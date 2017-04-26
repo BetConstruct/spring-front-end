@@ -1,0 +1,118 @@
+@mixin classic-new-view-7 {
+  // resize view
+  @media screen and (max-width: 1359px) {
+    .left-column-v3 {
+      width: 250px;
+    }
+    .multiselect-view-v3 .competition-title-v3:hover > .sub-menu-multiselect-view-v3 {
+      left: 250px;
+    }
+    .center-column-v3 {
+      width: calc(100% - 510px);
+    }
+    .right-column-v3{box-sizing: border-box;
+      width: 260px;
+    }
+    .right-column-v3 .animation-control .game-video .video-player-container {
+      height: 142px;
+    }
+    .right-column-v3 .video-animation-vox-v3{
+      height: 142px;
+    }
+    .right-column-v3 .game-video-container p{
+      font-size: 14px;
+      margin-top: 50px;
+    }
+    .left-menu-closed-v3 > .center-column-v3 {
+      width: calc(100% - 296px);
+    }
+    .button-info-text-view-v3{width: 225px;}
+    .mini-filters-box-v3 > ul > li > button > span{box-sizing: border-box;display: none;}
+    .classic-view-wrapper-v3 .left-column-v3.ng-hide ~ .center-column-v3{
+      box-sizing: border-box;
+      width: calc(100% - 260px);
+    }
+  }
+
+  @media screen and (max-width: 1279px) {
+    .live-events-column-v3 {
+      width: 100%;
+    }
+    .prematch-games-list{
+      width: 100%;
+      height: 250px;
+    }
+    .favorite-game-open-euro2016 > .prematch-games-list ~ .live-game-view-contain-v3 {
+      top: 0;
+      height: 100%;
+    }
+    .prematch-view-v3 .live-game-view-contain-v3 {
+      top: 260px;
+      height: calc(100% - 260px);
+      width: 100%;
+      padding: 0;
+    }
+    .prematch-view-v3 .all-game-info-container-v3{
+      padding: 0;
+    }
+    .prematch-list-view-v3 .md-progress-circular{
+      margin-top: 50px;
+    }
+  }
+
+  @media screen and (max-width: 1599px) {
+    .dashboard-view-v3 > .live-events-column-v3 {
+      width: 100%;
+    }
+    .dashboard-view-v3 > .live-events-column-v3:first-child{
+      margin: 0 0 5px;
+      width: 100%;
+      padding-right: 6px;
+    }
+  }
+
+  @media screen and (min-width: 1440px) {
+    .betslip-expanded .center-column-v3 {
+      width: calc(100% - 700px);
+    }
+    .classic-view-wrapper-v3.betslip-expanded .left-column-v3.ng-hide ~ .center-column-v3 {
+      width: calc(100% - 400px);
+    }
+    .betslip-expanded .left-menu-closed-v3 > .center-column-v3 {
+      width: calc(100% - 436px);
+    }
+    .betslip-expanded .right-column-v3 {
+      width: 400px;
+    }
+    .betslip-expanded .right-column-v3 .mini-game-container-j {
+      height: 291px;
+    }
+    .betslip-expanded .right-column-v3 .mini-game-container-j.closed {
+      height: 31px;
+    }
+    .betslip-expanded .right-column-v3 .mini-game-container-j iframe {
+      height: 260px;
+    }
+    .betslip-expanded .video-animation-vox-v3,
+    .betslip-expanded .video-animation-vox-v3 .video-player-container {
+      height: 207px;
+    }
+    .betslip-expanded .right-column-v3 .buner-b {
+      width: 100%;
+    }
+  }
+  @media screen and (min-width: 1600px) {
+    .center-column-v3.dashboard .games-view-wrapper-v3{
+      overflow: inherit;
+    }
+    .dashboard-view-v3 > .live-events-column-v3{
+      height: 100%;
+      padding: 0 6px 0 6px;
+      @include scroll;
+    }
+    .dashboard-view-v3 > .live-events-column-v3:first-child{
+      padding: 0 6px 0 0;
+    }
+  }
+  // resize view END
+}

@@ -1,0 +1,38 @@
+<!--counter offer popup-->
+<div ng-controller="superBetCtrl">
+    <div class="popup-bg-contain" ng-class="{'active': showCounterOfferPopup}">
+        <div class="popup-classic counter-offer">
+            <div class="closed-btn" ng-click="declineCounterOffer();"></div>
+            <h3 trans>SuperBet Counter Offer</h3>
+            <div class="popup-content">
+                <div class="evt-details">
+                    {{counterOffer.events.event.competition_name|removeParts:[counterOffer.events.event.sport_name]}}
+                    <p>{{counterOffer.events.event.event_name}}</p>
+                </div>
+                <table>
+                    <tr>
+                        <th trans>Bet Details</th>
+                        <th trans>Offer Details</th>
+                    </tr>
+                    <tr>
+                        <td ng-class="{'old-odd': (originalSuperBet.k != counterOffer.events.event.coeficient)}"><span trans>Odds:</span> {{originalSuperBet.k}}</td>
+                        <td><span trans>Odds:</span> {{counterOffer.events.event.coeficient}}</td>
+                    </tr>
+                    <tr>
+                        <td ng-class="{'old-odd': (originalSuperBet.amount != counterOffer.amount)}"><span trans>Amount:</span> {{originalSuperBet.amount}}</td>
+                        <td><span trans>Amount:</span> {{counterOffer.amount}}</td>
+                    </tr>
+                </table>
+                <div class="remaining-time">
+                    <span trans>Remaining time:</span>{{(counterOfferCountDown - counterOfferCountDown % 60) / 60|padWithZeros:2}}{{counterOfferCountDown % 2 ? ':' : ' '}}{{counterOfferCountDown % 60|padWithZeros:2}}
+                </div>
+                <div class="popup-buttons">
+                    <button ng-click="approveCounterOffer();" trans>Accept</button>
+                    <button ng-click="declineCounterOffer();" trans class="btn-default">Decline</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<!--counter offer popup END-->

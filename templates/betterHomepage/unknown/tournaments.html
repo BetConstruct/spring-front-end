@@ -1,0 +1,37 @@
+<h3 trans>Tournaments</h3>
+<div class="tournament-info-new">
+	<div class="select-block">
+		<select ng-model="tournamentModel.selectedTournament"
+				ng-options="opt as opt.label for opt in options"
+				ng-init="loadTournament()"
+				ng-change="loadTournament()">
+
+		</select>
+	</div>
+	<div class="tournament-time-b">
+		<p>{{time}}</p>
+	</div>
+	<div class="name-tournament-new">
+		<h4>{{name}}</h4>
+		<p></p>
+	</div>
+
+	<div class="mini-step-info">
+		<div class="steps-info first">
+			<p>{{entranceFee}}</p>
+		</div>
+
+		<div class="steps-info">
+			<p>{{prize}}</p>
+		</div>
+
+	</div>
+
+
+</div>
+
+<div class="show-all-listinfo">
+	<a ng-href="{{tournamentModel.selectedTournament.href}}">
+		<button trans>Play now</button>
+	</a>
+</div>

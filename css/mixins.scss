@@ -1,0 +1,111 @@
+$delete-cache: '?v=' + random(666);
+@mixin scroll($scroll: scroll, $width: $scrollbar-width, $background: $scroll-main-color, $border-radius: 10px) {
+  overflow-y: $scroll;
+  overflow-x: hidden;
+  scrollbar-track-color: $scroll-main-color;
+  scrollbar-shadow-color: $scroll-main-color;
+  scrollbar-base-color: $scroll-main-thumb-color;
+  scrollbar-arrow-color: $scroll-main-thumb-color;
+  &::-webkit-scrollbar-track {
+    border-radius: $border-radius;
+  }
+  &::-webkit-scrollbar {
+    width: $width;
+    background: $scroll-main-color;
+    border-radius: $border-radius;
+  }
+  &::-webkit-scrollbar-thumb {
+    border-radius: $border-radius;
+    background: $scroll-main-thumb-color;
+    &:hover {
+      background: lighten( desaturate( $scroll-main-thumb-color, 1 ), 6 );
+    }
+  }
+}
+@function set-color($color, $color-dark: #000000, $color-light: #ffffff) {
+  @if ($color == $brand-color-1 and nth($disable-button-bg-sc, 1) == true) {
+    @return nth($disable-button-bg-sc, 2);
+  } 
+  @else if ($color == $brand-color-1 and nth($disable-brand-color-1-sc, 1) == true) {
+    @return nth($disable-brand-color-1-sc, 2);
+  } 
+  @else if ($color == $brand-color-2 and nth($disable-brand-color-2-sc, 1) == true) {
+    @return nth($disable-brand-color-2-sc, 2);
+  } 
+  @else if ($color == $hero-color and nth($disable-hero-color-sc, 1) == true) {
+    @return nth($disable-hero-color-sc, 2);
+  } @else {
+    @if (lightness($color) > 50) {
+      @return $color-dark;
+    } @else {
+      @return $color-light;
+    }
+  }
+}
+@mixin bg-and-color($background, $border: no) {
+  background: $background;
+  @if $border == yes {
+    border-color: $background;
+  }
+  color: set-color($background);
+}
+@mixin placeholder {
+  &::-webkit-input-placeholder {@content; opacity: 1;}
+  &:-moz-placeholder           {@content; opacity: 1;}
+  &::-moz-placeholder          {@content; opacity: 1;}
+  &:-ms-input-placeholder      {@content; opacity: 1;}  
+}
+@mixin another-logo-by-class($className, $logo-bg: "", $logo-fix-bg: "", $logo-width: 243px, $logo-fix-width: 156px, $popup-logo: $logo-bg) {
+  .#{$className} {
+    div.logo-contain-b, div.logo {
+      width: #{$logo-width};
+      > a {
+        background: #{$logo-bg};
+      }
+    }
+    div.header-top-row {
+      padding: 8px 0 0 #{20px + $logo-width};
+    }
+    div.conteiner {
+      &.show-game, &.show-fix {
+        div.logo-contain-b, div.logo {
+          width: #{$logo-fix-width};
+          > a {
+            background: #{$logo-fix-bg};
+          }
+        }
+      }
+    }
+    div.logo-form-b {
+      background: #{$popup-logo};
+    }
+  }
+}
+$payments-image-path: '../../../images/payments.png#{$delete-cache}' !default;
+@mixin payments($name, $x,  $width, $parentClass: "", $size: "", $path: $payments-image-path) {
+  #{$parentClass} .paymentIcon.#{$name} {
+    background: no-repeat url(#{$path}) #{$x}px 50% #{$size};
+    width: #{$width}px;
+  }
+}
+@mixin footer-hide-this-payments($paymentsList, $skinName: "") {
+  @each $payment in $paymentsList {
+    #{$skinName} .contain-footer-block .payment-content-block {
+      li#{$payment} {
+        display: none !important;
+      }
+    }
+  }
+}
+@mixin footer-show-this-payments($paymentsList, $skinName: "") {
+  #{$skinName} .contain-footer-block .payment-content-block {
+    li {
+      display: inline-block !important;
+      &#{$paymentsList} {
+        display: none !important;
+      }
+    }
+  }
+}
+// example @include footer-hide-this-payments((".red", ".lol", ".kov"));
+// example @include footer-show-this-payments(":not(.red):not(.kov)" ALSO YOU CAN SET IT SKIN SPECIFIC ".vbet" );

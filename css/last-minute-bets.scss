@@ -1,0 +1,238 @@
+$last-minute-bets-widget: $skin-color !default;
+.last-minute-bets-j * {
+  box-sizing: border-box;
+}
+.last-minute-bets-j {
+  width: 540px;
+  height: 365px;
+  float: left;
+  margin: 0 0 0 10px;
+  overflow: hidden;
+  position: relative;
+}
+.lmb-time-selector {
+  float: left;
+  width: 100%;
+  height: 50px;
+  background-color: $last-minute-bets-widget;
+  padding: 0 15px 0 0;
+  box-sizing: border-box;
+}
+.lmb-sport-select-j {
+  height: 31px;
+  background-color: $last-minute-bets-widget;
+  float: left;
+  width: 100%;
+  overflow: hidden;
+  margin: 15px 0 0;
+}
+.lmb-sport-select-j > p {
+  text-align: center;
+  height: 31px;
+  font: 12px/31px $font-f;
+  color: $text-palette-4;
+}
+.lmb-sport-select-j .sport-icon-j {
+  display: block;
+  height: 16px;
+  width: 16px;
+  color: $text-palette-4;
+  float: left;
+  margin: 7px;
+  font: 16px/16px 'sport-icon';
+  text-align: center;
+}
+.lmb-sport-select-j ul {
+  margin: 1px 0 0;
+  float: left;
+}
+.lmb-sport-select-j ul li {
+  display: block;
+  float: left;
+  height: 30px;
+  max-width: 30px;
+  cursor: pointer;
+  white-space: nowrap;
+  overflow: hidden;
+}
+.lmb-sport-select-j ul li span {
+  display: inline-block;
+  float: left;
+  height: 30px;
+  font-size: 12px;
+  line-height: 30px;
+  padding-right: 14px;
+  color: set-color($brand-color-1, black, white);
+  width: calc(100% - 38px);
+}
+.lmb-sport-select-j ul li.active-j .sport-icon-j {
+  color: set-color($brand-color-1, black, white);
+  transition: 300ms color;
+}
+.lmb-sport-select-j ul li:nth-child(even) {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+.lmb-time-selector li {
+  display: block;
+  float: right;
+  margin: 0 10px;
+  color: $text-palette-4;
+  font: 12px/50px $font-f;
+  cursor: pointer;
+  transition: 250ms color, 250ms box-shadow;
+}
+.lmb-time-selector li:hover,
+.lmb-time-selector li.active-j {
+  color: $text-palette-3;
+}
+.lmb-time-selector li.active-j {
+  box-shadow: inset 0 -2px 0 $hero-color;
+}
+.lmb-time-selector li:first-child {
+  float: left;
+  margin: 0;
+  cursor: default;
+}
+.lmb-time-selector h3 {
+  float: left;
+  font: 16px/50px $font-f;
+  text-transform: uppercase;
+  color: $text-palette-3;
+  text-indent: 25px;
+}
+.lmb-table-wrap-j {
+  float: left;
+  width: 100%;
+  background: $last-minute-bets-widget;
+  height: 270px;
+  overflow: hidden;
+  position: relative;
+}
+.lmb-table-j {
+  float: left;
+  background: $skin-palette-10;
+  width: 100%;
+  display: table;
+  table-layout: fixed;
+}
+.lmb-table-j ul {
+  display: table-row;
+}
+.lmb-table-j ul:nth-of-type(even) {
+  background: lighten( desaturate( $last-minute-bets-widget, 5), 3);
+}
+.lmb-table-j .lmb-title-j li {
+  background-color: darken( saturate( adjust-hue( $last-minute-bets-widget, 4deg), 1), 7);
+  color: $text-palette-4;
+  text-align: center;
+  font-size: 10px;
+  text-transform: uppercase;
+}
+.lmb-table-j .lmb-title-j li,
+.lmb-table-j .lmb-title-j li:nth-child(5),
+.lmb-table-j .lmb-title-j li:nth-child(6),
+.lmb-table-j .lmb-title-j li:nth-child(7) {
+  box-shadow: none;
+  border: 0;
+}
+.lmb-table-j li {
+  display: table-cell;
+  vertical-align: middle;
+  height: 30px;
+  font-size: 12px;
+  color: $text-palette-3;
+  box-shadow: inset 0 -1px 0 rgba(lighten( desaturate( adjust-hue( $last-minute-bets-widget, 4deg), 23), 32), 0.2);
+  position: relative;
+}
+.lmb-table-j li .market-info-b{
+  float: left;
+  width: 100%;
+  position: relative;
+  display: inline-block;
+}
+.lmb-table-j li:first-child,
+.lmb-table-j li:nth-child(3),
+.lmb-table-j li:last-child {
+  color: $text-palette-4;
+  font-size: 10px;
+}
+.lmb-table-j li:first-child {
+  width: 66px;
+  text-align: center;
+}
+.lmb-table-j li:nth-child(3) {
+  width: 30px;
+  text-align: center;
+  font-size: 12px;
+}
+.lmb-table-j li:nth-child(5),
+.lmb-table-j li:nth-child(6),
+.lmb-table-j li:nth-child(7) {
+  width: 72px;
+  text-align: center;
+  border-left: 1px solid darken( adjust-hue( $last-minute-bets-widget, 2deg), 5);
+}
+.lmb-table-j li:nth-child(7) {
+  border-right: 1px solid darken( adjust-hue( $last-minute-bets-widget, 2deg), 5);
+}
+.lmb-table-j li:last-child {
+  width: 45px;
+  text-align: right;
+  padding: 0 10px 0 0;
+  font-size: 12px;
+}
+.lmb-table-j li .market-info-b {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  &.blocked{
+    font: 12px/15px icomoon;
+    &:before{
+      content: "\e68f";
+    }
+    span{display: none;}
+  }
+}
+.lmb-table-j li .market-info-b span {
+  color: map-get($coeff-color-map, homepage-last-minute-bets);
+  float: none;
+  padding: 0;
+  margin: 0;
+  text-align: center;
+  display: inline-block;
+}
+.lmb-table-j li:hover .market-info-b span {
+  color: map-get($coeff-color-map, homepage-last-minute-bets-hover);
+}
+.lmb-sport-select-j ul li.active-j {
+  background-color: $brand-color-1;
+  max-width: 100%;
+  transition: 400ms max-width linear, 300ms background cubic-bezier(0.4, 0, 0.2, 1);
+}
+.lmb-table-j .market-info-b.market-name-j {
+  padding: 0 5px 0 0;
+}
+.lmb-table-j li:nth-child(2) .market-info-b.market-name-j {
+  padding: 0;
+}
+.lmb-table-j .lmb-title-j li:nth-child(2) {
+  text-align: center;
+}
+.lmb-table-wrap-j .md-progress-circular {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin: -71px 0 0 -50px;
+}
+.news-block-section .md-progress-circular {
+  top: 160px;
+}
+.lmb-table-j li:nth-child(2) {
+  text-align: right;
+}
+@media screen and (max-width: 1260px) {
+  .last-minute-bets-j {
+    margin: 0;
+    width: 100%;
+  }
+}

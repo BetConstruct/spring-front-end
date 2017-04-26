@@ -1,0 +1,72 @@
+<div ng-controller="modernViewManCtrl" class="explorer block-size-visible-b" class-on-scroll="scrolled,notscrolled" watch-resize>
+<!--Menu games-->
+<div class="menu-games" ng-init="initModernView()">
+    <div class="contain-menu-games modern-menu-j block-size-visible-b">
+        <ul ng-class="{'favorites-first': conf.showFavoriteGamesInSportList}">
+            <!--Переключатель при неактивном состоянии заменить  class="live-b" на  class="live-b2"-->
+            <li data-step="1" data-position="right" data-intro="Use this selector to switch between Live and Pre-match games" ng-show="conf.customSportsBook.modern.showPrematch && conf.customSportsBook.modern.showLive" class="live-prematch-toggle-li-j" trans="attr-only">
+                <div class="pl-ie8" ng-class="{'live-b2': !env.live, 'live-b':env.live}">
+                    <a ng-click="toggleLive()" trans ng-show="env.live" title="click to switch to pre-match">live</a>
+                    <a ng-click="toggleLive()" trans ng-show="!env.live" title="click to swicth to Live games">live</a>
+                </div>
+                <!--<div class="live-prematch" ng-click="toggleLive()" ng-class="{'live-on': env.live,'live-off': !env.live}">
+                    <a trans>pre-match</a>
+                    <a trans>live</a>
+                </div>-->
+                <div class="pl-toggle animate" ng-class="{'animate': env, 'no-header': conf.integrationMode}">
+                    <div class="container" ng-class="{'live-on': env.live,'live-off': !env.live}" ng-mousedown="toggleLive()">
+                        <div>
+                            <a trans>pre-match</a>
+                            <a trans>live</a>
+                            <div class="switch"></div>
+                        </div>
+                    </div>
+                    <p><span trans>Switch to</span> <span ng-show="!env.live">Live</span><span ng-show="env.live" trans>pre-match</span></p>
+                </div>
+            </li>
+            <div class="contein-nav-g" data-step="2" data-position="bottom" data-intro="Select sport" trans="attr-only">
+                <li ng-repeat="sport in sports_list track by sport.id" ng-if="$index < sportListMaxVisibleItems" ng-class="{'active': sport.id === selectedSportId,'animate-star-odd':sport.game % 2 == 1,'sport-favorites': sport.id === -1,'animate-star-even':sport.game% 2 == 0 && sport.game >0 }">
+                    <a ng-click="sportClicked(sport)" ng-show="!sport.link">
+                        <span class="star-anim" ng-if="sport.id === -1"></span>
+                        <span class="{{sport.alias}}">
+                            <span class="game-count" ng-show="sport.game">{{ sport.game }}</span>
+                        </span>{{sport.name}}
+                    </a>
+                    <a ng-show="sport.link" ng-href="{{sport.link}}"><span></span>{{sport.name}}</a>
+                </li>
+            </div>
+            <li class="more-games" ng-show="sportsByLetterDividedToColumns"><a> <span class="more-text" trans>more</span><span class="more-count">{{ sports_list.length - sportListMaxVisibleItems }}</span> </a>
+            <div class="contein-games" ng-include="getTemplate('templates/sport/sportlist.html')" ng-show="!hideSportListDropdown"></div>
+            </li>
+        </ul>
+        <div ng-include="getTemplate('templates/search/sport.html')"></div>
+    </div>
+</div>
+<!--Menu games end-->
+
+<!--Menu country-->
+<div class="country-b" ng-show="!favoriteGamesSelectedAsSport && !modernVirtualSportsSelected && selectedSportId">
+<div class="country-block-contain">
+    <ul class="countrylist">
+        <div class="contaien-country one-line-menu" data-step="3" data-position="bottom" data-intro="Select region" trans="attr-only">
+            <li ng-repeat="region in regionsList track by region.id" ng-if="$index < regionsListMaxVisibleItems" >
+                <a ng-click="regionClicked(region)" ng-class="{'active': region.id === selectedRegionId}">
+                    <p ng-class="'flag-'+ region.alias | removeUselessSymbolsByRegexp: '[,\' ]+': 'g': 'true'" class="flag flag-icon"></p> {{ region.name }}
+                    <span class="nofloat" ng-show="region.game">({{ region.game }})</span>
+                    <span class="nofloat" ng-show="region.id == upcomingRegionId && $root.selectedRegionAlias == 'allUpcoming'">({{(selectedUpcomingPeriod + ' hours')|translate}})</span>
+                </a>
+
+                <div class="open-lang" ng-if="region.id == upcomingRegionId">
+                    <div class="arrow-sport"></div>
+                    <ul>
+                        <li ng-repeat="period in upcomingPeriods" ng-click="upcomingPeriodClicked(period)" ng-class="{'active-format': period == selectedUpcomingPeriod && $root.selectedRegionAlias == 'allUpcoming'}">{{(period + ' hours')|translate}}</li>
+                    </ul>
+                </div>
+            </li>
+        </div>
+        <div class="contein-games" ng-include="getTemplate('templates/sport/regionslist.html')"></div>
+    </ul>
+</div>
+</div>
+<!--Menu country END-->
+</div>

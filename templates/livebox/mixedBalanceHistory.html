@@ -1,0 +1,33 @@
+<div class="full-bet-history-information-contain">
+    <div class="bet-info-list-separator-b title">
+        <ul>
+            <li class="date-id-column-b"><p trans="">Date and ID</p></li>
+            <li class="bet-type-column-b">
+                <span trans="">Type</span>
+            </li>
+            <li class="bet-stake-info-column"><p trans>Amount</p></li>
+            <li class="outcome-bet-info-column"><p trans>Final Balance</p></li>
+        </ul>
+    </div>
+    <div class="bet-info-list-separator-b" ng-repeat="balance in balanceHistory">
+        <ul>
+            <li class="date-id-column-b">
+                <span>{{balance.date_time|formatDate:(conf.layoutTimeFormat[conf.sportsLayout] || 'noLocaleTranslate')}} {{conf.layoutTimeFormat[conf.sportsLayout] ? (balance.date_time|formatDate:'hour':null:env.timeFormat) : ''}}</span>
+                <span ng-show="balance.bet_id"><i trans>id:</i> <b>{{balance.bet_id}}</b></span>
+            </li>
+            <li class="bet-type-column-b">
+                <small ng-if="balance.product_category === 2">{{ balance.game }}</small>
+                <span>{{ balanceTypes[balance.operation] || (balance.operation_name|translate) }}</span>
+            </li>
+            <li class="bet-stake-info-column">
+                <span ng-show="!balance.bonus && balance.amount"><span ng-show="balance.amount > 0">+</span><span>{{balance.amount|number:conf.balanceFractionSize}} {{currency_name|currency}}</span></span>
+                <span ng-show="balance.bonus && !balance.amount"  title="Balance placed from bonus." trans="attr-only"><span ng-show="balance.bonus > 0">+</span><span>{{balance.bonus|number:conf.balanceFractionSize}} {{currency_name|currency}}</span></span>
+                <span ng-show="balance.bonus && balance.amount"  title="{{('Part of balance placed from bonus.'|translate) + ' (' + balance.amount + ' + ' + balance.bonus + ')'}}" ><span ng-show="balance.bonus + balance.amount > 0">+</span><span>{{(balance.bonus + balance.amount)|number:conf.balanceFractionSize}} {{currency_name|currency}}</span></span>
+            </li>
+            <li class="outcome-bet-info-column">
+                <span>{{balance.balance|number:conf.balanceFractionSize}} {{currency_name|currency}}</span>
+            </li>
+        </ul>
+    </div>
+    <div class="load-more-j" ng-show="balanceHistoryIsMoreItemsAvailable()"><p take-parent-scroll="true" ng-click="balanceHistoryLoadMoreInfo(); "><span trans>Load more</span></p></div>
+</div>

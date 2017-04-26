@@ -1,0 +1,149 @@
+.print-a4-j,
+.print-a4-j * {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    -webkit-print-color-adjust: exact;
+    font-size: 17px;
+    line-height: 23px;
+    font-family: Arial;
+}
+@page {
+    size: 1280px 1811px;
+    margin: 0;
+}
+.print-a4-j {
+    width: 1180px;
+    padding: 40px 30px;
+    display: inline-block;
+    background: white;
+    .header-j {
+        padding-bottom: 29px;
+        border-bottom: 2px solid #000000;
+        float: left;
+        width: 100%;
+        .logo-j {
+            height: 71px;
+            position: relative;
+            float: left;
+            img {
+                max-height: 71px;
+                display: block;
+            }
+        }
+        .bar-code-j {
+            position: relative;
+            height: 71px;
+            float: right;
+            .qr-code-b {
+                height: 71px;
+            }
+            * {
+                box-sizing: content-box;
+            }
+        }
+    }
+    .bet-list-j {
+        float: left;
+        width: 100%;
+        border: 2px solid black;
+        border-width: 2px 0;
+        padding-bottom: 34px;
+    }
+    .bet-info-j {
+        float: left;
+        width: 100%;
+        td {
+            padding-top: 10px;
+            padding-bottom: 9px;
+            vertical-align: middle;
+            width: 1%;
+            p {
+                float: left;
+                width: 100%;
+            }
+            &.big-bet-j {
+                text-align: right;
+                p {
+                    font-size: 29px;
+                    b {
+                        font-size: 29px;
+                        line-height: 38px;
+                        display: block;
+                    }
+                }
+            }
+        }
+    }
+    .bet-table-j {
+        display: table;
+        float: left;
+        width: 100%;
+        ul {
+            display: table-row;
+            li {
+                display: table-cell;
+                vertical-align: top;
+                padding-top: 29px;
+                padding-bottom: 10px;
+                width: 50%;
+                padding-right: 30px;
+                border-bottom: 1px solid #EFEFEF;
+                p:first-child {
+                    font-size: 19px;
+                }
+            }
+        }
+    }
+    .pot-win-j {
+        float: left;
+        width: 100%;
+        p {
+            float: left;
+            width: 100%;
+            b {
+                font-size: 29px;
+                display: block;
+                padding-top: 9px;
+            }
+        }
+        p:first-child {
+            font-size: 19px;
+            margin-top: 23px;
+        }
+    }
+}
+@mixin print8cm{
+    @page {
+        size: 8cm 16.5cm;
+        margin: 0;
+    }
+    .print-a4-j {
+        width: 450px;
+        padding: 20px;
+    }
+    .print-a4-j .bet-table-j, .print-a4-j .bet-table-j ul, .print-a4-j .bet-table-j ul li, .print-a4-j .bet-info-j, .print-a4-j .bet-info-j tr, .print-a4-j .bet-info-j tr td {
+        display: block;
+        width: 100%;
+        float: left;
+    }
+    .print-a4-j .bet-info-j td.big-bet-j {
+        text-align: left;
+        border-top: 2px solid #000;
+    }
+    .print-a4-j .header-j .bar-code-j, .print-a4-j .header-j .logo-j {
+        width: 100%;
+    }
+    .print-a4-j .header-j .logo-j img {
+        max-width: 100%;
+        margin: auto;
+    }
+    .print-a4-j .header-j .bar-code-j .qr-code-b {
+        float: right;
+        margin-right: 20px;
+    }
+}
+$enable-print-8cm: false !default;
+@if $enable-print-8cm == true {
+    @include print8cm;
+}

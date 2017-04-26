@@ -1,0 +1,1069 @@
+.product-list-contain{
+  float: left;
+  width: 100%;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+.product-list-contain > .md-progress-circular,
+.featured-game-list-b > .md-progress-circular {
+  margin: 0 auto;
+}
+.featured-game-list-b > .md-progress-circular {
+  margin-top: 40px;
+}
+.product-list-contain > ul{
+  float: left;
+  width: calc(100% + 10px);
+  margin: 10px 0 0;
+  display: table;
+  table-layout: fixed;
+  position: relative;
+}
+.product-list-contain > ul > li{
+  display: table-cell;
+  box-sizing: border-box;
+  width: calc(100% / 6);
+  max-width: calc(100% / 6);
+  min-width: calc(100% / 6);
+  margin: 0;
+  padding: 0 10px 0 0;
+  border: 0;
+  transition: background 250ms;
+  vertical-align: top;
+  text-align: center;
+  height: 100%;
+  position: relative;
+}
+
+.product-list-contain > ul.column-5 > li{
+  width: 20%;
+  max-width: 20%;
+  min-width: 20%;
+}
+.product-list-contain > ul.column-4 > li{
+  width: 25%;
+  max-width: 25%;
+  min-width: 25%;
+}
+.product-list-contain > ul.column-3 > li{
+  width: calc(100% / 3);
+  max-width: calc(100% / 3);
+  min-width: calc(100% / 3);
+}
+.product-list-contain > ul.column-2 > li{
+  width: 50%;
+  max-width: 50%;
+  min-width: 50%;
+}
+.product-list-contain > ul.column-1 > li{
+  width: 100%;
+  border: none;
+}
+.product-list-contain > ul > li > a{
+  display: block;
+  float: left;
+  width: 100%;
+  min-height: 180px;
+  text-decoration: none;
+  transition: background 250ms;
+  box-sizing: border-box;
+  position: relative;
+  background: lighten( desaturate( adjust-hue( $skin-color, -1deg ), 11 ), 7 );
+  background: -moz-linear-gradient(top,  lighten( desaturate( adjust-hue( $skin-color, -1deg ), 11 ), 7 ) 0%, lighten( desaturate( $skin-color, 7 ), 3 ) 100%);
+  background: -webkit-linear-gradient(top,  lighten( desaturate( adjust-hue( $skin-color, -1deg ), 11 ), 7 ) 0%,lighten( desaturate( $skin-color, 7 ), 3 ) 100%);
+  background: linear-gradient(to bottom,  lighten( desaturate( adjust-hue( $skin-color, -1deg ), 11 ), 7 ) 0%,lighten( desaturate( $skin-color, 7 ), 3 ) 100%);
+  > img {
+    display: block;
+    float: left;
+    width: 100%;
+  }
+  &.show {
+    background: none;
+    min-height: auto;
+  }
+  &:before {
+    display: none;
+  }
+}
+.product-list-contain > ul > li:hover > a {
+  background: desaturate( adjust-hue( $skin-color, -1deg ), 3 );
+  background: -moz-linear-gradient(top,  desaturate( adjust-hue( $skin-color, -1deg ), 3 ) 0%, lighten( desaturate( adjust-hue( $skin-color, -1deg ), 11 ), 7 ) 100%);
+  background: -webkit-linear-gradient(top,  desaturate( adjust-hue( $skin-color, -1deg ), 3 ) 0%,lighten( desaturate( adjust-hue( $skin-color, -1deg ), 11 ), 7 ) 100%);
+  background: linear-gradient(to bottom,  desaturate( adjust-hue( $skin-color, -1deg ), 3 ) 0%,lighten( desaturate( adjust-hue( $skin-color, -1deg ), 11 ), 7 ) 100%);
+  &.show {
+    background: none;
+    min-height: auto;
+  }
+}
+.icon-container-product{
+  float: left;
+  box-sizing: border-box;
+  width: 100%;
+  text-align: center;
+  height: 88px;
+  display: table;
+  position: relative;
+}
+.icon-container-product > b{
+  font: 48px/52px icomoon;
+  color: $text-palette-3;
+  display: table-cell;
+  vertical-align: bottom;
+  transition: color 250ms;
+  animation: shadowSlide 4s infinite;
+  animation-fill-mode: both;
+}
+$anim-time: 5;
+@keyframes shadowSlide {
+  0%, 50%, 100% {
+    text-shadow: 0 0 4px rgba(darken($hero-color, 20), 0), 0 0 4px rgba(0, 0, 0, 0), 0 0 5px rgba(darken($hero-color, 15), 0);
+    color: $text-palette-3;
+  }
+  25% {
+    text-shadow: 0 0 54px rgba(lighten($hero-color, 20), 1), 0 0 4px rgba(0, 0, 0, 0.21), 0 0 5px rgba(darken($hero-color, 15), 0.39);
+    color: $text-palette-1;
+  }
+}
+.product-list-contain > ul > li {
+  &:nth-child(2) .icon-container-product > b {
+    animation-delay: #{2.0 / $anim-time}s;
+  }
+  &:nth-child(3) .icon-container-product > b {
+    animation-delay: #{2.0 / $anim-time * 2}s;
+  }
+  &:nth-child(4) .icon-container-product > b {
+    animation-delay: #{2.0 / $anim-time * 3}s;
+  }
+  &:nth-child(5) .icon-container-product > b {
+    animation-delay: #{2.0 / $anim-time * 4}s;
+  }
+  &:nth-child(6) .icon-container-product > b {
+    animation-delay: #{2.0 / $anim-time * 5}s;
+  }
+}
+.icon-container-product > b:before{content: "\69";}
+.icon-container-product > b.sportsbook:before{content: "\e6d7";}
+.icon-container-product > b.casino:before{content: "\e6d6";}
+.icon-container-product > b.live.casino:before{content: "\71";}
+.icon-container-product > b.belote:before{content: "\e6d0";}
+.icon-container-product > b.backgammon:before{content: "\e6cf";}
+.icon-container-product > b.Pool.Betting:before, .icon-container-product > b.Colossusbets:before{content: "\e6fb";}
+.icon-container-product > b.Fantasy:before{
+  content: "\67";
+  font-size: 66px;
+  display: block;
+}
+.icon-container-product > b.live.russian.poker:before, .icon-container-product > b.Live.Russian.Poker:before{content: "\e903";}
+.icon-container-product > b.statistics:before, .icon-container-product > b.Statistics:before{content: "\e6de";}
+.icon-container-product > b.free.quiz:before, .icon-container-product > b.Free.Quiz:before{content: "\e912";}
+.icon-container-product > b.poker:before{
+  content: "\e6c0";
+  font-size: 64px;
+  position: relative;
+  top: 6px;
+}
+.icon-container-product > b.Fortune:before {
+  content: "\e6f8";
+}
+.product-list-contain > ul > li:hover > a > .icon-container-product > b{color: $text-palette-2;}
+.product-list-contain > ul > li > a > .product-title-animation-wrapper {
+  float: left;
+  width: 100%;
+  margin: 17px 0 0;
+  overflow: hidden;
+  > h4{
+    float: left;
+    width: 100%;
+    padding: 0 4px;
+    text-align: center;
+    box-sizing: border-box;
+    font: 400 14px/16px $font-f;
+    color: $text-palette-2;
+    text-transform: uppercase;
+    transition: color 250ms;
+    animation-duration: 5s;
+    animation-iteration-count: infinite;
+    animation-fill-mode: forwards;
+    overflow: hidden;
+  }
+  &.has-animation {
+    > h4 {
+      &:first-child {
+        animation-name: product-title-animation-first;
+      }
+      &:nth-child(2) {
+        animation-name: product-title-animation-second;
+        max-height: 0px;
+      }
+    }
+  }
+}
+
+@keyframes product-title-animation-first {
+  0% {
+    max-height: 48px;
+  }
+  20%, 60% {
+    max-height: 0px;
+  }
+  80% {
+    max-height: 48px;
+  }
+}
+@keyframes product-title-animation-second {
+  0% {
+    max-height: 0px;
+  }
+  10%, 50% {
+    max-height: 48px;
+  }
+  70% {
+    max-height: 0px;
+  }
+}
+
+.product-list-contain > ul > li:hover > a > .product-title-animation-wrapper > h4{
+  color: $text-palette-1;
+}
+.product-list-contain > ul > li > a > button {
+  text-transform: uppercase;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 36px;
+  background: $skin-palette-12;
+  border: 0;
+  font: 12px $font-f;
+  color: $text-palette-4;
+  cursor: pointer;
+  transition: box-shadow 250ms, color 250ms;
+  box-shadow: inset 0 0 0 $hero-color;
+  overflow: hidden;
+  padding: 0;
+  @media screen and (max-width: 1260px) {
+    font-size: 11px;
+  }
+}
+.product-list-contain > ul > li > a > button:before {
+  content: "";
+  display: block;
+  width: 100%;
+  left: 0;
+  height: 1px;
+  top: -2px;
+  background: $hero-color;
+  transition: background 250ms;
+  position: absolute;
+}
+.product-list-contain > ul > li:hover > a > button {
+  box-shadow: inset 0 36px 0 $hero-color;
+  color: set-color($hero-color);
+}
+.product-list-contain > ul > li:hover > .sportsBook-l > button{
+  box-shadow: inherit;
+  color: $text-palette-4;
+}
+.product-list-contain > ul > li > .sportsBook-l > button:hover{
+  box-shadow: inset 0 36px 0 $hero-color;
+  color: set-color($hero-color);
+}
+
+.product-list-contain > ul > li > a > button:hover:before {
+  background: darken( desaturate( adjust-hue( $skin-color, 4deg ), 11 ), 1 );
+}
+.featured-game-list-b{
+  float: left;
+  box-sizing: border-box;
+  width: 100%;
+  margin: 10px 0 0;
+  height: 180px;
+  background: $skin-palette-12;
+}
+.title-b-wg{
+  float: left;
+  box-sizing: border-box;
+  width: 100%;
+  height: 50px;
+  padding: 0 160px 0 20px;
+  position: relative;
+}
+.title-b-wg > h3{
+  float: left;
+  width: 100%;
+  box-sizing: border-box;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  font: 16px/50px $font-f;
+  color: $text-palette-4;
+  text-transform: uppercase;
+}
+.mini-slider-b-contain{
+  height: 50px;
+  position: absolute;
+  right: 20px;
+  top: 0;
+  box-sizing: border-box;
+}
+.change-b-slide{
+  float: left;
+  box-sizing: border-box;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: lighten( desaturate( adjust-hue( $skin-color, 1deg ), 21 ), 11 );
+  margin: 19px 0 0 7px;
+  transition: background 200ms;
+  cursor: pointer;
+}
+.change-b-slide.active{
+  background: $hero-color;
+  cursor: default;
+}
+.games-view-slider-contain{
+  float: left;
+  width: 100%;
+  height: 130px;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+.games-view-slider-contain > ul{
+  float: left;
+  width: 100%;
+  box-sizing: border-box;
+}
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    -webkit-transform: translate3d(0, 100%, 0);
+    transform: translate3d(0, 100%, 0);
+  }
+  to {
+    opacity: 1;
+    -webkit-transform: none;
+    transform: none;
+  }
+}
+.games-view-slider-contain > ul > li{
+  float: left;
+  width: calc((100% - 20px) / 3);
+  height: 130px;
+  box-sizing: border-box;
+  background: lighten( desaturate( $skin-color, 7 ), 4 );
+  margin: 0 0 0 10px;
+  position: relative;
+  padding: 0 0 0 100px;
+  animation: fadeInUp 0.3s;
+  animation-fill-mode: both;
+}
+.games-view-slider-contain > ul > li:nth-child(1), .games-view-slider-contain > ul > li:nth-child(3) {
+  animation-delay: 0.15s;
+  animation-duration: 0.6s;
+}
+.games-view-slider-contain > ul.column-2 > li:nth-child(1), .games-view-slider-contain > ul.column-1 > li:nth-child(1) {
+  animation-delay: 0s;
+  animation-duration: 0.3s;
+}
+.games-view-slider-contain > ul.column-2 > li{width: calc((100% - 10px) / 2);}
+.games-view-slider-contain > ul.column-1 > li{width: 100%;}
+.games-view-slider-contain > ul > li:first-child{margin: 0;}
+.date-championship-logo{
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100px;
+  height: 130px;
+  background: $skin-palette-10;
+  box-sizing: border-box;
+}
+.date-championship-logo > p{
+  box-sizing: border-box;
+  float: left;
+  width: 100%;
+  color: $text-palette-3;
+  font: 12px/16px $font-f;
+  text-align: center;
+  padding: 84px 10px 16px;
+  height: 130px;
+  background-size:auto 48px;
+  background-position: 50% 20px;
+  background-repeat: no-repeat;
+}
+.date-championship-logo > p:first-line {
+  color: $text-palette-4;
+  font-size: 11px;
+}
+.date-championship-logo > p > b{
+  float: left;
+  width: 100%;
+  display: inline-block;
+  color: $text-palette-3;
+  font-weight: normal;
+}
+.date-championship-logo > p > i{
+  float: left;
+  width: 100%;
+  display: inline-block;
+  font-style: normal;
+  font-weight: bold;
+}
+.competition-logo-contain{
+  float: left;
+  width: 100%;
+  height: 66px;
+}
+.game-full-information-w{
+  float:left;
+  width: 100%;
+  height: 130px;
+  position: relative;
+  overflow: hidden;
+  box-sizing: border-box;
+  padding: 15px 20px 0;
+}
+.game-full-information-w:before{
+  display: none;
+}
+.game-full-information-w > img{
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 110%;
+  height: auto;
+  z-index: 11;
+}
+.team-names-wrapper-b{
+  float: left;
+  width: 100%;
+  box-sizing: border-box;
+  position: relative;
+  z-index: 22;
+}
+.team-names-wrapper-b > ul{
+  float: left;
+  width: 100%;
+  box-sizing: border-box;
+}
+.team-names-wrapper-b > ul > li{
+  float: left;
+  width: 100%;
+  box-sizing: border-box;
+  height: 22px;
+  margin: 0 0 10px;
+}
+.team-names-wrapper-b > ul > li > p{
+  float: left;
+  width: 100%;
+  position: relative;
+  box-sizing: border-box;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font: 16px/22px $font-f;
+  color: #c2c5cd;
+  padding-left: 35px;
+  background-repeat: no-repeat;
+  background-size: 20px;
+  background-position: 0 50%;
+}
+.team-names-wrapper-b > ul > li > p > b{font-weight: normal}
+.game-link-wrapper-b{
+  float: left;
+  width: 100%;
+  box-sizing: border-box;
+  position: relative;
+  z-index: 22;
+  margin:  10px 0 0;
+}
+.game-link-wrapper-b > a{
+  float: left;
+  text-decoration: none;
+  color: #fff;
+  font: 12px/14px $font-f;
+  text-transform: uppercase;
+  padding: 6px 15px;
+  background: none;
+  border: 1px solid #7b8191;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+  box-sizing: border-box;
+  transition: background 500ms, border-color 500ms;
+}
+.games-view-slider-contain > ul > li:hover .game-link-wrapper-b > a{
+  background: $brand-color-1;
+  border: 1px solid $brand-color-1;
+  color: set-color($brand-color-1);
+}
+.body-wrapper.homepage .new-homepage .top-picture-block {
+  padding-top: 10px;
+}
+.body-wrapper.homepage {
+  .temp_bg, .news-block-section {
+    min-height: 350px;
+  }
+  .lmb-time-selector {
+    box-shadow: none;
+    background: $skin-palette-12;
+  }
+  .lmb-time-selector h3 {
+    color: $text-palette-4;
+  }
+  .big-cash {
+    background: none;
+  }
+  .new-homepage .featured-games-container {
+    border-color: rgba(0, 0, 0, 0);
+    background: rgba(0, 0, 0, 0);
+  }
+  .last-minute-bets-j {
+    height: auto;
+  }
+  .lmb-sport-select-j {
+    margin: 0;
+    height: 30px;
+  }
+  .lmb-sport-select-j ul {
+    margin: 0;
+  }
+  .news-block-section .block-news-preview {
+    margin: 0;
+    border: 0;
+  }
+  .news-block-section .block-news-preview .news-img-block {
+    height: 300px;
+    box-shadow: 0 2px 0 $skin-palette-12;
+  }
+  .news-block-section .block-news-preview .news-list {
+    height: 300px;
+    margin: 0;
+    position: relative;
+    > ul {
+      width: calc(100% - 5px);
+      padding-bottom: 40px;
+    }
+  }
+  .news-block-section .block-news-preview .all-news-link a {
+    padding: 12px 0;
+    box-shadow: 0 2px 0 $skin-palette-12;
+    width: calc(100% - 22px);
+    @media screen and (-webkit-min-device-pixel-ratio:0) {
+      width: calc(100% - 9px);
+    }
+    background: $skin-palette-10;
+  }
+  .news-block-section .block-news-preview .news-list ul li {
+    background: lighten( desaturate( $skin-palette-10, 7 ), 4 );
+    border-bottom-color: $skin-palette-11;
+  }
+  .news-block-section .block-news-preview .news-list ul li p.date-news-info {
+    color: $text-palette-4;
+  }
+  .news-block-section .block-news-preview .news-list ul li p.news-text-inform {
+    color: $text-palette-3;
+  }
+  .news-block-section .block-news-preview .news-list ul li.active-news {
+    background: $skin-palette-12;
+  }
+  .news-block-section .block-news-preview .news-img-block p {
+    background: rgba(lighten( desaturate( $skin-palette-10, 7 ), 4 ), 0.9);
+  }
+  .news-block-section .block-news-preview a {
+    color: set-color(lighten( desaturate( $skin-palette-10, 7 ), 4 ), #000000, #f3f3f5);
+  }
+  .new-homepage .nav-news-sport ul li {
+    transition: box-shadow 250ms;
+  }
+  .new-homepage .nav-news-sport ul li a {
+    color: $text-palette-4;
+    transition: color 250ms;
+    &:hover {
+      color: $text-palette-3;
+    }
+  }
+  .new-homepage .nav-news-sport ul li h3 {
+    color: $text-palette-4;
+  }
+  .new-homepage .nav-news-sport ul .last-item a {
+    background: desaturate( adjust-hue( $skin-palette-10, 5deg ), 4 );
+  }
+  @media screen and (max-width: 1260px) {
+    .new-homepage .featured-games-container {
+      margin: 0;
+    }
+  }
+  .nav-news-sport ul .last-item .contein-games ul li a {
+    background: none;
+  }
+}
+@keyframes pulse-j {
+  from {
+    -webkit-transform: translate3d(0,0,0);
+    -moz-transform: translate3d(0,0,0);
+    transform: translate3d(0,0,0);
+  }
+  1%, 8% {
+    -webkit-transform: translate3d(0,-2px,0);
+    -moz-transform: translate3d(0,-2px,0);
+    transform: translate3d(0,-2px,0);
+  }
+  4%, 11%, to {
+    -webkit-transform: translate3d(0,0,0);
+    -moz-transform: translate3d(0,0,0);
+    transform: translate3d(0,0,0);
+  }
+}
+.product-list-contain > ul > li:hover .icon-container-product {
+  animation: pulse-j 5s ease-in-out;
+}
+@keyframes product-jackpot-anim-j {
+  0% {
+    margin-top: 0;
+  }
+  7% {
+    margin-top: -14px;
+  }
+  50% {
+    margin-top: -14px;
+  }
+  57% {
+    margin-top: 0;
+  }
+  100% {
+    margin-top: 0;
+  }
+}
+.product-jackpot-anim-j > span {
+  display: block;
+  height: 14px;
+  overflow: hidden;
+}
+.product-jackpot-anim-j > span > div:first-child {
+  animation: product-jackpot-anim-j 6s both ease infinite;
+}
+.product-list-contain > ul > li > a > button:nth-last-child(2), .product-list-contain > ul > li > a > button:nth-last-child(2) + button {
+  width: 50%;
+}
+.product-list-contain > ul > li > a > button:nth-last-child(2) + button {
+  left: 50%;
+}
+.product-list-contain > ul > li > a > button:nth-last-child(2):after {
+  content: "";
+  display: block;
+  width: 1px;
+  height: 20px;
+  background: lighten( desaturate( $skin-color, 8 ), 3 );
+  position: absolute;
+  right: 0;
+  bottom: 9px;
+}
+.product-list-contain > ul > li > a > button:nth-last-child(2):hover:after {
+  display: none;
+}
+div.slider-image-wrapper-b {
+  @if $homepage-banners-size == default {
+    background-size: auto 100%;
+  } @else {
+    background-size: $homepage-banners-size;
+  }
+  @media screen and (max-width: 1260px) {
+    background-size: 100%;
+  }
+}
+.product-list-contain > ul > li .product-slider-image {
+  display: none;
+  width: 100%;
+  &:before, &:after {
+    display: none;
+  }
+  &.show {
+    display: block;
+    ~ .icon-container-product, ~ h4, ~ .product-title-animation-wrapper {
+      display: none;
+    }
+    ~ button {
+      position: relative;
+    }
+    &.hide-button {
+      ~ button {
+        display: none;
+      }
+    }
+  }
+}
+.news-block-section .block-news-preview .news-img-block p .news-date-b {
+  color: set-color($hero-color);
+}
+.page-main  .about-us-custom-l{
+  position: relative;
+  float: left;
+  margin-top: 10px;
+  width: 100%;
+  > div:first-child:hover {
+    :after {
+      color: #1b669f;
+      transition: color .2s;
+    }
+  }
+  > div:first-child{
+    width: 100%;
+    box-sizing: border-box;
+    height: 50px;
+    padding: 0 20px;
+    background: #061824;
+    :hover{
+      :after{
+        color: #1b669f;
+        transition: color .2s ;
+      }
+    }
+    :after {
+      font: 32px/50px icomoon;
+      color: #9599a6;
+      content: "\e642";
+      position: absolute;
+      right: 15px;
+      top: 0px;
+      transition: color .2s ;
+
+    }
+  }
+  h1 {
+    font: normal 16px/48px $font-f;
+    color: #9599a6;
+    text-transform: uppercase;
+    padding-top: 2px;
+  }
+  .open-dropdown-custom-l{
+    width: 100%;
+    max-height: 0;
+    transition: max-height .2s;
+    overflow: hidden;
+    &.active {
+      max-height: 350px;
+    }
+    > div {
+      height: 350px;
+      float: left;
+      width: 100%;
+      text-align: justify;
+      background: #113651;
+      box-sizing: border-box;
+      box-shadow: 0 2px 0 #061824;
+      font: 14px/21px $font-f;
+      color: #9ca0ad;
+      padding: 18px 10px 0px 20px;
+      > div {
+        @include scroll($scroll: auto, $background: #113651);
+        height: 327px;
+        box-sizing: border-box;
+        padding: 0 10px 0 0;
+        float: left;
+        width: 100%;
+      }
+    }
+    p {
+      margin-bottom: 19px;
+    }
+    h2, h3 {
+      font-style: italic;
+      font-weight: 700;
+      margin-bottom: 19px;
+    }
+    ul li {
+      list-style: square;
+      margin-bottom: 19px;
+      margin-left: 35px;
+    }
+    ol li {
+      list-style: decimal;
+      margin-bottom: 19px;
+      margin-left: 35px;
+    }
+    a {
+      color: #2489d5;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+  }
+}
+.nav-news-sport-j {
+  display: table;
+  float: left;
+  width: 100%;
+  height: 50px;
+  background: $skin-palette-12;
+  > div {
+    display: table-cell;
+    vertical-align: top;
+    position: relative;
+    z-index: 320;
+  }
+}
+.nav-news-sport-cat-j > div {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  overflow: hidden;
+  height: 50px;
+}
+.nav-news-sport-cat-j a, .hp-news-more-j > span {
+  display: block;
+  float: left;
+  padding: 0 20px;
+  text-transform: uppercase;
+  text-decoration: none;
+  box-sizing: border-box;
+  height: 50px;
+  font: 14px/50px $font-f;
+  color: $text-palette-4;
+  transition: 300ms color, 300ms box-shadow,  300ms background;
+  position: relative;
+  &:hover {
+    color: $text-palette-1;
+  }
+}
+.nav-news-sport-cat-j a{
+  border-right: 1px solid $skin-palette-10;
+  box-shadow: inset 0 0 0 $hero-color;
+  &.active {
+    box-shadow: inset 0 -3px 0 $hero-color;
+  }
+}
+.sport-news-link-t:after{
+  content: '1';
+  font-size: 8px;
+  line-height: 12px;
+  font-family: sans-serif;
+  text-align: center;
+  display: block;
+  background: $hero-color;
+  color: set-color($hero-color);
+  width: 10px;
+  height: 10px;
+  border-radius: 10px;
+  position: absolute;
+  top: 10px;
+  right: 8px;
+}
+.hp-news-more-j {
+  width: 1%;
+  .hp-news-group-j {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    display: none;
+    width: 320px;
+    background: $skin-palette-10;
+    box-sizing: border-box;
+    padding: 20px 20px 6px;
+    box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.2), 0 3px 10px -2px rgba(0, 0, 0, 0.2);
+    .hp-news-category-search-j {
+      float: left;
+      width: 100%;
+      height: 36px;
+      margin: 0 0 12px;
+      position: relative;
+      input {
+        display: block;
+        float: left;
+        width: 100%;
+        height: 36px;
+        background: none;
+        border: 0;
+        box-shadow: 0 0 0 1px $text-palette-6 inset;
+        font: 12px/36px $font-f;
+        color: $text-palette-4;
+        padding: 0 30px 0 12px;
+        box-sizing: border-box;
+        transition: box-shadow 240ms;
+        @include placeholder {
+          font: 12px/36px $font-f;
+          color: $text-palette-4;
+        }
+        &:focus {
+          box-shadow: 0 0 0 1px $text-palette-4 inset;
+        }
+      }
+      &:before {
+        box-sizing: border-box;
+        position: absolute;
+        font: 14px/36px icomoon;
+        content: "\e6d4";
+        color: $text-palette-4;
+        display: block;
+        right: 12px;
+        top: 0;
+        z-index: 5;
+        pointer-events: none;
+      }
+    }
+    .hp-new-more-cats-j {
+      float: left;
+      width: 100%;
+      height: 226px;
+      @include scroll($scroll: auto);
+      &::-webkit-scrollbar {
+        background: transparent;
+      }
+      .hp-news-group-letter-j, .hp-news-group-letter-j ~ div {
+        border-bottom: 1px solid $skin-palette-11;
+        padding: 12px 0px;
+        font: 14px/16px $font-f;
+        color: $text-palette-4;
+        transition: 300ms color;
+        width: 100%;
+      }
+      .hp-news-group-letter-j {
+        color: $text-palette-3;
+        font-size: 16px;
+        padding: 11px 0;
+      }
+      .hp-news-group-letter-j ~ div:hover {
+        color: $text-palette-1;
+      }
+    }
+  }
+  &:hover {
+    .hp-news-group-j {
+      display: block;
+    }
+    > span {
+      background: $skin-palette-10;
+      color: $text-palette-1;
+      box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.2);
+      &:before {
+        content: "";
+        display: block;
+        position: absolute;
+        height: 5px;
+        background: $skin-palette-10;
+        bottom: -5px;
+        left: -2px;
+        z-index: 40;
+        width: calc(100% + 2px);
+      }
+    }
+  }
+  > span {
+    z-index: 30;
+    transition: 300ms color;
+    > i {
+      display: block;
+      font-style: normal;
+      line-height: 26px;
+      height: 26px;
+      background: $skin-palette-10;
+      margin: 12px 0;
+      padding: 0 24px 0 12px;
+      position: relative;
+      white-space: nowrap;
+      border-radius: 30px;
+      &:after {
+        content: "\e674";
+        font: 20px/26px icomoon;
+        display: block;
+        position: absolute;
+        top: 0;
+        right: 4px;
+      }
+    }
+  }
+}
+.homepage-xs-banner-bottom-j {
+  float: right;
+  width: 210px;
+  height: 350px;
+  position: relative;
+  overflow: hidden;
+  z-index: 30;
+  background: $skin-palette-10;
+  box-shadow: 0 2px 0 $skin-palette-12;
+  a {
+    display: block;
+    height: 100%;
+    text-decoration: none;
+  }
+  img {
+    display: block;
+    float: left;
+    width: 100%;
+  }
+}
+@media screen and (min-width: 1261px) {
+  .homepage-xs-banner-bottom-j ~ {
+    .news-block-section {
+      width: calc(100% - 550px - 220px);
+      .block-news-preview .news-img-block {
+        width: 100%;
+      }
+      .all-news-link, .news-list {
+        display: none;
+      }
+    }
+  }
+}
+@media screen and (max-width: 1260px) {
+  .homepage-xs-banner-bottom-j ~ {
+    .news-block-section {
+      width: calc(100% - 220px);
+    }
+  }
+}
+.homepage-small-banners-j {
+  float: left;
+  width: 100%;
+  margin: 0 0 48px;
+  text-align: left;
+  img, a {
+    display: block;
+    float: left;
+    width: 100%;
+    text-decoration: none;
+  }
+  h2 {
+    float: left;
+    width: 100%;
+    padding: 12px 20px;
+    font: 12px/16px $font-f;
+    color: $text-palette-3;
+    box-sizing: border-box;
+    background: $skin-palette-12;
+    margin: 0 0 12px;
+    text-align: center;
+    text-transform: uppercase;
+  }
+  p {
+    float: left;
+    width: 100%;
+    font: 12px/16px $font-f;
+    color: $text-palette-4;
+  }
+  button {
+    display: block;
+    position: absolute;
+    background: none;
+    bottom: 0;
+    right: 10px;
+    height: 36px;
+    padding: 0 24px;
+    box-sizing: border-box;
+    border: 1px solid $skin-palette-4;
+    color: $text-palette-3;
+    text-transform: uppercase;
+    transition: 300ms color, 300ms border-color, 300ms background;
+    font: 12px $font-f;
+    cursor: pointer;
+  }
+  &:hover {
+    button {
+      background: $brand-color-1;
+      border-color: $brand-color-1;
+      color: set-color($brand-color-1);
+    }
+  }
+}

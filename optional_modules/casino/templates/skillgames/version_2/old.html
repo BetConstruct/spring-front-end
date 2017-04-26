@@ -1,0 +1,16 @@
+<div ng-init="getSkillGamesBanners();">
+    <vbet-big-slider ng-if="skilledGamesBanners" images="skilledGamesBanners" link-click-handler="openCBannerLink"></vbet-big-slider>
+</div>
+<div class="Featured-casino-games">
+    <div class="contein-slider">
+        <div class="games-slider">
+            <h3 ng-show="games && games.length" trans>SKILL GAMES</h3>
+            <casino-games-list
+                    is-new-design-enabled="cConf.newCasinoDesignEnabled"
+                    show-conditions="true"
+                    games-list="games"
+                    game-show-conditions="true">
+            </casino-games-list>
+        </div>
+    </div>
+</div>

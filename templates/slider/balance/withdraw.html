@@ -1,0 +1,188 @@
+<div class="register deposit" ng-controller="paymentsCtrl" ng-init="init('withdraw');  withdrawTab = 'withdraw'">
+    <h4 ng-show="isProfilePartial" class="complite-info-register">
+        <p ng-init="msgs=('It is very important to keep your personal information up to date. Hence our request to you is to submit your personal information in My Profile ->|Personal Details|as soon as possible.'|translate).split('|')">
+            <span>{{msgs[0]}}</span>
+            <span ng-if="msgs[1]"><a ng-click="env.showSlider=true; env.sliderContent='settings';env.mixedSettingsPage='details'">{{msgs[1]}}</a></span>
+            <span ng-if="msgs[2]">{{msgs[2]}}</span>
+            <span ng-if="msgs[3]"><a ng-click="env.showSlider=true; env.sliderContent='settings';env.mixedSettingsPage='details'">{{msgs[3]}}</a></span>
+        </p>
+    </h4>
+    <div ng-show="isProfilePartial === false">
+        <ul class="withdraw-tabs" ng-show="conf.showWithdrawRequestsTab">
+            <li ng-class="{'active': withdrawTab == 'withdraw' }" ng-click="withdrawTab = 'withdraw'" trans>Withdraw</li>
+            <li ng-class="{'active': withdrawTab == 'status' }" prevent-fast-click="1.5" ng-click="withdrawTab = 'status'" trans>Status</li>
+        </ul>
+        <div class="form-contain deposit withdraw status" ng-if="withdrawTab == 'status'" ng-include="getTemplate('templates/slider/balance/withdraw_status.html')"></div>
+
+        <div class="form-contain deposit withdraw" ng-show="withdrawTab == 'withdraw'">
+            <h4> <span trans>Withdraw from main wallet</span> <br>
+                <span trans>Select withdraw method</span>
+            </h4>
+            <div class="depozit-block-icon">
+                <ul>
+                    <li ng-repeat="paymentSystem in paymentConfig|orderBy:'order'"
+                        ng-class="{'active-deposit': $parent.selectedPaymentSystem==paymentSystem}"
+                        ng-show="paymentSystem.canWithdraw && (!isInCasino() || paymentSystem.canWithdrawFromCasino === undefined || paymentSystem.canWithdrawFromCasino)">
+                        <div class="{{paymentSystem.name}}"><a class="paymentIcon {{paymentSystem.name}}" ng-click="$parent.selectedPaymentSystem.name !== paymentSystem.name && selectPaymentSystem(paymentSystem)">{{paymentSystem.name}} <span class="deposit-arrow"></span></a></div>
+                    </li>
+                </ul>
+            </div>
+            <div ng-if="selectedPaymentSystem.withdrawIframe">
+                <iframe class="payment-iframe" ng-src="{{selectedPaymentSystem.withdrawIframe}}"></iframe>
+            </div>
+            <div ng-if="selectedPaymentSystem.customWithdrawTemplate" ng-include="getTemplate(selectedPaymentSystem.customWithdrawTemplate)"></div>
+            <form ng-model="withdrawFormData" name="withdrawForm" ng-show="withdrawReady && !selectedPaymentSystem.customWithdrawTemplate">
+                <div class="form-sign-in {{selectedPaymentSystem.name}}-left" ng-class="{'single-column':selectedPaymentSystem.onlyInfoTextOnWithdraw || (!selectedPaymentSystem.withdrawFormFields.length && !selectedPaymentSystem.hasBetShops && !selectedPaymentSystem.isTransferToLinkedService)}">
+                    <div class="text-payment-contain">
+                        <p ng-bind-html="selectedPaymentSystem.withdrawText"></p>
+                    </div>
+                </div>
+
+                <div class="form-sign-in {{selectedPaymentSystem.name}}-right status-message deposit-withdraw-fix-j" ng-if="showConfirmation">
+                    <div class="text-deposit-contain">
+                        <p class="confirm-text" ng-if="selectedPaymentSystem.depositConfirmText" ng-bind-html="selectedPaymentSystem.depositConfirmText" trans></p>
+                        <p trans>Please confirm money transfer</p>
+                        <p><span trans>Amount: </span> <span class="amount">{{paymentAmount.withdraw}} {{selectedPaymentSystem.customCurrency?(selectedPaymentSystem.customCurrency|translate):(currency_name|currency)}}</span></p>
+                    </div>
+                    <external-form  form-target="{{selectedPaymentSystem.stayInSameTabOnDeposit ? '_self' : '_blank'}}" params="externalFormParams" additional-fields="addFields" on-submit="confirmDeposit" button-caption="Confirm"></external-form>
+                </div>
+
+                <div class="form-sign-in {{selectedPaymentSystem.name}}-right"
+                     ng-show="!showConfirmation && !selectedPaymentSystem.onlyInfoTextOnWithdraw && (selectedPaymentSystem.withdrawFormFields.length || selectedPaymentSystem.hasBetShops || selectedPaymentSystem.isTransferToLinkedService)">
+                    <div ng-repeat="field in selectedPaymentSystem.withdrawFormFields" ng-switch on="field.type" class="{{selectedPaymentSystem.name + '-' + field.name}}">
+                        <label ng-show="!field.hideLabel">{{field.label|translate}}</label>
+                        <div ng-switch-when="text" >
+                            <input name="{{field.name}}" ng-attr-id="{{field.id}}" ng-model="$parent.$parent.withdrawFormData[field.name]" type="text" size="{{field.size}}" maxlength="{{field.maxlength}}" ng-required="field.required" prevent-input="{{field.restrict}}" allow-spaces="{{field.allowSpaces}}" ng-disabled="field.disabled">
+                        </div>
+                        <div ng-switch-when="dateMask">
+                            <input name="{{field.name}}" ui-mask="99/99/9999" ng-blur="$parent.$parent.withdrawFormData[field.name]=dateMaskFix($parent.$parent.withdrawFormData[field.name])" ng-attr-id="{{field.id}}" ng-readonly="field.readonly" ng-model="$parent.$parent.withdrawFormData[field.name]" type="text" size="{{field.size}}" maxlength="{{field.maxlength}}" ng-required="field.required" ng-disabled="field.disabled" placeholder="dd/mm/yyyy" trans="attr-only">
+                        </div>
+                        <div ng-switch-when="hidden" class="ng-hide">
+                            <input name="{{field.name}}" ng-attr-id="{{field.id}}" ng-model="$parent.$parent.withdrawFormData[field.name]" type="text" ng-hide="true">
+                        </div>
+                        <div ng-switch-when="password" >
+                            <input name="{{field.name}}" ng-attr-id="{{field.id}}" ng-model="$parent.$parent.withdrawFormData[field.name]" type="password" size="{{field.size}}" maxlength="{{field.maxlength}}" ng-required="field.required">
+                        </div>
+                        <div ng-switch-when="email">
+                            <input name="{{field.name}}" ng-attr-id="{{field.id}}" ng-model="$parent.$parent.withdrawFormData[field.name]" type="email" size="{{field.size}}" ng-required="field.required">
+                        </div>
+                        <div ng-switch-when="number">
+                            <input name="{{field.name}}" id="numpad-{{field.name}}" numpad numpad-force ng-model="$parent.$parent.withdrawFormData[field.name]" type="number" min="{{field.min}}" max="{{field.max}}" size="{{field.size}}" ng-required="field.required">
+                        </div>
+                        <div class="select-block" ng-switch-when="country">
+                            <select name="{{field.name}}" ng-model="$parent.$parent.withdrawFormData[field.name]" ng-options="keyName as  country.name for (keyName, country) in countryCodes"></select>
+                        </div>
+                        <div class="select-block" ng-switch-when="month">
+                            <select name="{{field.name}}" ng-model="$parent.$parent.withdrawFormData[field.name]"  ng-init="$parent.$parent.withdrawFormData[field.name]=cartExpiry.month[0]" ng-options="item for item in cartExpiry.month"></select>
+                        </div>
+                        <div class="select-block" ng-switch-when="year" ng-init="cartExpiryYears()">
+                            <select name="{{field.name}}" ng-model="$parent.$parent.withdrawFormData[field.name]" ng-init="$parent.$parent.withdrawFormData[field.name]=cartExpiry.year[0]" ng-options="item for item in cartExpiry.year"></select>
+                        </div>
+                        <div ng-switch-when="date">
+                            <div class="picker-contain">
+                                <div class="input-group" ng-click="openDatePicker(field.name, $event)">
+                                    <input type="text" class="form-control" placeholder={{today}} datepicker-popup="dd/MM/yyyy" min-date="minDate" max-date="today"
+                                           ng-attr-id="{{field.id}}"
+                                           ng-model="$parent.$parent.withdrawFormData[field.name]" is-open="datePickers[field.name]"
+                                           datepicker-options="dateOptions"
+                                           disabled="disabled"
+                                           ng-required="true" close-text="Close"/>
+                                    <span class="input-group-btn"><button type="button" class="btn btn-default date-view deposit-btn" ng-click="openDatePicker(field.name, $event)"><i class="date-p"></i></button></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="select-block" ng-switch-when="select">
+                            <select name="{{field.name}}" ng-model="$parent.$parent.withdrawFormData[field.name]" ng-required="field.required"
+                                    ng-init="$parent.$parent.withdrawFormData[field.name] = field.options[0].value;setInfo(field.options, $parent.$parent.withdrawFormData[field.name], 'withdrawText')"
+                                    ng-change="setInfo(field.options, $parent.$parent.withdrawFormData[field.name], 'withdrawText');">
+                                <option ng-repeat="option in field.options" value="{{option.value}}" ng-selected="$first">{{option.text|translate}}</option>
+                            </select>
+                        </div>
+                        <div class="radio-contein-withdraw" ng-switch-when="radio">
+                            <div ng-repeat="option in field.options">
+                                <input type="radio" name="{{field.name}}" ng-model="$parent.$parent.withdrawFormData[field.name]" value="{{option.value}}" ng-checked="$first" ng-required="field.required && $first"><span>{{option.text|translate}}</span>
+                            </div>
+                        </div>
+                        <div class="text-payment-contain" ng-switch-when="html" ng-bind-html="field.html">
+                        </div>
+                        <div ng-switch-when="template">
+                            <ng-include src="getTemplate(field.path)"></ng-include>
+                        </div>
+                    </div>
+
+
+                    <div ng-if="selectedPaymentSystem.hasBetShops" ng-init="loadBetShops(true)" class="radio-contein-withdraw">
+                        <ul ng-hide="selectedPaymentSystem.betShops.cities.length === 1 && selectedPaymentSystem.betShops.cities[0].betshops.length === 1 && selectedPaymentSystem.betShops.cities[0].betshops[0].address == ''">
+                            <li ng-repeat="city in selectedPaymentSystem.betShops.cities">
+                                <p class="bet-shop-city-name">{{city.name}}</p>
+                                <div ng-repeat="shop in city.betshops track by $index">
+                                    <input type="radio" name="office_id"
+                                           ng-model="$parent.$parent.$parent.withdrawFormData.office_id" value="{{shop.id}}"
+                                           ng-required="$first"><span>{{shop.address}}<i class="{{shop.type}}">{{shop.type}}</i></span>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!----  Poker withdraw ----->
+                    <div ng-if="selectedPaymentSystem.isTransferToLinkedService && selectedPaymentSystem.name =='vivaropoker'" ng-init="getLinkedInfo()" class="radio-contein-withdraw">
+                        <div ng-if="!selectedPaymentSystem.linkedInfo.linked_username && selectedPaymentSystem.linkedInfoLoaded">
+                            <label trans>Username</label>
+                            <input name="username" ng-model="$parent.$parent.withdrawFormData.username" type="text" required="required">
+                            <label trans>Password</label>
+                            <input name="password" ng-model="$parent.$parent.withdrawFormData.password" type="password" required="required">
+                        </div>
+                        <div ng-if="selectedPaymentSystem.linkedInfo.linked_username && selectedPaymentSystem.linkedInfoLoaded" class="withdraw-poker-info">
+                            <label>{{authData.login}}</label>
+                            <label>&#8681;</label>
+                            <label>{{selectedPaymentSystem.linkedInfo.linked_username}}</label>
+                        </div>
+                    </div>
+
+                    <!----  Free withdraw ----->
+                    <div ng-if="selectedPaymentSystem.isTransferToLinkedService && selectedPaymentSystem.name =='freevivaro'" ng-init="getLinkedInfo()" class="radio-contein-withdraw">
+                        <div ng-if="!selectedPaymentSystem.linkedInfo.linked_user_id && selectedPaymentSystem.linkedInfoLoaded">
+                            <label trans>User ID</label>
+                            <input name="username" ng-model="$parent.$parent.withdrawFormData.free_user_id" type="text" required="required">
+                        </div>
+                        <div ng-if="selectedPaymentSystem.linkedInfo.linked_user_id && selectedPaymentSystem.linkedInfoLoaded" class="withdraw-poker-info">
+                            <label>{{authData.login}}</label>
+                            <label>&#8681;</label>
+                            <label>{{selectedPaymentSystem.linkedInfo.linked_user_id}}</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="cont-deposit-button" ng-show="!showConfirmation && !selectedPaymentSystem.onlyInfoTextOnWithdraw">
+                    <div class="button-sign">
+                        <button id="withdraw-button" ng-hide="selectedPaymentSystem.hideWithdrawButton" class="button-sign" title="{{(!paymentAmount.withdraw || paymentAmount.withdraw >= paymentAmount.availableWithdrawAmount ? 'Please enter the correct amount' : withdrawForm.$invalid ? 'Please select a bet-shop from the list.'  : '')|translate}}"
+                                ng-click="withdraw()" ng-disabled="busy || (withdrawForm.$invalid && !hideWithdrawAmount) " ng-bind="(selectedPaymentSystem.withdrawButtonCaption || 'Withdraw')|translate"></button>
+                        <div class="deposit-amount" ng-hide="hideWithdrawAmount || selectedPaymentSystem.hideWithdrawAmount" ng-if="selectedPaymentSystem.withdrawPrefilledAmount === undefined">
+                            <label>
+                                <span trans>Withdraw Amount</span>
+                                <span ng-hide="selectedPaymentSystem.customCurrency">({{currency_name|currency}})</span>
+                                <span ng-show="selectedPaymentSystem.customCurrency">{{selectedPaymentSystem.customCurrency|translate}}</span>
+                                <span trans>available:</span> {{ paymentAmount.availableWithdrawAmount |number:conf.balanceFractionSize}}</label>
+                            <input name="" id="numpad-forced" type="number" numpad numpad-force ng-model="paymentAmount.withdraw" step="{{paymentAmount.amountMinLimit}}" min = {{paymentAmount.amountMinLimit}}
+                                   max="{{paymentAmount.availableWithdrawAmount}}" placeholder="enter amount here" ng-disabled="!(paymentAmount.availableWithdrawAmount>0)" required trans>
+
+                            <button ng-repeat="customAmount in withdrawCustomAmounts track by $index" ng-click="paymentAmount.withdraw=customAmount">{{customAmount|number}}</button>
+
+                        </div>
+                    </div>
+
+                    <div  class="button-sign" ng-if="selectedPaymentSystem.userConfirmationButton">
+                        <button class="button-sign" ng-click="confirmUser(withdrawFormData.user_confirmation_password)" trans>Confirm</button>
+                    </div>
+
+                </div>
+
+            </form>
+            <div ng-if="conf.enableAccountVerification" class="account-verification-b">
+                <p trans>Please, upload your passport scan or passport photo to ease your further withdrawals.</p>
+                <button trans ng-click="openVerifyAccountPage();$event.stopPropagation();">Verify Account</button>
+            </div>
+
+        </div>
+    </div>
+</div>

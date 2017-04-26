@@ -1,0 +1,49 @@
+<div ng-controller="myBetsCtrl">
+    <div class="new-default-popup-j cashout-j" ng-if="cashoutPopup.active" ng-class="{'error' : cashoutDialogType == 'confirm' && !cashoutSuccess, 'success' : cashoutDialogType == 'confirm' && cashoutSuccess}">
+        <div class="pp-table-j">
+            <div class="table-row-j">
+                <div class="table-cell-j">
+                    <center ng-show="cashoutRequestInProgress"><vbet-loader></vbet-loader></center>
+                    <div class="popup-wrapper-j" ng-show="!cashoutRequestInProgress">
+                        <div class="pu-head-j">
+                            <span trans>Cash-out</span>
+                            <a class="close-j" ng-click="cashoutPopup.active = false;$event.stopPropagation();"></a>
+                        </div>
+                        <div class="pu-contain-j" ng-show="cashoutDialogType == 'confirm' && !cashoutSuccess">
+                            <p ng-show="unknownError" trans>Error occured.</p>
+                            <p trans>Cash-out for selected bet is not available.</p>
+                        </div>
+
+                        <div class="pu-contain-j" ng-show="cashoutDialogType == 'confirm' && cashoutSuccess">
+                            <p trans>Cash-out done.</p>
+                            <span>({{cashoutSuccess}})</span>
+                        </div>
+                        <div class="pu-contain-j" ng-show="cashoutDialogType == 'cashout'">
+                            <p class="id-cashout-j">id:{{cashoutBet.id}}</p>
+                            <span class="date-info-cashout">({{cashoutBet.date_time|formatDate}})</span>
+                            <div ng-show="cashoutBet.type==='1'" class="all-info-cashout-j">
+                                <span>{{cashoutBet.events[0].competition_name|removeParts:[cashoutBet.events[0].sport_name]}}</span>
+                                <br/>
+                                <span>{{cashoutBet.events[0].game_name}}</span>
+                                <br/>
+                                <span trans>Pick:</span> <span>{{cashoutBet.events[0].event_name}}</span>
+                            </div>
+                            <p class="warning-j" ng-show="newCashoutData.new_price" trans>Price has changed</p>
+                            <p class="warning-j" ng-show="!cashoutBet.originalPrice && !newCashoutData.new_price" trans>The event has already finished, calculations will complete soon.</p>
+                            <p ng-show="cashoutBet.originalPrice || newCashoutData.new_price">
+                                <b trans>Amount</b>
+                                <span ng-bind="cashoutBet.calculatedCashout" ng-class="{'unavailable': newCashoutData.new_price}"></span>
+                                <span ng-bind="newCashoutData.new_price" ng-show="newCashoutData.new_price"></span> {{cashoutBet.currency|currency}}
+                            </p>
+                        </div>
+                        <div class="pu-button-wrap-j">
+                            <button ng-click="cashoutPopup.active = false; $event.stopPropagation();" trans ng-if="cashoutDialogType == 'cashout'" class="cancel-j">Cancel</button>
+                            <button ng-click="doCashout(cashoutBet, newCashoutData);$event.stopPropagation();" ng-if="cashoutDialogType == 'cashout'" trans>Cash-out</button>
+                            <button ng-click="cashoutPopup.active = false;" trans ng-if="cashoutDialogType == 'confirm'">Ok</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

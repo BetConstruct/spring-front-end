@@ -1,0 +1,162 @@
+<div class="casino-main" ng-init="loadCategories()" ng-show="!gamesInfo.length">
+    <!--Menu games-->
+    <div class="menu-casino" ng-show="mainCategories.length > 1">
+        <div class="menu-games">
+            <div class="contain-menu-games">
+                <ul>
+                    <!--Переключатель при неактивном состоянии заменить  class="live-b" на  class="live-b2"-->
+                    <div class="contein-nav-g">
+                        <li ng-repeat="category in mainCategories track by category.id" ng-show="category.id !== -1 || myCasinoGames.length !== 0" ng-class="{'active-game-casino': selectedCategory.id === category.id}"><a ng-click="selectCategory(category)">{{ category.categoryName }}</a></li>
+                    </div>
+                    <li class="more-games more-games-j" ng-show="moreCategories.length"><a trans>more</a>
+                        <div class="contein-games" ng-show="!hideCategoriesListDropdown">
+                            <div class="arrow-sport"></div>
+                            <h3 trans>Select a Category</h3>
+
+                            <div class="meny-games" ng-repeat="column in moreCategories">
+                                <ul ng-repeat="letterGroup in column">
+                                    <li>{{ letterGroup[0].categoryName.charAt(0)}}</li>
+                                    <li ng-repeat="category in letterGroup" ng-show="category.id !== -1 || myCasinoGames.length !== 0"><a ng-click="selectCategory(category); setJustForMoment('hideCategoriesListDropdown', true, 500)"> {{ category.categoryName }}</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+                <div ng-include="getTemplate('optional_modules/casino/templates/search.html')"></div>
+                <!--<div ng-include="getTemplate('templates/search/casino.html')"></div>-->
+            </div>
+        </div>
+    </div>
+    <!--Menu games end-->
+    <!--big-slider-->
+    <div ng-controller="cmsPagesCtrl" ng-init="getCasinoBanners();" class="contain-casino poker casino casino-slider-hide" ng-show="selectedCategory && selectedCategory.id === undefined && selectedCategoryAllGames.length">
+        <vbet-big-slider ng-if="casinoTopBanners" images="casinoTopBanners" link-click-handler="openCBannerLink" slider-template="cConf.newCasinoDesignEnabled"></vbet-big-slider>
+    </div>
+    <div class="all-games-wrap">
+        <div class="casino-main-contain">
+            <div class="country-b casino" ng-show="filterOptions">
+                <div class="country-block-contain">
+                    <ul class="countrylist">
+                        <div class="contaien-country" data-step="3" data-position="bottom" data-intro="Select region" trans="attr-only">
+                            <li>
+                                <a ng-click="selectedProvider.name = ''" ng-class="{'active': selectedProvider.name === ''}">
+                                    <span trans>All Providers</span>
+                                </a>
+                            </li>
+                            <li ng-repeat="provider in filterOptions" ng-show="provider.value !== null && provider.key !== 'EZG'">
+                                <a ng-click="selectedProvider.name = provider.key"
+                                   ng-class="{'active': selectedProvider.name === provider.key}">
+                                    <span>{{ provider.value }}</span>
+                                </a>
+                            </li>
+                        </div>
+                    </ul>
+                </div>
+            </div>
+            <!--Casino popular games-->
+            <div class="popular-casino-games" ng-show="selectedCategory.id === undefined && popularsPerGroups.length && selectedCategoryGames.length">
+                <div class="contein-slider">
+                    <div class="games-slider">
+                        <div class="left-arrow-b"  ng-class="{'popular-arrow-hide': slideIndex == 0}"><a ng-click="slideToLeft()" trans>left arrow</a></div>
+                        <div class="right-arrow-b" ng-class="{'popular-arrow-hide': (slideIndex == popularsPerGroups.length - 1)}"><a ng-click="slideToRight()" trans>right arrow</a></div>
+                        <h3 trans>Popular Games</h3>
+                        <div>
+                           <!-- <ul ng-repeat="perGroup in popularsPerGroups" ng-show="$index == slideIndex" class="animate-show animate-hide">
+                                <li ng-repeat="game in perGroup track by game.id">
+                                    <a ng-click="openGame(game, 'real');$event.stopPropagation();">
+                                        <p ng-if="cConf.realModeEnabled" class="play-button"><span trans>play now</span></p>
+                                        <img ng-src="{{cConf.iconsUrl + game.gameID}}.jpg" alt="">
+                                    </a>
+                                    <p ng-show="game.hasFunMode" class="fun-game">
+                                        <a class="game-fun-link" ng-click="openGame(game, 'fun')">
+                                            <span trans>PLAY FOR FUN</span>
+                                        </a>
+                                    </p>
+                                    <div class="popular-game-name">
+                                        <p><a ng-click="openGame(game, 'real');$event.stopPropagation();"> {{game.gameName}} </a></p>
+                                        <div class="fav-block"><a ng-class="{'star-active': isFromSaved(game.id)}" ng-click="toggleSaveToMyCasinoGames(game)">star</a></div>
+                                    </div>
+                                </li>
+                            </ul>-->
+
+                            <casino-games-list
+                                    is-new-design-enabled="cConf.newCasinoDesignEnabled"
+                                    show-conditions="selectedCategory.category !== 'SkillGames'"
+                                    games-list="popularsPerGroups[slideIndex]"
+                                    game-show-conditions="true"
+                                    selected-category="selectedCategory">
+                            </casino-games-list>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--Featured games-->
+            <div class="Featured-casino-games" ng-show="selectedCategoryGames.length" ng-class="{'lessCategories': mainCategories.length < 2}">
+                <div class="contein-slider">
+                    <div class="games-slider">
+                        <h3 ng-show="selectedCategory.category === undefined" trans>TOP SLOTS</h3>
+                        <h3 ng-show="selectedCategory.category !== undefined">{{selectedCategory.categoryName}}</h3>
+                     <!--   <ul ng-show="selectedCategory.category !== 'SkillGames'">
+                            <li ng-repeat="game in selectedCategoryGames | limitTo: numberOfRecentGames track by game.id" ng-hide="game.id === '1297' || (game.id === '1314' && !conf.ogwilEnabled)">
+                                <a ng-click="openGame(game, 'real'); $event.stopPropagation();">
+                                    <p ng-if="cConf.realModeEnabled" class="play-button"><span trans>play now</span></p>
+                                    <img ng-src="{{cConf.iconsUrl + game.gameID}}.jpg" alt="">
+                                </a>
+                                <p ng-show="game.hasFunMode && (!env.authorized || game.id !== '1314')" class="fun-game">
+                                    <a class="game-fun-link" ng-click="openGame(game, 'fun')">
+                                        <span ng-show="selectedCategory.id != '35'" trans>PLAY FOR FUN</span>
+                                        <span ng-show="!env.authorized && selectedCategory.id == '35'" trans>VIEW</span>
+                                    </a>
+                                </p>
+                                <div class="popular-game-name">
+                                    <p><a ng-click="openGame(game, 'real'); $event.stopPropagation();" title="{{game.gameName}}"> {{game.gameName}} </a></p>
+                                    <div class="fav-block"><a ng-click="toggleSaveToMyCasinoGames(game)" ng-class="{'star-active': isFromSaved(game.id)}">star</a></div>
+                                </div>
+                            </li>
+                        </ul>-->
+                        <casino-games-list
+                                is-new-design-enabled="cConf.newCasinoDesignEnabled"
+                                show-conditions="selectedCategory.category !== 'SkillGames'"
+                                games-list="selectedCategoryGames"
+                                games-limit="numberOfRecentGames"
+                                game-show-conditions="!(game.id === '1297' || (game.id === '1314' && !conf.ogwilEnabled))"
+                                selected-category="selectedCategory">
+                        </casino-games-list>
+
+                        <!--<ul ng-if="selectedCategory.category === 'SkillGames'">
+                            <li ng-repeat="game in selectedCategoryGames track by game.id">
+                                <a ng-click="openGame(game, 'real'); $event.stopPropagation();" ng-class="{'cursor-arrow' : game.gameType.realPlay !== 1}">
+                                    <p ng-if="game.gameType.realPlay === 1 && cConf.realModeEnabled" class="play-button"><span trans>play now</span></p>
+                                    <img ng-src="{{cConf.iconsUrl + game.gameID}}.jpg" alt="">
+                                </a>
+                                <p class="casino-game-download" ng-show="cConf.downloadEnabled && game.gameType.isDownloadClient === 1" ng-click="gaSend('send', 'event', 'games', game.gameCategory||game.gameCat, {'page': $location.path(), 'eventLabel': ('Download '+game.gameName)}); $event.stopPropagation();">
+                                    <a ng-show="(userOS!=='Windows' && userOS !== 'MacOS' && userOS !== 'Linux' && userOS !== 'UNIX') || (!game.gameInfo.downloadLink && (userOS==='Windows' || userOS==='Linux' || userOS==='UNIX')) || (userOS==='MacOS' && !game.gameInfo.downloadLinkMac)" ng-click="$parent.globalPopup=('There is no downloadable client for your operating system'|translate)"><span trans>DOWNLOAD</span></a>
+                                    <a ng-href="{{game.gameInfo.downloadLink}}" ng-show="(userOS==='Windows' || userOS==='UNIX') && game.gameInfo.downloadLink"><span trans>DOWNLOAD</span></a>
+                                    <a ng-href="{{game.gameInfo.downloadLinkMac}}" ng-show="userOS==='MacOS' && game.gameInfo.downloadLinkMac"><span trans>DOWNLOAD</span></a>
+                                    <a ng-href="{{game.gameInfo.downloadLinkLinux}}" ng-show="userOS==='Linux' && game.gameInfo.downloadLinkLinux"><span trans>DOWNLOAD</span></a>
+                                </p>
+                                <p ng-show="game.hasFunMode" class="fun-game">
+                                    <a class="game-fun-link" ng-show="!env.authorized && game.gameType.realPlay === 1" ng-click="openGame(game, 'demo'); $event.stopPropagation();"><span trans>VIEW</span></a>
+                                </p>
+                                <div class="popular-game-name">
+                                    <p><a>{{game.gameName|translate}}</a></p>
+                                    <div ng-show="game.gameType.realPlay === 1" class="fav-block"><a ng-click="toggleSaveToMyCasinoGames(game)" ng-class="{'star-active': isFromSaved(game.id)}">star</a></div>
+                                </div>
+                            </li>
+                        </ul>-->
+                        <casino-games-list
+                                is-new-design-enabled="cConf.newCasinoDesignEnabled"
+                                show-conditions="selectedCategory.category === 'SkillGames'"
+                                games-list="selectedCategoryGames"
+                                game-show-conditions="!(game.id === '1297' || (game.id === '1314' && !conf.ogwilEnabled))"
+                                selected-category="selectedCategory">
+                        </casino-games-list>
+                        <div class="load-more-news" ng-show="selectedCategoryGames.length > numberOfRecentGames"><a load-more ng-click="loadMoreGames()"><p trans>Load more</p><span></span></a></div>
+                    </div>
+                </div>
+            </div>
+            <!--Featured games END-->
+        </div>
+    </div>
+    <vbet-loader ng-show="!selectedCategoryAllGames.length && selectedCategory.id !== -1"></vbet-loader>
+</div>

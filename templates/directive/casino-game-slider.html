@@ -1,0 +1,19 @@
+<div class="intro-slider-j" no-animate="disable">
+    <div class="pag-j">
+        <ul class="skillgame-landing-guide" ng-mouseover="rotationPaused = true" ng-mouseleave="rotationPaused = false">
+            <li ng-class="{'active': $index == selectedIndex}" ng-repeat="slide in productSlides" ng-click="selectSlide($index)" ng-show="productSlides.length > 1"></li>
+        </ul>
+    </div>
+    <div class="intro-s-j" ng-repeat="slide in productSlides" ng-show="$index === selectedIndex" ng-class="{'active': $index === selectedIndex}">
+        <div class="intro-s-j-slider-contain" ng-style="{'background-image': 'url({{slide.thumbnail_images.full.url}})'}">
+            <div class="clickable-slider" ng-show="slide.url" ng-click="openUrl(slide.url, slide.custom_fields.target[0])"></div>
+            <div class="skillgame-landing-guide">
+                <h1>{{pageName | translate}}</h1>
+                <h2>{{slide.title}}</h2>
+                <div class="primary-j">
+                    <p ng-bind-html="slide.content|html"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

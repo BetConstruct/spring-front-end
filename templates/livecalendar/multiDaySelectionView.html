@@ -1,0 +1,153 @@
+<!--left-menu-->
+<div class="left-menu-contain"
+     ng-class="{'mini': leftMenuClosed, 'full-width': (conf.customSportsBook.enabled && !conf.customSportsBook.classic.showMarkets)}">
+    <div class="scroll-contain">
+        <div class="left-list-menu">
+            <div class="title-menu-b">
+                <div class="prematch-live-buttons">
+                    <ul>
+                        <li>
+                            <p>
+                                <button ng-click="openSport(1)">
+                                    <span trans >Live</span>
+                                </button>
+                            </p>
+                        </li>
+                        <li ng-if="conf.customSportsBook.classic.showPrematch">
+                            <p>
+                                <button  ng-click="openSport(0)">
+                                    <span trans >pre-match</span>
+                                </button>
+                            </p>
+                        </li>
+                        <li class="live-calendar-games-count-j active">
+                            <p>
+                                <span class="games-count" ng-bind="totalGamesCount"></span>
+                            </p>
+                        </li>
+                    </ul>
+                </div>
+                <div class="arrow-closed-b icon-previous" ng-click="leftMenuClosed = !leftMenuClosed;"></div>
+            </div>
+
+            <vbet-loader ng-show="leftMenuIsLoading"></vbet-loader>
+            <ul ng-show="!leftMenuIsLoading">
+                <li ng-repeat="sport in leftMenuSports track by sport.id" ng-class="{'active': sport.expanded, 'loading': sport.loading}">
+                    <div class="calendar-nav" ng-class="{'active': liveCalendarSelectedSports[sport.id]}">
+                        <input name="" ng-model="liveCalendarSelectedSports[sport.id]" type="checkbox" ng-disabled="liveCalendarSelectedSports[leftMenuSports[0].id] && ($index == 0) && (selectedSports.length == 1)" value="" id="checkbox-lc-sport-{{sport.id}}" ng-change="toggleSport()">
+                        <label for="checkbox-lc-sport-{{sport.id}}" title="{{sport.name}}">
+                            <span ng-class="sport.alias" class="mini-icon-1 mini-icon-{{sport.id}}"></span>
+                            {{sport.name}}
+                        </label>
+                    </div>
+                </li>
+            </ul>
+            <vbet-loader ng-show="openGameLoading"></vbet-loader>
+            <h1 trans ng-show="!leftMenuSports.length && !leftMenuIsLoading" class="now-games-menu">No games found</h1>
+        </div>
+    </div>
+</div>
+<!--left-menu END-->
+<!--centr-market-->
+<div class="centr-market-contain" ng-class="{'favorite-game-open': favoriteGameIsSelected}">
+    <div class="game-center-container" ng-class="{'left-menu-closed': leftMenuClosed}">
+        <!--Prematch END-->
+        <div class="scroll-contain">
+            <!-- Score control -->
+            <div class="live-game-container">
+
+                <div class="livecalendar-filter-b">
+                    <h2 trans>Games</h2>
+                    <ul>
+                        <li>
+                            <input name="" type="checkbox" ng-model="options.allDaysSelected" value="" id="checkbox-lc-day-all" ng-change="toggleDayAll()">
+                            <label for="checkbox-lc-day-all" trans>all</label>
+                        </li>
+                        <li ng-repeat="day in dayFilter">
+                            <input name="" ng-model="liveCalendarSelectedDays[day.id]" type="checkbox" value="" id="checkbox-lc-day-{{day.id}}" ng-change="toggleDay(true)">
+                            <label ng-bind="day.from|formatDate:'ddd D'" for="checkbox-lc-day-{{day.id}}"></label>
+                        </li>
+
+                        <li class="live-calendar-toggle-j" ng-if="conf.enableLiveCalendarUpcomingGamesFilter">
+                            <label>
+                                <button class="toggle-j" ng-class="{'active': !prematchFlow}" ng-click="togglePrematch()" title="{{'Upcoming'|translate}}"></button>
+                                <span trans>LIVE</span> - <span trans>pre-match</span>
+                            </label>
+                        </li>
+
+                        <li ng-show="conf.enableLiveCalendarPrinting">
+                            <div class="print-b-calendar"><button ng-click="printCoupon()" trans>Print coupon</button></div>
+                        </li>
+                    </ul>
+                </div>
+                <vbet-loader ng-show="gamesAreLoading"></vbet-loader>
+
+                <div class="game-content" ng-show="!gamesAreLoading && !liveCalendarGames.length" trans>No games found</div>
+                <div class="game-content" ng-show="!gamesAreLoading && liveCalendarGames.length">
+                    <!--Calendar-->
+
+                    <div class="calendar-wrapper">
+                        <div class="calendar-content" ng-repeat="sportGroup in liveCalendarGames" ng-class="collapsedSports[sportGroup.sport.id]? '':'active'">
+                            <h3 ng-click="collapsedSports[sportGroup.sport.id] = !collapsedSports[sportGroup.sport.id]">
+                                <b class="mini-icon-1 mini-icon-{{sportGroup.sport.id}} {{sportGroup.sport.alias}}"></b>
+                                <span>{{sportGroup.sport.name}}</span>
+                                <b class="arrow-rotate icon-arrow-right6"></b>
+                            </h3>
+
+                            <div ng-repeat="day in sportGroup.games" ng-show="day[0].day">
+                                <h4>{{day[0].day.from|formatDate:'dddd D'}}
+                                    <span ng-show="day[0].dayOffset === 0" trans>Today</span>
+                                    <span ng-show="day[0].dayOffset === 1" trans>Tomorrow</span>
+                                </h4>
+
+                                <div class="live-view-information-b">
+                                    <ul class="titles-games-b">
+                                        <li class="calendar-date-b"></li>
+                                        <li class="name-team-calendar"></li>
+                                        <li class="namber-game-calendar" ng-hide="conf.hideLiveCalendarNumber"><p>№</p></li>
+                                        <li title="1x2_1" trans="attr-only"><p>1</p></li>
+                                        <li title="1x2_X" trans="attr-only"><p>X</p></li>
+                                        <li title="1x2_2" trans="attr-only"><p>2</p></li>
+                                        <li><p trans>More</p></li>
+                                        <li class="video-info-calendar"></li>
+                                    </ul>
+                                    <ul ng-repeat="game in day|orderBy:'start_ts' track by $index">
+                                        <li class="calendar-date-b" ng-bind="game.start_ts|formatDate:'hour':null:env.timeFormat"></li>
+                                        <li ng-if="!(game.pointerId && marketEvents[game.pointerId].game.events_count-(marketEvents[game.pointerId].events|count) > 0)" class="name-team-calendar" title="{{game.title}}"><span>{{game.title}}</span></li>
+                                        <li ng-if="game.pointerId && marketEvents[game.pointerId].game.events_count-(marketEvents[game.pointerId].events|count) > 0" ng-click="openMore(sportGroup.sport.id, marketEvents[game.pointerId].game)" class="name-team-calendar" title="{{game.title}}"><span>{{game.title}}</span></li>
+                                        <li class="namber-game-calendar" ng-hide="conf.hideLiveCalendarNumber"><p ng-show="game.game_number">{{game.game_number}}</p></li>
+                                        <li ng-class="{'active': isEventInBetSlip(marketEvents[game.pointerId].events.P1[0]), 'empty': !marketEvents[game.pointerId].events.P1[0]}" class="event-b-calendare" ng-click="bet(marketEvents[game.pointerId].events.P1[0], marketEvents[game.pointerId].market, marketEvents[game.pointerId].game)">
+                                            <p> {{marketEvents[game.pointerId].events.P1[0].price|oddConvert:env.oddFormat:null:'WINNER'}}</p>
+                                        </li>
+                                        <li ng-class="{'active': isEventInBetSlip(marketEvents[game.pointerId].events.X[0]), 'empty': !marketEvents[game.pointerId].events.X[0]}" class="event-b-calendare" ng-click="bet(marketEvents[game.pointerId].events.X[0], marketEvents[game.pointerId].market, marketEvents[game.pointerId].game)">
+                                            <p>{{marketEvents[game.pointerId].events.X[0].price|oddConvert:env.oddFormat:null:'WINNER'}}</p>
+                                        </li>
+                                        <li ng-class="{'active': isEventInBetSlip(marketEvents[game.pointerId].events.P2[0]), 'empty': !marketEvents[game.pointerId].events.P2[0]}" class="event-b-calendare" ng-click="bet(marketEvents[game.pointerId].events.P2[0], marketEvents[game.pointerId].market, marketEvents[game.pointerId].game)">
+                                            <p>{{marketEvents[game.pointerId].events.P2[0].price|oddConvert:env.oddFormat:null:'WINNER'}}</p>
+                                        </li>
+                                        <li class="soom-events-b">
+                                            <p ng-show="!conf.GmsPlatform && game.pointerId && marketEvents[game.pointerId].game.events_count-(marketEvents[game.pointerId].events|count) > 0"
+                                               ng-click="openMore(sportGroup.sport.id, marketEvents[game.pointerId].game)">+{{marketEvents[game.pointerId].game.events_count-(marketEvents[game.pointerId].events|count)}}</p>
+                                            <p ng-show="conf.GmsPlatform && game.pointerId && marketEvents[game.pointerId].game.markets_count > 0"
+                                               ng-click="openMore(sportGroup.sport.id, marketEvents[game.pointerId].game)">+{{marketEvents[game.pointerId].game.markets_count}}</p>
+                                        </li>
+                                        <li class="video-info-calendar" >
+                                            <div class="extra-b-contain" ng-show="game.game_text_info">
+                                                <b class="icon-ic_video_collection_24px"></b>
+                                                <div class="game-extra-info">
+                                                    <p>{{game.game_text_info}}</p>
+                                                </div>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--Calendar END-->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--centr-market END-->

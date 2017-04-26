@@ -1,0 +1,94 @@
+<div ng-controller="freeBetCtrl" ng-init="loadVictorinas(); setTitle('Free Bet')" ng-if="conf.freeBetEnabled">
+  <div class="conteiner-content free">  
+    <div class="content">
+        <!-- System Calculator-->
+        <div id="system-claculator-container" ng-if="$root.showSystemCalculator" draggable allow-other-mouse-events drag-from="calculator-draggable-header">
+            <ng-include src="getTemplate('templates/sport/classic/systemCalculator.html')"></ng-include>
+        </div>
+        <!-- System Calculator-->
+    	<div class="games-center">
+            <div class="left-b-game">
+                <div class="name-page-totalizator">
+                    <h1><span trans>Free Bet</span></h1>
+                    <div class="date-free-totalizator">
+                        <ul ng-if="env.authorized" ng-init="creatDays()">
+                            <li ng-repeat="dayObj in days|orderBy:'offset':true" ng-class="{'active': dayObj.offset === day}">
+                                <a ng-click="$parent.day = dayObj.offset; loadVictorinas(dayObj.offset)">{{dayObj.text}}</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="description"><p trans>freebet_info</p></div>
+                </div>
+                <h1 trans ng-show="!loading && victorinas === null" class="no-data">No data</h1>
+
+                <div class="totalizator" ng-hide="loading || victorinas === null">
+                    <form>
+                        <div class="pool-stake-box">
+                            <ul>
+                                <li  ng-show="!env.authorized">
+                                    <span trans>To place your bet, please</span>
+                                    <span ng-click="broadcast('openLoginForm');$event.stopPropagation()" class="underline" trans>sign in</span>
+                                    <span trans>or</span>
+                                    <span ng-click="broadcast('openRegForm');$event.stopPropagation()" class="underline" trans>register</span>
+                                </li>
+
+                            </ul>
+                        </div>
+                        <div ng-repeat="(victorinaId, competition) in victorinas">
+
+                            <div class="category-sport-name-list">
+                                <p><span ng-class="'flag-'+ competition[0].region_alias | removeUselessSymbolsByRegexp: '[,\' ]+': 'g': 'true'" class="flag-icon"></span>#{{victorinaId}}</p>
+                                <ul>
+                                    <li trans>W1</li>
+                                    <li>X</li>
+                                    <li trans>W2</li>
+                                </ul>
+                            </div>
+
+                            <div class="list-totalizator">
+                                <ul ng-repeat="game in competition|orderBy:'order' track by game.id" ng-class="{'complete': complete[victorinaId]}" ng-show="game.events.p1 || game.events.p2 || game.events.x || game.game_name">
+                                    <li ng-class="game.sport_alias" title="{{game.sport_name}}"><div class="mini-icon-1 {{game.sport_alias}}"></div><p ng-bind="game.sport_name"></p></li>
+                                    <li class="time-totalizator-game"><p>{{game.game_start_date|formatDate:'full'}}</p></li>
+                                    <li class="name-team-totalizator"><p title="{{game.competition_name}}">{{game.competition_name}}</p></li>
+                                    <li class="name-team-totalizator"><p title="{{game.game_name}}">{{game.game_name}}</p></li>
+                                    <li class="events-totalizator {{game.events.p1.status}}" title="{{statuses[game.events.p1.status]}}" ng-class="{'selected': victorinaModel[victorinaId][game.id] == game.events.p1.event_id}">
+                                        <label ng-show="game.events.p1">
+                                            <input name="{{victorinaId + '-' + game.id }}" type="radio" value="{{game.events.p1.event_id}}" ng-model="victorinaModel[victorinaId][game.id]" ng-disabled="game.events.p1.status == 'Waiting'"/>
+                                            <span>{{game.events.p1.k|oddConvert:env.oddFormat:null:'WINNER'}}</span>
+                                        </label>
+                                    </li>
+                                    <li class="events-totalizator {{game.events.x.status}}"  title="{{statuses[game.events.p1.status]}}" ng-class="{'selected': victorinaModel[victorinaId][game.id] == game.events.x.event_id}">
+                                        <label ng-show="game.events.x" ><input name="{{victorinaId + '-' + game.id }}" type="radio" value="{{game.events.x.event_id}}"   ng-model="victorinaModel[victorinaId][game.id]" ng-disabled="game.events.x.status == 'Waiting'"/>
+                                            <span>{{game.events.x.k|oddConvert:env.oddFormat:null:'WINNER'}}</span>
+                                        </label>
+                                    </li>
+                                    <li class="events-totalizator {{game.events.p2.status}}" title="{{statuses[game.events.p1.status]}}" ng-class="{'selected': victorinaModel[victorinaId][game.id] == game.events.p2.event_id}">
+                                        <label ng-show="game.events.p2"><input name="{{victorinaId + '-' + game.id }}" type="radio" value="{{game.events.p2.event_id}}" ng-model="victorinaModel[victorinaId][game.id]" ng-disabled="game.events.p2.status == 'Waiting'"/>
+                                            <span>{{game.events.p2.k|oddConvert:env.oddFormat:null:'WINNER'}}</span>
+                                        </label>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="random-buttons" ng-show="victorinas && competition.length && !competition[0].have_bet">
+                                <ul>
+                                    <li><button ng-click="randomChoice(victorinaId)" trans>Random Choice</button></li>
+                                    <li><button ng-click="favouriteChoice(victorinaId)" trans>Favourite Choice</button></li>
+                                    <li><button ng-click="doFreeBet(victorinaId, $event)" trans ng-disabled="!complete[victorinaId]">Place bets!</button></li>
+                                </ul>
+                            </div>
+                        </div>
+
+                    </form>
+                </div>
+                <vbet-loader class="page-center" ng-if="loading" style="top:40px;"></vbet-loader>
+            </div>
+            <div class="right-block-list">
+                <!--Банер-->
+                <div class="right-banner-container" ng-if="conf.enableBannerUnderBetslip" ng-controller="cmsSportNewsCtrl" ng-include="getTemplate('templates/sport/classic/banners.html')"></div>
+                <!--Спортивные новости-->
+                <div class="sport-news" ng-include="getTemplate('templates/sport/sportnews.html')" id="sport-news-sidebar" ng-if="conf.enableNews"></div>
+            </div>
+        </div>
+    </div>
+  </div>
+</div>

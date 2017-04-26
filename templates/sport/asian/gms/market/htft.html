@@ -1,0 +1,199 @@
+<div class="fixed-element-parent">
+    <div class="game-list-compitishion" fixonscroll ignore-ie="true" auto-positon="top"  scrollable-area-id="asianView" header-id="main-header-container">
+        <table class="name-ft-ht-layout ft-ht">
+            <tr>
+                <td class="big-row">
+                    <div class="info-bl">
+                        <p><i class="icon-sport-asia" ng-class="selectedSport.alias"></i> <span ng-bind="selectedSport.name"></span></p>
+                    </div>
+                </td>
+                <td class="factor-w">
+                    <div class="info-bl">
+                        <p trans>HH</p>
+                    </div>
+                </td>
+                <td class="factor-w">
+                    <div class="info-bl">
+                        <p trans>HD</p>
+                    </div>
+                </td>
+                <td class="factor-w">
+                    <div class="info-bl">
+                        <p trans>HA</p>
+                    </div>
+                </td>
+                <td class="factor-w">
+                    <div class="info-bl">
+                        <p trans>DH</p>
+                    </div>
+                </td>
+                <td class="factor-w">
+                    <div class="info-bl">
+                        <p trans>DD</p>
+                    </div>
+                </td>
+                <td class="factor-w">
+                    <div class="info-bl">
+                        <p trans>DA</p>
+                    </div>
+                </td>
+                <td class="factor-w">
+                    <div class="info-bl">
+                        <p trans>AH</p>
+                    </div>
+                </td>
+                <td class="factor-w">
+                    <div class="info-bl">
+                        <p trans>AD</p>
+                    </div>
+                </td>
+                <td class="factor-w">
+                    <div class="info-bl">
+                        <p trans>AA</p>
+                    </div>
+                </td>
+                <td class="more-competition">
+                    <div class="info-bl">
+                        <p trans>More</p>
+                    </div>
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>
+<div class="asian-separator-container-b" ng-repeat="competitions in centerData.competitions track by $index">
+    <div ng-repeat="competition in competitions|limitTo:conf.asian.competitionsPerPage:(selectedPage*conf.asian.competitionsPerPage) track by $index" class="game-list-compitishion" ng-class="{closed: collapedCompetitions[competition.id]}">
+        <div class="name-chempionship-asia" ng-click="toggleCompetition(competition.id)">
+            <h3 ng-bind="competition.name"></h3>
+        </div>
+        <table class="match-odd1X2 ft-ht" ng-if="!collapedCompetitions[competition.id]">
+            <tr ng-repeat="game in competition.games track by game.id">
+                <td class="section-1">
+                    <div class="info-bl">
+                        <p class="time-g-asia" ng-show="game.type ==1">
+                            <span ng-bind="game.info.current_game_state|convertSetName:game.sport.alias|translate"></span><span ng-bind="fixDisplayTime(game.info.current_game_time)"></span>
+                        </p>
+                        <p class="time-g-asia" ng-show="game.type !=1">
+                            <span ng-bind="game.start_ts|formatDate:(conf.layoutTimeFormat.asian || 'D/MM')"></span> <span ng-bind="game.start_ts|formatDate:'hour':null:env.timeFormat"></span>
+                        </p>
+                    </div>
+                </td>
+                <td class="section-2">
+                    <div class="info-bl">
+                        <p class="teams-n-account-asia">
+                            <span class="name-team-asian-1x2" title="{{game.team1_name}} - {{game.team2_name}}">{{game.team1_name}} - {{game.team2_name}}</span>
+                            <span class="account-asian-1x2" ng-show="game.type ==1">
+                            <b ng-bind="game.info.score1"></b>
+                            <b ng-bind="game.info.score2"></b>
+                        </span>
+                        </p>
+                    </div>
+                </td>
+                <td class="factor-w asian-market-overflow-j">
+                    <div class="asian-market-wrap-j"
+                         ng-show="game.markets['HALFTIME/FULLTIME'][0]['W1/W1']"
+                         ng-click="bet(game.markets['HALFTIME/FULLTIME'][0]['W1/W1'], game.markets['HALFTIME/FULLTIME'][0], game)"
+                         ng-class="{'locked': (game.markets['HALFTIME/FULLTIME'][0]['W1/W1'].price | oddConvert:'decimal') == 1 || game.is_blocked, up: game.markets['HALFTIME/FULLTIME'][0]['W1/W1'].price_change == '1', down: game.markets['HALFTIME/FULLTIME'][0]['W1/W1'].price_change == '-1', 'active': isEventInBetSlip(game.markets['HALFTIME/FULLTIME'][0]['W1/W1'])}">
+                        <div class="asian-market-j">
+                            <div class="asian-market-cell-j odd-container-j"  ng-bind="game.markets['HALFTIME/FULLTIME'][0]['W1/W1'].price|oddConvert:env.oddFormat:null:'HALFTIME/FULLTIME'"></div>
+                        </div>
+                    </div>
+                </td>
+                <td class="factor-w asian-market-overflow-j">
+                    <div class="asian-market-wrap-j"
+                         ng-show="game.markets['HALFTIME/FULLTIME'][0]['W1/X']"
+                         ng-click="bet(game.markets['HALFTIME/FULLTIME'][0]['W1/X'], game.markets['HALFTIME/FULLTIME'][0], game)"
+                         ng-class="{'locked': (game.markets['HALFTIME/FULLTIME'][0]['W1/X'].price | oddConvert:'decimal') == 1 || game.is_blocked, up: game.markets['HALFTIME/FULLTIME'][0]['W1/X'].price_change == '1', down: game.markets['HALFTIME/FULLTIME'][0]['W1/X'].price_change == '-1', 'active': isEventInBetSlip(game.markets['HALFTIME/FULLTIME'][0]['W1/X'])}">
+                        <div class="asian-market-j">
+                            <div class="asian-market-cell-j odd-container-j" ng-bind="game.markets['HALFTIME/FULLTIME'][0]['W1/X'].price|oddConvert:env.oddFormat:null:'HALFTIME/FULLTIME'"></div>
+                        </div>
+                    </div>
+                </td>
+                <td class="factor-w asian-market-overflow-j">
+                    <div class="asian-market-wrap-j"
+                         ng-show="game.markets['HALFTIME/FULLTIME'][0]['W1/W2']"
+                         ng-click="bet(game.markets['HALFTIME/FULLTIME'][0]['W1/W2'], game.markets['HALFTIME/FULLTIME'][0], game)"
+                         ng-class="{'locked': (game.markets['HALFTIME/FULLTIME'][0]['W1/W2'].price | oddConvert:'decimal') == 1 || game.is_blocked, up: game.markets['HALFTIME/FULLTIME'][0]['W1/W2'].price_change == '1', down: game.markets['HALFTIME/FULLTIME'][0]['W1/W2'].price_change == '-1', 'active': isEventInBetSlip(game.markets['HALFTIME/FULLTIME'][0]['W1/W2'])}">
+                        <div class="asian-market-j">
+                            <div class="asian-market-cell-j odd-container-j" ng-bind="game.markets['HALFTIME/FULLTIME'][0]['W1/W2'].price|oddConvert:env.oddFormat:null:'HALFTIME/FULLTIME'"></div>
+                        </div>
+                    </div>
+                </td>
+                <td class="factor-w asian-market-overflow-j">
+                    <div class="asian-market-wrap-j"
+                         ng-show="game.markets['HALFTIME/FULLTIME'][0]['X/W1']"
+                         ng-click="bet(game.markets['HALFTIME/FULLTIME'][0]['X/W1'], game.markets['HALFTIME/FULLTIME'][0], game)"
+                         ng-class="{'locked': (game.markets['HALFTIME/FULLTIME'][0]['X/W1'].price | oddConvert:'decimal') == 1 || game.is_blocked, up: game.markets['HALFTIME/FULLTIME'][0]['X/W1'].price_change == '1', down: game.markets['HALFTIME/FULLTIME'][0]['X/W1'].price_change == '-1', 'active': isEventInBetSlip(game.markets['HALFTIME/FULLTIME'][0]['X/W1'])}">
+                        <div class="asian-market-j">
+                            <div class="asian-market-cell-j odd-container-j" ng-bind="game.markets['HALFTIME/FULLTIME'][0]['X/W1'].price|oddConvert:env.oddFormat:null:'HALFTIME/FULLTIME'"></div>
+                        </div>
+                    </div>
+                </td>
+                <td class="factor-w asian-market-overflow-j">
+                    <div class="asian-market-wrap-j"
+                         ng-show="game.markets['HALFTIME/FULLTIME'][0]['X/X']"
+                         ng-click="bet(game.markets['HALFTIME/FULLTIME'][0]['X/X'], game.markets['HALFTIME/FULLTIME'][0], game)"
+                         ng-class="{'locked': (game.markets['HALFTIME/FULLTIME'][0]['X/X'].price | oddConvert:'decimal') == 1 || game.is_blocked, up: game.markets['HALFTIME/FULLTIME'][0]['X/X'].price_change == '1', down: game.markets['HALFTIME/FULLTIME'][0]['X/X'].price_change == '-1', 'active': isEventInBetSlip(game.markets['HALFTIME/FULLTIME'][0]['X/X'])}">
+                        <div class="asian-market-j">
+                            <div class="asian-market-cell-j odd-container-j" ng-bind="game.markets['HALFTIME/FULLTIME'][0]['X/X'].price|oddConvert:env.oddFormat:null:'HALFTIME/FULLTIME'"></div>
+                        </div>
+                    </div>
+                </td>
+                <td class="factor-w asian-market-overflow-j">
+                    <div class="asian-market-wrap-j"
+                         ng-show="game.markets['HALFTIME/FULLTIME'][0]['X/W2']"
+                         ng-click="bet(game.markets['HALFTIME/FULLTIME'][0]['X/W2'], game.markets['HALFTIME/FULLTIME'][0], game)"
+                         ng-class="{'locked': (game.markets['HALFTIME/FULLTIME'][0]['X/W2'].price | oddConvert:'decimal') == 1 || game.is_blocked, up: game.markets['HALFTIME/FULLTIME'][0]['X/W2'].price_change == '1', down: game.markets['HALFTIME/FULLTIME'][0]['X/W2'].price_change == '-1', 'active': isEventInBetSlip(game.markets['HALFTIME/FULLTIME'][0]['X/W2'])}">
+                        <div class="asian-market-j">
+                            <div class="asian-market-cell-j odd-container-j" ng-bind="game.markets['HALFTIME/FULLTIME'][0]['X/W2'].price|oddConvert:env.oddFormat:null:'HALFTIME/FULLTIME'"></div>
+                        </div>
+                    </div>
+                </td>
+                <td class="factor-w asian-market-overflow-j">
+                    <div class="asian-market-wrap-j"
+                         ng-show="game.markets['HALFTIME/FULLTIME'][0]['W2/W1']"
+                         ng-click="bet(game.markets['HALFTIME/FULLTIME'][0]['W2/W1'], game.markets['HALFTIME/FULLTIME'][0], game)"
+                         ng-class="{'locked': (game.markets['HALFTIME/FULLTIME'][0]['W2/W1'].price | oddConvert:'decimal') == 1 || game.is_blocked, up: game.markets['HALFTIME/FULLTIME'][0]['W2/W1'].price_change == '1', down: game.markets['HALFTIME/FULLTIME'][0]['W2/W1'].price_change == '-1', 'active': isEventInBetSlip(game.markets['HALFTIME/FULLTIME'][0]['W2/W1'])}">
+                        <div class="asian-market-j">
+                            <div class="asian-market-cell-j odd-container-j" ng-bind="game.markets['HALFTIME/FULLTIME'][0]['W2/W1'].price|oddConvert:env.oddFormat:null:'HALFTIME/FULLTIME'"></div>
+                        </div>
+                    </div>
+                </td>
+                <td class="factor-w asian-market-overflow-j">
+                    <div class="asian-market-wrap-j"
+                         ng-show="game.markets['HALFTIME/FULLTIME'][0]['W2/X']"
+                         ng-click="bet(game.markets['HALFTIME/FULLTIME'][0]['W2/X'], game.markets['HALFTIME/FULLTIME'][0], game)"
+                         ng-class="{'locked': (game.markets['HALFTIME/FULLTIME'][0]['W2/X'].price | oddConvert:'decimal') == 1 || game.is_blocked, up: game.markets['HALFTIME/FULLTIME'][0]['W2/X'].price_change == '1', down: game.markets['HALFTIME/FULLTIME'][0]['W2/X'].price_change == '-1', 'active': isEventInBetSlip(game.markets['HALFTIME/FULLTIME'][0]['W2/X'])}">
+                        <div class="asian-market-j">
+                            <div class="asian-market-cell-j odd-container-j" ng-bind="game.markets['HALFTIME/FULLTIME'][0]['W2/X'].price|oddConvert:env.oddFormat:null:'HALFTIME/FULLTIME'"></div>
+                        </div>
+                    </div>
+                </td>
+                <td class="factor-w asian-market-overflow-j">
+                    <div class="asian-market-wrap-j"
+                         ng-show="game.markets['HALFTIME/FULLTIME'][0]['W2/W2']"
+                         ng-click="bet(game.markets['HALFTIME/FULLTIME'][0]['W2/W2'], game.markets['HALFTIME/FULLTIME'][0], game)"
+                         ng-class="{'locked': (game.markets['HALFTIME/FULLTIME'][0]['W2/W2'].price | oddConvert:'decimal') == 1 || game.is_blocked, up: game.markets['HALFTIME/FULLTIME'][0]['W2/W2'].price_change == '1', down: game.markets['HALFTIME/FULLTIME'][0]['W2/W2'].price_change == '-1', 'active': isEventInBetSlip(game.markets['HALFTIME/FULLTIME'][0]['W2/W2'])}">
+                        <div class="asian-market-j">
+                            <div class="asian-market-cell-j odd-container-j" ng-bind="game.markets['HALFTIME/FULLTIME'][0]['W2/W2'].price|oddConvert:env.oddFormat:null:'HALFTIME/FULLTIME'"></div>
+                        </div>
+                    </div>
+                </td>
+
+                <td class="more-competition">
+                    <div class="asian-status-icons">
+                        <div ng-show="game.is_neutral_venue" class="game-is-neutral" title="is neutral venue" trans="attr-only"></div>
+                        <div ng-show="game.type === 1 && game.hasVideo && conf.videoEnabled" class="has-video" trans="attr-only" title="video"></div>
+                    </div>
+                    <div class="asian-status-icons">
+                        <div class="icon-favorite" ng-click="toggleGameFavorite(game)" ng-class="{'active': myGames.indexOf(game.id) !== -1}" title="{{'Favorite'|translate}}"></div>
+                        <div ng-show="conf.enableH2HStat && game.is_stat_available" ng-click="openStatistics(game);$event.stopPropagation();" class="h2h-stats" title="{{'statistic'|translate}}"></div>
+                    </div>
+                    <div class="info-bl" ng-click="loadAllEvents(game.id)" title="{{'More Markets'|translate}}">
+                        <p>+{{::game.moreMarketsCount || ''}}</p>
+                    </div>
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>

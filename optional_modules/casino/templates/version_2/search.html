@@ -1,0 +1,29 @@
+<form ng-show=" $location.path() == '/casino/'" ng-controller="casinoNewSearchCtrl">
+    <div class="block-search">
+        <input name="" type="text" placeholder="Search a casino game..." title="Search a casino game..." ng-model="searchCommand" ng-keypress="searchEnter($event)" trans>
+        <!-- casino result search-->
+        <div class="search-results-container" ng-show="showSearchCommandResults" hide-on-click state-flag-var="showSearchCommandResults" broadcast-on-close="search.ResultsClosed" class-on-scroll="search-results-container-scroll,search-results-container" >
+            <div class="search-results-inner casino">
+                <div class="arrow-sport"></div>
+                <h3 trans>Search results</h3>
+                <div id="casino-result-search" keyboard-navigation result-id-prefix="search-result-casino-" select-result-by-id-func="selectCasinoGameFromSearchResults" results-ids="searchCommandResultGameIds" selected-result-id="selectedSearchCommandResultId" show-results-flag="showSearchCommandResults">
+                    <div ng-repeat="game in searchCommandResults">
+                        <dl ng-class="{'active': selectedSearchCommandResultId === game.id}" ng-click="openCasinoGame(game); $event.stopPropagation();" id="search-result-casino-{{ game.id }}">
+                            <dt><img ng-src="{{game.icon_2}}" alt=""></dt>
+                            <dd>
+                                <div>{{ game.name }}</div>
+                                <div class="play-game-button-search-wrap-j">
+                                    <div class="play-game-button-search" trans ng-click="openCasinoGame(game, 'real');$event.stopPropagation();">play now</div>
+                                    <div class="play-game-button-search1" trans ng-show="!game.types.viewMode && game.types.funMode && cConf.funModeEnabled" ng-click="openCasinoGame(game, 'fun');$event.stopPropagation();">Play For Free</div>
+                                    <div class="play-game-button-search1" trans ng-show="game.types.viewMode && !game.types.funMode" ng-click="openCasinoGame(game, 'fun');$event.stopPropagation();">View</div>
+                                </div>
+
+                            </dd>
+                        </dl>
+                    </div>
+                </div>
+                <div class="search-no-results" ng-show="!(searchCommandResults|count)" trans>no results</div>
+            </div>
+        </div>
+    </div>
+</form>

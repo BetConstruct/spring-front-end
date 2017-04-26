@@ -1,0 +1,20 @@
+<div class="prematch-live-buttons">
+    <ul>
+        <li ng-class="{active:env.live}" ng-if="::conf.customSportsBook.classic.showLive">
+            <p>
+                <button ng-click="toggleLive()" ng-disabled="env.live">
+                    <span trans>Live</span>
+                    <span class="games-count" ng-bind="''+gameCounts['1']+''"></span>
+                </button>
+            </p>
+        </li>
+        <li ng-class="{active:!env.live}" ng-if="::conf.customSportsBook.classic.showPrematch" ng-init="subscribeToAllGameCounts(0)">
+            <p>
+                <button ng-click="toggleLive()" ng-disabled="!env.live">
+                    <span trans>pre-match</span>
+                    <span class="games-count" ng-bind="''+gameCounts['0']+''"></span>
+                </button>
+            </p>
+        </li>
+    </ul>
+</div>

@@ -1,0 +1,51 @@
+<div class="casino-slider-wrapper" ng-mouseover="rotationPaused = true" ng-mouseleave="rotationPaused = false">
+    <div class="contain-casino poker" ng-if="!sliderTemplate">
+        <div class="casino-top-slider">
+            <div class="big-slider-casino">
+                <div class="wrapper-slider-box-b">
+                    <div ng-show="$index == index" ng-repeat="banner in images track by $index" class="repeat-contain-b-slider" ng-class="{'active': $index === index}">
+                        <div class="contain-img-slider-view">
+                            <a ng-href="{{!banner.isYouTubeVideo ? banner.link : ''}}" target="{{banner.linktarget}}" ng-click="linkClick(banner)"  ng-style="{'background-image':'url({{banner.imageurl}})'}">
+                                <!--<img ng-src="{{banner.imageurl}}" alt="">-->
+                            </a>
+                            <button ng-if="!$root.env.authorized && banner.action && banner.action === 'register'" trans ng-click="$root.$broadcast('openRegForm');$event.stopPropagation();">Register</button>
+                            <button ng-if="!$root.env.authorized && banner.action && banner.action === 'login'" trans ng-click="$root.$broadcast('openLoginForm');$event.stopPropagation();">Sign in</button>
+                            <button ng-if="banner.custom_fields.id[0]" trans ng-click="$event.stopPropagation();$root.broadcast('casinoGamesList.openGame', {gameId: banner.custom_fields.id[0]});">Play now</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="arrow-left-s" ng-show="index > 0"><a ng-click="index = index - 1;">left-arrow</a></div>
+        <div class="arrow-right-s" ng-show="index < images.length - 1"><a ng-click="index = index + 1;">right-arrow</a>
+        </div>
+    </div>
+
+
+    <div ng-if="sliderTemplate">
+        <div class="slider-optional-b-casino" ng-show="images.length > 1">
+            <span ng-repeat="banner in images track by $index"
+                  ng-click="changeActiveBanner($index)"
+                  ng-class="{'active': $index === index}">
+            </span>
+        </div>
+        <div ng-repeat="banner in images track by $index"
+             ng-class="{'active': $index === index}"
+             ng-show="$index == index"
+
+             class="slide-container-repeat-b" no-animate="disable">
+            <div class="slide-casino-new-img-b">
+                <a ng-href="{{!banner.isYouTubeVideo ? banner.link : ''}}" target="{{banner.linktarget}}" ng-click="linkClick(banner)" style="background-image: url({{banner.imageurl}});"></a>
+                <div class="promotions-in-mixed-balance">
+                    <h1 ng-if="banner.title">{{banner.title}}</h1>
+                    <p ng-if="banner.description || banner.content" ng-bind-html="$sce.trustAsHtml(banner.description || banner.content)"></p>
+                </div>
+                <button ng-if="!$root.env.authorized && banner.action && banner.action === 'register'" trans ng-click="$root.$broadcast('openRegForm'); $event.stopPropagation();">Register</button>
+                <button ng-if="!$root.env.authorized && banner.action && banner.action === 'login'" trans ng-click="$root.$broadcast('openLoginForm');  $event.stopPropagation();">Sign in</button>
+                <button ng-if="banner.custom_fields.id[0]" trans ng-click="$event.stopPropagation();$root.broadcast('casinoGamesList.openGame', {gameId: banner.custom_fields.id[0]});">Play now</button>
+            </div>
+
+            
+        </div>
+    </div>
+</div>

@@ -1,0 +1,131 @@
+
+<div class="game-list-compitishion">
+    <table>
+        <tr>
+            <td class="big-row" rowspan="2"><div class="info-bl"><p><i class="icon-sport-asia" ng-class="selectedSport.alias"></i> <span ng-bind="selectedSport.name"></span></p></div></td>
+            <td colspan="3"><div class="info-bl"><p trans>Full Time</p></div></td>
+            <td colspan="3"><div class="info-bl"><p trans>Half Time</p></div></td>
+            <td class="more-competition" rowspan="2"><div class="info-bl"><p trans>More</p></div></td>
+        </tr>
+        <tr>
+            <td class="factor-name"><div class="info-bl"><p trans>1st Goal</p></div></td>
+            <td class="factor-name"><div class="info-bl"><p trans>Last Goal</p></div></td>
+            <td class="factor-name"><div class="info-bl"><p trans>None</p></div></td>
+            <td class="factor-name"><div class="info-bl"><p trans>1st Goal</p></div></td>
+            <td class="factor-name"><div class="info-bl"><p trans>Last Goal</p></div></td>
+            <td class="factor-name"><div class="info-bl"><p trans>None</p></div></td>
+
+        </tr>
+    </table>
+</div>
+
+
+<div class="asian-separator-container-b" ng-repeat="competitions in centerData.competitions track by $index">
+    <div ng-repeat="competition in competitions track by $index" class="game-list-compitishion" ng-class="{closed: collapedCompetitions[competition.id]}">
+    <div class="name-chempionship-asia" ng-click="toggleCompetition(competition.id)">
+        <h3 ng-bind="competition.name"></h3>
+    </div>
+    <table>
+        <tbody ng-repeat="game in competition.games track by game.id">
+        <tr>
+            <td class="section-1 border-d">
+                <div class="info-bl">
+                    <p ng-bind="game.info.current_game_state|convertSetName:game.sport.alias|translate" ng-show="game.type ==1"></p>
+                    <p ng-bind="game.start_ts|formatDate:'D/MM'" ng-show="game.type !=1"></p>
+                </div>
+            </td>
+            <td class="section-2 border-d"><div class="info-bl"><p ng-bind="game.team1_name"></p></div></td>
+            <td class="section-3"><div class="info-bl" ng-show="game.type ==1"><p ng-bind="game.info.score1"></p></div></td>
+
+            <td class="factor-w" ng-class="{up: game.markets['90MINS'].FGLG[0]['1FIRST'].price_change == '1', down: game.markets['90MINS'].FGLG[0]['1FIRST'].price_change == '-1', 'active': isEventInBetSlip(game.markets['90MINS'].FGLG[0]['1FIRST'])}">
+                <div class="info-bl" ng-show="game.markets['90MINS'].FGLG[0]['1FIRST']" ng-click="bet(game.markets['90MINS'].FGLG[0]['1FIRST'], game.markets['90MINS'].FGLG[0], game)">
+                    <p ng-bind="game.markets['90MINS'].FGLG[0]['1FIRST'].price|oddConvert:env.oddFormat"></p>
+                </div>
+            </td>
+            <td class="factor-w" ng-class="{up: game.markets['90MINS'].FGLG[0]['1LAST'].price_change == '1', down: game.markets['90MINS'].FGLG[0]['1LAST'].price_change == '-1', 'active': isEventInBetSlip(game.markets['90MINS'].FGLG[0]['1LAST'])}">
+                <div class="info-bl" ng-show="game.markets['90MINS'].FGLG[0]['1LAST']" ng-click="bet(game.markets['90MINS'].FGLG[0]['1LAST'], game.markets['90MINS'].FGLG[0], game)">
+                    <p ng-bind="game.markets['90MINS'].FGLG[0]['1LAST'].price|oddConvert:env.oddFormat"></p>
+                </div>
+            </td>
+
+
+            <td rowspan="2" class="factor-w" ng-class="{up: game.markets['90MINS'].FGLG[0]['NOGOAL'].price_change == '1', down: game.markets['90MINS'].FGLG[0]['NOGOAL'].price_change == '-1', 'active': isEventInBetSlip(game.markets['90MINS'].FGLG[0]['NOGOAL'])}">
+                <div class="info-bl" ng-show="game.markets['90MINS'].FGLG[0]['NOGOAL']" ng-click="bet(game.markets['90MINS'].FGLG[0]['NOGOAL'], game.markets['90MINS'].FGLG[0], game)">
+                    <p ng-bind="game.markets['90MINS'].FGLG[0]['NOGOAL'].price|oddConvert:env.oddFormat"></p>
+                </div>
+            </td>
+
+
+            <td class="factor-w" ng-class="{up: game.markets[game.halfTimeSequence].FGLG[0]['1FIRST'].price_change == '1', down: game.markets[game.halfTimeSequence].FGLG[0]['1FIRST'].price_change == '-1', 'active': isEventInBetSlip(game.markets[game.halfTimeSequence].FGLG[0]['1FIRST'])}">
+                <div class="info-bl" ng-show="game.markets[game.halfTimeSequence].FGLG[0]['1FIRST']" ng-click="bet(game.markets[game.halfTimeSequence].FGLG[0]['1FIRST'], game.markets[game.halfTimeSequence].FGLG[0], game)">
+                    <p ng-bind="game.markets[game.halfTimeSequence].FGLG[0]['1FIRST'].price|oddConvert:env.oddFormat"></p>
+                </div>
+            </td>
+            <td class="factor-w" ng-class="{up: game.markets[game.halfTimeSequence].FGLG[0]['1LAST'].price_change == '1', down: game.markets[game.halfTimeSequence].FGLG[0]['1LAST'].price_change == '-1', 'active': isEventInBetSlip(game.markets[game.halfTimeSequence].FGLG[0]['1LAST'])}">
+                <div class="info-bl" ng-show="game.markets[game.halfTimeSequence].FGLG[0]['1LAST']" ng-click="bet(game.markets[game.halfTimeSequence].FGLG[0]['1LAST'], game.markets[game.halfTimeSequence].FGLG[0], game)">
+                    <p ng-bind="game.markets[game.halfTimeSequence].FGLG[0]['1LAST'].price|oddConvert:env.oddFormat"></p>
+                </div>
+            </td>
+
+
+            <td rowspan="2" class="factor-w" ng-class="{up: game.markets[game.halfTimeSequence].FGLG[0]['NOGOAL'].price_change == '1', down: game.markets[game.halfTimeSequence].FGLG[0]['NOGOAL'].price_change == '-1', 'active': isEventInBetSlip(game.markets[game.halfTimeSequence].FGLG[0]['NOGOAL'])}">
+                <div class="info-bl" ng-show="game.markets[game.halfTimeSequence].FGLG[0]['NOGOAL']" ng-click="bet(game.markets[game.halfTimeSequence].FGLG[0]['NOGOAL'], game.markets[game.halfTimeSequence].FGLG[0], game)">
+                    <p ng-bind="game.markets[game.halfTimeSequence].FGLG[0]['NOGOAL'].price|oddConvert:env.oddFormat"></p>
+                </div>
+            </td>
+
+
+
+            <td class="more-competition" rowspan="2">
+                <div class="info-bl" ng-show="game.moreMarketsCount" ng-click="loadAllEvents(game.id)" title="{{'More Markets'|translate}}">
+                    <p>+{{::game.moreMarketsCount}}</p>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td class="section-1">
+                <div class="info-bl">
+                    <p ng-bind="fixDisplayTime(game.info.current_game_time)" ng-show="game.type ==1"></p>
+                    <p ng-bind="game.start_ts|formatDate:'hour':null:env.timeFormat" ng-show="game.type !=1"></p>
+
+                </div>
+            </td>
+            <td class="section-2"><div class="info-bl"><p ng-bind="game.team2_name"></p></div></td>
+            <td class="section-3"><div class="info-bl" ng-show="game.type ==1"><p ng-bind="game.info.score2"></p></div></td>
+
+            <td class="factor-w" ng-class="{up: game.markets['90MINS'].FGLG[0]['2FIRST'].price_change == '1', down: game.markets['90MINS'].FGLG[0]['2FIRST'].price_change == '-1', 'active': isEventInBetSlip(game.markets['90MINS'].FGLG[0]['2FIRST'])}">
+                <div class="info-bl" ng-show="game.markets['90MINS'].FGLG[0]['2FIRST']" ng-click="bet(game.markets['90MINS'].FGLG[0]['2FIRST'], game.markets['90MINS'].FGLG[0], game)">
+                    <p ng-bind="game.markets['90MINS'].FGLG[0]['2FIRST'].price|oddConvert:env.oddFormat"></p>
+                </div>
+            </td>
+            <td class="factor-w" ng-class="{up: game.markets['90MINS'].FGLG[0]['2LAST'].price_change == '1', down: game.markets['90MINS'].FGLG[0]['2LAST'].price_change == '-1', 'active': isEventInBetSlip(game.markets['90MINS'].FGLG[0]['2LAST'])}">
+                <div class="info-bl" ng-show="game.markets['90MINS'].FGLG[0]['2LAST']" ng-click="bet(game.markets['90MINS'].FGLG[0]['2LAST'], game.markets['90MINS'].FGLG[0], game)">
+                    <p ng-bind="game.markets['90MINS'].FGLG[0]['2LAST'].price|oddConvert:env.oddFormat"></p>
+                </div>
+            </td>
+            <!--<td class="factor-w" ng-class="{up: game.markets['90MINS'].FGLG[0]['NOGOAL'].price_change == '1', down: game.markets['90MINS'].FGLG[0]['NOGOAL'].price_change == '-1', 'active': isEventInBetSlip(game.markets['90MINS'].FGLG[0]['NOGOAL'])}">
+                <div class="info-bl" ng-show="game.markets['90MINS'].FGLG[0]['NOGOAL']" ng-click="bet(game.markets['90MINS'].FGLG[0]['NOGOAL'], game.markets['90MINS'].FGLG[0], game)">
+                    <p ng-bind="game.markets['90MINS'].FGLG[0]['NOGOAL'].price|oddConvert:env.oddFormat"></p>
+                </div>
+            </td>-->
+            <td class="factor-w" ng-class="{up: game.markets[game.halfTimeSequence].FGLG[0]['2FIRST'].price_change == '1', down: game.markets[game.halfTimeSequence].FGLG[0]['2FIRST'].price_change == '-1', 'active': isEventInBetSlip(game.markets[game.halfTimeSequence].FGLG[0]['2FIRST'])}">
+                <div class="info-bl" ng-show="game.markets[game.halfTimeSequence].FGLG[0]['2FIRST']" ng-click="bet(game.markets[game.halfTimeSequence].FGLG[0]['2FIRST'], game.markets[game.halfTimeSequence].FGLG[0], game)">
+                    <p ng-bind="game.markets[game.halfTimeSequence].FGLG[0]['2FIRST'].price|oddConvert:env.oddFormat"></p>
+                </div>
+            </td>
+            <td class="factor-w" ng-class="{up: game.markets[game.halfTimeSequence].FGLG[0]['2LAST'].price_change == '1', down: game.markets[game.halfTimeSequence].FGLG[0]['2LAST'].price_change == '-1', 'active': isEventInBetSlip(game.markets[game.halfTimeSequence].FGLG[0]['2LAST'])}">
+                <div class="info-bl" ng-show="game.markets[game.halfTimeSequence].FGLG[0]['2LAST']" ng-click="bet(game.markets[game.halfTimeSequence].FGLG[0]['2LAST'], game.markets[game.halfTimeSequence].FGLG[0], game)">
+                    <p ng-bind="game.markets[game.halfTimeSequence].FGLG[0]['2LAST'].price|oddConvert:env.oddFormat"></p>
+                </div>
+            </td>
+
+            <!--<td class="factor-w" ng-class="{up: game.markets[game.halfTimeSequence].FGLG[0]['NOGOAL'].price_change == '1', down: game.markets[game.halfTimeSequence].FGLG[0]['NOGOAL'].price_change == '-1', 'active': isEventInBetSlip(game.markets[game.halfTimeSequence].FGLG[0]['NOGOAL'])}">
+                <div class="info-bl" ng-show="game.markets[game.halfTimeSequence].FGLG[0]['NOGOAL']" ng-click="bet(game.markets[game.halfTimeSequence].FGLG[0]['NOGOAL'], game.markets[game.halfTimeSequence].FGLG[0], game)">
+                    <p ng-bind="game.markets[game.halfTimeSequence].FGLG[0]['NOGOAL'].price|oddConvert:env.oddFormat">4</p>
+                </div>
+            </td>-->
+        </tr>
+        </tbody>
+    </table>
+</div>
+</div>

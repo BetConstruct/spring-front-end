@@ -1,0 +1,22 @@
+<div ng-controller="cmsSportNewsCtrl">
+    <div class="hp-slider-17" ng-show="selectedHomepageGames.length" ng-init="getSelectedHomepageGames()" ng-mouseover="rotationPaused = true" ng-mouseleave="rotationPaused=false">
+        <div class="hp-slide-17" no-animate ng-repeat="selectedHomepageGame in selectedHomepageGames" ng-class="{'active': $index === selectedGameIndex}">
+            <a no-animate ng-click="bannerClick(selectedHomepageGame)" ng-href="{{!selectedHomepageGame.isYouTubeVideo ? selectedHomepageGame.link : ''}}" target="{{selectedHomepageGame.target}}">
+                <div class="hp-splash-17" ng-show="selectedHomepageGame.content">
+                    <div>
+                        <span ng-bind-html="selectedHomepageGame.content"></span>
+                    </div>
+                </div>
+                <img src="{{selectedHomepageGame.thumbnail_images.full.url}}" />
+                <object ng-show="selectedHomepageGame.flash_banner_url" class="flash_banner" width="100%" height="100%">
+                    <param name="scale" value="exactFit" />
+                    <embed ng-src="{{selectedHomepageGame.flash_banner_url}}" scale="exactFit" height="100%" width="100%">
+                </object>
+            </a>
+        </div>
+        <div class="hp-slider-pagination-17" ng-show="selectedHomepageGames.length >1 && !conf.enableHomepageBannerPrevNextSliders">
+            <small ng-repeat="selectedHomepageGame in selectedHomepageGames" ng-class="{'active': $index === selectedGameIndex}" ng-click="$parent.selectedGameIndex = $index"></small>
+        </div>
+    </div>
+    <vbet-loader ng-show="!selectedHomepageGames.length"></vbet-loader>
+</div>

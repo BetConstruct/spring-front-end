@@ -1,0 +1,256 @@
+@mixin casino2013 {
+  //casino top menu
+  .menu-casino .contain-menu-games ul li a {font-size: 12px;}
+  .menu-casino .contain-menu-games ul .more-games a, .menu-casino .contain-menu-games ul .more-games a:hover {}
+  .menu-casino .contain-menu-games ul .active-game-casino {box-shadow: 0 -2px 0 $hero-color inset;}
+  .menu-casino .contain-menu-games ul .active-game-casino a {
+    color: $text-palette-1;
+  }
+  .casino-main-contain .country-b .country-block-contain ul a.active:before{display: none;}
+  //casino top menu END
+  .body-wrapper.games .contain-casino.poker,
+  .body-wrapper.jackpot .contain-casino.poker,
+  .casino-main .contain-casino.poker,
+  .contain-casino.poker.casino {
+    background: -moz-linear-gradient($skin-palette-11,$skin-palette-12);
+    background: -webkit-linear-gradient($skin-palette-11,$skin-palette-12);
+    background: -o-linear-gradient($skin-palette-11,$skin-palette-12);
+    background: linear-gradient($skin-palette-11,$skin-palette-12);
+    box-shadow: none;
+  }
+  //popular-casino-games
+  .games-slider h3 {
+    color: $text-palette-1;
+    font: 40px/42px  $font-f;
+    text-transform: none;
+  }
+  .body-wrapper.jackpot {
+    background: $jackpot-background;
+  }
+  .body-wrapper.sport.classic {background: $skin-palette-11;}
+  .games-slider ul li a {background: $skin-palette-12;border-radius: 5px;}
+  .games-slider ul li img {
+    border-radius: 5px;
+    width: 220px;
+    max-height: 146px;
+  }
+  .games-slider ul li:hover img{opacity: 0.2;}
+  .right-arrow-b, .left-arrow-b{top: 160px;}
+  .left-arrow-b a,
+  .right-arrow-b a {position: relative;}
+  .left-arrow-b a:before,
+  .right-arrow-b a:before {
+    font: 48px/32px icomoon;
+    display: block;
+    position: absolute;
+    top: 0;
+    color: #a61f67;
+    text-indent: 0;
+  }
+  .left-arrow-b a:before{content: "\e66f";right: -17px;}
+  .right-arrow-b a:before{content: "\e672";left: -17px;}
+  .popular-game-name p {
+    font: 15px/20px $font-f;
+    color: $text-palette-13;
+    height: 26px;
+  }
+  .games-slider ul li .popular-game-name p a {
+    color: $text-palette-1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    box-shadow: none;
+  }
+  .popular-game-name .fav-block a {
+    box-shadow: none;
+    background: none;
+    position: relative;
+  }
+  .popular-game-name .fav-block a:before{
+    content: "\f006";
+    font: 16px/18px icomoon;
+    color: $text-palette-1;
+    position: absolute;
+    right: 0;
+    top: 0;
+    text-indent: 0;
+  }
+  .fav-block a.star-active {background: none;}
+  .fav-block a.star-active:before{
+    content: "\f005";
+    font: 16px/18px icomoon;
+    position: absolute;
+    right: 0;
+    top: 0;
+    text-indent: 0;
+    color: #efbf00;
+  }
+  .block-slider .popular-game-name{float: left; display: block;}
+  .block-slider .popular-game-name .fav-block a:before{
+    color: #efbf00;
+    content: "\f005";
+  }
+  .category-game p {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color: #9e9e9e;
+    font: 12px/16px $font-f;
+    font-weight: $bold-text;
+    text-transform: uppercase;
+  }
+  .play-button span {
+    color: $text-palette-1;
+    font: 13px/16px $font-f;
+    background: $hero-color;
+    border-radius: 20px;
+    text-transform: uppercase;
+    padding: 7px 20px;
+    border-top: none;
+  }
+  .games-slider ul li:hover p.play-button{top: 70px;}
+  .games-slider ul li:hover p.fun-game{top: 106px;}
+  .games-slider ul li p.casino-game-download{
+    top: 33px;
+    right: 6px;
+  }
+  .games-slider ul li p.casino-game-download a{margin: 0 24px 0 0;}
+  .casino-game-download a span{
+    font: 13px/16px $font-f;
+    color: set-color($hero-color);
+    background: $hero-color;
+    border-radius: 0;
+    text-transform: uppercase;
+    padding: 4px 15px;
+    display: inline-block;
+  }
+  .fun-game span{
+    font: 13px/16px $font-f;
+    color: set-color($brand-color-1);
+    background: $brand-color-1;
+    border-radius: 16px;
+    text-transform: uppercase;
+    padding: 8px 15px;
+    display: inline-block;
+  }
+  .casino-game-download a span:after {
+    top: -6px;
+    right: -3px;
+    box-shadow: -1px 0 0  darken( saturate( $hero-color, 7 ), 8 );
+    border-radius: 50px;
+    border: 6px solid  $hero-color;
+    width: 25px;
+    height: 25px;
+    background: $skin-palette-1;
+    font-family: 'icomoon';
+    content: "\e670";
+    color: $hero-color;
+    font-size: 22px;
+    text-align: center;
+    line-height: 26px;
+  }
+  .games-slider ul li a.game-fun-link {
+    box-shadow: none;
+    text-decoration: none;
+  }
+  //popular-casino-games END
+
+  //games-colection
+  .colltcton-casino h3 {
+    font: 30px/32px  $font-f;
+    color: $text-palette-13;
+    text-transform: uppercase;
+  }
+  .colltcton-casino ul li a p {
+    color: $text-palette-1;
+    font: 30px/32px  $font-f;
+  }
+  .colltcton-casino ul li a p span {
+    background: rgba(223, 52, 52, 0.3);
+    text-shadow: 0 0 16px $text-palette-1, 0 0 16px #b71d48;
+    box-shadow: 0 0 6px 4px rgba(223, 52, 52, 0.3);
+  }
+  //games-colection END
+
+  //Featured-games
+  .Featured-casino-games .games-slider h3 {
+    font: 30px/32px  $font-f;
+  }
+  //Featured-games END
+
+  //top-slots-block
+  .top-slots-block h3 {
+    font: 40px/42px  $font-f;
+    color: $text-palette-13;
+  }
+  .top-slots-block ul li a {
+    color: #999999;
+    font: 14px/18px $font-f;
+    font-weight: $bold-text;
+  }
+  .top-slots-block ul li a:before {
+    content: "| ";
+    color: #999999;
+    font-size: 13px;
+  }
+  .top-slots-block ul li:first-child a:before {content: "";}
+  .top-slots-block ul .active-type-list a, .top-slots-block ul li a:hover {color: #282828;}
+  //top-slots-block END
+
+  //favorite-game-slider
+
+  .all-games-wrap{background: $casino-background;}
+  .all-games-wrap:before{
+    content: "";
+    left: 0;
+    position: absolute;
+    width: 100%;
+    height: 60px;
+    background: $skin-palette-12;
+  }
+  .casino-main-contain .country-block-contain{border: none;}
+  .country-b.casino{background: none;margin: 5px 0 0;}
+  .ok-g-link a:hover{color: $text-palette-1;}
+  .block-slider .games-slider ul li .icon-delete > a{
+    display: block;
+    width: 14px;
+    height: 16px;
+    text-align: center;
+    position: relative;
+  }
+  .games-slider ul li{display: table;}
+  .popular-game-name {
+    float: none;
+    display: table-header-group;
+  }
+  .casino-main-contain ul.countrylist{
+    width: 100%;
+    text-align: center;
+    background: $skin-palette-12;
+  }
+  .casino-main-contain .contaien-country{float: none;}
+  .casino-main-contain .country-b .country-block-contain ul li{
+    float: none;
+    display: inline-block;
+    margin: 5px 0 0 5px;
+    max-width: 220px;
+  }
+  .casino-main-contain .country-b .country-block-contain ul li a{
+    color: $text-palette-1;
+    font: 13px/14px $font-f;
+    font-weight: $bold-text;
+    padding: 11px 10px 12px;
+  }
+  .games-slider{border-bottom: 1px solid $skin-palette-10;}
+  .closed-button-casino{display: none;}
+  .popular-casino-games{margin: 15px 0 10px 0;}
+  .casino-main-contain .country-b .country-block-contain ul a.active{
+    background: none;
+    box-shadow: 0 2px 0 $brand-color-1 inset,
+    0 -2px 0 $brand-color-1 inset,
+    2px 0 0 $brand-color-1 inset,
+    -2px 0 0 $brand-color-1 inset;
+    border-radius: 0;
+  }
+  //favorite-game-slider END
+}

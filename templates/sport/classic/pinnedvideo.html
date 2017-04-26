@@ -1,0 +1,38 @@
+<div id="pinned-games-container">
+
+    <div ng-repeat="pinnedGame in pinnedGames"
+         class="game-video game-video-detached" draggable ng-show="pinnedGame" ng-show="pinnedGame.video_data">
+        <div class="game-video-container detached-game-container"  id="detached-game-container-{{pinnedGame.id}}" ng-init="soundVolume = env.sound">
+            <div class="detached-game-name"><p>{{pinnedGame.sport.name}} : {{pinnedGame.team1_name}} {{pinnedGame.team2_name ? '&mdash; ' + pinnedGame.team2_name : ''}}</p></div>
+            <flashplayer  id="gamevideo{{pinnedGame.id}}" stream-url="{{pinnedGame.video_data}}" provider-id="{{pinnedGame.tv_type}}" ng-if="pinnedGame.video_data" initially-muted="{{ soundVolume }}"></flashplayer>
+            <div class="video-player-control" >
+                <span ng-click="togglePause();" ng-show="!paused && videoIsLoaded" class="video-pause">Pause</span>
+                <span ng-click="togglePause();" ng-show="paused && videoIsLoaded" class="video-play">Play</span>
+                <div class="video-player-control detached-volume">
+                    <span ng-click="soundVolume = 0;" ng-show="videoIsLoaded && soundVolume > 0" class="video-mute">Mute</span>
+                    <span ng-click="soundVolume = 0.75;" ng-show="soundVolume === 0 && videoIsLoaded" class="video-unmute">UnMute</span>
+                    <div class="sound-volume" ng-show="videoIsLoaded">
+                        <div>
+                            <rzslider rz-slider-model="soundVolume" rz-slider-floor="0"
+                                      rz-slider-ceil="1"
+                                      rz-slider-step="0.01"
+                                      rz-slider-precision="1" rz-slider-always-show-bar="true">
+                            </rzslider>
+                        </div>
+                    </div>
+                </div>
+                <div class="detached-info">
+                    {{pinnedGame.info.current_game_state|convertSetName:pinnedGame.sport.alias|translate}}
+                    {{ pinnedGame.info.current_game_state? ' ' + ('Score:'|translate) + ' ' :''}}{{pinnedGame.info.score1}} {{pinnedGame.info.score2 ? '&ndash; ' + pinnedGame.info.score2 : ''}}
+                    {{pinnedGame.stats.passes.team1_value && pinnedGame.sport.alias === 'Tennis'? '&#40;' + pinnedGame.stats.passes.team1_value:''}} {{ pinnedGame.stats.passes.team2_value && pinnedGame.sport.alias === 'Tennis'? '&#58; '+ pinnedGame.stats.passes.team2_value + '&#41;': '' }}
+                    {{pinnedGame.stats[pinnedGame.info.current_game_state] && pinnedGame.sport.alias !== 'Tennis'? '&#40;' + pinnedGame.stats[pinnedGame.info.current_game_state].team1_value + ' &ndash; ':''}}
+                    {{pinnedGame.stats[pinnedGame.info.current_game_state] && pinnedGame.sport.alias !== 'Tennis' ? pinnedGame.stats[pinnedGame.info.current_game_state].team2_value  + '&#41;' :''}}
+                </div>
+            </div>
+            <a ng-click="attachPinnedVideo(pinnedGame, 'dragable'); $parent.mute = undefined; $parent.paused = undefined;"><span
+                    trans>close</span></a>
+            <div resizer preserve-aspect-ratio target="detached-game-container-{{pinnedGame.id}}" initial-height="197" initial-width="347" min-height="100" min-width="100" class="resizer"
+                 max-width="{{ conf.detachedVideoSizes[pinnedGame.tv_type].maxWidth }}" max-height="{{ conf.detachedVideoSizes[pinnedGame.tv_type].maxHeight }}"></div>
+        </div>
+    </div>
+</div>

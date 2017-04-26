@@ -1,0 +1,16 @@
+<div class="kl-winners-block-j">
+    <h1>{{ title|translate }}</h1>
+    <ul ng-show="!winnersLoading || winners">
+        <li ng-repeat="winner in winners track by $index" ng-click="openWinnerGame(winner.game_id)">
+            <div>
+                <img ng-src="{{externalImages[winner.game_id]}}" />
+            </div>
+            <div>
+                <h2>{{winner.game_name}}</h2>
+                <h3>{{winner.player_user_name}}</h3>
+                <h4>{{winner.win_amount}} {{winner.currency_id|currency}}</h4>
+            </div>
+        </li>
+    </ul>
+    <vbet-loader ng-if="!winners && winnersLoading"></vbet-loader>
+</div>

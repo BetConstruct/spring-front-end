@@ -1,0 +1,52 @@
+<div class="three-in-one-skillgames-j" ng-controller="cmsPagesCtrl" ng-init="loadPage('games-landing-page-'+env.lang, true); checkIfEnabled('gameslanding');">
+    <div ng-if="pages">
+        <div class="tio-intro-j" ng-init="gameSoftware = getPageBySlug(pages,'PokerBackgammon&OFCPokerSoftware')">
+            <div class="content-j">
+                <div class="tio-skill-games-holder-j">
+                    <div class="image-wrapper">
+                        <img src="{{gameSoftware.thumbnail}}">
+                    </div>
+                    <h1 ng-bind="gameSoftware.title"></h1>
+                    <div ng-bind-html="gameSoftware.content"></div>
+                    <div>
+                        <a ng-if="userOSVersion === 'WindowsXP' && gameSoftware.custom_fields.button_windows_xp[0]" href="{{gameSoftware.custom_fields.button_windows_xp[0]}}" ng-click="broadcast('analytics.button', 'poker3in1')" class="button-j" trans>Download</a>
+                        <a ng-if="(userOSVersion !== 'WindowsXP' || !gameSoftware.custom_fields.button_windows_xp[0]) && (userOS === 'Windows' || userOS === 'Linux')" href="{{gameSoftware.custom_fields.button_windows[0]}}" ng-click="broadcast('analytics.button', 'poker3in1')" class="button-j" trans>Download</a>
+                        <a ng-if="userOS === 'MacOS'" href="{{gameSoftware.custom_fields.button_mac[0]}}" ng-click="broadcast('analytics.button', 'poker3in1')" class="button-j" trans>Download</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="our-advantages-j" ng-init="advantages = getPageBySlug(pages,'OurAdvantages')">
+            <div class="content-j">
+                <div class="title-j" ng-bind="advantages.title"></div>
+                <input type="checkbox" id="our-advantages-j">
+                <label for="our-advantages-j" ng-show="advantages.children.length > 4"></label>
+                <div class="our-advantages-wrapper-j">
+                    <ul>
+                        <li ng-repeat="advantage in advantages.children track by $index">
+                            <div class="o-advantages-icon-j {{advantage.custom_fields.class[0]}}"></div>
+                            <p ng-bind="advantage.title"></p>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="tio-download-section-j" ng-init="downloads = getPageBySlug(pages, 'TryitNow!')">
+            <div class="content-j">
+                <div class="tio-vert-align-wrapper-j">
+                    <div class="tio-vert-align-inline-j">
+                        <h1 ng-bind="downloads.title"></h1>
+                        <div ng-bind-html="downloads.content"></div>
+                        <div>
+
+                            <a ng-if="userOSVersion === 'WindowsXP' && downloads.custom_fields.button_windows_xp[0]" href="{{downloads.custom_fields.button_windows_xp[0]}}" class="button-j" ng-click="broadcast('analytics.button', 'poker3in1')" trans>Download</a>
+                            <a ng-if="(userOSVersion !== 'WindowsXP' || !downloads.custom_fields.button_windows_xp[0]) && (userOS === 'Windows' || userOS === 'Linux')" href="{{downloads.custom_fields.button_windows[0]}}" class="button-j" ng-click="broadcast('analytics.button', 'poker3in1')" trans>Download</a>
+                            <a ng-if="userOS === 'MacOS'" href="{{downloads.custom_fields.button_mac[0]}}" class="button-j" ng-click="broadcast('analytics.button', 'poker3in1')" trans>Download</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>

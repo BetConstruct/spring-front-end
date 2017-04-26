@@ -1,0 +1,177 @@
+<div ng-controller="cmsPagesCtrl" ng-init="checkIfEnabled('belote'); setTitle('Belote')">
+    <div ng-if="!globalConfig.belote.redirectOnGame">
+        <div ng-show="!showNestedFrame">
+
+            <!-- NEW BELOTE PAGE -->
+            <div ng-if="conf.showNewBelotePage" class="skillgame-landing-j belote-j"  ng-init="loadPage('belote.mainPageSlugs', true)">
+                <vbet-loader ng-show="!pages"></vbet-loader>
+                <div ng-if="pages">
+                    <div class="intro-section-j" ng-init="initProductBanners('belote')">
+                        <casino-game-slider product-slides="productSlides" page-name = "Belote"></casino-game-slider>
+                        <div class="skillgame-landing-guide button-group-j">
+                            <ul>
+                                <li>
+                                    <button ng-click="openNestedFrame()" trans>Play now</button>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="promotions-section-j">
+                        <h1 trans>Best Promotions</h1>
+                        <div class="nav-landp-j"  no-animate>
+                            <promotion-news template="slider" slug="belote" hide-dates="true" main-class="block-meny-news promo" use-custom-base-host="true" ng-if="!showDownloadLinks" share-path="belote"></promotion-news>
+                        </div>
+                    </div>
+                    <div class="game-torunament-section-j">
+                        <div ng-init="tounamentTable = getPageBySlug(pages,'belote-table')" ng-bind-html="tounamentTable.content"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div ng-if="!conf.showNewBelotePage" ng-init="loadPages('belote');getCustomPage('belote','mainPageHeaderSlugs','headerContentHTML');setDefaultDownloadOS('belote');" class="poker-background new" ng-class="'belote-'+selectedBelotePage.slug" watch-resize>
+                <!--Casino-->
+                <!--Menu games-->
+                <div class="menu-casino menu-poker menu-belote">
+                    <div class="menu-games">
+                        <div class="contain-menu-games">
+                            <ul class="poker-menu">
+                                <div class="contein-nav-g">
+                                    <!--<li ng-repeat="page in belotePages" ng-class="{'active-game-casino': page.id === selectedBelotePage.id}" class="poker {{page.slug}}">-->
+                                    <!--<a ng-click="selectPage(page, 'belote'); $parent.showDownloadLinks = false" id="belotepage{{page.slug}}"><span></span>{{page.title}}</a>-->
+                                    <!--</li>-->
+                                </div>
+                            </ul>
+
+                            <!--   <div class="download-button-info"><button ng-click="showDownloadLinks = !showDownloadLinks" trans>Download</button></div>-->
+                            <!--<div class="download-button-info play"><a ng-href="{{globalConfig.belote.instantPlayLink}}" target="_blank"><button trans>Play now</button></a></div>-->
+                        </div>
+
+                    </div>
+                </div>
+
+                <!--&lt;!&ndash;big-slider&ndash;&gt;-->
+                <!--<div ng-show="selectedBelotePage.slug == 'home'" ng-init="gePageBanners('belote');">-->
+                <!--<vbet-big-slider ng-if="beloteTopBanners" images="beloteTopBanners" link-click-handler="checkForPageDeepLinkFunc('belote')"> </vbet-big-slider>-->
+                <!--</div>-->
+                <!--&lt;!&ndash;big-slider END&ndash;&gt;-->
+
+
+                <div class="contain-casino poker big-b">
+                    <div class="centr-block-baners-s" ng-hide="customPageLoading">
+                        <div class="screens-bg-f"></div>
+                        <div class="text-block-change-b" ng-hide="headerContentHTML">
+                            <p><span trans>Belote</span> <br><a ng-bind="'Use your '|translate"></a> <b trans>brain</b></p>
+                        </div>
+                        <div class="text-block-change-b" ng-show="headerContentHTML" ng-bind-html="headerContentHTML"></div>
+                        <div class="buttons-reg-s">
+                            <!--<div class="download-button-info play">-->
+                            <!--<a ng-href="http://belote.vbet.com" target="_blank" href="http://belote.vbet.com"><button trans="">Խաղալ հիմա</button></a>-->
+                            <!--</div>-->
+                            <div class="download-button-info play">
+                                <a ng-click="openNestedFrame()"><button trans>Play now!</button></a>
+                                <!-- <a target="{{globalConfig.belote.instantPlayTarget}}" ng-href="{{globalConfig.belote.instantPlayLink}}"><button trans>Play now!</button></a> -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!--mini-slider-->
+                <!--mini-slider END-->
+
+                <vbet-loader class="page-center" ng-show="!belotePagesLoaded"></vbet-loader>
+
+                <div class="poker-baners" ng-show="belotePagesLoaded && selectedBelotePage.slug != 'home'">
+                    <div class="contain-baners">
+                        <div class="top-slots-block">
+                            <div class="poker-text" ng-class="selectedBelotePage.slug">
+                                <div ng-bind-html="selectedBelotePage.content"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <!--mini title-->
+                <div ng-show="showDownloadLinks" class="choose-block-b"><h1><span>choose</span> your os</h1></div>
+                <!--mini title-->
+                <!--Sub menu-->
+                <div class="sub-menu-poker" ng-show="showDownloadLinks">
+                    <ul>
+                        <li ng-class="{'active': selectedOS =='All'}"><a ng-click="selectedOS = 'All'">All</a></li>
+                        <li ng-show="globalConfig.belote.downloadLink.windows" ng-class="{'active': selectedOS=='Windows'}"><a ng-click="selectedOS = 'Windows'">Windows</a></li>
+                        <li ng-show="globalConfig.belote.downloadLink.mac" ng-class="{'active': selectedOS=='MacOS'}"><a ng-click="selectedOS = 'MacOS'">Mac OS</a></li>
+                        <li ng-show="globalConfig.belote.downloadLink.linux" ng-class="{'active': selectedOS=='UNIX' || selectedOS=='Linux'}"><a ng-click="selectedOS = 'Linux'">Linux</a></li>
+                        <li ng-show="globalConfig.belote.downloadLink.android" ng-class="{'active': selectedOS=='android'}"><a ng-click="selectedOS = 'android'">Android</a></li>
+                    </ul>
+                </div>
+
+                <!--Sub menu-->
+
+                <div class="download-links" ng-show="showDownloadLinks" ng-class="{'all-oses':selectedOS =='All'}">
+                    <h2 ng-show="selectedOS =='All'"><span trans>All downloads</span></h2>
+                    <ul>
+                        <li ng-show="(selectedOS =='All' && globalConfig.belote.downloadLink.windows) ||  selectedOS =='Windows'">
+                            <div class="title-link-d windows">
+                                <h3 trans>Windows</h3>
+                                <span ng-bind="globalConfig.belote.requirements.windows"></span>
+                            </div>
+                            <p ng-bind="globalConfig.belote.downloadDescription.windows"></p>
+
+                            <div class="link-sec-download">
+                                <a ng-href="{{globalConfig.belote.downloadLink.windows}}" trans>Download</a>
+                            </div>
+                        </li>
+                        <li ng-show="(selectedOS =='All' && globalConfig.belote.downloadLink.mac)  ||  selectedOS =='MacOS'">
+                            <div class="title-link-d mac">
+                                <h3 trans>Mac OS</h3>
+                                <span ng-bind="globalConfig.belote.requirements.mac"></span>
+                            </div>
+                            <p ng-bind="globalConfig.belote.downloadDescription.mac"></p>
+
+                            <div class="link-sec-download">
+                                <a ng-href="{{globalConfig.belote.downloadLink.mac}}" trans>Download</a>
+                            </div>
+                        </li>
+                        <li ng-show="(selectedOS =='All' && globalConfig.belote.downloadLink.linux)  ||  selectedOS =='Linux'">
+                            <div class="title-link-d linux">
+                                <h3 trans>Linux</h3>
+                                <span ng-bind="globalConfig.belote.requirements.linux"></span>
+                            </div>
+                            <p ng-bind="globalConfig.belote.downloadDescription.linux"></p>
+
+                            <div class="link-sec-download">
+                                <a ng-href="{{globalConfig.belote.downloadLink.linux}}" trans>Download</a>
+                            </div>
+                        </li>
+                        <li ng-show="(selectedOS =='All' && globalConfig.belote.downloadLink.android)  ||  selectedOS =='android'">
+                            <div class="title-link-d android">
+                                <h3 trans>Android</h3>
+                                <span ng-bind="globalConfig.belote.requirements.android"></span>
+                            </div>
+                            <p ng-bind="globalConfig.belote.downloadDescription.android"></p>
+
+                            <div class="link-sec-download">
+                                <a ng-href="{{globalConfig.belote.downloadLink.android}}" trans>Download</a>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="mein-page-contain poker" ng-show="selectedBelotePage.slug == 'home'">
+                    <div class="page-main"></div>
+                    <div class="table-information" ng-show="belotePagesLoaded" ng-bind-html="selectedBelotePage.content"></div>
+                </div>
+            </div>
+
+        </div>
+
+        <div ng-if="showNestedFrame" ng-controller="casinoSpecialGamesCtrl" ng-init="loadGame('belote'); checkIfEnabled('belote');"  class="big-games-overflow" ng-include="getTemplate('optional_modules/casino/templates/specialgames/skillgame.html')"></div>
+    </div>
+
+    <div ng-if="globalConfig.belote.redirectOnGame" class="belote-with-fullscreen" ng-controller="casinoSpecialGamesCtrl" ng-init="loadGame('belote')" ng-include="getTemplate('optional_modules/casino/templates/specialgames/main.html')"></div>
+</div>
+
+
+
+
+

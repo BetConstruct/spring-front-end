@@ -1,0 +1,125 @@
+<div ng-if="conf.oldHomepage" ng-init="setTitle('')" class="old-homepage">
+    <!--Главная страница-->
+    <div class="mein-page-contain">
+        <div class="page-main">
+            <div class="top-picture-block" ng-include="getTemplate('templates/homepage/top_game_banners.html')"></div>
+
+            <div>
+                <div ng-include="getTemplate('templates/homepage/countdown_announcement.html')" ng-controller="homepageCtrl" class="announcement" ng-if="env.showFifaCountdown" ></div>
+                <div ng-include="getTemplate('templates/homepage/short_wide_banners.html')" ng-controller="cmsSportNewsCtrl" class="announcement announcement-banners"  ng-init="getHomepageBanners()" ng-show="homepageBanners.length" ></div>
+            </div>
+        </div>
+    </div>
+
+    <!--Блок с новостью-->
+    <div ng-include="getTemplate('templates/homepage/center.html')" class="block-size-visible-b"></div>
+    <div ng-include="getTemplate('templates/homepage/sportnews_full.html')" class="block-size-visible-b" ng-if="!conf.disableHomepageNews"></div>
+    <!--Блок с новостью END-->
+</div>
+
+
+<style ng-controller="cmsPagesCtrl" ng-init="loadPage('homepage-backgrounds', true)">
+    .body-wrapper.homepage {
+    {{mainPage.thumbnail ? 'background-image: url('+mainPage.thumbnail+');' : ''}}
+    {{mainPage.custom_fields.size ? "background-size: " + mainPage.custom_fields.size[0] + ";" : mainPage.thumbnail ? "background-size: 100%;" : ""}}
+    {{mainPage.custom_fields.position ? 'background-position: ' + mainPage.custom_fields.position[0] : mainPage.thumbnail ? "background-position: 50% 0" : ""}};
+    {{mainPage.custom_fields.attachment ? "background-attachment:" + mainPage.custom_fields.attachment[0] + ";" : ""}}
+    {{mainPage.custom_fields.color ? "background-color: " + mainPage.custom_fields.color[0] + ";" : ""}}
+    {{mainPage.custom_fields.repeat ? "background-repeat: " + mainPage.custom_fields.repeat[0] : mainPage.thumbnail ? "background-repeat: no-repeat" : ""}};
+    }
+</style>
+
+<!-- new home page template -->
+<div ng-if="!conf.oldHomepage" ng-init="setTitle('')" class="new-homepage">
+    <div class="mein-page-contain">
+        <div class="page-main">
+            <div>
+                <div class="outside-b-sh">
+                    <div class="top-picture-block" ng-include="getTemplate('templates/homepage/top_game_banners.html')"></div>
+
+                    <div ng-if="conf.enableProductsSliderOnHomePage" ng-include="getTemplate('templates/homepage/products_slider.html')" class="block-size-visible-b"></div>
+
+                    <div ng-if="conf.enableFeaturedGameMultiSliderOnHomePage" ng-include="getTemplate('templates/homepage/featured_games_slider.html')" class="block-size-visible-b"></div>
+
+                    <div ng-if="!conf.enableProductsSliderOnHomePage">
+                        <div ng-include="getTemplate('templates/homepage/short_wide_banners.html')" ng-controller="cmsSportNewsCtrl" class="announcement announcement-banners new-version" ng-init="getHomepageBanners()" ng-show="homepageBanners.length"></div>
+                    </div>
+                </div>
+                <div ng-if="conf.enableHomePageBottomXSBanner" class="homepage-xs-banner-bottom-j" ng-controller="cmsPagesCtrl" ng-init="loadBanners(getSlug('bannerSlugs.homepageBottomBanners'));slider.index = 0;">
+                    <vbet-loader class="centered-j" ng-show="!bannerObjects[getSlug('bannerSlugs.homepageBottomBanners')]"></vbet-loader>
+                    <a ng-if="bannerObjects[getSlug('bannerSlugs.homepageBottomBanners')]" ng-href="{{bannerObjects[getSlug('bannerSlugs.homepageBottomBanners')][slider.index].link}}" target="{{bannerObjects[getSlug('bannerSlugs.homepageBottomBanners')][slider.index].linktarget}}">
+                        <img ng-src="{{ bannerObjects[getSlug('bannerSlugs.homepageBottomBanners')][slider.index].imageurl }}">
+                    </a>
+                </div>
+
+
+
+
+
+                <div class="news-block-section" ng-if="!conf.disableHomepageNews">
+                    <!-- news section -->
+                    <div ng-include="getTemplate('templates/homepage/new_sportnews_full.html')" class="tpl-container" ></div>
+
+
+                </div>
+                <div ng-if="(!conf.enableHomePageBottomBanner && !conf.homePageLastMinuteBets.enable) && !conf.disableHomePageTournaments" ng-controller="homepageTournaments">
+                    <div class="mini-t-container tournament" ng-class="{'ChinesePoker': tournamentModel.selectedTournament.value == 2}">
+                        <vbet-loader ng-show="!tournamentsLoadComplete"></vbet-loader>
+                        <div ng-show="tournamentsLoadComplete" ng-include="getTemplate('templates/homepage/tournaments.html')">
+                        </div>
+                    </div>
+                    <div class="mini-t-container leaderbord" ng-if="conf.getPokerLeaderboardDataFromSwarm">
+                        <vbet-loader ng-show="!pokerLeaderboard"></vbet-loader>
+                        <div ng-init="getPokerLeaderboard();" ng-show="pokerLeaderboard">
+                            <h3 trans>Poker Leaderboard</h3>
+                            <div class="list-leder-gamers">
+                                <table border="0" cellspacing="0" cellpadding="0">
+                                    <tbody>
+                                        <tr>
+                                            <td>ID</td>
+                                            <td trans>Points</td>
+                                        </tr>
+                                        <tr ng-repeat="boardData in pokerLeaderboard">
+                                            <td>{{boardData.player_id}}</td>
+                                            <td>{{boardData.point}}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div ng-if="!conf.hidePokerLeaderboardAllButton" class="show-all-listinfo">
+                                <a ng-href="#/poker?page=leaderboards&subpage=tournament">
+                                    <button trans>Show All</button>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div ng-controller="twitterController" ng-include="getTemplate('templates/homepage/twitternews.html')" class="twitter-news-contain" ng-if="conf.twitterFeed.enabled" ng-show="tweets.length" ng-init="loadTwitterFeed()"></div>
+                <div ng-controller="cmsPagesCtrl" class="mini-t-container leaderbord" ng-if="!conf.getPokerLeaderboardDataFromSwarm && !conf.enableHomePageBottomBanner && !conf.homePageLastMinuteBets.enable">
+                    <vbet-loader ng-show="!pokerLeaderboard"></vbet-loader>
+                    <div ng-init="getPokerLeaderboard();" ng-show="pokerLeaderboard">
+                        <h3 trans>Poker Leaderboard</h3>
+                        <div class="list-leder-gamers" ng-bind-html="pokerLeaderboard"></div>
+                        <div ng-if="!conf.hidePokerLeaderboardAllButton" class="show-all-listinfo">
+                            <a ng-href="#/poker?page=leaderboards&subpage=tournament">
+                                <button trans>Show All</button>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div ng-if="conf.enableHomePageBottomBanner && !conf.homePageLastMinuteBets.enable" ng-controller="cmsPagesCtrl" ng-init="loadBanners(getSlug('bannerSlugs.homepageBottomBanners'))" class="hp-bottom-buner-j">
+                    <vbet-loader ng-show="!bannerObjects[getSlug('bannerSlugs.homepageBottomBanners')]"></vbet-loader>
+                    <div ng-show="bannerObjects[getSlug('bannerSlugs.homepageBottomBanners')]">
+                        <a ng-href="{{bannerObjects[getSlug('bannerSlugs.homepageBottomBanners')][0].link}}" target="{{bannerObjects[getSlug('bannerSlugs.homepageBottomBanners')][0].linktarget}}">
+                            <img ng-src="{{ bannerObjects[getSlug('bannerSlugs.homepageBottomBanners')][0].imageurl }}" alt="">
+                        </a>
+                    </div>
+                </div>
+                <!--<vbet-last-minute-bets ng-if="conf.homePageLastMinuteBets.enable" sport-tabs-quantity="15"></vbet-last-minute-bets>-->
+                <game-widget ng-if="conf.homePageLastMinuteBets.enable && !conf.twitterFeed.enabled" sport-tabs-quantity="15" game-widget-type="'lastMinutesBets'" game-widget-title="'Last minute bets'" class="last-minutes-widget-b"></game-widget>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--<div ng-controller="cmsPageSliderCtrl" ng-include="getTemplate('templates/bottomslider.html')" onload="loadSliderContent('homepage-slider-' + env.lang)"></div>-->

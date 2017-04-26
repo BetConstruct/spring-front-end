@@ -1,0 +1,44 @@
+<div class="float-left width-100" ng-controller="twitterController"  ng-init="loadTwitterFeed()">
+    <div class="twitter-news-contain-mini">
+        <div class="tittle-twitters-b">
+            <h3 trans>
+                <b class="twitter-icon-b"></b>
+                Twitter News
+            </h3>
+        </div>
+        <div class="twiter-region-tabs">
+            <ul>
+                <li ng-repeat="tab in tabs" ng-class="{active:tab.active}" ng-click="selectTab(tab)">{{tab.title| translate}}</li>
+            </ul>
+        </div>
+        <div class="twittr-news-list-b">
+            <ul>
+                <li ng-repeat="tweet in tweets">
+                    <div class="icon-title-date-twit" ng-show="{{tweet.entities.user_mentions.length}}">
+                        <h4>
+                            <b>{{tweet.entities.user_mentions[0].name}}</b>
+                            <i ng-trim="true">
+                                <span ng-if="tweet.entities.user_mentions[0].screen_name">@</span>
+                                {{tweet.entities.user_mentions[0].screen_name}}
+                            </i>
+                        </h4>
+                    </div>
+                    <div class="news-time-b">
+                        <span>{{tweet.created_at}}</span>
+                    </div>
+                    <p>
+                        <a ng-href={{tweet.entities.urls[0].url}} target="_blank">
+                            {{tweet.text}}
+                            <img
+                                    ng-if="tweet.entities.media.length"
+                                    ng-src="{{tweet.entities.media[0].media_url}}"
+                                    width="{{tweet.entities.media[0].sizes.small.w}}"
+                                    height="{{tweet.entities.media[0].sizes.small.h}}"
+                            />
+                        </a>
+                    </p>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>

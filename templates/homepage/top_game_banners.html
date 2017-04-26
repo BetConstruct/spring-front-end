@@ -1,0 +1,34 @@
+<div ng-controller="cmsSportNewsCtrl" class="featured-games-container">
+    <vbet-loader  ng-show="!selectedHomepageGames.length"></vbet-loader>
+    <div ng-show="selectedHomepageGames.length" ng-init="getSelectedHomepageGames()" ng-mouseover="rotationPaused = true" ng-mouseleave="rotationPaused=false" class="slider-visible-contain-b">
+        <div no-animate="disable" class="big-buner" ng-repeat="selectedHomepageGame in selectedHomepageGames" ng-show="$index === selectedGameIndex" ng-class="{'active': $index === selectedGameIndex}">
+            <div no-animate class="slider-image-wrapper-b" style="background-image: url({{selectedHomepageGame.thumbnail_images.full.url}})">
+                <a class="block-black-hover" ng-click="bannerClick(selectedHomepageGame)"
+                   ng-href="{{!selectedHomepageGame.isYouTubeVideo ? selectedHomepageGame.link : ''}}" target="{{selectedHomepageGame.target}}">
+                    <p class="name-chempionship" ng-bind-html="selectedHomepageGame.content"></p>
+                   <!-- <span class="bet-button" trans ng-show="!selectedHomepageGame.isExternal">Bet now!</span>-->
+                </a>
+                <object ng-show="selectedHomepageGame.flash_banner_url"  class="flash_banner" width="100%" height="100%">
+                    <param name="scale" value="exactFit" />
+                    <embed  ng-src="{{selectedHomepageGame.flash_banner_url}}" scale="exactFit" height="100%"  width="100%">
+                </object>
+            </div>
+        </div>
+        <div class="featured-game-selector" ng-show="selectedHomepageGames.length >1 && !conf.enableHomepageBannerPrevNextSliders">
+            <span ng-repeat="selectedHomepageGame in selectedHomepageGames" ng-class="{'active': $index === selectedGameIndex}" ng-click="$parent.selectedGameIndex = $index">{{$index}}</span>
+        </div>
+        <div class="featured-game-slide-arrows" ng-show="selectedHomepageGames.length >1 && conf.enableHomepageBannerPrevNextSliders">
+            <span ng-click="slideBanners('left')" ng-class="{'disabled': selectedGameIndex == 0}"></span>
+            <span ng-click="slideBanners('right')" ng-class="{'disabled': selectedGameIndex == selectedHomepageGames.length - 1}"></span>
+        </div>
+    </div>
+</div>
+
+<div ng-controller="featuredgameCtrl" class="big-cash" ng-class="mostPopularLiveGame.sport.alias" ng-if="!conf.enableHpBannerInsteadLiveGame">
+    <vbet-loader  ng-show="!mostPopularLiveGame"></vbet-loader>
+    <div  ng-init="getOneLiveGame()" ng-show="mostPopularLiveGame">
+        <div class="contein-cash" ng-include="getTemplate('templates/homepage/featuredgame.html')"></div>
+    </div>
+</div>
+
+<div ng-if="conf.enableHpBannerInsteadLiveGame" class="big-cash baner-new" banner-slider interval="{{conf.featuredGames.rotationPeriod}}" slug="homepageRightBanners"></div>

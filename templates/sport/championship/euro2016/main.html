@@ -1,0 +1,89 @@
+<div class="play-off-list-wrapper" ng-controller="euroCompetitionCtrl">
+    <div class="contain-play-off-b">
+        <div class="play-off-tab-switcher">
+            <ul>
+                <li ng-repeat="(key,value) in  ::tabs"
+                    ng-click="changeTab(key)"
+                    ng-class="{'active': key === currentTab}">
+                    <p ng-bind="::value|translate"></p>
+                </li>
+            </ul>
+        </div>
+        <div class="new-default-popup-j playoffmap" ng-if="map.GeoLat && map.GeoLong">
+            <div class="pp-table-j">
+                <div class="table-row-j">
+                    <div class="table-cell-j">
+                        <div class="popup-wrapper-j">
+                            <div class="pu-head-j">
+                                <span ng-bind ="::map.Name"></span>
+                                <a class="close-j" ng-click="closeMap()"></a>
+                            </div>
+                            <div class="pu-contain-j" map-lazy-load="https://maps.google.com/maps/api/js">
+                                <ng-map center="{{map.GeoLat}},{{map.GeoLong}}" map-type-id="SATELLITE"  zoom="16" class="default-style" ></ng-map>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="groups-wrapper-view-b" ng-show="currentTab === 0">
+            <div class="standing-list-view-b">
+                <div class="standing-tab-nav-b">
+                    <ul>
+                        <li ng-class="{active : matchOrder === 0 }">
+                            <p ng-click="setOrder(0)" trans>By Groups</p>
+                        </li>
+                        <li ng-class="{active : matchOrder === 1 }">
+                            <p ng-click="setOrder(1)" trans>By Date</p>
+                        </li>
+                    </ul>
+                </div>
+                <div class="by-group-list-view-b by-date-view">
+                    <vbet-loader ng-show="loading"></vbet-loader>
+                    <ul>
+                           <li ng-repeat="item in groups track by $index"
+                             ng-init="data = item.Item"
+                             ng-show="matchOrder === 0"
+                             ng-include="getTemplate('templates/sport/championship/euro2016/matchTable.html')">
+                        </li>
+                        <li ng-repeat="data in dateOrderedMatches track by $index"
+                             ng-show="matchOrder === 1"
+                             ng-include="getTemplate('templates/sport/championship/euro2016/matchTable.html')">
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="groups-wrapper-view-b" ng-show="currentTab === 1">
+            <vbet-loader ng-show="loading"></vbet-loader>
+            <div class="groups-list-view-b">
+                <ul>
+                    <li ng-repeat="item  in groups" ng-show="item.Item.WebLeagueTables.length > 0">
+                        <league-table
+                                items="item.Item.WebLeagueTables"
+                                matches="item.Item.tokenized"
+                                block-title="item.Item.Name"
+                                expand-team="expandTeam"></league-table>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="play-off-contain-wrapper" ng-show="currentTab === 2">
+            <vbet-loader ng-show="loading"></vbet-loader>
+            <div class="play-off-tab-switcher table-title">
+                <ul>
+                    <li ng-repeat="column in playOff"><p ng-bind="::column.Name"></p></li>
+                </ul>
+            </div>
+            <div class="playoff-list-view-wrapper"
+                 ng-include="getTemplate('templates/sport/championship/euro2016/playoff.html')">
+            </div>
+        </div>
+
+        <div class="groups-wrapper-view-b" ng-show="currentTab === 3">
+            <div class="playoff-list-view-wrapper"
+                 ng-include="getTemplate('templates/sport/championship/euro2016/teamsGroup.html')">
+            </div>
+        </div>
+    </div>
+</div>

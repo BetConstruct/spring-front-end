@@ -1,0 +1,9 @@
+<li title="Favorites" trans="attr-only" ng-if="conf.sportEnabled || casinoEnabled"
+    ng-show="!conf.rfid.loginWIthRFID || conf.rfid.loginWIthRFID && env.authorized" class="my-games"
+    prevent-fast-click
+    ng-click="goToTop(!env.authorized); myGamesToggle()"
+    ng-class="{'animate-star-odd':(myGames.length + myCasinoGames.length)% 2 == 1 && favGamesChange,'animate-star-even':(myGames.length + myCasinoGames.length)% 2 == 0 && (myGames.length + myCasinoGames.length)>0 && favGamesChange}">
+    <div ng-show="favGamesChange" class="star-anim"></div>
+    <a ng-class="{'active-s': env.sliderContent === 'savedGames' || env.sliderContent === 'casinoSavedGames'}" trans title="My games"></a>
+    <span class="my-games-count" ng-show="myGames.length || myCasinoGames.length">{{myGames.length + myCasinoGames.length}}</span>
+</li>

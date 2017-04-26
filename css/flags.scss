@@ -1,0 +1,366 @@
+.flag-icon {
+  background: url(../../../images/flags.png#{$delete-cache}) no-repeat 0 0 / 100%;
+  width: 16px;
+  height: 16px;
+}
+.flag-asean { background-position: 0 0%}
+.flag-afghanistan { background-position: 0 0.353357%}
+.flag-africa { background-position: 0 0.706714%}
+.flag-aland { background-position: 0 1.060071%}
+.flag-albania { background-position: 0 1.413428%}
+.flag-alderney { background-position: 0 1.766784%}
+.flag-algeria { background-position: 0 2.120141%}
+.flag-americansamoa { background-position: 0 2.473498%}
+.flag-andorra { background-position: 0 2.826855%}
+.flag-angola { background-position: 0 3.180212%}
+.flag-anguilla { background-position: 0 3.533569%}
+.flag-antiguaandbarbuda { background-position: 0 3.886926%}
+.flag-arableague { background-position: 0 4.240283%}
+.flag-argentina { background-position: 0 4.59364%}
+.flag-armenia { background-position: 0 4.946996%}
+.flag-aruba { background-position: 0 5.300353%}
+.flag-asia { background-position: 0 5.65371%}
+.flag-australia { background-position: 0 6.007067%}
+.flag-austria { background-position: 0 6.360424%}
+.flag-azerbaijan { background-position: 0 6.713781%}
+.flag-bahamas { background-position: 0 7.067138%}
+.flag-bahrain { background-position: 0 7.420495%}
+.flag-bangladesh { background-position: 0 7.773852%}
+.flag-barbados { background-position: 0 8.127208%}
+.flag-basquecountry { background-position: 0 8.480565%}
+.flag-belarus { background-position: 0 8.833922%}
+.flag-belgium { background-position: 0 9.187279%}
+.flag-belize { background-position: 0 9.540636%}
+.flag-benin { background-position: 0 9.893993%}
+.flag-bermuda { background-position: 0 10.24735%}
+.flag-bhutan { background-position: 0 10.600707%}
+.flag-bolivia { background-position: 0 10.954064%}
+.flag-bonairesinteustatiusandsaba { background-position: 0 11.30742%}
+.flag-bosniaherzegovina { background-position: 0 11.660777%}
+.flag-botswana { background-position: 0 12.014134%}
+.flag-bouvet { background-position: 0 12.367491%}
+.flag-brazil { background-position: 0 12.720848%}
+.flag-britishindianoceanterritory { background-position: 0 13.074205%}
+.flag-brunei { background-position: 0 13.427562%}
+.flag-bulgaria { background-position: 0 13.780919%}
+.flag-burkinafaso { background-position: 0 14.134276%}
+.flag-burundi { background-position: 0 14.487633%}
+.flag-caricom { background-position: 0 14.840989%}
+.flag-cis { background-position: 0 15.194346%}
+.flag-cambodja { background-position: 0 15.547703%}
+.flag-cameroon { background-position: 0 15.90106%}
+.flag-canada { background-position: 0 16.254417%}
+.flag-capeverde { background-position: 0 16.607774%}
+.flag-catalonia { background-position: 0 16.961131%}
+.flag-caymanislands { background-position: 0 17.314488%}
+.flag-centralafricanrepublic { background-position: 0 17.667845%}
+.flag-chad { background-position: 0 18.021201%}
+.flag-chile { background-position: 0 18.374558%}
+.flag-china { background-position: 0 18.727915%}
+.flag-chinesetaipei { background-position: 0 19.081272%}
+.flag-christmas { background-position: 0 19.434629%}
+.flag-cocoskeeling { background-position: 0 19.787986%}
+.flag-colombia { background-position: 0 20.141343%}
+.flag-commonwealth { background-position: 0 20.4947%}
+.flag-comoros { background-position: 0 20.848057%}
+.flag-congobrazzaville { background-position: 0 21.201413%}
+.flag-congokinshasa { background-position: 0 21.55477%}
+.flag-cookislands { background-position: 0 21.908127%}
+.flag-costarica { background-position: 0 22.261484%}
+.flag-cotedivoire { background-position: 0 22.614841%}
+.flag-croatia { background-position: 0 22.968198%}
+.flag-cuba { background-position: 0 23.321555%}
+.flag-curacao { background-position: 0 23.674912%}
+.flag-cyprus { background-position: 0 24.028269%}
+.flag-czechrepublic { background-position: 0 24.381625%}
+.flag-denmark { background-position: 0 24.734982%}
+.flag-djibouti { background-position: 0 25.088339%}
+.flag-dominica { background-position: 0 25.441696%}
+.flag-dominicanrepublic { background-position: 0 25.795053%}
+.flag-ecuador { background-position: 0 26.14841%}
+.flag-egypt { background-position: 0 26.501767%}
+.flag-elsalvador { background-position: 0 26.855124%}
+.flag-england { background-position: 0 27.208481%}
+.flag-equatorialguinea { background-position: 0 27.561837%}
+.flag-eritrea { background-position: 0 27.915194%}
+.flag-estonia { background-position: 0 28.268551%}
+.flag-ethiopia { background-position: 0 28.621908%}
+.flag-europe { background-position: 0 28.975265%}
+.flag-fao { background-position: 0 29.328622%}
+.flag-falkland { background-position: 0 29.681979%}
+.flag-faroes { background-position: 0 30.035336%}
+.flag-fiji { background-position: 0 30.388693%}
+.flag-finland { background-position: 0 30.742049%}
+.flag-france { background-position: 0 31.095406%}
+.flag-french-guiana { background-position: 0 31.448763%}
+.flag-frenchsouthernandantarcticlands { background-position: 0 31.80212%}
+.flag-gabon { background-position: 0 32.155477%}
+.flag-galicia { background-position: 0 32.508834%}
+.flag-gambia { background-position: 0 32.862191%}
+.flag-georgia { background-position: 0 33.215548%}
+.flag-germany { background-position: 0 33.568905%}
+.flag-ghana { background-position: 0 33.922261%}
+.flag-gibraltar { background-position: 0 34.275618%}
+.flag-greece { background-position: 0 34.628975%}
+.flag-greenland { background-position: 0 34.982332%}
+.flag-grenada { background-position: 0 35.335689%}
+.flag-guadeloupe { background-position: 0 35.689046%}
+.flag-guam { background-position: 0 36.042403%}
+.flag-guatemala { background-position: 0 36.39576%}
+.flag-guernsey { background-position: 0 36.749117%}
+.flag-guinea { background-position: 0 37.102473%}
+.flag-guineabissau { background-position: 0 37.45583%}
+.flag-guyana { background-position: 0 37.809187%}
+.flag-haiti { background-position: 0 38.162544%}
+.flag-heardislandandmcdonald { background-position: 0 38.515901%}
+.flag-honduras { background-position: 0 38.869258%}
+.flag-hongkong { background-position: 0 39.222615%}
+.flag-hungary { background-position: 0 39.575972%}
+.flag-iaea { background-position: 0 39.929329%}
+.flag-iho { background-position: 0 40.282686%}
+.flag-iceland { background-position: 0 40.636042%}
+.flag-india { background-position: 0 40.989399%}
+.flag-indonesia { background-position: 0 41.342756%}
+.flag-international { background-position: 0 41.696113%}
+.flag-iran { background-position: 0 42.04947%}
+.flag-iraq { background-position: 0 42.402827%}
+.flag-ireland { background-position: 0 42.756184%}
+.flag-islamicconference { background-position: 0 43.109541%}
+.flag-isleofman { background-position: 0 43.462898%}
+.flag-israel { background-position: 0 43.816254%}
+.flag-italy { background-position: 0 44.169611%}
+.flag-jamaica { background-position: 0 44.522968%}
+.flag-japan { background-position: 0 44.876325%}
+.flag-jersey { background-position: 0 45.229682%}
+.flag-jordan { background-position: 0 45.583039%}
+.flag-kazakhstan { background-position: 0 45.936396%}
+.flag-kenya { background-position: 0 46.289753%}
+.flag-kiribati { background-position: 0 46.64311%}
+.flag-kosovo { background-position: 0 46.996466%}
+.flag-kuwait { background-position: 0 47.349823%}
+.flag-kyrgyzstan { background-position: 0 47.70318%}
+.flag-laos { background-position: 0 48.056537%}
+.flag-latvia { background-position: 0 48.409894%}
+.flag-lebanon { background-position: 0 48.763251%}
+.flag-lesotho { background-position: 0 49.116608%}
+.flag-liberia { background-position: 0 49.469965%}
+.flag-libya { background-position: 0 49.823322%}
+.flag-liechtenshein { background-position: 0 50.176678%}
+.flag-lithuania { background-position: 0 50.530035%}
+.flag-luxembourg { background-position: 0 50.883392%}
+.flag-macao { background-position: 0 51.236749%}
+.flag-macedonia { background-position: 0 51.590106%}
+.flag-madagascar { background-position: 0 51.943463%}
+.flag-malawi { background-position: 0 52.29682%}
+.flag-malaysia { background-position: 0 52.650177%}
+.flag-maldives { background-position: 0 53.003534%}
+.flag-mali { background-position: 0 53.35689%}
+.flag-malta { background-position: 0 53.710247%}
+.flag-marshallislands { background-position: 0 54.063604%}
+.flag-martinique { background-position: 0 54.416961%}
+.flag-mauritania { background-position: 0 54.770318%}
+.flag-mauritius { background-position: 0 55.123675%}
+.flag-mayotte { background-position: 0 55.477032%}
+.flag-mexico { background-position: 0 55.830389%}
+.flag-micronesia { background-position: 0 56.183746%}
+.flag-moldova { background-position: 0 56.537102%}
+.flag-monaco { background-position: 0 56.890459%}
+.flag-mongolia { background-position: 0 57.243816%}
+.flag-montenegro { background-position: 0 57.597173%}
+.flag-montserrat { background-position: 0 57.95053%}
+.flag-morocco { background-position: 0 58.303887%}
+.flag-mozambique { background-position: 0 58.657244%}
+.flag-myanmar { background-position: 0 59.010601%}
+.flag-nato { background-position: 0 59.363958%}
+.flag-namibia { background-position: 0 59.717314%}
+.flag-nauru { background-position: 0 60.070671%}
+.flag-nepal { background-position: 0 60.424028%}
+.flag-netherlands { background-position: 0 60.777385%}
+.flag-netherlandsantilles { background-position: 0 61.130742%}
+.flag-newcaledonia { background-position: 0 61.484099%}
+.flag-newzealand { background-position: 0 61.837456%}
+.flag-nicaragua { background-position: 0 62.190813%}
+.flag-niger { background-position: 0 62.54417%}
+.flag-nigeria { background-position: 0 62.897527%}
+.flag-niue { background-position: 0 63.250883%}
+.flag-norfolk { background-position: 0 63.60424%}
+.flag-northamerica { background-position: 0 63.957597%}
+.flag-northkorea { background-position: 0 64.310954%}
+.flag-northerncyprus { background-position: 0 64.664311%}
+.flag-northernireland { background-position: 0 65.017668%}
+.flag-northernmariana { background-position: 0 65.371025%}
+.flag-norway { background-position: 0 65.724382%}
+.flag-oas { background-position: 0 66.077739%}
+.flag-opec { background-position: 0 66.431095%}
+.flag-oceania { background-position: 0 66.784452%}
+.flag-olimpics { background-position: 0 67.137809%}
+.flag-oman { background-position: 0 67.491166%}
+.flag-pakistan { background-position: 0 67.844523%}
+.flag-palau { background-position: 0 68.19788%}
+.flag-palestine { background-position: 0 68.551237%}
+.flag-panama { background-position: 0 68.904594%}
+.flag-papuanewguinea { background-position: 0 69.257951%}
+.flag-paraguay { background-position: 0 69.611307%}
+.flag-peru { background-position: 0 69.964664%}
+.flag-philippines { background-position: 0 70.318021%}
+.flag-pitcairn { background-position: 0 70.671378%}
+.flag-poland { background-position: 0 71.024735%}
+.flag-portugal { background-position: 0 71.378092%}
+.flag-puertorico { background-position: 0 71.731449%}
+.flag-qatar { background-position: 0 72.084806%}
+.flag-quebec { background-position: 0 72.438163%}
+.flag-redcross { background-position: 0 72.791519%}
+.flag-reunion { background-position: 0 73.144876%}
+.flag-romania { background-position: 0 73.498233%}
+.flag-russia { background-position: 0 73.85159%}
+.flag-rwanda { background-position: 0 74.204947%}
+.flag-saintbarthelemy { background-position: 0 74.558304%}
+.flag-sainthelena { background-position: 0 74.911661%}
+.flag-saintlucia { background-position: 0 75.265018%}
+.flag-saintmartin { background-position: 0 75.618375%}
+.flag-saintpierreandmiquelon { background-position: 0 75.971731%}
+.flag-samoa { background-position: 0 76.325088%}
+.flag-sanmarino { background-position: 0 76.678445%}
+.flag-saotomeandprincipe { background-position: 0 77.031802%}
+.flag-saudiarabia { background-position: 0 77.385159%}
+.flag-scotland { background-position: 0 77.738516%}
+.flag-senegal { background-position: 0 78.091873%}
+.flag-serbia { background-position: 0 78.44523%}
+.flag-seychelles { background-position: 0 78.798587%}
+.flag-sierraleone { background-position: 0 79.151943%}
+.flag-singapore { background-position: 0 79.5053%}
+.flag-sintmaarten { background-position: 0 79.858657%}
+.flag-slovakia { background-position: 0 80.212014%}
+.flag-slovenia { background-position: 0 80.565371%}
+.flag-solomonislands { background-position: 0 80.918728%}
+.flag-somalia { background-position: 0 81.272085%}
+.flag-somaliland { background-position: 0 81.625442%}
+.flag-southafrica { background-position: 0 81.978799%}
+.flag-southamerica { background-position: 0 82.332155%}
+.flag-southgeorgiaandsouthsandwich { background-position: 0 82.685512%}
+.flag-southkorea { background-position: 0 83.038869%}
+.flag-southsudan { background-position: 0 83.392226%}
+.flag-spain { background-position: 0 83.745583%}
+.flag-srilanka { background-position: 0 84.09894%}
+.flag-stkittsandnevis { background-position: 0 84.452297%}
+.flag-stvincentandthegrenadines { background-position: 0 84.805654%}
+.flag-sudan { background-position: 0 85.159011%}
+.flag-suriname { background-position: 0 85.512367%}
+.flag-svalbardandjanmayen { background-position: 0 85.865724%}
+.flag-swaziland { background-position: 0 86.219081%}
+.flag-sweden { background-position: 0 86.572438%}
+.flag-switzerland { background-position: 0 86.925795%}
+.flag-syria { background-position: 0 87.279152%}
+.flag-tahiti { background-position: 0 87.632509%}
+.flag-taiwan { background-position: 0 87.985866%}
+.flag-tajikistan { background-position: 0 88.339223%}
+.flag-tanzania { background-position: 0 88.69258%}
+.flag-thailand { background-position: 0 89.045936%}
+.flag-timorleste { background-position: 0 89.399293%}
+.flag-togo { background-position: 0 89.75265%}
+.flag-tokelau { background-position: 0 90.106007%}
+.flag-tonga { background-position: 0 90.459364%}
+.flag-trinidadtobago { background-position: 0 90.812721%}
+.flag-tristandacunha { background-position: 0 91.166078%}
+.flag-tunisia { background-position: 0 91.519435%}
+.flag-turkey { background-position: 0 91.872792%}
+.flag-turkmenistan { background-position: 0 92.226148%}
+.flag-turksandcaicosislands { background-position: 0 92.579505%}
+.flag-tuvalu { background-position: 0 92.932862%}
+.flag-usa { background-position: 0 93.286219%}
+.flag-uganda { background-position: 0 93.639576%}
+.flag-ukraine { background-position: 0 93.992933%}
+.flag-unitedarabemirates { background-position: 0 94.34629%}
+.flag-unitedkingdom { background-position: 0 94.699647%}
+.flag-uruguay { background-position: 0 95.053004%}
+.flag-uzbekistan { background-position: 0 95.40636%}
+.flag-vanutau { background-position: 0 95.759717%}
+.flag-vaticancity { background-position: 0 96.113074%}
+.flag-venezuela { background-position: 0 96.466431%}
+.flag-vietnam { background-position: 0 96.819788%}
+.flag-virginislandsbritish { background-position: 0 97.173145%}
+.flag-virginislandsus { background-position: 0 97.526502%}
+.flag-wales { background-position: 0 97.879859%}
+.flag-wallisandfutuna { background-position: 0 98.233216%}
+.flag-westernsahara { background-position: 0 98.586572%}
+.flag-world { background-position: 0 98.939929%}
+.flag-yemen { background-position: 0 99.293286%}
+.flag-zambia { background-position: 0 99.646643%}
+.flag-zimbabwe { background-position: 0 100%}
+@if $header-lang-with-flag == true{
+  $languages:(
+    eng: flag-england,
+    arm: flag-armenia,
+    rus: flag-russia,
+    alb: flag-albania,
+    bgr: flag-bulgaria,
+    bos: flag-bosniaherzegovina,
+    chi: flag-china,
+    zhh: flag-china,
+    cze: flag-czechrepublic,
+    dut: flag-germany,
+    fas: flag-faroes,
+    fre: flag-france,
+    geo: flag-georgia,
+    ger: flag-germany,
+    gre: flag-greece,
+    hrv: flag-croatia,
+    heb: flag-israel,
+    ita: flag-italy,
+    jpn: flag-japan,
+    kor: flag-southkorea,
+    lat: flag-latvia,
+    lit: flag-lithuania,
+    mac: flag-macedonia,
+    nor: flag-norway,
+    pol: flag-poland,
+    por: flag-portugal,
+    pt-br: flag-brazil,
+    slv: flag-slovenia,
+    spa: flag-spain,
+    srp: flag-serbia,
+    swe: flag-swaziland,
+    tur: flag-turkey,
+    ukr: flag-ukraine,
+    vnm: flag-vietnam,
+    kur: flag-hungary,
+    est: flag-estonia,
+    hun: flag-hungary,
+    arb: flag-arableague,
+    slk: flag-slovakia,
+    rum: flag-romania
+  );
+  @each $className, $extendSelector in $languages {
+    .separator-contain-nav .settings-icon-contain.leng-b {
+      &.selected-#{$className}:before,
+      ~ div .drop-items-contain-b > ul > li.#{$className}:before {
+        background-color: transparent;
+        background-image: url(../../../images/flags.png#{$delete-cache});
+        background-size: 100%;
+        @extend #{"." + $extendSelector};
+      }
+    }
+  }
+  .separator-contain-nav .settings-icon-contain.leng-b {
+    padding: 0 18px 0 30px;
+    &:before, ~ div .drop-items-contain-b > ul > li:before {
+      border-radius:0
+    }
+    ~ div .drop-items-contain-b > ul > li {
+      &.active:after,
+      &:hover:after,
+      &.active:hover:after{
+        display:none;
+      }
+    }
+    &:before {
+      content: "";
+      display: block;
+      width: 16px;
+      height: 16px;
+      position: absolute;
+      top: 2px;
+      left: 5px;
+    }
+  }
+}

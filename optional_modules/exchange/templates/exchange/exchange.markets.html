@@ -1,0 +1,233 @@
+<!--center-column-->
+<div class="wrapper-separator-rialto" ng-controller="markets" >
+    <div ng-if="pageType == 0 " ng-include="getTemplate('optional_modules/exchange/templates/exchange/exchange.homePage.html')"></div>
+    <div ng-if="pageType == 1 " class="center-b-rialto live">
+        <!--Game livescore block-->
+        <div class="game-livescore-rialto  {{sportAlias}}" ng-class="{'exchange-prematch' : gameType === 0} " ng-show="game.team1_name">
+            <div class="game-info" ng-class="{'game-{{sportAlias}}':true}">
+                <div class="game-control">
+                    <div ng-if="gameType === 1" ng-include="getTemplate('templates/sport/livescore.html')"></div>
+                    <div ng-if="gameType === 1" ng-include="getTemplate('templates/sport/livegamestatistics.html')"></div>
+                </div>
+            </div>
+            <!--             <div class="game-block-title">
+                <h3><span>{{regionName}}</span>{{competitionName}}</h3>
+                <div ng-show="game.start_ts" class="game-current-time">{{game.start_ts | formatDate:'full':null:env.timeFormat}}</div>
+            </div>
+            <div class="game-livescore-details">
+                <div class="game-team-1">
+                    <p>{{game.team1_name}}</p>
+                    <span><i>0</i></span>
+                </div>
+                <div class="game-team-2">
+                    <span><i>1</i></span>
+                    <p>{{game.team2_name}}</p>
+                </div>
+            </div> -->
+        </div>
+        <!--Game livescore block-->
+        <!--left-column-->
+        <div class="left-column-markets-rialto">
+            <div class="match-result-rialto-b " ng-repeat="market in markets track by $index" ng-class="market.isActive">
+                <div ng-show=" $index % 2 == 0">
+                    <div class="match-result-row-rialto">
+                        <div class="mini-contain-row-rialto"  ng-click="isActive(market)">
+                            <div class="arrow-icon-rialto " ></div>
+                            <h5 title="{{market.name}}">{{market.name}}</h5>
+                            <div class="matchet-price-rialto">
+                                <p><b> {{ market.base ? "("+market.base+")" : ""}} </b></p>
+                            </div>
+                            <div class="cashout-rialto-b">
+                                <p ng-show="market.commission">{{ market.commission  }}<span>{{ market.commissionRate }}</span></p>
+                            </div>
+                        </div>
+                        <div class="filter-cashout-rialto">
+                            <div class="liability-info-rialto">
+                                <p>Liability</p>
+                                <span>50.000C</span>
+                            </div>
+                            <div class="filter-information-b-rialto">
+                                <ul>
+                                    <li>Cash out <span>10.000C</span></li>
+                                    <li>Profit: <span>-10.000C</span></li>
+                                </ul>
+                            </div>
+                            <div class="min-max-range-rialto">
+                                <div class="min-button-rialto">
+                                    <p>Min</p>
+                                </div>
+                                <div class="field-range-b">
+                                    <div class="default-fielt-color">
+                                        <div class="color-fieald-range">
+                                            <div class="slider-rialto-b"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="max-button-rialto">
+                                    <p>Max</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="info-all-events-row">
+                            <ul class="info-arrow-changed-rialto">
+                                <li class="possible-win-rialto-b"></li>
+                                <li class="mini-b-factor-rialto down">
+                                    <div class="changed-arrob-info-new remove-icon">
+                                        <p>{{ market.downPercent}}% </p>
+                                    </div>
+                                </li>
+                                <li class="mini-b-factor-rialto down"></li>
+                                <li class="mini-b-factor-rialto down">
+                                    <div class="changed-arrob-info-new" ng-click="addBets('down')">
+                                        <p trans>Back All</p>
+                                    </div>
+                                </li>
+                                <li class="mini-b-factor-rialto up">
+                                    <div class="changed-arrob-info-new" ng-click="addBets('up')">
+                                        <p trans>Lay All</p>
+                                    </div>
+                                </li>
+                                <li class="mini-b-factor-rialto up"></li>
+                                <li class="mini-b-factor-rialto up">
+                                    <div class="changed-arrob-info-new remove-icon">
+                                        <p> {{ market.upPercent}}% </p>
+                                    </div>
+                                </li>
+                                <li class="mini-b-factor-statistics"></li>
+                            </ul>
+                            <ul ng-repeat="event in market.event track by  $index">
+                                <li class="possible-win-rialto-b">
+                                    <div class="info-bet-rialto">
+                                        <h5 title="{{event.name+' ('+ event.base+')'}}">{{event.name }}{{  event.base !== '' ? ' ('+ event.base+')' :event.base}} {{  event.name == 'W1' ? ' '+ game.team1_name+' ' : ''}} {{  event.name == 'W2' ? ' '+ game.team2_name+' ' :''}}  </h5>
+                                        <p class="factor-up-down-rialto">
+                                            <span title="{{defaultCurrencyShortName}}" ng-class="event.eStableProfit >= 0 ? 'up' : 'down'">{{event.eStableProfit || event.eStableProfit == 0 ? event.eStableProfit + " "+defaultCurrencyShortName:""}}</span>
+                                            <span title="{{defaultCurrencyShortName}}" ng-if="event.ePossibleProfit"  ng-class="event.ePossibleProfit >= 0 ? 'up' : 'down'">{{event.ePossibleProfit || event.ePossibleProfit == 0? event.ePossibleProfit + " "+defaultCurrencyShortName:""}}</span>
+                                        </p>
+                                    </div>
+                                </li>
+                                <li class="mini-b-factor-rialto down" ng-repeat="fairEvent in event.fairEvent.down track by $index ">
+                                    <div class="factor-rialto">
+                                        <p ng-click="addBets()">{{fairEvent.price}}</p>
+                                        <span title="{{defaultCurrencyShortName}}">{{( fairEvent.userCurrencyAmount && fairEvent.userCurrencyAmount !== 0  )?fairEvent.userCurrencyAmount  : ""  }}</span>
+                                    </div>
+                                </li>
+                                <li class="mini-b-factor-rialto up" ng-repeat="fairEvent in event.fairEvent.up  track by $index">
+                                    <div class="factor-rialto">
+                                        <p ng-click="addBets()">{{fairEvent.price}}</p>
+                                        <span title="{{defaultCurrencyShortName}}">{{ ( fairEvent.userCurrencyAmount && fairEvent.userCurrencyAmount !== 0 )?fairEvent.userCurrencyAmount   : ""  }}</span>
+                                    </div>
+                                </li>
+                                <li class="mini-b-factor-statistics">
+                                    <div class=""></div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--left-column END-->
+        <!--right-column-->
+        <div class="right-column-markets-rialto">
+            <div class="match-result-rialto-b " ng-repeat="market in markets track by $index" ng-class="market.isActive" >
+                <div ng-show=" $index % 2 == 1">
+                    <div class="match-result-row-rialto ">
+                        <div class="mini-contain-row-rialto" ng-click="isActive(market)">
+                            <div class="arrow-icon-rialto" ></div>
+                            <h5 title="{{market.name}}">{{market.name}}</h5>
+                            <div class="matchet-price-rialto">
+                                <p><b>  {{ market.base ? "("+market.base+")" : ""}} </b></p>
+                            </div>
+                            <div class="cashout-rialto-b">
+                                <p ng-show="market.commission">{{ market.commission  }}<span>{{ market.commissionRate }}</span></p>
+                            </div>
+                        </div>
+                        <div class="filter-cashout-rialto">
+                            <div class="liability-info-rialto">
+                                <p>Liability</p>
+                                <span>50.000C</span>
+                            </div>
+                            <div class="filter-information-b-rialto">
+                                <ul>
+                                    <li>Cash out <span>10.000C</span></li>
+                                    <li>Profit: <span>-10.000C</span></li>
+                                </ul>
+                            </div>
+                            <div class="min-max-range-rialto">
+                                <div class="min-button-rialto">
+                                    <p>Min</p>
+                                </div>
+                                <div class="field-range-b">
+                                    <div class="default-fielt-color">
+                                        <div class="color-fieald-range">
+                                            <div class="slider-rialto-b"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="max-button-rialto">
+                                    <p>Max</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="info-all-events-row">
+                            <ul class="info-arrow-changed-rialto">
+                                <li class="possible-win-rialto-b"></li>
+                                <li class="mini-b-factor-rialto down">
+                                    <div class="changed-arrob-info-new remove-icon" >
+                                        <p>{{ market.downPercent}}% </p>
+                                    </div>
+                                </li>
+                                <li class="mini-b-factor-rialto down"></li>
+                                <li class="mini-b-factor-rialto down">
+                                    <div class="changed-arrob-info-new" ng-click="addBets('down')">
+                                        <p trans>Back All</p>
+                                    </div>
+                                </li>
+                                <li class="mini-b-factor-rialto up">
+                                    <div class="changed-arrob-info-new " ng-click="addBets('up')">
+                                        <p trans>Lay All</p>
+                                    </div>
+                                </li>
+                                <li class="mini-b-factor-rialto up"></li>
+                                <li class="mini-b-factor-rialto up">
+                                    <div class="changed-arrob-info-new remove-icon" >
+                                        <p> {{ market.upPercent}}% </p>
+                                    </div>
+                                </li>
+                                <li class="mini-b-factor-statistics"></li>
+                            </ul>
+                            <ul ng-repeat="event in market.event">
+                                <li class="possible-win-rialto-b">
+                                    <div class="info-bet-rialto">
+                                        <h5 title="{{event.name+' ('+ event.base+')'}}">{{event.name }}{{  event.base !== '' ? ' ('+ event.base+')' :event.base}} </h5>
+                                        <p class="factor-up-down-rialto">
+                                            <span title="{{defaultCurrencyShortName}}" ng-class="event.eStableProfit >= 0 ? 'up' : 'down'">{{event.eStableProfit || event.eStableProfit == 0 ? event.eStableProfit + " "+defaultCurrencyShortName:""}}</span>
+                                            <span title="{{defaultCurrencyShortName}}" ng-if="event.ePossibleProfit"  ng-class="event.ePossibleProfit >= 0 ? 'up' : 'down'">{{event.ePossibleProfit || event.ePossibleProfit == 0? event.ePossibleProfit + " "+defaultCurrencyShortName:""}}</span>
+                                        </p>
+                                    </div>
+                                </li>
+                                <li class="mini-b-factor-rialto down" ng-repeat="fairEvent in event.fairEvent.down  track by $index">
+                                    <div class="factor-rialto">
+                                        <p ng-click="addBets()"  ng-class="fairBetIsActiv">{{fairEvent.price}}</p>
+                                        <span title="{{defaultCurrencyShortName}}">{{( fairEvent.userCurrencyAmount && fairEvent.userCurrencyAmount !== 0  )?fairEvent.userCurrencyAmount : ""  }}</span>
+                                    </div>
+                                </li>
+                                <li class="mini-b-factor-rialto up" ng-repeat="fairEvent in event.fairEvent.up  track by $index">
+                                    <div class="factor-rialto">
+                                        <p ng-click="addBets()" ng-class="fairBetIsActiv">{{fairEvent.price}}</p>
+                                        <span  title="{{defaultCurrencyShortName}}">{{ ( fairEvent.userCurrencyAmount && fairEvent.userCurrencyAmount !== 0 )?fairEvent.userCurrencyAmount  : ""  }}</span>
+                                    </div>
+                                </li>
+                                <li class="mini-b-factor-statistics">
+                                    <div class=""></div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--right-column END-->
+    </div>
+</div>
+<!--center-column END-->

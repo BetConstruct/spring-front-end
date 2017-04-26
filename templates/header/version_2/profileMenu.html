@@ -1,0 +1,86 @@
+<!--User name-id-->
+<div class="separator-contain-nav user-nav-view-b {{headerVersion2Icons.profileToggled ? 'active' : ''}}" hide-on-click state-flag-var="headerVersion2Icons.profileToggled"  id="user-settings">
+    <div class="settings-icon-contain balance-box"
+         ng-click="toggleProfileMenu($event)" ng-mouseover="toggleProfileMenu($event, true)" ng-mouseleave="toggleProfileMenu($event, false)">
+        <b class="mybets-icon-box-b user-icon-view"></b>
+        <i></i>
+        <span class="count-info-box-b"
+            ng-bind="profile.unread_count"
+            ng-show="profile.unread_count"
+        ></span>
+    </div>
+
+    <div class="nav-open-view-contain" ng-mouseover="toggleProfileMenu($event, true)" ng-mouseleave="toggleProfileMenu($event, false)">
+        <ul>
+            <li>
+                <div class="user-info-box-b">
+                    <h3 ng-hide="conf.profileMenuHeaderFullName">{{profile.full_name}}</h3>
+                    <h4 ng-show="!env.hideUsername">{{ profile[conf.profileMenuHeaderDisplayField] }}</h4>
+                    <h5>
+                        <span trans>ID</span>:
+                        <span>{{profile.unique_id}}</span>
+                    </h5>
+                </div>
+            </li>
+            <li>
+                <div class="drop-nav-new-b"> <!--closed-->
+                    <div class="drop-items-contain-b icon-view-box">
+                        <ul>
+                            <li ng-click="toggleSliderTab('settings'); headerVersion2Icons.profileToggled = false; $event.stopPropagation()"
+                                prevent-fast-click="1.5"
+                                ng-class="{'active': env.sliderContent === 'settings'}"
+                            >
+                                <i class="my-profile-icon-b"></i>
+                                <span trans>My Profile</span>
+<!--                                                     <b>???</b> -->
+                            </li>
+                            <li ng-if="!conf.disableHeaderMessages && conf.headerMessageIcon.enabled"
+                                ng-show="!conf.headerMessageIcon.showInTopRow"
+                                ng-class="{'active': env.sliderContent === 'messages'}"
+                                prevent-fast-click="1.5"
+                                ng-click="toggleSliderTab('messages'); headerVersion2Icons.profileToggled = false; $event.stopPropagation()"
+                            >
+                                <i class="messages-icon-b"></i>
+                                <span trans>Messages</span>
+                                <b ng-bind="profile.unread_count" ng-show="profile.unread_count"></b>
+                            </li>
+                            <li ng-show="conf.enableBonuses"
+                                ng-click="toggleSliderTab('bonuses'); headerVersion2Icons.profileToggled = false; $event.stopPropagation()"
+                                prevent-fast-click="1.5"
+                                ng-class="{'active': env.sliderContent === 'bonuses'}"
+                            >
+                                <i class="bonuses-icon-b"></i>
+                                <span trans>Bonuses</span>
+                                <b ng-if="conf.sportEnabled"
+                                    ng-show="!env.hideBalance && profile.bonus_balance && (conf.GmsPlatform || (!isInCasino() && !isInPoker()))"
+                                >
+                                    {{profile.calculatedBonus}} {{profile.currency_name|currency}}
+                                </b>
+
+                                <b ng-if="::(!conf.GmsPlatform && (casinoEnabled || conf.pokerEnabled))"
+                                    ng-show="!env.hideBalance && (env.casinoBalance !== undefined && (isInCasino() || isInPoker()) || !conf.sportEnabled)"
+                                >
+                                    {{env.casinoBalance.bonus || env.casinoBalance.bonus_balance}} {{profile.currency_name|currency}}
+                                </b>
+                            </li>
+                            <li ng-show="conf.GmsPlatform && conf.promotionalBonuses.enable"
+                                ng-click="toggleSliderTab('promotionalBonuses'); headerVersion2Icons.profileToggled = false; $event.stopPropagation()"
+                                prevent-fast-click="1.5"
+                                ng-class="{'active': env.sliderContent === 'promotionalBonuses'}"
+                            >
+                                <i class="bonuses-icon-b"></i>
+                                <span trans>Promotional Bonuses</span>
+                            </li>
+                            <li ng-hide="env.hideLogOut" ng-click="logOut(); headerVersion2Icons.profileToggled = false; $event.stopPropagation()">
+                                <i class="logout-icon-b"></i>
+                                <span trans>Log Out</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </li>
+        </ul>
+    </div>
+
+</div>
+<!--User name-id END-->

@@ -1,0 +1,3 @@
+<li ng-hide="!conf.registration.enable || conf.disableRegistrationAndLogin || loginInProgress" class="register-button"><span ng-class="{'active-s': env.sliderContent === 'registrationForm'}" ng-click="goToTop(); register()" trans class="noflip">Register</span>
+    <ng-include src="getTemplate('templates/header/dynamicmessage.html')"></ng-include>
+</li>

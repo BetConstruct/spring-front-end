@@ -1,0 +1,259 @@
+<!--right-column-->
+<div class="wrapper-separator-rialto" ng-controller="betSlip">
+    <div class="left-nav-container-rialto right-b">
+        <div class="right-b-rialto">
+            <div class="rialto-betslip-title">
+                <h3>
+                <span  ng-click="betSlipType(0)" ng-class="betSlip" trans>BetSlip</span>
+                <span  ng-click="betSlipType(1)" ng-class="openBets" trans>Open Bets</span>
+                <span  ng-click="betSlipType(2)" ng-class="openBids" trans>Bets</span>
+                </h3>
+            </div>
+            <div ng-show="betSlipId == 0">
+                <div class="bet-result-exchange" ng-show="betSlipResponseMessage">
+                    <p ><p>{{betSlipResponseMessage|translate}}<p><p >{{betSlipResponseDynamicMessage|translate}}<p></p>
+                </div>
+                <div ng-repeat="game in games track by $index">
+                    <div ng-repeat="betFairEvent in game.betFairEvent.down track by  $index">
+                        <div ng-show=" $index == 0">
+                            <div class="team-name-betslip-rialto green-b">
+                                <p ng-click="gameMarkets(game.id)">
+                                    <span title="{{game.team1_name}}">
+                                        <b>{{game.team1_name}}</b>
+                                        <i class="separator-line"></i>
+                                    </span>
+                                    <span title="{{game.team2_name}}">{{game.team2_name}}</span>
+                                </p>
+                            </div>
+                            <div class="odds-title-rialto">
+                                <ul>
+                                    <li trans>Odds</li>
+                                    <li trans>Stake</li>
+                                    <li trans>Profit</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="lialto-events-conainer green-bl">
+                            <div class="disable-b-exchange"  ng-class="betIsActive"></div>
+                            <div class="single-event-iformation-b">
+                                <div class="league-name-container-event">
+                                    <p>
+                                        <span>{{betFairEvent.eventName }}{{ betFairEvent.fBase || betFairEvent.fBase == 0 ? " ("+ betFairEvent.fBase +")" :"" }}</span>
+                                        <b class="closed-icon-event-rialto" ng-click="removeBet()"></b>
+                                    </p>
+                                </div>
+                                <div class="form-contein-bet-rialto">
+                                    <form>
+                                        <div class="inp-wrap-b number">
+                                            <input type="text" ng-model="betFairEvent.price" ng-change="broadcast()" ng-blur="validatePrice()" ng-keydown="keyPress($event)">
+                                            <div class="arrow-change-figure">
+                                                <b class="to-increase" ng-click="arrow('up')"></b>
+                                                <b class="to-reduce" ng-click="arrow('down')"></b>
+                                            </div>
+                                        </div>
+                                        <div class="inp-wrap-b">
+                                            <input type="text" ng-model="betFairEvent.amount"  ng-change="broadcast()" ng-blur="validatePrice()" title="{{defaultCurrencyShortName}}">
+                                            <!--<div class="arrow-change-figure">-->
+                                            <!--<b class="to-increase"></b>-->
+                                            <!--<b class="to-reduce"></b>-->
+                                            <!--</div>-->
+                                        </div>
+                                        <p> {{betFairEvent.betProfit}}</p>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div ng-repeat="game in games track by $index">
+                    <div ng-repeat="betFairEvent in game.betFairEvent.up track by  $index">
+                        <div ng-show=" $index == 0">
+                            <div class="team-name-betslip-rialto red-b">
+                                <p ng-click="gameMarkets(game.id)">
+                                    <span title="{{ game.team1_name}}">
+                                        <b>{{game.team1_name}}</b>
+                                        <i class="separator-line"></i>
+                                    </span>
+                                    <span title="{{game.team2_name}}">
+                                        {{game.team2_name}}
+                                    </span>
+                                </p>
+                            </div>
+                            <div class="odds-title-rialto">
+                                <ul>
+                                    <li trans>Backer's odds</li>
+                                    <li trans>Backer's stake</li>
+                                    <li trans>Liability</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="lialto-events-conainer red-bl">
+                            <div class="disable-b-exchange " ng-class="betIsActive"></div>
+                            <div class="single-event-iformation-b">
+                                <div class="league-name-container-event">
+                                    <p>
+                                        <span title="{{betFairEvent.eventName }}">{{betFairEvent.eventName }}{{ betFairEvent.fBase || betFairEvent.fBase == 0 ? " ("+ betFairEvent.fBase +")" :"" }}</span>
+                                        <b class="closed-icon-event-rialto" ng-click="removeBet()"></b>
+                                    </p>
+                                </div>
+                                <div class="form-contein-bet-rialto">
+                                    <form>
+                                        <div class="inp-wrap-b number">
+                                            <input type="text" ng-model="betFairEvent.price" ng-change="broadcast()" ng-blur="validatePrice()" ng-keydown="keyPress($event)">
+                                            <div class="arrow-change-figure">
+                                                <b class="to-increase" ng-click="arrow('up')"></b>
+                                                <b class="to-reduce" ng-click="arrow('down')"></b>
+                                            </div>
+                                        </div>
+                                        <div class="inp-wrap-b">
+                                            <input type="text" ng-model="betFairEvent.amount" ng-change="broadcast()" ng-blur="validatePrice()" title="{{defaultCurrencyShortName}}">
+                                            <!--<div class="arrow-change-figure">-->
+                                            <!--<b class="to-increase"></b>-->
+                                            <!--<b class="to-reduce"></b>-->
+                                            <!--</div>-->
+                                        </div>
+                                        <p>{{betFairEvent.betProfit}}</p>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="bet-b-container">
+                    <!--<div class="bet-result-exchange" >-->
+                    <!--<p trans>Liability</p>-->
+                    <!--</div>-->
+                    <ul>
+                        <li>
+                            <button ng-click="cancelAll()" ng-disabled="cancelAllIsActive" trans>Cancel all</button><!-- disabled="disabled"-->
+                        </li>
+                        <li>
+                            <button ng-click="placeBet()" ng-disabled="placeBetIsActive" trans>Place bets!</button>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div ng-show="betSlipId == 1">
+                <div class="bet-result-exchange" ng-show="bidEditResponseMessage">
+                    <p>{{bidEditResponseMessage}}</p>
+                </div>
+                <div ng-repeat="fairBid in fairBids track by myTrackingFunction(fairBid) ">
+                    <div>
+                        <div >
+                            <div class="team-name-betslip-rialto" ng-class=" fairBid.type == 1 ? 'green-b':'red-b'" ng-show="fairBid.gameId" >
+                                <p ng-click="gameMarkets(fairBid.gameId)">
+                                    <span title="{{fairBid.gameName}}">
+                                        <b>{{fairBid.gameName}}</b>
+                                    </span>
+                                    <!--<div class="disable-b-exchange" ></div>-->
+                                </p>
+                            </div>
+                            <div class="odds-title-rialto">
+                                <ul>
+                                    <li trans>{{ fairBid.type == 1? "Odds":"Backer's odds" }}</li>
+                                    <li trans>{{ fairBid.type == 1? "Stake":"Bakcer’s Stake" }}</li>
+                                    <li trans>{{ fairBid.type == 1? "Profit":"Liability" }}</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="lialto-events-conainer " ng-class=" fairBid.type == 1 ? 'green-bl':'red-bl'">
+                            <div class="disable-b-exchange"  ng-class="betIsActive"></div>
+                            <div class="single-event-iformation-b">
+                                <div class="league-name-container-event">
+                                    <p>
+                                        <span>{{fairBid.base ? fairBid.eventName + " ("+fairBid.base+")" : fairBid.eventName}}</span>
+                                        <!--<i class="edit-icon " ng-click="bidUpdate() " ng-class="fairBid.bidUpdateStatus" ng-show="!fairBid.bet_amount"></i>-->
+                                        <b class="closed-icon-event-rialto" ng-click="removeOpenBet()" ></b>
+                                    </p>
+                                </div>
+                                <div class="form-contein-bet-rialto">
+                                    <form>
+                                        <div class="inp-wrap-b number">
+                                            <input type="text" ng-disabled="!fairBid.bidUpdateStatus" ng-model="fairBid.price" ng-change="broadcast()" ng-blur="validatePrice()" ng-keydown="keyPress($event)"><!--ng-blur="changePrice(fairBid.price)"-->
+                                            <!--<div class="arrow-change-figure">-->
+                                            <!--<b class="to-increase" ng-click="arrow('up')"></b>-->
+                                            <!--<b class="to-reduce" ng-click="arrow('down')"></b>-->
+                                            <!--</div>-->
+                                        </div>
+                                        <div class="inp-wrap-b">
+                                            <input type="text" title="{{defaultCurrencyShortName}}" ng-disabled="!fairBid.bidUpdateStatus" ng-model="fairBid.userCurrencyCleanAmount"  ng-change="broadcast()" ng-blur="validatePrice()"><!--- fairBid.amount -fairBid.bet_amount -->
+                                        </div>
+                                        <p title="{{defaultCurrencyShortName}}">{{ ( ((fairBid.price !== "") && (fairBid.price !== 0)) && ((fairBid.userCurrencyCleanAmount !== "") && (fairBid.userCurrencyCleanAmount !== 0)) ) ? (fairBid.userCurrencyCleanAmount *(fairBid.price - 1)).toFixed(2)+" "+defaultCurrencyShortName: "" }}</p>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--<div class="bet-b-container">-->
+                <!--<ul>-->
+                <!--<li>-->
+                <!--<button disabled="disabled" trans>Cancel all</button>-->
+                <!--</li>-->
+                <!--<li>-->
+                <!--<button disabled="disabled" ng-click="placeBet()" trans>Place bets!</button>-->
+                <!--</li>-->
+                <!--</ul>-->
+                <!--</div>-->
+            </div>
+            <iframe ng-if="exchangeConf.exchangeVideoUnderBetslip" width="300" height="220" ng-src="{{exchangeConf.exchangeVideoUnderBetslip|html:'url'}}" frameborder="0" allowfullscreen></iframe>
+            <div ng-show="betSlipId == 2">
+                <div ng-repeat="fairBet in fairBets track by $index">
+                    <div>
+                        <div >
+                            <div class="team-name-betslip-rialto" ng-class=" fairBet.type == 1 ? 'green-b':'red-b'">
+                                <p ng-click="gameMarkets(fairBet.gameId)">
+                                    <span title="{{fairBet.gameName}}">
+                                        <b>{{fairBet.gameName}}</b>
+                                    </span>
+                                    <!--<div class="disable-b-exchange" ></div>-->
+                                </p>
+                            </div>
+                            <div class="odds-title-rialto">
+                                <ul>
+                                    <li trans>{{fairBet.type == 1? "Odds":"Backer’s Odds"}}</li>
+                                    <li trans>{{fairBet.type == 1? "Stake":"Bakcer’s Stake"}}</li>
+                                    <li trans>{{fairBet.type == 1? "Profit":"Your liabnnnnnnnnnnnnn"}}</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="lialto-events-conainer " ng-class=" fairBet.type == 1 ? 'green-bl':'red-bl'">
+                            <div class="single-event-iformation-b">
+                                <div class="league-name-container-event">
+                                    <p>
+                                        <span>{{fairBet.base ? fairBet.eventName + " ("+fairBet.base+")" : fairBet.eventName}}</span>
+                                        <!--<i class="edit-icon "></i>-->
+                                        <!--<b class="closed-icon-event-rialto" ng-click="removeBet()"></b>-->
+                                    </p>
+                                </div>
+                                <div class="form-contein-bet-rialto">
+                                    <form>
+                                        <div class="inp-wrap-b number">
+                                            <input type="text" disabled ng-model="fairBet.price">
+                                        </div>
+                                        <div class="inp-wrap-b">
+                                            <input type="text" disabled ng-model="fairBet.userCurrencyAmount" title="{{ defaultCurrencyShortName }}">
+                                        </div>
+                                        <p title="{{defaultCurrencyShortName}}">{{ ( ((fairBet.price !== "") && (fairBet.price !== 0)) && ((fairBet.userCurrencyAmount !== "") && (fairBet.userCurrencyAmount !== 0)) ) ? (fairBet.userCurrencyAmount *(fairBet.price - 1)).toFixed(2)+" "+defaultCurrencyShortName : "" }}</p>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--<div class="bet-b-container">-->
+                <!--<ul>-->
+                <!--<li>-->
+                <!--<button disabled="disabled">Cancel all</button>-->
+                <!--</li>-->
+                <!--<li>-->
+                <!--<button ng-click="placeBet()">Place bet</button>-->
+                <!--</li>-->
+                <!--</ul>-->
+                <!--</div>-->
+
+            </div>
+        </div>
+    </div>
+</div>
+<!--right-column END-->

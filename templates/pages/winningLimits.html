@@ -1,0 +1,29 @@
+<div class="open_blok_news" ng-controller="cmsPagesCtrl" ng-init="loadPage('winning-limits-'+env.lang)">
+
+    <vbet-loader ng-show="!pagesLoaded"></vbet-loader>
+
+    <div class="nav-news-sport" ng-show="pagesLoaded && mainPage.content">
+        <ul>
+            <div class="news-sport-contain">
+                <li><h3 ng-bind-html="mainPage.title|html"></h3></li>
+                <li></li>
+            </div>
+        </ul>
+    </div>
+
+    <div class="big-news-block" ng-show="pagesLoaded && mainPage.content">
+        <div class="right-block-news">
+            <div class="left-block-news">
+                <div class="picture-news-block"><a>
+                    <img alt="" ng-src="{{mainPage.thumbnail}}"></a>
+                </div>
+
+
+            </div>
+            <span class="news-date-b" ng-show="mainPage.date">{{mainPage.date}}</span>
+
+            <p class="all-text-news-b" ng-bind-html="mainPage.content|html">
+            </p>
+        </div>
+    </div>
+</div>

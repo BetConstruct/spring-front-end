@@ -1,0 +1,17 @@
+<div ng-controller="casinoCtrl"
+     ng-init="checkIfEnabled('casino'); setTitle(('Casino'|translate));"
+     watch-resize middle-screen-mode="true"
+     ng-class="{'casino-mainpage-wrapper-b': cConf.newCasinoDesignEnabled}">
+    <!--Casino-new hompage-->
+   <div ng-include="getTemplate('optional_modules/casino/templates/casino-new-template.html')" ng-if="cConf.newCasinoDesignEnabled"></div>
+<!--Casino old homepage-->
+    <div ng-include="getTemplate('optional_modules/casino/templates/casino-old-template.html')" ng-if="!cConf.newCasinoDesignEnabled"></div>
+
+    <div ng-show="!cConf.newCasinoDesignEnabled && (selectedCategory.id !== undefined || (popularGames.length && popularsPerGroups.length === 0)) && (selectedCategory.id === -1 || selectedCategoryAllGames.length) && selectedCategoryGames.length === 0"
+         class="no-games">
+        <p trans>No games found</p>
+    </div>
+    <div ng-show="allGames && allGames.length" ng-include="getTemplate('optional_modules/casino/templates/popup-games.html')"></div>
+    <div ng-include="getTemplate('optional_modules/casino/templates/big-game.html')" ng-if="gamesInfo.length" class="big-games-overflow"></div>
+</div>
+<!--Casino END-->

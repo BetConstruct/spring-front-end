@@ -1,0 +1,42 @@
+<!--
+<div ng-controller="casinoMiniGamesCtrl" ng-mouseover="rotationPaused = true;"
+     ng-mouseleave="rotationPaused = false;">
+    <div ng-if="showGames" class="mini-game-container-j" ng-class="{'closed':hideIframe}">
+        <div class="choose-minigame-j">
+            <div class="minigame-selectbox-j" ng-if="gameOptions.games && gameOptions.games.length > 1">
+                <select ng-model="gameOptions.selectedIndex" ng-change="loadGame()">
+                    <option ng-repeat="game in gameOptions.games track by game.id" value="{{ $index }}">{{ game.gameName || game.name }}</option>
+                </select>
+            </div>
+            <p trans>Mini games</p>
+            <a ng-click="hideIframe = !hideIframe" class="hide-iframe-j" title="{{ 'Hide / Show'|translate }}"></a>
+        </div>
+        <iframe ng-if="frameUrl !== ''" ng-src="{{frameUrl}}"></iframe>
+    </div>
+</div>
+-->
+
+
+
+
+
+
+<div ng-controller="casinoMiniGamesCtrl" class="mini-game-p no-select-j" ng-class="{'open-dropdown-menu-p': toggleMiniGamesDropdown, 'closed': hideIframe}"> <!--add class closed, add class open-dropdown-menu-p-->
+    <div class="mini-header-p">
+        <a class="mini-block-close-p" ng-click="hideIframe = !hideIframe" href="" trans>Mini Games</a>
+        <a class="mini-games-close-p" href="" ng-click="toggleMiniGamesDropdown = false;" trans>Select Games</a>
+    </div>
+    <div class="mini-ifram-container-p">
+        <ul class="mini-game-type-p">
+            <li ng-repeat="game in gameOptions.games track by game.id"><a ng-class="{'active': $index == gameOptions.selectedIndex}" ng-click="selectMiniGame($index)">{{game.name}}</a></li>
+        </ul>
+        <div class="mini-ifram-p">
+            <iframe ng-if="frameUrl !== ''" ng-src="{{frameUrl}}"></iframe>
+        </div>
+    </div>
+    <div class="mini-select-p">
+        <span class="arrow-left-p" ng-click="slideMiniGames('left')"></span>
+        <p ng-click="toggleMiniGamesDropdown = !toggleMiniGamesDropdown">{{gameOptions.games[gameOptions.selectedIndex].name}}</p>
+        <span class="arrow-right-p" ng-click="slideMiniGames('right')"></span>
+    </div>
+</div>

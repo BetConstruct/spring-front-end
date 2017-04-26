@@ -1,0 +1,8 @@
+<div ng-if="youtubeVideoUrl" class="popup-bg-contain" ng-class="{'active': youtubeVideoUrl}">
+    <div class="deposit-alert-contain livecasino-bonus">
+        <div class="icon-delete"><a title="{{ 'close'|translate }}" ng-click="$parent.$parent.youtubeVideoUrl = null;">Close</a></div>
+        <div class="popup-livecasino-tables">
+            <iframe ng-src="{{ youtubeVideoUrl }}" frameborder="0" allowfullscreen></iframe>
+        </div>
+    </div>
+</div>

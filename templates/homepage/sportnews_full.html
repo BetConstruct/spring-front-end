@@ -1,0 +1,117 @@
+<!--Меню sport news-->
+<div ng-controller="cmsSportNewsCtrl" watch-resize>
+    <div class="spor-news-nav-contein" ng-init="init(true);loadSports();setTitle('News');">
+        <div class="nav-news-sport">
+            <ul>
+                <div class="news-sport-contain" ng-show="sports">
+                    <li><h3 trans>sport news</h3></li>
+                    <li ng-class="{'active-item': !selectedNewsSport.id}"><a ng-click="selectNewsSport({id:undefined})" trans>all</a></li>
+                    <li ng-repeat="sport in sports" ng-class="{'active-item':sport.id === selectedNewsSport.id}" ng-if="$index < maxVisibleSports">
+                        <a ng-click="selectNewsSport(sport);closeNews();">{{ sport.title|translate }}</a>
+                    </li>
+                </div>
+                <li class="last-item" ng-show="sportsMore.length"><a trans>More</a>
+                    <div class="contein-games" ng-hide="hideSportListDropdown">
+                        <div class="arrow-sport"></div>
+                        <h3 trans>Select a Sport</h3>
+                        <div class="meny-games" ng-repeat="column in sportsMore">
+                            <ul ng-repeat="letterGroup in column">
+                                <li>{{ letterGroup[0].title.charAt(0) }}</li>
+                                <li ng-repeat="sport in letterGroup"><a ng-click="selectNewsSport(sport);closeNews();"> {{ sport.title|translate }} </a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="open_blok_news" ng-show="landingNews.id">
+        <div ng-click="closeNews()" class="close-slider-button"></div>
+        <a name="lnews-{{landingNews.id}}" class="anchor"></a>
+
+        <div class="big-news-block">
+            <div class="right-block-news">
+                <div class="left-block-news">
+                    <div class="picture-news-block"><a><img ng-src="{{landingNews.thumbnail}}" alt=""></a></div>
+                    <div class="button_bet" ng-show="landingNews.gameExists">
+                        <a href="#/sport/?type={{landingNews.custom_fields.type[0]}}&sport={{landingNews.custom_fields.sport[0]}}&game={{landingNews.custom_fields.game[0]}}&competition={{landingNews.custom_fields.competition[0]}}&region={{landingNews.custom_fields.region[0]}}"><p trans>Place A bet!</p><span></span></a>
+                    </div>
+                    <div class="mini-social-icons">
+                        <div class="mini-social-icons">
+                            <p trans>Share</p>
+                            <ul>
+                                <li class="mini-facebook"><a ng-href="https://www.facebook.com/sharer/sharer.php?u={{landingNews.permalink}}" target="_blank">facebook</a></li>
+                                <li class="mini-twitter">
+                                    <a ng-href="https://twitter.com/share?text={{landingNews.titleRaw}}&url=1&via={{conf.twitterAccount}}&hashtags={{conf.twitterHashTag}},{{landingNews.categories[0].title}}" target="_blank">Tweet</a>
+                                </li>
+                                <li class="mini-google"><a ng-href="https://plus.google.com/share?url={{landingNews.permalink}}" target="_blank">google+</a></li>
+                                <li class="mini-permalink"><a href="" ng-click="showPermaLink(landingNews.permalink)">permalink</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <h3 ng-bind-html="landingNews.title"></h3>
+                <span class="news-date-b">{{ landingNews.start_date }}</span>
+                <p class="all-text-news-b" ng-bind-html="landingNews.content"></p>
+            </div>
+        </div>
+        <div class="closed-arrow-b"><a ng-click="closeNews()" trans>close</a></div>
+    </div>
+
+    <vbet-loader ng-show="articleLoader && !newsAreLoading"></vbet-loader>
+
+    <!--Меню sport news-->
+    <div class="block-meny-news"  ng-init="loadRecentNews(numberOfRecentNews, undefined);">
+        <div ng-repeat="group in recentNewsInGroups" class="block-sport-news" ng-class="{'news-initial': !newsAmountIncreased}">
+            <div class="list-news">
+                <ul ng-repeat="news in group.news" ng-class="'news-column-' + $index">
+                    <li ng-class="{'active-news': (news.id == selectedNews.id)}">
+                        <h3 title="{{news.titleRaw}}"><a ng-click="showNews(news, group.id);$event.stopPropagation();" ng-bind-html="news.title"></a></h3>
+                        <p>{{ news.start_date + cmsTimeZone |formatDate: 'full':null:env.timeFormat }}</p>
+                        <div class="picture-news-block">
+                            <div class="sport-news-name">{{ news.categories[0].title }}</div>
+                            <a ng-click="showNews(news, group.id);$event.stopPropagation();" att="" id="news{{news.id}}"><img ng-src="{{news.thumbnail}}" alt=""></a>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            <!--раскрытый блок с новостью-->
+            <div class="open_blok_news" ng-show="selectedNews.id && selectedNewsGroupId == group.id">
+                <div ng-click="closeNews()" class="close-slider-button"></div>
+                <a name="news-{{selectedNews.id}}" class="anchor"></a>
+                <div class="big-news-block">
+                    <div class="right-block-news">
+                        <div class="left-block-news">
+                            <div class="picture-news-block"><a><img ng-src="{{selectedNews.thumbnail}}" alt=""></a></div>
+                            <div class="button_bet" ng-show="selectedNews.gameExists" ng-click="goToTop();">
+                                <a href="#/sport/?type={{selectedNews.custom_fields.type[0]}}&sport={{selectedNews.custom_fields.sport[0]}}&game={{selectedNews.custom_fields.game[0]}}&competition={{selectedNews.custom_fields.competition[0]}}&region={{selectedNews.custom_fields.region[0]}}"> <p trans>Place A bet!</p><span></span></a>
+                            </div>
+                            <div class="mini-social-icons">
+                                <p trans>Share</p>
+                                <ul>
+                                    <li class="mini-facebook"><a ng-href="https://www.facebook.com/sharer/sharer.php?u={{selectedNews.permalink}}" target="_blank">facebook</a></li>
+                                    <li class="mini-twitter">
+                                        <a ng-href="https://twitter.com/share?text={{selectedNews.titleRaw}}&url=1&via={{conf.twitterAccount}}&hashtags={{conf.twitterHashTag}},{{selectedNews.categories[0].title}}" target="_blank">Tweet</a>
+                                    </li>
+                                    <li class="mini-google"><a ng-href="https://plus.google.com/share?url={{selectedNews.permalink}}" target="_blank">google+</a></li>
+                                    <li class="mini-permalink"><a href="" ng-click="showPermaLink(selectedNews.permalink)">permalink</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <h3 ng-bind-html="selectedNews.title"></h3>
+                        <span class="news-date-b">{{ selectedNews.start_date + cmsTimeZone |formatDate:'full':null:env.timeFormat }}</span>
+                        <p ng-bind-html="selectedNews.content" class="all-text-news-b"></p>
+                    </div>
+                </div>
+                <div class="closed-arrow-b"><a ng-click="closeNews()" trans>close</a></div>
+            </div><!--раскрытый блок с новостью END-->
+        </div>
+
+        <div class="load-more-news" ng-show="!noMoreNews">
+            <a ng-if="conf.autoLoadNews" load-more bottom-offset="600" exception="newsAreLoading" ng-click="loadMoreNews()" ng-show="!newsAreLoading"><p trans>Load more</p><span></span></a>
+            <a ng-if="!conf.autoLoadNews" ng-click="loadMoreNews()" ng-show="!newsAreLoading"><p trans>Load more</p><span></span></a>
+            <a trans class="loading-more" ng-show="newsAreLoading">Loading</a>
+        </div>
+    </div>
+</div>

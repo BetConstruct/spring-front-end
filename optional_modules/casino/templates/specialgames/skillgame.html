@@ -1,0 +1,18 @@
+<div class="big-game-background">
+    <div class="big-game-contain" class-on-scroll="scrolled,notscrolled"
+         ng-style="{background: 'no-repeat 50% 0'}">
+        <div class="casual-game">
+            <div class="casino-game-contain">
+                <div class="flash-game-contain">
+                    <div class="big-game-control">
+                        <div class="icon-delete"><a title="{{ 'close'|translate }}" ng-click="broadcast('closeNestedFrame');$event.stopPropagation();">Close</a></div>
+                        <div class="icon-delete popup"><a title="{{ 'Open In Pop-Up Window'|translate }}" ng-click="frameControll('popup'); broadcast('closeNestedFrame');">popUp</a></div>
+                        <div class="icon-delete refresh"><a title="{{ 'Refresh'|translate }}" ng-click="frameControll('refresh');">refresh</a></div>
+                    </div>
+                    <iframe frame-control allowfullscreen="true" number-of-window="1" initial-width="{{initialFrameSize.width}}" initial-height="{{initialFrameSize.height}}" ng-src="{{frameUrl}}"></iframe>
+                    <vbet-loader ng-show="loadingUserData"></vbet-loader>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

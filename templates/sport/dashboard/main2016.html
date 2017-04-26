@@ -1,0 +1,4 @@
+<div ng-if="!env.isOffline" class="block-size-visible-b">
+    <div class="classic-version-euro2016" ng-include="getTemplate('templates/sport/euro2016/main.html')" ng-if="conf.sportEnabled"></div>
+</div>
+<div ng-if="env.isOffline" ng-include="getTemplate('templates/offline.html')"></div>

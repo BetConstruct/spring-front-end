@@ -1,0 +1,9 @@
+<div class="subtop-header-menu-j">
+    <ul>
+        <li ng-if="(menu.enabled || conf[menu.enabledConfig]) && (!menu.exceptViews || menu.exceptViews.indexOf(conf.sportsLayout) === -1) && !(menu.disableForEuro2016 && conf.availableSportsbookViews.euro2016)"
+            ng-repeat="menu in conf.subHeaderItems track by menu.alias" ng-class="{'active': $location.path() === '/' + menu.alias + '/'}">
+            <a ng-if="!menu.url" ng-href="{{$location.path() === '/' + menu.alias + '/' ? $location.absUrl() + '#' : '#/' + menu.alias }}">{{menu.displayName|translate}}</a>
+            <a ng-if="menu.url" ng-href="{{menu.url}}" ng-click="$event.stopPropagation()" target="_blank">{{menu.displayName|translate}}</a>
+        </li>
+    </ul>
+</div>

@@ -1,0 +1,105 @@
+<ng-include ng-if="conf.favoriteTeam.enabled" src="getTemplate('templates/sport/classic/leftmenu/prematch/favoriteTeam.html')"></ng-include>
+    <li ng-repeat="sport in leftMenuPrematchSports track by sport.id"
+        ng-hide="!showPanel.expanded && $index > prematchSportCount"
+        ng-class="{'active': leftMenuState.prematch.sport[sport.id].expanded || (virtualSportsSelected && sport.isVirtualSport) ||($parent.todaysBetsSelected && sport.isTodayBets ||(outrightSelected && sport.isOutright)), 'loading': sport.loading}"
+        class="{{sport.alias}}" id="sport-{{sport.alias}}">
+
+
+        <a ng-click="expandLeftMenuPrematchSport(sport, null, null, true); selectSport(sport, !leftMenuState.prematch.sport[sport.id].expanded)"
+           title="{{sport.name}} ({{sport.game}})"
+           ng-show="!sport.link">
+            <span ng-class="sport.alias" class="mini-icon-1 mini-icon-{{sport.id}}"></span> {{sport.name}} <span ng-show="sport.game">({{sport.game}})</span>
+            <b class="arrow-rotate icon-arrow-right6"></b>
+        </a>
+        <a ng-href="{{conf.todayBets.redirectToLiveCalendar ? sport.link : ''}}"
+           ng-click="todaysBetsSelected = true; !conf.todayBets.redirectToLiveCalendar ? expandLeftMenuPrematchSport(sport): '';clickLiveCalendar()"
+           title="{{::sport.name}}"
+           ng-if="conf.todayBets.enabled && sport.link"
+           class="daily-wrap-b">
+            <!-- TODAY BETS -->
+            <p ng-show="sport.id === -11" class="daily-coupon-b">
+                                    <span class="coupon-date-b">
+                                        <b>{{toDay|formatDate:'D'}}</b>
+                                        <i>{{toDay|formatDate:'MMM'}}</i>
+                                    </span>
+                                    <span class="text-coupon-d">
+                                        <b trans>Daily coupon</b>
+                                    </span>
+            </p>
+            <!-- TODAY BETS END -->
+
+            <span ng-class="::sport.alias" class="mini-icon-1 mini-icon-{{::sport.id}}"></span>
+            {{::sport.name}} <span ng-show="sport.game">({{sport.game}})</span>
+            <b ng-show="sport.id !== -11" class="arrow-rotate icon-arrow-right6"></b>
+        </a>
+        <ul ng-show="leftMenuState.prematch.sport[sport.id].expanded">
+            <li ng-repeat="region in sport.regions track by region.id" ng-class="{'active': leftMenuState.prematch.region[region.id].expanded , 'loading': region.loading}" ng-if="!sport.isFavoriteCompetition">
+                <a ng-click="expandLeftMenuPrematchRegion(region, sport); selectRegion(region)">
+                    <span class="flag-{{::region.alias | removeUselessSymbolsByRegexp: '[,\' ]+': 'g': 'true'}} flag-icon"></span> {{::region.name}} <span>({{region.game}})</span>
+                    <b class="arrow-rotate icon-arrow-right6"></b>
+                </a>
+                <div ng-repeat="competition in region.competitions track by competition.id"
+                     ng-show="leftMenuState.prematch.region[region.id].expanded"
+                     class="compitition-b"
+                     multi-menu-constructor
+                     element-to-add-class="set-top-from-parent" container-class="left-container-content-p">
+
+
+                    <h4 title="{{competition.name}}" ng-click="expandCompetition(competition, sport);" ng-show="!env.preMatchMultiSelection" ng-class="{'active': (selectedCompetition.id == competition.id) && !outrightSelected}">
+                        <i> {{competition.name}}</i><b class="arrow-rotate icon-arrow-right6"></b>
+
+                    </h4>
+                    <h4 title="{{competition.name}}" ng-show="env.preMatchMultiSelection">
+                        <input name="" ng-model="prematchMultiViewCompetitions[competition.id]" type="checkbox" value="" id="checkbox-competition{{competition.id}}" ng-change="competitionToMultiview(competition)">
+                        <label for="checkbox-competition{{competition.id}}"><i>{{competition.name}}</i></label>
+                    </h4>
+                    <div class="poup-sports set-top-from-parent">
+                        <ul ng-show="!competition.hidden && !switchToPopularGames" ng-class="{'popup': !env.live}">
+                            <li ng-repeat="game in competition.games track by game.id" ng-class="{'active': game.id === openGame.id, 'no-events': (!game.events_count || game.is_blocked)}" >
+                                <div class="game-one-teams" ng-show="!env.live">
+                                    <input name="" ng-model="prematchMultiViewGames[game.id]" type="checkbox" value="" id="checkbox-game{{game.id}}" ng-change="gameCheckBoxClicked(competition);">
+                                    <label for="checkbox-game{{game.id}}">{{game.team1_name}} {{game.team2_name ? ' - ' + game.team2_name : ''}} <span class="game-time">{{game.start_ts|formatDate:'full':null:env.timeFormat}}</span></label>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+            </li>
+            <li>
+                <div ng-repeat="competition in sport.favoriteCompetition" ng-if="sport.isFavoriteCompetition" class="compitition-b" multi-menu-constructor element-to-add-class="set-top-from-parent" container-class="left-container-content-p"
+                     ng-class="{'active': leftMenuState.prematch.region[region.id].expanded , 'loading': region.loading}">
+
+
+
+                    <h4 title="{{competition.region.name}}" ng-click="expandCompetition(competition, sport);" ng-show="!env.preMatchMultiSelection" ng-class="{'active': (selectedCompetition.id == competition.id) && !outrightSelected}">
+                        <img ng-if="conf.teamLogosPath && !conf.showPopularCompetitionsSportIcons" ng-src="{{conf.teamLogosPath}}c/s/1/{{competition.id}}.png"/>
+                        <span ng-if="conf.showPopularCompetitionsSportIcons" class="sport-icon-pcj {{competition.sport_alias}}"></span>
+                        <i> {{conf.enableOlympicGames ? competition.name : (competition.name|removeParts:[competition.sport_name])}}</i><b class="arrow-rotate icon-arrow-right6"></b>
+                    </h4>
+                    <h4 title="{{competition.region.name}}" ng-show="env.preMatchMultiSelection">
+                        <input name="" ng-model="prematchMultiViewCompetitions[competition.id]" type="checkbox" value="" id="checkbox-competition{{competition.id}}" ng-change="competitionToMultiview(competition)">
+                        <label for="checkbox-competition{{competition.id}}"><i>{{competition.name}}</i></label>
+                    </h4>
+                    <div class="poup-sports set-top-from-parent">
+                        <ul ng-show="!competition.hidden && !switchToPopularGames" ng-class="{'popup': !env.live}">
+
+                            <li ng-repeat="game in competition.games track by game.id" ng-class="{'active': game.id === openGame.id, 'no-events': (!game.events_count || game.is_blocked)}" >
+                                <div ng-click="gameClicked(game, competition, true);" class="game-row">
+                                    <div class="num-of-events" title="Number of markets">({{game.markets_count}})</div>
+                                    <p title="{{game.team1_name}} - {{game.team2_name}} ({{game.markets_count}})">{{game.team1_name}} {{game.team2_name ? ' - ' + game.team2_name : ''}}</p>
+                                </div>
+
+                                <div class="game-one-teams" ng-show="!env.live">
+                                    <input name="" ng-model="prematchMultiViewGames[game.id]" type="checkbox" value="" id="checkbox-game{{game.id}}" ng-change="gameCheckBoxClicked(competition);">
+                                    <label for="checkbox-game{{game.id}}">{{game.team1_name}} {{game.team2_name ? ' - ' + game.team2_name : ''}} <span class="game-time">{{game.start_ts|formatDate:'full':null:env.timeFormat}}</span></label>
+                                </div>
+
+                            </li>
+
+                        </ul>
+                    </div>
+                </div>
+            </li>
+        </ul>
+    </li>

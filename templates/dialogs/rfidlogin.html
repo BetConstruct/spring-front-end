@@ -1,0 +1,16 @@
+<div ng-controller="rfidCtrl" ng-if="conf.rfid.loginWIthRFID && !env.authorized && $location.path() !='/popup/'">
+    <div ng-show="conf.rfid.promptRFIDPassword" class="popup-bg-contain active" ng-class="{'active': passwordPromptPopup}" >
+        <div class="deposit-alert-contain">
+            <div class="text-deposit-alert password">
+                <form ng-submit="verifyPassword()">
+                    <p>
+                        <span trans>Input Password</span>
+                        <input type="password" ng-model="rfidPassword" focus-on="rfidPasswordFormOpened">
+                        <button class="message-box-ok-btn" type="submit" trans>OK</button>
+                    </p>
+                </form>
+
+            </div>
+        </div>
+    </div>
+</div>

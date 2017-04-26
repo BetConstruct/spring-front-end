@@ -1,0 +1,29 @@
+<div class="container wrapper-rialto" ng-app="exchange">
+    <div class="row-wrapper-rialto-b">
+
+        <div class="example-b">
+            <!--wrapper rialto-->
+            <div class="wrapper-rialto">
+                <div class="row-wrapper-rialto-b" ng-controller="MainCtrl as main" ng-init="main.onInit()">
+
+                    <!--left-column-->
+                    <div class="column-rialto-b-1"  ng-include="getTemplate('optional_modules/exchange/templates/exchange/exchange.leftMenu.html')" ng-class="menuIsActive"></div>
+                    <!--add class="closed"-->
+                    <!--left-column END-->
+
+
+                    <!--center-column-->
+                    <div class="column-rialto-b-2" ng-include="getTemplate('optional_modules/exchange/templates/exchange/exchange.markets.html')"></div>
+                    <!--center-column END-->
+
+                    <!--right-column-->
+                    <div class="column-rialto-b-3" ng-include="getTemplate('optional_modules/exchange/templates/exchange/exchange.betSlip.html')"></div>
+                    <!--right-column END-->
+
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>

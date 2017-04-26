@@ -1,0 +1,28 @@
+<div ng-if="!conf.betterHomepage">
+    <div class="hp-slider-17" ng-show="banners.length" ng-mouseover="over=true" ng-mouseleave="over=false">
+        <div class="hp-slide-17" no-animate ng-repeat="banner in banners track by $index" ng-class="{'active': $parent.$parent.slide==$index}">
+            <a ng-if="banner.linkType=='url' && !banner.videoLink"
+               ng-href="{{banner.link}}"
+               ng-click="bannerClick(banner)" target="{{banner.linktarget}}">
+                <img ng-src="{{ banner.imageurl }}" alt="">
+            </a>
+
+            <a ng-if="banner.linkType=='broadcast' && !banner.videoLink"
+               ng-click="$root.$broadcast(banner.link);bannerClick(banner)">
+                <img ng-src="{{ banner.imageurl }}" alt="">
+            </a>
+            <a ng-if="banner.videoLink"
+               ng-click="$root.$broadcast('youtube.videourl', banner.videoLink)">
+                <img ng-src="{{ banner.imageurl }}">
+            </a>
+
+            <p ng-if="banner.content" ng-bind-html="banner.content|html"></p>
+            <div ng-if="banner.linkType=='html'" ng-bind-html="banner.text|html"></div>
+            <span class="hp-slider-action-button-17" ng-if="banner.custom_fields.button[0] && banner.custom_fields.button[0]!== 'hide'" ng-bind="banner.custom_fields.button[0]" trans></span>
+        </div>
+        <div class="hp-slider-pagination-17" ng-show="banners.length > 1">
+            <small ng-repeat="banner in banners track by $index" ng-class="{'active':$parent.$parent.slide==$index}" ng-click="$parent.$parent.slide=$index"></small>
+        </div>
+    </div>
+    <vbet-loader ng-show="!banners.length"></vbet-loader>
+</div>

@@ -1,0 +1,183 @@
+@mixin casino-left-menu {
+  .body-wrapper.casino .casino-main {
+    width: 980px;
+    display: block;
+    margin: 0 auto;
+    position: relative;
+  }
+  .menu-casino {width: 200px; position: static;}
+  .contain-casino.poker.casino {display: none;}
+  .menu-casino .menu-games {
+    height: auto;
+    min-width: inherit;
+    width: 100%;
+    margin: 60px 0 20px;
+  }
+  .body-wrapper.casino .menu-games .contain-menu-games {width: 100%;}
+  .menu-casino .menu-games .contain-menu-games ul .contein-nav-g {
+    height: auto;
+    width: 100%;
+  }
+  .body-wrapper.casino .menu-games .contain-menu-games ul {margin: 0;}
+  .menu-casino .menu-games ul li {
+    height: 40px;
+    width: 100%;
+  }
+  .menu-casino .menu-games .contain-menu-games ul li a{
+    float: left;
+    width: 100%;
+    height: 100%;
+    display: inline-block;
+    line-height: 38px;
+    border-left: none;
+    border-right: none;
+    box-sizing: border-box;
+    padding: 0 10px;
+    text-align: left;
+    max-width: 100%;
+    border-top: 1px solid #191c2a;
+    border-bottom: 1px solid #0e1016;
+  }
+  .all-games-wrap {
+    float: left;
+    width: calc(100% - 210px);
+    min-width: 740px;
+    margin: 0 0 0 10px;
+  }
+  .all-games-wrap:before {display: none;}
+  .casino-main-contain {
+    width: calc(100% - 20px);
+    float: left;
+  }
+  .menu-casino .menu-games ul li.more-games {height: auto;}
+  .menu-casino .menu-games .contain-menu-games ul li.more-games > a {display: none;}
+  .menu-casino .menu-games .contain-menu-games ul .more-games .contein-games h3 {display: none;}
+  .menu-casino .menu-games .contain-menu-games ul .more-games .contein-games {
+    display: block;
+    float: left;
+    position: relative;
+    top: 0;
+    left: 0;
+    right: auto;
+    opacity: 1;
+    min-width: inherit;
+    max-width: inherit;
+    padding: 0;
+    box-sizing: border-box;
+    border: none;
+    box-shadow: none;
+    background: none;
+    width: 100%;
+    z-index: 99;
+  }
+  .casino-main .menu-casino .contain-menu-games > ul{width: 100%;}
+  .menu-casino .menu-games .contain-menu-games ul .more-games .contein-games .arrow-sport {display: none;}
+  .menu-casino .menu-games .contain-menu-games ul li.more-games .meny-games ul {
+    padding: 0;
+    width: 100%;
+  }
+  .menu-casino .menu-games .contain-menu-games ul .more-games .contein-games .meny-games {
+    width: 100%;
+    margin: 0;
+  }
+  .menu-casino .menu-games .contain-menu-games ul li.more-games .meny-games ul li:first-child {display: none;}
+  .menu-casino .menu-games .contain-menu-games ul li.more-games .meny-games ul li {
+    float: left;
+    height: 40px;
+    padding: 0;
+  }
+  .menu-casino .menu-games .contain-menu-games ul li.more-games .meny-games ul li > a {
+    padding: 0 10px;
+    text-align: left;
+    border-top: 1px solid #191c2a;
+    border-bottom: 1px solid #0e1016;
+    width: 100%;
+    border-radius: 0;
+    display: block;
+  }
+  .country-b.casino {
+    width: 200px;
+    float: right;
+    height: 32px;
+    overflow: hidden;
+    position: relative;
+    z-index: 66;
+    box-sizing: border-box;
+    border-radius: 4px;
+    min-height: inherit;
+    top: 50px;
+    right: 44px;
+  }
+  .country-b.casino:after{
+    font: 16px/32px icomoon;
+    content: "\e670";
+    position: absolute;
+    right: 5px;
+    top: 0;
+    width: 20px;
+    height: 32px;
+    text-align: center;
+    transition: color 250ms;
+    display: block;
+    z-index: 33;
+    color: #ffffff;
+  }
+  .country-b.casino:hover:after{content: "\e671";}
+  .country-b.casino:hover {overflow: visible;}
+  .casino-main-contain ul.countrylist {
+    right: 0;
+    top: 0;
+    position: absolute;
+    border-radius: 4px;
+    overflow: hidden;
+    padding:  32px 0 0;
+    max-height: 32px;
+    min-height: 32px;
+    transition: max-height 1000ms;
+  }
+  .country-b.casino:hover ul.countrylist{
+    max-height: 999px;
+  }
+  .casino-main-contain .country-b .country-block-contain ul li,   .casino-main-contain .country-b .country-block-contain ul li:first-child {
+    float: left;
+    width: 100%;
+    box-sizing: border-box;
+    margin: 0;
+    position: static;
+  }
+  .casino-main-contain .country-b .country-block-contain ul li > a.active{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+  }
+  .menu-casino .contain-menu-games form {
+    position: absolute;
+    z-index: 30;
+    right: 280px;
+    top: 102px;
+  }
+  .country-b .country-block-contain ul .contaien-country li:first-child {margin: 0;}
+  .casino-main-contain .country-b .country-block-contain ul li a {
+    text-align: left;
+    box-sizing: border-box;
+    padding: 8px 10px 8px;
+    font-size: 12px;
+    line-height: 12px;
+    border-top: 1px solid #191c2a;
+    border-bottom: 1px solid #0e1016;
+  }
+  .casino-main-contain .country-block-contain {width: 100%;min-height: inherit;}
+   .all-games-wrap .games-slider,
+   .Featured-casino-games .contein-slider,
+   .popular-casino-games .contein-slider {
+    width: 100%;
+  }
+  .casino-main .load-more-news {width: 100%;}
+  .casino-main + .no-games {width: calc(100% - 600px); margin: 50px 0 0;}
+  @media screen and (min-width: 1850px) {
+    .body-wrapper.casino .casino-main {
+      width: 1700px;
+    }
+  }
+}

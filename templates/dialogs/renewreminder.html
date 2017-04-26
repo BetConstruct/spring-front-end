@@ -1,0 +1,17 @@
+<div class="popup-bg-contain" ng-class="{'active': $root.renewReminder}" ng-controller="headerCtrl"  ng-if="conf.remindToRenewBalance.enabled && $location.path() !='/popup/'">
+    <div class="deposit-alert-contain">
+        <div class="icon-delete"><a ng-click="$root.renewReminder=false">Close</a></div>
+        <div class="text-deposit-alert">
+            <p>
+                <span>
+                    <b trans>Your balance is low</b>
+                    <!--<i>({{ profile.balance|number:conf.balanceFractionSize }}&nbsp;{{ profile.currency_name|currency }})</i>-->
+                </span>
+                <span ng-show="conf.remindToRenewBalance.page === 'renew'" trans>Renew to get more.</span>
+                <button class="message-box-ok-btn" ng-click="renewReminder = null; env.showSlider = true; env.sliderContent = conf.remindToRenewBalance.page; $event.stopPropagation();" ng-show="conf.remindToRenewBalance.page === 'renew'">Renew</button>
+                <button class="message-box-ok-btn" ng-click="renewReminder = null; env.showSlider = true; env.sliderContent = conf.remindToRenewBalance.page; $event.stopPropagation();" ng-show="conf.remindToRenewBalance.page === 'deposit'">Deposit</button>
+            </p>
+
+        </div>
+    </div>
+</div>

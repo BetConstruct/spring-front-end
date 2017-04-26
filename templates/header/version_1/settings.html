@@ -1,0 +1,62 @@
+<div class="contain-all-settings">
+    <div class="settings">
+        <ng-include class="notifications-fix-on-creload-j" src="getTemplate('templates/header/version_' + conf.header.version + '/notifications.html')"></ng-include>
+
+        <div ng-if="(conf.enableSettings.authorized && env.authorized) || (conf.enableSettings.notAuthorized && !env.authorized)" class="settings-button" ng-class="{'open': showSettingsDropDown}" ng-click="showSettingsDropDown=!showSettingsDropDown" hide-on-click state-flag-var="showSettingsDropDown" ng-init="settingsInit()">
+            <span class="set-icon" title="Settings" trans></span>
+            <div class="open-lang">
+                <div class="arrow-sport"></div>
+                <ul>
+                    <div ng-show="isInSports()">
+                        <div ng-include="getTemplate('templates/header/oddformatswitcher.html');"></div>
+                        <li class="title-sep"><span trans>Event sounds:</span></li>
+                        <li ng-click="setSound(0.75)" ng-class="{'active-format': env.sound > 0}" trans>On</li>
+                        <li ng-click="setSound(0)" ng-class="{'active-format': env.sound === 0}" trans>Off</li>
+                    </div>
+                    <div ng-show="conf.allowHidingUsernameAndBalance && env.authorized" >
+                        <li class="title-sep"><span trans>Hide:</span></li>
+                        <li ng-click="setHideUsername(!env.hideUsername)" ng-class="{'active-format': env.hideUsername}" trans>Username</li>
+                        <li ng-click="setHideBalance(!env.hideBalance)" ng-class="{'active-format': env.hideBalance}" trans>Balance</li>
+                    </div>
+                    <div ng-show="conf.allowTimeFormatChange">
+                        <li class="title-sep"><span trans>Time format</span></li>
+                        <li ng-click="setTimeFormat(env.longTimeFormats.HALF)" ng-class="{'active-format': env.timeFormat === env.longTimeFormats.HALF}" trans>12 hours</li>
+                        <li ng-click="setTimeFormat(env.longTimeFormats.FULL)" ng-class="{'active-format': env.timeFormat === env.longTimeFormats.FULL}" trans>24 hours</li>
+                    </div>
+                    <ng-include src="getTemplate('templates/header/layoutswitcher.html')"></ng-include>
+                    <div ng-show="conf.themes.length">
+                        <li class="title-sep"><span trans>Choose color scheme:</span></li>
+                        <li ng-repeat="theme in conf.themes" ng-click="setTheme(theme)" ng-bind="theme.name" ng-class="{'active-format': $root.theme === theme}"></li>
+                    </div>
+                </ul>
+                <!--<p><span trans>Sound:</span></p>
+                <ul>
+                    <li ng-click="setSound('on')" ng-class="{'active-format': env.sound === 'on'}" trans>On</li>
+                    <li ng-click="setSound('off')" ng-class="{'active-format': env.sound === 'off'}" trans>Off</li>
+                </ul>-->
+            </div>
+        </div>
+
+        <div class="language-change selected-{{env.lang}}" ng-class="{'open':showLangSelector}" title="Change language" trans="attr-only" ng-show="(conf.availableLanguages|count) > 1">
+            <p ng-click="showLangSelector=!showLangSelector" id="lang-selector">{{ conf.availableLanguages[env.lang]['short']}}<span class="arrow-lang"></span></p>
+            <div class="open-lang" hide-on-click state-flag-var="showLangSelector" except="lang-selector" >
+                <div class="arrow-sport"></div>
+                <ul>
+                    <li ng-repeat="lang in sortedAvailableLanguages track by lang.code" ng-click="selectLanguage(lang.code)" ng-show="env.lang!==lang.code" ng-class="lang.code">{{ lang.full|translate }}</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <ng-include src="getTemplate('templates/header/version_' + conf.header.version + '/livechat.html')"></ng-include>
+
+    <div title="FAQ" trans class="help-b faq" ng-click="openFaq()" ng-if="conf.haveFaq">FAQ</div>
+
+    <div ng-if="(conf.headerMessageIcon.alwaysShow || profile.unread_count > 0) && env.authorized && conf.headerMessageIcon.enabled"
+         class="message-info"
+         title="{{profile.unread_count}} messages"
+         ng-click="toggleSliderTab('messages');">
+        <span ng-bind="profile.unread_count" ng-show="profile.unread_count" ng-class="{'new-m':env.isNewMessage}"></span>
+    </div>
+
+</div>

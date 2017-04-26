@@ -1,0 +1,27 @@
+<div class="container-sub no-select-j" ng-controller="subscriptionsCtrl">
+    <div class="wrapper-sub">
+        <div class="header-sub">
+            <a href="#/">
+                <img src="skins/{{conf.skin}}/img/logo.png" alt="">
+            </a>
+        </div>
+        <div class="content-sub">
+            <p class="title" trans>Newsletter Management</p>
+            <p class="info" trans>Select the channels below to unsubscribe</p>
+            <p class="email">
+                <label for="email">
+                    <input id="email" ng-model="prop.unsubscribeEmail" type="checkbox">
+                    <span trans>Email</span>
+                </label>
+            </p>
+            <p class="sms">
+                <label for="sms">
+                    <input id="sms" ng-model="prop.unsubscribeSms" type="checkbox">
+                    <span trans>SMS</span>
+                </label>
+            </p>
+            <button ng-click="saveSubscription()" trans>Save</button>
+            <footer ng-bind-html="'If you have unsubscribed by mistake, change your settings in your {1} account'|translate:[conf.skin]|html"></footer>
+        </div>
+    </div>
+</div>

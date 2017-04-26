@@ -1,0 +1,139 @@
+<div class="extended-reg-j" ng-controller="RegistrationController">
+    <form name="registerform" class="registration-form" novalidate="novalidate" id="simplified-reg-form">
+        <h1>Informations personnellesd - Personal information</h1>
+        <table>
+            <tr>
+                <td>
+                    <h2>Personal information</h2>
+                    <article>
+                    <pre>
+                        First name
+                        Last name
+                        Gender
+                        Birth date
+                        Country of birth
+                        City of birth
+                        Country
+                        City
+                        Address
+                        Additional address
+                        Postal/zip code
+                        Mobile phone
+                    </pre>
+                        <hr/>
+                        <ul>
+                            <li ng-repeat="regItem in RegConfig.step2.leftCol track by $index" class="field-separator">
+                                <ng-include src="'skins/vbet.com/templates/registration-fields.html'"></ng-include>
+                            </li>
+                        </ul>
+                    </article>
+                </td>
+                <td>
+                    <h2>Connection / logon information</h2>
+                    <article>
+                    <pre>
+                        Room ID
+                        Password
+                        Password confirmation
+                        E-mail
+                        E-mail confirmation
+                        Security question
+                        Your answer
+                        Promotion code
+                    </pre>
+                        <hr/>
+                        <ul>
+                            <li ng-repeat="regItem in RegConfig.step2.rightCol track by $index" class="field-separator">
+                                <ng-include src="'skins/vbet.com/templates/registration-fields.html'"></ng-include>
+                            </li>
+                        </ul>
+                    </article>
+                </td>
+                <td>
+                    <h2>Bank information</h2>
+                    <article>
+                        <p>Thank you for entering your IBAN. It is used only for the payment of winnings.</p>
+                        <ul>
+                            <li class="iban-block-j">
+                                <label>
+                                    <p>IBAN</p>
+
+                                    <div class="error-wrap-j">
+                                        <input type="text" placeholder="IBAN">
+                                        <i></i>
+
+                                        <div class="caption-j">This is it. love or hate it.</div>
+                                    </div>
+                                </label>
+                                <label>
+                                    <div class="error-wrap-j">
+                                        <input type="text" placeholder="BIC/SWIFT">
+                                        <i></i>
+
+                                        <div class="caption-j">This is it. love or hate it.</div>
+                                    </div>
+                                </label>
+                                <a ng-click="ibanValidation()">Check the validity of your IBAN</a>
+                            </li>
+                        </ul>
+                        <hr>
+                        <ul class="promo-agree-block-j">
+                            <p>I agree to receive the registration bonus, special offers and Vbet.fr information.</p>
+                            <li>
+                                <label>
+                                    <div class="error-wrap-j">
+                                        <input type="checkbox">
+
+                                        <p>Via e-mail</p>
+                                    </div>
+                                </label>
+                            </li>
+                            <li>
+
+                                <label>
+                                    <div class="error-wrap-j">
+                                        <input type="checkbox">
+
+                                        <p>Via SMS</p>
+                                    </div>
+                                </label>
+                            </li>
+                        </ul>
+                        <hr>
+                        <label class="age-agree-j">
+                            <div class="error-wrap-j">
+                                <input type="checkbox"><span>I certify being at least 18 years old, and being aware of the Terms and Conditions and Rules of Vbet.fr.</span>
+                            </div>
+                        </label>
+                        <hr>
+                        <label class="capt-j-ext">
+                            <p>Please fill in the following Captcha</p>
+
+                            <div ng-switch-when="captcha" class="error-wrap-j"
+                                 ng-init="resetError[regItem.name] = true"
+                                 ng-class="{'error': (!resetError[regItem.name] || registerform[regItem.name].blur) &amp;&amp; registerform[regItem.name].$invalid &amp;&amp; showFieldsValidation}"
+                                 ng-show="regItem.imgSrc">
+                                <label>
+                                    <img ng-src="https://cptca.betconstruct.com/captcha.php?key=6f4618a96a008c66a55a"
+                                         src="https://cptca.betconstruct.com/captcha.php?key=6f4618a96a008c66a55a">
+                                    <button ng-click="loadCaptchaImage(regItem)" trans="">Reload</button>
+                                </label>
+
+                                <div vb-html-compiler="<input type='text' name='captcha_text' ng-blur='registerform[regItem.name].blur=true' ng-model='registrationData[regItem.name]' placeholder=''/>"
+                                     custom-attrs="regItem.customAttrs">
+                                    <input type="text" name="captcha_text"
+                                           ng-blur="registerform[regItem.name].blur=true"
+                                           ng-model="registrationData[regItem.name]" placeholder="Type the words here"
+                                           required="required"
+                                           class="ng-pristine ng-scope ng-invalid ng-invalid-required ng-touched">
+                                </div>
+                            </div>
+                        </label>
+                        <hr>
+                        <button class="submit-but-j" ng-click="resetError = {}; register();" ng-class="{'loading':registration.busy}" disabled="true" ng-disabled="registration.busy" trans>Open my account</button>
+                    </article>
+                </td>
+            </tr>
+        </table>
+    </form>
+</div>

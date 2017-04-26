@@ -1,0 +1,38 @@
+<div ng-controller="cmsSportNewsCtrl" ng-init="getHomepageBanners('products-banners-' + env.lang)" ng-show="homepageBanners.length" class="product-list-contain">
+    <vbet-loader ng-show="homepageBannersLoading"></vbet-loader>
+    <ul ng-show="!homepageBannersLoading" class="column-{{ homepageBanners.length }}">
+        <li ng-repeat="banner in homepageBanners track by $index" ng-if="!banner.custom_fields.authorized[0] || (env.authorized && banner.custom_fields.authorized[0])">
+            <a ng-if="!(banner.title == 'Sportsbook' || banner.custom_fields.sportsbook[0])" ng-href="{{banner.custom_fields.openSlider ? '' : banner.link}}" ng-click="(banner.custom_fields.openSlider ? openHelpPage(banner.custom_fields.openSlider[0]) : ''); $event.stopPropagation()" target="{{banner.linktarget}}">
+                <img class="product-slider-image {{(banner.custom_fields.image[0] ? 'show hide-button' : '')}} {{ banner.custom_fields.css[0] || banner.title.$$unwrapTrustedValue() }}" ng-src="{{banner.custom_fields.image[0] ? banner.image : banner.imageurl}}"/>
+                <p class="icon-container-product">
+                    <b class="{{ banner.custom_fields.css[0] || banner.title.$$unwrapTrustedValue() }}"></b>
+                </p>
+                <div class="product-title-animation-wrapper" ng-class="{'has-animation' : banner.custom_fields.second_name}">
+                    <h4>{{ banner.title|translate }}</h4>
+                    <h4 ng-show="banner.custom_fields.second_name">{{ banner.custom_fields.second_name[0] }}</h4>
+                </div>
+                <button ng-class="{'product-jackpot-anim-j': conf.poolBettingJackpotOnHomepage && (banner.title == 'Free Quiz' || banner.title == 'Pool Betting' || banner.title === conf.poolBettingJackpotOnHomepage) && $root.poolBettingJackpot}">
+                    <span>
+                        <div ng-bind-html="banner.description"></div>
+                        <div ng-if="conf.poolBettingJackpotOnHomepage && (banner.title == 'Free Quiz' || banner.title == 'Pool Betting' || banner.title === conf.poolBettingJackpotOnHomepage) && $root.poolBettingJackpot">
+                            <span trans>Jackpot</span>:
+                            <span>{{$root.poolBettingJackpot * (currency.toto_rate || 1)|number:conf.balanceFractionSize}}</span>
+                            <span>{{conf.poolBettingCurrencyName|currency}}</span>
+                        </div>
+                    </span>
+                </button>
+            </a>
+
+            <a ng-if="(banner.title == 'Sportsbook' || banner.custom_fields.sportsbook[0])" class="sportsBook-l" ng-init="sportsBookType=1" href="#/sport/?type={{sportsBookType}}" ng-click="$root.broadcast('setGamesType', sportsBookType == 1)">
+                <p class="icon-container-product">
+                    <b class="{{ banner.custom_fields.css[0] || banner.title.$$unwrapTrustedValue() }}"></b>
+                </p>
+                <div class="product-title-animation-wrapper">
+                    <h4>{{ banner.title|translate }}</h4>
+                </div>
+                <button trans>Live</button>
+                <button ng-mouseleave="sportsBookType=1" ng-mouseover="sportsBookType=0" trans>pre-match</button>
+            </a>
+        </li>
+    </ul>
+</div>

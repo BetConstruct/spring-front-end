@@ -1,0 +1,29 @@
+<div class="better-homepage" ng-init="setTitle('')">
+    <div ng-repeat="row in conf.homepage track by $index" class="row"
+         ng-style="{'max-width': row.maxWidth}"
+         ng-class="{'guide': !row.fullWidth}">
+        <div class="row-child">
+            <div ng-repeat="item in row.items track by $index" class="{{item.class}} {{item.templateUrl}}">
+                <div ng-if="item.templateUrl"
+                     ng-class="{'kill-height-til-media': item.mediaHeight}"
+                     ng-style="{'height': (item.height || item.mediaHeight), 'max-height': item.maxHeight}"
+                     ng-include="getTemplate(item.templateUrl)"></div>
+                <div ng-if="item.sliderSlug"
+                     ng-class="{'kill-height-til-media': item.mediaHeight}"
+                     ng-style="{'height': (item.height || item.mediaHeight), 'max-height': item.maxHeight}"
+                     banner-slider
+                     interval="{{conf.featuredGames.rotationPeriod}}" slug="{{item.sliderSlug}}"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<style ng-controller="cmsPagesCtrl" ng-init="loadPage('homepage-backgrounds', true)">
+    .body-wrapper.homepage {
+        {{mainPage.thumbnail ? 'background-image: url('+mainPage.thumbnail+');' : ''}}
+        {{mainPage.custom_fields.size ? "background-size: " + mainPage.custom_fields.size[0] + ";" : mainPage.thumbnail ? "background-size: 100%;" : ""}}
+        {{mainPage.custom_fields.position ? 'background-position: ' + mainPage.custom_fields.position[0] : mainPage.thumbnail ? "background-position: 50% 0" : ""}};
+        {{mainPage.custom_fields.attachment ? "background-attachment:" + mainPage.custom_fields.attachment[0] + ";" : ""}}
+        {{mainPage.custom_fields.color ? "background-color: " + mainPage.custom_fields.color[0] + ";" : ""}}
+        {{mainPage.custom_fields.repeat ? "background-repeat: " + mainPage.custom_fields.repeat[0] : mainPage.thumbnail ? "background-repeat: no-repeat" : ""}};
+    }
+</style>

@@ -1,0 +1,102 @@
+<!--Casino-->
+
+<!--Menu games-->
+<div class="menu-casino menu-poker">
+    <div class="menu-games">
+        <div class="contain-menu-games">
+            <ul class="poker-menu">
+                <div class="contein-nav-g">
+                    <li ng-repeat="page in pokerPages" ng-class="{'active-game-casino': page.id === selectedPokerPage.id}" class="poker {{page.slug}}">
+                        <a ng-click="selectPage(page, 'poker')"><span></span>{{page.title}}</a>
+                    </li>
+                </div>
+            </ul>
+            <div class="download-client">
+                <ul>
+                    <li class="desktop"><a href="{{$parent.globalConfig.poker[pokerType + 'downloadLink'].windows}}" target="_blank" title="Download Windows client" trans>desktop</a></li>
+                    <li class="ipone"><a href="{{$parent.globalConfig.poker[pokerType + 'downloadLink'].mac}}" target="_blank" title="Download MacOS client" trans>iPhone</a></li>
+                    <li class="android"><a href="{{$parent.globalConfig.poker.instantPlayLink}}?user={{pokerLoginData.userName}}&pwdhash={{pokerLoginData.PasswordHash}}&userid={{pokerLoginData.UserID}}&uid={{pokerLoginData.UniqueID}}" target="_blank"  title="Instant Play" trans>android</a></li>
+                    <li class="linux"><a href="{{$parent.globalConfig.poker[pokerType + 'downloadLink'].linux}}" target="_blank"  title="Download Linux client" trans>linux</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="country-b" ng-show="selectedPokerPage.children.length">
+    <div class="country-block-contain">
+        <ul class="countrylist">
+            <div class="contaien-country">
+                <li ng-repeat="subpage in selectedPokerPage.children">
+                    <a ng-click="$parent.selectedPokerPage.selectedPokerSubpage = subpage" ng-class="{'active': $parent.selectedPokerPage.selectedPokerSubpage.id === subpage.id}"> {{ subpage.title }}</a>
+                </li>
+            </div>
+        </ul>
+    </div>
+</div>
+
+<!--Menu games end-->
+
+<!--big-slider-->
+<div ng-show="selectedPokerPage.slug == 'home'"
+     ng-init="gePageBanners('poker');">
+    <vbet-big-slider
+            ng-if="pokerTopBanners"
+            images="pokerTopBanners"
+            link-click-handler="checkForPageDeepLinkFunc('poker')">
+    </vbet-big-slider>
+</div>
+<!--big-slider END-->
+
+<div class="mein-page-contain poker" ng-show="selectedPokerPage.slug == 'home'">
+    <div class="page-main">
+        <div class="popup-bg-contain" ng-class="{'active': globalPopup}">
+            <div class="deposit-alert-contain">
+                <div class="icon-delete"><a ng-click="globalPopup=null">Close</a></div>
+                <div class="text-deposit-alert">
+                    <div class="popup-status-icon" ng-class="globalPopupType||'info'"></div>
+                    <p>
+                        <span ng-bind="globalPopup"></span>
+                        <button class="message-box-ok-btn" ng-click="globalPopup=null" trans>OK</button>
+                    </p>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="announcement poker-info">
+            <ul class="old-view">
+                <li>
+                    <a ng-click="globalPopup=('There is no downloadable client for your operating system'|translate)" ng-show="userOS!=='Windows' && userOS !== 'MacOS' && userOS !== 'Linux' && userOS !== 'UNIX'"><p>1 <span trans>Download</span></p></a>
+                    <a ng-href="{{$parent.globalConfig.poker.downloadLink.linux}}" ng-show="userOS==='Linux' || userOS==='UNIX'"><p>1 <span trans>Download</span></p></a>
+                    <a ng-href="{{$parent.globalConfig.poker.downloadLink.windows}}" ng-show="userOS==='Windows'"><p>1 <span trans>Download</span></p></a>
+                    <a ng-href="{{$parent.globalConfig.poker.downloadLink.mac}}" ng-show="userOS==='MacOS'"><p>1 <span trans>Download</span></p></a>
+                </li>
+
+                <li><a ng-click="openRegForm();$event.stopPropagation()"><p>2 <span trans>Register</span></p></a></li>
+
+                <li><a ng-click="selectPage(getPageBySlug(pokerPages, 'how-to-play'), 'poker')"><p>3 <span trans>Play</span></p></a></li>
+
+            </ul>
+        </div>
+    </div>
+</div>
+
+<vbet-loader class="page-center" ng-show="!pokerPagesLoaded"></vbet-loader>
+
+<!--poker baners-->
+<div class="poker-baners" ng-show="pokerPagesLoaded && selectedPokerPage.content">
+    <div class="contain-baners">
+        <div class="top-slots-block">
+            <div class="poker-text" ng-class="selectedPokerPage.slug">
+                <div ng-bind-html="selectedPokerPage.content"></div>
+                <div ng-bind-html="selectedPokerPage.selectedPokerSubpage.content"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<promotion-news slug="poker" main-class="block-meny-news promo"  share-path="poker" use-custom-base-host="true" ng-if="selectedPokerPage.slug == 'promotion'"></promotion-news>
+<promotion-news slug="poker" category-slug-key="tournamentCategorySlugs" main-class="block-meny-news promo"  share-path="poker" use-custom-base-host="true" ng-if="selectedPokerPage.slug == 'tournament'"></promotion-news>
+
+<div ng-include="getTemplate('optional_modules/casino/templates/poker/calculator.html')" ng-if="selectedPokerPage.slug == 'tournament-leaderboard'"></div>

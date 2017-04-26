@@ -1,0 +1,112 @@
+<div class="bet-history" ng-if="!conf.enableMixedView && env.sliderContent === 'casinoBetHistory' && conf.enableCasinoBetHistory" ng-controller="myBetsCtrl" ng-init="initBetHistory('Casino')">
+    <div class="contein-bet-history">
+        <!--Блок с датой-->
+        <div class="left-block-history">
+            <div class="form-sign-in">
+                <label trans>Time Period</label>
+                <div class="select-block">
+                    <select ng-model="dataSelectedIndex" ng-change="loadBetHistory('Casino')">
+                        <option ng-repeat="d in betHistoryParams.dateRanges" ng-disabled="d.type == 'month'" value="{{ $index }}"  ng-class="{ 'data-range-month' : d.type == 'month', 'data-range-week': d.type == 'week' }">{{ d.str }}</option>
+                    </select>
+                </div>
+            </div>
+
+
+            <div class="form-sign-in">
+                <label trans>Categories</label>
+                <div class="select-block">
+                    <select ng-model="betHistoryParams.category"  ng-change="loadBetHistory('Casino')">
+                        <option value="0" trans>All bets</option>
+                        <option value="6" ng-show="conf.casinoEnabled" trans>Casino games</option>
+                        <option value="1" ng-show="conf.livedealerEnabled" trans>Live casino</option>
+                        <option value="3" ng-show="conf.skillgamesEnabled" trans>Skill games</option>
+                        <option value="2" ng-show="conf.casinoEnabled" trans>Virtual games</option>
+                        <option value="706" ng-show="conf.financialsEnabled" trans>Financials</option>
+                        <!-- 4 is the category ID . the actual game id is 15-->
+                        <option value="1297" ng-show="conf.fantasyEnabled" trans>Fantasy Sports</option>
+                        <!-- 4 is the category ID . the actual game id is 55-->
+                        <option value="5" ng-show="conf.ogwilEnabled" trans>Ogwil</option>
+                        <option value="547" ng-show="conf.beloteEnabled" trans>Belote</option>
+                        <!-- 3 is the category ID . the actual game id is 10-->
+                        <option value="599" ng-show="conf.backgammonEnabled" trans>Backgammon</option>
+                        <!-- 3 is the category ID . the actual game id is 11-->
+                    </select>
+                </div>
+            </div>
+
+            <div ng-show="betHistoryParams.category === '1'" class="form-sign-in">
+                <label trans>Live games</label>
+
+                <div class="select-block">
+                    <select ng-model="betHistoryParams.game"  ng-change="loadBetHistory('Casino')">
+                        <option value="0" trans>All games</option>
+                        <option value="102" trans>Roulette</option>
+                        <option value="101" trans>BlackJack</option>
+                        <option value="104" trans>Bet on Poker</option>
+                        <option value="103" trans>Baccarat</option>
+                    </select>
+                </div>
+            </div>
+
+        </div>
+        <!--Блок с датой END-->
+        <div class="right-block-history error" ng-if="errorLoadingHistory">
+            <p>
+                <span trans>Error occured</span>
+                <span trans>Please try later or contact support.</span>
+            </p>
+        </div>
+
+        <vbet-loader class="page-center right-block-history" ng-if="!betHistoryLoaded && !errorLoadingHistory"></vbet-loader>
+        <!--all bets block-->
+        <div class="right-block-history" ng-if="betHistoryLoaded">
+            <div class="All-Bets-history">
+                <h3 trans>All Bets</h3>
+                <div class="history-list">
+                    <ul ng-repeat="bet in betHistory">
+                        <li class="list-date">{{bet.bet_date|formatDate:'full'}}</li>
+                        <li class="chempionship-history"><span>{{ bet.game_name }}</span></li>
+                        <li class="history-name-team">
+                            <div class="mini-express-b">
+                                {{ bet.round_id }}
+                                <div ng-show="bet.bet_id != ''" class="bet-history-popup">
+                                    <div class="express-contain">
+                                        <div class="arrow-sport"></div>
+                                        {{ bet.bet_id }}
+                                    </div>
+                                </div>
+                            </div>
+
+                        </li>
+                        <li class="maney-rate">
+                            {{bet.currency|currency}} <span>{{bet.bet_amount}}</span>
+                        </li>
+                        <li class="rezult-rate">
+                            <span class="unsettled-rezult" ng-show="bet.status == 0" trans>unsettled</span>
+                            <span class="lost-rezult" ng-show="bet.status == 1 && bet.win_amount == 0" trans>lost</span>
+                            <span class="unsettled-rezult" ng-show="bet.status == 2" trans>returned</span>
+                            <div ng-show="bet.status == 1 && bet.win_amount > 0"><span class="won-rezult" trans>Won</span> <p>{{bet.currency|currency}} {{bet.win_amount}}</p></div>
+                        </li>
+                        <li class="list-date">{{bet.win_date|formatDate:'full'}}</li>
+                    </ul>
+
+                </div>
+            </div>
+            <!--pagination-->
+            <div class="pagination" ng-show="betHistory.length">
+                <ul>
+                    <li ng-repeat="page in betHistoryPages" ng-class="{true: 'item-active', false: 'item-dark'}[betHistoryActivePage === page]">
+                        <a ng-click="betHistoryGotoPage(page)" ng-show="page > 0">{{page}}</a>
+                        <span ng-show="page < 0">...</span>
+                    </li>
+
+                    <li class="item-next" ng-show="betHistoryActivePage < totalPages"><a ng-click="betHistoryGotoPage(betHistoryActivePage + 1)" trans>next</a></li>
+                    <li class="item-prevew" ng-show="betHistoryActivePage > 1"><a ng-click="betHistoryGotoPage(betHistoryActivePage -1)" trans>prev</a></li>
+                </ul>
+            </div>
+            <!--pagination END-->
+        </div>
+
+        <!--all bets block END-->
+    </div>
+</div>

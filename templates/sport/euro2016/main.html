@@ -1,0 +1,582 @@
+<div class="classic-view-wrapper-v3" ng-controller="classicViewMainCtrl" ng-class="{'betslip-expanded': $root.videoResizeButton}">
+    <div class="classic-view-row-v3">
+        <div class="classic-view-column-v3 {{leftMenuClosed ? 'left-menu-closed-v3' : ''}}">
+
+            <!-- System Calculator-->
+            <div id="system-claculator-container"
+                ng-if="$root.showSystemCalculator"
+                draggable
+                allow-other-mouse-events
+                drag-from="calculator-draggable-header">
+                <include-template template-path="templates/sport/classic/systemCalculator.html"></include-template>
+            </div>
+            <!-- System Calculator-->
+
+            <!--left-column-->
+            <div ng-controller="classicViewLeftController" class="left-column-v3">
+
+                <div class="left-column-v3-header">
+
+                    <!--switcher view-->
+                    <div class="view-switcher-v3">
+                        <ul>
+                            <li class="{{$location.path() === '/dashboard/' ? 'active' : ''}}" ng-show="conf.dashboard.showLeftDashboard">
+                                <button ng-click="$location.path('/dashboard/')">
+                                    <i class="dashboard-icon-b"></i>
+                                </button>
+                            </li>
+                            <li ng-class="{active:env.live && $location.path() !== '/dashboard/'}" ng-if="::conf.customSportsBook.classic.showLive">
+                                <button ng-click="($location.path() == '/sport/' || $location.path().indexOf('customsport') !== -1) ? toggleLive() : selectSportTabFromDashboard(1);" ng-disabled="env.live && $location.path() !== '/dashboard/'">
+                                    <span trans>Live</span>
+                                    <b ng-bind="''+gameCounts['1']+''"></b>
+                                </button>
+                            </li>
+                            <li ng-class="{active:!env.live && $location.path() !== '/dashboard/'}" ng-if="::conf.customSportsBook.classic.showPrematch" ng-init="subscribeToAllGameCounts(0)">
+                                <button ng-click="($location.path() == '/sport/' || $location.path().indexOf('customsport') !== -1) ? toggleLive() : selectSportTabFromDashboard(0)" ng-disabled="!env.live && $location.path() !== '/dashboard/'">
+                                    <span trans>pre-match</span>
+                                    <b ng-bind="''+gameCounts['0']+''"></b>
+                                </button>
+                            </li>
+
+                        </ul>
+
+                    </div>
+                    <!--switcher view END-->
+
+                    <!--filters-->
+                    <div class="filter-view-v3">
+                        <div class="filter-row-v3">
+                            <ul>
+                                <li ng-show="!env.live">
+                                    <div class="time-filter-v3" ng-class="{'active': periodDropdownOpened}">
+                                        <p ng-click="periodDropdownOpened=!periodDropdownOpened"><span>{{(selectedUpcomingPeriod ? selectedUpcomingPeriod + ' hours' : 'All')|translate}}</span> <i class="arrow-rotate-filter-v3"></i></p>
+                                        <div class="sub-nav-filter-time-v3">
+                                            <ul>
+                                                <li ng-repeat="period in upcomingPeriods track by $index" ng-click="selectPrematchTimePeriod(period);$parent.periodDropdownOpened = false" ng-class="{'icon-checkmark': period == selectedUpcomingPeriod}">
+                                                    <span>{{(period ? period + ' hours' : 'All')|translate}}</span>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li class="{{!liveFilters.disableRegions ? 'active' : ''}}"
+                                    ng-show="env.live"
+                                    ng-click="toggleRegionsFilter()"
+                                    title="Disable regions" trans="attr-only"
+                                >
+                                    <i class="region-icon-v3"></i>
+                                </li>
+                                <li ng-show="env.live && conf.videoEnabled"
+                                    ng-click="toggleVideoFilter()"
+                                    ng-class="{'active':liveFilters.withVideo}"
+                                    title="With video"
+                                    trans="attr-only"
+                                >
+                                    <i class="video-icon-v3"></i>
+                                </li>
+                                <!--<li>-->
+                                    <!--<i class="tv-icon-v3"></i>-->
+                                <!--</li>-->
+
+
+<!--                                 <li ng-init="$root.noClassicScroll = !!conf.classicScrollToggleDefaultState"
+                                    ng-show="conf.enableClassicScrollToggle && conf.sportsLayout === 'euro2016' && $location.path() === '/sport/'"
+                                >
+                                    <i class="scroll-none-icon-v3 {{$root.noClassicScroll ? 'active' : ''}}"
+                                       ng-click="$root.noClassicScroll = !$root.noClassicScroll; toggleLiveSectionPin()"
+                                       title="Toggle inner scrolling" trans=""
+                                    ></i>
+                                </li> -->
+                            </ul>
+
+                            <!-- live multiview switcher visible on live-->
+                            <div class="multi-view-sw-v3" ng-show="env.live && $location.path() !== '/dashboard/'">
+                                <p trans>Multiview</p>
+                                <div class="switcher-view-b {{$location.path() === '/multiview/' ? 'active' : ''}}"
+                                     ng-click="$location.path() === '/multiview/' ? $location.path('/sport') : $location.path('/multiview')"
+                                >
+                                    <div class="sw-button-v3"></div>
+                                </div>
+                            </div>
+                            <!-- prematch multiselect switcher visible on prematch-->
+                            <div class="multi-view-sw-v3" ng-show="!env.live && $location.path() !== '/dashboard/'">
+                                <p trans>Multiselect</p>
+                                <div class="switcher-view-b" ng-if="isMultiViewVisible" ng-click="toggleMultiView()" ng-class="{'active': env.preMatchMultiSelection}">
+                                    <div class="sw-button-v3"></div>
+                                </div>
+                            </div>
+
+
+                        </div>
+
+                        <div class="second-row-filter-v3">
+<!--                             <div class="search-box-v3"> -->
+<!--                                 <input type="text" placeholder="Competition or a team"> -->
+                                <include-template template-path="templates/search/sport.html" class="search-box-v3" ng-if="conf.enableMenuSearch"></include-template>
+<!--                             </div> -->
+
+                            <div class="closed-left-nav-v3" ng-click="toggleLeftMenu()"></div>
+
+                        </div>
+                    </div>
+                    <!--filters END-->
+
+                    <div class="full-menu-wrapper-box-v3">
+                        <vbet-loader ng-show="leftMenuLiveLoading"></vbet-loader>
+                        <div ng-show="!leftMenuLiveLoading" class="full-menu-wrapper-v3">
+
+                            <!--Favorites-->
+                            <include-template class="left-menu-wrapper-v3"
+                                template-path="templates/sport/euro2016/left/favorites.html"
+                            ></include-template>
+                            <!--Favorites END-->
+
+                            <!--Live-->
+                            <include-template class="left-menu-wrapper-v3"
+                                template-path="templates/sport/euro2016/left/live.html"
+                                ng-show="env.live"
+                            ></include-template>
+                            <!--Live END-->
+
+
+                            <!--Prematch and Multiselect-->
+                            <include-template class="left-menu-wrapper-v3"
+                                template-path="templates/sport/euro2016/left/prematch.html"
+                                ng-show="!env.live"
+                            ></include-template>
+                            <!--Prematch and Multiselect-->
+                        </div>
+
+                        <h1 ng-show="((!leftMenuLiveSports.length && env.live) || (!leftMenuPrematchSports.length && !env.live)) && !leftMenuLiveLoading && !$root.myGames.length"
+                            class="now-games-menu" trans>No games found</h1>
+                    </div>
+                </div>
+            </div>
+            <!--left-column END-->
+
+            <!--center-column-->
+            <div class="center-column-v3"
+                 ng-switch="$location.path()"
+                 ng-class="{'game-pinned': isLiveGamePinned && !noClassicScroll && !(enlargedGame && enlargedGame.video_data) && openGame.type == 1, 'live': env.live, 'prematch': !env.live && $location.path() !== '/dashboard/', 'dashboard': $location.path() === '/dashboard/'}">
+                <div ng-switch-default
+                    class="games-view-wrapper-v3
+                        {{!env.live ? 'prematch-view-v3' : ''}}
+                        {{favoriteGameIsSelected && favoriteGameFromLeftMenu ? 'favorite-game-open-euro2016': ''}}
+                        {{isLiveGamePinned && !noClassicScroll && GamesWithStatsBlock[openGame.sport.alias.toLowerCase()] && openGame.type == 1 && !(enlargedGame && enlargedGame.video_data) ? 'has-statistics' : ''}}
+                        {{isLiveGamePinned && !noClassicScroll && showStatsBlock && openGame.type == 1 && openGame.info.current_game_state !== 'notstarted' && openGame.show_type != 'OUTRIGHT' && !(enlargedGame && enlargedGame.video_data) && GamesWithStatsBlock[openGame.sport.alias.toLocaleLowerCase()]? 'open' : ''}}">
+                    <div class="prematch-games-list" ng-show="!env.live">
+                        <div class="prematch-games-list-title-v3">
+                            <div class="prematch-column-title-v3" ng-show="!todaysBetsSelected">
+                                <h2>
+                                    <b ng-show="!env.preMatchMultiSelection && prematchGameViewData" class="prematch-region-icon-v3 flag-icon flag-{{prematchGameViewData[0].games[0].region.alias | removeUselessSymbolsByRegexp: '[,\' ]+': 'g': 'true'}}" title="{{prematchGameViewData[0].games[0].region.name}}"></b>
+                                    <span ng-show="env.preMatchMultiSelection" ng-click="resetPrematchMultiView()" class="closed-all-games-v3"></span>
+                                    <span ng-show="env.preMatchMultiSelection" trans>Chosen Games</span>
+                                    <span ng-show="!env.preMatchMultiSelection && prematchGameViewData">{{prematchGameViewData[0].name}}</span>
+                                </h2>
+                            </div>
+                            <div class="custom-select-for-todays-bets-j" ng-show="todaysBetsSelected" ng-class="todaysBetsFilterOpened ? 'opened-j' : ''" ng-click="todaysBetsFilterOpened = !todaysBetsFilterOpened" hide-on-click state-flag-var="todaysBetsFilterOpened">
+                                <div><i class="icon-for-sport-j mini-icon-1" ng-class="todaysBetsSelectedSport.alias"></i>{{todaysBetsSelectedSport.name}}</div>
+                                <ul>
+                                    <li ng-repeat="sport in todaysBetsSports track by sport.id" ng-class=" $parent.todaysBetsSelectedSport.id==sport.id?'active-j':'' "
+                                        ng-click="$parent.todaysBetsSelectedSport=sport; expandTodaysBets(sport)">
+                                        <i class="icon-for-sport-j" ng-class="sport.alias"></i>{{sport.name}}
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="prematch-markets-filter-v3" ng-show="(showMarketsFilter || env.preMatchMultiSelection) && !outrightSelected"  ng-click="showMarketFilterDropDown = !showMarketFilterDropDown">
+                                <div class="time-filter-v3" ng-class="{'active': showMarketFilterDropDown}">
+                                    <p><span>{{selectedMarketFilter.name|translate}}</span> <i class="arrow-rotate-filter-v3"></i></p>
+                                    <div class="sub-nav-filter-time-v3">
+                                        <ul>
+                                            <li ng-repeat="marketField in marketFilterTypes" ng-click="selectMarketFilter(marketField)"  ng-class="{'icon-checkmark': marketField.type === selectedMarketFilter.type}">
+                                                <span>{{marketField.name|translate}}</span>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="prematch-list-view-v3" ng-class="{'prematch': !env.live && !env.preMatchMultiSelection}">
+                            <vbet-loader ng-show="prematchGamesLoading"></vbet-loader>
+                            <div class="prematch-game-view-contain-v3"
+                                 ng-show="!prematchGamesLoading"
+                                 ng-repeat="competition in prematchGameViewData track by competition.id" ng-class="{'closed': competitionNameGroupe[$index]}">
+                                <div class="title-championship-v3" ng-click="competitionNameGroupe[$index] = !competitionNameGroupe[$index]" ng-show="env.preMatchMultiSelection">
+                                    <div class="closed-game-icon-v3" ng-click="broadcast('prematchMultiView.removeCompetitionFromSelection', {competition: competition}); $event.stopPropagation()"></div>
+                                    <p><span>{{competition.games[0].sport.name}}</span>. <span>{{competition.games[0].region.name}}</span> - <span>{{competition.name}}</span></p>
+                                    <div class="arrow-view-v3"></div>
+                                </div>
+                                <div class="time-info-game-box-v3" ng-repeat="(groupDate, groupGames) in competition.gamesGroupedByDate" ng-class="{'closed': competitionTimeGroupe[$index]}">
+                                    <div class="time-title-view-v3" ng-click="competitionTimeGroupe[$index] = !competitionTimeGroupe[$index]">
+                                        <p>{{groupDate|formatDate:'unixDate'}}</p>
+                                        <div class="arrow-view-v3"></div>
+                                    </div>
+                                    <div class="game-events-view-v3" ng-repeat="prematchGame in groupGames track by prematchGame.id">
+                                        <div class="mini-title-box-gameview-v3" ng-class="{'active': selectedGame.id === prematchGame.id}">
+                                            <div class="closed-game-icon-v3" ng-show="env.preMatchMultiSelection && !outrightSelected" ng-click="broadcast('prematchMultiView.removeGameFromSelection', {id: prematchGame.id, competition: competition}); $event.stopPropagation()"></div>
+                                            <div class="pematch-single-game-info-v3"
+                                                 ng-click="openGameFullDetails(prematchGame, selectedCompetition);selectGame(prematchGame.id);selectCompetition()"
+                                                 ng-show="!conf.alternativeClassicGamesLayout"
+                                                 title="{{ conf.edition.enabled ? (('Edition'|translate) + ': ' + (prematchGame.start_ts|formatDate:'edition')) : '' }}">
+                                                <div class="team-name-view-table-v3">
+                                                    <div class="team-names-date-icons-v3">
+                                                        <div class="time-game-v3">
+                                                            <p>{{prematchGame.start_ts|formatDate:'noLocaleTime':null:$root.env.timeFormat}}</p>
+                                                        </div>
+                                                        <p>
+                                                            <span>
+                                                                <i>{{prematchGame.team1_name}}</i>
+                                                                <b ng-if="prematchGame.team2_name" trans>vs</b>
+                                                                <i>{{prematchGame.team2_name}}</i>
+                                                            </span>
+                                                        </p>
+                                                    </div>
+                                                    <div class="game-icons-view-list-v3">
+                                                        <ul>
+                                                            <!--<li class="tv-icon-market-v3" ></li>-->
+                                                            <li class="statistic-icon-market-v3" statistics-on-hover stats-game ="{'id': prematchGame.id, 'region': prematchGameViewData[0].games[0].region.alias, 'competition': prematchGameViewData[0].name, 'sport': prematchGame.sport.alias}" popup-height="" popup-width="" ng-show="conf.enableH2HStat && prematchGame.is_stat_available" ng-click="openStatistics(prematchGame);$event.stopPropagation();" title="statistic" trans>
+
+                                                            </li>
+                                                            <li class="favorite-icon-market-v3"  ng-show="!env.preMatchMultiSelection || outrightSelected" ng-class="{'active': myGames.indexOf(prematchGame.id) !== -1}" ng-click="toggleGameFavorite(prematchGame); $event.stopPropagation()"></li>
+                                                            <li ng-show="conf.showGameIds && prematchGame.game_number" title="game number" class="game-id-v3">№{{prematchGame.game_number}}</li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="markets-count-view-v3" ng-click="openGameFullDetails(prematchGame, selectedCompetition);selectGame(prematchGame.id);selectCompetition()">
+                                                <span>{{prematchGame.additionalEvents ? '+' + prematchGame.additionalEvents : ''}}</span>
+                                                <div class="arrow-icon-b-v3"></div>
+                                            </div>
+                                        </div>
+                                        <div class="events-list-view-v3">
+                                            <ul ng-if="prematchGame.sport.alias !== 'Soccer' && selectedMarketFilter === marketFilterTypes[0]" class="column-{{ prematchGame.firstMarket.col_count || (prematchGame.firstMarket.type == 'P1XP2' ? 3 : '2 two-odds') }}" ng-class="{'two-odds': prematchGame.firstMarket.col_count == 2}">
+                                                <li title="{{prematchGame.firstMarket.events.P1.name}}"
+                                                    ng-mouseover="displayEventLimit(prematchGame.firstMarket.events.P1, prematchGame, false, prematchGame.firstMarket)" ng-mouseleave="cancelDisplayEventLimit(prematchGame.firstMarket.events.P1)"
+                                                    ng-show="prematchGame.firstMarket.events.P1"
+                                                    ng-click="bet(prematchGame.firstMarket.events.P1, prematchGame.firstMarket, prematchGame)">
+                                                    <div class="single-events-b-v3" ng-class="{'active': isEventInBetSlip(prematchGame.firstMarket.events.P1), 'blocked': ((prematchGame.firstMarket.events.P1.price | oddConvert:'decimal') == 1 || prematchGame.is_blocked)}">
+                                                        <div class="max-bet-tooltip-v3" ng-show="env.authorized && event.maxBet !== undefined" ng-class="{'maxbet-enabled': env.authorized}">
+                                                            <p>
+                                                                <span trans="">Max:</span> <b ng-bind="conf.onlyDecimalStakeAmount ? Math.floor(event.maxBet) : event.maxBet"></b> <i>{{profile.currency_name|currency }}</i>
+                                                            </p>
+                                                        </div>
+                                                        <div class="mini-box-market-info-v3">
+                                                            <p>
+                                                                <i>{{prematchGame.firstMarket.events.P1.name}}</i>
+                                                            </p>
+                                                            <span>
+                                                                <b ng-show="(prematchGame.firstMarket.events.P1.price | oddConvert:'decimal') !== 1 && !prematchGame.is_blocked"
+                                                                   ng-class="{'factor-top': event.price_change > 0, 'factor-bottom': event.price_change < 0}">{{prematchGame.firstMarket.events.P1.price|oddConvert:env.oddFormat:null:'WINNER'}}</b>
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </li>
+                                                <li title="{{prematchGame.firstMarket.events.X.name}}"
+                                                    ng-mouseover="displayEventLimit(prematchGame.firstMarket.events.X, prematchGame, false, prematchGame.firstMarket)" ng-mouseleave="cancelDisplayEventLimit(prematchGame.firstMarket.events.X)"
+                                                    ng-show="prematchGame.firstMarket.events.X"
+                                                    ng-click="bet(prematchGame.firstMarket.events.X, prematchGame.firstMarket, prematchGame)">
+                                                    <div class="single-events-b-v3" ng-class="{'active': isEventInBetSlip(prematchGame.firstMarket.events.X), 'blocked': ((prematchGame.firstMarket.events.X.price | oddConvert:'decimal') == 1 || prematchGame.is_blocked)}">
+                                                        <div class="max-bet-tooltip-v3" ng-show="env.authorized && event.maxBet !== undefined" ng-class="{'maxbet-enabled': env.authorized}">
+                                                            <p>
+                                                                <span trans="">Max:</span> <b ng-bind="conf.onlyDecimalStakeAmount ? Math.floor(event.maxBet) : event.maxBet"></b> <i>{{profile.currency_name|currency }}</i>
+                                                            </p>
+                                                        </div>
+                                                        <div class="mini-box-market-info-v3">
+                                                            <p>
+                                                                <i>{{prematchGame.firstMarket.events.X.name}}</i>
+                                                            </p>
+                                                            <span>
+                                                                 <b ng-show="(prematchGame.firstMarket.events.X.price | oddConvert:'decimal') != 1 && !prematchGame.is_blocked"
+                                                                    ng-class="{'factor-top': event.price_change > 0, 'factor-bottom': event.price_change < 0}">{{prematchGame.firstMarket.events.X.price|oddConvert:env.oddFormat:null:'WINNER'}}</b>
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </li>
+                                                <li title="{{prematchGame.firstMarket.events.P2.name}}"
+                                                    ng-mouseover="displayEventLimit(prematchGame.firstMarket.events.P2, prematchGame, false, prematchGame.firstMarket)" ng-mouseleave="cancelDisplayEventLimit(prematchGame.firstMarket.events.P2)"
+                                                    ng-show="prematchGame.firstMarket.events.P2"
+                                                    ng-click="bet(prematchGame.firstMarket.events.P2, prematchGame.firstMarket, prematchGame)">
+                                                    <div class="single-events-b-v3" ng-class="{'active': isEventInBetSlip(prematchGame.firstMarket.events.P2), 'blocked': ((prematchGame.firstMarket.events.P2.price | oddConvert:'decimal') == 1 || prematchGame.is_blocked)}">
+                                                        <div class="max-bet-tooltip-v3" ng-show="env.authorized && event.maxBet !== undefined" ng-class="{'maxbet-enabled': env.authorized}">
+                                                            <p>
+                                                                <span trans="">Max:</span> <b ng-bind="conf.onlyDecimalStakeAmount ? Math.floor(event.maxBet) : event.maxBet"></b> <i>{{profile.currency_name|currency }}</i>
+                                                            </p>
+                                                        </div>
+                                                        <div class="mini-box-market-info-v3">
+                                                            <p>
+                                                                <i>{{prematchGame.firstMarket.events.P2.name}}</i>
+                                                            </p>
+                                                            <span>
+                                                                <b ng-show="(prematchGame.firstMarket.events.P2.price | oddConvert:'decimal') != 1 && !prematchGame.is_blocked"
+                                                                   ng-class="{'factor-top': event.price_change > 0, 'factor-bottom': event.price_change < 0}">{{prematchGame.firstMarket.events.P2.price|oddConvert:env.oddFormat:null:'WINNER'}}</b>
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </li>
+                                            </ul>
+                                            <ul ng-if="prematchGame.sport.alias === 'Soccer'" class="column-{{(selectedMarketFilter.type == 'P1XP2' || selectedMarketFilter.type == '1X12X2' || selectedMarketFilter.type == 'CornersResult') && prematchGame.filteredMarkets[selectedMarketFilter.type].realType != 'P1P2' ? 3 : '2 two-odds'}}">
+                                                <li ng-repeat="event in prematchGame.filteredMarkets[selectedMarketFilter.type + selectedMarketFilter.base].events" title="{{event.name}}{{displayBase(event, prematchGame.filteredMarkets[selectedMarketFilter.type])}}"
+                                                    ng-mouseover="displayEventLimit(event, prematchGame, false, prematchGame.firstMarket)" ng-mouseleave="cancelDisplayEventLimit(event)"
+                                                    ng-show="event && event.name"
+                                                    ng-click="bet(event, prematchGame.filteredMarkets[selectedMarketFilter.type][0], prematchGame)">
+                                                    <div class="single-events-b-v3" ng-class="{'active': isEventInBetSlip(event), 'blocked': ((event.price | oddConvert:'decimal') == 1 || prematchGame.is_blocked)}">
+                                                        <div class="max-bet-tooltip-v3" ng-show="env.authorized && event.maxBet !== undefined" ng-class="{'maxbet-enabled': env.authorized}">
+                                                            <p>
+                                                                <span trans="">Max:</span> <b ng-bind="conf.onlyDecimalStakeAmount ? Math.floor(event.maxBet) : event.maxBet"></b> <i>{{profile.currency_name|currency }}</i>
+                                                            </p>
+                                                        </div>
+                                                        <div class="mini-box-market-info-v3">
+                                                            <p>
+                                                                <i>{{event.name}} {{displayBase(event, prematchGame.filteredMarkets[selectedMarketFilter.type])}}</i>
+                                                            </p>
+                                                            <span>
+                                                                <b ng-show="(event.price | oddConvert:'decimal') != 1 && !prematchGame.is_blocked" ng-class="{'factor-top': event.price_change > 0, 'factor-bottom': event.price_change < 0}">{{event.price|oddConvert:env.oddFormat:null:prematchGame.filteredMarkets[selectedMarketFilter.type + selectedMarketFilter.base][0].display_key}}</b>
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!--Prematch view END-->
+
+                    <!--Live/Prematch game view-->
+                    <div class="live-game-view-contain-v3">
+
+                        <div class="game-header-view-v3 {{openGame.sport.alias}}" ng-show="!env.live">
+                            <div ng-show="openGame.sport.alias === 'HorseRacing'" class="team-name-market">
+                                <div class="race-title">
+                                    <div>
+                                        <span>{{ openGame.start_ts| formatDate:'full':null:env.timeFormat}}</span>
+                                    </div>
+                                    <div title="{{openGame.competition.name}}">
+                                        {{openGame.competition.name}}
+                                    </div>
+                                    <div>
+                                        {{openGame.info.race.distance}}
+                                    </div>
+                                    <div>
+                                        <span title="Race Type" trans="attr-only">{{openGame.info.race.race_type|translate}}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="prematch-header-view-v3" ng-show="openGame.sport.alias !== 'HorseRacing'">
+                                <div class="prematch-header-row-v3">
+                                    <ul ng-show="openGame">
+                                        <li>
+                                            <p>
+                                                <span>{{openGame.start_ts|formatDate:'noLocaleTranslate':null:$root.env.timeFormat}}</span>
+                                            </p>
+                                        </li>
+                                        <li>
+                                            <div class="title-teams-premztch-v3">
+                                                <p ng-show="openGame.team1_name || openGame.team2_name">
+                                                    <span ng-show="openGame.team1_name">{{openGame.team1_name}}</span>
+                                                    <span ng-show="openGame.team1_name && openGame.team2_name">vs</span>
+                                                    <span ng-show="openGame.team2_name">{{openGame.team2_name}}</span>
+                                                </p>
+                                            </div>
+                                            <div class="prematch-competition-title-v3">
+                                                <p><b ng-show="prematchGameViewData" class="prematch-region-icon-v3 flag-icon flag-{{openGame.region.alias | removeUselessSymbolsByRegexp: '[,\' ]+': 'g': 'true'}}"></b><span>{{openGame.sport.name}}</span> <span>-</span> <span>{{openGame.competition.name}}</span></p>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </div>
+
+                                <div class="statistic-icon-view-p-v3" ng-show="conf.enableH2HStat && openGame.is_stat_available && openGame" ng-click="openStatistics(openGame);$event.stopPropagation();" title="statistic" ></div>
+
+
+                            </div>
+
+                        </div>
+
+                        <div class="all-game-info-container-v3">
+                            <div  ng-if="conf.videoEnabled && pinnedGameType === 'fullScreen' && !conf.detachedVideoSizes[openGame.tv_type]">
+                                <div ng-if="enlargedGame && enlargedGame.video_data" class="game-video game-video-detached game-video-fullscreen">
+                                    <div class="game-video-container detached-game-container" id="detached-game-container-{{enlargedGame.id}}">
+                                       <!-- <div class="detached-game-name">
+                                            <p>{{enlargedGame.sport.name}} : {{enlargedGame.team1_name}}
+                                                {{enlargedGame.team2_name ? '&mdash; ' + enlargedGame.team2_name : ''}}</p>
+                                        </div>-->
+                                        <video-player class="game-video"
+                                                      player-id="gamevideo{{enlargedGame.id}}full"
+                                                      stream-url="{{enlargedGame.video_data}}"
+                                                      provider-id="{{enlargedGame.tv_type}}"
+                                                      initially-muted="{{ env.sound }}"></video-player>
+                                        <!--<flashplayer id="gamevideo{{enlargedGame.id}}full" stream-url="{{enlargedGame.video_data}}" provider-id="{{enlargedGame.tv_type}}"  initially-muted="{{ env.sound }}"></flashplayer>-->
+                                        <div class="video-player-control">
+
+                                            <div class="detached-info">
+                                                {{enlargedGame.info.current_game_state|convertSetName:enlargedGame.sport.alias|translate}}
+                                                {{ enlargedGame.info.current_game_state? ' ' + ('Score:'|translate) + ' '
+                                                :''}}{{enlargedGame.info.score1}} {{enlargedGame.info.score2 ? '&ndash; ' +
+                                                enlargedGame.info.score2 : ''}}
+                                                {{enlargedGame.stats.passes.team1_value && enlargedGame.sport.alias === 'Tennis'? '&#40;' +
+                                                enlargedGame.stats.passes.team1_value:''}} {{ enlargedGame.stats.passes.team2_value &&
+                                                enlargedGame.sport.alias === 'Tennis'? '&#58; '+ enlargedGame.stats.passes.team2_value + '&#41;':
+                                                '' }}
+                                                {{enlargedGame.stats[enlargedGame.info.current_game_state] && enlargedGame.sport.alias !==
+                                                'Tennis'? '&#40;' + enlargedGame.stats[enlargedGame.info.current_game_state].team1_value +
+                                                ' &ndash; ':''}}
+                                                {{enlargedGame.stats[enlargedGame.info.current_game_state] && enlargedGame.sport.alias !==
+                                                'Tennis' ? enlargedGame.stats[enlargedGame.info.current_game_state].team2_value + '&#41;'
+                                                :''}}
+                                            </div>
+                                        </div>
+                                        <a ng-click="attachPinnedVideo(enlargedGame, 'fullScreen'); $parent.mute = undefined; $parent.paused = undefined;">
+                                            <span trans>close</span>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--Statistic-->
+                            <include-template class="statistic-view-v3" template-path="templates/sport/euro2016/center/live-game-scores.html"></include-template>
+                            <!--Statistic-->
+
+                            <!--game view-->
+                            <include-template class="live-events-view-v3" template-path="templates/sport/euro2016/center/game.html" ng-show="!openGameLoading"></include-template>
+                            <!--game view-->
+                            <p class="game-finished-v3" ng-show="openGameFinished" trans>This Game is already finished or unavailable</p>
+                            <vbet-loader ng-show="openGameLoading"></vbet-loader>
+                        </div>
+                        <div class="scroll-ff-view"></div>
+                    </div>
+                        <!--Live/Prematch game view END-->
+                    </div>
+                    <div ng-switch-when="/multiview/" class="games-view-wrapper-v3">
+
+                    <euro2016-multiview multi-view-live-opened-games="multiViewLiveOpenedGames"></euro2016-multiview>
+
+                </div>
+                <include-template ng-switch-when="/dashboard/"
+                    class="games-view-wrapper-v3"
+                    template-path="templates/sport/euro2016/center/dashboard.html"
+                >
+                </include-template>
+
+            </div>
+            <!--center-column END-->
+
+
+            <!--right-column-->
+            <div class="right-column-v3">
+
+                <!--View settings-->
+                <div class="view-settings-b-v3">
+                    <ul>
+                        <li>
+                            <div class="time-filter-v3"
+                                 ng-show="conf.sportEnabled && conf.enableSportsbookLayoutSwitcher && isInSports()"
+                                 ng-class="{'active': showLayoutSubMenu}"
+                                 ng-click="showLayoutSubMenu = !showLayoutSubMenu"
+                                 state-flag-var="showLayoutSubMenu" hide-on-click>
+                                <p><span>{{({modern: 'Modern', classic: 'Classic', asian: 'Asian', external: 'Eastern',combo: 'Combo', 'euro2016': 'Classic'}[conf.sportsLayout])|translate}}</span> <i class="arrow-rotate-filter-v3"></i></p>
+                                <div class="sub-nav-filter-time-v3">
+                                    <ul>
+                                        <li ng-repeat="(key, value) in sportsbookAvailableViews track by $index" ng-click="switchSportsbookLayout(key)" ng-class="{'icon-checkmark': conf.sportsLayout === key}"><span ng-bind="key == 'euro2016'? ('Classic'|translate) : key|capitalise|translate"></span></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="time-filter-v3" ng-show="!conf.disableDecimalSubMenu"
+                                 ng-click="showDecimalSubMenu = !showDecimalSubMenu"
+                                 state-flag-var="showDecimalSubMenu"
+                                 ng-class="{'active': showDecimalSubMenu}"
+                                 hide-on-click>
+                                <p><span>{{env.oddFormat|capitalise|translate}}</span> <i class="arrow-rotate-filter-v3"></i></p>
+                                <div class="sub-nav-filter-time-v3">
+                                    <ul>
+                                        <li ng-repeat="oddFormat in ::conf.oddFormats track by oddFormat.name"
+                                            ng-click="broadcast('setOddsFormat', oddFormat.format)"
+                                            ng-class="{'icon-checkmark': env.oddFormat === oddFormat.format}">
+                                            <span>{{ oddFormat.name | translate }}</span>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <!--View settings END-->
+
+                <div class="right-b-view-wrapper-v3">
+                    <!--animation and video-->
+                    <div class="animation-video-box-v3" ng-class="{'active': hideVideoAndAnimationBox}"
+                         ng-if="!conf.animationAndVideoOnLeft && (env.live || !virtualSportsSelected) && (((openGame.video_id || openGame.video_data) && conf.videoEnabled && !pinnedGames[openGame.id] && !enlargedGame) || openGame.has_animation)">
+                        <div class="animation-video-contain-v3" ng-if=" env.live">
+
+                            <div class="animation-video-title-row-v3">
+
+                                <div class="anime-video-switcher-v3">
+                                    <ul>
+                                        <li class="video-view-icon-v3"
+                                            ng-show="conf.videoEnabled && (openGame.video_id || openGame.video_data) && !pinnedGames[openGame.id] && (!enlargedGame || openGame.id !== enlargedGame.id)"
+                                            ng-class="{'active': openGame.activeFieldType==='video' && !playerRemoved}"
+                                            ng-click="openGame.activeFieldType='video'; playerRemoved = false;">
+                                        </li>
+                                        <li class="animation-view-icon-v3"
+                                            ng-show="openGame.has_animation"
+                                            ng-class="{'active': openGame.activeFieldType==='field' || playerRemoved || pinnedGames[openGame.id]}"
+                                            ng-click="openGame.activeFieldType='field'">
+                                        </li>
+                                    </ul>
+                                </div>
+
+                                <div class="contain-v-a-fanction-icons-v3">
+                                    <ul>
+                                        <li class="arrow-closed-anime-b-v3" ng-click="toggleVideoAndAnimationBox()" ng-class="{'active': hideVideoAndAnimationBox}"></li>
+                                        <li class="resize-icon-b-v3" ng-click="$root.videoResizeButton = !$root.videoResizeButton" ng-class="{'active': $root.videoResizeButton}"></li>
+                                        <li class="pin-icon-video-v3" ng-class="{'disabled': !env.authorized}" ng-show="openGame.activeFieldType == 'video' && openGame.tv_type !== conf.defaultStreaming.tvType && !pinnedGames[openGame.id]" ng-click="openGame.activeFieldType='field'; detachVideo('dragable');"></li>
+                                        <li class="resize-icon-full-video-v3"  ng-show="openGame.activeFieldType == 'video'"  ng-class="{'active': env.authorized && openGame.activeFieldType == 'video' &&!conf.detachedVideoSizes[openGame.tv_type],'disabled': !(env.authorized && openGame.activeFieldType == 'video' &&!conf.detachedVideoSizes[openGame.tv_type])}" ng-click="openGame.activeFieldType='field'; detachVideo('fullScreen');"></li>
+                                        <li class="sound-icon-v3 " ng-click="env.sound = 0;" ng-show="openGame.activeFieldType==='field' && env.sound > 0" title="Sound" trans="attr-only"></li>
+                                        <li class="sound-icon-v3 active" ng-click="env.sound = 0.75;" ng-show="openGame.activeFieldType==='field' && env.sound === 0" title="Sound" trans="attr-only"></li>
+                                    </ul>
+                                </div>
+
+                            </div>
+
+                            <div class="video-animation-vox-v3 animation-control">
+                                <video-player ng-if="openGame.video_data && openGame.activeFieldType === 'video' && !hideVideoAndAnimationBox && conf.videoEnabled && !enlargedGame && !pinnedGames[openGame.id] && !openGameLoading"
+                                              class="game-video"
+                                              player-id="gamevideo{{openGame.id}}"
+                                              stream-url="{{openGame.video_data}}"
+                                              provider-id="{{openGame.tv_type}}"
+                                              initially-muted="{{ env.sound }}"></video-player>
+                                <div class="game-video-container" ng-if="openGame.activeFieldType === 'video' && !hideVideoAndAnimationBox && conf.videoEnabled && !enlargedGame && !pinnedGames[openGame.id]">
+                                    <p ng-if="!env.authorized" trans
+                                       ng-click="broadcast('openLoginForm');$event.stopPropagation();" class="login-link">You need to be logged in to be able to play video.</p>
+                                    <p ng-if="env.authorized && (profile.calculatedBalance + profile.calculatedBonus) === 0 && !profile.initial_balance" trans
+                                       ng-click="!conf.disableDepositPage && broadcast('toggleSliderTab', 'deposit');$event.stopPropagation();">You need to have non-zero balance to be able to play video.</p>
+                                </div>
+                               <!-- <include-template template-path="templates/sport/classic/video.html" ng-if="openGame.activeFieldType === 'video' && !hideVideoAndAnimationBox && conf.videoEnabled && !enlargedGame && !pinnedGames[openGame.id]" class="game-video"></include-template>-->
+                                <include-template class=" " template-path="templates/sport/classic/animations.html"></include-template>
+                            </div>
+                        </div>
+                    </div>
+
+                   <!-- <include-template  class="animation-video-contain-v3 animation-control" template-path="templates/sport/classic/animation_video.html"></include-template>-->
+                    <!--animation and video END-->
+                    <!--Betslip-->
+                        <include-template class="betslip-include-v3" template-path="templates/sport/euro2016/right/betslip.html"></include-template>
+                    <!--Betslip END-->
+                    <!--Mini Games-->
+                    <div class="mini-games" ng-if="conf.enableMiniGameUnderBetslip" ng-include="getTemplate('optional_modules/casino/templates/specialgames/minigames.html')"></div>
+                    <!--Mini Games-->
+                    <div class="right-banner-container" ng-if="conf.enableBannerUnderBetslip" ng-controller="cmsSportNewsCtrl" ng-include="getTemplate('templates/sport/classic/banners.html')"></div>
+                </div>
+
+            </div>
+            <!--right-column END-->
+
+            <!--detached video container-->
+            <ng-include ng-if="conf.videoEnabled && pinnedGameType === 'dragable'" src="getTemplate('templates/sport/classic/av-pinned.html')" style="position: fixed; z-index: 999999999; position:-ms-page;"></ng-include>
+           <!-- <div style="width: 150px; height: 150px; background: #ccc; position: absolute; z-index: 99999" ng-show="conf.videoEnabled && pinnedGameType === 'dragable'">video animation dragable div</div>-->
+        </div>
+    </div>
+</div>

@@ -1,0 +1,40 @@
+<li ng-show="myGames.length" class="favorite-nav" ng-class="{'active': leftMenuState.favorites.expanded}">
+    <a ng-click="leftMenuState.favorites.expanded = !leftMenuState.favorites.expanded; leftMenuClosed ? toggleLeftMenu() : void()">
+        <span class="favorites icon-star2"></span>
+        {{'Favorite games'|translate}}
+        <span>({{myGames.length}})</span>
+        <b class="arrow-rotate icon-arrow-right6"></b>
+    </a>
+    <ul ng-show="leftMenuState.favorites.expanded">
+        <li ng-repeat="game in leftMenuFavorites track by game.id" 
+            ng-click="gameClicked(game, game.competition, true)"
+            ng-mouseenter="addGameHoveredInLeftMenuToSubscribtionQueue(game)"
+            ng-mouseleave="emptyLeftMenuHoveredGameSubscriptionQueue(game)"
+            ng-class="{'active': game.id === activeGameId, 'no-events': !(game.events_count || game.markets_count)}"
+            ng-show="myGames.indexOf(game.id) !== -1 && (!$root.multiViewLiveOpenedGames || $root.multiViewLiveOpenedGames.indexOf(game.id) === -1)">
+
+            <div class="num-of-events" trans="attr-only" title="Number of markets">({{game.markets_count}})</div>
+            <p title="{{game.team1_name}} - {{game.team2_name}}">{{::game.team1_name}} {{::(game.team2_name ? ' - ' + game.team2_name : '')}}</p>
+            <div class="time-sport-cash" ng-if="game.type == 0 || game.type == 2">
+                <i>{{game.start_ts|formatDate:'full':null:env.timeFormat}}</i>
+            </div>
+            <div class="time-sport-cash" ng-if="game.type == 1 && (game.info.score1 != undefined)">
+                <p><span>{{game.info.score1}} </span> {{game.info.score2}}</p>
+                <span class="team-name-inform">
+                    {{game.info.current_game_state|convertSetName:game.sport.alias|translate}}
+                    <i ng-show="game.sport.alias === 'Soccer'">
+                        {{game.stats.score_set1.team1_value ? '(' + game.stats.score_set1.team1_value + ' :' : '(0 :'}}
+                        {{game.stats.score_set1.team2_value ?  game.stats.score_set1.team2_value + ')' : ' 0)'}}
+                    </i>
+                    <i ng-show="game.sport.alias !== 'Soccer'">
+                        {{game.stats['score_'+game.info.current_game_state].team1_value ? '(' + game.stats['score_'+game.info.current_game_state].team1_value + ' :' : '(0 :'}}
+                        {{game.stats['score_'+game.info.current_game_state].team2_value ?  game.stats['score_'+game.info.current_game_state].team2_value + ')' : ' 0)'}}
+                    </i>
+                    <b trans="attr-only" title="Game time">{{getCurrentTime(game.info.current_game_time)}}</b>
+                </span>
+            </div>
+            <span class="icon-ic_video_collection_24px" ng-show="game.video_id && conf.videoEnabled"></span>
+            <div class="fav-game-star icon-star2" ng-class="{'active': myGames.indexOf(game.id) !== -1}" ng-click="toggleGameFavorite(game); $event.stopPropagation();"></div>
+        </li>
+    </ul>
+</li>

@@ -1,0 +1,16 @@
+<div class="mein-page-contain cms-page" ng-controller="cmsPagesCtrl" ng-init="getPageContent()">
+    <div class="page-main">
+
+        <div class="page-loader" ng-show="!loaded" trans>loading...</div>
+        <h3 ng-if="!pageIsOk && loaded" trans>Page not found</h3>
+
+        <div ng-if="pageIsOk && loaded">
+            <h1 ng-bind-html="title"></h1>
+
+            <div class="page-content" ng-bind-html="content"></div>
+        </div>
+
+
+    </div>
+</div>
+

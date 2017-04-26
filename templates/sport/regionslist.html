@@ -1,0 +1,24 @@
+<li class="flag-more" ng-show="regionsByLetterDividedToColumns.length"><a><span trans>more</span><span>({{ regionsList.length - regionsListMaxVisibleItems}})</span></a>
+
+
+    <!--Допальнительные флаги -->
+    <div class="contein-games"  ng-show="!hideRegionsListDropdown">
+        <div class="arrow-sport"></div>
+        <h3 trans>Select region</h3>
+        <div class="meny-games" ng-repeat="column in regionsByLetterDividedToColumns ">
+            <ul ng-repeat="letterGroup in column">
+                <li>{{ letterGroup[0].name.charAt(0)}}{{ letterGroup[0].name.charAt(1)==='ւ' ? 'ւ' : ''}}</li>
+                <li ng-repeat="region in letterGroup">
+                    <a ng-click="resetSearchParams('game');selectRegion(region);setJustForMoment('hideRegionsListDropdown', true, 500)">
+                        <p ng-class="'flag-'+region.alias | removeUselessSymbolsByRegexp: '[,\' ]+': 'g': 'true'"  class="flag flag-icon"></p>
+                        {{ region.name }} ({{ region.gamesCount || region.game }})
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</li>
+
+
+
+

@@ -1,0 +1,88 @@
+<!--New chinese poker-->
+<div ng-controller="cmsPagesCtrl" ng-init="setTitle('Chinese Poker')" class="skillgame-landing-j chinese-poker-j">
+    <div class="intro-section-j" ng-init="loadPage('chinese-poker.mainPageSlugs', true)">
+        <casino-game-slider product-slides="productSlides" page-name = "Chinese Poker"></casino-game-slider>
+        <div class="skillgame-landing-guide button-group-j" ng-if="pages" ng-init="initProductBanners('chinese-poker')">
+            <ul>
+                <li ng-if="userOS === 'Windows' && globalConfig.chinesePoker.downloadLink.windows">
+                    <a ng-href="{{ globalConfig.chinesePoker.downloadLink.windows }}" ng-click="broadcast('analytics.button', 'OFC poker')">
+                        <button trans>Download</button>
+                    </a>
+                </li>
+                <li ng-if="userOS === 'MacOS' && globalConfig.chinesePoker.downloadLink.mac">
+                    <a ng-href="{{ globalConfig.chinesePoker.downloadLink.mac }}" ng-click="broadcast('analytics.button', 'OFC poker')">
+                        <button trans>Download</button>
+                    </a>
+                </li>
+                <li ng-if="userOS === 'Linux' && globalConfig.chinesePoker.downloadLink.linux">
+                    <a ng-href="{{ globalConfig.chinesePoker.downloadLink.linux }}" ng-click="broadcast('analytics.button', 'OFC poker')">
+                        <button trans>Download</button>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="select-os-section-j" ng-if="!globalConfig.chinesePoker.hideDownloadLinkSection">
+        <div>
+            <ul class="skillgame-landing-guide">
+                <li ng-if="globalConfig.chinesePoker.downloadLink.windows">
+                    <div class="head-j windows">
+                        <h1>Windows OS</h1>
+                        <p trans>Windows XP or higher</p>
+                    </div>
+                    <div class="os-rquirments-j">
+                        <p trans>chinesepoker_requirements_windows</p>
+                        <p class="ng-hide" trans>chinesepoker_download_description_windows</p>
+                    </div>
+                </li>
+                <li ng-if="globalConfig.chinesePoker.downloadLink.mac">
+                    <div class="head-j mac">
+                        <h1>Mac OS</h1>
+                        <p trans>Mac OS 9 or higher</p>
+                    </div>
+                    <div class="os-rquirments-j">
+                        <p trans>chinesepoker_requirements_mac</p>
+                        <p class="ng-hide" trans>chinesepoker_download_description_mac</p>
+                    </div>
+                </li>
+                <li ng-if="globalConfig.chinesePoker.downloadLink.linux">
+                    <div class="head-j linux">
+                        <h1>Linux OS</h1>
+                        <p trans>xUbuntu 14.04 and higher</p>
+                    </div>
+                    <div class="os-rquirments-j">
+                        <p trans>chinesepoker_requirements_linux</p>
+                        <p class="ng-hide" trans>chinesepoker_download_description_linux</p>
+                    </div>
+                </li>
+            </ul>
+        </div>
+        <div>
+            <ul class="skillgame-landing-guide get-section-j">
+                <li ng-if="globalConfig.chinesePoker.downloadLink.windows">
+                    <a ng-href="{{ globalConfig.chinesePoker.downloadLink.windows }}">
+                        <button trans>Download</button>
+                    </a>
+                </li>
+                <li ng-if="globalConfig.chinesePoker.downloadLink.mac">
+                    <a ng-href="{{ globalConfig.chinesePoker.downloadLink.mac }}">
+                        <button trans>Download</button>
+                    </a>
+                </li>
+                <li ng-if="globalConfig.chinesePoker.downloadLink.linux">
+                    <a ng-href="{{ globalConfig.chinesePoker.downloadLink.linux }}">
+                        <button trans>Download</button>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="promotions-section-j">
+        <h1 trans>Best Promotions</h1>
+        <div class="nav-landp-j"  no-animate>
+            <promotion-news template="slider" slug="chinese-poker" hide-dates="true" main-class="block-meny-news promo" use-custom-base-host="true" ng-if="!showDownloadLinks" share-path="chinese-poker"></promotion-news>
+        </div>
+    </div>
+
+</div>
+<!--End of New chinese poker-->

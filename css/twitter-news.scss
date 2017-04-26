@@ -1,0 +1,220 @@
+.twitter-news-wrapper{float: left;}
+.mini-t-container.twitter-b{
+  width: 265px;
+  height: 367px;
+  margin: 0 0 0 10px;
+  box-sizing: border-box;
+  padding: 0 0 5px;
+}
+.twitter-news-contain-mini{
+  float: left;
+  width: 100%;
+  box-sizing: border-box;
+  background: $skin-palette-12;
+}
+.tittle-twitters-b{
+  float: left;
+  width: 100%;
+  box-sizing: border-box;
+  height: 38px;
+  padding: 0 15px;
+  background: $skin-palette-12;
+}
+.tittle-twitters-b > h3{
+  float: left;
+  width: 100%;
+  padding: 0;
+  margin: 0;
+  font: 14px/38px $font-f;
+  font-weight: bold;
+  color: $text-palette-3;
+  text-transform: uppercase;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+.twitter-icon-b{
+  position: relative;
+  top: 5px;
+  display: inline-block;
+  margin-right: 5px;
+}
+.twitter-icon-b:before {
+  font: 24px/24px icomoon;
+  content: "\e6c5";
+  font-weight: normal;
+}
+.twiter-region-tabs{
+  float: left;
+  width: 100%;
+  height: 34px;
+  box-sizing: border-box;
+}
+.twiter-region-tabs > ul{
+  float: left;
+  width: 100%;
+  height: 34px;
+  box-sizing: border-box;
+  border-bottom: 1px solid $hero-color;
+  background: $skin-palette-10;
+}
+.twiter-region-tabs > ul > li{
+  float: left;
+  width: 50%;
+  display: inline-block;
+  text-align: center;
+  font: 13px/30px $font-f;
+  border-bottom: 3px solid transparent;
+  color: $text-palette-3;
+  box-sizing: border-box;
+  padding: 2px 5px 0;
+  height: 33px;
+  cursor: pointer;
+}
+.twiter-region-tabs > ul > li.active{
+  color: $text-palette-1;
+  border-color: $hero-color;
+  font-weight: bold;
+}
+.twittr-news-list-b{
+  float: left;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0;
+  max-height: 290px;
+  @include scroll($scroll: auto);
+}
+.twittr-news-list-b > ul{
+  float: left;
+  width: 100%;
+  box-sizing: border-box;
+}
+.twittr-news-list-b > ul > li{
+  float: left;
+  width: 100%;
+  box-sizing: border-box;
+  border-bottom: 1px solid $skin-palette-10;
+  padding: 10px;
+  color: $text-palette-4;
+}
+.icon-title-date-twit{
+  float: left;
+  width: calc(100% - 40px);
+  box-sizing: border-box;
+  height: 34px;
+}
+.icon-title-date-twit > h4{
+  float: left;
+  width: 100%;
+  font-weight: normal;
+}
+.icon-title-date-twit > h4 > b{
+  width: 100%;
+  font: 13px/14px $font-f;
+  color: $text-palette-1;
+  display: inline-block;
+  font-weight: bold;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+.icon-title-date-twit > h4 > i{
+  float: left;
+  width: 100%;
+  font: 11px/12px $font-f;
+  display: inline-block;
+  font-style: normal;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+.news-time-b{
+  float: right;
+  width: 40px;
+  height: 34px;
+  font: 11px/26px $font-f;
+  text-align: right;
+  color: $text-palette-1;
+}
+.twittr-news-list-b > ul > li > p{
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0;
+  font: 12px/16px $font-f;
+}
+.twittr-news-list-b > ul > li > p img{
+  width: 100%;
+  position: static;
+  height: auto;
+  margin: 10px 0 0;
+  transform: none;
+}
+.twittr-news-list-b > ul > li > p > a{
+  color: $text-palette-4;
+  transition: color 150ms;
+  text-decoration: none;
+  width: 100%;
+}
+.twittr-news-list-b > ul > li > p > a:hover{
+  color: $text-palette-1;
+}
+.right-block-list .mini-t-container{margin: 10px 0;}
+@media screen and (max-width: 1260px) {
+  .body-wrapper.homepage .twitter-news-wrapper {
+    width: calc(50% - 5px);
+    .mini-t-container.twitter-b {
+      margin: 0;
+      width: 100%;
+    }
+  }
+}
+.right-betslip-contain .mini-t-container.twitter-b, .right-banner-container .mini-t-container.twitter-b {
+  margin: 0;
+  width: 100%;
+}
+.conteiner-content {
+  .twitter-news-wrapper {
+    .mini-t-container.twitter-b {
+      background: #dfdfdf;
+      border-bottom: 2px solid #dfdfdf;
+    }
+    .tittle-twitters-b {
+      background: #dfdfdf;
+      > h3 {
+        color: #070b14;
+      }
+    }
+    .twiter-region-tabs > ul {
+      background: #f1f1f1;
+      > li {
+        color: #000000;
+      }
+    }
+    .twittr-news-list-b > ul > li {
+      color: #0d1423;
+      border-bottom: 1px solid #f1f1f1;
+    }
+    .icon-title-date-twit > h4 > b {
+      color: #000000;
+    }
+    .news-time-b {
+      color: #000000;
+    }
+    .twittr-news-list-b > ul > li > p > a {
+      color: #0d1423;
+    }
+    .twittr-news-list-b {
+      scrollbar-base-color: #c2c5cd;
+      scrollbar-track-color: #c2c5cd;
+      scrollbar-shadow-color: #c2c5cd;
+      scrollbar-base-color: white;
+      scrollbar-arrow-color: white;
+      &::-webkit-scrollbar {
+        background: #c2c5cd;
+      }
+      &::-webkit-scrollbar-thumb {
+        background: white;
+      }
+    }
+  }
+}

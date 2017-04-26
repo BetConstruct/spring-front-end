@@ -1,0 +1,42 @@
+<div class="land-page landing-{{env.lang}}">
+    <div class="bg-image-land"></div>
+        <div class="land-content-b">
+            <div class="title-lad">
+                <h1><span trans>ON THE WAY</span> <span trans>TO VICTORY!</span></h1>
+            </div>
+            <div class="lending-buttons-new">
+                <ul>
+                    <li>
+                        <button ng-click="broadcast('openLoginForm'); $event.stopPropagation();" trans>Sign in</button>
+                        <p ng-click="broadcast('toggleSliderTab', 'forgotPasswordForm'); $event.stopPropagation();">
+                            <span trans>Forgot your password?</span>
+                            <!--<a trans>Reset</a>-->
+                        </p>
+                    </li>
+
+                    <li>
+                        <button ng-click="broadcast('openRegForm'); $event.stopPropagation();" trans>Register</button>
+                    </li>
+                </ul>
+            </div>
+            <div class="separator-info">
+                <ul>
+                    <li>
+                        <p><span>1</span> <b trans>Join</b></p>
+                    </li>
+                    <li>
+                        <p><span>2</span> <b trans>Bet</b></p>
+                    </li>
+                    <li>
+                        <p><span>3</span> <b trans>Win</b></p>
+                    </li>
+                </ul>
+            </div>
+            <!--<div class="about-comp-info">-->
+                <!--<p>-->
+                <!--&copy; <a href="#/">{{conf.site_name}}</a>-->
+                <!--<span trans>All rights reserved.</span>-->
+                <!--</p>-->
+            <!--</div>-->
+        </div>
+</div>

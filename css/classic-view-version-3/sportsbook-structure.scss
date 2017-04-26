@@ -1,0 +1,374 @@
+@mixin classic-new-view-1 {
+  .body-wrapper.sport.euro2016{
+    box-sizing: border-box;
+  }
+  .classic-version-euro2016{
+    box-sizing: border-box;
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    background: $classic-view-background;
+    min-width: 980px;
+  }
+  .container-p, .classic-version-euro2016{
+    padding: #{$header-first-line-height + $header-nav-line-height} 0 0;
+    &.mini-header-padding {
+      padding-top: #{$header-nav-line-height};
+    }
+  }
+  .subheader-enabled + div {
+    .container-p, .classic-version-euro2016{
+      border-top: #{$subheader-height} solid transparent;
+    }
+  }
+  .classic-view-wrapper-v3{
+    box-sizing: border-box;
+    float: left;
+    width: 100%;
+    height: 100%;
+    display: table;
+    table-layout: fixed;
+  }
+  .classic-view-row-v3{
+    box-sizing: border-box;
+    display: table-row;
+    width: 100%;
+  }
+  .classic-view-column-v3{
+    box-sizing: border-box;
+    position: relative;
+    display: table-cell;
+    width: 100%;
+    height: 100%;
+    border-top: 5px solid transparent;
+  }
+  .left-column-v3{
+    box-sizing: border-box;
+    float: left;
+    width: 300px;
+    height: 100%;
+    position: relative;
+    -moz-user-select: none;
+    -khtml-user-select: none;
+    user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+  }
+  .center-column-v3{
+    box-sizing: border-box;
+    float: left;
+    display: inline-block;
+    position: relative;
+    width: calc(100% - 596px);
+    height: 100%;
+    padding: 0;
+    border-left: 7px solid transparent;
+    border-right: 7px solid transparent;
+  }
+  .scroll-ff-view {box-sizing: border-box;
+    display: none;
+  }
+  //FF scroll color
+  @-moz-document url-prefix() {
+    .center-column-v3:after, .right-column-v3:after, .left-column-v3:after, .prematch-games-list:after, .scroll-ff-view:after, .prematch-games-list:after,
+    .prematch .prematch-view-v3 .live-game-view-contain-v3:after, .multiview-contain.has-statistics:after, .center-column-v3.dashboard:before, .center-column-v3.dashboard.game-pinned:after {
+      box-sizing: border-box;
+      content: "";
+      display: block;
+      width: 0;
+      height: 100%;
+      position: absolute;
+      top: 0;
+      right: 0;
+      box-shadow: -9px 9px 0 9px rgba($skin-palette-8, 0.83);
+    }
+    .scroll-ff-view {
+      box-sizing: border-box;
+      width: 0;
+      height: 100%;
+      position: absolute;
+      top: 0;
+      right: 0;
+      display: block;
+    }
+    .center-column-v3.game-pinned:after {
+      box-sizing: border-box;
+      display: none;
+    }
+    .scroll-ff-view:after {
+      box-sizing: border-box;
+      display: none;
+    }
+    .center-column-v3.dashboard:before{
+      right: auto;
+      left: 54%;
+      z-index: 24;
+      display: none;
+    }
+    @media screen and (min-width: 1600px) {
+      .center-column-v3.dashboard:before{
+        display: block;
+      }
+    }
+    .game-pinned .games-view-wrapper-v3.has-statistics .all-game-info-container-v3 + .scroll-ff-view:after {
+      box-sizing: border-box;
+      top: 142px;
+      display: block;
+      transition: top 400ms;
+    }
+    .game-pinned .prematch-view-v3:after {
+      box-sizing: border-box;
+      display: none;
+    }
+    .game-pinned .games-view-wrapper-v3.prematch-view-v3.has-statistics .all-game-info-container-v3 + .scroll-ff-view:after {
+      box-sizing: border-box;
+      top: 194px;
+    }
+    .game-pinned .games-view-wrapper-v3.has-statistics.open .all-game-info-container-v3 + .scroll-ff-view:after {
+      box-sizing: border-box;
+      top: 214px;
+    }
+    .game-pinned .games-view-wrapper-v3.prematch-view-v3.has-statistics.open .all-game-info-container-v3 + .scroll-ff-view:after {
+      box-sizing: border-box;
+      top: 266px;
+    }
+    .right-column-v3:after {
+      box-sizing: border-box;
+      top: 27px;
+      height: calc(100% - 27px);
+    }
+    .left-column-v3:after {
+      box-sizing: border-box;
+      top: 112px;
+      height: calc(100% - 112px);
+    }
+    .left-menu-closed-v3 .left-column-v3:after{
+      box-sizing: border-box;
+      display: none;
+    }
+    .prematch-games-list:after {
+      box-sizing: border-box;
+      top: 41px;
+      height: calc(100% - 41px);
+      left: calc(100% + 1px);
+    }
+    .center-column-v3.prematch:after {
+      box-sizing: border-box;
+      top: 51px;
+      height: calc(100% - 51px);
+      display: none;
+    }
+    .prematch .prematch-view-v3 .live-game-view-contain-v3:after {
+      box-sizing: border-box;
+      top: 51px;
+      height: calc(100% - 51px);
+    }
+    .game-pinned.prematch .prematch-view-v3 .live-game-view-contain-v3:after{
+      box-sizing: border-box;
+      display: none;
+    }
+    .multiview-contain.has-statistics:after{
+      box-sizing: border-box;
+      top: 146px;
+      height: 238px;
+      right: -1px;
+      transition: top 400ms, height 400ms;
+    }
+    .multiview-contain.has-statistics.open:after{
+      box-sizing: border-box;
+      top: 215px;
+      height: 181px;
+    }
+  }
+  //FF scroll color END
+
+  .right-column-v3{
+    box-sizing: border-box;
+    float: left;
+    width: 296px;
+    height: 100%;
+    position: relative;
+    padding: 0 1px 0 0;
+  }
+  .classic-version-euro2016 .animation-control *{
+    box-sizing: content-box;
+  }
+  .classic-version-euro2016 .game-video-detached{
+    box-sizing: border-box;
+    border: 1px solid $c16-sp-9;
+  }
+  .classic-version-euro2016 .game-video-container.detached-game-container {
+    box-sizing: border-box;
+    min-width: 240px;
+    min-height: 135px;
+  }
+  .classic-version-euro2016 .game-video-detached {
+    box-sizing: border-box;
+    box-shadow: 0 0 15px $c16-sp-12;
+    padding: 31px 0 0;
+  }
+  .classic-version-euro2016 .detached-game-container > .animation-video-title-row-v3{
+    box-sizing: border-box;
+    float: none;
+    position: absolute;
+    left: 0;
+    top: 0;
+    border-radius: inherit;
+  }
+  .classic-version-euro2016 .detached-game-container .animation-control{
+    box-sizing: border-box;
+    height: 100%;
+    overflow: inherit;
+    margin: 0;
+  }
+  .classic-version-euro2016 .detached-game-container .animation-control .game-video .video-player-container,
+  .classic-version-euro2016 .detached-game-container .game-video-container{
+    box-sizing: border-box;
+    height: 100%;
+  }
+  .classic-version-euro2016 .detached-game-container .animation-control .game-control{
+    box-sizing: border-box;
+    height: 100%;
+    overflow: hidden;
+  }
+  .classic-version-euro2016 .video-player-control {
+    box-sizing: border-box;
+    background: none;
+    position: absolute;
+    top: -26px;
+    height: 20px;
+    width: 30px;
+    right: 110px;
+    padding: 0;
+    border-left: 1px solid lighten( desaturate( adjust-hue( $c16-sp, -1deg ), 16 ), 3 );
+  }
+  .classic-version-euro2016 .video-player-control.volume-control{
+    box-sizing: border-box;
+    right: 79px;
+  }
+  .classic-version-euro2016 .detached-game-container .video-player-control{
+    box-sizing: border-box;
+    right: 57px;
+  }
+  .classic-version-euro2016 .detached-game-container .video-player-control.volume-control{
+    box-sizing: border-box;
+    right: 26px;
+  }
+  .classic-version-euro2016 .video-player-control > span{
+    box-sizing: border-box;
+    margin: 0;
+    width: 30px;
+    height: 20px;
+    position: relative;
+    background: none;
+  }
+  .classic-version-euro2016 .video-player-control > span:before{
+    box-sizing: border-box;
+    font: 15px/20px icomoon;
+    color: $c16-tp-6;
+    width: 30px;
+    height: 20px;
+    position: absolute;
+    display: block;
+    text-indent: 0;
+    text-align: center;
+  }
+  .classic-version-euro2016 .video-player-control .video-mute:before{
+    content: "\e688";
+  }
+  .classic-version-euro2016 .video-player-control .video-unmute:before{
+    content: "\e686";
+  }
+  .classic-version-euro2016 .video-player-control .video-pause:before{
+    content: "\e651";
+  }
+  .classic-version-euro2016 .video-player-control .video-play:before{
+    content: "\e650";
+  }
+  .classic-version-euro2016 .game-video.game-video-detached.game-video-fullscreen .detached-game-container{
+    box-sizing: border-box;
+    height: calc(100% - 28px);
+    video-player {
+      margin-top: 18px;
+    }
+    .detached-info{
+      position: absolute;
+      right: 75px;
+    }
+  }
+  .classic-version-euro2016 .game-video.game-video-detached.game-video-fullscreen{
+    box-sizing: border-box;
+    margin-bottom: 10px;
+    padding: 10px 0 57.4%;
+    left: 0;
+    width: calc(100% - 5px) !important;
+    border-radius: 2px;
+    box-shadow: none;
+    background: $c16-sp-9;
+  }
+  .classic-version-euro2016 .game-video.game-video-detached.game-video-fullscreen .video-player-control{
+    box-sizing: border-box;
+    right: 20px;
+    left: auto;
+    width: 100%;
+    max-width: 100%;
+    top: -6px;
+    text-align: right;
+    color: $c16-tp-5;
+    border: none;
+  }
+  .classic-version-euro2016 .game-video.game-video-detached.game-video-fullscreen .detached-game-container .detached-game-name{
+    box-sizing: border-box;
+    background: none;
+    text-shadow: none;
+    position: relative;
+    top: -6px;
+  }
+  .classic-version-euro2016 .game-video.game-video-detached.game-video-fullscreen .detached-game-container .detached-game-name p{
+    box-sizing: border-box;
+    max-width: 50%;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    color: $c16-tp-5;
+  }
+  .classic-version-euro2016 .game-video.game-video-detached.game-video-fullscreen .game-video-container a{
+    box-sizing: border-box;
+    background: none;
+    width: 24px;
+    height: 24px;
+    font: 9px/24px icomoon;
+    color: $c16-tp-2;
+    top: -8px;
+    right: 0;
+    border-left: 1px solid lighten( desaturate( adjust-hue( $c16-sp, -1deg ), 16 ), 3 );
+    text-indent: 9999em;
+  }
+  .classic-version-euro2016 .game-video.game-video-detached.game-video-fullscreen .game-video-container a:before{
+    box-sizing: border-box;
+    content: "\e6f2";
+    position: absolute;
+    right: 0;
+    text-indent: 0;
+    width: 24px;
+    text-align: center;
+  }
+  .classic-version-euro2016 .game-video.game-video-detached.game-video-fullscreen:before{
+    box-sizing: border-box;
+    display: block;
+    content: "";
+    width: 100%;
+    height: 1px;
+    background: $c16-sp-7;
+    top: 27px;
+    position: absolute;
+  }
+  .right-column-v3 .buner-b img{
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+}

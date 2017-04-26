@@ -1,0 +1,9 @@
+<div
+        id="smart-chat-widget"
+        ng-if="conf.liveChat.wId && $location.path() !='/popup/'"
+        data-chat="{{conf.liveChat.enableChat}}"
+        data-wid="{{conf.liveChat.wId}}"
+        data-lang="{{conf.liveChat.langMapping[(conf.availableLanguages[env.lang].short|lowercase)] || conf.availableLanguages[env.lang].short|lowercase}}"
+        data-title="{{conf.liveChat.title[(conf.availableLanguages[env.lang].short|lowercase)]}}">
+
+</div>

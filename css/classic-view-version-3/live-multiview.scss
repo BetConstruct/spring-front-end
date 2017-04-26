@@ -1,0 +1,123 @@
+@mixin classic-new-view-8 {
+  // Live multiview
+  .full-multiview-wrapper-v3{
+    box-sizing: border-box;
+    float: left;
+    width: 100%;
+  }
+  .game-center-container-multi-v3{
+    box-sizing: border-box;
+    float: left;
+    width: 100%;
+  }
+  .multiview-wrapper-v3{
+    box-sizing: border-box;
+    float: left;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 100;
+  }
+  .game-center-container-multi-v3 .multiview-contain, .game-center-container-multi-v3 .dndPlaceholder{
+    box-sizing: border-box;
+    float: left;
+    width: calc(50% - 6px);
+    margin: 0 5px 10px 0;
+    height: 400px;
+    background: $c16-sp-9;
+    list-style: none;
+    position: relative;
+    @media screen and (max-width: 1333px) {width: 100%;margin: 0 0 10px 0;}
+  }
+  .game-center-container-multi-v3 .no-games-multiview .dotted-border-j-mv {
+    color: $c16-tp-6;
+    border-color: $c16-tp-6;
+  }
+  .games-list-mini-view-v3 .dndPlaceholder{
+    height: 0;
+    margin: 0;
+    width: 100%;
+  }
+  @media screen and (max-width: 1279px) {
+    .live-events-column-v3 {
+      width: 100%;
+    }
+    .multiview-wrapper-v3 > .multiview-contain, .dndPlaceholder{
+      width: calc(100% - 6px);
+    }
+  }
+  .multi-game-view-game-v3{
+    box-sizing: border-box;
+    float: left;
+    width: 100%;
+  }
+  .multi-game-view-game-v3 .game-additional-info-v3{
+    margin-top: 0;
+  }
+  .multi-view-statistic-v3{
+    box-sizing: border-box;
+    float: left;
+    width: 100%;
+    min-height: 147px;
+  }
+  .multi-view-statistic-v3 *{
+    box-sizing: content-box;
+  }
+  .multi-view-game-info-v3{
+    box-sizing: border-box;
+    float: left;
+    width: 100%;
+    @include scroll;
+    height: 254px;
+    transition: height 500ms;
+  }
+  .multiview-contain.has-statistics .multi-view-game-info-v3{
+    box-sizing: border-box;
+    height: 236px;
+  }
+  .multiview-contain.has-statistics.open .multi-view-game-info-v3{
+    box-sizing: border-box;
+    height: 164px;
+  }
+  .multiview-wrapper-v3 .live-events-column-v3{
+    box-sizing: border-box;
+    width: 100%;
+  }
+  .multiview-wrapper-v3  .live-game-container .game-info ul.title li{
+    white-space: nowrap;
+  }
+  .multiview-wrapper-v3  .game-score-multiset ul li.right-arrow:before, 
+  .multiview-wrapper-v3  .game-score-multiset ul li.left-arrow:before {
+    top: 12px;
+  }
+
+  .multiview {
+    .left-column-v3-header {
+      height: 81px;
+    }
+    .full-menu-wrapper-box-v3 {
+      height: calc(100% - 81px);
+      top: 81px;
+    }
+    .left-menu-closed-v3 .filter-row-v3 {
+      display: none;
+    }
+    .filter-view-v3 {
+      height: 38px;
+      .filter-row-v3 {
+        width: calc(100% - 32px);
+        margin: 2px 0 0;
+      }
+      .second-row-filter-v3 {
+        width: 32px;
+        margin: 0;
+        .search-box-v3 {
+          display: none;
+        }
+      }
+    }
+  }
+  // Live multiview END
+}

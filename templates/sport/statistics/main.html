@@ -1,0 +1,8 @@
+<div class="gameing-wrapper container-p" ng-controller="statisticsCtrl" ng-init="initStatistics()">
+    <!-- System Calculator-->
+    <div id="system-claculator-container" ng-if="$root.showSystemCalculator" draggable allow-other-mouse-events drag-from="calculator-draggable-header">
+        <ng-include src="getTemplate('templates/sport/classic/systemCalculator.html')"></ng-include>
+    </div>
+    <!-- System Calculator-->
+    <iframe ng-src="{{statsUrl}}" class="statistics-page" width="100%" height="100%"></iframe>
+</div>

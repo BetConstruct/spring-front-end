@@ -1,0 +1,20 @@
+<div class="help-landing" ng-controller="gameDetailsCtrl" ng-init="getGameDetails()">
+	<div class="conteiner" class-on-scroll="show-fix,show-normal">
+    	<div class="header-bg">
+
+            <div class="category-nav">
+            </div>
+         </div>
+        <div class="header">
+        	<div class="logo" ng-class="conf.site_name"><a>logo</a></div>
+            	<div class="contain-all-settings">
+                    <div id="live-chat-button1" ng-if="!conf.liveChat.isSfChat && conf.liveChat.siteId && conf.liveChat.codePlan"  title="Live Chat" trans class="help-b"></div>
+                    <div class="help-b" ng-if="conf.liveChat.isSfChat" ng-click="startSFChat()" title="Live Chat" trans="attr-only">
+                        <li><a trans>Contact Support</a></li>
+                    </div>
+            	</div>
+        </div>
+     </div>
+     <div class="block-faq-content " style="color:white;" ng-bind-html="game.description|html">
+     </div>
+</div>

@@ -1,0 +1,21 @@
+
+    <div class="arrow-sport"></div>
+    <h3 trans>Select a Sport</h3>
+   <div class="meny-games" ng-repeat="column in sportsByLetterDividedToColumns ">
+        <ul ng-repeat="letterGroup in column">
+            <li>{{ letterGroup[0].name.charAt(0)}}</li>
+            <li ng-repeat="sport in letterGroup">
+                <a  ng-show="!sport.link" ng-click="resetSearchParams(['region', 'game']);selectSport(sport);setJustForMoment('hideSportListDropdown', true, 500)">
+                    {{ sport.name }} <i ng-if="sport.game">({{ sport.game }})</i>
+                </a>
+                <a ng-show="sport.link" ng-href="{{sport.link}}">{{ sport.name }} <i>({{ sport.game }})</i></a>
+            </li>
+        </ul>
+    </div>
+    <!--<ul>
+        <li ng-repeat="item in additionalSports" ng-class="item.cssClass">
+            <a ng-show="item.type==='sport'" ng-click="resetSearchParams('region');selectSport(item.sport);setJustForMoment('hideSportListDropdown', true, 500)" ng-class="'sport-' + item.sport.alias"><span></span> {{ item.sport.name }} ({{ item.sport.game }})</a>
+            <p ng-show="item.type==='letter'">{{item.letter}}</p>
+        </li>-->
+    <!--</ul>-->
+    <!--</div>-->

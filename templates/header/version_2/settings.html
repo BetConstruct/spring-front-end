@@ -1,0 +1,79 @@
+<div id="default-settings" class="separator-contain-nav {{headerVersion2Icons.settingsIsToggled ? 'active' : ''}}">
+    <div class="settings-icon-contain settings-b" ng-click="headerVersion2Icons.settingsIsToggled = !headerVersion2Icons.settingsIsToggled"></div>
+    <div class="nav-open-view-contain">
+        <ul>
+            <li ng-show="env.authorized && conf.enableSettingHideLabels">
+                <div class="switcher-t-view-b" ng-click="headerVersion2Icons.hideLablesIsToggled = !headerVersion2Icons.hideLablesIsToggled">
+                    <p trans>Hide labels</p>
+                    <div class="switcher-box-b {{headerVersion2Icons.hideLablesIsToggled ? 'on' : ''}}">
+                        <div class="sw-circle-b"></div>
+                    </div>
+                </div>
+            </li>
+            <li ng-show="conf.sportsLayout !== 'external'">
+                <div class="drop-nav-new-b {{headerVersion2Icons.oddsInIsToggled ? 'closed' : ''}}">
+                    <p ng-click="headerVersion2Icons.oddsInIsToggled = !headerVersion2Icons.oddsInIsToggled">
+                        <span trans>Odds in</span>
+                        <i class="arrow-closed-open-b"></i>
+                    </p>
+                    <div class="drop-items-contain-b">
+                        <ul>
+                            <li ng-repeat="oddFormat in ::conf.oddFormats track by oddFormat.name" ng-click="broadcast('setOddsFormat', oddFormat.format)"
+                                ng-class="{'active': env.oddFormat === oddFormat.format}">{{ oddFormat.name | translate }}</li>
+                        </ul>
+                    </div>
+                </div>
+            </li>
+            <li ng-show="isInSports()">
+                <div class="switcher-t-view-b" ng-click="setSound(env.sound); env.sound > 0 ? env.sound = 0 : env.sound = 0.75">
+                    <p trans>Events sounds</p>
+                    <div class="switcher-box-b {{env.sound > 0 ? 'on' : ''}}">
+                        <div class="sw-circle-b"></div>
+                    </div>
+                </div>
+            </li>
+            <li ng-show="conf.allowTimeFormatChange">
+                <div class="drop-nav-new-b {{headerVersion2Icons.timeFormatIsToggled ? 'closed' : ''}}">
+                    <p ng-click="headerVersion2Icons.timeFormatIsToggled = !headerVersion2Icons.timeFormatIsToggled">
+                        <span trans>Time format</span>
+                        <i class="arrow-closed-open-b"></i>
+                    </p>
+                    <div class="drop-items-contain-b time-format">
+                        <ul>
+                            <li ng-click="setTimeFormat(env.longTimeFormats.HALF)" ng-class="{'active': env.timeFormat === env.longTimeFormats.HALF}" trans>12 H</li>
+                            <li ng-click="setTimeFormat(env.longTimeFormats.FULL)" ng-class="{'active': env.timeFormat === env.longTimeFormats.FULL}" trans>24 H</li>
+                        </ul>
+                    </div>
+                </div>
+            </li>
+            <li ng-show="conf.enableSportsbookLayoutSwitcher">
+                <div class="drop-nav-new-b {{headerVersion2Icons.layoutSwitcherIsToggled ? 'closed' : ''}}">
+                    <p ng-click="headerVersion2Icons.layoutSwitcherIsToggled = !headerVersion2Icons.layoutSwitcherIsToggled">
+                        <span trans>Sportsbook Layout</span>
+                        <i class="arrow-closed-open-b"></i>
+                    </p>
+                    <div class="drop-items-contain-b">
+                        <ul>
+                            <li ng-repeat="(key, value) in sportsbookAvailableViews track by $index" ng-click="switchSportsbookLayout(key)" ng-class="{'active': conf.sportsLayout === key}" ng-bind="key == 'euro2016'? ('Classic'|translate) : key|capitalise|translate"></li>
+                        </ul>
+                    </div>
+                </div>
+            </li>
+
+            <li ng-if="conf.themes.length">
+                <div class="drop-nav-new-b {{headerVersion2Icons.themeSwitcherIsToggled ? 'closed' : ''}}">
+                    <p ng-click="headerVersion2Icons.themeSwitcherIsToggled = !headerVersion2Icons.themeSwitcherIsToggled">
+                        <span trans>Choose color scheme:</span>
+                        <i class="arrow-closed-open-b"></i>
+                    </p>
+                    <div class="drop-items-contain-b">
+                        <ul>
+                            <li ng-repeat="theme in conf.themes" ng-click="setTheme(theme)" ng-bind="theme.name" ng-class="{'active': $root.theme === theme}"></li>
+                        </ul>
+                    </div>
+                </div>
+            </li>
+
+        </ul>
+    </div>
+</div>

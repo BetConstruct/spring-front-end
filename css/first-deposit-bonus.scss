@@ -1,0 +1,227 @@
+@mixin first-deposit-bonus-style {
+  .first_deposit_bonus {
+    float: left;
+    width: 100%;
+    box-sizing: border-box;
+  }
+  .first-deposit-bonus-box {
+    float: left;
+    width: 100%;
+    box-sizing: border-box;
+    margin: 58px 0 30px;
+  }
+  .bonus-promo-wrapper-b {
+    box-sizing: border-box;
+    min-width: 950px;
+    max-width: 1350px;
+    margin: 0 auto;
+    padding: 0 20px;
+    width: 100%;
+  }
+  .bonus-promo-wrapper-b:after {
+    content: "";
+    display: block;
+    clear: both;
+  }
+  .promo-bonus-full-contain {
+    float: left;
+    width: 100%;
+    background: no-repeat 50% 0;
+    box-sizing: border-box;
+    min-height: 640px;
+  }
+  .right-b-content-view {
+    float: right;
+    margin: 75px 0 0 0;
+    box-sizing: border-box;
+    width: 684px;
+    height: 393px;
+    padding: 150px 0 0 34px;
+    background: url("../../../images/first-deposit-bonus/100p.png#{$delete-cache}") no-repeat 0 0;
+  }
+  .text-bonus-info-b{
+    float: left;
+    width: 100%;
+    box-sizing: border-box;
+    i, em {
+      display: none;
+    }
+    &.cms-page-free-spins-j i, em {
+      display: inline-block;
+      font: 18px/28px $font-f;
+      padding: 0 8px;
+      background: $hero-color;
+      border-radius: 4px;
+      vertical-align: 6px;
+      margin: 0 0 0 12px;
+    }
+  }
+  .text-bonus-info-b > h2 {
+    float: left;
+    width: 100%;
+    box-sizing: border-box;
+    font-weight: normal;
+    font: 34px/50px $font-f;
+    color: #ffffff;
+    text-align: left;
+    text-transform: uppercase;
+    strong {
+      display: block;
+    }
+  }
+  .text-bonus-info-b > p {
+    float: left;
+    width: 100%;
+    box-sizing: border-box;
+    font: 18px/20px $font-f;
+    color: #ffffff;
+    text-align: left;
+    margin: 15px 0 0;
+  }
+  .text-bonus-info-b > p > a {
+    text-decoration: none;
+    color: #1eb37f;
+  }
+  .text-bonus-info-b > p > a:hover {
+    text-decoration: underline;
+  }
+  .reg-button-view-b {
+    float: left;
+    width: 100%;
+    box-sizing: border-box;
+    margin: 30px 0 0;
+  }
+  .reg-button-view-b > button {
+    float: left;
+    box-sizing: border-box;
+    color: #f3f3f5;
+    font: 20px/48px $font-f;
+    height: 48px;
+    border: none;
+    background: #137150;
+    background: -moz-linear-gradient(left, #157e59 0%, #1ca877 35%, #1fb681 52%, #1eb27e 60%, #1ca877 70%, #16845d 100%);
+    background: -webkit-linear-gradient(left, #157e59 0%, #1ca877 35%, #1fb681 52%, #1eb27e 60%, #1ca877 70%, #16845d 100%);
+    background: linear-gradient(to right, #157e59 0%, #1ca877 35%, #1fb681 52%, #1eb27e 60%, #1ca877 70%, #16845d 100%);
+    position: relative;
+    padding: 0 36px;
+    text-align: center;
+    text-transform: uppercase;
+    cursor: pointer;
+    display: inline-block;
+    transition-duration: 0.3s;
+    -webkit-transition-property: -webkit-transform;
+    transition-property: transform;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+    transform: translate3d(0,0,0);
+    box-shadow: 0 0 1px rgba(0, 0, 0, 0);
+  }
+  .reg-button-view-b > button:before {
+    pointer-events: none;
+    position: absolute;
+    z-index: -1;
+    content: '';
+    top: 100%;
+    left: 5%;
+    height: 10px;
+    width: 90%;
+    opacity: 0;
+    background: -webkit-radial-gradient(center, ellipse, rgb(22, 133, 93) 0%, rgba(0, 0, 0, 0) 80%);
+    background: radial-gradient(ellipse at center, rgb(22, 133, 93) 0%, rgba(0, 0, 0, 0) 80%);
+    transition-duration: 0.3s;
+    -webkit-transition-property: -webkit-transform, opacity;
+    transition-property: transform, opacity;
+  }
+  .reg-button-view-b > button:hover {
+    transform: translate3d(0,-6px,0);
+    animation-name: hover;
+    animation-duration: 1.5s;
+    animation-delay: 0.3s;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+    animation-direction: alternate;
+  }
+  .reg-button-view-b > button:hover:before {
+    opacity: .4;
+    transform: translate3d(0,6px,0);
+    animation-name: hover-shadow;
+    animation-duration: 1.5s;
+    animation-delay: .3s;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+    animation-direction: alternate;
+  }
+  @keyframes hover {
+    50% {
+      transform: translate3d(0,-3px,0);
+    }
+    100% {
+      transform: translate3d(0,-6px,0);
+    }
+  }
+  @keyframes hover-shadow {
+    0% {
+      transform: translate3d(0,6px,0);
+      opacity: .4;
+    }
+    50% {
+      transform: translate3d(0,3px,0);
+      opacity: 1;
+    }
+    100% {
+      transform: translate3d(0,6px,0);
+      opacity: .4;
+    }
+  }
+  .bottom-row-bonus-b {
+    float: left;
+    width: 100%;
+    box-sizing: border-box;
+    height: 172px;
+    background: rgba(41, 48, 67, 0.8);
+    padding: 25px 0 0;
+    text-align: center;
+  }
+  .bottom-row-bonus-b > ul {
+    display: inline-block;
+    box-sizing: border-box;
+    vertical-align: top;
+    max-width: 950px;
+  }
+  .bottom-row-bonus-b > ul > li {
+    float: left;
+    box-sizing: border-box;
+    width: 33.3%;
+    text-align: center;
+    padding: 0 50px;
+  }
+  .step-icon-text-view {
+    display: inline-block;
+    vertical-align: top;
+    box-sizing: border-box;
+    width: 180px;
+    padding: 80px 0 0;
+    background-image: url('../../../images/first-deposit-bonus/step-b.png#{$delete-cache}');
+    background-repeat: no-repeat;
+  }
+  .register-now {background-position: 54% 0;}
+  .confirm-bonus {background-position: 46% -382px;}
+  .make-a-deposit {background-position: 52% -777px;}
+  .step-icon-text-view > p {
+    float: left;
+    width: 100%;
+    box-sizing: border-box;
+    font: 18px/20px $font-f;
+    color: #ffffff;
+  }
+  @media screen and (max-width: 1260px){
+    .bonus-promo-wrapper-b{
+      padding: 0 15px;
+      max-width: 980px;
+    }
+    .promo-bonus-full-contain{background-position: 28% 0;}
+    .right-b-content-view{
+      width: 530px;
+      margin: 40px 0 35px 0;
+    }
+  }
+}

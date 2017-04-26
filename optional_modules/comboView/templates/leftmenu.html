@@ -1,0 +1,103 @@
+<div class="left-column-view-contain-template" ng-controller="comboViewLeftController">
+    <!--simple-view-menu-->
+    <div class="simple-nav-contain">
+        <div class="title-menu-separator">
+            <h2 trans>Sports Betting</h2>
+        </div>
+        <div class="simple-nav-items-wrapper">
+            <ul>
+                <li trans ng-click="liveTodaySelected()" ng-class="{'active': 'liveToday' === selectedCentralView}" >Live Today</li>
+                <li trans ng-click="popularEventsSelected()"  ng-class="{'active': 'popularEvents' === selectedCentralView}" ng-if="conf.loadPopularGamesForSportsBook.enabled">Popular Events</li>
+            </ul>
+        </div>
+    </div>
+    <!--simple-view-menu END-->
+    <!--left sport menu-->
+    <div class="left-menu-wrapper-b">
+        <div class="title-menu-separator">
+            <h2 trans>All Odds</h2>
+        </div>
+        <!--Search-->
+        <div class="search-f-contain">
+            <!--<div class="search-contain">
+                <input type="text" placeholder="Search..." trans>
+
+            </div>-->
+            <div class="search-menu-wrapper-j"  ng-click="toggleLeftMenu(true)" ng-if="conf.enableMenuSearch" ng-include="getTemplate('templates/search/sport.html')"></div>
+        </div>
+        <!--Search END-->
+        <!--Sport menu-->
+        <div class="menu-sport-contain">
+            <ul>
+                <li ng-repeat="sport in leftMenuSports track by sport.id" ng-class="{'active': sport.opened, 'selected': selectedSport.id === sport.id && 'sport' === selectedCentralView}">
+                    <!--first level Sports name-->
+                    <div class="item-naw-row" title="{{sport.name}}" ng-click="selectLeftMenuSport(sport);">
+                        <div class="icon-sports-contain {{sport.alias}}"></div>
+                        <div class="arrow-icon-separator" ng-click="sport.opened ? closeSportRegions(sport) : loadLeftMenuRegionsForTheSport(sport); $event.stopPropagation();"></div>
+                        <p>{{sport.name}}</p>
+                        <div class="amount-games-number">
+                            <span>{{sport.market}}</span>
+                        </div>
+                    </div>
+                    <!--first level Sports name END-->
+
+                    <!--second level Region-->
+                    <div class="second-l-nav-wrapper" >
+                        <div ng-repeat="region in sport.region track by region.id" >
+                            <div class="second-level-sport-nav" ng-class="{'active': region.opened, 'selected': selectedRegion.id === region.id && 'region' === selectedCentralView}" ng-click="selectLeftMenuRegion(region, sport);">
+                                <div class="arrow-icon-separator" ng-click="region.opened ? closeRegionCompetitions(region) : loadLeftMenuCompetitionsForTheRegion(region); $event.stopPropagation();"></div>
+                                <h3>{{region.name}}</h3>
+                                <div class="amount-games-number">
+                                    <span>{{region.market}}</span>
+                                </div>
+                            </div>
+                            <!--third level -->
+                            <div class="third-level-nav-wrapper">
+                                <div ng-repeat="competition in region.competition track by competition.id">
+                                    <div class="third-level-row"  ng-class="{'active': competition.opened, 'selected': selectedCompetition.id === competition.id && 'competition' === selectedCentralView}" ng-click=" selectLeftMenuCompetition(competition, region, sport)">
+                                        <div class="arrow-icon-separator" ng-click="competition.opened ? closeCompetitionGames(competition) : loadLeftMenuGamesForTheCompetition(competition); $event.stopPropagation();"></div>
+                                        <h4>{{competition.name|removeParts:[sport.name]|removeParts:[region.name]}}</h4>
+                                        <div class="amount-games-number">
+                                            <span>{{competition.market}}</span>
+                                        </div>
+                                    </div>
+
+                                    <!--fourth level-->
+                                    <div class="fourth-level-nav-wrapper">
+                                        <div class="fourth-level-row" ng-repeat="game in competition.games track by game.id"  ng-class="{'active': game.opened, 'selected': selectedGame.id === game.id && 'gameView' === selectedCentralView}">
+                                            <div ng-click="selectLeftMenuGame(game, competition, region, sport)" class="select-left-nav-b">
+                                                <div class="arrow-icon-separator" ng-click="game.opened = !game.opened; $event.stopPropagation()"></div>
+                                                <h5><span>{{game.team1_name}}</span> - <span>{{game.team2_name}}</span></h5>
+                                                <div class="amount-games-number">
+                                                    <span>{{game.markets_count}}</span>
+                                                </div>
+                                            </div>
+                                            <!--fifth level-->
+                                            <div class="fifth-level-nav-wrapper">
+                                                <div class="date-time-container">
+                                                    <p ng-bind="game.start_ts|formatDate:'full':null:env.timeFormat:env.selectedTimeZone"></p>
+                                                </div>
+                                                <div class="simple-fiealds-b" ng-if="game.main_market" ng-class="{'blocked':((event.price | oddConvert:'decimal') == 1 || game.is_blocked)}">
+                                                    <ul ng-class="{'column-3':game.main_market.type === 'P1XP2'}">
+                                                        <li ng-class="{'active': isEventInBetSlip(game.main_market.events.P1[0])}" ng-click="bet(game.main_market.events.P1[0], game, sport.id, region.id, competition.id, game.main_market, sport.alias)">{{game.main_market.events.P1[0].price|oddConvert:env.oddFormat}}</li>
+                                                        <li ng-class="{'active': isEventInBetSlip(game.main_market.events.X[0])}" ng-if="game.main_market.type === 'P1XP2'" ng-click="bet(game.main_market.events.X[0], game, sport.id, region.id, competition.id, game.main_market, sport.alias)">{{game.main_market.events.X[0].price|oddConvert:env.oddFormat}}</li>
+                                                        <li ng-class="{'active': isEventInBetSlip(game.main_market.events.P2[0])}" ng-click="bet(game.main_market.events.P2[0], game, sport.id, region.id, competition.id, game.main_market, sport.alias)">{{game.main_market.events.P2[0].price|oddConvert:env.oddFormat}}</li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                            <!--fifth level END-->
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!--third level END-->
+                    </div>
+                    <!--second level Region END-->
+                </li>
+            </ul>
+        </div>
+        <!--Sport menu END-->
+    </div>
+    <!--left sport menu END-->
+</div>

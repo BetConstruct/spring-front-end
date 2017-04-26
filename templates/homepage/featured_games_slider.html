@@ -1,0 +1,60 @@
+<div ng-controller="featuredgameCtrl" ng-init="loadAllFeaturedGames(true);" class="featured-game-list-b" ng-hide="featuredGames.length < 2" no-animate>
+
+    <vbet-loader ng-show="featuredGamesLoading"></vbet-loader>
+
+    <div ng-show="featuredGamesGroups" ng-mouseover="multiSlideRotationPaused = true" ng-mouseleave="multiSlideRotationPaused = false">
+        <div class="title-b-wg">
+            <h3 trans>Featured games</h3>
+            <div class="mini-slider-b-contain">
+                <div class="change-b-slide" ng-show="featuredGamesGroups.length > 1" ng-repeat="slideItem in featuredGamesGroups track by $index" ng-click="multiSlideFeaturedGames($index);" ng-class="{'active': $parent.multiSlideIndex === $index}"></div>
+            </div>
+        </div>
+
+        <div class="games-view-slider-contain" ng-controller="cmsPagesCtrl" ng-init="loadPage('competition-backgrounds',true);">
+            <ul class="column-{{ featuredGamesGroups[multiSlideIndex].games.length }}">
+                <!-- defoult 3 columns ---------- or add class="column-2" 2 columns ---- class="column-1" one column-->
+                <li ng-repeat="game in featuredGamesGroups[multiSlideIndex].games track by game.id">
+                    <div class="date-championship-logo">
+                        <p ng-if="conf.enableTeamLogosOnHomepage" ng-style="{'background-image': 'url({{conf.teamLogosPath}}c/m/{{Math.floor(game.import_id / 2000)}}/{{game.import_id}}.png)'}">
+                            {{ game.start_ts|formatDate:'full':null:env.timeFormat }}
+                        </p>
+                        <p ng-if="!conf.enableTeamLogosOnHomepage" ng-style="{'background-image': 'url(images/team-logo-default.png)'}">
+                            {{ game.start_ts|formatDate:'full':null:env.timeFormat }}
+                        </p>
+                    </div>
+                    <div
+                            no-animate="disable"
+                            class="game-full-information-w {{ game.sport.alias }}"
+                            ng-init="bgImage = (backgroundsCompetitionsMaps[game.competition.id] && conf.featuredGames.backgroundsCompetitionsPath + backgroundsCompetitionsMaps[game.competition.id]) || getPageByField(pages, game.competition.id, 'competition').thumbnail_images.full.url"
+                            style="{{(bgImage?'background-image: url('+bgImage+')':'')}}"
+                    >
+                        <div class="team-names-wrapper-b">
+                            <ul>
+                                <li>
+                                    <p ng-if="conf.enableTeamLogosOnHomepage" ng-style="{'background-image': 'url({{conf.teamLogosPath}}e/s/{{Math.floor(game.team1_id / 2000)}}/{{game.team1_id}}.png)'}">
+                                        <b>{{ game.team1_name }}</b>
+                                    </p>
+                                    <p ng-if="!conf.enableTeamLogosOnHomepage" ng-style="{'background-image': 'url(images/team-logo-default.png)'}">
+                                        <b>{{ game.team1_name }}</b>
+                                    </p>
+                                </li>
+                                <li>
+                                    <p ng-if="conf.enableTeamLogosOnHomepage" ng-style="{'background-image': 'url({{conf.teamLogosPath}}e/s/{{Math.floor(game.team2_id / 2000)}}/{{game.team2_id}}.png)'}">
+                                        <b>{{ game.team2_name }}</b>
+                                    </p>
+                                    <p ng-if="!conf.enableTeamLogosOnHomepage" ng-style="{'background-image': 'url(images/team-logo-default.png)'}">
+                                        <b>{{ game.team2_name }}</b>
+                                    </p>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="game-link-wrapper-b">
+                            <a ng-if="isIframe" ng-click="gotoSelectedGame({game:game.id, competition:game.competition.id, sport: game.sport.id, region: game.region.id, type: game.type === 2 ? 0 : game.type}); $event.stopPropagation();" trans>Bet Now</a>
+                            <a ng-if="!isIframe" ng-href="#/sport/?type={{game.type === 2 ? 0 : game.type}}&sport={{ game.sport.id }}&game={{ game.id }}&competition={{ game.competition.id }}&region={{ game.region.id  }}" trans>Bet Now</a>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>

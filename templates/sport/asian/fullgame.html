@@ -1,0 +1,237 @@
+<!--More tamplate-->
+<!--live game -->
+<div class="asian-live game-{{openGame.sport.alias.toLowerCase()}}" ng-show="openGame && openGame.type === 1">
+    <!-- live game score -->
+    <ng-include src="getTemplate('templates/sport/livescore.html')" ng-show="openGame.type == 1"></ng-include>
+    <!-- live game stats -->
+    <div class="live-stats" ng-include="getTemplate('templates/sport/livegamestatistics.html')" ng-show="openGame.type == 1"></div>
+</div>
+
+<div class="game-list-compitishion" ng-class="{closed: openGame.markets.WINNER.collapsed}" ng-show="openGame.availableSequences.WINNER">
+    <div class="name-chempionship-asia more-c" >
+        <h3 ng-click="openGame.markets.WINNER.collapsed = !openGame.markets.WINNER.collapsed" trans>Match Betting</h3>
+        <div class="block-filter-hdp">
+            <ul>
+                <li ng-repeat="sequence in openGame.availableSequences.WINNER track by $index"
+                    ng-bind="::(asianMarkets.sequenceNames[sequence] || sequence)|translate"
+                    ng-class="{active: openGame.selectedSequence['WINNER'] === sequence}"
+                    ng-click="openGame.selectedSequence['WINNER'] = sequence"></li>
+
+            </ul>
+        </div>
+    </div>
+
+
+    <table class="second-more-view">
+        <tr>
+            <td class="more-c-view"
+                ng-class="{'locked-market-asi': openGame.markets.WINNER[openGame.selectedSequence['WINNER']][0]['1'].price == 1 || openGame.is_blocked, up: openGame.markets.WINNER[openGame.selectedSequence['WINNER']][0]['1'].price_change == '1', down: openGame.markets.WINNER[openGame.selectedSequence['WINNER']][0]['1'].price_change == '-1', 'active': isEventInBetSlip(openGame.markets.WINNER[openGame.selectedSequence['WINNER']][0]['1'])}"
+                    >
+                <div class="name-market-view" ng-show="openGame.markets.WINNER[openGame.selectedSequence['WINNER']][0]['1']" ng-click="bet(openGame.markets.WINNER[openGame.selectedSequence['WINNER']][0]['1'], openGame.markets.WINNER[openGame.selectedSequence['WINNER']][0], openGame)">
+                    <p><i ng-bind="openGame.team1_name"></i></p><span ng-bind="openGame.markets.WINNER[openGame.selectedSequence['WINNER']][0]['1'].price|oddConvert:env.oddFormat"></span>
+                </div>
+            </td>
+            <td class="more-c-view"
+                ng-class="{'locked-market-asi': openGame.markets.WINNER[openGame.selectedSequence['WINNER']][0]['1'].price == 1 || openGame.is_blocked, up: openGame.markets.WINNER[openGame.selectedSequence['WINNER']][0]['X'].price_change == '1', down: openGame.markets.WINNER[openGame.selectedSequence['WINNER']][0]['X'].price_change == '-1', 'active': isEventInBetSlip(openGame.markets.WINNER[openGame.selectedSequence['WINNER']][0]['X'])}"
+                    >
+                <div class="name-market-view" ng-show="openGame.markets.WINNER[openGame.selectedSequence['WINNER']][0]['X']" ng-click="bet(openGame.markets.WINNER[openGame.selectedSequence['WINNER']][0]['X'], openGame.markets.WINNER[openGame.selectedSequence['WINNER']][0], openGame)">
+                    <p><i>X</i></p><span ng-bind="openGame.markets.WINNER[openGame.selectedSequence['WINNER']][0]['X'].price|oddConvert:env.oddFormat"></span>
+                </div>
+            </td>
+            <td class="more-c-view"
+                ng-class="{'locked-market-asi': openGame.markets.WINNER[openGame.selectedSequence['WINNER']][0]['1'].price == 1 || openGame.is_blocked, up: openGame.markets.WINNER[openGame.selectedSequence['WINNER']][0]['2'].price_change == '1', down: openGame.markets.WINNER[openGame.selectedSequence['WINNER']][0]['2'].price_change == '-1', 'active': isEventInBetSlip(openGame.markets.WINNER[openGame.selectedSequence['WINNER']][0]['2'])}"
+                    >
+                <div class="name-market-view" ng-show="openGame.markets.WINNER[openGame.selectedSequence['WINNER']][0]['2']" ng-click="bet(openGame.markets.WINNER[openGame.selectedSequence['WINNER']][0]['2'], openGame.markets.WINNER[openGame.selectedSequence['WINNER']][0], openGame)">
+                    <p><i ng-bind="openGame.team2_name"></i></p><span ng-bind="openGame.markets.WINNER[openGame.selectedSequence['WINNER']][0]['2'].price|oddConvert:env.oddFormat"></span>
+                </div>
+            </td>
+
+            <!--<td class="more-c-view up"><div class="name-market-view"><p><i>Draw</i></p><span>120/200</span></div></td>-->
+            <!--<td class="more-c-view"><div class="name-market-view"><p><i>Man. Unites</i></p><span>3201.20</span></div></td>-->
+        </tr>
+
+    </table>
+
+</div>
+
+
+<div class="game-list-compitishion" ng-class="{closed: openGame.markets.HANDICAP.collapsed}" ng-show="openGame.availableSequences.HANDICAP">
+    <div class="name-chempionship-asia more-c" >
+        <h3 ng-click="openGame.markets.HANDICAP.collapsed = !openGame.markets.HANDICAP.collapsed" trans>Handicap</h3>
+        <div class="block-filter-hdp">
+            <ul>
+                <li ng-repeat="sequence in openGame.availableSequences.HANDICAP track by $index"
+                    ng-bind="::(asianMarkets.sequenceNames[sequence] || sequence)|translate"
+                    ng-class="{active: openGame.selectedSequence['HANDICAP'] === sequence}"
+                    ng-click="openGame.selectedSequence['HANDICAP'] = sequence"></li>
+
+            </ul>
+        </div>
+    </div>
+
+
+    <table class="second-more-view">
+        <tr ng-repeat="market in openGame.markets.HANDICAP[openGame.selectedSequence['HANDICAP']]">
+
+            <td class="more-c-view" ng-class="{'locked-market-asi': openGame.markets.WINNER[openGame.selectedSequence['WINNER']][0]['1'].price == 1 || openGame.is_blocked, up: market.Handicap1.price_change == '1', down: market.Handicap1.price_change == '-1', 'active': isEventInBetSlip(market.Handicap1)}">
+                <div class="info-bl k-and-info" ng-show="market.Handicap1" ng-click="bet(market.Handicap1, market, openGame)">
+                    <p><b ng-bind="prefixBase(market.Handicap1.base)"></b> <i>{{market.Handicap1.price|oddConvert:env.oddFormat}}</i></p>
+                </div>
+            </td>
+
+            <td class="more-c-view" ng-class="{'locked-market-asi': openGame.markets.WINNER[openGame.selectedSequence['WINNER']][0]['1'].price == 1 || openGame.is_blocked, up: market.Handicap2.price_change == '1', down: market.Handicap2.price_change == '-1', 'active': isEventInBetSlip(market.Handicap2)}">
+                <div class="info-bl k-and-info" ng-show="market.Handicap2" ng-click="bet(market.Handicap2, market, openGame)">
+                    <p><b ng-bind="prefixBase(market.Handicap2.base)"></b> <i>{{market.Handicap2.price|oddConvert:env.oddFormat}}</i></p>
+                </div>
+            </td>
+
+
+
+        </tr>
+
+    </table>
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="game-list-compitishion" ng-class="{closed: openGame.markets.GOALS.collapsed}" ng-show="openGame.availableSequences.GOALS">
+    <div class="name-chempionship-asia more-c">
+        <h3 ng-click="openGame.markets.GOALS.collapsed = !openGame.markets.GOALS.collapsed" ng-bind="::(asianMarkets.totalTypeNameBySport[selectedSport.alias] || asianMarkets.totalTypeNameBySport.Default)|translate"></h3>
+        <div class="block-filter-hdp">
+            <ul>
+                <li ng-repeat="sequence in openGame.availableSequences.GOALS track by $index"
+                    ng-bind="::(asianMarkets.sequenceNames[sequence] || sequence)|translate"
+                    ng-class="{active: openGame.selectedSequence['GOALS'] === sequence}"
+                    ng-click="openGame.selectedSequence['GOALS'] = sequence"></li>
+
+            </ul>
+        </div>
+    </div>
+
+
+    <table class="any-markets-more">
+        <tr ng-repeat="market in openGame.markets.GOALS[openGame.selectedSequence['GOALS']]">
+
+            <td class="more-c-view" ng-class="{'locked-market-asi': openGame.markets.WINNER[openGame.selectedSequence['WINNER']][0]['1'].price == 1 || openGame.is_blocked, up: market.OVER.price_change == '1', down: market.OVER.price_change == '-1', 'active': isEventInBetSlip(market.OVER)}">
+                <div class="info-bl k-and-info" ng-show="market.OVER" ng-click="bet(market.OVER, market, openGame)">
+                    <p><b ng-bind="::(('aO'|translate) + ' ' + market.OVER.base)"></b> <i>{{market.OVER.price|oddConvert:env.oddFormat}}</i></p>
+                </div>
+            </td>
+            <td class="more-c-view" ng-class="{'locked-market-asi': openGame.markets.WINNER[openGame.selectedSequence['WINNER']][0]['1'].price == 1 || openGame.is_blocked, up: market.UNDER.price_change == '1', down: market.UNDER.price_change == '-1', 'active': isEventInBetSlip(market.UNDER)}">
+                <div class="info-bl k-and-info" ng-show="market.UNDER" ng-click="bet(market.UNDER, market, openGame)">
+                    <p><b ng-bind="::(('aU'|translate) + ' ' + market.UNDER.base)"></b> <i>{{market.UNDER.price|oddConvert:env.oddFormat}}</i></p>
+                </div>
+            </td>
+
+        </tr>
+
+    </table>
+
+</div>
+
+
+
+
+<div class="game-list-compitishion" ng-class="{closed: openGame.markets.HTFT.collapsed}" ng-show="openGame.markets.HTFT['90MINS'][0]">
+    <div class="name-chempionship-asia more-c" ng-click="openGame.markets.HTFT.collapsed = !openGame.markets.HTFT.collapsed">
+        <h3>HALF TIME / FULL TIME</h3>
+    </div>
+    <table class="any-markets-more">
+        <tr>
+            <td class="more-c-view" ng-class="{'locked-market-asi': openGame.markets.WINNER[openGame.selectedSequence['WINNER']][0]['1'].price == 1 || openGame.is_blocked, up: openGame.markets.HTFT['90MINS'][0]['1'].price_change == '1', down: openGame.markets.HTFT['90MINS'][0]['1'].price_change == '-1', 'active': isEventInBetSlip(openGame.markets.HTFT['90MINS'][0]['1'])}">
+                <div class="name-market-view" ng-show="openGame.markets.HTFT['90MINS'][0]['1']" ng-click="bet(openGame.markets.HTFT['90MINS'][0]['1'], openGame.markets.HTFT['90MINS'][0], openGame)">
+                    <p><i trans>HH</i></p><span ng-bind="openGame.markets.HTFT['90MINS'][0]['1'].price|oddConvert:env.oddFormat"></span>
+                </div>
+            </td>
+            <td class="more-c-view" ng-class="{'locked-market-asi': openGame.markets.WINNER[openGame.selectedSequence['WINNER']][0]['1'].price == 1 || openGame.is_blocked, up: openGame.markets.HTFT['90MINS'][0]['2'].price_change == '1', down: openGame.markets.HTFT['90MINS'][0]['2'].price_change == '-1', 'active': isEventInBetSlip(openGame.markets.HTFT['90MINS'][0]['2'])}">
+                <div class="name-market-view" ng-show="openGame.markets.HTFT['90MINS'][0]['2']" ng-click="bet(openGame.markets.HTFT['90MINS'][0]['2'], openGame.markets.HTFT['90MINS'][0], openGame)">
+                    <p><i trans>HD</i></p><span ng-bind="openGame.markets.HTFT['90MINS'][0]['2'].price|oddConvert:env.oddFormat"></span>
+                </div>
+            </td>
+            <td class="more-c-view" ng-class="{'locked-market-asi': openGame.markets.WINNER[openGame.selectedSequence['WINNER']][0]['1'].price == 1 || openGame.is_blocked, up: openGame.markets.HTFT['90MINS'][0]['3'].price_change == '1', down: openGame.markets.HTFT['90MINS'][0]['3'].price_change == '-1', 'active': isEventInBetSlip(openGame.markets.HTFT['90MINS'][0]['3'])}">
+                <div class="name-market-view" ng-show="openGame.markets.HTFT['90MINS'][0]['3']" ng-click="bet(openGame.markets.HTFT['90MINS'][0]['3'], openGame.markets.HTFT['90MINS'][0], openGame)">
+                    <p><i trans>HA</i></p><span ng-bind="openGame.markets.HTFT['90MINS'][0]['3'].price|oddConvert:env.oddFormat"></span>
+                </div>
+            </td>
+            <td class="more-c-view" ng-class="{'locked-market-asi': openGame.markets.WINNER[openGame.selectedSequence['WINNER']][0]['1'].price == 1 || openGame.is_blocked, up: openGame.markets.HTFT['90MINS'][0]['4'].price_change == '1', down: openGame.markets.HTFT['90MINS'][0]['4'].price_change == '-1', 'active': isEventInBetSlip(openGame.markets.HTFT['90MINS'][0]['4'])}">
+                <div class="name-market-view" ng-show="openGame.markets.HTFT['90MINS'][0]['4']" ng-click="bet(openGame.markets.HTFT['90MINS'][0]['4'], openGame.markets.HTFT['90MINS'][0], openGame)">
+                    <p><i trans>DH</i></p><span ng-bind="openGame.markets.HTFT['90MINS'][0]['4'].price|oddConvert:env.oddFormat"></span>
+                </div>
+            </td>
+        </tr>
+        <tr>
+
+            <td class="more-c-view" ng-class="{'locked-market-asi': openGame.markets.WINNER[openGame.selectedSequence['WINNER']][0]['1'].price == 1 || openGame.is_blocked, up: openGame.markets.HTFT['90MINS'][0]['5'].price_change == '1', down: openGame.markets.HTFT['90MINS'][0]['5'].price_change == '-1', 'active': isEventInBetSlip(openGame.markets.HTFT['90MINS'][0]['5'])}">
+                <div class="name-market-view" ng-show="openGame.markets.HTFT['90MINS'][0]['5']" ng-click="bet(openGame.markets.HTFT['90MINS'][0]['5'], openGame.markets.HTFT['90MINS'][0], openGame)">
+                    <p><i trans>DD</i></p><span ng-bind="openGame.markets.HTFT['90MINS'][0]['5'].price|oddConvert:env.oddFormat"></span>
+                </div>
+            </td>
+            <td class="more-c-view" ng-class="{'locked-market-asi': openGame.markets.WINNER[openGame.selectedSequence['WINNER']][0]['1'].price == 1 || openGame.is_blocked, up: openGame.markets.HTFT['90MINS'][0]['6'].price_change == '1', down: openGame.markets.HTFT['90MINS'][0]['6'].price_change == '-1', 'active': isEventInBetSlip(openGame.markets.HTFT['90MINS'][0]['6'])}">
+                <div class="name-market-view" ng-show="openGame.markets.HTFT['90MINS'][0]['6']" ng-click="bet(openGame.markets.HTFT['90MINS'][0]['6'], openGame.markets.HTFT['90MINS'][0], openGame)">
+                    <p><i trans>DA</i></p><span ng-bind="openGame.markets.HTFT['90MINS'][0]['6'].price|oddConvert:env.oddFormat"></span>
+                </div>
+            </td>
+            <td class="more-c-view" ng-class="{'locked-market-asi': openGame.markets.WINNER[openGame.selectedSequence['WINNER']][0]['1'].price == 1 || openGame.is_blocked, up: openGame.markets.HTFT['90MINS'][0]['7'].price_change == '1', down: openGame.markets.HTFT['90MINS'][0]['7'].price_change == '-1', 'active': isEventInBetSlip(openGame.markets.HTFT['90MINS'][0]['7'])}">
+                <div class="name-market-view" ng-show="openGame.markets.HTFT['90MINS'][0]['7']" ng-click="bet(openGame.markets.HTFT['90MINS'][0]['7'], openGame.markets.HTFT['90MINS'][0], openGame)">
+                    <p><i trans>AH</i></p><span ng-bind="openGame.markets.HTFT['90MINS'][0]['7'].price|oddConvert:env.oddFormat"></span>
+                </div>
+            </td>
+            <td class="more-c-view" ng-class="{'locked-market-asi': openGame.markets.WINNER[openGame.selectedSequence['WINNER']][0]['1'].price == 1 || openGame.is_blocked, up: openGame.markets.HTFT['90MINS'][0]['8'].price_change == '1', down: openGame.markets.HTFT['90MINS'][0]['8'].price_change == '-1', 'active': isEventInBetSlip(openGame.markets.HTFT['90MINS'][0]['8'])}">
+                <div class="name-market-view" ng-show="openGame.markets.HTFT['90MINS'][0]['8']" ng-click="bet(openGame.markets.HTFT['90MINS'][0]['8'], openGame.markets.HTFT['90MINS'][0], openGame)">
+                    <p><i trans>AD</i></p><span ng-bind="openGame.markets.HTFT['90MINS'][0]['8'].price|oddConvert:env.oddFormat"></span>
+                </div>
+            </td>
+            <td class="more-c-view" ng-class="{'locked-market-asi': openGame.markets.WINNER[openGame.selectedSequence['WINNER']][0]['1'].price == 1 || openGame.is_blocked, up: openGame.markets.HTFT['90MINS'][0]['9'].price_change == '1', down: openGame.markets.HTFT['90MINS'][0]['9'].price_change == '-1', 'active': isEventInBetSlip(openGame.markets.HTFT['90MINS'][0]['9'])}">
+                <div class="name-market-view" ng-show="openGame.markets.HTFT['90MINS'][0]['9']" ng-click="bet(openGame.markets.HTFT['90MINS'][0]['9'], openGame.markets.HTFT['90MINS'][0], openGame)">
+                    <p><i trans>AA</i></p><span ng-bind="openGame.markets.HTFT['90MINS'][0]['9'].price|oddConvert:env.oddFormat"></span>
+                </div>
+            </td>
+        </tr>
+
+
+    </table>
+
+</div>
+
+
+
+
+
+<div ng-repeat="market in openGame.otherMarkets track by market.id" class="game-list-compitishion" ng-class="{closed: market.collapsed}">
+    <div class="name-chempionship-asia more-c" ng-click="market.collapsed = !market.collapsed">
+        <h3 ng-bind="market.name"></h3>
+    </div>
+
+
+    <div class="many-columns-b cols-{{market.col_count}}">
+        <ul>
+            <li ng-repeat="event in market.events" class="more-c-view" ng-class="{'locked-market-asi': event.price == 1 || openGame.is_blocked, up: event.price_change == '1', down: event.price_change == '-1', 'active': isEventInBetSlip(event)}">
+                <div class="name-market-view" ng-click="bet(event, market, openGame)">
+                    <p><i ng-bind="event.name + ' ' + (event.base|handicapBaseFormat)"></i> </p>
+                    <span ng-bind="event.price|oddConvert:env.oddFormat" ng-class="{up: event.price_change > 0, down: event.price_change < 0}"></span>
+                </div>
+            </li>
+        </ul>
+
+
+    </div>
+
+</div>
+
+
+<!--More tamplate end-->

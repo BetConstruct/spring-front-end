@@ -1,0 +1,19 @@
+<div ng-controller="headerCtrl"  ng-if="env.sliderContent === 'warning'">
+    <div class="block-sign-in-form">
+        <div class="form-contain">
+            <h3 trans></h3>
+            <div class="form-sign-in warning">
+                <p>
+                	<span>
+                    	<b trans>Your balance is low</b> 
+                		<!--<i>({{ profile.balance|number:conf.balanceFractionSize }}&nbsp;{{ profile.currency_name|currency }})</i>-->
+                    </span>
+                    <span ng-show="conf.remindToRenewBalance.page === 'renew'" trans>Renew to get more.</span>
+                    <button trans ng-click="env.sliderContent = conf.remindToRenewBalance.page; $event.stopPropagation();" ng-show="conf.remindToRenewBalance.page === 'renew'">Renew</button>
+                    <button trans ng-click="env.sliderContent = conf.remindToRenewBalance.page;env.paymentListShown = conf.showPaymentsDescriptionByDefault || false; $event.stopPropagation();" ng-show="conf.remindToRenewBalance.page === 'deposit'">Deposit</button>
+
+                </p>
+            </div>
+        </div>
+    </div>
+</div>

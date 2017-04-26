@@ -1,0 +1,1090 @@
+  .play-off-list-wrapper {
+    background: #0A0F13 url(../../../images/backgrounds/bg-play-off.jpg#{$delete-cache}) no-repeat 50% 0;
+    background-size: 100%;
+    float: left;
+    width: 100%;
+    box-sizing: border-box;
+    margin: 48px 0 0;
+    padding: 10px 0 0;
+  }
+  .contain-play-off-b {
+    min-width: 980px;
+    max-width: 1350px;
+    box-sizing: border-box;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  .contain-play-off-b:after {
+    content: "";
+    display: block;
+    clear: both;
+  }
+  .play-off-tab-switcher {
+    float: left;
+    width: 100%;
+    box-sizing: border-box;
+    overflow: hidden;
+  }
+  .play-off-tab-switcher > ul {
+    float: left;
+    width: 100%;
+    box-sizing: border-box;
+    display: table;
+    margin: 0 0 3px;
+  }
+  .play-off-tab-switcher > ul > li {
+    width: 10%;
+    padding: 0 0 0 3px;
+    box-sizing: border-box;
+    text-align: center;
+    font: 12px/36px $font-f;
+    color: #ffffff;
+    text-transform: uppercase;
+    margin: 0;
+    display: table-cell;
+  }
+  .play-off-tab-switcher > ul > li:first-child {
+    padding: 0;
+  }
+  .play-off-tab-switcher > ul > li > p {
+    float: left;
+    width: 100%;
+    background: rgba(255, 255, 255, 0.05);
+    box-sizing: border-box;
+    padding: 0 10px;
+    transition: background 260ms;
+    cursor: pointer;
+  }
+  .play-off-tab-switcher > ul > li.active > p,
+  .play-off-tab-switcher > ul > li:hover > p {
+    cursor: default;
+    background: rgba(255, 255, 255, 0.3);
+  }
+  .play-off-tab-switcher > ul > li:hover > p {
+    cursor: pointer;
+  }
+  .play-off-tab-switcher.table-title > ul {
+    background: rgba(255, 255, 255, 0.2);
+    width: calc(100% + 91px);
+    position: relative;
+    left: -91px;
+    margin: 0;
+  }
+  .play-off-tab-switcher.table-title > ul > li {
+    width: 25%;
+    padding: 0 0 0 91px;
+    cursor: default;
+    margin: 0;
+  }
+  .play-off-tab-switcher.table-title > ul > li,
+  .play-off-tab-switcher.table-title > ul > li:hover {
+    background: rgba(255, 255, 255, 0.05);
+  }
+  .play-off-tab-switcher.table-title > ul > li > p {
+    background: none;
+    cursor: default;
+  }
+  //list view
+  .play-off-contain-wrapper {
+    float: left;
+    width: 100%;
+    box-sizing: border-box;
+    margin: 0 0 10px;
+  }
+  .playoff-list-view-wrapper {
+    float: left;
+    width: 100%;
+    box-sizing: border-box;
+    overflow: hidden;
+    margin: 10px 0 0;
+    position: relative;
+  }
+  .playoff-list-view-wrapper > ul {
+    float: left;
+    width: calc(100% + 91px);
+    box-sizing: border-box;
+    position: relative;
+    left: -91px;
+  }
+  .playoff-list-view-wrapper > ul > li {
+    float: left;
+    width: 25%;
+    box-sizing: border-box;
+    min-height: 700px;
+    padding: 0 0 0 91px;
+  }
+  .group-list-view-b {
+    float: left;
+    width: 100%;
+    box-sizing: border-box;
+    position: relative;
+  }
+  .group-list-view-b:before {
+    content: "";
+    display: block;
+    position: absolute;
+    height: 83px;
+    width: 1px;
+    background: #607087;
+    right: -46px;
+    top: 54px;
+  }
+  .playoff-list-view-wrapper > ul > li.column-1-4-b .group-list-view-b:before {
+    top: 95px;
+    height: 165px;
+  }
+  .playoff-list-view-wrapper > ul > li.column-1-2-b .group-list-view-b:before {
+    top: 174px;
+    height: 331px;
+  }
+  .couple-game-box {
+    float: left;
+    width: 100%;
+    box-sizing: border-box;
+    text-align: left;
+    margin: 10px 0 0;
+  }
+  .playoff-list-view-wrapper > ul > li.column-1-4-b .couple-game-box {
+    margin: 51px 0 41px;
+  }
+  .playoff-list-view-wrapper > ul > li.column-1-2-b .couple-game-box {
+    margin: 130px 0 128px;
+  }
+  .playoff-list-view-wrapper > ul > li:last-child .couple-game-box:first-child {
+    margin: 288px 0 46px;
+  }
+  .title-date-playoff-game-b {
+    float: left;
+    width: 100%;
+    box-sizing: border-box;
+    position: relative;
+    padding: 0 14px 0 0;
+    height: 20px;
+  }
+  .title-date-playoff-game-b > h3 {
+    float: left;
+    width: 100%;
+    box-sizing: border-box;
+    color: #c2c5cd;
+    font: 11px/20px $font-f;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+  }
+  .third-place-game-title {
+    position: absolute;
+    left: 0;
+    top: -45px;
+    width: 100%;
+    box-sizing: border-box;
+  }
+  .third-place-game-title > h3 {
+    float: left;
+    width: 100%;
+    box-sizing: border-box;
+    color: #c2c5cd;
+    font: 11px/20px $font-f;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    text-transform: uppercase;
+    overflow: hidden;
+    text-align: center;
+  }
+  .title-date-playoff-game-b > h3 > span {
+    display: inline-block;
+    padding: 0 10px 0 0;
+  }
+  .title-date-playoff-game-b > h3 > a {
+    font-weight: normal;
+    text-transform: uppercase;
+    color: #c2c5cd;
+    font: 11px/20px $font-f;
+    text-decoration: none;
+  }
+  .title-date-playoff-game-b > h3 > a:before {
+    content: "|";
+    position: relative;
+    left: -7px;
+    top: -1px;
+  }
+  .live-indicator-b {
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 14px;
+    height: 20px;
+  }
+  .live-indicator-b:before {
+    content: "";
+    display: block;
+    width: 6px;
+    height: 6px;
+    position: absolute;
+    left: 4px;
+    top: 6px;
+    border-radius: 50%;
+    background: #1d7d34;
+  }
+  .team-names-box-view {
+    float: left;
+    width: 100%;
+    box-sizing: border-box;
+  }
+  .team-names-box-view > ul {
+    float: left;
+    width: 100%;
+    box-sizing: border-box;
+  }
+  .team-names-box-view > ul > li {
+    float: left;
+    width: 100%;
+    box-sizing: border-box;
+    position: relative;
+    padding: 0 0 0 30px;
+    height: 24px;
+    border: 1px solid #3f4553;
+    color: #c2c5cd;
+    background: #3f4553;
+    margin: 0 0 2px;
+    transition: border-color 200ms, background 200ms, color 200ms;
+  }
+  .team-names-box-view > ul > li:first-child:before,
+  .team-names-box-view > ul > li:first-child:after {
+    content: "";
+    display: block;
+    position: absolute;
+    height: 1px;
+    width: 43px;
+    background: #607087;
+    right: -47px;
+    top: 23px;
+  }
+  .group-list-view-b:before {
+    display: none;
+  }
+  .group-list-view-b:nth-child(odd):before {
+    content: "";
+    display: block;
+    position: absolute;
+    height: 83px;
+    width: 1px;
+    background: #607087;
+    right: -46px;
+    top: 54px;
+  }
+  .final .team-names-box-view > ul > li:first-child:before {
+    right: auto;
+    left: -47px;
+    top: 29px;
+  }
+  .team-names-box-view > ul > li:first-child:after {
+    right: auto;
+    left: -47px;
+  }
+  .playoff-list-view-wrapper > ul > li.column-1-2-b .team-names-box-view > ul > li:first-child:after {
+    top: 23px;
+  }
+  .playoff-list-view-wrapper > ul > li:last-child .group-list-view-b .couple-game-box:first-child .team-names-box-view > ul > li:after {
+    top: 29px;
+  }
+  .playoff-list-view-wrapper > ul > li:last-child .group-list-view-b .couple-game-box:first-child .team-names-box-view > ul > li {
+    height: 30px;
+  }
+  .playoff-list-view-wrapper > ul > li:last-child .group-list-view-b .couple-game-box:first-child .team-names-box-view > ul > li.active {
+    background: $brand-color-1;
+    border-color: $brand-color-1;
+    color: set-color($brand-color-1);
+  }
+  .playoff-list-view-wrapper > ul > li:last-child .group-list-view-b .couple-game-box:first-child .team-names-box-view > ul > li .country-b-contain-w {
+    padding-left: 34px;
+  }
+  .playoff-list-view-wrapper > ul > li:last-child .group-list-view-b .couple-game-box:first-child .team-names-box-view > ul > li .flag-wrapper-view {
+    width: 20px;
+    height: 14px;
+    top: 7px;
+  }
+  .playoff-list-view-wrapper > ul > li:last-child .group-list-view-b .couple-game-box:first-child .title-date-playoff-game-b > h3 {
+    font-size: 13px;
+  }
+  .playoff-list-view-wrapper > ul > li:last-child .group-list-view-b .couple-game-box:first-child .team-names-box-view > ul > li .country-b-contain-w > p,
+  .playoff-list-view-wrapper > ul > li:last-child .group-list-view-b .couple-game-box:first-child .team-names-box-view > ul > li .country-b-contain-w > span {
+    font-size: 14px;
+    line-height: 28px;
+  }
+  .playoff-list-view-wrapper > ul > li:last-child .group-list-view-b .couple-game-box:last-child .team-names-box-view > ul > li:first-child:after {
+    display: none;
+  }
+  .team-names-box-view > ul > li:hover {
+    background: #505767;
+    color: #f3f3f5;
+  }
+  .team-names-box-view > ul > li.active {
+    border-color: #aa8136;
+    background: #2e323e;
+    color: #f3f3f5;
+  }
+  .flag-wrapper-view {
+    position: absolute;
+    left: 7px;
+    top: 6px;
+    width: 15px;
+    height: 10px;
+  }
+  .country-b-contain-w {
+    width: 100%;
+    position: absolute;
+    display: table;
+    top: 0;
+    left: 0;
+    height: 100%;
+    padding: 0 0 0 30px;
+    box-sizing: border-box;
+  }
+  .country-b-contain-w > p {
+    display: table-cell;
+    padding: 0;
+    font: 12px/22px $font-f;
+    position: relative;
+    width: 100%;
+  }
+  .country-b-contain-w > p > i {
+    position: absolute;
+    left: 0;
+    top: 0;
+    display: block;
+    padding: 0;
+    box-sizing: border-box;
+    width: 100%;
+    font-style: normal;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .country-b-contain-w > span {
+    text-align: right;
+    padding: 0 4px;
+    font: 12px/22px $font-f;
+    position: relative;
+    box-sizing: border-box;
+    white-space: nowrap;
+    transform: translate3d(0, 0, 0);
+  }
+  //list view END
+
+  //Groups view
+  .groups-wrapper-view-b {
+    float: left;
+    width: 100%;
+    box-sizing: border-box;
+    background: rgba(255, 255, 255, 0.05);
+    margin: 0 0 10px;
+  }
+  .groups-list-view-b {
+    float: left;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 15px;
+  }
+  .groups-list-view-b > ul {
+    float: left;
+    width: 100%;
+    box-sizing: border-box;
+  }
+  .groups-list-view-b > ul > li {
+    float: left;
+    width: 50%;
+    padding: 15px;
+    box-sizing: border-box;
+  }
+  .single-group-view-b {
+    float: left;
+    width: 100%;
+    box-sizing: border-box;
+    min-height: 156px;
+  }
+  .grout-view-separator {
+    float: left;
+    width: 100%;
+    box-sizing: border-box;
+  }
+  .grout-view-separator > ul {
+    float: left;
+    width: 100%;
+    box-sizing: border-box;
+    table-layout: fixed;
+    display: table;
+    background: rgba(18, 22, 35, 0.6);
+    transition: background 260ms;
+    padding: 0 10px;
+  }
+  .grout-view-separator > ul:first-child {
+    margin: 0 0 2px;
+    background: rgba(255, 255, 255, 0.2);
+  }
+  .grout-view-separator > ul > li {
+    box-sizing: border-box;
+    display: table-cell;
+    color: #7b8191;
+    font: 12px/14px $font-f;
+    width: 8%;
+    padding: 8px 0;
+    text-align: center;
+    border-bottom: 1px solid #505767;
+  }
+  .grout-view-separator > ul:first-child > li > .flag-country-view {
+    position: relative;
+    top: -1px;
+    left: 0;
+    display: inline-block;
+    vertical-align: top;
+  }
+  .grout-view-separator > ul:first-child > li {
+    color: #f3f3f5;
+    border: none;
+  }
+  .grout-view-separator > ul:last-child > li {
+    border: none;
+  }
+  .grout-view-separator > ul > li:first-child {
+    color: #f3f3f5;
+    text-align: left;
+    width: 40%;
+  }
+  .grout-view-separator > ul > li > p {
+    float: left;
+    width: 100%;
+    position: relative;
+    box-sizing: border-box;
+  }
+  .grout-view-separator > ul > li > p > i {
+    font-style: normal;
+    position: absolute;
+    left: 2px;
+    top: 0;
+  }
+  .grout-view-separator > ul > li:first-child > p {
+    width: 240px;
+    padding: 0 0 0 40px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+  }
+  .grout-view-separator > ul > li:last-child > p {
+    color: #f3f3f5;
+  }
+  .grout-view-separator > ul:first-child > li:first-child > p {
+    padding: 0;
+    width: 280px;
+  }
+  .flag-country-view {
+    position: absolute;
+    display: block;
+    left: 16px;
+    top: 0;
+    width: 16px;
+    height: 12px;
+  }
+  //Groups view END
+
+  //Standing view
+  .standing-list-view-b {
+    float: left;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 0 30px 40px;
+  }
+  .contain-play-off-b .md-progress-circular {
+    margin: 30px auto 0;
+  }
+  .standing-tab-nav-b {
+    float: left;
+    width: 100%;
+    box-sizing: border-box;
+    text-align: center;
+    font-size: 0;
+    margin: 10px 0 15px;
+  }
+  .standing-tab-nav-b > ul {
+    display: inline-block;
+    box-sizing: border-box;
+  }
+  .standing-tab-nav-b > ul > li {
+    float: left;
+    box-sizing: border-box;
+    margin: 0 10px;
+    cursor: pointer;
+  }
+  .standing-tab-nav-b > ul > li.active {
+    cursor: pointer;
+  }
+  .standing-tab-nav-b > ul > li > p {
+    float: left;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 8px 0;
+    color: #f3f3f5;
+    font: 12px/14px $font-f;
+    border-bottom: 2px solid transparent;
+    text-transform: uppercase;
+  }
+  .standing-tab-nav-b > ul > li.active > p {
+    border-bottom: 2px solid #a5aabc;
+    color: #a5aabc;
+  }
+  .by-group-list-view-b {
+    float: left;
+    width: 100%;
+    box-sizing: border-box;
+  }
+  .by-group-list-view-b > ul {
+    float: left;
+    width: 100%;
+    box-sizing: border-box;
+  }
+  .by-group-list-view-b > ul > li {
+    float: left;
+    width: 100%;
+    box-sizing: border-box;
+    margin: 0 0 5px;
+  }
+  .single-group-playoff {
+    float: left;
+    width: 100%;
+    box-sizing: border-box;
+    max-height: 28px;
+    overflow: hidden;
+    animation: play-off-closed 240ms ease;
+  }
+  .single-group-playoff.active {
+    max-height: 30000px;
+    animation: play-off-open 500ms ease-in-out;
+  }
+  @keyframes play-off-open {
+    0% {
+      max-height: 28px;
+    }
+    100% {
+      max-height: 999px;
+    }
+  }
+  @keyframes play-off-closed {
+    0% {
+      display: block;
+      max-height: 200px;
+    }
+    100% {
+      display: block;
+      max-height: 28px;
+    }
+  }
+  .group-title-box-b {
+    float: left;
+    width: 100%;
+    box-sizing: border-box;
+    background: rgba(255, 255, 255, 0.2);
+    height: 28px;
+    padding: 0 30px;
+    position: relative;
+    cursor: pointer;
+  }
+  .group-title-box-b > h3 {
+    float: left;
+    width: 100%;
+    color: #f3f3f5;
+    font: 12px/28px $font-f;
+    text-align: center;
+    box-sizing: border-box;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+  }
+  .arrow-rotate-view-b {
+    width: 30px;
+    height: 28px;
+    position: absolute;
+    right: 0;
+    top: 0;
+    font-style: normal;
+    font: 16px/28px icomoon;
+    display: block;
+    color: #c2c5cd;
+    text-align: center;
+  }
+  .arrow-rotate-view-b:before {
+    content: "\e670";
+  }
+  .single-group-playoff.active .group-title-box-b .arrow-rotate-view-b:before {
+    content: "\e671";
+  }
+  .group-game-single-view {
+    float: left;
+    width: 100%;
+    box-sizing: border-box;
+    background: rgba(18, 22, 35, 0.6);
+    padding: 0 20px 20px;
+    margin: 5px 0 0;
+  }
+  .by-group-list-view-b.by-date-view .group-game-single-view {
+    padding: 20px;
+  }
+  .group-title-box-b + .group-game-single-view {
+    margin: 2px 0 0;
+  }
+  .group-game-single-view > p {
+    float: left;
+    width: 100%;
+    box-sizing: border-box;
+    text-align: center;
+    font: 11px/30px $font-f;
+    color: #7b8191;
+  }
+  .group-game-single-view > ul {
+    float: left;
+    width: 100%;
+    box-sizing: border-box;
+  }
+  .group-game-single-view > ul > li {
+    float: left;
+    box-sizing: border-box;
+    width: calc((100% - 86px) / 2);
+    position: relative;
+    height: 30px;
+  }
+  .group-game-single-view > ul > li:nth-child(2) {
+    width: 86px;
+    text-align: center;
+  }
+  .group-game-single-view > ul > li > span {
+    color: #c2c5cd;
+    font: 16px/30px $font-f;
+  }
+  .group-game-single-view > ul > li > span:nth-child(2):before {
+    content: " : ";
+  }
+  .group-game-single-view > ul > li:first-child {
+    text-align: right;
+  }
+  .contain-name-view-country-b {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    display: table;
+    top: 0;
+    left: 0;
+  }
+  .contain-name-view-country-b > p {
+    display: table-cell;
+    padding: 0;
+    font: 16px/30px $font-f;
+    color: #f3f3f5;
+    position: relative;
+    width: 100%;
+    height: 100%;
+  }
+  .group-game-single-view > ul > li:first-child > .contain-name-view-country-b > p > i {
+    padding-right: 40px;
+  }
+  .group-game-single-view > ul > li:last-child > .contain-name-view-country-b > p > i {
+    padding-left: 40px;
+  }
+  .flag-country-view-b {
+    width: 16px;
+    height: 12px;
+    position: absolute;
+    left: 0;
+    top: 9px;
+  }
+  .group-game-single-view > ul > li:first-child .flag-country-view-b {
+    left: auto;
+    right: 0;
+  }
+  .contain-name-view-country-b > p > i {
+    position: absolute;
+    left: 0;
+    top: 0;
+    display: block;
+    padding: 0;
+    box-sizing: border-box;
+    width: 100%;
+    font-style: normal;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .contain-name-view-country-b > span {
+    display: table-cell;
+    text-align: right;
+    padding: 0;
+    font: 12px/14px $font-f;
+    position: relative;
+    box-sizing: border-box;
+  }
+  .contain-name-view-country-b > span > a {
+    display: block;
+    text-decoration: none;
+    color: set-color($brand-color-1);
+    text-transform: uppercase;
+    white-space: nowrap;
+    font-weight: normal;
+    font: 12px/30px $font-f;
+    box-sizing: border-box;
+    padding: 0;
+    background: $brand-color-1;
+    max-width: 0;
+    overflow: hidden;
+    transition: max-width 300ms, padding 300ms, background 300ms;
+  }
+  .contain-name-view-country-b > span > a:hover {
+    background: lighten($brand-color-1, 10);
+  }
+  .group-game-single-view:hover .contain-name-view-country-b > span > a {
+    max-width: 250px;
+    padding: 0 20px;
+  }
+  //Standing view END
+
+  @media screen and (max-width: 1260px) {
+    .contain-play-off-b {
+      padding: 20px 15px;
+      width: 980px;
+    }
+    .grout-view-separator > ul > li:first-child > p {
+      width: 120px;
+      padding: 0 0 0 40px;
+    }
+    .grout-view-separator > ul:first-child > li:first-child > p {
+      padding: 0;
+      width: 160px;
+    }
+  }
+  .contain-name-view-country-b-info-j {
+    width: 60%;
+    height: 100%;
+    position: absolute;
+    top: -4px;
+    left: 0;
+    text-align: left;
+  }
+  .contain-name-view-country-b-info-j p {
+    display: block;
+    color: #f3f3f5;
+  }
+  .contain-name-view-country-b-info-j p i {
+    font-style: normal;
+    font-size: 10px;
+    line-height: 14px;
+  }
+  .contain-name-view-country-b-info-j p:last-child {
+    text-transform: uppercase;
+    margin-top: 5px;
+  }
+  .title-date-playoff-game-b > h3 > span.stadium-name-j {
+    max-width: 176px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    vertical-align: top;
+  }
+  .contain-name-view-country-b {
+    z-index: 0;
+  }
+  .contain-name-view-country-b-info-j {
+    z-index: 10000;
+  }
+  .contain-name-view-country-b-info-j p:last-child i:before, .title-date-playoff-game-b > h3 > span.stadium-name-j:before {
+    content: "\e60a";
+    font: 12px/16px icomoon;
+    vertical-align: middle;
+    color: #C14C43;
+    display: inline-block;
+    margin: 0 3px 0 0;
+  }
+  .playoff-list-view-wrapper > button, .playoff-list-view-wrapper > a {
+    display: block;
+    color: set-color($brand-color-1);
+    text-transform: uppercase;
+    white-space: nowrap;
+    font-weight: normal;
+    font: 12px/30px Arial, Helvetica, sans-serif;
+    box-sizing: border-box;
+    background: $brand-color-1;
+    transition: background 300ms;
+    padding: 0 20px;
+    border: 0;
+    cursor: pointer;
+    position: absolute;
+    top: 10px;
+    text-decoration: none;
+    right: 0;
+    z-index: 90;
+    &:hover {
+      background: lighten($brand-color-1, 10);
+    }
+  }
+  .playoffmap .popup-wrapper-j {
+    width: 700px;
+    .pu-contain-j {
+      padding: 0;
+      .default-style {
+        height: 400px;
+      }
+    }
+  }
+  .team-group-view-l {
+    float: left;
+    width: 100%;
+    box-sizing: border-box;
+    min-height: 156px;
+    .div-layout-1{
+      width: 40%;
+      float: left;
+    }
+    .div-layout-2{
+      width: 60%;
+      float: right;
+    }
+    .grout-view-separator.team-names-l {
+      width: 100%;
+      padding: 20px 0 20px 20px;
+      .flag-country-view{top: 8px;}
+      ul {
+        position: relative;
+        transition: background 260ms;
+        li {
+          &:first-child {
+            p {
+              padding: 0 30px;
+              width: 100%;
+            }
+            width: 100%;
+          }
+          &:last-child {
+            a {
+              color: #f3f3f5;
+              text-decoration: initial;
+              background: #1a7051;
+              padding: 3px 18px;
+            }
+          }
+          width: 25%;
+        }
+        &:not(:first-child) {
+          &:after {
+            position: absolute;
+            content: "\e672";
+            font: 16px/30px icomoon;
+            right: 12px;
+            top: 0;
+            color: #7b8191;
+          }
+          &:hover, &.active {
+            background: rgba(255, 255, 255, 0.1);
+            transition: background 260ms;
+          }
+        }
+      }
+    }
+    .grout-view-separator.team-player-view-l {
+      padding: 20px;
+      width: 100%;
+      color: white;
+      .flag-country-view{
+        top: -10px;
+        right: 0;
+      }
+      ul {
+        &:first-child {
+          margin: 0 0 2px;
+          background: rgba(255, 255, 255, 0.2);
+          height: 40px;
+          li {
+            p {
+              font-size: 18px;
+              line-height: 30px;
+              padding-left: 5px;
+            }
+          }
+          img {
+            width: 22px;
+            vertical-align: sub;
+            float: right;
+          }
+        }
+        &:nth-child(2) {
+          margin: 0 0 2px;
+          background: rgba(255, 255, 255, 0.2);
+        }
+        &:nth-child(n+3) {
+          cursor: pointer;
+          li {
+            &:last-child {
+              p {
+                color: #7b8191;
+              }
+            }
+          }
+        }
+        &:not(:first-child) {
+          li {
+            &:first-child {
+              width: 5%;
+              color: white;
+              p {
+                padding: 0;
+                text-indent: 5px;
+              }
+            }
+            &:nth-child(2) {
+              width: 55%;
+              color: white;
+              text-align: left;
+            }
+            &:last-child {
+              width: 40%;
+              text-align: right;
+            }
+          }
+        }
+      }
+    }
+  }
+  .popup-block {
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.91);
+    z-index: 99999;
+    .closed-popup-form {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      z-index: 55;
+    }
+    .register-steps-b {
+      padding: 10px;
+      background: rgb(18, 22, 35);
+    }
+    .player-info-popup {
+      .name-player-l {
+        width: 100%;
+        height: 40px;
+        border-bottom: 1px solid #171c2c;
+        h3 {
+          color: #c1c4cd;
+          font: 16px/30px Arial, Helvetica, sans-serif !important;
+          margin: 5px 0 5px;
+          box-shadow: none;
+          text-transform: none;
+          text-align: center;
+        }
+      }
+      .number-player-l {
+        position: relative;
+        width: auto;
+        padding: 15px 50px;
+        overflow: hidden;
+        height: 220px;
+        .left-arrow {
+          color: #7b8191;
+          &:hover {
+            color: #c1c4cd;
+            transition: color 260ms;
+          }
+          &:after {
+            position: absolute;
+            font-weight: 400;
+            content: "\e674";
+            font: 56px icomoon;
+            font-weight: 700;
+            left: 0px;
+            top: 28%;
+            transform: rotateZ(90deg);
+          }
+        }
+        .right-arrow {
+          color: #7b8191;
+          &:hover {
+            color: #c1c4cd;
+            transition: color 260ms;
+          }
+          &:after {
+            position: absolute;
+            font-weight: 400;
+            content: "\e674";
+            font: 56px icomoon;
+            font-weight: 700;
+            right: 0px;
+            top: 28%;
+            transform: rotateZ(-90deg);
+          }
+        }
+        .t-shirt {
+          width: auto;
+          height: 200px;
+          margin: 0 auto;
+          background: url("http://statistics.betconstruct.com/images/sh/0/1-252.png") no-repeat center;
+          span {
+            padding: 10px;
+            background: rgba(0, 0, 0, 0.51);
+            display: inline-block;
+            color: white;
+            margin-top: 25%;
+          }
+        }
+        div {
+          &:last-child {
+            font: 16px/36px Arial, Helvetica, sans-serif !important;
+            margin: 0 0 5px;
+            box-shadow: none;
+            text-transform: none;
+            text-align: center;
+            color: #7b8191;;
+          }
+        }
+      }
+      .player-info-l {
+        border-top: 1px solid #171c2c;
+        ul {
+          height: 30px;
+          width: 100%;
+          line-height: 30px;
+          padding: 0;
+          li {
+            color: #7c8292;
+            padding: 0 10px;
+            &:first-child {
+              float: left;
+            }
+            &:last-child {
+              float: right;
+            }
+          }
+          &:nth-child(2n) {
+            background: rgba(0, 0, 0, 0.1);
+          }
+        }
+      }
+    }
+  }
+  .check-l{
+    &:after{
+      position: relative;
+      content: "\e625";
+      font: 12px icomoon;
+      right: 0;
+      top: 3px;
+      color: #7b8191;
+    }
+  }
+  .team-group-view-l .grout-view-separator.team-player-view-l ul {
+    &:hover, &.active {
+      background: rgba(255, 255, 255, 0.1);
+    }
+  }
+  .grout-view-separator.team-player-view-l > ul > li:last-child{
+    text-align: right;
+  }
+  .team-group-view-l .grout-view-separator.team-player-view-l ul:nth-child(2) > li {
+    border: none;
+  }

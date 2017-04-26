@@ -1,0 +1,18 @@
+<div class="ref-social-icons-j">
+    <a class="cms-jcon-vk1" ng-if="conf.vkontakteUrlLangs[env.lang] || conf.vkontakteUrl" href="{{conf.vkontakteUrlLangs[env.lang] || conf.vkontakteUrl}}" target="_blank"></a>
+    <a class="cms-jcon-youtube1" ng-if="conf.youtubeUrlLangs[env.lang] || conf.youtubeUrl" href="{{conf.youtubeUrlLangs[env.lang] || conf.youtubeUrl}}" target="_blank"></a>
+    <a class="cms-jcon-facebook_icon" ng-if="conf.facebookUrlLangs[env.lang] || conf.facebookUrl" href="{{conf.facebookUrlLangs[env.lang] || conf.facebookUrl}}" target="_blank"></a>
+    <a class="cms-jcon-linkedin" ng-if="conf.linkedInUrlLangs[env.lang] || conf.linkedInUrl" href="{{conf.linkedInUrlLangs[env.lang] || conf.linkedInUrl}}" target="_blank"></a>
+    <a class="cms-jcon-pinterest" ng-if="conf.pinterestUrlLangs[env.lang] || conf.pinterestUrl" href="{{conf.pinterestUrlLangs[env.lang] || conf.pinterestUrl}}" target="_blank"></a>
+    <a class="cms-jcon-insstagram1" ng-if="conf.instagramUserName" href="http://instagram.com/{{conf.instagramUserName}}?ref=badge" target="_blank"></a>
+    <a class="cms-jcon-twitter1" ng-if="conf.twitterAccount" href="https://twitter.com/{{conf.twitterAccount[$location.path().split('/').join('')] || conf.twitterAccount['default'] || conf.twitterAccount[env.lang] || conf.twitterAccount}}/" target="_blank"></a>
+    <a class="cms-jcon-google_plus_icon" ng-if="conf.googlePlusUrl" href="{{conf.googlePlusUrl}}" target="_blank"></a>
+    <a class="cms-jcon-whatsapp" ng-if="conf.whatsappUrlLangs[env.lang] || conf.whatsappUrl" href="{{conf.whatsappUrlLangs[env.lang] || conf.whatsappUrl}}" title="{{conf.whatsappTitles[env.lang] || conf.whatsappTitle}}" target="_blank"></a>
+    <a class="cms-jcon-OK_icon" ng-if="conf.odnoklassnikiUrlLangs[env.lang] || conf.odnoklassnikiUrl" href="{{conf.odnoklassnikiUrlLangs[env.lang] || conf.odnoklassnikiUrl}}" target="_blank"></a>
+    <a class="cms-jcon-skype" ng-if="conf.skypeAccountLangs[env.lang] || conf.skypeAccount" href="{{conf.skypeAccountLangs[env.lang] || conf.skypeAccount}}" target="_blank"></a>
+    <a class="cms-jcon-viber" ng-if="conf.viberNumberLangs[env.lang] || conf.viberNumber" href="{{conf.viberNumberLangs[env.lang] || conf.viberNumber}}" target="_blank"></a>
+    <a class="cms-jcon-vimeo" ng-if="conf.vimeoUrlLangs[env.lang] || conf.vimeoUrl" href="{{conf.vimeoUrlLangs[env.lang] || conf.vimeoUrl}}" target="_blank"></a>
+    <a class="cms-jcon-reddit" ng-if="conf.redditUrlLangs[env.lang] || conf.redditUrl" href="{{conf.redditUrlLangs[env.lang] || conf.redditUrl}}" target="_blank"></a>
+    <a class="cms-jcon-telegram" ng-if="conf.telegramUrlLangs[env.lang] || conf.telegramUrl" href="{{conf.telegramUrlLangs[env.lang] || conf.telegramUrl}}" target="_blank"></a>
+    <a ng-repeat="icon in conf.additionalIconsInFooter" ng-href="{{icon.url}}" target="{{icon.target || '_blank'}}" ng-class="icon.name"></a>
+</div>

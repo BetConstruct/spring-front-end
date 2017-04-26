@@ -1,0 +1,217 @@
+@mixin live-casino-list-view {
+	.live-casino-list-view-j{
+		float: left;
+		width: 100%;
+		min-height: 100%;
+		background:#0c101e;
+		padding-top: 90px;
+	}
+	.lc-lv-guide{
+		width: 100%;
+		max-width: 1380px;
+		min-width: 980px;
+		margin: auto;
+		color: #c2c2d5;
+		font: 12px/14px $font-f;
+	}
+	.lc-lv-guide aside{
+		width: 260px;
+		float: left;
+		background: #212433;
+		padding: 0 20px;
+		box-sizing: border-box;
+		position: fixed;
+	}
+	.lc-lv-guide aside h5 {
+		text-transform: uppercase;
+		height: 40px;
+		font-size: 18px;
+		line-height: 40px;
+		font-weight: normal;
+		margin: 10px 0;
+		border-bottom: 1px solid #4D505C;
+		float: left;
+		width: 100%;
+	}
+	.lc-lv-guide aside ul {
+		float: left;
+		display: block;
+		width: 100%;
+		margin: 0 0 10px;
+	}
+	.lc-lv-guide aside li{
+		display: block;
+		height: 36px;
+		font-size: 14px;
+		line-height: 36px;
+		white-space: nowrap;
+		width: 100%;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		transition: color 0.3s;
+	}
+	.lc-lv-guide aside li:hover {
+		color: #f3f3f5;
+	}
+	.lc-lv-guide aside li.active{
+		color: $hero-color;
+		pointer-events: none;
+	}
+	.lc-lv-content-j{
+		width: calc(100% - 290px);
+		float: right;
+	}
+	.lc-lv-content-j fieldset {
+		padding-top: 80px;
+		border-top: 3px solid #212433;
+		margin-bottom: 40px;
+	}
+	.lc-lv-content-j fieldset legend {
+		margin: auto;
+		padding: 0 30px;
+		font-size: 32px;
+		font-weight: normal;
+	}
+	.lc-lv-content-j fieldset legend img {
+		max-height: 62px;
+		display: block;
+		margin: auto;
+	}
+	.lc-lv-content-j fieldset ul {
+		display: block;
+		text-align: center;
+		font-size: 0;
+	}
+	.lc-lv-content-j li { 
+		display: inline-block;
+		width: 350px;
+		margin: 0 6px 60px;
+		text-align: center;
+		font-size: 16px;
+		text-transform: uppercase;
+		transition: 0.15s color;
+	}
+	.lc-lv-content-j li:hover {
+		color: #f3f3f5;
+	}
+	.body-wrapper.livedealer fieldset .menu-games.dealer {
+		margin: -30px 0 35px 0;
+		border-radius: 5px;
+		height: 36px;
+		overflow: hidden;
+		.subtop-game-menu-j {
+			margin: 0;
+			background: #212433;
+			.contein-nav-g {
+				width: 100% !important;
+				li {
+					display: inline-block;
+					height: 36px;
+					margin: 0 44px 0 0;
+					float: none;
+					width: auto;
+				}
+			}
+		}
+	}
+	.lc-lv-content-j li i {
+		display: block;
+		width: 100%;
+		height: 200px;
+		border-radius: 0 25px 0 25px;
+		margin-bottom: 25px;
+		&.game-image-by-id-j-VGS101{
+			background: url(../../../images/live-casino/live-blackjack.jpg#{$delete-cache});
+		}
+		&.game-image-by-id-j-VGS104{
+			background: url(../../../images/live-casino/live-bet-on-poker.jpg#{$delete-cache});
+		}
+		&.game-image-by-id-j-VGS103{
+			background: url(../../../images/live-casino/live-baccarat.jpg#{$delete-cache});
+		}
+		&.game-image-by-id-j-VGS102{
+			background: url(../../../images/live-casino/live-roulette-2.jpg#{$delete-cache});
+		}
+		&.game-image-by-id-j-VGS105{
+			background: url(../../../images/live-casino/live-bet-on-baccarat.jpg#{$delete-cache});
+		}
+		&.game-image-by-id-j-VGS106{
+			background: url(../../../images/live-casino/live-russian-poker.jpg#{$delete-cache});
+		}
+		&.game-image-by-id-j-VGS107{
+			background: url(../../../images/live-casino/live-roulette-fortune.jpg#{$delete-cache});
+		}
+		&.game-image-by-id-j-EVL104{
+			background: url(../../../images/live-casino/live-roulette.jpg#{$delete-cache});
+		}
+		&.game-image-by-id-j-EVL109{
+			background: url(../../../images/live-casino/three-card-poker.jpg#{$delete-cache});
+		}
+		&.game-image-by-id-j-EVL108{
+			background: url(../../../images/live-casino/casino-holdem.jpg#{$delete-cache});
+		}
+		&.game-image-by-id-j-EVL105{
+			background: url(../../../images/live-casino/live-blackjack-2.jpg#{$delete-cache});
+		}
+		&.game-image-by-id-j-EVL103{
+			background: url(../../../images/live-casino/live-baccarat-2.jpg#{$delete-cache});
+		}
+		&.game-image-by-id-j-NETlcblackjack_sw{
+			background: url(../../../images/live-casino/netent-live-blackjack.jpg#{$delete-cache});
+		}
+		&.game-image-by-id-j-NETlcroulette_sw{
+			background: url(../../../images/live-casino/netent-live-roulette.jpg#{$delete-cache});
+		}
+		&.game-image-by-id-j-NETlcblackjackcdlr_sw{
+			background: url(../../../images/live-casino/netent-live-blackjack-common-draw.jpg#{$delete-cache});
+		}
+		&.game-image-by-id-j-NETlcrouletteauto_sw{
+			background: url(../../../images/live-casino/netent-auto-roulette.jpg#{$delete-cache});
+		}
+		&.game-image-by-id-j-EZGroulette.studio-1{
+			background: url(../../../images/live-casino/Latam-Mini-350x200-Roulette.jpg#{$delete-cache});
+		}
+		&.game-image-by-id-j-EZGblackjack.studio-1{
+			background: url(../../../images/live-casino/Latam-Mini-350x200-BJ.jpg#{$delete-cache});
+		}
+		&.game-image-by-id-j-EZGbaccarat.studio-1{
+			background: url(../../../images/live-casino/Latam-Mini-350x200-Bac.jpg#{$delete-cache});
+		}
+		&.game-image-by-id-j-EZGroulette.studio-30{
+			background: url(../../../images/live-casino/Asia-Mini-350x200-Roulette.jpg#{$delete-cache});
+		}
+		&.game-image-by-id-j-EZGbaccarat.studio-30{
+			background: url(../../../images/live-casino/Asia-Mini-350x200-Bac.jpg#{$delete-cache});
+		}
+		&.game-image-by-id-j-EZG20{
+			background: url(../../../images/live-casino/.jpg#{$delete-cache});
+		}
+		&.game-image-by-id-j-EZGkeno{
+			background: url(../../../images/live-casino/Baltic-Mini-350x200-Keno.jpg#{$delete-cache});
+		}
+		&.game-image-by-id-j-EZGlottery{
+			background: url(../../../images/live-casino/Baltic-Mini-350x200-Numbers.jpg#{$delete-cache});
+		}
+		&.game-image-by-id-j-EZG7{
+			background: url(../../../images/live-casino/Euro-Mini-350x200-AutoRoulette.jpg#{$delete-cache});
+		}
+		&.game-image-by-id-j-EZGblackjack.studio-60{
+			background: url(../../../images/live-casino/Baltic-Mini-350x200-BJ.jpg#{$delete-cache});
+		}
+		&.game-image-by-id-j-EZGroulette.studio-60{
+			background: url(../../../images/live-casino/Baltic-Mini-350x200-Roulette.jpg#{$delete-cache});
+		}
+		&.game-image-by-id-j-EZGblackjack.studio-50{
+			background: url(../../../images/live-casino/Easteuro-Mini-350x200-BJ.jpg#{$delete-cache});
+		}
+		&.game-image-by-id-j-EZGroulette.studio-50{
+			background: url(../../../images/live-casino/Easteuro-Mini-350x200-Roulette.jpg#{$delete-cache});
+		}
+		&.game-image-by-id-j-EZGcasino_holdem.studio-50{
+			background: url(../../../images/live-casino/Live_Holdem.jpg#{$delete-cache});
+		}
+		&.game-image-by-id-j-EZGroulette.studio-4{
+			background: url(../../../images/live-casino/Live_Auto_Roulette.jpg#{$delete-cache});
+		}
+	}
+}

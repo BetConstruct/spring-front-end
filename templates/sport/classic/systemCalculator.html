@@ -1,0 +1,80 @@
+<div class="system-calculator" ng-controller="systemCalculatorController" ng-init="init()">
+    <div class="system-calculator-title" id="calculator-draggable-header">
+        <h3 trans>System Calculator</h3>
+        <div class="closed-calculator-b" ng-click="resetCalculator(); $root.showSystemCalculator = false"></div>
+    </div>
+    <div class="calculator-select-contain">
+        <div class="select-calc-box-b">
+            <div class="select-block">
+                <select trans="attr-only" title="Choose Option" ng-change="selectionChangeHandler()" ng-model="params.selectedSysOption" ng-options="opt as opt.label for opt in systemPicker"></select>
+            </div>
+        </div>
+        <div class="total-stake-input-b">
+            <input type="text" ng-model="params.stake" placeholder="Total stake..." ng-change="reCalculate()"  maxlength="10" prevent-input="[^\d\.]"  trans="attr-only">
+        </div>
+    </div>
+    <div class="system-events-view-box">
+        <div class="event-view-box-separator">
+            <ul>
+                <li></li>
+                <li></li>
+                <li>
+                    <div class="sistem-event-icons-b system-win" title="Win" ng-click="changeAllFlags(0)" trans="attr-only"></div>
+                </li>
+                <li>
+                    <div class="sistem-event-icons-b system-lost" title="Lose" ng-click="changeAllFlags(1)" trans="attr-only"></div>
+                </li>
+                <li>
+                    <div class="sistem-event-icons-b system-return" title="Void" ng-click="changeAllFlags(2)" trans="attr-only"></div>
+                </li>
+            </ul>
+        </div>
+        <div class="scroll-view-contain-calculator" >
+            <div class="event-view-box-separator" ng-repeat="event in params.events">
+                <ul>
+                    <li>{{$index+1}}</li>
+                    <li><input type="text" ng-model="event.odd" maxlength="8" ng-change="((this.value > 999.99) ? this.value = '999.99' : ''); reCalculate()"  prevent-input="[^\d\.]" tabindex="{{$index + 1}}" onkeyup="((this.value > 999.99) ? this.value = '999.99' : '')"></li>
+                    <li>
+                        <input type="radio" name="won-{{$index}}" ng-model="event.flag" ng-change="reCalculate()" ng-value=0>
+                        <label></label>
+                    </li>
+                    <li>
+                        <input type="radio" name="lost-{{$index}}" ng-model="event.flag" ng-change="reCalculate()" ng-value=1>
+                        <label></label>
+                    </li>
+                    <li>
+                        <input type="radio" name="draw-{{$index}}" ng-model="event.flag" ng-change="reCalculate()" ng-value=2>
+                        <label></label>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="full-calculation-information-b">
+        <div class="mini-calc-info-box">
+            <ul>
+                <li>
+                    <p><span trans>Combinations</span></p>
+                    <span>{{result.options}}</span>
+                </li>
+                <!--<li>
+                    <p trans>Total Stake</p>
+                    <span>{{params.stake}}</span>
+                </li>-->
+                <li>
+                    <p><span trans>Stake per combination</span></p>
+                    <span>{{params.stakePerBet}}</span>
+                </li>
+                <li>
+                    <p><span trans>Winnings</span></p>
+                    <span>{{result.win}}</span>
+                </li>
+            </ul>
+        </div>
+        <div class="calculator-buttons-contain">
+            <ul>
+                <li><button ng-click="resetCalculator()" trans>Reset</button></li>
+            </ul>
+        </div>
+    </div>
+</div>

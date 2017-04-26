@@ -1,0 +1,67 @@
+<div class="wrap-b">
+    <div class="w-dealer-x">
+        <div class="w-image-top">
+            <div class="w-image-top-light"></div>
+            <div class="baner-wrap">
+                <div class="baner-wrap-light"></div>
+
+                <div class="left-baner-d">
+                    <div ng-show="firstView" ng-mouseover="t3DBRotationControl('l1', 'over');"
+                         ng-mouseleave="t3DBRotationControl('l1', 'out');">
+                        <a ng-click="top3DBannerClickHandler(top3DBanners.l1.list[top3DBanners.l1.index].link); $event.stopPropagation();"
+                           ng-href="{{ top3DBanners.l1.list[top3DBanners.l1.index].link }}"><img class="animate-show" ng-src="{{ top3DBanners.l1.list[top3DBanners.l1.index].imageurl }}" alt=""></a>
+                    </div>
+                    <div ng-show="!firstView" ng-mouseover="t3DBRotationControl('l2', 'over');"
+                         ng-mouseleave="t3DBRotationControl('l2', 'out');">
+                        <a ng-click="top3DBannerClickHandler(top3DBanners.l2.list[top3DBanners.l2.index].link); $event.stopPropagation();"
+                           ng-href="{{ top3DBanners.l2.list[top3DBanners.l2.index].link }}"><img ng-src="{{ top3DBanners.l2.list[top3DBanners.l2.index].imageurl }}" alt=""></a>
+                    </div>
+                </div>
+
+                <div class="center-info-dealer"></div>
+
+                <div class="right-baner-d">
+                    <div ng-show="firstView" ng-mouseover="t3DBRotationControl('r1', 'over');"
+                         ng-mouseleave="t3DBRotationControl('r1', 'out');">
+                        <a ng-click="top3DBannerClickHandler(top3DBanners.r1.list[top3DBanners.r1.index].link); $event.stopPropagation();"
+                           ng-href="{{ top3DBanners.r1.list[top3DBanners.r1.index].link }}"><img ng-src="{{ top3DBanners.r1.list[top3DBanners.r1.index].imageurl }}" alt=""></a>
+                    </div>
+                    <div ng-show="!firstView" ng-mouseover="t3DBRotationControl('r2', 'over');"
+                         ng-mouseleave="t3DBRotationControl('r2', 'out');">
+                        <a ng-click="top3DBannerClickHandler(top3DBanners.r2.list[top3DBanners.r2.index].link); $event.stopPropagation();"
+                           ng-href="{{ top3DBanners.r2.list[top3DBanners.r2.index].link }}"><img ng-src="{{ top3DBanners.r2.list[top3DBanners.r2.index].imageurl }}" alt=""></a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div ng-if="liveGamesConf.allViewsEnabled" class="left-change-arrow"
+             ng-click="view3DChangeArrowClick(); $event.stopPropagation();">
+            <span ng-show="firstView" trans>Live Keno</span>
+            <span ng-show="!firstView" trans>Casino games</span>
+        </div>
+        <div class="w-image-bottom" ng-show="firstView" ng-if="liveGamesConf.allViewsEnabled || (!liveGamesConf.allViewsEnabled && firstView)">
+            <div class="contain-bottom-games">
+                <div class="roulette-f" ng-click="table3DClickHandler(liveGamesConf.games.roulette.id)"></div>
+                <div class="baccart-f" ng-click="table3DClickHandler(liveGamesConf.games.baccarat.id)"></div>
+                <div class="blackjack-f" ng-click="table3DClickHandler(liveGamesConf.games.blackjack.id)"></div>
+                <div class="poker-f" ng-click="table3DClickHandler(liveGamesConf.games.betOnPoker.id)"></div>
+            </div>
+        </div>
+
+        <div class="w-image-keno" ng-show="!firstView" ng-if="liveGamesConf.allViewsEnabled || (!liveGamesConf.allViewsEnabled && !firstView)">
+            <div class="contain-bottom-games">
+                <div class="chip-contain">
+                    <div class="keno-table" ng-click="table3DClickHandler(liveGamesConf.games.keno.id)"></div>
+                    <div class="draw-table" ng-click="table3DClickHandler(liveGamesConf.games.draw.id)"></div>
+                </div>
+            </div>
+        </div>
+        <div ng-if="liveGamesConf.allViewsEnabled" class="right-change-arrow"
+             ng-click="view3DChangeArrowClick(); $event.stopPropagation();">
+            <span ng-show="!firstView" trans>Casino games</span>
+            <span ng-show="firstView" trans>Live Draw 6 of 49</span>
+        </div>
+    </div>
+</div>

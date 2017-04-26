@@ -1,0 +1,160 @@
+<div class="bet-history"  ng-if="!conf.enableMixedView && env.sliderContent === 'shukaBetHistory'"
+     ng-controller="myBetsCtrl" ng-init="initBetHistory('shukaBetHistory')">
+    <div class="contein-bet-history">
+        <!--Блок с датой-->
+        <div class="left-block-history">
+            <h3 trans>Bet History</h3>
+            <div class="form-sign-in">
+                <label trans>Time Period</label>
+                <div class="select-block">
+                    <select ng-model="dataSelectedIndex" ng-change="loadBetHistory('shukaBetHistory')">
+                        <option ng-repeat="d in betHistoryParams.dateRanges" value="{{ $index }}"  ng-class="{ 'data-range-month' : d.type == 'month', 'data-range-week': d.type == 'week' }">{{ d.str }}</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-sign-in">
+                <label trans>Type</label>
+                <div class="select-block">
+                    <select ng-model="betHistoryParams.type"  ng-change="loadBetHistory('shukaBetHistory')">
+                        <option value="-1" trans>All</option>
+                        <option value="0" trans>lay</option>
+                        <option value="1" trans>back</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-sign-in">
+                <label trans>Outcome</label>
+
+                <div class="select-block">
+                    <select ng-model="betHistoryParams.outcome"  ng-change="loadBetHistory('shukaBetHistory')">
+                        <option value="-1" trans>All</option>
+                        <option value="0" trans>Unsettled</option>
+                        <option value="1" trans>Lost</option>
+                        <option value="2" trans>Returned</option>
+                        <option value="3" trans>Won</option>
+                        <option value="5" trans>Cashed out</option>
+                    </select>
+                </div>
+            </div>
+
+        </div>
+        <!--Блок с датой END-->
+        <div class="right-block-history error" ng-if="errorLoadingHistory">
+            <p>
+                <span trans>Error occured</span>
+                <span trans>Please try later or contact support.</span>
+            </p>
+        </div>
+
+        <vbet-loader class="page-center right-block-history" ng-if="!betHistoryLoaded && !errorLoadingHistory"></vbet-loader>
+        <!--all bets block-->
+        <div class="right-block-history" ng-if="betHistoryLoaded">
+            <div class="All-Bets-history">
+                <h3 trans>All Bets</h3>
+                <div class="history-list">
+                    <ul ng-repeat="bet in betHistory">
+                        <li class="list-date">
+                            <p class="live-indicator">
+                                <b ng-show="bet.type==='1' && bet.event.is_live === '1'">Live </b>
+                                <b ng-if="bet.ew">ew</b>
+                                <b ng-if="bet.super_bet" class="superbet-icon">S</b>
+                            </p>{{bet.date_time|formatDate:'full'}}</li>
+                        <li class="history-name-team">
+                            <div class="mini-express-b">
+                                <span>
+                                    <span class="team-n-information">{{bet.event.game_name}}</span>
+                                    <div class="history-date-mini">
+                                        <span ng-class="{'lay': bet.type === '0'}">{{bet.type === '0' ? "Lay" : "Back"}}</span>, {{bet.event.game_start_date|formatDate:'full'}}
+                                    </div>
+                                 </span>
+                                <div class="bet-history-popup">
+                                    <div class="express-contain">
+                                        <div class="arrow-sport"></div>
+
+                                        <div ng-show="bet.type=='Toto'"><span trans>Draw</span> <span>N{{bet.draw_number}}</span></div>
+                                        <ul>
+                                            <li ng-click="gotoBetGame(bet.event)">
+                                                <div class="result-bet-icon" ng-class="{'win': bet.event.status=='3', 'lost': bet.event.status=='1', 'watch': bet.event.status=='0', 'return': bet.event.status=='2'}"></div>
+                                                <p>
+                                                    <span class="popup-coef" ng-show="bet.event.coeficient || bet.event.k_type == 11">({{bet.event.k_type == 11 ? 'SP' : (bet.event.coeficient|oddConvert:env.oddFormat)}})</span>
+                                                    <span class="popup-sport-name">{{bet.event.sport_name}}</span>
+                                                    <span class="popup-date-game"> {{bet.event.game_start_date|formatDate:'full'}}</span>
+                                                    <span class="popup-live-game" ng-show="bet.event.is_live==1">Live</span>
+                                                </p>
+                                                <span class="event-name">{{bet.event.game_name}}</span>
+                                                <span class="event-pick">
+                                                    <span trans>Pick</span>: {{bet.event.event_name}} <span ng-show="bet.event.basis">({{bet.event.basis}})</span> <span ng-show="bet.event.selection">({{poolBettingSelection(bet.event.selection)}})</span>
+                                                </span>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </li>
+                        <li class="chempionship-history">
+                            <div><span class="team-n-information"><span trans>Pick</span>: {{bet.event.event_name}}</span>
+                                <span ng-show="bet.event.basis">({{bet.event.basis}})</span>
+                            <div class="bet-id">id: <span ng-bind="bet.id"></span></div>
+                            <div class="bet-id"><span trans>Liability</span>: <span ng-bind="bet.liability"></span> <span>{{bet.currency|currency}}</span></div>
+                        </li>
+                        <li class="maney-rate">
+                            <p>{{bet.type == 1 && bet.event.k_type ==11 ? 'SP' : (bet.k|oddConvert:env.oddFormat)}} </p> {{bet.currency|currency}}
+                            <span ng-show="!bet.bonus_bet_amount && bet.amount">{{bet.amount}}</span>
+                            <span ng-show="bet.bonus_bet_amount && !bet.amount" title="Bet placed from bonus." class="bonus" trans="attr-only">{{bet.bonus_bet_amount}}</span>
+                            <span ng-show="bet.bonus_bet_amount && bet.amount" title="{{('Part of bet placed from bonus.'|translate) + ' (' + bet.amount + ' + ' + bet.bonus_bet_amount + ')'}}" class="bonus-combined">{{bet.bonus_bet_amount + bet.amount}}</span>
+
+                        </li>
+                        <li class="rezult-rate">
+                            <span class="unsettled-rezult"  ng-show="bet.status == -5" trans>On Hold</span>
+                            <span class="lost-rezult"       ng-show="bet.status == -4" trans>Declined</span>
+                            <span class="unsettled-rezult"  ng-show="bet.status == 0" trans>unsettled</span>
+                            <span class="lost-rezult"       ng-show="bet.status == 1" trans>lost</span>
+                            <span class="unsettled-rezult"  ng-show="bet.status == 2" trans>returned</span>
+
+                            <div ng-show="bet.status == 3">
+                                <span class="won-rezult" trans>Won</span>
+                                <p>
+                                    {{bet.currency|currency}}
+                                    <i ng-bind="bet.bonus_amount" ng-show="bet.bonus_amount" class="bonus" title="Bonus" trans="attr-only"></i>
+                                    <b ng-show="bet.bonus_amount && bet.payment" class="bonus-combined">+</b>
+                                    <b ng-show="bet.payment">{{bet.payment}}</b>
+                                </p>
+                            </div>
+                            <div ng-show="bet.status == 5">
+                                <span class="won-rezult"  trans>Cashed out</span>
+                                <p ng-show="bet.payout">
+                                    {{bet.currency|currency}}
+                                    <b >{{bet.payout}}</b>
+                                </p>
+                            </div>
+                            <div class="cash-out-button" ng-show="bet.status == 0 && bet.calculatedCashout !==undefined">
+                                <button ng-click="broadcast('open.cashoutDialog', bet)" ng-disabled="!bet.calculatedCashout || !bet.cashoutEnabled" title="{{bet.calculatedCashout ? bet.calculatedCashout + ' ' + bet.currency  : ('Cash-out is not available at the moment'|translate)}}">
+                                    <b trans>Cash-out</b>
+                                    <b ng-bind="bet.calculatedCashout + ' ' + bet.currency" ng-show="bet.calculatedCashout"></b>
+                                </button>
+                            </div>
+                        </li>
+                    </ul>
+
+                </div>
+            </div>
+            <!--pagination-->
+            <div class="pagination" ng-show="betHistory.length && betHistoryPages.length > 1">
+                <ul>
+                    <li ng-repeat="page in betHistoryPages" ng-class="{true: 'item-active', false: 'item-dark'}[betHistoryActivePage === page]">
+                        <a ng-click="betHistoryGotoPage(page)" ng-show="page > 0">{{page}}</a>
+                        <span ng-show="page < 0">...</span>
+                    </li>
+
+                    <li class="item-next" ng-show="betHistoryActivePage < totalPages"><a ng-click="betHistoryGotoPage(betHistoryActivePage + 1)" trans>next</a></li>
+                    <li class="item-prevew" ng-show="betHistoryActivePage > 1"><a ng-click="betHistoryGotoPage(betHistoryActivePage -1)" trans>prev</a></li>
+                </ul>
+            </div>
+            <!--pagination END-->
+        </div>
+
+        <!--all bets block END-->
+    </div>
+</div>

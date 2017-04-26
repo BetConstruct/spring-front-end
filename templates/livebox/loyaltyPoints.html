@@ -1,0 +1,192 @@
+<div ng-controller="loyaltyPointsCtrl" class="info-scroll-contain-b-new" no-animate>
+    <div class="balance-lightbox-j loyalty-points-lightbox-j" ng-show="programs">
+        <section>
+            <div>
+                <div class="loyalty-points-j">
+                    <div class="lp-header-j Bronze {{pointsExchangeData.userCurrentStatus.Name}}">
+                        <div class="lp-status-panel-wrap-j">
+                            <ul>
+                                <li>
+                                    <div class="lp-current-status-j">
+                                        <ul>
+                                            <li class="lp-current-status-icon-holder-j">
+                                                <div><i></i></div>
+                                            </li>
+                                            <li>
+                                                <h1 trans ng-bind="pointsExchangeData.userCurrentStatus.Name|translate"></h1>
+                                                <h2>{{ pointsExchangeData.userCurrentStatus.MinPoint }} + / <span trans>Month</span></h2>
+                                                <p trans>Next status update</p>
+                                                <h4>
+                                                    <span class="{{pointsExchangeData.userNextStatus.Name}}" ng-bind="pointsExchangeData.userNextStatus.Name|translate"></span>
+                                                    <icon class="cms-jcon-infou">
+                                                        <div class="tooltip-j" trans>Status updates take place at the end of each month</div>
+                                                    </icon>
+                                                    <span ng-if="pointsExchangeData.remainingDays" trans ng-bind="pointsExchangeData.remainingDays"></span>
+                                                </h4>
+                                                <button ng-click="env.sliderContent = 'promotionalBonuses'" trans>View Bonuses</button>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="lp-circle-wrapper-j">
+                                        <div class="lp-circle-group-w-j">
+                                            <svg width="108" height="108">
+                                                <circle r="53" cx="54" cy="54" stroke-dasharray="{{ 360 * (pointsExchangeData.userCurrentStatus.MinPoint - profile.loyalty_last_earned_points) / (pointsExchangeData.userCurrentStatus.MinPoint || 1) }}, 600"></circle>
+                                            </svg>
+                                            <div class="lp-circle-j">
+
+                                                <div>
+                                                    <p>{{ profile.loyalty_last_earned_points }}</p>
+                                                    <small>{{ pointsExchangeData.userCurrentStatus.MinPoint }}+</small>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                        <h3 trans>Month points</h3>
+                                        <p trans>Pack Minimum</p>
+                                        <icon class="cms-jcon-infou">
+                                            <div class="tooltip-j" trans>Number of points received during the current month</div>
+                                        </icon>
+                                    </div>
+                                </li>
+
+                                <li>
+                                    <div class="lp-circle-wrapper-j">
+                                        <div class="lp-circle-group-w-j">
+                                            <svg width="108" height="108">
+                                                <circle r="53" cx="54" cy="54" stroke-dasharray="{{ 336 * (profile.loyalty_earned_points - profile.loyalty_point) / profile.loyalty_earned_points }}, 600"></circle>
+                                            </svg>
+                                            <div class="lp-circle-j">
+
+                                                <div>
+                                                    <p>{{ profile.loyalty_point }}</p>
+                                                    <small>{{ profile.loyalty_earned_points }}</small>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                        <h3 trans>Exchangeable</h3>
+                                        <p trans>All time</p>
+                                        <icon class="cms-jcon-infou">
+                                            <div class="tooltip-j" trans>Total number of exchangeable points</div>
+                                        </icon>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="lp-progress-bar-j">
+                        <div class="lp-progress-j"><span ng-style="{width: progressValue + '%'}" style="width: {{ progressValue }};" data-progress="{{ profile.loyalty_last_earned_points }}"></span></div>
+                        <ul class="lp-packs-wrap-j">
+                            <li ng-repeat="program in programs track by program.Id">{{ program.MinPoint }}</li>
+                        </ul>
+                    </div>
+                    <div class="lp-packs-group-wrap-j">
+                        <ul class="lp-packs-wrap-j">
+                            <li ng-repeat="program in programs track by program.Id">
+                                <div class="lp-pack-wrap-j {{ program.Name }}" ng-class="{'active': selectedProgram.Id === program.Id}"> <!--ng-click="selecteProgram(program);"-->
+                                    <div class="lp-pack-icon-j"></div>
+                                    <h2 ng-bind="program.Name|translate"></h2>
+                                    <p>{{ program.MinPoint }} + / <span trans>Month</span></p>
+                                    <!--<button trans>View</button>-->
+                                </div>
+                            </li>
+                        </ul>
+                        <!--<div class="lp-pack-details-j {{ selectedProgram.Name }}" ng-show="selectedProgram" ng-class="{'active': selectedProgram}">
+                            <ul>
+                                <li>
+                                    <div class="lp-details-head-j">
+                                        <ul>
+                                            <li>
+                                                <p trans>Granted Points</p>
+                                            </li>
+                                        </ul>
+                                        <ul>
+                                            <li><b trans>Gold Pack</b></li>
+                                            <li>
+                                                <p trans>Granted Points</p>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <div class="lp-details-content-j">
+                                        <ul>
+                                            <li>
+                                                <p trans>Min depoistMin depoistMin depoistMin depoist</p>
+                                            </li>
+                                            <li>
+                                                <p trans>100</p>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="lp-details-head-j">
+                                        <ul>
+                                            <li>
+                                                <p trans>Granted Points</p>
+                                            </li>
+                                        </ul>
+                                        <ul>
+                                            <li><b trans>Gold Pack</b></li>
+                                            <li>
+                                                <p trans>Granted Points</p>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <div class="lp-details-content-j">
+                                        <ul>
+                                            <li>
+                                                <p trans>Min depoistMin depoistMin depoistMin depoist</p>
+                                            </li>
+                                            <li>
+                                                <p trans>100</p>
+                                            </li>
+                                        </ul>
+                                        <ul>
+                                            <li>
+                                                <p trans>Min depoistMin depoistMin depoistMin depoist</p>
+                                            </li>
+                                            <li>
+                                                <p trans>100</p>
+                                            </li>
+                                        </ul>
+                                        <ul>
+                                            <li>
+                                                <p trans>Min depoistMin depoistMin depoistMin depoist</p>
+                                            </li>
+                                            <li>
+                                                <p trans>100</p>
+                                            </li>
+                                        </ul>
+                                        <ul>
+                                            <li>
+                                                <p trans>Min depoistMin depoistMin depoistMin depoist</p>
+                                            </li>
+                                            <li>
+                                                <p trans>100</p>
+                                            </li>
+                                        </ul>
+                                        <ul>
+                                            <li>
+                                                <p trans>Min depoistMin depoistMin depoistMin depoist</p>
+                                            </li>
+                                            <li>
+                                                <p trans>100</p>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>-->
+                    </div>
+                </div>
+                <div class="promotions-balance-j">
+                    <div ng-controller="cmsPagesCtrl" ng-init="gePageBanners('balance','withdraw-banner-' + $root.env.lang);">
+                        <vbet-big-slider class="big-slider-casino-directive" ng-if="balanceTopBanners" images="balanceTopBanners" link-click-handler="openCBannerLink" slider-template="true"></vbet-big-slider>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+</div>

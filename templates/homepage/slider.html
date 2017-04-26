@@ -1,0 +1,121 @@
+
+<div ng-controller="cmsSportNewsCtrl">
+    <vbet-loader ng-show="!selectedHomepageGames.length"></vbet-loader>
+    <div class="hp-slider-17" ng-show="selectedHomepageGames.length" ng-init="getSelectedHomepageGames()" ng-mouseover="rotationPaused = true" ng-mouseleave="rotationPaused=false">
+        <div class="hp-slide-17" no-animate="disable" ng-repeat="selectedHomepageGame in selectedHomepageGames" ng-show="$index === selectedGameIndex" ng-class="{'active': $index === selectedGameIndex}">
+            <a no-animate ng-click="bannerClick(selectedHomepageGame)" ng-href="{{!selectedHomepageGame.isYouTubeVideo ? selectedHomepageGame.link : ''}}" target="{{selectedHomepageGame.target}}">
+                <div class="hp-splash-17" ng-show="selectedHomepageGame.content">
+                    <div>
+                        <span ng-bind-html="selectedHomepageGame.content"></span>
+                    </div>
+                </div>
+                <img src="{{selectedHomepageGame.thumbnail_images.full.url}}" />
+                <object ng-show="selectedHomepageGame.flash_banner_url" class="flash_banner" width="100%" height="100%">
+                    <param name="scale" value="exactFit" />
+                    <embed ng-src="{{selectedHomepageGame.flash_banner_url}}" scale="exactFit" height="100%" width="100%">
+                </object>
+            </a>
+        </div>
+        <div class="hp-slider-pagination-17" ng-show="selectedHomepageGames.length >1 && !conf.enableHomepageBannerPrevNextSliders">
+            <small ng-repeat="selectedHomepageGame in selectedHomepageGames" ng-class="{'active': $index === selectedGameIndex}" ng-click="$parent.selectedGameIndex = $index"></small>
+        </div>
+    </div>
+</div>
+
+<!--
+item.slider.showCondition: "selectedHomepageGames.length",
+item.slider.init: "getSelectedHomepageGames()",
+item.slider.mousover: "rotationPaused = true",
+item.slider.mouseleave: "rotationPaused=false",
+item.slider.slideRepeat: "selectedHomepageGame in selectedHomepageGames",
+item.slider.slideShowCondition: "$index === selectedGameIndex",
+item.slider.slideHref: "!selectedHomepageGame.isYouTubeVideo ? selectedHomepageGame.link : ''",
+item.slider.slideClick: "bannerClick(selectedHomepageGame)",
+item.slider.slideTarget: "selectedHomepageGame.target",
+item.slider.slideSplashContent: "selectedHomepageGame.content",
+item.slider.slideImg: "selectedHomepageGame.thumbnail_images.full.url",
+item.slider.paginationShowCondition: "selectedHomepageGames.length >1 && !conf.enableHomepageBannerPrevNextSliders",
+item.slider.paginationItemClick: "$parent.selectedGameIndex = $index"
+
+
+{{item.slider.}}
+-->
+
+
+<style type="text/css">
+    .hp-slider-17 * {
+        box-sizing: border-box; }
+
+    .hp-slider-17 {
+        float: left;
+        width: 100%;
+        position: relative; }
+    .hp-slider-17 .hp-slide-17 {
+        width: 100%;
+        transition: 300ms opacity; 
+        opacity: 0;
+        position: absolute;
+        top: 0;
+        left: 0;} 
+    .hp-slider-17 .hp-slide-17.active {
+
+        position: relative;
+        opacity: 1;
+    }
+    .hp-slider-17 .hp-slide-17 .hp-splash-17 {
+        position: absolute;
+        background: black;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        width: 100%;
+        height: 100%;
+        transition: 240ms opacity;
+        opacity: 0;
+        z-index: 20; }
+    .hp-slider-17 .hp-slide-17 .hp-splash-17 > div {
+        display: table;
+        table-layout: fixed;
+        width: 100%;
+        height: 100%;
+        float: left;
+        text-align: center;
+        font: 36px / 40px Arial;
+        text-transform: uppercase;
+        color: white; }
+    .hp-slider-17 .hp-slide-17 .hp-splash-17 > div span {
+        display: table-cell;
+        vertical-align: middle;
+        padding: 0 20px; }
+    .hp-slider-17 .hp-slide-17 a {
+        display: block;
+        float: left;
+        width: 100%;
+        text-decoration: none;
+        position: relative; }
+    .hp-slider-17 .hp-slide-17 a img {
+        display: block;
+        float: left;
+        width: 100%; }
+    .hp-slider-17 .hp-slide-17:hover .hp-splash-17 {
+        opacity: 0.8; }
+
+    .hp-slider-17 .hp-slider-pagination-17 {
+        position: absolute;
+        z-index: 40;
+        bottom: 36px;
+        width: 100%;
+        padding: 0 36px; }
+    .hp-slider-17 .hp-slider-pagination-17 small {
+        display: block;
+        width: 12px;
+        height: 12px;
+        background: red;
+        float: left;
+        border-radius: 100%;
+        trnasition: 240ms background; }
+    .hp-slider-17 .hp-slider-pagination-17 small + small {
+        margin: 0 0 0 12px; }
+    .hp-slider-17 .hp-slider-pagination-17 small.active {
+        background: #a61f67; }
+</style>

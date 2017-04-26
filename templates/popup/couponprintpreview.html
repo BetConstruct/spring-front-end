@@ -1,0 +1,63 @@
+<div class="daily-coupon-print" ng-controller="betPrint" ng-init="printCouponContent()">
+    <div>
+        <table>
+            <tr>
+                <td>
+                    <div class="print-logo-contain-b"><img alt="" src="skins/{{config.skin}}/images/logo.png" /></div>
+                </td>
+                <td>
+                    <div class="coupon-name-b">
+                        <p trans>DAILY COUPON</p>
+                    </div>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div ng-repeat="sportGroup in liveCalendarGames">
+        <table ng-repeat="day in sportGroup.games" ng-show="day[0].day">
+            <tr ng-show="dummy">
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <div class="sport-name-column-p">
+                        <h1>{{sportGroup.sport.name}}</h1>
+                    </div>
+                </td>
+                <td colspan="4">
+                    <div class="date-b-column">
+                        <p>{{day[0].day.from|formatDate:'DD/MM/YYYY'}}</p>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2"></td>
+                <td><div class="column-name-b"><p>№</p></div></td>
+                <td><div class="column-name-b"><p>1</p></div></td>
+                <td><div class="column-name-b"><p>X</p></div></td>
+                <td><div class="column-name-b"><p>2</p></div></td>
+            </tr>
+            <tr ng-repeat="game in day|orderBy:'start_ts' track by $index">
+                <td>
+                    <div class="time-b-column"><p ng-bind="game.start_ts|formatDate:'HH:mm'"></p></div>
+                </td>
+                <td>
+                    <div class="name-b-column"><p>{{game.title}}</p></div>
+                </td>
+                <td>
+                    <div class="number-game-column"><p>{{game.game_number}}</p></div>
+                </td>
+                <td>
+                    <div class="event-game-column-b"><p>{{marketEvents[game.pointerId].events.P1[0].price|oddConvert:env.oddFormat:null:'WINNER'}}</p></div>
+                </td>
+                <td>
+                    <div class="event-game-column-b"><p>{{marketEvents[game.pointerId].events.X[0].price|oddConvert:env.oddFormat:null:'WINNER'}}</p></div>
+                </td>
+                <td>
+                    <div class="event-game-column-b"><p>{{marketEvents[game.pointerId].events.P2[0].price|oddConvert:env.oddFormat:null:'WINNER'}}</p></div>
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>

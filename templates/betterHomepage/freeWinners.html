@@ -1,0 +1,36 @@
+<div class="absolute-widget">
+    <div class="free-winners-wrap-j" ng-controller="freeWinnersCtrl" ng-init="loadRankingTable();">
+        <vbet-loader class="ng-hide" ng-hide="players.length"></vbet-loader>
+        <div class="lmb-time-selector" ng-show="players.length">
+            <ul>
+                <li>
+                    <h3 trans>Current day ranking</h3>
+                </li>
+            </ul>
+        </div>
+        <div class="free-winners-list-j" ng-show="players.length">
+            <ul class="title-j">
+                <li>
+                    <div trans>ID</div>
+                </li>
+                <li>
+                    <div trans>Amount</div>
+                </li>
+                <li>
+                    <div trans>Name</div>
+                </li>
+            </ul>
+            <ul ng-repeat="player in players">
+                <li>
+                    <div ng-bind="player.client_id"></div>
+                </li>
+                <li>
+                    <div class="win-amount-j" ng-bind="player.amount|number"></div>
+                </li>
+                <li>
+                    <div ng-bind="player.name"></div>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>

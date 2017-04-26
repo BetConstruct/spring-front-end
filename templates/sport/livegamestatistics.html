@@ -1,0 +1,259 @@
+<div class="game-control soccer" ng-if="openGame.last_event && (openGame.sport.alias === 'Soccer' || openGame.sport.alias === 'CyberFootball')">
+    <div class="statistics-toggle flip-contain" ng-class="{'hide-stats': env.hideLiveStats, 'hide-stats-multiview' : !showStatsBlock}">
+        <!-- soccer stats -->
+        <div class="flip-card flipped-{{env.liveStatsFlipMode || flipMode || 0}}" ng-class="{'flipped-multivew-0': !flipMode, 'flipped-multivew-1': flipMode === 1, 'flipped-multivew-2': flipMode === 2}">
+            <div class="euro2016-changeStatsMode-j">
+                <input type="button" ng-click="changeStatsMode(2)" ng-class="{'active': flipMode === 2}"  value="{{'Timeline'|translate}}"/>
+                <input type="button" ng-click="changeStatsMode(0)" ng-class="{'active': !flipMode}" value="{{'H2H Chart'|translate}}"/>
+                <input type="button" ng-click="changeStatsMode(1)" ng-class="{'active': flipMode === 1}" value="{{'Table'|translate:null:'Game Table'}}"/>
+            </div>
+            <ul class="game-statistics front">
+                <li>
+                    <div trans class="title">Dangerous Attack</div>
+                    <div class="stat-l">{{openGame.stats.dangerous_attack.team1_value}}</div>
+                    <div class="team-2" ng-style="{background: '#'+ openGame.info.shirt2_color}">
+                        <div class="team-1" ng-style="{background: '#'+ openGame.info.shirt1_color, width: openGame.stats.dangerous_attack.team1_width + '%'}"></div>
+                    </div>
+                    <div class="stat-r">{{openGame.stats.dangerous_attack.team2_value}}</div>
+                </li>
+                <li>
+                    <div trans class="title">Shot on target</div>
+                    <div class="stat-l">{{openGame.stats.shot_on_target.team1_value}}</div>
+                    <div class="team-2" ng-style="{background: '#'+ openGame.info.shirt2_color}">
+                        <div class="team-1" ng-style="{background: '#'+ openGame.info.shirt1_color, width: openGame.stats.shot_on_target.team1_width + '%'}"></div>
+                    </div>
+                    <div class="stat-r">{{openGame.stats.shot_on_target.team2_value}}</div>
+                </li>
+                <li>
+                    <div trans class="title">Shot off target</div>
+                    <div class="stat-l">{{openGame.stats.shot_off_target.team1_value}}</div>
+                    <div class="team-2" ng-style="{background: '#'+ openGame.info.shirt2_color}">
+                        <div class="team-1" ng-style="{background: '#'+ openGame.info.shirt1_color, width: openGame.stats.shot_off_target.team1_width + '%'}"></div>
+                    </div>
+                    <div class="stat-r">{{openGame.stats.shot_off_target.team2_value}}</div>
+                </li>
+                <li>
+                    <div trans class="title">Corner kick</div>
+                    <div class="stat-l">{{openGame.stats.corner.team1_value}}</div>
+                    <div class="team-2" ng-style="{background: '#'+ openGame.info.shirt2_color}">
+                        <div class="team-1" ng-style="{background: '#'+ openGame.info.shirt1_color, width: openGame.stats.corner.team1_width + '%'}"></div>
+                    </div>
+                    <div class="stat-r">{{openGame.stats.corner.team2_value}}</div>
+                </li>
+                <li>
+                    <div trans class="title">Yellow card</div>
+                    <div class="stat-l">{{ openGame.stats.yellow_card.team1_value }}</div>
+                    <div class="team-2" ng-style="{background: '#'+ openGame.info.shirt2_color}">
+                        <div class="team-1" ng-style="{background: '#'+ openGame.info.shirt1_color, width: openGame.stats.yellow_card.team1_width + '%'}"></div>
+                    </div>
+                    <div class="stat-r">{{ openGame.stats.yellow_card.team2_value }}</div>
+                </li>
+                <li>
+                    <div trans class="title">Red card</div>
+                    <div class="stat-l">{{openGame.stats.red_card.team1_value}}</div>
+                    <div class="team-2" ng-style="{background: '#'+ openGame.info.shirt2_color}">
+                        <div class="team-1" ng-style="{background: '#'+ openGame.info.shirt1_color, width: openGame.stats.red_card.team1_width + '%'}"></div>
+                    </div>
+                    <div class="stat-r">{{openGame.stats.red_card.team2_value}}</div>
+                </li>
+            </ul>
+            <table class="game-list-statistics back">
+                <tr>
+                    <th>&nbsp;</th>
+                    <th><span title="First time score" trans>HT</span></th>
+                    <th><span class="y-card" title="yellow cards" trans></span></th>
+                    <th><span class="r-card" title="red cards" trans></span></th>
+                    <th><span class="corner" title="corners" trans><span></span></span></th>
+                    <th><span class="penalty" title="penalties" trans><span></span></span></th>
+                    <th ng-show="openGame.stats.offside"><span title="Offside" class="icon-offside" trans></span></th>
+                    <th ng-show="openGame.stats.substitution"><span title="Substitute" class="icon-substitution" trans></span></th>
+                    <th ng-show="openGame.stats.foul"><span title="Foul">Foul</span></th>
+                </tr>
+                <tr>
+                    <td>
+                        <p>
+                            <span><tshirt shorts="{{openGame.info.short1_color}}" shirt="{{openGame.info.shirt1_color}}"></tshirt></span>
+                           <b>{{ openGame.team1_name ?  openGame.team1_name: '' }}</b>
+                        </p>
+                    </td>
+                    <td>{{ openGame.stats.score_set1.team1_value ? openGame.stats.score_set1.team1_value : 0}}</td>
+                    <td>{{ openGame.stats.yellow_card.team1_value }}</td>
+                    <td>{{ openGame.stats.red_card.team1_value }}</td>
+                    <td>{{ openGame.stats.corner.team1_value }}</td>
+                    <td>{{ openGame.stats.penalty.team1_value }}</td>
+                    <td ng-show="openGame.stats.offside">{{ openGame.stats.offside.team1_value}}</td>
+                    <td ng-show="openGame.stats.substitution">{{ openGame.stats.substitution.team1_value}}</td>
+                    <td ng-show="openGame.stats.foul">{{ openGame.stats.foul.team1_value}}</td>
+                </tr>
+                <tr>
+                    <td>
+                        <p>
+                            <span><tshirt shorts="{{openGame.info.short2_color}}" shirt="{{openGame.info.shirt2_color}}"></tshirt></span>
+                            <b>{{ openGame.team2_name ?  openGame.team2_name: '' }}</b>
+                        </p>
+                    </td>
+                    <td>{{ openGame.stats.score_set1.team2_value ? openGame.stats.score_set1.team2_value : 0}}</td>
+                    <td>{{ openGame.stats.yellow_card.team2_value }}</td>
+                    <td>{{ openGame.stats.red_card.team2_value }}</td>
+                    <td>{{ openGame.stats.corner.team2_value }}</td>
+                    <td>{{ openGame.stats.penalty.team2_value }}</td>
+                    <td ng-show="openGame.stats.offside">{{ openGame.stats.offside.team2_value}}</td>
+                    <td ng-show="openGame.stats.substitution">{{ openGame.stats.substitution.team2_value}}</td>
+                    <td ng-show="openGame.stats.foul">{{ openGame.stats.foul.team2_value}}</td>
+                </tr>
+            </table>
+            <div class="timeline-container" ng-class="{'hide-stats': env.hideLiveStats}">
+                <soccertimeline ng-class="{'tl-80': openGame.last_event.match_length === '80', 'extra': isExtraTime(openGame.info)}"></soccertimeline>
+                <div class="tl-data">
+                    <div class="current-minute" ng-style="openGame.tlCurrentMinute"></div>
+                    <div ng-repeat="tlEvent in openGame.tlEvents" ng-style="tlEvent.timeline_position" class="{{tlEvent.team + '-' + tlEvent.type}}">
+                        <div class="{{tlEvent.type}}"></div>
+                        <div class="tl-details" ng-class="{'to-right': tlEvent.minute>50}">{{tlEvent.details.type|capitalise|translate}} {{tlEvent.details.add_info}}</div>
+                    </div>
+                    <div class="tl-info" ng-style="openGame.tlCurrentPosition">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="toggle-stats" ng-class="{'hide': env.hideLiveStats}"  ng-click="toggleStatsVisibility()" title="Show / Hide statistics" trans></div>
+</div>
+
+<div class="game-control tennis" ng-if="openGame.last_event && openGame.sport.alias === 'Tennis'">
+    <div class="statistics-toggle" ng-class="{'hide-stats': env.hideLiveStats, 'hide-stats-multiview' : !showStatsBlock}">
+        <!-- tennis stats -->
+        <ul class="game-statistics">
+            <li>
+                <div trans class="title">Aces</div>
+                <div class="stat-l">{{openGame.stats.aces.team1_value}}</div>
+                <div class="team-2" ng-style="{background: '#'+ openGame.info.shirt2_color}">
+                    <div class="team-1" ng-style="{background: '#'+ openGame.info.shirt1_color, width: openGame.stats.aces.team1_width + '%'}"></div>
+                </div>
+                <div class="stat-r">{{openGame.stats.aces.team2_value}}</div>
+            </li>
+            <li>
+                <div trans class="title">Double Faults</div>
+                <div class="stat-l">{{openGame.stats.double_fault.team1_value}}</div>
+                <div class="team-2" ng-style="{background: '#'+ openGame.info.shirt2_color}">
+                    <div class="team-1" ng-style="{background: '#'+ openGame.info.shirt1_color, width: openGame.stats.double_fault.team1_width + '%'}"></div>
+                </div>
+                <div class="stat-r">{{openGame.stats.double_fault.team2_value}}</div>
+            </li>
+        </ul>
+    </div>
+    <div class="toggle-stats" ng-class="{'hide': env.hideLiveStats}"  ng-click="toggleStatsVisibility()" title="Show / Hide statistics" trans></div>
+</div>
+
+
+<div class="game-control basketball" ng-if="openGame.last_event && openGame.sport.alias === 'Basketball'">
+    <div class="statistics-toggle " ng-class="{'hide-stats': env.hideLiveStats, 'hide-stats-multiview' : !showStatsBlock}">
+        <!-- basketball stats -->
+        <ul class="game-statistics">
+            <li>
+                <div trans class="title">Three Points</div>
+                <div class="stat-l">0</div>
+                <div class="team-2">
+                    <div class="team-1"></div>
+                </div>
+                <div class="stat-r">0</div>
+            </li>
+            <li>
+                <div trans class="title">Two Points</div>
+                <div class="stat-l">0</div>
+                <div class="team-2">
+                    <div class="team-1"></div>
+                </div>
+                <div class="stat-r">0</div>
+            </li>
+            <li>
+                <div trans class="title">One Point</div>
+                <div class="stat-l">0</div>
+                <div class="team-2">
+                    <div class="team-1"></div>
+                </div>
+                <div class="stat-r">0</div>
+            </li>
+            <li>
+                <div trans class="title">Timeout</div>
+                <div class="stat-l">0</div>
+                <div class="team-2">
+                    <div class="team-1"></div>
+                </div>
+                <div class="stat-r">0</div>
+            </li>
+            <li>
+                <div trans class="title">Foul</div>
+                <div class="stat-l">0</div>
+                <div class="team-2">
+                    <div class="team-1"></div>
+                </div>
+                <div class="stat-r">0</div>
+            </li>
+        </ul>
+    </div>
+    <div class="toggle-stats" ng-class="{'hide': env.hideLiveStats}"  ng-click="toggleStatsVisibility()" title="Show / Hide statistics" trans></div>
+</div>
+
+<!-- Dota game template -->
+<div class="game-control dota" ng-if="dotaGamesList.indexOf(openGame.sport.alias) !== -1">
+    <div class="statistics-toggle " ng-class="{'hide-stats': env.hideLiveStats, 'hide-stats-multiview' : !showStatsBlock}">
+        <ul class="game-statistics" ng-hide="true"><!-- change this staff-->
+        <li>
+            <div trans class="title">Kills</div>
+            <div class="stat-l">{{openGame.stats[openGame.info.current_game_state].team1_kills}}</div>
+            <div class="team-2" ng-style="{background: '#'+ openGame.info.shirt2_color}">
+                <div class="team-1" ng-style="{background: '#'+ openGame.info.shirt1_color, width: openGame.stats.shot_on_target.team1_width + '%'}"></div>
+            </div>
+            <div class="stat-r">{{openGame.stats[openGame.info.current_game_state].team2_kills}}</div>
+        </li>
+        <li>
+            <div trans class="title">Towers</div>
+            <div class="stat-l">{{openGame.stats[openGame.info.current_game_state].team1_towers}}</div>
+            <div class="team-2" ng-style="{background: '#'+ openGame.info.shirt2_color}">
+                <div class="team-1" ng-style="{background: '#'+ openGame.info.shirt1_color, width: openGame.stats.shot_off_target.team1_width + '%'}"></div>
+            </div>
+            <div class="stat-r">{{openGame.stats[openGame.info.current_game_state].team2_towers}}</div>
+        </li>
+        <li>
+            <div trans class="title">Bosses</div>
+            <div class="stat-l">{{openGame.stats[openGame.info.current_game_state].team1_bosses}}</div>
+            <div class="team-2" ng-style="{background: '#'+ openGame.info.shirt2_color}">
+                <div class="team-1" ng-style="{background: '#'+ openGame.info.shirt1_color, width: openGame.stats.dangerous_attack.team1_width + '%'}"></div><!--TODO-->
+            </div>
+            <div class="stat-r">{{openGame.stats[openGame.info.current_game_state].team2_bosses}}</div>
+        </li>
+    </ul>
+        <table class="table-stats-view">
+            <tr ng-if="openGame.sport.alias === 'Dota' || openGame.sport.alias === 'Dota2' || openGame.sport.alias === 'LeagueofLegends'">
+                <th></th>
+                <th trans >Kills</th>
+                <th trans >Towers</th>
+                <th trans ng-if="openGame.sport.alias === 'Dota' || openGame.sport.alias === 'Dota2'">Roshan</th>
+                <th trans ng-if="openGame.sport.alias === 'LeagueofLegends'">Dragons</th>
+            </tr>
+            <tr ng-if="openGame.sport.alias === 'CounterStrike'">
+                <th></th>
+                <th trans >Kills</th>
+                <th trans >Rounds</th>
+                <th trans >Bombs</th>
+            </tr>
+            <tr>
+                <td>
+                    <p><span>{{ openGame.team1_name ?  openGame.team1_name: '' }}</span></p>
+                </td>
+                <td>{{openGame.stats[openGame.info.current_game_state].team1_kills}}</td>
+                <td>{{openGame.stats[openGame.info.current_game_state].team1_towers}}</td>
+                <td>{{openGame.stats[openGame.info.current_game_state].team1_bosses}}</td>
+            </tr>
+            <tr>
+                <td>
+                    <p><span>{{ openGame.team2_name ?  openGame.team2_name: '' }}</span></p>
+                </td>
+                <td>{{openGame.stats[openGame.info.current_game_state].team2_kills}}</td>
+                <td>{{openGame.stats[openGame.info.current_game_state].team2_towers}}</td>
+                <td>{{openGame.stats[openGame.info.current_game_state].team2_bosses}}</td>
+            </tr>
+        </table>
+    </div>
+    <div class="toggle-stats" ng-class="{'hide': env.hideLiveStats}"  ng-click="toggleStatsVisibility()" title="Show / Hide statistics" trans></div>
+</div>

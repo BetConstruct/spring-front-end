@@ -1,0 +1,33 @@
+<div class="single-game-mini-view">
+    <ul>
+        <li>
+            <div class="date-info-box">
+                <p ng-bind="getGame().start_ts|formatDate:'full':null:env.timeFormat:timezoneSwitcherValue"></p>
+            </div>
+        </li>
+        <li>
+            <div class="team-names-title-b"
+                ng-click="!getGame().additionalEvents ?  $event.stopPropagation() : openGameView(getGame())"
+            >
+                <p>{{getGame().team1_name}}</p>
+                <p>{{getGame().team2_name}}</p>
+            </div>
+        </li>
+        <li>
+            <combo-view-market-events ng-repeat="market in getGame().filteredMarkets[getLiveMarket(getCompetitoin()).type]"
+                market="market"
+                bet="bet"
+                game="getGame()"
+                sport="sport"
+                region="region"
+                competition="competition">
+            </combo-view-market-events>
+        </li>
+        <li>
+            <div class="all-markets-button-b"
+                ng-click="!getGame().additionalEvents ?  $event.stopPropagation() : openGameView(getGame())">
+                <p ng-show="conf.combo.showMoreOdds && getGame().additionalEvents" trans>More odds</p><p ng-show="!conf.combo.showMoreOdds">{{getGame().additionalEvents ? '+' + getGame().additionalEvents : '0'}}</p>
+            </div>
+        </li>
+    </ul>
+</div>

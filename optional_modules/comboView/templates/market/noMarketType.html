@@ -1,0 +1,13 @@
+<div class="game-events-contain-b">
+    <ul class="column-1">
+        <li ng-repeat="event in market.event track by event.id" title="{{event.name}}">
+            <div class="small-title-event-b"></div>
+            <p>
+                <span>
+                    {{event.name}}
+                </span>
+                <span>{{event.price|oddConvert:env.oddFormat}}</span>
+            </p>
+         </li>
+    </ul>
+</div>

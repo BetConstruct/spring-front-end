@@ -1,0 +1,103 @@
+<div ng-controller="globalDialogCtrl">
+    <div class="new-default-popup-j popup-bg-contain active" ng-class="globalDialog.type||'info'" ng-if="globalDialog && !globalDialog.popup && !globalDialog.standardPopup">
+        <div class="pp-table-j">
+            <div class="table-row-j">
+                <div class="table-cell-j">
+                    <div class="fedback-wrapper dialog">
+                        <div class="feed-closed-b" ng-click="closeGlobalDialog()" ng-if="!globalDialog.hideCloseButton"></div>
+                        <div class="fedback-info">
+                            <h3 ng-bind-html="(globalDialog.title||'')|translate|html"></h3>
+                            <ul>
+                                <li ng-if="globalDialog.image">
+                                    <div class="dialog-icon-b">
+                                        <div class="mini-img-dialog">
+                                            <img alt="" ng-src="{{globalDialog.image}}" />
+                                        </div>
+                                    </div>
+                                </li>
+                                <li ng-if="globalDialog.content">
+                                    <div class="dialog-text-b" ng-bind-html="globalDialog.content|translate|html"></div>
+                                    <div class="dialog-text-box-b" ng-if="globalDialog.contentBox">
+                                        <input type="text" ng-model="globalDialog.contentBox" readonly/>
+                                    </div>
+                                    <a ng-if="globalDialog.buttonText" target="_blank" ng-href="{{globalDialog.buttonURL}}" ng-click="buttonClick();$event.stopPropagation();" ng-bind-html="globalDialog.buttonText|translate|html"></a>
+
+                                    <ul ng-if="globalDialog.buttons" class="dialog-buttons-t">
+                                        <li ng-repeat="button in globalDialog.buttons"><a ng-href="{{button.url}}" ng-click="closeGlobalDialog(true);$event.stopPropagation();" target="{{button.target}}" ng-bind-html="button.text|translate|html"></a></li>
+                                    </ul>
+
+                                </li>
+                                <li ng-if="globalDialog.iframeURL">
+                                    <iframe ng-src="{{globalDialog.iframeURL|html:'url'}}"></iframe>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="popup-bg-contain active" ng-if="globalDialog && globalDialog.popup && !globalDialog.standardPopup">
+        <div class="deposit-alert-contain">
+            <div class="text-deposit-alert free">
+                <div class="popup-status-icon" ng-class="globalDialog.type||'info'"></div>
+                <p>
+                    <span ng-if="globalDialog.content" ng-bind-html="globalDialog.content|translate|html"></span>
+
+                    <button ng-if="globalDialog.popup!='yesno'" class="message-box-ok-btn" ng-click="closeGlobalDialog()" trans>OK</button>
+                    <button ng-if="globalDialog.popup=='yesno'" class="message-box-ok-btn" ng-click="answer('yes')" trans>Yes</button>
+                    <button ng-if="globalDialog.popup=='yesno'" class="message-box-ok-btn" ng-click="answer('no')" trans>No</button>
+                </p>
+
+            </div>
+        </div>
+    </div>
+    <div ng-if="activeDialog">
+        <div class="new-default-popup-j {{activeDialog.tag}}" ng-class="activeDialog.type" > <!--info warning error success feedback-->
+            <div class="pp-table-j">
+                <div class="table-row-j">
+                    <div class="table-cell-j">
+                        <div class="popup-wrapper-j" ng-show="activeDialog.type === 'image'">
+                            <div class="pu-head-j" ng-if="activeDialog.showCloseButton">
+                                <span ng-bind-html="(activeDialog.title||'')|translate|html"></span>
+                                <a class="close-j"  ng-click="closeDialog(activeDialog, 'closeButton');$event.stopPropagation();" ></a>
+                            </div>
+                            <a ng-href="{{activeDialog.imageUrl}}" ng-if="activeDialog.imageUrl" target="_self">
+                                <img ng-src="{{activeDialog.src}}"  ng-click="closeDialog(activeDialog, 'imageButton');$event.stopPropagation();"  />
+                            </a>
+                            <img ng-src="{{activeDialog.src}}" ng-if="!activeDialog.imageUrl"  ng-click="closeDialog(activeDialog, 'imageButton');$event.stopPropagation();"  />
+                        </div>
+                        <div class="popup-wrapper-j" ng-show="activeDialog.type !== 'image'">
+                            <div class="pu-head-j">
+                                <span ng-bind-html="activeDialog.title|translate|html"></span>
+                                <a class="close-j" ng-show="!activeDialog.hideCloseButton"  ng-click="closeDialog(activeDialog, 'closeButton');$event.stopPropagation();" ></a>
+                            </div>
+                            <div class="pu-contain-j">
+                                <h3 ng-show="activeDialog.subTitle" ng-bind-html="activeDialog.subTitle|translate|html"></h3>
+                                <p ng-bind-html="activeDialog.content|translate|html"></p>
+
+                                <div class="dialog-text-box-b" ng-if="activeDialog.contentBox">
+                                    <input type="text" ng-model="activeDialog.contentBox" readonly/>
+                                </div>
+
+                            </div>
+                            <div class="pu-button-wrap-j" ng-if="!activeDialog.hideButtons">
+                                <div ng-if="!activeDialog.buttons">
+                                    <button ng-if="!activeDialog.yesno" ng-click="closeDialog(activeDialog, 'okButton');$event.stopPropagation();" trans>OK</button>
+                                    <button ng-if="activeDialog.cancel" ng-click="closeDialog(activeDialog, 'cancelButton');$event.stopPropagation();" trans>Cancel</button>
+                                    <button ng-if="activeDialog.yesno" ng-click="closeDialog(activeDialog, 'yesButton');$event.stopPropagation();" trans>Yes</button>
+                                    <button ng-if="activeDialog.yesno" ng-click="closeDialog(activeDialog, 'noButton');$event.stopPropagation();" trans>No</button>
+                                </div>
+
+                                <div ng-if="activeDialog.buttons">
+                                    <button ng-repeat="button in activeDialog.buttons track by $index" ng-click="closeDialog(activeDialog, '', button);$event.stopPropagation();" ng-bind="button.title|translate"></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

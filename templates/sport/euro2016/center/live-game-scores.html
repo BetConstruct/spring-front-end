@@ -1,0 +1,62 @@
+<!-- active game template -->
+<div class="live-game-container" ng-show="openGame.type == 1">
+    <div class="game-content">
+        <div class="game-info game-{{openGame.sport.alias.toLowerCase()}}"
+             ng-show="!openGameLoading">
+            <button class="unpin-button"
+                    ng-class="{'active': isLiveGamePinned && !noClassicScroll}"
+                    ng-disabled="noClassicScroll"
+                    ng-show="conf.enableLiveSectionPin && (openGame.sport.alias !== 'HorseRacing') && !(enlargedGame && openGame.id === enlargedGame.id)"
+                    ng-click="toggleLiveSectionPin()"
+                    trans="attr-only"
+                    title="Pin/Unpin">
+            </button>
+            <div class="game-detailed-stats"
+                 ng-if="openGame.sport.alias === 'Soccer' && openGame.live_events">
+                <span class="icon-stat-details"></span>
+
+                <div class="hover-sp"
+                     ng-class="{'to-right': openGame.info.currMinute>60, 'to-center': (openGame.info.currMinute >30 && openGame.info.currMinute <= 60)}">
+                    <div class="football-gamer-name"
+                         ng-repeat="gameEvent in openGame.live_events|orderBy:'add_info_order':true">
+                        <div ng-class="gameEvent.event_type+'-icon'" class="{{gameEvent.event_icon}}"></div>
+                                            <span ng-class="gameEvent.team">
+                                                <tshirt shirt="{{ openGame.info['shirt'+ gameEvent.team.slice(-1) + '_color'] }}"
+                                                        shorts="{{ openGame.info['short'+ gameEvent.team.slice(-1) + '_color'] }}"></tshirt>
+                                            </span>
+
+                        <p>{{gameEvent.event_type.replace('_', ' ')|capitalise|translate}} {{
+                            gameEvent.add_info }} {{openGame[gameEvent.team + '_name']}}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="sport-title"
+                 ng-click="broadcast('liveGame.headerClicked', openGame);$event.stopPropagation();"
+                 ng-if="liveGamesSoccerTemplate.indexOf(openGame.sport.alias) !== -1 || conf.esportsGames.indexOf(openGame.sport.alias) !== -1">
+                <b class="mini-icon-1 mini-icon-{{openGame.sport.id}} {{openGame.sport.alias}}"
+                   title="{{openGame.sport.alias}}"></b>
+                                <span class="ellipsis-text" title="{{openGame.competition.name}}">
+                                    <b ng-show="conf.showGameIds">{{openGame.game_number}}</b> {{openGame.competition.name}}
+                                </span>
+                <a ng-show="conf.enableH2HStat && openGame.is_stat_available"
+                   ng-click="openStatistics(openGame);$event.stopPropagation();"
+                   class="statistics-h2h"
+                   statistics-on-hover
+                   stats-game ="{'id': openGame.id, 'region':openGame.region.alias, 'competition': openGame.competition.name, 'sport': openGame.sport.alias}"></a>
+                                        <span ng-if="openGame.sport.alias === 'HorseRacing'"
+                                              title="{{ openGame.team2_name ?  openGame.team2_name: '' }}">{{ openGame.team2_name ?  openGame.team2_name: '' }}&nbsp;&nbsp;&nbsp; {{ openGame.start_ts| formatDate: "LT"}}</span>
+
+            </div>
+            <ng-include src="getTemplate('templates/sport/livescore.html')"></ng-include>
+            <div class="add-info" ng-if="!!openGame.info.current_game_state">
+                {{
+                openGame.info.current_game_state|convertSetName:openGame.sport.alias|translate
+                }} {{ (openGame.info.current_game_time)[0] === '-'? ('will start
+                in'|translate)+' '+ (openGame.info.current_game_time).substring(1):
+                openGame.info.current_game_time }}
+            </div>
+            <ng-include
+                    src="getTemplate('templates/sport/livegamestatistics.html')"></ng-include>
+        </div>
+    </div>
+</div>

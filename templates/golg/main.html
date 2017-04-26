@@ -1,0 +1,189 @@
+<div ng-controller="cmsPagesCtrl" ng-init="loadPage('fifa-iphone-' + env.lang, true); checkIfEnabled('iphone')">
+
+<div class="menu-casino menu-poker">
+<div class="menu-games">
+	<div class="contain-menu-games">
+    	<ul class="poker-menu">
+            <div class="contein-nav-g">
+                <li ng-repeat="page in pages" ng-class="{'active-game-casino': page.id === $parent.selectedPage.id}" class="poker {{page.slug}}" ng-show="page.slug!='mytickets' || env.authorized">
+                    <a ng-click="$parent.selectedPage = page"><span></span>{{page.title}}</a>
+                </li>
+
+            </div>
+         </ul>
+      </div>
+</div>
+</div>
+
+
+
+
+
+<div class="mein-page-contain poker iphone" ng-show="selectedPage.slug == 'home'">
+    <div class="contain-casino iphone">
+        <div class="casino-top-slider">
+            <div class="big-slider-casino">
+                <ul><li><img ng-src="{{selectedPage.thumbnail_images.full.url}}"></li></ul>
+            </div>
+        </div>
+    </div>
+
+
+	<div class="ipone-rules-block">
+        	<table>
+              <tr>
+                <td>
+                	<p ng-bind-html="selectedPage.content"></p>
+                </td>
+                <td ng-controller="lotteryCtrl" ng-init="loadLotteryWinners(true)">
+                	<h3  trans>This week's winners</h3>
+
+                    <ul>
+                        <li ng-show="!winners.length" class="no-winners" trans>There are no winners yet</li>
+                        <li ng-repeat="winner in winners"><span>{{winner.date_time}}</span>{{winner.ticket_number}}</li>
+
+                    </ul>
+                </td>
+              </tr>
+            </table>
+            
+            <div class="priz-slider" ng-if="pagesLoaded" ng-init="winnersPhotos = getPageBySlug(pages, 'winners').children">
+            	<ul>
+                	<li ng-repeat="winner in winnersPhotos"><img ng-src="{{winner.thumbnail_images.full.url}}"></li>
+
+                </ul>
+                <!--<div class="left-arrow-b"></a></div>-->
+        		<!--<div class="right-arrow-b"></a></div>-->
+        
+        </div>
+            
+		</div>
+        
+     
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="mein-page-contain poker iphone" ng-show="selectedPage.slug == 'rules'">
+    
+        <div class="iphone-content">
+           	<div class="info-text-iphone">
+            <h3 trans>Rules</h3>
+            	<p ng-bind-html="selectedPage.content"></p>
+            </div>
+        </div>
+        
+        
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="mein-page-contain poker iphone" ng-if="selectedPage.slug == 'tickets'">
+        <div class="iphone-content" ng-controller="lotteryCtrl" ng-init="loadLotteryTickets()">
+           	<div class="info-text-iphone">
+            <h3 trans>Tickets</h3>
+                <p ng-bind-html="selectedPage.content"></p>
+                <div class="loader poker-baners loader-no-padding" ng-show="ticketsLoading">
+                    <div class="loader-ring">
+                        <div class="loader-ball-holder">
+                            <div class="loader-ball"></div>
+                        </div>
+                    </div>
+                </div>
+            <ul>
+            	<li ng-repeat="ticket in tickets "><span>{{ticket.date_time}}</span> {{ticket.ticket_number}}</li>
+            </ul>
+            </div>
+        </div>
+</div>
+
+
+
+<div class="mein-page-contain poker iphone" ng-if="selectedPage.slug == 'winners'">
+
+        <div class="iphone-content" ng-controller="lotteryCtrl" ng-init="loadLotteryWinners()">
+           	<div class="info-text-iphone">
+            <h3 trans>Winners</h3>
+            	<p ng-bind-html="selectedPage.content"></p>
+                <h4 class="no-winners" ng-show="!winners.length" trans>There are no winners yet</h4>
+                <ul>
+                    <li ng-repeat="winner in winners"><span>{{winner.date_time}}</span>{{winner.ticket_number}}</li>
+
+                </ul>
+            </div>
+        </div>
+        
+</div>
+
+<div class="mein-page-contain poker iphone" ng-if="selectedPage.slug == 'mytickets'">
+
+        <div class="iphone-content" ng-controller="lotteryCtrl" ng-init="loadMyTickets()">
+            <div class="info-text-iphone">
+                <h3 trans>My tickets</h3>
+                <div class="loader poker-baners loader-no-padding" ng-show="ticketsLoading">
+                    <div class="loader-ring">
+                        <div class="loader-ball-holder">
+                            <div class="loader-ball"></div>
+                        </div>
+                    </div>
+                </div>
+                <p ng-bind-html="selectedPage.content"></p>
+                <h4 class="no-winners" ng-show="!tickets.length && !ticketsLoading" trans>You have no tickets</h4>
+                <ul>
+                    <li ng-repeat="ticket in tickets"><span>{{ticket.date_time|formatDate}}</span>{{ticket.ticket_number}}</li>
+
+                </ul>
+            </div>
+        </div>
+
+</div>
+
+<div class="mein-page-contain poker iphone" ng-if="selectedPage.slug == 'history'">
+    <div class="iphone-content" ng-controller="lotteryCtrl" ng-init="loadLotteryWinners()">
+           	<div class="info-text-iphone">
+            <h3 trans>History</h3>
+            	<ul>
+        	        <li ng-repeat="winner in winners"><span>{{winner.date_time}}</span>{{winner.ticket_number}}</li>
+
+                </ul>
+            	
+            </div>
+        </div>
+</div>
+
+
+
+
+
+<div class="loader poker-baners loader-no-padding" ng-show="!pagesLoaded">
+    <div class="loader-ring">
+        <div class="loader-ball-holder">
+            <div class="loader-ball"></div>
+        </div>
+    </div>
+</div>
+
+</div>

@@ -1,0 +1,439 @@
+
+    <div class="element-monitor sport-title">
+        <ul class="field-switcher">
+            <li ng-show="conf.videoEnabled && (openGame.video_id || openGame.video_data) && !pinnedGames[openGame.id] && (!enlargedGame || openGame.id !== enlargedGame.id)"
+                ng-class="{'selected': openGame.activeFieldType==='video' && !playerRemoved}"><a ng-click="openGame.activeFieldType='video'; playerRemoved = false;" class="icon-ic_video_collection_24px"></a></li>
+            <li ng-show="openGame.has_animation" ng-class="{'selected': openGame.activeFieldType==='field' || playerRemoved }"><a class="playing-field" ng-click="openGame.activeFieldType='field'"></a></li>
+        </ul>
+        <div class="video-animation-toggle" ng-click="toggleVideoAndAnimationBox()"></div>
+        <div class="video-resize-toggle" ng-click="$root.videoResizeButton = !$root.videoResizeButton"></div>
+
+        <div class="animation-sound-switch" ng-show="openGame.activeFieldType==='field'" ng-if="openGame.activeFieldType!=='video'">
+            <!--<span class="video-mute icon-ic_volume_up_24px" ng-click="toggleAnimationSound(openGame.isAnimationMute)" ng-show="!openGame.isAnimationMute &&  env.sound === 'on'" title="Sound Effect"></span>
+            <span class="video-unmute icon-ic_volume_off_24px" ng-click="toggleAnimationSound(openGame.isAnimationMute)" ng-show="openGame.isAnimationMute && env.sound === 'on'" title="Sound Effect"></span>
+            <span class="video-soundoff icon-ic_volume_off_24px" ng-show="env.sound === 'off'" trans title="Turn on sound from settings"></span>-->
+            <span class="video-mute icon-ic_volume_up_24px" ng-click="env.sound = 0;" ng-show="env.sound > 0" title="Sound" trans="attr-only"></span>
+            <span class="video-unmute icon-ic_volume_off_24px" ng-click="env.sound = 0.75;" ng-show="env.sound === 0" title="Sound" trans="attr-only"></span>
+            <div class="sound-volume">
+                <div>
+                    <rzslider rz-slider-model="env.sound" rz-slider-floor="0"
+                              rz-slider-ceil="1"
+                              rz-slider-step="0.01"
+                              rz-slider-precision="1" rz-slider-always-show-bar="true">
+                    </rzslider>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div ng-if="openGame.activeFieldType === 'video' && !hideVideoAndAnimationBox && conf.videoEnabled && !enlargedGame"
+
+         class="game-video">
+
+        <div class="game-video-container">
+            <p ng-if="!env.authorized && !conf.integrationMode" trans
+               ng-click="broadcast('openLoginForm');$event.stopPropagation();" class="login-link">You need to be logged in to be able to play video.</p>
+            <p ng-if="!env.authorized && conf.integrationMode" trans class="login-link">You need to be logged in to be able to play video.</p>
+
+            <p ng-if="env.authorized && (profile.calculatedBalance + profile.calculatedBonus) === 0 && !profile.initial_balance" trans ng-click="!conf.disableDepositPage && broadcast('toggleSliderTab', 'deposit');$event.stopPropagation();">You need to have non-zero balance to be able to play video.</p>
+
+            <div ng-if="env.authorized && !conf.video.autoPlay && ((profile.calculatedBalance + profile.calculatedBonus) !== 0 || profile.initial_balance)" ng-click="restoreVideo(openGame)" class="video-b-icon-arrow"></div>
+
+            <div ng-if="env.authorized && !playerRemoved && openGame.video_data && ((profile.calculatedBalance + profile.calculatedBonus) > 0 || profile.initial_balance > 0)"  class="video-player-container">
+                <div class="video-player-control" ng-show="videoIsLoaded">
+                    <span ng-click="togglePause();" ng-show="!paused" class="video-pause">Pause</span>
+                    <span ng-click="togglePause();" ng-show="paused" class="video-play">Play</span>
+                </div>
+                <div class="video-player-control volume-control" ng-show="videoIsLoaded">
+                    <span ng-click="env.sound = 0;" ng-show="env.sound > 0"
+                          class="video-mute icon-ic_volume_off_24px">Mute</span>
+                    <span ng-click="env.sound = 0.75;" ng-show="env.sound === 0"
+                          class="video-unmute icon-ic_volume_up_24px">UnMute</span>
+                    <div class="sound-volume">
+                        <div>
+                            <rzslider rz-slider-model="env.sound" rz-slider-floor="0"
+                                      rz-slider-ceil="1"
+                                      rz-slider-step="0.01"
+                                      rz-slider-precision="1" rz-slider-always-show-bar="true">
+                            </rzslider>
+                        </div>
+                    </div>
+                </div>
+                <flashplayer ng-if="openGame.video_data && conf.video.autoPlay" id="gamevideo{{openGame.id}}"
+                             stream-url="{{openGame.video_data}}" provider-id="{{openGame.tv_type}}"
+                             initially-muted="{{ env.sound }}"></flashplayer>
+            </div>
+        </div>
+        <div class="fav-monitor" style="top:10px; background: white;" ng-show="openGame.video_data">
+            <a ng-show="!conf.detachedVideoSizes[openGame.tv_type] && env.authorized" ng-click="openGame.activeFieldType='field'; detachVideo('fullScreen');" class="detach-fullscreen"><span
+                    class="detach-btn" trans>Detach</span></a>
+            <a ng-show="openGame.tv_type !== conf.defaultStreaming.tvType" ng-click="openGame.activeFieldType='field'; detachVideo('dragable');"><span class="detach-btn" trans>Detach</span></a>
+        </div>
+    </div>
+
+
+    <audio id="{{openGame.id}}" ng-src="{{animationSoundsMap[openGame.last_event.type] + '.mp3'}}" autoplay="" ng-if="animationSoundOn() && animationSoundsMap[openGame.last_event.type]" ng-init="changeVolume()"></audio>
+    <audio id="{{openGame.id}}" ng-src="{{animationSoundsMap[openGame.last_event.type] + '.ogg'}}" autoplay="" ng-if="animationSoundOn() && animationSoundsMap[openGame.last_event.type] && !isMp3Supported" ng-init="changeVolume()"></audio>
+
+    <!-- Soccer animation control -->
+    <div class="game-control soccer" ng-if="openGame.sport.alias === 'Soccer' && openGame.activeFieldType != 'video'">
+        <ul class="game-team-names">
+            <li title="{{ openGame.team1_name }}">{{ openGame.team1_name }}</li>
+            <li class="teams-score"><span>{{openGame.info.score1}} : {{openGame.info.score2}}</span></li>
+            <li title="{{ openGame.team2_name }}">{{ openGame.team2_name }}</li>
+        </ul>
+        <!-- Soccer animation control -->
+        <!-- Field with animations -->
+        <div class="field-container tl-hide">
+            <div class="field">
+                <div ng-if="openGame.last_event.type === 'Attack'" class="animation-container {{openGame.last_event.type}}" ng-class="{'home': openGame.last_event.side === '1', 'away': openGame.last_event.side === '2'}">
+                    <div class=" attack-div">
+                        <div class="attack-dir"></div>
+                    </div>
+                    <p trans title="Attack">Attack</p>
+                </div>
+                <div ng-if="openGame.last_event.type === 'BallSafe'" class="animation-container {{openGame.last_event.type}} " ng-class="{'home': openGame.last_event.side === '1', 'away': openGame.last_event.side === '2'}">
+                    <div>
+                        <div trans title="Ball Safe">Ball Safe</div>
+                        <div>{{openGame['team'+openGame.last_event.side + '_name']}}</div>
+                    </div>
+                </div>
+                <div ng-if="openGame.last_event.type === 'Corner'" class="animation-container {{openGame.last_event.type}}" ng-class="{'home': openGame.last_event.side === '1', 'away': openGame.last_event.side === '2'}">
+                    <div>
+                        <div class=" ball"></div>
+                    </div>
+                    <p class="text-event" trans title="Corner">Corner</p>
+                </div>
+                <div ng-if="openGame.last_event.type === 'DangerousAttack'" class="animation-container {{openGame.last_event.type}} " ng-class="{'home': openGame.last_event.side === '1', 'away': openGame.last_event.side === '2'}">
+                    <!--<audio id="{{openGame.id}}" ng-src="{{openGame.last_event.type === 'DangerousAttack'? 'audio/soccer/DangerousAttack.mp3': ''}}" autoplay="autoplay" ng-if="animationSoundOn()"></audio>
+                    <audio id="{{openGame.id}}" ng-src="{{openGame.last_event.type === 'DangerousAttack'? 'audio/soccer/DangerousAttack.ogg': ''}}" autoplay="autoplay" ng-if="animationSoundOn() && !isMp3Supported"></audio>-->
+                    <div class=" attack-div">
+                        <div class="attack-dir"></div>
+                    </div>
+                    <p trans title="Dangerous Attack">Dangerous Attack</p>
+                </div>
+                <div ng-if="openGame.last_event.type === 'ExtraTimeFirstHalf'" class="animation-container {{openGame.last_event.type}}" ng-class="{'home': openGame.last_event.side === '1', 'away': openGame.last_event.side === '2'}">
+                    <div class=" text-event" trans title="Extra Time First Half">Extra Time First Half</div>
+                </div>
+                <div ng-if="openGame.last_event.type === 'ExtraTimeHalfTime'" class="animation-container {{openGame.last_event.type}}" ng-class="{'home': openGame.last_event.side === '1', 'away': openGame.last_event.side === '2'}">
+                    <div class=" text-event" trans title="Extra Time Half Time">Extra Time Half Time</div>
+                </div>
+                <div ng-if="openGame.last_event.type === 'ExtraTimeSecondHalf'" class="animation-container {{openGame.last_event.type}}" ng-class="{'home': openGame.last_event.side === '1', 'away': openGame.last_event.side === '2'}">
+                    <div class=" text-event" trans title="Extra Time Second Half">Extra Time Second Half</div>
+                </div>
+                <div ng-if="openGame.last_event.type === 'Finished'" class="animation-container {{openGame.last_event.type}}" ng-class="{'home': openGame.last_event.side === '1', 'away': openGame.last_event.side === '2'}">
+                    <div class=" text-event" trans title="Finished">Finished</div>
+                </div>
+                <div ng-if="openGame.last_event.type === 'FirstHalf'" class="animation-container {{openGame.last_event.type}}" ng-class="{'home': openGame.last_event.side === '1', 'away': openGame.last_event.side === '2'}">
+                    <div class=" text-event" trans title="First Half">First Half</div>
+                </div>
+                <div ng-if="openGame.last_event.type === 'FreeKick'" class="animation-container {{openGame.last_event.type}}" ng-class="{'home': openGame.last_event.side === '1', 'away': openGame.last_event.side === '2'}">
+                    <div class=" ripple"></div>
+                    <div class="arrow"></div>
+                    <div class="ball"></div>
+                    <div class="text-event" trans title="Free Kick">Free Kick</div>
+                </div>
+                <div ng-if="openGame.last_event.type === 'Goal'" class="animation-container {{openGame.last_event.type}}" ng-class="{'home': openGame.last_event.side === '1', 'away': openGame.last_event.side === '2'}">
+                   <!-- <audio id="{{openGame.id}}" ng-src="{{openGame.last_event.type === 'Goal'? 'audio/soccer/Goal.mp3':''}}"  ng-if="animationSoundOn()"></audio>
+                    <audio id="{{openGame.id}}" ng-src="{{openGame.last_event.type === 'Goal'? 'audio/soccer/Goal.ogg':''}}"  ng-if="animationSoundOn() && !isMp3Supported"></audio>-->
+                    <div class=" ball-cont">
+                        <div class="ball"></div>
+                    </div>
+                    <p class="goal-text"><span trans title="Goal">Goal</span>!!!</p>
+                    <p class="team" title="{{openGame['team'+openGame.last_event.side + '_name']}}">{{openGame['team'+openGame.last_event.side + '_name']}}</p>
+                </div>
+                <div ng-if="openGame.last_event.type === 'GoalKick'" class="animation-container {{openGame.last_event.type}}" ng-class="{'home': openGame.last_event.side === '1', 'away': openGame.last_event.side === '2'}">
+                    <div class=" ripple"></div>
+                    <div class="arrow"></div>
+                    <div class="ball"></div>
+                    <div class="text-event" trans title="Goal Kick">Goal Kick</div>
+                </div>
+                <div ng-if="openGame.last_event.type === 'HalfTime'" class="animation-container {{openGame.last_event.type}}" ng-class="{'home': openGame.last_event.side === '1', 'away': openGame.last_event.side === '2'}">
+                    <div class=" text-event" trans title="Half Time">Half Time</div>
+                </div>
+                <div ng-if="openGame.last_event.type === 'NotStarted'" class="animation-container {{openGame.last_event.type}}" ng-class="{'home': openGame.last_event.side === '1', 'away': openGame.last_event.side === '2'}">
+                    <div class=" text-event" trans title="Not Started">Not Started</div>
+                </div>
+                <div ng-if="openGame.last_event.type === 'Offside'" class="animation-container {{openGame.last_event.type}}" ng-class="{'home': openGame.last_event.side === '1', 'away': openGame.last_event.side === '2'}">
+                    <div class=" line"></div>
+                    <div class="ball"></div>
+                    <p trans title="Offside">Offside</p>
+                </div>
+                <div ng-if="openGame.last_event.type === 'Penalty'" class="animation-container {{openGame.last_event.type}}" ng-class="{'away': openGame.last_event.side === '1', 'home': openGame.last_event.side === '2'}">
+                    <div class=" arrow"></div>
+                    <div class="ball"></div>
+                    <div class="text-event" trans title="Penalty">Penalty</div>
+                </div>
+                <div ng-if="openGame.last_event.type === 'PreExtraHalf'" class="animation-container {{openGame.last_event.type}}" ng-class="{'home': openGame.last_event.side === '1', 'away': openGame.last_event.side === '2'}">
+                    <div class=" text-event" trans title="Pre Extra Half">Pre Extra Half</div>
+                </div>
+                <div ng-if="openGame.last_event.type === 'RedCard'" class="animation-container {{openGame.last_event.type}}" ng-class="{'home': openGame.last_event.side === '1', 'away': openGame.last_event.side === '2'}">
+                    <!--<audio id="{{openGame.id}}" ng-src="{{openGame.last_event.type === 'RedCard'?'audio/soccer/RedCard.mp3':''}}"  ng-if="animationSoundOn()"></audio>
+                    <audio id="{{openGame.id}}" ng-src="{{openGame.last_event.type === 'RedCard'?'audio/soccer/RedCard.ogg':''}}"  ng-if="animationSoundOn() && !isMp3Supported"></audio>-->
+                    <div class=" rotator">
+                        <div class="card"></div>
+                    </div>
+                    <div class="text-event" trans title="Red Card">Red Card</div>
+                </div>
+                <div ng-if="openGame.last_event.type === 'SecondHalf'" class="animation-container {{openGame.last_event.type}}" ng-class="{'home': openGame.last_event.side === '1', 'away': openGame.last_event.side === '2'}">
+                    <div class=" text-event" trans title="Second Half">Second Half</div>
+                </div>
+                <div ng-if="openGame.last_event.type === 'Substitution'" class="animation-container {{openGame.last_event.type}}" ng-class="{'home': openGame.last_event.side === '1', 'away': openGame.last_event.side === '2'}">
+                    <div class=" sub-cont"></div>
+                    <div class="text-event" trans title="Substitution">Substitution</div>
+                </div>
+                <div ng-if="openGame.last_event.type === 'ThrowIn'" class="animation-container {{openGame.last_event.type}}" ng-class="{'home': openGame.last_event.side === '1', 'away': openGame.last_event.side === '2'}">
+                    <p trans title="Throw In">Throw In</p>
+                    <div>
+                        <div class="ball"></div>
+                    </div>
+                </div>
+                <div ng-if="openGame.last_event.type === 'YellowCard'" class="animation-container {{openGame.last_event.type}}" ng-class="{'home': openGame.last_event.side === '1', 'away': openGame.last_event.side === '2'}">
+                   <!-- <audio id="{{openGame.id}}" ng-src="{{openGame.last_event.type === 'YellowCard'? 'audio/soccer/YellowCard.mp3':''}}"  ng-if="animationSoundOn()"></audio>
+                    <audio id="{{openGame.id}}" ng-src="{{openGame.last_event.type === 'YellowCard'? 'audio/soccer/YellowCard.ogg':''}}"  ng-if="animationSoundOn() && !isMp3Supported"></audio>-->
+                    <div class="rotator">
+                        <div class="card"></div>
+                    </div>
+                    <div class="text-event" trans title="Yellow Card">Yellow Card</div>
+                </div>
+                <div ng-if="openGame.last_event.type === 'GoalkeeperSave'" class ="animation-container {{openGame.last_event.type}}" ng-class="{'home': openGame.last_event.side === '1', 'away': openGame.last_event.side === '2'}">
+                    <div></div>
+                    <p trans title="Goalkeeper Save">Goalkeeper Save</p>
+                </div>
+
+                <div class="gate-l"></div>
+                <div class="gate-r"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tennis animation control -->
+    <div class="game-control tennis tennis-{{openGame.info.field}}" ng-if="openGame.sport.alias === 'Tennis' && openGame.activeFieldType != 'video'">
+        <ul class="game-team-names">
+            <li title="{{ openGame.team1_name }}">{{ openGame.team1_name }}</li>
+            <li class="teams-score"><span>{{openGame.info.score1}} : {{openGame.info.score2}}</span></li>
+            <li title="{{ openGame.team2_name }}">{{ openGame.team2_name }}</li>
+        </ul>
+        <div class="field-container tl-hide">
+            <div class="field field-{{openGame.info.field}}">
+                <div class="{{openGame.last_event.type}} side_{{openGame.last_event.side}} {{openGame.last_event.court_side}}">
+                    <div ng-if="openGame.last_event.type === 'BallInPlay'">
+                        <div class="ball_container">
+                            <div class="ball"></div>
+                            <div class="ball_shadow"></div>
+                        </div>
+                    </div>
+                    <div ng-if="openGame.last_event.type === 'Ace'">
+                        <div class="ball_container">
+                            <div class="ball"></div>
+                            <div class="ball_shadow"></div>
+                        </div>
+                        <div trans class="set" title="Ace">Ace</div>
+                    </div>
+                    <div ng-if="openGame.last_event.type === 'Point'">
+                        <div class="score_1"><span>{{openGame.stats.passes.team1_value}}</span></div>
+                        <div class="score_2"><span>{{openGame.stats.passes.team2_value}}</span></div>
+                        <div trans class="point_text" title="Point">Point</div>
+                    </div>
+                    <div ng-if="openGame.last_event.type === 'ServiceFault'">
+                        <div trans class="fault_text" title="Service Fault">Service Fault</div>
+                    </div>
+                    <div ng-if="openGame.last_event.type === 'DoubleFault'">
+                        <div trans class="fault_text" title="Double Fault">Double Fault</div>
+                    </div>
+                    <div ng-if="openGame.last_event.type === 'Finished'">
+                        <div trans class="set" title="Finished">Finished</div>
+                    </div>
+                    <div ng-if="openGame.last_event.type === 'FirstSet'">
+                        <div trans class="set" title="First Set">First Set</div>
+                    </div>
+                    <div ng-if="openGame.last_event.type === 'SecondSet'">
+                        <div trans class="set" title="Second Set">Second Set</div>
+                    </div>
+                    <div ng-if="openGame.last_event.type === 'ThirdSet'">
+                        <div trans class="set" title="Third Set">Third Set</div>
+                    </div>
+                    <div ng-if="openGame.last_event.type === 'FourthSet'">
+                        <div trans class="set" title="Fourth Set">Fourth Set</div>
+                    </div>
+                    <div ng-if="openGame.last_event.type === 'FifthSet'">
+                        <div trans class="set" title="Fifth Set">Fifth Set</div>
+                    </div>
+                    <div ng-if="openGame.last_event.type === 'InjuryBreak'">
+                        <div trans class="set" title="Injury Break">Injury Break</div>
+                    </div>
+                    <div ng-if="openGame.last_event.type === 'RainDelay'">
+                        <div trans class="set" title="Rain Delay">Rain Delay</div>
+                    </div>
+                    <div ng-if="openGame.last_event.type === 'Timeout'">
+                        <div trans class="set" title="Timeout">Timeout</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Basketball animation control -->
+    <div class="game-control basketball" ng-if="openGame.sport.alias === 'Basketball' && openGame.activeFieldType != 'video'">
+        <ul class="game-team-names">
+            <li title="{{ openGame.team1_name }}">{{ openGame.team1_name }}</li>
+            <li class="teams-score"><span>{{openGame.info.score1}} : {{openGame.info.score2}}</span></li>
+            <li title="{{ openGame.team2_name }}">{{ openGame.team2_name }}</li>
+        </ul>
+        <!-- Field with animations -->
+        <div class="field-container">
+            <div class="field">
+                <!--div ng-include="openGame.Event.url" class="animation-container {{openGame.last_event.type}} {{openGame.last_event.side}}"></div-->
+                <div class="animation-container {{openGame.last_event.type}}" ng-class="{1:'home', 2:'away'}[openGame.last_event.side]">
+                    <div ng-if="openGame.last_event.type === 'FirstQuarter'">
+                        <div trans class="text-event" title="First Quarter">First Quarter</div>
+                    </div>
+                    <div ng-if="openGame.last_event.type === 'FirstQuarterEnded'">
+                        <div trans class="text-event" title="First Quarter Ended">First Quarter Ended</div>
+                    </div>
+                    <div ng-if="openGame.last_event.type === 'SecondQuarter'">
+                        <div trans class="text-event" title="Second Quarter">Second Quarter</div>
+                    </div>
+                    <div ng-if="openGame.last_event.type === 'SecondQuarterEnded'">
+                        <!-- TYPO in word second, need to test-->
+                        <div trans class="text-event" title="Second Quarter Ended">Second Quarter Ended</div>
+                    </div>
+                    <div ng-if="openGame.last_event.type === 'ThirdQuarter'">
+                        <div trans class="text-event" title="Third Quarter">Third Quarter</div>
+                    </div>
+                    <div ng-if="openGame.last_event.type === 'ThirdQuarterEnded'">
+                        <div trans class="text-event" title="Third Quarter Ended">Third Quarter Ended</div>
+                    </div>
+                    <div ng-if="openGame.last_event.type === 'FourthQuarter'">
+                        <div trans class="text-event" title="Fourth Quarter">Fourth Quarter</div>
+                    </div>
+                    <div ng-if="openGame.last_event.type === 'FourthQuarterEnded'">
+                        <div trans class="text-event" title="Fourth Quarter Ended">Fourth Quarter Ended</div>
+                    </div>
+                    <div ng-if="openGame.last_event.type === 'Overtime'">
+                        <div trans class="text-event" title="Overtime">Overtime</div>
+                    </div>
+                    <div ng-if="openGame.last_event.type === 'OvertimeEnded'">
+                        <div trans class="text-event" title="Overtime Ended">Overtime Ended</div>
+                    </div>
+                    <div ng-if="openGame.last_event.type === 'Foul'">
+                        <div class="timeout-container">
+                            <div trans title="Foul">Foul</div>
+                            <div>{{openGame.last_event.team_name}}</div>
+                        </div>
+                    </div>
+                    <div ng-if="openGame.last_event.type === 'FreeThrow'">
+                        <div class="basket"></div>
+                        <div class="arrow"></div>
+                        <div class="b_ball"></div>
+                        <div trans class="text-event" title="Free Throw">Free Throw</div>
+                    </div>
+                    <div ng-if="openGame.last_event.type === 'Free1Throw'">
+                        <div class="basket"></div>
+                        <div class="arrow"></div>
+                        <div class="b_ball"></div>
+                        <div trans class="text-event" title="Free 1-Point Throw">Free 1-Point Throw</div>
+                    </div>
+                    <div ng-if="openGame.last_event.type === 'Free2Throws'">
+                        <div class="basket"></div>
+                        <div class="arrow"></div>
+                        <div class="b_ball"></div>
+                        <div trans class="text-event" title="Free 2-Point Throw">Free 2-Point Throw</div>
+                    </div>
+                    <div ng-if="openGame.last_event.type === 'Free3Throws'">
+                        <div class="basket"></div>
+                        <div class="arrow"></div>
+                        <div class="b_ball"></div>
+                        <div trans class="text-event" title="Free 3-Point Throw">Free 3-Point Throw</div>
+                    </div>
+                    <div ng-if="openGame.last_event.type === 'MissedFreeThrow'">
+                        <div trans class="text-event" title="Missed Free Throw">Missed Free Throw</div>
+                    </div>
+                    <div ng-if="openGame.last_event.type === 'Attack'">
+                        <div class="attack-div">
+                            <div class="attack-dir"></div>
+                        </div>
+                        <p trans title="Attack">Attack</p>
+                    </div>
+                    <div ng-if="openGame.last_event.type === 'OnePoint'">
+                        <div class="basket"></div>
+                        <div class="ball_container">
+                            <div class="b_ball"></div>
+                        </div>
+                        <div trans class="text-event" title="One Point">One Point</div>
+                    </div>
+                    <div ng-if="openGame.last_event.type === 'TwoPoints'">
+                        <div class="basket"></div>
+                        <div class="ball_container">
+                            <div class="b_ball"></div>
+                        </div>
+                        <div trans class="text-event" title="Two Points">Two Points</div>
+                    </div>
+                    <div ng-if="openGame.last_event.type === 'ThreePoints'">
+                        <div class="basket"></div>
+                        <div class="ball_container">
+                            <div class="b_ball"></div>
+                        </div>
+                        <div trans class="text-event" title="Three Points">Three Points</div>
+                    </div>
+                    <div ng-if="openGame.last_event.type === 'Timeout'">
+                        <div trans class="text-event" title="Timeout">Timeout</div>
+                    </div>
+                    <div ng-if="openGame.last_event.type === 'Finished'">
+                        <div trans class="text-event" title="Finished">Finished</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Volleyball animation control -->
+    <div class="game-control volleyball" ng-if="openGame.sport.alias === 'Volleyball' && openGame.activeFieldType!=='video'">
+        <ul class="game-team-names">
+            <li title="{{ openGame.team1_name }}">{{ openGame.team1_name }}</li>
+            <li class="teams-score"><span>{{openGame.info.score1}} : {{openGame.info.score2}}</span></li>
+            <li title="{{ openGame.team2_name }}">{{ openGame.team2_name }}</li>
+        </ul>
+        <div class="field-container tl-hide">
+            <div class="field">
+                <div class="{{openGame.last_event.type}} side_{{openGame.last_event.side}}">
+                    <div ng-if="openGame.last_event.type === 'BallInPlay'">
+                        <div class="ball_container">
+                            <div class="v_ball"></div>
+                            <div class="v_ball_shadow"></div>
+                        </div>
+                    </div>
+                    <div ng-if="openGame.last_event.type === 'Point'">
+                        <div class="point_container">
+                            <div trans class="point_text">Point</div>
+                        </div>
+                    </div>
+                    <div ng-if="openGame.last_event.type === 'Fault'">
+                        <div trans class="text-event">Fault</div>
+                    </div>
+                    <div ng-if="openGame.last_event.type === 'Finished'">
+                        <div trans class="text-event">Finished</div>
+                    </div>
+                    <div ng-if="openGame.last_event.type === 'Timeout'">
+                        <div trans class="text-event">Timeout</div>
+                    </div>
+                    <div ng-if="openGame.last_event.type === 'FirstSet'">
+                        <div trans class="text-event">First Set</div>
+                    </div>
+                    <div ng-if="openGame.last_event.type === 'SecondSet'">
+                        <div trans class="text-event">Second Set</div>
+                    </div>
+                    <div ng-if="openGame.last_event.type === 'ThirdSet'">
+                        <div trans class="text-event">Third Set</div>
+                    </div>
+                    <div ng-if="openGame.last_event.type === 'FourthSet'">
+                        <div trans class="text-event">Fourth Set</div>
+                    </div>
+                    <div ng-if="openGame.last_event.type === 'FifthSet'">
+                        <div trans class="text-event">Fifth Set</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+

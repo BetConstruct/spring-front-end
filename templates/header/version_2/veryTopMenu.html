@@ -1,0 +1,23 @@
+<div class="simple-nav-j" ng-init="menuItems = conf.theVeryTopMenu[env.lang] || conf.theVeryTopMenu['default'] || conf.theVeryTopMenu" ng-show="menuItems.length > 0">
+   <p trans>More</p>
+   <ul sub-menu-creator="veryTopMenu">
+      <li ng-repeat="item in menuItems track by $index" ng-show="!item.showCondition || item.showCondition.authorized === env.authorized">
+         <a ng-if="item.href || (item.broadcast && !env.authorized)" target="{{item.target || '_self'}}"
+            ng-href="{{item.href}}"
+            ng-click="$root.topMenuDropDown=false;closeSlider();$parent.verytopMenuExpanded = false;broadcast(item.broadcast)"
+            ng-bind="item.label|translate" ng-class="item.staticClass"></a>
+         <a ng-if="item.help"
+            ng-click="closeSlider();openHelpPage(item.help, item.helpFrom);goToTop();$parent.verytopMenuExpanded=false;$event.stopPropagation();"
+            ng-bind="item.label|translate"></a>
+         <a ng-if="item.sliderAuthorized && env.authorized"
+            ng-click="conf.enableMixedView ? selectBalanceMenuItem($event,'deposit') : broadcast( 'toggleSliderTab', item.sliderAuthorized); goToTop();$parent.verytopMenuExpanded=false;$event.stopPropagation();"
+            ng-bind="item.label|translate"></a>
+         <a ng-if="item.sliderAuthorized && !env.authorized"
+            ng-click="broadcast( 'openLoginForm');goToTop();$parent.verytopMenuExpanded=false;$event.stopPropagation();"
+            ng-bind="item.label|translate"></a>
+      </li>
+      <li ng-show="conf.veryTopMenuAffiliateProgram">
+         <a ng-click="goToTop(); openCustomDialog('affiliateProgram'); $event.stopPropagation();" trans>Affiliate Program</a>
+      </li>
+   </ul>
+</div>

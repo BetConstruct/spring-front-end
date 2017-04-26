@@ -1,0 +1,46 @@
+<div ng-controller="skillGamesMainCtrl" watch-resize middle-screen-mode="true" ng-init="checkIfEnabled('skillgames'); loadGames(); setTitle('Games');">
+    <div ng-show="gamesPageLoaded">
+        <div class="casino-main" ng-show="!gamesInfo.length">
+            <div ng-if="!conf.enableNewSkillGame">
+                <div ng-init="getSkillGamesBanners();">
+                    <vbet-big-slider ng-if="skilledGamesBanners" images="skilledGamesBanners" link-click-handler="openCBannerLink"></vbet-big-slider>
+                </div>
+                <!--Skill games-->
+                <div class="Featured-casino-games">
+                    <div class="contein-slider">
+                        <div class="games-slider">
+                            <h3 ng-show="games && games.length" trans>SKILL GAMES</h3>
+                            <ul>
+                                <li ng-repeat="game in games track by game.id">
+                                    <a ng-click="openGame(game, 'real'); $event.stopPropagation();" ng-class="{'cursor-arrow' : game.gameType.realPlay !== 1}">
+                                        <p ng-show="game.gameType.realPlay === 1" class="play-button"><span trans>play now</span></p>
+                                        <img ng-src="{{cConf.iconsUrl + game.gameID}}.jpg" alt="">
+                                    </a>
+                                    <p class="casino-game-download" ng-show="cConf.downloadEnabled && game.gameType.isDownloadClient === 1" ng-click="gaSend('send', 'event', 'games', game.gameCategory||game.gameCat, {'page': $location.path(), 'eventLabel': ('Download '+game.gameName)}); $event.stopPropagation();">
+                                        <a ng-show="(userOS!=='Windows' && userOS !== 'MacOS' && userOS !== 'Linux' && userOS !== 'UNIX') || (!game.gameInfo.downloadLink && (userOS==='Windows' || userOS==='Linux' || userOS==='UNIX')) || (userOS==='MacOS' && !game.gameInfo.downloadLinkMac)" ng-click="$parent.globalPopup=('There is no downloadable client for your operating system'|translate)"><span trans>DOWNLOAD</span></a>
+                                        <a ng-href="{{game.gameInfo.downloadLink}}" ng-show="(userOS==='Windows' || userOS==='UNIX') && game.gameInfo.downloadLink"><span trans>DOWNLOAD</span></a>
+                                        <a ng-href="{{game.gameInfo.downloadLinkMac}}" ng-show="userOS==='MacOS' && game.gameInfo.downloadLinkMac"><span trans>DOWNLOAD</span></a>
+                                        <a ng-href="{{game.gameInfo.downloadLinkLinux}}" ng-show="userOS==='Linux' && game.gameInfo.downloadLinkLinux"><span trans>DOWNLOAD</span></a>
+                                    </p>
+                                    <p ng-show="game.hasFunMode" class="fun-game">
+                                        <a class="game-fun-link" ng-show="!env.authorized && game.gameType.realPlay === 1" ng-click="openGame(game, 'demo'); $event.stopPropagation();"><span trans>VIEW</span></a>
+                                    </p>
+                                    <div class="popular-game-name">
+                                        <p><a>{{game.gameName|translate}}</a></p>
+                                        <div ng-show="game.gameType.realPlay === 1" class="fav-block"><a ng-click="toggleSaveToMyCasinoGames(game)" ng-class="{'star-active': isFromSaved(game.id)}">star</a></div>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <!--Skill games END-->
+            </div>
+            <div ng-if="conf.enableNewSkillGame" ng-include="getTemplate('optional_modules/casino/templates/skillgames/new.html')"></div>
+        </div>
+        <div ng-show="allGames && allGames.length" ng-include="getTemplate('optional_modules/casino/templates/popup-games.html')"></div>
+        <div ng-include="getTemplate('optional_modules/casino/templates/big-game.html')" ng-if="gamesInfo.length" class="big-games-overflow"></div>
+    </div>
+
+    <vbet-loader class="skillgames" ng-show="!gamesPageLoaded"></vbet-loader>
+</div>

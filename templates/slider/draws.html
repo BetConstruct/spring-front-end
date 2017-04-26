@@ -1,0 +1,328 @@
+<div ng-controller="poolBettingCtrl" >
+    <div ng-if="!conf.newPoolBettingPage">
+        <div class="register deposit" ng-if="env.sliderContent === 'alldraws'" ng-init="initAllDraws()">
+            <div class="all-draws-contain">
+                <div class="draws-contain">
+                    <table>
+                        <tr>
+                            <th trans>Draw number</th>
+                            <th trans>End date</th>
+                            <th trans context="all draws">State</th>
+                            <th trans>Jackpot</th>
+                            <th trans>Pool</th>
+                            <th trans>Prize fund</th>
+                            <th trans>Tickets / Variants</th>
+                        </tr>
+                        <tr ng-repeat="draw in draws|orderBy:'-number'" ng-if="draw.state">
+                            <td>
+                                <span ng-show="draw.status === 1"><a ng-click="closeDrawsSlider()" trans>Current Draw</a></span>
+                                <span ng-show="draw.status !== 1">
+                                    <a ng-click="gotoDraw(draw.id, draw.number)">
+                                        <span trans>Draw</span> <span>N{{draw.number}}</span>
+                                    </a>
+                                </span>
+                            </td>
+                            <td>{{draw.end_date|formatDate:'full'}}</td>
+                            <td>{{draw.state|translate}}</td>
+                            <td>{{draw.jackpot|number:conf.balanceFractionSize}}</td>
+                            <td>{{(draw.pool_fee + draw.prize_fund)|number:conf.balanceFractionSize}}</td>
+                            <td>{{draw.prize_fund|number:conf.balanceFractionSize}}</td>
+                            <td><span ng-show="draw.tickets_count || draw.bets_count">{{draw.tickets_count}} / {{draw.bets_count}}</span></td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <!-----------------------------   single draw --------------------------->
+        <div class="register deposit" ng-if="env.sliderContent === 'singledraw'" ng-init="initSingleDraw()">
+
+
+        <div class="all-draws-contain">
+
+        <div class="single-draw-block">
+        <div class="name-title-draw">
+            <h3><span trans>Draw</span> №<span>{{draw.number}}</span></h3>
+            <p ng-show="draw.end_date">{{draw.end_date|formatDate}}</p>
+            <ul>
+                <li ng-show="previousDraw"><a ng-click="gotoDraw(previousDraw.id, previousDraw.number)">&#8678;</a></li>
+                <li ng-show="nextDraw && nextDraw.status > 1"><a ng-click="gotoDraw(nextDraw.id, nextDraw.number)">&#8680;</a></li>
+            </ul>
+        </div>
+
+        <div class="rezult-draw-info">
+
+            <table>
+                <tr>
+                    <th colspan="3" trans>Event</th>
+                    <th trans>Result</th>
+                    <th colspan="3" trans>Bookmakers probability / bets amount (in %)</th>
+                </tr>
+                <tr ng-repeat="row in gamesResultTableRows">
+                    <th colspan="4" ng-if="row.type==='competition'"><p title="{{row.sport_name + ' ' + row.competition_name}}">{{row.sport_name + ' ' + row.competition_name}}</p></th>
+                    <th ng-if="row.type==='competition'">1</th>
+                    <th ng-if="row.type==='competition'">X</th>
+                    <th ng-if="row.type==='competition'">2</th>
+                    <td ng-if="row.type==='game'">{{row.order}}</td>
+                    <td ng-if="row.type==='game'">{{row.start_ts|formatDate:'D.MM HH:mm'}}</td>
+                    <td ng-if="row.type==='game'"><p title="{{row.team1_name + '-' + row.team2_name}}">{{row.team1_name + '-' + row.team2_name}}</p></td>
+                    <td ng-if="row.type==='game'">{{row.score}}</td>
+                    <td ng-if="row.type==='game'">{{row.p1}} / {{row.p1_1}}</td>
+                    <td ng-if="row.type==='game'">{{row.x}} / {{row.x_1}}</td>
+                    <td ng-if="row.type==='game'">{{row.p2}} / {{row.p2_1}}</td>
+
+                </tr>
+            </table>
+        </div>
+
+
+        <div class="draw-prize-info">
+            <div class="prize-list-info">
+                <table>
+                    <tr>
+                        <td><span ng-show="draw.min" trans>min.</span><span trans>Jackpot</span></td>
+                        <td>{{draw.jackpot|number:conf.balanceFractionSize}} <span>{{currency.name|currency}}</span></td>
+                    </tr>
+                    <tr>
+                        <td trans>Pool</td>
+                        <td>{{(draw.pool_fee + draw.prize_fund)* (currency.toto_rate || 1)|number:conf.balanceFractionSize}} <span>{{currency.name|currency}}</span></td>
+                    </tr>
+                    <tr>
+                        <td trans>Prize fund</td>
+                        <td>{{draw.prize_fund* (currency.toto_rate || 1)|number:conf.balanceFractionSize}} <span>{{currency.name|currency}}</span></td>
+                    </tr>
+                    <tr>
+                        <td trans>Tickets</td>
+                        <td>{{draw.tickets_count}}</td>
+                    </tr>
+                    <tr>
+                        <td trans>Variants</td>
+                        <td>{{draw.bets_count}}</td>
+                    </tr>
+                </table>
+            </div>
+
+
+            <div class="all-result-block" >
+
+                <table ng-if="totoPrizeInfo">
+                    <tr>
+                        <th>xx/15</th>
+                        <th>%</th>
+                        <th trans>Prize fund</th>
+                        <th trans>Winners (var.)</th>
+                        <th trans>Win sum</th>
+                        <th trans>Win coef</th>
+                    </tr>
+                    <tr ng-repeat="prize in totoPrizeInfo" ng-if="prize.win_count">
+                        <td>{{prize.win_count}}</td>
+                        <td>{{prize.percent}}</td>
+                        <td>{{prize.prize_amount}}</td>
+                        <td>{{prize.winners}}</td>
+                        <td>{{prize.norm}}</td>
+                        <td>{{prize.payout}}</td>
+                    </tr>
+                </table>
+                <div class="all-draw-events"><a ng-click="openAllDraws()" trans>All draws</a></div>
+                <div class="all-draw-events"><a href="{{conf.poolBettingResultsUrlPrefix}}draw_{{draw.id}}_{{env.lang}}.html" target="_blank" trans>All bets</a></div>
+
+            </div>
+        </div>
+        </div>
+        </div>
+        </div>
+    </div>
+
+    <div ng-if="conf.newPoolBettingPage">
+        <div class="register deposit"  ng-if="env.sliderContent === 'alldraws'" ng-init="initAllDraws()">
+            <div class="all-draws-contain">
+
+                <div class="all-draws-classic">
+                    <ul class="all-title-j">
+                        <li class="draw-col-j">
+                            <span trans>Draw number</span>
+                        </li>
+                        <li class="date-col-j">
+                            <span trans>End date</span>
+                        </li>
+                        <li class="state-col-j">
+                            <span trans>State</span>
+                        </li>
+                        <li class="jackpot-col-j">
+                            <span trans>Jackpot</span>
+                        </li>
+                        <li class="pool-col-j">
+                            <span trans>Pool</span>
+                        </li>
+                        <li class="prize-col-j">
+                            <span trans>Prize fund</span>
+                        </li>
+                        <li class="tickets-col-j">
+                            <span trans>Tickets/Variants</span>
+                        </li>
+                    </ul>
+                    <div class="all-draws-classic-list">
+                        <ul ng-repeat="draw in draws|orderBy:'-number'">
+                            <li class="draw-col-j" >
+                                <span ng-show="draw.status === 1"><a ng-click="closeDrawsSlider()" trans>Current Draw</a></span>
+                                <span ng-show="draw.status !== 1">
+                                    <a ng-click="gotoDraw(draw.id, draw.number)">
+                                        <span>
+                                            <p trans>Draw</p> <p>N{{draw.number}}</p>
+                                        </span>
+                                    </a>
+                                </span>
+                            </li>
+                            <li class="date-col-j">
+                                <span>{{draw.end_date|formatDate:'full'}}</span>
+                            </li>
+                            <li class="state-col-j">
+                                <span>{{draw.state|translate}}</span>
+                            </li>
+                            <li class="jackpot-col-j">
+                                <span>{{draw.jackpot|number:conf.balanceFractionSize}}</span>
+                            </li>
+                            <li class="pool-col-j">
+                                <span>{{(draw.pool_fee + draw.prize_fund)|number:conf.balanceFractionSize}}</span>
+                            </li>
+                            <li class="prize-col-j">
+                                <span>{{draw.prize_fund|number:conf.balanceFractionSize}}</span>
+                            </li>
+                            <li class="tickets-col-j">
+                                <span ng-show="draw.tickets_count || draw.bets_count">{{draw.tickets_count}} / {{draw.bets_count}}</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="register deposit" ng-if="env.sliderContent === 'singledraw'" ng-init="initSingleDraw()">
+            <div class="all-draws-contain">
+
+                <div class="all-draws-classic">
+                    <ul class="all-title-j">
+                        <li class="single-draw-title-j">
+                            <div>
+                                <span>Draw #{{draw.number}}</span>
+                                <span ng-show="draw.end_date">{{draw.end_date|formatDate}}</span>
+                            </div>
+                        </li>
+                        <li class="back-to-list-j">
+                            <button ng-click="openAllDraws()" trans>Back to list</button>
+                            <a class="prev-j" ng-show="previousDraw" ng-click="gotoDraw(previousDraw.id, previousDraw.number)"></a>
+                            <a class="next-j" ng-show="nextDraw && nextDraw.status > 1" ng-click="gotoDraw(nextDraw.id, nextDraw.number)"></a>
+                        </li>
+                    </ul>
+                    <ul class="draw-info-j">
+                        <li class="min-jackpot-j">
+                            <p><span ng-show="draw.min" trans>Min.</span> Jacpot</p>
+                            <p><span>{{draw.jackpot|number:conf.balanceFractionSize}} </span> <span> {{currency.name|currency}}</span></p>
+                        </li>
+                        <li>
+                            <p>Pool</p>
+                            <p><span>{{(draw.pool_fee + draw.prize_fund)* (currency.toto_rate || 1)|number:conf.balanceFractionSize}}</span> <span>{{currency.name|currency}}</span></p>
+                        </li>
+                        <li>
+                            <p>Prize fund</p>
+                            <p><span>{{draw.prize_fund* (currency.toto_rate || 1)|number:conf.balanceFractionSize}} </span> <span>{{currency.name|currency}}</span></p>
+                        </li>
+                        <li>
+                            <p>Tickets</p>
+                            <p>{{draw.tickets_count}}</p>
+                        </li>
+                        <li>
+                            <p>Variants</p>
+                            <p>{{draw.bets_count}}</p>
+                        </li>
+                    </ul>
+                    <div class="single-draw-classic-statistic" ng-if="totoPrizeInfo">
+                        <ul class="title-j">
+                            <li><p>xx / 15</p></li>
+                            <li><p>%</p></li>
+                            <li><p trans>Prize fund</p></li>
+                            <li><p trans>Winners (var.)</p></li>
+                            <li><p trans>Win sum</p></li>
+                            <li><p trans>Win coef</p></li>
+                        </ul>
+                        <ul ng-repeat="prize in totoPrizeInfo" ng-if="prize.win_count">
+                            <li><p>{{prize.win_count}}</p></li>
+                            <li><p>{{prize.percent}}</p></li>
+                            <li><p>{{prize.prize_amount}}</p></li>
+                            <li><p>{{prize.winners}}</p></li>
+                            <li><p>{{prize.norm}}</p></li>
+                            <li><p>{{prize.payout}}</p></li>
+                        </ul>
+                    </div>
+                    <div class="classic-draws-scroll-contain">
+                        <div class="pbetting-compitation-group-j ng-scope"  ng-repeat="row in gamesResultTableRows">
+                            <div class="title" ng-if="row.type==='competition'">
+                                <ul>
+                                    <li>
+                                        <p title="{{row.sport_name + ' ' + row.competition_name}} {{row.sport_name + ' ' + row.competition_name}}" class="ng-binding"><span class="icon-j flag-j flag-Europe" ng-class="'flag-'+ competition[0].region_alias | removeUselessSymbolsByRegexp: '[,\' ]+': 'g'"></span>{{row.sport_name + ' ' + row.competition_name}} {{row.sport_name + ' ' + row.competition_name}}</p>
+                                    </li>
+                                    <li class="event-pbetting-j">
+                                        <span trans="">W1</span>
+                                    </li>
+                                    <li class="event-pbetting-j">
+                                        <span trans="">X</span>
+                                    </li>
+                                    <li class="event-pbetting-j">
+                                        <span trans="">W2</span>
+                                    </li>
+                                </ul>
+                            </div>
+                            <ul class="pbetting-row ng-scope" ng-if="row.type==='game'">
+                                <li>
+                                    <div class="pbetting-list-data-j">
+                                        <p class="time-j">
+                                            <span class="ng-binding">{{row.start_ts|formatDate:'D.MM HH:mm'}}</span>
+                                        </p>
+                                        <p class="pb-compitation-name-j">
+                                            <span title="Gimnasia La Plata" class="ng-binding">{{row.team1_name}}</span>
+                                        </p>
+                                        <p class="pbetting-list-vs-j">
+                                            <span trans="">vs</span>
+                                        </p>
+                                        <p class="pb-compitation-name-j">
+                                            <span title="Gimnasia La Plata" class="ng-binding">{{row.team2_name}}</span>
+                                        </p>
+                                        <!--<p class="additional-market-j">-->
+                                            <!--<span><a href="#/sport/?type=0&amp;sport=844&amp;region=65560&amp;game=1579215908&amp;competition=647112589">»</a></span>-->
+                                        <!--</p>-->
+                                    </div>
+                                </li>
+                                <li class="event-pbetting-j" ng-class="{'selected': poolBettingModel[game.order]['p1']}">
+                                    <label class="pbetting-label-j">
+                                        <div>
+                                            <span class="ng-binding">{{row.p1}} / {{row.p1_1}}</span>
+                                        </div>
+                                    </label>
+                                </li>
+                                <li class="event-pbetting-j" ng-class="{'selected': poolBettingModel[game.order]['x']}">
+                                    <label class="pbetting-label-j">
+                                        <div>
+                                            <span class="ng-binding">{{row.x}} / {{row.x_1}}</span>
+                                        </div>
+                                    </label>
+                                </li>
+                                <li class="event-pbetting-j" ng-class="{'selected': poolBettingModel[game.order]['p2']}">
+                                    <label class="pbetting-label-j">
+                                        <div>
+                                            <span class="ng-binding">{{row.p2}} / {{row.p2_1}}</span>
+                                        </div>
+                                    </label>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                </div>
+
+
+            </div>
+        </div>
+
+    </div>
+
+</div>

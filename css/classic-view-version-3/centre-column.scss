@@ -1,0 +1,1425 @@
+@mixin classic-new-view-3 {
+  .games-view-wrapper-v3,
+  .game-pinned.dashboard .games-view-wrapper-v3,
+  .multiview .game-pinned .games-view-wrapper-v3 {
+    box-sizing: border-box;
+    width: 100%;
+    position: absolute;
+    padding: 0;
+    top: 0;
+    left: 0;
+    height: 100%;
+    @include scroll;
+    transform: translate3d(0, 0, 0);
+  }
+  .games-view-wrapper-v3.open,
+  .games-view-wrapper-v3.has-statistics,
+  .game-pinned .games-view-wrapper-v3 {
+    box-sizing: border-box;
+    overflow: inherit;
+  }
+  .game-pinned.prematch .games-view-wrapper-v3.prematch-view-v3 .all-game-info-container-v3,
+  .games-view-wrapper-v3.prematch-view-v3.open > .all-game-info-container-v3,
+  .games-view-wrapper-v3.prematch-view-v3.has-statistics > .live-game-view-contain-v3 > .all-game-info-container-v3 {
+    box-sizing: border-box;
+    overflow: inherit;
+  }
+  .game-pinned .games-view-wrapper-v3 > .live-game-view-contain-v3 > .all-game-info-container-v3 > .live-events-view-v3,
+  .games-view-wrapper-v3.open > .live-game-view-contain-v3 > .all-game-info-container-v3 > .live-events-view-v3,
+  .games-view-wrapper-v3.has-statistics > .live-game-view-contain-v3 > .all-game-info-container-v3 > .live-events-view-v3 {
+    box-sizing: border-box;
+    float: none;
+    position: absolute;
+    top: 150px;
+    height: calc(100% - 150px);
+    left: 0;
+    @include scroll;
+    transition: top 400ms, height 400ms;
+    transform: translate3d(0, 0, 0);
+  }
+  .prematch.game-pinned .games-view-wrapper-v3 > .live-game-view-contain-v3 > .all-game-info-container-v3 > .live-events-view-v3 {
+    padding-left: 5px;
+  }
+  .games-view-wrapper-v3.open.has-statistics > .live-game-view-contain-v3 > .all-game-info-container-v3 > .live-events-view-v3 {
+    box-sizing: border-box;
+    top: 222px;
+    height: calc(100% - 222px);
+    transition: top 400ms, height 400ms;
+  }
+  .all-game-info-container-v3 {
+    box-sizing: border-box;
+    float: left;
+    width: 100%;
+  }
+  //Statistic
+  .statistic-view-v3 {
+    box-sizing: border-box;
+    float: left;
+    width: 100%;
+    margin: 0 0 2px;
+  }
+  //Statistic END
+  //Live game view
+  .live-game-view-contain-v3 {
+    box-sizing: border-box;
+    float: left;
+    width: 100%;
+    height: 100%;
+  }
+  .live-events-view-v3 {
+    box-sizing: border-box;
+    float: left;
+    width: 100%;
+    transform: translate3d(0, 0, 0);
+  }
+  .games-view-wrapper-v3 .md-progress-circular,
+  .prematch-list-view-v3 .md-progress-circular {
+    box-sizing: border-box;
+    margin: 200px auto auto;
+  }
+  .game-additional-info-v3 {
+    box-sizing: border-box;
+    float: left;
+    width: 100%;
+    margin: -5px 0 5px;
+    position: relative;
+  }
+  .game-pinned .game-additional-info-v3 {
+    margin-top: 0;
+  }
+  .game-additional-info-v3:before {
+    box-sizing: border-box;
+    font: 10px/14px icomoon;
+    content: "\e6e4";
+    color: $c16-tp-6;
+    position: absolute;
+    left: 5px;
+    top: 1px;
+  }
+  .game-additional-info-v3 > p {
+    box-sizing: border-box;
+    float: left;
+    width: 100%;
+    padding: 0 0 0 20px;
+    font: 11px/14px $font-f;
+    color: $c16-tp-6;
+  }
+  .Info-text-view-market-v3 {
+    box-sizing: border-box;
+    float: left;
+    width: 100%;
+    margin: 20px 0;
+  }
+  .Info-text-view-market-v3 > p {
+    box-sizing: border-box;
+    float: left;
+    width: 100%;
+    text-align: center;
+    font: 13px/16px $font-f;
+    color: $c16-tp-6;
+    padding: 5px 10px;
+  }
+  .game-finished-v3 {
+    box-sizing: border-box;
+    float: left;
+    width: 100%;
+    text-align: center;
+    font: 20px/24px $font-f;
+    text-transform: uppercase;
+    color: $c16-tp-5;
+    padding: 30px 10px;
+  }
+  .game-pinned .game-finished-v3 {
+    margin-top: 100px;
+  }
+  .live-events-column-v3 {
+    box-sizing: border-box;
+    float: left;
+    width: 50%;
+    padding: 0 6px 0 3px;
+  }
+  .live-events-column-v3:first-child {
+    box-sizing: border-box;
+    padding: 0 3px 0 0;
+  }
+  .market-ciew-v3 {
+    box-sizing: border-box;
+    float: left;
+    width: 100%;
+    margin: 0 0 5px;
+    overflow: hidden;
+    border-radius: 2px;
+    transform: translate3d(0, 0, 0);
+  }
+  .live-events-column-v3.single-market-showed {
+    box-sizing: border-box;
+    width: 100%;
+  }
+  .live-events-column-v3.single-market-showed + .live-events-column-v3 {
+    display: none;
+  }
+  .market-title-v3 {
+    box-sizing: border-box;
+    float: left;
+    width: 100%;
+    position: relative;
+    height: 28px;
+    background: darken( desaturate( adjust-hue( $c16-sp-8, 6deg), 2), 5);
+    box-shadow: 0 1px 0 darken( saturate( adjust-hue( $c16-sp-8, 1deg), 2), 4) inset;
+    padding: 0 26px 0 0;
+  }
+  .market-title-v3 > .arrow-view-v3 {
+    box-sizing: border-box;
+    width: 26px;
+    line-height: 28px;
+    color: $c16-tp-6;
+    cursor: pointer;
+  }
+  .market-title-v3 > .arrow-view-v3:before {
+    box-sizing: border-box;
+    content: "\e671";
+  }
+  .market-title-v3.closed > .arrow-view-v3:before {
+    box-sizing: border-box;
+    content: "\e670";
+  }
+  .name-market-row-v3 {
+    box-sizing: border-box;
+    float: left;
+    width: 100%;
+    position: relative;
+    height: 28px;
+  }
+  .market-name-icon-row-v3 {
+    box-sizing: border-box;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    display: table;
+    top: 0;
+    left: 0;
+  }
+  .market-name-icon-row-v3 > h3 {
+    box-sizing: border-box;
+    display: table-cell;
+    padding: 0;
+    font: 12px/28px $font-f;
+    color: $c16-tp-3;
+    position: relative;
+    width: 100%;
+  }
+  .market-name-icon-row-v3 > h3 > i {
+    box-sizing: border-box;
+    position: absolute;
+    left: 0;
+    top: 0;
+    display: block;
+    padding: 0 0 0 10px;
+    width: 100%;
+    font-style: normal;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .market-icons-view-v3 {
+    box-sizing: border-box;
+    display: table-cell;
+    padding: 0;
+    position: relative;
+  }
+  .market-icons-view-v3 > ul {
+    box-sizing: border-box;
+    float: right;
+    padding: 4px 0 3px;
+    display: table;
+  }
+  .market-icons-view-v3 > ul > li {
+    box-sizing: border-box;
+    height: 20px;
+    min-width: 30px;
+    display: table-cell;
+    border-right: 1px solid rgba($c16-tp-12, 0.25);
+    font: 14px/20px $font-f;
+    padding: 0 5px;
+    text-align: center;
+    white-space: nowrap;
+    color: $c16-tp-3;
+  }
+  .market-icons-view-v3 > ul > li:before {
+    box-sizing: border-box;
+    font: 14px/20px icomoon;
+  }
+  .favorite-icon-market-v3:before {
+    box-sizing: border-box;
+    content: "\f005";
+    color: darken( saturate( adjust-hue( $c16-sp, -2deg), 5), 3);
+    cursor: pointer;
+    transition: color 240ms;
+  }
+  .favorite-icon-market-v3.active:before,
+  .favorite-icon-market-v3:hover:before,
+  .favorite-icon-market-v3.remove:before {
+    box-sizing: border-box;
+    color: $brand-color-2;
+  }
+  .cashout-icon-market-v3:before {
+    box-sizing: border-box;
+    content: "\e68a";
+    color: #028947;
+  }
+  .link-icon-market-v3:before {
+    box-sizing: border-box;
+    content: "\e613";
+    color: #9fa948;
+    position: relative;
+    top: 1px;
+  }
+  .events-list-view-v3 {
+    box-sizing: border-box;
+    float: left;
+    width: 100%;
+    max-height: 10000px;
+    //transition: max-height 1200ms;
+  }
+  .market-title-v3.closed + .events-list-view-v3 {
+    box-sizing: border-box;
+    max-height: 0;
+    transition: none;
+    animation: closed-animate-b 240ms ease;
+  }
+  .events-list-view-v3 > ul {
+    box-sizing: border-box;
+    float: left;
+    width: 100%;
+  }
+  .events-list-view-v3 > ul > li {
+    box-sizing: border-box;
+    float: left;
+    margin: 0;
+    padding-top: 1px;
+    padding-left: 1px;
+    animation: open-market-animate-b 200ms ease;
+  }
+  @keyframes open-market-animate-b {
+    0% {
+      -webkit-transform: translate3d(0, 0, 0) scale3d(1, 0.4, 1);
+      -moz-transform: translate3d(0, 0, 0) scale3d(1, 0.4, 1);
+      -o-transform: translate3d(0, 0, 0) scale3d(1, 0.4, 1);
+      -ms-transform: translate3d(0, 0, 0) scale3d(1, 0.4, 1);
+      transform: translate3d(0, 0, 0) scale3d(1, 0.4, 1);
+    }
+    100% {
+      -webkit-transform: translate3d(0, 0, 0) scale3d(1, 1, 1);
+      -moz-transform: translate3d(0, 0, 0) scale3d(1, 1, 1);
+      -o-transform: translate3d(0, 0, 0) scale3d(1, 1, 1);
+      -ms-transform: translate3d(0, 0, 0) scale3d(1, 1, 1);
+      transform: translate3d(0, 0, 0) scale3d(1, 1, 1);
+    }
+  }
+  .events-list-view-v3 > ul.column-1 > li {
+    width: 100%;
+    padding-left: 0;
+  }
+  .events-list-view-v3 > ul.column-2.two-odds > li:nth-child(2n+1) {
+    padding-left: 1px;
+  }
+  .events-list-view-v3 > ul.column-2 > li,
+  .events-list-view-v3 > ul.default > li,
+  .events-list-view-v3 > ul.column-0 > li {
+    width: 50%;
+  }
+  .events-list-view-v3 > ul.column-3 > li {
+    width: calc(100% / 3);
+  }
+  .events-list-view-v3 > ul.column-4 > li {
+    width: 25%;
+  }
+  .events-list-view-v3 > ul.column-5 > li {
+    width: 20%;
+  }
+  .events-list-view-v3 > ul.column-2 > li:nth-child(2n+1),
+  .events-list-view-v3 > ul.column-3 > li:nth-child(3n+1),
+  .events-list-view-v3 > ul.column-4 > li:nth-child(4n+1),
+  .events-list-view-v3 > ul.column-5 > li:nth-child(5n+1),
+  .events-list-view-v3 > ul.column-0 > li:nth-child(2n+1),
+  .events-list-view-v3 > ul.default > li:nth-child(2n+1),
+  .events-list-view-v3 > ul.column-2.two-odds > li:nth-child(3n+1) {
+    padding-left: 0;
+  }
+  .events-list-view-v3 > ul.column-2.two-odds > li:nth-child(2) {
+    display: none;
+    padding: 0;
+  }
+  .prematch-list-view-v3 .events-list-view-v3 > ul.column-3 > li {
+    width: 37%;
+  }
+  .prematch-list-view-v3 .events-list-view-v3 > ul.column-3 > li:nth-child(2) {
+    width: 26%;
+  }
+  .single-events-b-v3 {
+    box-sizing: border-box;
+    float: left;
+    width: 100%;
+    height: 28px;
+    background: $c16-sp-10;
+    position: relative;
+    box-shadow: inset 0 1px 0 rgba(0, 0, 0, 0.1)
+  }
+  .single-events-b-v3.blocked:before {
+    box-sizing: border-box;
+    display: block;
+    position: absolute;
+    right: 10px;
+    top: 0;
+    font: 10px/28px icomoon;
+    font-style: normal;
+    content: "\e68f";
+    color: $c16-tp-6;
+  }
+  .single-events-b-v3.blocked .mini-box-market-info-v3 > span {
+    display: none;
+  }
+  .single-events-b-v3.blocked .mini-box-market-info-v3 > p > i {
+    box-sizing: border-box;
+    padding-right: 28px;
+    font-style: normal;
+  }
+  .max-bet-tooltip-v3 {
+    box-sizing: border-box;
+    position: absolute;
+    bottom: 32px;
+    left: 0;
+    text-align: center;
+    width: 100%;
+    height: 0;
+    overflow: hidden;
+    opacity: 0;
+    transition: opacity 500ms;
+    transition-delay: 2s;
+  }
+  .single-events-b-v3:hover > .max-bet-tooltip-v3 {
+    height: auto;
+    overflow: inherit;
+    opacity: 1;
+  }
+  .max-bet-tooltip-v3 > p {
+    box-sizing: border-box;
+    display: inline-block;
+    vertical-align: top;
+    background: $brand-color-1;
+    border-radius: 2px;
+    padding: 5px 10px;
+    font: 11px/12px $font-f;
+    color: set-color($brand-color-1);
+    white-space: nowrap;
+  }
+  .max-bet-tooltip-v3 > p > i {
+    box-sizing: border-box;
+    font-style: normal;
+  }
+
+  .max-bet-tooltip-v3:before {
+    box-sizing: border-box;
+    content: "";
+    display: block;
+    position: absolute;
+    bottom: -5px;
+    left: calc(50% - 6px);
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-width: 6px 6px 0;
+    border-color: $brand-color-1 transparent transparent;
+  }
+  .mini-box-market-info-v3 {
+    box-sizing: border-box;
+    float: left;
+    width: 100%;
+    display: table;
+    border-spacing: 0;
+    height: 28px;
+  }
+  .mini-box-market-info-v3 > p {
+    box-sizing: border-box;
+    display: table-cell;
+    padding: 0;
+    font: 12px/28px $font-f;
+    color: $c16-tp-5;
+    position: relative;
+    width: 100%;
+    height: 28px;
+  }
+  .mini-box-market-info-v3 > p > i {
+    box-sizing: border-box;
+    position: absolute;
+    left: 0;
+    top: 0;
+    display: block;
+    padding: 0 0 0 10px;
+    width: 100%;
+    height: 28px;
+    font-style: normal;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .mini-box-market-info-v3 > span {
+    box-sizing: border-box;
+    display: table-cell;
+    text-align: right;
+    padding: 0 10px;
+    font: 12px/28px $font-f;
+    height: 100%;
+    color: map-get($coeff-color-map, classic);
+    &:only-child {
+      text-align: center;
+    }
+  }
+  .mini-box-market-info-v3 > span > b {
+    box-sizing: border-box;
+    position: relative;
+    display: inline-block;
+    font-weight: normal;
+    transform: translate3d(0, 0, 0);
+    vertical-align: top;
+  }
+  .single-events-b-v3:hover {
+    background: $c16-sp-8;
+  }
+  .factor-top:before,
+  .factor-bottom:before {
+    box-sizing: border-box;
+    font: 12px/28px icomoon;
+    position: absolute;
+    left: -12px;
+    top: 0;
+    content: "\e66d";
+    @if ($classic-switch-odds-state-colors == true) {
+      color: #e9044a;
+    } @else {
+      color: #04e914;
+    }
+    animation: arrow-blick-v3 300ms ease;
+    transform: translate3d(0, 0, 0);
+  }
+  .factor-bottom:before {
+    box-sizing: border-box;
+    @if ($classic-switch-odds-state-colors == true) {
+      color: #04e914;
+    } @else {
+      color: #e9044a;
+    }
+    content: "\e66c";
+  }
+  @keyframes arrow-blick-v3 {
+    0% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
+  .single-events-b-v3.active,
+  .single-events-b-v3.active:hover {
+    background: $hero-color;
+  }
+  .single-events-b-v3.active .factor-top:before,
+  .single-events-b-v3.active .factor-bottom:before {
+    color: set-color($hero-color);
+  }
+  .single-events-b-v3:hover > .mini-box-market-info-v3 > p {
+    color: $c16-tp-3;
+  }
+  .single-events-b-v3:hover > .mini-box-market-info-v3 > span {
+    color: map-get($coeff-color-map, classic-hover);
+  }
+  .single-events-b-v3.active > .mini-box-market-info-v3 > p,
+  .single-events-b-v3.active:hover > .mini-box-market-info-v3 > p {
+    color: set-color($hero-color);
+  }
+  .single-events-b-v3.active > .mini-box-market-info-v3 > span,
+  .single-events-b-v3.active:hover > .mini-box-market-info-v3 > span {
+    color: map-get($coeff-color-map, classic-active);
+  }
+  //Live game view END
+  //favorite market view
+  .favorite-market-view-v3 {
+    box-sizing: border-box;
+    float: left;
+    width: 100%;
+    padding: 0 6px 0 3px;
+  }
+  //Pre-match view
+  .prematch-view-v3 {
+    box-sizing: border-box;
+    overflow: inherit;
+  }
+  .prematch-view-v3 .favorite-market-view-v3 {
+    box-sizing: border-box;
+    padding: 0 6px 0 0;
+  }
+  .game-header-view-v3 {
+    box-sizing: border-box;
+    float: left;
+    width: 100%;
+    height: 46px;
+    background: $c16-sp-9;
+    border-radius: 2px 2px 0 0;
+    transform: translate3d(0, 0, 0);
+  }
+  .game-header-view-v3:before {
+    display: none;
+  }
+  .prematch-header-view-v3 {
+    box-sizing: border-box;
+    float: left;
+    width: 100%;
+    position: relative;
+    padding: 0 30px 0 10px;
+    height: 30px;
+    margin: 7px 0 0;
+  }
+  .prematch-header-row-v3 {
+    box-sizing: border-box;
+    float: left;
+    width: 100%;
+  }
+  .prematch-header-row-v3 > ul {
+    box-sizing: border-box;
+    float: left;
+    width: 100%;
+    display: table;
+    height: 30px;
+  }
+  .prematch-header-row-v3 > ul > li {
+    box-sizing: border-box;
+    display: table-cell;
+    vertical-align: top;
+    height: 100%;
+    padding: 0 0 0 10px;
+  }
+  .prematch-header-row-v3 > ul > li:first-child {
+    box-sizing: border-box;
+    width: 2%;
+    border-right: 1px solid lighten( desaturate( adjust-hue( $c16-sp, -1deg), 16), 3);
+    padding: 0 10px 0 0;
+    min-width: 64px;
+  }
+  .prematch-header-row-v3 > ul > li > p {
+    box-sizing: border-box;
+    float: left;
+    width: 100%;
+    color: $c16-tp-6;
+    font: 11px/16px $font-f;
+    text-transform: uppercase;
+  }
+  .title-teams-premztch-v3 {
+    box-sizing: border-box;
+    float: left;
+    width: 100%;
+  }
+  .title-teams-premztch-v3 > p {
+    box-sizing: border-box;
+    float: left;
+    width: 100%;
+    font: 12px/14px $font-f;
+    color: $c16-tp-3;
+  }
+  .title-teams-premztch-v3 > p > span {
+    box-sizing: border-box;
+    max-width: 47%;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    display: inline-block;
+  }
+  .title-teams-premztch-v3 > p > span:nth-last-child(2) {
+    font-size: 11px;
+    color: $c16-tp-6;
+  }
+  .prematch-competition-title-v3 {
+    box-sizing: border-box;
+    float: left;
+    width: 100%;
+  }
+  .prematch-competition-title-v3 > p {
+    box-sizing: border-box;
+    width: 100%;
+    font: 12px/14px $font-f;
+    color: $c16-tp-6;
+  }
+  .prematch-competition-title-v3 > p > .prematch-region-icon-v3 {
+    box-sizing: border-box;
+    margin: -1px 6px 0 0;
+  }
+  .prematch-competition-title-v3 > p > span {
+    box-sizing: border-box;
+    display: inline-block;
+    max-width: 50%;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+  }
+  .statistic-icon-view-p-v3 {
+    box-sizing: border-box;
+    position: absolute;
+    right: 15px;
+    top: 0;
+    font: 12px/16px icomoon;
+    color: lighten( desaturate( $c16-tp, 19), 51);
+  }
+  .statistic-icon-view-p-v3:before {
+    box-sizing: border-box;
+    content: "\e6b8";
+  }
+  .prematch-games-list {
+    box-sizing: border-box;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 48%;
+    height: 100%;
+    padding: 0;
+    max-height: 100%;
+  }
+  .favorite-game-open-euro2016 > .prematch-games-list {
+    box-sizing: border-box;
+    display: none;
+  }
+  .prematch-view-v3.favorite-game-open-euro2016 > .live-game-view-contain-v3 {
+    box-sizing: border-box;
+    width: 100%;
+    padding: 0;
+  }
+  .prematch-view-v3.favorite-game-open-euro2016 .all-game-info-container-v3 {
+    box-sizing: border-box;
+    padding: 0;
+  }
+  .prematch-games-list-title-v3 {
+    box-sizing: border-box;
+    float: left;
+    width: 100%;
+    height: 36px;
+    background: $c16-sp-9;
+    border-radius: 2px 2px 0 0;
+  }
+  .prematch-column-title-v3 {
+    box-sizing: border-box;
+    float: left;
+    width: 100%;
+    position: relative;
+    padding: 0 8px;
+  }
+  .prematch-column-title-v3 > h2 {
+    box-sizing: border-box;
+    float: left;
+    width: 100%;
+    color: $c16-tp-3;
+    font: 12px/36px $font-f;
+  }
+  .prematch-region-icon-v3 {
+    box-sizing: border-box;
+    display: inline-block;
+    font-weight: normal;
+    float: left;
+    margin: 10px 8px 0 0;
+  }
+  .prematch-markets-filter-v3 {
+    box-sizing: border-box;
+    position: absolute;
+    z-index: 66;
+    right: 0;
+    padding: 6px;
+    top: 0;
+  }
+  .prematch-markets-filter-v3 .time-filter-v3 {
+    box-sizing: border-box;
+    min-width: 150px;
+    max-width: 160px;
+  }
+  .prematch-markets-filter-v3 .time-filter-v3 > p {
+    box-sizing: border-box;
+    text-transform: none;
+    padding-left: 10px;
+    text-align: right;
+  }
+  .prematch-column-title-v3 > h2 > span {
+    box-sizing: border-box;
+    display: inline-block;
+    white-space: nowrap;
+    float: left;
+    max-width: calc(100% - 150px);
+    text-overflow: ellipsis;
+    overflow: hidden;
+  }
+  .closed-all-games-v3 {
+    box-sizing: border-box;
+    padding: 0 8px 0 2px;
+    font: 8px/36px icomoon;
+    color: $c16-tp-3;
+    text-align: center;
+    cursor: pointer;
+  }
+  .closed-all-games-v3:before {
+    box-sizing: border-box;
+    content: "\e6f2";
+  }
+  .prematch-list-view-v3 {
+    box-sizing: border-box;
+    position: absolute;
+    top: 41px;
+    right: 0;
+    width: 100%;
+    height: calc(100% - 41px);
+    @include scroll;
+    padding: 0 6px 0 0;
+    transform: translate3d(0, 0, 0);
+  }
+  .prematch-view-v3 .live-game-view-contain-v3 {
+    box-sizing: border-box;
+    float: none;
+    position: absolute;
+    top: 0;
+    right: 0;
+    height: 100%;
+    width: 52%;
+    padding: 0 0 0 5px;
+  }
+  .prematch-view-v3 .all-game-info-container-v3 {
+    box-sizing: border-box;
+    float: none;
+    position: absolute;
+    top: 51px;
+    right: 0;
+    width: 100%;
+    height: calc(100% - 51px);
+    padding: 0 0 0 5px;
+    @include scroll;
+  }
+  .prematch-view-v3 .live-events-column-v3 {
+    box-sizing: border-box;
+    width: 100%;
+    padding: 0 6px 0 0;
+  }
+  //prematch game list
+  .prematch-game-view-contain-v3 {
+    box-sizing: border-box;
+    float: left;
+    width: 100%;
+    max-height: 30000px;
+    animation: region-open-animate-b 500ms ease-in-out;
+    overflow: hidden;
+  }
+  .prematch-game-view-contain-v3.closed {
+    box-sizing: border-box;
+    max-height: 29px;
+    animation: region-closed-animate-b 240ms ease;
+  }
+  @keyframes region-open-animate-b {
+    0% {
+      max-height: 29px;
+    }
+    100% {
+      max-height: 999px;
+    }
+  }
+  @keyframes region-closed-animate-b {
+    0% {
+      display: block;
+      max-height: 500px;
+    }
+    100% {
+      display: block;
+      max-height: 29px;
+    }
+  }
+  .prematch-game-view-contain-v3.closed > .title-championship-v3 {
+    border-radius: 2px;
+  }
+  .time-info-game-box-v3 > .time-title-view-v3 > .arrow-view-v3:before {
+    box-sizing: border-box;
+    content: "\e671";
+  }
+  .prematch-game-view-contain-v3.closed > .title-championship-v3 > .arrow-view-v3:before,
+  .time-info-game-box-v3.closed > .time-title-view-v3 > .arrow-view-v3:before {
+    content: "\e670";
+  }
+  .title-championship-v3 {
+    box-sizing: border-box;
+    float: left;
+    width: 100%;
+    background: $c16-sp-10;
+    position: relative;
+    height: 24px;
+    padding: 0 30px;
+    margin: 0 0 5px;
+    border-radius: 2px 2px 0 0;
+  }
+  .prematch-list-view-v3.prematch .title-championship-v3 {
+    box-sizing: border-box;
+    padding-left: 10px;
+  }
+  .title-championship-v3 > .arrow-view-v3,
+  .time-title-view-v3 > .arrow-view-v3 {
+    box-sizing: border-box;
+    height: 24px;
+    line-height: 24px;
+    color: $c16-tp-6;
+  }
+  .title-championship-v3 > p {
+    box-sizing: border-box;
+    color: $c16-tp-3;
+    font: 11px/24px $font-f;
+    text-transform: uppercase;
+    float: left;
+    width: 100%;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+  }
+  .closed-game-icon-v3 {
+    box-sizing: border-box;
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 28px;
+    height: 100%;
+    font: 8px/24px icomoon;
+    color: $c16-tp-3;
+    text-align: center;
+    cursor: pointer;
+  }
+  .closed-game-icon-v3:before {
+    box-sizing: border-box;
+    content: "\e6f2";
+  }
+  .time-title-view-v3 {
+    box-sizing: border-box;
+    float: left;
+    width: 100%;
+    position: relative;
+    padding: 0 30px 0 10px;
+    height: 24px;
+    background: lighten( desaturate( adjust-hue( $c16-sp, 2deg), 11), 2);
+    border-radius: 2px 2px 0 0;
+    margin: 0 0 2px;
+    transition: background 240ms;
+  }
+  .time-info-game-box-v3.closed > .time-title-view-v3 {
+    box-sizing: border-box;
+    background: $c16-sp-10;
+  }
+  .time-title-view-v3:hover,
+  .time-info-game-box-v3.closed > .time-title-view-v3:hover {
+    background: $c16-sp-9;
+  }
+  .time-title-view-v3 > p {
+    box-sizing: border-box;
+    color: $c16-tp-6;
+    font: 11px/24px $font-f;
+    text-transform: uppercase;
+    float: left;
+    width: 100%;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    transition: color 240ms;
+  }
+  .time-title-view-v3:hover > p {
+    color: $c16-tp-6;
+  }
+  .time-info-game-box-v3 {
+    box-sizing: border-box;
+    float: left;
+    width: 100%;
+    overflow: hidden;
+    max-height: 30000px;
+    animation: prematch-open-animate-b 500ms ease-in-out;
+  }
+  .time-info-game-box-v3.closed {
+    max-height: 26px;
+    animation: prematch-closed-animate-b 240ms ease;
+  }
+  .time-info-game-box-v3.closed > .time-title-view-v3 {
+    border-radius: 2px;
+  }
+  @keyframes prematch-open-animate-b {
+    0% {
+      max-height: 26px;
+    }
+    100% {
+      max-height: 999px;
+    }
+  }
+  @keyframes prematch-closed-animate-b {
+    0% {
+      display: block;
+      max-height: 200px;
+    }
+    100% {
+      display: block;
+      max-height: 26px;
+    }
+  }
+  .game-events-view-v3 {
+    box-sizing: border-box;
+    float: left;
+    width: 100%;
+    margin: 0 0 4px;
+    overflow: hidden;
+    border-radius: 0 0 2px 2px;
+  }
+  .mini-title-box-gameview-v3 {
+    box-sizing: border-box;
+    float: left;
+    width: 100%;
+    border-radius: 2px 2px 0 0;
+    position: relative;
+    height: 30px;
+    background: lighten( desaturate( adjust-hue( $c16-sp, 2deg), 19), 11);
+    box-shadow: 0 1px 0 rgba(255, 255, 255, 0.06) inset;
+    padding: 0 50px 0 30px;
+    transition: background 240ms;
+  }
+  .mini-title-box-gameview-v3.active,
+  .mini-title-box-gameview-v3:hover {
+    background: $classic-prematch-group-title-active-bg;
+    .team-names-date-icons-v3 > p > span {
+      color: set-color($classic-prematch-group-title-active-bg);
+    }
+    .arrow-icon-b-v3,
+    .team-names-date-icons-v3 > p > span > b,
+    .time-game-v3 > p {
+      color: rgba(set-color($classic-prematch-group-title-active-bg), 0.5);
+    }
+    .favorite-icon-market-v3:before {
+      color: rgba(darken( saturate( adjust-hue( $c16-sp, -2deg), 5), 3), 0.5)
+    }
+    .favorite-icon-market-v3.active:before,
+    .favorite-icon-market-v3:hover:before,
+    .favorite-icon-market-v3.remove:before {
+      color: $brand-color-2;
+    }
+  }
+  .prematch-list-view-v3.prematch .mini-title-box-gameview-v3 {
+    box-sizing: border-box;
+    padding-left: 10px;
+  }
+  .markets-count-view-v3 {
+    box-sizing: border-box;
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 50px;
+    height: 100%;
+    padding: 0 15px 0 0;
+    cursor: pointer;
+  }
+  .markets-count-view-v3 > span {
+    box-sizing: border-box;
+    float: left;
+    width: 100%;
+    font: 11px/30px $font-f;
+    color: $c16-tp-6;
+    padding: 0 0 0 5px;
+    transition: color 240ms;
+  }
+  .markets-count-view-v3:hover > span,
+  .mini-title-box-gameview-v3:hover .markets-count-view-v3 > span,
+  .mini-title-box-gameview-v3.active .markets-count-view-v3 > span {
+    box-sizing: border-box;
+    color: $c16-tp-1;
+  }
+  .arrow-icon-b-v3 {
+    box-sizing: border-box;
+    position: absolute;
+    width: 15px;
+    height: 100%;
+    right: 0;
+    top: 0;
+    font: 16px/30px icomoon;
+    color: $c16-tp-7;
+    transition: color 240ms;
+    text-indent: -4px;
+  }
+  .arrow-icon-b-v3:before {
+    box-sizing: border-box;
+    content: "\e672";
+  }
+  .team-name-view-table-v3 {
+    box-sizing: border-box;
+    float: left;
+    width: 100%;
+    height: 30px;
+    display: table;
+  }
+  .mini-title-box-gameview-v3 > .closed-game-icon-v3 {
+    box-sizing: border-box;
+    height: 100%;
+    line-height: 30px;
+  }
+  .team-names-date-icons-v3 {
+    box-sizing: border-box;
+    width: 100%;
+    display: table-cell;
+    position: relative;
+    padding: 0 0 0 50px;
+  }
+  .time-game-v3 {
+    box-sizing: border-box;
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+  }
+  .time-game-v3 > p {
+    box-sizing: border-box;
+    color: $c16-tp-6;
+    font: 11px/30px $font-f;
+    float: left;
+    transition: color 240ms;
+  }
+  .pematch-single-game-info-v3 {
+    box-sizing: border-box;
+    float: left;
+    width: 100%;
+  }
+  .team-names-date-icons-v3 > p {
+    box-sizing: border-box;
+    position: relative;
+    width: 100%;
+    float: left;
+    height: 30px;
+  }
+  .team-names-date-icons-v3 > p > span {
+    box-sizing: border-box;
+    width: 100%;
+    font: 11px/30px $font-f;
+    color: $c16-tp-3;
+    white-space: nowrap;
+    position: absolute;
+    height: 30px;
+  }
+  .team-names-date-icons-v3 > p > span > i {
+    box-sizing: border-box;
+    font-style: normal;
+    display: inline-block;
+    max-width: calc(50% - 14px);
+    text-overflow: ellipsis;
+    overflow: hidden;
+  }
+  .team-names-date-icons-v3 > p > span > b {
+    box-sizing: border-box;
+    font-weight: normal;
+    color: $c16-tp-6;
+    display: inline-block;
+    width: 28px;
+    text-align: center;
+    vertical-align: top;
+    transition: color 240ms;
+  }
+  .game-icons-view-list-v3 {
+    box-sizing: border-box;
+    display: table-cell;
+    padding: 5px 0 5px 5px;
+    vertical-align: top;
+  }
+  .game-icons-view-list-v3 > ul {
+    box-sizing: border-box;
+    float: right;
+    display: table;
+  }
+  .game-icons-view-list-v3 > ul > li {
+    box-sizing: border-box;
+    display: table-cell;
+    min-width: 30px;
+    border-right: 1px solid rgba($c16-tp-12, 0.25);
+    height: 20px;
+    padding: 0 5px;
+    text-align: center;
+    vertical-align: middle;
+  }
+  .game-icons-view-list-v3 > ul > li.game-id-v3 {
+    font: 11px $font-f;
+    color: $c16-tp-4;
+    padding: 0 8px;
+  }
+  .game-icons-view-list-v3 > ul > li:before {
+    box-sizing: border-box;
+    font: 16px/20px icomoon;
+  }
+  .game-icons-view-list-v3 > ul > li.statistic-icon-market-v3:before {
+    box-sizing: border-box;
+    content: "\e6b8";
+    color: $c16-tp-4;
+    font-size: 12px;
+    position: relative;
+    top: -1px;
+  }
+  .tv-icon-market-v3:before {
+    box-sizing: border-box;
+    content: "\e683";
+    color: $c16-tp-4;
+  }
+  //prematch game list END{box-sizing: border-box;"id":5068492,"addedInMultiView":true}
+  //Pre-match view END
+  .classic-view-wrapper-v3 .left-column-v3.ng-hide ~ .center-column-v3,
+  .virtualsports .classic-view-wrapper-v3 .center-column-v3{
+    box-sizing: border-box;
+    width: calc(100% - 296px);
+  }
+  //Live calendar
+  .classic-view-wrapper-v3 .live-calendar-16-j .md-progress-circular {
+    margin: 100px auto auto;
+  }
+  .livecalendar .classic-view-wrapper-v3 .center-column-v3 .live-calendar-16-j {
+    box-sizing: border-box;
+    padding: 0;
+  }
+  .livecalendar .classic-view-wrapper-v3 .center-column-v3 .live-calendar-16-scroll-fix-j {
+    box-sizing: border-box;
+    left: 0;
+    top: 38px;
+    right: 0;
+  }
+  .livecalendar .animation-video-box-v3,
+  .overview .animation-video-box-v3 {
+    display: none;
+  }
+  //Live calendar END
+  .single-events-b-v3.blocked {
+    pointer-events: none;
+  }
+}
+.markets-group-wrap-v3 {
+  float: left;
+  width: 100%;
+  border-bottom: 1px solid $c16-sp-8;
+  padding: 0 0 1px;
+  height: 35px;
+  box-sizing: border-box;
+  position: relative;
+  z-index: 200;
+  margin: 0 0 4px;
+  .classic-version-euro2016 & {
+    width: calc(100% - 9px);
+    margin: 0 3px 4px;
+  }
+  > ul {
+    display: table;
+    table-layout: fixed;
+    position: relative;
+    float: left;
+    width: 100%;
+    > li {
+      display: table-cell;
+      box-sizing: border-box;
+      background: $c16-sp-10;
+      background-clip: padding-box;
+      border-left: 1px solid transparent;
+      position: relative;
+      color: $c16-tp-6;
+      height: 33px;
+      text-align: center;
+      transition: 240ms color, 240ms background, 240ms box-shadow;
+      span {
+        position: absolute;
+        top: 0;
+        left: 10px;
+        font: 12px/33px $font-f;
+        width: calc(100% - 20px);
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        overflow: hidden;
+        box-sizing: border-box;
+        i,
+        b {
+          font-style: normal;
+          font-weight: normal;
+        }
+      }
+      &.more-j {
+        display: none;
+        width: 60px;
+        border-radius: 0 2px 0 0;
+        text-align: right;
+        &:before {
+          content: "\e66c";
+          font: 12px/36px icomoon;
+          display: block;
+          position: absolute;
+          top: 0;
+          right: 9px;
+          color: $c16-tp-6;
+        }
+        > span {
+          left: 0;
+          width: calc(100% - 28px);
+          font: 12px/33px $font-f;
+        }
+        + li {
+          border: 0;
+        }
+      }
+      &:nth-child(2) {
+        border-radius: 2px 0 0 0;
+      }
+      &.favorte-markets-group-j {
+        width: 38px;
+        background: $c16-sp-9;
+        background-clip: padding-box;
+        > span:before {
+          box-sizing: border-box;
+          content: "\f005";
+          cursor: pointer;
+          display: block;
+          float: left;
+          width: 100%;
+          font: 18px/33px icomoon;
+          color: #ac8336;
+        }
+        &:not([data-count='0']):after {
+          content: attr(data-count);
+          display: inline-block;
+          box-sizing: border-box;
+          min-width: 14px;
+          height: 14px;
+          padding: 0 3px;
+          border-radius: 8px;
+          background: rgba(0, 0, 0, 0.3);
+          color: #f3f3f5;
+          text-align: center;
+          font: 9px/14px $font-f;
+          position: absolute;
+          top: 3px;
+          right: 3px;
+        }
+        + li {
+          border-left: 2px solid transparent;
+        }
+        &.ng-hide + li {
+          border-radius: 2px 0 0 0;
+          border-left: 0;
+        }
+        > span {
+          overflow: visible;
+          > i {
+            display: none;
+          }
+        }
+        &.animate-star-even > span {
+          animation: star-scale-even 1 .25s ease-out;
+        }
+        &.animate-star-odd > span {
+          animation: star-scale-odd 1 .25s ease-out;
+        }
+      }
+      &:hover,
+      &.active {
+        background: $c16-sp-8;
+        color: $c16-tp-1;
+        background-clip: padding-box;
+      }
+    }
+    &:not(.has-dropdown) {
+      > li:last-child {
+        border-radius: 0 2px 0 0;
+      }
+    }
+    &.has-dropdown {
+      display: block;
+      height: 33px;
+      > li {
+        display: block;
+        float: left;
+        height: 33px;
+        &.more-j {
+          float: right;
+          display: block;
+        }
+        &:nth-child(3),
+        &:nth-child(4),
+        &:nth-child(5),
+        &:nth-child(6),
+        &:nth-child(7) {
+          width: calc((100% - 98px) / 5);
+        }
+        &:nth-child(7) ~ li {
+          background: lighten( desaturate( adjust-hue( $c16-sp-9, 3deg ), 3 ), 3 );
+          line-height: 29px;
+          height: 29px;
+          border: 0;
+          float: right;
+          clear: both;
+          width: 190px;
+          display: none;
+          &:hover,
+          &.active {
+            background: $brand-color-1;
+            color: set-color($brand-color-1);
+            span {
+              box-shadow: 0 -1px 0 rgba($c16-sp-10, 0) inset;
+            }
+          }
+          span {
+            display: table;
+            line-height: 29px;
+            box-shadow: 0 -1px 0 $c16-sp-10 inset;
+            transition: 240ms box-shadow;
+            i {
+              display: table-cell;
+              position: relative;
+              &:last-child {
+                width: 1%;
+                padding: 0 0 0 10px;
+              }
+              &:first-child {
+                text-align: left;
+                b {
+                  display: block;
+                  position: absolute;
+                  top: 0;
+                  left: 0;
+                  width: 100%;
+                  text-overflow: ellipsis;
+                  white-space: nowrap;
+                  overflow: hidden;
+                }
+              }
+            }
+          }
+          &:last-child {
+            span {
+              box-shadow: none;
+            }
+          }
+        }
+      }
+      &.show-dropdown {
+        > li {
+          &.more-j {
+            &:before {
+              content: "\e66d";
+            }
+            &,
+            &:hover {
+              background: lighten( desaturate( adjust-hue( $c16-sp-9, 3deg ), 3 ), 3 );
+              background-clip: padding-box;
+              color: $c16-tp-1;
+            }
+          }
+          &:nth-child(7) ~ li {
+            display: block;
+          }
+        }
+      }
+    }
+  }
+}
+.classic-version-euro2016 .prematch-view-v3 .markets-group-wrap-v3 {
+  width: calc(100% - 6px);
+  margin: 0 3px 4px 0;
+}

@@ -1,0 +1,70 @@
+<div ng-controller="skypeAuthorizationCtrl" ng-if="false">
+    <div class="new-default-popup-j feedback skype" ng-if="skypeAuth.show && env.authorized">
+
+        <div class="pp-table-j" ng-if="skypeAuth.sending">
+            <div class="table-row-j">
+                <div class="table-cell-j">
+                    <div class="popup-wrapper-j">
+                        <vbet-loader></vbet-loader>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="pp-table-j" ng-show="!skypeAuth.sending">
+            <div class="table-row-j">
+                <div class="table-cell-j">
+                    <div class="popup-wrapper-j">
+                        <div class="pu-head-j">
+                            <span>Authorization request</span>
+                            <a class="close-j" ng-click="skypeAuth.show=false"></a>
+                        </div>
+                        <form name="skypeAutorizationForm">
+                            <div class="pu-contain-j">
+                                <p>
+                                    <span trans>To be identified at the bet shop, you are required to make a Skype call with the operator.</span><br/><br/>
+                                    <span>Choose a convenient date and time. The confirmation for your request will be sent to you as a Private Message</span>
+                                </p>
+                                <label ng-class="{'error': feedbackForm.email.$dirty && feedbackForm.email.$invalid}">
+                                    <p trans>Skype ID</p>
+
+                                    <div class="error-container-j">
+                                        <input name="text" type="text" placeholder="skypeidexample" required
+                                               ng-model="skypeAuth.skypeID" trans>
+                                    </div>
+                                </label>
+                                <label>
+                                    <p trans>Date and time of call</p>
+
+                                    <div class="authorization-select-box">
+                                        <select ng-model="skypeAuth.day">
+                                            <option ng-repeat="day in skypeAuth.dayList track by $index"
+                                                    value="{{day}}">{{day}}
+                                            </option>
+                                        </select>
+                                        <select ng-model="skypeAuth.month">
+                                            <option ng-repeat="month in skypeAuth.monthList track by $index"
+                                                    value="{{month}}">{{month}}
+                                            </option>
+                                        </select>
+                                        <select ng-model="skypeAuth.time">
+                                            <option ng-repeat="time in skypeAuth.timeList track by $index"
+                                                    value="{{time}}">{{time}}
+                                            </option>
+                                        </select>
+                                    </div>
+                                </label>
+                            </div>
+                            <div class="pu-button-wrap-j">
+                                <button ng-click="sendSkypeRequest()" trans>Send</button>
+                                <button class="cancel-j" ng-click="skypeAuth.show=false">Cancel</button>
+                                <vbet-loader ng-show="sendingFeedBackInProgress"></vbet-loader>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>

@@ -1,0 +1,454 @@
+.winners .contain-casino.poker.ng-scope.casino-slider-hide {
+    margin: 44px 0 0 0;
+}
+.winners-tab-nav-b {
+    float: left;
+    width: 100%;
+    margin: 0;
+    height: 45px;
+    min-width: 980px;
+    background: $skin-palette-10;
+    box-sizing: border-box;
+}
+.center-separator-contain-b {
+    margin: 0 auto;
+    min-width: 980px;
+    max-width: 1310px;
+    box-sizing: border-box;
+    padding: 0 15px;
+}
+.center-separator-contain-b > ul{
+    float: left;
+    width: 100%;
+    box-sizing: border-box;
+}
+.center-separator-contain-b > ul > li{
+    float: left;
+    display: inline-block;
+    color: $text-palette-1;
+    height: 45px;
+    font: 14px/42px $font-f;
+    text-transform: uppercase;
+    text-align: center;
+    padding: 0 20px;
+    box-sizing: border-box;
+    cursor: pointer;
+}
+.center-separator-contain-b > ul > li.active{
+    box-shadow: 0 -4px 0 $hero-color inset;
+}
+.winner-list-wrapper-b{
+    float: left;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 0 0 30px;
+}
+.winner-contain-list-b{
+    margin: 0 auto;
+    min-width: 980px;
+    max-width: 1310px;
+    box-sizing: border-box;
+    padding: 0 15px;
+}
+.winner-contain-list-b > ul{
+    float: left;
+    width: 100%;
+    display: table;
+    box-sizing: border-box;
+    min-height: 62px;
+    border-top: 1px solid $skin-palette-6;
+}
+.winner-contain-list-b > ul:first-child{
+    border-top: none;
+    border-bottom: 2px solid $skin-palette-6;
+    height: 42px;
+}
+.winner-contain-list-b > ul > li{
+    width: 20%;
+    display: table-cell;
+    box-sizing: border-box;
+    vertical-align: middle;
+    color: $text-palette-2;
+    font: 18px/20px $font-f;
+}
+.winner-contain-list-b > ul:first-child > li{
+    font: 12px/14px $font-f;
+    text-transform: uppercase;
+    color: $text-palette-1;
+}
+.winner-contain-list-b > ul > li.winner-betprice-b,
+.winner-contain-list-b > ul > li.winner-date-b{
+    color: $text-palette-3;
+}
+.winner-contain-list-b > ul > li.winning-size-b{
+    color: $hero-color;
+}
+.icon-sport-view-contain{
+    display: inline-block;
+    width: 24px;
+    height: 24px;
+    margin: 5px 0 2px 15px;
+    color: $text-palette-1;
+    border-radius: 50%;
+    font: 24px/24px sport-icon;
+}
+.winner-list-wrapper-b .load-more-news {
+    display: inline-block;
+    width: 100%;
+}
+
+
+.casino-winner-list-j {
+    float: left;
+    width: 100%;
+    color: $text-palette-3;
+    font: normal 16px/18px $font-f;
+    a {
+        text-decoration: none;
+    }
+    .load-more-news {
+        float: left;
+        margin-top: 100px;
+        width: 100% !important;
+    }
+    ul {
+        float: left;
+        width: 100%;
+        li {
+            border-bottom: 1px solid $skin-palette-6;
+            margin-top: 18px;
+            padding: 0 0 18px;
+            float: left;
+            width: 100%;
+            .game-pic-j {
+                width: 196px;
+                float: left;
+                overflow: hidden;
+                img {
+                    display: block;
+                    width: 100%;
+                }
+            }
+            .klwin-info-j {
+                float: right;
+                width: calc(100% - 212px);
+                h1, h2, h3, .klwintext-info-j {
+                    float: left;
+                    width: 100%;
+                }
+                h3 {
+                    color: $text-palette-2;
+                    font: bold 14px/16px $font-f;
+                    text-transform: uppercase;
+                    margin-top: -2px;
+                }
+                h1 {
+                    color: $text-palette-4;
+                    font: normal 18px/20px $font-f;
+                    text-transform: uppercase;
+                    margin-top: 7px;
+                }
+                h2 {
+                    color: $text-palette-3;
+                    font: normal 18px/20px $font-f;
+                    margin-top: 4px;
+                    margin-bottom: 27px;
+                }
+                .klwintext-info-j {
+                    color: $hero-color;
+                    font: normal 16px/18px $font-f;
+                    span {
+                        color: $text-palette-3;
+                    }
+                }
+            }
+        }
+    }
+}
+.winner-contain-list-b .winner-contain-list-b {
+    padding: 0;
+    min-width: 100%;
+    max-width: 100%;
+}
+.winner-contain-list-b aside {
+    width: 320px;
+    float: right;
+    padding-top: 50px;
+}
+.winner-contain-list-b > div {
+    padding-top: 50px;
+    width: calc(100% - 330px);
+}
+.week-top-game-j{
+    width: 100%;
+    margin: 0 0 14px;
+    > h1 {
+        font-size: 18px;
+        line-height: 20px;
+        color: $text-palette-2;
+        text-transform: uppercase;
+        margin: 0 0 10px;
+    }
+    > a {
+        display: block;
+        width: 100%;
+        img {
+            display: block;
+            width: 100%;
+            height: auto;
+        }
+    }
+}
+.winner-contain-list-b .right-banner-container{
+    margin: 0 0 14px;
+    .buner-b {
+        width: 100%;
+        img {
+            width: 100%;
+            display: block;
+        }
+    }
+}
+.wins-block-j{
+    width: 100%;
+    min-height: 50px;
+    background: $skin-palette-10;
+    margin-bottom: 14px;
+    >h1, >div {
+        float: left;
+        width: 100%;
+    }
+    > div > p {
+        display: none;
+    }
+    &:after {
+        content: " ";
+        clear: both;
+        display: table;
+    }
+    >h1{
+        font-weight: 200;
+        font-size: 16px;
+        line-height: 45px;
+        height: 45px;
+        text-transform: uppercase;
+        color: $text-palette-1;
+        text-indent: 15px;
+    }
+    table{
+        width: 100% !important;
+        table-layout: fixed;
+        float: left;
+        tr{
+            td{
+                line-height: 40px;
+                font-size: 14px;
+                color: $text-palette-3;
+                border-top: 1px solid $skin-palette-6;
+                vertical-align: middle;
+                &:first-child {
+                    width: 48px;
+                    img {
+                        display: block;
+                        margin: 0 auto;
+                        height: 14px;
+                        width: 20px;
+                    }
+                }
+                &:nth-child(2) {
+                    width: 38px;
+                }
+                &:nth-child(3) {
+                    width: 150px;
+                    overflow: hidden;
+                    white-space: nowrap;
+                    text-overflow: ellipsis;
+                }
+                &:last-child {
+                    text-align: right;
+                    padding-right: 12px;
+                }
+            }
+        }
+    }
+}
+.kl-winners-block-j {
+    width: 100%;
+    height: 362px;
+    background: $skin-palette-10;
+    padding: 0 9px 20px 0;
+    box-sizing: border-box;
+    position: relative;
+    margin: 0 0 14px;
+    .md-progress-circular {
+        top: 50%;
+        left: 50%;
+        margin: -50px;
+        position: absolute;
+    }
+    > h1 {
+        float: left;
+        width: 100%;
+        text-transform: uppercase;
+        height: 37px;
+        color: $text-palette-3;
+        font: bold 14px/38px $font-f;
+        box-sizing: border-box;
+        padding: 0 0 0 55px;
+        position: relative;
+        &:before {
+            content: "\e94e";
+            font: normal 18px/37px icomoon;
+            display: block;
+            position: absolute;
+            top: 0;
+            left: 20px;
+        }
+    }
+    ul {
+        float: left;
+        width: 100%;
+        max-height: 305px;
+        @include scroll($scroll: auto);
+        box-sizing: border-box;
+        padding-right: 13px;
+        li {
+            float: left;
+            width: 100%;
+            display: block;
+            box-sizing: border-box;
+            padding: 17px 13px;
+            padding-right: 0;
+            border-top: 1px solid $skin-palette-6;
+            > div {
+                float: right;
+                width: calc(100% - 124px);
+            }
+            > div:first-of-type {
+                height: 72px;
+                width: 110px;
+                float: left;
+                img {
+                    display: block;
+                    width: 100%;
+                    min-height: 72px;
+                }
+            }
+            h1 {
+                color: $text-palette-3;
+                font: normal 9px/17px $font-f;
+                float: left;
+                width: 100%;
+                margin-top: -4px;
+                margin-bottom: 1px;
+            }
+            h2 {
+                color: $text-palette-4;
+                font: normal 12px/14px $font-f;
+                float: left;
+                width: 100%;
+                text-transform: uppercase;
+            }
+            h3 {
+                float: left;
+                width: 100%;
+                font: normal 12px/14px $font-f;
+                color: $text-palette-3;
+                text-transform: uppercase;
+                margin-top: 11px;
+                margin-bottom: 2px;
+            }
+            h4 {
+                float: left;
+                width: 100%;
+                color: $hero-color;
+                font: 16px/18px $font-f;
+            }
+        }
+    }
+}
+.winners-tab-nav-b + .winner-contain-list-b {
+    margin-bottom: 48px;
+}
+.winners-tab-nav-b + .winner-contain-list-b:after {
+    content: " ";
+    display: table;
+    clear: both;
+}
+top-game-block {
+    width: 100%;
+    height: 100%;
+}
+.top-game-block > h1 {
+    font-size: 18px;
+    line-height: 24px;
+    color: #e9e9e9;
+    text-transform: uppercase;
+}
+.top-game-block .top-game-icon {
+    font-family: 'icomoon';
+}
+.top-game-block .top-game-icon:after {
+    content: '\f006';
+    color: #c0003f;
+    font-size: 24px;
+    vertical-align: middle;
+}
+
+.top-game-background {
+    display: block;
+    width: 320px;
+    height: 180px;
+    background: wheat;
+    margin: 10px 0;
+}
+
+.wins-block {
+    width: 100%;
+    min-height: 50px;
+    background: #252525;
+    margin-bottom: 10px;
+}
+.wins-block > h1 {
+    font-weight: 200;
+    font-size: 16px;
+    line-height: 45px;
+    height: 45px;
+    text-transform: uppercase;
+    color: white;
+    text-indent: 15px;
+}
+.wins-block ul li {
+    line-height: 40px;
+    font-size: 14px;
+    color: #c8c8c8;
+    border-top: 1px solid #333436;
+}
+.wins-block ul li span {
+    margin-left: 15px;
+}
+.wins-block ul li span.flag {
+    display: inline-block;
+    width: 20px;
+    height: 15px;
+    background: wheat;
+    vertical-align: middle;
+}
+.wins-block ul li span:last-child {
+    display: inline-block;
+    float: right;
+    padding-right: 15px;
+}
+.winners {
+    .contain-img-slider-view > a {
+        background-size: contain;
+        background-repeat: no-repeat;
+        background-position-x: 50%;
+    }
+    .wrapper-slider-box-b {
+        height: 100%
+    }
+    .big-slider-casino {
+        height: 250px !important;
+    }
+}

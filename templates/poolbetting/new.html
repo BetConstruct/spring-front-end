@@ -1,0 +1,159 @@
+<div ng-controller="poolBettingCtrl" ng-init="init();setTitle('Pool Betting');checkIfEnabled('poolBetting');" ng-keypress="betFromKeyboard($event)">
+    <div class="classic-poolbetting-wrap">
+        <div class="classic-poolbetting">
+            <div>
+                <div class="pbetting-main-j" ng-hide="loading">
+                    <div class="head-pbetting-j">
+                        <h1 trans>Pool betting</h1>
+                        <div class="clock-j" ng-show="!drawIsOver && timer">
+                            <span ng-if="timer.days.value">{{timer.days.value}}</span>
+                            <span>
+                                {{timer.hours.value|numberFixedLength:2}}:{{timer.minutes.value|numberFixedLength:2}}:{{timer.seconds.value|numberFixedLength:2}}
+                            </span>
+                        </div>
+                        <h2>#{{draw.number}}</h2>
+                        <ul class="promo-box-j">
+                            <li class="hero-j">
+                                <div><span ng-show="draw.min" trans>min.</span> <span trans>Jackpot</span></div>
+                                <p>{{(draw.jackpot * (currency.toto_rate || 1))|number:conf.balanceFractionSize }} {{currency.name|currency}}</p>
+                            </li>
+                            <li>
+                                <div trans>Pool:</div>
+                                <p>{{((draw.pool_fee + draw.prize_fund)* (currency.toto_rate || 1))|number:conf.balanceFractionSize}}  {{currency.name|currency}}</p>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="pbetting-list-j" ng-hide="loading">
+                        <form ng-model="poolBettingForm">
+                        <div class="rand-fav-wrap-j">
+                            <span trans>All games</span>
+                            <button class="fav-choice-j" ng-click="favouriteChoice()" trans>Favourite Choice</button>
+                            <button class="rand-choice-j" ng-click="randomChoice()" trans>Random Choice</button>
+                        </div>
+                        <div class="pbetting-compitation-group-j" ng-repeat="competition in competitions">
+                            <div class="title">
+                                <ul>
+                                    <li>
+                                        <p title="{{competition[0].competition_name}}"><span class="icon-j flag-j" ng-class="'flag-'+ competition[0].region_alias | removeUselessSymbolsByRegexp: '[,\' ]+': 'g'"></span>{{competition[0].competition_name}}</p>
+                                    </li>
+                                    <li class="event-pbetting-j">
+                                        <span trans>W1</span>
+                                    </li>
+                                    <li class="event-pbetting-j">
+                                        <span trans>X</span>
+                                    </li>
+                                    <li class="event-pbetting-j">
+                                        <span trans>W2</span>
+                                    </li>
+                                </ul>
+                            </div>
+                            <ul class="pbetting-row" ng-repeat="game in competition|orderBy:'order'" ng-class="{'complete': complete}">
+                                <li>
+                                    <div class="pbetting-list-data-j">
+                                        <p class="time-j">
+                                            <span>{{game.start_ts|formatDate:'full'}}</span>
+                                        </p>
+                                        <p class="pb-compitation-name-j">
+                                            <span title="Gimnasia La Plata">{{game.team1_name}}</span>
+                                        </p>
+                                        <p class="pbetting-list-vs-j">
+                                            <span trans>vs</span>
+                                        </p>
+                                        <p class="pb-compitation-name-j">
+                                            <span title="Gimnasia La Plata">{{game.team2_name}}</span>
+                                        </p>
+                                        <p class="additional-market-j">
+                                            <span><a href="#/sport/?type=0&sport={{game.sport_id}}&region={{game.region_id}}&game={{game.game_id}}&competition={{game.competition_id}}">&raquo;</a></span>
+                                        </p>
+                                    </div>
+                                </li>
+                                <li class="event-pbetting-j" ng-class="{'selected': poolBettingModel[game.order]['p1']}">
+                                    <label class="pbetting-label-j">
+                                        <input name="p1{{game.order}}" type="checkbox" value="1" ng-model="poolBettingModel[game.order]['p1']" />
+                                        <div>
+                                            <i></i>
+                                            <span>{{game.p1_price|oddConvert:env.oddFormat:null:'WINNER'}}</span>
+                                        </div>
+                                    </label>
+                                </li>
+                                <li class="event-pbetting-j" ng-class="{'selected': poolBettingModel[game.order]['x']}">
+                                    <label class="pbetting-label-j">
+                                        <input name="x{{game.order}}" type="checkbox" value="1" ng-model="poolBettingModel[game.order]['x']" />
+                                        <div>
+                                            <i></i>
+                                            <span>{{game.x_price|oddConvert:env.oddFormat:null:'WINNER'}}</span>
+                                        </div>
+                                    </label>
+                                </li>
+                                <li class="event-pbetting-j" ng-class="{'selected': poolBettingModel[game.order]['p2']}">
+                                    <label class="pbetting-label-j">
+                                        <input name="p2{{game.order}}" type="checkbox" value="1" ng-model="poolBettingModel[game.order]['p2']" />
+                                        <div>
+                                            <i></i>
+                                            <span>{{game.p2_price|oddConvert:env.oddFormat:null:'WINNER'}}</span>
+                                        </div>
+                                    </label>
+                                </li>
+                            </ul>
+                        </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="pbetting-right-j">
+                    <div class="head-pbetting-j">
+                        <div class="dropdown-small-j">
+                            <span trans>Odds in</span>
+                            <div ng-class="{active:showDecimalSubMenu}" ng-click="showDecimalSubMenu = !showDecimalSubMenu" state-flag-var="showDecimalSubMenu" hide-on-click>
+                                <span>{{env.oddFormat|capitalise|translate}}</span>
+                                <ul>
+                                    <li ng-repeat="oddFormat in ::conf.oddFormats track by oddFormat.name" ng-click="broadcast('setOddsFormat', oddFormat.format)" ng-class="{'active-format': env.oddFormat === oddFormat.format}">{{ oddFormat.name | translate }}</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="pbetting-betslip-j">
+                        <p>Bet slip</p>
+                        <a class="popuplinks-j" ng-click="openAllDraws();$event.stopPropagation();" trans>All draws</a>
+                        <a class="popuplinks-j" ng-click="openRulesPage();$event.stopPropagation();" trans>Rules</a>
+                        <div class="pb-bslip-options-wrap-j" ng-hide="loading">
+                            <div class="pool-stake-box">
+                                <ul>
+                                    <li  ng-show="!env.authorized">
+                                        <span trans>To place your bet, please</span>
+                                        <span ng-click="broadcast('openLoginForm');$event.stopPropagation()" class="underline" trans>sign in</span>
+                                        <span trans>or</span>
+                                        <span ng-click="broadcast('openRegForm');$event.stopPropagation()" class="underline" trans>register</span>
+                                    </li>
+                                </ul>
+                            </div>
+                            <ul>
+                                <li ng-show="poolBettingProperties.options"><span trans>Options:</span> <span> {{poolBettingProperties.options}}</span></li>
+                                <li ng-show="poolBettingProperties.options"> <span trans>Minimal bet amount: </span><span>{{poolBettingProperties.minStake}}</span> <span>{{currency.name|currency}}</span></li>
+                                <li ng-show="poolBettingProperties.options && conf.bonusesEnabled && (profile.points_balance >= conf.poolBettingPointsAmount)">
+                                    <label class="use-points-j" >
+                                        <input type="checkbox"  ng-disabled="profile.points_balance < conf.poolBettingPointsAmount" ng-model="use_bonus.balance">
+                                        <i></i>
+                                        <span trans >Use Points</span>
+                                    </label>
+                                </li>
+                                <li class="highlighted-j" ng-show="poolBettingProperties.options && conf.bonusesEnabled && (profile.points_balance >= conf.poolBettingPointsAmount)">
+                                    <p><span trans>Available</span> {{profile.points_balance}}</p> <span> ( Equivalent 1750 AMD )</span>
+                                </li>
+                                <li class="input-wrap-j">
+                                    <input ng-model="poolBettingProperties.stake" type="text" placeholder="0" maxlength="8" prevent-input="[^\d\.\,]" onkeyup="this.value=this.value.replace(/,/g, '.').replace(/[^\d\.]/,'')" trans><input type="submit" ng-hide="true">
+                                    <button ng-click="env.authorized ? addToBetslip() : broadcast('openLoginForm') + $event.stopPropagation()" trans ng-disabled="!complete || !( poolBettingProperties.stake >= poolBettingProperties.minStake )">Place bets!</button>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="pb-bs-box-j" ng-show="poolBettingBanner">
+                        <a>
+                            <img src="http://fakeimg.pl/650x300/">
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div> 
+    <vbet-loader class="page-center" ng-if="loading"></vbet-loader>
+</div>

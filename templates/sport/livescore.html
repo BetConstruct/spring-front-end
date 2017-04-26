@@ -1,0 +1,157 @@
+<div class="live-game-template-wrapper">
+    <!-- soccer live game template-->
+    <div class="game-score soccer-template" ng-if="openGame.show_type != 'OUTRIGHT' && (liveGamesSoccerTemplate.indexOf(openGame.sport.alias) !== -1 || conf.esportsGames.indexOf(openGame.sport.alias) !== -1)">
+        <div>
+            <ul>
+                <li ng-style="{'border-left-color': '#'+ openGame.info.shirt1_color}" ng-class="{active: openGame.info.pass_team === 'team1'}">
+                    <img ng-if="conf.esportsGames.indexOf(openGame.sport.alias) !== -1" ng-src="{{conf.teamLogosPath}}e/m/{{conf.GmsPlatform?Math.floor(openGame.team1_id / 2000):Math.floor(openGame.team1_external_id / 2000)}}/{{conf.GmsPlatform?openGame.team1_id:openGame.team1_external_id}}.png" />
+                    <div class="team-form" ng-if="conf.esportsGames.indexOf(openGame.sport.alias) === -1"><tshirt shorts="{{openGame.info.short1_color}}" shirt="{{openGame.info.shirt1_color}}"></tshirt></div>
+                    <p><span>{{ openGame.team1_name ?  openGame.team1_name: '' }}</span></p>
+                </li>
+                <li class="score-total" ng-show="openGame.info.score1 !== undefined"><span><i ng-bind="openGame.info.score1"></i></span></li>
+                <li class="set-scores">
+                    <div ng-repeat="frame_num in framesCount(openGame.stats)" ng-show="framesCount(openGame.stats).length - frame_num < 7" ng-class="{'active-cash':openGame.info.current_game_state === 'set'+frame_num,'winner':isSetWinner(openGame.stats['score_set'+frame_num],1)}">
+                        {{openGame.stats['score_set' + frame_num].team1_value ? openGame.stats['score_set' + frame_num].team1_value : 0}}
+                    </div>
+                </li>
+            </ul>
+            <ul>
+                <li ng-style="{'border-left-color': '#'+ openGame.info.shirt2_color}" ng-class="{active: openGame.info.pass_team === 'team2'}">
+                    <img ng-if="conf.esportsGames.indexOf(openGame.sport.alias) !== -1" ng-src="{{conf.teamLogosPath}}e/m/{{conf.GmsPlatform?Math.floor(openGame.team2_id / 2000):Math.floor(openGame.team2_external_id / 2000)}}/{{conf.GmsPlatform? openGame.team2_id:openGame.team2_external_id}}.png" />
+                    <div class="team-form" ng-if="conf.esportsGames.indexOf(openGame.sport.alias) === -1"><tshirt shorts="{{openGame.info.short2_color}}" shirt="{{openGame.info.shirt2_color}}"></tshirt></div>
+                    <p><span>{{ openGame.team2_name ?  openGame.team2_name: '' }}</span></p>
+                </li>
+                <li class="score-total" ng-show="openGame.info.score2 !== undefined"><span><i ng-bind="openGame.info.score2"></i></span></li>
+                <li class="set-scores">
+                    <div ng-repeat="frame_num in framesCount(openGame.stats)" ng-show="framesCount(openGame.stats).length - frame_num < 7" ng-class="{'active-cash':openGame.info.current_game_state === 'set'+frame_num,'winner':isSetWinner(openGame.stats['score_set'+frame_num],2)}">
+                        {{openGame.stats['score_set' + frame_num].team2_value ? openGame.stats['score_set' + frame_num].team2_value : 0}}
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <!-- generic multiset games template -->
+    <div class="game-score-multiset" ng-if="openGame.show_type != 'OUTRIGHT' && (openGame.sport.alias !== 'HorseRacing' && liveGamesSoccerTemplate.indexOf(openGame.sport.alias) === -1 && conf.esportsGames.indexOf(openGame.sport.alias) == -1)">
+        <ul class="title" title="{{ conf.edition.enabled ? (('Edition'|translate) + ': ' + (openGame.start_ts|formatDate:'edition')) : '' }}" ng-click="broadcast('liveGame.headerClicked', openGame);$event.stopPropagation();">
+            <li>
+                <dl>
+                    <dt>
+                        <b class=" mini-icon-1 mini-icon-{{openGame.sport.id}} {{openGame.sport.alias}}"></b>
+                        <span class="ellipsis-text" title="{{openGame.competition.name}}">
+                            <b ng-show="conf.showGameIds">№ {{openGame.game_number}}</b> {{openGame.competition.name}}
+                        </span>
+                        <a ng-show="conf.enableH2HStat && openGame.is_stat_available"
+                           ng-click="openStatistics(openGame);$event.stopPropagation();"
+                           class="statistics-h2h"
+                           statistics-on-hover
+                           stats-game ="{'id': openGame.id, 'region':openGame.region.alias, 'competition': openGame.competition.name, 'sport': openGame.sport.alias}"></a>
+                        <span class="game-time">{{getCurrentTime(openGame.info.current_game_time) | translate}}</span>
+                    </dt>
+                </dl>
+            </li>
+            <li class="left-arrow" ng-class="{'disabled': openGame.setsOffset === 0}" ng-click="slideSets('left', openGame, visibleSetsNumber)" ng-if="visibleSetsNumber < framesCount(openGame.stats).length"></li>
+            <li ng-repeat="frame_num in framesCount(openGame.stats)"
+                ng-show="frame_num > openGame.setsOffset && frame_num <= visibleSetsNumber + openGame.setsOffset"
+                ng-class="{'active-cash':openGame.info.current_game_state === 'set'+frame_num}">
+                <span ng-bind="showFrameAlias(frame_num, openGame.sport.alias)"></span>
+            </li>
+            <li class="right-arrow" ng-class="{'disabled': openGame.setsOffset === framesCount(openGame.stats).length - visibleSetsNumber}" ng-click="slideSets('right', openGame, visibleSetsNumber, framesCount(openGame.stats).length)" ng-if="visibleSetsNumber < framesCount(openGame.stats).length"></li>
+            <li class="sets-score">
+                <span>{{ "set"|convertSetName:openGame.sport.alias|translate }}</span>
+            </li>
+            <li class="total-score" ng-if="openGame.sport.alias==='Tennis'"><span trans>Points</span></li>
+            <li></li>
+        </ul>
+        <ul>
+            <li>
+                <dl>
+                    <dt>
+                    <div class="team-form"><tshirt shorts="{{openGame.info.short1_color}}" shirt="{{openGame.info.shirt1_color}}"></tshirt></div>
+                    <p title="{{ openGame.team1_name ?  openGame.team1_name: '' }}">{{ openGame.team1_name ?  openGame.team1_name: '' }}</p>
+                    </dt>
+                </dl>
+            </li>
+            <li ng-if="visibleSetsNumber < framesCount(openGame.stats).length"></li>
+            <li ng-repeat="frame_num in framesCount(openGame.stats)"
+                ng-show="frame_num > openGame.setsOffset && frame_num <= visibleSetsNumber + openGame.setsOffset"
+                ng-class="{'active-cash':openGame.info.current_game_state === 'set'+frame_num,'winner':isSetWinner(openGame.stats['score_set'+frame_num],1)}">
+                <span>{{openGame.stats['score_set' + frame_num].team1_value ? openGame.stats['score_set' + frame_num].team1_value : 0}}</span>
+            </li>
+            <li ng-if="visibleSetsNumber < framesCount(openGame.stats).length"></li>
+            <li class="sets-score"><span>{{ openGame.info.score1 ?  openGame.info.score1 : '' | translate}}</span></li>
+            <li class="total-score" ng-if="openGame.sport.alias==='Tennis'"><span>{{ openGame.stats.passes.team1_value || 0 }}</span></li>
+            <li class="serve-team" ng-class="{active: openGame.info.pass_team === 'team1'}"><b class="mini-icon-1 mini-icon-{{openGame.sport.id}} {{openGame.sport.alias}}"></b></li>
+        </ul>
+        <ul>
+            <li>
+                <dl>
+                    <dt>
+                    <div class="team-form"><tshirt shorts="{{openGame.info.short2_color}}" shirt="{{openGame.info.shirt2_color}}"></tshirt></div>
+                    <p title="{{ openGame.team2_name ?  openGame.team2_name: '' }}">{{ openGame.team2_name ?  openGame.team2_name: '' }}</p>
+                    </dt>
+                </dl>
+
+            </li>
+            <li ng-if="visibleSetsNumber <framesCount(openGame.stats).length"></li>
+            <li ng-repeat="frame_num in framesCount(openGame.stats)"
+                ng-show="frame_num > openGame.setsOffset && frame_num <= visibleSetsNumber + openGame.setsOffset"
+                ng-class="{'active-cash':openGame.info.current_game_state === 'set'+frame_num,'winner':isSetWinner(openGame.stats['score_set'+frame_num],2)}">
+                <span>{{openGame.stats['score_set' + frame_num].team2_value ? openGame.stats['score_set' + frame_num].team2_value : 0}}</span>
+            </li>
+            <li ng-if="visibleSetsNumber < framesCount(openGame.stats).length"></li>
+            <li class="sets-score"><span>{{ openGame.info.score2 ?  openGame.info.score2 : '' | translate}}</span></li>
+            <li class="total-score" ng-if="openGame.sport.alias==='Tennis'"><span>{{ openGame.stats.passes.team2_value || 0 }}</span></li>
+            <li class="serve-team" ng-class="{active: openGame.info.pass_team === 'team2'}"><b class="mini-icon-1 mini-icon-{{openGame.sport.id}} {{openGame.sport.alias}}"></b></li>
+        </ul>
+    </div>
+    <!-- Horse racing live game template -->
+    <div class="game-horse-racing" ng-if="openGame.sport.alias === 'HorseRacing'">
+        <ul class="race-title" ng-click="broadcast('liveGame.headerClicked', openGame);$event.stopPropagation();">
+            <li>
+                <p trans>Today at</p>
+                <span>{{ openGame.start_ts| formatDate: "LT"}}</span>
+            </li>
+            <li>
+                <p>{{openGame.competition.name}}</p>
+            </li>
+            <li>
+                <span>{{openGame.info.race.distance.split(' ')[0] + ' '}}</span>
+                <span>{{openGame.info.race.distance.split(' ')[1]|translate}}</span>
+            </li>
+            <li>
+                <p title="Surface" trans="attr-only">{{openGame.info.race.race_type|translate}}</p>
+            </li>
+        </ul>
+        <div class="race-detail-cont">
+            <div class="field-details">
+                <p trans>Prize</p>
+                <div><span ng-if="openGame.info.race.currency ==='EUR'"> &#128;</span><span ng-if="openGame.info.race.currency ==='GBP'"> &#163;</span> {{openGame.info.race.prize}}</div>
+            </div>
+            <div class="field-details">
+                <p trans>Surface</p>
+                <div title="{{openGame.info.race.track_type|translate}}">{{openGame.info.race.track_type|translate}}</div>
+            </div>
+        </div>
+        <div class="race-add-info">
+            <p><b class="mini-icon-1 mini-icon-{{openGame.sport.id}} {{openGame.sport.alias}}"></b>{{openGame.info.race.title}}</p>
+            <span></span>
+        </div>
+
+        <div class="field-details stadium">
+            <p trans>Course</p>
+            <div ng-style="{'background-image': 'url(' + openGame.info.race.courceIcon + ')'}"></div>
+        </div>
+    </div>
+
+    <div class="outright-template" ng-if="openGame.show_type == 'OUTRIGHT'">
+        <p>
+            {{ openGame.team1_name ?  openGame.team1_name: '' }}
+        </p>
+    </div>
+    
+    <div class="current-game-info-line" ng-show="openGame.show_type != 'OUTRIGHT' && (liveGamesSoccerTemplate.indexOf(openGame.sport.alias) !== -1 || conf.esportsGames.indexOf(openGame.sport.alias) !== -1)">
+        <p>
+            <span>{{ openGame.info.current_game_state|convertSetName:openGame.sport.alias|translate }} </span> <span ng-if="openGame.info.current_game_state !== 'notstarted' && openGame.info.current_game_state !== 'timeout'">{{ (openGame.info.current_game_time)[0] === '-'? ('will start in'|translate)+' '+ (openGame.info.current_game_time).substring(1): openGame.info.current_game_time }}</span>
+        </p>
+    </div>
+</div>

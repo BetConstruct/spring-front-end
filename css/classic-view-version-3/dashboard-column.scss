@@ -1,0 +1,593 @@
+@mixin classic-new-view-5 {
+  //Dashboard
+  .dashboard-view-v3{
+    box-sizing: border-box;
+    float: left;
+    width: 100%;
+    height: 100%;
+  }
+  .dashboard-view-v3 > .live-events-column-v3{
+    width: 46%;
+  }
+  .dashboard-view-v3 > .live-events-column-v3:first-child{
+    width: 54%;
+  }
+  //Live dashboard column
+  .live-games-list-d-v3{
+    box-sizing: border-box;
+    float: left;
+    width: 100%;
+  }
+  .live-column-title-v3, .upcoming-column-title-v3{
+    box-sizing: border-box;
+    float: left;
+    width: 100%;
+    position: relative;
+    background: $c16-sp-9;
+    height: 36px;
+    border-radius: 2px 2px 0 0;
+    margin: 0 0 5px;
+    padding: 0 30px 0 34px;
+  }
+  .upcoming-column-title-v3 > h2, .live-column-title-v3 > h2{
+    box-sizing: border-box;
+    float: left;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    color: set-color($hero-color);
+    font: 12px/36px $font-f;
+  }
+  .upcoming-column-title-v3 > h2 > span, .live-column-title-v3 > h2 > span{
+    box-sizing: border-box;
+    position: relative;
+    display: inline-block;
+    vertical-align: top;
+    padding: 0 18px 0 0;
+  }
+  .upcoming-column-title-v3 > h2 > span{background: $c16-sp-7; color: set-color($c16-sp-7);}
+  .live-column-title-v3 > h2 > span{background: $hero-color;}
+  .upcoming-column-title-v3 > h2 > span:before,
+  .live-column-title-v3 > h2 > span:before{
+    box-sizing: border-box;
+    position: absolute;
+    right: 0;
+    top: 0;
+    font: 16px/36px icomoon;
+    content: "\e672";
+    color: $c16-tp-7;
+    display: none;
+  }
+  .d-arrow-icon-v3{
+    position: absolute;
+    width: 30px;
+    height: 36px;
+    right: 0;
+    top: 0;
+    font: 12px/36px icomoon;
+    text-align: center;
+    color: lighten( desaturate( $c16-tp, 23 ), 37 );
+  }
+  .d-arrow-icon-v3:before{
+    content: "\e938";
+  }
+  .d-arrow-icon-v3.closed-all:before{
+    content: "\e937";
+  }
+  .all-live-games-list-d-v3{
+    box-sizing: border-box;
+    float: left;
+    width: 100%;
+  }
+  .live-games-column-dasboard-v3{
+    box-sizing: border-box;
+    float: left;
+    width: 100%;
+  }
+  .group-games-contain-v3{
+    box-sizing: border-box;
+    float: left;
+    width: 100%;
+    border: 1px solid $c16-sp-10;
+    border-top: none;
+    border-radius: 2px;
+    padding: 0;
+    margin: 0 0 5px;
+    overflow: hidden;
+    max-height: 30000px;
+    animation: region-open-animate-b 500ms ease-in-out;
+  }
+  .group-games-contain-v3.region-closed{
+    max-height: 24px;
+    animation: region-closed-animate-b 240ms ease;
+  }
+  @keyframes region-open-animate-b{
+    0% {max-height: 24px;}
+    100% {max-height: 999px;}
+  }
+  @keyframes region-closed-animate-b {
+    0% {display: block;max-height: 200px;}
+    100% {display: block;max-height: 24px;}
+  }
+  .group-games-contain-v3 > .title-championship-v3{
+    box-sizing: border-box;
+    background: $c16-sp-10;
+  }
+  .group-games-contain-v3 > .title-championship-v3 {
+    box-sizing: border-box;
+    padding-left: 33px;
+    margin: 0 0 6px;
+  }
+  .dashboard-single-l-game-v3{
+    box-sizing: border-box;
+    float: left;
+    width: 100%;
+    height: 50px;
+    padding: 0;
+    margin: 0 0 5px;
+  }
+  .dashboard-single-l-game-v3:last-child{
+    margin-bottom: 0;
+  }
+  .dashboard-single-l-game-v3 > ul{
+    box-sizing: border-box;
+    float: left;
+    width: 100%;
+    display: table;
+    table-layout: fixed;
+    overflow: hidden;
+  }
+  .title-championship-v3 + .dashboard-single-l-game-v3 > ul{
+    border-top-left-radius: 2px;
+    border-top-right-radius: 2px;
+  }
+  .dashboard-single-l-game-v3:last-child > ul{
+    border-bottom-left-radius: 2px;
+    border-bottom-right-radius: 2px;
+  }
+  .dashboard-single-l-game-v3 > ul > li{
+    box-sizing: border-box;
+    display: table-cell;
+    vertical-align: top;
+  }
+  .dashboard-single-l-game-v3 > ul > li:first-child{
+    width: 36%;
+  }
+  .dashboard-single-l-game-v3 > ul > li:last-child{
+    width: 50px;
+   }
+  .dashboard-single-l-game-v3 > ul > li > .single-game-item-v3{
+    box-sizing: border-box;
+    margin: 0;
+    border-radius: inherit;
+  }
+  .dashboard-single-l-game-v3 > ul > li .single-game-item-v3:before{display: none;}
+  .market-info-view-d-v3{
+    box-sizing: border-box;
+    float: left;
+    width: 100%;
+    padding: 0 1px 0 2px;
+  }
+  .market-name-d-v3{
+    box-sizing: border-box;
+    float: left;
+    width: 100%;
+    background: lighten( desaturate( adjust-hue( $c16-sp, -1deg ), 14 ), 6 );
+    margin: 0;
+    height: 21px;
+  }
+  .market-name-d-v3 > h4{
+    box-sizing: border-box;
+    float: left;
+    width: 100%;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    color: $c16-tp-6;
+    font: 11px/21px $font-f;
+    padding: 0 10px;
+  }
+  .all-markets-favorite-d-v3{
+    box-sizing: border-box;
+    float: left;
+    width: 100%;
+    height: 50px;
+    background: lighten( desaturate( adjust-hue( $c16-sp, -1deg ), 14 ), 6 );
+  }
+  .all-markets-favorite-d-v3 > ul{
+    box-sizing: border-box;
+    float: left;
+    width: 100%;
+  }
+  .all-markets-favorite-d-v3 > ul > li{
+    box-sizing: border-box;
+    float: left;
+    width: 100%;
+    position: relative;
+    height: 29px;
+    margin: 0;
+  }
+  .all-markets-favorite-d-v3 > ul > li:first-child{
+    box-sizing: border-box;
+    height: 21px;
+  }
+  .all-markets-favorite-d-v3 > ul > li .favorite-icon-market-v3{
+    box-sizing: border-box;
+    font: 16px/20px icomoon;
+    width: 30px;
+    float: right;
+    height: 20px;
+    position: relative;
+    text-align: center;
+    top: 4px;
+  }
+  .favorite-icon-market-v3 .markets-count-view-v3 > span{
+    box-sizing: border-box;
+    line-height: 29px;
+    padding-left: 6px;
+  }
+  .contain-pop-game-dashboard-v3{
+    box-sizing: border-box;
+    float: left;
+    width: 100%;
+  }
+  .popular-game-view-wrapper-v3{
+    box-sizing: border-box;
+    float: left;
+    width: 100%;
+    margin: 0 0 5px;
+    border-radius: 2px;
+    overflow: hidden;
+    background-color: $c16-sp-9;
+    background-size: cover;
+    background-position: 0 100%;
+    border: 1px solid $c16-sp-9;
+    position: relative;
+    > div, > span {
+      position: relative;
+      z-index: 20;
+    }
+  }
+  .popular-game-view-wrapper-v3:before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba($c16-sp-9, 0.08);
+  }
+  .popular-game-t-row-v3{
+    box-sizing: border-box;
+    float: left;
+    width: 100%;
+  }
+  .popular-game-dashboard-v3{
+    box-sizing: border-box;
+    float: left;
+    width: 100%;
+    height: 96px;
+  }
+  .popular-game-view-wrapper-v3 .market-title-v3{
+    box-sizing: border-box;
+    background: rgba(255, 255, 255, 0.05);
+    box-shadow: 0 -1px 0 rgba(0, 0, 0, 0.15) inset;
+    height: 22px;
+    padding: 0;
+  }
+  .popular-game-view-wrapper-v3 .name-market-row-v3{
+    box-sizing: border-box;
+    height: 22px;
+  }
+  .popular-game-view-wrapper-v3 .market-name-icon-row-v3 > h3{
+    box-sizing: border-box;
+    line-height: 22px;
+    color: #7b8191;
+  }
+  .popular-game-view-wrapper-v3 .market-icons-view-v3 > ul > li:before{
+    box-sizing: border-box;
+    font-size: 14px;
+  }
+  .popular-game-view-wrapper-v3 .market-icons-view-v3 > ul{
+    box-sizing: border-box;
+    padding: 0;
+  }
+  .popular-game-view-wrapper-v3 .market-icons-view-v3 > ul > li{
+    box-sizing: border-box;
+    border: none;
+  }
+  .popular-game-team-name-v3{
+    box-sizing: border-box;
+    float: left;
+    width: 100%;
+    padding: 8px 8px 3px;
+  }
+  .popular-game-team-name-v3 > table{
+    box-sizing: border-box;
+    float: left;
+  }
+  .popular-game-team-name-v3 > table tr td{
+    box-sizing: border-box;
+    vertical-align: middle;
+    padding: 0 0 4px;
+  }
+  .liga-icon-view-v3{
+    box-sizing: border-box;
+    float: left;
+    width: 20px;
+    height: 20px;
+    text-align: center;
+    margin: 0 10px 0 0;
+  }
+  .liga-icon-view-v3 > img{
+    box-sizing: border-box;
+    max-width: 20px;
+    max-height: 20px;
+    display: block;
+  }
+  .popular-game-team-name-v3 > table tr td > p{
+    box-sizing: border-box;
+    font: 16px/18px $font-f;
+    color: #c2c5cd;
+    float: left;
+    width: 100%;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    padding: 0 30px 0 0;
+    max-width: 350px;
+  }
+  .popular-game-team-name-v3 > table tr td > span{
+    box-sizing: border-box;
+    font: 16px/18px $font-f;
+    color: #b6862e;
+  }
+  .events-view-p-game-v3{
+    box-sizing: border-box;
+    float: left;
+    width: 100%;
+    position: relative;
+    height: 28px;
+    padding: 0 60px 0 8px;
+  }
+  .events-view-p-game-v3 > .events-list-view-v3{
+    box-sizing: border-box;
+    width: 370px;
+  }
+  .events-view-p-game-v3 .markets-count-view-v3{
+    box-sizing: border-box;
+    right: 6px;
+  }
+  .events-view-p-game-v3 .events-list-view-v3 > ul > li:first-child > .single-events-b-v3{
+    border-top-left-radius: 2px;
+    border-bottom-left-radius: 2px;
+  }
+  .events-view-p-game-v3 .events-list-view-v3 > ul > li:last-child > .single-events-b-v3{
+    border-top-right-radius: 2px;
+    border-bottom-right-radius: 2px;
+  }
+  .dashboard-live-game-competitin-v3{
+    box-sizing: border-box;
+    float: left;
+    width: 100%;
+  }
+  .contain-competition-dashboard-v3{
+    box-sizing: border-box;
+    float: left;
+    width: 100%;
+    padding: 0 6px;
+    margin-bottom: 6px;
+    max-height: 30000px;
+    overflow: hidden;
+    animation: dashboard-c-open-animate-b 500ms ease-in-out;
+  }
+  .contain-competition-dashboard-v3.closed{
+    animation: dashboard-c-closed-animate-b 240ms ease;
+    max-height: 26px;
+  }
+  @keyframes dashboard-c-open-animate-b{
+    0% {max-height: 26px;}
+    100% {max-height: 999px;}
+  }
+  @keyframes dashboard-c-closed-animate-b {
+    0% {display: block;max-height: 200px;}
+    100% {display: block;max-height: 26px;}
+  }
+  .title-competition-dashboard-v3{
+    box-sizing: border-box;
+    float: left;
+    width: 100%;
+    height: 24px;
+    border-radius: 2px 2px 0 0;
+    background: lighten( desaturate( adjust-hue( $c16-sp, 2deg ), 20 ), 13 );
+    padding: 0 24px 0 6px;
+    position: relative;
+    margin: 0 0 2px;
+  }
+  .title-competition-dashboard-v3 > h5{
+    box-sizing: border-box;
+    float: left;
+    width: 100%;
+    color: $c16-tp-4;
+    font: 11px/24px $font-f;
+    text-transform: uppercase;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+  }
+  .title-competition-dashboard-v3 > .arrow-view-v3{
+    box-sizing: border-box;
+    width: 24px;
+    line-height: 24px;
+    color: $c16-tp-6;
+  }
+  .title-competition-dashboard-v3 > .arrow-view-v3:before{
+    box-sizing: border-box;
+    content: "\e671";
+  }
+  .contain-competition-dashboard-v3.closed .title-competition-dashboard-v3 > .arrow-view-v3:before{
+    box-sizing: border-box;
+    content: "\e670";
+  }
+  .contain-competition-dashboard-v3.closed > .title-competition-dashboard-v3{border-radius: 2px;}
+  //Live dashboard column END
+
+  //Upcoming dashboard column
+  .upcoming-games-list-d-v3{
+    box-sizing: border-box;
+    float: left;
+    width: 100%;
+  }
+  .upcoming-icon-v3{
+    box-sizing: border-box;
+    width: 34px;
+    height: 100%;
+    position: absolute;
+    left: 0;
+    top: 0;
+    font: 16px/36px icomoon;
+    text-indent: 10px;
+    color: $c16-tp-1;
+    background: $c16-sp-7;
+    border-radius: 2px 0 0;
+  }
+  .upcoming-icon-v3:before{
+    box-sizing: border-box;
+    content: "\e6e2";
+  }
+  .live-column-title-v3 .upcoming-icon-v3{
+    box-sizing: border-box;
+    background: $hero-color;
+  }
+  .live-column-title-v3 .upcoming-icon-v3:before{
+    box-sizing: border-box;
+    content: "\e936";
+    color: set-color($hero-color);
+  }
+  .upcoming-games-filter-v3{
+    float: left;
+    height: 36px;
+    padding: 6px 0 0;
+  }
+  .upcoming-games-filter-v3 .time-filter-v3 > p{
+    box-sizing: border-box;
+    padding-left: 10px;
+    text-transform: none;
+  }
+  .single-sport-box-v3{
+    box-sizing: border-box;
+    float: left;
+    width: 100%;
+    border-radius: 2px;
+    overflow: hidden;
+    margin: 0 0 4px;
+    max-height: 30000px;
+    animation: upcoming-open-animate-b 500ms ease-in-out;
+  }
+  .region-list-view-d-v3{
+    box-sizing: border-box;
+    float: left;
+    width: 100%;
+  }
+  .competition-list-view-d-v3{
+    box-sizing: border-box;
+    float: left;
+    width: 100%;
+  }
+  .sport-name-up-game-v3{
+    box-sizing: border-box;
+    float: left;
+    width: 100%;
+    height: 30px;
+    background: $c16-sp-9;
+    position: relative;
+    padding: 0 30px 0 34px;
+    border-radius: 2px 2px 0 0;
+    cursor: pointer;
+    margin: 0 0 3px;
+  }
+  .single-sport-box-v3.sport-closed > .sport-name-up-game-v3{
+    box-shadow: none;
+  }
+  .sport-name-up-game-v3:before{
+    display: none;
+  }
+  .single-sport-box-v3c.sport-name-up-game-v3:hover > .arrow-view-v3:before,
+  .single-sport-box-v3 .sport-name-up-game-v3 > .arrow-view-v3:before{
+    box-sizing: border-box;
+    content: "\e671";
+    color: $c16-tp-3;
+  }
+  .single-sport-box-v3.sport-closed > .sport-name-up-game-v3 > .arrow-view-v3:before{
+    content: "\e670";
+    color: transparent;
+  }
+  .single-sport-box-v3.sport-closed > .sport-name-up-game-v3:hover > .arrow-view-v3:before{color: $c16-tp-3;}
+  .single-sport-box-v3.sport-closed{box-sizing: border-box;
+    max-height: 30px;
+    animation: upcoming-closed-animate-b 240ms ease;
+  }
+  @keyframes upcoming-open-animate-b{
+    0% {max-height: 30px;}
+    100% {max-height: 999px;}
+  }
+  @keyframes upcoming-closed-animate-b{
+    0% {display: block;max-height: 500px;}
+    100% {display: block;max-height: 30px;}
+  }
+  .sport-name-up-game-v3 > .sport-icon-v3{
+    box-sizing: border-box;
+    width: 34px;
+    box-shadow: none;
+  }
+  .sport-name-up-game-v3 > h3{
+    box-sizing: border-box;
+    float: left;
+    width: 100%;
+    color: $c16-tp-3;
+    font: 12px/30px $font-f;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+  }
+  .single-sport-box-v3 > .title-championship-v3{
+    box-sizing: border-box;
+    padding-left: 34px;
+  }
+  .single-sport-box-v3 .flag-view-v3{
+    box-sizing: border-box;
+    top: 4px;
+  }
+  .single-sport-box-v3 .mini-title-box-gameview-v3{
+    box-sizing: border-box;
+    padding-left: 10px;
+  }
+  .title-championship-v3.competition-closed + .time-info-game-box-v3{
+    box-sizing: border-box;
+    max-height: 0;
+    animation: closed-animate-b 240ms ease;
+  }
+  .title-championship-v3.competition-closed{
+    box-sizing: border-box;
+    border-radius: 2px;
+  }
+  .title-championship-v3 > .arrow-view-v3:before{
+    box-sizing: border-box;
+    content: "\e671";
+  }
+  .title-championship-v3.competition-closed > .arrow-view-v3:before,
+  .group-games-contain-v3.region-closed > .title-championship-v3 > .arrow-view-v3:before{
+    box-sizing: border-box;
+    content: "\e670";
+  }
+  //Upcoming dashboard column END
+  //Dashboard END
+  .popular-game-t-row-v3 .events-view-p-game-v3 .markets-count-view-v3 {
+    > span {
+      color: #7b8191;
+    }
+    .arrow-icon-b-v3 {
+      color: #505767;
+    }
+  }
+}

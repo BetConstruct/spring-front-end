@@ -1,0 +1,13 @@
+<div ng-controller="casinoVersion2Ctrl" ng-init="checkIfEnabled('casino'); setTitle(('Casino'|translate));" watch-resize middle-screen-mode="true"
+     ng-class="{'casino-mainpage-wrapper-b': cConf.newCasinoDesignEnabled}">
+    <!--Casino-new hompage-->
+   <div ng-include="getTemplate('optional_modules/casino/templates/version_2/casino-new-template.html')" ng-if="cConf.newCasinoDesignEnabled"></div>
+<!--Casino old homepage-->
+    <div ng-include="getTemplate('optional_modules/casino/templates/version_2/casino-old-template.html')" ng-if="!cConf.newCasinoDesignEnabled"></div>
+
+    <multiview-control ng-if="cConf.multiViewEnabled" wide-mode="wideMode" middle-mode="middleMode" view-count="viewCount" games-info="gamesInfo"></multiview-control>
+
+   <div ng-include="getTemplate('optional_modules/casino/templates/version_2/big-game.html')" ng-if="gamesInfo.length" class="big-games-overflow"></div>
+
+</div>
+<!--Casino END-->

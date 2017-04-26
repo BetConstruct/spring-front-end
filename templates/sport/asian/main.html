@@ -1,0 +1,306 @@
+<!--asian view-->
+<div class="gaming-wrapper-asia" ng-controller="asianViewMainController as asianCtrl" id="asianView">
+    <div class="asian-contain">
+        <!--left-menu-->
+        <div class="fixed-element-parent asian-left-menu-fixed">
+            <div class="asian-left-menu-scroll-wrapper"  fixonscroll auto-positon="true" scrollable-area-id="asianView" header-id="main-header-container">
+                <div class="asian-left-contain-menu" ng-class="'type-' + selectedMenuType.active">
+                    <ng-include class="include-viewSwitcher-j" src="getTemplate('templates/sport/viewswitcher.html')"></ng-include>
+
+                    <!--video and animation-->
+                    <div class="animation-video-box-v3" ng-class="{'active': hideVideoAndAnimationBox}"
+                         ng-if="(openGame.type === 1 || !virtualSportsSelected) && (((openGame.video_id || openGame.video_data) && conf.videoEnabled && !pinnedGames[openGame.id] && !enlargedGame) || openGame.has_animation)">
+                        <div class="animation-video-contain-v3" ng-if="openGame.type===1">
+                            <div class="animation-video-title-row-v3">
+                                <div class="anime-video-switcher-v3">
+                                    <ul>
+                                        <li class="video-view-icon-v3" ng-click="openGame.activeFieldType='video'; playerRemoved = false;"
+                                            ng-show="conf.videoEnabled && (openGame.video_id || openGame.video_data) && !pinnedGames[openGame.id] && (!enlargedGame || openGame.id !== enlargedGame.id)"
+                                            ng-class="{'active': openGame.activeFieldType==='video' && !playerRemoved}">
+                                        </li>
+                                        <li class="animation-view-icon-v3" ng-show="openGame.has_animation" ng-click="openGame.activeFieldType='field'"
+                                            ng-class="{'active': openGame.activeFieldType==='field' || playerRemoved || pinnedGames[openGame.id]}">
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="contain-v-a-fanction-icons-v3">
+                                    <ul>
+                                        <li class="arrow-closed-anime-b-v3" ng-click="toggleVideoAndAnimationBox()" ng-class="{'active': hideVideoAndAnimationBox}"></li>
+                                        <li class="resize-icon-b-v3" ng-click="$root.videoResizeButton = !$root.videoResizeButton" ng-class="{'active': $root.videoResizeButton}"></li>
+                                        <li class="pin-icon-video-v3" ng-class="{'disabled': !env.authorized}" ng-show="openGame.activeFieldType == 'video' && openGame.tv_type !== conf.defaultStreaming.tvType && !pinnedGames[openGame.id]" ng-click="openGame.activeFieldType='field'; detachVideo('dragable');"></li>
+                                        <li class="resize-icon-full-video-v3" ng-show="openGame.activeFieldType == 'video'" ng-class="{'active': env.authorized && openGame.activeFieldType == 'video' &&!conf.detachedVideoSizes[openGame.tv_type],'disabled': !(env.authorized && openGame.activeFieldType == 'video' &&!conf.detachedVideoSizes[openGame.tv_type])}" ng-click="openGame.activeFieldType='field'; detachVideo('fullScreen');"></li>
+                                        <li class="sound-icon-v3 " ng-click="env.sound = 0;" ng-show="openGame.activeFieldType==='field' && env.sound > 0" title="Sound" trans="attr-only"></li>
+                                        <li class="sound-icon-v3 active" ng-click="env.sound = 0.75;" ng-show="openGame.activeFieldType==='field' && env.sound === 0" title="Sound" trans="attr-only"></li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="video-animation-vox-v3 animation-control">
+
+
+                                <video-player ng-if="openGame.activeFieldType === 'video' && !hideVideoAndAnimationBox && conf.videoEnabled && !enlargedGame && !pinnedGames[openGame.id]"
+                                              class="game-video"
+                                              player-id="gamevideo{{openGame.id}}"
+                                              stream-url="{{openGame.video_data}}"
+                                              provider-id="{{openGame.tv_type}}"
+                                              initially-muted="{{ env.sound }}"></video-player>
+
+                                <!--<include-template template-path="templates/sport/classic/video.html" ng-if="openGame.activeFieldType === 'video' && !hideVideoAndAnimationBox && conf.videoEnabled && !enlargedGame && !pinnedGames[openGame.id]" class="game-video"></include-template>-->
+                                <include-template template-path="templates/sport/classic/animations.html"></include-template>
+                            </div>
+                        </div>
+                    </div>
+                    <!--video and animation END-->
+                    <!--betslip-->
+                    <div ng-if="::!conf.disableBetSlip" class="right-block-list" ng-class="{'betslip-open':betslipOpen}">
+                        <div class="betslip-toggle" ng-click="betslipOpen=!betslipOpen" ng-class="{'betslip-button-open':betslipOpen }"><p>BetSlip</p><span class="betslip-bets-count" ng-bind="$root.betSlipBetsCount"></span></div>
+                        <div class="list-bet-block" ng-if="$location.path() !== '/poolbetting/'" ng-include="getTemplate('templates/sport/betslip.html')"></div>
+                    </div>
+                    <!--betslip END-->
+                    <!--Menu tabs-->
+                    <div class="menu-tabs-b">
+                        <ul>
+                            <li ng-click="setMenuType(value)"
+                                ng-class="{'active': selectedMenuType.active === value}"
+                                ng-repeat="(key, value) in LEFT_MENU">
+                                <p>{{key|translate}} {{value === 1 && liveGamesCount ? ' (' + liveGamesCount + ')' : ''}}</p>
+                            </li>
+                        </ul>
+                    </div>
+                    <!--Menu tabs-->
+                    <!--Favorite games-->
+                    <include-template class="left-menu-wrapper-v3" template-path="templates/sport/euro2016/left/favorites.html"></include-template>
+                    <div class="asian-left-nav">
+                        <vbet-loader ng-show="leftMenuIsLoading"></vbet-loader>
+                        <div ng-if="!leftMenuIsLoading" class="asian-left-menu">
+                            <ul>
+                                <div ng-repeat="group in sportsGroup track by group.id" ng-show="group" ng-class="{'asian-menu-group-wrap-j' : group.hasHeader}">
+                                    <li ng-click="leftMenuState[selectedMenuType.active][group.id] = !leftMenuState[selectedMenuType.active][group.id]" ng-show="group.hasHeader" ng-class="{'active': leftMenuState[selectedMenuType.active][group.id]}">
+                                        <div class="icon-sport-asia sport-group-{{group.alias}}" ng-class="group.name"></div> <!--this is temp solution, later replace ng-class group.name with group.alias -->
+                                        <p class="sport-name-asia">{{group.name}}
+                                            <span class="sport-market-counts">{{group.count}}</span>
+                                        </p>
+                                        <div class="menu-arrow-asia"></div>
+                                    </li>
+                                    <div>
+                                        <li ng-repeat="sport in group.sports track by sport.id" ng-class="{'active': sport.id === selectedSport.id && !selectedSport.closedTab}">
+                                            <div ng-click="clearPage();openSport(sport, {key: 'HDP'})">
+                                                <div class="icon-sport-asia" ng-class="sport.alias"></div>
+                                                <p class="sport-name-asia">{{sport.name}}
+                                                    <span class="sport-market-counts">{{sport.game}}</span>
+                                                </p>
+                                                <div class="menu-arrow-asia" ng-show="selectedMenuType.active != 1"></div>
+                                            </div>
+                                            <div class="sport-markets-menu" ng-if="selectedMenuType.active != 1 && !selectedSport.closedTab">
+                                                <ul>
+                                                    <li ng-if="sport.alias === 'Soccer'"  ng-show="marketGameCounts[sport.alias][marketType.key] > 0" ng-class="{'active pointer-events-none': marketType.key === selectedMarket.key}"
+                                                        ng-repeat="marketType in asianMarkets.Soccer track by $index"
+                                                        ng-click="clearPage();openMarket(marketType, sport)">
+                                                        <p class="market-neme-asia">{{marketType.name|translate}}<span class="sport-market-counts" ng-bind="marketGameCounts[sport.alias][marketType.key]"></span></p>
+                                                    </li>
+                                                    <li ng-if="sport.alias !== 'Soccer'"  ng-show="marketGameCounts[sport.alias][marketType.key] > 0" ng-class="{'active pointer-events-none': marketType.key === selectedMarket.key}"
+                                                        ng-repeat="marketType in asianMarkets.OTHER track by $index"
+                                                        ng-click="openMarket(marketType, sport)">
+                                                        <p class="market-neme-asia">{{marketType.name|translate}}<span class="sport-market-counts" ng-bind="marketGameCounts[sport.alias][marketType.key]"></span></p>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </li>
+                                    </div>
+                                </div>
+                            </ul>
+                        </div>
+                        <div ng-show="!env.live && sportsGroup.length === 0 && !leftMenuIsLoading" trans>No event is available at the moment.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--left-menu END-->
+        <!-- System Calculator-->
+        <div id="system-claculator-container" ng-if="$root.showSystemCalculator" draggable allow-other-mouse-events drag-from="calculator-draggable-header">
+            <div ng-include="getTemplate('templates/sport/classic/systemCalculator.html')"></div>
+        </div>
+        <!-- System Calculator-->
+        <!--Game-wrapper-->
+        <div class="game-contain" ng-class="'type-' + selectedMenuType.active">
+            <!--filter-->
+            <div class="big-filter-wrapper">
+                <div ng-if="conf.availableAsianViewThemes.length > 1" class="selectSportsbookColor-j" ng-class="{active: themeSelector.show}">
+                    <p ng-click="themeSelector.show = !themeSelector.show"></p>
+                    <div>
+                        <div ng-repeat="theme in conf.availableAsianViewThemes track by $index" ng-class="{active: themeSelector.name == theme.name}" ng-click="loadTheme(theme)" class="{{theme.displayName || theme.name}}"></div>
+                    </div>
+                </div>
+                <div ng-if="conf.asian.countdown.enabled" class="refresh-asian-view">
+                    <button ng-class="{'loading-proccess' : countDown.remaining === 0}" ng-click="resetCountDown()" ng-bind="countDown.remaining || ''"></button>
+                </div>
+                <ul>
+                    <li ng-class="{active: orderingMenuOpened}" hide-on-click state-flag-var="orderingMenuOpened" ng-show="!openGame">
+                        <div class="contein-mini-filtr time" ng-class="{'active': orderedByTime}">
+                            <div class="filter-icon" ng-click="changeSortOrder()" ng-class="{asc: sortAscending, desc: !sortAscending}"></div>
+                            <p class="name-filter-b" ng-click="orderingMenuOpened = !orderingMenuOpened" ng-show="orderedByTime" trans>Order by Time</p>
+                            <p class="name-filter-b" ng-click="orderingMenuOpened = !orderingMenuOpened" ng-show="!orderedByTime" trans>Order by Competition</p>
+                            <div class="menu-arrow-asia"></div>
+                            <div class="sub-menu-filter">
+                                <ul>
+                                    <li ng-class="{'active': orderedByTime}" ng-click="orderedByTime = true; orderByTime(); selectPage(0); orderingMenuOpened = false;">
+                                        <p trans>Order by Time</p>
+                                    </li>
+                                    <li ng-class="{'active': !orderedByTime}" ng-click="orderedByTime = false; orderByTime(); selectPage(0); orderingMenuOpened = false;">
+                                        <p trans>Order by Competition</p>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </li>
+                    <li ng-show="openGame" ng-click="goBackFromOpenGame(); resetCountDown(true);">
+                        <div class="contein-mini-filtr">
+                            <div class="filter-icon back"></div>
+                            <p trans>Back</p>
+                        </div>
+                    </li>
+                    <li ng-click="dateFilterOpened = !dateFilterOpened" ng-class="{'active': dateFilterOpened}" ng-show="selectedMenuType.active == 0 && activeGameId == null" hide-on-click state-flag-var="dateFilterOpened">
+                        <div class="contein-mini-filtr date">
+                            <div class="filter-icon"></div>
+                            <p class="name-filter-b"><span trans>Date Filter</span>: {{ filterName}} ({{filterCount}})</p>
+                            <div class="menu-arrow-asia"></div>
+                            <div class="sub-menu-filter">
+                                <ul>
+                                    <li ng-show="dateFilterGameCount[$index].game > 0" ng-repeat="day in dayFilter track by $index">
+                                        <input name="" ng-model="filters.selectedDays[day.id]" type="checkbox" value="" id="checkbox-lc-day-{{day.id}}" ng-disabled="dateFilterDaysCount <= 1" ng-change="toggleDay()" >
+                                        <label for="checkbox-lc-day-{{day.id}}">{{day.from|formatDate:'ddd D'}} ({{dateFilterGameCount[$index].game}})</label>
+                                    </li>
+                                    <li ng-show="dateFilterGameCount[7].game > 0">
+                                        <input name="" ng-model="filters.allDays.selected" type="checkbox" value="" id="checkbox-lc-day-all" ng-disabled="dateFilterDaysCount <= 1" ng-change="toggleAllDays()" >
+                                        <label for="checkbox-lc-day-all">{{filters.allDays.name | translate}} ({{dateFilterGameCount[7].game}})</label>
+                                    </li>
+                                    <li ng-show="dateFilterGameCount.length > 0 || dateFilterGameCount[7].game > 0">
+                                        <button ng-click="dateFilterConfirm()" trans>OK</button>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </li>
+                    <li ng-click="allowFiltering(); showCompetitionsSelector=true" hide-on-click state-flag-var="showCompetitionsSelector" ng-show="!openGame">
+                        <div class="contein-mini-filtr competition">
+                            <div class="filter-icon"></div>
+                            <p class="name-filter-b" trans>Select competition</p>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+
+            <!--filter END-->
+
+            <div ng-if="pages.length > 1 && selectedMarket.key !== 'FULLGAME'" ng-show="!marketGamesAreLoading"  class="asian-pagination no-select-j">
+                <button class="cms-jcon-arrow-left5" ng-disabled="selectedPage === 0" ng-click="selectPage(selectedPage-1);resetCountDown()"></button>
+                <button ng-repeat="page in pages"  ng-click="selectPage($index);resetCountDown()" ng-show="Math.abs($index - paginationPosition) <= 6" ng-bind="Math.abs($index - paginationPosition) === 6 ? '...' : $index + 1" ng-class="{'active': $index === selectedPage}"></button>
+                <button class="cms-jcon-arrow-right5" ng-disabled="selectedPage === pages.length - 1" ng-click="selectPage(selectedPage+1);resetCountDown()"></button>
+            </div>
+            <vbet-loader ng-show="marketGamesAreLoading"></vbet-loader>
+
+            <div class="asian-separator-container-b" ng-switch=":selectedMarket-change:selectedMarket.key" ng-show="!marketGamesAreLoading">
+                <!-- first goal last goal-->
+                <div class="asian-separator-container-b" ng-switch-when="FLG">
+                    <ng-include class="asian-separator-container-b" src="getTemplate('templates/sport/asian/' + (conf.GmsPlatform ? 'gms/' : '') + 'market/flg.html')"></ng-include>
+                </div>
+                <!-- first goal last goal-->
+                <!--Outright-->
+                <div class="asian-separator-container-b" ng-switch-when="OUR">
+                    <ng-include class="asian-separator-container-b" src="getTemplate('templates/sport/asian/' + (conf.GmsPlatform ? 'gms/' : '') + 'market/our.html')"></ng-include>
+                </div>
+                <!--Outright END-->
+                <!--match odds 1X2-->
+                <div class="asian-separator-container-b" ng-switch-when="MODDS" >
+                    <ng-include class="asian-separator-container-b" src="getTemplate('templates/sport/asian/' + (conf.GmsPlatform ? 'gms/' : '') + 'market/modds.html')"></ng-include>
+                </div>
+                <!--match odds 1X2-->
+                <!--HT FT -->
+                <div class="asian-separator-container-b" ng-switch-when="HTFT">
+                    <ng-include class="asian-separator-container-b" src="getTemplate('templates/sport/asian/' + (conf.GmsPlatform ? 'gms/' : '') + 'market/htft.html')"></ng-include>
+                </div>
+                <!--HT FT END-->
+                <!-- HDP & OU -->
+                <div class="asian-separator-container-b" ng-switch-when="HDP">
+                    <ng-include class="asian-separator-container-b" src="getTemplate('templates/sport/asian/' + (conf.GmsPlatform ? 'gms/' : '') + 'market/hdp.html')"></ng-include>
+                </div>
+                <!-- HDP & OU END-->
+                <!-- Ft & HT Odd/Even-->
+                <div class="asian-separator-container-b" ng-switch-when="FHTOE">
+                    <ng-include class="asian-separator-container-b" src="getTemplate('templates/sport/asian/' + (conf.GmsPlatform ? 'gms/' : '') + 'market/fhtoe.html')"></ng-include>
+                </div>
+                <!-- Ft & HT Odd/Even-->
+                <!--FT & HT Correct Score-->
+                <div class="asian-separator-container-b" ng-switch-when="FHTCS">
+                    <ng-include class="asian-separator-container-b" src="getTemplate('templates/sport/asian/' + (conf.GmsPlatform ? 'gms/' : '') + 'market/fhtcs.html')"></ng-include>
+                </div>
+                <!--FT & HT Correct Score END-->
+                <!-- FT & HT Double Chance -->
+                <div class="asian-separator-container-b" ng-switch-when="FTDC">
+                    <ng-include class="asian-separator-container-b" src="getTemplate('templates/sport/asian/' + (conf.GmsPlatform ? 'gms/' : '') + 'market/ftdc.html')"></ng-include>
+                </div>
+                <!-- FT & HT Double Chance END -->
+                <!-- FT & HT Total Goal -->
+                <div class="asian-separator-container-b" ng-switch-when="FHTG">
+                    <ng-include class="asian-separator-container-b" src="getTemplate('templates/sport/asian/market/fhtg.html')"></ng-include>
+                </div>
+                <!--FT & HT Total Goal END -->
+                 <div class="asian-separator-container-b fullgame-j" ng-switch-when="FULLGAME">
+                    <ng-include class="asian-separator-container-b" src="getTemplate('templates/sport/asian/' + (conf.GmsPlatform ? 'gms/' : '') + 'fullgame.html')"></ng-include>
+                </div>
+            </div>
+
+            <div ng-show="!marketGamesAreLoading && !filterLoading && !leftMenuIsLoading && centerData.competitions.length === 0" trans>No Today’s event is available, please check on Live or Future events.</div>
+
+
+            <div ng-if="pages.length > 1 && selectedMarket.key !== 'FULLGAME'" ng-show="!marketGamesAreLoading"  class="asian-pagination no-select-j">
+                <button class="cms-jcon-arrow-left5" ng-disabled="selectedPage === 0" ng-click="selectPage(selectedPage-1)"></button>
+                <button ng-repeat="page in pages" ng-click="selectPage($index)" ng-show="Math.abs($index - paginationPosition) <= 6" ng-bind="Math.abs($index - paginationPosition) === 6 ? '...' : $index + 1" ng-class="{'active': $index === selectedPage}"></button>
+                <button class="cms-jcon-arrow-right5" ng-disabled="selectedPage === pages.length - 1" ng-click="selectPage(selectedPage+1)"></button>
+            </div>
+
+
+            <!--filter popup-->
+            <div class="popup-wrapper-asian" ng-show="showCompetitionsSelector">
+                <div class="contain-poput-asia">
+                    <div class="block-position-b">
+                            <div ng-click="$event.stopPropagation();" style="cursor: initial;" class="popup-asian-info">
+                                <div class="popup-title-b">
+                                    <div class="name-filter-asian">
+                                        <div class="filter-icon"></div>
+                                        <h3 trans>Select competition</h3>
+                                    </div>
+                                    <div class="filter-function-b">
+                                        <ul>
+                                            <li>
+                                                <input name="" type="checkbox" value="" id="checkbox-00" ng-model="selectedAll" ng-click="checkAll(true)">
+                                                <label for="checkbox-00" trans>Check all</label>
+                                            </li>
+                                            <li>
+                                                <button ng-click="cancelCompetitionsSelector()" trans>Cancel</button>
+                                            </li>
+                                            <li>
+                                                <button ng-click="saveFilterData(); updateCompetitionsFilter();" ng-disabled="!enableFiltering" trans>OK</button>
+                                            </li>
+                                        </ul>
+
+                                    </div>
+                                </div>
+                                <div class="all-filter-competitions">
+                                    <ul>
+                                        <li ng-repeat="competition in competitionsFilter | orderBy: 'regionName' track by competition.id">
+                                            <input type="checkbox" ng-model="$parent.selectedCompetitionsModel[competition.id]" ng-click="allCompatitionsCheck($parent.selectedCompetitionsModel[competition.id])" id="comp{{::competition.id}}">
+                                            <label for="comp{{::competition.id}}" ng-bind="competition.regionName + ' - ' + competition.name"></label>
+                                        </li>
+                                     </ul>
+                                </div>
+                            </div>
+                    </div>
+                </div>
+            </div>
+            <!--filter popup END-->
+        </div>
+        <ng-include ng-if="conf.videoEnabled && pinnedGameType === 'dragable'" src="getTemplate('templates/sport/classic/av-pinned.html')" style="position: fixed; z-index: 999999999;"></ng-include>
+        <!--Game-wrapper END-->
+    </div>
+</div>
+<!--asian view END-->

@@ -1,0 +1,64 @@
+<!--Menu-->
+<div class="header-bottom-row">
+    <div class="header-nav-contain" ng-show="!conf.rfid.loginWIthRFID || conf.rfid.loginWIthRFID && env.authorized">
+        <ul ng-class="{'menu-dropdown': $root.topMenuDropDown, 'menu-dropdown-show': subMenuItemCount > 0}" sub-menu-creator="main">
+
+            <div class="top-menu-more" ng-show="subMenuItemCount > 0" title="More"
+                 ng-click="$root.topMenuDropDown=!$root.topMenuDropDown;" hide-on-click
+                 state-flag-var="$root.topMenuDropDown" trans="attr-only">+{{subMenuItemCount}}
+            </div>
+
+            <li ng-repeat="item in topMenu track by item.name"
+                ng-if="item.showCondition && !item.hidden"
+                ng-class="{'active': item.classObject.active,
+                   '{{::item.dynamicClass}}': true,
+                   'new-info-item': item.subDisplayName || item.specialCase === 'gamesSpecialText',
+                   'new-info-item-sup': item.supDisplayName
+                }">
+                <div ng-if="!item.popup && !item.broadcast" class="top-menu-sub-a-t">
+                    <a ng-href="{{item.classObject.active ? $location.absUrl() : item.href}}" ng-click="item.click()" ng-if="!item.authorizedOnly"
+                       ng-show="!item.specialCase && !item.subDisplayName && !item.supDisplayName" target="{{ item.target || '_self' }}">
+                        <span ng-bind="item.displayName"></span>
+                    </a>
+                    <a ng-if="item.authorizedOnly  && !env.authorized " ng-click="broadcast( 'openLoginForm');goToTop();$parent.verytopMenuExpanded=false;$event.stopPropagation();">
+                        <span ng-bind="item.displayName"></span>
+                    </a>
+                    <a ng-if="item.authorizedOnly  && env.authorized " ng-click="item.click()">
+                        <span ng-bind="item.displayName"></span>
+                    </a>
+                    <a ng-href="{{item.href}}"  ng-click="item.click()" class="poolbetting-menu-item" class-rotate="poolbetting,jackpot" class-rotate-intervals="5000,2000" ng-if="item.specialCase === 'poolbetting'">
+                        <p class="poolbetting-title" ng-bind="item.displayName"></p>
+                        <!--<p class="jackpot" trans>Jackpot</p>
+                        <span>{{(poolBettingJackpot * (poolBettingCurrency.toto_rate || 1))|number: 0 + Math.abs(poolBettingCurrency.rounding) }} {{poolBettingCurrency.name|currency}}</span> -->
+                    </a>
+
+                    <a ng-href="{{item.href}}"
+                       ng-click="item.click()"
+                       ng-if="item.subDisplayName || item.supDisplayName || item.specialCase === 'gamesSpecialText'"
+                       target="{{ item.target || '_self' }}">
+                        <span ng-bind="item.displayName"></span>
+                        <span ng-if="!item.subDisplayName && !item.supDisplayName">
+                            <b>{{conf.gameMenuSpecialText|translate}}</b>
+                        </span>
+                        <span ng-if="item.subDisplayName">
+                            <b>{{item.subDisplayName|translate}}</b>
+                        </span>
+                        <span ng-if="item.supDisplayName">
+                            <b>{{item.supDisplayName|translate}}</b>
+                        </span>
+                    </a>
+                </div>
+
+                <div ng-if="item.popup || item.broadcast" class="top-menu-sub-a-t">
+                    <a ng-if="item.popup" ng-click="$root.topMenuDropDown=false;closeSlider(); openPopup(item.link,item.title,item.popup)" ng-bind="item.title"></a>
+                    <a ng-if="item.broadcast" ng-click="$root.topMenuDropDown=false;closeSlider(); broadcast(item.broadcast)" ng-bind="item.title"></a>
+                </div>
+
+            </li>
+        </ul>
+        <ul ng-controller="cmsPagesCtrl" ng-init="initSections()">
+            <li ng-if="section.rootPageSlug[env.lang] && section.placement === 'topmenu'" ng-repeat="section in additionalSections" ng-class="{ 'active' : $location.path() === '/section/' + section.id }" class="noflip"><a href="#/section/{{section.id}}">{{section.name}}</a></li>
+        </ul>
+    </div>    
+</div>
+<!--Menu END-->

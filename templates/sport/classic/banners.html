@@ -1,0 +1,23 @@
+<div class="buner-b" ng-init="getBanners('under-betslip-banners-classic-' + env.lang)"
+     ng-hide="hideRightBanner && conf.hideBetslipBannerWhenBetslipIsNotEmpty" id="sport-news-sidebar-container">
+
+    <a ng-repeat="banner in banners"
+       ng-if="banner.active"
+       ng-href="{{ banner.link }}" target="{{ banner.linktarget }}"
+       ng-click="gaSend('send', 'event', 'news', {'page': $location.path(), 'eventLabel': 'betslip banner click'})" route-reload>
+        <div ng-show="banner.imageurl">
+            <img ng-src="{{ banner.imageurl }}" alt="{{ banner.alt }}">
+
+            <p ng-show="banner.game.id" >
+                <span title="{{banner.game.competition.name}}" class="competition-name" ng-click="gotoGame(banner.game); $event.stopPropagation(); $event.preventDefault()">{{banner.game.competition.name}}</span>
+                <span title="{{banner.game.team1_name}}" ng-click="bet(banner.game.events.P1, banner.game.market, banner.game); $event.stopPropagation(); $event.preventDefault()">{{banner.game.team1_name}} <b ng-show="banner.game.events.P1.price">{{banner.game.events.P1.price|oddConvert:env.oddFormat:null:'WINNER'}}</b></span>
+                <span ng-show="banner.game.team2_name" ng-click="bet(banner.game.events.P2, banner.game.market, banner.game); $event.stopPropagation(); $event.preventDefault()" title="{{banner.game.team2_name}}">{{banner.game.team2_name}}<b ng-show="banner.game.events.P1.price">{{banner.game.events.P2.price|oddConvert:env.oddFormat:null:'WINNER'}}</b></span>
+            </p>
+        </div>
+        <div ng-if="banner.videolink">
+           <vbet-video-player  url="{{banner.videolink}}"
+                               set-duration="setBannerVideoDuration"
+                               play="startPlayVideoBanner"></vbet-video-player>
+        </div>
+    </a>
+</div>

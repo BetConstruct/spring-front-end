@@ -1,0 +1,37 @@
+@mixin classic-new-view-6 {
+    .statistic-view-v3 .statistics-toggle.flip-contain .flip-btn {
+        box-sizing: content-box;
+    }
+    .statistic-view-v3 .game-info *{
+        box-sizing: content-box;
+        -webkit-user-select: none;
+        -khtml-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+    }
+    .statistic-view-v3 .live-game-container .sport-title, .statistic-view-v3 .game-score-multiset ul.title li {
+        background: $c16-sp-9;
+        border-top: 1px solid $c16-sp-9;
+        font-weight: normal;
+        color: set-color($c16-sp-9);
+        white-space: nowrap;
+    }
+    .statistic-view-v3 .live-game-container .sport-title, .statistic-view-v3 .game-score-multiset ul.title li:first-child{
+        border-radius: 2px 0 0;
+    }
+    .statistic-view-v3 .live-game-container .sport-title, .statistic-view-v3 .game-score-multiset ul.title li:last-child{
+        border-radius: 0 2px 0 0;
+    }
+    .game-info .game-detailed-stats > span.icon-stat-details {
+        box-shadow: 0 -3px 0 $c16-sp-10;
+        background: $c16-sp-10;
+    }
+    .game-info .game-detailed-stats .icon-stat-details:before {
+        background: set-color($c16-sp);
+        box-shadow: 0 4px 0 set-color($c16-sp), 0 8px 0 set-color($c16-sp);
+    }
+    .live-game-container .sport-title .statistics-h2h {
+        color: set-color($c16-sp);
+    }
+}

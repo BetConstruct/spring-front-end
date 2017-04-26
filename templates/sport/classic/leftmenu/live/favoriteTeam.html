@@ -1,0 +1,41 @@
+<li ng-show="env.authorized && !favoriteTeamLoading && !favoriteTeamError" class="favorite-nav favorite-team-j" ng-class="{'active': leftMenuState.favoriteTeam.expanded}">
+    <a ng-click="leftMenuState.favoriteTeam.expanded = !leftMenuState.favoriteTeam.expanded; leftMenuClosed ? toggleLeftMenu() : void()">
+        <span class="favorites icon-star2"></span>
+        {{favoriteTeam.name.new ? favoriteTeam.name.new : 'My favorite team'|translate}}
+        <span>({{data.favoriteTeamLiveGames.list.length}})</span>
+        <b class="arrow-rotate icon-arrow-right6"></b>
+    </a>
+    <ul ng-show="leftMenuState.favoriteTeam.expanded" class="favorite-team-group-j">
+        <div class="favorite-nav favorite-team-change-form" ng-class="{'active': leftMenuState.favoriteTeamForm.expanded}">
+            <ng-include src="getTemplate('templates/sport/classic/leftmenu/favoriteTeamForm.html')"></ng-include>
+        </div>
+        <li ng-repeat="game in data.favoriteTeamLiveGames.list" 
+            ng-class="{'active': game.id === activeGameId, 'no-events': (!(game.events_count || game.markets_count) || game.is_blocked)}" 
+            dnd-effect-allowed="move" dnd-draggable="game" dnd-type="game.sport.alias + game.region.alias + game.competition.id" dnd-disable-if="'/multiview/' !== $location.path() || multiViewLiveOpenedGamesIds.length === conf.liveMultiViewItemsAmount">
+            <div ng-click="gameClicked(game, game.competition, true); leftMenuState.live.region[game.region.id].expanded = true; selectSport(sport);selectRegion(region)" class="game-row">
+                <div class="num-of-events" trans="attr-only" title="Number of markets">({{game.markets_count}})</div>
+                <p title="{{game.team1_name}} - {{game.team2_name}} ({{game.markets_count}})">{{game.team1_name}} {{game.team2_name ? ' - ' + game.team2_name : ''}}</p>
+                <div class="time-sport-cash" ng-if="game.type==1" ng-show="game.info.score1!=undefined || game.info.score2 !=undefined || game.info.current_game_state || game.info.current_game_time">
+                    <p><span>{{game.info.score1}} </span> {{game.info.score2}}</p>
+                    <span class="team-name-inform">
+                        {{game.info.current_game_state|convertSetName:game.sport.alias|translate}}
+                        <i ng-if="game.sport.alias === 'Soccer'">
+                            {{game.stats.score_set1.team1_value ? '(' + game.stats.score_set1.team1_value + ' :' : '(0 :'}}
+                            {{game.stats.score_set1.team2_value ?  game.stats.score_set1.team2_value + ')' : ' 0)'}}
+                        </i>
+                        <i ng-if="game.sport.alias !== 'Soccer'">
+                            {{game.stats['score_'+game.info.current_game_state].team1_value ? '(' + game.stats['score_'+game.info.current_game_state].team1_value + ' :' : '(0 :'}}
+                            {{game.stats['score_'+game.info.current_game_state].team2_value ?  game.stats['score_'+game.info.current_game_state].team2_value + ')' : ' 0)'}}
+                        </i>
+                        <b trans="attr-only" title="Game time">{{getCurrentTime(game.info.current_game_time)}}</b>
+                    </span>
+                </div>
+                <span class="icon-ic_video_collection_24px" ng-show="game.video_id && conf.videoEnabled"></span>
+                <div class="fav-game-star icon-star" ng-class="{'active': myGames.indexOf(game.id) !== -1}" ng-click="toggleGameFavorite(game); $event.stopPropagation()"></div>
+            </div>
+        </li>
+        <div ng-show="favoriteTeam.name.original && (!data.favoriteTeamLiveGames.list || !data.favoriteTeamLiveGames.list.length)" class="empty-text-container">
+            <p trans>There are no games</p>
+        </div>
+    </ul>
+</li>

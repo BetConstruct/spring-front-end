@@ -1,0 +1,554 @@
+@mixin experimental-sportbook-4 {
+  .quick-bet-price-box{
+    float: left;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 0;
+  }
+  .quick-bet-price-box > ul{
+    float: left;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 0 3px;
+  }
+  .quick-bet-price-box > ul > li{
+    float: left;
+    width: auto;
+    background: none;
+    padding: 0 3px 5px 3px;
+    box-sizing: border-box;
+  }
+  .quick-bet-price-box > ul > li > select{
+    width: 60px;
+    height: 24px;
+    border: 1px solid #cfd6dc;
+    box-sizing: border-box;
+    outline: none;
+    font: 11px/16px $font-f;
+    color: #3f4553;
+    background: #DBE1E6;
+    border-radius: 4px;
+  }
+  .quick-bet-price-box > ul > li > button{
+    height: 24px;
+    font: 11px/16px $font-f;
+    padding: 0 5px;
+    border: 1px solid #cfd6dc;
+    box-sizing: border-box;
+    outline: none;
+    color: #3f4553;
+    background: #DBE1E6;
+    border-radius: 4px;
+    transition: background 200ms;
+  }
+  .quick-bet-price-box > ul > li > button:hover{
+    background: #cfd6dc;
+  }
+  /*Quickbet END*/
+
+  /*Betslip*/
+  .right-column-view-contain > .list-bet-block{
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    background: #e8edf1;
+    border: none;
+  }
+  .right-column-view-contain > .list-bet-block .quick-bet-button {
+    left: 0;
+    top: 0;
+    position: relative;
+    z-index: 88;
+    float: left;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 8px 10px 3px;
+  }
+  .right-column-view-contain > .list-bet-block .bet-notification-zone.quick-bet-notifications{
+    width: 100%;
+    box-sizing: border-box;
+    padding: 5px 5px 10px;
+  }
+  .right-column-view-contain > .list-bet-block .name-b-list{
+    height: auto;
+    border: 0;
+    z-index: 400;
+  }
+  .right-column-view-contain > .list-bet-block .name-b-list h2{
+    float: left;
+    width: 100%;
+    box-sizing: border-box;
+    height: 36px;
+    background: #3f4553;
+    padding: 0 10px;
+    color: #ffffff;
+    margin: 0;
+  }
+  .right-column-view-contain .empty-betslip{
+    padding: 4px 5px 5px;
+    box-sizing: border-box;
+  }
+  .right-column-view-contain > .list-bet-block .name-b-list h2 > i{
+    font: 14px/36px $font-f;
+    font-weight: bold;
+    display: inline-block;
+  }
+  .right-column-view-contain > .list-bet-block .name-b-list h2 > b {
+    font: 12px/16px $font-f;
+    padding: 1px 3px;
+    background: rgba(0,0,0,0.2);
+    border-radius: 4px;
+    min-width: 17px;
+    position: relative;
+    top: -7px;
+    display: inline-block;
+    text-align: center;
+    color: #7b8191;
+  }
+  .right-column-view-contain > .list-bet-block .bet-accepted-noification {
+    background: #cfd6dc;
+    border-top: 1px solid #3f4553;
+    border-bottom: 1px solid #3f4553;
+  }
+  .right-column-view-contain > .list-bet-block .bet-container{
+    overflow: inherit;
+    max-height: inherit;
+  }
+  .right-column-view-contain > .list-bet-block .bs-type-switcher{
+    float: left;
+    width: 100%;
+    box-sizing: border-box;
+    left: 0;
+    top: 0;
+    right: auto;
+    margin: 0;
+    padding: 5px 0;
+    border: none;
+    height: 30px;
+    box-shadow: none;
+  }
+  .right-column-view-contain > .list-bet-block .bs-type-switcher > p,
+  .right-column-view-contain > .list-bet-block .bs-type-switcher > span{
+    display: none;
+  }
+  .right-column-view-contain > .list-bet-block .bs-type-switcher > .open-type-switcher{
+    float: left;
+    width: 100%;
+    display: block;
+    position: relative;
+    top: 0;
+    left: 0;
+    right: auto;
+    box-sizing: border-box;
+    height: auto;
+    padding: 0;
+  }
+  .right-column-view-contain > .list-bet-block .bs-type-switcher > .open-type-switcher > ul{
+    float: left;
+    width: 100%;
+    display: table;
+    box-sizing: border-box;
+    padding: 0;
+  }
+  .right-column-view-contain > .list-bet-block .bs-type-switcher > .open-type-switcher > ul > li{
+    display: table-cell;
+    box-sizing: border-box;
+    float: none;
+    margin: 0;
+    padding: 0 3px;
+    border: none;
+    border-radius: inherit;
+    background: none;
+    cursor: default;
+    min-width: inherit;
+    box-shadow: none;
+  }
+  .right-column-view-contain > .list-bet-block .bs-type-switcher > .open-type-switcher > ul > li > a{
+    min-width: inherit;
+    box-sizing: border-box;
+    padding: 3px 0;
+    font-size: 10px;
+    font-weight: normal;
+    color: #3f4553;
+    border: none;
+    background: #cfd6dc;
+    border-radius: 4px;
+    transition: color 200ms, background 200ms;
+  }
+  .right-column-view-contain > .list-bet-block .bs-type-switcher > .open-type-switcher > ul > li > a.active,
+  .right-column-view-contain > .list-bet-block .bs-type-switcher > .open-type-switcher > ul > li > a:hover{
+    background: #3f4553;
+    color: #ffffff;
+  }
+  .right-column-view-contain > .list-bet-block .betslip-system-chenge{
+    height: 11px;
+    position: relative;
+    bottom: 0;
+    right: 0;
+    margin: 0 3px 5px 0;
+    z-index: 338;
+    border: 1px solid #cfd6dc;
+    background: #cfd6dc;
+    border-radius: 3px;
+    min-width: 96px;
+    top: 0;
+  }
+  .right-column-view-contain > .list-bet-block .betslip-system-chenge.open .open-type-switcher {
+    box-shadow: 0 3px 10px -3px #3f4553;
+  }
+  .right-column-view-contain > .list-bet-block .betslip-system-chenge > .open-type-switcher > ul{
+    padding: 0;
+  }
+  .right-column-view-contain > .list-bet-block .betslip-system-chenge > .open-type-switcher > ul > li{
+    padding: 0;
+    margin: 0;
+    background: none;
+    border: none;
+    min-width: inherit;
+    border-radius: inherit;
+    text-align: left;
+  }
+  .right-column-view-contain > .list-bet-block .betslip-system-chenge > .arrow-bs-type-switcher{
+    top: 2px;
+  }
+  .right-column-view-contain > .list-bet-block .betslip-system-chenge > .arrow-bs-type-switcher:before{
+    content: "\e670";
+    font: 12px/14px icomoon;
+    color: #3f4553;
+  }
+  .right-column-view-contain > .list-bet-block .betslip-system-chenge.open > .arrow-bs-type-switcher:before{
+    content: "\e671";
+  }
+  .right-column-view-contain > .list-bet-block .settings-icon-bet{
+    z-index: 355;
+    background: none;
+    display: none;
+  }
+  .right-column-view-contain > .list-bet-block .settings-icon-bet:before{
+    content: "\e6a0";
+    font: 16px/22px icomoon;
+    color: #3f4553;
+  }
+  .right-column-view-contain > .list-bet-block .bet-settings-container{
+    border-bottom: none;
+  }
+  .right-column-view-contain > .list-bet-block .bet-settings-container .betslip-options{
+    width: 100%;
+    box-sizing: border-box;
+    background: #cfd6dc;
+    border-bottom: none;
+    max-height: inherit;
+    height: auto;
+    padding: 5px 10px;
+    overflow: inherit;
+  }
+  .right-column-view-contain > .list-bet-block .bet-settings-container .betslip-options > span{
+    display: inline-block;
+    width: 100%;
+  }
+  .right-column-view-contain > .list-bet-block .bet-settings-container .betslip-options > label{
+    display: inline-block;
+    float: none;
+    width: auto;
+    left: 0;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    max-width: 33%;
+    padding: 0 5px;
+    box-sizing: border-box;
+  }
+  .right-column-view-contain > .list-bet-block .bet-container > ul{
+    overflow: hidden;
+    border-top: 1px solid #ffffff;
+  }
+  .right-column-view-contain > .list-bet-block ul li:first-child span a{
+    font: 8px/14px icomoon;
+    background: none;
+    width: 14px;
+    height: 14px;
+    text-align: center;
+    position: relative;
+    box-sizing: border-box;
+    transition: box-shadow 200ms;
+    color: #3f4553;
+    border-radius: 3px;
+  }
+  .right-column-view-contain > .list-bet-block ul li:first-child span a:before{
+    content: "\e6ee";
+    text-indent: 0;
+    position: absolute;
+    left: 3px;
+    top: 0;
+  }
+  .right-column-view-contain > .list-bet-block ul li:first-child span a:hover{
+    box-shadow: 0 0 0 1px #cfd6dc inset;
+  }
+  .right-column-view-contain > .list-bet-block .bet-container > ul > li{
+    background: #e8edf1;
+  }
+  .right-column-view-contain > .list-bet-block .bet-container > ul.changed > li{
+    background: #cfd6dc;
+  }
+  .right-column-view-contain > .list-bet-block .bet-container > ul.deleted > li{
+       background: #E0DFDF;
+  }
+  .right-column-view-contain > .list-bet-block .single-bet-container .single-bet-betmax {
+    border: 1px solid #666666;
+    background: #666666;
+    text-transform: uppercase;
+    border-radius: 3px;
+    transition: background 200ms, border 200ms;
+    opacity: 1;
+  }
+  .right-column-view-contain > .list-bet-block .single-bet-container input{
+    box-shadow: none;
+  }
+  .right-column-view-contain > .list-bet-block .single-bet-container .single-bet-betmax > span{
+    color: #ffffff;
+  }
+  .right-column-view-contain > .list-bet-block .single-bet-container .single-bet-betmax:hover{
+    border: 1px solid #3f4553;
+    background: #3f4553;
+  }
+  .right-column-view-contain > .list-bet-block .single-bet-container .single-bet-stake-repeat:before{
+    color: #3f4553;
+  }
+  .right-column-view-contain > .list-bet-block .bet-conflict-warning .conflict-content > ul{padding: 0;}
+  .right-column-view-contain > .list-bet-block .bet-container > ul > li span{
+    color: #3f4553;
+  }
+  .right-column-view-contain > .list-bet-block .bet-container > ul > li span.bet-initial-price{
+    color: #ffffff;
+  }
+  .right-column-view-contain > .list-bet-block .bet-form form p span{
+    color: #3f4553;
+  }
+  .right-column-view-contain > .list-bet-block .betslip-clearall-button input{
+    background: #3f4553;
+    border-color: #3f4553;
+    color: #ffffff;
+  }
+  .right-column-view-contain > .list-bet-block .superbet-info-block,
+  .right-column-view-contain > .list-bet-block .superbet-checkbox.active{
+    background: #3f4553;
+  }
+  .right-column-view-contain > .list-bet-block .superbet-checkbox label {
+    color: #debe0b;
+  }
+  .right-column-view-contain > .list-bet-block .button-bet button{
+    background: $hero-color;
+    border-color: $hero-color;
+    color: set-color($hero-color);
+  }
+  .right-column-view-contain > .list-bet-block .button-bet button[disabled="disabled"] {
+    background: #cfd6dc;
+    border-color: #cfd6dc;
+    color: #a6a7ab;
+  }
+  .right-column-view-contain > .list-bet-block .bet-notification-zone{
+    background: #ffffff;
+  }
+  .right-column-view-contain > .list-bet-block .button-bet .bet-notification-zone:before{
+    color: #ffffff;
+  }
+  .right-column-view-contain > .list-bet-block .swicher-right-block-odd {
+    background: #3f4553;
+    top: 8px;
+    color: #FFF;
+  }
+  .right-column-view-contain > .list-bet-block .name-b-list .tabs-booking ul li {
+    box-shadow: none;
+    color: #FFF;
+    border-color: rgba(0, 0, 0, 0);
+    margin: 0 5px 0 0;
+    top: 5px;
+  }
+  .open-type-switcher {
+    box-shadow: none;
+  }
+  .right-column-view-contain {
+    .bet-notification-zone-j, .bet-notification-update-text-j { 
+      background: white;
+    }
+    .bet-notification-zone-j:before, .bet-notification-update-text-j:before {
+      border-color: white transparent transparent transparent; 
+    }
+    .quickBet-and-bsSettings-j {
+      color: #f3f3f5;
+      background: #2e323e;
+      .quickBetButton-j {
+        .md-progress-circular.small-progress {
+          position: absolute;
+          top: 3px;
+          left: 8px;
+          padding: 0 !important;
+          margin: 0 !important;
+          .md-inner .md-gap{  border-top-color: white; border-bottom-color: white;}
+          .md-inner .md-left .md-half-circle{ border-left-color: white; border-top-color: white;}
+          .md-inner .md-right .md-half-circle{ border-right-color: white;  border-top-color: white;}
+        }
+        i {
+          background: #3f4553;
+          &:before {
+            background: #c2c5cd;
+          }
+        }
+        &.active i {
+          background: $brand-color-1;
+          &:before {
+            background: set-color($brand-color-1);
+          }
+        }
+      }
+    }
+    .betSettingsContainer-j {
+      > i {
+        color: #737887;
+        display: none;
+      }
+    }
+    .betslipOptions-j {
+      max-height: 200px;
+      > div {
+        background: #e8edf1;
+        text-align: center;
+        color: #404654;
+      }
+      label{
+        float: none;
+        display: inline-block;
+        width: auto;
+        vertical-align: top;
+        margin: 0 5px;
+        span {
+          &:before {
+            background: #fff;
+          }
+        }
+        input[type="radio"]:checked + span:before {
+          background: #a1b5b1;
+        }
+        input[type="radio"]:checked + span:after {
+          background: #fff;
+        }
+      }
+    }   
+    .additionalButtonsBetslip-j {
+      background: #212531;
+      button {
+        span, a {
+          color: #757c8e;
+        }
+        &:not(:only-child):not(:first-child):before {
+          background: #111522;
+        } 
+        &:hover { 
+          span, a {
+            color: set-color($brand-color-1);
+            background: $brand-color-1;
+          }
+        }
+      }
+    }
+    .bookingTabs-j {
+      button{
+        background: #3F4553;
+        color: #7b8191;
+        &.active {
+          background: #2e323e;
+          color: #dbe1e6;
+          box-shadow: none;
+        }
+      }
+    }
+    .bsTypeSwitchers-j {
+      background: #2e323e;
+      position: static;
+      float: left;
+      width: 100%;
+      .bsTypeSwitcher-j {
+        > p {
+          color: #7b8191;
+          &:before {
+            color: #505768;
+          }
+        }
+        &.open > p{
+          background: #363945;
+        }
+        > div {
+          background: #363945;
+          box-shadow: 0 2px 3px -1px rgba(0,0,0,0.4);
+          > button {
+            color: #7c8292;
+            background: none;
+            > a{
+              box-shadow: 0 1px 0 #212531 inset;
+            }
+            &.active {
+              background: $brand-color-1;
+              color: set-color($brand-color-1);
+              a {
+                box-shadow: none;
+              }
+            }
+            &:hover {
+              color: #f4f4f6;
+            }
+          }
+        }
+      }
+    }
+    .viewSwitcher-j{
+      margin: 0 0 10px;
+      > ul {
+        background: #3f4553;
+        > li {
+          > p {
+            color: #7b8191;
+            &:before {
+              color: #505768;
+            }
+          }
+          &.scrollToggle,
+          &.systemCalculator {
+            &:hover, &.active {
+              color: #f4f4f6;
+            }
+          }
+          &:not(:only-child):not(:last-child):after {
+            background: rgba(0,0,0,0.2);
+          }
+          &:before {
+            color: #c2c5cd;
+          }
+        }
+        &.active {
+          p {
+            background: #363945;
+          }
+        }
+        > ul {
+          background: #363945;
+          box-shadow: 0 2px 3px -1px rgba(0, 0, 0, 0.5);
+          > li {
+            span {
+              box-shadow: 0 1px 0 #212531 inset;
+            }
+            &.active {
+              background: $brand-color-1;
+              color: set-color($brand-color-1);
+              span {
+                box-shadow: none;
+              }
+            }
+            &:hover {
+              color: #f4f4f6;
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,71 @@
+<div class="
+    new-default-popup-j
+    {{env.sliderContent === 'recentBets'|| env.sliderContent === 'casinoBetHistory' ? 'bet-history-b': ''}}
+    {{env.sliderContent === 'promotionalBonuses' ? 'bonuses-view': ''}}
+    "
+>
+    <div class="all-history-lightbox-contain" ng-class="{'profile': env.sliderContent === 'settings'}"> <!--add profile-->
+        <div class="all-history-lightbox-content" ng-class="{'casino-disabled-j': !conf.promotionalBonuses.casino}">
+            <div class="all-history-tab-contain">
+                <div class="all-main-tabs-b">
+                    <ul>
+                        <li ng-class="{'active': env.sliderContent === 'settings'}" ng-click="env.sliderContent = 'settings'" ng-if="env.authorized && !partnerConfig.profileNotAvailable">
+                            <i class="profile-icon-tab-b"></i>
+                            <p>
+                                <i trans>My Profile</i>
+                                <span class="id-view-tab">ID: {{profile.unique_id}}</span>
+                            </p>
+                        </li>
+                        <li ng-class="{'active': ['deposit', 'withdraw', 'balanceHistory', 'casinoBalanceHistory','cashier'].indexOf(env.sliderContent) !== -1}" ng-if="conf.enableMixedView && conf.enableMixedViewBalance"
+                            ng-click="env.sliderContent !== 'withdraw' && env.sliderContent !== 'deposit' && env.sliderContent !== 'balanceHistory' ? env.sliderContent = 'deposit':''">
+                            <i class="balance-icon-tab-b"></i>
+                            <p>
+                                <i trans>Balance</i>
+                                <span class="balance-view-tab">{{(!isInCasino() || (conf.GmsPlatform && !conf.GmsPlatformMultipleBalance) ? profile.balance : (conf.GmsPlatformMultipleBalance ? profile.casino_balance : env.casinoBalance.balance))|number:conf.balanceFractionSize}} {{profile.currency_name|currency}}</span>
+                            </p>
+                        </li>
+                        <li ng-class="{'active': (env.sliderContent === 'recentBets'|| env.sliderContent === 'casinoBetHistory')}"
+                            ng-click="!conf.GmsPlatform && isInCasino() ? env.sliderContent = 'casinoBetHistory' : env.sliderContent = 'recentBets'"  ng-if="env.authorized && conf.betHistoryEnabled">
+                            <i class="my-bets-icon-tab-b"></i>
+                            <h4 trans>My bets</h4>
+                        </li>
+                        <li ng-class="{'active': env.sliderContent === 'loyaltyPoints'}"
+                            ng-click="env.sliderContent = 'loyaltyPoints'"
+                            ng-if="conf.enableLoyaltyPoints && env.authorized">
+                            <i class="balance-icon-tab-b"></i>
+                            <h4 trans>Loyalty Points</h4>
+                        </li>
+                        <li ng-class="{'active': env.sliderContent === 'promotionalBonuses'}"
+                            ng-click="env.sliderContent = 'promotionalBonuses'"
+                            ng-if="conf.promotionalBonuses.enable && env.authorized">
+                            <i class="bonuses-icon-tab-b"></i>
+                            <h4 trans>Bonuses</h4>
+                        </li>
+                        <li ng-class="{'active': env.sliderContent === 'tickets'}"
+                            ng-click="env.sliderContent = 'tickets'"
+                            ng-if="conf.enableTickets && env.authorized">
+                            <i class="cms-jcon-ticket"></i>
+                            <h4 trans>Tickets</h4>
+                        </li>
+                       <!-- <li>
+                            <i class="promo-icon-tab-b"></i>
+                            <h4>Promo</h4>
+                        </li>-->
+                        <!--<li>
+                            <i class="help-icon-tab-b"></i>
+                            <h4>Help</h4>
+                        </li>-->
+                    </ul>
+                    <div ng-show="!isPopup" ng-click="env.showSlider=false; env.sliderContent='';" class="my-bets-closed-icon-b"></div>
+                </div>
+            </div>
+                <ng-include src="getTemplate('templates/livebox/mixedBetHistory.html')" ng-if="env.sliderContent === 'recentBets' || env.sliderContent === 'casinoBetHistory'"></ng-include>
+                <ng-include src="getTemplate('templates/livebox/mixedBalance.html')" ng-if="['deposit', 'withdraw', 'balanceHistory', 'casinoBalanceHistory','cashier'].indexOf(env.sliderContent) !== -1"></ng-include>
+                <ng-include src="getTemplate('templates/livebox/mixedUserProfile.html')" ng-if="env.sliderContent === 'settings'"></ng-include>
+                <ng-include src="getTemplate('templates/livebox/promotionalBonuses/main.html')" ng-if="conf.GmsPlatform && env.sliderContent === 'promotionalBonuses'"></ng-include>
+                <ng-include src="getTemplate('templates/livebox/loyaltyPoints.html')" ng-if="conf.GmsPlatform && env.sliderContent === 'loyaltyPoints'"></ng-include>
+                <ng-include src="getTemplate('templates/livebox/mixedTickets.html')" ng-if="conf.GmsPlatform && env.sliderContent === 'tickets'"></ng-include>
+
+        </div>
+    </div>
+</div>

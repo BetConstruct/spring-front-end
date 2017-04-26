@@ -1,0 +1,15 @@
+<div ng-controller="cmsSportNewsCtrl" ng-init="loadRecentNews(5)">
+
+    <div ng-click="showSportNewsSidebar = !showSportNewsSidebar">
+
+        <h2 trans>sport news</h2> <span class="toggle-news" ng-class="{'open': showSportNewsSidebar, 'closed': !showSportNewsSidebar}"></span>
+    </div>
+
+    <ul ng-repeat="news in recentNews" ng-show="showSportNewsSidebar" no-animate>
+        <li><a href="#/news/?news={{ news.id }}#lnews-{{ news.id }}"><img ng-src="{{news.thumbnail_images.thumbnail.url || news.thumbnail}}" alt=""></a></li>
+        <li>
+            <p><a href="#/news/?news={{ news.id }}#lnews-{{ news.id }}" ng-bind-html="news.title" ng-click="gaSend('send', 'event', 'news', 'betslip news click', {'page': $location.path(), 'eventLabel': news.categories[0].title});gaSend('send', 'event', 'news', 'betslip news by ID', {'page': $location.path(), 'eventLabel': news.id});"></a></p>
+            <span ng-bind="news.date|formatDate:'full'"></span>
+        </li>
+    </ul>
+</div>

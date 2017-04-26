@@ -1,0 +1,33 @@
+<div class="login-birthdate-t" ng-controller="birthDateInputCtrl">
+    <div class="field-separator birth_day">
+        <div class=" birth_day no-select-j" ng-class="{'error':signInError  && forms.signinform.$pristine}">
+            <label><span trans>Birth date</span></label>
+            <div class="tooltip-wrapper-j">
+                <div class="select-j">
+                    <select ng-model="dateData.birth_day" day-selector options="days" required="required" ng-options="d for d in days track by d" ng-change="user.birth_date=getBirthDate();"></select>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="field-separator birth_month">
+        <div class="birth_month no-select-j" ng-class="{'error':signInError  && forms.signinform.$pristine}">
+            <label><span></span></label>
+            <div class="tooltip-wrapper-j">
+                <div class="select-j">
+                    <select ng-model="dateData.birth_month" required="required" ng-options="m.name|translate for m in conf.monthNames track by m.val" ng-init="dateData.birth_month = conf.monthNames[0]" ng-change="user.birth_date=getBirthDate();"></select>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="field-separator birth_year">
+        <div class="birth_year no-select-j" ng-class="{'error':signInError  && forms.signinform.$pristine}">
+            <label><span></span></label>
+            <div class="tooltip-wrapper-j">
+                <div class="select-j">
+                    <select ng-model="dateData.birth_year" required="required" ng-options="y for y in dateData.years track by y" ng-change="user.birth_date=getBirthDate();"></select>
+                </div>
+            </div>
+        </div>
+    </div>
+    <input type="hidden" ng-model="user.birth_date" ng-init="user.birth_date=getBirthDate();">
+</div>

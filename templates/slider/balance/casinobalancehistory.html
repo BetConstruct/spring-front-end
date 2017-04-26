@@ -1,0 +1,66 @@
+<div class="bet-history new"
+     ng-if="conf.enableCasinoBalanceHistory"
+     ng-controller="balanceCtrl" ng-init="initbalanceHistory('Casino')">
+    <div class="contein-bet-history">
+        <!--Блок с датой-->
+        <div class="left-block-history new">
+            <div class="form-sign-in">
+                <label trans>Time Period</label>
+                <div class="select-block">
+                    <select ng-model="dataSelectedIndex" ng-change="loadBalanceHistory('Casino')">
+                        <option ng-repeat="d in balanceHistoryParams.dateRanges" ng-disabled="d.type == 'month'" value="{{ $index }}"  ng-class="{ 'data-range-month' : d.type == 'month', 'data-range-week': d.type == 'week' }">{{ d.str }}</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <!--Блок с датой END-->
+
+        <vbet-loader class="page-center right-block-history" ng-if="!balanceHistoryLoaded && !message"></vbet-loader>
+        <!--all Transactions block-->
+        <div class="right-block-history new" ng-if="balanceHistoryLoaded">
+            <div class="All-Bets-history">
+                <h3 trans>All Casino Transactions</h3>
+                <div class="history-list">
+                    <ul>
+                        <li class="transactions-money"><span trans>Date</span></li>
+                        <li class="transactions-money"><span trans>Product</span></li>
+                        <li class="transactions-money"><span trans>Operation Type</span></li>
+                        <li class="transactions-money"><span trans>Bet Amount</span></li>
+                        <li class="transactions-money"><span trans>Balance</span></li>
+                    </ul>
+                    <ul ng-repeat="balance in balanceHistory">
+                        <li class="transactions-list-date">
+                            <span>{{balance.date_time|formatDate:'full'}} </span>
+                            <p ng-show="balance.bet_id"><span trans>id:&nbsp;</span> <span>{{balance.bet_id}}</span></p>
+                        </li>
+
+                        <li class="transactions-money"><span>{{(balance.game || 'Casino')|translate}}</span></li>
+                        <li class="transactions-money">
+                            <span>{{conf.GmsPlatform ? (balance.operation_name|translate) : casinoBalanceTypes[balance.id]}}</span></li>
+                        <li class="transactions-money">
+                            <span ng-show="[0, 4, 5].indexOf(balance.id) !== -1" ng-if="!conf.GmsPlatform">-</span>
+                            <span ng-show="conf.GmsPlatform ? balance.amount > 0 : [0, 4, 5].indexOf(balance.id) === -1">+</span>
+                            <span>{{balance.amount}} {{currency_name|currency}}</span>
+                        </li>
+                        <li class="transactions-money"><span>{{balance.balance}} {{currency_name|currency}}</span></li>
+                    </ul>
+
+
+                </div>
+            </div>
+            <!--pagination-->
+            <div class="pagination" ng-show="balanceHistory.length && balanceHistoryPages.length > 1">
+                <ul>
+                    <li ng-repeat="page in balanceHistoryPages" ng-class="{true: 'item-active', false: 'item-dark'}[balanceHistoryActivePage === page]">
+                        <a ng-click="balanceHistoryGotoPage(page)" ng-show="page> 0">{{page}}</a>
+                        <span ng-show="page < 0">...</span>
+                    </li>
+                    <li class="item-next" ng-show="balanceHistoryActivePage < totalPages"><a ng-click="balanceHistoryGotoPage(balanceHistoryActivePage + 1)" trans>next</a></li>
+                    <li class="item-prevew" ng-show="balanceHistoryActivePage > 1"><a ng-click="balanceHistoryGotoPage(balanceHistoryActivePage -1)" trans>prev</a></li>
+                </ul>
+            </div>
+            <!--pagination END-->
+        </div>
+        <!--all Transactions block END-->
+    </div>
+</div>

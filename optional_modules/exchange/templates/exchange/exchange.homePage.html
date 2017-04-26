@@ -1,0 +1,715 @@
+<div ng-controller="homePage">
+        <!--center-column-->
+
+                <div class="center-b-rialto">
+
+
+                    <!--left-column-->
+                    <div class="left-column-markets-rialto">
+
+                        <!--slider-->
+                        <div class="rialto-slider-wrapper" ng-class="isClosed"> <!--add class="closed"-->
+                            <div class="title-slider-rialto">
+                                <!--<div class="arrow-left-rialto"></div>-->
+                                <div class="name-event-rialto-slider">
+                                    <!--<p>Featured events</p>-->
+                                </div>
+                                <!--<div class="arrow-right-rialto"></div>-->
+                            </div>
+
+
+                            <div class="wrapper-all-info-slider">
+
+                                <div class="big-slider-img-rialto">
+                                    <img src= {{homePageImageUrl}} alt="">
+                                </div>
+
+
+                                <!--<div class="breadcrumb-mini-rialto">-->
+                                    <!--<ul>-->
+                                        <!--<li>-->
+                                            <!--<div class="icon-sport-rialto"></div>-->
+                                            <!--<p>{{weeklyGameSportName}}</p></li>-->
+                                        <!--<li>-->
+                                            <!--<div class="flag-b-rialto"></div>-->
+                                            <!--<p>{{weeklyGameRegionName}}</p></li>-->
+                                        <!--<li><p>{{weeklyGameCompetitionName}}</p></li>-->
+                                    <!--</ul>-->
+                                <!--</div>-->
+
+
+
+
+                            </div>
+                            <div class="closed-slider-rialto" ng-click="widgetToggle()">
+                                <p>{{banerStatus}}</p>
+                            </div>
+                        </div>
+
+
+                        <!--slider END-->
+
+
+                        <!--menu tab-->
+
+                        <div class="tab-popular-rialto">
+                            <ul>
+                                <li class="">Most popular</li>
+                            </ul>
+                        </div>
+
+                        <!--menu tab END-->
+
+
+                        <!-- Any markets-->
+                        <div class="rialto-market-mini " ng-repeat="mostPopulargame in mostPopulargames" ng-click="gameMarkets(mostPopulargame.id)">
+                            <div class="team-name-b-rialto">
+                                <!--<div class="favorite-star-b-rialto "></div>-->
+                                <div class="date-info-rialto">
+                                    <p>{{mostPopulargame.start_ts | formatDate:'full':null:env.timeFormat}}</p>
+                                </div>
+                                <div class="name-full-team-rialto">
+                                    <span>{{mostPopulargame.team1_name}}</span>
+                                    <span class="vs-name-b">vs</span>
+                                    <span>{{mostPopulargame.team2_name}}</span>
+                                </div>
+                                <div class="more-b-event-rialto" ng-click="gameMarkets(mostPopulargame.id)">
+                                    <!--<span>{{  "+" + marketsCount(mostPopulargame.id) }}</span>-->
+                                </div>
+                            </div>
+
+                         <!--    <div class="events-b-rialto" ng-repeat="markets in mostPopulargame.market track by $index ">
+                                <ul ng-repeat=" market in markets  track by $index  " >
+                                    <li   ng-repeat="event in market track by $index"> -->
+                            <div class="events-b-rialto" ng-repeat="market in mostPopulargame.market track by $index ">
+                                <ul >
+                                    <!--<span ng-show="market">{{market}}</span>-->
+                                    <li   ng-repeat="event in market.event track by $index">
+
+
+                                                <p class="name-t-rialto-b">{{event.name}}</p>
+
+                                                <div class="price-b-ivento">
+                                                    <span class="back-b-event" ng-click="addBet">{{event.fairEvent.down[2].price}}</span>
+                                                    <span class="lay-b-event" ng-click="addBet">{{event.fairEvent.up[0].price}}</span>
+                                                </div>
+
+
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+
+
+                        <!--<div class="rialto-market-mini">-->
+                            <!--<div class="team-name-b-rialto">-->
+                                <!--<div class="favorite-star-b-rialto active"></div>-->
+                                <!--<div class="date-info-rialto">-->
+                                    <!--<p>Today at 21:20</p>-->
+                                <!--</div>-->
+                                <!--<div class="name-full-team-rialto">-->
+                                    <!--<span>Gimnasia La Plata</span>-->
+                                    <!--<span class="vs-name-b">vs</span>-->
+                                    <!--<span>Union de Santa Fe</span>-->
+                                <!--</div>-->
+                                <!--<div class="more-b-event-rialto">-->
+                                    <!--<span>+14</span>-->
+                                <!--</div>-->
+                            <!--</div>-->
+
+                            <!--<div class="events-b-rialto">-->
+                                <!--<ul>-->
+                                    <!--<li>-->
+                                        <!--<p class="name-t-rialto-b">1</p>-->
+
+                                        <!--<div class="price-b-ivento">-->
+                                            <!--<span class="back-b-event">3.15</span>-->
+                                            <!--<span class="lay-b-event active">4.59</span>-->
+                                        <!--</div>-->
+                                    <!--</li>-->
+                                    <!--<li>-->
+                                        <!--<p class="name-t-rialto-b">X</p>-->
+
+                                        <!--<div class="price-b-ivento">-->
+                                            <!--<span class="back-b-event">3.15</span>-->
+                                            <!--<span class="lay-b-event">4.59</span>-->
+                                        <!--</div>-->
+                                    <!--</li>-->
+                                    <!--<li>-->
+                                        <!--<p class="name-t-rialto-b">2</p>-->
+
+                                        <!--<div class="price-b-ivento">-->
+                                            <!--<span class="back-b-event">3.15</span>-->
+                                            <!--<span class="lay-b-event">4.59</span>-->
+                                        <!--</div>-->
+                                    <!--</li>-->
+                                <!--</ul>-->
+                            <!--</div>-->
+                        <!--</div>-->
+
+
+                        <!--<div class="rialto-market-mini active">-->
+                            <!--<div class="team-name-b-rialto">-->
+                                <!--<div class="favorite-star-b-rialto active"></div>-->
+                                <!--<div class="date-info-rialto">-->
+                                    <!--<p>Today at 21:20</p>-->
+                                <!--</div>-->
+                                <!--<div class="name-full-team-rialto">-->
+                                    <!--<span>Gimnasia La Plata</span>-->
+                                    <!--<span class="vs-name-b">vs</span>-->
+                                    <!--<span>Union de Santa Fe</span>-->
+                                <!--</div>-->
+                                <!--<div class="more-b-event-rialto">-->
+                                    <!--<span>+14</span>-->
+                                <!--</div>-->
+                            <!--</div>-->
+
+                            <!--<div class="events-b-rialto">-->
+                                <!--<ul>-->
+                                    <!--<li>-->
+                                        <!--<p class="name-t-rialto-b">1</p>-->
+
+                                        <!--<div class="price-b-ivento">-->
+                                            <!--<span class="back-b-event">3.15</span>-->
+                                            <!--<span class="lay-b-event">4.59</span>-->
+                                        <!--</div>-->
+                                    <!--</li>-->
+                                    <!--<li>-->
+                                        <!--<p class="name-t-rialto-b">X</p>-->
+
+                                        <!--<div class="price-b-ivento">-->
+                                            <!--<span class="back-b-event">3.15</span>-->
+                                            <!--<span class="lay-b-event">4.59</span>-->
+                                        <!--</div>-->
+                                    <!--</li>-->
+                                    <!--<li>-->
+                                        <!--<p class="name-t-rialto-b">2</p>-->
+
+                                        <!--<div class="price-b-ivento">-->
+                                            <!--<span class="back-b-event">3.15</span>-->
+                                            <!--<span class="lay-b-event">4.59</span>-->
+                                        <!--</div>-->
+                                    <!--</li>-->
+                                <!--</ul>-->
+                            <!--</div>-->
+                        <!--</div>-->
+
+                        <!--<div class="rialto-market-mini">-->
+                            <!--<div class="team-name-b-rialto">-->
+                                <!--<div class="favorite-star-b-rialto"></div>-->
+                                <!--<div class="date-info-rialto">-->
+                                    <!--<p>Today at 21:20</p>-->
+                                <!--</div>-->
+                                <!--<div class="name-full-team-rialto">-->
+                                    <!--<span>Gimnasia La Plata</span>-->
+                                    <!--<span class="vs-name-b">vs</span>-->
+                                    <!--<span>Union de Santa Fe</span>-->
+                                <!--</div>-->
+                                <!--<div class="more-b-event-rialto">-->
+                                    <!--<span>+14</span>-->
+                                <!--</div>-->
+                            <!--</div>-->
+
+                            <!--<div class="events-b-rialto">-->
+                                <!--<ul>-->
+                                    <!--<li>-->
+                                        <!--<p class="name-t-rialto-b">1</p>-->
+
+                                        <!--<div class="price-b-ivento">-->
+                                            <!--<span class="back-b-event">3.15</span>-->
+                                            <!--<span class="lay-b-event">4.59</span>-->
+                                        <!--</div>-->
+                                    <!--</li>-->
+                                    <!--<li>-->
+                                        <!--<p class="name-t-rialto-b">X</p>-->
+
+                                        <!--<div class="price-b-ivento">-->
+                                            <!--<span class="back-b-event">3.15</span>-->
+                                            <!--<span class="lay-b-event">4.59</span>-->
+                                        <!--</div>-->
+                                    <!--</li>-->
+                                    <!--<li>-->
+                                        <!--<p class="name-t-rialto-b">2</p>-->
+
+                                        <!--<div class="price-b-ivento">-->
+                                            <!--<span class="back-b-event">3.15</span>-->
+                                            <!--<span class="lay-b-event">4.59</span>-->
+                                        <!--</div>-->
+                                    <!--</li>-->
+                                <!--</ul>-->
+                            <!--</div>-->
+                        <!--</div>-->
+
+
+                        <!--<div class="rialto-market-mini active">-->
+                            <!--<div class="team-name-b-rialto">-->
+                                <!--<div class="favorite-star-b-rialto"></div>-->
+                                <!--<div class="date-info-rialto">-->
+                                    <!--<p>Today at 21:20</p>-->
+                                <!--</div>-->
+                                <!--<div class="name-full-team-rialto">-->
+                                    <!--<span>Gimnasia La Plata</span>-->
+                                    <!--<span class="vs-name-b">vs</span>-->
+                                    <!--<span>Union de Santa Fe</span>-->
+                                <!--</div>-->
+                                <!--<div class="more-b-event-rialto">-->
+                                    <!--<span>+14</span>-->
+                                <!--</div>-->
+                            <!--</div>-->
+
+                            <!--<div class="events-b-rialto">-->
+                                <!--<ul>-->
+                                    <!--<li>-->
+                                        <!--<p class="name-t-rialto-b">1</p>-->
+
+                                        <!--<div class="price-b-ivento">-->
+                                            <!--<span class="back-b-event">3.15</span>-->
+                                            <!--<span class="lay-b-event">4.59</span>-->
+                                        <!--</div>-->
+                                    <!--</li>-->
+                                    <!--<li>-->
+                                        <!--<p class="name-t-rialto-b">X</p>-->
+
+                                        <!--<div class="price-b-ivento">-->
+                                            <!--<span class="back-b-event">3.15</span>-->
+                                            <!--<span class="lay-b-event">4.59</span>-->
+                                        <!--</div>-->
+                                    <!--</li>-->
+                                    <!--<li>-->
+                                        <!--<p class="name-t-rialto-b">2</p>-->
+
+                                        <!--<div class="price-b-ivento">-->
+                                            <!--<span class="back-b-event">3.15</span>-->
+                                            <!--<span class="lay-b-event">4.59</span>-->
+                                        <!--</div>-->
+                                    <!--</li>-->
+                                <!--</ul>-->
+                            <!--</div>-->
+                        <!--</div>-->
+
+
+                        <!--<div class="rialto-market-mini">-->
+                            <!--<div class="team-name-b-rialto">-->
+                                <!--<div class="favorite-star-b-rialto active"></div>-->
+                                <!--<div class="date-info-rialto">-->
+                                    <!--<p>Today at 21:20</p>-->
+                                <!--</div>-->
+                                <!--<div class="name-full-team-rialto">-->
+                                    <!--<span>Gimnasia La Plata</span>-->
+                                    <!--<span class="vs-name-b">vs</span>-->
+                                    <!--<span>Union de Santa Fe</span>-->
+                                <!--</div>-->
+                                <!--<div class="more-b-event-rialto">-->
+                                    <!--<span>+14</span>-->
+                                <!--</div>-->
+                            <!--</div>-->
+
+                            <!--<div class="events-b-rialto">-->
+                                <!--<ul>-->
+                                    <!--<li>-->
+                                        <!--<p class="name-t-rialto-b">1</p>-->
+
+                                        <!--<div class="price-b-ivento">-->
+                                            <!--<span class="back-b-event">3.15</span>-->
+                                            <!--<span class="lay-b-event">4.59</span>-->
+                                        <!--</div>-->
+                                    <!--</li>-->
+                                    <!--<li>-->
+                                        <!--<p class="name-t-rialto-b">X</p>-->
+
+                                        <!--<div class="price-b-ivento">-->
+                                            <!--<span class="back-b-event">3.15</span>-->
+                                            <!--<span class="lay-b-event">4.59</span>-->
+                                        <!--</div>-->
+                                    <!--</li>-->
+                                    <!--<li>-->
+                                        <!--<p class="name-t-rialto-b">2</p>-->
+
+                                        <!--<div class="price-b-ivento">-->
+                                            <!--<span class="back-b-event">3.15</span>-->
+                                            <!--<span class="lay-b-event">4.59</span>-->
+                                        <!--</div>-->
+                                    <!--</li>-->
+                                <!--</ul>-->
+                            <!--</div>-->
+                        <!--</div>-->
+
+
+                        <!--<div class="rialto-market-mini">-->
+                            <!--<div class="team-name-b-rialto">-->
+                                <!--<div class="favorite-star-b-rialto active"></div>-->
+                                <!--<div class="date-info-rialto">-->
+                                    <!--<p>Today at 21:20</p>-->
+                                <!--</div>-->
+                                <!--<div class="name-full-team-rialto">-->
+                                    <!--<span>Gimnasia La Plata</span>-->
+                                    <!--<span class="vs-name-b">vs</span>-->
+                                    <!--<span>Union de Santa Fe</span>-->
+                                <!--</div>-->
+                                <!--<div class="more-b-event-rialto">-->
+                                    <!--<span>+14</span>-->
+                                <!--</div>-->
+                            <!--</div>-->
+
+                            <!--<div class="events-b-rialto">-->
+                                <!--<ul>-->
+                                    <!--<li>-->
+                                        <!--<p class="name-t-rialto-b">1</p>-->
+
+                                        <!--<div class="price-b-ivento">-->
+                                            <!--<span class="back-b-event">3.15</span>-->
+                                            <!--<span class="lay-b-event">4.59</span>-->
+                                        <!--</div>-->
+                                    <!--</li>-->
+                                    <!--<li>-->
+                                        <!--<p class="name-t-rialto-b">X</p>-->
+
+                                        <!--<div class="price-b-ivento">-->
+                                            <!--<span class="back-b-event">3.15</span>-->
+                                            <!--<span class="lay-b-event">4.59</span>-->
+                                        <!--</div>-->
+                                    <!--</li>-->
+                                    <!--<li>-->
+                                        <!--<p class="name-t-rialto-b">2</p>-->
+
+                                        <!--<div class="price-b-ivento">-->
+                                            <!--<span class="back-b-event">3.15</span>-->
+                                            <!--<span class="lay-b-event">4.59</span>-->
+                                        <!--</div>-->
+                                    <!--</li>-->
+                                <!--</ul>-->
+                            <!--</div>-->
+                        <!--</div>-->
+
+
+                        <!--<div class="rialto-market-mini">-->
+                            <!--<div class="team-name-b-rialto">-->
+                                <!--<div class="favorite-star-b-rialto active"></div>-->
+                                <!--<div class="date-info-rialto">-->
+                                    <!--<p>Today at 21:20</p>-->
+                                <!--</div>-->
+                                <!--<div class="name-full-team-rialto">-->
+                                    <!--<span>Gimnasia La Plata</span>-->
+                                    <!--<span class="vs-name-b">vs</span>-->
+                                    <!--<span>Union de Santa Fe</span>-->
+                                <!--</div>-->
+                                <!--<div class="more-b-event-rialto">-->
+                                    <!--<span>+14</span>-->
+                                <!--</div>-->
+                            <!--</div>-->
+
+                            <!--<div class="events-b-rialto">-->
+                                <!--<ul>-->
+                                    <!--<li>-->
+                                        <!--<p class="name-t-rialto-b">1</p>-->
+
+                                        <!--<div class="price-b-ivento">-->
+                                            <!--<span class="back-b-event">3.15</span>-->
+                                            <!--<span class="lay-b-event">4.59</span>-->
+                                        <!--</div>-->
+                                    <!--</li>-->
+                                    <!--<li>-->
+                                        <!--<p class="name-t-rialto-b">X</p>-->
+
+                                        <!--<div class="price-b-ivento">-->
+                                            <!--<span class="back-b-event">3.15</span>-->
+                                            <!--<span class="lay-b-event">4.59</span>-->
+                                        <!--</div>-->
+                                    <!--</li>-->
+                                    <!--<li>-->
+                                        <!--<p class="name-t-rialto-b">2</p>-->
+
+                                        <!--<div class="price-b-ivento">-->
+                                            <!--<span class="back-b-event">3.15</span>-->
+                                            <!--<span class="lay-b-event">4.59</span>-->
+                                        <!--</div>-->
+                                    <!--</li>-->
+                                <!--</ul>-->
+                            <!--</div>-->
+                        <!--</div>-->
+
+
+                        <!--<div class="rialto-market-mini">-->
+                            <!--<div class="team-name-b-rialto">-->
+                                <!--<div class="favorite-star-b-rialto active"></div>-->
+                                <!--<div class="date-info-rialto">-->
+                                    <!--<p>Today at 21:20</p>-->
+                                <!--</div>-->
+                                <!--<div class="name-full-team-rialto">-->
+                                    <!--<span>Gimnasia La Plata</span>-->
+                                    <!--<span class="vs-name-b">vs</span>-->
+                                    <!--<span>Union de Santa Fe</span>-->
+                                <!--</div>-->
+                                <!--<div class="more-b-event-rialto">-->
+                                    <!--<span>+14</span>-->
+                                <!--</div>-->
+                            <!--</div>-->
+
+                            <!--<div class="events-b-rialto">-->
+                                <!--<ul>-->
+                                    <!--<li>-->
+                                        <!--<p class="name-t-rialto-b">1</p>-->
+
+                                        <!--<div class="price-b-ivento">-->
+                                            <!--<span class="back-b-event">3.15</span>-->
+                                            <!--<span class="lay-b-event">4.59</span>-->
+                                        <!--</div>-->
+                                    <!--</li>-->
+                                    <!--<li>-->
+                                        <!--<p class="name-t-rialto-b">X</p>-->
+
+                                        <!--<div class="price-b-ivento">-->
+                                            <!--<span class="back-b-event">3.15</span>-->
+                                            <!--<span class="lay-b-event">4.59</span>-->
+                                        <!--</div>-->
+                                    <!--</li>-->
+                                    <!--<li>-->
+                                        <!--<p class="name-t-rialto-b">2</p>-->
+
+                                        <!--<div class="price-b-ivento">-->
+                                            <!--<span class="back-b-event">3.15</span>-->
+                                            <!--<span class="lay-b-event">4.59</span>-->
+                                        <!--</div>-->
+                                    <!--</li>-->
+                                <!--</ul>-->
+                            <!--</div>-->
+                        <!--</div>-->
+
+
+                        <!--<div class="rialto-market-mini">-->
+                            <!--<div class="team-name-b-rialto">-->
+                                <!--<div class="favorite-star-b-rialto active"></div>-->
+                                <!--<div class="date-info-rialto">-->
+                                    <!--<p>Today at 21:20</p>-->
+                                <!--</div>-->
+                                <!--<div class="name-full-team-rialto">-->
+                                    <!--<span>Gimnasia La Plata</span>-->
+                                    <!--<span class="vs-name-b">vs</span>-->
+                                    <!--<span>Union de Santa Fe</span>-->
+                                <!--</div>-->
+                                <!--<div class="more-b-event-rialto">-->
+                                    <!--<span>+14</span>-->
+                                <!--</div>-->
+                            <!--</div>-->
+
+                            <!--<div class="events-b-rialto">-->
+                                <!--<ul>-->
+                                    <!--<li>-->
+                                        <!--<p class="name-t-rialto-b">1</p>-->
+
+                                        <!--<div class="price-b-ivento">-->
+                                            <!--<span class="back-b-event">3.15</span>-->
+                                            <!--<span class="lay-b-event">4.59</span>-->
+                                        <!--</div>-->
+                                    <!--</li>-->
+                                    <!--<li>-->
+                                        <!--<p class="name-t-rialto-b">X</p>-->
+
+                                        <!--<div class="price-b-ivento">-->
+                                            <!--<span class="back-b-event">3.15</span>-->
+                                            <!--<span class="lay-b-event">4.59</span>-->
+                                        <!--</div>-->
+                                    <!--</li>-->
+                                    <!--<li>-->
+                                        <!--<p class="name-t-rialto-b">2</p>-->
+
+                                        <!--<div class="price-b-ivento">-->
+                                            <!--<span class="back-b-event">3.15</span>-->
+                                            <!--<span class="lay-b-event">4.59</span>-->
+                                        <!--</div>-->
+                                    <!--</li>-->
+                                <!--</ul>-->
+                            <!--</div>-->
+                        <!--</div>-->
+
+
+                        <!--<div class="rialto-market-mini">-->
+                            <!--<div class="team-name-b-rialto">-->
+                                <!--<div class="favorite-star-b-rialto active"></div>-->
+                                <!--<div class="date-info-rialto">-->
+                                    <!--<p>Today at 21:20</p>-->
+                                <!--</div>-->
+                                <!--<div class="name-full-team-rialto">-->
+                                    <!--<span>Gimnasia La Plata</span>-->
+                                    <!--<span class="vs-name-b">vs</span>-->
+                                    <!--<span>Union de Santa Fe</span>-->
+                                <!--</div>-->
+                                <!--<div class="more-b-event-rialto">-->
+                                    <!--<span>+14</span>-->
+                                <!--</div>-->
+                            <!--</div>-->
+
+                            <!--<div class="events-b-rialto">-->
+                                <!--<ul>-->
+                                    <!--<li>-->
+                                        <!--<p class="name-t-rialto-b">1</p>-->
+
+                                        <!--<div class="price-b-ivento">-->
+                                            <!--<span class="back-b-event">3.15</span>-->
+                                            <!--<span class="lay-b-event">4.59</span>-->
+                                        <!--</div>-->
+                                    <!--</li>-->
+                                    <!--<li>-->
+                                        <!--<p class="name-t-rialto-b">X</p>-->
+
+                                        <!--<div class="price-b-ivento">-->
+                                            <!--<span class="back-b-event">3.15</span>-->
+                                            <!--<span class="lay-b-event">4.59</span>-->
+                                        <!--</div>-->
+                                    <!--</li>-->
+                                    <!--<li>-->
+                                        <!--<p class="name-t-rialto-b">2</p>-->
+
+                                        <!--<div class="price-b-ivento">-->
+                                            <!--<span class="back-b-event">3.15</span>-->
+                                            <!--<span class="lay-b-event">4.59</span>-->
+                                        <!--</div>-->
+                                    <!--</li>-->
+                                <!--</ul>-->
+                            <!--</div>-->
+                        <!--</div>-->
+
+
+                        <!--Any markets-->
+
+                    </div>
+                    <!--left-column END-->
+
+
+                    <!--right-column-->
+                    <div class="right-column-markets-rialto">
+
+                        <div class="full-title-name-last">
+                            <h3><span>{{weeklyGameCompetitionName}}</span></h3>
+                        </div>
+
+                        <div class="time-name-more-info-rialto">
+                            <div class="full-time-rialto">
+                                <p>{{weeklyGameData.start_ts | formatDate:'full':null:env.timeFormat}} </p>
+                            </div>
+                            <!--<div class="game-statistic-icon-rialto"></div>-->
+                            <h4 ng-click="gameMarkets(weeklyGameData.id)"><span> {{" -> "+ weeklyGameData.team1_name}}</span> <span>{{ weeklyGameData.team2_name}}</span></h4>
+                        </div>
+
+                        <div class="match-result-rialto-b " ng-repeat="market in weeklyMarkets track by $index" ng-class="market.isActive">
+
+                                <div class="match-result-row-rialto">
+                                    <div class="mini-contain-row-rialto"  ng-click="isActive(market)">
+                                        <div class="arrow-icon-rialto " ></div>
+                                        <h5 title="{{market.name}}">{{market.name}}</h5>
+
+                                        <div class="matchet-price-rialto">
+                                            <p><b> {{ market.base ? "("+market.base+")" : ""}} </b></p>
+                                        </div>
+                                        <div class="cashout-rialto-b">
+                                            <!--<p>Cashout</p>-->
+                                        </div>
+                                    </div>
+
+                                    <div class="filter-cashout-rialto">
+                                        <div class="liability-info-rialto">
+                                            <p>Liability</p>
+                                            <span>50.000C</span>
+                                        </div>
+                                        <div class="filter-information-b-rialto">
+                                            <ul>
+                                                <li>Cash out <span>10.000C</span></li>
+                                                <li>Profit: <span>-10.000C</span></li>
+                                            </ul>
+                                        </div>
+                                        <div class="min-max-range-rialto">
+                                            <div class="min-button-rialto">
+                                                <p>Min</p>
+                                            </div>
+                                            <div class="field-range-b">
+
+                                                <div class="default-fielt-color">
+                                                    <div class="color-fieald-range">
+                                                        <div class="slider-rialto-b"></div>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                            <div class="max-button-rialto">
+                                                <p>Max</p>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="info-all-events-row">
+                                        <ul class="info-arrow-changed-rialto">
+                                            <li class="possible-win-rialto-b"></li>
+                                            <li class="mini-b-factor-rialto down">
+                                                <div class="changed-arrob-info-new remove-icon" >
+                                                    <p>{{ market.downPercent}}% </p>
+                                                </div>
+                                            </li>
+                                            <li class="mini-b-factor-rialto down"></li>
+                                            <li class="mini-b-factor-rialto down">
+                                                <div class="changed-arrob-info-new" ng-click="addBets('down')">
+                                                    <p trans>Back All</p>
+                                                </div>
+                                            </li>
+                                            <li class="mini-b-factor-rialto up">
+                                                <div class="changed-arrob-info-new " ng-click="addBets('up')">
+                                                    <p trans>Lay All</p>
+                                                </div>
+                                            </li>
+                                            <li class="mini-b-factor-rialto up"></li>
+                                            <li class="mini-b-factor-rialto up">
+                                                <div class="changed-arrob-info-new remove-icon" >
+                                                    <p> {{ market.upPercent}}% </p>
+                                                </div>
+                                            </li>
+                                            <li class="mini-b-factor-statistics"></li>
+                                        </ul>
+
+                                        <ul ng-repeat="event in market.event track by  $index">
+                                            <li class="possible-win-rialto-b">
+                                                <div class="info-bet-rialto">
+                                                    <h5 title="{{event.name+' ('+ event.base+')'}}">{{event.name }}{{  event.base !== '' ? ' ('+ event.base+')' :event.base}}   {{  event.name == 'W1' ? ' '+ weeklyGameData.team1_name+' ' : ''}} {{  event.name == 'W2' ? ' '+ weeklyGameData.team2_name+' ' :''}}   </h5>
+
+                                                    <p class="factor-up-down-rialto">
+                                                        <span title="{{defaultCurrencyShortName}}" ng-class="event.eStableProfit >= 0 ? 'up' : 'down'">{{event.eStableProfit || event.eStableProfit == 0 ? event.eStableProfit + " "+defaultCurrencyShortName:""}}</span>
+                                                        <span title="{{defaultCurrencyShortName}}" ng-if="event.ePossibleProfit"  ng-class="event.ePossibleProfit >= 0 ? 'up' : 'down'">{{event.ePossibleProfit || event.ePossibleProfit == 0? event.ePossibleProfit + " "+defaultCurrencyShortName:""}}</span>
+                                                    </p>
+                                                </div>
+                                            </li>
+                                            <li class="mini-b-factor-rialto down" ng-repeat="fairEvent in event.fairEvent.down track by $index ">
+                                                <div class="factor-rialto">
+                                                    <p ng-click="addBets()">{{fairEvent.price}}</p>
+                                                    <span title="{{defaultCurrencyShortName }}">{{( fairEvent.userCurrencyAmount && fairEvent.userCurrencyAmount !== 0  )?fairEvent.userCurrencyAmount  : ""  }}</span>
+                                                </div>
+                                            </li>
+
+                                            <li class="mini-b-factor-rialto up" ng-repeat="fairEvent in event.fairEvent.up  track by $index">
+                                                <div class="factor-rialto">
+                                                    <p ng-click="addBets()">{{fairEvent.price}}</p>
+                                                    <span title="{{defaultCurrencyShortName }}">{{ ( fairEvent.userCurrencyAmount && fairEvent.userCurrencyAmount !== 0 )?fairEvent.userCurrencyAmount  : ""  }}</span>
+                                                </div>
+                                            </li>
+                                            <li class="mini-b-factor-statistics">
+                                                <!--<div class="factor-rialto-statistic-icon"></div>-->
+                                            </li>
+                                        </ul>
+
+
+                                    </div>
+                                </div>
+
+
+                        </div>
+
+
+
+                    </div>
+                    <!--right-column END-->
+
+
+                </div>
+
+        <!--center-column END-->
+
+
+</div>
+

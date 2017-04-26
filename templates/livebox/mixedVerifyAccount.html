@@ -1,0 +1,10 @@
+<!--Preferences-->
+<h3 trans>Verify Account</h3>
+<div class="settings-info-contain registration-form" ng-if="conf.accountVerificationMessage">
+    <div ng-bind-html="conf.accountVerificationMessage|translate|html"></div>
+</div>
+
+<div class="settings-info-contain">
+    <passport-uploader ng-if="conf.enableAccountVerification"></passport-uploader>
+<asiv>
+<!--Preferences END-->

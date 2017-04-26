@@ -1,0 +1,23 @@
+<ul class="old-topmenu-filter-wrapper-j">
+    <li>
+        <div class="left-list-menu">
+            <div class="game-mini-filter" ng-class="{'active': periodDropdownOpened}">
+                <p ng-click="periodDropdownOpened=!periodDropdownOpened">{{(selectedUpcomingPeriod ? selectedUpcomingPeriod + ' hours' : 'All')|translate}} <b class="arrow-rotate icon-arrow-right6"></b></p>
+                <ul>
+                    <li ng-repeat="period in upcomingPeriods track by $index" ng-click="selectPrematchTimePeriod(period);$parent.periodDropdownOpened = false" ng-class="{'icon-checkmark': period == selectedUpcomingPeriod}">{{(period ? period + ' hours' : 'All')|translate}}</li>
+                </ul>
+            </div>
+        </div>        
+        <div class="cms-jcon-two-arrows-down" ng-show="!env.live" ng-click="toggleMultiView()" ng-if="isMultiViewVisible" ng-class="{'active': env.preMatchMultiSelection, 'off': !env.preMatchMultiSelection}" title="Multi-selection mode" trans></div>
+        <div class="cms-jcon-betting-bet" ng-show="conf.loadPopularGamesForSportsBook.enabled && !env.live" ng-click="loadPopularGames()" ng-class="isPopularGames ? 'active' : ''" trans title="Popular Games"></div>
+    </li>
+    <div class="cms-jcon-left-menu" ng-click="toggleLeftMenu()" ng-show="::(!conf.customSportsBook.enabled || conf.customSportsBook.classic.showMarkets)"></div>
+    <li>
+        <a href="#/livecalendar" trans="attr-only" title="Live Calendar" class="cms-jcon-calendar" ng-show="conf.liveCalendarEnabled && conf.liveCalendarInLeftMenu"></a>
+        <div ng-click="toggleRegionsFilter()" ng-show="env.live" class="cms-jcon-public-globus" ng-class="{'active':!liveFilters.disableRegions}" title="Disable regions" trans="attr-only"></div>
+        <div ng-show="conf.videoEnabled && env.live" ng-click="toggleVideoFilter()" class="cms-jcon-play-outline" ng-class="{'active':liveFilters.withVideo}" title="With video" trans="attr-only"></div>
+    </li>
+</ul>
+<div class="left-list-menu">
+    <div class="search-menu-wrapper-j" ng-click="toggleLeftMenu(true)" ng-if="conf.enableMenuSearch" ng-include="getTemplate('templates/search/sport.html')"></div>
+</div>

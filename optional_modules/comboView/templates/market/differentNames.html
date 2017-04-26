@@ -1,0 +1,13 @@
+<div class="game-events-contain-b">
+    <ul ng-class="{'column-2': market.col_count === 2}">
+        <li ng-repeat="event in market.event track by event.id">
+            <div class="small-title-event-b"></div>
+            <p>
+                <span>{{event.price|oddConvert:env.oddFormat}}</span>
+                <span>
+                    {{event.name}}
+                </span>
+            </p>
+         </li>
+    </ul>
+</div>

@@ -1,0 +1,54 @@
+<div class="left-block-score">
+    <div class="live-game-team" ng-class="{'no-video-flash': !(conf.videoEnabled && game.video_id || game.has_animation) || (isVideoDetached && !game.has_animation), 'no-video-ie8': !game.video_id || isVideoDetached}">
+        <ul>
+            <li ng-class="{'active':game.info.pass_team=='team1'}">
+                <div class="team-form"><tshirt shorts="{{game.info.short1_color}}" shirt="{{game.info.shirt1_color}}"></tshirt></div>
+                <span>{{ game.team1_name }}</span>
+            </li>
+            <li>{{game.stats['score_'+game.info.current_game_state].team1_value ? game.stats['score_'+game.info.current_game_state].team1_value : 0}}</li>
+            <li class="set-number">{{ game.info.score1 }}</li>
+        </ul>
+        <ul>
+            <li ng-class="{'active':game.info.pass_team=='team2'}">
+                <div class="team-form"><tshirt shorts="{{game.info.short2_color}}" shirt="{{game.info.shirt2_color}}"></tshirt></div>
+                <span>{{ game.team2_name }}</span>
+            </li>
+            <li>{{game.stats['score_'+game.info.current_game_state].team2_value ? game.stats['score_'+game.info.current_game_state].team2_value : 0}}</li>
+            <li class="set-number">{{ game.info.score2 }}</li>
+        </ul>
+    </div>
+    <!--Счет игры live game-->
+
+    <table class="cash-game cash-game-tabletennis"
+        ng-class="{'no-video-flash': !(conf.videoEnabled && game.video_id || game.has_animation) || (isVideoDetached && !game.has_animation), 'no-video-ie8': !game.video_id || isVideoDetached}"
+        ng-init="setNames = framesCount(game.stats);"
+    >
+        <tr>
+            <th trans>Set</th>
+            <th ng-repeat="set_num in ::setNames track by $index" ng-class="{'active-set': game.info.current_game_state == 'set'+set_num }">{{set_num}}</th>
+        </tr>
+        <tr>
+            <td class="team-1" ng-style="{'border-left-color': '#'+ game.info.shirt1_color}">
+                <div ng-class="{'active-game':game.info.pass_team=='team1'}"><tshirt shorts="{{game.info.short1_color}}" shirt="{{game.info.shirt1_color}}"></tshirt></div>
+                <span>{{ game.team1_name }}</span>
+            </td>
+            <td ng-repeat="set_num in ::setNames track by $index" ng-class="{'active-cash':game.info.current_game_state == 'set' + set_num,'winner':game.stats['score_' + set_num].isTeam1SetWinner}">
+                {{ game.stats['score_set' + set_num].team1_value ? game.stats['score_set' + set_num].team1_value : 0}}
+            </td>
+        </tr>
+        <tr>
+            <td class="team-2" ng-style="{'border-left-color': '#'+ game.info.shirt2_color}">
+                <div ng-class="{'active-game':game.info.pass_team=='team2'}"><tshirt shorts="{{game.info.short2_color}}" shirt="{{game.info.shirt2_color}}"></tshirt></div>
+                <span>{{ game.team2_name }}</span>
+            </td>
+            <td ng-repeat="set_num in ::setNames track by $index" ng-class="{'active-cash':game.info.current_game_state == 'set' + set_num,'winner':game.stats['score_' + set_num].isTeam2SetWinner}">
+                {{ game.stats['score_set' + set_num].team2_value ? game.stats['score_set' + set_num].team2_value : 0}}
+            </td>
+        </tr>
+    </table>
+</div>
+<div ng-show="(conf.videoEnabled && game.video_id && !isVideoDetached) || game.has_animation" ng-class="{'hide-animation-ie8': !game.video_id || isVideoDetached}">
+    <div class="right-block-flash" id="game-monitor-{{ game.id }}">
+        <include-template template-path="templates/sport/open/player.html"></include-template>
+    </div>
+</div>

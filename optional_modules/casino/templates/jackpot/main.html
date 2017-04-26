@@ -1,0 +1,68 @@
+<div ng-controller="casinoJackpotCtrl" ng-init="checkIfEnabled('jackpot'); setTitle('Jackpot'); loadJackpotPages();">
+    <div ng-show="jackpotPageLoaded">
+        <div  ng-init="getJackpotBanners();">
+
+            <vbet-big-slider ng-if="jackpotBanners && jackpotBanners.length" images="jackpotBanners" link-click-handler="openJBlink();"></vbet-big-slider>
+        </div>
+
+        <div class="jackpot-contain-info">
+            <div class="centr-jackpot-info">
+                <div class="jeckpot-games-block">
+                    <div class="jackpot-rules-b">
+                        <div class="info-rules-big">
+                            <h4>{{ jackpotRules[1].title }}</h4>
+                            <p ng-bind-html="jackpotRules[1].content"></p>
+                        </div>
+                        <div class="rules-title"><h2>{{ jackpotRules[0].title }}
+                            <span ng-bind-html="jackpotRules[0].content"></span>
+                        </h2>
+                        </div>
+                        <div class="list-points-slider" ng-show="leaders.length">
+                            <table>
+                                <tr>
+                                    <th trans>Current Rank</th>
+                                    <th trans>ID</th>
+                                    <th trans>Prize</th>
+                                    <th trans>Points</th>
+                                    <th trans>Previous Rank</th>
+                                </tr>
+                                <tr ng-repeat="leader in leaders track by $index">
+                                    <td ng-repeat="item in leader track by $index">{{ item }}</td>
+                                </tr>
+                            </table>
+
+                            <div class="slider-top-button" ng-show="offset > 0"><a ng-click="slide('top')">top</a></div>
+                            <div class="slider-bottom-button" ng-show="offset < leaderCount - LEADERS_TO_SHOW"><a ng-click="slide('bottom')">bottom</a></div>
+                        </div>
+                    </div>
+
+                    <div class="jackpot-game-list">
+                        <div class="games-list-jackpot-b">
+                            <div class="Featured-casino-games">
+                                <div class="contein-slider">
+                                    <div class="games-slider">
+                                        <ul>
+                                            <li ng-repeat="game in jackpotGames track by game.id">
+                                                <a ng-click="openJackpotGame(game, 'real'); $event.stopPropagation();">
+                                                    <p class="play-button"><span trans>play now</span></p>
+                                                    <img ng-src="{{iconsUrl + game.gameID}}.jpg" alt="">
+                                                </a>
+                                                <p class="fun-game"><a class="game-fun-link" ng-click="openJackpotGame(game, 'fun')"><span trans>Play For Free</span></a></p>
+                                                <div class="popular-game-name">
+                                                    <p><a ng-click="openJackpotGame(game, 'real'); $event.stopPropagation();" title="{{game.gameName}}"> {{game.gameName}} </a></p>
+                                                    <div class="fav-block"><a ng-click="toggleSaveToMyCasinoGames(game)" ng-class="{'star-active': isFromSaved(game.id)}">star</a></div>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <vbet-loader class="jackpot" ng-show="!jackpotPageLoaded"></vbet-loader>
+</div>

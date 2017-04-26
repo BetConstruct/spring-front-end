@@ -1,0 +1,15 @@
+<ul class="banners-{{homepageBanners.length}} old-view" ng-if="conf.oldHomepage" >
+    <li ng-repeat="banner in homepageBanners"><a href="{{banner.link}}" target="{{banner.linktarget}}"><img ng-src="{{banner.imageurl}}" title="{{banner.title}}"  alt="{{banner.title}}"></a></li>
+</ul>
+<!--mini text-baners-->
+<div class="text-baners-new" ng-if="!conf.oldHomepage" >
+    <ul>
+        <li ng-repeat="banner in homepageBanners">
+            <a href="{{banner.link}}" target="{{banner.linktarget}}">
+                <img ng-src="{{banner.imageurl}}" title="{{banner.title}}"  alt="{{banner.title}}">
+                <p ng-bind-html="banner.title"></p>
+            </a>
+        </li>
+    </ul>
+</div>
+<!--mini text-baners END-->

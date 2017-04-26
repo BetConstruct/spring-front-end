@@ -1,0 +1,79 @@
+<div class="game-list-compitishion">
+    <table class="name-ft-ht-layout">
+        <tr>
+            <td class="big-row"><div class="info-bl"><p><i class="icon-sport-asia" ng-class="selectedSport.alias"></i><span ng-bind="selectedSport.name"></span></p></div></td>
+            <td class="Correct-scire-title"><div class="info-bl"><p trans>Correct Score</p></div></td>
+
+            <td class="more-competition"><div class="info-bl"><p trans>More</p></div></td>
+        </tr>
+    </table>
+</div>
+<div class="asian-separator-container-b" ng-repeat="competitions in centerData.competitions track by $index">
+    <div ng-repeat="competition in competitions track by $index" class="game-list-compitishion" ng-class="{closed: collapedCompetitions[competition.id]}">
+    <div class="name-chempionship-asia" ng-click="toggleCompetition(competition.id)">
+    <!--<div class="name-chempionship-asia">-->
+        <h3 ng-bind="competition.name"></h3>
+        <!--<h3>ENGLAND - PREMIER LEAGUE</h3>-->
+    </div>
+
+    <table class="match-odd1X2 correct-score">
+        <tbody ng-repeat="game in competition.games|orderBy:'start_ts' track by game.id">
+            <tr>
+                <td colspan="5">
+                    <div class="info-bl">
+                        <p class="teams-n-account-asia">
+                            <span class="name-team-asian-1x2" ng-bind="game.team1_name"></span>
+                                            <span class="account-asian-1x2" ng-show="game.type ==1">
+                                                <b ng-bind="game.info.score1"></b>
+                                                <b ng-bind="game.info.score2"></b>
+                                            </span>
+                            <span class="name-team-asian-1x2" ng-bind="game.team2_name"></span>
+                        </p>
+                        <div class="block-filter-hdp">
+                            <ul>
+                                <li ng-repeat="sequence in game.availableSequences track by $index" ng-bind="(asianMarkets.sequenceNames[sequence] || sequence)|translate" ng-class="{active: game.selectedSequence === sequence}" ng-click="game.selectedSequence = sequence"></li>
+                            </ul>
+                        </div>
+                    </div>
+
+                </td>
+            </tr>
+            <tr ng-repeat="lineEvents in game.markets[game.selectedSequence].CORRECTSCORE[0].linesEvents track by $index">
+                <td class="section-1">
+                    <div class="info-bl">
+                        <p class="time-g-asia" ng-show="game.type ==1 && $index === 0">
+                            <span ng-bind="game.info.current_game_state|convertSetName:game.sport.alias|translate"></span><span ng-bind="fixDisplayTime(game.info.current_game_time)"></span>
+                        </p>
+                        <p class="time-g-asia" ng-show="game.type !=1 && $index === 0">
+                            <span ng-bind="game.start_ts|formatDate:'D/MM'"></span> <span ng-bind="game.start_ts|formatDate:'hour':null:env.timeFormat"></span>
+                        </p>
+                    </div>
+                </td>
+                <td class="factor-w"
+                    ng-class="{up: lineEvents.firstWin.price_change == '1', down: lineEvents.firstWin == '-1', 'active': isEventInBetSlip(lineEvents.firstWin)}">
+                    <div class="info-bl" ng-show="lineEvents.firstWin.scores" ng-click="bet(lineEvents.firstWin, game.markets[game.selectedSequence].CORRECTSCORE[0], game)">
+                        <p><b ng-bind="lineEvents.firstWin.scores"></b> <i>{{lineEvents.firstWin.price|oddConvert:env.oddFormat}}</i></p>
+                    </div>
+                </td>
+                <td class="factor-w"
+                    ng-class="{up: lineEvents.handicap.price_change == '1', down: lineEvents.handicap == '-1', 'active': isEventInBetSlip(lineEvents.handicap)}" >
+                    <div class="info-bl" ng-show="lineEvents.handicap.scores"  ng-click="bet(lineEvents.handicap, game.markets[game.selectedSequence].CORRECTSCORE[0], game)">
+                        <p><b ng-bind="lineEvents.handicap.scores"></b> <i>{{lineEvents.handicap.price|oddConvert:env.oddFormat}}</i></p>
+                    </div>
+                </td>
+                <td class="factor-w"
+                    ng-class="{up: lineEvents.secondWin.price_change == '1', down: lineEvents.secondWin == '-1', 'active': isEventInBetSlip(lineEvents.secondWin)}">
+                    <div class="info-bl" ng-show="lineEvents.secondWin.scores"  ng-click="bet(lineEvents.secondWin, game.markets[game.selectedSequence].CORRECTSCORE[0], game)">
+                        <p><b ng-bind="lineEvents.secondWin.scores"></b> <i>{{lineEvents.secondWin.price|oddConvert:env.oddFormat}}</i></p>
+                    </div>
+                </td>
+                <td class="more-competition">
+                    <div class="info-bl" ng-if="game.moreMarketsCount && $first" ng-click="loadAllEvents(game.id)">
+                        <p>+{{::game.moreMarketsCount}}</p>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+</div>

@@ -1,0 +1,231 @@
+<div ng-controller="facebookCtrl" >
+
+    <div ng-if="conf.odnoklassnikiIntegration.enable && !registrationComplete && !registrationFailed"
+         class="odnoclassniki-wrapper"
+         ng-controller="OdnoklassnikiCtrl as odnoCtrl">
+            <div class="facebook-login-button odnoklassniki" ng-click="register();"><span trans>Sign up with Odnoklassniki</span></div>
+    </div>
+
+    <div class="form-contain" ng-show="fbReady && !registrationComplete && !registrationFailed">
+
+        <div  class="fb-register-block">
+            <div ng-show="!fbLoggedIn" class="fb-register-block-button">
+                <h2></h2>
+                <div class="facebook-login-button" ng-click="loginToFb(); registerWithFacebook = true;"><span trans>Sign up with Facebook</span></div>
+            </div>
+
+        </div>
+
+
+
+
+
+
+    <form name="fbsignupform" ng-submit="register()" >
+        <div class="form-sign-in fb" ng-class="{'error': fbLoggedIn}">
+            <h3 trans>User details:</h3>
+
+
+                <input ng-model="registrationData.facebook_id" type="hidden">
+
+            <label trans>Email Address</label>
+            <div class="form-text tooltip-wrapper-j" ng-class="{'error': fbsignupform.email.$dirty && fbsignupform.email.$invalid  && showFieldsValidation}">
+                <input name="email" ng-model="registrationData.email" placeholder="Enter here" required="required" type="email" ng-pattern="/^[\w!.%+\-]+@[\w\-]+(?:\.[\w\-]+)+$/" trans>
+                <div class="form-error-icon-j"></div>
+                <div class="tooltip-j">
+                    
+                    <p trans ng-show="fbsignupform.email.$error.required">This field is required</p>
+                    <p trans ng-show="fbsignupform.email.$error.email">Please enter a valid email address</p>
+                    <p trans ng-show="fbsignupform.email.$error.pattern">Please enter a valid email address</p>
+                    <p trans ng-show="fbsignupform.email.$error.exists && registrationData.email">This email already exists in our database, please enter another</p>
+                </div>
+            </div>
+
+
+            <label trans>Name</label>
+            
+            <div class="last-name-fb">
+                <div class="form-text tooltip-wrapper-j first-n" ng-class="{'error': fbsignupform.first_name.$dirty && fbsignupform.first_name.$invalid  && showFieldsValidation}">
+
+                    <input name="first_name" ng-model="registrationData.first_name" required="required" ng-disabled="fbLoggedIn" type="text" placeholder="First" trans>
+                    <div class="form-error-icon-j"></div>
+                    <div class="tooltip-j">
+                        
+                        <p trans>Please enter a valid first name</p>
+                    </div>
+                </div>
+
+                <div class="form-text tooltip-wrapper-j first-n" ng-class="{'error': fbsignupform.last_name.$dirty && fbsignupform.last_name.$invalid  && showFieldsValidation}">
+
+                    <input name="last_name" ng-model="registrationData.last_name" required="required" ng-disabled="fbLoggedIn" type="text" placeholder="Last" trans>
+                    <div class="form-error-icon-j"></div>
+                    <div class="tooltip-j">
+                        
+                        <p trans>Please enter a valid last name</p>
+                    </div>
+                </div>
+</div>
+
+            <div class="gender-block">
+                <label trans>Gender</label>
+                <div class="select-block">
+
+
+                    <select name="gender" ng-model="registrationData.gender" ng-pattern="/^[M,F]$/" ng-disabled="fbLoggedIn">
+                        <option value="M" selected trans>Male</option>
+                        <option value="F" trans>Female</option>
+                    </select>
+
+                </div>
+
+            </div>
+
+            <div class="info-passport-phone-fb">
+                <div class="passpart-info" ng-class="{'passport': conf.registration.requireDocNumber}">
+                    <div class="registr-mini-block" ng-if="conf.registration.requireDocNumber">
+                        <label><span trans>Passport Number</span> <span class="hint">*</span></label>
+                        <div class="form-text tooltip-wrapper-j first-n" ng-class="{'error': fbsignupform.doc_number.$dirty && fbsignupform.doc_number.$invalid && showFieldsValidation}">
+                            <input name="doc_number" ng-model="registrationData.doc_number" type="text" ng-pattern="/^[a-zA-Z\d\s]+$/i" required trans onchange="this.value=this.value.replace(/\s/g, '').toUpperCase()">
+                            <div class="form-error-icon-j"></div>
+                            <div class="tooltip-j">
+                                
+                                <p trans ng-show="fbsignupform.doc_number.$error.required">This field is required</p>
+                                <p trans ng-show="fbsignupform.doc_number.$error.exists && registrationData.doc_number">Passport Number is already registered for another account</p>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+                <div class="phone-form-contain register-multicolumnn" ng-if="conf.registration.requirePhoneNumber">
+                    <label><span trans>Contact number</span> <span class="hint">*</span></label>
+
+                    <div class="form-text tooltip-wrapper-j reg-form-input-number"
+                         ng-class="{'error': ((fbsignupform.phone_number.$dirty && fbsignupform.phone_number.$invalid && showFieldsValidation))}">
+                        <input name="phone_number"
+                               ng-model="registrationData.phone_number"
+                               type="text" required
+                               placeholder="Number"
+                               ng-pattern="conf.registration.phoneNumberPattern"
+                               maxlength="{{conf.registration.phoneNumberLength}}"
+                               trans>
+
+                        <div class="form-error-icon-j"></div>
+                        <div class="tooltip-j">
+                            
+                            <p trans ng-show="fbsignupform.phone_number.$error.invalid">Invalid phone number</p>
+                            <p trans ng-show="fbsignupform.phone_number.$error.duplicate">Duplicate phone number</p>
+                            <p trans ng-show="fbsignupform.phone_number.$error.required">This field is required</p>
+                            <p ng-show="fbsignupform.phone_number.$error.pattern"><span trans>Invalid phone number</span></p>
+                        </div>
+                        <div class="form-verify-info" ng-if="conf.registration.requireSmsValidation && !fbsignupform.phone_number.$error.pattern">
+                            <div class="form-error-icon-j"></div>
+                            <div class="tooltip-j">
+                                
+                                <p trans>Verify phone number by sms</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+</div>
+
+<div class="form-sign-in fb">
+            <div class="facebook-ask-for-username-pass" ng-show="fbLoggedIn || (regFlow.currentRegFlow === regFlow.ODNO)">
+                <div class="title-info-fb" ng-class="{'full-height-tooltip': signinWithoutFb === 'no'}" ng-if="conf.registration.askAboutSpecifyingLoginPass">
+                    <h1 trans>Do you plan to sign in with login/password as well?</h1>
+                    <p>
+                        <span class="tooltip-fb" trans>If you plan to sign in not using social networks login in the future you need to provide username/password. Otherwise it will be automatically generated for you and you will receive it by email. You're not required to use your username/password if you plan to use social networks login every time.</span>
+                    </p>
+                    <label for="signin-without-fb-no"><span trans>No</span> <input type="radio" id="signin-without-fb-no" ng-model="$parent.signinWithoutFb" name="signin-without-fb" value="no"></label>
+                <label for="signin-without-fb-yes" ><span trans>Yes</span><input type="radio" id="signin-without-fb-yes" ng-model="$parent.signinWithoutFb" name="signin-without-fb" value="yes"></label>
+                </div>
+                <div  class="title-info-fb" ng-show="!conf.registration.askAboutSpecifyingLoginPass">
+                    <h1 trans>Some games will still require you to sign in using username/password.</h1>
+                </div>
+            </div>
+
+            <div class="right-b-register-fb" ng-show="!conf.registration.askAboutSpecifyingLoginPass  || (signinWithoutFb === 'yes' || !fbLoggedIn)"
+                    ng-hide="(regFlow.currentRegFlow === regFlow.ODNO) && (signinWithoutFb !== 'yes')">
+                <label><span trans>Username</span></label>
+                <div class="form-text tooltip-wrapper-j" ng-class="{'error': fbsignupform.username.$dirty && fbsignupform.username.$invalid && showFieldsValidation}">
+                    <input name="username" ng-model="registrationData.username" ng-change="fbsignupform.username.$invalid = false;" type="text" placeholder="Your login" required="required" trans>
+                    <div class="form-error-icon-j"></div>
+                    <div class="tooltip-j">
+                        
+                        <p trans ng-show="fbsignupform.username.$error.required">This field is required</p>
+                        <p trans ng-show="fbsignupform.username.$error.exists && fbsignupform.username">Sorry, this username has been used already</p>
+                    </div>
+
+                </div>
+
+                <label trans>Password</label>
+                <div class="form-text tooltip-wrapper-j" ng-class="{'error': fbsignupform.password.$dirty && fbsignupform.password.$invalid  && showFieldsValidation}">
+                    <input name="password" ng-model="registrationData.password" type="password" required="required" ng-minlength="6" trans>
+                    <div class="form-error-icon-j"></div>
+                    <div class="tooltip-j">
+                        
+                        <p trans ng-show="fbsignupform.password.$error.required">This field is required</p>
+                        <p trans ng-show="fbsignupform.password.$error.sameAsLogin && registrationData.password">Password cannot be same as login</p>
+                        <p trans ng-show="fbsignupform.password.$error.minlength">Must be at least 6 characters</p>
+                    </div>
+
+                </div>
+
+                <label trans>Repeat password</label>
+                <div class="form-text tooltip-wrapper-j" ng-class="{'error': fbsignupform.password2.$dirty && fbsignupform.password2.$invalid &&!fbsignupform.password.$error.minlength && showFieldsValidation}">
+                    <input name="password2" ng-model="registrationData.password2" match="registrationData.password" type="password" required="required" trans>
+                    <div class="form-error-icon-j"></div>
+                    <div class="tooltip-j">
+                        
+                        <p trans ng-show="fbsignupform.password2.$error.match && registrationData.password2">passwords don't match</p>
+                        <p trans ng-show="fbsignupform.password2.$error.required">This field is required</p>
+                    </div>
+                </div>
+
+           </div>
+            
+
+        </div>
+        <div class="button-sign fb">
+		<label for="checkbox-id" ng-class="{'error': fbsignupform.agree.$dirty && fbsignupform.agree.$error.required}">
+                <input ng-model="registrationData.agree" type="checkbox" id="checkbox-id" name="agree"required>
+                <span trans>I agree to all</span>
+                <a class="info-tooltip"><span trans>Terms &amp; Conditions</span>
+                    <p><span class="arrow-sport"></span><span trans>You can read our Terms and Conditions by clicking corresponding links in page footer.</span></p>
+                </a>
+                <span ng-show="conf.registration.minimumAllowedAge==18" trans>and I am over 18 years of age and have read and accepted the general terms and conditions.</span>
+                <span ng-show="conf.registration.minimumAllowedAge==21" trans>and I am over 21 years of age and have read and accepted the general terms and conditions.</span>
+            </label>
+            <div class="loader-btn" >
+                <vbet-loader class="small-progress" ng-show="busy"></vbet-loader>
+                <input ng-click="showFieldsValidation = true" class="facebook-register complete-{{(fbsignupform.$error.required|count)+(fbsignupform.$error.match|count)+(fbsignupform.$error.pattern|count)}}" name="" type="submit" value="{{(fbLoggedIn ? 'Continue' :'Register')|translate}}" ng-disabled="busy || (((fbsignupform.$error.required|count)+(fbsignupform.$error.match|count)+(fbsignupform.$error.pattern|count))>0 && showFieldsValidation)" ng-class="{loading:busy}" trans>
+            </div>
+        </div>
+    </form>
+</div>
+
+
+    <div class="registration-ok" ng-show="registrationComplete">
+        <p>
+            <span trans>Registration complete.</span><br><br>
+            <!--<span trans ng-show="conf.registration.mailIsSentAfterRegistration">Please check your email.</span>-->
+            <span trans>Start playing now.</span><br>
+            <span trans>You have</span> <span>{{ profile.calculatedBalance|number:conf.balanceFractionSize }}&nbsp;{{ profile.currency_name|currency }}</span>
+        </p>
+    </div>
+    <div class="registration-failed" ng-show="registrationFailed">
+        <p class="error">
+            <span trans>Registration failed due to technical error.</span>
+            <span> {{registrationFailed}}. </span>
+            <span trans>Please try again later.</span>
+        </p>
+        <button class="registration-done-btn" ng-click="closeRegistrationResult()" trans>OK</button>
+    </div>
+
+
+
+
+</div>

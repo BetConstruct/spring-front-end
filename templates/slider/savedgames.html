@@ -1,0 +1,118 @@
+<!--savegames-->
+<div class="save-games-contain" ng-show="env.sliderContent === 'savedGames'" ng-controller="myGamesCtrl" ng-if="conf.sportSavedGamesEnabled" watch-resize>
+    <div class="my-games-save">
+        <div class="games-save-slider" >
+            <div class="arrow-left-s" ng-show="offset > 0"><a ng-click="slide('left')">left-arrow</a></div>
+            <div class="arrow-right-s" ng-show="offset < allGamesCount - gamesToShow"><a ng-click="slide('right')">right-arrow</a></div>
+            <ul ng-show="games.length > 0">
+                <li ng-repeat="game in games track by game.id" ng-click="gotoGame(game)" ng-class="{'first': $first, 'last': $last}">
+                    <div class="game-status" ng-class="{'game-status-live': game.type === 1}">
+                        <div class="type-rezult-won" ng-show="game.type === 1" trans>LIVE NOW!</div>
+                        <div class="type-rezult" title="{{ game.start_ts| formatDate:null:null:env.timeFormat}}" ng-class="{'prematch': game.type !== 1}">{{ game.start_ts| formatDate:null:null:env.timeFormat}}</div>
+                        <div class="type-game" title="{{ game.sport.name }}">
+                            <!--<div class="mini-icon-1"></div>-->
+                            {{ game.sport.name }}
+                        </div>
+                        <div class="icon-delete"><a ng-click="removeFavoriteGame(game); $event.stopPropagation();" class="my-game-remove-btn">delete</a></div>
+                    </div>
+                    <!-- if live game, show this template -->
+                    <div ng-show="game.type === 1">
+                        <div class="teams" ng-class="{'racing': game.sport.alias === 'HorseRacing'}">
+                            <div class="team-1">
+                                <div class="score">{{ game.info.score1 }}</div>
+                                <div class="name" title="{{game.team1_name}}"><span>{{ game.team1_name }}</span></div>
+                            </div>
+                            <div class="team-2">
+                                <div class="score">{{ game.info.score2 }}</div>
+                                <div class="name" title="{{game.team2_name}}"><span>{{ game.team2_name }}</span></div>
+                            </div>
+                        </div>
+                        <div class="additional-info" ng-class="{'no-logo': !(game.info.extra.team1icon && !game.info.extra.team2icon)}">
+                            <div class="logo-team-1"><div ng-show="game.info.extra.team1icon"><img ng-src="{{ game.info.extra.team1icon}}"></div></div>
+                            <div class="details"> {{(game.info.current_game_state|convertSetName:game.sport.alias|translate)}} <span ng-if="game.sport.alias === 'Soccer'">{{ game.info.current_game_time }}</span></div>
+                            <div class="logo-team-2"><div ng-show="game.info.extra.team2icon"><img ng-src="{{ game.info.extra.team2icon}}"></div></div>
+                        </div>
+                        <div class="save-games-stats" ng-if="game.sport.alias !== 'Soccer' && game.sport.alias !== 'HorseRacing'">
+                            <table class="cash-game">
+                                <tr>
+                                    <th ng-if="game.sport.alias !== 'Basketball'" trans>Set</th>
+                                    <th ng-if="game.sport.alias === 'Basketball'" trans>Quarter</th>
+                                    <th ng-repeat="set_num in framesCount(game.stats)" ng-class="{'active-set': game.info.current_game_state == 'set'+set_num }">{{set_num}}</th>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td ng-repeat="set_num in framesCount(game.stats)" ng-class="{'active-cash':game.info.current_game_state == 'set' + set_num,'winner':isSetWinner(game.stats['score_set' + set_num],1)}">
+                                        {{ game.stats['score_set' + set_num].team1_value ? game.stats['score_set' + set_num].team1_value : 0}}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td ng-repeat="set_num in framesCount(game.stats)" ng-class="{'active-cash':game.info.current_game_state == 'set' + set_num,'winner':isSetWinner(game.stats['score_set' + set_num],2)}">
+                                        {{ game.stats['score_set' + set_num].team2_value ? game.stats['score_set' + set_num].team2_value : 0}}
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div ng-if="game.sport.alias === 'Soccer'" class="save-soccer-stats">
+                            <div class="tl-container">
+                                <soccertimeline ng-class="{'tl-80': game.last_event.match_length === '80', 'extra': isExtraTime(game.info)}"></soccertimeline>
+                                <div class="tl-new">
+                                    <div class="current-time" ng-style="game.tlCurrentMinute"></div>
+                                    <div ng-repeat="tlEvent in game.tlEvents" ng-style="tlEvent.timeline_position" class="{{tlEvent.team + '-' + tlEvent.type}}">
+                                        <div class="{{tlEvent.type}}"></div>
+                                        <div class="tl-details" ng-style="">{{tlEvent.details.type|capitalise|translate}} {{tlEvent.details.add_info}}</div>
+                                    </div>
+
+                                    <div class="tl-info" ng-style="game.tlCurrentPosition">
+                                        <div class="hover-sp">
+                                            <div class="football-gamer-name" ng-repeat="gameEvent in game.live_events|orderBy:'add_info_order':true">
+                                                <div ng-class="gameEvent.event_type+'-icon'" class="{{gameEvent.event_icon}}"></div>
+                                                <span ng-class="gameEvent.team">
+                                                    <tshirt shirt="{{ game.info['shirt'+ gameEvent.team.slice(-1) + '_color'] }}" shorts="{{ game.info['short'+ gameEvent.team.slice(-1) + '_color'] }}"></tshirt>
+                                                </span>
+                                                <p>{{gameEvent.event_type.replace('_', ' ')|capitalise|translate}} {{ gameEvent.add_info }} {{game[gameEvent.team + '_name']}}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="save-horseracing-stats" ng-if="game.sport.alias === 'HorseRacing'">                         
+                            <table>
+                                <tr>
+                                    <td trans>Time</td>
+                                    <td trans>Prize</td>
+                                    <td trans>Distance</td>
+                                    <td trans>Surface</td>
+                                </tr>
+                                <tr>
+                                    <td>{{ game.start_ts| formatDate: "LT"}}</td>
+                                    <td>{{game.info.race.prize}}</td>
+                                    <td>{{game.info.race.distance}}</td>
+                                    <td>{{game.info.race.track_type}}</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                    <div ng-show="game.type !== 1" class="pre-match">
+                        <div class="teams">
+                            <div class="team-1">
+                                <div class="name" title="{{game.team1_name}}"><span>{{ game.team1_name }}</span></div>
+                            </div>
+                            <div class="team-2">
+                                <div class="name" title="{{game.team2_name}}"><span>{{ game.team2_name }}</span></div>
+                            </div>
+                        </div>
+                        <div class="additional-info" ng-class="{'no-logo': !(game.info.extra.team1icon && game.info.extra.team2icon)}">
+                            <div class="logo-team-1"><div ng-show="game.info.extra.team1icon"><img ng-src="{{ game.info.extra.team1icon}}"></div></div>
+                            <div class="logo-team-2"><div ng-show="game.info.extra.team2icon"><img ng-src="{{ game.info.extra.team2icon}}"></div></div>
+                            <div class="details"><span trans>Game start:</span><br /><b>{{ game.start_ts| formatDate}}</b></div>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+            <div class="dont-games-block" ng-show=" games.length === 0"><p trans>You don't have favourite games. To add some, click the star icon near the game name.</p></div>
+        </div>
+    </div>
+</div>
+<!--savegames END-->

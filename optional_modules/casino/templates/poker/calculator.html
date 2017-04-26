@@ -1,0 +1,38 @@
+<div class="block-meny-news" ng-controller="pokerLeaderBoardCtrl">
+<div class="block-centr-calc">
+	<h1 trans>Points Calculator</h1>
+	<div class="poker-calc">
+    	<div class="form-calc-poker">
+            <ul>
+                <li>
+                    <label for="buyin" trans>Buy-in</label>
+                    <div class="select-block">
+                    	<select id="buyin" ng-options="buyIn.value as buyIn.name for buyIn in leaderBoardFormData.buyIns" ng-model="leaderBoardFormData.buyIn" ng-change="calculateLeaderBoard()"></select>
+                    </div>
+                </li>
+            
+                <li>
+                	<label for="entrants" trans>Entrants</label>
+                	<input id="entrants" ng-model="leaderBoardFormData.entrants" ng-change="calculateLeaderBoard()">
+               	</li>
+            
+                <li>
+                    <label for="position" trans>Position</label>
+                    <input id="position" ng-model="leaderBoardFormData.position" ng-change="calculateLeaderBoard()">
+                </li>
+            
+                <li class="calc-result">
+                    <label for="points" trans>Points</label>
+                    <input id="points" ng-model="leaderBoardFormData.points" readonly="readonly">
+                </li>
+            </ul>	
+        </div>
+        <div class="formula-icon"></div>
+        
+    </div>
+
+
+</div>
+
+
+</div>

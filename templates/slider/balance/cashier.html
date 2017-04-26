@@ -1,0 +1,243 @@
+<div class="new-wallet-slider-page-j" ng-controller="cashierCtrl" ng-init="initCashier();" ng-if="conf.transferEnabled && conf.enableNewCashier">
+
+    <ul class="your-currency-j-and-refresh-balances-j">
+        <li class="your-currency-j"><span trans>Your currency is</span> <span> {{profile.currency_name|currency}}</span></li>
+        <!--<li><a href="" class="refresh-balances-j">Refresh balances</a></li>-->
+    </ul>
+    <div class="wallet-boxes-j-global">
+        <div class="wallet-box-j balance has-button-j-if">
+            <h4 trans>Balance</h4>
+            <div class="main-cont-j-wall resilts-table-j-wall-set">
+                <ul class="j-table-replace-button">
+                    <li><span trans>Total</span> {{(profile.calculatedBalance + (casinoEnabled ? (conf.GmsPlatformMultipleBalance ? profile.casino_balance : casinoBalance.balance) : 0) )|number:conf.balanceFractionSize:(conf.GmsPlatformMultipleBalance ? profile.casino_balance : casinoBalance.balance):profile.balance:(conf.GmsPlatformMultipleBalance ? profile.casino_balance : casinoBalance.balance)}}</li>
+                    <li><span trans>Main</span> {{profile.calculatedBalance|number:conf.balanceFractionSize}}</li>
+                    <li><span trans>Casino</span> {{(conf.GmsPlatformMultipleBalance ? profile.casino_balance : casinoBalance.balance)|number:conf.balanceFractionSize}}</li>
+                </ul>
+            </div>
+            <div class="j-wall-set-button-ciont two-buttons-j">
+                    <button class="colorful-j" ng-show="!conf.disableDepositPage"  ng-click="env.sliderContent = 'deposit'"   title="If your balance less, top up your balance now." trans>Deposit</button>
+                    <button class="skin-j"     ng-show="!conf.disableWithdrawPage"  ng-click="env.sliderContent = 'withdraw'"  trans>Withdraw</button>
+
+            </div>
+        </div>
+        <div class="wallet-box-j transfer has-button-j-if">
+            <h4 trans>Transfer</h4>
+            <div class="main-cont-j-wall">
+                <label>
+                    <span class="select-title-j" trans>From</span>
+                    <div class="select-box-j">
+                        <select ng-model="cashierFormModel.fromProduct" ng-change="changeCashierFormModelFromProduct(cashierFormModel.fromProduct)">
+                            <option value="Casino" ng-if="casinoEnabled" trans>Casino - Poker</option>
+                            <option value="Sport" trans>Main</option>
+                        </select>
+                    </div>
+                </label>
+                <label>
+                    <span class="select-title-j" trans>To</span>
+                    <div class="select-box-j">
+                        <select ng-model="cashierFormModel.toProduct">
+                            <option value="Casino" ng-if="casinoEnabled" ng-show="cashierFormModel.fromProduct !== 'Casino'" trans>Casino - Poker</option>
+                            <option value="Sport" ng-show="cashierFormModel.fromProduct !== 'Sport'" trans>Main</option>
+                        </select>
+                    </div>
+                </label>
+                <div class="money-plus-button-j-table">
+	                <label>
+	                    <span class="select-title-j" trans>Amount</span>
+	                    <input name="amount" type="number" numpad numpad-force placeholder="Enter" min="{{transferMinLimit}}" fix-input-number
+	                           max="{{({'Sport': profile.calculatedBalance, 'Casino': (conf.GmsPlatformMultipleBalance ? profile.casino_balance : casinoBalance.balance), 'Poker': (conf.GmsPlatformMultipleBalance ? profile.casino_balance : casinoBalance.balance)}[cashierFormModel.fromProduct])}}"
+	                           autocomplete="off" ng-model="cashierFormModel.amount" required="required" step="{{transferMinLimit}}"
+	                           trans>
+	                </label>
+	                <div class="cashier-button superbet">
+	                    <button type="button" ng-disabled="transferInProgress || cashierFormModel.fromProduct === cashierFormModel.toProduct" ng-click="getMaxTransferAmount()" trans>Max</button>
+	                </div>
+                </div>
+            </div>
+            <div class="j-wall-set-button-ciont">
+                <button disabled="true" ng-disabled=" !cashierFormModel.amount || cashierForm.amount.$invalid || transferInProgress || cashierFormModel.fromProduct === cashierFormModel.toProduct" ng-click="transfer()">
+                    <span trans ng-show="!transferInProgress">Transfer</span>
+                    <span trans ng-show="transferInProgress">Wait...</span>
+                </button>
+            </div>
+        </div>
+        <div class="wallet-box-j bonus" ng-if="!conf.enableToWinInfoInWallet && conf.enableBonusSectionInWallet">
+            <h4 trans>Bonus</h4>
+            <div class="main-cont-j-wall resilts-table-j-wall-set">
+                <ul class="j-table-replace-button">
+                    <li><span trans>Total</span>{{(profile.calculatedBonus + env.casinoBalance.bonus)|number:conf.balanceFractionSize}}</li>
+                    <li><span trans>Main</span> {{(profile.calculatedBonus)|number:conf.balanceFractionSize}} <button class="skin-j" ng-show="conf.enableBonusCancellation && profile.bonus_balance" ng-click="cancelBonus('Sport');" trans>Cancel</button> </li>
+                    <li><span trans>Casino</span> {{(env.casinoBalance.bonus || env.casinoBalance.bonus_balance)|number:conf.balanceFractionSize}} <button class="skin-j" ng-show="conf.enableBonusCancellation && (env.casinoBalance.bonus || env.casinoBalance.bonus_balance)" ng-click="cancelBonus('Casino');">Cancel</button> </li>
+                </ul>
+            </div>
+            <!--<div class="j-wall-set-button-ciont">-->
+                <!--<button class="skin-j">Cancel all bonuses</button>-->
+            <!--</div>-->
+        </div>
+        <div class="wallet-box-j points" ng-if="!conf.enableToWinInfoInWallet && conf.enablePointsSectionInWallet">
+            <h4 trans>Points</h4>
+            <div class="main-cont-j-wall resilts-table-j-wall-set">
+                <ul class="j-table-replace-button">
+                    <li><span trans>Total</span> {{(profile.points_balance + env.casinoBalance.points_balance)|number:4}}</li>
+                    <li ng-if="profile.points_balance!==undefined && profile.points_balance!==null && conf.showPointsBalance"><span trans>Main</span> {{profile.points_balance}} <!--<button trans ng-show="conf.pointsShopEnabled">Go to shop</button>-->  </li>
+                    <li><span trans>Casino</span> {{env.casinoBalance.points_balance}} <!--<button trans ng-show="conf.pointsShopEnabled">Go to shop</button>--></li>
+                </ul>
+            </div>
+        </div>
+
+        <!--<div class="wallet-box-j pool-betting-points" ng-if="conf.enableToWinInfoInWallet">
+            <h4 trans>Pool Betting</h4>
+            <div class="main-cont-j-wall resilts-table-j-wall-set">
+                <div class="bold-promo-text-j" trans>Use points to win</div>
+                <div class="light-promo-text-j"><span trans>Jackpot</span><div>{{(poolBettingJackpot * (poolBettingCurrency.toto_rate || 1))|number: 0 + Math.abs(poolBettingCurrency.rounding) }} <span> {{poolBettingCurrency.name}}</span></div></div>
+                <ul class="j-table-replace-button">
+                    <li><span trans>Points</span>{{ profile.points_balance }}</li>
+                </ul>
+            </div>
+            <div class="j-wall-set-button-ciont">
+                <a ng-href="{{ $location.path() !== '/poolbetting/' ? '#/poolbetting' : '' }}" ng-click="closeSlider();" trans>Use Points</a>
+            </div>
+        </div>-->
+        <!--<div class="wallet-box-j casino-bonus" ng-if="conf.enableToWinInfoInWallet">
+            <h4 trans>Casino</h4>
+            <div class="main-cont-j-wall resilts-table-j-wall-set">
+                <div class="light-promo-text-j point-texts-j"><p trans>Points left</p><span>{{(18000 - env.casinoBalance.points_balance)|number:0 }}</span></div>
+                <div class="bold-promo-text-j" trans>To win iphone 6</div>
+                <ul class="j-table-replace-button">
+                    <li><span trans>Points</span>{{ env.casinoBalance.points_balance }}</li>
+                </ul>
+            </div>
+            <div class="j-wall-set-button-ciont">
+                <a ng-href="{{ $location.path() !== '/casino/' ? '#/casino' : '' }}" ng-click="closeSlider();" trans>Play games</a>
+            </div>
+        </div>-->
+
+    </div>
+</div>
+
+<div class="register deposit" ng-controller="cashierCtrl" ng-init="!conf.GmsPlatform && initCashier();" ng-if="conf.transferEnabled && !conf.enableNewCashier">
+
+    <div class="casier-volute-name">
+        <h4>
+            <span trans>Your currency is</span> <span>{{profile.currency_name|currency}}</span>
+        </h4>
+    </div>
+
+    <div class="form-sign-in cashier">
+        <div class="form-cashier">
+            <form autocomplete="off" name="cashierForm" id="cashierForm">
+                <div class="contain-cashier-forms">
+                    <label trans>From</label>
+
+                    <div class="select-block">
+                        <select ng-model="cashierFormModel.fromProduct" ng-change="changeCashierFormModelFromProduct(cashierFormModel.fromProduct)">
+                            <option value="Casino" ng-if="casinoEnabled || conf.pokerEnabled" trans>Casino - Poker</option>
+                            <option value="Sport" trans>Main</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="contain-cashier-forms">
+                    <label trans>To</label>
+
+                    <div class="select-block">
+                        <select ng-model="cashierFormModel.toProduct">
+                            <option value="Casino" ng-if="casinoEnabled || conf.pokerEnabled" ng-show="cashierFormModel.fromProduct !== 'Casino' || cashierFormModel.fromProduct !== 'Poker'" trans>Casino - Poker</option>
+                            <option value="Sport" ng-show="cashierFormModel.fromProduct !== 'Sport'" trans>Main</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="contain-cashier-forms">
+                    <label trans>Amount</label>
+                    <input name="amount" type="number" numpad numpad-force placeholder="Enter" min="{{transferMinLimit}}" fix-input-number
+                           max="{{({'Sport': profile.calculatedBalance, 'Casino': (conf.GmsPlatformMultipleBalance ? profile.casino_balance : casinoBalance.balance), 'Poker': (conf.GmsPlatformMultipleBalance ? profile.casino_balance : casinoBalance.balance)}[cashierFormModel.fromProduct])}}"
+                           autocomplete="off" ng-model="cashierFormModel.amount" required="required" step="{{transferMinLimit}}"
+                           trans>
+                </div>
+
+                <div class="cashier-button">
+                    <button disabled="true" ng-disabled="cashierForm.amount.$invalid || transferInProgress || cashierFormModel.fromProduct === cashierFormModel.toProduct" ng-click="transfer()">
+                        <span trans ng-show="!transferInProgress">Transfer</span>
+                        <span trans ng-show="transferInProgress">Wait...</span>
+                    </button>
+                </div>
+
+                <div class="cashier-button superbet">
+                    <button type="button" ng-disabled="transferInProgress || cashierFormModel.fromProduct === cashierFormModel.toProduct" ng-click="getMaxTransferAmount()">
+                        <span trans>Max</span>
+                    </button>
+                </div>
+
+            </form>
+        </div>
+    </div>
+
+
+
+    <div class="table-status wallet">
+        <table>
+            <tr>
+                <th colspan="3"><p trans>Main</p></th>
+            </tr>
+            <tr>
+                <td><p trans>Balance</p></td>
+                <td><p>{{profile.calculatedBalance|number:conf.balanceFractionSize}}</p></td>
+                <td>
+                    <div class="cancel-btn red">
+                        <button ng-show="!conf.disableDepositPage"   ng-click="env.sliderContent = 'deposit'" title="If your balance less, top up your balance now." trans>Deposit</button>
+                    </div>
+                </td>
+            </tr>
+            <tr ng-if="profile.points_balance!==undefined && profile.points_balance!==null && conf.showPointsBalance">
+                <td><p trans>Points</p></td>
+                <td><p>{{profile.points_balance}}</p></td>
+                <td><div class="cancel-btn"><button trans ng-show="conf.pointsShopEnabled">Go to shop</button></div></td>
+            </tr>
+            <tr ng-if="profile.bonus_balance">
+                <td><p trans>Main Bonus</p></td>
+                <td><p>{{(profile.calculatedBonus)|number:conf.balanceFractionSize}}</p></td>
+                <td><div class="cancel-btn"><button ng-show="conf.enableBonusCancellation" ng-click="cancelBonus('Sport');" trans>Cancel</button></div></td>
+            </tr>
+        </table>
+    </div>
+    <div class="table-status wallet" ng-show="casinoEnabled || conf.pokerEnabled">
+        <table>
+            <tr>
+                <th colspan="3"><p trans>Casino</p></th>
+            </tr>
+            <tr>
+                <td><p trans>Balance</p></td>
+                <td><p>{{(conf.GmsPlatformMultipleBalance ? profile.casino_balance : casinoBalance.balance)|number:conf.balanceFractionSize}}</p></td>
+                <td>
+                    <div class="cancel-btn red">
+                        <button ng-show="!conf.disableDepositPage" ng-click="env.sliderContent = 'deposit'" title="If your balance less, top up your balance now." trans>Deposit</button>
+                    </div>
+                </td>
+            </tr>
+            <tr ng-if="env.casinoBalance.points_balance && conf.showPointsBalance">
+                <td><p trans>Points</p></td>
+                <td><p>{{env.casinoBalance.points_balance}}</p></td>
+                <td><div class="cancel-btn"><button trans ng-show="conf.pointsShopEnabled">Go to shop</button></div></td>
+            </tr>
+            <tr ng-if="env.casinoBalance.bonus || env.casinoBalance.bonus_balance">
+                <td><p trans>Casino Bonus</p></td>
+                <td><p>{{(env.casinoBalance.bonus || env.casinoBalance.bonus_balance)|number:conf.balanceFractionSize}}</p></td>
+                <td><div class="cancel-btn"><button ng-show="conf.enableBonusCancellation" ng-click="cancelBonus('Casino');">Cancel</button></div></td>
+            </tr>
+        </table>
+
+    </div>
+
+    <div class="table-status wallet" ng-show="casinoEnabled || conf.pokerEnabled">
+        <table>
+            <tr>
+                <th colspan="3"><p trans>Total</p></th>
+            </tr>
+            <tr>
+                <td><p trans>Balance</p></td>
+                <td><p>{{(profile.calculatedBalance + (casinoEnabled ? (conf.GmsPlatformMultipleBalance ? profile.casino_balance : casinoBalance.balance) : 0) )|number:conf.balanceFractionSize:(conf.GmsPlatformMultipleBalance ? profile.casino_balance : casinoBalance.balance):profile.balance:(conf.GmsPlatformMultipleBalance ? profile.casino_balance : casinoBalance.balance)}}</p></td>
+                <td>&nbsp;</td>
+            </tr>
+        </table>
+    </div>
+</div>

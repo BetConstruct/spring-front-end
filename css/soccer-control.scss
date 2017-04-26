@@ -1,0 +1,2568 @@
+/* Reset style */
+
+//html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, font, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, b, u, i, center, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td {margin: 0;padding: 0;border: 0;outline: 0; font-size: 100%;vertical-align: baseline;background: transparent;}body {line-height: 1;}ol, ul {list-style: none;}blockquote, q {quotes: none;}blockquote:before, blockquote:after, q:before, q:after {content: '';content: none;color: #FFF;font: 14px Arial, Helvetica, sans-serif;}:focus {outline: 0;}ins {text-decoration: none;}del {text-decoration: line-through;}table {border-collapse: collapse;border-spacing: 0;}
+
+/* --------------------------------------------------------------------------------------------------- */
+
+
+/* the container of control */
+
+
+/* .wrapper {
+	width: 349px;		
+	margin:30px auto 0;	
+} */
+
+
+/* helper dropdown control with game events, used only for test */
+
+
+/* .select_event{
+	text-shadow: 1px 1px rgba(255, 255, 255, 0.73);
+	background: #B6D7FC;
+	padding-left: 10px;
+	line-height: 41px;
+} */
+
+
+/* Soccer games control 
+	--------------------------------------------------------------------------------------------------*/
+
+.game-control {
+	margin: 21px 6px 0;
+	font-size: 14px;
+	/* Team names and score info header part 
+		----------------------------------------------------------------------------*/
+	.scoreboard {
+		overflow: hidden;
+		padding: 0.5em 0;
+		.team1,
+		.team2 {
+			float: left;
+			width: 50%;
+			line-height: 2.2em;
+			font-size: 1.2em;
+		}
+		.name {
+			width: calc(100% - 2em);
+			overflow: hidden;
+			text-overflow: ellipsis;
+			white-space: nowrap;
+		}
+		.score {
+			width: 1.5em;
+			height: 2.2em;
+			background: #ccc;
+			text-align: center;
+		}
+		.team1 {
+			.name {
+				text-align: left;
+			}
+			.score {
+				float: right;
+				margin-right: 0.25em;
+			}
+		}
+		.team2 {
+			.name {
+				text-align: right;
+			}
+			.score {
+				float: left;
+				margin-left: 0.25em;
+			}
+		}
+		.details {
+			text-align: center;
+		}
+	}
+	/* statistics on bottom of field 
+		----------------------------------------------------------------------------------------------*/
+	.statistics-toggle {
+		background: #2F3613;
+		color: #fff;
+		height: 57px;
+		.right-block-flash-soccer & {
+			margin: 2px -5px 0;
+		}
+		button {
+			display: block;
+			width: 40px;
+			height: 20px;
+			margin: 0 auto;
+			background: #fff;
+			border: 1px solid #ccc;
+			border-bottom: 0 none;
+			position: relative;
+			top: 1px;
+			cursor: pointer;
+			&:focus {
+				outline: none;
+			}
+			&:after {
+				content: "";
+				position: absolute;
+				top: 7px;
+				left: 13px;
+				width: 0;
+				height: 0;
+				border-width: 6px;
+				border-style: solid;
+				border-color: #666 transparent transparent;
+			}
+		}
+	}
+	.game-statistics {
+		overflow: hidden;
+		margin: 0 0.3em;
+		&.hidden {
+			display: none;
+		}
+		li {
+			float: left;
+			width: (100%/3 - 2%);
+			/*divide width depending on number of statistics in a row , for tennis number = 2, for soccer 3*/
+			margin: 0.3em 0;
+			margin-right: 2.9%;
+			&:nth-child(3n) {
+				/* number 3 is number of statistics in the row*/
+				margin-right: 0;
+			}
+			.title {
+				margin-bottom: 0.3em;
+				font-size: 8px;
+				color: #fff;
+				text-align: center;
+				text-transform: uppercase;
+				text-overflow: ellipsis;
+				white-space: nowrap;
+				overflow: hidden;
+			}
+			.stat-l,
+			.stat-r {
+				float: left;
+				width: 12%;
+				font-size: 9px;
+				line-height: 0.5em;
+			}
+			.stat-r {
+				text-align: right;
+			}
+			.team-2 {
+				float: left;
+				width: 76%;
+				height: 0.3em;
+				background: #f00;
+				box-shadow: 0px 0px 3px 0px rgba(117, 117, 117, 1);
+				.team-1 {
+					width: 50%;
+					height: 0.3em;
+					background: #ccc;
+				}
+			}
+			&.persent {
+				.team-2 {
+					background: transparent;
+					position: relative;
+					.team-1 {
+						width: 0;
+						float: left;
+					}
+					.t2-persent {
+						float: right;
+						height: 0.3em;
+					}
+					.sep {
+						position: absolute;
+						left: 50%;
+						height: 0.3em;
+						width: 1px;
+						background: rgba(255, 255, 255, 0.3);
+					}
+				}
+			}
+		}
+	}
+	/* Field container with animated controls
+		--------------------------------------------------------------------------------------------*/
+	.field-container {
+		.game-team-names {
+			overflow: hidden;
+			margin: 0 10px;
+			li {
+				float: left;
+				width: 48%;
+				line-height: 35px;
+				overflow: hidden;
+				text-overflow: ellipsis;
+				white-space: nowrap;
+				color: #fff;
+				&:last-child {
+					text-align: right;
+					float: right;
+				}
+			}
+		}
+		.field {
+			position: relative;
+			margin: 0 auto;
+			width: 338px;
+			height: 100px;
+			background: url("../../../images/animation/ssoccer1.png#{$delete-cache}") no-repeat center center;
+			background-size: contain;
+			img {
+				width: 100%;
+			}
+			.gate-l {
+				position: absolute;
+				left: 1%;
+				width: 31px;
+				height: 54px;
+				background: url("../../../images/animation/gate_passive-l.png#{$delete-cache}") no-repeat top left;
+			}
+			.gate-r {
+				position: absolute;
+				left: 89%;
+				width: 31px;
+				height: 54px;
+				background: url("../../../images/animation/gate_passive.png#{$delete-cache}") no-repeat top left;
+			}
+		}
+		&.tl-hide {
+			.game-team-names {
+				display: block;
+			}
+			.timeline {
+				display: none;
+			}
+			.field {
+				margin: 5px auto 5px;
+			}
+		}
+	}
+}
+
+/*--- Timeline styles ---*/
+
+.timeline {
+	position: relative;
+	height: 42px;
+	background: url("../../../images/animation/soccer-timeline.png#{$delete-cache}") no-repeat 0 19px;
+	margin: 0 auto;
+	.tl_event {
+		position: absolute;
+	}
+	svg {
+		position: absolute;
+		top: 4px;
+		width: 10px;
+		height: 10px;
+	}
+	.current-time {
+		position: absolute;
+		bottom: 14px;
+		height: 2px;
+		width: 0;
+		background: #fff;
+	}
+}
+
+/* Timeline icons */
+
+.tl-corner {
+	position: absolute;
+	/*top: 12px;*/
+	overflow: hidden;
+	width: 10px;
+	height: 10px;
+	border-bottom: 1px solid #fff;
+	border-left: 1px solid #fff;
+	transform: scale(0.65);
+	box-shadow: -1px 1px 0 #000;
+	z-index: 5;
+	&:after {
+		content: "";
+		top: 4px;
+		left: -6px;
+		width: 10px;
+		height: 10px;
+		border-radius: 50%;
+		position: absolute;
+		border: 1px solid #fff;
+		box-shadow: inset 0px 1px 0 #000;
+	}
+}
+.tl-yellow_card {
+	position: absolute;
+	/*top: 14px;
+	left:2px;*/
+	width: 0.4em;
+	height: 0.588em;
+	border-radius: 20%;
+	background: #fc0;
+}
+.tl-red_card {
+	position: absolute;
+	/*top: 14px;
+	left:2px;*/
+	width: 0.4em;
+	height: 0.588em;
+	border-radius: 20%;
+	background: #f00;
+}
+.tl-goal {
+	opacity: 1;
+	position: absolute;
+	/*top:14px;
+	left:0;*/
+	width: 7px;
+	height: 7px;
+	background-color: #fff;
+	background-image: url("../../../images/animation/soccer-ball-bg.png#{$delete-cache}");
+	background-size: 80%;
+	background-position: 108% 35%;
+	border-radius: 50%;
+	box-shadow: 2px 5px 1px rgba(0, 0, 0, 0.3), inset 1px -2px 2px rgba(0, 0, 0, 0.57)
+}
+.tl-exchange {
+	position: absolute;
+	/*top:10px;
+	left:-5px;*/
+	width: 18px;
+	height: 12px;
+	background-image: url("../../../images/animation/tl-exchange.png#{$delete-cache}");
+}
+.tl-container {
+	position: relative;
+	float: left;
+	width: 100%;
+	//background: url("../../../images/animation/soccer-tl.png#{$delete-cache}") no-repeat 0 4px;
+	&.no-video-flash {
+		width: 680px;
+		//background: url("../../../images/animation/soccer-tl-2x.png#{$delete-cache}") no-repeat 0 4px;
+		&.extra-time {
+			//background: url("../../../images/animation/soccer-tl-extra-2x.png#{$delete-cache}") no-repeat 0 4px;
+		}
+	}
+	&.extra-time {
+		//background: url("../../../images/animation/soccer-tl-extra.png#{$delete-cache}") no-repeat 0 4px;
+	}
+}
+.tl-new {
+	@extend .timeline;
+	width: 97%; //calc(100% - 11px);
+	background: none;
+	margin-left: 0;
+	svg {
+		position: static;
+		width: auto;
+		height: auto;
+	}
+	.team2-tl-corner {
+		top: 36px;
+	}
+	.team2-tl-yellow_card,
+	.team2-tl-red_card {
+		top: 36px;
+	}
+	.team2-tl-goal {
+		top: 30px;
+	}
+	.team2-tl-exchange {
+		top: 32px;
+	}
+	.team1-tl-corner {
+		top: 12px;
+	}
+	.team1-tl-yellow_card,
+	.team1-tl-red_card {
+		top: 9px;
+	}
+	.team1-tl-goal {
+		top: 8px;
+	}
+	.tl-corner {
+		transform: scale(0.8);
+		//top:5px;
+	}
+	.tl-yellow_card {
+		//top: 6px;
+		width: 10px;
+		height: 12px;
+		border-radius: 0;
+	}
+	.tl-red_card {
+		//top: 6px;
+		width: 10px;
+		height: 12px;
+		border-radius: 0;
+	}
+	.tl-goal {
+		//top: 15px;
+		left: -5px;
+		width: 13px;
+		height: 13px;
+		background: url("../../../images/animation/s_ball.png#{$delete-cache}") no-repeat;
+		background-size: 16px;
+		background-position: 0 0;
+		opacity: 1;
+		box-shadow: 0 0px 1px rgba(255, 255, 255, 0.5), inset 0 0 1px rgba(0, 0, 0, 0.5);
+	}
+	.current-time {
+		bottom: 2px;
+		height: 24px;
+		background: rgba(255, 152, 0, 0.5);
+		//border-right: 1px solid rgb(255,213,0);		
+	}
+	.tl-info {
+		position: absolute;
+		top: 20px;
+		margin-left: -9px;
+		background: url("../../../images/animation/stats_tl.png#{$delete-cache}") no-repeat;
+		width: 17px;
+		height: 37px;
+		&:hover .hover-sp {
+			left: -10px;
+			height: 200px;
+			overflow: hidden;
+			overflow-y: auto;
+		}
+		.football-gamer-name p {
+			text-transform: capitalize;
+		}
+	}
+	.tl-details {
+		bottom: 8px;
+	}
+}
+.tl-details {
+	display: none;
+	position: absolute;
+	/*bottom: -5px;*/
+	margin-left: -20px;
+	padding: 2px 5px;
+	background: #fff;
+	box-shadow: 0 0 5px #000;
+	z-index: 100;
+	white-space: nowrap;
+	vertical-align: bottom;
+	text-transform: capitalize;
+	&:after,
+	&:before {
+		content: '';
+		position: absolute;
+		top: 100%;
+		left: 15px;
+		width: 0;
+		height: 0;
+		border-width: 0.5em;
+		border-style: solid;
+		border-color: #fff transparent transparent transparent;
+	}
+	&:before {
+		border-color: rgba(0, 0, 0, 0.5) transparent transparent transparent;
+		top: calc(100% + 1px);
+	}
+}
+//the timeline event tooltip appears on hover
+.tl-data>div,
+.tl-new>div {
+	&:hover {
+		.tl-details {
+			display: block;
+		}
+	}
+}
+.no-video-flash .tl-new .tl-info:hover .hover-sp.to-right {
+	right: -10px;
+	left: auto;
+}
+
+/* Animated controls 
+-----------------------------------------------------------------------------------------------------*/
+
+.animation-container {
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+}
+.ball {
+	background-color: #fff;
+	background-image: url("../../../images/animation/soccer-ball-bg.png#{$delete-cache}");
+	background-size: 80%;
+	width: 3.5%;
+	height: 11.5%;
+	border-radius: 50%;
+	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4), inset 0 0 5px rgba(0, 0, 0, 1);
+}
+
+/* Corner ball 
+----------------------------*/
+
+.Corner {
+	&.away >div {
+		animation: ball-y-away 1.8s 0.3s infinite cubic-bezier(0, 0, 0.35, 1);
+		.ball {
+			animation: ball-x-away 1.8s 0.3s infinite cubic-bezier(0, 0, 0.65, 1);
+		}
+	}
+	&.home >div {
+		animation: ball-y-home 1.9s 0.3s infinite cubic-bezier(0, 0, 0.35, 1);
+		.ball {
+			position: absolute;
+			right: 0;
+			top: 0;
+			animation: ball-x-home 1.9s 0.3s infinite cubic-bezier(0, 0, 0.65, 1);
+		}
+	}
+	>div {
+		position: absolute;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		transform: translateY(85%);
+	}
+}
+
+/* Yellow/Red Card
+-----------------------*/
+
+.YellowCard.home,
+.RedCard.home {
+	.rotator {
+		left: 25%;
+		animation: rotate 4s infinite ease-in-out;
+		.card {
+			animation: fadeIn 4s infinite ease-in-out; //, rotate 1.1s 1.5s infinite ease-out; 
+		}
+	}
+}
+.YellowCard.away,
+.RedCard.away {
+	.rotator {
+		right: 25%;
+		animation: rotate 4s infinite ease-in-out;
+		.card {
+			animation: fadeIn 4s infinite ease-in-out; //, rotate 1.1s 1.5s infinite ease-out; 
+		}
+	}
+}
+.rotator {
+	backface-visibility: visible;
+	transform-origin: 50% 50%;
+	opacity: 0;
+	position: absolute;
+	top: 30%;
+	width: 7.5%;
+	height: 35%;
+	.card {
+		height: 100%;
+		width: 100%;
+		border-radius: 0.35em;
+		box-shadow: 0 1px 5px rgba(0, 0, 0, 0.5), inset 0 1px 1px rgba(255, 255, 255, 0.5);
+	}
+	.YellowCard & .card {
+		background: #ffeb00;
+	}
+	.RedCard & .card {
+		background: #F00;
+	}
+}
+
+/* Throw in
+--------------------------- */
+
+.ThrowIn {
+	p {
+		position: absolute;
+		top: 18%;
+		width: 80%;
+		margin: 0 10%;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+		text-align: center;
+		color: #fff;
+		opacity: 0;
+		animation: text-slide 1.5s 0.2s 1 ease-out, shadow-pulse 3.5s 1s infinite;
+		animation-fill-mode: forwards;
+	}
+	>div {
+		position: absolute;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		transform: translateY(85%);
+		.ball {
+			position: absolute;
+			transform: translateX(0%);
+		}
+	}
+	&.home >div {
+		animation: ball-throw_home 1.8s 0.3s infinite cubic-bezier(0, 0, 0.35, 1);
+		.ball {
+			left: 40%;
+			animation: throw-in_home 1.8s 0.3s infinite cubic-bezier(0, 0, 0.65, 1);
+		}
+	}
+	&.away >div {
+		animation: ball-throw_away 1.8s 0.3s infinite cubic-bezier(0, 0, 0.35, 1);
+		.ball {
+			left: 50%;
+			animation: throw-in_away 1.8s 0.3s infinite cubic-bezier(0, 0, 0.65, 1);
+		}
+	}
+}
+
+/* Text only animation controls
+------------------------- */
+
+.text-event {
+	position: absolute;
+	top: 27%;
+	left: 25%;
+	width: 50%;
+	height: 50%;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	//	white-space: nowrap;
+	opacity: 0;
+	font-size: 1em;
+	text-align: center;
+	text-shadow: 1px 1px 10px #000;
+	color: #fff;
+	animation: text-slide 1.5s 0.2s 1 ease-out, shadow-pulse 3.5s 1s infinite;
+}
+
+/* Attack 
+---------------------------*/
+
+.Attack,
+.DangerousAttack {
+	.attack-div {
+		position: absolute;
+		background: linear-gradient(90deg, transparent, rgba(255, 0, 0, 1));
+		width: 30%;
+		top: 2%;
+		height: 90%;
+		opacity: 0;
+		.attack-dir {
+			position: absolute;
+			top: 43%;
+			margin-top: -1.5em;
+			width: 0;
+			height: 0;
+			border-width: 1.5em;
+			border-style: solid;
+		}
+	}
+	p {
+		position: absolute;
+		top: 30%;
+		color: #fff;
+		font-size: 1em;
+		text-align: center;
+		width: 30%;
+		margin: 0 35%;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+		opacity: 0;
+	}
+	&.home {
+		.attack-div {
+			top: 2%;
+			left: 10%;
+			transform: skewX(-7deg);
+			background: linear-gradient(90deg, transparent, rgba(255, 0, 0, 1));
+			.attack-dir {
+				left: 99%;
+				border-color: transparent transparent transparent rgba(255, 0, 0, 1);
+			}
+		}
+	}
+	&.away {
+		.attack-div {
+			right: 10%;
+			transform: skewX(6deg);
+			background: linear-gradient(90deg, rgba(255, 0, 0, 1), transparent);
+			.attack-dir {
+				right: 99%;
+				border-color: transparent rgba(255, 0, 0, 1) transparent transparent;
+			}
+		}
+	}
+}
+.Attack {
+	&.home {
+		.attack-div {
+			animation: attack-home 1.3s 1 ease, pulse-attack 2s 1.3s infinite ease; //5 ease, hide-animation 3.3s 9s 1 ease;
+			animation-fill-mode: forwards;
+		}
+		p {
+			animation: move-right 1.3s 1 ease; //, hide-animation 3.3s 10s 1 ease;
+			animation-fill-mode: forwards;
+		}
+	}
+	&.away {
+		.attack-div {
+			animation: attack-away 1.3s 1 ease, pulse-attack 2s 1.3s infinite ease; //5 ease, hide-animation 3.3s 9s 1 ease;
+			animation-fill-mode: forwards;
+		}
+		p {
+			animation: move-left 1.3s 1 ease; //,hide-animation 3.3s 10s 1 ease;
+			animation-fill-mode: forwards;
+		}
+	}
+}
+.DangerousAttack {
+	p {
+		width: 60%;
+		margin: 0 20%;
+	}
+	&.home {
+		.attack-div {
+			animation: dangerous-attack-home 1.3s 1 ease, pulse-attack 2.2s 1.3s infinite ease; //5 ease,hide-animation 3.3s 9s 1 ease;
+			animation-fill-mode: forwards;
+		}
+		p {
+			animation: move-right 1.3s 1 ease; //, hide-animation 3.3s 10s 1 ease;
+			animation-fill-mode: forwards;
+		}
+	}
+	&.away {
+		.attack-div {
+			animation: dangerous-attack-away 1.3s 1 ease, pulse-attack 2.2s 1.3s infinite ease; //5 ease,hide-animation 3.3s 8s 1 ease;
+			animation-fill-mode: forwards;
+		}
+		p {
+			animation: move-left 1.3s 1 ease; //, hide-animation 3.3s 10s 1 ease;;
+			animation-fill-mode: forwards;
+		}
+	}
+}
+
+/* Ball Safe 
+--------------------------*/
+
+.BallSafe {
+	>div {
+		position: absolute;
+		top: 3%;
+		width: 49%;
+		height: 90%;
+		animation: ball-safe 2s ease infinite;
+		div {
+			position: absolute;
+			width: 100%;
+			height: 40%;
+			overflow: hidden;
+			text-overflow: ellipsis;
+			white-space: nowrap;
+			text-align: center;
+			color: #fff;
+			&:first-child {
+				top: 26%;
+			}
+			&:last-child {
+				top: 43%;
+				width: 80%;
+				margin: 0 10%;
+			}
+		}
+	}
+	&.home >div {
+		background: linear-gradient(90deg, transparent, rgba(255, 255, 255, .4));
+		div {
+			&:first-child {
+				animation: ball-safe-down 1s ease 1;
+			}
+			&:last-child {
+				animation: ball-safe-up 1s ease 1;
+			}
+		}
+	}
+	&.away >div {
+		left: 49%;
+		background: linear-gradient(90deg, rgba(255, 255, 255, .4), transparent);
+		div {
+			&:first-child {
+				animation: ball-safe-down 1.5s ease 1;
+			}
+			&:last-child {
+				animation: ball-safe-up 1.5s ease 1;
+			}
+		}
+	}
+}
+
+/* Substitution 
+----------------------------*/
+
+.Substitution {
+	.sub-cont {
+		opacity: 0;
+		position: absolute;
+		width: 1.4em;
+		height: 1.4em;
+		border-radius: 50%;
+		border: 3px solid;
+		border-color: #f00 #f00 #0f0 #0f0;
+		transform: rotate(-45deg);
+		box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5), inset 0px 0px 10px rgba(0, 0, 0, 0.5);
+		animation: substitute 1.5s infinite ease-in-out;
+		animation-fill-mode: forwards;
+		&:before,
+		&:after {
+			content: "";
+			position: absolute;
+			top: -41%;
+			left: -9%;
+			width: 0;
+			height: 0;
+			border-width: 0.5em;
+			border-style: solid;
+			border-color: transparent transparent #0f0 transparent;
+			transform: rotate(45deg);
+		}
+		&:after {
+			top: 69%;
+			left: 41%;
+			border-color: #f00 transparent transparent transparent;
+		}
+	}
+	&.home {
+		.sub-cont {
+			opacity: 1;
+			left: 33%;
+			top: 50%
+		}
+	}
+	&.away {
+		.sub-cont {
+			opacity: 1;
+			right: 33%;
+			top: 50%
+		}
+	}
+}
+
+/* Offside 
+--------------------------*/
+
+.Offside {
+	.line {
+		position: absolute;
+		height: 90%;
+		border-left: 0.11em dashed #fe0;
+		opacity: 0;
+	}
+	.ball {
+		opacity: 0;
+		position: absolute;
+	}
+	p {
+		position: absolute;
+		top: 27%;
+		left: 25%;
+		width: 50%;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+		font-size: 1.2em;
+		text-align: center;
+		text-shadow: 1px 1px 10px #000;
+		color: #fff;
+		opacity: 0;
+		//animation: slideDown 3s 0.2s 1 ease-out, shadow-pulse 3.5s 1s infinite;
+		animation: text-slide 1.5s 0.2s 1 ease-out, shadow-pulse 3.5s 1s infinite;
+	}
+	&.home {
+		.line {
+			right: 30%;
+			transform: skewX(16deg);
+			animation: line-pulse 1.4s infinite ease-in-out;
+		}
+		.ball {
+			animation: ball-offside-home 1.4s infinite ease-out;
+		}
+	}
+	&.away .line {
+		left: 30%;
+		transform: skewX(-14deg);
+		animation: line-pulse 1.4s infinite ease;
+	}
+	.ball {
+		animation: ball-offside-away 1.4s infinite ease-out;
+	}
+}
+
+/* Free kick 
+-------------------*/
+
+.FreeKick {
+	opacity: 0;
+	.ripple {
+		position: absolute;
+		width: 3%;
+		height: 10%;
+		margin: 3%;
+		border-radius: 50%;
+		border: 0.1em solid #fff;
+		animation: ripple-out 1.5s infinite ease;
+		animation-fill-mode: forwards;
+	}
+	.ball {
+		position: absolute;
+		animation: free-kick 1.5s infinite linear;
+		animation-fill-mode: forwards;
+	}
+	.arrow {
+		position: absolute;
+		width: 20%;
+		border-bottom: 0.15em dashed #fff;
+		animation: expand-arrow 3s infinite ease;
+		&:after {
+			position: absolute;
+			top: 50%;
+			margin-top: -0.31em;
+			content: "";
+			width: 0;
+			height: 0;
+			border-width: 0.4em;
+			border-style: solid;
+			border-color: transparent transparent transparent #fff;
+		}
+	}
+	&.home {
+		opacity: 1;
+		.ripple {
+			bottom: 20%; //33%;
+			left: 32%;
+		}
+		.ball {
+			bottom: 31%; //43%;
+			left: 35%;
+		}
+		.arrow {
+			bottom: 34%; //46.5%;
+			left: 37%;
+			transform: rotate(-9deg);
+			transform-origin: 0 0;
+			&:after {
+				left: 100%;
+				border-color: transparent transparent transparent #fff;
+			}
+		}
+	}
+	&.away {
+		opacity: 1;
+		.ripple {
+			bottom: 20%;
+			right: 32%;
+		}
+		.ball {
+			bottom: 31%;
+			right: 35%;
+		}
+		.arrow {
+			bottom: 34%;
+			right: 37%;
+			transform: rotate(9deg);
+			transform-origin: 100% 0;
+			&:after {
+				right: 100%;
+				border-color: transparent #fff transparent transparent;
+			}
+		}
+	}
+}
+
+/* Penalty 
+-------------------------*/
+
+.Penalty {
+	opacity: 0;
+	.ball {
+		position: absolute;
+		animation: penalty-ball 1s infinite linear;
+		box-shadow: 0 4px 3px rgba(0, 0, 0, 0.44), inset 0 0 5px black;
+	}
+	.arrow {
+		position: absolute;
+		width: 10%;
+		border-bottom: 0.18em dashed #fff;
+		animation: penalty-arrow 1.5s infinite ease;
+		&:after {
+			position: absolute;
+			top: 50%;
+			margin-top: -0.31em;
+			content: "";
+			width: 0;
+			height: 0;
+			border-width: 0.4em;
+			border-style: solid;
+		}
+	}
+	&.home {
+		opacity: 1;
+		.ball {
+			left: 19%;
+			top: 30%;
+		}
+		.arrow {
+			top: 38%;
+			left: 22%;
+			transform-origin: 0 0;
+			transform: rotate(180deg);
+			&:after {
+				left: 100%;
+				border-color: transparent transparent transparent #fff;
+			}
+		}
+	}
+	&.away {
+		opacity: 1;
+		.ball {
+			right: 19%;
+			top: 30%;
+		}
+		.arrow {
+			top: 38%;
+			right: 22%;
+			transform-origin: 100% 0;
+			transform: rotate(180deg);
+			&:after {
+				right: 100%;
+				border-color: transparent #fff transparent transparent;
+			}
+		}
+	}
+}
+
+/* Goal kick 
+----------------------------*/
+
+.GoalKick {
+	opacity: 0;
+	.ripple {
+		position: absolute;
+		width: 3%;
+		height: 10%;
+		margin: 3%;
+		border-radius: 50%;
+		border: 0.1em solid #fff;
+		animation: ripple-out 1.5s infinite ease;
+		animation-fill-mode: forwards;
+	}
+	.ball {
+		position: absolute;
+		animation: free-kick 1.5s infinite linear;
+		animation-fill-mode: forwards;
+	}
+	.arrow {
+		position: absolute;
+		width: 20%;
+		border-bottom: 0.15em dashed #fff;
+		animation: expand-arrow 3s infinite ease;
+		&:after {
+			position: absolute;
+			top: 50%;
+			margin-top: -0.31em;
+			content: "";
+			width: 0;
+			height: 0;
+			border-width: 0.4em;
+			border-style: solid;
+			border-color: transparent transparent transparent #fff;
+		}
+	}
+	&.home {
+		opacity: 1;
+		.ripple {
+			bottom: 31%;
+			left: 11%;
+		}
+		.ball {
+			bottom: 41%;
+			left: 14%;
+		}
+		.arrow {
+			bottom: 42.5%;
+			left: 15%;
+			transform: rotate(-7deg);
+			transform-origin: 0 0;
+			&:after {
+				left: 100%;
+				border-color: transparent transparent transparent #fff;
+			}
+		}
+	}
+	&.away {
+		opacity: 1;
+		.ripple {
+			bottom: 31%;
+			right: 11%;
+		}
+		.ball {
+			bottom: 41%;
+			right: 14%;
+		}
+		.arrow {
+			bottom: 42.5%;
+			right: 15%;
+			transform: rotate(7deg);
+			transform-origin: 100% 0;
+			&:after {
+				right: 100%;
+				border-color: transparent #fff transparent transparent;
+			}
+		}
+	}
+}
+
+/* Goal 
+---------------------------*/
+
+.Goal {
+	.ball-cont {
+		position: absolute;
+		top: 0;
+		left: 0;
+		bottom: 0;
+		right: 0;
+	}
+	.ball {
+		position: absolute;
+		top: 0;
+		width: 5.5%;
+		height: 18.5%;
+		box-shadow: inset 0px 0px 4px 3px rgba(0, 0, 0, 0.6);
+	}
+	&.home {
+		.ball-cont {
+			animation: goal-up-home 2.5s 0.2s 1 cubic-bezier(0, 0, 0.35, 1);
+			animation-fill-mode: forwards;
+			.ball {
+				right: 34%;
+				opacity: 0;
+				animation: ball-rotate 1s infinite linear, goal-home 2.5s 1 cubic-bezier(0, 0, 0.65, 1), goal-to-center-home 1s 3.5s 1 ease-out;
+				animation-fill-mode: forwards;
+			}
+		}
+		p {
+			animation: goal-text-home 1s 4.2s 3 ease;
+			animation-fill-mode: forwards;
+			&.team {
+				animation: goal-text-home 3s 4.2s 1 ease;
+				animation-fill-mode: forwards;
+			}
+		}
+	}
+	&.away {
+		.ball-cont {
+			animation: goal-up-away 2.5s 0.2s 1 cubic-bezier(0, 0, 0.35, 1);
+			animation-fill-mode: forwards;
+			.ball {
+				right: 34%;
+				opacity: 0;
+				animation: ball-rotate 1s infinite linear, goal-away 2.5s 1 cubic-bezier(0, 0, 0.65, 1), goal-to-center-away 1s 3.5s 1 ease-out;
+				animation-fill-mode: forwards;
+			}
+		}
+		p {
+			animation: goal-text-away 1s 4.2s 3 ease;
+			animation-fill-mode: forwards;
+			&.team {
+				animation: goal-text-away 3s 4.2s 1 ease;
+				animation-fill-mode: forwards;
+			}
+		}
+	}
+	p {
+		opacity: 0;
+		position: absolute;
+		top: 7%;
+		left: 25%;
+		width: 50%;
+		font-size: 1.2em;
+		text-align: center;
+		text-shadow: 1px 1px 10px #000;
+		color: #fff;
+		&.team {
+			top: 52%;
+			height: 40%;
+			overflow: hidden;
+		}
+		&.goal-text {
+			white-space: nowrap;
+			overflow: hidden;
+			text-overflow: ellipsis;
+		}
+	}
+}
+
+/* Goalkeeper Save 
+--------------------------*/
+
+.GoalkeeperSave {
+	>div {
+		position: absolute;
+		top: 8.8%;
+		width: 16%;
+		height: 64%;
+		background: rgba(255, 255, 255, 0.4);
+		transform: perspective(50px) rotateX(8deg) skewX(-22deg);
+		animation: ball-safe 2s ease infinite;
+	}
+	p {
+		position: absolute;
+		top: 26%;
+		width: 100%;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+		color: #fff;
+		animation: ball-safe-down 1.4s ease 1
+	}
+	&.home {
+		>div {
+			left: 9.5%;
+		}
+	}
+	&.away {
+		>div {
+			right: 10.5%;
+			transform: perspective(50px) rotateX(8deg) skewX(22deg);
+		}
+		p {
+			text-align: right;
+		}
+	}
+}
+
+/* Animation keyframes
+	------------------------------------------------------------------------------------------------------------------------ */
+
+
+/* hide animation after it is finished */
+
+@keyframes hide-animation {
+	0% {
+		opacity: 1;
+	}
+	100% {
+		opacity: 0;
+	}
+}
+
+/* corner animation */
+
+@keyframes ball-x-away {
+	0% {
+		transform: translateX(0%);
+		background-position: 0 0;
+		box-shadow: 0 0px 3px rgba(0, 0, 0, 0.5), inset 0 0 5px rgba(0, 0, 0, 1);
+	}
+	50% {
+		transform: translateX(500%);
+		animation-timing-function: ease-in;
+		box-shadow: 0 25px 15px rgba(0, 0, 0, 0.3), inset 0 0 5px rgba(0, 0, 0, 1);
+	}
+	100% {
+		transform: translateX(250%);
+		background-position: 800% -1600%;
+		box-shadow: 0 10px 3px rgba(0, 0, 0, 0.3), inset 0 0 3px rgba(0, 0, 0, 1);
+	}
+}
+@keyframes ball-x-home {
+	0% {
+		transform: translateX(0%);
+		background-position: 0 0;
+		box-shadow: 0 0px 3px rgba(0, 0, 0, 0.5), inset 0 0 5px rgba(0, 0, 0, 1);
+	}
+	50% {
+		transform: translateX(-500%);
+		animation-timing-function: ease-in;
+		box-shadow: 0 25px 15px rgba(0, 0, 0, 0.3), inset 0 0 5px rgba(0, 0, 0, 1);
+	}
+	100% {
+		transform: translateX(-250%);
+		background-position: 800% -1600%;
+		box-shadow: 0 10px 3px rgba(0, 0, 0, 0.3), inset 0 0 3px rgba(0, 0, 0, 1);
+	}
+}
+@keyframes ball-y-away {
+	0% {
+		transform: translateY(85%);
+		animation-timing-function: ease-out;
+	}
+	80% {
+		opacity: 1;
+	}
+	100% {
+		transform: translateY(20%);
+		opacity: 0;
+	}
+}
+@keyframes ball-y-home {
+	0% {
+		transform: translateY(85%);
+		animation-timing-function: ease-out;
+	}
+	80% {
+		opacity: 1;
+	}
+	100% {
+		transform: translateY(20%);
+		opacity: 0;
+	}
+}
+
+/* --------------------------------------- */
+
+
+/* Yellow/Red card animation */
+
+@keyframes fadeIn {
+	0% {
+		transform: scale(0);
+		opacity: 0;
+	}
+	15% {
+		transform: scale(1.1);
+	}
+	20% {
+		transform: scale(0.9);
+		opacity: 1;
+	}
+	30% {
+		transform: scale(1);
+		opacity: 1;
+	}
+	70% {
+		transform: scale(1);
+		opacity: 1;
+	}
+	85% {
+		transform: scale(1.1);
+		opacity: 1;
+	}
+	100% {
+		transform: scale(0);
+		opacity: 0;
+	}
+}
+@keyframes rotate {
+	0%,
+	100% {
+		opacity: 1
+	}
+	31% {
+		transform: perspective(1050px) rotateY(0deg);
+	}
+	51% {
+		transform: perspective(1050px) rotateY(180deg);
+	}
+	70% {
+		transform: perspective(1050px) rotateY(0deg);
+	}
+}
+
+/* Throw in animation */
+
+@keyframes ball-throw_home {
+	0% {
+		transform: translateY(85%);
+		animation-timing-function: ease-out;
+	}
+	80% {
+		opacity: 1;
+	}
+	100% {
+		transform: translateY(30%);
+		opacity: 0;
+	}
+}
+@keyframes ball-throw_away {
+	0% {
+		transform: translateY(85%);
+		animation-timing-function: ease-out;
+	}
+	80% {
+		opacity: 1;
+	}
+	100% {
+		transform: translateY(30%);
+		opacity: 0;
+	}
+}
+@keyframes throw-in_home {
+	0% {
+		background-position: 0 0;
+		box-shadow: 0 20px 15px rgba(0, 0, 0, 0.5), inset 0 0 5px rgba(0, 0, 0, 1);
+		transform: translateX(0);
+	}
+	30% {
+		box-shadow: 0 25px 15px rgba(0, 0, 0, 0.3), inset 0 0 5px rgba(0, 0, 0, 1);
+		animation-timing-function: ease-in;
+	}
+	60% {
+		background-position: 0 -600%;
+		width: 2.8%;
+		height: 9%;
+		box-shadow: 0 1px 1px rgba(0, 0, 0, 0.6), inset 0 -3px 6px rgba(0, 0, 0, 1);
+		opacity: 1;
+	}
+	100% {
+		background-position: 0 -1600%;
+		box-shadow: 0 0 0px rgba(0, 0, 0, 0.6), inset 0 -3px 6px rgba(0, 0, 0, 1);
+		opacity: 0;
+		width: 2%;
+		height: 6.6%;
+		transform: translateX(60px);
+	}
+}
+@keyframes throw-in_away {
+	0% {
+		background-position: 0 0;
+		box-shadow: 0 20px 15px rgba(0, 0, 0, 0.5), inset 0 0 5px rgba(0, 0, 0, 1);
+		transform: translateX(0);
+	}
+	30% {
+		box-shadow: 0 25px 15px rgba(0, 0, 0, 0.3), inset 0 0 5px rgba(0, 0, 0, 1);
+		animation-timing-function: ease-in;
+	}
+	60% {
+		background-position: 0 -600%;
+		width: 2.8%;
+		height: 9%;
+		box-shadow: 0 1px 1px rgba(0, 0, 0, 0.6), inset 0 -3px 6px rgba(0, 0, 0, 1);
+		opacity: 1;
+	}
+	100% {
+		background-position: 0 -1600%;
+		box-shadow: 0 0 0px rgba(0, 0, 0, 0.6), inset 0 -3px 6px rgba(0, 0, 0, 1);
+		opacity: 0;
+		width: 2%;
+		height: 6.6%;
+		transform: translateX(-60px);
+	}
+}
+
+/* Text animations */
+
+@keyframes slideDown {
+	0% {
+		opacity: 0;
+		transform: translateY(-100%);
+	}
+	50% {
+		opacity: 1;
+		transform: translateY(8%);
+	}
+	65% {
+		transform: translateY(-18%);
+	}
+	80% {
+		transform: translateY(10%);
+	}
+	95% {
+		transform: translateY(-4%);
+	}
+	100% {
+		transform: translateY(0%);
+	}
+}
+@keyframes shadow-pulse {
+	0% {
+		text-shadow: 1px 1px 10px 1px #000;
+		opacity: 0.8;
+	}
+	50% {
+		text-shadow: 1px 1px 5px 1px rgba(0, 0, 0, 0.4);
+		opacity: 0.95;
+	}
+	100% {
+		text-shadow: 1px 1px 10px 1px #000;
+		opacity: 0.8;
+	}
+}
+
+/* Attack/Damngerous Attack animation */
+
+@keyframes attack-home {
+	0% {
+		opacity: 0;
+	}
+	100% {
+		transform: skewX(4deg);
+		left: 30%;
+		opacity: 0.7;
+	}
+}
+@keyframes attack-away {
+	0% {
+		opacity: 0;
+	}
+	100% {
+		transform: skewX(-7deg);
+		right: 30%;
+		opacity: 0.7;
+	}
+}
+@keyframes dangerous-attack-home {
+	0% {
+		opacity: 0;
+	}
+	100% {
+		transform: skewX(20deg);
+		left: 50%;
+		opacity: 0.7;
+	}
+}
+@keyframes dangerous-attack-away {
+	0% {
+		opacity: 0;
+	}
+	100% {
+		transform: skewX(-20deg);
+		right: 50%;
+		opacity: 0.7;
+	}
+}
+@keyframes pulse-attack {
+	0%,
+	100% {
+		opacity: 0.7;
+	}
+	50% {
+		opacity: 0.4;
+	}
+}
+@keyframes move-right {
+	0% {
+		text-indent: -100%;
+		opacity: 0;
+	}
+	100% {
+		//left:45%;
+		text-indent: 0;
+		opacity: 0.7;
+	}
+}
+@keyframes move-left {
+	0% {
+		text-indent: 100%;
+		opacity: 0;
+	}
+	100% {
+		//right: 45%;
+		text-indent: 0;
+		opacity: 0.7;
+	}
+}
+
+/* Ball Safe animation */
+
+@keyframes ball-safe {
+	0% {
+		opacity: 0.7;
+	}
+	50% {
+		opacity: 1;
+	}
+	100% {
+		opacity: 0.7;
+	}
+}
+@keyframes ball-safe-down {
+	0% {
+		opacity: 0;
+		top: 0;
+		animation-timing-function: ease-in-out;
+	}
+	70% {
+		opacity: 1;
+		top: 26%;
+		animation-timing-function: ease-out;
+	}
+	90% {
+		top: 25%;
+	}
+	100% {
+		top: 26%;
+	}
+}
+@keyframes ball-safe-up {
+	0% {
+		opacity: 0;
+		top: 68%;
+		animation-timing-function: ease-in-out;
+	}
+	70% {
+		opacity: 1;
+		top: 40%;
+		animation-timing-function: ease-out;
+	}
+	90% {
+		top: 43%;
+	}
+	100% {
+		top: 42%;
+	}
+}
+
+/* Offside animation */
+
+@keyframes line-pulse {
+	0% {
+		opacity: 0;
+	}
+	65% {
+		opacity: 0;
+		animation-timing-function: ease-out;
+	}
+	75% {
+		opacity: 1;
+	}
+	85% {
+		opacity: 0.3;
+	}
+	90% {
+		opacity: 1;
+	}
+	100% {
+		opacity: 0;
+	}
+}
+@keyframes ball-offside-home {
+	0% {
+		top: 65%;
+		right: 45%;
+	}
+	50% {
+		opacity: 1;
+		box-shadow: 0 25px 15px rgba(0, 0, 0, 0.3), inset 0 0 5px rgba(0, 0, 0, 1);
+		width: 4%;
+		height: 13%;
+		animation-timing-function: ease-in;
+	}
+	90% {
+		opacity: 0.8;
+		box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4), inset 0 0 5px rgba(0, 0, 0, 1);
+	}
+	100% {
+		top: 28%;
+		right: 26%;
+		opacity: 0;
+		background-position: 800% 200%;
+		width: 2.3%;
+		height: 6.6%;
+		box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4), inset 0 0 5px rgba(0, 0, 0, 1);
+	}
+}
+@keyframes ball-offside-away {
+	0% {
+		top: 65%;
+		left: 45%;
+	}
+	50% {
+		opacity: 1;
+		box-shadow: 0 25px 15px rgba(0, 0, 0, 0.3), inset 0 0 5px rgba(0, 0, 0, 1);
+		width: 4%;
+		height: 13%;
+		animation-timing-function: ease-in;
+	}
+	90% {
+		opacity: 0.8;
+		box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4), inset 0 0 5px rgba(0, 0, 0, 1);
+	}
+	100% {
+		top: 28%;
+		left: 26%;
+		opacity: 0;
+		background-position: 800% 200%;
+		width: 2.3%;
+		height: 6.6%;
+		box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4), inset 0 0 5px rgba(0, 0, 0, 1);
+	}
+}
+@keyframes text-slide {
+	0% {
+		top: -20%;
+		opacity: 0;
+		animation-timing-function: ease-out;
+	}
+	75% {
+		top: 28%;
+	}
+	88% {
+		top: 24%;
+	}
+	100% {
+		top: 25%;
+		opacity: 1;
+	}
+}
+
+/* Substitution animation*/
+
+@keyframes substitute {
+	0% {
+		transform: rotate(-45deg);
+	}
+	100% {
+		transform: rotate(315deg);
+	}
+}
+
+/* Free kick animation*/
+
+@keyframes free-kick {
+	0% {
+		background-position: 0% 0%;
+	}
+	100% {
+		background-position: -1200% 400%;
+	}
+}
+@keyframes free-kick_basket {
+	0% {
+		background-position: 0% 50%;
+	}
+	100% {
+		background-position: -1200% 50%;
+	}
+}
+@keyframes ripple-out {
+	0% {
+		opacity: 0;
+	}
+	15% {
+		opacity: 0.8
+	}
+	85% {
+		width: 9%;
+		height: 27%;
+		margin: 0.2%;
+		opacity: 0;
+	}
+	100% {
+		opacity: 0
+	}
+}
+@keyframes expand-arrow {
+	0% {
+		width: 0;
+		opacity: 0;
+	}
+	10% {
+		opacity: 1;
+	}
+	50% {
+		width: 20%;
+	}
+	60% {
+		opacity: 1
+	}
+	100% {
+		opacity: 0;
+	}
+}
+
+/*Penalty animation*/
+
+@keyframes penalty-arrow {
+	0% {
+		width: 0;
+		opacity: 0;
+	}
+	10% {
+		opacity: 1;
+	}
+	50% {
+		width: 10%;
+	}
+	60% {
+		opacity: 1;
+	}
+	100% {
+		opacity: 0;
+	}
+}
+@keyframes penalty-ball {
+	100% {
+		background-position: 1200% 0;
+	}
+}
+
+/* Goal animation */
+
+@keyframes ball-rotate {
+	100% {
+		background-position: 1500% 0;
+	}
+}
+@keyframes goal-up-home {
+	0%,
+	20% {
+		transform: translateY(40%);
+	}
+	50% {
+		transform: translateY(20%);
+		animation-timing-function: ease-in;
+	}
+	80% {
+		transform: translateY(25%);
+	}
+	100% {
+		transform: translateY(30%);
+	}
+}
+@keyframes goal-home {
+	0% {
+		transform: scale(0);
+		right: 34%;
+		opacity: 0;
+	}
+	25% {
+		transform: scale(0.65);
+		right: 34%;
+		opacity: 1;
+	}
+	30% {
+		right: 34%;
+		box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4), inset 0 0 5px black;
+	}
+	55% {
+		right: 14%;
+		box-shadow: 0 25px 15px rgba(0, 0, 0, 0.3), inset 0 0 5px rgba(0, 0, 0, 1);
+	}
+	80% {
+		right: 3%;
+		box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4), inset 0 0 5px black;
+		animation-timing-function: ease;
+	}
+	100% {
+		right: 5%;
+		opacity: 1;
+		transform: scale(0.65);
+	}
+}
+@keyframes goal-to-center-home {
+	0% {
+		right: 4%;
+		transform: scale(0.65);
+	}
+	100% {
+		right: 48%;
+		transform: scale(1);
+	}
+}
+@keyframes goal-text-home {
+	0% {
+		opacity: 0;
+		transform: scale(0);
+	}
+	50% {
+		opacity: 1;
+		transform: scale(1.1);
+	}
+	75% {
+		transform: scale(0.9);
+	}
+	100% {
+		transform: scale(1);
+		opacity: 1;
+	}
+}
+
+/* ---  */
+
+@keyframes goal-up-away {
+	0%,
+	20% {
+		transform: translateY(40%);
+	}
+	50% {
+		transform: translateY(20%);
+		animation-timing-function: ease-in;
+	}
+	80% {
+		transform: translateY(25%);
+	}
+	100% {
+		transform: translateY(30%);
+	}
+}
+@keyframes goal-away {
+	0% {
+		transform: scale(0);
+		left: 34%;
+		opacity: 0;
+	}
+	25% {
+		transform: scale(0.65);
+		left: 34%;
+		opacity: 1;
+	}
+	30% {
+		left: 34%;
+		box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4), inset 0 0 5px black;
+	}
+	55% {
+		left: 14%;
+		box-shadow: 0 25px 15px rgba(0, 0, 0, 0.3), inset 0 0 5px rgba(0, 0, 0, 1);
+	}
+	80% {
+		left: 4%;
+		box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4), inset 0 0 5px black;
+		animation-timing-function: ease;
+	}
+	100% {
+		left: 5%;
+		opacity: 1;
+		transform: scale(0.65);
+	}
+}
+@keyframes goal-to-center-away {
+	0% {
+		left: 4%;
+		transform: scale(0.65)
+	}
+	100% {
+		left: 46%;
+		transform: scale(1);
+	}
+}
+@keyframes goal-text-away {
+	0% {
+		opacity: 0;
+		transform: scale(0);
+	}
+	50% {
+		opacity: 1;
+		transform: scale(1.1);
+	}
+	75% {
+		transform: scale(0.9);
+	}
+	100% {
+		transform: scale(1);
+		opacity: 1;
+	}
+}
+
+/* Styles for basketball animation control 
+	-------------------------------------------------------------------------------------------------------------------*/
+
+.right-block-flash.right-block-flash-basketball {
+	background: rgba(70, 11, 11, 0.49);
+	box-shadow: inset 0 0 0px 1px #5A0000;
+}
+.game-control.basketball {
+	.basket {
+		position: absolute;
+		top: 1%;
+		background: url("../../../images/animation/b_basket.png#{$delete-cache}") no-repeat;
+		width: 86px;
+		height: 86px;
+		opacity: 0;
+	}
+	.ball_container {
+		position: absolute;
+		top: 0;
+		bottom: 0;
+		left: 0;
+		right: 0;
+	}
+	.b_ball {
+		background: url("../../../images/animation/basketball.jpg#{$delete-cache}") 0 50%;
+		position: absolute;
+		width: 6%;
+		height: 19%;
+		border-radius: 50%;
+		box-shadow: 0px 4px 6px rgba(75, 27, 9, 0.79), inset 2px -2px 8px rgba(49, 12, 0, 0.9);
+		opacity: 0;
+	}
+	.arrow {
+		position: absolute;
+		bottom: 20%;
+		width: 20%;
+		border-bottom: 0.15em dashed #fff;
+		opacity: 0;
+		&:after {
+			position: absolute;
+			top: 50%;
+			margin-top: -0.31em;
+			content: "";
+			width: 0;
+			height: 0;
+			border-width: 0.4em;
+			border-style: solid;
+		}
+	}
+	.field-container {
+		background: transparent;
+		/*#8A4429; */
+		overflow: hidden;
+		margin-bottom: 1px;
+		.field {
+			margin-top: 10px;
+			background: url("../../../images/animation/basket.png#{$delete-cache}") no-repeat center center;
+		}
+	}
+	.statistics-toggle {
+		background: #6A3A31;
+		padding: 0 0 2px 0;
+		.game-statistics li {
+			&:nth-last-child(-n+2) {
+				width: (100%/2 - 2%);
+				.stat-l,
+				.stat-r {
+					width: 8%;
+				}
+				.team-2 {
+					width: 84%;
+				}
+			}
+			&:last-child {
+				margin-right: 0;
+				float: right;
+			}
+		}
+	}
+	.Attack {
+		.attack-div {
+			top: 0%;
+			height: 94%;
+		}
+		&.home {
+			.attack-div {
+				background: linear-gradient(90deg, transparent, rgba(255, 41, 0, 1));
+				.attack-dir {
+					border-color: transparent transparent transparent rgba(255, 41, 0, 1);
+				}
+			}
+		}
+		&.away {
+			.attack-div {
+				background: linear-gradient(90deg, rgba(255, 41, 0, 1), transparent);
+				.attack-dir {
+					border-color: transparent rgba(255, 41, 0, 1) transparent transparent;
+				}
+			}
+		}
+	}
+	/* Foul
+	------------------------*/
+	.Foul {
+		.timeout-container {
+			position: absolute;
+			top: 2%;
+			width: 49.5%;
+			height: 91%;
+			animation: ball-safe 2s ease infinite;
+			div {
+				position: absolute;
+				width: 100%;
+				height: 35%;
+				overflow: hidden;
+				text-align: center;
+				color: #fff;
+				text-shadow: 1px -1px 5px #000;
+				&:first-child {
+					top: 28%;
+				}
+				&:last-child {
+					top: 42%;
+					width: 80%;
+					margin: 0 10%;
+				}
+			}
+		}
+		&.home .timeout-container {
+			background: linear-gradient(90deg, transparent, rgba(255, 0, 0, 0.4));
+			div {
+				&:first-child {
+					animation: ball-safe-down 1s ease 1;
+				}
+				&:last-child {
+					animation: ball-safe-up 1s ease 1;
+				}
+			}
+		}
+		&.away .timeout-container {
+			left: 49.5%;
+			background: linear-gradient(90deg, rgba(255, 0, 0, 0.4), transparent);
+			div {
+				&:first-child {
+					animation: ball-safe-down 1.5s ease 1;
+				}
+				&:last-child {
+					animation: ball-safe-up 1.5s ease 1;
+				}
+			}
+		}
+	}
+	/* Free throw
+	--------------------*/
+	.FreeThrow,
+	.Free1Throw,
+	.Free2Throws,
+	.Free3Throws {
+		&.away {
+			.basket {
+				left: 1%;
+				opacity: 1;
+			}
+			.b_ball {
+				bottom: 20%;
+				left: 46%;
+				opacity: 1;
+				animation: free-kick_basket 3s infinite linear;
+			}
+			.arrow {
+				right: 50%;
+				animation: expand-arrow 3.5s infinite ease;
+				&:after {
+					right: 100%;
+					border-color: transparent #fff transparent transparent;
+				}
+			}
+		}
+		&.home {
+			.basket {
+				right: 1%;
+				transform: scaleX(-1);
+				opacity: 1;
+			}
+			.b_ball {
+				bottom: 20%;
+				right: 46%;
+				animation: free-kick_basket 3.5s infinite linear;
+				opacity: 1;
+			}
+			.arrow {
+				left: 50%;
+				animation: expand-arrow 3s infinite ease;
+				&:after {
+					left: 100%;
+					border-color: transparent transparent transparent #fff;
+				}
+			}
+		}
+	}
+	/* Point
+	-------------------*/
+	.OnePoint,
+	.TwoPoints,
+	.ThreePoints {
+		.text-event {
+			animation: text-slide 1.5s 1.2s 1 ease-out, shadow-pulse 3.5s 2s infinite;
+		}
+		&.home {
+			.basket {
+				right: 1%;
+				transform: scaleX(-1);
+				opacity: 1;
+			}
+			.b_ball {
+				right: 46%;
+				opacity: 0;
+				box-shadow: 0px 30px 20px rgba(75, 27, 9, 0.43), inset 2px -2px 8px rgba(49, 12, 0, 0.9);
+				animation: b_point-home 2s 0.3s 1 cubic-bezier(0, 0, 0.65, 1);
+			}
+			.ball_container {
+				transform: translateY(41%);
+				animation: point_cont-home 2s 0.3s 1 cubic-bezier(0, 0, 0.35, 1);
+				animation-fill-mode: forwards;
+			}
+		}
+		&.away {
+			.basket {
+				left: 1%;
+				opacity: 1;
+			}
+			.b_ball {
+				left: 46%;
+				opacity: 0;
+				box-shadow: 0px 30px 20px rgba(75, 27, 9, 0.43), inset 2px -2px 8px rgba(49, 12, 0, 0.9);
+				animation: b_point-away 2s 0.3s 1 cubic-bezier(0, 0, 0.65, 1);
+			}
+			.ball_container {
+				transform: translateY(41%);
+				animation: point_cont-away 2s 0.3s 1 cubic-bezier(0, 0, 0.35, 1);
+				animation-fill-mode: forwards;
+			}
+		}
+	}
+}
+
+/* animation keyframes */
+
+@keyframes point_cont-home {
+	0% {
+		transform: translateY(46%);
+		opacity: 0;
+		animation-timing-function: ease-out;
+	}
+	10% {
+		opacity: 1;
+	}
+	30% {
+		transform: translateY(30%);
+	}
+	90% {
+		opacity: 1;
+	}
+	100% {
+		transform: translateY(53%);
+		opacity: 0;
+	}
+}
+@keyframes b_point-home {
+	0% {
+		opacity: 1;
+		transform: translateX(0%);
+		background-position: 0 50%;
+	}
+	50% {
+		transform: translateX(480%);
+		box-shadow: 0px 40px 20px rgba(75, 27, 9, 0.43), inset 2px -2px 8px rgba(49, 12, 0, 0.9);
+		animation-timing-function: ease-out;
+	}
+	100% {
+		transform: translateX(480%);
+		background-position: 800% 50%;
+		opacity: 1;
+	}
+}
+@keyframes point_cont-away {
+	0% {
+		transform: translateY(46%);
+		opacity: 0;
+		animation-timing-function: ease-out;
+	}
+	10% {
+		opacity: 1;
+	}
+	30% {
+		transform: translateY(30%);
+	}
+	90% {
+		opacity: 1;
+	}
+	100% {
+		transform: translateY(53%);
+		opacity: 0;
+	}
+}
+@keyframes b_point-away {
+	0% {
+		opacity: 1;
+		transform: translateX(0%);
+		background-position: 0 50%;
+	}
+	50% {
+		transform: translateX(-480%);
+		box-shadow: 0px 40px 20px rgba(75, 27, 9, 0.43), inset 2px -2px 8px rgba(49, 12, 0, 0.9);
+		animation-timing-function: ease-out;
+	}
+	100% {
+		transform: translateX(-480%);
+		background-position: 800% 50%;
+		opacity: 1;
+	}
+}
+
+/* Styles for Volleyball animation control 
+------------------------------------------------------------------------------------*/
+
+.right-block-flash.right-block-flash-volleyball {
+	background: rgba(145, 119, 40, 0.4);
+}
+.game-control.volleyball {
+	margin-top: 35px;
+	.text-event {
+		font-size: 1.2em;
+	}
+	.statistics-toggle {
+		background: rgba(109, 67, 23, 0.78);
+	}
+	.field-container {
+		.field {
+			background: url("../../../images/animation/vall.png#{$delete-cache}") no-repeat center center;
+			height: 123px;
+		}
+	}
+	/* ball */
+	.v_ball {
+		background: #ccc;
+		position: absolute;
+		width: 5%;
+		height: 14%;
+		border-radius: 50%;
+		box-shadow: inset 2px -2px 8px rgba(54, 31, 1, 0.7);
+		opacity: 0;
+	}
+	/* Point */
+	.Point {
+		.point_container {
+			position: absolute;
+			top: 13%;
+			width: 49.5%;
+			height: 80%;
+			animation: ball-safe 2s ease infinite;
+			div {
+				position: absolute;
+				height: 40%;
+				overflow: hidden;
+				text-align: center;
+				color: #fff;
+				text-shadow: 1px -1px 5px #000;
+				top: 36%;
+				width: 80%;
+				margin: 0 10%;
+			}
+		}
+		&.side_1 .point_container {
+			background: linear-gradient(90deg, transparent, rgba(255, 224, 0, 0.4));
+			div {
+				animation: v_point 1.3s ease 1;
+			}
+		}
+		&.side_2 .point_container {
+			left: 49.5%;
+			background: linear-gradient(90deg, rgba(255, 224, 0, 0.4), transparent);
+			div {
+				animation: v_point 1.5s ease 1;
+			}
+		}
+	}
+	/* Ball In Play */
+	.BallInPlay {
+		.ball_container {
+			position: absolute;
+			top: 0;
+			bottom: 0;
+			left: 0;
+			right: 0;
+			.v_ball,
+			.v_ball_shadow {
+				position: absolute;
+				top: 20%;
+			}
+			.v_ball_shadow {
+				background: none;
+				width: 5%;
+				height: 14%;
+				border-radius: 50%;
+			}
+		}
+		&.side_1 .ball_container {
+			animation: v_ball_in_play_y_home 1.7s 0.2s infinite cubic-bezier(0, 0, 0.35, 1);
+			animation-fill-mode: forwards;
+			.v_ball {
+				opacity: 0;
+				animation: v_ball_in_play_x_home 1.7s 0.2s infinite cubic-bezier(0, 0, 0.65, 1);
+				animation-fill-mode: forwards;
+			}
+			.v_ball_shadow {
+				animation: v_ball_in_play_x_shadow 1.7s 0.2s infinite cubic-bezier(0, 0, 0.65, 1);
+				animation-fill-mode: forwards;
+			}
+		}
+		&.side_2 .ball_container {
+			animation: v_ball_in_play_y_away 1.7s 0.2s infinite cubic-bezier(0, 0, 0.35, 1);
+			animation-fill-mode: forwards;
+			.v_ball {
+				opacity: 0;
+				animation: v_ball_in_play_x_away 1.7s 0.2s infinite cubic-bezier(0, 0, 0.65, 1);
+				animation-fill-mode: forwards;
+			}
+			.v_ball_shadow {
+				animation: v_ball_in_play_x_shadow_away 1.7s 0.2s infinite cubic-bezier(0, 0, 0.65, 1);
+				animation-fill-mode: forwards;
+			}
+		}
+	}
+}
+
+/* BallInPlay animation */
+
+@keyframes v_ball_in_play_y_home {
+	0% {
+		opacity: 0;
+		transform: translateY(30%);
+		animation-timing-function: ease-out;
+	}
+	10%,
+	90% {
+		opacity: 1;
+	}
+	50% {
+		transform: translateY(0%);
+		animation-timing-function: ease-in;
+	}
+	100% {
+		opacity: 0;
+		transform: translateY(30%);
+		animation-timing-function: ease-out;
+	}
+}
+@keyframes v_ball_in_play_x_home {
+	0% {
+		left: 15%;
+		opacity: 0;
+		background-position: 0% 0%;
+		animation-timing-function: ease-out;
+	}
+	10%,
+	60% {
+		opacity: 1;
+	}
+	20% {
+		animation-timing-function: ease-in;
+	}
+	70% {}
+	90% {
+		opacity: 0
+	}
+	100% {
+		left: 65%;
+		opacity: 0;
+		background-position: 1600% 800%;
+		animation-timing-function: ease-out;
+	}
+}
+@keyframes v_ball_in_play_x_shadow {
+	0% {
+		left: 15%;
+		opacity: 0;
+		animation-timing-function: ease-out;
+		box-shadow: 0 8px 5px rgba(60, 34, 1, 0.4), inset 0 0 5px rgb(59, 77, 3);
+	}
+	10%,
+	60% {
+		opacity: 1;
+	}
+	35% {
+		box-shadow: 0 30px 15px rgba(60, 34, 1, 0.4), inset 0 0 5px rgb(59, 77, 3);
+		animation-timing-function: ease-in;
+	}
+	70% {
+		box-shadow: 0 16px 10px rgba(60, 34, 1, 0.4), inset 0 0 5px rgb(59, 77, 3);
+	}
+	90% {
+		opacity: 0
+	}
+	100% {
+		left: 65%;
+		opacity: 0;
+		animation-timing-function: ease-out;
+		box-shadow: 0 4px 3px rgba(60, 34, 1, 0.4), inset 0 0 5px rgb(59, 77, 3);
+	}
+}
+@keyframes v_ball_in_play_y_away {
+	0% {
+		opacity: 0;
+		transform: translateY(30%);
+		animation-timing-function: ease-out;
+	}
+	50% {
+		transform: translateY(0%);
+		animation-timing-function: ease-in;
+	}
+	10%,
+	90% {
+		opacity: 1;
+	}
+	100% {
+		opacity: 0;
+		transform: translateY(30%);
+		animation-timing-function: ease-out;
+	}
+}
+@keyframes v_ball_in_play_x_away {
+	0% {
+		right: 15%;
+		opacity: 0;
+		background-position: 0% 0%;
+		animation-timing-function: ease-out;
+	}
+	10%,
+	60% {
+		opacity: 1;
+	}
+	20% {
+		animation-timing-function: ease-in;
+	}
+	70% {}
+	90% {
+		opacity: 0
+	}
+	100% {
+		right: 65%;
+		opacity: 0;
+		background-position: 1600% 800%;
+		animation-timing-function: ease-out;
+	}
+}
+@keyframes v_ball_in_play_x_shadow_away {
+	0% {
+		right: 15%;
+		opacity: 0;
+		animation-timing-function: ease-out;
+		box-shadow: 0 8px 5px rgba(60, 34, 1, 0.4), inset 0 0 5px rgb(59, 77, 3);
+	}
+	10%,
+	60% {
+		opacity: 1;
+	}
+	20% {
+		box-shadow: 0 30px 15px rgba(60, 34, 1, 0.4), inset 0 0 5px rgb(59, 77, 3);
+		animation-timing-function: ease-in;
+	}
+	70% {
+		box-shadow: 0 16px 10px rgba(60, 34, 1, 0.4), inset 0 0 5px rgb(59, 77, 3);
+	}
+	90% {
+		opacity: 0
+	}
+	100% {
+		right: 65%;
+		opacity: 0;
+		animation-timing-function: ease-out;
+		box-shadow: 0 4px 3px rgba(60, 34, 1, 0.4), inset 0 0 5px rgb(59, 77, 3);
+	}
+}
+@keyframes v_point {
+	0% {
+		opacity: 0;
+		top: 68%;
+		animation-timing-function: ease-in;
+	}
+	25% {
+		opacity: 1;
+		top: 24%;
+		animation-timing-function: ease-out;
+	}
+	50% {
+		top: 44%;
+		animation-timing-function: ease-out;
+	}
+	75% {
+		top: 30%;
+		animation-timing-function: ease-out;
+	}
+	100% {
+		top: 36%;
+	}
+}

@@ -1,0 +1,108 @@
+<!--Overview-->
+<div class="all-inplay-wrapper" ng-repeat="sports in [favoriteGames, allSports] track by $index" ng-show="sports[0].competitions.length">
+    <div
+        class="inplay-game-wrapper {{sport.alias}}"
+        ng-repeat="sport in sports track by sport.id"
+        ng-class="{'closed': states.sport[sport.id].collapsed, 'pointer-events-none': isSportCollapsed[sport.id]}"
+    >
+
+        <div class="title-sport-inplay" ng-click="states.sport[sport.id].collapsed = !states.sport[sport.id].collapsed">
+            <div class="sport-icon-inplay mini-icon-1 mini-icon-{{sport.id}} {{sport.alias}}"></div>
+            <p ng-bind="sport.name"></p>
+            <div class="arrow-toggle-inplay"></div>
+        </div>
+        <div class="all-info-game-inplay-container" ng-repeat="competition in sport.competitions track by competition.id" ng-show="competition.games.length">
+            <div class="mini-wrapper-info-inplay" ng-class="{'closed': states.competition[sport.id + competition.id].collapsed}">
+                <div class="overview-championship-info" ng-click="states.competition[sport.id + competition.id].collapsed = !states.competition[sport.id + competition.id].collapsed">
+                    <div class="arrow-toggle-inplay"></div>
+                    <div class="sport-icon-inplay mini-icon-1 mini-icon-{{competition.sport.id}} {{competition.sport.alias}}" ng-show="!sport.id"></div>
+
+                    <h4>
+                        <span ng-bind="competition.sport.name" ng-show="!sport.id" class="fav-name-overview-b-sport"></span>
+                        <span class="championship-name-country-overview">
+                            <b class="flag-overview flag-icon flag-{{competition.region.alias | removeUselessSymbolsByRegexp: '[,\' ]+': 'g': 'true'}}"></b>
+                            <i ng-bind="competition.name"></i>
+                        </span>
+                    </h4>
+                </div>
+                <div class="overview-game-info" ng-class="{'blocked': (!(game.events_count || game.markets_count) || game.is_blocked)}" ng-repeat="game in competition.games track by game.id">
+                    <div class="overview-name-column">
+                        <a ng-href="#/sport/?game={{game.id}}&sport={{sport.id || competition.sport.id}}&competition={{competition.id}}&type=1&region={{game.region.id}}">
+                            <div class="name-team-overview">
+                                    <p title="{{game.team1_name + ' - ' + game.team2_name}}">
+                                        <span ng-bind="game.team1_name"></span>
+                                        <span ng-bind="game.team2_name"></span>
+                                    </p>
+                                <div class="video-icon-overview" ng-show="game.hasVideo && conf.videoEnabled"></div>
+                            </div>
+                            <div class="detail-info-overview">
+                                <p>
+                                    <span class="score-contain-overview-b" ng-show="game.info.score1!==undefined"><b>{{game.info.score1}} </b><b>{{game.info.score2}}</b></span>
+                                    <span class="overview-game-team-inform">
+                                        {{game.info.current_game_state|convertSetName:game.sport.alias|translate}}
+                                        <i ng-if="sport.alias === 'Soccer' || sport.alias === 'CyberFootball'">
+                                            {{game.stats.score_set1.team1_value ? '(' + game.stats.score_set1.team1_value + ' :' : '(0 :'}}
+                                            {{game.stats.score_set1.team2_value ?  game.stats.score_set1.team2_value + ')' : ' 0)'}}
+                                        </i>
+                                        <i ng-if="sport.alias !== 'Soccer' && sport.alias !== 'CyberFootball'">
+                                            {{game.stats['score_'+game.info.current_game_state].team1_value ? '(' + game.stats['score_'+game.info.current_game_state].team1_value + ' :' : '(0 :'}}
+                                            {{game.stats['score_'+game.info.current_game_state].team2_value ?  game.stats['score_'+game.info.current_game_state].team2_value + ')' : ' 0)'}}
+                                        </i>
+                                    </span>
+                                </p>
+                                <div class="overview-blocked-icon"></div>
+                                <div class="time-match-overview">
+                                    <span ng-bind="getCurrentTime(game.info.current_game_time)"></span>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="overview-markets-column">
+                        <div class="separator-overview-b" ng-if="game.firstMarket && (game.firstMarket.events.P1.price || game.firstMarket.events.X.price || game.firstMarket.events.P2.price)">
+                            <div class="name-market-overview">
+                                <div class="change-markets-box">
+                                    <p ng-bind="game.firstMarket.name"></p>
+                                    <ul class="market-selector-not-working-yet">
+                                        <li ng-repeat="market in markets"></li>
+                                    </ul>
+                                </div>
+                                <div class="chain-cashout-icons">
+                                    <span class="chain-icon-overview"  ng-show="game.firstMarket.express_id" title="Events from different groups can be combined in combined bets" trans="attr-only"></span>
+                                    <span class="combined-bets-overview" ng-bind="game.firstMarket.express_id">1</span>
+                                    <span class="cashout-b-overview" title="Cash-out available" ng-show="game.firstMarket.cashout && ((!env.live && !!partnerConfig.is_cashout_prematch) || (env.live && !!partnerConfig.is_cashout_live))" trans></span>
+                                </div>
+                            </div>
+                            <div class="mini-b-events-overview">
+                                <ul ng-class="{'column-3': game.firstMarket.events.X, 'column-2': game.firstMarket.events.X === undefined}">
+                                    <li ng-class="{'active': isEventInBetSlip(game.firstMarket.events.P1), 'blocked': ((game.firstMarket.events.P1.price | oddConvert:'decimal') == 1 || game.is_blocked)}"
+                                            ng-click="bet(game.firstMarket.events.P1, game.firstMarket, game)" title="{{game.firstMarket.events.P1.name}}">
+                                        <p ng-bind="game.firstMarket.events.P1.name"></p>
+                                        <span class="price{{game.firstMarket.events.P1.price_change}}" ng-bind="game.firstMarket.events.P1.price|oddConvert:env.oddFormat:null:'WINNER'"></span>
+                                    </li>
+                                    <li ng-class="{'active': isEventInBetSlip(game.firstMarket.events.X), 'blocked': ((game.firstMarket.events.X.price | oddConvert:'decimal') == 1 || game.is_blocked)}"
+                                        ng-click="bet(game.firstMarket.events.X, game.firstMarket, game)" title="{{game.firstMarket.events.X.name}}"
+                                            ng-show="game.firstMarket.events.X">
+                                        <p ng-bind="game.firstMarket.events.X.name"></p>
+                                        <span class="price{{game.firstMarket.events.X.price_change}}" ng-bind="game.firstMarket.events.X.price|oddConvert:env.oddFormat:null:'WINNER'"></span>
+                                    </li>
+                                    <li ng-class="{'active': isEventInBetSlip(game.firstMarket.events.P2), 'blocked': ((game.firstMarket.events.P2.price | oddConvert:'decimal') == 1 || game.is_blocked)}"
+                                        ng-click="bet(game.firstMarket.events.P2, game.firstMarket, game)" title="{{game.firstMarket.events.P2.name}}">
+                                        <p ng-bind="game.firstMarket.events.P2.name"></p>
+                                        <span class="price{{game.firstMarket.events.P2.price_change}}" ng-bind="game.firstMarket.events.P2.price|oddConvert:env.oddFormat:null:'WINNER'"></span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="overview-more-events-column">
+                        <div class="favorite-overview-icon" ng-class="{'active': myGames.indexOf(game.id) !== -1}" ng-click="toggleGameFavorite(game); $event.stopPropagation()"></div>
+                        <div class="any-events-b" ng-show="game.additionalEvents" >
+                            <a ng-bind="'+' + game.additionalEvents" ng-href="#/sport/?game={{game.id}}&sport={{sport.id || competition.sport.id}}&competition={{competition.id}}&type=1&region={{game.region.id}}"></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--Overview END-->

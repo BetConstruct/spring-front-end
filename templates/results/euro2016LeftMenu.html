@@ -1,0 +1,160 @@
+<div class="left-column-v3-header">
+
+        <!--Tab-->
+        <div class="view-switcher-v3">
+            <ul>
+                <li ng-class="{active: requestData.live === 1}" ng-click="requestData.live=1;updateLeftMenu(true)">
+                    <button>
+                        <span trans>Live</span>
+                    </button>
+                </li>
+                <li ng-class="{active: requestData.live === 0}" ng-click="requestData.live=0;updateLeftMenu(true)">
+                    <button>
+                        <span trans>Finished</span>
+                    </button>
+                </li>
+            </ul>
+
+        </div>
+        <!--Tab-->
+
+
+        <!--filter-->
+        <div class="filter-view-v3">
+
+            <div class="results-f-row-view">
+
+                <div class="time-filter-v3" ng-class="{active: requestData.showDropDown}">
+                    <p ng-click="requestData.showDropDown = !requestData.showDropDown"><span>{{(requestData.selectHours ? requestData.selectHours + ' hours' : 'all')|translate}}</span> <i class="arrow-rotate-filter-v3"></i></p>
+                    <div class="sub-nav-filter-time-v3 active">
+                        <ul>
+                            <li ng-repeat="hours in hoursList track by $index" ng-click="adjustDate('hours', hours)" ng-class="{'icon-checkmark':hours===requestData.selectHours}">
+                                <span>{{(hours + ' hours')|translate}}</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+            </div>
+
+            <!--datepicker-->
+            <div class="date-r-filter-b">
+
+                <ul>
+                    <li>
+                        <p trans>From</p>
+                        <div class="mini-form-box-b">
+                            <div class="date-picker-b">
+                                <div class="picker-contain">
+                                    <div class="input-group" ng-click="openFrom($event)">
+                                        <input type="text" class="form-control" placeholder="From" datepicker-popup="{{conf.dateFormat.datepicker}}"  max-date="today"
+                                               ng-model="requestData.dateFrom" is-open="datePicker.openedFrom"  disabled="disabled"
+                                               datepicker-options="dateOptions" ng-change="adjustDate('from')"
+                                               ng-required="true" close-text="Close"/>
+                                        <span class="input-group-btn">
+                                                                <button type="button" class="btn btn-default date-view" ng-click="openFrom($event)">
+                                                                    <i class="date-p"></i>
+                                                                </button>
+                                                            </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    <li>
+                        <p trans>To</p>
+                        <div class="mini-form-box-b">
+                            <div class="date-picker-b">
+                                <div class="picker-contain">
+                                    <div class="input-group" ng-click="openTo($event)">
+                                        <input type="text" class="form-control" placeholder="To" datepicker-popup="{{conf.dateFormat.datepicker}}" min-date="minToDate" max-date="today"
+                                               ng-model="requestData.dateTo" is-open="datePicker.openedTo"  disabled="disabled"
+                                               datepicker-options="dateOptions" ng-change="adjustDate('to')"
+                                               ng-required="true" close-text="Close"/>
+                                        <span class="input-group-btn">
+                                                                <button type="button" class="btn btn-default date-view" ng-click="openTo($event)">
+                                                                    <i class="date-p"></i>
+                                                                </button>
+                                                            </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+
+            </div>
+            <!--datepicker END-->
+
+
+        </div>
+        <!--filter END-->
+
+
+        <!--left menu list-->
+
+        <div class="full-menu-wrapper-box-v3">
+
+            <!--loader-->
+
+            <!--loader-->
+
+
+            <div class="left-nav-view-v3 prematch-view multiselect-view-v3">
+                <ul>
+                    <li ng-repeat="sport in sportList track by sport.id">
+                        <div class="sports-item-v3 {{sport.alias}}" ng-class="{active: sport.expanded}" ng-click="sport.expanded=!sport.expanded"><!--active-->
+                            <div class="sport-icon-v3 {{sport.alias}}"></div>
+                            <p>{{sport.name}}</p>
+                            <div class="arrow-view-v3"></div>
+                            <div class="sport-games-count-v3">
+                                <span>{{sport.region.length}}</span>
+                            </div>
+                        </div>
+
+                        <div ng-repeat="region in sport.region track by region.id" class="region-item-row-v3" ng-class="{active: sport.expanded}"><!--active-->
+                            <div class="region-items-box">
+                                <div class="full-region-info-v3">
+                                    <div class="region-item-v3" ng-class="{active: region.expanded}" ng-click="region.expanded=!region.expanded">
+                                        <div class="flag-view-v3 flag-{{region.alias}}"></div>
+                                        <p>{{region.name}} <span>({{region.competition.length}})</span></p>
+                                        <div class="arrow-view-v3"></div>
+                                    </div>
+
+                                    <div class="games-list-nav-v3">
+                                        <div class="games-list-mini-view-v3">
+
+                                            <div class="competition-view-v-3">
+                                                <div ng-repeat="competition in region.competition track by competition.id" class="competition-title-v3">
+                                                    <label title="{{competition.name}}">
+                                                        <input ng-disabled="loading" type="checkbox" ng-model="selectedCompetitions[competition.id]" ng-change="updateLeftMenu()">
+                                                        <span>{{competition.name}}</span>
+                                                    </label>
+                                                    <div class="icon-separator-v3 favorite" ng-show="false"></div>
+                                                </div>
+                                            </div>
+
+
+
+
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                        </div>
+
+
+
+                    </li>
+                </ul>
+            </div>
+
+
+        </div>
+
+        <!--left menu list-->
+
+
+    </div>

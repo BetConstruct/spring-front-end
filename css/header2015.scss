@@ -1,0 +1,799 @@
+@mixin header2015 {
+  /*new header*/
+  .conteiner .new-header-wrapper .topmenu-sport-and-region {
+    top: 0;
+  }
+  .conteiner .new-header-wrapper .header {
+    padding: 0 20px;
+    max-width: 100%;
+  }
+  .body-wrapper.homepage .conteiner .new-header-wrapper .header,
+  .body-wrapper.belote .conteiner .new-header-wrapper .header,
+  .body-wrapper.backgammon .conteiner .new-header-wrapper .header {
+    max-width: 1310px;
+    padding: 0 20px;
+  }
+  .new-header-wrapper {
+    float: left;
+    width: 100%;
+    background: $J-GLOBAL-COLOR;
+    height: 105px;
+  }
+  .new-header-wrapper .header-bg {
+    height: 40px;
+    bottom: -5px;
+  }
+  .new-header-wrapper .main-nav ul.not-sign .sign-in-reg-buttons li.register-button span, .new-header-wrapper .main-nav ul.not-sign .sign-in-reg-buttons li.sign-in-button span {
+    font: 14px/16px $font-f;
+    font-weight: bold;
+  }
+  .conteiner .new-header-wrapper .settings {
+    margin: 0;
+  }
+  .new-header-wrapper .logo.VBET a {
+    width: 142px;
+  }
+  .new-header-wrapper .logo a {
+    height: 105px;
+  }
+  .new-header-wrapper .clock {
+    top: 55px;
+  }
+  .new-header-wrapper .clock span {
+    font-weight: normal;
+    font: 13px/14px $font-f;
+    color: darken(saturate(adjust-hue($j-main-global-color-first, 333deg), 35), 25);
+  }
+  .new-header-wrapper .top-black {
+    height: 65px;
+    background: $J-GLOBAL-COLOR;
+  }
+  .new-header-wrapper .category-nav {
+    float: left;
+    width: 100%;
+    margin: 5px 0 0;
+    padding: 0;
+    position: relative;
+    z-index: 66;
+  }
+  .new-header-wrapper .category-nav ul {
+    margin: 1px 0 0 165px;
+  }
+  .new-header-wrapper .sign-in-reg-buttons {
+    position: relative;
+    top: 3px;
+    left: 0;
+    right: 0;
+    width: auto;
+    margin: 0;
+  }
+  .new-header-wrapper .contain-all-settings {
+    top: 1px;
+    margin: 0 38px 0 0;
+    position: relative;
+  }
+  .new-header-wrapper .top-menu {
+    width: auto;
+    float: none;
+  }
+  .conteiner .new-header-wrapper .category-nav ul {
+    position: relative;
+  }
+  .conteiner .new-header-wrapper .main-nav ul li.active-s {
+    background: none !important;
+  }
+  .new-header-wrapper .category-nav ul li a {
+    font: 13px/14px $font-f;
+    font-weight: bold;
+    padding: 13px 12px;
+  }
+  .conteiner .new-header-wrapper .category-nav ul li.casino.fantasy a {
+    max-width: inherit;
+    padding: 13px 20px;
+  }
+  .category-nav ul li a.poolbetting-menu-item {
+    max-width: inherit;
+    min-width: 124px;
+  }
+  .category-nav ul li a.poolbetting-menu-item.jackpot {
+    min-width: 116px;
+    padding: 7px 12px 19px;
+  }
+  .new-header-wrapper .block-search {
+    top: 12px;
+    position: absolute;
+    min-width: 36px;
+    right: 53px;
+    z-index: 1111;
+  }
+  .new-header-wrapper .block-search input[type="text"] {
+    position: relative;
+    background: none;
+    float: right;
+    padding: 8px 0 9px 36px;
+    z-index: 444;
+    margin: 0 5px 0 0;
+    transition-duration: 0ms;
+    -webkit-transition: width 600ms, box-shadow 600ms, background 600ms;
+    -moz-transition: width 600ms, box-shadow 600ms, background 600ms;
+    -ms-transition: width 600ms, box-shadow 600ms, background 600ms;
+    transition: width 600ms, box-shadow 600ms, background 600ms;
+  }
+  .new-header-wrapper .block-search input[type="text"]:hover {
+    width: 0;
+  }
+  .new-header-wrapper .block-search input[type="text"]:focus, .new-header-wrapper .block-search input[type="text"]:focus:hover {
+    box-shadow: 0 0 0 1px lighten(desaturate(adjust-hue($j-dark-blue-global-2, -4deg), 19), 26);
+    border-radius: 3px;
+    background: $J-GLOBAL-COLOR;
+    z-index: 222;
+    width: 186px;
+  }
+  .new-header-wrapper .block-search:before {
+    font: 17px/24px icomoon;
+    content: "\e6d4";
+    color: $white-text;
+    position: absolute;
+    left: 10px;
+    top: 9px;
+    z-index: 333;
+  }
+  .new-header-wrapper .settings-button:after {
+    content: "";
+    display: block;
+    position: absolute;
+    right: -5px;
+    width: 1px;
+    background: lighten(desaturate(adjust-hue($j-dark-blue-global-2, 1deg), 18), 16);
+  }
+  .new-header-wrapper .language-change {
+    margin-top: 14px;
+  }
+  .new-header-wrapper .help-b:after {
+    height: 18px;
+    top: 22px;
+    right: 2px;
+  }
+  .new-header-wrapper .help-b.faq:after {
+    right: -9px;
+  }
+  .new-header-wrapper .help-b a:before {
+    left: 0;
+  }
+  .new-header-wrapper .help-b.faq:before {
+    left: 2px;
+    top: 21px;
+    font: 48px/20px icomoon;
+  }
+  .new-header-wrapper .settings-button:after,
+  .new-header-wrapper .settings-button:before {
+    height: 18px;
+    top: 9px;
+  }
+  .new-header-wrapper .verytopmenutoggle {
+    display: block;
+    width: 30px;
+    height: 30px;
+    color: $j-main-global-color-first;
+    text-align: center;
+  }
+  .new-header-wrapper .verytopmenutoggle:before {
+    content: "\e642";
+    font: 24px/30px icomoon;
+  }
+  .new-header-wrapper .second-nav-block {
+    width: auto;
+    left: 200px;
+    min-width: inherit;
+    top: 18px;
+    z-index: 333;
+  }
+  .Vivaro .new-header-wrapper .second-nav-block {
+    left: 294px;
+  }
+  .new-header-wrapper .second-nav-block ul {
+    margin: 0;
+    max-width: inherit;
+    position: relative;
+    display: none;
+  }
+  .new-header-wrapper .second-nav-block.expanded ul {
+    display: block;
+    margin: 0;
+  }
+  .new-header-wrapper .second-nav-block ul:before {
+    content: "";
+    position: absolute;
+    top: -5px;
+    left: 10px;
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-width: 0 5px 6px 5px;
+    border-color: transparent transparent $j-main-global-color-first transparent;
+  }
+  .new-header-wrapper .second-nav-block ul li {
+    display: block;
+    text-align: left;
+    padding: 0;
+    margin: 0 0 0 5px;
+  }
+  .new-header-wrapper .second-nav-block ul li a {
+    background: $white-bg;
+    display: block;
+    width: 100%;
+    padding: 5px 10px;
+    font: 12px/14px $font-f;
+    border-top: 1px solid darken($j-main-global-color-first, 7);
+    color: $j-main-global-color-second;
+  }
+  .new-header-wrapper .second-nav-block ul li a:hover {
+    color: $hero-color;
+    text-decoration: none;
+  }
+  .main-nav.favorite {
+    margin: 0 0 0 10px;
+  }
+  .main-nav.favorite ul li.my-games {
+    border-radius: 0 0 5px 5px;
+  }
+  .main-nav.favorite ul li.my-games a {
+    padding-top: 24px;
+  }
+  .main-nav.favorite ul li.my-games:before,
+  .main-nav.favorite ul li.fav-games:before {
+    top: 10px;
+    left: -24px;
+    font: 84px/40px icomoon;
+  }
+  .main-nav.favorite ul li span.my-games-count {
+    top: 29px;
+    left: 9px;
+  }
+  .main-nav.account-nav {
+    margin: 12px 0 0 0;
+  }
+  .main-nav.account-nav ul li.balance,
+  .main-nav.account-nav ul li {
+    background-color: transparent;
+    margin: 0 5px 0 0;
+  }
+  .main-nav.account-nav ul li a:before,
+  .main-nav.account-nav ul li span:before,
+  .main-nav.account-nav ul li.balance:before {
+    display: none;
+  }
+  .main-nav.account-nav ul li.my-bets a p {
+    max-width: inherit;
+  }
+  .main-nav.account-nav ul li.register-button {
+    background: $j-head-reg-button;
+  }
+  .main-nav.account-nav ul li a {
+    color: $j-header-icons-color;
+    text-transform: none;
+    font: 13px/14px $font-f;
+    font-weight: normal;
+  }
+  .main-nav.account-nav ul li.balance a,
+  .new-header-wrapper .main-nav ul li.balance a span {
+    font: 12px/16px $font-f;
+    font-weight: bold;
+    color: $j-main-global-color-first;
+  }
+  .new-header-wrapper .message-info {
+    margin: 0;
+    padding: 0 5px 0 0;
+  }
+  .new-header-wrapper .main-nav ul li.sign-in-button {
+    margin: 0 8px 0 0;
+  }
+  .new-header-wrapper .arrow-lang:before {
+    content: "\e670";
+    font: 16px/18px icomoon;
+    right: -10px;
+    top: -1px;
+  }
+  .new-header-wrapper .search-results-container {
+    right: -22px;
+  }
+  .new-header-wrapper .search-results-inner .arrow-sport {
+    right: 3px;
+  }
+  .new-header-wrapper .prof-name a:before {
+    content: "\e678";
+    top: 12px;
+  }
+  .new-header-wrapper .prof-name a {
+    font: 13px/20px $font-f;
+  }
+  .new-header-wrapper .prof-icon:after {
+    top: 2px;
+    position: relative;
+  }
+  .new-header-wrapper .help-b {
+    width: 50px;
+  }
+  .new-header-wrapper .animated-vivarobet,
+  .new-header-wrapper .animated-vbet {
+    position: absolute;
+    height: 105px;
+  }
+  .new-header-wrapper .help-b a {
+    width: 44px;
+  }
+  .conteiner .new-header-wrapper .set-icon {
+    transition-duration: 0ms;
+    -webkit-transition: transform 600ms;
+    -moz-transition: transform 600ms;
+    -ms-transition: transform 600ms;
+    transition: transform 600ms;
+  }
+  .conteiner .new-header-wrapper .settings {
+    max-width: inherit;
+  }
+  .conteiner .new-header-wrapper .settings-button {
+    margin: 13px 1px 0 5px;
+  }
+  @media screen and (max-width: 1260px) {
+    .body-wrapper.homepage .conteiner.new .header {
+      max-width: 950px;
+      min-width: 950px;
+    }
+  }
+  .conteiner .new-header-wrapper .category-nav ul:after {
+    border-radius: 5px;
+  }
+  @media screen and (max-width: 1359px) {
+    .conteiner .new-header-wrapper .category-nav ul li:nth-child(n+8) a {
+      padding: 8px 12px;
+    }
+    .category-nav ul li:nth-child(8) {
+      top: 40px;
+    }
+    .category-nav ul li:nth-child(9) {
+      top: 70px;
+    }
+    .category-nav ul li:nth-child(10) {
+      top: 100px;
+    }
+    .category-nav ul li:nth-child(11) {
+      top: 130px;
+    }
+    .category-nav ul li:nth-child(12) {
+      top: 160px;
+    }
+    .category-nav ul li:nth-child(13) {
+      top: 190px;
+    }
+    .category-nav ul li:nth-child(14) {
+      top: 220px;
+    }
+    .category-nav ul li:nth-child(15) {
+      top: 250px;
+    }
+    .category-nav ul li:nth-child(16) {
+      top: 280px;
+    }
+    .category-nav ul li:nth-child(17) {
+      top: 310px;
+    }
+    .category-nav ul li:nth-child(18) {
+      top: 340px;
+    }
+    .category-nav ul li:nth-child(19) {
+      top: 370px;
+    }
+    .category-nav ul li:nth-child(20) {
+      top: 400px;
+    }
+    .category-nav ul li:nth-child(21) {
+      top: 430px;
+    }
+    .category-nav ul li:nth-child(22) {
+      top: 460px;
+    }
+  }
+  /*mini-header in scroll*/
+  .conteiner.show-fix .new-header-wrapper,
+  .conteiner.show-game .new-header-wrapper {
+    height: 50px;
+  }
+  .conteiner.show-fix .new-header-wrapper .header,
+  .conteiner.show-game .new-header-wrapper .header {
+    height: 50px;
+  }
+  .conteiner.show-fix .new-header-wrapper .top-black,
+  .conteiner.show-game .new-header-wrapper .top-black {
+    height: 25px;
+  }
+  .conteiner.show-fix .new-header-wrapper .header-bg,
+  .conteiner.show-game .new-header-wrapper .header-bg {
+    height: 25px;
+    bottom: -10px;
+  }
+  .conteiner.show-fix .new-header-wrapper .logo a,
+  .conteiner.show-game .new-header-wrapper .logo a {
+    height: 25px;
+  }
+  .conteiner.show-fix .new-header-wrapper .clock,
+  .conteiner.show-game .new-header-wrapper .clock {
+    display: block;
+    top: 14px;
+    margin: 0;
+    padding: 14px 0 0 0;
+    position: absolute;
+  }
+  .conteiner.show-fix .new-header-wrapper .clock span,
+  .conteiner.show-game .new-header-wrapper .clock span {
+    font-size: 12px;
+  }
+  .conteiner.show-fix .new-header-wrapper .category-nav,
+  .conteiner.show-game .new-header-wrapper .category-nav {
+    margin: 1px 0 0;
+    height: 25px;
+  }
+  .conteiner.show-fix .new-header-wrapper .category-nav ul,
+  .conteiner.show-game .new-header-wrapper .category-nav ul {
+    margin: 0 0 0 100px;
+  }
+  .conteiner.show-fix .new-header-wrapper .settings,
+  .conteiner.show-game .new-header-wrapper .settings {
+    display: block;
+    height: 25px;
+  }
+
+  .conteiner.show-fix .new-header-wrapper .prof-name,
+  .conteiner.show-game .new-header-wrapper .prof-name {
+    display: block;
+    margin: 0;
+    z-index: 6666;
+  }
+  .conteiner.show-fix .new-header-wrapper .main-nav.account-nav ul li,
+  .conteiner.show-game .new-header-wrapper .main-nav.account-nav ul li {
+    height: 25px;
+  }
+  .conteiner.show-fix .new-header-wrapper .main-nav ul.not-sign .sign-in-reg-buttons li.sign-in-button {
+    background: transparent;
+  }
+  .conteiner.show-fix .new-header-wrapper .main-nav.account-nav,
+  .conteiner.show-game .new-header-wrapper .main-nav.account-nav {
+    margin-top: 0;
+  }
+  .conteiner.new.show-fix .main-nav ul li a,
+  .conteiner.new.show-game .main-nav ul li a {
+    padding: 6px 6px 3px 38px;
+  }
+  .conteiner.show-fix .new-header-wrapper .category-nav ul li a.poolbetting-menu-item,
+  .conteiner.show-game .new-header-wrapper .category-nav ul li a.poolbetting-menu-item {
+    min-width: 92px;
+  }
+  .conteiner.show-fix .new-header-wrapper .category-nav ul li a,
+  .conteiner.show-game .new-header-wrapper .category-nav ul li a,
+  .conteiner.show-fix .new-header-wrapper .category-nav ul li.casino.fantasy a,
+  .conteiner.show-game .new-header-wrapper .category-nav ul li.casino.fantasy a {
+    font-size: 11px;
+    padding: 5px 8px 6px;
+    max-width: inherit;
+  }
+  .conteiner.show-fix .new-header-wrapper .category-nav ul li a p.jackpot,
+  .conteiner.show-game .new-header-wrapper .category-nav ul li a p.jackpot {
+    top: -5px;
+    position: relative;
+  }
+  .conteiner.show-fix .new-header-wrapper .category-nav ul li a span,
+  .conteiner.show-game .new-header-wrapper .category-nav ul li a span {
+    bottom: 0;
+    font-size: 9px;
+  }
+  .conteiner.show-fix .new-header-wrapper .main-nav.account-nav ul li.balance a,
+  .conteiner.show-game .new-header-wrapper .main-nav.account-nav ul li.balance a {
+    font: 11px/16px $font-f;
+    font-weight: bold;
+    border-left: 1px solid lighten(desaturate(adjust-hue($J-GLOBAL-COLOR, 1deg), 17), 13);
+    border-right: 1px solid lighten(desaturate(adjust-hue($J-GLOBAL-COLOR, 1deg), 17), 13);
+    padding: 6px 6px 4px 38px;
+  }
+  .conteiner.show-fix .new-header-wrapper .contain-all-settings,
+  .conteiner.show-game .new-header-wrapper .contain-all-settings {
+    top: 0;
+    margin: 0 28px 0 0;
+    background: lighten(adjust-hue($J-GLOBAL-COLOR, -4deg), 8);
+  }
+  .conteiner.show-fix .new-header-wrapper .prof-name a,
+  .conteiner.show-game .new-header-wrapper .prof-name a {
+    padding: 3px 30px 2px 10px;
+    border-radius: inherit;
+    background: none;
+    border-left: 1px solid lighten(desaturate(adjust-hue($J-GLOBAL-COLOR, 1deg), 17), 13);
+  }
+  .body-wrapper .conteiner.show-fix .new-header-wrapper .help-b,
+  .body-wrapper .conteiner.show-game .new-header-wrapper .help-b {
+    position: relative;
+    right: 0;
+    top: 0;
+    left: 0;
+    height: 25px;
+    border-right: 1px solid lighten(desaturate(adjust-hue($J-GLOBAL-COLOR, 1deg), 17), 13);
+    margin: 0;
+    display: block;
+  }
+  .conteiner.show-fix .new-header-wrapper .help-b.faq, .conteiner.show-game .new-header-wrapper .help-b.faq {
+    position: relative;
+    top: 0;
+    height: 25px;
+    width: auto;
+    padding: 0 10px;
+  }
+  .conteiner.show-fix .new-header-wrapper .help-b a, .conteiner.show-game .new-header-wrapper .help-b a {
+    height: 25px;
+  }
+  .conteiner.show-fix .new-header-wrapper .second-nav-block, .conteiner.show-game .new-header-wrapper .second-nav-block {
+    display: block;
+    top: -1px;
+    left: 110px;
+    z-index: 9999;
+  }
+  .Vivaro .conteiner.show-fix .new-header-wrapper .second-nav-block, .Vivaro .conteiner.show-game .new-header-wrapper .second-nav-block {
+    left: 200px;
+  }
+  .conteiner.show-fix .new-header-wrapper .block-search,
+  .conteiner.show-game .new-header-wrapper .block-search {
+    top: 0;
+    height: 25px;
+    padding: 0;
+    right: 50px;
+    background: #242e45;
+    min-width: 38px;
+  }
+  .conteiner.show-fix .new-header-wrapper .block-search input[type="text"],
+  .conteiner.show-game .new-header-wrapper .block-search input[type="text"] {
+    padding: 3px 0 5px 36px;
+    margin: 0;
+  }
+  .conteiner.show-fix .new-header-wrapper .block-search:before,
+  .conteiner.show-game .new-header-wrapper .block-search:before {
+    font: 14px/25px icomoon;
+    top: 2px;
+    left: 11px;
+  }
+  .conteiner.show-fix .new-header-wrapper .language-change,
+  .conteiner.show-fix .new-header-wrapper .settings-button,
+  .conteiner.show-game .new-header-wrapper .language-change,
+  .conteiner.show-game .new-header-wrapper .settings-button {
+    height: 25px;
+    margin: 0 5px;
+    width: 25px;
+  }
+  .conteiner.show-fix .new-header-wrapper .language-change,
+  .conteiner.show-game .new-header-wrapper.language-change {
+    margin: 0;
+    padding: 0 5px;
+  }
+  .conteiner.show-fix .new-header-wrapper .help-b a:before,
+  .conteiner.show-game .new-header-wrapper .help-b a:before {
+    top: -2px;
+    left: -12px;
+    font: 40px/30px icomoon;
+  }
+  .conteiner.show-fix .new-header-wrapper .help-b.faq,
+  .conteiner.show-game .new-header-wrapper .help-b.faq {
+    text-indent: 0;
+    color: $j-main-global-color-first;
+    text-align: center;
+    font: 10px/25px $font-f;
+    font-weight: bold;
+    border-left: 1px solid lighten(desaturate(adjust-hue($J-GLOBAL-COLOR, 1deg), 17), 13);
+  }
+  .conteiner.show-fix .new-header-wrapper .help-b.faq:before,
+  .conteiner.show-game .new-header-wrapper .help-b.faq:before {
+    display: none;
+  }
+  .conteiner.show-fix .new-header-wrapper .language-change p,
+  .conteiner.show-game .new-header-wrapper .language-change p {
+    font: 10px/26px $font-f;
+  }
+  .conteiner.show-fix .new-header-wrapper .logo.VBET,
+  .conteiner.show-game .new-header-wrapper .logo.VBET {
+    margin: 0;
+  }
+  .conteiner.show-fix .new-header-wrapper .set-icon,
+  .conteiner.show-game .new-header-wrapper .set-icon {
+    top: 0;
+    height: 25px;
+    width: 25px;
+    right: -1px;
+  }
+  .conteiner.show-fix .new-header-wrapper .set-icon:before,
+  .conteiner.show-game .new-header-wrapper .set-icon:before {
+    content: "\e6a6";
+    font: 40px/25px icomoon;
+    left: -7px;
+    top: 0;
+    width: 25px;
+    height: 25px;
+  }
+  .conteiner.show-fix .new-header-wrapper .settings-button:after,
+  .conteiner.show-game .new-header-wrapper .settings-button:after,
+  .conteiner.show-fix .new-header-wrapper .settings-button:before,
+  .conteiner.show-game .new-header-wrapper .settings-button:before {
+    top: 0;
+    height: 25px;
+  }
+  .conteiner.show-fix .new-header-wrapper .arrow-lang:before,
+  .conteiner.show-game .new-header-wrapper .arrow-lang:before {
+    right: -5px;
+    top: -6px;
+  }
+  .conteiner.show-fix .new-header-wrapper .main-nav ul li.balance:after,
+  .conteiner.show-game .new-header-wrapper .main-nav ul li.balance:after {
+    font: 40px/25px icomoon;
+    left: 0;
+  }
+  .conteiner.show-fix .new-header-wrapper .prof-name a:before,
+  .conteiner.show-game .new-header-wrapper .prof-name a:before {
+    content: "\e678";
+    top: 5px;
+    right: 10px;
+    font: 11px/18px icomoon;
+  }
+  .conteiner.show-fix .new-header-wrapper .main-nav ul li.my-bets,
+  .conteiner.show-game .new-header-wrapper .main-nav ul li.my-bets {
+    background-position: 8px 3px !important;
+    background-size: 12px;
+  }
+  .conteiner.show-fix .new-header-wrapper .main-nav ul li.my-bets a,
+  .conteiner.show-game .new-header-wrapper .main-nav ul li.my-bets a {
+    padding: 6px 6px 4px 28px;
+  }
+  .conteiner.show-fix .new-header-wrapper .message-info,
+  .conteiner.show-game .new-header-wrapper .message-info {
+    display: block;
+    height: 25px;
+    border-left: 1px solid lighten(desaturate(adjust-hue($J-GLOBAL-COLOR, 1deg), 17), 13);
+    background: $J-GLOBAL-COLOR;
+  }
+  .conteiner.show-fix .new-header-wrapper .message-info:before,
+  .conteiner.show-game .new-header-wrapper .message-info:before {
+    font: 20px/25px icomoon;
+    top: 1px;
+  }
+  .conteiner.show-fix .new-header-wrapper .message-info span,
+  .conteiner.show-game .new-header-wrapper .message-info span {
+    top: 1px;
+    right: 5px;
+  }
+  .conteiner.show-fix .new-header-wrapper .main-nav.favorite ul li.my-games,
+  .conteiner.show-game .new-header-wrapper .main-nav.favorite ul li.my-games {
+    border-radius: inherit;
+    height: 25px;
+    overflow: hidden;
+  }
+  .conteiner.show-fix .new-header-wrapper .main-nav.favorite ul li.my-games a,
+  .conteiner.show-game .new-header-wrapper .main-nav.favorite ul li.my-games a {
+    padding: 6px 4px 3px 26px;
+  }
+  .conteiner.show-fix .new-header-wrapper .main-nav.favorite ul li.my-games:before,
+  .conteiner.show-fix .new-header-wrapper .main-nav.favorite ul li.fav-games:before,
+  .conteiner.show-game .new-header-wrapper .main-nav.favorite ul li.my-games:before,
+  .conteiner.show-game .new-header-wrapper .main-nav.favorite ul li.fav-games:before {
+    top: -8px;
+    font: 72px/40px icomoon;
+    left: -20px;
+  }
+  .conteiner.show-fix .new-header-wrapper span.my-games-count,
+  .conteiner.show-game .new-header-wrapper span.my-games-count {
+    top: 9px;
+    font-size: 8px;
+    left: 7px;
+  }
+  .conteiner.show-fix .new-header-wrapper .main-nav.account-nav ul li.register-button,
+  .conteiner.show-game .new-header-wrapper .main-nav.account-nav ul li.register-button {
+    background: $j-head-reg-button;
+    height: 16px;
+  }
+  .conteiner.show-fix .new-header-wrapper .main-nav ul li.sign-in-button,
+  .conteiner.show-game .new-header-wrapper .main-nav ul li.sign-in-button {
+    height: 16px;
+    background-color: transparent;
+  }
+  .conteiner.show-fix .new-header-wrapper .main-nav ul.not-sign .sign-in-reg-buttons li.register-button span,
+  .conteiner.show-game .new-header-wrapper .main-nav ul.not-sign .sign-in-reg-buttons li.register-button span,
+  .conteiner.show-fix .new-header-wrapper .main-nav ul.not-sign .sign-in-reg-buttons li.sign-in-button span,
+  .conteiner.show-game .new-header-wrapper .main-nav ul.not-sign .sign-in-reg-buttons li.sign-in-button span {
+    padding: 0 10px !important;
+    font: 10px/16px $font-f;
+    height: 16px;
+  }
+  .conteiner.show-fix .new-header-wrapper .block-search input[type="text"]:focus,
+  .conteiner.show-game .new-header-wrapper .block-search input[type="text"]:focus {
+    box-shadow: none;
+    background: #242e45;
+    width: 195px;
+  }
+  .conteiner.show-fix .new-header-wrapper .search-results-container-scroll,
+  .conteiner.show-game .new-header-wrapper .search-results-container-scroll {
+    right: -30px;
+    top: 30px;
+  }
+  .conteiner.show-fix .new-header-wrapper .prof-name ul,
+  .conteiner.show-game .new-header-wrapper .prof-name ul {
+    top: 25px;
+    z-index: 333;
+  }
+  .conteiner.show-fix .new-header-wrapper .category-nav ul:after,
+  .conteiner.show-game .new-header-wrapper .category-nav ul:after {
+    top: 3px;
+    height: 20px;
+    border-radius: 3px;
+    font: 13px/20px $font-f;
+  }
+  .conteiner.show-fix .new-header-wrapper .category-nav ul:before,
+  .conteiner.show-game .new-header-wrapper .category-nav ul:before {
+    top: 5px;
+  }
+  @media screen and (max-width: 1500px) {
+    .conteiner.show-fix .new-header-wrapper .category-nav ul li:nth-child(8),
+    .conteiner.show-game .new-header-wrapper .category-nav ul li:nth-child(8) {
+      top: 25px;
+    }
+    .conteiner.show-fix .new-header-wrapper .category-nav ul li:nth-child(9),
+    .conteiner.show-game .new-header-wrapper .category-nav ul li:nth-child(9) {
+      top: 50px;
+    }
+    .conteiner.show-fix .new-header-wrapper .category-nav ul li:nth-child(10),
+    .conteiner.show-game .new-header-wrapper .category-nav ul li:nth-child(10) {
+      top: 75px;
+    }
+    .conteiner.show-fix .new-header-wrapper .category-nav ul li:nth-child(11),
+    .conteiner.show-game .new-header-wrapper .category-nav ul li:nth-child(11) {
+      top: 100px;
+    }
+    .conteiner.show-fix .new-header-wrapper .category-nav ul li:nth-child(12),
+    .conteiner.show-game .new-header-wrapper .category-nav ul li:nth-child(12) {
+      top: 125px;
+    }
+    .conteiner.show-fix .new-header-wrapper .category-nav ul li:nth-child(13),
+    .conteiner.show-game .new-header-wrapper .category-nav ul li:nth-child(13) {
+      top: 150px;
+    }
+    .conteiner.show-fix .new-header-wrapper .category-nav ul li:nth-child(14),
+    .conteiner.show-game .new-header-wrapper .category-nav ul li:nth-child(14) {
+      top: 175px;
+    }
+    .conteiner.show-fix .new-header-wrapper .category-nav ul li:nth-child(15),
+    .conteiner.show-game .new-header-wrapper .category-nav ul li:nth-child(15) {
+      top: 200px;
+    }
+    .conteiner.show-fix .new-header-wrapper .category-nav ul li:nth-child(16),
+    .conteiner.show-game .new-header-wrapper .category-nav ul li:nth-child(16) {
+      top: 225px;
+    }
+    .conteiner.show-fix .new-header-wrapper .category-nav ul li:nth-child(17),
+    .conteiner.show-game .new-header-wrapper .category-nav ul li:nth-child(17) {
+      top: 250px;
+    }
+    .conteiner.show-fix .new-header-wrapper .category-nav ul li:nth-child(18),
+    .conteiner.show-game .new-header-wrapper .category-nav ul li:nth-child(18) {
+      top: 275px;
+    }
+    .conteiner.show-fix .new-header-wrapper .category-nav ul li:nth-child(19),
+    .conteiner.show-game .new-header-wrapper .category-nav ul li:nth-child(19) {
+      top: 300px;
+    }
+    .conteiner.show-fix .new-header-wrapper .category-nav ul li:nth-child(20),
+    .conteiner.show-game .new-header-wrapper .category-nav ul li:nth-child(20) {
+      top: 325px;
+    }
+    .conteiner.show-fix .new-header-wrapper .category-nav ul li:nth-child(21),
+    .conteiner.show-game .new-header-wrapper .category-nav ul li:nth-child(21) {
+      top: 350px;
+    }
+    .conteiner.show-fix .new-header-wrapper .category-nav ul li:nth-child(22),
+    .conteiner.show-game .new-header-wrapper .category-nav ul li:nth-child(22) {
+      top: 375px;
+    }
+  }
+  /*mini-header in scroll END*/
+  /*new header END*/
+}

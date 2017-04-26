@@ -1,0 +1,36 @@
+<div class="help-landing" ng-controller="cmsPagesCtrl">
+    <div class="headerVersion_2">
+        <div class="conteiner new0" class-on-scroll="show-fix,show-normal">
+            <div class="header-wrapper">
+                <div class="header-container-b">
+                    <div class="logo-nav-wrapper">
+                        <div class="logo-contain-b">
+                            <a class="pointer-events-none" href="#/"></a>
+                        </div>
+                    </div>
+                    <div class="header-top-row"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <div class="block-faq-content {{selectedTopPage.slug.toLowerCase()}} {{selectedSecondLevelPage.slug.toLowerCase()}}" ng-init="getPokerPopup('poker-' + $location.search().action); popupHelpContentLoaded = true">
+        <vbet-loader class="page-center" ng-show="!popupHelpContentLoaded"></vbet-loader>
+        <p>{{pokerPopup.title}}</p>
+        <div class="help-rules-block">
+
+            <div class="help-rules payments" >
+
+                <div class="peymants-info" ng-bind-html="pokerPopup.children[0].content|html">
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+</div>

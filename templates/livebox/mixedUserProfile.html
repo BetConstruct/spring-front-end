@@ -1,0 +1,637 @@
+<div class="info-scroll-contain-b-new"  ng-controller="settingsCtrl" ng-init="env.mixedSettingsPage=env.mixedSettingsPage||'details'">
+    <div class="profile-scroll-wrapper">
+        <div class="any-tabs-wrapper-b">
+            <div class="group-tabs-wrapper">
+                <div class="first-level-history-tab">
+                    <ul>
+                        <li ng-click="env.mixedSettingsPage='details'" ng-class="{'active': env.mixedSettingsPage==='details'}" ng-init="loadUserInfo()"><span trans>Personal Details</span></li>
+                        <li ng-click="env.mixedSettingsPage='changepassword'" ng-show="!conf.disableChangePassword" ng-class="{'active': env.mixedSettingsPage==='changepassword'}"><span trans>Change Password</span></li>
+                        <li ng-show="conf.enableAccountVerification && !profile.is_verified" ng-click="env.mixedSettingsPage = 'verifyaccount'" ng-class="{'active': env.mixedSettingsPage==='verifyaccount'}"><span  trans>Verify Account</span></li>
+                        <li ng-show="conf.userTimeOut.enabled" ng-click="env.mixedSettingsPage='usertimeout'" ng-class="{'active': env.mixedSettingsPage==='usertimeout'}"><span trans>Time-Out</span></li>
+                        <li ng-show="conf.selfExclusion.enabled" ng-click="env.mixedSettingsPage='selfexclusion'" ng-class="{'active': env.mixedSettingsPage==='selfexclusion'}"><span trans>Self-Exclusion</span></li>
+                        <li ng-show="conf.realityCheck.enabled" ng-click="env.mixedSettingsPage='realitycheck'" ng-class="{'active': env.mixedSettingsPage==='realitycheck'}"><span trans>Reality Checks</span></li>
+                        <li ng-show="conf.enableDepositLimits" ng-click="env.mixedSettingsPage='depositlimits'" ng-class="{'active': env.mixedSettingsPage==='depositlimits'}"><span trans>Deposit Limits</span></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="profile-tab-contain-b">
+
+            <div ng-show="env.mixedSettingsPage==='verifyaccount' && conf.enableAccountVerification">
+                <ng-include src="getTemplate('templates/livebox/mixedVerifyAccount.html')"></ng-include>
+            </div>
+
+            <div ng-if="env.mixedSettingsPage==='settingsV2'">
+                <ng-include src="getTemplate('templates/livebox/mixedUserProfileV2.html')"></ng-include>
+            </div>
+
+            <div ng-show="env.mixedSettingsPage==='preferences'">
+                <!--Preferences-->
+                <h3 trans>Preferences</h3>
+                <div class="settings-info-contain">
+                    <form name="preferencesForm">
+                        <label for="language" trans>Change language</label>
+
+                        <div class="select-block">
+                            <select id="language" name="language" ng-model="preferences.language">
+                                <option ng-repeat="(code, lang) in conf.availableLanguages" value="{{code}}" ng-selected="preferences.language===code">{{ lang.full|translate }}</option>
+                            </select>
+                        </div>
+
+                        <label for="odd_format" trans>Odds in</label>
+
+                        <div class="select-block">
+                            <select name="odd_format" id="odd_format" ng-model="preferences.oddFormat">
+                                <option value="decimal" trans>Decimal</option>
+                                <option value="fractional" trans>Fractional</option>
+                                <option value="american" trans>American</option>
+                            </select>
+                        </div>
+                        <div class="change-button-container">
+                            <div class="cashier-button">
+                                <button ng-disabled="preferencesForm.$pristine" ng-show="!working" ng-click="savePreferences()" trans>Save</button>
+                                <button disabled="disabled" ng-show="working" trans>Wait...</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <!--Preferences END-->
+            </div>
+
+            <div ng-show="env.mixedSettingsPage==='changepassword'" class="change-password-section-j">
+                <!--Change Password-->
+                <h3 trans>Change Password</h3>
+
+                <div class="settings-info-contain">
+                    <form name="changepasswordForm" class="registration-form">
+                        <label><span trans>Current Password</span></label>
+                        <div class="form-text"  ng-class="{'error': (!passwordResetError['oldpassword'] || changepasswordForm['oldpassword'].blur) &&((changepasswordForm.oldpassword.$dirty && changepasswordForm.oldpassword.$error.required) || (changepasswordForm.oldpassword.$error.incorrect && !changepasswordForm.oldpassword.$dirty))}">
+                            <div class="tooltip-wrapper-j">
+                                <input name="oldpassword" ng-blur="changepasswordForm['oldpassword'].blur=true" id="changePasswordOld" numpad ng-model="changepasswordData.oldpassword" type="password" required trans>
+                                <div class="form-error-icon-j" ng-click="resetFieldError('oldpassword', true)"></div>
+                                <div class="tooltip-j">
+                                    <div trans ng-show="changepasswordForm.oldpassword.$error.required">This field is required</div>
+                                    <div trans ng-show="changepasswordForm.oldpassword.$pristine && changepasswordForm.oldpassword.$error.incorrect">Password incorrect</div>
+                                </div>
+                            </div>
+                        </div>
+                        <label><span trans>New Password</span></label>
+                        <div class="form-text"  ng-class="{'error': (!passwordResetError['password'] || changepasswordForm['password'].blur) && changepasswordForm.password.$dirty && changepasswordForm.password.$invalid}">
+                            <div class="tooltip-wrapper-j">
+                                <input name="password" ng-blur="changepasswordForm['password'].blur=true" id="changePasswordNew" numpad ng-model="changepasswordData.password" type="password" placeholder="{{'Must be at least {1} characters'|translate:[conf.passwordValidationLength]}}" required ng-pattern="conf.passwordValidationPattern" ng-minlength="personalDetails.limits.password !== undefined?personalDetails.limits.password.minlength:''" ng-maxlength="personalDetails.limits.password !== undefined?personalDetails.limits.password.maxlength:''">
+
+                                <div class="form-error-icon-j" ng-click="resetFieldError('password', true)"></div>
+                                <div class="tooltip-j">
+
+                                    <div trans ng-show="changepasswordForm.password.$error.required">This field is required</div>
+                                    <div ng-show="changepasswordForm.password.$error.minlength">{{'Must be at least {1} characters'|translate:[conf.passwordValidationLength]}}</div>
+                                    <div ng-show="changepasswordForm.password.$error.maxlength">{{'Must be less than {1} characters'|translate:[50]}}</div>
+                                    <div ng-show="changepasswordForm.password.$error.pattern" ng-bind="conf.passwordValidationPatternError|translate"></div>
+                                    <div trans ng-show="changepasswordForm.password.$error.sameAsLogin">Password cannot be same as login</div>
+
+                                    <div trans ng-show="registerform.password2.$error.required" class="">This field is required</div>
+                                </div>
+                            </div>
+                        </div>
+                        <label><span trans>Confirm New Password</span></label>
+                        <div class="form-text" ng-class="{'error': (!passwordResetError['password2'] || changepasswordForm['password2'].blur) && changepasswordForm.password2.$dirty && (changepasswordForm.password2.$modelValue !== changepasswordForm.password.$modelValue)}">
+                            <div class="tooltip-wrapper-j">
+                                <input name="password2" id="changePasswordNew2" ng-blur="changepasswordForm['password2'].blur=true" numpad ng-model="changepasswordData.password2" type="password" placeholder="Confirm password" required trans ng-disabled="changepasswordForm.password.$invalid"  ng-minlength="personalDetails.limits.password2 !== undefined?personalDetails.limits.password2.minlength:''" ng-maxlength="personalDetails.limits.password2 !== undefined?personalDetails.limits.password2.maxlength:''">
+
+                                <div class="form-error-icon-j" ng-click="resetFieldError('password2', true)"></div>
+                                <div class="tooltip-j">
+
+                                    <div trans ng-show="changepasswordData.password2 && (changepasswordData.password2 !== changepasswordData.password)">Passwords don't match</div>
+                                    <div trans ng-show="changepasswordForm.password2.$error.required">This field is required</div>
+                                    <div ng-show="changepasswordForm.password2.$error.minlength">{{'Must be at least {1} characters'|translate:[conf.passwordValidationLength]}}</div>
+                                    <div ng-show="changepasswordForm.password2.$error.maxlength">{{'Must be less than {1} characters'|translate:[50]}}</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="change-button-container password">
+                            <div class="cashier-button">
+                                <button ng-disabled="!changepasswordForm.$dirty || changepasswordForm.$invalid || (changepasswordForm.password2.$modelValue !== changepasswordForm.password.$modelValue)" ng-show="!working" trans ng-click="changePassword();passwordResetError = {}">Save</button>
+                                <button disabled="disabled" ng-show="working" trans>Wait...</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <!--Change Password END-->
+            </div>
+            <div ng-show="env.mixedSettingsPage==='details'">
+                <!--Change Password-->
+                <h3 trans>Personal Details</h3>
+                <vbet-loader class="page-center" ng-show="loadingInfo"></vbet-loader>
+                <div class="settings-info-contain" ng-show="!loadingInfo">
+                    <form name="detailsForm" class="registration-form">
+                        <div class="personal-details-left">
+
+                            <ul>
+                                <li ng-class="{'read-only': personalDetails.readOnlyFields.indexOf('user_id') !== -1, 'editable': personalDetails.editableFields.indexOf('user_id') !== -1}">
+                                    <label><span trans>ID</span>: <span class="hint" ng-show="personalDetails.requiredEditableFields.indexOf('user_id') !== -1">*</span></label>
+                                    <div class="disabled-field">
+                                        <p>{{details.user_id}}</p>
+                                    </div>
+
+                                    <div class="active-field">
+                                        <div class="form-text" ng-class="{'error': (!resetError['user_id'] || detailsForm['user_id'].blur) && detailsForm.user_id.$invalid}">
+                                            <div class="tooltip-wrapper-j">
+                                                <input name="user_id" type="text" ng-blur="detailsForm['user_id'].blur=true" ng-model="details.user_id" title="{{personalDetails.disabledFields.indexOf('user_id') !== -1 ? ('This field cannot be edited.'|translate) : ''}}" ng-required="personalDetails.requiredEditableFields.indexOf('user_id') !== -1" ng-disabled="personalDetails.disabledFields.indexOf('user_id') !== -1">
+
+                                                <div class="form-error-icon-j" ng-click="resetFieldError('user_id')" ng-show="personalDetails.disabledFields.indexOf('user_id') === -1"></div>
+                                                <div class="tooltip-j" ng-show="personalDetails.disabledFields.indexOf('user_id') === -1">
+
+                                                    <div trans ng-show="detailsForm.user_id.$error.required">This field is required</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+
+                                <li ng-class="{'read-only': personalDetails.readOnlyFields.indexOf('username') !== -1, 'editable': personalDetails.editableFields.indexOf('username') !== -1}">
+                                    <label><span trans>Username</span>: <span class="hint" ng-show="personalDetails.requiredEditableFields.indexOf('username') !== -1">*</span></label>
+                                    <div class="disabled-field">
+                                        <p>{{details.username}}</p>
+                                    </div>
+
+                                    <div class="active-field">
+                                        <div class="form-text" ng-class="{'error': (!resetError['username'] || detailsForm['username'].blur) && detailsForm.username.$invalid}">
+                                            <div class="tooltip-wrapper-j">
+                                                <input name="username" type="text" ng-blur="detailsForm['username'].blur=true" ng-model="details.username" title="{{personalDetails.disabledFields.indexOf('username') !== -1 ? ('This field cannot be edited.'|translate) : ''}}" ng-required="personalDetails.requiredEditableFields.indexOf('username') !== -1" ng-disabled="personalDetails.disabledFields.indexOf('username') !== -1">
+
+                                                <div class="form-error-icon-j" ng-show="personalDetails.disabledFields.indexOf('username') === -1"></div>
+                                                <div class="tooltip-j" ng-click="resetFieldError('username')"  ng-show="personalDetails.disabledFields.indexOf('username') === -1">
+
+                                                    <div trans ng-show="detailsForm.username.$error.required">This field is required</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+
+                                <li ng-class="{'read-only': personalDetails.readOnlyFields.indexOf('first_name') !== -1, 'editable': personalDetails.editableFields.indexOf('first_name') !== -1}">
+                                    <label><span trans>First Name</span>: <span class="hint" ng-show="personalDetails.requiredEditableFields.indexOf('first_name') !== -1">*</span></label>
+                                    <div class="disabled-field">
+                                        <p>{{details.first_name}}</p>
+                                    </div>
+
+                                    <div class="active-field">
+                                        <div class="form-text" ng-class="{'error': (!resetError['first_name'] || detailsForm['first_name'].blur) && detailsForm.first_name.$invalid}">
+                                            <div class="tooltip-wrapper-j">
+                                                <input
+                                                        ng-pattern="patterns.userName"
+                                                        name="first_name"
+                                                        placeholder="Enter your name" trans type="text"
+                                                        ng-model="details.first_name"
+                                                        title="{{personalDetails.disabledFields.indexOf('first_name') !== -1 ? ('This field cannot be edited.'|translate) : ''}}"
+                                                        ng-required="personalDetails.requiredEditableFields.indexOf('first_name') !== -1"
+                                                        ng-maxlength="personalDetails.limits.first_name !== undefined?personalDetails.limits.first_name.maxlength:''"
+                                                        ng-minlength="personalDetails.limits.first_name !== undefined?personalDetails.limits.first_name.minlength:''"
+                                                        ng-disabled="personalDetails.disabledFields.indexOf('first_name') !== -1"
+                                                        ng-blur="detailsForm['first_name'].blur=true">
+
+                                                <div class="form-error-icon-j" ng-click="resetFieldError('first_name')" ng-show="personalDetails.disabledFields.indexOf('first_name') === -1"></div>
+                                                <div class="tooltip-j" ng-show="personalDetails.disabledFields.indexOf('first_name') === -1">
+
+                                                    <div trans ng-show="detailsForm.first_name.$error.maxlength">Too long</div>
+                                                    <div trans ng-show="detailsForm.first_name.$error.required">This field is required</div>
+                                                    <div trans ng-show="detailsForm.first_name.$error.pattern">Please enter a valid first name: only letters-no space, no digits and/or symbols.</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li ng-class="{'read-only': personalDetails.readOnlyFields.indexOf('sur_name') !== -1, 'editable': personalDetails.editableFields.indexOf('sur_name') !== -1}">
+                                    <label><span trans>Last Name</span>: <span class="hint" ng-show="personalDetails.requiredEditableFields.indexOf('sur_name') !== -1">*</span></label>
+                                    <div class="disabled-field">
+                                        <p>{{details.sur_name}}</p>
+                                    </div>
+
+                                    <div class="active-field">
+                                        <div class="form-text" ng-class="{'error': (!resetError['sur_name'] || detailsForm['sur_name'].blur) && detailsForm.sur_name.$invalid}">
+                                            <div class="tooltip-wrapper-j">
+                                                <input name="sur_name"
+                                                       ng-pattern="patterns.userName"
+                                                       placeholder="Enter your last name" trans type="text"
+                                                       ng-model="details.sur_name"
+                                                       title="{{personalDetails.disabledFields.indexOf('sur_name') !== -1 ? ('This field cannot be edited.'|translate) : ''}}"
+                                                       ng-required="personalDetails.requiredEditableFields.indexOf('sur_name') !== -1"
+                                                       ng-minlength="personalDetails.limits.sur_name !== undefined?personalDetails.limits.sur_name.minlength:''"
+                                                       ng-maxlength="personalDetails.limits.sur_name !== undefined?personalDetails.limits.sur_name.maxlength:''"
+                                                       ng-disabled="personalDetails.disabledFields.indexOf('sur_name') !== -1"
+                                                       ng-blur="detailsForm['sur_name'].blur=true">
+
+                                                <div class="form-error-icon-j" ng-click="resetFieldError('sur_name')" ng-show="personalDetails.disabledFields.indexOf('sur_name') === -1"></div>
+                                                <div class="tooltip-j" ng-show="personalDetails.disabledFields.indexOf('sur_name') === -1">
+
+                                                    <div trans ng-show="detailsForm.sur_name.$error.maxlength">Too long</div>
+                                                    <div trans ng-show="detailsForm.sur_name.$error.required">This field is required</div>
+                                                    <div trans ng-show="detailsForm.sur_name.$error.pattern" ng-bind="personalDetails.validation.userName|translate"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                                <!-- -----------------------------------------------------birth_date -->
+                                <li ng-class="{'read-only': personalDetails.readOnlyFields.indexOf('birth_date') !== -1, 'editable': personalDetails.editableFields.indexOf('birth_date') !== -1}">
+                                    <label><span trans>Birth date</span>: <span class="hint" ng-show="personalDetails.requiredEditableFields.indexOf('birth_date') !== -1">*</span></label></label>
+
+                                    <div class="disabled-field">
+                                        <p>{{details.birth_date}}</p>
+                                    </div>
+
+                                    <div class="b-date active-field birth-date-fields">
+                                        <div class="tooltip-wrapper-j b-date">
+                                            <div class="select-block">
+                                                <select name="birth_day" ng-change="calculateAge()" ng-required="personalDetails.requiredEditableFields.indexOf('birth_date') !== -1"
+                                                        ng-options="d for d in days"
+                                                        day-selector
+                                                        month-model="birthDate.month"
+                                                        year-model="birthDate.year"
+                                                        options="days"
+                                                        ng-model="birthDate.day"
+                                                        title="{{personalDetails.disabledFields.indexOf('birth_date') !== -1 ? ('This field cannot be edited.'|translate) : ''}}"
+                                                        ng-disabled="personalDetails.disabledFields.indexOf('birth_date') !== -1">
+                                                    <option value="" disabled selected trans>Day</option>
+                                                </select>
+                                            </div>
+                                            <div class="select-block">
+                                                <select name="birth_month" ng-change="calculateAge()" ng-required="personalDetails.requiredEditableFields.indexOf('birth_date') !== -1"
+                                                        ng-model="birthDate.month"
+                                                        ng-disabled="personalDetails.disabledFields.indexOf('birth_date') !== -1"
+                                                        title="{{personalDetails.disabledFields.indexOf('birth_date') !== -1 ? ('This field cannot be edited.'|translate) : ''}}">
+                                                    <option value="" disabled selected trans>Month</option>
+                                                    <option ng-repeat="month in monthNames" value="{{month.val}}">{{month.name| translate}}</option>
+                                                </select>
+                                            </div>
+                                            <div class="select-block">
+                                                <select name="birth_year" ng-change="calculateAge()" ng-required="personalDetails.requiredEditableFields.indexOf('birth_date') !== -1"
+                                                        ng-model="birthDate.year"
+                                                        ng-options="y for (y,y) in birthDate.years"
+                                                        title="{{personalDetails.disabledFields.indexOf('birth_date') !== -1 ? ('This field cannot be edited.'|translate) : ''}}"
+                                                        ng-disabled="personalDetails.disabledFields.indexOf('birth_date') !== -1">
+                                                    <option value="" disabled selected trans>Year</option>
+                                                </select>
+                                            </div>
+                                            <div ng-class="{'error': detailsForm.birth_day.$invalid || detailsForm.birth_month.$invalid || detailsForm.birth_year.$invalid}">
+                                                <div class="tooltip-j" ng-show="conf.personalDetails.disabledFields.indexOf('birth_date') === -1">
+                                                    <div trans ng-show="detailsForm.birth_day.$error.required || detailsForm.birth_month.$error.required || detailsForm.birth_year.$error.required">This field is required</div>
+                                                </div>
+                                            </div>
+                                            <div ng-class="{error: userAge && userAge < conf.registration.minimumAllowedAge}">
+                                                <div class="tooltip-j"><p ng-show="userAge && userAge < conf.registration.minimumAllowedAge">{{ ('Registration on this site is not permitted for people under ' + conf.registration.minimumAllowedAge) |translate }}</p></div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+
+                                </li>
+                                <!-- ----------------------------------------------------- gender -->
+                                <li class="gender-lbl" ng-class="{'read-only': personalDetails.readOnlyFields.indexOf('gender') !== -1, 'editable': personalDetails.editableFields.indexOf('gender') !== -1}">
+                                    <label ><span trans>Gender</span>:</label>
+                                    <div class="disabled-field">
+                                        <p>{{details.viewGender}}</p>
+                                    </div>
+                                    <div class="active-field">
+                                        <label class="custom-radio">
+                                            <input type="radio" ng-model="details.sex" name="gender" value="M">
+                                            <span trans>Male</span>
+                                        </label>
+                                        <label class="custom-radio">
+                                            <input type="radio" ng-model="details.sex" name="gender" value="F">
+                                            <span trans>Female</span>
+                                        </label>
+                                    </div>
+                                </li>
+                                <li ng-if="personalDetails.readOnlyFields.indexOf('email') !== -1 || personalDetails.editableFields.indexOf('email') !== -1 || personalDetails.disabledFields.indexOf('email') !== -1" ng-class="{'read-only': personalDetails.readOnlyFields.indexOf('email') !== -1, 'editable': personalDetails.editableFields.indexOf('email') !== -1}">
+                                    <label><span trans>Email</span>: <span class="hint" ng-show="personalDetails.requiredEditableFields.indexOf('email') !== -1">*</span></label>
+                                    <div class="disabled-field">
+                                        <p>{{details.email}}</p>
+                                    </div>
+
+                                    <div class="active-field">
+                                        <div class="form-text" ng-class="{'error': (!resetError['email'] || detailsForm['email'].blur) && detailsForm.email.$invalid}">
+                                            <div class="tooltip-wrapper-j">
+                                                <input name="email" type="text" ng-model="details.email" title="{{personalDetails.disabledFields.indexOf('email') !== -1 ? ('This field cannot be edited.'|translate) : ''}}" ng-required="personalDetails.requiredEditableFields.indexOf('email') !== -1" ng-pattern="patterns.email" ng-disabled="personalDetails.disabledFields.indexOf('email') !== -1" ng-blur="detailsForm['email'].blur=true">
+
+                                                <div class="form-error-icon-j"  ng-click="resetFieldError('email')" ng-show="personalDetails.disabledFields.indexOf('email') === -1"></div>
+                                                <div class="tooltip-j" ng-show="personalDetails.disabledFields.indexOf('email') === -1">
+
+                                                    <div trans ng-show="detailsForm.email.$error.required">This field is required</div>
+                                                    <div trans ng-show="detailsForm.email.$error.pattern" ng-bind="personalDetails.validation.email|translate"></div>
+                                                    <div trans ng-show="detailsForm.email.$error.dublicate" ng-bind="personalDetails.validation.emailExsists|translate"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li ng-class="{'read-only': personalDetails.readOnlyFields.indexOf('doc_number') !== -1, 'editable': personalDetails.editableFields.indexOf('doc_number') !== -1}">
+                                    <label><span trans>Passport Number</span>: <span class="hint" ng-show="personalDetails.requiredEditableFields.indexOf('doc_number') !== -1">*</span></label>
+                                    <div class="disabled-field">
+                                        <p>{{details.doc_number}}</p>
+                                    </div>
+
+                                    <div class="active-field">
+                                        <div class="form-text" ng-class="{'error':(!resetError['doc_number'] || detailsForm['doc_number'].blur) && detailsForm.password.$dirty &&  detailsForm.doc_number.$invalid}">
+                                            <div class="tooltip-wrapper-j">
+                                                <input name="doc_number" placeholder="Enter your passport number" trans ng-pattern="patterns.docNumber" type="text" ng-minlength="personalDetails.limits.doc_number !== undefined?personalDetails.limits.doc_number.minlength:''" ng-maxlength="personalDetails.limits.doc_number !== undefined?personalDetails.limits.doc_number.maxlength:''" ng-model="details.doc_number" title="{{personalDetails.disabledFields.indexOf('doc_number') !== -1 ? ('This field cannot be edited.'|translate) : ''}}" ng-required="personalDetails.requiredEditableFields.indexOf('doc_number') !== -1" ng-disabled="personalDetails.disabledFields.indexOf('doc_number') !== -1" ng-blur="detailsForm['doc_number'].blur=true">
+                                                <div class="form-error-icon-j" ng-click="resetFieldError('doc_number')" ng-show="personalDetails.disabledFields.indexOf('doc_number') === -1"></div>
+                                                <div class="tooltip-j" ng-show="personalDetails.disabledFields.indexOf('doc_number') === -1">
+
+                                                    <div trans ng-show="detailsForm.doc_number.$error.required">This field is required</div>
+                                                    <div trans ng-show="detailsForm.doc_number.$error.minlength">This field is too short</div>
+                                                    <div trans ng-show="detailsForm.doc_number.$error.maxlength">This field is too long</div>
+                                                    <div trans ng-show="detailsForm.doc_number.$error.pattern" ng-bind="personalDetails.validation.docNumber|translate"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+
+                                <li ng-if="personalDetails.readOnlyFields.indexOf('zip_code') !== -1 || personalDetails.editableFields.indexOf('zip_code') !== -1 || personalDetails.requiredEditableFields.indexOf('zip_code') !== -1 ||personalDetails.disabledFields.indexOf('zip_code') !== -1" ng-class="{'read-only': personalDetails.readOnlyFields.indexOf('zip_code') !== -1, 'editable': personalDetails.editableFields.indexOf('zip_code') !== -1}">
+                                    <label><span trans>Zip Code</span>: <span ng-show="personalDetails.requiredEditableFields.indexOf('zip_code')">*</span></label>
+                                    <div class="disabled-field">
+                                        <p>{{details.zip_code}}</p>
+                                    </div>
+
+                                    <div class="active-field">
+                                        <div class="form-text" ng-class="{'error': detailsForm.zip_code.$invalid}">
+                                            <div class="tooltip-wrapper-j">
+                                                <input name="zip_code" placeholder="Enter your zip code" prevent-input="[^\d]" type="text" ng-minlength="personalDetails.limits.zip_code.minlength ? personalDetails.limits.zip_code.minlength : '' " ng-maxlength="personalDetails.limits.zip_code.maxlength ? personalDetails.limits.zip_code.maxlength : '' " ng-model="details.zip_code" title="{{personalDetails.disabledFields.indexOf('zip_code') !== -1 ? ('This field cannot be edited.'|translate) : ''}}" ng-required="personalDetails.requiredEditableFields.indexOf('zip_code') !== -1" ng-disabled="personalDetails.disabledFields.indexOf('zip_code') !== -1" trans>
+                                                <div class="form-error-icon-j"></div>
+                                                <div class="tooltip-j">
+                                                    <div ng-show="detailsForm.zip_code.$error.required" trans>This field is required</div>
+                                                    <div ng-show="detailsForm.zip_code.$error.minlength" trans>This field is too short</div>
+                                                    <div ng-show="detailsForm.zip_code.$error.maxlength" trans>This field is too long</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+
+
+                                <li ng-class="{'read-only': personalDetails.readOnlyFields.indexOf('iban') !== -1, 'editable': personalDetails.editableFields.indexOf('iban') !== -1}">
+                                    <label><span trans>iban</span>: <span class="hint" ng-show="personalDetails.requiredEditableFields.indexOf('iban') !== -1">*</span></label>
+                                    <div class="disabled-field">
+                                        <p>{{details.iban}}</p>
+                                    </div>
+
+                                    <div class="active-field">
+                                        <div class="form-text" ng-class="{'error':(!resetError['iban'] || detailsForm['iban'].blur) &&  detailsForm.iban.$invalid}">
+                                            <div class="tooltip-wrapper-j">
+                                                <input name="iban" type="text" ng-model="details.iban" title="{{personalDetails.disabledFields.indexOf('iban') !== -1 ? ('This field cannot be edited.'|translate) : ''}}" ng-required="personalDetails.requiredEditableFields.indexOf('iban') !== -1" ng-disabled="personalDetails.disabledFields.indexOf('iban') !== -1" ng-blur="detailsForm['iban'].blur=true">
+
+                                                <div class="form-error-icon-j" ng-click="resetFieldError('iban')" ng-show="personalDetails.disabledFields.indexOf('iban') === -1"></div>
+                                                <div class="tooltip-j" ng-show="personalDetails.disabledFields.indexOf('iban') === -1">
+
+                                                    <div trans ng-show="detailsForm.iban.$error.required">This field is required</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+
+                            </ul>
+                        </div>
+                        <div class="personal-details-right">
+                            <ul>
+                                <li ng-class="{'read-only': personalDetails.readOnlyFields.indexOf('country_code') !== -1, 'editable': personalDetails.editableFields.indexOf('country_code') !== -1}">
+                                    <label><span trans>Country</span>: <span class="hint" ng-show="personalDetails.requiredEditableFields.indexOf('country_code') !== -1">*</span></label>
+                                    <div class="disabled-field">
+                                        <p>{{details.selectCountryCode.name }}</p>
+                                    </div>
+
+                                    <div class="active-field">
+                                        <div class="tooltip-wrapper-j"  ng-class="{'error': detailsForm.country_code.$invalid}">
+                                            <div class="select-block">
+                                                <select
+                                                        ng-model="details.selectCountryCode"
+                                                        title="{{personalDetails.disabledFields.indexOf('country_code') !== -1 ? ('This field cannot be edited.'|translate) : ''}}"
+                                                        name="country_code" ng-options="item as item.name for item in countryCodes track by item.key"
+                                                        ng-required="personalDetails.requiredEditableFields.indexOf('country_code') !== -1"
+                                                        ng-disabled="personalDetails.disabledFields.indexOf('country_code') !== -1"></select>
+                                            </div>
+                                            <div class="tooltip-j" ng-show="personalDetails.disabledFields.indexOf('country_code') === -1">
+
+                                                <div trans ng-show="detailsForm.country_code.$error.required">This field is required</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+
+                                <li ng-class="{'read-only': personalDetails.readOnlyFields.indexOf('city') !== -1, 'editable': personalDetails.editableFields.indexOf('city') !== -1}">
+                                    <label><span trans>City</span>: <span class="hint" ng-show="personalDetails.requiredEditableFields.indexOf('city') !== -1">*</span></label>
+                                    <div class="disabled-field">
+                                        <p>{{details.city}}</p>
+                                    </div>
+                                    <div class="active-field">
+                                        <div class="form-text" ng-class="{'error': (!resetError['city'] || detailsForm['city'].blur) && detailsForm.city.$invalid}">
+                                            <div class="tooltip-wrapper-j">
+                                                <input name="city" placeholder="Enter the city where you live" trans="attr-only" type="text" ng-model="details.city" title="{{personalDetails.disabledFields.indexOf('city') !== -1 ? ('This field cannot be edited.'|translate) : ''}}" ng-required="personalDetails.requiredEditableFields.indexOf('city') !== -1" ng-disabled="personalDetails.disabledFields.indexOf('city') !== -1" ng-minlength="personalDetails.limits.city !== undefined?personalDetails.limits.city.minlength:''" ng-maxlength="personalDetails.limits.city !== undefined?personalDetails.limits.city.maxlength:''" ng-blur="detailsForm['city'].blur=true">
+
+                                                <div class="form-error-icon-j"   ng-click="resetFieldError('city')" ng-show="personalDetails.disabledFields.indexOf('city') === -1"></div>
+                                                <div class="tooltip-j" ng-show="personalDetails.disabledFields.indexOf('city') === -1">
+
+                                                    <div trans ng-show="detailsForm.city.$error.required">This field is required</div>
+                                                    <div trans ng-show="detailsForm.city.$error.minlength">This field is too short</div>
+                                                    <div trans ng-show="detailsForm.city.$error.maxlength">This field is too long</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li>{{detailsForm.address}}</li>
+                                <li ng-class="{'read-only': personalDetails.readOnlyFields.indexOf('address') !== -1, 'editable': personalDetails.editableFields.indexOf('address') !== -1}">
+                                    <label><span trans>Address</span>: <span class="hint" ng-show="personalDetails.requiredEditableFields.indexOf('address') !== -1">*</span></label>
+                                    <div class="disabled-field">
+                                        <p>{{details.address}}</p>
+                                    </div>
+
+                                    <div class="active-field">
+                                        <div class="form-text" ng-class="{'error': (!resetError['address'] || detailsForm['address'].blur) && detailsForm.address.$invalid}">
+                                            <div class="tooltip-wrapper-j">
+                                                <input name="address" title="{{personalDetails.disabledFields.indexOf('address') !== -1 ? ('This field cannot be edited.'|translate) : ''}}" placeholder="Street/House" trans type="text" ng-model="details.address"  ng-required="personalDetails.requiredEditableFields.indexOf('address') !== -1" ng-disabled="personalDetails.disabledFields.indexOf('address') !== -1" ng-minlength="personalDetails.limits.address !== undefined?personalDetails.limits.address.minlength:''" ng-maxlength="personalDetails.limits.address !== undefined?personalDetails.limits.address.maxlength:''" ng-blur="detailsForm['address'].blur=true">
+
+                                                <div class="form-error-icon-j"  ng-click="resetFieldError('address')" ng-show="personalDetails.disabledFields.indexOf('address') === -1"></div>
+                                                <div class="tooltip-j" ng-show="personalDetails.disabledFields.indexOf('address') === -1">
+
+                                                    <div trans ng-show="detailsForm.address.$error.required">This field is required</div>
+                                                    <div trans ng-show="detailsForm.address.$error.minlength">This field is too short</div>
+                                                    <div trans ng-show="detailsForm.address.$error.maxlength">This field is too long</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+
+                                <li ng-class="{'read-only': personalDetails.readOnlyFields.indexOf('phone_number') !== -1, 'editable': personalDetails.editableFields.indexOf('phone_number') !== -1}">
+                                    <label><span trans>Contact number</span>:<span class="hint" ng-show="personalDetails.requiredEditableFields.indexOf('phone_number') !== -1">*</span></label>
+                                    <div class="disabled-field">
+                                        <p>{{details.phone_number}}</p>
+                                    </div>
+                                    <div class="active-field">
+                                        <div class="form-text" ng-class="{'error': (!resetError['phone_number'] || detailsForm['phone_number'].blur) && detailsForm.phone.$invalid}">
+                                            <div class="tooltip-wrapper-j">
+                                                <input name="phone" placeholder="Enter your phone number" trans prevent-input="[^\d]" ng-model="details.phone_number" ng-minlength="personalDetails.limits.phone_number !== undefined?personalDetails.limits.phone_number.minlength:''" ng-maxlength="personalDetails.limits.phone_number !== undefined?personalDetails.limits.phone_number.maxlength:''" title="{{personalDetails.disabledFields.indexOf('phone_number') !== -1 ? ('This field cannot be edited.'|translate) : ''}}" type="text" ng-required="personalDetails.requiredEditableFields.indexOf('phone_number') !== -1" ng-disabled="personalDetails.disabledFields.indexOf('phone_number') !== -1" ng-blur="detailsForm['phone_number'].blur=true">
+
+                                                <div class="form-error-icon-j"  ng-click="resetFieldError('phone_number')" ng-show="personalDetails.disabledFields.indexOf('phone_number') === -1"></div>
+                                                <div class="tooltip-j"  ng-click="resetFieldError('phone_number')" ng-show="personalDetails.disabledFields.indexOf('phone_number') === -1">
+
+                                                    <div trans ng-show="detailsForm.phone.$error.required" class="">This field is required</div>
+                                                    <div trans ng-show="detailsForm.phone.$error.minlength">This field is too short</div>
+                                                    <div trans ng-show="detailsForm.phone.$error.maxlength">This field is too long</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li ng-class="{'read-only': personalDetails.readOnlyFields.indexOf('security_question') !== -1, 'editable': personalDetails.editableFields.indexOf('security_question') !== -1}">
+                                    <label><span trans>Security question</span>: <span class="hint" ng-show="personalDetails.requiredEditableFields.indexOf('security_question') !== -1">*</span></label>
+                                    <div class="disabled-field">
+                                        <p>{{details.security_question}}</p>
+                                    </div>
+
+                                    <div class="active-field">
+                                        <div class="select-block">
+                                            <div class="tooltip-wrapper-j"  ng-class="{'error': (!resetError['security_question'] || detailsForm['security_question'].blur) && detailsForm.security_question.$invalid}">
+                                                <select ng-model="details.security_question" title="{{personalDetails.disabledFields.indexOf('security_question') !== -1 ? ('This field cannot be edited.'|translate) : ''}}" name="security_question" ng-required="personalDetails.requiredEditableFields.indexOf('security_question') !== -1" ng-disabled="personalDetails.disabledFields.indexOf('security_question') !== -1" ng-blur="detailsForm['security_question'].blur=true">
+                                                    <option ng-repeat="q in conf.registration.securityQuestion.questions track by $index" value="{{q|translate}}">{{q|translate}}</option>
+                                                </select>
+                                                <div class="form-error-icon-j"  ng-click="resetFieldError('security_question')" ng-show="personalDetails.disabledFields.indexOf('security_question') === -1"></div>
+                                                <div class="tooltip-j" ng-show="personalDetails.disabledFields.indexOf('security_question') === -1">
+
+                                                    <div trans ng-show="detailsForm.security_question.$error.required">This field is required</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li ng-class="{'read-only': personalDetails.readOnlyFields.indexOf('security_answer') !== -1, 'editable': personalDetails.editableFields.indexOf('security_answer') !== -1}">
+                                    <label><span trans>Security answer</span>: <span class="hint" ng-show="personalDetails.requiredEditableFields.indexOf('security_answer') !== -1">*</span></label>
+                                    <div class="disabled-field">
+                                        <p>{{details.security_answer}}</p>
+                                    </div>
+                                    <div class="active-field">
+                                        <div class="form-text" ng-class="{'error': (!resetError['security_answer'] || detailsForm['security_answer'].blur) && detailsForm.security_answer.$invalid}">
+                                            <div class="tooltip-wrapper-j">
+                                                <input name="security_answer" type="text" ng-blur="detailsForm['security_answer'].blur=true" ng-model="details.security_answer" title="{{personalDetails.disabledFields.indexOf('security_answer') !== -1 ? ('This field cannot be edited.'|translate) : ''}}" ng-required="personalDetails.requiredEditableFields.indexOf('security_answer') !== -1" ng-disabled="personalDetails.disabledFields.indexOf('security_answer') !== -1" ng-minlength="personalDetails.limits.security_answer !== undefined?personalDetails.limits.security_answer.minlength:''" ng-maxlength="personalDetails.limits.security_answer !== undefined?personalDetails.limits.security_answer.maxlength:''" ng-blur="detailsForm['security_answer'].blur=true" >
+
+                                                <div class="form-error-icon-j" ng-click="resetFieldError('security_answer')" ng-show="personalDetails.disabledFields.indexOf('security_answer') === -1"></div>
+                                                <div class="tooltip-j" ng-show="personalDetails.disabledFields.indexOf('security_answer') === -1">
+
+                                                    <div trans ng-show="detailsForm.security_answer.$error.required">This field is required</div>
+                                                    <div trans ng-show="detailsForm.security_answer.$error.minlength">This field is too short</div>
+                                                    <div trans ng-show="detailsForm.security_answer.$error.maxlength">This field is too long</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li class="visible-item">
+                                    <label><span trans>Current Password</span>: <span class="hint">*</span></label>
+
+                                    <div>
+                                        <div class="form-text" ng-class="{'error': (!resetError['password'] || detailsForm['password'].blur) && detailsForm.password.$dirty && detailsForm.password.$invalid}">
+                                            <div class="tooltip-wrapper-j">
+                                                <input name="password" ng-blur="detailsForm['password'].blur=true" ng-model="details.password" type="password" placeholder="{{'Enter your password'|translate}}" required ng-blur="detailsForm['password'].blur=true">
+                                                <div class="form-error-icon-j" ng-click="resetFieldError('password')"></div>
+                                                <div class="tooltip-j">
+
+                                                    <div trans ng-show="detailsForm.password.$error.required" class="">This field is required</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li class="editable chekcbox-j" ng-show="personalDetails.editableFields.indexOf('subscribed_to_news') !== -1">
+                                    <label><input name="" ng-model="details.subscribed_to_news" type="checkbox" /><span trans>Send me Sport news</span></label>
+                                </li>
+                                <li class="editable chekcbox-j" ng-show="personalDetails.editableFields.indexOf('notify_via_email') !== -1">
+                                    <label><input name="" ng-model="details.notify_via_email" type="checkbox" /><span trans>Notify via e-mail</span></label>
+                                </li>
+                                <li class="editable chekcbox-j" ng-show="personalDetails.editableFields.indexOf('notify_via_sms') !== -1">
+                                    <label><input name="" ng-model="details.notify_via_sms" type="checkbox" /><span trans>Notify via SMS</span></label>
+                                </li>
+
+                                <li class="editable chekcbox-j" ng-show="personalDetails.editableFields.indexOf('subscribe_to_email') !== -1">
+                                    <label><input name="" ng-model="details.subscribe_to_email" type="checkbox" /><span trans>Notify via e-mail</span></label>
+                                </li>
+                                <li class="editable chekcbox-j" ng-show="personalDetails.editableFields.indexOf('subscribe_to_sms') !== -1">
+                                    <label><input name="" ng-model="details.subscribe_to_sms" type="checkbox" /><span trans>Notify via SMS</span></label>
+                                </li>
+                                <li class="editable chekcbox-j" ng-show="personalDetails.editableFields.indexOf('subscribe_to_bonus') !== -1">
+                                    <label><input name="" ng-model="details.subscribe_to_bonus" type="checkbox" /><span trans>Notify about Bonuses</span></label>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="change-button-container password">
+                            <div class="cashier-button">
+                                <button ng-show="!working" ng-disabled="!detailsForm.$dirty || detailsForm.$invalid || (userAge < conf.registration.minimumAllowedAge)" ng-click="resetError = {};changeDetails()" trans>Save</button>
+                                <button disabled="disabled" ng-show="working" trans>Wait...</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <!--Change Password END-->
+            </div>
+            <ng-include src="getTemplate('templates/livebox/mixedDepositLimits.html')"></ng-include>
+
+            <ng-include ng-if="env.mixedSettingsPage==='usertimeout'" src="getTemplate('templates/livebox/mixedUserTimeOut.html')"></ng-include>
+            <ng-include ng-if="env.mixedSettingsPage==='selfexclusion'" src="getTemplate('templates/livebox/mixedSelfExclusion.html')"></ng-include>
+            <ng-include ng-if="env.mixedSettingsPage==='realitycheck'" src="getTemplate('templates/livebox/mixedRealitycheck.html')"></ng-include>
+
+            <div ng-if="env.friendReferral.enabled && env.mixedSettingsPage ==='friendReferral'" class="friend-referral" ng-init="initFriendReferral()">
+                <h3 trans>Friend Referral</h3>
+                <div class="settings-info-contain deposit-limit">
+                    <p>Please add friend referral description</p>
+                    <div class="referral-info">
+                        <div>
+                            <label trans>Promo Code</label>
+                            <div>{{profile.username}}</div>
+                        </div>
+                        <div>
+                            <label trans>Period</label>
+                            <div class="select-block">
+                                <select ng-model="selectedFriendRefData.date" ng-options="date.text for date in refDatesArray" ng-change="loadFriendReferralData()">
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <label class="results-live-j" ng-hide="true">
+                        <input type="checkbox">
+                        <i></i>
+                        <span trans>Active players only</span>
+                    </label>
+                    <vbet-loader ng-show="loadingReferralsList"></vbet-loader>
+                    <div ng-show="!loadingReferralsList">
+                        <table>
+                            <tr>
+                                <th trans>Player Name</th>
+                                <th trans>Win or loss</th>
+                            </tr>
+                        </table>
+                        <div class="referral-table">
+                            <table>
+                                <tr ng-repeat="subClient in friendReferralList track by subClient.client_id">
+                                    <td ng-bind="subClient.name"></td>
+                                    <td ng-bind="subClient.profit"></td>
+                                </tr>
+                            </table>
+                        </div>
+                        <table class="ref-total">
+                            <tr>
+                                <th trans>Total</th>
+                                <th>{{friendReferralData.bonus_percent}}%</th>
+                            </tr>
+                            <tr>
+                                <td ng-bind="friendReferralData.total_amount || 0"></td>
+                                <td ng-bind="friendReferralData.bonus_amount || 0"></td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

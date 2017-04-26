@@ -1,0 +1,70 @@
+<div ng-show="gamesInfo.length && gamesInfo[0].gameType.ratio !== '0'">
+    <ul class="casino-view" ng-show="middleMode || wideMode">
+        <li ng-class="{'selectedView' : viewCount === 1}"><a ng-click="changeView(1)" title="{{ 'One Game View'|translate }}"></a></li>
+        <li ng-class="{'selectedView' : viewCount === 2}"><a ng-click="changeView(2)" title="{{ 'Two Games View'|translate }}"></a></li>
+        <li ng-show="wideMode && confData.main.fourGameViewEnable" ng-class="{'selectedView' : viewCount === 4}"><a ng-click="changeView(4)" title="{{ 'Four Games View'|translate }}"></a></li>
+    </ul>
+</div>
+
+<div class="popup-bg-contain" ng-class="{'active': selectedCategory}">
+    <div class="deposit-alert-contain casino" ng-class="{'popup-multigame-b': confData.liveCasino.lobby.getDataViaSwarm}">
+        <div class="icon-delete"><a title="{{ 'close'|translate }}" ng-click="closePopUp();">Close</a>
+        </div>
+        <div class="text-deposit-alert">
+            <div class="country-b casino-popup">
+                <div class="country-block-contain popup">
+                    <ul class="countrylist">
+                        <div class="contaien-country" data-step="3" data-position="bottom" data-intro="Select region"
+                             trans="attr-only">
+                            <li>
+                                <a ng-click="selectCategory('all')" ng-class="{'active': selectedCategory === 'all'}"><span trans>Casino games</span></a>
+                            </li>
+                            <li ng-show="$root.conf.livedealerEnabled">
+                                <a ng-click="selectCategory(confData.liveCasino.categoryId)" ng-class="{'active': selectedCategory === confData.liveCasino.categoryId}"><span trans>Live casino</span></a>
+                            </li>
+                            <li ng-show="$root.conf.skillgamesEnabled">
+                                <a ng-click="selectCategory(confData.skillGames.categoryId)" ng-class="{'active': selectedCategory === confData.skillGames.categoryId}"><span trans>Skill games</span></a>
+                            </li>
+                            <li ng-show="$root.conf.virtualBettingEnabled">
+                                <a ng-click="selectCategory(confData.virtualBetting.categoryId)" ng-class="{'active': selectedCategory === confData.virtualBetting.categoryId}"><span trans>Virtual games</span></a>
+                            </li>
+                        </div>
+                    </ul>
+                </div>
+            </div>
+            <!--Featured games-->
+            <div class="Featured-casino-games">
+                <div class="contein-slider">
+                    <div class="games-slider">
+                        <h3 trans>All Multi View Games</h3>
+
+                        <div class="casino-multisearch" ng-show="!confData.liveCasino.lobby.getDataViaSwarm || selectedCategory !== 'LiveDealer'">
+                            <span trans>Search</span>
+                            <input ng-disabled="selectedCategory === confData.liveCasino.categoryId" type="search" ng-model="searchCommand">
+                        </div>
+
+                        <!-- show-conditions="selectedCategory !== confData.liveCasino.categoryId"-->
+                        <casino-games-list ng-class="{'all-games-casino-list': cConf.newCasinoDesignEnabled}"
+                                           is-new-design-enabled="confData.main.newCasinoDesign.enabled"
+                                           show-conditions="true"
+                                           games-list="games"
+                                           games-limit="2000"
+                                           game-show-conditions="true">
+                        </casino-games-list>
+                        <div class="load-more-news multiview" ng-show="gamesLimit < maxCount && selectedCategory !== confData.liveCasino.categoryId"><a ng-click="loadMoreGames()" ng-class="{'loading-more': loadingProcess}"><p trans>Load more</p><span></span></a></div>
+
+                        <div ng-show="games.length === 0 && !loadingProcess && selectedCategory !== confData.liveCasino.categoryId" class="no-games"><p trans>No games found</p></div>
+                    </div>
+                </div>
+            </div>
+            <!--Featured games END-->
+
+            <!--<div class="live-casino-tables">
+                <casino-lobby ng-if="confData.liveCasino.lobby.getDataViaSwarm && selectedCategory && selectedCategory === confData.liveCasino.categoryId" active-game-id="all"></casino-lobby>
+                <iframe ng-if="!confData.liveCasino.lobby.getDataViaSwarm && selectedCategory && selectedCategory === confData.liveCasino.categoryId && liveCasinoTablesInfo.url" ng-src="{{ liveCasinoTablesInfo.url }}"></iframe>
+                <vbet-loader ng-show="loadingProcess && !games.length"></vbet-loader>
+            </div>-->
+
+        </div>
+    </div>
+</div>

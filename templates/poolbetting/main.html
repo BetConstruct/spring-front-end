@@ -1,0 +1,99 @@
+<div ng-controller="poolBettingCtrl" ng-init="init();setTitle('Pool Betting');checkIfEnabled('poolBetting');" ng-keypress="betFromKeyboard($event)">
+
+        <div class="name-page-totalizator" ng-hide="loading">
+            <h1><span trans>Pool Betting</span> N{{draw.number}} <br>
+                <span ng-show="draw.min" trans>min.</span> <span trans>Jackpot</span>&nbsp;<span> {{(draw.jackpot * (currency.toto_rate || 1))|number:conf.balanceFractionSize }} {{currency.name}}</span>
+                <br>
+                <span trans>Pool:</span> <span>{{((draw.pool_fee + draw.prize_fund)* (currency.toto_rate || 1))|number:conf.balanceFractionSize}}  {{currency.name|currency}}</span>
+            </h1>
+            <div class="counter-contain">
+                <div class="counter-block" ng-show="!drawIsOver && timer">
+                    <span ng-if="timer.days.value">{{timer.days.value}}</span>
+                    <span>{{timer.hours.value|numberFixedLength:2}}</span>
+                    <span>{{timer.minutes.value|numberFixedLength:2}}</span>
+                    <span>{{timer.seconds.value|numberFixedLength:2}}</span>
+
+                </div>
+                <ul>
+                    <li><a ng-click="openRulesPage();$event.stopPropagation();" trans>Rules</a></li>
+                    <li><a ng-click="openAllDraws();$event.stopPropagation();" trans>All draws</a></li>
+                </ul>
+
+            </div>
+        </div>
+        <div class="totalizator" ng-hide="loading">
+            <form ng-model="poolBettingForm">
+                <div ng-repeat="competition in competitions">
+                    <div class="category-sport-name-list">
+                        <p><span ng-class="'flag-'+ competition[0].region_alias | removeUselessSymbolsByRegexp: '[,\' ]+': 'g'"></span>
+                            {{competition[0].competition_name}} </p>
+                        <ul>
+                            <li trans>W1</li>
+                            <li>X</li>
+                            <li trans>W2</li>
+                        </ul>
+                    </div>
+
+                    <div class="list-totalizator" >
+                        <ul ng-repeat="game in competition|orderBy:'order'" ng-class="{'complete': complete}">
+                            <li><p>{{game.order}}</p></li>
+                            <li class="time-totalizator-game"><p>{{game.start_ts|formatDate:'full':null:env.timeFormat}}</p></li>
+                            <li class="name-team-totalizator"><p>{{game.team1_name}}</p></li>
+                            <li class="name-team-totalizator"><p>{{game.team2_name}}</p></li>
+
+
+                            <li class="events-totalizator" ng-class="{'selected': poolBettingModel[game.order]['p1']}"><label><input name="p1{{game.order}}" type="checkbox" value="1" ng-model="poolBettingModel[game.order]['p1']"/><span>{{game.p1_price|oddConvert:env.oddFormat:null:'WINNER'}}</span></label></li>
+                            <li class="events-totalizator" ng-class="{'selected': poolBettingModel[game.order]['x']}"><label ng-class="active"><input name="x{{game.order}}" type="checkbox" value="1" ng-model="poolBettingModel[game.order]['x']"/><span>{{game.x_price|oddConvert:env.oddFormat:null:'WINNER'}}</span></label></li>
+                            <li class="events-totalizator" ng-class="{'selected': poolBettingModel[game.order]['p2']}"><label><input name="p2{{game.order}}" type="checkbox" value="1" ng-model="poolBettingModel[game.order]['p2']"/><span>{{game.p2_price|oddConvert:env.oddFormat:null:'WINNER'}}</span></label></li>
+                            <li class="link-to-game"><a href="#/sport/?type=0&sport={{game.sport_id}}&region={{game.region_id}}&game={{game.game_id}}&competition={{game.competition_id}}">&raquo;</a></li>
+                        </ul>
+
+                    </div>
+                </div>
+
+                <div class="place-bets-jwrap">
+                    <div class="random-buttons-j" ng-show="competitions.length && !drawIsOver">
+                        <a class="random-j" ng-click="randomChoice()" trans>Random Choice</a>
+                        <a class="favourite-j" ng-click="favouriteChoice()" trans>Favourite Choice</a>
+                    </div>
+                    <div class="pool-stake-box-j" ng-show="competitions.length && !drawIsOvere">
+                        <ul>
+                            <li>
+                                <ul class="pboptions-j">
+                                    <li ng-show="poolBettingProperties.options">
+                                        <span trans>Options:</span> <span> {{poolBettingProperties.options}}</span>
+                                        <span trans>Minimal bet amount: </span><span>{{poolBettingProperties.minStake}}</span> <span>{{currency.name|currency}}</span>
+                                    </li>
+                                    <li class="bonus-enabled" ng-show="poolBettingProperties.options && conf.bonusesEnabled && (profile.points_balance >= conf.poolBettingPointsAmount)">
+                                        <label><input class="use-points-j" type="checkbox"  ng-disabled="profile.points_balance < conf.poolBettingPointsAmount" ng-model="use_bonus.balance"/><i></i><span trans >Use Points</span></label>
+                                        - <span>30.000.000 ( 1750 AMD )</span>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li>
+                                <div class="pb-tooltip-container-j">
+                                    <button ng-click="addToBetslip()" trans ng-disabled="!complete || !( poolBettingProperties.stake >= poolBettingProperties.minStake ) || !( profile.calculatedBalance > poolBettingProperties.stake && !use_bonus.balance || profile.points_balance > conf.poolBettingPointsAmount && use_bonus.balance) || !env.authorized">Place bets!</button>
+                                    <span ng-show="(profile.calculatedBalance < poolBettingProperties.stake && !use_bonus.balance) && env.authorized" trans>Insufficient balance</span>
+                                </div>
+                                <input ng-model="poolBettingProperties.stake" type="text" placeholder="0" maxlength="8" prevent-input="[^\d\.\,]" onkeyup="this.value=this.value.replace(/,/g, '.').replace(/[^\d\.]/,'')" trans><input type="submit" ng-hide="true">
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="pool-stake-box">
+                    <ul>
+                        <li  ng-show="!env.authorized">
+                            <span trans>To place your bet, please</span>
+                            <span ng-click="broadcast('openLoginForm');$event.stopPropagation()" class="underline" trans>sign in</span>
+                            <span trans>or</span>
+                            <span ng-click="broadcast('openRegForm');$event.stopPropagation()" class="underline" trans>register</span>
+                        </li>
+                    </ul>
+                </div>
+            </form>
+        </div>
+
+
+
+    <vbet-loader class="page-center" style="top:120px;" ng-if="loading"></vbet-loader>
+</div>

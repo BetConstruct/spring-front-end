@@ -1,0 +1,32 @@
+<div class="popup-bg-contain fixed-view-popup live-dealer-p" ng-class="{'active': liveCasinoLobbyPopup.open}">
+    <div class="popup-full-contain-b">
+        <div class="livecasino-popup-cell-b">
+            <div class="livecasino-popup-contain-b">
+                <div class="closed-b-popup" title="{{ 'close'|translate }}" ng-click="liveCasinoLobbyPopup.open=false;"></div>
+                <div class="popup-header-contain">
+                    <div class="title-contain-lobby-b">
+                        <h2 trans>Live casino lobby</h2>
+                        <div class="chanhe-view-lobby-b">
+                            <div class="block-view-separator-b column-lobby" ng-class="{'active': !casinoLobbyRowView}" ng-click="toggleCasinoLobbyView(false)" title="{{'Grid View'|translate}}">
+                                <i></i>
+                            </div>
+                            <div class="block-view-separator-b row-lobby" ng-class="{'active': casinoLobbyRowView}"  ng-click="toggleCasinoLobbyView(true)" title="{{'List View'|translate}}">
+                                <i></i>
+                            </div>
+                        </div>
+                        <div class="balance-casier-lobby" ng-show="env.authorized">
+                            <button ng-click="openDeposit()" trans>Cashier</button>
+                            <div class="lobby-balance-view" >
+                                <p>
+                                    <span>Balance:</span>
+                                    <b>{{(conf.GmsPlatform ? (conf.GmsPlatformMultipleBalance ? profile.casino_balance: profile.balance) : env.casinoBalance.balance)|number:conf.balanceFractionSize}}&nbsp;{{profile.currency_name|currency }}</b>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <casino-lobby ng-if="liveCasinoLobbyPopup.open" active-game-id="{{selectedGameId}}" ng-class="{'lobby-row-view-b': casinoLobbyRowView}"></casino-lobby>
+            </div>
+        </div>
+    </div>
+</div>

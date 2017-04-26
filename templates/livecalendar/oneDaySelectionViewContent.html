@@ -1,0 +1,169 @@
+<div class="live-cal16-day-selector-j" hide-on-click state-flag-var="showSportsDropdown">
+    <div class="lc16-left-sport-section-j">
+        <div class="lc16-sport-selector-j">
+            <input ng-model="showSportsDropdown" type="checkbox" id="lc16-sport-selector-j">
+            <label for="lc16-sport-selector-j">
+                <p class="ellipsis-text">
+                    <span>{{sportsLabel}}</span>
+                    (<span ng-if="selectedSports.length > 0 && !options.allSportsSelected">{{selectedSports.length}} <span trans>of</span> </span><span ng-show="sportsSelected && liveCalendarAllGames">{{leftMenuSports.length}}</span>)
+                </p>
+            </label>
+            <ul>
+                <li>
+                    <label>
+                        <input ng-model="options.allSportsSelected" type="checkbox" ng-change="toggleSport(true)">
+                        <i class="all-sports-j"></i>
+                        <span trans>All Sports</span>
+                    </label>
+                </li>
+                <li ng-repeat="sport in leftMenuSports track by sport.id">
+                    <label>
+                        <input ng-model="liveCalendarSelectedSports[sport.id]" type="checkbox" ng-disabled="liveCalendarSelectedSports[leftMenuSports[0].id] && ($index == 0) && (selectedSports.length == 1)" ng-change="toggleSport()">
+                        <i ng-class="sport.alias"></i>
+                        <span>{{sport.name}}</span>
+                    </label>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="lc16-right-section-j">
+        <ul>
+            <li ng-class="{active: liveCalendarSelectedDays[$index]}" ng-repeat="day in dayFilter" ng-click="liveCalendarSelectedDays[$index] ? '' : selectDay($index)">
+                <div class="ellipsis-text">
+                    <span ng-bind="day.from|formatDate: conf.dateFormat.liveCalendarDataFormat"></span>
+                    <span ng-bind="day.from|formatDate:'ddd'"></span>
+                </div>
+            </li>
+        </ul>
+    </div>
+</div>
+<vbet-loader ng-show="gamesAreLoading"  class="centered-j"></vbet-loader>
+<div class="live-calendar-16-scroll-fix-j">
+
+    <div class="live-calendar-16-content-j" ng-show="!gamesAreLoading && liveCalendarAllGames.length === 0">
+        <ul class="filter-j">
+            <li class="sport-column-j">
+                <div class="ellipsis-text">
+                    <span trans>No games found</span>
+                </div>
+            </li>
+        </ul>
+    </div>
+
+    <div class="live-calendar-16-content-j" ng-show="!gamesAreLoading && liveCalendarAllGames.length > 0">
+        <ul class="filter-j">
+            <li class="sport-column-j">
+                <div class="ellipsis-text">
+                    <span trans>Sport</span>
+                </div>
+            </li>
+            <li class="time-column-j">
+                <div class="ellipsis-text">
+                    <span trans>Time</span>
+                </div>
+            </li>
+            <li class="country-column-j">
+                <div class="ellipsis-text">
+                    <span trans>Country</span>
+                </div>
+            </li>
+            <li class="league-column-j">
+                <div class="ellipsis-text">
+                    <span trans>League</span>
+                </div>
+            </li>
+            <li class="event-column-j">
+                <div class="ellipsis-text">
+                    <span trans>Event</span>
+                </div>
+            </li>
+            <li class="coeff-column-j">
+                <div class="ellipsis-text">
+                    <span trans>1</span>
+                </div>
+            </li>
+            <li class="coeff-column-j">
+                <div class="ellipsis-text">
+                    <span trans>x</span>
+                </div>
+            </li>
+            <li class="coeff-column-j">
+                <div class="ellipsis-text">
+                    <span trans>2</span>
+                </div>
+            </li>
+            <li class="more-column-j">
+                <div class="ellipsis-text">
+                    <span ng-show="false" trans>More</span>
+                </div>
+            </li>
+        </ul>
+        <ul ng-repeat="game in liveCalendarAllGames|orderBy:'start_ts' track by $index">
+            <li class="sport-column-j" title="{{game.sport.name}}">
+                <div class="ellipsis-text">
+                    <i ng-class="game.sport.alias"></i><span>{{game.sport.name}}</span>
+                </div>
+            </li>
+            <li class="time-column-j">
+                <div ng-bind="game.start_ts|formatDate:'hour':null:env.timeFormat"></div>
+            </li>
+            <li class="country-column-j" title="{{game.region.name}}">
+                <div class="ellipsis-text">
+                    <i class="flag-icon flag-{{game.region.alias | removeUselessSymbolsByRegexp: '[,\' ]+': 'g': 'true'}}"></i><span>{{game.region.name}}</span>
+                </div>
+            </li>
+            <li class="league-column-j" title="{{game.competition.name}}">
+                <div class="ellipsis-text">{{game.competition.name}}</div>
+            </li>
+            <li class="event-column-j" title="{{game.title}}">
+                <div class="ellipsis-text">{{game.title}}</div>
+            </li>
+
+            <li ng-class="{'active': isEventInBetSlip(marketEvents[game.pointerId].events.P1[0]) && (!conf.GmsPlatform || !game.is_blocked), 'empty': !marketEvents[game.pointerId].events.P1[0]}" class="coeff-column-j">
+                <div ng-show="!conf.GmsPlatform || !game.is_blocked" ng-hide="(marketEvents[game.pointerId].events.P1[0].price | oddConvert:'decimal') == 1" ng-click="bet(marketEvents[game.pointerId].events.P1[0], marketEvents[game.pointerId].market, marketEvents[game.pointerId].game)">
+                    {{marketEvents[game.pointerId].events.P1[0].price|oddConvert:env.oddFormat:null:'WINNER'}}
+                </div>
+                <div ng-show="(game.is_blocked ||( marketEvents[game.pointerId].events.P1[0].price | oddConvert:'decimal') == 1) && conf.GmsPlatform">
+                    <span class="single-bet-locked" title="Event Locked" trans></span>
+                </div>
+            </li>
+
+            <li ng-class="{'active': isEventInBetSlip(marketEvents[game.pointerId].events.X[0]) && (!conf.GmsPlatform || !game.is_blocked), 'empty': !marketEvents[game.pointerId].events.X[0]}" class="coeff-column-j">
+                <div ng-show="!conf.GmsPlatform || !game.is_blocked" ng-hide="(marketEvents[game.pointerId].events.X[0].price | oddConvert:'decimal') == 1" ng-click="bet(marketEvents[game.pointerId].events.X[0], marketEvents[game.pointerId].market, marketEvents[game.pointerId].game)">
+                    {{marketEvents[game.pointerId].events.X[0].price|oddConvert:env.oddFormat:null:'WINNER'}}
+                </div>
+                <div ng-show="(game.is_blocked || (marketEvents[game.pointerId].events.X[0].price | oddConvert:'decimal') == 1) && conf.GmsPlatform">
+                    <span class="single-bet-locked" title="Event Locked" trans></span>
+                </div>
+            </li>
+            <li ng-class="{'active': isEventInBetSlip(marketEvents[game.pointerId].events.P2[0]) && (!conf.GmsPlatform || !game.is_blocked), 'empty': !marketEvents[game.pointerId].events.P2[0]}" class="coeff-column-j">
+                <div ng-show="!conf.GmsPlatform || !game.is_blocked" ng-hide="(marketEvents[game.pointerId].events.P2[0].price | oddConvert:'decimal') == 1" ng-click="bet(marketEvents[game.pointerId].events.P2[0], marketEvents[game.pointerId].market, marketEvents[game.pointerId].game)">
+                    {{marketEvents[game.pointerId].events.P2[0].price|oddConvert:env.oddFormat:null:'WINNER'}}
+                </div>
+                <div ng-show="(game.is_blocked  || (marketEvents[game.pointerId].events.P2[0].price | oddConvert:'decimal') == 1) && conf.GmsPlatform">
+                    <span class="single-bet-locked" title="Event Locked" trans></span>
+                </div>
+            </li>
+
+            <li class="more-column-j">
+                <i class="statistics-h2h" ng-show="conf.enableH2HStat && game.is_stat_available"
+                   ng-click="openStatistics(game);$event.stopPropagation();" title="statistic" trans></i>
+                <div class="extra-b-contain" ng-show="game.info.add_info || game.text_info.split(';')[0]">
+                    <b class="icon-ic_video_collection_24px"></b>
+                    <div class="game-extra-info">
+                        <p class="ng-binding" ng-show="game.game_text_info">{{game.game_text_info}}</p>
+                    </div>
+                </div>
+                <div ng-show="!conf.GmsPlatform && game.pointerId && marketEvents[game.pointerId].game.events_count-(marketEvents[game.pointerId].events|count) > 0"
+                     ng-click="openMore(game.sport.id, marketEvents[game.pointerId].game)" class="more-j">
+                    +{{marketEvents[game.pointerId].game.events_count-(marketEvents[game.pointerId].events|count)}}
+                </div>
+
+                <div ng-show="conf.GmsPlatform && game.pointerId && marketEvents[game.pointerId].game.markets_count > 0"
+                     ng-click="openMore(game.sport.id, marketEvents[game.pointerId].game)"
+                     class="more-j">+{{marketEvents[game.pointerId].game.markets_count}}
+                </div>
+            </li>
+        </ul>
+    </div>
+</div>

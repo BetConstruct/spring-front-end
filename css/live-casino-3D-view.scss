@@ -1,0 +1,374 @@
+@mixin livecasino-3d-view {
+  .wrap-b{
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    background: #01011B;
+    background: -moz-linear-gradient(#09001b 0%, #00000c 60%, #000017 61%, #00002b 100%);
+    background: -webkit-linear-gradient(#09001b 0%, #00000c 60%, #000017 61%, #00002b 100%);
+    background: -o-linear-gradient(#09001b 0%, #00000c 60%, #000017 61%, #00002b 100%);
+    background: linear-gradient(#09001b 0%, #00000c 60%, #000017 61%, #00002b 100%);
+  }
+  .w-dealer-x{
+    position: fixed;
+    top: 25px;
+    left: 5%;
+    width: 90%;
+    padding-bottom: 52%;
+    background: #000012;
+  }
+  .w-image-top {
+    position: absolute;
+    width: 100%;
+    padding-bottom: 32.45%;
+    height: 0;
+    top: 3%;
+    left: 0;
+    background: url(../../../images/live-casino-3D/b-contain-1.png#{$delete-cache}) no-repeat 0 0;
+    background-size: contain;
+    z-index: 2;
+  }
+  .w-image-top-light {
+    position: absolute;
+    width: 100%;
+    padding-bottom: 32.45%;
+    height: 0;
+    top: 0;
+    left: 0;
+  }
+  .w-image-bottom {
+    position: absolute;
+    width: 100%;
+    padding-bottom: 44.16%;
+    height: 0;
+    bottom: 0;
+    left: 0;
+    background: url(../../../images/live-casino-3D/bg-2.png#{$delete-cache}) no-repeat 0 0;
+    background-size: contain;
+  }
+  .w-image-bottom {
+    position: absolute;
+    width: 100%;
+    padding-bottom: 44.16%;
+    height: 0;
+    bottom: 0;
+    left: 0;
+    background: url(../../../images/live-casino-3D/bg-2.png#{$delete-cache}) no-repeat 0 0;
+    background-size: contain;
+  }
+  .w-image-keno {
+    position: absolute;
+    width: 100%;
+    padding-bottom: 44.16%;
+    height: 0;
+    bottom: 0;
+    left: 0;
+    background: url(../../../images/live-casino-3D/bg-keno.png#{$delete-cache}) no-repeat 0 0;
+    background-size: contain;
+  }
+  .w-image-bottom-light {
+    position: absolute;
+    width: 100%;
+    padding-bottom: 44.16%;
+    height: 0;
+    bottom: 0;
+    left: 0;
+  }
+  .baner-wrap{
+    position: absolute;
+    left: 0;
+    top: 25.6%;
+    width: 100%;
+    background: url(../../../images/live-casino-3D/ram-2.png#{$delete-cache}) no-repeat 0 0;
+    background-size: contain;
+    padding-bottom: 21.36%;
+  }
+  .baner-wrap-light{
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    background: url(../../../images/live-casino-3D/ram-1.png#{$delete-cache}) no-repeat 0 0;
+    background-size: contain;
+    padding-bottom: 21.36%;
+    animation: mouse-anim 1500ms 30000 linear;
+  }
+  .left-baner-d{
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 30.6%;
+    padding: 1.35% 0 1.35% 1.35%;
+  }
+  .right-baner-d{
+    position: absolute;
+    right: 0;
+    width: 30.6%;
+    padding: 1.35% 1.35% 1.35% 0;
+  }
+  .right-baner-d img, .left-baner-d img, .center-info-dealer img{width: 100%;}
+  .center-info-dealer{
+    position: absolute;
+    width: 33.5%;
+    padding: 0 1.35%;
+    margin: 1.35% 0;
+    left: 31.9%;
+  }
+  .contain-bottom-games{
+    position: absolute;
+    width: 100%;
+    left: 0;
+    bottom: 0;
+    padding-bottom: 32.74%;
+  }
+  .blackjack-f{
+    position: absolute;
+    width: 42.4%;
+    left: 6.2%;
+    bottom: 11%;
+    padding-bottom: 21%;
+    background: url(../../../images/live-casino-3D/f-blackjack-1.png#{$delete-cache}) no-repeat 0 0;
+    background-size: contain;
+    animation: popup-enter .4s ease-in-out;
+    z-index: 111;
+  }
+  .blackjack-f:before{
+    content: "";
+    position: absolute;
+    display: block;
+    width: 104%;
+    left: -2%;
+    bottom: -2.5%;
+    padding-bottom: 52.92%;
+    background: url(../../../images/live-casino-3D/f-blackjack-2.png#{$delete-cache}) no-repeat 0 0;
+    background-size: contain;
+    cursor: pointer;
+    opacity: 0;
+    transition: opacity 300ms;
+  }
+  .poker-f{
+    position: absolute;
+    width: 42.48%;
+    right: 5.7%;
+    bottom: 12%;
+    padding-bottom: 20.9%;
+    background: url(../../../images/live-casino-3D/f-poker-1.png#{$delete-cache}) no-repeat 0 0;
+    background-size: contain;
+    z-index: 222;
+    animation: popup-enter .4s ease-in-out;
+  }
+  .poker-f:before{
+    content: "";
+    display: block;
+    position: absolute;
+    width: 104%;
+    right: -2.8%;
+    bottom: -3%;
+    padding-bottom: 52.9%;
+    background: url(../../../images/live-casino-3D/f-poker-2.png#{$delete-cache}) no-repeat 0 0;
+    background-size: contain;
+    cursor: pointer;
+    opacity: 0;
+    transition: opacity 300ms;
+  }
+  .roulette-f{
+    position: absolute;
+    width: 30%;
+    left: 20%;
+    top: -1%;
+    padding-bottom: 11.6%;
+    background: url(../../../images/live-casino-3D/f-roulette-1.png#{$delete-cache}) no-repeat 0 100%;
+    background-size: contain;
+    z-index: 33;
+    animation: popup-enter .4s ease-in-out;
+  }
+  .roulette-f:before{
+    content: "";
+    display: block;
+    position: absolute;
+    width: 101.08%;
+    left: -1.11%;
+    top: -29.561%;
+    padding-bottom: 53%;
+    background: url(../../../images/live-casino-3D/f-roulette-2.png#{$delete-cache}) no-repeat 0 100%;
+    background-size: contain;
+    cursor: pointer;
+    z-index: 99;
+    opacity: 0;
+    transition: opacity 300ms;
+  }
+  .baccart-f{
+    position: absolute;
+    width: 29.26%;
+    right: 20.06%;
+    top: 0;
+    padding-bottom: 11.2%;
+    background: url(../../../images/live-casino-3D/f-baccart-1.png#{$delete-cache}) no-repeat 0 100%;
+    background-size: contain;
+    z-index: 6;
+    animation: popup-enter .4s ease-in-out;
+  }
+  .baccart-f:before{
+    content: "";
+    display: block;
+    position: absolute;
+    width: 105%;
+    right: -2.5%;
+    top: -21.56%;
+    padding-bottom: 49%;
+    background: url(../../../images/live-casino-3D/f-baccart-2.png#{$delete-cache}) no-repeat 0 100%;
+    background-size: contain;
+    z-index: 99;
+    cursor: pointer;
+    opacity: 0;
+    transition: opacity 300ms;
+  }
+  .left-change-arrow{
+    left: 0;
+    top: 57%;
+    position: absolute;
+    z-index: 666;
+    padding-left: 1.6%;
+    cursor: pointer;
+    font-family: $font-f;
+    font-size: 1vw;
+    line-height: 14px;
+    color: #c2c5cd;
+    white-space: nowrap;
+    text-transform: uppercase;
+    transition: color 200ms;
+  }
+  .main-nav ul li.balance:after {
+    content: "\e6a5";
+    font: 48px/40px icomoon;
+    color: $hero-color;
+    position: absolute;
+    left: -5px;
+    top: 0;
+  }
+  .left-change-arrow span:before{
+    font-family: icomoon;
+    content: "\e91a";
+    font-size: 2vw;
+    letter-spacing: -11px;
+    position: absolute;
+    left: -10px;
+    top: 0%;
+    color: #FFF;
+    opacity: 0.3;
+    transition: opacity 200ms;
+  }
+  .left-change-arrow:hover span:before, .right-change-arrow:hover span:before {
+    opacity: 0.7;
+  }
+  .right-change-arrow{
+    right: 0;
+    top: 57%;
+    position: absolute;
+    z-index: 666;
+    padding-right: 1.6%;
+    cursor: pointer;
+    font-family: $font-f;
+    font-size: 1vw;
+    line-height: 14px;
+    color: #c2c5cd;
+    white-space: nowrap;
+    text-transform: uppercase;
+    transition: color 200ms;
+  }
+  .right-change-arrow span:before{
+    font-family: icomoon;
+    content: "\e91b";
+    font-size: 2vw;
+    letter-spacing: -11px;
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 10%;
+    opacity: 0.3;
+    transition: opacity 200ms;
+  }
+  .left-change-arrow:hover, .right-change-arrow:hover{color: #f3f3f5;}
+  .chip-contain{
+    position: absolute;
+    width: 65%;
+    left: 17.4%;
+    bottom: 0;
+    padding-bottom: 28.4%;
+    background: url(../../../images/live-casino-3D/chip.png#{$delete-cache}) no-repeat 0 0;
+    background-size: contain;
+    animation: popup-enter .4s ease-in-out;
+  }
+  .keno-table{
+    position: absolute;
+    width: 30%;
+    left: 16.5%;
+    bottom: 57%;
+    padding-bottom: 21%;
+    background: url(../../../images/live-casino-3D/keno-normal.png#{$delete-cache}) no-repeat 0 100%;
+    background-size: contain;
+    z-index: 33;
+    cursor: pointer;
+  }
+  .keno-table:before{
+    content: "";
+    display: block;
+    position: absolute;
+    width: 100%;
+    left: -9.3%;
+    bottom: -12.6%;
+    padding-bottom: 88%;
+    background: url(../../../images/live-casino-3D/keno-hover.png#{$delete-cache}) no-repeat 0 100%;
+    background-size: contain;
+    z-index: 33;
+    cursor: pointer;
+    opacity: 0;
+    transition: opacity 300ms;
+  }
+  .draw-table{
+    position: absolute;
+    width: 30%;
+    right: 5.3%;
+    bottom: 57.4%;
+    padding-bottom: 21%;
+    background: url(../../../images/live-casino-3D/draw-normal.png#{$delete-cache}) no-repeat 0 100%;
+    background-size: contain;
+    z-index: 33;
+    cursor: pointer;
+  }
+  .draw-table:before{
+    content: "";
+    display: block;
+    position: absolute;
+    width: 100%;
+    right: 9.6%;
+    bottom: -14.2%;
+    padding-bottom: 89.6%;
+    background: url(../../../images/live-casino-3D/draw-hover.png#{$delete-cache}) no-repeat 0 100%;
+    background-size: contain;
+    z-index: 33;
+    cursor: pointer;
+    opacity: 0;
+    transition: opacity 300ms;
+  }
+  .draw-table:hover:before,
+  .keno-table:hover:before,
+  .baccart-f:hover:before,
+  .roulette-f:hover:before,
+  .poker-f:hover:before,
+  .blackjack-f:hover:before{
+    opacity: 1;
+  }
+  .team-name-market ul li:first-child{
+    font-weight: $style-text;
+    text-shadow: none;
+  }
+  .team-name-market ul{margin: 0;}
+  .team-name-market ul li span{color: $text-palette-1;}
+  .team-name-market ul li:first-child span{color: $text-palette-4;}
+  @-moz-document url-prefix() {.baccart-f-light{background: url(../../../images/live-casino-3D/f-baccart-2.png#{$delete-cache}) no-repeat 0 101%;background-size: contain;}}
+  @keyframes mouse-anim {
+    0% {opacity: 0;}
+    100% {opacity: 1;}
+  }
+}

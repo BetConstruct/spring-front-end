@@ -1,0 +1,17 @@
+<div class="verifity-account">
+    <form  method="POST" name="passportImageForm" enctype='multipart/form-data'
+          ng-hide="notSupported">
+        <input id="uploadFilePassport" trans="attr-only" placeholder="Choose File" disabled="disabled" />
+
+        <div class="fileUpload btn btn-primary">
+            <span trans>Browse</span>
+            <input type="file" name="passportImage" id="{{inputId}}" accept="image/*" class="passportUpload">
+        </div>
+
+        <button ng-disabled="disablePassportVerificationSubmitButton" type="submit" ng-click="submitForm();" trans>Submit</button>
+    </form>
+    <div trans ng-show="notSupported">Your browser doesn't support file uploading, Please update or use Google Chrome</div>
+    <div trans ng-show="fileUploaded">Your file is successfully uploaded</div>
+    <div trans ng-show="uploadError">There was an error during file upload, please try again.</div>
+    <vbet-loader ng-show="loadingProgress"></vbet-loader>
+</div>

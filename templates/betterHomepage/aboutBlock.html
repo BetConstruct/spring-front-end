@@ -1,0 +1,11 @@
+<div class="float-left width-100" ng-controller="cmsPagesCtrl" ng-init="loadPage('homepage-banners-bottom-'+env.lang,true);">
+    <div class="homepage-about-us-block">
+        <a ng-href="mainPage.children[0].content|html" ng-if="pagesLoaded">
+            <p class="size-7 size-m-12"><img ng-src="{{widgets[0].instance.image}}"></p>
+            <p class="size-5 size-m-12">
+                <span class="title" ng-bind-html="widgets[0].instance.title|html">Lorem ipsum</span>
+                <span ng-bind-html="widgets[0].instance.content|html">There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don't look.</span>
+            </p>
+        </a>
+    </div>
+</div>

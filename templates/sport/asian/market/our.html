@@ -1,0 +1,31 @@
+<div class="game-list-compitishion outright">
+    <table class="outright-tamplate sport">
+        <tr>
+            <td class="big-row"><div class="info-bl"><p><i class="icon-sport-asia" ng-class="selectedSport.alias"></i> <span ng-bind="selectedSport.name"></span></p></div></td>
+            <td class="event-title-asia"><div class="info-bl"><p trans>Event</p></div></td>
+            <td class="outiright-odds-asia"><div class="info-bl"><p trans>Odds</p></div></td>
+        </tr>
+    </table>
+</div>
+
+
+<div class="asian-separator-container-b" ng-repeat="competitions in centerData.competitions track by $index">
+    <div ng-repeat="competition in competitions track by $index" class="game-list-compitishion" ng-class="{closed: collapedCompetitions[competition.id]}">
+        <div class="name-chempionship-asia" ng-click="toggleCompetition(competition.id)">
+            <h3 ng-bind="competition.name"></h3>
+        </div>
+        <table class="outright-tamplate" ng-repeat="game in competition.games">
+            <tr ng-repeat="event in (game.markets[0].events || (game.markets|firstElement).OUTRIGHT[0].events)" ng-click="bet(event, game.markets[0], game)">
+                <td class="sport-outright date" >
+                    <div class="info-bl" ng-show="$index === 0">
+                        <p><span ng-bind="game.start_ts|formatDate:'D/MM'"></span> <span ng-bind="game.start_ts|formatDate:'hour':null:env.timeFormat"></span></p>
+                    </div>
+                </td>
+                <td class="event-title-asia"><div class="info-bl"><p ng-bind="event.name"></p></div></td>
+                <td class="outiright-odds-asia" ng-class="{up: event.price_change == '1', down: event.price_change == '-1', 'active': isEventInBetSlip(event)}">
+                    <div class="info-bl"><p ng-bind="event.price|oddConvert:env.oddFormat"></p></div>
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>

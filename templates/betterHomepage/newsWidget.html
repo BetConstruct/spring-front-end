@@ -1,0 +1,80 @@
+<div class="news-widget" ng-controller="cmsSportNewsCtrl" watch-resize>
+    <vbet-loader ng-show="newsAreLoading"></vbet-loader>
+    <div class="nav-news-sport-j" ng-init="init(); loadSports()">
+        <div class="nav-news-sport-cat-j" ng-show="sports">
+            <div>
+                <a ng-class="{'sport-news-link-t': conf.sportNewsLink, 'pointer-events-none': !conf.sportNewsLink}" ng-href="{{conf.sportNewsLink}}" target="_blank" trans>sport news</a>
+                <a ng-click="selectNewsSport({id:undefined})" ng-class="{'active': !selectedNewsSport.id}" trans>all</a>
+                <a ng-click="selectNewsSport(sport);closeNews();" ng-repeat="sport in sports" ng-class="{'active':sport.id === selectedNewsSport.id}" ng-if="$index < maxVisibleSports">{{ sport.title|translate }}</a>
+            </div>
+        </div>
+        <div class="hp-news-more-j" ng-show="sportsMore.length">
+            <span><i trans>More</i></span>
+            <div class="hp-news-group-j" ng-hide="hideSportListDropdown">
+                <div class="hp-news-category-search-j">
+                    <input type="text" placeholder="Search" ng-model="sportNews.term">
+                </div>
+                <div class="hp-new-more-cats-j">
+                    <div ng-repeat="column in sportsMore">
+                        <div ng-repeat="letterGroup in column">
+                            <div class="hp-news-group-letter-j" ng-show="filteredGroups.length">{{letterGroup[0].title.charAt(0)}}</div>
+                            <div ng-repeat="sport in filteredGroups = (letterGroup | filter:sportNews.term) track by $index"
+                                 ng-click="sportNews.term = '';selectNewsSport(sport);closeNews();"
+                                 class="sportnews-{{sport.id}}">
+                                {{ sport.title|translate }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="block-news-preview" ng-init="loadRecentNews(numberOfRecentNews, undefined, true); "
+         ng-show="!newsAreLoading">
+        <ul>
+            <li>
+                <div class="news-img-block">
+                    <div no-animate="disable" class="news-slide" ng-repeat="news in recentNews"
+                         ng-mouseover="showHightlightedNews(selectedNews)" ng-mouseleave="loopThroughNews(true)"
+                         ng-show="news.id === selectedNews.id" ng-class="{'active': news.id === selectedNews.id}">
+                        <a no-animate ng-if='!isWidget' ng-href="#/news/?news={{news.id}}"
+                           style="background-image: url({{news.thumbnail}})">
+                        </a>
+                        <a no-animate ng-if='isWidget' ng-click="gotoSelectedNews(news)"
+                           style="background-image: url({{news.thumbnail}})"></a>
+                        <p>
+                            <small>{{ news.date|formatDate: (conf.dateFormat.newsDataFormat[env.lang] || conf.dateFormat.newsDataFormat.default) }}</small>
+                            <span ng-bind-html="news.title"></span>
+                        </p>
+                        <span ng-if="$index == 0 && isWidget" ng-init="showHightlightedNews(news)"></span>
+                    </div>
+                </div>
+            </li>
+            <li>
+                <div class="news-list" id="newsBlockID">
+                    <ul ng-mouseleave="loopThroughNews(true)">
+                        <li ng-repeat="news in recentNews" id="{{news.id}}"
+                            ng-class="{'active': (news.id == selectedNews.id)}"
+                            ng-mouseover="showHightlightedNews(news)" ng-click="gotoNews(news.id)">
+                            <a ng-if='!isWidget' ng-href="#/news/?news={{news.id}}">
+                                <p class="date-news-info">{{ news.date + cmsTimeZone |formatDate: conf.dateFormat.newsDataFormat.newsDate:null:env.timeFormat }}</p>
+                                <p class="news-text-inform" title="{{news.titleRaw}}" ng-bind-html="news.title"></p>
+                            </a>
+                            <a ng-if='isWidget' ng-click="gotoSelectedNews(news)">
+                                <p class="date-news-info">{{ news.date + cmsTimeZone |formatDate: conf.dateFormat.newsDataFormat.newsDate:null:env.timeFormat }}</p>
+                                <p class="news-text-inform" title="{{news.titleRaw}}" ng-bind-html="news.title"></p>
+                            </a>
+                        </li>
+                        <li ng-if="!recentNews || recentNews.length == 0">
+                            <a class="pointer-events-none">
+                                <p trans>There are no news in this section.</p>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                <a ng-href="#/news" ng-if='!isWidget' class="all-news-link-j" trans>All news</a>
+                <a ng-click="gotoSelectedNews()" ng-if='isWidget' class="all-news-link-j" trans>All news</a>
+            </li>
+        </ul>
+    </div>
+</div>

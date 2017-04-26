@@ -1,0 +1,21 @@
+    <ul>
+        <li><a ng-href="#/sport/?type={{timer ? '0': '1'}}&sport=844&region=65537&competition=866568152"></a></li>
+        <li><p><a ng-href="#/sport/?type={{timer ? '0': '1'}}&sport=844&region=65537&competition=866568152" trans>FIFA WORLD CUP</a></p></li>
+        <li><div class="timer">
+            <p>
+                <span ng-show="timer.years.value">{{timer.years.value}}</span>
+                <span ng-show="timer.years.value" trans context="fifa countdown">years</span>
+                <span ng-show="timer.months.value">{{timer.months.value}}</span>
+                <span ng-show="timer.months.value" trans context="fifa countdown">months</span>
+                <span ng-show="timer.days.value">{{timer.days.value}}</span>
+                <span ng-show="timer.days.value" trans context="fifa countdown">days</span>
+                <span ng-show="timer.hours.value">{{timer.hours.value}}</span>
+                <span ng-show="timer.hours.value" trans context="fifa countdown">hours</span> <br>
+                <span ng-show="timer.minutes.value">{{timer.minutes.value}}</span>
+                <span ng-show="timer.minutes.value" trans context="fifa countdown">minutes</span>
+                <span ng-show="timer.seconds.value">{{timer.seconds.value}}</span>
+                <span ng-show="timer.seconds.value" trans context="fifa countdown">seconds</span>
+
+            </p>
+        </div></li>
+    </ul>

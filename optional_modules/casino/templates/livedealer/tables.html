@@ -1,0 +1,79 @@
+<div class="directive-lobby-box">
+    <vbet-loader ng-show="lobbyDataLoading"></vbet-loader>
+    <div class="popup-navigation-b" ng-show="!lobbyDataLoading && casinoLobby">
+        <ul ng-class="{'sub-nav-v-b': casinoLobby.length > visibleMenuLength, 'open-sub-nav-lobby': lobbySubMenuOpen}" hide-on-click state-flag-var="lobbySubMenuOpen"> <!-- class="sub-nav-v-b open-sub-nav-lobby" -->
+           <li ng-repeat="game in casinoLobby track by $index"
+                ng-class="{'active': game.GameIds.indexOf(selectedGame.id) != -1}"
+                ng-click="selectLobbyGame(game)">{{game.GameName |translate}}
+            </li>
+            <div class="sub-nav-view-b" ng-click="lobbySubMenuOpen = !lobbySubMenuOpen">
+                <span>+{{ casinoLobby.length - visibleMenuLength}}</span>
+                <span trans>More</span>
+            </div>
+        </ul>
+    </div>
+
+    <div class="tab-information-contain"  ng-show="!lobbyDataLoading">
+        <div class="filter-row-lobby-b">
+            <ul>
+                <li class="active" ng-class="{'active': !sortAscending && sortingProperty === 'GameName'}"  ng-click="toggleTablesSorting('GameName')" trans>Table</li>
+                <li ng-class="{'active': !sortAscending && sortingProperty === 'DealerNickName'}" ng-click="toggleTablesSorting('DealerNickName')" trans>Dealer</li>
+                <li trans>Statistics</li>
+                <li ng-class="{'active': !sortAscending && sortingProperty === 'Limits'}" ng-click="toggleTablesSorting('Limits')" trans>Limits</li>
+            </ul>
+        </div>
+        <div class="tab-info-block-b">
+            <ul>
+                <li ng-repeat="table in allTables track by $index"
+                    ng-show="selectedGame.id == 'all' || selectedGame.name == table.groupName"
+                    ng-click="table.IsOffline ?'': selectTable(table)"
+                    ng-class="{'disabled': table.IsOffline}" no-animate>
+                    <div class="contain-game-lobby-single">
+                        <div class="mini-row-contain-l">
+                            <div class="title-single-b-lobby">
+                                <h3><span>{{table.GameName|translate}}</span> <span>{{table.TableName|translate}}</span></h3>
+                                <div class="lang-lobby-view" style="background-image: url({{table.DealerLangImageUrl}})"></div>
+                            </div>
+
+                            <div class="dealers-name-box-b">
+                                <div class="img-dealer-view">
+                                    <img ng-src="{{table.dealerImg}}" alt="">
+                                   <!-- <img ng-src="table.dealerImg" src="https://websitelivegames-am.betconstruct.com/Content/Images/DealerPhotos/748.png" alt="">-->
+                                </div>
+                                <div class="mini-name-lobby-b name-b-dealer-b"><p><span trans>Dealer</span>: </p> <h4>{{table.DealerNickName}}</h4></div>
+                                <div class="mini-name-lobby-b limit-b-dealer-b">
+                                    <p ><span trans>Limits</span>: </p>
+                                    <h4 ng-show="table.Limits.length == 1"> {{table.Limits[0].MinBetAmount|shortNumberFormat}}-{{table.Limits[0].MaxBetAmount|shortNumberFormat}} {{table.CurrencySymbol|currency}}</h4>
+                                    <div class="limits-select-box" ng-show="table.Limits.length > 1">
+                                        <select ng-model="table.selectedLimit"
+                                                ng-change="selectedLimits[table.TableId] = table.selectedLimit;"
+                                                ng-click="$event.stopPropagation();"
+                                                ng-options="(limit.MinBetAmount|shortNumberFormat) + '-' +(limit.MaxBetAmount|shortNumberFormat) + ' ' + (table.CurrencySymbol|currency) for limit in table.Limits track by limit.LimitCategoryId">
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="mini-name-lobby-b gamers-b-dealer-b" ng-show="table.BoxCount > 0"><p><span trans>Players</span>: </p> <h4>{{table.BusyBoxCount}}/{{table.BoxCount}}</h4></div>
+                            </div>
+                            <div class="view-box-contain-button">
+                                <div class="view-button-lobby-view">
+                                    <button ng-disabled="table.IsOffline" ng-bind="(table.IsOffline ? 'Offline' : $root.env.authorized ? 'Play' : 'View') | translate" ng-class="{'active': $root.env.authorized}"></button>
+                                </div>
+                            </div>
+                            <div class="numbers-view-s-lobby" ng-show="table.Statistics.length">
+                                <ul>
+                                    <li ng-repeat="stat in table.Statistics"><span ng-style="stat.styles">{{stat.Value}}</span></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+

@@ -1,0 +1,5 @@
+<div class="old-version-link-j">
+    <a ng-show="conf.mobileVersionLink" ng-href="{{conf.mobileVersionLink}}" trans>Mobile version</a>
+    <a ng-show="conf.oldVersionLink[env.lang] && (!conf.oldVersionLink.onlyOnPage || conf.oldVersionLink.onlyOnPage == $location.path())" href="{{conf.oldVersionLink[env.lang]}}&p={{$location.path().split('/').join('')|capitalise}}" target="_blank" trans>Previous version</a>
+    <a ng-show="conf.flashVersionLink[env.lang]" class="flash" href="{{conf.flashVersionLink[env.lang]}}" target="_blank" trans>Previous Flash version</a>
+</div>

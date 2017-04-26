@@ -1,0 +1,37 @@
+<div class="single-group-playoff" ng-class="{'active': matchExbandedBlock[$index]}">
+    <div class="group-title-box-b">
+        <h3 ng-bind="::data.Name" ng-click="expandBlock($index)"></h3>
+        <i class="arrow-rotate-view-b" ng-click="expandBlock($index)"></i>
+    </div>
+    <div class="group-game-single-view" ng-repeat="(key,match) in  data.WebMatches[0]  track by key">
+        <ul>
+            <li>
+                <div class="contain-name-view-country-b-info-j">
+                    <p><i ng-show="::matchOrder === 0" ng-bind="::match.DateConverted"></i>
+                    </p>
+                    <p><i ng-show="::matchOrder === 1" ng-bind="::match.group"></i></p>
+                    <p><i ng-bind="::match.StadiumName" ng-click="showMap(match.StadiumId)"></i></p>
+                </div>
+                <div class="contain-name-view-country-b" ng-click="expandTeam(match.HomeTeam[0].id,match.HomeTeam[0].name)">
+                    <p><i ng-bind="::match.HomeTeam[0].name" ></i></p>
+                    <b class="flag-country-view-b flag-{{::match.HomeTeam[0].id}} "></b>
+                    <!--<span class="logo"><bcs-img bcs-entity-type="'e'" bcs-size="'m'"  bcs-wh="{w:'25px', h:'25px'}" bcs-id="::match.HomeTeam[0]['id']"   ></bcs-img></span>-->
+                </div>
+            </li>
+            <li>
+                <span ng-bind="::match.HomeScore"></span>
+                <span ng-bind="::match.AwayScore"></span>
+            </li>
+            <li>
+                <div class="contain-name-view-country-b" ng-click="expandTeam(match.AwayTeam[0].id,match.AwayTeam[0].name)">
+                    <p><i ng-bind="::match.AwayTeam[0].name"></i></p>
+                    <span  ng-if="!$routeParams.widgetid && marginedTime <= match.DateObject ">
+                        <a ng-href="#/sport/?type={{::(match.DateObject < now && match.DateObject >= marginedTime)  ? betting.typeLive : betting.typePrematch}}&sport={{::betting.sport }}&game={{::match.Id}}&competition={{::betting.competition }}&region={{::betting.region}}"
+                           trans>Bet Now</a>
+                    </span>
+                    <b class="flag-country-view-b flag-{{::match.AwayTeam[0].id}}"></b>
+                </div>
+            </li>
+        </ul>
+    </div>
+</div>

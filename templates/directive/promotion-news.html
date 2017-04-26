@@ -1,0 +1,87 @@
+<div ng-class="mainClass">
+
+    <div class="subtop-header-menu-j ng-scope" ng-if="conf.enablePromotionsActualFilter">
+        <ul ng-init="setPromotionsFilter('actual')">
+            <li ng-class="{active: promotionsFilter.name==='actual'}">
+                <a ng-click="setPromotionsFilter('actual')" trans>Actual</a>
+            </li>
+            <li ng-class="{active: promotionsFilter.name==='finished'}">
+                <a ng-click="setPromotionsFilter('finished')" trans>Finished</a>
+            </li>
+        </ul>
+    </div>
+
+    <div ng-repeat="group in recentNewsList track by $index" class="block-sport-news">
+        <div class="list-news">
+            <ul ng-repeat="news in group.news track by $index"
+                ng-class="'news-column-' + $index"
+            >
+                <li ng-class="{'active-news': (news.id == selectedNews.id)}">
+                    <h3 title="{{news.titleRaw}}">
+                        <a ng-click="showNews(news, group.id);$event.stopPropagation();" ng-bind-html="news.title"></a></h3>
+
+                    <p ng-hide="conf.hidePromotionNewsDate">{{ news.date|formatDate:'full' }} <!--<span class="sport-name-promo">Tennis</span>--></p>
+
+                    <div class="picture-news-block">
+                        <a ng-click="showNews(news, group.id);$event.stopPropagation();" id="news{{news.id}}"><img
+                                ng-src="{{news.thumbnail || news.thumbnail_images.full.url}}" alt=""></a>
+                    </div>
+                </li>
+
+            </ul>
+        </div>
+
+        <!--раскрытый блок с новостью-->
+        <div class="open_blok_news" ng-show="selectedNews.id && selectedNewsGroupId == group.id">
+            <div ng-click="closeNews()" class="close-slider-button"></div>
+            <a name="news-{{selectedNews.id}}" class="anchor"></a>
+
+            <div class="big-news-block">
+
+                <div class="right-block-news">
+                    <h3 class="promo-bonus-title" ng-bind-html="selectedNews.title"></h3>
+
+                    <div class="left-block-news">
+                        <span class="date-promo-b" ng-hide="conf.hidePromotionNewsDate">{{ selectedNews.date|formatDate:'full' }}</span>
+                        <!--<span class="name-promo-bonus">Bonus</span>-->
+                        <div class="picture-news-block"><a><img ng-src="{{selectedNews.thumbnail || selectedNews.thumbnail_images.full.url}}" alt=""></a>
+
+                        </div>
+                        <div class="mini-social-icons">
+                            <p trans>Share</p>
+                            <ul>
+                                <li class="mini-facebook"><a
+                                        ng-href="https://www.facebook.com/sharer/sharer.php?u={{selectedNews.permalink}}"
+                                        target="_blank">facebook</a></li>
+                                <li class="mini-twitter">
+                                    <a ng-href="https://twitter.com/share?text={{selectedNews.titleRaw}}&url=1&via={{conf.twitterAccount}}&hashtags={{conf.twitterHashTag}},{{selectedNews.categories[0].title}}"
+                                       target="_blank">Tweet</a>
+                                </li>
+                                <li class="mini-google"><a
+                                        ng-href="https://plus.google.com/share?url={{selectedNews.permalink}}"
+                                        target="_blank">google+</a></li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <p class="all-text-news-b" ng-bind-html="selectedNews.content"></p>
+<!--
+                    <div class="ok-g-link"><a href="#">okay, go!</a></div>
+-->
+
+                </div>
+            </div>
+            <div class="closed-arrow-b"><a ng-click="closeNews()" trans>close</a></div>
+        </div>
+        <!--раскрытый блок с новостью END-->
+    </div>
+
+    <vbet-loader class="page-center" ng-show="!recentNewsList"></vbet-loader>
+
+    <!-- load more block -->
+    <div class="load-more-news" ng-show="areThereMore">
+        <a ng-click="loadMore()" ng-show="!newsAreLoading"><p trans>Load more</p><span></span></a>
+        <a trans class="loading-more" ng-show="newsAreLoading">Loading</a>
+    </div>
+    <!-- !load more block -->
+</div>

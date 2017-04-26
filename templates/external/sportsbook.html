@@ -1,0 +1,5 @@
+<div class="container-p" ng-class="{'mini-header-padding': casinoGameOpened}" ng-if="$location.path()==='/sb/' || ($location.path()==='/sport/' && conf.sportsLayout === 'external')" ng-controller="sportsbookCtrl"
+     ng-init="loadExternalSportsbook()">
+    <vbet-loader class="page-center" ng-show="sportsbookLoading"></vbet-loader>
+    <div class="height-100 width-100 float-left" id="BetConstructObject"></div>
+</div>

@@ -1,0 +1,455 @@
+$disable-live-calendar-coeff-styling: false !default;
+.live-calendar-16-j, .live-calendar-16-j * {
+    box-sizing: border-box;
+}
+.live-calendar-16-j {
+    float: left;
+    width: 100%;
+}
+.live-cal16-day-selector-j {
+    display: table;
+    float: left;
+    width: 100%;
+    height: 38px;
+    .lc16-left-sport-section-j, .lc16-right-section-j {
+        display: table-cell;
+        vertical-align: top;
+    }
+    .lc16-left-sport-section-j {
+        background: $skin-palette-7;
+        border-radius: 5px 5px 0px 0px;
+        padding: 7px 10px;
+        max-width: 394px;
+        min-width: 203px;
+        width: 24.5%;
+    }
+    .lc16-right-section-j {
+        width: 75.5%;
+        padding-left: 2px;
+        ul {
+            float: left;
+            width: 100%;
+            height: 38px;
+            border-bottom: 2px solid $brand-color-1;
+            li {
+                width: calc((100% - 13px) / 7);
+                height: 36px;
+                margin-right: 2px;
+                background: $skin-palette-8;
+                float: left;
+                display: block;
+                border-radius: 5px 5px 0px 0px;
+                border-bottom: 1px solid darken( desaturate( adjust-hue( $skin-palette-10, -12deg ), 1 ), 9 );
+                text-align: center;
+                padding-top: 7px;
+                transition: background 300ms, border-color 300ms;
+                &:hover {
+                    background: $skin-palette-7;
+                }
+                &:last-child {
+                    margin: 0;
+                }
+                span {
+                    display: block;
+                    color: $text-palette-3;
+                    font: 12px/14px $font-f;
+                    text-transform: uppercase;
+                    transition: color 300ms;
+                    &:last-child {
+                        color: $text-palette-4;
+                        font: bold 10px/12px $font-f;
+                    }
+                }
+                &.active {
+                    background: $brand-color-1;
+                    border-bottom-color: $brand-color-1;
+                }
+                &.active span, &.active span:last-child {
+                    color: set-color($brand-color-1);
+                }
+            }
+        }
+    }
+}
+.lc16-sport-selector-j {
+    display: block;
+    float: left;
+    width: 183px;
+    position: relative;
+    white-space: nowrap;
+    p {
+        float: left;
+        width: 100%;
+        border-radius: 4px;
+        background: lighten( desaturate( $skin-palette-10, 17 ), 12 );
+        height: 24px;
+        color: $text-palette-1;
+        text-transform: uppercase;
+        font: 10px/24px $font-f;
+        padding: 0 23px 0 10px;
+        position: relative;
+        &:before {
+            content: "\e670";
+            font: 16px/26px icomoon;
+            display: block;
+            position: absolute;
+            top: 0;
+            right: 7px;
+            color: $text-palette-3;
+        }
+    }
+    input[type="checkbox"] {
+        position: absolute;
+        top: 0;
+        left: 0;
+        opacity: 0;
+        cursor: pointer;
+    }
+    label {
+        display: block;
+        cursor: pointer;
+        width: 100%;
+        float: left;
+    }
+    > input[type="checkbox"]:checked + label p:before {
+        content: "\e671";
+    }
+    > input[type="checkbox"]:checked ~ ul {
+        display: inline-block;
+    }
+    ul {
+        display: none;
+        position: absolute;
+        top: calc(100% + 2px);
+        left: 0;
+        border-radius: 4px;
+        overflow: hidden;
+        background: lighten( desaturate( $skin-palette-10, 17 ), 12 );
+        min-width: 183px;
+        z-index: 90;
+        max-height: 330px;
+        @include scroll($scroll: auto);
+        li {
+            border-bottom: 1px solid $skin-palette-7;
+            height: 25px;
+            padding: 0 23px 0 25px;
+            color: $text-palette-3;
+            text-transform: uppercase;
+            font: 10px/24px $font-f;
+            color: $text-palette-4;
+            position: relative;
+            transition: background 250ms, color 250ms;
+            &:last-child {
+                height: 24px;
+                border-bottom: 0;
+            }
+            &:hover {
+                color: $text-palette-1;
+                background: $skin-palette-5;
+            }
+            span {
+                display: block;
+                position: relative;
+                &:before {
+                    content: "";
+                    display: block;
+                    background: lighten( desaturate( adjust-hue( $skin-palette-10, 1deg ), 17 ), 3 );
+                    width: 14px;
+                    height: 14px;
+                    border-radius: 3px;
+                    position: absolute;
+                    right: -18px;
+                    top: 5px;
+                }
+                &:after {
+                    content: "\e6f3";
+                    color: $text-palette-3;
+                    font: 6px/14px icomoon;
+                    text-align: center;
+                    display: none; 
+                    width: 14px;
+                    height: 14px;
+                    border-radius: 3px;
+                    position: absolute;
+                    right: -18px;
+                    top: 5px;
+                }
+            }
+            input[type="checkbox"]:checked ~ span:after {
+                display: block;
+            }
+            i {
+                display: block;
+                height: 16px;
+                width: 16px;
+                position: absolute;
+                font: normal 16px/16px sport-icon;
+                text-transform: none;
+                top: 4px;
+                left: 5px;
+                &.all-sports-j:before {
+                    content: "\e600";
+                    font-family: sport-icon;
+                }
+            }
+        }
+    }
+}
+.live-calendar-16-content-j {
+    display: table;
+    table-layout: fixed;
+    float: left;
+    width: 100%;
+    color: $text-palette-3;
+    font: 12px/30px $font-f;
+    ul {
+        display: table-row;
+        &:nth-child(even) li {
+            background: lighten( desaturate( adjust-hue( $skin-palette-10, 3deg ), 14 ), 2 );
+        }
+        &:last-child li {
+            &.coeff-column-j {
+                border-bottom: 0;
+            }
+            &:first-child {
+                border-bottom-left-radius: 5px;
+            }
+            &:last-child {
+                border-bottom-right-radius: 5px;
+            }
+        }
+        &.filter-j li {
+            background: darken( desaturate( adjust-hue( $skin-palette-10, -3deg ), 8 ), 5 );
+            height: 20px;
+            font: 10px/20px $font-f;
+            color: $text-palette-4;
+            text-transform: uppercase;
+            &.coeff-column-j {
+                box-shadow: none;
+                border: 0;
+                pointer-events: none;
+                & + .coeff-column-j + .coeff-column-j { 
+                    border: 0;
+                }
+            }
+            &.country-column-j, &.sport-column-j {
+                padding: 0 10px;
+            }
+            span.filter-drop-j {
+                display: inline-block;
+                position: relative;
+                padding-right: 17px;
+                &:after {
+                    content: "\e670";
+                    font: 14px/20px icomoon;
+                    position: absolute;
+                    display: block;
+                    right: 0;
+                    top: 0;
+                }
+                &.active:after {
+                    content: "\e671";
+                }
+            }
+        }
+    }
+    li {
+        display: table-cell;
+        vertical-align: top;
+        height: 30px; 
+        background: $skin-palette-8;
+        position: relative;
+        &:first-child {
+            padding-left: 10px;
+        }
+        &.coeff-column-j {
+            width: 81px;
+            text-align: center; 
+            @if ($disable-live-calendar-coeff-styling == false) {
+                border-top: 1px solid lighten( desaturate( $skin-palette-10, 19 ), 11 );
+                border-left: 1px solid darken( desaturate( adjust-hue( $skin-palette-10, 7deg ), 1 ), 10 );
+                border-bottom: 1px solid darken( desaturate( adjust-hue( $skin-palette-10, 7deg ), 1 ), 10 );
+                box-shadow: inset 1px 0 0 lighten( desaturate( adjust-hue( $skin-palette-10, 4deg ), 19 ), 11 );
+            }
+            line-height: 28px;
+            transition: background 250ms, border-color 250ms, box-shadow 250ms, color 250ms;
+            color: map-get($coeff-color-map, classic);
+            & + .coeff-column-j + .coeff-column-j {
+                @if ($disable-live-calendar-coeff-styling == false) {
+                    border-right: 1px solid $skin-palette-12;
+                }
+                width: 82px;
+            }
+            @if ($disable-live-calendar-coeff-styling == false) {
+                &:hover {
+                    background: lighten( desaturate( adjust-hue( $skin-palette-10, 2deg ), 17 ), 9 );
+                    border-top-color: lighten( desaturate( adjust-hue( $skin-palette-10, 1deg ), 19 ), 13 );
+                    box-shadow: inset 1px 0 0 lighten( desaturate( adjust-hue( $skin-palette-10, 1deg ), 19 ), 13 );
+                    color: map-get($coeff-color-map, classic-hover);
+                }
+                &.active {
+                    background: $hero-color;
+                    border-top-color: lighten( desaturate( adjust-hue( $hero-color, -2deg ), 14 ), 7 );
+                    box-shadow: inset 1px 0 0 lighten( desaturate( adjust-hue( $hero-color, -2deg ), 14 ), 7 );
+                    color: map-get($coeff-color-map, classic-active);
+                }
+            }            
+        }
+        &.more-column-j {
+            width: 91px;
+            text-align: right;
+            padding-right: 10px;
+            color: $text-palette-4;
+            position: relative;
+            i {
+                display: block;
+                width: 18px;
+                height: 30px;
+                position: absolute;
+                top: 0;
+                left: 7px;
+                font: 12px/30px icomoon;
+                text-align: center;
+                color: $text-palette-4;
+                &:before {
+                    content: "\e90f";
+                    transition: color 250ms;
+                    font-size: 8px;
+                    right: 8px;
+                    top: 10px;
+                }
+            }
+            .extra-b-contain:hover b:before, i:hover:before {
+                color: $text-palette-3;
+            }
+            .more-j {
+                float: right;
+                width: 100%;
+                &:first-letter {
+                    font-size: 10px;
+                    line-height:28px;
+                }
+            }
+            .extra-b-contain b:before {
+                content: "\e6e4";
+                font-size: 12px;
+                transition: color 250ms;
+            }
+            .extra-b-contain {
+                position: absolute;
+                top: 1px;
+                left: 27px;
+                width: auto;
+                height: 29px;
+                .game-extra-info {
+                    right: -8px;
+                }
+            }
+            .extra-b-contain p {
+                float: right;
+                width: 100%;
+                white-space: nowrap;
+                padding: 5px 10px;
+                line-height: 20px;
+                border-bottom: 1px solid darken( desaturate( adjust-hue( $skin-palette-10, 5deg ), 14 ), 1 );
+                border-top: 1px solid lighten( desaturate( adjust-hue( $skin-palette-10, 4deg ), 18 ), 9 );
+                background: lighten( desaturate( adjust-hue( $skin-palette-10, 4deg ), 18 ), 9 );
+                color: $text-palette-3;
+                &:first-child {
+                    border-radius: 3px 3px 0 0;
+                }
+                &:last-child {
+                    border-radius: 0 0 3px 3px;
+                }
+                &:only-child {
+                    border-radius: 3px;
+                }
+            }
+            .extra-b-contain:hover .game-extra-info {
+                display: block;
+            }
+        }
+        &.time-column-j {
+            width: 100px;
+            text-align: center;
+            color: $text-palette-4;
+        }
+        &.sport-column-j {
+            width: 13.3%;
+            padding: 0 10px 0 35px;
+            i {
+                display: block;
+                width: 16px;
+                height: 16px;
+                border-radius: 100%;
+                position: absolute;
+                left: 10px;
+                top: 7px;
+                font: 16px/16px sport-icon;
+            }
+        }
+        &.country-column-j {
+            width: 14.6%;
+            padding: 0 10px 0 35px;
+            i {
+                display: block;
+                width: 16px;
+                height: 16px;
+                position: absolute;
+                left: 10px;
+                top: 7px;
+            }
+        }
+        &.league-column-j {
+            width: 13.8%;
+            padding: 0 10px;
+        }
+        &.event-column-j {
+            padding: 0 10px;
+        }
+    }
+}
+.body-wrapper.no-classic-scroll .contain-gameing.no-left-menu-j .centr-market-contain .scroll-contain {
+    width: 100%;
+    margin: 0;
+}
+.live-calendar-16-scroll-fix-j {
+    position: absolute;
+    top: 38px;
+    left: 0;
+    width: 100%;
+    bottom: 0;
+    @include scroll($scroll: auto);
+}
+@media screen and (max-width: 1350px) {
+    .live-calendar-16-content-j li.sport-column-j, 
+    .live-calendar-16-content-j li.country-column-j {
+        width: 35px;
+        font-size: 0;
+    }
+    .live-calendar-16-content-j ul.filter-j li.sport-column-j span.filter-drop-j,
+    .live-calendar-16-content-j ul.filter-j li.country-column-j span.filter-drop-j {
+        font-size: 0;
+        vertical-align: top;
+        margin-left: -2px;
+    }
+    .live-calendar-16-content-j li.league-column-j {
+        display: none;
+    }
+}
+@media screen and (max-width: 1100px) {
+    .live-calendar-16-content-j li.coeff-column-j {
+        display: none;
+    }
+}
+.live-calendar-16-content-j .single-bet-locked:before {
+    position: absolute;
+    display: block;
+    right: 50%;
+    width: 20px;
+    margin-right: -10px;
+    text-align: center;
+    font: 11px/28px 'icomoon';
+    content: "\e68f";
+    color: $text-palette-4;
+}

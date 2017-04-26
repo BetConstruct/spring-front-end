@@ -1,0 +1,98 @@
+<div ng-show="gamesInfo.length && gamesInfo[0].gameType.ratio !== '0' && gamesInfo[0].game.id !== '706'">
+    <ul class="casino-view" style="" ng-show="middleMode || wideMode">
+			<li ng-class="{'selectedView' : viewCount === 1}"><a ng-click="changeView(1)" title="{{ 'One Game View'|translate }}"></a></li>
+			<li ng-class="{'selectedView' : viewCount === 2}"><a ng-click="changeView(2)" title="{{ 'Two Games View'|translate }}"></a></li>
+			<li ng-show="wideMode && cConf.fourGameViewEnable" ng-class="{'selectedView' : viewCount === 4}"><a ng-click="changeView(4)" title="{{ 'Four Games View'|translate }}"></a></li>
+    </ul>
+</div>
+
+<div class="popup-bg-contain" ng-class="{'active': $parent.showAllGames}">
+    <div class="deposit-alert-contain casino" ng-class="{'popup-multigame-b': cConf.loadLiveCasinoLobbyViaSwarm}">
+        <div class="icon-delete"><a title="{{ 'close'|translate }}"
+                                    ng-click="$parent.showAllGames=false; popUpGamesLimit = 40; $parent.popUpSearchInput = '';">Close</a>
+        </div>
+        <div class="text-deposit-alert">
+            <div class="country-b casino-popup" ng-init="popUpGamesLimit = 40; $parent.popUpSearchInput = '';">
+                <div class="country-block-contain popup">
+                    <ul class="countrylist">
+                        <div class="contaien-country" data-step="3" data-position="bottom" data-intro="Select region"
+                             trans="attr-only">
+                            <li><a ng-click="$parent.agSelectedCategory = 'CasinoGames'; popUpGamesLimit = 40"
+                                   ng-class="{'active': $parent.agSelectedCategory === 'CasinoGames'}"><span trans>Casino games</span></a>
+                            </li>
+                            <li ng-show="conf.livedealerEnabled"><a ng-click="$parent.agSelectedCategory = 'LiveDealer'"
+                                                                    ng-class="{'active': $parent.agSelectedCategory === 'LiveDealer'}"><span
+                                    trans>Live casino</span></a></li>
+                            <li ng-show="conf.skillgamesEnabled"><a ng-click="$parent.agSelectedCategory = 'SkillGames'"
+                                                                    ng-class="{'active': $parent.agSelectedCategory === 'SkillGames'}"><span
+                                    trans>Skill games</span></a></li>
+                            <!-- ng-show="conf.skillgamesEnabled" -->
+                            <li><a ng-click="$parent.agSelectedCategory = 'Virtual Betting'"
+                                   ng-class="{'active': $parent.agSelectedCategory === 'Virtual Betting'}"><span trans>Virtual games</span></a>
+                            </li>
+                        </div>
+                    </ul>
+                </div>
+            </div>
+            <!--Featured games-->
+            <div class="Featured-casino-games">
+                <div class="contein-slider">
+                    <div class="games-slider">
+                        <h3 trans>All Multi View Games</h3>
+
+                        <div class="casino-multisearch" ng-show="!cConf.loadLiveCasinoLobbyViaSwarm || $parent.agSelectedCategory !== 'LiveDealer'">
+                            <span trans>Search</span>
+                            <input ng-disabled="$parent.agSelectedCategory === 'LiveDealer'" type="search"
+                                   ng-model="$parent.popUpSearchInput">
+                        </div>
+
+                      <!--  <ul ng-show="$parent.agSelectedCategory !== 'LiveDealer'">
+                            <li ng-repeat="game in popUpGames | limitTo: popUpGamesLimit track by game.id">
+                            <a ng-click="openGame(game, 'real'); $event.stopPropagation();">
+                                    <p class="play-button"><span trans>play now</span></p>
+                                    <img ng-src="{{cConf.iconsUrl + game.gameID}}.jpg" alt="">
+                                </a>
+
+                                <p ng-show="game.hasFunMode && (!env.authorized || game.id !== '1314')"
+                                   class="fun-game"><a
+                                        ng-show="game.gameCategory !== 'LiveDealer' && game.gameCategory !== 'SkillGames' && game.gameCategory !== 'VirtualBetting'"
+                                        class="game-fun-link"
+                                        ng-click="openGame(game, 'fun'); $event.stopPropagation();"><span trans>PLAY FOR FUN</span></a>
+                                    <a ng-show="!env.authorized && (game.gameCategory === 'LiveDealer' || game.gameCategory === 'SkillGames' || game.gameCategory === 'VirtualBetting')"
+                                       class="game-fun-link"
+                                       ng-click="openGame(game, 'demo'); $event.stopPropagation();"><span
+                                            trans>VIEW</span></a></p>
+
+                                <div class="popular-game-name">
+                                    <p><a ng-click="openGame(game, 'real'); $event.stopPropagation();"
+                                          title="{{game.gameName}}"> {{game.gameName}} </a></p>
+
+                                    <div class="fav-block"><a ng-click="toggleSaveToMyCasinoGames(game)"
+                                                              ng-class="{'star-active': isFromSaved(game.id)}">star</a>
+                                    </div>
+                                </div>
+                            </li>
+                            <div class="load-more-news multiview" ng-show="popUpGamesLimit < popUpGames.length"><a
+                                    ng-click="popUpGamesLimit = popUpGamesLimit + 40"><p trans>Load more</p>
+                                <span></span></a></div>
+                        </ul>-->
+                        <casino-games-list ng-class="{'all-games-casino-list': cConf.newCasinoDesignEnabled}"
+                                is-new-design-enabled="cConf.newCasinoDesignEnabled"
+                                show-conditions="true"
+                                games-list="popUpGames"
+                                games-limit="popUpGamesLimit"
+                                game-show-conditions="true">
+                        </casino-games-list>
+                        <div class="load-more-news multiview" ng-show="popUpGamesLimit < popUpGames.length"><a
+                                ng-click="popUpGamesLimit = popUpGamesLimit + 40"><p trans>Load more</p>
+                            <span></span></a></div>
+
+                        <div ng-show="popUpGames.length === 0 && $parent.agSelectedCategory !== 'LiveDealer'" class="no-games"><p trans>No games found</p></div>
+                    </div>
+                </div>
+            </div>
+            <!--Featured games END-->
+
+        </div>
+    </div>
+</div>

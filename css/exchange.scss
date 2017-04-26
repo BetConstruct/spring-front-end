@@ -1,0 +1,2379 @@
+@mixin exchange {
+  /*new styles layout*/
+  .exchange {
+    width: 100%;
+    height: 800px;
+    position: relative;
+  }
+  /*new styles layout END*/
+  .example-b {
+    width: 100%;
+    height: 100%;
+  }
+  .body-wrapper.exchange0 .exchange0 {
+  }
+  /*rialto*/
+  .wrapper-rialto {
+    float: left;
+    width: 100%;
+    min-width: 980px;
+    position: relative;
+    background: darken( saturate( $skin-palette-8, 12 ), 8 );
+    display: table;
+    height: 900px;
+    box-sizing: border-box;
+    padding: 25px 0 0;
+    margin: 0;
+  }
+  .row-wrapper-rialto-b {
+    display: table-row;
+    height: 100%;
+  }
+  .column-rialto-b-1, .column-rialto-b-2, .column-rialto-b-3 {
+    display: table-cell;
+    height: 100%;
+    position: relative;
+  }
+  .column-rialto-b-1 {
+    width: 280px;
+  }
+  .column-rialto-b-3 {
+    width: 300px;
+  }
+  .left-b-rialto {
+    width: 100%;
+    background: darken( saturate( $skin-palette-8, 12 ), 8 );
+    height: 100%;
+    margin: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    position: absolute;
+  }
+  .left-nav-container-rialto {
+    position: absolute;
+    width: 100%;
+    overflow-y: auto;
+    overflow-x: hidden;
+    height: calc(100% - 93px);
+    top: 93px;
+  }
+  .left-nav-container-rialto.right-b {
+    top: 0;
+    height: 100%;
+    float: none;
+    width: 100%
+  }
+  .wrapper-separator-rialto {
+    width: 100%;
+    height: 100%;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    position: absolute;
+  }
+  .center-b-rialto {
+    width: calc(100% - 10px);
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    overflow-y: auto;
+    overflow-x: hidden;
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 5px;
+  }
+  .right-b-rialto {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+  }
+  /*Exchange IE*/
+  .left-b-rialto, .wrapper-separator-rialto, .right-b-rialto {
+    position: relative \0;
+    display: block \0;
+  }
+  /*Exchange IE END*/
+
+  .left-nav-container-rialto,
+  .right-b-rialto,
+  .center-b-rialto {
+    @include scroll($scroll: auto);
+  }
+  /*left-block-closed-rialto*/
+  .column-rialto-b-1.closed {
+    width: 38px;
+  }
+  .column-rialto-b-1.closed .left-nav-container-rialto {
+    overflow: hidden;
+    width: 38px;
+  }
+  .column-rialto-b-1.closed .input-rialto-b {
+    display: none;
+  }
+  .column-rialto-b-1.closed .search-b-rialto {
+    padding-right: 33px;
+  }
+  .column-rialto-b-1.closed .icon-closed-menu-rialto {
+    right: 0;
+  }
+  .column-rialto-b-1.closed .icon-closed-menu-rialto:before {
+    position: relative;
+    right: 7px;
+  }
+  .column-rialto-b-1.closed .nav-rialto-row p,
+  .column-rialto-b-1.closed .nav-rialto-row .arrow-b-rialto {
+    display: none;
+  }
+  .column-rialto-b-1.closed .title-nav-rialto h3 > span {
+    display: none;
+  }
+  .column-rialto-b-1.closed .title-nav-rialto h3 i {
+    width: 40px;
+    right: 20px;
+  }
+  .column-rialto-b-1.closed .rialto-left-nav > ul > li.active .second-level-rialto-nav {
+    display: none;
+  }
+  .column-rialto-b-1.closed .live-prematch-switcher-new ul li {
+    display: none;
+  }
+  .column-rialto-b-1.closed .live-prematch-switcher-new ul li button {
+    position: absolute;
+    background: none;
+    text-indent: -999em;
+  }
+  .column-rialto-b-1.closed .live-prematch-switcher-new ul li.active button > b {
+    text-indent: 0;
+    right: auto;
+    width: 23px;
+    left: -7px;
+    text-align: center;
+  }
+  .column-rialto-b-1.closed .live-prematch-switcher-new ul li.active {
+    display: block;
+  }
+  /*left-block-closed-rialto END*/
+  /*search block*/
+  .search-b-rialto {
+    float: left;
+    width: 100%;
+    box-sizing: border-box;
+    position: relative;
+    padding: 5px 45px 5px 5px;
+    height: 41px;
+    border-bottom: 1px solid darken( saturate( $skin-palette-8, 12 ), 8 );
+    background: $skin-palette-8;
+    border-radius: 0 5px 0 0;
+  }
+  .input-rialto-b {
+    float: left;
+    width: 100%;
+    background: darken( saturate( $skin-palette-8, 12 ), 6 );
+    height: 30px;
+    border-radius: 4px;
+    position: relative;
+  }
+  .input-rialto-b:before {
+    position: absolute;
+    left: 10px;
+    top: 0;
+    font: 16px/30px icomoon;
+    content: "\e6d4";
+    color: $text-palette-4;
+  }
+  .input-rialto-b > input[type="text"] {
+    background: none;
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 30px;
+    border: none;
+    box-sizing: border-box;
+    width: 100%;
+    border-radius: 4px;
+    z-index: 22;
+    padding: 0 4px 0 36px;
+    color: $text-palette-1;
+    font: 12px $font-f;
+  }
+  .input-rialto-b > input[type="text"]::-webkit-input-placeholder,
+  .inp-wrap-b input[type="text"]::-webkit-input-placeholder {
+    color: $text-palette-4;
+    text-transform: uppercase;
+  }
+  .input-rialto-b > input[type="text"]:-moz-placeholder,
+  .inp-wrap-b input[type="text"]::-webkit-input-placeholder {
+    color: $text-palette-4;
+    text-transform: uppercase;
+  }
+  .input-rialto-b > input[type="text"]::-moz-placeholder,
+  .inp-wrap-b input[type="text"]::-moz-placeholder {
+    color: $text-palette-4;
+    text-transform: uppercase;
+  }
+  .input-rialto-b > input[type="text"]:-ms-input-placeholder,
+  .inp-wrap-b input[type="text"]:-ms-input-placeholder {
+    color: $text-palette-4;
+    text-transform: uppercase;
+  }
+  .input-rialto-b > input[type="text"]:focus {
+    box-shadow: 0 0 0 1px $hero-color;
+    transition-duration: 250ms;
+  }
+  .icon-closed-menu-rialto {
+    position: absolute;
+    width: 44px;
+    height: 40px;
+    right: 9px;
+    top: 0;
+    font: 64px/40px icomoon;
+    color: $text-palette-4;
+    cursor: pointer;
+  }
+  .icon-closed-menu-rialto:before {
+    content: "\e6a2";
+  }
+  /*search block END*/
+
+  /*live-pre-match switcher*/
+  .live-prematch-switcher-new {
+    float: left;
+    width: 100%;
+    box-sizing: border-box;
+    height: 52px;
+    border-top: 1px solid darken( saturate( $skin-palette-8, 12 ), 8 );
+    border-bottom: 1px solid darken( saturate( $skin-palette-8, 12 ), 8 );
+    background: $skin-palette-8;
+    padding: 10px;
+  }
+  .live-prematch-switcher-new ul {
+    float: left;
+    width: 100%;
+  }
+  .live-prematch-switcher-new ul li {
+    float: left;
+    width: 50%;
+    height: 30px;
+    position: relative;
+  }
+  .live-prematch-switcher-new ul li button {
+    border: none;
+    width: 100%;
+    text-align: left;
+    border-radius: 0 5px 5px 0;
+    height: 100%;
+    box-sizing: border-box;
+    padding: 0 8px;
+    color: $text-palette-4;
+    background: lighten( desaturate( adjust-hue( $skin-palette-8, -4deg ), 6 ), 13 );
+    font: 12px $font-f;
+    text-transform: uppercase;
+    cursor: pointer;
+  }
+  .live-prematch-switcher-new ul li:first-child button {
+    border-radius: 5px 0 0 5px;
+    cursor: default;
+  }
+  .live-prematch-switcher-new ul li button b {
+    position: absolute;
+    background: darken(saturate(lighten( desaturate( adjust-hue( $skin-palette-8, -4deg ), 6 ), 13 ), 2), 7);
+    padding: 3px 4px;
+    border-radius: 3px;
+    right: 5px;
+    top: 5px;
+    height: 14px;
+    min-width: 14px;
+    text-align: center;
+  }
+  .live-prematch-switcher-new ul li.active button,
+  .live-prematch-switcher-new ul li:hover button {
+    color: $text-palette-1;
+    background: darken( desaturate( $hero-color, 1 ), 7 );
+  }
+  .live-prematch-switcher-new ul li:hover button {
+    transition-duration: 200ms;
+  }
+
+  /*title-menu*/
+  .title-nav-rialto {
+    float: left;
+    width: 100%;
+    border-bottom: 2px solid $hero-color;
+  }
+  .title-nav-rialto h3 {
+    float: left;
+    box-sizing: border-box;
+    width: 100%;
+    padding: 5px 48px 5px 10px;
+    border-bottom: 1px solid $skin-palette-8;
+    border-top: 1px solid darken( saturate( $skin-palette-8, 12 ), 8 );
+    background: $skin-palette-6;
+    height: 34px;
+    font: 12px/22px $font-f;
+    color: $text-palette-3;
+    position: relative;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+  }
+  .title-nav-rialto h3 i {
+    font-style: normal;
+    position: absolute;
+    width: 48px;
+    height: 32px;
+    text-align: center;
+    right: 0;
+    top: 0;
+    font: 12px/32px $font-f;
+  }
+  /*title-menu END*/
+
+  /*left-menu rialto*/
+  .rialto-left-nav {
+    float: left;
+    width: 100%;
+  }
+  .rialto-left-nav > ul {
+    float: left;
+    width: 100%;
+  }
+  .rialto-left-nav > ul > li {
+    float: left;
+    width: 100%;
+    background: $skin-palette-7;
+  }
+  .nav-rialto-row {
+    float: left;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 4px 30px 4px 36px;
+    position: relative;
+    border-top: 1px solid lighten(desaturate(adjust-hue($skin-palette-7, 1deg), 2), 4);
+    border-bottom: 1px solid darken(saturate(adjust-hue($skin-palette-7, 4deg), 15), 14);
+    height: 30px;
+    cursor: pointer;
+  }
+  .nav-rialto-row p {
+    width: 100%;
+    color: $text-palette-4;
+    font: 12px/20px $font-f;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+  }
+  .icon-sport-rialto {
+    position: absolute;
+    font: 16px/16px 'sport-icon';
+    color: $text-palette-4;
+    text-align: center;
+    left: 10px;
+    top: 6px;
+    width: 16px;
+    height: 16px;
+    text-align: center;
+  }
+  .arrow-b-rialto {
+    position: absolute;
+    right: 0;
+    width: 28px;
+    height: 28px;
+    top: 0;
+    font: 16px/28px icomoon;
+    color: $text-palette-1;
+    text-align: center;
+  }
+  .nav-rialto-row .arrow-b-rialto:before {
+    content: "\e670";
+  }
+  .rialto-left-nav > ul > li.active .nav-rialto-row .arrow-b-rialto:before {
+    content: "\e671";
+  }
+  .rialto-left-nav > ul > li.active .nav-rialto-row p {
+    color: $text-palette-1;
+  }
+  .second-level-rialto-nav {
+    float: left;
+    width: 100%;
+    display: none;
+  }
+  .second-level-rialto-nav > ul {
+    float: left;
+    width: 100%;
+  }
+  .second-level-rialto-nav > ul > li {
+    float: left;
+    width: 100%;
+    height: 30px;
+    overflow: hidden;
+  }
+  .second-level-rialto-nav > ul > li.active {
+    height: auto;
+  }
+  .secont-level-row-rialto {
+    float: left;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 4px 30px 4px 36px;
+    position: relative;
+    background: $skin-palette-8;
+    height: 30px;
+    cursor: pointer;
+    border-top: 1px solid lighten(desaturate($skin-palette-8, 7), 9);
+    border-bottom: 1px solid darken(saturate(adjust-hue($skin-palette-8, 3deg), 10), 9);
+  }
+  .secont-level-row-rialto p {
+    width: 100%;
+    color: $text-palette-4;
+    font: 12px/20px $font-f;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+  }
+  .flag-b-rialto {
+    position: absolute;
+    left: 10px;
+    top: 8px;
+    width: 16px;
+    height: 16px;
+  }
+  .second-level-rialto-nav > ul > li.active .secont-level-row-rialto,
+  .second-level-rialto-nav > ul > li:hover .secont-level-row-rialto {
+    background: $skin-palette-7;
+  }
+  .second-level-rialto-nav > ul > li:hover .secont-level-row-rialto {
+    transition-duration: 250ms;
+  }
+  .second-level-rialto-nav > ul > li.active .secont-level-row-rialto p {
+    color: $text-palette-1;
+  }
+  .second-level-rialto-nav > ul > li.active .arrow-b-rialto:before,
+  .second-level-rialto-nav > ul > li:hover .arrow-b-rialto:before {
+    content: "\e672";
+  }
+  .second-level-rialto-nav > ul > li.active .secont-level-row-rialto .arrow-b-rialto:before,
+  .second-level-rialto-nav > ul > li.active .competition-name-realto-b.active .arrow-b-rialto:before {
+    content: "\e670";
+  }
+  .rialto-left-nav > ul > li.active .second-level-rialto-nav {
+    display: block;
+  }
+  .bet-result-exchange {
+    float: left;
+    width: 100%;
+    background: lighten( desaturate( $skin-palette-8, 4 ), 5 );
+    box-sizing: border-box;
+    padding: 10px;
+  }
+  .bet-result-exchange > p {
+    color: $brand-color-1;
+    font: 15px/18px $font-f;
+  }
+  .rialto-betslip-title {
+    float: left;
+    width: 100%;
+    box-sizing: border-box;
+    position: relative;
+    padding: 0;
+    height: 41px;
+    border-bottom: 1px solid $skin-palette-8;
+    background: $skin-palette-8;
+    border-radius: 5px 5px 0 0;
+  }
+  .rialto-betslip-title h3 {
+    color: $text-palette-3;
+    font: 13px/14px $font-f;
+    float: left;
+    width: 100%;
+    height: 40px;
+    display: table;
+   }
+  .rialto-betslip-title h3 > span {
+    width: 33%;
+    text-align: center;
+    background: lighten( desaturate( adjust-hue( $skin-palette-8, -2deg ), 4 ), 2 );
+    box-sizing: border-box;
+    border: 1px solid $skin-palette-8;
+    cursor: pointer;
+    transition: background 200ms;
+    display: table-cell;
+    vertical-align: middle;
+    padding: 0 5px;
+  }
+  .rialto-betslip-title h3 > span:first-child {
+    border-right: none;
+    border-radius: 5px 0 0;
+  }
+  .rialto-betslip-title h3 > span:last-child {
+    border-radius: 0 5px 0 0;
+    border-left: none;
+  }
+  .rialto-betslip-title h3 > span.active,
+  .rialto-betslip-title h3 > span:hover {
+    background: lighten( desaturate( $skin-palette-8, 4 ), 5 );
+  }
+  .competition-name-realto-b {
+    float: left;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 0;
+    position: relative;
+    background: $skin-palette-8;
+    cursor: pointer;
+    border-top: 1px solid lighten( desaturate( $skin-palette-8, 7 ), 9 );
+    border-bottom: 1px solid darken( saturate( adjust-hue( $skin-palette-8, 3deg ), 10 ), 9 );
+    height: 30px;
+    overflow: hidden;
+  }
+  .competition-name-realto-b.active {
+    height: auto;
+  }
+  .competition-name-realto-b .arrow-b-rialto {
+    right: auto;
+    left: 4px;
+    color: $text-palette-4;
+  }
+  .second-level-rialto-nav > ul > li.active .competition-name-realto-b + .live-menu-rialto {
+    display: none;
+  }
+  .second-level-rialto-nav > ul > li.active .competition-name-realto-b.active + .live-menu-rialto {
+    display: block;
+  }
+  .competition-name-realto-b > h5 {
+    float: left;
+    width: 100%;
+    font: 12px/20px $font-f;
+    padding: 4px 30px 4px 36px;
+    box-sizing: border-box;
+    font-weight: normal;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    color: $text-palette-4;
+  }
+  .second-level-rialto-nav > ul > li.active .competition-name-realto-b.active > h5,
+  .second-level-rialto-nav > ul > li.active .competition-name-realto-b.active .arrow-b-rialto,
+  .second-level-rialto-nav > ul > li.active .competition-name-realto-b:hover > h5,
+  .second-level-rialto-nav > ul > li.active .competition-name-realto-b:hover .arrow-b-rialto {
+    color: $brand-color-2;
+    -webkit-transition: color 200ms;
+  }
+  /*live game rialto*/
+  .live-menu-rialto {
+    float: left;
+    width: 100%;
+    display: none;
+  }
+  .second-level-rialto-nav > ul > li.active .live-menu-rialto {
+    display: block;
+  }
+  .single-game-information-b {
+    float: left;
+    width: 100%;
+    height: 38px;
+    box-sizing: border-box;
+    padding: 0 0 0 38px;
+    position: relative;
+    background: darken(saturate($skin-palette-8, 12), 6);
+    border-top: 1px solid saturate(adjust-hue($skin-palette-8, -3deg), 2);
+    border-bottom: 1px solid darken(saturate(adjust-hue($skin-palette-8, 3deg), 10), 9);
+    cursor: pointer;
+  }
+  .favorite-star-live-rialto {
+    position: absolute;
+    width: 36px;
+    height: 36px;
+    left: 0;
+    top: 0;
+    font: 18px/38px icomoon;
+    text-align: center;
+    color: $text-palette-8;
+    cursor: pointer;
+    transition-duration: 150ms;
+    display: none;
+  }
+  .favorite-star-live-rialto:before {
+    content: "\f005";
+  }
+  .favorite-star-live-rialto.active, .favorite-star-live-rialto:hover {
+    color: $brand-color-2;
+  }
+  .name-team-live-g {
+    float: left;
+    width: 100%;
+    color: $text-palette-4;
+    font: 12px/18px $font-f;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+  }
+  .name-team-live-g span:nth-child(2):before {
+    content: " - ";
+  }
+  .live-score-game-rialto {
+    float: left;
+    width: 100%;
+    height: 18px;
+  }
+  .live-score-game-rialto > p {
+    float: left;
+    width: 100%;
+    color: $text-palette-5;
+    font: 10px/14px $font-f;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+  }
+  .score-rialto-game {
+    color: $brand-color-2;
+    padding: 0 5px 0 0;
+  }
+  .score-rialto-game > b:first-child:after {
+    content: " : ";
+  }
+  .single-game-information-b:hover .live-score-game-rialto > p,
+  .single-game-information-b.active .live-score-game-rialto > p {
+    color: #a82d46;
+    transition-duration: 200ms;
+  }
+  /*live game rialto END*/
+  /*left-menu rialto END*/
+  /*rialto END*/
+
+  /*center block rialto*/
+  /*left-column rialto*/
+  .left-column-markets-rialto {
+    float: left;
+    width: calc(50% - 65px);
+  }
+  .center-b-rialto.live .left-column-markets-rialto {
+    width: 50%;
+  }
+  .rialto-slider-wrapper {
+    float: left;
+    width: 100%;
+  }
+  .wrapper-all-info-slider {
+    float: left;
+    width: 100%;
+  }
+  .rialto-slider-wrapper.closed .wrapper-all-info-slider {
+    display: none;
+  }
+  .title-slider-rialto {
+    float: left;
+    width: 100%;
+    height: 40px;
+    background: $skin-palette-8;
+    border-radius: 4px 4px 0 0;
+    border-bottom: 1px solid darken( saturate( adjust-hue( $skin-palette-8, -16deg ), 10 ), 8 );
+    position: relative;
+  }
+  .arrow-left-rialto {
+    width: 40px;
+    height: 100%;
+    position: absolute;
+    left: 0;
+    top: 0;
+    border-right: 1px solid darken(saturate($skin-palette-8, 12), 6);
+    border-radius: 5px 0 0;
+    z-index: 10;
+    text-align: center;
+    transition-duration: 200ms;
+    cursor: pointer;
+  }
+  .arrow-left-rialto:before {
+    content: "\e66f";
+    font: 24px/42px icomoon;
+    color: $text-palette-3;
+  }
+  .arrow-right-rialto {
+    width: 40px;
+    height: 100%;
+    position: absolute;
+    right: 0;
+    top: 0;
+    border-left: 1px solid darken(saturate($skin-palette-8, 12), 6);
+    border-radius: 0 5px 0 0;
+    z-index: 10;
+    text-align: center;
+    transition-duration: 200ms;
+    cursor: pointer;
+  }
+  .arrow-right-rialto:before {
+    content: "\e672";
+    font: 24px/42px icomoon;
+    color: $text-palette-3;
+  }
+  .arrow-left-rialto:hover,
+  .arrow-right-rialto:hover {
+    background: lighten(desaturate(adjust-hue($skin-palette-8, -1deg), 5), 5);
+  }
+  .name-event-rialto-slider {
+    float: left;
+    padding: 0 41px;
+    box-sizing: border-box;
+    height: 40px;
+    width: 100%;
+    text-align: center;
+  }
+  .name-event-rialto-slider p {
+    color: $text-palette-4;
+    font: 12px/40px $font-f;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+  }
+  .big-slider-img-rialto {
+    float: left;
+    width: 100%;
+    overflow: hidden;
+    height: 252px;
+    text-align: center;
+  }
+   .big-slider-img-rialto img {
+    width: 100%;
+    min-height: 100%;
+    display: block;
+  }
+  .breadcrumb-mini-rialto {
+    float: left;
+    width: 100%;
+    height: 40px;
+    background: $skin-palette-7;
+    border-bottom: 1px solid darken( saturate( adjust-hue( $skin-palette-8, -16deg ), 10 ), 8 );
+    white-space: nowrap;
+  }
+  .breadcrumb-mini-rialto ul {
+    float: left;
+  }
+  .breadcrumb-mini-rialto ul li {
+    float: left;
+    height: 40px;
+    font: 14px/40px $font-f;
+    color: $text-palette-3;
+    margin: 0 20px 0 0;
+    position: relative;
+    padding: 0 0 0 10px;
+  }
+  .breadcrumb-mini-rialto ul li p {
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    max-width: 180px;
+  }
+  .breadcrumb-mini-rialto ul li:first-child, .breadcrumb-mini-rialto ul li:nth-child(2) {
+    padding: 0 0 0 32px;
+  }
+  .breadcrumb-mini-rialto ul li:before {
+    position: absolute;
+    left: -18px;
+    width: 28px;
+    height: 28px;
+    top: 6px;
+    font: 16px/28px icomoon;
+    color: $text-palette-1;
+    text-align: center;
+    content: "\e672";
+  }
+  .breadcrumb-mini-rialto ul li:first-child:before {
+    display: none;
+  }
+  .breadcrumb-mini-rialto .icon-sport-rialto {
+    top: 11px;
+  }
+  .breadcrumb-mini-rialto .flag-b-rialto {
+    top: 14px;
+  }
+  .rialto-market-mini {
+    float: left;
+    width: 100%;
+    margin: 0 0 3px;
+    overflow: hidden;
+    border-radius: 5px;
+  }
+  .rialto-slider-wrapper .rialto-market-mini {
+    margin: 0;
+    border-radius: inherit;
+  }
+  .team-name-b-rialto {
+    float: left;
+    width: 100%;
+    height: 32px;
+    border-bottom: 1px solid darken( saturate( adjust-hue( $skin-palette-8, -16deg ), 10 ), 8 );
+    background: $skin-palette-8;
+  }
+  .favorite-star-b-rialto {
+    float: left;
+    height: 32px;
+    width: 32px;
+    font: 18px/32px icomoon;
+    color: #111624;
+    text-align: center;
+    cursor: pointer;
+  }
+  .favorite-star-b-rialto.active {
+    color: $brand-color-2;
+  }
+  .favorite-star-b-rialto:before {
+    content: "\f005";
+  }
+  .date-info-rialto {
+    font: 10px/15px $font-f;
+    float: left;
+    height: 32px;
+    width: 60px;
+    text-align: center;
+    margin: 0 10px 0 0;
+    color: $text-palette-4;
+  }
+  .more-b-event-rialto {
+    float: right;
+  }
+  .rialto-market-mini.active .more-b-event-rialto > span:after {
+    font: 16px/21px icomoon;
+    color: $text-palette-1;
+    content: "\e672";
+    position: absolute;
+    top: 5px;
+    right: 5px;
+  }
+  .more-b-event-rialto > span {
+    float: left;
+    display: inline-block;
+    height: 32px;
+    width: 36px;
+    padding: 0 10px;
+    font: 12px/32px $font-f;
+    color: $text-palette-4;
+    text-align: right;
+    cursor: pointer;
+    position: relative;
+  }
+  .rialto-market-mini.active .more-b-event-rialto > span {
+    color: $text-palette-1;
+    padding: 0 20px 0 0;
+  }
+  .rialto-market-mini.active .team-name-b-rialto {
+    background: $skin-palette-6;
+  }
+  .rialto-market-mini.active .date-info-rialto,
+  .rialto-market-mini.active .name-full-team-rialto span,
+  .rialto-market-mini.active .name-full-team-rialto span.vs-name-b {
+    color: $text-palette-3;
+  }
+
+  .name-full-team-rialto {
+    float: left;
+    width: calc(100% - 178px);
+    height: 32px;
+    padding: 0 10px;
+  }
+  .name-full-team-rialto span {
+    float: left;
+    display: inline-block;
+    width: calc((100% - 24px) / 2);
+    font: 12px/32px $font-f;
+    color: $text-palette-3;
+    text-align: center;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+  }
+  .name-full-team-rialto span.vs-name-b {
+    color: $text-palette-4;
+    width: 24px;
+    height: 32px;
+    text-align: center;
+  }
+  .tab-popular-rialto {
+    float: left;
+    width: 100%;
+    border-top: 1px solid darken( saturate( adjust-hue( $skin-palette-8, -16deg ), 10 ), 8 );
+    background: $skin-palette-7;
+    margin: 4px 0 3px;
+    border-radius: 5px 5px 0 0;
+    height: 40px;
+  }
+  .tab-popular-rialto ul {
+    float: left;
+    display: table;
+    width: 100%;
+  }
+  .tab-popular-rialto ul li {
+    display: table-cell;
+    width: 30%;
+    padding: 0 10px;
+    text-align: center;
+    color: $text-palette-3;
+    font: 12px/40px $font-f;
+    height: 40px;
+    border-left: 1px solid darken( saturate( adjust-hue( $skin-palette-8, -16deg ), 10 ), 8 );
+    box-shadow: 0 -2px 0 $skin-palette-5 inset, 0 -3px 0 darken( saturate( adjust-hue( $skin-palette-8, -16deg ), 10 ), 8 ) inset;
+    cursor: pointer;
+    transition-duration: 200ms;
+  }
+  .tab-popular-rialto ul li:first-child {
+    border-left: none;
+    border-radius: 5px 0 0;
+  }
+  .tab-popular-rialto ul li:last-child {
+    border-radius: 0 5px 0 0;
+  }
+  .tab-popular-rialto ul li:hover,
+  .tab-popular-rialto ul li.active {
+    background: $skin-palette-6;
+    box-shadow: 0 -2px 0 $hero-color inset, 0 -3px 0 darken( saturate( adjust-hue( $skin-palette-8, -16deg ), 10 ), 8 ) inset;
+  }
+  .events-b-rialto {
+    float: left;
+    width: 100%;
+    height: 32px;
+    box-shadow: 0 1px 0 lighten( desaturate( $skin-palette-8, 7 ), 9 ) inset;
+    background: $skin-palette-7;
+    margin-bottom: 1px;
+    overflow: hidden;
+  }
+  .events-b-rialto ul {
+    float: left;
+    width: 100%;
+  }
+  .events-b-rialto ul li {
+    width: 34%;
+    float: left;
+    display: block;
+    box-shadow: 1px 0 0 darken( saturate( adjust-hue( $skin-palette-8, -16deg ), 10 ), 8 ) inset;
+    height: 32px;
+  }
+  .events-b-rialto ul li:first-child {
+    box-shadow: none;
+  }
+  .events-b-rialto ul li:nth-child(2) {
+    width: 32%;
+  }
+  .name-t-rialto-b {
+    float: left;
+    font: 12px/32px $font-f;
+    color: $text-palette-3;
+    padding: 0 10px 0 11px;
+  }
+  .price-b-ivento {
+    float: right;
+    border-left: 1px solid darken( saturate( adjust-hue( $skin-palette-8, -16deg ), 10 ), 8 );
+    height: 32px;
+  }
+  .back-b-event, .lay-b-event {
+    float: left;
+    display: inline-block;
+    padding: 0 8px;
+    font: 12px/32px $font-f;
+    cursor: pointer;
+    min-width: 24px;
+    height: 32px;
+  }
+  .back-b-event {
+    color: #589cb2;
+    transition-duration: 200ms;
+  }
+  .lay-b-event {
+    background: lighten( desaturate( adjust-hue( $skin-palette-8, -2deg ), 4 ), 2 );
+    color: #a62b4a;
+    box-shadow: 0 1px 0 lighten( desaturate( adjust-hue( $skin-palette-8, -5deg ), 6 ), 6 ) inset;
+    transition-duration: 150ms;
+  }
+  .back-b-event.active, .back-b-event:hover {
+    background: #589cb2;
+    color: $text-palette-1;
+  }
+  .lay-b-event.active, .lay-b-event:hover {
+    color: $text-palette-1;
+    background: #9e3653;
+  }
+  .closed-slider-rialto {
+    float: left;
+    width: 100%;
+    height: 34px;
+    background: $skin-palette-7;
+    border-radius: 0 0 5px 5px;
+    border-top: 1px solid darken( saturate( adjust-hue( $skin-palette-8, -16deg ), 10 ), 8 );
+    text-align: center;
+    color: $text-palette-3;
+    font: 12px/34px $font-f;
+    text-transform: uppercase;
+    cursor: pointer;
+  }
+  .closed-slider-rialto p {
+    display: inline-block;
+    position: relative;
+  }
+  .closed-slider-rialto p:before, .closed-slider-rialto p:after {
+    position: absolute;
+    left: -25px;
+    width: 28px;
+    height: 28px;
+    top: -1px;
+    font: 16px/28px icomoon;
+    color: $text-palette-1;
+    content: "\e671";
+  }
+  .rialto-slider-wrapper.closed .closed-slider-rialto p:before, .rialto-slider-wrapper.closed .closed-slider-rialto p:after {
+    content: "\e670";
+  }
+  .closed-slider-rialto p:after {
+    top: 5px;
+  }
+  /*left-column rialto END*/
+
+  /*right-column rialto*/
+  .right-column-markets-rialto {
+    float: left;
+    width: calc(50% + 60px);
+    margin: 0 0 0 5px;
+  }
+  .center-b-rialto.live .right-column-markets-rialto {
+    width: calc(50% - 5px);
+  }
+  .full-title-name-last {
+    float: left;
+    width: 100%;
+    float: left;
+    width: 100%;
+    height: 40px;
+    background: $skin-palette-8;
+    border-radius: 5px 5px 0 0;
+    border-bottom: 1px solid $skin-palette-8;
+  }
+  .full-title-name-last h3 {
+    float: left;
+    width: 100%;
+    color: $text-palette-3;
+    font: 14px/40px $font-f;
+    text-transform: uppercase;
+    text-indent: 15px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+  }
+  .full-title-name-last h3 span:first-child:after {
+    content: " - ";
+  }
+  .time-name-more-info-rialto {
+    float: left;
+    width: 100%;
+    margin: 2px 0 4px;
+    height: 29px;
+    border-bottom: 2px solid $hero-color;
+    box-shadow: 0 -1px 0 darken( saturate( adjust-hue( $skin-palette-8, -16deg ), 10 ), 8 );
+    background: $skin-palette-8;
+    border-radius: 5px 5px 0 0;
+  }
+  .full-time-rialto {
+    float: left;
+    height: 28px;
+    padding: 0 0 0 10px;
+  }
+  .full-time-rialto p {
+    float: left;
+    color: $text-palette-4;
+    font: 12px/28px $font-f;
+    max-width: 110px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+  }
+  .game-statistic-icon-rialto {
+    float: left;
+    width: 28px;
+    height: 28px;
+    text-align: center;
+    font: 20px/26px icomoon;
+    color: $text-palette-4;
+    cursor: pointer;
+  }
+  .game-statistic-icon-rialto:before {
+    content: "\e681";
+  }
+  .time-name-more-info-rialto h4 {
+    float: left;
+    color: $text-palette-3;
+    font: 12px/28px $font-f;
+    width: calc(100% - 150px);
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+  }
+  .time-name-more-info-rialto h4 span:first-child:after {
+    content: " - ";
+  }
+  .match-result-rialto-b {
+    float: left;
+    width: 100%;
+  }
+  .match-result-row-rialto {
+    float: left;
+    width: 100%;
+    border-bottom: 1px solid darken(saturate(adjust-hue($skin-palette-8, 3deg), 10), 9);
+    margin: 0 0 2px;
+    border-radius: 5px;
+    overflow: hidden;
+  }
+  .mini-contain-row-rialto {
+    float: left;
+    width: 100%;
+    height: 28px;
+    background: $skin-palette-8;
+    border-radius: 5px 5px 0 0;
+  }
+  .arrow-icon-rialto {
+    float: left;
+    width: 28px;
+    height: 28px;
+    font: 16px/28px icomoon;
+    color: $text-palette-4;
+    text-align: center;
+    cursor: pointer;
+  }
+  .arrow-icon-rialto:before {
+    content: "\e671";
+  }
+  .mini-contain-row-rialto h5 {
+    float: left;
+    font: 12px/28px $font-f;
+    text-transform: uppercase;
+    color: $text-palette-3;
+    padding: 0 5px 0 0;
+  }
+  .matchet-price-rialto {
+    float: left;
+    height: 28px;
+  }
+  .matchet-price-rialto > p {
+    float: left;
+    font: 12px/28px $font-f;
+    color: $text-palette-4;
+  }
+  .matchet-price-rialto > p:before {
+    content: " \2013  ";
+    position: relative;
+    left: -2px;
+  }
+  .cashout-rialto-b {
+    float: right;
+    height: 28px;
+    padding: 0 10px 0 5px;
+    background: lighten(desaturate(adjust-hue($skin-palette-8, -1deg), 5), 5);
+    border-radius: 0 5px 0 0;
+    cursor: pointer;
+  }
+  .cashout-rialto-b > p {
+    color: $text-palette-2;
+    color: $text-palette-4;
+    font: 12px/28px $font-f;
+    float: left;
+    padding: 0 0 0 30px;
+    padding: 0 0 0 5px;
+    position: relative;
+  }
+/*  .cashout-rialto-b > p:before {
+    content: "\e6ce";
+    position: absolute;
+    width: 28px;
+    height: 28px;
+    top: 0;
+    left: 0;
+    font: 14px/28px icomoon;
+    color: $text-palette-4;
+    text-align: center;
+  }*/
+  .info-all-events-row {
+    float: left;
+    width: 100%;
+  }
+  .info-all-events-row ul {
+    float: left;
+    width: 100%;
+    display: table;
+    background: lighten(desaturate(adjust-hue($skin-palette-8, -1deg), 5), 5);
+    border-top: 1px solid darken(saturate(adjust-hue($skin-palette-8, 3deg), 10), 9);
+  }
+  .info-all-events-row ul li {
+    display: table-cell;
+    box-shadow: 0 1px 0 lighten(desaturate($skin-palette-8, 7), 9) inset;
+    border-left: 1px solid darken(saturate(adjust-hue($skin-palette-8, 3deg), 10), 9);
+    vertical-align: middle;
+    height: 49px;
+  }
+  .info-all-events-row ul li:first-child {
+    border-left: none;
+  }
+  .info-all-events-row ul li.mini-b-factor-statistics {
+    width: 30px;
+    min-width: 30px;
+    max-width: 30px;
+    background: lighten(desaturate(adjust-hue($skin-palette-8, -1deg), 5), 5);
+  }
+  .info-all-events-row ul li.mini-b-factor-rialto {
+    width: 64px;
+    min-width: 64px;
+    max-width: 64px;
+  }
+  .factor-rialto-statistic-icon {
+    float: left;
+    width: 30px;
+    height: 49px;
+    text-align: center;
+    font: 20px/48px icomoon;
+    color: $text-palette-4;
+    cursor: pointer;
+  }
+  .factor-rialto-statistic-icon:before {
+    content: "\e681";
+  }
+  .factor-rialto {
+    float: left;
+    width: 100%;
+    height: 49px;
+  }
+  .factor-rialto > p {
+    height: 28px;
+    border-bottom: 1px solid darken(saturate(adjust-hue($skin-palette-8, 3deg), 10), 9);
+    width: 100%;
+    text-align: center;
+    font: 12px/28px $font-f;
+    cursor: pointer;
+    transition-duration: 150ms;
+    box-shadow: 0 1px 0 lighten(desaturate($skin-palette-8, 7), 9) inset;
+  }
+  .mini-b-factor-rialto.up .factor-rialto > p {
+    color: #a62b4a;
+    background: lighten(desaturate(adjust-hue($skin-palette-8, -2deg), 4), 2);
+  }
+  .mini-b-factor-rialto.down .factor-rialto > p {
+    color: #589cb2;
+  }
+  .mini-b-factor-rialto.up .factor-rialto > p.active,
+  .mini-b-factor-rialto.up .factor-rialto > p:hover {
+    color: #ffffff;
+    background: #9e3653;
+  }
+  .mini-b-factor-rialto.down .factor-rialto > p.active,
+  .mini-b-factor-rialto.down .factor-rialto > p:hover {
+    background: #589cb2;
+    color: #ffffff;
+  }
+  .factor-rialto > span {
+    display: block;
+    width: 100%;
+    height: 20px;
+    text-align: center;
+    color: $text-palette-4;
+    font: 11px/20px $font-f;
+    background: $skin-palette-8;
+  }
+  .info-all-events-row ul li.possible-win-rialto-b {
+    width: 50%;
+  }
+  .info-bet-rialto {
+    float: left;
+    width: 100%;
+    height: 49px;
+    position: relative;
+  }
+  .info-bet-rialto > h5 {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    text-indent: 10px;
+    font: 12px/28px $font-f;
+    height: 28px;
+    color: $text-palette-3;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+  }
+  .info-bet-rialto > p {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    text-indent: 10px;
+    font: 11px/20px $font-f;
+    height: 20px;
+    color: $brand-color-1;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+  }
+  .info-bet-rialto > p span {
+    padding: 0 0 0 10px;
+    color: #a82d46;
+  }
+  .info-bet-rialto > p span:before {
+    font: 12px/14px icomoon;
+    content: "\e67e";
+    color: $text-palette-4;
+    position: relative;
+    top: 1px;
+    left: -6px;
+  }
+  .info-bet-rialto > p span:first-child {
+    padding: 0;
+    color: $brand-color-1;
+  }
+  .info-bet-rialto > p span:first-child:before {
+    display: none;
+  }
+  .filter-cashout-rialto {
+    float: left;
+    width: 100%;
+    height: 40px;
+    background: $skin-palette-12;
+    border-bottom: 1px solid $brand-color-2;
+    margin: 0 0 2px;
+    display: none;
+  }
+  .liability-info-rialto {
+    float: left;
+    height: 40px;
+    padding: 0 10px;
+  }
+  .liability-info-rialto > p {
+    width: 100%;
+    height: 20px;
+    font: 11px/24px $font-f;
+  }
+  .liability-info-rialto > span {
+    width: 100%;
+    height: 20px;
+    font: 11px/14px $font-f;
+  }
+  .filter-information-b-rialto {
+    float: left;
+    height: 40px;
+    margin: 0 20px;
+  }
+  .filter-information-b-rialto ul {
+    float: left;
+    height: 24px;
+    margin: 8px 0 0;
+  }
+  .filter-information-b-rialto ul li {
+    float: left;
+    height: 24px;
+    background: $skin-palette-2;
+    padding: 0 10px;
+    color: darken( saturate( adjust-hue( $text-palette-8, -16deg ), 10 ), 8 );
+    font: 11px/24px $font-f;
+  }
+  .filter-information-b-rialto ul li:first-child {
+    border-radius: 5px 0 0 5px;
+    text-transform: uppercase;
+    background: $skin-palette-2;
+    color: $text-palette-1;
+  }
+  .filter-information-b-rialto ul li:last-child {
+    border-radius: 0 5px 5px 0;
+  }
+  .filter-information-b-rialto ul li span {
+    color: #a82d46;
+  }
+  .filter-information-b-rialto ul li:first-child span {
+    color: $text-palette-1;
+  }
+  .min-max-range-rialto {
+    float: left;
+    height: 40px;
+  }
+  .min-button-rialto,
+  .max-button-rialto {
+    float: left;
+    height: 40px;
+    font: 12px/40px $font-f;
+  }
+  .field-range-b {
+    float: left;
+    height: 40px;
+    width: 200px;
+    margin: 0 10px;
+  }
+  .default-fielt-color {
+    float: left;
+    width: 100%;
+    height: 4px;
+    background: $skin-palette-7;
+    border-radius: 3px;
+    margin: 18px 0 0;
+  }
+  .color-fieald-range {
+    float: left;
+    position: relative;
+    border-radius: 3px;
+    height: 4px;
+    background: $skin-palette-4;
+    min-width: 40%;
+  }
+  .slider-rialto-b {
+    position: absolute;
+    height: 12px;
+    width: 12px;
+    border-radius: 50%;
+    background: $skin-palette-4;
+    border: 3px solid lighten(saturate(adjust-hue($skin-palette-8, -4deg), 11), 1);
+    top: -7px;
+    right: -10px;
+    cursor: pointer;
+  }
+  .slider-rialto-b:before,
+  .slider-rialto-b:after {
+    content: "";
+    display: block;
+    height: 1px;
+    width: 4px;
+    background: $skin-palette-10;
+    position: absolute;
+    top: 5px;
+    right: 4px;
+  }
+  .slider-rialto-b:after {
+    top: 7px;
+  }
+  .match-result-row-rialto.filter-open .cashout-rialto-b/*,
+  .cashout-rialto-b:hover*/ {
+    background: $skin-palette-12;
+    transition-duration: 150ms;
+  }
+  .match-result-row-rialto.filter-open .filter-cashout-rialto {
+    display: block;
+  }
+  .info-all-events-row ul.info-arrow-changed-rialto {
+    background: $skin-palette-8;
+  }
+  .info-all-events-row ul.info-arrow-changed-rialto li {
+    border-left-color: transparent;
+    height: 28px;
+    background: none;
+    box-shadow: none;
+  }
+  .changed-arrob-info-new {
+    float: left;
+    width: 100%;
+    text-align: center;
+  }
+  .changed-arrob-info-new > p {
+    color: $text-palette-4;
+    font: 11px/28px $font-f;
+  }
+  .mini-b-factor-rialto.down .changed-arrob-info-new > p:after {
+    content: "\e660";
+    font: 16px/28px icomoon;
+    color: $text-palette-4;
+    text-align: center;
+    position: relative;
+    top: 3px;
+    right: -2px;
+    color: #589cb2;
+  }
+  .mini-b-factor-rialto.up .changed-arrob-info-new > p:before {
+    content: "\e660";
+    font: 16px/28px icomoon;
+    color: $text-palette-4;
+    text-align: center;
+    cursor: pointer;
+    position: relative;
+    top: 3px;
+    left: -2px;
+    color: #a62b4a;
+  }
+  .mini-b-factor-rialto.down .changed-arrob-info-new.remove-icon > p:after,
+  .mini-b-factor-rialto.up .changed-arrob-info-new.remove-icon > p:before{
+    display: none;
+  }
+  .match-result-rialto-b.closed .info-all-events-row {
+    display: none;
+  }
+  .match-result-rialto-b.closed .arrow-icon-rialto:before {
+    content: "\e670";
+  }
+  /*right-column rialto END*/
+
+  /*game-livescore*/
+  .game-livescore-rialto {
+    float: left;
+    width: 100%;
+    background: $skin-palette-8;
+    margin: 0 0 3px;
+    min-height: 120px;
+    border-radius: 5px 5px 0 0;
+  }
+  .game-livescore-rialto.exchange-prematch {
+    min-height: 89px;
+    display: none;
+  }
+  .exchange-prematch .game-livescore-details > div span {
+    display: none;
+  }
+  .exchange-prematch.game-livescore-rialto.soccer .game-livescore-details:before {
+    content: "-";
+    color: #ffffff;
+  }
+  .game-livescore-rialto .game-info .game-control .statistics-toggle{
+      text-align: center;
+  }
+  .game-livescore-rialto .game-info .game-control .toggle-stats{
+    display: none;
+  }
+  .game-livescore-rialto .game-score-multiset{
+    color: #fff;
+  }
+  .game-livescore-rialto {
+    background-image: url(../../../images/game-category/custom.jpg#{$delete-cache});
+    background-size: cover;
+  }
+  .game-livescore-rialto.soccer, .game-livescore-rialto.cyberfootball {
+    background-image: url(../../../images/game-category/Football-bg.jpg#{$delete-cache});
+    background-position: 50% 0;
+  }
+  .game-livescore-rialto.tennis {
+    background-image: url(../../../images/game-category/tennis.jpg#{$delete-cache});
+  }
+  .game-livescore-rialto.basketball {
+    background-image: url(../../../images/game-category/basketball.jpg#{$delete-cache});
+  }
+  .game-livescore-rialto.volleyball {
+    background-image: url(../../../images/game-category/valleyball.jpg#{$delete-cache});
+  }
+  .game-livescore-rialto.tabletennis {
+    background-image: url(../../../images/game-category/tab_tennis.jpg#{$delete-cache});
+  }
+  .game-livescore-rialto.baseball {
+    background-image: url(../../../images/game-category/baceball.jpg#{$delete-cache});
+  }
+  .game-livescore-rialto.badminton {
+    background-image: url(../../../images/game-category/badmenton.jpg#{$delete-cache});
+  }
+  .game-livescore-rialto.boxing {
+    background-image: url(../../../images/game-category/box.jpg#{$delete-cache});
+  }
+  .game-livescore-rialto.cycling {
+    background-image: url(../../../images/game-category/cycling.jpg#{$delete-cache});
+  }
+  .game-livescore-rialto.futsal {
+    background-image: url(../../../images/game-category/footsal.jpg#{$delete-cache});
+  }
+  .game-livescore-rialto.icehockey {
+    background-image: url(../../../images/game-category/ice_hockey.jpg#{$delete-cache});
+  }
+  .game-livescore-rialto.horseracing {
+    background-image: url(../../../images/game-category/horse_racing.jpg#{$delete-cache});
+  }
+  .game-livescore-rialto.snooker {
+    background-image: url(../../../images/game-category/snooker2.jpg#{$delete-cache});
+  }
+  .game-livescore-rialto.cricket {
+    background-image: url(../../../images/game-category/Cricket.jpg#{$delete-cache});
+  }
+  .game-livescore-rialto.rugby {
+    background-image: url(../../../images/game-category/rugby.jpg#{$delete-cache});
+  }
+  .game-livescore-rialto.golf {
+    background-image: url(../../../images/game-category/golf.jpg#{$delete-cache});
+  }
+  .game-livescore-rialto.handball {
+    background-image: url(../../../images/game-category/handball.jpg#{$delete-cache});
+  }
+  .game-livescore-rialto.beachvolleyball {
+    background-image: url(../../../images/game-category/b_Volleyball.jpg#{$delete-cache});
+  }
+  .game-livescore-rialto.wrestling {
+    background-image: url(../../../images/game-category/Wrestling1.jpg#{$delete-cache});
+  }
+  .game-livescore-rialto.americanfootball {
+    background-image: url(../../../images/game-category/amer_fball.jpg#{$delete-cache});
+  }
+  /* .game-block-title {
+    float: left;
+    width: 100%;
+    height: 30px;
+    line-height: 30px;
+    border-radius: 5px 5px 0 0;
+    position: relative;
+    text-transform: uppercase;
+    background: $skin-palette-8;
+    font: 12px/30px $font-f;
+  }
+ .game-livescore-rialto .game-block-title h3 {
+    float: left;
+    width: 50%;
+    padding: 0 80px 0 10px;
+    font-size: 14px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color: $text-palette-3;
+  }
+  .game-livescore-rialto .game-block-title h3 span:after {
+    font: 14px/30px icomoon;
+    content: "\e672";
+    padding: 0 5px;
+  }
+  .game-livescore-rialto .game-block-title .game-current-time {
+    float: left;
+    position: relative;
+    left: -74px;
+    width: 148px;
+    height: 33px;
+    overflow: hidden;
+    text-align: center;
+    background: lighten( desaturate( adjust-hue( $skin-palette-8, -3deg ), 6 ), 13 );
+    color: $text-palette-1;
+    font-weight: bold;
+  }
+  .game-livescore-rialto .game-livescore-details {
+    float: left;
+    width: 100%;
+    height: 89px;
+    overflow: hidden;
+    position: relative;
+    color: #ffffff;
+  }
+  .game-livescore-rialto.soccer .game-livescore-details:before {
+    content: ":";
+    position: absolute;
+    top: -3px;
+    left: calc(50% - 5px);
+    color: #ffffff;
+    font: 34px/89px $font-f;
+  }*/
+
+
+  /*.game-livescore-details > div {
+    float: left;
+    width: 50%;
+    height: 100%;
+    padding: 0 10px;
+    display: table;
+  }
+  .game-livescore-details > div p {
+    width: 100%;
+    display: table-cell;
+    vertical-align: middle;
+    text-transform: uppercase;
+    word-break: break-all;
+    font: 16px/30px $font-f;
+  }
+  .game-livescore-details .game-team-1 p {
+    text-align: right;
+    padding-right: 30px;
+  }
+  .game-livescore-details .game-team-2 p {
+    padding-left: 30px;
+  }
+
+  .game-livescore-details > div span {
+    position: relative;
+    padding: 5px 10px;
+    font: 34px/89px $font-f;
+  }
+  .game-livescore-details > div span:before, .game-livescore-details > div span:after {
+    content: "";
+    position: absolute;
+    width: 100%;
+    height: 50%;
+    background: $skin-palette-7;
+    border-radius: 5px;
+  }
+  .game-livescore-details > div span:before {
+    top: 0;
+    left: 0;
+    box-shadow: inset 0px 1px 0 lighten( desaturate( adjust-hue( $skin-palette-8, -3deg ), 12 ), 17 );
+  }
+  .game-livescore-details > div span:after {
+    top: 50%;
+    left: 0;
+    box-shadow: inset 0px -1px 0 $skin-palette-10;
+  }
+  .game-livescore-details > div span i {
+    font-style: normal;
+    position: relative;
+    z-index: 9;
+  }
+  .game-livescore-details > div span i:before {
+    content: "";
+    position: absolute;
+    width: 100%;
+    height: 1px;
+    left: 0;
+    top: 50%;
+    box-shadow: 0 1px 0px rgba(130, 132, 139, 0.5), 0 1px 0px #121623 inset;
+  }
+  .game-livescore-rialto .game-soccer-timeline {
+    float: left;
+    width: 100%;
+    height: 101px;
+    padding: 18px 25px;
+    perspective: 600px;
+    background: rgba(0, 0, 0, 0.4);
+    border-top: 1px solid #404040;
+  }
+  .game-livescore-rialto .game-soccer-timeline .timeline-control {
+    transform: rotateX(20deg);
+    -webkit-transform: rotateX(20deg);
+  }
+  .game-livescore-rialto .game-soccer-timeline .tl-data .current-minute {
+    transform: rotateX(20deg);
+    -webkit-transform: rotateX(20deg);
+  }*/
+  /*game-livescore END*/
+  /*center block rialto END*/
+
+  /*Betslip rialto*/
+  /*animation and video block*/
+  .animation-b-rialto {
+    float: left;
+    width: 100%;
+    margin: 0 0 3px;
+  }
+  .animation-b-rialto .game-block-title .arrow-b-rialto {
+    color: $text-palette-3;
+  }
+  .animation-b-rialto .game-block-title.collapsed .arrow-b-rialto:before {
+    content: "\e670";
+  }
+  .animation-b-rialto .game-block-title .arrow-b-rialto:before {
+    content: "\e671";
+  }
+  .animation-b-rialto .game-block-title button {
+    float: left;
+    width: 30px;
+    height: 30px;
+    font: 16px/30px icomoon;
+    background: transparent;
+    border-width: 0px;
+    cursor: pointer;
+    border-right: 1px solid lighten(desaturate(adjust-hue($skin-palette-8, -1deg), 5), 5);
+    color: $text-palette-4;
+  }
+  .animation-b-rialto .game-block-title button.fullscreen:before {
+    content: "\6f";
+  }
+  .animation-b-rialto .game-block-title button.detach:before {
+    content: "\50";
+  }
+  .animation-b-rialto .animation-video-toggle {
+    position: absolute;
+    top: 4px;
+    left: 50%;
+    margin-left: -30px;
+    background: lighten(desaturate(adjust-hue($skin-palette-8, -4deg), 6), 13);
+    border: 1px solid lighten(desaturate(adjust-hue($skin-palette-8, -4deg), 6), 13);
+    border-radius: 3px;
+  }
+  .animation-b-rialto .animation-video-toggle li {
+    float: left;
+    width: 30px;
+    height: 20px;
+    border-radius: 3px;
+    cursor: pointer;
+    font: 16px/20px 'icomoon';
+    text-transform: none;
+    text-align: center;
+    color: $text-palette-4;
+  }
+  .animation-b-rialto .animation-video-toggle li.active {
+    background: $skin-palette-8;
+    cursor: default;
+  }
+  .animation-b-rialto .animation-video-toggle li.field-icon:before {
+    content: "\6a";
+  }
+  .animation-b-rialto .animation-video-toggle li.video-icon:before {
+    content: "\6b";
+    font-size: 14px;
+  }
+  .animation-b-rialto .animation-video-container {
+    float: left;
+    width: 100%;
+    height: 186px;
+    background: $skin-palette-13;
+  }
+  .animation-b-rialto .live-game-statistics {
+    float: left;
+    width: 100%;
+    border-radius: 0 0 5px 5px;
+    background: $skin-palette-7;
+  }
+  .animation-b-rialto .live-game-statistics h3 {
+    float: left;
+    width: 100%;
+    height: 20px;
+    position: relative;
+    text-transform: uppercase;
+    font: 10px/20px $font-f;
+    background: $skin-palette-6;
+  }
+  .animation-b-rialto .live-game-statistics h3 p {
+    margin-left: 10px;
+  }
+  .animation-b-rialto .live-game-statistics h3 .arrow-b-rialto {
+    font: 16px/20px icomoon;
+    width: 28px;
+    height: 20px;
+  }
+  .animation-b-rialto .live-game-statistics h3 .arrow-b-rialto:before {
+    content: "\e671";
+  }
+  .animation-b-rialto .live-game-statistics h3.collapsed .arrow-b-rialto:before {
+    content: "\e670";
+  }
+  /*live game statistics*/
+  .live-game-statistics .game-statistics {
+    float: left;
+    width: 100%;
+    margin: 10px 0 30px;
+  }
+  .live-game-statistics .game-statistics li {
+    float: left;
+    width: 100%;
+    font: 10px/30px $font-f;
+    color: $text-palette-1;
+  }
+  .live-game-statistics .game-statistics li .title {
+    text-align: center;
+    text-transform: uppercase;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+  }
+  .live-game-statistics .game-statistics li .stat-l, .live-game-statistics .game-statistics li .stat-r {
+    float: left;
+    width: 30px;
+    line-height: 3px;
+    text-align: center;
+  }
+  .live-game-statistics .game-statistics li .team-2 {
+    float: left;
+    width: calc(100% - 60px);
+    height: 3px;
+    background: #a82d46;
+  }
+  .live-game-statistics .game-statistics li .team-1 {
+    width: 50%;
+    height: 3px;
+    background: #5ea3cb;
+  }
+  /*animation and video block END*/
+
+  .team-name-betslip-rialto {
+    float: left;
+    width: 100%;
+    height: 28px;
+    background: $skin-palette-8;
+    border-bottom: 1px solid darken(saturate(adjust-hue($skin-palette-8, 3deg), 10), 9);
+    border-top: 1px solid darken(saturate(adjust-hue($skin-palette-8, 3deg), 10), 9);
+  }
+  .team-name-betslip-rialto > p {
+    float: left;
+    width: 100%;
+    color: $text-palette-4;
+    font: 12px/28px $font-f;
+    box-sizing: border-box;
+    padding: 0 10px;
+    text-align: center;
+  }
+  .team-name-betslip-rialto.green-b > p {
+    color: #589cb2;
+  }
+  .team-name-betslip-rialto.red-b > p {
+    color: #a62b4a;
+  }
+  .team-name-betslip-rialto > p span {
+    float: left;
+    width: 50%;
+    display: block;
+    box-sizing: border-box;
+    padding: 0 0 0 10px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    text-align: left;
+    position: relative;
+  }
+  .team-name-betslip-rialto > p span b {
+    font-weight: normal;
+  }
+  .team-name-betslip-rialto > p span:first-child {
+    padding: 0 10px 0 0;
+    text-align: right;
+  }
+  .separator-line {
+    font-style: normal;
+    width: 20px;
+    height: 28px;
+    text-align: center;
+    display: block;
+    position: absolute;
+    right: -10px;
+    top: 0;
+  }
+  .separator-line:before {
+    content: " - ";
+  }
+  .odds-title-rialto {
+    float: left;
+    width: 100%;
+    height: 29px;
+    padding: 0 10px;
+    box-sizing: border-box;
+    background: $skin-palette-8;
+    border-top: 1px solid lighten(desaturate(adjust-hue($skin-palette-8, 1deg), 3), 5);
+  }
+  .odds-title-rialto > ul {
+    float: left;
+    width: 100%;
+  }
+  .odds-title-rialto > ul li {
+    float: left;
+    width: 80px;
+    font: 12px/28px $font-f;
+    color: $text-palette-4;
+    margin: 0 0 0 5px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+  }
+  .odds-title-rialto > ul li:first-child {
+    margin: 0;
+    width: 90px;
+  }
+  .lialto-events-conainer {
+    float: left;
+    width: 100%;
+    position: relative;
+  }
+  .disable-b-exchange {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 66;
+    background-color: rgba(46, 50, 63, 0.7);
+    display: none;
+  }
+  .disable-b-exchange.active {
+    display: block;
+  }
+  .single-event-iformation-b {
+    float: left;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 10px 8px 10px 10px;
+    background: $skin-palette-7;
+    border-top: 1px solid darken(saturate(adjust-hue($skin-palette-7, 4deg), 15), 14);
+    box-shadow: 0 1px 0 lighten(desaturate(adjust-hue($skin-palette-7, 1deg), 2), 4) inset;
+  }
+  .league-name-container-event {
+    float: left;
+    width: 100%;
+    height: 24px;
+  }
+  .league-name-container-event > p {
+    float: left;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 0 44px 0 0;
+    position: relative;
+    color: #c1c4cd;
+    font: 12px/14px $font-f;
+  }
+  .league-name-container-event > p span {
+    float: left;
+    width: 100%;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+  }
+  .league-name-container-event > p > i {
+    width: 16px;
+    height: 16px;
+    display: block;
+    position: absolute;
+    top: 1px;
+    right: 20px;
+    color: #7d8393;
+    font-style: normal;
+    font: 12px/16px icomoon;
+    cursor: pointer;
+    transition: color 200ms;
+  }
+  .league-name-container-event > p > i:hover {
+    color: $text-palette-1;
+  }
+  .league-name-container-event > p > i.edit-icon:before {
+    content: "\e6fa";
+  }
+  .league-name-container-event > p > i.refresh:before {
+    content: "\e6f4";
+  }
+
+  .closed-icon-event-rialto {
+    position: absolute;
+    width: 14px;
+    height: 14px;
+    text-align: center;
+    font: 14px/14px icomoon;
+    right: 0;
+    top: 1px;
+    cursor: pointer;
+    color: #7c8292;
+  }
+  .closed-icon-event-rialto:before {
+    content: "\e62c";
+  }
+  .closed-icon-event-rialto:hover {
+    color: $hero-color;
+    transition-duration: 150ms;
+  }
+  .form-contein-bet-rialto {
+    float: left;
+    width: 100%;
+  }
+  .inp-wrap-b {
+    float: left;
+    width: 90px;
+    margin: 0 5px 0 0;
+    position: relative;
+  }
+  .arrow-change-figure {
+    position: absolute;
+    right: 1px;
+    top: 2px;
+    width: 29px;
+    box-sizing: border-box;
+    height: 32px;
+    border-left: 1px solid lighten( desaturate( adjust-hue( $skin-palette-8, -2deg ), 6 ), 11 );
+    background: $skin-palette-8;
+    border-radius: 0 5px 5px 0;
+  }
+  .arrow-change-figure > b {
+    float: left;
+    width: 28px;
+    height: 16px;
+    text-align: center;
+    font: 16px/16px icomoon;
+    color: lighten( desaturate( adjust-hue( $text-palette-8, -3deg ), 10 ), 26 );
+    cursor: pointer;
+    transition: color 150ms;
+  }
+  .arrow-change-figure > b:hover {
+    color: $text-palette-1;
+  }
+  .to-increase {
+  }
+  .to-reduce {
+  }
+  .to-increase:before {
+    content: "\e671";
+  }
+  .to-reduce:before {
+    content: "\e670";
+  }
+  .inp-wrap-b input[type="text"] {
+    width: 100%;
+    box-sizing: border-box;
+    height: 36px;
+    border-radius: 5px;
+    border: 1px solid darken(saturate(adjust-hue($skin-palette-7, 1deg), 5), 5);
+    background: darken(saturate(adjust-hue($skin-palette-7, 1deg), 5), 5);
+    @if $white-skin == true {
+      background: $form-elements-bg;
+      border: 1px solid darken(saturate(adjust-hue($form-elements-bg, 1deg), 5), 5);
+    }
+    padding: 0 14px;
+    color: $text-palette-4;
+    font: 12px $font-f;
+    &::-webkit-input-placeholder {
+      color: $text-palette-4;
+    }
+    &::-moz-input-placeholder {
+      color: $text-palette-4;
+    }
+  }
+  .inp-wrap-b.number input[type="text"] {
+    padding: 0 32px 0 14px;
+  }
+  .inp-wrap-b input[type="text"]:focus {
+    border: 1px solid lighten(desaturate(adjust-hue($skin-palette-7, 1deg), 7), 28);
+    transition-duration: 250ms;
+  }
+  .form-contein-bet-rialto p {
+    float: left;
+    color: $text-palette-4;
+    font: 12px/16px $font-f;
+    margin: 8px 0 0 10px;
+  }
+  .lialto-events-conainer.green-bl .single-event-iformation-b {
+    box-shadow: 2px 0 0 #589cb2 inset, 0 1px 0 lighten(desaturate(adjust-hue($skin-palette-7, 1deg), 2), 4) inset;
+  }
+  .lialto-events-conainer.red-bl .single-event-iformation-b {
+    box-shadow: 2px 0 0 #a62b4a inset, 0 1px 0 lighten(desaturate(adjust-hue($skin-palette-7, 1deg), 2), 4) inset;
+  }
+  .bet-b-container {
+    float: left;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 10px;
+    background: $skin-palette-8;
+    border-top: 1px solid darken(saturate(adjust-hue($skin-palette-8, 3deg), 10), 9);
+    box-shadow: 0 1px 0 lighten(desaturate($skin-palette-8, 7), 9) inset;
+  }
+  .bet-b-container > ul {
+    float: left;
+    width: 100%;
+  }
+  .bet-b-container > ul li {
+    float: left;
+    width: 50%;
+    box-sizing: border-box;
+    padding: 0 0 0 5px;
+
+  }
+  .bet-b-container > ul li:first-child {
+    padding: 0 5px 0 0;
+  }
+  .bet-b-container > ul li button {
+    width: 100%;
+    height: 100%;
+    border: none;
+    background: $brand-color-1;
+    color: set-color($brand-color-1);
+    border-radius: 5px;
+    font: 14px $font-f;
+    text-transform: uppercase;
+    box-sizing: border-box;
+    padding: 9px 5px;
+    cursor: pointer;
+  }
+  /*
+  .bet-b-container > ul li:first-child button{
+      background: $skin-palette-6;
+      color: $text-palette-4;
+  }
+  */
+  .bet-b-container > ul li button:disabled {
+    background: $button-disable-bg;
+    color: lighten(desaturate($button-disable-bg, 12), 33);
+    @if $white-skin == true {
+      color: rgba(0, 0, 0, 0.3);
+    }
+    cursor: default;
+  }
+  /*Betslip rialto END*/
+
+  /*resize*/
+  @media screen and (max-width: 1700px) {
+    .column-rialto-b-1 {
+      width: 210px;
+    }
+    .live-prematch-switcher-new ul li {
+      width: 62%;
+    }
+    .live-prematch-switcher-new ul li:first-child {
+      width: 38%;
+    }
+  }
+  @media screen and (max-width: 1590px) {
+    .left-column-markets-rialto, .center-b-rialto.live .left-column-markets-rialto {
+      width: 100%;
+    }
+    .right-column-markets-rialto, .center-b-rialto.live .right-column-markets-rialto {
+      width: 100%;
+      margin: 2px 0 0;
+    }
+
+  }
+  /*resize END*/
+}
+.category-nav ul li.exchange {
+  height: auto;
+  width: auto;
+}
+.info-all-events-row ul li.mini-b-factor-rialto {
+  white-space: nowrap;
+}
+.info-all-events-row ul li.mini-b-factor-rialto.down {
+  direction: rtl;
+}
+// Statistics popup
+.exchange-pop-j {
+  .popup-wrapper-j {
+    width: 950px;
+    background: white;
+    .pu-head-j {
+      background: #a5aabc;
+      text-align: center;
+      box-shadow: none;
+      span {
+        display: block;
+        width: 100%;
+        padding: 0 38px 0 0;
+        color: white;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+      }
+      .close-j {
+        color: white;
+      }
+    }
+  }
+}
+.exchange-pu-j {
+  float: left;
+  width: 100%;
+  text-align: left;
+  padding: 40px 40px 0;
+  p {
+    color: #acaeb5;
+    font: 12px/14px $font-f;
+    float: left;
+    width: 100%;
+  }
+  ul {
+    float: left;
+    width: 100%;
+        padding-bottom: 20px;
+    border-bottom: 1px solid #f3f3f5;
+    margin-bottom: 11px;
+    li {
+      display: block;
+      width: 50%;
+      float: left;
+      &:last-child {
+        padding-left: 18px;
+      }
+    }
+    span {
+      display: block;
+      width: 100%;
+      float: left;
+      color: #7b8191;
+      font: 24px/26px $font-f;
+      padding-top: 7px;
+      sub {
+        text-transform: uppercase;
+        font: 14px/16px $font-f;
+      }
+    }
+  }
+  .exchange-stats-select-j {
+    float: left;
+    width: 100%;
+    height: 30px;
+    border-radius: 4px;
+    border: 1px solid #c2c5cd;
+    overflow: hidden;
+    margin-top: 5px;
+    position: relative;
+    &:before {
+      content: "\e674";
+      font: 18px icomoon;
+      position: absolute;
+      right: 8px;
+      top: calc((100% - 14px) / 2);
+      height: 12px;
+      color: #b8b9bf;
+    }
+    select {
+      border: 0;
+      display: block;
+      float: left;
+      width: calc(100% + 24px);
+      height: 28px;
+      font: 12px $font-f;
+      color: #7b8191;
+      padding-left: 10px;
+    }
+  }
+  .pp-table-j {
+    float: left;
+    padding: 0;
+    > div {
+      width: calc(100% - 426px);
+      display: table-cell;
+      vertical-align: top;
+      &:first-of-type {
+        width: 426px;
+        border-right: 1px solid #f3f3f5;
+        p {
+          padding-left: 30px;
+        }
+      }
+      &:nth-of-type(2) {
+        padding-left: 40px;
+      }
+    }
+  }
+  > div {
+    float: left;
+    width: 100%;
+    padding: 40px 0;
+    button {
+      padding: 0 32px;
+      display: block;
+      float: right;
+      height: 36px;
+      border: 1px solid #a5aabc;
+      background: none;
+      color: #7b8191;
+      font: 14px $font-f;
+      border-radius: 5px;
+      text-transform: uppercase;
+      transition: background 0.3s, color 0.3s, border 0.3s;
+      cursor: pointer;
+      &:hover {
+        background: $brand-color-1;
+        border-color: $brand-color-1;
+        color: set-color($brand-color-1);
+      }
+    }
+  }
+  table {
+    float: left;
+    width: 100%;
+    table-layout: fixed;
+    tr {
+      td {
+        border-bottom: 1px solid #f3f3f5;
+        width: 1%;
+        color: #7b8191;
+        font: 12px/14px $font-f;
+        padding: 8px 5px 8px 10px;
+        transition: background 0.5s;
+        vertical-align: middle;
+        &.back-b-j {
+          background: #deebf0;
+          box-shadow: inset -1px 0 0 white;
+        }
+        &.lay-b-j {
+          background: #f0dee5;
+          box-shadow: inset -1px 0 0 white;
+        }
+      }
+      &:first-child td {
+        border-color: #c2c5cd;
+      }
+    }
+  }
+}
+// End statistics popup

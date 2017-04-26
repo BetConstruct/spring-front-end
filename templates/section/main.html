@@ -1,0 +1,44 @@
+<div ng-controller="cmsPagesCtrl" ng-init="loadSection(conf);" ng-class="'section-' + sectionSlug" class="section">
+    <!--Casino-->
+
+    <h3 ng-if="pageNotFound" trans>Page not found</h3>
+
+    <vbet-loader class="menu-casino" ng-show="!sectionLoaded && !pageNotFound"></vbet-loader>
+    <!--Menu games-->
+    <div class="menu-casino" ng-if="!pageNotFound && sectionLoaded">
+        <div class="menu-games">
+            <div class="contain-menu-games">
+                <ul class="poker-menu">
+                    <div class="contein-nav-g">
+                        <li ng-repeat="page in sectionPages"
+                            ng-class="{'active-game-casino': page.id === selectedSectionPage.id}"><a
+                                ng-click="selectSectionPage(page)">{{page.title}}</a></li>
+                    </div>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!--Menu games end-->
+    <div class="poker-baners" ng-if="!pageNotFound" ng-class="selectedSectionPage.slug">
+        <div class="contain-baners">
+
+            <div class="top-slots-block">
+                <!--<h3>{{selectedSectionPage.title}}</h3>-->
+                <div ng-if="sectionConfig.bannersOnPages[selectedSectionPage.slug][env.lang]" ng-init="loadBanners(sectionConfig.bannersOnPages[selectedSectionPage.slug][env.lang])">
+                    <vbet-big-slider ng-if="bannerObjects[sectionConfig.bannersOnPages[selectedSectionPage.slug][env.lang]]"
+                                     images="bannerObjects[sectionConfig.bannersOnPages[selectedSectionPage.slug][env.lang]]"
+                                     link-click-handler="openBannerLink()">
+                    </vbet-big-slider>
+                </div>
+                <div class="poker-text" ng-class="selectedSectionPage.slug">
+                    <div ng-bind-html="selectedSectionPage.content"></div>
+                </div>
+            </div>
+
+
+        </div>
+        <div ng-include="sectionConfig.enableCustomTemplate[selectedSectionPage.slug]" ng-if="sectionConfig.enableCustomTemplate && sectionConfig.enableCustomTemplate[selectedSectionPage.slug]"></div>
+        </div>
+
+
+</div>

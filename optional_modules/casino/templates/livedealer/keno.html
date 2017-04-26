@@ -1,0 +1,27 @@
+<!--Live Dealer-->
+<div ng-controller="liveCasinoMainCtrl"
+     ng-init="loadGames();checkIfEnabled('liveDealer'); setTitle('Keno');">
+    <div class="casino-main" ng-show="!gamesInfo.length">
+        <div ng-show="games.length">
+            <div ng-include="getTemplate('optional_modules/casino/templates/livedealer/threedimensionalview.html')"></div>
+        </div>
+
+        <vbet-loader ng-hide="games.length || errorStatus == 1"></vbet-loader>
+    </div>
+
+    <div class="error-block-ld"
+         ng-show="errorStatus && dealerPagesLoaded && (!dealerPages.length || selectedDealerPage.slug == 'home')">
+        <div class="info-text-error-ld">
+            <ul>
+                <li trans>Live Casino Page is currently closed for</li>
+                <li><span trans>maintenance.</span></li>
+                <li trans>We will be back soon with more and better features. Thank you for your patience.</li>
+                <li><a href="#" trans>Click here to see other games.</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <div ng-include="getTemplate('optional_modules/casino/templates/big-game.html')" ng-if="gamesInfo.length"
+         class="big-games-overflow"></div>
+</div>
+<!--live dealer games-->

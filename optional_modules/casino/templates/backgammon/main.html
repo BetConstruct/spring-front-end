@@ -1,0 +1,193 @@
+<div ng-controller="cmsPagesCtrl" ng-init="checkIfEnabled('backgammon'); setTitle('Backgammon')">
+    <div ng-if="!globalConfig.backgammon.redirectOnGame">
+        <div ng-show="!showNestedFrame">
+
+            <!-- NEW BACKGAMMON PAGE -->
+            <div ng-if="conf.showNewBackgammonPage" class="skillgame-landing-j backgammon-j">
+                <div ng-init="loadPage('backgammon.mainPageSlugs', true)">
+                    <div class="intro-section-j" ng-if="pages" ng-init="initProductBanners('backgammon')">
+                        <casino-game-slider product-slides="productSlides" page-name = "Backgammon"></casino-game-slider>
+                        <div class="skillgame-landing-guide button-group-j">
+                            <ul id="backgammon-buttons">
+                                <li>
+                                    <button ng-click="openNestedFrame();" trans>Play now</button>
+                                </li>
+                                <li ng-hide="showDownloadLinks">
+                                    <button ng-click="toggleDownloadLink('backgammon-buttons')" trans>Download</button>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="winner-block-j" ng-init="winnersList = getPageBySlug(pages, 'backgammon-winners').content" ng-show="winnersList">
+                            <div class="skillgame-landing-guide" ng-bind-html="winnersList"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="select-os-section-j" ng-show="showDownloadLinks">
+                    <div>
+                        <ul class="skillgame-landing-guide">
+                            <li>
+                                <div class="head-j windows">
+                                    <h1 trans>Windows OS</h1>
+                                    <p trans>Windows XP or higher</p>
+                                </div>
+                                <div class="os-rquirments-j">
+                                    <p trans>backgammon_requirements_windows</p>
+                                    <p trans>backgammon_download_description_windows</p>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                    <div>
+                        <ul class="skillgame-landing-guide get-section-j">
+                            <li>
+                                <a ng-href="{{globalConfig.backgammon.downloadLink.windows}}">
+                                    <button trans>Download</button>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="promotions-section-j">
+                    <h1 trans >Best Promotions</h1>
+                    <div class="nav-landp-j"  no-animate>
+                        <promotion-news template="slider" slug="backgammon" hide-dates="true" main-class="block-meny-news promo" use-custom-base-host="true" ng-if="!showDownloadLinks" share-path="backgammon"></promotion-news>
+                    </div>
+                </div>
+                <div class="game-torunament-section-j" ng-init="setDefaultDownloadOS('backgammon');" >
+                    <div class="skillgame-landing-guide">
+                        <div ng-if="!globalConfig.backgammon.tournamentScheduleUrl" class="skillgame-landing-guide" ng-init="loadPages('backgammon');getCustomPage('backgammon','mainPageHeaderSlugs','headerContentHTML');">
+                            <div ng-show="backgammonPagesLoaded" ng-bind-html="selectedBackgammonPage.content"></div>
+                        </div>
+                        <div ng-controller="homepageTournaments" ng-init="getBackgammonTournamentList()">
+                            <h3 ng-if="backgammonTournamentList" style="text-align: center;" trans>Tournament List</h3>
+                            <table class="visible" ng-show="backgammonTournamentList">
+                                <tr>
+                                    <td width="159" height="20" trans>Date</td>
+                                    <td width="159" trans>Time</td>
+                                    <td width="167" trans>Prize pool</td>
+                                    <td width="130" trans>Buy-in</td>
+                                    <td width="180" trans>Type</td>
+                                </tr>
+                                <tr ng-repeat="data in backgammonTournamentList|orderBy:'start_date' track by $index" title="{{data.trn_name}}">
+                                    <td>{{data.start_date|formatDate:'MMMM DD'}} {{data.start_date|formatDate:'dddd'}}</td>
+                                    <td>{{data.start_date|formatDate:'HH:mm'}}</td>
+                                    <td>{{data.prize?data.prize + ' '+data.currency:'Free'|translate}}</td>
+                                    <td>{{data.buyin?data.buyin + ' '+data.currency:'Free'|translate}}</td>
+                                    <td>&nbsp;<span>{{data.game_type|translate}}</span> <span ng-if="!data.with_rebuy" trans>(without re-buy)</span></td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- OLD BACKGAMMON PAGE -->
+            <div ng-if="!conf.showNewBackgammonPage" ng-init="loadPages('backgammon');getCustomPage('backgammon','mainPageHeaderSlugs','headerContentHTML');setDefaultDownloadOS('backgammon');" class="poker-background new" ng-class="'poker-'+selectedBackgammonPage.slug" watch-resize>
+                <div class="menu-casino menu-poker menu-backgammon">
+                    <div class="menu-games">
+                        <div class="contain-menu-games">
+                            <ul class="poker-menu">
+                                <div class="contein-nav-g">
+                                    <!--<li ng-repeat="page in backgammonPages" ng-class="{'active-game-casino': page.id === selectedBackgammonPage.id}" class="poker {{page.slug}}">-->
+                                    <!--<a ng-click="selectPage(page, 'backgammon'); $parent.showDownloadLinks = false" id="backgammonpage{{page.slug}}"><span></span>{{page.title}}</a>-->
+                                    <!--</li>-->
+                                </div>
+                            </ul>
+
+                            <!--<div class="download-button-info"><button ng-click="toggleDownloadLink('choose-your-os')" trans>Download</button></div>-->
+                            <!--<div class="download-button-info play"><a ng-href="{{globalConfig.backgammon.instantPlayLink}}" target="_blank"><button trans>Play now</button></a></div>-->
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="country-b" ng-show="selectedBackgammonPage.children.length">
+                    <div class="country-block-contain">
+                        <ul class="countrylist">
+                            <div class="contaien-country">
+                                <li ng-repeat="subpage in selectedBackgammonPage.children">
+                                    <a ng-click="$parent.selectedBackgammonPage.selectedBackgammonSubpage = subpage" ng-class="{'active': $parent.selectedBackgammonPage.selectedBackgammonSubpage.id === subpage.id}">{{ subpage.title }}</a>
+                                </li>
+                            </div>
+                        </ul>
+                    </div>
+                </div>
+                <!--Menu games end-->
+
+                <!--big-slider
+                <div ng-show="selectedBackgammonPage.slug == 'home'" ng-init="gePageBanners('backgammon');">
+                    <vbet-big-slider ng-if="backgammonTopBanners" images="backgammonTopBanners" link-click-handler="checkForPageDeepLinkFunc('backgammon')"> </vbet-big-slider>
+                </div>
+                big-slider END-->
+
+                <div class="contain-casino poker big-b">
+                    <div class="centr-block-baners-s" ng-hide="customPageLoading">
+                        <div class="screens-bg-f"></div>
+                        <div class="text-block-change-b" ng-hide="headerContentHTML">
+                            <p><span trans>Backgammon</span> <br><a trans>Use your</a> <b trans>skills</b></p>
+                        </div>
+                        <div class="text-block-change-b" ng-show="headerContentHTML" ng-bind-html="headerContentHTML"></div>
+                        <div class="buttons-reg-s">
+                            <div class="download-button-info play">
+                                <a ng-click="openNestedFrame();"><button trans>Play now!</button></a>
+                                <!-- <a target="{{globalConfig.backgammon.instantPlayTarget}}" ng-href="{{globalConfig.backgammon.instantPlayLink}}"> <button trans>Play now!</button></a> -->
+                            </div>
+                            <div class="download-button-info">
+                                <button ng-click="toggleDownloadLink('choose-your-os')" trans>Download</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <!--mini-slider-->
+
+                <!--mini-slider END-->
+
+
+                <!--mini title-->
+                <!--<div ng-show="showDownloadLinks" class="choose-block-b"><h1 trans id="choose-your-os">choose your os</h1></div>-->
+                <!--mini title-->
+                <!--Sub menu-->
+                <div class="sub-menu-poker" ng-show="showDownloadLinks && selectedOS">
+                    <ul>
+                        <!--<li ng-class="{'active': selectedOS =='All'}">      <a ng-click="selectedOS = 'All'" trans>All</a></li>-->
+                        <li ng-show="globalConfig.backgammon.downloadLink.windows" ng-class="{'active': selectedOS=='Windows'}"><a ng-click="selectedOS = 'Windows'">Windows</a></li>
+                        <!--<li ng-show="globalConfig.backgammon.downloadLink.mac" ng-class="{'active': selectedOS=='MacOS'}">     <a ng-click="selectedOS = 'MacOS'">Mac OS</a></li>-->
+                        <!--<li ng-show="globalConfig.backgammon.downloadLink.linux" ng-class="{'active': selectedOS=='UNIX' || selectedOS=='Linux'}"><a ng-click="selectedOS = 'Linux'">Linux</a></li>-->
+                        <!--<li ng-show="globalConfig.backgammon.downloadLink.android" ng-class="{'active': selectedOS=='android'}"><a ng-click="selectedOS = 'android'">Android</a></li>-->
+                    </ul>
+                </div>
+
+                <!--Sub menu-->
+
+                <div class="download-links" ng-show="showDownloadLinks" ng-class="{'all-oses':selectedOS =='All'}" ng-init="selectedOS='Windows'">
+                    <h2 ng-show="selectedOS =='All'"><span trans>All downloads</span></h2>
+                    <ul>
+                        <li ng-show="(selectedOS =='All' && globalConfig.backgammon.downloadLink.windows) ||  selectedOS =='Windows' || selectedOS === null">
+                            <div class="title-link-d windows">
+                                <h3 trans>Windows</h3>
+                                <span trans>backgammon_requirements_windows</span>
+                            </div>
+                            <p trans>backgammon_download_description_windows</p>
+
+                            <div class="link-sec-download">
+                                <a ng-href="{{globalConfig.backgammon.downloadLink.windows}}" trans>Download</a>
+                            </div>
+                        </li>
+
+                    </ul>
+                </div>
+                <vbet-loader class="page-center" ng-show="!backgammonPagesLoaded"></vbet-loader>
+
+                <div class="mein-page-contain poker" ng-show="!showDownloadLinks">
+                    <div class="page-main"></div>
+                    <div class="table-information" ng-show="backgammonPagesLoaded" ng-bind-html="selectedBackgammonPage.content"></div>
+                </div>
+            </div>
+        </div>
+        <div ng-if="showNestedFrame" ng-controller="casinoSpecialGamesCtrl" ng-init="loadGame('backgammon')" class="big-games-overflow" ng-include="getTemplate('optional_modules/casino/templates/specialgames/skillgame.html')"></div>
+    </div>
+
+    <div ng-if="globalConfig.backgammon.redirectOnGame" class="backgammon-with-fullscreen" ng-controller="casinoSpecialGamesCtrl" ng-init="loadGame('backgammon')" ng-include="getTemplate('optional_modules/casino/templates/specialgames/main.html')"></div>
+</div>

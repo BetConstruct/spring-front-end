@@ -1,0 +1,4 @@
+<div ng-show="conf.sportsLayout !== 'asian' && conf.sportsLayout !== 'external'">
+    <li class="title-sep"><span trans>Odds in</span>:</li>
+    <li ng-repeat="oddFormat in ::conf.oddFormats track by oddFormat.name" ng-click="broadcast('setOddsFormat', oddFormat.format)" ng-class="{'active-format': env.oddFormat === oddFormat.format}">{{ oddFormat.name | translate }}</li>
+</div>

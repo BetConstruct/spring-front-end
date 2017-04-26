@@ -1,0 +1,62 @@
+<div class="last-minute-bets-j">
+    <div class="lmb-time-selector">
+        <ul>
+            <li>
+                <h3 trans>Last minute bets</h3>
+            </li>
+            <li ng-click="setMinutes(conf.timeOptions[2])" ng-class="{'active-j':minutesFilter == conf.timeOptions[2]}">{{conf.timeOptions[2]}} <span trans>minutes</span></li>
+            <li ng-click="setMinutes(conf.timeOptions[1])" ng-class="{'active-j':minutesFilter == conf.timeOptions[1]}">{{conf.timeOptions[1]}} <span trans>minutes</span></li>
+            <li ng-click="setMinutes(conf.timeOptions[0])" ng-class="{'active-j':minutesFilter == conf.timeOptions[0]}">{{conf.timeOptions[0]}} <span trans>minutes</span></li>
+        </ul>
+    </div>
+    <div class="lmb-sport-select-j">
+        <p ng-if="loadCompleted && liveGameViewData && liveGameViewData.length === 0" class="last-bets-nogames-t" trans>No games found</p>
+        <ul ng-show="loadCompleted">
+            <li ng-show="liveGameViewData.length > 0" ng-repeat="sport in liveGameViewData track by $index" ng-class="{'active-j':selectedSport.id == sport.id}" title="{{ sport.name }}" ng-click="selectSport(sport)"><i class="sport-icon-j {{sport.alias}}"></i><span>{{sport.name}}</span></li>
+        </ul>
+    </div>
+    <div class="lmb-table-wrap-j">
+        <vbet-loader ng-show="!loadCompleted"></vbet-loader>
+        <div class="lmb-table-j" ng-show="loadCompleted">
+            <ul class="lmb-title-j">
+                <li trans>Time</li>
+                <li trans>Team 1</li>
+                <li></li>
+                <li trans>Team 2</li>
+                <li trans>1</li>
+                <li trans>X</li>
+                <li trans>2</li>
+                <li></li>
+            </ul>
+            <ul ng-repeat="game in selectedSport.game track by game.id">
+                <li>
+                    <div class="market-info-b">{{ game.start_ts| formatDate:'LT':null:env.timeFormat}}</div>
+                </li>
+                <li>
+                    <div class="market-info-b market-name-j">{{game.team1_name}}</div>
+                </li>
+                <li>
+                    <div class="market-info-b">vs</div>
+                </li>
+                <li>
+                    <div class="market-info-b market-name-j">{{game.team2_name}}</div>
+                </li>
+                <li>
+                    <div class="market-info-b"><span class="price"><span class="price{{game.events.P1.price_change}}">{{game.events.P1.price | oddConvert:$root.env.oddFormat:null:'WINNER'}}</span></span>
+                    </div>
+                </li>
+                <li>
+                    <div class="market-info-b"><span class="price"><span class="price{{game.events.X.price_change}}">{{game.events.X.price | oddConvert:$root.env.oddFormat:null:'WINNER'}}</span></span>
+                    </div>
+                </li>
+                <li>
+                    <div class="market-info-b"><span class="price"><span class="price{{game.events.P2.price_change}}">{{game.events.P2.price | oddConvert:$root.env.oddFormat:null:'WINNER'}}</span></span>
+                    </div>
+                </li>
+                <li>
+                    <a ng-click="goToUrl(game)" class="market-info-b">+{{game.markets_count}}</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>

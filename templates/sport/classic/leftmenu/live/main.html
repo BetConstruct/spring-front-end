@@ -1,0 +1,53 @@
+<ng-include ng-if="conf.favoriteTeam.enabled" src="getTemplate('templates/sport/classic/leftmenu/live/favoriteTeam.html')"></ng-include>
+<li ng-repeat="sport in leftMenuLiveSports track by sport.id" ng-hide="sport.hideSport || sport.hide" class="{{sport.alias}}" id="sport-{{sport.alias}}"
+    ng-class="{'active': leftMenuState.live.sport[sport.id].expanded || (virtualSportsSelected && sport.isVirtualSport) ||($parent.todaysBetsSelected && sport.isTodayBets), 'loading': sport.loading, 'no-games': !sport.game}">
+    <a ng-click="leftMenuState.live.sport[sport.id].expanded = !leftMenuState.live.sport[sport.id].expanded; leftMenuClosed ? toggleLeftMenu() : void(); selectSport(sport, !leftMenuState.live.sport[sport.id].expanded)" title="{{sport.name + (sport.game ? '(' + sport.game  + ')' : '') }}">
+        <span ng-class="sport.alias" class="mini-icon-1 mini-icon-{{sport.id}}"></span> {{sport.name}} <span ng-show="sport.game">({{sport.game}})</span>
+        <b class="arrow-rotate icon-arrow-right6"></b>
+    </a>
+    <ul ng-show="leftMenuState.live.sport[sport.id].expanded">
+        <li ng-repeat="region in sport.regions track by region.id" ng-class="{'active': leftMenuState.live.region[region.id].expanded , 'loading': region.loading,'no-game-region': !region.game}" ng-if="!sport.isFavoriteCompetition">
+            <a ng-click="leftMenuState.live.region[region.id].expanded = !leftMenuState.live.region[region.id].expanded; selectSport(sport); selectRegion(region)" ng-hide="liveFilters.disableRegions || !region.game">
+                <span class="flag-{{::region.alias | removeUselessSymbolsByRegexp: '[,\' ]+': 'g': 'true'}} flag-icon"></span> {{::region.name}} <span>({{region.game}})</span>
+                <b class="arrow-rotate icon-arrow-right6"></b>
+            </a>
+            <div ng-repeat="competition in region.competitions track by competition.id" ng-show="(leftMenuState.live.region[region.id].expanded || liveFilters.disableRegions) && competition.gameCount" class="compitition-b">
+                <h4 title="{{competition.name}}" ng-click="leftMenuState.live.competition[competition.id].collapsed = !leftMenuState.live.competition[competition.id].collapsed; selectSport(sport); selectRegion(region)" ng-class="{'competitionInLive': !leftMenuState.live.competition[competition.id].collapsed}">
+                    <span class="flag-{{competition.region.alias | removeUselessSymbolsByRegexp: '[,\' ]+': 'g': 'true'}} flag-icon" ng-show="liveFilters.disableRegions" title="{{competition.region.name}}"></span>
+                    {{competition.name}}
+                </h4>
+                <div class="poup-sports set-top-from-parent">
+                    <ul ng-show="!leftMenuState.live.competition[competition.id].collapsed"  dnd-list="competition.games" dnd-allowed-types="[sport.alias + region.alias + competition.id]">
+                        <li ng-repeat="game in competition.games track by game.id" ng-class="{'active': game.id === activeGameId && '/multiview/' !== $location.path(), 'no-events': (!(game.events_count || game.markets_count) || game.is_blocked)}" ng-show="'/multiview/' !== $location.path() || !$root.multiViewLiveOpenedGamesIds || $root.multiViewLiveOpenedGamesIds.indexOf(game.id) === -1"
+                            dnd-effect-allowed="move" dnd-draggable="game" dnd-type="sport.alias + region.alias + competition.id" dnd-disable-if="'/multiview/' !== $location.path() || multiViewLiveOpenedGamesIds.length === conf.liveMultiViewItemsAmount">
+                            <div ng-click="'/multiview/' === $location.path() ? gameClicked(game, competition, true) : selectGame(sport, region, competition, game)"
+                                ng-mouseenter="addGameHoveredInLeftMenuToSubscribtionQueue(game)"
+                                ng-mouseleave="emptyLeftMenuHoveredGameSubscriptionQueue(game)"
+                                class="game-row">
+                                <div class="num-of-events" trans="attr-only" title="Number of markets">({{game.markets_count}})</div>
+                                <p title="{{game.team1_name}} - {{game.team2_name}} ({{game.markets_count}})">{{game.team1_name}} {{game.team2_name ? ' - ' + game.team2_name : ''}}</p>
+                                <div class="time-sport-cash" ng-if="game.type==1" ng-show="game.info.score1!=undefined || game.info.score2 !=undefined || game.info.current_game_state || game.info.current_game_time">
+                                    <p><span>{{game.info.score1}} </span> {{game.info.score2}}</p>
+                                    <span class="team-name-inform">
+                                        {{game.info.current_game_state|convertSetName:sport.alias|translate}}
+                                        <i ng-if="sport.alias === 'Soccer'">
+                                            {{game.stats.score_set1.team1_value ? '(' + game.stats.score_set1.team1_value + ' :' : '(0 :'}}
+                                            {{game.stats.score_set1.team2_value ?  game.stats.score_set1.team2_value + ')' : ' 0)'}}
+                                        </i>
+                                        <i ng-if="sport.alias !== 'Soccer'">
+                                            {{(game.stats['score_'+game.info.current_game_state].team1_value || game.stats['score_'+game.info.current_game_state].team1_value == 0) ? '(' + game.stats['score_'+game.info.current_game_state].team1_value + ' :' : (conf.electronicSportAlias.indexOf(sport.alias) === -1) ? '(0 :' : ''}}
+                                            {{(game.stats['score_'+game.info.current_game_state].team2_value || game.stats['score_'+game.info.current_game_state].team2_value == 0) ?  game.stats['score_'+game.info.current_game_state].team2_value + ')' : (conf.electronicSportAlias.indexOf(sport.alias) === -1) ? ' 0)' : ''}}
+                                        </i>
+                                        <b trans="attr-only" title="Game time">{{getCurrentTime(game.info.current_game_time)}}</b>
+                                    </span>
+                                </div>
+                                <span class="icon-ic_video_collection_24px" ng-show="game.video_id && conf.videoEnabled"></span>
+                                <div class="fav-game-star icon-star" ng-class="{'active': myGames.indexOf(game.id) !== -1}" ng-click="toggleGameFavorite(game); $event.stopPropagation()"></div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </li>
+    </ul>
+</li>

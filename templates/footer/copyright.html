@@ -1,0 +1,7 @@
+<div class="copyright-j" ng-show="!conf.disableFooterCopyrightBlock">
+    <div>&copy; <span ng-show="(now|date:'yyyy') > conf.copyrightSince">{{conf.copyrightSince}} - </span>{{now|date:'yyyy'}} <a href="#/">{{conf.site_name}}</a></div>
+    <div ng-if="conf.poweredByInFooter">
+        <a href="//www.betconstruct.com" target="_blank" ng-bind-html="'Powered by BetConstruct'|translate|html"></a>
+        <span trans>All rights reserved.</span>
+    </div>
+</div>

@@ -1,0 +1,98 @@
+<div ng-controller="cmsPagesCtrl" ng-init="loadPage('free-winners-' + env.lang, true); checkIfEnabled('freeWinners')">
+
+
+
+
+<div class="menu-casino menu-poker">
+<div class="menu-games">
+	<div class="contain-menu-games">
+    	<ul class="poker-menu">
+            <div class="contein-nav-g">
+                <li ng-repeat="page in pages | limitTo: 2" ng-class="{'active-game-casino': page.id === $parent.selectedFreePage.id}" class="poker {{page.slug}}">
+                    <a ng-click="$parent.selectedFreePage = page"><span></span>{{page.title}}</a>
+                </li>
+
+            </div>
+         </ul>
+      </div>
+</div>
+</div>
+
+<div ng-if="pagesLoaded" ng-init="$parent.selectedFreePage = pages[0];"></div>
+
+<div class="mein-page-contain poker iphone" ng-show="selectedFreePage.slug == 'home'">
+
+    <div class="winners-big-baner">
+        <div class="big-picture-baner">
+
+        </div>
+
+    </div>
+
+	<div class="ipone-rules-block">
+        	<table>
+              <tr>
+                <td>
+                	<p ng-bind-html="selectedFreePage.content"></p>
+                </td>
+                <td ng-controller="freeWinnersCtrl" ng-init="loadWinners();">
+                	<h3  trans>Winners</h3>
+
+                    <ul>
+                        <li ng-show="!winners.length" class="no-winners" trans>There are no winners yet</li>
+                        <li ng-repeat="winner in winners" class="free-wiinners-list" ng-class="{'has-image': getPageByTitle(selectedFreePage.children, winner.client_id.toString()).thumbnail_images.full.url}">
+                            <img ng-src="{{getPageByTitle(selectedFreePage.children, winner.client_id.toString()).thumbnail_images.full.url}}">
+                            <span class="date">{{winner.date}} <i class="client-id">(id: {{winner.client_id}})</i></span>
+                            <span class="name">{{winner.name}}</span>
+                            <span class="amount">{{winner.amount}} {{(profile.currency_name || conf.registration.defaultCurrency)|currency }}</span>
+                        </li>
+
+                    </ul>
+                </td>
+              </tr>
+            </table>
+            
+            <div class="priz-slider" ng-if="pagesLoaded" ng-init="winnersPhotos = getPageBySlug(pages, 'winners').children">
+            	<ul>
+                	<li ng-repeat="winner in winnersPhotos"><img ng-src="{{winner.thumbnail_images.full.url}}"></li>
+
+                </ul>
+                <!--<div class="left-arrow-b"></a></div>-->
+        		<!--<div class="right-arrow-b"></a></div>-->
+        
+        </div>
+            
+		</div>
+        
+     
+</div>
+
+
+
+
+
+
+<div class="mein-page-contain poker iphone" ng-if="selectedFreePage.slug == 'winners'">
+
+        <div class="iphone-content" ng-controller="freeWinnersCtrl" ng-init="loadRankingTable()">
+           	<div class="info-text-iphone">
+            <h3><span ng-bind="selectedFreePage.title"></span></h3>
+            	<p ng-bind-html="selectedFreePage.content"></p>
+                    <h4 class="no-winners" ng-show="!players.length" trans>No data</h4>
+                <table ng-show="players.length" class="number-winners-list">
+                    <tr><td>ID</td><td trans>Name</td><td> <span class="amount" trans>Amount</span></td></tr>
+                    <tr ng-repeat="player in players">
+                        <td class="client-id" ng-bind="player.client_id"></td>
+                        <td class="name" ng-bind="player.name"></td>
+                        <td class="amount" ng-bind="player.amount"></td>
+                    </tr>
+                </table>
+
+            </div>
+        </div>
+        
+</div>
+
+<vbet-loader class="page-center" ng-show="!pagesLoaded"></vbet-loader>
+
+</div>

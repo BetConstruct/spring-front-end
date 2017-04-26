@@ -1,0 +1,63 @@
+<div class="new-live-casino-j overwrite-j" ng-init="initSlidingView();" id="liveCasinoScrollable">
+    <div class="live-casino-second-new-j">
+        <div class="j-resize-950-1280">
+            <div class="j-float-100-rel live-casino-slider-second-v-j">
+                <casino-game-slider product-slides="productSlides"></casino-game-slider>
+            </div>
+
+            <div class="fixed-nav-wrapper-casino-view live-casino-lm" fixonscroll scrollable-area-id="liveCasinoScrollable" header-id="main-header-container" default-offset="370">
+                <div class="casino-left-menu-v-2">
+                    <div class="search-category-nav-contain">
+                        <div class="left-column-casino-nav" no-animate>
+                            <ul ng-show="providerOptions.length > 1">
+                                <li ng-repeat="provider in providerOptions track by $index"
+                                    ng-class="{'active': $parent.selectedProvider === provider}"
+                                    ng-click="$parent.selectedProvider = provider">
+                                    {{provider|translate }}
+
+                                    <ul>
+                                        <li ng-repeat="studio in devidedGames[selectedProvider].studios track by $index"
+                                            ng-class="{'active': studio === devidedGames[selectedProvider].defaultStudio}">
+                                            <a >{{ ($parent.selectedProvider + '_STUDIO_' + studio)|translate }}</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="wrapper-separator-games">
+                <div class="all-games-casino-list" no-animate ng-class="{'no-left-menu': providerOptions.length == 0}">
+                    <ul>
+                        <div ng-repeat="provider in providerOptions track by $index">
+                            <li ng-repeat="game in devidedGames[provider].games track by $index"
+                                ng-show="liveGamesConf.hiddenGamesIds.indexOf(game.id) === -1 && (selectedProvider === provider || selectedProvider === 'All') && (!game.markets || game.markets.available.indexOf(devidedGames[selectedProvider].defaultStudio) !== -1)"
+                                class="list-games-casino-view-b"
+                                no-animate>
+                                <a ng-click="openGame(game, 'real', devidedGames[selectedProvider].defaultStudio); $event.stopPropagation();">
+                                    <p class="game-img-box-b" ng-style="{'background-image': 'url({{useBigIcons ? game.icon_3 : game.icon_2}})'}"></p>
+                                    <p class="game-name-b-favorite">
+                                        <span >{{ game.name|translate }}</span>
+                                        <!--<i class="favorite-icon-view" ng-show="!showDeleteBtn" ng-click="toggleSaveToMyCasinoGames(game); $event.stopPropagation();" ng-class="{'active': isFromSaved(game.id)}"></i>-->
+                                    </p>
+                                    <div class="casino-resize-buttons">
+                                        <div>
+                                            <button ng-click="openGame(game, 'real', devidedGames[selectedProvider].defaultStudio); $event.stopPropagation();">
+                                                <span trans>Play now</span>
+                                            </button>
+                                            <button ng-if="game.types.viewMode && !env.authorized" ng-click="openGame(game, null, devidedGames[selectedProvider].defaultStudio); $event.stopPropagation();">
+                                                <span trans>View</span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </a>
+                            </li>
+                        </div>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,162 @@
+<div ng-controller="RegistrationController as regCtrl">
+
+    <div class="register" ng-show="conf.facebookIntegration.enable"
+         ng-include="getTemplate('templates/slider/fbsignup.html')"></div>
+
+    <div ng-show="!conf.facebookIntegration.enable">
+        
+        <div class="registration-list-columns-wrapper-j" ng-show="!registration.complete && !registration.failed" ng-init="regFormInit()">
+            <ul class="registartion-title-wrapper-j">
+                <li><h3 trans>Register</h3></li>
+                <li ng-if="conf.registration.headerTitle" ng-bind-html="conf.registration.headerTitle|translate|html"></li>
+            </ul>
+            <form name="registerform" ng-submit="register()" novalidate="novalidate">
+                <div class="registration-list-columns-j">
+                    <ul>
+                        <li ng-show="RegConfig.leftCol.length > 0">
+                            <div ng-repeat="regItem in RegConfig.leftCol track by $index" class="reg-list-item-wrapper-j {{regItem.name}} {{regItem.type}}">
+                                <ng-include src="'templates/slider/registration-fields.html'"></ng-include>
+                            </div>
+                            <div ng-if="conf.registration.showCallVerificationMessage" class="reg-list-item-wrapper-j registrationCallVerificationMessage-j">
+                                <p trans>Your registration will be approved after verification call</p>
+                            </div>
+                        </li>
+                        <li ng-show="RegConfig.rightCol.length > 0">
+                            <div ng-repeat="regItem in RegConfig.rightCol track by $index" class="reg-list-item-wrapper-j {{regItem.name}} {{regItem.type}}">
+                                <ng-include src="'templates/slider/registration-fields.html'"></ng-include>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <div class="registration-list-columns-footer-j">
+                    <ul> 
+                        <li>
+                            <div class="no-select-j checkbox-reg-j" ng-init="resetError[agree] = true"> 
+                                
+                                
+                                <input ng-model="registrationData.agree" type="checkbox" id="checkbox-id" name="agree" required>
+                                <label ng-if="!conf.registration.customTerms" for="checkbox-id"  ng-class="{'error': !resetError[agree] && registerform.agree.$error.required}">
+                                    <span trans>I agree to all</span>
+                                    <a ng-if="!conf.registration.disableTermsLink && !conf.registration.customLink.enabled" href="#/?help=general-terms-and-conditions" target="_blank" trans>Terms &amp; Conditions</a>
+                                    <a ng-if="conf.registration.customLink.enabled" ng-href="{{ conf.registration.customLink.link }}" target="_blank" trans>Terms &amp; Conditions</a>
+                                    <div ng-if="conf.registration.disableTermsLink && !conf.registration.customLink.enabled" class="disableTermsLink-j">
+                                        <span trans>Terms &amp; Conditions</span>
+                                        <div class="tooltip-j">
+                                            <div trans>You can read our Terms and Conditions by clicking corresponding links in page footer.</div>
+                                        </div>
+                                    </div>
+                                    <span ng-show="conf.registration.minimumAllowedAge==18" class="hintReq" trans>and I am over 18 years of age and have read and accepted the general terms and conditions.</span>
+                                    <span ng-show="conf.registration.minimumAllowedAge==21" class="hintReq" trans>and I am over 21 years of age and have read and accepted the general terms and conditions.</span>
+                                    
+                                    <div class="tooltip-j" trans>
+                                        You need to confirm the agreements.
+                                    </div>
+                                    
+                                </label>
+                                <label ng-if="conf.registration.customTerms" for="checkbox-id"  ng-class="{'error': !resetError[agree] && registerform.agree.$error.required}">
+                                    <span ng-bind-html="conf.registration.customTerms.prefix|translate|html:'nowrap'"></span>
+                                    <a ng-if="!conf.registration.customTerms.urlsList" class="info-tooltip" ng-click="broadcast('window.openPopup', {url:conf.registration.customTerms.url.replace('languageCode', env.lang), title: '', params: 'toolbar=no,scrollbars=no,resizable=no,width=900,height=700'}); $event.stopPropagation()"><span ng-bind-html="conf.registration.customTerms.urlText|translate|html:'nowrap'"></span></a>
+
+                                    <a ng-if="conf.registration.customTerms.urlsList"
+                                       ng-repeat="link in conf.registration.customTerms.urlsList track by $index"
+                                       class="info-tooltip"
+                                       ng-click="broadcast('window.openPopup', {url:link.url.replace('languageCode', env.lang), title: '', params: 'toolbar=no,scrollbars=no,resizable=no,width=900,height=700'}); $event.stopPropagation()">
+                                        {{$first ? '': $last ? '& ': ', '}}
+                                        <span ng-bind-html="link.urlText|translate|html:'nowrap'"></span>
+                                    </a>
+
+                                    <span ng-bind-html="conf.registration.customTerms.content|translate|html:'nowrap'"></span>
+                                </label>
+                            </div>
+                            <div ng-repeat="regItem in RegConfig.bottomCol track by $index">
+                                <ng-include src="'templates/slider/registration-fields.html'"></ng-include>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="submit-reg-wrapper-j">
+                                <vbet-loader class="small-progress" ng-show="registration.busy"></vbet-loader>
+                                <input type="submit"
+                                       ng-click="resetError = {}"
+                                       ng-class="{loading:registration.busy}"
+                                       value="{{'Register'|translate}}" disabled="true"
+                                       ng-disabled="registration.busy || userAge < conf.registration.minimumAllowedAge"
+                                       title="{{({true:'User age is under minimum allowed'} [userAge < conf.registration.minimumAllowedAge]) | translate}}">
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </form>
+        </div>
+
+        <div class="popup-layout-registration registration-ok" ng-show="registration.complete">
+            <script-runner script-data="scriptContent" ng-if="scriptContent"></script-runner>
+            <div class="vertical-middle-wrapper">
+                <div class="all-popup-separator">
+                    <div class="register-steps-b popup-errors">
+                        <div class="register-contain-new popup-err-success">
+                            <div class="closed-popup-form" ng-click="broadcast('slider.close')"></div>
+                            <div class="name-popup-registratin-b">
+                                <h4 trans>Success</h4>
+                            </div>
+
+                            <div class="icon-popup-registration-b success-icon">
+                                <span></span>
+                            </div>
+
+                            <div class="inform-reg-popup">
+                                <h5>
+                                    <span trans>Registration complete.</span>
+                                </h5>
+                                <h6 ng-if="conf.registration.mailIsSentAfterRegistration">
+                                    <span>{{ conf.registration.mailIsSentAfterRegistration | translate }}</span>
+                                    <a ng-if="!conf.GmsPlatform" ng-click="resendEmail()" trans>Resend</a>
+                                </h6>
+                            </div>
+                            <div class="finish-register-buttons">
+                                <div class="button-confirm">
+                                    <button class="registration-done-btn" ng-click="closeRegistrationResult()" trans>OK</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="close" ng-click="broadcast('slider.close')"></div>
+        </div>
+
+        <div class="popup-layout-registration registration-failed" ng-show="registration.failed">
+            <div class="vertical-middle-wrapper">
+                <div class="all-popup-separator">
+                    <div class="register-steps-b popup-errors">
+                        <div class="register-contain-new popup-err-success">
+                            <div class="closed-popup-form" ng-click="broadcast('slider.close')"></div>
+                            <div class="name-popup-registratin-b">
+                                <h4>Error</h4>
+                            </div>
+
+                            <div class="icon-popup-registration-b error-icon">
+                                <span></span>
+                            </div>
+
+                            <div class="inform-reg-popup">
+                                <h5>
+                                    <span trans>Registration failed due to technical error.</span>
+                                </h5>
+                                <h6>
+                                    <span trans>Please try again later.</span>
+                                </h6>
+                            </div>
+                            <div class="finish-register-buttons">
+                                <div class="button-confirm">
+                                    <button class="registration-done-btn" ng-click="closeRegistrationResult()" trans>OK</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="close" ng-click="broadcast('slider.close')"></div>
+        </div>
+
+    </div>
+</div>

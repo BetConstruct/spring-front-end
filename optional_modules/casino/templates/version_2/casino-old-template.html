@@ -1,0 +1,98 @@
+<div class="casino-main" ng-show="!gamesInfo.length">
+    <!--Menu games-->
+    <div class="menu-casino" ng-show="mainCategories.length > 1">
+        <div class="menu-games">
+            <div class="contain-menu-games">
+                <ul>
+                    <!--Переключатель при неактивном состоянии заменить  class="live-b" на  class="live-b2"-->
+                    <div class="contein-nav-g">
+                        <li ng-repeat="category in mainCategories track by category.id" ng-show="category.id !== -1 || myCasinoGames.length !== 0" ng-class="{'active-game-casino': selections.category.id === category.id}">
+                            <a ng-click="selectCategory(category)">{{ category.title }}</a>
+                        </li>
+                    </div>
+
+                    <li class="more-games more-games-j" ng-show="moreCategories.length"><a trans>more</a>
+                        <div class="contein-games" ng-show="!hideCategoriesListDropdown">
+                            <div class="arrow-sport"></div>
+                            <h3 trans>Select a Category</h3>
+
+                            <div class="meny-games" ng-repeat="column in moreCategories">
+                                <ul ng-repeat="letterGroup in column">
+                                    <li>{{ letterGroup[0].title.charAt(0)}}</li>
+                                    <li ng-repeat="category in letterGroup" ng-show="category.id !== -1 || myCasinoGames.length !== 0"><a ng-click="selectCategory(category); setJustForMoment('hideCategoriesListDropdown', true, 500)"> {{ category.title }}</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+                <div ng-include="getTemplate('optional_modules/casino/templates/version_2/search.html')"></div>
+            </div>
+        </div>
+    </div>
+    <!--Menu games end-->
+    <!--big-slider-->
+    <div ng-controller="cmsPagesCtrl" ng-init="getCasinoBanners();" class="contain-casino poker casino casino-slider-hide" ng-show="selections.category.id === '-2'" no-animate>
+        <vbet-big-slider ng-if="casinoTopBanners" images="casinoTopBanners" link-click-handler="openCBannerLink" slider-template="cConf.newCasinoDesignEnabled"></vbet-big-slider>
+    </div>
+    <div class="all-games-wrap">
+        <div class="casino-main-contain">
+            <div class="country-b casino">
+                <div class="country-block-contain">
+                    <ul class="countrylist">
+                        <div class="contaien-country" data-step="3" data-position="bottom" data-intro="Select region" trans="attr-only">
+                            <li ng-repeat="provider in providers track by $index">
+                                <a ng-click="selectProvider(provider)"
+                                   ng-class="{'active': selections.providerName === provider.name}">
+                                    <span>{{ provider.title|translate }}</span>
+                                </a>
+                            </li>
+                        </div>
+                    </ul>
+                </div>
+            </div>
+            <!--Casino popular games-->
+            <div class="popular-casino-games" ng-if="selections.category.id === '-2' && popularsPerGroups.length">
+                <div class="contein-slider">
+                    <div class="games-slider">
+                        <div class="left-arrow-b"  ng-class="{'popular-arrow-hide': slideIndex == 0}"><a ng-click="slideToLeft()" trans>left arrow</a></div>
+                        <div class="right-arrow-b" ng-class="{'popular-arrow-hide': (slideIndex == popularsPerGroups.length - 1)}"><a ng-click="slideToRight()" trans>right arrow</a></div>
+                        <h3 trans>Popular Games</h3>
+                        <div>
+
+                            <casino-games-list
+                                    is-new-design-enabled="cConf.newCasinoDesignEnabled"
+                                    show-conditions="true"
+                                    games-list="popularsPerGroups[slideIndex]"
+                                    game-show-conditions="true">
+                            </casino-games-list>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--Featured games-->
+            <div class="Featured-casino-games" ng-show="games.length" ng-class="{'lessCategories': mainCategories.length < 2}">
+                <div class="contein-slider">
+                    <div class="games-slider">
+                        <h3 ng-if="selections.category.id === '-2'" trans>TOP SLOTS</h3>
+                        <h3 ng-show="selections.category.id !== '-2'">{{selections.category.title|translate}}</h3>
+
+                        <casino-games-list
+                                is-new-design-enabled="cConf.newCasinoDesignEnabled"
+                                show-conditions="true"
+                                games-list="games"
+                                game-show-conditions="true">
+                        </casino-games-list>
+
+                        <div class="load-more-news" ng-show="games.length < limits.max"><a load-more ng-click="loadMoreGames()"><p trans>Load more</p><span></span></a></div>
+                    </div>
+                </div>
+            </div>
+            <!--Featured games END-->
+        </div>
+    </div>
+    <vbet-loader ng-show="loadingProcess"></vbet-loader>
+
+    <div ng-show="!loadingProcess && !games.length && (selections.category.id !== '-2' || !popularsPerGroups.length)" class="no-games">
+        <p trans>No games found</p>
+    </div>
+</div>

@@ -1,0 +1,61 @@
+<div id="header" class="block-size-visible-b" ng-include="getTemplate('templates/mainheader.html')" ng-if="$location.path() !='/popup/'"></div>
+<ng-include  src="getTemplate('templates/dialogs/globaldialog.html')"></ng-include>
+<div ng-controller="pokerLoginCtrl" ng-if="conf.pokerEnabled && !conf.enableNewPoker && $location.path() !='/popup/'"></div>
+
+<ng-include src="getTemplate('templates/dialogs/renewreminder.html')"></ng-include>
+
+<div ng-controller="headerCtrl"  ng-if="$location.path() !='/popup/'" ng-init="headerInit();">
+    <div class="popup-bg-contain" ng-class="{'active': $root.globalPopup}">
+        <div class="deposit-alert-contain">
+            <div class="icon-delete"><a ng-click="$root.globalPopup=null">Close</a></div>
+            <div class="text-deposit-alert">
+                <div class="popup-status-icon" ng-class="$root.globalPopupType||'info'"></div>
+                <p>
+                    <span ng-bind-html="$root.globalPopup | html" trans></span>
+                    <button class="message-box-ok-btn" ng-click="$root.globalPopup=null" trans>OK</button>
+                </p>
+            </div>
+        </div>
+    </div>
+    <div class="popup-bg-contain" ng-class="{'active': yesNoDialog}" >
+        <div class="deposit-alert-contain">
+            <div class="text-deposit-alert free">
+                <div class="popup-status-icon" ng-class="yesNoDialogType||'info'"></div>
+                <p>
+                    <span ng-bind="yesNoDialog"></span>
+                    <button class="message-box-ok-btn" ng-click="answer('yes')" trans>Yes</button>
+                    <button class="message-box-ok-btn" ng-click="answer('no')" trans>No</button>
+                </p>
+
+            </div>
+        </div>
+    </div>
+    <ng-include src="getTemplate('templates/dialogs/youtubevideo.html')"></ng-include>
+</div>
+
+<ng-include src="getTemplate('templates/dialogs/survey.html')"></ng-include>
+<ng-include src="getTemplate('templates/dialogs/rfidlogin.html')"></ng-include>
+
+<div class="faq-container" draggable ng-if="showFaq" ng-controller="cmsPagesCtrl" ng-init="loadFaq()">
+    <h3>FAQ</h3>
+</div>
+
+<div class="popup-bg-contain" ng-class="{'active': blockingPopup}">
+    <div class="deposit-alert-contain">
+        <div class="text-deposit-alert">
+            <div class="popup-status-icon" ng-class="blockingPopupType||'info'"></div>
+            <p><span ng-bind="blockingPopup"></span></p>
+        </div>
+    </div>
+</div>
+<!--Menu sport end-->
+
+<ng-include src="getTemplate('templates/dialogs/feedback.html')"></ng-include>
+<ng-include src="getTemplate('templates/dialogs/promotions.html')"></ng-include>
+
+<ng-include src="getTemplate('templates/dialogs/counteroffer.html')"></ng-include>
+<ng-include src="getTemplate('templates/dialogs/cashout.html')"></ng-include>
+<ng-include src="getTemplate('templates/dialogs/skype_authorization_request.html')"></ng-include>
+<ng-include src="getTemplate('templates/dialogs/couponCheck.html')"></ng-include>
+<ng-include ng-if="conf.customHeaderTemplate" src="getTemplate(conf.customHeaderTemplate)"></ng-include>
+

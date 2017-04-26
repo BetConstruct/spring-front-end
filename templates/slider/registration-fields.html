@@ -1,0 +1,136 @@
+<div ng-switch="regItem.type" ng-class="{'reg-label-hidden-t':regItem.labelHidden}">
+    <!-- INPUT TYPE TEXT -->
+    <div ng-switch-when="text"
+         class="{{regItem.classes}}"
+         ng-init="resetError[regItem.name] = true"
+         ng-class="{'error': (!resetError[regItem.name] || registerform[regItem.name].blur) && registerform[regItem.name].$invalid && showFieldsValidation}">
+        
+        <label><span ng-bind="regItem.title | translate" ng-class="{'hintReq' : regItem.required}"></span></label>
+        
+        <div class="tooltip-wrapper-j">
+            <div vb-html-compiler="<input type='text' name='{{regItem.name}}' ng-blur='registerform[regItem.name].blur=true' ng-model='registrationData[regItem.name]' placeholder='{{regItem.placeholder|translate}}' title='{{regItem.placeholder|translate}}'/>" custom-attrs="regItem.customAttrs"></div>
+            
+            <div class="form-error-icon-j" ng-click="resetFieldError(regItem.name)"></div>
+            <div class="tooltip-j">
+                <div ng-repeat="val in regItem.validation"
+                   ng-show="registerform[regItem.name].$error[val.name]">
+                    {{val.message|translate}}
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- INPUT TYPE CAPTCHA -->
+    <div ng-switch-when="captcha"
+         class="captcha {{regItem.classes}}"
+         ng-init="resetError[regItem.name] = true"
+         ng-class="{'error': (!resetError[regItem.name] || registerform[regItem.name].blur) && registerform[regItem.name].$invalid && showFieldsValidation}"
+         ng-show="regItem.imgSrc"
+        >
+
+        <label>
+            <span ng-bind="regItem.title | translate" ng-class="{'hintReq' : regItem.required}"></span>
+        </label>
+        <div class="tooltip-wrapper-j">
+            <img ng-src="{{regItem.imgSrc}}">
+            <button ng-click="loadCaptchaImage(regItem)" trans>Reload</button>
+            <div vb-html-compiler="<input type='text' name='{{regItem.name}}' ng-blur='registerform[regItem.name].blur=true' ng-model='registrationData[regItem.name]' placeholder='{{regItem.placeholder|translate}}'/>" custom-attrs="regItem.customAttrs"></div>
+            <div class="tooltip-j">
+                <div ng-repeat="val in regItem.validation"
+                   ng-show="registerform[regItem.name].$error[val.name]">
+                    {{val.message|translate}}
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- INPUT TYPE EMAIL -->
+    <div ng-switch-when="email"
+         class="{{regItem.classes}}"
+         ng-init="resetError[regItem.name] = true"
+         ng-class="{'error': (!resetError[regItem.name] || registerform[regItem.name].blur) && registerform[regItem.name].$invalid && showFieldsValidation}">
+
+        <label><span  ng-bind="regItem.title | translate" ng-class="{'hintReq' : regItem.required}"></span></label>
+
+        <div class="tooltip-wrapper-j">
+            <div vb-html-compiler="<input type='email' name='{{regItem.name}}' ng-blur='registerform[regItem.name].blur=true' ng-model='registrationData[regItem.name]' placeholder='{{regItem.placeholder| translate}}'/>" custom-attrs="regItem.customAttrs"></div><!--ng-pattern='/^[\w!.%+\-]+@[\w\-]+(?:\.[\w\-]+)+$/'-->
+
+
+            <div class="form-error-icon-j" ng-click="resetFieldError(regItem.name)"></div>
+            <div class="tooltip-j">
+                <div ng-repeat="val in regItem.validation"
+                   ng-show="registerform[regItem.name].$error[val.name]">
+                    {{val.message|translate}}
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- INPUT TYPE PASSWORD -->
+    <div ng-switch-when="password"
+         class="{{regItem.classes}}"
+         ng-init="resetError[regItem.name] = true"
+         ng-class="{'error': (!resetError[regItem.name] || registerform[regItem.name].blur) && registerform[regItem.name].$invalid && showFieldsValidation}">
+        <label><span ng-bind="regItem.title | translate" ng-class="{'hintReq' : regItem.required}"></span></label>
+
+        <div class="tooltip-wrapper-j">
+            <div vb-html-compiler="<input autocomplete='new-password' ng-init='toolTip=false' ng-focus='toolTip=true' ng-blur='toolTip=false; registerform[regItem.name].blur=true' type='password' name='{{regItem.name}}' ng-model='registrationData[regItem.name]' placeholder='{{regItem.placeholder| translate}}'/>"
+                 custom-attrs="regItem.customAttrs"
+                 insert-after="<div ng-if='conf.showCapsLockHint && capsLockStateHolder[regItem.name]' class='capslock-is-on-j' trans>Caps Lock is On</div>"></div>
+
+            <div class="form-error-icon-j" ng-click="resetFieldError(regItem.name)"></div>
+            <div class="tooltip-j">
+                <div ng-repeat="val in regItem.validation"
+                   ng-show="registerform[regItem.name].$error[val.name]">
+                    {{val.message|translate}}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--  SELECT -->
+    <div ng-switch-when="select"
+         class="{{regItem.classes}} {{regItem.name}} no-select-j"
+         ng-init="resetError[regItem.name] = true"
+         ng-class="{'error': (!resetError[regItem.name] || registerform[regItem.name].blur) && registerform[regItem.name].$invalid && showFieldsValidation}"
+         title="{{regItem.hoverBlock ? (regItem.hoverBlock  | translate) : '' }}">
+        <!-- Added hoverBlock property-->
+        <label><span  ng-bind="regItem.title | translate" ng-class="{'hintReq' : regItem.required}"></span></label>
+        <div class="tooltip-wrapper-j">
+            <div ng-if="regItem.customValidation" vb-html-compiler="{{regItem.customValidation}}"></div>
+            <div class="select-j" vb-html-compiler="<select name='{{regItem.name}}' ng-blur='registerform[regItem.name].blur=true' ng-model='registrationData[regItem.name]' ng-disabled='registerform[regItem.name].disabled'></select>"
+                 append-to-html="{{regItem.optionsData}}"
+                 custom-attrs="regItem.customAttrs"></div>
+            <div class="tooltip-j">
+                <div ng-repeat="val in regItem.validation"
+                   ng-show="registerform[regItem.name].$error[val.name]">
+                    {{val.message|translate}}
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- INPUT TYPE ChECKBOX -->
+    <div ng-switch-when="checkbox"
+         class="{{regItem.classes}} no-select-j checkbox-reg-j"
+         ng-init="resetError[regItem.name] = true"
+         ng-class="{'error':(!resetError[regItem.name] || registerform[regItem.name].blur) && registerform[regItem.name].$invalid && showFieldsValidation}">
+        <div class="tooltip-wrapper-j">
+            <div vb-html-compiler="<input type='checkbox' name='{{regItem.name}}' ng-blur='registerform[regItem.name].blur=true' ng-model='registrationData[regItem.name]'   id='checkbox-id{{$index}}'/>"
+                 insert-after='<label for="checkbox-id{{$index}}"><span  ng-bind="regItem.title | translate" ng-class="{hintReq: regItem.required}"></span></label>'
+                 custom-attrs="regItem.customAttrs"></div>
+            
+            
+            
+            <div class="tooltip-j">
+                <div ng-repeat="val in regItem.validation"
+                   ng-show="registerform[regItem.name].$error[val.name]">
+                    {{val.message|translate}}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div ng-switch-when="div">
+        <label>{{regItem.content|translate}}</label>
+    </div>
+    <input ng-switch-when="iovation" ng-if="conf.iovationLoginScripts" ng-init="initIovation()" ng-model="registrationData[regItem.name]" name="ioBlackBox" id="ioBlackBox" class="ng-hide" value="" />
+</div>
+
+

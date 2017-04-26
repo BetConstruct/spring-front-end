@@ -1,0 +1,66 @@
+<div class="mini-slider-new" ng-hide="recentNewsList.length === 0">
+    <div class="contain-new-slider">
+        <ul>
+            <div class="arrow-slider-left" ng-click="slideLeft()" ng-show="selectedGroupId > 0"></div>
+            <div class="arrow-slider-right" ng-click="slideRight()" ng-show="selectedGroupId < recentNewsList.length-1"></div>
+            <div ng-repeat="group in recentNewsList track by $index"
+                 ng-init="pickFirstGroup(recentNewsList[0])"
+                 ng-show="selectedGroupId == group.id">
+                <li ng-repeat="news in group.news"
+                    ng-class="{'active-news': (news.id == selectedNews.id)}">
+                    <p>{{news.titleRaw}}</p>
+                    <span ng-show="showDates">{{ news.date|formatDate:'full' }} </span>
+                    <div class="picture-container-s">
+                        <!--IMG-->
+                        <a ng-click="showNews(news,group.id);$event.stopPropagation();" id="news{{news.id}}">
+                            <img ng-src="{{news.thumbnail  || news.thumbnail_images.full.url}}"  alt=""></a>
+                        <div class="read-more-link"><a ng-click="showNews(news,group.id);$event.stopPropagation();" trans>Read More</a></div>
+                    </div>
+                </li>
+                <!--раскрытый блок с новостью-->
+                <div class="open_blok_news" ng-show="selectedNews.id && selectedNewsGroupId == group.id">
+                    <div ng-click="closeNews()" class="close-slider-button"></div>
+                    <a name="news-{{selectedNews.id}}" class="anchor"></a>
+
+                    <div class="big-news-block">
+
+                        <div class="right-block-news">
+                            <h3 class="promo-bonus-title" ng-bind-html="selectedNews.title"></h3>
+
+                            <div class="left-block-news">
+                                <span class="date-promo-b">{{ selectedNews.date|formatDate:'full' }}</span>
+                                <!--<span class="name-promo-bonus">Bonus</span>-->
+                                <div class="picture-news-block"><a><img ng-src="{{selectedNews.thumbnail || selectedNews.thumbnail_images.full.url}}" alt=""></a>
+
+                                </div>
+                                <div class="mini-social-icons">
+                                    <p trans>Share</p>
+                                    <ul>
+                                        <li class="mini-facebook"><a
+                                                ng-href="https://www.facebook.com/sharer/sharer.php?u={{selectedNews.permalink}}"
+                                                target="_blank">facebook</a></li>
+                                        <li class="mini-twitter">
+                                            <a ng-href="https://twitter.com/share?text={{selectedNews.titleRaw}}&url=1&via={{conf.twitterAccount}}&hashtags={{conf.twitterHashTag}},{{selectedNews.categories[0].title}}"
+                                               target="_blank">Tweet</a>
+                                        </li>
+                                        <li class="mini-google"><a
+                                                ng-href="https://plus.google.com/share?url={{selectedNews.permalink}}"
+                                                target="_blank">google+</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <p ng-bind-html="selectedNews.content"></p>
+                            <!--
+                                                <div class="ok-g-link"><a href="#">okay, go!</a></div>
+                            -->
+
+                        </div>
+                    </div>
+                    <div class="closed-arrow-b"><a ng-click="closeNews()" trans>close</a></div>
+                </div>
+                <!--раскрытый блок с новостью END-->
+            </div>
+        </ul>
+    </div>
+</div>

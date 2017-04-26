@@ -1,0 +1,31 @@
+
+
+<div class="game-video-container">
+    <p ng-if="!env.authorized && !conf.integrationMode" trans
+       ng-click="broadcast('openLoginForm');$event.stopPropagation();" class="login-link">You need to be logged in to be able to play video.</p>
+    <p ng-if="!env.authorized && conf.integrationMode" trans class="login-link">You need to be logged in to be able to play video.</p>
+
+    <p ng-if="env.authorized && (profile.calculatedBalance + profile.calculatedBonus) === 0 && !profile.initial_balance" trans ng-click="!conf.disableDepositPage && broadcast('toggleSliderTab', 'deposit');$event.stopPropagation();">You need to have non-zero balance to be able to play video.</p>
+
+    <div ng-if="env.authorized && !conf.video.autoPlay && ((profile.calculatedBalance + profile.calculatedBonus) !== 0 || profile.initial_balance)" ng-click="restoreVideo(openGame)" class="video-b-icon-arrow"></div>
+
+    <div ng-if="env.authorized && !playerRemoved && openGame.video_data && ((profile.calculatedBalance + profile.calculatedBonus) > 0 || profile.initial_balance > 0)" ng-init="soundVolume = env.sound" class="video-player-container">
+        <div class="video-player-control" ng-show="videoIsLoaded">
+            <span ng-click="togglePause();" ng-show="!paused" class="video-pause">Pause</span>
+            <span ng-click="togglePause();" ng-show="paused" class="video-play">Play</span>
+        </div>
+        <div class="video-player-control volume-control" ng-show="videoIsLoaded">
+            <span ng-click="soundVolume = 0;" ng-show="videoIsLoaded && soundVolume > 0" class="video-mute">Mute</span>
+            <span ng-click="soundVolume = 0.75;" ng-show="soundVolume === 0 && videoIsLoaded" class="video-unmute">UnMute</span>
+
+        </div>
+        <flashplayer ng-if="openGame.video_data && conf.video.autoPlay" id="gamevideo{{openGame.id}}"
+                     stream-url="{{openGame.video_data}}" provider-id="{{openGame.tv_type}}"
+                     initially-muted="{{soundVolume }}"></flashplayer>
+    </div>
+</div>
+<!-- <div class="fav-monitor" style="top:10px; background: white;" ng-show="openGame.video_data">
+   <a ng-show="!conf.detachedVideoSizes[openGame.tv_type]" ng-click="openGame.activeFieldType='field'; detachVideo('fullScreen');" class="detach-fullscreen"><span
+            class="detach-btn" trans>Detach</span></a>
+    <a ng-show="openGame.tv_type !== conf.defaultStreaming.tvType" ng-click="openGame.activeFieldType='field'; detachVideo('dragable');"><span class="detach-btn" trans>Detach</span></a>
+</div>-->

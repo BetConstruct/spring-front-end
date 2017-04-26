@@ -1,0 +1,18 @@
+<a ng-if="!$routeParams.widgetid && conf.fantasyEnabled" ng-href="#/fantasy" trans>Join Fantasy Play-Offs</a>
+<ul>
+    <li ng-class="::columns[key].class" ng-repeat="(key,item) in ::playOff track by key">
+        <div class="group-list-view-b" ng-repeat="(index,match)  in item.Series track by index" ng-class="{'final': item.Matches.length == 1}"  >
+            <include-template
+                    class="couple-game-box"
+                    template-path="templates/sport/championship/euro2016/playoffGame.html">
+            </include-template>
+            <!--<include-template-->
+                    <!--ng-if="item.Sibling.length > 0  &&  $last"-->
+                    <!--ng-init = "match = item.Sibling[0].Series;title = item.Sibling[0].Name || '3rd place'"-->
+                    <!--class="couple-game-box"-->
+                    <!--template-path="templates/sport/championship/euro2016/playoffGame.html">-->
+            <!--</include-template>-->
+        </div>
+    </li>
+</ul>
+

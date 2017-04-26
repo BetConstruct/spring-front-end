@@ -1,0 +1,188 @@
+<div class="help-landing" ng-controller="cmsPagesCtrl" ng-init="selectDefaultPage()">
+    <div class="headerVersion_2">
+        <div class="conteiner new0" class-on-scroll="show-fix,show-normal">
+            <div class="header-wrapper">
+                <div class="header-container-b">
+                    <div class="logo-nav-wrapper">
+                        <div class="logo-contain-b">
+                            <a class="pointer-events-none" href="#/"></a>
+                        </div>
+                        <div class="simple-nav-b">
+                            <ul>
+                                <li class="menu-visible-icon-b" id="compact-menu">
+                                    <label for="header-collapse" trans="">Menu</label>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="header-top-row"></div>
+                    <input type="checkbox" id="header-collapse">
+                    <ul class="responsive-header-mainMenu-j">
+                        <li>
+                            <div class="header-bottom-row ng-scope">
+                                <div class="header-nav-contain">
+                                    <ul ng-class="{'menu-dropdown': $root.topMenuDropDown, 'menu-dropdown-show': subMenuItemCount > 0}" sub-menu-creator="main">
+                                        <div class="top-menu-more" ng-show="subMenuItemCount > 0" title="More"
+                                             ng-click="$root.topMenuDropDown=!$root.topMenuDropDown;" hide-on-click
+                                             state-flag-var="$root.topMenuDropDown" trans="attr-only">+{{subMenuItemCount}}
+                                        </div>
+                                        <li ng-repeat="topPage in navigation track by topPage.id" ng-class="{'active': $parent.selectedTopPage.slug==topPage.slug}">
+                                            <div class="top-menu-sub-a-t">
+                                                <a ng-click="selectPopupTopPage(topPage)"  ng-bind="(topPage.slug.toLowerCase() == 'payments'?'Payments':topPage.title)|translate"></a>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+        <div class="sub-nav-faq" ng-if="selectedTopPage.slug.toLowerCase() != 'payments'">
+        	<ul>
+                <li ng-repeat="secondLevelPage in helpPages[selectedTopPage.slug].children track by secondLevelPage.id" ng-class="{'active': $parent.selectedSecondLevelPage.slug== secondLevelPage.slug}">
+                    <a ng-bind="secondLevelPage.title" ng-click="selectPopupSecondLevelPage(secondLevelPage)"></a>
+                </li>
+
+            </ul>
+        </div>
+
+
+
+        <div class="block-faq-content {{selectedTopPage.slug.toLowerCase()}} {{selectedSecondLevelPage.slug.toLowerCase()}}">
+            <vbet-loader class="page-center" ng-show="!popupHelpContentLoaded"></vbet-loader>
+			<div class="help-rules-block">
+                 	<!--<div class="rules-menu-b" ng-show="selectedSecondLevelPage.children.length && selectedTopPage.slug != 'faq'">-->
+                    	<!--<ul>-->
+                        	<!--<li ng-repeat="thirdLevelPage in selectedSecondLevelPage.children track by thirdLevelPage.id" ng-class="{'active': $parent.selectedThirdLevelPage.slug== thirdLevelPage.slug}">-->
+                                <!--<a ng-bind="thirdLevelPage.title" ng-click="selectPopupThirdLevelPage(thirdLevelPage)"></a>-->
+                            <!--</li>-->
+                        <!--</ul>-->
+                   <!--</div>-->
+
+                   <div class="help-rules" ng-show="!selectedSecondLevelPage.children.length">
+                   		<h1 ng-bind="displayPage.title"></h1>
+                        <h2></h2>
+                        <p ng-bind-html="displayPage.content" ng-show="selectedTopPage.slug.toLowerCase() != 'payments'"></p>
+                   </div>
+
+            </div>
+
+
+     <!--payments-->
+
+
+            <div class="help-rules-block" ng-show="selectedTopPage.slug.toLowerCase() == 'payments'">
+
+                   <div class="help-rules payments" >
+
+                    <div class="currency-block" ng-if="selectedPaymentsType!='betshop'">
+                          <div class="select-block">
+
+                                <select ng-options="currency|currency for currency in conf.availableCurrencies" ng-model="currencyHolder.selectedCurrency"></select>
+                                </div>
+                          <label trans>Currency</label>
+                   </div>
+
+                        <div class="payments-tab">
+                        	<ul>
+                            	<li ng-class="{'active': selectedPaymentsType === 'deposit'}" ng-click="selectedPaymentsType = 'deposit'" trans>Deposit</li>
+                                <li ng-class="{'active': selectedPaymentsType === 'withdraw'}" ng-click="selectedPaymentsType = 'withdraw'" trans>Withdraw</li>
+                                <li ng-show="conf.showBetshopsInFaq" ng-class="{'active': selectedPaymentsType === 'betshop'}" ng-click="selectedPaymentsType = 'betshop'" trans>Betshop</li>
+                            </ul>
+                        </div>
+
+                        	<div class="peymants-info" ng-if="selectedPaymentsType!='betshop'">
+                            	<table>
+                                	<tbody>
+                                      <tr>
+                                        <th><span trans>Payment Method</span></th>
+                                        <th><span trans>Name</span></th>
+                                        <th><span trans>Fee</span></th>
+                                        <th><span trans>Process Time</span></th>
+                                        <th><span trans>Min</span></th>
+                                        <th><span trans>Max</span></th>
+                                        <th><span trans>Info</span></th>
+                                      </tr>
+                                    </tbody>
+
+                                    <tbody ng-repeat="system in paymentSystems | faqPayment:selectedPaymentsType:currencyHolder.selectedCurrency " ng-show="selectedPaymentsType == 'deposit' ? system.canDeposit : system.canWithdraw">
+                                      <tr ng-class="{'open-info': system.infoBlockExpanded}">
+                                        <td ng-click="system.infoBlockExpanded = !system.infoBlockExpanded">
+                                            <div class="payment-content-block" ng-hide="system.image">
+                                                <ul><li ng-class="system.name"><span class="paymentIcon" ng-class="system.name"></span></li></ul>
+                                            </div>
+                                            <div class="paymentImageWrapper" ng-show="system.image">
+                                                <div><img src="{{system.image}}" class="paymentImage center"></div>
+                                            </div>
+                                        </td>
+
+                                        <td><span ng-bind="system.displayName|translate"></span></td>
+                                        <td>
+                                            <span trans ng-show="system.info[currencyHolder.selectedCurrency][selectedPaymentsType + 'Fee'] == 0">Free</span>
+                                            <span ng-show="system.info[currencyHolder.selectedCurrency][selectedPaymentsType + 'Fee'] != 0" ng-bind="system.info[currencyHolder.selectedCurrency][selectedPaymentsType + 'Fee']"></span>
+                                        </td>
+                                        <td>
+                                            <span ng-show="system.info[currencyHolder.selectedCurrency][selectedPaymentsType + 'ProcessTime'] == 0" trans>Instant</span>
+                                            <span ng-show="system.info[currencyHolder.selectedCurrency][selectedPaymentsType + 'ProcessTime'] != 0"  ng-bind="system.info[currencyHolder.selectedCurrency][selectedPaymentsType + 'ProcessTime'] + (' ') + ((system.info[currencyHolder.selectedCurrency][selectedPaymentsType + 'ProcessTimeType'] || 'hours')| translate)"></span>
+                                        </td>
+                                        <td><span ng-bind="system.info[currencyHolder.selectedCurrency]['min' + (selectedPaymentsType|capitalise)] || ('No'|translate)"></span></td>
+                                        <td><span ng-bind="system.info[currencyHolder.selectedCurrency]['max' + (selectedPaymentsType|capitalise)] || ('No'|translate)"></span></td>
+                                        <td ng-click="system.infoBlockExpanded = !system.infoBlockExpanded"><div class="information-icon"><span title="Additional information" trans="attr-only">i</span></div></td>
+                                      </tr>
+
+                                      <tr class="block-info" ng-class="{'open': system.infoBlockExpanded}">
+                                        <td colspan="7">
+                                            <p ng-bind-html="selectedTopPage.systems[selectedPaymentsType + '-' + system.name] || selectedTopPage.systems[system.name] "></p>
+                                            <div class="payment-b-contain">
+                                            	<ul>
+                                                	<li></li>
+                                                    <li>
+                                                        <button trans ng-show="selectedPaymentsType == 'deposit'"  ng-click="openParentPaymentsPage(system.name, selectedPaymentsType)">Deposit</button>
+                                                        <button trans ng-show="selectedPaymentsType == 'withdraw'" ng-click="openParentPaymentsPage(system.name, selectedPaymentsType)">Withdraw</button>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                            </td>
+                                       </tr>
+                                    </tbody>
+
+                                 </table>
+                            </div>
+
+                            <div class="peymants-info" ng-if="selectedPaymentsType=='betshop'" ng-init="loadPage('faq-betshops-' + env.lang,true);">
+                                <div class="faq-betshops-t" ng-show="pagesLoaded">
+                                    <p ng-bind-html="(mainPage.content || 'Page not found'|translate)|html"></p>
+                                </div>
+                            </div>
+
+                         </div>
+
+            		</div>
+
+
+          <!--payments END-->
+
+
+
+        	<div class="question-faq" ng-show="selectedSecondLevelPage.children.length">
+
+            	<ul>
+
+                    <li ng-repeat="thirdLevelPage in selectedSecondLevelPage.children"
+                        ng-class="{'open-q': $parent.selectedThirdLevelPage.slug== thirdLevelPage.slug && thirdLevelPage.expanded}">
+                    	<h3 ng-bind="thirdLevelPage.title" ng-click="selectPopupThirdLevelPage(thirdLevelPage);"></h3>
+                        <p ng-bind-html="thirdLevelPage.content"></p>
+                    </li>
+
+                </ul>
+
+
+            </div>
+
+        </div>
+
+
+</div>

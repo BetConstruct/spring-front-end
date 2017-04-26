@@ -1,0 +1,19 @@
+<div class="footer-nav-b" ng-controller="cmsPagesCtrl" ng-init="loadHelpPages();" ng-if="!conf.disableFooterNav">
+    <!--<ul ng-repeat="footerLinkSection in footerLinks">-->
+    <!--<li class="top-level-page"><a>{{ footerLinkSection.title }}</a></li>-->
+    <!--<li ng-repeat="link in footerLinkSection.links"><a href="{{link.link}}" target="{{link.newWindow ? '_blank' : '_self'}}">{{ link.title }}</a></li>-->
+    <!--</ul>-->
+    <ul ng-repeat="topLevelPage in navigation">
+        <li class="top-level-page" ng-if="topLevelPage.children.length"><a>{{ topLevelPage.title }}</a></li>
+        <li class="top-level-page" ng-if="topLevelPage.children.length === 0">
+            <a ng-show="topLevelPage.custom_fields.link[0] == null"  ng-click="scrollToTop(); openHelpPage(topLevelPage.slug, 'footer'); $event.stopPropagation()">{{ topLevelPage.title }}</a>
+            <a ng-show="topLevelPage.custom_fields.link[0] != null" ng-href="{{topLevelPage.custom_fields.link[0]}}" target="{{topLevelPage.custom_fields.new_window[0] == 1 ? '_blank' : '_self'}}">{{ topLevelPage.title }}</a>
+        </li>
+        <li ng-repeat="childPage in topLevelPage.children">
+            <a ng-show="childPage.custom_fields.link[0] == null" ng-if="!childPage.custom_fields.authorized[0] || (env.authorized && childPage.custom_fields.authorized[0])" ng-click="scrollToTop(); openHelpPage(childPage.slug, 'footer'); $event.stopPropagation()">{{ childPage.title }}</a>
+            <a ng-show="childPage.custom_fields.link[0] != null && childPage.custom_fields.new_popup[0] != 1" href="{{childPage.custom_fields.link[0]}}" target="{{childPage.custom_fields.new_window[0] == 1 ? '_blank' : '_self'}}">{{childPage.title }}</a>
+            <a ng-show="childPage.custom_fields.link[0] != null && childPage.custom_fields.new_popup[0] == 1" ng-click="broadcast('window.openPopup', {url:childPage.custom_fields.link[0], title: '', params: 'toolbar=no,scrollbars=no,resizable=no,width=900,height=700'}); $event.stopPropagation()">{{childPage.title }}</a>
+        </li>
+    </ul>
+
+</div>

@@ -1,0 +1,118 @@
+<div ng-init="loginFormInit();">
+    <h3 trans>Sign in</h3>
+    <div  ng-click="$event.stopPropagation();"  class="help-b" ng-if="!conf.liveChat.isSfChat && conf.liveChat.siteId && conf.liveChat.codePlan">
+        <a pass-click-to="comm100-float-button-2"><span trans>Contact Support</span></a>
+    </div>
+    <div ng-if="conf.liveChat.isSfChat" ng-click="startSFChat()" title="Live Chat" trans="attr-only" class="help-b"><a><span trans>Contact Support</span></a></div>
+
+    <div title="Live Agent" trans="attr-only" class="help-b" ng-show="!!isLiveAgent" ng-click="startLiveAgent()">
+        <a trans>Contact Support</a>
+    </div>
+
+    <div title="Live Agent" trans="attr-only" class="help-b" ng-show="!!conf.liveChat.zopimInHeader" ng-click="" onclick="showZopimChat();">
+        <a trans>Contact Support</a>
+    </div>
+
+    <form name="forms.signinform" ng-submit="params.needVerification? verifySmsCode(): login()">
+    <div ng-show="conf.facebookIntegration.enable && !fbLoggedIn && !cannotLoginWIthFbId || (conf.odnoklassnikiIntegration.enable && !odnoModel.cannotLoginWIthOdno)" ng-controller="facebookCtrl">
+        <div class="facebook-login-button" ng-click="loginToFb()"><span trans>Login with Facebook</span></div>
+
+    </div>
+    <div ng-if="conf.odnoklassnikiIntegration.enable"
+         ng-hide="cannotLoginWIthFbId || odnoModel.cannotLoginWIthOdno"
+         ng-controller="OdnoklassnikiCtrl as odnoCtrl">
+        <div class="facebook-login-button odnoklassniki" ng-click="login(); "><span trans>Sign in with Odnoklassniki</span></div>
+
+
+    </div>
+    <div class="form-sign-in odno-ki" ng-class="{'error-animation':signInError  && forms.signinform.$pristine}">
+
+        <div class="facebook-login" ng-controller="facebookCtrl">
+            <div ng-show="cannotLoginWIthFbId && fbLoggedIn" ng-click="env.showSlider = true; env.sliderContent = 'registrationForm';$event.stopPropagation()">
+                <p class="free-error-tooltip" trans>If you want to be able to login with your Facebook account you need to first Sign up with Facebook account.</p>
+            </div>
+
+            <div ng-show="odnoModel.cannotLoginWIthOdno"
+                 ng-click="env.showSlider = true; env.sliderContent = 'registrationForm';$event.stopPropagation()">
+                <p class="free-error-tooltip" trans>If you want to be able to login with your Odnoklassniki account you need to first Sign up with Odnoklassniki account.</p>
+            </div>
+
+            <div ng-show="fbLoginInProgress" class="free-small-loader">
+                <vbet-loader class="small-progress"></vbet-loader>
+            </div>
+
+
+
+        </div>
+
+
+        <label trans>Username</label>
+        <div class="form-text" ng-class="{'error':signInError  && forms.signinform.$pristine}">
+            <input ng-model="user.username" id="signinform-login-input" numpad type="text" placeholder="Your login" required="required" trans focus-on="login.formOpened" dont-scroll-on-focus ng-change="params.needVerification=false"  autocomplete="off">
+        </div>
+        <label trans>Password</label>
+        <div class="form-text" ng-class="{'error':signInError && forms.signinform.$pristine}">
+            <input ng-model="user.password" id="signinform-password-input" numpad type="password" placeholder="Enter your password" focus-on="login.formOpened.andUsernameIsAvailable" required="required"  autocomplete="off" trans ng-keypress="passwordKeyPress($event)">
+            <div ng-if="conf.showCapsLockHint && capsLockIsOn"  class="capslock-is-on-j" trans>Caps Lock is On</div>
+        </div>        
+        <label ng-if="params.needVerificationCode" trans>Enter verification code</label>
+        <div ng-if="params.needVerificationCode" class="form-text" ng-class="{'error':signInError && forms.signinform.$pristine}">
+            <input ng-model="user.login_code" id="signinform-password-input" numpad type="text" placeholder="You will receive verification code on your Email" required="required"  autocomplete="off" trans>
+        </div>
+        <label for="signinform-remember-me" class="sign-in-checkbox-j" ng-show="conf.rememberMeCheckbox">
+            <input ng-model="user.remember" id="signinform-remember-me" type="checkbox">
+            <span trans>Remember me</span>
+        </label>
+
+        <input ng-if="conf.iovationLoginScripts" ng-init="initIovation()" ng-model="user.ioBlackBox" name="ioBlackBox" id="ioBlackBox" class="ng-hide" />
+
+        <div class="sms-verification-container" ng-if="conf.registration.requireSmsValidation && params.needVerification">
+            <label trans>SMS verification code</label>
+
+            <div class="sms-code-block active">
+                <div class="form-text code sms-code" ng-class="{'error':signInError && forms.signinform.$pristine || smsErrMsg}">
+                    <input ng-model="user.smsCode" type="text" placeholder="Enter verification code" required="required" trans>
+
+                    <div class="form-verify-info" ng-show="params.smsErrMsg">
+                        <div class="form-error-icon"></div>
+                        <div class="form-error-text">
+                            <div class="error-icon-f"></div>
+                            <p>{{params.smsErrMsg}}</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="button-sms code">
+                    <div ng-click="resendSMS()" ng-disabled="!params.allowSMSResend">Resend</div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="signin-error-message" ng-show="signInError && forms.signinform.$pristine && !params.needVerification && !params.needVerificationCode && !params.needUserAuthorization">
+            <p trans>Invalid username or password.</p>
+        </div>
+        <div class="signin-error-message" ng-show="signInError && forms.signinform.$pristine && (params.needVerification || params.needVerificationCode)">
+            <p trans>Please verify your account to be able to log in.</p>
+            <p ng-if="params.needVerificationCode" trans>You will receive verification code on your Email</p>
+        </div>
+        <div class="signin-error-message" ng-show="signInError && forms.signinform.$pristine && !params.needVerification && !params.needVerificationCode && params.needUserAuthorization">
+            <p trans>To the specified e-mail address we have sent the letter. Click on the link to continue registration. If you do not receive the email, contact support.</p>
+        </div>
+    </div>
+    <div class="button-sign">
+        <ul ng-hide="!conf.registration.enable || conf.disableRegistrationAndLogin">
+            <li><a ng-click="openForgotPasswordForm();$event.stopPropagation()" title="Forgot your password?" trans>Forgot your password?</a></li>
+            <li><a ng-click="register();$event.stopPropagation()" trans>Create an account</a></li>
+        </ul>
+
+        <ul ng-if="conf.showForgotPassword && (!conf.registration.enable || conf.disableRegistrationAndLogin)">
+            <li><a ng-click="openForgotPasswordForm();$event.stopPropagation()" title="Forgot your password?" trans>Forgot your password?</a></li>
+        </ul>
+
+        <div class="loader-btn">
+            <vbet-loader class="small-progress" ng-show="busy"></vbet-loader>
+            <input name="" type="submit" value="{{({true:'Verify', false:'Sign in'}[params.needVerification])|translate}}" ng-disabled="busy || forms.signinform.$invalid || forms.signinform.$pristine" ng-class="{loading:busy}" trans>
+        </div>
+    </div>
+</form>
+</div>

@@ -1,0 +1,297 @@
+.three-in-one-skillgames-j {
+    float: left;
+    width: 100%;
+    min-width: 980px;
+    * {
+        box-sizing: border-box;
+    }
+    .content-j {
+        margin: 0 auto;
+        max-width: 1350px;
+        position: relative;
+        height: 100%;
+        padding: 0 20px;
+        &:after {
+            content: "";
+            display: block;
+            clear: both;
+        }
+        @media screen and (max-width: 1260px) {
+            max-width: 980px;
+        }
+    }
+    > div {
+        &, > div {
+            float: left;
+            width: 100%;            
+        }
+    }
+    .tio-intro-j {
+        height: 948px;
+        border-bottom: 2px solid $hero-color;
+        background: url(../../../images/three-in-one-skill-games/tio-intro-j.jpg#{$delete-cache}) no-repeat 50% 100% / cover; 
+        @media screen and (max-height: 980px) {
+            height: 700px;
+        }
+        > .content-j {
+            display: table;
+        }
+        .tio-skill-games-holder-j {
+            text-align: center;
+            display: table-cell;
+            vertical-align: middle;
+            .image-wrapper {
+                height: 74px;
+                float: left;
+                width: 100%;
+                margin: 116px 0 0;
+                img {
+                    display: block;
+                    margin: 0 auto;
+                }
+            }
+            h1 {
+                float: left;
+                width: 100%;
+                font: 20px/22px $font-f;
+                color: white;
+                text-transform: uppercase;
+                margin: 24px 0 0;
+                position: relative;
+                height: 64px;
+                &:before {
+                    content: "";
+                    display: block;
+                    height: 1px;
+                    position: absolute;
+                    width: 874px;
+                    border-bottom: 1px dashed rgba(255, 255, 255, 0.2);
+                    left: 50%;
+                    margin-left: -437px;
+                    bottom: 0;
+                }
+            }
+            h2 {
+                width: 100%;
+                float: left;
+                font: 18px/20px $font-f;
+                text-transform: uppercase;
+                color: white;
+                margin: 40px 0 30px;
+                + p {
+                    width: 70%;
+                    margin: 0 auto;
+                }
+            }
+            > div {
+                float: left;
+                width: 100%;
+                color: white;
+                font: 15px/21px $font-f;
+            }
+            .button-j {
+                display: inline-block;
+                height: 36px;
+                padding: 0 36px;
+                border: 0;
+                text-transform: uppercase;
+                text-decoration: none;
+                font: 14px/36px $font-f;
+                background: $hero-color;
+                color: set-color($hero-color);
+                transition: 300ms color, 300ms background;
+                margin: 36px 0 0;
+                &:hover {
+                    background: lighten($hero-color, 10);
+                    color: set-color(lighten($hero-color, 10));
+                }
+            }
+            &:after {
+                content: "";
+                clear: both;
+                display: block;
+            }
+        }
+    }
+
+
+    .tio-download-section-j {
+        height: 460px;
+        text-align: center;
+        color: #ffffff;
+        font: 300 18px / 21px $font-f;
+        background: url(../../../images/three-in-one-skill-games/tio-download-section.png#{$delete-cache}) no-repeat 50% 50% / cover;
+        .tio-vert-align-wrapper-j {
+            display: table;
+            table-layout: fixed;
+            height: 100%;
+            width: 100%;
+            .tio-vert-align-inline-j {
+                display: table-cell;
+                vertical-align: middle;
+                div {
+                    float: left;
+                    width: 100%;
+                }
+            }
+        }
+        h1 {
+            float: left;
+            width: 100%;
+            color: #f3f3f5;
+            font: 400 36px / 36px $font-f;
+            margin: 0 0 34px;
+        }
+        .button-j, button {
+            padding: 0 26px 0 78px;
+            display: inline-block;
+            text-decoration: none;
+            height: 48px;
+            background: $hero-color;
+            color: set-color($hero-color);
+            font: 400 18px / 48px $font-f;
+            border: none;
+            text-transform: uppercase;
+            position: relative;
+            transition: 300ms background;
+            margin: 36px 0 0;
+            &:hover {
+                background: lighten($hero-color, 10);
+            }
+            &:before {
+                content: "\e6e0";
+                height: 30px;
+                width: 32px;
+                display: block;
+                position: absolute;
+                top: 9px;
+                left: 17px;
+                font: 15px/32px icomoon;
+                text-align: left;
+                border-right: 1px solid rgba(set-color($hero-color), 0.3);
+            }
+        }
+    }
+}
+@keyframes open-our-advantages-j{
+    0% {max-height: 220px;}
+    100% {max-height: 9990px;}
+}
+.our-advantages-j {
+    float: left;
+    width: 100%;
+    background: #f3f3f5;
+    min-width: 980px;
+    * {
+        box-sizing: border-box;
+    }
+    .content-j {
+        margin: 0 auto;
+        max-width: 1350px;
+        position: relative;
+        height: 100%;
+        padding: 0 20px 60px;
+        @media screen and (max-width: 1260px) {
+            max-width: 980px;
+        }
+        &:after {
+            content: "";
+            display: block;
+            clear: both;
+        }
+    }
+    input[type="checkbox"] {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        pointer-events: none;
+        opacity: 0;
+        &:checked {
+            ~ .our-advantages-wrapper-j {
+                max-height: 999999px;
+                animation: open-our-advantages-j 1s ease-in-out;
+            }
+            ~ label:before {
+                transform: rotate(-180deg);
+            }
+        }
+    }
+    label {
+        display: block;
+        height: 60px;
+        width: 100%;
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        color: #3f4553;
+        transition: 300ms color;
+        cursor: pointer;
+        &:hover {
+            color: lighten(#3f4553, 10);
+        }
+        &:before {
+            content: "\e678";
+            font: 28px/14px icomoon;
+            display: block;
+            text-align: center;
+            transition: 300ms transform;
+        }
+    }
+    .our-advantages-wrapper-j {
+        float: left;
+        width: 100%;
+        max-height: 220px;
+        overflow: hidden;
+        transform: translate3d(0,0,0);
+        ul {
+            float: left;
+            width: 100%;
+            padding: 0 35px;
+            li {
+                display: block;
+                float: left;
+                width: 25%;
+                padding: 0 20px;
+                height: 220px;
+                text-align: center;
+                overflow: hidden;
+                color: #212532;
+                font: 300 18px / 24px $font-f;
+                p, div {
+                    float: left;
+                    width: 100%;
+                }
+                > p {
+                    -webkit-line-clamp: 5;
+                    -webkit-box-orient: vertical;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    display: -webkit-box;
+                }
+                .o-advantages-icon-j {
+                    height: 60px;
+                    margin: 0 0 30px;
+                    &:before {
+                        display: block;
+                        float: left;
+                        width: 100%;
+                        font: 60px/60px icomoon;
+                        text-align: center;
+                        color: #3f4553;
+                    }
+                }
+            }
+        }
+    }
+    .title-j {
+        float: left;
+        width: 100%;
+        height: 111px;
+        border-bottom: 1px solid #C2C5CD;
+        color: #232532;
+        font: 400 24px / 110px $font-f;
+        text-align: center;
+        text-transform: uppercase;
+        margin: 0 0 45px;
+    }
+}

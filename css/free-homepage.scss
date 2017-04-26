@@ -1,0 +1,55 @@
+.free-winners-wrap-j {
+    float: left;
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+    position: relative;
+    .lmb-time-selector {
+        margin: 0 0 15px;
+    }
+}
+.free-winners-list-j {
+    display: table;
+    table-layout: fixed;
+    width: 100%;
+    ul {
+        display: table-row;
+        li {
+            display: table-cell;
+            color: $text-palette-2;
+            font: 12px/32px $font-f;
+            border-bottom: 1px solid $skin-palette-11;
+            height: 33px;
+            background-color: $skin-palette-10;
+            padding: 0 15px;
+            width: 1%;
+            box-sizing: border-box;
+            > div {
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+                box-sizing: border-box;
+            }
+            &:first-child {
+                border-radius: 2px 0 0 2px;
+            }
+            &:last-child {
+                border-radius: 0 2px 2px 0;
+            }
+        }
+        &:nth-child(odd) li {
+            background-color: $skin-palette-9;
+        }
+        &.title-j li {
+            background-color: $skin-palette-12;
+            height: 36px;
+            border-bottom: 0;
+            border-radius: 0; 
+            color: $text-palette-4;
+            font: 400 16px/36px $font-f;
+        }
+    }
+    .win-amount-j {
+        color: #c4963f;
+    }
+}

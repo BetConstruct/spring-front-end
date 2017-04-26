@@ -1,0 +1,11 @@
+<div class="help-landing" ng-controller="cmsPagesCtrl" ng-init="loadPage(location.page + '-' + env.lang,true);">
+    <div class="conteiner" ng-if="pagesLoaded">
+        <div class="help-rules-block">
+            <div class="help-rules">
+                <h3 ng-bind-html="mainPage.title|html">Title</h3>
+                <p ng-bind-html="mainPage.content|html">Content</p>
+            </div>
+        </div>
+
+    </div>
+</div>

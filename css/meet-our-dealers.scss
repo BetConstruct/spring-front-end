@@ -1,0 +1,429 @@
+@mixin our-dealers {
+  /* MEET OUR DEALERS */
+  .meet-our-dealers-page-j {
+    float: left;
+    width: 100%;
+  }
+  .meet-our-dealers-page-j .meet-promotion-big-j {
+    float: left;
+    width: 100%;
+    background: url(../../../images/backgrounds/meet-our-dealers-bg.jpg#{$delete-cache}) center top;
+    background-size: cover;
+    height: 750px;
+    position: relative;
+  }
+  .meet-our-dealers-page-j .meet-promotion-big-j:before {
+    content: '';
+    display: block;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    position: absolute;
+    height: 52px;
+  }
+  .meet-our-dealers-page-j .meet-promotion-big-j .j-resize-950-1280 {
+    padding: 0 15px;
+    display: table;
+    position: relative;
+    height: 100%;
+    width: calc( 100% - 30px );
+  }
+  .meet-our-dealers-page-j .meet-promotion-big-j .j-resize-950-1280:before {
+    position: absolute;
+    content: '';
+    display: block;
+    width: 124px;
+    height: 124px;
+    background-size: contain;
+    left: 15px;
+    top: 102px;
+  }
+  .meet-our-dealers-page-j .meet-promotion-big-j .j-resize-950-1280 .title-block-j {
+    display: table-cell;
+    vertical-align: bottom;
+    padding-bottom: 190px;
+    width: calc(100% - 460px);
+  }
+  .meet-our-dealers-page-j .meet-promotion-big-j .j-resize-950-1280 .title-block-j .meet-od-max-width-j {
+    width: 440px;
+    float: left;
+  }
+  .meet-our-dealers-page-j .meet-promotion-big-j .j-resize-950-1280 .title-block-j h3 {
+    color: $white-text;
+    font: normal 48px/50px $font-f;
+    white-space: nowrap;
+    display: block;
+    float: left;
+    width: 100%;
+    padding-bottom: 15px;
+    text-transform: uppercase;
+  }
+  .meet-our-dealers-page-j .meet-promotion-big-j .j-resize-950-1280 .title-block-j p {
+    font: normal 14px/20px $font-f;
+    color: $j-main-global-color-third;
+    display: block;
+    float: left;
+    width: 100%;
+  }
+  .meet-our-dealers-page-j .meet-promotion-big-j .j-resize-950-1280 .left-summary-block-j {
+    display: table-cell;
+    width: 460px;
+    vertical-align: bottom;
+    padding-bottom: 210px;
+    text-align: right;
+  }
+  .meet-our-dealers-page-j .meet-promotion-big-j .j-resize-950-1280 .left-summary-block-j .dealers-every-day-tarm-tarm-j {
+    color: $white-text;
+    display: inline-block;
+    vertical-align: middle;
+    text-align: left;
+  }
+  .meet-our-dealers-page-j .meet-promotion-big-j .j-resize-950-1280 .left-summary-block-j .dealers-every-day-tarm-tarm-j span {
+    font: 64px/66px $font-f;
+    display: inline-block;
+    position: relative;
+    vertical-align: middle;
+    top: 7px;
+  }
+  .meet-our-dealers-page-j .meet-promotion-big-j .j-resize-950-1280 .left-summary-block-j .dealers-every-day-tarm-tarm-j span sup {
+    font-size: 18px;
+    position: relative;
+    top: -38px;
+  }
+  .meet-our-dealers-page-j .meet-promotion-big-j .j-resize-950-1280 .left-summary-block-j .dealers-every-day-tarm-tarm-j p {
+    font: 14px/16px $font-f;
+    text-transform: uppercase;
+    display: inline-block;
+    width: 90px;
+    line-height: 20px;
+    vertical-align: middle;
+    padding-left: 17px;
+    text-align: left;
+  }
+  .meet-our-dealers-page-j .meet-promotion-big-j .j-resize-950-1280 .left-summary-block-j button {
+    display: inline-block;
+    vertical-align: middle;
+    padding: 0 24px;
+    height: 46px;
+    border: 0;
+    background-color: $hero-color;
+    color: $white-text;
+    border-radius: 5px;
+    cursor: pointer;
+    text-transform: uppercase;
+    margin-left: 38px;
+  }
+  .meet-our-dealers-page-j .dealers-slider-wrapper-j {
+    float: left;
+    width: 100%;
+    position: relative;
+    z-index: 30;
+    top: -100px;
+  }
+  .meet-our-dealers-page-j .dealers-slider-wrapper-j .j-resize-950-1280 {
+    padding: 0 15px;
+  }
+  .meet-our-dealers-page-j .dealers-slider-wrapper-j .j-resize-950-1280 .slider-dealer-j {
+    display: block;
+    width: 100%;
+    float: left;
+    margin-bottom: 10px;
+  }
+  .meet-our-dealers-page-j .dealers-slider-wrapper-j .j-resize-950-1280 .slider-dealer-j li {
+    display: block;
+    width: calc((100% / 3) - 7px);
+    height: 215px;
+    background: $j-main-global-color-third;
+    transition-duration: 300ms;
+    float: left;
+    margin-right: 10px;
+  }
+  .meet-our-dealers-page-j .dealers-slider-wrapper-j .j-resize-950-1280 .slider-dealer-j li:last-child {
+    margin: 0;
+  }
+  .meet-our-dealers-page-j .dealers-slider-wrapper-j .j-resize-950-1280 .slider-dealer-j li:hover {
+    background: $j-fifty-shades-of-white;
+  }
+  .meet-our-dealers-page-j .dealers-slider-wrapper-j .j-resize-950-1280 .slider-dealer-j li:hover > div .info-icon-j {
+    color: #7b8191;
+  }
+  .meet-our-dealers-page-j .dealers-slider-wrapper-j .j-resize-950-1280 .slider-dealer-j li .delaer-container-image-j {
+    width: 50%;
+    float: left;
+    height: 215px;
+    position: relative;
+  }
+  .meet-our-dealers-page-j .dealers-slider-wrapper-j .j-resize-950-1280 .slider-dealer-j li .delaer-container-image-j img {
+    max-width: 98%;
+    height: auto;
+    max-height: 95%;
+    display: block;
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translate(-50%, 0);
+    -moz-transform: translate(-50%, 0);
+    -webkit-transform: translate(-50%, 0);
+  }
+  .meet-our-dealers-page-j .dealers-slider-wrapper-j .j-resize-950-1280 .slider-dealer-j li > div:not(.delaer-container-image-j) {
+    width: 50%;
+    float: right;
+    height: 100%;
+    position: relative;
+    color: #242e45;
+  }
+  .meet-our-dealers-page-j .dealers-slider-wrapper-j .j-resize-950-1280 .slider-dealer-j li > div:not(.delaer-container-image-j) h4 {
+    text-transform: uppercase;
+    font: 24px/26px $font-f;
+    font-weight: bold;
+    display: block;
+    float: left;
+    width: 100%;
+    padding: 26px 0 4px;
+  }
+  .meet-our-dealers-page-j .dealers-slider-wrapper-j .j-resize-950-1280 .slider-dealer-j li > div:not(.delaer-container-image-j) h5 {
+    font: 16px/18px $font-f;
+    text-transform: uppercase;
+    display: block;
+    float: left;
+    width: 100%;
+    padding-bottom: 20px;
+  }
+  .meet-our-dealers-page-j .dealers-slider-wrapper-j .j-resize-950-1280 .slider-dealer-j li > div:not(.delaer-container-image-j) p {
+    font: 12px/18px $font-f;
+  }
+  .meet-our-dealers-page-j .dealers-slider-wrapper-j .j-resize-950-1280 .slider-dealer-j li > div:not(.delaer-container-image-j) p .star-icon-moon-j {
+    display: inline-block;
+    display: inline-block;
+    font: normal 16px "icomoon";
+    vertical-align: middle;
+    margin-right: 4px;
+  }
+  .meet-our-dealers-page-j .dealers-slider-wrapper-j .j-resize-950-1280 .slider-dealer-j li > div:not(.delaer-container-image-j) p .star-icon-moon-j:before {
+    content: "\f005";
+  }
+  .meet-our-dealers-page-j .dealers-slider-wrapper-j .j-resize-950-1280 .slider-dealer-j li > div:not(.delaer-container-image-j) button {
+    height: 30px;
+    border: 0;
+    text-transform: uppercase;
+    color: $white-text;
+    border-radius: 3px;
+    background-color: $hero-color;
+    padding: 0 15px;
+    font: 12px/30px $font-f;
+    position: absolute;
+    left: 0;
+    bottom: 25px;
+    cursor: pointer;
+  }
+  .meet-our-dealers-page-j .dealers-slider-wrapper-j .j-resize-950-1280 .slider-dealer-j li > div:not(.delaer-container-image-j) .info-icon-j {
+    text-decoration: none;
+    background: $white-bg;
+    border-radius: 50px;
+    color: $j-main-global-color-third;
+    display: block;
+    height: 27px;
+    width: 28px;
+    text-align: center;
+    position: absolute;
+    bottom: 25px;
+    right: 23px;
+  }
+  .meet-our-dealers-page-j .dealers-slider-wrapper-j .j-resize-950-1280 .slider-dealer--pagination-j {
+    background: #2E323E;
+    float: left;
+    width: 100%;
+    display: table;
+    height: 60px;
+  }
+  .meet-our-dealers-page-j .dealers-slider-wrapper-j .j-resize-950-1280 .slider-dealer--pagination-j li {
+    display: table-cell;
+    width: 1%;
+    vertical-align: middle;
+  }
+  .meet-our-dealers-page-j .dealers-slider-wrapper-j .j-resize-950-1280 .slider-dealer--pagination-j li a {
+    color: $j-main-global-color-third;
+    font: 14px/16px $font-f;
+    font-weight: bold;
+    text-decoration: none;
+    position: relative;
+  }
+  .meet-our-dealers-page-j .dealers-slider-wrapper-j .j-resize-950-1280 .slider-dealer--pagination-j li a:before {
+    font: normal 18px/16px 'icomoon';
+    display: inline-block;
+    position: absolute;
+    top: 50%;
+    transform: translate(0, -50%);
+    -moz-transform: translate(0, -50%);
+    -webkit-transform: translate(0, -50%);
+  }
+  .meet-our-dealers-page-j .dealers-slider-wrapper-j .j-resize-950-1280 .slider-dealer--pagination-j li.pagination-dots-j {
+    text-align: center;
+  }
+  .meet-our-dealers-page-j .dealers-slider-wrapper-j .j-resize-950-1280 .slider-dealer--pagination-j li.pagination-dots-j span {
+    width: 12px;
+    height: 12px;
+    display: inline-block;
+    margin: 0 3px;
+    border-radius: 100px;
+    cursor: pointer;
+    background: #4d515b;
+  }
+  .meet-our-dealers-page-j .dealers-slider-wrapper-j .j-resize-950-1280 .slider-dealer--pagination-j li.pagination-dots-j span.active-j {
+    background: #a4a6ac;
+  }
+  .meet-our-dealers-page-j .dealers-slider-wrapper-j .j-resize-950-1280 .slider-dealer--pagination-j li:first-child a {
+    padding-left: 45px;
+  }
+  .meet-our-dealers-page-j .dealers-slider-wrapper-j .j-resize-950-1280 .slider-dealer--pagination-j li:first-child a:before {
+    content: "\e677";
+    left: 15px;
+  }
+  .meet-our-dealers-page-j .dealers-slider-wrapper-j .j-resize-950-1280 .slider-dealer--pagination-j li:last-child {
+    text-align: right;
+  }
+  .meet-our-dealers-page-j .dealers-slider-wrapper-j .j-resize-950-1280 .slider-dealer--pagination-j li:last-child a {
+    padding-right: 45px;
+  }
+  .meet-our-dealers-page-j .dealers-slider-wrapper-j .j-resize-950-1280 .slider-dealer--pagination-j li:last-child a:before {
+    content: "\e67a";
+    right: 15px;
+  }
+  .table-cell-j-center {
+    display: table-cell;
+    vertical-align: middle;
+    width: 100%;
+  }
+  .fixed-table-popup-j {
+    display: table;
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    background: rgba(18, 22, 35, 0.97);
+    z-index: 99999;
+  }
+  .fixed-table-popup-j .table-cell-j-center .dealer-more-info-wrap-j-main {
+    height: 650px;
+    margin: 0 auto;
+    background-color: $white-text;
+    width: 870px;
+    position: relative;
+  }
+  .fixed-table-popup-j .table-cell-j-center .dealer-more-info-wrap-j-main .dealer-more-info-wrap-j {
+    width: 50%;
+    height: 100%;
+    float: left;
+    position: relative;
+    color: $j-dark-blue-global-3;
+  }
+  .fixed-table-popup-j .table-cell-j-center .dealer-more-info-wrap-j-main .dealer-more-info-wrap-j h4 {
+    font: normal 48px/50px $font-f;
+    display: block;
+    float: left;
+    width: 100%;
+    text-transform: uppercase;
+    padding-top: 40px;
+  }
+  .fixed-table-popup-j .table-cell-j-center .dealer-more-info-wrap-j-main .dealer-more-info-wrap-j h5 {
+    font: normal 24px/26px $font-f;
+    display: block;
+    float: left;
+    width: 100%;
+    text-transform: uppercase;
+    padding-top: 5px;
+    padding-bottom: 30px;
+  }
+  .fixed-table-popup-j .table-cell-j-center .dealer-more-info-wrap-j-main .dealer-more-info-wrap-j p.lucky-number-j {
+    font: normal 16px/22px $font-f;
+    display: block;
+    float: left;
+    width: 100%;
+  }
+  .fixed-table-popup-j .table-cell-j-center .dealer-more-info-wrap-j-main .dealer-more-info-wrap-j p.lucky-number-j .star-icon-moon-j {
+    display: inline-block;
+    font: normal 18px "icomoon";
+    vertical-align: middle;
+    margin-right: 4px;
+    position: relative;
+    top: -2px;
+  }
+  .fixed-table-popup-j .table-cell-j-center .dealer-more-info-wrap-j-main .dealer-more-info-wrap-j p.lucky-number-j .star-icon-moon-j:before {
+    content: "\f005";
+  }
+  .fixed-table-popup-j .table-cell-j-center .dealer-more-info-wrap-j-main .dealer-more-info-wrap-j .dealer-info-scroll-block-j {
+    margin-top: 32px;
+    font: normal 14px/18px $font-f;
+    display: block;
+    float: left;
+    width: calc(100% - 60px);
+    height: 320px;
+    overflow-y: auto;
+    padding-right: 30px;
+  }
+  .fixed-table-popup-j .table-cell-j-center .dealer-more-info-wrap-j-main .dealer-more-info-wrap-j .dealer-popup-button-set-j {
+    display: inline-block;
+    left: 0;
+    bottom: 35px;
+    position: absolute;
+  }
+  .fixed-table-popup-j .table-cell-j-center .dealer-more-info-wrap-j-main .dealer-more-info-wrap-j .dealer-popup-button-set-j button {
+    text-decoration: none;
+    height: 36px;
+    border: 0;
+    cursor: pointer;
+    font: normal 14px/36px $font-f;
+    color: $white-text;
+    text-transform: uppercase;
+    border-radius: 5px;
+    padding: 0 20px;
+    background: $j-button-background-new-style;
+    display: block;
+    float: left;
+    margin-right: 10px;
+  }
+  .fixed-table-popup-j .table-cell-j-center .dealer-more-info-wrap-j-main .dealer-more-info-wrap-j .dealer-popup-button-set-j button.skin-j {
+    border: 2px solid #7b8191;
+    line-height: 32px;
+    color: $skin-palette-5;
+    background-color: transparent;
+  }
+  .fixed-table-popup-j .table-cell-j-center .dealer-more-info-wrap-j-main .dealer-more-image-j {
+    position: relative;
+    width: 50%;
+    height: 100%;
+    float: left;
+  }
+  .fixed-table-popup-j .table-cell-j-center .dealer-more-info-wrap-j-main .dealer-more-image-j img {
+    max-width: 100%;
+    max-height: 96%;
+    position: absolute;
+    display: block;
+    bottom: 0;
+  }
+  .popup-close-white-j {
+    width: 40px;
+    height: 40px;
+    background: $white-bg;
+    color: #858a98;
+    display: block;
+    text-decoration: none;
+    position: absolute;
+    top: 0;
+    right: -40px;
+    cursor: pointer;
+    text-align: center;
+    font: 20px/40px icomoon;
+  }
+  .popup-close-white-j:before {
+    content: "\e62c";
+  }
+  @media screen and (max-width: 1260px) {
+    .meet-our-dealers-page-j .meet-promotion-big-j .j-resize-950-1280 {
+      width: 950px;
+      max-width: inherit;
+    }
+  }
+  /* END MEET OUR DEALERS */
+}

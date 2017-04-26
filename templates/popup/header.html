@@ -1,0 +1,44 @@
+<div class="header block-size-visible-b">
+    <div>
+        <div>
+            <div class="clock noflip">
+                <span>{{profile.full_name}}</span>
+            </div>
+        </div>
+        <div class="transparent-line"></div>
+        <div>
+            <div class="additional-deposit-j popup-messages-icon-t">
+                <div class="message-info" ng-if="(conf.headerMessageIcon.alwaysShow || profile.unread_count > 0) && env.authorized && conf.headerMessageIcon.enabled" ng-click="$location.search('user', 'messages');">
+                    <span ng-bind="profile.unread_count" ng-show="profile.unread_count" ng-class="{'new-m':env.isNewMessage}" class="ng-binding new-m">2</span>
+                </div>
+            </div>
+            <div ng-click="$location.search('user', 'balanceHistory')" class="additional-deposit-j">{{profile.calculatedBalance|number:conf.balanceFractionSize}} {{profile.currency_name|currency}}</div>
+            <div ng-click="$location.search('user', 'settings')" class="additional-deposit-j" trans>Settings</div>
+        </div>
+        <div>
+            <div class="logo noflip" ng-class="::conf.site_name">
+                <a>
+                    <p class="animated-vbet"></p>
+                    <p class="animated-vivarobet"></p>
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="top-menu">
+        <div class="main-nav">
+            <ul class="not-sign rulse-bonus-block-t">
+                <div class="sign-in-reg-buttons">
+                    <li ng-class="{active: action == 'deposit'}">
+                        <button ng-click="$location.search('user', 'deposit')" trans>Deposit</button>
+                    </li>
+                    <li ng-class="{active: action == 'withdraw'}">
+                        <button ng-click="$location.search('user', 'withdraw')" trans>Withdraw</button>
+                    </li>
+                    <li ng-class="{active: action == 'betHistory'}">
+                        <button ng-click="$location.search('user', 'betHistory')" trans>Bet History</button>
+                    </li>
+                </div>
+            </ul>
+        </div>
+    </div>
+</div>

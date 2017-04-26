@@ -1,0 +1,44 @@
+<div class="info-scroll-contain-b-new mixed-tickets-j" ng-controller="mixedTicketsCtrl" no-animate>
+    <div class="any-tabs-wrapper-b">
+        <div class="group-tabs-wrapper">
+            <div class="first-level-history-tab">
+                <div class="mixed-tickets-search-j">
+                    <input type="text" placeholder="{{'Ticket ID' | translate}}" ng-model="searchTicketId" />
+                </div>
+            </div> 
+        </div>
+    </div>
+    <div class="balance-lightbox-j"> 
+        <section>
+            <div> 
+                <ul>
+                    <li><span trans>Ticket ID</span><span trans>Date</span></li>
+                    <li class="ng-hide"></li>
+                    <li trans>Promo</li>
+                </ul> 
+                <div class="mixed-tickets-content-j">
+                
+                    <table ng-init="loadTickets()" ng-show="tickets.length > 0 && !isLoading">  
+                        <tr ng-repeat="ticket in (tickets | filter:{ id: searchTicketId } )  track by $index">
+                            <td><span>ID:</span> {{ticket.id}}</td>
+                            <td>{{ticket.date|formatDate: 'DD.MM.YY / HH:mm'}}</td>
+                        </tr>
+                    </table>
+                    <table ng-show="tickets.length == 0 && !isLoading">
+                        <tr>
+                            <td><center trans>You do not have any tickets yet</center></td>
+                        </tr>
+                    </table> 
+                    <vbet-loader ng-show="isLoading"></vbet-loader>
+                    
+                </div>
+                <div class="promotions-balance-j">
+
+                    <div ng-controller="cmsPagesCtrl" ng-init="gePageBanners('balance','withdraw-banner-' + $root.env.lang);" >
+                        <vbet-big-slider class="big-slider-casino-directive" ng-if="balanceTopBanners" images="balanceTopBanners" link-click-handler="openCBannerLink" slider-template="true"></vbet-big-slider>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+</div>

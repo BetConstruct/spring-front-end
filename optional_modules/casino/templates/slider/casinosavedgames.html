@@ -1,0 +1,22 @@
+<!--casino savegames-->
+<div ng-controller="casinoMyGamesCtrl" class="save-games-contain" ng-show="env.sliderContent === 'casinoSavedGames'" watch-resize>
+    <div class="my-games-save casino">
+        <div class="games-save-slider">
+            <div class="arrow-left-s" ng-show="offset > 0"><a ng-click="slide('left')">left-arrow</a></div>
+            <div class="arrow-right-s" ng-show="offset < myCasinoGames.length - GAMES_TO_SHOW"><a ng-click="slide('right')">right-arrow</a></div>
+            <div class="games-slider">
+                <casino-games-list ng-class="{'all-games-casino-list': cConf.newCasinoDesignEnabled}"
+                        is-new-design-enabled="cConf.newCasinoDesignEnabled"
+                        show-conditions="true"
+                        games-list="myCasinoSavedGames"
+                        game-show-conditions="true"
+                        show-delete-btn="true">
+                </casino-games-list>
+                <div class="dont-games-block" ng-show="myCasinoSavedGames.length === 0"><p trans>You don't have favourite games. To add some, click the star icon near the game name.</p></div>
+            </div>
+
+            <vbet-loader class="page-center" ng-show="!casinoGamesLoaded"></vbet-loader>
+        </div>
+    </div>
+</div>
+<!--casino savegames END-->

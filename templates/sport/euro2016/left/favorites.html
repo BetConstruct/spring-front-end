@@ -1,0 +1,68 @@
+<div class="left-nav-view-v3 favorite-nav" ng-show="myGames.length">
+    <ul>
+        <li>
+            <div class="
+                    sports-item-v3 {{sport.alias}}
+                    {{leftMenuState.favorites.expanded ? 'active' : ''}}
+                "
+                 ng-click="leftMenuState.favorites.expanded = !leftMenuState.favorites.expanded; leftMenuClosed ? toggleLeftMenu() : void()">
+                <div class="sport-icon-v3 favorite-nav-icon-v3"></div>
+                <p>{{'Favorite games'|translate}}</p>
+                <div class="sport-games-count-v3">
+                    <span ng-show="myGames.length">{{myGames.length}}</span>
+                </div>
+                <div class="arrow-view-v3"></div>
+            </div>
+
+
+            <div class="region-item-row-v3">
+                <div class="region-items-box">
+
+                    <div class="full-region-info-v3">
+
+                        <div class="games-list-nav-v3">
+
+                            <div class="games-list-mini-view-v3">
+                                <div class="competition-view-v-3">
+                                    <div class="single-game-item-v3 {{game.id === activeGameId && $location.path() !== '/dashboard/' ? 'active' : ''}}"
+                                        ng-repeat="game in leftMenuFavorites track by game.id"
+                                         ng-click="selectFavoriteGame(game)"
+                                         ng-show="myGames.indexOf(game.id) !== -1 && (!$root.multiViewLiveOpenedGames || $root.multiViewLiveOpenedGames.indexOf(game.id) === -1)"
+                                    >
+                                        <div class="team-name-1-v3">
+                                            <p>{{::game.team1_name}}</p>
+                                            <span ng-if="game.type == 1 && (game.info.score1 != undefined)">{{game.info.score1}}</span>
+                                        </div>
+                                        <div class="team-name-1-v3">
+                                            <p>{{::game.team2_name ? game.team2_name : ''}}</p>
+                                            <span ng-if="game.type == 1 && (game.info.score1 != undefined)">{{game.info.score2}}</span>
+                                        </div>
+                                        <div class="game-info-mini-v3">
+                                            <p>
+                                                <span ng-show="game.type === 1">{{game.info.current_game_state|convertSetName:game.sport.alias|translate}}</span>
+                                                <span ng-show="game.type !==1">{{game.start_ts|formatDate:'full':null:env.timeFormat}}</span>
+                                                <span ng-show="game.type === 1" trans="attr-only" title="Game time">&nbsp;{{getCurrentTime(game.info.current_game_time)}}</span>
+                                                <i class="blocked-icon-v3" ng-show="(!(game.events_count || game.markets_count) || game.is_blocked)"></i>
+                                            </p>
+                                            <div class="game-info-icons-v3">
+                                                <div class="icon-separator-v3 favorite {{myGames.indexOf(game.id) !== -1 ? 'active' : ''}}"
+                                                     ng-click="toggleGameFavorite(game); $event.stopPropagation()"
+                                                ></div>
+                                                <div class="icon-separator-v3 market-count-v3" trans="attr-only" title="Number of markets">
+                                                    <span>+{{game.markets_count}}</span>
+                                                </div>
+                                                <div class="icon-separator-v3 video" ng-show="game.video_id && conf.videoEnabled"></div>
+                                                <!--<div class="icon-separator-v3 tv"></div>-->
+                                                <div class="icon-separator-v3 statistic" ng-click="openStatistics(game);$event.stopPropagation();" ng-show="conf.enableH2HStat && game.is_stat_available" title="{{'statistic'|translate}}"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </li>
+    </ul>
+</div>

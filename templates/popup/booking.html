@@ -1,0 +1,53 @@
+<style>@page {size: auto;margin: auto;}.body-wrapper {min-width: 100%}</style>
+<div  ng-controller="betPrint" ng-init="printBetEvent()">
+   <div class="print-info-b" ng-if="betData.viewType===2">
+    <table class="booking-bet-print-table">
+        <tr>
+            <td>
+                <div class="logo-mini-print"><img ng-src="./skins/{{conf.skin}}/images/logo.png" onload="print()"></div>
+            </td>
+            <td>
+                <div class="all-bet-inform">
+                    <ul>
+                        <li trans ng-if="betData.betType===1">Single</li>
+                        <li trans ng-if="betData.betType===2">Express</li>
+                        <li ng-if="betData.betType===3"><span trans>System</span> {{betData.sysVal}}/{{betData.bets.length}}</li>
+                        <li trans ng-if="betData.betType===4">Chain</li>
+                        <li>Bet ID: {{betData.bookId}}</li>
+                    </ul>
+                </div>
+            </td>
+            <td>
+                <div class="qr-code-b" barcode-generator="{{betData.bookId}}" ></div>
+            </td>
+        </tr>
+<!--        <tr>
+            <td colspan="3" ng-if="betData.amount">
+                <h1>{{betData.amount}}</h1>
+            </td>
+        </tr>-->
+
+        <tr ng-repeat="betEvent in betData.bets">
+            <td colspan="3">
+                <div class="info-separator-b">
+                    <ul>
+                        <li>{{betEvent.title}}</li>
+                        <li><span trans>Pick: </span> {{betEvent.marketName}} / {{betEvent.pick}} <span ng-if="betEvent.isLive">(LIVE)</span></li>
+                    </ul>
+                </div>
+            </td>
+        </tr>
+    </table>
+    </div>
+    <div class="booking-popup" ng-if="betData.viewType===1">
+
+        <div class="info-booking">
+            <div class="booking-logo">
+                <img  ng-src="skins/{{conf.skin}}/images/{{conf.bookingLogoUrl}}" onload="print()" alt="">
+            </div>
+            <p ng-bind="betData.message"></p>
+            <h1 ng-bind="betData.bookId"></h1>
+        </div>
+    </div>
+
+</div>

@@ -1,0 +1,75 @@
+<div ng-controller="euro88PaymentsCtrl" ng-init="getData('GetActivePaymentMessage', '1');">
+    <div class="form-sign-in">
+        <div class="text-payment-contain">
+            <div class="payment-text-euro">
+                <!--put here description of payment -->
+            </div>
+            <div class="euro-v-payment">
+                <ul>
+                    <li>
+                        <div class="payment-euro8-form">
+                            <input type="text"  comma="number"  comma-enable={{conf.enableCommaSeparateNumber}} placeholder="{{'enter amount here' | translate}}" value="" prevent-input="[^0-9]+"  required="required" ng-model="paymentSum">
+                            <button disabled>{{ profile.currency_name|currency }}</button>
+                        </div>
+                    </li>
+                    <li ng-repeat="item in sumsList">
+                        <div class="other-b-payment">
+                            <button ng-click="increaseSum(item.value);">{{ item.name }}</button>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="other-b-payment">
+                            <button ng-click="paymentSum = ''" trans>Clear</button>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            <div class="other-b-deposit">
+                <button ng-disabled="!paymentSum" ng-click="getData('CreatePaymentMessage', '1');" trans>Withdraw</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="title-euro-deposit">
+        <h5><a ng-click="getData('GetActivePaymentMessage', '1');" trans>Payment Requests Withdrawal</a></h5>
+        <table ng-show="GetActivePaymentMessage && GetActivePaymentMessage.status !== 'none'">
+            <tr>
+                <td>
+                    <div class="name-refresh" ng-click="getData('GetActivePaymentMessage', '1');">
+                        <p><span trans>Date</span></p>
+                    </div>
+                </td>
+                <td>
+                    <p trans>Amount</p>
+                </td>
+                <td><p trans>Status</p></td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="more-info-payment-euro">
+                        <span>{{ GetActivePaymentMessage.date }}</span>
+                        <p ng-bind-html="GetActivePaymentMessage.msg"></p>
+                        <div ng-show="GetActivePaymentMessage.canReply === 'yes'" class="other-b-deposit" ng-click="getData('ConfirmPaymentMessage', '1', GetActivePaymentMessage.mID);">
+                            <button trans>Confirm</button>
+                        </div>
+                    </div>
+                </td>
+                <td>
+                    <p>{{ GetActivePaymentMessage.eamount | number:conf.balanceFractionSize }}</p>
+                </td>
+                <td><p>{{ GetActivePaymentMessage.msgstatus }}</p></td>
+            </tr>
+        </table>
+        <div ng-if="profile.currency_name === 'KRW'" ng-show="!GetActivePaymentMessage || GetActivePaymentMessage.status === 'none'" class="payment-default-text-b">
+            <ul class="europayment-payment-default-text-b">
+                <li trans>1. The minimum withdrawal amount 10,000 KRW.</li>
+                <li trans>2. Withdrawal can only be made from registered accounts.</li>
+                <li trans>3. NBA, basketball Korea, South Korea Volleyball ended after the withdrawal takes about one hour.</li>
+                <li trans>4. After three days of each month cash back debit payments will be given which will take approximately two hours.</li>
+                <li trans>5. If you want a quick withdrawal, please use the above time away.</li>
+            </ul>
+        </div>
+    </div>
+
+    <vbet-loader ng-show="requestInProcess"></vbet-loader>
+</div>

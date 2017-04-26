@@ -1,0 +1,102 @@
+<div class="extended-reg-j" ng-controller="RegistrationController as regCtrl">
+    <div ng-show="!registration.complete && !registration.failed" ng-init="regFormInit()">
+        <form name="registerform" class="registration-form" novalidate="novalidate" id="simplified-reg-form">
+            <h1 trans>Informations personnellesd - Personal information</h1>
+            <table>
+                <tr>
+                    <td>
+                        <h2 trans>Personal information</h2>
+                        <article>
+                            <ul>
+                                <li ng-repeat="regItem in RegConfig.leftCol track by $index" class="field-separator">
+                                    <ng-include src="'skins/vbet.com/templates/registration-fields-fr.html'"></ng-include>
+                                </li>
+                            </ul>
+                        </article>
+                    </td>
+                    <td>
+                        <h2 trans>Connection / logon information</h2>
+                        <article>
+                            <ul>
+                                <li ng-repeat="regItem in RegConfig.rightCol track by $index" class="field-separator">
+                                    <ng-include src="'skins/vbet.com/templates/registration-fields-fr.html'"></ng-include>
+                                </li>
+                            </ul>
+
+                        </article>
+                    </td>
+                    <td>
+                        <h2 trans>Bank information</h2>
+                        <article>
+                            <p trans>Thank you for entering your IBAN. It is used only for the payment of winnings.</p>
+
+                            <ul>
+                                <ul>
+                                    <li ng-repeat="regItem in RegConfig.bankCol track by $index"
+                                        class="field-separator">
+                                        <ng-include src="'skins/vbet.com/templates/registration-fields-fr.html'"></ng-include>
+                                    </li>
+                                </ul>
+                            </ul>
+                            <hr>
+                            <ul class="promo-agree-block-j">
+                                <p trans>I agree to receive the registration bonus, special offers and Vbet.fr
+                                    information.</p>
+                                <li>
+                                    <label>
+                                        <div class="error-wrap-j">
+                                            <input type="checkbox">
+
+                                            <p trans>Via e-mail</p>
+                                        </div>
+                                    </label>
+                                </li>
+                                <li>
+
+                                    <label>
+                                        <div class="error-wrap-j">
+                                            <input type="checkbox">
+
+                                            <p trans>Via SMS</p>
+                                        </div>
+                                    </label>
+                                </li>
+                            </ul>
+                            <hr>
+                            <label class="age-agree-j">
+                                <div class="error-wrap-j" ng-class="{'error': formSubmited && registerform.agree.$error.required}">
+                                    <input ng-model="registrationData.agree" type="checkbox" name="agree" required>
+
+                                    <span trans>I agree to all</span>
+                                    <a ng-if="!conf.registration.termsSlug" ng-click="openTC()">Terms &amp; Conditions</a>
+                                    <a ng-controller="cmsPagesCtrl" ng-if="conf.registration.termsSlug" ng-click="openHelpPage(conf.registration.termsSlug, 'footer');$event.stopPropagation();">Terms &amp; Conditions</a>
+                                    <span ng-show="conf.registration.minimumAllowedAge==18" trans>and I am over 18 years of age and have read and accepted the general terms and conditions.</span>
+                                    <span ng-show="conf.registration.minimumAllowedAge==21" trans>and I am over 21 years of age and have read and accepted the general terms and conditions.</span>
+                                </div>
+
+                                <div class="form-error-text"
+                                     ng-show="formSubmited && registerform.agree.$error.required">
+                                    <div class="error-icon-f"></div>
+                                    <p trans ng-show="formSubmited && registerform.agree.$error.required">You need to
+                                        confirm the agreements.</p>
+                                </div>
+                            </label>
+                            <hr>
+                            <button class="submit-but-j" ng-click="formSubmited = true; register();" ng-class="{'loading':registration.busy}" disabled="true" ng-disabled="registration.busy" trans>Open my account</button>
+                        </article>
+                    </td>
+                </tr>
+            </table>
+        </form>
+    </div>
+
+    <div class="popup-layout-registration registration-ok" ng-if="registration.complete">
+        <div ng-init="registrationFinishDialog('Registration complete.','Info','info')"></div>
+    </div>
+
+    <div class="popup-layout-registration registration-failed" ng-if="registration.failed">
+        <div ng-init="registrationFinishDialog('Registration failed due to technical error.','Error','error')"></div>
+    </div>
+
+
+</div>

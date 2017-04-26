@@ -1,0 +1,36 @@
+<div class="fixed-element-parent">
+    <div class="game-list-compitishion outright" fixonscroll ignore-ie="true" auto-positon="top"  scrollable-area-id="asianView" header-id="main-header-container">
+        <table class="outright-tamplate sport">
+            <tr>
+                <td class="big-row"><div class="info-bl"><p><i class="icon-sport-asia" ng-class="selectedSport.alias"></i> <span ng-bind="selectedSport.name"></span></p></div></td>
+                <td class="event-title-asia"><div class="info-bl"><p trans>Event</p></div></td>
+                <td class="outiright-odds-asia"><div class="info-bl"><p trans>Odds</p></div></td>
+            </tr>
+        </table>
+    </div>
+</div>
+<div class="asian-separator-container-b" ng-repeat="competitions in centerData.competitions track by $index">
+    <div ng-repeat="competition in competitions|limitTo:conf.asian.competitionsPerPage:(selectedPage*conf.asian.competitionsPerPage) track by $index" class="game-list-compitishion" ng-class="{closed: collapedCompetitions[competition.id]}">
+        <div class="name-chempionship-asia" ng-click="toggleCompetition(competition.id)">
+            <h3 ng-bind="(competition.name)+': '+(competition.games[0].markets['OUTRIGHT'][0].name ? competition.games[0].markets['OUTRIGHT'][0].name : '')"></h3>
+        </div>
+        <table class="outright-tamplate" ng-repeat="game in competition.games" ng-if="!collapedCompetitions[competition.id]">
+            <tr ng-repeat="event in (game.markets['OUTRIGHT'][0].events || (game.markets|firstElement).OUTRIGHT[0].events)" ng-click="bet(event, game.markets['OUTRIGHT'][0], game)">
+                <td class="sport-outright date" >
+                    <div class="info-bl" ng-show="$index === 0">
+                        <p><span ng-bind="game.start_ts|formatDate:(conf.layoutTimeFormat.asian || 'D/MM')"></span> <span ng-bind="game.start_ts|formatDate:'hour':null:env.timeFormat"></span></p>
+                    </div>
+                </td>
+                <td class="event-title-asia"><div class="info-bl"><p ng-bind="event.name"></p></div></td>
+                <td class="outiright-odds-asia asian-market-overflow-j">
+                    <div class="asian-market-wrap-j"
+                         ng-class="{'locked': (event.price | oddConvert:'decimal') == 1 || game.is_blocked, up: event.price_change == '1', down: event.price_change == '-1', 'active': isEventInBetSlip(event)}">
+                        <div class="asian-market-j"> 
+                            <div class="asian-market-cell-j odd-container-j" ng-bind="event.price|oddConvert:env.oddFormat:null:'OUTRIGHT'"></div>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>

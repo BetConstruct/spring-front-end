@@ -1,0 +1,299 @@
+/*--- livegame widget styles --- */
+.body-wrapper {
+  &.widgetlivegame, &.widgeteuro2016, &.widgetlastminutesbets, &.widgetbetnow, &.widgetnews, &.widgetpopulargames, &.widgetfeaturedgames {
+    .contain-header, .footer-group {
+      display: none;
+    }
+  }
+}
+.body-wrapper.widgetlivegame, .body-wrapper.widgetpopulargames, .body-wrapper.widgetlastminutesbets,
+.body-wrapper.widgetbetnow,
+.body-wrapper.widgetnews,
+.body-wrapper.widgetlivegame .contain-gameing,
+.body-wrapper.widgetlivegame .gameing-wrapper{
+  min-width: 0;
+}
+.body-wrapper.widgetlivegame.classic .centr-market-contain{
+  @media screen and (max-width: 990px) {
+    min-width: 0;
+  }
+}
+.body-wrapper.widgetlivegame .centr-market-contain,
+.body-wrapper.widgetlivegame .game-contain-j{
+  padding: 0;
+  cursor: default;
+}
+.body-wrapper.widgetlivegame .centr-market-contain .scroll-contain{
+  width: 100%;
+  height: 100%;
+  min-width: 0;
+}
+.body-wrapper.widgetlivegame  .gameing-wrapper,
+.body-wrapper.widgetfeaturedgames .featured-game-list-b {
+  margin: 0;
+  padding: 0;
+  top: 0;
+}
+.body-wrapper.widgetlivegame .live-slide-widget{
+  float: left;
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+.body-wrapper.widgetlivegame .no-widget-games{
+  float: left;
+  width: 100%;
+  color: $text-palette-4;
+  font-size: 18px;
+  text-align: center;
+  position: absolute;
+  top: calc( 50% - 20px );
+}
+.body-wrapper.widgetlivegame .live-slide-widget > span{
+  position: absolute;
+  width: 30px;
+  height: 20px;
+  top: 58px;
+  z-index: 999;
+  color: $text-palette-1;
+  background: $skin-palette-11;
+  text-align: center;
+  font: 12px/20px icomoon;
+  opacity: 0.3;
+  transform: scale(1,1);
+  -webkit-transform: scale(1,1);
+  transition: opacity 300ms ease,transform 300ms ease;
+}
+.body-wrapper.widgetlivegame .live-slide-widget:hover > span,
+.body-wrapper.widgetlivegame .live-slide-widget:hover > span:hover{
+  opacity: 0.8;
+  transform: scale(1,1.3);
+  -webkit-transform: scale(1,1.3);
+}
+.body-wrapper.widgetlivegame .live-slide-widget .left-slide{
+  left: 0;
+  &:before{
+    content: "\e677";
+  }
+}
+.body-wrapper.widgetlivegame .live-slide-widget .right-slide{
+  right: 0;
+  &:before{
+    content: "\e67a";
+  }
+}
+/*.body-wrapper.widgetlivegame .live-slide-widget > ng-include{
+  cursor: default;
+}*/
+.body-wrapper.widgetlivegame.classic .scroll-contain{
+  position: fixed;
+  /*overflow: hidden;*/
+  @media screen and (max-width: 990px){
+    overflow-x: hidden;
+    overflow-y: auto;
+  }
+}
+.body-wrapper.widgetlivegame .game-info .game-control .statistics-toggle.hide-stats-multiview{
+  height: 0;
+  padding: 0;
+  overflow: hidden;
+}
+.body-wrapper.widgetlivegame .scroll-contain .scroll-j-scroll {
+  /*overflow-x: hidden;
+  overflow-y: auto;*/
+  overflow: inherit;
+}
+.body-wrapper.widgetlivegame .live-game-container .game-info .unpin-button{
+  display: none;
+}
+.body-wrapper.widgetlivegame .fav-markets-contain-wrapper .mini-market-b{
+  float: left;
+}
+.body-wrapper.widgetlivegame .mini-market-left{
+  width: 100%;
+}
+.body-wrapper.widgetlivegame .mini-market-right,
+.body-wrapper.widgetlivegame .mini-market-left .mini-market-b {
+  display: none;
+}
+.body-wrapper.widgetlivegame .mini-market-b:first-of-type{
+  display: inline-block;
+}
+.body-wrapper.widgetlivegame {
+  .statistics-toggle.flip-contain .flip-card.flipped-multivew-0 .timeline-container, .statistics-toggle.flip-contain .flip-card.flipped-multivew-0 .back,
+  .statistics-toggle.flip-contain .flip-card.flipped-multivew-1 .front, .statistics-toggle.flip-contain .flip-card.flipped-multivew-1 .timeline-container,
+  .statistics-toggle.flip-contain .flip-card.flipped-multivew-2 .front, .statistics-toggle.flip-contain .flip-card.flipped-multivew-2 .back {
+    will-change: transform;
+    -webkit-transform: rotateX(90deg);
+    transform: rotateX(90deg);
+    -webkit-transform-origin: 50% 100%;
+    transform-origin: 50% 100%;
+    opacity: 0;
+  }
+  .statistics-toggle.flip-contain .flip-card.flipped-multivew-1 .back{
+    will-change: transform;
+    -webkit-transform: rotateX(0deg);
+    transform: rotateX(0deg);
+    opacity: 1;
+  }
+}
+.body-wrapper.widgetpopulargames .wrapper-contein, 
+.body-wrapper.widgeteuro2016 .wrapper-contein, 
+.body-wrapper.widgetnews .wrapper-contein, 
+.body-wrapper.widgetlastminutesbets .wrapper-contein{
+  padding: 0;
+}
+.body-wrapper.widgeteuro2016 .play-off-list-wrapper {
+  margin: 0;
+  min-height: 100vh;
+  background: none;
+}
+.body-wrapper.widgetpopulargames .last-minute-bets-j, .body-wrapper.widgetlastminutesbets .last-minute-bets-j {
+  margin: 0;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+  .lmb-table-wrap-j {
+    overflow: visible;
+    height: auto;
+    li.active {
+      background: $hero-color;
+      box-shadow: none;
+      .market-info-b span {
+        color: set-color($hero-color);
+      }      
+      *:before, *:after {
+        color: set-color($hero-color);
+      }
+    }
+  }
+}
+.body-wrapper.widgetbetnow .title-b-widget {
+  pointer-events: none;
+  .closed-open-arrow {
+    display: none;
+  }
+}
+.widgetbetnow .wrapper-contein {
+  padding: 0;
+  .md-progress-circular {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin: -50px;
+  }
+}
+.body-wrapper.widgetnews .news-block-section .nav-news-sport {
+  width: 100%;
+}
+.body-wrapper.widgetnews .news-block-section {
+  width: 100%;
+  min-height: inherit;
+}
+.body-wrapper.widgetnews .news-block-section .block-news-preview .news-list:before {
+  display: none;
+}
+.body-wrapper.widgetnews {
+  .news-block-section .block-news-preview {
+    margin: 0;
+    border: 0;
+  }
+  .news-block-section .block-news-preview .news-img-block {
+    height: 300px;
+    box-shadow: 0 2px 0 $skin-palette-12;
+  }
+  .news-block-section .block-news-preview .news-list {
+    height: 300px;
+    margin: 0;
+    position: relative;
+    > ul {
+      width: calc(100% - 5px);
+      padding-bottom: 40px;
+    } 
+  }
+  .news-block-section .block-news-preview .all-news-link a {
+    padding: 12px 0;
+    box-shadow: 0 2px 0 $skin-palette-12;
+    width: calc(100% - 22px); 
+    @media screen and (-webkit-min-device-pixel-ratio:0) {
+      width: calc(100% - 9px); 
+    }
+    background: $skin-palette-10;
+  }
+  .news-block-section .block-news-preview .news-list ul li {
+    background: lighten( desaturate( $skin-palette-10, 7 ), 4 );
+    border-bottom-color: $skin-palette-11;
+  }
+  .news-block-section .block-news-preview .news-list ul li p.date-news-info {
+    color: $text-palette-4;
+  }
+  .news-block-section .block-news-preview .news-list ul li p.news-text-inform {
+    color: $text-palette-3;
+  }
+  .news-block-section .block-news-preview .news-list ul li.active-news {
+    background: $skin-palette-12;
+  }
+  .news-block-section .block-news-preview .news-img-block p {
+    background: rgba(lighten( desaturate( $skin-palette-10, 7 ), 4 ), 0.9);
+  }
+  .news-block-section .block-news-preview a {
+    color: set-color(lighten( desaturate( $skin-palette-10, 7 ), 4 ), #000000, #f3f3f5);
+  }
+  .nav-news-sport ul li {
+    transition: box-shadow 250ms;
+  }
+  .nav-news-sport ul li a {
+    color: $text-palette-4;
+    transition: color 250ms;
+    &:hover {
+      color: $text-palette-3;
+    }
+  }
+  .nav-news-sport ul li h3 {
+    color: $text-palette-4;
+  }
+  .nav-news-sport ul .last-item a {
+    background: desaturate( adjust-hue( $skin-palette-10, 5deg ), 4 );
+  }
+  .nav-news-sport ul .last-item .contein-games {
+    right: 10px;
+    max-height: calc(100vh - 72px);
+    overflow-y: auto;
+    overflow-x: hidden;
+    width: 320px;
+  }
+  .spor-news-nav-contein {
+    min-width: 100%;
+    height: 60px;
+  }
+  .news-sport-contain {
+    width: calc(100% - 100px);
+    height: 60px;
+  }
+  .nav-news-sport > ul > .last-item > a {
+    font-size: 0;
+    &:before {
+      content: "More";
+      font-size: 14px;
+    }
+  }
+  .news-block-section .block-news-preview .news-img-block .news-slide > a {
+    background-size: cover;
+    background-position: center center;
+  }
+  .news-block-section .block-news-preview .news-img-block {
+    width: 60% !important;
+    height: calc(100vh - 60px);
+  }
+  .news-block-section .block-news-preview .news-list {
+    width: 40% !important;
+    height: calc(100vh - 60px);
+  }
+  .all-news-link {
+    width: 40% !important;
+  }
+  .news-block-section .block-news-preview .news-img-block p {
+    width: 100% !important; 
+    box-sizing: border-box;
+  }
+}

@@ -1,0 +1,259 @@
+$delete-cache: '?v=' + random(666);
+
+$hero-color: #a61f67 !default;
+$brand-color-1: #1a7051 !default;
+$brand-color-2: #ac8336 !default;
+
+$vbet-colors: false !default;
+@if $vbet-colors == true {
+  $skin-color: #1e2639 !global !default;                  $text-color: #1e2639 !global !default;
+} @else {
+  $skin-color: #252525 !global !default;                  $text-color: #252525 !global !default;
+}
+
+$white-skin: false !global !default;                      $white-default: $white-skin !default;
+
+$disable-hero-color-sc: false, white !default;
+$disable-brand-color-1-sc: false, white !default; 
+$disable-button-bg-sc: false, white !default; 
+$disable-brand-color-2-sc: false, white !default;
+
+// Skin colors
+$skin-palette-1: #ffffff !default;                                                           //#ffffff;
+$skin-palette-2: lighten( desaturate( adjust-hue( $skin-color, 18deg ), 22 ), 79 ) !default; //#f3f3f5;
+$skin-palette-3: lighten( desaturate( adjust-hue( $skin-color, 2deg ), 21 ), 61 ) !default;  //#c2c5cd;
+$skin-palette-4: lighten( desaturate( adjust-hue( $skin-color, 2deg ), 22 ), 36 ) !default;  //#7b8191;
+$skin-palette-5: lighten( desaturate( $skin-color, 18 ), 19 ) !default;                      //#505767;
+$skin-palette-6: lighten( desaturate( $skin-color, 17 ), 12 ) !default;                      //#3f4553;
+$skin-palette-7: lighten( desaturate( adjust-hue( $skin-color, 3deg ), 16 ), 4 ) !default;   //#2e323e;
+$skin-palette-8: darken( desaturate( adjust-hue( $skin-color, 4deg ), 11 ), 1 ) !default;    //#212532;
+$skin-palette-9: lighten( $skin-color, 4 ) !default;                                         //#242e45;
+$skin-palette-10: $skin-color !default;                                                      //#1e2639;
+$skin-palette-11: darken( adjust-hue( $skin-color, 4deg ), 4 ) !default;                     //#171c2c;
+$skin-palette-12: darken( saturate( adjust-hue( $skin-color, 4deg ), 1 ), 7 ) !default;      //#121623;
+$skin-palette-13: #000000 !default;
+
+$text-palette-1: #ffffff !default;                                                           //#ffffff;
+$text-palette-2: lighten( desaturate( adjust-hue( $text-color, 18deg ), 22 ), 79 ) !default; //#f3f3f5;
+$text-palette-3: lighten( desaturate( adjust-hue( $text-color, 2deg ), 21 ), 61 ) !default;  //#c2c5cd;
+$text-palette-4: lighten( desaturate( adjust-hue( $text-color, 2deg ), 22 ), 36 ) !default;  //#7b8191;
+$text-palette-5: lighten( desaturate( $text-color, 18 ), 19 ) !default;                      //#505767;
+$text-palette-6: lighten( desaturate( $text-color, 17 ), 12 ) !default;                      //#3f4553;
+$text-palette-7: lighten( desaturate( adjust-hue( $text-color, 3deg ), 16 ), 4 ) !default;   //#2e323e;
+$text-palette-8: darken( desaturate( adjust-hue( $text-color, 4deg ), 11 ), 1 ) !default;    //#212532;
+$text-palette-9: lighten( $text-color, 4 ) !default;                                         //#242e45;
+$text-palette-10: $text-color !default;                                                      //#1e2639;
+$text-palette-11: darken( adjust-hue( $text-color, 4deg ), 4 ) !default;                     //#171c2c;
+$text-palette-12: darken( saturate( adjust-hue( $text-color, 4deg ), 1 ), 7 ) !default;      //#121623;
+$text-palette-13: #000000 !default;                                                          //#000000;
+$text-palette-14: lighten( desaturate( adjust-hue( $text-color, 5deg ), 16 ), 52 ) !default; //#000000;
+$text-palette-15: lighten( desaturate( adjust-hue( $text-color, 4deg ), 23 ), 32 ) !default; //#000000;
+
+// Sportsbook 
+$classic-skinning-color: $skin-palette-11 !default;  // #171c2c
+$market-title-color: $skin-palette-7 !default;
+$market-active-title-color: lighten( desaturate( adjust-hue( $market-title-color, -1deg ), 1 ), 11 ) !default;
+$market-active-bg: $hero-color !default;
+$classic-market-background: lighten( desaturate( $classic-skinning-color, 11 ), 3 ) !default;
+$classic-market-hover-background: lighten( desaturate( adjust-hue( $classic-market-background, -2deg ), 2 ), 10 ) !default;
+$classic-market-active-background: $hero-color !default;
+$classic-market-group-background: lighten( desaturate( adjust-hue( $classic-skinning-color, -1deg ), 16 ), 8 ) !default;
+$classic-prematch-market-active-background: lighten( desaturate( adjust-hue( $classic-market-group-background, -1deg ), 1 ), 11 ) !default;
+
+$modern-view-body-background: white !default;
+$modern-view-navigation: #F9F9F9 !default;
+$modern-view-game-background: white !default;
+$modern-view-game-bottom-borders: $hero-color !default;
+$modern-view-game-league-bottom-borders: black !default;
+$modern-view-game-league-colors: black !default;
+$modern-view-game-league-count-colors: black !default;
+$modern-view-game-market-name-colors: black !default;
+$modern-view-game-market-row-count-colors: #505767 !default;
+$modern-view-coeff-color: black !default; 
+$modern-view-market-item-color: black !default;
+$modern-view-news-block-palette: darken( $modern-view-game-background, 6 ) !default;
+$modern-view-betslip-palette: $modern-view-game-background !default;
+$modern-view-betslip-text-palette: #616161 !default; 
+
+$c16-sp: $classic-skinning-color !default;
+$c16-tp: $c16-sp !default;
+$c16-sp-1: #ffffff !default;
+$c16-sp-2: lighten( desaturate( adjust-hue( $c16-sp, 14deg ), 22 ), 83 ) !default; //#f3f3f5;
+$c16-sp-3: lighten( desaturate( adjust-hue( $c16-sp, -2deg ), 21 ), 65 ) !default; //#c2c5cd;
+$c16-sp-4: lighten( desaturate( adjust-hue( $c16-sp, 1deg ), 16 ), 56 ) !default;  //#a5aabc;
+$c16-sp-5: lighten( desaturate( $c16-sp, 20 ), 47 ) !default;                      //#8d92a3;
+$c16-sp-6: lighten( desaturate( adjust-hue( $c16-sp, -2deg ), 22 ), 40 ) !default; //#7b8191;
+$c16-sp-7: lighten( desaturate( adjust-hue( $c16-sp, -4deg ), 18 ), 23 ) !default; //#505767;
+$c16-sp-8: lighten( desaturate( adjust-hue( $c16-sp, -4deg ), 17 ), 16 ) !default; //#3f4553;
+$c16-sp-9: lighten( desaturate( adjust-hue( $c16-sp, -1deg ), 16 ), 8 ) !default;  //#2e323e;
+$c16-sp-10: lighten( desaturate( $c16-sp, 11 ), 3 ) !default;                      //#212532;
+$c16-sp-11: darken( saturate( $c16-sp, 1 ), 3 ) !default;                          //#121623;
+$c16-sp-12: #000000 !default;
+$c16-tp-1: #ffffff !default;
+$c16-tp-2: lighten( desaturate( adjust-hue( $c16-tp, 14deg ), 22 ), 83 ) !default; //#f3f3f5;
+$c16-tp-3: lighten( desaturate( adjust-hue( $c16-tp, -2deg ), 21 ), 65 ) !default; //#c2c5cd;
+$c16-tp-4: lighten( desaturate( adjust-hue( $c16-tp, 1deg ), 16 ), 56 ) !default;  //#a5aabc;
+$c16-tp-5: lighten( desaturate( $c16-tp, 20 ), 47 ) !default;                      //#8d92a3;
+$c16-tp-6: lighten( desaturate( adjust-hue( $c16-tp, -2deg ), 22 ), 40 ) !default; //#7b8191;
+$c16-tp-7: lighten( desaturate( adjust-hue( $c16-tp, -4deg ), 18 ), 23 ) !default; //#505767;
+$c16-tp-8: lighten( desaturate( adjust-hue( $c16-tp, -4deg ), 17 ), 16 ) !default; //#3f4553;
+$c16-tp-9: lighten( desaturate( adjust-hue( $c16-tp, -1deg ), 16 ), 8 ) !default;  //#2e323e;
+$c16-tp-10: lighten( desaturate( $c16-tp, 11 ), 3 ) !default;                      //#212532;
+$c16-tp-11: darken( saturate( $c16-tp, 1 ), 3 ) !default;                          //#121623;
+$c16-tp-12: #000000 !default;
+
+// Buttons
+$button-disable-bg: $skin-palette-6 !default;
+$button-border-color: $skin-palette-5 !default;
+
+// Typography
+$style-text: normal !default;
+$bold-text: bold !default;
+$custom-font: "" !default;
+$custom-font-file-name: $custom-font;
+@if ($custom-font != "") {
+  $custom-font: $custom-font + ",";
+}
+$font-f: #{$custom-font} Arial, Helvetica, sans-serif !default;
+
+
+
+// Backgrounds 
+$body-background: $skin-palette-11 !default;
+$homepage-background: $body-background !default;
+$jackpot-background: $body-background !default;
+$casino-background: $body-background !default;
+$classic-view-foreground: darken( saturate( $body-background, 1 ), 3 ) !default;
+$news-background: $body-background !default;
+
+// Footer header
+$header-first-line-background: $skin-palette-11 !default;
+$header-nav-line-background: lighten( desaturate( adjust-hue( $header-first-line-background, -2deg ), 7 ), 8 ) !default;
+$footer-background: $skin-palette-12 !default;
+$footer-payments-line-background: $skin-palette-11 !default;
+
+// UI elements
+$form-elements-bg: $skin-palette-10 !default;
+$form-elements-focus: $skin-palette-4 !default;
+$favorite-active-color: #B5D000 !default;
+$registration-fields-background: $skin-palette-7 !default;
+$registration-fields-background-border: $skin-palette-5 !default;
+$casino-play-button-bg: $brand-color-1 !default;
+$subheader-background: $skin-palette-8 !default;
+$scrollbar-width: 4px !default;
+$scroll-main-color: $skin-palette-8 !default;
+$scroll-main-thumb-color: $skin-palette-5 !default;
+
+$logo-bg:           url(../images/logo.png#{$delete-cache})  no-repeat 0 50% / contain !default;
+$logo-fix-bg:       url(../images/logo2.png#{$delete-cache}) no-repeat 0 50%  / contain !default;
+
+$logo-circle: $logo-bg !default;
+
+$logo-width:        243px !default;            $logo-height:               100px !default;
+$logo-fix-width:    156px !default;            $logo-fix-height:            36px !default;
+
+@if ($white-skin == true and $white-default == true) {
+  $c16-tp: #121623;
+  $text-color: #0d1423;
+  $classic-skinning-color:  darken( adjust-hue( $skin-color, 4deg ), 4 ) !default;
+  $text-palette-15: darken( desaturate( adjust-hue( $text-color, 4deg ), 23 ), 32 );
+  $text-palette-14: darken( desaturate( adjust-hue( $text-color, 5deg ), 16 ), 52 );    
+  $text-palette-13: #ffffff;
+  $text-palette-12: lighten( desaturate( adjust-hue( $text-color, 18deg ), 22 ), 79 );
+  $text-palette-11: lighten( desaturate( adjust-hue( $text-color, 2deg ), 21 ), 61 );
+  $text-palette-10: lighten( desaturate( adjust-hue( $text-color, 2deg ), 22 ), 36 );
+  $text-palette-9: lighten( desaturate( $text-color, 18 ), 19 );
+  $text-palette-8: lighten( desaturate( $text-color, 17 ), 12 );
+  $text-palette-7: lighten( desaturate( adjust-hue( $text-color, 3deg ), 16 ), 4 );
+  $text-palette-6: darken( desaturate( adjust-hue( $text-color, 4deg ), 11 ), 1 );
+  $text-palette-5: lighten( $text-color, 4 );
+  $text-palette-4: $text-color;
+  $text-palette-3: darken( adjust-hue( $text-color, 4deg ), 4 );
+  $text-palette-2: darken( saturate( adjust-hue( $text-color, 4deg ), 1 ), 7 );
+  $text-palette-1: #000000;
+  $c16-tp-12: #ffffff;
+  $c16-tp-11: darken( desaturate( adjust-hue( $c16-tp, 14deg ), 22 ), 83 );
+  $c16-tp-10: darken( desaturate( adjust-hue( $c16-tp, -2deg ), 21 ), 65 );
+  $c16-tp-9: darken( desaturate( adjust-hue( $c16-tp, 1deg ), 16 ), 56 );
+  $c16-tp-8: darken( desaturate( $c16-tp, 20 ), 47 );
+  $c16-tp-7: darken( desaturate( adjust-hue( $c16-tp, -2deg ), 22 ), 40 );
+  $c16-tp-6: darken( desaturate( adjust-hue( $c16-tp, -4deg ), 18 ), 23 );
+  $c16-tp-5: darken( desaturate( adjust-hue( $c16-tp, -4deg ), 17 ), 16 );
+  $c16-tp-4: darken( desaturate( adjust-hue( $c16-tp, -1deg ), 16 ), 8 );
+  $c16-tp-3: darken( desaturate( $c16-tp, 11 ), 3 );
+  $c16-tp-2: darken( saturate( $c16-tp, 1 ), 3 );
+  $c16-tp-1: #000000;
+  $body-background: white !default;
+  $homepage-background: $body-background !default;  
+  $button-border-color: rgba(0,0,0,0.3);
+  $button-disable-bg: rgba(0,0,0,0.2);
+  $scroll-main-color: #c2c5cd !global;
+  $scroll-main-thumb-color: #505767 !global;
+}  
+
+$asian-switch-odds-state-colors: false !default;
+$classic-switch-odds-state-colors: false !default;
+$custom-footer-sprite: false !default;
+$menu-padding: 0 $logo-width !default;
+$coeff-color-map: (
+  modern: red,
+  modern-hover: green,
+  modern-active: blue,
+
+  classic: #b6862e,
+  classic-hover: #e9ab04,
+  classic-active: set-color($hero-color),
+
+  homepage-last-minute-bets: #b6862e,
+  homepage-last-minute-bets-hover: #e9ab04,
+  homepage-last-minute-bets-active: set-color($hero-color),
+
+  overview-score: #DEC04F,
+
+  asian: red,
+  asian-hover: green,
+  asian-active: blue,
+
+  combo: red,
+  combo-hover: green,
+  combo-active: blue
+) !default; 
+
+@if variable-exists(coeff-color) {
+  $coeff-color-map: (
+    modern: $coeff-color,
+    modern-hover: $coeff-color,
+    modern-active: $coeff-color,
+
+    classic: $coeff-color,
+    classic-hover: $coeff-color,
+    classic-active: set-color($hero-color),
+
+    homepage-last-minute-bets: $coeff-color,
+    homepage-last-minute-bets-hover: $coeff-color,
+    homepage-last-minute-bets-active: set-color($hero-color),
+
+    overview-score: $coeff-color,
+
+    asian: $coeff-color,
+    asian-hover: $coeff-color,
+    asian-active: $coeff-color,
+
+    combo: $coeff-color,
+    combo-hover: $coeff-color,
+    combo-active: $coeff-color
+  );
+}
+
+$lcasino-games-pattern-bg: url(../../../images/backgrounds/new-card-pattern-j.png#{$delete-cache}) repeat 50% 0 !default;
+$colorized-social-icons: false !default; 
+$classic-prematch-group-title-active-bg: lighten( $c16-sp-7, 2) !default;
+$classic-view-background: darken( adjust-hue( $c16-sp-11, -18deg ), 2 ) !default;
+$promotion-open-background: #dcdcdc !default;
+$homepage-banners-size: cover;
+$header-lang-with-flag: false !default;
+$header-first-line-height: 52px !default;
+$header-nav-line-height: 42px !default;
+$subheader-height: 36px !default;
+$pages-with-full-width-header: (".sport", ".winninglimits", ".virtualsports", ".multiview", ".full-screen", ".livecalendar", ".statistics", ".financials", ".results", ".freebet", ".news", ".dashboard", ".overview", ".gameGDRdog6providerGDRexid400002", ".gameEDGcockfightproviderEDGexid155000") !default;
+$pages-with-full-width-header-background: (".livedealer",  ".external",  ".games", ".backgammon", ".belote", ".gameslanding", ".pokerklas ", ".poolbetting", ".fantasy", ".gameCSB1providerCSBexid152000", ".first_deposit_bonus", ".first_deposit_bonus_and_20_free_spins", ".poker") !default;

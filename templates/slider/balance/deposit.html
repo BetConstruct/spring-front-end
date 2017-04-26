@@ -1,0 +1,216 @@
+<!--Deposit-->
+<div class="register deposit" ng-controller="paymentsCtrl"  ng-init="init('deposit');">
+    <h4 ng-show="isProfilePartial" class="complite-info-register">
+        <p ng-init="msgs=('It is very important to keep your personal information up to date. Hence our request to you is to submit your personal information in My Profile ->|Personal Details|as soon as possible.'|translate).split('|')">
+            <span>{{msgs[0]}}</span>
+            <span ng-if="msgs[1]"><a ng-click="env.showSlider=true; env.sliderContent='settings';env.mixedSettingsPage='details'">{{msgs[1]}}</a></span>
+            <span ng-if="msgs[2]">{{msgs[2]}}</span>
+            <span ng-if="msgs[3]"><a ng-click="env.showSlider=true; env.sliderContent='settings';env.mixedSettingsPage='details'">{{msgs[3]}}</a></span>
+        </p>
+    </h4>
+    <div ng-show="isProfilePartial === false" class="form-contain deposit">
+        <h4>
+            <span trans>Deposit to main wallet</span><br />
+            <span trans>Select a payment method</span>
+        </h4>
+        <div class="depozit-block-icon">
+            <ul>
+                <li ng-repeat="paymentSystem in paymentConfig | orderBy:'order' track by $index"
+                    ng-class="{'active-deposit': $parent.selectedPaymentSystem==paymentSystem}"
+                    ng-show="paymentSystem.canDeposit">
+                    <div class="{{paymentSystem.name}}"><a class="paymentIcon {{paymentSystem.name}}" ng-click="$parent.selectedPaymentSystem.name !== paymentSystem.name && selectPaymentSystem(paymentSystem)">{{paymentSystem.name}} <span class="deposit-arrow"></span></a></div>
+                </li>
+            </ul>
+        </div>
+        <div ng-if="selectedPaymentSystem.depositIframe">
+            <iframe class="payment-iframe" ng-src="{{selectedPaymentSystem.depositIframe}}"></iframe>
+        </div>
+        <div ng-if="selectedPaymentSystem.customDepositTemplate" ng-include="getTemplate(selectedPaymentSystem.customDepositTemplate)"></div>
+        <form ng-model="depositFormDataData"  name="depositFormData" novalidate ng-show="!selectedPaymentSystem.customDepositTemplate">
+            <div class="form-sign-in {{selectedPaymentSystem.name}}-left" ng-class="{'single-column': !selectedPaymentSystem.depositFormFields.length && !showConfirmation && !showGetStatusForm && !paymentIsDone && !selectedPaymentSystem.hasBetShops}">
+                <div ng-show="selectedPaymentSystem.depositText" class="text-payment-contain">
+                    <p ng-bind-html="selectedPaymentSystem.depositText"></p>
+                </div>
+            </div>
+            <div class="form-sign-in {{selectedPaymentSystem.name}}-right status-message deposit-withdraw-fix-j" ng-if="showConfirmation">
+                <div class="text-deposit-contain">
+                    <p class="confirm-text" ng-if="selectedPaymentSystem.depositConfirmText" ng-bind-html="selectedPaymentSystem.depositConfirmText" trans></p>
+                    <p trans>Please confirm money transfer</p>
+                    <p><span trans>Amount: </span> <span class="amount">{{paymentAmount.deposit}} {{selectedPaymentSystem.customCurrency?(selectedPaymentSystem.customCurrency|translate):(currency_name|currency)}}</span></p>
+                </div>
+                <external-form  form-target="{{selectedPaymentSystem.stayInSameTabOnDeposit ? '_self' : '_blank'}}" params="externalFormParams" additional-fields="addFields" on-submit="confirmDeposit" button-caption="Confirm"></external-form>
+            </div>
+
+            <div class="form-sign-in {{selectedPaymentSystem.name}}-right status-message" ng-if="showGetStatusForm">
+                <div class="text-deposit-contain" ng-show="!busy && !getDepositStatusInProgress">
+                    <p >
+                        <span trans>Status:</span>
+                        <span ng-show="depositStatus === 'unknown'" trans>Unknown</span>
+                        <span ng-show="depositStatus === 'success'" trans>Success</span>
+                        <span ng-show="depositStatus === 'pending'" trans>Pending</span>
+                        <span ng-show="depositStatus === 'error'" trans>Failure</span>
+                    </p>
+                    <p ng-show="depositedAmount !== undefined && depositStatus === 'success'">
+                        <span trans>Deposit Amount</span> <span ng-bind="depositedAmount"></span>
+                    </p>
+                </div>
+                <vbet-loader ng-show="getDepositStatusInProgress || busy"></vbet-loader>
+                <external-form ng-show="!getDepositStatusInProgress && !busy" params="externalFormParams" additional-fields="addFields" on-submit="getDepositStatus" button-caption="Check"></external-form>
+            </div>
+
+            <div class="form-sign-in" ng-show="!showConfirmation && !paymentIsDone && (selectedPaymentSystem.depositFormFields.length > 0 || selectedPaymentSystem.hasBetShops)">
+                <div class="text-payment-contain">
+                    <div ng-if="selectedPaymentSystem.hasBetShops" ng-init="loadBetShops()">
+                        <ul>
+                            <li ng-repeat="city in selectedPaymentSystem.betShops.cities">
+                                <p class="bet-shop-city-name">{{city.name}}</p>
+                                <ul>
+                                    <li ng-repeat="shop in city.betshops">{{shop.address}}<i class="{{shop.type}}">{{shop.type}}</i> </li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div ng-repeat="field in selectedPaymentSystem.depositFormFields" ng-switch on="field.type" class="{{selectedPaymentSystem.name + '-' + field.name}}">
+                    <label ng-show="field.type != 'button' && !field.hideLabel">{{field.label|translate}}</label>
+                    <div ng-switch-when="button">
+                        <button ng-click="this[field.click]()">{{field.label}}</button>
+                    </div>
+                    <div ng-switch-when="text">
+                        <input name="{{field.name}}" ng-attr-id="{{field.id}}" ng-readonly="field.readonly" ng-model="$parent.$parent.depositFormData[field.name]" type="text" size="{{field.size}}" maxlength="{{field.maxlength}}" ng-required="field.required" prevent-input="{{field.restrict}}" allow-spaces="{{field.allowSpaces}}" ng-disabled="field.disabled" placeholder="{{field.placeholder}}" trans="attr-only">
+                    </div>
+                    <div ng-switch-when="dateMask">
+                        <input name="{{field.name}}" ui-mask="99/99/9999" ng-blur="$parent.$parent.depositFormData[field.name]=dateMaskFix($parent.$parent.depositFormData[field.name])" ng-attr-id="{{field.id}}" ng-readonly="field.readonly" ng-model="$parent.$parent.depositFormData[field.name]" type="text" size="{{field.size}}" maxlength="{{field.maxlength}}" ng-required="field.required" ng-disabled="field.disabled" placeholder="dd/mm/yyyy" trans="attr-only">
+                    </div>
+                    <div ng-switch-when="hidden" class="ng-hide">
+                        <input name="{{field.name}}" ng-attr-id="{{field.id}}" ng-model="$parent.$parent.depositFormData[field.name]" type="text" ng-hide="true">
+                    </div>
+                    <div ng-switch-when="password">
+                        <input name="{{field.name}}" ng-attr-id="{{field.id}}" ng-model="$parent.$parent.depositFormData[field.name]" type="password" size="{{field.size}}" maxlength="{{field.maxlength}}" ng-required="field.required">
+                    </div>
+                    <div ng-switch-when="email">
+                        <input name="{{field.name}}" ng-attr-id="{{field.id}}" ng-model="$parent.$parent.depositFormData[field.name]" type="email" size="{{field.size}}" ng-required="field.required">
+                    </div>
+                    <div ng-switch-when="number">
+                        <input name="{{field.name}}" id="numpad-{{field.name}}" numpad numpad-force ng-model="$parent.$parent.depositFormData[field.name]" type="number" size="{{field.size}}" min="{{field.min}}" max="{{field.max}}" ng-required="field.required">
+                    </div>
+                    <div class="select-block" ng-switch-when="country">
+                        <select name="{{field.name}}" ng-model="$parent.$parent.depositFormData[field.name]" ng-options="keyName as  country.name for (keyName, country) in countryCodes"></select>
+                    </div>
+
+
+
+                    <div class="select-block birthdayForm" ng-switch-when="day">
+                        <select name="{{field.name}}"
+                                day-selector
+                                month-model="$parent.$parent.depositFormData.month"
+                                year-model="$parent.$parent.depositFormData.year"
+                                options="days"
+                                ng-change="calculateAge()"
+                                ng-init="$parent.$parent.depositFormData.day = fieldBirthday.day[0] "
+                                ng-model="$parent.$parent.depositFormData.day"
+                                ng-options="item for item in days">
+
+                        </select>
+                    </div>
+
+                    <div class="select-block birthdayForm" ng-switch-when="month">
+                        <select
+                                name="{{field.name}}"
+                                ng-model="$parent.$parent.depositFormData.month"
+                                ng-change="calculateAge()"
+                                ng-init="$parent.$parent.depositFormData.month = fieldBirthday.month[0] "
+                                ng-options="item for item in fieldBirthday.month "
+                        >
+
+                        </select>
+                    </div>
+
+                    <div class="select-block birthdayForm" ng-switch-when="year" ng-init="fieldBirthdayYears()">
+                        <select
+                                name="{{field.name}}"
+                                ng-model="$parent.$parent.depositFormData.year"
+                                ng-change="calculateAge()"
+                                ng-init="$parent.$parent.depositFormData.year = fieldBirthday.year[50] "
+                                ng-options="item for item in fieldBirthday.year"
+                        >
+
+                        </select>
+                    </div>
+
+
+
+
+                    <div ng-switch-when="date">
+                        <div class="picker-contain">
+                            <div class="input-group" ng-click="openDatePicker(field.name, $event)">
+                                <input type="text" class="form-control" placeholder={{today}} datepicker-popup="dd/MM/yyyy" min-date="minDate" max-date="today"
+                                       ng-attr-id="{{field.id}}"
+                                       ng-model="$parent.$parent.depositFormData[field.name]" is-open="datePickers[field.name]"
+                                       datepicker-options="dateOptions"
+                                       disabled="disabled"
+                                       ng-required="true" close-text="Close"/>
+                                <span class="input-group-btn"><button type="button" class="btn btn-default date-view deposit-btn" ng-click="openDatePicker(field.name, $event)"><i class="date-p"></i></button></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="select-block" ng-switch-when="select">
+                        <select name="{{field.name}}" ng-model="$parent.$parent.depositFormData[field.name]"
+                                ng-init="$parent.$parent.depositFormData[field.name] = field.options[0].value;setInfo(field.options, $parent.$parent.depositFormData[field.name], 'depositText')"
+                                ng-change="setInfo(field.options, $parent.$parent.depositFormData[field.name], 'depositText')">
+                            <option ng-repeat="option in field.options" value="{{option.value}}" ng-selected="$first">{{option.text|translate}}</option>
+                        </select>
+                    </div>
+                    <div class="select-block" ng-switch-when="radio">
+                        <div ng-repeat="option in field.options">
+                            <input type="radio" name="{{field.name}}" ng-model="$parent.$parent.depositFormData[field.name]"  value="{{option.value}}" ng-checked="$first" ng-required="field.required && $first"><span>{{option.text|translate}}</span>
+                        </div>
+                    </div>
+                    <div class="text-payment-contain" ng-switch-when="html" ng-bind-html="field.html">
+                    </div>
+                    <div ng-switch-when="template">
+                        <ng-include src="getTemplate(field.path)"></ng-include>
+                    </div>
+                </div>
+            </div>
+
+            <div class="cont-deposit-button" ng-show="!showConfirmation && !paymentIsDone && !selectedPaymentSystem.onlyInfoTextOnDeposit">
+                <div class="button-sign" ng-show="selectedPaymentSystem && !selectedPaymentSystem.onlyInfoTextOnDeposit">
+                    <button id="deposit-button" class="button-sign" ng-hide="selectedPaymentSystem.hideDepositButton" trans ng-click="deposit()"
+                            ng-disabled="((!paymentAmount.deposit && selectedPaymentSystem.depositPrefilledAmount === undefined)|| busy) || ((selectedPaymentSystem.name == 'card' && !selectedPaymentSystem.enabledForCard) && depositFormData.pin_code === undefined) || userAge < conf.registration.minimumAllowedAge"
+                            ng-bind="(depositInProgress ? 'Start over' : ((selectedPaymentSystem.depositButtonCaption|translate) || 'Deposit'))|translate"></button>
+                    <div class="deposit-amount" ng-hide="selectedPaymentSystem.hideDepositButton || selectedPaymentSystem.hideDepositAmmount" ng-if="selectedPaymentSystem.depositPrefilledAmount === undefined">
+                        <label>
+                            <span trans>Deposit Amount</span>
+                            <span ng-hide="selectedPaymentSystem.customCurrency">({{currency_name|currency}})</span>
+                            <span ng-show="selectedPaymentSystem.customCurrency">{{selectedPaymentSystem.customCurrency|translate}}</span>
+                        </label>
+                        <input name="amount" id="numpad-forced" type="number" numpad numpad-force ng-model="paymentAmount.deposit" placeholder="enter amount here" min="{{paymentAmount.amountMinLimit}}" step="{{paymentAmount.amountMinLimit}}" required trans>
+
+                        <button ng-repeat="customAmount in depositCustomAmounts track by $index" ng-click="paymentAmount.deposit=customAmount">{{customAmount|number}}</button>
+
+                    </div>
+                </div>
+
+                <div class="button-sign" ng-if="selectedPaymentSystem.userConfirmationButton">
+                    <button class="button-sign" ng-click="confirmUser(depositFormData.user_confirmation_password)" trans>Confirm</button>
+                </div>
+
+            </div>
+            <div class="popup-bg-contain" ng-class="{'active': popupInfo}">
+                <div class="deposit-alert-contain">
+                    <div class="icon-delete"><a ng-click="popupInfo=null">Close</a></div>
+                    <div class="text-deposit-alert">
+                        <div class="popup-status-icon" ng-class="messageType||'info'"></div>
+                        <p>
+                            <span ng-bind="popupInfo"></span>
+                            <button class="message-box-ok-btn" ng-click="popupInfo=null" trans>OK</button>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<!--Deposit END-->

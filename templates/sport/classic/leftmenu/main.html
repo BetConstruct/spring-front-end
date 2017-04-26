@@ -1,0 +1,27 @@
+<div ng-controller="classicViewLeftController as menuCtrl" class="left-menu-contain" 
+     ng-class="{'mini': leftMenuClosed,'multiview-enabled': env.preMatchMultiSelection,'outright-selected': outrightSelected, 'alternative-games-layout' : conf.alternativeClassicGamesLayout, 'full-width': (conf.customSportsBook.enabled && !conf.customSportsBook.classic.showMarkets), 'video-and-animation': hideVideoAndAnimationBox && (openGame.last_event || (openGame.video_id&& conf.videoEnabled)), 'video-and-animation-opened': !hideVideoAndAnimationBox && (openGame.last_event || openGame.video_id) && !isVideoDetached}">
+    <div class="left-container-header-p">
+        <div class="title-menu-b">
+            <ng-include class="left-list-menu" src="getTemplate('templates/sport/classic/leftmenu/liveprematchbuttons.html')"></ng-include>
+            <ng-include src="getTemplate('templates/sport/classic/leftmenu/topbuttons.html')"></ng-include>
+        </div>
+    </div>
+    <div class="left-container-content-p">
+        <div class="old-classic-scroll-contain">
+            <div class="left-list-menu" id="sports-list-container" ng-class="{'live': env.live, 'prematch': !env.live, 'with-video-animation': conf.animationAndVideoOnLeft && (openGame.last_event || (openGame.video_id && conf.videoEnabled && !pinnedGames[openGame.id])) && (env.live || !virtualSportsSelected)}">
+
+
+                <vbet-loader ng-show="leftMenuLiveLoading"></vbet-loader>
+
+                <ul ng-show="!leftMenuLiveLoading" ng-class="{'regions-enabled': !liveFilters.disableRegions}">
+                    <ng-include src="getTemplate('templates/sport/classic/leftmenu/favorites.html')" class="left-menu-animate"></ng-include>
+                </ul>
+                <ul ng-controller="favoriteTeamController" ng-show="!leftMenuLiveLoading" ng-class="{'regions-enabled': !liveFilters.disableRegions}">
+                    <ng-include src="getTemplate('templates/sport/classic/leftmenu/live/main.html')" ng-show="env.live" class="left-menu-animate-live"></ng-include>
+                    <ng-include src="getTemplate('templates/sport/classic/leftmenu/prematch/main.html')" ng-show="!env.live" class="left-menu-animate-prematch"></ng-include>
+                </ul>
+                <h1 ng-show="((!leftMenuLiveSports.length && env.live) || (!leftMenuPrematchSports.length && !env.live)) && !leftMenuLiveLoading && !$root.myGames.length" class="now-games-menu" trans>No games found</h1>
+            </div>
+        </div>
+    </div>
+</div>

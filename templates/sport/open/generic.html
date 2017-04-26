@@ -1,0 +1,42 @@
+<div class="live-game-generic" ng-class="{'no-video-flash': !(conf.videoEnabled && game.video_id || game.has_animation) || (isVideoDetached && !game.has_animation), 'no-video-ie8': !game.video_id || isVideoDetached}">
+    <ul>
+        <li>
+            <p>
+                <span>{{ game.team1_name }}</span>
+            </p>
+
+        </li>
+        <li>
+            <div class="soccer-score">
+                {{ game.info.score1 ?  game.info.score1 : ''}}
+            </div>
+            <div class="team-coat" ng-show="game.info.extra.team1icon"><img ng-src="{{ game.info.extra.team1icon}}"></div>
+            <div class="team-form" ng-if="!game.info.extra.team1icon && conf.esportsGames.indexOf(game.sport.alias) === -1"><tshirt shorts="{{game.info.short1_color}}" shirt="{{game.info.shirt1_color}}"></tshirt></div>
+            <div class="team-form" ng-if="conf.esportsGames.indexOf(game.sport.alias) !== -1"><img ng-src="{{conf.teamLogosPath}}e/m/{{conf.GmsPlatform? Math.floor(game.team1_id / 2000) : Math.floor(game.team1_external_id / 2000)}}/{{conf.GmsPlatform? game.team1_id : game.team1_external_id}}.png" /></div>
+        </li>
+    </ul>
+    <ul>
+        <li>
+            <p>
+                <span>{{ game.team2_name ?  game.team2_name: '' }}</span>
+            </p>
+        </li>
+        <li>
+            <div class="soccer-score">
+                {{ game.info.score2 ?  game.info.score2 : ''}}
+            </div>
+            <div class="team-coat" ng-show="game.info.extra.team2icon"><img ng-src="{{ game.info.extra.team2icon}}"></div>
+            <div class="team-form" ng-if="!game.info.extra.team2icon && conf.esportsGames.indexOf(game.sport.alias) === -1"><tshirt shorts="{{game.info.short2_color}}" shirt="{{game.info.shirt2_color}}"></tshirt></div>
+            <div class="team-form" ng-if="conf.esportsGames.indexOf(game.sport.alias) !== -1"><img ng-src="{{conf.teamLogosPath}}e/m/{{conf.GmsPlatform?Math.floor(game.team2_id / 2000) : Math.floor(game.team2_external_id / 2000)}}/{{conf.GmsPlatform? game.team2_id : game.team2_external_id}}.png" /></div>
+        </li>
+    </ul>
+    <div class="add-info" ng-if="!!game.info.current_game_state">
+        {{ game.info.current_game_state|convertSetName:game.sport.alias|translate }}
+        <span>{{getCurrentTime(game.info.current_game_time)}}</span>
+    </div>
+</div>
+<div ng-show="(conf.videoEnabled && game.video_id && !isVideoDetached) || game.has_animation">
+    <div class="right-block-flash" id="game-monitor-{{ game.id }}">
+        <include-template template-path="templates/sport/open/player.html"></include-template>
+    </div>
+</div>

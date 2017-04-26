@@ -1,0 +1,13 @@
+<div class="game-events-contain-b">
+    <ul>
+        <li ng-repeat="event in market.correctScoreEvents track by $index">
+            <div class="small-title-event-b"></div>
+            <p>
+                <span>{{event.price|oddConvert:env.oddFormat}}</span>
+                <span>
+                    {{event.name}}
+                </span>
+            </p>
+         </li>
+    </ul>
+</div>

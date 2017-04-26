@@ -1,0 +1,85 @@
+<div ng-controller="mixedWinnersCtrl" ng-init="activeWinnersTab='betting'">
+    <div ng-controller="cmsPagesCtrl" class="contain-casino poker casino casino-slider-hide" ng-init="getCasinoBanners('bannerSlugs.casino-winners');">
+        <vbet-big-slider ng-if="casinoTopBanners" images="casinoTopBanners" link-click-handler="openCBannerLink"></vbet-big-slider>
+    </div>
+
+    <div class="winners-tab-nav-b">
+        <div class="center-separator-contain-b">
+            <ul>
+                <li ng-class="{active:activeWinnersTab=='betting'}" ng-click="activeWinnersTab='betting'" prevent-fast-click trans>Betting winnings</li>
+                <li ng-class="{active:activeWinnersTab=='casino'}" ng-click="activeWinnersTab='casino'" prevent-fast-click trans>Casino winnings</li>
+            </ul>
+        </div>
+    </div>
+    <div class="winner-contain-list-b">
+        <div ng-if="activeWinnersTab=='betting'" class="winner-list-wrapper-b" ng-init="getBetWinners();">
+            <div class="winner-contain-list-b">
+                <ul>
+                    <li class="winner-nickname-b" ng-if="!standardMode"></li>
+                    <li class="winner-multiple-sport-icon" ng-if="!standardMode"></li>
+                    <li class="winner-date-b" trans>Date</li>
+                    <li class="winner-betprice-b" trans>Bet</li>
+                    <li class="winning-size-b" trans>Winning</li>
+                </ul>
+                <center ng-if="winnersLoading"><vbet-loader></vbet-loader></center>
+
+
+                <ul ng-if="!winnersLoading && winners.sport.length == 0">
+                    <li align="center" trans>There are no winners yet</li>
+                </ul>
+                <ul ng-repeat="winner in winners.sport track by $index">
+                    <li class="winner-nickname-b" ng-if="!standardMode"><p>{{winner.username}}</p></li>
+                        <li class="winner-multiple-sport-icon" ng-if="!standardMode">
+                            <div ng-repeat="event in winner.events.event track by $index" class="icon-sport-view-contain" ng-class="event.sport_name"></div>
+                        </li>
+                        <li class="winner-date-b">{{winner.date}}</li>
+                        <li class="winner-betprice-b">{{winner.amount}} {{winner.currency}}</li>
+                        <li class="winning-size-b">{{winner.payment}} {{winner.currency}}</li>
+                </ul>
+            </div>
+        </div>
+
+        <div ng-if="activeWinnersTab=='casino'" class="casino-winner-list-j" ng-init="getCasinoWinners();">
+            <center ng-if="winnersLoading"><vbet-loader></vbet-loader></center>
+            <ul>
+                <li ng-if="!winnersLoading && winners.casino.length == 0" align="center" trans>There are no winners yet</li>
+
+                <li ng-repeat="winner in winners.casino track by $index">
+                    <div class="game-pic-j">
+                        <img ng-src="{{ winner.game.icon_2 }}">
+                    </div>
+                    <div class="klwin-info-j">
+                        <h3>{{winner.created_at}}</h3>
+                        <h1>{{winner.game.name}}</h1>
+                        <h2>{{winner.user_name}}</h2>
+                        <div class="klwintext-info-j" ng-bind-html="winner.desc|html"></div>
+                    </div>
+                </li>
+            </ul>
+            <div ng-if="false" class="load-more-news" ng-show="!noMoreNews">
+                <a ng-click="loadMoreNews()" ng-show="!newsAreLoading" class=""><p trans="">Load more</p><span></span></a>
+                <a trans="" class="loading-more ng-hide" ng-show="newsAreLoading">Loading</a>
+            </div>
+        </div>
+        <aside  >
+            <div ng-show="topFavoriteData" class="week-top-game-j">
+                <h1 ng-bind-html="topFavoriteData.title|html"></h1>
+                <a ng-href="{{ topFavoriteData.link }}">
+                    <img ng-src="{{ topFavoriteData.image }}"/>
+                </a>
+            </div>
+            <casino-biggest-winners title="Latest winners" template-url="templates/directive/casino-biggest-winners.html" limit="10"></casino-biggest-winners>
+            <div ng-show="bottomFavoriteData" class="right-banner-container">
+                <div class="buner-b ">
+                    <a ng-href="{{ bottomFavoriteData.link }}">
+                        <div>
+                            <img ng-src="{{ bottomFavoriteData.image }}">
+                        </div>
+                    </a>
+                </div>
+            </div>
+            <!--<a class="winners-club-block-j"></a> -->
+        </aside>
+
+    </div>
+</div>

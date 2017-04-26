@@ -1,0 +1,159 @@
+<div ng-switch="regItem.type">
+    <!-- INPUT TYPE TEXT -->
+    <label ng-switch-when="text"
+           class="{{regItem.classes}}">
+        <p><span ng-bind="regItem.title | translate"></span> <span class="hint" ng-if="regItem.required">*</span></p>
+        <div class="error-wrap-j" ng-class="{'error': (formSubmited || registerform[regItem.name].blur) && registerform[regItem.name].$invalid && showFieldsValidation}">
+            <div vb-html-compiler="<input type='text' name='{{regItem.name}}' ng-blur='registerform[regItem.name].blur=true' ng-model='registrationData[regItem.name]' placeholder='{{regItem.placeholder|translate}}'/>" custom-attrs="regItem.customAttrs"></div>
+            <i></i>
+            <div class="caption-j">{{regItem.tooltip|translate}}
+                <span ng-repeat="val in regItem.validation"
+                   ng-show="registerform[regItem.name].$error[val.name]">
+                    {{val.message|translate}}
+                </span>
+            </div>
+        </div>
+    </label>
+    
+    <!-- INPUT TYPE EMAIL -->
+    <label class="no-marginb-j {{regItem.classes}}" ng-switch-when="email">
+        <p><span  ng-bind="regItem.title | translate"></span> <span class="hint" ng-if="regItem.required">*</span></p>
+        <div class="error-wrap-j" ng-class="{'error': (formSubmited || registerform[regItem.name].blur) && registerform[regItem.name].$invalid && showFieldsValidation}">
+            <div vb-html-compiler="<input type='email' name='{{regItem.name}}' ng-blur='registerform[regItem.name].blur=true' ng-model='registrationData[regItem.name]' placeholder='{{regItem.placeholder| translate}}'/>" custom-attrs="regItem.customAttrs"></div><!--ng-pattern='/^[\w!.%+\-]+@[\w\-]+(?:\.[\w\-]+)+$/'-->
+            <i></i>
+            <div class="caption-j" ng-show="regItem.tooltip"></div>
+            <div class="caption-j">               
+                <span ng-repeat="val in regItem.validation"
+                   ng-show="registerform[regItem.name].$error[val.name]">
+                    {{val.message|translate}}
+                </span>
+            </div>
+        </div>
+    </label>
+    
+    <!-- INPUT TYPE PASSWORD --> 
+    <label ng-switch-when="password"
+           class="{{regItem.classes}}">
+        <p><span ng-bind="regItem.title | translate"></span> <span class="hint" ng-if="regItem.required">*</span></p>
+        <div class="error-wrap-j" ng-class="{'error': (formSubmited || registerform[regItem.name].blur) && registerform[regItem.name].$invalid && showFieldsValidation}">
+            <div vb-html-compiler="<input ng-init='toolTip=false' ng-focus='toolTip=true' ng-blur='toolTip=false; registerform[regItem.name].blur=true' type='password' name='{{regItem.name}}' ng-model='registrationData[regItem.name]' placeholder='{{regItem.placeholder| translate}}'/>"
+                 custom-attrs="regItem.customAttrs"></div>
+            <i></i>
+            <div class="caption-j" ng-show="regItem.tooltip" ng-class="{'tooltip-reg-password': toolTip}" ng-show="!formSubmited && (regItem.name === 'password')">{{regItem.tooltip|translate}}</div>
+            <div class="caption-j">
+                <span ng-repeat="val in regItem.validation"
+                   ng-show="registerform[regItem.name].$error[val.name]">
+                    {{val.message|translate}}
+                </span>
+            </div>
+        </div>
+        <div class="pass-strong-bar-j"><span></span></div>
+    </label>    
+    
+
+    <!--  SELECT -->    
+    <div ng-switch-when="select"
+        class="{{regItem.classes}}">
+        <p><span  ng-bind="regItem.title | translate"></span> <span class="hint" ng-if="regItem.required">*</span></p>
+        <div class="error-wrap-j" ng-class="{'error': (formSubmited || registerform[regItem.name].blur) && registerform[regItem.name].$invalid && showFieldsValidation}">
+            <div class="regselect-j">
+                <div ng-if="regItem.customValidation" vb-html-compiler="{{regItem.customValidation}}"></div>
+                <span vb-html-compiler="<select name='{{regItem.name}}' ng-blur='registerform[regItem.name].blur=true' ng-model='registrationData[regItem.name]' ng-disabled='registerform[regItem.name].disabled'></select>"
+                     append-to-html="{{regItem.optionsData}}"
+                      custom-attrs="regItem.customAttrs"></span>
+                <div class="caption-j">
+                    <span ng-repeat="val in regItem.validation"
+                       ng-show="registerform[regItem.name].$error[val.name]">
+                        {{val.message|translate}}
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- INPUT TYPE RADIO -->
+    <div ng-switch-when="radio"
+         class="{{regItem.classes}}"
+         ng-class="{'error':(formSubmited || registerform[regItem.name].blur) && registerform[regItem.name].$invalid && showFieldsValidation}">
+        <div vb-html-compiler="<input type='radio' name='{{regItem.name}}' ng-blur='registerform[regItem.name].blur=true' ng-model='registrationData[regItem.name]'   id='checkbox-id{{$index}}'/>"
+             class="check"
+             insert-after='<label for="checkbox-id{{$index}}"><span  ng-bind="regItem.title | translate"></span> <span class="hint" ng-if="regItem.required">*</span></label>'
+             custom-attrs="regItem.customAttrs"></div>
+        <div class="form-error-icon"></div>
+        <div class="form-error-text">
+            <div class="error-icon-f"></div>
+            <p ng-repeat="val in regItem.validation"
+               ng-show="registerform[regItem.name].$error[val.name]">
+                {{val.message|translate}}
+            </p>
+        </div>
+    </div>
+
+    <!-- INPUT TYPE ChECKBOX -->   
+    
+    <label ng-switch-when="checkbox"
+           class="checkbox {{regItem.classes}}">
+        <div class="error-wrap-j" ng-class="{'error':(formSubmited || registerform[regItem.name].blur) && registerform[regItem.name].$invalid && showFieldsValidation}">
+            <div vb-html-compiler="<input type='checkbox' name='{{regItem.name}}' ng-blur='registerform[regItem.name].blur=true' ng-model='registrationData[regItem.name]'   id='checkbox-id{{$index}}'/>"
+                 class="check"
+                 insert-after='<p><span  ng-bind="regItem.title | translate"></span> <span class="hint" ng-if="regItem.required">*</span></p>'
+                 custom-attrs="regItem.customAttrs"></div>
+        </div>
+    </label>
+    
+    
+    
+    <!-- INPUT TYPE CAPTCHA -->
+    <label ng-switch-when="captcha"
+         class="capt-j-ext {{regItem.classes}}"
+         ng-class="{'error': (formSubmited || registerform[regItem.name].blur) && registerform[regItem.name].$invalid && showFieldsValidation}"
+         ng-show="regItem.imgSrc"
+         >
+
+        <p>
+            <span ng-bind="regItem.title | translate"></span>
+            <span class="hint" ng-if="regItem.required">*</span>
+        </p>
+
+        <label>
+            <img ng-src="{{regItem.imgSrc}}">
+
+            <div class="caption-j" ng-show="regItem.tooltip"></div>
+            <div class="caption-j">
+                <span ng-repeat="val in regItem.validation"
+                      ng-show="registerform[regItem.name].$error[val.name]">
+                    {{val.message|translate}}
+                </span>
+            </div>
+
+            <button ng-click="loadCaptchaImage(regItem)" trans>Reload</button>
+
+
+        </label>
+        
+        <div vb-html-compiler="<input type='text' name='{{regItem.name}}' ng-blur='registerform[regItem.name].blur=true' ng-model='registrationData[regItem.name]' placeholder='{{regItem.placeholder|translate}}'/>" custom-attrs="regItem.customAttrs"></div>
+
+        <div class="password-info-t" ng-show="regItem.tooltip"><p>{{regItem.tooltip|translate}}</p></div>
+
+
+    </label>
+    
+    
+    
+    
+    <div ng-switch-when="iban_validation">
+        <a ng-click="ibanValidation()">{{regItem.title | translate}}</a>
+    </div>
+
+
+    <hr ng-switch-when="hr" />
+    <div ng-switch-when="br" style="clear: both;"><br /></div>
+
+    <div ng-switch-when="label">
+        <label>
+            <span ng-bind="regItem.title | translate"></span>
+        </label>
+    </div>
+</div>
+
+

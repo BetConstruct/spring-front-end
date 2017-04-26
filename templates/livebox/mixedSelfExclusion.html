@@ -1,0 +1,29 @@
+<div>
+    <h3 trans>Self-Exclusion</h3>
+    <div class="settings-info-contain deposit-limit">
+        <div ng-if="!('self-exclusion-text'|translate:null:true)">
+            <p trans>We will close your account, preventing access to your online account for the time period specified (between 6 months and 5 years).</p>
+            <p trans>Your account will only be re-opened if you contact us to request it after the Self-Exclusion period has expired.</p>
+            <p trans>Please note that you will be able to decrease your self-exclusion period or revoke it completely, only after seven days from your 1st request.</p>
+            <p trans>For further details please contact our support and refer to the Terms and Conditions and Responsible Gambling pages.</p>
+        </div>
+        <div ng-if="'self-exclusion-text'|translate:null:true">
+            <p ng-bind-html="'self-exclusion-text'|translate|html"><p trans>
+        </div>
+
+        <form class="registration-form">
+            <div class="form-text" ng-init="$parent.periodValue= null">
+                <label ng-repeat="option in conf.selfExclusion.options track by $index">
+                    <input type="radio" name="period" ng-click="selectPeriod(option.limit)" ng-model="$parent.periodValue" value="{{ $index }}">
+                    <span ng-bind="option.name|translate"></span>
+                </label>
+            </div>
+            <div class="change-button-container password">
+                <div class="cashier-button">
+                    <button ng-disabled="!periodValue" ng-show="!working" trans ng-click="setSelfExclusion(conf.selfExclusion.type)">Save</button>
+                    <button disabled="disabled" ng-show="working" trans>Wait...</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

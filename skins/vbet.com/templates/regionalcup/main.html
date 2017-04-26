@@ -1,0 +1,218 @@
+<div ng-controller="cmsPagesCtrl" ng-init="loadPage('regionalcup-'+env.lang,true);">
+    <div ng-controller="regionalCupRegistrationCtrl">
+        <div class="new-default-popup-j tab-popup-j regional-cup-register-j" ng-if="show">
+            <div class="pp-table-j">
+                <div class="table-row-j">
+                    <div class="table-cell-j">
+                        <div class="popup-wrapper-j">
+                            <div class="pu-head-j">
+                                <span ng-class="{'active':step == 0}" trans>Captain</span>
+                                <span ng-class="{'active':step == 1}" trans>Team member 1</span>
+                                <span ng-class="{'active':step == 2}" trans>Team member 2</span>
+                                <a class="close-j" ng-click="close()"></a>
+                            </div>
+                            <form class="register-regionalcup-j" name="regForm" ng-submit="submitForm()">
+                                <div>
+                                    <div ng-if="step == 0">
+                                        <label class="reg-cup-register-j">
+                                            <p trans>Team name</p>
+                                            <input type="text" ng-model="form.captain.team_name" ng-required="true">
+                                        </label>
+                                        <label class="reg-cup-register-j">
+                                            <p trans>Region</p>
+                                            <input type="text" ng-model="form.captain.region" ng-required="true">
+                                        </label>
+                                        <label class="reg-cup-register-j">
+                                            <p trans>Name of the Captain</p>
+                                            <input type="text" ng-model="form.captain.name" ng-required="true">
+                                        </label>
+                                        <label class="reg-cup-register-j">
+                                            <p trans>Surname of the Captain</p>
+                                            <input type="text" ng-model="form.captain.surname" ng-required="true">
+                                        </label>
+                                        <label class="reg-cup-register-j">
+                                            <p trans>Nickname of the Captain</p>
+                                            <input type="text" ng-model="form.captain.nickname" ng-required="true">
+                                        </label>
+                                        <label class="reg-cup-register-j">
+                                            <p trans>ID of the Captain</p>
+                                            <input type="text" ng-model="form.captain.id" ng-required="true">
+                                        </label>
+                                        <label class="reg-cup-register-j">
+                                            <p trans>Contact number of the Captain</p>
+                                            <input type="text" value="+374" ng-model="form.captain.contact_number" ng-required="true">
+                                        </label>
+                                        <label class="reg-cup-register-j">
+                                            <p trans>Passport number of the Captain</p>
+                                            <input type="text" ng-model="form.captain.passport_number" ng-required="true">
+                                        </label>
+                                    </div>
+                                    <div ng-if="step == 1">
+                                        <label class="reg-cup-register-j">
+                                            <p trans>Name</p>
+                                            <input type="text" ng-model="form.member1.name" ng-required="true">
+                                        </label>
+                                        <label class="reg-cup-register-j">
+                                            <p trans>Surname</p>
+                                            <input type="text" ng-model="form.member1.surname" ng-required="true">
+                                        </label>
+                                        <label class="reg-cup-register-j">
+                                            <p trans>Nickname</p>
+                                            <input type="text" ng-model="form.member1.nickname" ng-required="true">
+                                        </label>
+                                        <label class="reg-cup-register-j">
+                                            <p trans>ID</p>
+                                            <input type="text" ng-model="form.member1.id" ng-required="true">
+                                        </label>
+                                        <label class="reg-cup-register-j">
+                                            <p trans>Contact number</p>
+                                            <input type="text" ng-model="form.member1.contact_number" ng-required="true">
+                                        </label>
+                                    </div>
+                                    <div ng-if="step == 2">
+                                        <label class="reg-cup-register-j">
+                                            <p trans>Name</p>
+                                            <input type="text" ng-model="form.member2.name" ng-required="true">
+                                        </label>
+                                        <label class="reg-cup-register-j">
+                                            <p trans>Surname</p>
+                                            <input type="text" ng-model="form.member2.surname" ng-required="true">
+                                        </label>
+                                        <label class="reg-cup-register-j">
+                                            <p trans>Nickname</p>
+                                            <input type="text" ng-model="form.member2.nickname" ng-required="true">
+                                        </label>
+                                        <label class="reg-cup-register-j">
+                                            <p trans>ID</p>
+                                            <input type="text" ng-model="form.member2.id" ng-required="true">
+                                        </label>
+                                        <label class="reg-cup-register-j">
+                                            <p trans>Contact number</p>
+                                            <input type="text" ng-model="form.member2.contact_number" ng-required="true">
+                                        </label>
+                                    </div>
+                                    <div class="rcup-register-text-j" ng-bind-html="getPageBySlug(pages,'rules').content"></div>
+                                    <ul class="rc-buttons-wrap-j">
+                                        <li class="terms-j" ng-if="step == 2">
+                                            <label>
+                                                <input type="checkbox" ng-model="form.agree" ng-required="true">
+                                                <i></i>
+                                                <span trans>I agree to all Terms & Conditions</span>
+                                            </label>
+                                        </li>
+                                        <li class="button-wrap-br-regcup-j">
+                                            <button ng-click="back()" ng-if="step > 0" class="back-j"><span>Back</span></button>
+                                            <button ng-click="$parent.action='next'">
+                                                <span ng-if="step != 2" trans>Next</span>
+                                                <span ng-if="step == 2" trans>Register</span>
+                                            </button>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="new-default-popup-j pu-game-rules-j" ng-if="pagesLoaded && (openRules || openTournamentList)">
+        <div class="pp-table-j">
+            <div class="table-row-j">
+                <div class="table-cell-j">
+                    <div class="pu-rules-wrap-j">
+                        <span class="close-pu-rules-j" ng-click="$parent.openRules = false;$parent.openTournamentList = false"></span>
+                        <h2 ng-if="$parent.openRules">
+                            <i class="icon-j"></i>
+                            <strong>{{getPageBySlug(pages,$parent.openRules).title}}</strong> <span trans>Game rules</span>
+                        </h2>
+                        <h2 ng-if="$parent.openTournamentList">
+                            <i class="icon-j"></i>
+                            <strong>{{getPageBySlug(pages,$parent.openTournamentList).title}}</strong> <span trans>Tournament List</span>
+                        </h2>
+                        <div class="rules-tabs-j">
+                            <ul ng-if="$parent.openRules">
+                                <li ng-click="$parent.openRules = 'poker'" ng-class="{'active-j':$parent.openRules == 'poker'}" trans>Poker</li>
+                                <li ng-click="$parent.openRules = 'belote'" ng-class="{'active-j':$parent.openRules == 'belote'}" trans>Belote</li>
+                                <li ng-click="$parent.openRules = 'backgammon'" ng-class="{'active-j':$parent.openRules == 'backgammon'}" trans>Backgammon</li>
+                            </ul>
+
+                            <ul ng-if="$parent.openTournamentList">
+                                <li ng-click="$parent.openTournamentList = 'poker-tournament-list'" ng-class="{'active-j':$parent.openTournamentList == 'poker-tournament-list'}" trans>Poker</li>
+                                <li ng-click="$parent.openTournamentList = 'belote-tournament-list'" ng-class="{'active-j':$parent.openTournamentList == 'belote-tournament-list'}" trans>Belote</li>
+                                <li ng-click="$parent.openTournamentList = 'backgammon-tournament-list'" ng-class="{'active-j':$parent.openTournamentList == 'backgammon-tournament-list'}" trans>Backgammon</li>
+                            </ul>
+
+                        </div>
+                        <div class="rules-tab-group-j">
+
+                            <div class="rules-tab-j" ng-if="$parent.openRules">
+                                <h1>{{getPageBySlug(pages,$parent.openRules).title}}</h1>
+                                <div ng-bind-html="getPageBySlug(pages,$parent.openRules).content"></div>
+                            </div>
+
+                            <div class="rules-tab-j" ng-if="$parent.openTournamentList">
+                                <h1>{{getPageBySlug(pages,$parent.openTournamentList).title}}</h1>
+                                <div ng-bind-html="getPageBySlug(pages,$parent.openTournamentList).content"></div>
+                            </div>
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="regional-cup-page-j" ng-if="pagesLoaded">
+        <div class="wrap-standart-j" ng-init="slides = getPageBySlug(pages,'slides');sliderNum = 0">
+            <div class="rcup-slider-wrap-j">
+                <ul class="slides-j">
+                    <li style="background-image: url({{slides.children[sliderNum].thumbnail_images.full.url}});">
+                        <div class="rcup-max-width-j">
+                            <h2>{{slides.children[sliderNum].title}}</h2>
+                            <p ng-bind-html="slides.children[sliderNum].content|html"></p>
+                        </div>
+                    </li>
+                </ul>
+                <div class="rcup-pagination-j" ng-if="slides.children.length > 1">
+                    <ul>
+                        <li class="prev-j" ng-click="$parent.sliderNum = sliderClamp($parent.sliderNum - 1, slides.children.length, true)"></li>
+                        <li ng-repeat="item in slides.children track by $index" ng-click="$parent.$parent.sliderNum = $index"><span ng-class="{'active-j':$parent.$parent.sliderNum == $index}"></span></li>
+                        <li class="next-j" ng-click="$parent.sliderNum = sliderClamp($parent.sliderNum + 1, slides.children.length, true)"></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="rcup-games-j">
+                <ul>
+                    <li class="poker-j">
+                        <i class="icon-rcup-j"></i>
+                        <p trans>Poker</p>
+                        <div class="button-wrap-j">
+                            <button ng-if="false" ng-click="broadcast('openRegionalCupRegistration',{type:'poker'})" class="rc-button-j" trans>Register</button>
+                            <button ng-click="$parent.openTournamentList = 'poker-tournament-list'" class="rc-button-j tl-list-t" trans>The final's participants</button>
+                            <button ng-click="$parent.openRules = 'poker'" class="skin-j rc-button-j" trans>The final's rules</button>
+                        </div>
+                    </li>
+                    <li class="belote-j">
+                        <i class="icon-rcup-j"></i>
+                        <p trans>Belote</p>
+                        <div class="button-wrap-j">
+                            <button ng-if="false" ng-click="broadcast('openRegionalCupRegistration',{type:'belote'})" class="rc-button-j" trans>Register</button>
+                            <button ng-click="$parent.openTournamentList = 'belote-tournament-list'" class="rc-button-j tl-list-t" trans>The final's participants</button>
+                            <button ng-click="$parent.openRules = 'belote'" class="skin-j rc-button-j" trans>The final's rules</button>
+                        </div>
+                    </li>
+                    <li class="backgammon-j">
+                        <i class="icon-rcup-j"></i>
+                        <p trans>Backgammon</p>
+                        <div class="button-wrap-j">
+                            <button ng-if="false" ng-click="broadcast('openRegionalCupRegistration',{type:'backgammon'})" class="rc-button-j" trans>Register</button>
+                            <button ng-click="$parent.openTournamentList = 'backgammon-tournament-list'" class="rc-button-j tl-list-t" trans>The final's participants</button>
+                            <button ng-click="$parent.openRules = 'backgammon'" class="skin-j rc-button-j" trans>The final's rules</button>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>

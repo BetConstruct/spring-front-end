@@ -1,0 +1,395 @@
+<div class="fixed-element-parent">
+    <div class="game-list-compitishion-j" fixonscroll ignore-ie="true" auto-positon="top" scrollable-area-id="asianView" header-id="main-header-container">
+        <table class="hdp-contain-j hdp-titile-j">
+            <tr>
+                <td class="light-bg-j br-j" colspan="2">
+                    <p><i class="icon-sport-asia" ng-class="selectedSport.alias"></i> <span ng-bind="selectedSport.name"></span></p>
+                </td>
+                <td class="dark-bg-j br-j xs-s"><p trans>Winner</p></td>
+                <td class="dark-bg-j br-j ms"><p trans>Handicap</p></td>
+                <td class="dark-bg-j br-j ms"><p trans>Total</p></td>
+                <td class="dark-bg-j br-j ms"><p trans>O / E</p></td>
+                <td class="light-bg-j xs"><p trans>More</p></td>
+            </tr>
+        </table>
+    </div>
+</div>
+<div class="market_list_view" ng-class="{'all_view' : selectedSport.id === -1}">
+    <div class="asian-separator-container-b" ng-repeat="competitions in :competitions-change:centerData.competitions track by $index">
+    <div ng-repeat="competition in  competitions|limitTo:conf.asian.competitionsPerPage:(selectedPage*conf.asian.competitionsPerPage) track by $index" class="game-list-compitishion-j" ng-class="{closed: collapedCompetitions[competition.id]}"> <!--competition.collapsed -->
+        <div class="name-chempionship-asia" ng-click="toggleCompetition(competition.id)"><!--competition.collapsed = !competition.collapsed   -->
+            <h3 ng-bind="competition.games[0].region.name + ' - ' + competition.name"></h3>
+            <div ng-if="selectedSport.id === -1" class="icon-sport-asia" ng-class="competition.games[0].sport.alias"></div>
+        </div>
+        <table class="hdp-contain-j" ng-if="!collapedCompetitions[competition.id]">
+            <tbody ng-repeat="game in competition.games|orderBy:'start_ts' track by game.id">
+            <tr>
+                <th class="dark-bg-j bt-j bb-j" colspan="2">
+                    <p>
+                       <span ng-show="game.is_neutral_venue" class="game-is-neutral" title="is neutral venue" trans="attr-only"></span>
+                       <span ng-show="game.type === 1 && game.hasVideo && conf.videoEnabled" class="has-video" trans="attr-only" title="video"></span>
+                       <span ng-show="conf.asianShowTeamNames" ng-bind="::game.team1_name"></span>
+                       <span ng-show="conf.asianShowTeamNames" ng-bind="::game.team2_name"></span>
+                    </p>
+                </th>
+                <th class="dark-bg-j bt-j bb-j" colspan="4">
+                    <div class="block-filter-hdp">
+                        <ul>
+                            <li ng-repeat="sequence in game.availableSequences track by $index"
+                                ng-bind="('PERIOD' === sequence.subKey) ? (asianMarkets.periodsBySports[game.sport.alias] + ' ' + sequence.sequence): (sequence.sequence? sequence.subKey + ' ' + sequence.sequence : sequence.subKey)|translate"
+                                ng-class="{active: game.selectedSequence.subKey === sequence.subKey && game.selectedSequence.sequence === sequence.sequence}"
+                                ng-click="broadcast('$$rebind::expandedHdpGames-change'); game.selectedSequence = sequence"></li>
+                        </ul>
+                    </div>
+                </th>
+                <th class="dark-bg-j bt-j bb-j"></th>
+            </tr>
+            <tr>
+                <td class="dark-bg-j br-j xs" rowspan="3">
+                    <small ng-bind="game.info.current_game_state|convertSetName:game.sport.alias|translate" ng-show="game.type ==1"></small>
+                    <small ng-bind="::game.start_ts|formatDate:(conf.layoutTimeFormat.asian || 'D/MM')" ng-show="game.type !=1"></small>
+                    <small ng-bind="getCurrentTime(game.info.current_game_time)" ng-show="game.type ==1"></small>
+                    <small ng-bind="game.start_ts|formatDate:'hour':null:env.timeFormat" ng-show="game.type !=1"></small>
+                </td>
+                <td class="light-bg-j br-j">
+                    <div class="asian-team-name-wrapper-j">
+                        <div>
+                            <p ng-bind="::game.team1_name"></p>
+                        </div>
+                        <div class="asian-team-rub-j">
+                            <b class="yellow-card-asia" ng-show="game.type == 1 && game.sport.alias == 'Soccer' && game.stats.yellow_card.team1_value">{{game.stats.yellow_card.team1_value}}</b>
+                            <b class="red-card-asia" ng-show="game.type == 1 && game.sport.alias == 'Soccer' && game.stats.red_card.team1_value">{{game.stats.red_card.team1_value}}</b>
+                            <b class="score-card-asia" ng-show="game.type == 1" ng-bind="game.info.score1"></b>
+                        </div>
+                    </div>
+                </td>
+                <!-- Winner -->
+                <td class="dark-bg-j br-j bb-j xs-s asian-market-overflow-j">
+                    <div class="asian-market-wrap-j"
+                         ng-if="game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence].WINNER[0]['P1'] || game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence].WINNER[0]['W1']"
+                         ng-click="bet(game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence].WINNER[0]['P1'], game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence].WINNER[0], game)"
+                         ng-class="{'locked': (game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence].WINNER[0]['P1'].price | oddConvert:'decimal') == 1 || game.is_blocked, up: game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence].WINNER[0]['P1'].price_change == '1', down: game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence].WINNER[0]['P1'].price_change == '-1', 'active': isEventInBetSlip(game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence].WINNER[0]['P1'])}">
+                        <div class="asian-market-j">
+                            <div class="asian-market-cell-j odd-container-j" ng-bind="(game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence].WINNER[0]['P1'].price ||
+                                                                                      game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence].WINNER[0]['W1'].price)|oddConvert:env.oddFormat:null:'WINNER'"></div>
+                        </div>
+                    </div>
+                </td>
+                <!-- Handicap -->
+                <td class="dark-bg-j br-j bb-j ms asian-market-overflow-j">
+                    <div class="asian-market-wrap-j"
+                         ng-if="game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence].HANDICAP[0].Home"
+                         ng-click="bet(game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence].HANDICAP[0].Home, game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence].HANDICAP[0], game)"
+                         ng-class="{'locked': (game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence].HANDICAP[0].Home.price | oddConvert:'decimal') == 1 || game.is_blocked, up: game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence].HANDICAP[0].Home.price_change == '1', down: game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence].HANDICAP[0].Home.price_change == '-1', 'active': isEventInBetSlip(game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence].HANDICAP[0].Home)}">
+                        <div class="asian-market-j">
+                            <div class="asian-market-cell-j">
+                                <div class="asian-market-rub-j" ng-bind="prefixBase(game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence].HANDICAP[0], 'Home')"></div>
+                            </div>
+                            <div class="asian-market-cell-j odd-container-j">{{game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence].HANDICAP[0].Home.price|oddConvert:env.oddFormat:null:'HANDICAP'}}</div>
+                        </div>
+                    </div>
+                </td>
+                <!-- Totals -->
+                <td class="dark-bg-j br-j bb-j ms asian-market-overflow-j">
+                    <div class="asian-market-wrap-j"
+                         ng-class="{'locked': (game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence][pointsTypeForMarket][0].Over.price | oddConvert:'decimal') == 1 || game.is_blocked, up: game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence][pointsTypeForMarket][0].Over.price_change == '1', down: game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence][pointsTypeForMarket][0].Over.price_change == '-1', 'active': isEventInBetSlip(game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence][pointsTypeForMarket][0].Over)}"
+                         ng-if="game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence][pointsTypeForMarket][0].Over"
+                         ng-click="bet(game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence][pointsTypeForMarket][0].Over, game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence][pointsTypeForMarket][0], game)">
+                        <div class="asian-market-j">
+                            <div class="asian-market-cell-j">
+                                <div class="asian-market-rub-j" ng-bind="(('aO'|translate) + ' ' + (game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence][pointsTypeForMarket][0].Over.base|handicapBaseFormat))"></div>
+                            </div>
+                            <div class="asian-market-cell-j odd-container-j">{{game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence][pointsTypeForMarket][0].Over.price|oddConvert:env.oddFormat:null:pointsTypeForMarket}}</div>
+                        </div>
+                    </div>
+                </td>
+                <!-- ODD -->
+                <td class="dark-bg-j br-j bb-j ms asian-market-overflow-j">
+                    <div class="asian-market-wrap-j"
+                         ng-class="{'locked': (game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence]['ODD/EVEN'][0].Odd.price | oddConvert:'decimal') == 1 || game.is_blocked, 'up':game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence]['ODD/EVEN'][0].Odd.price_change == '1', 'down':game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence]['ODD/EVEN'][0].Odd.price_change == '-1','active': isEventInBetSlip(game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence]['ODD/EVEN'][0].Odd)}"
+                         ng-if="game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence]['ODD/EVEN'][0].Odd"
+                         ng-click="bet(game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence]['ODD/EVEN'][0].Odd, game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence]['ODD/EVEN'][0], game)">
+                        <div class="asian-market-j">
+                            <div class="asian-market-cell-j">
+                                <div class="asian-market-rub-j" trans>O</div>
+                            </div>
+                            <div class="asian-market-cell-j odd-container-j" ng-bind="(game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence]['ODD/EVEN'][0].Odd.price|oddConvert:env.oddFormat:null:'ODD/EVEN')"></div>
+                        </div>
+
+                    </div>
+                </td>
+                <td class="dark-bg-j bb-j xs">
+                    <div class="asian-status-icons">
+                        <div class="icon-favorite" ng-click="toggleGameFavorite(game)" ng-class="{'active': myGames.indexOf(game.id) !== -1}" title="{{'Favorite'|translate}}"></div>
+                        <div ng-show="conf.enableH2HStat && game.is_stat_available" ng-click="openStatistics(game);$event.stopPropagation();" class="h2h-stats" title="{{'statistic'|translate}}"></div>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="light-bg-j br-j" ng-class="{'bb-j': !game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence].WINNER[0]['X']}">
+                    <div class="asian-team-name-wrapper-j">
+                        <div>
+                            <p ng-bind="::game.team2_name"></p>
+                        </div>
+                        <div class="asian-team-rub-j">
+                            <b class="yellow-card-asia" ng-show="game.type == 1 && game.sport.alias == 'Soccer' && game.stats.yellow_card.team2_value" class="yellow-card-asian">{{game.stats.yellow_card.team2_value}}</b>
+                            <b class="red-card-asia" ng-show="game.type == 1 && game.sport.alias == 'Soccer' && game.stats.red_card.team2_value">{{game.stats.red_card.team2_value}}</b>
+                            <b class="score-card-asia" ng-show="game.type == 1" ng-bind="game.info.score2"></b>
+                        </div>
+                    </div>
+                </td>
+                <!-- Winner -->
+                <td class="dark-bg-j bb-j br-j xs-s asian-market-overflow-j">
+                    <div class="asian-market-wrap-j"
+                         ng-class="{'locked': (game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence].WINNER[0]['P2'].price | oddConvert:'decimal') == 1 || game.is_blocked, up: game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence].WINNER[0]['P2'].price_change == '1', down: game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence].WINNER[0]['P2'].price_change == '-1', 'active': isEventInBetSlip(game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence].WINNER[0]['P2'])}"
+                         ng-show="game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence].WINNER[0]['P2'] || game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence].WINNER[0]['W2']"
+                         ng-click="bet(game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence].WINNER[0]['P2'], game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence].WINNER[0], game)">
+                        <div class="asian-market-j">
+                            <div class="asian-market-cell-j odd-container-j" ng-bind="(game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence].WINNER[0]['P2'].price|oddConvert:env.oddFormat:null:'WINNER') ||
+                                                                                      (game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence].WINNER[0]['W2'].price|oddConvert:env.oddFormat:null:'WINNER')"></div>
+                        </div>
+                    </div>
+                </td>
+                <!-- Handicap -->
+                <td class="dark-bg-j bb-j br-j ms asian-market-overflow-j">
+                    <div class="asian-market-wrap-j"
+                         ng-class="{'locked': (game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence].HANDICAP[0].Away.price | oddConvert:'decimal') == 1 || game.is_blocked, up: game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence].HANDICAP[0].Away.price_change == '1', down: game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence].HANDICAP[0].Away.price_change == '-1', 'active': isEventInBetSlip(game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence].HANDICAP[0].Away)}"
+                         ng-show="game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence].HANDICAP[0].Away"
+                         ng-click="bet(game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence].HANDICAP[0].Away, game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence].HANDICAP[0], game)">
+                        <div class="asian-market-j">
+                            <div class="asian-market-cell-j">
+                                <div class="asian-market-rub-j" ng-bind="prefixBase(game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence].HANDICAP[0], 'Away')"></div>
+                            </div>
+                            <div class="asian-market-cell-j odd-container-j">{{game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence].HANDICAP[0].Away.price|oddConvert:env.oddFormat:null:'HANDICAP'}}</div>
+                        </div>
+                    </div>
+                </td>
+                <!-- Totals -->
+                <td class="dark-bg-j bb-j br-j ms asian-market-overflow-j">
+                    <div class="asian-market-wrap-j"
+                         ng-class="{'locked': (game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence][pointsTypeForMarket][0].Under.price | oddConvert:'decimal') == 1 || game.is_blocked, up: game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence][pointsTypeForMarket][0].Under.price_change == '1', down: game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence][pointsTypeForMarket][0].Under.price_change == '-1', 'active': isEventInBetSlip(game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence][pointsTypeForMarket][0].Under)}"
+                         ng-show="game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence][pointsTypeForMarket][0].Under"
+                         ng-click="bet(game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence][pointsTypeForMarket][0].Under, game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence][pointsTypeForMarket][0], game)">
+                        <div class="asian-market-j">
+                            <div class="asian-market-cell-j">
+                                <div class="asian-market-rub-j" ng-bind="(('aU'|translate) + ' ' + (game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence][pointsTypeForMarket][0].Under.base|handicapBaseFormat))"></div>
+                            </div>
+                            <div class="asian-market-cell-j odd-container-j">{{game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence][pointsTypeForMarket][0].Under.price|oddConvert:env.oddFormat:null:'TOTALS'}}</div>
+                        </div>
+                    </div>
+                </td>
+                <!-- Even -->
+                <td class="dark-bg-j br-j bb-j ms asian-market-overflow-j">
+                    <div class="asian-market-wrap-j"
+                         ng-class="{'locked':(game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence]['ODD/EVEN'][0].Even.price | oddConvert:'decimal') == 1 || game.is_blocked, 'up':game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence]['ODD/EVEN'][0].Even.price_change =='1', 'down': game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence]['ODD/EVEN'][0].Even.price_change == '-1','active': isEventInBetSlip(game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence]['ODD/EVEN'][0].Even)}"
+                         ng-if="game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence]['ODD/EVEN'][0].Even"
+                         ng-click="bet(game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence]['ODD/EVEN'][0].Even, game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence]['ODD/EVEN'][0], game)">
+                        <div class="asian-market-j">
+                            <div class="asian-market-cell-j">
+                                <div class="asian-market-rub-j" trans>E</div>
+                            </div>
+                            <div class="asian-market-cell-j odd-container-j" ng-bind="(game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence]['ODD/EVEN'][0].Even.price|oddConvert:env.oddFormat:null:'ODD/EVEN')"></div>
+                        </div>
+                    </div>
+                </td>
+                <td class="dark-bg-j bb-j xs asian-more-markets-count-j">
+                    <p ng-click="loadAllEvents(game.id)" title="{{'More Markets'|translate}}">+{{::game.moreMarketsCount > 0 ? game.moreMarketsCount : ''}}</p>
+                </td>
+            </tr>
+            <tr>
+                <td ng-class="{'br-j light-bg-j': game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence].WINNER[0]['X'], 'dark-bg-j': !game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence].WINNER[0]['X']}">
+                    <div class="asian-team-name-wrapper-j" ng-show="game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence].WINNER[0]['X']">
+                        <div>
+                            <p ng-bind="game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence].WINNER[0]['X'].name|translate"></p>
+                        </div>
+                    </div>
+                </td>
+                <td class="dark-bg-j xs-s asian-market-overflow-j br-j">
+                    <div class="asian-market-wrap-j"
+                         ng-class="{'locked': (game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence].WINNER[0]['X'].price | oddConvert:'decimal') == 1 || game.is_blocked, up: game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence].WINNER[0]['X'].price_change == '1', down: game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence].WINNER[0]['X'].price_change == '-1', 'active': isEventInBetSlip(game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence].WINNER[0]['X'])}"
+                         ng-click="bet(game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence].WINNER[0]['X'], game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence].WINNER[0], game)"
+                         ng-show="game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence].WINNER[0]['X']">
+                        <div class="asian-market-j">
+                            <div class="asian-market-cell-j odd-container-j" ng-bind="game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence].WINNER[0]['X'].price|oddConvert:env.oddFormat:null:'WINNER'"></div>
+                        </div>
+                    </div>
+                </td>
+                <td class="dark-bg-j xs "></td>
+                <td class="dark-bg-j xs "></td>
+                <td class="dark-bg-j xs "></td>
+                <td class="dark-bg-j xs "></td>
+            </tr>
+
+            <tr ng-repeat-start="n in [1,2,3] track by $index" ng-show="game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence].HANDICAP[n] || game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence][pointsTypeForMarket][n]">
+                <td class="dark-bg-j br-j xs"></td>
+                <td class="light-bg-j bt-j br-j">
+                    <div class="asian-team-name-wrapper-j">
+                        <div>
+                            <p ng-bind="::game.team1_name"></p>
+                        </div>
+                    </div>
+                </td>
+                <td class="dark-bg-j br-j xs-s"></td>
+                <td class="dark-bg-j bt-j br-j ms asian-market-overflow-j">
+                    <div class="asian-market-wrap-j" ng-show="game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence].HANDICAP[n].Home"
+                         ng-click="bet(game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence].HANDICAP[n].Home, game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence].HANDICAP[n], game)"
+                         ng-class="{'locked': (game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence].HANDICAP[n].Home.price | oddConvert:'decimal') == 1 || game.is_blocked, up: game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence].HANDICAP[n].Home.price_change == '1', down: game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence].HANDICAP[n].Home.price_change == '-1', 'active': isEventInBetSlip(game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence].HANDICAP[n].Home)}">
+                        <div class="asian-market-j">
+                            <div class="asian-market-cell-j">
+                                <div class="asian-market-rub-j" ng-bind="prefixBase(game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence].HANDICAP[n], 'Home')"></div>
+                            </div>
+                            <div class="asian-market-cell-j odd-container-j">{{game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence].HANDICAP[n].Home.price|oddConvert:env.oddFormat:null:'HANDICAP'}}</div>
+                        </div>
+                    </div>
+                </td>
+                <td class="dark-bg-j bt-j br-j ms asian-market-overflow-j">
+                    <div class="asian-market-wrap-j" ng-class="{'locked': (game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence][pointsTypeForMarket][n].Over.price | oddConvert:'decimal') == 1 || game.is_blocked, up: game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence][pointsTypeForMarket][n].Over.price_change == '1', down: game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence][pointsTypeForMarket][n].Over.price_change == '-1', 'active': isEventInBetSlip(game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence][pointsTypeForMarket][n].Over)}"
+                         ng-show="game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence][pointsTypeForMarket][n].Over"
+                         ng-click="bet(game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence][pointsTypeForMarket][n].Over, game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence][pointsTypeForMarket][n], game)">
+                        <div class="asian-market-j">
+                            <div class="asian-market-cell-j">
+                                <div class="asian-market-rub-j" ng-bind="(('aO'|translate) + ' ' + (game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence][pointsTypeForMarket][n].Over.base|handicapBaseFormat))"></div>
+                            </div>
+                            <div class="asian-market-cell-j odd-container-j">{{game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence][pointsTypeForMarket][n].Over.price|oddConvert:env.oddFormat:null:pointsTypeForMarket}}</div>
+                        </div>
+                    </div>
+                </td>
+                <td class="dark-bg-j ms"></td>
+                <td class="dark-bg-j xs"></td>
+            </tr>
+            <tr ng-repeat-end ng-show="game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence].HANDICAP[n] || game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence][pointsTypeForMarket][n]">
+                <td class="dark-bg-j br-j xs"></td>
+                <td class="light-bg-j br-j">
+                    <div class="asian-team-name-wrapper-j">
+                        <div>
+                            <p ng-bind="::game.team2_name"></p>
+                        </div>
+                    </div>
+                </td>
+                <td class="dark-bg-j br-j xs-s"></td>
+                <td class="dark-bg-j br-j bt-j ms asian-market-overflow-j">
+                    <div class="asian-market-wrap-j"
+                         ng-class="{'locked': (game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence].HANDICAP[n].Away.price | oddConvert:'decimal') == 1 || game.is_blocked, up: game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence].HANDICAP[n].Away.price_change == '1', down: game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence].HANDICAP[n].Away.price_change == '-1', 'active': isEventInBetSlip(game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence].HANDICAP[n].Away)}"
+                         ng-show="game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence].HANDICAP[n].Away"
+                         ng-click="bet(game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence].HANDICAP[n].Away, game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence].HANDICAP[n], game)">
+                        <div class="asian-market-j">
+                            <div class="asian-market-cell-j">
+                                <div class="asian-market-rub-j" ng-bind="prefixBase(game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence].HANDICAP[n], 'Away')"></div>
+                            </div>
+                            <div class="asian-market-cell-j odd-container-j">{{game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence].HANDICAP[n].Away.price|oddConvert:env.oddFormat:null:'HANDICAP'}}</div>
+                        </div>
+                    </div>
+                </td>
+                <td class="dark-bg-j br-j bt-j ms asian-market-overflow-j">
+                    <div class="asian-market-wrap-j"
+                         ng-class="{'locked': (game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence][pointsTypeForMarket][n].Under.price | oddConvert:'decimal') == 1 || game.is_blocked, up: game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence][pointsTypeForMarket][n].Under.price_change == '1', down: game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence][pointsTypeForMarket][n].Under.price_change == '-1', 'active': isEventInBetSlip(game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence][pointsTypeForMarket][n].Under)}"
+                         ng-show="game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence][pointsTypeForMarket][n].Under"
+                         ng-click="bet(game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence][pointsTypeForMarket][n].Under, game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence][pointsTypeForMarket][n], game)">
+                        <div class="asian-market-j">
+                            <div class="asian-market-cell-j">
+                                <div class="asian-market-rub-j" ng-bind="(('aU'|translate) + ' ' + (game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence][pointsTypeForMarket][n].Under.base|handicapBaseFormat))"></div>
+                            </div>
+                            <div class="asian-market-cell-j odd-container-j">{{game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence][pointsTypeForMarket][n].Under.price|oddConvert:env.oddFormat:null:'TOTALS'}}</div>
+                        </div>
+                    </div>
+                </td>
+                <td class="dark-bg-j ms"></td>
+                <td class="dark-bg-j xs"></td>
+            </tr>
+
+            <tr>
+                <td class="dark-bg-j br-j xs"></td>
+                <td class="light-bg-j br-j">
+                    <div class="asian-team-name-wrapper-j">
+                    </div>
+                </td>
+                <td class="dark-bg-j xs"></td>
+                <td class="dark-bg-j ms more-arrow-j-asia br-j no-select-j" ng-click="toggleExtraMarkets(game)" colspan="3" ng-class="{active: game.expanded}" trans>More Asian Markets</td>
+                <td class="dark-bg-j xs"></td>
+            </tr>
+            <tr ng-show="game.expanded" ng-repeat-start="n in :expandedHdpGames-change:expandedHdpGames[game.id].marketRows[game.selectedSequence.subKey][game.selectedSequence.sequence] track by $index">
+                <td class="dark-bg-j br-j xs"></td>
+                <td class="light-bg-j bt-j br-j">
+                    <div class="asian-team-name-wrapper-j">
+                        <div>
+                            <p ng-bind="::game.team1_name"></p>
+                        </div>
+                    </div>
+                </td>
+                <td class="dark-bg-j br-j xs-s"></td>
+                <td class="dark-bg-j bt-j br-j ms asian-market-overflow-j">
+                    <div class="asian-market-wrap-j"
+                         ng-class="{'locked': (expandedHdpGames[game.id].markets[game.selectedSequence.subKey][game.selectedSequence.sequence].HANDICAP[$index].Home.price | oddConvert:'decimal') == 1 || game.is_blocked, up: expandedHdpGames[game.id].markets[game.selectedSequence.subKey][game.selectedSequence.sequence].HANDICAP[$index].Home.price_change == '1', down: expandedHdpGames[game.id].markets[game.selectedSequence.subKey][game.selectedSequence.sequence].HANDICAP[$index].Home.price_change == '-1', 'active': isEventInBetSlip(expandedHdpGames[game.id].markets[game.selectedSequence.subKey][game.selectedSequence.sequence].HANDICAP[$index].Home)}"
+                         ng-if=":expandedHdpGames-change:expandedHdpGames[game.id].markets[game.selectedSequence.subKey][game.selectedSequence.sequence].HANDICAP[$index].Home"
+                         ng-click="bet(expandedHdpGames[game.id].markets[game.selectedSequence.subKey][game.selectedSequence.sequence].HANDICAP[$index].Home, expandedHdpGames[game.id].markets[game.selectedSequence.subKey][game.selectedSequence.sequence].HANDICAP[$index], expandedHdpGames[game.id])">
+                        <div class="asian-market-j">
+                            <div class="asian-market-cell-j">
+                                <div class="asian-market-rub-j" ng-bind="prefixBase(expandedHdpGames[game.id].markets[game.selectedSequence.subKey][game.selectedSequence.sequence].HANDICAP[$index], 'Home')"></div>
+                            </div>
+                            <div class="asian-market-cell-j odd-container-j">{{expandedHdpGames[game.id].markets[game.selectedSequence.subKey][game.selectedSequence.sequence].HANDICAP[$index].Home.price|oddConvert:env.oddFormat:null:'HANDICAP'}}</div>
+                        </div>
+                    </div>
+                </td>
+                <td class="dark-bg-j bt-j br-j ms asian-market-overflow-j">
+                    <div class="asian-market-wrap-j"
+                         ng-if=":expandedHdpGames-change:expandedHdpGames[game.id].markets[game.selectedSequence.subKey][game.selectedSequence.sequence][pointsTypeForMarket][$index].Over"
+                         ng-click="bet(expandedHdpGames[game.id].markets[game.selectedSequence.subKey][game.selectedSequence.sequence][pointsTypeForMarket][$index].Over, expandedHdpGames[game.id].markets[game.selectedSequence.subKey][game.selectedSequence.sequence][pointsTypeForMarket][$index], expandedHdpGames[game.id])"
+                         ng-class="{'locked': (expandedHdpGames[game.id].markets[game.selectedSequence.subKey][game.selectedSequence.sequence][pointsTypeForMarket][$index].Over.price | oddConvert:'decimal') == 1 || game.is_blocked, up: expandedHdpGames[game.id].markets[game.selectedSequence.subKey][game.selectedSequence.sequence][pointsTypeForMarket][$index].Over.price_change == '1', down: expandedHdpGames[game.id].markets[game.selectedSequence.subKey][game.selectedSequence.sequence][pointsTypeForMarket][$index].Over.price_change == '-1', 'active': isEventInBetSlip(expandedHdpGames[game.id].markets[game.selectedSequence.subKey][game.selectedSequence.sequence][pointsTypeForMarket][$index].Over)}">
+                        <div class="asian-market-j">
+                            <div class="asian-market-cell-j">
+                                <div class="asian-market-rub-j" ng-bind="(('aO'|translate) + ' ' + (expandedHdpGames[game.id].markets[game.selectedSequence.subKey][game.selectedSequence.sequence][pointsTypeForMarket][$index].Over.base|handicapBaseFormat))"></div>
+                            </div>
+                            <div class="asian-market-cell-j odd-container-j">{{expandedHdpGames[game.id].markets[game.selectedSequence.subKey][game.selectedSequence.sequence][pointsTypeForMarket][$index].Over.price|oddConvert:env.oddFormat:null:pointsTypeForMarket}}</div>
+                        </div>
+                    </div>
+                </td>
+                <td class="dark-bg-j ms"></td>
+                <td class="dark-bg-j xs"></td>
+            </tr>
+            <tr ng-show="game.expanded" ng-repeat-end>
+                <td class="dark-bg-j br-j xs"></td>
+                <td class="light-bg-j br-j">
+                    <div class="asian-team-name-wrapper-j">
+                        <div>
+                            <p ng-bind="::game.team2_name"></p>
+                        </div>
+                    </div>
+                </td>
+                <td class="dark-bg-j br-j xs-s"></td>
+                <td class="dark-bg-j br-j bt-j ms asian-market-overflow-j">
+                    <div class="asian-market-wrap-j"
+                         ng-class="{'locked': (expandedHdpGames[game.id].markets[game.selectedSequence.subKey][game.selectedSequence.sequence].HANDICAP[$index].Away.price | oddConvert:'decimal') == 1 || game.is_blocked, up: expandedHdpGames[game.id].markets[game.selectedSequence.subKey][game.selectedSequence.sequence].HANDICAP[$index].Away.price_change == '1', down: expandedHdpGames[game.id].markets[game.selectedSequence.subKey][game.selectedSequence.sequence].HANDICAP[$index].Away.price_change == '-1', 'active': isEventInBetSlip(expandedHdpGames[game.id].markets[game.selectedSequence.subKey][game.selectedSequence.sequence].HANDICAP[$index].Away)}"
+                         ng-show="expandedHdpGames[game.id].markets[game.selectedSequence.subKey][game.selectedSequence.sequence].HANDICAP[$index].Away"
+                         ng-click="bet(expandedHdpGames[game.id].markets[game.selectedSequence.subKey][game.selectedSequence.sequence].HANDICAP[$index].Away, expandedHdpGames[game.id].markets[game.selectedSequence.subKey][game.selectedSequence.sequence].HANDICAP[$index], expandedHdpGames[game.id])">
+                        <div class="asian-market-j">
+                            <div class="asian-market-cell-j">
+                                <div class="asian-market-rub-j" ng-bind="prefixBase(expandedHdpGames[game.id].markets[game.selectedSequence.subKey][game.selectedSequence.sequence].HANDICAP[$index], 'Away')"></div>
+                            </div>
+                            <div class="asian-market-cell-j odd-container-j">{{expandedHdpGames[game.id].markets[game.selectedSequence.subKey][game.selectedSequence.sequence].HANDICAP[$index].Away.price|oddConvert:env.oddFormat:null:'HANDICAP'}}</div>
+                        </div>
+                    </div>
+                </td>
+                <td class="dark-bg-j br-j bt-j ms asian-market-overflow-j">
+                    <div class="asian-market-wrap-j"
+                         ng-show="expandedHdpGames[game.id].markets[game.selectedSequence.subKey][game.selectedSequence.sequence][pointsTypeForMarket][$index].Under"
+                         ng-click="bet(expandedHdpGames[game.id].markets[game.selectedSequence.subKey][game.selectedSequence.sequence][pointsTypeForMarket][$index].Under, expandedHdpGames[game.id].markets[game.selectedSequence.subKey][game.selectedSequence.sequence][pointsTypeForMarket][$index], expandedHdpGames[game.id])"
+                         ng-class="{'locked': (expandedHdpGames[game.id].markets[game.selectedSequence.subKey][game.selectedSequence.sequence][pointsTypeForMarket][$index].Under.price | oddConvert:'decimal') == 1 || game.is_blocked, up: expandedHdpGames[game.id].markets[game.selectedSequence.subKey][game.selectedSequence.sequence][pointsTypeForMarket][$index].Under.price_change == '1', down: expandedHdpGames[game.id].markets[game.selectedSequence.subKey][game.selectedSequence.sequence][pointsTypeForMarket][$index].Under.price_change == '-1', 'active': isEventInBetSlip(expandedHdpGames[game.id].markets[game.selectedSequence.subKey][game.selectedSequence.sequence][pointsTypeForMarket][$index].Under)}">
+                        <div class="asian-market-j">
+                            <div class="asian-market-cell-j">
+                                <div class="asian-market-rub-j" ng-bind="(('aU'|translate) + ' ' + (expandedHdpGames[game.id].markets[game.selectedSequence.subKey][game.selectedSequence.sequence][pointsTypeForMarket][$index].Under.base|handicapBaseFormat))"></div>
+                            </div>
+                            <div class="asian-market-cell-j odd-container-j">{{expandedHdpGames[game.id].markets[game.selectedSequence.subKey][game.selectedSequence.sequence][pointsTypeForMarket][$index].Under.price|oddConvert:env.oddFormat:null:pointsTypeForMarket}}</div>
+                        </div>
+                    </div>
+                </td>
+                <td class="dark-bg-j ms"></td>
+                <td class="dark-bg-j xs"></td>
+            </tr>
+            <tr ng-show="game.expanded && !extraMarketsLoading && (!expandedHdpGames[game.id] || !expandedHdpGames[game.id].marketRows[game.selectedSequence.subKey] || expandedHdpGames[game.id].marketRows[game.selectedSequence.subKey][game.selectedSequence.sequence].length == 0)">
+                <td colspan="7" class="dark-bg-j bt-j no-markets-j"><center trans>There are no extra markets</center></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+</div>

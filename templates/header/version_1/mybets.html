@@ -1,0 +1,6 @@
+<li class="my-bets" ng-show="conf.betHistoryEnabled || conf.enableCasinoBetHistory">
+    <a title="My bets" trans="attr-only" prevent-fast-click ng-click="goToTop();myBetsToggle()"
+       ng-class="{'active-s': env.sliderContent === 'recentBets' || env.sliderContent === 'betHistory' || env.sliderContent === 'casinoBetHistory'}">
+        <p trans>My bets</p>
+    </a>
+</li>

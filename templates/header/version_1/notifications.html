@@ -1,0 +1,13 @@
+<div class="notifications-container"  ng-controller="notificationCtrl">
+    <div class="info-sportsbook-tooltip" ng-repeat="notification in notifications" ng-class="notification.type" ng-show="notification.visible">
+        <div class="closed-b-tool" ng-click="closeLayoutSwitcherHint(notification)">
+            <span></span>
+        </div>
+        <h3 ng-bind-html = "notification.title|translate|html"></h3>
+        <ul>
+            <li><p trans ng-bind-html = "notification.content|translate|html"></p></li>
+            <li ng-hide="notification.hideCheckBox"><label><input type="checkbox" ng-model="notification.dontShowLayoutSwitcherHintAgain"><span trans>Don't show this again.</span></label></li>
+        </ul>
+
+    </div>
+</div>

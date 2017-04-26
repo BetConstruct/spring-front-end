@@ -1,0 +1,15 @@
+<div class="game-events-contain-b">
+    <ul>
+        <li ng-repeat="event in market.events track by $index">
+            <div class="small-title-event-b">{{event.name}}</div>
+            <p>
+                <span ng-if="event.name">
+                    {{event.price|oddConvert:env.oddFormat}}
+                </span>
+                <span ng-if="!event.name">
+                    {{displayBase(event, market)}}
+                </span>
+            </p>            
+         </li>
+    </ul>
+</div>

@@ -1,0 +1,71 @@
+<div class="how-to-play-wrapper">
+    <div class="top-row-wrapper-b">
+        <div class="info-page-how-to-play">
+            <h1 ng-bind-html="howToPlayPage.learnToWin.title"></h1>
+            <div class="description-how-to-play">
+                <p ng-bind-html="howToPlayPage.learnToWin.content"></p>
+            </div>
+            <div class="icons-how-to-play-b">
+                <ul>
+                    <li>
+                        <i class="time-24-7-icon"></i>
+                    </li>
+                    <li>
+                        <i class="live-b-icon"></i>
+                    </li>
+                    <li>
+                        <i class="hd-b-icon"></i>
+                    </li>
+                    <li>
+                        <i class="multiplayer-b-icon"></i>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="buttons-how-to-play-contain">
+                <ul>
+                    <li>
+                        <button ng-click="broadcast('youtube.videourl', howToPlayPage.learnToWin.custom_fields.url[0]);$event.stopPropagation();"><i></i><span trans>Visit the studio</span></button>
+                    </li>
+                    <li>
+                        <button ng-click="scrollToSelectedItem('liveCasinoRules')"><span ng-bind-html="selectedDealerPage.title"></span></button>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+
+    <div id="liveCasinoRules" class="how-to-play-rules-b">
+        <div class="rules-info-b-contain">
+            <div class="rules-icon-box-wrapper">
+                <div class="rules-info-icon-box"></div>
+            </div>
+            <h2 ng-bind-html="howToPlayPage.rules.title"></h2>
+            <div class="full-rules-info-box">
+                <p ng-bind-html="howToPlayPage.rules.content"></p>
+            </div>
+        </div>
+    </div>
+
+    <div class="product-rules-contain-b">
+        <div class="prod-rulles-slider-container">
+            <div class="rules-slider-box-b">
+                <div ng-show="howToPlayPage.products.length > 1" ng-click="slideHowToPlayProducts('left')" class="arrow-slider-rules left"></div>
+                <div ng-show="howToPlayPage.products.length > 1" ng-click="slideHowToPlayProducts('right')" class="arrow-slider-rules right"></div>
+                <ul>
+                    <li ng-repeat="item in howToPlayPage.products[howToPlayPage.sliderIndex].group track by item.id">
+                        <div class="icon-prod-wrapper-box {{ item.custom_fields.game[0] }}">
+                            <i></i>
+                        </div>
+                        <h3><span ng-bind-html="item.title"></span></h3>
+                        <p ng-bind-html="item.content"></p>
+                        <div ng-show="item.custom_fields.url[0]" class="read-more-button-box">
+                            <button ng-click="$root.globalDialog={type:'gamerules',title: '',iframeURL:item.custom_fields.url[0]};$event.stopPropagation();" trans>Read</button>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>

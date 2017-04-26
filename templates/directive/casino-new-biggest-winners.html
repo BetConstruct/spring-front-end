@@ -1,0 +1,24 @@
+<div class="gamers-won-list-b">
+    <div class="winner-list-view-b">
+        <div class="winners-list-tab-view-b">
+            <ul>
+                <li ng-if="biggestWinners.topWinners" ng-class="{'active': activeTab === 'top'}" ng-click="changeTab('top')" trans>Top Winners</li>
+                <li ng-if="biggestWinners.lastWinners" ng-class="{'active': activeTab === 'last'}" ng-click="changeTab('last')" trans>Last Winners</li>
+            </ul>
+        </div>
+        <ul ng-show="!winnersLoading || winners">
+            <li ng-repeat="winner in winners track by $index">
+                <div class="winners-single-view-b">
+                    <div class="winner-info-box-b">
+                        <div class="winners-cell-b">
+                            <h3 ng-bind="winner.player_user_name"></h3>
+                            <p ng-bind="winner.game_name"></p>
+                        </div>
+                        <span>{{winner.win_amount|number:conf.balanceFractionSize}} {{winner.currency_id|currency}}</span>
+                    </div>
+                </div>
+            </li>
+        </ul>
+        <vbet-loader ng-if="!winners && winnersLoading"></vbet-loader>
+    </div>
+</div>

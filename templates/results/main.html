@@ -1,0 +1,4 @@
+<ng-include ng-if="conf.results.version===1 && conf.sportEnabled" src="getTemplate('templates/results/classic.html')"></ng-include>
+<div class="block-size-visible-b classic-version-euro2016" ng-if="conf.results.version===2 && conf.sportEnabled">
+    <ng-include class="classic-view-wrapper-v3" src="getTemplate('templates/results/euro2016.html')"></ng-include>
+</div>

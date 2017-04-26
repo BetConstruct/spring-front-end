@@ -1,0 +1,87 @@
+<div class="featured-game-wrapper-j" ng-controller="featuredgameCtrl">
+    <div class="featured-game-block-j game-bg-{{mostPopularLiveGame.sport.alias}}" ng-show="mostPopularLiveGame">
+        <div class="bg-game-featured" ng-show="mostPopularLiveGame.image.length"><img
+                ng-src="{{mostPopularLiveGame.image.length && mostPopularLiveGame.image}}"></div>
+        <ul ng-init="getOneLiveGame()">
+            <li>
+                <div class="featured-game-title-container-j">
+                    <h1 ng-show="mostPopularLiveGame.type != 1" trans>Featured game</h1>
+                    <h1 ng-show="mostPopularLiveGame.type == 1" trans>Live now</h1>
+                    <p>
+                        <small ng-show="mostPopularLiveGame.type == 1" trans>live</small>
+                        <span>{{ mostPopularLiveGame.info.current_game_state|convertSetName:mostPopularLiveGame.sport.alias|translate }}
+                            {{ (mostPopularLiveGame.info.current_game_time.split(' ').length ===2 ? mostPopularLiveGame.info.current_game_time.split(' ')[1] : mostPopularLiveGame.info.current_game_time.split(' ')[0])|translate}}</span>
+                        <span ng-show="mostPopularLiveGame.type == 0"
+                              ng-bind="mostPopularLiveGame.start_ts|formatDate:'full':null:env.timeFormat"></span>,
+                        <span ng-bind="mostPopularLiveGame.sport.name"></span>,
+                        <u ng-bind="mostPopularLiveGame.competition.name" trans></u>
+                    </p>
+                </div>
+            </li>
+            <li>
+                <div class="featured-game-bet-container-j">
+
+
+                    <ul class="featured-game-team-names-container-j">
+                        <li>
+                            <p>{{ mostPopularLiveGame.team1_name }}</p>
+                        </li>
+                        <li>
+                            <span>{{ mostPopularLiveGame.info.score1 }}</span>
+                            <span>{{ mostPopularLiveGame.info.score2 }}</span>
+                        </li>
+                        <li>
+                            <p>{{ mostPopularLiveGame.team2_name }}</p>
+                        </li>
+                    </ul>
+                    <a href="#/sport/?type={{mostPopularLiveGame.type}}&sport={{ mostPopularLiveGame.sport.id }}&game={{ mostPopularLiveGame.id }}&competition={{ mostPopularLiveGame.competition.id }}&region={{ mostPopularLiveGame.region.id  }}"
+                       ng-click="gaSend('send', 'event', 'explorer', {'page': $location.path(), 'eventLabel': 'Homepage mostPopLiveGame click'})">
+                        <ul class="featured-game-markets-group-j">
+                            <li>
+                                <ul class="featured-game-market-j">
+                                    <li>
+                                        <p>{{ mostPopularLiveGame.team1_name }}</p>
+                                    </li>
+                                    <li class="rub-j">
+                                        <p>{{mostPopularLiveGame.event.P1.price|oddConvert:env.oddFormat:null:'WINNER'}}</p>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li ng-show="mostPopularLiveGame.event.X">
+                                <ul class="featured-game-market-j">
+                                    <li>
+                                        <p>X</p>
+                                    </li>
+                                    <li class="rub-j">
+                                        <p>{{mostPopularLiveGame.event.X.price|oddConvert:env.oddFormat:null:'WINNER'}}</p>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li>
+                                <ul class="featured-game-market-j">
+                                    <li>
+                                        <p>{{ mostPopularLiveGame.team2_name }}</p>
+                                    </li>
+                                    <li class="rub-j">
+                                        <p>{{mostPopularLiveGame.event.P2.price|oddConvert:env.oddFormat:null:'WINNER'}}</p>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </a>
+                </div>
+                <div class="featured-game-footer-j">
+                    <a class="featured-game-button-j"
+                       href="#/sport/?type={{mostPopularLiveGame.type}}&sport={{ mostPopularLiveGame.sport.id }}&game={{ mostPopularLiveGame.id }}&competition={{ mostPopularLiveGame.competition.id }}&region={{ mostPopularLiveGame.region.id  }}"
+                       ng-click="gaSend('send', 'event', 'explorer', {'page': $location.path(), 'eventLabel': 'Homepage mostPopLiveGame click'})"
+                       trans>Bet now!</a>
+                    <a class="featured-game-more-markets-j"
+                       href="#/sport/?type={{mostPopularLiveGame.type}}&sport={{ mostPopularLiveGame.sport.id }}&game={{ mostPopularLiveGame.id }}&competition={{ mostPopularLiveGame.competition.id }}&region={{ mostPopularLiveGame.region.id  }}"
+                       ng-click="gaSend('send', 'event', 'explorer', {'page': $location.path(), 'eventLabel': 'Homepage mostPopLiveGame click'})"
+                       ng-show="mostPopularLiveGame.markets_count > 1">{{'+ {1} Markets'|translate:[(mostPopularLiveGame.markets_count -1)]}}</a>
+                </div>
+            </li>
+        </ul>
+    </div>
+    <vbet-loader ng-show="!mostPopularLiveGame"></vbet-loader>
+</div>

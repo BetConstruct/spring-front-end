@@ -1,0 +1,2 @@
+<li class="title-sep"><span trans>Sportsbook layout:</span></li>
+<li ng-repeat="(view, value ) in sportsbookAvailableViews track by $index" ng-click="switchSportsbookLayout(view)" ng-class="{'active-format': conf.sportsLayout === view}" ng-bind="view == 'euro2016'? ('Classic'|translate) : view|capitalise|translate"></li>

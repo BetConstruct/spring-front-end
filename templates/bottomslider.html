@@ -1,0 +1,23 @@
+<div class="upcomming-contain" ng-show="sliderHasContent" watch-resize>
+    <div class="slider-upcomming">
+
+        <h3>{{sliderTitle}}</h3>
+
+        <div class="arrow-left-s" ng-show="offset > 0"><a ng-click="slide('left')"></a></div>
+        <div class="arrow-right-s" ng-show="offset < allItemsCount - itemsToShow"><a ng-click="slide('right')"></a></div>
+        <ul>
+            <li ng-repeat="item in items" class="slider-animate" ng-class="{'first': $first, 'last': $last}">
+                <a ng-href="{{item.link}}">
+                    <p class="country-match">{{item.title}}</p>
+                    <span class="sport-liga" ng-bind-html="item.content"></span>
+                    <p class="picture-news-block">
+                        <span class="sport-news-name" ng-show="item.custom_fields.sport_name[0]">{{item.custom_fields.sport_name[0]}}</span>
+                        <img ng-src="{{item.thumbnail}}" ng-show="item.thumbnail">
+                    </p>
+                    <p class="date-next-game">{{item.custom_fields.bottom_line_text[0]}}</p>
+                </a>
+            </li>
+
+        </ul>
+    </div>
+</div>

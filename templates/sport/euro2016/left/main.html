@@ -1,0 +1,19 @@
+<vbet-loader ng-show="leftMenuLiveLoading"></vbet-loader>
+<div ng-show="!leftMenuLiveLoading" class="full-menu-wrapper-v3">
+    <!--Live-->
+    <include-template class="left-menu-wrapper-v3"
+          template-path="templates/sport/euro2016/left/live.html"
+          ng-show="env.live"
+    ></include-template>
+    <!--Live END-->
+
+    <!--Prematch and Multiselect-->
+    <include-template class="left-menu-wrapper-v3"
+          template-path="templates/sport/euro2016/left/prematch.html"
+          ng-show="!env.live"
+    ></include-template>
+    <!--Prematch and Multiselect-->
+</div>
+
+<h1 ng-show="((!leftMenuLiveSports.length && env.live) || (!leftMenuPrematchSports.length && !env.live)) && !leftMenuLiveLoading && !$root.myGames.length"
+    class="now-games-menu" trans>No games found</h1>

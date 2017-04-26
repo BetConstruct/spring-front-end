@@ -1,0 +1,44 @@
+<!--General information-->
+<div class="bet-history" ng-if="env.sliderContent === 'help'" ng-controller="cmsPagesCtrl">
+	<div class="contein-bet-history" ng-init="loadHelpPages()">
+    	<div class="general-left-block">
+            <div class="general-nav-block">
+            	<ul>
+                	<li ng-class="{'active-item-g': (selectedPage.id === level1.id || selectedPageParent === level1.id)}" ng-repeat="level1 in navigation" ng-show="(!level1.custom_fields.link || !level1.custom_fields.link.length || level1.custom_fields.link[0] == '') && !level1.custom_fields.hideinslider[0]">
+                        <a ng-click="openPage(level1)" >{{ level1.title }}<span class="aroow-rotate-b"></span></a>
+                    
+                    	<ul>
+                        	<li ng-class="{'sub-astive': selectedPage.id === level2.id}" ng-repeat="level2 in level1.children" ng-show="selectedPage.id === level2.parent || selectedPageParent === level2.parent">
+                                <a ng-show="level2.custom_fields.link[0] == null"  ng-click="openPage(level2)">{{ level2.title }}</a>
+                                <a ng-show="level2.custom_fields.link[0] != null" href="{{level2.custom_fields.link[0]}}" target="{{level2.custom_fields.new_window[0] == 1 ? '_blank' : '_self'}}">{{level2.title }}</a>
+                            </li>
+
+                        </ul>
+                     </li>
+                </ul>
+            </div>
+         </div>
+        <!--Блок с датой END-->
+        <!--all bets block-->
+        <div class="right-block-history">	
+            <div class="All-Bets-history">
+
+                <div class="general-text-icons {{selectedPage.slug}}" ng-if="globalConfig.main.downloadPDFButtons">
+                    <div class="print-icon-b">
+                        <a ng-click="printSelectedPage()" trans>Print</a>
+                    </div>
+                    <div class="download-icon-b" ng-if="downloadPDFLink">
+                        <a href="{{downloadPDFLink}}" target="_blank" trans>Download</a>
+                    </div>
+                </div>
+
+                <h3>{{ selectedPage.title }} </h3>
+
+            	<div class="general-text-list" ng-bind-html="selectedPage.content">
+
+             </div> 
+           </div>    
+          </div>
+    </div>
+</div>
+<!--General information END-->

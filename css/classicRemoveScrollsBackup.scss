@@ -1,0 +1,233 @@
+/*remove scroll*/
+@mixin hidescrolls {
+  .contain-gameing{
+    position: relative;
+	background: $skin-palette-12;
+  }
+  .gameing-wrapper{
+    position: static;
+    float: left;
+    margin: 33px 0 0 0;
+  }
+  .gameing-wrapper.live {
+    .scroll-j-scroll-wrap, .scroll-j-scroll {
+      position: static;
+    }
+  }
+  .todays-results-j-contain {
+    height: auto;
+    overflow-x: inherit;
+    overflow-y: inherit;
+  }
+  .left-list-menu{
+    overflow: inherit;
+    margin: 0;
+  }
+  .title-menu-b, .left-menu-contain.video-and-animation-opened .scroll-contain.with-video-animation.search-menu-enabled-j .left-list-menu .title-menu-b, .left-menu-contain.video-and-animation .scroll-contain.with-video-animation.search-menu-enabled-j .left-list-menu .title-menu-b{
+    position: relative;
+    float: left;
+    top: 0!important;
+  }
+  &.results .game-center-container.left-menu-closed .scroll-contain{
+    width: 100%;
+  }
+  .search-menu-enabled-j .title-menu-b{
+    height: 120px;
+  }
+  .left-menu-contain.mini .search-menu-wrapper-j {
+    width: 28px;
+  }
+  &.classic .left-list-menu .search-menu-wrapper-j, .left-menu-contain.video-and-animation .scroll-contain.with-video-animation.search-menu-enabled-j .left-list-menu .search-menu-wrapper-j, .left-menu-contain.video-and-animation-opened .scroll-contain.with-video-animation.search-menu-enabled-j .left-list-menu .search-menu-wrapper-j {
+    position: relative;
+    top: 0 !important;
+    float: left;
+    margin-top: 35px;
+  }
+  &.classic .gameing-wrapper.prematch .multiview-enabled .compitition-b:hover .poup-sports {
+    left: 218px;
+  }
+  &.classic .gameing-wrapper.prematch .multiview-enabled .left-list-menu ul li ul li .poup-sports{
+    margin: 0;
+  }
+  &.classic .right-betslip-contain {
+    overflow: hidden;
+  }
+  &.classic .game-center-container{
+    position: relative;
+    float: left;
+    width: 100%;
+  }
+  &.classic .centr-market-contain{
+    width: 100%;
+    min-width: 474px;
+  }
+  &.classic .left-menu-contain .scroll-contain, .left-menu-contain.video-and-animation .scroll-contain.with-video-animation.search-menu-enabled-j, .left-menu-contain.video-and-animation-opened .scroll-contain.with-video-animation.search-menu-enabled-j{
+    position: relative;
+    left: 0;
+    right: 0;
+    z-index: 55;
+    top: 0 !important;
+  }
+  &.classic .gameing-wrapper.prematch .multiview-enabled .left-list-menu ul li ul li .poup-sports:not(*:root){margin: 0;}
+  &.classic .right-betslip-contain .name-b-list{width: 272px;}
+  &.classic .right-betslip-contain .all-bets-info{
+    overflow: inherit;
+    max-height: inherit;
+  }
+  &.classic .right-betslip-contain .settings-icon-bet{right: 0;}
+  &.classic .right-betslip-contain .betslit-top-name-box{
+    position: static;
+    height: auto;
+    top: 0;
+    left: 0;
+    width: 100%;
+    float: left;
+  }
+  &.classic .gameing-wrapper .team-name-market{
+    float: left;
+    position: static;
+  }
+  &.classic .gameing-wrapper .team-name-market.prematch{
+    width: 360px;
+    position: absolute;
+    left: 0;
+    top: 0;
+  }
+  &.classic .gameing-wrapper .team-name-market.info{
+    width: calc(100% - 366px);
+    margin-left: 5px;
+  }
+  &.classic .right-betslip-contain .bet-settings-container:hover .set-icon, &.classic .right-betslip-contain .bet-settings-container .set-icon{margin-right: 0;}
+  &.classic .gameing-wrapper.prematch .centr-market-contain .scroll-contain{
+    margin-top: 38px;
+    position: relative;
+    top: 0;
+    left: 0;
+    right: 0;
+  }
+  &.classic .statistics-toggle .game-list-statistics td:first-child p{width: auto;}
+  &.classic .gameing-wrapper.prematch .centr-market-contain .team-name-market.info ~ .scroll-contain{
+    width: calc(100% - 366px);
+    margin-top: 0;
+    margin-left: 5px;
+  }
+  &.classic .gameing-wrapper.prematch .centr-market-contain.favorite-game-open .open-game-is-live ~ .scroll-contain,
+  &.classic .gameing-wrapper.prematch .centr-market-contain.favorite-game-open .team-name-market.info ~ .scroll-contain{
+    margin-left: 0;
+    width: 100%;
+  }
+  &.classic .gameing-wrapper.live .centr-market-contain.favorite-game-open .game-center-container .team-name-market.info,
+  &.classic .gameing-wrapper.prematch .centr-market-contain.favorite-game-open .team-name-market.info{
+    width: 100%;
+    margin: 0;
+  }
+  &.classic .scroll-contain, &.classic .gameing-wrapper.prematch .centr-market-contain.virtual-games .scroll-contain{
+    position: static;
+    top: 0;
+    overflow: inherit;
+    width: 100%;
+    float: left;
+    height: auto;
+    margin-bottom: 10px;
+  }
+  .gameing-wrapper.prematch .multiview-enabled .left-list-menu ul li ul li .poup-sports{
+	top: 0 !important;
+  }
+  .gameing-wrapper.prematch .left-list-menu ul li.active ul li.active .compitition-b{position: relative;}
+  .left-list-menu ul li ul li{overflow: inherit;}
+  .left-list-menu ul li ul li ul.popup{overflow: inherit;}
+}
+@media screen and (max-width: 990px) {
+    .body-wrapper {
+        @include hidescrolls;
+    }
+    .gameing-wrapper.prematch .centr-market-contain .scroll-contain.prematch {
+        overflow-y: auto;
+        overflow-x: hidden;
+    }
+    .body-wrapper.dashboard .scroll-contain{
+        max-width: 474px;
+    }
+    .body-wrapper.classic .right-betslip-contain {
+        max-width: 254px;
+    }
+    .live-game-container .game-info .unpin-button {
+        opacity: 0.5;
+        pointer-events: none;
+        cursor: default;
+    }
+    .body-wrapper.classic.overview .game-center-container {
+        max-width: 710px;
+    }
+    .body-wrapper.results .centr-market-contain .scroll-contain .md-progress-circular {
+        position: relative;
+        padding-bottom: 30px;
+    }
+     .body-wrapper.multiview .centr-market-contain {
+        height: 100%;
+    }
+    .body-wrapper.multiview .centr-market-contain  .game-center-container {
+        display: table;
+        height: 100%;
+        table-layout: fixed;
+        width: 496px;
+    }
+    .body-wrapper.multiview .centr-market-contain .scroll-contain.multiview-wrapper {
+        position: absolute;
+        height: 100%;
+        bottom: 0;
+        display: table-cell;
+    }
+}
+.body-wrapper.no-classic-scroll {
+  @include hidescrolls;
+}
+.body-wrapper.no-classic-scroll.classic .gameing-wrapper.live .contain-gameing.video-resize-block .centr-market-contain .scroll-contain {
+  width: 100%;
+}
+@media screen and (min-width: 1600px){
+  .body-wrapper.classic.no-classic-scroll .gameing-wrapper .team-name-market.prematch{
+    width: 410px;
+  }
+  .body-wrapper.classic.no-classic-scroll .gameing-wrapper.prematch .centr-market-contain .team-name-market.info ~ .scroll-contain,
+  .body-wrapper.classic.no-classic-scroll .gameing-wrapper .team-name-market.info{
+    width: calc(100% - 416px);
+  }
+  .body-wrapper.classic.no-classic-scroll .right-betslip-contain .name-b-list{width: 350px;}
+  .body-wrapper.classic.no-classic-scroll .gameing-wrapper.prematch .multiview-enabled .compitition-b:hover .poup-sports {
+    left: 298px;
+  } 
+}
+@media screen and (max-width: 1279px){
+  .body-wrapper.classic.no-classic-scroll .gameing-wrapper.prematch .centr-market-contain .scroll-contain.prematch{
+    overflow-y: auto;
+    overflow-x: hidden;
+    margin-top: 0;
+    margin-left: 0;
+    height: 230px;
+    top: 38px;
+	  min-height: inherit;
+  }
+  .body-wrapper.classic.no-classic-scroll .gameing-wrapper .team-name-market.prematch{
+    width: 100%;
+    min-width: 474px;
+  }
+  .body-wrapper.classic.no-classic-scroll .gameing-wrapper .team-name-market.info {
+    width: 100%;
+    margin-left: 0;
+    margin-top: 38px;
+    min-width: 474px;
+  }
+  .body-wrapper.classic.no-classic-scroll .gameing-wrapper.prematch .centr-market-contain .team-name-market.info ~ .scroll-contain {
+    width: 100%;
+    margin-top: 0;
+    margin-left: 0;
+    min-width: 474px;
+    position: relative;
+  }
+  .body-wrapper.classic.no-classic-scroll .gameing-wrapper .centr-market-contain .scroll-contain{min-width: 474px;}
+  .body-wrapper.classic.no-classic-scroll .gameing-wrapper.prematch .multiview-enabled .compitition-b:hover .poup-sports {
+    left: 218px;
+  }
+}
+/*remove scroll end*/

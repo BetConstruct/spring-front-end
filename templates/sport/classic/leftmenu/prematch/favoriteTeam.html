@@ -1,0 +1,15 @@
+<li ng-show="env.authorized && !favoriteTeamLoading && !favoriteTeamError" class="favorite-team-j" ng-class="{'active': leftMenuState.favoriteTeam.expanded}">
+    <a ng-click="favoriteTeamClickedInPrematch()">
+        <span class="favorites icon-star2"></span>
+        {{favoriteTeam.name.new ? favoriteTeam.name.new : 'My favorite team'|translate}}
+        <span>({{data.favoriteTeamPrematchGames.list.length}})</span>
+        <b ng-show="favoriteTeam.editable" class="arrow-rotate icon-arrow-right6"
+            ng-click="leftMenuState.favoriteTeam.expanded = !leftMenuState.favoriteTeam.expanded; leftMenuClosed ? toggleLeftMenu() : void()">
+        </b>
+    </a>
+    <ul ng-show="leftMenuState.favoriteTeam.expanded" class="favorite-team-group-j">
+        <div class="favorite-nav favorite-team-change-form" ng-class="{'active': leftMenuState.favoriteTeamForm.expanded}">
+            <ng-include src="getTemplate('templates/sport/classic/leftmenu/favoriteTeamForm.html')"></ng-include>
+        </div>
+    </ul>
+</li>

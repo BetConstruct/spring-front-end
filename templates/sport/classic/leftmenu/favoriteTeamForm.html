@@ -1,0 +1,66 @@
+<div ng-show="favoriteTeam && favoriteTeam.editable">
+    <a class="select-fav-team-j" 
+       ng-click="formHeaderClicked()"
+    >
+        {{'Select your favorite team'|translate}}
+        <b class="arrow-rotate icon-arrow-right6"></b>
+    </a>
+    <div ng-show="leftMenuState.favoriteTeamForm.expanded" class="favorite-team-content-j">
+
+        <form name="favoriteTeamForm">
+            <div class="block-search">
+                <input name="" 
+                       type="text" 
+                       placeholder="{{'Search for team'|translate}}" 
+                       title="{{'Search for team'|translate}}" 
+                       ng-model="data.searchTerm" 
+                       ng-change="doSearch(data.searchTerm)"
+                       ng-keypress="searchEnter($event)" 
+                       ng-model-options="{ debounce: 500 }"
+                       trans
+               >
+
+                <!-- result search-->
+                <div class="search-results-container" ng-show="data.showSearchResults" hide-on-click state-flag-var="data.showSearchResults" 
+                     broadcast-on-close="search.ResultsClosed" class-on-scroll="search-results-container-scroll,search-results-container" >
+                    <div class="search-results-inner">
+                        <div class="arrow-sport"></div>
+                        <h3 trans>Search results</h3>
+                        <div id="result-search" 
+                            keyboard-navigation 
+                            result-id-prefix="search-result-" 
+                            results-ids="searchResultGameIds" 
+                            selected-result-id="selectedSearchResultId" show-results-flag="data.showSearchResults">
+                            <dl ng-repeat="sportResults in data.searchResults|orderBy:'order'" class="search-result-item">
+                                <dt>{{ sportResults.results[0].sport.name }}</dt>
+                                <dd ng-repeat="result in sportResults.results" id="search-result-{{ result.game.id }}">
+                                    <button ng-show="result.game.team1_name.toLowerCase().indexOf(data.searchTerm.toLowerCase()) !== -1"
+                                       ng-click="selectFavoriteTeam({'name': result.game.team1_name, 'id': result.game.team1_id})">
+                                        {{ result.game.team1_name }}
+                                    </button>
+                                    <button ng-show="result.game.team2_name.toLowerCase().indexOf(data.searchTerm.toLowerCase()) !== -1"
+                                       ng-click="selectFavoriteTeam({'name': result.game.team2_name, 'id': result.game.team2_id})">
+                                        {{ result.game.team2_name }}
+                                    </button>
+                                </dd>
+                            </dl>
+                        </div>
+                        <div class="search-no-results" ng-show="!(data.searchResults|count)" trans>no results</div>
+                    </div>
+                </div>
+            </div>
+            <span class="confirm-text-j" ng-show="favoriteTeam.name.new">
+                {{'Click "Confirm" button to set {1} as your favorite team'|translate:[favoriteTeam.name.new]}}
+            </span>
+            <button ng-click="storeFavoriteTeam()" ng-disabled="favoriteTeamLoading || favoriteTeam.name.new === favoriteTeam.name.old">
+                {{'Confirm'|translate}}
+            </button>
+            <button ng-click="resetFavoriteTeam()" class="skin-j" ng-disabled="favoriteTeamLoading || favoriteTeam.name.new === favoriteTeam.name.old">
+                {{'Cancel'|translate}}
+            </button>
+            <span class="info-j">
+                {{'From now on you can choose your favorite football team and even get cool bonuses betting on it. Just search to add it.'|translate}}
+            </span>
+        </form>
+    </div>
+</div>

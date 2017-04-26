@@ -1,0 +1,25 @@
+<form ng-init="isInSportsVariable = isInSports()" ng-show="isInSportsVariable" ng-controller="searchCtrl">
+    <div class="block-search" ng-show="!conf.rfid.loginWIthRFID || conf.rfid.loginWIthRFID && env.authorized">
+        <input name="" type="text" placeholder="competition or a team..." title="Search a competition or a team..." ng-model="searchTerm" ng-keypress="searchEnter($event)" trans>
+        <!-- result search-->
+        <div class="search-results-container" ng-show="showSearchResults" hide-on-click state-flag-var="showSearchResults" broadcast-on-close="search.ResultsClosed" class-on-scroll="search-results-container-scroll,search-results-container" >
+            <div class="search-results-inner">
+                <div class="arrow-sport"></div>
+                <h3 trans>Search results</h3>
+                <div id="result-search" keyboard-navigation result-id-prefix="search-result-" select-result-by-id-func="selectGameFromSearchResults" results-ids="searchResultGameIds" selected-result-id="selectedSearchResultId" show-results-flag="showSearchResults">
+                    <dl ng-repeat="sportResults in searchResults|orderBy:'order'" class="search-result-item">
+                        <dt>{{ sportResults.results[0].sport.name }}</dt>
+                        <dd ng-repeat="result in sportResults.results" ng-class="{'active': selectedSearchResultId === result.game.id}" id="search-result-{{ result.game.id }}">
+                            <button ng-click="goToResult(result)">
+                                {{ result.game.team1_name }} - {{ result.game.team2_name }}
+                                <br>
+                                <div>{{ result.competition.name }} {{result.game.start_ts|formatDate}}</div>
+                            </button>
+                        </dd>
+                    </dl>
+                </div>
+                <div class="search-no-results" ng-show="!(searchResults|count)" trans>no results</div>
+            </div>
+        </div>
+    </div>
+</form>

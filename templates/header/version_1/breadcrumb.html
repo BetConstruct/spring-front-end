@@ -1,0 +1,13 @@
+<div class="topmenu-sport-and-region" ng-click="scrollToElement('header')"><span ng-show="$location.path() === '/sport/'">{{ selectedSportName }} {{ selectedRegionName }}</span></div>
+<div class="topmenu-sport-and-region" ng-click="scrollToElement('header')"><span ng-show="isInPoker()" trans>Poker</span></div>
+<div class="topmenu-sport-and-region" ng-click="scrollToElement('header');broadcast('game.closeCasinoGame');"><span ng-show="$location.path() === '/casino/'" trans>Casino</span></div>
+<div class="topmenu-sport-and-region" ng-click="scrollToElement('header');broadcast('game.closeCasinoGame');"><span ng-show="$location.path() === '/livedealer/'" trans>Live casino</span></div>
+<div class="topmenu-sport-and-region" ng-click="scrollToElement('header')"><span ng-show="$location.path() === '/fantasy/'" trans>Fantasy Sports</span></div>
+<div class="topmenu-sport-and-region" ng-click="scrollToElement('header')"><span ng-show="$location.path() === '/ogwil/'" trans>OGWIL</span></div>
+<div class="topmenu-sport-and-region" ng-click="scrollToElement('header');broadcast('game.closeCasinoGame');"><span ng-show="$location.path() === '/games/'" trans>Games</span></div>
+<div class="topmenu-sport-and-region" ng-click="scrollToElement('header')"><span ng-show="$location.path() === '/backgammon/'" trans>Backgammon</span></div>
+<div class="topmenu-sport-and-region" ng-click="scrollToElement('header')"><span ng-show="$location.path() === '/belote/'" trans>Belote</span></div>
+<div class="topmenu-sport-and-region" ng-click="scrollToElement('header')"><span ng-show="$location.path() === '/jackpot/'" trans>Jackpot</span></div>
+<div class="topmenu-sport-and-region">                                     <span ng-show="$location.path() === '/financials/'" trans>Financials</span></div>
+<div class="topmenu-sport-and-region" ng-click="scrollToElement('header')"><span ng-show="$location.path() === '/freebet/'" trans>Free Bet</span></div>
+<div class="topmenu-sport-and-region" ng-click="scrollToElement('header')"><span ng-show="$location.path() === '/poolbetting/'" trans>Pool Betting</span></div>

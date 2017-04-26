@@ -1,0 +1,138 @@
+<div class="container-p gameing-wrapper" ng-controller="dashboardCtrl" ng-init="setTitle(('Dashboard'|translate))" ng-class="{'dashboard-live': env.live, 'dashboard-prematch': !env.live}" no-animate>
+    <div class="left-container-p" ng-class="{'mini-p': leftMenuClosed}">
+        <ng-include src="getTemplate('templates/sport/classic/leftmenu/main.html')" class="left-menu-wrapper-j" no-animate></ng-include>
+    </div>
+    <div class="center-container-p">
+        <div class="old-classic-scroll-contain">
+            <div class="contain-gameing">
+
+
+                <!-- System Calculator-->
+                <div id="system-claculator-container" ng-if="$root.showSystemCalculator" draggable allow-other-mouse-events drag-from="calculator-draggable-header">
+                    <ng-include src="getTemplate('templates/sport/classic/systemCalculator.html')"></ng-include>
+                </div>
+                <!-- System Calculator-->
+
+                <!--Dashboard center-->
+                <div class="dashboard-wrapper" ng-class="{'dashboarde-extended-j':conf.dashboard.version==2}" no-animate>
+
+                    <div ng-if="conf.dashboard.version==2 && conf.dashboard.sliders" class="bet-now-widget-contain" ng-class="{'closed':topBannersClosed}">
+                        <div class="title-b-widget" ng-click="topBannersClosed = !topBannersClosed">
+                            <h3></h3>
+                            <div class="closed-open-arrow"></div>
+                        </div>
+                        <div class="dashboard-full-width-slider-j">
+                            <div ng-if="conf.dashboard.sliders[0]" class="big-cash baner-new" banner-slider slug="dashboardLeftBanners"></div>
+                            <div ng-if="conf.dashboard.sliders[1]" class="big-cash baner-new" banner-slider slug="dashboardRightBanners"></div>
+                            <div ng-if="conf.dashboard.sliders[2]" class="big-cash baner-new" banner-slider slug="homepageRightBanners"></div>
+                            <div ng-if="conf.dashboard.sliders[3]" class="big-cash baner-new" banner-slider slug="homepageBottomBanners"></div>
+                        </div>
+                    </div>
+
+                    <div class="dashboard-left-column">
+                        <div ng-if="conf.dashboard.version==1" class="contein-cash" ng-include="getTemplate('templates/sport/dashboard/betnowwidget.html')"></div>
+                        <div ng-if="conf.dashboard.version==2" class="bet-now-multiple-widget-j">
+                            <div ng-if="showGames && (showGames[1].length === 0 && showGames[0].length === 0)" class="full-widget-game-info dashboard-loading-t">
+                                <vbet-loader></vbet-loader>
+                            </div>
+                            <table ng-if="showGames && (showGames[1].length > 0 || showGames[0].length > 0)">
+                                <tr>
+                                    <td ng-if="showGames[1].length > 0">
+                                        <div class="left-row-t" ng-repeat="game in showGames[1]" ng-init="showGameId = game"
+                                             class="contein-cash"
+                                             ng-include="getTemplate('templates/sport/dashboard/betnowwidget.html')">
+                                        </div>
+                                    </td>
+                                    <td ng-if="showGames[0].length > 0">
+                                        <div class="left-row-t" ng-repeat="game in showGames[0]" ng-init="showGameId = game"
+                                             class="contein-cash"
+                                             ng-include="getTemplate('templates/sport/dashboard/betnowwidget.html')">
+                                        </div>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div ng-if="conf.dashboard.version==3" make-slider move-roundly="true" items-count="{{showGames[0].concat(showGames[1]).length}}"
+                             initial-index="1" class="generic-slider" ng-class="{'widget-closed': featuredGamesSlider.closed}">
+
+                            <div class="slide-buttons" ng-show="showGames[0].concat(showGames[1]).length && !featuredGamesSlider.closed" >
+                                <span ng-click="nextSlide()" class="slide-next"></span>
+                                <span ng-click="prevSlide()" class="slide-prev"></span>
+                            </div>
+                            <div ng-repeat="game in showGames[0].concat(showGames[1])" ng-init="showGameId = game" ng-show="$index===currentIndex"
+                                 class="contein-cash"
+                                 ng-include="getTemplate('templates/sport/dashboard/betnowwidget.html')">
+                            </div>
+                        </div>
+
+
+
+                        <div class="bet-now-widget-contain" ng-class="{'closed': highlightsWidgetClosed}">
+                            <div class="title-b-widget" ng-click="highlightsWidgetClosed = !highlightsWidgetClosed && conf.dashboard.version!=2" ng-show="conf.showPromotedGamesOnWidget.enabled">
+                                <h3 trans>Highlights</h3>
+                                <div ng-if="conf.dashboard.version!=2" class="closed-open-arrow"></div>
+                            </div>
+                            <div class="highlits-contain" ng-if="conf.showPromotedGamesOnWidget.enabled">
+                                <game-widget sport-tabs-quantity="5" game-widget-type="'highlights'"  game-widget-title="'Highlights'" class="size-contain-separator"></game-widget>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="dashboard-right-column">
+
+                        <!--slider-->
+                        <div ng-if="conf.dashboard.version==1" class="bet-now-widget-contain slider">
+                            <div class="dashboard-slider-contain" banner-slider slug="dashboardBanners" ng-hide="hide"></div><!--dashboardBanners-->
+                        </div>
+                        <!--slider END-->
+                        <div class="bet-now-widget-contain" ng-class="{'closed':livenowWidgetClosed}">
+                            <div class="title-b-widget" ng-click="livenowWidgetClosed = !livenowWidgetClosed && conf.dashboard.version!=2">
+                                <h3 trans>Live now</h3>
+                                <div ng-if="conf.dashboard.version!=2" class="closed-open-arrow"></div>
+                            </div>
+                            <div class="highlits-contain live-now">
+                                <game-widget ng-if="conf.homePageLastMinuteBets.enable" sport-tabs-quantity="15" game-widget-type="'liveNow'"  game-widget-title="'Live Now'" class="size-contain-separator"></game-widget>
+                            </div>
+                        </div>
+
+                        <div ng-if="conf.dashboard.version==2 && conf.dashboard.v2LastMinuteBets" class="bet-now-widget-contain last-minute-bets-t" ng-class="{'closed':lastMinutesBetsClosed}">
+                            <div class="title-b-widget" ng-click="lastMinutesBetsClosed = !lastMinutesBetsClosed && conf.dashboard.version!=2">
+                                <h3 trans>Last minute bets</h3>
+                                <div ng-if="conf.dashboard.version!=2" class="closed-open-arrow"></div>
+                            </div>
+                            <div class="highlits-contain live-now">
+                                <game-widget ng-if="conf.homePageLastMinuteBets.enable && !conf.twitterFeed.enabled" sport-tabs-quantity="15" game-widget-type="'lastMinutesBets'" game-widget-title="'Last minute bets'" class="last-minutes-widget-b"></game-widget>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+                <!--Dashboard center END-->
+            </div>
+        </div>
+    </div>
+    <div class="right-container-p">
+        <div class="old-classic-scroll-contain">
+            <div class="right-betslip-contain"
+                 ng-show="conf.customSportsBook.classic.showBetSlip"
+                 ng-class="{'video-and-animation': hideVideoAndAnimationBox && (openGame.has_animation || (openGame.video_id && conf.videoEnabled)), 'video-and-animation-opened': !hideVideoAndAnimationBox && (openGame.has_animation || openGame.video_id) && !isVideoDetached}">
+                <ng-include class="include-viewSwitcher-j" src="getTemplate('templates/sport/viewswitcher.html')"></ng-include>
+                <!-- Animation control start -->
+                <div class="block-size-visible-b" ng-if="!conf.animationAndVideoOnLeft && (env.live || !virtualSportsSelected) && (((openGame.video_id || openGame.video_data) && conf.videoEnabled && !pinnedGames[openGame.id] && !enlargedGame) || openGame.has_animation)">
+                    <div class="animation-control" ng-include="getTemplate('templates/sport/classic/animation_video.html')"></div>
+                </div>
+
+                <!-- Animation control end -->
+                <div class="betslip-toggle" ng-click="betslipOpen=!betslipOpen" ng-class="{'betslip-button-open':betslipOpen }"><p>BetSlip</p><span class="betslip-bets-count" ng-bind="$root.betSlipBetsCount"></span></div>
+                <div class="list-bet-block" ng-if="$location.path() !== '/poolbetting/'" ng-include="getTemplate('templates/sport/betslip.html')"></div> 
+                <div class="mini-games" ng-if="conf.enableMiniGameUnderBetslip" ng-include="getTemplate('optional_modules/casino/templates/specialgames/minigames.html')"></div>
+                <div class="right-banner-container" ng-if="conf.enableBannerUnderBetslip" ng-controller="cmsSportNewsCtrl" ng-include="getTemplate('templates/sport/classic/banners.html')"></div>
+                <!--Спортивные новости-->
+                <div ng-if="conf.enableNews && conf.showNewsInClassicView" ng-show="(!betSlipBetsCount || betSlipBetsCount === 0) && showNewsBlock && showNewsBetSet && (hideVideoAndAnimationBox || (!openGame.has_animation && (!openGame.video_id || !conf.videoEnabled || pinnedGames[openGame.id] || enlargedGame)))" class="sport-news" ng-include="getTemplate('templates/sport/sportnews.html')" id="sport-news-sidebar"></div>
+
+            </div>
+        </div>
+    </div>
+</div>

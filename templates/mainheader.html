@@ -1,0 +1,126 @@
+<div class="block-size-visible-b
+    {{conf.site_name}}
+    {{conf.disableHeader ? 'no-header' : ''}}
+    {{conf.integrationMode ? 'no-header-navigation' : ''}}
+    headerVersion_{{conf.header.version}}"
+    ng-controller="mainHeaderCtrl"
+    ng-init="mainHeaderInit()"
+>
+    <!--Header авторизованный-->
+    <div class-on-scroll="show-fix,show-normal" class="conteiner new0" ng-class="{'show-game': casinoGameOpened}" id="main-header-container">
+        <ng-include class="block-size-visible-b" src="getTemplate('templates/header/version_' + conf.header.version + '/main.html')"></ng-include>
+    </div>
+
+    <!--Header END авторизованный-->
+
+    <!------------------------------------------------------------------      Slider  ------------------------------------------------------------------------------------------>
+
+    <div class="block-slider block-slider-{{env.sliderContent}}-t" no-animate class-on-scroll="slider-scroll" id="block-slider-container" ng-class="{'popup': env.sliderAsPopup[env.sliderContent]}"
+         hide-on-click="{{env.sliderContent!=='registrationForm'}}" state-flag-var="env.showSlider" broadcast-on-close="slider.close" except="header"
+         ng-show="env.showSlider &&
+            (!conf.enableMixedView || ['recentBetsCashout', 'recentBets', 'betHistory', 'casinoBetHistory','shukaBetHistory',
+                    'settings','deposit', 'withdraw', 'balanceHistory', 'casinoBalanceHistory', 'cashier', 'loyaltyPoints', 'tickets'].indexOf(env.sliderContent) === -1)
+            && (!conf.enableBonuses || env.sliderContent !== 'bonuses') && env.sliderContent !== 'promotionalBonuses' " >
+
+        <div ng-click="closeSlider()" class="close-slider-button-j"></div>
+
+        <!--tabs-->
+        <div class="tab-contain-bets" ng-if="env.sliderContent === 'recentBetsCashout' || env.sliderContent === 'recentBets' || env.sliderContent === 'betHistory' || env.sliderContent === 'casinoBetHistory'|| env.sliderContent === 'shukaBetHistory'">
+            <div class="centr-tabs-block">
+                <ul>
+                    <li ng-class="{'active-tab': env.sliderContent === 'recentBetsCashout'}"
+                        ng-if="conf.betHistoryEnabled && conf.betHistoryCashoutEnabled && conf.sportEnabled" ng-click="env.sliderContent = 'recentBetsCashout';" trans>Bet cashout</li>
+                    <li ng-class="{'active-tab': env.sliderContent === 'recentBets'}"
+                        ng-if="conf.betHistoryEnabled && conf.sportEnabled" ng-click="env.sliderContent = 'recentBets';" trans>Recent Bets</li>
+                    <li ng-class="{'active-tab': env.sliderContent === 'betHistory'}"
+                        ng-if="conf.betHistoryEnabled && conf.sportEnabled" ng-click="env.sliderContent = 'betHistory'" trans>Bet History</li>
+                    <li ng-class="{'active-tab': env.sliderContent === 'casinoBetHistory'}"
+                        ng-if="conf.enableCasinoBetHistory" ng-click="env.sliderContent = 'casinoBetHistory'" trans>Casino Bet History</li>
+                    <li ng-class="{'active-tab': env.sliderContent === 'shukaBetHistory'}"
+                        ng-if="conf.exchangeBetHistoryEnabled" ng-click="env.sliderContent = 'shukaBetHistory'" trans>Exchange Bet History</li>
+                </ul>
+            </div>
+        </div>
+
+        <!--tabs END-->
+        <!--mygames-recentbets-->
+        <div ng-include="getTemplate('templates/slider/recentbets.html')"></div>
+        <!--mygames-recentbets END-->
+
+        <!--Bet hestory-->
+        <div ng-include="getTemplate('templates/slider/bethistory.html')"></div>
+        <div ng-include="getTemplate('templates/slider/casinobethistory.html')"></div>
+        <div ng-include="getTemplate('templates/slider/shukabethistory.html')"></div>
+        <!--Bet hestory END-->
+
+        <div ng-include="getTemplate('templates/slider/help.html')"></div>
+
+        <!--tabs-->
+
+        <div ng-if="env.authorized && profile && (env.sliderContent === 'cashier' || env.sliderContent === 'balanceHistory' || env.sliderContent === 'casinoBalanceHistory' || env.sliderContent === 'renew' || env.sliderContent === 'deposit' || env.sliderContent === 'withdraw' || env.sliderContent === 'buddytransfer') ">
+            <div class="tab-contain-bets">
+                <div class="centr-tabs-block">
+                    <ul>
+                        <li ng-show="(casinoEnabled || conf.pokerEnabled) && conf.transferEnabled" ng-class="{'active-tab': env.sliderContent === 'cashier'}" ng-click="env.sliderContent = 'cashier'" trans>Wallet</li>
+                        <li ng-hide="!conf.sportEnabled && !virtualsportsEnabled && !pokerEnabled && !poolBettingEnabled && !conf.GmsPlatform" ng-class="{'active-tab': env.sliderContent === 'balanceHistory'}" ng-click="env.sliderContent = 'balanceHistory'">{{'History'|translate:null:'Balance History'}}</li>
+                        <li ng-hide="!conf.enableCasinoBalanceHistory" ng-class="{'active-tab': env.sliderContent === 'casinoBalanceHistory'}" ng-click="env.sliderContent = 'casinoBalanceHistory'">{{"History"|translate}} ({{"Casino"|translate}})</li>
+                        <li ng-class="{'active-tab': env.sliderContent === 'renew'}" ng-click="env.sliderContent = 'renew'" ng-hide="!conf.enableFreeRenew" trans>Renew</li>
+                        <li ng-class="{'active-tab': env.sliderContent === 'deposit'}" ng-click="env.sliderContent = 'deposit'" ng-hide="conf.disableDepositPage" trans>Deposit</li>
+                        <li ng-class="{'active-tab': env.sliderContent === 'withdraw'}" ng-click="env.sliderContent = 'withdraw'" ng-hide="conf.disableWithdrawPage" trans>Withdraw</li>
+                        <li ng-class="{'active-tab': env.sliderContent === 'buddytransfer'}" ng-click="env.sliderContent = 'buddytransfer'" ng-show="conf.enableBuddyTransfer" trans>Buddy transfer</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div ng-include="getTemplate('templates/slider/balance/renew.html')" ng-if="env.sliderContent == 'renew' && conf.enableFreeRenew"></div>
+            <div ng-include="getTemplate('templates/slider/balance/deposit.html')" ng-if="env.sliderContent == 'deposit' && !conf.enableMixedView &&  !conf.depositDisabled"></div>
+            <div ng-include="getTemplate('templates/slider/balance/withdraw.html')" ng-if="env.sliderContent == 'withdraw' && !conf.enableMixedView &&  !conf.withdrawDisabled"></div>
+            <div ng-include="getTemplate('templates/slider/balance/cashier.html')" ng-if="env.sliderContent == 'cashier'  && !conf.enableMixedView"></div>
+            <div ng-include="getTemplate('templates/slider/balance/buddytransfer.html')" ng-if="env.sliderContent == 'buddytransfer' "></div>
+
+            <!--All transactions-->
+            <div ng-include="getTemplate('templates/slider/balance/balancehistory.html')" ng-if="!conf.enableMixedView && env.sliderContent == 'balanceHistory'"></div>
+            <div ng-include="getTemplate('templates/slider/balance/casinobalancehistory.html')"  ng-if="!conf.enableMixedView && env.sliderContent == 'casinoBalanceHistory'" ></div>
+        </div>
+        <!--tabs END-->
+
+        <!--All transactions END-->
+        <div class=" block-sign-in-form" ng-include="getTemplate('templates/slider/signinform.html')"></div>
+        <div class=" block-sign-in-form" ng-include="getTemplate('templates/slider/custom_content.html')"></div>
+        <div class=" block-sign-in-form" ng-include="getTemplate('templates/slider/invite.html')"></div>
+        <div class=" block-sign-in-form" ng-include="getTemplate('templates/slider/warning.html')"></div>
+
+        <div class="tab-contain-bets saved-games-container"
+             ng-if="(conf.casinoEnabled || conf.livedealerEnabled || conf.skillgamesEnabled) && conf.sportSavedGamesEnabled && conf.casinoSavedGamesEnabled && (env.sliderContent === 'savedGames' || env.sliderContent === 'casinoSavedGames')">
+            <div class="centr-tabs-block">
+                <ul>
+                    <li ng-class="{'active-tab': env.sliderContent === 'savedGames'}" ng-show="conf.sportEnabled" ng-click="env.sliderContent = 'savedGames'" class="favorites-sport">
+                        <span trans>Sports</span> <span ng-show="myGames.length">( {{ myGames.length }} )</span>
+                    </li>
+                    <li ng-class="{'active-tab': env.sliderContent === 'casinoSavedGames'}" ng-click="env.sliderContent = 'casinoSavedGames'" class="favorites-casino" ng-show="(conf.casinoEnabled || conf.livedealerEnabled) && !env.hideCasinoFavorites && !conf.hideConfCasinoFavorites">
+                        <span trans>Casino</span> <span ng-show="myCasinoGames.length"> ( {{ myCasinoGames.length }} )</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="block-sign-in-form saved-games-container" ng-include="getTemplate('templates/slider/savedgames.html')"></div>
+        <div class="block-sign-in-form saved-games-container" ng-if="availableModules.indexOf('casino') > -1"
+             ng-hide="env.hideCasinoFavorites"
+             ng-include="getTemplate('optional_modules/casino/templates/slider/casinosavedgames.html')"></div>
+        <div class="block-sign-in-form" ng-include="getTemplate('templates/slider/settings.html')"></div>
+        <div class="block-sign-in-form" ng-include="getTemplate('templates/slider/messages.html')"></div>
+        <div class="block-sign-in-form" ng-include="getTemplate('templates/slider/draws.html')"></div>
+
+        <!--Slider END-->
+
+        <div class="closed-arrow-b"><a ng-click="broadcast('slider.close')" trans>close</a></div>
+    </div>
+    <div ng-include="getTemplate('templates/livebox/mixedView.html')"
+        ng-if="env.showSlider &&
+            ((conf.enableMixedView && ['recentBetsCashout', 'recentBets', 'betHistory', 'casinoBetHistory', 'shukaBetHistory',
+                'settings', 'deposit', 'withdraw', 'balanceHistory', 'casinoBalanceHistory', 'cashier', 'loyaltyPoints', 'tickets'].indexOf(env.sliderContent) !== -1)
+                || env.sliderContent === 'promotionalBonuses') ">
+    </div>
+
+    <div ng-if="isCssLoading" class="css-loading-t"></div>
+</div>

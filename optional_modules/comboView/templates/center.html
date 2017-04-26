@@ -1,0 +1,188 @@
+<div class="centre-column-view-contain-template" ng-controller="comboViewCenterController">
+    <!--breadcrumbs nav-->
+    <div class="breadcrumbs-nav-contain">
+        <ul>
+            <li ng-click="liveTodaySelected()" ng-if="selectedCentralView !== 'liveToday'"><p trans>Home</p></li>
+            <li ng-click="selectedCentralView !== 'liveToday' && selectedCentralView !== 'popularEvents'? selectSport(selectedSport) : ''" ng-if="selectedSport"><p>{{selectedSport.name}}</p></li>
+            <li ng-click="selectRegion(selectedSport, selectedRegion)" ng-if="selectedRegion"><p>{{selectedRegion.name}}</p></li>
+            <li ng-click="selectCompetition(selectedSport, selectedRegion, selectedCompetition)" ng-if="selectedCompetition"><p>{{selectedCompetition.name|removeParts:[selectedSport.name]|removeParts:[selectedRegion.name]}}</p></li>
+            <li ng-if="selectedGame"><p>{{selectedGame.team1_name}} - {{selectedGame.team2_name}}</p></li>
+        </ul>
+    </div>
+    <!--breadcrumbs nav END-->
+
+    <vbet-loader ng-if="centerViewLoading" class="central-view-loader"></vbet-loader>
+    <div ng-switch="selectedCentralView" class="centeral-view-container">
+        <div class="all-games-view-container" ng-switch-default ng-show="!centerViewLoading">
+            <!--<div class="title-separator-b sub-header" ng-if="selectedCentralView !== 'sport'">
+                <h3>{{mainHeaderTitle}}</h3>
+            </div>-->
+
+            <div ng-if="!centerViewLiveData.length && selectedCentralView != 'liveToday'" class="title-separator-b sub-header">
+                <h3 trans>Currently no live events</h3>
+            </div>
+
+            <div ng-if="centerViewLiveData.length" class="title-separator-b sub-header">
+                <h3 trans>Live overview</h3>
+            </div>
+            <div ng-repeat="sport in centerViewLiveData track by sport.id" class="mini-game-container-template" ng-if="!hideLiveEvents">
+                <div ng-repeat="regionLight in sport.regions track by regionLight.id" ng-init="region = sport.region[regionLight.id]" class="mini-game-container-template">
+                    <div class="title-separator-b region" ng-class="{'active': !region.regionListClosed}" ng-click="region.regionListClosed = !region.regionListClosed; region.isLoading = true; toggleItem({'sport': sport.id, 'region': region.id, 'type': 1, 'isClosed': region.regionListClosed, 'isLoading': region.isLoading})">
+                        <h3>{{region.name}}</h3>
+                        <vbet-loader class="small-progress" ng-if="region.isLoading"></vbet-loader>
+                        <div class="arrow-icon-separator"></div>
+                    </div>
+                    <div ng-repeat="competitionLight in region.competitions track by competitionLight.id" ng-init="competition = region.competition[competitionLight.id]" class="mini-game-container-template" ng-class="{active: competitionLiveBlock[competition.id].expanded}">
+                        <div class="title-separator-b sub-header" ng-if="selectedCentralView === 'region'">
+                            <h3>{{competition.name|removeParts:[sport.name]|removeParts:[region.name]}}</h3>
+                        </div>
+                        <div class="title-region-markets-b" ng-click="competitionLiveBlock[competition.id].expanded = !competitionLiveBlock[competition.id].expanded;">
+                            <div class="icon-sports-contain {{sport.alias}}"></div>
+                            <h4>
+                                <b ng-if="!isSelectedCentralViewTogglable()" trans>Live Matches</b>
+                                <b ng-if="isSelectedCentralViewTogglable()">{{ competition.name }}</b>
+                                <i>({{competition.games.length}})</i>
+                                <span>{{getLiveMarket(competition).name}}</span>
+                            </h4>
+                            <div class="arrow-icon-separator"></div>
+                        </div>
+                        <div class="markets-filter-events-contain" ng-class="{active: competitionLiveFilters[competition.id].expanded}" ng-if="competition.filteredMarketsCount">
+                            <ul>
+                                <li ng-repeat="filteredMarket in competition.filteredMarkets track by filteredMarket.type" ng-click="setLiveMarket(filteredMarket, competition.id)"
+                                    ng-class="{'active': getLiveMarket(competition).type === filteredMarket.type}">
+                                    <p>
+                                        <span>{{filteredMarket.name}}</span>
+                                    </p>
+                                </li>
+                            </ul>
+                            <div class="filter-more-button-c" ng-if="competition.moreFilteredMarketsCount" ng-click="competitionLiveFilters[competition.id].expanded = !competitionLiveFilters[competition.id].expanded">
+                                <span ng-show="conf.combo.showMoreOdds" trans>More odds</span> <span ng-show="!conf.combo.showMoreOdds">{{competition.moreFilteredMarketsCount}}</span>
+                            </div>
+                        </div>
+                        <div ng-repeat="gameLight in competition.games track by $index" ng-init="game = competition.game[gameLight.id]" class="mini-game-container-template">
+                            <combo-view-row template-path="optional_modules/comboView/templates/game/miniLive.html" class="mini-game-container-template"></combo-view-row>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="no-data-info-b" ng-if="!centerViewPrematchData.length && !centerViewLoading" trans>No data available for this period of time</div>
+
+            <div ng-repeat="sport in centerViewPrematchData track by sport.id" class="mini-game-container-template">
+                <div class="title-separator-b sub-header" ng-if="selectedCentralView === 'liveToday'">
+                    <h3>{{sport.name}}</h3>
+                </div>
+                <div class="title-separator-b sub-header" ng-if="selectedCentralView != 'liveToday'">
+                    <h3>{{mainHeaderTitle || sport.name}} <span trans>Prematch Events</span></h3>
+                </div>
+                <div ng-repeat="regionLight in sport.regions track by regionLight.id" ng-init="region = sport.region[regionLight.id]" class="mini-game-container-template">
+                    <div class="all-games-markets-b active">
+                        <div class="title-separator-b region" ng-class="{'active': !region.regionListClosed}" ng-click="region.regionListClosed = !region.regionListClosed; region.isLoading = true; toggleItem({'sport': sport.id, 'region': region.id, 'type': 0, 'isClosed': region.regionListClosed, 'isLoading': region.isLoading})">
+                            <h3>{{region.name}}</h3>
+                            <vbet-loader class="small-progress" ng-if="region.isLoading"></vbet-loader>
+                            <div class="arrow-icon-separator"></div>
+                        </div>
+                        <div class="region-games-list-view">
+                            <div ng-repeat="competitionLight in region.competitions track by competitionLight.id" ng-init="competition = region.competition[competitionLight.id]" class="mini-game-container-template" ng-class="{active: competitionBlock[competition.id].expanded}">
+                                <div class="title-separator-b" ng-if="selectedCentralView === 'region'">
+                                    <h3>{{competition.name|removeParts:[sport.name]|removeParts:[region.name]}}</h3>
+                                </div>
+                                <div class="title-region-markets-b" ng-click="competitionBlock[competition.id].expanded = !competitionBlock[competition.id].expanded;">
+                                    <div class="icon-sports-contain {{sport.alias}}"></div>
+                                    <h4>
+                                        <b ng-if="!isSelectedCentralViewTogglable()" trans>Upcoming Matches</b>
+                                        <b ng-if="isSelectedCentralViewTogglable()">{{competition.name}}</b>
+                                        <i>({{competition.games.length}})</i>
+                                        <span >{{getPrematchMarket(competition).name || competition.name|removeParts:[region.name]}}</span>
+                                    </h4>
+                                    <div class="arrow-icon-separator"></div>
+                                </div>
+                                <div class="markets-filter-events-contain" ng-class="{active: competitionPrematchFilters[competition.id].expanded}" ng-if="competition.filteredMarketsCount">
+                                    <ul>
+                                        <li ng-repeat="filteredMarket in competition.filteredMarkets track by filteredMarket.type" ng-click="setPrematchMarket(filteredMarket, competition.id)"
+                                            ng-class="{'active': getPrematchMarket(competition).type === filteredMarket.type}">
+                                            <p>
+                                                <span>{{filteredMarket.name}}</span>
+                                            </p>
+                                        </li>
+                                    </ul>
+                                    <div class="filter-more-button-c" ng-if="competition.moreFilteredMarketsCount"
+                                         ng-click="competitionPrematchFilters[competition.id].expanded = !competitionPrematchFilters[competition.id].expanded">
+                                        <span ng-show="conf.combo.showMoreOdds" trans>More odds</span> <span ng-show="!conf.combo.showMoreOdds">{{competition.moreFilteredMarketsCount}}</span>
+                                    </div>
+                                </div>
+                                <div ng-repeat="gameLight in competition.games track by $index" ng-init="game = competition.game[gameLight.id]" class="mini-game-container-template">
+                                    <combo-view-row template-path="optional_modules/comboView/templates/game/miniPrematch.html" class="mini-game-container-template"></combo-view-row>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div ng-switch-when="gameView" class="game-view-contain-b">
+           <!-- GAME VIEW-->
+            <vbet-loader ng-if="liveGameLoading"  class="central-view-loader"></vbet-loader>
+            <div class="game-visual-b" ng-if="openGame.type === 1 && !liveGameLoading">
+                <!--<div class="animation-control" ng-if="openGame.has_animation">
+                    <ng-include src="getTemplate('templates/sport/classic/animation_video.html')"></ng-include>
+                </div>-->
+                <div class="live-game-container" ng-class="{'has-animation': openGame.has_animation}">
+                    <div class="game-info game-{{openGame.sport.alias.toLowerCase()}}">
+                        <div class="live-game-title-b" ng-show="liveGamesSoccerTemplate.indexOf(openGame.sport.alias) !== -1">
+                            <b class="icon-sports-contain {{openGame.sport.alias}}" title="{{openGame.sport.alias}}"></b>
+                                <span class="ellipsis-text" title="{{openGame.competition.name}}">
+                                    <b ng-show="conf.showGameIds">{{openGame.game_number}}</b> {{openGame.competition.name}}
+                                </span>
+                            <span ng-if="openGame.sport.alias === 'HorseRacing'" title="{{ openGame.team2_name ?  openGame.team2_name: '' }}">{{ openGame.team2_name ?  openGame.team2_name: '' }}&nbsp;&nbsp;&nbsp; {{ openGame.start_ts| formatDate: "LT"}}</span>
+                        </div>
+                        <ng-include src="getTemplate('templates/sport/livescore.html')"></ng-include>
+                        <ng-include src="getTemplate('templates/sport/livegamestatistics.html')"></ng-include>
+                    </div>
+                </div>
+            </div>
+            <div ng-repeat="marketGroup in openGame.markets track by $index" class="live-game-all-markets-b" ng-show="!liveGameLoading">
+                <div class="region-games-list-view">
+                    <!--Championship Region title-->
+                    <div class="live-game-market-title active"
+                        ng-class="{'active': !gameViewMarketGroup[$index].expanded}"
+                        ng-click="gameViewMarketGroup[$index].expanded = !gameViewMarketGroup[$index].expanded">
+                        <h4>
+                            <span>{{marketGroup[0].name}}</span>
+                        </h4>
+                        <div class="arrow-icon-separator"></div>
+                    </div>
+                    <!--Championship Region title END-->
+                    
+                    <div ng-repeat="market in marketGroup track by market.id" class="game-view-market-row">
+                        <!--single-game-mini-view-->
+                        <div class="single-game-mini-view">
+                            <ul>
+                                <li>
+                                    <div class="team-names-title-b">
+                                        <p>{{openGame.team1_name}}</p>
+                                        <p>{{openGame.team2_name}}</p>
+                                    </div>
+                                </li>
+
+                                <li>
+                                    <combo-view-market-events 
+                                        market="market"
+                                        bet="bet"
+                                        game="game"
+                                        sport="sport"
+                                        region="region"
+                                        competition="competition"
+                                    >
+                                    </combo-view-market-events>
+                                </li>
+                            </ul>
+                        </div>
+                        <!--single-game-mini-view END-->                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

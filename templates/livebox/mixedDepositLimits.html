@@ -1,0 +1,73 @@
+<div ng-if="env.mixedSettingsPage==='depositlimits'" ng-init="getLimits()">
+    <!--Change Password-->
+    <h3 trans>Deposit Limits</h3>
+
+    <div class="settings-info-contain deposit-limit">
+        <p trans>Deposit limits allow you to limit the amount of funds you can deposit into the account. The amount can be chosen over a daily, weekly or monthly period. The deposit limit will allow you to restrict the amount of money entering your account, before betting takes place.</p>
+
+        <form name="depositLimitsForm" class="registration-form">
+            <label ng-if="!conf.GmsPlatform"><span trans>Amount</span></label>
+
+            <div ng-if="!conf.GmsPlatform" class="form-text" ng-class="{'error': depositLimitsForm.max_single_deposit.$dirty && depositLimitsForm.max_single_deposit.$invalid}">
+                <div class="tooltip-wrapper-j">
+                    <input name="max_single_deposit" ng-model="$parent.depositLimitsData.max_single_deposit" type="text" placeholder="Enter amount" required trans>
+
+                    <div class="form-error-icon-j"></div>
+                    <div class="tooltip-j">
+
+                        <div trans ng-show="depositLimitsForm.max_single_deposit.$error.required">This field is required</div>
+                    </div>
+                </div>
+            </div>
+
+            <label><span context="Deposit limits" trans>Day</span></label>
+
+            <div class="form-text"  ng-class="{'error': depositLimitsForm.max_day_deposit.$dirty && depositLimitsForm.max_day_deposit.$invalid}">
+                <div class="tooltip-wrapper-j">
+                    <input name="max_day_deposit" ng-model="$parent.depositLimitsData.max_day_deposit" type="text" placeholder="Enter amount" required trans>
+
+                    <div class="form-error-icon-j"></div>
+                    <div class="tooltip-j">
+
+                        <div trans ng-show="depositLimitsForm.max_day_deposit.$error.required">This field is required</div>
+                    </div>
+                </div>
+            </div>
+
+
+            <label><span context="Deposit limits" trans>Week</span></label>
+
+            <div class="form-text" ng-class="{'error': depositLimitsForm.max_week_deposit.$dirty && depositLimitsForm.max_week_deposit.$invalid}">
+                <div class="tooltip-wrapper-j">
+                    <input name="max_week_deposit" ng-model="$parent.depositLimitsData.max_week_deposit" type="text" placeholder="Enter amount" required trans>
+
+                    <div class="form-error-icon-j"></div>
+                    <div class="tooltip-j">
+
+                        <div trans ng-show="depositLimitsForm.max_week_deposit.$error.required">This field is required</div>
+                    </div>
+                </div>
+            </div>
+            <label><span trans context="Deposit limits">Month</span></label>
+
+            <div class="form-text" ng-class="{'error': depositLimitsForm.max_month_deposit.$dirty && depositLimitsForm.max_month_deposit.$invalid}">
+                <div class="tooltip-wrapper-j">
+                    <input name="max_month_deposit" ng-model="$parent.depositLimitsData.max_month_deposit" type="text" placeholder="Enter amount" required trans>
+
+                    <div class="form-error-icon-j"></div>
+                    <div class="tooltip-j">
+
+                        <div trans ng-show="depositLimitsForm.max_month_deposit.$error.required">This field is required</div>
+                    </div>
+                </div>
+            </div>
+            <div class="change-button-container password">
+                <div class="cashier-button">
+                    <button ng-disabled="!depositLimitsForm.$dirty || depositLimitsForm.$invalid" ng-show="!working" trans ng-click="setDepositLimits()">Save</button>
+                    <button disabled="disabled" ng-show="working" trans>Wait...</button>
+                </div>
+            </div>
+        </form>
+        <div class="info"><span class="note-highlight" trans>Please note that you'll be able to increase your limits only after seven days from your 1st request.</span></div>
+    </div>
+</div>

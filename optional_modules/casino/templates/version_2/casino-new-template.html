@@ -1,0 +1,134 @@
+<div ng-show="!gamesInfo.length" class="center-contain-casino-b" id="casinoScrollable">
+    <div class="casino-top-slider-wrapper">
+        <!--Slider-->
+        <div ng-controller="cmsPagesCtrl" ng-init="getCasinoBanners();"  class="slider-view-casino-b" ng-if="cConf.topBanners.showSlider" ng-class="{'full-width-slider-casino-j': (!cConf.topBanners.showBannerInsteadWinners && !cConf.topBanners.showBannerInsteadOfBiggestWinners && cConf.topBanners.showPopularGameBanner)}">
+            <vbet-big-slider class="big-slider-casino-directive" ng-if="casinoTopBanners" images="casinoTopBanners" link-click-handler="openCBannerLink" slider-template="cConf.newCasinoDesignEnabled"></vbet-big-slider>
+        </div>
+        <!--Slider END-->
+        <div class="casino-right-b-modules" ng-if="cConf.topBanners.showPopularGameBanner || cConf.topBanners.showBannerInsteadWinners || cConf.topBanners.showBannerInsteadOfBiggestWinners || cConf.topBanners.showBiggestWinners">
+            <div  class="single-game-contain-wp" ng-if="cConf.topBanners.showPopularGameBanner" banner-slider container="{{'banner-most-popular-game-' + env.lang}}" interval="4000">
+            </div>
+
+            <div ng-init="loadBannerInsteadWinners('winners-slider')" class="single-game-contain-wp" ng-if="cConf.topBanners.showBannerInsteadWinners && !cConf.topBanners.showBannerInsteadOfBiggestWinners">
+                <div class="single-game-screen-wrapper">
+                    <a ng-href="{{newLastTopBanner.link}}">
+                        <p style="background-image: url({{newLastTopBanner.imageurl}});height:100%;"></p>
+                    </a>
+                </div>
+            </div>
+            <casino-biggest-winners ng-if="cConf.topBanners.showBannerInsteadOfBiggestWinners" title="{{cConf.topBanners.showBiggestWinners ? 'Last Winners' : ''}}" template-url="templates/directive/{{cConf.topBanners.showBiggestWinners?'casino-biggest-winners.html':'casino-new-biggest-winners.html'}}" limit="5" class="winners-list-directive"></casino-biggest-winners>
+        </div>
+    </div>
+    <div class="casino-games-slider-wrapper" ng-if="!cConf.hideCasinoJackpotSlider" ng-show="jackpotSliderGames.length"> <!--ng-controller="casinoJackpotCtrl" ng-init="loadJackpotPages();"  -->
+        <div class="title-slider-games-b" no-animate>
+            <h3><span ng-bind="(cConf.jackpotSubstituteCategory? cConf.jackpotSubstituteCategory.name :'Jackpot Games')|translate"></span></h3>
+            <div class="slider-games-box-b-new">
+                <div class="slider-addow-box-b">
+                    <ul>
+                        <li class="preview-b-slide" ng-click="slideJackpotGames('prev')" ng-class="{'disabled': jackpotSlideIndex <= 0 }" trans>prev</li>
+                        <li class="next-b-slide" ng-click="slideJackpotGames('next')"  ng-class="{'disabled': jackpotSlideIndex +jackpotSliderVisibleGamesCount >= jackpotGames.length }" trans>next</li>
+                    </ul>
+                </div>
+                <casino-games-list class="slider-games-box-b"
+                        is-new-design-enabled="cConf.newCasinoDesignEnabled"
+                        show-conditions="true"
+                        use-big-icons="true"
+                        games-list="jackpotSliderGames"
+                        game-show-conditions="true"
+                        selected-category="selectedCategory">
+                </casino-games-list>
+                <vbet-loader ng-show="!jackpotSliderGames"></vbet-loader>
+            </div>
+        </div>
+    </div>
+    <div class="all-casino-games-box">
+
+        <!--<div class="providers-nav-casino" fixonscroll scrollable-area-id="casinoScrollable" header-id="main-header-container" default-offset="{{providerMenuDefaultOffset}}" ng-class="{'closed': providersMenuState.isClosed}" id="providerMenu">-->
+            <!--<ul>-->
+               <!--&lt;!&ndash; <div class="contaien-country" data-step="3" data-position="bottom" data-intro="Select region" trans="attr-only">&ndash;&gt;-->
+                    <!--<li ng-repeat="provider in providers track by $index">-->
+                        <!--<a ng-click="selectProvider(provider)"-->
+                           <!--ng-class="{'active': selections.providerName === provider.name}">-->
+                            <!--<span>{{ provider.title|translate }}</span>-->
+                        <!--</a>-->
+                    <!--</li>-->
+               <!--&lt;!&ndash; </div>&ndash;&gt;-->
+            <!--</ul>-->
+            <!--<div class="more-button-prviter-nav" ng-click="toggleProvidersMenu()">-->
+                <!--<span trans>More</span>-->
+            <!--</div>-->
+        <!--</div>-->
+
+        <div class="fixed-element-parent">
+            <div class="fixed-nav-wrapper-casino-view" fixonscroll scrollable-area-id="casinoScrollable" header-id="main-header-container"  >
+                <div class="providers-nav-casino" ng-class="{'closed': providersMenuState.isClosed, 'never-closed': cConf.providersMenuPermanentlyExpanded}" id="providerMenu" ng-show="!cConf.hideCasinoProvidersRow">
+                    <ul sub-menu-creator="casino">
+                        <!-- <div class="contaien-country" data-step="3" data-position="bottom" data-intro="Select region" trans="attr-only">-->
+                        <li ng-repeat="provider in providers track by $index">
+                            <a ng-click="selectProvider(provider)"
+                               ng-class="{'active': selections.providerName === provider.name}">
+                                <span>{{ provider.title|translate }}</span>
+                            </a>
+                        </li>
+                        <!-- </div>-->
+                    </ul>
+                    <div ng-show="subMenuItemShowBtn" class="more-button-prviter-nav" ng-click="toggleProvidersMenu()">
+                        <span trans>More</span>
+                    </div>
+                </div>
+
+                <div class="casino-left-menu-v-2">
+                    <div class="search-category-nav-contain">
+                        <!--search-->
+                        <div class="search-casino-box-b">
+                            <div ng-include="getTemplate('optional_modules/casino/templates/version_2/search.html')"></div>
+                        </div>
+                        <!--search END-->
+                        <div class="left-column-casino-nav" no-animate>
+                            <ul>
+                                <li ng-repeat="category in categories track by category.id"
+                                    ng-show="category.id !== -1 || myCasinoGames.length !== 0"
+                                    ng-class="{'active': selections.category.id === category.id}"
+                                    ng-click="selectCategory(category)">
+                                    {{ category.title | translate : null : 'Casino ' + category.title }}
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="wrapper-separator-games">
+
+            <!--<div class="search-category-nav-contain" fixonscroll scrollable-area-id="casinoScrollable" default-offset="{{categoryMenuDefaultOffset}}" header-id="main-header-container" id="casinoCategories">-->
+                <!--&lt;!&ndash;search&ndash;&gt;-->
+                <!--<div class="search-casino-box-b">-->
+                    <!--<div ng-include="getTemplate('optional_modules/casino/templates/version_2/search.html')"></div>-->
+                <!--</div>-->
+                <!--&lt;!&ndash;search END&ndash;&gt;-->
+                <!--<div class="left-column-casino-nav" no-animate>-->
+                    <!--<ul>-->
+                        <!--<li ng-repeat="category in categories track by category.id"-->
+                            <!--ng-show="category.id !== -1 || myCasinoGames.length !== 0"-->
+                            <!--ng-class="{'active': selections.category.id === category.id}"-->
+                            <!--ng-click="selectCategory(category)">-->
+                            <!--{{ category.title|translate }}-->
+                        <!--</li>-->
+                    <!--</ul>-->
+                <!--</div>-->
+            <!--</div>-->
+
+            <div class="all-games-casino-list">
+                <casino-games-list class="all-casino-games-list-box"
+                        is-new-design-enabled="cConf.newCasinoDesignEnabled"
+                        show-conditions="true"
+                        games-list="games"
+                        game-show-conditions="true">
+                </casino-games-list>
+                <vbet-loader ng-show="loadingProcess"></vbet-loader>
+                <div ng-show="games.length > numberOfRecentGames" class="more-casino-games-load-b"><p load-more ng-click="loadMoreGames(); setTargetElementFixed('casinoCategories')"><span trans>Load more</span></p></div>
+                <div ng-show="!loadingProcess && !games.length" class="new-casino-no-games-text"><p trans>No games found</p></div>
+            </div>
+        </div>
+    </div>
+</div>

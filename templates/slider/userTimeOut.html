@@ -1,0 +1,22 @@
+<div ng-init="selfExclusionData.period = 0">
+    <h3 trans>Time-Out</h3>
+    <div class="settings-info-contain deposit-limit">
+        <p trans>If you want to take a short break from playing with us, you may do so by taking a Time-Out.</p>
+        <p trans>Once you begin your Time-Out, you will no longer be able to deposit funds or play in any of our products.</p>
+        <p trans>However, you will be able to withdraw any balance you may have.</p>
+        <form class="registration-form">
+            <div class="form-text" >
+                <label ng-repeat="option in conf.userTimeOut.options track by $index">
+                    <input type="radio" name="period" ng-click="selectPeriod(option.limit)">
+                    <span ng-bind="option.name|translate"></span>
+                </label>
+            </div>
+            <div class="change-button-container password">
+                <div class="cashier-button">
+                    <button ng-disabled="!selfExclusionData.period" ng-show="!working" trans ng-click="setSelfExclusion(conf.userTimeOut.type)">Save</button>
+                    <button disabled="disabled" ng-show="working" trans>Wait...</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

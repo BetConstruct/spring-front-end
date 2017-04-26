@@ -1,0 +1,56 @@
+<div ng-controller="drawCtrl" ng-init="setTitle('draw')" class="draw-view-wrapper-b">
+    <div class="center-view-draw-b">
+        <div class="draw-content-contain-b">
+            <h2 ng-if="conf.enableDrawInfoText">
+                <span trans>The draw will take place today at 19:00</span>
+            </h2>
+
+            <div class="video-wrap-draw-row">
+                <div class="draw-video-container-b">
+
+                    <div class="video-player-control volume-control" ng-show="videoIsLoaded">
+                        <span ng-click="env.sound = 0;" ng-show="env.sound > 0" class="video-mute icon-ic_volume_off_24px">Mute</span>
+                        <span ng-click="env.sound = 0.75;" ng-show="env.sound === 0" class="video-unmute icon-ic_volume_up_24px">UnMute</span>
+                        <div class="sound-volume">
+                            <div>
+                                <rzslider rz-slider-model="env.sound" rz-slider-floor="0"
+                                          rz-slider-ceil="1"
+                                          rz-slider-step="0.01"
+                                          rz-slider-precision="1" rz-slider-always-show-bar="true">
+                                </rzslider>
+                            </div>
+                        </div>
+                    </div>
+
+                    <flashplayer id="gamevideodraw" stream-url="live draw" provider-id="{{4}}" initially-muted="{{ env.sound }}"></flashplayer>
+                </div>
+            </div>
+
+            <div class="numbers-list-draw-b">
+                <ul>
+                    <li ng-bind="data.event"></li>
+                </ul>
+            </div>
+
+            <div class="info-draw-count-b">
+                <h3><span ng-bind="data.matches"></span> <span trans>matches</span></h3>
+            </div>
+
+            <div class="info-draw-count-b" ng-show="data.winner">
+                <h3><span trans>Winner</span> : <span ng-bind="data.winner"></span></h3>
+            </div>
+
+            <div class="full-list-user-bet-id-b">
+                <ul>
+                    <li>
+                        <h4>
+                            <span trans>For more info please click</span> <a ng-href="{{ resultUrl }}" trans>here</a>
+                        </h4>
+                    </li>
+                </ul>
+            </div>
+
+        </div>
+
+    </div>
+</div>

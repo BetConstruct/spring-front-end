@@ -1,0 +1,31 @@
+<div class="first-deposit-bonus-box" ng-controller="cmsPagesCtrl" ng-init="loadPage('bonus-page-' + env.lang, true)">
+    <div class="bonus-promo-wrapper-b">
+        <div class="promo-bonus-full-contain" style="background-image: url({{pages[0].thumbnail}})">
+            <div class="right-b-content-view">
+                <div ng-bind-html="pages[0].content" class="text-bonus-info-b"></div>
+                <div class="reg-button-view-b">
+                    <button ng-click="broadcast('openRegForm'); $event.stopPropagation();" trans>Register Now</button>
+                </div>
+            </div>
+            <div class="bottom-row-bonus-b">
+                <ul>
+                    <li>
+                        <div class="step-icon-text-view {{ pages[1].slug }}">
+                            <p ng-bind-html="pages[1].title"></p>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="step-icon-text-view {{ pages[2].slug }}">
+                            <p ng-bind-html="pages[2].title"></p>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="step-icon-text-view {{ pages[3].slug }}">
+                            <p ng-bind-html="pages[3].title"></p>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>

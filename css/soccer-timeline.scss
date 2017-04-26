@@ -1,0 +1,354 @@
+/* timeline control */
+
+.timeline-container {
+    position: relative;
+    float: left;
+    width: 100%;
+    height: 36px;
+}
+.timeline-control {
+    position: absolute;
+    width: 97%;
+    height: 32px;
+    color: #fff;
+    text-align: left;
+    font: 12px/12px arial;
+    box-shadow: 1px 0 0 #fff inset, -1px 0 0 #fff inset;
+    &:before {
+        content: "\00a0 0";
+        position: absolute;
+        left: 0;
+        width: 103%;
+        top: 4px;
+        top: calc(50% - 12px);
+        border-bottom: 1px solid #fff;
+        box-shadow: 0 -6px 6px rgba(0, 0, 0, 0.3) inset, 0 6px 6px rgba(0, 0, 0, 0.3);
+    }
+    &:after {
+        content: "9 0";
+        position: absolute;
+        left: 97.5%;
+        left: calc(100% - 9px);
+        top: 4px;
+        top: calc(50% - 12px);
+        white-space: nowrap;
+    }
+    span.tl-20,
+    span.tl-40,
+    span.tl-6-0,
+    span.tl-80 {
+        display: none;
+    }
+    span {
+        position: absolute;
+        top: 0;
+        width: 11.11111%;
+        width: calc(100% / 9);
+        height: 100%;
+        box-shadow: -1px 0 0 #fff inset;
+        text-shadow: 1px 1px 0 #000;
+        &:before {
+            position: absolute;
+            left: 75%;
+            left: calc(100% - 9px);
+            top: 4px;
+            top: calc(50% - 12px);
+            white-space: nowrap;
+        }
+        &:after {
+            content: "";
+            position: absolute;
+            top: 25%;
+            width: 50%;
+            height: 50%;
+            box-shadow: 1px 0 0 #fff inset, -1px 0 0 #fff inset;
+        }
+        &.tl-15 {
+            left: 5.55555%;
+            left: calc(100% / 18);
+            &:before {
+                content: "1 5";
+            }
+        }
+        &.tl-30 {
+            left: 22.22222%;
+            left: calc((100% / 18) * 4);
+            &:before {
+                content: "3 0";
+            }
+        }
+        &.tl-45 {
+            left: 38.88888%;
+            left: calc((100% / 18) * 7);
+            box-shadow: -2px 0 0 #fff inset;
+            &:before {
+                content: "4 5";
+            }
+        }
+        &.tl-60 {
+            left: 55.55555%;
+            left: calc((100% / 18) * 10);
+            &:before {
+                content: "6 0";
+            }
+        }
+        &.tl-75 {
+            left: 72.22222%;
+            left: calc((100% / 18) * 13);
+            &:before {
+                content: "7 5";
+            }
+        }
+        &.tl-90 {
+            left: 88.88888%;
+            left: calc((100% / 18) * 16);
+            box-shadow: -2px 0 0 #fff inset;
+        }
+        &.ht-ft {
+            &:before {
+                content: "H T";
+                left: -9px;
+                top: -10px;
+                box-shadow: none;
+            }
+            &:after {
+                content: "F T";
+                left: 96.5%;
+                left: calc(100% - 9px);
+                top: -10px;
+                box-shadow: none;
+            }
+        }
+    }
+    &,
+    &.tl-80 {
+        span.ht-ft {
+            width: 50%;
+            left: 50%;
+            font: 10px/10px arial;
+            font-weight: bold;
+        }
+    }
+    &.tl-80 {
+        &:after {
+            content: "8 0";
+        }
+        span {
+            &.tl-15,
+            &.tl-30,
+            &.tl-45,
+            &.tl-60,
+            &.tl-75,
+            &.tl-90 {
+                display: none;
+            }
+            &.tl-20,
+            &.tl-40,
+            &.tl-6-0,
+            &.tl-80 {
+                display: block;
+            }
+            & {
+                width: 16.66666%;
+                width: calc(100% / 6);
+            }
+            &.tl-20 {
+                left: 8.33333%;
+                left: calc(100% / 12);
+            }
+            &.tl-40 {
+                left: 33.33333%;
+                left: calc((100% / 12) * 4);
+                box-shadow: -2px 0 0 #fff inset;
+            }
+            &.tl-6-0 {
+                left: 58.33333%;
+                left: calc((100% / 12) * 7);
+            }
+            &.tl-80 {
+                left: 83.33333%;
+                left: calc((100% / 12) * 10);
+                box-shadow: -2px 0 0 #fff inset;
+            }
+            &.tl-20:before {
+                content: "2 0";
+            }
+            &.tl-40:before {
+                content: "4 0";
+            }
+            &.tl-6-0:before {
+                content: "6 0";
+            }
+        }
+    }
+    &.extra {
+        &:after {
+            content: "3 0";
+        }
+        span {
+            &.tl-15:before {
+                content: " 5";
+            }
+            &.tl-30:before {
+                content: "1 0";
+            }
+            &.tl-45:before {
+                content: "1 5";
+            }
+            &.tl-60:before {
+                content: "2 0";
+            }
+            &.tl-75:before {
+                content: "2 5";
+            }
+        }
+        &.tl-80 {
+            &:after {
+                content: "2 0";
+            }
+            span {
+                &.tl-20:before {
+                    content: "5";
+                }
+                &.tl-40:before {
+                    content: "1 0";
+                }
+                &.tl-6-0:before {
+                    content: "1 5";
+                }
+            }
+        }
+    }
+}
+.tl-data {
+    position: relative;
+    height: 100%;
+    width: 97%;
+    .current-minute {
+        position: absolute;
+        top: 10%;
+        height: 80%;
+        background: rgba(255, 181, 73, 0.2);
+    }
+    .tl-info {
+        position: absolute;
+        top: 4px;
+        width: 17px;
+        height: 37px;
+        margin-left: -9px;
+        background: url("../../../images/timeline/stats_tl.png") no-repeat;
+    }
+    .team1-tl-corner,
+    .team1-tl-goal,
+    .team1-tl-yellow_card,
+    .team1-tl-red_card,
+    .team1-tl-exchange {
+        position: absolute;
+        bottom: 100%;
+    }
+    .team1-tl-goal {
+        top: -2px;
+    }
+    .team2-tl-corner,
+    .team2-tl-goal,
+    .team2-tl-yellow_card,
+    .team2-tl-red_card,
+    .team2-tl-exchange {
+        position: absolute;
+        top: 100%;
+        margin-top: -15px;
+    }
+    .tl-goal {
+        position: absolute;
+        opacity: 1;
+        width: 12px;
+        height: 12px;
+        background-color: #fff;
+        background-image: url("../../../images/timeline/soccer-ball-bg.png");
+        background-size: 80%;
+        background-position: 108% 35%;
+        border-radius: 50%;
+        box-shadow: 2px 5px 1px rgba(0, 0, 0, 0.3), inset 1px -2px 2px rgba(0, 0, 0, 0.57);
+    }
+    .tl-corner {
+        position: absolute;
+        overflow: hidden;
+        height: 15px;
+        width: 15px;
+        border-bottom: 2px solid #fff;
+        border-left: 2px solid #fff;
+        -webkit-transform: scale(0.65);
+        transform: scale(0.65);
+        box-shadow: -1px 1px 0 #000;
+        z-index: 5;
+        &:after {
+            content: "";
+            top: 5px;
+            left: -6px;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            position: absolute;
+            border: 2px solid #fff;
+            box-shadow: inset 0px 1px 0 #000;
+        }
+    }
+    .tl-card {
+        position: absolute;
+        width: 10px;
+        height: 12px;
+        border-radius: 20%;
+        box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.5);
+    }
+    .tl-yellow_card {
+        @extend .tl-card;
+        background: #fc0;
+    }
+    .tl-red_card {
+        @extend .tl-card;
+        background: #f00;
+    }
+    .tl-exchange {
+        position: absolute;
+        width: 18px;
+        height: 12px;
+        background-image: url("../../../images/timeline/tl-exchange.png");
+    }
+    .tl-details {
+        position: absolute;
+        display: none;
+        left: 4px;
+        bottom: 8px;
+        padding: 6px;
+        margin-left: -20px;
+        box-shadow: 0 1px 2px #111;
+        background: #fff;
+        color: #000;
+        white-space: nowrap;
+        vertical-align: bottom;
+        text-transform: capitalize;
+        z-index: 100;
+        &:before,
+        &:after {
+            content: '';
+            position: absolute;
+            top: 100%;
+            left: 15px;
+            width: 0;
+            height: 0;
+            border-width: 0.5em;
+            border-style: solid;
+            border-color: #fff transparent transparent transparent;
+        }
+        &:before {
+            border-color: rgba(0, 0, 0, 0.5) transparent transparent transparent;
+            top: calc(100% + 1px);
+        }
+    }
+    > div:hover .tl-details {
+        display: block;
+    }
+}
+//----------------------------------------------------
+
+/* timeline control END */

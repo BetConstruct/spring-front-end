@@ -1,0 +1,82 @@
+
+<div class="r-single-competition-view" >
+
+    <div class="r-competition-title-view active" ng-if="openGame.game_id">
+        <ng-include src="getTemplate('templates/results//euro2016GameInfoTop.html')"></ng-include>
+    </div>
+
+
+    <div class="all-result-list-view-n">
+
+
+        <div class="market-ciew-v3" ng-repeat="detail in openGame.details track by $index">
+            <div class="market-title-v3">
+                <div class="name-market-row-v3">
+                    <div class="market-name-icon-row-v3">
+                        <h3>
+                            <i>{{detail.line_name}}</i>
+                        </h3>
+                    </div>
+                </div>
+            </div>
+
+            <div class="events-list-view-v3">
+                <ul>
+                    <li style="float: left;width: 100%;" ng-repeat="event in detail.event_name track by $index">
+                        <div class="single-events-b-v3">
+                            <div class="mini-box-market-info-v3">
+                                <p>
+                                    <i>{{event}}</i>
+                                </p>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+
+
+        <!--
+        <div class="r-c-games-date-list" ng-repeat="detail in openGame.details track by $index">
+            <div class="time-period-view-r">
+                <div class="date-r-group-title" ng-class="{active:!recordClosed}" ng-click="recordClosed = !recordClosed" ng-show="detail.line_name">
+                    <p>{{detail.line_name}}</p>
+                </div>
+
+                <div class="r-c-games-view-list-box">
+
+                    <div class="result-single-game-view-b r-live-game" ng-repeat="event in detail.event_name track by $index">
+                        <ul>
+
+
+                            <li class="game-info-r-view">
+                                <div class="r-team-name-score-logo">
+                                    <ul>
+                                        <li class="team-name-b-r left-r">
+                                            <p>{{detail.line_name}}<span ng-show="detail.line_name">:</span></p>
+                                        </li>
+
+                                        <li class="team-name-b-r right-r">
+                                            <p><span ng-repeat="event in detail.event_name track by $index">{{event}} </span></p>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </li>
+
+
+                        </ul>
+
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+        -->
+
+    </div>
+
+
+
+</div>

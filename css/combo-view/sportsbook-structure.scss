@@ -1,0 +1,81 @@
+@mixin experimental-sportbook-1 {
+  .alternative-sportsbook-wrapper {
+    float: left;
+    width: 100%;
+    box-sizing: border-box;
+    min-width: 980px;
+    margin: 0;
+    background: #DBE1E6;
+    overflow: hidden;
+  }
+  .alternative-sportsbook-wrapper-template{
+    padding: 10px;
+    float: left;
+    box-sizing: border-box;
+    width: 100%;
+    background: #DBE1E6;
+    overflow: hidden;
+  }
+  .optimal-contain-b-view{
+    float: left;
+    width: calc(100% - 320px);
+    box-sizing: border-box;
+  }
+  .optimal-contain-b{
+    float: left;
+    width: 100%;
+    box-sizing: border-box;
+    border-right: 10px solid #DBE1E6;
+  }
+  .left-column-view-contain {
+    float: left;
+    width: 320px;
+    box-sizing: border-box;
+    background: #e8edf1;
+  }
+  .centre-column-view-contain {
+    float: left;
+    width: calc(100% - 320px);
+    box-sizing: border-box;
+    background: #e8edf1;
+    border-left: 10px solid #DBE1E6;
+  }
+  .right-column-view-contain {
+    float: right;
+    width: 320px;
+    box-sizing: border-box;
+    background: #e8edf1;
+  }
+  .live-overview-contanier-b{
+    float: left;
+    width: 100%;
+    box-sizing: border-box;
+    border-right: 10px solid #DBE1E6;
+  }
+  /*resize max 1359px*/
+  @media screen and (max-width: 1359px) {
+    .alternative-sportsbook-wrapper-template{
+      padding: 5px;
+    }
+    .optimal-contain-b-view{
+      width: calc(100% - 265px);
+    }
+    .optimal-contain-b{
+      border-width: 0px;
+    }
+    .left-column-view-contain {
+      width: 240px;
+    }
+    .right-column-view-contain {
+      width: 260px;
+    }
+    .centre-column-view-contain {
+      width: calc(100% - 240px);
+      border-width: 5px;
+    }
+    .live-overview-contanier-b{
+      border-width: 5px;
+    }
+  }
+  /*resize max 1359px END*/
+}

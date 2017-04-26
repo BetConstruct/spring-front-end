@@ -1,0 +1,24 @@
+<div class="classic-view-wrapper-v3 classic-version-euro2016">
+    <div class="classic-view-row-v3">
+        <div class="classic-view-column-v3">
+            <!-- System Calculator-->
+            <div id="system-claculator-container"
+                 ng-if="$root.showSystemCalculator"
+                 draggable
+                 allow-other-mouse-events
+                 drag-from="calculator-draggable-header">
+                <include-template template-path="templates/sport/classic/systemCalculator.html"></include-template>
+            </div>
+            <!-- System Calculator-->
+            <div class="left-column-v3 ng-hide"></div>
+            <!--center-column-->
+            <div class="center-column-v3">
+                <include-template class="games-view-wrapper-v3 virtual-games" template-path="templates/sport/virtualsports.html"></include-template>
+            </div>
+            <!--center-column END-->
+            <!--right-column-->
+            <include-template template-path="templates/sport/euro2016/right/main.html"></include-template>
+            <!--right-column END-->
+        </div>
+    </div>
+</div>

@@ -1,0 +1,18 @@
+<div ng-controller="cmsPagesCtrl" ng-init="setTitle('Deberc')">
+    <div ng-show="!showNestedFrame" class="skillgame-landing-j"  ng-init="loadPage('deberc.mainPageSlugs', true)">
+        <vbet-loader ng-show="!pages"></vbet-loader>
+        <div ng-if="pages">
+            <div class="intro-section-j" ng-init="initProductBanners('deberc')">
+                <casino-game-slider product-slides="productSlides" page-name = "Deberc"></casino-game-slider>
+                <div class="skillgame-landing-guide button-group-j">
+                    <ul>
+                        <li>
+                            <button ng-click="openNestedFrame()" trans>Play now</button>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div ng-if="showNestedFrame" ng-controller="casinoSpecialGamesCtrl" ng-init="loadGame('deberc')" class="big-games-overflow" ng-include="getTemplate('optional_modules/casino/templates/specialgames/skillgame.html')"></div>
+</div>

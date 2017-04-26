@@ -1,0 +1,142 @@
+<div class="container-p" ng-controller="ResultsController as resCtrl" ng-init="setTitle('Results')">
+    <!-- System Calculator-->
+    <div id="system-claculator-container" ng-if="$root.showSystemCalculator" draggable allow-other-mouse-events drag-from="calculator-draggable-header">
+        <ng-include src="getTemplate('templates/sport/classic/systemCalculator.html')"></ng-include>
+    </div>
+    <!-- System Calculator-->
+    <div class="center-container-p">
+        <div class="old-classic-scroll-contain">
+            <!--RESULTS-->
+            <div class="results-center-ba-j">
+                <h4 trans>Results Centre</h4>
+            </div>
+            <div class="navigation-of-results-j">
+                <div class="results-table-cell-j">
+                    <ul class="search-tabs-conatiner">
+                        <li>
+                            <label>
+                                <h5 trans>Sport</h5>
+                                <div class="results-select-j">
+                                    <select ng-model="requestData.sport"
+                                            ng-options="sport.name for sport in sportList track by sport.id"
+                                            ng-change="updateCompetition();todayResult = false">
+                                    </select>
+                                </div>
+                            </label>
+                        </li>
+                        <li>
+                            <label>
+                                <h5 trans>Competition</h5>
+                                <div class="results-select-j">
+                                    <select ng-model="requestData.competition"
+                                            ng-options="competition as ((competition.region.name ? competition.region.name + ' - ' : '') + competition.name) for competition in competitionList track by competition.id">
+                                    </select>
+                                </div>
+                            </label>
+                        </li>
+                        <li>
+                            <h5><span trans>Date</span>
+                                <label class="results-live-j"><input type="checkbox" ng-model="requestData.live"><i></i><span trans>Live</span></label>
+                            </h5>
+                            <div class="date-picker-b">
+                                <div class="picker-contain">
+                                    <div class="input-group" ng-click="openFrom($event)">
+                                        <input type="text" class="form-control" placeholder="From" datepicker-popup="{{conf.dateFormat.datepicker}}"  max-date="today"
+                                               ng-model="requestData.dateFrom" is-open="openedFrom"  disabled="disabled"
+                                               datepicker-options="dateOptions" ng-change="adjustDate('from')"
+                                               ng-required="true" close-text="Close"/> <!--min-date="minFromDate"-->
+                                        <span class="input-group-btn"><button type="button" class="btn btn-default date-view" ng-click="openFrom($event)"><i class="date-p"></i></button></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                        <li ng-show="!conf.edition.enabled">
+                            <h5>&nbsp;</h5>
+                            <div class="date-picker-b">
+                                <div class="picker-contain">
+                                    <div class="input-group" ng-click="openTo($event)">
+                                        <input type="text" class="form-control" placeholder="To" datepicker-popup="{{conf.dateFormat.datepicker}}" min-date="minToDate" max-date="today"
+                                               ng-model="requestData.dateTo" is-open="openedTo"  disabled="disabled"
+                                               datepicker-options="dateOptions" ng-change="adjustDate('to')"
+                                               ng-required="true" close-text="Close"/>
+                                        <span class="input-group-btn"><button type="button" class="btn btn-default date-view" ng-click="openTo($event)"><i class="date-p"></i></button></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                        <li ng-show="conf.edition.enabled">
+                            <h5><span trans>Edition</span></h5>
+                            <div class="date-picker-b">
+                                <div class="picker-contain">
+                                    <div class="input-group">
+                                        <input class="form-control edition-b" ng-model="editionNumber" prevent-input="[^0-9]+" />
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="results-table-cell-j button-container-j">
+                    <button class="search-lat-button-j-results" ng-click="searchGames()" ng-class="{'pointer-events-none': gameListLoaded}" trans>Search</button>
+                </div>
+            </div>
+
+            <!-- RESULTS -->
+            <div  ng-show="!gameListLoaded" class="results-table-j">
+                <table  ng-show="gamesResult[0]">
+                    <tr>
+                        <th ng-click="sortByDate = !sortByDate"><div><span ng-class="{ 'up-j-icon': !sortByDate }" class="icon-arrow-down5-j-sort"></span><span trans >Date</span></div></th>
+                        <th><div trans>Competition</div></th>
+                        <th><div trans>Event</div></th>
+                        <th>
+                            <div ng-if="gamesResult[0].sport_id != virtualSportsIds.horse_racing_id && gamesResult[0].sport_id != virtualSportsIds.greyhounds_id" trans>Score</div>
+                            <div ng-if="gamesResult[0].sport_id == virtualSportsIds.horse_racing_id || gamesResult[0].sport_id == virtualSportsIds.greyhounds_id" trans>Winner</div>
+                        </th>
+                    </tr>
+                    <tr ng-repeat-start="game in gamesResult | orderBy: 'date': sortByDate" ng-click="toggleGameDetails(game)">
+                        <td><div>{{game.date|formatDate:'full':null:env.timeFormat}}</div></td>
+                        <td><div>{{game.competition_name}}</div></td>
+                        <td><div>{{game.game_name}}</div></td>
+                        <td><div>{{game.scores}}</div></td>
+                    </tr>
+                    <tr ng-repeat-end ng-show="expandedGames.indexOf(game.game_id) != -1" >
+                        <td colspan="4" class="result-details">
+                            <vbet-loader ng-show="game.additionalDetailsAreLoading"></vbet-loader>
+                            <ul  ng-show="game.details.length > 0">
+                                <li ng-repeat="detail in game.details">
+                                    {{detail.line_name}}<span ng-show="detail.line_name">:</span>
+                                    <span ng-repeat="event in detail.event_name track by $index">{{event}} </span>
+                                </li>
+                            </ul>
+                            <ul  ng-show="!game.additionalDetailsAreLoading && game.details.length === 0">
+                                <li>
+                                    <span trans>No information available</span>
+                                </li>
+                            </ul>
+                        </td>
+                    </tr>
+                </table>
+                <div ng-show="(gamesResult !== null) && !gamesResult[0]" class="no-result-to-show-j" trans>No Results</div>
+            </div>
+            <!-- RESULTS END -->
+            <vbet-loader ng-show="gameListLoaded" class="centered-j"></vbet-loader>
+        </div>
+    </div>
+    <div class="right-container-p">
+        <div class="old-classic-scroll-contain">
+            <div class="todays-results-j-contain"  ng-init="todayResults()">
+                <div class="todays-results-j" ng-show="!todayGameListLoaded">
+                    <div class="results-header-j">
+                        <h2 trans>Today's Results</h2>
+                    </div>
+                    <ul>
+                        <li  ng-show="todayGameList" ng-repeat="sport in todayGameList track by $index" ng-click="resultsBySport(sport); requestData.dateFrom = today; requestData.dateTo = today"><div>{{sport.sport[0].name}}</div></li>
+                        <li  ng-hide="todayGameList"><div>List is empty</div></li>
+                    </ul>
+                </div>
+                <vbet-loader ng-show="todayGameListLoaded" class="centered-j"></vbet-loader>
+            </div>
+        </div>
+    </div>
+</div>

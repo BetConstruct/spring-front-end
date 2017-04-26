@@ -1,0 +1,30 @@
+<div title="Live Agent" trans="attr-only" class="help-b" ng-show="!!isLiveAgent" ng-click="startLiveAgent()">
+    <a>Live Chat</a>
+</div>
+
+<div title="Live Agent" trans="attr-only" class="help-b" ng-show="!!conf.liveChat.zopimInHeader" ng-click="" onclick="showZopimChat('tr');">
+    <a>Contact Support</a>
+</div>
+
+<div class="feedback-button" ng-show="!!conf.liveChat.zopimInFooter" onclick="showZopimChat('br');">
+    <p>Live Chat</p>
+</div>
+
+<div ng-if="::conf.liveChat.isSfChat" ng-click="startSFChat()" title="Live Chat" trans="attr-only" class="help-b">
+    <a>Live Chat</a>
+</div>
+
+<div ng-if="conf.liveChat.olarkId" ng-click="" onclick="olark('api.box.expand')" title="Live Chat" trans="attr-only" class="help-b">
+    <a>Live Chat</a>
+</div>
+
+<div id="live-chat-popup-button" ng-if="conf.liveChat.popup" title="Live Chat" trans class="help-b" onclick="startLiveChat()"></div>
+<div class="feedback-button" ng-if="conf.liveChat.liveChatInFooter" onclick="startLiveChat();">
+    <p ng-bind-html="'Live Chat'|translate|html:'nowrap'"></p>
+</div>
+
+<div id="live-chat-button1" ng-if="!conf.liveChat.isSfChat && conf.liveChat.siteId && conf.liveChat.codePlan"  title="Live Chat" trans class="help-b"></div>
+<div ng-if="conf.liveChat.isDeskChat"  title="Live Chat" trans="attr-only" class="help-b"><a ng-click="startDeskChat()"></a></div>
+
+<div ng-if="conf.liveChat.customDivId && !(conf.liveChat.customDivIdLang && conf.liveChat.customDivIdLang[env.lang])" id="{{conf.liveChat.customDivId}}" class="help-b"></div>
+<div ng-if="conf.liveChat.customDivIdLang && conf.liveChat.customDivIdLang[env.lang]" id="{{conf.liveChat.customDivIdLang[env.lang]}}" class="help-b"></div>

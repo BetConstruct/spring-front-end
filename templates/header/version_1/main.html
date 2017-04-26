@@ -1,0 +1,36 @@
+<div ng-include="getTemplate('templates/header/version_' + conf.header.version + '/verytopmenu.html')" class="block-size-visible-b"></div>
+<div class="top-black" ng-include="getTemplate('templates/header/version_' + conf.header.version + '/headerannouncements.html')"></div>
+<div class="header-bg"></div>
+<div class="header block-size-visible-b">
+    <ng-include src="getTemplate('templates/header/version_' + conf.header.version + '/breadcrumb.html')"></ng-include>
+    <div ng-hide="conf.integrationMode">
+        <div ng-include="getTemplate('templates/header/version_' + conf.header.version + '/clock.html')"></div>
+        <div class="transparent-line"></div>
+        <div ng-include="getTemplate('templates/header/version_' + conf.header.version + '/settings.html')"></div>
+        <div ng-include="getTemplate('templates/header/version_' + conf.header.version + '/profilemenu.html')"></div>
+        <div ng-include="getTemplate('templates/header/version_' + conf.header.version + '/logo.html')"></div>
+    </div>
+    <div class="top-menu" ng-hide="::conf.integrationMode">
+        <div class="main-nav">
+            <ul ng-show="env.authorized">
+                <ng-include src="getTemplate('templates/header/version_' + conf.header.version + '/bonuses.html')"></ng-include>
+                <ng-include src="getTemplate('templates/header/version_' + conf.header.version + '/favorites.html')"></ng-include>
+                <ng-include src="getTemplate('templates/header/version_' + conf.header.version + '/mybets.html')"></ng-include>
+                <ng-include src="getTemplate('templates/header/version_' + conf.header.version + '/balance.html')"></ng-include>
+                <li class="last-child">
+                    <ng-include src="getTemplate('templates/header/dynamicmessage.html')"></ng-include>
+                </li>
+            </ul>
+
+            <ul class="not-sign" ng-show="!env.authorized">
+                <ng-include src="getTemplate('templates/header/version_' + conf.header.version + '/favorites.html')"></ng-include>
+                <div class="sign-in-reg-buttons">
+                    <ng-include src="getTemplate('templates/header/version_' + conf.header.version + '/registrationbutton.html')"></ng-include>
+                    <ng-include src="getTemplate('templates/header/version_' + conf.header.version + '/signinbutton.html')"></ng-include>
+                </div>
+            </ul>
+        </div>
+        <div ng-include="getTemplate('templates/header/version_' + conf.header.version + '/topmenu.html')"></div>
+    </div>
+</div>
+<ng-include class="subtop-header-menu-j" ng-show="currentPageHasSubHeader() && isInSports() && $location.path() !== '/'" no-animate src="getTemplate('templates/sport/toptab.html')"></ng-include>

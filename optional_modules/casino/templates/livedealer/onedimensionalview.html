@@ -1,0 +1,43 @@
+<div class="new-live-casino-j overwrite-j" ng-init="initSlidingView();">
+    <div class="live-casino-second-new-j">
+        <div class="j-resize-950-1280" ng-controller="cmsPagesCtrl" ng-init="loadPage('live-casino-most-popular-game-' + env.lang, true)">
+            <div ng-if="widgets[0].instance.image" class="single-game-contain-wp">
+                <div class="single-game-screen-wrapper">
+                    <p style="background-image: url({{widgets[0].instance.image}});"></p>
+                    <a class="banner-clickable-full" ng-href="{{widgets[0].instance.link}}" target="{{widgets[0].instance.linktarget}}"></a>
+                </div>
+            </div>
+            <div class="j-float-100-rel live-casino-slider-second-v-j">
+                <casino-game-slider product-slides="productSlides"></casino-game-slider>
+            </div>
+            <ul class="provider-navigation-j" ng-show="providerOptions.length > 1">
+                <li ng-repeat="provider in providerOptions track by $index" ng-click="$parent.selectedProvider = provider" ng-class="{'active-j': $parent.selectedProvider === provider}">{{ provider|translate }}</li>
+            </ul>
+            <div class="menu-games dealer" ng-show="devidedGames[selectedProvider].defaultStudio && devidedGames[selectedProvider].studios.length > 1">
+                <div class="subtop-game-menu-j">
+                    <ul class="j-resize-950-1280">
+                        <div class="contein-nav-g">
+                            <li ng-repeat="studio in devidedGames[selectedProvider].studios track by $index" ng-class="{'active': studio === devidedGames[selectedProvider].defaultStudio}">
+                                <a ng-click="devidedGames[selectedProvider].defaultStudio = studio">{{ ($parent.selectedProvider + '_STUDIO_' + studio)|translate }}</a>
+                            </li>
+                        </div>
+                    </ul>
+                </div>
+            </div>
+
+
+            <ul class="live-casino-games-by-ul-column">
+                <li ng-repeat="game in devidedGames[selectedProvider].games track by $index"
+                    ng-show="liveGamesConf.hiddenGamesIds.indexOf(game.id) === -1 && (!game.markets || game.markets.available.indexOf(devidedGames[selectedProvider].defaultStudio) !== -1)"
+                    ng-click="openGame(game, null, devidedGames[selectedProvider].defaultStudio); $event.stopPropagation();"><!-- ng-click="openTables(game, null, devidedGames[selectedProvider].defaultStudio); $event.stopPropagation();"-->
+
+                    <i class="game-icon-by-id-j-{{game.gameID || game.front_game_id}}"></i>
+                    <div class="float-left-of-icon-lss-j">
+                        <p>{{ (game.gameName || game.name)|translate }}</p>
+                        <button  trans>play now</button>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,572 @@
+/* Soccer games control 
+	--------------------------------------------------------------------------------------------------*/
+.game-control.tennis{
+	margin: 27px 6px 0;
+	font-size: 14px;
+	
+
+	/* statistics on bottom of field 
+		----------------------------------------------------------------------------------------------*/
+	.statistics-toggle{
+		background: #223451;
+		color: #ffffff;
+		overflow: hidden;
+		height: 51px;
+		
+		button{	
+			display: block;			
+			width: 40px;
+			height: 20px;
+			margin: 0 auto;
+			background:#fff;
+			border:1px solid #ccc;
+			border-bottom:0 none;
+			position:relative;
+			top:1px;
+			cursor: pointer;			
+			&:focus{
+				outline: none;
+			}
+			&:after{
+				content: "";
+				position:absolute;
+				top:7px;
+				left: 13px;
+				width: 0;
+				height: 0;
+				border-width: 6px;
+				border-style:solid;
+				border-color:#666 transparent transparent;
+
+			}
+		}
+	}
+	.game-statistics{
+		overflow: hidden;	
+		margin: 0.5em 0.3em;
+		&.hidden{ display:none;}
+		li{
+			float: left;
+			width: (100%/2 - 2%); /*divide width depending on number of statistics in a row , for tennis number = 2, for soccer 3*/
+			margin: 0.3em 0;
+			margin-right: 2.9%;		
+			&:nth-child(2n){ 	/* number 3 is number of statistics in the row*/
+				margin-right: 0; 				
+			}
+		}
+	}
+
+	/* Field container with animated controls
+		--------------------------------------------------------------------------------------------*/
+	.field-container{	
+		padding: 0 0 1px;			
+		.game-team-names{			
+			li{
+				line-height: 25px;
+			}
+		}
+		&.tl-hide .field{margin:0;}
+	}	
+	
+		.field{
+			position: relative;
+			margin: 0 auto;
+			width: 338px;
+			height: 116px;
+			background: url("../../../images/animation/t-field.png#{$delete-cache}") no-repeat 0 0;
+		  	> div, > div > div{
+		 		width: 100%;
+		 		height: 100%;
+				position: absolute;
+				left: 0;
+				top: 0;
+			}
+		
+			&.field-0{
+				background: url("../../../images/animation/t-field-red.png#{$delete-cache}") no-repeat 0 0;
+			}
+			&.field-1{
+				background: url("../../../images/animation/t-field.png#{$delete-cache}") no-repeat 0 0;
+			}
+			&.field-2{
+				background: url("../../../images/animation/t-field-green.png#{$delete-cache}") no-repeat 0 0;
+			}
+		}
+	/* Animated controls 
+		-----------------------------------------------------------------------------------------------------*/
+		.animation-container{
+			position: absolute;
+			top: 0;
+			left: 0;
+			right: 0;
+			bottom: 0;
+		}
+		.ball {
+			background: none !important;
+		  	font: 12px/14px 'sport-icon';
+			width: 14px !important;
+			height: 14px !important;
+		  	text-align: center;
+			color: #e8e000;
+		  	text-shadow: 0 0 1px #000000;
+		  	text-indent: 2px;
+			display: block;
+		  	box-shadow: none !important;
+			border-radius: inherit !important;
+			&:before {
+				content: '\e663';
+				position: relative;
+				z-index: 20;
+			  display: block;
+			  }
+			&:after{
+			  content: '\e663';
+			  color: transparent;
+			  text-shadow: 0 0 13px #000000;
+			  position: absolute;
+			  left: 0;
+			  top: 2px;
+			  display: block;
+			  z-index: 10;
+			}
+		  }
+		/* Point 
+		------------------------ */
+		.Point{
+			.point_text{
+				position:absolute;
+				bottom: 11%;
+				opacity: 0.85;
+				color: #353535;	
+				max-width: 27%;
+				white-space: nowrap;
+				text-overflow: ellipsis;
+				overflow: hidden;			
+				font-size: 0.8em;
+				font-weight: bold;
+				padding: 0.2em 0.5em;
+				border-radius: 4px;
+				background: #D6D6D6;
+				border: 1px solid #bbbbbb;
+				text-transform: uppercase;
+				text-shadow: 0 -1px 0 #eeeeee;
+			}
+			&.side_1{
+				 .point_text{
+					left: 8%;
+					animation: point_text_1 0.8s 1 ease-out;
+					animation-fill-mode: forwards;
+				}
+			}
+			&.side_2{
+					.point_text{
+					right: 8%;
+					animation: point_text_2 0.8s 1 ease-out;
+					animation-fill-mode: forwards;
+				}
+			}
+			.score_1,.score_2{
+				position: absolute;
+				top: 30%;
+				width: 9%;
+				height: 1.6em;
+				overflow: hidden;
+				line-height: 1.6em;
+				font-size: 1.2em;
+				background: #112345;
+				border-radius: 4px;
+				border: 1px solid #08193d;
+				text-align: center;
+				color: #effc23;
+				opacity: 0.8;
+				span{
+					position: relative;
+				}
+			}
+			.score_1{
+				left: 38%;
+				animation: point_text_1 0.8s 1 ease-out;
+				animation-fill-mode: forwards;
+			}
+			.score_2{
+				right: 37%;
+				animation: point_text_2 0.8s 1 ease-out;
+				animation-fill-mode: forwards;
+			}
+		}
+
+		/* Ball In Play */
+		.BallInPlay{
+			.ball_container{
+				position: absolute;
+				top: 0;
+				bottom: 0;
+				left: 0;
+				right: 0;
+				.ball,.ball_shadow{
+					position:absolute;
+					top:20%;
+				}
+			}
+			&.side_1.right .ball_container{
+				.ball{
+				  animation: ball_in_play_1_right 1.5s ease-out infinite;
+				  &:before{
+					animation: rotate_ball 1.5s linear infinite;
+				  }
+				  &:after{
+					animation: ball_in_play_shadow 1.5s ease-out infinite;
+				  }
+				}
+			}
+			&.side_1.left .ball_container{
+				.ball{
+					animation: ball_in_play_1_left 1.5s ease-out infinite;
+					&:before{
+					  animation: rotate_ball 1.5s linear infinite;
+					}
+					&:after{
+					  animation: ball_in_play_shadow 1.5s ease-out infinite;
+					}
+				}
+			}
+			&.side_2.left .ball_container{
+				.ball{
+					animation: ball_in_play_2_left 1.5s ease-out infinite;
+					&:before{
+					  animation: rotate_ball 1.5s linear infinite;
+					}
+					&:after{
+					  animation: ball_in_play_shadow 1.5s ease-out infinite;
+					}
+				}
+			}
+			&.side_2.right .ball_container{
+				.ball{
+				  animation: ball_in_play_2_right 1.5s ease-out infinite;
+				  &:before{
+					animation: rotate_ball 1.5s linear infinite;
+				  }
+				  &:after{
+					animation: ball_in_play_shadow 1.5s ease-out infinite;
+				  }
+				}
+			}
+		}
+
+		/* Ace */
+		.Ace{
+			.ball_container{
+				position: absolute;
+				top: 0;
+				bottom: 0;
+				left: 0;
+				right: 0;
+				.ball,.ball_shadow{
+					position:absolute;
+					top:20%;
+				}
+			}
+			.set{
+					position:absolute;
+					top:40%;
+					width: 30%;
+					text-align: center;
+					overflow: hidden;
+					text-overflow: ellipsis;
+					white-space: nowrap;
+					padding:0.3em 1em;
+					border-radius: 4px;
+					border: 1px solid #08193d;
+					color: #effc23;
+					font-size: 0.8em;
+					font-weight: bold;
+					text-transform: uppercase;
+					background: #112345;
+					opacity: 0;
+					}
+
+			&.side_1 {
+				.ball_container{
+					.ball{
+					  	opacity: 0;
+						animation: ball_ace_home 0.8s 1 ease-in-out;
+					  &:after{
+						animation: ball_ace_shadow 0.8s 1 ease-in-out;
+					  }
+					}
+				}
+				.set{
+					left: 11%;
+					animation: setInfo 0.5s 0.9s 1 ease-in;
+					animation-fill-mode:forwards;
+				}
+			}
+			&.side_2{
+				.ball_container{
+					.ball{
+					  	opacity: 0;
+						animation: ball_ace_away 0.8s 1 ease-in-out;
+						&:after{
+						  animation: ball_ace_shadow 0.8s 1 ease-in-out;
+						}
+					}
+				}
+				.set{
+					right: 11%;
+					animation: setInfo 0.5s 0.9s 1 ease-in;
+					animation-fill-mode:forwards;
+				}
+			}
+		}
+		/* First-Fifth Set & Finished*/
+		.FirstSet,.SecondSet,.ThirdSet,.FourthSet,.FifthSet,.InjuryBreak,.RainDelay,.Timeout,.Finished,.Game{
+			position:absolute;
+			top:40%;
+			width: 70% !important;;
+			margin: 0 15%;
+			text-align: center;
+			.set{
+			overflow: hidden;
+			text-overflow: ellipsis;
+			white-space: nowrap;
+			padding:0.3em 1em;
+			border-radius: 4px;
+			border: 1px solid #08193d;
+			color: #effc23;
+			font-size: 0.8em;
+			font-weight: bold;
+			text-transform: uppercase;
+			background: #112345;
+			opacity: 0;
+
+				animation: setInfo 1.5s 0.2s 1 ease-in;
+				animation-fill-mode:forwards;
+			}
+		}
+
+		/* Fault */
+		.ServiceFault, .DoubleFault {
+			.fault_text{
+				position:absolute;
+				bottom: 11%;
+				opacity: 0.85;
+				color: #353535;
+				max-width: 27%;
+				white-space: nowrap;
+				text-overflow: ellipsis;
+				overflow: hidden;
+				font-size: 0.8em;
+				font-weight: bold;
+				padding: 0.2em 0.5em;
+				border-radius: 4px;
+				background: #FFEB00;
+				border: 1px solid #F5FF00;
+				text-transform: uppercase;
+			}
+			&.side_1{
+				 .fault_text{
+					left: 8%;
+					animation: fault_text_1 0.8s 1 ease-out;
+					animation-fill-mode: forwards;
+				}
+			}
+			&.side_2{
+					.fault_text{
+					right: 8%;
+					animation: fault_text_2 0.8s 1 ease-out;
+					animation-fill-mode: forwards;
+				}				
+			}
+		}
+	}
+.game-control.tennis .BallInPlay .ball_container .ball_shadow{
+	display: none;
+}
+
+
+
+
+/* Animation keyframes
+	------------------------------------------------------------------------------------------------------------------------ */
+@keyframes hide-animation{
+	0%{
+		opacity: 1;
+	}
+	100%{ opacity: 0; }
+}
+
+/* Point animation */
+@keyframes point_text_1{
+	0%{
+		opacity: 0;
+		animation-timing-function: ease-in;
+	}
+	100%{opacity:1;}
+}
+@keyframes point_text_2{
+	0%{
+		opacity: 0;
+		animation-timing-function: ease-in;
+	}
+	100%{opacity:1;}
+}
+@keyframes slideDown{
+	0%{
+		top:-100%;
+	}
+	100%{
+		top:0;
+	}
+}
+/* Fault animation */
+@keyframes fault_text_1{
+	0%{
+		opacity: 0;
+		animation-timing-function: ease-in;
+	}
+	40%{
+		opacity: 0.3;
+		animation-timing-function: ease-in;
+	}
+	80%{
+		opacity: 0.5;
+		animation-timing-function: ease-in;
+	}
+	20%,60%,100%{opacity:1;}
+}
+
+@keyframes fault_text_2{
+	0%{
+		opacity: 0;
+		animation-timing-function: ease-in;
+	}
+	40%{
+		opacity: 0.3;
+		animation-timing-function: ease-in;
+	}
+	80%{
+		opacity: 0.5;
+		animation-timing-function: ease-in;
+	}
+	20%,60%,100%{opacity:1;}
+}
+	
+/* ------------------------------------------------------- */
+/* BallInPlay animation */
+@keyframes rotate_ball{
+	0%{
+		transform: translate3d(0,0,0) rotate(0deg);
+	}
+	70%{
+		transform: translate3d(0,0,0) rotate(180deg);
+	}
+	100%{
+		transform: translate3d(0,0,0) rotate(360deg);
+	}
+}
+
+@keyframes ball_in_play_1_left{
+  0% {
+	transform: translate3d(500%, 0%, 0);
+  }
+  100% {
+	transform: translate3d(1900%, 350%, 0);
+  }
+}
+@keyframes ball_in_play_1_right{
+  0% {
+	transform: translate3d(500%, 350%, 0);
+  }
+  100% {
+	transform: translate3d(1900%, 0%, 0);
+  }
+}
+@keyframes ball_in_play_2_left{
+  0% {
+	transform: translate3d(1900%, 350%, 0);
+  }
+  100% {
+	transform: translate3d(500%, 0%, 0);
+  }
+}
+@keyframes ball_in_play_2_right{
+  0% {
+	transform: translate3d(1900%, 0%, 0);
+  }
+  100% {
+	transform: translate3d(500%, 350%, 0);
+  }
+}
+
+@keyframes ball_in_play_shadow {
+  35%{
+	transform: translate3d(0, 200%, 0);
+  }
+}
+/* ------------------------------------------------------- */
+
+/* Finished and all info only animations: firstSet - fifthSet */
+@keyframes setInfo{
+	0%{
+		transform: scale(0);
+		opacity: 0;
+	}
+	70%{
+		transform:scale(1.05);
+		animation-timing-function: ease-in;
+		opacity: 1;
+	}
+	100%{
+		transform: scale(1);
+		opacity: 0.8;
+	}
+}
+
+/* Ace animation */
+
+@keyframes ball_ace_home {
+  0% {
+	opacity: 1;
+	transform: translate3d(500%, 0%, 0);
+  }
+  50% {
+	transform: translate3d(1400%, 350%, 0) scaleY(0.6);
+  }
+  90%{
+	opacity: 1;
+  }
+  100% {
+	opacity: 0;
+	transform: translate3d(1900%, 0%, 0);
+  }
+}
+@keyframes ball_ace_away {
+  0% {
+	opacity: 1;
+	transform: translate3d(1900%, 0%, 0);
+  }
+  50% {
+	transform: translate3d(1000%, 350%, 0) scaleY(0.6);
+  }
+  90%{
+	opacity: 1;
+  }
+  100% {
+	transform: translate3d(500%, 0%, 0);
+	opacity: 0;
+  }
+}
+
+@keyframes ball_ace_shadow {
+  0%{
+	transform: translate3d(0, 250%,0);
+  }
+  50%{
+	transform: translate3d(0, 0, 0);
+  }
+  100%{
+	transform: translate3d(0, 150%,0);
+  }
+}
+

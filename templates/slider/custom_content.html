@@ -1,0 +1,10 @@
+<!--Custom Content-->
+<div ng-controller="headerCtrl" ng-if="env.sliderContent == 'customContent' && env.sliderCustomContent">
+    <div ng-if="!env.sliderCustomContent.contentType"
+         class="register deposit external-form-t {{env.sliderCustomContent.type?env.sliderCustomContent.type:'info'}}">
+        <div ng-if="env.sliderCustomContent.html" ng-bind-html="env.sliderCustomContent.html|html"></div>
+        <div ng-if="env.sliderCustomContent.url">
+            <iframe ng-src="{{env.sliderCustomContent.url|html:'url'}}" width="100%" height="620px" frameborder="0"></iframe>
+        </div>
+    </div>
+</div>

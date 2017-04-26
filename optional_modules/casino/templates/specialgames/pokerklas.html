@@ -1,0 +1,72 @@
+<div ng-controller="casinoSpecialGamesCtrl" ng-init="loadGame('pokerklas');checkIfEnabled('pokerKlas');">
+  <div class="skillgame-landing-j">
+    <div class="intro-section-j">
+      <div class="intro-slider-j"> 
+        <div class="intro-s-j">
+          <div class="skillgame-landing-guide">
+            <h1 trans>Poker klas</h1>
+            <h2 trans>Welcome to Poker</h2>
+            <div class="primary-j">
+              <p trans>Enjoy the Poker with Pokerklas Network...</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="skillgame-landing-guide button-group-j">
+        <ul>
+          <li>
+            <a>
+              <button ng-click="env.authorized ? loadGame('pokerklas') : broadcast('openLoginForm'); $event.stopPropagation();" trans>Play now</button>
+            </a>
+          </li>
+          <li>
+            <a ng-if="(userOS!=='Windows' && userOS !== 'MacOS') || (!game.downloadLink && userOS==='Windows') || (userOS==='MacOS' && !game.downloadLinkMac)" ng-click="broadcast('globalDialogs.addDialog', {type: 'error',title: 'Error',content: 'There is no downloadable client for your operating system'})"><button trans>Download</button></a>
+            <a ng-href="{{game.downloadLink}}" ng-if="userOS==='Windows' && game.downloadLink"><button trans>Download</button></a>
+            <a ng-href="{{game.downloadLinkMac}}" ng-if="userOS==='MacOS' && game.downloadLinkMac"><button trans>Download</button></a>
+          </li>
+          <li ng-show="env.authorized">
+            <button class="skin-j" ng-click="amountTransfer('get_balance_poker_klas', null, null, '2')" trans>TRANSFER</button>
+          </li>
+        </ul>
+      </div>
+    </div>  
+  </div>
+  
+  
+  
+  <div class="new-default-popup-j pokerklas" ng-show="amountTransferModel.showTransferPopUp">
+    <div class="pp-table-j">
+      <div class="table-row-j">
+        <div class="table-cell-j">
+          <div class="popup-wrapper-j">
+            <div class="pu-head-j">
+              <span trans>Transfer</span>
+              <a class="close-j" ng-click="amountTransferModel.showTransferPopUp = false"></a>
+            </div>
+            <div class="transfer-form-game-j">
+              <ul>
+                <li>
+                  <form autocomplete="off" name="fromForm" id="fromForm" ng-submit="amountTransfer('transfer', 'KlasGaming'  ,'Casino')">
+                    <input name="amountFromGame" type="number" placeholder="ENTER" min="0.1" max="{{ amountTransferModel.gpAmount }}" autocomplete="off" ng-model="amountTransferModel.fromGameAmount" required="required" step="0.1" trans>
+                    <button disabled="true" ng-disabled="fromForm.amountFromGame.$invalid" trans>Withdraw from game</button>
+                  </form>
+                </li>
+                <li>
+                  <form autocomplete="off" name="toForm" id="toForm" ng-submit="amountTransfer('transfer', 'Casino', 'KlasGaming')">
+                    <input name="amountToGame" type="number" placeholder="ENTER" min="0.1" max="{{ env.casinoBalance.balance || 1000 }}" autocomplete="off" ng-model="amountTransferModel.fromCasinoAmount" required="required" step="0.1" trans>
+                    <button disabled="true" ng-disabled="toForm.amountToGame.$invalid" trans>Deposit to game</button>
+                  </form>
+                </li>
+              </ul>
+              <p ng-show="amountTransferModel.gpAmount !== null"><span trans>Game Balance: </span>{{ amountTransferModel.gpAmount }}&nbsp;{{ currency_name|currency }}</p>
+              <p ng-show="amountTransferModel.messageType && amountTransferModel.messageType === 'error'"><span trans>Error occured</span></p>
+              <p ng-show="amountTransferModel.messageType && amountTransferModel.messageType === 'success'"><span trans>Success</span></p>
+            </div>
+            <div ng-show="amountTransferModel.transferInProgress" class="contein-smoll-loader"><div class="smoll-loader"></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+   
+</div>

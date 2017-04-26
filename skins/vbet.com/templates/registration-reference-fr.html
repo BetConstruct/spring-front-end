@@ -1,0 +1,354 @@
+<div class="extended-reg-j" ng-controller="RegistrationController">
+    <h1>Informations personnellesd - Personal information</h1>
+    <table>
+        <tr>
+            <td>
+                <h2>Personal information</h2>
+                <article>
+                    <ul>
+                        <li>
+                            <label>
+                                <p>First name</p>
+
+                                <div class="error-wrap-j">
+                                    <input type="text" placeholder="First name">
+                                    <i></i>
+
+                                    <div class="caption-j">This is it. love or hate it.</div>
+                                </div>
+                            </label>
+                        </li>
+                        <li>
+                            <label>
+                                <p>Last name</p>
+
+                                <div class="error-wrap-j error">
+                                    <input type="text" placeholder="Last name">
+                                    <i></i>
+
+                                    <div class="caption-j">This is it. love or hate it.</div>
+                                </div>
+                            </label>
+                        </li>
+                    </ul>
+                    <ul>
+                        <li class="gender-block-j">
+                            <p>Gender</p>
+                            <label>
+                                <div class="error-wrap-j">
+                                    <input type="radio" name="gender" checked>
+                                    <span>Male</span>
+                                </div>
+                            </label>
+                            <label>
+                                <div class="error-wrap-j">
+                                    <input type="radio" name="gender">
+                                    <span>Female</span>
+                                </div>
+                            </label>
+                        </li>
+                        <li class="birth-date-j">
+                            <label>
+                                <p>Birth date</p>
+
+                                <div class="error-wrap-j">
+                                    <input type="text" placeholder="DD" maxlength="2">
+                                </div>
+                            </label>
+                            <label>
+                                <p>&nbsp;</p>
+
+                                <div class="error-wrap-j">
+                                    <div class="regselect-j">
+                                        <select>
+                                            <option>MM</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </label>
+                            <label>
+                                <p>&nbsp;</p>
+
+                                <div class="error-wrap-j">
+                                    <input type="text" placeholder="YYYY" maxlength="4">
+                                </div>
+                            </label>
+                        </li>
+                    </ul>
+                    <ul>
+                        <li>
+                            <p>Country of birth</p>
+
+                            <div class="error-wrap-j">
+                                <div class="regselect-j">
+                                    <select>
+                                        <option>Country</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </li>
+                        <li>
+                            <p>City of birth</p>
+
+                            <div class="error-wrap-j">
+                                <div class="regselect-j">
+                                    <select>
+                                        <option>City</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                    <hr>
+                    <ul>
+                        <li>
+                            <label>
+                                <p>Country</p>
+
+                                <div class="error-wrap-j">
+                                    <div class="regselect-j">
+                                        <select>
+                                            <option>Country</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </label>
+                        </li>
+                        <li>
+                            <label>
+                                <p>City</p>
+
+                                <div class="error-wrap-j">
+                                    <div class="regselect-j">
+                                        <select>
+                                            <option>City</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </label>
+                        </li>
+                    </ul>
+                    <ul>
+                        <li>
+                            <label>
+                                <p>Address</p>
+
+                                <div class="error-wrap-j">
+
+                                    <input type="text" placeholder="Address">
+                                </div>
+                            </label>
+                        </li>
+                        <li>
+                            <label>
+                                <p>Additional address</p>
+
+                                <div class="error-wrap-j">
+                                    <input type="text" placeholder="Additional address">
+                                </div>
+                            </label>
+                        </li>
+                    </ul>
+                    <ul>
+                        <li>
+                            <label>
+                                <p>Postal/zip code</p>
+
+                                <div class="error-wrap-j">
+                                    <input type="text" placeholder="Postal/zip code">
+                                </div>
+                            </label>
+                        </li>
+                        <li>
+                            <label>
+                                <p>Mobile phone</p>
+
+                                <div class="error-wrap-j">
+                                    <input type="text" placeholder="Mobile phone">
+                                </div>
+                            </label>
+                        </li>
+                    </ul>
+                </article>
+            </td>
+            <td>
+                <h2>Connection / logon information</h2>
+                <article>
+                    <ul>
+                        <li>
+                            <label>
+                                <p>Room ID</p>
+
+                                <div class="error-wrap-j">
+                                    <input type="text" placeholder="Room ID">
+                                </div>
+                            </label>
+                        </li>
+                    </ul>
+                    <ul>
+                        <li>
+                            <label>
+                                <p>Password</p>
+
+                                <div class="error-wrap-j">
+                                    <input type="password" placeholder="Password">
+                                </div>
+                                <div class="pass-strong-bar-j"><span></span></div>
+                            </label>
+                        </li>
+                        <li>
+                            <label>
+                                <p>Password confirmation</p>
+
+                                <div class="error-wrap-j">
+                                    <input type="password" placeholder="Password confirmation">
+                                </div>
+                            </label>
+                        </li>
+                    </ul>
+                    <ul>
+                        <li>
+                            <label class="no-marginb-j">
+                                <p>E-mail</p>
+
+                                <div class="error-wrap-j">
+                                    <input type="email" placeholder="E-mail">
+                                </div>
+                            </label>
+                        </li>
+                        <li>
+                            <label class="no-marginb-j">
+                                <p>E-mail confirmation</p>
+
+                                <div class="error-wrap-j">
+                                    <input type="email" placeholder="E-mail confirmation">
+                                </div>
+                            </label>
+                        </li>
+                    </ul>
+                    <hr>
+                    <ul>
+                        <li>
+                            <label>
+                                <p>Security question</p>
+
+                                <div class="error-wrap-j">
+                                    <div class="regselect-j">
+                                        <select>
+                                            <option>What is the number of your school?</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </label>
+                        </li>
+                    </ul>
+                    <ul>
+                        <li>
+                            <label>
+                                <p>Your answer</p>
+
+                                <div class="error-wrap-j">
+                                    <input type="text" placeholder="Your answer">
+                                </div>
+                            </label>
+                        </li>
+                    </ul>
+                    <ul>
+                        <li>
+                            <label>
+                                <p>Promotion code</p>
+
+                                <div class="error-wrap-j">
+                                    <input type="text" placeholder="Promotion code">
+                                </div>
+                            </label>
+                        </li>
+                        <li>&nbsp;</li>
+                    </ul>
+                </article>
+            </td>
+            <td>
+                <h2>Bank information</h2>
+                <article>
+                    <p>Thank you for entering your IBAN. It is used only for the payment of winnings.</p>
+                    <ul>
+                        <li class="iban-block-j">
+                            <label>
+                                <p>IBAN</p>
+
+                                <div class="error-wrap-j">
+                                    <input type="text" placeholder="IBAN">
+                                    <i></i>
+
+                                    <div class="caption-j">This is it. love or hate it.</div>
+                                </div>
+                            </label>
+                            <label>
+                                <div class="error-wrap-j">
+                                    <input type="text" placeholder="BIC/SWIFT">
+                                    <i></i>
+
+                                    <div class="caption-j">This is it. love or hate it.</div>
+                                </div>
+                            </label>
+                            <a>Check the validity of your IBAN</a>
+                        </li>
+                    </ul>
+                    <hr>
+                    <ul class="promo-agree-block-j">
+                        <p>I agree to receive the registration bonus, special offers and Vbet.fr information.</p>
+                        <li>
+                            <label>
+                                <div class="error-wrap-j">
+                                    <input type="checkbox">
+
+                                    <p>Via e-mail</p>
+                                </div>
+                            </label>
+                        </li>
+                        <li>
+
+                            <label>
+                                <div class="error-wrap-j">
+                                    <input type="checkbox">
+
+                                    <p>Via SMS</p>
+                                </div>
+                            </label>
+                        </li>
+                    </ul>
+                    <hr>
+                    <label class="age-agree-j">
+                        <div class="error-wrap-j">
+                            <input type="checkbox"><span>I certify being at least 18 years old, and being aware of the Terms and Conditions and Rules of Vbet.fr.</span>
+                        </div>
+                    </label>
+                    <hr>
+                    <label class="capt-j-ext">
+                        <p>Please fill in the following Captcha</p>
+
+                        <div ng-switch-when="captcha" class="error-wrap-j"
+                             ng-class="{'error': (formSubmited || registerform[regItem.name].blur) &amp;&amp; registerform[regItem.name].$invalid &amp;&amp; showFieldsValidation}"
+                             ng-show="regItem.imgSrc">
+                            <label>
+                                <img ng-src="https://cptca.betconstruct.com/captcha.php?key=6f4618a96a008c66a55a"
+                                     src="https://cptca.betconstruct.com/captcha.php?key=6f4618a96a008c66a55a">
+                                <button ng-click="loadCaptchaImage(regItem)" trans="">Reload</button>
+                            </label>
+
+                            <div vb-html-compiler="<input type='text' name='captcha_text' ng-blur='registerform[regItem.name].blur=true' ng-model='registrationData[regItem.name]' placeholder=''/>"
+                                 custom-attrs="regItem.customAttrs">
+                                <input type="text" name="captcha_text" ng-blur="registerform[regItem.name].blur=true"
+                                       ng-model="registrationData[regItem.name]" placeholder="Type the words here"
+                                       required="required"
+                                       class="ng-pristine ng-scope ng-invalid ng-invalid-required ng-touched">
+                            </div>
+                        </div>
+                    </label>
+                    <hr>
+                    <button class="submit-but-j" disabled="disabled">Open my account</button>
+                </article>
+            </td>
+        </tr>
+    </table>
+</div>

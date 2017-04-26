@@ -1,0 +1,55 @@
+@import '_animations';
+@import 'flags';
+@import 'asian';
+@import 'faq';
+@import 'popups';
+@import 'registration';
+@import 'last-minute-bets';
+@import 'regional-cup';
+@import 'soccer-timeline';
+@import 'recent-bets';
+@import 'free-homepage';
+@import 'buddy-to-buddy-transfer';
+@import 'dashboard';
+@import 'footer';
+@import 'featured-game';
+@import 'about-us';
+@import 'calculator';
+@import 'pool-betting';
+@import 'results';
+@import 'snippets';
+@import 'twitter-news';
+@import 'custom-widget';
+@import 'skillgames';
+@import 'skillgamepage';
+@import 'print-a4';
+@import 'livecasino-popup';
+@import 'livecalendar2016';
+@import 'livecasino-how-to-play';
+@import "user-settings";
+@import "winners";
+@import 'playoff';
+@import 'hover-subheader';
+@import 'mixedMyBets';
+@import "mixedBalance";
+@import "loyaltyPoints";
+@import "registration-fr";
+@import 'casino2016';
+@import 'three-in-one-skill-games';
+@import 'global-promotions';
+@import '../fonts/icomoon/icons';
+@import 'header2016';
+@import 'classic-view-version-3-main';
+@import 'homepage2016';
+@import '_statisticsOnHover';
+@import 'mini-games';
+
+$combo-enabled: true !default;@import 'combo-view-main';@if $combo-enabled == true {@include experimental-sportbook-1;@include experimental-sportbook-2;@include experimental-sportbook-3;@include experimental-sportbook-4;@include experimental-sportbook-5;}
+$exchange-enabled: false !default;@import 'exchange';@if exchange-enabled == true {@include exchange;}
+$casino2013-enabled: false !default;
+$header2013-enabled: false !default;
+$header2015-enabled: false !default;
+$draw-view-enabled: true !default;@import 'draw-view';@if $draw-view-enabled == true {@include draw-view-style;}
+$live-casino-list-view-enabled: false !default;@import "live-casino-list-view";@if $live-casino-list-view-enabled == true {@include live-casino-list-view;}
+$first-deposit-bonus-view-enabled: true !default;@import 'first-deposit-bonus';@if $first-deposit-bonus-view-enabled == true {@include first-deposit-bonus-style;}
+@import 'betterHomepage';

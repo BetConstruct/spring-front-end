@@ -1,0 +1,46 @@
+<div ng-controller="FeedbackController as feedbackCtrl"  ng-if="(conf.feedbackButton.enabledLogin || conf.feedbackButton.enabledLogOut) && $location.path() != '/popup/'">
+
+    <div class="new-default-popup-j feedback" ng-show="showFeedBackPopup">
+        <div class="pp-table-j">
+            <div class="table-row-j">
+                <div class="table-cell-j">
+                    <div class="popup-wrapper-j">
+                        <div class="pu-head-j">
+                            <span trans>Feedback</span>
+                            <a class="close-j" ng-click="toggleView()"></a>
+                        </div>
+                        <form name="feedbackForm">
+                            <div class="pu-contain-j">
+                                <p>
+                                  <span trans>Hello, we'd love to hear your thoughts.</span><br /><br />
+                                  <span trans>Now, if you have any questions, comments or suggestions, please enter your feedback in the box below and then press Send.</span>
+                                </p> 
+                                <label ng-class="{'error': feedbackForm.email.$dirty && feedbackForm.email.$invalid}">
+                                    <p trans>Email Address</p>
+                                  <div class="error-container-j">
+                                    <input name="email" type="email" placeholder="Enter your email address" required
+                                           ng-model="email"
+                                           ng-pattern="/^[\w!.%+\-]+@[\w\-]+(?:\.[\w\-]+)+$/" trans>
+                                    <div class="form-error-text-j" ng-show="feedbackForm.email.$error.pattern">
+                                        <div class="error-icon-f-j"></div>
+                                        <span trans ng-show="feedbackForm.email.$error.pattern">Please enter a valid email address</span>
+                                    </div>
+                                  </div>                                    
+                                </label>
+                                <label>
+                                    <p trans>Your message</p>
+                                    <textarea name="" cols="1" rows="1" ng-model="messageBody"></textarea>
+                                </label>
+                            </div>
+                            <div class="pu-button-wrap-j">
+                                <button class="cancel-j feedback-cancel-t" ng-click="toggleView()" trans>Cancel</button>
+                                <button ng-show="!sendingFeedBackInProgress" trans ng-click="sendMessage()" ng-disabled="feedbackForm.$invalid">Send</button>
+                                <vbet-loader ng-show="sendingFeedBackInProgress"></vbet-loader>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,17 @@
+$hero-color:        #a61f67;          $skin-color:              #1e2639;
+$brand-color-1:     #1a7051;          $text-color:          $skin-color;
+$brand-color-2:     #c4963f;
+
+$logo-bg:           url(../images/logo.png#{$delete-cache})  no-repeat 0 100% / contain;
+$logo-fix-bg:       url(../images/logo2.png#{$delete-cache})  no-repeat 0 50% / contain;
+$logo-width:        227px;                    
+$logo-fix-width:    156px;
+
+
+// DELETE THIS FOR NEW SKINS OK?
+$asian-switch-odds-state-colors: true;
+$menu-padding: 0 60px;
+@include footer-show-this-payments(":not(.wirecardnew):not(.ecopayznew)", ".vbetCoUk");
+@include another-logo-by-class("VBET", "url(../../../images/VBET/logo-vbet-2x.png#{$delete-cache}) no-repeat 0 100% / contain", "url(../../../images/VBET/logo-vbet2.png#{$delete-cache}) no-repeat 0 50% / contain", 117px, 80px, "url(../../../images/VBET/logo-circle.png#{$delete-cache}) no-repeat 50% 0");
+@include another-logo-by-class("VBETUSA", "url(../../../images/VBET/logo-vbet.png#{$delete-cache}) no-repeat 0 100% / contain", "url(../../../images/VBET/logo-vbet2.png#{$delete-cache}) no-repeat 0 50% / contain", 200px, 80px, "url(../../../images/VBET/logo-circle.png#{$delete-cache}) no-repeat 50% 0");
+.VivaroBet, .VBET {.body-wrapper.homepage {background: #1E2538 url(../../../images/backgrounds/vivaro_bg-spring-eng.jpg) repeat-x 50% 0 !important;&.lang-rus {background-image: url(../../../images/backgrounds/vivaro_bg-spring-rus.jpg) !important;}&.lang-arm {background-image: url(../../../images/backgrounds/vivaro_bg-spring-arm.jpg) !important;}}}

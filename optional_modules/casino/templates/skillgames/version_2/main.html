@@ -1,0 +1,14 @@
+<div ng-controller="skillGamesVersion2MainCtrl" watch-resize middle-screen-mode="true" ng-init="checkIfEnabled('skillgames'); setTitle('Games');">
+    <div ng-show="!loadingProcess">
+        <div class="casino-main" ng-show="!gamesInfo.length">
+            <div ng-if="!conf.enableNewSkillGame" ng-include="getTemplate('optional_modules/casino/templates/skillgames/version_2/old.html')"></div>
+            <div ng-if="conf.enableNewSkillGame" ng-include="getTemplate('optional_modules/casino/templates/skillgames/version_2/new.html')"></div>
+        </div>
+
+        <multiview-control ng-if="cConf.multiViewEnabled" wide-mode="wideMode" middle-mode="middleMode" view-count="viewCount" games-info="gamesInfo"></multiview-control>
+
+        <div ng-include="getTemplate('optional_modules/casino/templates/version_2/big-game.html')" ng-if="gamesInfo.length" class="big-games-overflow"></div>
+    </div>
+
+    <vbet-loader class="skillgames" ng-show="loadingProcess"></vbet-loader>
+</div>

@@ -1,0 +1,77 @@
+<div ng-controller="euro88PaymentsCtrl" ng-init="getData('GetActivePaymentMessage', '0');">
+    <div class="form-sign-in">
+        <div class="text-payment-contain">
+            <div class="payment-text-euro">
+                <!--put here description of payment -->
+            </div>
+            <div class="euro-v-payment">
+                <ul>
+                    <li>
+                        <div class="payment-euro8-form">
+                            <input type="text"  comma="number" comma-enable={{conf.enableCommaSeparateNumber}} placeholder="{{'enter amount here' | translate}}" value="" prevent-input="[^0-9]+"  required="required" ng-model="paymentSum">
+                            <button disabled>{{ profile.currency_name|currency }}</button>
+                        </div>
+                    </li>
+                    <li ng-repeat="item in sumsList">
+                        <div class="other-b-payment">
+                            <button ng-click="increaseSum(item.value);">{{ item.name }}</button>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="other-b-payment">
+                            <button ng-click="paymentSum = null" trans>Clear</button>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            <div class="other-b-deposit">
+                <button trans ng-disabled="!paymentSum" ng-click="getData('CreatePaymentMessage', '0')">Deposit</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="title-euro-deposit">
+
+        <h5><a ng-click="getData('GetActivePaymentMessage', '1');" trans>Payment Requests Deposit</a></h5>
+        <table ng-show="GetActivePaymentMessage  && GetActivePaymentMessage.status !== 'none'">
+            <tr>
+                <td>
+                    <div class="name-refresh" ng-click="getData('GetActivePaymentMessage', '0');">
+                        <p><span trans>Date</span></p>
+                    </div>
+                </td>
+                <td>
+                    <p trans>Amount</p>
+                </td>
+                <td><p trans>Status</p></td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="more-info-payment-euro">
+                        <span ng-bind-html="GetActivePaymentMessage.dateLocale|html"></span>
+
+                        <p ng-bind-html="GetActivePaymentMessage.msg"></p>
+                        <div ng-show="GetActivePaymentMessage.canReply === 'yes'" class="other-b-deposit" ng-click="getData('ConfirmPaymentMessage', '0', GetActivePaymentMessage.mID);">
+                            <button trans>Confirm</button>
+                        </div>
+                    </div>
+                </td>
+                <td>
+                    <p>{{ GetActivePaymentMessage.eamount | number:conf.balanceFractionSize }}</p>
+                </td>
+                <td><p>{{ GetActivePaymentMessage.msgstatus }}</p></td>
+            </tr>
+        </table>
+        <div ng-if="profile.currency_name === 'KRW'" ng-show="!GetActivePaymentMessage || GetActivePaymentMessage.status === 'none'" class="payment-default-text-b">
+            <ul>
+                <li trans>1. The minimum deposit amount is 10,000 KRW.</li>
+                <li trans>2. Enter the amount you wish to deposit, then select the account you wish to deposit and press to 'Deposit' button.</li>
+                <li trans>3. Please always check deposit bank account from time to time.</li>
+                <li trans>4. 30 minutes after the deposit account confirmation your money should be in your account, please re-apply when 30 minutes are over.</li>
+            </ul>
+        </div>
+    </div>
+
+    <vbet-loader ng-show="requestInProcess"></vbet-loader>
+
+</div>

@@ -1,0 +1,32 @@
+<div class="float-left width-100" ng-if="!conf.integrationMode && !conf.disableFooterNav && !conf.disableFooter && $location.path() !='/popup/'"> 
+    <div class="guide" ng-controller="footerCtrl">
+        <div class="footer-j">
+            <div class="footer-section left" ng-include="getTemplate('templates/footer/helppages.html')"></div>
+            <div class="footer-section right">
+                <ng-include src="getTemplate('templates/footer/social.html')"></ng-include>
+                <ng-include src="getTemplate('templates/footer/copyright.html')"></ng-include>
+                <ng-include src="getTemplate('templates/footer/links.html')"></ng-include>
+                <div class="back-block-j">
+                    <div class="age-restriction-j" ng-show="conf.ageRestrictionInFooter">{{conf.ageRestrictionInFooter}}+</div>
+                    <button ng-click="broadcast('feedback.toggle')" ng-if="(env.authorized && conf.feedbackButton.enabledLogin) || (!env.authorized && conf.feedbackButton.enabledLogOut)" trans>Feedback</button>
+                    <button ng-click="scrollToTop(true)" trans>back to top</button>
+                </div>
+            </div>
+        </div>
+        <div class="extended-license-footer" ng-if="conf.footer_license_logos || conf.about_company_text[env.lang]">
+            <ul>
+                <li ng-bind-html="conf.about_company_text[env.lang]"></li>
+                <li ng-show="conf.footer_license_logos" class="gamble-logos-j">
+                    <ul ng-repeat="row in conf.footer_license_logos">
+                        <li ng-repeat="logo in row"  ng-hide="logo.hide_on ? logo.hide_on.indexOf(env.lang) !== -1 : logo.show_on ? logo.show_on.indexOf(env.lang) === -1 : false">
+                            <a ng-if="!logo.iframe" ng-href="{{logo.href}}" target="{{logo.target ? logo.target : '_blank'}}" style="{{logo.css}}"><img ng-src="{{logo.img}}" width="{{logo.width}}" height="{{logo.height}}"> </a>
+                            <iframe ng-if="logo.iframe" ng-src="{{logo.iframe | html : 'url'}}" style="{{logo.css}}" width="{{logo.width}}" height="{{logo.height}}" frameborder="0" scrolling="no"></iframe>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <ng-include src="getTemplate('templates/footer/paymentmethods.html')"></ng-include>
+    <ng-include src="getTemplate('templates/footer/chatwidget.html')"></ng-include>
+</div>

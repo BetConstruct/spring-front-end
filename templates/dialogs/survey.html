@@ -1,0 +1,47 @@
+<div ng-controller="blitzsurveyCtrl" ng-if="profile && conf.showSurveyPopup">
+    <div class="popup-bg-contain" ng-class="{'active': active}" >
+        <div class="blitz-survey popup-classic">
+            <div class="closed-btn" ng-click="closeSurvey()"></div>
+            <h3 trans>Blitz Survey</h3>
+            <form name="blitzsurvey" ng-submit="answerSurvey()">
+                <p trans>We are interested to know which of the below-mentioned games you know to play (you can check up to 5 products):</p>
+                <div class="games-to-know">
+                    <ul>
+                        <li>
+                            <input type="checkbox" class="classic-checkbox" ng-model="gameSurvey.chinesepoker" id="chinesepoker" ng-click="noGames = false">
+                            <label for="chinesepoker" trans>Chinese Poker</label>
+                        </li>
+                        <li>
+                            <input type="checkbox" class="classic-checkbox" ng-model="gameSurvey.livecasino" id="livecasino" ng-click="noGames = false">
+                            <label for="livecasino" trans>Live Casino</label>
+                        </li>
+                        <li>
+                            <input type="checkbox" class="classic-checkbox" ng-model="gameSurvey.poker" id="poker" ng-click="noGames = false">
+                            <label for="poker" trans>Poker</label>
+                        </li>
+                    </ul>
+                    <ul>
+                        <li>
+                            <input type="checkbox" class="classic-checkbox" ng-model="gameSurvey.backgammon" id="backgammon" ng-click="noGames = false">
+                            <label for="backgammon" trans>Backgammon</label>
+                        </li>
+                        <li>
+                            <input type="checkbox" class="classic-checkbox" ng-model="gameSurvey.belote" id="belote" ng-click="noGames = false">
+                            <label for="belote" trans>Belote</label>
+                        </li>
+                        <li>
+                            <input type="checkbox" class="classic-checkbox" ng-model="noGames" id="none" ng-click="noneSelected()">
+                            <label for="none"  trans>None of these</label>
+                        </li>
+                    </ul>
+                </div>
+                <p trans>Thank you for participating in our survey. VivaroBet appreciates your interest in our products.</p>
+                <div class="popup-buttons">
+                    <!-- <button  trans>Answer Later</button>-->
+                    <button ng-click="sendAnswers()" trans>Submit</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+</div>

@@ -1,0 +1,11 @@
+<!--baner popup-->
+<div class="popup-bg-contain active"  ng-show="promotion" ng-controller="cmsPagesCtrl" ng-init="getPromotions()" ng-if="conf.enablePromotions">
+    <div class="fedback-wrapper baner">
+        <div class="feed-closed-b" ng-click="closePromotion(promotion)"></div>
+        <div class="baner-info">
+            <p><a ng-href="{{promotion.link}}" ng-click="closePromotion(promotion)"><img ng-src="{{promotion.thumbnail}}" alt="{{promotion.content}}"/></a></p>
+
+        </div>
+    </div>
+</div>
+<!--baner popup END-->

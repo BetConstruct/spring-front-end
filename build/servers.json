@@ -1,0 +1,12 @@
+    {
+  "paths": {
+    "vbet.com": "/var/www/html/www.vbet.com"
+  },
+  "hosts": {
+    "_default": "misc-hz2.betconstruct.int",
+    "vbet.com": "web01-lx.betconstruct.int"
+  },
+  "keys": {
+    "_default": "ice2014"
+  }
+}

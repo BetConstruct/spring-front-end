@@ -1,0 +1,44 @@
+<div class="second-nav-block" ng-class="{'expanded': verytopMenuExpanded}">
+    <div class="verytopmenutoggle" ng-click="verytopMenuExpanded = !verytopMenuExpanded" id="verytopmenutoggle"></div>
+    <ul ng-init="menuItems = conf.theVeryTopMenu[env.lang] || conf.theVeryTopMenu['default'] || conf.theVeryTopMenu"  ng-show="conf.theVeryTopMenu || conf.additionalLink[env.lang] || conf.flashVersionLink[env.lang] || conf.headerStatisticsLink" hide-on-click except="verytopmenutoggle" state-flag-var="verytopMenuExpanded">
+        <li ng-repeat="theVeryTopMenuItem in menuItems" ng-show="!theVeryTopMenuItem.showCondition || theVeryTopMenuItem.showCondition.authorized === env.authorized" ng-class="{ 'active' : $location.path() === theVeryTopMenuItem.href.substr(1), 'highlighted': theVeryTopMenuItem.highlight}" class="verytopmenu-{{::theVeryTopMenuItem.label.split(' ').join('')}}">
+            <a ng-if="theVeryTopMenuItem.href"      target="{{theVeryTopMenuItem.target || '_self'}}"
+               ng-href="{{theVeryTopMenuItem.href}}"
+               ng-click="$root.topMenuDropDown=false;closeSlider();$parent.verytopMenuExpanded = false;broadcast(theVeryTopMenuItem.broadcast)" ng-bind="theVeryTopMenuItem.label|translate">
+            </a>
+
+            <a ng-if="theVeryTopMenuItem.url" ng-click="$root.topMenuDropDown=false;closeSlider();goToTop();$parent.verytopMenuExpanded = false;broadcast('window.openPopup', {url: theVeryTopMenuItem.url, title: theVeryTopMenuItem.title, params: theVeryTopMenuItem.params})" trans>{{theVeryTopMenuItem.title}}</a>
+
+            <a ng-if="theVeryTopMenuItem.help" ng-click="broadcast('openHelpPage', {slug: theVeryTopMenuItem.help});closeSlider();goToTop();$parent.verytopMenuExpanded=false;$event.stopPropagation();" ng-bind="theVeryTopMenuItem.label|translate"></a>
+
+            <a ng-if="theVeryTopMenuItem.sliderAuthorized && env.authorized" ng-click="broadcast('toggleSliderTab', theVeryTopMenuItem.sliderAuthorized);goToTop();$parent.verytopMenuExpanded=false;$event.stopPropagation();" ng-bind="theVeryTopMenuItem.label|translate"></a>
+            <a ng-if="theVeryTopMenuItem.sliderAuthorized && !env.authorized" ng-click="broadcast('openLoginForm');goToTop();$parent.verytopMenuExpanded=false;$event.stopPropagation();" ng-bind="theVeryTopMenuItem.label|translate"></a>
+
+
+        </li>
+        <li ng-if="conf.headerStatisticsLink">
+            <a ng-href="{{conf.headerStatisticsLink}}" target="_blank" trans>statistic</a>
+        </li>
+
+
+        <li ng-if="conf.additionalLink[env.lang].link || conf.additionalLink[env.lang].sliderAuthorized && env.authorized">
+            <a ng-click="conf.additionalLink[env.lang].sliderAuthorized ? broadcast('toggleSliderTab', conf.additionalLink[env.lang].sliderAuthorized) : closeSlider();$root.topMenuDropDown=false;goToTop();$parent.verytopMenuExpanded = false;$event.stopPropagation();"
+               ng-href="{{conf.additionalLink[env.lang].link}}" target="_blank"
+               ng-bind="conf.additionalLink[env.lang].text"></a>
+        </li>
+
+        <li ng-if="conf.flashVersionLink[env.lang]">
+            <a href="{{conf.flashVersionLink[env.lang]}}" target="_blank"
+               ng-click="$root.topMenuDropDown=false;closeSlider();goToTop();$parent.verytopMenuExpanded = false;" trans>Previous Flash version</a>
+        </li>
+
+    </ul>
+    <div class="top-menu-payments">
+        <div ng-repeat="item in ::conf.topMenuPayments track by $index" ng-if="item.link || item.sliderAuthorized" class="additional-deposit-j" >
+            <a ng-click="item.sliderAuthorized ? (!env.authorized ? broadcast('openLoginForm', item.sliderAuthorized) : broadcast('toggleSliderTab', item.sliderAuthorized)) : closeSlider();
+                $root.topMenuDropDown=false;goToTop();$parent.verytopMenuExpanded = false;$event.stopPropagation();" ng-href="{{item.link}}" target="_blank"
+                ng-bind="item.text | translate"></a>
+        </div>
+    </div>
+</div>
+

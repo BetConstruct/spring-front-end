@@ -1,0 +1,391 @@
+//Calculator
+#system-claculator-container{
+  transform: translate3d(0, 0, 0);
+  cursor: default !important;
+}
+.system-calculator{
+  float: left;
+  width: 296px;
+  background: $skin-palette-7;
+  min-height: 400px;
+  box-shadow: 0 0 0 5px rgba(80,87,104,0.6),0 5px 30px 10px rgba(14,21,27,0.6);
+  overflow-x: hidden;
+}
+.system-calculator-title{
+  float: left;
+  width: 100%;
+  box-sizing: border-box;
+	background: $skin-palette-8;
+  height: 30px;
+  border-bottom: 1px solid $hero-color;
+  padding: 0 30px 0 10px;
+  position: relative;
+  cursor: pointer;
+}
+.system-calculator-title > h3{
+  font: 12px/30px $font-f;
+  font-weight: bold;
+  color: $text-palette-3;
+  text-transform: uppercase;
+}
+.closed-calculator-b{
+  width: 20px;
+  height: 20px;
+  position: absolute;
+  right: 5px;
+  top: 5px;
+  text-align: center;
+  font: 10px/20px icomoon;
+  color: $text-palette-5;
+  transition: color 200ms;
+  cursor: pointer;
+}
+.closed-calculator-b:hover{
+  color: $text-palette-1;
+}
+.closed-calculator-b:before{content: "\e6ee";}
+.calculator-select-contain{
+  float: left;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 10px;
+  background: $skin-palette-7;
+  border-bottom: 1px solid darken( desaturate( adjust-hue( $skin-palette-10, -3deg ), 8 ), 5 );
+  min-height: 70px;
+}
+.select-calc-box-b{
+  float: left;
+  width: 100%;
+  box-sizing: border-box;
+  margin: 0 0 10px;
+  position: relative;
+}
+.select-calc-box-b .select-block{
+  position: relative;
+  right: 0;
+  width: 100%;
+  top: 0;
+  float: left;
+  box-sizing: border-box;
+  background: darken( desaturate( adjust-hue( $skin-palette-10, -3deg ), 8 ), 5 );
+  height: 26px;
+  overflow: hidden;
+  box-shadow: none;
+  border: none;
+}
+.select-calc-box-b .select-block:after{
+  right: 5px;
+  top: 6px;
+  color: lighten( desaturate( $text-palette-10, 18 ), 19 );
+  content: "\e670";
+  font-size: 16px;
+  position: absolute;
+  font-family: icomoon;
+}
+.select-calc-box-b .select-block > select{
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: calc(100% + 20px);
+  background: none;
+  border: none;
+  box-sizing: border-box;
+  height: 26px;
+  color: $text-palette-3;
+  font: 12px/26px $font-f;
+  padding: 0 5px;
+  z-index: 99;
+  cursor: pointer;
+}
+.select-calc-box-b .select-block > select > option{
+  background: darken( desaturate( adjust-hue( $skin-palette-10, -3deg ), 8 ), 5 );
+}
+.total-stake-input-b{
+  float: left;
+  width: 100%;
+  box-sizing: border-box;
+  margin: 0;
+  position: relative;
+  height: 26px;
+}
+.total-stake-input-b > input[type="text"]{
+  background: darken( desaturate( adjust-hue( $skin-palette-10, -3deg ), 8 ), 5 );
+  border: none;
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  color: $text-palette-3;
+  font: 12px/26px $font-f;
+  padding: 0 10px;
+  margin: 0;
+  box-sizing: border-box;
+}
+.system-events-view-box{
+  float: left;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 10px;
+  background: $skin-palette-8;
+  border-bottom: 1px solid darken( desaturate( adjust-hue( $skin-palette-10, -3deg ), 8 ), 5 );
+  box-shadow: 0 1px 0 lighten( desaturate( adjust-hue( $skin-palette-10, 4deg ), 18 ), 8 );
+}
+.event-view-box-separator{
+  float: left;
+  width: 100%;
+  box-sizing: border-box;
+  margin: 0 0 1px;
+}
+.sistem-event-icons-b{
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  position: relative;
+  color: $text-palette-3;
+  font: 12px/20px icomoon;
+  text-indent: 6px;
+}
+.sistem-event-icons-b.system-win:before{content: "\e6f3";}
+.sistem-event-icons-b.system-lost:before{content: "\e6f2";}
+.sistem-event-icons-b.system-return:before{content: "\e705";}
+.scroll-view-contain-calculator{
+  float: left;
+  width: 100%;
+  box-sizing: border-box;
+  max-height: 185px;
+  @include scroll($scroll: auto);
+}
+.scroll-view-contain-calculator .event-view-box-separator {
+  background: $skin-palette-7;
+}
+.scroll-view-contain-calculator .event-view-box-separator:nth-child(even){
+	background: lighten( desaturate( adjust-hue( $skin-palette-10, 6deg ), 19 ), 7 );
+}
+.event-view-box-separator > ul{
+  float: left;
+  width: 100%;
+  box-sizing: border-box;
+  display: table;
+}
+.event-view-box-separator > ul > li{
+  box-sizing: border-box;
+  display: table-cell;
+  font: 12px/30px $font-f;
+  color: $text-palette-3;
+  height: 30px;
+  text-align: center;
+  padding: 0 5px;
+  vertical-align: top;
+  position: relative;
+}
+.event-view-box-separator > ul > li:nth-child(1){
+  width: 20px;
+}
+.event-view-box-separator > ul > li:nth-child(2){
+  width: 70px;
+}
+.event-view-box-separator > ul > li:nth-child(3),
+.event-view-box-separator > ul > li:nth-child(4),
+.event-view-box-separator > ul > li:nth-child(5){
+  width: 50px;
+}
+.event-view-box-separator > ul > li > input[type="text"]{
+  float: left;
+  margin: 5px 0 0;
+  box-sizing: border-box;
+  width: 70px;
+  height: 20px;
+  padding: 0 5px;
+  font: 12px/20px $font-f;
+  color: $brand-color-2;
+  font-weight: bold;
+  border: none;
+  background: $skin-palette-8;
+}
+.event-view-box-separator > ul > li > input[type="radio"]{
+  position: absolute;
+  margin: 4px 0 0 -10px;
+  width: 20px;
+  height: 20px;
+  z-index: 22;
+  opacity: 0;
+  left: 50%;
+}
+.event-view-box-separator > ul > li > label{
+  width: 14px;
+  height: 14px;
+  display: inline-block;
+  background: $skin-palette-8;
+  border-radius: 50%;
+  position: relative;
+  top: 3px;
+}
+.event-view-box-separator > ul > li > input[type="radio"]:checked + label:before{
+  content: "";
+  display: block;
+  position: absolute;
+  left: 4px;
+  top: 4px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: $brand-color-2;
+}
+.event-view-box-separator > ul > li:nth-child(3) > input[type="radio"]:checked + label:before{background: $brand-color-1;}
+.event-view-box-separator > ul > li:nth-child(4) > input[type="radio"]:checked + label:before{background: #e9044a;}
+.full-calculation-information-b{
+  float: left;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 5px 10px 10px;
+}
+.mini-calc-info-box{
+  float: left;
+  width: 100%;
+  box-sizing: border-box;
+}
+.mini-calc-info-box > ul{
+  float: left;
+  width: 100%;
+  box-sizing: border-box;
+  border-bottom: 1px solid lighten( desaturate( adjust-hue( $skin-palette-10, 4deg ), 18 ), 8 );
+}
+.mini-calc-info-box > ul > li{
+  float: left;
+  width: 100%;
+  box-sizing: border-box;
+  height: 26px;
+  font: 12px/24px $font-f;
+  border-bottom: 1px solid darken( desaturate( adjust-hue( $skin-palette-10, 7deg ), 1 ), 10 );
+  border-top: 1px solid lighten( desaturate( adjust-hue( $skin-palette-10, 4deg ), 18 ), 8 );
+  display: table;
+  color: #c1c4cd;
+}
+.mini-calc-info-box > ul > li:first-child{
+  border-top: none;
+}
+.mini-calc-info-box > ul > li > p{
+  box-sizing: border-box;
+  display: table-cell;
+  position: relative;
+  width: 100%;
+  vertical-align: middle;
+}
+.mini-calc-info-box > ul > li > p > span {
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  padding: 0 4px 0 0;
+  box-sizing: border-box;
+}
+.mini-calc-info-box > ul > li > span{
+  float: right;
+  color: $brand-color-2;
+  font-weight: bold;
+  box-sizing: border-box;
+}
+.mini-calc-info-box > ul > li:first-child > span{
+  color: $text-palette-3;
+}
+.calculator-buttons-contain{
+  float: left;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 10px 0 0;
+}
+.calculator-buttons-contain > ul{
+  float: left;
+  width: 100%;
+  box-sizing: border-box;
+}
+.calculator-buttons-contain > ul > li{
+  float: left;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0;
+  position: relative;
+  height: 30px;
+}
+.calculator-buttons-contain > ul > li > button{
+  float: left;
+  width: 100%;
+  height: 30px;
+  border: 1px solid $skin-palette-4;
+  color: $text-palette-1;
+  font: 12px $font-f;
+  text-transform: uppercase;
+  text-align: center;
+  padding: 0 10px;
+  background: none;
+  cursor: pointer;
+  transition: background 200ms, border-color 200ms;
+  background: $skin-palette-7;
+}
+.calculator-buttons-contain > ul > li > button:hover{
+  border-color: $brand-color-1;
+  background: $brand-color-1;
+  color: set-color($brand-color-1);
+}
+.body-wrapper:not(.classic):not(.asian):not(.euro2016) {
+  .system-calculator{
+    background: #ffffff;
+    box-shadow: 0 0 0 5px #505768, 0 0 15px 7px #3b3b3b;
+  }
+  .system-calculator-title > h3,
+  .select-calc-box-b .select-block > select{
+    color: #000000;
+  }
+  .calculator-select-contain{
+    background: #ffffff;
+    border-color: #BDBCBC;
+  }
+  .system-calculator-title{
+    background: #CFD6DC;
+    border-color: #BDBCBC;
+  }
+  .system-events-view-box{
+    background: #CFD6DC;
+    border-color: #BDBCBC;
+    box-shadow: none;
+  }
+  .mini-calc-info-box > ul{
+    border-color: #BDBCBC;
+  }
+  .select-calc-box-b .select-block,
+  .total-stake-input-b > input[type="text"],
+  .select-calc-box-b .select-block > select > option{
+    background: #CFD6DC;
+    color: #000000;
+  }
+  .mini-calc-info-box > ul > li{
+    border-color: #BDBCBC;
+    color: #000000;
+  }
+  .scroll-view-contain-calculator .event-view-box-separator{
+    background: #ffffff;
+  }
+  .scroll-view-contain-calculator .event-view-box-separator:nth-child(even) {
+    background: #E8EDF1;
+  }
+  .mini-calc-info-box > ul > li:first-child > span {
+    color: #404654;
+  }
+  .sistem-event-icons-b{color: #000000;}
+  .event-view-box-separator > ul > li > label,
+  .event-view-box-separator > ul > li > input[type="text"]{
+    background: #B0BCC5;
+    color: #000000;
+  }
+  .total-stake-input-b > input[type="text"]::-webkit-input-placeholder {color:#000000;}
+  .total-stake-input-b > input[type="text"]::-moz-placeholder          {color:#000000;}
+  .total-stake-input-b > input[type="text"]:-moz-placeholder           {color:#000000;}
+  .total-stake-input-b > input[type="text"]:-ms-input-placeholder      {color:#000000;}
+  .event-view-box-separator > ul > li{color: #000000;}
+  .scroll-view-contain-calculator::-webkit-scrollbar{background: #B0BCC5;}
+}

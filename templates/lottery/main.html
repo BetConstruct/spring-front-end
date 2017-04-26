@@ -1,0 +1,108 @@
+<div ng-controller="lotteryCtrl">
+    <div class="lottery-wrapper" ng-init="initData();">
+        <div class="centr-lottery">
+            <div class="contein-all-lattery" ng-show="loadedSections === 4">
+                <div class="lottry-left-b">
+                    <h2>{{ lotteryRules.title }}</h2>
+
+                    <p ng-bind-html="lotteryRules.content"></p>
+                    <div class="winners-list-found">
+                        <div class="top-winners-lottery">
+                            <h3 trans>Winners</h3>
+                            <div class="numbers-lottery-list">
+                                <ul ng-repeat="winner in winners">
+                                    <li>{{ winner.date_time }}</li>
+                                    <li><span>{{ winner.ticket_number }}</span></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="number-drawn-today">
+                            <h3 trans>Number Drawn Today</h3>
+                            <!--  <input type="text" placeholder=""> -->
+
+                            <div ng-show="tickets !== undefined && myTickets !== undefined && tickets.length && myTickets.length">
+                                <select ng-model="tichetType">
+                                    <option value="0">All Tickets</option>
+                                    <option value="1">My Tickets</option>
+                                </select>
+                            </div>
+
+                            <div class="numbers-lottery-list">
+                                <div ng-show="tichetType == 0">
+                                    <ul ng-repeat="ticket in tickets track by $index">
+                                        <!-- <li>{{ ticket.date_time }}</li> -->
+                                        <li>{{ ticket.ticket_number }}</li>
+                                    </ul>
+                                </div>
+                                <div ng-show="tichetType == 1">
+                                    <ul ng-repeat="myTicket in myTickets track by $index">
+                                        <li>{{ myTicket.ticket_number }}</li>
+                                    </ul>
+                                </div>
+
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="lottry-right-b">
+                    <h2 trans>Get Started</h2>
+                    <div class="form-started">
+                        <form name="lotteryform"  ng-submit="lotteryform.$valid && submitForm()" novalidate>
+                            <ul>
+                                <li>
+                                    <label trans>Name</label>
+                                    <input type="text" placeholder="" ng-model="form.name" required>
+                                </li>
+                                <li>
+                                    <label trans>Phone</label>
+                                    <input type="text" placeholder=""  prevent-input="[^0-9]+"  ng-model="form.phone" ng-maxlength="20" required>
+                                </li>
+                                <li>
+                                    <label trans>Ticket Number</label>
+                                    <input type="text" placeholder=""  prevent-input="[^0-9]+" ng-model="form.ticketNumber" ng-maxlength="20" required>
+                                </li>
+                                <li>
+									<input type="submit" value="{{'Send'|translate}}" ng-disabled="lotteryform.$invalid">
+                                </li>
+                            </ul>
+							<div class="error_msg" ng-show="form.errorMsg" trans>Please try later or contact support.</div>
+                            <div class="success_msg" ng-show="form.successMsg" trans>Request Submitted</div>
+                        </form>
+                    </div>
+
+                    <div class="new-slider-winners" ng-show="winnersList.length" ng-mouseover="rotationPaused = true"
+                         ng-mouseleave="rotationPaused=false">
+                        <div class="arrow-win-left" ng-click="slideBigImage('left')"
+                             ng-show="sliderIndex > 0 || sliderOffset > 0"></div>
+                        <div class="arrow-win-right" ng-click="slideBigImage('right')"
+                             ng-show="sliderIndex < winnersList.length - 1 || sliderOffset < winnersList[sliderIndex].length - 1"></div>
+                        <div class="big-winners-img-contain">
+                            <img ng-src="{{ winnersList[sliderIndex][sliderOffset].thumbnail }}"/>
+                        </div>
+                            <div class="mini-winners-contain">
+                                <div class="mini-w-images">
+                                    <div class="arrow-win-left" ng-show="sliderIndex > 0"
+                                         ng-click="slideSmallImages('left')"></div>
+                                    <div class="arrow-win-right" ng-show="sliderIndex < winnersList.length - 1"
+                                         ng-click="slideSmallImages('right')"></div>
+
+                                    <ul ng-repeat="list in winnersList track by $index"
+                                        ng-show="$index === sliderIndex">
+                                        <li ng-repeat="item in list track by $index"
+                                            ng-class="{'slider-active-item' : sliderOffset === $index}"
+                                            ng-click="sliderItemClick($index);">
+                                            <img ng-src="{{ item.thumbnail }}"/>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                    </div>
+                </div>
+            </div>
+
+            <vbet-loader class="lottery-loader" ng-show="loadedSections !== 4"></vbet-loader>
+        </div>
+    </div>
+
+</div>

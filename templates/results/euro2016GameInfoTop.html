@@ -1,0 +1,36 @@
+<div class="size-contain-separator">
+    <div class="size-contain-separator">
+        <div class="bet-now-widget-contain" ng-class="{'closed': featuredGameWidgetClosed}">
+            <div ng-show="version!=2"  class="title-b-widget" ng-click="featuredGamesSlider.closed = featuredGameWidgetClosed = !featuredGameWidgetClosed">
+                <h3 ng-show="openGame" ng-bind="openGame.competition_name + ' - ' + openGame.game_name"></h3>
+                <h3 ng-show="!openGame" trans>loading...</h3>
+                <div class="closed-open-arrow"></div>
+            </div>
+            <div class="full-widget-game-info" style="{{(openGame.game_bg_competition||openGame.game_bg?'background-image: url('+(openGame.game_bg_competition||openGame.game_bg)+')':'')}}">
+                <vbet-loader class="centered-j" ng-show="!openGame"></vbet-loader>
+                <div class="wrapper-widget-info-b" ng-show="openGame">
+                    <div class="bg-game-featured" ng-show="openGame.image.length"><img ng-src="{{openGame.image.length && openGame.image}}"></div>
+
+                    <div class="championship-logo-contain team-name-b-r left-r">
+                        <p>{{openGame.competition_name}}</p>
+                    </div>
+                    <div class="game-full-information-b">
+                        <ul>
+                            <li class="first-team-n-contain">
+                                <div class="logo-team-new" ng-if="conf.teamLogosPath && openGame.team1_id !== undefined"><img ng-src="{{conf.teamLogosPath}}e/m/0/{{openGame.team1_id}}.png" err-src="images/team-logo-default.png" /></div>
+                                <p>{{openGame.team1_name}}</p>
+                            </li>
+                            <li class="icon-b-wrapper">
+                                <span>{{openGame.scores}}</span>
+                            </li>
+                            <li class="second-team-n-contain">
+                                <div class="logo-team-new" ng-if="conf.teamLogosPath && openGame.team2_id !== undefined"><img ng-src="{{conf.teamLogosPath}}e/m/0/{{openGame.team2_id}}.png" err-src="images/team-logo-default.png"/></div>
+                                <p>{{openGame.team2_name}}</p>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

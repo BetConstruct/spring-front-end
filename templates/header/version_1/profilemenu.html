@@ -1,0 +1,19 @@
+<div class="prof-name" ng-show="env.authorized">
+    <a ng-class="{'prof-icon': env.hideUsername}">
+        <span ng-show="!env.hideUsername">{{ profile[conf.profileMenuHeaderDisplayField] }}</span>
+    </a>
+    <ul>
+        <li>ID:<span class="selectable">{{profile.unique_id}}</span></li>
+        <!--<li ng-if="conf.showPointsBalance" ng-show="!isInPoker() && (profile.points_balance!==undefined && profile.points_balance!==null &&  || !isInCasino() env.casinoBalance.points_balance!==undefined && env.casinoBalance.points_balance!==null && (isInCasino))"  title="You can use this points to get some bonuses.">
+            <b class="bonus-icon-b"></b>
+            <span ng-show="isInCasino()"><span trans>Points</span> (<span trans>Casino</span>):</span>
+            <span ng-hide="isInCasino()" trans>Points:</span>
+            <span>{{isInCasino() ? env.casinoBalance.points_balance : profile.points_balance}}</span>
+        </li>-->
+        <li ng-if="!conf.disableHeaderMessages" class="message-icon" prevent-fast-click="1.5"  trans ng-click="toggleSliderTab('messages');">My messages</li>
+        <li class="settings-icon" prevent-fast-click="1.5" trans ng-click="toggleSliderTab('settings');">Settings</li>
+        <li ng-if="conf.recentBetsInSettings" class="recentbets-icon" trans ng-click="toggleSliderTab('recentBets');">Recent Bets</li>
+        <li ng-hide="env.hideLogOut" class="logoff-icon" trans ng-click="logOut()">Log Out</li>
+
+    </ul>
+</div>

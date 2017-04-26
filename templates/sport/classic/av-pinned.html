@@ -1,0 +1,25 @@
+<div id="pinned-games-container">
+
+    <div ng-repeat="openGame in pinnedGames"
+         class="game-video game-video-detached" draggable ng-show="openGame" ng-if="openGame.video_data">
+        <div class="game-video-container detached-game-container"  id="detached-game-container-{{openGame.id}}">
+
+            <div class="animation-video-title-row-v3">
+                <div class="contain-v-a-fanction-icons-v3">
+                    <ul>
+                        <li class="pin-icon-video-v3 active" ng-click="attachPinnedVideo(openGame, 'dragable'); $parent.mute = undefined; $parent.paused = undefined;"></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="animation-control">
+                <video-player class="game-video"
+                              player-id="gamevideo{{openGame.id}}"
+                              stream-url="{{openGame.video_data}}"
+                              provider-id="{{openGame.tv_type}}"
+                              initially-muted="{{ env.sound }}"></video-player>
+            </div>
+            <div resizer preserve-aspect-ratio target="detached-game-container-{{openGame.id}}" initial-height="197" initial-width="347" min-height="100" min-width="100" class="resizer"
+                 max-width="{{ conf.detachedVideoSizes[openGame.tv_type].maxWidth }}" max-height="{{ conf.detachedVideoSizes[openGame.tv_type].maxHeight }}"></div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,25 @@
+<div class="container-p" ng-controller="overviewCtrl" ng-init="initOverview();setTitle('Live Overview')"> 
+    <div id="system-claculator-container" ng-if="$root.showSystemCalculator" draggable allow-other-mouse-events drag-from="calculator-draggable-header">
+        <ng-include src="getTemplate('templates/sport/classic/systemCalculator.html')"></ng-include>
+    </div>
+    <div class="center-container-p">
+        <div class="old-classic-scroll-contain">
+            <vbet-loader ng-show="overviewLoading" class="centered-j"></vbet-loader>
+            <div ng-include="getTemplate('templates/sport/overview/overview.html')" class="classic-overview-wrapper"  ng-show="!overviewLoading"></div>
+        </div>
+    </div>
+    <div class="right-container-p">
+        <div class="old-classic-scroll-contain" ng-class="{'right-betslip-contain-modern right-block-list modern' : conf.showModernBetslipInClassic, 'right-betslip-contain' : !conf.showModernBetslipInClassic }">
+            <ng-include class="include-viewSwitcher-j" src="getTemplate('templates/sport/viewswitcher.html')"></ng-include>
+            <div class="betslip-toggle" ng-click="betslipOpen=!betslipOpen" ng-class="{'betslip-button-open':betslipOpen }"><p>BetSlip</p><span class="betslip-bets-count" ng-bind="$root.betSlipBetsCount"></span></div>
+            <div class="list-bet-block" ng-if="$location.path() !== '/poolbetting/'" ng-include="getTemplate('templates/sport/betslip.html')"></div>
+            <div class="right-banner-container" ng-if="conf.enableBannerUnderBetslip" ng-controller="cmsSportNewsCtrl" ng-include="getTemplate('templates/sport/classic/banners.html')"></div>
+            <div class="mini-games" ng-if="conf.enableMiniGameUnderBetslip" ng-include="getTemplate('optional_modules/casino/templates/specialgames/minigames.html')"></div>
+
+
+            <!--Спортивные новости-->
+            <div ng-show="((betSlipBetsCount === 0) || !betSlipBetsCount) && (hideVideoAndAnimationBox || !env.live) && showNewsBlock && showNewsBetSet && showNewsInClassicView" class="sport-news" ng-include="getTemplate('templates/sport/sportnews.html')" id="sport-news-sidebar" ng-if="conf.enableNews"></div>
+
+        </div>
+    </div>
+</div>

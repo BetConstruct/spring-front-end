@@ -1,0 +1,130 @@
+<div class="bet-history" ng-if="env.sliderContent === 'messages'" ng-controller="messagesCtrl" ng-init="loadMessages()">
+    <div class="general-left-block">
+        <div class="settings-nav-contain">
+            <h3 title="Messages" trans>Messages</h3>
+            <ul>
+                <li ng-repeat="messagesName in conf.messagesPageMenu" ng-class="{'active': messagesProps.page===messagesName}">
+                    <a ng-click="messagesProps.page=messagesName">
+                        <span>{{messagesProps.names[messagesName]|translate}}</span>
+                        <span ng-if="messagesName==='inbox'" class="count" ng-show="!messagesProps.inboxLoading" ng-bind="(conf.showInboxMessagesCount ? inboxMessages.length : profile.unread_count) || 0"></span>
+                        <span ng-if="messagesName==='sent'" class="count" ng-show="!messagesProps.outboxLoading" ng-bind="sentMessages.length || 0"></span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+
+    <div class="right-block-history message" ng-show="messagesProps.page==='inbox'">
+        <div class="All-Bets-history">
+            <h3 trans class="inbox">Inbox</h3>
+            <div class="message-contain">
+                <vbet-loader class="page-center right-block-history" ng-if="inboxLoading"></vbet-loader>
+                <ul ng-show="!inboxLoading">
+                    <li ng-repeat="message in inboxMessages | orderBy:'-date'" ng-class="{'message-open': message.open}">
+                        <div class="message-title-contain"
+                             ng-class="{'new': (message.checked == 0 && !message.isSystem), 'system-message': message.isSystem }"
+                             ng-click="openMessage(message,0)">
+                            <p ng-bind-html="message.subject" title="{{message.subject}}"></p>
+                        </div>
+                        <div class="message-time">
+                            <p>{{message.date|formatDate:'full'}}</p>
+                        </div>
+                        <div class="message-delete" ng-show="message.isDeletable">
+                            <a ng-click="deleteMessage(message)">Delete</a>
+                        </div>
+                        <!--Open message-->
+                        <div class="open-message-contain" ng-show="message.open">
+                            <div class="arrow-sport ng-scope"></div>
+                            <p ng-bind-html="message.body"></p>
+                        </div>
+                        <!--Open message END-->
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="right-block-history message" ng-show="messagesProps.page==='sent'">
+        <div class="All-Bets-history">
+            <h3 trans class="sent">Sent messages</h3>
+            <div class="message-contain">
+                <!--<div class="loader right-block-history" ng-if="outboxLoading">
+                    <div class="loader-ring">
+                        <div class="loader-ball-holder">
+                            <div class="loader-ball"></div>
+                        </div>
+                    </div>
+                </div>-->
+                <vbet-loader class="page-center right-block-history" ng-if="outboxLoading"></vbet-loader>
+                <ul ng-show="!outboxLoading">
+                    <li ng-repeat="message in sentMessages" ng-class="{'message-open': message.open}">
+                        <div class="message-title-contain new"
+                             ng-click="openMessage(message)">
+                            <p ng-bind-html="message.subject"  title="{{message.subject}}"></p>
+                        </div>
+                        <div class="message-time">
+                            <p>{{message.date|formatDate:'full'}}</p>
+                        </div>
+                        <div class="message-delete" ng-show="message.isDeletable">
+                            <a ng-click="deleteMessage(message)">Delete</a>
+                        </div>
+                        <!--Open message-->
+                        <div class="open-message-contain" ng-show="message.open">
+                            <div class="arrow-sport ng-scope"></div>
+                            <p ng-bind-html="message.body"></p>
+                        </div>
+                        <!--Open message END-->
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="right-block-history message compose send-message-j" ng-show="messagesProps.page==='new'">
+        <div class="All-Bets-history">
+            <h3 trans class="compose">New message</h3>
+          
+            
+            	<div class="settings-info-contain">
+        <form name="sendMessageForm" class="registration-form">
+            <label><span trans>Subject</span></label>
+
+            <div class="tooltip-wrapper-j" ng-class="{'error': sendMessageForm.subject.$dirty && sendMessageForm.subject.$invalid}">
+                <input name="subject" ng-model="newMessage.subject" type="text" maxlength="255" required trans>
+
+                <div class="form-error-icon-j"></div>
+                <div class="tooltip-j">
+                    <div trans="" ng-show="sendMessageForm.subject.$error.required">This field is required</div>
+                </div>
+            </div>
+
+            
+		   <label><span trans>Message</span></label>
+           <div class="form-text" ng-class="{'error': sendMessageForm.text.$dirty && sendMessageForm.text.$invalid}">
+           	
+            	<textarea name="text" cols="1" rows="1" ng-change="updateMessageBody()" ng-model="newMessage.body" required></textarea>
+                <label ng-if="conf.maxMessageLength"><span>{{newMessage.body.length||0}}/{{conf.maxMessageLength}}</span></label>
+           </div>
+
+
+           
+
+            <div class="change-button-container password">
+                <div class="cashier-button">
+                    <button ng-disabled="!sendMessageForm.$dirty || sendMessageForm.$invalid" ng-show="!working" trans="" ng-click="sendMessage()">Send</button>
+                    <button disabled="disabled" ng-show="working" trans>Wait...</button>
+
+                </div>
+            </div>
+        </form>
+    </div>
+        </div>
+    </div>
+
+
+
+
+</div>

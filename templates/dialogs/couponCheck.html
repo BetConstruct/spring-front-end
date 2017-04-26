@@ -1,0 +1,70 @@
+<div ng-controller="couponCheckCtrl" ng-if="conf.enableCouponCheck">
+    <div class="new-default-popup-j coupon-check" ng-show="showCouponPopup">
+        <div class="pp-table-j">
+            <div class="table-row-j">
+                <div class="table-cell-j">
+                    <div class="popup-wrapper-j">
+                        <div class="pu-head-j"><span trans="">Coupon check</span> <a class="close-j" ng-click="toggleView()"></a></div>
+                        <div class="coupon-check-details" ng-class="{'warning': couponDetails.warningMessage}">
+                            <ul>
+                                <li class="title-sep" trans>Betslip</li>
+                                <li>
+                                    <p trans>Betslip ID</p>
+                                   <span ng-bind="couponDetails.id"></span>
+                                </li>
+                                <li>
+                                    <p trans>Date</p>
+                                    <span ng-bind="couponDetails.date_time|formatDate:'noLocaleTranslate':null:$root.env.timeFormat"></span>
+                                </li>
+                                <li>
+                                    <p trans>Bet Type</p>
+                                    <span ng-bind="betTypes[couponDetails.type]"></span>
+                                </li>
+                                <li class="title-sep" trans>Detail</li>
+                                <li>
+                                    <p trans>Stakes</p>
+                                    <span ng-bind="couponDetails.bet_amount"></span>
+                                </li>
+                                <li>
+                                    <p trans>Bonus</p>
+                                    <span ng-bind="couponDetails.bonus"></span>
+                                </li>
+                                <li>
+                                    <p trans>Pot.winnings</p>
+                                    <span ng-bind="couponDetails.possible_win"></span>
+                                </li>
+                                <li class="title-sep" trans>Event List</li>
+                            </ul>
+                            <table>
+                                <tr>
+                                    <th trans>Event</th>
+                                    <th trans>Start date</th>
+                                    <th trans>Type</th>
+
+                                    <th trans>Odds</th>
+                                    <th trans>Status</th>
+                                </tr>
+                                <tr ng-repeat="event in couponDetails.events track by $index">
+                                    <td>
+                                        {{event.competition_name}} <br/> {{event.team1}}-{{event.team2}}
+                                    </td>
+                                    <td>
+                                        {{event.game_start_date|formatDate:'noLocaleTranslate':null:$root.env.timeFormat}}
+                                    </td>
+                                    <td>
+                                        <p title="{{event.market_name}}-{{event.event_name}}{{event.basis}}">{{event.market_name}}<br/>{{event.event_name}}{{event.basis}}</p>
+                                    </td>
+
+                                    <td>{{event.coeficient}}</td>
+                                    <td>{{{'-5': 'On Hold', '-4': 'Declined', '0': 'UNSETTLED', '1': 'Lost', '2': 'Returned', '3': 'Won', '5': 'Cashed out'}[event.outcome]|translate}}</td>
+                                </tr>
+                            </table>
+                            <div ng-bind="couponDetails.warningMessage | translate"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

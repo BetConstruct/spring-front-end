@@ -1,0 +1,126 @@
+<div class="upcoming-games-list-d-v3">
+    <div class="upcoming-column-title-v3">
+        <div class="upcoming-icon-v3"></div>
+        <h2>
+            <span>{{gameWidgetTitle | translate}}</span>
+        </h2>
+        <div class="upcoming-games-filter-v3">
+            <div class="time-filter-v3 " ng-click="openTimeFilter = !openTimeFilter"
+                    ng-class="{'active': openTimeFilter}">
+                <p><span>{{'In ' + minutesFilter + ' Min'|translate}}</span> <i class="arrow-rotate-filter-v3"></i></p>
+                <div class="sub-nav-filter-time-v3">
+                    <ul>
+                        <li ng-repeat="minute in $root.conf.homePageLastMinuteBets.timeOptions track by $index"
+                            ng-click="setMinutes(minute);"
+                            ng-class="{'icon-checkmark':minutesFilter == minute}">
+                            <span>{{'In ' + minute + ' Min'|translate}}</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="d-arrow-icon-v3" ng-click="toggleSports()" ng-class="{'closed-all' : collapsedAll}"></div>
+    </div>
+    <div class="single-sport-contain">
+        <div class="sport-title-view-up-v3"></div>
+        <div class="upcpming-game-contain-v3">
+            <div class="prematch-game-view-contain-v3">
+                <div class="single-sport-box-v3"
+                     ng-repeat="sport in liveGameViewData track by $index"
+                     ng-show="liveGameViewData.length"
+                     ng-class="{'sport-closed': sport.collapsed}">
+                    <div class="sport-name-up-game-v3 {{sport.alias}}" ng-click="toggleSports(sport); $event.stopPropagation();">
+                        <div class="sport-icon-v3 {{sport.alias}}"></div>
+                        <h3>{{sport.name}}</h3>
+                        <div class="arrow-view-v3"></div>
+                    </div>
+                    <div ng-repeat="region in sport.region track by $index" class="region-list-view-d-v3">
+                        <div ng-repeat="competition in region.competition track by $index"
+                             ng-show="competition.gamesLength"
+                             class="competition-list-view-d-v3">
+                            <div class="title-championship-v3" ng-click="competition.collapsed=!competition.collapsed;toggleItem(competition); $event.stopPropagation();" ng-class="{'competition-closed': competition.collapsed}">
+                                <div class="flag-view-v3 flag-icon flag-{{region.alias | removeUselessSymbolsByRegexp: '[,\' ]+': 'g': 'true'}}"></div>
+                                <p><span>{{competition.name}}</span></p>
+                                <div class="arrow-view-v3"></div>
+                            </div>
+                            <div class="time-info-game-box-v3">
+                                <div class="game-events-view-v3" ng-repeat="game in competition.game" ng-click="goToUrl(game); $event.stopPropagation();">
+                                    <div class="mini-title-box-gameview-v3">
+
+                                        <div class="pematch-single-game-info-v3">
+                                            <div class="team-name-view-table-v3">
+                                                <div class="team-names-date-icons-v3">
+                                                    <div class="time-game-v3">
+                                                        <p>{{ game.start_ts| formatDate:'noLocaleTime':null:$root.env.timeFormat}}</p>
+                                                    </div>
+                                                    <p>
+                                                                <span>
+                                                                    <i>{{game.team1_name}}</i>
+                                                                    <b trans>vs</b>
+                                                                    <i>{{game.team2_name}}</i>
+                                                                </span>
+                                                    </p>
+                                                </div>
+                                                <div class="game-icons-view-list-v3">
+                                                    <ul>
+                                                        <li class="tv-icon-market-v3" ng-hide="!game.video_id && !game.last_event"></li>
+                                                        <li class="statistic-icon-market-v3" ng-if="$root.conf.enableH2HStat &&  game.is_stat_available" ng-click="openStatistics(game); $event.stopPropagation();"></li>
+                                                        <li class="favorite-icon-market-v3" ng-click="toggleGameFavorite(game); $event.stopPropagation();" ng-class="{'active': $root.myGames.indexOf(game.id) !== -1}"></li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="markets-count-view-v3" ng-click="goToUrl(game); $event.stopPropagation();">
+                                            <span>+{{game.markets_count}}</span>
+                                            <div class="arrow-icon-b-v3"></div>
+                                        </div>
+                                    </div>
+                                    <div class="events-list-view-v3">
+                                        <ul class="column-{{sportP1P2Alias.indexOf(sport.alias) > -1 ? 2 : 3}}" ng-class="{'two-odds': sportP1P2Alias.indexOf(sport.alias) > -1 }">
+                                            <li>
+                                                <div class="single-events-b-v3 {{((game.events.P1.price | oddConvert:'decimal') == 1 || game.is_blocked) ? 'blocked' : ''}}"
+                                                    ng-click="bet(game.events.P1, game); $event.stopPropagation();"
+                                                    ng-class="{'active': isEventInBetSlip(game.events.P1), 'blocked': ((game.events.P1.price | oddConvert:'decimal') == 1 || game.is_blocked)}">
+                                                    <div class="mini-box-market-info-v3">
+                                                        <p>
+                                                            <i>{{game.team1_name}}</i>
+                                                        </p>
+                                                        <span class="price{{game.events.P1.price_change}}"><b>{{game.events.P1.price | oddConvert:$root.env.oddFormat:null:'WINNER'}}</b></span>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                            <li>
+                                                <div class="single-events-b-v3 {{((game.events.X.price | oddConvert:'decimal') == 1 || game.is_blocked) ? 'blocked' : ''}}"
+                                                     ng-hide="sportP1P2Alias.indexOf(sport.alias) > -1"
+                                                     ng-click="bet(game.events.X, game); $event.stopPropagation();"
+                                                     ng-class="{'active': isEventInBetSlip(game.events.X), 'blocked': ((game.events.X.price | oddConvert:'decimal') == 1 || game.is_blocked)}">
+                                                    <div class="mini-box-market-info-v3">
+                                                        <p>
+                                                            <i>{{game.events.X.name}}</i>
+                                                        </p>
+                                                        <span class="price{{game.events.X.price_change}}"><b>{{game.events.X.price | oddConvert:$root.env.oddFormat:null:'WINNER'}}</b></span>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                            <li>
+                                                <div class="single-events-b-v3 {{((game.events.P2.price | oddConvert:'decimal') == 1 || game.is_blocked) ? 'blocked' : ''}}" ng-click="bet(game.events.P2, game); $event.stopPropagation();"
+                                                     ng-class="{'active': isEventInBetSlip(game.events.P2), 'blocked': ((game.events.P2.price | oddConvert:'decimal') == 1 || game.is_blocked)}">
+                                                    <div class="mini-box-market-info-v3">
+                                                        <p>
+                                                            <i>{{game.team2_name}}</i>
+                                                        </p>
+                                                        <span class="price{{game.events.P2.price_change}}"><b>{{game.events.P2.price | oddConvert:$root.env.oddFormat:null:'WINNER'}}</b></span>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

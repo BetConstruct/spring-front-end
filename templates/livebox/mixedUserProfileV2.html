@@ -1,0 +1,23 @@
+<div ng-controller="settingsV2Ctrl" class="user-data-input-t extended-reg-j">
+    <h3 trans>Personal information</h3>
+
+    <div class="settings-info-contain registration-form">
+        <div>
+            <p ng-if="userInputFields.length" trans>You need to verify your personal information.</p>
+            <p ng-if="!userInputFields.length" trans>Your information is up to date.</p>
+        </div>
+    </div>
+
+    <div class="settings-info-contain extended-reg-j">
+        <form name="registerform" class="registration-form" novalidate="novalidate" id="simplified-reg-form">
+            <ul>
+                <li ng-repeat="regItem in userInputFields track by $index" class="field-separator">
+                    <ng-include src="getTemplate('templates/slider/registration-fields.html')"></ng-include>
+                </li>
+                <li ng-if="userInputFields.length">
+                    <button class="submit-but-j" ng-click="saveUserData();" trans>Save</button>
+                </li>
+            </ul>
+        </form>
+    </div>
+</div>

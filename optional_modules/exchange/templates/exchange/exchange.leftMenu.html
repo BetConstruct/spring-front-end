@@ -1,0 +1,116 @@
+<!--left-column-->
+<div class="left-b-rialto" ng-controller="leftMenu">
+    <!--search-block-->
+    <div class="search-b-rialto">
+        <form>
+            <!--<div class="input-rialto-b">-->
+                <!--<input name="" type="text" placeholder="Search">-->
+            <!--</div>-->
+            <div class="icon-closed-menu-rialto" ng-click="menuToggle()"></div>
+        </form>
+    </div>
+
+    <div class="live-prematch-switcher-new ">
+        <ul>
+            <li ng-click="sportType(1)"  ng-class="live">
+                <button title="coming soon">Live <b>{{::liveGamesCount}}</b></button>
+            </li>
+            <li ng-click="sportType(0)" ng-class="preMatch">
+                <button>Pre-match <b>{{::prematchGamesCount}}</b></button>
+            </li>
+
+        </ul>
+    </div>
+
+
+    <div class="left-nav-container-rialto">
+
+        <div class="title-nav-rialto">
+            <h3>
+                <span>Sports</span>
+                <!--<i> + {{::sportCount}}</i>-->
+            </h3>
+        </div>
+
+        <div class="rialto-left-nav">
+            <ul>
+                <li data-ng-repeat="sport in ::sports " ng-class="sport.isActive">
+
+                    <div class="nav-rialto-row" ng-click="regionList(sport.id) ">
+                        <div class="icon-sport-rialto" ng-click="menuToggle()" ng-class="sport.alias"></div>
+                        <p>{{::sport.name}}</p>
+                        <b class="arrow-b-rialto"></b>
+                    </div>
+                    <div class="second-level-rialto-nav">
+                        <ul>
+                            <li ng-repeat="region in ::sport.regions | orderBy:'order'" ng-class="region.isActive">
+                                <div class="secont-level-row-rialto" ng-click="competitionList(region.id)">
+                                    <div class="flag-b-rialto flag-{{::region.alias}}"></div>
+                                    <p>{{::region.name }}</p>
+
+                                    <b class="arrow-b-rialto"></b>
+                                </div>
+
+
+                                <div class="competition-name-realto-b" ng-repeat="competition in ::region.competitions | orderBy:'order'"
+                                     ng-class="competition.isActive" ng-click="gameList(competition)">
+                                    <h5>{{::competition.name}}</h5>
+                                    <b class="arrow-b-rialto"></b>
+
+
+
+
+
+
+
+
+
+                                    <!--<div class="live-menu-rialto">-->
+                                    <!--<div class="single-game-information-b active">-->
+                                    <!--<div class="favorite-star-live-rialto active"></div>-->
+                                    <!--<p class="name-team-live-g">-->
+                                    <!--<span>Juventus</span>-->
+                                    <!--<span>Barcelona</span>-->
+                                    <!--</p>-->
+                                    <!--</div>-->
+                                    <!--</div>-->
+
+
+
+                                    <div class="live-menu-rialto"  ng-repeat="game in ::competition.games "  ng-click="gameMarket(this,sport.id,region.id,competition.id,game.id)">
+                                        <div class="single-game-information-b " ng-class="game.isActive">
+                                            <div class="favorite-star-live-rialto" > </div>
+                                            <p class="name-team-live-g"  title="{{game.team1_name + game.team2_name}}">
+                                                <span>{{::game.team1_name}}</span>
+                                                <span>{{::game.team2_name}}</span>
+                                            </p>
+
+                                            <div class="live-score-game-rialto">
+                                                <p>
+                                                                            <!--<span class="score-rialto-game">-->
+                                                                                <!--<b>3</b>-->
+                                                                                <!--<b>0</b>-->
+                                                                            <!--</span>-->
+                                                    <span class="time-game-period">{{game.start_ts | formatDate:'full':null:env.timeFormat }}</span>
+                                                </p>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                            </li>
+
+                        </ul>
+                    </div>
+                </li>
+            </ul>
+        </div>
+
+    </div>
+
+
+</div>
+
+<!--left-column END-->

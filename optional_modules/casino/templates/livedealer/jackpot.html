@@ -1,0 +1,24 @@
+<!-- JACKPOT Popup -->
+<div ng-if="jackpotData">
+    <div class="popup-bg-contain active">
+        <div class="fedback-wrapper live-casino">
+            <div class="feed-closed-b" ng-click="closeLCJackpotPopUp(checkboxSelected);"></div>
+            <div class="fedback-info">
+                <h3><div trans >Live Casino</div>
+                    <div><span trans>Every week Jackpot</span> {{ jackpotData.totalJackpot }} {{ profile.currency_name|currency }}</div>
+                </h3>
+                <ul>
+                    <li ng-repeat="player in jackpotData.userList track by $index" ng-class="{'jackpot-current-user': jackpotData.userId ===  player.Id}">
+                        <p><span ng-bind="player.Name"></span>  <span style="float: right;"><span ng-bind="player.Points"></span> <span trans>points</span></span></p>
+                    </li>
+                </ul>
+                <div class="accept-f-b">
+                    <input id="name-b" type="checkbox" ng-model="checkboxSelected"/>
+                    <label for="name-b" trans>Don`t show again</label>
+                </div>
+                <div class="show-m-button"><a href="#/promos/?news={{liveGamesConf.jackpot.url[env.lang] || liveGamesConf.jackpot.url.eng}}" ng-click="closeLCJackpotPopUp(checkboxSelected);" trans>Show more</a></div><!-- TEMPORARY URL -->
+            </div>
+        </div>
+    </div>
+</div>
+<!-- JACKPOT Popup END-->

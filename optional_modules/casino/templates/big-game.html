@@ -1,0 +1,30 @@
+<!--Casino big game-->
+<div class="big-game-background">
+    <div class="big-game-contain" class-on-scroll="scrolled,notscrolled"
+         ng-class="{'big-game-default-background': gamesInfo.length > 1}"
+         ng-style="{background: 'url(' + cConf.backGroundUrl + gamesInfo[0].gameID + '.jpg) no-repeat 50% 0'}">
+        <div class="casual-game">
+            <div class="casino-game-contain">
+                <!--Флеш игра-->
+                <div class="flash-game-contain" ng-repeat="gameInfo in gamesInfo">
+                    <!--<div class="dont-game-info-text" ng-if="gameInfo.game.gameType.playForFun === 0 && gameInfo.gameMode === 'fun'"><p trans>Sorry the game which you chose doesn't have the type of play for fun</p></div>-->
+                    <div class="big-game-control" ng-show="gameInfo.gameUrl !==''">
+                        <div class="icon-delete"><a title="{{ 'close'|translate }}" ng-click="closeGame(gameInfo.id)">Close</a></div>
+                        <div class="icon-delete popup" ng-show="gameInfo.game.gameType.playForFun !== 0 || gameInfo.gameMode !== 'fun'"><a title="{{ 'Open In Pop-Up Window'|translate }}" ng-click="openGameInNewWindow(gameInfo.id)">popUp</a></div>
+                        <div class="icon-delete refresh"><a title="{{ 'Refresh'|translate }}" ng-click="refreshGame(gameInfo.id)">refresh</a></div>
+                      <!--  <div class="icon-delete change"><a title="{{ 'change'|translate }}" ng-click="enableToAddGame(gameInfo.id)">change</a></div> -->
+                        <div class="icon-delete favourite"><a title="{{ (!isFromSaved(gameInfo.game.id) ? 'Add to My Games' : 'Remove from My Games')|translate}}" ng-class="{'favourite-active': isFromSaved(gameInfo.game.id)}" ng-click="toggleSaveToMyCasinoGames(gameInfo.game)">Favorite</a></div>
+                        <div class="icon-delete favourite {{gameInfo.gameMode}}"  ng-show="gameInfo.game.hasFunMode && 'Virtual Betting' !== gameInfo.game.gameCategory && 'SkillGames' !== gameInfo.game.gameCategory && 'LiveDealer' !== gameInfo.game.gameCategory" title="{{('Click to change to ' + ('fun' === gameInfo.gameMode ? 'real mode' : 'fun mode'))|translate}}">
+                            <a ng-click="togglePlayForReal(gameInfo);$event.stopPropagation();" trans>really/for fun</a>
+                        </div>
+                    </div>
+                    <vbet-loader ng-show="gameInfo.loadingUserData"></vbet-loader>
+                    <div class="add-casino-game" ng-show="gameInfo.gameUrl == '' && casinoGameOpened > 1 && !gameInfo.loadingUserData"><a title="{{ 'Add a Game'|translate }}" ng-click="enableToAddGame(gameInfo.id)">+</a></div>
+                    <iframe frame-control allowfullscreen="true" number-of-window="{{ gamesInfo.length }}" initial-width="{{gameInfo.game.gameType.width}}" initial-height="{{gameInfo.game.gameType.height}}" element-id="{{gameInfo.gameID}}" aspect-ratio="{{gameInfo.game.gameType.ratio}}"  ng-src="{{gameInfo.gameUrl}}"></iframe>
+                </div>
+                <!--Флеш игра END-->
+            </div>
+        </div>
+    </div>
+</div>
+<!--Casino big game END-->
