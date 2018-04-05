@@ -1,6 +1,6 @@
 <div class="second-nav-block" ng-class="{'expanded': verytopMenuExpanded}">
     <div class="verytopmenutoggle" ng-click="verytopMenuExpanded = !verytopMenuExpanded" id="verytopmenutoggle"></div>
-    <ul ng-init="menuItems = conf.theVeryTopMenu[env.lang] || conf.theVeryTopMenu['default'] || conf.theVeryTopMenu"  ng-show="conf.theVeryTopMenu || conf.additionalLink[env.lang] || conf.flashVersionLink[env.lang] || conf.headerStatisticsLink" hide-on-click except="verytopmenutoggle" state-flag-var="verytopMenuExpanded">
+    <ul ng-init="menuItems = conf.theVeryTopMenu[env.lang] || conf.theVeryTopMenu['default'] || conf.theVeryTopMenu"  ng-show="conf.theVeryTopMenu || conf.additionalLink[env.lang] || conf.header.statisticsLink" hide-on-click except="verytopmenutoggle" state-flag-var="verytopMenuExpanded">
         <li ng-repeat="theVeryTopMenuItem in menuItems" ng-show="!theVeryTopMenuItem.showCondition || theVeryTopMenuItem.showCondition.authorized === env.authorized" ng-class="{ 'active' : $location.path() === theVeryTopMenuItem.href.substr(1), 'highlighted': theVeryTopMenuItem.highlight}" class="verytopmenu-{{::theVeryTopMenuItem.label.split(' ').join('')}}">
             <a ng-if="theVeryTopMenuItem.href"      target="{{theVeryTopMenuItem.target || '_self'}}"
                ng-href="{{theVeryTopMenuItem.href}}"
@@ -16,20 +16,14 @@
 
 
         </li>
-        <li ng-if="conf.headerStatisticsLink">
-            <a ng-href="{{conf.headerStatisticsLink}}" target="_blank" trans>statistic</a>
+        <li ng-if="conf.header.statisticsLink">
+            <a ng-href="{{conf.header.statisticsLink}}" target="_blank" trans>statistic</a>
         </li>
-
 
         <li ng-if="conf.additionalLink[env.lang].link || conf.additionalLink[env.lang].sliderAuthorized && env.authorized">
             <a ng-click="conf.additionalLink[env.lang].sliderAuthorized ? broadcast('toggleSliderTab', conf.additionalLink[env.lang].sliderAuthorized) : closeSlider();$root.topMenuDropDown=false;goToTop();$parent.verytopMenuExpanded = false;$event.stopPropagation();"
                ng-href="{{conf.additionalLink[env.lang].link}}" target="_blank"
                ng-bind="conf.additionalLink[env.lang].text"></a>
-        </li>
-
-        <li ng-if="conf.flashVersionLink[env.lang]">
-            <a href="{{conf.flashVersionLink[env.lang]}}" target="_blank"
-               ng-click="$root.topMenuDropDown=false;closeSlider();goToTop();$parent.verytopMenuExpanded = false;" trans>Previous Flash version</a>
         </li>
 
     </ul>

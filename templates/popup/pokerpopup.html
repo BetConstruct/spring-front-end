@@ -1,14 +1,32 @@
 <div class="help-landing" ng-controller="cmsPagesCtrl">
     <div class="headerVersion_2">
-        <div class="conteiner new0" class-on-scroll="show-fix,show-normal">
+        <div class="conteiner new0 pointer-events-none" class-on-scroll="show-fix,show-normal">
             <div class="header-wrapper">
                 <div class="header-container-b">
-                    <div class="logo-nav-wrapper">
-                        <div class="logo-contain-b">
-                            <a class="pointer-events-none" href="#/"></a>
-                        </div>
-                    </div>
-                    <div class="header-top-row"></div>
+                    <ul class="responsive-header-contain-j">
+                        <li class="responsive-header-item-j">
+                            <div class="logo-nav-wrapper">
+                                <a ng-href="{{::logoUrl}}" class="pointer-events-none">
+                                    <img ng-src="{{conf.logo.image ? conf.logo.image : 'skins/' + conf.skin + '/images/logo.png'}}" image-on-load image-width="logoWidth" class-on-scroll="ng-hide,ng-show" ng-style="{'width' : conf.logo.width ? (conf.logo.width + 'px') : '', 'height' : conf.logo.height ? (conf.logo.height + 'px') : ''}"/>
+                                    <img ng-src="{{conf.logo.imageFix ? conf.logo.imageFix : 'skins/' + conf.skin + '/images/logo2.png'}}" class="ng-hide" class-on-scroll="ng-show,ng-hide" ng-style="{'width' : conf.logo.widthFix ? (conf.logo.widthFix + 'px') : '', 'height' : conf.logo.heightFix ? (conf.logo.heightFix + 'px') : ''}"/>
+                                </a>
+                            </div>
+                        </li>
+                        <li class="responsive-header-item-j auto-width">
+                            <div class="header-top-row">
+                                <ul class="responsive-header-contain-j">
+
+                                </ul>
+                            </div>
+                        </li>
+                    </ul>
+                    <ul class="responsive-header-mainMenu-j">
+                        <li>
+                            <div class="header-bottom-row ng-scope">
+                                <div class="header-nav-contain"></div>
+                            </div>
+                        </li>
+                    </ul>
                 </div>
             </div>
         </div>
@@ -23,7 +41,7 @@
 
             <div class="help-rules payments" >
 
-                <div class="peymants-info" ng-bind-html="pokerPopup.children[0].content|html">
+                <div class="peymants-info" ng-bind-html="pokerPopup.children[0].content|html:'p'">
                 </div>
 
             </div>

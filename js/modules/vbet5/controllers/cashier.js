@@ -189,7 +189,7 @@ VBET5.controller('cashierCtrl', ['$scope', '$rootScope', '$location', 'Translato
     $scope.getMaxTransferAmount = function getMaxTransferAmount() {
         switch ($scope.cashierFormModel.fromProduct) {
         case 'Sport':
-            $scope.cashierFormModel.amount = $scope.profile.balance;
+            $scope.cashierFormModel.amount = $scope.profile.calculatedBalance;
             break;
         case 'Casino':
         case 'Poker':

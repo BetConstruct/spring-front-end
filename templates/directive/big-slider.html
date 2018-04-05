@@ -22,12 +22,16 @@
     </div>
 
 
-    <div ng-if="sliderTemplate">
-        <div class="slider-optional-b-casino" ng-show="images.length > 1">
+    <div ng-class="{'slider-arrows-b-casino': conf.sliderArrows}" ng-if="sliderTemplate">
+        <div class="slider-optional-b-casino" ng-show="!conf.sliderArrows && images.length > 1">
             <span ng-repeat="banner in images track by $index"
                   ng-click="changeActiveBanner($index)"
                   ng-class="{'active': $index === index}">
             </span>
+        </div>
+        <div class="slider-optional-b-casino" ng-show="conf.sliderArrows && images.length > 1">
+            <span ng-click="changeActiveBanner(index - 1)"></span>
+            <span ng-click="changeActiveBanner(index + 1)"></span>
         </div>
         <div ng-repeat="banner in images track by $index"
              ng-class="{'active': $index === index}"
@@ -38,7 +42,7 @@
                 <a ng-href="{{!banner.isYouTubeVideo ? banner.link : ''}}" target="{{banner.linktarget}}" ng-click="linkClick(banner)" style="background-image: url({{banner.imageurl}});"></a>
                 <div class="promotions-in-mixed-balance">
                     <h1 ng-if="banner.title">{{banner.title}}</h1>
-                    <p ng-if="banner.description || banner.content" ng-bind-html="$sce.trustAsHtml(banner.description || banner.content)"></p>
+                    <p ng-if="banner.custom_fields.label.length || banner.content" ng-bind-html="$sce.trustAsHtml(banner.custom_fields.label[0] || banner.content)"></p>
                 </div>
                 <button ng-if="!$root.env.authorized && banner.action && banner.action === 'register'" trans ng-click="$root.$broadcast('openRegForm'); $event.stopPropagation();">Register</button>
                 <button ng-if="!$root.env.authorized && banner.action && banner.action === 'login'" trans ng-click="$root.$broadcast('openLoginForm');  $event.stopPropagation();">Sign in</button>

@@ -1,0 +1,22 @@
+<ul class="provider-navigation-j" ng-show="liveGamesData.providerOptions.length > 1">
+    <li class="game-provider-{{provider}}" ng-repeat="provider in liveGamesData.providerOptions track by $index" ng-click="liveGamesData.selectedProvider = provider" ng-class="{'active-j': liveGamesData.selectedProvider === provider}">{{ provider|translate }}</li>
+</ul>
+<div class="subtop-game-menu-j" ng-show="liveGamesData.devidedGames[liveGamesData.selectedProvider].defaultStudio && liveGamesData.devidedGames[liveGamesData.selectedProvider].studios.length > 1">
+    <div class="contein-nav-g">
+        <li ng-repeat="studio in liveGamesData.devidedGames[liveGamesData.selectedProvider].studios track by $index" ng-class="{'active': studio === liveGamesData.devidedGames[liveGamesData.selectedProvider].defaultStudio}">
+            <a ng-click="liveGamesData.devidedGames[liveGamesData.selectedProvider].defaultStudio = studio">{{ (liveGamesData.selectedProvider + '_STUDIO_' + studio)|translate }}</a>
+        </li>
+    </div>
+</div>
+<ul class="live-casino-games-by-ul-column lc-studio-{{ liveGamesData.devidedGames[liveGamesData.selectedProvider].defaultStudio }}">
+    <li ng-repeat="game in liveGamesData.devidedGames[liveGamesData.selectedProvider].games track by $index"
+        ng-show="confData.liveCasino.hiddenGamesIds.indexOf(game.id) === -1 && (!game.markets || game.markets.available.indexOf(liveGamesData.devidedGames[liveGamesData.selectedProvider].defaultStudio) !== -1)"
+        ng-click="openGame(game, null, liveGamesData.devidedGames[liveGamesData.selectedProvider].defaultStudio); $event.stopPropagation();"><!-- ng-click="openTables(game, null, devidedGames[selectedProvider].defaultStudio); $event.stopPropagation();"-->
+
+        <i class="game-icon-by-id-j-{{game.gameID || game.front_game_id}}"></i>
+        <div class="float-left-of-icon-lss-j">
+            <p ng-bind-html="(game.gameName || game.name)|translate|html"></p>
+            <button  trans>play now</button>
+        </div>
+    </li>
+</ul>

@@ -56,7 +56,7 @@
 
         <div class="top-menu-more" ng-show="topMenuLength > conf.visibleItemsInTopMenu" title="More"
              ng-click="$root.topMenuDropDown=!$root.topMenuDropDown;" hide-on-click
-             state-flag-var="$root.topMenuDropDown" trans="attr-only">+{{topMenuLength - conf.visibleItemsInTopMenu}}
+             state-flag-var="$root.topMenuDropDown" trans="attr-only">{{topMenuLength - conf.visibleItemsInTopMenu}}
         </div>
     </ul>
     <ul ng-controller="cmsPagesCtrl" ng-init="initSections()">

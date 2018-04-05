@@ -6,7 +6,7 @@
  * @description
  *  messages controller
  */
-VBET5.controller('messagesCtrl', ['$scope', '$rootScope', '$sce', 'Utils', 'Zergling', 'Translator', 'Config', 'TimeoutWrapper', function ($scope, $rootScope, $sce, Utils, Zergling, Translator, Config, TimeoutWrapper) {
+VBET5.controller('messagesCtrl', ['$scope', '$rootScope', 'Utils', 'Zergling', 'Translator', 'Config', 'TimeoutWrapper', function ($scope, $rootScope, Utils, Zergling, Translator, Config, TimeoutWrapper) {
     'use strict';
     TimeoutWrapper = TimeoutWrapper($scope);
     var TYPE_INCOMING = 0, TYPE_OUTGOING = 1,
@@ -85,10 +85,7 @@ VBET5.controller('messagesCtrl', ['$scope', '$rootScope', '$sce', 'Utils', 'Zerg
     function updateIncomingMessages(response) {
         $scope.inboxMessages = response.messages;
         angular.forEach($scope.inboxMessages, function (message) {
-            message.body = replaceSystemMessages(message.body);
             message.subject = replaceSystemMessages(message.subject);
-            message.body = $sce.trustAsHtml(message.body.substr(0, 6).toLowerCase() === '<html>' ? message.body : Utils.nl2br(message.body));
-            message.subject = $sce.trustAsHtml(message.subject);
             message.isSystem = false;
             message.isSystem = !message.hasOwnProperty('checked');
             message.isDeletable = !!Config.main.deleteInboxMessages;
@@ -106,8 +103,6 @@ VBET5.controller('messagesCtrl', ['$scope', '$rootScope', '$sce', 'Utils', 'Zerg
     function updateOutgoingMessages(response) {
         $scope.sentMessages = response.messages;
         angular.forEach($scope.sentMessages, function (message) {
-            message.body = $sce.trustAsHtml(Utils.nl2br(message.body));
-            message.subject = $sce.trustAsHtml(message.subject);
             message.isDeletable = !!Config.main.deleteSentMessages;
             message.isInbox = false;
         });

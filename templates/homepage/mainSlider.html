@@ -1,0 +1,33 @@
+<div ng-controller="cmsSportNewsCtrl">
+    <!-- SDC-27978 ng-class="{'new-slider-animation': conf.enableNewBannerAnimation}" was created specifically for the mentioned task.
+         If it is not needed anymore - delete it. I will leave a comment with the same task name, where other things were created that can be deleted as well -->
+    <div class="hp-slider-17" ng-show="selectedHomepageGames.length" ng-class="{'new-slider-animation': conf.enableNewBannerAnimation}" ng-init="getSelectedHomepageGames()" ng-mouseover="rotationPaused = true" ng-mouseleave="rotationPaused=false">
+        <!-- SDC-27978   'right': conf.enableNewBannerAnimation && (previousBanner || previousBanner === 0) -->
+        <div class="hp-slide-17" no-animate ng-repeat="selectedHomepageGame in selectedHomepageGames"
+             ng-class="{'active': $index === selectedGameIndex,
+                        'right': conf.enableNewBannerAnimation && (previousBanner || previousBanner === 0)}">
+            <a no-animate ng-href="{{bannerClick(selectedHomepageGame, true)}}" ng-click="!bannerClick(selectedHomepageGame, true) ? bannerClick(selectedHomepageGame) : null">
+                <div class="hp-splash-17" ng-show="selectedHomepageGame.content">
+                    <div>
+                        <span ng-bind-html="selectedHomepageGame.content"></span>
+                    </div>
+                </div>
+                <img ng-src="{{selectedHomepageGame.thumbnail_images.full.url}}" />
+                <!--<object ng-show="selectedHomepageGame.flash_banner_url" class="flash_banner" width="100%" height="100%">
+                    <param name="scale" value="exactFit" />
+                    <embed ng-src="{{selectedHomepageGame.flash_banner_url}}" scale="exactFit" height="100%" width="100%">
+                </object>-->
+            </a>
+        </div>
+        <div class="hp-slider-pagination-17" ng-show="!conf.sliderArrows && selectedHomepageGames.length >1">
+            <small ng-repeat="selectedHomepageGame in selectedHomepageGames" ng-class="{'active': $index === selectedGameIndex}" ng-click="$parent.selectedGameIndex = $index"></small>
+        </div>
+        <div class="hp-slider-arrows-17" ng-class="item.sliderArrowsClass" ng-show="conf.sliderArrows && selectedHomepageGames.length > 1">
+            <!-- SDC-27978  previousBanner = undefined; -->
+            <small ng-click="previousBanner = undefined; selectedGameIndex = selectedGameIndex - 1;selectedGameIndex = selectedGameIndex < 0 ? selectedHomepageGames.length - 1 : selectedGameIndex"></small>
+            <!-- SDC-27978  previousBanner = true; -->
+            <small ng-click="previousBanner = true; selectedGameIndex = selectedGameIndex + 1;selectedGameIndex = selectedGameIndex > selectedHomepageGames.length - 1 ? 0 : selectedGameIndex"></small>
+        </div>
+    </div>
+    <vbet-loader ng-show="!selectedHomepageGames.length"></vbet-loader>
+</div>

@@ -5,13 +5,16 @@
 /* global VBET5 */
 VBET5.constant('SkinConfig', {
     loadConfigFromCMS: false, // ignore this config and don't generate/upload it during release, conf.json will be created by CMS
-    additionalModules: ['exchange', 'casino', 'comboView'],
+    additionalModules: ['casino', 'comboView'],
     'main': {
+        enableBigBet: true,
         prefetchLeftMenuHoveredLivesGames: {
             enabled: false,
             prefetchAfter: 250
         },
-        betterSportsbook: true, // temporary, @TODO: remove after refactoring
+        logo: {
+            paddingMenu: 60
+        },
         siteTitle: {
             "eng": "Vbet - Sports betting, Poker, Casino, Online Games",
             "jpn": "Vbet - Sports betting, Poker, Casino, Online Games",
@@ -24,8 +27,83 @@ VBET5.constant('SkinConfig', {
             "rus": "Букмекерская контора Vbet - Онлайн ставки, покер, казино, онлайн игры",
             "arm": "Vbet բուքմեյքերական ընկերություն - Օնլայն խաղադրույքներ, պոկեր, կազինո, նարդի, օնլայն խաղեր"
         },
+        balanceSeparateDepositBanners: true,
         header: {
-            version: 2
+            version: 2,
+            haveFaq: false,
+            messageIcon: {
+                enabled: true,
+                alwaysShow: true
+            },
+            showHelpIcon: false,
+            statisticsLink: 'https://statistics.vbet.com',
+            customButtons: [
+                {
+                    text: 'Deposit',
+                    authorized: true,
+                    slider: 'deposit',
+                    class: 'brand-color cms-jcon-deposit'
+                }
+            ],
+            customIcons: [
+                {
+                    title: 'Contact us',
+                    icon: 'cms-jcon-phone',
+                    action: 'openHelpPage',
+                    data: {
+                        slug: 'contact-us',
+                        from: 'footer'
+                    }
+                },
+                {
+                    title: 'Live Chat',
+                    icon: 'cms-jcon-customer-support',
+                    action: 'liveAgent.start'
+                }
+            ]
+        },
+        footer: {
+            mobileVersionLink: "https://m.vbet.com",
+            ageRestriction: 18,
+            showPaymentSystems: false,
+            poweredBy: false,  // 0 - don't show,  1 -show with link,  2 - show without link, 3 - show only all right reserved
+            about_company_text: {
+                'eng': "Vbet sportsbook is operated by Vivaro Limited (Company Registration № C45929, Malta, 23.12.2008), having its registered address at Luxe Pavilion, 2nd level, Diamonds International Building, Portomaso, St. Julians STJ 4010, Malta, and is licensed and regulated by the Malta Gaming Authority as the regulatory body responsible (Class 2 Licence № MGA/CL2/1079/2015, granted 23.06.2015). The other products are operated by Radon B.V. (Commercial register of Curacao no.126922) under a sublicense CIL pursuant to Master gaming License №5536/JAZ.<br />Play responsibly. For further information contact <a href='http://responsiblegamblingtrust.org.uk' target='_blank'>http://responsiblegamblingtrust.org.uk</a>",
+                'chi': "Vbet體育博彩遊戲由Vivaro有限公司負責運營,Vivaro有限公司根據馬耳他相關法律於2008年12月23日正式註冊成立,公司註冊號 NC45929. 業界領先的博彩公司 Vbet體育博彩遊戲由Vivaro有限公司負責運營,Vivaro有限公司根據馬耳他相關法律於2008年12月23日正式註冊成立,公司註冊號 NC45929.    Vbet體育博彩遊戲由Vivaro有限公司負責運營,Vivaro有限公司根據馬耳他相關法律於2008年12月23日正式註冊成立,公司註冊號NC45929. 公司註冊地址為Luxe Pavilion, 2nd level, Diamonds International Building, Portomaso, St Julian's STJ 4010, Malt,公司由馬耳他博彩委員會發放博彩牌照並受委員會監管.Vbet的體育博彩使用馬耳他博彩委員會於2015年6月23日發放的2類牌照合法運營，牌照號為MGA/CL2/ 1079/2015.Vbet的其他產品由Radon BV公司負責運營,此公司為庫拉索合法註冊的商業公司，註冊號為126922,此公司有根據相關法律附屬於主牌照的子牌照,註冊號為5536 /JAZ. Radon Limited DSLR Notaries (Suite 750), Ftieh St. Birkirkara Bypass, Birkirkara BKR 2940, Malta, 為Radon BV的子公司. Vbet是一個不斷發展擁有超過十年經驗的公司,將給玩家帶來最好的博彩體驗.我們以能為全球各地的玩家提供服務感到十分榮幸. <a href='http://responsiblegamblingtrust.org.uk' target='_blank'>http://responsiblegamblingtrust.org.uk</a>",
+                'jpn': "Vbet sportsbook is operated by Vivaro Limited (Company Registration № C45929, Malta, 23.12.2008), having its registered address at Luxe Pavilion, 2nd level, Diamonds International Building, Portomaso, St. Julians STJ 4010, Malta, and is licensed and regulated by the Malta Gaming Authority as the regulatory body responsible (Class 2 Licence № MGA/CL2/1079/2015, granted 23.06.2015). The other products are operated by Radon B.V. (Commercial register of Curacao no.126922) under a sublicense CIL pursuant to Master gaming License №5536/JAZ.<br />Play responsibly. For further information contact <a href='http://responsiblegamblingtrust.org.uk' target='_blank'>http://responsiblegamblingtrust.org.uk</a>",
+                'spa': "Vbet sportsbook is operated by Vivaro Limited (Company Registration № C45929, Malta, 23.12.2008), having its registered address at Luxe Pavilion, 2nd level, Diamonds International Building, Portomaso, St. Julians STJ 4010, Malta, and is licensed and regulated by the Malta Gaming Authority as the regulatory body responsible (Class 2 Licence № MGA/CL2/1079/2015, granted 23.06.2015). The other products are operated by Radon B.V. (Commercial register of Curacao no.126922) under a sublicense CIL pursuant to Master gaming License №5536/JAZ.<br />Play responsibly. For further information contact <a href='http://responsiblegamblingtrust.org.uk' target='_blank'>http://responsiblegamblingtrust.org.uk</a>",
+                'geo': "Vbet-ის დანარჩენი პროდუქცია მართულია Radon B.V-ით, რომელიც დარეგისტრირებულია კიურასაოს კომერციულ რეგისტრში 126922 ნომრის ქვეშ და ფლობს CIL სუბლიცენზიას Master gaming ლიცენზიის თანხმობით 5536/JAZ ნომრით.<br />ითამაშეთ საპასუხისმგებლად. დამატებითი ინფორმაციისათვის დაგვიკავშირდით  <a href='http://responsiblegamblingtrust.org.uk' target='_blank'>http://responsiblegamblingtrust.org.uk</a>",
+                'por': "Vbet sportsbook is operated by Vivaro Limited (Company Registration № C45929, Malta, 23.12.2008), having its registered address at Luxe Pavilion, 2nd level, Diamonds International Building, Portomaso, St. Julians STJ 4010, Malta, and is licensed and regulated by the Malta Gaming Authority as the regulatory body responsible (Class 2 Licence № MGA/CL2/1079/2015, granted 23.06.2015). The other products are operated by Radon B.V. (Commercial register of Curacao no.126922) under a sublicense CIL pursuant to Master gaming License №5536/JAZ.<br />Play responsibly. For further information contact <a href='http://responsiblegamblingtrust.org.uk' target='_blank'>http://responsiblegamblingtrust.org.uk</a>",
+                'tur': "Vbet sportsbook is operated by Vivaro Limited (Company Registration № C45929, Malta, 23.12.2008), having its registered address at Luxe Pavilion, 2nd level, Diamonds International Building, Portomaso, St. Julians STJ 4010, Malta, and is licensed and regulated by the Malta Gaming Authority as the regulatory body responsible (Class 2 Licence № MGA/CL2/1079/2015, granted 23.06.2015). The other products are operated by Radon B.V. (Commercial register of Curacao no.126922) under a sublicense CIL pursuant to Master gaming License №5536/JAZ.<br />Play responsibly. For further information contact <a href='http://responsiblegamblingtrust.org.uk' target='_blank'>http://responsiblegamblingtrust.org.uk</a>",
+                'kor': "Vbet sportsbook is operated by Vivaro Limited (Company Registration № C45929, Malta, 23.12.2008), having its registered address at Luxe Pavilion, 2nd level, Diamonds International Building, Portomaso, St. Julians STJ 4010, Malta, and is licensed and regulated by the Malta Gaming Authority as the regulatory body responsible (Class 2 Licence № MGA/CL2/1079/2015, granted 23.06.2015). The other products are operated by Radon B.V. (Commercial register of Curacao no.126922) under a sublicense CIL pursuant to Master gaming License №5536/JAZ.<br />Play responsibly. For further information contact <a href='http://responsiblegamblingtrust.org.uk' target='_blank'>http://responsiblegamblingtrust.org.uk</a>",
+                'rus': "Vbet sportsbook is operated by Vivaro Limited (Company Registration № C45929, Malta, 23.12.2008), having its registered address at Luxe Pavilion, 2nd level, Diamonds International Building, Portomaso, St. Julians STJ 4010, Malta, and is licensed and regulated by the Malta Gaming Authority as the regulatory body responsible (Class 2 Licence № MGA/CL2/1079/2015, granted 23.06.2015). The other products are operated by Radon B.V. (Commercial register of Curacao no.126922) under a sublicense CIL pursuant to Master gaming License №5536/JAZ.<br />Play responsibly. For further information contact <a href='http://responsiblegamblingtrust.org.uk' target='_blank'>http://responsiblegamblingtrust.org.uk</a>",
+                'arm': "Vbet sportsbook is operated by Vivaro Limited (Company Registration № C45929, Malta, 23.12.2008), having its registered address at Luxe Pavilion, 2nd level, Diamonds International Building, Portomaso, St. Julians STJ 4010, Malta, and is licensed and regulated by the Malta Gaming Authority as the regulatory body responsible (Class 2 Licence № MGA/CL2/1079/2015, granted 23.06.2015). The other products are operated by Radon B.V. (Commercial register of Curacao no.126922) under a sublicense CIL pursuant to Master gaming License №5536/JAZ.<br />Play responsibly. For further information contact <a href='http://responsiblegamblingtrust.org.uk' target='_blank'>http://responsiblegamblingtrust.org.uk</a>",
+                'swe': "Vbet sportsbook is operated by Vivaro Limited (Company Registration № C45929, Malta, 23.12.2008), having its registered address at Luxe Pavilion, 2nd level, Diamonds International Building, Portomaso, St. Julians STJ 4010, Malta, and is licensed and regulated by the Malta Gaming Authority as the regulatory body responsible (Class 2 Licence № MGA/CL2/1079/2015, granted 23.06.2015). The other products are operated by Radon B.V. (Commercial register of Curacao no.126922) under a sublicense CIL pursuant to Master gaming License №5536/JAZ.<br />Play responsibly. For further information contact <a href='http://responsiblegamblingtrust.org.uk' target='_blank'>http://responsiblegamblingtrust.org.uk</a>",
+                'ger': "Vbet sportsbook is operated by Vivaro Limited (Company Registration № C45929, Malta, 23.12.2008), having its registered address at Luxe Pavilion, 2nd level, Diamonds International Building, Portomaso, St. Julians STJ 4010, Malta, and is licensed and regulated by the Malta Gaming Authority as the regulatory body responsible (Class 2 Licence № MGA/CL2/1079/2015, granted 23.06.2015). The other products are operated by Radon B.V. (Commercial register of Curacao no.126922) under a sublicense CIL pursuant to Master gaming License №5536/JAZ.<br />Play responsibly. For further information contact <a href='http://responsiblegamblingtrust.org.uk' target='_blank'>http://responsiblegamblingtrust.org.uk</a>",
+                'nor': "Vbet sportsbook is operated by Vivaro Limited (Company Registration № C45929, Malta, 23.12.2008), having its registered address at Luxe Pavilion, 2nd level, Diamonds International Building, Portomaso, St. Julians STJ 4010, Malta, and is licensed and regulated by the Malta Gaming Authority as the regulatory body responsible (Class 2 Licence № MGA/CL2/1079/2015, granted 23.06.2015). The other products are operated by Radon B.V. (Commercial register of Curacao no.126922) under a sublicense CIL pursuant to Master gaming License №5536/JAZ.<br />Play responsibly. For further information contact <a href='http://responsiblegamblingtrust.org.uk' target='_blank'>http://responsiblegamblingtrust.org.uk</a>"
+            },
+            license_logos: [
+                [
+                    {href: "http://responsiblegamblingtrust.org.uk", img: "images/VBET/gamblelogo2.png", height: "36px"},
+                    {href: "https://www.authorisation.mga.org.mt/verification.aspx?lang=EN&company=d10daec7-dde7-441a-b9ef-2666667bf4fc&details=1", img: "images/VBET/mga_logo.png", height: "36px"}
+                ],
+                [
+                    {img: "images/VBET/iso.png", height: "66px"},
+                    {img: "images/VBET/gamblelogo1.png", height: "56px"}
+                ]
+            ],
+            feedbackButton: {
+                enabledLogin: true,
+                enabledLogOut: true
+            },
+            socialLinks: {
+                instagram: {url: {default: "http://instagram.com/vbet_official?ref=badge"}},
+                twitter: {url: {default: "https://twitter.com/Vbet_com"}},
+                facebook: {url: {default: "https://www.facebook.com/vbetcom"}},
+                googlePlus: {url: {default: "https://plus.google.com/u/1/+Vbetlivebetting/"}},
+                youtube: {url: {default: "https://www.youtube.com/user/VIVARObetting"}},
+                vkontakte: {url: {default: "https://vk.com/vbet_official"}}
+            }
         },
         selfExclusion: {
             enabled: true
@@ -35,13 +113,103 @@ VBET5.constant('SkinConfig', {
         },
         site_name: "VBET",
         skin: 'vbet.com',
-        geoIPLangSwitch: true,
+        geoIPLangSwitch: {
+            enabled: true,
+            default: 'eng',
+            'MX': 'spa',
+            'ES': 'spa',
+            'CO': 'spa',
+            'AR': 'spa',
+            'PE': 'spa',
+            'VE': 'spa',
+            'CL': 'spa',
+            'CU': 'spa',
+            'EC': 'spa',
+            'DO': 'spa',
+            'GT': 'spa',
+            'HN': 'spa',
+            'BO': 'spa',
+            'SV': 'spa',
+            'NI': 'spa',
+            'PY': 'spa',
+            'CR': 'spa',
+            'PR': 'spa',
+            'UY': 'spa',
+            'PA': 'spa',
+            'GQ': 'spa',
+            'RU': 'rus',
+            'UA': 'rus',
+            'KZ': 'rus',
+            'UZ': 'rus',
+            'BY': 'rus',
+            'AZ': 'rus',
+            'KG': 'rus',
+            'TJ': 'rus',
+            'LV': 'rus',
+            'LT': 'rus',
+            'MD': 'rus',
+            'EE': 'rus',
+            'TM': 'rus',
+            'AM': 'arm',
+            'PT': 'por',
+            'AO': 'por',
+            'MZ': 'por',
+            'CV': 'por',
+            'GW': 'por',
+            'ST': 'por',
+            'TL': 'por',
+            'BR': 'pt-br',
+            'TR': 'tur',
+            'KR': 'kor',
+            'KP': 'kor',
+            'JP': 'jpn',
+            'CN': 'zhh',
+            'HK': 'chi',
+            'MO': 'chi',
+            'TW': 'chi',
+            'GE': 'geo',
+            'GR': 'gre',
+            'SE': 'swe',
+            'DE': 'ger',
+            'AT': 'ger',
+            'LI': 'ger',
+            'CH': 'ger',
+            'LU': 'ger',
+            'NO': 'nor',
+            'DZ': 'arb',
+            'BH': 'arb',
+            'DJ': 'arb',
+            'EG': 'arb',
+            'JO': 'arb',
+            'IQ': 'arb',
+            'YE': 'arb',
+            'QA': 'arb',
+            'KW': 'arb',
+            'LB': 'arb',
+            'LY': 'arb',
+            'MR': 'arb',
+            'MA': 'arb',
+            'AE': 'arb',
+            'OM': 'arb',
+            'SA': 'arb',
+            'SY': 'arb',
+            'SD': 'arb',
+            'TN': 'arb',
+            'KM': 'arb',
+            'SO': 'arb',
+            'SN': 'arb',
+            'TD': 'arb',
+            'PS': 'arb',
+            'IR': 'fas',
+            'AF': 'fas'
+        },
         resultMenuOrdering: [844, 848, 850, 852, 858],
         showResultsMaxDays: 7,
         enableOlympicGames: false,
         enableDepositLimits: true,
         liveMultiViewEnabled: true,
-        htmlMetaTags: '<script src="//cdn.letreach.com/js/main/8f9c087cd9926c903fa9dac01fcbdebf.js"></script>',
+        prematchMultiColumnEnabled: true,
+        htmlMetaTags: '<script src="https://my.hellobar.com/09df6853a04aabdc0c0ed5e7b9b116fde686359b.js" type="text/javascript" charset="utf-8" async="async"></script>',
         show3LettersLanguageCode: true,
         enableLoyaltyPoints: true,
         appPokeristUrl: '//vbet-app.pokerist.com/index_vbet.php',
@@ -50,20 +218,17 @@ VBET5.constant('SkinConfig', {
         enableLandingPage: false,
         liveCalendarView: 'oneDaySelectionView',
         enableSystemCalculator: true,
-        enableAccountVerification: true,
-        showNewBelotePage: true,
+
+        accountVerificationMessage: 'account-verification-text', // value used as key for getting translation from translation tool
         visibleItemsInTopMenu: 9, // visible items quantity in Top Menu in small view
         showOfficeView:false,
-        exchangeEnabled:false,
-        enableResetError: true,
-        showNewBackgammonPage: true,
+        useLadderForFractionalFormat: true,
         newPoolBettingPage: false,
-        poweredByInFooter: false,  // false - don't show,  true -show with link,  -1 - show without link
         hideGmsMarketBase: false,
         sportNewsLink: 'http://www.vbetnews.com/',
         GmsPlatform:true,
-        expandFavoriteCompetitions:true,
-        expandFavoriteCompetitionsFirst:true,
+        expandOnlyOneSport: true,
+        enableSuggestedBets: true,
         enableSportsbookLayoutSwitcher: true,
         enableBonuses: false,
         promotionalBonuses: {
@@ -119,13 +284,13 @@ VBET5.constant('SkinConfig', {
                 enabledConfig: "showResultsTabInSportsbook"
             }
         ],
-        betterHomepage: true,
+        sliderArrows: true,
         homepage: [
             {
                 items: [
                     {
                         class: "size-7",
-                        templateUrl: "templates/betterHomepage/mainSlider.html"
+                        templateUrl: "templates/homepage/mainSlider.html"
                     },
                     {
                         class: "size-5",
@@ -137,20 +302,23 @@ VBET5.constant('SkinConfig', {
                 items: [
                     {
                         class: "size-12",
-                        templateUrl: "templates/betterHomepage/productsSlider.html"
+                        templateUrl: "templates/homepage/productsSlider.html"
                     }
                 ]
             },
             {
                 items: [
                     {
-                        class: "size-5 size-m-12 top",
-                        height: "360px",
-                        templateUrl: "templates/betterHomepage/newsWidget.html"
-                    },
+                        class: "size-12",
+                        templateUrl: "templates/homepage/featuredGamesSlider.html"
+                    }
+                ]
+            },
+            {
+                items: [
                     {
-                        class: "size-5",
-                        templateUrl: "templates/betterHomepage/lastMinuteBets.html"
+                        class: "size-10",
+                        templateUrl: "templates/homepage/lastMinuteBets.html"
                     },
                     {
                         class: "size-2",
@@ -159,7 +327,7 @@ VBET5.constant('SkinConfig', {
                 ]
             }
         ],
-        enableLayoutSwitcherInSportsbook: true,
+        
         homePageLastMinuteBets: {
             enable: true,
             timeOptions: [15, 30, 60]
@@ -168,10 +336,13 @@ VBET5.constant('SkinConfig', {
         results: {
             version: 1
         },
+        search: {   //limits of search results
+            limitGames: 25,
+            limitCompetitions: 25
+        },
         enableVisibleInPrematchGames: true,
         customSelectedSequenceInAsianSportsbook: "MATCH",
         enableLiveSectionPin: true,
-        mobileVersionLink: false,
         liveModule: {
             newWay: false, // load through .php (the old way)
             enabled: true,
@@ -182,15 +353,17 @@ VBET5.constant('SkinConfig', {
         sportsLayout: "euro2016",
         availableSportsbookViews: {modern: true, classic: false, asian: true, external: false, euro2016: true},
         asianLoadDays: 0,
-        sportsClassicLayout: false,
         showFavoriteCompetitions: true, // show "popular competitions" in classic view
+        popularMatches: {
+            enabled: true
+        },
         googleAnalyticsId: 'UA-29242337-7',
+        hotjarAnalyticsId: '617073',
+        oneSignalId: '8e6410e4-1f52-4260-8ef9-c874a0a2057b',
+        facebookPixelId: '1152941148075259',
         yandexMetricaId: '',
-        fantasyEnabled: true,
         defaultTimeFormat: 'DD/MM/YYYY LT',
-        ogwilEnabled: true,
-        casinoEnabled: true,
-        casinoVersion: 2,
+
         transferEnabled: false,
         liveCalendarEnabled: true,
         liveCalendarInLeftMenu: false,
@@ -203,32 +376,22 @@ VBET5.constant('SkinConfig', {
         liveOverviewEnabled: true,
         enableLiveCalendarPrinting: true,
         exchangeBetHistoryEnabled: false,
-        getPokerLeaderboardDataFromSwarm: true, // in home page
         downloadPDFButtons: true,
-        pokerEnabled: true,
-        hidePokerLeaderboardAllButton: true,
         gameMenuSpecialText: '',
         enableNewPoker: true,
-        rememberMeCheckbox: false,
-        enableNewSkillGame: true,
-        livedealerEnabled: true,
-        financialsEnabled: true,
+        rememberMeCheckbox: {
+            enabled: false
+        },
         countOfRecentBetsToShow: 3,
         //statsHostname: 'http://statistics.betcoapps.com/#/en/external/page/',  // hostname for statistics. when clicking on game statistics icon, popup on this hostname is open,
         statsHostname: {
             prefixUrl: 'https://statistics.vbet.com/#/',
-            defaultLang: 'en',
+
             subUrl: '/external/page/'
         },
-        headerStatisticsLink: 'https://statistics.vbet.com',
         enableH2HStat: true,
-        jackpotEnabled: false,
-        newMenuItems: {virtualSport:true, games:false, liveCasino:false, fantasy: true},
-        poolBettingEnabled: false, //enable/disable pool betting
-        enableHeaderAnnouncement: false,
+        newMenuItems: {virtualSport:false, games:false, liveCasino:false, fantasy: false,  poker: 'web'},
         showFavoriteGamesInSportList: true,
-        showFinancialsInSportList: 222,   // false to hide,  any number to show (number is used as 'order' field to define it's position among sports)
-        freeBetEnabled: true,
         displayEventsMaxBet: true,
         showEachWay: true,
         nonActivityAction: {
@@ -238,16 +401,19 @@ VBET5.constant('SkinConfig', {
             checkingInterval: 5000 // seconds
         },
         showVirtualsInSportList: false,
+        virtualSportIds: {
+            virtualsports: [54, 55, 56, 57, 118, 150, 174],
+            insvirtualsports: [132, 133, 134, 135, 136, 137, 138]
+        },
         showOutright: false,//200,
         casinoBalanceDefaultPage: 'deposit',
         enableCasinoBalanceHistory: true, //enable casino balance history in top menu
         enableCasinoBetHistory: false, //enable casino balance history in top menu
         enableMixedView: true,
         enableMiniGameUnderBetslip: true,
+        minimizeMiniGamesUnderBetslip: false,
         enableBonusCancellation: true, // enable canceling bonus
         enableSubHeader: true,
-        virtualBettingEnabledInTopMenu: false,
-        virtualSportEnabledInTopMenu: true,
         showResultsTabInSportsbook: true,
         statisticsInsportsbookTab: true,
         classicMarkets2ColSorting: false,
@@ -307,58 +473,45 @@ VBET5.constant('SkinConfig', {
                 url: 'https://www.facebook.com/tr?id=1677021112574000&ev=PageView&noscript=1'
             }
         ],
-        backGammonEnabledInTopMenu: true,
-        beloteEnabledInTopMenu: true,
         showWithdrawRequestsTab: false,
         enableNewCashier: false,
         runtimePopupCount: 2,
-        showPopupBeforeRegistration: true,
-        headerMessageIcon: {
-            enabled: true,
-            alwaysShow: true
-        },
-        ageRestrictionInFooter: 18,
-        haveFaq: true,
-        openHelpAsPopup: true,
-        enablePromotions: true,
+        showPopupBeforeRegistration: false,
         aocEnabled: true, // enable AOC link in main menu
-        feedbackButton: {
-            enabledLogin: true,
-            enabledLogOut: true
-        },
-        availableVideoProviderIds: [1, 3, 5, 7, 8, 11, 12, 15, 16, 19, 21, 22, 23, 999999],
+        availableVideoProviderIds: [1, 3, 5, 7, 8, 11, 12, 15, 16, 19, 21, 22, 23, 29, 999999],
         aocLink: "#/section/aoc",
-        theVeryTopMenu: [{href: "#/promos/", label: "Promotions"}, {href: "#/freebet/", label: "Free Quiz"}, {href: "http://www.vbetnews.com/", label: "VbetNews", target: '_blank'}, {help: 'payments', label: 'Payments'},{href: "https://free.vbet.com", label: 'Free Vbet',target: '_blank'},{href: "http://new.vbet.com/", label: 'New VBet',target: '_blank'}],
+        theVeryTopMenu: [{href: "#/promos/", label: "Promotions"}, {href: "http://www.vbetnews.com/", label: "VbetNews", target: '_blank'}, {help: 'payments', label: 'Payments'}, {href: "https://free.vbet.com", label: 'Free Vbet',target: '_blank'},{href: "http://new.vbet.com/", label: 'New VBet',target: '_blank'}],
         balanceDefaultPage: 'deposit',
         showPromotedGamesOnWidget: {
             enabled: true,
             level: 'competition',  // game or competition
             type: 'promoted', // promoted or favorite
-            gameLimit: 30
+            gameLimit: 100
         },
+        disableITFGamesInfo: true,
         showPointsBalance: true,
         passwordNewResetMode: false,
         allowTimeFormatChange: true,
-        passwordValidationLength: 8,
         availableLanguages: {
             '@replace': true, // this means that object won't be merged with 'parent object', but will replace it
             'eng': {'short': 'EN', 'full': "English", order: 1},
-            'spa': {'short': 'ES', 'full': "Español", order: 2},
-            'arm': {'short': 'HY', 'full': "Հայերեն", order: 4},
-            'rus': {'short': 'RU', 'full': "Русский", order: 3},
-            'por': {'short': 'PT', 'full': "Português", order: 5},
-            'pt-br' : { 'short': 'PT-BR', 'full': "Português do Brasil", order: 6},
-            'tur': {'short': 'TR', 'full': "Türkçe", order: 7},
+            'spa': {'short': 'ES', 'full': "Español", order: 5},
+            'arm': {'short': 'HY', 'full': "Հայերեն", order: 13},
+            'rus': {'short': 'RU', 'full': "Русский", order: 4},
+            'por': {'short': 'PT', 'full': "Português", order: 6},
+            'pt-br' : { 'short': 'PT-BR', 'full': "Português do Brasil", order: 7},
+            'tur': {'short': 'TR', 'full': "Türkçe", order: 19},
             'kor': { 'short': 'KO', 'full': "한국어", order: 8},
             'jpn': { 'short': 'JP', 'full': "日本語", order: 9},
             'chi': { 'short': 'CH', 'full': "繁體中文", order: 10},
             'zhh': {'short': 'ZH', 'full': "简体中文", order: 11},
             'geo': {'short': 'KA', 'full': "ქართული", order: 12},
-            'swe': {'short': 'SE', 'full': "Swedish", order: 13},
-            'ger' : { 'short': 'DE', 'full': "Deutsch", order: 14},
-            'nor': {'short': 'NO', 'full': "Norwegian", order: 15},
-            'arb' : { 'short': 'AR', 'full': "العربية", order: 16},
-            'fas' : { 'short': 'FA', 'full': "Farsi", order: 17}
+            'swe': {'short': 'SE', 'full': "Swedish", order: 3},
+            'arb' : { 'short': 'AR', 'full': "العربية", order: 16, rtl: true},
+            'fas' : { 'short': 'FA', 'full': "فارسی", order: 17, rtl: true},
+            'ukr': {'short': 'UK', 'full': "Українська", order: 18},
+            'ger': {'short': 'DE', 'full': "Deutsch", order: 2},
+            'pol' : { 'short': 'PL', 'full': "Polski", order: 20}
         },
         twitterFeed: {
             enabled: false,
@@ -386,43 +539,35 @@ VBET5.constant('SkinConfig', {
         },
         redirectOnTablets: 'http://tablet.vbet.com/',
         poolBettingResultsUrlPrefix: 'http://www.vbet.com/results/',
-        about_company_text: {
-            'eng': "Vbet sportsbook is operated by Vivaro Limited (Company Registration № C45929, Malta, 23.12.2008), having its registered address at Luxe Pavilion, 2nd level, Diamonds International Building, Portomaso, St. Julians STJ 4010, Malta, and is licensed and regulated by the Malta Gaming Authority as the regulatory body responsible (Class 2 Licence № MGA/CL2/1079/2015, granted 23.06.2015). The other products are operated by Radon B.V. (Commercial register of Curacao no.126922) under a sublicense CIL pursuant to Master gaming License №5536/JAZ.<br />Play responsibly. For further information contact <a href='http://responsiblegamblingtrust.org.uk' target='_blank'>http://responsiblegamblingtrust.org.uk</a>",
-            'chi': "Vbet體育博彩遊戲由Vivaro有限公司負責運營,Vivaro有限公司根據馬耳他相關法律於2008年12月23日正式註冊成立,公司註冊號 NC45929. 業界領先的博彩公司 Vbet體育博彩遊戲由Vivaro有限公司負責運營,Vivaro有限公司根據馬耳他相關法律於2008年12月23日正式註冊成立,公司註冊號 NC45929.    Vbet體育博彩遊戲由Vivaro有限公司負責運營,Vivaro有限公司根據馬耳他相關法律於2008年12月23日正式註冊成立,公司註冊號NC45929. 公司註冊地址為Luxe Pavilion, 2nd level, Diamonds International Building, Portomaso, St Julian's STJ 4010, Malt,公司由馬耳他博彩委員會發放博彩牌照並受委員會監管.Vbet的體育博彩使用馬耳他博彩委員會於2015年6月23日發放的2類牌照合法運營，牌照號為MGA/CL2/ 1079/2015.Vbet的其他產品由Radon BV公司負責運營,此公司為庫拉索合法註冊的商業公司，註冊號為126922,此公司有根據相關法律附屬於主牌照的子牌照,註冊號為5536 /JAZ. Radon Limited DSLR Notaries (Suite 750), Ftieh St. Birkirkara Bypass, Birkirkara BKR 2940, Malta, 為Radon BV的子公司. Vbet是一個不斷發展擁有超過十年經驗的公司,將給玩家帶來最好的博彩體驗.我們以能為全球各地的玩家提供服務感到十分榮幸. <a href='http://responsiblegamblingtrust.org.uk' target='_blank'>http://responsiblegamblingtrust.org.uk</a>",
-            'jpn': "Vbet sportsbook is operated by Vivaro Limited (Company Registration № C45929, Malta, 23.12.2008), having its registered address at Luxe Pavilion, 2nd level, Diamonds International Building, Portomaso, St. Julians STJ 4010, Malta, and is licensed and regulated by the Malta Gaming Authority as the regulatory body responsible (Class 2 Licence № MGA/CL2/1079/2015, granted 23.06.2015). The other products are operated by Radon B.V. (Commercial register of Curacao no.126922) under a sublicense CIL pursuant to Master gaming License №5536/JAZ.<br />Play responsibly. For further information contact <a href='http://responsiblegamblingtrust.org.uk' target='_blank'>http://responsiblegamblingtrust.org.uk</a>",
-            'spa': "Vbet sportsbook is operated by Vivaro Limited (Company Registration № C45929, Malta, 23.12.2008), having its registered address at Luxe Pavilion, 2nd level, Diamonds International Building, Portomaso, St. Julians STJ 4010, Malta, and is licensed and regulated by the Malta Gaming Authority as the regulatory body responsible (Class 2 Licence № MGA/CL2/1079/2015, granted 23.06.2015). The other products are operated by Radon B.V. (Commercial register of Curacao no.126922) under a sublicense CIL pursuant to Master gaming License №5536/JAZ.<br />Play responsibly. For further information contact <a href='http://responsiblegamblingtrust.org.uk' target='_blank'>http://responsiblegamblingtrust.org.uk</a>",
-            'geo': "Vbet-ის დანარჩენი პროდუქცია მართულია Radon B.V-ით, რომელიც დარეგისტრირებულია კიურასაოს კომერციულ რეგისტრში 126922 ნომრის ქვეშ და ფლობს CIL სუბლიცენზიას Master gaming ლიცენზიის თანხმობით 5536/JAZ ნომრით.<br />ითამაშეთ საპასუხისმგებლად. დამატებითი ინფორმაციისათვის დაგვიკავშირდით  <a href='http://responsiblegamblingtrust.org.uk' target='_blank'>http://responsiblegamblingtrust.org.uk</a>",
-            'por': "Vbet sportsbook is operated by Vivaro Limited (Company Registration № C45929, Malta, 23.12.2008), having its registered address at Luxe Pavilion, 2nd level, Diamonds International Building, Portomaso, St. Julians STJ 4010, Malta, and is licensed and regulated by the Malta Gaming Authority as the regulatory body responsible (Class 2 Licence № MGA/CL2/1079/2015, granted 23.06.2015). The other products are operated by Radon B.V. (Commercial register of Curacao no.126922) under a sublicense CIL pursuant to Master gaming License №5536/JAZ.<br />Play responsibly. For further information contact <a href='http://responsiblegamblingtrust.org.uk' target='_blank'>http://responsiblegamblingtrust.org.uk</a>",
-            'tur': "Vbet sportsbook is operated by Vivaro Limited (Company Registration № C45929, Malta, 23.12.2008), having its registered address at Luxe Pavilion, 2nd level, Diamonds International Building, Portomaso, St. Julians STJ 4010, Malta, and is licensed and regulated by the Malta Gaming Authority as the regulatory body responsible (Class 2 Licence № MGA/CL2/1079/2015, granted 23.06.2015). The other products are operated by Radon B.V. (Commercial register of Curacao no.126922) under a sublicense CIL pursuant to Master gaming License №5536/JAZ.<br />Play responsibly. For further information contact <a href='http://responsiblegamblingtrust.org.uk' target='_blank'>http://responsiblegamblingtrust.org.uk</a>",
-            'kor': "Vbet sportsbook is operated by Vivaro Limited (Company Registration № C45929, Malta, 23.12.2008), having its registered address at Luxe Pavilion, 2nd level, Diamonds International Building, Portomaso, St. Julians STJ 4010, Malta, and is licensed and regulated by the Malta Gaming Authority as the regulatory body responsible (Class 2 Licence № MGA/CL2/1079/2015, granted 23.06.2015). The other products are operated by Radon B.V. (Commercial register of Curacao no.126922) under a sublicense CIL pursuant to Master gaming License №5536/JAZ.<br />Play responsibly. For further information contact <a href='http://responsiblegamblingtrust.org.uk' target='_blank'>http://responsiblegamblingtrust.org.uk</a>",
-            'rus': "Vbet sportsbook is operated by Vivaro Limited (Company Registration № C45929, Malta, 23.12.2008), having its registered address at Luxe Pavilion, 2nd level, Diamonds International Building, Portomaso, St. Julians STJ 4010, Malta, and is licensed and regulated by the Malta Gaming Authority as the regulatory body responsible (Class 2 Licence № MGA/CL2/1079/2015, granted 23.06.2015). The other products are operated by Radon B.V. (Commercial register of Curacao no.126922) under a sublicense CIL pursuant to Master gaming License №5536/JAZ.<br />Play responsibly. For further information contact <a href='http://responsiblegamblingtrust.org.uk' target='_blank'>http://responsiblegamblingtrust.org.uk</a>",
-            'arm': "Vbet sportsbook is operated by Vivaro Limited (Company Registration № C45929, Malta, 23.12.2008), having its registered address at Luxe Pavilion, 2nd level, Diamonds International Building, Portomaso, St. Julians STJ 4010, Malta, and is licensed and regulated by the Malta Gaming Authority as the regulatory body responsible (Class 2 Licence № MGA/CL2/1079/2015, granted 23.06.2015). The other products are operated by Radon B.V. (Commercial register of Curacao no.126922) under a sublicense CIL pursuant to Master gaming License №5536/JAZ.<br />Play responsibly. For further information contact <a href='http://responsiblegamblingtrust.org.uk' target='_blank'>http://responsiblegamblingtrust.org.uk</a>",
-            'swe': "Vbet sportsbook is operated by Vivaro Limited (Company Registration № C45929, Malta, 23.12.2008), having its registered address at Luxe Pavilion, 2nd level, Diamonds International Building, Portomaso, St. Julians STJ 4010, Malta, and is licensed and regulated by the Malta Gaming Authority as the regulatory body responsible (Class 2 Licence № MGA/CL2/1079/2015, granted 23.06.2015). The other products are operated by Radon B.V. (Commercial register of Curacao no.126922) under a sublicense CIL pursuant to Master gaming License №5536/JAZ.<br />Play responsibly. For further information contact <a href='http://responsiblegamblingtrust.org.uk' target='_blank'>http://responsiblegamblingtrust.org.uk</a>",
-            'ger': "Vbet sportsbook is operated by Vivaro Limited (Company Registration № C45929, Malta, 23.12.2008), having its registered address at Luxe Pavilion, 2nd level, Diamonds International Building, Portomaso, St. Julians STJ 4010, Malta, and is licensed and regulated by the Malta Gaming Authority as the regulatory body responsible (Class 2 Licence № MGA/CL2/1079/2015, granted 23.06.2015). The other products are operated by Radon B.V. (Commercial register of Curacao no.126922) under a sublicense CIL pursuant to Master gaming License №5536/JAZ.<br />Play responsibly. For further information contact <a href='http://responsiblegamblingtrust.org.uk' target='_blank'>http://responsiblegamblingtrust.org.uk</a>",
-            'nor': "Vbet sportsbook is operated by Vivaro Limited (Company Registration № C45929, Malta, 23.12.2008), having its registered address at Luxe Pavilion, 2nd level, Diamonds International Building, Portomaso, St. Julians STJ 4010, Malta, and is licensed and regulated by the Malta Gaming Authority as the regulatory body responsible (Class 2 Licence № MGA/CL2/1079/2015, granted 23.06.2015). The other products are operated by Radon B.V. (Commercial register of Curacao no.126922) under a sublicense CIL pursuant to Master gaming License №5536/JAZ.<br />Play responsibly. For further information contact <a href='http://responsiblegamblingtrust.org.uk' target='_blank'>http://responsiblegamblingtrust.org.uk</a>"
-        },
-        footer_license_logos: [
-            [
-                {href: "http://responsiblegamblingtrust.org.uk", img: "images/VBET/gamblelogo2.png", height: "36px"},
-                {href: "https://www.authorisation.mga.org.mt/verification.aspx?lang=EN&company=d10daec7-dde7-441a-b9ef-2666667bf4fc&details=1", img: "images/VBET/mga_logo.png", height: "36px"}
-            ],
-            [
-                {img: "images/VBET/iso.png", height: "66px"},
-                {img: "images/VBET/gamblelogo1.png", height: "56px"}
-            ]
-        ],
-        oldVersionLink: false,
+        defaultAvailablePaths: ['/news', '/promos', '/cas-promos', '/about','/first_deposit_bonus', '/first_deposit_bonus_and_20_free_spins', '/404', '/draw', '/exchange-shop', '/registration','/fantasy'],
         multiLevelMenu: {
             "@replace": true,
             "live": null,
             "sport": null,
+            "poker": null,
+            "chinga-choong": {
+                "title": "ChingaChoong",
+                "link": "#/games/?pageid=-1&game=5589",
+                "cssclass": "",
+                "dynamicClass": "new-top-nav",
+                "broadcast": "games.openGame",
+                "broadcastData": {
+                    id: '5589'
+                },
+                "activeLink": "#/games/?pageid=-1&game=5589",
+                "order": 4
+            },
             "virtual-sports": {
-                "order": 5,
+                order: 5,
                 "subMenu": [
                     {
                         "name": "virtual-sports",
                         "displayName": "BetConstruct",
                         "href": "#/virtualsports"
+                    },
+                    {
+                        "displayName": "Inspired",
+                        "href": "#/insvirtualsports"
                     },
                     {
                         "displayName": "Golden Race",
@@ -437,32 +582,37 @@ VBET5.constant('SkinConfig', {
                 ]
             },
             "games": null,
-            "casino": null,
-            "livedealer": null,
-            "FastGame": null,
-            "virtual-betting": null,
-            "fantasy": null,
-            "exchange": null,
-            "financials": {
-                "subMenu": [
+            "casino": {
+                subMenu: [
                     {
-                        "displayName": "Version 1",
-                        "href": "#/financials"
+                        name: "casino",
+                        displayName: "Home",
+                        href: "#/casino"
                     },
                     {
-                        "displayName": "Version 2",
-                        "href": "#/game/TLCTLC/provider/TLC/exid/14000",
-                        "activeLink": "/game/TLCTLC/provider/TLC/exid/14000"
+                        displayName: "Tournaments",
+                        href: "#/tournaments",
+                        activeLink: '#/tournaments',
+                        excludeParam: true
                     }
                 ]
             },
-            "menuItem2": {
+            "livedealer": null,
+            "vr-casino": {
+                title: "VR Casino",
+                link: "#/vrcasino",
+                activeLink: '/vrcasino/',
+                "dynamicClass": "new-top-nav"
+            },
+            "pools-betting": {
                 "title": "Pools Betting",
                 "link": "#/game/CSB1/provider/CSB/exid/152000",
                 "cssclass": "",
-                "dynamicClass": "new-top-nav",
                 "activeLink": "/game/CSB1/provider/CSB/exid/152000",
                 "order": 20
+            },
+            tournaments: {
+                order: 100
             }
         },
         additionalLink: {
@@ -479,20 +629,84 @@ VBET5.constant('SkinConfig', {
         },
         liveChat: {
             isLiveAgent: true,
-            liveAgentID: 'b0170f5a'
+            liveAgentID: 'b0170f5a',
+            liveAgentAsTooltip: true,
+            disableFromHeader: true,
+            "rus": {
+                isLiveAgent: true,
+                liveAgentID: '93d5959a',
+                liveAgentAsTooltip: true,
+                disableFromHeader: true
+            },
+            "arm": {
+                isLiveAgent: true,
+                liveAgentID: 'd54d0ccf',
+                liveAgentAsTooltip: true,
+                disableFromHeader: true
+            },
+            "por": {
+                isLiveAgent: true,
+                liveAgentID: '1d3eae3a',
+                liveAgentAsTooltip: true,
+                disableFromHeader: true
+            },
+            "pt-br": {
+                isLiveAgent: true,
+                liveAgentID: '1d3eae3a',
+                liveAgentAsTooltip: true,
+                disableFromHeader: true
+            },
+            "tur": {
+                isLiveAgent: true,
+                liveAgentID: '1cfc21f1',
+                liveAgentAsTooltip: true,
+                disableFromHeader: true
+            },
+            "geo": {
+                isLiveAgent: true,
+                liveAgentID: '19db0523',
+                liveAgentAsTooltip: true,
+                disableFromHeader: true
+            },
+            "arb": {
+                isLiveAgent: true,
+                liveAgentID: 'ba535c2c',
+                liveAgentAsTooltip: true,
+                disableFromHeader: true
+            },
+            "fas": {
+                isLiveAgent: true,
+                liveAgentID: 'b3acc539',
+                liveAgentAsTooltip: true,
+                disableFromHeader: true
+            },
+            "ukr": {
+                isLiveAgent: true,
+                liveAgentID: '93d5959a',
+                liveAgentAsTooltip: true,
+                disableFromHeader: true
+            },
+            "ger": {
+                isLiveAgent: true,
+                liveAgentID: '8219a563',
+                liveAgentAsTooltip: true,
+                disableFromHeader: true
+            }
         },
         site_id: "4",
         registration: {
-            restrictedCountriesByIp: ['GB'],
+            restrictedCountriesLoginAndRegistration:true,
+            restrictedCountriesByIp: ['GB', 'GP', 'GF', 'MQ', 'YT', 'RE', 'US'],
             simplified: true, //not ready yet
             enableRegisterByPhoneNumber: false,
             phoneNumberPattern: "^[0-9 ]{6,12}$",
             defaultCurrency: 'USD',
             disableTermsLink: false,
-            type: 'partial', // will replace registration.simplified: WEB-5288
-            hideLabels: false,
             mailIsSentAfterRegistration: 'Please check your email.',
             loginRightAfterRegistration: true,
+            sliderPageAfterRegistration: "deposit",
+            closeSliderAfterRegistration: true,
+           //
             securityQuestion: {
                 enabled: true
             }
@@ -504,11 +718,12 @@ VBET5.constant('SkinConfig', {
          //testSiteId: 23 // for debug purpose set to false by default
          },*/
         personalDetails: {
-            availableCountriesList:['AU', 'AD', 'AE', 'AF', 'AG', 'AL', 'AM', 'AO', 'AR', 'AS', 'AT', 'AW', 'AZ', 'BA', 'BB', 'BD', 'BE', 'BF', 'BG', 'BH', 'BI', 'BJ', 'BM', 'BN', 'BO', 'BR', 'BS', 'BT', 'BW', 'BY', 'BZ', 'CA', 'CD', 'CF', 'CG', 'CH', 'CI', 'CK', 'CL', 'CM', 'CN', 'CO', 'CR', 'CU', 'CV', 'CY', 'DJ', 'DM', 'DO', 'DZ', 'EC', 'EG', 'ER', 'ET', 'FI', 'FJ', 'FO', 'GA', 'GD', 'GE', 'GH', 'GM', 'GN', 'GQ', 'GR', 'GT', 'GU', 'GW', 'GY', 'HK', 'HN', 'HR', 'HT', 'ID', 'IL', 'IN', 'IQ', 'IR', 'IS', 'IT', 'JM', 'JO', 'JP', 'KE', 'KG', 'KH', 'KI', 'KM', 'KN', 'KP', 'KR', 'KW', 'KY', 'KZ', 'LA', 'LB', 'LC', 'LI', 'LK', 'LR', 'LS', 'LT', 'LU', 'LY', 'MA', 'MC', 'MD', 'ME', 'MG', 'MK', 'ML', 'MM', 'MN', 'MR', 'MT', 'MU', 'MV', 'MW', 'MX', 'MY', 'MZ', 'NA', 'NE', 'NG', 'NI', 'NO', 'NP', 'NR', 'NZ', 'OM', 'PA', 'PE', 'PG', 'PH', 'PK', 'PL', 'PR', 'PS', 'PW', 'PY', 'QA', 'RO', 'RS', 'RU', 'RW', 'SA', 'SB', 'SC', 'SD', 'SE', 'SG', 'SI', 'SK', 'SL', 'SM', 'SN', 'SO', 'SR', 'ST', 'SV', 'SY', 'SZ', 'TD', 'TG', 'TH', 'TJ', 'TL', 'TM', 'TN', 'TO', 'TR', 'TT', 'TV', 'TW', 'TZ', 'UA', 'UG', 'UY', 'UZ', 'VC', 'VE', 'VG', 'VI', 'VN', 'VU', 'WS', 'YE', 'ZA', 'ZM', 'ZW'],
-            readOnlyFields: ['user_id', 'email','gender', 'birth_date', 'country_code'],
-            editableFields: [ 'phone_number', 'doc_number','first_name', 'sur_name','city', 'address'],
-            requiredEditableFields: [ 'phone_number', 'doc_number','first_name', 'sur_name','city', 'address'],
+            availableCountriesList:[ 'AD', 'AE', 'AL', 'AM', 'AO', 'AR', 'AS', 'AT', 'AW', 'AZ', 'BA', 'BB', 'BD', 'BF', 'BH', 'BI', 'BJ', 'BM', 'BN', 'BO', 'BR', 'BS', 'BT', 'BW', 'BY', 'BZ', 'CA', 'CD', 'CF', 'CG', 'CH', 'CI', 'CK', 'CL', 'CM', 'CN', 'CO', 'CR', 'CV', 'DJ', 'DM', 'DO', 'DZ', 'EC', 'EG', 'ER', 'ET', 'FI', 'FJ', 'FO', 'GA', 'GD', 'GE', 'GH', 'GM', 'GN', 'GQ', 'GR', 'GT', 'GU', 'GW', 'GY', 'HN', 'HR', 'HT', 'ID', 'IN', 'IS', 'JM', 'JO', 'KE', 'KG', 'KH', 'KI', 'KM', 'KN', 'KP', 'KR', 'KW', 'KZ', 'LA', 'LB', 'LC', 'LI', 'LK', 'LR', 'LS', 'LT', 'LU', 'MA', 'MC', 'MD', 'ME', 'MG', 'MK', 'ML', 'MN', 'MR', 'MT', 'MU', 'MV', 'MW', 'MX', 'MY', 'MZ', 'NA', 'NE', 'NG', 'NI', 'NO', 'NP', 'NR', 'NZ', 'OM', 'PA', 'PE', 'PG', 'PK', 'PR', 'PS', 'PW', 'PY', 'QA', 'RO', 'RW',  'SB', 'SC', 'SE', 'SI', 'SK', 'SL', 'SM', 'SN', 'SO', 'SR', 'ST', 'SV', 'SZ', 'TD', 'TG', 'TH', 'TJ', 'TL', 'TM', 'TN', 'TO', 'TT', 'TV', 'TW', 'TZ', 'UA', 'UY', 'UZ', 'VC', 'VE', 'VG', 'VI', 'VN', 'VU', 'WS', 'ZA', 'ZM', 'ZW'],
+            readOnlyFields: ['user_id', 'email', 'country_code'],
+            editableFields: [ 'phone_number', 'doc_number','first_name', 'sur_name','city', 'address', 'subscribed_to_news', 'subscribe_to_email', 'subscribe_to_sms', 'gender', 'birth_date'],
+            requiredEditableFields: [ 'phone_number', 'doc_number','first_name', 'sur_name','city', 'address', 'gender', 'birth_date'],
             patterns:  {
+                email: "^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+([\.])[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$",
                 docNumber: "^[A-Za-z\\u0400-\\u04FF0-9]*[0-9]+[A-Za-z\\u0400-\\u04FF0-9]*$"
             },
             limits: {
@@ -516,15 +731,14 @@ VBET5.constant('SkinConfig', {
                     minlength: 5,
                     maxlength: 100
                 }
+            },
+            requiredFieldsForPayments: ['birth_date', 'doc_number', 'gender'],
+            requiredFieldsFor: {
+                deposit: false,
+                withdraw: true
             }
         },
         availableCurrencies: ['USD', 'EUR', 'RUB', 'UAH', 'CNY','KZT','PLN','SEK','MXN','GEL','TRY'],
-        facebookUrl: "https://www.facebook.com/vbetcom",
-        googlePlusUrl: "https://plus.google.com/u/1/+Vbetlivebetting/",
-        youtubeUrl: "https://www.youtube.com/user/VIVARObetting",
-        vkontakteUrl: "https://vk.com/vbet_official",
-        instagramUserName: "vbet_official",
-        twitterAccount: 'Vbet_com',
         twitterHashTag: 'vbet',
         favoriteTeam: {
             enabled: false,
@@ -576,64 +790,6 @@ VBET5.constant('SkinConfig', {
     regConfig: {
         step1: [
             {
-                "title": "Name",
-                "name": "first_name",
-                "type": "text",
-                "required": true,
-                "placeholder": "First",
-                "classes": "",
-                "customAttrs": [{"ng-pattern": "/^[^0-9\\[\\]\\\\`~!@#$%^&*()_+={};:<>|./?,\"'-\\s]+$/"}, {"capitaliseinput": ""},{"required": "required"} ],
-                "validation": [{"name": "required", "message": "This field is required"}, {"name": "pattern", "message": "Please enter a valid  name: only letters - no space, no digits and/or symbols"}]
-            },
-            {
-                "title": "Last",
-                "name": "last_name",
-                "placeholder": "Last",
-                "type": "text",
-                "required": true,
-                "classes": "",
-                "customAttrs": [{"ng-pattern": "/^[^0-9\\[\\]\\\\`~!@#$%^&*()_+={};:<>|./?,\"'-\\s]+$/"}, {"capitaliseinput": ""},{"required": "required"} ],
-                "validation": [{"name": "required", "message": "This field is required"}, {"name": "pattern", "message": "Please enter a valid  last name: only letters - no space, no digits and/or symbols"}]
-            },
-            {
-                "title": "Birth date",
-                "name": "birth_day",
-                "type": "select",
-                "required": true,
-                "classes": "",
-                "customAttrs": [{"required": "required"}, {"ng-options": "d for d in days"}, {"day-selector": ""}, {"month-model": "registrationData.birth_month"}, {"year-model": "registrationData.birth_year"}, {"options": "days"}, {"ng-change": "calculateAge()"}],
-                "validation": [{"name": "required", "message": "This field is required"}]
-            }, {
-                "title": "",
-                "name": "birth_month",
-                "type": "select",
-                "required": true,
-                "classes": "",
-                "customAttrs": [{"required": "required"}, {"ng-change": "calculateAge()"}],
-                "optionsData": "<option ng-repeat=\"month in monthNames\" value=\"{{month.val}}\">{{month.name| translate}}</option>",
-                "validation": [{"name": "required", "message": "This field is required"}]
-            }, {
-                "title": "",
-                "name": "birth_year",
-                "type": "select",
-                "required": true,
-                "classes": "",
-                "customAttrs": [{"required": "required"}, {"ng-options": "y for y in registrationData.years track by y"}, {"ng-change": "calculateAge()"}],
-                "onChange": ["calculateAge"],
-                "validation": [{"name": "required", "message": "This field is required"}],
-                "customValidation": "<div  ng-class=\"{error: userAge < 18}\"> <div class=\"tooltip-j\"> <p trans ng-show=\"userAge < 18 \">Registration on this site is not permitted for people under 18.</p></div>"
-            },
-            {
-                "title": "Country",
-                "name": "country_id",
-                "type": "select",
-                "required": true,
-                "classes": "",
-                "customAttrs": [{"ng-options":"item as item.name for item in countryCodes track by item.key"}, {"ng-init": "preFillRegionalData()"}, {"ng-change": "checkIfCountryIsRestricted();"}, {"required": "required"}],
-                "validation": [{"name": "required", "message": "This field is required"}],
-                "customValidation": "<div  ng-class=\"{error: countryIsRestricted}\"> <div class=\"tooltip-j\"> <p trans ng-show=\"countryIsRestricted\">Registration on this site is not permitted in selected country.</p><p ng-show=\"altUrl4RestrictedCountry\"><span trans>You can register here:</span> <a href=\"{{altUrl4RestrictedCountry}}\">{{altUrl4RestrictedCountry}}</a></p></div>"
-            },
-            {
                 "title": "Email Address",
                 "name": "email",
                 "type": "email",
@@ -648,87 +804,112 @@ VBET5.constant('SkinConfig', {
                 ]
             },
             {
-                "title": "Gender",
-                "name": "gender",
-                "type": "select",
-                "required": true,
-                "classes": "",
-                "customAttrs": [{"ng-pattern": "/^[M,F]$/"}, {"ng-change": "calculateAge()"}],
-                "optionsData": "<option ng-repeat=\"gender in genders\" value=\"{{gender.val}}\">{{gender.name| translate}}</option>",
-                "validation": []
-            }, {
                 "title": "Password",
                 "name": "password",
-                "placeholder": "Password should contain at least 8 characters",
+                "placeholder": "Password should contain at least 6 characters",
                 "type": "password",
                 "required": true,
                 "classes": "",
-                "customAttrs": [{"ng-minlength": "8"}, {"type": "password"}, {"required": "required"}, {"ng-pattern": "/^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)[a-zA-Z\\d\\[\\]\\\\`~!@#$%^&*()_+={};:<>|./?,\"'-]+$/"}, {"ng-keypress": "passwordKeyPress($event, 'password')"}],
+                "enableShowPassword": true,
+                "customAttrs": [{"type": "{{regItem.inputType}}"},{"ng-minlength": "6"},  {"required": "required"}, {"ng-maxlength": "14"}, {"ng-keypress": "passwordKeyPress($event, 'password')"}],
                 "validation": [{"name": "required", "message": "This field is required"}, {
                     "name": "minlength",
-                    "message": "Password should contain at least 8 characters"
+                    "message": "Password should contain at least 6 characters"
                 }, {"name": "sameAsLogin", "message": "Password cannot be same as login"}, {
                     "name": "tooShort",
-                    "message": "Password is too short"
+                    "message": "Minimum length – 8 characters, without spaces."
                 }, {
                     "name": "pattern",
-                    "message": "Password should contain upper and lower-case English letters, at least one digit and no spaces."
+                    "message": "Allowed characters are A-Z, a-z, 0-9 and these special characters ! @ # $ % ? ^ & * ( ) - = _ + \ / | ; : , . < > [ ] { } ` ' ~"
+                }, {
+                    "name": "maxlength",
+                    "message": "Password is too long"
                 }]
-            },
-
-            {
-                "title": "Confirm Password",
-                "name": "password2",
-                "type": "password",
-                "placeholder": "Confirm Password",
-                "required": true,
-                "classes": "",
-                "customAttrs": [{"match": "registrationData.password"}, {"required": "required"}, {"ng-disabled": "registerform.password.$invalid"}, {"ng-keypress": "passwordKeyPress($event, 'password2')"}],
-                "validation": [{"name": "required", "message": "This field is required"}, {
-                    "name": "match",
-                    "message": "Passwords don't match"
-                }]
-            },{
-                "title": "Address",
-                "name": "address",
-                "type": "text",
-                "placeholder": "Enter here",
-                "required": true,
-                "classes": "",
-                "customAttrs": [{"required": "required"}],
-                "validation": [{"name": "required", "message": "This field is required"}]
-            },
-            {
-                "title": "Currency",
-                "hoverBlock":"Attention: Once you choose your currency, you will not be able to change it later in your profile.",
-                "name": "currency_name",
-                "type": "select",
-                "required": true,
-                "classes": "",
-                "customAttrs": [{"ng-options": "c for c in  conf.availableCurrencies track by c"}, {"ng-value": "c"}, {"ng-disabled": "currencyDisabled"}],
-                "validation": []
-            },
-            {
-                "title": "Promo code",
-                "name": "promo_code",
-                "type": "text",
-                "required": false,
-                "placeholder": "Enter here",
-                "classes": "",
-                "customAttrs": [{"ng-disabled": "hasPromoCode"}],
-                "validation": []
-            },
-            {
-                "title": "Please enter the text shown on image",
-                "name": "captcha_text",
-                "type": "captcha",
-                "placeholder": "",
-                "required": true,
-                "classes": "",
-                "customAttrs": [{"required": "required"}],
-                "validation": [{"name": "required", "message": "This field is required"}, {"name": "notmatching", "message": "Text you've entered doesn't match text on image."}]
             }
-        ]
+        ],
+        step2: {
+            "leftCol":[
+                {
+                    "title": "First Name",
+                    "name": "first_name",
+                    "type": "text",
+                    "required": true,
+                    "placeholder": "Enter here",
+                    "classes": "",
+                    "customAttrs": [{"ng-pattern": "/^[^0-9\\[\\]\\\\`~!@#$%^&*()_+={};:<>|./?,\"'-\\s]+$/"}, {"capitaliseinput": ""},{"required": "required"} ],
+                    "validation": [{"name": "required", "message": "This field is required"}, {"name": "pattern", "message": "Please enter a valid  name: only letters - no space, no digits and/or symbols"}]
+                },
+                {
+                    "title": "Last Name",
+                    "name": "last_name",
+                    "placeholder": "Enter here",
+                    "type": "text",
+                    "required": true,
+                    "classes": "",
+                    "customAttrs": [{"ng-pattern": "/^[^0-9\\[\\]\\\\`~!@#$%^&*()_+={};:<>|./?,\"'-\\s]+$/"}, {"capitaliseinput": ""},{"required": "required"} ],
+                    "validation": [{"name": "required", "message": "This field is required"}, {"name": "pattern", "message": "Please enter a valid  last name: only letters - no space, no digits and/or symbols"}]
+                },
+                {
+                    "title": "Country",
+                    "name": "country_id",
+                    "type": "select",
+                    "required": true,
+                    "classes": "",
+                    "customAttrs": [{"ng-options":"item as item.name for item in countryCodes track by item.key"}, {"ng-init": "preFillRegionalData()"}, {"ng-change": "checkIfCountryIsRestricted();"}, {"required": "required"}],
+                    "validation": [{"name": "required", "message": "This field is required"}],
+                    "customValidation": "<div  ng-class=\"{error: countryIsRestricted}\"> <div class=\"tooltip-j\"> <p trans ng-show=\"countryIsRestricted\">Registration on this site is not permitted in selected country.</p><p ng-show=\"altUrl4RestrictedCountry\"><span trans>You can register here:</span> <a href=\"{{altUrl4RestrictedCountry}}\">{{altUrl4RestrictedCountry}}</a></p></div>"
+                },
+                {
+                    "title": "Currency",
+                    "hoverBlock":"Attention: Once you choose your currency, you will not be able to change it later in your profile.",
+                    "name": "currency_name",
+                    "type": "select",
+                    "required": true,
+                    "classes": "",
+                    "customAttrs": [{"ng-options": "c for c in  conf.availableCurrencies track by c"}, {"ng-value": "c"}, {"ng-disabled": "currencyDisabled"}],
+                    "validation": []
+                },
+                {
+                    "title": "Mobile",
+                    "name": "phone_code",
+                    "type": "text",
+                    "required": true,
+                    "classes": "",
+                    "customAttrs": [{"country-code-validate": ""}, {"deValidate": ""}, {"ng-maxlength": "5"}, {"required": "required"}, {"prevent-input": "[^0-9]+"}],
+                    "validation": [{"name": "countryCode", "message": "Country code is not correct"}, {
+                        "name": "required",
+                        "message": "Country code is not correct"
+                    }]
+                },
+                {
+                    "title": "",
+                    "name": "phone_number",
+                    "type": "text",
+                    "required": true,
+                    "placeholder": "Enter number",
+                    "hasCustomHtml": true,
+                    "classes": "",
+                    "customAttrs": [{"ng-pattern": "/^[0-9 ]+$/"}, {"required": "required"}, {"prevent-input": "[^0-9]+"}, {"ng-maxlength": "15"}],
+                    "validation": [{"name": "maxlength", "message": 'Too long'},{"name": "invalid", "message": "Invalid phone number"}, {
+                        "name": "duplicate",
+                        "message": "Duplicate phone number"
+                    }, {"name": "failedsms", "message": "Failed to send sms"}, {
+                        "name": "required",
+                        "message": "This field is required"
+                    }, {"name": "pattern", "message": "Please, enter valid phone number: only digits are allowed - no spaces, letters and/or symbols"}]
+                },
+                {
+                    "title": "",
+                    "name": "g_recaptcha_response",
+                    "type": "recaptcha",
+                    "placeholder": "",
+                    "required": true,
+                    "classes": "",
+                    "validation": [{"name": "required", "message": "This field is required"}, {"name": "notmatching", "message": "This field is required"}]
+                }
+            ],
+            rightCol: []
+        }
     },
     'env': {
         live: true,
@@ -738,15 +919,39 @@ VBET5.constant('SkinConfig', {
         showSportsbookToolTip: true
     },
     'betting': {
-        enableExpressBonus: true,
+        enableExpressBonus: false,
         expressBonusVisibilityQty: 2,
-        expressBonusType: 20, //1: regular bonus 2,3,4,5..% ; 2: 2-5,10,15,20,25,30,30..30 %;: regular bonus 2,3,4,5..% ; 2: 2-5,10,15,20,25,30,30..30 %;
+        expressBonusMap: {
+            '0': 0,
+            '1': 0,
+            '2': 0,
+            '3': 3,
+            '4': 4,
+            '5': 5,
+            '6': 5,
+            '7': 7,
+            '8': 7,
+            '9': 7,
+            '10': 15,
+            '11': 20,
+            '12': 20,
+            '13': 20,
+            '14': 20,
+            '15': 20,
+            '16': 35,
+            '17': 35,
+            '18': 35,
+            '19': 35,
+            '20': 35,
+            default: 50
+        }, //1: regular bonus 2,3,4,5..% ; 2: 2-5,10,15,20,25,30,30..30 %;: regular bonus 2,3,4,5..% ; 2: 2-5,10,15,20,25,30,30..30 %;
         enableEachWayBetting: true,
         enableHorseRacingBetSlip: true, // SP, new bet types, etc.
         enableSuperBet: true,
         expressBonusMinOdd: 1.3,
         defaultPriceChangeSetting: 1,
         allowManualSuperBet: true,
+        clearOnLogout: false,
         quickBet: {
             enableQuickBetStakes: true,
             quickBetStakeCoeffs: {'USD': 5, 'AMD': 50, 'EUR': 3},
@@ -757,37 +962,26 @@ VBET5.constant('SkinConfig', {
         disableClearAllInBetProgress: true,
         disableMaxButtonInBetProgress: true,
         showSuperBetNotificationsViaPopup: true,
-        enableRetainSelectionAfterPlacment: true
+        totalOddsMax : 10000,
+        enableRetainSelectionAfterPlacment: true,
+        enableFullCoverBetTypes: false
+    },
+    "everCookie": {
+        "enabled": true
     },
     'swarm': {
-        url: [{ url: "https://swarm-spring-cloud.betconstruct.com"}],
-        websocket: [{ url: "wss://swarm-spring-cloud.betconstruct.com"}]
-        /* url: [{ url: "http://192.168.250.189:8095"}],
-         websocket: [{ url: "ws://192.168.250.189:8095"}]*/
+        url: [{ url: "https://eu-swarm-lp.betconstruct.com/"}],
+        websocket: [{ url: "wss://eu-swarm-ws.betconstruct.com/"}]
+        //url: [{ url: "http://10.25.57.76:8091"}],
+        //websocket: [{ url: "ws://10.25.57.76:8091"}]
     },
     poker: {
         rakeRaceEnabled: true,
         tournamentListEnabled: true,
-        hideDownloadLinkSectionInPokerPage: true,
-        instantPlayAvailable: false,
-        instantPlayLink: '',
-        instantPlayTarget: '',
-        downloadLink: {
-            '@replace': true,
-            windows: 'https://casino.vbet.com/nardi/VbetSkillGames-2.2.2-Setup.exe',
-            windowsXp: 'https://casino.vbet.com/nardi/VbetSkillGames-2.2.2-XP-Setup.exe',
-            mac: 'http://vbet-poker.betconstruct.com/downloadFile.php?do=mac',
-            android: 'javascript:alert("Coming soon")'
-        }
+        hideDownloadLinkSectionInPokerPage: true
     },
     chinesePoker: {
-        hideDownloadLinkSection: false,
-        instantPlayAvailable: false,
-        downloadLink: {
-            '@replace': true,
-            windows: 'http://casino.vbet.com/nardi/VGames-1.1.11-Setup.exe',
-            mac: 'http://casino.vbet.com/nardi/VGames-1.1.3.dmg'
-        }
+        hideDownloadLinkSection: false
     },
     belote: {
         instantPlayTarget: '',
@@ -796,11 +990,12 @@ VBET5.constant('SkinConfig', {
         //redirectOnInstantPlay: true,
         //instantPlayLink: "http://www.vbet.com/#/games/?game=599&type=real"
     },
+    vrcasino:{
+        redirectOnGame: false,
+        showDownloadSection: true,
+        showPromotionsInVRCasino: false
+    },
     backgammon: {
-        instantPlayTarget: '',
-        downloadLink: {
-            windows: 'http://casino.vbet.com/nardi/VGammon-1.1.27-Setup.exe'
-        }
     },
     'payments': [
         {
@@ -834,6 +1029,7 @@ VBET5.constant('SkinConfig', {
             displayName: 'Skrill',
             canDeposit: true,
             canWithdraw: true,
+            countryRestrict: ['DE', 'PL'],
             order: 1,
             // translate##deposit_info_skrill##   <--- these are special comments that tell translation
             // generation script that key inside hashes has to be included in translation table
@@ -892,11 +1088,12 @@ VBET5.constant('SkinConfig', {
             displayName: 'Neteller',
             canDeposit: true,
             canWithdraw: true,
+            countryRestrict: ['DE', 'PL'],
             order: 5,
             depositInfoTextKey: 'deposit_info_neteller', // translate##deposit_info_neteller##
             withdrawInfoTextKey: 'withdraw_info_neteller', // translate##withdraw_info_neteller##
             depositFormFields: [
-                {name: 'email', type: 'text', label: 'Email/Account Id '}, // translate##Account Id##
+                {name: 'email', type: 'text', label: 'Email/Account Id'}, // translate##Account Id##
                 {name: 'secure_id', type: 'text', label: 'Secure Id/Authentication code'}   // translate##Secure Id##
             ],
             withdrawFormFields: [
@@ -942,26 +1139,17 @@ VBET5.constant('SkinConfig', {
             ]
         },
         {
-            name: 'centili',
-            info: {
-                "RUB" : { depositFee: 0, withdrawFee: 0, depositProcessTime: 0, withdrawProcessTime: 12,  minDeposit: 0.1, maxDeposit: null, minWithdraw: 1, maxWithdraw: null}
-            },
-            displayName: 'Beeline',
-            canDeposit: true,
-            canWithdraw: false,
-            order: 8,
-            depositInfoTextKey: 'deposit_info_centili' // translate##deposit_info_cash##
-        },
-        {
             name: 'wirecard',
             displayName: "WireCard",
             canDeposit: true,
+            countryRestrict: ['TR', 'NO', 'US'],
+
             canWithdraw: false,
             order: 9,
             depositInfoTextKey: 'deposit_info_wirecard',
             info: {
                 "USD" : { depositFee: 0, withdrawFee: 0, depositProcessTime: 0, withdrawProcessTime: 12,  minDeposit: 5, maxDeposit: null, minWithdraw: 1, maxWithdraw: null},
-                "EUR" : { depositFee: 0, withdrawFee: 0, depositProcessTime: 0, withdrawProcessTime: 12,  minDeposit: 5, maxDeposit: null, minWithdraw: 1, maxWithdraw: null},
+                "EUR" : { depositFee: 0, withdrawFee: 0, depositProcessTime: 0, withdrawProcessTime: 12,  minDeposit: 10, maxDeposit: 5000, minWithdraw: 10, maxWithdraw: 10000},
                 "RUB" : { depositFee: 0, withdrawFee: 0, depositProcessTime: 0, withdrawProcessTime: 12,  minDeposit: 100, maxDeposit: null, minWithdraw: 1, maxWithdraw: null},
                 "UAH" : { depositFee: 0, withdrawFee: 0, depositProcessTime: 0, withdrawProcessTime: 12,  minDeposit: 100, maxDeposit: null, minWithdraw: 1, maxWithdraw: null},
                 "PLN" : { depositFee: 0, withdrawFee: 0, depositProcessTime: 0, withdrawProcessTime: 12,  minDeposit: 1, maxDeposit: null, minWithdraw: 1, maxWithdraw: null}
@@ -969,13 +1157,14 @@ VBET5.constant('SkinConfig', {
         },
         {
             name: 'wirecardnew',
+            countryRestrict: ['TR', 'NO', 'US'],
             displayName: "WireCard",
             canDeposit: false,
             canWithdraw: true,
             order: 1,
             info: {
                 "USD" : { depositFee: 0, withdrawFee: 0, depositProcessTime: 0, withdrawProcessTime: 12,  minDeposit: 5, maxDeposit: null, minWithdraw: 10, maxWithdraw: 10000},
-                "EUR" : { depositFee: 0, withdrawFee: 0, depositProcessTime: 0, withdrawProcessTime: 12,  minDeposit: 5, maxDeposit: null, minWithdraw: 10, maxWithdraw: 10000},
+                "EUR" : { depositFee: 0, withdrawFee: 0, depositProcessTime: 0, withdrawProcessTime: 12,  minDeposit: 10, maxDeposit: 5000, minWithdraw: 10, maxWithdraw: 10000},
                 "RUB" : { depositFee: 0, withdrawFee: 0, depositProcessTime: 0, withdrawProcessTime: 12,  minDeposit: 100, maxDeposit: null, minWithdraw: 50, maxWithdraw: 15000},
                 "UAH" : { depositFee: 0, withdrawFee: 0, depositProcessTime: 0, withdrawProcessTime: 12,  minDeposit: 100, maxDeposit: null, minWithdraw: 50, maxWithdraw: 10000},
                 "PLN" : { depositFee: 0, withdrawFee: 0, depositProcessTime: 0, withdrawProcessTime: 12,  minDeposit: 1, maxDeposit: null, minWithdraw: 1, maxWithdraw: 10000}
@@ -1010,6 +1199,21 @@ VBET5.constant('SkinConfig', {
         {
             name: 'yandexinvois',
             displayName: "Yandex Invoice",
+            canDeposit: true,
+            canWithdraw: false,
+            order: 11,
+            depositInfoTextKey: 'deposit_info_yandex',
+            withdrawInfoTextKey: 'withdraw_info_yandex',
+            onlyInfoTextOnWithdraw: true, // this means that we won't show any form or button on deposit  page, including amount selection, only text
+            info: {
+                "USD" : { depositFee: 0, withdrawFee: 0, depositProcessTime: 0, withdrawProcessTime: 12,  minDeposit: 5, maxDeposit: 5000, minWithdraw: null, maxWithdraw: null},
+                "EUR" : { depositFee: 0, withdrawFee: 0, depositProcessTime: 0, withdrawProcessTime: 12,  minDeposit: 5, maxDeposit: 5000, minWithdraw: null, maxWithdraw: null},
+                "RUB" : { depositFee: 0, withdrawFee: 0, depositProcessTime: 0, withdrawProcessTime: 12,  minDeposit: 10, maxDeposit: 50000, minWithdraw: null, maxWithdraw: null},
+                "UAH" : { depositFee: 0, withdrawFee: 0, depositProcessTime: 0, withdrawProcessTime: 12,  minDeposit: 10, maxDeposit: 50000, minWithdraw: null, maxWithdraw: null}
+            }
+        },{
+            name: 'yandexsberbank',
+            displayName: "Yandex Sberbank",
             canDeposit: true,
             canWithdraw: false,
             order: 11,
@@ -1129,6 +1333,35 @@ VBET5.constant('SkinConfig', {
             withdrawFormFields: [
                 {name: 'x_name', type: 'text', label: 'Full Name'},
                 {name: 'email', type: 'text', label: 'Email'},
+                {name: 'x_document', type: 'text', label: 'Document Number'}
+            ]
+        },
+        {
+            name: 'astropaymobile',
+            canDeposit: false,
+            canWithdraw: true,
+            displayName: "AstroPayCardMobile",
+            order: 13,
+            info: {
+                "USD" : { depositFee: 0, withdrawFee: 0, depositProcessTime: 0, withdrawProcessTime: 12,  minDeposit: 1, maxDeposit: null, minWithdraw: 1, maxWithdraw: null},
+                "EUR" : { depositFee: 0, withdrawFee: 0, depositProcessTime: 0, withdrawProcessTime: 12,  minDeposit: 0.1, maxDeposit: null, minWithdraw: 1, maxWithdraw: null},
+                "RUB" : { depositFee: 0, withdrawFee: 0, depositProcessTime: 0, withdrawProcessTime: 12,  minDeposit: 0.1, maxDeposit: null, minWithdraw: 1, maxWithdraw: null},
+                "UAH" : { depositFee: 0, withdrawFee: 0, depositProcessTime: 0, withdrawProcessTime: 12,  minDeposit: 0.1, maxDeposit: null, minWithdraw: 1, maxWithdraw: null}
+            },
+            depositFormFields: [
+                {name: 'x_card_num', type: 'text', maxlength: 16, label: 'Card Number'},  // translate##Card Number##
+                {name: 'x_card_code', type: 'text', maxlength: 4, label: 'Card code'},  // translate##Card code##
+                {name: 'x_exp_date_mm', type: 'text', maxlength: 2, label: 'Expiry date (mm)'},  // translate##Expiry date (mm)##
+                {name: 'x_exp_date_yy', type: 'text', maxlength: 4, label: 'Expiry date (yyyy)'}  // translate##Expiry date (yyyy)##
+            ],
+            depositInfoText: {
+            },
+            withdrawInfoText: {
+            },
+            //withdrawInfoTextKey: 'withdraw_info_astropay', // translate##withdraw_info_astropay##
+            withdrawFormFields: [
+                {name: 'x_name', type: 'text', label: 'Full Name'},
+                {name: 'mobile_number', type: 'text', label: 'Mobile Number'},
                 {name: 'x_document', type: 'text', label: 'Document Number'}
             ]
         },
@@ -1496,6 +1729,8 @@ VBET5.constant('SkinConfig', {
         },
         {
             name: 'apcopay',
+            countryAllow: ['NL'],
+
             canDeposit: true,
             canWithdraw: false,
             displayName: "IDEAL",
@@ -1512,6 +1747,8 @@ VBET5.constant('SkinConfig', {
         {
             name: 'apcopay2',
             canDeposit: true,
+            countryAllow: ['DE'],
+
             canWithdraw: false,
             displayName: "GiroPay",
             depositInfoText: {
@@ -1526,6 +1763,8 @@ VBET5.constant('SkinConfig', {
         },
         {
             name: 'apcopay3',
+            countryAllow: ['CZ'],
+
             canDeposit: true,
             canWithdraw: false,
             displayName: "Trust Pay",
@@ -1543,7 +1782,13 @@ VBET5.constant('SkinConfig', {
             name: 'interkassa',
             canDeposit: true,
             canWithdraw: false,
-            order: 40,
+            order: 7,
+            info: {
+                "USD" : { depositFee: 0, withdrawFee: 0, depositProcessTime: 0, withdrawProcessTime: 1,  minDeposit: 1, maxDeposit: null, minWithdraw: 1, maxWithdraw: null},
+                "RUB" : { depositFee: 0, withdrawFee: 0, depositProcessTime: 0, withdrawProcessTime: 1,  minDeposit: 1, maxDeposit: null, minWithdraw: 1, maxWithdraw: null},
+                "UAH" : { depositFee: 0, withdrawFee: 0, depositProcessTime: 0, withdrawProcessTime: 1,  minDeposit: 1, maxDeposit: 10000, minWithdraw: 1, maxWithdraw: 10000},
+            },
+
             displayName: "Interkassa",
             depositFormFields: [
             ]
@@ -1554,6 +1799,12 @@ VBET5.constant('SkinConfig', {
             canDeposit: true,
             canWithdraw: true,
             order: 41,
+            info: {
+                "USD" : { depositFee: 0, withdrawFee: 0, depositProcessTime: 0, withdrawProcessTime: 1,  minDeposit: 1, maxDeposit: null, minWithdraw: 1, maxWithdraw: null},
+                "RUB" : { depositFee: 0, withdrawFee: 0, depositProcessTime: 0, withdrawProcessTime: 1,  minDeposit: 1, maxDeposit: null, minWithdraw: 1, maxWithdraw: null},
+                "UAH" : { depositFee: 0, withdrawFee: 0, depositProcessTime: 0, withdrawProcessTime: 1,  minDeposit: 1, maxDeposit: 10000, minWithdraw: 1, maxWithdraw: 10000},
+            },
+
             depositInfoText: {
             },
             withdrawInfoText: {
@@ -1574,6 +1825,12 @@ VBET5.constant('SkinConfig', {
             canDeposit: true,
             canWithdraw: true,
             order: 42,
+            info: {
+                "USD" : { depositFee: 0, withdrawFee: 0, depositProcessTime: 0, withdrawProcessTime: 1,  minDeposit: 1, maxDeposit: null, minWithdraw: 1, maxWithdraw: null},
+                "RUB" : { depositFee: 0, withdrawFee: 0, depositProcessTime: 0, withdrawProcessTime: 1,  minDeposit: 1, maxDeposit: null, minWithdraw: 1, maxWithdraw: null},
+                "UAH" : { depositFee: 0, withdrawFee: 0, depositProcessTime: 0, withdrawProcessTime: 1,  minDeposit: 1, maxDeposit: 10000, minWithdraw: 1, maxWithdraw: 10000},
+            },
+
             depositInfoText: {
             },
             withdrawInfoText: {
@@ -1594,6 +1851,12 @@ VBET5.constant('SkinConfig', {
             canDeposit: true,
             canWithdraw: true,
             order: 43,
+            info: {
+                "USD" : { depositFee: 0, withdrawFee: 0, depositProcessTime: 0, withdrawProcessTime: 1,  minDeposit: 1, maxDeposit: null, minWithdraw: 1, maxWithdraw: null},
+                "RUB" : { depositFee: 0, withdrawFee: 0, depositProcessTime: 0, withdrawProcessTime: 1,  minDeposit: 1, maxDeposit: null, minWithdraw: 1, maxWithdraw: null},
+                "UAH" : { depositFee: 0, withdrawFee: 0, depositProcessTime: 0, withdrawProcessTime: 1,  minDeposit: 1, maxDeposit: 10000, minWithdraw: 1, maxWithdraw: 10000},
+            },
+
             depositInfoText: {
             },
             withdrawInfoText: {
@@ -1611,6 +1874,12 @@ VBET5.constant('SkinConfig', {
             canDeposit: true,
             canWithdraw: true,
             order: 44,
+            info: {
+                "USD" : { depositFee: 0, withdrawFee: 0, depositProcessTime: 0, withdrawProcessTime: 1,  minDeposit: 1, maxDeposit: null, minWithdraw: 1, maxWithdraw: null},
+                "RUB" : { depositFee: 0, withdrawFee: 0, depositProcessTime: 0, withdrawProcessTime: 1,  minDeposit: 1, maxDeposit: null, minWithdraw: 1, maxWithdraw: null},
+                "UAH" : { depositFee: 0, withdrawFee: 0, depositProcessTime: 0, withdrawProcessTime: 1,  minDeposit: 1, maxDeposit: 10000, minWithdraw: 1, maxWithdraw: 10000},
+            },
+
             depositInfoText: {
             },
             withdrawInfoText: {
@@ -1619,7 +1888,275 @@ VBET5.constant('SkinConfig', {
             withdrawFormFields: [
                 {name: 'purse', type: 'text', label: 'Purse', restrict: '[\\s]'}
             ]
+        },
+        {
+            name: 'interkassa_qiwi',
+            displayName: 'Qiwi',
+            canDeposit: true,
+            canWithdraw: true,
+            order: 5,
+            info: {
+                "USD" : { depositFee: 0, withdrawFee: 0, depositProcessTime: 0, withdrawProcessTime: 1,  minDeposit: 1, maxDeposit: null, minWithdraw: 1, maxWithdraw: null},
+                "RUB" : { depositFee: 0, withdrawFee: 0, depositProcessTime: 0, withdrawProcessTime: 1,  minDeposit: 1, maxDeposit: null, minWithdraw: 1, maxWithdraw: null},
+                "UAH" : { depositFee: 0, withdrawFee: 0, depositProcessTime: 0, withdrawProcessTime: 1,  minDeposit: 1, maxDeposit: 10000, minWithdraw: 1, maxWithdraw: 10000},
+            },
+
+            depositInfoText: {
+            },
+            withdrawInfoText: {
+            },
+            depositFormFields: [],
+            withdrawFormFields: [
+                {name: 'phone', type: 'text', label: 'Phone'}
+            ]
+        },
+        {
+            name: 'entercash',
+            countryAllow: ['GR', 'FI', 'NL', 'AT', 'SE', 'NO'],
+            canDeposit: true,
+            canWithdraw: true,
+            order: 33,
+            info: {
+                "EUR" : { depositFee: 0, withdrawFee: 0, depositProcessTime: 0, withdrawProcessTime: 12,  minDeposit: 10, maxDeposit: 5000, minWithdraw: 1, maxWithdraw: null},
+                "SEK" : { depositFee: 0, withdrawFee: 0, depositProcessTime: 0, withdrawProcessTime: 12,  minDeposit: 100, maxDeposit: 50000, minWithdraw: 10, maxWithdraw: 10000},
+            },
+
+            depositFormFields: [],
+            withdrawFormFields: [
+                {name: 'accountNumber', type: 'text', label: 'Account number', required: true},
+                {name: 'clearingNumber', type: 'text', label: 'Clearing number', required: true},
+                {name: 'zip', type: 'text', label: 'Zip code'},
+            ],
+            depositInfoText: {},
+            withdrawInfoText: {}
+        },
+        {
+            name: 'hipay',
+            canDeposit: true,
+            canWithdraw: false,
+            displayName: "Hipay",
+            countryAllow: ['NO', 'CA'],
+            order: 34,
+            info: {
+                "EUR" : { depositFee: 0, withdrawFee: 0, depositProcessTime: 0, withdrawProcessTime: 12,  minDeposit: 1, maxDeposit: 10000, minWithdraw: null, maxWithdraw: null}
+            },
+            depositFormFields: [
+            ],
+            depositInfoText: {
+            }
+        },
+        {
+            name: 'paykasa',
+            canDeposit: true,
+            displayName: "Paykasa",
+            info: {
+                "TRY" : { depositFee: 0, withdrawFee: 0, depositProcessTime: 0, withdrawProcessTime: 12,  minDeposit: 1, maxDeposit: 10000, minWithdraw: null, maxWithdraw: null},
+            },
+            canWithdraw: false,
+            order: 15,
+            depositPrefilledAmount: 1,
+            depositFormFields: [
+                {name: 'voucher', type: 'text', label: 'Voucher'}
+            ],
+            depositInfoText: ''
+        },
+        {
+            name: 'gpaysafe',
+            canDeposit: true,
+            canWithdraw: true,
+            order: 25,
+            info: {
+                "EUR" : { depositFee: 0, withdrawFee: 0, depositProcessTime: 0, withdrawProcessTime: 12,  minDeposit: 1, maxDeposit: null, minWithdraw: 1, maxWithdraw: null},
+                "TRY" : { depositFee: 0, withdrawFee: 0, depositProcessTime: 0, withdrawProcessTime: 12,  minDeposit: 1, maxDeposit: null, minWithdraw: 1, maxWithdraw: null},
+            },
+
+            depositInfoText: {
+            },
+            withdrawFormFields: [
+                {name: 'bankCode', type: 'text', label: 'Bank Code'},
+                {name: 'bankAccount', type: 'text', label: 'Bank Account'},
+                {name: 'branchCode', type: 'text', label: 'Branch Code'},
+            ],
+            depositFormFields: [
+            ]
+        },
+        {
+            name: 'paymastercards',
+            displayName: 'MatsterCard',
+            canDeposit: true,
+            canWithdraw: true,
+            order: 2,
+            info: {
+                "UAH" : { depositFee: 0, withdrawFee: 0, depositProcessTime: 0, withdrawProcessTime: 1,  minDeposit: 1, maxDeposit: 150000, minWithdraw: 50, maxWithdraw: 10000},
+            },
+
+            depositInfoText: {
+            },
+            withdrawInfoText: {
+            },
+            depositFormFields: [],
+            withdrawFormFields: [
+                {name: 'account', type: 'text', label: 'Account'}
+            ]
+        },
+        {
+            name: 'paymastervisa',
+            displayName: 'Visa',
+            canDeposit: true,
+            canWithdraw: true,
+            order: 1,
+            info: {
+                "UAH" : { depositFee: 0, withdrawFee: 0, depositProcessTime: 0, withdrawProcessTime: 1,  minDeposit: 1, maxDeposit: 150000, minWithdraw: 50, maxWithdraw: 10000},
+            },
+
+            depositInfoText: {
+            },
+            withdrawInfoText: {
+            },
+            depositFormFields: [],
+            withdrawFormFields: [
+                {name: 'account', type: 'text', label: 'Account'}
+            ]
+        },
+        {
+            name: 'paymasterprivat24',
+            displayName: 'Privat24',
+            canDeposit: true,
+            canWithdraw: true,
+            order: 3,
+            info: {
+                "UAH" : { depositFee: 0, withdrawFee: 0, depositProcessTime: 0, withdrawProcessTime: 1,  minDeposit: 1, maxDeposit: 150000, minWithdraw: 50, maxWithdraw: 10000},
+            },
+
+            depositInfoText: {
+            },
+            withdrawInfoText: {
+            },
+            depositFormFields: [],
+            withdrawFormFields: [
+                {name: 'account', type: 'text', label: 'Account'}
+            ]
+        },
+        {
+            name: 'paymasterqiwi',
+            displayName: 'Qiwi',
+            canDeposit: false,
+            canWithdraw: false,
+            order: 5,
+            info: {
+                "UAH" : { depositFee: 0, withdrawFee: 0, depositProcessTime: 0, withdrawProcessTime: 1,  minDeposit: 1, maxDeposit: 150000, minWithdraw: 50, maxWithdraw: 10000},
+            },
+
+            depositInfoText: {
+            },
+            withdrawInfoText: {
+            },
+            depositFormFields: [],
+            withdrawFormFields: [
+                {name: 'account', type: 'text', label: 'Account'}
+            ]
+        },
+        {
+            name: 'paymasterwebmoney',
+            displayName: 'Webmoney',
+            canDeposit: true,
+            canWithdraw: true,
+            order: 4,
+            info: {
+                "UAH" : { depositFee: 0, withdrawFee: 0, depositProcessTime: 0, withdrawProcessTime: 1,  minDeposit: 1, maxDeposit: 150000, minWithdraw: 50, maxWithdraw: 10000},
+            },
+
+            depositInfoText: {
+            },
+            withdrawInfoText: {
+            },
+            depositFormFields: [],
+            withdrawFormFields: [
+                {name: 'account', type: 'text', label: 'Account'}
+            ]
+        },
+        {
+            name: 'interkassa_bitcoin',
+            displayName: "BitCoin",
+            order: 6,
+            canDeposit: true,
+            canWithdraw: false,
+            info: {
+                "USD" : { depositFee: 0, withdrawFee: 0, depositProcessTime: 0, depositProcessTimeType: 'minutes', withdrawProcessTime: 12,  minDeposit: 1, maxDeposit: 10000, minWithdraw: 1, maxWithdraw: 10000},
+                "EUR" : { depositFee: 0, withdrawFee: 0, depositProcessTime: 0, depositProcessTimeType: 'minutes', withdrawProcessTime: 12,  minDeposit: 1, maxDeposit: 10000, minWithdraw: 1, maxWithdraw: 10000},
+                "UAH" : { depositFee: 0, withdrawFee: 0, depositProcessTime: 0, depositProcessTimeType: 'minutes', withdrawProcessTime: 12,  minDeposit: 1, maxDeposit: 10000, minWithdraw: 1, maxWithdraw: 10000},
+            },
+            depositFormFields: [
+            ]
+        },
+        {
+            name: 'paysafecard',
+            displayName: 'PaySafeCard',
+            canDeposit: true,
+            canWithdraw: true,
+            order: 16,
+            depositInfoText: {
+                eng: "",
+                ger: "",
+                por: ""
+            },
+            withdrawInfoText : {
+                eng: "",
+                ger: "",
+                por: ""
+            },
+            depositFormFields: [],
+            withdrawFormFields: [
+                {name: 'email', type: 'email', label: 'Email', required: true}
+            ]
+        },
+        {
+            name: 'cubits',
+            displayName: 'Cubits',
+            canDeposit: false,
+            canWithdraw: true,
+            order: 1,
+            info: {
+                "MBT" : { depositFee: 0, withdrawFee: 0, depositProcessTime: 0, withdrawProcessTime: 24, minDeposit: 1, maxDeposit: 10000, minWithdraw: 1, maxWithdraw: 10000}
+            },
+            depositInfoText : {
+            },
+            withdrawFormFields: [
+                {name: 'address', type: 'text', label: 'BitCoin Address'}
+            ]
+        },
+        {
+            name: 'cubits_channel',
+            displayName: 'Cubits',
+            canDeposit: true,
+            canWithdraw: false,
+            depositPrefilledAmount: 1,
+            order: 1,
+            info: {
+                "MBT" : { depositFee: 0, withdrawFee: 0, depositProcessTime: 0, withdrawProcessTime: 24, minDeposit: 1, maxDeposit: 10000, minWithdraw: 1, maxWithdraw: 10000}
+            },
+            depositInfoText : {
+            }
+        },
+        {
+            name: 'persianpay',
+            displayName: 'Persian Pay',
+            canDeposit: true,
+            canWithdraw: true,
+            order: 1,
+            info: {
+            },
+            depositInfoText : {
+            },
+            withdrawFormFields: [
+                {name: 'card_number', type: 'text', label: 'Card Number'},
+                {name: 'shaba_number', type: 'text', label: 'SHABA NUMBER'},
+                {name: 'bank_account_number', type: 'text', label: 'BANK ACCOUNT NUMBER'},
+                {name: 'user', type: 'text', label: 'User'},
+            ]
+
         }
+
     ],
     paymentByCurrency: {
         deposit: {
@@ -1628,8 +2165,8 @@ VBET5.constant('SkinConfig', {
                 'astropaystreamline6', 'astropaystreamline7', 'astropaystreamline8', 'astropaystreamline9', 'astropaystreamline10', 'astropaystreamline11',
                 'astropaystreamline12', 'astropaystreamline13', 'astropaystreamline14'],
             'EUR': ["skrill", "netellernew", "moneta", "ecocard", "wirecard", "yandex", "yandexinvois", "yandexcash", "yandexbank", "yandexprbank", "dotpay",
-                "safecharge", "otopay", "apcopay1", "apcopay2", "apcopay3"],
-            'RUB': ["webmoney", "qiwi", "moneta", "ecocard", "centili", "wirecard", "yandex", "yandexinvois", "yandexcash", "yandexbank", "yandexprbank", "safecharge"],
+                "safecharge", "otopay", "apcopay1", "apcopay2", "apcopay3", "paykasa"],
+            'RUB': ["webmoney", "qiwi", "moneta", "ecocard", "wirecard", "yandex", "yandexinvois", "yandexcash", "yandexbank", "yandexprbank", "safecharge"],
             'UAH': ["wirecard", "yandex", "yandexinvois", "yandexcash", "yandexbank", "yandexprbank", "safecharge"],
             'CNY': ["unionpay", "safecharge"],
             'SEK': ["pugglepay", "safecharge"],
@@ -1649,7 +2186,7 @@ VBET5.constant('SkinConfig', {
 CMS.constant('SkinWPConfig', {
     hiddenNewsCategoryIds: [],
     wpUrl: 'https://cmsbetconstruct.com/json',  // WordpResss instance serving pages, banners
-    wpNewsUrl:  {
+    wpNewsUrl: {
         main: 'https://cmsbetconstruct.com/json'
     },  // WordpResss instance serving news
     wpBaseHost: 'vbet',  // this parameter will be passed to JSON api and all links in response(e.g. images) will have this host
@@ -1940,91 +2477,29 @@ CMS.constant('SkinWPConfig', {
     }
 });
 CASINO.constant('SkinCConfig', {
-    cUrlPrefix: 'https://casino.vbet.com',
-    cGamesUrl: '/global/play.php',
+    cUrlPrefix: 'https://games.vbet.com',
+    cGamesUrl: '/authorization.php',
     cUrl: '/global/casinoGamesLoad.php',
     main : {
-        newCasinoDesign: {
-            enabled: true
-        },
-        enableGameInfoButton: false, //implemented only for casinoVersion:2
+        enableGameInfoButton: false,
         showAllGamesOnHomepage: true,
         partnerID: '4',
         multiViewEnabled: true,
-        providersThatWorkWithSwarm: ['KLG', 'VGS'],
-        providersThatWorkWithCasinoBackend: {
-            providers: [
-                'GDR',
-                'EDG',
-                'RTG',
-                'BCS',
-                'NET',
-                'EZG',
-                'BSG',
-                'TWB',
-                'NYX',
-                'PSN',
-                'ISB',
-                'EVL',
-                'TPG',
-                'EDP',
-                'WMG',
-                'EGT',
-                'BGB',
-                'PTG',
-                'MLS',
-                'GNI',
-                'GAT',
-                'OMG',
-                'MRS',
-                'PPY',
-                'HBN',
-                'JGS',
-                'SPG',
-                'ASG',
-                'BMG',
-                'ORX',
-                'ORZ',
-                'RDR',
-                'MGS',
-                'DLV',
-                'WZN',
-                'RLG'
-            ],
-            url: "https://launchgames.vbet.com/global/play.php"
-        },
         filterByProvider: [
             'IGG','LBX','EVL','TLC','CSB'
         ],
+        restrictProvidersInCountries: {
+            'LSS': ['AM']
+        },
         filterByProviderEnabled: true,
         numberOfRecentGames: 30, //initial number of recent games to show.  When newCasinoDesign is enabled change this value to be 3X
         numberOfRecentGamesWide: 30, //initial number of recent games to show in wide screen mode.  When newCasinoDesign is enabled change this value to be 5X
-        increaseBy: 15, // load this number of additional games when clicking "load more".   When newCasinoDesign is enabled change this value to be 3X
-        increaseByWide: 15, // load this number of additional games when clicking "load more".  When newCasinoDesign is enabled change this value to be 5X
         favourtieGamesCategoryEnabled: true,
-        categories: [
-            -1,
-            59,
-            65,
-            40,
-            4,
-            51,
-            1,
-            35,
-            40,
-            19,
-            63,
-            52
-        ],
         storedbonusPopUpLifetime: 259200000 // 3days
     },
     liveCasino: {
         viewStyle: 'SliderView',
-        lobby: {
-            getDataViaSwarm: true,
-            updateInterval: 10000,
-            provider: "VGS"
-        },
+
         jackpot: {
             url: {
                 'eng': 55440,
@@ -2047,4 +2522,3 @@ CASINO.constant('SkinCConfig', {
     },
     bonusPopUpUrl: false
 });
-EXCHANGE.constant('SkinExchangeConfig', {});

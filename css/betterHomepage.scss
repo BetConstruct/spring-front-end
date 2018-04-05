@@ -1,8 +1,21 @@
 .size-1 {
   width: 8.33333333%;
+  .hp-slider-17 .hp-slider-arrows-17 small {
+    width: 24px;
+    height: 24px;
+    font: 14px/24px icomoon;
+  }
 }
-.size-2 {
+.size-2, .size-2-5 {
   width: 16.66666667%;
+  .hp-slider-17 .hp-slider-arrows-17 small {
+    width: 24px;
+    height: 24px;
+    font: 14px/24px icomoon;
+  }
+}
+.size-2-5 {
+  width: 20.833333335%;
 }
 .size-3 {
   width: 25%;
@@ -33,6 +46,11 @@
 }
 .size-12 {
   width: 100%;
+  .hp-slider-17 .hp-slider-arrows-17 small {
+    width: 36px;
+    height: 36px;
+    font: 20px/36px icomoon;
+  }
 }
 @media screen and (max-width: 1260px) {
   .size-m-1 {
@@ -148,7 +166,7 @@
   @media screen and (max-width: 1260px) {
     width: 960px;
   }
-  &:after{
+  &:after, &:before{
     display: block;
     content: '';
     clear: both;
@@ -161,22 +179,7 @@ body .better-homepage {
   .row {
     background: rgba($skin-palette-11,0.55);
     &:first-of-type {
-      box-shadow: 0 -150px 0 rgba($skin-palette-11,0.55);
-    }
-  }
-  .product-list-contain > ul, .featured-game-list-b {
-    margin: 0;
-  }
-  .last-minutes-widget-b {
-    width: 100%;
-    float: left;
-    .last-minute-bets-j {
-      height: 100%;
-      width: 100%;
-      margin: 0;
-      .lmb-table-wrap-j{
-        height: calc(100% - 80px);
-      }
+      box-shadow: 0 -160px 0 rgba($skin-palette-11,0.55);
     }
   }
   .absolute-widget {
@@ -190,7 +193,10 @@ body .better-homepage {
     height: 100%;
     padding: 5px;
     overflow: hidden;
-    z-index: 40;
+    z-index: 30;
+    &.last-minutes-widget-b {
+      height: calc(100% - 5px);
+    }
   }
 }
 .hp-slider-17 {
@@ -284,10 +290,12 @@ body .better-homepage {
       }
     }
   }
-  .hp-slider-pagination-17 {
+  .hp-slider-pagination-17,
+  .hp-slider-arrows-17 {
     position: absolute;
     z-index: 40;
     bottom: 36px;
+    left: 0;
     width: 100%;
     padding: 0 36px;
     white-space: nowrap;
@@ -301,11 +309,39 @@ body .better-homepage {
       background: rgba($skin-palette-6, 0.8);
       border-radius: 100%;
       transition: 240ms background;
+      text-align: center;
       + small {
         margin: 0 0 0 12px;
       }
       &.active {
         background: rgba($hero-color, 0.5);
+      }
+    }
+  }
+  .hp-slider-arrows-17 {
+    width: auto;
+    margin: 0 26px;
+    padding: 0;
+    bottom: 26px;
+    small {
+      width: 30px;
+      height: 30px;
+      color: rgba($text-palette-1, 0.7);
+      background: rgba(desaturate( $skin-palette-11, 5 ), 0.5);
+      border-radius: 0;
+      font: 16px/30px icomoon;
+      &:before {
+        content: "\e677";
+      }
+      + small {
+        margin: 0 0 0 4px;
+        &:before {
+          content: "\e67a";
+        }
+      }
+      &:hover {
+        color: rgba($text-palette-1, 1);
+        background: rgba(desaturate( $skin-palette-11, 5 ), 0.8);
       }
     }
   }
@@ -489,7 +525,7 @@ body .better-homepage {
 }
 @media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {
   div[class*="featuredGame.html"] {
-    background-color: #131524;
+    background: url(../../../images/featured-games-backgrounds/soccer.png#{$delete-cache}) no-repeat 0 0 / cover;
     .featured-game-block-j {
       background: none;
     }
@@ -505,9 +541,7 @@ body .better-homepage {
 .featured-game-block-j {
   height: 100%;
   width: 100%;
-  background-color: #131524;
-  background-size: cover;
-  background-position: right center;
+  background: $skin-palette-12 no-repeat 100% 50% / cover;
   padding: 24px 32px;
   box-sizing: border-box;
   display: inline-block;
@@ -519,7 +553,7 @@ body .better-homepage {
       float: left;
       width: 100%;
       &:last-child {
-        position: absolute;
+        margin-top: 31px;
         left: 0;
         box-sizing: border-box;
         bottom: 0;
@@ -532,13 +566,13 @@ body .better-homepage {
       float: left;
       width: 100%;
       font: 700 24px/24px $font-f;
-      color: #f3f3f5;
+      color: $text-palette-2;
       text-transform: uppercase;
       margin: 0 0 12px;
     }
     > p {
       font: 12px/14px $font-f;
-      color: #a9adb7;
+      color: $text-palette-3;
       small {
         display: inline-block;
         vertical-align: top;
@@ -551,7 +585,7 @@ body .better-homepage {
       }
       u {
         text-decoration: none;
-        border-bottom: 1px dotted #a9adb7;
+        border-bottom: 1px dotted $text-palette-3;
       }
     }
   }
@@ -568,7 +602,7 @@ body .better-homepage {
       font: 14px/34px $font-f;
       border: 1px solid $hero-color;
       padding: 0 24px;
-      color: white;
+      color: $text-palette-1;
       white-space: nowrap;
       margin: 0 16px 0 0;
       transition: 300ms color, background 300ms, border 300ms;
@@ -585,10 +619,10 @@ body .better-homepage {
       white-space: nowrap;
       text-transform: uppercase;
       font: 14px/34px $font-f;
-      color: #c2c5cd;
+      color: $text-palette-3;
       transition: color 300ms;
       &:hover {
-        color: white;
+        color: $text-palette-1;
       }
     }
   }
@@ -617,8 +651,8 @@ body .better-homepage {
   .featured-game-team-names-container-j {
     margin: 0 0 2px;
     > li {
-      background: rgba(#121623, 0.75);
-      color: #c2c5cd;
+      background: rgba($skin-palette-12, 0.75);
+      color: $text-palette-3;
       height: 40px;
       text-transform: uppercase;
       position: relative;
@@ -628,7 +662,6 @@ body .better-homepage {
         top: 0;
         left: 0;
         right: 0;
-        bottom: 0;
         padding: 0 6px;
         white-space: nowrap;
         overflow: hidden;
@@ -655,7 +688,7 @@ body .better-homepage {
               top: 50%;
               left: 50%;
               margin: 0 0 0 -5px;
-              background: #c2c5cd;
+              background: $text-palette-3;
             }
           }
         }
@@ -683,12 +716,12 @@ body .better-homepage {
     bottom: 0;
     width: 100%;
     display: table;
-    background: rgba(#121623, 0.75);
-    color: #c2c5cd;
+    background: rgba($skin-palette-12, 0.75);
+    color: $text-palette-1;
     transition: 300ms background, 300ms box-shadow;
     &:hover {
-      background: rgba(#212532, 0.75);
-      box-shadow: inset 0 0 0 1px #373d4c;
+      background: rgba($skin-palette-8, 0.75);
+      box-shadow: inset 0 0 0 1px $skin-palette-6;
     }
     > li {
       display: table-cell;
@@ -734,6 +767,7 @@ body .better-homepage {
         }
         &:last-child {
           width: 70%;
+          margin-top: 0;
           position: static;
           padding: 0;
         }
@@ -802,7 +836,6 @@ body .better-homepage {
             color: $text-palette-1;
           }
         }
-
       }
     }
   }
@@ -845,4 +878,61 @@ body .better-homepage {
       margin-bottom: 20px;
     }
   }
+}
+
+
+.game-bg-Soccer {
+  background-image: url(../../../images/featured-games-backgrounds/soccer.png#{$delete-cache});
+}
+
+.game-bg-Tennis {
+  background-image: url(../../../images/featured-games-backgrounds/tennis.png#{$delete-cache});
+}
+
+.game-bg-Volleyball {
+  background-image: url(../../../images/featured-games-backgrounds/volleyball.png#{$delete-cache});
+}
+
+.game-bg-BeachVolleyball {
+  background-image: url(../../../images/featured-games-backgrounds/volleyball.png#{$delete-cache});
+}
+
+.game-bg-IceHockey {
+  background-image: url(../../../images/featured-games-backgrounds/icehockey.png#{$delete-cache});
+}
+
+.game-bg-Boxing {
+  background-image: url(../../../images/featured-games-backgrounds/boxing.png#{$delete-cache});
+}
+
+.game-bg-Basketball {
+  background-image: url(../../../images/featured-games-backgrounds/basketball.png#{$delete-cache});
+}
+
+.game-bg-Baseball {
+  background-image: url(../../../images/featured-games-backgrounds/baseball.png#{$delete-cache});
+}
+
+.game-bg-AmericanFootball {
+  background-image: url(../../../images/featured-games-backgrounds/rugby.png#{$delete-cache});
+}
+
+.game-bg-Golf {
+  background-image: url(../../../images/featured-games-backgrounds/golf.png#{$delete-cache});
+}
+
+.game-bg-Chess {
+  background-image: url(../../../images/featured-games-backgrounds/chess.png#{$delete-cache});
+}
+
+.game-bg-Handball {
+  background-image: url(../../../images/featured-games-backgrounds/handball.png#{$delete-cache});
+}
+
+.game-bg-Rugby {
+  background-image: url(../../../images/featured-games-backgrounds/rugby.png#{$delete-cache});
+}
+
+.game-bg-HorseRacing {
+  background-image: url(../../../images/featured-games-backgrounds/horseracing.png#{$delete-cache});
 }

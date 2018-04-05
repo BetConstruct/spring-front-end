@@ -11,11 +11,13 @@ VBET5.directive('imageOnLoad', function () {
     return {
         restrict: 'A',
         scope: {
-            successCallBack: '&'
+            successCallBack: '&',
+            imageWidth: "="
         },
         link: function (scope, element) {
             element.on('load', function () {
                     scope.successCallBack();
+                    scope.imageWidth = element[0].clientWidth
             });
         }
     };

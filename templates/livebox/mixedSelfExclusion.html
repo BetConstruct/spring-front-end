@@ -8,11 +8,11 @@
             <p trans>For further details please contact our support and refer to the Terms and Conditions and Responsible Gambling pages.</p>
         </div>
         <div ng-if="'self-exclusion-text'|translate:null:true">
-            <p ng-bind-html="'self-exclusion-text'|translate|html"><p trans>
+            <p ng-bind-html="'self-exclusion-text'|translate|html:'p'"><p trans>
         </div>
 
         <form class="registration-form">
-            <div class="form-text" ng-init="$parent.periodValue= null">
+            <div class="form-text">
                 <label ng-repeat="option in conf.selfExclusion.options track by $index">
                     <input type="radio" name="period" ng-click="selectPeriod(option.limit)" ng-model="$parent.periodValue" value="{{ $index }}">
                     <span ng-bind="option.name|translate"></span>
@@ -20,7 +20,7 @@
             </div>
             <div class="change-button-container password">
                 <div class="cashier-button">
-                    <button ng-disabled="!periodValue" ng-show="!working" trans ng-click="setSelfExclusion(conf.selfExclusion.type)">Save</button>
+                    <button ng-show="!working" ng-disabled="!periodValue" trans ng-click="setSelfExclusion(conf.selfExclusion.type, 'selfExclusion')">Save</button>
                     <button disabled="disabled" ng-show="working" trans>Wait...</button>
                 </div>
             </div>

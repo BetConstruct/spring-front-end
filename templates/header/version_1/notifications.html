@@ -3,9 +3,9 @@
         <div class="closed-b-tool" ng-click="closeLayoutSwitcherHint(notification)">
             <span></span>
         </div>
-        <h3 ng-bind-html = "notification.title|translate|html"></h3>
+        <h3 ng-bind-html = "notification.title|translate|html:'p'"></h3>
         <ul>
-            <li><p trans ng-bind-html = "notification.content|translate|html"></p></li>
+            <li><p trans ng-bind-html = "notification.content|translate|html:'p'"></p></li>
             <li ng-hide="notification.hideCheckBox"><label><input type="checkbox" ng-model="notification.dontShowLayoutSwitcherHintAgain"><span trans>Don't show this again.</span></label></li>
         </ul>
 

@@ -82,6 +82,17 @@ VBET5.directive('fixonscroll', ['$window', 'DomHelper', 'UserAgent', function ($
             var el = $window.document.getElementById(data.id);
             angular.element(el).removeClass('scrollable-absolute');
             angular.element(el).addClass('scrollable-fixed');
-        })
+        });
+
+        /**
+         * @description forces the element refresh
+         */
+        scope.$on('forceElementRefresh', function() {
+            angular.element(element[0]).removeClass('scrollable-absolute scrollable-fixed');
+            element[0].parentElement.style="";
+            if(attrs.autoPositon || attrs.parentWidth) {
+                element[0].style="";
+            }
+        });
     };
 }]);

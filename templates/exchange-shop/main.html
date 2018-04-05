@@ -1,0 +1,45 @@
+<div ng-controller="exchangeShopCtrl">
+    <vbet-loader ng-if="shop.loading"></vbet-loader>
+    <div class="exchange-shop-j no-select-j">
+        <div class="guide-j" ng-if="shop.products">
+            <div class="es-big-intro-j">
+                <ul>
+                    <li ng-repeat="product in shop.products track by $index" ng-if="product.on_top" ng-click="showItemDetails(product)">
+                        <div class="es-big-product-j">
+                            <hgroup>
+                                <h1 ng-if="product.label" ng-bind="product.label|translate"></h1>
+
+                                <h2 ng-bind="product.name"></h2>
+
+                                <p ng-bind="(product.price|number) + ' ' + ('Pts.'|translate)"></p>
+                            </hgroup>
+                            <button>{{(env.authorized ? 'Get It' : 'Show more')|translate}}</button>
+                            <img ng-src="{{product.images[0].image|url}}">
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            <fieldset>
+                <legend ng-show="env.authorized" align="center">{{'Exchangeable points'|translate}} {{profile.loyalty_point}}</legend>
+                <legend ng-show="!env.authorized" align="center" trans>Available Items</legend>
+            </fieldset>
+            <div class="es-small-products-j">
+                <ul>
+                    <li ng-repeat="product in shop.products track by $index" ng-if="!product.on_top" ng-click="showItemDetails(product)">
+                        <div class="es-small-product-j">
+                            <div class="es-splash-j">
+                                <button>{{(env.authorized ? 'Get It' : 'Show more')|translate}}</button>
+                            </div>
+                            <hgroup>
+                                <h1 ng-bind="product.name"></h1>
+                                <p ng-bind="(product.price|number) + ' ' + ('Pts.'|translate)"></p>
+                            </hgroup>
+                            <img ng-src="{{product.images[0].image|url}}">
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <ng-include ng-if="shop.details" src="getTemplate('templates/exchange-shop/details.html')"></ng-include>
+</div>

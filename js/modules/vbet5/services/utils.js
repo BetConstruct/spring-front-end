@@ -9,6 +9,7 @@
 VBET5.service('Utils', ['$timeout', '$filter', '$location', '$window', 'Config', 'Storage', function ($timeout, $filter, $location, $window, Config, Storage) {
     'use strict';
     var Utils = {};
+    var bodyWrapperClasses = {};
 
     /**
      * @ngdoc method
@@ -897,7 +898,7 @@ VBET5.service('Utils', ['$timeout', '$filter', '$location', '$window', 'Config',
             }
         });
         return array;
-    }
+    };
 
 
     /**
@@ -1029,7 +1030,7 @@ VBET5.service('Utils', ['$timeout', '$filter', '$location', '$window', 'Config',
         });
 
         return defaultBase;
-    }
+    };
 
     Utils.emptyObject = function emptyObject (object) {
         angular.forEach(object, function (value, key) {
@@ -1093,7 +1094,6 @@ VBET5.service('Utils', ['$timeout', '$filter', '$location', '$window', 'Config',
         return lng;
     };
 
-
     /**
      * @ngdoc method
      * @name goToUrl
@@ -1135,7 +1135,6 @@ VBET5.service('Utils', ['$timeout', '$filter', '$location', '$window', 'Config',
             );
         }
     };
-
 
     /**
      * @ngdoc method
@@ -1234,6 +1233,7 @@ VBET5.service('Utils', ['$timeout', '$filter', '$location', '$window', 'Config',
      * @returns {*}
      */
     Utils.getAvailableCountries = function getAvailableCountries(allCountries) {
+        allCountries = Utils.clone(allCountries);
         var resultCountries = {}, availableCountries = Config.main.personalDetails.availableCountriesList;
         var restrictedCountries = Config.main.personalDetails.restrictedCountriesList;
         if(availableCountries && availableCountries.length) {
@@ -1267,7 +1267,7 @@ VBET5.service('Utils', ['$timeout', '$filter', '$location', '$window', 'Config',
      * @param {Number} Custom sport ID
      */
     Utils.setCustomSportAliasesFilter = function setCustomSportAliasesFilter(request, customIds) {
-        if (Config.main.site_id === "474") { //@TODO hardcoded for ggbook skin. it must be removed after making dynamically functional
+        if (Config.main.cyberSkin) {
             customIds = Config.main.customSportIds && Config.main.customSportIds.cyber
         } else {
             customIds = customIds || Utils.getCustomSportAliasFilter();
@@ -1307,7 +1307,6 @@ VBET5.service('Utils', ['$timeout', '$filter', '$location', '$window', 'Config',
             return Math.round(fValue);
         }
     };
-
 
     /**
      * Calculates string hash
@@ -1374,6 +1373,219 @@ VBET5.service('Utils', ['$timeout', '$filter', '$location', '$window', 'Config',
                 }
             }
         }
+    };
+
+    /**
+     * @ngdoc method
+     * @name getFirstMarket
+     * @methodOf vbet5.service:Utils
+     * @description Returns P1XP2 market if it exsists or first market
+     * @param {Object} markets market object from backend
+     * @param {Object} $filter angular $filter object
+     */
+    Utils.getFirstMarket = function getFirstMarket(markets, $filter){
+        var firstMarket;
+        var firstMarketName = "P1XP2";
+        angular.forEach(markets, function (market) {
+            if (market.type  === firstMarketName) {
+                firstMarket = market;
+            }
+        });
+        if (firstMarket === undefined) {
+            firstMarket =  $filter("firstElement")(markets);
+        }
+        return firstMarket;
+    };
+
+    /**
+     * Split array into chunks
+     * return converted array
+     * @param {Array} arr input array
+     * @param {Int} colCount chunks count
+     * @returns {Array}
+     */
+    Utils.splitArrayChunks = function splitArrayChunks (arr, colCount) {
+        var chunks = [], len = Math.ceil(arr.length / colCount),
+            i = 0,
+            n = arr.length;
+        while (i < n) {
+            chunks.push(arr.slice(i, i += len));
+        }
+        return chunks;
+    };
+
+    /**
+     * @ngdoc method
+     * @name checkIfDocumentIsValid
+     * @methodOf vbet5.controller:RegistrationController
+     * @description
+     *  checks if document is valid in (TR for now)
+     */
+    Utils.checkNationalId = function checkNationalId(docNumber) {
+        if (!docNumber || !docNumber.length || docNumber.length !== 11) {
+            return false;
+        }
+        var t = [], i, ilk, son;
+        for (i = 0; i < docNumber.length; i++) {
+            t[i + 1] = parseInt(docNumber[i], 10);
+        }
+
+        ilk = ( (t[1] + t[3] + t[5] + t[7] + t[9]) * 7 - (t[2] + t[4] + t[6] + t[8]) ) % 10;
+        son = (t[1] + t[2] + t[3] + t[4] + t[5] + t[6] + t[7] + t[8] + t[9] + t[10]) % 10;
+
+        if (t[1] === 0) {
+            return false;
+        }
+
+        if (ilk === t[10] && son === t[11]) {
+            console.log('Document Valid');
+            return true;
+        }
+
+        return false;
+    };
+
+    /**
+     * @ngdoc method
+     * @name fixDomainChanges
+     * @methodOf vbet5.controller:RegistrationController
+     * @description
+     *  Fix domain changes
+     */
+    Utils.fixDomainChanges = function fixDomainChanges(config, product) {
+        if (Config.main.enableDomainFixesForPartners.indexOf(parseInt(Config.main.site_id)) === -1 || $window.location.hostname ==="localhost") return;
+        var oldDomain = $window.location.hostname.split(/\./);
+        var existedDomain, currentDomain = (oldDomain.length === 4) ? oldDomain.slice(-3).join(".") : oldDomain.slice(-2).join(".");
+
+        switch (product) {
+            case 'sportsbook': {
+                oldDomain = config.main.redirectOnTablets && config.main.redirectOnTablets.split(/\./);
+                if (oldDomain) {
+                    existedDomain = (oldDomain.length === 4) ? (oldDomain.slice(-3).join(".")).replace(/\/$/, '') : (oldDomain.slice(-2).join(".")).replace(/\/$/, '');
+                    if (existedDomain !== currentDomain) {
+                        config.main.redirectOnTablets = config.main.redirectOnTablets.replace(existedDomain, currentDomain);
+                        config.main.footer.mobileVersionLink && (config.main.footer.mobileVersionLink = config.main.footer.mobileVersionLink.replace(existedDomain, currentDomain));
+                        config.main.header.statisticsLink && (config.main.header.statisticsLink = config.main.header.statisticsLink.replace(existedDomain, currentDomain));
+                        config.main.statsHostname && config.main.statsHostname.prefixUrl && (config.main.statsHostname.prefixUrl.replace(existedDomain, currentDomain));
+                        config.main.htmlMetaTags && (config.main.htmlMetaTags = config.main.htmlMetaTags.replace(existedDomain, currentDomain));
+
+                        var i, length;
+                        if (config.main.theVeryTopMenu) {
+                            for (i = 0, length = config.main.theVeryTopMenu.length; i < length; i+= 1) {
+                                config.main.theVeryTopMenu[i].href && (config.main.theVeryTopMenu[i].href = config.main.theVeryTopMenu[i].href.replace(existedDomain, currentDomain));
+                            }
+                        }
+                        //add case for multilevelmenu if it contain domain specific urls
+                    }
+                    return;
+                }
+            }
+            case 'casino': {
+                oldDomain = config.cUrlPrefix && config.cUrlPrefix.split(/\./);
+                if (oldDomain) {
+                    existedDomain = (oldDomain.length === 4) ? oldDomain.slice(-3).join(".") : oldDomain.slice(-2).join(".");
+                    if (existedDomain !== currentDomain) {
+                        config.cUrlPrefix = config.cUrlPrefix.replace(existedDomain, currentDomain);
+                        config.fantasySports && config.fantasySports.externalURL && (config.fantasySports.externalURL = config.fantasySports.externalURL.replace(existedDomain, currentDomain));
+                    }
+                    return;
+                }
+            }
+        }
+    };
+
+    /**
+     * @ngdoc method
+     * @name setBodyClass
+     * @methodOf vbet5.controller:RegistrationController
+     * @description
+     *  fixDomainChanges
+     */
+    Utils.setBodyClass = function setBodyClass(cssClass, group) {
+        if (cssClass && group) {
+            bodyWrapperClasses[group] = cssClass;
+        } else if (group) {
+            delete bodyWrapperClasses[group];
+        }
+        Config.env.bodyWrapperClass = Utils.objectToArray(bodyWrapperClasses).join(' ');
+    };
+
+    /**
+     * @ngdoc method
+     * @name sortItemsArray
+     * @methodOf vbet5.service:Utils
+     * @param {Array} items
+     * @description If order of array items not have give them order index and sort given array by that order
+     */
+    Utils.sortItemsArray = function sortItemsArray(items) {
+        if (items && items.length > 0) {
+            var itemsLength = items.length;
+            for(var i = 0; i < itemsLength; ++i) {
+                var item = items[i];
+                if(item.order === undefined){
+                    item.order = i;
+                }
+            }
+            items.sort(Utils.orderSorting);
+        }
+    };
+
+
+    /**
+     * @ngdoc method
+     * @name formatEventData
+     * @methodOf vbet5.service:Utils
+     * @param {Object} data object from SWARM
+     * @description Formats SWARM response so that we can add events to the betslip
+     */
+    Utils.formatEventData = function formatEventData(data) {
+        var formattedData = [],
+            bet;
+
+        angular.forEach(data.sport, function(sport) {
+            angular.forEach(sport.region, function (region) {
+                angular.forEach(region.competition, function (competition) {
+                    angular.forEach(competition.game, function (game) {
+                        bet = {};
+                        bet.gameInfo = game;
+                        bet.gameInfo.competition = competition;
+                        bet.gameInfo.region = region;
+                        bet.gameInfo.sport = sport;
+                        bet.gameInfo.title = game.team1_name + (game.team2_name ? ' - ' + game.team2_name : '');
+
+                        angular.forEach(game.market, function(market) {
+                            bet.marketInfo = market;
+                            bet.marketInfo.name = $filter('improveName')(market.name, game);
+
+                            angular.forEach(market.event, function(event) {
+                                bet.eventInfo = event;
+                                formattedData.push(bet);
+                            });
+                        });
+                    });
+                });
+            });
+        });
+
+        return formattedData;
+    };
+
+
+    /**
+     * @ngdoc method
+     * @name uniqueNum
+     * @methodOf vbet5.service:Utils
+     * @param {Array} arr - array of numbers (can be a String)
+     * @description Removes duplicate numbers in array
+     */
+    Utils.uniqueNum = function uniqueNum(arr) {
+        if (!arr.length) { return []; }
+        return arr.reduce(function(acc, curr) {
+            if (curr !== '' && !isNaN(Number(curr)) && acc.indexOf(Number(curr)) === -1) {
+                acc.push(Number(curr));
+            }
+            return acc;
+        }, []);
     };
 
     return Utils;

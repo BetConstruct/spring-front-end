@@ -16,6 +16,16 @@
   }
   .results-view-b .left-column-v3-header{
     height: 143px;
+    &.hide-result-filter {
+      height: 40px;
+      .filter-view-v3 {
+        display: none;
+      }
+      .full-menu-wrapper-box-v3 {
+        top: 40px;
+        height: calc(100% - 40px);
+      }
+    }
   }
   .results-view-b .full-menu-wrapper-box-v3{
     top: 143px;
@@ -27,10 +37,21 @@
     box-sizing: border-box;
     padding: 3px 0 0;
   }
+  .date-r-filter-b .mini-form-box-b .input-group {
+    box-shadow: 0 0 0 1px #404654;
+    transition: 250ms box-shadow;
+    &:not(.active):hover {
+      box-shadow: 0 0 0 1px $c16-tp-6;
+    }
+  }
   .results-f-row-view > .time-filter-v3{
     width: 100%;
     height: 30px;
-    box-shadow: 0 0 0 1px $c16-tp-6 inset;
+    box-shadow: 0 0 0 1px #404654 inset;
+    transition: 250ms box-shadow;
+    &:not(.active):hover {
+      box-shadow: 0 0 0 1px $c16-tp-6 inset;
+    }
   }
   .results-f-row-view > .time-filter-v3.active{
     box-shadow: none;
@@ -65,8 +86,7 @@
   .results-view-b .view-switcher-v3 > ul > li:hover > button{
     background: #b6862e;
   }
-  .results-view-b .view-switcher-v3 > ul > li,
-  .results-view-b .view-switcher-v3 > ul > li:first-child{
+  .results-view-b .view-switcher-v3 > ul > li{
     width: 50%;
   }
   .date-r-filter-b{
@@ -110,7 +130,8 @@
     white-space: nowrap;
     text-overflow: ellipsis;
     overflow: hidden;
-    font: 12px/14px $font-f;
+    font-size: 6 + $size-font;
+    line-height: 14px;
     color: $c16-tp-6;
     padding: 0 0 5px;
   }
@@ -144,16 +165,9 @@
   //left menu END
 
   //results-games-list
-  .results-games-list-n{
-    float: left;
-    width: 50%;
-    padding: 0 3px 0 0;
-    box-sizing: border-box;
-    height: 100%;
-  }
   .results-games-view-container-n{
     float: left;
-    width: 50%;
+    width: 41%;
     box-sizing: border-box;
     @include scroll;
     height: 100%;
@@ -169,30 +183,88 @@
     width: 100%;
     box-sizing: border-box;
     margin: 0 0 6px;
+    .r-competition-info-holder {
+      width: 100%;
+      float: left;
+      &.hide-animation-result > .display-float {
+        &:nth-last-child(2) {
+          width: 100%;
+        }
+        &:nth-child(2) {
+          dispaly: none;
+        }
+      }
+      > .display-float {
+        display: block;
+        width: 100%;
+        float: left;
+        padding: 0 6px 0 0;
+        box-sizing: border-box;
+        @media screen and (min-width: 1601px){
+          &:nth-last-child(2) {
+            width: calc(100% - 293px);
+          }
+          &:nth-child(2) {
+            width: 287px;
+            overflow: hidden;
+            border-radius: 2px;
+            padding: 0;
+          }
+        }
+      }
+    }
+    .popular-game-view-wrapper-v3 {
+      height: 162px;
+      .popular-game-team-name-v3 {
+        padding-top: 20px;
+        > table {
+          width: 100%;
+          tr td {
+            padding: 0 0 10px;
+          }
+        }
+      }
+    }
+    .video-animation-vox-v3 {
+      @media screen and (max-width: 1600px){
+        height: auto;
+        margin: 0 0 6px;
+      }
+    }
   }
   .r-competition-title-view{
     float: left;
     width: 100%;
+    padding: 8px 0;
+    text-align: center;
     position: relative;
     background: #2e323e;
     box-sizing: border-box;
     box-shadow: 0 1px 0 rgba(123, 129, 145, 0.15) inset;
     border-radius: 2px;
+    &.closed-results-all-games {
+      height: 34px;
+      padding: 0 12px;
+      text-align: left;
+      background: #1e212d;
+    }
   }
   .r-competition-title-view.active{
     border-radius: 2px 2px 0 0;
   }
   .r-competition-title-view > p{
-    float: left;
-    width: 100%;
+    margin: 2px 0 0 4px;
     box-sizing: border-box;
     color: #c2c5cd;
-    font: 11px/36px $font-f;
+    font-size: 5 + $size-font;
+    line-height: 13px;
     text-transform: uppercase;
     text-align: center;
     white-space: nowrap;
     text-overflow: ellipsis;
     overflow: hidden;
+    display: inline-block;
+    vertical-align: middle;
   }
   .remove-c-r-icon{
     position: absolute;
@@ -240,32 +312,19 @@
     content: "\e671";
   }
   .competition-logo-r{
-    float: left;
-    width: 100%;
     text-align: center;
     font-size: 0;
+    display: inline-block;
+    vertical-align: middle;
   }
   .competition-logo-r > img{
-    margin: 10px 0 0;
     display: inline-block;
     vertical-align: top;
+    height: 24px;
   }
-
-
-
-
-
   .all-result-list-view-n{
     float: left;
     width: 100%;
-    height: auto;
-    max-height: 0;
-    overflow: hidden;
-    transition: max-height 400ms;
-  }
-  .r-competition-title-view.active + .all-result-list-view-n{
-    max-height: 9999px;
-    transition: max-height 600ms;
   }
   .r-c-games-date-list{
     float: left;
@@ -311,7 +370,8 @@
     width: 100%;
     box-sizing: border-box;
     text-align: center;
-    font: 11px/24px $font-f;
+    font-size: 5 + $size-font;
+    line-height: 24px;
     color: #505767;
     text-transform: uppercase;
     transition: color 240ms;
@@ -386,6 +446,23 @@
     display: table-cell;
     vertical-align: top;
     box-sizing: border-box;
+    &.one-team-name-t {
+      .r-team-name-score-logo > ul > li {
+        &.score-view-column-r,
+        &.right-r {
+          display: block;
+        }
+      }
+      .left-r {
+        padding-left: 28px;
+        > p {
+          text-align: left;
+        }
+        > .team-logo-r {
+          left: 0;
+        }
+      }
+    }
   }
   .r-date-view{
     width: 54px;
@@ -395,7 +472,8 @@
     float: left;
     height: 16px;
     box-sizing: border-box;
-    font: 11px/16px $font-f;
+    font-size: 5 + $size-font;
+    line-height: 16px;
     color: #7b8191;
     padding: 0 5px;
     border-radius: 2px;
@@ -406,9 +484,7 @@
     background: #208c65;
     color: #ffffff;
   }
-
-  .game-info-r-view{}
-
+.game-info-r-view{}
 .r-team-name-score-logo{
   float: left;
   width: 100%;
@@ -426,7 +502,8 @@
     display: table-cell;
     vertical-align: top;
     color: #a5aabc;
-    font: 14px/30px $font-f;
+    font-size: 8 + $size-font;
+    line-height: 30px;
   }
   .team-name-b-r{
     position: relative;
@@ -458,6 +535,7 @@
   .score-view-column-r > span{
     color: #b6862e;
     font-weight: bold;
+    letter-spacing: 3px;
   }
   .r-live-game .score-view-column-r > span{color: #c2c5cd;}
   .result-single-game-view-b.active .score-view-column-r > span, .result-single-game-view-b.r-live-game.active .score-view-column-r > span{color: #caa35a;}
@@ -499,20 +577,12 @@
     color: #a2a5ac;
   }
   .arrow-r-game-view:before{content: "\e672";}
-
-
-
-
-
-
   //results-games-list END
-
-
 
   //results-markets-list
   .results-markets-list-n{
     float: right;
-    width: 50%;
+    width: 59%;
     box-sizing: border-box;
     padding: 0 0 0 4px;
     height: 100%;
@@ -521,11 +591,9 @@
     float: left;
     width: 100%;
     box-sizing: border-box;
-    background: #2e323e;
     @include scroll;
     height: 100%;
   }
-
   //results-markets-list END
 
   @media screen and (max-width: 1359px) {

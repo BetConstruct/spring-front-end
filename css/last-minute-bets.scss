@@ -2,11 +2,15 @@ $last-minute-bets-widget: $skin-color !default;
 .last-minute-bets-j * {
   box-sizing: border-box;
 }
-.last-minute-bets-j {
-  width: 540px;
-  height: 365px;
+.last-minutes-widget-b {
+  width: 100%;
   float: left;
-  margin: 0 0 0 10px;
+}
+.last-minute-bets-j {
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  float: left;
   overflow: hidden;
   position: relative;
 }
@@ -104,9 +108,10 @@ $last-minute-bets-widget: $skin-color !default;
   float: left;
   width: 100%;
   background: $last-minute-bets-widget;
-  height: 270px;
+  height: calc(100% - 80px);
   overflow: hidden;
   position: relative;
+  @include scroll($scroll: auto);
 }
 .lmb-table-j {
   float: left;
@@ -229,10 +234,4 @@ $last-minute-bets-widget: $skin-color !default;
 }
 .lmb-table-j li:nth-child(2) {
   text-align: right;
-}
-@media screen and (max-width: 1260px) {
-  .last-minute-bets-j {
-    margin: 0;
-    width: 100%;
-  }
 }

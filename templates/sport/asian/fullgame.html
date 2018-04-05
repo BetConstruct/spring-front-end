@@ -2,9 +2,9 @@
 <!--live game -->
 <div class="asian-live game-{{openGame.sport.alias.toLowerCase()}}" ng-show="openGame && openGame.type === 1">
     <!-- live game score -->
-    <ng-include src="getTemplate('templates/sport/livescore.html')" ng-show="openGame.type == 1"></ng-include>
+    <ng-include src="getTemplate('templates/directive/live-game-scores-info.html')" ng-show="openGame.type == 1"></ng-include>
     <!-- live game stats -->
-    <div class="live-stats" ng-include="getTemplate('templates/sport/livegamestatistics.html')" ng-show="openGame.type == 1"></div>
+    <div class="live-stats" ng-include="getTemplate('templates/directive/live-game-scores-statistics.html')" ng-show="openGame.type == 1"></div>
 </div>
 
 <div class="game-list-compitishion" ng-class="{closed: openGame.markets.WINNER.collapsed}" ng-show="openGame.availableSequences.WINNER">

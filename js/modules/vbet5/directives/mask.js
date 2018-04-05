@@ -22,9 +22,10 @@ VBET5.directive('uiMask', function () {
             '8' : /[0-8]/,
             '9' : /\d/,
             'A' : /[a-zA-Z]/,
-            '*' : /[a-zA-Z0-9]/
+            '*' : /[a-zA-Z0-9]/,
+            '+': /[1-9]/
         },
-        clearOnBlur : true,
+        clearOnBlur : false,
         clearOnBlurPlaceholder : false,
         escChar : '\\',
         eventsToHandle : ['input', 'keyup', 'click', 'focus'],

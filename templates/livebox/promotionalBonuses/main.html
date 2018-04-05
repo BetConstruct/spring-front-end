@@ -30,77 +30,9 @@
         <div class="first-level-history-tab">
             <ul>
                 <li ng-if="conf.promotionalBonuses.sportsbook" ng-click="switchBonusTab(backendBonusConstants.BonusSource.SportsBook)" ng-class="{'active': (activeBonusTab === backendBonusConstants.BonusSource.SportsBook)}"><span trans>sportsbook</span></li>
-                <li ng-if="conf.promotionalBonuses.casino" ng-click="switchBonusTab(backendBonusConstants.BonusSource.Casino)" ng-class="{'active': (activeBonusTab === backendBonusConstants.BonusSource.Casino)}"><span trans>Casino</span></li>
+                <li ng-if="conf.promotionalBonuses.casino && casinoEnabled" ng-click="switchBonusTab(backendBonusConstants.BonusSource.Casino)" ng-class="{'active': (activeBonusTab === backendBonusConstants.BonusSource.Casino)}"><span trans>Casino</span></li>
             </ul>
         </div>
-
-        <!--<div class="second-view-nav-box-w" style="display: none">
-            <div class="second-level-history-tab">
-                <ul ng-show="productMode == 'Sportsbook'">
-                    <li ng-click="betStatusFilter = undefined" ng-class="{'active': (betStatusFilter == undefined)}"><span trans>All Bets</span> <i ng-show="betEventCounts.all">{{betEventCounts.all}}</i></li>
-                    <li ng-click="betStatusFilter = 0" ng-class="{'active': (betStatusFilter == 0)}"><span trans>Open</span> <i ng-show="betEventCounts.unsettled" >{{betEventCounts.unsettled}}</i></li>
-                    <li ng-click="betStatusFilter = 5" ng-class="{'active': (betStatusFilter == 5)}"><span trans>Cashed out</span> <i ng-show="betEventCounts.cashout">{{betEventCounts.cashout}}</i></li>
-                    <li ng-click="betStatusFilter = 3" ng-class="{'active': (betStatusFilter == 3)}"><span trans>Won</span> <i ng-show="betEventCounts.won">{{betEventCounts.won}}</i></li>
-                    <li ng-click="betStatusFilter = 1" ng-class="{'active': (betStatusFilter == 1)}"><span trans>Lost</span> <i ng-show="betEventCounts.lost">{{betEventCounts.lost}}</i></li>
-                    <li ng-click="betStatusFilter = 2" ng-class="{'active': (betStatusFilter == 2)}"><span trans>Returned</span> <i ng-show="betEventCounts.returned">{{betEventCounts.returned}}</i></li>
-                </ul>
-            </div>
-            <div class="all-history-filter-container">
-                <div class="filter-columns-container">
-                    <ul>
-                        <li>
-                            <p>Period</p>
-                            <div class="select-box-period-b"> &lt;!&ndash;active&ndash;&gt;
-                                <p>Last 24 hours</p>
-                                <ul>
-                                    <li>Last 12 hours</li>
-                                    <li>Last 6 hours</li>
-                                    <li>Last 3 hours</li>
-                                    <li>Last 2 hours</li>
-                                    <li>Last 1 hours</li>
-                                </ul>
-
-                            </div>
-                        </li>
-                        <li class="range-filter-box">
-                            <p>Range</p>
-                            <div class="mini-form-box-b">
-                                <div class="date-picker-b">
-                                    <div class="picker-contain">
-                                        <div class="input-group" ng-click="openFrom($event)">
-                                            <input type="text" class="form-control" placeholder="From" datepicker-popup="dd/MM/yyyy" min-date="minDate" max-date="today"
-                                                   ng-model="requestData.dateFrom" is-open="openedFrom"  disabled="disabled"
-                                                   datepicker-options="dateOptions" ng-change="adjustDate('from')"
-                                                   ng-required="true" close-text="Close"/>
-                                            <span class="input-group-btn"><button type="button" class="btn btn-default date-view" ng-click="openFrom($event)"><i class="date-p"></i></button></span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </li>
-                        <li>
-                            <p></p>
-                            <div class="mini-form-box-b">
-                                <div class="date-picker-b">
-                                    <div class="picker-contain">
-                                        <div class="input-group" ng-click="openTo($event)">
-                                            <input type="text" class="form-control" placeholder="To" datepicker-popup="dd/MM/yyyy" min-date="minDate" max-date="today"
-                                                   ng-model="requestData.dateTo" is-open="openedTo"  disabled="disabled"
-                                                   datepicker-options="dateOptions" ng-change="adjustDate('to')"
-                                                   ng-required="true" close-text="Close"/>
-                                            <span class="input-group-btn"><button type="button" class="btn btn-default date-view" ng-click="openTo($event)"><i class="date-p"></i></button></span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </li>
-                    </ul>
-                </div>
-                <div class="mybets-filter-show-b">
-                    <button>Show</button>
-                </div>
-            </div>
-        </div>-->
     </div>
     <vbet-loader ng-if="loadingBonus"></vbet-loader>
     <div class="bet-view-information-box" ng-if="!loadingBonus">
@@ -122,7 +54,7 @@
                         <span>{{bonus.name}}</span>
                     </li>
                     <li class="outcome-bet-info-column">
-                        <span ng-show="bonus.amount">{{bonus.amount|number:conf.balanceFractionSize}} <i>{{currency_name|currency}}</i></span>
+                        <span ng-show="bonus.amount !== undefined">{{bonus.amount|number:conf.balanceFractionSize}} <i>{{currency_name|currency}}</i></span>
                     </li>
                     <li class="bet-status-column-b" ng-class="{'active-status': (bonus.acceptance_type === backendBonusConstants.BonusAcceptanceType.Accepted || bonus.acceptance_type === backendBonusConstants.BonusAcceptanceType.Activated)}">
                         <span>{{(bonus.acceptance_type!=0?backendBonusConstants.BonusAcceptanceTypeByValue[bonus.acceptance_type]:'Available Bonus')|translate}}</span>
@@ -134,11 +66,6 @@
                         <!--claim bonus-->
                         <div class="bonus-info-list-separator-b">
                             <ul>
-                                <!--<li class="screen-contain-box-b">
-                                    <div class="screen-img-contain-b">
-                                        <img src="http://games.vivarobet.am/global/img/games/gameIcons/gameIcons2/EDPendorphina_Urartu.jpg" alt="">
-                                    </div>
-                                </li>-->
                                 <li class="full-bonus-info-box">
                                     <div class="bonus-progress-info" ng-if="!loadingActiveBonusDetails && activeBonusDetails && bonus.acceptance_type === backendBonusConstants.BonusAcceptanceType.Activated && bonus.bonus_type === backendBonusConstants.BonusType.WageringBonus">
                                         <div class="progress-bonus-info-box">
@@ -153,13 +80,14 @@
                                             <li trans>Bonus</li>
                                             <li trans>Time to wager</li>
                                             <li trans>Wagering req</li>
-                                            <li trans>Min/Max Deposit</li>
+                                            <li ng-hide="conf.hideMinMaxColumn" trans>Min/Max Deposit</li>
                                         </ul>
                                         <ul ng-hide="bonus.bonus_type === backendBonusConstants.BonusType.FreeBet">
                                             <li><span ng-show="bonus.name">{{bonus.name}}</span></li>
                                             <li><span ng-show="bonus.expiration_days">{{bonus.expiration_days}}</span> <span trans>days</span></li>
                                             <li><span ng-show="bonus.wagering_factor">x{{bonus.wagering_factor}}</span></li>
-                                            <li><span ng-show="bonus.min_amount">{{bonus.min_amount|number:conf.balanceFractionSize}}</span>
+                                            <li ng-hide="conf.hideMinMaxColumn">
+                                                <span ng-show="bonus.min_amount">{{bonus.min_amount|number:conf.balanceFractionSize}}</span>
                                                 <span ng-show="bonus.min_amount && bonus.max_amount"> / </span>
                                                 <span ng-show="bonus.max_amount">{{bonus.max_amount|number:conf.balanceFractionSize}}</span>
                                                 <span ng-show="currency_name && (bonus.min_amount || bonus.max_amount)">{{currency_name|currency}}</span>
@@ -187,7 +115,7 @@
                                         <span trans>Starting date:</span>
                                         <span>{{bonus.start_date|formatDate:'noLocaleTranslate'}}</span>
                                     </p>
-                                    <p ng-show="bonus.end_date">
+                                    <p ng-show="bonus.end_date && !conf.hideMinMaxColumn">
                                         <span trans>Ending date:</span>
                                         <span>{{bonus.end_date|formatDate:'noLocaleTranslate'}}</span>
                                     </p>
@@ -204,6 +132,9 @@
                                             <i trans>Deposit</i>
                                             <span trans>To activate bonus please do deposit</span>
                                         </button>
+                                    </div>
+                                    <div class="bonus-function-b" ng-if="conf.promotionalBonuses.helpButtonSlug">
+                                        <button ng-click="broadcast('openHelpPage', {slug: conf.promotionalBonuses.helpButtonSlug});" trans>How to use</button>
                                     </div>
                                 </li>
                             </ul>

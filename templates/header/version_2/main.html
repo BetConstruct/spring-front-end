@@ -1,5 +1,5 @@
 <!--header-->
-<div class="guide header-wrapper" ng-controller="mainHeaderVersion2Controller"  ng-init="init()">
+<div ng-controller="mainHeaderVersion2Controller" class="guide header-wrapper" ng-if="!conf.integrationMode && $location.path().indexOf('/widget/') === -1">
     <div class="notification-popup-l" ng-if="notificationPopup.show">
         <div class="notification-popup-info-l">
             <div></div>
@@ -16,70 +16,72 @@
             <a ng-click="notificationPopup.show = false" class="custom-close-l"> &#215; </a>
         </div>
     </div>
+    <div class="header-license-img" ng-if="conf.header.license && $location.path() === '/'">
+        <a ng-href="{{conf.header.license.url}}" target="_blank">
+            <img ng-src="{{conf.header.license.image}}">
+        </a>
+    </div>
     <div class="header-container-b">
-        <div class="logo-nav-wrapper">
-            <!--logo-->
-            <div class="logo-contain-b">
-                <a ng-href="{{::logoUrl}}" ng-click="closeSlider();"></a>
-            </div>
-            <!--logo END-->
-
-            <!--promo menu and menu icon-->
-            <div class="simple-nav-b">
-                <ul>
-                    <li class="menu-visible-icon-b" id="compact-menu" >
-                        <label for="header-collapse" trans>Menu</label>
-                    </li>
-                </ul>
-            </div>
-            <!--promo menu and menu icon END-->
-        </div>
-
-        <!--header top row-->
-        <div class="header-top-row">
-            <ul class="responsive-header-contain-j">
-                <li class="responsive-header-item-j very-top-menu-wrapper-j">
-                    <div class="original" ng-include="getTemplate('templates/header/version_2/veryTopMenu.html')"></div>
-                    <div class="duplicate" ng-include="getTemplate('templates/header/version_2/veryTopMenu.html')"></div>
-                </li>
-                <div class="responsive-header-item-j">
-                    <div class="additional-header-buttons-j" ng-if="conf.headerCustomButtons">
-                        <a
-                                ng-init="button.storageEnv && (env[button.toggleEnv] = getStorageState(button.storageEnv))"
-                                ng-repeat="button in conf.headerCustomButtons track by $index"
-                                ng-if="env.authorized == button.authorized && !button.hide"
-                                class="{{button.class}}"
-                                ng-click="
+        <ul class="responsive-header-contain-j">
+            <li class="responsive-header-item-j">
+                <div class="logo-nav-wrapper">
+                    <a ng-href="{{::logoUrl}}" ng-click="closeSlider();">
+                        <img ng-src="{{(conf.logo.image ? conf.logo.image : 'skins/' + conf.skin + '/images/logo.png') + '?v=' + env.appVersion}}" image-on-load image-width="logoWidth" ng-style="{'width' : conf.logo.width ? (conf.logo.width + 'px') : '', 'height' : conf.logo.height ? (conf.logo.height + 'px') : ''}"/>
+                        <img ng-src="{{(conf.logo.imageFix ? conf.logo.imageFix : 'skins/' + conf.skin + '/images/logo2.png') + '?v=' + env.appVersion}}" ng-style="{'width' : conf.logo.widthFix ? (conf.logo.widthFix + 'px') : '', 'height' : conf.logo.heightFix ? (conf.logo.heightFix + 'px') : ''}"/>
+                    </a>
+                </div>
+            </li>
+            <li class="responsive-header-item-j auto-width">
+                <div class="header-top-row">
+                    <ul class="responsive-header-contain-j">
+                        <li class="responsive-header-item-j header-icon-menu">
+                            <label for="header-collapse" class="menu-visible-icon-b" trans>Menu</label>
+                        </li>
+                        <li class="responsive-header-item-j very-top-menu-wrapper-j auto-width">
+                            <div class="original" ng-include="getTemplate('templates/header/version_2/veryTopMenu.html')"></div>
+                            <div class="duplicate" ng-include="getTemplate('templates/header/version_2/veryTopMenu.html')"></div>
+                        </li>
+                        <li class="responsive-header-item-j" ng-if="conf.header.customButtons || conf.header.textForLanguage">
+                            <div class="additional-header-buttons-j">
+                                <a ng-if="conf.header.textForLanguage[env.lang] || conf.header.textForLanguage.default" ng-href="{{conf.header.textForLanguage.href}}" class="text-only">{{conf.header.textForLanguage[env.lang] || conf.header.textForLanguage.default}}</a>
+                                <a
+                                        ng-init="button.storageEnv && (env[button.toggleEnv] = getStorageState(button.storageEnv))"
+                                        ng-repeat="button in conf.header.customButtons track by $index"
+                                        ng-if="(button.authorized === undefined || env.authorized === button.authorized) && !button.hide"
+                                        class="{{button.class}}"
+                                        style="{{button.style}}"
+                                        ng-click="
                                 button.hideOnClick && (button.hide = true);
                                 button.toggleEnv && (env[button.toggleEnv] = !env[button.toggleEnv]);
                                 button.setEnv && (env[button.setEnv[0]] = button.setEnv[1]);
                                 button.broadcast && (broadcast( button.broadcast[0], button.broadcast[1]));
                                 button.storageEnv && (setStorageState(button.storageEnv, env[button.toggleEnv]));
-                                $event.stopPropagation()
+                                button.help && (openHelpPage(button.help, button.helpFrom));
+                                button.slider && (conf.enableMixedView ? (selectBalanceMenuItem($event,button.slider)) : broadcast( 'toggleSliderTab',button.slider, button.authorized));
+                                button.href && (openPopup(button.href, button.popupTitle, button.popupParams));
+                                $event.stopPropagation();
                             "
-                        >
-                            {{button.checkbox && (env[button.toggleEnv] ? '&#9745;' : '&#9744;')}}
-                            {{(button.toggleEnv ? button.text[env[button.toggleEnv] ? 1 : 0] : button.text)|translate}}
-                        </a>
-                    </div>
-                </div>
-                <!--Messages-->
-                <li class="responsive-header-item-j"
-                    ng-show="env.authorized && conf.headerMessageIcon.showInTopRow" ng-if="!conf.disableHeaderMessages && conf.headerMessageIcon.enabled" >
-                    <div class="separator-contain-nav"
-                         prevent-fast-click ng-click="toggleSliderTab('messages')">
-                        <div class="settings-icon-contain messages-icon-b">
-                            <i class="favorite-count-view" ng-bind="profile.unread_count"
-                               ng-show="profile.unread_count"></i>
-                        </div>
-                    </div>
-                </li>
-                <!--Messages END-->
-                <li class="responsive-header-item-j"
-                    ng-if="loginTime !== undefined">
-                    <div class="separator-contain-nav">
-                        <div class="settings-icon-contain clock-set-b" >
-                            {{'Active Time:'|translate}} <span ng-bind="loginTime|formatDate:'duration'"></span>
+                                >
+                                    {{button.checkbox && (env[button.toggleEnv] ? '&#9745;' : '&#9744;')}}
+                                    {{(button.toggleEnv ? button.text[env[button.toggleEnv] ? 1 : 0] : button.text)|translate}}
+                                </a>
+                            </div>
+                        </li>
+                        <li class="responsive-header-item-j"
+                            ng-show="env.authorized && conf.header.messageIcon.showInTopRow" ng-if="conf.header.messageIcon.enabled" >
+                            <div class="separator-contain-nav"
+                                 prevent-fast-click ng-click="toggleSliderTab('messages')">
+                                <div class="settings-icon-contain messages-icon-b">
+                                    <i class="favorite-count-view" ng-bind="profile.unread_count"
+                                       ng-show="profile.unread_count"></i>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="responsive-header-item-j"
+                            ng-if="loginTime !== undefined">
+                            <div class="separator-contain-nav">
+                                <div class="settings-icon-contain clock-set-b" >
+                                    {{'Active Time:'|translate}} <span ng-bind="loginTime|formatDate:'duration'"></span>
 
                         </div>
                     </div>
@@ -89,27 +91,28 @@
                     <div class="separator-contain-nav" ng-click="toggleSliderTab('promotionalBonuses')">
                         <div class="settings-icon-contain my-bets-b">
                             <b class="mybets-icon-box-b cms-jcon-bonus2"></b>
+                        <i class="mybets-count-view" ng-show="bonusesCount.sportsbook + bonusesCount.casino > 0 && !conf.promotionalBonuses.disableCountOnIcon" ng-init="getBonusesCount();" ng-bind="bonusesCount.sportsbook + bonusesCount.casino"></i>
                         </div>
                     </div>
                 </li>
-                <!--register sign in-->
                 <li class="responsive-header-item-j"
                     ng-show="!env.authorized">
                     <div class="signin-reg-buttons-b" id="signin-reg-buttons">
-                        <ul>
-                            <li ng-hide="conf.disableRegistrationAndLogin"
+                        <ul ng-hide="conf.header.disableRegistrationAndLogin">
+                            <li ng-hide="!conf.registration.enableSignIn"
                                 ng-if="!conf.rfid.loginWIthRFID || conf.rfid.loginWIthRFID && conf.rfid.allowAccessWithoutRfid">
-                                <button ng-class="{'active-s': env.sliderContent === 'signInForm'}" ng-click="signin()" trans>Sign in</button>
+                                <button ng-class="{'active-s': env.sliderContent === 'login'}" ng-click="signin()" trans>Sign in</button>
                             </li>
-                            <li ng-hide="!conf.registration.enable || conf.disableRegistrationAndLogin">
+                            <li ng-hide="!conf.registration.enable">
                                 <button ng-click="register()" trans>Register</button>
                                 <ng-include src="getTemplate('templates/header/dynamicmessage.html')"></ng-include>
                             </li>
                         </ul>
                     </div>
                 </li>
-                <!--register sign in END-->
-                <!--User Menu-->
+                <li class="responsive-header-item-j">
+                    <ng-include class="settings-include-contain" src="getTemplate('templates/header/version_2/whatsNewNotifications.html')"></ng-include>
+                </li>
                 <li class="responsive-header-item-j" ng-show="env.authorized">
                     <ng-include class="settings-include-contain" src="getTemplate('templates/header/version_2/profileMenu.html')"></ng-include>
                 </li>
@@ -125,35 +128,43 @@
                         </div>
                     </div>
                 </li>
-                <!--User Menu END-->
-                <!--Custom Icons-->
                 <li class="responsive-header-item-j" ng-repeat="icon in conf.header.customIcons track by $index" title="{{icon.title|translate}}">
-                    <div class="separator-contain-nav"
-                         prevent-fast-click ng-click="icon.action && broadcast(icon.action, icon.data);icon.func && this[icon.func]()">
-                        <div class="settings-icon-contain {{icon.icon}}">
+                    <div ng-switch="icon.type">
+                        <div ng-switch-when="a" class="separator-contain-nav">
+                            <a class="{{icon.class}}" id="{{icon.id}}" href="{{icon.href}}" target="{{icon.target}}" ng-click="$root[icon.onclick]()">{{icon.text|translate}}</a>
+                        </div>
+                        <div ng-switch-when="help" class="separator-contain-nav"
+                             prevent-fast-click ng-click="broadcast('openHelpPage', {slug: icon.action, from: icon.target || 'footer'});">
+                            <div class="settings-icon-contain {{icon.icon}}">
+                            </div>
+                        </div>
+                        <div ng-switch-default class="separator-contain-nav"
+                             prevent-fast-click ng-click="icon.action && broadcast(icon.action, icon.data);icon.func && this[icon.func]()">
+                            <div class="settings-icon-contain {{icon.icon}}">
+                            </div>
                         </div>
                     </div>
                 </li>
-                <!--Custom Icons END-->
-                <!--Favorite-->
                 <li class="responsive-header-item-j"
-                    ng-show="!conf.rfid.loginWIthRFID || conf.rfid.loginWIthRFID && env.authorized" ng-if="(conf.sportEnabled || casinoEnabled) && conf.header.showFavoriteIcon" >
+                    ng-show="!conf.rfid.loginWIthRFID || conf.rfid.loginWIthRFID && env.authorized" ng-if="(calculatedConfigs.sportEnabled || casinoEnabled) && conf.header.showFavoriteIcon" >
                     <div class="separator-contain-nav"
                          prevent-fast-click ng-click="myGamesToggle()">
                         <div class="settings-icon-contain favorite-icon-b">
                             <i class="favorite-count-view"
-                               ng-show="myGames.length || (!env.hideCasinoFavorites && myCasinoGames.length)"
-                               >{{myGames.length + (env.hideCasinoFavorites ? 0 : myCasinoGames.length)}}</i>
+                               ng-show="myGames.length || (!env.hideCasinoFavorites && casinoEnabled && myCasinoGames.length)"
+                               >{{myGames.length + ((env.hideCasinoFavorites || !casinoEnabled) ? 0 : myCasinoGames.length)}}</i>
                         </div>
                     </div>
                 </li>
-                <!--Favorite END-->
+
                 <li class="responsive-header-item-j"
                     ng-show="conf.header.showHelpIcon">
                     <div id="faq-header" class="separator-contain-nav dont-collaped-b {{headerVersion2Icons.helpIsToggled ? 'active' : ''}}"
                          hide-on-click state-flag-var="headerVersion2Icons.helpIsToggled"
-                         except="start-demo-tour" ng-click="headerIconClick();">
-                        <div class="settings-icon-contain {{conf.header.iconClass || 'help-icon-b'}}"></div>
+                         ng-click="headerIconClick();"
+                         ng-mouseover="headerIconClick(true);"
+                         ng-mouseleave="headerIconClick(false);" >
+                        <div class="settings-icon-contain help-icon-b"></div>
                         <div class="nav-open-view-contain">
                             <ul>
                                 <li>
@@ -161,25 +172,32 @@
                                         <p><span trans>Choose Help</span></p>
                                         <div class="drop-items-contain-b icon-view-box">
                                             <ul>
-                                                <li id="start-demo-tour" ng-if="conf.haveHints && env.authorized" ng-click="StartDemoTour((isInCasino() && !conf.GmsPlatform) ? ['demo', 'casino'] : ['demo', 'header'], true)">
+                                                <!--<li id="start-demo-tour" ng-if="conf.header.demoTour.enabled && conf.header.haveHints && env.authorized" ng-click="StartDemoTour((isInCasino() && !conf.GmsPlatform) ? ['demo', 'casino'] : ['demo', 'header'], true)">
                                                     <i class="icon-faq-new-b"></i>
                                                     <span trans>View Hints</span>
-                                                </li>
-                                                <li ng-click="openFaq();$event.stopPropagation()" ng-if="conf.haveFaq && conf.haveFaq==true">
+                                                </li>-->
+                                                <li ng-click="openFaq();$event.stopPropagation()" ng-if="conf.header.haveFaq && conf.header.haveFaq==true">
                                                     <i class="icon-faq-new-b"></i>
                                                     <span trans>FAQ</span>
                                                 </li>
 
-                                                <li ng-click="openUrl(conf.haveFaq);$event.stopPropagation();" ng-if="conf.haveFaq && conf.haveFaq!=true && !conf.openFaqAsPopup">
+                                                <li ng-click="openUrl(conf.header.haveFaq);$event.stopPropagation();" ng-if="conf.header.haveFaq && conf.header.haveFaq!=true && !conf.header.openFaqAsPopup">
                                                     <i class="icon-faq-new-b"></i>
                                                     <span trans>FAQ</span>
                                                 </li>
 
-                                                <li ng-click="openPopup(conf.haveFaq, 'FAQ', 'toolbar=0,location=0,directories=0,status=1,menubar=0,scrollbars=0,resizable=1,width=600,height=680');$event.stopPropagation();"
-                                                    ng-if="conf.haveFaq && conf.haveFaq!=true && conf.openFaqAsPopup">
+                                                <li ng-click="openPopup(conf.header.haveFaq, 'FAQ', 'toolbar=0,location=0,directories=0,status=1,menubar=0,scrollbars=0,resizable=1,width=600,height=680');$event.stopPropagation();"
+                                                    ng-if="conf.header.haveFaq && conf.header.haveFaq!=true && conf.header.openFaqAsPopup">
                                                     <i class="icon-faq-new-b"></i>
                                                     <span trans>FAQ</span>
                                                 </li>
+
+                                                <!-- Additional help icons (SDC-27785) -->
+                                                <li ng-repeat="helpItem in (conf.header.additionalHelpIcons[env.lang] || conf.header.additionalHelpIcons.eng)">
+                                                    <i ng-class="helpItem.icon"></i>
+                                                    <a ng-if="helpItem.title" ng-click="broadcast('scrollTo', 'header')" ng-href="#/?help={{helpItem.slug}}" ng-bind="helpItem.title" trans></a>
+                                                </li>
+
                                                 <li ng-show="!!isLiveAgent && !conf.liveChat.disableFromHeader && !conf.liveChat[env.lang].notLiveAgentIsLang" ng-click="startLiveAgent()">
                                                     <i class="icon-livechat-new-b"></i>
                                                     <span trans>Live Chat</span>
@@ -210,109 +228,115 @@
                                                     <i class="icon-faq-new-b"></i>
                                                     <span trans>Live Chat</span>
                                                 </li>
-
-                                            </ul>
-
-
-                                        </div>
-                                    </div>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </li>
-                <!--Clock-->
-                <li class="responsive-header-item-j"
-                 ng-hide="conf.hideClock">
-                    <div class="separator-contain-nav {{conf.enableTimeZoneSelect ? 'timezone-v' : 'no-timezone-v'}} {{conf.enableTimeZoneSelect && headerVersion2Icons.timezoneIsToggled ? 'active' : ''}}"
-                         hide-on-click state-flag-var="headerVersion2Icons.timezoneIsToggled">
-                        <div class="settings-icon-contain clock-set-b"
-                             ng-click="headerVersion2Icons.timezoneIsToggled = !headerVersion2Icons.timezoneIsToggled">
-                            <span ng-bind="env.clock|formatDate:'fullHourWithoutAmPm':null:env.timeFormat"></span>
-                            <i ng-bind="env.clock|formatDate:'onlyAmPm':null:env.timeFormat"></i>
-                        </div>
-
-                        <div class="nav-open-view-contain" ng-if="conf.enableTimeZoneSelect">
-                            <ul>
-                                <li>
-                                    <div class="drop-nav-new-b">
-                                        <p>
-                                            <span trans>Change Time zone</span>
-                                        </p>
-                                        <div class="drop-items-contain-b">
-                                            <ul>
-                                                <li ng-repeat="zone in timezones track by $index" ng-click="setTimezoneSwitcherValue(zone.value)" ng-class="{active: (zone.value == env.selectedTimeZone)}">
-                                                    <span>{{zone.name}}</span>
+                                                <li  ng-if="conf.liveChat.headerLink" title="Live Chat">
+                                                    <i class="icon-faq-new-b"></i>
+                                                    <a  href="{{conf.liveChat.headerLink}}" target="_blank" trans>Live Chat</a>
                                                 </li>
+                                                <li  ng-if="conf.liveChat.template" title="Live Chat">
+                                                    <i class="icon-livechat-new-b"></i>
+                                                    <ng-include src="getTemplate(conf.liveChat.template)"></ng-include>
+                                                </li>
+
+
                                             </ul>
-                                        </div>
-                                    </div>
-                                </li>
-                            </ul>
-                        </div>
+
+
+                                                </div>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="responsive-header-item-j"
+                            ng-hide="conf.header.hideClock">
+                            <div class="separator-contain-nav {{conf.header.enableTimeZoneSelect ? 'timezone-v' : 'no-timezone-v'}} {{conf.header.enableTimeZoneSelect && headerVersion2Icons.timezoneIsToggled ? 'active' : ''}}"
+                                 hide-on-click state-flag-var="headerVersion2Icons.timezoneIsToggled">
+                                <div class="settings-icon-contain clock-set-b"
+                                     ng-click="headerVersion2Icons.timezoneIsToggled = !headerVersion2Icons.timezoneIsToggled">
+                                    <span>
+                                        <b ng-bind="env.clock|formatDate:'fullHourWithoutAmPm':null:env.timeFormat"></b>
+                                    </span>
+                                    <i ng-bind="env.clock|formatDate:'onlyAmPm':null:env.timeFormat"></i>
+                                </div>
+
+                                <div class="nav-open-view-contain" ng-if="conf.header.enableTimeZoneSelect">
+                                    <ul>
+                                        <li>
+                                            <div class="drop-nav-new-b">
+                                                <p>
+                                                    <span trans>Change Time zone</span>
+                                                </p>
+                                                <div class="drop-items-contain-b">
+                                                    <ul>
+                                                        <li ng-repeat="zone in timezones track by $index" ng-click="setTimezoneSwitcherValue(zone.value)" ng-class="{active: (zone.value == env.selectedTimeZone)}">
+                                                            <span>{{zone.name}}</span>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="responsive-header-item-j"
+                            ng-show="(conf.availableLanguages|count) > 1">
+                            <div class="separator-contain-nav {{headerVersion2Icons.languageIsToggled ? 'active' : ''}}"
+                                 hide-on-click state-flag-var="headerVersion2Icons.languageIsToggled">
+                                <div class="settings-icon-contain leng-b selected-{{env.lang}}" ng-click="headerVersion2Icons.languageIsToggled = !headerVersion2Icons.languageIsToggled">
+                                    <span>{{conf.show3LettersLanguageCode? (env.lang | uppercase) : conf.availableLanguages[env.lang].short}}</span>
+                                    <i></i>
+                                </div>
+
+                                <div class="nav-open-view-contain">
+                                    <ul>
+                                        <li>
+                                            <div class="drop-nav-new-b">
+                                                <p>
+                                                    <span trans>Change language</span>
+                                                </p>
+                                                <div class="drop-items-contain-b">
+                                                    <ul>
+                                                        <li ng-repeat="lang in sortedAvailableLanguages track by lang.code"
+                                                            ng-click="selectLanguage(lang.code)" ng-class="{'active': lang.code === env.lang}" class="{{lang.code}}"><span>{{ lang.full|translate }}</span></li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="responsive-header-item-j"
+                            ng-if="(conf.header.enableSettings.authorized && env.authorized) || (conf.header.enableSettings.notAuthorized && !env.authorized)">
+                            <ng-include class="settings-include-contain" src="getTemplate('templates/header/version_' + conf.header.version + '/settings.html')"
+                                        hide-on-click state-flag-var="headerVersion2Icons.settingsIsToggled"></ng-include>
+                        </li>
+                    </ul>
+                    <div class="feedback-button" ng-show="!!conf.liveChat.zopimInFooter" onclick="showZopimChat('br');">
+                        <p trans>Live Chat</p>
                     </div>
-                </li>
-                <!--Clock END-->
-                <!--Language-->
-                <li class="responsive-header-item-j"
-                    ng-show="(conf.availableLanguages|count) > 1">
-                    <div class="separator-contain-nav {{headerVersion2Icons.languageIsToggled ? 'active' : ''}}"
-                         hide-on-click state-flag-var="headerVersion2Icons.languageIsToggled">
-                        <div class="settings-icon-contain leng-b selected-{{env.lang}}" ng-click="headerVersion2Icons.languageIsToggled = !headerVersion2Icons.languageIsToggled">
-                            <span>{{conf.show3LettersLanguageCode? (env.lang | uppercase) : conf.availableLanguages[env.lang].short}}</span>
-                            <i></i>
-                        </div>
 
-                        <div class="nav-open-view-contain">
-                            <ul>
-                                <li>
-                                    <div class="drop-nav-new-b">
-                                        <p>
-                                            <span trans>Change language</span>
-                                        </p>
-                                        <div class="drop-items-contain-b">
-                                            <ul>
-                                                <li ng-repeat="lang in sortedAvailableLanguages track by lang.code"
-                                                    ng-click="selectLanguage(lang.code)" ng-class="{'active': lang.code === env.lang}" class="{{lang.code}}"><span>{{ lang.full|translate }}</span></li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                </li>
-                            </ul>
-                        </div>
+                    <div class="feedback-button" ng-show="!!conf.liveChat.popupInFooter" onclick="startLiveChat()">
+                        <p trans>Live Chat</p>
                     </div>
-                </li>
-                <!--Language END-->
-                <!--Settings-->
-                <li class="responsive-header-item-j"
-                    ng-if="(conf.enableSettings.authorized && env.authorized) || (conf.enableSettings.notAuthorized && !env.authorized)">
-                    <ng-include class="settings-include-contain" src="getTemplate('templates/header/version_' + conf.header.version + '/settings.html')"
-                                ng-init="settingsInit()" hide-on-click state-flag-var="headerVersion2Icons.settingsIsToggled"></ng-include>
-                </li>
-                <!--Settings END-->
-            </ul>
-            <div class="feedback-button" ng-show="!!conf.liveChat.zopimInFooter" onclick="showZopimChat('br');">
-                <p trans>Live Chat</p>
-            </div>
 
-            <div class="feedback-button" ng-show="!!conf.liveChat.popupInFooter" onclick="startLiveChat()">
-                <p trans>Live Chat</p>
-            </div>
-
-            <div class="feedback-button" ng-show="!!conf.liveChat.liveAgentInFooter"  onclick="startLiveAgent()" >
-                <p trans>Live Chat</p>
-            </div> 
-        </div>
-        <!--header top row END-->
+                    <div class="feedback-button" ng-show="!!conf.liveChat.liveAgentInFooter && (conf.liveChat[env.lang]=== undefined || conf.liveChat[env.lang].liveAgentInFooter)" onclick="startLiveAgent()" >
+                        <p>{{(conf.liveChat.liveAgentInFooterLabel || 'Live Chat')|translate}}</p>
+                    </div>
+                </div>
+            </li>
+        </ul>
         <input type="checkbox" id="header-collapse">
         <ul class="responsive-header-mainMenu-j">
-            <li>
-                <ng-include ng-if="!conf.header.hideTopMenu" class="include-menu-header-b" src="getTemplate('templates/header/version_2/topMenu.html')"></ng-include>
-            </li>
             <li class="header-left-small-b-j" ng-controller="cmsPagesCtrl" ng-init="loadBanners(getSlug('bannerSlugs.headerSmallBanner'));slider.index = 0;" ng-show="bannerObjects[getSlug('bannerSlugs.headerSmallBanner')]">
                 <a ng-href="{{bannerObjects[getSlug('bannerSlugs.headerSmallBanner')][slider.index].link}}" target="{{bannerObjects[getSlug('bannerSlugs.headerSmallBanner')][slider.index].linktarget}}">
                     <img ng-src="{{ bannerObjects[getSlug('bannerSlugs.headerSmallBanner')][slider.index].imageurl }}">
                 </a>
+            </li>
+            <li ng-style="{'padding' : conf.logo.padding || ('0 ' + (conf.logo.height ? '0' : conf.logo.paddingMenu || logoWidth)  + 'px')}">
+                <ng-include ng-if="!conf.header.hideTopMenu" class="include-menu-header-b" src="getTemplate('templates/header/version_2/topMenu.html')"></ng-include>
             </li>
         </ul>
     </div>
@@ -321,16 +345,16 @@
 
 <ng-include ng-show="currentPageHasSubHeader() && isInSports() && $location.path() !== '/' && $location.path() !== '/virtualsports/'" no-animate src="getTemplate('templates/sport/toptab.html')"></ng-include>
 
-
-<div class="subtop-header-menu-j"  no-animate ng-show="subMenuItems && subMenuItems.length > 1">
-    <ul>
-        <li
-            ng-repeat="subMenuItem in subMenuItems track by $index" ng-class="{'active': subMenuItem.classObject.active}">
-            <a ng-href="{{subMenuItem.href}}">{{subMenuItem.displayName | translate}}</a>
-        </li>
-    </ul>
+<div class="guide header-wrapper" ng-if="subMenuItems && subMenuItems.length > 1">
+    <div class="subtop-header-menu-j"  no-animate>
+        <ul>
+            <li ng-repeat="subMenuItem in subMenuItems track by $index" ng-class="{'active': subMenuItem.classObject.active}" ng-if="subMenuItem.showCondition">
+                <a ng-href="{{subMenuItem.href}}">{{subMenuItem.displayName | translate}}</a>
+            </li>
+        </ul>
+    </div>
 </div>
 
 <div class="feedback-button" ng-if="conf.liveChat.liveChatInFooter" onclick="startLiveChat();">
-    <p ng-bind-html="'Live Chat'|translate|html:'nowrap'"></p>
+    <p ng-bind-html="'Live Chat'|translate|html"></p>
 </div>

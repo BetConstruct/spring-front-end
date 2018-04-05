@@ -1,4 +1,4 @@
-<div ng-controller="casinoSpecialGamesCtrl" ng-init="loadGame('pokerklas');checkIfEnabled('pokerKlas');">
+<div ng-controller="casinoSpecialGamesCtrl">
   <div class="skillgame-landing-j">
     <div class="intro-section-j">
       <div class="intro-slider-j"> 
@@ -25,7 +25,7 @@
             <a ng-href="{{game.downloadLinkMac}}" ng-if="userOS==='MacOS' && game.downloadLinkMac"><button trans>Download</button></a>
           </li>
           <li ng-show="env.authorized">
-            <button class="skin-j" ng-click="amountTransfer('get_balance_poker_klas', null, null, '2')" trans>TRANSFER</button>
+            <button class="skin-j" ng-click="amountTransfer('get_balance_poker_klas', null, null, '3100002')" trans>TRANSFER</button>
           </li>
         </ul>
       </div>

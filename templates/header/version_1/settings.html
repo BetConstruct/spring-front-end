@@ -2,7 +2,7 @@
     <div class="settings">
         <ng-include class="notifications-fix-on-creload-j" src="getTemplate('templates/header/version_' + conf.header.version + '/notifications.html')"></ng-include>
 
-        <div ng-if="(conf.enableSettings.authorized && env.authorized) || (conf.enableSettings.notAuthorized && !env.authorized)" class="settings-button" ng-class="{'open': showSettingsDropDown}" ng-click="showSettingsDropDown=!showSettingsDropDown" hide-on-click state-flag-var="showSettingsDropDown" ng-init="settingsInit()">
+        <div ng-if="(conf.header.enableSettings.authorized && env.authorized) || (conf.header.enableSettings.notAuthorized && !env.authorized)" class="settings-button" ng-class="{'open': showSettingsDropDown}" ng-click="showSettingsDropDown=!showSettingsDropDown" hide-on-click state-flag-var="showSettingsDropDown">
             <span class="set-icon" title="Settings" trans></span>
             <div class="open-lang">
                 <div class="arrow-sport"></div>
@@ -50,9 +50,9 @@
 
     <ng-include src="getTemplate('templates/header/version_' + conf.header.version + '/livechat.html')"></ng-include>
 
-    <div title="FAQ" trans class="help-b faq" ng-click="openFaq()" ng-if="conf.haveFaq">FAQ</div>
+    <div title="FAQ" trans class="help-b faq" ng-click="openFaq()" ng-if="conf.header.haveFaq">FAQ</div>
 
-    <div ng-if="(conf.headerMessageIcon.alwaysShow || profile.unread_count > 0) && env.authorized && conf.headerMessageIcon.enabled"
+    <div ng-if="(conf.header.messageIcon.alwaysShow || profile.unread_count > 0) && env.authorized && conf.header.messageIcon.enabled"
          class="message-info"
          title="{{profile.unread_count}} messages"
          ng-click="toggleSliderTab('messages');">

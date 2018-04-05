@@ -34,8 +34,9 @@ angular.module('vbet5.betting').controller('euro2016CenterController', ['$rootSc
      * @param {Object} game game data object
      * @param {Boolean} fromCustomWidget if it from custom widget
      * @param {Object} competition competition data object
+     * @param {Boolean} fully is responsible for covering the entire central part of the
      */
-    $scope.openGameFullDetailsMultiview = function openGameFullDetailsMultiview(game, competition, fromCustomWidget, fromLeftMenu) {
+    $scope.openGameFullDetailsMultiview = function openGameFullDetailsMultiview(game, competition, fromCustomWidget, fromLeftMenu, fully) {
         if ($scope.selectedGame && $scope.selectedGame.id === game.id) {
             console.log("game already selected");
             return;
@@ -53,7 +54,7 @@ angular.module('vbet5.betting').controller('euro2016CenterController', ['$rootSc
         console.log('openGameFullDetails', game, competition);
         $scope.selectedGame = game;
 
-        $scope.favoriteGameIsSelected = ($rootScope.myGames.indexOf(game.id) !== -1);
+        $scope.favoriteGameIsSelected = fully || $rootScope.myGames.indexOf(game.id) !== -1;
         $scope.favoriteGameFromLeftMenu = $scope.favoriteGameIsSelected && fromLeftMenu;
 
         if (competition) {

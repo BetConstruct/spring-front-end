@@ -1,26 +1,24 @@
 <div ng-init="setTitle('Sport')">
     <div ng-if="!env.isOffline" class="block-size-visible-b">
         <div ng-include="getTemplate('templates/sport/classic/better_main.html')"
-             ng-if="conf.betterSportsbook && conf.sportEnabled && conf.sportsLayout === 'classic' && $location.path() !== '/poolbetting/'"></div>
-        <div ng-include="getTemplate('templates/sport/classic/main.html')"
-             ng-if="!conf.betterSportsbook && conf.sportEnabled && conf.sportsLayout === 'classic' && $location.path() !== '/poolbetting/'"></div>
+             ng-if="calculatedConfigs.sportEnabled && conf.sportsLayout === 'classic' && $location.path() !== '/poolbetting/'"></div>
         <div ng-include="getTemplate('templates/sport/asian/main.html')"
-             ng-if="conf.sportEnabled && conf.sportsLayout === 'asian' && $location.path() !== '/poolbetting/'"></div>
+             ng-if="calculatedConfigs.sportEnabled && conf.sportsLayout === 'asian' && $location.path() !== '/poolbetting/'"></div>
         <div ng-include="getTemplate('optional_modules/comboView/templates/main.html')"
-             ng-if="conf.sportEnabled && conf.sportsLayout === 'combo' && $location.path() !== '/poolbetting/'"
+             ng-if="calculatedConfigs.sportEnabled && conf.sportsLayout === 'combo' && $location.path() !== '/poolbetting/'"
              class="alternative-sportsbook-wrapper"
         ></div>
 
         <div class="classic-version-euro2016" ng-include="getTemplate('templates/sport/euro2016/main.html')"
-             ng-if="conf.sportEnabled && conf.sportsLayout === 'euro2016' && $location.path() !== '/poolbetting/'"></div>
+             ng-if="calculatedConfigs.sportEnabled && conf.sportsLayout === 'euro2016' && $location.path() !== '/poolbetting/'"></div>
 
         <div ng-include="getTemplate('templates/external/sportsbook.html')"
-             ng-if="conf.sportEnabled && conf.sportsLayout === 'external' && $location.path() !== '/poolbetting/'"></div>
+             ng-if="calculatedConfigs.sportEnabled && conf.sportsLayout === 'external' && $location.path() !== '/poolbetting/'"></div>
 
         <div ng-include="getTemplate('templates/poolbetting/new.html')"
              ng-if="$location.path() === '/poolbetting/' && conf.newPoolBettingPage"></div>
 
-        <div ng-if="(conf.sportEnabled && conf.sportsLayout === 'modern') || $location.path() === '/poolbetting/'" class="block-size-visible-b"
+        <div ng-if="(calculatedConfigs.sportEnabled && conf.sportsLayout === 'modern') || $location.path() === '/poolbetting/'" class="block-size-visible-b"
              ng-class="{'sports-on-top': conf.sportsAlwaysOnTop}">
             <div class="tpl-container explorer-container" ng-include="getTemplate('templates/sport/explorer.html')"
                  ng-if="$location.path() === '/sport/' || $location.path().indexOf('customsport') !== -1" class-on-scroll="block-fixed,block-no-fixed"></div>
@@ -40,17 +38,15 @@
                     <div class="games-center">
                         <!--Левый блок(блок с игрой)-->
                         <div class="left-b-game" id="gamesContainer" ng-include="getTemplate('templates/sport/games.html')"
-                             ng-if="($location.path() === '/sport/' || $location.path().indexOf('customsport') !== -1) && !modernVirtualSportsSelected"></div>
+                             ng-if="($location.path() === '/sport/' || $location.path().indexOf('customsport') !== -1)"></div>
                         <div class="left-b-game" ng-include="getTemplate('templates/poolbetting/main.html')"
                              ng-if="$location.path() === '/poolbetting/' && !conf.newPoolBettingPage"></div>
-                        <div class="left-b-game virtual-modern"
+                        <!--<div class="left-b-game virtual-modern"
                              ng-include="getTemplate('templates/sport/virtualsportsmodern.html')"
-                             ng-if="$location.path() === '/sport/' && modernVirtualSportsSelected"></div>
+                             ng-if="$location.path() === '/sport/' && modernVirtualSportsSelected"></div>-->
                         <!--Правый блок(блок bet list)-->
 
-                        <div ng-if="!conf.disableBetSlip" class="right-block-list" betslipscroll
-                             scrollable-area-id="gamesContainer" footer-id="footerContainer"
-                             watch-elements="sport-news-sidebar" ng-class="{'betslip-open':betslipOpen}">
+                        <div ng-if="!conf.disableBetSlip" class="right-block-list betslip-sticky" ng-class="{'betslip-open':betslipOpen}">
 
                             <ng-include class="include-viewSwitcher-j" src="getTemplate('templates/sport/viewswitcher.html')"></ng-include>
 
@@ -61,10 +57,10 @@
                             <div class="list-bet-block" ng-if="$location.path() !== '/poolbetting/'"
                                  ng-include="getTemplate('templates/sport/betslip.html')"></div>
                             <div ng-controller="twitterController"
-                                 ng-include="getTemplate('templates/homepage/twitternews.html')"
+                                 ng-include="getTemplate('templates/homepage/twitterWidget.html')"
                                  class="twitter-news-contain" ng-if="conf.twitterFeed.enabled" ng-show="tweets.length"
                                  ng-init="loadTwitterFeed()"></div>
-                            <div class="mini-games" ng-if="conf.enableMiniGameUnderBetslip"
+                            <div class="mini-games" ng-if="conf.enableMiniGameUnderBetslip && $root.casinoEnabled"
                                  ng-include="getTemplate('optional_modules/casino/templates/specialgames/minigames.html')"></div>
                             <!--Банер-->
                             <div class="right-banner-container" ng-if="conf.enableBannerUnderBetslip"
@@ -72,7 +68,7 @@
                                  ng-include="getTemplate('templates/sport/banners.html')"></div>
                             <!--Спортивные новости-->
                             <div class="sport-news" ng-include="getTemplate('templates/sport/sportnews.html')"
-                                 id="sport-news-sidebar" ng-if="conf.enableNews"></div>
+                                 id="sport-news-sidebar" ng-if="conf.enableNews && conf.enableNewsInModernView"></div>
 
                         </div>
 

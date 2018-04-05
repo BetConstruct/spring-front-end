@@ -270,7 +270,7 @@
             <td>
                 <h2>Bank information</h2>
                 <article>
-                    <p>Thank you for entering your IBAN. It is used only for the payment of winnings.</p>
+                    <p trans>Thank you for entering your IBAN. It is used only for the payment of winnings.</p>
                     <ul>
                         <li class="iban-block-j">
                             <label>
@@ -334,7 +334,7 @@
                             <label>
                                 <img ng-src="https://cptca.betconstruct.com/captcha.php?key=6f4618a96a008c66a55a"
                                      src="https://cptca.betconstruct.com/captcha.php?key=6f4618a96a008c66a55a">
-                                <button ng-click="loadCaptchaImage(regItem)" trans="">Reload</button>
+                                <button ng-click="loadCaptchaImage(regItem);$event.preventDefault();" trans="">Reload</button>
                             </label>
 
                             <div vb-html-compiler="<input type='text' name='captcha_text' ng-blur='registerform[regItem.name].blur=true' ng-model='registrationData[regItem.name]' placeholder=''/>"

@@ -14,14 +14,14 @@ angular.module('vbet5.betting').controller('modernViewManCtrl', ['$rootScope', '
     var VIRTUAL_REGION_POPULAR = {id: -3, alias: 'popular', name: $filter('translate')('Popular'), order: -1};
     var VIRTUAL_SPORT_ALL = {id: null, alias: 'all', name: $filter('translate')('All'), order: -1};
     var VIRTUAL_SPORT_FAVORITE = {id: -1, alias: 'favorites', name: $filter('translate')('Favorite games'), order: -9999, game: $rootScope.myGames.length};
-    var VIRTUAL_SPORT_FINANCIALS = {
-        id: -2,
-        alias: 'financials',
-        name: $filter('translate')('Financials'),
-        order: Config.main.showFinancialsInSportList,
-        game: 2,
-        link: '#/financials'
-    };
+    // var VIRTUAL_SPORT_FINANCIALS = {
+    //     id: -2,
+    //     alias: 'financials',
+    //     name: $filter('translate')('Financials'),
+    //     order: Config.main.showFinancialsInSportList,
+    //     game: 2,
+    //     link: '#/financials'
+    // };
     var VIRTUAL_SPORT_VIRTUALS = {
         id: -3,
         alias: 'virtualsports',
@@ -29,12 +29,16 @@ angular.module('vbet5.betting').controller('modernViewManCtrl', ['$rootScope', '
         order: Config.main.showVirtualsInSportList,
         game: 25
     };
+    var VIRTUAL_MOST_POPULAR = {id: -4, alias: 'mostPopular', name: $filter('translate')(Config.main.popularMatches && Config.main.popularMatches.title || "Popular Games"), order: -1};
 
     var sportListSubId = null;
     var regionListSubId = null;
     var gamesSubId = null;
+    var mostPopularsListSubId = null;
     var searchParams;
     var sportSubscriptionProgress = null, regionSubscriptionProgress = null, gameSubsciptionProgress = null;
+
+    $scope.withVideo = !!$location.search().video;
     var isWideScreen;
 
     var customSportAliasFilter = Utils.getCustomSportAliasFilter();
@@ -193,6 +197,7 @@ angular.module('vbet5.betting').controller('modernViewManCtrl', ['$rootScope', '
             sportSubscriptionProgress.then(function (subId) {
                 Zergling.unsubscribe(subId);
                 sportListSubId = null;
+                mostPopularsListSubId = null;
                 $scope.loadSportsList();
             });
         }
@@ -205,7 +210,7 @@ angular.module('vbet5.betting').controller('modernViewManCtrl', ['$rootScope', '
      * @name updateSportsList
      * @methodOf vbet5.controller:modernViewManCtrl
      * @description Update sport list
-     * @param {Object} response data
+     * @param {Object} data the response data
      */
     function updateSportsList(data) {
         //ordering is done in controller, not in template because:
@@ -218,9 +223,9 @@ angular.module('vbet5.betting').controller('modernViewManCtrl', ['$rootScope', '
         }
 
         if (!customSportAliasFilter) {
-            if (Config.main.showFinancialsInSportList && !$scope.env.live) {
-                $scope.sports_list.unshift(VIRTUAL_SPORT_FINANCIALS);
-            }
+            // if (Config.main.showFinancialsInSportList && !$scope.env.live) {
+            //     $scope.sports_list.unshift(VIRTUAL_SPORT_FINANCIALS);
+            // }
             if (Config.main.showVirtualsInSportList && !$scope.env.live) {
                 $scope.sports_list.unshift(VIRTUAL_SPORT_VIRTUALS);
             }
@@ -232,6 +237,11 @@ angular.module('vbet5.betting').controller('modernViewManCtrl', ['$rootScope', '
                     }
                 });
                 $scope.sports_list.unshift(VIRTUAL_SPORT_ALL);
+            }
+
+            if(Config.main.popularMatches && Config.main.popularMatches.enabled && !$scope.env.live) {
+                $scope.sports_list.unshift(VIRTUAL_MOST_POPULAR);
+
             }
         }
 
@@ -248,11 +258,14 @@ angular.module('vbet5.betting').controller('modernViewManCtrl', ['$rootScope', '
         if (data && data.region !== undefined) {
             var regionsArray = Utils.objectToArray(data.region);
             regionsArray = GameInfo.groupRegionsIfNeeded(regionsArray, $scope.selectedSportId);
+            if (!$scope.selectedSportId) {
+                regionsArray = groupRegionsForAllSports(regionsArray);
+            }
             $scope.regionsList = $filter('orderBy')(regionsArray, 'order');
-            if (!$scope.env.live) {
+            if (!$scope.env.live && $scope.selectedSportId !== VIRTUAL_MOST_POPULAR.id) {
                 $scope.regionsList.unshift(VIRTUAL_REGION_UPCOMING);
             } else {
-                if (Config.main.videoEnabled) {
+                if (Config.main.videoEnabled && !Config.main.customSportsBook.modern.toggleLiveButton && $scope.selectedSportId !== VIRTUAL_MOST_POPULAR.id) {
                     $scope.regionsList.unshift(VIRTUAL_REGION_WITHVIDEO);
                 }
                 $scope.regionsList.unshift(VIRTUAL_REGION_ALL);
@@ -300,7 +313,7 @@ angular.module('vbet5.betting').controller('modernViewManCtrl', ['$rootScope', '
     function updateGames(data, initial) {
         $rootScope.gamesAreLoading = false;
         var firstSport = $filter('firstElement')(data.sport);
-        if (firstSport && firstSport.id !== $scope.selectedSportId && $scope.selectedSportId !== VIRTUAL_SPORT_FAVORITE.id && $scope.selectedSportId !== VIRTUAL_SPORT_ALL.id) {
+        if (firstSport && firstSport.id !== $scope.selectedSportId && $scope.selectedSportId !== VIRTUAL_SPORT_FAVORITE.id && $scope.selectedSportId !== VIRTUAL_SPORT_ALL.id && $scope.selectedSportId !== VIRTUAL_MOST_POPULAR.id) {
             $rootScope.selectedCompetitions = null;
             $rootScope.selectedCompetitionsInColumns = null;
             return; // "late" update (user has already changed sport)
@@ -310,6 +323,10 @@ angular.module('vbet5.betting').controller('modernViewManCtrl', ['$rootScope', '
         angular.forEach(data.sport, function (sport) {
             angular.forEach(sport.region, function (region) {
                 angular.forEach(region.competition, function (competition) {
+                    if (!Config.main.GmsPlatform) {
+                        competition.name = $filter('removeParts')(competition.name, [$rootScope.selectedSportName]);
+                        competition.name = $filter('removeParts')(competition.name, [region.name]);
+                    }
                     competition.region = {id: region.id, name: region.name, alias: region.alias};
                     competition.gamesArray = Utils.objectToArray(competition.game) || [];
                     $rootScope.selectedCompetitions.push(competition);
@@ -328,11 +345,9 @@ angular.module('vbet5.betting').controller('modernViewManCtrl', ['$rootScope', '
         });
         var i, length = $rootScope.selectedCompetitions.length;
         for (i = 0; i < length; i++) {
-            $rootScope.selectedCompetitions[i].name = $filter('removeParts')($rootScope.selectedCompetitions[i].name, [$rootScope.selectedSportName, $rootScope.selectedRegionName]);
+              $rootScope.selectedCompetitions[i].name = $filter('removeParts')($rootScope.selectedCompetitions[i].name, [$rootScope.selectedSportName, $rootScope.selectedRegionName]);
         }
-        $rootScope.selectedCompetitions.sort(function (a, b) {
-            return a.order - b.order;
-        });
+        $rootScope.selectedCompetitions.sort(Utils.orderSorting);
 
         // now always dividing to 2 columns, maybe later number of columns can be set according to screen width if needed
         $rootScope.selectedCompetitionsInColumns = divideToParts($rootScope.selectedCompetitions, 2);
@@ -412,19 +427,22 @@ angular.module('vbet5.betting').controller('modernViewManCtrl', ['$rootScope', '
             }
         };
 
-        if (!Config.main.GmsPlatform) {
-            request.where.sport = {'id': {'@nin': Config.main.virtualSportIds}};
-        }
+        request.where.sport = {'id': {'@nin': GameInfo.getVirtualSportIds()}};
+
         if (Config.env.gameTimeFilter) {
             request.where.game.start_ts = Config.env.gameTimeFilter;
         }
 
         Utils.setCustomSportAliasesFilter(request);
 
+        if ($scope.withVideo && Config.env.live) {
+            request.where.game['@or'] = GameInfo.getVideoFilter();
+        }
+
         Zergling.subscribe(
             request,
             updateSportsList
-            )
+        )
             .then(function (result) {
                 subscribingProgress.resolve(result.subid);
                 if (result.subid) {
@@ -432,7 +450,7 @@ angular.module('vbet5.betting').controller('modernViewManCtrl', ['$rootScope', '
                 }
                 if (result.data) {
                     updateSportsList(result.data);
-                    var sportToSelect, defaultSportListIndex = Config.main.showFavoriteGamesInSportList ? 1 : 0; //when favorites is enabled, it's the first item and actual sports begin from index 1
+                    var sportToSelect, defaultSportListIndex = (Config.main.showFavoriteGamesInSportList && /* Checking if there is a fav to select*/ $rootScope.myGames.length ) ? 0 : 1; //when favorites is enabled, it's the first item and actual sports begin from index 1
                     if (!isNaN(searchSportParam)) {
                         // although 2 lines below looks scary, they just select sport object with id specified in search
                         // and if specified sport does not exist, then first available one
@@ -441,6 +459,9 @@ angular.module('vbet5.betting').controller('modernViewManCtrl', ['$rootScope', '
 
                         if (Config.main.showFavoriteGamesInSportList && searchSportParam === VIRTUAL_SPORT_FAVORITE.id) {
                             sportToSelect = VIRTUAL_SPORT_FAVORITE;
+                        }
+                        if(Config.main.popularMatches && Config.main.popularMatches.enabled && searchSportParam === VIRTUAL_MOST_POPULAR.id) {
+                            sportToSelect = VIRTUAL_MOST_POPULAR;
                         }
                         if (Config.main.showVirtualsInSportList && searchSportParam === VIRTUAL_SPORT_VIRTUALS.id && !Config.env.live) {
                             sportToSelect = VIRTUAL_SPORT_VIRTUALS;
@@ -457,6 +478,43 @@ angular.module('vbet5.betting').controller('modernViewManCtrl', ['$rootScope', '
             subscribingProgress.resolve(null);
         });
     };
+
+    /**
+     * @ngdoc method
+     * @name subscribeToMostPopulars
+     * @methodOf vbet5.controller:modernViewManCtrl
+     * @description subscribes to most popular games count
+     */
+
+    $scope.subscribeToMostPopulars = function subscribeToMostPopulars () {
+        var subscribingProgress = $q.defer();
+        VIRTUAL_MOST_POPULAR.game = 0;
+        var request = {
+            'source': 'betting', 'what': {'sport': [], 'game': '@count'},
+            'where': {
+                'game': {
+                    'type': Config.main.GmsPlatform ? {'@in': [0, 2]} : 0,
+                    'promoted': Config.main.GmsPlatform ? true : {'@contains': parseInt(Config.main.site_id)}
+                }
+            }
+        };
+
+        Zergling.subscribe(request, setPopularGamesCount)
+            .then( function (result) {
+                subscribingProgress.resolve(result.subid);
+                if (result.subid) {
+                    mostPopularsListSubId = result.subid;
+                }
+                setPopularGamesCount(result.data);
+        })
+    };
+
+    function setPopularGamesCount (data) {
+        VIRTUAL_MOST_POPULAR.game = 0;
+        angular.forEach(data.sport, function (sport) {
+            VIRTUAL_MOST_POPULAR.game += sport.game;
+        })
+    }
 
     /**
      * @ngdoc method
@@ -480,7 +538,7 @@ angular.module('vbet5.betting').controller('modernViewManCtrl', ['$rootScope', '
                     'region': ['id', 'name', 'alias'],
                     'competition': [],
                     'game': [
-                        ['id', 'start_ts', 'team1_name', 'team2_name', 'team1_external_id', 'team2_external_id', 'type', 'info', 'events_count', 'markets_count', 'extra', 'is_blocked', 'game_number', 'exclude_ids', 'is_stat_available', 'is_live']
+                        ['id', 'start_ts', 'team1_name', 'team2_name', 'team1_external_id', 'team2_external_id', 'type', 'info', 'events_count', 'markets_count', 'extra', 'is_blocked', 'game_number', 'exclude_ids', 'is_stat_available', 'is_live', 'is_neutral_venue']
                     ],
                     'event': ['id', 'price', 'type', 'name'],
                     'market': ['type', 'express_id', 'name']
@@ -633,12 +691,16 @@ angular.module('vbet5.betting').controller('modernViewManCtrl', ['$rootScope', '
      * @param {Object} sport sport object
      */
     $scope.selectSport = function selectSport(sport) {
-        var regionIdToSelect;
-        console.log('select sport', sport);
         if (!sport) {
-            console.warn('cannot select sport');
             return;
         }
+        if (sport.id === VIRTUAL_SPORT_VIRTUALS.id) {
+            $location.path('/virtualsports');
+            return;
+        }
+        var regionIdToSelect;
+        console.log('select sport', sport);
+
         analytics.gaSend('send', 'event', 'explorer', 'select sport ' + ($scope.env.live ? '(LIVE)' : '(PM)'), {'page': $location.path(), 'eventLabel': sport.alias});
         $location.search('sport', sport.id);
         searchParams = $location.search();
@@ -646,13 +708,6 @@ angular.module('vbet5.betting').controller('modernViewManCtrl', ['$rootScope', '
         console.log('sporrtlist', $scope.sports_list);
         $scope.sports_list = Utils.makeSelectedVisible($scope.sports_list, {id: $scope.selectedSportId}, $scope.sportListMaxVisibleItems);
 
-        if (sport.id === VIRTUAL_SPORT_VIRTUALS.id) {
-            $rootScope.modernVirtualSportsSelected = true;
-            $rootScope.selectedSportAlias = sport.alias;
-            return;
-        }
-
-        $rootScope.modernVirtualSportsSelected = false;
         $scope.regionsList = [];
         $rootScope.selectedCompetitions = [];
         $rootScope.selectedCompetitionsInColumns = [];
@@ -673,12 +728,17 @@ angular.module('vbet5.betting').controller('modernViewManCtrl', ['$rootScope', '
             regionSubscriptionProgress = subscribingProgress.promise;
             var request = {
                 'source': 'betting',
-                'what': {'region': [], 'game': '@count'},
-                'where': {
-                    'sport': {
-                        'id': $scope.selectedSportId},
-                        'game': (Config.main.enableVisibleInPrematchGames && !Config.env.live ? {'@or': ([{ 'type': Config.env.live ? 1 : Config.main.GmsPlatform ? {'@in':[0,2]} : 0 }, {'visible_in_prematch': 1, 'type': 1}])} : {'type': Config.env.live ? 1 : Config.main.GmsPlatform ? {'@in':[0,2]} : 0})
+                'what': {'region': [], 'game': '@count'}
+            };
+
+            request.where = sport.id === VIRTUAL_MOST_POPULAR.id ? {
+                'game': {
+                    'type': Config.main.GmsPlatform ? {'@in': [0, 2]} : 0,
+                    'promoted': Config.main.GmsPlatform ? true : {'@contains': parseInt(Config.main.site_id)}
                 }
+            } : {
+                'sport': {'id': $scope.selectedSportId},
+                'game': (Config.main.enableVisibleInPrematchGames && !Config.env.live ? {'@or': ([{ 'type': Config.env.live ? 1 : Config.main.GmsPlatform ? {'@in':[0,2]} : 0 }, {'visible_in_prematch': 1, 'type': 1}])} : {'type': Config.env.live ? 1 : Config.main.GmsPlatform ? {'@in':[0,2]} : 0})
             };
 
             if (!sport.id) {
@@ -687,6 +747,10 @@ angular.module('vbet5.betting').controller('modernViewManCtrl', ['$rootScope', '
 
             if (Config.env.gameTimeFilter) {
                 request.where.game.start_ts = Config.env.gameTimeFilter;
+            }
+
+            if ($scope.withVideo && Config.env.live) {
+                request.where.game['@or'] = GameInfo.getVideoFilter();
             }
             /*Utils.setCustomSportAliasesFilter(request);*/
             Zergling.subscribe(
@@ -771,21 +835,24 @@ angular.module('vbet5.betting').controller('modernViewManCtrl', ['$rootScope', '
                     'region': ['id', 'name', 'alias'],
                     'competition': [],
                     'game': [
-                        ['id', 'start_ts', 'team1_name', 'team2_name', 'team1_external_id', 'team2_external_id', 'type', 'info', 'events_count', 'markets_count', 'extra', 'is_blocked', 'game_number', 'exclude_ids', 'is_stat_available', 'is_live']
+                        ['id', 'start_ts', 'team1_name', 'team2_name', 'team1_external_id', 'team2_external_id', 'type', 'info', 'events_count', 'markets_count', 'extra', 'is_blocked', 'game_number', 'exclude_ids', 'is_stat_available', 'is_live', 'is_neutral_venue']
                     ],
                     'event': ['id', 'price', 'type', 'name'],
                     'market': ['type', 'express_id', 'name']
-                },
-                'where': {
-                    'sport': {
-                        'id': $scope.selectedSportId
-                    },
-                    'market': {
-                        'type': {'@in': ['P1XP2', 'P1P2']}
-                    },
-                    'game': (Config.main.enableVisibleInPrematchGames && !Config.env.live ? {'@or': ([{ 'type': Config.env.live ? 1 : Config.main.GmsPlatform ? {'@in':[0,2]} : 0 }, {'visible_in_prematch': 1, 'type': 1}])} : {'type': Config.env.live ? 1 : Config.main.GmsPlatform ? {'@in':[0,2]} : 0})
                 }
             };
+            request.where = {
+                'market': {'type': {'@in': ['P1XP2', 'P1P2']}}
+            };
+            if ($scope.selectedSportId === VIRTUAL_MOST_POPULAR.id) {
+                request.where.game = {
+                    'type': Config.main.GmsPlatform ? {'@in': [0, 2]} : 0,
+                    'promoted': Config.main.GmsPlatform ? true : {'@contains': parseInt(Config.main.site_id)}
+                }
+            } else {
+                request.where.game = Config.main.enableVisibleInPrematchGames && !Config.env.live ? {'@or': ([{ 'type': Config.env.live ? 1 : Config.main.GmsPlatform ? {'@in':[0,2]} : 0 }, {'visible_in_prematch': 1, 'type': 1}])} : {'type': Config.env.live ? 1 : Config.main.GmsPlatform ? {'@in':[0,2]} : 0};
+                request.where.sport = { 'id': $scope.selectedSportId };
+            }
 
             if (!$scope.selectedSportId) {
                 delete request.where.sport;
@@ -804,7 +871,7 @@ angular.module('vbet5.betting').controller('modernViewManCtrl', ['$rootScope', '
             }
             if ($scope.selectedRegionId === VIRTUAL_REGION_UPCOMING.id) {
                 request.where.game.start_ts = {'@now': {'@gte': 0, '@lt': $scope.selectedUpcomingPeriod * 3600}};
-            } else if ($scope.selectedRegionId === VIRTUAL_REGION_WITHVIDEO.id) {
+            } else if ($scope.selectedRegionId === VIRTUAL_REGION_WITHVIDEO.id || $scope.withVideo) {
                 request.where.game['@or'] = GameInfo.getVideoFilter();
             } else if ($scope.selectedRegionId === VIRTUAL_REGION_POPULAR.id) {
                 request.where.competition = {'favorite': true};
@@ -866,7 +933,10 @@ angular.module('vbet5.betting').controller('modernViewManCtrl', ['$rootScope', '
             Zergling.unsubscribe(gamesSubId);
             gamesSubId = null;
         }
-
+        if(mostPopularsListSubId) {
+            Zergling.unsubscribe(mostPopularsListSubId);
+            mostPopularsListSubId = null;
+        }
         $rootScope.favoriteGamesSelectedAsSport = false;
     });
 
@@ -912,6 +982,76 @@ angular.module('vbet5.betting').controller('modernViewManCtrl', ['$rootScope', '
     $scope.initModernView = function initModernView() {
         GameInfo.getProviderAvailableEvents().then(function() {
             $scope.loadSportsList();
+
+            if (Config.main.popularMatches && Config.main.popularMatches.enabled) {
+                $scope.subscribeToMostPopulars();
+            }
         });
     };
+
+    /**
+     * @ngdoc method
+     * @name toggleVideo
+     * @methodOf vbet5.controller:explorerCtrl
+     * @description
+     *
+     * Toggles  live/pre-match
+     * unsubscribes from all sports,regions, games subscriptions
+     * then loads sports list for selected mode
+     */
+    $scope.toggleVideo = function toggleVideo(setState) {
+        $scope.withVideo = !$scope.withVideo;
+
+        if (setState !== undefined) {
+            $scope.withVideo = setState;
+        }
+
+        if ($scope.withVideo) {
+            $location.search('video', true);
+        } else {
+            $location.search('video', undefined);
+        }
+
+        if (sportSubscriptionProgress === null) {  //first time
+            $scope.loadSportsList();
+        } else {
+            sportSubscriptionProgress.then(function (subId) {
+                Zergling.unsubscribe(subId);
+                sportListSubId = null;
+                mostPopularsListSubId = null;
+                $scope.loadSportsList();
+            });
+        }
+    };
+
+    /**
+     * @ngdoc method
+     * @name groupRegionsForAllSports
+     * @methodOf vbet5.controller:explorerCtrl
+     * @description
+     *
+     * Toggles  live/pre-match
+     * unsubscribes from all sports,regions, games subscriptions
+     * then loads sports list for selected mode
+     */
+    function groupRegionsForAllSports(regionsInput) {
+        var regionsAlias = {};
+
+        angular.forEach(regionsInput, function (region){
+            var gamesCount = region.game = parseInt(region.game);
+            if (regionsAlias[region.alias]) {
+                regionsAlias[region.alias].region_ids.push(region.id);
+                regionsAlias[region.alias].sport_ids.push(region.sport_id);
+                regionsAlias[region.alias].gamesCount += gamesCount;
+            }
+            else {
+                region.region_ids = [region.id];
+                region.sport_ids = [region.sport_id];
+                region.gamesCount = gamesCount;
+                regionsAlias[region.alias] = region;
+            }
+        });
+
+        return Utils.objectToArray(regionsAlias);
+    }
 }]);

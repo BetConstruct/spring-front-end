@@ -1,8 +1,14 @@
+@import 'introjs';
+@import 'barcode';
+@import 'rg-slider';
+@import 'rzslider';
+@import 'hopscotch';
+@import '_fonts';
 @import '_animations';
 @import 'flags';
 @import 'asian';
 @import 'faq';
-@import 'popups';
+@import '_popups';
 @import 'registration';
 @import 'last-minute-bets';
 @import 'regional-cup';
@@ -38,18 +44,25 @@
 @import 'three-in-one-skill-games';
 @import 'global-promotions';
 @import '../fonts/icomoon/icons';
+@import '../fonts/sport/_sportIcons';
 @import 'header2016';
 @import 'classic-view-version-3-main';
 @import 'homepage2016';
+@import 'exchangeShop';
 @import '_statisticsOnHover';
 @import 'mini-games';
-
-$combo-enabled: true !default;@import 'combo-view-main';@if $combo-enabled == true {@include experimental-sportbook-1;@include experimental-sportbook-2;@include experimental-sportbook-3;@include experimental-sportbook-4;@include experimental-sportbook-5;}
-$exchange-enabled: false !default;@import 'exchange';@if exchange-enabled == true {@include exchange;}
+@import "_comboBetslip";
+@import "_comboCentre";
+@import "_comboLeft";
+@import "_comboLiveOverview";
+@import "_comboStructure";
+$spinner-2017-enabled: false !default;@import "spinner";@if $spinner-2017-enabled == true {@include spinner-2017;}
 $casino2013-enabled: false !default;
-$header2013-enabled: false !default;
 $header2015-enabled: false !default;
 $draw-view-enabled: true !default;@import 'draw-view';@if $draw-view-enabled == true {@include draw-view-style;}
 $live-casino-list-view-enabled: false !default;@import "live-casino-list-view";@if $live-casino-list-view-enabled == true {@include live-casino-list-view;}
 $first-deposit-bonus-view-enabled: true !default;@import 'first-deposit-bonus';@if $first-deposit-bonus-view-enabled == true {@include first-deposit-bonus-style;}
 @import 'betterHomepage';
+@import '_casinoTournaments';
+@import 'slider-animation-r-t';
+@import '_freeBet';

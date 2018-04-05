@@ -6,7 +6,7 @@
         <div class="contain-gameing" ng-controller="classicViewCenterController">
             <div class="centr-market-contain">
                 <div class="game-center-container">
-                    <div class="scroll-contain" ng-class="{'pin-live-section' : !noClassicScroll && isLiveGamePinned && conf.enableLiveSectionPin && (openGame.sport.alias !== 'HorseRacing') && !(enlargedGame && openGame.id === enlargedGame.id)}">
+                    <div class="scroll-contain" ng-class="{'pin-live-section' : !noClassicScroll && env.isLiveGamePinned && conf.enableLiveSectionPin && (openGame.sport.alias !== 'HorseRacing') && !(enlargedGame && openGame.id === enlargedGame.id)}">
                         <div ng-if="newSlideAvailable" class="live-slide-widget">
                             <span class="left-slide" ng-click="widgetSlide('prev')" ng-show="liveGames.length > 1"></span>
                             <div class="game-contain-j"
@@ -21,7 +21,7 @@
                                             <div class="game-content">
                                                 <div class="game-info game-{{openGame.sport.alias.toLowerCase()}}" ng-show="!openGameLoading">
                                                     <button class="unpin-button"
-                                                            ng-class="{'active': isLiveGamePinned && !noClassicScroll}"
+                                                            ng-class="{'active': env.isLiveGamePinned && !noClassicScroll}"
                                                             ng-disabled="noClassicScroll"
                                                             ng-show="conf.enableLiveSectionPin && (openGame.sport.alias !== 'HorseRacing') && !(enlargedGame && openGame.id === enlargedGame.id)"
                                                             ng-click="toggleLiveSectionPin()"
@@ -47,18 +47,18 @@
                                     </span>
                                                         <span ng-if="openGame.sport.alias === 'HorseRacing'" title="{{ openGame.team2_name ?  openGame.team2_name: '' }}">{{ openGame.team2_name ?  openGame.team2_name: '' }}&nbsp;&nbsp;&nbsp; {{ openGame.start_ts| formatDate: "LT"}}</span>
                                                     </div>
-                                                    <ng-include src="getTemplate('templates/sport/livescore.html')"></ng-include>
+                                                    <ng-include src="getTemplate('templates/directive/live-game-scores-info.html')"></ng-include>
                                                     <div class="add-info" ng-if="!!openGame.info.current_game_state">
                                                         {{ openGame.info.current_game_state|convertSetName:openGame.sport.alias|translate }} {{ (openGame.info.current_game_time)[0] === '-'? ('will start in'|translate)+' '+ (openGame.info.current_game_time).substring(1): openGame.info.current_game_time }}
                                                     </div>
-                                                    <ng-include src="getTemplate('templates/sport/livegamestatistics.html')"></ng-include>
+                                                    <ng-include src="getTemplate('templates/directive/live-game-scores-statistics.html')"></ng-include>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
 
-                                <div class="scroll-j-tr" ng-class="{'stats-block-shown':(openGame.last_event && showStatsBlock)}">
+                                <div class="scroll-j-tr" ng-class="{'stats-block-shown':(openGame.last_event && showStatsBlock )}">
                                     <div class="scroll-j-td">
                                         <div class="scroll-j-scroll-wrap">
                                             <div class="scroll-j-scroll">
@@ -236,7 +236,7 @@
     <!-- Last Minutes bets Games Widget -->
     <div ng-switch-when="lastminutesbets">
         <div>
-            <game-widget ng-if="conf.homePageLastMinuteBets.enable && !conf.twitterFeed.enabled" sport-tabs-quantity="15" game-widget-type="'lastMinutesBets'" game-widget-mode="'iframe'" game-widget-title="'Last minute bets'" class="last-minutes-widget-b"></game-widget>
+            <game-widget sport-tabs-quantity="15" game-widget-type="'lastMinutesBets'" game-widget-mode="'iframe'" game-widget-title="'Last minute bets'" class="last-minutes-widget-b"></game-widget>
         </div>
     </div>
 
@@ -255,7 +255,7 @@
     <div ng-switch-when="news">
         <div ng-init="isWidget=true">
             <div class="news-block-section">
-                <div ng-include="getTemplate('templates/homepage/new_sportnews_full.html')" class="tpl-container"></div>
+                <div ng-include="getTemplate('templates/homepage/newsWidget.html')" class="tpl-container"></div>
             </div>
         </div>
     </div>
@@ -263,10 +263,23 @@
     <!--featuredgames widget-->
     <div ng-switch-when="featuredgames">
         <div ng-init="isIframe=true">
-            <ng-include src="getTemplate('templates/homepage/featured_games_slider.html')"></ng-include>
+            <ng-include src="getTemplate('templates/homepage/featuredGamesSlider.html')"></ng-include>
         </div>
     </div>
 
+    <!--freebet widget-->
+    <div ng-switch-when="freebet">
+        <div ng-init="isIframe=true">
+            <ng-include src="getTemplate('templates/freebet/main.html')"></ng-include>
+        </div>
+    </div>
 
-
+    <!--animation widget-->
+    <div ng-switch-when="animation" ng-controller="widgetCtrl" ng-init="openGameById($location.search().gameid)">
+        <div ng-init="isIframe=true">
+           <div class="video-animation-vox-v3 animation-control">
+               <include-template template-path="templates/sport/classic/animations.html"></include-template>
+           </div>
+       </div>
+    </div>
 </div>

@@ -39,7 +39,7 @@
  }
 .resent-bets-slider-b > ul > li{
   float: left;
-  width: 325px;
+  width: calc(25% - 2px);
   box-sizing: border-box;
   margin: 0 0 0 2px;
   border: 4px solid rgba($skin-palette-11, 0.8);
