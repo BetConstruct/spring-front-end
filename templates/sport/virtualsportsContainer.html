@@ -1,4 +1,4 @@
-<div class="container-p gameing-wrapper"  no-animate ng-init="checkIfEnabled('virtualSports'); setTitle('Virtual sports')">
+<div class="container-p gameing-wrapper"  no-animate ng-init="setTitle('Virtual sports')">
     <!-- System Calculator-->
     <div id="system-claculator-container" ng-if="$root.showSystemCalculator" draggable allow-other-mouse-events drag-from="calculator-draggable-header">
         <ng-include src="getTemplate('templates/sport/classic/systemCalculator.html')"></ng-include>
@@ -19,7 +19,7 @@
                 <ng-include class="include-viewSwitcher-j" src="getTemplate('templates/sport/viewswitcher.html')"></ng-include>
                 <div class="betslip-toggle" ng-click="betslipOpen=!betslipOpen" ng-class="{'betslip-button-open':betslipOpen }"><p>BetSlip</p><span class="betslip-bets-count" ng-bind="$root.betSlipBetsCount"></span></div>
                 <div class="list-bet-block" ng-if="$location.path() !== '/poolbetting/'" ng-include="getTemplate('templates/sport/betslip.html')"></div> 
-                <div class="mini-games" ng-if="conf.enableMiniGameUnderBetslip" ng-include="getTemplate('optional_modules/casino/templates/specialgames/minigames.html')"></div>
+                <div class="mini-games" ng-if="conf.enableMiniGameUnderBetslip && $root.casinoEnabled" ng-include="getTemplate('optional_modules/casino/templates/specialgames/minigames.html')"></div>
                 <div class="right-banner-container" ng-if="conf.enableBannerUnderBetslip" ng-controller="cmsSportNewsCtrl" ng-include="getTemplate('templates/sport/classic/banners.html')"></div>
                 <div ng-if="conf.enableNews && conf.showNewsInClassicView" ng-show="(!betSlipBetsCount || betSlipBetsCount === 0) && showNewsBlock && showNewsBetSet && (hideVideoAndAnimationBox || (!openGame.has_animation && (!openGame.video_id || !conf.videoEnabled || pinnedGames[openGame.id] || enlargedGame)))" class="sport-news" ng-include="getTemplate('templates/sport/sportnews.html')" id="sport-news-sidebar"></div>
             </div>

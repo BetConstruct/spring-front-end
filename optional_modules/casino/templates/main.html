@@ -1,17 +1,19 @@
-<div ng-controller="casinoCtrl"
-     ng-init="checkIfEnabled('casino'); setTitle(('Casino'|translate));"
-     watch-resize middle-screen-mode="true"
-     ng-class="{'casino-mainpage-wrapper-b': cConf.newCasinoDesignEnabled}">
+<div ng-controller="casinoCtrl" ng-init=" setTitle(('Casino'|translate));" watch-resize middle-screen-mode="true" class="casino-mainpage-wrapper-b">
     <!--Casino-new hompage-->
-   <div ng-include="getTemplate('optional_modules/casino/templates/casino-new-template.html')" ng-if="cConf.newCasinoDesignEnabled"></div>
-<!--Casino old homepage-->
-    <div ng-include="getTemplate('optional_modules/casino/templates/casino-old-template.html')" ng-if="!cConf.newCasinoDesignEnabled"></div>
+    <div ng-include="getTemplate('optional_modules/casino/templates/casino-template.html')"></div>
 
-    <div ng-show="!cConf.newCasinoDesignEnabled && (selectedCategory.id !== undefined || (popularGames.length && popularsPerGroups.length === 0)) && (selectedCategory.id === -1 || selectedCategoryAllGames.length) && selectedCategoryGames.length === 0"
-         class="no-games">
-        <p trans>No games found</p>
-    </div>
-    <div ng-show="allGames && allGames.length" ng-include="getTemplate('optional_modules/casino/templates/popup-games.html')"></div>
+
+    <multiview-control ng-if="confData.main.multiViewEnabled" wide-mode="wideMode" middle-mode="middleMode" view-count="viewCount" games-info="gamesInfo"></multiview-control>
     <div ng-include="getTemplate('optional_modules/casino/templates/big-game.html')" ng-if="gamesInfo.length" class="big-games-overflow"></div>
+
 </div>
-<!--Casino END-->
+<style ng-controller="cmsPagesCtrl" ng-init="loadPage('casino-backgrounds-' + env.lang, 'lang')">
+    .body-wrapper.casino {
+    {{mainPage.thumbnail ? 'background-image: url('+mainPage.thumbnail+');' : ''}}
+    {{mainPage.custom_fields.size ? "background-size: " + mainPage.custom_fields.size[0] + ";" : mainPage.thumbnail ? "background-size: 100%;" : ""}}
+    {{mainPage.custom_fields.position ? 'background-position: ' + mainPage.custom_fields.position[0] : mainPage.thumbnail ? "background-position: 50% 0" : ""}};
+    {{mainPage.custom_fields.attachment ? "background-attachment:" + mainPage.custom_fields.attachment[0] + ";" : ""}}
+    {{mainPage.custom_fields.color ? "background-color: " + mainPage.custom_fields.color[0] + ";" : ""}}
+    {{mainPage.custom_fields.repeat ? "background-repeat: " + mainPage.custom_fields.repeat[0] : mainPage.thumbnail ? "background-repeat: no-repeat" : ""}};
+    }
+</style>

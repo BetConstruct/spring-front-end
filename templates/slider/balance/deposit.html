@@ -1,6 +1,6 @@
 <!--Deposit-->
 <div class="register deposit" ng-controller="paymentsCtrl"  ng-init="init('deposit');">
-    <h4 ng-show="isProfilePartial" class="complite-info-register">
+    <h4 ng-show="isProfilePartial" class="complite-info-register please-complete-profile">
         <p ng-init="msgs=('It is very important to keep your personal information up to date. Hence our request to you is to submit your personal information in My Profile ->|Personal Details|as soon as possible.'|translate).split('|')">
             <span>{{msgs[0]}}</span>
             <span ng-if="msgs[1]"><a ng-click="env.showSlider=true; env.sliderContent='settings';env.mixedSettingsPage='details'">{{msgs[1]}}</a></span>
@@ -172,13 +172,19 @@
                     <div ng-switch-when="template">
                         <ng-include src="getTemplate(field.path)"></ng-include>
                     </div>
+                    <div ng-switch-when="checkbox" class="no-select-j">
+                        <label ng-if="selectedPaymentSystem.agreeTermsText">
+                            <input name="{{field.name}}" ng-attr-id="{{field.id}}" ng-model="selectedPaymentSystem.agreeTerms" ng-init="selectedPaymentSystem.agreeTermsExists = true" type="checkbox" ng-required="field.required">
+                            <span ng-bind-html="selectedPaymentSystem.agreeTermsText"></span>
+                        </label>
+                    </div>
                 </div>
             </div>
 
             <div class="cont-deposit-button" ng-show="!showConfirmation && !paymentIsDone && !selectedPaymentSystem.onlyInfoTextOnDeposit">
                 <div class="button-sign" ng-show="selectedPaymentSystem && !selectedPaymentSystem.onlyInfoTextOnDeposit">
                     <button id="deposit-button" class="button-sign" ng-hide="selectedPaymentSystem.hideDepositButton" trans ng-click="deposit()"
-                            ng-disabled="((!paymentAmount.deposit && selectedPaymentSystem.depositPrefilledAmount === undefined)|| busy) || ((selectedPaymentSystem.name == 'card' && !selectedPaymentSystem.enabledForCard) && depositFormData.pin_code === undefined) || userAge < conf.registration.minimumAllowedAge"
+                            ng-disabled="((!paymentAmount.deposit && selectedPaymentSystem.depositPrefilledAmount === undefined)|| busy) || ((selectedPaymentSystem.name == 'card' && !selectedPaymentSystem.enabledForCard) && depositFormData.pin_code === undefined) || userAge < conf.registration.minimumAllowedAge || (selectedPaymentSystem.agreeTermsExists && !selectedPaymentSystem.agreeTerms)"
                             ng-bind="(depositInProgress ? 'Start over' : ((selectedPaymentSystem.depositButtonCaption|translate) || 'Deposit'))|translate"></button>
                     <div class="deposit-amount" ng-hide="selectedPaymentSystem.hideDepositButton || selectedPaymentSystem.hideDepositAmmount" ng-if="selectedPaymentSystem.depositPrefilledAmount === undefined">
                         <label>
@@ -189,14 +195,14 @@
                         <input name="amount" id="numpad-forced" type="number" numpad numpad-force ng-model="paymentAmount.deposit" placeholder="enter amount here" min="{{paymentAmount.amountMinLimit}}" step="{{paymentAmount.amountMinLimit}}" required trans>
 
                         <button ng-repeat="customAmount in depositCustomAmounts track by $index" ng-click="paymentAmount.deposit=customAmount">{{customAmount|number}}</button>
-
+                        <label class="no-select-j">
+                            <span ng-bind-html="selectedPaymentSystem.companyText"></span>
+                        </label>
                     </div>
                 </div>
-
                 <div class="button-sign" ng-if="selectedPaymentSystem.userConfirmationButton">
                     <button class="button-sign" ng-click="confirmUser(depositFormData.user_confirmation_password)" trans>Confirm</button>
                 </div>
-
             </div>
             <div class="popup-bg-contain" ng-class="{'active': popupInfo}">
                 <div class="deposit-alert-contain">

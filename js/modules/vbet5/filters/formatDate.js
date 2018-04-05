@@ -14,10 +14,15 @@
  */
 VBET5.filter('formatDate', ['Moment', 'Config', 'Utils', function (Moment, Config, Utils) {
     'use strict';
-    var DEFAULT_FORMAT = Config.main.defaultTimeFormat || (Config.env.lang === 'tur' ? "DD MMM YYYY LT" : "ll LT");
-
+    var DEFAULT_FORMAT = (Config.main.dateFormat[Config.env.lang] && Config.main.dateFormat[Config.env.lang].default) || Config.main.defaultTimeFormat || (Config.env.lang === 'tur' ? "DD MMM YYYY LT" : "ll LT");
+    var DATE_FORMAT = Config.main.dateFormat;
+    if (Config.main.dateFormat[Config.env.lang]) {
+        angular.forEach(Config.main.dateFormat[Config.env.lang], function (value, key) {
+            DATE_FORMAT[key] = value;
+        });
+    }
     return Utils.memoize(function (timestamp, format, calendarDays, longDateFormat) {
-        var localeIsFixed = false;
+        var localeIsFixed = false, input = timestamp;
         calendarDays = calendarDays || 1;
         if (typeof timestamp === 'string' && timestamp.indexOf(':') !== -1 && timestamp.indexOf('-') !== -1) {
             timestamp = Moment.get(timestamp);
@@ -48,7 +53,7 @@ VBET5.filter('formatDate', ['Moment', 'Config', 'Utils', function (Moment, Confi
                     localeIsFixed = true; // TODO see below
                     break;
                 case 'noLocaleTranslate':
-                    format = Config.main.dateFormat.noLocaleTranslate[Config.env.timeFormat];
+                    format = DATE_FORMAT.noLocaleTranslate[Config.env.timeFormat];
                     localeIsFixed = true; // TODO see below
                     break;
                 case 'noLocaleTime':
@@ -57,12 +62,14 @@ VBET5.filter('formatDate', ['Moment', 'Config', 'Utils', function (Moment, Confi
                     break;
                 case 'unixDate':
                     if (Config.env.lang === 'arb') {
-                        return Moment.moment.utc(timestamp).locale(localeLang).format(Config.main.dateFormat.unixDate);
+                        return Moment.moment.utc(timestamp).locale(localeLang).format(DATE_FORMAT.unixDate);
                     }
-                    return Moment.moment.utc(timestamp).format(Config.main.dateFormat.unixDate);
+                    return Moment.moment.utc(timestamp).format(DATE_FORMAT.unixDate);
                 case 'edition':
                     var edition = Moment.get(timestamp).locale(localeLang);
                     return parseInt(edition.format('DDD'), 10) + ((Config.main.edition && Config.main.edition.offset) || 0);
+                case 'tornament':
+                    return Moment.moment.utc(input).local().format("YY-MM-DD HH:mm");
                 case 'duration':
                     return Moment.moment.utc(timestamp).format("HH:mm:ss");
             }

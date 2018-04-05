@@ -5,24 +5,19 @@ CASINO.constant('CConfig', {
     bigIconsUrl: '/global/img/games/gameIcons/gameIcons3/',
     backGroundUrl: '/global/img/games/gameIcons/background/',
     winnersIconsUrl: '/global/img/extimg/',
-    cGamesUrl: '/global/v-play.php',
+    gamesUrl: '/authorization.php',
     cUrlPrefix: 'http://casino.vbet.com',
     dataUrl: 'https://www.cmsbetconstruct.com/casino/',
     casinoDomain: 'http://games.vivarobet.am',
     bonusPopUpUrl: '', //for example: 'http://www.youtube.com/embed/ft6pQz_9S6M?rel=0&autoplay=1&controls=1'
-
+    deviceTypeId: 1,
     main: {
-        newCasinoDesign: {
-            enabled: false
-        },
-        enableGameInfoButton: false, //implemented only for casinoVersion:2
-        maxVisibleCategories: 5, //maximum number of categories visible in explorer (the rest will go in "more" block)
-        maxVisibleCategoriesWide: 10,//maximum number of categories visible in explorer in wide screen mode (the rest will go in "more" block)
+        enableGameInfoButton: false,
         moreColumnNumber: 6, //number of columns in categories  "more" dropdown block
         numberOfRecentGames: 20, //initial number of recent games to show.  When newCasinoDesign is enabled change this value to be 3X
         numberOfRecentGamesWide: 28, //initial number of recent games to show in wide screen mode.  When newCasinoDesign is enabled change this value to be 5X
-        increaseBy: 15, // load this number of additional games when clicking "load more".   When newCasinoDesign is enabled change this value to be 3X
-        increaseByWide: 15, // load this number of additional games when clicking "load more".  When newCasinoDesign is enabled change this value to be 5X
+        increaseBy: 30, // load this number of additional games when clicking "load more".   When newCasinoDesign is enabled change this value to be 3X
+        increaseByWide: 30, // load this number of additional games when clicking "load more".  When newCasinoDesign is enabled change this value to be 5X
         partnerID: '13', // partner ID
         popularGamesID: 'PopularGames', // popular games ID
         topSlotsID: 'TopSlots', // top slots ID
@@ -30,12 +25,25 @@ CASINO.constant('CConfig', {
         multiViewEnabled: false,
         fourGameViewEnable: true,
         filterByProviderEnabled: true,
-        funModeEnabled: true,// enable/disable fun mode
+        depositButtonUnderGame: {
+            enabled: true,
+            disableOptions: {
+                providers: ['VGS'],
+                categories: ['28']
+            }
+        },
+        enableDepositButtonInCasino: true,
+        licenseLogo: { // shows license logo on the opposite side of the deposit button
+            enabled: false,
+            href: ''
+        },
+        funModeEnabled: 1,// enable/disable fun mode.  0 - disable for all users, 1 - enable for all users, 2 - enable for logged in users
         realModeEnabled: true, // enable/disable real playing mode
         providersThatHaveNotFunMode: ['MTG'],
-        providersThatWorkWithSwarm: ['GNI', 'HBN', 'PTG', 'PSN', 'NYX', 'ASG', 'MGS', 'KLG', 'VGS'],
+        providersThatWorkWithSwarm: ['KLG', 'VGS'],
         providersCustomMessages: {
             NET: {
+                showForCountries: ['FR', 'IT', 'DZ', 'EC', 'ID', 'IR', 'MM', 'AF', 'AL', 'AO', 'KH', 'GY', 'IQ', 'KW', 'LA', 'NA', 'NI', 'KP', 'PK', 'PA', 'PG', 'SD', 'SY', 'UG', 'YE', 'ZW'],
                 message: '(NET) Please be informed that some IP addresses are blocked.',
                 timeDelay: 604800000
             }
@@ -43,21 +51,6 @@ CASINO.constant('CConfig', {
         categoriesThatHaveNotFunMode: ['Progressive'],
         downloadEnabled: true,// enable/disable client download option
         storedbonusPopUpLifetime: 86400000, // 1 day: timestamp in milisecond
-        categories: [
-            51, //videoslot
-            65, //New
-            39, //FilmSlot
-            46, //InstantWin
-            28, //LiveDealer
-            35, //VirtualBetting
-            4,  //PopularGames
-            36, //SkillGames
-            17, //TableGames
-            1,  //TopSlots
-            40, //VideoPoker
-            44  //OtherGames
-        ],
-        filterByCategory: ["28", "36", "23"],
         filterByProvider: [],
         biggestWinners: {
             topWinners: true,
@@ -67,6 +60,7 @@ CASINO.constant('CConfig', {
         topBanners: {
             showSlider: true,
             showPopularGameBanner: true,
+            showPopularGameBannerDoubleSize: false,
             showBannerInsteadWinners: false,
             showBannerInsteadOfBiggestWinners: true,
             showBiggestWinners: false
@@ -83,6 +77,37 @@ CASINO.constant('CConfig', {
         url: '/global/cashier/cashier.php',
         timeout: 10000 // in milliseconds
     },
+    tournaments: {
+        filters: [
+            {
+                name: 'Status',
+                field: 'State',
+                filters: [
+                    {name: 'All', all: true, active: false},
+                    {name: 'Upcoming', value: 3, active: true},
+                    {name: 'Live', value: 2, active: true},
+                    {name: 'Finished', value: 1, active: false},
+                    {name: 'Canceled', value: -1, active: false}
+                ]
+            },
+            {
+                name: 'Registration status',
+                field: 'registrationStatus',
+                filters: [
+                    {name: 'Registration Started', value: 1},
+                    {name: 'Registration Finished', value: 2}
+                ]
+            },
+            {
+                name: 'Entry type',
+                field: 'buyInStatus',
+                filters: [
+                    {name: 'Buy-in', value: 2},
+                    {name: 'Free Entry', value: 1}
+                ]
+            }
+        ]
+    },
     jackpot: {
         url_prefix: 'http://casino.vivarobet.am',
         url: '/jackpot/getJackpotData.php',
@@ -95,7 +120,7 @@ CASINO.constant('CConfig', {
         view3DEnabled: false,  // the old config for liva casino view (if view3DEnabled = true then page has 3D view if view3DEnabled = false then page has viewStyle view)
         view3DBannersRotationPeriod: 5000,
         hiddenGamesIds: ['4015', '4821'],
-        lcGameUrlPrefix: '//rgs-livedealerwebserver.',
+        lcGameUrlPrefix: '//rgs-livedealerwebclient.',
         provider: "VGS",
         lobbyGroupsMap: {
             '102': 1,
@@ -104,7 +129,11 @@ CASINO.constant('CConfig', {
             '104': 4,
             '105': 3,
             '106': 4,
-            '107': 1
+            '107': 1,
+            '110': 1,
+            '112': 2,
+            '119': 5,
+            '108': 3
         },
         liveDealersPhotosUrl: "http://websitelivegames-am.betconstruct.com/Content/Images/DealerPhotos/",
         liveDealersPhotosUrlVersion2: "http://rgs-livedealerwebserver.betconstruct.int/content/dealers/",
@@ -187,38 +216,54 @@ CASINO.constant('CConfig', {
             height: '900'
         }
     },
-    shashki: {
+    checkers: {
         id: "3991",
         gameID: "VGSshashki",
         externalID: '88',
         provider: 'VGS',
-        redirectOnGame: true,
         initialSize: {
             width: '1600',
             height: '900'
         }
     },
+    csbPoolBetting: {
+        gameID: "CSB1",
+        provider: "CSB",
+        externalID: "152000"
+    },
     pokerklas: {
         id: "",
         gameID: "",
-        externalID: '2',
+        externalID: '3100002',
         provider: 'KLG',
         downloadLink: "http://qtupdate.klasnetwork.com/windows/installers/268/2d/setup.exe",
         downloadLinkMac: "http://qtupdate.klasnetwork.com/mac/installers/268/2d/MarsBet.pkg"
     },
+    ggpoker: {
+        id: "",
+        gameID: "",
+        externalID: '154000',
+        provider: 'GG Network',
+        downloadLink: "http://dlportal.sdock.net/installer/ggpokersite?btag1=betc",
+        downloadLinkMac: "http://dlportal.sdock.net/installer/osx/ggpokersite/en?btag1=betc"
+    },
     poker: {
         front_game_id: 'VGSPoker',
-        id: "VGSPoker",
+        id: "5639",
+        provider: 'VGS',
         gameCategory: 'SkillGames',
         gameID: "VGSPoker",
-        externalID: '',
+        externalID: '28',
         gameProvider: 'VGS',
         gameName: 'Poker',
         name: 'Poker',
+        initialSize: {
+            height: 1,
+            width: 2
+        },
         gameType: {
             isDownloadClient: 1,
             realPlay: 0,
-            ratio: "16:9",
             playForFun: 0
         }
     },
@@ -233,5 +278,8 @@ CASINO.constant('CConfig', {
         games: [
             {id: "ASG22", provider: "ASG", externalID: '3035'}
         ]
+    },
+    vrcasino: {
+        id: "6490"
     }
 });

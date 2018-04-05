@@ -13,6 +13,11 @@
 		margin: auto;
 		color: #c2c2d5;
 		font: 12px/14px $font-f;
+		&:after {
+			content: "";
+			display: block;
+			clear: both;
+		}
 	}
 	.lc-lv-guide aside{
 		width: 260px;
@@ -20,7 +25,10 @@
 		background: #212433;
 		padding: 0 20px;
 		box-sizing: border-box;
-		position: fixed;
+		position: static;
+		position: sticky;
+		position: -webkit-sticky;
+		top: 48px;
 	}
 	.lc-lv-guide aside h5 {
 		text-transform: uppercase;
@@ -94,16 +102,11 @@
 	.lc-lv-content-j li:hover {
 		color: #f3f3f5;
 	}
-	.body-wrapper.livedealer fieldset .menu-games.dealer {
-		margin: -30px 0 35px 0;
-		border-radius: 5px;
-		height: 36px;
-		overflow: hidden;
+	.body-wrapper.livedealer fieldset  {
 		.subtop-game-menu-j {
-			margin: 0;
-			background: #212433;
+			margin: -30px 0 35px 0;
+			border-radius: 5px;
 			.contein-nav-g {
-				width: 100% !important;
 				li {
 					display: inline-block;
 					height: 36px;
@@ -151,7 +154,7 @@
 			background: url(../../../images/live-casino/casino-holdem.jpg#{$delete-cache});
 		}
 		&.game-image-by-id-j-EVL105{
-			background: url(../../../images/live-casino/live-blackjack-2.jpg#{$delete-cache});
+			background: url(../../../images/live-casino/live-blackjack-221.jpg#{$delete-cache});
 		}
 		&.game-image-by-id-j-EVL103{
 			background: url(../../../images/live-casino/live-baccarat-2.jpg#{$delete-cache});
@@ -203,6 +206,18 @@
 		}
 		&.game-image-by-id-j-EZGblackjack.studio-50{
 			background: url(../../../images/live-casino/Easteuro-Mini-350x200-BJ.jpg#{$delete-cache});
+		}
+		&.game-image-by-id-j-EVLcsp{
+			background: url(../../../images/live-casino/game-image-by-id-j-EVLcsp.jpg#{$delete-cache});
+		}
+		&.game-image-by-id-j-EVLtrp{
+			background: url(../../../images/live-casino/game-image-by-id-j-EVLtrp.jpg#{$delete-cache});
+		}
+		&.game-image-by-id-j-EVLeth{
+			background: url(../../../images/live-casino/game-image-by-id-j-EVLeth.jpg#{$delete-cache});
+		}
+		&.game-image-by-id-j-EVLmoneywheel{
+			background: url(../../../images/live-casino/game-image-by-id-j-EVLmoneywheel.jpg#{$delete-cache});
 		}
 		&.game-image-by-id-j-EZGroulette.studio-50{
 			background: url(../../../images/live-casino/Easteuro-Mini-350x200-Roulette.jpg#{$delete-cache});

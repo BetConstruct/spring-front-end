@@ -43,8 +43,8 @@ CASINO.directive('frameControl', ['$window', '$timeout', 'UserAgent', function (
                             definitiveWidth = scale * attr.initialWidth;
                             definitiveHeight = scale * attr.initialHeight;
                         } else {
-                            definitiveWidth = wWidth - 50;
-                            definitiveHeight = wHeight - 50;
+                            definitiveWidth = wWidth; //- 50;
+                            definitiveHeight = wHeight; //- 50;
                         }
                     }
 
@@ -73,8 +73,18 @@ CASINO.directive('frameControl', ['$window', '$timeout', 'UserAgent', function (
                     break;
             }
 
+            if (attr.hasSidebar === "true") {
+                var aspectRationNumber = definitiveWidth / definitiveHeight;
+                definitiveWidth = definitiveWidth - attr.sidebarWidth;
+                definitiveHeight = definitiveWidth / aspectRationNumber;
+            }
+
             element.css({ width: definitiveWidth + 'px', height: definitiveHeight + 'px'});
         };
+
+        attr.$observe('hasSidebar', function (value) {
+            windowResize();
+        });
 
         attr.$observe('numberOfWindow', function (value) {
             windowResize();

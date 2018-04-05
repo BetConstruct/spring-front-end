@@ -124,24 +124,7 @@
         <div ng-switch-when="gameView" class="game-view-contain-b">
            <!-- GAME VIEW-->
             <vbet-loader ng-if="liveGameLoading"  class="central-view-loader"></vbet-loader>
-            <div class="game-visual-b" ng-if="openGame.type === 1 && !liveGameLoading">
-                <!--<div class="animation-control" ng-if="openGame.has_animation">
-                    <ng-include src="getTemplate('templates/sport/classic/animation_video.html')"></ng-include>
-                </div>-->
-                <div class="live-game-container" ng-class="{'has-animation': openGame.has_animation}">
-                    <div class="game-info game-{{openGame.sport.alias.toLowerCase()}}">
-                        <div class="live-game-title-b" ng-show="liveGamesSoccerTemplate.indexOf(openGame.sport.alias) !== -1">
-                            <b class="icon-sports-contain {{openGame.sport.alias}}" title="{{openGame.sport.alias}}"></b>
-                                <span class="ellipsis-text" title="{{openGame.competition.name}}">
-                                    <b ng-show="conf.showGameIds">{{openGame.game_number}}</b> {{openGame.competition.name}}
-                                </span>
-                            <span ng-if="openGame.sport.alias === 'HorseRacing'" title="{{ openGame.team2_name ?  openGame.team2_name: '' }}">{{ openGame.team2_name ?  openGame.team2_name: '' }}&nbsp;&nbsp;&nbsp; {{ openGame.start_ts| formatDate: "LT"}}</span>
-                        </div>
-                        <ng-include src="getTemplate('templates/sport/livescore.html')"></ng-include>
-                        <ng-include src="getTemplate('templates/sport/livegamestatistics.html')"></ng-include>
-                    </div>
-                </div>
-            </div>
+            <live-game-scores show-stats-block="showStatsBlock" open-game="openGame" enlarged-game="enlargedGame"></live-game-scores>
             <div ng-repeat="marketGroup in openGame.markets track by $index" class="live-game-all-markets-b" ng-show="!liveGameLoading">
                 <div class="region-games-list-view">
                     <!--Championship Region title-->

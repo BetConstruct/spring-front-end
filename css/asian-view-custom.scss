@@ -1,0 +1,377 @@
+$asian-view-custom: false !default;
+
+@if $asian-view-custom == true {
+  .asian-live {
+    &.game-soccer,
+    &.game-cyberfootball {
+      background-image: url(../../../images/asian-view-game-category/football.jpg#{$delete-cache});
+    }
+    &.game-tennis {
+      background-image: url(../../../images/asian-view-game-category/tennis.jpg#{$delete-cache});
+    }
+    &.game-basketball,
+    &.game-ebasketball {
+      background-image: url(../../../images/asian-view-game-category/basketball.jpg#{$delete-cache});
+    }
+    &.game-volleyball {
+      background-image: url(../../../images/asian-view-game-category/volleyball.jpg#{$delete-cache});
+    }
+    &.game-tabletennis {
+      background-image: url(../../../images/asian-view-game-category/table-tennis.jpg#{$delete-cache});
+    }
+    &.game-baseball {
+      background-image: url(../../../images/asian-view-game-category/baseball.jpg#{$delete-cache});
+    }
+    &.game-badminton {
+      background-image: url(../../../images/asian-view-game-category/badminton.jpg#{$delete-cache});
+    }
+    &.game-icehockey {
+      background-image: url(../../../images/asian-view-game-category/ice-hockey.jpg#{$delete-cache});
+    }
+    &.game-hockey {
+      background-image: url(../../../images/asian-view-game-category/field-hockey.jpg#{$delete-cache});
+    }
+    &.game-beachvolleyball {
+      background-image: url(../../../images/asian-view-game-category/beach-volleyball.jpg#{$delete-cache});
+    }
+    &.game-handball {
+      background-image: url(../../../images/asian-view-game-category/handball.jpg#{$delete-cache});
+    }
+  }
+  .asian-separator-container-b .fixed-element-parent .scrollable-fixed {
+    width: 1130px;
+    left: auto;
+  }
+  .asian-left-menu ul li {
+    min-height: 34px;
+    max-height: 34px;
+    line-height: 34px;
+    margin: 1px 0 0;
+    .icon-sport-asia {
+      top: 9px;
+    }
+    .menu-arrow-asia {
+      height: 34px;
+      &:before {
+        line-height: 34px;
+      }
+    }
+  }
+  .asian-live-game {
+    width: 32px;
+    height: 12px;
+    padding: 0;
+    color: $brand-color-1;
+    background: none;
+    font: 0/0 $font-f;
+    position: relative;
+    &:before {
+      content: "\5e";
+      position: absolute;
+      top: -6px;
+      left: 5px;
+      font: 24px/24px icomoon;
+    }
+  }
+  .match-odd1X2.ft-ht .info-bl p.time-g-asia {
+    padding: 0 1px;
+  }
+  .game-list-compitishion table tr td {
+    line-height: 11px;
+  }
+  .asian-status-icons {
+    display: inline-block;
+    width: auto;
+    > div {
+      display: inline-block;
+      margin: 0 2px;
+      padding: 1px 0;
+      line-height: 15px;
+    }
+  }
+  .match-odd1X2 {
+    &.correct-score .info-bl p, .info-bl p {
+      padding: 1px 0;
+    }
+    .info-bl p.teams-n-account-asia {
+      padding: 5px 0;
+    }
+  }
+  .body-wrapper.asian {
+    .gaming-wrapper-asia {
+      float: none;
+      margin: 0 auto;
+      max-width: 1440px;
+      background: rgba(set-color(darken( desaturate( adjust-hue( $skin-color, 4deg ), 11 ), 1 )), 0.5);
+      @if $white-skin == true {
+        background: rgba(black, 0.03);
+      }
+      .viewSwitcher-j > ul,
+      .asian-left-contain-menu .list-bet-block,
+      .asian-left-contain-menu .name-b-list h2,
+      .animation-video-title-row-v3,
+      .menu-tabs-b ul li,
+      .asian-left-menu ul li,
+      .big-filter-wrapper ul li,
+      .asian-pagination > button,
+      .game-list-compitishion-j,
+      .game-list-compitishion,
+      .prematch-game-title,
+      .markets-group-wrap-v3 > ul.has-dropdown > li,
+      .asian-left-contain-menu .bet-form form input[type="text"],
+      .button-bet button {
+        border-radius: 0;
+      }
+      .viewSwitcher-j > ul > li:not(:only-child):not(:last-child):after {
+        background: rgba(set-color(darken( desaturate( adjust-hue( $skin-color, 4deg ), 11 ), 1 )), 0.5);
+      }
+      .factor-w .asian-market-wrap-j .asian-market-j {
+        line-height: 43px;
+      }
+      .contain-v-a-fanction-icons-v3 > ul > li {
+        border-color: rgba(set-color(darken( desaturate( adjust-hue( $skin-color, 4deg ), 11 ), 1 )), 0.5);
+      }
+      .game-finished-v3 {
+        color: darken( desaturate( adjust-hue( $skin-color, 4deg ), 11 ), 1 );
+      }
+    }
+    .big-filter-wrapper ul li {
+      border-left: 1px solid rgba(set-color(darken( desaturate( adjust-hue( $skin-color, 4deg ), 11 ), 1 )), 0.5);
+      &:first-child {
+        border: none;
+      }
+    }
+    table.hdp-contain-j {
+      th, td {
+        &.xs-s {
+          width: 94px;
+          min-width: 94px;
+        }
+        &.ms {
+          width: 150px;
+          min-width: 150px;
+        }
+      }
+    }
+    .sport-markets-menu ul li {
+      margin: 0;
+      border-bottom: 1px solid rgba(set-color(darken( desaturate( adjust-hue( $skin-color, 4deg ), 11 ), 1 )), 0.5);
+      &:first-child {
+        &.active, &:hover {
+          box-shadow: 0 1px 0 rgba(set-color(darken( desaturate( adjust-hue( $skin-color, 4deg ), 11 ), 1 )), 0.5) inset;
+        }
+      }
+    }
+    .menu-tabs-b ul li {
+      border-color: rgba($text-palette-1,0.5);
+      &:first-child {
+        border: none;
+      }
+      &.active {
+        background: lighten( desaturate( adjust-hue( $skin-color, 3deg), 16), 4);;
+        box-shadow: inset 0 -3px 0 $hero-color;
+        color: $text-palette-1;
+      }
+    }
+    .asian-market-wrap-j {
+      &:not(.locked):not(.active):hover .asian-market-j {
+        color: set-color($hero-color);
+        background: $hero-color;
+        box-shadow: 0 0 0 200px $hero-color;
+        .asian-market-rub-j {
+          color: set-color($hero-color);
+        }
+      }
+      &:not(.locked):not(.active):not(.up):not(.down):hover .asian-market-j {
+        color: set-color($hero-color);
+      }
+      &:not(.locked) .odd-container-j {
+        &:before{
+          content: "";
+          position: absolute;
+          top: auto;
+          right: 0;
+          bottom: 0;
+          border-left: 8px solid transparent;
+        }
+        &:after {
+          display: none;
+        }
+      }
+      &.up:not(.locked) .asian-market-j {
+        .odd-container-j:before {
+          top: 0;
+          bottom: auto;
+          border-top: 8px solid map-get($coeff-color-map, asian-up);
+        }
+      }
+      &.down:not(.locked) .asian-market-j {
+        .odd-container-j:before {
+          content: "";
+          border-bottom: 8px solid map-get($coeff-color-map, asian-down);
+        }
+      }
+      &:hover, &.active {
+        &.up:not(.locked) .asian-market-j {
+          .odd-container-j:before {
+            border-top-color: set-color($hero-color);
+          }
+        }
+        &.down:not(.locked) .asian-market-j {
+          .odd-container-j:before {
+            border-bottom-color: set-color($hero-color);
+          }
+        }
+      }
+    }
+    // Start HDP & OU
+
+    .market_list_view {
+      table.hdp-contain-j {
+        .asian-team-name-wrapper-j > div {
+          > p {
+            text-transform: uppercase;
+          }
+          > b {
+            border-radius: 3px !important;
+          }
+        }
+        tr {
+          &:not(:first-child):nth-child(odd) .light-bg-j,
+          &:nth-child(odd) .asian-market-overflow-j,
+          &:nth-child(odd) .br-j.bb-j {
+            background: lighten( desaturate( $skin-color, 18), 19);
+          }
+          &:nth-child(even) {
+            .asian-market-overflow-j,
+            .br-j.bb-j,
+            .dark-bg-j.br-j {
+              background: lighten( desaturate( $skin-color, 17 ), 12 );
+            }
+          }
+          .asian-market-overflow-j .asian-market-j {
+            line-height: 27px;
+            background: none;
+            box-shadow: none;
+          }
+        }
+        .dark-bg-j.asian-market-overflow-j .asian-market-wrap-j .asian-market-j .asian-market-cell-j:nth-last-child(2) {
+          background: none;
+          box-shadow: none;
+        }
+        td {
+          &.br-j {
+            border: 0;
+          }
+          &.dark-bg-j.br-j.bb-j.more-arrow-j-asia {
+            color: set-color($skin-palette-9);
+            background: $skin-palette-9;
+            &:hover, &.active {
+              background: lighten( saturate( $skin-palette-9, 1 ), 7 );
+            }
+          }
+          small {
+            width: 50px;
+            word-break: break-all;
+          }
+        }
+        td,
+        th {
+          &.xs-s {
+            width: 94px;
+            min-width: 94px;
+          }
+          &.ms {
+            width: 150px;
+            min-width: 150px;
+          }
+        }
+        .asian-market-wrap-j {
+          .asian-market-j {
+            table-layout: fixed;
+            .asian-market-cell-j {
+              background: rgba(0, 0, 0, 0.1);
+              &:hover {
+                background: $hero-color;
+              }
+              .asian-market-rub-j {
+                text-align: center;
+              }
+              &:nth-last-child(2) {
+                text-align: right;
+              }
+              &:nth-child(2) {
+                text-align: center;
+              }
+            }
+          }
+          &:not(.locked) {
+            &:not(.active):not(.up):not(.down):hover .asian-market-j {
+              color: set-color($hero-color);
+            }
+            &:not(.active):hover .asian-market-j,
+            &.active .asian-market-j {
+              background: none;
+              box-shadow: none;
+              .odd-container-j {
+                background: $hero-color;
+              }
+            }
+          }
+          &:not(.locked) .odd-container-j {
+            &:before, &:after {
+              bottom: 1px;
+            }
+          }
+          &.up:not(.locked) .asian-market-j {
+            .odd-container-j:before {
+              top: 1px;
+            }
+          }
+        }
+      }
+    }
+
+    // End HDP & OU
+
+    // Start FT & HT 1x2 and Correct score and others
+
+    .game-list-compitishion table {
+      background: darken( desaturate( adjust-hue( $skin-color, 4deg), 15), 1);
+      &.match-odd1X2 {
+        tr td.factor-w {
+          border-color:  darken( desaturate( adjust-hue( $skin-color, 4deg), 15), 1);
+        }
+        .asian-market-wrap-j {
+          &:hover.up:not(.active):not(.locked) .asian-market-j,
+          &:hover.down:not(.active):not(.locked) .asian-market-j {
+            color: set-color($hero-color);
+          }
+        }
+        &.correct-score .asian-market-cell-j {
+          padding: 0 12px 0 0;
+        }
+        &:not(.correct-score) .asian-market-wrap-j .asian-market-j {
+          line-height: 47px;
+        }
+        &.correct-score {
+          .asian-market-overflow-j .asian-market-wrap-j .asian-market-j {
+            line-height: 41px;
+          }
+        }
+      }
+    }
+
+    // End  FT & HT 1x2 and Correct score
+
+    .fullgame-j .asian-market-cell-j {
+      padding: 0 12px 0 0;
+    }
+  }
+}
+
+
+
+
+
+

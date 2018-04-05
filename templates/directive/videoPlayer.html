@@ -5,7 +5,6 @@
 
     <p ng-if="env.authorized && (profile.calculatedBalance + profile.calculatedBonus) === 0 && !profile.initial_balance" trans ng-class="{'pointer-events-none': conf.integrationMode}" ng-click="!conf.disableDepositPage && broadcast('toggleSliderTab', 'deposit');$event.stopPropagation();">You need to have non-zero balance to be able to play video.</p>
 
-    <div ng-if="env.authorized && !conf.video.autoPlay && ((profile.calculatedBalance + profile.calculatedBonus) !== 0 || profile.initial_balance)" ng-click="restoreVideo(openGame)" class="video-b-icon-arrow"></div>
     <div class="flash-loader-overlay" ng-hide="videoState.frameUrl || videoState.videoIsLoaded">
         <div class="box">
             <div class="container cylinder">
@@ -13,6 +12,8 @@
             </div>
         </div>
     </div>
+
+    <i ng-if="env.authorized && !conf.video.autoPlay && openGame.video_data === undefined && ((profile.calculatedBalance + profile.calculatedBonus) !== 0 || profile.initial_balance)" ng-click="broadcast('game.restoreVideo', openGame.id)" class="video-play-button"></i>
     <div ng-if="env.authorized && !playerRemoved && openGame.video_data && ((profile.calculatedBalance + profile.calculatedBonus) > 0 || profile.initial_balance > 0)" ng-init="soundVolume = env.sound" class="video-player-container">
 
         <div class="video-control-buttons">
@@ -21,13 +22,13 @@
                 <span ng-click="togglePause();" ng-show="paused" class="video-play"></span>
             </div>
             <div class="sound-volume-control" ng-show="videoState.videoIsLoaded">
-                <span ng-click="soundVolume = 0;toggleMute(1)" ng-show="soundVolume > 0" class="video-mute"></span>
-                <span ng-click="soundVolume = 0.75; toggleMute(0)" ng-show="soundVolume === 0" class="video-unmute"></span>
+                <span ng-click="toggleMute(1)" ng-show="env.sound > 0" class="video-mute"></span>
+                <span ng-click="toggleMute(0)" ng-show="env.sound === 0" class="video-unmute"></span>
             </div>
         </div>
-        <iframe ng-if="videoState.frameUrl" ng-src="{{ videoState.frameUrl }}" width="100%" height="100%" frameborder="0" scrolling="no"></iframe>
+        <iframe ng-if="videoState.frameUrl" ng-src="{{ videoState.frameUrl }}" width="100%" height="100%" frameborder="0" scrolling="no" allowfullscreen></iframe>
 
-        <div ng-if="openGame.video_data && conf.video.autoPlay" id="{{playerId}}"></div><!--id="gamevideo{{openGame.id}}"-->
+        <div ng-if="openGame.video_data" id="{{playerId}}" ng-init="embedPlayer();"></div><!--id="gamevideo{{openGame.id}}"-->
         <div class="video-detached-game-name">
             <div ng-show="enlargedGame">{{enlargedGame.sport.name}} : {{enlargedGame.team1_name}}
                 {{enlargedGame.team2_name ? '&mdash; ' + enlargedGame.team2_name : ''}}</div>

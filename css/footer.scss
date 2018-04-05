@@ -2,7 +2,7 @@
   float: left;
   width: 100%;
   position: relative;
-  z-index: 30;
+  z-index: 1000;
   background: $footer-background;
   .paymen-icons-list {
     background: $footer-payments-line-background;
@@ -35,12 +35,18 @@
       display: table-cell;
       vertical-align: middle;
       text-align: center;
+      line-height: 50px;
       padding: 20px 0;
       > li {
         display: inline-block;
         vertical-align: middle;
         min-width: 9.5%;
         padding: 0 6px;
+        .paymentImage {
+          display: inline-block;
+          vertical-align: middle;
+          float: none;
+        }
         &:nth-child(n+19) {
           display: none;
         }
@@ -59,13 +65,13 @@
   background: $skin-palette-7;
   @if $white-skin == true {
     background: rgba(0, 0, 0, 0.4);
-    color: #121623;
+    color: #fff;
   }
   &.footer-button-open {
     background: $skin-palette-12;
     @if $white-skin == true {
       background: rgba(0, 0, 0, 0.4);
-      color: #121623;
+      color: #fff;
     }
   }
 }
@@ -101,10 +107,10 @@
       vertical-align: middle;
       width: 42px;
       height: 42px;
-      background: $skin-palette-11;
-      box-shadow: 0 0 1px lighten( desaturate( adjust-hue( $skin-palette-11, -4deg ), 18 ), 23 ) inset;
+      background: rgba(set-color($footer-background), 0.03);
+      box-shadow: 0 0 1px rgba(set-color($footer-background), 0.28) inset;
       font: 16px/42px $font-f;
-      color: $text-palette-1;
+      color: set-color($footer-background);
       border-radius: 100%;
       text-align: center;
     }
@@ -126,11 +132,12 @@
       }
       + button {
         background: none;
-        border-color: $button-border-color;
-        color: $text-palette-1;
+        border-color: rgba(set-color($footer-background), 0.28);
+        color: set-color($footer-background);
         &:hover {
           background: $brand-color-1;
           border-color: $brand-color-1;
+          color: set-color($brand-color-1);
         }
       }
     }
@@ -139,9 +146,9 @@
     float: left;
     width: 100%;
     font: 12px/20px $font-f;
-    color: $text-palette-3;
+    color: rgba(set-color($footer-background), 0.75);
     a {
-      color: $text-palette-3;
+      color: rgba(set-color($footer-background), 0.75);
     }
   }
   .old-version-link-j {
@@ -156,7 +163,7 @@
       margin: 20px 0 0;
       padding: 0 10px;
       border: 1px solid $brand-color-1;
-      color: $text-palette-1;
+      color: set-color($footer-background);
       text-transform: uppercase;
       transition: 300ms background, 300ms border, 300ms color;
       + a {
@@ -192,16 +199,16 @@
           padding-bottom: 12px;
         }
         a {
-          color: $text-palette-4;
+          color: rgba(set-color($footer-background), 0.46);
           font: 12px/14px $font-f;
           &:hover{
-            color: $text-palette-3;
+            color: rgba(set-color($footer-background), 0.75);
           }
         }
         &.top-level-page {
           a {
             font: $bold-text 14px/16px $font-f;
-            color: $text-palette-1;
+            color: set-color($footer-background);
             pointer-events: none;
           }
         }
@@ -212,15 +219,34 @@
 .extended-license-footer {
   float: left;
   width: 100%;
-  border-top: 1px solid $skin-palette-7;
+  border-top: 1px solid rgba(set-color($footer-background), 0.13);
   padding: 20px 0;
   font: 11px/16px $font-f;
-  color: $text-palette-5;
+  color: rgba(set-color($footer-background), 0.28);
   a {
-    color: $skin-palette-4;
+    color: $text-palette-4;
     text-decoration: none;
     &:hover {
-      color: $skin-palette-3;
+      color: $text-palette-3;
+    }
+  }
+  > div {
+    float: left;
+    width: 100%;
+    > div {
+      float: left;
+      width: 100%;
+      text-align: center;
+      > div {
+        margin: 0 20px 20px;
+        display: inline-block;
+        &:first-child {
+          margin-left: 0;
+        }
+        &:last-child {
+          margin-right: 0;
+        }
+      }
     }
   }
   > ul {
@@ -230,9 +256,16 @@
     > li {
       display: table-cell;
       vertical-align: top;
+      width: 1%;
+      padding: 0 0 0 10px;
+      &:first-child {
+        width: 100%;
+        padding: 0;
+      }
+      &.ceg-seal-t {
+        min-width: 80px;
+      }
       &.gamble-logos-j {
-        width: 1%;
-        padding: 0 0 0 10px;
         > ul {
           display: table;
           float: right;

@@ -17,18 +17,18 @@
                 <div class="select-block">
                     <select ng-model="betHistoryParams.category"  ng-change="loadBetHistory('Casino')">
                         <option value="0" trans>All bets</option>
-                        <option value="6" ng-show="conf.casinoEnabled" trans>Casino games</option>
-                        <option value="1" ng-show="conf.livedealerEnabled" trans>Live casino</option>
-                        <option value="3" ng-show="conf.skillgamesEnabled" trans>Skill games</option>
-                        <option value="2" ng-show="conf.casinoEnabled" trans>Virtual games</option>
-                        <option value="706" ng-show="conf.financialsEnabled" trans>Financials</option>
+                        <option value="6" ng-show="calculatedConfigs.casinoEnabled" trans>Casino games</option>
+                        <option value="1" ng-show="calculatedConfigs.livedealerEnabled" trans>Live casino</option>
+                        <option value="3" ng-show="calculatedConfigs.skillgamesEnabled" trans>Skill games</option>
+                        <option value="2" ng-show="calculatedConfigs.casinoEnabled" trans>Virtual games</option>
+                        <option value="706" ng-show="calculatedConfigs.financialsEnabled" trans>Financials</option>
                         <!-- 4 is the category ID . the actual game id is 15-->
-                        <option value="1297" ng-show="conf.fantasyEnabled" trans>Fantasy Sports</option>
+                        <option value="1297" ng-show="calculatedConfigs.fantasyEnabled" trans>Fantasy Sports</option>
                         <!-- 4 is the category ID . the actual game id is 55-->
-                        <option value="5" ng-show="conf.ogwilEnabled" trans>Ogwil</option>
-                        <option value="547" ng-show="conf.beloteEnabled" trans>Belote</option>
+                        <option value="5" ng-show="calculatedConfigs.ogwilEnabled" trans>Ogwil</option>
+                        <option value="547" ng-show="calculatedConfigs.beloteEnabled" trans>Belote</option>
                         <!-- 3 is the category ID . the actual game id is 10-->
-                        <option value="599" ng-show="conf.backgammonEnabled" trans>Backgammon</option>
+                        <option value="599" ng-show="calculatedConfigs.backgammonEnabled" trans>Backgammon</option>
                         <!-- 3 is the category ID . the actual game id is 11-->
                     </select>
                 </div>

@@ -1,11 +1,11 @@
-<div class="clock noflip" ng-click="timezonesExpanded = !timezonesExpanded" ng-class="{timezonesExpanded : conf.enableTimeZoneSelect}">
+<div class="clock noflip" ng-click="timezonesExpanded = !timezonesExpanded" ng-class="{timezonesExpanded : conf.header.enableTimeZoneSelect}">
     <span ng-bind="env.clock|formatDate:'fullHour':null:env.timeFormat"></span>
-    <br ng-if="conf.enableTimeZoneSelect"/>
-    <span ng-if="conf.enableTimeZoneSelect" ng-bind="env.selectedTimeZone"></span>
+    <br ng-if="conf.header.enableTimeZoneSelect"/>
+    <span ng-if="conf.header.enableTimeZoneSelect" ng-bind="env.selectedTimeZone"></span>
     <div 
         ng-class="timezoneClass" 
         class="open-lang"
-        ng-if="conf.enableTimeZoneSelect && timezonesExpanded"        
+        ng-if="conf.header.enableTimeZoneSelect && timezonesExpanded"
     >
         <div class="arrow-sport"></div>
         <ul>

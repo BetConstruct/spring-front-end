@@ -19,7 +19,8 @@ VBET5.controller('headerCtrl', ['$scope', '$rootScope', '$sce', '$window', '$loc
      * starts to listen needed events
      */
     $scope.headerInit = function headerInit(){
-        $scope.$on('profile', setCurrencyConfig);
+        $scope.$on('login.loggedIn', setCurrencyConfig);
+        $scope.$on('login.loggedOut', setCurrencyConfig);
         $scope.$on('gotoSelectedGame', gotoSelectedGame);
         //this isn't really the best place for this listener
         $scope.$on('$routeChangeSuccess', routeChangeSuccess);
@@ -87,7 +88,7 @@ VBET5.controller('headerCtrl', ['$scope', '$rootScope', '$sce', '$window', '$loc
             if (response && response.data && response.data.partner) {
                 $rootScope.partnerConfig = Utils.objectToArray(response.data.partner)[0];
             }
-            if(Config.partner && Config.partner.profileNotAvailable) {
+            if(Config.partner && Config.partner.profileNotAvailable && $rootScope.partnerConfig) {
                 $rootScope.partnerConfig.profileNotAvailable = Config.partner.profileNotAvailable;
             }
         }
@@ -125,7 +126,7 @@ VBET5.controller('headerCtrl', ['$scope', '$rootScope', '$sce', '$window', '$loc
 
     function gotoSelectedGame(event, data) {
         $location.search({
-            'type': data.type,
+            'type': parseInt(data.type) === 1 ? 1 : 0,
             'sport': data.sport.id !== undefined ? data.sport.id : data.sport,
             'region': data.region,
             'competition': data.competition,
@@ -150,6 +151,7 @@ VBET5.controller('headerCtrl', ['$scope', '$rootScope', '$sce', '$window', '$loc
      * @description Converts youtube URL to trusted
      */
     function handleVideoUrl(event, url) {
+        url = url.replace('watch?v=', 'embed/')
         $scope.youtubeVideoUrl = $sce.trustAsResourceUrl(url);
     }
 
@@ -163,7 +165,7 @@ VBET5.controller('headerCtrl', ['$scope', '$rootScope', '$sce', '$window', '$loc
         if ($location.path() === '/dashboard/') {
             $rootScope.env.preMatchMultiSelection = false;
         } else {
-            $rootScope.env.preMatchMultiSelection = Storage.get('preMatchMultiSelection');
+            $rootScope.env.preMatchMultiSelection = Storage.get('preMatchMultiSelection') !== undefined ? Storage.get('preMatchMultiSelection') : $rootScope.env.preMatchMultiSelection;
         }
         console.log("$routeChangeSuccess:", $location.path());
     }

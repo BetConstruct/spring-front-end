@@ -9,11 +9,14 @@ VBET5.controller('freeBetCtrl', ['$scope', '$rootScope', 'Config', 'Utils', 'Zer
     'use strict';
 
     $scope.victorinaModel = {};
-    $scope.day = 0;
+    $scope.filter = {
+        day: 0
+    };
+    $scope.enablePartnerSigninRegisterCallbacks = Config.partner.enableSigninRegisterCallbacks;
     $scope.statuses = {
         'Waiting'   : Translator.get("unsettled"),
-        'Lost'      : Translator.get("lost"),
-        'Won'       : Translator.get("Won")
+        'Lose'      : Translator.get("lost"),
+        'Win'       : Translator.get("Won")
     };
 
     /**
@@ -25,7 +28,7 @@ VBET5.controller('freeBetCtrl', ['$scope', '$rootScope', 'Config', 'Utils', 'Zer
     $scope.creatDays = function () {
         $scope.days = [];
         var today;
-        angular.forEach(Config.main.freeBetOffsetDays, function (offset) {
+        angular.forEach(Config.main.freeBet.offsetDays, function (offset) {
             Zergling.get({day: offset}, 'get_victorina_info').then(function (response) {
                 if (response.victorinas) {
                     today = Moment.get();
@@ -57,6 +60,20 @@ VBET5.controller('freeBetCtrl', ['$scope', '$rootScope', 'Config', 'Utils', 'Zer
             $scope.victorinas = victorinas;
             console.log('get_victorina_info', victorinas, $scope.victorinaModel);
         });
+    };
+
+    $scope.changeDay = function updateDay () {
+        var dayObj;
+        angular.forEach($scope.days, function (dayData) {
+            if (dayData.offset === $scope.filter.day) {
+                dayObj = dayData;
+            }
+        });
+
+        if (!dayObj) {
+            return;
+        }
+        $scope.loadVictorinas(dayObj.offset);
     };
 
     /**
@@ -151,10 +168,10 @@ VBET5.controller('freeBetCtrl', ['$scope', '$rootScope', 'Config', 'Utils', 'Zer
         Zergling.get(request, 'do_bet_victorina').then(
             function (result) {
                 console.log("request =", request);
-                $scope.freeBetResultType = (result.result !== 0) ? 'error' : 'success';
+                $scope.freeBetResultType = (result.result !== 0) ? 'Error' : 'Success';
                 if (result.result === 0) {
                     $scope.freeBetResult = Translator.get("Your bet is accepted.");
-                    $scope.day = 0;
+                    $scope.filter.day = 0;
                     $scope.loadVictorinas(0);
                 } else if (('message_' + result.result) !== Translator.get('message_' + result.result)) {
                     $scope.freeBetResult = Translator.get('message_' + result.result);
@@ -166,13 +183,13 @@ VBET5.controller('freeBetCtrl', ['$scope', '$rootScope', 'Config', 'Utils', 'Zer
             }
         )['catch'](
             function (reason) {
-                $scope.freeBetResultType = 'error';
+                $scope.freeBetResultType = 'Error';
                 $scope.freeBetResult = Translator.get("Sorry we can't accept your bets now, please try later") + ' (' + reason.code + ')';
                 console.log('Error:', reason);
             }
         )['finally'](function () {
             $rootScope.$broadcast("globalDialogs.addDialog",{
-                type: $scope.freeBetResultType,
+                type: $scope.freeBetResultType.toLowerCase(),
                 title: $scope.freeBetResultType,
                 content: $scope.freeBetResult
             });
@@ -184,7 +201,8 @@ VBET5.controller('freeBetCtrl', ['$scope', '$rootScope', 'Config', 'Utils', 'Zer
      */
     $scope.$watch('env.authorized', function (newValue, oldValue) {
         if (newValue !== oldValue) {
-            $scope.loadVictorinas($scope.day);
+            $scope.filter.day = $rootScope.env.authorized ? $scope.filter.day : 0;
+            $scope.loadVictorinas($scope.filter.day);
         }
     });
 }]);

@@ -66,8 +66,8 @@
                                             <div class="full-info-resent-game" ng-class="{'no-click': !gamePointers[event.game_id]}" ng-click="gotoBetGame(event)">
                                                 <ul>
                                                     <li ng-if="bet.type !== 'Toto'">
-                                                        <span ng-if="!conf.GmsPlatform" title="{{event.event_name}} {{(event.basis ? (' (' + event.basis + ')') : '')}}">{{event.event_name}} {{(event.basis ? (' (' + event.basis + ')') : '')}}</span>
-                                                        <span ng-if="conf.GmsPlatform" title="{{event.basis ? event.event_name.replace(event.basis, (event.basis|handicapBaseFormat)) : event.event_name}}">{{event.market_name ? event.market_name + " - ": ""}}{{event.basis ? event.event_name.replace(event.basis, (event.basis|handicapBaseFormat)) : event.event_name}}</span>
+                                                        <div ng-if="!conf.GmsPlatform" title="{{event.event_name}} {{(event.basis ? (' (' + event.basis + ')') : '')}}"><span>{{(event.basis ? (' (' + event.basis + ')') : '')}}</span> <span>{{event.event_name}}</span></div>
+                                                        <div ng-if="conf.GmsPlatform" title="{{event.basis ? event.event_name.replace(event.basis, (event.basis|handicapBaseFormat)) : event.event_name}}"><span>{{event.basis ? event.event_name.replace(event.basis, (event.basis|handicapBaseFormat)) : event.event_name}}</span><span>{{event.market_name ? ' - ' + event.market_name : ''}}</span></div>
                                                     </li>
                                                     <li ng-if="bet.type !== 'Toto'"><span>{{event.k_type == 11 ? 'SP' : (event.coeficient|oddConvert:env.oddFormat)}}</span></li>
                                                     <li ng-if="bet.type === 'Toto' && event.selection"><span trans>Pick</span>: {{poolBettingSelection(event.selection)}}</li>
@@ -75,7 +75,7 @@
                                                     <li><span title="{{event.competition_name|removeParts:[event.sport_name]}}">{{event.competition_name|removeParts:[event.sport_name]}}</span></li>
                                                     <li>
                                                         <span>{{event.game_start_date|formatDate:'full'}}</span>
-                                                        <button class="ticket-id-view" ng-show="event.scores===undefined" ng-click="getGameInfo(event);$event.stopPropagation();" trans>Score</button>
+                                                        <button ng-if="conf.GmsPlatform" class="ticket-id-view" ng-show="event.scores===undefined" ng-click="getGameInfo(event);$event.stopPropagation();" trans>Score</button>
                                                         <b ng-show="event.scores"><span trans>Result:</span> {{event.scores}}</b>
                                                     </li>
                                                 </ul>
@@ -101,10 +101,10 @@
                                 </div>
 
                                 <div class="cashout-print-contain">
-                                   <div class="cashout-button-resentbets" ng-show="((bet.events[0].is_live == 0 && !!partnerConfig.is_cashout_prematch) || (bet.events[0].is_live == 1 && !!partnerConfig.is_cashout_live)) && bet.outcome == 0 && bet.calculatedCashout !==undefined">
-                                        <button ng-click="broadcast('open.cashoutDialog', bet)" ng-disabled="!bet.calculatedCashout || !bet.cashoutEnabled" title="{{bet.calculatedCashout ? bet.calculatedCashout + ' ' + bet.currency  : ('Cash-out Temporary unavailable'|translate)}}">
+                                   <div class="cashout-button-resentbets" ng-show="((bet.events[0].is_live == 0 && !!partnerConfig.is_cashout_prematch) || (bet.events[0].is_live == 1 && !!partnerConfig.is_cashout_live)) && bet.outcome == 0 && bet.cash_out !==undefined">
+                                        <button ng-click="broadcast('open.cashoutDialog', bet)" ng-disabled="!bet.cash_out || !bet.cashoutEnabled" title="{{bet.cash_out ? bet.cash_out + ' ' + bet.currency  : ('Cash-out Temporary unavailable'|translate)}}">
                                             <b trans>Cash-out</b>
-                                            <b ng-if="bet.calculatedCashout">{{bet.calculatedCashout}} {{bet.currency}}</b>
+                                            <b ng-if="bet.cash_out">{{bet.cash_out}} {{bet.currency}}</b>
                                         </button>
                                     </div>
 
@@ -136,4 +136,6 @@
     </div>
 
     <vbet-loader class="contein-recentbets" ng-show="!myBetsLoaded && !errorLoadingBets"></vbet-loader>
+
+    <ng-include src="getTemplate('templates/dialogs/cashout.html')"></ng-include>
 </div>

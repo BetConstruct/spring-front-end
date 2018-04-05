@@ -8,7 +8,6 @@
 VBET5.controller('comboViewLeftController', ['$scope', 'Config', 'GameInfo', 'Utils', 'ConnectionService', '$location', 'Storage', function ($scope, Config, GameInfo, Utils, ConnectionService, $location, Storage) {
     'use strict';
     var connectionService = new ConnectionService($scope);
-    var customSportAliasFilter = Utils.getCustomSportAliasFilter();
 
     $scope.isEventInBetSlip = GameInfo.isEventInBetSlip;
     $scope.leftMenuSports = [];
@@ -28,8 +27,10 @@ VBET5.controller('comboViewLeftController', ['$scope', 'Config', 'GameInfo', 'Ut
                 'game': {}
             }
         };
+
+        request.where.sport = {'id': {'@nin': GameInfo.getVirtualSportIds()}};
+
         if(!Config.main.GmsPlatform) {
-            request.where.sport = {'id': {'@nin': Config.main.virtualSportIds}};
             request.where.game.type = {'@in': [0,1]};
         }
 
@@ -263,8 +264,8 @@ VBET5.controller('comboViewLeftController', ['$scope', 'Config', 'GameInfo', 'Ut
         /*Utils.setCustomSportAliasesFilter(request);*/
         var updateLeftMenuGamesForTheCompetition = function updateLeftMenuGamesForTheCompetition (data, subid) {
             var sport_data = Utils.objectToArray(data.sport);
-            var region_array = Utils.objectToArray(sport_data[0].region);
-            var games_array = Utils.objectToArray(region_array[0].game);
+            var region_array = sport_data && Utils.objectToArray(sport_data[0].region) || [];
+            var games_array = region_array[0] && Utils.objectToArray(region_array[0].game);
             var sport = Utils.getArrayObjectElementHavingFieldValue($scope.leftMenuSports, 'id', sport_data[0].id);
             var region = Utils.getArrayObjectElementHavingFieldValue(sport.region, 'id', region_array[0].id);
             var competition = Utils.getArrayObjectElementHavingFieldValue(region.competition, 'id', competition_id);
@@ -396,6 +397,11 @@ VBET5.controller('comboViewLeftController', ['$scope', 'Config', 'GameInfo', 'Ut
             }
         });
     }
+
+    // Was created for selecting favorite games from top menu. Not fully functional deep linking handle!
+    $scope.$on("comboView.handleDeepLinking", function() {
+        openInitialFieldsInLeftMenu();
+    });
 
     (function init() {
         GameInfo.getProviderAvailableEvents().then(function() {

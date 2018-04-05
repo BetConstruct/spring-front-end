@@ -1,34 +1,48 @@
 <!--balance-->
-<div class="separator-contain-nav {{headerVersion2Icons.balanceIsToggled ? 'active' : ''}}"
-    hide-on-click state-flag-var="headerVersion2Icons.balanceIsToggled">
+<div class="separator-contain-nav {{headerVersion2Icons.balanceIsToggled ? 'active' : ''}}">
     <div class="settings-icon-contain balance-box" no-animate
         ng-show="(conf.GmsPlatform && !conf.GmsPlatformMultipleBalance) || (!isInCasino() && !isInPoker())"
         ng-class="{'bonus': profile.bonus_balance !== undefined && profile.calculatedBonus !== 0}"
         ng-click="headerVersion2Icons.balanceIsToggled = !headerVersion2Icons.balanceIsToggled; $event.stopPropagation()"
-		id="wallet">
-        <ul>
+		id="wallet"
+         hide-on-click state-flag-var="headerVersion2Icons.balanceIsToggled">
+        <b class="mybets-icon-box-b cms-jcon-Wallet" ng-show="env.hideBalance"></b>
+        <ul ng-show="!env.hideBalance">
             <li>
-               <span class="balance-view-off" ng-show="!env.hideBalance && !headerVersion2Icons.hideLablesIsToggled">
+               <span class="balance-view-off">
                     {{ profile.calculatedBalance|number:conf.balanceFractionSize }}
                 </span>
-                <span ng-show="!env.hideBalance">{{profile.currency_name|currency}}</span>
+                <span>{{profile.currency_name|currency}}</span>
             </li>
-            <li ng-if="!env.hideBalance && !headerVersion2Icons.hideLablesIsToggled && (profile.bonus_balance !== undefined)">
-                <span class="bonus-view-mini-b">{{profile.calculatedBonus|number:conf.balanceFractionSize}} {{profile.currency_name|currency}}</span>
+            <li ng-if="profile.bonus_balance !== undefined">
+                <p class="bonus-view-mini-b">
+                    <span>{{profile.calculatedBonus|number:conf.balanceFractionSize}}</span>
+                    <span>{{profile.currency_name|currency}}</span>
+                </p>
             </li>
         </ul>
         <i></i>
     </div>
     <div ng-controller="casinoLoginCtrl" id="walletCasino" class="settings-icon-contain balance-box" no-animate
-       ng-if="::((!conf.GmsPlatform || conf.GmsPlatformMultipleBalance) && (casinoEnabled || conf.pokerEnabled) && availableModules.indexOf('casino') > -1)"
-       ng-show="(env.casinoBalance !== undefined || conf.GmsPlatformMultipleBalance) && (isInCasino() || isInPoker()) || !conf.sportEnabled"
+       ng-if="::((!conf.GmsPlatform || conf.GmsPlatformMultipleBalance) && (casinoEnabled || calculatedConfigs.pokerEnabled || calculatedConfigs.backgammonEnabled) && availableModules.indexOf('casino') > -1)"
+       ng-show="(env.casinoBalance !== undefined || conf.GmsPlatformMultipleBalance) && (isInCasino() || isInPoker()) || !calculatedConfigs.sportEnabled"
        ng-class="{'bonus': (env.casinoBalance.bonus || env.casinoBalance.bonus_balance)}"
        ng-click="headerVersion2Icons.balanceIsToggled = !headerVersion2Icons.balanceIsToggled; $event.stopPropagation()">
-        <!--delete "env.casinoBalance.bonus" after sworm update for all sites-->
-        <span class="balance-view-off" ng-show="!env.hideBalance">
-            {{conf.showOnlyMainBalance ? profile.calculatedBalance : conf.GmsPlatformMultipleBalance ? profile.casino_balance : env.casinoBalance.balance|number:conf.balanceFractionSize }}
-        </span>
-        <span ng-show="!env.hideBalance">{{profile.currency_name|currency}}</span>
+        <b class="mybets-icon-box-b cms-jcon-Wallet" ng-show="env.hideBalance"></b>
+        <ul ng-show="!env.hideBalance">
+            <li>
+               <span class="balance-view-off">
+                     {{conf.showOnlyMainBalance ? profile.calculatedBalance : conf.GmsPlatformMultipleBalance ? profile.casino_balance : env.casinoBalance.balance|number:conf.balanceFractionSize }}
+                </span>
+                <span>{{profile.currency_name|currency}}</span>
+            </li>
+            <li ng-if="profile.bonus_balance !== undefined">
+                <p class="bonus-view-mini-b">
+                    <span>{{profile.calculatedBonus|number:conf.balanceFractionSize}}</span>
+                    <span>{{profile.currency_name|currency}}</span>
+                </p>
+            </li>
+        </ul>
         <i></i>
         <!--delete "env.casinoBalance.bonus" after sworm update for all sites-->
     </div>
@@ -38,9 +52,34 @@
             <li>
                 <div class="drop-nav-new-b">
                       <div class="drop-items-contain-b icon-view-box">
+                          <div class="switcher-t-view-b">
+                              <p trans>Hide balance</p>
+                              <div class="switcher-box-b" ng-click="setHideBalance(!env.hideBalance); $event.stopPropagation()" ng-class="{'on': env.hideBalance}">
+                                  <div class="sw-circle-b"></div>
+                              </div>
+                          </div>
+                          <div class="user-info-box-b"
+                               ng-show="env.hideBalance && ((conf.GmsPlatform && !conf.GmsPlatformMultipleBalance) || (!isInCasino() && !isInPoker()))">
+                              <h4>
+                                  {{ profile.calculatedBalance|number:conf.balanceFractionSize }} {{profile.currency_name|currency}}
+                              </h4>
+                              <h5 ng-if="profile.bonus_balance !== undefined">
+                                  {{profile.calculatedBonus|number:conf.balanceFractionSize}} {{profile.currency_name|currency}}
+                              </h5>
+                          </div>
+                          <div class="user-info-box-b" ng-controller="casinoLoginCtrl"
+                               ng-if="::((!conf.GmsPlatform || conf.GmsPlatformMultipleBalance) && (casinoEnabled || calculatedConfigs.pokerEnabled || calculatedConfigs.backgammonEnabled) && availableModules.indexOf('casino') > -1)"
+                               ng-show="env.hideBalance && ((env.casinoBalance !== undefined || conf.GmsPlatformMultipleBalance) && (isInCasino() || isInPoker()) || !calculatedConfigs.sportEnabled)">
+                              <h4>
+                                  {{conf.showOnlyMainBalance ? profile.calculatedBalance : conf.GmsPlatformMultipleBalance ? profile.casino_balance : env.casinoBalance.balance|number:conf.balanceFractionSize }} {{profile.currency_name|currency}}
+                              </h4>
+                              <h5 ng-if="profile.bonus_balance !== undefined">
+                                  {{profile.calculatedBonus|number:conf.balanceFractionSize}} {{profile.currency_name|currency}}
+                              </h5>
+                          </div>
                         <ul>
                             <li ng-click="selectBalanceMenuItem($event, 'cashier')"
-                                ng-show="(casinoEnabled || conf.pokerEnabled) && conf.transferEnabled"
+                                ng-show="(casinoEnabled || calculatedConfigs.pokerEnabled) && conf.transferEnabled"
                                 ng-class="{'active': env.sliderContent === 'cashier'}"
                                 prevent-fast-click="1.5">
                                 <i class="cashier-icon-b"></i>
@@ -48,7 +87,7 @@
                             </li>
                             <li ng-click="selectBalanceMenuItem($event, 'balanceHistory');$event.stopPropagation();"
                                 ng-class="{'active': env.sliderContent === 'balanceHistory'}"
-                                ng-hide="!conf.sportEnabled && !virtualsportsEnabled && !pokerEnabled && !poolBettingEnabled && !conf.GmsPlatform"
+                                ng-hide="!calculatedConfigs.sportEnabled && !virtualsportsEnabled && !pokerEnabled && !poolBettingEnabled && !conf.GmsPlatform"
                                 prevent-fast-click="1.5">
                                 <i class="history-icon-b"></i>
                                 <span>{{'History'|translate:null:'Balance History'}}</span>
@@ -83,14 +122,14 @@
                             </li>
                             <li ng-click="selectBalanceMenuItem($event, 'buddytransfer')"
                                 ng-class="{'active': env.sliderContent === 'buddytransfer'}"
-                                ng-show="conf.enableBuddyTransfer"
+                                ng-show="conf.buddyTransfer.enabled && !conf.enableMixedView"
                                 prevent-fast-click="1.5">
                                 <i class="buddyTransfer-icon-b"></i>
                                 <span trans>Buddy transfer</span>
                             </li>
                             <li ng-click="selectBalanceMenuItem($event, 'loyaltyPoints')"
                                 ng-class="{'active': env.sliderContent === 'loyaltyPoints'}"
-                                ng-show="conf.enableLoyaltyPoints"
+                                ng-show="conf.enableLoyaltyPoints && casinoEnabled"
                                 prevent-fast-click="1.5">
                                 <i class="deposit-icon-b"></i>
                                 <span trans>Loyalty Points</span>

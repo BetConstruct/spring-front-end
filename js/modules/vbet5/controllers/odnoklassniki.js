@@ -106,7 +106,7 @@ VBET5.controller('OdnoklassnikiCtrl', ['$scope', '$window', '$rootScope', 'Confi
     function subscribeToProfile() {
         Config.env.authorized = true;
         TimeoutWrapper(function () {
-            if ($scope.env.sliderContent === 'signInForm' || $rootScope.env.sliderContent === 'registrationForm' || $rootScope.env.sliderContent === 'forgotPasswordForm') {
+            if ($scope.env.sliderContent === 'login' || $rootScope.env.sliderContent === 'register' || $rootScope.env.sliderContent === 'forgotPasswordForm') {
                 $scope.env.showSlider = false;
                 $scope.env.sliderContent = '';
             }
@@ -114,7 +114,6 @@ VBET5.controller('OdnoklassnikiCtrl', ['$scope', '$window', '$rootScope', 'Confi
         Zergling
             .subscribe({'source': 'user', 'what': {'profile': []}, 'subscribe': true}, updateProfile)
             .then(function (result) {
-                $rootScope.profileSubId = result.subid;
                 $rootScope.$broadcast('login.loggedIn');
                 $rootScope.odnoModel.loggedIn = true;
                 Storage.set('loginFlow', $scope.regFlow.ODNO);

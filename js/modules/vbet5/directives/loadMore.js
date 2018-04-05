@@ -13,7 +13,8 @@ VBET5.directive('loadMore', ['$window', '$timeout', function ($window, $timeout)
         restrict: 'A',
         scope: {
             exception: '=',
-            bottomOffset: '='
+            bottomOffset: '=',
+            blockOffset: '='
         },
         link: function (scope, element) {
             var clicked = false,
@@ -24,7 +25,7 @@ VBET5.directive('loadMore', ['$window', '$timeout', function ($window, $timeout)
                 var body = document.body, html = document.documentElement;
                 var docHeight = Math.max(body.scrollHeight, body.offsetHeight, html.clientHeight, html.scrollHeight, html.offsetHeight);
                 var windowBottom = windowHeight + window.pageYOffset;
-                return windowBottom + bottomOffset >= docHeight;
+                return scope.blockOffset === undefined ? windowBottom + bottomOffset >= docHeight : windowBottom + scope.blockOffset >= docHeight + 7;
             }
 
             angular.element($window).bind("scroll", function () {

@@ -4,7 +4,7 @@
  * @description
  * Open Games controller
  */
-angular.module('vbet5.betting').controller('gameCtrl', ['$rootScope', '$scope', '$location', '$filter', '$window', 'Config', 'Utils', 'GameInfo', 'analytics',  function ($rootScope, $scope, $location, $filter, $window, Config, Utils, GameInfo, analytics ) {
+angular.module('vbet5.betting').controller('gameCtrl', ['$rootScope', '$scope', '$location', '$filter', '$window', 'Config', 'Utils', 'GameInfo', 'StreamService', 'analytics',  function ($rootScope, $scope, $location, $filter, $window, Config, Utils, GameInfo, StreamService, analytics ) {
     'use strict';
 
     /**
@@ -15,13 +15,15 @@ angular.module('vbet5.betting').controller('gameCtrl', ['$rootScope', '$scope', 
      */
     var availableSportTemplates = ['soccer', 'tennis', 'basketball', 'volleyball', 'snooker', 'icehockey', 'netball', 'tabletennis', 'badminton', 'horseracing', 'handball', 'baseball', 'beachvolleyball', 'australianfootball']; //,'cricket','darts'
 
-    $scope.isVideoDetached = false;
+    var streamService = new StreamService($scope);
 
+    $scope.isVideoDetached = false;
     $scope.eventsInBetSlip = {};
 
     var audio = document.createElement('audio');
     $scope.isMp3Supported = !!(audio.canPlayType && audio.canPlayType('audio/mpeg;').replace(/no/, ''));
 
+    $scope.getVideoData = GameInfo.getVideoData;
     $scope.changeVolume = GameInfo.changeVolume;
     $scope.setSound = GameInfo.setSound;
     $scope.animationSoundsMap = GameInfo.animationSoundsMap;
@@ -53,7 +55,7 @@ angular.module('vbet5.betting').controller('gameCtrl', ['$rootScope', '$scope', 
 
         var results = [];
         var eventsArr = Utils.objectToArray(events);
-        eventsArr.sort(function (a, b) { return a.order - b.order; });
+        eventsArr.sort(Utils.orderSorting);
 
         while (eventsArr.length) {
             results.push(eventsArr.splice(0, cols));
@@ -222,7 +224,7 @@ angular.module('vbet5.betting').controller('gameCtrl', ['$rootScope', '$scope', 
     $scope.detachVideo = function detachVideo() {
         $scope.isVideoDetached = true;
         $scope.game.video_data = null;
-        $scope.getVideoData($scope.game);
+        GameInfo.getVideoData($scope.game);
         $scope.$emit('game.detachVideo', $scope.game);
     };
 
@@ -257,8 +259,10 @@ angular.module('vbet5.betting').controller('gameCtrl', ['$rootScope', '$scope', 
     $scope.$on('game.attachVideo', function attachVideo(event, game) {
         console.log('attach', game);
         if (game && game.id === $scope.game.id) {
-            $scope.game.video_data = null;
-            $scope.getVideoData($scope.game);
+            $scope.game.video_data = undefined;
+            if (Config.main.video.autoPlay) {
+                GameInfo.getVideoData($scope.game);
+            }
             $scope.isVideoDetached = false;
             $scope.game.activeFieldType = 'video'; //   <--- this doesn't work for some reason  :(
         }
@@ -301,7 +305,7 @@ angular.module('vbet5.betting').controller('gameCtrl', ['$rootScope', '$scope', 
                 $scope.game = gameCompetition[$scope.game.competition.id].game[$scope.game.id];
                 processGameData();
             }
-            $scope.$parent.unsubscribeFromgame($scope.game);
+            $scope.$parent.unsubscribeFromGame($scope.game);
             $scope.game.open = false;
             $scope.game.loading = false;
             if ($scope.$parent.openGames[$scope.game.type][$scope.game.id] !== undefined) {
@@ -312,7 +316,7 @@ angular.module('vbet5.betting').controller('gameCtrl', ['$rootScope', '$scope', 
 
     };
 
-    $scope.$on("$destroy", function () { $scope.$parent.unsubscribeFromgame($scope.game); });
+    $scope.$on("$destroy", function () { $scope.$parent.unsubscribeFromGame($scope.game); });
 
     $scope.$on('openGame', function (event, id) {
         if (id === $scope.game.id) {
@@ -338,48 +342,6 @@ angular.module('vbet5.betting').controller('gameCtrl', ['$rootScope', '$scope', 
     $scope.eachWayPlace = GameInfo.eachWayPlace;
     $scope.isExtraTime = GameInfo.isExtraTime;
     $scope.getCurrentTime = GameInfo.getCurrentTime;
-
-    $scope.getVideoData = GameInfo.getVideoData;
-
-    //make video available as soon as user logs in
-    $scope.$on('loggedIn', checkVideoAvailability);     // restoring login case
-    $scope.$on('login.loggedIn', checkVideoAvailability); //normal login case
-
-    /**
-     * @ngdoc method
-     * @name checkVideoAvailability
-     * @methodOf vbet5.controller:gameCtrl
-     * @description Check video availability
-     */
-    function checkVideoAvailability() {
-        if ($scope.game) {
-            if ($rootScope.profile) {
-                $scope.getVideoData($scope.game);
-            } else {
-                var profilePromise = $rootScope.$watch('profile', function () {
-                    if ($rootScope.profile) {
-                        profilePromise();
-                        $scope.getVideoData($scope.game);
-                    }
-                });
-            }
-        }
-    }
-
-    //and unavailable when he logs out
-    $scope.$on('login.loggedOut', function () { $scope.game.video_data = null; });
-
-    //synchronize video with user balance
-    $scope.$watch('profile.balance', function (newValue, oldValue) {
-        if ($scope.game) {
-            if (newValue === 0 && $rootScope.profile.initial_balance === 0) {
-                $scope.game.video_data = null;
-            } else if (oldValue === 0 && newValue > 0 && !$scope.game.video_data) {
-                GameInfo.getVideoData($scope.game);
-            }
-        }
-    });
-
     $scope.framesCount = GameInfo.framesCount;
 
     // curried  'improveName'filter
@@ -389,7 +351,7 @@ angular.module('vbet5.betting').controller('gameCtrl', ['$rootScope', '$scope', 
      * @name improveNameForThisGame
      * @methodOf vbet5.controller:gameCtrl
      * @description Use improveName filter
-     * @param {String} Game name
+     * @param {String} name name
      * @param {Object} game object
      */
     var improveNameForThisGame = function improveNameForThisGame(name, game) {
@@ -436,7 +398,7 @@ angular.module('vbet5.betting').controller('gameCtrl', ['$rootScope', '$scope', 
 
         // process data that is visible only inside open game
         if ($scope.game.open) {
-            if ($scope.game.type === 0) {
+            if ($scope.game.type === 0 || $scope.game.type === 2) {
                 //we have market groups for pre-match games only
                 $scope.marketGroups = Utils.groupByItemProperty($scope.game.market, 'group_id', 'none');
             } else {
@@ -507,19 +469,7 @@ angular.module('vbet5.betting').controller('gameCtrl', ['$rootScope', '$scope', 
             }
         }
 
-        var hasVideo = GameInfo.hasVideo($scope.game);
-        if (hasVideo) {
-            if ($scope.game.video_data === undefined) {
-                $scope.game.video_data = null; //not to call this several times before getVideoData fills the field
-                $scope.getVideoData($scope.game);
-            }
-        }
-
-        if (hasVideo && (Config.env.authorized || $rootScope.loginInProgress || !$scope.game.has_animation || Config.main.alwaysOpenVideo) && $scope.game.activeFieldType === undefined && Config.main.videoEnabled) {
-            $scope.game.activeFieldType = 'video';
-        } else if ($scope.game.activeFieldType === undefined) {
-            $scope.game.activeFieldType = 'field';
-        }
+        streamService.monitoring($scope, 'game', 'null', 'null');
 
         // is used only in init() to avid duplicate calls of this function during initialization.
         $scope.processGameDataIsCalled = true;
@@ -537,6 +487,8 @@ angular.module('vbet5.betting').controller('gameCtrl', ['$rootScope', '$scope', 
      * Adds bet to betslip by broadcasting **bet** event from root scope
      */
     $scope.bet = function bet(event, market, game, oddType) {
+        if (!event) return;
+
         addRemoveEventFromBetSlip(event, false);
 
         oddType = oddType || 'odd';
@@ -724,15 +676,6 @@ angular.module('vbet5.betting').controller('gameCtrl', ['$rootScope', '$scope', 
      * @param {Object} markets array
      */
     $scope.getFirstMarket = function getFirstMarket(markets){
-        var firstMarket = undefined;
-        angular.forEach(markets, function (market) {
-           if (market.type  === firstMarketName) {
-               firstMarket = market;
-           }
-        });
-        if (firstMarket === undefined) {
-            firstMarket =  $filter("firstElement")(markets);
-        }
-        return firstMarket;
+        return Utils.getFirstMarket(markets, $filter);
     };
 }]);

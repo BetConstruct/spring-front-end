@@ -1,6 +1,33 @@
 @mixin classic-new-view-1 {
+  .sport.euro2016 .view-container,
+  .dashboard .view-container,
+  .multiview .view-container,
+  .livecalendar .view-container,
+  .statistics .view-container,
+  .results .view-container{
+    float: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    padding: 0;
+    box-sizing: border-box;
+    > div{
+      display: inline-block;
+      vertical-align: top;
+      width: 100%;
+      height: 100%;
+      position: relative;
+      > .block-size-visible-b{
+        float: left;
+        width: 100%;
+        height: 100%;
+      }
+    }
+  }
   .body-wrapper.sport.euro2016{
     box-sizing: border-box;
+    font-family: $font-f;
   }
   .classic-version-euro2016{
     box-sizing: border-box;
@@ -12,6 +39,9 @@
     margin: 0;
     background: $classic-view-background;
     min-width: 980px;
+  }
+  .container-p{
+    font-family: $font-f;
   }
   .container-p, .classic-version-euro2016{
     padding: #{$header-first-line-height + $header-nav-line-height} 0 0;
@@ -26,21 +56,25 @@
   }
   .classic-view-wrapper-v3{
     box-sizing: border-box;
-    float: left;
+    display: inline-block;
+    vertical-align: top;
     width: 100%;
     height: 100%;
-    display: table;
-    table-layout: fixed;
+    transform: translate3d(0,0,0);
   }
   .classic-view-row-v3{
     box-sizing: border-box;
-    display: table-row;
+    float: left;
+    //display: table;
+    //table-layout: fixed;
     width: 100%;
+    height: 100%;
   }
   .classic-view-column-v3{
     box-sizing: border-box;
     position: relative;
-    display: table-cell;
+    display: inline-block;
+    vertical-align: top;
     width: 100%;
     height: 100%;
     border-top: 5px solid transparent;
@@ -68,130 +102,96 @@
     border-left: 7px solid transparent;
     border-right: 7px solid transparent;
   }
-  .scroll-ff-view {box-sizing: border-box;
+  .scroll-ff-view {
+    box-sizing: border-box;
     display: none;
   }
   //FF scroll color
-  @-moz-document url-prefix() {
-    .center-column-v3:after, .right-column-v3:after, .left-column-v3:after, .prematch-games-list:after, .scroll-ff-view:after, .prematch-games-list:after,
-    .prematch .prematch-view-v3 .live-game-view-contain-v3:after, .multiview-contain.has-statistics:after, .center-column-v3.dashboard:before, .center-column-v3.dashboard.game-pinned:after {
-      box-sizing: border-box;
-      content: "";
-      display: block;
-      width: 0;
-      height: 100%;
-      position: absolute;
-      top: 0;
-      right: 0;
-      box-shadow: -9px 9px 0 9px rgba($skin-palette-8, 0.83);
-    }
-    .scroll-ff-view {
-      box-sizing: border-box;
-      width: 0;
-      height: 100%;
-      position: absolute;
-      top: 0;
-      right: 0;
-      display: block;
-    }
-    .center-column-v3.game-pinned:after {
-      box-sizing: border-box;
-      display: none;
-    }
-    .scroll-ff-view:after {
-      box-sizing: border-box;
-      display: none;
-    }
-    .center-column-v3.dashboard:before{
-      right: auto;
-      left: 54%;
-      z-index: 24;
-      display: none;
-    }
-    @media screen and (min-width: 1600px) {
-      .center-column-v3.dashboard:before{
+  @supports not (-moz-osx-font-smoothing:auto) {
+    @-moz-document url-prefix() {
+      .center-column-v3:after, .right-column-v3:after, .left-column-v3:after, .prematch-games-list:after, .scroll-ff-view:after, .prematch-games-list:after,
+      .prematch .prematch-view-v3 .live-game-view-contain-v3:after, .center-column-v3.dashboard:before {
+        box-sizing: border-box;
+        content: "";
+        display: block;
+        width: 0;
+        height: 100%;
+        position: absolute;
+        top: 0;
+        right: 0;
+        box-shadow: -9px 9px 0 9px rgba($skin-palette-8, 0.83);
+      }
+      .scroll-ff-view {
+        box-sizing: border-box;
+        width: 0;
+        height: 100%;
+        position: absolute;
+        top: 0;
+        right: 0;
         display: block;
       }
-    }
-    .game-pinned .games-view-wrapper-v3.has-statistics .all-game-info-container-v3 + .scroll-ff-view:after {
-      box-sizing: border-box;
-      top: 142px;
-      display: block;
-      transition: top 400ms;
-    }
-    .game-pinned .prematch-view-v3:after {
-      box-sizing: border-box;
-      display: none;
-    }
-    .game-pinned .games-view-wrapper-v3.prematch-view-v3.has-statistics .all-game-info-container-v3 + .scroll-ff-view:after {
-      box-sizing: border-box;
-      top: 194px;
-    }
-    .game-pinned .games-view-wrapper-v3.has-statistics.open .all-game-info-container-v3 + .scroll-ff-view:after {
-      box-sizing: border-box;
-      top: 214px;
-    }
-    .game-pinned .games-view-wrapper-v3.prematch-view-v3.has-statistics.open .all-game-info-container-v3 + .scroll-ff-view:after {
-      box-sizing: border-box;
-      top: 266px;
-    }
-    .right-column-v3:after {
-      box-sizing: border-box;
-      top: 27px;
-      height: calc(100% - 27px);
-    }
-    .left-column-v3:after {
-      box-sizing: border-box;
-      top: 112px;
-      height: calc(100% - 112px);
-    }
-    .left-menu-closed-v3 .left-column-v3:after{
-      box-sizing: border-box;
-      display: none;
-    }
-    .prematch-games-list:after {
-      box-sizing: border-box;
-      top: 41px;
-      height: calc(100% - 41px);
-      left: calc(100% + 1px);
-    }
-    .center-column-v3.prematch:after {
-      box-sizing: border-box;
-      top: 51px;
-      height: calc(100% - 51px);
-      display: none;
-    }
-    .prematch .prematch-view-v3 .live-game-view-contain-v3:after {
-      box-sizing: border-box;
-      top: 51px;
-      height: calc(100% - 51px);
-    }
-    .game-pinned.prematch .prematch-view-v3 .live-game-view-contain-v3:after{
-      box-sizing: border-box;
-      display: none;
-    }
-    .multiview-contain.has-statistics:after{
-      box-sizing: border-box;
-      top: 146px;
-      height: 238px;
-      right: -1px;
-      transition: top 400ms, height 400ms;
-    }
-    .multiview-contain.has-statistics.open:after{
-      box-sizing: border-box;
-      top: 215px;
-      height: 181px;
+      .scroll-ff-view:after {
+        box-sizing: border-box;
+        display: none;
+      }
+      .center-column-v3.dashboard:before{
+        right: auto;
+        left: 54%;
+        z-index: 24;
+        display: none;
+      }
+      @media screen and (min-width: 1600px) {
+        .center-column-v3.dashboard:before{
+          display: block;
+        }
+      }
+      .right-column-v3:after {
+        box-sizing: border-box;
+        top: 27px;
+        height: calc(100% - 27px);
+      }
+      .left-column-v3:after {
+        box-sizing: border-box;
+        top: 112px;
+        height: calc(100% - 112px);
+      }
+      .left-menu-closed-v3 .left-column-v3:after{
+        box-sizing: border-box;
+        display: none;
+      }
+      .prematch-games-list:after {
+        box-sizing: border-box;
+        top: 41px;
+        height: calc(100% - 41px);
+        left: calc(100% + 1px);
+      }
+      .center-column-v3.prematch:after {
+        box-sizing: border-box;
+        top: 51px;
+        height: calc(100% - 51px);
+        display: none;
+      }
+      .prematch .prematch-view-v3 .live-game-view-contain-v3:after {
+        box-sizing: border-box;
+        top: 51px;
+        height: calc(100% - 51px);
+      }
     }
   }
   //FF scroll color END
-
+  .virtual-sports-right-b{
+    float: right;
+    height: 100%;
+  }
   .right-column-v3{
     box-sizing: border-box;
     float: left;
     width: 296px;
     height: 100%;
     position: relative;
-    padding: 0 1px 0 0;
+    padding: 0;
+    border-radius: 0 3px 0 0;
+    transform: translate3d(0,0,0);
   }
   .classic-version-euro2016 .animation-control *{
     box-sizing: content-box;
@@ -370,5 +370,15 @@
     display: block;
     width: 100%;
     height: auto;
+  }
+  .game-pinned {
+    live-game-scores {
+      z-index: 300;
+      position: sticky;
+      position: -webkit-sticky;
+      top: 0;
+      left: 0;
+      transform: translate3d(0,0,0);
+    }
   }
 }

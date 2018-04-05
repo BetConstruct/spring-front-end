@@ -1,10 +1,10 @@
 @font-face {
   font-family: 'icomoon';
-  src:  url('fonts/icomoon.eot?1zf112');
-  src:  url('fonts/icomoon.eot?1zf112#iefix') format('embedded-opentype'),
-    url('fonts/icomoon.ttf?1zf112') format('truetype'),
-    url('fonts/icomoon.woff?1zf112') format('woff'),
-    url('fonts/icomoon.svg?1zf112#icomoon') format('svg');
+  src:  url('fonts/icomoon.eot?r0hesi');
+  src:  url('fonts/icomoon.eot?r0hesi#iefix') format('embedded-opentype'),
+    url('fonts/icomoon.ttf?r0hesi') format('truetype'),
+    url('fonts/icomoon.woff?r0hesi') format('woff'),
+    url('fonts/icomoon.svg?r0hesi#icomoon') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -24,6 +24,138 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+.cms-jcon-checkmark2:before {
+  content: "\e992";
+}
+.cms-jcon-close_mark:before {
+  content: "\e993";
+}
+.cms-jcon-pendding:before {
+  content: "\e994";
+}
+.cms-jcon-wechat:before {
+  content: "\e98f";
+}
+.cms-jcon-qq:before {
+  content: "\e990";
+}
+.cms-jcon-line:before {
+  content: "\e991";
+}
+.cms-jcon-one:before {
+  content: "\e98d";
+}
+.cms-jcon-two:before {
+  content: "\e98e";
+}
+.cms-jcon-thin-close:before {
+  content: "\e98c";
+}
+.cms-jcon-thin-plus:before {
+  content: "\e98b";
+}
+.cms-jcon-bell-notification:before {
+  content: "\e98a";
+}
+.cms-jcon-blogger:before {
+  content: "\e989";
+}
+.cms-jcon-popular_games_icon:before {
+  content: "\e986";
+}
+.cms-jcon-video_poker_icon:before {
+  content: "\e987";
+}
+.cms-jcon-classic_slots_icon:before {
+  content: "\e988";
+}
+.cms-jcon-betcloud:before {
+  content: "\e985";
+}
+.cms-jcon-cms-jcon-facebook-round-icon:before {
+  content: "\e984";
+}
+.cms-jcon-MONEYWHEEL:before {
+  content: "\e93b";
+}
+.cms-jcon-THREE-CARD-POKER:before {
+  content: "\e981";
+}
+.cms-jcon-EXTREME-TEXAS-HOLDEM:before {
+  content: "\e982";
+}
+.cms-jcon-CARIBIAN-STUD-POKER:before {
+  content: "\e983";
+}
+.cms-jcon-iconmonstr-tumblr-3:before {
+  content: "\e980";
+}
+.cms-jcon-envelopej:before {
+  content: "\e97f";
+}
+.cms-jcon-vrcasinoicon1:before {
+  content: "\e97e";
+}
+.cms-jcon-gc-logo:before {
+  content: "\e97d";
+}
+.cms-jcon-mobile:before {
+  content: "\e97c";
+}
+.cms-jcon-spinner-01:before {
+  content: "\e97b";
+}
+.cms-jcon-zodiac_icon:before {
+  content: "\e97a";
+}
+.cms-jcon-icon_web_dragon_tiger:before {
+  content: "\e93c";
+}
+.cms-jcon-icon_web_punto_banco:before {
+  content: "\e979";
+}
+.cms-jcon-pacman:before {
+  content: "\e96e";
+}
+.cms-jcon-all_games:before {
+  content: "\e96f";
+}
+.cms-jcon-casual_games:before {
+  content: "\e970";
+}
+.cms-jcon-new_games:before {
+  content: "\e971";
+}
+.cms-jcon-scratch_games:before {
+  content: "\e972";
+}
+.cms-jcon-skill_games:before {
+  content: "\e973";
+}
+.cms-jcon-table_games:before {
+  content: "\e974";
+}
+.cms-jcon-top_games:before {
+  content: "\e975";
+}
+.cms-jcon-video_slots:before {
+  content: "\e976";
+}
+.cms-jcon-virtual_games:before {
+  content: "\e977";
+}
+.cms-jcon-chingachoong:before {
+  content: "\e96d";
+}
+.cms-jcon-games:before {
+  content: "\e96b";
+}
+.cms-jcon-777:before {
+  content: "\e96c";
+}
+.cms-jcon-chat2:before {
+  content: "\e96a";
+}
 .cms-jcon-comment-chat:before {
   content: "\e969";
 }
@@ -179,15 +311,6 @@
 }
 .cms-jcon-icons-feed-goal-kick:before {
   content: "\7e";
-}
-.cms-jcon-My-bets .path1:before {
-  content: "\e93b";
-  color: rgb(254, 254, 254);
-}
-.cms-jcon-My-bets .path2:before {
-  content: "\e93c";
-  margin-left: -1.0283203125em;
-  color: rgb(14, 24, 26);
 }
 .cms-jcon-russian-roulette:before {
   content: "\e93a";
@@ -537,9 +660,6 @@
 .cms-jcon-fantasy-sport:before {
   content: "\65";
 }
-.cms-jcon-fantasy-sport-u:before {
-  content: "\67";
-}
 .cms-jcon-user-hambourger:before {
   content: "\68";
 }
@@ -812,6 +932,9 @@
 }
 .cms-jcon-arrow-right-two:before {
   content: "\e92b";
+}
+.cms-jcon-Buddy-to-Buddy:before {
+  content: "\e978";
 }
 .cms-jcon-cross-close:before {
   content: "\e117";
@@ -1281,4 +1404,3 @@
 .cms-jcon-star-big-outline:before {
   content: "\f006";
 }
-

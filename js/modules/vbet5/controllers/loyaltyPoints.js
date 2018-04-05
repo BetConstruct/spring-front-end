@@ -67,7 +67,7 @@ VBET5.controller('loyaltyPointsCtrl', ['$scope', '$rootScope', 'Translator', 'Ze
                 if ($scope.profile.loyalty_level_id == $scope.programs[i].Id) {
                     $scope.pointsExchangeData.userCurrentStatus = $scope.programs[i];
 
-                    $scope.progressValue = (100 * $rootScope.profile.loyalty_last_earned_points) / ($scope.programs[$scope.programs.length - 1].MaxPoint - $scope.programs[0].MinPoint);
+                    $scope.progressValue = (100 * $rootScope.profile.loyalty_last_earned_points) / ($scope.programs[$scope.programs.length - 1].MinPoint);
 
                     var nextIndex = i;
 
@@ -126,6 +126,7 @@ VBET5.controller('loyaltyPointsCtrl', ['$scope', '$rootScope', 'Translator', 'Ze
                     dialog.type = 'success';
                     dialog.title = 'Success';
                     dialog.content = Translator.get('Point Exchange was successful.');
+                    $scope.$emit('profile.refresh');
                 } else if(response.code === 2417) {
                     console.log('2417', response);
                     dialog.content = Translator.get('Entered amount is out of allowable range.');

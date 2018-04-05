@@ -1,4 +1,4 @@
-<li title="Favorites" trans="attr-only" ng-if="conf.sportEnabled || casinoEnabled"
+<li title="Favorites" trans="attr-only" ng-if="calculatedConfigs.sportEnabled || casinoEnabled"
     ng-show="!conf.rfid.loginWIthRFID || conf.rfid.loginWIthRFID && env.authorized" class="my-games"
     prevent-fast-click
     ng-click="goToTop(!env.authorized); myGamesToggle()"

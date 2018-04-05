@@ -19,7 +19,7 @@
                                 <div class="results-select-j">
                                     <select ng-model="requestData.sport"
                                             ng-options="sport.name for sport in sportList track by sport.id"
-                                            ng-change="updateCompetition();todayResult = false">
+                                            ng-change="processCompetitionData(requestData.sport)">
                                     </select>
                                 </div>
                             </label>
@@ -29,7 +29,8 @@
                                 <h5 trans>Competition</h5>
                                 <div class="results-select-j">
                                     <select ng-model="requestData.competition"
-                                            ng-options="competition as ((competition.region.name ? competition.region.name + ' - ' : '') + competition.name) for competition in competitionList track by competition.id">
+                                            ng-disabled="updatingCompetitions"
+                                            ng-options="competition as ((competition.region.name ? competition.region.name + ' - ' : '') + competition.Name) for competition in competitionList track by competition.Id">
                                     </select>
                                 </div>
                             </label>
@@ -41,9 +42,9 @@
                             <div class="date-picker-b">
                                 <div class="picker-contain">
                                     <div class="input-group" ng-click="openFrom($event)">
-                                        <input type="text" class="form-control" placeholder="From" datepicker-popup="{{conf.dateFormat.datepicker}}"  max-date="today"
+                                        <input type="text" class="form-control" placeholder="From" datepicker-popup="{{conf.dateFormat.datepicker}}"  max-date="maxDay"
                                                ng-model="requestData.dateFrom" is-open="openedFrom"  disabled="disabled"
-                                               datepicker-options="dateOptions" ng-change="adjustDate('from')"
+                                               datepicker-options="dateOptions" ng-change="adjustDate('from'); requestData.live = 0; todayResult = false;"
                                                ng-required="true" close-text="Close"/> <!--min-date="minFromDate"-->
                                         <span class="input-group-btn"><button type="button" class="btn btn-default date-view" ng-click="openFrom($event)"><i class="date-p"></i></button></span>
                                     </div>
@@ -55,9 +56,9 @@
                             <div class="date-picker-b">
                                 <div class="picker-contain">
                                     <div class="input-group" ng-click="openTo($event)">
-                                        <input type="text" class="form-control" placeholder="To" datepicker-popup="{{conf.dateFormat.datepicker}}" min-date="minToDate" max-date="today"
+                                        <input type="text" class="form-control" placeholder="To" datepicker-popup="{{conf.dateFormat.datepicker}}" min-date="minToDate" max-date="maxDay"
                                                ng-model="requestData.dateTo" is-open="openedTo"  disabled="disabled"
-                                               datepicker-options="dateOptions" ng-change="adjustDate('to')"
+                                               datepicker-options="dateOptions" ng-change="adjustDate('to'); requestData.live = 0;"
                                                ng-required="true" close-text="Close"/>
                                         <span class="input-group-btn"><button type="button" class="btn btn-default date-view" ng-click="openTo($event)"><i class="date-p"></i></button></span>
                                     </div>
@@ -78,7 +79,7 @@
                 </div>
 
                 <div class="results-table-cell-j button-container-j">
-                    <button class="search-lat-button-j-results" ng-click="searchGames()" ng-class="{'pointer-events-none': gameListLoaded}" trans>Search</button>
+                    <button class="search-lat-button-j-results" ng-disabled="updatingCompetitions" ng-click="searchGames()" ng-class="{'pointer-events-none': gameListLoaded}" trans>Search</button>
                 </div>
             </div>
 
@@ -89,19 +90,19 @@
                         <th ng-click="sortByDate = !sortByDate"><div><span ng-class="{ 'up-j-icon': !sortByDate }" class="icon-arrow-down5-j-sort"></span><span trans >Date</span></div></th>
                         <th><div trans>Competition</div></th>
                         <th><div trans>Event</div></th>
-                        <th>
+                        <th ng-if="gamesScorePresent">
                             <div ng-if="gamesResult[0].sport_id != virtualSportsIds.horse_racing_id && gamesResult[0].sport_id != virtualSportsIds.greyhounds_id" trans>Score</div>
                             <div ng-if="gamesResult[0].sport_id == virtualSportsIds.horse_racing_id || gamesResult[0].sport_id == virtualSportsIds.greyhounds_id" trans>Winner</div>
                         </th>
                     </tr>
                     <tr ng-repeat-start="game in gamesResult | orderBy: 'date': sortByDate" ng-click="toggleGameDetails(game)">
-                        <td><div>{{game.date|formatDate:'full':null:env.timeFormat}}</div></td>
+                        <td><div>{{game.date|formatDate: 'full' : null : env.timeFormat}}</div></td>
                         <td><div>{{game.competition_name}}</div></td>
                         <td><div>{{game.game_name}}</div></td>
-                        <td><div>{{game.scores}}</div></td>
+                        <td ng-if="gamesScorePresent" title="{{game.interrupted ? 'Unavailable' : (game.scores ? game.scores : '')}}"><div>{{game.interrupted ? 'Unavailable' : (game.scores ? game.scores : '')}}</div></td>
                     </tr>
                     <tr ng-repeat-end ng-show="expandedGames.indexOf(game.game_id) != -1" >
-                        <td colspan="4" class="result-details">
+                        <td colspan="{{gamesResult[0].scores || gamesResult[1].scores ? 4 : 3}} " class="result-details">
                             <vbet-loader ng-show="game.additionalDetailsAreLoading"></vbet-loader>
                             <ul  ng-show="game.details.length > 0">
                                 <li ng-repeat="detail in game.details">
@@ -125,17 +126,17 @@
     </div>
     <div class="right-container-p">
         <div class="old-classic-scroll-contain">
-            <div class="todays-results-j-contain"  ng-init="todayResults()">
-                <div class="todays-results-j" ng-show="!todayGameListLoaded">
+            <div class="todays-results-j-contain">
+                <div class="todays-results-j" ng-show="todayGameListLoaded">
                     <div class="results-header-j">
                         <h2 trans>Today's Results</h2>
                     </div>
                     <ul>
-                        <li  ng-show="todayGameList" ng-repeat="sport in todayGameList track by $index" ng-click="resultsBySport(sport); requestData.dateFrom = today; requestData.dateTo = today"><div>{{sport.sport[0].name}}</div></li>
-                        <li  ng-hide="todayGameList"><div>List is empty</div></li>
+                        <li  ng-show="todayGameList" ng-repeat="sport in todayGameList track by sport.id" ng-click="requestData.dateFrom = maxDay; requestData.dateTo = maxDay; resultsBySport(sport);"><div>{{sport.name}}</div></li>
+                        <li  ng-hide="todayGameList"><div trans>List is empty</div></li>
                     </ul>
                 </div>
-                <vbet-loader ng-show="todayGameListLoaded" class="centered-j"></vbet-loader>
+                <vbet-loader ng-show="!todayGameListLoaded" class="centered-j"></vbet-loader>
             </div>
         </div>
     </div>

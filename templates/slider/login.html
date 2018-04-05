@@ -1,7 +1,7 @@
 <div ng-init="loginFormInit();">
     <h3 trans>Sign in</h3>
     <div  ng-click="$event.stopPropagation();"  class="help-b" ng-if="!conf.liveChat.isSfChat && conf.liveChat.siteId && conf.liveChat.codePlan">
-        <a pass-click-to="comm100-float-button-2"><span trans>Contact Support</span></a>
+        <a pass-click-to="comm100-float-button-{{conf.liveChat.buttonId || '2'}}"><span trans>Contact Support</span></a>
     </div>
     <div ng-if="conf.liveChat.isSfChat" ng-click="startSFChat()" title="Live Chat" trans="attr-only" class="help-b"><a><span trans>Contact Support</span></a></div>
 
@@ -28,12 +28,12 @@
     <div class="form-sign-in odno-ki" ng-class="{'error-animation':signInError  && forms.signinform.$pristine}">
 
         <div class="facebook-login" ng-controller="facebookCtrl">
-            <div ng-show="cannotLoginWIthFbId && fbLoggedIn" ng-click="env.showSlider = true; env.sliderContent = 'registrationForm';$event.stopPropagation()">
+            <div ng-show="cannotLoginWIthFbId && fbLoggedIn" ng-click="env.showSlider = true; env.sliderContent = 'register';$event.stopPropagation()">
                 <p class="free-error-tooltip" trans>If you want to be able to login with your Facebook account you need to first Sign up with Facebook account.</p>
             </div>
 
             <div ng-show="odnoModel.cannotLoginWIthOdno"
-                 ng-click="env.showSlider = true; env.sliderContent = 'registrationForm';$event.stopPropagation()">
+                 ng-click="env.showSlider = true; env.sliderContent = 'register';$event.stopPropagation()">
                 <p class="free-error-tooltip" trans>If you want to be able to login with your Odnoklassniki account you need to first Sign up with Odnoklassniki account.</p>
             </div>
 
@@ -59,7 +59,7 @@
         <div ng-if="params.needVerificationCode" class="form-text" ng-class="{'error':signInError && forms.signinform.$pristine}">
             <input ng-model="user.login_code" id="signinform-password-input" numpad type="text" placeholder="You will receive verification code on your Email" required="required"  autocomplete="off" trans>
         </div>
-        <label for="signinform-remember-me" class="sign-in-checkbox-j" ng-show="conf.rememberMeCheckbox">
+        <label for="signinform-remember-me" class="sign-in-checkbox-j" ng-show="conf.rememberMeCheckbox.enabled">
             <input ng-model="user.remember" id="signinform-remember-me" type="checkbox">
             <span trans>Remember me</span>
         </label>
@@ -88,25 +88,24 @@
 
         </div>
 
-        <div class="signin-error-message" ng-show="signInError && forms.signinform.$pristine && !params.needVerification && !params.needVerificationCode && !params.needUserAuthorization">
+        <div class="signin-error-message" ng-show="signInError && forms.signinform.$pristine && !params.needVerification && !params.needVerificationCode && !params.needUserAuthorization && !params.lockedUser">
             <p trans>Invalid username or password.</p>
         </div>
-        <div class="signin-error-message" ng-show="signInError && forms.signinform.$pristine && (params.needVerification || params.needVerificationCode)">
+        <div class="signin-error-message" ng-show="signInError && forms.signinform.$pristine && (params.needVerification || params.needVerificationCode) && !params.lockedUser">
             <p trans>Please verify your account to be able to log in.</p>
             <p ng-if="params.needVerificationCode" trans>You will receive verification code on your Email</p>
         </div>
-        <div class="signin-error-message" ng-show="signInError && forms.signinform.$pristine && !params.needVerification && !params.needVerificationCode && params.needUserAuthorization">
+        <div class="signin-error-message" ng-show="signInError && forms.signinform.$pristine && !params.needVerification && !params.needVerificationCode && params.needUserAuthorization && !params.lockedUser">
             <p trans>To the specified e-mail address we have sent the letter. Click on the link to continue registration. If you do not receive the email, contact support.</p>
+        </div>
+        <div class="signin-error-message" ng-show="signInError && forms.signinform.$pristine && params.lockedUser">
+            <p trans>User is locked. Please contact Support.</p>
         </div>
     </div>
     <div class="button-sign">
-        <ul ng-hide="!conf.registration.enable || conf.disableRegistrationAndLogin">
-            <li><a ng-click="openForgotPasswordForm();$event.stopPropagation()" title="Forgot your password?" trans>Forgot your password?</a></li>
-            <li><a ng-click="register();$event.stopPropagation()" trans>Create an account</a></li>
-        </ul>
-
-        <ul ng-if="conf.showForgotPassword && (!conf.registration.enable || conf.disableRegistrationAndLogin)">
-            <li><a ng-click="openForgotPasswordForm();$event.stopPropagation()" title="Forgot your password?" trans>Forgot your password?</a></li>
+        <ul>
+            <li><a ng-click="openForgotPasswordForm();$event.stopPropagation()" ng-hide="conf.header.disableRegistrationAndLogin" title="Forgot your password?" trans>Forgot your password?</a></li>
+            <li><a ng-click="register();$event.stopPropagation()" ng-hide="!conf.registration.enable || conf.header.disableRegistrationAndLogin" trans>Create an account</a></li>
         </ul>
 
         <div class="loader-btn">

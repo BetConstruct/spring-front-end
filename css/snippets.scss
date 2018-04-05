@@ -26,10 +26,10 @@ div.draws-contain,
 // End scrolls
 // Radio button
 .custom-radio input[type="radio"] + span:before {
-  background-color: $skin-palette-10;
+  background-color: $text-palette-10;
 }
 .custom-radio input[type="radio"]:checked + span:after {
-  background-color: $skin-palette-4;
+  background-color: $text-palette-4;
 }
 // End radio button
 // Subheader
@@ -44,9 +44,11 @@ div.draws-contain,
     transition: opacity 200ms;
     background: $subheader-background;
   }
-  .conteiner.show-fix {
-    .header-bg:before, .subtop-header-menu-j {
-      display: none;
+  .conteiner {
+    &.show-fix, &.show-game {
+      .header-bg:before, .subtop-header-menu-j {
+        display: none;
+      }
     }
   }
 }
@@ -448,133 +450,6 @@ div.draws-contain,
   font: 22px/28px $font-f;
 }
 // End offline site
-// Modern view live score backgrounds
-.conteiner-live-block {
-  /*  default one */
-  background: url(../../../images/game-category-m/defauld.png#{$delete-cache}) no-repeat 0 -55px;
-}
-.closed-game-container-Soccer {
-  background: url(../../../images/game-category-m/game-live-football.png#{$delete-cache}) no-repeat 0 -55px;
-}
-.closed-game-container-Tennis {
-  background: url(../../../images/game-category-m/tennis.png#{$delete-cache}) no-repeat 0 -122px;
-}
-.closed-game-container-Volleyball {
-  background: url(../../../images/game-category-m/volleyball.png#{$delete-cache}) no-repeat 0 -122px;
-}
-.closed-game-container-BeachVolleyball {
-  background: url(../../../images/game-category-m/beach-vball.png#{$delete-cache}) no-repeat 0 -55px;
-}
-.closed-game-container-Golf {
-  background: url(../../../images/game-category-m/Golf.png#{$delete-cache}) no-repeat 0 -122px;
-}
-.closed-game-container-AlpineSkiing {
-  background: url(../../../images/game-category-m/AlpineSkiing.png#{$delete-cache}) no-repeat 0 -55px;
-}
-.closed-game-container-Formula1 {
-  background: url(../../../images/game-category-m/Formula1.png#{$delete-cache}) no-repeat 0 -122px;
-}
-.closed-game-container-Baseball {
-  background: url(../../../images/game-category-m/Baseball1.png#{$delete-cache}) no-repeat 0 -55px;
-}
-.closed-game-container-Snooker {
-  background: url(../../../images/game-category-m/Snooker.png#{$delete-cache}) no-repeat 0 -55px;
-}
-.closed-game-container-HorseRacing {
-  background: url(../../../images/game-category-m/HorseRacing.png#{$delete-cache}) no-repeat 0 -55px;
-}
-.closed-game-container-WaterPolo {
-  background: url(../../../images/game-category-m/WaterPolo.png#{$delete-cache}) no-repeat 0 -55px;
-}
-.closed-game-container-IceHockey {
-  background: url(../../../images/game-category-m/ice-hockey.png#{$delete-cache}) no-repeat 0 -122px;
-}
-.closed-game-container-TableTennis {
-  background: url(../../../images/game-category-m/t-tennis.png#{$delete-cache}) no-repeat 0 -122px;
-}
-.closed-game-container-Basketball,
-.closed-game-container-EBasketball {
-  background: url(../../../images/game-category-m/Basketball.png#{$delete-cache}) no-repeat 0 -122px;
-}
-.closed-game-container-Badminton {
-  background: url(../../../images/game-category-m/badminton.png#{$delete-cache}) no-repeat 0 -122px;
-}
-.closed-game-container-Handball {
-  background: url(../../../images/game-category-m/handball.png#{$delete-cache}) no-repeat 0 -122px;
-}
-.closed-game-container-Eurovision {
-  background: url(../../../images/game-category-m/eurovision.png#{$delete-cache}) no-repeat 0 -55px;
-}
-.closed-game-container-UFS {
-  background: url(../../../images/game-category-m/mma.png#{$delete-cache}) no-repeat 0 -122px;
-}
-.conteiner-live-block .game-team {
-  background: url(../../../images/game-category-m/defauld.png#{$delete-cache}) no-repeat 100% 0;
-}
-.conteiner-live-block .game-team-soccer {
-  background: url(../../../images/game-category-m/soccer-big.png#{$delete-cache}) no-repeat 100% 0;
-}
-.conteiner-live-block .game-team-tennis {
-  background: url(../../../images/game-category-m/tennis.png#{$delete-cache}) no-repeat 100% 0;
-}
-.conteiner-live-block .game-team-tabletennis {
-  background: url(../../../images/game-category-m/t-tennis.png#{$delete-cache}) no-repeat 100% 0;
-}
-.conteiner-live-block .game-team-basketball,
-.conteiner-live-block .game-team-ebasketball {
-  background: url(../../../images/game-category-m/Basketball.png#{$delete-cache}) no-repeat 100% 0;
-}
-.conteiner-live-block .game-team-volleyball {
-  background: url(../../../images/game-category-m/volleyball.png#{$delete-cache}) no-repeat 100% 0;
-}
-.conteiner-live-block .game-team-beachvolleyball {
-  background: url(../../../images/game-category-m/beach-vball.png#{$delete-cache}) no-repeat 100% 0;
-}
-.conteiner-live-block .game-team-golf {
-  background: url(../../../images/game-category-m/Golf.png#{$delete-cache}) no-repeat 100% 0;
-}
-.conteiner-live-block .game-team-alpineskiing {
-  background: url(../../../images/game-category-m/AlpineSkiing.png#{$delete-cache}) no-repeat 100% 0;
-}
-.conteiner-live-block .game-team-snooker {
-  background: url(../../../images/game-category-m/Snooker.png#{$delete-cache}) no-repeat 100% 0;
-}
-.conteiner-live-block .game-team-formula1 {
-  background: url(../../../images/game-category-m/Formula1.png#{$delete-cache}) no-repeat 100% 0;
-}
-.conteiner-live-block .game-team-baseball {
-  background: url(../../../images/game-category-m/Baseball1.png#{$delete-cache}) no-repeat 100% 0;
-}
-.conteiner-live-block .game-team-horseracing {
-  background: url(../../../images/game-category-m/HorseRacing.png#{$delete-cache}) no-repeat 100% 0;
-}
-.conteiner-live-block .game-team-waterpolo {
-  background: url(../../../images/game-category-m/WaterPolo.png#{$delete-cache}) no-repeat 100% 0;
-}
-.conteiner-live-block .game-team-icehockey {
-  background: url(../../../images/game-category-m/ice-hockey.png#{$delete-cache}) no-repeat 100% 0;
-}
-.conteiner-live-block .game-team-badminton {
-  background: url(../../../images/game-category-m/badminton.png#{$delete-cache}) no-repeat 100% 0;
-}
-.conteiner-live-block .game-team-handball {
-  background: url(../../../images/game-category-m/handball.png#{$delete-cache}) no-repeat 100% 0;
-}
-.conteiner-live-block .game-team-eurovision {
-  background: url(../../../images/game-category-m/eurovision.png#{$delete-cache}) no-repeat 100% 0;
-}
-.conteiner-live-block .game-team-ufs {
-  background: url(../../../images/game-category-m/mma.png#{$delete-cache}) no-repeat 100% 0;
-}
-.game-team {
-  background: url(../../../images/game-category-m/game-1.png#{$delete-cache}) no-repeat 0 0;
-}
-.game-team-soccer .right-block-flash,
-.right-block-flash-soccer {
-  background: $skin-palette-1 url(../../../images/game-category-m/game-live-football.png#{$delete-cache}) 0 0;
-  background-size: 418%;
-}
-// End modern view live score backgrounds
 // Games page menu
 .games-pattern-j {
     margin: 0;
@@ -880,6 +755,9 @@ div.draws-contain,
 .game-video-container {
   position: relative;
   z-index: 22;
+  float: left;
+  width: 100%;
+  height: 100%;
 }
 .game-video-container.detached-game-container {
   position: static;
@@ -1159,20 +1037,6 @@ $hide-plus-four: false !default;
   }
 }
 // live casino provider game
-.provider-navigation-j + .menu-games.dealer {
-  height: 0;
-  min-width: inherit;
-  .subtop-game-menu-j {
-    margin: 0;
-    .j-resize-950-1280 {
-      display: inline-block;
-      width: auto !important;
-    }
-  }
-  & + .live-casino-games-by-ul-column {
-    margin-top: 70px;
-  }
-}
 // end live casino provider game
 // account information
 .account-info-fr-pp {
@@ -1306,7 +1170,7 @@ input[type="password"]:focus ~ .capslock-is-on-j {
   display: none;
   z-index: 11;
 }
-.slider-optional-b-casino{
+.slider-optional-b-casino {
   position: absolute;
   bottom: 0;
   width: 100%;
@@ -1315,20 +1179,57 @@ input[type="password"]:focus ~ .capslock-is-on-j {
   z-index: 90;
   padding: 0 15px;
   background: rgba($skin-palette-6, 0.4);
+  font: 0/0 $font-f;
+  text-align: left;
+  > span {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    background: lighten( desaturate( adjust-hue( $skin-color, 18deg ), 26 ), 15 );
+    border-radius: 50%;
+    text-align: center;
+    margin: 14px 4px 0;
+    &.active{
+      cursor: default;
+      background: $hero-color;
+    }
+  }
 }
-.slider-optional-b-casino > span{
-  display: block;
-  float: left;
-  width: 12px;
-  height: 12px;
-  background: lighten( desaturate( adjust-hue( $skin-color, 18deg ), 26 ), 15 );
-  border-radius: 50%;
-  margin: 14px 8px 0 0;
-  cursor: pointer;
-}
-.slider-optional-b-casino > span.active{
-  cursor: default;
-  background: $hero-color;
+.slider-arrows-b-casino {
+  .slider-optional-b-casino {
+    width: auto;
+    height: auto;
+    margin: 0 26px;
+    padding: 0;
+    bottom: 26px;
+    background: none;
+    > span {
+      width: 30px;
+      height: 30px;
+      margin: 0;
+      color: rgba($text-palette-1, 0.7);
+      background: rgba(desaturate( $skin-palette-11, 5 ), 0.5);
+      border-radius: 0;
+      font: 16px/30px icomoon;
+      &:before {
+        content: "\e677";
+      }
+      + span {
+        margin: 0 0 0 4px;
+        &:before {
+          content: "\e67a";
+        }
+      }
+      &:hover {
+        color: rgba($text-palette-1, 1);
+        background: rgba(desaturate( $skin-palette-11, 5 ), 0.8);
+      }
+    }
+  }
+  .slide-casino-new-img-b > button {
+    bottom: 64px;
+    left: 26px;
+  }
 }
 .slide-casino-new-img-b{
   float: left;
@@ -1389,12 +1290,6 @@ input[type="password"]:focus ~ .capslock-is-on-j {
   width: 100%;
   min-height: calc(100vh - 94px);
   float: left;
-  background: -moz-linear-gradient(top,  darken( desaturate( adjust-hue( $skin-color, 18deg ), 7 ), 1 ) 0%, darken( saturate( adjust-hue( $skin-color, 3deg ), 1 ), 7 ) 50%, darken( saturate( adjust-hue( $skin-color, 4deg ), 5 ), 8 ) 100%);
-  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,darken( desaturate( adjust-hue( $skin-color, 18deg ), 7 ), 1 )), color-stop(50%,darken( saturate( adjust-hue( $skin-color, 3deg ), 1 ), 7 )), color-stop(100%,darken( saturate( adjust-hue( $skin-color, 4deg ), 5 ), 8 )));
-  background: -webkit-linear-gradient(top,  darken( desaturate( adjust-hue( $skin-color, 18deg ), 7 ), 1 ) 0%,darken( saturate( adjust-hue( $skin-color, 3deg ), 1 ), 7 ) 50%,darken( saturate( adjust-hue( $skin-color, 4deg ), 5 ), 8 ) 100%);
-  background: -o-linear-gradient(top,  darken( desaturate( adjust-hue( $skin-color, 18deg ), 7 ), 1 ) 0%,darken( saturate( adjust-hue( $skin-color, 3deg ), 1 ), 7 ) 50%,darken( saturate( adjust-hue( $skin-color, 4deg ), 5 ), 8 ) 100%);
-  background: -ms-linear-gradient(top,  darken( desaturate( adjust-hue( $skin-color, 18deg ), 7 ), 1 ) 0%,darken( saturate( adjust-hue( $skin-color, 3deg ), 1 ), 7 ) 50%,darken( saturate( adjust-hue( $skin-color, 4deg ), 5 ), 8 ) 100%);
-  background: linear-gradient(to bottom,  darken( desaturate( adjust-hue( $skin-color, 18deg ), 7 ), 1 ) 0%,darken( saturate( adjust-hue( $skin-color, 3deg ), 1 ), 7 ) 50%,darken( saturate( adjust-hue( $skin-color, 4deg ), 5 ), 8 ) 100%);
   .single-game-contain-wp {
     float: right;
     height: 370px;
@@ -1405,6 +1300,23 @@ input[type="password"]:focus ~ .capslock-is-on-j {
     ~ .live-casino-slider-second-v-j {
       width: calc(100% - 330px);
     }
+  }
+}
+@if $live-casino-background == default {
+  .new-live-casino-j {
+    background: -moz-linear-gradient(top,  darken( desaturate( adjust-hue( $skin-color, 18deg ), 7 ), 1 ) 0%, darken( saturate( adjust-hue( $skin-color, 3deg ), 1 ), 7 ) 50%, darken( saturate( adjust-hue( $skin-color, 4deg ), 5 ), 8 ) 100%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,darken( desaturate( adjust-hue( $skin-color, 18deg ), 7 ), 1 )), color-stop(50%,darken( saturate( adjust-hue( $skin-color, 3deg ), 1 ), 7 )), color-stop(100%,darken( saturate( adjust-hue( $skin-color, 4deg ), 5 ), 8 )));
+    background: -webkit-linear-gradient(top,  darken( desaturate( adjust-hue( $skin-color, 18deg ), 7 ), 1 ) 0%,darken( saturate( adjust-hue( $skin-color, 3deg ), 1 ), 7 ) 50%,darken( saturate( adjust-hue( $skin-color, 4deg ), 5 ), 8 ) 100%);
+    background: -o-linear-gradient(top,  darken( desaturate( adjust-hue( $skin-color, 18deg ), 7 ), 1 ) 0%,darken( saturate( adjust-hue( $skin-color, 3deg ), 1 ), 7 ) 50%,darken( saturate( adjust-hue( $skin-color, 4deg ), 5 ), 8 ) 100%);
+    background: -ms-linear-gradient(top,  darken( desaturate( adjust-hue( $skin-color, 18deg ), 7 ), 1 ) 0%,darken( saturate( adjust-hue( $skin-color, 3deg ), 1 ), 7 ) 50%,darken( saturate( adjust-hue( $skin-color, 4deg ), 5 ), 8 ) 100%);
+    background: linear-gradient(to bottom,  darken( desaturate( adjust-hue( $skin-color, 18deg ), 7 ), 1 ) 0%,darken( saturate( adjust-hue( $skin-color, 3deg ), 1 ), 7 ) 50%,darken( saturate( adjust-hue( $skin-color, 4deg ), 5 ), 8 ) 100%);
+  }
+  .live-casino-second-new-j:before {
+    background: $lcasino-games-pattern-bg;
+  }
+}@else {
+  .body-wrapper.livedealer {
+    background: $live-casino-background;
   }
 }
 // printing popup
@@ -1429,6 +1341,44 @@ input[type="password"]:focus ~ .capslock-is-on-j {
 .viewSwitcher-j {
   position: relative;
   z-index: 600;
+  &.select-pagination {
+    display: table;
+    float: right;
+    margin: 0 0 10px;
+    > span {
+      text-align: right;
+      display: table-cell;
+      vertical-align: middle;
+      margin: 0 0 4px;
+      padding: 0 10px;
+      color: $text-palette-7;
+      font: 11px/13px $font-f
+    }
+    > ul {
+      display: table-cell;
+      vertical-align: middle;
+      width: 50px;
+      > li {
+        padding: 0;
+        p:before {
+          width: 20px;
+        }
+        > ul {
+          width: 100%;
+          left: 0;
+          max-height: 150px;
+          @include scroll;
+        }
+      }
+    }
+    & ~  .select-pagination {
+      > ul > li > ul {
+        top: auto;
+        bottom: 100%;
+        box-shadow: 0 1px 0 0 rgba(0, 0, 0, 0.5), inset 0 2px 3px -1px rgba(0, 0, 0, 0.5);
+      }
+    }
+  }
   > ul {
     width: 100%;
     height: 24px;
@@ -1955,8 +1905,23 @@ input[type="password"]:focus ~ .capslock-is-on-j {
     &.active {
       pointer-events: none;
       background: #fff;
-      color: $brand-color-1;
+      color: #505768;
       box-shadow: 0 1px 0 $brand-color-1 inset, 0 -1px 0 $brand-color-1;
+    }
+    &[data-count]:not([data-count='0']) {
+      &:after {
+        content: attr(data-count);
+        display: inline-block;
+        vertical-align: text-top;
+        background: $hero-color;
+        color: set-color($hero-color);
+        font: 700 11px/14px $font-f;
+        height: 12px;
+        padding: 0 3px;
+        border-radius: 2px;
+        box-shadow: 0 1px 0 rgba(black, 0.3);
+        margin: 0 0 0 6px;
+      }
     }
   }
 }
@@ -1967,7 +1932,8 @@ input[type="password"]:focus ~ .capslock-is-on-j {
   z-index: 300;
   .bsTypeSwitcher-j {
     float: left;
-    width: 85px;
+    width: calc(50% - 10px);
+    min-width: 85px;
     position: relative;
     margin: 0 5px;
     > p {
@@ -2215,3 +2181,370 @@ input[type="password"]:focus ~ .capslock-is-on-j {
     }
   }
 }
+.skinning {
+  background: white;
+  .skinning-page {
+    float: left;
+    width: 100%;
+    padding: 24px 0;
+    color: #7C8190;
+    h1 {
+      float: left;
+      width: 100%;
+      font: 24px $font-f;
+      margin: 0 0 12px;
+    }
+    section {
+      float: left;
+      width: 100%;
+      margin: 0 0 54px;
+      h3 {
+        float: left;
+        width: 100%;
+        font: 700 14px $font-f;
+        margin: 0 0 12px;
+      }
+      ul {
+        display: table;
+        table-layout: fixed;
+        float: left;
+        width: 100%;
+        li {
+          display: table-cell;
+          vertical-align: top;
+          position: relative;
+          &:before {
+            display: block;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            width: 100%;
+            text-align: center;
+            font: 14px/34px $font-f;
+          }
+          div {
+            float: left;
+            width: 100%;
+            padding: 100% 0 0;
+            box-shadow: inset 0 0 0 1px rgba(black, 0.08);
+            position: relative;
+            &:before {
+              content: attr(data-number);
+              display: block;
+              position: absolute;
+              top: 0;
+              left: 0;
+              padding: 12px;
+              font: 700 13px $font-f;
+              color: white;
+              text-shadow: 0 1px 7px rgba(0, 0, 0, 0.71);
+            }
+          }
+        }
+      }
+      &.main-colors {
+        width: 50%;
+        margin-right: 12.5%;
+      }
+      &.other-colors {
+        width: 37.5%;
+      }
+      &.line-colors, &.superbet-colors {
+        width: 25%;
+        margin-right: 12.5%;
+      }
+      &.blur-color {
+        width: 12.5%;
+        margin-right: 12.5%;
+      }
+    }
+  }
+  .hero-color {
+    background: $hero-color;
+    &:before {
+      content: "#{$hero-color}";
+    }
+  }
+  .brand-color-1 {
+    background: $brand-color-1;
+    &:before {
+      content: "#{$brand-color-1}";
+    }
+  }
+  .brand-color-2 {
+    background: $brand-color-2;
+    &:before {
+      content: "#{$brand-color-2}";
+    }
+  }
+  .brand-color-3 {
+    background: #0D8E8F;
+    &:before {
+      content: "#0D8E8F";
+    }
+  }
+  .skin-palette-12 {
+    background: $skin-palette-12;
+    &:before {
+      content: "#{$skin-palette-12}";
+    }
+  }
+  .skin-palette-11 {
+    background: $skin-palette-11;
+    &:before {
+      content: "#{$skin-palette-11}";
+    }
+  }
+  .skin-palette-8 {
+    background: $skin-palette-8;
+    &:before {
+      content: "#{$skin-palette-8}";
+    }
+  }
+  .skin-palette-7 {
+    background: $skin-palette-7;
+    &:before {
+      content: "#{$skin-palette-7}";
+    }
+  }
+  .skin-palette-6 {
+    background: $skin-palette-6;
+    &:before {
+      content: "#{$skin-palette-6}";
+    }
+  }
+  .skin-palette-5 {
+    background: $skin-palette-5;
+    &:before {
+      content: "#{$skin-palette-5}";
+    }
+  }
+  .skin-palette-4, .superbet-color-2 {
+    background: $skin-palette-4;
+    &:before {
+      content: "#{$skin-palette-4}";
+    }
+  }
+  .skin-palette-3 {
+    background: $skin-palette-3;
+    &:before {
+      content: "#{$skin-palette-3}";
+    }
+  }
+  .other-color-1 {
+    background: #008D47;
+    &:before {
+      content: "#008D47";
+    }
+  }
+  .other-color-2 {
+    background: #F4DA16;
+    &:before {
+      content: "#F4DA16";
+    }
+  }
+  .other-color-3 {
+    background: #E9044A;
+    &:before {
+      content: "#E9044A";
+    }
+  }
+  .line-color-1 {
+    background: #000000;
+    &:before {
+      content: "#000000 Alpha: 0.5";
+      @if($white-skin == true) {
+        content: "#000000 Alpha: 0.15";
+      }
+    }
+  }
+  .line-color-2 {
+    background: #FFFFFF;
+    &:before {
+      content: "#FFFFFF Alpha: 0.07";
+      @if($white-skin == true) {
+        content: "#FFFFFF Alpha: 0";
+      }
+    }
+  }
+  .blur-mask-color {
+    background: $skin-palette-6;
+    @if($white-skin == true) {
+      background: #FFFFFF;
+    }
+    &:before {
+      content: "#{$skin-palette-6} Alpha: 0.8";
+      @if($white-skin == true) {
+        content: "#FFFFFF Alpha: 0.9";
+      }
+    }
+  }
+  .superbet-color-1 {
+    background: #1E4447;
+    &:before {
+      content: "#1E4447";
+    }
+  }
+  @if($white-skin == true) {
+    .skin-palette-12 {
+      background: #2E323E;
+      &:before {
+        content: "#2E323E";
+      }
+    }
+    .skin-palette-11 {
+      background: #FFFFFF;
+      &:before {
+        content: "#FFFFFF";
+      }
+    }
+    .skin-palette-8 {
+      background: #E6E8EC;
+      &:before {
+        content: "#E6E8EC";
+      }
+    }
+    .skin-palette-7 {
+      background: #F6F7FA;
+      &:before {
+        content: "#F6F7FA";
+      }
+    }
+    .skin-palette-6 {
+      background: #C2C5CD;
+      &:before {
+        content: "#C2C5CD";
+      }
+    }
+    .skin-palette-5 {
+      background: #7B8191;
+      &:before {
+        content: "#7B8191";
+      }
+    }
+    .skin-palette-4, .superbet-color-2 {
+      background: #505767;
+      &:before {
+        content: "#505767";
+      }
+    }
+    .skin-palette-3 {
+      background: #3F4553;
+      &:before {
+        content: "#3F4553";
+      }
+    }
+  }
+}
+.spoiler {
+  clear: both;
+  position: relative;
+  margin: 13px 0 0;
+  background: white;
+  border-radius: 3px;
+  > input[type="checkbox"] {
+    position: absolute;
+    top: 0;
+    left: 0;
+    opacity: 0;
+    height: 48px;
+    width: 100%;
+    cursor: pointer;
+    &:checked {
+      ~ .spoiler-content {
+        display: block;
+      }
+      ~ .spoiler-title:before {
+        content: "\e627";
+      }
+    }
+  }
+  > .spoiler-title {
+    display: block;
+    height: 48px;
+    padding: 0 16px;
+    font: 700 16px/48px $font-f;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    cursor: pointer;
+    color: #121623;
+    &:before {
+      content: "\e628";
+      display: inline-block;
+      vertical-align: top;
+      font: 20px/48px icomoon;
+      margin: 0 8px 0 0;
+      color: $brand-color-1;
+    }
+    .spoiler-toggle {
+      display: none;
+    }
+  }
+  .spoiler-content {
+    display: none;
+    padding: 10px 16px;
+    box-sizing: border-box;
+    border-top: 1px solid $promotion-open-background;
+    p {
+      color: #121623;
+      &:first-child {
+        margin: 0;
+      }
+    }
+  }
+}
+@include liveScoreBackgrounds("custom");
+@include liveScoreBackgrounds("soccer");
+@include liveScoreBackgrounds("cyberfootball");
+@include liveScoreBackgrounds("ebasketball");
+@include liveScoreBackgrounds("leagueoflegends");
+@include liveScoreBackgrounds("tabletennis");
+@include liveScoreBackgrounds("dota");
+@include liveScoreBackgrounds("dota2", "dota");
+@include liveScoreBackgrounds("cricket");
+@include liveScoreBackgrounds("badminton");
+@include liveScoreBackgrounds("australianfootball");
+@include liveScoreBackgrounds("volleyball");
+@include liveScoreBackgrounds("icehockey");
+@include liveScoreBackgrounds("basketball");
+@include liveScoreBackgrounds("tennis");
+@include liveScoreBackgrounds("americanfootball");
+@include liveScoreBackgrounds("baseball");
+@include liveScoreBackgrounds("beachvolleyball");
+@include liveScoreBackgrounds("boxing");
+@include liveScoreBackgrounds("starcraft");
+@include liveScoreBackgrounds("beachfootball", "beachsoccer");
+@include liveScoreBackgrounds("starcraft2");
+@include liveScoreBackgrounds("futsal");
+@include liveScoreBackgrounds("golf");
+@include liveScoreBackgrounds("eurovision");
+@include liveScoreBackgrounds("chess");
+@include liveScoreBackgrounds("callofduty");
+@include liveScoreBackgrounds("snooker");
+@include liveScoreBackgrounds("overwatch");
+@include liveScoreBackgrounds("oscar");
+@include liveScoreBackgrounds("judo");
+@include liveScoreBackgrounds("handball");
+@include liveScoreBackgrounds("mma");
+@include liveScoreBackgrounds("darts");
+@include liveScoreBackgrounds("formula1");
+@include liveScoreBackgrounds("grasshockey");
+@include liveScoreBackgrounds("esports");
+@include liveScoreBackgrounds("counterstrike");
+@include liveScoreBackgrounds("heroesofthestorm");
+@include liveScoreBackgrounds("rugbyleague");
+@include liveScoreBackgrounds("rugbysevens");
+@include liveScoreBackgrounds("rugbyunion");
+@include liveScoreBackgrounds("grecoromanwrestling");
+@include liveScoreBackgrounds("freestylewrestling");
+@include liveScoreBackgrounds("alpineskiing");
+@include liveScoreBackgrounds("cycling");
+@include liveScoreBackgrounds("hearthstone");
+@include liveScoreBackgrounds("wrestling");
+@include liveScoreBackgrounds("worldoftanks");
+@include liveScoreBackgrounds("streetfighterv");
+@include liveScoreBackgrounds("rugby");
+@include liveScoreBackgrounds("mortalkombatxl");

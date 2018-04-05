@@ -4,7 +4,7 @@
             <div class="game-mini-filter" ng-class="{'active': periodDropdownOpened}">
                 <p ng-click="periodDropdownOpened=!periodDropdownOpened">{{(selectedUpcomingPeriod ? selectedUpcomingPeriod + ' hours' : 'All')|translate}} <b class="arrow-rotate icon-arrow-right6"></b></p>
                 <ul>
-                    <li ng-repeat="period in upcomingPeriods track by $index" ng-click="selectPrematchTimePeriod(period);$parent.periodDropdownOpened = false" ng-class="{'icon-checkmark': period == selectedUpcomingPeriod}">{{(period ? period + ' hours' : 'All')|translate}}</li>
+                    <li ng-repeat="period in upcomingPeriods track by $index" ng-click="selectPrematchTimePeriod(period);$parent.periodDropdownOpened = false" ng-class="{'active': period == selectedUpcomingPeriod}">{{(period ? period + ' hours' : 'All')|translate}}</li>
                 </ul>
             </div>
         </div>        
@@ -13,7 +13,7 @@
     </li>
     <div class="cms-jcon-left-menu" ng-click="toggleLeftMenu()" ng-show="::(!conf.customSportsBook.enabled || conf.customSportsBook.classic.showMarkets)"></div>
     <li>
-        <a href="#/livecalendar" trans="attr-only" title="Live Calendar" class="cms-jcon-calendar" ng-show="conf.liveCalendarEnabled && conf.liveCalendarInLeftMenu"></a>
+        <a href="#/livecalendar" trans="attr-only" title="Live Calendar" class="cms-jcon-calendar" ng-show="calculatedConfigs.liveCalendarEnabled && conf.liveCalendarInLeftMenu"></a>
         <div ng-click="toggleRegionsFilter()" ng-show="env.live" class="cms-jcon-public-globus" ng-class="{'active':!liveFilters.disableRegions}" title="Disable regions" trans="attr-only"></div>
         <div ng-show="conf.videoEnabled && env.live" ng-click="toggleVideoFilter()" class="cms-jcon-play-outline" ng-class="{'active':liveFilters.withVideo}" title="With video" trans="attr-only"></div>
     </li>

@@ -218,3 +218,44 @@
     }
   }
 }
+.modern.sport {
+  .tittle-twitters-b {
+    background: #dfdfdf;
+    > h3 {
+      color: #070b14;
+    }
+  }
+  .twitter-news-contain-mini {
+    background: #dfdfdf;
+  }
+  .twiter-region-tabs > ul{
+    background: #f1f1f1;
+    > li {
+      color: #070b14;
+      &.active {
+        color: #000000;
+      }
+    }
+  }
+  .twittr-news-list-b {
+    scrollbar-track-color: #c2c5cd;
+    scrollbar-shadow-color: #c2c5cd;
+    scrollbar-base-color: #505767;
+    scrollbar-arrow-color: #505767;
+    > ul > li {
+      border-bottom: 1px solid #f1f1f1;
+      > p > a {
+        color: #0d1423;
+      }
+    }
+  }
+  .icon-title-date-twit > h4 {
+    color: #000000;
+    > b {
+      color: #000000;
+    }
+  }
+  .news-time-b {
+    color: #000000;
+  }
+}

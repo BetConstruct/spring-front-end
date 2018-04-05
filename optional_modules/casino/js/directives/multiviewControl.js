@@ -6,7 +6,7 @@
  *
  * @description Makes gets and updates list of biggest winners of casino
  */
-CASINO.directive('multiviewControl', ['$interval', '$timeout', 'CConfig', 'casinoData', 'casinoManager', function ($interval, $timeout, CConfig, casinoData, casinoManager) {
+CASINO.directive('multiviewControl', ['$interval', '$timeout', 'CConfig', 'casinoData', 'casinoManager', 'Geoip', function ($interval, $timeout, CConfig, casinoData, casinoManager, Geoip) {
     'use strict';
     return {
         restrict: 'E',
@@ -24,10 +24,12 @@ CASINO.directive('multiviewControl', ['$interval', '$timeout', 'CConfig', 'casin
             scope.games = [];
             scope.gamesLimit = 40;
             scope.maxCount = 0;
-            scope.newDesignEnabled = CConfig.main.newCasinoDesign.enabled;
+            var countryCode = '';
+
             scope.changeView = function changeView(view) {
                 scope.$emit('casinoMultiview.viewChange', view);
             };
+            scope.showMultiViewDropdown = false;
 
             scope.closePopUp = function closePopUp () {
                 scope.selectedCategory = null;
@@ -41,15 +43,6 @@ CASINO.directive('multiviewControl', ['$interval', '$timeout', 'CConfig', 'casin
                 scope.selectedCategory = categoryId;
                 reset();
 
-                /*if (scope.selectedCategory === CConfig.liveCasino.categoryId) {
-                    if (!CConfig.liveCasino.lobby.getDataViaSwarm) {
-                        scope.liveCasinoTablesInfo = {};
-                        casinoManager.setupTableInfo(scope.liveCasinoTablesInfo);
-                    }
-                    scope.loadingProcess = false;
-
-                    return;
-                }*/
                 getGames();
             };
 
@@ -59,18 +52,6 @@ CASINO.directive('multiviewControl', ['$interval', '$timeout', 'CConfig', 'casin
                     getGames();
                 }
             };
-
-            scope.$on('casinoMultiview.showGames', function (event, category) {
-                scope.selectCategory(category);
-            });
-
-            scope.$on('casinoGamesList.openGame', function (event, data) {
-                scope.closePopUp();
-            });
-
-            scope.$on('livedealer.redirectGame', function (event, message) {
-                scope.closePopUp();
-            });
 
             var currentSearchCommandValue, searchCommandWatcherPromise, searchEnabled = false;
             function searchCommandWatcher() {
@@ -115,15 +96,39 @@ CASINO.directive('multiviewControl', ['$interval', '$timeout', 'CConfig', 'casin
             function getGames() {
                 scope.loadingProcess = true;
                 var openedGameIds = getOpenedGamesIds();
-                casinoData.getGames(scope.selectedCategory, null, scope.gamesLimit - 40, scope.gamesLimit, scope.searchCommand, openedGameIds).then(function (response) {
+                casinoData.getGames(scope.selectedCategory, null, countryCode, scope.gamesLimit - 40, scope.gamesLimit, scope.searchCommand, openedGameIds).then(function (response) {
                     if (response && response.data && response.data.status !== -1) {
-                        Array.prototype.push.apply(scope.games, response.data.games);
-                        scope.maxCount = parseInt(response.data.total_count);
+                        if (scope.selectedCategory === scope.confData.liveCasino.categoryId) {
+                            scope.liveGamesData = scope.liveGamesData || casinoManager.initProvidersData(response.data.games);
+                        } else {
+                            Array.prototype.push.apply(scope.games, response.data.games);
+                            scope.maxCount = parseInt(response.data.total_count);
+                        }
                     }
                 })['finally'](function () {
                     scope.loadingProcess = false;
                 })
             }
+
+            scope.openGame = function openGame (game, gameType, studio) {
+                scope.$emit('casinoGamesList.openGame', {game: game, playMode: gameType, studio: studio});
+            };
+
+            (function() {
+                scope.showMultiViewDropdown = (
+                    (scope.$root.calculatedConfigs.livedealerEnabled && scope.$root.calculatedConfigs.skillgamesEnabled) ||
+                    (scope.$root.calculatedConfigs.casinoEnabled && scope.$root.calculatedConfigs.skillgamesEnabled) ||
+                    (scope.$root.calculatedConfigs.casinoEnabled && scope.$root.calculatedConfigs.livedealerEnabled) ||
+                    (scope.$root.calculatedConfigs.casinoEnabled && scope.$root.calculatedConfigs.virtualBettingEnabledInTopMenu)
+                );
+                Geoip.getGeoData(false).then(function (data) {
+                    data && data.countryCode && (countryCode = data.countryCode);
+                })['finally'](function () {
+                    scope.$on('casinoMultiview.showGames', function (event, category) {scope.selectCategory(category);});
+                    scope.$on('casinoGamesList.openGame', scope.closePopUp);
+                    scope.$on('livedealer.redirectGame', scope.closePopUp);
+                });
+            })();
         }
     };
 }]);

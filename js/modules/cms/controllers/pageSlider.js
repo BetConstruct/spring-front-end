@@ -82,7 +82,7 @@ VBET5.controller('cmsPageSliderCtrl', ['$scope', '$location', '$sce', '$route', 
     /**
      * @ngdoc method
      * @name gotoGame
-     * @methodOf vbet5.controller:myGamesCtrl
+     * @methodOf vbet5.controller:cmsPageSliderCtrl
      * @description  Navigates to provided game
      *
      * @param {Object} game game object

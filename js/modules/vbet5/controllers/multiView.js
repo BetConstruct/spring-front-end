@@ -7,12 +7,11 @@
 angular.module('vbet5.betting').controller('multiViewCtrl', ['$rootScope', '$scope', '$location', 'Config', 'Zergling', 'Utils', 'Storage', 'GameInfo', 'Translator', '$window', function ($rootScope, $scope, $location, Config, Zergling, Utils, Storage, GameInfo, Translator, $window) {
     'use strict';
     $rootScope.footerMovable = true;
-
+    $rootScope.multiViewLiveOpenedGames = [];
+    $rootScope.multiViewLiveOpenedGamesIds = [];
     function checkAvailabilityOfPreviousGames() {
         var prevGamesList = Storage.get('multiViewLiveOpenedGamesIds');
         if (!prevGamesList) {
-            $rootScope.multiViewLiveOpenedGames = [];
-            $rootScope.multiViewLiveOpenedGamesIds = [];
             return;
         }
         var request = {

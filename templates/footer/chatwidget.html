@@ -7,3 +7,5 @@
         data-title="{{conf.liveChat.title[(conf.availableLanguages[env.lang].short|lowercase)]}}">
 
 </div>
+<button ng-if="conf.liveChat.liveAgentAsTooltip" class="live-chat-round-icon cms-jcon-chat2" onclick="startLiveAgent()">{{(conf.liveChat.liveAgentAsTooltip!==true?conf.liveChat.liveAgentAsTooltip:'Any questions?')|translate}}</button>
+<button ng-if="conf.liveChat.zopimAsTooltip" class="live-chat-round-icon cms-jcon-chat2" onclick="showZopimChat('br');">{{(conf.liveChat.zopimAsTooltip!==true?conf.liveChat.zopimAsTooltip:'Any questions?')|translate}}</button>

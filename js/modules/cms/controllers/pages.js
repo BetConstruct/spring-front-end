@@ -86,7 +86,7 @@ angular.module('CMS').controller('cmsPagesCtrl', ['$location', '$rootScope', '$s
      * @description Print selectd page
      */
     $scope.printSelectedPage = function printSelectedPage() {
-        $window.open('#/popup/?action=pageprint&rootPageSlug=' + WPConfig.help.pageSlugs[Config.env.lang] + '&pageSlug=' + $scope.selectedPage.slug, Config.main.skin + 'pageprint.popup', "scrollbars=1,width=1000,height=600,resizable=yes");
+        $window.open('#/popup/?action=pageprint&rootPageSlug=' + (WPConfig.help.pageSlugs[Config.env.lang] || WPConfig.help.pageSlugs['eng'] || 'help-root-eng') + '&pageSlug=' + $scope.selectedPage.slug, Config.main.skin + 'pageprint.popup', "scrollbars=1,width=1000,height=600,resizable=yes");
     };
 
     /**
@@ -148,7 +148,7 @@ angular.module('CMS').controller('cmsPagesCtrl', ['$location', '$rootScope', '$s
             $scope.selectedPageParent = page.parent;
         }
 
-        $scope.downloadPDFLink = WPConfig.wpUrl + '?json=pdf&pdf=' +  WPConfig.wpBaseHost + '&page_id=' + page.id;
+        $scope.downloadPDFLink = Config.main.enableDownloadPDFInHelpPages && ((Config.main.cmsDataDomain ? Config.main.cmsDataDomain + '/json' : WPConfig.wpUrl) + '?json=pdf&pdf=' +  (WPConfig.wpBaseHost[$location.host()] || WPConfig.wpBaseHost['default'] || WPConfig.wpBaseHost) + '&page_id=' + page.id);
     };
 
     var helpPagesLoaded = null;
@@ -182,7 +182,8 @@ angular.module('CMS').controller('cmsPagesCtrl', ['$location', '$rootScope', '$s
             loadingHelpPages.resolve(true);
         }
         if ($scope.env.selectedHelpPageSlug) {
-            $scope.openPage($rootScope.helpPages[$scope.env.selectedHelpPageSlug]);
+            var pageToOpen = parseInt($scope.env.selectedHelpPageSlug) ? getPageById($scope.env.selectedHelpPageSlug) : $rootScope.helpPages[$scope.env.selectedHelpPageSlug];
+            $scope.openPage(pageToOpen);
         }
         return helpPagesLoaded;
     };
@@ -250,16 +251,15 @@ angular.module('CMS').controller('cmsPagesCtrl', ['$location', '$rootScope', '$s
      * @param {Object} page page object
      */
     $scope.selectPopupTopPage = function selectPopupTopPage(page, dontSelectDefaultSubPage) {
+        if (!page) return;
         if (page.slug === 'payments') { // payments is a special page
             dontSelectDefaultSubPage = true;
             page.systems = {};
             angular.forEach(page.children, function (child) {
                 page.systems[child.slug] = child.content;
             });
-            console.log('payments page object:', page);
         }
 
-        console.log('selectPopupTopPage', page);
         $scope.selectedTopPage = page;
         $location.search('page', page.slug);
         if (page.children.length && !dontSelectDefaultSubPage) {
@@ -329,10 +329,11 @@ angular.module('CMS').controller('cmsPagesCtrl', ['$location', '$rootScope', '$s
     $scope.openParentPaymentsPage = function openParentPaymentsPage(system, type) {
         console.log('openParentPaymentsPage', system, type, $window.opener);
         var hash, target = $window.opener || $window;
+        system = system ? '&system=' + system : '';
         if (target.document.location.hash.indexOf('/popup/') !== -1) {
-            hash = '#/?action=' + type;
+            hash = '#/?action=' + type + system;
         } else {
-            hash = target.document.location.hash + (target.document.location.hash.indexOf('?') === -1 ? '?' : '&') + 'action=' + type;
+            hash = target.document.location.hash + (target.document.location.hash.indexOf('?') === -1 ? '?' : '&') + 'action=' + type + system;
         }
         target.location = target.document.location.origin + target.document.location.pathname + hash;
         if ($window.opener) {
@@ -353,22 +354,12 @@ angular.module('CMS').controller('cmsPagesCtrl', ['$location', '$rootScope', '$s
     $scope.openHelpPage = function openHelpPage(slug, from) {
         if (Config.main.openHelpAsPopup === 'popup') {
             $window.open('#/popup/?action=helpPopup&help=' + slug, Config.main.skin + 'help.popup', "scrollbars=1,width=1000,height=500,resizable=yes");
-        } else if (Config.main.openHelpAsPopup === 'all' || (Config.main.openHelpAsPopup && from !== 'footer')) {
+        } else if (Config.main.openHelpAsPopup === 'all' || (Config.main.openHelpAsPopup === 'OnlyHeaderPopup' && from !== 'footer')) {
             var userId = $rootScope.profile && $rootScope.profile.unique_id ? $rootScope.profile.unique_id : '';
             $window.open('#/popup/?u=' + userId + '&action=help&page=' + slug, Config.main.skin + 'help.popup', "scrollbars=1,width=1000,height=600,resizable=yes");
         } else {
             $scope.loadHelpPages().then(function () {
                 $rootScope.env.sliderContent = 'help';
-
-                /*
-                if ($rootScope.env.selectedHelpPageSlug === slug && $rootScope.env.showSlider) {
-                    $rootScope.env.showSlider = false;
-                    $rootScope.env.selectedHelpPageSlug = '';
-                } else {
-                    $rootScope.env.showSlider = true;
-                    $rootScope.env.selectedHelpPageSlug = slug;
-                }
-                */
 
                 if ($rootScope.env.selectedHelpPageSlug === slug) {
                     $rootScope.env.showSlider = true;
@@ -389,18 +380,20 @@ angular.module('CMS').controller('cmsPagesCtrl', ['$location', '$rootScope', '$s
     };
 
     $scope.$on('openHelpPage', function (event, obj) {
-        console.log(event, obj);
         $scope.openHelpPage(obj.slug, obj.from);
     });
 
-    $rootScope.$on('$locationChangeSuccess', function () {
+    $scope.$on('$locationChangeSuccess', function () {
         if ($location.search().help !== undefined) {
             $scope.openHelpPage($location.search().help, "footer");
         }
     });
 
     $scope.$watch('env.selectedHelpPageSlug', function () {
-        $scope.openPage($rootScope.helpPages[$scope.env.selectedHelpPageSlug]);
+        if ($scope.env.selectedHelpPageSlug) {
+            var pageToOpen = parseInt($scope.env.selectedHelpPageSlug) ? getPageById($scope.env.selectedHelpPageSlug) : $rootScope.helpPages[$scope.env.selectedHelpPageSlug];
+            $scope.openPage(pageToOpen);
+        }
     });
 
     /**
@@ -412,7 +405,8 @@ angular.module('CMS').controller('cmsPagesCtrl', ['$location', '$rootScope', '$s
     function openDeepLinkedHelpPage() {
         if ($location.search().help) {
             $scope.loadHelpPages().then(function () {
-                if ($rootScope.helpPages[$location.search().help]) {
+                var page = parseInt($location.search().help) ? getPageById($location.search().help) : $rootScope.helpPages[$location.search().help];
+                if (page) {
                     $rootScope.env.showSlider = true;
                     $rootScope.env.sliderContent = 'help';
                     $rootScope.env.selectedHelpPageSlug = $location.search().help;
@@ -463,6 +457,26 @@ angular.module('CMS').controller('cmsPagesCtrl', ['$location', '$rootScope', '$s
                 angular.forEach(response.data.widgets, function (widget) {
                     $scope.bannerObjects[containerId].push(widget.instance);
                 });
+            }
+        });
+    };
+
+    /**
+     * @ngdoc method
+     * @name loadFeatureGamesBackgrounds
+     * @methodOf CMS.controller:cmsPagesCtrl
+     * @description
+     *
+     * @param {string} containerId id of container to get backgrounds for
+     */
+    $scope.loadFeatureGamesBackgrounds = function loadFeatureGamesBackgrounds(containerId) {
+        content.getWidgetData(containerId).then(function (response) {
+            if (response.data && response.data.categories) {
+                $scope.featureGamesBackgrounds = {};
+                angular.forEach(response.data.categories, function (category) {
+                    $scope.featureGamesBackgrounds[category.name] = category;
+                });
+
             }
         });
     };
@@ -524,7 +538,7 @@ angular.module('CMS').controller('cmsPagesCtrl', ['$location', '$rootScope', '$s
             return;
         }
         analytics.gaSend('send', 'event', 'news', {'page': $location.path(), 'eventLabel': 'Casino Big banner click'});
-        var unregisterlocationChangeSuccess = $rootScope.$on('$locationChangeSuccess', function () {
+        var unregisterlocationChangeSuccess = $scope.$on('$locationChangeSuccess', function () {
             $rootScope.$broadcast('openCasinoBannerLink');
             unregisterlocationChangeSuccess();
         });
@@ -546,32 +560,6 @@ angular.module('CMS').controller('cmsPagesCtrl', ['$location', '$rootScope', '$s
                 $scope['selected' + Utils.ucfirst(product) + 'Page']['selected' + Utils.ucfirst(product) + 'Subpage'] = $scope.getPageBySlug($scope['selected' + Utils.ucfirst(product) + 'Page'].children, $location.search().subpage);
             }
         }, 10);
-    };
-
-    /**
-     * @ngdoc method
-     * @name checkForPageDeepLinkFunc
-     * @methodOf CMS.controller:cmsPagesCtrl
-     * @description Check for page deep link func
-     * @param {String} Product name
-     */
-    $scope.checkForPageDeepLinkFunc = function checkForPageDeepLinkFunc(product) {
-        return function () {
-            $scope.checkForPageDeepLink(product);
-        };
-    };
-
-    /**
-     * @ngdoc method
-     * @name watchLocation
-     * @methodOf CMS.controller:cmsPagesCtrl
-     * @description Trigger deeplink function once url is changed
-     * @param {String} Product name
-     */
-    $scope.watchLocation = function watchLocation(product) {
-        $rootScope.$on('$locationChangeSuccess', function () {
-            $scope.checkForPageDeepLink(product);
-        });
     };
 
     /**
@@ -788,12 +776,12 @@ angular.module('CMS').controller('cmsPagesCtrl', ['$location', '$rootScope', '$s
      * @description loads page(s) from CMS
      *
      * @param {String} slug page slug
-     * @param {Boolean} withChildren whether to load page children or not
+     * @param {Boolean} withChildren whether to load page children or not, if set to 'lang' overwrites mainPage from child
      */
     $scope.loadPage = function loadPage(slug, withChildren) {
         $scope.pageLoaded = false;
         if (Utils.isObjectEmpty($scope.pages)) {
-            content.getPage(slug, withChildren).then(function (data) {
+            content.getPage(slug, !!withChildren).then(function (data) {
                 console.log('loadPage', data);
                 $scope.mainPage = data.data.page;
                 $scope.pages = data.data.page ? data.data.page.children : [];
@@ -802,6 +790,9 @@ angular.module('CMS').controller('cmsPagesCtrl', ['$location', '$rootScope', '$s
                 for (i = 0; i < length; i++) {
                     $scope.pages[i].title = $sce.trustAsHtml($scope.pages[i].title);
                     $scope.pages[i].content = $sce.trustAsHtml($scope.pages[i].content);
+                    if (withChildren && withChildren === 'lang' && $scope.pages[i].slug === Config.env.lang) {
+                        $scope.mainPage = $scope.pages[i];
+                    }
                 }
                 console.log('loaded pages:', $scope.pages);
                 $scope.selectedPage = $scope.pages[0];
@@ -1122,4 +1113,15 @@ angular.module('CMS').controller('cmsPagesCtrl', ['$location', '$rootScope', '$s
         });
     };
 
+    function getPageById(id) {
+        var page;
+
+        angular.forEach($rootScope.helpPages, function (helpPage) {
+            if (helpPage.id === parseInt(id)) {
+                page = helpPage;
+            }
+        });
+
+        return page;
+    }
 }]);

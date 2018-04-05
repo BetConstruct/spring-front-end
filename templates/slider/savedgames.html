@@ -5,7 +5,7 @@
             <div class="arrow-left-s" ng-show="offset > 0"><a ng-click="slide('left')">left-arrow</a></div>
             <div class="arrow-right-s" ng-show="offset < allGamesCount - gamesToShow"><a ng-click="slide('right')">right-arrow</a></div>
             <ul ng-show="games.length > 0">
-                <li ng-repeat="game in games track by game.id" ng-click="gotoGame(game)" ng-class="{'first': $first, 'last': $last}">
+                <li ng-repeat="game in games track by game.id" ng-click="chooseFavorite(game)" ng-class="{'first': $first, 'last': $last}">
                     <div class="game-status" ng-class="{'game-status-live': game.type === 1}">
                         <div class="type-rezult-won" ng-show="game.type === 1" trans>LIVE NOW!</div>
                         <div class="type-rezult" title="{{ game.start_ts| formatDate:null:null:env.timeFormat}}" ng-class="{'prematch': game.type !== 1}">{{ game.start_ts| formatDate:null:null:env.timeFormat}}</div>

@@ -16,6 +16,13 @@ angular.module('vbet5').constant('AsianMarkets', {
         {key: 'OUR', name: 'Outright'}
     ],
     OTHER: [{key: 'HDP', name: 'HDP & OU'}, {key: 'OUR', name: 'Outright'}],
+    ignoreMainOrderFor: {
+        'WINNER': true,
+        'ODD/EVEN': true,
+        'CORNERWINNER': true,
+        'CORNERHANDICAP': true,
+        'CORNERODD/EVEN': true
+    },
     marketsBySportGms: {
         Soccer: {
             HDP: ['ODD/EVEN', 'WINNER', 'HANDICAP', 'TOTALS'],
@@ -28,6 +35,9 @@ angular.module('vbet5').constant('AsianMarkets', {
             FLG: ['FIRST GOAL', 'LAST GOAL'],
             FTDC: ['DOUBLE CHANCE'],
             OUR: ['OUTRIGHT']
+        },
+        All: {
+            HDP: ['ODD/EVEN', 'WINNER', 'HANDICAP', 'CORNERWINNER', 'CORNERHANDICAP', 'CORNERTOTALS', 'CORNERODD/EVEN', 'TOTALS']
         },
         'Default': {
             HDP: ['ODD/EVEN', 'WINNER', 'HANDICAP', 'TOTALS'],

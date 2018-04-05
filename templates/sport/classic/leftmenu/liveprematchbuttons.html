@@ -8,7 +8,7 @@
                 </button>
             </p>
         </li>
-        <li ng-class="{active:!env.live}" ng-if="::conf.customSportsBook.classic.showPrematch" ng-init="subscribeToAllGameCounts(0)">
+        <li ng-class="{active:!env.live}" ng-if="::conf.customSportsBook.classic.showPrematch">
             <p>
                 <button ng-click="toggleLive()" ng-disabled="!env.live">
                     <span trans>pre-match</span>

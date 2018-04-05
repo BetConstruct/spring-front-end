@@ -3,6 +3,13 @@
 <div class="menu-games" ng-init="initModernView()">
     <div class="contain-menu-games modern-menu-j block-size-visible-b">
         <ul ng-class="{'favorites-first': conf.showFavoriteGamesInSportList}">
+
+            <li ng-show="env.live && sports_list && sports_list.length && conf.customSportsBook.modern.toggleLiveButton" data-step="1" data-position="right" class="with-video-filter" ng-class="{'active': withVideo}">
+                <a ng-click="toggleVideo(); resetSearchParams('game');">
+                    <span class="cms-jcon-video-tv">
+                    </span>{{'Live TV'|translate}}
+                </a>
+            </li>
             <!--Переключатель при неактивном состоянии заменить  class="live-b" на  class="live-b2"-->
             <li data-step="1" data-position="right" data-intro="Use this selector to switch between Live and Pre-match games" ng-show="conf.customSportsBook.modern.showPrematch && conf.customSportsBook.modern.showLive" class="live-prematch-toggle-li-j" trans="attr-only">
                 <div class="pl-ie8" ng-class="{'live-b2': !env.live, 'live-b':env.live}">
@@ -45,7 +52,7 @@
 <!--Menu games end-->
 
 <!--Menu country-->
-<div class="country-b" ng-show="!favoriteGamesSelectedAsSport && !modernVirtualSportsSelected && selectedSportId">
+<div class="country-b" ng-show="!favoriteGamesSelectedAsSport">
 <div class="country-block-contain">
     <ul class="countrylist">
         <div class="contaien-country one-line-menu" data-step="3" data-position="bottom" data-intro="Select region" trans="attr-only">

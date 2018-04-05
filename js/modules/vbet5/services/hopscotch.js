@@ -9,7 +9,7 @@ VBET5.service('DemoTour', ['$rootScope', '$window', 'Utils', 'Translator', 'Stor
 
     var directionOfsset =  window.angular.element(document).find('html')[0].getAttribute('dir')== "rtl" ? 200 : -100;
 
-    var demoTourJson = Config.main.demoTour.enabled ? {
+    var demoTourJson = Config.main.header.demoTour.enabled ? {
         demo: {
             order: 0,
             steps: [

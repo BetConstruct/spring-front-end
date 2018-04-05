@@ -18,6 +18,6 @@ angular.module('vbet5.betting').controller('euro2016MainController', ['$scope', 
             return;
         }
 
-        $scope.openGameFullDetails(data.game, data.competition, false, true);
+        $scope.openGameFullDetails(data.game, data.competition, false, true, data.fully);
     });
 }]);

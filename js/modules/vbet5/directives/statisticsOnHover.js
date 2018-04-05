@@ -1,7 +1,6 @@
 
-VBET5.directive('statisticsOnHover', ['$document', '$http', '$compile', '$q', '$timeout', 'DomHelper', 'Config', 'Translator', function($document, $http, $compile, $q, $timeout, DomHelper, Config, Translator) {
+VBET5.directive('statisticsOnHover', ['$document', '$http', '$compile', '$q', '$timeout', 'DomHelper','Zergling', 'Config', 'Translator', 'LanguageCodes', function($document, $http, $compile, $q, $timeout, DomHelper, Zergling, Config, Translator, LanguageCodes) {
     'use strict';
-
     return {
         restrict: 'A',
         replace: false,
@@ -15,6 +14,7 @@ VBET5.directive('statisticsOnHover', ['$document', '$http', '$compile', '$q', '$
             var statisticsCache = {};
             var statsUrlPrefix = Config.main.statisticsOnHover.prefixUrl;
             var mouseEnterProcessPromise, mouseLeaveProcessPromise;
+            var isStatisticsOpened = false;
             var STATS_CONSTANTS = {
                 H2H: ['Home', 'Away'],
                 performance: ['all', 'Home', 'Away']
@@ -29,7 +29,7 @@ VBET5.directive('statisticsOnHover', ['$document', '$http', '$compile', '$q', '$
                     abbr: 'GT',
                     title: 'Average total goals'
                 }
-            }
+            };
             scope.sportBasedStats = {
                 'Soccer': {
                     AGPM1: {
@@ -66,7 +66,7 @@ VBET5.directive('statisticsOnHover', ['$document', '$http', '$compile', '$q', '$
                         value: 'goals'
                     },
                     AGPM2: {
-                        abbr: 'GT',
+                        abbr: 'RT',
                         title: 'Average total runs',
                         value: 'total_goals'
                     },
@@ -80,7 +80,7 @@ VBET5.directive('statisticsOnHover', ['$document', '$http', '$compile', '$q', '$
                         value: 'goals'
                     },
                     AGPM2: {
-                        abbr: 'GT',
+                        abbr: 'PT',
                         title: 'Average total points',
                         value: 'total_goals'
                     },
@@ -94,10 +94,12 @@ VBET5.directive('statisticsOnHover', ['$document', '$http', '$compile', '$q', '$
                         value: 'scoreByPeriod'
                     },
                     AGPM2: {
-                        abbr: 'GT',
+                        abbr: 'GaT',
                         title: 'Average total games',
                         value: 'total_scoreByPeriod'
-                    }
+                    },
+                    home: false,
+                    away: false
                 },
                 'IceHockey': {
                     AGPM1: {
@@ -149,7 +151,7 @@ VBET5.directive('statisticsOnHover', ['$document', '$http', '$compile', '$q', '$
                         value: 'scoreByPeriod'
                     },
                     AGPM2: {
-                        abbr: 'GT',
+                        abbr: 'PT',
                         title: 'Average total points',
                         value: 'total_scoreByPeriod'
                     },
@@ -177,10 +179,12 @@ VBET5.directive('statisticsOnHover', ['$document', '$http', '$compile', '$q', '$
                         value: 'goals'
                     },
                     AGPM2: {
-                        abbr: 'GT',
+                        abbr: 'PT',
                         title: 'Average total points',
                         value: 'total_goals'
-                    }
+                    },
+                    home: false,
+                    away: false
                 },
                 'FieldHockey': {
                     AGPM1: {
@@ -217,14 +221,28 @@ VBET5.directive('statisticsOnHover', ['$document', '$http', '$compile', '$q', '$
                         value: 'goals'
                     },
                     AGPM2: {
-                        abbr: 'GT',
+                        abbr: 'PT',
+                        title: 'Average total points',
+                        value: 'total_goals'
+                    },
+                    home: true,
+                    away: true
+                },
+                'Badminton': {
+                    AGPM1: {
+                        abbr: 'IT',
+                        title: 'Average individual total points',
+                        value: 'goals'
+                    },
+                    AGPM2: {
+                        abbr: 'PT',
                         title: 'Average total points',
                         value: 'total_goals'
                     },
                     home: true,
                     away: true
                 }
-            }
+            };
             scope.info = {'message': 'Data is loading ...'};
             scope.keepOpen = false;
             scope.statistics = {};
@@ -275,12 +293,15 @@ VBET5.directive('statisticsOnHover', ['$document', '$http', '$compile', '$q', '$
             /**
              * @description calculates head to head statistics
              * @param stats
+             * @param mapTeams
              */
             function calculateH2H(stats, mapTeams) {
-                var count = 0;
+                var count = 0,
+                    cyclesLength = STATS_CONSTANTS.H2H.length,
+                    i = 0;
                 angular.forEach(stats.H2HMatches, function(h2h) {
                     if(count < 5) {
-                        for(var i = 0; i< STATS_CONSTANTS.H2H.length; i++) {
+                        for(; i < cyclesLength; i++) {
                             if (scope.statistics.H2H[mapTeams[h2h[STATS_CONSTANTS.H2H[i] + 'Team'][0].name]]) {
                                 scope.statistics.H2H[mapTeams[h2h[STATS_CONSTANTS.H2H[i] + 'Team'][0].name]].scores.push({'score1': h2h[STATS_CONSTANTS.H2H[i] + 'Score'], 'score2': h2h[STATS_CONSTANTS.H2H[Math.abs(i-1)] + 'Score']});
                                 scope.statistics.H2H[mapTeams[h2h[STATS_CONSTANTS.H2H[i] + 'Team'][0].name]].all.games++;
@@ -320,6 +341,7 @@ VBET5.directive('statisticsOnHover', ['$document', '$http', '$compile', '$q', '$
                                 };
                             }
                         }
+                        i = 0;
                         count++;
                     }
                 });
@@ -327,27 +349,33 @@ VBET5.directive('statisticsOnHover', ['$document', '$http', '$compile', '$q', '$
 
 
                 //calculate H2H performance
-                for (var j = 0; j < STATS_CONSTANTS.performance.length; j++) {
-                    var persentTeam1 = scope.statistics.H2H.team1[STATS_CONSTANTS.performance[j]].games ? (100/scope.statistics.H2H.team1[STATS_CONSTANTS.performance[j]].games * scope.statistics.H2H.team1[STATS_CONSTANTS.performance[j]].points) : 0;
-                    scope.statistics.H2H.team1[STATS_CONSTANTS.performance[j]].persent = (persentTeam1 % 1 === 0 ?  persentTeam1 : persentTeam1.toFixed(1))+ '%';
-                    var persentTeam2 = scope.statistics.H2H.team2[STATS_CONSTANTS.performance[j]].games ? (100/scope.statistics.H2H.team2[STATS_CONSTANTS.performance[j]].games * scope.statistics.H2H.team2[STATS_CONSTANTS.performance[j]].points) : 0;
-                    scope.statistics.H2H.team2[STATS_CONSTANTS.performance[j]].persent = (persentTeam2 % 1 === 0 ? persentTeam2 : persentTeam2.toFixed(1)) + '%';
+                var performance = STATS_CONSTANTS.performance.length, j = 0;
+                for (; j < performance; j++) {
+                    var persentTeam1 = scope.statistics.H2H && scope.statistics.H2H.team1 && scope.statistics.H2H.team1[STATS_CONSTANTS.performance[j]].games ? (100 / scope.statistics.H2H.team1[STATS_CONSTANTS.performance[j]].games * scope.statistics.H2H.team1[STATS_CONSTANTS.performance[j]].points) : 0;
+                    var persentTeam2 = scope.statistics.H2H && scope.statistics.H2H.team2 && scope.statistics.H2H.team2[STATS_CONSTANTS.performance[j]].games ? (100 / scope.statistics.H2H.team2[STATS_CONSTANTS.performance[j]].games * scope.statistics.H2H.team2[STATS_CONSTANTS.performance[j]].points) : 0;
+                    if (scope.statistics.H2H && scope.statistics.H2H.team1 && scope.statistics.H2H.team2) {
+                        scope.statistics.H2H.team1[STATS_CONSTANTS.performance[j]].persent = (persentTeam1 % 1 === 0 ? persentTeam1 : persentTeam1.toFixed(1))+ '%';
+                        scope.statistics.H2H.team2[STATS_CONSTANTS.performance[j]].persent = (persentTeam2 % 1 === 0 ? persentTeam2 : persentTeam2.toFixed(1)) + '%';
+                    }
                 }
 
                 //add filter to count agpm by periods if needed
-                var scoreType = scope.sportBasedStats[scope.statsGame.sport] ? scope.sportBasedStats[scope.statsGame.sport].AGPM1.value : 'goals';
-                scope.statistics.H2H.team1.AGPM = scope.statistics.H2H.team1.all.games ? (scope.statistics.H2H.team1[scoreType]/scope.statistics.H2H.team1.all.games).toFixed(1) : 0;
-                scope.statistics.H2H.team2.AGPM = scope.statistics.H2H.team1.all.games ? (scope.statistics.H2H.team2[scoreType]/scope.statistics.H2H.team1.all.games).toFixed(1) : 0;
-                scope.statistics.H2H.AGPM = scope.statistics.H2H.team1.all.games ? ((scope.statistics.H2H.team1[scoreType] + scope.statistics.H2H.team2[scoreType]) / scope.statistics.H2H.team1.all.games).toFixed(1) : 0;
+                if (scope.statistics.H2H && scope.statistics.H2H.team1 && scope.statistics.H2H.team1.all) {
+                    var scoreType = scope.sportBasedStats[scope.statsGame.game.sport.alias] ? scope.sportBasedStats[scope.statsGame.game.sport.alias].AGPM1.value : 'goals';
+                    scope.statistics.H2H.team1.AGPM = scope.statistics.H2H.team1.all.games ? (scope.statistics.H2H.team1[scoreType]/scope.statistics.H2H.team1.all.games).toFixed(1) : 0;
+                    scope.statistics.H2H.team2.AGPM = scope.statistics.H2H.team1.all.games ? (scope.statistics.H2H.team2[scoreType]/scope.statistics.H2H.team1.all.games).toFixed(1) : 0;
+                    scope.statistics.H2H.AGPM = scope.statistics.H2H.team1.all.games ? ((scope.statistics.H2H.team1[scoreType] + scope.statistics.H2H.team2[scoreType]) / scope.statistics.H2H.team1.all.games).toFixed(1) : 0;
+                }
             }
 
             /**
              * @description calculates h2h league stats
              * @param stats
+             * @param mapTeams
              */
             function calculateH2HLeague(stats, mapTeams) {
                 scope.statistics.H2Hleague[mapTeams[stats.H2HleagueTable[0].EntityName]] = {POS: stats.H2HleagueTable[0].PositionTotal, PLD: stats.H2HleagueTable[0].PlayedTotal, PTS: stats.H2HleagueTable[0].PointsTotal};
-                scope.statistics.H2Hleague[mapTeams[stats.H2HleagueTable[1].EntityName]] = {POS: stats.H2HleagueTable[1].PositionTotal, PLD: stats.H2HleagueTable[1].PlayedTotal, PTS: stats.H2HleagueTable[1].PointsTotal};               
+                scope.statistics.H2Hleague[mapTeams[stats.H2HleagueTable[1].EntityName]] = {POS: stats.H2HleagueTable[1].PositionTotal, PLD: stats.H2HleagueTable[1].PlayedTotal, PTS: stats.H2HleagueTable[1].PointsTotal};
                 for (var i = 1; i < 3; i++) {
                     if(stats['UpcomingMatchesEnt' + i] && stats['UpcomingMatchesEnt' + i].length) {
                         var currentTeam = mapTeams[stats['UpcomingMatchesEnt' + i][0].AwayTeam[0].name] || mapTeams[stats['UpcomingMatchesEnt' + i][0].HomeTeam[0].name];
@@ -358,23 +386,39 @@ VBET5.directive('statisticsOnHover', ['$document', '$http', '$compile', '$q', '$
             }
 
             /**
-             *
-             * @param stats
-             * @param mapTeams
+             * @description
+             * @param stats param oll statistics data
              */
-            function calculatePlayedMatches(stats, mapTeams) {
+            function calculatePlayedMatches(stats) {
+                var conflicts = [],
+                    decisions = {};
                 for(var i = 1; i < 3; i++) {
                     var count = 0;
                     angular.forEach(stats['PlayedMatchesEnt' + i], function (match) {
                         if(count < 5) {
-                            var currentSide = mapTeams[match.HomeTeam[0].name] ? 'Home' : 'Away';
-                            var otherSide =  mapTeams[match.HomeTeam[0].name] ? 'Away' : 'Home';
-                            var currentTeam = mapTeams[match[currentSide + 'Team'][0].name];
+                            var currentTeam = (scope.statistics.team1 === match.HomeTeam[0].name || scope.statistics.team1 === match.AwayTeam[0].name) ? "team1" : "team2",
+                                currentSide = scope.statistics[currentTeam] === match.HomeTeam[0].name ? "Home" : "Away",
+                                otherSide = currentSide === "Home" ? "Away" : "Home";
+
+                            if (conflicts.indexOf(match.Id) === -1) {
+                                if ((scope.statistics.team1 === match.HomeTeam[0].name || scope.statistics.team1 === match.AwayTeam[0].name) && (scope.statistics.team2 === match.HomeTeam[0].name || scope.statistics.team2 === match.AwayTeam[0].name)) {
+                                    conflicts.push(match.Id);
+                                    decisions[match.Id] = {
+                                        currentTeam: currentTeam
+                                    }
+                                }
+                            } else {
+                                currentTeam = decisions[match.Id].currentTeam === "team1" ? "team2" : "team1";
+                                currentSide = otherSide;
+                                otherSide = currentSide === "Home" ? "Away" : "Home";
+                            }
 
                             if(scope.statistics.playedMatches[currentTeam]) {
                                 scope.statistics.playedMatches[currentTeam].scores.push({
                                     score1: match.HomeScore,
                                     score2: match.AwayScore,
+                                    homeTeam: match.HomeTeam,
+                                    awayTeam: match.AwayTeam,
                                     state: match.HomeScore === match.AwayScore ? 'draw' : match[currentSide + 'Score'] > match[otherSide + 'Score'] ? 'won' : 'lost'
                                 });
                                 scope.statistics.playedMatches[currentTeam].goals += match[currentSide + 'Score'];
@@ -386,6 +430,8 @@ VBET5.directive('statisticsOnHover', ['$document', '$http', '$compile', '$q', '$
                                     scores: [{
                                         score1: match.HomeScore,
                                         score2: match.AwayScore,
+                                        homeTeam: match.HomeTeam,
+                                        awayTeam: match.AwayTeam,
                                         state: match.HomeScore === match.AwayScore ? 'draw' : match[currentSide + 'Score'] > match[otherSide + 'Score'] ? 'won' : 'lost'
                                     }],
                                     goals: match[currentSide + 'Score'],
@@ -402,10 +448,10 @@ VBET5.directive('statisticsOnHover', ['$document', '$http', '$compile', '$q', '$
                 }
 
 
-                var scoreType = scope.sportBasedStats[scope.statsGame.sport] ? scope.sportBasedStats[scope.statsGame.sport].AGPM1.value : 'goals';
+                var scoreType = scope.sportBasedStats[scope.statsGame.game.sport.alias] ? scope.sportBasedStats[scope.statsGame.game.sport.alias].AGPM1.value : 'goals';
                 scope.statistics.playedMatches.team1.AGPM = (scope.statistics.playedMatches.team1[scoreType] / scope.statistics.playedMatches.team1.scores.length).toFixed(1);
                 scope.statistics.playedMatches.team2.AGPM = (scope.statistics.playedMatches.team2[scoreType] / scope.statistics.playedMatches.team2.scores.length).toFixed(1);
-                var totalScoreType = scope.sportBasedStats[scope.statsGame.sport] ? scope.sportBasedStats[scope.statsGame.sport].AGPM2.value : 'total_goals';
+                var totalScoreType = scope.sportBasedStats[scope.statsGame.game.sport.alias] ? scope.sportBasedStats[scope.statsGame.game.sport.alias].AGPM2.value : 'total_goals';
                 scope.statistics.playedMatches.team1.totalAGPM = (scope.statistics.playedMatches.team1[totalScoreType] / scope.statistics.playedMatches.team1.scores.length).toFixed(1);
                 scope.statistics.playedMatches.team2.totalAGPM = (scope.statistics.playedMatches.team2[totalScoreType] / scope.statistics.playedMatches.team2.scores.length).toFixed(1);
             }
@@ -413,45 +459,48 @@ VBET5.directive('statisticsOnHover', ['$document', '$http', '$compile', '$q', '$
             /**
              *
              * @description change data got from server to match provided design
-             * @param stats
+             * @param stats param oll statistics data
              */
             function updateStatistics(stats) {
                 if(!stats) {
                     scope.info.message = Translator.get("No data available at the moment");
                     return;
                 }
-                scope.statistics.team1_name = stats.H2HMatches[0].HomeTeam[0].name;
-                scope.statistics.team2_name = stats.H2HMatches[0].AwayTeam[0].name;
 
                 var mapTeams = {};
-                mapTeams[scope.statistics.team1_name] = 'team1';
-                mapTeams[scope.statistics.team2_name] = 'team2';
+                mapTeams[stats.CurrentMatch.HomeTeamName] = 'team1';
+                mapTeams[stats.CurrentMatch.AwayTeamName] = 'team2';
+                scope.statistics['team1'] = stats.CurrentMatch.HomeTeamName;
+                scope.statistics["team2"] = stats.CurrentMatch.AwayTeamName;
 
+                scope.statistics["competition_id"] = stats.CurrentMatch.CompetitionId;
 
+                scope.statistics["team1_id"] = stats.HomeTeamId;
+                scope.statistics["team2_id"] = stats.AwayTeamId;
 
                 calculateH2H(stats, mapTeams);
                 if(stats.H2HleagueTable.length) {
                     calculateH2HLeague(stats, mapTeams);
                 }
-                calculatePlayedMatches(stats, mapTeams);
+                calculatePlayedMatches(stats);
 
-
-                //cache the statistics
-                statisticsCache[scope.statsGame.id] = scope.statistics;
-                scope.isLoading = false;
+                    //cache the statistics
+                statisticsCache[scope.statsGame.game.id] = scope.statistics;
             }
 
             /**
-             * @description load data
+             * @description load statistics data
              */
             function loadStatistics() {
+                if (isStatisticsOpened) return;
                 var canceler = $q.defer();
                 scope.isLoading = true;
                 scope.info.message = Translator.get("Data is loading ...");
                 var statsBlock = angular.element('<div class="statistic-on-hover"><include-template template-path="templates/directive/stats-on-hover.html"></include-template></div>');
+                isStatisticsOpened = true;
                 setPosition(statsBlock);
-
                 var statsBlockLeave = function () {
+                    console.log("statblock mouseenter");
                     scope.keepOpen = false;
                     mouseLeaveProcessPromise && $timeout.cancel(mouseLeaveProcessPromise);
                     mouseLeaveProcessPromise = $timeout(function () {
@@ -460,28 +509,26 @@ VBET5.directive('statisticsOnHover', ['$document', '$http', '$compile', '$q', '$
                     }, 500);
                 };
 
-                statsBlock.on('mouseenter', function() {scope.keepOpen = true;});
+                statsBlock.on('mouseenter', function() {scope.keepOpen = true; console.log("statblock mouseenter");});
                 statsBlock.on('mouseleave', statsBlockLeave);
                 body.append($compile(statsBlock)(scope));
-                if (statisticsCache[scope.statsGame.id]) {
-                    scope.statistics = statisticsCache[scope.statsGame.id];
+                if (statisticsCache[scope.statsGame && scope.statsGame.game && scope.statsGame.game.id]) {
+                    scope.statistics = statisticsCache[scope.statsGame.game.id];
                     scope.isLoading = false;
                     return;
                 }
-
                 scope.statistics = {};
                 //reset stats object
                 scope.statistics.H2H = {};
                 scope.statistics.H2Hleague = {};
                 scope.statistics.playedMatches = {};
-
                 $http({
                     method: 'GET',
-                    url: statsUrlPrefix + scope.statsGame.id,
+                    url: statsUrlPrefix.replace('en', LanguageCodes[Config.env.lang] || 'en') + (Config.main.GmsPlatform && scope.statsGame.game.id || scope.statsGame.game.game_external_id),
                     timeout: canceler.promise
                 }).then(function(response) {
-                    console.log('Statistics on Hover', response);
-                    updateStatistics(response.data);
+                    updateStatistics(response.data, scope.statsGame.game.id);
+                    scope.isLoading = false;
                 },
                     function(error) {
                         console.log('Statistics error', error);
@@ -490,18 +537,20 @@ VBET5.directive('statisticsOnHover', ['$document', '$http', '$compile', '$q', '$
             }
 
             /**
-             *
+             * @description closed statistics pop-up
              */
             function closePopup() {
                 if(scope.keepOpen) {
                     return;
                 }
+                isStatisticsOpened = false;
                 var mystats = angular.element(document.getElementsByClassName('statistic-on-hover')[0]);
                 mystats.html = '';
                 mystats.remove();
             }
 
             element.on('mouseenter', function () {
+                console.log("element mouseenter");
                 scope.keepOpen = true;
                 mouseEnterProcessPromise = $timeout(function () {
                     mouseEnterProcessPromise = undefined;
@@ -509,6 +558,7 @@ VBET5.directive('statisticsOnHover', ['$document', '$http', '$compile', '$q', '$
                 }, 500);
             });
             element.on('mouseleave', function () {
+                console.log("element mouseleave");
                 scope.keepOpen = false;
                 mouseEnterProcessPromise && $timeout.cancel(mouseEnterProcessPromise) && (mouseEnterProcessPromise = undefined);
 

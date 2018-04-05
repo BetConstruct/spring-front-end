@@ -5,7 +5,7 @@
  * @description
  *  comboView Main controller
  */
-VBET5.controller('comboViewMainController', ['$rootScope', '$scope', 'Config', 'Utils', '$location', 'TimezoneService', 'Storage', function ($rootScope, $scope, Config, Utils, $location, TimezoneService, Storage) {
+VBET5.controller('comboViewMainController', ['$rootScope', '$scope', 'Config', 'Utils', '$location', 'TimezoneService', 'Storage', 'GameInfo', function ($rootScope, $scope, Config, Utils, $location, TimezoneService, Storage, GameInfo) {
     'use strict';
 
     $scope.timezones = TimezoneService.data;
@@ -16,7 +16,7 @@ VBET5.controller('comboViewMainController', ['$rootScope', '$scope', 'Config', '
     $scope.upcomingPeriods = Utils.clone(Config.main.upcomingGamesPeriods);
     $scope.upcomingPeriods.unshift(0);
     $scope.selectedUpcomingPeriod = $scope.upcomingPeriods[Config.env.defaultUpcomingPeriodIndex + 1 || 0];
-
+    $scope.getVideoData = GameInfo.getVideoData;
     $scope.mainView = '';
 
     if ($location.path().indexOf('overview') >= 0) {

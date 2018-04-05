@@ -1,0 +1,19 @@
+<div ng-controller="promoCodeCtrl" class="settings-info-contain deposit-limit">
+    <h3 trans>Promo code</h3>
+    <div ng-if="'promo-code-text'|translate:null:true">
+        <p ng-bind-html="'promo-code-text'|translate|html:'p'"><p trans>
+    </div>
+
+    <form name="selfExclusionForm" class="registration-form">
+        <div class="form-text" >
+            <label>
+                <input type="text" ng-model="promoCode.value" prevent-input="[^a-zA-Z0-9]">
+            </label>
+        </div>
+        <div class="change-button-container password">
+            <div class="cashier-button">
+                <button ng-disabled="!promoCode.value.trim()" ng-click="submitPromoCode()">Submit</button>
+            </div>
+        </div>
+    </form>
+</div>

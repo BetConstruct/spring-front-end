@@ -1,3 +1,4 @@
+<ng-include ng-if="conf.integrationMode" src="getTemplate('templates/sport/toptab.html');"></ng-include>
 <div class="promos-container" ng-init="setTitle('Promotions')" no-animate>
-    <promotion-news slug="promotions" main-class="promo block-meny-news" path="news" use-custom-base-host="true" count="999"></promotion-news>
+    <promotion-news slug="all" main-class="promo block-meny-news" path="news" categories-list="true" use-custom-base-host="true" count="999"></promotion-news>
 </div>

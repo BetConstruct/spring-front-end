@@ -1,6 +1,6 @@
 <div ng-controller="cmsPagesCtrl"
      ng-if="!conf.enableNewPoker"
-     ng-init="loadPages('poker'); checkIfEnabled('poker'); setTitle('Poker')"
+     ng-init="loadPages('poker'); setTitle('Poker')"
      ng-include="getTemplate('optional_modules/casino/templates/poker/old.html')"
      ng-class="'poker-'+selectedPokerPage.slug"
      class="poker-background"

@@ -1,0 +1,48 @@
+$skin-second: true;
+@import '../../../css/skinConstruction';
+.market-title-v3, .mini-title-box-gameview-v3:not(.active):not(:hover) {
+  background: #f3f3f5;
+}
+.game-full-information-w {
+  background: white !important;
+}
+.team-names-wrapper-b > ul > li > p {
+  color: #121623;
+}
+.product-list-contain > ul > li > a {
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+.featured-game-list-b {
+  background: none;
+}
+.center-contain-casino-b {
+  background: rgba(255, 255, 255, 0.86);
+  box-shadow: 0 -160px 0 rgba(255, 255, 255, 0.86);
+}
+body .better-homepage .row {
+  background: rgba(255, 255, 255, 0.96);
+  &:first-of-type {
+    box-shadow: 0 -160px 0 rgba(255, 255, 255, 0.96);
+  }
+}
+.casino-tournaments-include .guide {
+  background: rgba(255, 255, 255, 0.86);
+  box-shadow: 0 -300px 0 rgba(255, 255, 255, 0.86);
+}
+.game-name-b-favorite, .deposit-alert-contain.casino .game-name-b-favorite {
+  background: white;
+}
+.extended-license-footer > ul > li.gamble-logos-j img {
+  filter: grayscale(100%) invert(100%);
+}
+.balance-lightbox-j aside ul li {
+  &, &.active {
+    background: #e0dfe6;
+  }
+}
+.single-events-b-v3:not(.active), .filter-view-v3 {
+  background: white;
+}
+.product-list-contain > ul > li > a > button, .date-championship-logo, .lmb-table-j {
+  background: #eaeaee;
+}

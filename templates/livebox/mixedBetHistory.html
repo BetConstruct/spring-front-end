@@ -8,7 +8,7 @@
                 <ul ng-if="env.sliderContent === 'recentBets' || env.sliderContent === 'casinoBetHistory'">
                     <li ng-class="{'active': productMode === 'Sportsbook'}" ng-click="betHistoryLoaded && productMode !== 'Sportsbook' && loadMixedBetHistory('Sportsbook');"><span trans>sportsbook</span></li>
                     <li ng-class="{'active': productMode === 'Casino'}" ng-click="betHistoryLoaded && productMode !== 'Casino' && loadMixedBetHistory('Casino');"
-                        ng-if="!conf.GmsPlatform && (conf.casinoEnabled || conf.livedealerEnabled || conf.skillgamesEnabled || conf.financialsEnabled || conf.fantasyEnabled || conf.ogwilEnabled || conf.beloteEnabled || conf.backgammonEnabled)">
+                        ng-if="!conf.GmsPlatform && (calculatedConfigs.casinoEnabled || calculatedConfigs.livedealerEnabled || calculatedConfigs.skillgamesEnabled || calculatedConfigs.financialsEnabled || calculatedConfigs.fantasyEnabled || calculatedConfigs.ogwilEnabled || calculatedConfigs.beloteEnabled || calculatedConfigs.backgammonEnabled)">
                         <span trans>Casino</span></li>
 
 
@@ -32,7 +32,7 @@
                 <div class="all-history-filter-container">
                     <div class="filter-columns-container">
                         <ul>
-                            <li ng-show="productMode == 'Sportsbook'" >
+                            <li ng-show="productMode == 'Sportsbook' && !conf.betHistoryHideId" >
                                 <p trans>bet id:</p>
                                 <div class="mini-form-box-b">
                                     <input type="text" ng-model="betHistoryParams.betIdFilter" placeholder="#"
@@ -47,15 +47,15 @@
                                     <p>{{selectedCasinoCategory}}</p>
                                     <ul>
                                         <li ng-click="betHistoryParams.category = '0'; selectedCasinoCategory = 'All bets'|translate; $parent.categoriesDropdownOpened = false" trans>All</li>
-                                        <li ng-show="conf.casinoEnabled" ng-click="betHistoryParams.category = '6'; selectedCasinoCategory = 'Casino games'|translate; $parent.categoriesDropdownOpened = false" trans>Casino games</li>
-                                        <li ng-show="conf.livedealerEnabled" ng-click="betHistoryParams.category = '1'; selectedCasinoCategory = 'Live casino'|translate; $parent.categoriesDropdownOpened = false" trans>Live casino</li>
-                                        <li ng-show="conf.skillgamesEnabled" ng-click="betHistoryParams.category = '3'; selectedCasinoCategory = 'Skill games'|translate; $parent.categoriesDropdownOpened = false" trans>Skill games</li>
-                                        <li ng-show="conf.casinoEnabled" ng-click="betHistoryParams.category = '2'; selectedCasinoCategory = 'Virtual games'|translate; $parent.categoriesDropdownOpened = false"  trans>Virtual games</li>
-                                        <li ng-show="conf.financialsEnabled" ng-click="betHistoryParams.category = '706'; selectedCasinoCategory = 'Financials'|translate; $parent.categoriesDropdownOpened = false" trans>Financials</li>
-                                        <li ng-show="conf.fantasyEnabled" ng-click="betHistoryParams.category = '1297'; selectedCasinoCategory = 'Fantasy Sports'|translate; $parent.categoriesDropdownOpened = false" trans>Fantasy Sports</li>
-                                        <li ng-show="conf.ogwilEnabled" ng-click="betHistoryParams.category = '5'; selectedCasinoCategory = 'Ogwil'|translate; $parent.categoriesDropdownOpened = false" trans>Ogwil</li>
-                                        <li ng-show="conf.beloteEnabled" ng-click="betHistoryParams.category = '547'; selectedCasinoCategory = 'Belote'|translate; $parent.categoriesDropdownOpened = false" trans>Belote</li>
-                                        <li ng-show="conf.backgammonEnabled" ng-click="betHistoryParams.category = '599'; selectedCasinoCategory = 'Backgammon'|translate; $parent.categoriesDropdownOpened = false" trans>Backgammon</li>
+                                        <li ng-show="calculatedConfigs.casinoEnabled" ng-click="betHistoryParams.category = '6'; selectedCasinoCategory = 'Casino games'|translate; $parent.categoriesDropdownOpened = false" trans>Casino games</li>
+                                        <li ng-show="calculatedConfigs.livedealerEnabled" ng-click="betHistoryParams.category = '1'; selectedCasinoCategory = 'Live casino'|translate; $parent.categoriesDropdownOpened = false" trans>Live casino</li>
+                                        <li ng-show="calculatedConfigs.skillgamesEnabled" ng-click="betHistoryParams.category = '3'; selectedCasinoCategory = 'Skill games'|translate; $parent.categoriesDropdownOpened = false" trans>Skill games</li>
+                                        <li ng-show="casinoEnabled.casinoEnabled" ng-click="betHistoryParams.category = '2'; selectedCasinoCategory = 'Virtual games'|translate; $parent.categoriesDropdownOpened = false"  trans>Virtual games</li>
+                                        <li ng-show="calculatedConfigs.financialsEnabled" ng-click="betHistoryParams.category = '706'; selectedCasinoCategory = 'Financials'|translate; $parent.categoriesDropdownOpened = false" trans>Financials</li>
+                                        <li ng-show="calculatedConfigs.fantasyEnabled" ng-click="betHistoryParams.category = '1297'; selectedCasinoCategory = 'Fantasy Sports'|translate; $parent.categoriesDropdownOpened = false" trans>Fantasy Sports</li>
+                                        <li ng-show="calculatedConfigs.ogwilEnabled" ng-click="betHistoryParams.category = '5'; selectedCasinoCategory = 'Ogwil'|translate; $parent.categoriesDropdownOpened = false" trans>Ogwil</li>
+                                        <li ng-show="calculatedConfigs.beloteEnabled" ng-click="betHistoryParams.category = '547'; selectedCasinoCategory = 'Belote'|translate; $parent.categoriesDropdownOpened = false" trans>Belote</li>
+                                        <li ng-show="calculatedConfigs.backgammonEnabled" ng-click="betHistoryParams.category = '599'; selectedCasinoCategory = 'Backgammon'|translate; $parent.categoriesDropdownOpened = false" trans>Backgammon</li>
                                     </ul>
 
                                 </div>
@@ -108,7 +108,7 @@
                                                        ng-required="true"
                                                        close-text="Close"
                                                 />
-                                                            <span class="input-group-btn">
+                                                <span class="input-group-btn">
                                                                 <button type="button" class="btn btn-default date-view" ng-click="openFrom($event)">
                                                                     <i class="date-p"></i>
                                                                 </button>
@@ -150,7 +150,10 @@
 
             <div class="bet-info-list-separator-b title">
                 <ul>
-                    <li class="date-id-column-b"><p trans>Date and ID</p></li>
+                    <li class="date-id-column-b">
+                        <p ng-show="conf.betHistoryHideId" trans>Date</p>
+                        <p ng-show="!conf.betHistoryHideId" trans>Date and ID</p>
+                    </li>
                     <li class="bet-status-icon-column-b"></li>
                     <li class="bet-type-column-b">
                         <span ng-show="productMode == 'Sportsbook'" trans>Bet Type</span>
@@ -186,28 +189,36 @@
             <div class="bet-info-list-separator-b" ng-repeat="bet in betHistory | orderBy:'date_time':true track by bet.id " ng-if="productMode === 'Sportsbook' && (betHistoryLoaded && (betStatusFilter == undefined || betStatusFilter == bet.outcome) && (betHistoryParams.betTypeSelector == undefined ||betHistoryParams.betTypeSelector.value == bet.type))"
                  ng-class="{'active': bet.expand}" ng-click="bet.expand = !bet.expand">
                 <ul>
-                    <li class="date-id-column-b">
+                    <li class="date-id-column-b" ng-class="{'has-icon': bet.outcome != 5 && bet.showBetDrawIcon && bet.outcome != 2}">
                         <span testik>{{bet.date_time|formatDate:(conf.layoutTimeFormat[conf.sportsLayout] || 'noLocaleTranslate')}} {{conf.layoutTimeFormat[conf.sportsLayout]? (bet.date_time|formatDate:'hour':null:env.timeFormat): ''}}</span>
-                        <span><i>ID:</i> <b>{{bet.id}}</b></span>
+                        <span ng-show="!conf.betHistoryHideId"><i>ID:</i> <b>{{bet.id}}</b></span>
+                        <i ng-if="bet.outcome != 5 && bet.showBetDrawIcon && bet.outcome != 2" title="{{betDrawIconTitle|translate}}"></i>  <!--CARS Tournament-->
                     </li>
                     <li class="bet-status-icon-column-b">
-                        <div class="icon-st-bet" ng-class="{'1':'single-bet', '2':'multiple-bet', '3':'system-bet', '4':'chain-bet', 'Toto': 'toto-bet'}[bet.type]"></div>
+                        <div class="icon-st-bet" ng-class="{'1':'single-bet', '2':'multiple-bet', '3':'system-bet', '4':'chain-bet', 'Toto': 'toto-bet', '5': 'trixie-bet', '6': 'yankee-bet', '8': 'super-yankee-bet', '9': 'heinz-bet', '10': 'super-heinz-bet', '11': 'goliath-bet', '20': 'block-bet'}[bet.type]"></div>
                     </li>
                     <li class="bet-type-column-b">
-                        <span>{{{'1':'Single', '2':'express', '3':'System', '4':'chain', 'Toto': 'Pool Betting'}[bet.type]|translate}}</span>
+                        <span>{{{'1':'Single', '2':'express', '3':'System', '4':'chain', 'Toto': 'Pool Betting', '5': 'Trixie', '6': 'Yankee', '8': 'Super Yankee', '9': 'Heinz', '10': 'Super Heinz', '11': 'Goliath', '20': 'Block'}[bet.type]|translate}}</span>
                         <span ng-if="bet.type==3">. {{bet.system_min_count}}/{{bet.events.length}} ({{bet.systemCombinationsCount}} {{'opt.'|translate}})</span>
                         <i class="superbet-icon-history" ng-show="bet.super_bet"></i>
-                        <i class="cashoutbet-icon-history" ng-show="bet.calculatedCashout && !GmsPlatform"></i>
+                        <i class="cashoutbet-icon-history" ng-show="bet.outcome == 0 && bet.cash_out !== undefined"></i>
                         <i class="eachway-icon-history" ng-show="bet.ew"></i>
                         <i class="printbet-icon-history" ng-if="conf.enableBetPrint" ng-click="openPrintPreview(bet)"></i>
                         <i class="cms-jcon-bonus2"  title="Made with Bonus money" ng-if="bet.is_bonus_money"></i>
+                        <i class="repeat-icon-bet-history"
+                           ng-show="conf.enableBetFromBetHistory && (bet.outcome == 0 || bet.outcome == 5) && bet.type == 2"
+                           ng-click="$event.stopPropagation();addEvents(bet);"
+                           title="Repeat Bet">
+                            <span trans>Rebet</span>
+                        </i>
                         <i class="share-bet-history" ng-click="$event.stopPropagation();">
                             <social-share ng-repeat="item in conf.recentbetsSharing track by $index" ng-if="item.availableTypes.indexOf(bet.type)!==-1" provider="{{ item.provider }}"  share-data="bet"></social-share>
                         </i>
                     </li>
                     <li class="bet-stake-info-column">
-                        <span>{{bet.bonus_bet_amount ? bet.bonus_bet_amount : '' + bet.amount ? bet.amount : ''}} <i>{{bet.currency|currency}}</i></span>
-                        <spans></spans>
+                        <input disabled type="text" ng-model="bet['totalAmount']" ng-class=""  comma
+                                     comma-enable={{conf.enableCommaSeparateNumber}}
+                                     comma-decimal="enable" comma-dot="{{conf.enableDotInsteadComma}}"> <i>{{bet.currency|currency}}</i>
                     </li>
                     <li class="bet-odds-info-column">
                         <span>{{bet.type == 1 && bet.events[0].k_type ==11 ? 'SP' : (bet.k|oddConvert:env.oddFormat)}}</span>
@@ -217,13 +228,13 @@
                         <span ng-show="bet.outcome == 0 && bet.possible_win">{{bet.possible_win|number:conf.balanceFractionSize}} <i>{{bet.currency|currency}}</i></span>
                         <span ng-show="bet.outcome != 0 && bet.payout">{{bet.payout|number:conf.balanceFractionSize}} <i>{{bet.currency|currency}}</i></span>
                     </li>
-                    <li class="bet-status-column-b" ng-class="{'has-cash-out': (bet.outcome == 0 && bet.calculatedCashout !==undefined && !GmsPlatform)}">
+                    <li class="bet-status-column-b" ng-class="{'has-cash-out': (bet.outcome == 0 && bet.cash_out !== undefined && !GmsPlatform)}">
                         <span>{{{'-5': 'On Hold', '-4': 'Declined', '0': 'UNSETTLED', '1': 'Lost', '2': 'Returned', '3': 'Won', '5': 'Cashed out'}[bet.outcome]|translate}}</span>
                         <div class="status-icon-separator-b" ng-class="{'-5': 'clock-status', '-4': 'lost', '0': 'clock-status', '1': 'lost', '2': 'bet-returned', '3': 'won', '5': 'won'}[bet.outcome]"></div>
-                        <div class="cash-out-button mixed-cash-out" ng-show="bet.outcome == 0 && bet.calculatedCashout !== undefined">
+                        <div class="cash-out-button mixed-cash-out" ng-show="bet.outcome == 0 && bet.cash_out !== undefined">
                             <button ng-click="broadcast('open.cashoutDialog', bet);$event.stopPropagation();" ng-disabled="!bet.cashoutEnabled" >
-                                <i class="cashoutbet-icon-history" title="{{(bet.calculatedCashout ? 'Cash-out' : 'Cash-out is not available at the moment')|translate}}"></i>
-                                <b>{{bet.calculatedCashout|number:conf.balanceFractionSize}} {{bet.currency|currency}}</b>
+                                <i class="cashoutbet-icon-history" title="{{(bet.cash_out ? 'Cash-out' : 'Cash-out is not available at the moment')|translate}}"><span trans>Cash-out</span></i>
+                                <b>{{bet.cash_out|number:conf.balanceFractionSize}} {{bet.currency|currency}}</b>
                             </button>
                         </div>
                     </li>
@@ -251,11 +262,11 @@
                                 </li>
                                 <li class="bet-type-column-b">
                                     <div class="team-name-history-bet" title="{{event.sport_name}} {{event.region_name}} {{event.competition_name}}: {{event.team1}} - {{event.team2}}"
-                                        ng-class="{'live-game-j': event.is_live}">
+                                         ng-class="{'live-game-j': event.is_live}">
                                         <div ng-if="event.scores===undefined || event.scores!==false" ng-mouseover="getGameInfo(event)" class="icon-st-bet info">
-                                        	<div class="game-finished-tooltip match-result">
-                                				<span>{{event.scores ? ('Result:'|translate) + ' ' + event.scores : ''}}</span>
-                            				</div>
+                                            <div class="game-finished-tooltip match-result" ng-if="event.scores">
+                                                <span>{{('Result:'|translate) + ' ' + event.scores}}</span>
+                                            </div>
                                         </div>
                                         <div ng-if="!(event.scores===undefined || event.scores!==false)" class="icon-st-bet info"></div>
                                         <span>{{event.team1}}</span>
@@ -350,4 +361,6 @@
         </div>
     </div>
     <!--bet history END-->
+
+    <ng-include src="getTemplate('templates/dialogs/cashout.html')"></ng-include>
 </div>

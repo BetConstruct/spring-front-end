@@ -1,11 +1,9 @@
-<div class="full-multiview-wrapper-v3" ng-controller="multiViewCtrl" ng-init="setTitle('Live MultiView')">
+<div class="full-multiview-wrapper-v3" ng-controller="multiViewCtrl" ng-init="$root.setTitle('Live MultiView')">
     <div class="game-center-container-multi-v3">
         <div class="multiview-wrapper-v3"
              dnd-list="$root.multiViewLiveOpenedGames"
              dnd-drop="dropCallback(event, index, item)">
-            <div class="multiview-contain
-                    has-statistics
-                    {{showStatsBlock && openGame.type == 1 ? 'open' : ''}}"
+            <div class="multiview-contain"
                  ng-class="{'active' : $parent.openGame.id == game.id}"
                  ng-repeat="game in $root.multiViewLiveOpenedGames"
                  ng-controller="classicViewCenterController"
@@ -17,11 +15,10 @@
                  dnd-moved="$root.multiViewLiveOpenedGames.splice($index, 1);"
                  dnd-disable-if="$root.multiViewLiveOpenedGames.length === 1">
                 <div class="multi-game-view-game-v3
+                    game-pinned
                     {{!env.live ? 'prematch-view-v3' : ''}}
-                    {{favoriteGameIsSelected && favoriteGameFromLeftMenu ? 'favorite-game-open-euro2016': ''}}
-                    {{isLiveGamePinned && !noClassicScroll && GamesWithStatsBlock[openGame.sport.alias.toLowerCase()] && openGame.type == 1 ? 'has-statistics' : ''}}
-                    {{isLiveGamePinned && !noClassicScroll && showStatsBlock && openGame.type == 1 ? 'open' : ''}}">
-                    <div class="multi-view-statistic-v3" ng-include="getTemplate('templates/sport/euro2016/center/live-game-scores.html')"></div>
+                    {{favoriteGameIsSelected && favoriteGameFromLeftMenu ? 'favorite-game-open-euro2016': ''}}">
+                    <live-game-scores show-stats-block="showStatsBlock" class="multi-view-statistic-v3" open-game="openGame" enlarged-game="enlargedGame"></live-game-scores>
                     <div class="multi-view-game-info-v3" ng-init="openGameFullDetails(game)" ng-include="getTemplate('templates/sport/euro2016/center/game.html')"></div>
                 </div>
             </div>

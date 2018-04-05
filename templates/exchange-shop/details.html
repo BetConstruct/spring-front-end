@@ -1,0 +1,142 @@
+<div class="new-default-popup-j eshop-item">
+    <div class="pp-table-j">
+        <div class="table-row-j">
+            <div class="table-cell-j">
+                <div class="eshop-item-wrapper">
+                    <span class="close-j" ng-click="shop.details=null"></span>
+                    <div class="eshop-item-left-info">
+                        <div class="eshop-item-header" trans>Item Details</div>
+                        <div class="eshop-item-content">
+                            <div class="eshop-slider-wrapper">
+                                <div class="eshop-slider-active-image" style="background-image: url({{shop.details.images[shop.sliderIndex].image|url}});"></div>
+                                <ul ng-show="shop.details.images.length > 1">
+                                    <li><button class="prev-j" ng-click="shop.sliderIndex = shop.sliderIndex - 1;shop.sliderIndex = (shop.sliderIndex < 0 ? shop.details.images.length - 1 : shop.sliderIndex)"></button></li>
+                                    <li><div class="eshop-slider-previw">{{shop.sliderIndex + 1}} / {{shop.details.images.length}}</div></li>
+                                    <li><button class="next-j" ng-click="shop.sliderIndex = shop.sliderIndex + 1;shop.sliderIndex = (shop.sliderIndex > shop.details.images.length - 1 ? 0 : shop.sliderIndex)"></button></li>
+                                </ul>
+                            </div>
+                            <h3>{{shop.details.name}}</h3>
+                        </div>
+                        <div class="eshop-item-footer">
+                            <div class="eshop-item-price-row">
+                                <p trans>Price</p>
+                                <strong>{{shop.details.price}} {{'Pts.'|translate}}</strong>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="eshop-item-right-info">
+                        <div class="eshop-item-header">
+                            {{(shop.step === 0 ? 'Additional information' : 'Delivery Details') | translate}}
+                            {{( (shop.details.price &lt;= profile.loyalty_earned_points && !shop.details.simple && env.authorized) ? ((shop.step + 1) + ' / 3') : '')}}
+                        </div>
+                        <div class="eshop-item-content" ng-if="shop.step === 0">
+                            <div class="eshop-item-primary-description">
+                                <h6><p>{{shop.details.name}}</p></h6>
+                                <h5>{{(shop.details.price * shop.order.count)|number}} {{'Pts.'|translate}}</h5>
+                                <div class="eshop-item-options" ng-show="env.authorized">
+                                    <small
+                                            ng-repeat="color in shop.details.availableColors track by $index"
+                                            style="background-color: {{color || ''}}"
+                                            ng-click="shop.order.color = color"
+                                            ng-class="{active: shop.order.color === color}
+                                            "></small>
+                                    <div class="eshop-item-options-select" ng-show="shop.details.availableCounts.length > 1">
+                                        <select
+                                                ng-model="shop.order.count"
+                                                ng-options="count as count for count in shop.details.availableCounts"></select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="eshop-item-description">
+                                <div class="eshop-item-description-scroll">
+                                    <p ng-show="shop.details.price>profile.loyalty_earned_points" class="not-enough-founds"><span trans>Not enough bonus balance.</span></p>
+                                    <p ng-bind-html="shop.details.description|html"></p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="eshop-item-content" ng-if="shop.step === 1">
+                            <div class="eshop-delivery-form">
+                                <h5 trans>Full name</h5>
+                                <h6>{{profile.first_name}} {{profile.last_name}}</h6>
+                                <ul>
+                                    <li>
+                                        <label>
+                                            <p trans>Contact number</p>
+                                            <input type="text" ng-model="shop.order.contact_number" trans="attr-only" placeholder="Enter here">
+                                        </label>
+                                    </li>
+                                    <li>
+                                        <label>
+                                            <p trans>Additional number</p>
+                                            <input type="text" ng-model="shop.order.additional_number" placeholder="Optional">
+                                        </label>
+                                    </li>
+                                </ul>
+                                <ul>
+                                    <li>
+                                        <label>
+                                            <p trans>Country</p>
+                                            <div class="select-j">
+                                                <select ng-model="shop.order.country_code"
+                                                    ng-options="itemValue.key as itemValue.name|translate for itemValue in countryCodes"
+                                                >
+                                                </select>
+                                            </div>
+                                        </label>
+                                    </li>
+                                    <li>
+                                        <label>
+                                            <p trans>City</p>
+                                            <input type="text" ng-model="shop.order.city" trans="attr-only" placeholder="Enter here">
+                                        </label>
+                                    </li>
+                                </ul>
+                                <ul>
+                                    <li>
+                                        <label>
+                                            <p trans>Address</p>
+                                            <input type="text" ng-model="shop.order.address" trans="attr-only" placeholder="Enter here">
+                                        </label>
+                                    </li>
+                                </ul>
+                                <div class="eshop-form-checkbox">
+                                    <label>
+                                        <input type="checkbox" ng-model="shop.order.agree">
+                                        <p><span trans>I agree to all</span> <a href="#/?help=general-terms-and-conditions" target="_blank" trans>Terms &amp; Conditions</a></p>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="eshop-item-content" ng-if="shop.step === 2">
+                            <div class="eshop-item-primary-description">
+                                <h6><p>{{shop.details.name}}</p></h6>
+                                <h5>{{(shop.details.price * shop.order.count)|number}} {{'Pts.'|translate}}</h5>
+                            </div>
+                            <div class="eshop-item-description">
+                                <div class="eshop-item-description-scroll">
+                                    <p>
+                                        <span ng-show="shop.order.valid && shop.order.count === 1">{{'You are about to get {1}. Please confirm transaction !'|translate:[shop.details.name]}}</span>
+                                        <span ng-show="shop.order.valid && shop.order.count !== 1">{{'You are about to get {1}. Please confirm transaction !'|translate:[shop.order.count + 'x' + ' ' +shop.details.name]}}</span>
+                                        <span ng-show="!shop.order.valid" style="color: #FF0000" trans>One or more of your Offers contain errors. Please review and try again.</span>
+                                    </p>
+                                    <p ng-repeat="field in shop.fields track by $index">
+                                        <b ng-show="!field.hidden">{{field.label|translate}}:</b>
+                                        <span ng-show="!field.hidden && !field.country">{{shop.order[field.name]}}</span>
+                                        <span ng-show="!field.hidden && field.country">{{countryCodesByKey[shop.order[field.name]].name|translate}}</span>
+                                        <i style="color: #FF0000" ng-show="shop.order.error[field.name]">{{(shop.order.error[field.name] === true ? 'Please fill out this field.' : shop.order.error[field.name])|translate}}</i>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="eshop-item-footer">
+                            <div class="eshop-popup-buttons" ng-show="env.authorized && shop.details.price<=profile.loyalty_earned_points">
+                                <button ng-click="shopBack()" ng-disabled="shop.order.translactionInProgress">{{(shop.step === 0 ? 'Not Now' : 'Back') | translate}}</button>
+                                <button ng-hide="!shop.order.valid && shop.step === 2" ng-click="shopConfirm()" ng-disabled="shop.order.translactionInProgress">{{(shop.step === 2 || shop.details.simple? 'Confirm' : 'Next') | translate}}</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

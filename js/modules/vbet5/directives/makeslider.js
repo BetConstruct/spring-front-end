@@ -56,7 +56,7 @@ VBET5.directive('makeSlider', ['Config', '$interval', function (Config, $interva
                     scope.multiSlideRotationPaused = false;
                     multiSlideInterval = $interval(function () {
                         if (!scope.multiSlideRotationPaused) {
-                            scope.moveSliderTo();bc.e-devi
+                            scope.moveSliderTo();
                         }
                     },  attrs.sliderRotatingInterval || 5000);
                 }

@@ -74,7 +74,7 @@
                 margin: 0 10px 0 0;
             }
             li:nth-child(2) {
-                width: 607px; 
+                width: 607px;
             }
             li:nth-child(3) {
                 width: calc(100% - 607px - 156px);
@@ -93,7 +93,7 @@
             border: 1px solid $skin-palette-6;
             position: relative;
             overflow: hidden;
-            &:before {
+            &.show-arrow-t:before {
                 content: "\e670";
                 width: 16px;
                 height: 16px;
@@ -143,6 +143,16 @@
                     box-shadow: inset 3px 0 0 $hero-color;
                     background: lighten( desaturate( adjust-hue( $skin-color, 3deg ), 25 ), 22 );
                 }
+                &.mixedBuddyTransfer {
+                    &:before {
+                        content: "\e978";
+                        font: 34px/42px icomoon;
+                        display: block;
+                        margin: 0 0 0 12px;
+                        float: left;
+                        color: $text-palette-3;
+                    }
+                }
                 span {
                     height: 100%;
                     display: block;
@@ -172,16 +182,25 @@
             width: 100%;
             padding: 30px;
             min-height: 100%;
+            > div .mixed-iframe {
+                float: left;
+                width: calc(100% + 60px);
+                margin: -30px;
+                height: calc(100vh - 246px);
+            }
         }
         h5 {
-            color: $text-palette-14; 
+            color: $text-palette-14;
             font: 400 14px / 24px $font-f;
             float: left;
             width: 100%;
             margin: 0 0 40px;
             a {
-                color: $text-palette-14; 
+                color: $text-palette-14;
                 text-decoration: underline;
+            }
+            &:empty {
+                display: none;
             }
         }
         form, .form-j {
@@ -198,7 +217,7 @@
                     margin: 0 0 0 10px;
                 }
             }
-            label:not(.notthis) {
+             label:not(.notthis) {
                 color: $text-palette-4;
                 font: 400 14px/16px $font-f;
                 display: block;
@@ -227,7 +246,7 @@
                     border: 1px solid lighten( desaturate( adjust-hue( $skin-color, 2deg ), 16 ), 9 );
                     background: lighten( desaturate( adjust-hue( $skin-color, 3deg ), 14 ), 1 );
                     padding: 0 14px;
-                    color: $text-palette-14; 
+                    color: $text-palette-14;
                     font: 400 12px $font-f;
                     transition: .25s background, .25s border;
                     &::-webkit-input-placeholder {color:$text-palette-4;font: 12px $font-f;text-transform: capitalize;}
@@ -242,6 +261,9 @@
                         border-color: $skin-palette-6;
                     }
                 }
+                 .deposit-form-control {
+                     border-radius: 0;
+                 }
                 .select-j {
                     width: 100%;
                     float: left;
@@ -252,7 +274,7 @@
                         background: lighten( desaturate( adjust-hue( $skin-color, 3deg ), 14 ), 1 );
                         border: 1px solid lighten( desaturate( adjust-hue( $skin-color, 2deg ), 16 ), 9 );
                         padding: 0 32px 0 14px;
-                        color: $text-palette-14; 
+                        color: $text-palette-14;
                         font: 400 12px $font-f;
                         transition: .25s background, .25s border;
                         width: 100%;
@@ -277,7 +299,7 @@
                         pointer-events: none;
                     }
                 }
-                small {
+                > small, .small-currency-wrapper-j > small {
                     background: rgba($skin-palette-7, 0.5);
                     color: $text-palette-4;
                     text-align: center;
@@ -288,12 +310,29 @@
                     display: block;
                     right: 1px;
                     bottom: 1px;
-                    ~ input:not(.notthis)[type="number"] {
-                        padding-right: 43px;
+                    ~ input:not(.notthis)[type="number"], ~ input:not(.notthis)[type="text"] {
+                        padding-right: 48px;
+                        @media not all and (min-resolution:.001dpcm) {
+                            @supports (-webkit-appearance:none) {
+                                &::-webkit-inner-spin-button,
+                                &::-webkit-outer-spin-button {
+                                    display: none;
+                                }
+                            }
+                        }
+                    }
+                }
+                &.primary-text {
+                    margin: 18px 0;
+                    line-height: 18px;
+                    span {
+                        a {
+                            color: $text-palette-2;
+                        }
                     }
                 }
             }
-            button {
+             button:not(.deposit-data-view):not(.btn-sm) {
                 border: 0;
                 padding: 0 28px;
                 display: block;
@@ -312,10 +351,16 @@
                     background: $skin-palette-6;
                     @if $white-skin == true {
                         color: rgba(0, 0, 0, 0.66);
+                        background: rgba(black, 0.08);
                     } else {
                         color: $skin-palette-7;
                     }
                 }
+            }
+            .deposit-data-view {
+                float: right;
+                top: -36px;
+                background: none;
             }
             .input-error-message {
                 float: left;
@@ -323,15 +368,19 @@
                 padding: 0 0 0 25px;
                 margin: -10px 0 10px;
             }
+            .primary-checkbox span a {
+                color: $text-palette-2;
+            }
         }
         .custom-amounts-list{
             float: left;
-            width: 100%;
+            width: 386px;
+            margin-top: 20px;
             span {
                 display: block;
                 float: left;
                 line-height: 24px;
-                margin: 0 6px 0 0;
+                margin: 4px 6px 0 0;
             }
             button {
                 padding: 0 12px;
@@ -368,7 +417,7 @@
                 }
                 td {
                     height: 44px;
-                    color: $text-palette-14; 
+                    color: $text-palette-14;
                     font: 14px/42px $font-f;
                     vertical-align: top;
                     > div {
@@ -385,17 +434,17 @@
             }
         }
     }
-    .switchPaymenthMethodScroll, .mixedWallet-j, .withdraw-status-j, .mixed-tickets-content-j {
+    .switchPaymenthMethodScroll, .withdraw-status-j, .mixed-tickets-content-j, .mixedWallet-j {
         width: 763px;
         height: calc(100% - 35px);
         float: left;
         @include scroll($scroll: auto);
     }
     .promotions-balance-j {
+        float: right;
         background-color: $skin-palette-12;
         height: calc(100% - 35px);
         width: calc(100% - 607px - 156px);
-        float: left;
         color: $text-palette-4;
         font: 14px/20px $font-f;
         position: relative;
@@ -444,6 +493,14 @@
                 }
             }
         }
+        &.no-banners-balance {
+            display: none;
+            +  {
+                .switchPaymenthMethodScroll, .withdraw-status-j, .mixedWallet-j, .loyalty-points-j {
+                    width: 100%;
+                }
+            }
+        }
     }
     .betshops-j {
         float: left;
@@ -478,7 +535,7 @@
             > li {
                 border-bottom: 1px solid $skin-palette-8;
                 padding: 0 0 10px;
-            } 
+            }
             > li:first-child p {
                 padding-top: 0;
             }
@@ -496,11 +553,12 @@
     width: calc(100% + 60px);
     margin: 75px 0 0 -30px;
     position: relative;
+    color: $text-palette-14;
     padding: 10px 30px 10px 15px;
     background: lighten( desaturate( adjust-hue( $skin-color, 3deg ), 14 ), 2 );
     h6 {
         font: 12px $font-f;
-        color: $text-palette-8;
+        color: $text-palette-4;
         position: absolute;
         bottom: 100%;
         padding: 0 0 8px;
@@ -511,7 +569,7 @@
             display: table-cell;
             vertical-align: middle;
             font: 12px/18px $font-f;
-            color: $text-palette-14; 
+            color: $text-palette-14;
             &:last-child {
                 width: 1%;
                 padding: 0 0 0 10px;
@@ -574,7 +632,7 @@
             margin-left: -25px;
             font: 50px/50px "icomoon";
         }
-    }    
+    }
 }
 .mixedBalanceHistory-j .bet-info-list-separator-b > ul > li.bet-type-column-b small {
     float: left;
@@ -600,9 +658,10 @@
 .balance-lightbox-j section.mixedWallet-iwrap-j > div > ul li:nth-child(2),
 .balance-lightbox-j section > div.withdraw-status-templ-j > ul li:nth-child(2) {
     width: calc(100% - 607px - 156px);
-} 
+}
 
-.mixedWallet-j {
+.balance-lightbox-j .mixedWallet-j {
+    height: 100%;
     background-color: $skin-palette-7;
     color: $text-palette-4;
     font: 400 12px/14px $font-f;
@@ -642,7 +701,7 @@
                     padding: 0 0 0 14px;
                     position: relative;
                     z-index: 20;
-                    color: $text-palette-14; 
+                    color: $text-palette-14;
                     border: 0;
                     font: 400 12px $font-f;
                     option {
@@ -682,7 +741,7 @@
                 height: 36px;
                 width: calc(50% - 5px);
                 background: none;
-                color: $text-palette-14; 
+                color: $text-palette-14;
                 font: 400 14px $font-f;
                 border: 1px solid $skin-palette-4;
                 transition: 250ms background, 250ms border-color, 250ms color;
@@ -712,11 +771,11 @@
             &:disabled {
                 pointer-events: none;
                 background: none;
-                color: $text-palette-14; 
+                color: $text-palette-14;
                 opacity: 0.8;
                 border: 1px solid $skin-palette-4;
             }
-            
+
             &:hover {
                 background: lighten($brand-color-1, 10);
                 border-color: lighten($brand-color-1, 10);
@@ -732,7 +791,7 @@
             margin: 0 0 36px;
         }
         th {
-            color: $text-palette-14; 
+            color: $text-palette-14;
             font: 400 12px / 34px $font-f;
             text-align: left;
             padding: 0 14px;
@@ -798,7 +857,7 @@
         float: left;
         width: 200%;
         button + button {
-            margin: 0 0 0 10px; 
+            margin: 0 0 0 10px;
         }
     }
     .title-euro-deposit-j {
@@ -931,6 +990,16 @@
                             font-style: normal;
                             color: $text-palette-4;
                         }
+                        &.payment-system-name {
+                            border: 1px solid $hero-color;
+                            color: $hero-color;
+                            display: inline-block;
+                            height: 20px;
+                            padding: 0 8px;
+                            line-height: 20px;
+                            border-radius: 2px;
+                            background: rgba(black, 0.1);
+                        }
                     }
                 }
             }
@@ -996,7 +1065,7 @@
             }
         }
     }
-} 
+}
 .mixed-tickets-j {
     .mixed-tickets-search-j {
         float: left;
@@ -1081,13 +1150,13 @@
     }
 }
 @media screen and (max-width: 1260px) {
-    .balance-lightbox-j .promotions-balance-j, 
-    .balance-lightbox-j section > div > ul li:nth-child(3), 
+    .balance-lightbox-j .promotions-balance-j,
+    .balance-lightbox-j section > div > ul li:nth-child(3),
     .balance-lightbox-j section > div.withdraw-status-templ-j > ul li:nth-child(2),
     .balance-lightbox-j section.mixedWallet-iwrap-j > div > ul li:nth-child(2) {
         display: none;
     }
-    .balance-lightbox-j .switchPaymenthMethodScroll, 
+    .balance-lightbox-j .switchPaymenthMethodScroll,
     .balance-lightbox-j .withdraw-status-j,
     .balance-lightbox-j .mixedWallet-j,
     .balance-lightbox-j .mixed-tickets-content-j,
@@ -1096,7 +1165,7 @@
     }
 }
 .custom-payment-template-j .balance-lightbox-j {
-    .switchPaymenthMethodScroll,
+    /*.switchPaymenthMethodScroll,
     .mixedWallet-j,
     .withdraw-status-j {
         width: 100%;
@@ -1104,7 +1173,7 @@
     .promotions-balance-j,
     section > div > ul li:nth-child(3) {
         display: none;
-    }
+    }*/
     article {
         .form-sign-in,
         .text-payment-contain {
@@ -1118,7 +1187,7 @@
             box-sizing: content-box;
         }
     }
-} 
+}
 .balance-lightbox-j {
     .new-deposit-b-contain {
         float: left;
@@ -1242,14 +1311,14 @@
                 padding: 0;
                 margin: 2px 0;
                 text-align: right;
-                color: $text-palette-14; 
+                color: $text-palette-14;
                 > input {
                     height: 36px;
                     width: 300px;
                     border: 1px solid lighten( desaturate( adjust-hue( $skin-color, 2deg ), 16 ), 9 );
                     background: lighten( desaturate( adjust-hue( $skin-color, 3deg ), 14 ), 1 );
                     padding: 0 14px;
-                    color: $text-palette-14; 
+                    color: $text-palette-14;
                     font: 400 12px $font-f;
                     transition: .25s background, .25s border;
                     &::-webkit-input-placeholder {color:$text-palette-4;font: 12px $font-f;text-transform: capitalize;}
@@ -1262,7 +1331,7 @@
                     }
                     &:disabled {
                         pointer-events: none;
-                        color: $text-palette-6; 
+                        color: $text-palette-6;
                     }
                 }
             }
@@ -1336,4 +1405,28 @@
             }
         }
     }
+}
+.balance-lightbox-j article, .block-slider {
+    .please-complete-profile {
+        a {
+            height: 36px;
+            display: inline-block;
+            vertical-align: middle;
+            text-decoration: none;
+            padding: 0 24px;
+            border: 0;
+            text-transform: uppercase;
+            background: $hero-color;
+            color: set-color($hero-color);
+            margin: 0 0 0 12px;
+            transition: 300ms background;
+            font: 12px/36px $font-f;
+            &:hover {
+                background: lighten($hero-color, 10);
+            }
+        }
+    }
+}
+button.button-confirm .md-progress-circular.small-progress {
+    right: 4px;
 }

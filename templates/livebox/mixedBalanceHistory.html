@@ -13,11 +13,13 @@
         <ul>
             <li class="date-id-column-b">
                 <span>{{balance.date_time|formatDate:(conf.layoutTimeFormat[conf.sportsLayout] || 'noLocaleTranslate')}} {{conf.layoutTimeFormat[conf.sportsLayout] ? (balance.date_time|formatDate:'hour':null:env.timeFormat) : ''}}</span>
-                <span ng-show="balance.bet_id"><i trans>id:</i> <b>{{balance.bet_id}}</b></span>
+                <span ng-show="!conf.transactionIdInBalanceHistory && balance.bet_id"><i trans>id:</i> <b>{{balance.bet_id}}</b></span>
+                <span ng-show="conf.transactionIdInBalanceHistory && balance.transaction_id"><i trans>id:</i> <b>{{balance.transaction_id}}</b></span>
             </li>
             <li class="bet-type-column-b">
                 <small ng-if="balance.product_category === 2">{{ balance.game }}</small>
                 <span>{{ balanceTypes[balance.operation] || (balance.operation_name|translate) }}</span>
+                <span ng-show="balance.buddy_id || balance.buddy_name">: ({{balance.buddy_id}} : {{balance.buddy_name}})</span>
             </li>
             <li class="bet-stake-info-column">
                 <span ng-show="!balance.bonus && balance.amount"><span ng-show="balance.amount > 0">+</span><span>{{balance.amount|number:conf.balanceFractionSize}} {{currency_name|currency}}</span></span>

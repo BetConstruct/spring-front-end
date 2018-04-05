@@ -51,16 +51,17 @@ angular.module('vbet5').constant('RegConfig', {
         "classes": "",
         "customAttrs": [{"required": "required"}, {"ng-options": "y for y in registrationData.years track by y"}, {"ng-change": "calculateAge()"}],
         "onChange": ["calculateAge"],
-        "validation": [{"name": "required", "message": "This field is required"}]
+        "validation": [{"name": "required", "message": "This field is required"}],
+        "customValidation": "<div  ng-class=\"{error: userAge < 18}\"> <div class=\"tooltip-j\" ng-show=\"userAge < 18 \"> <p trans >Registration on this site is not permitted for people under 18.</p></div>"
     }, {
         "title": "Gender",
         "name": "gender",
         "type": "select",
         "required": true,
         "classes": "",
-        "customAttrs": [{"ng-pattern": "/^[M,F]$/"}, {"ng-change": "calculateAge()"}],
+        "customAttrs": [{"required": "required"}, {"ng-pattern": "/^[M,F]$/"}, {"ng-change": "calculateAge()"}],
         "optionsData": "<option ng-repeat=\"gender in genders\" value=\"{{gender.val}}\">{{gender.name| translate}}</option>",
-        "validation": []
+        "validation": [{"name": "required", "message": "This field is required"}]
     }, {
         "title": "Username",
         "name": "username",
@@ -84,11 +85,11 @@ angular.module('vbet5').constant('RegConfig', {
         "type": "password",
         "required": true,
         "classes": "",
-        "customAttrs": [{"ng-minlength": "8"}, {"type": "password"}, {"required": "required"}, {"ng-pattern": "/^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)[a-zA-Z\\d\\[\\]\\\\`~!@#$%^&*()_+={};:<>|./?,\"'-]+$/"}],
+        "customAttrs": [{"ng-minlength": "8"}, {"ng-maxlength": "50"}, {"type": "password"}, {"required": "required"}, {"ng-pattern": "/^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)[a-zA-Z\\d\\[\\]\\\\`~!@#$%^&*()_+={};:<>|./?,\"'-]+$/"}],
         "validation": [{"name": "required", "message": "This field is required"}, {
             "name": "minlength",
             "message": "Password should contain at least 8 characters"
-        }, {"name": "sameAsLogin", "message": "Password cannot be same as login"}, {
+        }, {"name": "sameAsLogin", "message": "Password cannot be same as login"}, {"name": "maxlength", "message": "Password is too long"}, {
             "name": "tooShort",
             "message": "Password is too short"
         }, {"name": "pattern", "message": "Password should contain upper and lower-case English letters, at least one digit and no spaces."}]
@@ -133,8 +134,8 @@ angular.module('vbet5').constant('RegConfig', {
         "type": "text",
         "required": true,
         "classes": "",
-        "customAttrs": [{"required": "required"}],
-        "validation": [{"name": "required", "message": "This field is required"}]
+        "customAttrs": [{"required": "required"}, {"ng-pattern": "/^[a-zA-Z]+(?:[\\s-][a-zA-Z]+)*$/"}],
+        "validation": [{"name": "required", "message": "This field is required"}, {"name": "pattern", "message": "Please enter a valid city name: only Latin letters and a space or hyphen"}]
     }, {
         "title": "Address",
         "name": "address",
@@ -163,14 +164,15 @@ angular.module('vbet5').constant('RegConfig', {
         "placeholder": "Enter number",
         "hasCustomHtml": true,
         "classes": "",
-        "customAttrs": [{"ng-pattern": "/^[0-9 ]+$/"}, {"required": "required"}, {"prevent-input": "/^[\\S ]+$/"}],
+        "customAttrs": [{"ng-pattern": "/^[0-9 ]+$/"}, {"required": "required"}, {"prevent-input": "/^[\\S ]+$/"}, {"ng-minlength": "5"}, {"ng-maxlength": "20"}],
         "validation": [{"name": "invalid", "message": "Invalid phone number"}, {
             "name": "duplicate",
             "message": "Duplicate phone number"
         }, {"name": "failedsms", "message": "Failed to send sms"}, {
             "name": "required",
             "message": "This field is required"
-        }, {"name": "pattern", "message": "Please, enter valid phone number: only digits are allowed - no spaces, letters and/or symbols"}]
+        }, {"name": "pattern", "message": "Please, enter valid phone number: only digits are allowed - no spaces, letters and/or symbols"},
+            {"name": "minlength", "message": "Too short"}, {"name": "maxlength", "message": "Too long"}]
     }, {
         "title": "Currency",
         "name": "currency_name",

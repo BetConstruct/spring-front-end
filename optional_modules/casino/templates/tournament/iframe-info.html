@@ -1,0 +1,22 @@
+<div ng-controller="casinoTournamentsCtrl" ng-init="loadCasinoIframeInfo(gameInfo, true)">
+    <div ng-if="tournament.iframeInfo.playerList.length" class="iframe-tournament-sidebar">
+        <div class="current-results-sidebar">
+            <div class="ct-stat-block has-counter">
+                <div class="ct-stat-icon"></div>
+                <div class="waved-decor-7-white"></div>
+                <h5 trans>Current Results</h5>
+                <h6 ng-show="tournament.iframeInfo.currentPlayer.Amount"><span trans>Me</span> {{tournament.iframeInfo.currentPlayer.Amount}}</h6>
+                <div class="cst-stat-list">
+                    <div class="cst-stat-list-item" ng-repeat="player in tournament.iframeInfo.playerList track by $index">
+                        <ul>
+                            <li>
+                                <p><b>{{player.Place + '. ' || ' '}}</b> {{(player.label | translate) || player.PlayerId}}</p>
+                            </li>
+                            <li>{{player.Amount}}</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

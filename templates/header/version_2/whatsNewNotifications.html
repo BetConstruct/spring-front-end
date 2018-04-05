@@ -1,0 +1,38 @@
+<div ng-controller="whatsNewNotificationsCtrl">
+    <div ng-if="notificationsGrouped.length"
+         class="separator-contain-nav notification-nav-view {{notifications.toggled ? 'active' : ''}}">
+        <div class="settings-icon-contain"
+             ng-click="toggleNotificationsMenu($event)" hide-on-click state-flag-var="notifications.toggled">
+            <b class="mybets-icon-box-b notification-icon-b"></b>
+            <i class="mybets-count-view" ng-show="notifications.count">{{notifications.count}}</i>
+        </div>
+
+        <div class="nav-open-view-contain">
+            <ul>
+                <li>
+                    <h2 ng-bind-html="(notifications.title || 'What’s new')|translate|html" trans></h2>
+                    <div class="drop-nav-notification">
+                        <ul ng-repeat="notificationGroup in notificationsGrouped track by notificationGroup.date">
+                            <li>
+                                <h3>{{notificationGroup.date}}</h3>
+                                <button ng-click="clearNotifications(null, notificationGroup.date);$event.stopPropagation();">
+                                    <span trans>Clear</span>
+                                    <i class="remove-icon-betslip-v3"></i>
+                                </button>
+                            </li>
+                            <li ng-repeat="notification in notificationGroup.items track by notification.id" style="cursor: {{notification.url ? 'pointer' : 'default'}};" ng-click="openNotification(notification);$event.stopPropagation();"
+                                ng-class="{'notification-read': notifications.showed[notification.id] === 2, active: notifications.showed[notification.id] !== 2 && notification.custom_fields.highlight_notification[0]}">
+                                <h4>
+                                    <b class="cms-jcon-sport"></b>
+                                    <span ng-bind-html="notification.title|html"></span>
+                                    <i ng-click="clearNotifications(notification.id);$event.stopPropagation();"></i>
+                                </h4>
+                                <p ng-bind-html="notification.content|html"></p>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>

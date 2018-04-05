@@ -1,4 +1,4 @@
-<a ng-if="!$routeParams.widgetid && conf.fantasyEnabled" ng-href="#/fantasy" trans>Join Fantasy Play-Offs</a>
+<a ng-if="!$routeParams.widgetid && calculatedConfigs.fantasyEnabled" ng-href="#/fantasy" trans>Join Fantasy Play-Offs</a>
 <ul>
     <li ng-class="::columns[key].class" ng-repeat="(key,item) in ::playOff track by key">
         <div class="group-list-view-b" ng-repeat="(index,match)  in item.Series track by index" ng-class="{'final': item.Matches.length == 1}"  >

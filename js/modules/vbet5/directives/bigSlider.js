@@ -18,6 +18,7 @@ VBET5.directive('vbetBigSlider', ['$rootScope', '$timeout', '$route', '$interval
         link: function (scope) {
             scope.index = 0;
             scope.$sce = $sce;
+            scope.conf = Config.main;
             var stopInterval;
             /**
              * @description Slides click handler
@@ -34,6 +35,8 @@ VBET5.directive('vbetBigSlider', ['$rootScope', '$timeout', '$route', '$interval
 
             scope.changeActiveBanner = function changeActiveBanner(activeIndex) {
                 scope.index = activeIndex;
+                scope.index = scope.index < 0 ? scope.images.length - 1 : scope.index;
+                scope.index = scope.index > scope.images.length - 1 ? 0 : scope.index;
             };
             
             /**

@@ -108,12 +108,13 @@ VBET5.service('partner', ['$rootScope', '$window', '$location', '$document', 'Co
             Config.env.integrationMode = true;
             var authDataVal = {auth_token: authToken};
             if (userId) {
-                authDataVal.user_id = Config.partner.allowStringUserId ? userId : parseInt(userId, 10)
+                authDataVal.user_id = Config.partner.allowStringUserId ? userId : parseInt(userId, 10);
             }
             AuthData.set(authDataVal);
         }
         if ($location.search().oddsType) {
             Storage.set('oddFormat', $location.search().oddsType);
+            Config.env.oddFormat = $location.search().oddsType;
         }
         try {
             $window.getZergling = function () {
@@ -187,11 +188,17 @@ VBET5.service('partner', ['$rootScope', '$window', '$location', '$document', 'Co
         console.log('partner', type, data);
         if (partner.callbackFn) {
             partner.callbackFn(type, data);
-            /*$window.parent.postMessage({
-                action: partner.callbackFn,
-                data: {'type': type, value: data}
-            },
-            '*');*/
+        } else if (Config.main.integrationMode) {
+            try {
+                $window.parent.postMessage({
+                        type: type,
+                        value: data
+                    },
+                    '*');
+            }
+            catch (e) {
+                console.log(e);
+            }
         }
     };
 

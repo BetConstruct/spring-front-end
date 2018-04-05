@@ -9,10 +9,16 @@
 
 var CASINO = angular.module('casino', ['ngRoute']);
 
-CASINO.run(['Utils', 'CConfig', 'SkinCConfig', 'RuntimeConfig', function (Utils, CConfig, SkinCConfig, RuntimeConfig) {
+CASINO.run(['$rootScope', 'Utils', 'CConfig', 'SkinCConfig', 'RuntimeConfig', function ($rootScope, Utils, CConfig, SkinCConfig, RuntimeConfig) {
     'use strict';
 
-    Utils.MergeRecursive(CConfig, SkinCConfig); //load skin specific config overrides
-    Utils.MergeRecursive(CConfig, RuntimeConfig && RuntimeConfig.SkinCConfig); //load config overrides from conf.json
+    if (RuntimeConfig && RuntimeConfig.SkinCConfig) {
+        Utils.MergeRecursive(CConfig, RuntimeConfig.SkinCConfig); //load config overrides from conf.json
+    } else {
+        Utils.MergeRecursive(CConfig, SkinCConfig); //load skin specific config overrides
+    }
 
+    Utils.fixDomainChanges(CConfig, 'casino');
+
+    $rootScope.cUrlPrefix = CConfig.cUrlPrefix;
 }]);

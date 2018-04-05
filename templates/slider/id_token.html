@@ -1,0 +1,26 @@
+<div ng-controller="idTokenCtrl" ng-escape="broadcast('slider.close')">
+    <div>
+        <div class="form-register-layout id-token-popup">
+            <div class="popup-layout-registration"  ng-keypress="keyPress($event)">
+                <div class="vertical-middle-wrapper">
+                    <div class="all-popup-separator">
+                        <div class="register-steps-b">
+                            <div class="register-contain-new">
+                                <div class="closed-popup-form" ng-click="broadcast('slider.close')"></div>
+                                <div class="id-token-popup-img" style="background-image: url('data:image/png;base64,{{qrCode}}')"></div>
+                                <div class="button-confirm">
+                                    <button disabled trans>Download fasttoken app</button>
+                                </div>
+                                <div class="register-information-b">
+                                    <h2 ng-click="$root.env.sliderContent = 'login'; $event.stopPropagation()" trans>Cancel and use your login and password</h2>
+                                </div>
+                            </div>
+                            <div ng-include="getTemplate('templates/slider/contact_support.html')"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="close" ng-click="broadcast('slider.close')"></div>
+            </div>
+        </div>
+    </div>
+</div>

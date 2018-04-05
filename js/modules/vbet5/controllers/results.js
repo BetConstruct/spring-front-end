@@ -4,13 +4,13 @@
  * @description
  * ResultsController controller
  */
-angular.module('vbet5.betting').controller('ResultsController', ['$rootScope', '$scope', '$q', 'Zergling', 'Config', 'Moment', 'Translator', 'Utils', 'GameInfo',
-    function ($rootScope, $scope, $q, Zergling, Config, Moment, Translator, Utils, GameInfo) {
+angular.module('vbet5.betting').controller('ResultsController', ['$rootScope', '$scope', '$q', 'Zergling', 'Config', 'Moment', 'Translator', 'Utils',
+    function ($rootScope, $scope, $q, Zergling, Config, Moment, Translator, Utils) {
         'use strict';
 
         var timeZone = Config.env.selectedTimeZone || '';
-        var request = {}, defaultGameList = true;
-        var sportListPromise;
+        var defaultGameList = true;
+        var showResultsMaxDays = 2; // Max days is currently hardcoded as "get_active_competitions" request can't show results for more than two days. May change in the future.
 
         Moment.setLang(Config.env.lang);
         Moment.updateMonthLocale();
@@ -18,15 +18,16 @@ angular.module('vbet5.betting').controller('ResultsController', ['$rootScope', '
 
         $rootScope.footerMovable = true; // make footer movable
         $scope.today = Moment.get().format("YYYY-MM-DD");
+        $scope.maxDay = new Date(Moment.moment($scope.today).format()); // This adjusts max day if a there is a timezone config
         $scope.requestData = {
-            dateFrom: $scope.today,
-            dateTo: $scope.today,
+            dateFrom: $scope.maxDay,
+            dateTo: $scope.maxDay,
             live: false
         };
-        $scope.minFromDate = Moment.moment($scope.requestData.dateTo).add((-1 * (Config.main.showResultsMaxDays)), 'days');
+        $scope.minFromDate = Moment.moment($scope.requestData.dateTo).add((-1 * (showResultsMaxDays)), 'days');
         $scope.minToDate = Moment.moment().add(-730, 'days');
         $scope.sortByDate = true;
-        $scope.todayResult = false;
+        $scope.todayResult = true;
         $scope.todayGameList = null;
         $scope.todayGameListLoaded = false;
         $scope.gamesResult = null;
@@ -34,16 +35,12 @@ angular.module('vbet5.betting').controller('ResultsController', ['$rootScope', '
         $scope.dateOptions = { showWeeks: 'false' };
         $scope.expandedGames = [];
 
-        $scope.requestData = {
-            dateFrom: $scope.today,
-            dateTo: $scope.today,
-            live: false
-        };
-
         $scope.virtualSportsIds = {
             horse_racing_id: 1124636817,
             greyhounds_id: 1124639301
         };
+
+        var previousDate = Moment.moment($scope.requestData.dateFrom).format("YYYY-MM-DD");
 
         /**
          * @ngdoc method
@@ -73,90 +70,100 @@ angular.module('vbet5.betting').controller('ResultsController', ['$rootScope', '
 
         /**
          * @ngdoc method
-         * @name loadSports
-         * @description load game list
+         * @name loadSportsAndCompetitions
          * @methodOf vbet5.controller:ResultsController
+         * @description Loads data of active sports and their respective competitions for the chosen date
+         * @param {Boolean} initialLoad - if true loads data for the initial load of the page
+         * @param {Boolean} loadSports - loads active sports and competitions for the selected date
          */
-        function loadSports() {
-            var deferred = $q.defer();
-            sportListPromise = deferred.promise;
+        $scope.loadSportsAndCompetitions = function loadSportsAndCompetitions(initialLoad, loadSports) {
+            $scope.updatingCompetitions = true;
 
-            var requestSportList = {
-                'source': 'betting',
-                'what': {'sport': ['id', 'name']}
-            };
-            if (Config.main.disableVirtualSportsInResults && !Config.main.GmsPlatform) {
-                requestSportList.where = {'sport': {'id': {'@nin': Config.main.virtualSportIds}}}
-            }
-            Utils.setCustomSportAliasesFilter(requestSportList);
+            var request = {};
+            formatRequestDate(request, initialLoad);
 
-            Zergling.get(requestSportList, 'get').then(function (result) {
-                if (result.data.sport) {
-                    $scope.sportList = Utils.objectToArray(result.data.sport);
-                    deferred.resolve($scope.sportList);
-                    $scope.requestData.sport = $scope.sportList[0];
+            Zergling.get(request, "get_active_competitions").then(function (result) {
+                if (result.details) {
+                    var sportToProcess;
+                    var todayGameList = [];
+                    angular.forEach(result.details, function(sport) {
+                        if (loadSports && $scope.requestData.sport.id === sport.Id) {
+                            // Checking if a sport was active on a changed date
+                            sportToProcess = true;
+                        }
+                        todayGameList.push({id: sport.Id, name: sport.Name, Regions: sport.Regions});
+                    });
+
+                    if (!Config.main.resultMenuOrdering) {
+                        todayGameList.sort(function(a, b) {
+                            return a.id - b.id;
+                        });
+                    } else {
+                        var index;
+                        angular.forEach(todayGameList, function (sport) {
+                            index = Config.main.resultMenuOrdering.indexOf(parseFloat(sport.id));
+                            sport.order = index !== -1 ? index : sport.id;
+                        });
+                        todayGameList.sort(Utils.orderSorting);
+                    }
+
+                    $scope.sportList = todayGameList;
+                    if (initialLoad) {
+                        $scope.todayGameList = todayGameList;
+                        $scope.requestData.sport = $scope.sportList[0];
+                        $scope.processCompetitionData($scope.requestData.sport);
+                        $scope.todayGameListLoaded = true;
+                    } else if (loadSports) {
+                        if (!sportToProcess) {
+                            $scope.requestData.sport = $scope.sportList[0];
+                        }
+                        $scope.updatingCompetitions = false;
+                    }
                 }
-
-                $scope.updateCompetition();
-
             })['catch'](function (reason) {
-                deferred.resolve([]);
                 console.log('Error:', reason);
+                if (initialLoad) {
+                    $scope.todayGameListLoaded = false;
+                }
             });
-        }
-
-        loadSports();
+        };
 
         /**
          * @ngdoc method
-         * @name updateCompetition
-         * @description update competition list depending region
+         * @name processCompetitionData
          * @methodOf vbet5.controller:ResultsController
+         * @description Processes data of competitions
+         * @param {Object} data - data received from "get_active_competitions" call
          */
-        $scope.updateCompetition = function updateCompetition() {
-            Zergling.get(
-                {
-                    'source': 'betting',
-                    'what': {
-                        'region': ['id', 'name'],
-                        'competition': ['id', 'name']
-
-                    },
-                    'where': {
-                        'sport': {'id': $scope.requestData.sport.id}
-                    }
-                },
-                'get'
-            ).then(function (result) {
-
-                $scope.competitionList = [];
-                angular.forEach(result.data.region, function (region) {
-                    angular.forEach(region.competition, function (competition) {
-                        competition.region = {
-                            id: region.id,
-                            name: region.name
-                        };
-                        $scope.competitionList.push(competition);
-                    });
+        $scope.processCompetitionData = function processCompetitionData(data) {
+            if (!data) {return;}
+            $scope.updatingCompetitions = true;
+            $scope.competitionList = [];
+            angular.forEach(data.Regions, function(region) {
+                angular.forEach(region.Competitions, function(competition) {
+                    competition.region = {
+                        id: region.Id,
+                        name: region.Name
+                    };
+                    $scope.competitionList.push(competition);
                 });
-
-                $scope.competitionList = $scope.competitionList.sort(function(a, b) {
-                    return (a.region.name + ' - ' + a.name).localeCompare(b.region.name + ' - ' + b.name);
-                });
-                $scope.competitionList.unshift({id: '-1', name: Translator.get('All')}); //The value of id need for correct displaying of ng-options
-
-
-
-                $scope.requestData.competition = $scope.competitionList[0];
-
-                if (defaultGameList) {
-                    $scope.searchGames();
-                    defaultGameList = false;
-                }
-            })['catch'](function (reason) {
-                console.log('Error:', reason);
             });
+
+            $scope.competitionList = $scope.competitionList.sort(function(a, b) {
+                return (a.region.name + ' - ' + a.Name).localeCompare(b.region.name + ' - ' + b.Name);
+            });
+            $scope.competitionList.unshift({Id: '-1', Name: Translator.get('All')}); //The value of id need for correct displaying of ng-options
+
+            $scope.requestData.competition = $scope.competitionList[0];
+
+            if (defaultGameList) {
+                $scope.searchGames();
+                defaultGameList = false;
+            }
+            $scope.updatingCompetitions = false;
         };
+
+        $scope.loadSportsAndCompetitions(true, false);
 
         /**
          * @ngdoc method
@@ -199,24 +206,28 @@ angular.module('vbet5.betting').controller('ResultsController', ['$rootScope', '
          * @description load search result of game data
          * @methodOf vbet5.controller:ResultsController
          */
-        $scope.searchGames = function searchGames() {
+        $scope.searchGames = function searchGames(sportId) {
             adjustEditionDate();
             $scope.expandedGames = [];
             $scope.gameListLoaded = true;
-            $scope.todayResult = false;
+            $scope.gamesScorePresent = null;
+
+            // Forming request
+            var request = {};
             request.is_date_ts = 1;
-            request.sport_id = $scope.requestData.sport.id;
-            request.competition_id = $scope.requestData.competition.id >= 0 ? $scope.requestData.competition.id : '';
-            request.live = Number($scope.requestData.live);
-            request.from_date = Moment.get(Moment.moment($scope.requestData.dateFrom).format().split('T')[0] + 'T00:00:00'+ timeZone).unix();
+            if (!sportId) {
+                request.sport_id = $scope.requestData.sport.id;
+                request.competition_id = $scope.requestData.competition.Id >= 0 ? $scope.requestData.competition.Id : "";
+                request.live = Number($scope.requestData.live);
+                formatRequestDate(request, false);
+            } else {
+                request.competition_id = "";
+                request.sport_id = sportId;
+                $scope.requestData.live = 0;
+                formatRequestDate(request, true);
+            }
 
-            var toUnixDate = Moment.get(Moment.moment($scope.requestData.dateTo).format().split('T')[0] + 'T23:59:59'+ timeZone).unix();
-
-            request.to_date = toUnixDate < Moment.get().unix() ? toUnixDate :  Moment.get().unix();
-
-            $scope.gameListLoaded = true;
-
-            Zergling.get(request, 'get_result_games').then(function (result) {
+            Zergling.get(request, "get_result_games").then(function (result) {
                 $scope.gameListLoaded = false;
                 $scope.sortByDate = true;
                 $scope.gamesResult = [];
@@ -224,6 +235,9 @@ angular.module('vbet5.betting').controller('ResultsController', ['$rootScope', '
                     var games = [];
                     if (result.games.game[0]) { // checking if game is array (if one game, then game is object)
                         angular.forEach(result.games.game, function (game) {
+                            if (game.scores !== '' && $scope.gamesScorePresent !== true ) {
+                                $scope.gamesScorePresent = true
+                            }
                             if (game.date <= Moment.get().unix()) {
                                 games.push(game);
                             }
@@ -261,80 +275,31 @@ angular.module('vbet5.betting').controller('ResultsController', ['$rootScope', '
          * @methodOf vbet5.controller:ResultsController
          */
         $scope.adjustDate = function adjustDate(type) {
+            previousDate = Moment.moment($scope.requestData.dateFrom).format("YYYY-MM-DD");
             switch (type) {
                 case 'from':
                     if (Moment.get($scope.requestData.dateFrom).unix() > Moment.get($scope.requestData.dateTo).unix() || (Config.main.edition && Config.main.edition.enabled)) {
-                        $scope.requestData.dateTo = Moment.moment($scope.requestData.dateFrom).format("YYYY-MM-DD");
+                        $scope.requestData.dateTo = Moment.moment($scope.requestData.dateFrom).format();
                         adjustEditionFromDate();
                     }
-                    if(Moment.get($scope.requestData.dateFrom).unix() < Moment.get($scope.requestData.dateTo).add((-1 * (Config.main.showResultsMaxDays)), 'days').unix()) {
-                        $scope.requestData.dateTo  = Moment.moment($scope.requestData.dateFrom).add((Config.main.showResultsMaxDays), 'days').format("YYYY-MM-DD");
+                    if(Moment.get($scope.requestData.dateFrom).unix() < Moment.get($scope.requestData.dateTo).add((-1 * (showResultsMaxDays)), 'days').unix()) {
+                        $scope.requestData.dateTo  = Moment.moment($scope.requestData.dateFrom).add((showResultsMaxDays), 'days').format();
                     }
-                    $scope.minFromDate = Moment.moment($scope.requestData.dateTo).add((-1 * (Config.main.showResultsMaxDays)), 'days');
-                    return;
+                    $scope.minFromDate = Moment.moment($scope.requestData.dateTo).add((-1 * (showResultsMaxDays)), 'days');
+                    break;
                 case 'to':
                     if (Moment.get($scope.requestData.dateFrom).unix() > Moment.get($scope.requestData.dateTo).unix()) {
-                        $scope.requestData.dateFrom = Moment.moment($scope.requestData.dateTo).format("YYYY-MM-DD");
+                        $scope.requestData.dateFrom = Moment.moment($scope.requestData.dateTo).format();
                     }
-                    if(Moment.get($scope.requestData.dateFrom).unix() < Moment.get($scope.requestData.dateTo).add((-1 * (Config.main.showResultsMaxDays)), 'days').unix()){
-                        $scope.requestData.dateFrom = Moment.moment($scope.requestData.dateTo).add((-1 * (Config.main.showResultsMaxDays)), 'days').format("YYYY-MM-DD");
+                    if(Moment.get($scope.requestData.dateFrom).unix() < Moment.get($scope.requestData.dateTo).add((-1 * (showResultsMaxDays)), 'days').unix()){
+                        $scope.requestData.dateFrom = Moment.moment($scope.requestData.dateTo).add((-1 * (showResultsMaxDays)), 'days').format();
                     }
-                    $scope.minFromDate = Moment.moment($scope.requestData.dateTo).add((-1 * (Config.main.showResultsMaxDays)), 'days');
-                    return;
+                    $scope.minFromDate = Moment.moment($scope.requestData.dateTo).add((-1 * (showResultsMaxDays)), 'days');
+                    break;
             }
+            $scope.loadSportsAndCompetitions(false, true);
         };
 
-        /**
-         * @ngdoc method
-         * @name todayResults
-         * @description load Today's Result data for all game type
-         * @methodOf vbet5.controller:ResultsController
-         */
-        $scope.todayResults = function todayResults() {
-            var requestTodayResults = {};
-            requestTodayResults.is_date_ts = 1;
-            requestTodayResults.from_date = Moment.get(Moment.moment().format().split('T')[0] + 'T00:00:00'+ timeZone).unix();
-            requestTodayResults.to_date =  Moment.get().unix();
-            $scope.todayGameListLoaded = true;
-            Zergling.get(requestTodayResults, 'get_result_games').then(function (result) {
-                if (result.games.game) {
-                    var todayGameList = {};
-                    sportListPromise.then(function (sportList) {
-                        angular.forEach(sportList, function (sport) {
-                            angular.forEach(result.games.game, function (game) {
-                                if(game.sport_id && game.competition_name && sport.id == game.sport_id){
-                                    game.name = game.sport_name || game.competition_name.split('.').slice(0, 1)[0];
-                                    if (game.date <= Moment.get().unix()) {
-                                        if (!todayGameList[game.sport_id]) {
-                                            if (!Config.main.disableVirtualSportsInResults || Config.main.virtualSportIds.indexOf(parseInt(game.sport_id))  === -1) {
-                                                todayGameList[game.sport_id] = {};
-                                                todayGameList[game.sport_id].sport = [];
-                                            }
-                                        }
-                                        if (todayGameList[game.sport_id]) {
-                                            todayGameList[game.sport_id].sport.push(game);
-                                        }
-                                    }
-                                }
-                            });
-                        });
-                        $scope.todayGameListLoaded = false;
-                        $scope.todayGameList = Utils.objectToArray(todayGameList);
-                        if (Config.main.resultMenuOrdering) {
-                            var index;
-                            angular.forEach($scope.todayGameList, function (sport) {
-                                index = Config.main.resultMenuOrdering.indexOf(parseFloat(sport.sport[0].sport_id));
-                                sport.order = index !== -1 ? index : sport.sport[0].sport_id;
-                            });
-                            $scope.todayGameList.sort(Utils.orderSorting);
-                        }
-                    });
-                }
-            })['catch'](function (reason) {
-                console.log('Error:', reason);
-                $scope.todayGameListLoaded = false;
-            });
-        };
 
         /**
          * @ngdoc method
@@ -342,23 +307,19 @@ angular.module('vbet5.betting').controller('ResultsController', ['$rootScope', '
          * @description load Today's Result of game data depend game type
          * @methodOf vbet5.controller:ResultsController
          */
-        $scope.resultsBySport = function resultsBySport(game) {
+        $scope.resultsBySport = function resultsBySport(sport) {
             $scope.expandedGames = [];
-            $scope.todayResult = true;
             $scope.sortByDate = true;
-            $scope.gamesResult = game.sport;
-            var sport_id = game.sport[0].sport_id;
-            if($scope.requestData.sport.id == sport_id) {
+            var sport_id = sport.id;
+            if($scope.requestData.sport.id == sport_id && $scope.todayResult) {
                 return;
             }
-            if ($scope.sportList) {
-                angular.forEach($scope.sportList, function (sport) {
-                    if (sport.id == sport_id) {
-                        $scope.requestData.sport = sport;
-                        $scope.updateCompetition();
-                    }
-                });
-            }
+            $scope.requestData.sport = sport;
+            $scope.searchGames(sport_id);
+            // If the previous date we received info on is different from today we request active competitions, if not - we just process its competitions data
+            Moment.get($scope.today).unix() !== Moment.get(previousDate).unix() ? $scope.loadSportsAndCompetitions(false, true) : $scope.processCompetitionData(sport);
+            $scope.todayResult = true;
+            previousDate = Moment.moment($scope.requestData.dateFrom).format("YYYY-MM-DD");
         };
 
         /**
@@ -414,6 +375,28 @@ angular.module('vbet5.betting').controller('ResultsController', ['$rootScope', '
                     game.additionalDetailsAreLoading = false;
                     console.log('Error:', reason);
                 });
+            }
+        }
+
+        /**
+         * @ngdoc method
+         * @name formatRequestDate
+         * @description Formats date
+         * @param {Object} request - request object
+         * @param {Boolean} currentTime - if true, sets current day as the from_date
+         */
+        function formatRequestDate(request, currentTime) {
+            if (!currentTime) {
+                request.from_date = Moment.get(Moment.moment($scope.requestData.dateFrom).format().split("T")[0] + "T00:00:00" + timeZone).unix();
+                var toUnixDate = Moment.get(Moment.moment($scope.requestData.dateTo).format().split("T")[0] + "T23:59:59" + timeZone).unix();
+                request.to_date = toUnixDate < Moment.get().unix() ? toUnixDate : Moment.get().unix();
+            } else {
+                if (timeZone) {
+                    request.from_date = Moment.get(Moment.moment($scope.today).format().split("T")[0] + "T00:00:00"+ timeZone).unix();
+                } else {
+                    request.from_date = Moment.get(Moment.moment().format().split("T")[0] + "T00:00:00"+ timeZone).unix();
+                }
+                request.to_date =  Moment.get().unix();
             }
         }
 

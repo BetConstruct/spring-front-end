@@ -12,14 +12,16 @@ VBET5.directive('routeReload', ['$timeout', '$route', function ($timeout, $route
         scope: {
             exception: '='
         },
-        link: function (scope, elem) {
-            elem.on('click', function () {
-                if (!scope.exception) {
-                    $timeout(function () {
-                        $route.reload();
-                    }, 100);
-                }
-            });
+        link: function (scope, elem, attr) {
+            if(attr.reload !== 'false') {
+                elem.on('click', function () {
+                    if (!scope.exception) {
+                        $timeout(function () {
+                            $route.reload();
+                        }, 100);
+                    }
+                });
+            }
         }
     };
 }]);

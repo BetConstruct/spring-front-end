@@ -13,18 +13,18 @@ VBET5.directive('watchResize', ['Config', 'DomHelper', function (Config, DomHelp
         var wideScreen, middleScreen;
         var broadcastWindowSize = function () {
             var windowWidth = DomHelper.getWindowSize().width;
-            if (windowWidth >= Config.main.wideScreenModeWidth && wideScreen !== 'on') {
+            if (windowWidth >= 1833 && wideScreen !== 'on') {
                 wideScreen = 'on';
                 scope.$parent.$broadcast('widescreen.on');
-            } else if (windowWidth < Config.main.wideScreenModeWidth && wideScreen !== 'off') {
+            } else {
                 wideScreen = 'off';
                 scope.$parent.$broadcast('widescreen.off');
             }
             if (attr.middleScreenMode) {
-                if (windowWidth >= Config.main.middleScreenModeWidth && middleScreen !== 'on') {
+                if (windowWidth >= 1340 && middleScreen !== 'on') {
                     middleScreen = 'on';
                     scope.$parent.$broadcast('middlescreen.on');
-                } else if (windowWidth < Config.main.middleScreenModeWidth && middleScreen !== 'off') {
+                } else {
                     middleScreen = 'off';
                     scope.$parent.$broadcast('middlescreen.off');
                 }

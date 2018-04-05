@@ -4,14 +4,14 @@
         <ul>
             <li>
                 <div class="time-filter-v3"
-                     ng-show="conf.sportEnabled && conf.enableSportsbookLayoutSwitcher"
+                     ng-show="calculatedConfigs.sportEnabled && conf.enableSportsbookLayoutSwitcher"
                      ng-class="{'active': showLayoutSubMenu}"
                      ng-click="showLayoutSubMenu = !showLayoutSubMenu"
                      state-flag-var="showLayoutSubMenu" hide-on-click>
                     <p><span>{{({modern: 'Modern', classic: 'Classic', asian: 'Asian', external: 'Eastern',combo: 'Combo', 'euro2016': 'Classic'}[conf.sportsLayout])|translate}}</span> <i class="arrow-rotate-filter-v3"></i></p>
                     <div class="sub-nav-filter-time-v3">
                         <ul>
-                            <li ng-repeat="(key, value) in conf.availableSportsbookViews track by $index" ng-click="switchSportsbookLayout(key)" ng-class="{'icon-checkmark': conf.sportsLayout === key}"><span ng-bind="key == 'euro2016'? ('Classic'|translate) : key|capitalise|translate"></span></li>
+                            <li ng-repeat="(key, value) in conf.availableSportsbookViews track by $index" ng-click="switchSportsbookLayout(key)" ng-class="{'active': conf.sportsLayout === key}"><span ng-bind="key == 'euro2016'? ('Classic'|translate) : key|capitalise|translate"></span></li>
                         </ul>
                     </div>
                 </div>
@@ -27,7 +27,7 @@
                         <ul>
                             <li ng-repeat="oddFormat in ::conf.oddFormats track by oddFormat.name"
                                 ng-click="broadcast('setOddsFormat', oddFormat.format)"
-                                ng-class="{'icon-checkmark': env.oddFormat === oddFormat.format}">
+                                ng-class="{'active': env.oddFormat === oddFormat.format}">
                                 <span>{{ oddFormat.name | translate }}</span>
                             </li>
                         </ul>
@@ -42,7 +42,7 @@
         <include-template class="betslip-include-v3" template-path="templates/sport/euro2016/right/betslip.html"></include-template>
         <!--Betslip END-->
         <!--Mini Games-->
-        <div class="mini-games" ng-if="conf.enableMiniGameUnderBetslip" ng-include="getTemplate('optional_modules/casino/templates/specialgames/minigames.html')"></div>
+        <div class="mini-games" ng-if="conf.enableMiniGameUnderBetslip && $root.casinoEnabled" ng-include="getTemplate('optional_modules/casino/templates/specialgames/minigames.html')"></div>
         <!--Mini Games-->
         <div class="right-banner-container" ng-if="conf.enableBannerUnderBetslip" ng-controller="cmsSportNewsCtrl" ng-include="getTemplate('templates/sport/classic/banners.html')"></div>
     </div>

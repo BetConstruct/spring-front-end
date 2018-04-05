@@ -7,7 +7,7 @@
             <p trans>However, you will be able to withdraw any balance you may have.</p>
         </div>
         <div ng-if="'time-out-text'|translate:null:true">
-            <p ng-bind-html="'time-out-text'|translate|html"><p trans>
+            <p ng-bind-html="'time-out-text'|translate|html:'p'"><p trans>
         </div>
         <form name="selfExclusionForm" class="registration-form">
             <div class="form-text" >
@@ -23,7 +23,7 @@
                 </div>
 
                 <div class="cashier-button">
-                    <button ng-disabled="!periodValue" ng-show="!working" trans ng-click="setSelfExclusion(conf.userTimeOut.type)">Save</button>
+                    <button ng-disabled="!periodValue" ng-show="!working" trans ng-click="setSelfExclusion(conf.userTimeOut.type, 'userTimeOut')">Save</button>
                     <button disabled="disabled" ng-show="working" trans>Wait...</button>
                 </div>
             </div>

@@ -24,20 +24,36 @@ var BettingModule = angular.module('vbet5.betting', ['ngMap']);
  *
  * defines getTemplate function which returns template path(needed to override templates in skins if needed)
  */
-angular.module('vbet5').run(['$rootScope', '$location', '$routeParams', '$timeout', '$window', '$cookies', 'Utils', 'Config', 'SkinConfig', 'Storage', 'analytics', 'UserAgent', 'DomHelper', 'liveChat', 'partner', 'RegConfig', 'RuntimeConfig', 'Zergling', 'Tracking', 'Moment', 'Translator',
-    function ($rootScope, $location, $routeParams, $timeout, $window, $cookies, Utils, Config, SkinConfig, Storage, analytics, UserAgent, DomHelper, liveChat, partner, RegConfig, RuntimeConfig, Zergling, Tracking, Moment, Translator) {
+angular.module('vbet5').run(['$rootScope', '$location', '$routeParams', '$timeout', '$window', '$cookies', 'Utils', 'Config', 'SkinConfig', 'Storage', 'analytics', 'UserAgent', 'DomHelper', 'liveChat', 'partner', 'RegConfig', 'RuntimeConfig', 'Zergling', 'Tracking', 'Moment', 'Translator','facebookPixel', 'everCookie',
+    function ($rootScope, $location, $routeParams, $timeout, $window, $cookies, Utils, Config, SkinConfig, Storage, analytics, UserAgent, DomHelper, liveChat, partner, RegConfig, RuntimeConfig, Zergling, Tracking, Moment, Translator,facebookPixel, everCookie) {
         'use strict';
 
         $rootScope.availableModules = availableModules;
 
-        Utils.MergeRecursive(Config, SkinConfig);
         if (SkinConfig.regConfig) {
             Utils.MergeRecursive(RegConfig, SkinConfig.regConfig);
         }
-        Utils.MergeRecursive(Config, RuntimeConfig && RuntimeConfig.SkinConfig);
+        if (RuntimeConfig && !Utils.isObjectEmpty(RuntimeConfig)) {
+            Utils.MergeRecursive(Config, RuntimeConfig.SkinConfig);
+        } else {
+            Utils.MergeRecursive(Config, SkinConfig);
+        }
+
+        Utils.fixDomainChanges(Config, 'sportsbook');
+
         if (Config.main.localStorageKeyNamePrefix) {
             Storage.setKeyNamePrefix(Config.main.localStorageKeyNamePrefix);
         }
+
+        if (Config.main.integrationMode){
+            Config.main.multiLevelMenu = {};
+        }
+
+        if (typeof Config.main.registration.minimumAllowedAge === 'object') { //bad solution and need to refactor
+            Config.main.registration.minimumAllowedAge = Config.main.registration.minimumAllowedAge[$location.host()] || Config.main.registration.minimumAllowedAge['default'];
+        }
+
+        everCookie.init();
 
         Zergling.init();
 
@@ -47,13 +63,22 @@ angular.module('vbet5').run(['$rootScope', '$location', '$routeParams', '$timeou
             lang = Config.main.transLangByDomain[$location.host()];
         }
 
-        if (lang && Config.main.availableLanguages[lang] !== undefined) {
-            Config.env.lang = lang;
-            Storage.set('lang', lang);
-            Translator.addTranslations(Config.main.addLowerCaseTranslations, Config.main.addUpperCaseTranslations);
-        }
+        if (Config.main.redirectOnLanguage && Config.main.redirectOnLanguage[lang]) {
+            Storage.set('lang', Config.env.lang);
+            $location.search("lang", undefined);
+            // Need the redirect function to work on timeout so the location changes properly
+            $timeout(function redirect() { $window.location = Config.main.redirectOnLanguage[lang] +  $window.location.hash; }, 0);
+        } else {
+            if ($location.search().notrans === 'id') {
+                Config.env.lang = 'notrans';
+            } else if (lang && Config.main.availableLanguages[lang] !== undefined) {
+                Config.env.lang = lang;
+                Storage.set('lang', lang);
+                Translator.addTranslations(Config.main.addLowerCaseTranslations, Config.main.addUpperCaseTranslations);
+            }
 
-        Moment.setLang(Config.env.lang);
+            Moment.setLang(Config.env.lang);
+        }
 
         if ($location.search().pid && (Config.main.site_id === null || Config.main.allowSiteIdOverride)) {
             Config.main.site_id = $location.search().pid;
@@ -61,23 +86,19 @@ angular.module('vbet5').run(['$rootScope', '$location', '$routeParams', '$timeou
         if (Config.swarm.sendTerminalIdlInRequestSession) {
             Config.main.terminalId = $location.search().tid;
         }
-        if (!Config.main.sportsLayout && Config.main.sportsClassicLayout) {
-            Config.main.sportsLayout = "classic"; //legacy support
-        }
         if (Config.main.enableSportsbookLayoutSwitcher) {
-            if($cookies.get("sportsBookLayout") !== undefined){
+            if ($location.search().sportsBookLayout) {
+                Config.main.sportsLayout = $location.search().sportsBookLayout;
+                $location.search('sportsBookLayout', undefined);
+            } else if ($cookies.get("sportsBookLayout") !== undefined){
                 Config.main.sportsLayout = $cookies.get("sportsBookLayout");
-            }else if (Storage.get('sportsBookLayout') !== undefined) {
+            } else if (Storage.get('sportsBookLayout') !== undefined) {
                 Config.main.sportsLayout = Utils.getActiveSportsLayout();
             } else if ($location.search().classic) {
                 Config.main.sportsLayout = "classic";
-            } else if ($location.search().sportsBookLayout) {
-                if($location.search().sportsBookLayout !== 'classic' || Config.main.sportsLayout !== 'euro2016') {
-                    Config.main.sportsLayout = $location.search().sportsBookLayout;
-                }
-                $location.search('sportsBookLayout', undefined);
             }
-            //Config.env.showSportsbookToolTip = !Storage.get('dontShowLayoutSwitcherHint');
+            // need to remove after refactor
+            Config.main.sportsLayout === "classic" && !Config.main.availableSportsbookViews['classic'] && Config.main.availableSportsbookViews['euro2016'] && (Config.main.sportsLayout = 'euro2016');
         }
         $rootScope.domainClass = $window.location.hostname.replace(/[\.\-]/g, '');
 
@@ -102,9 +123,11 @@ angular.module('vbet5').run(['$rootScope', '$location', '$routeParams', '$timeou
         var delay = $location.search().action ? 500 : 100;
         $timeout(redirectIfNeeded, delay);
         analytics.init();
+        facebookPixel.init();
 
         // make these available to all scopes
         $rootScope.conf = Config.main;
+        $rootScope.releaseDate = Config.releaseDate;
         $rootScope.confPartner = Config.partner;
         $rootScope.poker = Config.poker;
         $rootScope.env = Config.env;
@@ -150,7 +173,7 @@ angular.module('vbet5').run(['$rootScope', '$location', '$routeParams', '$timeou
         $rootScope.userOS = UserAgent.getOS();
         $rootScope.userOSVersion = UserAgent.getOSVersion();
 
-        if (DomHelper.getWindowSize().width >= Config.main.wideScreenModeWidth) {
+        if (DomHelper.getWindowSize().width >= 1833) {
             $rootScope.wideScreenMode = true;
         }
 
@@ -172,23 +195,14 @@ angular.module('vbet5').run(['$rootScope', '$location', '$routeParams', '$timeou
 
         if ($location.search().btag) {
             Storage.set('promo_code', $location.search().btag, Config.main.registration.promoCodeLifetime);
+            $cookies.putObject('promo_code', $location.search().btag, Config.main.registration.promoCodeLifetime);
         }
 
         Tracking.init();
         Tracking.event('NUV');
         Tracking.event('runtime', null, true);
 
-        /**
-         *
-         * @param {string} moduleName
-         * @description checks if module is enabled from config. If not, redirects to homepage
-         */
-        $rootScope.checkIfEnabled = function (moduleName) {
-            if (Config.main[moduleName + 'Enabled'] !== true) {
-                console.log(moduleName, ' disabled');
-                $location.path("/");
-            }
-        };
+        $location.search().btag && $location.search('btag', undefined);
 
         // handle online-offline status
         if (Config.main.offlineMessage) {
@@ -207,6 +221,228 @@ angular.module('vbet5').run(['$rootScope', '$location', '$routeParams', '$timeou
 
         if (Config.main.preventPuttingInIFrame && $window.top.location != $window.location) {
             $window.top.location = $window.location.href;
+        }
+
+
+        $rootScope.validPaths = {};
+        $rootScope.calculatedConfigs = {};
+
+        var menuPaths = {
+            "news": {
+                path: "#/news",
+                config: "enableNewsLinkInMenu"
+            },
+            "live": {
+                path: Config.main.sportsLayout == 'combo' ? "#/overview" : "#/sport",
+                config: "sportEnabled"
+            },
+            "dashboard": {
+                path: '#/dashboard',
+                config: "dashboardEnabled"
+            },
+            "overview": {
+                path: "#/overview",
+                config: "liveOverviewEnabled"
+            },
+            "multiview": {
+                path: "#/multiview",
+                config: "liveMultiViewEnabled"
+            },
+            "statistics": {
+                path: "#/statistics",
+                config: "statisticsInsportsbookTab"
+            },
+            "results": {
+                path: '#/results',
+                config: "showResultsTabInSportsbook"
+            },
+            "sport": {
+                path: Config.main.topMenuCustomUrl && Config.main.topMenuCustomUrl.sport ? Config.main.topMenuCustomUrl.sport : "#/sport",
+                config: "sportEnabled"
+            },
+            "livecalendar": {
+                path: "#/livecalendar",
+                config: "liveCalendarEnabled"
+            },
+            "virtual-sports": {
+                path: "#/virtualsports",
+                config: "virtualSportsEnabled"
+            },
+            "poolbetting": {
+                path: "#/poolbetting",
+                config: "poolBettingEnabled"
+            },
+            "virtual-betting": {
+                path: "#/casino",
+                config: "virtualBettingEnabledInTopMenu"
+            },
+            "belote": {
+                path: Config.belote.redirectOnInstantPlay ? Config.belote.instantPlayLink : "#/belote",
+                config: "beloteEnabled"
+            },
+            "backgammon": {
+                path: Config.backgammon.redirectOnInstantPlay ? Config.backgammon.instantPlayLink : "#/backgammon",
+                config: "backgammonEnabled"
+            },
+            "pokerklas": {
+                path: "#/pokerklas",
+                config: "pokerKlasEnabledInTopMenu"
+            },
+            "ggpoker": {
+                path: "#/ggpoker",
+                config: "ggpokerEnabledInTopMenu"
+            },
+            "casino": {
+                path: "#/casino",
+                config: "casinoEnabled"
+            },
+            "tournaments": {
+                path: "#/tournaments",
+                config: "tournamentsEnabled"
+            },
+            "poker": {
+                path: Config.poker.redirectOnInstantPlay ? Config.poker.instantPlayLink : "#/poker",
+                config: "pokerEnabled"
+            },
+            "chinese-poker": {
+                path: "#/chinesepoker",
+                config: "chinesePokerEnabled"
+            },
+            "livedealer": {
+                path: "#/livedealer",
+                config: "livedealerEnabled"
+            },
+            "keno": {
+                path: "#/keno",
+                config: "kenoEnabled"
+            },
+            "games": {
+                path: "#/games",
+                config: "skillgamesEnabled"
+            },
+            "ogwil": {
+                path: "#/ogwil",
+                config: "ogwilEnabled"
+            },
+            "freebet": {
+                path: "#/freebet",
+                config: "freeBetEnabled"
+            },
+            "fantasy": {
+                path: "#/fantasy",
+                config: "fantasyEnabled"
+            },
+            "jackpot": {
+                path: "#/jackpot",
+                config: "jackpotEnabled"
+            },
+            "financials": {
+                path: "#/financials",
+                config: "financialsEnabled"
+            },
+            "financials1": {
+                path: "#/financials",
+                config: "financialsEnabled"
+            },
+            "financials2": {
+                path: "#/game/TLCTLC/provider/TLC/exid/14000",
+                config: "financialsEnabled"
+            },
+            "exchange": {
+                path: Config.main.exchangeCustomLink || "#/exchange/0/",
+                config: "exchangeEnabled"
+            },
+            "winners": {
+                path: "#/winners",
+                config: "winnersEnabled"
+            }
+
+        };
+
+        var findAndChangeConfig = function (path) {
+            angular.forEach (menuPaths, function (value) {
+                if (value.path === path){
+                    $rootScope.calculatedConfigs[value.config] = true;
+                }
+            });
+        };
+        $rootScope.findAndChangeConfig = findAndChangeConfig;
+        var fixPath = function(path) {
+            var fixedPath = path;
+            var questionMarkIndex = fixedPath.indexOf("?");
+            if(questionMarkIndex !== -1) {
+                fixedPath =  fixedPath.substr(0, questionMarkIndex);
+            }
+            var lastCharacter = fixedPath.substr(fixedPath.length - 1);
+            if (lastCharacter === '/') {
+                fixedPath = fixedPath.substr(0, fixedPath.length - 1);
+            }
+            return fixedPath;
+        };
+
+        angular.forEach (Config.main.multiLevelMenu, function(value , key) {
+            var menuDetails = menuPaths[key];
+            if (menuDetails !== undefined) {
+                $rootScope.calculatedConfigs[menuDetails.config] = true;
+                $rootScope.validPaths[menuDetails.path] = true;
+            }
+            if(value !== null){
+                if (value.subMenu !== undefined) {
+                    angular.forEach(value.subMenu, function (subMenuItem) {
+                        if (subMenuItem.href || subMenuItem.link) {
+                            var path = subMenuItem.href || subMenuItem.link;
+                            path = fixPath(path);
+                            $rootScope.validPaths[path] = true;
+                            findAndChangeConfig(path);
+                        }
+                    });
+                } else if (value.href || value.link) {
+                    var path = value.href || value.link;
+                    path = fixPath(path);
+                    $rootScope.validPaths[path] = true;
+                    findAndChangeConfig(path);
+                }
+            }
+        });
+
+        if (Config.main.integrationMode || (Config.main.subHeaderItems && Config.main.subHeaderItems.length)) {
+            $rootScope.calculatedConfigs["sportEnabled"] = true;
+        }
+
+        if($rootScope.calculatedConfigs.sportEnabled){
+            angular.forEach(Config.main.subHeaderItems, function(item) {
+                var menuDetails = menuPaths[item.alias];
+                var config = true;
+                if (item.enabledConfig != undefined) {
+                    if (item.enabledConfig === "dashboardEnabled") {
+                        config = Config.main.dashboard.enabled;
+                    } else {
+                        config = Config.main[item.enabledConfig];
+                    }
+                }
+                if (menuDetails !== undefined && config) {
+                    $rootScope.calculatedConfigs[menuDetails.config] = true;
+                    if (item.url === undefined) {
+                        $rootScope.validPaths[menuDetails.path] = true;
+                    }
+                }
+
+            });
+        }
+
+        var topMenu = Config.main.theVeryTopMenu ?
+            (Config.main.theVeryTopMenu.length ? Config.main.theVeryTopMenu : Config.main.theVeryTopMenu[$rootScope.env.lang] || Config.main.theVeryTopMenu['default']) : '';
+
+        if (topMenu) {
+            angular.forEach(topMenu, function(item){
+                if (item.href) {
+                    var path = fixPath(item.href);
+                    if (!$rootScope.validPaths[path]) {
+                        $rootScope.validPaths[path] = true;
+                        findAndChangeConfig(path);
+                    }
+                }
+            });
         }
 
     }]);

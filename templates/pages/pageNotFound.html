@@ -1,9 +1,15 @@
-<div class="container404">
-    <div>
-        <div class="wrap_404">
-            <div class="title_404" trans>Error</div>
-            <div class="error_number">404</div>
-            <div class="error_desc" trans>Page not found</div>
-        </div>
-    </div>
+<div class="guide">
+    <table class="container404">
+        <tr>
+            <td>
+                <div class="logo-form-b">
+                    <img ng-src="{{conf.logo.secondImage ? conf.logo.secondImage : 'skins/' + conf.skin + '/images/logo.png'}}"/>
+                </div>
+                <h1 trans>oops... you've got lost</h1>
+                <h3 trans>We are sorry. The page you requested has either been moved or removed from the site.</h3>
+                <a href="#/" trans>Home page</a>
+                <button onclick="window.history.back()" trans>Go back</button>
+            </td>
+        </tr>
+    </table>
 </div>

@@ -1,0 +1,80 @@
+<div ng-if="env.mixedSettingsPage==='betlimits'" ng-init="getBetLimits()">
+    <h3 trans>Bet Limits</h3>
+    <vbet-loader class="page-center" ng-if="loadBetLimits"></vbet-loader>
+    <div class="settings-info-contain deposit-limit" ng-if="!loadBetLimits">
+        <p trans>Bet limits allow you to limit the amount of money you can bet during a specific period of time.</p>
+
+        <form name="forms.betLimitsForm" class="registration-form">
+
+            <div class="bet-limits-wrapper">
+                <div ng-hide="conf.betLimits.hideSportsbookLimits">
+                    <span trans>Sportsbook</span>
+                    <label><span context="Bet limits" trans>Max One bet amount</span></label>
+
+                    <div class="form-text"  ng-class="{'error': forms.betLimitsForm.SportMaxSingleBet.$touched && forms.betLimitsForm.SportMaxSingleBet.$invalid}">
+                        <div class="tooltip-wrapper-j">
+                            <input name="SportMaxSingleBet" ng-model="$parent.betLimitsData.SportMaxSingleBet" type="text" placeholder="Enter amount" prevent-input="[^0-9]+" trans>
+
+                            <div class="form-error-icon-j" ng-click="resetFieldError('SportMaxSingleBet', 'betLimits')"></div>
+                            <div class="tooltip-j">
+
+                                <div trans ng-show="forms.betLimitsForm.SportMaxSingleBet.$error.required">This field is required</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <label><span context="Bet limits" trans>Max Daily bet amount</span></label>
+
+                    <div class="form-text"  ng-class="{'error': forms.betLimitsForm.SportMaxDailyBet.$touched && forms.betLimitsForm.SportMaxDailyBet.$invalid}">
+                        <div class="tooltip-wrapper-j">
+                            <input name="SportMaxDailyBet" ng-model="$parent.betLimitsData.SportMaxDailyBet" type="text" placeholder="Enter amount" prevent-input="[^0-9]+" trans>
+
+                            <div class="form-error-icon-j" ng-click="resetFieldError('SportMaxDailyBet', 'betLimits')"></div>
+                            <div class="tooltip-j">
+
+                                <div trans ng-show="forms.betLimitsForm.SportMaxDailyBet.$error.required">This field is required</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div ng-hide="conf.betLimits.hideCasinoLimits">
+                    <span trans>Casino</span>
+                    <label><span context="Bet limits" trans>Max One bet amount</span></label>
+
+                    <div class="form-text" ng-class="{'error': forms.betLimitsForm.CasinoMaxSingleBet.$touched && forms.betLimitsForm.CasinoMaxSingleBet.$invalid}">
+                        <div class="tooltip-wrapper-j">
+                            <input name="CasinoMaxSingleBet" ng-model="$parent.betLimitsData.CasinoMaxSingleBet" type="text" placeholder="Enter amount" prevent-input="[^0-9]+" trans>
+
+                            <div class="form-error-icon-j" ng-click="resetFieldError('CasinoMaxSingleBet', 'betLimits')"></div>
+                            <div class="tooltip-j">
+
+                                <div trans ng-show="forms.betLimitsForm.CasinoMaxSingleBet.$error.required">This field is required</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <label><span trans context="Bet limits">Max Daily bet amount</span></label>
+
+                    <div class="form-text" ng-class="{'error': forms.betLimitsForm.CasinoMaxDailyBet.$touched && forms.betLimitsForm.CasinoMaxDailyBet.$invalid}">
+                        <div class="tooltip-wrapper-j">
+                            <input name="CasinoMaxDailyBet" ng-model="$parent.betLimitsData.CasinoMaxDailyBet" type="text" placeholder="Enter amount" prevent-input="[^0-9]+" trans>
+
+                            <div class="form-error-icon-j" ng-click="resetFieldError('CasinoMaxDailyBet', 'betLimits')"></div>
+                            <div class="tooltip-j">
+
+                                <div trans ng-show="forms.betLimitsForm.CasinoMaxDailyBet.$error.required">This field is required</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="change-button-container password">
+                <div class="cashier-button">
+                    <button ng-disabled="!forms.betLimitsForm.$dirty || forms.betLimitsForm.$invalid" ng-show="!working" trans ng-click="setBetLimits()">Save</button>
+                    <button disabled="disabled" ng-show="working" trans>Wait...</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

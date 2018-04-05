@@ -17,8 +17,9 @@
                     {{betData.system_min_count}}/{{betData.system_max_count}}</p>
 
                 <p ng-if="betData.type==='4'" trans>Chain</p>
-                <p>Customer ID: {{userId}}</p>
-                <p>Bet ID: {{betData.id}}</p>
+                <p><span trans>Username</span>: {{betData.userName}}</p>
+                <p><span trans>Customer ID</span>: {{betData.userId}}</p>
+                <p><span trans>Bet ID</span>: {{betData.id}}</p>
                 <p>{{betData.date_time|formatDate}}</p>
             </td>
             <td class="big-bet-j">

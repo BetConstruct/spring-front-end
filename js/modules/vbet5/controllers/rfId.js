@@ -47,7 +47,6 @@ VBET5.controller('rfidCtrl', ['$scope', '$rootScope', '$window', 'Config', 'Zerg
                         updateProfile(data);
                     })
                     .then(function (result) {
-                        $rootScope.profileSubId = result.subid;
                         $rootScope.$broadcast('profile', result.data);
 
                         $scope.env.authorized = true;
@@ -64,15 +63,19 @@ VBET5.controller('rfidCtrl', ['$scope', '$rootScope', '$window', 'Config', 'Zerg
                 .get(request, 'rfid_login')
                 .then(processRfidResults)['catch'](
                     function (reason) {
-                        console.log('Error:', reason);
-                        var errMsg = Translator.get("Invalid RFID card");
-                        if (reason.data.status === "1200" && Config.main.rfid.promptRFIDPassword) {
-                            $rootScope.$broadcast('globalDialogs.removeDialogsByTag', 'rfid');
-                            errMsg = Translator.get("Invalid Password");
-                        } else if (reason.data.status === "1002") {
-                            errMsg = Translator.get("Invalid RFID card");
+                        $rootScope.$broadcast('globalDialogs.removeDialogsByTag', 'rfid');
+                        var errMsg;
+                        switch (parseInt(reason.data.status)) {
+                            case 1200:
+                                Config.main.rfid.promptRFIDPassword && (errMsg = "Invalid Password");
+                                break;
+                            case 1002:
+                                errMsg = "Invalid RFID card";
+                                break;
+                            default:
+                                errMsg = "Invalid RFID card";
                         }
-                        //Utils.setJustForMoment($rootScope, 'blockingPopup', errMsg, 5000);
+
                         $rootScope.$broadcast("globalDialogs.addDialog", {
                             type: 'info',
                             tag: 'rfid',
@@ -123,7 +126,6 @@ VBET5.controller('rfidCtrl', ['$scope', '$rootScope', '$window', 'Config', 'Zerg
         var doLogoutStuff = function () {
             if (!logoutDone) {
                 logoutDone = true;
-                $scope.env.authorized = false;
                 if(!Config.main.rfid.doNotShowWarningPopup) {
                     $rootScope.$broadcast("globalDialogs.addDialog", {
                         type: 'info',
@@ -134,7 +136,6 @@ VBET5.controller('rfidCtrl', ['$scope', '$rootScope', '$window', 'Config', 'Zerg
                         content: 'Please put your RFID card on card reader'
                     });
                 }
-                Zergling.unsubscribe($rootScope.profileSubId);
                 $scope.env.hideLogOut = false;
                 $rootScope.currency_name = null;
                 $rootScope.fbLoggedIn = false;
@@ -147,6 +148,7 @@ VBET5.controller('rfidCtrl', ['$scope', '$rootScope', '$window', 'Config', 'Zerg
         };
         Zergling.logout()['finally'](doLogoutStuff);
         TimeoutWrapper(doLogoutStuff, Config.main.logoutTimeout); //in case logout fails for some reason (no network, etc.)
+        $scope.env.authorized = false;
         AuthData.clear();
     }
 
@@ -171,7 +173,8 @@ VBET5.controller('rfidCtrl', ['$scope', '$rootScope', '$window', 'Config', 'Zerg
         $window.SignInByRFID = SignInByRFID;
         $window.SignOutRF = SignOutRF;
         $window.IsRfSignIn = IsRfSignIn;
-        if(!Config.main.rfid.doNotShowWarningPopup) {
+        if(!Config.main.rfid.doNotShowWarningPopup && !$scope.env.authorized) {
+            $rootScope.$broadcast('globalDialogs.removeDialogsByTag', 'rfid');
             $rootScope.$broadcast("globalDialogs.addDialog", {
                 type: 'info',
                 tag: 'rfid',
@@ -199,5 +202,10 @@ VBET5.controller('rfidCtrl', ['$scope', '$rootScope', '$window', 'Config', 'Zerg
         }
     };
 
-
+    /**
+     * scope's destroying means that logged in  success.  so need to remove info popup
+     */
+    $scope.$on('$destroy', function () {
+        $rootScope.$broadcast('globalDialogs.removeDialogsByTag', 'rfid');
+    });
 }]);

@@ -4,8 +4,8 @@
  * @description
  * LiveCalendarController controller
  */
-angular.module('vbet5.betting').controller('LiveCalendarController', ['$scope', '$rootScope', '$location', '$window', 'ConnectionService', 'Zergling', 'Moment', 'Translator', 'Utils', 'Config', 'GameInfo',
-    function ($scope, $rootScope, $location, $window, ConnectionService, Zergling, Moment, Translator, Utils, Config, GameInfo) {
+angular.module('vbet5.betting').controller('LiveCalendarController', ['$scope', '$rootScope', '$location', '$window', 'ConnectionService', 'Moment', 'Translator', 'Utils', 'Config', 'GameInfo',
+    function ($scope, $rootScope, $location, $window, ConnectionService, Moment, Translator, Utils, Config, GameInfo) {
         'use strict';
         $rootScope.footerMovable = true;
 
@@ -24,7 +24,7 @@ angular.module('vbet5.betting').controller('LiveCalendarController', ['$scope', 
         $scope.options = {
             allSportsSelected: false,
             allDaysSelected: false
-        }
+        };
 
         /**
          * @ngdoc method
@@ -83,29 +83,31 @@ angular.module('vbet5.betting').controller('LiveCalendarController', ['$scope', 
                     angular.forEach(region.competition, function (competition) {
                         angular.forEach(competition.game, function (game) {
                             var groupedMarkets = Utils.groupByItemProperty(game.market, 'type');
-                            var gameObj = {
-                                sport: {id: sport.id},
-                                region: {id: region.id},
-                                competition: {id: competition.id},
-                                id: game.id,
-                                team1_name: game.team1_name,
-                                team2_name: game.team2_name,
-                                events_count: game.events_count,
-                                markets_count: game.markets_count,
-                                type: game.type
-                            };
-                            if (groupedMarkets.P1XP2 !== undefined && groupedMarkets.P1XP2[0] && groupedMarkets.P1XP2[0].event) {
-                                $scope.marketEvents[game.id] = {
-                                    events: Utils.groupByItemProperty(groupedMarkets.P1XP2[0].event, 'type'),
-                                    market: groupedMarkets.P1XP2[0],
-                                    game: gameObj
+                            if (groupedMarkets) {
+                                var gameObj = {
+                                    sport: {id: sport.id},
+                                    region: {id: region.id},
+                                    competition: {id: competition.id},
+                                    id: game.id,
+                                    team1_name: game.team1_name,
+                                    team2_name: game.team2_name,
+                                    events_count: game.events_count,
+                                    markets_count: game.markets_count,
+                                    type: game.type
                                 };
-                            } else if (groupedMarkets.P1P2 !== undefined && groupedMarkets.P1P2[0] && groupedMarkets.P1P2[0].event) {
-                                $scope.marketEvents[game.id] = {
-                                    events: Utils.groupByItemProperty(groupedMarkets.P1P2[0].event, 'type'),
-                                    market: groupedMarkets.P1P2[0],
-                                    game: gameObj
-                                };
+                                if (groupedMarkets.P1XP2 !== undefined && groupedMarkets.P1XP2[0] && groupedMarkets.P1XP2[0].event) {
+                                    $scope.marketEvents[game.id] = {
+                                        events: Utils.groupByItemProperty(groupedMarkets.P1XP2[0].event, 'type'),
+                                        market: groupedMarkets.P1XP2[0],
+                                        game: gameObj
+                                    };
+                                } else if (groupedMarkets.P1P2 !== undefined && groupedMarkets.P1P2[0] && groupedMarkets.P1P2[0].event) {
+                                    $scope.marketEvents[game.id] = {
+                                        events: Utils.groupByItemProperty(groupedMarkets.P1P2[0].event, 'type'),
+                                        market: groupedMarkets.P1P2[0],
+                                        game: gameObj
+                                    };
+                                }
                             }
                         });
                     });
@@ -121,7 +123,8 @@ angular.module('vbet5.betting').controller('LiveCalendarController', ['$scope', 
          */
         function getLinkedGames() {
             if (linkedGameSubId) {
-                Zergling.unsubscribe(linkedGameSubId);
+                connectionService.unsubscribe(linkedGameSubId);
+                linkedGameSubId = null;
             }
             var request = {
                 'source': 'betting',
@@ -129,7 +132,7 @@ angular.module('vbet5.betting').controller('LiveCalendarController', ['$scope', 
                     'sport': ['id', 'name', 'alias', 'order'],
                     'competition': ['id'],
                     'region': ['id', 'name', 'alias'],
-                    'game': ['id', 'team1_name', 'team2_name', 'type', 'events_count', 'markets_count', 'is_stat_available', 'team1_external_id', 'team2_external_id', 'is_live'],
+                    'game': ['id', 'team1_name', 'team2_name', 'type', 'events_count', 'is_stat_available', 'team1_external_id', 'team2_external_id', 'is_live'],
                     'market': ['type', 'name', 'id', 'base', 'express_id'],
                     'event': ['type', 'id', 'price', 'name', 'base']
                 },
@@ -165,7 +168,6 @@ angular.module('vbet5.betting').controller('LiveCalendarController', ['$scope', 
          * @param {Object} data games data object
          */
         function updateGames(data) {
-            console.log('updateGames', data);
             excludeIds = [];
             $scope.liveCalendarGames = [];
             $scope.liveCalendarAllGames = [];
@@ -190,12 +192,15 @@ angular.module('vbet5.betting').controller('LiveCalendarController', ['$scope', 
                                     game.dayOffset = $scope.dayFilter[i].id;
                                 }
                             }
-                            if (!Config.main.GmsPlatform && game.exclude_ids || Config.main.GmsPlatform && game.id) {
-                                game.pointerId = Config.main.GmsPlatform ? game.id : game.exclude_ids;
+                            if (!Config.main.GmsPlatform && game.exclude_ids) {
+                                game.pointerId = game.exclude_ids;
                                 excludeIds.push(game.pointerId);
                             } else {
                                 game.pointerId = game.id;
                             }
+
+                            GameInfo.hasVideo(game, true); // check availability of video
+
                             allGames.push(game);
                             $scope.liveCalendarAllGames.push(game);
                         });
@@ -206,7 +211,7 @@ angular.module('vbet5.betting').controller('LiveCalendarController', ['$scope', 
                         getLinkedGames();
                         excludeIdsKey = excludeIds.join();
                     }
-                } else if (Config.main.calendarPrematchSelection) {
+                } else if (Config.main.calendarPrematchSelection || Config.main.GmsPlatform) {
                     updateLinkedGames(data);
                 }
                 $scope.liveCalendarGames.push({sport: sport, order: sport.order, games: Utils.groupByItemProperty(allGames, 'dayOffset')});
@@ -243,12 +248,6 @@ angular.module('vbet5.betting').controller('LiveCalendarController', ['$scope', 
             );
         }
 
-        $scope.$on('$destroy', function () {
-            if (!linkedGameSubId) {
-                Zergling.unsubscribe(linkedGameSubId);
-            }
-        });
-
         /**
          * @ngdoc method
          * @name loadSelectedGames
@@ -264,7 +263,9 @@ angular.module('vbet5.betting').controller('LiveCalendarController', ['$scope', 
                     'sport': ['id', 'name', 'alias', 'order'],
                     'region': ['id', 'name', 'alias'],
                     'competition': ['id', 'name'],
-                    'game': ['id', 'type', 'is_blocked', 'game_number', 'team1_name', 'team2_name','team1_reg_name', 'team2_reg_name', 'start_ts', 'title', 'info', 'text_info', 'events_count', 'exclude_ids', 'is_stat_available', 'team1_external_id', 'team2_external_id', 'is_live']
+                    'game': [['id', 'type', 'is_blocked', 'game_number', 'team1_name', 'team2_name','team1_reg_name', 'team2_reg_name', 'start_ts', 'markets_count',
+                        'title', 'info', 'text_info', 'events_count', 'exclude_ids', 'is_stat_available', 'team1_external_id', 'team2_external_id', 'is_live',
+                        'video_id', 'tv_type', 'video_id2', 'video_id3', 'partner_video_id']]
                 },
                 'where': {
                     'sport': {'id': {'@in': $scope.selectedSports}},
@@ -274,15 +275,18 @@ angular.module('vbet5.betting').controller('LiveCalendarController', ['$scope', 
                 }
             };
 
-            // if prematch selection
-            if (Config.main.calendarPrematchSelection) {
+            if (Config.main.GmsPlatform || Config.main.calendarPrematchSelection) {
                 request.what.market = ['type', 'name', 'id', 'base', 'express_id'];
                 request.what.event = ['type', 'id', 'price', 'name', 'base'];
                 request.where.market = {type: {'@in': ['P1XP2', 'P1P2']}};
             }
 
             if ($scope.selectedDays && $scope.selectedDays.length > 0) {
-                request.where.game['@or'] = $scope.selectedDays;
+                if ($scope.selectedDays.length > 1) {
+                    request.where.game['@or'] = $scope.selectedDays;
+                } else {
+                    request.where.game.start_ts = $scope.selectedDays[0].start_ts;
+                }
             }
             /*Utils.setCustomSportAliasesFilter(request);*/
 
@@ -318,7 +322,6 @@ angular.module('vbet5.betting').controller('LiveCalendarController', ['$scope', 
             }
             oddType = oddType || 'odd';
             var game = Utils.clone(openGame);
-            console.log('betsslip', arguments);
             $rootScope.$broadcast('bet', {event: event, market: market, game: game, oddType: oddType});
         };
 
@@ -441,7 +444,6 @@ angular.module('vbet5.betting').controller('LiveCalendarController', ['$scope', 
             $scope.selectedDays = days.map(function (element) {
                 return {'start_ts': element};
             });
-            console.log($scope.liveCalendarSelectedDays);
             loadSelectedGames();
         };
 

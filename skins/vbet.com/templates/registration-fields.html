@@ -32,7 +32,7 @@
             <span ng-bind="regItem.title | translate"></span>
             <span class="hint" ng-if="regItem.required">*</span>
             <img ng-src="{{regItem.imgSrc}}">
-            <button ng-click="loadCaptchaImage(regItem)" trans>Reload</button>
+            <button ng-click="loadCaptchaImage(regItem);$event.preventDefault();" trans>Reload</button>
         </label>
 
         <div vb-html-compiler="<input type='text' name='{{regItem.name}}' ng-blur='registerform[regItem.name].blur=true' ng-model='registrationData[regItem.name]' placeholder='{{regItem.placeholder|translate}}'/>" custom-attrs="regItem.customAttrs"></div>

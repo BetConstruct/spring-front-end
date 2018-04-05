@@ -4,13 +4,14 @@
  * @description
  * euro2016 view dashboard controller
  */
-VBET5.controller('euro2016DashboardCenterController', ['$rootScope', '$scope', 'OddService', 'ConnectionService', 'Config', '$filter', 'Utils', 'GameInfo', 'Moment', function ($rootScope, $scope, OddService, ConnectionService, Config, $filter, Utils, GameInfo, Moment) {
+VBET5.controller('euro2016DashboardCenterController', ['$rootScope', '$scope', 'OddService', 'ConnectionService', 'Config', '$filter', 'Utils', 'GameInfo', 'Moment', 'Storage', function ($rootScope, $scope, OddService, ConnectionService, Config, $filter, Utils, GameInfo, Moment, Storage) {
     'use strict';
 
     var connectionService = new ConnectionService($scope);
     var connectionSubIds = {};
     var parentMainScope = $scope.$parent.$parent.$parent;
     var expandedRegionSubIds = {};
+    var expandedSportsSubIds = {};
     var updateCentralLiveView = updateCentralViewFactory('centerViewLiveData');
     var updateCentralPrematchView = updateCentralViewFactory('centerViewPrematchData');
 
@@ -35,6 +36,7 @@ VBET5.controller('euro2016DashboardCenterController', ['$rootScope', '$scope', '
         $scope.showFrameAlias = GameInfo.showFrameAlias;
         $scope.slideSets = GameInfo.slideSets;
         $scope.getCurrentTime = GameInfo.getCurrentTime;
+        $scope.hideRegionsInDashboard = Storage.get("hideRegionsInDashboard") === undefined ? true : Storage.get("hideRegionsInDashboard");
         $scope.visibleSetsNumber = 5;
 
         $scope.selectedMarketForLiveCompetition = {};
@@ -113,7 +115,7 @@ VBET5.controller('euro2016DashboardCenterController', ['$rootScope', '$scope', '
                     {
                         type: source == 'centerViewLiveData' ? 1 : 0,
                         isClosed: false,
-                        'region': $scope[source][0].region[$scope[source][0].regions[0].id].id,
+                        'region': !$scope.hideRegionsInDashboard ? $scope[source][0].region[$scope[source][0].regions[0].id].id : "",
                         'sport': $scope[source][0].id
                     }
                 );
@@ -174,8 +176,12 @@ VBET5.controller('euro2016DashboardCenterController', ['$rootScope', '$scope', '
             if (subId && data.sport) {
                 var sportKeys = Object.keys(data.sport);
                 if (sportKeys.length) {
-                    var regionKeys = Object.keys(data.sport[sportKeys[0]].region);
-                    expandedRegionSubIds[data.sport[sportKeys[0]].region[regionKeys[0]].id] = subId;
+                    if (!$scope.hideRegionsInDashboard) {
+                        var regionKeys = Object.keys(data.sport[sportKeys[0]].region);
+                        expandedRegionSubIds[data.sport[sportKeys[0]].region[regionKeys[0]].id] = subId;
+                    } else {
+                        expandedSportsSubIds[data.sport[sportKeys[0]].id] = subId;
+                    }
                 }
             }
             $scope.pointerIds = $scope.pointerIds || {};
@@ -187,7 +193,19 @@ VBET5.controller('euro2016DashboardCenterController', ['$rootScope', '$scope', '
                     }
 
                     angular.forEach(templateSport.region, function (region, key) {
-                        if (sport.region[sport.regions[0].id].id == region.id) {
+                        if ($scope.hideRegionsInDashboard) {
+
+                            angular.forEach(sport.regions, function(sportRegion) {
+                                if (sport.region[sportRegion.id].id === region.id) {
+                                    sport.region[sportRegion.id].isLoading = false;
+
+                                    var mergedRegion = angular.extend({}, region, sport.region[sportRegion.id]);
+                                    angular.forEach(mergedRegion, function (mergedRegionValue, mergedRegionKey) {
+                                        templateSport.region[key][mergedRegionKey] = mergedRegionValue;
+                                    });
+                                }
+                            });
+                        } else if (sport.region[sport.regions[0].id].id == region.id) {
                             // replace (initially loaded) light region info with fully loaded data
                             sport.region[sport.regions[0].id].isLoading = false;
 
@@ -197,6 +215,7 @@ VBET5.controller('euro2016DashboardCenterController', ['$rootScope', '$scope', '
                             });
                         }
                     });
+                    $scope.sportBlock[sport.id].isLoading = false;
                 });
 
                 callback && callback(sport);
@@ -220,7 +239,7 @@ VBET5.controller('euro2016DashboardCenterController', ['$rootScope', '$scope', '
         var sportCount = 0;
 
         angular.forEach(data.sport, function (sport) {
-            sport.regions = Utils.objectToArray(sport.region, false, ['id', 'order']);
+            sport.regions = Utils.objectToArray(sport.region);
             sport.regions.sort(Utils.orderSorting);
 
             angular.forEach(sport.region, function (region) {
@@ -233,7 +252,7 @@ VBET5.controller('euro2016DashboardCenterController', ['$rootScope', '$scope', '
                 region.isLoading = false;
 
                 if (region.competition) {
-                    region.competitions = Utils.objectToArray(region.competition, false, ['id', 'order']);
+                    region.competitions = Utils.objectToArray(region.competition);
                     region.competitions.sort(Utils.orderSorting);
                 }
 
@@ -250,8 +269,8 @@ VBET5.controller('euro2016DashboardCenterController', ['$rootScope', '$scope', '
 
                         GameInfo.hasVideo(game);
 
-                        game.filteredMarkets = Utils.groupByItemProperty(game.market, 'type');
-                        angular.forEach(game.filteredMarkets, function (marketGroup, id) {
+                        var filteredMarkets = Utils.groupByItemProperty(game.market, 'type');
+                        angular.forEach(filteredMarkets, function (marketGroup, id) {
                             competition.filteredMarkets.push(marketGroup[0]);
 
                             if (marketGroup.length > 1 && marketGroup[0].base) {
@@ -274,9 +293,7 @@ VBET5.controller('euro2016DashboardCenterController', ['$rootScope', '$scope', '
                                 });
                             }
 
-                            marketGroup.events.sort(function (a, b) {
-                                return a.order - b.order;
-                            });
+                            marketGroup.events.sort(Utils.orderSorting);
 
                             if (marketGroup.events.length === 2) {
                                 marketGroup.events.splice(1, 0, {});
@@ -293,6 +310,8 @@ VBET5.controller('euro2016DashboardCenterController', ['$rootScope', '$scope', '
                             });
                         });
 
+                        game.filteredMarket = filteredMarkets && (filteredMarkets['P1XP2'] || filteredMarkets['P1P2']);
+
                         gameCallback && gameCallback(game, competition);
 
                         if (game.exclude_ids) {
@@ -300,7 +319,7 @@ VBET5.controller('euro2016DashboardCenterController', ['$rootScope', '$scope', '
                         }
                     });
 
-                    competition.games = Utils.twoParamsSorting(Utils.objectToArray(competition.game, false, ['id', 'start_ts']), ['start_ts', 'id']);
+                    competition.games = Utils.twoParamsSorting(Utils.objectToArray(competition.game), ['start_ts', 'id']);
 
                     var competitionTotalMarketCount = Object.keys(competition.filteredMarkets).length;
                     competition.filteredMarketsCount = competitionTotalMarketCount;
@@ -313,10 +332,16 @@ VBET5.controller('euro2016DashboardCenterController', ['$rootScope', '$scope', '
             if (sportCount === 1) {
                 // mark first region as open
                 if (subId) {
-                    sport.region[sport.regions[0].id].regionListClosed = false;
+                    if (!$scope.hideRegionsInDashboard) {
+                        sport.region[sport.regions[0].id].regionListClosed = false;
+                    } else {
+                        angular.forEach(sport.region, function(region) {
+                            region.regionListClosed = false;
+                        });
+                    }
                 }
 
-                if (isSelectedCentralViewTogglable()) {
+                if (isSelectedCentralViewTogglable()) { // Why do we need this part?
                     sport.region[sport.regions[0].id].isLoading = true;
                 }
             }
@@ -657,7 +682,7 @@ VBET5.controller('euro2016DashboardCenterController', ['$rootScope', '$scope', '
             } else {
                 connectionService.subscribe(request, updateCentralPrematchViewWithExpandedRegion, null, true);
             }
-        } else {
+        } else if (item.region) {
             stopRegionLoading(item);
 
             if (!expandedRegionSubIds[item.region]) {
@@ -666,6 +691,14 @@ VBET5.controller('euro2016DashboardCenterController', ['$rootScope', '$scope', '
 
             connectionService.unsubscribe(expandedRegionSubIds[item.region]);
             delete expandedRegionSubIds[item.region];
+        } else {
+            if (!expandedSportsSubIds[item.sport]) {
+                return;
+            }
+
+            connectionService.unsubscribe(expandedSportsSubIds[item.sport]);
+            delete expandedSportsSubIds[item.sport];
+            $scope.sportBlock[item.sport].isLoading = false;
         }
     };
 
@@ -692,6 +725,7 @@ VBET5.controller('euro2016DashboardCenterController', ['$rootScope', '$scope', '
 
         connectionService.unsubscribe(connectionSubIds);
         connectionService.unsubscribe(expandedRegionSubIds);
+        connectionService.unsubscribe(expandedSportsSubIds);
 
         $scope.hideLiveEvents = false;
         var requestLive = generateRequest({'competition': competition.id, type: 1});
@@ -720,6 +754,7 @@ VBET5.controller('euro2016DashboardCenterController', ['$rootScope', '$scope', '
         $scope.centerViewLoading = true;
         connectionService.unsubscribe(connectionSubIds);
         connectionService.unsubscribe(expandedRegionSubIds);
+        connectionService.unsubscribe(expandedSportsSubIds);
 
         $scope.hideLiveEvents = false;
         var requestLive = generateRequest({'region': region.id, type: 1});
@@ -747,6 +782,7 @@ VBET5.controller('euro2016DashboardCenterController', ['$rootScope', '$scope', '
         $scope.centerViewLoading = true;
         connectionService.unsubscribe(connectionSubIds);
         connectionService.unsubscribe(expandedRegionSubIds);
+        connectionService.unsubscribe(expandedSportsSubIds);
 
         $scope.hideLiveEvents = false;
 
@@ -774,6 +810,7 @@ VBET5.controller('euro2016DashboardCenterController', ['$rootScope', '$scope', '
         $scope.centerViewLoading = true;
         connectionService.unsubscribe(connectionSubIds);
         connectionService.unsubscribe(expandedRegionSubIds);
+        connectionService.unsubscribe(expandedSportsSubIds);
 
         $scope.hideLiveEvents = true;
 
@@ -803,6 +840,7 @@ VBET5.controller('euro2016DashboardCenterController', ['$rootScope', '$scope', '
         $scope.centerViewLoading = true;
         connectionService.unsubscribe(connectionSubIds);
         connectionService.unsubscribe(expandedRegionSubIds);
+        connectionService.unsubscribe(expandedSportsSubIds);
 
         $scope.hideLiveEvents = true;
 
@@ -815,9 +853,8 @@ VBET5.controller('euro2016DashboardCenterController', ['$rootScope', '$scope', '
             'where': {'game': {'type': 1}}
         };
 
-        if (!Config.main.GmsPlatform) {
-            request.where.sport = {'id': {'@nin': Config.main.virtualSportIds}};
-        }
+        request.where.sport = {'id': {'@nin': GameInfo.getVirtualSportIds()}};
+
         Utils.setCustomSportAliasesFilter(request);
 
         connectionService.subscribe(request, updateCentralLiveView);
@@ -834,6 +871,7 @@ VBET5.controller('euro2016DashboardCenterController', ['$rootScope', '$scope', '
 
         connectionService.unsubscribe(connectionSubIds);
         connectionService.unsubscribe(expandedRegionSubIds);
+        connectionService.unsubscribe(expandedSportsSubIds);
 
         $scope.hideLiveEvents = true;
 
@@ -886,7 +924,7 @@ VBET5.controller('euro2016DashboardCenterController', ['$rootScope', '$scope', '
 
     //and unavailable when he logs out
     $scope.$on('login.loggedOut', function () {
-        $scope.openGame.video_data = null;
+        $scope.openGame && ($scope.openGame.video_data = null);
     });
 
     //synchronize video with user balance
@@ -960,7 +998,13 @@ VBET5.controller('euro2016DashboardCenterController', ['$rootScope', '$scope', '
      */
     $scope.toggleSports = function toggleSports (sportId) {
         if (sportId) {
+            if ($scope.sportBlock[sportId].isLoading) { return; }
             $scope.sportBlock[sportId].expanded = !$scope.sportBlock[sportId].expanded;
+
+            if ($scope.hideRegionsInDashboard) {
+                $scope.sportBlock[sportId].isLoading = true;
+                $scope.toggleItem({'sport': sportId, 'type': 1, 'isClosed': !$scope.sportBlock[sportId].expanded});
+            }
             checkToggleAllStatus();
         } else {
             $scope.expandedAll = !$scope.expandedAll;
@@ -991,4 +1035,17 @@ VBET5.controller('euro2016DashboardCenterController', ['$rootScope', '$scope', '
             $scope.expandedAll = false;
         }
     }
+
+    /**
+     * @ngdoc method
+     * @name toggleRegionFilter
+     * @methodOf vbet5.controller:euro2016DashboardCenterController
+     * @description  toggles region filter (if hideRegionsInDashboard is true - all games in all regions will be shown)
+     */
+    $scope.toggleRegionFilter = function toggleRegionFilter() {
+        $scope.hideRegionsInDashboard = !$scope.hideRegionsInDashboard;
+        Storage.set("hideRegionsInDashboard", $scope.hideRegionsInDashboard);
+
+        $scope.$broadcast("euro2016.comboView.leftMenu.liveNow");
+    };
 }]);

@@ -100,16 +100,16 @@ $skin-palette-8: $skin-palette-8 !default;
 .form-control{
     float: left;
     border-radius: 5px 0 0 5px;
-    height: 34px;
+    height: 36px;
+    box-sizing: border-box;
     padding-left: 14px;
-    width: calc(100% - 45px);
+    width: calc(100% - 30px);
     border: 0;
 }
 .results-center-ba-j {
     float: left;
     width: 100%;
     height: 108px;
-    margin: 0 0 17px;
     background: url(../../../images/backgrounds/results-header.jpg#{$delete-cache}) no-repeat 50% 50% / cover; 
     background-clip: content-box;
     padding: 0 0 2px;
@@ -132,7 +132,7 @@ $skin-palette-8: $skin-palette-8 !default;
     width: calc(100% + 4px);
     border-collapse: separate;
     border-spacing: 2px 1px;
-    margin-left: -2px;
+    margin: 0 0 20px -2px;
     table-layout: fixed;
 }
 .results-table-j table .icon-arrow-down5-j-sort {
@@ -156,10 +156,10 @@ $skin-palette-8: $skin-palette-8 !default;
     text-overflow: ellipsis;
     white-space: nowrap;
 }
-.results-table-j table tr td:first-child, .results-table-j table tr th:first-child {width: 15%;}
-.results-table-j table tr td:nth-child(2), .results-table-j table tr th:nth-child(2) {width: 42%;}
-.results-table-j table tr td:nth-child(2), .results-table-j table tr th:nth-child(3) {width: 42%;}
-.results-table-j table tr td:last-child, .results-table-j table tr th:last-child {width: 11%;}
+.results-table-j table tr td:first-child, .results-table-j table tr th:first-child {width: 18%;}
+.results-table-j table tr td:nth-child(2), .results-table-j table tr th:nth-child(2) {width: 36%;}
+.results-table-j table tr td:nth-child(2), .results-table-j table tr th:nth-child(3) {width: 36%;}
+.results-table-j table tr td:last-child, .results-table-j table tr th:nth-child(4) {width: 20%;}
 .results-table-j ul{
     float: left;
     width: 100%;
@@ -247,7 +247,7 @@ $skin-palette-8: $skin-palette-8 !default;
     width: 100%;
     display: table;
     box-sizing: border-box;
-    padding: 0 10px 28px;
+    padding: 17px 10px 28px;
 }
 .results-table-cell-j {
     display: table-cell;
@@ -258,19 +258,29 @@ $skin-palette-8: $skin-palette-8 !default;
     width: 1%;
     vertical-align: bottom;
     padding-left: 8px;
+    white-space: nowrap;
 }
 .button-container-j button {
     height: 36px;
     text-transform: uppercase;
     border: 0;
     border-radius: 5px;
-    font: normal 13px Arial, Helvetica, sans-serif;
+    font-family: $font-f;
+    font-size: 7 + $size-font;
+    font-weight: normal;
     padding: 0 20px;
+    transition: 300ms color, 300ms background;
+    &:disabled {
+        pointer-events: none;
+        background: $form-elements-bg;
+        color: rgba(set-color($form-elements-bg), 0.2);
+    }
 }
 .navigation-of-results-j ul.search-tabs-conatiner {
     float: left;
     width: 100%;
     display: table;
+    table-layout: fixed;
 }
 .search-tabs-conatiner > li {
     display: table-cell;
@@ -341,7 +351,8 @@ $skin-palette-8: $skin-palette-8 !default;
     border-top: 1px solid lighten( desaturate( adjust-hue( $skin-palette-8, 1deg ), 7 ), 4 );
     border-left: 1px solid lighten( desaturate( adjust-hue( $skin-palette-8, 1deg ), 7 ), 4 );
     color: $text-palette-4;
-    font: 12px/12px $font-f;
+    font-size: 6 + $size-font;
+    line-height: 12px;
 }
 .date-picker-b .dropdown-menu table tr td .btn-default[disabled="disabled"],
 .date-picker-b .dropdown-menu table tr td .btn-default[disabled="disabled"]:hover{
@@ -366,13 +377,15 @@ $skin-palette-8: $skin-palette-8 !default;
     background: none;
     border: none;
     color: $text-palette-4;
-    font: 12px/30px $font-f;
+    font-size: 6 + $size-font;
+    line-height: 30px;
     position: relative;
 }
 .input-group .dropdown-menu table tr:nth-child(2) th{
     font-weight: $style-text;
     color: $text-palette-4;
-    font: 12px/12px $font-f;
+    font-size: 6 + $size-font;
+    line-height: 12px;
     text-align: center;
 }
 .input-group .dropdown-menu table tr th .pull-left:before{
@@ -394,24 +407,29 @@ $skin-palette-8: $skin-palette-8 !default;
 .form-control{
     background: $form-elements-bg;
     color: $text-palette-4;
-    font: 12px/14px $font-f;
+    font-size: 6 + $size-font;
+    line-height: 14px;
 }
 .no-result-to-show-j {
     float: left;
     width: 100%;
     padding: 50px 0;
     text-align: center;
-    font: 32px/34px $font-f;
+    font-size: 26 + $size-font;
+    line-height: 34px;
     color: $text-palette-4;
     box-shadow: none;
 }
 .results-center-ba-j h4 {
-    font: $style-text 24px/26px $font-f;
-    color: white;
+    font-size: 18 + $size-font;
+    line-height: 26px;
+    font-weight: $style-text;
+    color: #ffffff;
 }
 .results-table-j table {
     color: $text-palette-2;
-    font: 13px/16px $font-f;
+    font-size: 7 + $size-font;
+    line-height: 16px;
 }
 .results-table-j table tr td, .results-table-j table tr th {
     background: $skin-palette-7; 
@@ -421,11 +439,12 @@ $skin-palette-8: $skin-palette-8 !default;
 .todays-results-j {background: $skin-palette-7;}
 .todays-results-j > ul > li {
     color: $text-palette-2;
-    font: 12px/18px $font-f;
+    font-size: 6 + $size-font;
+    line-height: 18px;
     border-bottom: 1px solid darken( saturate( adjust-hue( $skin-palette-7, 4deg ), 15 ), 14 );
     box-shadow: 0 1px 0 lighten( desaturate( adjust-hue( $skin-palette-7, 1deg ), 2 ), 4 );
 }
-.button-container-j button {
+.button-container-j button{
     color: set-color($brand-color-1);
     background: $brand-color-1;
 }
@@ -436,17 +455,23 @@ $skin-palette-8: $skin-palette-8 !default;
 }
 .results-header-j h2 {
     color: $text-palette-1;
-    font: 16px/18px $font-f;
+    font-size: 10 + $size-font;
+    line-height: 18px;
+    font-weight: normal;
 }
 .search-tabs-conatiner h5 {
     color: $text-palette-3;
-    font: $style-text 12px/14px $font-f;
+    font-size: 6 + $size-font;
+    line-height: 14px;
+    font-weight: $style-text;
 }
 .results-select-j {background: $form-elements-bg;}
 .results-select-j:before {color: $text-palette-4;}
 .results-select-j select {
     color: $text-palette-4;
-    font: $style-text 12px/14px $font-f;
+    font-size: 6 + $size-font;
+    line-height: 14px;
+    font-weight: $style-text;
 }
 .results-select-j select option, .results-select-j select optgroup {
     background: $form-elements-bg;
@@ -507,7 +532,7 @@ label.results-live-j input:checked + i:before {
     .results-table-cell-j.button-container-j {
         padding-left: 4px;
     }
-    .button-container-j button {
+    .button-container-j button{
         font-size: 0;
         padding: 0 10px;
     }
@@ -528,3 +553,29 @@ label.results-live-j input:checked + i:before {
         max-width: 100%;
     }
 }
+sports-results {
+    float: left;
+    width: 100%;
+    height: 100%;
+    text-align: left;
+    display: block;
+}
+@media screen and (max-width: 1260px){
+    .results-table-j table tr td:nth-child(2), .results-table-j table tr th:nth-child(3) {
+        font-size: 6 + $size-font;
+    }
+    .results-table-j table tr td:nth-child(2), .results-table-j table tr th:nth-child(2){
+        width: 28%;
+    }
+    .results-table-j table tr td:first-child, .results-table-j table tr th:first-child{
+        font-size: 4 + $size-font;
+    }
+    .results-table-j table tr td:last-child, .results-table-j table tr th:nth-child(4){
+        font-size: 4 + $size-font;
+        width: 40%;
+    }
+    .results-table-j ul{font-size: 5 + $size-font;}
+}
+//small view
+
+//small view END

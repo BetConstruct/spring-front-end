@@ -131,7 +131,7 @@
 
                     <div class="select-block">
                         <select ng-model="cashierFormModel.fromProduct" ng-change="changeCashierFormModelFromProduct(cashierFormModel.fromProduct)">
-                            <option value="Casino" ng-if="casinoEnabled || conf.pokerEnabled" trans>Casino - Poker</option>
+                            <option value="Casino" ng-if="casinoEnabled || calculatedConfigs.pokerEnabled" trans>Casino - Poker</option>
                             <option value="Sport" trans>Main</option>
                         </select>
                     </div>
@@ -141,7 +141,7 @@
 
                     <div class="select-block">
                         <select ng-model="cashierFormModel.toProduct">
-                            <option value="Casino" ng-if="casinoEnabled || conf.pokerEnabled" ng-show="cashierFormModel.fromProduct !== 'Casino' || cashierFormModel.fromProduct !== 'Poker'" trans>Casino - Poker</option>
+                            <option value="Casino" ng-if="casinoEnabled || calculatedConfigs.pokerEnabled" ng-show="cashierFormModel.fromProduct !== 'Casino' || cashierFormModel.fromProduct !== 'Poker'" trans>Casino - Poker</option>
                             <option value="Sport" ng-show="cashierFormModel.fromProduct !== 'Sport'" trans>Main</option>
                         </select>
                     </div>
@@ -200,7 +200,7 @@
             </tr>
         </table>
     </div>
-    <div class="table-status wallet" ng-show="casinoEnabled || conf.pokerEnabled">
+    <div class="table-status wallet" ng-show="casinoEnabled || calculatedConfigs.pokerEnabled">
         <table>
             <tr>
                 <th colspan="3"><p trans>Casino</p></th>
@@ -228,7 +228,7 @@
 
     </div>
 
-    <div class="table-status wallet" ng-show="casinoEnabled || conf.pokerEnabled">
+    <div class="table-status wallet" ng-show="casinoEnabled || calculatedConfigs.pokerEnabled">
         <table>
             <tr>
                 <th colspan="3"><p trans>Total</p></th>

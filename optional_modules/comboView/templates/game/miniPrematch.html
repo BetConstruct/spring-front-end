@@ -14,7 +14,7 @@
             </div>
         </li>
         <li>
-            <combo-view-market-events ng-repeat="market in getGame().filteredMarkets[getPrematchMarket(getCompetitoin()).type]"
+            <combo-view-market-events ng-if="!getGame().additionalEvents || getGame().show_type !== 'OUTRIGHT' || !conf.GmsPlatform" ng-repeat="market in getGame().filteredMarkets[getPrematchMarket(getCompetitoin()).type]"
                 market="market"
                 bet="bet"
                 game="getGame()"

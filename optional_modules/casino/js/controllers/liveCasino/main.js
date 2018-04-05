@@ -5,48 +5,23 @@
  * casino page controller
  */
 
-CASINO.controller('liveCasinoMainCtrl', ['$rootScope', '$scope', '$sce', '$location', '$interval', '$window', 'Storage', 'CConfig', 'casinoData', 'Utils', 'casinoUtils', 'Translator', 'casinoCache', 'Zergling', 'WPConfig', 'content', 'analytics', 'smoothScroll', 'TimeoutWrapper', function ($rootScope, $scope, $sce, $location, $interval, $window, Storage, CConfig, casinoData, Utils, casinoUtils, Translator, casinoCache, Zergling, WPConfig, content, analytics, smoothScroll, TimeoutWrapper) {
+CASINO.controller('liveCasinoMainCtrl', ['$rootScope', '$scope', '$sce', '$location', '$interval', '$window', 'Storage', 'CConfig', 'casinoData', 'Utils', 'casinoManager', 'Translator', 'Zergling', 'WPConfig', 'content', 'analytics', 'smoothScroll', 'Geoip', function ($rootScope, $scope, $sce, $location, $interval, $window, Storage, CConfig, casinoData, Utils, casinoManager, Translator, Zergling, WPConfig, content, analytics, smoothScroll, Geoip) {
     'use strict';
 
     $scope.games = [];
     $scope.gamesInfo = [];
     $scope.viewCount = 1;
     $scope.errorStatus = 0;
-    $scope.liveGamesConf = CConfig.liveCasino;
+    $scope.confData = CConfig;
     $scope.selectedGameId = '';
-    $scope.liveCasinoLobbyPopup = {};
-    $scope.casinoLobbyRowView = Storage.get('isLobbyRowView');
-    $scope.cConf = {
-        iconsUrl: CConfig.cUrlPrefix + CConfig.iconsUrl,
-        backGroundUrl: CConfig.cUrlPrefix + CConfig.backGroundUrl,
-        newCasinoDesignEnabled: CConfig.main.newCasinoDesign.enabled
-    };
-    TimeoutWrapper = TimeoutWrapper($scope);
+    $scope.hasTournaments = $rootScope.conf.multiLevelMenu.hasOwnProperty('tournaments');
 
     $scope.$on('widescreen.on', function () { $scope.wideMode = true; });
     $scope.$on('widescreen.off', function () { $scope.wideMode = false; });
     $scope.$on('middlescreen.on', function () { $scope.middleMode = true; });
     $scope.$on('middlescreen.off', function () { $scope.middleMode = false; });
 
-    /**
-     * @ngdoc method
-     * @name init
-     * @methodOf CASINO.controller:liveCasinoMainCtrl
-     * @description Initialization
-     */
-    function init() {
-        if ($scope.liveGamesConf.view3DEnabled || $scope.liveGamesConf.viewStyle === '3DView') { //footer must be movable for only for 3D View
-            $rootScope.footerMovable = true;
-        }
-        loadDealerPages();
-        loadGames();
-
-        //check and show bonus popUp if it need
-        if (CConfig.bonusPopUpUrl) {
-            getBonusPopUpOptions();
-        }
-    }
-
+    var countryCode = '';
     /**
      * @ngdoc method
      * @name loadGames
@@ -55,31 +30,18 @@ CASINO.controller('liveCasinoMainCtrl', ['$rootScope', '$scope', '$sce', '$locat
      * and assigns to scope's 'games' variable
      */
     function loadGames() {
-        var gamesData = casinoCache.get(CConfig.liveCasino.categoryName + CConfig.main.partnerID);
-        if (gamesData !== undefined  && gamesData.length) {
-            prepareGames(gamesData);
-        } else {
-            casinoData.getCategory(CConfig.liveCasino.categoryName, CConfig.main.partnerID).then(function (response) {
-                if (response.data.length) {
-                    var availableGames = casinoUtils.filterByGameProvider(response.data, CConfig.liveCasino.filterByProvider);
-                    var preparedGames = casinoUtils.setGamesFunMode(availableGames);
-                    casinoCache.put(CConfig.liveCasino.categoryName + CConfig.main.partnerID, preparedGames);
-                    prepareGames(preparedGames);
-                } else {
-                    $scope.errorStatus = 1;
-                }
-            }, function (reason) {
+        casinoData.getGames(CConfig.liveCasino.categoryId, null, countryCode).then(function (response) {
+            if (response && response.data && response.data.status !== -1) {
+                prepareGames(response.data.games);
+                showProviderMessage('onOpen');
+            } else {
                 $scope.errorStatus = 1;
-            });
-        }
+            }
+        })['catch'](function () {
+            $scope.errorStatus = 1;
+        });
     }
 
-    /**
-     * @ngdoc method
-     * @name getBonusPopUpOptions
-     * @methodOf CASINO.controller:liveCasinoMainCtrl
-     * @description Get bonus pop up options
-     */
     function getBonusPopUpOptions() {
         var searchParams = $location.search();
         if (!searchParams.game) {
@@ -91,83 +53,41 @@ CASINO.controller('liveCasinoMainCtrl', ['$rootScope', '$scope', '$sce', '$locat
         }
     }
 
-    /**
-     * @ngdoc method
-     * @name prepareGames
-     * @methodOf CASINO.controller:liveCasinoMainCtrl
-     * @description Prepare casino games
-     * @param {Object} games array
-     */
     function prepareGames(games) {
         var isInKeno = $location.path() === '/keno/' || $location.path() === '/keno';
         if (!isInKeno) {
             $scope.games = games;
 
-            if (CConfig.main.multiViewEnabled) {
-                getAllGames();
-            }
-            if ($scope.liveGamesConf.view3DEnabled || $scope.liveGamesConf.viewStyle === '3DView') {
+            if ($scope.confData.liveCasino.view3DEnabled || $scope.confData.liveCasino.viewStyle === '3DView') {
                 prepareView3DDisplay();
                 load3DViewTopBanners();
-            } else if ($scope.liveGamesConf.viewStyle === 'SliderView') {
-                if (!$scope.liveGamesConf.disableProvidersFilter) {
-                    initProvidersData();
-                }
+            } else if ($scope.confData.liveCasino.viewStyle === 'SliderView' || $scope.confData.liveCasino.viewStyle === 'LeftMenuView') {
+                $scope.liveGamesData = casinoManager.initProvidersData(games);
             }
         } else {
             var kenoGames = [], length = games.length;
             for (var i = 0; i < length; i += 1) {
-                if (games[i].id === $scope.liveGamesConf.games.keno.id || games[i].id === $scope.liveGamesConf.games.draw.id) {
+                if (games[i].id === $scope.confData.liveCasino.games.keno.id || games[i].id === $scope.confData.liveCasino.games.draw.id) {
                     kenoGames.push(games[i]);
                 }
             }
             $scope.games = kenoGames;
             $scope.firstView = false;
-            $scope.liveGamesConf.allViewsEnabled = false;
-            $scope.liveGamesConf.view3DEnabled = true;
+            $scope.confData.liveCasino.allViewsEnabled = false;
+            $scope.confData.liveCasino.view3DEnabled = true;
         }
 
         findAndOpenGame();
     }
 
-    /**
-     * @ngdoc method
-     * @name getAllGames
-     * @methodOf CASINO.controller:liveCasinoMainCtrl
-     * @description  loads all games and filter options list using {@link CASINO.service:casinoData casinoData} service's **getFilterOptions** method
-     */
-    function getAllGames() {
-        $scope.agSelectedCategory = 'LiveDealer';
-        $scope.popUpSearchInput = '';
-        var gamesData = casinoCache.get('allGames' + CConfig.main.partnerID);
-        if (gamesData !== undefined) {
-            $scope.allGames = casinoCache.get('allGames' + CConfig.main.partnerID);
-        } else {
-            casinoData.getFilterOptions().then(function (response) {
-                if (response.data) {
-                    var multiViewGames = casinoUtils.getMultiviewGames(Utils.objectToArray(response.data.games));
-                    var filteredMultiViewGames = casinoUtils.filterByGameProvider(multiViewGames, CConfig.main.filterByProvider);
-                    $scope.allGames = casinoUtils.setGamesFunMode(filteredMultiViewGames);
-                    casinoCache.put('allGames' + CConfig.main.partnerID, $scope.allGames);
-                }
-            });
-        }
-    };
 
-    /**
-     * @ngdoc method
-     * @name findAndOpenGame
-     * @methodOf CASINO.controller:liveCasinoMainCtrl
-     * @description Find and open game
-     */
     function findAndOpenGame() {
         var searchParams = $location.search();
         if (searchParams.game !== undefined) {
-            var gameID = parseInt(searchParams.game, 10);
-            var game = getGameById(gameID);
+            var game = casinoManager.getGameById($scope.games, searchParams.game);
             var studio = searchParams.studio;
             if (game) {
-                $scope.openGame(game, null, null, studio, searchParams.limit);
+                $scope.openGame(game, null, studio);
             }
         }
     }
@@ -181,37 +101,7 @@ CASINO.controller('liveCasinoMainCtrl', ['$rootScope', '$scope', '$sce', '$locat
      * @param {string} id game id
      */
     $scope.openGameInNewWindow = function openGameInNewWindow(id) {
-        casinoUtils.openPopUpWindow($scope, id);
-    };
-
-    /**
-     * @ngdoc method
-     * @name openTables
-     * @methodOf CASINO.controller:liveCasinoMainCtrl
-     * @param {Object} game game object
-     * @param {String} gameType gameType string
-     * @param {String} studio studio string
-     * @description  opens login form if it needed, or generates live casino tables url and opens it
-     */
-    $scope.openTables = function openTables(game, gameType, studio) {
-        if (!gameType) {
-            gameType = $rootScope.env.authorized || !CConfig.main.funModeEnabled ? 'real' : 'fun';
-        }
-        if (gameType === 'real' && !$rootScope.env.authorized) {
-            $rootScope.$broadcast("openLoginForm");
-            return;
-        }
-        var data = CConfig.liveCasino.games;
-        //other games haven't tables
-        if (game.id === data.roulette.id || game.id === data.blackjack.id || game.id === data.baccarat.id || game.id === data.betOnPoker.id || game.id === data.betOnBaccarat.id ||game.id === data.russianPoker.id || game.id === data.fortuna.id) {
-            $scope.liveCasinoLobbyPopup.open = true;
-            $scope.selectedGameId = game.serverGameID;
-            if(!$scope.liveGamesConf.lobby.getDataViaSwarm) {
-                authorizeTablesControll(game);
-            }
-        } else {
-            $scope.openGame(game, gameType, null, studio);
-        }
+        casinoManager.openPopUpWindow($scope, id);
     };
 
     /**
@@ -220,30 +110,19 @@ CASINO.controller('liveCasinoMainCtrl', ['$rootScope', '$scope', '$sce', '$locat
      * @methodOf CASINO.controller:liveCasinoMainCtrl
      * @param {Object} game game object
      * @param {String} gameType gameType string
-     * @param {String} tableId tableId string
      * @param {String} studio studio string
-     * @param {String} limit limit string
+     * @param {String} urlSuffix the url's suffix
+     * @param {Number} multiViewWindowIndex - passed when the window in multiview is refreshed
      * @description  opens login form if it needed, or generates casino game url and opens it
      */
-    $scope.openGame = function openGame(game, gameType, tableId, studio, limit) {
+    $scope.openGame = function openGame(game, gameType, studio, urlSuffix, multiViewWindowIndex) {
         if ($scope.gamesInfo.length < 2) {
-            if (tableId) {
-                $location.search('table', tableId);
-            } else {
-                var searchParams = $location.search();
-                if (searchParams.table !== undefined) {
-                    tableId = searchParams.table;
-                }
-            }
             if (studio) {
                 $location.search('studio', studio);
             }
-            if (limit) {
-                $location.search('limit', limit);
-            }
         }
 
-        casinoUtils.openCasinoGame($scope, game, gameType, tableId, studio, limit);
+        casinoManager.openCasinoGame($scope, game, gameType, studio, urlSuffix, multiViewWindowIndex);
     };
 
     /**
@@ -253,34 +132,7 @@ CASINO.controller('liveCasinoMainCtrl', ['$rootScope', '$scope', '$sce', '$locat
      * @description  close opened game
      */
     $scope.closeGame = function closeGame(id) {
-        if (id === undefined) {
-            $scope.gamesInfo = [];
-            $scope.viewCount = 1;
-            $rootScope.casinoGameOpened = 0;
-        } else {
-            var cauntOfGames = 0, i, count;
-            for (i = 0, count = $scope.gamesInfo.length; i < count; i += 1) {
-                if ($scope.gamesInfo[i].id === id) {
-                    var uniqueId = Math.random().toString(36).substr(2, 9);
-                    $scope.gamesInfo[i] = {gameUrl: '', id: uniqueId, toAdd: false};
-                }
-                if ($scope.gamesInfo[i].gameUrl !== '') {
-                    cauntOfGames++;
-                }
-            }
-
-            if (cauntOfGames === 0) {
-                $scope.gamesInfo = [];
-                $scope.viewCount = 1;
-                $rootScope.casinoGameOpened = 0;
-            }
-        }
-
-        $location.search('type', undefined);
-        $location.search('game', undefined);
-        $location.search('table', undefined);
-        $location.search('studio', undefined);
-        $location.search('limit', undefined);
+        casinoManager.closeGame($scope, id);
     };
 
     /**
@@ -311,78 +163,40 @@ CASINO.controller('liveCasinoMainCtrl', ['$rootScope', '$scope', '$sce', '$locat
      * @param {Object} game Object
      */
     $scope.toggleSaveToMyCasinoGames = function toggleSaveToMyCasinoGames(game) {
-        casinoUtils.toggleSaveToMyCasinoGames($rootScope, game);
+        casinoManager.toggleSaveToMyCasinoGames($rootScope, game);
     };
 
-    /**
-     * @ngdoc method
-     * @name togglePlayForReal
-     * @methodOf CASINO.controller:liveCasinoMainCtrl
-     * @description Toggle play for real
-     * @param game info object
-     */
     $scope.togglePlayForReal = function togglePlayForReal (gameInfo) {
-        casinoUtils.togglePlayMode($scope, gameInfo);
+        casinoManager.togglePlayMode($scope, gameInfo);
     };
 
-    /**
-     * @ngdoc method
-     * @name getGameById
-     * @methodOf CASINO.controller:liveCasinoMainCtrl
-     * @description get game by id
-     * @param {Number} game id
-     */
-    function getGameById(gameID) {
-        for(var i = 0, count = $scope.games.length; i < count;  i += 1) {
-            if ($scope.games[i].id == gameID) {
-                return $scope.games[i];
-            }
-        }
-    }
-
-    /**
-     * @ngdoc method
-     * @name openLiveDealerGame
-     * @methodOf CASINO.controller:liveCasinoMainCtrl
-     * @description open live dealer game
-     * @param {Object} event not used
-     * @param {Object} game object
-     * @param {String} game type
-     */
     function openLiveDealerGame(event, game, gameType) {
         if ($scope.viewCount === 1) {
-            // if ($scope.gamesInfo.length === 1) {
-            //     $scope.closeGame();
-            // }
-            //
             if ($scope.games.length) {
-                $scope.openTables(getGameById(game.id), gameType, game.markets && game.markets.default);
-                // $scope.openGame(getGameById(game.id), gameType);
+                $scope.openGame(game, gameType, $scope.liveGamesData.devidedGames[$scope.liveGamesData.selectedProvider].defaultStudio);
             } else {
                 var gamesWatcherPromise = $scope.$watch('games', function() {
                     if ($scope.games.length) {
-                        $scope.openTables(getGameById(game.id), gameType, game.markets && game.markets.default);
-                        //$scope.openGame(getGameById(game.id), gameType);
+                        $scope.openGame(game, gameType, $scope.liveGamesData.devidedGames[$scope.liveGamesData.selectedProvider].defaultStudio);
                         gamesWatcherPromise();
                     }
                 });
             }
         } else {
             //games that are not resizable
-            var typeOfGame = (typeof game.gameType) == 'string' ? JSON.parse(game.gameType) : game.gameType;
-            if (typeOfGame.ratio == "0") {
+            if (game.ratio == "0") {
                 $rootScope.$broadcast("globalDialogs.addDialog", {
                     type: "warning",
                     title: "Warning",
-                    content: Translator.get('Sorry, this game cannot be opened in multi-view mode')
+                    content: 'Sorry, this game cannot be opened in multi-view mode'
                 });
             } else {
                 var i, count = $scope.gamesInfo.length;
                 for (i = 0; i < count; i += 1) {
                     if ($scope.gamesInfo[i].gameUrl === '') {
                         $scope.gamesInfo[i].toAdd = true;
-                        if (game.gameCategory === CConfig.liveCasino.categoryName) {
-                            $scope.openTables(game, gameType);
+                        if (game.categories.indexOf(CConfig.liveCasino.categoryId)!== -1) {
+                            $scope.openGame(game, null, $scope.liveGamesData.devidedGames[$scope.liveGamesData.selectedProvider].defaultStudio);
                         } else {
                             $scope.openGame(game, gameType);
                         }
@@ -393,7 +207,7 @@ CASINO.controller('liveCasinoMainCtrl', ['$rootScope', '$scope', '$sce', '$locat
                     $rootScope.$broadcast("globalDialogs.addDialog", {
                         type: "warning",
                         title: "Warning",
-                        content: Translator.get('Please close one of the games for adding new one')
+                        content: 'Please close one of the games for adding new one'
                     });
                 }
             }
@@ -402,18 +216,14 @@ CASINO.controller('liveCasinoMainCtrl', ['$rootScope', '$scope', '$sce', '$locat
 
     $scope.$on("livedealer.openGame", openLiveDealerGame);
 
-    $scope.$on('game.closeCasinoGame', function (ev, id) {
-        if ($scope.gamesInfo && $scope.gamesInfo.length) {
-            if (id === undefined) {
-                $scope.closeGame();
-            } else {
-                var i, length = $scope.gamesInfo.length;
-                for (i = 0; i < length; i += 1) {
-                    if ($scope.gamesInfo[i].game && $scope.gamesInfo[i].game.id == id) {
-                        $scope.closeGame($scope.gamesInfo[i].id);
-                    }
-                }
-            }
+    $scope.$on('casino.action', function(event, data) {
+        switch (data.action) {
+            case 'setUrlData':
+                data.url && data.frameId && casinoManager.setCurrentFrameUrlSuffix($scope.gamesInfo, data);
+                break;
+            case 'closeGame':
+                casinoManager.findAndCloseGame($scope, data.gameId);
+                break;
         }
     });
 
@@ -422,105 +232,7 @@ CASINO.controller('liveCasinoMainCtrl', ['$rootScope', '$scope', '$sce', '$locat
             return;
         }
         if ($scope.gamesInfo && $scope.gamesInfo.length) {
-            casinoUtils.refreshOpenedGames($scope);
-        }
-
-        //refresh tables container if it's opened
-        if ($scope.tablesControll) {
-            var tableGame = $scope.tablesControll.game;
-            $scope.tablesControll = null;
-
-            TimeoutWrapper(function () {
-                authorizeTablesControll(tableGame);
-            }, 20);
-        }
-    });
-
-    /**
-     * @ngdoc method
-     * @name authorizeTablesControll
-     * @methodOf CASINO.controller:liveCasinoMainCtrl
-     * @description Authorize tables controlls
-     * @param {Object} game object
-     */
-    function authorizeTablesControll(game) {
-        $scope.tablesControll = {loadingUserData: true, game: game};
-        if (CConfig.main.providersThatWorkWithSwarm.indexOf(game.gameProvider) !== -1) {
-            Zergling.get({'provider': game.gameProvider, 'game_id': game.gameID, 'external_game_id': game.externalID, 'mode': $rootScope.env.authorized ? 'real' : 'fun'}, 'casino_game_url')
-                .then(
-                function (data) {
-                    if (data && data.url) {
-                        $scope.tablesControll.url = $sce.trustAsResourceUrl(data.url);
-                        $scope.tablesControll.loadingUserData = false;
-                    } else {
-                        showAuthErrorAndRemoveTablesControll();
-                    }
-                },
-                function (reason) {
-                    showAuthErrorAndRemoveTablesControll();
-                });
-        } else {
-            var gameUrl = CConfig.cUrlPrefix + CConfig.cGamesUrl + '?gameid=' + game.gameID + '&provider=' + game.gameProvider + '&lan=' + $rootScope.env.lang + '&partnerid=' + CConfig.main.partnerID;
-            if ($rootScope.env.authorized) {
-                Zergling.get({'game_id': parseInt(game.externalID)}, 'casino_auth').then(function (response) {
-                    if (response && response.result) {
-                        if (response.result.has_error == "False") {
-                            var userInfo = '&token=' + response.result.token + '&username=' + response.result.username + '&currency=' + response.result.currency + '&userid=' + response.result.id;
-                            $scope.tablesControll.url = $sce.trustAsResourceUrl(gameUrl + userInfo + '&mode=' + 'real');
-                            $scope.tablesControll.loadingUserData = false;
-                        } else if (response.result.has_error == "True") {
-                            showAuthErrorAndRemoveTablesControll();
-                        }
-                    }
-                }, function (failResponse) {
-                    showAuthErrorAndRemoveTablesControll();
-                });
-            } else {
-                $scope.tablesControll.loadingUserData = false;
-                $scope.tablesControll.url = $sce.trustAsResourceUrl(gameUrl + '&mode=demo');
-            }
-        }
-    }
-
-    /**
-     * @ngdoc method
-     * @name showAuthErrorAndRemoveTablesControll
-     * @methodOf CASINO.controller:liveCasinoMainCtrl
-     * @description Show authorization error and remove casino tables controlls
-     */
-    function showAuthErrorAndRemoveTablesControll() {
-        $rootScope.$broadcast("globalDialogs.addDialog", {
-            type: "error",
-            title: "Error",
-            content: Translator.get('casino_auth_error')
-        });
-        $scope.tablesControll = null;
-    }
-
-    /**
-     * listen to messages from other windows to change livedealer options when needed
-     */
-    $scope.$on('livedealer.redirectGame', function (event, message) {
-        if (message.data && !message.data.openJackpotList) {
-            casinoUtils.adjustLiveCasinoGame($scope, message, $scope.games);
-        }
-
-
-
-        if (message.data.isMinnyLobby) {
-            var searchParams = $location.search();
-            if (searchParams.game !== undefined) {
-                for (var i = 0, length = $scope.games.length; i < length; i += 1) {
-                    if (message.data.provider + message.data.gameId === $scope.games[i].gameID) {
-                        $location.search('game', $scope.games[i].id);
-                        break;
-                    }
-                }
-                $location.search('table', message.data.tableId);
-            }
-        } else {
-            $scope.tablesControll = null;
-            $scope.liveCasinoLobbyPopup.open=false;
+            casinoManager.refreshOpenedGames($scope);
         }
     });
 
@@ -535,7 +247,7 @@ CASINO.controller('liveCasinoMainCtrl', ['$rootScope', '$scope', '$sce', '$locat
         if ($scope.games && $scope.games.length) {
             var game, i, length = $scope.games.length;
             for (i = 0; i < length; i += 1) {
-                if ($scope.games[i].serverGameID == dealerInfo.game_id) {
+                if ($scope.games[i].server_game_id == dealerInfo.game_id) {
                     game = $scope.games[i];
                     break;
                 }
@@ -543,61 +255,18 @@ CASINO.controller('liveCasinoMainCtrl', ['$rootScope', '$scope', '$sce', '$locat
 
             if (game) {
                 $scope.selectDealerPage($scope.dealerPages[0]);
-                $scope.openGame(game, undefined, dealerInfo.table_id);
+                $scope.openGame(game);
             }
         }
     };
 
     /**
-     * @ngdoc method
-     * @name changeView
-     * @methodOf CASINO.controller:liveCasinoMainCtrl
      * @description change view for applying functionality of multiple view in casino
-     * @param {Int} view the Int
      */
-    $scope.changeView = function changeView(view) {
-        var i, gameInfo, uniqueId;
-        if(view > $scope.gamesInfo.length) {
-            for (i = $scope.gamesInfo.length; i < view; i++) {
-                uniqueId = Math.random().toString(36).substr(2, 9);
-                gameInfo = {gameUrl: '', id: uniqueId, toAdd: false};
-                $scope.gamesInfo.push(gameInfo);
-            }
-            $scope.viewCount = view;
-        } else if (view < $scope.gamesInfo.length) {
-            var actualviews = 0, actualGames = [];
-            for (i = 0; i < $scope.gamesInfo.length; i += 1) {
-                if ($scope.gamesInfo[i].gameUrl !== '') {
-                    gameInfo = $scope.gamesInfo[i];
-                    actualGames.push(gameInfo);
-                    actualviews++;
-                }
-            }
-            if (actualviews <= view) {
-                if (actualviews === 1 && view === 2) {
-                    uniqueId = Math.random().toString(36).substr(2, 9);
-                    gameInfo = {gameUrl: '', id: uniqueId, toAdd: false};
-                    if ($scope.gamesInfo[0].gameUrl !== '') {
-                        actualGames.push(gameInfo);
-                    } else {
-                        actualGames.unshift(gameInfo);
-                    }
-                }
-                $scope.gamesInfo = actualGames;
-                $scope.viewCount = view;
-            } else {
-                var numberOfNeeded = actualviews - view;
-                $rootScope.$broadcast("globalDialogs.addDialog", {
-                    type: "warning",
-                    title: "Warning",
-                    content: Translator.get('Please close {1} game(s) to change view', [numberOfNeeded])
-                });
-            }
-        }
-        $rootScope.casinoGameOpened = $scope.gamesInfo.length;
 
-        analytics.gaSend('send', 'event', 'multiview',  {'page': $location.path(), 'eventLabel': 'multiview changed to ' + view});
-    };
+    $scope.$on('casinoMultiview.viewChange', function (event, view) {
+        casinoManager.changeView($scope, view);
+    });
 
     /**
      * @ngdoc method
@@ -610,26 +279,8 @@ CASINO.controller('liveCasinoMainCtrl', ['$rootScope', '$scope', '$sce', '$locat
         for (var i = 0; i < $scope.gamesInfo.length; i += 1) {
             $scope.gamesInfo[i].toAdd = id === $scope.gamesInfo[i].id;
         }
-        $scope.showAllGames = true;
-        //we need to reinitialize filter options and selected category options
-        $scope.popUpSearchInput = "";
-        $scope.agSelectedCategory = 'LiveDealer';
-        $scope.popUpGames = casinoUtils.getCasinoPopUpGames($scope.allGames, $scope.agSelectedCategory, $scope.popUpSearchInput, $scope.gamesInfo);
-        $scope.mvTablesInfo = {};
-        casinoUtils.setupTableInfo($scope.mvTablesInfo);
+        $scope.$broadcast('casinoMultiview.showGames', CConfig.liveCasino.categoryId); // show multiview popup  with live casino games
     };
-
-    $scope.$watch('agSelectedCategory', function(){
-        $scope.popUpGames = casinoUtils.getCasinoPopUpGames($scope.allGames, $scope.agSelectedCategory, $scope.popUpSearchInput, $scope.gamesInfo);
-
-        if ($scope.agSelectedCategory === 'LiveDealer' && $scope.showAllGames) {
-            $scope.mvTablesInfo = {};
-            casinoUtils.setupTableInfo($scope.mvTablesInfo);
-        }
-    });
-    $scope.$watch('popUpSearchInput', function(){
-        $scope.popUpGames = casinoUtils.getCasinoPopUpGames($scope.allGames, $scope.agSelectedCategory, $scope.popUpSearchInput, $scope.gamesInfo);
-    });
 
     /**
      * @ngdoc method
@@ -640,7 +291,7 @@ CASINO.controller('liveCasinoMainCtrl', ['$rootScope', '$scope', '$sce', '$locat
      * @param {Int} id the games id
      */
     $scope.refreshGame = function refreshGame(id) {
-        casinoUtils.refreshCasinoGame($scope, id);
+        casinoManager.refreshCasinoGame($scope, id);
     };
 
     /**
@@ -672,21 +323,17 @@ CASINO.controller('liveCasinoMainCtrl', ['$rootScope', '$scope', '$sce', '$locat
                         }
                     }
                     var page = checkForDealerPageDeepLink() || $scope.dealerPages[0];
-                    $scope.selectDealerPage(page);
+                    if(page){
+                        $scope.selectDealerPage(page);
+                    }
                 }
             }, function (reason) {
                 $scope.dealerPages = [];
                 $scope.dealerPagesLoaded = true;
             });
         }
-    }
+    };
 
-    /**
-     * @ngdoc method
-     * @name checkForDealerPageDeepLink
-     * @methodOf CASINO.controller:liveCasinoMainCtrl
-     * @description Check for dealer page deep link
-     */
     function checkForDealerPageDeepLink(){
         if ($location.search().page) {
             var i, slug = $location.search().page;
@@ -711,26 +358,24 @@ CASINO.controller('liveCasinoMainCtrl', ['$rootScope', '$scope', '$sce', '$locat
     $scope.selectDealerPage = function selectDealerPage(page) {
         if (!$scope.selectedDealerPage || $scope.selectedDealerPage.slug !== page.slug) {
             $scope.selectedDealerPage = page;
-            $location.search('page', page.slug);
+            if (page.slug === 'tournaments') {
+                $location.url('/tournaments/');
+            } else {
+                $location.search('page', page.slug);
 
-            if (page.slug === "meet-our-dealers") {
-                $scope.ourDealers = getVisibleGames($scope.selectedDealerPage.children);
-                //get dealerInfo
-                getDealerInfo($scope.ourDealers[2].custom_fields.dealer_id[0]);
-            }
+                if (page.slug === "meet-our-dealers") {
+                    $scope.ourDealers = getVisibleGames($scope.selectedDealerPage.children);
+                    //get dealerInfo
+                    getDealerInfo($scope.ourDealers[2].custom_fields.dealer_id[0]);
+                }
 
-            if (page.slug === 'how-to-play' && !$scope.howToPlayPage) {
-                prepareHowToPlay();
+                if (page.slug === 'how-to-play' && !$scope.howToPlayPage) {
+                    prepareHowToPlay();
+                }
             }
         }
     };
 
-    /**
-     * @ngdoc method
-     * @name prepareHowToPlay
-     * @methodOf CASINO.controller:liveCasinoMainCtrl
-     * @description Prepare "HowToPlay" page
-     */
     function prepareHowToPlay() {
         var i, length = $scope.selectedDealerPage.children.length;
         $scope.howToPlayPage = {
@@ -749,6 +394,24 @@ CASINO.controller('liveCasinoMainCtrl', ['$rootScope', '$scope', '$sce', '$locat
                     $scope.howToPlayPage.learnToWin = $scope.selectedDealerPage.children[i];
                     break;
             }
+        }
+    }
+
+    /**
+     * @ngdoc method
+     * @name showProviderMessage
+     * @methodOf CASINO.controller:liveCasinoMainCtrl
+     * @description Displays custom provider message
+     *
+     * @param {String} provider
+     */
+    function showProviderMessage (provider) {
+        if (CConfig.liveCasino && CConfig.liveCasino.providerMessage && CConfig.liveCasino.providerMessage[provider]) {
+            $rootScope.$broadcast("globalDialogs.addDialog", {
+                type: "info",
+                title: "Info",
+                content: CConfig.liveCasino.providerMessage[provider]
+            });
         }
     }
 
@@ -775,8 +438,10 @@ CASINO.controller('liveCasinoMainCtrl', ['$rootScope', '$scope', '$sce', '$locat
      * @description scroll to element that has itemId
      *
      * @param {String} itemId id of item
+     * @param {String} provider name (optional)
      */
-    $scope.scrollToSelectedItem = function scrollToSelectedItem(itemId){
+    $scope.scrollToSelectedItem = function scrollToSelectedItem(itemId, provider){
+        showProviderMessage(provider);
         smoothScroll(itemId);
     };
 
@@ -802,28 +467,12 @@ CASINO.controller('liveCasinoMainCtrl', ['$rootScope', '$scope', '$sce', '$locat
         getDealerInfo($scope.ourDealers[2].custom_fields.dealer_id[0]);
     };
 
-    /**
-     * @ngdoc method
-     * @name getVisibleGames
-     * @methodOf CASINO.controller:liveCasinoMainCtrl
-     * @description Get visible games
-     * @param {Object} games array
-     * @returns {Object} visible games array
-     */
     function getVisibleGames(games) {
         return games.slice(0, 5);
     }
 
     /*
-    * get dealer info according to dealerId
-    */
-
-    /**
-     * @ngdoc method
-     * @name getDealerInfo
-     * @methodOf CASINO.controller:liveCasinoMainCtrl
-     * @description get dealer info according to it`s ID
-     * @param {Number} dealer id
+     * get dealer info according to dealerId
      */
     function getDealerInfo(dealerId) {
         $scope.dealerInfo = null;
@@ -844,12 +493,6 @@ CASINO.controller('liveCasinoMainCtrl', ['$rootScope', '$scope', '$sce', '$locat
 
     var rotatePromise;
 
-    /**
-     * @ngdoc method
-     * @name initSlidingView
-     * @methodOf CASINO.controller:liveCasinoMainCtrl
-     * @description Sliding view initialization
-     */
     $scope.initSlidingView = function initSlidingView() {
         loadSlidingViewTopBanners();
     };
@@ -862,15 +505,14 @@ CASINO.controller('liveCasinoMainCtrl', ['$rootScope', '$scope', '$sce', '$locat
      * @description  opens current tables or shows error message if the selected game is undefined
      */
     $scope.table3DClickHandler = function table3DClickHandler(gameId) {
-        var game = getGameById(gameId);
+        var game = casinoManager.getGameById($scope.games, gameId);
         if (game) {
-            var gameType = $rootScope.env.authorized || !CConfig.main.funModeEnabled ? 'real' : 'demo';
-            $scope.openTables(game, gameType);
+            $scope.openGame(game);
         } else {
             $rootScope.$broadcast("globalDialogs.addDialog", {
                 type: "warning",
                 title: "Warning",
-                content: Translator.get('The game is not available')
+                content: 'The game is not available'
             });
         }
     };
@@ -932,12 +574,6 @@ CASINO.controller('liveCasinoMainCtrl', ['$rootScope', '$scope', '$sce', '$locat
         }
     }
 
-    /**
-     * @ngdoc method
-     * @name loadSlidingViewTopBanners
-     * @methodOf CASINO.controller:liveCasinoMainCtrl
-     * @description Load top banners
-     */
     function loadSlidingViewTopBanners () {
         content.getPage('live-casino.mainPageSlugs', true).then(function (data) {
             $scope.productSlides = (data.data.page && data.data.page.children[0] && data.data.page.children[0].children) || [];
@@ -957,7 +593,7 @@ CASINO.controller('liveCasinoMainCtrl', ['$rootScope', '$scope', '$sce', '$locat
         if (link === undefined || link === '') {
             return;
         }
-        var unregisterlocationChangeSuccess = $rootScope.$on('$locationChangeSuccess', function () {
+        var unregisterlocationChangeSuccess = $scope.$on('$locationChangeSuccess', function () {
             unregisterlocationChangeSuccess();
 
             var searchParams = $location.search();
@@ -983,12 +619,7 @@ CASINO.controller('liveCasinoMainCtrl', ['$rootScope', '$scope', '$sce', '$locat
         $scope.top3DBanners[currentBanner].rotationPaused = mouseEvent === 'over';
     };
 
-    /**
-     * @ngdoc method
-     * @name change3DBanners
-     * @methodOf CASINO.controller:liveCasinoMainCtrl
-     * @description Change 3D banners
-     */
+
     function change3DBanners() {
         if ($scope.firstView) {
             // rotate l1 banner
@@ -1028,115 +659,72 @@ CASINO.controller('liveCasinoMainCtrl', ['$rootScope', '$scope', '$sce', '$locat
         }
     }
 
-    /**
-     * @ngdoc method
-     * @name prepareView3DDisplay
-     * @methodOf CASINO.controller:liveCasinoMainCtrl
-     * @description Prepare 3D view
-     */
     function prepareView3DDisplay() {
         var FPGamesLength = 0, SPGamesLength = 0;
         var i, length = $scope.games.length;
         for (i = 0; i < length; i += 1) {
             switch ($scope.games[i].id) {
-                case $scope.liveGamesConf.games.roulette.id:
-                case $scope.liveGamesConf.games.blackjack.id:
-                case $scope.liveGamesConf.games.baccarat.id:
-                case $scope.liveGamesConf.games.betOnPoker.id:
+                case $scope.confData.liveCasino.games.roulette.id:
+                case $scope.confData.liveCasino.games.blackjack.id:
+                case $scope.confData.liveCasino.games.baccarat.id:
+                case $scope.confData.liveCasino.games.betOnPoker.id:
                     FPGamesLength += 1;
                     break;
-                case $scope.liveGamesConf.games.keno.id:
-                case $scope.liveGamesConf.games.draw.id:
+                case $scope.confData.liveCasino.games.keno.id:
+                case $scope.confData.liveCasino.games.draw.id:
                     SPGamesLength += 1;
                     break;
             }
         }
 
-        $scope.liveGamesConf.allViewsEnabled = FPGamesLength > 0 && SPGamesLength > 0;
+        $scope.confData.liveCasino.allViewsEnabled = FPGamesLength > 0 && SPGamesLength > 0;
         $scope.firstView = FPGamesLength > 0;
     }
 
-    /**
-     * @ngdoc method
-     * @name initProvidersData
-     * @methodOf CASINO.controller:liveCasinoMainCtrl
-     * @description Initialize provider data
-     */
-    function initProvidersData() {
-        var i, length = $scope.games.length, providers = [], devidedGames = {};
-
-        for (i = 0; i < length; i += 1) {
-            if (providers.indexOf($scope.games[i].gameProvider) === -1) {
-                providers.push($scope.games[i].gameProvider);
-            }
-            if ($scope.games[i].markets && (typeof $scope.games[i].markets) === 'string') {
-                $scope.games[i].markets = JSON.parse($scope.games[i].markets);
-            }
-            if (!devidedGames[$scope.games[i].gameProvider]) {
-                devidedGames[$scope.games[i].gameProvider] = {
-                    games:[],
-                    defaultStudio: '',
-                    studios: []
-                };
-            }
-
-            var devidedItem = devidedGames[$scope.games[i].gameProvider];
-            devidedItem.games.push($scope.games[i]);
-
-            if ($scope.games[i].markets && $scope.games[i].markets.available) {
-                if ($scope.games[i].markets.default && !devidedItem.defaultStudio) {
-                    devidedItem.defaultStudio = $scope.games[i].markets.default;
-                }
-                for (var j = 0, stLength = $scope.games[i].markets.available.length; j < stLength; j += 1) {
-                    if (devidedItem.studios.indexOf($scope.games[i].markets.available[j]) === -1) {
-                        devidedItem.studios.push($scope.games[i].markets.available[j]);
-                    }
-                }
-            }
-        }
-
-        $scope.providerOptions = providers;
-        $scope.selectedProvider = CConfig.liveCasino.selectedDefaultProvider && $scope.providerOptions.indexOf(CConfig.liveCasino.selectedDefaultProvider) !== -1 ? CConfig.liveCasino.selectedDefaultProvider : $scope.providerOptions[0];
-        $scope.devidedGames = devidedGames;
-    }
-
-    /**
-     * @ngdoc method
-     * @name openDeposit
-     * @methodOf CASINO.controller:liveCasinoMainCtrl
-     * @description Post message to open deposit slider on the main product
-     */
-    $scope.openDeposit = function() {
-        $scope.liveCasinoLobbyPopup.open=false;
-        $window.postMessage({
-            action: "openSlider", tab: "deposit"
-        },'*');
-    };
-
-    /**
-     * @ngdoc method
-     * @name toggleCasinoLobbyView
-     * @methodOf CASINO.controller:liveCasinoMainCtrl
-     * @description Toggle casino lobby view
-     */
-    $scope.toggleCasinoLobbyView = function toggleCasinoLobbyView(isRowView) {
-        $scope.casinoLobbyRowView = isRowView;
-        Storage.set('isLobbyRowView', $scope.casinoLobbyRowView);
-    };
 
     $scope.$on('casinoGamesList.openGame', function(e, data) {
-        $scope.openGame(data.game, data.playMode);
+        if (!data.game && data.gameId) {
+            var game = casinoManager.getGameById($scope.games, data.gameId);
+            if (game) {
+                $scope.openGame(game, data.playMode, data.studio);
+            } else {
+                casinoData.getGames(null, null, countryCode, null, null, null, null, [data.gameId]).then(function(response) {
+                    if(response && response.data) {
+                        $scope.openGame(response.data.games[0]);
+                    }
+                });
+            }
+        } else {
+            $scope.openGame(data.game, data.playMode, data.studio);
+        }
     });
 
-    init();
+    $scope.openCasinoGameDetails = function openCasinoGameDetails (game_skin_id) {
+        casinoManager.openGameDetailsPopUp(game_skin_id);
+    };
+
+    (function init() {
+        if ($scope.confData.liveCasino.view3DEnabled || $scope.confData.liveCasino.viewStyle === '3DView') { //footer must be movable for only for 3D View
+            $rootScope.footerMovable = true;
+        }
+        loadDealerPages();
+        Geoip.getGeoData(false).then(function (data) {
+            data && data.countryCode && (countryCode = data.countryCode);
+        })['finally'](function () {
+            loadGames();
+        });
+
+        //check and show bonus popUp if it need
+        if (CConfig.bonusPopUpUrl) {
+            getBonusPopUpOptions();
+        }
+    })();
 
     $scope.$on('$destroy', function () {
         if (rotatePromise) {
             $interval.cancel(rotatePromise);
         }
-    });
-
-    $scope.$on('casinoGamesList.toggleSaveToMyCasinoGames', function(e, game) {
-        $scope.toggleSaveToMyCasinoGames(game);
+        casinoManager.clearAllPromises();
+        showProviderMessage('onLeave');
     });
 }]);

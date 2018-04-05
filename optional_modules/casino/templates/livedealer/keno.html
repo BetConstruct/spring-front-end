@@ -1,6 +1,6 @@
 <!--Live Dealer-->
 <div ng-controller="liveCasinoMainCtrl"
-     ng-init="loadGames();checkIfEnabled('liveDealer'); setTitle('Keno');">
+     ng-init="loadGames(); setTitle('Keno');">
     <div class="casino-main" ng-show="!gamesInfo.length">
         <div ng-show="games.length">
             <div ng-include="getTemplate('optional_modules/casino/templates/livedealer/threedimensionalview.html')"></div>

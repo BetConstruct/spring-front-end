@@ -1,8 +1,9 @@
 <div class="viewSwitcher-j no-select-j" ng-controller="sportsbookSwitchersCtrl">
     <ul>
-        <li ng-if="conf.sportEnabled && conf.enableSportsbookLayoutSwitcher"
+        <li ng-if="calculatedConfigs.sportEnabled && conf.enableSportsbookLayoutSwitcher"
             ng-class="{'active': showLayoutSwitcher}"
-            ng-click="showLayoutSwitcher = !showLayoutSwitcher">
+            ng-click="showLayoutSwitcher = !showLayoutSwitcher"
+            state-flag-var="showLayoutSwitcher" hide-on-click>
             <p>{{({modern: 'Modern', classic: 'Classic', asian: 'Asian', external: 'Eastern',combo: 'Combo', 'euro2016': 'Classic'}[conf.sportsLayout])|translate}}</p>
             <ul>
                 <li ng-repeat="(view, value ) in sportsbookAvailableViews track by $index" 
@@ -14,19 +15,14 @@
         </li>
         <li ng-if="conf.sportsLayout !== 'external'"
             ng-class="{'active': showOddsSwitcher}"
-            ng-click="showOddsSwitcher = !showOddsSwitcher">
+            ng-click="showOddsSwitcher = !showOddsSwitcher"
+            state-flag-var="showOddsSwitcher" hide-on-click>
             <p>{{env.oddFormat|capitalise|translate}}</p>
             <ul>
                 <li ng-repeat="oddFormat in ::conf.oddFormats track by oddFormat.name" ng-click="broadcast('setOddsFormat', oddFormat.format)"
                     ng-class="{'active': env.oddFormat === oddFormat.format}"><span>{{ oddFormat.name | translate }}</span></li>
             </ul>
         </li>
-        <!--<li class="scrollToggle"
-            ng-init="$root.noClassicScroll = !!conf.classicScrollToggleDefaultState"
-            ng-click="$root.noClassicScroll = !$root.noClassicScroll; toggleLiveSectionPin()"
-            ng-class="{'active': $root.noClassicScroll}"
-            ng-if="conf.enableClassicScrollToggle && conf.sportsLayout === 'classic' && $location.path() === '/sport/'"
-            ></li>-->
         <li class="systemCalculator"
             ng-if="conf.enableSystemCalculator"
             ng-click="$root.showSystemCalculator = !$root.showSystemCalculator"

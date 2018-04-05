@@ -1,16 +1,10 @@
 /*--- livegame widget styles --- */
-.body-wrapper {
-  &.widgetlivegame, &.widgeteuro2016, &.widgetlastminutesbets, &.widgetbetnow, &.widgetnews, &.widgetpopulargames, &.widgetfeaturedgames {
-    .contain-header, .footer-group {
-      display: none;
-    }
-  }
-}
 .body-wrapper.widgetlivegame, .body-wrapper.widgetpopulargames, .body-wrapper.widgetlastminutesbets,
 .body-wrapper.widgetbetnow,
 .body-wrapper.widgetnews,
 .body-wrapper.widgetlivegame .contain-gameing,
-.body-wrapper.widgetlivegame .gameing-wrapper{
+.body-wrapper.widgetlivegame .gameing-wrapper,
+.body-wrapper.widgetanimation{
   min-width: 0;
 }
 .body-wrapper.widgetlivegame.classic .centr-market-contain{
@@ -93,10 +87,15 @@
     overflow-y: auto;
   }
 }
-.body-wrapper.widgetlivegame .game-info .game-control .statistics-toggle.hide-stats-multiview{
-  height: 0;
-  padding: 0;
-  overflow: hidden;
+.body-wrapper.widgetlivegame .game-info .game-control {
+  .statistics-toggle.hide-stats-multiview{
+    height: 0;
+    padding: 0;
+    overflow: hidden;
+  }
+  .toggle-stats {
+    display: none;
+  }
 }
 .body-wrapper.widgetlivegame .scroll-contain .scroll-j-scroll {
   /*overflow-x: hidden;
@@ -295,5 +294,13 @@
   .news-block-section .block-news-preview .news-img-block p {
     width: 100% !important; 
     box-sizing: border-box;
+  }
+}
+.view-container.widgetfreebet {
+  background: white;
+}
+.headerVersion_2 {
+  &.no-header-navigation {
+    min-height: 0;
   }
 }

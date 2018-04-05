@@ -418,30 +418,17 @@ VBET5.filter('oddConvert', [ 'Config', 'Utils', function (Config, Utils) {
                 return findNearestLadderKey(startIndex, middleIndex-1, num);
             }
         }
-    };
+    }
 
     function dec2fracFromLadder(dec) {
         var val;
         if(ladder[dec]) {
             return ladder[dec];
         } else{
-            /*for(var i = 0; i < ladderKeys.length; i++) {
-                if(dec < ladderKeys[i]) {
-                   val = ladderKeys[i-1];
-                   break;
-                }
-            }*/
             val = findNearestLadderKey(0, ladderKeys.length-1, dec);
             return ladder[val];
         }
     }
-
-
-
-
-
-
-
 
     /**
      * Recursively converts odd to fractional format
@@ -471,7 +458,6 @@ VBET5.filter('oddConvert', [ 'Config', 'Utils', function (Config, Utils) {
         }
 
         return decVal % 1 === 0 ? String(decVal) + '/1' : String(recCalc(decVal));
-
     }
 
     /**
@@ -496,7 +482,7 @@ VBET5.filter('oddConvert', [ 'Config', 'Utils', function (Config, Utils) {
 
         var fValue = parseFloat(value);
         var iValue = parseInt(value, 10);
-        var rValue = (value !== undefined && value !== '') ? Math.round(parseFloat(value) * 100 || 0) / 100 : value;
+        var rValue = (value !== undefined && value !== '') ? Math.round(parseFloat(value) * 1000 || 0) / 1000 : value;
 
         switch (format) {
             case 'decimal':{
@@ -514,7 +500,7 @@ VBET5.filter('oddConvert', [ 'Config', 'Utils', function (Config, Utils) {
             case 'fractional':
                 return value ? (Config.main.useLadderForFractionalFormat ? dec2fracFromLadder(fValue) : dec2frac(rValue)) : value;
             case 'american':
-                return value ? rValue > 2 ? '+' + (100 * (rValue - 1)).toString().split('.')[0] : rValue !== 1 ? (-100 / (rValue - 1)).toString().split('.')[0] : '-' : rValue;
+                return value ? rValue > 2 ? '+' + Math.round(100 * (rValue - 1)) : rValue !== 1 ? Math.round(-100 / (rValue - 1)) : '-' : rValue;
             case 'hongkong':
                 var hValue = (value !== undefined && value !== '') ? (iValue !== fValue && value.toString().split('.')[1].length > 2) ? (Math.round((value - 1) * Math.pow(10, Config.main.roundDecimalCoefficients)) / Math.pow(10, Config.main.roundDecimalCoefficients)) : (fValue - 1.0).toFixed(2) : value;
                 if (Config.main.decimalFormatRemove3Digit) {
@@ -523,7 +509,7 @@ VBET5.filter('oddConvert', [ 'Config', 'Utils', function (Config, Utils) {
                 return hValue;
             case 'malay':
                 if (fValue === 2) {
-                    return '0.000';
+                    return '1.00';
                 } else if (fValue > 2) {
                     return (Math.round(((1 / (1 - fValue)).toFixed(Config.main.roundDecimalCoefficients + 1)) * Math.pow(10, Config.main.roundDecimalCoefficients)) / Math.pow(10, Config.main.roundDecimalCoefficients)).toFixed(Config.main.roundDecimalCoefficients);
                 } else {
@@ -531,7 +517,7 @@ VBET5.filter('oddConvert', [ 'Config', 'Utils', function (Config, Utils) {
                 }
             case 'indo':
                 if (fValue === 2) {
-                    return '0.000';
+                    return '1.00';
                 } else if (fValue > 2) {
                     return (fValue - 1).toFixed(Config.main.roundDecimalCoefficients);
                 } else {

@@ -46,7 +46,7 @@
                 <div ng-class="{'active-game':game.info.pass_team=='team1'}"><tshirt shorts="{{game.info.short1_color}}" shirt="{{game.info.shirt1_color}}"></tshirt></div>
                 <span>{{ game.team1_name }}</span>
             </td>
-            <td ng-repeat="set_num in " ng-class="{'active-cash':game.info.current_game_state == 'set' + set_num,'winner':game.stats['score_' + set_num].isTeam1SetWinner}">
+            <td ng-repeat="set_num in ::setNames track by $index" ng-class="{'active-cash':game.info.current_game_state == 'set' + set_num,'winner':game.stats['score_' + set_num].isTeam1SetWinner}">
                 {{ game.stats['score_set' + set_num].team1_value ? game.stats['score_set' + set_num].team1_value : 0}}
             </td>
         </tr>

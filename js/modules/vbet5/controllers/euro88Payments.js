@@ -1,17 +1,19 @@
-VBET5.controller('euro88PaymentsCtrl', ['$scope', '$rootScope', '$sce', '$filter', 'Zergling','Moment', function ($scope, $rootScope, $sce, $filter, Zergling, Moment) {
+VBET5.controller('euro88PaymentsCtrl', ['$scope', '$rootScope', '$sce', '$filter', 'Zergling', 'Moment', 'Config', 'Translator', function ($scope, $rootScope, $sce, $filter, Zergling, Moment, Config, Translator) {
     'use strict';
 
     $scope.paymentSum = null;
+    var paymentConfig = (Config.payments.length && Config.payments[0]) || {};
 
     function init() {
         //values of default sums are different for different currencies
         switch ($rootScope.profile.currency_name) {
             case 'KRW':
+                var currency10000Won = Translator.translationExists('10000 won') ? Translator.get('10000 won') : '만원';
                 $scope.sumsList = [
-                    { name: '1만원', value: 10000},
-                    { name: '5만원', value: 50000},
-                    { name: '10만원', value: 100000},
-                    { name: '50만원', value: 500000}
+                    { name: '1' + currency10000Won, value: 10000},
+                    { name: '5' + currency10000Won, value: 50000},
+                    { name: '10' + currency10000Won, value: 100000},
+                    { name: '50' + currency10000Won, value: 500000}
                 ];
                 break;
             default:
@@ -48,9 +50,10 @@ VBET5.controller('euro88PaymentsCtrl', ['$scope', '$rootScope', '$sce', '$filter
         }
         var request = {
             amount: 100, // maybe its bad idea but it need to working
-            service: "europayment",
+            service: paymentConfig.paymentID || paymentConfig.name || "europayment",
             payer: payer
         };
+
         Zergling.get(request, 'deposit').then(
             function (data) {
                 $scope.requestInProcess = false;
@@ -92,6 +95,12 @@ VBET5.controller('euro88PaymentsCtrl', ['$scope', '$rootScope', '$sce', '$filter
                             content: popupMessage
                         });
                     }
+                } else  if (command !== 'GetActivePaymentMessage'){
+                    $rootScope.$broadcast("globalDialogs.addDialog", {
+                        type: "error",
+                        title: 'Error',
+                        content: data.details.error
+                    });
                 }
             },
             function (reason) {

@@ -1,9 +1,13 @@
 <div>
     <h3 trans>Reality Checks</h3>
     <div class="settings-info-contain deposit-limit">
-        <p trans>We offer you an opportunity to manage the amount of time spent playing, by setting up a Reality Check on your account.</p>
-        <p trans>Once you have saved your reality check time, you get a pop-up once this period has come up on the start of a casino session - placing a real money wager.</p>
-
+        <div ng-if="!('reality-check-text'|translate:null:true)">
+            <p trans>We offer you an opportunity to manage the amount of time spent playing, by setting up a Reality Check on your account.</p>
+            <p trans>Once you have saved your reality check time, you get a pop-up once this period has come up on the start of a casino session - placing a real money wager.</p>
+        </div>
+        <div ng-if="'reality-check-text'|translate:null:true">
+            <p ng-bind-html="'reality-check-text'|translate|html"><p trans>
+        </div>
         <form class="registration-form" ng-class="{'disable-reality-form' : working}" ng-init="realityCheck.selectedValue=($root.profile.active_time_in_casino !== null ? $root.profile.active_time_in_casino : '0')">
             <div class="form-text">
                 <label ng-repeat="option in conf.realityCheck.options track by $index">

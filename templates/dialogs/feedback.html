@@ -1,4 +1,4 @@
-<div ng-controller="FeedbackController as feedbackCtrl"  ng-if="(conf.feedbackButton.enabledLogin || conf.feedbackButton.enabledLogOut) && $location.path() != '/popup/'">
+<div ng-controller="FeedbackController as feedbackCtrl"  ng-if="(conf.footer.feedbackButton.enabledLogin || conf.footer.feedbackButton.enabledLogOut) && $location.path() != '/popup/'">
 
     <div class="new-default-popup-j feedback" ng-show="showFeedBackPopup">
         <div class="pp-table-j">
@@ -17,7 +17,7 @@
                                 </p> 
                                 <label ng-class="{'error': feedbackForm.email.$dirty && feedbackForm.email.$invalid}">
                                     <p trans>Email Address</p>
-                                  <div class="error-container-j">
+                                  <div class="tooltip-wrapper-j">
                                     <input name="email" type="email" placeholder="Enter your email address" required
                                            ng-model="email"
                                            ng-pattern="/^[\w!.%+\-]+@[\w\-]+(?:\.[\w\-]+)+$/" trans>

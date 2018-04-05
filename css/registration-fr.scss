@@ -9,12 +9,12 @@
   overflow: hidden;
   max-width: 1310px;
   width: 100%;
-  margin: 80px auto 60px;
+  margin: 0 auto 60px;
   @media screen and (max-width: 1310px) {
     max-width: 980px;
   }
   h1 {
-    color: #c2c5cd;
+    color: $text-palette-3;
     font: 400 18px $font-f;
     text-transform: uppercase;
     width: 100%;
@@ -24,15 +24,15 @@
   h2 {
     width: 100%;
     float: left;
-    background-color: #1e2639;
+    background-color: $skin-palette-10;
     height: 61px;
-    border-bottom: 1px solid #333d52;
+    border-bottom: 1px solid lighten( desaturate( adjust-hue( $skin-color, -1deg ), 8 ), 9 );
     border-radius: 5px 5px 0 0;
     padding: 0 10px 0 25px;
     white-space: nowrap;
     text-overflow: ellipsis;
     overflow: hidden;
-    color: #c2c5cd;
+    color: $text-palette-3;
     font: 400 18px/60px $font-f;
   }
   table {
@@ -43,7 +43,7 @@
     border-spacing: 10px 0;
     border-collapse: separate;
     td {
-      background-color: #242e45;
+      background-color: $skin-palette-9;
       border-radius: 5px;
       vertical-align: top;
     }
@@ -51,7 +51,7 @@
   article {
     width: 100%;
     float: left;
-    color: #7b8191;
+    color: $text-palette-4;
     font: 400 12px/14px $font-f;
     padding: 25px 12px 24px;
     .reg-w-50 {
@@ -68,7 +68,7 @@
     }
     ul {
       width: 100%;
-      float: left; 
+      float: left;
     }
   }
   hr {
@@ -77,8 +77,8 @@
     height: 2px;
     margin: 10px 0;
     border: 0;
-    background-color: #192030;
-    border-bottom: 1px solid #333d52;
+    background-color: darken( saturate( $skin-color, 1 ), 3 );
+    border-bottom: 1px solid lighten( desaturate( adjust-hue( $skin-color, -1deg ), 8 ), 9 );
   }
   label {
     width: 100%;
@@ -94,36 +94,37 @@
     float: left;
   }
   input[type="text"],
+  input[type="number"],
   input[type="email"],
   input[type="password"] {
-    background-color: #1e2639;
-    border: 1px solid #1e2639;
+    background-color: $skin-palette-10;
+    border: 1px solid $skin-palette-10;
     height: 36px;
     width: 100%;
     float: left;
     border-radius: 5px;
     padding: 0 10px 0 14px;
-    color: #c2c5cd;
+    color: $text-palette-3;
     font: 400 12px $font-f;
     transition-duration: 300ms;
     &::-webkit-input-placeholder {
-      color: #666b7b;
+      color: $text-palette-4;
       font: 400 12px $font-f;
     }
     &:-moz-placeholder {
-      color: #666b7b;
+      color: $text-palette-4;
       font: 400 12px $font-f;
     }
     &::-moz-placeholder {
-      color: #666b7b;
+      color: $text-palette-4;
       font: 400 12px $font-f;
     }
     &:-ms-input-placeholder {
-      color: #666b7b;
+      color: $text-palette-4;
       font: 400 12px $font-f;
     }
     &:focus {
-      border: 1px solid #343c51;
+      border: 1px solid lighten( desaturate( adjust-hue( $skin-color, 1deg ), 9 ), 9 );
     }
     &.ng-error {
       border-color: #a82d46;
@@ -144,11 +145,11 @@
     }
   }
   .regselect-j {
-    background-color: #1e2639;
+    background-color: $skin-palette-10;
     height: 36px;
     width: 100%;
     border-radius: 5px;
-    border: 1px solid #1e2639;
+    border: 1px solid $skin-palette-10;
     overflow: hidden;
     position: relative;
     transition-duration: 300ms;
@@ -158,15 +159,15 @@
       height: 100%;
       width: calc(100% + 24px);
       padding: 0 30px 0 14px;
-      color: #666b7b;
+      color: $text-palette-4;
       font: 400 12px $font-f;
       border: 0;
       position: relative;
       z-index: 40;
       option {
-        color: #c2c5cd;
+        color: $text-palette-3;
         font: 400 12px $font-f;
-        background-color: #1e2639;
+        background-color: $skin-palette-10;
       }
     }
     &:after {
@@ -176,7 +177,7 @@
       right: 10px;
       top: 50%;
       height: 12px;
-      color: #737888;
+      color: $text-palette-3;
       margin-top: -8px;
     }
     &.ng-error {
@@ -200,7 +201,7 @@
         height: 6px;
         width: 6px;
         border-radius: 100%;
-        background: #737888;
+        background: $text-palette-3;
         position: absolute;
         top: 5px;
         left: 5px;
@@ -222,7 +223,7 @@
         height: 16px;
         width: 16px;
         border-radius: 100%;
-        background: #1e2639;
+        background: $skin-palette-10;
         position: absolute;
         top: 0;
         left: 0;
@@ -246,7 +247,7 @@
       float: left;
       display: block;
       transition: 250ms color;
-      color: #505767;
+      color: $text-palette-5;
       position: relative;
       padding-left: 15px;
       &:before {
@@ -257,7 +258,7 @@
         left: -3px;
       }
       &:hover {
-        color: #7b8191;
+        color: $text-palette-4;
       }
     }
   }
@@ -289,7 +290,7 @@
           height: 16px;
           width: 16px;
           border-radius: 3px;
-          background: #1e2639;
+          background: $skin-palette-10;
           position: absolute;
           top: 0;
           left: 0;
@@ -308,7 +309,7 @@
         position: absolute;
         left: 4px;
         top: 0;
-        color: #7c8292;
+        color: $text-palette-4;
       }
     }
   }
@@ -341,7 +342,7 @@
         height: 16px;
         width: 16px;
         border-radius: 3px;
-        background: #1e2639;
+        background: $skin-palette-10;
         position: absolute;
         top: 0;
         left: 0;
@@ -352,12 +353,15 @@
         position: absolute;
         left: 4px;
         top: 0;
-        color: #7c8292;
+        color: $text-palette-4;
       }
     }
   }
   .capt-j-ext {
     margin-bottom: 3px;
+    &.error-wrap-j .caption-j {
+      top: 22px;
+    }
     label {
       margin: 0;
       width: auto;
@@ -366,12 +370,12 @@
         width: 36px;
         height: 36px;
         background: none;
-        border: 1px solid #1e2639;
+        border: 1px solid $skin-palette-10;
         position: absolute;
         bottom: 0;
         right: 0;
         font-size: 0;
-        color: #7c8292;
+        color: $text-palette-4;
         cursor: pointer;
         border-radius: 5px;
         &:before {
@@ -387,7 +391,7 @@
       float: left;
       width: 150px;
       border-radius: 5px;
-      border: 1px solid #1e2639;
+      border: 1px solid $skin-palette-10;
       margin-right: 10px;
     }
     input[type="text"] {
@@ -396,8 +400,8 @@
   }
   .submit-but-j {
     height: 36px;
-    background: #1a7051;
-    border: 2px solid #1a7051;
+    background: $brand-color-1;
+    border: 2px solid $brand-color-1;
     border-radius: 5px;
     padding: 0 25px;
     float: right;
@@ -409,20 +413,20 @@
     cursor: pointer;
     &:disabled,
     &:disabled:hover {
-      border-color: #404654;
-      color: #404654;
+      border-color: $text-palette-6;
+      color: $text-palette-6;
       cursor: default;
       background: none;
     }
     &:hover {
-      background: #a61f67;
-      border-color: #a61f67;
+      background: $hero-color;
+      border-color: $hero-color;
     }
   }
   .pass-strong-bar-j {
     height: 4px;
     border-radius: 10px;
-    background: #212532;
+    background: $skin-palette-8;
     width: 100%;
     position: absolute;
     bottom: -9px;
@@ -430,7 +434,7 @@
     span {
       height: 4px;
       display: block;
-      background: #1a7051;
+      background: $brand-color-1;
       border-radius: 10px;
       width: 100%;
       transition-duration: 500ms;
@@ -458,7 +462,7 @@
       input[type="checkbox"] + span:before {
         border: 1px solid #a82d46;
         &:focus {
-          border: 1px solid #343c51;
+          border: 1px solid lighten( desaturate( adjust-hue( $skin-color, 1deg ), 9 ), 9 );
         }
       }
       i,
@@ -484,11 +488,11 @@
       width: 150px;
       min-height: 25px;
       border-radius: 5px;
-      top: 0px;
-      background: #c1c4cd;
+      top: 0;
+      background: $skin-palette-3;
       z-index: 99;
       position: absolute;
-      color: #404654;
+      color: $text-palette-6;
       font: 12px/16px Arial, Helvetica, sans-serif;
       padding: 10px 10px 8px;
       &:before {
@@ -496,7 +500,7 @@
         content: "";
         border-style: solid;
         border-width: 6px 6px 6px 0;
-        border-color: rgba(0, 0, 0, 0) #c1c4cd rgba(0, 0, 0, 0) rgba(0, 0, 0, 0);
+        border-color: rgba(0, 0, 0, 0) $skin-palette-3 rgba(0, 0, 0, 0) rgba(0, 0, 0, 0);
         position: absolute;
         z-index: 99;
         width: 10px;
@@ -513,7 +517,7 @@
       right: -9px;
       left: auto;
       border-width: 6px 0 6px 6px;
-      border-color: rgba(0, 0, 0, 0) rgba(0, 0, 0, 0) rgba(0, 0, 0, 0) #c1c4cd;
+      border-color: rgba(0, 0, 0, 0) rgba(0, 0, 0, 0) rgba(0, 0, 0, 0) $skin-palette-3;
     }
   }
 }

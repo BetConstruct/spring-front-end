@@ -5,9 +5,10 @@
  * jackpot page controller
  */
 
-CASINO.controller('casinoJackpotCtrl', ['$rootScope', '$scope', '$sce', '$location', 'casinoData', 'content', 'CConfig', 'Config', 'casinoUtils', 'casinoCache', function ($rootScope, $scope, $sce, $location, casinoData, content, CConfig, Config, casinoUtils, casinoCache) {
+CASINO.controller('casinoJackpotCtrl', ['$rootScope', '$scope', '$sce', '$location', 'casinoData', 'content', 'CConfig', 'Config', 'casinoCache', function ($rootScope, $scope, $sce, $location, casinoData, content, CConfig, Config, casinoCache) {
     'use strict';
 
+    //@TODO implementet for only old casino version : need to refactor
     $scope.iconsUrl = CConfig.cUrlPrefix + CConfig.iconsUrl;
     $scope.LEADERS_TO_SHOW = 10;
     $scope.offset = 0;
@@ -96,17 +97,17 @@ CASINO.controller('casinoJackpotCtrl', ['$rootScope', '$scope', '$sce', '$locati
     };
 
     function getJackpotGames() {
-        var games = casinoCache.get('jachpotGames_' + CConfig.main.partnerID);
+        var games = casinoCache.get('jachpotGames_' + Config.main.site_id);
         if (games !== undefined) {
             $scope.jackpotGames = games;
             checkIfPageLoaded();
             $scope.jackpotSliderGames = $scope.jackpotGames.slice($scope.jackpotSlideIndex, $scope.jackpotSlideIndex + $scope.jackpotSliderVisibleGamesCount);
         } else {
-            casinoData.getAction('jackpot', CConfig.main.partnerID).then(function (response) {
+            casinoData.getAction('jackpot', Config.main.site_id).then(function (response) {
                 $scope.jackpotGames = [];
                 if (response.data) {
-                    $scope.jackpotGames = casinoUtils.setGamesFunMode(response.data);
-                    casinoCache.put('jachpotGames_' + CConfig.main.partnerID, $scope.jackpotGames);
+                    //$scope.jackpotGames = casinoUtils.setGamesFunMode(response.data);
+                    casinoCache.put('jachpotGames_' + Config.main.site_id, $scope.jackpotGames);
                     $scope.jackpotSliderGames = $scope.jackpotGames.slice($scope.jackpotSlideIndex, $scope.jackpotSlideIndex + $scope.jackpotSliderVisibleGamesCount);
                 }
                 checkIfPageLoaded();
@@ -118,14 +119,14 @@ CASINO.controller('casinoJackpotCtrl', ['$rootScope', '$scope', '$sce', '$locati
     };
 
     function getLeadersList() {
-        var savedLeaders = casinoCache.get('jachpotLeaders_' + CConfig.main.partnerID);
+        var savedLeaders = casinoCache.get('jachpotLeaders_' + Config.main.site_id);
         if (savedLeaders !== undefined) {
             jackpotLeaders = savedLeaders;
             $scope.leaderCount = jackpotLeaders.length;
             $scope.leaders = getVisibleLeaders(jackpotLeaders);
             checkIfPageLoaded();
         } else {
-            casinoData.getJackpotLeadersList(CConfig.main.partnerID).then(function (response) {
+            casinoData.getJackpotLeadersList(Config.main.site_id).then(function (response) {
                 $scope.leaders = [];
                 if (response.data && response.data.length) {
                     var allleaders = response.data, index = 0;
@@ -140,7 +141,7 @@ CASINO.controller('casinoJackpotCtrl', ['$rootScope', '$scope', '$sce', '$locati
                         jackpotLeaders.push(leader);
                     }
                     $scope.leaders = getVisibleLeaders(jackpotLeaders);
-                    casinoCache.put('jachpotLeaders_' + CConfig.main.partnerID, jackpotLeaders);
+                    casinoCache.put('jachpotLeaders_' + Config.main.site_id, jackpotLeaders);
                 }
                 checkIfPageLoaded();
             }, function (reason) {
@@ -183,7 +184,7 @@ CASINO.controller('casinoJackpotCtrl', ['$rootScope', '$scope', '$sce', '$locati
      * @param {Object} game Object
      */
     $scope.toggleSaveToMyCasinoGames = function toggleSaveToMyCasinoGames(game) {
-        casinoUtils.toggleSaveToMyCasinoGames($rootScope, game);
+        //casinoUtils.toggleSaveToMyCasinoGames($rootScope, game);
     };
 
     /**
@@ -222,18 +223,7 @@ CASINO.controller('casinoJackpotCtrl', ['$rootScope', '$scope', '$sce', '$locati
             return;
         }
 
-        if(CConfig.main.newCasinoDesign.enabled) {
-            $rootScope.$broadcast('casino.openGame', game, gameType);
-        } else {
-            var unregisterRouteChangeSuccess = $rootScope.$on('$routeChangeSuccess', function () {
-                if (!$location.$$replace) {
-                    $rootScope.$broadcast('casino.openGame', game, gameType);
-                    unregisterRouteChangeSuccess();
-                }
-            });
-
-            $location.url('/casino/');
-        }
+        $rootScope.$broadcast('casino.openGame', game, gameType);
     };
 
     function checkIfPageLoaded() {

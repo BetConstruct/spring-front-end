@@ -55,10 +55,12 @@
                     right: 18px;
                     color: $text-palette-4;
                     .tooltip-j {
-                        top: calc(100% + 10px);
+                        top: 100%;
                         left: auto;
                         right: -6px;
-                        width: 160px;
+                        position: relative;
+                        float: right;
+                        max-width: inherit;
                         &:before {
                             top: -6px;
                             border-width: 0 6px 6px 6px;
@@ -160,7 +162,19 @@
             position: relative;
             padding: 0 4px;
             .tooltip-j {
-                top: -9px
+                max-width: inherit;
+                top: calc(100% + 10px);
+                left: -4px;
+                right: auto;
+                bottom: auto;
+                &:before {
+                    top: auto;
+                    bottom: 100%;
+                    left: 8px;
+                    right: auto;
+                    border-width: 0 6px 6px 6px;
+                    border-color: transparent transparent #c1c4cd transparent;
+                }
             }
         }
         > ul {
@@ -237,17 +251,28 @@
         button {
             float: left;
             height: 30px;
+            margin: 0 6px 6px 0;
             border: 1px solid lighten( desaturate( adjust-hue( $text-color, 5deg ), 27 ), 38 );
             background: none;
             text-transform: uppercase;
             font: 12px $font-f;
             color: $text-palette-2;
-            padding: 0 23px;
+            padding: 0 15px;
             transition: 300ms color, 300ms background, 240ms border-color;
             &:hover {
                 border-color: transparent;
                 background: $brand-color-1;
                 color: set-color($brand-color-1);
+            }
+            &.lp-ex-button {
+                border: 1px solid $header-brand-color-1;
+                background: $header-brand-color-1;
+                color: set-color($header-brand-color-1);
+                &:hover {
+                    background: lighten( saturate( $header-brand-color-1, 1 ), 7 ) !important;
+                    border-color: lighten( saturate( $header-brand-color-1, 1 ), 7 ) !important;
+                    color: set-color($header-brand-color-1) !important;
+                }
             }
         }
     }

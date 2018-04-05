@@ -20,7 +20,7 @@
                     <ng-include src="getTemplate('templates/sport/classic/leftmenu/live/main.html')" ng-show="env.live" class="left-menu-animate-live"></ng-include>
                     <ng-include src="getTemplate('templates/sport/classic/leftmenu/prematch/main.html')" ng-show="!env.live" class="left-menu-animate-prematch"></ng-include>
                 </ul>
-                <h1 ng-show="((!leftMenuLiveSports.length && env.live) || (!leftMenuPrematchSports.length && !env.live)) && !leftMenuLiveLoading && !$root.myGames.length" class="now-games-menu" trans>No games found</h1>
+                <h1 ng-show="((!liveSportGroups.length && env.live) || (!prematchSportGroups.length && !env.live)) && !leftMenuLiveLoading && !$root.myGames.length" class="now-games-menu" trans>No games found</h1>
             </div>
         </div>
     </div>

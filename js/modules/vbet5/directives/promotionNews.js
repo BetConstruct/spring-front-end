@@ -26,7 +26,10 @@ VBET5.directive('promotionNews',
                     slug: '@',
                     categorySlugKey: '@',
                     useCustomBaseHost: '@', // for new cms
-                    categoryJsonType: '@'
+                    categoryJsonType: '@',
+                    newsAreLoading: '@',
+                    recentNewsList: '@',
+                    categoriesList: '@'
                 },
                 link: function ($scope, element, attrs) {
                     var recentNews = [], newsPerGroup = WPConfig.news.pokerNewsPerGroup, isSliderMode,
@@ -38,6 +41,7 @@ VBET5.directive('promotionNews',
                     $scope.count = $scope.count || WPConfig.news.numberOfRecentNews;
                     $scope.showDates = !$scope.hideDates;
                     $scope.conf = Config.main;
+
                     $scope.getTemplate = function () {
                         var url;
                         if (templates[attrs.template]) {
@@ -124,12 +128,9 @@ VBET5.directive('promotionNews',
                      */
                     function loadNews(count) {
                         count = parseInt(count, 10) || 999;
-                        var categorySlugKey = $scope.categorySlugKey || "newsCategorySlugs";
-                        var type = $routeParams.type ? $routeParams.type + "-" : "";
-                        if (content.getSlug(type + $scope.slug + '.' + categorySlugKey)) {
-                            var categorySlug = content.getSlug(type + $scope.slug + '.' + categorySlugKey);
+                        if ($scope.slug) {
                             $scope.newsAreLoading = true;
-                            content.getPostsByCategorySlug(categorySlug, $scope.categoryJsonType, count, false, WPConfig.wpPromoUrl, $scope.useCustomBaseHost && WPConfig.wpPromoCustomBaseHost).then(function (response) {
+                            content.getPostsByCategorySlug($scope.slug, $scope.categoryJsonType, count, false, WPConfig.wpPromoUrl, $scope.useCustomBaseHost && WPConfig.wpPromoCustomBaseHost).then(function (response) {
                                 $scope.newsAreLoading = false;
                                 if (response.data && response.data.posts) {
                                     recentNews = response.data.posts;
@@ -201,13 +202,6 @@ VBET5.directive('promotionNews',
                         (templates[attrs.template]) ? groupNewsInGroups(SLIDER_NEWS_COUNT.wideOff) : groupNewsInGroups();
                     });
 
-                    function init() {
-                        loadNews($scope.count);
-                    }
-
-                    // Initialize directive
-                    init();
-
                     /**
                      * @ngdoc method
                      * @name closeNews
@@ -229,7 +223,57 @@ VBET5.directive('promotionNews',
                             $scope.selectedGroupId = group.id;
                         };
                     }
+                    /**
+                     * @ngdoc method
+                     * @name setSlug
+                     * @description  set current slug from promotions menu
+                     *
+                     */
+                    $scope.setSlug = function setSlug(slug, isInitialize) {
+                        if($scope.slug !== slug || isInitialize) {
+                            $scope.slug = slug;
+                            $location.search("slug", slug);
+                            if (!isInitialize) {
+                                $scope.closeNews();
 
+                            }
+                            loadNews($scope.count);
+                        }
+                    };
+
+                    /**
+                     * @ngdoc method
+                     * @name loadCategories
+                     * @description  load promotion categories
+                     *
+                     */
+                    function loadCategories() {
+                        $scope.promotionCategories = [{title: "All", key: "all"}];
+                            content.getPromotionCategories().then(function(data) {
+                                if(data && data.data && data.data.status === "ok" && data.data.categories.length > 0) {
+                                    var categories = data.data.categories;
+                                    for (var i = 0, length = categories.length; i < length; ++i) {
+                                        if (categories[i].name !== "promotions") {
+                                            $scope.promotionCategories.push({
+                                                title: categories[i].title,
+                                                key: categories[i].name
+                                            });
+                                        }
+
+                                    }
+                                }
+                                $scope.setSlug($location.search().slug || $scope.slug || $scope.promotionCategories[0], true);
+                        });
+                    }
+
+                    // Initialize directive
+                    (function init() {
+                        if ($scope.categoriesList) {
+                            loadCategories();
+                        } else {
+                            loadNews($scope.count);
+                        }
+                    }());
                 }
             };
         }

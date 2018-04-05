@@ -11,7 +11,7 @@
                 </div>
 
                 <div class="short-summary">
-                    <p ng-show="main.children[0].content" ng-bind-html="main.children[0].content|html"></p>
+                    <p ng-show="main.children[0].content" ng-bind-html="main.children[0].content|html:'p'"></p>
                     <div class="grouped-btns">
                         <a ng-click="scrollToSelectedItem('details')" class="action-btn" trans>Tell me more</a>
                     </div>
@@ -23,12 +23,12 @@
         <div class="section-details" id="details" ng-init="statistics = getPageBySlug(pages, 'statistics')">
             <div class="section-content">
                 <div class="active-title">
-                    <span>30,000</span>
+                    <span>{{statistics.custom_fields.label_value[0] || '30,000'}}</span>
                     <h3>{{statistics.title}}</h3>
                     <p ng-bind-html="statistics.content"></p>
                 </div>
                 <ul class="service-items">
-                    <li ng-repeat="stats in statistics.children" ng-bind-html="stats.content|html" class="{{stats.slug}}"></li>
+                    <li ng-repeat="stats in statistics.children" ng-bind-html="stats.content|html:'p'" class="{{stats.slug}}"></li>
                 </ul>
             </div>
         </div>
@@ -40,7 +40,7 @@
                     <p ng-bind-html="map.content"></p>
                 </div>
                 <div class="map-buttons">
-                    <button class="primary-btn" ng-click="showMap = true" trans>View on map</button>
+                    <button ng-show="!map.custom_fields.hide_map_button[0]" class="primary-btn" ng-click="showMap = true" trans>View on map</button>
                     <button class="contact-btn" ng-click="scrollToSelectedItem('contact')" trans>Contact us</button>
                 </div>
             </div>
@@ -55,11 +55,11 @@
             </div>
             <div class="contact-list">
                 <ul>
-                    <li ng-repeat="childContact in contacts.children" class="{{childContact.slug}}" ng-bind-html="childContact.content|html" ng-click="openPopUp(childContact.slug)"></li>
+                    <li ng-repeat="childContact in contacts.children" class="{{childContact.slug}}" ng-bind-html="childContact.content|html:'p'" ng-click="openPopUp(childContact.slug)"></li>
                 </ul>
             </div>
 
-            <iframe ng-if="conf.showOfficeView" ng-src="{{ conf.showOfficeView|html:'url' }}"></iframe>
+            <iframe ng-if="conf.showOfficeView" ng-src="{{ conf.showOfficeView|url }}"></iframe>
         </div>
 
          

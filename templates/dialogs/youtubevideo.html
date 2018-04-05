@@ -1,8 +1,12 @@
-<div ng-if="youtubeVideoUrl" class="popup-bg-contain" ng-class="{'active': youtubeVideoUrl}">
-    <div class="deposit-alert-contain livecasino-bonus">
-        <div class="icon-delete"><a title="{{ 'close'|translate }}" ng-click="$parent.$parent.youtubeVideoUrl = null;">Close</a></div>
-        <div class="popup-livecasino-tables">
-            <iframe ng-src="{{ youtubeVideoUrl }}" frameborder="0" allowfullscreen></iframe>
+<div class="new-default-popup-j video-frame" ng-if="youtubeVideoUrl">
+    <div class="pp-table-j">
+        <div class="table-row-j">
+            <div class="table-cell-j">
+                <div class="popup-wrapper-j">
+                    <a class="close-j" ng-click="$parent.$parent.youtubeVideoUrl = null;"></a>
+                    <iframe ng-src="{{ youtubeVideoUrl }}" frameborder="0" allowfullscreen></iframe>
+                </div>
+            </div>
         </div>
     </div>
 </div>

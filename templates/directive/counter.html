@@ -1,0 +1,26 @@
+<div class="ct-game-countdown">
+    <ul ng-show="timer.time > 0">
+        <li>
+            <strong>{{timer.d}}</strong>
+            <span>{{timerText[0]}}</span>
+        </li>
+        <li class="has-dot">
+            <strong>{{('00' + timer.h).slice(-2)}}</strong>
+            <span>{{timerText[1]}}</span>
+        </li>
+        <li class="has-dot has-dot-blink">
+            <strong>{{('00' + timer.m).slice(-2)}}</strong>
+            <span>{{timerText[2]}}</span>
+        </li>
+        <li>
+            <strong>{{('00' + timer.s).slice(-2)}}</strong>
+            <span>{{timerText[3]}}</span>
+        </li>
+    </ul>
+    <ul ng-show="timer.time <= 0" class="counter-status-msg finished">
+        <li>
+            <strong>{{(finishText || 'Finished')|translate}}</strong>
+        </li>
+    </ul>
+    <button ng-if="false" ng-click="timer.time = 3;$event.stopPropagation()">force end {{timer.time}}</button>
+</div>

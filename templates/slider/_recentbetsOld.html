@@ -82,13 +82,13 @@
                             </div>
                         </div>
                         <div class="tournament-name" ng-show="bet.type==='1'" title="{{bet.events[0].event_name}}  {{{true:'('+bet.events[0].basis+')',false:''}[bet.events[0].basis !== '']}}"><span trans>Pick:</span>{{bet.events[0].event_name}} {{{true:'('+bet.events[0].basis+')',false:''}[bet.events[0].basis !== '']}}</div>
-                        <div class="cash-out-button" ng-show="((bet.events[0].is_live == 0 && !!partnerConfig.is_cashout_prematch) || (bet.events[0].is_live == 1 && !!partnerConfig.is_cashout_live)) && bet.outcome == 0 && bet.calculatedCashout !==undefined">
+                        <div class="cash-out-button" ng-show="((bet.events[0].is_live == 0 && !!partnerConfig.is_cashout_prematch) || (bet.events[0].is_live == 1 && !!partnerConfig.is_cashout_live)) && bet.outcome == 0 && bet.cash_out !==undefined">
                             <div class="accumlator-bonus-m" ng-show="bet.outcome == 0 && bet.bonus">
                                 <b title="Accumulator bonus">{{bet.bonus}} {{bet.currency|currency}}</b>
                             </div>
-                            <button ng-click="broadcast('open.cashoutDialog', bet)" ng-disabled="!bet.calculatedCashout || !bet.cashoutEnabled" title="{{bet.calculatedCashout ? bet.calculatedCashout + ' ' + bet.currency  : ('Cash-out Temporary unavailable'|translate)}}">
+                            <button ng-click="broadcast('open.cashoutDialog', bet)" ng-disabled="!bet.cash_out || !bet.cashoutEnabled" title="{{bet.cash_out ? bet.cash_out + ' ' + bet.currency  : ('Cash-out Temporary unavailable'|translate)}}">
                                 <b trans>Cash-out</b>
-                                <b ng-if="bet.calculatedCashout" ng-bind="bet.calculatedCashout + ' ' + bet.currency"></b>
+                                <b ng-if="bet.cash_out" ng-bind="bet.cash_out + ' ' + bet.currency"></b>
                             </button>
                         </div>
                     </div>
@@ -140,4 +140,6 @@
 
     </div>
     <vbet-loader class="contein-recentbets" ng-show="!myBetsLoaded && !errorLoadingBets"></vbet-loader>
+
+    <ng-include src="getTemplate('templates/dialogs/cashout.html')"></ng-include>
 </div>

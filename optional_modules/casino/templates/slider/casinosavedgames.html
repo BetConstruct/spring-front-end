@@ -5,8 +5,7 @@
             <div class="arrow-left-s" ng-show="offset > 0"><a ng-click="slide('left')">left-arrow</a></div>
             <div class="arrow-right-s" ng-show="offset < myCasinoGames.length - GAMES_TO_SHOW"><a ng-click="slide('right')">right-arrow</a></div>
             <div class="games-slider">
-                <casino-games-list ng-class="{'all-games-casino-list': cConf.newCasinoDesignEnabled}"
-                        is-new-design-enabled="cConf.newCasinoDesignEnabled"
+                <casino-games-list class="all-games-casino-list"
                         show-conditions="true"
                         games-list="myCasinoSavedGames"
                         game-show-conditions="true"

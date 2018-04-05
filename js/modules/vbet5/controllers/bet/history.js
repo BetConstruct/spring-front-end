@@ -5,7 +5,7 @@
  * @description
  *  bet history controller.
  */
-VBET5.controller('myBetsCtrl', ['$scope', 'Utils', 'ConnectionService', 'Zergling', 'Moment', 'Translator', 'Config', 'GameInfo', '$rootScope', '$window', '$filter', function ($scope, Utils, ConnectionService, Zergling, Moment, Translator, Config, GameInfo, $rootScope, $window, $filter) {
+VBET5.controller('myBetsCtrl', ['$scope', 'Utils', 'ConnectionService', 'Zergling', 'Moment', 'Translator', 'Config', 'GameInfo', '$rootScope', '$window', '$filter', '$timeout', '$location', function ($scope, Utils, ConnectionService, Zergling, Moment, Translator, Config, GameInfo, $rootScope, $window, $filter, $timeout, $location) {
     'use strict';
     $scope.BETS_TO_SHOW = Config.main.countOfRecentBetsToShow;
     $scope.offset = 0;
@@ -24,6 +24,8 @@ VBET5.controller('myBetsCtrl', ['$scope', 'Utils', 'ConnectionService', 'Zerglin
         active: false
     };
 
+    $scope.canCashOut = true;
+
     $scope.profit = {
         show: false,
         result: 0
@@ -34,7 +36,6 @@ VBET5.controller('myBetsCtrl', ['$scope', 'Utils', 'ConnectionService', 'Zerglin
     }
     var betHistory, BETS_PER_HISTORY_PAGE = 6;
     var sliderContentWatcherPromise;
-    var connectionService = new ConnectionService($scope);
 
     $scope.betHistoryParams = {
         dateRanges: [],
@@ -188,6 +189,16 @@ VBET5.controller('myBetsCtrl', ['$scope', 'Utils', 'ConnectionService', 'Zerglin
                     betGameIdsObj[betEvent.game_id] = parseInt(betEvent.game_id, 10);
                 }
             });
+
+            /*this functional only for car tournament*/
+            if (Config.betting.popupMessageAfterBet && Config.betting.popupMessageAfterBet.startTime && bet.amount >= Config.betting.popupMessageAfterBet[bet.currency]) {
+                var diffStart = Moment.get(Moment.moment.unix(bet.date_time)).diff(Moment.moment.utc(Config.betting.popupMessageAfterBet.startTime), 'seconds');
+                var diffEnd = Moment.get(Moment.moment.unix(bet.date_time)).diff(Moment.moment.utc(Config.betting.popupMessageAfterBet.endTime), 'seconds');
+                if (diffStart > 0 && diffEnd < 0) {
+                    bet.showBetDrawIcon = true;
+                    $scope.betDrawIconTitle = Config.betting.popupMessageAfterBet.tooltip;
+                }
+            }
         });
 
         var betGameIds = Utils.objectToArray(betGameIdsObj);
@@ -197,7 +208,7 @@ VBET5.controller('myBetsCtrl', ['$scope', 'Utils', 'ConnectionService', 'Zerglin
                 'sport': ['id', 'alias'],
                 'region': ['id'],
                 'competition': ['id'],
-                'game': ['id']
+                'game': ['id', 'type']
             },
             'where': {
                 'game': {
@@ -219,7 +230,7 @@ VBET5.controller('myBetsCtrl', ['$scope', 'Utils', 'ConnectionService', 'Zerglin
                                                     'game': betEvent.game_id,
                                                     'sport': sport,
                                                     'competition': competition.id,
-                                                    'type': betEvent.is_live || '0',
+                                                    'type': game.type === 1 ? "1" : "0",
                                                     'region': region.id
                                                 };
                                             }
@@ -238,51 +249,94 @@ VBET5.controller('myBetsCtrl', ['$scope', 'Utils', 'ConnectionService', 'Zerglin
 
     /**
      * @ngdoc method
-     * @name updateEventChashouts
+     * @name updateEventCashouts
      * @methodOf vbet5.controller:myBetsCtrl
      * @description calculate bet cashouts
-     * @param {object} data data from swarm
+     * @param {object} data from swarm
      */
-    function updateEventChashouts(data) {
-        angular.forEach(allBets, function (betData) {
-            if (betData.type == '1' || betData.type == '2') {
-                var hasInactiveEvents = false;
-                var newCoef = 1;
-                var amountCoefPow = 0; // count of unsettled events: used for GmsPlatform
+    function updateEventCashouts(data) {
+        var cashOutBetIds = [];
+        var currentBets = Config.main.enableMixedView ? betHistory : allBets;
+        angular.forEach(currentBets, function (betData) {
+            // Only look at 'Single' and 'Multiple' bets that are not settled
+            if ((betData.type == '1' || betData.type == '2') && betData.outcome == '0') {
+                var hasInactiveEvents = false,
+                    needsCalculation;
+
                 angular.forEach(betData.events, function (betEvent) {
-                    var isEventActive = false;
+                    var isEventActive = betEvent.outcome == 3;
+                    var betEventId = Config.main.GmsPlatform ? betEvent.selection_id : betEvent.id;
+
                     angular.forEach(data.event, function (currentEvent) {
-                        var betEventId = Config.main.GmsPlatform ? betEvent.selection_id : betEvent.id;
                         if (betEventId == currentEvent.id && currentEvent.price && currentEvent.price > 1) {
                             isEventActive = true;
-                            newCoef *= currentEvent.price;
-                            amountCoefPow += 1;
-                        } else if (Config.main.GmsPlatform && betEvent.outcome === 3) {
-                            isEventActive = true;
+                            // We only need to make the call if there was a price change
+                            needsCalculation = needsCalculation || currentEvent.price_change || !betData.cash_out;
                         }
                     });
+
                     if (!isEventActive) {
                         hasInactiveEvents = true;
                     }
                 });
-
-                if (!hasInactiveEvents) {
-                    var amountCoef = Config.main.GmsPlatform ? Math.pow(0.9, amountCoefPow) : betData.type == '1' ? 0.9 : 0.8;
-
-                    betData.calculatedCashout =  ((betData.k / newCoef) * betData.amount * amountCoef).toFixed(Math.abs(($rootScope.currency && $rootScope.currency.rounding) || 0));
-                    if (parseFloat(betData.calculatedCashout) == 0) {
-                        betData.cashoutEnabled = false;
-                    } else {
-                        betData.cashoutEnabled = true;
-                        if (betData.cash_out === '0' || (parseInt(Moment.get().format('x')/1000) - betData.date_time) < 20) {
-                            Utils.setJustForMoment(betData, 'cashoutEnabled', false, 20000);
-                        }
-                    }
+                /* If a bet doesn't have any inactive event and its cash out needs to be recalculated we push it to the array where the ids of those bets are stored.
+                   If it doesn't need any recalculation, but all events are active, we keep the same amount which was set previously.
+                   Finally, if none of the cases apply, we set it to undefined */
+                if (!hasInactiveEvents && needsCalculation) {
+                    cashOutBetIds.push(betData.id);
+                } else if (hasInactiveEvents || parseFloat(betData.cash_out) == 0 || betData.cash_out === null) {
+                    betData.cash_out = undefined;
+                    betData.cashoutEnabled = false;
                 } else {
-                    betData.calculatedCashout = undefined;
+                    betData.cashoutEnabled = true;
+                    /* if ((parseInt(Moment.get().format('x')/1000) - betData.date_time) < 20) {
+                        Utils.setJustForMoment(betData, 'cashoutEnabled', false, 20000);
+                    } */
                 }
+
             }
         });
+
+        if (cashOutBetIds.length) {
+            Zergling.get({"bet_ids": cashOutBetIds}, "calculate_cashout_amount")
+                .then(function(response) {
+                    if (response.details) {
+                        var cashOutMap = Utils.createMapFromObjItems(response.details, 'Id');
+
+                        angular.forEach(currentBets, function(betData) {
+                            if (cashOutMap[betData.id]) {
+                                betData.cash_out = cashOutMap[betData.id]['CashoutAmount'];
+
+                                // This part is needed for dynamic pop up info update
+                                if ($scope.cashoutBet && $scope.cashoutBet.id && cashOutMap[$scope.cashoutBet.id]) { // $scope.cashoutBet is the active bet that we want to cash out
+                                    $scope.cashoutPopup.inputValue = cashOutMap[$scope.cashoutBet.id]['CashoutAmount'];
+                                    $scope.cashoutPopup.sliderValue = 100; // 100 is the maximum slider value (100%)
+
+                                    /* $scope.newCashoutData is created when pop up is opened and contains info on cash out price
+                                       It is sent as the full cash out price (in case we don't manipulate either input value or slider value) */
+                                    if ($scope.newCashoutData && $scope.newCashoutData.new_price) {
+                                        $scope.newCashoutData.new_price = cashOutMap[$scope.cashoutBet.id]['CashoutAmount'];
+
+                                        // We delete the partial price because it doesn't need to be sent if the cash out is 'full'
+                                        if ($scope.newCashoutData.partial_price) {
+                                            $scope.newCashoutData.partial_price = '';
+                                        }
+                                    }
+                                }
+
+                                if (parseFloat(betData.cash_out) == 0 || betData.cash_out === null) {
+                                    betData.cashoutEnabled = false;
+                                    betData.cash_out = undefined;
+                                } else {
+                                    betData.cashoutEnabled = true;
+                                }
+                            }
+                        });
+                    }
+
+                });
+        }
+
     }
 
     /**
@@ -306,7 +360,7 @@ VBET5.controller('myBetsCtrl', ['$scope', 'Utils', 'ConnectionService', 'Zerglin
         $scope.cashoutEventIds = Utils.objectToArray(cashoutEventIdsObj);
 
         if ($scope.cashoutEventIds.length) {
-            connectionService
+            Zergling
             .subscribe({
                     'source': 'betting',
                     'what': {
@@ -318,13 +372,10 @@ VBET5.controller('myBetsCtrl', ['$scope', 'Utils', 'ConnectionService', 'Zerglin
                         }
                     }
                 },
-                updateEventChashouts,
-                {
-                    'thenCallback': function (response) {
-                        cashoutSubId = response.subid;
-                    }
-                }
-            );
+                updateEventCashouts).then(function (response) {
+                cashoutSubId = response.subid;
+                updateEventCashouts(response.data);
+            });
         }
     }
 
@@ -392,7 +443,7 @@ VBET5.controller('myBetsCtrl', ['$scope', 'Utils', 'ConnectionService', 'Zerglin
 //             'with_pool_bets': true
                 }
             };
-            if (Config.main.poolBettingEnabled) {
+            if ($rootScope.calculatedConfigs.poolBettingEnabled) {
                 request.where.with_pool_bets = true;
             }
 
@@ -405,7 +456,6 @@ VBET5.controller('myBetsCtrl', ['$scope', 'Utils', 'ConnectionService', 'Zerglin
             Zergling.get(request, 'bet_history')
                 .then(
                 function (response) {
-                    fillBetsPointerInfo(response);
                     updateMyBets(response);
                     subscribeToCashoutEvents(response);
                     $scope.myBetsLoaded = true;
@@ -433,7 +483,7 @@ VBET5.controller('myBetsCtrl', ['$scope', 'Utils', 'ConnectionService', 'Zerglin
      * @param {Object} betEvent bet history Event
      */
     $scope.gotoBetGame = function gotoBetGame(betEvent) {
-        if (Config.main.virtualSportIds.indexOf(parseInt(betEvent.sport_id, 10)) === -1 && $rootScope.gamePointers[betEvent.game_id]) {
+        if (GameInfo.getVirtualSportIds().indexOf(parseInt(betEvent.sport_id, 10)) === -1 && $rootScope.gamePointers[betEvent.game_id]) {
             $rootScope.$broadcast('gotoSelectedGame', $rootScope.gamePointers[betEvent.game_id]);
         }
     };
@@ -446,7 +496,12 @@ VBET5.controller('myBetsCtrl', ['$scope', 'Utils', 'ConnectionService', 'Zerglin
      */
     $scope.initBetHistory = function initBetHistory(product) {
         function doInitBetHistory() {
-            var i, iMax = 6, time;
+            var i, iMax = 6, time, monthFormat = 'MMMM YYYY', weekFormat = 'DD MMM';
+            if (Config.env.lang === 'jpn') {
+                monthFormat = 'YYYY年 MMMM';
+                weekFormat = 'DD日 MMM';
+            }
+
             if ($rootScope.profile && $rootScope.profile.reg_date) {
                 var format = ($rootScope.profile.reg_date.indexOf('.') > -1) ? 'DD.MM.YYYY' : '';
                 var regPeriod = Moment.get().diff(Moment.get($rootScope.profile.reg_date, format).startOf('month'), 'days') / 30;
@@ -457,7 +512,7 @@ VBET5.controller('myBetsCtrl', ['$scope', 'Utils', 'ConnectionService', 'Zerglin
                 $scope.betHistoryParams.dateRanges.push({
                     fromDate: time.unix(),
                     toDate: time.clone().add('months', 1).unix(),
-                    str: time.format('MMMM YYYY'),
+                    str: time.format(monthFormat),
                     type: 'month'
                 });
 
@@ -473,14 +528,14 @@ VBET5.controller('myBetsCtrl', ['$scope', 'Utils', 'ConnectionService', 'Zerglin
                     weekDates.push({
                         fromDate: fromDate.unix(),
                         toDate: toDate.unix(),
-                        str: "· " + (fromDate.format('DD MMM') + " - " + toDate.format('DD MMM')),
+                        str: "· " + (fromDate.format(weekFormat) + " - " + toDate.format(weekFormat)),
                         type: 'week'
                     })
                 }
                 if (moreDaysCount > 0) {
                     fromDate = time.clone().add('days', j * 7);
                     toDate = fromDate.clone().add('days', moreDaysCount);
-                    var str = moreDaysCount == 1 ? fromDate.format('DD MMM') : fromDate.format('DD MMM') + " - " + toDate.format('DD MMM');
+                    var str = moreDaysCount == 1 ? fromDate.format(weekFormat) : fromDate.format(weekFormat) + " - " + toDate.format(weekFormat);
                     weekDates.push({fromDate: fromDate.unix(), toDate: toDate.unix(), str: "· " + str, type: 'week'});
                 }
                 $scope.betHistoryParams.dateRanges = $scope.betHistoryParams.dateRanges.concat(weekDates.reverse());
@@ -514,8 +569,13 @@ VBET5.controller('myBetsCtrl', ['$scope', 'Utils', 'ConnectionService', 'Zerglin
             outcome = parseInt($scope.betHistoryParams.outcome, 10);
 
         if ($scope.betHistoryParams.dateRange && $scope.betHistoryParams.dateRange.fromDate !== -1) {
-            where.from_date = $scope.betHistoryParams.dateRange.fromDate;
-            where.to_date = $scope.betHistoryParams.dateRange.toDate;
+            if ($scope.selectedUpcomingPeriod) {
+                where.from_date = Moment.get().unix() - $scope.selectedUpcomingPeriod * 3600;
+                where.to_date = Moment.get().unix();
+            } else {
+                where.from_date = $scope.betHistoryParams.dateRange.fromDate;
+                where.to_date = $scope.betHistoryParams.dateRange.toDate;
+            }
         }
 
         if ($scope.betHistoryParams.betIdFilter && !isNaN(parseInt($scope.betHistoryParams.betIdFilter))) {
@@ -531,7 +591,7 @@ VBET5.controller('myBetsCtrl', ['$scope', 'Utils', 'ConnectionService', 'Zerglin
         if (type !== -1) {
             where.type = type.toString();
         }
-        if (Config.main.poolBettingEnabled && !isVivaroShuka && !$scope.betHistoryParams.betIdFilter) {
+        if ($rootScope.calculatedConfigs.poolBettingEnabled && !isVivaroShuka && !$scope.betHistoryParams.betIdFilter) {
             where.with_pool_bets = true;
         }
         var request = {'where': where};
@@ -578,6 +638,11 @@ VBET5.controller('myBetsCtrl', ['$scope', 'Utils', 'ConnectionService', 'Zerglin
         Zergling.get(request, command)
             .then(
                 function (response) {
+                    if (response.result === -1 || !response.bets) {
+                        $scope.errorLoadingHistory = true;
+                        return;
+                    }
+
                     if (!(response.bets instanceof  Array)) {
                         var tempData = response.bets;
                         response.bets = [];
@@ -587,10 +652,6 @@ VBET5.controller('myBetsCtrl', ['$scope', 'Utils', 'ConnectionService', 'Zerglin
                     calculateLiability(response.bets);
                     calculateSystemCombinations(response.bets);
                     betHistory = response.bets;
-                    if (response.result === -1) {
-                        $scope.errorLoadingHistory = true;
-                        return;
-                    }
                     fillBetsPointerInfo(betHistory);
                     convertStringFiledsToNumbers(response.bets);
                     allBets = Utils.objectToArray(response.bets);
@@ -649,9 +710,11 @@ VBET5.controller('myBetsCtrl', ['$scope', 'Utils', 'ConnectionService', 'Zerglin
      */
     $scope.openPrintPreview = function openPrintPreview(betData) {
         if (Config.main.enableBetPrint) {
-            var userId = $rootScope.profile && $rootScope.profile.unique_id ? $rootScope.profile.unique_id : '';
-            var encodedBetData = encodeURIComponent(JSON.stringify(betData));
-            $window.open('#/popup/?action=betprintpreview&userId=' + userId + '&data=' + encodedBetData, Config.main.skin + 'betprintpreview.popup', "scrollbars=1,width=1000,height=600,resizable=yes");
+            var betDataInfo = angular.copy(betData);
+            betDataInfo.userId = ($rootScope.profile && ($rootScope.profile.id || $rootScope.profile.unique_id)) || '';
+            betDataInfo.userName = ($rootScope.profile && $rootScope.profile.username) || '';
+            var encodedBetData = encodeURIComponent(JSON.stringify(betDataInfo));
+            $window.open('#/popup/?action=betprintpreview&data=' + encodedBetData, Config.main.skin + 'betprintpreview.popup', "scrollbars=1,width=1000,height=600,resizable=yes");
         }
     };
 
@@ -667,17 +730,37 @@ VBET5.controller('myBetsCtrl', ['$scope', 'Utils', 'ConnectionService', 'Zerglin
     $scope.doCashout = function doCashout(bet, suggested) {
         $scope.cashoutRequestInProgress = true;
         $scope.newCashoutData = null;
-        var price = parseFloat(suggested && suggested.new_price ? suggested.new_price : bet.calculatedCashout);
-        Zergling.get({bet_id: bet.id, price: price}, 'cashout')
+        var price = parseFloat(suggested && suggested.new_price ? suggested.new_price : bet.cash_out);
+        var request = {bet_id: bet.id, price: price};
+
+        if (suggested.partial_price) {
+            request.partial_price = suggested.partial_price;
+        }
+
+        Zergling.get(request, 'cashout')
             .then(
                 function (response) {
                     if (response.result === "Ok") {
+                        var currentTimestamp = Moment.get().unix();
+                        if (suggested.partial_price && (($scope.betHistoryParams.dateRange.fromDate <= currentTimestamp && currentTimestamp <= $scope.betHistoryParams.dateRange.toDate) || $scope.selectedUpcomingPeriod !== 0)){
+                            $timeout(function() { //need to remove timeout after backend's fix
+                                $scope.loadMixedBetHistory();
+                            }, 950);
+                        } else {
+                            updateAfterCashout(bet.id);
+                        }
                         $scope.cashoutDialogType = 'confirm';
                         $scope.cashoutSuccess = (response.details && (response.details.cash_out_price || response.details.price)) || true;
+                        if (Config.partner.balanceRefreshPeriod || Config.main.rfid.balanceRefreshPeriod) { // refresh balance right after successed cashout in integration skin (or for rfid)
+                            $rootScope.$broadcast('refreshBalance');
+                        }
                     } else if (response.result === "Fail" && response.details && response.details.new_price) {
                         $scope.cashoutDialogType = 'cashout';
                         $scope.newCashoutData = response.details;
+                        $scope.newCashoutData.priceChanged = true;
+                        $scope.changeCashoutValue($scope.cashoutPopup.sliderValue, $scope.newCashoutData.new_price)
                         bet.cash_out = $scope.newCashoutData.new_price;
+                        $scope.cashoutPopup.inputValue = bet.cash_out;
                     } else if (response.result === "NotAvailable" || response.result === "Fail") {
                         $scope.cashoutDialogType = 'confirm';
                         $scope.cashoutSuccess = false;
@@ -725,10 +808,14 @@ VBET5.controller('myBetsCtrl', ['$scope', 'Utils', 'ConnectionService', 'Zerglin
 
     $scope.$on('open.cashoutDialog', function (event, data) {
         $scope.cashoutPopup.active = true;
+        $scope.cashoutPopup.sliderValue = 100;
         $scope.cashoutDialogType = 'cashout';
         $scope.cashoutBet = data;
         $scope.cashoutBet.originalPrice = data.cash_out;
-        $scope.newCashoutData = null;
+        $scope.newCashoutData = {
+            new_price: parseFloat(data.cash_out)
+        };
+        $scope.cashoutPopup.inputValue = $scope.cashoutBet.cash_out;
     });
 
     if (Config.main.betHistoryCashoutEnabled && (Config.env.sliderContent === 'recentBetsCashout' || Config.env.sliderContent === 'recentBets')) {
@@ -804,4 +891,191 @@ VBET5.controller('myBetsCtrl', ['$scope', 'Utils', 'ConnectionService', 'Zerglin
             });
         }
     };
+
+    /**
+     * @ngdoc method
+     * @name updateAfterCashout
+     * @methodOf vbet5.controller:myBetsCtrl
+     * @description updates cash out information of a specific event after a bet has been 'cashed out'
+     */
+    function updateAfterCashout(betId) {
+        var request = {'where': { 'bet_id': betId }};
+
+        $timeout(function() {
+            Zergling.get(request, 'bet_history')
+                .then(function(response) {
+                    if (response && response.bets) {
+                        var currentBets = Config.main.enableMixedView ? betHistory : allBets;
+                        var cashedOutBet = response.bets[0];
+                        for (var i = 0, length = currentBets.length; i < length; i++) {
+                            if (currentBets[i].id === cashedOutBet.id) {
+                                currentBets[i] = cashedOutBet;
+                                break;
+                            }
+                        }
+                        if (Config.main.enableMixedView) {
+                            $scope.betHistory = currentBets
+                        } else {
+                            $scope.myBets = getVisibleBets(currentBets);
+                        }
+                    }
+                });
+        }, 950);
+
+    }
+
+    /**
+     * @ngdoc method
+     * @name changeCashoutValue
+     * @methodOf vbet5.controller:myBetsCtrl
+     * @description converts percent value(100% is the max cash-out price) to cash-out price
+     */
+    $scope.changeCashoutValue = function changeCashoutValue(value, calculated) {
+        $scope.canCashOut = true;
+        var minCashoutValue = ($rootScope.partnerConfig && $rootScope.partnerConfig.min_bet_stakes && $rootScope.partnerConfig.min_bet_stakes[$rootScope.profile.currency_name]) || 0.1;
+
+        if (calculated < minCashoutValue) return;
+
+        var price = 0.01 * calculated * value;
+
+        if (price === 0) {
+            $scope.canCashOut = false;
+        }
+        if (calculated >= 100 || $rootScope.conf.balanceFractionSize === 0) {
+            price = Math.round(price);
+        } else if (calculated >= 10) {
+            price = Math.round(price * 10) / 10;
+        } else {
+            price = Math.round(price * 100) / 100;
+        }
+
+        price = $rootScope.conf.balanceFractionSize === 0 && price < 1 ? 1 : price;
+
+        if (minCashoutValue <= calculated - price) {
+            $scope.cashoutPopup.inputValue = price;
+            $scope.newCashoutData.partial_price = price;
+        } else {
+            $scope.newCashoutData.partial_price = '';
+            $scope.cashoutPopup.inputValue = calculated;
+            $scope.newCashoutData.price = calculated;
+        }
+    };
+
+    /**
+     * @ngdoc method
+     * @name changeBackCashoutValue
+     * @methodOf vbet5.controller:myBetsCtrl
+     * @description converts cash-out price to percent value
+     */
+    $scope.changeBackCashoutValue = function changeBackCashoutValue(calculated){
+        if(isNaN(calculated)) {
+            $scope.canCashOut = true;
+            return;
+        }
+
+        var minCashoutValue = ($rootScope.partnerConfig && $rootScope.partnerConfig.min_bet_stakes && $rootScope.partnerConfig.min_bet_stakes[$rootScope.profile.currency_name]) || 0.1;
+        minCashoutValue = parseFloat(minCashoutValue);
+        var price = parseFloat($scope.cashoutPopup.inputValue);
+        calculated = parseFloat(calculated);
+
+        if (price < 0 || !price) {
+            $scope.cashoutPopup.sliderValue = 0;
+            $scope.canCashOut = false;
+            return;
+        } else if((price > calculated - minCashoutValue && price < calculated) || (price > calculated)) {
+            $scope.cashoutPopup.sliderValue = 100;
+            $scope.canCashOut = false;
+            return;
+        }
+
+        if((calculated - price >= minCashoutValue) || price === calculated) {
+            $scope.canCashOut = true;
+            var value = price / (calculated * 0.01) ;
+                value = Math.round(value);
+                if(price === calculated) {
+                    $scope.newCashoutData.partial_price = '';
+                    $scope.cashoutPopup.sliderValue = value;
+                    $scope.newCashoutData.price = price;
+                } else {
+                    $scope.cashoutPopup.sliderValue = value;
+                    $scope.newCashoutData.partial_price = price;
+                }
+            }
+    };
+
+    /**
+     * @ngdoc method
+     * @name addEvents
+     * @methodOf vbet5.controller:mixedMyBetsCtrl
+     * @description place bet from bet history
+     */
+    $scope.addEvents = function addEvents(eventsFromBetHistory) {
+        $scope.betHistoryLoaded = false;
+        $rootScope.$broadcast('clearbets');
+        var eventIds = [],
+            betsToPlace = [],
+            oddType = 'odd',
+            bet;
+        angular.forEach(eventsFromBetHistory.events, function(event) {
+            if(event.outcome == null) {
+                eventIds.push(event.selection_id);
+            }
+        });
+
+        Zergling.get({
+            'source': 'betting',
+            'what': {
+                'sport': ['id', 'name', 'alias', 'order'],
+                'competition': ['id', 'order', 'name'],
+                'region': ['id', 'name', 'alias'],
+                'game': ['id', 'team1_id', 'team1_name', 'team2_id', 'team2_name', 'type'],
+                'market': ['base', 'type', 'name', 'express_id'],
+                'event': []
+            },
+            'where': {
+                'event': {
+                    'id': {'@in': eventIds}
+                }
+            }
+        }).then(function(response) {
+            angular.forEach(response.data.sport, function(sport) {
+                angular.forEach(sport.region, function (region) {
+                    angular.forEach(region.competition, function (competition) {
+                        angular.forEach(competition.game, function (game) {
+                            bet = {};
+                            bet.gameInfo = game;
+                            bet.gameInfo.competition = competition;
+                            bet.gameInfo.region = region;
+                            bet.gameInfo.sport = sport;
+                            bet.gameInfo.title = game.team1_name + (game.team2_name ? ' - ' + game.team2_name : '');
+
+                            angular.forEach(game.market, function(market) {
+                                bet.marketInfo = market;
+                                bet.marketInfo.name = $filter('improveName')(market.name, game);
+
+                                angular.forEach(market.event, function(event) {
+                                    bet.eventInfo = event;
+                                    betsToPlace.push(bet);
+                                });
+                            });
+                        });
+                    });
+                });
+            });
+            for (var i = 0; i < betsToPlace.length; i++) {
+                if (!GameInfo.isEventInBetSlip(betsToPlace[i].eventInfo)) {
+                    $rootScope.$broadcast('bet', {event: betsToPlace[i].eventInfo, market: betsToPlace[i].marketInfo, game: betsToPlace[i].gameInfo, oddType: oddType});
+                }
+            }
+            $rootScope.env.showSlider=false;
+            $rootScope.env.sliderContent='';
+            $scope.betHistoryLoaded = true;
+
+        });
+        if($location.path() != '/sport/' && $location.path() != '/dashboard/' && $location.path() != '/multiview/' && $location.path() != '/livecalendar/') {
+            $location.url('/sport/?type=1');
+        }
+    }
 }]);
+
+

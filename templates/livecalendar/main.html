@@ -1,4 +1,4 @@
-<div class="container-p" ng-controller="LiveCalendarController as liveCalCtrl" ng-init="checkIfEnabled('liveCalendar');">
+<div class="container-p" ng-controller="LiveCalendarController as liveCalCtrl" >
     <!-- System Calculator-->
     <div id="system-claculator-container" ng-if="$root.showSystemCalculator" draggable allow-other-mouse-events drag-from="calculator-draggable-header">
         <ng-include src="getTemplate('templates/sport/classic/systemCalculator.html')"></ng-include>
@@ -11,7 +11,7 @@
             <ng-include class="include-viewSwitcher-j" src="getTemplate('templates/sport/viewswitcher.html')"></ng-include>
             <div class="list-bet-block" ng-if="$location.path() !== '/poolbetting/'" ng-include="getTemplate('templates/sport/betslip.html')"></div>
             <div class="right-banner-container" ng-if="conf.enableBannerUnderBetslip" ng-controller="cmsSportNewsCtrl" ng-include="getTemplate('templates/sport/classic/banners.html')"></div>
-            <div class="mini-games" ng-if="conf.enableMiniGameUnderBetslip" ng-include="getTemplate('optional_modules/casino/templates/specialgames/minigames.html')"></div>
+            <div class="mini-games" ng-if="conf.enableMiniGameUnderBetslip && $root.casinoEnabled" ng-include="getTemplate('optional_modules/casino/templates/specialgames/minigames.html')"></div>
         </div>
     </div>
 </div>

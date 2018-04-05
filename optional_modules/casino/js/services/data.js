@@ -12,33 +12,7 @@ CASINO.service('casinoData', ['CConfig', 'Config', '$http', function (CConfig, C
 
     var casinoData = {};
 
-    //var lang = $rootScope.env.lang;
-
-    /**
-     * @ngdoc method
-     * @name getAllGames
-     * @methodOf CASINO.service:casinoData
-     * @description returns promise which will be resolved  with list of all games
-     *
-     * @param {string} partnerID. id of partner to get all games
-     * @returns {Object} promise
-     */
-    casinoData.getAllGames = function getAllGames(partnerID) {
-        return $http.post(CConfig.cUrlPrefix + CConfig.cUrl, {action: 'allgames', partnerID: partnerID});
-    };
-
-    /**
-     * @ngdoc method
-     * @name getAllMiniGames
-     * @methodOf CASINO.service:casinoData
-     * @description returns promise which will be resolved  with list of all mini games
-     *
-     * @param {string} partnerID. id of partner to get all games
-     * @returns {Object} promise
-     */
-    casinoData.getAllMiniGames = function getAllMiniGames(partnerID) {
-        return $http.post(CConfig.cUrlPrefix + CConfig.cUrl, {action: 'bycat', param: 'Mini Games', partnerID: partnerID});
-    };
+    var DATA_URL = Config.main.cmsDataDomain ? Config.main.cmsDataDomain + '/casino/' : CConfig.dataUrl;
 
     /**
      * @ngdoc method
@@ -56,54 +30,6 @@ CASINO.service('casinoData', ['CConfig', 'Config', '$http', function (CConfig, C
 
     /**
      * @ngdoc method
-     * @name getCategory
-     * @methodOf CASINO.service:casinoData
-     * @description returns promise which will be resolved with Category containing games
-     *
-     * @param {string} partnerID. id of partner to get category
-     * @param {string} categoryId. id of Category to get category games
-     * @returns {Object} promise
-     */
-    casinoData.getCategory = function getCategory(categoryId, partnerID) {
-        return $http.post(CConfig.cUrlPrefix + CConfig.cUrl, {
-            action: 'bycat',
-            param: categoryId,
-            partnerID: partnerID
-        });
-    };
-
-    /**
-     * @ngdoc method
-     * @name getSearchResult
-     * @methodOf CASINO.service:casinoData
-     * @description returns promise which will be resolved  with the list of researching game results
-     *
-     * @param {string} searchCommand search term
-     * @param {string} partnerID. id of partner
-     * @returns {Object} promise
-     */
-    casinoData.getSearchResult = function getSearchResult(searchCommand, partnerID) {
-        return $http.post(CConfig.cUrlPrefix + CConfig.cUrl, {
-            action: 'searchGame',
-            searchQ: searchCommand,
-            partnerID: partnerID
-        });
-    };
-
-    /**
-     * @ngdoc method
-     * @name getFilterOptions
-     * @methodOf CASINO.service:casinoData
-     * @description returns promise which will be resolved  with the list of all games and filtering options
-     *
-     * @returns {Object} promise
-     */
-    casinoData.getFilterOptions = function getFilterOptions() {
-        return $http.post(CConfig.cUrlPrefix + CConfig.cUrl, {action: 'getGamesJson'});
-    };
-
-    /**
-     * @ngdoc method
      * @name getJackpotLeadersList
      * @methodOf CASINO.service:casinoData
      * @description returns promise which will be resolved  with the list of leaders
@@ -115,48 +41,65 @@ CASINO.service('casinoData', ['CConfig', 'Config', '$http', function (CConfig, C
         return $http.post(CConfig.cUrlPrefix + CConfig.jackpot.url, {partnerID: partnerID});
     };
 
-    /* used for getting data from cms */
-    casinoData.getGames = function getGames(category, provider, from, to, searchCommand, restrictedGamesIds, gameIds, gameExternalIds) {
-        var dataUrl = CConfig.dataUrl + 'getGames?partner_id=' + Config.main.site_id;
-        if (category !== null && category !== 'all') {
-            dataUrl += '&category=' + category;
-        }
-        if (provider !== null && provider !== 'all' && provider !== undefined) {
-            dataUrl += '&provider=' + provider;
-        }
-        if (from !== undefined && from !== null) {
-            dataUrl += '&offset=' + from;
-        }
-        if (to !== undefined && to !== null) {
-            dataUrl += '&limit=' + to;
-        }
-        if (searchCommand) {
-            dataUrl += '&search=' + searchCommand;
-        }
+    /**
+     * @ngdoc method
+     * @name getGames
+     * @methodOf CASINO.service:casinoData
+     * @description returns promise which will be resolved  with the list of games
+     *
+     * @param {string} category the games category
+     * @param {string} provider the games provider
+     * @param {int} from start index
+     * @param {int} to end index
+     * @param {string} searchCommand the term of search
+     * @param {array} restrictedGamesIds the ids of restricted games
+     * @param {array} gameIds the games ids
+     * @param {array} gameExternalIds the games external ids
+     * @param {string} countryCode the code of user's country
+     *
+     * @returns {Object} promise
+     */
+    casinoData.getGames = function getGames(category, provider, countryCode,  from, to, searchCommand, restrictedGamesIds, gameIds, gameExternalIds) {
+        var dataUrl = DATA_URL + 'getGames?partner_id=' + Config.main.site_id + '&lang=' + Config.env.lang;
+
+        category !== null && category !== 'all' && (dataUrl += '&category=' + category);
+        provider !== null && provider !== 'all' && provider !== undefined && (dataUrl += '&provider=' + provider);
+        countryCode && (dataUrl += '&country=' + countryCode);
+        from !== undefined && from !== null && (dataUrl += '&offset=' + from);
+        to !== undefined && to !== null && (dataUrl += '&limit=' + to);
+        searchCommand && (dataUrl += '&search=' + searchCommand);
+
         if (restrictedGamesIds && restrictedGamesIds.length) {
             for (var i = 0, length = restrictedGamesIds.length; i < length; i += 1) {
                 dataUrl += '&except[]=' + restrictedGamesIds[i];
             }
         }
-        if (gameIds !== undefined && gameIds !== null) {
-            dataUrl += '&id=' + gameIds.join();
-        }
-        if(gameExternalIds !== undefined && gameExternalIds !== null) {
-            dataUrl += '&external_id=' +gameExternalIds.join();
-        }
+
+        gameIds !== undefined && gameIds !== null && (dataUrl += '&id=' + gameIds.join());
+        gameExternalIds !== undefined && gameExternalIds !== null && (dataUrl += '&external_id=' +gameExternalIds.join());
+
         return $http.get(dataUrl);
     };
 
-    casinoData.getOptions = function getOptions() {
-        return $http.get(CConfig.dataUrl + 'getOptions?partner_id=' + Config.main.site_id);
+    /**
+     * @ngdoc method
+     * @name getOptions
+     * @methodOf CASINO.service:casinoData
+     * @description returns promise which will be resolved  with the list of options (categiry and provider list)
+     *
+     * @param {string} countryCode user's country code id
+     * @returns {Object} promise
+     */
+    casinoData.getOptions = function getOptions(countryCode) {
+        return $http.get(DATA_URL + 'getOptions?partner_id=' + Config.main.site_id + (countryCode && ('&country=' + countryCode) || ''));
     };
 
     casinoData.getJackpotGames = function getJackpotGames () {
-        return $http.get(CConfig.dataUrl + 'getJeckpots?partner_id=' + Config.main.site_id)
+        return $http.get(DATA_URL + 'getJeckpots?partner_id=' + Config.main.site_id)
     };
 
     casinoData.getCasinoGameDetails = function getCasinoGameDetails(game_skin_id) {
-        return $http.get(CConfig.dataUrl + 'getSkinGameDesc?game_skin_id=' + game_skin_id);
+        return $http.get(DATA_URL + 'getSkinGameDesc?game_skin_id=' + game_skin_id);
     };
 
     casinoData.getDraw = function getDraw() {
@@ -164,7 +107,7 @@ CASINO.service('casinoData', ['CConfig', 'Config', '$http', function (CConfig, C
     };
 
     casinoData.getGameWinners = function getGameWinners() {
-        return $http.get(CConfig.dataUrl + 'getGameWinners?site_id=' + Config.main.site_id);
+        return $http.get(DATA_URL + 'getGameWinners?site_id=' + Config.main.site_id);
     };
 
     return casinoData;

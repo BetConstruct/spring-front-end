@@ -1,6 +1,6 @@
 <div id="header" class="block-size-visible-b" ng-include="getTemplate('templates/mainheader.html')" ng-if="$location.path() !='/popup/'"></div>
-<ng-include  src="getTemplate('templates/dialogs/globaldialog.html')"></ng-include>
-<div ng-controller="pokerLoginCtrl" ng-if="conf.pokerEnabled && !conf.enableNewPoker && $location.path() !='/popup/'"></div>
+<ng-include src="getTemplate('templates/dialogs/globaldialog.html')"></ng-include>
+<div ng-controller="pokerLoginCtrl" ng-if="calculatedConfigs.pokerEnabled && !conf.enableNewPoker && $location.path() !='/popup/'"></div>
 
 <ng-include src="getTemplate('templates/dialogs/renewreminder.html')"></ng-include>
 
@@ -51,11 +51,9 @@
 <!--Menu sport end-->
 
 <ng-include src="getTemplate('templates/dialogs/feedback.html')"></ng-include>
-<ng-include src="getTemplate('templates/dialogs/promotions.html')"></ng-include>
 
 <ng-include src="getTemplate('templates/dialogs/counteroffer.html')"></ng-include>
-<ng-include src="getTemplate('templates/dialogs/cashout.html')"></ng-include>
 <ng-include src="getTemplate('templates/dialogs/skype_authorization_request.html')"></ng-include>
 <ng-include src="getTemplate('templates/dialogs/couponCheck.html')"></ng-include>
-<ng-include ng-if="conf.customHeaderTemplate" src="getTemplate(conf.customHeaderTemplate)"></ng-include>
+<ng-include ng-if="conf.header.customTemplate" src="getTemplate(conf.header.customTemplate)"></ng-include>
 

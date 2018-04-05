@@ -12,15 +12,9 @@ CASINO.controller('casinoMyGamesCtrl', ['$scope', '$rootScope', 'Storage', '$loc
     'use strict';
 
     $scope.casinoGamesLoaded = false;
-    $rootScope.myCasinoGames = setFunModeText($cookies.getObject("myCasinoGames") || Storage.get("myCasinoGames") || []);
+    $rootScope.myCasinoGames = $cookies.getObject("myCasinoGames") || Storage.get("myCasinoGames") || [];
+    $scope.confData = CConfig;
 
-    $scope.cConf = {
-        iconsUrl: CConfig.cUrlPrefix + CConfig.iconsUrl,
-        funModeEnabled: CConfig.main.funModeEnabled,
-        providersThatHaveNotFunMode: CConfig.main.providersThatHaveNotFunMode,
-        categoriesThatHaveNotFunMode: CConfig.main.categoriesThatHaveNotFunMode,
-        newCasinoDesignEnabled: CConfig.main.newCasinoDesign.enabled
-    };
     /**
      * @ngdoc method
      * @name getVisibleGames
@@ -57,27 +51,6 @@ CASINO.controller('casinoMyGamesCtrl', ['$scope', '$rootScope', 'Storage', '$loc
         showVisibleGames();
     });
 
-    /**
-     * @description sets game's fun mode button correct text
-     * @param games
-     */
-    function setFunModeText(games) {
-        if ($rootScope.conf.casinoVersion !== 2) {
-            var i, length = games.length;
-            for (i = 0; i < length; i += 1) {
-                if (games[i].hasFunMode && !games[i].funModeText) {
-                    games[i].funModeText = games[i].gameCategory.replace(/\s+/g, '') === CConfig.skillGames.categoryName || games[i].gameCategory.replace(/\s+/g, '') === CConfig.virtualBetting.categoryName ? 'View' : 'Play For Free';
-                }
-
-                if (CConfig.main.guestLabel && !Config.env.authorized) {
-                    games[i].funModeText = CConfig.main.guestLabel;
-                }
-
-            }
-        }
-
-        return games;
-    }
     /**
      * @ngdoc method
      * @name slide
@@ -164,34 +137,12 @@ CASINO.controller('casinoMyGamesCtrl', ['$scope', '$rootScope', 'Storage', '$loc
             }
             $rootScope.$broadcast(page + '.openGame', game, gameType);
         } else {
-            var gameId = $rootScope.conf.casinoVersion !== 2 ? game.gameID : game.front_game_id;
-            if (gameId == CConfig.ogwil.gameID) {
-                if (gameType === 'real' && !$rootScope.env.authorized) {
-                    $rootScope.$broadcast("openLoginForm");
-                } else {
-                    $location.url('/ogwil/');
-                }
-                return;
-            }
-            if ($rootScope.conf.casinoVersion !== 2) {
-                switch (game.gameCategory) {
-                    case CConfig.skillGames.categoryName:
-                        page = 'games';
-                        break;
-                    case CConfig.liveCasino.categoryName:
-                        page = 'livedealer';
-                        break;
-                    default:
-                        page = 'casino';
-                }
+            if (game.categories.indexOf(CConfig.skillGames.categoryId) !== -1) {
+                page = 'games';
+            } else if (game.categories.indexOf(CConfig.liveCasino.categoryId) !== -1) {
+                page = 'livedealer';
             } else {
-                if (game.categories.indexOf(CConfig.skillGames.categoryId) !== -1) {
-                    page = 'games';
-                } else if (game.categories.indexOf(CConfig.liveCasino.categoryId) !== -1) {
-                    page = 'livedealer';
-                } else {
-                    page = 'casino';
-                }
+                page = 'casino';
             }
 
             pagePath =  '/' + page + '/';
@@ -230,6 +181,7 @@ CASINO.controller('casinoMyGamesCtrl', ['$scope', '$rootScope', 'Storage', '$loc
         $scope.removeGameFromSaved(game.id);
     });
     $scope.$on('casinoGamesList.openGame', function(e, data) {
+        if (data.skipFavorite || !data.game) return;
         $scope.openGame(data.game, data.playMode);
     });
 

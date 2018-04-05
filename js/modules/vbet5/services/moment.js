@@ -5,80 +5,10 @@
  * @description  Moment.js lib wrapper (http://momentjs.com/)
  */
 
-VBET5.service('Moment', ['Config', '$locale', function (Config, $locale) {
+VBET5.service('Moment', ['Config', '$locale', 'LanguageCodes', function (Config, $locale, LanguageCodes) {
     'use strict';
     var Moment = {
         moment: moment
-    };
-    var langMapping = {
-        'arm': 'hy-am',
-        'tur': 'tr',
-        'rus': 'ru',
-        'eng': 'en',
-        'gre': 'el',
-        'kor': 'ko',
-        'pol': 'pl',
-        'ger': 'de',
-        'ita': 'it',
-        'cze': 'cs',
-        'spa': 'es',
-        'por': 'pt',
-        'geo': 'ka',
-        'lit': 'lt',
-        'lat': 'lv',
-        'jpn': 'ja',
-        'fas': 'fa',
-        'nor': 'nb',
-        'swe': 'sv',
-        'bos': 'bs',
-        'hrv': 'hr',
-        'mac': 'mk',
-        'slv': 'sl',
-        'srp': 'sr',
-        'heb': 'he',
-        'chi': 'zh-tw',
-        'bgr': 'bg',
-        'vnm': 'vi',
-        'zhh': 'zh-cn',
-        'ukr': 'uk',
-        "kur": 'ar', // Set to arabic since moment.js does not have kurdish for now
-        "fre": 'fr',
-        "arb": 'ar'
-    };
-
-    var langMappingStatistics = {
-        'arm': 'hy',
-        'chi': 'zh',
-        'zhh': 'zs',
-        'eng': 'en',
-        'geo': 'ka',
-        'kor': 'ko',
-        'por': 'pt',
-        'spa': 'es',
-        'tur': 'tr',
-        'rus': 'ru',
-        'fas': 'fa',
-        "arb": 'ar',
-        'pol': 'pl',
-        'ger': 'de',
-        'ita': 'it',
-        'cze': 'cs',
-        'lit': 'lt',
-        'lat': 'lv',
-        'jpn': 'ja',
-        'nor': 'nb',
-        'swe': 'sv',
-        'bos': 'bs',
-        'hrv': 'hr',
-        'mac': 'mk',
-        'slv': 'sl',
-        'srp': 'sr',
-        'heb': 'he',
-        'bgr': 'bg',
-        'vnm': 'vi',
-        'ukr': 'uk',
-        "kur": 'ar', // Set to arabic since moment.js does not have kurdish for now
-        "fre": 'fr'
     };
 
     /**
@@ -88,7 +18,7 @@ VBET5.service('Moment', ['Config', '$locale', function (Config, $locale) {
      * @description Get statistics language
      */
     Moment.getStatisticsLang = function getStatisticsLang () {
-        return langMappingStatistics[Config.env.lang];
+        return LanguageCodes[Config.env.lang];
     };
 
     /**
@@ -98,11 +28,10 @@ VBET5.service('Moment', ['Config', '$locale', function (Config, $locale) {
      * @description Get language
      */
     Moment.getLangMap = function getLangMap() {
-        return langMapping[Config.env.lang];
+        return LanguageCodes[Config.env.lang];
     };
 
-    Moment.moment.locale(langMapping[Config.env.lang]);
-    console.log("Moment setting lang", langMapping[Config.env.lang]);
+    Moment.moment.locale(LanguageCodes[Config.env.lang]);
 
     /**
      * @ngdoc method
@@ -112,7 +41,7 @@ VBET5.service('Moment', ['Config', '$locale', function (Config, $locale) {
      * @param {String} lang language to set
      */
     Moment.setLang = function setLang(lang) {
-        Moment.moment.locale(langMapping[lang] || lang);
+        Moment.moment.locale(LanguageCodes[lang] || lang);
     };
 
     /**
@@ -120,11 +49,11 @@ VBET5.service('Moment', ['Config', '$locale', function (Config, $locale) {
      * @name setLongDateFormat
      * @methodOf vbet5.service:Moment
      * @description Set long date format
-     * @param {String} Time format
+     * @param {String} timeFormat format
      */
     Moment.setLongDateFormat = function setLongDateFormat(timeFormat) {
         if (timeFormat === Config.env.longTimeFormats.HALF) {
-            Moment.moment.locale(langMapping[Config.env.lang], {
+            Moment.moment.locale(LanguageCodes[Config.env.lang], {
                 longDateFormat : {
                     LT: "h:mm A",
                     L: "MM/DD/YYYY",
@@ -139,7 +68,7 @@ VBET5.service('Moment', ['Config', '$locale', function (Config, $locale) {
             });
         }
         if (timeFormat === Config.env.longTimeFormats.FULL) {
-            Moment.moment.locale(langMapping[Config.env.lang], {
+            Moment.moment.locale(LanguageCodes[Config.env.lang], {
                 longDateFormat : {
                     LT: "HH:mm",
                     L: "MM/DD/YYYY",

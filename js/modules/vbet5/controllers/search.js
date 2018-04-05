@@ -73,9 +73,8 @@ VBET5.controller('searchCtrl', ['$rootScope', '$scope', 'TimeoutWrapper', '$rout
 
         if (term && (term.length > 2 || (termIsNumber && Config.main.search.enableSearchByGameNumber))) {
             var like = {}, promiseComp, promiseGame;
-
             like[Utils.getLanguageCode(Config.env.lang)] = term;
-            
+            like['eng'] = term;
             // search for games
             var request = {
                 'source': 'betting',

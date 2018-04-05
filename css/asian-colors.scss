@@ -1,56 +1,91 @@
 @mixin asian-view($skin-color: $skin-color, $asian-light-skin: false) {
   $text-color: $skin-color;
   $text-palette-1: #ffffff; //#ffffff;
-  $text-palette-2: lighten( desaturate( adjust-hue( $text-color, 18deg), 22), 79); //#f3f3f5;
-  $text-palette-3: lighten( desaturate( adjust-hue( $text-color, 2deg), 21), 61); //#c2c5cd;
-  $text-palette-4: lighten( desaturate( adjust-hue( $text-color, 2deg), 22), 36); //#7b8191;
-  $text-palette-5: lighten( desaturate( $text-color, 18), 19); //#505767;
-  $text-palette-6: lighten( desaturate( $text-color, 17), 12); //#3f4553;
-  $text-palette-7: lighten( desaturate( adjust-hue( $text-color, 3deg), 16), 4); //lighten( desaturate( adjust-hue( $skin-color, 3deg ), 16 ), 4 );
-  $text-palette-8: darken( desaturate( adjust-hue( $text-color, 4deg), 11), 1); //#212532;
-  $text-palette-9: lighten( $text-color, 4); //#242e45;
+  $text-palette-2: lighten(desaturate(adjust-hue($text-color, 18deg), 22), 79); //#f3f3f5;
+  $text-palette-3: lighten(desaturate(adjust-hue($text-color, 2deg), 21), 61); //#c2c5cd;
+  $text-palette-4: lighten(desaturate(adjust-hue($text-color, 2deg), 22), 36); //#7b8191;
+  $text-palette-5: lighten(desaturate($text-color, 18), 19); //#505767;
+  $text-palette-6: lighten(desaturate($text-color, 17), 12); //#3f4553;
+  $text-palette-7: lighten(desaturate(adjust-hue($text-color, 3deg), 16), 4); //lighten( desaturate( adjust-hue( $skin-color, 3deg ), 16 ), 4 );
+  $text-palette-8: darken(desaturate(adjust-hue($text-color, 4deg), 11), 1); //#212532;
+  $text-palette-9: lighten($text-color, 4); //#242e45;
   $text-palette-10: $text-color; //#1e2639;
-  $text-palette-11: darken( adjust-hue( $text-color, 4deg), 4); //#171c2c;
-  $text-palette-12: darken( saturate( adjust-hue( $text-color, 4deg), 1), 7); //#121623;
+  $text-palette-11: darken(adjust-hue($text-color, 4deg), 4); //#171c2c;
+  $text-palette-12: darken(saturate(adjust-hue($text-color, 4deg), 1), 7); //#121623;
   $text-palette-13: #000000; //#000000;
-  $text-palette-14: lighten( desaturate( adjust-hue( $text-color, 5deg), 16), 52); //#000000;
-  $text-palette-15: lighten( desaturate( adjust-hue( $text-color, 4deg), 23), 32); //#000000;
-  $button-disable-bg: lighten( desaturate( $skin-color, 17), 12);
+  $text-palette-14: lighten(desaturate(adjust-hue($text-color, 5deg), 16), 52); //#000000;
+  $text-palette-15: lighten(desaturate(adjust-hue($text-color, 4deg), 23), 32); //#000000;
+  $button-disable-bg: lighten(desaturate($skin-color, 17), 12);
   @if $asian-light-skin==true {
     $text-color: #0d1423;
-    $text-palette-15: darken( desaturate( adjust-hue( $text-color, 4deg), 23), 32);
-    $text-palette-14: darken( desaturate( adjust-hue( $text-color, 5deg), 16), 52);
+    $text-palette-15: darken(desaturate(adjust-hue($text-color, 4deg), 23), 32);
+    $text-palette-14: darken(desaturate(adjust-hue($text-color, 5deg), 16), 52);
     $text-palette-13: #ffffff;
-    $text-palette-12: lighten( desaturate( adjust-hue( $text-color, 18deg), 22), 79);
-    $text-palette-11: lighten( desaturate( adjust-hue( $text-color, 2deg), 21), 61);
-    $text-palette-10: lighten( desaturate( adjust-hue( $text-color, 2deg), 22), 36);
-    $text-palette-9: lighten( desaturate( $text-color, 18), 19);
-    $text-palette-8: lighten( desaturate( $text-color, 17), 12);
-    $text-palette-7: lighten( desaturate( adjust-hue( $text-color, 3deg), 16), 4);
-    $text-palette-6: darken( desaturate( adjust-hue( $text-color, 4deg), 11), 1);
-    $text-palette-5: lighten( $text-color, 4);
+    $text-palette-12: lighten(desaturate(adjust-hue($text-color, 18deg), 22), 79);
+    $text-palette-11: lighten(desaturate(adjust-hue($text-color, 2deg), 21), 61);
+    $text-palette-10: lighten(desaturate(adjust-hue($text-color, 2deg), 22), 36);
+    $text-palette-9: lighten(desaturate($text-color, 18), 19);
+    $text-palette-8: lighten(desaturate($text-color, 17), 12);
+    $text-palette-7: lighten(desaturate(adjust-hue($text-color, 3deg), 16), 4);
+    $text-palette-6: darken(desaturate(adjust-hue($text-color, 4deg), 11), 1);
+    $text-palette-5: lighten($text-color, 4);
     $text-palette-4: $text-color;
-    $text-palette-3: darken( adjust-hue( $text-color, 4deg), 4);
-    $text-palette-2: darken( saturate( adjust-hue( $text-color, 4deg), 1), 7);
+    $text-palette-3: darken(adjust-hue($text-color, 4deg), 4);
+    $text-palette-2: darken(saturate(adjust-hue($text-color, 4deg), 1), 7);
     $text-palette-1: #000000;
     $button-border-color: rgba(0, 0, 0, 0.3);
     $button-disable-bg: rgba(0, 0, 0, 0.2);
   }
   .gaming-wrapper-asia {
     color: $text-palette-1;
+    .markets-group-wrap-v3 {
+      background: none;
+    }
+    .game-info .game-detailed-stats {
+      > span.icon-stat-details {
+        box-shadow: 0 -3px 0 darken(desaturate(adjust-hue($skin-color, 4deg), 11), 1);
+        background: darken(desaturate(adjust-hue($skin-color, 4deg), 11), 1);
+        &:before {
+          background: set-color($skin-color);
+          box-shadow: 0 4px 0 set-color($skin-color), 0 8px 0 set-color($skin-color);
+        }
+      }
+      .hover-sp {
+        scrollbar-base-color: darken(desaturate(adjust-hue($skin-color, 4deg), 11), 1);
+        scrollbar-track-color: darken(desaturate(adjust-hue($skin-color, 4deg), 11), 1);
+        scrollbar-shadow-color: darken(desaturate(adjust-hue($skin-color, 4deg), 11), 1);
+        scrollbar-base-color: lighten(desaturate($skin-color, 18), 19);
+        scrollbar-arrow-color: lighten(desaturate($skin-color, 18), 19);
+        &::-webkit-scrollbar-track {
+          border-radius: 10px;
+        }
+        &::-webkit-scrollbar {
+          width: $scrollbar-width;
+          background: darken(desaturate(adjust-hue($skin-color, 4deg), 11), 1);
+          border-radius: 10px;
+        }
+        &::-webkit-scrollbar-thumb {
+          border-radius: 10px;
+          background: lighten(desaturate($skin-color, 18), 19);
+          &:hover {
+            background: lighten(desaturate(lighten(desaturate($skin-color, 18), 19), 1), 6);
+          }
+        }
+      }
+    }
   }
   .gaming-wrapper-asia .md-progress-circular.md-theme {
     .md-inner .md-gap {
-      border-top-color: lighten( desaturate( adjust-hue( $skin-color, 3deg), 16), 4);
-      border-bottom-color: lighten( desaturate( adjust-hue( $skin-color, 3deg), 16), 4);
+      border-top-color: lighten(desaturate(adjust-hue($hero-color, 3deg), 16), 4);
+      border-bottom-color: lighten(desaturate(adjust-hue($hero-color, 3deg), 16), 4);
     }
     .md-inner .md-left .md-half-circle {
-      border-left-color: lighten( desaturate( adjust-hue( $skin-color, 3deg), 16), 4);
-      border-top-color: lighten( desaturate( adjust-hue( $skin-color, 3deg), 16), 4);
+      border-left-color: lighten(desaturate(adjust-hue($hero-color, 3deg), 16), 4);
+      border-top-color: lighten(desaturate(adjust-hue($hero-color, 3deg), 16), 4);
     }
     .md-inner .md-right .md-half-circle {
-      border-right-color: lighten( desaturate( adjust-hue( $skin-color, 3deg), 16), 4);
-      border-top-color: lighten( desaturate( adjust-hue( $skin-color, 3deg), 16), 4);
+      border-right-color: lighten(desaturate(adjust-hue($hero-color, 3deg), 16), 4);
+      border-top-color: lighten(desaturate(adjust-hue($hero-color, 3deg), 16), 4);
     }
   }
   .gaming-wrapper-asia .contein-mini-filtr .md-progress-circular.md-theme {
@@ -68,7 +103,7 @@
     }
   }
   & {
-    background: darken( saturate( adjust-hue( $skin-color, 4deg), 1), 7);
+    background: darken(saturate(adjust-hue($skin-color, 4deg), 1), 7);
   }
   .gaming-wrapper-asia .video-player-control.volume-control > span,
   .gaming-wrapper-asia .contain-v-a-fanction-icons-v3 > ul > li.sound-icon-v3:before {
@@ -76,33 +111,33 @@
   }
   .gaming-wrapper-asia .video-player-control > span.video-pause:before,
   .gaming-wrapper-asia .video-player-control > span.video-play:before {
-    border-right: 1px solid lighten( desaturate( adjust-hue( $skin-color, 3deg), 16), 4);
+    border-right: 1px solid lighten(desaturate(adjust-hue($skin-color, 3deg), 16), 4);
   }
   .gaming-wrapper-asia .game-video-detached {
-    border: 1px solid lighten( desaturate( adjust-hue( $skin-color, 3deg), 16), 4);
-    background: lighten( desaturate( adjust-hue( $skin-color, 3deg), 16), 4);
+    border: 1px solid lighten(desaturate(adjust-hue($skin-color, 3deg), 16), 4);
+    background: lighten(desaturate(adjust-hue($skin-color, 3deg), 16), 4);
   }
   .gaming-wrapper-asia .detached-game-container .detached-game-name {
-    background: lighten( desaturate( adjust-hue( $skin-color, 3deg), 16), 4);
+    background: lighten(desaturate(adjust-hue($skin-color, 3deg), 16), 4);
   }
   .gaming-wrapper-asia .detached-game-container .detached-game-name p {
-    color: set-color(lighten( desaturate( adjust-hue( $skin-color, 3deg), 16), 4));
+    color: set-color(lighten(desaturate(adjust-hue($skin-color, 3deg), 16), 4));
   }
   .asian-left-contain-menu .list-bet-block {
-    background: lighten( desaturate( adjust-hue( $skin-color, 3deg), 16), 4);
+    background: lighten(desaturate(adjust-hue($skin-color, 3deg), 16), 4);
   }
   .asian-left-contain-menu .arrow-bs-type-switcher:after {
     color: $text-palette-1;
   }
   .asian-left-contain-menu .betting-result-info {
-    border-bottom: 1px solid darken( saturate( adjust-hue( $skin-color, 4deg), 1), 7);
-    background: lighten( desaturate( adjust-hue( $skin-color, 3deg), 16), 4);
+    border-bottom: 1px solid darken(saturate(adjust-hue($skin-color, 4deg), 1), 7);
+    background: lighten(desaturate(adjust-hue($skin-color, 3deg), 16), 4);
   }
   .asian-left-contain-menu .bet-notification-warning a {
     color: $text-palette-1;
   }
   .asian-left-contain-menu .button-bet .bet-notification-update-text {
-    background: lighten( desaturate( adjust-hue( $skin-color, 3deg), 16), 4);
+    background: lighten(desaturate(adjust-hue($skin-color, 3deg), 16), 4);
   }
   .asian-left-contain-menu .list-bet-block ul li:first-child span a {
     color: $text-palette-4;
@@ -114,11 +149,11 @@
     color: $text-palette-3;
   }
   .asian-left-contain-menu .single-bet-container .single-bet-betmax {
-    background: lighten( desaturate( adjust-hue( $skin-color, 2deg), 22), 36);
+    background: lighten(desaturate(adjust-hue($skin-color, 2deg), 22), 36);
     color: $text-palette-1;
   }
   .asian-left-contain-menu .bet-currency-value .single-bet-betmax {
-    background: lighten( desaturate( adjust-hue( $skin-color, 2deg), 22), 36);
+    background: lighten(desaturate(adjust-hue($skin-color, 2deg), 22), 36);
     color: $text-palette-1;
   }
   .asian-left-contain-menu .list-bet-block ul li .single-bet-container .single-bet-betmax span {
@@ -126,7 +161,7 @@
   }
   .asian-left-contain-menu .single-bet-container .single-bet-betmax:hover,
   .asian-left-contain-menu .bet-currency-value .single-bet-betmax:hover {
-    background: lighten( desaturate( $skin-color, 18), 19);
+    background: lighten(desaturate($skin-color, 18), 19);
   }
   .asian-left-contain-menu .list-bet-block ul li .betprice, .asian-left-contain-menu .list-bet-block ul li p:nth-of-type(2) span, .asian-left-contain-menu .list-bet-block ul li p span.pick {
     color: $brand-color-2;
@@ -144,19 +179,19 @@
     background: $hero-color;
   }
   .asian-left-contain-menu .button-bet button:disabled {
-    background: darken( desaturate( adjust-hue( $skin-color, 4deg), 11), 1);
+    background: darken(desaturate(adjust-hue($skin-color, 4deg), 11), 1);
     color: $button-disable-bg;
     .md-inner .md-gap {
-      border-top-color: set-color(darken( desaturate( adjust-hue( $skin-color, 4deg), 11), 1));
-      border-bottom-color: set-color(darken( desaturate( adjust-hue( $skin-color, 4deg), 11), 1));
+      border-top-color: set-color(darken(desaturate(adjust-hue($skin-color, 4deg), 11), 1));
+      border-bottom-color: set-color(darken(desaturate(adjust-hue($skin-color, 4deg), 11), 1));
     }
     .md-inner .md-left .md-half-circle {
-      border-left-color: set-color(darken( desaturate( adjust-hue( $skin-color, 4deg), 11), 1));
-      border-top-color: set-color(darken( desaturate( adjust-hue( $skin-color, 4deg), 11), 1));
+      border-left-color: set-color(darken(desaturate(adjust-hue($skin-color, 4deg), 11), 1));
+      border-top-color: set-color(darken(desaturate(adjust-hue($skin-color, 4deg), 11), 1));
     }
     .md-inner .md-right .md-half-circle {
-      border-right-color: set-color(darken( desaturate( adjust-hue( $skin-color, 4deg), 11), 1));
-      border-top-color: set-color(darken( desaturate( adjust-hue( $skin-color, 4deg), 11), 1));
+      border-right-color: set-color(darken(desaturate(adjust-hue($skin-color, 4deg), 11), 1));
+      border-top-color: set-color(darken(desaturate(adjust-hue($skin-color, 4deg), 11), 1));
     }
   }
   .asian-left-contain-menu .betslip-clearall-button i {
@@ -169,17 +204,17 @@
     color: $text-palette-1;
   }
   .asian-left-contain-menu .quick-bet-button .quickbet-switcher-jumper {
-    background: lighten( desaturate( adjust-hue( $skin-color, 2deg), 22), 36);
+    background: lighten(desaturate(adjust-hue($skin-color, 2deg), 22), 36);
   }
   .asian-left-contain-menu .bet-form form input[type="text"] {
-    border: 1px solid darken( saturate( adjust-hue( $skin-color, 4deg), 1), 7);
+    border: 1px solid darken(saturate(adjust-hue($skin-color, 4deg), 1), 7);
     color: $brand-color-2;
-    background: darken( saturate( adjust-hue( $skin-color, 4deg), 1), 7);
+    background: darken(saturate(adjust-hue($skin-color, 4deg), 1), 7);
   }
   .asian-left-contain-menu .single-bet-container [type="text"] {
-    border: 1px solid darken( saturate( adjust-hue( $skin-color, 4deg), 1), 7);
+    border: 1px solid darken(saturate(adjust-hue($skin-color, 4deg), 1), 7);
     color: $brand-color-2;
-    background: lighten( $skin-color, 4);
+    background: lighten($skin-color, 4);
   }
   .asian-left-contain-menu .bet-form form input[type="text"]:focus,
   .asian-left-contain-menu .single-bet-container input[type="text"]:focus {
@@ -200,21 +235,21 @@
   }
   .asian-left-contain-menu .bs-type-switcher,
   .asian-left-contain-menu .betslip-system-chenge {
-    background: darken( desaturate( adjust-hue( $skin-color, 4deg), 15), 1);
+    background: darken(desaturate(adjust-hue($skin-color, 4deg), 15), 1);
   }
   .asian-left-contain-menu .open-type-switcher ul li a {
-    border-bottom: 1px solid darken( saturate( adjust-hue( $skin-color, 4deg), 1), 7);
-    background: lighten( desaturate( adjust-hue( $skin-color, 3deg), 16), 4);
-    box-shadow: 1px 0 0 darken( saturate( adjust-hue( $skin-color, 4deg), 1), 7), -1px 0 0 darken( saturate( adjust-hue( $skin-color, 4deg), 1), 7);
+    border-bottom: 1px solid darken(saturate(adjust-hue($skin-color, 4deg), 1), 7);
+    background: lighten(desaturate(adjust-hue($skin-color, 3deg), 16), 4);
+    box-shadow: 1px 0 0 darken(saturate(adjust-hue($skin-color, 4deg), 1), 7), -1px 0 0 darken(saturate(adjust-hue($skin-color, 4deg), 1), 7);
     color: $text-palette-4;
   }
   .asian-left-contain-menu .open-type-switcher ul li:first-child a,
   .asian-left-contain-menu .open-type-switcher ul:first-child li:first-child a {
-    border-top: 1px solid darken( saturate( adjust-hue( $skin-color, 4deg), 1), 7);
+    border-top: 1px solid darken(saturate(adjust-hue($skin-color, 4deg), 1), 7);
   }
   .asian-left-contain-menu .open-type-switcher ul li a:hover {
     color: $text-palette-1;
-    background: lighten( desaturate( adjust-hue( $skin-color, 3deg), 16), 4);
+    background: lighten(desaturate(adjust-hue($skin-color, 3deg), 16), 4);
   }
   .asian-left-contain-menu .open-type-switcher ul li a.active,
   .asian-left-contain-menu .open-type-switcher ul li a.active:hover {
@@ -229,22 +264,22 @@
     color: $text-palette-1;
   }
   .asian-left-contain-menu .bet-button-wrapper .bet-notification-zone {
-    border-top: 1px solid lighten( desaturate( adjust-hue( $skin-color, 3deg), 16), 4);
-    border-bottom: 1px solid lighten( desaturate( adjust-hue( $skin-color, 3deg), 16), 4);
-    background: lighten( desaturate( adjust-hue( $skin-color, 3deg), 16), 4);
+    border-top: 1px solid lighten(desaturate(adjust-hue($skin-color, 3deg), 16), 4);
+    border-bottom: 1px solid lighten(desaturate(adjust-hue($skin-color, 3deg), 16), 4);
+    background: lighten(desaturate(adjust-hue($skin-color, 3deg), 16), 4);
   }
   .asian-left-contain-menu .button-bet .bet-notification-update-text {
     color: $text-palette-1;
-    box-shadow: 0 0 5px lighten( desaturate( adjust-hue( $skin-color, 2deg), 22), 36);
+    box-shadow: 0 0 5px lighten(desaturate(adjust-hue($skin-color, 2deg), 22), 36);
   }
   .asian-left-contain-menu .bet-settings-container .set-icon:after {
     color: $text-palette-1;
   }
   .asian-left-contain-menu .settings-icon-bet {
-    background: lighten( desaturate( adjust-hue( $skin-color, 3deg), 16), 4);
+    background: lighten(desaturate(adjust-hue($skin-color, 3deg), 16), 4);
   }
   .asian-left-contain-menu .list-bet-block .bet-container .bet-conflict-warning .conflict-content ul li {
-    border-top: 1px solid darken( saturate( adjust-hue( $skin-color, 4deg), 1), 7);
+    border-top: 1px solid darken(saturate(adjust-hue($skin-color, 4deg), 1), 7);
     color: $text-palette-5;
   }
   .asian-left-contain-menu .name-b-list h2 {
@@ -252,14 +287,14 @@
     background: $hero-color;
   }
   .asian-left-contain-menu .list-bet-block ul li {
-    box-shadow: 1px 0 0 darken( saturate( adjust-hue( $skin-color, 4deg), 1), 7) inset, 1px 0 0 darken( saturate( adjust-hue( $skin-color, 4deg), 1), 7) inset;
-    background: darken( desaturate( adjust-hue( $skin-color, 4deg), 15), 1);
+    box-shadow: 1px 0 0 darken(saturate(adjust-hue($skin-color, 4deg), 1), 7) inset, 1px 0 0 darken(saturate(adjust-hue($skin-color, 4deg), 1), 7) inset;
+    background: darken(desaturate(adjust-hue($skin-color, 4deg), 15), 1);
   }
   .asian-left-contain-menu .bet-container .list-bet-block ul {
-    border-bottom: 1px solid darken( saturate( adjust-hue( $skin-color, 4deg), 1), 7);
+    border-bottom: 1px solid darken(saturate(adjust-hue($skin-color, 4deg), 1), 7);
   }
   .asian-left-contain-menu .bet-container .list-bet-block ul.deleted {
-    border-bottom: 1px solid lighten( desaturate( $skin-color, 17), 12);
+    border-bottom: 1px solid lighten(desaturate($skin-color, 17), 12);
   }
   .asian-left-contain-menu .list-bet-block .bet-container ul:last-child {
     border-bottom: 1px solid $hero-color;
@@ -268,17 +303,17 @@
     border-bottom: 1px solid $hero-color;
   }
   .asian-left-contain-menu .list-bet-block ul.changed-j li {
-    background: lighten( desaturate( adjust-hue( $skin-color, 3deg), 16), 4);
+    background: lighten(desaturate(adjust-hue($skin-color, 3deg), 16), 4);
   }
   .asian-left-contain-menu .info-mini-icon {
-    background: darken( desaturate( adjust-hue( $skin-color, 4deg), 15), 1);
+    background: darken(desaturate(adjust-hue($skin-color, 4deg), 15), 1);
   }
   .asian-left-contain-menu .better-odds {
-    border-bottom-color: darken( desaturate( adjust-hue( $skin-color, 5deg), 14), 1);
+    border-bottom-color: darken(desaturate(adjust-hue($skin-color, 5deg), 14), 1);
   }
   .menu-tabs-b ul li {
-    background: lighten( desaturate( adjust-hue( $skin-color, 3deg), 16), 4);
-    border-left: 1px solid darken( saturate( adjust-hue( $skin-color, 4deg), 1), 7);
+    background: lighten(desaturate(adjust-hue($skin-color, 3deg), 16), 4);
+    border-left: 1px solid darken(saturate(adjust-hue($skin-color, 4deg), 1), 7);
     color: $text-palette-1;
   }
   .menu-tabs-b ul li.active {
@@ -287,10 +322,10 @@
   }
   .asian-left-menu ul li {
     color: $text-palette-1;
-    background: darken( desaturate( adjust-hue( $skin-color, 4deg), 15), 1);
+    background: darken(desaturate(adjust-hue($skin-color, 4deg), 15), 1);
   }
   .asian-left-menu .sport-markets-menu ul li {
-    background: darken( desaturate( adjust-hue( $skin-color, 4deg), 15), 1);
+    background: darken(desaturate(adjust-hue($skin-color, 4deg), 15), 1);
   }
   .asian-left-menu ul li:hover .icon-sport-asia,
   .asian-live .mini-icon-1,
@@ -302,10 +337,10 @@
     color: $text-palette-4;
   }
   .asian-left-menu ul li:hover {
-    background: lighten( desaturate( adjust-hue( $skin-color, 3deg), 16), 4);
+    background: lighten(desaturate(adjust-hue($skin-color, 3deg), 16), 4);
   }
   .asian-left-menu ul li.active {
-    background: lighten( desaturate( adjust-hue( $skin-color, 3deg), 16), 4);
+    background: lighten(desaturate(adjust-hue($skin-color, 3deg), 16), 4);
   }
   .icon-sport-asia {
     color: $text-palette-1;
@@ -314,45 +349,45 @@
     color: $text-palette-1;
   }
   .sport-markets-menu ul li {
-    border-bottom: 1px solid darken( saturate( adjust-hue( $skin-color, 4deg), 1), 7);
-    background: lighten( desaturate( adjust-hue( $skin-color, 3deg), 16), 4);
+    border-bottom: 1px solid darken(saturate(adjust-hue($skin-color, 4deg), 1), 7);
+    background: lighten(desaturate(adjust-hue($skin-color, 3deg), 16), 4);
     color: $text-palette-4;
-    box-shadow: 1px 0 0 darken( desaturate( adjust-hue( $skin-color, 4deg), 15), 1) inset, -1px 0 0 darken( desaturate( adjust-hue( $skin-color, 4deg), 15), 1) inset;
+    box-shadow: 1px 0 0 darken(desaturate(adjust-hue($skin-color, 4deg), 15), 1) inset, -1px 0 0 darken(desaturate(adjust-hue($skin-color, 4deg), 15), 1) inset;
   }
   .sport-markets-menu ul li.active {
     color: $text-palette-1;
-    background: lighten( desaturate( adjust-hue( $skin-color, 3deg), 16), 4);
-    box-shadow: 1px 0 0 lighten( desaturate( adjust-hue( $skin-color, 3deg), 16), 4), -1px 0 0 lighten( desaturate( adjust-hue( $skin-color, 3deg), 16), 4);
+    background: lighten(desaturate(adjust-hue($skin-color, 3deg), 16), 4);
+    box-shadow: 1px 0 0 lighten(desaturate(adjust-hue($skin-color, 3deg), 16), 4), -1px 0 0 lighten(desaturate(adjust-hue($skin-color, 3deg), 16), 4);
   }
   .sport-markets-menu ul li:first-child.active,
   .sport-markets-menu ul li:first-child:hover {
-    box-shadow: 0 1px 0 darken( saturate( adjust-hue( $skin-color, 4deg), 1), 7) inset;
+    box-shadow: 0 1px 0 darken(saturate(adjust-hue($skin-color, 4deg), 1), 7) inset;
   }
   .sport-markets-menu ul li:hover {
-    box-shadow: 1px 0 0 lighten( desaturate( adjust-hue( $skin-color, 3deg), 16), 4), -1px 0 0 lighten( desaturate( adjust-hue( $skin-color, 3deg), 16), 4);
+    box-shadow: 1px 0 0 lighten(desaturate(adjust-hue($skin-color, 3deg), 16), 4), -1px 0 0 lighten(desaturate(adjust-hue($skin-color, 3deg), 16), 4);
     color: $text-palette-1;
   }
   .big-filter-wrapper ul li {
-    border-left: 1px solid darken( saturate( adjust-hue( $skin-color, 4deg), 1), 7);
-    background: lighten( desaturate( adjust-hue( $skin-color, 3deg), 16), 4);
+    border-left: 1px solid darken(saturate(adjust-hue($skin-color, 4deg), 1), 7);
+    background: lighten(desaturate(adjust-hue($skin-color, 3deg), 16), 4);
     color: $text-palette-4;
     .menu-arrow-asia {
       color: $text-palette-4;
     }
   }
   .sub-menu-filter ul li {
-    border-bottom: 1px solid darken( saturate( adjust-hue( $skin-color, 4deg), 1), 7);
-    background: lighten( desaturate( adjust-hue( $skin-color, 3deg), 16), 4);
-    box-shadow: 1px 0 0 darken( saturate( adjust-hue( $skin-color, 4deg), 1), 7) inset, -1px 0 0 darken( saturate( adjust-hue( $skin-color, 4deg), 1), 7) inset;
+    border-bottom: 1px solid darken(saturate(adjust-hue($skin-color, 4deg), 1), 7);
+    background: lighten(desaturate(adjust-hue($skin-color, 3deg), 16), 4);
+    box-shadow: 1px 0 0 darken(saturate(adjust-hue($skin-color, 4deg), 1), 7) inset, -1px 0 0 darken(saturate(adjust-hue($skin-color, 4deg), 1), 7) inset;
     color: $text-palette-4;
   }
   .sub-menu-filter ul li:first-child {
-    border-top: 1px solid darken( saturate( adjust-hue( $skin-color, 4deg), 1), 7);
-    border-bottom: 1px solid darken( saturate( adjust-hue( $skin-color, 4deg), 1), 7);
+    border-top: 1px solid darken(saturate(adjust-hue($skin-color, 4deg), 1), 7);
+    border-bottom: 1px solid darken(saturate(adjust-hue($skin-color, 4deg), 1), 7);
   }
   .sub-menu-filter ul li:hover {
     color: $text-palette-1;
-    background: lighten( desaturate( adjust-hue( $skin-color, 3deg), 16), 4);
+    background: lighten(desaturate(adjust-hue($skin-color, 3deg), 16), 4);
   }
   .sub-menu-filter ul li.active,
   .sub-menu-filter ul li.active:hover {
@@ -361,8 +396,8 @@
   }
   .sub-menu-filter ul li input[type="checkbox"] + label:before,
   .popup-asian-info input[type="checkbox"] + label:before {
-    background: darken( saturate( adjust-hue( $skin-color, 4deg), 1), 7);
-    box-shadow: 0 0 1px lighten( desaturate( $skin-color, 18), 19);
+    background: darken(saturate(adjust-hue($skin-color, 4deg), 1), 7);
+    box-shadow: 0 0 1px lighten(desaturate($skin-color, 18), 19);
   }
   .sub-menu-filter ul li input[type="checkbox"]:checked + label:after,
   .popup-asian-info input[type="checkbox"]:checked + label:after {
@@ -372,52 +407,52 @@
     color: $hero-color;
   }
   .name-chempionship-asia {
-    background: lighten( desaturate( $skin-color, 18), 19);
+    background: lighten(desaturate($skin-color, 18), 19);
   }
   .name-chempionship-asia h3 {
     color: $text-palette-1;
   }
   .game-list-compitishion table tr td {
-    border: 1px solid darken( desaturate( adjust-hue( $skin-color, 4deg), 15), 1);
-    background: lighten( desaturate( adjust-hue( $skin-color, 3deg), 16), 4);
+    border: 1px solid darken(desaturate(adjust-hue($skin-color, 4deg), 15), 1);
+    background: lighten(desaturate(adjust-hue($skin-color, 3deg), 16), 4);
   }
   .game-list-compitishion table tr td.big-row {
-    background: lighten( desaturate( $skin-color, 17), 12);
+    background: lighten(desaturate($skin-color, 17), 12);
   }
   .game-list-compitishion table tr td.sport-outright {
-    background: lighten( desaturate( $skin-color, 17), 12);
+    background: lighten(desaturate($skin-color, 17), 12);
   }
   .game-list-compitishion table tr td.sport-outright.date {
-    background: darken( saturate( adjust-hue( $skin-color, 4deg), 1), 7);
+    background: darken(saturate(adjust-hue($skin-color, 4deg), 1), 7);
   }
   .game-list-compitishion table.outright-tamplate tr:nth-last-child(even) td {
-    background: lighten( desaturate( $skin-color, 18), 19);
+    background: lighten(desaturate($skin-color, 18), 19);
   }
   .game-list-compitishion table tr td.section-2 {
-    background: lighten( desaturate( $skin-color, 17), 12);
+    background: lighten(desaturate($skin-color, 17), 12);
   }
   .game-list-compitishion table tr td.section-3 {
-    background: lighten( desaturate( $skin-color, 17), 12);
+    background: lighten(desaturate($skin-color, 17), 12);
   }
   .game-list-compitishion table tr td.section-3 .info-bl {
-    background: darken( desaturate( adjust-hue( lighten( desaturate( $skin-color, 17), 12), -240deg), 4), 40);
+    background: darken(desaturate(adjust-hue(lighten(desaturate($skin-color, 17), 12), -240deg), 4), 40);
     color: $text-palette-1;
   }
   .game-list-compitishion table tr td.more-competition {
-    background: lighten( desaturate( $skin-color, 17), 12);
+    background: lighten(desaturate($skin-color, 17), 12);
   }
   .game-list-compitishion table.match-odd1X2 tr td.factor-w,
   .game-list-compitishion table.name-ft-ht-layout tr td.factor-w {
-    border-left-color: lighten( desaturate( adjust-hue( $skin-color, 3deg), 16), 4);
-    border-right-color: lighten( desaturate( adjust-hue( $skin-color, 3deg), 16), 4);
+    border-left-color: lighten(desaturate(adjust-hue($skin-color, 3deg), 16), 4);
+    border-right-color: lighten(desaturate(adjust-hue($skin-color, 3deg), 16), 4);
   }
   .game-list-compitishion table.match-odd1X2 tr td.factor-w.border-c,
   .game-list-compitishion table.name-ft-ht-layout tr td.factor-w.border-c {
-    border-right-color: darken( saturate( adjust-hue( $skin-color, 4deg), 1), 7);
+    border-right-color: darken(saturate(adjust-hue($skin-color, 4deg), 1), 7);
   }
   .game-list-compitishion table.match-odd1X2 tr td:nth-last-child(2),
   .game-list-compitishion table.name-ft-ht-layout tr td:nth-last-child(2) {
-    border-right-color: darken( saturate( adjust-hue( $skin-color, 4deg), 1), 7);
+    border-right-color: darken(saturate(adjust-hue($skin-color, 4deg), 1), 7);
   }
   .game-list-compitishion table tr td.border-d {
     border-bottom-color: transparent;
@@ -426,7 +461,7 @@
     color: $text-palette-1;
   }
   .more-arrow-b-asia {
-    background: lighten( desaturate( adjust-hue( $skin-color, 3deg), 16), 4);
+    background: lighten(desaturate(adjust-hue($skin-color, 3deg), 16), 4);
     color: $text-palette-1;
   }
   .game-list-compitishion table tr td.name-teams-hdp {
@@ -438,11 +473,11 @@
   }
   .game-list-compitishion table tr td.more-competition.first {
     border-left-color: transparent;
-    background: lighten( desaturate( adjust-hue( $skin-color, 3deg), 16), 4);
+    background: lighten(desaturate(adjust-hue($skin-color, 3deg), 16), 4);
   }
   .block-filter-hdp ul li {
-    background: darken( desaturate( adjust-hue( lighten( desaturate( adjust-hue( $skin-color, 3deg), 16), 4), -240deg), 4), 13);
-    color: $text-palette-1;
+    background: $text-palette-1;
+    color: set-color($text-palette-1);
   }
   .block-filter-hdp ul li:hover,
   .block-filter-hdp ul li.active {
@@ -450,7 +485,7 @@
     color: set-color($hero-color);
   }
   .game-list-compitishion table tr td.more-b-asia {
-    background: lighten( desaturate( adjust-hue( $skin-color, 3deg), 16), 4);
+    background: lighten(desaturate(adjust-hue($skin-color, 3deg), 16), 4);
   }
   .game-list-compitishion table .second-l-hdp tr td:first-child,
   .game-list-compitishion table .second-l-hdp tr td:last-child {
@@ -459,7 +494,7 @@
   }
   .game-list-compitishion table .second-l-hdp tr:last-child td:first-child,
   .game-list-compitishion table .second-l-hdp tr:last-child td:last-child {
-    border-bottom: 1px solid darken( saturate( adjust-hue( $skin-color, 4deg), 1), 7);
+    border-bottom: 1px solid darken(saturate(adjust-hue($skin-color, 4deg), 1), 7);
   }
   .game-list-compitishion table .second-l-hdp tr td:first-child,
   .game-list-compitishion table .second-l-hdp tr td:last-child {
@@ -468,7 +503,7 @@
   }
   .game-list-compitishion table .second-l-hdp tr:last-child td:first-child,
   .game-list-compitishion table .second-l-hdp tr:last-child td:last-child {
-    border-bottom: 1px solid darken( saturate( adjust-hue( $skin-color, 4deg), 1), 7);
+    border-bottom: 1px solid darken(saturate(adjust-hue($skin-color, 4deg), 1), 7);
   }
   .game-list-compitishion table .second-l-hdp tr:nth-child(2n+1) td.section-2 {
     border-top-color: transparent;
@@ -481,39 +516,39 @@
   }
   .game-list-compitishion .match-odd1X2.correct-score tr:last-child td.section-1,
   .game-list-compitishion .match-odd1X2.correct-score tr:last-child td.more-competition {
-    border-bottom-color: darken( saturate( adjust-hue( $skin-color, 4deg), 1), 7);
+    border-bottom-color: darken(saturate(adjust-hue($skin-color, 4deg), 1), 7);
   }
   .big-row .info-bl:before,
   .big-row .info-bl:after {
-    background: lighten( desaturate( $skin-color, 18), 19);
-    box-shadow: 0 1px 0 lighten( desaturate( $skin-color, 18), 19), 0 -1px 0 lighten( desaturate( $skin-color, 18), 19), -1px 0 0 lighten( desaturate( $skin-color, 18), 19);
+    background: lighten(desaturate($skin-color, 18), 19);
+    box-shadow: 0 1px 0 lighten(desaturate($skin-color, 18), 19), 0 -1px 0 lighten(desaturate($skin-color, 18), 19), -1px 0 0 lighten(desaturate($skin-color, 18), 19);
   }
   .name-chempionship-asia.more-c .block-filter-hdp li {
-    background: lighten( desaturate( adjust-hue( $skin-color, 3deg), 16), 4);
+    background: lighten(desaturate(adjust-hue($skin-color, 3deg), 16), 4);
   }
   .name-chempionship-asia.more-c .block-filter-hdp li.active,
   .name-chempionship-asia.more-c .block-filter-hdp li:hover {
-    background: darken( saturate( adjust-hue( $skin-color, 4deg), 1), 7);
+    background: darken(saturate(adjust-hue($skin-color, 4deg), 1), 7);
     color: $text-palette-1;
   }
   .game-list-compitishion table tr td.name-b-more {
-    background: lighten( desaturate( $skin-color, 17), 12);
+    background: lighten(desaturate($skin-color, 17), 12);
   }
   .game-list-compitishion table tr td.comp-column-more {
     color: $text-palette-4;
   }
   .game-list-compitishion table tr td.name-b-more.title {
-    background: darken( saturate( adjust-hue( $skin-color, 4deg), 1), 7);
+    background: darken(saturate(adjust-hue($skin-color, 4deg), 1), 7);
   }
   .game-list-compitishion table.more-events-t tr td.factor-w.border-light {
-    border-right-color: lighten( desaturate( adjust-hue( lighten( desaturate( adjust-hue( $skin-color, 2deg), 22), 36), 34deg), 13), 41);
+    border-right-color: lighten(desaturate(adjust-hue(lighten(desaturate(adjust-hue($skin-color, 2deg), 22), 36), 34deg), 13), 41);
   }
   .game-list-compitishion table.second-more-view td.more-c-view {
-    background: lighten( desaturate( $skin-color, 17), 12);
+    background: lighten(desaturate($skin-color, 17), 12);
   }
   .name-market-view span {
-    background: darken( saturate( adjust-hue( $skin-color, 4deg), 1), 7);
-    border-left: 1px solid darken( saturate( adjust-hue( $skin-color, 4deg), 1), 7);
+    background: darken(saturate(adjust-hue($skin-color, 4deg), 1), 7);
+    border-left: 1px solid darken(saturate(adjust-hue($skin-color, 4deg), 1), 7);
   }
   .game-list-compitishion table.any-markets-more td.more-c-view .name-market-view span {
     border: none;
@@ -526,7 +561,7 @@
     display: inline-block;
     float: left;
     width: calc(100% - 2px);
-    border: 1px solid darken( saturate( adjust-hue( $skin-color, 4deg), 1), 7);
+    border: 1px solid darken(saturate(adjust-hue($skin-color, 4deg), 1), 7);
     border-top: none;
   }
   .many-columns-b.cols-2 ul li {
@@ -541,7 +576,7 @@
   }
   .many-columns-b.cols-3 ul li:first-child,
   .many-columns-b.cols-3 ul li:nth-child(3n+4) {
-    border-left: 1px solid darken( saturate( adjust-hue( $skin-color, 4deg), 1), 7);
+    border-left: 1px solid darken(saturate(adjust-hue($skin-color, 4deg), 1), 7);
     width: calc((100% - 2px) / 3);
   }
   .many-columns-b.cols-4 ul li {
@@ -550,7 +585,7 @@
   }
   .many-columns-b.cols-4 ul li:first-child,
   .many-columns-b.cols-4 ul li:nth-child(4n+5) {
-    border-left: 1px solid darken( saturate( adjust-hue( $skin-color, 4deg), 1), 7);
+    border-left: 1px solid darken(saturate(adjust-hue($skin-color, 4deg), 1), 7);
     width: calc((100% - 8px) / 4);
   }
   .many-columns-b.cols-5 ul li {
@@ -559,17 +594,17 @@
   }
   .many-columns-b.cols-5 ul li:first-child,
   .many-columns-b.cols-5 ul li:nth-child(5n+6) {
-    border-left: 1px solid darken( saturate( adjust-hue( $skin-color, 4deg), 1), 7);
+    border-left: 1px solid darken(saturate(adjust-hue($skin-color, 4deg), 1), 7);
     width: calc((100% - 10px) / 5);
   }
   .many-columns-b ul li:hover {
-    background: lighten( desaturate( $skin-color, 18), 19);
+    background: lighten(desaturate($skin-color, 18), 19);
   }
   .many-columns-b ul li:nth-child(1):hover,
   .many-columns-b ul li:nth-child(2):hover,
   .many-columns-b ul li:nth-child(1),
   .many-columns-b ul li:nth-child(2) {
-    box-shadow: 0 1px 0 darken( saturate( adjust-hue( $skin-color, 4deg), 1), 7) inset;
+    box-shadow: 0 1px 0 darken(saturate(adjust-hue($skin-color, 4deg), 1), 7) inset;
   }
   .many-columns-b ul li.active,
   .many-columns-b ul li.active:hover {
@@ -580,7 +615,7 @@
     background: none;
   }
   .popup-asian-info {
-    background: darken( saturate( adjust-hue( $skin-color, 4deg), 1), 7);
+    background: darken(saturate(adjust-hue($skin-color, 4deg), 1), 7);
   }
   .name-filter-asian h3 {
     color: $text-palette-4;
@@ -593,16 +628,16 @@
     color: set-color($hero-color);
   }
   .filter-function-b ul li button:disabled {
-    background: darken( desaturate( adjust-hue( $skin-color, 4deg), 11), 1);
+    background: darken(desaturate(adjust-hue($skin-color, 4deg), 11), 1);
   }
   .all-filter-competitions ul li {
-    border: 1px solid darken( saturate( adjust-hue( $skin-color, 4deg), 1), 7);
-    background: lighten( desaturate( adjust-hue( $skin-color, 3deg), 16), 4);
+    border: 1px solid darken(saturate(adjust-hue($skin-color, 4deg), 1), 7);
+    background: lighten(desaturate(adjust-hue($skin-color, 3deg), 16), 4);
   }
   .all-filter-competitions ul li:hover {
-    background: lighten( desaturate( adjust-hue( $skin-color, 3deg), 16), 4);
+    background: lighten(desaturate(adjust-hue($skin-color, 3deg), 16), 4);
     border-left-color: $hero-color;
-    border-right-color: darken( saturate( adjust-hue( $skin-color, 4deg), 1), 7);
+    border-right-color: darken(saturate(adjust-hue($skin-color, 4deg), 1), 7);
   }
   .all-filter-competitions ul li.active,
   .all-filter-competitions ul li.active:hover {
@@ -615,17 +650,17 @@
     color: $text-palette-1;
   }
   .asian-live {
-    border: 1px solid darken( saturate( adjust-hue( $skin-color, 4deg), 1), 7);
+    border: 1px solid darken(saturate(adjust-hue($skin-color, 4deg), 1), 7);
     .sport-title {
-      background: lighten( desaturate( adjust-hue( $skin-color, 3deg), 16), 4);
-      border-top: 1px solid lighten( desaturate( adjust-hue( $skin-color, 3deg), 16), 4);
-      color: set-color(lighten( desaturate( adjust-hue( $skin-color, 3deg), 16), 4));
+      background: lighten(desaturate(adjust-hue($skin-color, 3deg), 16), 4);
+      border-top: 1px solid lighten(desaturate(adjust-hue($skin-color, 3deg), 16), 4);
+      color: set-color(lighten(desaturate(adjust-hue($skin-color, 3deg), 16), 4));
       b {
         color: $text-palette-4;
       }
     }
     .game-score-multiset ul.title li {
-      background: lighten( desaturate( $skin-color, 18), 19);
+      background: lighten(desaturate($skin-color, 18), 19);
       border-top: 0 none;
       color: $text-palette-1;
     }
@@ -639,7 +674,7 @@
     }
     .live-stats {
       .game-control {
-        border-top: 1px solid darken( saturate( adjust-hue( $skin-color, 4deg), 1), 7);
+        border-top: 1px solid darken(saturate(adjust-hue($skin-color, 4deg), 1), 7);
       }
       .game-control .statistics-toggle {
         color: white;
@@ -650,7 +685,7 @@
     }
   }
   .gaming-wrapper-asia .sportsbook-top-tab-t {
-    background: lighten( desaturate( adjust-hue( $skin-color, 3deg), 16), 4);
+    background: lighten(desaturate(adjust-hue($skin-color, 3deg), 16), 4);
     border-bottom: 2px solid $hero-color;
   }
   .gaming-wrapper-asia .sportsbook-top-tab-t > ul li {
@@ -664,7 +699,7 @@
     color: $text-palette-4;
   }
   .gaming-wrapper-asia .layout-switcher > ul li i {
-    background: lighten( desaturate( adjust-hue( $skin-color, 2deg), 22), 36);
+    background: lighten(desaturate(adjust-hue($skin-color, 2deg), 22), 36);
     color: $text-palette-12;
   }
   .gaming-wrapper-asia .layout-switcher > ul li.active-format i,
@@ -676,7 +711,7 @@
   .gaming-wrapper-asia .layout-switcher > ul li:hover,
   .gaming-wrapper-asia .sportsbook-top-tab-t > ul li a:hover,
   .gaming-wrapper-asia .sportsbook-top-tab-t > ul li.active a {
-    background: darken( desaturate( adjust-hue( $skin-color, 4deg), 11), 1);
+    background: darken(desaturate(adjust-hue($skin-color, 4deg), 11), 1);
     color: $text-palette-1;
   }
   .gaming-wrapper-asia .layout-switcher > ul li.title-sep:hover {
@@ -698,12 +733,12 @@
     color: $hero-color;
   }
   .selectSportsbookColor-j {
-    background: lighten( desaturate( adjust-hue( $skin-color, 6deg), 19), 7);
+    background: lighten(desaturate(adjust-hue($skin-color, 6deg), 19), 7);
     p:before {
       color: $text-palette-4;
     }
     > div {
-      background: lighten( desaturate( adjust-hue( $skin-color, 6deg), 19), 7);
+      background: lighten(desaturate(adjust-hue($skin-color, 6deg), 19), 7);
       > div {
         color: $text-palette-4;
         &:hover {
@@ -713,13 +748,40 @@
     }
   }
   .gaming-wrapper-asia .list-bet-block ul {
-    border-bottom: 1px solid darken( saturate( adjust-hue( $skin-color, 4deg), 1), 7);
+    border-bottom: 1px solid darken(saturate(adjust-hue($skin-color, 4deg), 1), 7);
   }
   .gaming-wrapper-asia .list-bet-block ul li p span {
     color: $text-palette-4;
   }
-  .gaming-wrapper-asia .asian-left-contain-menu .bet-form form p span:nth-child(2) {
-    color: $text-palette-1;
+  .gaming-wrapper-asia .list-bet-block .button-info-text-view-v3 {
+    width: 245px;
+    bottom: 100%;
+    right: 10px;
+    background: #e4e5ea;
+    >  ul {
+      border: none;
+      > li {
+        background: none;
+        box-shadow: none;
+        padding: 0 0 0 21px;
+        > p {
+          color: #404654;
+          font-size: 12px;
+          font-weight: normal;
+        }
+      }
+    }
+    &:before {
+      border-color: #e4e5ea transparent transparent transparent;
+    }
+  }
+  .gaming-wrapper-asia .asian-left-contain-menu .bet-form form p {
+    span:nth-child(2) {
+      color: $text-palette-1;
+    }
+    input:disabled {
+      color: $text-palette-1;
+    }
   }
   .gaming-wrapper-asia .asian-left-contain-menu .bet-form form p.express-odds span:nth-child(2) {
     color: $brand-color-2;
@@ -730,7 +792,7 @@
   .asian-left-contain-menu {
     .quickBet-and-bsSettings-j {
       color: $text-palette-15;
-      background: darken( desaturate( adjust-hue( $skin-color, -3deg), 8), 5);
+      background: darken(desaturate(adjust-hue($skin-color, -3deg), 8), 5);
       .quickBetButton-j {
         .md-progress-circular.small-progress {
           position: absolute;
@@ -739,30 +801,28 @@
           padding: 0 !important;
           margin: 0 !important;
           .md-inner .md-gap {
-            border-top-color: set-color(darken( desaturate( adjust-hue( $skin-color, -3deg), 8), 5));
-            border-bottom-color: set-color(darken( desaturate( adjust-hue( $skin-color, -3deg), 8), 5));
+            border-top-color: set-color(darken(desaturate(adjust-hue($skin-color, -3deg), 8), 5));
+            border-bottom-color: set-color(darken(desaturate(adjust-hue($skin-color, -3deg), 8), 5));
           }
           .md-inner .md-left .md-half-circle {
-            border-left-color: set-color(darken( desaturate( adjust-hue( $skin-color, -3deg), 8), 5));
-            border-top-color: set-color(darken( desaturate( adjust-hue( $skin-color, -3deg), 8), 5));
+            border-left-color: set-color(darken(desaturate(adjust-hue($skin-color, -3deg), 8), 5));
+            border-top-color: set-color(darken(desaturate(adjust-hue($skin-color, -3deg), 8), 5));
           }
           .md-inner .md-right .md-half-circle {
-            border-right-color: set-color(darken( desaturate( adjust-hue( $skin-color, -3deg), 8), 5));
-            border-top-color: set-color(darken( desaturate( adjust-hue( $skin-color, -3deg), 8), 5));
+            border-right-color: set-color(darken(desaturate(adjust-hue($skin-color, -3deg), 8), 5));
+            border-top-color: set-color(darken(desaturate(adjust-hue($skin-color, -3deg), 8), 5));
           }
         }
         i {
           @if $asian-light-skin==true {
             background: rgba(0, 0, 0, 0.1);
-          }
-          @else {
-            background: lighten( desaturate( adjust-hue( $skin-color, 3deg), 16), 4);
+          } @else {
+            background: lighten(desaturate(adjust-hue($skin-color, 3deg), 16), 4);
           }
           &:before {
             @if $asian-light-skin==true {
               background: $skin-palette-2;
-            }
-            @else {
+            } @else {
               background: $text-palette-2;
             }
           }
@@ -782,12 +842,12 @@
     }
     .betslipOptions-j {
       > div {
-        background: darken( desaturate( adjust-hue( $skin-color, -3deg), 8), 5);
+        background: darken(desaturate(adjust-hue($skin-color, -3deg), 8), 5);
       }
       label {
         span {
           &:before {
-            background: lighten( desaturate( adjust-hue( $skin-color, 3deg), 16), 4);
+            background: lighten(desaturate(adjust-hue($skin-color, 3deg), 16), 4);
           }
         }
         input[type="radio"]:checked + span:before {
@@ -799,14 +859,14 @@
       }
     }
     .additionalButtonsBetslip-j {
-      background: darken( desaturate( adjust-hue( $skin-color, 4deg), 11), 1);
+      background: darken(desaturate(adjust-hue($skin-color, 4deg), 11), 1);
       button {
         span,
         a {
-          color: lighten( desaturate( adjust-hue( $text-color, 1deg), 21), 34);
+          color: lighten(desaturate(adjust-hue($text-color, 1deg), 21), 34);
         }
         &:not(:only-child):not(:first-child):before {
-          background: darken( saturate( adjust-hue( $skin-color, 4deg), 2), 7);
+          background: darken(saturate(adjust-hue($skin-color, 4deg), 2), 7);
         }
         &:hover {
           span,
@@ -819,17 +879,17 @@
     }
     .bookingTabs-j {
       button {
-        background: lighten( desaturate( adjust-hue( $skin-color, 3deg), 16), 4);
+        background: lighten(desaturate(adjust-hue($skin-color, 3deg), 16), 4);
         color: $text-palette-4;
         &.active {
-          background: darken( desaturate( adjust-hue( $skin-color, -3deg), 8), 5);
+          background: darken(desaturate(adjust-hue($skin-color, -3deg), 8), 5);
           color: $brand-color-1;
           box-shadow: none;
         }
       }
     }
     .bsTypeSwitchers-j {
-      background: lighten( desaturate( adjust-hue( $skin-color, 3deg), 16), 4);
+      background: lighten(desaturate(adjust-hue($skin-color, 3deg), 16), 4);
       position: static;
       .bsTypeSwitcher-j {
         > p {
@@ -839,16 +899,16 @@
           }
         }
         &.open > p {
-          background: lighten( desaturate( adjust-hue( $skin-color, 6deg), 19), 7);
+          background: lighten(desaturate(adjust-hue($skin-color, 6deg), 19), 7);
         }
         > div {
-          background: lighten( desaturate( adjust-hue( $skin-color, 6deg), 19), 7);
+          background: lighten(desaturate(adjust-hue($skin-color, 6deg), 19), 7);
           box-shadow: 0 2px 3px -1px rgba(0, 0, 0, 0.4);
           > button {
             color: $text-palette-4;
             background: none;
             > a {
-              box-shadow: 0 1px 0 darken( desaturate( adjust-hue( $skin-color, 4deg), 11), 1) inset;
+              box-shadow: 0 1px 0 darken(desaturate(adjust-hue($skin-color, 4deg), 11), 1) inset;
             }
             &.active {
               background: $brand-color-1;
@@ -867,7 +927,7 @@
   }
   .gaming-wrapper-asia .viewSwitcher-j {
     > ul {
-      background: darken( desaturate( adjust-hue( $skin-color, 4deg), 11), 1);
+      background: darken(desaturate(adjust-hue($skin-color, 4deg), 11), 1);
       color: $text-palette-14;
       > li {
         &.scrollToggle,
@@ -878,7 +938,7 @@
           }
         }
         &:not(:only-child):not(:last-child):after {
-          background: darken( desaturate( adjust-hue( $skin-color, 5deg), 9), 9);
+          background: darken(desaturate(adjust-hue($skin-color, 5deg), 9), 9);
         }
         p {
           &:before {
@@ -887,16 +947,16 @@
         }
         &.active {
           p {
-            background: lighten( desaturate( adjust-hue( $skin-color, 6deg), 19), 7);
+            background: lighten(desaturate(adjust-hue($skin-color, 6deg), 19), 7);
           }
         }
         > ul {
-          background: lighten( desaturate( adjust-hue( $skin-color, 6deg), 19), 7);
+          background: lighten(desaturate(adjust-hue($skin-color, 6deg), 19), 7);
           > li {
             color: $text-palette-4;
             font: 12px/30px $font-f;
             span {
-              box-shadow: 0 1px 0 darken( desaturate( adjust-hue( $skin-color, 4deg), 11), 1) inset;
+              box-shadow: 0 1px 0 darken(desaturate(adjust-hue($skin-color, 4deg), 11), 1) inset;
             }
             &.active {
               background: $brand-color-1;
@@ -914,36 +974,34 @@
     }
   }
   .asian-live .mini-icon-1:before {
-    color: set-color(lighten( desaturate( $skin-color, 18), 19));
+    color: set-color(lighten(desaturate($skin-color, 18), 19));
   }
   .gaming-wrapper-asia {
     .animation-video-title-row-v3 {
-      border-bottom: 1px solid lighten( desaturate( adjust-hue( darken( adjust-hue( $skin-color, 4deg), 4), -4deg), 18), 23);
-      background: lighten( desaturate( adjust-hue( darken( adjust-hue( $skin-color, 4deg), 4), -1deg), 16), 8);
+      border-bottom: 1px solid lighten(desaturate(adjust-hue(darken(adjust-hue($skin-color, 4deg), 4), -4deg), 18), 23);
+      background: lighten(desaturate(adjust-hue(darken(adjust-hue($skin-color, 4deg), 4), -1deg), 16), 8);
     }
     .anime-video-switcher-v3 {
-      background: lighten( desaturate( darken( adjust-hue( $skin-color, 4deg), 4), 11), 3);
+      background: lighten(desaturate(darken(adjust-hue($skin-color, 4deg), 4), 11), 3);
     }
     .anime-video-switcher-v3 > ul > li:before {
       @if $asian-light-skin==true {
-        color: darken( desaturate( adjust-hue( $text-palette-11, -4deg), 18), 23);
-      }
-      @else {
-        color: lighten( desaturate( adjust-hue( $text-palette-11, -2deg), 22), 40);
+        color: darken(desaturate(adjust-hue($text-palette-11, -4deg), 18), 23);
+      } @else {
+        color: lighten(desaturate(adjust-hue($text-palette-11, -2deg), 22), 40);
       }
     }
     .anime-video-switcher-v3 > ul > li.active:before {
       color: set-color($hero-color);
     }
     .contain-v-a-fanction-icons-v3 > ul > li {
-      border-left: 1px solid lighten( desaturate( adjust-hue( darken( adjust-hue( $skin-color, 4deg), 4), -1deg), 16), 3);
+      border-left: 1px solid lighten(desaturate(adjust-hue(darken(adjust-hue($skin-color, 4deg), 4), -1deg), 16), 3);
     }
     .contain-v-a-fanction-icons-v3 > ul > li:before {
       @if $asian-light-skin==true {
-        color: darken( desaturate( adjust-hue( $text-palette-11, -2deg), 22), 40);
-      }
-      @else {
-        color: lighten( desaturate( adjust-hue( $text-palette-11, -2deg), 22), 40);
+        color: darken(desaturate(adjust-hue($text-palette-11, -2deg), 22), 40);
+      } @else {
+        color: lighten(desaturate(adjust-hue($text-palette-11, -2deg), 22), 40);
       }
     }
     .contain-v-a-fanction-icons-v3 > ul > li.active:before {
@@ -951,14 +1009,14 @@
     }
     .animation-control,
     .animation-control .game-video {
-      background: darken( desaturate( adjust-hue( $skin-color, 4deg), 11), 1);
+      background: darken(desaturate(adjust-hue($skin-color, 4deg), 11), 1);
     }
     .game-video-container p {
       color: $text-palette-1;
     }
   }
   .asian-left-contain-menu .booking-id-text-v3 {
-    border-bottom: 1px solid darken( desaturate( adjust-hue( darken( adjust-hue( $skin-color, 4deg ), 4 ), 6deg), 1), 5);
+    border-bottom: 1px solid darken(desaturate(adjust-hue(darken(adjust-hue($skin-color, 4deg), 4), 6deg), 1), 5);
     color: $text-palette-4;
     span + span {
       color: $text-palette-2;
@@ -979,21 +1037,21 @@
   .game-list-compitishion table tr td.section-1,
   table.hdp-contain-j td small,
   .game-list-compitishion table tr .more-arrow-b-asia {
-    color: $text-palette-4;
+    color: $text-palette-3;
   }
   .game-list-compitishion table.hdp-contain-title tr td.more-competition {
     color: $text-palette-3;
   }
   .has-video,
   .game-is-neutral {
-    color: $text-palette-3;
+    color: $text-palette-1;
   }
   .prematch-game-title {
-    background: lighten( desaturate( adjust-hue( $skin-color, 3deg ), 16 ), 4 );
+    background: lighten(desaturate(adjust-hue($skin-color, 3deg), 16), 4);
   }
   .asian-left-contain-menu {
     .sports-item-v3 {
-      background: darken( desaturate( adjust-hue( $skin-color, 4deg), 15), 1);
+      background: darken(desaturate(adjust-hue($skin-color, 4deg), 15), 1);
       > p {
         color: $text-palette-3;
       }
@@ -1008,19 +1066,22 @@
       }
     }
     .single-game-item-v3 {
-      background: darken( desaturate( adjust-hue( $skin-color, 4deg), 15), 1);
+      background: darken(desaturate(adjust-hue($skin-color, 4deg), 15), 1);
       .team-name-1-v3 > p {
         color: $text-palette-3;
       }
       .game-info-mini-v3 > p {
         color: $text-palette-4;
       }
-      &.active:before {
-        box-shadow: 2px 0 0 lighten( desaturate( $skin-color, 18 ), 19 ) inset;
+      &.active {
+        background: lighten(desaturate(adjust-hue($skin-color, 4deg), 15), 10);
+        &:before {
+          box-shadow: 2px 0 0 lighten(desaturate($skin-color, 18), 19) inset;
+        }
       }
     }
     .games-list-mini-view-v3 .blocked-icon-v3 {
-      background: darken( adjust-hue( $skin-color, 4deg ), 4 );
+      background: darken(adjust-hue($skin-color, 4deg), 4);
     }
     .icon-separator-v3 {
       color: $text-palette-4;
@@ -1029,16 +1090,16 @@
       color: $text-palette-4;
     }
     .icon-separator-v3.market-count-v3 > span {
-      background: darken( adjust-hue( $skin-color, 4deg ), 4 );
+      background: darken(adjust-hue($skin-color, 4deg), 4);
       color: $text-palette-3;
     }
   }
   .asian-separator-container-b {
     .markets-group-wrap-v3 {
-      border-bottom-color: lighten( desaturate( $skin-color, 17 ), 12 );
+      border-bottom-color: lighten(desaturate($skin-color, 17), 12);
       > ul {
         > li {
-          background-color: darken( desaturate( adjust-hue( $skin-color, 4deg ), 11 ), 1 );
+          background-color: darken(desaturate(adjust-hue($skin-color, 4deg), 11), 1);
           color: $text-palette-4;
           &.more-j {
             &:before {
@@ -1046,7 +1107,7 @@
             }
           }
           &.favorte-markets-group-j {
-            background-color: lighten( desaturate( adjust-hue( $skin-color, 3deg ), 16 ), 4 );
+            background-color: lighten(desaturate(adjust-hue($skin-color, 3deg), 16), 4);
             &,
             &.active {
               &:before {
@@ -1056,24 +1117,24 @@
           }
           &:hover,
           &.active {
-            background-color: lighten( desaturate( $skin-color, 17 ), 12 );
+            background-color: lighten(desaturate($skin-color, 17), 12);
             color: $text-palette-1;
           }
         }
         &.has-dropdown {
           > li {
             &:nth-child(7) ~ li {
-              background: lighten( desaturate( adjust-hue( lighten(desaturate(adjust-hue($skin-color,3deg),16),4), 3deg ), 3 ), 3 );
+              background: lighten(desaturate(adjust-hue(lighten(desaturate(adjust-hue($skin-color, 3deg), 16), 4), 3deg), 3), 3);
               &:hover,
               &.active {
                 background: $brand-color-1;
                 color: set-color($brand-color-1);
                 span {
-                  box-shadow: 0 -1px 0 rgba(darken( desaturate( adjust-hue( $skin-color, 4deg ), 11 ), 1 ), 0) inset;
+                  box-shadow: 0 -1px 0 rgba(darken(desaturate(adjust-hue($skin-color, 4deg), 11), 1), 0) inset;
                 }
               }
               span {
-                box-shadow: 0 -1px 0 darken( desaturate( adjust-hue( $skin-color, 4deg ), 11 ), 1 ) inset;
+                box-shadow: 0 -1px 0 darken(desaturate(adjust-hue($skin-color, 4deg), 11), 1) inset;
               }
             }
           }
@@ -1082,7 +1143,7 @@
               &.more-j {
                 &,
                 &:hover {
-                  background: lighten( desaturate( adjust-hue( lighten(desaturate(adjust-hue($skin-color,3deg),16),4), 3deg ), 3 ), 3 );
+                  background: lighten(desaturate(adjust-hue(lighten(desaturate(adjust-hue($skin-color, 3deg), 16), 4), 3deg), 3), 3);
                   background-clip: padding-box;
                   color: $text-palette-1;
                 }
@@ -1104,26 +1165,26 @@
       }
     }
     &:not(.locked):not(.active):hover .asian-market-j {
-      background: lighten( desaturate( $skin-color, 17 ), 12 );
-      box-shadow: 0 0 0 200px lighten( desaturate( $skin-color, 17 ), 12 );
+      background: lighten(desaturate($skin-color, 17), 12);
+      box-shadow: 0 0 0 200px lighten(desaturate($skin-color, 17), 12);
     }
     &.up:not(.active):not(.locked) {
       .asian-market-j {
         @if ($asian-switch-odds-state-colors == true) {
-          color: #e44108;
+          color: map-get($coeff-color-map, asian-down);
         }
         @if ($asian-switch-odds-state-colors == false) {
-          color: #1dbd15;
+          color: map-get($coeff-color-map, asian-up);
         }
       }
     }
     &.down:not(.active):not(.locked) {
       .asian-market-j {
         @if ($asian-switch-odds-state-colors == true) {
-          color: #1dbd15;
+          color: map-get($coeff-color-map, asian-up);
         }
         @if ($asian-switch-odds-state-colors == false) {
-          color: #e44108;
+          color: map-get($coeff-color-map, asian-down);
         }
       }
     }
@@ -1143,8 +1204,8 @@
       }
     }
     .asian-market-j {
-      background: lighten( desaturate( adjust-hue( $skin-color, 3deg), 16), 4);
-      box-shadow: 0 0 0 200px lighten( desaturate( adjust-hue( $skin-color, 3deg), 16), 4);
+      background: lighten(desaturate(adjust-hue($skin-color, 3deg), 16), 4);
+      box-shadow: 0 0 0 200px lighten(desaturate(adjust-hue($skin-color, 3deg), 16), 4);
       color: #CE9F5B;
       @if $asian-light-skin == true {
         color: #000;
@@ -1155,20 +1216,20 @@
     }
   }
   .headerVersion_2 .subtop-header-menu-j, .headerVersion_2 .subtop-game-menu-j {
-    background: darken( desaturate( adjust-hue( $skin-color, 4deg ), 11 ), 1 );
+    background: darken(desaturate(adjust-hue($skin-color, 4deg), 11), 1);
   }
   .subtop-header-menu-j {
     > ul {
       > li {
         > a {
-          color: rgba(set-color(darken( desaturate( adjust-hue( $skin-color, 4deg ), 11 ), 1 )), 0.73);
+          color: rgba(set-color(darken(desaturate(adjust-hue($skin-color, 4deg), 11), 1)), 0.73);
           &:hover {
-            color: set-color(darken( desaturate( adjust-hue( $skin-color, 4deg ), 11 ), 1 ));
+            color: set-color(darken(desaturate(adjust-hue($skin-color, 4deg), 11), 1));
           }
         }
         &.active {
           > a {
-            color: set-color(darken( desaturate( adjust-hue( $skin-color, 4deg ), 11 ), 1 ));
+            color: set-color(darken(desaturate(adjust-hue($skin-color, 4deg), 11), 1));
           }
         }
       }
@@ -1176,16 +1237,16 @@
   }
   table.hdp-contain-j {
     .dark-bg-j {
-      background: lighten( desaturate( adjust-hue( $skin-color, 3deg ), 16 ), 4 );
+      background: lighten(desaturate(adjust-hue($skin-color, 3deg), 16), 4);
     }
     .light-bg-j {
-      background: lighten( desaturate( $skin-color, 17 ), 12 );
+      background: lighten(desaturate($skin-color, 17), 12);
     }
     .dark-bg-j.asian-market-overflow-j .asian-market-wrap-j .asian-market-j {
       .asian-market-cell-j {
         &:nth-last-child(2) {
-          background: lighten( desaturate( adjust-hue( $skin-color, 3deg ), 16 ), 4 );
-          box-shadow: 0 26px 0 lighten( desaturate( adjust-hue( $skin-color, 3deg ), 16 ), 4 ), 0 -26px 0 lighten( desaturate( adjust-hue( $skin-color, 3deg ), 16 ), 4 );
+          background: lighten(desaturate(adjust-hue($skin-color, 3deg), 16), 4);
+          box-shadow: 0 26px 0 lighten(desaturate(adjust-hue($skin-color, 3deg), 16), 4), 0 -26px 0 lighten(desaturate(adjust-hue($skin-color, 3deg), 16), 4);
           .asian-market-rub-j {
             color: $text-palette-3;
           }
@@ -1195,10 +1256,10 @@
   }
   .asian-pagination {
     > button {
-      background: lighten( desaturate( adjust-hue( $skin-color, 3deg ), 16 ), 4 );
+      background: lighten(desaturate(adjust-hue($skin-color, 3deg), 16), 4);
       color: $text-palette-4;
       &:hover {
-        background: lighten(lighten( desaturate( adjust-hue( $skin-color, 3deg ), 16 ), 4 ), 10);
+        background: lighten(lighten(desaturate(adjust-hue($skin-color, 3deg), 16), 4), 10);
         color: lighten($text-palette-4, 10);
       }
       &.active {
@@ -1208,33 +1269,34 @@
     }
   }
   .asian-left-contain-menu {
-    scrollbar-base-color: darken( desaturate( adjust-hue( $skin-color, 4deg ), 11 ), 1 );
-    scrollbar-track-color: darken( desaturate( adjust-hue( $skin-color, 4deg ), 11 ), 1 );
-    scrollbar-shadow-color: darken( desaturate( adjust-hue( $skin-color, 4deg ), 11 ), 1 );
-    scrollbar-base-color: lighten( desaturate( $skin-color, 18 ), 19 );
-    scrollbar-arrow-color: lighten( desaturate( $skin-color, 18 ), 19 );
+    scrollbar-base-color: darken(desaturate(adjust-hue($skin-color, 4deg), 11), 1);
+    scrollbar-track-color: darken(desaturate(adjust-hue($skin-color, 4deg), 11), 1);
+    scrollbar-shadow-color: darken(desaturate(adjust-hue($skin-color, 4deg), 11), 1);
+    scrollbar-base-color: lighten(desaturate($skin-color, 18), 19);
+    scrollbar-arrow-color: lighten(desaturate($skin-color, 18), 19);
     &::-webkit-scrollbar-track {
       border-radius: 10px;
     }
     &::-webkit-scrollbar {
       width: $scrollbar-width;
-      background: darken( desaturate( adjust-hue( $skin-color, 4deg ), 11 ), 1 );
+      background: darken(desaturate(adjust-hue($skin-color, 4deg), 11), 1);
       border-radius: 10px;
     }
     &::-webkit-scrollbar-thumb {
       border-radius: 10px;
-      background: lighten( desaturate( $skin-color, 18 ), 19 );
+      background: lighten(desaturate($skin-color, 18), 19);
       &:hover {
-        background: lighten( desaturate( lighten( desaturate( $skin-color, 18 ), 19 ), 1 ), 6 );
+        background: lighten(desaturate(lighten(desaturate($skin-color, 18), 19), 1), 6);
       }
     }
   }
   .dark-bg-j.more-arrow-j-asia {
     color: $text-palette-1;
     &:hover {
-      background: lighten( desaturate( $skin-color, 17 ), 12 );
+      background: lighten(desaturate($skin-color, 17), 12);
     }
   }
+  .asian-button-refresh-view,
   .refresh-asian-view button {
     color: $text-palette-3;
     &:hover {
@@ -1257,14 +1319,48 @@
       }
     }
   }
+  table.hdp-contain-j td {
+    $border-color: lighten(desaturate($skin-color, 18), 19);
+    &.br-j {
+      border-right: 1px solid $border-color;
+    }
+    &.bt-j {
+      border-top: 1px solid $border-color;
+    }
+    &.bb-j {
+      border-bottom: 1px solid $border-color;
+    }
+    &.bl-j {
+      border-left: 1px solid $border-color;
+    }
+    table td {
+      &.dark-bg-j {
+        &:first-child, &:last-child {
+          &.bb-j {
+            border-bottom-color: lighten(desaturate(adjust-hue($skin-color, 3deg), 16), 4);;
+          }
+        }
+      }
+    }
+  }
+  .asian-fix-buttons button {
+    background: rgba(darken(desaturate(adjust-hue($skin-color, 4deg), 11), 1), 0.65);
+    color: set-color($skin-color);
+    &:before {
+      border-color: set-color($skin-color);
+    }
+  }
 }
+
 .body-wrapper.asian {
   @include asian-view($skin-color, $white-skin);
 }
+
 $compile-asian-themes: false !default;
 @if $compile-asian-themes==true {
   .body-wrapper.asian-white {
-    @include asian-view(#e7e7e7, true);
+    @include asian-view(#d6d6d6, true);
+
   }
   .body-wrapper.asian-black {
     @include asian-view(#161616);

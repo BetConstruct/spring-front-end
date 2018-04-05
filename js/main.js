@@ -5,7 +5,7 @@
  * @name index
  * @description <h1>the main application is 'app' which loads all needed modules</h1>
  */
-var availableModules = ['vbet5', 'CMS', 'casino', 'exchange'].reduce(function (acc, curr) {
+var availableModules = ['vbet5', 'CMS', 'casino'].reduce(function (acc, curr) {
     'use strict';
     try {
         angular.module(curr);
@@ -20,7 +20,7 @@ angular.module('app', availableModules);
 
 angular.module('app').config(['$compileProvider', function ($compileProvider) {
     'use strict';
-    $compileProvider.aHrefSanitizationWhitelist(/^\s*(https?|ftp|mailto|file|javascript|tel):/);
+    $compileProvider.aHrefSanitizationWhitelist(/^\s*(https?|ftp|mailto|file|javascript|tel|viber|skype):/);
 }]);
 
 (function () {
@@ -63,12 +63,16 @@ angular.module('app').config(['$compileProvider', function ($compileProvider) {
         var configUrlPrefix = "";
         if (getURLParameter('conf')) {
             configUrlPrefix = getURLParameter('conf');
-        } else if (document.getElementById("app-config") && document.getElementById("app-config").getAttribute('data-config-url-path')) {
-            configUrlPrefix = document.getElementById("app-config").getAttribute('data-config-url-path');
+        } else if (document.getElementById("app-config")) {
+            if (document.getElementById("app-config").getAttribute('data-config-url-path')) {
+                configUrlPrefix = document.getElementById("app-config").getAttribute('data-config-url-path');
+            } else if (window.location.hostname === 'localhost' && document.getElementById("app-config").getAttribute('data-config-is-externall') === 'true') {
+                configUrlPrefix = 'https://cmsbetconstruct.com/general/getConfJson?skin_id=' + document.getElementById("app-config").getAttribute('data-id') + '?';
+            }
         }
 
         // allow config change only from these hosts (must be lowercase!)
-        var ALLOWED_CONFIG_HOSTS = ["config.betconstruct.me","configs.betconstruct.me", "172.16.79.148", "cms.betconstruct.com"];
+        var ALLOWED_CONFIG_HOSTS = ["config.betconstruct.me","configs.betconstruct.me", "172.16.79.148", "cms.betconstruct.com", "cmsbetconstruct.com"];
 
         if (ALLOWED_CONFIG_HOSTS.indexOf(getLocation(configUrlPrefix).host.toLowerCase()) === -1) {
             configUrlPrefix = '';
@@ -76,8 +80,12 @@ angular.module('app').config(['$compileProvider', function ($compileProvider) {
 
         return $http.get(configUrlPrefix + "conf.json?" + getCurrentTimeRoundedByMinutes(5)).then(
             function (response) {
-                runtimeConfig = response.data;
-                angular.module("app").constant("RuntimeConfig", response.data);
+                if (response.data && response.data.status === -1) {
+                    angular.module("app").constant("RuntimeConfig", {});
+                } else {
+                    runtimeConfig = response.data;
+                    angular.module("app").constant("RuntimeConfig", response.data);
+                }
             },
             function () {
                 angular.module("app").constant("RuntimeConfig", {});
@@ -132,7 +140,7 @@ angular.module('app').config(['$compileProvider', function ($compileProvider) {
             urlPrefix = (appLocation.protocol + "//" + appLocation.host + appLocation.pathname).replace("app.min.js", "");
         }
         var antiCacheDate = new Date(), antiCacheDateFormatted = antiCacheDate.getFullYear() + '-' + (antiCacheDate.getMonth() + 1) + '-' + antiCacheDate.getDate();
-        var langUrl = urlPrefix + (urlPrefix.substr(-1) === '/' || !urlPrefix.length ? "" : "/") + "languages/" + lang + ".json?antiCache=" + antiCacheDateFormatted;
+        var langUrl = urlPrefix + (urlPrefix.substr(-1) === '/' || !urlPrefix.length ? "" : "/") + "languages/" + (getLocationParam('notrans') === 'id' ? 'notrans' : lang) + ".json?antiCache=" + antiCacheDateFormatted;
         console.log('loading language:', lang, langUrl);
         amplify.store('lang', lang);
         return $http.get(langUrl).then(

@@ -1,0 +1,130 @@
+<div ng-controller="buddyCtrl" ng-if="conf.GmsPlatform" class="info-scroll-contain-b-new buddy-transfer-mixed-view-t">
+    <!-- Version 1 -->
+    <div ng-if="conf.buddyTransfer.version === 1">
+        <h5 trans>Buddy transfer</h5>
+        <div class="form-j">
+            <label>
+                <p trans>Friend's username</p>
+                <input type="text" ng-model="transferData.friendName"/>
+            </label>
+            <label>
+                <p trans>Amount</p>
+                <div class="small-currency-wrapper-j">
+                    <small ng-show="!selectedPaymentSystem.customCurrency">
+                        {{profile.currency_name|currency}}
+                    </small>
+                    <input type="number" ng-model="transferData.transferAmount" comma
+                           comma-enable={{conf.enableCommaSeparateNumber}} comma-decimal="enable"
+                           comma-dot="{{conf.enableDotInsteadComma}}"/>
+                </div>
+            </label>
+            <button ng-disabled="!(transferData.friendName.trim() && transferData.transferAmount) || transactionInProgress"
+                    ng-click="makeTransfer()" trans>Transfer
+            </button>
+        </div>
+    </div>
+    <!-- Version 2 -->
+    <div ng-if="conf.buddyTransfer.version === 2">
+        <div class="buddy-transfer-j">
+            <div class="wrap-standart-j">
+                <div class="topprim-text-j">
+                    <h2 trans>Find friend by username</h2>
+                </div>
+                <div class="transb-group-j">
+                    <!--step1-->
+                    <div class="transfer-block-j  choose-user-j" ng-class="{'active': currentStep === 'step1'}">
+                        <div class="transferb-title-j">
+                            <h3 trans>Choose User</h3>
+                        </div>
+                        <div class="transb-inner-wrap">
+                            <form>
+                                <label>
+                                    <p class="info-title-j" trans>Friend's username</p>
+                                    <input type="text" ng-model="transferFormModel.buddyUsername">
+                                    <button class="search-j" ng-click="searchFriend(transferFormModel.buddyUsername)"></button>
+                                </label>
+                            </form>
+                            <div class="search-result-j">
+                                <p class="info-title-j">
+                                    <span class="active-j" trans>Friends list</span>
+                                </p>
+                                <div class="firends-scroll-j">
+                                    <ul>
+                                        <li ng-repeat="friend in friendList">
+                                            <label ng-click="chooseBuddy(friend)" ng-if="friend.show">
+                                                <input type="radio" name="select-friend-j" ng-model="transferFormModel.buddyUsername" value="{{friend.username}}"/>
+                                                <i></i>
+                                                <span>{{friend.username}}</span>
+                                            </label>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <vbet-loader class="page-center" ng-show="!friendListLoaded"></vbet-loader>
+                        <div class="tb-button-w-j">
+                            <button ng-click="chooseBuddy(); currentStep = 'step2'" ng-disabled="transferFormModel.buddyUsername === ''" trans>Continue</button>
+                        </div>
+                    </div>
+                    <!--step2-->
+                    <div class="transfer-block-j confirmation-j" ng-class="{'active': currentStep === 'step2'}">
+                        <div class="transferb-title-j">
+                            <h3 trans>Confirmation</h3>
+                        </div>
+                        <div class="transb-inner-wrap">
+                            <ul class="confirm-info-j">
+                                <label class="tbuddy-amount-j">
+                                    <p class="info-title-j" trans>Amount</p>
+                                    <span>{{profile.currency_name|currency}}</span>
+                                    <input ng-model="transferFormModel.amount" ng-disabled="maxAmount === 0" type="number" min="0" max="{{maxAmount}}" step="0.1">
+                                    <button ng-click="setMaxAmount()" trans>Max</button>
+                                </label>
+                                <li>
+                                    <p class="info-title-j" trans>Trasfer From</p>
+                                </li>
+                                <li>
+                                    <p trans>From My Account</p>
+                                    <p>{{transferFormModel.amount}} <span> {{profile.currency_name|currency}}</span></p>
+                                </li>
+                            </ul>
+                            <ul class="confirm-info-j">
+                                <li>
+                                    <p class="info-title-j"><span trans>To</span> <span>{{transferData.buddyUsername}}</span></p>
+                                </li>
+                                <li>
+                                    <p>{{transferFormModel.amount}} <span> {{profile.currency_name|currency}}</span></p>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="tb-button-w-j">
+                            <button class="skin-j" ng-click="currentStep = 'step1'" trans>Back</button>
+                            <button ng-click="makeTransfer(); currentStep = 'step3'" ng-disabled="maxAmount === 0 || !transferFormModel.amount || transferFormModel.amount > maxAmount" trans>Transfer</button>
+                        </div>
+                    </div>
+                    <!--step3-->
+                    <div class="transfer-block-j " ng-class="{'active': currentStep === 'step3', 'success-j': confirmResponse.type === 'Success', 'success-j error-j': confirmResponse.type === 'Error'}">
+                        <div ng-show="confirmResponse && confirmationLoaded">
+                            <div class="transferb-title-j">
+                                <h3>{{confirmResponse.type | translate}}</h3>
+                            </div>
+                            <div class="transb-inner-wrap">
+                                <div class="succes-big-j">
+                                </div>
+                                <p ng-bind-html="confirmResponse.message|translate|html"></p>
+                            </div>
+                            <div class="tb-button-w-j" ng-show="confirmResponse.nextStep">
+                                <button ng-click="currentStep = confirmResponse.nextStep" trans>Back</button>
+                            </div>
+                            <div class="tb-button-w-j" ng-show="!confirmResponse.nextStep">
+                                <button ng-show="!confirmResponse.nextStep" ng-click="closeSlider()" trans>Ok</button>
+                            </div>
+                        </div>
+                        <vbet-loader class="page-center" ng-show="!confirmationLoaded"></vbet-loader>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+

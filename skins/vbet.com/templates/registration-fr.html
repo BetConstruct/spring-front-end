@@ -1,7 +1,7 @@
 <div class="extended-reg-j" ng-controller="RegistrationController as regCtrl">
     <div ng-show="!registration.complete && !registration.failed" ng-init="regFormInit()">
         <form name="registerform" class="registration-form" novalidate="novalidate" id="simplified-reg-form">
-            <h1 trans>Informations personnellesd - Personal information</h1>
+            <h1 trans>Informations personnelles</h1>
             <table>
                 <tr>
                     <td>
@@ -40,8 +40,7 @@
                             </ul>
                             <hr>
                             <ul class="promo-agree-block-j">
-                                <p trans>I agree to receive the registration bonus, special offers and Vbet.fr
-                                    information.</p>
+                                <p trans>I agree to receive the registration bonus, special offers and Vbet.fr information.</p>
                                 <li>
                                     <label>
                                         <div class="error-wrap-j">
@@ -77,12 +76,11 @@
                                 <div class="form-error-text"
                                      ng-show="formSubmited && registerform.agree.$error.required">
                                     <div class="error-icon-f"></div>
-                                    <p trans ng-show="formSubmited && registerform.agree.$error.required">You need to
-                                        confirm the agreements.</p>
+                                    <p trans ng-show="formSubmited && registerform.agree.$error.required">You need to confirm the agreements.</p>
                                 </div>
                             </label>
                             <hr>
-                            <button class="submit-but-j" ng-click="formSubmited = true; register();" ng-class="{'loading':registration.busy}" disabled="true" ng-disabled="registration.busy" trans>Open my account</button>
+                            <button class="submit-but-j" ng-click="formSubmited = true; register();" ng-class="{'loading':registration.busy}" disabled="true" ng-disabled="registration.busy || (registrationData.g_recaptcha_response !== undefined && !registrationData.g_recaptcha_response)" trans>Open my account</button>
                         </article>
                     </td>
                 </tr>

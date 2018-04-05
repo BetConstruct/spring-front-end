@@ -27,6 +27,7 @@
             position: relative;
             float: left;
             img {
+                max-width: 100%;
                 max-height: 71px;
                 display: block;
             }
@@ -113,6 +114,13 @@
         }
     }
 }
+.info-booking {
+    text-align: center;
+    p {
+        padding: 5px 10px 5px 0;
+        text-align: justify;
+    }
+}
 @mixin print8cm{
     @page {
         size: 8cm 16.5cm;
@@ -135,12 +143,14 @@
         width: 100%;
     }
     .print-a4-j .header-j .logo-j img {
-        max-width: 100%;
         margin: auto;
     }
     .print-a4-j .header-j .bar-code-j .qr-code-b {
         float: right;
         margin-right: 20px;
+    }
+    .booking-logo img {
+        max-height: 80px;
     }
 }
 $enable-print-8cm: false !default;

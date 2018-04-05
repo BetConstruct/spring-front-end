@@ -63,8 +63,8 @@ VBET5.directive('hideOnClick', ['$window',  '$rootScope', 'Config', function ($w
 
     return function (scope, element, attr) {
         elements.push({scope: scope, element: element, attr: attr});
-        angular.element($window).bind("click", function () {
-            if (!Config.env.isGlobalDialog) {
+        angular.element($window).bind("click", function (event) {
+            if (event.button !== 2 && !Config.env.isGlobalDialog) { //event.button 2 is right button
                 hideElement(element, attr, scope);
             }
         });

@@ -170,7 +170,7 @@
                     <li style="background-image: url({{slides.children[sliderNum].thumbnail_images.full.url}});">
                         <div class="rcup-max-width-j">
                             <h2>{{slides.children[sliderNum].title}}</h2>
-                            <p ng-bind-html="slides.children[sliderNum].content|html"></p>
+                            <p ng-bind-html="slides.children[sliderNum].content|html:'p'"></p>
                         </div>
                     </li>
                 </ul>

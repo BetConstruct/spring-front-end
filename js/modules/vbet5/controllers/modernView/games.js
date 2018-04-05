@@ -324,20 +324,21 @@ BettingModule.controller('gamesCtrl', ['$rootScope', '$scope', '$location', '$fi
                 'failureCallback': function (reason) {
                     console.log('Error:', reason);
                 }
-            }
+            },
+            true
         );
     };
 
     /**
      * @ngdoc function
-     * @name unsubscribeFromgame
+     * @name unsubscribeFromGame
      * @methodOf vbet5.controller:gamesCtrl
      * @description unsubscribes from game updates
      * @param {object} game game object (only id field is used to find subscription in **subIds**)
      */
-    $scope.unsubscribeFromgame = function unsubscribeFromgame(game) {
+    $scope.unsubscribeFromGame = function unsubscribeFromGame(game) {
         if (subIds[game.id]) {
-            Zergling.unsubscribe(subIds[game.id]);
+            connectionService.unsubscribe(subIds[game.id]);
             delete subIds[game.id];
         }
     };

@@ -4,7 +4,7 @@ angular.module('vbet5').config(['$routeProvider', '$anchorScrollProvider', 'Skin
     $anchorScrollProvider.disableAutoScrolling();
 
     function getTemplate(path) {
-        if (SkinConfig.customTemplates && SkinConfig.customTemplates.indexOf(path.substr(10)) !== -1) { // substr's "10" param is the length of "templates/"
+        if (SkinConfig.customTemplates && (SkinConfig.customTemplates.indexOf(path.substr(10)) !== -1 || SkinConfig.customTemplates.indexOf(path) !== -1)) { // substr's "10" param is the length of "templates/"
             return "skins/" + SkinConfig.main.skin + "/" + path;
         }
         return path;
@@ -78,6 +78,16 @@ angular.module('vbet5').config(['$routeProvider', '$anchorScrollProvider', 'Skin
             },
             reloadOnSearch: false
         })
+        .when('/insvirtualsports/', {
+            templateUrl: function () {
+                if (Config.main.availableSportsbookViews.euro2016) {
+                    return getTemplate('templates/sport/euro2016/virtualsportsContainer.html');
+                } else {
+                    return getTemplate('templates/sport/virtualsportsContainer.html');
+                }
+            },
+            reloadOnSearch: false
+        })
         .when('/poolbetting/', {
             templateUrl: getTemplate('templates/sport/main.html'),
             reloadOnSearch: false
@@ -93,7 +103,11 @@ angular.module('vbet5').config(['$routeProvider', '$anchorScrollProvider', 'Skin
             templateUrl: getTemplate('templates/section/main.html')
         })
         .when('/casino/', {
-            templateUrl: getTemplate('optional_modules/casino/templates/' + (SkinConfig.main.casinoVersion === 2 ? 'version_2/' : '') + 'main.html'),
+            templateUrl: getTemplate('optional_modules/casino/templates/main.html'),
+            reloadOnSearch: false
+        })
+        .when('/tournaments/', {
+            templateUrl: getTemplate('optional_modules/casino/templates/tournament/main.html'),
             reloadOnSearch: false
         })
         .when('/promos/', {
@@ -101,6 +115,14 @@ angular.module('vbet5').config(['$routeProvider', '$anchorScrollProvider', 'Skin
             reloadOnSearch: false
         })
         .when('/vip-promos/', {
+            templateUrl: getTemplate('templates/promos/vip-main.html'),
+            reloadOnSearch: false
+        })
+	    .when('/exchange-shop/', {
+            templateUrl: getTemplate('templates/exchange-shop/main.html'),
+            reloadOnSearch: false
+        })
+        .when('/dealership/', {
             templateUrl: getTemplate('templates/promos/vip-main.html'),
             reloadOnSearch: false
         })
@@ -121,7 +143,7 @@ angular.module('vbet5').config(['$routeProvider', '$anchorScrollProvider', 'Skin
             reloadOnSearch: false
         })
         .when('/livedealer/', {
-            templateUrl: getTemplate('optional_modules/casino/templates/livedealer/' + (SkinConfig.main.casinoVersion === 2 ? 'version_2/' : '') + 'main.html'),
+            templateUrl: getTemplate('optional_modules/casino/templates/livedealer/main.html'),
             reloadOnSearch: false
         })
         .when('/keno/', {
@@ -140,8 +162,16 @@ angular.module('vbet5').config(['$routeProvider', '$anchorScrollProvider', 'Skin
             templateUrl: getTemplate('optional_modules/casino/templates/poker/main.html'),
             reloadOnSearch: false
         })
+        .when('/chinesepoker/', {
+            templateUrl: getTemplate('optional_modules/casino/templates/poker/chinesepoker.html'),
+            reloadOnSearch: false
+        })
         .when('/belote/', {
             templateUrl: getTemplate('optional_modules/casino/templates/belote/main.html'),
+            reloadOnSearch: false
+        })
+        .when('/vrcasino/', {
+            templateUrl: getTemplate('optional_modules/casino/templates/vrcasino/main.html'),
             reloadOnSearch: false
         })
         .when('/backgammon/', {
@@ -150,6 +180,10 @@ angular.module('vbet5').config(['$routeProvider', '$anchorScrollProvider', 'Skin
         })
         .when('/pokerklas/', {
             templateUrl: getTemplate('optional_modules/casino/templates/specialgames/pokerklas.html'),
+            reloadOnSearch: false
+        })
+        .when('/ggpoker/', {
+            templateUrl: getTemplate('optional_modules/casino/templates/specialgames/ggpoker.html'),
             reloadOnSearch: false
         })
         .when('/iphone/', {
@@ -181,7 +215,11 @@ angular.module('vbet5').config(['$routeProvider', '$anchorScrollProvider', 'Skin
             reloadOnSearch: false
         })
         .when('/games/', {
-            templateUrl: getTemplate('optional_modules/casino/templates/skillgames/' + (SkinConfig.main.casinoVersion === 2 ? 'version_2/' : '') + 'main.html'),
+            templateUrl: getTemplate('optional_modules/casino/templates/skillgames/main.html'),
+            reloadOnSearch: false
+        })
+        .when('/csbpoolbetting/', {
+            templateUrl: getTemplate('optional_modules/casino/templates/specialgames/csbpoolbetting.html'),
             reloadOnSearch: false
         })
         .when('/game/:slug/provider/:slug/exid/:slug', {
@@ -202,11 +240,7 @@ angular.module('vbet5').config(['$routeProvider', '$anchorScrollProvider', 'Skin
         })
         .when('/', {
             templateUrl: function () {
-                if (Config.main.betterHomepage) {
-                    return getTemplate('templates/betterHomepage/main.html');
-                } else {
-                    return getTemplate('templates/homepage/main.html');
-                }
+                return getTemplate('templates/homepage/main.html');
             },
             reloadOnSearch: false
         })
@@ -258,6 +292,14 @@ angular.module('vbet5').config(['$routeProvider', '$anchorScrollProvider', 'Skin
         })
         .when('/404/', {
             templateUrl: getTemplate('templates/pages/pageNotFound.html'),
+            reloadOnSearch: false
+        })
+        .when('/checkers/', {
+            templateUrl: getTemplate('optional_modules/casino/templates/checkers/main.html'),
+            reloadOnSearch: false
+        })
+        .when('/skinning/', {
+            templateUrl: getTemplate('templates/skinning/main.html'),
             reloadOnSearch: false
         })
         .otherwise({

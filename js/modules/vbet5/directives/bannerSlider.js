@@ -8,7 +8,7 @@
  * @param {Number} [interval] optional. Rotation interval in milliseconds (default is 10000)
  *
  */
-VBET5.directive('bannerSlider', ['$rootScope', '$location', '$interval', 'analytics', 'WPConfig', 'content', function ($rootScope, $location, $interval, analytics, WPConfig, content) {
+VBET5.directive('bannerSlider', ['$rootScope', '$location', '$interval', 'analytics', 'WPConfig', 'content', 'Config', function ($rootScope, $location, $interval, analytics, WPConfig, content, Config) {
     'use strict';
     return {
         restrict: 'EA',
@@ -22,6 +22,7 @@ VBET5.directive('bannerSlider', ['$rootScope', '$location', '$interval', 'analyt
             scope.slide = 0;
             scope.over = false;
             scope.banners = [];
+            scope.conf = Config.main;
             var intervalPromise;
 
             function animateBanners() {

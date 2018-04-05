@@ -1,30 +1,23 @@
 <div class="dashboard-view-v3" ng-controller="euro2016DashboardMainController">
     <!--Live games column dashboard-->
     <div class="live-events-column-v3" ng-controller="euro2016DashboardCenterController">
-        <div class="live-games-list-d-v3">
+        <div class="live-games-list-d-v3" ng-controller="cmsPagesCtrl" ng-init="loadFeatureGamesBackgrounds('featured-games');">
             <div class="contain-pop-game-dashboard-v3" ng-controller="featuredgameCtrl"
                 ng-init="getOneLiveGame(null, showGameId)">
                 <div class="popular-game-view-wrapper-v3"
-                 ng-if="mostPopularLiveGame" ng-style="{'background-image': mostPopularLiveGame.bg_style}">
-                <span ng-if="mostPopularLiveGame" ng-init="loadPage('competition-backgrounds',true)">
-                    <span ng-if="pagesLoaded" ng-init="mostPopularLiveGame.game_bg_competition=getPageByField(pages, mostPopularLiveGame.competition.id, 'competition').thumbnail_images.full.url"></span>
-                </span>
+                 ng-if="mostPopularLiveGame" style="background-image: url({{featureGamesBackgrounds[mostPopularLiveGame.sport.alias].image || featureGamesBackgrounds['Default'].image || mostPopularLiveGame.bg_style}});">
                 <!--<img ng-src="{{mostPopularLiveGame.image.length && mostPopularLiveGame.image}}">-->
                 <div class="popular-game-t-row-v3">
                     <div class="market-title-v3">
-                        <div class="name-market-row-v3">
-                            <div class="market-name-icon-row-v3">
-                                <h3>
-                                    <i class="ng-binding">{{mostPopularLiveGame.info.current_game_state | convertSetName:mostPopularLiveGame.sport.alias|translate}}</i>
-                                </h3>
-                                <div class="market-icons-view-v3">
-                                    <ul>
-                                        <li class="tv-icon-market-v3" ng-show="mostPopularLiveGame.video_id && conf.videoEnabled"></li>
-                                        <li class="statistic-icon-market-v3" ng-if="$root.conf.enableH2HStat &&  mostPopularLiveGame.is_stat_available" ng-click="openStatistics(mostPopularLiveGame); $event.stopPropagation();"></li>
-                                        <li class="favorite-icon-market-v3" ng-click="toggleGameFavorite(mostPopularLiveGame)" ng-class="{'active': $root.myGames.indexOf(mostPopularLiveGame.id) !== -1}"></li>
-                                    </ul>
-                                </div>
-                            </div>
+                        <h3 class="ng-binding">
+                            {{mostPopularLiveGame.info.current_game_state | convertSetName:mostPopularLiveGame.sport.alias|translate}}
+                        </h3>
+                        <div class="market-icons-view-v3">
+                            <ul>
+                                <li class="tv-icon-market-v3" ng-show="mostPopularLiveGame.video_id && conf.videoEnabled"></li>
+                                <li class="statistic-icon-market-v3" ng-if="$root.conf.enableH2HStat &&  mostPopularLiveGame.is_stat_available" ng-click="openStatistics(mostPopularLiveGame); $event.stopPropagation();"></li>
+                                <li class="favorite-icon-market-v3" ng-click="toggleGameFavorite(mostPopularLiveGame)" ng-class="{'active': $root.myGames.indexOf(mostPopularLiveGame.id) !== -1}"></li>
+                            </ul>
                         </div>
                     </div>
                     <div class="popular-game-dashboard-v3">
@@ -59,46 +52,29 @@
                             </table>
                         </div>
                         <div class="events-view-p-game-v3">
-                            <div class="events-list-view-v3">
-                                <ul class="column-3">
-                                    <li>
+                            <ul class="l-b column-3">
+                                    <li class="s-box">
                                         <div class="single-events-b-v3 {{((mostPopularLiveGame.event.P1.price | oddConvert:'decimal') == 1 || mostPopularLiveGame.is_blocked) ? 'blocked' : ''}}"
                                             ng-click="bet(mostPopularLiveGame.event.P1, mostPopularLiveGame)"
-                                            ng-class="{'active': isEventInBetSlip(mostPopularLiveGame.event.P1)}">
-                                            <div class="mini-box-market-info-v3">
-                                                <p>
-                                                    <i>{{mostPopularLiveGame.event.P1.name || 'W1'}}</i>
-                                                </p>
-                                                <span><b>{{mostPopularLiveGame.event.P1.price | oddConvert:$root.env.oddFormat:null:'WINNER'}}</b></span>
-                                            </div>
+                                            ng-class="{'active': isEventInBetSlip(mostPopularLiveGame.event.P1)}" title="{{mostPopularLiveGame.event.P1.name || 'W1'}}">
+                                            <b class="p-v">{{mostPopularLiveGame.event.P1.price | oddConvert:$root.env.oddFormat:null:'WINNER'}}</b>
                                         </div>
                                     </li>
-                                    <li ng-if="'P1XP2' === mostPopularLiveGame.choosenMarket.type">
+                                    <li class="s-box"  ng-if="'P1XP2' === mostPopularLiveGame.choosenMarket.type">
                                         <div class="single-events-b-v3 {{((mostPopularLiveGame.event.X.price | oddConvert:'decimal') == 1 || mostPopularLiveGame.is_blocked) ? 'blocked' : ''}}"
                                             ng-click="bet(mostPopularLiveGame.event.X, mostPopularLiveGame)"
-                                            ng-class="{'active': isEventInBetSlip(mostPopularLiveGame.event.X)}">
-                                            <div class="mini-box-market-info-v3">
-                                                <p>
-                                                    <i>X</i>
-                                                </p>
-                                                <span><b>{{mostPopularLiveGame.event.X.price | oddConvert:$root.env.oddFormat:null:'WINNER'}}</b></span>
-                                            </div>
+                                            ng-class="{'active': isEventInBetSlip(mostPopularLiveGame.event.X)}" title="X">
+                                            <b class="p-v">{{mostPopularLiveGame.event.X.price | oddConvert:$root.env.oddFormat:null:'WINNER'}}</b>
                                         </div>
                                     </li>
-                                    <li>
+                                    <li class="s-box">
                                         <div class="single-events-b-v3 {{((mostPopularLiveGame.event.P2.price == 1 | oddConvert:'decimal') == 1 || mostPopularLiveGame.is_blocked) ? 'blocked' : ''}}"
                                             ng-click="bet(mostPopularLiveGame.event.P2, mostPopularLiveGame)"
-                                            ng-class="{'active': isEventInBetSlip(mostPopularLiveGame.event.P2)}">
-                                            <div class="mini-box-market-info-v3">
-                                                <p>
-                                                    <i>{{mostPopularLiveGame.event.P2.name || 'W2'}}</i>
-                                                </p>
-                                                <span><b>{{mostPopularLiveGame.event.P2.price | oddConvert:$root.env.oddFormat:null:'WINNER'}}</b></span>
-                                            </div>
+                                            ng-class="{'active': isEventInBetSlip(mostPopularLiveGame.event.P2)}" title="{{mostPopularLiveGame.event.P2.name || 'W2'}}">
+                                            <b class="p-v">{{mostPopularLiveGame.event.P2.price | oddConvert:$root.env.oddFormat:null:'WINNER'}}</b>
                                         </div>
                                     </li>
                                 </ul>
-                            </div>
                             <div class="markets-count-view-v3" ng-click="goToUrl(mostPopularLiveGame); $event.stopPropagation();">
                                 <span>+{{mostPopularLiveGame.markets_count}}</span>
                                 <div class="arrow-icon-b-v3"></div>
@@ -113,24 +89,30 @@
                 <h2>
                     <span trans>Live now</span>
                 </h2>
-                <div class="d-arrow-icon-v3"  ng-click="toggleSports()" ng-class="{'closed-all' : !expandedAll}"></div>
+                <div class="dash-region-icon {{!hideRegionsInDashboard ? 'active' : ''}}"
+                    ng-click="toggleRegionFilter()"
+                    title="Disable regions" trans="attr-only"
+                >
+                    <i class="region-icon-v3"></i>
+                </div>
+                <div class="d-arrow-icon-v3"  ng-if="!hideRegionsInDashboard" ng-click="toggleSports()" ng-class="{'closed-all' : !expandedAll}"></div>
             </div>
             <div class="all-live-games-list-d-v3">
                 <div class="live-games-column-dasboard-v3">
                     <div class="single-sport-box-v3 {{sportBlock[sport.id].expanded ? '' : 'sport-closed'}}"
                         ng-repeat="sport in centerViewLiveData track by sport.id"
-                        ng-init="sportBlock[sport.id].expanded = true">
+                        ng-init="hideRegionsInDashboard ? sportBlock[sport.id].expanded = $first : sportBlock[sport.id].expanded = true">
                         <div class="sport-name-up-game-v3 {{sport.alias}}"
                             ng-click="toggleSports(sport.id)">
                             <div class="sport-icon-v3 {{sport.alias}}"></div>
                             <h3>{{sport.name}}</h3>
+                            <vbet-loader class="small-progress" ng-show="hideRegionsInDashboard && sportBlock[sport.id].isLoading"></vbet-loader>
                             <div class="arrow-view-v3"></div>
                         </div>
-                        <div class="group-games-contain-v3 {{region.regionListClosed ? 'region-closed' : ''}}"
-                             ng-repeat="regionLight in sport.regions track by regionLight.id"
-                             ng-init="region = sport.region[regionLight.id]">
+                        <div class="group-games-contain-v3 {{region.regionListClosed ? 'region-closed' : ''}} {{!hideRegionsInDashboard ? '' : 'no-border'}}"
+                             ng-repeat="region in sport.regions track by region.id">
 
-                            <div class="title-championship-v3"
+                            <div class="title-championship-v3" ng-if="!hideRegionsInDashboard"
                                  ng-click="region.regionListClosed = !region.regionListClosed;region.isLoading = true;
                                     toggleItem({'sport': sport.id, 'region': region.id, 'type': 1, 'isClosed': region.regionListClosed, 'isLoading': region.isLoading});">
                                 <div class="flag-view-v3 flag-icon flag-{{region.alias | removeUselessSymbolsByRegexp: '[,\' ]+': 'g': 'true'}}"></div>
@@ -138,18 +120,18 @@
                                 <div class="arrow-view-v3"></div>
                             </div>
                             <div class="dashboard-live-game-competitin-v3">
-                                <div class="contain-competition-dashboard-v3 {{!competitionBlock[competition.id].expanded ? 'closed' : ''}}"
-                                    ng-repeat="competitionLight in region.competitions track by competitionLight.id"
-                                    ng-init="competition = region.competition[competitionLight.id]; competitionBlock[competition.id].expanded = true">
+                                <div class="contain-competition-dashboard-v3 {{!hideRegionsInDashboard ? '' : 'no-padding'}} {{!competitionBlock[competition.id].expanded ? 'closed' : ''}}"
+                                    ng-repeat="competition in region.competitions track by competition.id"
+                                    ng-init="competitionBlock[competition.id].expanded = true">
                                 <div class="title-competition-dashboard-v3"
                                      ng-click="competitionBlock[competition.id].expanded = !competitionBlock[competition.id].expanded;">
-                                    <h5>{{competition.name|removeParts:[sport.name]|removeParts:[region.name]}}</h5>
+                                    <div ng-if="hideRegionsInDashboard" class="flag-view-v3 flag-icon flag-{{region.alias | removeUselessSymbolsByRegexp: '[,\' ]+': 'g': 'true'}}"></div>
+                                    <h5>{{::(hideRegionsInDashboard ? (region.name + ' - ') : '')}} {{competition.name|removeParts:[sport.name]}}</h5>
                                     <div class="arrow-view-v3"></div>
                                 </div>
 
                                 <div class="dashboard-single-l-game-v3"
-                                     ng-repeat="gameLight in competition.games track by $index"
-                                     ng-init="game = competition.game[gameLight.id]"
+                                     ng-repeat="game in competition.games track by game.id"
                                      ng-click="goToUrl(game)">
                                     <ul>
                                         <li>
@@ -184,35 +166,25 @@
                                                 <div class="market-name-d-v3">
                                                     <h4 trans >Match winner</h4>
                                                 </div>
-                                                <div class="events-list-view-v3">
-                                                    <ul class="column-{{market[0] ? (market[0].type === 'P1P2' ? 2 : 3) : 1}}"
-                                                        ng-init="market = game.filteredMarkets['P1XP2'] || game.filteredMarkets['P1P2']">
-                                                        <li
-                                                            ng-repeat="event in market[0].event track by event.id"
-                                                            ng-mouseover="displayEventLimit(event, game, false, market[0])"
+                                                <ul class="l-b column-{{game.filteredMarket[0] ? (game.filteredMarket[0].type === 'P1P2' ? 2 : 3) : 1}}">
+                                                        <li class="s-box"
+                                                            ng-repeat="event in game.filteredMarket[0].event track by event.id"
+                                                            ng-mouseover="displayEventLimit(event, game, false, game.filteredMarket[0])"
                                                             ng-mouseleave="cancelDisplayEventLimit(event)"
                                                             ng-show="event && event.name"
-                                                            ng-click="bet(event, market[0], game); $event.stopPropagation();">
+                                                            ng-click="bet(event, game.filteredMarket[0], game); $event.stopPropagation();">
                                                             <div class="single-events-b-v3
                                                                     {{isEventInBetSlip(event) ? 'active' : ''}}
-                                                                    {{((event.price | oddConvert:'decimal') == 1 || game.is_blocked) ? 'blocked' : ''}}">
-                                                                <div class="mini-box-market-info-v3">
-                                                                    <p>
-                                                                        <i>{{event.name}}</i>
-                                                                    </p>
-                                                                    <span ng-show="(event.price | oddConvert:'decimal') != 1 && !openGame.is_blocked">
-                                                                        <b ng-class="{'factor-top': event.price_change > 0, 'factor-bottom': event.price_change < 0}">
-                                                                            {{event.price|oddConvert:env.oddFormat:null:market[0].display_key}}
-                                                                        </b>
-                                                                    </span>
-                                                                </div>
+                                                                    {{((event.price | oddConvert:'decimal') == 1 || game.is_blocked) ? 'blocked' : ''}}" title="{{event.name}}">
+                                                                <b class="p-v" ng-show="(event.price | oddConvert:'decimal') != 1 && !openGame.is_blocked" ng-class="{'factor-top': event.price_change > 0, 'factor-bottom': event.price_change < 0}">
+                                                                    {{event.price|oddConvert:env.oddFormat:null:game.filteredMarket[0].display_key}}
+                                                                </b>
                                                             </div>
                                                         </li>
-                                                        <li ng-show="!market[0]">
+                                                        <li ng-show="!game.filteredMarket[0]">
                                                             <div class="single-events-b-v3"></div>
                                                         </li>
                                                     </ul>
-                                                </div>
                                             </div>
                                         </li>
 

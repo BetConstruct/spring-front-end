@@ -1,4 +1,4 @@
-<div ng-controller="cmsPagesCtrl" ng-init="setTitle('Deberc')">
+<div ng-controller="cmsPagesCtrl" ng-init="setTitle('Deberc');" get-casino-game="595">
     <div ng-show="!showNestedFrame" class="skillgame-landing-j"  ng-init="loadPage('deberc.mainPageSlugs', true)">
         <vbet-loader ng-show="!pages"></vbet-loader>
         <div ng-if="pages">
@@ -14,5 +14,5 @@
             </div>
         </div>
     </div>
-    <div ng-if="showNestedFrame" ng-controller="casinoSpecialGamesCtrl" ng-init="loadGame('deberc')" class="big-games-overflow" ng-include="getTemplate('optional_modules/casino/templates/specialgames/skillgame.html')"></div>
+    <div ng-if="showNestedFrame && game" ng-controller="casinoSpecialGamesCtrl" ng-init="loadGame('deberc')" class="big-games-overflow" ng-include="getTemplate('optional_modules/casino/templates/specialgames/skillgame.html')"></div>
 </div>

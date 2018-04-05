@@ -20,13 +20,13 @@
                             <li><a ng-click="$parent.agSelectedCategory = 'CasinoGames'; popUpGamesLimit = 40"
                                    ng-class="{'active': $parent.agSelectedCategory === 'CasinoGames'}"><span trans>Casino games</span></a>
                             </li>
-                            <li ng-show="conf.livedealerEnabled"><a ng-click="$parent.agSelectedCategory = 'LiveDealer'"
+                            <li ng-show="calculatedConfigs.livedealerEnabled"><a ng-click="$parent.agSelectedCategory = 'LiveDealer'"
                                                                     ng-class="{'active': $parent.agSelectedCategory === 'LiveDealer'}"><span
                                     trans>Live casino</span></a></li>
-                            <li ng-show="conf.skillgamesEnabled"><a ng-click="$parent.agSelectedCategory = 'SkillGames'"
+                            <li ng-show="calculatedConfigs.skillgamesEnabled"><a ng-click="$parent.agSelectedCategory = 'SkillGames'"
                                                                     ng-class="{'active': $parent.agSelectedCategory === 'SkillGames'}"><span
                                     trans>Skill games</span></a></li>
-                            <!-- ng-show="conf.skillgamesEnabled" -->
+                            <!-- ng-show="calculatedConfigs.skillgamesEnabled" -->
                             <li><a ng-click="$parent.agSelectedCategory = 'Virtual Betting'"
                                    ng-class="{'active': $parent.agSelectedCategory === 'Virtual Betting'}"><span trans>Virtual games</span></a>
                             </li>
@@ -76,8 +76,7 @@
                                     ng-click="popUpGamesLimit = popUpGamesLimit + 40"><p trans>Load more</p>
                                 <span></span></a></div>
                         </ul>-->
-                        <casino-games-list ng-class="{'all-games-casino-list': cConf.newCasinoDesignEnabled}"
-                                is-new-design-enabled="cConf.newCasinoDesignEnabled"
+                        <casino-games-list class="all-games-casino-list"
                                 show-conditions="true"
                                 games-list="popUpGames"
                                 games-limit="popUpGamesLimit"

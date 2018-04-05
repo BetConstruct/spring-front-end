@@ -17,7 +17,7 @@ VBET5.controller('balanceCtrl', ['$rootScope', '$scope', 'Utils', 'Zergling', 'M
 
     $scope.balanceHistoryLoaded = false;
 
-    $scope.balanceTypes = Config.main.betHistoryBalanceTypes;
+    $scope.balanceTypes = Config.main.GmsPlatform ? Config.main.betHistoryGmsBalanceTypes : Config.main.betHistoryBalanceTypes;
 
     $scope.casinoBalanceTypes = {
         0: Translator.get('Bet'),
@@ -37,7 +37,7 @@ VBET5.controller('balanceCtrl', ['$rootScope', '$scope', 'Utils', 'Zergling', 'M
     };
 
     (function init () {
-        if (Config.main.balanceHistoryDisabledOperations) {
+        if (!Config.main.GmsPlatform && Config.main.balanceHistoryDisabledOperations) {
             angular.forEach(Config.main.balanceHistoryDisabledOperations, function (val) {
                 if (disabledOperationsInFilter.indexOf(val) === -1) {
                     disabledOperationsInFilter.push(val);
@@ -48,7 +48,7 @@ VBET5.controller('balanceCtrl', ['$rootScope', '$scope', 'Utils', 'Zergling', 'M
         angular.forEach($scope.balanceTypes, function (value, key) {
             $scope.balanceTypes[key] = Translator.translationExists('BalanceHistory ' + value) ? Translator.get('BalanceHistory ' + value) : Translator.get(value);
 
-            if (disabledOperationsInFilter.indexOf(parseInt(key, 10)) === -1) {
+            if (Config.main.GmsPlatform || disabledOperationsInFilter.indexOf(parseInt(key, 10)) === -1) {
                 balanceTypesFilter[key] = $scope.balanceTypes[key];
             }
         });
@@ -133,7 +133,7 @@ VBET5.controller('balanceCtrl', ['$rootScope', '$scope', 'Utils', 'Zergling', 'M
                 function (response) {
                     if (response.history) {
                         var i, length;
-                        if (Config.main.balanceHistoryDisabledOperations && Config.main.balanceHistoryDisabledOperations.length) {
+                        if (!Config.main.GmsPlatform && Config.main.balanceHistoryDisabledOperations && Config.main.balanceHistoryDisabledOperations.length) {
                             balanceHistory = [];
                             for (i = 0, length = response.history.length; i < length; i += 1) {
                                 if (Config.main.balanceHistoryDisabledOperations.indexOf(parseInt(response.history[i].operation, 10)) === -1) {

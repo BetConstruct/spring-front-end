@@ -5,7 +5,7 @@
  * @description
  *  buddy transfer controller
  */
-VBET5.controller('buddyCtrl', ['$scope', 'Translator', 'Zergling', function ($scope, Translator, Zergling) {
+VBET5.controller('buddyCtrl', ['$rootScope', '$scope', 'Translator', 'Zergling', 'Config', 'Utils', function ($rootScope, $scope, Translator, Zergling, Config, Utils) {
     'use strict';
 
     var request = {};
@@ -87,6 +87,18 @@ VBET5.controller('buddyCtrl', ['$scope', 'Translator', 'Zergling', function ($sc
 
     /**
      * @ngdoc method
+     * @name searchFriend
+     * @methodOf vbet5.controller:buddyCtrl
+     * @description prepare and show data in step3
+     */
+    $scope.searchFriend = function searchFriend (name) {
+        angular.forEach($scope.friendList, function (friend) {
+            friend.show = name === '' || friend.username.indexOf(name) !== -1;
+        });
+    };
+
+    /**
+     * @ngdoc method
      * @name confirm
      * @methodOf vbet5.controller:buddyCtrl
      * @description prepare and show data in step3
@@ -145,9 +157,9 @@ VBET5.controller('buddyCtrl', ['$scope', 'Translator', 'Zergling', function ($sc
 
     /**
      * @ngdoc method
-     * @name agentTransfer
+     * @name userTransfers
      * @methodOf vbet5.controller:buddyCtrl
-     * @description prepare and show data in step3
+     * @description prepare and show data in step1
      */
     function userTransfers() {
         $scope.friendListLoaded = false;
@@ -186,6 +198,118 @@ VBET5.controller('buddyCtrl', ['$scope', 'Translator', 'Zergling', function ($sc
         });
     }
 
-    userTransfers();
+    /**
+     * @ngdoc method
+     * @name userTransfersGms
+     * @methodOf vbet5.controller:buddyCtrl
+     * @description prepare and show data in step1
+     */
+    function userTransfersGms() {
+        $scope.friendListLoaded = false;
+        Zergling.get({}, 'get_buddy_list').then(function (response) {
+            $scope.friendListLoaded = true;
+            console.log('user_transfers response', response);
+            $scope.friendList = [];
+            var friendListCache = {};
+            if (response && response.details) {
+                angular.forEach(response.details, function (friend) {
+                    friendListCache[friend.BuddyLogin] = {
+                        id: friend.ClientId,
+                        username: friend.BuddyLogin,
+                        show: true
+                    };
+                });
+                $scope.friendList = Utils.objectToArray(friendListCache);
+            }
+
+        }, function (failResponse) {
+            $scope.friendListLoaded = true;
+            console.log('user_transfers failResponse', failResponse);
+        });
+    }
+
+    /**
+     * @ngdoc method
+     * @name makeTransfer
+     * @methodOf vbet5.controller:buddyCtrl
+     * @description do trasnfer for Gms
+     */
+    $scope.makeTransfer = function makeTransfer() {
+        var request;
+
+        if (Config.main.buddyTransfer.version === 1) {
+            request = {
+                to_user: ($scope.transferData.friendName || '').trim(),
+                amount: parseFloat($scope.transferData.transferAmount || 0)
+            };
+        } else if (Config.main.buddyTransfer.version === 2) {
+            request = {
+                to_user: ($scope.transferData.buddyUsername || '').trim(),
+                amount: parseFloat($scope.transferFormModel.amount || 0)
+            };
+        } else {
+            return;
+        }
+
+
+
+        console.log('Buddy transfer request', request);
+
+        $scope.transactionInProgress = true;
+
+        Zergling.get(request, 'buddy_to_buddy_transfer').then(function (response) {
+            $scope.transactionInProgress = false;
+
+            if (Config.main.buddyTransfer.version === 2) {
+                if (response.result === 0) {
+                    $scope.confirmResponse = {
+                        type: 'Success',
+                        message: 'Your transfer is successfully completed'
+                    };
+                } else {
+                    $scope.confirmResponse = {
+                        type: 'Error',
+                        message: Translator.get('There was an error processing your request') + '<br>' + Translator.get(response.result_text),
+                        nextStep: 'step2'
+                    };
+                }
+                return;
+            }
+
+
+            if (response.result === 0) {
+                $rootScope.$broadcast("globalDialogs.addDialog", {
+                    type: 'info',
+                    title: 'Info',
+                    content: 'Your transfer is successfully completed'
+                });
+                $scope.transferData = {};
+            } else {
+                $rootScope.$broadcast("globalDialogs.addDialog", {
+                    type: 'error',
+                    title: 'Error',
+                    content: Translator.get('There was an error processing your request') + '<br>' + Translator.get(response.result_text)
+                });
+            }
+        }, function (response) {
+            $scope.transactionInProgress = false;
+            $rootScope.$broadcast("globalDialogs.addDialog", {
+                type: 'error',
+                title: 'Error',
+                content: Translator.get('There was an error processing your request') + '<br>' + Translator.get(response.result_text)
+            });
+            $scope.confirmResponse = {
+                nextStep: 'step2'
+            };
+        });
+    };
+
+    if (Config.main.GmsPlatform) {
+        if (Config.main.buddyTransfer.version === 2) {
+            userTransfersGms();
+        }
+    } else {
+        userTransfers();
+    }
 
 }]);

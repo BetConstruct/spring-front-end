@@ -1,0 +1,27 @@
+<div ng-controller="cmsPagesCtrl" ng-init="setTitle('checkers')">
+    <div ng-if="!globalConfig.checkers.redirectOnGame">
+        <div ng-show="!showNestedFrame">
+
+            <!-- CHECKERS PAGE -->
+            <div  class="skillgame-landing-j backgammon-j">
+                <div ng-init="loadPage('checkers', true)">
+                    <div class="intro-section-j" ng-if="pages" ng-init="initProductBanners('checkers')">
+                        <casino-game-slider product-slides="productSlides" page-name = "Checkers"></casino-game-slider>
+                        <div class="skillgame-landing-guide button-group-j">
+                            <ul id="backgammon-buttons">
+                                <li>
+                                    <button ng-click="openNestedFrame();" trans>Play now</button>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <promotion-news template="slider" slug="checkers" hide-dates="true" main-class="block-meny-news promo" use-custom-base-host="true" ng-if="!showDownloadLinks" share-path="checkers"></promotion-news>
+
+            </div>
+        </div>
+        <div ng-if="showNestedFrame" ng-controller="casinoSpecialGamesCtrl" ng-init="loadGame('checkers')" class="big-games-overflow" ng-include="getTemplate('optional_modules/casino/templates/specialgames/skillgame.html')"></div>
+    </div>
+
+    <div ng-if="globalConfig.checkers.redirectOnGame" class="backgammon-with-fullscreen" ng-controller="casinoSpecialGamesCtrl" ng-init="loadGame('checkers')" ng-include="getTemplate('optional_modules/casino/templates/specialgames/main.html')"></div>
+</div>

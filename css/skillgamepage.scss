@@ -12,8 +12,6 @@
 }
 .provider-navigation-j li.active-j {
   border-color: $hero-color;
-  padding: 0 16px;
-  margin: 0;
 }
 .live-casino-games-by-ul-column li {color: $text-palette-3;}
 .live-casino-games-by-ul-column li > i {
@@ -54,28 +52,42 @@
   font: 18px $font-f;
 }
 // End of new live casino
+
 .new-games-page-j {
   width: 100%;
   float: left;
-  background: rgb(63,67,79);
-  background: -moz-radial-gradient(top, ellipse cover,  lighten( desaturate( adjust-hue( $skin-color, 3deg ), 20 ), 11 ) 0%, lighten( desaturate( adjust-hue( $skin-color, 3deg ), 20 ), 11 ) 50%, darken( saturate( adjust-hue( $skin-color, 8deg ), 1 ), 6 ) 100%);
-  background: -webkit-gradient(radial, center top, 0, center center, 100%, color-stop(0%,lighten( desaturate( adjust-hue( $skin-color, 3deg ), 20 ), 11 )), color-stop(50%,lighten( desaturate( adjust-hue( $skin-color, 3deg ), 20 ), 11 )), color-stop(100%,darken( saturate( adjust-hue( $skin-color, 8deg ), 1 ), 6 )));
-  background: -webkit-radial-gradient(top, ellipse cover,  lighten( desaturate( adjust-hue( $skin-color, 3deg ), 20 ), 11 ) 0%,lighten( desaturate( adjust-hue( $skin-color, 3deg ), 20 ), 11 ) 50%,darken( saturate( adjust-hue( $skin-color, 8deg ), 1 ), 6 ) 100%);
-  background: -o-radial-gradient(top, ellipse cover,  lighten( desaturate( adjust-hue( $skin-color, 3deg ), 20 ), 11 ) 0%,lighten( desaturate( adjust-hue( $skin-color, 3deg ), 20 ), 11 ) 50%,darken( saturate( adjust-hue( $skin-color, 8deg ), 1 ), 6 ) 100%);
-  background: -ms-radial-gradient(top, ellipse cover,  lighten( desaturate( adjust-hue( $skin-color, 3deg ), 20 ), 11 ) 0%,lighten( desaturate( adjust-hue( $skin-color, 3deg ), 20 ), 11 ) 50%,darken( saturate( adjust-hue( $skin-color, 8deg ), 1 ), 6 ) 100%);
-  background: radial-gradient(ellipse at top,  lighten( desaturate( adjust-hue( $skin-color, 3deg ), 20 ), 11 ) 0%,lighten( desaturate( adjust-hue( $skin-color, 3deg ), 20 ), 11 ) 50%,darken( saturate( adjust-hue( $skin-color, 8deg ), 1 ), 6 ) 100%);
 }
 .gamesp-container-j {
   width: 100%;
   float: left;
   padding: 70px 0 60px;
   text-align: center;
-  background: -moz-radial-gradient(top, ellipse cover, rgba(lighten( desaturate( adjust-hue( $skin-color, 3deg ), 20 ), 11 ), 0.64) 0%, rgba(darken( saturate( adjust-hue( $skin-color, 8deg ), 1 ), 6 ), 0.6) 48%, rgba(darken( saturate( adjust-hue( $skin-color, 8deg ), 1 ), 6 ), 0) 100%);
-  background: -webkit-gradient(radial, center top, 0, center center, 100%, color-stop(0%, rgba(lighten( desaturate( adjust-hue( $skin-color, 3deg ), 20 ), 11 ), 0.64)), color-stop(48%, rgba(darken( saturate( adjust-hue( $skin-color, 8deg ), 1 ), 6 ), 0.6)), color-stop(100%, rgba(darken( saturate( adjust-hue( $skin-color, 8deg ), 1 ), 6 ), 0)));
-  background: -webkit-radial-gradient(top, ellipse cover, rgba(lighten( desaturate( adjust-hue( $skin-color, 3deg ), 20 ), 11 ), 0.64) 0%, rgba(darken( saturate( adjust-hue( $skin-color, 8deg ), 1 ), 6 ), 0.6) 48%, rgba(darken( saturate( adjust-hue( $skin-color, 8deg ), 1 ), 6 ), 0) 100%);
-  background: -o-radial-gradient(top, ellipse cover, rgba(lighten( desaturate( adjust-hue( $skin-color, 3deg ), 20 ), 11 ), 0.64) 0%, rgba(darken( saturate( adjust-hue( $skin-color, 8deg ), 1 ), 6 ), 0.6) 48%, rgba(darken( saturate( adjust-hue( $skin-color, 8deg ), 1 ), 6 ), 0) 100%);
-  background: -ms-radial-gradient(top, ellipse cover, rgba(lighten( desaturate( adjust-hue( $skin-color, 3deg ), 20 ), 11 ), 0.64) 0%, rgba(darken( saturate( adjust-hue( $skin-color, 8deg ), 1 ), 6 ), 0.6) 48%, rgba(darken( saturate( adjust-hue( $skin-color, 8deg ), 1 ), 6 ), 0) 100%);
-  background: radial-gradient(ellipse at top, rgba(lighten( desaturate( adjust-hue( $skin-color, 3deg ), 20 ), 11 ), 0.64) 0%, rgba(darken( saturate( adjust-hue( $skin-color, 8deg ), 1 ), 6 ), 0.6) 48%, rgba(darken( saturate( adjust-hue( $skin-color, 8deg ), 1 ), 6 ), 0) 100%);
+}
+@if $games-background == default {
+  .new-games-page-j {
+    background: rgb(63,67,79);
+    background: -moz-radial-gradient(top, ellipse cover,  lighten( desaturate( adjust-hue( $skin-color, 3deg ), 20 ), 11 ) 0%, lighten( desaturate( adjust-hue( $skin-color, 3deg ), 20 ), 11 ) 50%, darken( saturate( adjust-hue( $skin-color, 8deg ), 1 ), 6 ) 100%);
+    background: -webkit-gradient(radial, center top, 0, center center, 100%, color-stop(0%,lighten( desaturate( adjust-hue( $skin-color, 3deg ), 20 ), 11 )), color-stop(50%,lighten( desaturate( adjust-hue( $skin-color, 3deg ), 20 ), 11 )), color-stop(100%,darken( saturate( adjust-hue( $skin-color, 8deg ), 1 ), 6 )));
+    background: -webkit-radial-gradient(top, ellipse cover,  lighten( desaturate( adjust-hue( $skin-color, 3deg ), 20 ), 11 ) 0%,lighten( desaturate( adjust-hue( $skin-color, 3deg ), 20 ), 11 ) 50%,darken( saturate( adjust-hue( $skin-color, 8deg ), 1 ), 6 ) 100%);
+    background: -o-radial-gradient(top, ellipse cover,  lighten( desaturate( adjust-hue( $skin-color, 3deg ), 20 ), 11 ) 0%,lighten( desaturate( adjust-hue( $skin-color, 3deg ), 20 ), 11 ) 50%,darken( saturate( adjust-hue( $skin-color, 8deg ), 1 ), 6 ) 100%);
+    background: -ms-radial-gradient(top, ellipse cover,  lighten( desaturate( adjust-hue( $skin-color, 3deg ), 20 ), 11 ) 0%,lighten( desaturate( adjust-hue( $skin-color, 3deg ), 20 ), 11 ) 50%,darken( saturate( adjust-hue( $skin-color, 8deg ), 1 ), 6 ) 100%);
+    background: radial-gradient(ellipse at top,  lighten( desaturate( adjust-hue( $skin-color, 3deg ), 20 ), 11 ) 0%,lighten( desaturate( adjust-hue( $skin-color, 3deg ), 20 ), 11 ) 50%,darken( saturate( adjust-hue( $skin-color, 8deg ), 1 ), 6 ) 100%);
+  }
+  .gamesp-container-j {
+    background: -moz-radial-gradient(top, ellipse cover, rgba(lighten( desaturate( adjust-hue( $skin-color, 3deg ), 20 ), 11 ), 0.64) 0%, rgba(darken( saturate( adjust-hue( $skin-color, 8deg ), 1 ), 6 ), 0.6) 48%, rgba(darken( saturate( adjust-hue( $skin-color, 8deg ), 1 ), 6 ), 0) 100%);
+    background: -webkit-gradient(radial, center top, 0, center center, 100%, color-stop(0%, rgba(lighten( desaturate( adjust-hue( $skin-color, 3deg ), 20 ), 11 ), 0.64)), color-stop(48%, rgba(darken( saturate( adjust-hue( $skin-color, 8deg ), 1 ), 6 ), 0.6)), color-stop(100%, rgba(darken( saturate( adjust-hue( $skin-color, 8deg ), 1 ), 6 ), 0)));
+    background: -webkit-radial-gradient(top, ellipse cover, rgba(lighten( desaturate( adjust-hue( $skin-color, 3deg ), 20 ), 11 ), 0.64) 0%, rgba(darken( saturate( adjust-hue( $skin-color, 8deg ), 1 ), 6 ), 0.6) 48%, rgba(darken( saturate( adjust-hue( $skin-color, 8deg ), 1 ), 6 ), 0) 100%);
+    background: -o-radial-gradient(top, ellipse cover, rgba(lighten( desaturate( adjust-hue( $skin-color, 3deg ), 20 ), 11 ), 0.64) 0%, rgba(darken( saturate( adjust-hue( $skin-color, 8deg ), 1 ), 6 ), 0.6) 48%, rgba(darken( saturate( adjust-hue( $skin-color, 8deg ), 1 ), 6 ), 0) 100%);
+    background: -ms-radial-gradient(top, ellipse cover, rgba(lighten( desaturate( adjust-hue( $skin-color, 3deg ), 20 ), 11 ), 0.64) 0%, rgba(darken( saturate( adjust-hue( $skin-color, 8deg ), 1 ), 6 ), 0.6) 48%, rgba(darken( saturate( adjust-hue( $skin-color, 8deg ), 1 ), 6 ), 0) 100%);
+    background: radial-gradient(ellipse at top, rgba(lighten( desaturate( adjust-hue( $skin-color, 3deg ), 20 ), 11 ), 0.64) 0%, rgba(darken( saturate( adjust-hue( $skin-color, 8deg ), 1 ), 6 ), 0.6) 48%, rgba(darken( saturate( adjust-hue( $skin-color, 8deg ), 1 ), 6 ), 0) 100%);
+  }
+  .games-pattern-j:before {
+    background: $lcasino-games-pattern-bg;
+  }
+} @else {
+  .gamesp-container-j  {
+    background: $games-background;
+  }
 }
 .new-games-page-j .j-resize-950-1280 {padding: 0 15px;max-width: 1164px;}
 .new-games-page-j .j-resize-950-1280 li {
@@ -164,6 +176,26 @@
     content: "\e6c0";
     font-size: 54px;
   }
+  .games-pw-buttonset-j button {
+    position: relative;
+  }
+  .games-play-now-top-item button {
+    &:after {
+      content: attr(data-content);
+      display: inline-block;
+      color: set-color($hero-color);
+      background: $hero-color;
+      box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.6);
+      position: absolute;
+      height: 10px;
+      font: 8px/11px $font-f;
+      padding: 0 2px;
+      border-radius: 3px 0 3px 0;
+      right: 1px;
+      top: 1px;
+      box-sizing: border-box;
+    }
+  }
 } 
 .new-games-page-j li.VGSchPoker {
   background: #181B2C url(../../../images/games-page/chinesse-1.jpg#{$delete-cache}) no-repeat 0 -411px;
@@ -239,7 +271,24 @@
     content: "\e93a";
   }
 }
-
+.new-games-page-j li.VGSChingaChoong {
+  background: #181B2C url(../../../images/games-page/chingachoong.jpg#{$delete-cache}) no-repeat 0 -412px;
+  &:before {
+    background: url(../../../images/games-page/chingachoong.jpg#{$delete-cache}) no-repeat 0 0;
+  }
+  p:before {
+    content: "\e96d";
+  }
+}
+.new-games-page-j li.VGSVR.Casino {
+  background: #181B2C url(../../../images/games-page/vr-casino.png#{$delete-cache}) no-repeat 0 -412px;
+  &:before {
+    background: url(../../../images/games-page/vr-casino.png#{$delete-cache}) no-repeat 0 0;
+  }
+  p:before {
+    content: "\e97e";
+  }
+}
 .fav-bar-game-j {
   width: 105px;
   height: 105px;

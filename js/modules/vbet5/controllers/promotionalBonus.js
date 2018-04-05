@@ -6,7 +6,7 @@
  * @description  promotional bonuses controller.
  */
 
-VBET5.controller('promotionalBonusCtrl', ['$scope', 'Zergling', 'BackendConstants', '$rootScope', 'Translator', '$q', 'Config', function($scope, Zergling, BackendConstants, $rootScope, Translator, $q, Config) {
+VBET5.controller('promotionalBonusCtrl', ['$scope', 'Zergling', 'BackendConstants', '$rootScope', 'Translator', '$q', '$filter', 'Config', function($scope, Zergling, BackendConstants, $rootScope, Translator, $q, $filter, Config) {
     'use strict';
 
     $scope.backendBonusConstants = BackendConstants.PromotionalBonus;
@@ -127,7 +127,10 @@ VBET5.controller('promotionalBonusCtrl', ['$scope', 'Zergling', 'BackendConstant
             free_bonuses: $scope.activeBonusTab === $scope.backendBonusConstants.BonusSource.SportsBook
         };
         $scope.loadingBonus = true;
-        Zergling.get(request,'get_bonus_details').then(processBonusData)['catch'](function (reason) {
+        Zergling.get(request,'get_bonus_details').then(function (data) {
+            processBonusData(data);
+            $rootScope.$broadcast('promotionalbonuses.data', {data: data, product: request.free_bonuses ? 'sportsbook' : 'casino'});
+        })['catch'](function (reason) {
             showConfirmationDialog(BackendConstants.ErrorCodesByValue[reason.result], 'error');
         })['finally'](function () {
             $scope.loadingBonus = false;
@@ -145,7 +148,7 @@ VBET5.controller('promotionalBonusCtrl', ['$scope', 'Zergling', 'BackendConstant
         var response = {
             amount: 50,
             currency: 'USD'
-        }
+        };
         $scope.cancelBonusResponse(bonusId, response);
     };
 
@@ -159,7 +162,7 @@ VBET5.controller('promotionalBonusCtrl', ['$scope', 'Zergling', 'BackendConstant
     $scope.cancelBonus = function cancelBonus(bonusId) {
         var msg = Translator.get('Are you sure want to cancel this bonus?');
         if ($rootScope.profile && $rootScope.profile.frozen_balance) {
-            msg = msg + '<br />' + Translator.get('After the Cancellation {1} will be returned to you`r main balance.', [$rootScope.profile.frozen_balance + ' ' + $rootScope.profile.currency_name]);
+            msg = msg + '<br />' + Translator.get('After the Cancellation {1} will be returned to you`r main balance.', [$filter('number')($rootScope.profile.frozen_balance, $rootScope.conf.balanceFractionSize) + ' ' + $rootScope.profile.currency_name]);
         }
 
         var promise = showConfirmationDialog(msg, 'prompt');
@@ -186,7 +189,7 @@ VBET5.controller('promotionalBonusCtrl', ['$scope', 'Zergling', 'BackendConstant
      * @description Claim bonus
      */
     $scope.claimBonus = function claimBonus(bonusId) {
-        var promise = showConfirmationDialog('Are you sure want to claim this bonus?', 'prompt');
+        var promise = showConfirmationDialog('Are you sure you want to claim this bonus?', 'prompt');
         var request = {bonus_id: bonusId};
         promise.then(function () {
             Zergling.get(request,'claim_bonus').then(function (response) {

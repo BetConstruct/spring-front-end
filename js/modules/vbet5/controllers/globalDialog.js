@@ -19,7 +19,7 @@
  *          content: "content of first dialog" // required field
  *      }
  */
-VBET5.controller('globalDialogCtrl', ['$rootScope', '$scope', '$location', '$window', '$filter', 'Config', 'Storage', 'Utils', 'content', 'Geoip', 'TimeoutWrapper', 'Moment', 'Translator', function ($rootScope, $scope, $location, $window, $filter, Config, Storage, Utils, content, Geoip, TimeoutWrapper, Moment, Translator) {
+VBET5.controller('globalDialogCtrl', ['$rootScope', '$scope', '$location', '$window', '$filter', '$cookies', 'Config', 'Storage', 'Utils', 'content', 'Geoip', 'TimeoutWrapper', 'Moment', 'Translator', 'Tracking', 'analytics', function ($rootScope, $scope, $location, $window, $filter, $cookies, Config, Storage, Utils, content, Geoip, TimeoutWrapper, Moment, Translator, Tracking, analytics) {
     'use strict';
 
     // $scope.globalDialogs is array where the dialogs are stored
@@ -58,6 +58,16 @@ VBET5.controller('globalDialogCtrl', ['$rootScope', '$scope', '$location', '$win
         $scope.activeDialog = $scope.globalDialogs[$scope.globalDialogs.length - 1];
     }
 
+    function removeDialogByTag(tag) {
+        var i, length = $scope.globalDialogs.length;
+        for (i = 0; i < length; i += 1) {
+            if ($scope.globalDialogs[i].tag && $scope.globalDialogs[i].tag === tag) {
+                $scope.closeDialog($scope.globalDialogs[i]);
+                break;
+            }
+        }
+    }
+
     /**
      * @ngdoc method
      * @name addDialog
@@ -69,6 +79,8 @@ VBET5.controller('globalDialogCtrl', ['$rootScope', '$scope', '$location', '$win
         if (!dialog || !dialog.type || ('image' === dialog.type && !dialog.src) || ('image' !== dialog.type && !dialog.content)) {
             return null;
         }
+
+        dialog.tag && removeDialogByTag(dialog.tag);
         dialog.index = $scope.globalDialogs.length;
         dialog.standardPopup = true;
 
@@ -76,18 +88,12 @@ VBET5.controller('globalDialogCtrl', ['$rootScope', '$scope', '$location', '$win
         updateActiveDialog();
     }
 
-    $rootScope.$on("globalDialogs.addDialog", function (event, dialog) {
+    $scope.$on("globalDialogs.addDialog", function (event, dialog) {
         addDialog(dialog);
     });
 
-    $rootScope.$on("globalDialogs.removeDialogsByTag", function (event, tag) {
-        var i, length = $scope.globalDialogs.length;
-        for (i = 0; i < length; i += 1) {
-            if ($scope.globalDialogs[i].tag && $scope.globalDialogs[i].tag === tag) {
-                $scope.closeDialog($scope.globalDialogs[i]);
-                break;
-            }
-        }
+    $scope.$on("globalDialogs.removeDialogsByTag", function (event, tag) {
+        removeDialogByTag(tag);
     });
 
     /**
@@ -161,7 +167,7 @@ VBET5.controller('globalDialogCtrl', ['$rootScope', '$scope', '$location', '$win
 
         for (key in Config.customDialogs) {
             item = Config.customDialogs[key];
-            $rootScope.geoDataAvailable = $rootScope.geoDataAvailable || Geoip.getGeoData();
+            $rootScope.geoDataAvailable = $rootScope.geoDataAvailable || Geoip.getGeoData(false);
             if (item.country) {
                 (function (item) {
                     $rootScope.geoDataAvailable.then(function (data) {
@@ -180,7 +186,7 @@ VBET5.controller('globalDialogCtrl', ['$rootScope', '$scope', '$location', '$win
         loadDialogsFromConfig();
     });
 
-    $rootScope.$watch("env.authorized", function (newValue) {
+    $rootScope.$watch("env.authorized", function () {
         loadDialogsFromConfig();
     }, true);
 
@@ -268,6 +274,12 @@ VBET5.controller('globalDialogCtrl', ['$rootScope', '$scope', '$location', '$win
             $location.search('message', undefined); //remove it after displaying
             $location.search('messagetype', undefined); //remove it after displaying
             $location.search('messagevalue', undefined); //remove it after displaying
+            analytics.gaSend('send', 'event', 'dialog', 'message',  {'page': $location.path(), 'eventLabel': message});
+
+            if (Config.main.trackingOnMessage && Config.main.trackingOnMessage[message]) {
+                Tracking.event(Config.main.trackingOnMessage[message], {}, true);
+            }
+
         }
     }
 
@@ -281,12 +293,14 @@ VBET5.controller('globalDialogCtrl', ['$rootScope', '$scope', '$location', '$win
      */
     function showRuntimePopup(popup) {
 
-        var loginStatus = parseInt(popup.login || 0),
+        var loginStatus = parseInt(popup.login || 0, 10),
+            ageRestriction = parseInt(popup.age_restriction || 0, 10),
             userTime = Moment.get().utc().unix(),
             repeatType = popup.repeat_type || (popup.custom_fields && popup.custom_fields.repeat_type),
             customRepeat = popup.custom_repeat || (popup.custom_fields && popup.custom_fields.custom_repeat),
-            lastShow = parseInt(Storage.get('popup' + (popup.id || '') + 'ShowedTime'), 10),
-            expiryTime = 1;
+            lastShow = parseInt($cookies.getObject('popup' + (popup.id || '') + 'ShowedTime') || Storage.get('popup' + (popup.id || '') + 'ShowedTime'), 10),
+            expiryTime = 1,
+            calculatedAge = calculateAge();
 
         switch (repeatType) {
             case 'never':
@@ -306,22 +320,51 @@ VBET5.controller('globalDialogCtrl', ['$rootScope', '$scope', '$location', '$win
                 break;
         }
 
+        loginStatus = ageRestriction ? 1 : loginStatus;
+
         if ((loginStatus === 0 && !Config.env.authorized) || (loginStatus === 1 && Config.env.authorized) || loginStatus === 2) {
 
             if (lastShow && expiryTime === false) {
                 return;
             }
 
+            if (ageRestriction && (calculatedAge >= ageRestriction || !calculatedAge)) {
+                return;
+            }
+
             if (!lastShow || userTime > lastShow + expiryTime || popup.slug === 'registration-popup') {
-                addDialog({
+                var dialog = {
                     type: 'cms-popup',
                     title: popup.title,
                     content: popup.content + ' '
-                });
-                Storage.set('popup' + (popup.id || '') + 'ShowedTime', userTime);
+                };
+                popup.link && (dialog.link = popup.link);
+                popup.custom_fields && (dialog.custom_fields = popup.custom_fields);
+                addDialog(dialog);
+                storeData('popup' + (popup.id || '') + 'ShowedTime', userTime);
             }
         }
+    }
 
+    /**
+     * @ngdoc method
+     * @name storeData
+     * @methodOf vbet5.controller:globalDialogCtrl
+     * @param {String} key the id of stored data
+     * @param {Number} value the stored value
+     * @description stores value in Storage or cookie
+     */
+    function storeData(key, value) {
+        if (Config.main.useAuthCookies) {
+            var cookieOptions = {
+                domain: $window.location.hostname.split(/\./).slice(-2).join("."),
+                path: "/",
+                expires: new Date((new Date()).getTime() + 8640000000) //8640000000 = 100 day
+            };
+            $cookies.putObject(key, value, cookieOptions);
+        } else {
+            Storage.set(key, value);
+        }
     }
 
     if (Config.main.enableRuntimePopup && $location.path() != '/popup/') {
@@ -354,22 +397,56 @@ VBET5.controller('globalDialogCtrl', ['$rootScope', '$scope', '$location', '$win
         });
     }
 
+    function showOnAnotherPage (popups) {
+        $scope.$on('$routeChangeSuccess', function () {
+            for (var i = 0; i < popups.length; i++) {
+                if($location.path().indexOf(popups[i].show_on_page) !== -1 || (popups[i].show_on_page === 'home' && $location.path() === '/')) {
+                    showRuntimePopup(popups[i]);
+                }
+            }
+        });
+    }
+
     /**
      * @ngdoc method
      * @name processAllPopups
      * @methodOf vbet5.controller:globalDialogCtrl
      * @description Process dialogs and process registration fialog separately
-     * @param (Boolean) true if only registration dialogs must be processed
      */
-    function processAllPopups (registrationPopup) {
+    function processAllPopups () {
+        var dependPopups = [];
         angular.forEach(runtimePopupCache, function (popup) {
-            if (!!registrationPopup === (popup.slug === 'registration-popup')) {
-                showRuntimePopup(popup);
+            if (popup.slug !== 'registration-popup' && popup.slug !== 'after_bet') {
+                if($location.path().indexOf(popup.show_on_page) !== -1 || (popup.show_on_page === 'home' && $location.path() === '/')) {
+                    showRuntimePopup(popup);
+                } else {
+                    dependPopups.push(popup);
+                }
             }
         });
+
+        dependPopups.length && showOnAnotherPage(dependPopups);
     }
 
-    $scope.$on('showPopupBeforeRegistration', function () {
-        processAllPopups(true);
+    /**
+     * @ngdoc method
+     * @name calculateAge
+     * @methodOf vbet5.controller:globalDialogCtrl
+     * @description Recalculate user age and set to userAge
+     */
+    function calculateAge() {
+        if ($rootScope.profile && $rootScope.profile.birth_date) {
+            return Moment.get().diff(Moment.get(Moment.moment.utc($rootScope.profile.birth_date)), 'year');
+        }
+        return false;
+    }
+
+    $scope.$on('showPopupBySlug', function (event, slug) {
+        for (var i = 0, length = runtimePopupCache.length; i < length; ++i) {
+            if (runtimePopupCache[i].slug === slug) {
+                showRuntimePopup(runtimePopupCache[i]);
+                break;
+            }
+        }
     });
 }]);

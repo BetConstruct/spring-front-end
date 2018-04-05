@@ -103,16 +103,6 @@ VBET5.controller('notificationCtrl', ['$rootScope', '$scope', '$location', 'Conf
         $scope.loadNotifications();
     }
 
-    $scope.$on('login.loggedIn', function () {
-        if (Config.main.enableLoginPopup && Config.main.loginPopupMessage && Config.main.loginPopupMessage.length) {
-            $rootScope.globalDialog = {
-                type: 'loginpopup',
-                title: Config.main.loginPopupMessageTitle,
-                content: Config.main.loginPopupMessage
-            };
-        }
-    });
-
     /**
      * @description Show notification based on GEOloacation
      */

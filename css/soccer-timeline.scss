@@ -318,7 +318,7 @@
         position: absolute;
         display: none;
         left: 4px;
-        bottom: 8px;
+        bottom: -54px;
         padding: 6px;
         margin-left: -20px;
         box-shadow: 0 1px 2px #111;
@@ -332,17 +332,18 @@
         &:after {
             content: '';
             position: absolute;
-            top: 100%;
+            top: auto;
+            bottom: 100%;
             left: 15px;
             width: 0;
             height: 0;
             border-width: 0.5em;
             border-style: solid;
-            border-color: #fff transparent transparent transparent;
+            border-color: transparent transparent #fff transparent;
         }
         &:before {
-            border-color: rgba(0, 0, 0, 0.5) transparent transparent transparent;
-            top: calc(100% + 1px);
+            border-color: transparent transparent rgba(0, 0, 0, 0.5) transparent;
+            bottom: calc(100% + 1px);
         }
     }
     > div:hover .tl-details {

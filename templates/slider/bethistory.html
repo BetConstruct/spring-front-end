@@ -67,12 +67,12 @@
                                 <b ng-show="bet.type==='1' && bet.events[0].is_live === '1'">Live </b>
                                 <b ng-if="bet.ew">ew</b>
                                 <b ng-if="bet.super_bet" class="superbet-icon">S</b>
-                            </p>{{bet.date_time|formatDate:'full'}}</li>
+                            </p>{{bet.date_time|formatDate:'full':null:env.timeFormat}}</li>
                         <li class="history-name-team">
                             <div class="mini-express-b">
                                 <span ng-if="bet.type==1">
                                     <span class="team-n-information">{{bet.events[0].game_name}}</span>
-                                     <span class="history-date-mini">{{bet.events[0].game_start_date|formatDate:'full'}}</span>
+                                     <span class="history-date-mini">{{bet.events[0].game_start_date|formatDate:'full':null:env.timeFormat}}</span>
                                  </span>
                                <span ng-if="bet.type==2" trans>express</span>
                                 <span ng-if="bet.type==3"><span trans>System</span> {{bet.system_min_count}}/{{bet.system_max_count}}</span>
@@ -144,10 +144,10 @@
                                     {{bet.currency|currency}}
                                 </p>
                             </div>
-                            <div class="cash-out-button" ng-show="bet.outcome == 0 && bet.calculatedCashout !==undefined">
-                                <button ng-click="broadcast('open.cashoutDialog', bet)" ng-disabled="!bet.calculatedCashout || !bet.cashoutEnabled" title="{{bet.calculatedCashout ? bet.calculatedCashout + ' ' + bet.currency  : ('Cash-out is not available at the moment'|translate)}}">
+                            <div class="cash-out-button" ng-show="bet.outcome == 0 && bet.cash_out !==undefined">
+                                <button ng-click="broadcast('open.cashoutDialog', bet)" ng-disabled="!bet.cash_out || !bet.cashoutEnabled" title="{{bet.cash_out ? bet.cash_out + ' ' + bet.currency  : ('Cash-out is not available at the moment'|translate)}}">
                                     <b trans>Cash-out</b>
-                                    <b ng-bind="bet.calculatedCashout + ' ' + bet.currency" ng-show="bet.calculatedCashout"></b>
+                                    <b ng-bind="bet.cash_out + ' ' + bet.currency" ng-show="bet.cash_out"></b>
                                 </button>
                             </div>
                         </li>
@@ -172,4 +172,6 @@
 
         <!--all bets block END-->
     </div>
+
+    <ng-include src="getTemplate('templates/dialogs/cashout.html')"></ng-include>
 </div>

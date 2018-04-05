@@ -8,20 +8,20 @@
   box-sizing: border-box;
 }
 .topprim-text-j h2 {
-  color: #fbbb01;
+  color: $brand-color-2;
   font: 400 18px/20px $font-f;
   float: left;
 }
 .topprim-text-j a {
   display: block;
   float: right;
-  color: #f3f3f5;
+  color: $text-palette-2;
   font: 400 14px/16px $font-f;
   text-decoration: none;
 }
 .topprim-text-j a i {
   font: normal 16px/16px icomoon;
-  color: #7b8191;
+  color: $text-palette-4;
   display: inline-block;
   vertical-align: top;
   margin: 0 10px;
@@ -37,16 +37,18 @@
 }
 .transfer-block-j {
   float: left;
-  background-color: #363636;
+  background: $skin-palette-8;
   height: 365px;
   width: calc(100% / 4);
-  border: 1px solid;
-  border-width: 0 1px;
-  border-left-color: #3f4042;
-  border-right-color: #222121;
+  border: 1px solid  $skin-palette-12;
+  border-left-color: $skin-palette-7;
+  border-right-color: $skin-palette-12;
   position: relative;
-  box-shadow: 0px 4px 0px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 4px 0 rgba(0, 0, 0, 0.2);
   margin: 0 0 50px 0;
+}
+.buddy-transfer-mixed-view-t .transfer-block-j{
+  width: calc(100% / 3);
 }
 .transfer-block-j:first-of-type {
   border-left: 0;
@@ -58,12 +60,11 @@
   content: '';
   display: block;
   position: absolute;
-  top: 0px;
-  left: 0px;
-  right: 0px;
-  bottom: 0px;
-  background: white;
-  opacity: 0.2;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255,255,255, 0.2);
   cursor: default;
   z-index: 99;
 }
@@ -74,10 +75,10 @@
   height: 66px;
   width: 100%;
   float: left;
-  background-color: #2c2b2b;
+  background: lighten( desaturate( adjust-hue( $skin-color, 6deg ), 19 ), 8 );
 }
 .transferb-title-j h3 {
-  color: #f3f3f5;
+  color: $text-palette-2;
   font: 700 18px/66px $font-f;
   text-indent: 30px;
   text-align: left;
@@ -96,15 +97,23 @@
 }
 .tb-button-w-j button {
   border-radius: 6px;
-  background-color: $hero-color;
+  border: none;
+  background: $hero-color;
   height: 36px;
   width: calc(50% - 5px);
-  color: #ffffff;
+  color: set-color($hero-color);
   font: 400 14px $font-f;
   text-transform: uppercase;
-  border: 0;
   cursor: pointer;
   float: right;
+  &:hover {
+    background: lighten( saturate( $hero-color, 1 ), 7 );
+  }
+  &:disabled{
+    color: invert(rgba(set-color($popup-form-palette),0.47));
+    background: rgba(set-color($popup-form-palette),0.09);
+    cursor: default;
+  }
 }
 .tb-button-w-j button:only-of-type {
   width: 100%;
@@ -113,8 +122,9 @@
   float: left;
 }
 .tb-button-w-j button.skin-j {
-  border: 2px solid #505767;
-  background-color: transparent;
+  color: $text-palette-2;
+  border: 2px solid lighten( desaturate( adjust-hue( $skin-color, 2deg ), 16 ), 9 );
+  background: transparent;
 }
 .transfer-block-j.choose-user-j .tb-button-w-j button {
   width: calc(50% - 5px);
@@ -124,9 +134,8 @@
   text-align: center;
 }
 .transfer-block-j.success-j .succes-big-j {
-  background-color: #2c2b2b;
+  background: lighten( desaturate( adjust-hue( $skin-color, 6deg ), 19 ), 8 );
   border-radius: 50%;
-  box-shadow: 0px 1px 0px #2e2e2e;
   height: 110px;
   width: 110px;
   margin: 34px auto 0;
@@ -139,18 +148,18 @@
 .transfer-block-j.success-j p {
   display: block;
   margin-top: 25px;
-  color: #c2c5cd;
+  color: $text-palette-3;
   font: 700 14px/16px $font-f;
 }
 .confirm-info-j {
-  border-bottom: 1px solid #2c2b2b;
+  border-bottom: 1px solid lighten( desaturate( adjust-hue( $skin-color, 6deg ), 19 ), 8 );
   margin-bottom: 15px;
   float: left;
   width: 100%;
   padding-bottom: 5px;
 }
 .confirm-info-j li {
-  color: #c2c5cd;
+  color: $text-palette-3;
   font: 400 14px/16px $font-f;
   display: block;
   float: left;
@@ -165,13 +174,13 @@
   float: right;
 }
 .confirm-info-j p.info-title-j a {
-  color: #7b8191;
+  color: $text-palette-4;
   border-bottom: 1px solid #7b8191;
 }
 p.info-title-j {
   float: left;
   width: 100%;
-  color: #7b8191;
+  color: $text-palette-4;
   font: 400 14px/16px $font-f;
   white-space: nowrap;
   text-overflow: ellipsis;
@@ -179,8 +188,8 @@ p.info-title-j {
 }
 p.info-title-j a,
 p.info-title-j .active-j {
-  color: #c2c5cd;
-  border-bottom: 1px solid #c2c5cd;
+  color: $text-palette-3;
+  border-bottom: 1px solid $text-palette-3;
   text-decoration: none;
 }
 .transb-inner-wrap label {
@@ -194,7 +203,7 @@ p.info-title-j .active-j {
   margin-bottom: 8px;
 }
 .transb-inner-wrap .select-tb-j {
-  background-color: #2c2b2b;
+  background: #2c2b2b;
   border-radius: 5px;
   height: 36px;
   width: 100%;
@@ -215,44 +224,54 @@ p.info-title-j .active-j {
   height: 36px;
   display: inline-block;
   padding: 0 15px;
-  background-color: transparent;
+  background: transparent;
   border: 0;
-  color: #c2c5cd;
+  color: $text-palette-3;
   font: 400 14px $font-f;
   position: relative;
   z-index: 60;
 }
 .transb-inner-wrap .select-tb-j select option,
 .transb-inner-wrap .select-tb-j select optgroup {
-  background-color: #2c2b2b;
+  background: #2c2b2b;
 }
 .tbuddy-amount-j input {
   width: calc(100% - 87px);
-  height: 36px;
   float: left;
+  display: block;
+  height: 36px;
   border-radius: 5px;
-  background-color: #2c2b2b;
-  color: #c2c5cd;
-  font: 400 14px $font-f;
+  border: 1px solid lighten( desaturate( adjust-hue( $skin-color, 2deg ), 16 ), 9 );
+  background: lighten( desaturate( adjust-hue( $skin-color, 3deg ), 14 ), 1 );
   padding: 0 55px 0 15px;
-  border: 0px;
+  color: $text-palette-14;
+  font: 400 12px $font-f;
+  transition: .25s background, .25s border;
+  &::-webkit-input-placeholder {color:$text-palette-4;font: 12px $font-f;text-transform: capitalize;}
+  &::-moz-placeholder          {color:$text-palette-4;font: 12px $font-f;text-transform: capitalize;}
+  &:-moz-placeholder           {color:$text-palette-4;font: 12px $font-f;text-transform: capitalize;}
+  &:-ms-input-placeholder      {color:$text-palette-4;font: 12px $font-f;text-transform: capitalize;}
+  &:focus {
+    background: darken( desaturate( adjust-hue( $skin-color, 3deg ), 11 ), 1 );
+    border-color: $skin-palette-6;
+  }
 }
 .tbuddy-amount-j span {
   display: block;
   height: 36px;
-  color: #c2c5cd;
+  color: $text-palette-3;
   font: 400 14px/36px $font-f;
   width: 55px;
   position: absolute;
   right: 86px;
-  bottom: 0px;
+  bottom: 0;
 }
 .tbuddy-amount-j button {
   width: 77px;
   height: 36px;
-  border: 2px solid #505767;
+  border: 2px solid lighten( desaturate( adjust-hue( $skin-color, 2deg ), 16 ), 9 );
   display: block;
-  color: #f3f3f5;
+  color: $text-palette-2;
   font: 400 14px $font-f;
   text-align: center;
   float: right;
@@ -263,7 +282,6 @@ p.info-title-j .active-j {
   cursor: pointer;
   white-space: nowrap;
   text-overflow: ellipsis;
-  display: block;
 }
 .firends-scroll-j {
   @include scroll($scroll: auto);
@@ -291,48 +309,46 @@ p.info-title-j .active-j {
   display: inline-block;
   width: 16px;
   height: 16px;
-  background-color: #2c2b2b;
+  background: $skin-palette-7;
   border-radius: 50%;
   text-align: center;
 }
 .firends-scroll-j label input[type="radio"] {
-  position: absolute;
-  top: 0;
-  left: 0;
-  opacity: 0;
+  display: none;
 }
 .firends-scroll-j label input[type="radio"]:checked + i:before {
   content: '';
   width: 6px;
   height: 6px;
-  background-color: #c2c5cd;
-  display: inline-block;
+  background: $text-palette-3;
   vertical-align: middle;
   border-radius: 50%;
   display: block;
   margin: 5px;
 }
 .firends-scroll-j label input[type="radio"]:checked + i + span {
-  color: #f3f3f5;
+  color: $text-palette-2;
 }
 .firends-scroll-j label span {
   display: inline-block;
   text-indent: 10px;
-  color: #7b8191;
+  color: $text-palette-4;
   font: 400 12px/16px $font-f;
   vertical-align: top;
   white-space: nowrap;
   overflow: hidden;
-  width: calc(100% - 19px);
   text-overflow: ellipsis;
+}
+.buddy-transfer-mixed-view-t .firends-scroll-j label span{
+  width: calc(100% - 25px);
 }
 .firends-scroll-j button {
   width: 16px;
   height: 16px;
   border-radius: 50%;
   display: inline-block;
-  border: 1px solid #7b8191;
-  color: #7b8191;
+  border: 1px solid $skin-palette-4;
+  color: $text-palette-4;
   cursor: pointer;
   background: none;
   padding: 0;
@@ -350,7 +366,7 @@ p.info-title-j .active-j {
   right: 0;
 }
 .firends-scroll-j button.added-j {
-  background: #7b8191;
+  background: $skin-palette-4;
 }
 .firends-scroll-j button.added-j:before {
   font: 6px icomoon;
@@ -367,7 +383,7 @@ p.info-title-j .active-j {
   font: 12px Arial, Helvetica, sans-serif;
   display: inline-block;
   position: absolute;
-  top: 0px;
+  top: 0;
   left: 0;
   right: 0;
 }
@@ -392,30 +408,33 @@ p.info-title-j .active-j {
   display: block;
   float: left;
   width: 100%;
-  background-color: #2c2b2b;
+  background: #2c2b2b;
   border-radius: 5px;
-  color: #c2c5cd;
+  color: $text-palette-3;
   font: 400 14px $font-f;
   padding: 0 35px 0 15px;
   border: 0;
 }
-.choose-user-j form button {
+.transb-group-j .choose-user-j .transb-inner-wrap form label .search-j {
   position: absolute;
   bottom: 0;
   right: 0;
   height: 36px;
-  width: 28px;
+  width: 36px;
   border: 0;
-  background-color: transparent;
+  background: transparent;
   z-index: 20;
   cursor: pointer;
-  text-align: left;
+  text-align: center;
   padding: 0;
+  &:hover {
+    background: transparent;
+  }
 }
 .choose-user-j form button:before {
   content: "\e6d4";
   font: 13px/36px icomoon;
-  color: #737888;
+  color: $text-palette-4;
 }
 .search-result-j p.info-title-j {
   margin-bottom: 10px;
@@ -435,7 +454,6 @@ p.info-title-j .active-j {
   .tbuddy-amount-j button {
     width: 100%;
     margin-top: 10px;
-    margin-top: 10px;
   }
   .transfer-block-j {
     height: 460px;
@@ -454,7 +472,8 @@ p.info-title-j .active-j {
     width: 100%;
   }
 }
-.transfer-block-j.choose-user-j .md-progress-circular.page-center {
-  margin-top: -20px;
+.transb-group-j .transfer-block-j.choose-user-j .md-progress-circular.page-center {
+  margin: -20px 0 0 -50px;
+  padding: 0 !important;
 }
 /* end buddy to buddy transfer */

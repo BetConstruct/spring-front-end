@@ -1,10 +1,10 @@
 /**
  * @ngdoc controller
- * @name vbet5.controller:mixedMyBetsCtrl extended from myBetsCtrl
+ * @name vbet5.controller:mixedBalanceCtrl extended from myBetsCtrl
  * @description
  *  New bet history controller.
  */
-VBET5.controller('mixedBalanceCtrl', ['$scope', '$controller', 'Config', '$sce', 'Moment', '$filter', function($scope, $controller, Config, $sce, Moment, $filter) {
+VBET5.controller('mixedBalanceCtrl', ['$scope', '$controller', 'Config', '$sce', 'Moment', '$filter', '$rootScope', function($scope, $controller, Config, $sce, Moment, $filter, $rootScope) {
     'use strict';
     angular.extend(this, $controller('paymentsCtrl', {
         $scope: $scope
@@ -14,21 +14,25 @@ VBET5.controller('mixedBalanceCtrl', ['$scope', '$controller', 'Config', '$sce',
         $scope: $scope
     }));
 
+    Moment.setLang(Config.env.lang);
+    Moment.updateMonthLocale();
+    Moment.updateWeekDaysLocale();
+
     $scope.requestData = {
         dateFrom: $scope.today,
         dateTo: $scope.today,
         live: false
     };
-    $scope.datePickerFormat = Config.main.layoutTimeFormat[Config.main.sportsLayout] == 'MM/DD' ? Config.main.dateFormat.historyBalanceFormatDate : Config.main.dateFormat.datepicker;
+    $scope.datePickerFormat = Config.main.layoutTimeFormat[Config.main.sportsLayout] === 'MM/DD' ? Config.main.dateFormat.historyBalanceFormatDate : Config.main.dateFormat.datepicker;
 
     $scope.balanceHistoryParams.availableProducts = {};
 
-    if (Config.main.sportEnabled || Config.main.GmsPlatform) {
-        $scope.balanceHistoryParams.availableProducts[0] = 'Main'
+    if ($rootScope.calculatedConfigs.sportEnabled || Config.main.GmsPlatform) {
+        $scope.balanceHistoryParams.availableProducts[0] = 'Main';
     }
 
-    if (Config.main.enableCasinoBalanceHistory) {
-        $scope.balanceHistoryParams.availableProducts[1] = 'Casino'
+    if (Config.main.enableCasinoBalanceHistory && $rootScope.casinoEnabled &&($rootScope.calculatedConfigs.casinoEnabled || $rootScope.calculatedConfigs.livedealerEnabled)) {
+        $scope.balanceHistoryParams.availableProducts[1] = 'Casino';
     }
 
     $scope.currencyHolder = {};
@@ -101,24 +105,25 @@ VBET5.controller('mixedBalanceCtrl', ['$scope', '$controller', 'Config', '$sce',
     };
 
     $scope.adjustDate = function adjustDate(type) {
+        var monthCount = Config.main.balanceHistoryMonthCount || 1;
         switch (type) {
             case 'from':
                 if (Moment.get($scope.requestData.dateFrom).unix() > Moment.get($scope.requestData.dateTo).unix()) {
                     $scope.requestData.dateTo = Moment.moment($scope.requestData.dateFrom).format("YYYY-MM-DD");
                 }
 
-                if (Moment.get($scope.requestData.dateFrom).add(1, "M").isAfter($scope.today)) {
+                if (Moment.get($scope.requestData.dateFrom).add(monthCount, "M").isAfter($scope.today)) {
                     $scope.datePickerLimits.maxToDate = $scope.today;
                 } else {
-                    $scope.requestData.dateTo = Moment.get($scope.requestData.dateFrom).add(1, "M").format("YYYY-MM-DD");
-                    $scope.datePickerLimits.maxToDate = Moment.moment($scope.requestData.dateFrom).add(1, "M").format("YYYY-MM-DD");
+                    $scope.requestData.dateTo = Moment.get($scope.requestData.dateFrom).add(monthCount, "M").format("YYYY-MM-DD");
+                    $scope.datePickerLimits.maxToDate = Moment.moment($scope.requestData.dateFrom).add(monthCount, "M").format("YYYY-MM-DD");
                 }
 
                 break;
             case 'to':
                 if (Moment.get($scope.requestData.dateFrom).unix() > Moment.get($scope.requestData.dateTo).unix()) {
                     $scope.requestData.dateFrom = Moment.moment($scope.requestData.dateTo).format("YYYY-MM-DD");
-                    $scope.datePickerLimits.maxToDate = Moment.moment($scope.requestData.dateFrom).add(1, "M").format("YYYY-MM-DD");
+                    $scope.datePickerLimits.maxToDate = Moment.moment($scope.requestData.dateFrom).add(monthCount, "M").format("YYYY-MM-DD");
                 }
                 break;
         }

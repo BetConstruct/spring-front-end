@@ -25,7 +25,7 @@
                         <div class="message-title-contain"
                              ng-class="{'new': (message.checked == 0 && !message.isSystem), 'system-message': message.isSystem }"
                              ng-click="openMessage(message,0)">
-                            <p ng-bind-html="message.subject" title="{{message.subject}}"></p>
+                            <p ng-bind="message.subject" title="{{message.subject}}"></p>
                         </div>
                         <div class="message-time">
                             <p>{{message.date|formatDate:'full'}}</p>
@@ -36,7 +36,7 @@
                         <!--Open message-->
                         <div class="open-message-contain" ng-show="message.open">
                             <div class="arrow-sport ng-scope"></div>
-                            <p ng-bind-html="message.body"></p>
+                            <p ng-bind-html="message.body|nl2br|html"></p>
                         </div>
                         <!--Open message END-->
                     </li>
@@ -62,7 +62,7 @@
                     <li ng-repeat="message in sentMessages" ng-class="{'message-open': message.open}">
                         <div class="message-title-contain new"
                              ng-click="openMessage(message)">
-                            <p ng-bind-html="message.subject"  title="{{message.subject}}"></p>
+                            <p ng-bind="message.subject"  title="{{message.subject}}"></p>
                         </div>
                         <div class="message-time">
                             <p>{{message.date|formatDate:'full'}}</p>
@@ -73,7 +73,7 @@
                         <!--Open message-->
                         <div class="open-message-contain" ng-show="message.open">
                             <div class="arrow-sport ng-scope"></div>
-                            <p ng-bind-html="message.body"></p>
+                            <p ng-bind-html="message.body|escapehtml|nl2br|html"></p>
                         </div>
                         <!--Open message END-->
                     </li>

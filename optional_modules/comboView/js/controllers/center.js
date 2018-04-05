@@ -1,30 +1,23 @@
-VBET5.controller('comboViewCenterController', ['$rootScope', '$scope', 'OddService', 'ConnectionService', 'Config', '$filter', 'Utils', 'GameInfo', 'Moment', function ($rootScope, $scope, OddService, ConnectionService, Config, $filter, Utils, GameInfo, Moment) {
+VBET5.controller('comboViewCenterController', ['$rootScope', '$scope', 'OddService', 'ConnectionService', 'StreamService', 'Config', '$filter', 'Utils', 'GameInfo', 'Moment', function ($rootScope, $scope, OddService, ConnectionService, StreamService, Config, $filter, Utils, GameInfo, Moment) {
     'use strict';
 
     var connectionService = new ConnectionService($scope);
+    var streamService = new StreamService($scope);
     var connectionSubIds = {};
     var parentMainScope = $scope.$parent.$parent.$parent;
     var expandedRegionSubIds = {};
     var updateCentralLiveView = updateCentralViewFactory('centerViewLiveData');
     var updateCentralPrematchView = updateCentralViewFactory('centerViewPrematchData');
-
     var updateCentralLiveViewWithExpandedRegion = updateCentralViewWithExpandedRegionFactory('centerViewLiveData');
     var updateCentralPrematchViewWithExpandedRegion = updateCentralViewWithExpandedRegionFactory('centerViewPrematchData');
     var updateCentralPrematchViewWithExpandedRegionForLiveToday = updateCentralViewWithExpandedRegionFactory('centerViewPrematchData', updateLinkedGames);
 
-    var customSportAliasFilter = Utils.getCustomSportAliasFilter();
+    $scope.displayBase = GameInfo.displayBase;
+    $scope.displayEventLimit = GameInfo.displayEventLimit;
+    $scope.cancelDisplayEventLimit = GameInfo.cancelDisplayEventLimit;
+    $scope.isEventInBetSlip = GameInfo.isEventInBetSlip;
 
     (function initScope () {
-        $scope.displayBase = GameInfo.displayBase;
-        $scope.displayEventLimit = GameInfo.displayEventLimit;
-        $scope.cancelDisplayEventLimit = GameInfo.cancelDisplayEventLimit;
-        $scope.isEventInBetSlip = GameInfo.isEventInBetSlip;
-        $scope.liveGamesSoccerTemplate = GameInfo.liveGamesSoccerTemplate;
-        $scope.dotaGamesList = GameInfo.dotaGamesList;
-        $scope.framesCount = GameInfo.framesCount;
-        $scope.showFrameAlias = GameInfo.showFrameAlias;
-        $scope.slideSets = GameInfo.slideSets;
-        $scope.getCurrentTime = GameInfo.getCurrentTime;
         $scope.visibleSetsNumber = 5;
 
         $scope.selectedMarketForLiveCompetition = {};
@@ -220,9 +213,7 @@ VBET5.controller('comboViewCenterController', ['$rootScope', '$scope', 'OddServi
                                 });
                             }
 
-                            marketGroup.events.sort(function (a, b) {
-                                return a.order - b.order;
-                            });
+                            marketGroup.events.sort(Utils.orderSorting);
 
                             if (marketGroup.events.length === 2) {
                                 marketGroup.events.splice(1, 0, {});
@@ -284,7 +275,7 @@ VBET5.controller('comboViewCenterController', ['$rootScope', '$scope', 'OddServi
                     'id', 'start_ts', 'team1_name', 'team2_name', 
                     'team1_external_id', 'team2_external_id', 'type', 'info', 
                     'events_count', 'markets_count', 'extra', 'is_blocked', 
-                    'exclude_ids', 'is_stat_available', 'game_number', 'game_external_id', 'is_live'
+                    'exclude_ids', 'is_stat_available', 'game_number', 'game_external_id', 'is_live', 'show_type'
                 ],
                 'event': ['id', 'price', 'type', 'name', 'order', 'base'],
                 'market': ['type', 'express_id', 'name', 'base', 'order']
@@ -446,7 +437,7 @@ VBET5.controller('comboViewCenterController', ['$rootScope', '$scope', 'OddServi
 
             response.game[game.id].availableMarketGroups = {};
             response.game[game.id].sport = {id: sport.id, alias: sport.alias, name: sport.name};
-            response.game[game.id].region = {id: region.id};
+            response.game[game.id].region = {id: region.id, name: region.name};
             response.game[game.id].competition = {id: competition.id, name: competition.name};
 
             $scope.openGame = response.game[game.id];
@@ -471,27 +462,7 @@ VBET5.controller('comboViewCenterController', ['$rootScope', '$scope', 'OddServi
             if ($scope.openGame.sport.alias === "HorseRacing") {
                 GameInfo.getHorseRaceInfo($scope.openGame.info, $scope.openGame.market, "Winner");
             }
-
-            var hasVideo = GameInfo.hasVideo($scope.openGame);
-            if (hasVideo) {
-                if ($scope.openGame.video_data === undefined) {
-                    $scope.openGame.video_data = null; }//not to call this several times before getVideoData fills the field
-                    /*if ($scope.pinnedGames && !$scope.pinnedGames[$scope.openGame.id]) {*/
-                        GameInfo.getVideoData($scope.openGame);
-                        if ($scope.enlargedGame && $scope.enlargedGame.id !== $scope.openGame.id) {
-                            $scope.enlargedGame = $scope.openGame;
-                        }
-                    /*} else {
-                        $scope.openGame.activeFieldType = 'field';
-                    }*/
-
-            }
-
-            if (hasVideo && (Config.env.authorized || !$scope.openGame.has_animation) && $scope.openGame.activeFieldType === undefined) {
-                $scope.openGame.activeFieldType = 'video';
-            } else if ($scope.openGame.activeFieldType === undefined) {
-                $scope.openGame.activeFieldType = 'field';
-            }
+            streamService.monitoring($scope, 'openGame', 'null', 'enlargedGame');
 
             // move to GameInfo service and pass $scope.openGame
             GameInfo.updateOpenGameTextInfo($scope.openGame);
@@ -738,39 +709,6 @@ VBET5.controller('comboViewCenterController', ['$rootScope', '$scope', 'OddServi
         data.force = true;
 
         $scope.$emit('comboView.leftMenu.' + eventForView[parentMainScope.selectedCentralView], data);
-    });
-
-    $scope.$on('login.loggedIn', function () {
-        if ($scope.openGame) {
-            if ($rootScope.profile) {
-                GameInfo.getVideoData($scope.openGame);
-            } else {
-                var profilePromise = $rootScope.$watch('profile', function () {
-                    if ($rootScope.profile) {
-                        profilePromise();
-                        GameInfo.getVideoData($scope.openGame);
-                    }
-                });
-            }
-        }
-    });
-
-    //and unavailable when he logs out
-    $scope.$on('login.loggedOut', function () {
-        $scope.openGame.video_data = null;
-    });
-
-    //synchronize video with user balance
-    $scope.$watch('profile.balance', function (newValue, oldValue) {
-        if ($scope.openGame) {
-            return;
-        }
-
-        if (newValue === 0 && $rootScope.profile.initial_balance === 0) {
-            $scope.openGame.video_data = null;
-        } else if (oldValue === 0 && newValue > 0 && !$scope.openGame.video_data) {
-            GameInfo.getVideoData($scope.openGame);
-        }
     });
 
     $scope.selectSport = function selectSport (sport) {

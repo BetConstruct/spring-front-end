@@ -20,7 +20,7 @@
 
 <div id="live-chat-popup-button" ng-if="conf.liveChat.popup" title="Live Chat" trans class="help-b" onclick="startLiveChat()"></div>
 <div class="feedback-button" ng-if="conf.liveChat.liveChatInFooter" onclick="startLiveChat();">
-    <p ng-bind-html="'Live Chat'|translate|html:'nowrap'"></p>
+    <p ng-bind-html="'Live Chat'|translate|html"></p>
 </div>
 
 <div id="live-chat-button1" ng-if="!conf.liveChat.isSfChat && conf.liveChat.siteId && conf.liveChat.codePlan"  title="Live Chat" trans class="help-b"></div>

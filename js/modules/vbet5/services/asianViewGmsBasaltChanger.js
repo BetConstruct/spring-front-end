@@ -6,8 +6,8 @@ angular.module('vbet5').service('asianViewGmsBasaltChanger', ['Config', 'Utils',
     function eventCompareFunc(a, b) { return a.price - b.price;}
     var correctScorePattern = /\d:\d/;
 
-    var FIRST_HALF = ['HalfTimeResult', 'HalfTimeAsianHandicap', 'HalfTimeOverUnder', 'HalfTimeCorrectScore', '1stInningOver/Under'];
-    var SECOND_HALF = ['SecondHalfResult', '2ndHalfAsianHandicap', '2ndHalfTotalOver/Under', '2ndHalfCorrectScore'];
+    var FIRST_HALF = ['HalfTimeResult', 'HalfTimeAsianHandicap', 'HalfTimeOverUnder', 'HalfTimeCorrectScore', '1stInningOver/Under', 'FirstHalfEvenOddTotal', 'HalfTimeCornersOverUnder'];
+    var SECOND_HALF = ['SecondHalfResult', '2ndHalfAsianHandicap', '2ndHalfTotalOver/Under', '2ndHalfCorrectScore', 'SecondHalfEvenOddTotal'];
     var ACTIVE_SEQUENCES_GMS = ['MATCH', 'PERIOD', 'HALF', 'SET'];
     function handicapSortFunc(market1, market2) {
         if (!market1.hasOwnProperty('Handicap1') || !market1.hasOwnProperty('Handicap2')) {
@@ -146,27 +146,19 @@ angular.module('vbet5').service('asianViewGmsBasaltChanger', ['Config', 'Utils',
             return a.main_order - b.main_order;
         };
 
-        if (game.avalableMarketTypes.HANDICAP) {
-            angular.forEach(markets, function (market) {
-                angular.forEach(market, function (seq) {
-                    if (seq.HANDICAP && seq.HANDICAP.length > 1) {
-                        seq.HANDICAP.sort(sortingFunc);
-                    }
-                })
-            });
-        }
-
-        var sportType = AsianMarkets.marketsBySport[game.sport.alias] || AsianMarkets.marketsBySport.Default;
-        var pointsTypeForMarket = sportType.HDP[sportType.HDP.length - 1];
-        if (game.avalableMarketTypes[pointsTypeForMarket]) {
-            angular.forEach(markets, function (market) {
-                angular.forEach(market, function (seq) {
-                    if (seq[pointsTypeForMarket] && seq[pointsTypeForMarket].length > 1) {
-                        seq[pointsTypeForMarket].sort(sortingFunc);
-                    }
+        var dontNeedToBeSorted = AsianMarkets.ignoreMainOrderFor;
+        angular.forEach(game.avalableMarketTypes, function(availableMarket) {
+            if (!dontNeedToBeSorted[availableMarket]) {
+                angular.forEach(markets, function (market) {
+                    angular.forEach(market, function (seq) {
+                        if (seq[availableMarket] && seq[availableMarket].length > 1) {
+                            seq[availableMarket].sort(sortingFunc);
+                        }
+                    })
                 });
-            });
-        }
+            }
+        });
+
 
         angular.forEach(game.marketRows, function (marketRow, key) {
             angular.forEach(marketRow, function (sequence, index) {
@@ -416,7 +408,6 @@ angular.module('vbet5').service('asianViewGmsBasaltChanger', ['Config', 'Utils',
     }
 
     function setGmsMarketSequence(market) {
-        //market.sequence = FIRST_HALF.indexOf(market.market_type) > -1 ? 1 : SECOND_HALF.indexOf(market.market_type) > -1 ? 2 : parseInt(market.name);
         if(FIRST_HALF.indexOf(market.market_type) > -1) {
             market.sequence = 1;
         } else if(SECOND_HALF.indexOf(market.market_type) > -1) {

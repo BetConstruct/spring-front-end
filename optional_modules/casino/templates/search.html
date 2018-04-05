@@ -9,13 +9,15 @@
                 <div id="casino-result-search" keyboard-navigation result-id-prefix="search-result-casino-" select-result-by-id-func="selectCasinoGameFromSearchResults" results-ids="searchCommandResultGameIds" selected-result-id="selectedSearchCommandResultId" show-results-flag="showSearchCommandResults">
                     <div ng-repeat="game in searchCommandResults">
                         <dl ng-class="{'active': selectedSearchCommandResultId === game.id}" ng-click="openCasinoGame(game); $event.stopPropagation();" id="search-result-casino-{{ game.id }}">
-                            <dt><img ng-src="{{iconsUrl + game.gameID}}.jpg" alt=""></dt>
+                            <dt><img ng-src="{{game.icon_2}}" alt=""></dt>
                             <dd>
-                                <div> {{game.gameName}} </div>
+                                <div>{{ game.name }}</div>
                                 <div class="play-game-button-search-wrap-j">
                                     <div class="play-game-button-search" trans ng-click="openCasinoGame(game, 'real');$event.stopPropagation();">play now</div>
-                                    <div class="play-game-button-search1" trans ng-show="game.hasFunMode" ng-click="openCasinoGame(game, 'fun');$event.stopPropagation();" ng-bind="game.funModeText|translate"></div>
+                                    <div class="play-game-button-search1" trans ng-show="!game.types.viewMode && game.types.funMode && confData.main.funModeEnabled === 1" ng-click="openCasinoGame(game, 'fun');$event.stopPropagation();">Play For Free</div>
+                                    <div class="play-game-button-search1" trans ng-show="game.types.viewMode && !game.types.funMode" ng-click="openCasinoGame(game, 'fun');$event.stopPropagation();">View</div>
                                 </div>
+
                             </dd>
                         </dl>
                     </div>

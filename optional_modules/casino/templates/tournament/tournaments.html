@@ -1,0 +1,123 @@
+<div class="casino-tournaments-include" ng-init="getTournamentList(true);tournament.readMore=false; setTitle('Tournaments')">
+    <div class="guide">
+        <div class="casino-tournaments-filters-wrapper">
+            <div ng-repeat="filterGroup in tournament.filterList track by $index" class="casino-tournament-filter no-select-j" ng-class="{'active': filterGroup.expanded}" ng-mouseover="filterGroup.expanded=true" ng-mouseleave="filterGroup.expanded=false">
+                <p ng-click="filterGroup.expanded=!filterGroup.expanded">
+                    <span>{{filterGroup.name|translate}}</span>
+                    <span>
+                        <span ng-repeat="filter in filterGroup.filters track by $index" ng-if="filter.active">{{(filter.name|translate)}}</span>
+                    </span>
+                </p>
+                <div>
+                    <ul>
+                        <li ng-repeat="filter in filterGroup.filters track by $index">
+                            <label>
+                                <input ng-model="filter.active" ng-change="updateFilters(filterGroup, filter)" type="checkbox">
+                                <span>{{filter.name|translate}}</span>
+                            </label>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <button ng-show="false" class="casino-tournaments-filters-reset" ng-click="getTournamentList()"></button>
+        </div>
+        <div class="float-width" ng-if="!tournament.filteredList">
+            <vbet-loader></vbet-loader>
+        </div>
+        <div class="casino-tournaments-games">
+
+            <div class="ct-games-no-results" ng-show="tournament.filteredList.length === 0" trans>There are no tournaments with selected filters.</div>
+
+            <div class="casino-tournament-game" ng-repeat="item in tournament.filteredList track by item.Id"
+                 ng-show="tournament.casinoGames[item.Id].length > 0"
+                 ng-class="{finished: item.State === 1, live: item.State === 2, upcoming: item.State === 3}" ng-click="selectTournament(item.Id)">
+                <ul>
+                    <li>
+                        <div class="ctournament-image-wrapper hp-slider-17">
+                            <figure style="background-image: url({{item.LobbyBannerImagesFiltered[tournament.sliderIndex[item.Id]].ImageUrl}})"></figure>
+                            <div class="ct-game-prize-amount">{{item.PrizeFund|number}} {{item.CurrencyId}}</div>
+                            <counter start="{{item.State === 3 ? item.StartDate : item.EndDate}}" finish-text="{{item.State === 3 ? 'Started' : ''}}" class="status-color"></counter>
+                            <div class="hp-slider-arrows-17" ng-show="item.LobbyBannerImagesFiltered.length > 1">
+                                <small ng-click="tournament.sliderIndex[item.Id] = tournament.sliderIndex[item.Id] - 1;tournament.sliderIndex[item.Id] = tournament.sliderIndex[item.Id] < 0 ? item.LobbyBannerImagesFiltered.length - 1 : tournament.sliderIndex[item.Id];$event.stopPropagation();"></small>
+                                <small ng-click="tournament.sliderIndex[item.Id] = tournament.sliderIndex[item.Id] + 1;tournament.sliderIndex[item.Id] = tournament.sliderIndex[item.Id] > item.LobbyBannerImagesFiltered.length - 1 ? 0 : tournament.sliderIndex[item.Id];$event.stopPropagation();"></small>
+                            </div>
+                        </div>
+                    </li>
+
+                    <li>
+                        <div class="ctournament-detailed-info">
+                            <ul class="ctournament-title-table">
+                                <li>{{item.Name}}</li>
+                                <li>
+                                    <button ng-click="participateInTournament(item);$event.stopPropagation()" ng-disabled="!item.canParticipate || item.IsParticipated">
+                                        {{(item.IsParticipated ? 'Joined' : 'Join')|translate}}
+                                    </button>
+                                </li>
+                            </ul>
+                            <p>
+                                <span ng-bind-html="item.Description.substring(0,400)|html"></span>
+                                <span ng-click="tournament.readMore='true'" ng-show="item.Description.length >= 400">... <a trans>Read More</a></span>
+                            </p>
+                            <ul class="ctournament-status-boxes">
+                                <li>
+                                    <p><span trans>Status</span></p>
+                                    <p class="status-color">
+                                        <strong ng-show="item.State == 1" trans>Finished</strong>
+                                        <strong ng-show="item.State == 2" trans>Live</strong>
+                                        <strong ng-show="item.State == 3" trans>Upcoming</strong>
+                                    </p>
+                                </li>
+                                <li>
+                                    <p><span trans>Registration Start - End</span></p>
+                                    <p>
+                                        <strong>
+                                            {{item.RegistrationStartDate|formatDate:'tornament'}}<br />
+                                            {{item.RegistrationEndDate|formatDate:'tornament'}}
+                                        </strong>
+                                    </p>
+                                </li>
+                                <li>
+                                    <p><span trans>Tournament Start - End</span></p>
+                                    <p>
+                                        <strong>
+                                            {{item.StartDate|formatDate:'tornament'}}<br />
+                                            {{item.EndDate|formatDate:'tornament'}}
+                                        </strong>
+                                    </p>
+                                </li>
+                                <li title="Registered Players/Min. N. of Players" trans="attr-only">
+                                    <p><span trans>Players</span></p>
+                                    <p>
+                                        <strong>
+                                            {{item.JoinedPlayersCount || 0}} <span>/</span> {{item.MinStartingNumberOfPlayers || 0}}
+                                        </strong>
+                                    </p>
+                                </li>
+                                <li>
+                                    <p><span trans>Buy in + Fee</span></p>
+                                    <p><strong>{{item.RegistrationAmount}} {{item.CurrencyId}}</strong></p>
+                                </li>
+                            </ul>
+                            <div class="ctournament-containing-games">
+
+                                <casino-games-list class="all-casino-games-list-box"
+                                                   show-conditions="true"
+                                                   games-list="tournament.casinoGames[item.Id]"
+                                                   game-show-conditions="true">
+                                </casino-games-list>
+                                <ul ng-show="tournament.casinoGamesCount[item.Id] > 5">
+                                    <li class="ctournament-view-more">
+                                        <div>
+                                            <p>+{{+tournament.casinoGamesCount[item.Id] - 4}}</p>
+                                            <span trans>Show All</span>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>

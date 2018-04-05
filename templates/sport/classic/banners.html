@@ -14,8 +14,8 @@
                 <span ng-show="banner.game.team2_name" ng-click="bet(banner.game.events.P2, banner.game.market, banner.game); $event.stopPropagation(); $event.preventDefault()" title="{{banner.game.team2_name}}">{{banner.game.team2_name}}<b ng-show="banner.game.events.P1.price">{{banner.game.events.P2.price|oddConvert:env.oddFormat:null:'WINNER'}}</b></span>
             </p>
         </div>
-        <div ng-if="banner.videolink">
-           <vbet-video-player  url="{{banner.videolink}}"
+        <div ng-if="banner.videoLink">
+           <vbet-video-player  url="{{banner.videoLink}}"
                                set-duration="setBannerVideoDuration"
                                play="startPlayVideoBanner"></vbet-video-player>
         </div>

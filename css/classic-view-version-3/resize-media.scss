@@ -20,7 +20,7 @@
       height: 142px;
     }
     .right-column-v3 .game-video-container p{
-      font-size: 14px;
+      font-size: 8 + $size-font;
       margin-top: 50px;
     }
     .left-menu-closed-v3 > .center-column-v3 {
@@ -38,6 +38,9 @@
     .live-events-column-v3 {
       width: 100%;
     }
+    .game-additional-icons > ul {
+      display: none;
+    }
     .prematch-games-list{
       width: 100%;
       height: 250px;
@@ -53,7 +56,7 @@
       padding: 0;
     }
     .prematch-view-v3 .all-game-info-container-v3{
-      padding: 0;
+      padding-left: 0;
     }
     .prematch-list-view-v3 .md-progress-circular{
       margin-top: 50px;

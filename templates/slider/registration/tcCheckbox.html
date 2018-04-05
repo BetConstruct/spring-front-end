@@ -1,11 +1,13 @@
 <div class="checkbox-separator">
     <div class="tooltip-wrapper-j">
         <div class="mini-checkbox-b" ng-init="resetError[agree] = true" ng-class="{'error': !resetError[agree] && registerform.agree.$error.required}">
-            <div class="tooltip-j" ng-show="!resetError[agree] && registerform.agree.$error.required">
-                <div trans ng-show="!resetError[agree] && registerform.agree.$error.required">You need to confirm the agreements.</div>
-            </div>
             <input ng-model="registrationData.agree" type="checkbox" id="checkbox-id1" name="agree" required>
-            <label for="checkbox-id1" ng-class="{'error': !resetError[agree] && registerform.agree.$error.required}">
+
+            <label ng-if="'registration-tc-text'|translate:null:true" for="checkbox-id1" ng-class="{'error': !resetError[agree] && registerform.agree.$error.required}">
+                <span ng-bind-html="'registration-tc-text'|translate:['<a href=\'' + (conf.registration.customLink.link || '#/?help=general-terms-and-conditions&lang=' + env.lang) + '\' target=\'_blank\'>' + ('Terms &amp; Conditions'|translate) + '</a>', conf.registration.minimumAllowedAge]|html"></span>
+            </label>
+
+            <label ng-if="!('registration-tc-text'|translate:null:true)" for="checkbox-id1" ng-class="{'error': !resetError[agree] && registerform.agree.$error.required}">
                 <span trans>I agree to all</span>
                 <a class="info-tooltip" href="#/?help=general-terms-and-conditions&lang={{env.lang}}" target="_blank" ng-if="!conf.registration.disableTermsLink && !conf.registration.customLink.enabled">
                     <span trans >Terms &amp; Conditions</span>

@@ -8,7 +8,7 @@
                 <ul>
                     <li>
                         <div class="payment-euro8-form">
-                            <input type="text"  comma="number" comma-enable={{conf.enableCommaSeparateNumber}} placeholder="{{'enter amount here' | translate}}" value="" prevent-input="[^0-9]+"  required="required" ng-model="paymentSum">
+                            <input type="text"  comma="number" comma-enable={{conf.enableCommaSeparateNumber||conf.enableCommaSeparateWithdrawDeposit}} placeholder="{{'enter amount here' | translate}}" value="" prevent-input="[^0-9]+"  required="required" ng-model="paymentSum">
                             <button disabled>{{ profile.currency_name|currency }}</button>
                         </div>
                     </li>
@@ -37,7 +37,7 @@
             <tr>
                 <td>
                     <div class="name-refresh" ng-click="getData('GetActivePaymentMessage', '0');">
-                        <p><span trans>Date</span></p>
+                        <p><span trans>Refresh</span></p>
                     </div>
                 </td>
                 <td>
@@ -48,7 +48,7 @@
             <tr>
                 <td>
                     <div class="more-info-payment-euro">
-                        <span ng-bind-html="GetActivePaymentMessage.dateLocale|html"></span>
+                        <span ng-bind-html="GetActivePaymentMessage.dateLocale|html:'p'"></span>
 
                         <p ng-bind-html="GetActivePaymentMessage.msg"></p>
                         <div ng-show="GetActivePaymentMessage.canReply === 'yes'" class="other-b-deposit" ng-click="getData('ConfirmPaymentMessage', '0', GetActivePaymentMessage.mID);">
@@ -57,17 +57,17 @@
                     </div>
                 </td>
                 <td>
-                    <p>{{ GetActivePaymentMessage.eamount | number:conf.balanceFractionSize }}</p>
+                    <p>{{ GetActivePaymentMessage.eamount }}</p>
                 </td>
                 <td><p>{{ GetActivePaymentMessage.msgstatus }}</p></td>
             </tr>
         </table>
         <div ng-if="profile.currency_name === 'KRW'" ng-show="!GetActivePaymentMessage || GetActivePaymentMessage.status === 'none'" class="payment-default-text-b">
             <ul>
-                <li trans>1. The minimum deposit amount is 10,000 KRW.</li>
-                <li trans>2. Enter the amount you wish to deposit, then select the account you wish to deposit and press to 'Deposit' button.</li>
-                <li trans>3. Please always check deposit bank account from time to time.</li>
-                <li trans>4. 30 minutes after the deposit account confirmation your money should be in your account, please re-apply when 30 minutes are over.</li>
+                <li ng-bind-html="'1. The minimum deposit amount is 10,000 KRW.'|translate|html:'p'"></li>
+                <li ng-bind-html="'2. Enter the amount you wish to deposit, then select the account you wish to deposit and press to \'Deposit\' button.'|translate|html:'p'"></li>
+                <li ng-bind-html="'3. Please always check deposit bank account from time to time.'|translate|html:'p'"></li>
+                <li ng-bind-html="'4. 30 minutes after the deposit account confirmation your money should be in your account, please re-apply when 30 minutes are over.'|translate|html:'p'"></li>
             </ul>
         </div>
     </div>

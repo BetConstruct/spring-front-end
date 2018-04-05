@@ -1,0 +1,18 @@
+<div ng-controller="casinoTournamentsCtrl" watch-resize middle-screen-mode="true">
+
+    <ng-include ng-show="!gamesInfo.length" ng-if="!$location.search().tournament_id" src="getTemplate('optional_modules/casino/templates/tournament/tournaments.html')"></ng-include>
+    <ng-include ng-show="!gamesInfo.length" ng-if="$location.search().tournament_id" src="getTemplate('optional_modules/casino/templates/tournament/details.html')"></ng-include>
+
+    <multiview-control wide-mode="wideMode" middle-mode="middleMode" view-count="viewCount" games-info="gamesInfo"></multiview-control>
+    <div ng-include="getTemplate('optional_modules/casino/templates/big-game.html')" ng-if="gamesInfo.length" class="big-games-overflow"></div>
+</div>
+<style ng-controller="cmsPagesCtrl" ng-init="loadPage('casino-backgrounds-' + env.lang, 'lang')">
+    .body-wrapper.tournaments {
+    {{mainPage.thumbnail ? 'background-image: url('+mainPage.thumbnail+');' : ''}}
+    {{mainPage.custom_fields.size ? "background-size: " + mainPage.custom_fields.size[0] + ";" : mainPage.thumbnail ? "background-size: 100%;" : ""}}
+    {{mainPage.custom_fields.position ? 'background-position: ' + mainPage.custom_fields.position[0] : mainPage.thumbnail ? "background-position: 50% 0" : ""}};
+    {{mainPage.custom_fields.attachment ? "background-attachment:" + mainPage.custom_fields.attachment[0] + ";" : ""}}
+    {{mainPage.custom_fields.color ? "background-color: " + mainPage.custom_fields.color[0] + ";" : ""}}
+    {{mainPage.custom_fields.repeat ? "background-repeat: " + mainPage.custom_fields.repeat[0] : mainPage.thumbnail ? "background-repeat: no-repeat" : ""}};
+    }
+</style>

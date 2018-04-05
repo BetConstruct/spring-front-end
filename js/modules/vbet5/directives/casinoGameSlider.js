@@ -4,7 +4,7 @@
  * @name vbet5.directive:vbetBigSlider
  * @description Big slider widget
  */
-VBET5.directive('casinoGameSlider', ['$interval', '$window', 'Config', function ($interval, $window, Config) {
+VBET5.directive('casinoGameSlider', ['$interval', '$window', '$location', 'Config', function ($interval, $window, $location, Config) {
     'use strict';
     return {
         restrict: 'E',
@@ -17,6 +17,7 @@ VBET5.directive('casinoGameSlider', ['$interval', '$window', 'Config', function 
         link: function (scope) {
             var bannersInterval;
             scope.selectedIndex = 0;
+            scope.conf = Config.main;
 
             /**
              * @ngdoc method
@@ -42,9 +43,11 @@ VBET5.directive('casinoGameSlider', ['$interval', '$window', 'Config', function 
             scope.selectSlide = function selectSlide(index) {
                 if (bannersInterval) {
                     $interval.cancel(bannersInterval);
-                    bannersInterval = $interval(rotateSlides, Config.main[scope.pageName + 'SlidesRotationPeriod'] || 5000);
+                    bannersInterval = $interval(rotateSlides, Config.main[scope.pageName && scope.pageName.replace(/\s/g, '') + 'SlidesRotationPeriod'] || 5000);
                 }
                 scope.selectedIndex = index;
+                scope.selectedIndex = scope.selectedIndex > scope.productSlides.length - 1 ? 0 : scope.selectedIndex;
+                scope.selectedIndex = scope.selectedIndex < 0 ? scope.productSlides.length - 1 : scope.selectedIndex;
             };
 
             /**
@@ -63,13 +66,21 @@ VBET5.directive('casinoGameSlider', ['$interval', '$window', 'Config', function 
 
             function createInterval() {
                 if (scope.productSlides.length > 1) {
-                    bannersInterval = $interval(rotateSlides, Config.main[scope.pageName + 'SlidesRotationPeriod'] || 5000);
+                    bannersInterval = $interval(rotateSlides, Config.main[scope.pageName && scope.pageName.replace(/\s/g, '') + 'SlidesRotationPeriod'] || 5000);
                 }
             }
 
 
-            scope.openUrl = function openUrl(url, target) {
-                url && $window.open(url, target || '_self');
+            scope.openUrl = function openUrl(url) {
+                if (url.indexOf($location.path()) !== -1) { // url path and current path is same
+                    var locationChangePromise = scope.$on('$locationChangeSuccess', function () {
+                        locationChangePromise();
+                        var searchParams = $location.search();
+                        if (searchParams.game !== undefined) {
+                            scope.$emit('casinoGamesList.openGame', {gameId: searchParams.game, playMode: searchParams.type, studio: searchParams.studio});
+                        }
+                    });
+                }
             };
             /**
              * clear interval

@@ -9,9 +9,9 @@
  *
  */
 
-VBET5.service('Geoip', ['$http', '$q', '$location', 'Config', function ($http, $q, $location, Config) {
+VBET5.service('Geoip', ['$http', '$q', '$location', 'Config', '$timeout', function ($http, $q, $location, Config, $timeout) {
     'use strict';
-    var Geoip = {}, data = null;
+    var Geoip = {}, data = null, promise = null;
 
     if ($location.search().nogeoip) {
         Config.geoIP.callbackUrl = '';
@@ -64,21 +64,35 @@ VBET5.service('Geoip', ['$http', '$q', '$location', 'Config', function ($http, $
      */
     Geoip.getGeoData = function getGeoData(noCache) {
         var deferred = $q.defer();
-
         if (!noCache && data) {
-            console.log("getGeoData returning cached data", data);
             deferred.resolve(data);
             return deferred.promise;
         }
+
+        if (promise) {
+            return promise;
+        }
         $http.jsonp(Config.geoIP.callbackUrlCity)
             .success(function (response) {
-                data = response;
-                deferred.resolve(response);
+                if (promise !== null) {
+                    promise = null;
+                    data = response;
+                    deferred.resolve(response);
+                }
             }).error(function (response) {
-                console.log("error getting geo data", response);
-                deferred.reject(response);
+                 if (promise !== null) {
+                     promise = null;
+                     deferred.reject(response);
+                 }
             });
-        return deferred.promise;
+        $timeout(function () {
+            if (promise !== null) {
+                promise = null;
+                deferred.reject();
+            }
+        }, 5000);
+        promise = deferred.promise;
+        return promise;
     };
 
     return Geoip;

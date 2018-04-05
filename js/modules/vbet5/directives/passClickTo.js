@@ -18,6 +18,10 @@ VBET5.directive('passClickTo', ['$window', function ($window) {
             event.stopPropagation();
             var el = $window.document.getElementById(attr.passClickTo);
             if (el) {
+                if (attr.iframe) {
+                    var content = angular.element(el).find('iframe')[0] && angular.element(el).find('iframe')[0].contentWindow;
+                    content && (el = content.document);
+                }
                 if (attr.find) {
                     el = angular.element(el).find(attr.find)[0];
                 } else {

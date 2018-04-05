@@ -5,13 +5,8 @@
  * @description
  * footer controller
  */
-VBET5.controller('footerCtrl', ['$scope', '$rootScope', '$window', '$sce', '$location', 'Config', 'DomHelper', 'smoothScroll', 'UserAgent', function ($scope, $rootScope, $window, $sce, $location, Config, DomHelper, smoothScroll, UserAgent) {
+VBET5.controller('footerCtrl', ['$scope', '$rootScope', '$window', '$sce', '$location', 'Config', 'DomHelper', 'smoothScroll', 'UserAgent', 'Utils', function ($scope, $rootScope, $window, $sce, $location, Config, DomHelper, smoothScroll, UserAgent, Utils) {
     'use strict';
-
-    //footer text can contain HTML
-    if (Config.main.about_company_text && (!Config.main.about_company_text[Config.env.lang] || typeof Config.main.about_company_text[Config.env.lang] === 'string')) {
-        Config.main.about_company_text[Config.env.lang] = $sce.trustAsHtml(Config.main.about_company_text[Config.env.lang] || Config.main.about_company_text.eng || '');
-    }
 
     /**
      * @ngdoc method
@@ -23,16 +18,9 @@ VBET5.controller('footerCtrl', ['$scope', '$rootScope', '$window', '$sce', '$loc
      * If false or not specified will scroll only on small screens
      */
     $scope.scrollToTop = function scrollToTop(always) {
-
         always = always || false;
         if (always || DomHelper.isScreenSmall()) {
-            if (UserAgent.IEVersion()) {
-                $window.scroll(0, 0);
-            } else {
-                smoothScroll('header');
-            }
-
-
+            $rootScope.$broadcast('scrollTo', 'header');
         }
     };
 
@@ -75,7 +63,7 @@ VBET5.controller('footerCtrl', ['$scope', '$rootScope', '$window', '$sce', '$loc
 
     $scope.now = Date.now();
     if (Config.payments && Config.payments.length) {
-        $scope.paymentSystemNames = Config.payments.sort(function (a, b) { return a.order - b.order; }).reduce(function (accumulator, current) {
+        $scope.paymentSystemNames = Config.payments.sort(Utils.orderSorting).reduce(function (accumulator, current) {
             if (!current.isTransferToLinkedService && (current.canDeposit || current.canWithdraw) && !current.hidePaymentInFooter) {
                 accumulator.push({
                     name: current.name,

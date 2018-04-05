@@ -36,7 +36,9 @@
     text-overflow: ellipsis;
     overflow: hidden;
     color: set-color($hero-color);
-    font: 12px/36px $font-f;
+    font-size: 6 + $size-font;
+    line-height: 36px;
+    font-weight: normal;
   }
   .upcoming-column-title-v3 > h2 > span, .live-column-title-v3 > h2 > span{
     box-sizing: border-box;
@@ -96,6 +98,10 @@
     overflow: hidden;
     max-height: 30000px;
     animation: region-open-animate-b 500ms ease-in-out;
+    &.no-border {
+      border: 0;
+      margin: 0;
+    }
   }
   .group-games-contain-v3.region-closed{
     max-height: 24px;
@@ -184,7 +190,9 @@
     text-overflow: ellipsis;
     overflow: hidden;
     color: $c16-tp-6;
-    font: 11px/21px $font-f;
+    font-size: 5 + $size-font;
+    line-height: 21px;
+    font-weight: normal;
     padding: 0 10px;
   }
   .all-markets-favorite-d-v3{
@@ -275,14 +283,14 @@
     height: 22px;
     padding: 0;
   }
-  .popular-game-view-wrapper-v3 .name-market-row-v3{
-    box-sizing: border-box;
-    height: 22px;
-  }
-  .popular-game-view-wrapper-v3 .market-name-icon-row-v3 > h3{
+  //.popular-game-view-wrapper-v3 .name-market-row-v3{
+  //  box-sizing: border-box;
+  //  height: 22px;
+  //}
+  .popular-game-view-wrapper-v3 .market-title-v3  > h3{
     box-sizing: border-box;
     line-height: 22px;
-    color: #7b8191;
+    color: $text-palette-4;
   }
   .popular-game-view-wrapper-v3 .market-icons-view-v3 > ul > li:before{
     box-sizing: border-box;
@@ -327,8 +335,9 @@
   }
   .popular-game-team-name-v3 > table tr td > p{
     box-sizing: border-box;
-    font: 16px/18px $font-f;
-    color: #c2c5cd;
+    font-size: 10 + $size-font;
+    line-height: 18px;
+    color: $text-palette-3;
     float: left;
     width: 100%;
     white-space: nowrap;
@@ -339,7 +348,8 @@
   }
   .popular-game-team-name-v3 > table tr td > span{
     box-sizing: border-box;
-    font: 16px/18px $font-f;
+    font-size: 10 + $size-font;
+    line-height: 18px;
     color: #b6862e;
   }
   .events-view-p-game-v3{
@@ -349,6 +359,9 @@
     position: relative;
     height: 28px;
     padding: 0 60px 0 8px;
+    //> .events-list-view-v3 > ul{
+    //  white-space: nowrap;
+    //}
   }
   .events-view-p-game-v3 > .events-list-view-v3{
     box-sizing: border-box;
@@ -379,10 +392,13 @@
     margin-bottom: 6px;
     max-height: 30000px;
     overflow: hidden;
-    animation: dashboard-c-open-animate-b 500ms ease-in-out;
+    //animation: dashboard-c-open-animate-b 500ms ease-in-out;
+    &.no-padding {
+      padding: 0;
+    }
   }
   .contain-competition-dashboard-v3.closed{
-    animation: dashboard-c-closed-animate-b 240ms ease;
+    //animation: dashboard-c-closed-animate-b 240ms ease;
     max-height: 26px;
   }
   @keyframes dashboard-c-open-animate-b{
@@ -403,17 +419,22 @@
     padding: 0 24px 0 6px;
     position: relative;
     margin: 0 0 2px;
-  }
-  .title-competition-dashboard-v3 > h5{
-    box-sizing: border-box;
-    float: left;
-    width: 100%;
-    color: $c16-tp-4;
-    font: 11px/24px $font-f;
-    text-transform: uppercase;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    overflow: hidden;
+    > h5{
+      box-sizing: border-box;
+      float: left;
+      width: 100%;
+      color: $c16-tp-4;
+      font-size: 5 + $size-font;
+      line-height: 24px;
+      font-weight: normal;
+      text-transform: uppercase;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      overflow: hidden;
+    }
+    > .flag-view-v3 + h5 {
+      padding: 0 0 0 26px;
+    }
   }
   .title-competition-dashboard-v3 > .arrow-view-v3{
     box-sizing: border-box;
@@ -499,6 +520,7 @@
     float: left;
     width: 100%;
     height: 30px;
+    line-height: 30px;
     background: $c16-sp-9;
     position: relative;
     padding: 0 30px 0 34px;
@@ -545,10 +567,18 @@
     float: left;
     width: 100%;
     color: $c16-tp-3;
-    font: 12px/30px $font-f;
+    font-size: 6 + $size-font;
+    line-height: 30px;
+    font-weight: normal;
     white-space: nowrap;
     text-overflow: ellipsis;
     overflow: hidden;
+    + .md-progress-circular {
+      margin: 0;
+      position: absolute;
+      top: 4px;
+      right: 30px;
+    }
   }
   .single-sport-box-v3 > .title-championship-v3{
     box-sizing: border-box;
@@ -582,12 +612,4 @@
   }
   //Upcoming dashboard column END
   //Dashboard END
-  .popular-game-t-row-v3 .events-view-p-game-v3 .markets-count-view-v3 {
-    > span {
-      color: #7b8191;
-    }
-    .arrow-icon-b-v3 {
-      color: #505767;
-    }
-  }
 }

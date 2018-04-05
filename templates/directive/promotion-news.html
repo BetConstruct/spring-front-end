@@ -1,5 +1,17 @@
-<div ng-class="mainClass">
-
+<div ng-class="mainClass" class="promotions-main-p">
+    <div class="promotions-menu-p ng-scope" ng-if="promotionCategories.length > 1">
+        <div class="promotions-baner-p">
+            <p trans>Promotions</p>
+            <span ng-repeat="item in promotionCategories track by $index" class="promotions-icons-{{item.key}} cms-jcon-{{item.key}}"></span>
+        </div>
+        <ul>
+            <li ng-repeat="item in promotionCategories track by $index"
+                ng-class="{active: slug === item.key}"
+                ng-click="setSlug(item.key)">
+                {{item.title| translate}}
+            </li>
+        </ul>
+    </div>
     <div class="subtop-header-menu-j ng-scope" ng-if="conf.enablePromotionsActualFilter">
         <ul ng-init="setPromotionsFilter('actual')">
             <li ng-class="{active: promotionsFilter.name==='actual'}">
@@ -10,17 +22,21 @@
             </li>
         </ul>
     </div>
+    <div ng-if="!recentNewsList.length && !newsAreLoading" class="new-casino-no-games-text">
+        <p trans>No promos for the selected category</p>
+    </div>
+    <div ng-repeat="group in recentNewsList track by $index" ng-show="!newsAreLoading" class="block-sport-news">
 
-    <div ng-repeat="group in recentNewsList track by $index" class="block-sport-news">
         <div class="list-news">
             <ul ng-repeat="news in group.news track by $index"
-                ng-class="'news-column-' + $index"
-            >
+                ng-class="'news-column-' + $index">
                 <li ng-class="{'active-news': (news.id == selectedNews.id)}">
                     <h3 title="{{news.titleRaw}}">
-                        <a ng-click="showNews(news, group.id);$event.stopPropagation();" ng-bind-html="news.title"></a></h3>
+                        <a ng-click="showNews(news, group.id);$event.stopPropagation();" ng-bind-html="news.title"></a>
+                    </h3>
 
-                    <p ng-hide="conf.hidePromotionNewsDate">{{ news.date|formatDate:'full' }} <!--<span class="sport-name-promo">Tennis</span>--></p>
+                    <p ng-hide="conf.hidePromotionNewsDate">{{ news.date|formatDate:'full' }}
+                        <!--<span class="sport-name-promo">Tennis</span>--></p>
 
                     <div class="picture-news-block">
                         <a ng-click="showNews(news, group.id);$event.stopPropagation();" id="news{{news.id}}"><img
@@ -44,7 +60,9 @@
                     <div class="left-block-news">
                         <span class="date-promo-b" ng-hide="conf.hidePromotionNewsDate">{{ selectedNews.date|formatDate:'full' }}</span>
                         <!--<span class="name-promo-bonus">Bonus</span>-->
-                        <div class="picture-news-block"><a><img ng-src="{{selectedNews.thumbnail || selectedNews.thumbnail_images.full.url}}" alt=""></a>
+                        <div class="picture-news-block"><a><img
+                                ng-src="{{selectedNews.thumbnail || selectedNews.thumbnail_images.full.url}}"
+                                alt=""></a>
 
                         </div>
                         <div class="mini-social-icons">
@@ -65,9 +83,9 @@
                     </div>
 
                     <p class="all-text-news-b" ng-bind-html="selectedNews.content"></p>
-<!--
-                    <div class="ok-g-link"><a href="#">okay, go!</a></div>
--->
+                    <!--
+                                        <div class="ok-g-link"><a href="#">okay, go!</a></div>
+                    -->
 
                 </div>
             </div>
@@ -76,7 +94,7 @@
         <!--раскрытый блок с новостью END-->
     </div>
 
-    <vbet-loader class="page-center" ng-show="!recentNewsList"></vbet-loader>
+    <vbet-loader class="page-center" ng-show="newsAreLoading"></vbet-loader>
 
     <!-- load more block -->
     <div class="load-more-news" ng-show="areThereMore">

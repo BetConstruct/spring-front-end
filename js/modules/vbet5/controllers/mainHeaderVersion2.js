@@ -1,17 +1,5 @@
-VBET5.controller('mainHeaderVersion2Controller', ['$rootScope', '$scope', '$location', 'Config', 'Zergling', 'Storage', 'ActiveStep', function ($rootScope, $scope, $location, Config, Zergling, Storage, ActiveStep) {
+VBET5.controller('mainHeaderVersion2Controller', ['$rootScope', '$scope', '$location', 'Config', 'Zergling', 'Storage', 'ActiveStep', 'BackendConstants', function ($rootScope, $scope, $location, Config, Zergling, Storage, ActiveStep, BackendConstants) {
     'use strict';
-
-    Config.main.dashboardEnabled = Config.main.dashboard.enabled; // @TODO need to remove after solution is  found
-
-    /**
-     * @ngdoc method
-     * @name init
-     * @methodOf vbet5.controller:mainHeaderVersion2Controller
-     * @description Initialization
-     */
-    $scope.init = function init () {
-        $scope.headerVersion2Icons = {};
-    };
 
     /**
      * @ngdoc method
@@ -19,7 +7,7 @@ VBET5.controller('mainHeaderVersion2Controller', ['$rootScope', '$scope', '$loca
      * @methodOf vbet5.controller:mainHeaderVersion2Controller
      * @description Handle header icons click (LiveChat, GAQ e.t.c.)
      */
-    $scope.headerIconClick = function headerIconClick() {
+    $scope.headerIconClick = function headerIconClick(state) {
         if (Config.main.header && Config.main.header.iconAction) {
             switch (Config.main.header.iconAction) {
                 case 'faq':
@@ -27,7 +15,12 @@ VBET5.controller('mainHeaderVersion2Controller', ['$rootScope', '$scope', '$loca
                     return;
             }
         }
-        $scope.headerVersion2Icons.helpIsToggled = !$scope.headerVersion2Icons.helpIsToggled;
+        if (state !== undefined && Config.main.openProfileMenuByHover) {
+            $scope.headerVersion2Icons.helpIsToggled = state;
+        } else if (!Config.main.openProfileMenuByHover && state === undefined) {
+            $scope.headerVersion2Icons.helpIsToggled = !$scope.headerVersion2Icons.helpIsToggled;
+        }
+
     };
 
     $scope.notificationPopup = {};
@@ -125,6 +118,7 @@ VBET5.controller('mainHeaderVersion2Controller', ['$rootScope', '$scope', '$loca
             $rootScope.profile.skype_request = true;
             checkSkypeRequestStatus();
         }
+        Config.activeStepsConfig && processProfileActiveStep();
     });
 
     $scope.$on('openPayment.deposit', function(e, args) {
@@ -142,7 +136,7 @@ VBET5.controller('mainHeaderVersion2Controller', ['$rootScope', '$scope', '$loca
      */
     $scope.openHelpPage = function (helpPageItem, from) {
         if (helpPageItem === "payments" && Config.main.enableMixedView) {
-            $scope.env.paymentListShown = true;
+            $scope.env.paymentListShown = !Config.main.removePaymentMethodBlockInWithdrawPage;
             $scope.toggleSliderTab('deposit');
         } else {
             $rootScope.$broadcast('openHelpPage', {slug: helpPageItem, from: from});
@@ -211,11 +205,6 @@ VBET5.controller('mainHeaderVersion2Controller', ['$rootScope', '$scope', '$loca
 
     // this part of code is used on
     if (Config.activeStepsConfig) {
-
-        $scope.$on('profile', function () {
-            processProfileActiveStep();
-        });
-
         $scope.notificationPopupClick = function notificationPopupClick(popup) {
             if (popup.param) {
                 $location.search(popup.param[0], popup.param[1]);
@@ -242,7 +231,7 @@ VBET5.controller('mainHeaderVersion2Controller', ['$rootScope', '$scope', '$loca
 
     /**
      * @ngdoc method
-     * @name userDataConfirm
+     * @name processUserAuthorization
      * @methodOf vbet5.controller:mainHeaderVersion2Controller
      * @description Process user authorization (Not used in all skins)
      */
@@ -285,6 +274,7 @@ VBET5.controller('mainHeaderVersion2Controller', ['$rootScope', '$scope', '$loca
     $scope.$on('profilemenu.closed', function () {
         $scope.headerVersion2Icons.profileToggled = false;
     });
+
     $scope.$on('activeStep.accept_terms_conditions', function (event, data) {
         Zergling.get({}, 'accept_terms_conditions').then(function (response) {
             if (response.result === 0){
@@ -297,7 +287,8 @@ VBET5.controller('mainHeaderVersion2Controller', ['$rootScope', '$scope', '$loca
             console.error('accept_terms_conditions ERROR');
         });
     });
-    $rootScope.$on('slider.userDataConfirm', userDataConfirm);
+
+    $scope.$on('slider.userDataConfirm', userDataConfirm);
     $scope.env.paymentListShown = Config.main.showPaymentsDescriptionByDefault || false;
     $scope.getStorageState = function getStorageState (name) {
         return !!Storage.get(name);
@@ -315,4 +306,54 @@ VBET5.controller('mainHeaderVersion2Controller', ['$rootScope', '$scope', '$loca
         Storage.set(name, !!state);
     };
 
+    /**
+     * @ngdoc method
+     * @name getBonusesCount
+     * @methodOf vbet5.controller:mainHeaderVersion2Controller
+     * @description Checks the availability of product bonuses and gets the number of active bonuses
+     */
+    $scope.getBonusesCount = function getBonusesCount() {
+        if (Config.main.promotionalBonuses.disableCountOnIcon) return;
+        $scope.bonusesCount = {
+            'sportsbook': 0,
+            'casino': 0
+        };
+
+        var getProductBonuses  = function (product) {
+            Zergling.get({free_bonuses: product === 'sportsbook'},'get_bonus_details').then(function (data) {
+                calculateBonusesCount(data, product);
+            });
+        };
+
+        if (Config.main.promotionalBonuses.sportsbook) getProductBonuses('sportsbook');
+        if (Config.main.promotionalBonuses.casino) getProductBonuses('casino');
+    };
+
+    function calculateBonusesCount(data, product) {
+        if (data && data.bonuses) {
+            var i = 0, length = data.bonuses.length, count = 0;
+            for (; i < length; i += 1) {
+                data.bonuses[i].acceptance_type === BackendConstants.PromotionalBonus.BonusAcceptanceType.None && data.bonuses[i].can_accept && (count += 1);
+            }
+
+            $scope.bonusesCount[product] = count;
+        }
+    }
+
+
+    /**
+     * @ngdoc method
+     * @name init
+     * @methodOf vbet5.controller:mainHeaderVersion2Controller
+     * @description Initialization
+     */
+    (function init () {
+        $scope.headerVersion2Icons = {};
+
+        if (Config.main.promotionalBonuses.enable && !Config.main.promotionalBonuses.disableCountOnIcon) {
+            $scope.$on('promotionalbonuses.data', function (event, data) {
+                calculateBonusesCount(data.data, data.product);
+            });
+        }
+    })();
 }]);

@@ -30,14 +30,38 @@ VBET5.service('analytics', ['$rootScope', '$window', '$location', 'Config', func
      * @ngdoc method
      * @name init
      * @methodOf vbet5.service:analytics
+     * @description Hotjar initialization
+     */
+    function initHotjar (hotjarId) {
+        (function (h, o, t, j, a, r) {
+            h.hj = h.hj || function () {
+                    (h.hj.q = h.hj.q || []).push(arguments);
+                };
+            h._hjSettings = {hjid: parseInt(hotjarId, 10), hjsv: 5};
+            a = o.getElementsByTagName('head')[0];
+            r = o.createElement('script');
+            r.async = 1;
+            r.src = t + h._hjSettings.hjid + j + h._hjSettings.hjsv;
+            a.appendChild(r);
+        })(window, document, '//static.hotjar.com/c/hotjar-', '.js?sv=');
+    }
+
+    /**
+     * @ngdoc method
+     * @name init
+     * @methodOf vbet5.service:analytics
      * @description Initialization
      */
     analytics.init = function init() {
         if ($window.ga && Config.main.googleAnalyticsId) {
-            $window.ga('create', Config.main.googleAnalyticsId, {'cookieDomain': 'none'});
+            $window.ga('create', Config.main.googleAnalyticsId, Config.main.googleAnalyticsDomain || {'cookieDomain': 'none'});
             if (Config.main.googleAnalyticsEnableDisplayFeatures) {
                 $window.ga('require', 'displayfeatures');
             }
+        }
+
+        if (Config.main.hotjarAnalyticsId) {
+            initHotjar(Config.main.hotjarAnalyticsId);
         }
 
         if (Config.main.yandexMetricaId) {
@@ -80,10 +104,14 @@ VBET5.service('analytics', ['$rootScope', '$window', '$location', 'Config', func
     analytics.gaSend = function gaSend() {
         if ($window.ga) {
             $window.ga.apply(this, arguments);
-        } else {
-            console.warn('ga is not defined');
         }
 
+        if ($window.hj && arguments && arguments.length && arguments.length >= 5 && arguments[3] && arguments[4] && arguments[4].eventLabel) {
+            console.log('Hotjar', arguments[3], arguments[4].eventLabel);
+            $window.hj(arguments[3], arguments[4].eventLabel);
+        }
+
+        console.warn('analytics defined');
     };
 
     $rootScope.gaSend = analytics.gaSend;

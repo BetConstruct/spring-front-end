@@ -5,6 +5,7 @@
                     sports-item-v3 {{sport.alias}}
                     {{leftMenuState.favorites.expanded ? 'active' : ''}}
                 "
+                 ng-if="myGames.length > 0" ng-init="leftMenuState.favorites.expanded = true"
                  ng-click="leftMenuState.favorites.expanded = !leftMenuState.favorites.expanded; leftMenuClosed ? toggleLeftMenu() : void()">
                 <div class="sport-icon-v3 favorite-nav-icon-v3"></div>
                 <p>{{'Favorite games'|translate}}</p>
@@ -24,7 +25,7 @@
 
                             <div class="games-list-mini-view-v3">
                                 <div class="competition-view-v-3">
-                                    <div class="single-game-item-v3 {{game.id === activeGameId && $location.path() !== '/dashboard/' ? 'active' : ''}}"
+                                    <div class="single-game-item-v3 {{game.id == activeGameId && $location.path() !== '/dashboard/' ? 'active' : ''}}"
                                         ng-repeat="game in leftMenuFavorites track by game.id"
                                          ng-click="selectFavoriteGame(game)"
                                          ng-show="myGames.indexOf(game.id) !== -1 && (!$root.multiViewLiveOpenedGames || $root.multiViewLiveOpenedGames.indexOf(game.id) === -1)"

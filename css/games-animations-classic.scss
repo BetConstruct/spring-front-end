@@ -111,6 +111,26 @@
 					background-image: url(../../../images/animation/classic/basketball-field-3d.png#{$delete-cache});
 					width: 94%;
 					margin: 0 3%;
+					> .game-possession{
+						position: absolute;
+						width: 200%;
+						height: 300%;
+						transform: translate3d(0,0,0) rotate(45deg);
+						background: rgba(0, 0, 0, 0.2);
+						text-align: center;
+						&.away{
+							right: 60%;
+							top: -150%;
+							animation: 1000ms basketball-ball-view-away linear infinite;
+							animation-fill-mode: forwards;
+						}
+						&.home{
+							left: 60%;
+							top: -58%;
+							animation: 1000ms basketball-ball-view-home linear infinite;
+							animation-fill-mode: forwards;
+						}
+					}
 				}
 			}
 			.basket {
@@ -323,6 +343,14 @@
 				}
 			}
 		}
+
+
+
+
+
+
+
+
 		&.volleyball {
 			background: #F5B653;
 			.field-container {
@@ -2023,3 +2051,27 @@
 		box-shadow: 0 4px 3px rgba(60, 34, 1, 0.4), inset 0 0 5px rgb(59, 77, 3);
 	}
 }
+//basketball ball view
+@keyframes basketball-ball-view-home{
+	0%{
+		transform: translate3d(30%,0,0) rotate(45deg);
+		opacity: 0;
+	}
+	50%{opacity: 1;}
+	100%{
+		transform: translate3d(0,0,0) rotate(45deg);
+		opacity: 0;
+	}
+}
+@keyframes basketball-ball-view-away{
+	0%{
+		transform: translate3d(-30%,0,0) rotate(45deg);
+		opacity: 0;
+	}
+	50%{opacity: 1;}
+	100%{
+		transform: translate3d(0,0,0) rotate(45deg);
+		opacity: 0;
+	}
+}
+//basketball ball view

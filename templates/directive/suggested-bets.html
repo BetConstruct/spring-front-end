@@ -1,0 +1,40 @@
+<div class="suggest-contain-list" ng-if="showSuggestions && suggestedBetsList.length">
+    <div class="suggest-text">
+        <h2 trans>Suggested bets</h2>
+        <p trans>We think that these bets may also be interesting to you. Try to win even more.</p>
+    </div>
+    <div class="suggest-list">
+        <div>
+            <div ng-repeat="bet in suggestedBetsList track by bet.eventInfo.id">
+                <div class="suggest-mini-list">
+                    <div class="suggest-teams-name">
+                        <div class="suggest-title-event">
+                            <p>{{ ::bet.gameInfo.title }}</p>
+                        </div>
+                    </div>
+                    <div class="suggest-single-event-info">
+                        <div>
+                            <div>
+                                <p>{{ ::bet.marketInfo.name }}</p>
+                            </div>
+                            <div>
+                                <p>
+                                 <span ng-bind="(bet.eventInfo.type === 'P1' && bet.gameInfo.team1_name) || (bet.eventInfo.type === 'P2' && bet.gameInfo.team2_name) ||
+                                   (bet.eventInfo.base !== undefined ? (bet.eventInfo.name + bet.eventInfo.base) : bet.eventInfo.name)"></span>
+                                </p>
+                                <div class="suggest-bet-price">
+                                    <span>{{bet.eventInfo.price|oddConvert:$root.env.oddFormat}}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <button ng-click="addToBetslip()" trans>Add to BetSlip</button>
+    <button ng-click="hide()" trans>No, thanks</button>
+    <div class="suggest-no-show">
+        <p ng-click="hide(true)" trans>Don`t show again</p>
+    </div>
+</div>

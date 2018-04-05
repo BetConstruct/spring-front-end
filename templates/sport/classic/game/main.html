@@ -1,49 +1,6 @@
 <div class="game-contain-j">
-    <div class="scroll-j-tr" ng-show="openGame.type == 1">
-        <div class="scroll-j-td">
-            <span class="close-multiv-j" ng-click="removeGameFromList(game.id)" ng-show="!openGameLoading"></span>
-            <div class="live-game-container">
-                <div class="game-content">
-                    <div class="game-info game-{{openGame.sport.alias.toLowerCase()}}" ng-show="!openGameLoading">
-                        <button class="unpin-button"
-                                ng-class="{'active': isLiveGamePinned && !noClassicScroll}"
-                                ng-disabled="noClassicScroll"
-                                ng-show="conf.enableLiveSectionPin && (openGame.sport.alias !== 'HorseRacing') && !(enlargedGame && openGame.id === enlargedGame.id)"
-                                ng-click="toggleLiveSectionPin()"
-                                trans="attr-only"
-                                title="Pin/Unpin">
-                        </button>
-                        <div class="game-detailed-stats" ng-if="openGame.sport.alias === 'Soccer' && openGame.live_events">
-                            <span class="icon-stat-details"></span>
-                            <div class="hover-sp" ng-class="{'to-right': openGame.info.currMinute>60, 'to-center': (openGame.info.currMinute >30 && openGame.info.currMinute <= 60)}">
-                                <div class="football-gamer-name" ng-repeat="gameEvent in openGame.live_events|orderBy:'add_info_order':true">
-                                    <div ng-class="gameEvent.event_type+'-icon'" class="{{gameEvent.event_icon}}"></div>
-                                            <span ng-class="gameEvent.team">
-                                                <tshirt shirt="{{ openGame.info['shirt'+ gameEvent.team.slice(-1) + '_color'] }}" shorts="{{ openGame.info['short'+ gameEvent.team.slice(-1) + '_color'] }}"></tshirt>
-                                            </span>
-                                    <p>{{gameEvent.event_type.replace('_', ' ')|capitalise|translate}} {{ gameEvent.add_info }} {{openGame[gameEvent.team + '_name']}}</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div title="{{ conf.edition.enabled ? (('Edition'|translate) + ': ' + (openGame.start_ts|formatDate:'edition')) : '' }}" class="sport-title" ng-click="broadcast('liveGame.headerClicked', openGame);$event.stopPropagation();" ng-if="liveGamesSoccerTemplate.indexOf(openGame.sport.alias) !== -1 || conf.esportsGames.indexOf(openGame.sport.alias) !== -1">
-                            <b class="mini-icon-1 mini-icon-{{openGame.sport.id}} {{openGame.sport.alias}}" title="{{openGame.sport.alias}}"></b>
-                                <span class="ellipsis-text" title="{{openGame.competition.name}}">
-                                    <b ng-show="conf.showGameIds">{{openGame.game_number}}</b> {{openGame.competition.name}}
-                                </span>
-                            <a ng-show="conf.enableH2HStat && openGame.is_stat_available" ng-click="openStatistics(openGame);$event.stopPropagation();" class="statistics-h2h"></a>
-                            <span ng-if="openGame.sport.alias === 'HorseRacing'" title="{{ openGame.team2_name ?  openGame.team2_name: '' }}">{{ openGame.team2_name ?  openGame.team2_name: '' }}&nbsp;&nbsp;&nbsp; {{ openGame.start_ts| formatDate: "LT"}}</span>
-                        </div>
-                        <ng-include src="getTemplate('templates/sport/livescore.html')"></ng-include>
-                        <div class="add-info" ng-if="!!openGame.info.current_game_state">
-                            {{ openGame.info.current_game_state|convertSetName:openGame.sport.alias|translate }} {{ (openGame.info.current_game_time)[0] === '-'? ('will start in'|translate)+' '+ (openGame.info.current_game_time).substring(1): openGame.info.current_game_time }}
-                        </div>
-                        <ng-include src="getTemplate('templates/sport/livegamestatistics.html')"></ng-include>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="scroll-j-tr" ng-class="{'stats-block-shown':(openGame.last_event && showStatsBlock && GamesWithStatsBlock[openGame.sport.alias.toLowerCase()])}">
+    <live-game-scores show-stats-block="showStatsBlock" open-game="openGame" enlarged-game="enlargedGame"></live-game-scores>
+    <div class="scroll-j-tr" ng-class="{'stats-block-shown':(openGame.last_event && showStatsBlock  && GamesWithStatsBlock[openGame.sport.alias.toLowerCase()])}">
         <div class="scroll-j-td">
             <div class="scroll-j-scroll-wrap">
                 <div class="scroll-j-scroll">
@@ -56,14 +13,16 @@
                         </div>
 
 
-                        <div class="markets-group-wrap-v3" ng-show="openGame.markets">
-                            <ul ng-class="{'show-dropdown': marketGroupFilterExpanded, 'has-dropdown': openGame.availableMarketGroups.length > 6 }">
-                                <li class="more-j" ng-click="marketGroupFilterExpanded = !marketGroupFilterExpanded" hide-on-click state-flag-var="marketGroupFilterExpanded"><span>+ {{ openGame.availableMarketGroups.length - 5 }}</span></li>
+                        <div class="markets-group-wrap-v3" ng-show="openGame.markets && openGame.sport.alias !== 'HorseRacing'">
+                            <ul ng-class="{'show-dropdown': marketGroupFilterExpanded, 'has-dropdown': openGame.availableMarketGroups.length > (($root.env.live ? 5 : 3) + 1)}">
+                                <li class="more-j" ng-click="marketGroupFilterExpanded = !marketGroupFilterExpanded" hide-on-click state-flag-var="marketGroupFilterExpanded"><span>+ {{ openGame.availableMarketGroups.length - (($root.env.live ? 5 : 3) + 1) }}</span></li>
                                 <li ng-repeat="group in openGame.availableMarketGroups track by group.id"
-                                    ng-class="{active: openGame.selectedMarketGroupId === group.id, 'favorte-markets-group-j': $first, 'animate-star-odd' : $first && openGame.sport.favouriteMarkets.length % 2 == 1, 'animate-star-even': $first && openGame.sport.favouriteMarkets.length % 2 == 0}"
-                                    ng-click="selectMarketGroup(group.id)"
-                                    data-count="{{ group.count }}">
-                                    <span><i><b>{{ group.name|translate }}</b></i><i ng-show="group.count !== undefined">({{ group.count }})</i></span></li>
+                                    ng-class="{active: openGame.selectedMarketGroupId === group.id,
+                                    'favorte-markets-group-j': $first, 'animate-star-odd' : $first && openGame.sport.favouriteMarkets.length % 2 == 1,
+                                    'animate-star-even': $first && openGame.sport.favouriteMarkets.length % 2 == 0,
+                                    'to-dropdown': $index > ($root.env.live ? 5 : 3), 'column-3':  ($root.env.live ? 5 : 3) == 3}"
+                                    ng-click="selectMarketGroup(group.id)" data-count="{{ group.count }}">
+                                    <span><i><b>{{ group.name|translate }}</b></i> <i ng-show="group.count !== undefined">({{ group.count }})</i></span></li>
                             </ul>
                         </div>
 

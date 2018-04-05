@@ -1,0 +1,31 @@
+<div class="float-width" ng-show="popular.data.length">
+    <div class="sports-item-v3 {{::popular.color}}"
+         ng-class="{'active': popular.expanded}"
+         ng-click="toggle();">
+        <div class="sport-icon-v3 {{::popular.icon}}"></div>
+        <p ng-bind="::title|translate"></p>
+        <div class="arrow-view-v3"></div>
+        <div class="sport-games-count-v3">
+            <span>{{popular.data.length}}</span>
+        </div>
+    </div>
+    <div class="region-item-row-v3">
+        <div class="region-items-box">
+            <div class="full-region-info-v3 active">
+                <div class="games-list-nav-v3">
+                    <div class="games-list-mini-view-v3">
+                        <div class="competition-view-v-3">
+                            <div class="competition-title-v3 ng-scope ng-isolate-scope" ng-repeat="item in popular.data track by item.id" ng-class="{active: item.id == $root.$location.search()[type] }">
+                                <label title="{{ ::item.region.name }}" ng-click="$root.broadcast('sportsbook.selectData', {type: 'popular.' + type, data: item})">
+                                    <span class="sport-icon-v3 favorite-competitions-icon-t {{item.sport.alias}}"></span>
+                                    <span ng-bind="::(item.name || item.team1_name + ' - ' + item.team2_name)"></span>
+                                    <div class="flag-view-v3 flag-icon flag-{{::item.region.alias | removeUselessSymbolsByRegexp: '[,\' ]+': 'g': 'true'}}"></div>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

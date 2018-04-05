@@ -1,14 +1,13 @@
-<div class="fixed-element-parent">
-    <div class="game-list-compitishion" fixonscroll ignore-ie="true" auto-positon="top"  scrollable-area-id="asianView" header-id="main-header-container">
-        <table class="name-ft-ht-layout">
-            <tr>
-                <td class="big-row"><div class="info-bl"><p><i class="icon-sport-asia" ng-class="selectedSport.alias"></i><span ng-bind="selectedSport.name"></span></p></div></td>
-                <td class="Correct-scire-title"><div class="info-bl"><p trans>Correct Score</p></div></td>
+<div class="game-list-compitishion asian-sticky-top">
+    <table class="name-ft-ht-layout">
+        <colgroup span="3"></colgroup>
+        <tr>
+            <td class="big-row"><div class="info-bl"><p><i class="icon-sport-asia" ng-class="selectedSport.alias"></i><span ng-bind="selectedSport.name"></span></p></div></td>
+            <td class="Correct-scire-title"><div class="info-bl"><p trans>Correct Score</p></div></td>
 
-                <td class="more-competition"><div class="info-bl"><p trans>More</p></div></td>
-            </tr>
-        </table>
-    </div>
+            <td class="more-competition"><div class="info-bl"><p trans>More</p></div></td>
+        </tr>
+    </table>
 </div>
 <div class="asian-separator-container-b" ng-repeat="competitions in centerData.competitions track by $index">
     <div ng-repeat="competition in competitions|limitTo:conf.asian.competitionsPerPage:(selectedPage*conf.asian.competitionsPerPage) track by $index" class="game-list-compitishion" ng-class="{closed: collapedCompetitions[competition.id]}">
@@ -19,6 +18,7 @@
     </div>
 
     <table class="match-odd1X2 correct-score"  ng-if="!collapedCompetitions[competition.id]">
+        <colgroup span="5"></colgroup>
         <tbody ng-repeat="game in competition.games|orderBy:'start_ts' track by game.id">
             <tr>
                 <td colspan="4">
@@ -50,6 +50,7 @@
             <tr ng-repeat="lineEvents in game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence]['CORRECT SCORE'][0].linesEvents track by $index">
                 <td class="section-1">
                     <div class="info-bl">
+                        <span ng-show="(game.type === 1 || (game.type === 2 && conf.asian.showLiveIconForUpcomingGames)) && $index === 0" class="asian-live-game" trans>live</span>
                         <p class="time-g-asia" ng-show="game.type ==1 && $index === 0">
                             <span ng-bind="game.info.current_game_state|convertSetName:game.sport.alias|translate"></span><span ng-bind="fixDisplayTime(game.info.current_game_time)"></span>
                         </p>

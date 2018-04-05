@@ -23,18 +23,17 @@ VBET5.directive('flashplayer', ['$window', '$timeout', '$rootScope', 'Translator
     return {
         restrict: 'E',
         link: function (scope, element, attrs) {
-            var PROVIDERS_WORKING_IN_IFRAME = ['21', '22', '23', '24', '29'];
             var frame, attributes = {};
             attributes.id = attrs.id + 'obj';
             var streamUrl = attrs.streamUrl.toString();
             var providerId = attrs.providerId.toString();
             var parent = scope.$parent;
-            if (PROVIDERS_WORKING_IN_IFRAME.indexOf(providerId) !== -1) { // for dota and windbet stream we must show streams in iframe
-                frame = angular.element('<iframe  src="'+streamUrl+'" width="100%" height="100%" frameborder="0" scrolling="no"></iframe>');
+            if ($rootScope.conf.videoProvidersThatWorkWithIframe.indexOf(providerId) !== -1) { // for dota and windbet stream we must show streams in iframe
+                frame = angular.element('<iframe  src="'+streamUrl+'" width="100%" height="100%" frameborder="0" scrolling="no" allowfullscreen></iframe>');
                 element.append(frame);
                 parent.videoIsLoaded = false; // for hiding player controlls
             } else { // for another all streams
-                var swfPath = providerId === '18' ? "swf/IMGVideo.swf" : "swf/LiveVideo.swf";
+                var swfPath = "swf/LiveVideo.swf?anticache=" + $rootScope.env.appVersion;
                 var callbackGlobalFuncName = 'flashPlayerCallback' + scope.$id;
 
                 var params = {};
@@ -42,6 +41,7 @@ VBET5.directive('flashplayer', ['$window', '$timeout', '$rootScope', 'Translator
                 params.quality = "high";
                 params.allowScriptAccess = "always";
                 params.wmode = "transparent";
+                params.bgColor = '000000';
                 scope.$on('flashplayer.newSingleInstance', function (event, scopeId) {
 //                console.log('\n\n\n------------', scopeId, scope.$id);
                     if (scopeId !== scope.$id) { //message is from another player
@@ -162,9 +162,9 @@ VBET5.directive('flashplayer', ['$window', '$timeout', '$rootScope', 'Translator
                     return; //  don't update if it's same
                 }
                 streamUrl = attrs.streamUrl.toString();
-                if (PROVIDERS_WORKING_IN_IFRAME.indexOf(providerId) !== -1) {
+                if ($rootScope.conf.videoProvidersThatWorkWithIframe.indexOf(providerId) !== -1) {
                     frame && frame.remove();
-                    frame = angular.element('<iframe  src="'+streamUrl+'" width="100%" height="100%" frameborder="0" scrolling="no"></iframe>');
+                    frame = angular.element('<iframe  src="'+streamUrl+'" width="100%" height="100%" frameborder="0" scrolling="no" allowfullscreen></iframe>');
                     element.append(frame);
                 } else {
                     if (scope.swfObj && scope.swfObj.setStreamOptions) {

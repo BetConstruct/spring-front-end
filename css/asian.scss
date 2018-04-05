@@ -1,17 +1,18 @@
 @import 'asian-colors';
+
 .big-contain-view {
   float: left;
   width: 100%;
   min-width: 970px;
   padding: 0;
 }
+
 .gaming-wrapper-asia {
   float: left;
   width: 100%;
   min-width: 970px;
   height: 100%;
   font: 10px/12px $font-f !important;
-  overflow: hidden;
   .md-progress-circular.md-theme {
     left: 50%;
     margin-left: -50px;
@@ -23,26 +24,74 @@
     left: auto;
     right: 22px;
   }
+  &:after {
+    content: "";
+    display: block;
+    clear: both;
+  }
 }
+
 .asian-contain {
   width: 100%;
   float: left;
-  padding: 10px;
+  padding: 10px 10px 32px;
+  position: relative;
   box-sizing: border-box;
   &:after {
     content: "";
     clear: both;
     display: block;
   }
+  .asian-fix-buttons {
+    position: fixed;
+    bottom: 0;
+    right: 10px;
+    button {
+      float: left;
+      height: 30px;
+      color: $text-palette-1;
+      background: rgba(lighten(desaturate($skin-color, 18), 19), 0.65);
+      padding: 0 16px 0 46px;
+      border: none;
+      box-sizing: border-box;
+      text-transform: uppercase;
+      cursor: pointer;
+      font: 12px/30px $font-f;
+      transform: translate3d(0, 0, 0);
+      &.asian-button-refresh-view {
+        width: 54px;
+        padding: 0 10px 0 30px;
+        &:before {
+          font: 10px/30px icomoon;
+        }
+      }
+      &.asian-button-to-top:before {
+        content: "\e661";
+        position: absolute;
+        top: 6px;
+        left: 4px;
+        display: block;
+        width: 30px;
+        height: 18px;
+        border-right: 1px solid $text-palette-1;
+        font: 16px/18px icomoon;
+      }
+      & + button {
+        margin-left: 2px;
+      }
+    }
+  }
 }
+
 /*left block*/
 .asian-left-menu-fixed {
   float: left;
-  width: 230px;
+  width: 280px;
 }
+
 .asian-left-menu-scroll-wrapper {
   float: left;
-  width: 230px;
+  width: 280px;
   height: calc(100vh - 20px - #{$header-first-line-height + $header-nav-line-height + $subheader-height});
   transition: 300ms margin, 300ms height;
   &.scrollable-fixed {
@@ -50,6 +99,7 @@
     height: calc(100vh - 20px - #{$subheader-height});
   }
 }
+
 .asian-left-contain-menu {
   padding: 0 1px 0 0;
   float: left;
@@ -63,6 +113,7 @@
     width: 100%;
   }
 }
+
 //animation & video
 .asian-left-contain-menu {
   .video-animation-vox-v3 {
@@ -79,14 +130,17 @@
     right: 112px;
   }
 }
+
 .gaming-wrapper-asia .video-player-control.volume-control {
   top: -28px;
   right: 82px;
 }
+
 .gaming-wrapper-asia .video-player-control.volume-control > span,
 .gaming-wrapper-asia .contain-v-a-fanction-icons-v3 > ul > li.sound-icon-v3:before {
   font-size: 18px;
 }
+
 .gaming-wrapper-asia .video-player-control > span.video-pause:before,
 .gaming-wrapper-asia .video-player-control > span.video-play:before {
   content: "\e651";
@@ -98,13 +152,16 @@
   text-align: center;
   top: 2px;
 }
+
 .gaming-wrapper-asia .video-player-control > span.video-play:before {
   content: "\e650";
 }
+
 .gaming-wrapper-asia .game-video-detached {
   padding: 0;
   box-shadow: 0 0 20px #000000;
 }
+
 .gaming-wrapper-asia .game-video-detached .animation-video-title-row-v3 {
   position: relative;
   z-index: 99;
@@ -112,12 +169,15 @@
   width: calc(100% + 2px);
   left: -1px;
 }
+
 .gaming-wrapper-asia .game-video-detached .game-video-container.detached-game-container {
   padding: 31px 0 0;
 }
+
 .gaming-wrapper-asia .game-video-fullscreen .game-video-container.detached-game-container {
   padding: 0;
 }
+
 .gaming-wrapper-asia .game-video-detached .detached-game-container .game-video-container {
   position: absolute;
   z-index: 22;
@@ -126,9 +186,11 @@
   height: 100%;
   top: 0;
 }
+
 .gaming-wrapper-asia .game-video-detached .detached-game-container .animation-control .game-video .video-player-container {
   height: 100%;
 }
+
 .gaming-wrapper-asia .game-video-detached .detached-game-container .video-player-control {
   background: none;
   top: -28px;
@@ -137,16 +199,19 @@
   height: 24px;
   width: 24px;
 }
+
 .gaming-wrapper-asia .game-video-fullscreen .detached-game-container .video-player-control {
-  width: auto;
+  width: 100%;
   right: 24px;
   top: 0;
   height: 18px;
 }
+
 .gaming-wrapper-asia .game-video-detached .detached-game-container .video-player-control.volume-control {
   right: 27px;
   top: -32px;
 }
+
 .gaming-wrapper-asia .game-video-detached .detached-game-container .animation-control .game-video {
   position: absolute;
   left: 0;
@@ -154,18 +219,22 @@
   width: 100%;
   height: 100%;
 }
+
 .gaming-wrapper-asia .game-video-detached .detached-game-container .animation-control {
   overflow: inherit;
   height: 100%;
   z-index: 111;
 }
+
 .gaming-wrapper-asia .detached-game-container .detached-game-name {
   text-shadow: none;
   height: 24px;
 }
+
 .gaming-wrapper-asia .detached-game-container .detached-game-name p {
   line-height: 24px;
 }
+
 .gaming-wrapper-asia .game-video.game-video-detached.game-video-fullscreen {
   float: left;
   position: relative;
@@ -176,7 +245,8 @@
   margin-bottom: 30px;
   box-shadow: none;
 }
-.gaming-wrapper-asia .game-video-container a {
+
+.gaming-wrapper-asia .game-video-container a:not(.not-this) {
   text-indent: -9999em;
   box-sizing: border-box;
   background: none;
@@ -185,26 +255,29 @@
   font: 9px/24px icomoon;
   top: 0;
   right: 0;
+  &:before {
+    box-sizing: border-box;
+    content: "\e6f2";
+    position: absolute;
+    right: 0;
+    text-indent: 0;
+    width: 24px;
+    text-align: center;
+  }
 }
-.gaming-wrapper-asia .game-video-container a:before {
-  box-sizing: border-box;
-  content: "\e6f2";
-  position: absolute;
-  right: 0;
-  text-indent: 0;
-  width: 24px;
-  text-align: center;
-}
+
 .gaming-wrapper-asia .game-video-fullscreen .game-video-container object {
   position: relative;
   top: 0;
 }
+
 .gaming-wrapper-asia .detached-info {
-  line-height: 12px;
+  line-height: 13px;
   padding-right: 10px;
   position: absolute;
   right: 75px;
 }
+
 //animation & video END
 
 /*betslip*/
@@ -231,12 +304,14 @@
     top: -14px;
   }
 }
+
 .asian-left-contain-menu .list-bet-block ul li:first-child span a {
   background: none;
   width: 20px;
   height: 20px;
   position: relative;
 }
+
 .asian-left-contain-menu .list-bet-block ul li:first-child span a:after {
   content: "\e6eb";
   font: 16px/20px "icomoon";
@@ -248,22 +323,27 @@
   width: 20px;
   height: 20px;
 }
+
 .asian-left-contain-menu .list-bet-block ul li {
   font-size: 10px;
 }
+
 .asian-left-contain-menu .eachway-selector,
 .asian-left-contain-menu .empty-betslip,
 .asian-left-contain-menu .quickbet-mode-betslip,
 .asian-left-contain-menu .detached-info {
   font-size: 10px;
 }
+
 .asian-left-contain-menu .bet-event-title {
   padding: 0 10px 0 0;
   display: table;
 }
+
 .asian-left-contain-menu .bet-event-notifications {
   top: 0;
 }
+
 .asian-left-contain-menu .single-bet-container .single-bet-betmax {
   border: none;
   border-radius: 2px;
@@ -271,6 +351,7 @@
   margin: 1px 0 0 4px;
   opacity: 1;
 }
+
 .asian-left-contain-menu .bet-currency-value .single-bet-betmax {
   border-radius: 2px;
   border: none;
@@ -280,44 +361,56 @@
   font-weight: bold;
   margin: 7px 6px 0 0;
 }
+
 .asian-left-contain-menu .superbet-checkbox input[type="checkbox"] {
   position: absolute;
 }
+
 .asian-left-contain-menu .bet-conflict-warning {
   margin-top: 1px;
 }
+
 .asian-left-contain-menu .list-bet-block ul li .betprice {
   font-size: 11px;
 }
+
 .asian-left-contain-menu .list-bet-block ul li p,
 .asian-left-contain-menu .list-bet-block ul li p span.pick {
   font-size: 10px;
 }
+
 .asian-left-contain-menu .list-bet-block ul li span {
   font-size: 10px;
 }
+
 .asian-left-contain-menu .betslip-options label {
   font-size: 10px;
 }
+
 .asian-left-contain-menu .button-bet .bet-button-wrapper {
   padding: 0;
 }
+
 .asian-left-contain-menu .button-bet .bet-notification-update-container {
   padding: 0 10px 0 0;
 }
+
 .asian-left-contain-menu .button-bet {
   width: calc(100% - 20px);
   padding: 10px;
   height: 31px;
 }
+
 .asian-left-contain-menu .button-bet button {
   border: none;
   min-height: 26px;
   margin: 0;
 }
+
 .asian-left-contain-menu .betslip-clearall-button i {
   border-radius: 0 0 4px 4px;
 }
+
 .asian-left-contain-menu .betslip-clearall-button input {
   background: none;
   text-transform: uppercase;
@@ -331,17 +424,21 @@
   display: block;
   float: left;
 }
+
 .asian-left-contain-menu .quick-bet-button p {
   line-height: 18px;
 }
+
 .asian-left-contain-menu .superbet-checkbox label {
   line-height: 18px;
   min-width: 85px;
   max-width: 85px;
 }
+
 .asian-left-contain-menu .express-stake-label {
   height: 28px;
 }
+
 .asian-left-contain-menu .bet-form form input[type="text"] {
   width: 60px;
   height: 20px;
@@ -351,6 +448,7 @@
   line-height: 20px;
   margin-right: 4px;
 }
+
 .asian-left-contain-menu .single-bet-container [type="text"] {
   box-shadow: none;
   font-size: 11px;
@@ -359,71 +457,87 @@
   border-radius: 3px;
   padding: 2px 4px;
 }
+
 .asian-left-contain-menu .bet-form form .bet-currency-value p {
   padding-top: 7px;
 }
+
 .asian-left-contain-menu .bs-type-switcher,
 .asian-left-contain-menu .betslip-system-chenge {
   box-shadow: none;
   border: none;
   padding: 6px 4px 6px 6px;
 }
+
 .asian-left-contain-menu .open-type-switcher {
   box-shadow: none;
   right: 0;
   top: 24px;
 }
+
 .asian-left-contain-menu .open-type-switcher ul li a {
   min-width: 100px;
   border-left: none;
   border-right: none;
   font-size: 11px;
 }
+
 .asian-left-contain-menu .list-bet-block .name-b-list ul {
   left: 1px;
 }
+
 .asian-left-contain-menu .betslip-system-chenge .open-type-switcher ul li a {
   width: 85px;
   white-space: nowrap;
   font-size: 10px;
 }
+
 .asian-left-contain-menu .open-type-switcher ul li:last-child a,
 .asian-left-contain-menu .betslip-system-chenge .open-type-switcher ul:last-child li:last-child a {
   border-radius: 0 0 3px 3px;
 }
+
 .asian-left-contain-menu .betslip-system-chenge .open-type-switcher ul li:last-child a {
   border-radius: inherit;
   border-top: none;
 }
+
 .asian-left-contain-menu .list-bet-block .name-b-list ul li:hover {
   background: none;
 }
+
 .asian-left-contain-menu .bs-type-switcher p,
 .asian-left-contain-menu .betslip-system-chenge p {
   font-size: 11px;
   line-height: 11px;
 }
+
 .asian-left-contain-menu .list-bet-block .bet-container .bet-conflict-warning .conflict-content ul {
   padding: 0;
 }
+
 .asian-left-contain-menu .list-bet-block .bet-container .bet-conflict-warning .conflict-content ul li {
   box-shadow: none;
   background: none;
 }
+
 .asian-left-contain-menu .bet-conflict-warning .list-bet-block .bet-container .conflict-content ul:last-child {
   border-bottom: none;
 }
+
 .asian-left-contain-menu .name-b-list {
   height: auto;
   border: 0;
   z-index: 20;
 }
+
 .asian-left-contain-menu .all-bets-info {
   float: left;
   width: 100%;
   position: relative;
   z-index: 10;
 }
+
 .asian-left-contain-menu .name-b-list h2 {
   padding: 0;
   width: 100%;
@@ -436,30 +550,35 @@
   height: 24px;
   border-radius: 3px 3px 0 0;
 }
+
 .asian-left-contain-menu .list-bet-block ul li {
   padding: 5px 16px 5px 5px;
 }
+
 .asian-left-contain-menu .bet-container {
   max-height: inherit;
   overflow: inherit;
 }
+
 .asian-left-contain-menu .bet-settings-container {
   border-bottom: none;
 }
+
 .asian-left-contain-menu .mini-game-container iframe {
   height: 129px;
 }
+
 .asian-left-contain-menu .list-bet-block ul li > .better-odd-contain {
   right: 2px;
   top: 20px;
 }
+
 .asian-left-contain-menu .list-bet-block ul li > .better-odd-contain > span {
   display: inline-block;
   padding: 0 3px;
 }
 
 /*betslip END*/
-
 
 /*Menu tabs*/
 
@@ -492,7 +611,6 @@
 
 /*Menu tabs END*/
 
-
 /*left menu sport*/
 
 .asian-left-menu {
@@ -501,10 +619,10 @@
   ul {
     float: left;
     width: 100%;
-    > div{
+    > div {
       float: left;
       width: 100%;
-      transform: translate3d(0,0,0);
+      transform: translate3d(0, 0, 0);
     }
     li {
       float: left;
@@ -527,16 +645,18 @@
         max-height: 300px;
         //min-height: auto;
       }
-      > div{
+      > div {
         float: left;
         width: 100%;
       }
     }
   }
 }
+
 .asian-left-contain-menu.type-1 .asian-left-menu ul li.active {
   margin: 1px 0;
 }
+
 .icon-sport-asia {
   position: absolute;
   z-index: 22;
@@ -548,15 +668,18 @@
   text-align: center;
   transition: color 200ms;
 }
+
 .asian-left-menu ul li > div.sport-group-eSports,
-.asian-left-menu ul li > div.sport-group-Winter{
+.asian-left-menu ul li > div.sport-group-Winter {
   float: none;
   width: auto;
 }
+
 .asian-left-menu ul li > div.menu-arrow-asia {
   float: none;
   width: 24px;
 }
+
 .sport-name-asia {
   float: left;
   padding: 0 0 0 36px;
@@ -567,6 +690,7 @@
   overflow: hidden;
   text-overflow: ellipsis;
 }
+
 .menu-arrow-asia {
   position: absolute;
   width: 24px;
@@ -583,24 +707,29 @@
     top: 0;
   }
 }
+
 .asian-left-menu ul li.active .menu-arrow-asia:before {
   content: "\e675";
 }
+
 .sport-market-counts {
   position: absolute;
   right: 0;
   top: 0;
 }
+
 .sport-markets-menu {
   float: left;
   width: 100%;
   margin: 0;
 }
+
 .sport-markets-menu ul li {
   border-radius: inherit;
   border-top: none;
   margin: 0;
 }
+
 .market-neme-asia {
   padding: 0 36px 0 10px;
   white-space: nowrap;
@@ -613,22 +742,23 @@
     right: 6px;
   }
 }
+
 .sport-markets-menu ul li.active {
   margin: 0;
 }
+
 /*left menu sport END*/
 
-
 /*left block END*/
-
 
 /*Game wrapper*/
 
 .game-contain {
   float: right;
-  width: calc(100% - 240px);
+  width: calc(100% - 290px);
   padding: 0;
 }
+
 .game-list-compitishion {
   float: left;
   width: 100%;
@@ -646,6 +776,7 @@
   position: relative;
   z-index: 500;
 }
+
 .big-filter-wrapper ul {
   width: 100%;
   display: table;
@@ -654,6 +785,7 @@
     width: calc(100% - 74px);
   }
 }
+
 .big-filter-wrapper ul li {
   display: table-cell;
   width: 25%;
@@ -663,22 +795,27 @@
   text-indent: 10px;
 
 }
+
 .big-filter-wrapper ul li:first-child {
   border: none;
   border-radius: 4px 0 0 4px;
 }
+
 .big-filter-wrapper ul li.active:first-child {
   border-radius: 4px 0 0 0;
 }
+
 .big-filter-wrapper ul li.active .sub-menu-filter li:first-child {
   border-radius: inherit;
 }
+
 .contein-mini-filtr {
   float: left;
   width: 100%;
   position: relative;
   height: 24px;
 }
+
 .contein-mini-filtr.date {
   .sub-menu-filter ul li:last-child {
     height: auto;
@@ -693,6 +830,7 @@
     }
   }
 }
+
 .filter-icon {
   float: left;
   width: 24px;
@@ -701,6 +839,7 @@
   position: relative;
   overflow: hidden;
 }
+
 .filter-icon:before {
   font: 18px/24px "icomoon";
   content: "";
@@ -711,32 +850,40 @@
   width: 24px;
   text-align: center;
 }
+
 .filter-icon.back:before {
   content: "\e66f";
 }
+
 .big-filter-wrapper ul li:first-child .filter-icon:before {
   font: 20px/24px icomoon;
   content: "\e665";
   left: -4px;
 }
+
 .big-filter-wrapper ul li:first-child .contein-mini-filtr .filter-icon.asc:before {
   content: "\e664";
 }
+
 .date .filter-icon:before {
   font: 12px/24px "icomoon";
   content: "\e907";
   left: -2px;
 }
+
 .competition .filter-icon:before,
 .name-filter-asian .filter-icon:before {
   content: "\e63f";
 }
+
 .contein-mini-filtr .menu-arrow-asia:before {
   left: -10px;
 }
+
 .big-filter-wrapper ul li.active .menu-arrow-asia:before {
-  content: "\e023";
+  content: "\e675";
 }
+
 .sub-menu-filter {
   position: absolute;
   top: 24px;
@@ -745,14 +892,17 @@
   z-index: 201;
   display: none;
 }
+
 .big-filter-wrapper ul li.active .sub-menu-filter {
   display: block;
 }
+
 .sub-menu-filter ul {
   float: left;
   width: 100%;
   display: block;
 }
+
 .sub-menu-filter ul li {
   display: block;
   width: 100%;
@@ -761,33 +911,40 @@
   font-size: 11px;
   position: relative;
 }
+
 .sub-menu-filter ul li:first-child {
   border-radius: inherit;
 }
+
 .name-filter-b {
   white-space: nowrap;
   text-overflow: ellipsis;
   overflow: hidden;
   width: calc(100% - 24px);
 }
+
 .contein-mini-filtr.time .name-filter-b {
   max-width: 100%;
   position: relative;
   z-index: 33;
 }
+
 .sub-menu-filter ul li p {
   white-space: nowrap;
   text-overflow: ellipsis;
   overflow: hidden;
 }
+
 .sub-menu-filter ul li:last-child {
   border-radius: 0 0 4px 4px;
 }
+
 .sub-menu-filter ul li input[type="checkbox"],
 .popup-asian-info input[type="checkbox"] {
   position: absolute;
   left: -9999em;
 }
+
 .sub-menu-filter ul li label {
   float: left;
   height: 24px;
@@ -797,6 +954,7 @@
   text-overflow: ellipsis;
   overflow: hidden;
 }
+
 .sub-menu-filter ul li input[type="checkbox"] + label:before,
 .popup-asian-info input[type="checkbox"] + label:before {
   content: "";
@@ -808,6 +966,7 @@
   left: 8px;
   top: 6px;
 }
+
 .sub-menu-filter ul li input[type="checkbox"]:checked + label:after,
 .popup-asian-info input[type="checkbox"]:checked + label:after {
   font-family: "icomoon";
@@ -824,20 +983,22 @@
 
 /*filter END*/
 
-
 /*compitishion layout*/
 
 .asian-separator-container-b {
   float: left;
   width: 100%;
 }
+
 .market_list_view {
   float: left;
   width: 100%;
 }
+
 .game-list-compitishion.closed {
   height: 24px;
 }
+
 .name-chempionship-asia {
   float: left;
   width: 100%;
@@ -845,6 +1006,7 @@
   overflow: hidden;
   position: relative;
 }
+
 .name-chempionship-asia h3 {
   position: absolute;
   left: 0;
@@ -859,12 +1021,15 @@
   white-space: nowrap;
   overflow: hidden;
 }
+
 .all_view .name-chempionship-asia h3 {
   padding-left: 24px;
 }
+
 .all_view .name-chempionship-asia .icon-sport-asia {
   left: 25px;
 }
+
 .name-chempionship-asia h3:before {
   font: normal 14px/24px "icomoon";
   content: "\e671";
@@ -873,6 +1038,7 @@
   left: -21px;
   top: 0;
 }
+
 .game-list-compitishion.closed .name-chempionship-asia h3:before,
 .game-list-compitishion-j.closed .name-chempionship-asia h3:before {
   font: normal 14px/24px "icomoon";
@@ -882,10 +1048,12 @@
   left: -21px;
   top: 0;
 }
+
 .game-list-compitishion table {
   float: left;
   width: 100%;
 }
+
 .game-list-compitishion table tr td {
   padding: 0;
   vertical-align: middle;
@@ -893,12 +1061,14 @@
   font-size: 10px;
   line-height: 12px;
 }
+
 .info-bl {
   float: left;
   width: 100%;
   padding: 0;
   position: relative;
 }
+
 .info-bl p {
   padding: 5px;
   position: relative;
@@ -906,27 +1076,34 @@
   width: 100%;
   box-sizing: border-box;
 }
+
 .match-odd1X2 .info-bl p {
   padding: 7px 10px;
 }
+
 .match-odd1X2.ft-ht .info-bl p.time-g-asia {
   padding: 1px 5px;
   text-align: center;
 }
+
 .outright-tamplate .info-bl p {
   padding: 5px 10px;
 }
+
 .outright-tamplate.sport .sport-outright .info-bl p {
   padding-left: 38px;
 }
+
 .outright-tamplate.sport .sport-outright .info-bl p i {
   top: 8px;
 }
+
 .section-2 .info-bl p {
   white-space: nowrap;
   text-overflow: ellipsis;
   overflow: hidden;
 }
+
 .game-list-compitishion table tr td.big-row {
   min-width: 230px;
   max-width: 230px;
@@ -934,20 +1111,25 @@
   text-transform: uppercase;
   text-align: left;
 }
+
 .game-list-compitishion table.name-ft-ht-layout.odd-even tr td.big-row {
   min-width: 374px;
   max-width: 374px;
   width: 374px;
 }
+
 .game-list-compitishion table tr td.m-odds-b {
   width: 52%;
 }
+
 .game-list-compitishion table tr td.big-row p {
   padding-left: 38px;
 }
+
 .game-list-compitishion table tr td.big-row p i {
   top: 3px;
 }
+
 .game-list-compitishion table tr td.sport-outright {
   min-width: 144px;
   max-width: 144px;
@@ -955,19 +1137,23 @@
   text-transform: uppercase;
   text-align: left;
 }
+
 .game-list-compitishion table.outright-tamplate.sport tr td.big-row {
   min-width: 144px;
   max-width: 144px;
   width: 144px;
 }
+
 .game-list-compitishion table.match-odd1X2.total-goal tr td.big-row {
   min-width: 230px;
   max-width: 230px;
   width: 230px;
 }
+
 .game-list-compitishion table tr td.outiright-odds-asia {
   text-align: left;
 }
+
 .game-list-compitishion table tr td.section-1 {
   min-width: 48px;
   max-width: 48px;
@@ -975,49 +1161,58 @@
   text-align: center;
   height: 20px;
 }
+
 .game-list-compitishion table tr td.event-title-asia {
   min-width: 464px;
   max-width: 464px;
   width: 464px;
   text-align: left;
 }
+
 .game-list-compitishion table tr td.section-2 {
   min-width: 154px;
   max-width: 154px;
   width: 154px;
   text-align: left;
 }
+
 .game-list-compitishion table.match-odd1X2 tr td.section-2 {
   min-width: 182px;
   max-width: 182px;
   width: 182px;
 }
+
 .game-list-compitishion table.match-odd1X2.odd-even tr td.section-2 {
   min-width: 325px;
   max-width: 325px;
   width: 325px;
 }
+
 .game-list-compitishion table tr td.section-3 {
   min-width: 26px;
   max-width: 26px;
   width: 26px;
 }
+
 .game-list-compitishion table tr td.factor-name {
   min-width: 60px;
   max-width: 60px;
   width: 20%;
 }
+
 .game-list-compitishion table tr td.factor-w {
   min-width: 60px;
   max-width: 60px;
   width: 20%;
 }
+
 .game-list-compitishion table tr td.factor-w .info-bl p b,
 .k-and-info p b {
   display: inline-block;
   width: 50%;
   text-align: left;
 }
+
 .game-list-compitishion table tr td.factor-w .info-bl p i,
 .k-and-info p i {
   font-style: normal;
@@ -1026,25 +1221,30 @@
   width: 50%;
   text-align: right;
 }
+
 .game-list-compitishion table.match-odd1X2.correct-score tr td.factor-w {
   min-width: 60px;
   max-width: 200px;
   width: 30%;
 }
+
 .game-list-compitishion table.ft-ht tr td.factor-w {
   min-width: 40px;
   max-width: 40px;
   width: 10%;
 }
+
 .game-list-compitishion table.match-odd1X2.total-goal tr td.factor-w,
 .game-list-compitishion table.match-odd1X2.total-goal tr td.factor-name {
   min-width: 50px;
   max-width: 50px;
   width: 10%;
 }
+
 .game-list-compitishion table.hdp-contain tr td.factor-w .info-bl p b:only-child {
   width: auto;
 }
+
 @-webkit-keyframes blink {
   0% {
     opacity: 1;
@@ -1056,6 +1256,7 @@
     opacity: 1;
   }
 }
+
 @keyframes blink {
   0% {
     opacity: 1;
@@ -1067,39 +1268,48 @@
     opacity: 1;
   }
 }
+
 .game-list-compitishion table tr td.factor-w:hover,
 .game-list-compitishion table tr td.outiright-odds-asia:hover {
-  
+
 }
+
 .game-list-compitishion table tr td.more-competition {
   min-width: 50px;
   max-width: 50px;
   width: 50px;
 }
+
 .game-list-compitishion table tr td.border-d {
   border-bottom-color: transparent;
 }
+
 .time-g-asia span {
   padding-right: 4px;
   display: inline-block;
 }
+
 .teams-n-account-asia {
   display: table;
 }
+
 .teams-n-account-asia span {
   display: table-cell;
   padding: 0 8px;
   width: 10%;
 }
+
 .teams-n-account-asia span.name-team-asian-1x2 {
   max-width: 100px;
   text-align: left;
   text-overflow: ellipsis;
   overflow: hidden;
 }
+
 .match-odd1X2.odd-even .teams-n-account-asia span.name-team-asian-1x2 {
   max-width: 220px;
 }
+
 .teams-n-account-asia span.account-asian-1x2 {
   text-align: right;
   white-space: nowrap;
@@ -1107,6 +1317,7 @@
   max-width: 40px;
   width: 40px;
 }
+
 .teams-n-account-asia span.account-asian-1x2 b {
   background: black;
   color: white;
@@ -1115,76 +1326,95 @@
   border-radius: 3px;
   position: relative;
 }
+
 .match-odd1X2.correct-score .info-bl p {
   padding: 4px 10px;
 }
+
 .match-odd1X2.correct-score p.teams-n-account-asia {
   display: inline-block;
   padding: 5px 0;
   float: left;
   text-transform: uppercase;
 }
+
 .match-odd1X2.correct-score .teams-n-account-asia span {
   display: inline;
 }
+
 .match-odd1X2.correct-score .teams-n-account-asia span.account-asian-1x2 {
   text-align: left;
   padding: 4px 0;
 }
+
 .match-odd1X2.ft-ht .teams-n-account-asia span.account-asian-1x2 b {
   padding: 2px 7px 3px;
 }
+
 .teams-n-account-asia span.account-asian-1x2 b:first-child {
   margin-right: 5px;
 }
+
 .teams-n-account-asia span.account-asian-1x2 b:first-child:after {
   content: ":";
   position: absolute;
   right: -5px;
   top: 3px;
 }
+
 .match-odd1X2.ft-ht .teams-n-account-asia span.account-asian-1x2 b:first-child:after {
   top: 1px;
 }
+
 .more-arrow-b-asia {
   width: 100%;
   height: 22px;
   text-align: center;
   position: relative;
-  
+
 }
+
 .more-arrow-b-asia:before {
   font: 16px/20px "icomoon";
   content: "\e674";
 }
+
 .more-b-asia.active .more-arrow-b-asia:before {
   content: "\e675";
 }
+
 .game-list-compitishion table tr td.name-teams-hdp {
   text-align: left;
   border-right-color: transparent;
   text-transform: uppercase;
 }
+
 .game-list-compitishion table tr td.filters-hdp {
   text-align: right;
   border-left-color: transparent;
   border-right-color: transparent;
 }
+
 .game-list-compitishion table tr td.more-competition.first {
   border-left-color: transparent;
 }
+
 .game-list-compitishion table tr td.name-teams-hdp .info-bl p {
   padding: 4px 10px;
 }
+
 .game-list-compitishion table tr td.name-teams-hdp .info-bl p span:first-child:after {
   content: " - ";
 }
+
 .block-filter-hdp {
   float: right;
 }
+
 .block-filter-hdp ul {
   float: left;
 }
+
 .block-filter-hdp ul li {
   float: left;
   display: inline-block;
@@ -1195,77 +1425,96 @@
   transition: 240ms color, 240ms background;
   box-sizing: border-box;
 }
+
 .game-list-compitishion table.hdp-contain-title tr td.big-row {
   min-width: 304px;
   max-width: 304px;
   width: 304px;
 }
+
 .game-list-compitishion table tr td.title-names-1x2 {
   width: 30%;
 }
+
 .game-list-compitishion table.hdp-contain-title tr td.title-names-hdp {
   width: 17%;
 }
+
 .game-list-compitishion table.hdp-contain tr td.section-2 {
   min-width: 254px;
   max-width: 254px;
   width: 254px;
 }
+
 .game-list-compitishion table .second-l-hdp tr td:first-child,
 .game-list-compitishion table .second-l-hdp tr td:last-child {
   border-top: none;
   border-bottom: none;
 }
+
 .game-list-compitishion table .second-l-hdp tr td:first-child,
 .game-list-compitishion table .second-l-hdp tr td:last-child {
   border-top: none;
   border-bottom: none;
 }
+
 .game-list-compitishion table .second-l-hdp tr:nth-child(2n+1) td.section-2 {
   border-top-color: transparent;
   border-bottom-color: transparent;
 }
+
 .hdp-contain .teams-n-account-asia span {
   padding: 2px 8px;
 }
+
 .hdp-contain .teams-n-account-asia span.name-team-asian-1x2 {
   max-width: 180px;
 }
+
 .hdp-contain .teams-n-account-asia span.account-asian-1x2 {
   padding-right: 2px;
 }
+
 .hdp-contain .teams-n-account-asia span.account-asian-1x2 b:first-child {
   margin-right: 0;
 }
+
 .hdp-contain .teams-n-account-asia span.account-asian-1x2 b:first-child:after {
   display: none;
 }
+
 .match-odd1X2.correct-score .block-filter-hdp {
   margin: 1px 54px 2px 0;
 }
+
 .match-odd1X2.correct-score .block-filter-hdp ul li {
   height: 20px;
   line-height: 20px;
 }
+
 .game-list-compitishion .match-odd1X2.correct-score tr td.section-1,
 .game-list-compitishion .match-odd1X2.correct-score tr td.more-competition {
   border-top-color: transparent;
   border-bottom-color: transparent;
 }
+
 .big-row .info-bl {
   position: relative;
 }
+
 .big-row .info-bl .icon-sport-asia {
   left: 0;
   top: 0;
   width: 26px;
   height: 100%;
 }
+
 .big-row .info-bl .icon-sport-asia:before {
   left: 0;
   top: 3px;
   position: relative;
 }
+
 .big-row .info-bl:before,
 .big-row .info-bl:after {
   content: "";
@@ -1273,35 +1522,43 @@
   top: -54%;
   width: 26px;
 }
+
 .big-row .info-bl:after {
   top: auto;
   bottom: -54%;
 }
+
 .name-chempionship-asia.more-c .block-filter-hdp {
   margin: 3px 10px 0 0;
 }
+
 .name-chempionship-asia.more-c .block-filter-hdp li {
   height: 18px;
   line-height: 18px;
   padding: 0 15px;
 }
+
 .game-list-compitishion table tr td.name-b-more {
   min-width: 230px;
   max-width: 230px;
   width: 230px;
   text-align: left;
 }
+
 .game-list-compitishion table tr td.comp-column-more {
   width: 30%;
 }
+
 .game-list-compitishion table tr td.name-b-more.title {
   text-transform: uppercase;
 }
+
 .sport-more-title,
 .name-b-teame-more {
   float: left;
   width: 100%;
 }
+
 .sport-more-title p,
 .name-b-teame-more p {
   padding: 5px 10px;
@@ -1309,25 +1566,30 @@
   text-overflow: ellipsis;
   overflow: hidden;
 }
+
 .game-list-compitishion table.more-events-t tr td.factor-w {
   width: 14%;
   min-width: 50px;
   max-width: 50px;
 }
+
 .name-chempionship-asia.more-c h3 {
   max-width: 250px;
   white-space: nowrap;
   text-overflow: ellipsis;
   overflow: hidden;
 }
+
 .game-list-compitishion table.second-more-view td.more-c-view {
   width: 10%;
 }
+
 .name-market-view {
   float: left;
   width: 100%;
   display: table;
 }
+
 .name-market-view p {
   display: table-cell;
   padding: 5px 0;
@@ -1337,6 +1599,7 @@
   vertical-align: middle;
   position: relative;
 }
+
 .name-market-view p i {
   font-style: normal;
   display: block;
@@ -1349,47 +1612,48 @@
   overflow: hidden;
   white-space: nowrap;
 }
+
 .name-market-view span {
   display: table-cell;
   padding: 5px 10px;
   vertical-align: middle;
   white-space: nowrap;
 }
+
 .game-list-compitishion table.any-markets-more td.more-c-view {
   width: 10%;
 }
+
 .game-list-compitishion table.any-markets-more td.more-c-view .name-market-view span {
   border: none;
   background: none;
 }
-.match-odd1X2.correct-score .section-1 .time-g-asia {
-  position: absolute;
-  top: -10px;
-  left: 0;
-}
+
 .many-columns-b {
   float: left;
   width: 100%;
 }
+
 .many-columns-b ul {
   float: left;
   width: 100%;
 }
+
 .many-columns-b .name-market-view p {
   width: 100%;
 }
+
 .many-columns-b ul li:hover {
-  
+
 }
+
 .many-columns-b .name-market-view span {
   background: none;
 }
 
 /*compitishion layout END*/
 
-
 /*Game wrapper END*/
-
 
 /*popup*/
 
@@ -1403,21 +1667,25 @@
   background: rgba(#121623, 0.5);
   overflow: hidden;
 }
+
 .popup-wrapper-asian.active {
   display: block;
 }
+
 .contain-poput-asia {
   width: 950px;
   margin: 0 auto;
   display: table;
   height: 100%;
 }
+
 .block-position-b {
   display: table-cell;
   vertical-align: middle;
   width: 100%;
   height: 100%;
 }
+
 .popup-asian-info {
   display: inline-block;
   width: calc(100% - 40px);
@@ -1425,31 +1693,38 @@
   border-radius: 4px;
   box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.5);
 }
+
 .popup-title-b {
   float: left;
   width: 100%;
   margin: 0 0 20px;
 }
+
 .name-filter-asian {
   float: left;
 }
+
 .name-filter-asian h3 {
   float: left;
   font-size: 12px;
   line-height: 24px;
   text-transform: uppercase;
 }
+
 .filter-function-b {
   float: right;
 }
+
 .filter-function-b ul {
   float: left;
 }
+
 .filter-function-b ul li {
   float: left;
   margin: 0 0 0 10px;
   position: relative;
 }
+
 .popup-asian-info label {
   float: left;
   height: 24px;
@@ -1461,10 +1736,12 @@
   text-overflow: ellipsis;
   overflow: hidden;
 }
+
 .filter-function-b ul li label {
   margin-right: 20px;
   overflow: inherit;
 }
+
 .filter-function-b ul li button {
   float: right;
   height: 24px;
@@ -1475,17 +1752,20 @@
   font-size: 11px;
   font-weight: bold;
   min-width: 100px;
-  
+
 }
+
 .filter-function-b ul li button:disabled {
   pointer-events: none;
 }
+
 .all-filter-competitions {
   float: left;
   width: 100%;
   @include scroll;
   max-height: 480px;
 }
+
 .all-filter-competitions ul {
   float: left;
   width: 100%;
@@ -1500,6 +1780,7 @@
   -ms-column-gap: 0;
   column-gap: 0;
 }
+
 .all-filter-competitions ul li {
   float: none;
   width: 100%;
@@ -1510,203 +1791,10 @@
   position: relative;
   display: inline-block;
   vertical-align: middle;
+  transform: translateZ(0);
 }
 
 /*popup END*/
-
-
-/*live game style*/
-
-.asian-live {
-  float: left;
-  width: 100%;
-  border-radius: 4px;
-  margin: 0 0 10px;
-  background-image: url(../../../images/game-category/custom.jpg#{$delete-cache});
-  background-size: cover;
-  position: relative;
-  .sport-title {
-    height: 30px;
-    text-align: left;
-    padding-left: 30px;
-    font: 12px/30px $font-f;
-    white-space: nowrap;
-    b {
-      margin-top: 3px;
-    }
-    span {
-      float: left;
-      max-width: 450px;
-    }
-    .curr-minute-info {
-      float: right;
-      margin-right: 30px;
-    }
-    .statistics-h2h {
-      right: 5px;
-    }
-  }
-  .game-info .game-detailed-stats {
-    top: 108px;
-  }
-  .game-score.soccer-template ul li.score-total span {
-    display: inline-block;
-    padding: 2px 8px 4px;
-  }
-  .game-score-multiset {
-    color: white;
-    text-align: center;
-  }
-  .game-score-multiset ul li.serve-team.active .mini-icon-1:before {
-    color: white;
-  }
-  .game-score-multiset ul.title .statistics-h2h {
-    top: 2px;
-  }
-  .game-score-multiset ul.title li {
-    border-top: 0 none;
-  }
-  .game-score-multiset ul li.total-score span,
-  .game-score-multiset ul li.sets-score span {
-    border-radius: 4px;
-  }
-  &.game-soccer,
-  &.game-cyberfootball {
-    background-image: url(../../../images/game-category/Football-bg.jpg#{$delete-cache});
-    background-position: 50% 75%;
-  }
-  &.game-tennis {
-    background-image: url(../../../images/game-category/tennis.jpg#{$delete-cache});
-  }
-  &.game-basketball,
-  &.game-ebasketball {
-    background-image: url(../../../images/game-category/basketball.jpg#{$delete-cache});
-  }
-  &.game-volleyball {
-    background-image: url(../../../images/game-category/valleyball.jpg#{$delete-cache});
-  }
-  &.game-tabletennis {
-    background-image: url(../../../images/game-category/tab_tennis.jpg#{$delete-cache});
-  }
-  &.game-baseball {
-    background-image: url(../../../images/game-category/baceball.jpg#{$delete-cache});
-  }
-  &.game-badminton {
-    background-image: url(../../../images/game-category/badmenton.jpg#{$delete-cache});
-  }
-  &.game-icehockey {
-    background-image: url(../../../images/game-category/ice_hockey.jpg#{$delete-cache});
-  }
-  &.game-horseracing {
-    background-image: url(../../../images/game-category/horse_racing.jpg#{$delete-cache});
-    background-size: cover;
-  }
-  &.game-snooker {
-    background-image: url(../../../images/game-category/snooker2.jpg#{$delete-cache});
-  }
-  &.game-cricket {
-    background-image: url(../../../images/game-category/Cricket.jpg#{$delete-cache});
-  }
-  &.game-golf {
-    background-image: url(../../../images/game-category/golf.jpg#{$delete-cache});
-  }
-  &.game-beachvolleyball {
-    background-image: url(../../../images/game-category/b_Volleyball.jpg#{$delete-cache});
-  }
-  &.game-handball {
-    background-image: url(../../../images/game-category/handball.jpg#{$delete-cache});
-  }
-  &.game-boxing {
-    background-image: url(../../../images/game-category/box.jpg#{$delete-cache});
-  }
-  &.game-cycling {
-    background-image: url(../../../images/game-category/cycling.jpg#{$delete-cache});
-  }
-  &.game-futsal {
-    background-image: url(../../../images/game-category/footsal.jpg#{$delete-cache});
-  }
-  &.game-rugby {
-    background-image: url(../../../images/game-category/rugby.jpg#{$delete-cache});
-  }
-  &.game-wrestling {
-    background-image: url(../../../images/game-category/Wrestling1.jpg#{$delete-cache});
-  }
-  &.game-americanfootball {
-    background-image: url(../../../images/game-category/amer_fball.jpg#{$delete-cache});
-  }
-  &.game-leagueoflegends {
-    background-image: url(../../../images/game-category/league-of-legends.jpg#{$delete-cache})
-  }
-  &.game-starcraft {
-    background-image: url(../../../images/game-category/star-craft.jpg#{$delete-cache})
-  }
-  &.game-counterstrike {
-    background-image: url(../../../images/game-category/counter-strike.jpg#{$delete-cache})
-  }
-  &.game-callofduty {
-    background-image: url(../../../images/game-category/callofduty.jpg#{$delete-cache});
-  }
-  &.game-hearthstone {
-    background-image: url(../../../images/game-category/hearthstone.jpg#{$delete-cache});
-  }
-  &.game-heroesofthestorm {
-    background-image: url(../../../images/game-category/heroesofthestorm.jpg#{$delete-cache});
-  }
-  &.game-worldoftanks {
-    background-image: url(../../../images/game-category/worldoftanks.jpg#{$delete-cache});
-  }
-  &.game-overwatch {
-    background-image: url(../../../images/game-category/overwatch.jpg#{$delete-cache});
-  }
-  .game-score-multiset ul.title .mini-icon-1 {
-    margin: 2px 0 0;
-    left: -10px;
-  }
-  .game-score-multiset ul.title li:first-child {
-    padding-left: 24px;
-  }
-  .mini-icon-1 {
-    background: none;
-    @extend .icon-sport-asia;
-    &:before {
-      display: block;
-    }
-  }
-  /*statistics styles */
-  .live-stats {
-    float: left;
-    width: 100%;
-    .game-control {
-      margin: 0;
-    }
-    .game-control.basketball {
-      display: none;
-    }
-    .game-control .statistics-toggle {
-      border-radius: 0 0 2px 2px;
-      background: #1b3325;
-      padding: 6px 0;
-      .timeline-container {
-        width: 94%;
-        margin: 12px 0 8px;
-        margin-left: 3.7%;
-        float: none;
-      }
-    }
-    .game-list-statistics td,
-    .game-list-statistics th {
-      padding: 2px;
-    }
-    .game-control .game-statistics li .stat-l,
-    .game-control .game-statistics li .stat-r {
-      font-size: 10px;
-      text-align: center;
-    }
-    .game-control .game-statistics li .team-2 {
-      box-shadow: none;
-    }
-  }
-}
 
 /*top swicher*/
 
@@ -1718,13 +1806,18 @@
   margin: 0 0 10px;
   text-align: center;
 }
-.gaming-wrapper-asia .layout-switcher {}
+
+.gaming-wrapper-asia .layout-switcher {
+}
+
 .gaming-wrapper-asia .layout-switcher > ul {
   float: none;
 }
+
 .gaming-wrapper-asia .sportsbook-top-tab-t > ul li {
   line-height: 26px;
 }
+
 .gaming-wrapper-asia .layout-switcher > ul li,
 .gaming-wrapper-asia .sportsbook-top-tab-t > ul li a {
   float: none;
@@ -1736,18 +1829,22 @@
   margin: 0;
   text-transform: uppercase;
   transition-duration: 250ms;
-  
+
 }
+
 .gaming-wrapper-asia .layout-switcher > ul li.title-sep {
   font: 12px/26px $font-f;
   display: none;
 }
+
 .gaming-wrapper-asia .layout-switcher > ul li.active-format:before {
   display: none;
 }
+
 .gaming-wrapper-asia .game-score-multiset > ul.title li:first-child span {
   text-indent: 10px;
 }
+
 .gaming-wrapper-asia .layout-switcher > ul li i {
   width: 16px;
   height: 16px;
@@ -1759,20 +1856,25 @@
   text-align: center;
   font: 10px/15px $font-f;
 }
+
 .gaming-wrapper-asia .factor-change-wrapper {
   right: 10px;
   height: 28px;
 }
+
 .gaming-wrapper-asia .factor-change-wrapper > p {
   font: 12px/28px $font-f;
 }
+
 .gaming-wrapper-asia .factor-change-wrapper > p:after {
   font: 16px/28px icomoon;
 }
+
 .gaming-wrapper-asia .sportsbook-top-tab-t > ul li .statistics-icon-new {
   top: 9px;
   font-size: 12px;
 }
+
 .gaming-wrapper-asia .sportsbook-top-tab-t > ul li .calendar-icon-new {
   font-size: 16px;
   top: 6px;
@@ -1780,12 +1882,9 @@
 
 /*top swicher end*/
 
-
 /*live game style END*/
 
-
 /*asian view END*/
-
 
 /*asian full view*/
 
@@ -1809,6 +1908,7 @@
 .game-list-compitishion.outright:before {
   display: none;
 }
+
 .teams-n-account-asia span.account-asian-1x2 b {
   &.red-card-asian,
   &.yellow-card-asian {
@@ -1829,9 +1929,11 @@
     color: black;
   }
 }
+
 .asian-left-contain-menu .viewSwitcher-j {
   margin: 0 0 2px;
 }
+
 .selectSportsbookColor-j {
   float: right;
   width: 24px;
@@ -1875,8 +1977,7 @@
       box-sizing: border-box;
       float: left;
       width: 100%;
-      font: 14px/30px icomoon;
-      ;
+      font: 14px/30px icomoon;;
       height: 30px;
       width: 30px;
       transition: color 240ms, background 240ms;
@@ -1903,6 +2004,7 @@
     }
   }
 }
+
 .asian-left-contain-menu {
   .bookingTabs-j {
     button {
@@ -1915,20 +2017,19 @@
     position: static;
     float: left;
     width: 100%;
-    .bsTypeSwitcher-j:first-child {
-      margin-left: 0;
-    }
   }
   .game-video-container p {
     margin: 52px 0 0 0;
     font-size: 15px;
     padding: 0 20px;
     box-sizing: border-box;
+    position: relative;
+    z-index: 10;
   }
   .sports-item-v3 {
     border-radius: 4px;
     height: 24px;
-    box-shadow: none; 
+    box-shadow: none;
     padding-right: 48px;
     &.active {
       border-radius: 4px 4px 0 0;
@@ -1941,7 +2042,7 @@
   }
   .sport-icon-v3 {
     line-height: 24px;
-    box-shadow: none; 
+    box-shadow: none;
   }
   .single-game-item-v3:first-child {
     border-top-left-radius: 0px;
@@ -1970,6 +2071,7 @@
     border: none;
   }
 }
+
 .asian-status-icons {
   display: table;
   width: 100%;
@@ -1979,6 +2081,7 @@
     text-align: center;
   }
 }
+
 .game-is-neutral {
   display: inline-block;
   vertical-align: middle;
@@ -1988,6 +2091,7 @@
     content: '\e959';
   }
 }
+
 .has-video {
   display: inline-block;
   vertical-align: middle;
@@ -1997,18 +2101,21 @@
     content: "\e683";
   }
 }
+
 .icon-favorite {
   font: 11px/20px icomoon;
   &:before {
     content: "\f005";
   }
 }
+
 .h2h-stats {
   font: 11px/20px icomoon;
   &:before {
     content: "\e6b8";
   }
 }
+
 .prematch-game-title {
   float: left;
   width: 100%;
@@ -2022,22 +2129,23 @@
     width: calc(100% - 60px);
     line-height: 30px;
   }
-  >div {
+  > div {
     float: right;
     margin-left: 10px;
     line-height: 30px;
   }
 }
+
 .asian-left-menu ul .asian-menu-group-wrap-j {
   float: left;
   width: 100%;
-  > li { 
-    margin-bottom: 1px; 
+  > li {
+    margin-bottom: 1px;
     .sport-name-asia {
       padding: 0 22px 0 36px;
       width: calc(100% - 24px);
       box-sizing: border-box;
-    } 
+    }
     &.active {
       ~ div {
         max-height: inherit;
@@ -2051,6 +2159,7 @@
     max-height: 0;
   }
 }
+
 .asian-contain {
   position: relative;
   .settings-icon-contain.clock-set-b {
@@ -2103,9 +2212,12 @@
     }
   }
 }
+
 .asian-market-overflow-j {
   overflow: hidden;
+  transform: translate3d(0, 0, 0);
 }
+
 .asian-market-wrap-j {
   position: relative;
   border-collapse: separate;
@@ -2199,6 +2311,7 @@
     }
   }
 }
+
 .game-list-compitishion-j {
   float: left;
   width: 100%;
@@ -2209,6 +2322,7 @@
     height: 24px;
   }
 }
+
 table.hdp-contain-j {
   border-collapse: separate;
   border-spacing: 0;
@@ -2274,6 +2388,12 @@ table.hdp-contain-j {
       &.active:after {
         content: "\e675";
       }
+    }
+    table {
+      display: table;
+      table-layout: fixed;
+      width: 100%;
+      border-collapse: separate;
     }
   }
   th {
@@ -2379,12 +2499,12 @@ table.hdp-contain-j {
           padding: 0;
         }
       }
-      &:first-child{
+      &:first-child {
         > p {
           padding-left: 34px;
           text-align: left;
         }
-      } 
+      }
     }
   }
   .asian-market-wrap-j .asian-market-j {
@@ -2408,6 +2528,7 @@ table.hdp-contain-j {
     }
   }
 }
+
 .asian-pagination {
   float: left;
   width: 100%;
@@ -2425,7 +2546,7 @@ table.hdp-contain-j {
     margin: 0 1px 0 0;
     transition: 240ms color, 240ms background, 240ms opacity;
     font: 12px/24px $font-f;
-    &.cms-jcon-arrow-left5{
+    &.cms-jcon-arrow-left5 {
       width: 36px;
       padding: 0;
       border-radius: 2px 0 0 2px;
@@ -2441,13 +2562,15 @@ table.hdp-contain-j {
     }
   }
 }
+
 .asian-separator-container-b .fixed-element-parent .scrollable-fixed {
   box-shadow: 0 2px 0 rgba(0, 0, 0, 0.2);
   border-radius: 0;
   z-index: 600;
-  width: calc(100% - 260px);
-  left: 250px;
+  width: calc(100% - 310px);
+  left: 300px;
 }
+.asian-button-refresh-view,
 .refresh-asian-view button {
   float: right;
   display: block;
@@ -2476,6 +2599,30 @@ table.hdp-contain-j {
     -webkit-animation: rotate-loader 1.5s linear infinite;
   }
 }
-.asian-separator-container-b .fixed-element-parent{
+
+.asian-separator-container-b .fixed-element-parent {
   position: static;
+}
+
+.asian-live-game {
+  margin: 0 5px 0 0;
+  background: #1A7051;
+  height: 16px;
+  color: white;
+  padding: 0 6px;
+  border-radius: 2px;
+  display: inline-block;
+  vertical-align: middle;
+  font: 9px/16px $font-f;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.asian-sticky-top {
+  position: static;
+  position: sticky;
+  position: -webkit-sticky;
+  top: 38px;
+  z-index: 300;
+  box-shadow: 0 0 0 2px rgba(black, 0.2)
 }

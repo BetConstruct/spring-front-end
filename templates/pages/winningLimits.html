@@ -5,7 +5,7 @@
     <div class="nav-news-sport" ng-show="pagesLoaded && mainPage.content">
         <ul>
             <div class="news-sport-contain">
-                <li><h3 ng-bind-html="mainPage.title|html"></h3></li>
+                <li><h3 ng-bind-html="mainPage.title|html:'p'"></h3></li>
                 <li></li>
             </div>
         </ul>
@@ -22,7 +22,7 @@
             </div>
             <span class="news-date-b" ng-show="mainPage.date">{{mainPage.date}}</span>
 
-            <p class="all-text-news-b" ng-bind-html="mainPage.content|html">
+            <p class="all-text-news-b" ng-bind-html="mainPage.content|html:'p'">
             </p>
         </div>
     </div>

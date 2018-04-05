@@ -31,13 +31,13 @@ VBET5.controller('facebookCtrl', ['$scope', '$rootScope', '$window', 'Config', '
     function statusChangeCallback(response) {
         console.log('login/getLoginStatus resposne', response);
         if (response.status === 'connected') { // Logged into your app and Facebook.
-            if (Config.env.sliderContent === 'signInForm') {
+            if (Config.env.sliderContent === 'login') {
                 $rootScope.fbLoggedIn = true;
             }
             $scope.fbLoginInProgress = false;
             $scope.regFlow.currentRegFlow = $scope.regFlow.FACEBOOK;
             console.log('logged in to FB, getting user details');
-            if(!Config.env.authorized && Config.env.sliderContent === 'signInForm'){
+            if(!Config.env.authorized && Config.env.sliderContent === 'login'){
                 $rootScope.$broadcast('facebook.loggedIn', response.authResponse); //login controller will get this and try to login user
             }
             FB.api('/me', function (response) {
@@ -80,7 +80,7 @@ VBET5.controller('facebookCtrl', ['$scope', '$rootScope', '$window', 'Config', '
             appId: Config.main.facebookIntegration.appId,   //'679441398804517',  // 264345993766604
             cookie: true,  // enable cookies to allow the server to access the session
             xfbml: false,   //not using social plugins (yet)
-            version: 'v2.0'
+            version: 'v2.12'
         });
         $rootScope.fbReady = true;
         getFbLoginStatus();
@@ -104,15 +104,22 @@ VBET5.controller('facebookCtrl', ['$scope', '$rootScope', '$window', 'Config', '
 
     $scope.$watch('fbUserDetails', function (fbUserDetails) {
         if (fbUserDetails) {
+            console.log('----------------------------');
+            console.log(fbUserDetails);
+
+            var fbName = (fbUserDetails.name || '').split(' ');
+
             $scope.registrationData.facebook_id = fbUserDetails.id;
-            $scope.registrationData.first_name = fbUserDetails.first_name;
-            $scope.registrationData.last_name = fbUserDetails.last_name;
+            $scope.registrationData.first_name = fbUserDetails.first_name || fbName[0];
+            $scope.registrationData.last_name = fbUserDetails.last_name || fbName[1];
             $scope.registrationData.email = fbUserDetails.email;
-            $scope.registrationData.gender = fbUserDetails.gender.substr(0, 1).toUpperCase();
+            $scope.registrationData.gender = fbUserDetails.gender && fbUserDetails.gender.substr(0, 1).toUpperCase();
             if (Config.main.registration.askAboutSpecifyingLoginPass) {
                 $scope.registrationData.username = fbUserDetails.email;
                 $scope.registrationData.password2 = $scope.registrationData.password = Math.random().toString(30).slice(-10);
             }
+            $scope.fbsignupform = $scope.fbsignupform || {};
+            $scope.fbsignupform.$dirty = false;
         }
 
     });
@@ -269,7 +276,7 @@ VBET5.controller('facebookCtrl', ['$scope', '$rootScope', '$window', 'Config', '
     $scope.$on('facebook.loginWIthIdFailed', function () {
         $scope.cannotLoginWIthFbId = true;
         if ($scope.fbLoginInProgress) {
-            $rootScope.env.sliderContent = 'registrationForm';
+            $rootScope.env.sliderContent = 'register';
         }
         $scope.fbLoginInProgress = false;
 
@@ -342,7 +349,7 @@ VBET5.controller('facebookCtrl', ['$scope', '$rootScope', '$window', 'Config', '
      * @description closes the "registration done" message and slider
      */
     $scope.closeRegistrationResult = function closeRegistrationResult() {
-        $rootScope.env.sliderContent = 'signInForm';
+        $rootScope.env.sliderContent = 'login';
         $scope.registrationComplete = false;
         $scope.registrationFailed = false;
     };

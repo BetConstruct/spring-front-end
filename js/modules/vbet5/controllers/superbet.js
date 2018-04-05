@@ -215,6 +215,7 @@ VBET5.controller('superBetCtrl', ['$rootScope', '$scope', '$interval', 'Storage'
             });
             if (superBet[0].super_bet_status === -1 || superBet[0].super_bet_status === '-1') {
                 showSuperBetNotification(Translator.get('Your offer ({1}) request is declined', [superBet[0].super_bet_id]));
+                $rootScope.offersCount = ($rootScope.offersCount === 1) ? 0 : $rootScope.offersCount-1;
                 $rootScope.$broadcast('globalDialogs.removeDialogsByTag', 'onHoldConfirm');
                 analytics.gaSend('send', 'event', 'betting', 'SuperBet ' + (Config.main.sportsLayout) + ($rootScope.env.live ? '(LIVE)' : '(PM)'), {'page': $location.path(), 'eventLabel': 'declined'});
             } else {
@@ -231,13 +232,14 @@ VBET5.controller('superBetCtrl', ['$rootScope', '$scope', '$interval', 'Storage'
                             $rootScope.$broadcast("globalDialogs.addDialog", {
                                 type: 'info',//what type of image to choose???
                                 title: 'Counter offer',
+                                hideCloseButton: true,
                                 content: Translator.get('Do you wish to accept our counter offer ({1}) with the following conditions? Offered Odd: {2} Offered Amount: {3}', [message , superBet[0].super_bet_price , superBet[0].super_bet_amount]),
                                 yesno: true,
                                 yesButton: ['acceptCounterOffer', superBet[0]],
                                 noButton: ['declineCounterOffer', superBet[0]]
                             });
-
                         } else {
+                            $rootScope.offersCount = ($rootScope.offersCount === 1) ? 0 : $rootScope.offersCount-1;
                             showSuperBetNotification(Translator.get('Your offer ({1}) request is accepted', [message]));
                             analytics.gaSend('send', 'event', 'betting', 'SuperBet ' + (Config.main.sportsLayout) + ($rootScope.env.live ? '(LIVE)' : '(PM)'), {'page': $location.path(), 'eventLabel': 'accepted'});
                         }
@@ -256,12 +258,16 @@ VBET5.controller('superBetCtrl', ['$rootScope', '$scope', '$interval', 'Storage'
     $scope.$on('acceptCounterOffer', function (event, superBet) {
         Zergling.get({bet_id: superBet.super_bet_id, accept: true}, 'super_bet_answer').then(function (data){console.log(data);})['catch'](function (reason) {
             console.log('Error:', reason);
+        })['finally'](function () {
+            scope.activeTab === activeTab && (scope.winnersLoading = false);
         });
     });
 
     $scope.$on('declineCounterOffer', function (event, superBet) {
         Zergling.get({bet_id: superBet.super_bet_id, accept: false}, 'super_bet_answer').then(function (data) {console.log(data);})['catch'](function (reason) {
             console.log('Error:', reason);
+        })['finally'](function () {
+            scope.activeTab === activeTab && (scope.winnersLoading = false);
         });
     });
 

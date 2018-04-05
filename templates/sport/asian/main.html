@@ -26,19 +26,17 @@
                                 <div class="contain-v-a-fanction-icons-v3">
                                     <ul>
                                         <li class="arrow-closed-anime-b-v3" ng-click="toggleVideoAndAnimationBox()" ng-class="{'active': hideVideoAndAnimationBox}"></li>
-                                        <li class="resize-icon-b-v3" ng-click="$root.videoResizeButton = !$root.videoResizeButton" ng-class="{'active': $root.videoResizeButton}"></li>
-                                        <li class="pin-icon-video-v3" ng-class="{'disabled': !env.authorized}" ng-show="openGame.activeFieldType == 'video' && openGame.tv_type !== conf.defaultStreaming.tvType && !pinnedGames[openGame.id]" ng-click="openGame.activeFieldType='field'; detachVideo('dragable');"></li>
-                                        <li class="resize-icon-full-video-v3" ng-show="openGame.activeFieldType == 'video'" ng-class="{'active': env.authorized && openGame.activeFieldType == 'video' &&!conf.detachedVideoSizes[openGame.tv_type],'disabled': !(env.authorized && openGame.activeFieldType == 'video' &&!conf.detachedVideoSizes[openGame.tv_type])}" ng-click="openGame.activeFieldType='field'; detachVideo('fullScreen');"></li>
+                                        <li class="pin-icon-video-v3" ng-class="{'disabled': !env.authorized}" ng-show="openGame.video_data && openGame.activeFieldType == 'video' && openGame.tv_type !== conf.defaultStreaming.tvType && !pinnedGames[openGame.id]" ng-click="openGame.activeFieldType='field'; detachVideo('dragable');"></li>
+                                        <li class="resize-icon-full-video-v3" ng-show="openGame.video_data && openGame.activeFieldType == 'video'" ng-class="{'active': env.authorized && openGame.activeFieldType == 'video' &&!conf.detachedVideoSizes[openGame.tv_type],'disabled': !(env.authorized && openGame.activeFieldType == 'video' &&!conf.detachedVideoSizes[openGame.tv_type])}" ng-click="openGame.activeFieldType='field'; detachVideo('fullScreen');"></li>
                                         <li class="sound-icon-v3 " ng-click="env.sound = 0;" ng-show="openGame.activeFieldType==='field' && env.sound > 0" title="Sound" trans="attr-only"></li>
                                         <li class="sound-icon-v3 active" ng-click="env.sound = 0.75;" ng-show="openGame.activeFieldType==='field' && env.sound === 0" title="Sound" trans="attr-only"></li>
                                     </ul>
                                 </div>
                             </div>
                             <div class="video-animation-vox-v3 animation-control">
-
-
                                 <video-player ng-if="openGame.activeFieldType === 'video' && !hideVideoAndAnimationBox && conf.videoEnabled && !enlargedGame && !pinnedGames[openGame.id]"
                                               class="game-video"
+                                              ng-class="{'animation-start': !videoState.videoIsLoaded && openGame.video_data, 'animation-end': videoState.videoIsLoaded}"
                                               player-id="gamevideo{{openGame.id}}"
                                               stream-url="{{openGame.video_data}}"
                                               provider-id="{{openGame.tv_type}}"
@@ -66,6 +64,9 @@
                             </li>
                         </ul>
                     </div>
+
+                    <div class="right-banner-container" ng-if="$root.conf.enableBannersInAsianView" ng-controller="cmsSportNewsCtrl" ng-include="getTemplate('templates/sport/classic/banners.html')"></div>
+
                     <!--Menu tabs-->
                     <!--Favorite games-->
                     <include-template class="left-menu-wrapper-v3" template-path="templates/sport/euro2016/left/favorites.html"></include-template>
@@ -191,14 +192,26 @@
 
             <!--filter END-->
 
-            <div ng-if="pages.length > 1 && selectedMarket.key !== 'FULLGAME'" ng-show="!marketGamesAreLoading"  class="asian-pagination no-select-j">
-                <button class="cms-jcon-arrow-left5" ng-disabled="selectedPage === 0" ng-click="selectPage(selectedPage-1);resetCountDown()"></button>
-                <button ng-repeat="page in pages"  ng-click="selectPage($index);resetCountDown()" ng-show="Math.abs($index - paginationPosition) <= 6" ng-bind="Math.abs($index - paginationPosition) === 6 ? '...' : $index + 1" ng-class="{'active': $index === selectedPage}"></button>
-                <button class="cms-jcon-arrow-right5" ng-disabled="selectedPage === pages.length - 1" ng-click="selectPage(selectedPage+1);resetCountDown()"></button>
+            <div ng-if="pages.length > 1 && selectedMarket.key !== 'FULLGAME'" ng-show="!marketGamesAreLoading" class="viewSwitcher-j no-select-j ng-scope select-pagination">
+                <span trans>Select page:</span>
+                <ul>
+                    <li state-flag-var="showPageination" ng-click="showPageination = !showPageination" ng-class="{'active': showPageination}" hide-on-click="">
+                        <p>
+                            {{selectedPage + 1}}
+                        </p>
+                        <ul>
+                            <li  ng-repeat="page in pages"  ng-click="selectPage($index);resetCountDown()" ng-class="{'active': selectedPage === $index}">
+                                <span ng-bind="$index + 1"></span>
+                            </li>
+                        </ul>
+                    </li>
+
+                </ul>
             </div>
             <vbet-loader ng-show="marketGamesAreLoading"></vbet-loader>
 
-            <div class="asian-separator-container-b" ng-switch=":selectedMarket-change:selectedMarket.key" ng-show="!marketGamesAreLoading">
+            <div ng-if="!marketGamesAreLoading && (centerData.competitions.length || selectedMarket.key === 'FULLGAME')" ng-init="fixSportTabScroll();"></div>
+            <div class="asian-separator-container-b" ng-switch=":selectedMarket-change:selectedMarket.key" ng-show="!marketGamesAreLoading && (centerData.competitions.length || selectedMarket.key === 'FULLGAME')">
                 <!-- first goal last goal-->
                 <div class="asian-separator-container-b" ng-switch-when="FLG">
                     <ng-include class="asian-separator-container-b" src="getTemplate('templates/sport/asian/' + (conf.GmsPlatform ? 'gms/' : '') + 'market/flg.html')"></ng-include>
@@ -249,15 +262,23 @@
                 </div>
             </div>
 
-            <div ng-show="!marketGamesAreLoading && !filterLoading && !leftMenuIsLoading && centerData.competitions.length === 0" trans>No Today’s event is available, please check on Live or Future events.</div>
+            <div ng-show="marketGamesAreLoading !== undefined && !dayFilter && !marketGamesAreLoading && !filterLoading && !leftMenuIsLoading && centerData.competitions.length === 0" trans>Currently no event is available in the selected section</div>
 
-
-            <div ng-if="pages.length > 1 && selectedMarket.key !== 'FULLGAME'" ng-show="!marketGamesAreLoading"  class="asian-pagination no-select-j">
-                <button class="cms-jcon-arrow-left5" ng-disabled="selectedPage === 0" ng-click="selectPage(selectedPage-1)"></button>
-                <button ng-repeat="page in pages" ng-click="selectPage($index)" ng-show="Math.abs($index - paginationPosition) <= 6" ng-bind="Math.abs($index - paginationPosition) === 6 ? '...' : $index + 1" ng-class="{'active': $index === selectedPage}"></button>
-                <button class="cms-jcon-arrow-right5" ng-disabled="selectedPage === pages.length - 1" ng-click="selectPage(selectedPage+1)"></button>
+            <div ng-if="pages.length > 1 && selectedMarket.key !== 'FULLGAME'" ng-show="!marketGamesAreLoading" class="viewSwitcher-j no-select-j ng-scope select-pagination">
+                <span trans>Select page:</span>
+                <ul>
+                    <li state-flag-var="showPageination" ng-click="showPageination = !showPageination" ng-class="{'active': showPageination}" hide-on-click="">
+                        <p>
+                            {{selectedPage + 1}}
+                        </p>
+                        <ul>
+                            <li  ng-repeat="page in pages"  ng-click="selectPage($index);resetCountDown()" ng-class="{'active': selectedPage === $index}">
+                                <span ng-bind="$index + 1"></span>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
             </div>
-
 
             <!--filter popup-->
             <div class="popup-wrapper-asian" ng-show="showCompetitionsSelector">
@@ -300,6 +321,10 @@
             <!--filter popup END-->
         </div>
         <ng-include ng-if="conf.videoEnabled && pinnedGameType === 'dragable'" src="getTemplate('templates/sport/classic/av-pinned.html')" style="position: fixed; z-index: 999999999;"></ng-include>
+        <div ng-if="conf.asian.countdown.enabled" class="asian-fix-buttons">
+            <button class="asian-button-refresh-view loading-proccess" ng-class="{'loading-proccess' : countDown.remaining === 0}" ng-click="resetCountDown()" ng-bind="countDown.remaining || ''"></button>
+            <button class="asian-button-to-top" ng-click="$root.broadcast('scrollTo', 'header'); $event.stopPropagation();">Back to top</button>
+        </div>
         <!--Game-wrapper END-->
     </div>
 </div>

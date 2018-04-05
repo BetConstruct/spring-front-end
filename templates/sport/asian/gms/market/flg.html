@@ -1,32 +1,30 @@
-<div class="fixed-element-parent">
-    <div class="game-list-compitishion" fixonscroll ignore-ie="true" auto-positon="top"  scrollable-area-id="asianView" header-id="main-header-container">
-        <table>
-            <tr>
-                <td class="big-row" rowspan="2"><div class="info-bl"><p><i class="icon-sport-asia" ng-class="selectedSport.alias"></i> <span ng-bind="selectedSport.name"></span></p></div></td>
-                <td colspan="3"><div class="info-bl"><p trans>Full Time</p></div></td>
-                <td colspan="3"><div class="info-bl"><p trans>Half Time</p></div></td>
-                <td class="more-competition" rowspan="2"><div class="info-bl"><p trans>More</p></div></td>
-            </tr>
-            <tr>
-                <td class="factor-name"><div class="info-bl"><p trans>1st Goal</p></div></td>
-                <td class="factor-name"><div class="info-bl"><p trans>Last Goal</p></div></td>
-                <td class="factor-name"><div class="info-bl"><p trans>None</p></div></td>
-                <td class="factor-name"><div class="info-bl"><p trans>1st Goal</p></div></td>
-                <td class="factor-name"><div class="info-bl"><p trans>Last Goal</p></div></td>
-                <td class="factor-name"><div class="info-bl"><p trans>None</p></div></td>
+<div class="game-list-compitishion asian-sticky-top">
+    <table>
+        <colgroup span="6"></colgroup>
+        <tr>
+            <td class="big-row" rowspan="2"><div class="info-bl"><p><i class="icon-sport-asia" ng-class="selectedSport.alias"></i> <span ng-bind="selectedSport.name"></span></p></div></td>
+            <td colspan="3"><div class="info-bl"><p trans>Full Time</p></div></td>
+            <td colspan="3"><div class="info-bl"><p trans>Half Time</p></div></td>
+            <td class="more-competition" rowspan="2"><div class="info-bl"><p trans>More</p></div></td>
+        </tr>
+        <tr>
+            <td class="factor-name"><div class="info-bl"><p trans>1st Goal</p></div></td>
+            <td class="factor-name"><div class="info-bl"><p trans>Last Goal</p></div></td>
+            <td class="factor-name"><div class="info-bl"><p trans>None</p></div></td>
+            <td class="factor-name"><div class="info-bl"><p trans>1st Goal</p></div></td>
+            <td class="factor-name"><div class="info-bl"><p trans>Last Goal</p></div></td>
+            <td class="factor-name"><div class="info-bl"><p trans>None</p></div></td>
 
-            </tr>
-        </table>
-    </div>
+        </tr>
+    </table>
 </div>
-
-
 <div class="asian-separator-container-b" ng-repeat="competitions in centerData.competitions track by $index">
     <div ng-repeat="competition in competitions|limitTo:conf.asian.competitionsPerPage:(selectedPage*conf.asian.competitionsPerPage) track by $index" class="game-list-compitishion" ng-class="{closed: collapedCompetitions[competition.id]}">
     <div class="name-chempionship-asia" ng-click="toggleCompetition(competition.id)">
         <h3 ng-bind="competition.name"></h3>
     </div>
     <table  ng-if="!collapedCompetitions[competition.id]">
+        <colgroup span="10"></colgroup>
         <tbody ng-repeat="game in competition.games track by game.id">
         <tr>
             <td class="section-1 border-d">
@@ -35,7 +33,10 @@
                     <p ng-bind="game.start_ts|formatDate:(conf.layoutTimeFormat.asian || 'D/MM')" ng-show="game.type !=1"></p>
                 </div>
             </td>
-            <td class="section-2 border-d"><div class="info-bl"><p ng-bind="game.team1_name"></p></div></td>
+            <td class="section-2 border-d">
+                <span ng-show="game.type === 1 || (game.type === 2 && conf.asian.showLiveIconForUpcomingGames)" class="asian-live-game">live</span>
+                <div class="info-bl"><p ng-bind="game.team1_name"></p></div>
+            </td>
             <td class="section-3"><div class="info-bl" ng-show="game.type ==1"><p ng-bind="game.info.score1"></p></div></td>
 
             <td class="factor-w asian-market-overflow-j">

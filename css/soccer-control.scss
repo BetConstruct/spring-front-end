@@ -83,6 +83,7 @@
 		background: #2F3613;
 		color: #fff;
 		height: 57px;
+		z-index: 100;
 		.right-block-flash-soccer & {
 			margin: 2px -5px 0;
 		}
@@ -145,6 +146,7 @@
 				width: 12%;
 				font-size: 9px;
 				line-height: 0.5em;
+				min-height: 4px;
 			}
 			.stat-r {
 				text-align: right;

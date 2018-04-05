@@ -2,8 +2,8 @@
     <div class="conteiner" ng-if="pagesLoaded">
         <div class="help-rules-block">
             <div class="help-rules">
-                <h3 ng-bind-html="mainPage.title|html">Title</h3>
-                <p ng-bind-html="mainPage.content|html">Content</p>
+                <h3 ng-bind-html="mainPage.title|html:'p'">Title</h3>
+                <p ng-bind-html="mainPage.content|html:'p'">Content</p>
             </div>
         </div>
 

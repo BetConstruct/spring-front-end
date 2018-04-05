@@ -285,7 +285,7 @@ VBET5.controller('lotteryCtrl', ['$rootScope', '$scope', '$interval', '$sce', 'Z
                     }
                 });
         } else {
-            $rootScope.broadcast('toggleSliderTab', 'signInForm');
+            $rootScope.broadcast('toggleSliderTab', 'login');
         }
     };
 }]);

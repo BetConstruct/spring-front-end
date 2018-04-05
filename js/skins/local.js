@@ -18,10 +18,30 @@ VBET5.constant('SkinConfig', {
         showEventsCountInMoreLink: true,
         skin: 'vbet.com',
         header: {
-            version: 2
+            version: 2,
+            haveFaq: true,
         },
         footer: {
-            version: 2
+            ageRestriction: 18,
+            about_company_text: {
+                'eng' : "Vbet is operated by Radon B.V. registered in the Commercial register of Curacao no. 126922 and has a sublicense CIL pursuant to Master gaming License №5536/JAZ.",
+                'spa' : "Vbet is operated by Radon B.V. registered in the Commercial register of Curacao no. 126922 and has a sublicense CIL pursuant to Master gaming License №5536/JAZ.",
+                'geo' : "Vbet is operated by Radon B.V. registered in the Commercial register of Curacao no. 126922 and has a sublicense CIL pursuant to Master gaming License №5536/JAZ.",
+                'rus' : "Vbet управляется со стороны Radon B.V., который зарегистрирован в Коммерческом регистре Кюрасао под номером 126922 и имеет сублицензию CIL в соответствии с Master gaming License #5536/JAZ.",
+                'arm' : "Vbet –ը գործում է Radon BV-ի անունից, որը գրանցված է Կյուրասաոի առեւտրային ռեգիստրում 126922 համարով և ունի CIL ենթաարտոնագիր՝ համաձայն Master gaming License #5536/JAZ:"
+            },
+            feedbackButton: {
+                enabledLogin: true,
+                enabledLogOut: false
+            },
+            socialLinks: {
+                instagram: {url: {default: "http://instagram.com/vbet_official?ref=badge"}},
+                twitter: {url: {default: "https://twitter.com/Vbet_com"}},
+                facebook: {url: {default: "https://www.facebook.com/vbetcom"}},
+                googlePlus: {url: {default: "https://plus.google.com/u/1/+Vbetlivebetting/"}},
+                youtube: {url: {default: "https://www.youtube.com/user/VIVARObetting"}},
+                vkontakte: {url: {default: "http://vk.com/vbetcom"}}
+            }
         },
         liveCalendarEnabled: true,
         liveModule: {
@@ -30,46 +50,23 @@ VBET5.constant('SkinConfig', {
             skin: "betsat.com"
         },
         enableScrollToggle: true,
-        sportEnabled: true,
         enableSportsbookLayoutSwitcher: true,
-        sportsClassicLayout: true,
         googleAnalyticsId: 'UA-29242337-7',
         yandexMetricaId: '24705809',
-        fantasyEnabled: true,
-        ogwilEnabled: true,
-        casinoEnabled: true,
-        pokerEnabled: true,
+
         enableNewPoker: true,
-        enableNewSkillGame: true,
-        livedealerEnabled: true,
-        financialsEnabled: true,
-        jackpotEnabled: true,
-        poolBettingEnabled: true, //enable pool betting
-        enableHeaderAnnouncement: false,
         showFavoriteGamesInSportList: true,
-        showFinancialsInSportList: 222,   // false to hide,  any number to show (number is used as 'order' field to define it's position among sports)
-        freeBetEnabled: true,
         showEachWay: true,
         showVirtualsInSportList: 1,
         enableCasinoBalanceHistory: true, //enable casino balance history in top menu
         enableCasinoBetHistory: true, //enable casino balance history in top menu
-        virtualBettingEnabledInTopMenu: true,
-        backGammonEnabledInTopMenu: true,
-        beloteEnabledInTopMenu: true,
-        ageRestrictionInFooter: 18,
-        haveFaq: true,
-        openHelpAsPopup: true,
-        enablePromotions: true,
         aocEnabled: true, // enable AOC link in main menu
-        feedbackButton: {
-            enabledLogin: true,
-            enabledLogOut: false
-        },
         availableVideoProviderIds: [1, 3, 5, 7, 8, 11, 12, 15, 21, 22, 23, 999999],
         aocLink: "#/section/aoc",
-        theVeryTopMenu: [{href: "#/fantasy/", label: "Fantasy Sports"}, {href: '#/financials/', label: "Financials"}, {href: "#/section/aoc", label: "AOC"}, {href: "#/freebet/", label: "Free Quiz"}, {href: "#/jackpot/", label: "Jackpot"}, {href: "#/promos/", label: "Promotions"}],
+        theVeryTopMenu: [{href: "#/fantasy/", label: "Fantasy Sports"}, {href: '`', label: "Financials"}, {href: "#/section/aoc", label: "AOC"}, {href: "#/freebet/", label: "Free Quiz"}, {href: "#/jackpot/", label: "Jackpot"}, {href: "#/promos/", label: "Promotions"}],
         multiLevelMenu: {
-            "live": {
+            "@replace": true,
+           "live": {
                 "order": 10
             },
             "sport": {
@@ -194,19 +191,6 @@ VBET5.constant('SkinConfig', {
         },
         redirectOnTablets: 'http://tablet.vbet.com/',
         poolBettingResultsUrlPrefix : 'http://www.vbet.com/results/',
-        about_company_text: {
-            'eng' : "Vbet is operated by Radon B.V. registered in the Commercial register of Curacao no. 126922 and has a sublicense CIL pursuant to Master gaming License №5536/JAZ.",
-            'spa' : "Vbet is operated by Radon B.V. registered in the Commercial register of Curacao no. 126922 and has a sublicense CIL pursuant to Master gaming License №5536/JAZ.",
-            'geo' : "Vbet is operated by Radon B.V. registered in the Commercial register of Curacao no. 126922 and has a sublicense CIL pursuant to Master gaming License №5536/JAZ.",
-            'rus' : "Vbet управляется со стороны Radon B.V., который зарегистрирован в Коммерческом регистре Кюрасао под номером 126922 и имеет сублицензию CIL в соответствии с Master gaming License #5536/JAZ.",
-            'arm' : "Vbet –ը գործում է Radon BV-ի անունից, որը գրանցված է Կյուրասաոի առեւտրային ռեգիստրում 126922 համարով և ունի CIL ենթաարտոնագիր՝ համաձայն Master gaming License #5536/JAZ:"
-        },
-        //flashVersionLink: {
-        //    eng: 'http://inplay.vbet.com/inplay/?language=en',
-        //    rus: 'http://inplay.vbet.com/inplay/?language=ru',
-        //    arm: 'http://inplay.vbet.com/inplay/?language=hy'
-        //},
-        oldVersionLink: false,
         additionalLink: {
             eng:  { link: 'http://free.vbet.com/#/?lang=eng', text: 'Free Vbet'},
             spa:  { link: 'http://free.vbet.com/#/?lang=spa', text: 'Free Vbet'},
@@ -236,12 +220,6 @@ VBET5.constant('SkinConfig', {
             requiredEditableFields: ['country_code', 'city', 'address']
         },
         availableCurrencies: ['USD', 'EUR', 'RUB', 'UAH', 'AMD'],
-        facebookUrl: "https://www.facebook.com/vbetcom",
-        googlePlusUrl: "https://plus.google.com/u/1/+Vbetlivebetting/",
-        youtubeUrl: "https://www.youtube.com/user/VIVARObetting",
-        vkontakteUrl: "http://vk.com/vbetcom",
-        instagramUserName : "vbet_official",
-        twitterAccount: 'Vbet_com',
         twitterHashTag: 'vbet'
     },
     partner: {
@@ -261,7 +239,7 @@ VBET5.constant('SkinConfig', {
         enableEachWayBetting: true
     },
     'swarm': {
-        url: [{url: "https://swarm.vbet.com"}],
+        url: [{url: "https://eu-swarm-lp.betconstruct.com"}],
         websocket: [{url: "wss://swarm5.betconstruct.com/"}]
         //url: [{url: "http://10.32.5.211:8080"}],
         //websocket: [{url: "ws://10.32.5.211:8080"}] //TEMPORARY
@@ -452,7 +430,7 @@ CMS.constant('SkinWPConfig', {
         }
     },
     wpUrl: 'http://www.vbet.com/json',  // WordpResss instance serving pages, banners
-    wpNewsUrl:  {
+    wpNewsUrl: {
         main: 'http://www.vbet.com/json'
     },  // WordpResss instance serving news
     wpBaseHost: 'www.vbet.com',  // this parameter will be passed to JSON api and all links in response(e.g. images) will have this host
@@ -467,18 +445,6 @@ CASINO.constant('SkinCConfig', {
         partnerID: '4',
         multiViewEnabled: true,
         filterByProviderEnabled: true,
-        categories: [
-            59,
-            65,
-            40,
-            4,
-            1,
-            35,
-            40,
-            19,
-            63,
-            52
-        ],
         storedbonusPopUpLifetime: 259200000 // 3days
     },
     liveCasino: {

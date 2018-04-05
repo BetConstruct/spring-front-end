@@ -4,7 +4,7 @@
  * @description
  * Custom widgets controller
  */
-VBET5.controller('widgetCtrl', ['$rootScope', '$scope', 'TimeoutWrapper', '$window', 'Config', 'ConnectionService', 'Zergling', 'Utils', function($rootScope, $scope, TimeoutWrapper, $window, Config, ConnectionService, Zergling, Utils) {
+VBET5.controller('widgetCtrl', ['$rootScope', '$scope', 'TimeoutWrapper', '$window', 'Config', 'ConnectionService', 'Zergling', 'Utils', 'GameInfo', function($rootScope, $scope, TimeoutWrapper, $window, Config, ConnectionService, Zergling, Utils, GameInfo) {
     'use strict';
 
 
@@ -169,25 +169,21 @@ VBET5.controller('widgetCtrl', ['$rootScope', '$scope', 'TimeoutWrapper', '$wind
      * @param {Object} game
      */
     $scope.broadCastGameDetails = function broadCastGameDetails(game) {
+        var message = {action: 'open_game'};
         if(game) {
-            $window.parent.postMessage(
-                {
-                    action: 'open_game',
-                    data: {
-                        gameId: game.id,
-                        competitionId: game.competition.id,
-                        regionId: game.region.id,
-                        sportId: game.sport.id
-                    }
-                },
-                '*'
-            );
+            message.data = {
+                gameId: game.id,
+                competitionId: game.competition.id,
+                regionId: game.region.id,
+                sportId: game.sport.id
+            };
         } else {
-            $window.parent.postMessage(
-                {action: 'open_game', data: {gameId: $scope.activeSlideGame.id}}, 
-                '*'
-            );
+            message.data = {gameId: $scope.activeSlideGame.id};
         }
+        $window.parent.postMessage(
+            message,
+            '*'
+        );
     };
 
     /**
@@ -242,7 +238,7 @@ VBET5.controller('widgetCtrl', ['$rootScope', '$scope', 'TimeoutWrapper', '$wind
             }
         };
 
-        request.where.game[Config.main.loadLiveWidgetGamesFrom.type] = {'@contains': parseInt(Config.main.site_id, 10)};
+        request.where.game[Config.main.loadLiveWidgetGamesFrom.type] = Config.main.GmsPlatform ? true : {'@contains': parseInt(Config.main.site_id, 10)};
 
         connectionService.subscribe(
             request,
@@ -275,23 +271,59 @@ VBET5.controller('widgetCtrl', ['$rootScope', '$scope', 'TimeoutWrapper', '$wind
         loadGame($scope.liveGames[slideIndex].id);
     };
 
+    /**
+     * @ngdoc method
+     * @name openGameById
+     * @methodOf vbet5.controller:widgetCtrl
+     * @description Load game by id
+     * @param {String} game id as string or number
+     */
+    $scope.openGameById = function openGame (gameId) {
+        gameId = parseInt(gameId, 10);
+        if (!gameId) {
+            return;
+        }
+
+        var request = {
+            'source': 'betting',
+            'what': {
+                'sport': ['alias'],
+                'game': ['id', 'start_ts', 'team1_name', 'team2_name', 'info', 'events_count', 'markets_count', 'type', 'team1_id', 'team2_id', 'team1_external_id', 'team2_external_id', 'is_live', 'last_event', 'stats']
+            },
+            'where': {
+                'game': {'id': gameId}
+            }
+        };
+
+        function updateWidgetGame (response) {
+            if (response && response.sport) {
+                angular.forEach(response.sport, function (sport) {
+                    angular.forEach(sport.game, function (game) {
+                        game.sport = sport;
+                        $scope.openGame = game;
+                        GameInfo.extendLiveGame($scope.openGame);
+                    });
+                });
+            }
+        }
+
+        connectionService.subscribe(
+            request,
+            updateWidgetGame
+        );
+    };
 
     $scope.$on('bet', function(event, data) {
         if(!data) {
             return;
         }
-
         $window.parent.postMessage({action: 'place_bet', data: data},'*');
     });
 
     $scope.$on('$routeChangeStart', function() {
-        console.log('Timer Cancel');
         TimeoutWrapper.cancel(timer);
-
         if(liveGamesSubId) {
             Zergling.unsubscribe(liveGamesSubId);
         }
-
     });
-
 }]);

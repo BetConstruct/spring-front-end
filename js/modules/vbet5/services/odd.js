@@ -31,9 +31,9 @@ VBET5.service('OddService', ['Config', 'Storage', 'Moment', function (Config, St
         }
 
         Config.env.oddFormat = value;
-        if (Config.main.allowSavingOddFormat) {
-            Storage.set('oddFormat', value, storageExpireTime);
-        }
+
+        Storage.set('oddFormat', value, storageExpireTime);
+
     };
 
     OddService.data = Config.main.oddFormats;

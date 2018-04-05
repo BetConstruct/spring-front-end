@@ -3,7 +3,7 @@
     box-sizing: border-box;
     float: left;
     width: 100%;
-    height: 112px;
+    //height: 112px;
     padding: 0 0 4px;
   }
   .view-switcher-v3{
@@ -25,7 +25,10 @@
     display: table-cell;
     padding: 0 0 0 2px;
   }
-  .view-switcher-v3 > ul > li:first-child{
+  .view-switcher-v3 > ul > li:first-child {
+    padding-left: 0;
+  }
+  .view-switcher-v3 > ul > li:first-child:nth-last-child(3){
     padding: 0;
     width: 36px;
   }
@@ -38,7 +41,9 @@
     width: 100%;
     background: $c16-sp-9;
     height: 36px;
-    font: 12px/36px $font-f;
+    font-family: $font-f;
+    font-size: 6 + $size-font;
+    line-height: 36px;
     color: $c16-tp-4;
     padding: 0 8px 0 15px;
     position: relative;
@@ -47,7 +52,7 @@
     cursor: pointer;
     transition: background 240ms, color 240ms;
   }
-  .view-switcher-v3 > ul > li:first-child > button{
+  .view-switcher-v3 > ul > li:first-child:nth-last-child(3) > button{
     text-align: center;
     padding: 0 8px;
   }
@@ -64,7 +69,9 @@
     right: 8px;
     font-weight: normal;
     top: 9px;
-    font: 10px/19px $font-f;
+    font-family: $font-f;
+    font-size: 4 + $size-font;
+    line-height: 19px;
     color: $c16-tp-6;
     padding: 0 5px;
     background: darken( desaturate( adjust-hue( $c16-sp, -1deg ), 16 ), 2 );
@@ -77,7 +84,7 @@
     background: $hero-color;
     color: set-color($hero-color);
   }
-  .view-switcher-v3 > ul > li.active > button{
+  .view-switcher-v3 > ul > li.active {
     pointer-events: none;
   }
   .view-switcher-v3 > ul > li.active > button > b,
@@ -121,13 +128,59 @@
     border-left: 1px solid darken( desaturate( adjust-hue( $c16-sp, -1deg ), 12 ), 1 );
     padding: 0 1px;
     cursor: pointer;
+    &.bigbet-switcher {
+      border: 0;
+      padding: 3px 4px;
+      .bigbet-switcher-item {
+        padding: 0 20px 0 6px;
+        border-radius: 2px;
+        background: #f3f3f5;
+        color: black;
+        font: 12px/18px icomoon;
+        position: relative;
+        &:before {
+          content: "\e985";
+        }
+        i {
+          display: block;
+          position: absolute;
+          top: 3px;
+          right: 3px;
+          width: 13px;
+          height: 11px;
+          background: rgba(0,0,0,0.3);
+          border-radius: 2px;
+          &:before {
+            content: "";
+            display: block;
+            position: absolute;
+            left: 1px;
+            top: 1px;
+            width: 6px;
+            height: 9px;
+            border-radius: 1px;
+            background: white;
+            box-shadow: 1px 0 0 rgba(black, 0.3);
+            transition: 300ms left;
+          }
+        }
+        &.active {
+          background: $brand-color-1;
+          color: set-color($brand-color-1);
+          i:before {
+            left: 6px;
+          }
+        }
+      }
+    }
   }
   .filter-row-v3 > ul > li:first-child{
 
     border: none;
     padding-left: 0;
   }
-  .filter-row-v3 > ul > li > i{
+  .filter-row-v3 > ul > li > i,
+  .dash-region-icon > i {
     box-sizing: border-box;
     display: inline-block;
     float: left;
@@ -138,6 +191,18 @@
     color: $c16-tp-6;
     border-radius: 2px;
     transition: background 240ms, color 240ms;
+  }
+  .dash-region-icon {
+    float: left;
+    height: 36px;
+    > i {
+      width: 36px;
+      height: 36px;
+      line-height: 36px;
+    }
+    &.active > i {
+      color: $text-palette-2;
+    }
   }
   .filter-row-v3 > ul > li:hover > i{
     color: $text-palette-2;
@@ -154,6 +219,12 @@
     box-sizing: border-box;
     content: "\e683";
     font-size: 18px;
+  }
+  .multiselect-icon-v3:before {
+    content: "\e6a1";
+    font-size: 14px;
+    display: inline-block;
+    vertical-align: top;
   }
   .tv-icon-v3:before{
     box-sizing: border-box;
@@ -179,7 +250,8 @@
     position: relative;
     padding: 0 28px;
     color: $c16-tp-3;
-    font: 12px/24px $font-f;
+    font-size: 6 + $size-font;
+    line-height: 24px;
     white-space: nowrap;
     text-overflow: ellipsis;
     overflow: hidden;
@@ -246,7 +318,8 @@
     float: left;
     width: 100%;
     color: $c16-tp-6;
-    font: 12px/30px $font-f;
+    font-size: 6 + $size-font;
+    line-height: 30px;
     padding: 0 8px;
     height: 30px;
     transition: color 240ms, background 240ms;
@@ -254,7 +327,7 @@
     text-overflow: ellipsis;
     overflow: hidden;
   }
-  .sub-nav-filter-time-v3 > ul > li.icon-checkmark, .sub-nav-filter-time-v3 > ul > li.icon-checkmark:hover{
+  .sub-nav-filter-time-v3 > ul > li.active, .sub-nav-filter-time-v3 > ul > li.active:hover{
     box-sizing: border-box;
     background: $brand-color-1;
     color: set-color($brand-color-1);
@@ -269,7 +342,7 @@
     display: block;
     box-shadow: 0 1px 0 $c16-sp-10 inset;
   }
-  .sub-nav-filter-time-v3 > ul > li.icon-checkmark > span{
+  .sub-nav-filter-time-v3 > ul > li.active > span{
     box-sizing: border-box;
     box-shadow: none;
   }
@@ -282,7 +355,8 @@
   }
   .multi-view-sw-v3 > p{
     box-sizing: border-box;
-    font: 12px/24px $font-f;
+    font-size: 6 + $size-font;
+    line-height: 24px;
     color: $c16-tp-3;
     white-space: nowrap;
     text-overflow: ellipsis;
@@ -379,8 +453,10 @@
     width: 100%;
     padding: 0 30px 0 10px;
     height: 100%;
-    box-shadow: 0 0 0 1px $c16-sp-8 inset;
-    font: 12px/30px $font-f;
+    box-shadow: 0 0 0 1px rgba(set-color($c16-sp-10), 0.4) inset;
+    font-family: $font-f;
+    font-size: 6 + $size-font;
+    line-height: 30px;
     color: $c16-tp-6;
     z-index: 22;
     border-radius: inherit;
@@ -392,7 +468,7 @@
   .search-box-v3 .block-search > input[type="text"]:-moz-placeholder           {color: $c16-tp-6;}
   .search-box-v3 .block-search > input[type="text"]:-ms-input-placeholder      {color: $c16-tp-6;}
   .search-box-v3 .block-search > input[type="text"]:focus{box-sizing: border-box;
-    box-shadow: 0 0 0 1px $c16-sp-6 inset;
+    box-shadow: 0 0 0 1px rgba(set-color($c16-sp-10), 0.7) inset;
   }
   .search-box-v3 .search-results-container{
     box-sizing: border-box;
@@ -422,8 +498,13 @@
     left: -5px;
     top: 10px;
   }
-  .search-box-v3 .search-results-inner h3{box-sizing: border-box;font-size: 16px;}
-  .search-box-v3 .search-results-inner h3, .search-box-v3 .search-no-results{
+  .search-box-v3 .search-results-inner h3{
+    box-sizing: border-box;
+    font-size: 10 + $size-font;
+    font-weight: normal;
+    color: #505767;
+  }
+  .search-box-v3 .search-no-results{
     box-sizing: border-box;
     color: #505767;
   }
@@ -473,7 +554,10 @@
     left: 0;
     text-align: left;
     height: calc(100% - 112px);
+    padding: 0 1px 0 0;
     @include scroll;
+    transform: translate3d(0,0,0);
+    &.multi-selection{transform: none;}
   }
   .full-menu-wrapper-box-v3 > .md-progress-circular{
     margin: 50px auto auto;
@@ -501,19 +585,19 @@
     box-sizing: border-box;
     background: none;
     padding: 10px;
-    font-size: 16px;
+    font-size: 10 + $size-font;
   }
   .left-menu-wrapper-v3 {
     box-sizing: border-box;
     float: left;
     width: 100%;
     text-align: left;
-   }
+  }
   .left-nav-view-v3{
     box-sizing: border-box;
     float: left;
     width: 100%;
-    transform: translate3d(0,0,0);
+    //transform: translate3d(0,0,0);
   }
   .left-nav-view-v3.prematch-view.multiselect-view-v3{
     transform: inherit;
@@ -528,18 +612,45 @@
     float: left;
     width: 100%;
     margin: 0 0 1px;
+    &.p-n-v{
+      float: left;
+      width: 100%;
+      .full-region-info-v3{margin-bottom: 0;}
+      &:nth-child(2){
+        margin-bottom: 0;
+      }
+      &:empty{
+        display: none;
+        margin: 0;
+      }
+    }
   }
+
   .sports-item-v3{
     box-sizing: border-box;
     float: left;
     width: 100%;
     height: 30px;
-    margin: 0 0 1px;
+    line-height: 30px;
+    margin: 0;
     position: relative;
     background: $c16-sp-9;
     padding: 0 30px 0 37px;
     box-shadow: 0 1px 0 lighten( desaturate( adjust-hue( $c16-sp, -4deg ), 18 ), 13 ) inset;
     cursor: pointer;
+    transform: translate3d(0,0,0);
+    &.sports-group-item-v3 {
+      height: 36px;
+      line-height: 36px;
+    }
+  }
+  @supports (position: sticky)or (position: -webkit-sticky) {
+    .sports-item-v3{
+      position: sticky;
+      position: -webkit-sticky;
+      top: 0;
+      z-index: 222;
+    }
   }
   .sports-item-v3:before, .single-game-item-v3:before{
     box-sizing: border-box;
@@ -571,21 +682,17 @@
     position: absolute;
     left: 0;
     top: 0;
-    font: 16px/30px sport-icon;
+    font: 16px sport-icon;
+    line-height: inherit;
     color: $c16-tp-6;
     text-indent: 10px;
     box-shadow: 3px 0 0 rgba(255, 255, 255, 0.15) inset;
   }
-  .sport-icon-v3.Soccer{color: set-color($c16-sp-9);}
-  .sport-icon-v3.Tennis{color: #8c893a;}
-  .sport-icon-v3.Basketball{color: #fca601;}
-  .sport-icon-v3.Volleyball{color: #e5e795;}
-  .sport-icon-v3.IceHockey{color: #50a2c6;}
-  .sport-icon-v3.AmericanFootball{color: #e7685c;}
-  .sport-icon-v3.Baseball{color: #5caaa7;}
   .sport-icon-v3.showallsports{color: $c16-tp-3;}
   .sport-icon-v3.todaybets > b{
-    font: 10px/18px font-f;
+    font-size: 4 + $size-font;
+    line-height: 18px;
+    font-family: $font-f;
     font-weight: normal;
     position: absolute;
     left: 10px;
@@ -605,78 +712,9 @@
     color: $c16-tp-3;
   }
   .sports-item-v3.todaybets.active > .arrow-view-v3:before{content: "\e672";}
-  
+
   .sports-item-v3.todaybets > .sport-icon-v3.todaybets {
     box-shadow: 3px 0 0 $hero-color inset;
-  }
-  .sports-item-v3.Soccer > .sport-icon-v3.Soccer {
-    box-shadow: 3px 0 0 #207456 inset;
-  }
-  .sports-item-v3.Tennis > .sport-icon-v3.Tennis {
-    box-shadow: 3px 0 0 #8c893a inset;
-  }
-  .sports-item-v3.Basketball > .sport-icon-v3.Basketball {
-    box-shadow: 3px 0 0 #fca601 inset;
-  }
-  .sports-item-v3.Volleyball > .sport-icon-v3.Volleyball {
-    box-shadow: 3px 0 0 #e5e795 inset;
-  }
-  .sports-item-v3.IceHockey > .sport-icon-v3.IceHockey {
-    box-shadow: 3px 0 0 #50a2c6 inset;
-  }
-  .sports-item-v3.AmericanFootball > .sport-icon-v3.AmericanFootball {
-    box-shadow: 3px 0 0 #e7685c inset;
-  }
-  .sports-item-v3.Baseball > .sport-icon-v3.Baseball {
-    box-shadow: 3px 0 0 #5caaa7 inset;
-  } 
-  .sport-name-up-game-v3.Tennis {
-    box-shadow: 0 -1px 0 #8c893a inset;
-  }
-  .sport-name-up-game-v3.Soccer {
-    box-shadow: 0 -1px 0 #1a7051 inset;
-  }
-  .sport-name-up-game-v3.Basketball {
-    box-shadow: 0 -1px 0 #ff7f00 inset;
-  }
-  .sport-name-up-game-v3.Volleyball {
-    box-shadow: 0 -1px 0 #7B8191 inset;
-  }
-  .sport-name-up-game-v3.IceHockey {
-    box-shadow: 0 -1px 0 #50a2c6 inset;
-  }
-  .sport-name-up-game-v3.AmericanFootball {
-    box-shadow: 0 -1px 0 #e7685c inset;
-  }
-  .sport-name-up-game-v3.Baseball {
-    box-shadow: 0 -1px 0 #5caaa7 inset;
-  } 
-  .game-header-view-v3.Tennis {
-    box-shadow: 0 -1px 0 #8c893a inset, inset 0 -2px 0 darken( adjust-hue( $c16-sp-11, -18deg ), 2 );
-  }
-  .game-header-view-v3.Soccer {
-    box-shadow: 0 -1px 0 #1a7051 inset, inset 0 -2px 0 darken( adjust-hue( $c16-sp-11, -18deg ), 2 );
-  }
-  .game-header-view-v3.Basketball {
-    box-shadow: 0 -1px 0 #ff7f00 inset, inset 0 -2px 0 darken( adjust-hue( $c16-sp-11, -18deg ), 2 );
-  }
-  .game-header-view-v3.Volleyball {
-    box-shadow: 0 -1px 0 #7B8191 inset, inset 0 -2px 0 darken( adjust-hue( $c16-sp-11, -18deg ), 2 );
-  }
-  .game-header-view-v3.IceHockey {
-    box-shadow: 0 -1px 0 #50a2c6 inset, inset 0 -2px 0 darken( adjust-hue( $c16-sp-11, -18deg ), 2 );
-  }
-  .game-header-view-v3.AmericanFootball {
-    box-shadow: 0 -1px 0 #e7685c inset, inset 0 -2px 0 darken( adjust-hue( $c16-sp-11, -18deg ), 2 );
-  }
-  .game-header-view-v3.Baseball {
-    box-shadow: 0 -1px 0 #5caaa7 inset, inset 0 -2px 0 darken( adjust-hue( $c16-sp-11, -18deg ), 2 );
-  } 
-  .sports-item-v3.Soccer.active > .arrow-view-v3 {
-    background: #1a7051;
-    &:before {
-      color: set-color(#1a7051);
-    }
   }
   .sports-item-v3.todaybets.active > .arrow-view-v3 {
     background: $hero-color;
@@ -684,49 +722,6 @@
       color: set-color($hero-color);
     }
   }
-  .sports-item-v3.Tennis.active > .arrow-view-v3 {
-    background: #8c893a;
-    &:before {
-      color: set-color(#8c893a);
-    }
-  }
-  .sports-item-v3.Basketball.active > .arrow-view-v3 {
-    background: #ff7f00;
-    &:before {
-      color: set-color(#ff7f00);
-    }
-  }
-  .sports-item-v3.Volleyball.active > .arrow-view-v3 {
-    background: #e5e795;
-    &:before {
-      color: set-color(#e5e795);
-    }
-  }
-  .sports-item-v3.IceHockey.active > .arrow-view-v3 {
-    background: #50a2c6;
-    &:before {
-      color: set-color(#50a2c6);
-    }
-  }
-  .sports-item-v3.AmericanFootball.active > .arrow-view-v3 {
-    background: #e7685c;
-    &:before {
-      color: set-color(#e7685c);
-    }
-  }
-  .sports-item-v3.Baseball.active > .arrow-view-v3 {
-    background: #5caaa7;
-    &:before {
-      color: set-color(#5caaa7);
-    }
-  }
-  .sports-item-v3.Soccer + .region-item-row-v3 .single-game-item-v3.active:before{box-shadow: 2px 0 0 #207456 inset;}
-  .sports-item-v3.Tennis + .region-item-row-v3 .single-game-item-v3.active:before{box-shadow: 2px 0 0 #8c893a inset;}
-  .sports-item-v3.Basketball + .region-item-row-v3 .single-game-item-v3.active:before{box-shadow: 2px 0 0 #fca601 inset;}
-  .sports-item-v3.Volleyball + .region-item-row-v3 .single-game-item-v3.active:before{box-shadow: 2px 0 0 #e5e795 inset;}
-  .sports-item-v3.IceHockey + .region-item-row-v3 .single-game-item-v3.active:before{box-shadow: 2px 0 0 #50a2c6 inset;}
-  .sports-item-v3.AmericanFootball + .region-item-row-v3 .single-game-item-v3.active:before{box-shadow: 2px 0 0 #e7685c inset;}
-  .sports-item-v3.Baseball + .region-item-row-v3 .single-game-item-v3.active:before{box-shadow: 2px 0 0 #5caaa7 inset;}
   .sports-item-v3.showallsports + .region-item-row-v3 .single-game-item-v3.active:before{box-shadow: 2px 0 0 #5caaa7 inset;}
 
   .single-game-item-v3.active:before{box-shadow: 2px 0 0 $c16-sp-7 inset;}
@@ -764,7 +759,8 @@
     box-sizing: border-box;
     float: left;
     width: 100%;
-    font: 12px/30px $font-f;
+    font-size: 6 + $size-font;
+    line-height: inherit;
     color: $c16-tp-3;
     white-space: nowrap;
     text-overflow: ellipsis;
@@ -777,7 +773,8 @@
     position: absolute;
     right: 0;
     top: 0;
-    font: 16px/30px icomoon;
+    font: 16px icomoon;
+    line-height: inherit;
     color: transparent;
     text-align: center;
     transition: color 240ms;
@@ -808,7 +805,8 @@
     padding: 0 10px 0 0;
     top: 0;
     color: $c16-tp-6;
-    font: 12px/30px $font-f;
+    font-size: 6 + $size-font;
+    line-height: inherit;
     transition: opacity 240ms;
   }
   .sports-item-v3.active .sport-games-count-v3, .sports-item-v3:hover .sport-games-count-v3{
@@ -822,7 +820,7 @@
     overflow: hidden;
     max-height: 0;
     animation: closed-animate-b 240ms ease;
-   }
+  }
   .region-items-box{
     box-sizing: border-box;
     float: left;
@@ -834,6 +832,8 @@
     float: left;
     width: 100%;
     margin: 0 0 1px;
+    &:first-child{margin-top: 1px;}
+    &:last-child{margin-bottom: 0;}
   }
   .sports-item-v3.active ~ .region-item-row-v3{
     max-height: 15999px;
@@ -858,6 +858,9 @@
     position: relative;
     cursor: pointer;
     transition: background 240ms;
+    > .arrow-view-v3 {
+      line-height: 30px;
+    }
   }
   .region-item-v3 .flag-World {
     margin-top: -2px;
@@ -882,7 +885,10 @@
   }
   .region-item-v3:hover, .region-item-v3.active{
     background: lighten( desaturate( adjust-hue( $c16-sp, -1deg ), 14 ), 6 );
-    max-height: 9999px;
+  }
+  .region-item-v3.active, .region-item-v3:hover{
+    //max-height: 9999px;
+    display: block;
   }
   .full-region-info-v3.active > .region-item-v3{
     background: lighten( desaturate( adjust-hue( $c16-sp, -1deg ), 14 ), 6 );
@@ -897,7 +903,8 @@
     box-sizing: border-box;
     float: left;
     width: 100%;
-    font: 12px/30px $font-f;
+    font-size: 6 + $size-font;
+    line-height: 30px;
     color: $c16-tp-6;
     white-space: nowrap;
     text-overflow: ellipsis;
@@ -918,24 +925,27 @@
     box-sizing: border-box;
     color: $c16-tp-3;
   }
-  .games-list-nav-v3
-  {box-sizing: border-box;
+  .games-list-nav-v3{
+    box-sizing: border-box;
     float: left;
     width: 100%;
-    max-height: 0;
-    overflow: hidden;
-    animation: closed-animate-b 240ms ease;
+    display: none;
+    //animation: closed-animate-b 240ms ease;
   }
   .favorite-nav .games-list-nav-v3{
-    max-height: 30000px;
+    //max-height: 30000px;
     animation: inherit;
+    display: block;
+
   }
   .full-region-info-v3.active > .games-list-nav-v3{
-    max-height: 30000px;
-    animation: open-animate-b 500ms ease-in-out;
+    display: block;
+    //max-height: 30000px;
+    //animation: open-animate-b 500ms ease-in-out;
   }
   .full-region-info-v3.no-regions{margin: 0;}
   .full-region-info-v3.no-regions > .games-list-nav-v3{
+    display: block;
     max-height: 30000px;
     animation: inherit;
   }
@@ -948,7 +958,8 @@
     animation: inherit;
   }
   .prematch-view .region-item-v3.active + .games-list-nav-v3{
-    max-height: 30000px;
+    //max-height: 30000px;
+    display: block;
   }
   .games-list-mini-view-v3{
     box-sizing: border-box;
@@ -966,16 +977,16 @@
     margin: 0;
     overflow: hidden;
     max-height: 9999px;
-    animation: open-animate-b-game 500ms ease-in-out;
+    //animation: open-animate-b-game 500ms ease-in-out;
   }
   .competition-view-v-3.closed{
     max-height: 29px;
     border-radius: 2px;
-    animation: closed-animate-b-game-1 240ms ease;
+    //animation: closed-animate-b-game-1 240ms ease;
   }
   .competition-view-v-3.closed:first-child{
     max-height: 26px;
-    animation: closed-animate-b-game-2 240ms ease;
+    //animation: closed-animate-b-game-2 240ms ease;
   }
   @keyframes open-animate-b-game{
     0% {max-height: 26px;}
@@ -993,7 +1004,10 @@
     margin: 0;
   }
   .full-region-info-v3.no-regions > .region-item-v3.ng-hide ~ .games-list-nav-v3 .games-list-mini-view-v3 {
-    margin: 0 0 -7px;
+    //margin: 0 0 -7px;
+    margin: 0 0 -5px;
+    border-bottom: none;
+    border-top: none;
   }
   .full-region-info-v3.no-regions:last-child  > .region-item-v3.ng-hide ~ .games-list-nav-v3 .games-list-mini-view-v3{
     margin-bottom: -2px;
@@ -1042,7 +1056,8 @@
     box-sizing: border-box;
     width: 100%;
     float: left;
-    font: 12px/24px $font-f;
+    font-size: 6 + $size-font;
+    line-height: 24px;
     color: $c16-tp-3;
     white-space: nowrap;
     text-overflow: ellipsis;
@@ -1052,7 +1067,9 @@
     box-sizing: border-box;
     width: 100%;
     float: left;
-    font: 12px/30px $font-f;
+    font-family: $font-f;
+    font-size: 6 + $size-font;
+    line-height: 30px;
     white-space: nowrap;
     text-overflow: ellipsis;
     overflow: hidden;
@@ -1060,6 +1077,14 @@
     padding: 0 10px;
     transition: color 240ms;
     cursor: pointer;
+    position: relative;
+    > div {
+      left: auto;
+      right: 10px;
+    }
+  }
+  .prematch-view .favoritecompetitions + .region-item-row-v3 .competition-title-v3 > label {
+    padding: 0 34px 0 10px;
   }
   .prematch-view .competition-title-v3 > label:hover, .prematch-view .competition-title-v3.active > label{
     color: $c16-tp-3;
@@ -1075,9 +1100,13 @@
     box-sizing: border-box;
     display: inline-block;
   }
-  .competition-title-v3 > label > span{box-sizing: border-box;
+  .competition-title-v3 > label > span{
+    box-sizing: border-box;
+    //position: relative;
+  }
+  .competition-title-v3 > label > span.favorite-competitions-icon-t{
     position: relative;
-   }
+  }
   .multiselect-view-v3 .competition-title-v3 > label > input[type="checkbox"] + span:before{
     box-sizing: border-box;
     position: absolute;
@@ -1087,8 +1116,8 @@
     height: 16px;
     background: $c16-sp-6;
     border-radius: 2px;
-    left: -22px;
-    top: -1px;
+    left: 7px;
+    top: 7px;
     z-index: 6;
   }
   .multiselect-view-v3 .competition-title-v3 > label > input[type="checkbox"]:checked + span:after{
@@ -1099,8 +1128,8 @@
     height: 16px;
     content: '\e6f3';
     font: 7px/16px icomoon;
-    left: -22px;
-    top: -1px;
+    left: 7px;
+    top: 7px;
     color: $c16-tp-11;
     z-index: 10;
   }
@@ -1113,8 +1142,9 @@
     position: absolute;
     font-style: normal;
     left: 30px;
-    top: 22px;
-    font: 10px/12px $font-f;
+    top: 23px;
+    font-size: 4 + $size-font;
+    line-height: 12px;
     color: $text-palette-5;
   }
   .competition-title-v3 > .arrow-view-v3:before{box-sizing: border-box;content: "\e671";}
@@ -1123,12 +1153,29 @@
     box-sizing: border-box;
     float: left;
     width: 100%;
-    height: 50px;
+    min-height: 50px;
     margin: 2px 0 0;
     background: lighten( desaturate( adjust-hue( $c16-sp, -1deg ), 14 ), 6 );
     position: relative;
     cursor: pointer;
     padding: 3px 6px 1px;
+    transform: translate3d(0,0,0);
+    .l-b{
+      margin: 4px 0;
+      position: relative;
+      z-index: 122;
+      white-space: nowrap;
+      .single-events-b-v3:not(:hover):not(.active) {
+        background: rgba($skin-palette-12, 0.7);
+      }
+      > li {
+        &:last-child {
+          .max-bet-tooltip-v3 {
+            direction: rtl;
+          }
+        }
+      }
+    }
   }
   .single-game-item-v3.no-events:before{
     box-sizing: border-box;
@@ -1153,55 +1200,81 @@
   .single-game-item-v3.active{
     box-sizing: border-box;
     cursor: default;
-    padding: 3px 6px 1px 8px;
+    padding-left: 8px;
+    > .events-list-view-v3 > ul{
+      white-space: nowrap;
+    }
   }
   .team-name-1-v3{
     box-sizing: border-box;
     float: left;
     width: 100%;
+    display: flex;
+    flex-flow: wrap;
+    flex-direction: row;
     position: relative;
-    padding: 0 24px 0 0;
+    padding: 0;
     margin: 1px 0 0;
+    z-index: 1;
+    min-height: 14px;
+    font-size: 0;
   }
   .team-name-1-v3 > p{
     box-sizing: border-box;
-    float: left;
-    width: 100%;
-    font: 11px/14px $font-f;
-    color: $c16-tp-3;
+    -webkit-box-flex: 1;
+    -ms-flex: 1;
+    flex: 1;
+    font-size: 5 + $size-font;
+    line-height: 14px;
+    color: $c16-tp-1;
     white-space: nowrap;
     text-overflow: ellipsis;
     overflow: hidden;
+    transform: translate3d(0,0,0);
   }
   .single-game-item-v3.no-events .team-name-1-v3 > p{
     box-sizing: border-box;
-    color: $c16-tp-6;
+    color: rgba($c16-tp-1,0.4);
   }
   .team-name-1-v3 > span{
     box-sizing: border-box;
-    position: absolute;
-    right: 0;
-    top: 0;
+    display: inline-block;
+    vertical-align: top;
+    text-align: right;
+    font-size: 6 + $size-font;
+    line-height: 14px;
     color: #aa8136;
+    padding: 0 0 0 3px;
+    transform: translate3d(0,0,0);
   }
   .game-info-mini-v3{
     box-sizing: border-box;
     float: left;
     width: 100%;
     position: relative;
-    padding: 0 60px 0 0;
+    display: flex;
+    flex-flow: wrap;
+    flex-direction: row;
+    padding: 0;
     z-index: 121;
+    min-height: 14px;
+    transform: translate3d(0,0,0);
   }
   .game-info-mini-v3 > p{
     box-sizing: border-box;
     float: left;
     width: 100%;
-    color: $c16-tp-6;
-    font: 10px/14px $font-f;
+    color: rgba($c16-tp-1,0.6);
+    font-size: 4 + $size-font;
+    line-height: 14px;
+    -webkit-box-flex: 1;
+    -ms-flex: 1;
+    flex: 1;
   }
   .game-info-mini-v3 > p > span{
     box-sizing: border-box;
     display: inline-block;
+    vertical-align: top;
   }
   .blocked-icon-v3{
     box-sizing: border-box;
@@ -1228,11 +1301,10 @@
   .blocked-icon-v3:before{box-sizing: border-box;content: "\e68f";}
   .game-info-icons-v3{
     box-sizing: border-box;
-    position: absolute;
-    right: 0;
-    top: 0;
+    display: inline-block;
+    vertical-align: top;
     z-index: 121;
-   }
+  }
   .icon-separator-v3{
     box-sizing: border-box;
     float: right;
@@ -1260,13 +1332,15 @@
     display: inline-block;
     background: darken( desaturate( adjust-hue( $c16-sp, -9deg ), 9 ), 1 );
     color: $c16-tp-4;
-    font: 10px/11px $font-f;
+    font-family: $font-f;
+    font-size: 4 + $size-font;
+    line-height: 11px;
     padding: 1px 0;
     width: 26px;
     text-align: center;
     border-radius: 3px;
     vertical-align: top;
-    font-weight: bold;
+    //font-weight: bold;
   }
   .sub-menu-multiselect-view-v3{
     box-sizing: border-box;
@@ -1314,7 +1388,7 @@
     border: 2px solid lighten( desaturate( adjust-hue( $c16-sp, -1deg ), 14 ), 6 );
     border-radius: 2px;
     padding: 5px;
-   }
+  }
   .sum-menu-multi-items > ul > li{
     box-sizing: border-box;
     float: left;
@@ -1330,7 +1404,9 @@
     box-sizing: border-box;
     border-radius: inherit;
     margin: 0;
-    height: 36px;
+    height: auto;
+    min-height: 36px;
+    padding-bottom: 5px;
   }
   .prematch-view .sum-menu-multi-items > ul > li > .competition-title-v3 > label{
     box-sizing: border-box;
@@ -1373,4 +1449,27 @@
     right: -2px;
   }
   //  left menu closed END
+  .classic-view-column-v3 {
+    .sports-item-v3 {
+      & + .region-item-row-v3 .single-game-item-v3.active:after {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: #474d5a;
+        background: -moz-linear-gradient(left, $c16-sp-8 0%, $c16-sp-8 27%, $c16-sp-9 58%, $c16-sp-9 100%);
+        background: -webkit-linear-gradient(left, $c16-sp-8 0%,$c16-sp-8 27%,$c16-sp-9 58%,$c16-sp-9 100%);
+        background: linear-gradient(to right, $c16-sp-8 0%,$c16-sp-8 27%,$c16-sp-9 58%,$c16-sp-9 100%);
+      }
+    }
+  }
+  @include coloring-by-sports("Soccer", #1a7051);
+  @include coloring-by-sports("Tennis", #8c893a);
+  @include coloring-by-sports("Basketball", #fca601);
+  @include coloring-by-sports("Volleyball", #e5e795);
+  @include coloring-by-sports("IceHockey", #50a2c6);
+  @include coloring-by-sports("AmericanFootball", #e7685c);
+  @include coloring-by-sports("Baseball", #5caaa7);
 }

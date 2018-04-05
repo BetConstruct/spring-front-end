@@ -5,11 +5,10 @@
  * special games pages controller
  */
 
-angular.module('casino').controller('casinoSpecialGamesCtrl', ['$rootScope', '$scope', '$sce', '$location', '$window', 'CConfig', 'Config', 'DomHelper', 'Translator', 'Zergling', 'AuthData', 'casinoManager', 'TimeoutWrapper', 'LanguageCodes', function ($rootScope, $scope, $sce, $location, $window, CConfig, Config, DomHelper, Translator, Zergling, AuthData, casinoManager, TimeoutWrapper, LanguageCodes) {
+angular.module('casino').controller('casinoSpecialGamesCtrl', ['$rootScope', '$scope', '$sce', '$location', '$window', 'CConfig', 'Config', 'DomHelper', 'Translator', 'Zergling', 'AuthData', 'casinoManager', '$timeout', 'LanguageCodes', function ($rootScope, $scope, $sce, $location, $window, CConfig, Config, DomHelper, Translator, Zergling, AuthData, casinoManager, $timeout, LanguageCodes) {
     'use strict';
 
     var gameName;
-    TimeoutWrapper = TimeoutWrapper($scope);
     $rootScope.footerMovable = true; // make footer movable
     /**
      * @ngdoc method
@@ -40,6 +39,9 @@ angular.module('casino').controller('casinoSpecialGamesCtrl', ['$rootScope', '$s
             case 'pokerklas':
                 title = 'Poker Klas';
                 break;
+            case 'ggpoker':
+                title = 'GG Poker';
+                break;
         }
         if (title) {
             $rootScope.setTitle(title);
@@ -50,23 +52,15 @@ angular.module('casino').controller('casinoSpecialGamesCtrl', ['$rootScope', '$s
 
     function getUrl() {
         $scope.frameUrl = null;
-        var game, prefix, additionalAttrs = '';
+        var game;
 
         switch (gameName) {
         case 'poker':
-            TimeoutWrapper(function () { $scope.frameUrl = $sce.trustAsResourceUrl(Config.poker.instantPlayLink) }, 50);
-            return;
+            game = CConfig.poker;
+            $scope.initialFrameSize = CConfig.poker.initialSize;
+            break;
         case 'fantasy':
             game = CConfig.fantasySports;
-            if (CConfig.fantasySports.externalURL) {
-                prefix = CConfig.fantasySports.externalURL + '?partnerid=' + CConfig.main.partnerID + '&lan=' + Config.env.lang;
-                if ($rootScope.env.authorized) {
-                    var authData = AuthData.get();
-                    prefix += '&sport_token=' + authData.auth_token + '&sport_userid=' + authData.user_id;
-                }
-            } else {
-                additionalAttrs = '&gmtShift=' + Config.env.selectedTimeZone.split(':')[0];
-            }
             break;
         case 'ogwil':
             game = CConfig.ogwil;
@@ -74,6 +68,9 @@ angular.module('casino').controller('casinoSpecialGamesCtrl', ['$rootScope', '$s
         case 'financials':
             game = CConfig.financials;
             break;
+            case 'csbpoolbetting':
+                game = CConfig.csbPoolBetting;
+                break;
         case 'game':
             var pathContent = $location.path().split('/');
             game = {
@@ -82,8 +79,8 @@ angular.module('casino').controller('casinoSpecialGamesCtrl', ['$rootScope', '$s
                 externalID: pathContent[6],
                 tableID: pathContent[8]
             };
-            if (game.gameID === 'TLCTLC' && !$rootScope.env.authorized) { //it must be reverted after changing finbet's page
-                TimeoutWrapper(function () {
+            if ((game.gameID === 'TLCTLC' || game.provider === 'TAK' || game.gameID === 'GDRdog6') && !$rootScope.env.authorized) { //it must be reverted after changing finbet's page
+                $timeout(function () {
                     if (!$rootScope.loginInProgress) {
                         $rootScope.$broadcast('openLoginForm');
                     } else {
@@ -94,7 +91,7 @@ angular.module('casino').controller('casinoSpecialGamesCtrl', ['$rootScope', '$s
                                     $rootScope.$broadcast('openLoginForm');
                                 }
                             }
-                        })
+                        });
                     }
                 }, 100);
                 return;
@@ -112,78 +109,60 @@ angular.module('casino').controller('casinoSpecialGamesCtrl', ['$rootScope', '$s
             game = CConfig.backgammon;
             $scope.initialFrameSize = CConfig.backgammon.initialSize;
             break;
+        case 'checkers':
+            game = CConfig.checkers;
+            $scope.initialFrameSize = CConfig.checkers.initialSize;
+            break;
         case 'pokerklas':
             game = $scope.game = CConfig.pokerklas;
             break;
+        case 'ggpoker':
+            game = $scope.game = CConfig.ggpoker;
+            break;
         }
         if (game) {
-            $scope.loadingUserData = true;
-            var isVGSLiveGame = game.tableID && CConfig.liveCasino.provider === game.provider;
-            if (!isVGSLiveGame && CConfig.main.providersThatWorkWithSwarm.indexOf(game.provider) !== -1 && !prefix) {
-                var request = {
-                    provider: game.provider,
-                    game_id: game.gameID,
-                    external_game_id: game.externalID,
-                    mode: $rootScope.env.authorized ? 'real' : 'fun',
-                    skin_host: CConfig.cUrlPrefix
-                };
+            var gameUrl;
 
-                Zergling.get(request, 'casino_game_url')
-                    .then(function (data) {
-                        if (data && data.url) {
-                            if (gameName === 'pokerklas') {
-                                var popup = $window.open(data.url, 'PokerKlas', 'width=800,height=800,menubar=yes,toolbar=yes,location=yes,scrollbars=yes,resizable=yes');
-                                casinoManager.checkIfPopupIsBlocked(popup);
-                                $scope.showTransferPopUp = true;
-                            } else {
-                                $scope.frameUrl = $sce.trustAsResourceUrl(data.url);
-                            }
-                        }
-                    })['finally'](function () {
-                        $scope.loadingUserData = false;
-                    });
+            if (game.tableID && game.provider === CConfig.liveCasino.provider) {
+                var urlPrefix = $window.location.protocol + CConfig.liveCasino.lcGameUrlPrefix + (CConfig.liveCasino.staticDomain || CConfig.cUrlPrefix.substring(CConfig.cUrlPrefix.indexOf('.') + 1));
+                var tableInfo = '/table/table/'  + game.tableID + ($location.search().limit ? ('/' + $location.search().limit) : '');
+                gameUrl = urlPrefix + '/web/' + (LanguageCodes[$rootScope.env.lang] || 'en') + '/' + Config.main.site_id + tableInfo + '?activeGroupId=' + (CConfig.liveCasino.lobbyGroupsMap[game.externalID] || 0) + ($location.search().room ? ('&roomNumber=' + $location.search().room) : '');
             } else {
-                if (isVGSLiveGame) { //betconstruct live casino tables state
-                    var subDomain = CConfig.cUrlPrefix.substring(CConfig.cUrlPrefix.indexOf('.') + 1);
-                    prefix = CConfig.liveCasino.lcGameUrlPrefix + subDomain + '/web/' + LanguageCodes[$rootScope.env.lang] + '/' + Config.main.site_id + '/table/table/' + game.tableID + '/1'; // last part is limit id and it must be detect dynamically
-                    $rootScope.casinoGameOpened = 1; // In this cases the header will be less
+                gameUrl = CConfig.cUrlPrefix + CConfig.gamesUrl + '?partnerId=' + Config.main.site_id + '&gameId=' + game.externalID + '&language=' + LanguageCodes[$rootScope.env.lang] + '&openType=' + ($rootScope.env.authorized ? 'real' : 'fun');
+                $location.search().studio && (gameUrl += '&studio=' + $location.search().studio);
+            }
 
-                    //@TODO after testing need to remove
-                    if (game.tableID && game.tableID == '701') {
-                        prefix = 'http://192.168.10.173:8083/web/en/4/table';
-                    }
-                } else {
-                    var urlPrefix = CConfig.main.providersThatWorkWithCasinoBackend && CConfig.main.providersThatWorkWithCasinoBackend.providers.indexOf(game.provider) !== -1 ? CConfig.main.providersThatWorkWithCasinoBackend.url : CConfig.cUrlPrefix + CConfig.cGamesUrl;
-                    prefix = prefix || (urlPrefix + '?gameid=' + game.gameID + '&provider=' + game.provider + '&lan=' + Config.env.lang + additionalAttrs + '&partnerid=' + CConfig.main.partnerID);
-                }
-                if ($rootScope.env.authorized) {
-                    Zergling.get({'game_id': parseInt(game.externalID)}, 'casino_auth').then(function (response) {
-                        if (response && response.result && response.result.has_error == "False") {
-                            if (isVGSLiveGame) {
-                                $scope.frameUrl = $sce.trustAsResourceUrl(prefix + '?token=' + response.result.token);
-                            } else {
-                                var userInfo = ('&token=' + response.result.token + '&username=' + response.result.username + '&balance=' + response.result.balance + '&currency=' + response.result.currency + '&userid=' + response.result.id + '&nickname=' + response.result.nickname + '&firstname=' + $rootScope.profile.first_name + '&lastname=' + $rootScope.profile.last_name).replace('#', '%23'); //in some cases user data contains '#' character
-                                $scope.frameUrl = $sce.trustAsResourceUrl(prefix + userInfo + '&mode=real');
-                            }
-                        }
-                    })['finally'](function () {
-                        $scope.loadingUserData = false;
-                    });
-                } else {
-                    $scope.loadingUserData = false;
-                    TimeoutWrapper(function () {
-                        $scope.frameUrl = $sce.trustAsResourceUrl(prefix + (isVGSLiveGame ? '' : '&mode=fun'));
-                    }, 20);
-                }
+            gameUrl += "&devicetypeid=" + CConfig.deviceTypeId;
+
+            $rootScope.env.authorized && (gameUrl += '&token=' + AuthData.getAuthToken() + (!Config.main.GmsPlatform ? '&username=' + $rootScope.profile.username : ''));
+
+            if (gameName === 'pokerklas') {
+                var popup = $window.open(gameUrl, 'PokerKlas', 'width=800,height=800,menubar=yes,toolbar=yes,location=yes,scrollbars=yes,resizable=yes');
+                casinoManager.checkIfPopupIsBlocked(popup);
+                $scope.showTransferPopUp = true;
+            } else {
+                $timeout(function () {
+                    $scope.frameUrl = $sce.trustAsResourceUrl(gameUrl);
+                }, 20);
             }
         }
     }
 
     $scope.$watch('env.authorized', function (newValue, oldValue) {
-        if (newValue !== oldValue && gameName !== 'pokerklas' && (newValue || gameName !== 'backgammon')) {
+        if (newValue === oldValue || gameName === 'pokerklas' || (!newValue && gameName === 'backgammon')) return;
+
+        if (!newValue || $rootScope.profile || Config.main.GmsPlatform) {
             getUrl();
+        } else {
+            var profileWatcherPromise = $scope.$watch('profile', function (newValue) {
+                if (newValue) {
+                    profileWatcherPromise();
+                    getUrl();
+                }
+            });
         }
-        if ($rootScope.env.authorized && $rootScope.env.sliderContent === 'signInForm') {
+
+        if ($rootScope.env.authorized && $rootScope.env.sliderContent === 'login') {
             $rootScope.env.showSlider = false;
             $rootScope.env.sliderContent = '';
         }
@@ -241,7 +220,7 @@ angular.module('casino').controller('casinoSpecialGamesCtrl', ['$rootScope', '$s
         $scope.amountTransferModel.method = method;
         $scope.amountTransferModel.from = from;
         $scope.amountTransferModel.to = to;
-        $scope.amountTransferModel.showTransferPopUp = true;
+        $scope.amountTransferModel.showTransferPopUp = false;
         $scope.amountTransferModel.messageType = '';
         $scope.amountTransferModel.gpAmount = null;
         $scope.amountTransferModel.externalGameId = externalGameId;

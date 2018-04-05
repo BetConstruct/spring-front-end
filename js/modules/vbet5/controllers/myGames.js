@@ -106,26 +106,6 @@ VBET5.controller('myGamesCtrl', ['$scope', '$rootScope', '$location', '$route', 
 
     $scope.framesCount = GameInfo.framesCount;
 
-    /**
-     * @ngdoc method
-     * @name init
-     * @methodOf vbet5.controller:myGamesCtrl
-     * @description Initialization. Get games from swarm to check if they still exist to know if "my games" button should be shown initially
-     */
-    function init() {
-        if ($rootScope.myGames.length === 0) {
-            console.log('no myGames to get');
-            return;
-        }
-        Zergling
-            .get({'source': 'betting', 'what': {'game': [], 'sport': ['id', 'alias', 'name'], 'competition': ['id', 'name'], 'region': ['id']}, 'where': {'game': {'id': {'@in': $rootScope.myGames }}}})
-            .then(function (data) {
-                updateMyGames(data.data);
-            });
-    }
-
-    init();
-
 
     /**
      * @ngdoc method
@@ -159,10 +139,6 @@ VBET5.controller('myGamesCtrl', ['$scope', '$rootScope', '$location', '$route', 
     function loadMyGames() {
         $scope.myGamesloaded = false;
 
-        if (subId) {
-            connectionService.unsubscribe(subId);
-        }
-
         if (!$rootScope.myGames.length) {
             updateMyGames({"sport": {}});
             return;
@@ -193,9 +169,16 @@ VBET5.controller('myGamesCtrl', ['$scope', '$rootScope', '$location', '$route', 
         );
     }
 
-    $rootScope.$on('myGames.load', loadMyGames);
 
-    var myGamesWatcher = $rootScope.$watch('myGames.length', loadMyGames );
+    // This acts like an initializer when the app is loaded. If there are myGames it subscribes to them during the initial load.
+    var myGamesWatcher = $rootScope.$watch('myGames.length', function myGamesWatcherFunc() {
+        if (subId) {
+            connectionService.unsubscribe(subId);
+            subId = null;
+        }
+        loadMyGames();
+    });
+
     $scope.$on('$destroy', function () {
         if (myGamesWatcher) {
             myGamesWatcher();
@@ -355,7 +338,7 @@ VBET5.controller('myGamesCtrl', ['$scope', '$rootScope', '$location', '$route', 
      * @description  Navigates to provided game
      * @param {Object} game game object
      */
-    $scope.gotoGame = function gotoGame(game) {
+    function gotoGame(game) {
         $rootScope.env.sliderContent = '';
         $rootScope.env.showSlider = false;
         var neededPath = Utils.getPathAccordintToAlias(game.sport.alias);
@@ -376,6 +359,43 @@ VBET5.controller('myGamesCtrl', ['$scope', '$rootScope', '$location', '$route', 
             }
         } else {
             $window.location.href = absoluteLink + '/?game=' + locationParams.game + '&sport=' + locationParams.sport + '&competition=' + locationParams.competition + '&region=' + locationParams.region + '&type=' + locationParams.type;
+        }
+    };
+
+
+    /**
+     * @ngdoc method
+     * @name chooseFavorite
+     * @methodOf vbet5.controller:myGamesCtrl
+     * @description  Navigates to chosen favorite game
+     * @param {Object} game - game object
+     */
+    $scope.chooseFavorite = function chooseFavorite(game) {
+        if (Config.main.sportsLayout !== "modern" && $location.path() === "/sport/") {
+            switch (Config.main.sportsLayout) {
+                case "classic":
+                case "euro2016":
+                    $rootScope.$broadcast("sportsbook.selectData", {type: "popular.game", data: game});
+                    break;
+                case "asian":
+                    $rootScope.$broadcast("asianView.selectFavorite", game);
+                    break;
+                case "combo":
+                    if ($location.search().game !== game.id) {
+                        $location.search({
+                            "game": game.id,
+                            "sport": game.sport.id,
+                            "competition": game.competition.id,
+                            "type": game.type === 2 ? 0 : game.type,
+                            "region": game.region.id
+                        });
+                        $rootScope.$broadcast("comboView.handleDeepLinking");
+                    }
+                    break;
+            }
+            $rootScope.$broadcast("slider.close");
+        } else {
+            gotoGame(game);
         }
     };
 

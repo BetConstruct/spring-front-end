@@ -11,7 +11,9 @@ angular.module('vbet5').service('GameInfo', ['$rootScope', '$http', '$filter', '
     GameInfo.liveGamesSoccerTemplate = ['Soccer', 'CyberFootball'];
     GameInfo.dotaGamesList = [];/*'Dota', 'Dota2','CounterStrike', 'LeagueofLegends', 'StarCraft', 'StarCraft2'  --temporary removed dota game statistics*/
     GameInfo.PROVIDER_AVAILABLE_EVENTS = null;
+    GameInfo.SPORT_GROUPS = null;
 
+    var virtualSportIds;
     /**
      * @ngdoc method
      * @name groupRegionsIfNeeded
@@ -92,9 +94,10 @@ angular.module('vbet5').service('GameInfo', ['$rootScope', '$http', '$filter', '
      * @methodOf vbet5.service:GameInfo
      * @description checks if games has video or not
      * @param {Object} game game object
+     * @param {Boolean} enablePrematchCheck enables checking for prematch games
      * @returns {Boolean} if game has video or not
      */
-    GameInfo.hasVideo = function hasVideo(game) {
+    GameInfo.hasVideo = function hasVideo(game, enablePrematchCheck) {
         if (Config.main.video.enableOptimization) {
             if (game.video_provider && (game.video_provider[0] !== Config.main.getProviderAvailableEventsAndEnableFiltering || !GameInfo.PROVIDER_AVAILABLE_EVENTS || GameInfo.PROVIDER_AVAILABLE_EVENTS.indexOf(game.video_provider[1]) !== -1)) {
                 game.tv_type = game.video_provider[0];
@@ -104,10 +107,10 @@ angular.module('vbet5').service('GameInfo', ['$rootScope', '$http', '$filter', '
             game.video_id = undefined;
             return false;
         }
-        if ((game.tv_type === 15 || game.tv_type === 29) && game.video_id && Config.main.availableVideoProviderIds.indexOf(game.tv_type) !== -1) {
+        if ([15, 29].indexOf(game.tv_type)!== -1 && game.video_id && Config.main.availableVideoProviderIds.indexOf(game.tv_type) !== -1) {
             return true;
         }
-        if (game.type === 1) { // games from 'prematch'  can't have video streams
+        if (game.type === 1 || enablePrematchCheck) {
             if ([1, 5, 25, 28].indexOf(game.tv_type) !== -1 && game.video_id && Config.main.availableVideoProviderIds.indexOf(game.tv_type) !== -1 && (!Config.main.getProviderAvailableEventsAndEnableFiltering || Config.main.getProviderAvailableEventsAndEnableFiltering.indexOf(game.tv_type) === -1 || !GameInfo.PROVIDER_AVAILABLE_EVENTS || !GameInfo.PROVIDER_AVAILABLE_EVENTS[game.tv_type] || GameInfo.PROVIDER_AVAILABLE_EVENTS[game.tv_type].indexOf(game.video_id) !== -1)) {
                 return true;
             }
@@ -120,7 +123,7 @@ angular.module('vbet5').service('GameInfo', ['$rootScope', '$http', '$filter', '
                 game.tv_type = 6;
                 return true;
             }
-            if ([7, 8, 11, 12, 16, 19, 26].indexOf(game.tv_type) !== -1 && Config.main.availableVideoProviderIds.indexOf(game.tv_type) !== -1) {
+            if ([7, 8, 11, 12, 16, 19, 26, 31].indexOf(game.tv_type) !== -1 && Config.main.availableVideoProviderIds.indexOf(game.tv_type) !== -1) {
                 return true;
             }
             if (game.video_id === 999999 && Config.main.availableVideoProviderIds.indexOf(999999) !== -1) { // the horse racing case
@@ -132,7 +135,7 @@ angular.module('vbet5').service('GameInfo', ['$rootScope', '$http', '$filter', '
                 game.tv_type = 17;
                 return true;
             }
-            if (game.video_id3 && ((game.tv_type === 21 && Config.main.availableVideoProviderIds.indexOf(21) !== -1) || (game.tv_type === 22 && Config.main.availableVideoProviderIds.indexOf(22) !== -1) || (game.tv_type === 23 && Config.main.availableVideoProviderIds.indexOf(23) !== -1))) {
+            if (game.video_id3 && [21, 22, 23, 30].indexOf(game.tv_type) !== -1 && Config.main.availableVideoProviderIds.indexOf(game.tv_type) !== -1) {
                 game.video_id = game.video_id3;
                 return true;
             }
@@ -197,6 +200,7 @@ angular.module('vbet5').service('GameInfo', ['$rootScope', '$http', '$filter', '
         }
 
         var filterList = [], idsFilter, availableProviders = Config.main.availableVideoProviderIds;
+        var videoId3Filter = {video_id3: {'@gt': 0}};
 
         availableProviders = GameInfo.processProvidersByCountryIfNeeded(availableProviders);
 
@@ -223,13 +227,17 @@ angular.module('vbet5').service('GameInfo', ['$rootScope', '$http', '$filter', '
                 case 16:        // ua_tv
                 case 19:        // E-Football
                 case 26:        // private vivaro
+                case 29:        //
+                case 30:        // youtube streaming
+                case 31:        //     NEW_LIVE_STREAMING
                     filterList.push({tv_type: availableProviders[i]});
                     break;
                 case 17:        // urakulas_tv
                 case 21:        // dota streaming
                 case 22:        // dota streaming
                 case 23:        // dota streaming
-                    filterList.push({video_id3: {'@gt': 0}});
+                case 30:        // youtube video
+                    filterList.indexOf(videoId3Filter) === - 1 &&(filterList.push(videoId3Filter));
                     break;
                 case 15:         // VIRTAUL_SPORTS
                     filterList.push({tv_type: 15, video_id: {'@gt': 0}});
@@ -254,16 +262,25 @@ angular.module('vbet5').service('GameInfo', ['$rootScope', '$http', '$filter', '
      * @description fills game object with video_data (gets it from swarm)
      * @param {Object} game game object
      * @param {Boolean} evenIfNotLoggedIn get video data even if user is not logged in
+     * @param {Boolean} isAnimation get animation data
      */
-    GameInfo.getVideoData = function getVideoData(game, evenIfNotLoggedIn) {
-        if (!game || (!evenIfNotLoggedIn && !$rootScope.env.authorized) || game.tv_type === undefined || game.video_id === undefined || ($rootScope.profile && $rootScope.profile.initial_balance == 0 && ($rootScope.profile.calculatedBalance + $rootScope.profile.calculatedBonus) == 0)) {
+    GameInfo.getVideoData = function getVideoData(game, evenIfNotLoggedIn, isAnimation) {
+        if (!isAnimation && (!game || game.tv_type === undefined || game.video_id === undefined || (!evenIfNotLoggedIn && (!$rootScope.profile || (!$rootScope.profile.initial_balance && ($rootScope.profile.calculatedBalance + $rootScope.profile.calculatedBonus) === 0))))) {
             return;
         }
+        var request = isAnimation ? {
+            video_id: game.video_provider[2],
+            provider: game.video_provider[0],
+            is_animation: true
+        } : {
+            video_id: game.video_id,
+            provider: game.tv_type
+        };
+
         return Zergling
-            .get({ video_id: game.video_id, provider: game.tv_type }, 'video_url')
+            .get(request, 'video_url')
             .then(function (data) {
-                console.log('video_url rsponse', data);
-                game.video_data = data;
+                game[(isAnimation ? 'animation' : 'video') + '_data'] = data;
             });
     };
 
@@ -289,7 +306,7 @@ angular.module('vbet5').service('GameInfo', ['$rootScope', '$http', '$filter', '
                     } else {
                         filterLoaded.resolve(null);
                     }
-                })['catch'](function(error) {
+                })['catch'](function() {
                 filterLoaded.resolve(null);
             });
         }
@@ -297,6 +314,34 @@ angular.module('vbet5').service('GameInfo', ['$rootScope', '$http', '$filter', '
         return result;
     };
 
+    /**
+     * @ngdoc method
+     * @name getSportGroups
+     * @methodOf vbet5.service:GameInfo
+     * @description loads sport groups data
+     * @returns {Object} promise
+     */
+    GameInfo.getSportGroups = function getSportGroups() {
+        var groupsProgress = $q.defer();
+        var result = groupsProgress.promise;
+
+        if (!Config.main.enableSportsGrouping || GameInfo.SPORT_GROUPS) {
+            groupsProgress.resolve(null);
+        } else {
+            Zergling
+                .get({}, 'get_partner_sport_group')
+                .then(function (data) {
+                    if (data && data.details) {
+                        GameInfo.SPORT_GROUPS = data.details;
+                    }
+                    groupsProgress.resolve(null);
+                })['catch'](function() {
+                groupsProgress.resolve(null);
+            });
+        }
+
+        return result;
+    };
 
     /**
      * @ngdoc method
@@ -329,19 +374,12 @@ angular.module('vbet5').service('GameInfo', ['$rootScope', '$http', '$filter', '
         gameInfo.race.favourite = gameInfo.race.favourite || [];
         gameInfo.race.second_favourite = gameInfo.race.second_favourite || [];
 
-        var xmls = (gameInfo.horse_xml && gameInfo.horse_xml.split(',')) || [];
         var raceXml, raceId;
-        for (var i = 0; i < xmls.length; i++) {           
-            if (xmls[i].indexOf('.xml') > -1) {
-                xmls[i] = xmls[i].indexOf('/') === -1 ? xmls[i].replace(' ', '') : xmls[i].split('/')[1];
-                if (xmls[i].indexOf('c') === 0) {
-                    raceXml = xmls[i];
-                }
-            }
-            else if(xmls[i].length){
-                raceId = xmls[i];
-            }
+        if (gameInfo.horse_xml) {
+            raceId = gameInfo.horse_xml.RacingId;
+            raceXml = gameInfo.horse_xml.HorceCXml && gameInfo.horse_xml.HorceCXml.split('/')[1];
         }
+
         var path = Config.main.horceRacingXmlUrl + raceXml;
         var raceData = {};
         //Does not work for localhost
@@ -457,7 +495,7 @@ angular.module('vbet5').service('GameInfo', ['$rootScope', '$http', '$filter', '
     var getCurrentRace = function getCurrentRace(allRaces, raceId) {
         if (allRaces.length > 1) {
             for (var i = 0; i < allRaces.length; i++) {
-                if (allRaces[i]._id === raceId) {
+                if (allRaces[i]._id == raceId) {
                     return allRaces[i];
                 }
             }
@@ -748,8 +786,6 @@ angular.module('vbet5').service('GameInfo', ['$rootScope', '$http', '$filter', '
         tennis: ['aces', 'double_fault']
     };
 
-    var GAMES_WITH_ANIMATIONS = ['Soccer', 'Tennis', 'Basketball'];
-
     var TIMELINE_EVENTS = ['goal', 'red card', 'yellow card', 'corner', 'substitution', 'yellow_card', 'red_card'];
 
     GameInfo.GamesWithStatsBlock = GAME_STATISTICS;
@@ -839,7 +875,14 @@ angular.module('vbet5').service('GameInfo', ['$rootScope', '$http', '$filter', '
             if(game.sport.alias === 'Tennis') {
                 GameInfo.setTennisCourtSide(game.last_event, game);
             }
-            game.has_animation = !!(GAMES_WITH_ANIMATIONS.indexOf(game.sport.alias)+1);
+            game.has_animation = !!(Config.main.sportsWithAnimations.indexOf(game.sport.alias)+1);
+        }
+        if (game.video_provider && game.video_provider[2]) {
+            if (Config.main.enableCustomAnimations) {
+                game.has_animation = true;
+            } else {
+                game.video_provider[2] = null;
+            }
         }
         if(game.info) {
             game.info.field = game.info.field !== undefined ? game.info.field : (game.field !== undefined ? game.field : '');
@@ -854,6 +897,18 @@ angular.module('vbet5').service('GameInfo', ['$rootScope', '$http', '$filter', '
                     game.live_events[i].add_info = game.live_events[i].current_minute || 0;
                 }
             }
+        }
+        if (Config.main.disableITFGamesInfo && game.is_itf) {
+            if (game.info) {
+                game.info.score1 = '-';
+                game.info.score2 = '-';
+                game.info.pass_team = "";
+            }
+            game.has_animation = false;
+            angular.forEach(game.stats, function (stat) {
+                stat.team1_value !== undefined && (stat.team1_value = '-');
+                stat.team2_value !== undefined && (stat.team2_value = '-');
+            });
         }
     };
 
@@ -1041,7 +1096,9 @@ angular.module('vbet5').service('GameInfo', ['$rootScope', '$http', '$filter', '
 
     // list of games  sets which should be replaced with specific text
     var liveGameSetsAliases = {
-        'Basketball5': 'OT' //basketball 5th quarter is called overtime 'OT'
+        'Basketball5': 'OT', //basketball 5th quarter is called overtime 'OT'
+        "BeachFootball4": 'OT',
+        "BeachFootball5": 'PT'
     };
 
     /**
@@ -1202,7 +1259,7 @@ angular.module('vbet5').service('GameInfo', ['$rootScope', '$http', '$filter', '
      *
      */
     GameInfo.getStatsLink = function getStatsLink(game) {
-        var statLang = Config.main.availableLanguages[Config.env.lang].short.toLowerCase() || Config.main.statsHostname.defaultLang;
+        var statLang = Moment.getStatisticsLang() || 'en';
         var hostName = Config.main.statsHostname.prefixUrl + statLang + Config.main.statsHostname.subUrl;
         if(Config.main.GmsPlatform) {
             return hostName + 'redirect/' + game.id;
@@ -1248,7 +1305,7 @@ angular.module('vbet5').service('GameInfo', ['$rootScope', '$http', '$filter', '
         GameInfo.maxBetRequests[event.id] = $timeout(function () {
             Zergling.get({events: [event.id]}, 'get_max_bet').then(function (response) {
                 if (GameInfo.maxBetRequests[event.id]) {
-                    event.maxBet = response && (Config.main.onlyDecimalStakeAmount ? Math.floor(response.result) : parseFloat(response.result));
+                    response && !response.result_text && (event.maxBet = (Config.main.onlyDecimalStakeAmount ? Math.floor(response.result) : parseFloat(response.result)));
 
                     GameInfo.maxBetRequests[event.id] = undefined;
                 }
@@ -1388,29 +1445,58 @@ angular.module('vbet5').service('GameInfo', ['$rootScope', '$http', '$filter', '
     };
 
     /**
-     * @description change 'correct score' market events order for 3 columns view
+     * @ngdoc method
+     * @name reorderMarketEvents
+     * @methodOf vbet5.service:GameInfo
+     * @description change market events (listed in marketsPreDividedByColumns variable in center.js and virtualSports.js) order for 2 & 3 columns view
+     * @param {Object} market the market Object
+     * @param {String} type the market's type
+     * @returns {Array} array of virtual sport ids
      */
-    GameInfo.reorderCSMarketEvents = function reorderCSMarketEvents(market) {
-       // market.col_count = 3;
-        var leftCol = [], rightCol = [], midCol = [];
-        angular.forEach(market.event, function(event) {
-            if(event.home_value > event.away_value) {
-                leftCol.push(event);
-            } else if(event.home_value < event.away_value) {
-                rightCol.push(event);
-            } else {
-                midCol.push(event);
-            }
-        });
-        leftCol.sort(function(a,b) {return a.home_value - b.home_value});
-        midCol.sort(function(a,b) {return a.home_value - b.home_value});
-        rightCol.sort(function(a,b) {return a.away_value - b.away_value});
-
+    GameInfo.reorderMarketEvents = function reorderMarketEvents(market, type) {
+        var leftCol = [], midCol = [], rightCol = [];
+        switch (type) {
+            case 'preDivided':
+                if (market.col_count === 2) {
+                    angular.forEach(market.event, function(event) {
+                        event.display_column === 1 ? leftCol.push(event) : rightCol.push(event);
+                    });
+                } else {
+                    angular.forEach(market.event, function(event) {
+                        switch (event.display_column) {
+                            case 1:
+                                leftCol.push(event);
+                                break;
+                            case 2:
+                                midCol.push(event);
+                                break;
+                            case 3:
+                                rightCol.push(event);
+                                break;
+                        }
+                    });
+                }
+                break;
+            case 'correctScore':
+                angular.forEach(market.event, function(event) {
+                    if(event.home_value > event.away_value) {
+                        leftCol.push(event);
+                    } else if(event.home_value < event.away_value) {
+                        rightCol.push(event);
+                    } else {
+                        midCol.push(event);
+                    }
+                });
+                leftCol.sort(function(a,b) {return a.home_value - b.home_value});
+                midCol.sort(function(a,b) {return a.home_value - b.home_value});
+                rightCol.sort(function(a,b) {return a.away_value - b.away_value});
+                break;
+        }
 
         market.events = [];
         var length;
 
-        if(market.col_count === 3) {
+        if (market.col_count === 3) {
             length = Math.max(leftCol.length, rightCol.length, midCol.length);
             for(var i = 0; i < length; i++) {
                 leftCol[i] = leftCol[i] || {id: -(i * 3), is_empty: true};
@@ -1440,6 +1526,24 @@ angular.module('vbet5').service('GameInfo', ['$rootScope', '$http', '$filter', '
                 market.events.push(rightCol[j]);
             }
         }
+    };
+
+    /**
+     * @ngdoc method
+     * @name getVirtualSportIds
+     * @methodOf vbet5.service:GameInfo
+     * @description returns ids of all virtual sports
+     * @param {Number} id id of "parent' region
+     * @returns {Array} array of virtual sport ids
+     */
+    GameInfo.getVirtualSportIds = function getVirtualSportIds() {
+        if (!virtualSportIds) {
+            virtualSportIds = [];
+            angular.forEach(Config.main.virtualSportIds, function (value) {
+                virtualSportIds = virtualSportIds.concat(value);
+            });
+        }
+        return virtualSportIds;
     };
 
     return GameInfo;

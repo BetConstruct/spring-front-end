@@ -1,0 +1,14 @@
+<div class="live-chat-b-contain">
+    <div ng-click="" class="help-b" ng-if="!conf.liveChat.isSfChat && conf.liveChat.siteId && conf.liveChat.codePlan">
+        <a pass-click-to="{{ conf.liveChat.buttonId ? conf.liveChat.buttonId : 'live-chat-button1' }}"  ng-attr-iframe="{{!conf.liveChat.buttonIsDiv ? 'true' : ''}}" ng-attr-find="{{!conf.liveChat.buttonIsDiv ? 'a' : ''}}"><span trans>Contact Support</span></a>
+    </div>
+    <div ng-if="conf.liveChat.isSfChat" ng-click="startSFChat()" title="Live Chat" trans="attr-only" class="help-b"><a><span trans>Contact Support</span></a></div>
+
+    <div title="Live Agent" trans="attr-only" class="help-b" ng-show="!!isLiveAgent" ng-click="startLiveAgent()">
+        <a trans>Contact Support</a>
+    </div>
+
+    <div title="Live Agent" trans="attr-only" class="help-b" ng-show="!!conf.liveChat.zopimInHeader" ng-click="" onclick="showZopimChat();">
+        <a trans>Contact Support</a>
+    </div>
+</div>

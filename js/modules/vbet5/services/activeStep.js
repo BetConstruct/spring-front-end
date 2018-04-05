@@ -16,28 +16,30 @@ VBET5.service('ActiveStep', ['$rootScope', 'Config', function ($rootScope, Confi
      * @name getActiveStep
      * @methodOf vbet5.service:ActiveStep
      * @description Get active step from profile for selected type
-     * @returns {String} Active step type
+     * @returns {Object} Active step Config
+     *
+     * @param {String}  type the type of step
+     * @param {int} stepId the step id
+     * @param {int} stateId the state id
      */
-    ActiveStep.getActiveStep = function getActiveStep (type) {
-
-        //$rootScope.profile = $rootScope.profile || {};
-        //$rootScope.profile.active_step = 3;
-        //$rootScope.profile.active_step_state = 5;
-
-        var ret = false;
-        if (Config.env.authorized && $rootScope.profile && $rootScope.profile.active_step) {
-            angular.forEach(Config.activeStepsConfig, function (stepConfig) {
-                angular.forEach(stepConfig.steps, function (step) {
-                    if (step.step && step.state ? $rootScope.profile.active_step === step.step && $rootScope.profile.active_step_state == step.state : $rootScope.profile.active_step === step.step) {
-                        if (type === stepConfig.type) {
-                            ret = stepConfig;
-                        }
+    ActiveStep.getActiveStep = function getActiveStep (type, stepId, stateId) {
+        var result = false;
+        if (Config.env.authorized && $rootScope.profile) {
+            var activeStep = stepId || $rootScope.profile.active_step;
+            var activeState = stateId || $rootScope.profile.active_step_state;
+            if (activeStep) {
+                angular.forEach(Config.activeStepsConfig, function (stepConfig) {
+                    if (type === stepConfig.type) {
+                        angular.forEach(stepConfig.steps, function (step) {
+                            if (step.step && activeStep === step.step && (!step.state || activeState == step.state)) {
+                                result = stepConfig;
+                            }
+                        });
                     }
                 });
-            });
-
+            }
         }
-        return ret;
+        return result;
     };
 
     /**

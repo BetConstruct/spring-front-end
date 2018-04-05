@@ -71,8 +71,7 @@ angular.module('vbet5.betting').controller('dashboardCtrl', ['$rootScope', '$sco
         };
 
         if (promoted) {
-            //request.where.game[promoted] = true;
-            request.where.game[promoted] = {"@contains": parseInt(Config.main.site_id)};
+            request.where.game[promoted] = Config.main.GmsPlatform ? true : {'@contains': parseInt(Config.main.site_id)};
         } else {
             request.where.game.type = type;
         }

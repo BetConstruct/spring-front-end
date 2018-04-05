@@ -1,5 +1,5 @@
 <!--New poker page -->
-<div ng-init="loadPages('poker'); loadPage('poker.mainPageSlugs', true); setTitle('Poker'); checkIfEnabled('poker');">
+<div ng-init="loadPages('poker'); loadPage('poker.mainPageSlugs', true); setTitle('Poker');" get-casino-game="5639">
     <div ng-show="!showNestedFrame">
         <div ng-if="pokerPages && pages" class="skillgame-landing-j poker-j">
             <div class="intro-section-j" ng-init="initProductBanners('poker')">
@@ -7,44 +7,29 @@
                 <div class="skillgame-landing-guide button-group-j">
                     <ul>
                         <li>
-                            <div ng-if="globalConfig.poker.instantPlayAvailable">
-                                <a ng-if="globalConfig.poker.instantPlayTarget === '_invest'" ng-click="openNestedFrame();$event.stopPropagation()">
-                                    <button trans>Play now!</button>
-                                </a>
-                                <a ng-if="globalConfig.poker.instantPlayTarget !== '_invest'" ng-href="{{globalConfig.poker.instantPlayLink}}" target="{{globalConfig.poker.instantPlayTarget}}">
-                                    <button trans="">Play now!</button>
+                            <div ng-if="game.types.realMode" ng-class="{'play-now-top-item': globalConfig.poker.showTopItem}">
+                                <a ng-click="openNestedFrame();$event.stopPropagation()">
+                                    <button  data-content="{{globalConfig.poker.showTopItem|translate}}" trans>Play now!</button>
                                 </a>
                             </div>
                         </li>
                         <li>
-                            <a ng-if="userOSVersion === 'WindowsXP' && globalConfig.poker.downloadLink.windowsXp" ng-href="{{ globalConfig.poker.downloadLink.windowsXp }}" ng-click="broadcast('analytics.button', 'poker')">
-                                <button class="skin-j" trans>poker</button>
+                            <a ng-if="userOSVersion === 'WindowsXP' && game.downloads.windowsXp" ng-href="{{ (game.downloads.windowsXp.indexOf('http') === -1 ? $root.cUrlPrefix + '/' : '') + game.downloads.windowsXp }}" ng-click="broadcast('analytics.button', 'poker')">
+                                <button class="skin-j" trans>download</button>
                             </a>
-                            <a ng-if="(userOSVersion !== 'WindowsXP' || !globalConfig.poker.downloadLink.windowsXp) && userOS === 'Windows' && globalConfig.poker.downloadLink.windows" ng-href="{{ globalConfig.poker.downloadLink.windows }}" ng-click="broadcast('analytics.button', 'poker')">
-                                <button class="skin-j" trans>poker</button>
+                            <a ng-if="(userOSVersion !== 'WindowsXP' || !game.downloads.windowsXp) && userOS === 'Windows' && game.downloads.windows" ng-href="{{ (game.downloads.windows.indexOf('http') === -1 ? $root.cUrlPrefix + '/' : '') + game.downloads.windows }}" ng-click="broadcast('analytics.button', 'poker')">
+                                <button class="skin-j" trans>download</button>
                             </a>
-                            <a ng-if="userOS === 'MacOS' && globalConfig.poker.downloadLink.mac" ng-href="{{ globalConfig.poker.downloadLink.mac }}" ng-click="broadcast('analytics.button', 'poker')">
-                                <button class="skin-j" trans>poker</button>
+                            <a ng-if="userOS === 'MacOS' && game.downloads.mac" ng-href="{{ (game.downloads.mac.indexOf('http') === -1 ? $root.cUrlPrefix + '/' : '') + game.downloads.mac}}" ng-click="broadcast('analytics.button', 'poker')">
+                                <button class="skin-j" trans>download</button>
                             </a>
-                            <a ng-if="(userOS !== 'Windows' || !globalConfig.poker.downloadLink.windows) && (userOS!=='MacOS' || !globalConfig.poker.downloadLink.mac)" ng-click="broadcast('analytics.button', 'poker');scrollToSelectedItem('winner-list');$event.stopPropagation();">
-                                <button class="skin-j" trans>poker</button>
-                            </a>
-                        </li>
-
-                        <li ng-if="globalConfig.chinesePoker.downloadLink && !globalConfig.poker.disableChinesePoker">
-                            <a ng-if="userOS === 'Windows' && globalConfig.chinesePoker.downloadLink.windows" ng-href="{{ globalConfig.chinesePoker.downloadLink.windows }}" ng-click="broadcast('analytics.button', 'OFC poker')">
-                                <button trans>Chinese Poker</button>
-                            </a>
-                            <a ng-if="userOS === 'MacOS' && globalConfig.chinesePoker.downloadLink.mac" ng-href="{{ globalConfig.chinesePoker.downloadLink.mac }}" ng-click="broadcast('analytics.button', 'OFC poker')">
-                                <button trans>Chinese Poker</button>
-                            </a>
-                            <a ng-if="userOS === 'Linux' && globalConfig.chinesePoker.downloadLink.linux" ng-href="{{ globalConfig.chinesePoker.downloadLink.linux }}" ng-click="broadcast('analytics.button', 'OFC poker')">
-                                <button trans>Chinese Poker</button>
+                            <a ng-if="((userOS !== 'Windows' || !game.downloads.windows) && (userOS!=='MacOS' || !game.downloads.mac)) && winnersList" ng-click="broadcast('analytics.button', 'poker');scrollToSelectedItem('winner-list');$event.stopPropagation();">
+                                <button class="skin-j" trans>download</button>
                             </a>
                         </li>
 
                         <div class="intro-info-j">
-                            <a ng-click="broadcast('openHelpPage', {slug: 'faq&subsub=rules&sub=poker'})" class="how-to-lplay-j" trans>How To Play</a>
+                            <a ng-hide="globalConfig.poker.hideHowToPlayLink" ng-click="broadcast('openHelpPage', {slug: 'faq&subsub=rules&sub=poker'})" class="how-to-lplay-j" trans>How To Play</a>
                             <a ng-if="globalConfig.poker.tournamentListEnabled" ng-click="broadcast('window.openPopup', {url:'#/popup/?action=tournamentlist', title: conf.skin, params: 'toolbar=no,resizable=yes,scrollbars=yes,width=900,height=700'}); $event.stopPropagation()" class="tournament-llist-j" trans>Tournament List</a>
                             <a ng-if="globalConfig.poker.rakeRaceEnabled" ng-click="broadcast('window.openPopup', {url:'#/popup/?action=rakerace', title: conf.skin, params: 'toolbar=no,resizable=yes,scrollbars=yes,width=900,height=700'}); $event.stopPropagation()" class="rakerace-llist-j" trans>Rake Race</a>
                         </div>
@@ -57,7 +42,7 @@
             <div class="select-os-section-j" ng-if="!globalConfig.poker.hideDownloadLinkSectionInPokerPage">
                 <div>
                     <ul class="skillgame-landing-guide">
-                        <li ng-show="globalConfig.poker.downloadLink.windows">
+                        <li ng-show="game.downloads.windows">
                             <div class="head-j windows">
                                 <h1 trans>Windows OS</h1>
                                 <p trans>Windows XP or higher</p>
@@ -67,7 +52,7 @@
                                 <p trans>poker_download_description_windows</p>
                             </div>
                         </li>
-                        <li ng-show="globalConfig.poker.downloadLink.mac">
+                        <li ng-show="game.downloads.mac">
                             <div class="head-j mac">
                                 <h1 trans>Mac OS</h1>
                                 <p trans>Mac OS 9 or higher</p>
@@ -77,7 +62,7 @@
                                 <p trans>poker_download_description_mac</p>
                             </div>
                         </li>
-                        <li ng-show="globalConfig.poker.downloadLink.android">
+                        <li ng-show="game.downloads.android">
                             <div class="head-j android">
                                 <h1>Android</h1>
                                 <p>Android version 4.0 or higher</p>
@@ -91,77 +76,43 @@
                 </div>
                 <div>
                     <ul class="skillgame-landing-guide get-section-j">
-                        <li ng-show="globalConfig.poker.downloadLink.windows">
-                            <a ng-href="{{ globalConfig.poker.downloadLink.windows }}">
+                        <li ng-show="game.downloads.windows">
+                            <a ng-href="{{ (game.downloads.windows.indexOf('http') === -1 ? $root.cUrlPrefix + '/' : '') + game.downloads.windows }}">
                                 <button trans>Download</button>
                             </a>
                         </li>
-                        <li ng-show="globalConfig.poker.downloadLink.mac">
-                            <a ng-href="{{ globalConfig.poker.downloadLink.mac }}">
+                        <li ng-show="game.downloads.mac">
+                            <a ng-href="{{ (game.downloads.mac.indexOf('http') === -1 ? $root.cUrlPrefix + '/' : '') +game.downloads.mac }}">
                                 <button trans>Download</button>
                             </a>
                         </li>
-                        <li ng-show="globalConfig.poker.downloadLink.android">
-                            <a ng-href="{{ globalConfig.poker.downloadLink.android }}">
+                        <li ng-show="game.downloads.android">
+                            <a ng-href="{{ (game.downloads.android.indexOf('http') === -1 ? $root.cUrlPrefix + '/' : '') + game.downloads.android }}">
                                 <button trans>Download</button>
                             </a>
                         </li>
                     </ul>
                 </div>
             </div>
-            <div class="promotions-section-j">
-                <h1 trans>Best Promotions</h1>
-                <div class="nav-landp-j"  no-animate>
-                    <promotion-news template="slider" slug="poker" hide-dates="true" main-class="block-meny-news promo" use-custom-base-host="true" ng-if="!showDownloadLinks" share-path="poker"></promotion-news>
-                </div>
-            </div>
-            <div class="new-default-popup-j pu-tour-list-j" ng-if="globalConfig.poker.tournamentsInfoLink && showTournamentsInfoList">
-                <div class="pp-table-j">
-                    <div class="table-row-j">
-                        <div class="table-cell-j">
-                            <div class="popup-wrapper-j">
-                                <div class="pu-head-j">
-                                    <span trans>Tournament List</span>
-                                    <a class="close-j" ng-click="$parent.showTournamentsInfoList = false;$event.stopPropagation()"></a>
-                                </div>
-                                <iframe ng-src="{{ globalConfig.poker.tournamentsInfoLink | html : 'url' }}" frameborder="0"></iframe>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <promotion-news template="slider" slug="poker" hide-dates="true" main-class="block-meny-news promo" use-custom-base-host="true" ng-if="!showDownloadLinks" share-path="poker"></promotion-news>
+
             <div class="cta-buttons-j">
                 <div class="skillgame-landing-guide">
                     <ul>
-                        <li ng-if="globalConfig.poker.instantPlayAvailable">
-                            <a ng-if="globalConfig.poker.instantPlayTarget === '_invest'" ng-click="openNestedFrame();$event.stopPropagation()">
+                        <li ng-if="game.types.realMode">
+                            <a ng-click="openNestedFrame();$event.stopPropagation()">
                                 <button trans>Play poker now</button>
-                            </a>
-                            <a ng-if="globalConfig.poker.instantPlayTarget !== '_invest'" ng-href="{{globalConfig.poker.instantPlayLink}}" target="{{globalConfig.poker.instantPlayTarget}}">
-                                <button trans="">Play poker now</button>
                             </a>
                         </li>
                         <li>
-                            <a ng-if="userOS === 'Windows' && globalConfig.poker.downloadLink.windows" ng-href="{{ globalConfig.poker.downloadLink.windows }}">
+                            <a ng-if="userOS === 'Windows' && game.downloads.windows" ng-href="{{ (game.downloads.windows.indexOf('http') === -1 ? $root.cUrlPrefix + '/' : '') + game.downloads.windows }}">
                                 <button class="skin-j" trans>Best poker software</button>
                             </a>
-                            <a ng-if="userOS === 'MacOS' && globalConfig.poker.downloadLink.mac" ng-href="{{ globalConfig.poker.downloadLink.mac }}">
+                            <a ng-if="userOS === 'MacOS' && game.downloads.mac" ng-href="{{ (game.downloads.mac.indexOf('http') === -1 ? $root.cUrlPrefix + '/' : '') + game.downloads.mac }}">
                                 <button class="skin-j" trans>Best poker software</button>
                             </a>
-                            <a ng-if="(userOS !== 'Windows' || !globalConfig.poker.downloadLink.windows) && (userOS!=='MacOS' || !globalConfig.poker.downloadLink.mac)" ng-click="scrollToSelectedItem('winner-list');$event.stopPropagation();">
+                            <a ng-if="(userOS !== 'Windows' || !game.downloads.windows) && (userOS!=='MacOS' || !game.downloads.mac)" ng-click="scrollToSelectedItem('winner-list');$event.stopPropagation();">
                                 <button class="skin-j" trans>Best poker software</button>
-                            </a>
-                        </li>
-
-                        <li ng-if="globalConfig.chinesePoker.downloadLink && !globalConfig.poker.disableChinesePoker">
-                            <a ng-if="userOS === 'Windows' && globalConfig.chinesePoker.downloadLink.windows" ng-href="{{ globalConfig.chinesePoker.downloadLink.windows }}" ng-click="broadcast('analytics.button', 'OFC poker')">
-                                <button trans>Chinese poker software</button>
-                            </a>
-                            <a ng-if="userOS === 'MacOS' && globalConfig.chinesePoker.downloadLink.mac" ng-href="{{ globalConfig.chinesePoker.downloadLink.mac }}" ng-click="broadcast('analytics.button', 'OFC poker')">
-                                <button trans>Chinese poker software</button>
-                            </a>
-                            <a ng-if="userOS === 'Linux' && globalConfig.chinesePoker.downloadLink.linux" ng-href="{{ globalConfig.chinesePoker.downloadLink.linux }}" ng-click="broadcast('analytics.button', 'OFC poker')">
-                                <button trans>Chinese poker software</button>
                             </a>
                         </li>
                     </ul>
@@ -176,6 +127,6 @@
         </div>
         <vbet-loader class="centered-j" ng-show="!pokerPagesLoaded"></vbet-loader>
     </div>
-    <div ng-if="showNestedFrame" class="big-games-overflow" ng-controller="casinoSpecialGamesCtrl" ng-init="loadGame('poker')" ng-include="getTemplate('optional_modules/casino/templates/specialgames/skillgame.html')"></div>
+    <div ng-if="showNestedFrame && game" class="big-games-overflow" ng-controller="casinoSpecialGamesCtrl" ng-init="loadGame('poker')" ng-include="getTemplate('optional_modules/casino/templates/specialgames/skillgame.html')"></div>
 </div>
 <!-- end of New poker page -->

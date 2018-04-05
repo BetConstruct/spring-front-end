@@ -5,15 +5,15 @@
  * @description
  * settings controller
  */
-VBET5.controller('settingsCtrl', ['$scope', '$rootScope', '$location', 'Zergling', 'Translator', 'AuthData', 'Config', 'Utils', 'Moment', 'CountryCodes', function ($scope, $rootScope, $location, Zergling, Translator, AuthData, Config, Utils, Moment, CountryCodes) {
+VBET5.controller('settingsCtrl', ['$scope', '$rootScope', '$location', '$document', 'Zergling', 'Translator', 'AuthData', 'Config', 'Utils', 'Moment', 'CountryCodes', function ($scope, $rootScope, $location, $document, Zergling, Translator, AuthData, Config, Utils, Moment, CountryCodes) {
     'use strict';
 
     var REG_FORM_BIRTH_YEAR_LOWEST = 1900;
     var referralStartDate = Config.main.friendReferral;
     $scope.countryCodes = Utils.objectToArray(Utils.getAvailableCountries(CountryCodes), 'key');
-    if (Config.main.registration.sortCountry) {
-        $scope.countryCodes = $scope.countryCodes.sort(Utils.alphabeticalSorting);
-    }
+
+    $scope.countryCodes = $scope.countryCodes.sort(Utils.alphabeticalSorting);
+
     $scope.personalDetails = angular.copy(Config.main.personalDetails);
     $scope.patterns = Config.main.personalDetails.patterns;
     $scope.settingsPage = $location.search().settingspage || Config.main.settingsDefaultPage; //deep linking
@@ -33,6 +33,7 @@ VBET5.controller('settingsCtrl', ['$scope', '$rootScope', '$location', 'Zergling
 
     $scope.resetError = {};
     $scope.passwordResetError = {};
+    $scope.forms = {}; // used for storing forms, otherwise wouldn't be accessible in controller
 
     // if field name is not in this object then name of the field in get_user and update_user requests is the same
     var fieldNamesInUpdateUserInfo = {
@@ -47,16 +48,16 @@ VBET5.controller('settingsCtrl', ['$scope', '$rootScope', '$location', 'Zergling
      * @description changes user password using data from corresponding form
      */
     $scope.changePassword = function changePassword() {
-        $scope.changepasswordForm.oldpassword.$invalid = $scope.changepasswordForm.oldpassword.$error.incorrect = false;
+        if ($scope.working || $scope.env.sliderContent !== 'settings') return;
+
         $scope.working = true;
-        $scope.changepasswordForm.$setPristine();
+        $scope.forms.changepasswordForm.oldpassword.$invalid = $scope.forms.changepasswordForm.oldpassword.$error.incorrect = false;
+        $scope.forms.changepasswordForm.$setPristine();
         var request = {
             password: $scope.changepasswordData.oldpassword,
             new_password: $scope.changepasswordData.password
         };
         Zergling.get(request, 'update_user_password').then(function (response) {
-            $scope.working = false;
-            console.log(response);
             if (response.auth_token) {
                 var authData = AuthData.get();
                 authData.auth_token = response.auth_token;
@@ -64,25 +65,42 @@ VBET5.controller('settingsCtrl', ['$scope', '$rootScope', '$location', 'Zergling
                 $rootScope.$broadcast("globalDialogs.addDialog", {
                     type: 'success',
                     title: 'Success',
-                    content: Translator.get('Password changed')
+                    content: 'Password changed'
+                });
+
+                if ($scope.forms.changepasswordForm) {
+                    // Cleaning up password fields after successful change
+                    $scope.changepasswordData.oldpassword = '';
+                    $scope.changepasswordData.password = '';
+                    $scope.changepasswordData.password2 = '';
+
+                    $scope.forms.changepasswordForm.$setPristine();
+                    $scope.forms.changepasswordForm.$setUntouched();
+                }
+
+            } else if (response.result) {
+                $rootScope.$broadcast("globalDialogs.addDialog", {
+                    type: 'error',
+                    title: 'Error',
+                    content: 'message_' + response.result
                 });
             } else {
                 throw response;
             }
         })['catch'](function (response) {
-            $scope.working = false;
-            if (response.data.match("1006")) {
-                $scope.changepasswordForm.oldpassword.$invalid = $scope.changepasswordForm.oldpassword.$error.incorrect = true;
+            if (response.data.match("1006") || response.data.match("1005")) {
+                $scope.forms.changepasswordForm.oldpassword.$invalid = $scope.forms.changepasswordForm.oldpassword.$error.incorrect = true;
                 return;
             }
-            var message = response.code == 12 ? 'Incorrect Current Password' : (Translator.get('Error occured') + ' : ' +response.msg);
+            var message = response.code === 12 ? 'Incorrect Current Password' : (Translator.get('Error occured') + ' : ' +response.msg);
             $rootScope.$broadcast("globalDialogs.addDialog", {
                 type: 'error',
                 title: 'Error',
                 content: message
             });
+        })['finally'](function() {
+            $scope.working = false;
         });
-
     };
 
     /**
@@ -92,73 +110,79 @@ VBET5.controller('settingsCtrl', ['$scope', '$rootScope', '$location', 'Zergling
      * @description changes user details using data from corresponding form
      */
     $scope.changeDetails = function changeDetails() {
-        $scope.details.country_code = $scope.details.selectCountryCode && $scope.details.selectCountryCode.key;
-        $scope.working = true;
-        var request = {user_info:{}};
-        if ($scope.personalDetails.editableFields.length) {
-            var index, i;
-            for(i = 0; i < $scope.personalDetails.editableFields.length; i++) {
-                index = $scope.personalDetails.editableFields[i];
-                if(index === 'birth_date' && $scope.birthDate && $scope.birthDate.year && $scope.birthDate.month && $scope.birthDate.day) {
-                    $scope.details[index] = $scope.birthDate.year.toString() + '-' + $scope.birthDate.month.toString() + '-' + $scope.birthDate.day.toString();
+        // Prevent user from updating profile till the previous changes have been resolved
+        if (!$scope.working && $scope.env.sliderContent === 'settings') {
+            $scope.working = true;
+            $document[0].activeElement.blur(); // Need to 'unfocus' password field in order for it not to be $touched after update
+            $scope.details.country_code = $scope.details.selectCountryCode && $scope.details.selectCountryCode.key;
+            var request = {user_info:{}};
+            if ($scope.personalDetails.editableFields.length) {
+                var index, i;
+                for(i = 0; i < $scope.personalDetails.editableFields.length; i++) {
+                    index = $scope.personalDetails.editableFields[i];
+                    if(index === 'birth_date' && $scope.birthDate && $scope.birthDate.year && $scope.birthDate.month && $scope.birthDate.day) {
+                        $scope.details[index] = $scope.birthDate.year.toString() + '-' + $scope.birthDate.month.toString() + '-' + $scope.birthDate.day.toString();
+                    }
+                    request.user_info[fieldNamesInUpdateUserInfo[index] || index] = index === 'gender' ? $scope.details.sex : $scope.details[index];
                 }
-                request.user_info[fieldNamesInUpdateUserInfo[index] || index] = index == 'gender' ? $scope.details.sex : $scope.details[index];
             }
-        }
-        request.user_info.password = $scope.details.password;
-        if(Config.main.GmsPlatform) {
-            request.user_info.subscribed_to_news = $scope.details.subscribed_to_news;
-        }
+            request.user_info.password = $scope.details.password;
+            if(Config.main.GmsPlatform) {
+                request.user_info.subscribed_to_news = $scope.details.subscribed_to_news;
+                request.user_info.last_name = request.user_info.last_name || request.user_info.sur_name;
+            }
 
-        console.log("changeDetails", $scope.personalDetails.editableFields, request, $scope.details);
-        Zergling.get(request, 'update_user').then(function (response) {
-            $scope.working = false;
-            if (response.result === 0) {
-                $rootScope.$broadcast("globalDialogs.addDialog", {
-                    type: 'success',
-                    title: 'Success',
-                    content: 'Personal information updated.'
-                });
-                prepareOnceEditableFields();
+            console.log("changeDetails", $scope.personalDetails.editableFields, request, $scope.details);
+            Zergling.get(request, 'update_user').then(function (response) {
+                if (response.result === 0) {
+                    $rootScope.$broadcast("globalDialogs.addDialog", {
+                        type: 'success',
+                        title: 'Success',
+                        content: 'Personal information updated.',
+                        buttons: [
+                            {title: 'Ok', callback: function() {
+                                /*$rootScope.$broadcast('toggleSliderTab', 'deposit');*/
+                            }}
+                        ]
+                    });
+                    prepareOnceEditableFields();
 
-            } else if (response.result === '-1002' || response.result === '-1003') {
+                    // Need to check if the detailsForm is available to setPristine & setUntouched (to avoid errors)
+                    if ($scope.forms.detailsForm) {
+                        // Clearing password field & 'resetting' the form after successful profile change
+                        $scope.details.password = "";
+                        $scope.forms.detailsForm.$setPristine();
+                        $scope.forms.detailsForm.$setUntouched();
+                    }
+                } else if (response.result === '-1002' || response.result === '-1003' || response.result === '-1005') {
+                    $rootScope.$broadcast("globalDialogs.addDialog", {
+                        type: 'error',
+                        title: 'Error',
+                        content: 'Wrong Password' // No need to translate since its translated on the dialog side already
+                    });
+                } else if (response.result === '-1119') {
+                    $scope.forms.detailsForm.email.$invalid = $scope.forms.detailsForm.email.$error.dublicate = true;
+                } else if (response.result === '-1123') {
+                    $rootScope.$broadcast("globalDialogs.addDialog", {
+                        type: 'error',
+                        title: 'Error',
+                        content: 'Passport Number is already registered for another account' // No need to translate since its translated on the dialog side already
+                    });
+                }
+                console.log(response);
+            })['catch'](function (response) {
                 $rootScope.$broadcast("globalDialogs.addDialog", {
                     type: 'error',
                     title: 'Error',
-                    content: 'Wrong Password' // No need to translate since its translated on the dialog side already
+                    content: Translator.get('Error occured') + ' : ' + response.data
                 });
-            } else if (response.result === '-1119') {
-                $scope.detailsForm.email.$invalid = $scope.detailsForm.email.$error.dublicate = true;
-            } else if (response.result === '-1123') {
-                $rootScope.$broadcast("globalDialogs.addDialog", {
-                    type: 'error',
-                    title: 'Error',
-                    content: 'Passport Number is already registered for another account' // No need to translate since its translated on the dialog side already
-                });
-            }
-            console.log(response);
-        })['catch'](function (response) {
-            $scope.working = false;
-            $rootScope.$broadcast("globalDialogs.addDialog", {
-                type: 'error',
-                title: 'Error',
-                content: Translator.get('Error occured') + ' : ' + response.data
+                console.log(response);
+            })['finally'](function() {
+                $scope.working = false;
             });
-            console.log(response);
-        });
-
+        }
     };
 
-    /**
-     * @ngdoc method
-     * @name savePreferences
-     * @methodOf vbet5.controller:settingsCtrl
-     * @description changes user preferences using data from corresponding form
-     */
-    $scope.savePreferences = function savePreferences() {
-        $scope.working = true;
-
-    };
 
     /**
      * @ngdoc method
@@ -171,12 +195,11 @@ VBET5.controller('settingsCtrl', ['$scope', '$rootScope', '$location', 'Zergling
         Zergling.get({}, 'get_user').then(function (data) {
             $scope.details = data;
             $scope.details.phone_number = $scope.details.phone; // field name is different when loading/saving  :/
+            $scope.details.sur_name = $scope.details.last_name || $scope.details.sur_name; // field name is different when loading/saving  :/
             $scope.details.selectCountryCode = CountryCodes[$scope.details.country_code];
             if ($scope.details.selectCountryCode !== undefined && $scope.countryCodes.indexOf($scope.details.selectCountryCode) === -1) {
                 $scope.countryCodes.push($scope.details.selectCountryCode);
-                if (Config.main.registration.sortCountry) {
-                    $scope.countryCodes = $scope.countryCodes.sort(Utils.alphabeticalSorting);
-                }
+                $scope.countryCodes = $scope.countryCodes.sort(Utils.alphabeticalSorting);
                 var countryCodeIndex = $scope.personalDetails.disabledFields.indexOf('country_code');
                 if (countryCodeIndex > -1) {
                     $scope.personalDetails.disabledFields.splice(countryCodeIndex, 1);
@@ -185,6 +208,11 @@ VBET5.controller('settingsCtrl', ['$scope', '$rootScope', '$location', 'Zergling
                 if(readOnlyIndex > -1){
                     $scope.personalDetails.editableFields.push($scope.personalDetails.readOnlyFields.splice(readOnlyIndex, 1)[0]);
                 }
+            }
+            var birthDateIndex = $scope.personalDetails.readOnlyFields.indexOf('birth_date');
+            if(!$scope.details.birth_date && birthDateIndex > -1){
+                $scope.personalDetails.editableFields.push($scope.personalDetails.readOnlyFields.splice(birthDateIndex, 1)[0]);
+                $scope.personalDetails.requiredEditableFields.push("birth_date");
             }
             if (Config.main.getBankInfoToProfile) {
                 Zergling.get({}, 'get_bank_info').then(function (response) {
@@ -232,7 +260,14 @@ VBET5.controller('settingsCtrl', ['$scope', '$rootScope', '$location', 'Zergling
             }
         }
 
-        if ($scope.details.sur_name) {
+        if ($scope.details.middle_name) {
+            index = $scope.personalDetails.editableFields.indexOf('middle_name');
+            if (index > -1) {
+                $scope.personalDetails.readOnlyFields.push($scope.personalDetails.editableFields.splice(index, 1)[0]);
+            }
+        }
+
+        if ($scope.details.sur_name || $scope.details.last_name) {
             index = $scope.personalDetails.editableFields.indexOf('sur_name');
             if (index > -1) {
                 $scope.personalDetails.readOnlyFields.push($scope.personalDetails.editableFields.splice(index, 1)[0]);
@@ -270,6 +305,8 @@ VBET5.controller('settingsCtrl', ['$scope', '$rootScope', '$location', 'Zergling
             index = $scope.personalDetails.editableFields.indexOf('birth_date');
             if (index > -1) {
                 $scope.personalDetails.readOnlyFields.push($scope.personalDetails.editableFields.splice(index, 1)[0]);
+                index = $scope.personalDetails.requiredEditableFields.indexOf('birth_date') > -1;
+                index > -1 && $scope.personalDetails.requiredEditableFields.splice(index, 1);
             }
         } else if($scope.personalDetails.editableFields.indexOf('birth_date') !== -1) {
             $scope.birthDate = $scope.birthDate || {};
@@ -341,16 +378,16 @@ VBET5.controller('settingsCtrl', ['$scope', '$rootScope', '$location', 'Zergling
                 period_type: 2,
                 period: 1
             },
-            {
-                deposit_limit: parseFloat($scope.depositLimitsData.max_week_deposit),
-                period_type: 3,
-                period: 1
-            },
-            {
-                deposit_limit: parseFloat($scope.depositLimitsData.max_month_deposit),
-                period_type: 4,
-                period: 1
-            }];
+                {
+                    deposit_limit: parseFloat($scope.depositLimitsData.max_week_deposit),
+                    period_type: 3,
+                    period: 1
+                },
+                {
+                    deposit_limit: parseFloat($scope.depositLimitsData.max_month_deposit),
+                    period_type: 4,
+                    period: 1
+                }];
         } else {
             request.limits = {
                 single: $scope.depositLimitsData.max_single_deposit,
@@ -390,10 +427,81 @@ VBET5.controller('settingsCtrl', ['$scope', '$rootScope', '$location', 'Zergling
 
     /**
      * @ngdoc method
+     * @name getBetLimits
+     * @methodOf vbet5.controller:settingsCtrl
+     * @description loads bet limits into $scope.betLimitsData
+     */
+    $scope.getBetLimits = function getBetLimits() {
+        $scope.loadBetLimits = true;
+        Zergling.get({}, 'get_client_bet_limit').then(function (response) {
+            if (response.result === 0 && response.details) {
+                $scope.betLimitsData = response.details;
+            }
+
+        })['catch'](function (response) {
+            $rootScope.$broadcast("globalDialogs.addDialog", {
+                type: 'error',
+                title: 'Error',
+                content: Translator.get('Error occured') + ' : ' + response.data
+            });
+        })['finally'](function () {
+            $scope.loadBetLimits = false;
+        });
+    };
+
+    /**
+     * @ngdoc method
+     * @name setBetLimits
+     * @methodOf vbet5.controller:settingsCtrl
+     * @description sets bet limits
+     */
+
+    $scope.setBetLimits = function setBetLimits() {
+        if ($scope.working) return;
+
+        $scope.working = true;
+        var request = {
+            sport_max_daily_bet: parseFloat($scope.betLimitsData.SportMaxDailyBet) || 0,
+            sport_max_single_bet: parseFloat($scope.betLimitsData.SportMaxSingleBet) || 0,
+            casino_max_daily_bet: parseFloat($scope.betLimitsData.CasinoMaxDailyBet) || 0,
+            casino_max_single_bet: parseFloat($scope.betLimitsData.CasinoMaxSingleBet) || 0
+        };
+
+        Zergling.get(request, 'set_client_bet_limit').then(function (response) {
+            if (response.result === 0 || response.result === 'OK') {
+                $rootScope.$broadcast("globalDialogs.addDialog", {
+                    type: 'success',
+                    title: 'Success',
+                    content: Translator.get('Bet limits set.')
+                });
+                $scope.forms.betLimitsForm.$setPristine();
+                $scope.forms.betLimitsForm.$setUntouched();
+            } else {
+                $rootScope.$broadcast("globalDialogs.addDialog", {
+                    type: 'error',
+                    title: 'Error',
+                    content: Translator.get('Please try later or contact support.')
+                });
+                $scope.getBetLimits(); // If new values are not set we make a call to get the old ones
+            }
+        })['catch'](function (response) {
+            $rootScope.$broadcast("globalDialogs.addDialog", {
+                type: 'error',
+                title: 'Error',
+                content: Translator.get('Error occured') + ' : ' + response.data
+            });
+            $scope.getBetLimits(); // If new values are not set we make a call to get the old ones
+        })['finally'](function () {
+            $scope.working = false;
+        });
+    };
+
+    /**
+     * @ngdoc method
      * @name setRealityCheckInterval
      * @methodOf vbet5.controller:settingsCtrl
      * @description Set reality check interval and shows corresponding dialog
-     * @param {Number} Input value
+     * @param {Number} value the input value
      */
     $scope.setRealityCheckInterval = function setRealityCheckInterval (value) {
         var parsedValue = parseInt(value);
@@ -429,6 +537,7 @@ VBET5.controller('settingsCtrl', ['$scope', '$rootScope', '$location', 'Zergling
     $scope.selectPeriod = function selectPeriod(value) {
         $scope.selfExclusionData = value;
     };
+    $scope.selectPeriod(Utils.cloneDeep(Config.main.selfExclusion.options[0].limit));
 
     /**
      * @ngdoc method
@@ -436,7 +545,33 @@ VBET5.controller('settingsCtrl', ['$scope', '$rootScope', '$location', 'Zergling
      * @methodOf vbet5.controller:settingsCtrl
      * @description sets self-exclusion periods
      */
-    $scope.setSelfExclusion = function setSelfExclusion(type) {
+    $scope.setSelfExclusion = function setSelfExclusion (type, configName) {
+        if (configName && Config.main[configName].enabled && Config.main[configName].type === type && Config.main[configName].confirmationText) {
+            $rootScope.$broadcast("globalDialogs.addDialog", {
+                type: 'info',
+                title: 'Info',
+                content: Config.main[configName].confirmationText,
+                buttons: [{
+                    title: 'Yes',
+                    callback: function () {
+                        setSelfExclusionConfirmed(type);
+                    }
+                }, {
+                    title: 'No'
+                }]
+            });
+        } else {
+            setSelfExclusionConfirmed(type);
+        }
+    };
+
+    /**
+     * @ngdoc method
+     * @name setSelfExclusion
+     * @methodOf vbet5.controller:settingsCtrl
+     * @description sets self-exclusion periods
+     */
+    function setSelfExclusionConfirmed (type) {
         $scope.working = true;
         var request = {
             exc_type: type
@@ -474,7 +609,7 @@ VBET5.controller('settingsCtrl', ['$scope', '$rootScope', '$location', 'Zergling
             console.log(response);
         });
         console.log(request);
-    };
+    }
 
     /**
      * @ngdoc method
@@ -567,22 +702,28 @@ VBET5.controller('settingsCtrl', ['$scope', '$rootScope', '$location', 'Zergling
      * @name resetFieldError
      * @methodOf vbet5.controller:settingsCtrl
      * @description Resets field error
-     * @param {String} Field name
-     * @param {Boolean} true if the field type is password
+     * @param {String} fieldName name
+     * @param {String} type of field (changePassword or depositLimits)
      */
-    $scope.resetFieldError = function resetFieldError(fieldName, changePassword){
-        if(!Config.main.enableResetError) {
-            return;
+    $scope.resetFieldError = function resetFieldError(fieldName, type) {
+        switch (type) {
+            case 'changePassword':
+                $scope.changepasswordData[fieldName] = '';
+                $scope.passwordResetError[fieldName] = true;
+                $scope.forms.changepasswordForm[fieldName].$setUntouched();
+                break;
+            case 'depositLimits':
+                $scope.depositLimitsData[fieldName] = '';
+                $scope.forms.depositLimitsForm[fieldName].$setUntouched();
+                break;
+            case 'betLimits':
+                $scope.betLimitsData[fieldName] = '';
+                $scope.forms.betLimitsForm[fieldName].$setUntouched();
+                break;
+            default:
+                $scope.details[fieldName] = '';
+                $scope.resetError[fieldName] = true;
+                $scope.forms.detailsForm[fieldName].$setUntouched();
         }
-        if (changePassword) {
-            $scope.changepasswordData[fieldName] = '';
-            $scope.passwordResetError[fieldName] = true;
-            $scope.changepasswordForm[fieldName].blur = false;
-        } else {
-            $scope.details[fieldName] = '';
-            $scope.resetError[fieldName] = true;
-            $scope.detailsForm[fieldName].blur = false;
-        }
-
     };
 }]);

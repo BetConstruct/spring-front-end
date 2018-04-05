@@ -52,7 +52,7 @@
                         <h3>{{winner.created_at}}</h3>
                         <h1>{{winner.game.name}}</h1>
                         <h2>{{winner.user_name}}</h2>
-                        <div class="klwintext-info-j" ng-bind-html="winner.desc|html"></div>
+                        <div class="klwintext-info-j" ng-bind-html="winner.desc|html:'p'"></div>
                     </div>
                 </li>
             </ul>
@@ -63,7 +63,7 @@
         </div>
         <aside  >
             <div ng-show="topFavoriteData" class="week-top-game-j">
-                <h1 ng-bind-html="topFavoriteData.title|html"></h1>
+                <h1 ng-bind-html="topFavoriteData.title|html:'p'"></h1>
                 <a ng-href="{{ topFavoriteData.link }}">
                     <img ng-src="{{ topFavoriteData.image }}"/>
                 </a>

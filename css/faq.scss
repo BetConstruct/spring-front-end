@@ -484,17 +484,10 @@
         }
     }
 }
-
-// Rake Race
-
 .help-landing .block-faq-content {
-    padding-top: 0;
     p {
-        color: $text-palette-1;
-        padding: 0 20px;
-        /*text-align: center;
-        text-transform: uppercase;
-        font: 18px/20px $font-f;*/
+        color: $text-palette-3;
+        font: 14px/16px $font-f;
     }
     .peymants-info table {
         width: 100% !important;
@@ -505,7 +498,7 @@
                 padding: 0 10px;
                 color: $text-palette-4;
                 background: $skin-palette-8;
-                font: 14px/40px Arial;
+                font: 14px/40px $font-f;
                 vertical-align: middle;
                 border: none;
                 overflow: hidden;

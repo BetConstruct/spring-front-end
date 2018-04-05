@@ -7,21 +7,22 @@
  */
 CMS.controller('cmsSportNewsCtrl', ['$rootScope', '$scope', '$sce', '$location', '$window', '$q',  '$anchorScroll', 'WPConfig', 'content', 'Config', 'Utils', 'DomHelper', 'Zergling', 'analytics', 'Translator', 'TimeoutWrapper', function ($rootScope, $scope, $sce, $location, $window, $q, $anchorScroll, WPConfig, content, Config, Utils, DomHelper, Zergling, analytics, Translator, TimeoutWrapper) {
     'use strict';
-
     TimeoutWrapper = TimeoutWrapper($scope);
     $scope.sports = null;
     $scope.cmsTimeZone = WPConfig.cmsTimeZone;
     $scope.selectedNewsSport = {id: undefined};
     $scope.selectedNews = null;
+    $scope.offsetOfRecentNews = 0;
     $scope.numberOfRecentNews = WPConfig.news.numberOfRecentNews;
     $scope.showSportNewsSidebar = Utils.isObjectEmpty($rootScope.betEvents);
     $scope.goToTop = DomHelper.goToTop;
+    $scope.dropdownOpen = false; // dropdown default close
 
     var increaseBy;
     var currentNewsIndex = 0;
     var scrolledOffset = 0;
     var timer;
-
+    var isNewsPage;
     /**
      * @ngdoc method
      * @name createSportsMoreDropdown
@@ -55,7 +56,7 @@ CMS.controller('cmsSportNewsCtrl', ['$rootScope', '$scope', '$sce', '$location',
      * @description the "responsiveness" stuff
      */
     var configureForSmallScreen = function (isNewsPage) {
-        $scope.maxVisibleSports = isNewsPage ? WPConfig.news.maxVisibleSports : WPConfig.news.maxVisibleSportsHomePage;
+        if (isNewsPage) { $scope.maxVisibleSports = WPConfig.news.maxVisibleSports }
         $scope.newsPerGroup = WPConfig.news.newsPerGroup;
         increaseBy = WPConfig.news.increaseBy;
         if ($scope.recentNews) {
@@ -135,7 +136,8 @@ CMS.controller('cmsSportNewsCtrl', ['$rootScope', '$scope', '$sce', '$location',
      * @methodOf CMS.controller:cmsSportNewsCtrl
      * @description checks if there's a deep linked news and opens it
      */
-    $scope.init = function init(isNewsPage) {
+    $scope.init = function init(fromNewsPage) {
+        isNewsPage = fromNewsPage;
         var searchparams = $location.search();
         if (searchparams.news) {
             $scope.articleLoader = true;
@@ -193,13 +195,28 @@ CMS.controller('cmsSportNewsCtrl', ['$rootScope', '$scope', '$sce', '$location',
                     });
                 }
                 $scope.sports = response.data.categories;
-                createSportsMoreDropdown();
+                isNewsPage && createSportsMoreDropdown();
                 //$scope.setTitle('News');
                 console.log('news sports', $scope.sports);
             }
-
         });
     };
+
+    /**
+     * @ngdoc method
+     * @name processNewsValues
+     * @methodOf CMS.controller:cmsSportNewsCtrl
+     * @description Sets trusted valued for news items
+     */
+    function processNewsValues (posts) {
+        var i;
+        for (i = 0; i < posts.length; i++) {
+            posts[i].titleRaw = angular.element('<div/>').html(posts[i].title).text(); //decode html entities
+            posts[i].title = $sce.trustAsHtml(posts[i].title);
+            posts[i].content = $sce.trustAsHtml(posts[i].content);
+            posts[i].permalink = getPermaLink(posts[i]);
+        }
+    }
 
     /**
      * @ngdoc method
@@ -209,50 +226,55 @@ CMS.controller('cmsSportNewsCtrl', ['$rootScope', '$scope', '$sce', '$location',
      * and assigns to scope's 'recentNews' variable.
      * Checks if there are more news to load and if no, sets scope's **noMoreNews** variable to true
      */
-    $scope.loadRecentNews = function loadRecentNews(count, sportId, startLooping) {
+    $scope.loadRecentNews = function loadRecentNews(offset, count, sportId, startLooping) {
+        if ($scope.newsAreLoading || $scope.preventFastClick) {
+            return;
+        }
+
+        offset = offset || 0;
         count = count || 10;
         $scope.newsAreLoading = true;
-        content.getRecentNews(count, sportId).then(function (response) {
+        $scope.preventFastClick = true;
+        content.getRecentNews(offset, count, sportId).then(function (response) {
+            $scope.preventFastClick = true;
+            TimeoutWrapper(function () {
+                $scope.preventFastClick = false;
+            }, 400);
+
             $scope.newsAreLoading = false;
             if (response.data && response.data.posts) {
-                $scope.recentNews = response.data.posts;
                 var i;
-                for (i = 0; i < $scope.recentNews.length; i++) {
-                    $scope.recentNews[i].titleRaw = angular.element('<div/>').html($scope.recentNews[i].title).text(); //decode html entities
-                    $scope.recentNews[i].title = $sce.trustAsHtml($scope.recentNews[i].title);
-                    $scope.recentNews[i].content = $sce.trustAsHtml($scope.recentNews[i].content);
-                    $scope.recentNews[i].permalink = getPermaLink($scope.recentNews[i]);
+                processNewsValues(response.data.posts);
+
+                if (sportId !== $scope.oldSportId) {
+                    $scope.recentNews = [];
+                    $scope.oldSportId = sportId;
+                } else {
+                    $scope.recentNews = $scope.recentNews || [];
+                }
+
+                for (i = 0; i < response.data.posts.length; i++) {
+                    $scope.recentNews[i + offset] = response.data.posts[i];
                 }
                 if ($scope.newsPerGroup) {
                     $scope.recentNewsInGroups = Utils.groupToGroups($scope.recentNews, $scope.newsPerGroup, 'news');
                 }
 
-                $scope.noMoreNews = response.data.count_total <= $scope.numberOfRecentNews;
+                $scope.noMoreNews = response.data.count_total <= offset + $scope.numberOfRecentNews;
 
-                if (!Config.main.oldHomepage || Config.main.betterHomepage) {
-                    if (timer) {
-                        TimeoutWrapper.cancel(timer);
-                    }
-                    currentNewsIndex = 0;
-                    scrolledOffset = 0;
-                    //$scope.selectedNews = $scope.recentNews[currentNewsIndex];
-                    DomHelper.scrollTop('newsBlockID', 0);
-                    if (startLooping && ($location.path() !== '/news/')) {
-                        $scope.loopThroughNews();
-                    }
+                if (timer) {
+                    TimeoutWrapper.cancel(timer);
+                }
+                currentNewsIndex = 0;
+                scrolledOffset = 0;
+                //$scope.selectedNews = $scope.recentNews[currentNewsIndex];
+                DomHelper.scrollTop('newsBlockID', 0);
+                if (startLooping && ($location.path() !== '/news/')) {
+                    $scope.loopThroughNews();
                 }
             }
         });
     };
-
-    /**
-     * @description stops news looping when one leaves the page
-     */
-    /*$scope.$on('$locationChangeStart', function (event) {
-        if (timer) {
-            TimeoutWrapper.cancel(timer);
-        }
-    });*/
 
     /**
      * @ngdoc method
@@ -303,7 +325,7 @@ CMS.controller('cmsSportNewsCtrl', ['$rootScope', '$scope', '$sce', '$location',
             $scope.closeNews();
             return;
         }
-        analytics.gaSend('send', 'event', 'news', 'show homepage news',  {'page': $location.path(), 'eventLabel': news.categories[0].title});
+        analytics.gaSend('send', 'event', 'news', 'show homepage news',  {'page': $location.path(), 'eventLabel': news.categoryTitle});
         analytics.gaSend('send', 'event', 'news', 'homepage news by ID',  {'page': $location.path(), 'eventLabel': news.id});
         $scope.selectedNews = news;
         $scope.selectedNewsGroupId = groupId;
@@ -315,6 +337,7 @@ CMS.controller('cmsSportNewsCtrl', ['$rootScope', '$scope', '$sce', '$location',
         }
 
         ckeckIfLinkedGameExists($scope.selectedNews);
+        $location.search("news", $scope.selectedNews.id);
         TimeoutWrapper(function () {
             DomHelper.scrollIntoView('news' + $scope.selectedNews.id);
         }, 50);
@@ -322,6 +345,9 @@ CMS.controller('cmsSportNewsCtrl', ['$rootScope', '$scope', '$sce', '$location',
         if (Config.main.sportNewsBlockNewWindow) {
             $rootScope.preventDefault();
         }
+        TimeoutWrapper(function () {
+            $scope.getBlockHeigth = document.getElementById('news-block-' + $scope.selectedNews.id + $scope.selectedNewsGroupId).clientHeight;
+        }, 50);
     };
 
     /**
@@ -338,15 +364,16 @@ CMS.controller('cmsSportNewsCtrl', ['$rootScope', '$scope', '$sce', '$location',
         }
         $scope.hideSportListDropdown = null;
         $scope.selectedNewsSport = sport;
+        $scope.offsetOfRecentNews = 0;
         $scope.numberOfRecentNews = WPConfig.news.numberOfRecentNews; //reset (in case it was increased by clicking 'load more'
-        $scope.loadRecentNews($scope.numberOfRecentNews, sport.id, true);
+        $scope.loadRecentNews(0, $scope.numberOfRecentNews, sport.id, true);
         $scope.selectedNews = null;
         var index = $scope.sports.indexOf(sport);
         if (index >= $scope.maxVisibleSports) {
             $scope.sports.splice(index, 1);
             $scope.sports.unshift($scope.selectedNewsSport);
         }
-        createSportsMoreDropdown();
+        isNewsPage && createSportsMoreDropdown();
         Utils.setJustForMoment($scope, 'hideSportListDropdown', true, 500);
     };
 
@@ -359,13 +386,13 @@ CMS.controller('cmsSportNewsCtrl', ['$rootScope', '$scope', '$sce', '$location',
      * to already loaded ones seems tricky, maybe this will be done later)
      */
     $scope.loadMoreNews = function loadMoreNews() {
-        if ($scope.newsAreLoading) {
+        if ($scope.newsAreLoading || $scope.preventFastClick) {
             return;
         }
         $scope.newsAmountIncreased = true;
-        $scope.numberOfRecentNews += increaseBy;
+        $scope.offsetOfRecentNews += WPConfig.news.numberOfRecentNews;
         if (!$scope.noMoreNews) {
-            $scope.loadRecentNews($scope.numberOfRecentNews, $scope.selectedNewsSport.id);
+            $scope.loadRecentNews($scope.offsetOfRecentNews, $scope.numberOfRecentNews, $scope.selectedNewsSport.id);
         }
     };
 
@@ -454,7 +481,7 @@ CMS.controller('cmsSportNewsCtrl', ['$rootScope', '$scope', '$sce', '$location',
         }
         banners.map(function (banner, index) {banner.active = (activeBannerIndex === index); });
         // if banner is video
-        if (banners[activeBannerIndex] && banners[activeBannerIndex].videolink) {
+        if (banners[activeBannerIndex] && banners[activeBannerIndex].videoLink) {
             $scope.startPlayVideoBanner = true;
             period = $scope.bannerVideoDuration;
         } else {
@@ -489,7 +516,7 @@ CMS.controller('cmsSportNewsCtrl', ['$rootScope', '$scope', '$sce', '$location',
             promises.banners = content.getWidget(containerId);
         } else {
             promises.commonBanners = content.getWidget('sidebar-1'); //banners for all langs
-            promises.banners = content.getWidget('under-betslip-banners-' + $rootScope.env.lang);
+            promises.banners = content.getWidget('under-betslip-banners-classic-' + $rootScope.env.lang);
         }
 
         if (Config.main.showPromotedGames && Config.main.showPromotedGames.betslipBanners) {
@@ -523,7 +550,7 @@ CMS.controller('cmsSportNewsCtrl', ['$rootScope', '$scope', '$sce', '$location',
                     $scope.banners[j].game = resolveObj.competitionGames[i];
                 }
             }
-            if (Config.main.underBetslipBannersRotationPeriod) {
+            if (Config.main.underBetslipBannersRotationPeriod && $scope.banners.length > 1) {
                 rotateBanners($scope.banners, Config.main.underBetslipBannersRotationPeriod);
             } else {
                 $scope.banners.map(function (banner) {banner.active = true; });
@@ -532,8 +559,8 @@ CMS.controller('cmsSportNewsCtrl', ['$rootScope', '$scope', '$sce', '$location',
         });
     };
 
-    $scope.$on('betslip.isEmpty', function () {$scope.hideRightBanner = false; });
-    $scope.$on('betslip.hasEvents', function () {$scope.hideRightBanner = true; });
+    $scope.$on('betslip.isEmpty', function () {$scope.hideRightBanner = false; $scope.showSportNewsSidebar = true;});
+    $scope.$on('betslip.hasEvents', function () {$scope.hideRightBanner = true; $scope.showSportNewsSidebar = false;});
 
     /**
      * @ngdoc method
@@ -546,10 +573,6 @@ CMS.controller('cmsSportNewsCtrl', ['$rootScope', '$scope', '$sce', '$location',
         $scope.landingNews = null;
         $location.search({});
     };
-
-    $scope.$on('betslip.isEmpty', function () {$scope.showSportNewsSidebar = true; });
-    $scope.$on('betslip.hasEvents', function () {$scope.showSportNewsSidebar = false; });
-
 
     /**
      * @ngdoc method
@@ -566,7 +589,7 @@ CMS.controller('cmsSportNewsCtrl', ['$rootScope', '$scope', '$sce', '$location',
             if (response.data && response.data.widgets && response.data.widgets[0]) {
                 $scope.homepageBanners = [];
                 angular.forEach(response.data.widgets, function (widget) {
-                    widget.instance.description = $sce.trustAsHtml(Translator.get(widget.instance.description));
+                    widget.instance.custom_fields.label && (widget.instance.custom_fields.label[0] = $sce.trustAsHtml(Translator.get(widget.instance.custom_fields.label[0])));
                     widget.instance.title = $sce.trustAsHtml(widget.instance.title);
                     $scope.homepageBanners.push(widget.instance);
                 });
@@ -589,13 +612,13 @@ CMS.controller('cmsSportNewsCtrl', ['$rootScope', '$scope', '$sce', '$location',
         if ($scope.rotationPaused || !$scope.selectedHomepageGames) {
             return;
         }
+        $scope.previousBanner = true; // SDC-27978 Can be deleted, if not needed anymore
         if ($scope.selectedGameIndex < $scope.selectedHomepageGames.length - 1) {
             $scope.selectedGameIndex++;
         } else {
             $scope.selectedGameIndex = 0;
         }
     }
-
 
     /**
      * @description slides banners
@@ -614,7 +637,7 @@ CMS.controller('cmsSportNewsCtrl', ['$rootScope', '$scope', '$sce', '$location',
                 }
                 break;
         }
-    }
+    };
 
     /**
      * @ngdoc method
@@ -678,37 +701,26 @@ CMS.controller('cmsSportNewsCtrl', ['$rootScope', '$scope', '$sce', '$location',
      *
      * @param {Object} [banner]  current object of slider
      */
-    $scope.bannerClick = function bannerClick(banner) {
-        analytics.gaSend('send', 'event', 'news', {'page': $location.path(), 'eventLabel': 'homepage big banner click: ' + (banner.title_plain || banner.title)});
+    $scope.bannerClick = function bannerClick(banner, getLink) {
+        if (!getLink) {
+            analytics.gaSend('send', 'event', 'news', {
+                'page': $location.path(),
+                'eventLabel': 'homepage big banner click: ' + (banner.title_plain || banner.title)
+            });
+        }
 
         if (banner.link === 'openRules') {
-            $rootScope.$broadcast('freeWinners.showPopupRules');
+            !getLink && $rootScope.$broadcast('freeWinners.showPopupRules');
         } else if (banner.isYouTubeVideo) {
-            $rootScope.$broadcast('youtube.videourl', banner.link);
+            !getLink && $rootScope.$broadcast('youtube.videourl', banner.link);
+        } else if((banner.link.indexOf('action=register') !== -1 || banner.link.indexOf('action=login') !== -1) && $scope.env.authorized){
+            return;
+        } else if (banner.target && banner.target === '_blank') {
+            !getLink && $window.open(banner.link, '_blank');
+        } else {
+            return banner.link;
         }
     };
-
-    $rootScope.$on(
-        '$locationChangeSuccess', function () {
-        if ($location.search() && $location.search().action) {
-            switch ($location.search().action) {
-                case 'register':
-                    if (!Config.main.registration.enable) {
-                        return;
-                    }
-                    $scope.env.showSlider = true;
-                    $scope.env.sliderContent = 'registrationForm';
-                    return;
-                case 'login':
-                    if (!Config.main.registration.enableSignIn) {
-                        return;
-                    }
-                    $scope.env.showSlider = true;
-                    $scope.env.sliderContent = 'signInForm';
-                    return;
-            }
-        }
-    });
 
     $scope.gotoSelectedNews = function gotoSelectedNews(news) {
         news = news || {};
@@ -722,6 +734,9 @@ CMS.controller('cmsSportNewsCtrl', ['$rootScope', '$scope', '$sce', '$location',
             '*'
         );
     };
-    $scope.dropdownOpen=false; // dropdown default close
 
+    $scope.$on('update.count', function(event, count) {
+        $scope.maxVisibleSports = count;
+        createSportsMoreDropdown();
+    });
 }]);

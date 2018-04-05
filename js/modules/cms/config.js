@@ -2,17 +2,23 @@
 CMS.constant('WPConfig', {
 //    wpUrl: 'http://10.32.5.1/wordpress/',
 //    wpUrl: 'http://vbet5admin.betconstruct.int/',
-    wpUrl: 'http://next.vbet.com/json',  // WordpResss instance serving pages, banners
+    wpUrl: '',  // WordpResss instance serving pages, banners
+    wpDirectUrl: '//cmsbetconstruct.com/getjson',  // Get direct data by slug
+    exchangeShopUrl: '//cmsbetconstruct.com/productapi/get', // exchange shop url
     twitterUrl: '//twitter.betconstruct.com/twitter.php',
-    wpNewsUrl:  {
+    wpNewsUrl: {
         main: 'http://www.vbet.com/json'
     },  // WordpResss instance serving news
     wpPokerPromoUrl: null, // can be url of json interface serving poker promo "news". if null, news url from wpNewsUrl will be used
     wpPromoUrl: null, // can be url of json interface serving poker promo "news". if null, news url from wpNewsUrl will be used
     seoFilesGenerationActive: false,
     cmsTimeZone: '+04:00',
-    wpBaseHost: 'www.vbet.com',  // this parameter will be passed to JSON api and all links in response(e.g. images) will have this host
-    wpNewsBaseHost: 'www.vbet.com', // this parameter will be passed to JSON api and all links in NEWS response(e.g. images) will have this host
+    wpBaseHost: { // this parameter will be passed to JSON api and all links in response(e.g. images) will have this host
+        'default': 'vbet'
+    },
+    wpNewsBaseHost: {
+        main: 'www.vbet.com'
+    }, // this parameter will be passed to JSON api and all links in NEWS response(e.g. images) will have this host
     hiddenNewsCategoryIds: [113, 119, 114, 120, 121, 112],  //hide specific news categories from menu
     news: {
         newsPerGroup: 3, //news in a row
@@ -24,7 +30,6 @@ CMS.constant('WPConfig', {
         increaseByWide: 8, // load this number of additional news when clicking "load more"
         maxVisibleSports: 5, //maximum number of sports visible in news (the rest will go in "more" block)
         maxVisibleSportsWide: 11, //maximum number of sports visible in news (the rest will go in "more" block)
-        maxVisibleSportsHomePage: 4, //maximum number of sports visible in news (the rest will go in "more" block)
         sportsColumnsNumber: 6, //number of columns in Sports  "more" dropdown block,
         langRootCategories: { // IDs of root categories for each language in WordPress
             'eng': '11',
@@ -42,6 +47,9 @@ CMS.constant('WPConfig', {
         }
     },
     bannerSlugs: {
+        analyticsBanner: {
+            'default': 'analytics-banner'
+        },
         headerSmallBanner: {
             'default': 'header-small-banner'
         },

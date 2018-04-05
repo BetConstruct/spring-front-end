@@ -572,7 +572,7 @@
   display: inline-block;
   font: 16px/36px icomoon;
   color: $text-palette-6;
-  margin: 0 0 0 10px;
+  margin: 0 0 0 6px;
 }
 .printbet-icon-history{
   float: right;
@@ -680,11 +680,22 @@
   background: lighten( desaturate( adjust-hue( $skin-color, 6deg ), 20 ), 9 );
   border-left: 1px solid lighten( desaturate( adjust-hue( $skin-color, 6deg ), 20 ), 9 );
 }
-.bet-info-list-separator-b > ul > li.bet-stake-info-column > span{
-  color: $text-palette-14;
-  font: 12px/36px $font-f;
+.bet-info-list-separator-b > ul > li.bet-stake-info-column {
+  > span, > input:disabled {
+    color: $text-palette-14;
+    font: 12px/36px $font-f;
+  }
+  > input:disabled {
+    width: calc(100% - 32px);
+    background: none;
+    border: none;
+    line-height: 34px;
+    height: 34px;
+    cursor: pointer;
+  }
 }
-.bet-info-list-separator-b > ul > li.bet-stake-info-column > span > i{
+.bet-info-list-separator-b > ul > li.bet-stake-info-column > span > i,
+.bet-info-list-separator-b > ul > li.bet-stake-info-column > i {
   font-style: normal;
   color: $text-palette-4;
   text-transform: uppercase;
@@ -764,6 +775,9 @@
   font-size: 14px;
   line-height: 12px;
   margin: 0 3px 0 0;
+  > span {
+    display: none;
+  }
 }
 .status-icon-separator-b.clock-status:before{
   content: "\e704";
@@ -834,9 +848,6 @@
   font-weight: normal;
   color: $text-palette-14;
 }
-.bet-info-list-separator-b > ul > li.date-id-column-b > span > i{
-  font-style: normal;
-}
 .bet-info-list-separator-b.title > ul > li,
 .bet-info-list-separator-b.title > ul > li.bet-type-column-b{
   font: 12px/36px $font-f;
@@ -847,9 +858,6 @@
   height: auto;
   background: $skin-palette-12;
   margin-top: 5px;
-}
-.bet-info-list-separator-b:hover .share-bet-history{
-  opacity: 1;
 }
 .bet-info-list-separator-b.title + .bet-info-list-separator-b.active{
   margin-top: 0;
@@ -1006,8 +1014,18 @@
 }
 .bet-info-list-separator-b.open-view .status-icon-separator-b{
   height: 30px;
-  font-size: 14px;
+  font-size: 16px;
   line-height: 30px;
+  background: desaturate( adjust-hue( $skin-palette-11, 1deg ), 10 );
+  &.lost:before {
+    content: "\e993"
+  }
+  &.clock-status:before {
+    content: "\e994";
+  }
+  &.won:before {
+    content: "\e992";
+  }
 }
 .team-name-history-bet{
   float: left;
@@ -1159,6 +1177,9 @@
   float: left;
   width: 100%;
   box-sizing: border-box;
+  & + .bonus-function-b {
+    margin-top: 1px;
+  }
 }
 .bonus-function-b > button{
   border: none;
@@ -1176,6 +1197,7 @@
 }
 .bonus-function-b.cancel-bonus > button{
   background: #a82d46;
+  color: white;
 }
 .bonus-function-b > button > i{
   font-style: normal;
@@ -1193,11 +1215,10 @@
   z-index: 66;
   padding: 5px 10px;
   font: 11px/14px $font-f;
-  background: $skin-palette-2;
-  color: $text-palette-8;
+  background: #c1c4cd;
+  color: #404654;
   text-transform: none;
   text-align: left;
-  box-shadow: 0 0 5px $skin-palette-8;
   right: -999em;
   transition-delay: 250ms;
 }
@@ -1213,7 +1234,7 @@
   height: 0;
   border-style: solid;
   border-width: 6px 6px 0 6px;
-  border-color: $skin-palette-2 transparent transparent transparent;
+  border-color: #c1c4cd transparent transparent transparent;
 }
 .bonus-info-list-separator-b > ul > li.bonus-start-end-b > p{
   float: left;
@@ -1552,6 +1573,7 @@
   color: $text-palette-4;
   padding: 0 40px 0 12px;
   margin: 0;
+  font: 12px/36px $font-f;
   -webkit-text-fill-color: $text-palette-4;
   @include placeholder {
     color: $text-palette-4;
@@ -1571,7 +1593,7 @@
     width: 100%;
     height: 36px;
   }
-} 
+}
 .profile-tab-contain-b form.ng-pristine .form-error-icon,
 .profile-tab-contain-b form.registration-form.ng-dirty .form-error-icon{
   top: 14px;
@@ -1798,6 +1820,25 @@
     }
   }
 }
+.repeat-icon-bet-history {
+  float: right;
+  margin: 0 0 0 14px;
+  font-style: normal;
+  display: inline-block;
+  &:before {
+    content: "\e6f4";
+    font-family: icomoon;
+    display: block;
+    float: left;
+    margin: 0 6px 0 0;
+  }
+  span {
+    display: block;
+    float: left;
+    text-transform: uppercase;
+    font-size: 10px;
+  }
+}
 .share-bet-history {
   height: 36px;
   font-style: normal;
@@ -1807,8 +1848,6 @@
   color: $text-palette-3;
   margin: 0 0 0 10px;
   float: right;
-  opacity: 0;
-  transition: 200ms opacity linear;
   social-share{float: left;}
   .mini-facebook, .mini-google, .mini-odnoklassniki{
     position: relative;
@@ -1873,8 +1912,21 @@
   .bonus-contain .bet-info-list-separator-b.title > ul > li.bet-type-column-b > span:first-child{
     display: inline-block;
   }
-  .bet-info-list-separator-b > ul > li.bet-type-column-b{
-    font-size: 11px;
+}
+@media screen and (max-width: 1050px){
+  .info-scroll-contain-b-new:not(.mixedBalanceHistory-j) .bet-info-list-separator-b > ul > li.bet-type-column-b{
+    > span {
+      display: none;
+    }
+  }
+  .repeat-icon-bet-history {
+    margin: 0 0 0 6px;
+    &:before {
+      margin: 0;
+    }
+    > span {
+      display: none;
+    }
   }
 }
 .bonuses-view .all-history-lightbox-content.casino-disabled-j {
@@ -1884,5 +1936,21 @@
   }
   .all-history-tab-contain {
     height: 120px;
+  }
+}
+.bet-info-list-separator-b > ul > li.date-id-column-b {
+  &.has-icon {
+    > span{
+      width: calc(100% - 24px);
+    }
+    > i {
+      width: 20px;
+      height: 36px;
+      position: absolute;
+      top: 0;
+      right: 10px;
+      display: block;
+      background: url("../../../images/small-car-bet.png#{$delete-cache}") no-repeat 0 50% / contain;
+    }
   }
 }

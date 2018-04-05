@@ -9,7 +9,7 @@ VBET5.factory('Translator', ['Config', 'Translations', '$location', function (Co
     'use strict';
     console.log('translator initialized');
     var Translator = {},
-        Translations = $location.search().notrans ? {} : TranslationsConst;
+        Translations = $location.search().notrans && $location.search().notrans !== 'id' ? {} : TranslationsConst;
 
     var regExp = /\{(\d+)\}/g;
 
@@ -39,7 +39,7 @@ VBET5.factory('Translator', ['Config', 'Translations', '$location', function (Co
             });
         }
 
-        if (Config.main.translateToDefaultIfNotAvailable && ret === str && lang !== Config.main.defaultTransLang) {
+        if (Config.main.defaultTransLang && ret === str && lang !== Config.main.defaultTransLang) {
             return Translator.get(str, placeholders, Config.main.defaultTransLang);
         }
         return ret;
@@ -56,10 +56,8 @@ VBET5.factory('Translator', ['Config', 'Translations', '$location', function (Co
      */
     Translator.translationExists = function translationExists(str, lang) {
         var d = (lang && Translations[lang]) || Translations[Config.env.lang];
-        if (d instanceof Object && d.hasOwnProperty(str)) {
-            return true;
-        }
-        return false;
+
+        return d instanceof Object && d.hasOwnProperty(str);
     };
 
     /**

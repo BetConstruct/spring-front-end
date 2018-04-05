@@ -4,7 +4,7 @@
  * @description
  *  New bet history controller.
  */
-VBET5.controller('mixedMyBetsCtrl', ['$scope', '$controller', 'Config', '$rootScope', 'Moment', 'Utils', '$location', function($scope, $controller, Config, $rootScope, Moment, Utils, $location) {
+VBET5.controller('mixedMyBetsCtrl', ['$rootScope', '$scope', '$controller', '$location', 'Config', 'GameInfo', 'Moment', 'Utils', function($rootScope, $scope, $controller, $location, Config, GameInfo, Moment, Utils) {
     'use strict';
 
     // Initialize the super class and extend it.
@@ -139,7 +139,7 @@ VBET5.controller('mixedMyBetsCtrl', ['$scope', '$controller', 'Config', '$rootSc
 
     $scope.openCorrespondingGame = function openCorrespondingGame (event) {
         var game = $scope.gamePointers[event.game_id];
-        if(game) {
+        if(game && GameInfo.getVirtualSportIds().indexOf(parseInt(game.sport.id, 10)) === -1) {
             $location.search({
                 'type': game.type === '0' ? 0 : 1,
                 'sport': game.sport.id,
@@ -185,6 +185,7 @@ VBET5.controller('mixedMyBetsCtrl', ['$scope', '$controller', 'Config', '$rootSc
             }
 
             $scope.betEventCounts.all++;
+            b.totalAmount = (b.bonus_bet_amount ? b.bonus_bet_amount : '' + b.amount ? b.amount : '').toString();
         });
     };
 

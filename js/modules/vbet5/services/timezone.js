@@ -38,7 +38,7 @@ VBET5.service('TimezoneService', ['Config', 'Storage', 'Moment', function (Confi
         if (Config.env.selectedTimeZone === value) {
             return;
         }
-        if(Config.main.enableTimeZoneSelect || !Config.env.selectedTimeZone) {
+        if(Config.main.header.enableTimeZoneSelect || !Config.env.selectedTimeZone) {
             Config.env.selectedTimeZone = value;
         }
 

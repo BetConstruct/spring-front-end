@@ -1,7 +1,7 @@
 <!--User name-id-->
-<div class="separator-contain-nav user-nav-view-b {{headerVersion2Icons.profileToggled ? 'active' : ''}}" hide-on-click state-flag-var="headerVersion2Icons.profileToggled"  id="user-settings">
-    <div class="settings-icon-contain balance-box"
-         ng-click="toggleProfileMenu($event)" ng-mouseover="toggleProfileMenu($event, true)" ng-mouseleave="toggleProfileMenu($event, false)">
+<div class="separator-contain-nav user-nav-view-b {{headerVersion2Icons.profileToggled ? 'active' : ''}}"   id="user-settings">
+    <div class="settings-icon-contain balance-box" ng-class="{'user-verified': profile.is_verified}"
+         ng-click="toggleProfileMenu($event)" ng-mouseover="toggleProfileMenu($event, true)" ng-mouseleave="toggleProfileMenu($event, false)" hide-on-click state-flag-var="headerVersion2Icons.profileToggled">
         <b class="mybets-icon-box-b user-icon-view"></b>
         <i></i>
         <span class="count-info-box-b"
@@ -15,7 +15,7 @@
             <li>
                 <div class="user-info-box-b">
                     <h3 ng-hide="conf.profileMenuHeaderFullName">{{profile.full_name}}</h3>
-                    <h4 ng-show="!env.hideUsername">{{ profile[conf.profileMenuHeaderDisplayField] }}</h4>
+                    <h4 ng-show="!env.hideUsername">{{ profile['username'] }}</h4>
                     <h5>
                         <span trans>ID</span>:
                         <span>{{profile.unique_id}}</span>
@@ -34,8 +34,8 @@
                                 <span trans>My Profile</span>
 <!--                                                     <b>???</b> -->
                             </li>
-                            <li ng-if="!conf.disableHeaderMessages && conf.headerMessageIcon.enabled"
-                                ng-show="!conf.headerMessageIcon.showInTopRow"
+                            <li ng-if="conf.header.messageIcon.enabled"
+                                ng-show="!conf.header.messageIcon.showInTopRow"
                                 ng-class="{'active': env.sliderContent === 'messages'}"
                                 prevent-fast-click="1.5"
                                 ng-click="toggleSliderTab('messages'); headerVersion2Icons.profileToggled = false; $event.stopPropagation()"
@@ -51,14 +51,14 @@
                             >
                                 <i class="bonuses-icon-b"></i>
                                 <span trans>Bonuses</span>
-                                <b ng-if="conf.sportEnabled"
+                                <b ng-if="calculatedConfigs.sportEnabled"
                                     ng-show="!env.hideBalance && profile.bonus_balance && (conf.GmsPlatform || (!isInCasino() && !isInPoker()))"
                                 >
                                     {{profile.calculatedBonus}} {{profile.currency_name|currency}}
                                 </b>
 
-                                <b ng-if="::(!conf.GmsPlatform && (casinoEnabled || conf.pokerEnabled))"
-                                    ng-show="!env.hideBalance && (env.casinoBalance !== undefined && (isInCasino() || isInPoker()) || !conf.sportEnabled)"
+                                <b ng-if="::(!conf.GmsPlatform && (casinoEnabled || calculatedConfigs.pokerEnabled))"
+                                    ng-show="!env.hideBalance && (env.casinoBalance !== undefined && (isInCasino() || isInPoker()) || !calculatedConfigs.sportEnabled)"
                                 >
                                     {{env.casinoBalance.bonus || env.casinoBalance.bonus_balance}} {{profile.currency_name|currency}}
                                 </b>

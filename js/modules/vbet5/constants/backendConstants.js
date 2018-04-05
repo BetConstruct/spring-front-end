@@ -38,6 +38,7 @@ angular.module('vbet5').constant('BackendConstants', (function () {
             }
         },
         ErrorCodes: {
+            'Client Has Active Bonus': 99,
             'InternalError': 1000,
             'InvalidUsernamePassword': 1002,
             'clientNotFound': 1002,
@@ -151,6 +152,7 @@ angular.module('vbet5').constant('BackendConstants', (function () {
             "WrongClassifierGrouopId": 2097,
             "WrongCurrencyCode": 2098,
             "WrongInputParameters": 2099,
+            "InvalidClientBonus": 2412,
             "WrongLoginAttempts": 3000,
             "NotSupportedCurrency": 3001,
             "WrongOldPassword": 3002,

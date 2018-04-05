@@ -7,7 +7,8 @@
 angular.module('vbet5.betting').controller('featuredgameCtrl', ['$rootScope', '$scope', '$interval', '$window', '$location', 'Zergling', 'Utils', 'Config', 'content', 'GameInfo', function ($rootScope, $scope, $interval, $window, $location, Zergling, Utils, Config, content, GameInfo) {
     'use strict';
 
-    var multiSlideInterval, gameImages = {}, subscriptions = {}, featuredGamesObj = {};
+    var multiSlideInterval, featuredGamesObj = {}, gameImages = {};
+    var featuredGamesSubId, featuredGameSubId;
 
     $scope.isEventInBetSlip = GameInfo.isEventInBetSlip;
     $scope.backgroundsCompetitionsMaps = Config.main.GmsPlatform ? Config.main.featuredGames.backgroundsCompetitionsMapsGms : Config.main.featuredGames.backgroundsCompetitionsMaps;
@@ -23,30 +24,25 @@ angular.module('vbet5.betting').controller('featuredgameCtrl', ['$rootScope', '$
         if (!data || !data.sport) {
             return;
         }
-
         angular.forEach(data.sport, function (sport) {
             angular.forEach(sport.region, function (region) {
                 angular.forEach(region.competition, function (competition) {
                     angular.forEach(competition.game, function (game) {
+                        game.sport = {id: sport.id, alias: sport.alias};
+                        game.region = {id: region.id};
+                        game.competition = {id: competition.id, name: competition.name};
+                        game.team1_id = game.team1_external_id || game.team1_id;
+                        game.team2_id = game.team2_external_id || game.team2_id;
+                        game.import_id = game.import_id || game.competition.id;
                         angular.forEach(game.market, function (market) {
-                            if (!market) return;
-                            game.events = Utils.createMapFromObjItems(market.event, 'type');
-                            game.sport = {id: sport.id, alias: sport.alias};
-                            game.region = {id: region.id};
-                            game.competition = {id: competition.id, name: competition.name};
-                            game.market = {id: market.id};
-
-                            game.team1_id = game.team1_external_id || game.team1_id;
-                            game.team2_id = game.team2_external_id || game.team2_id;
-                            game.import_id = game.import_id || game.competition.id;
-
-                            game.event = Utils.getItemBySubItemProperty(game.event, 'type', ['P1', 'P2', 'X']);
-                            if (game.info !== undefined && game.info.current_game_time > 0) {
-                                game.info.current_game_time = getOnlyTime(game.info.current_game_time);
+                            if (market.type === 'P1XP2' || market.type === 'P1P2') {
+                                game.events = Utils.createMapFromObjItems(market.event, 'type');
                             }
-
-                            featuredGamesObj[game.id] = game;
                         });
+                        if (game.info !== undefined && game.info.current_game_time > 0) {
+                            game.info.current_game_time = getOnlyTime(game.info.current_game_time);
+                        }
+                        featuredGamesObj[game.id] = game;
                     });
                 });
             });
@@ -103,6 +99,7 @@ angular.module('vbet5.betting').controller('featuredgameCtrl', ['$rootScope', '$
         }
     }
 
+
     /**
      * @ngdoc method
      * @name updateFeaturedGame
@@ -156,10 +153,9 @@ angular.module('vbet5.betting').controller('featuredgameCtrl', ['$rootScope', '$
             if (mostPopularGame.info !== undefined && mostPopularGame.info.current_game_time > 0) {
                 mostPopularGame.info.current_game_time = getOnlyTime(mostPopularGame.info.current_game_time);
             }
-            if (Config.main.featuredGameNewTemplate) {
-                addBgImageIfExists(mostPopularGame);
-            }
-            mostPopularGame.bg_style = mostPopularGame.game_bg_competition||mostPopularGame.game_bg?'url('+(mostPopularGame.game_bg_competition||mostPopularGame.game_bg)+')':'';
+            addBgImageIfExists(mostPopularGame);
+
+            mostPopularGame.bg_style = mostPopularGame.game_bg || '';
         } else {
             $scope.getOneLiveGame();
         }
@@ -202,7 +198,7 @@ angular.module('vbet5.betting').controller('featuredgameCtrl', ['$rootScope', '$
         } else {
             request.where.game = {
                 'type': getPreMatch ? 0 : 1,
-                '@limit': 50
+                '@limit': 10
             };
             if(Config.main.GmsPlatform) {
                 request.where.game.markets_count =  {'@gt': getPreMatch ? 1 : minEventsCount };
@@ -219,9 +215,10 @@ angular.module('vbet5.betting').controller('featuredgameCtrl', ['$rootScope', '$
             };
         }
 
+        featuredGameSubId && Zergling.unsubscribe(featuredGameSubId);
         Zergling.subscribe(request, updateFeaturedGame)
             .then(function (result) {
-                subscriptions[result.subid] = result.subid;
+                featuredGameSubId = result.subid;
 
                 if (Utils.isObjectEmpty(result.data.sport)) {
                     // too many weird conditions, I know. these have to be refactored later
@@ -236,7 +233,7 @@ angular.module('vbet5.betting').controller('featuredgameCtrl', ['$rootScope', '$
                     } else {
                         $interval(function () {getOneLiveGame(); }, 10000, 1);
                     }
-                    Zergling.unsubscribe(subscriptions[result.subid]);
+                    Zergling.unsubscribe(featuredGameSubId) && (featuredGameSubId = undefined);
                     return;
                 }
                 updateFeaturedGame(result.data);
@@ -265,23 +262,20 @@ angular.module('vbet5.betting').controller('featuredgameCtrl', ['$rootScope', '$
             'source': 'betting',
             'what': {
                 sport: ['id', 'alias', 'name'],
-                game: ['id', 'start_ts', 'team1_name', 'team2_name', 'info', 'events_count', 'markets_count', 'type', 'team1_id', 'team2_id', 'team1_external_id', 'team2_external_id', 'is_live'],
-                event: ['price', 'type'],
-                market: ['id'],
                 competition: ['id', 'name'],
-                region: ['id']
-
+                region: ['id'],
+                game: ['id', 'start_ts', 'team1_name', 'team2_name', 'info', 'events_count', 'markets_count', 'type', 'team1_id', 'team2_id', 'team1_external_id', 'team2_external_id', 'is_live'],
+                market: ['type'],
+                event: ['price', 'type']
             },
-            'where': {event: {type: {'@in': ['P1', 'X', 'P2']}}}
+            'where': {market: {type: {'@in': ['P1XP2', 'P1P2']}}}
         };
         request.where.game = {};
-        request.where[gameOrCompetition] = {'promoted': gameOrCompetition === 'competition' ? true : {'@contains': parseInt($rootScope.conf.site_id)}};
+        request.where[gameOrCompetition] = {'promoted': Config.main.GmsPlatform || gameOrCompetition === 'competition' ? true : {'@contains': parseInt($rootScope.conf.site_id)}};
         request.where.game['@limit'] = Config.main.featuredGames.limitation;
 
-
-
         Zergling.subscribe(request, updateFeaturedGames).then(function (response) {
-            subscriptions[response.subid] = response.subid;
+            featuredGamesSubId = response.subid;
             updateFeaturedGames(response.data);
         })['catch'](function (reason) {
             console.log('loadFeaturedGames failed', reason);
@@ -383,7 +377,8 @@ angular.module('vbet5.betting').controller('featuredgameCtrl', ['$rootScope', '$
     };
 
     $scope.$on('$destroy', function () {
-        Zergling.unsubscribe(Utils.objectToArray(subscriptions));
+        featuredGameSubId && Zergling.unsubscribe(featuredGameSubId);
+        featuredGamesSubId && Zergling.unsubscribe(featuredGamesSubId);
 
         if (multiSlideInterval) {
             $interval.cancel(multiSlideInterval);
@@ -394,7 +389,6 @@ angular.module('vbet5.betting').controller('featuredgameCtrl', ['$rootScope', '$
     /**
      * from here: this part must be remove after removing tempfeaturedgames.html
      */
-
     $scope.index = 0;
     $scope.slideTempBanner = function slideTempBanner(direction) {
         if (direction === 'left') {

@@ -3,28 +3,34 @@
         <div class="conteiner new0" class-on-scroll="show-fix,show-normal">
             <div class="header-wrapper">
                 <div class="header-container-b">
-                    <div class="logo-nav-wrapper">
-                        <div class="logo-contain-b">
-                            <a class="pointer-events-none" href="#/"></a>
-                        </div>
-                        <div class="simple-nav-b">
-                            <ul>
-                                <li class="menu-visible-icon-b" id="compact-menu">
-                                    <label for="header-collapse" trans="">Menu</label>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="header-top-row"></div>
+                    <ul class="responsive-header-contain-j">
+                        <li class="responsive-header-item-j">
+                            <div class="logo-nav-wrapper">
+                                <a ng-href="{{::logoUrl}}" class="pointer-events-none">
+                                    <img ng-src="{{conf.logo.image ? conf.logo.image : 'skins/' + conf.skin + '/images/logo.png'}}" image-on-load image-width="logoWidth" class-on-scroll="ng-hide,ng-show" ng-style="{'width' : conf.logo.width ? (conf.logo.width + 'px') : '', 'height' : conf.logo.height ? (conf.logo.height + 'px') : ''}"/>
+                                    <img ng-src="{{conf.logo.imageFix ? conf.logo.imageFix : 'skins/' + conf.skin + '/images/logo2.png'}}" class="ng-hide" class-on-scroll="ng-show,ng-hide" ng-style="{'width' : conf.logo.widthFix ? (conf.logo.widthFix + 'px') : '', 'height' : conf.logo.heightFix ? (conf.logo.heightFix + 'px') : ''}"/>
+                                </a>
+                            </div>
+                        </li>
+                        <li class="responsive-header-item-j auto-width">
+                            <div class="header-top-row">
+                                <ul class="responsive-header-contain-j">
+                                    <li class="responsive-header-item-j ng-hide" class-on-scroll="ng-show,ng-hide">
+                                        <label for="header-collapse" class="menu-visible-icon-b" trans>Menu</label>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
+                    </ul>
                     <input type="checkbox" id="header-collapse">
                     <ul class="responsive-header-mainMenu-j">
-                        <li>
+                        <li ng-style="{'padding' :  '0 ' + (conf.logo.height ? '0' : conf.logo.paddingMenu || logoWidth)  + 'px'}">
                             <div class="header-bottom-row ng-scope">
                                 <div class="header-nav-contain">
                                     <ul ng-class="{'menu-dropdown': $root.topMenuDropDown, 'menu-dropdown-show': subMenuItemCount > 0}" sub-menu-creator="main">
                                         <div class="top-menu-more" ng-show="subMenuItemCount > 0" title="More"
                                              ng-click="$root.topMenuDropDown=!$root.topMenuDropDown;" hide-on-click
-                                             state-flag-var="$root.topMenuDropDown" trans="attr-only">+{{subMenuItemCount}}
+                                             state-flag-var="$root.topMenuDropDown" trans="attr-only">{{subMenuItemCount}}
                                         </div>
                                         <li ng-repeat="topPage in navigation track by topPage.id" ng-class="{'active': $parent.selectedTopPage.slug==topPage.slug}">
                                             <div class="top-menu-sub-a-t">
@@ -114,7 +120,7 @@
                                             <div class="payment-content-block" ng-hide="system.image">
                                                 <ul><li ng-class="system.name"><span class="paymentIcon" ng-class="system.name"></span></li></ul>
                                             </div>
-                                            <div class="paymentImageWrapper" ng-show="system.image">
+                                            <div class="paymentImageWrapper" ng-show="system.image" ng-class="system.name">
                                                 <div><img src="{{system.image}}" class="paymentImage center"></div>
                                             </div>
                                         </td>
@@ -154,7 +160,7 @@
 
                             <div class="peymants-info" ng-if="selectedPaymentsType=='betshop'" ng-init="loadPage('faq-betshops-' + env.lang,true);">
                                 <div class="faq-betshops-t" ng-show="pagesLoaded">
-                                    <p ng-bind-html="(mainPage.content || 'Page not found'|translate)|html"></p>
+                                    <p ng-bind-html="(mainPage.content || 'Page not found'|translate)|html:'p'"></p>
                                 </div>
                             </div>
 

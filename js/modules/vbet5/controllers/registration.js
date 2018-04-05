@@ -10,17 +10,16 @@ angular.module('vbet5').controller('RegistrationController', ['$scope', '$rootSc
 
         TimeoutWrapper = TimeoutWrapper($scope);
         var REG_FORM_BIRTH_YEAR_LOWEST = new Date().getFullYear() - 110;
-        var minimumAllowedAge = Config.main.registration.minimumAllowedAge;
         var step1Fields = [];
         var registrationDefaultCurrency = Storage.get('defaultRegistrationCurrency') || $location.search().currency || Config.main.registration.defaultCurrency;
 
+        $scope.minimumAllowedAge = Config.main.registration.minimumAllowedAge;
         $scope.RegConfig = RegConfig;
         $scope.resetError = {};
         $scope.countryCodes = Utils.objectToArray(Utils.getAvailableCountries(CountryCodes), 'key');
-        if (Config.main.registration.sortCountry) {
-            $scope.countryCodes = $scope.countryCodes.sort(Utils.alphabeticalSorting);
-        }
 
+        $scope.countryCodes = $scope.countryCodes.sort(Utils.alphabeticalSorting);
+        $scope.phoneCodes = [];
         $scope.registration = {
             step: 1,
             complete: false,
@@ -47,7 +46,7 @@ angular.module('vbet5').controller('RegistrationController', ['$scope', '$rootSc
         $scope.registrationData = {
             first_name: '',
             years: [],
-            gender: $scope.genders[0].val,
+            gender: '',
             currency_name: registrationDefaultCurrency,
             language: Config.env.lang,
             birth_year: '',
@@ -93,6 +92,7 @@ angular.module('vbet5').controller('RegistrationController', ['$scope', '$rootSc
             var d2 = Moment.get();
             $scope.userAge = d2.diff(Moment.get(d1), 'year');
         };
+
         /**
          * @description Automatically set currency if it enabled and defined in config
          * @param {String} newVal
@@ -106,21 +106,6 @@ angular.module('vbet5').controller('RegistrationController', ['$scope', '$rootSc
                 }
             } else {
                 $scope.currencyDisabled = false;
-            }
-        }
-
-        /**
-         * @description Automatically set promo code if it enabled and defined in config
-         * @param {String} newVal
-         * @param {String} oldVal
-         */
-        function autoSetPromoCode(newVal, oldVal) {
-            if (Config.main.registration.autoSetPromoCode.dontOverwrite && $scope.registrationData.promo_code) {
-                return;
-            }
-            $scope.registrationData.promo_code = Config.main.registration.autoSetPromoCode.availableList[newVal && newVal.key] || '';
-            if (Config.main.registration.autoSetPromoCode.disableChangeAfterSelect) {
-                $scope.promoCodeDisabled = true;
             }
         }
 
@@ -154,7 +139,7 @@ angular.module('vbet5').controller('RegistrationController', ['$scope', '$rootSc
             if (Config.main.registration.phoneNumberPattern === "string") {
                 Config.main.registration.phoneNumberPattern = new RegExp(Config.main.registration.phoneNumberPattern);
             }
-            var i, length = new Date().getFullYear() - minimumAllowedAge;
+            var i, length = new Date().getFullYear() - $scope.minimumAllowedAge;
             for (i = length; i >= REG_FORM_BIRTH_YEAR_LOWEST; i -= 1) {
                 $scope.registrationData.years.push(i.toString());
             }
@@ -164,7 +149,6 @@ angular.module('vbet5').controller('RegistrationController', ['$scope', '$rootSc
             //$scope.registrationData.birth_year = $scope.registrationData.years[i - 1].toString();
 
             var promoCode = Storage.get('promo_code') || Config.main.registration.defaultPromoCode || '';
-            
             $scope.registrationData[Config.main.promoCodeFieldName] = promoCode;
             if (promoCode) {
                 $scope.hasPromoCode = true;
@@ -181,6 +165,7 @@ angular.module('vbet5').controller('RegistrationController', ['$scope', '$rootSc
             }
 
             function processRegItem(regItem) {
+                if(!regItem) return;
                 //console.log(regItem.name, regItem.type);
                 if (regItem.type === 'captcha') {
                     Config.main.registration.hasCaptcha = true;
@@ -190,8 +175,8 @@ angular.module('vbet5').controller('RegistrationController', ['$scope', '$rootSc
                     $scope.registrationData[regItem.name] = regItem.defaultValue;
                 }
 
-                if ((Config.main.registration.hideLabels && regItem.hideLabel === undefined) || regItem.hideLabel) {
-                    if (!regItem.labelHidden && regItem.type !== 'select' && regItem.type !== 'captcha') {
+                if (regItem.hideLabel) {
+                    if (!regItem.labelHidden && regItem.type !== 'select' && regItem.type !== 'captcha' && regItem.type !== 'recaptcha') {
                         regItem.placeholder = regItem.title;
                         regItem.title = '';
                         regItem.required = false;
@@ -209,6 +194,16 @@ angular.module('vbet5').controller('RegistrationController', ['$scope', '$rootSc
                     });
                 }
             });
+
+            var countryCodesLength =  $scope.countryCodes.length;
+            for (i = 0; i < countryCodesLength; ++i) {
+                var phoneCode = $scope.countryCodes[i].code;
+                if(phoneCode !== undefined && $scope.phoneCodes.indexOf(phoneCode) === -1){
+                    $scope.phoneCodes.push(phoneCode);
+                }
+            }
+
+            $scope.phoneCodes.sort();
         };
 
         /**
@@ -275,6 +270,19 @@ angular.module('vbet5').controller('RegistrationController', ['$scope', '$rootSc
             }
         }
 
+        /**
+         * @description Automatically set currency_code when country changed
+         * @param country code
+         */
+        function setCurrencyByCountryCode(code) {
+            var currency = CountryCodes[code] &&  CountryCodes[code].currency;
+            if (currency && Config.main.availableCurrencies.indexOf(currency) !== -1) {
+                $scope.registrationData.currency_name =  currency;
+            } else if (registrationDefaultCurrency) {
+                $scope.registrationData.currency_name = registrationDefaultCurrency;
+            }
+        }
+
         $scope.$watch('registrationData.country_id', function (newVal, oldVal) {
             newVal = newVal || oldVal;
 
@@ -286,9 +294,11 @@ angular.module('vbet5').controller('RegistrationController', ['$scope', '$rootSc
 
             if (Config.main.registration.autoSetCurrency && Config.main.registration.autoSetCurrency.enabled) {
                 autoSetCurrency(newVal, oldVal);
+            }  else {
+                setCurrencyByCountryCode(newVal.key);
             }
             if (Config.main.registration.autoSetPromoCode && Config.main.registration.autoSetPromoCode.enabled) {
-                autoSetPromoCode(newVal, oldVal);
+                setPromoCode(newVal, oldVal);
             }
 
         });
@@ -301,8 +311,9 @@ angular.module('vbet5').controller('RegistrationController', ['$scope', '$rootSc
          * determines user location via {@link vbet5.service:Geoip Geoip} service
          * and sets country and city and country values (if not selected yet)
          * @param predefinedCountryId user prefered country id, if predefined no need to make location call
+         * @param {Boolean} skipCity if true doesn't send pre filled city info to back-end
          */
-        $scope.preFillRegionalData = function preFillRegionalData(predefinedCountryId) {
+        $scope.preFillRegionalData = function preFillRegionalData(predefinedCountryId, skipCity) {
             var countryCodeItem;
             if(predefinedCountryId && $scope.countryCodes[predefinedCountryId]) {
                 //timeout is not good solution, but this way setting predefined country works
@@ -320,10 +331,12 @@ angular.module('vbet5').controller('RegistrationController', ['$scope', '$rootSc
                         TimeoutWrapper(function () {
                             $scope.registerform.country_id.disabled = true;
                         }, 1000);
-                    } else if (!$scope.registrationData.country_id && data.countryCode && (!Config.main.personalDetails.availableCountriesList || Config.main.personalDetails.availableCountriesList.indexOf(data.countryCode) !== -1)) {
+                    } else if (!$scope.registrationData.country_id && data.countryCode && (!Config.main.personalDetails.availableCountriesList || Config.main.personalDetails.availableCountriesList.indexOf(data.countryCode) !== -1) && (!Config.main.personalDetails.restrictedCountriesList || Config.main.personalDetails.restrictedCountriesList.indexOf(data.countryCode) === -1)) {
                         countryCodeItem = CountryCodes[data.countryCode];
                         countryCodeItem.key = data.countryCode;
-                        city = data.cityName;
+                        if (!skipCity) {
+                            city = data.cityName || countryCodeItem.city;
+                        }
                     }
                 })['catch'](function (reason) {
                     console.log(reason);
@@ -334,12 +347,18 @@ angular.module('vbet5').controller('RegistrationController', ['$scope', '$rootSc
                             countryCodeItem.key = Config.main.registration.defaultCountryCode;
                             city = CountryCodes[Config.main.registration.defaultCountryCode].city;
                         }
-                        $scope.registrationData.country_id = countryCodeItem || $scope.countryCodes[0];
+                        if (countryCodeItem) {
+                            $scope.registrationData.country_id = countryCodeItem
+                        } else {
+                            $scope.registrationData.country_id = $scope.countryCodes[0];
+                            city =  $scope.countryCodes[0].city;
+                        }
 
                         $scope.checkIfCountryIsRestricted();
+                        if (!skipCity) {
+                            $scope.registrationData.city  = $scope.registrationData.city || city || '';
 
-                        $scope.registrationData.city  = $scope.registrationData.city || city || '';
-
+                        }
                         setCountryCode($scope.registrationData.country_id);
                     }
                 });
@@ -388,27 +407,19 @@ angular.module('vbet5').controller('RegistrationController', ['$scope', '$rootSc
 
         /**
          * @ngdoc method
-         * @name setDefaultPromoCode
+         * @name setPromoCode
          * @methodOf vbet5.controller:RegistrationController
-         * @description Set default promocode it its not been defined before
+         * @description checks PromoCode if there is no defaultPromoCode in configs
          */
-        function setDefaultPromoCode() {
+
+        function setPromoCode(newVal, oldVal) {
             var promoCode = $scope.registrationData.promo_code;
-            if (!promoCode) {
-                if (Config.main.registration.deaultPromocodePerDomain &&
-                        Config.main.registration.deaultPromocodePerDomain[$window.location.hostname] !== undefined &&
-                        Config.main.registration.deaultPromocodePerDomain[$window.location.hostname].code !== undefined
-                        ) {
-                    promoCode = Config.main.registration.deaultPromocodePerDomain[$window.location.hostname].code;
-                } else if (Config.main.registration.defaultPromoCode && Config.main.registration.defaultPromoCode.length > 0) {
-                    promoCode = Config.main.registration.defaultPromoCode;
-                }
+
+            if (newVal !== undefined && Config.main.registration.autoSetPromoCode.availableList[newVal && newVal.key]) {
+                $scope.registrationData.promo_code = Config.main.registration.autoSetPromoCode.availableList[newVal && newVal.key];
+                promoCode = $scope.registrationData.promo_code;
             }
-            if (Config.main.registration.deaultPromocodePerDomain &&
-                    Config.main.registration.deaultPromocodePerDomain[$window.location.hostname] &&
-                    Config.main.registration.deaultPromocodePerDomain[$window.location.hostname].suffix) {
-                promoCode = promoCode + Config.main.registration.deaultPromocodePerDomain[$window.location.hostname].suffix;
-            }
+
             return promoCode;
         }
 
@@ -426,10 +437,14 @@ angular.module('vbet5').controller('RegistrationController', ['$scope', '$rootSc
                         regInfo.birth_date = $scope.registrationData.birth_year + '-' + $scope.registrationData.birth_month + '-' + $scope.registrationData.birth_day;
                     },
                     phone_number: function () {
-                        regInfo.phone = ($scope.registrationData.phone_code && $scope.registrationData.phone_number) ? $scope.registrationData.phone_code + $scope.registrationData.phone_number : '';
+                        if (Config.main.registration.enablePhoneNumberAsUsername) {
+                            regInfo.phone = '00' + $scope.registrationData.username;
+                        } else {
+                            regInfo.phone = ($scope.registrationData.phone_code && $scope.registrationData.phone_number) ? '00' + $scope.registrationData.phone_code + $scope.registrationData.phone_number : ($scope.registrationData.phone_number || '');
+                        }
                     },
                     promo_code: function () {
-                        var promoCode = setDefaultPromoCode();
+                        var promoCode = setPromoCode();
                         if(promoCode !== "" && promoCode !== undefined){
                             return promoCode;
                         }
@@ -480,6 +495,7 @@ angular.module('vbet5').controller('RegistrationController', ['$scope', '$rootSc
 
             var emailRequired = true;
             function processField(regItem) {
+                if(!regItem) return;
                 var fieldName = regItem.name;
                 if(fieldName === 'email') {
                     emailRequired = regItem.required;
@@ -506,11 +522,16 @@ angular.module('vbet5').controller('RegistrationController', ['$scope', '$rootSc
             });
 
             if((!regInfo.email || !emailRequired) && !regInfo.username) {
-                regInfo.username = regInfo.phone;
+                regInfo.username = $scope.registrationData.phone_number;
                 regInfo.ignore_username = undefined;
             }
 
             regInfo.currency_name = (Config.main.GmsPlatform && Config.main.registration.springCurrencyMap && Config.main.registration.springCurrencyMap[regInfo.currency_name]) || regInfo.currency_name || registrationDefaultCurrency;
+
+            // If a user has a promo code we send it regardless of the fact whether the partner has a "Promo Code" field in the registration form or not
+            if ($scope.hasPromoCode && !regInfo["promo_code"]) {
+                regInfo["promo_code"] = customDataType["promo_code"].call();
+            }
 
             return regInfo;
         }
@@ -534,14 +555,29 @@ angular.module('vbet5').controller('RegistrationController', ['$scope', '$rootSc
         }
         /**
          * @ngdoc method
+         * @name resetFieldError
+         * @methodOf vbet5.controller:RegistrationController
+         * @description reset Password and Confirm Password in registration form
+         */
+        function resetFieldError (name2) {
+            if ($scope.registerform[name2]) {
+                $scope.registerform[name2].$error = {};
+            }
+        }
+
+
+        /**
+         * @ngdoc method
          * @name register
          * @methodOf vbet5.controller:RegistrationController
          * @description registers the user
          */
         $scope.register = function register() {
+            $scope.resetError = {};
             $scope.registration.busy = true;
+            $scope.registration.submitted = true;
 
-            if ($scope.registerform.$invalid || ($scope.userAge !== undefined && $scope.userAge < minimumAllowedAge)) {
+            if ($scope.registerform.$invalid || ($scope.userAge !== undefined && $scope.userAge < $scope.minimumAllowedAge)) {
                 $scope.registration.busy = false;
                 return;
             }
@@ -582,6 +618,9 @@ angular.module('vbet5').controller('RegistrationController', ['$scope', '$rootSc
                             }
                             if (Config.main.registration.closeSliderAfterRegistration) {
                                 $rootScope.$broadcast('slider.close');
+                                setTimeout(function () {
+                                    $scope.closeRegistrationResult();
+                                }, 500);
                             }
                             if (Config.main.allowCustomHtml) {
                                 content.getWidget('tracking').then(function (resp) {
@@ -598,6 +637,11 @@ angular.module('vbet5').controller('RegistrationController', ['$scope', '$rootSc
                             });
                             $scope.resetRegForm();
                         } else {
+
+                            if ($scope.registrationData.g_recaptcha_response) {
+                                $scope.$broadcast('recaptcha.reload');
+                                $scope.registrationData.g_recaptcha_response = '';
+                            }
                             $scope.registerform.$dirty = true;
                             analytics.gaSend('send', 'event', 'slider', 'registration', {
                                 'page': $location.path(),
@@ -654,8 +698,14 @@ angular.module('vbet5').controller('RegistrationController', ['$scope', '$rootSc
                                 break;
                             case 21:
                             case '21':
-                                $scope.registerform.captcha_text.$dirty = $scope.registerform.captcha_text.$invalid = $scope.registerform.captcha_text.$error.notmatching = true;
-                                resetFormFieldErrorOnChange('captcha_text', 'notmatching');
+                                if ($scope.registerform.captcha_text) {
+                                    $scope.registerform.captcha_text.$dirty = $scope.registerform.captcha_text.$invalid = $scope.registerform.captcha_text.$error.notmatching = true;
+                                    resetFormFieldErrorOnChange('captcha_text', 'notmatching');
+                                }
+                                if ($scope.registerform.g_recaptcha_response) {
+                                    $scope.registerform.g_recaptcha_response.$dirty = $scope.registerform.g_recaptcha_response.$invalid = $scope.registerform.g_recaptcha_response.$error.notmatching = true;
+                                    resetFormFieldErrorOnChange('g_recaptcha_response', 'notmatching');
+                                }
                                 break;
                             case -1122:
                             case '-1122':
@@ -666,10 +716,16 @@ angular.module('vbet5').controller('RegistrationController', ['$scope', '$rootSc
                             case '-2074':
                                 if (Config.main.GmsPlatform){
                                     $scope.registerform.password.$dirty = $scope.registerform.password.$invalid = $scope.registerform.password.$error.sameAsLogin = true;
+                                    resetFormFieldErrorOnChange('password', 'sameAsLogin');
+                                    resetFieldError('password2');
                                 }
                             break;
+                            case -2442:
+                            case '-2442':
+                                $scope.registration.failed = 'Your details match a self-excluded customer in our database. Please contact customer support.';
+                                break;
                             default:
-                                $scope.registration.failed = Translator.get('Unknown error');
+                                $scope.registration.failed = 'Registration failed due to technical error.';
                                 break;
                             }
                             var thereAreinvalidStepOneFields = step1Fields.reduce(function (prev, field) { return $scope.registerform[field].$invalid || prev; }, false);
@@ -679,6 +735,14 @@ angular.module('vbet5').controller('RegistrationController', ['$scope', '$rootSc
                         }
                     },
                     function (response) {
+                        if (response.code) {
+                            switch (response.code) {
+                                case 26:
+                                    $scope.registerform.promo_code.$dirty = $scope.registerform.promo_code.$invalid = $scope.registerform.promo_code.$error.invalid = true;
+                                    resetFormFieldErrorOnChange('promo_code', 'invalid');
+                                    break;
+                            }
+                        }
                         console.log('registration failed:', response);
                         $scope.registration.failed = response.data;
                     }
@@ -694,13 +758,19 @@ angular.module('vbet5').controller('RegistrationController', ['$scope', '$rootSc
          * @description closes the "registration done" message and slider
          */
         $scope.closeRegistrationResult = function closeRegistrationResult() {
-            if ($rootScope.env.authorized && Config.main.registration.sliderPageAfterRegistration) {
-                if (['deposit', 'withdraw', 'renew', 'cashier', 'casinoBalanceHistory', 'balanceHistory'].indexOf(Config.main.registration.sliderPageAfterRegistration) !== -1) {
-                    $location.search({});
-                    $rootScope.env.sliderContent = Config.main.registration.sliderPageAfterRegistration;
-                    $rootScope.env.showSlider = true;
+            if (Config.main.registration.sliderPageAfterRegistration) {
+                if ($rootScope.env.authorized) {
+                    if (['deposit', 'withdraw', 'renew', 'cashier', 'casinoBalanceHistory', 'balanceHistory', 'promotionalBonuses'].indexOf(Config.main.registration.sliderPageAfterRegistration) !== -1) {
+                        $location.search({});
+                        $rootScope.env.sliderContent = Config.main.registration.sliderPageAfterRegistration;
+                        $rootScope.env.showSlider = true;
+                    } else {
+                        $rootScope.env.sliderContent = Config.main.registration.sliderPageAfterRegistration;
+                    }
                 } else {
-                    $rootScope.env.sliderContent = Config.main.registration.sliderPageAfterRegistration;
+                    $rootScope.env.sliderContent = '';
+                    $rootScope.env.showSlider = false;
+                    $rootScope.loginInProgress && $location.search('action', Config.main.registration.sliderPageAfterRegistration);
                 }
             } else {
                 $location.path('/');
@@ -711,28 +781,6 @@ angular.module('vbet5').controller('RegistrationController', ['$scope', '$rootSc
             $scope.registration.complete = false;
             $scope.registration.failed = false;
         };
-
-
-        //$scope.closeRegistrationResult = function closeRegistrationResult() {
-        //    if (!$rootScope.env.authorized) {
-        //        $rootScope.env.sliderContent = 'signInForm';
-        //    } else if (Config.main.registration.sliderPageAfterRegistration) {
-        //        if (['deposit', 'withdraw', 'renew', 'cashier', 'casinohistory', 'history'].indexOf(Config.main.registration.sliderPageAfterRegistration) !== -1) {
-        //            $location.path('/balance/' + Config.main.registration.sliderPageAfterRegistration);
-        //           $rootScope.env.sliderContent = '';
-        //            $rootScope.env.showSlider = false;
-        //        } else {
-        //            $rootScope.env.sliderContent = Config.main.registration.sliderPageAfterRegistration;
-        //        }
-
-        //    } else {
-        //        $rootScope.env.sliderContent = '';
-        //       $rootScope.env.showSlider = false;
-        //    }
-        //    $scope.registration.complete = false;
-        //    $scope.registration.failed = false;
-        //};
-
 
         /**
          * @ngdoc method
@@ -819,8 +867,8 @@ angular.module('vbet5').controller('RegistrationController', ['$scope', '$rootSc
          * @param {Number} age
          */
         $scope.changeMinimumAge = function(minimumAge){
-            if(minimumAllowedAge !== minimumAge){
-                minimumAllowedAge = minimumAge;
+            if($scope.minimumAllowedAge !== minimumAge){
+                $scope.minimumAllowedAge = minimumAge;
                 updateRegistrationDataYears();
             }
         };
@@ -832,13 +880,13 @@ angular.module('vbet5').controller('RegistrationController', ['$scope', '$rootSc
          * @description Change years dropdown
          */
         function updateRegistrationDataYears(){
-            var i, length = new Date().getFullYear() - minimumAllowedAge;
+            var i, length = new Date().getFullYear() - $scope.minimumAllowedAge;
             $scope.registrationData.years = [];
             for (i = length; i >= REG_FORM_BIRTH_YEAR_LOWEST; i -= 1) {
                 $scope.registrationData.years.push(i.toString());
             }
         }
-        
+
         if(Config.main.showCapsLockHint) {
             $scope.capsLockStateHolder = {};
         }
@@ -870,9 +918,6 @@ angular.module('vbet5').controller('RegistrationController', ['$scope', '$rootSc
          * @param {String} field name
          */
         $scope.resetFieldError = function resetFieldError(fieldName){
-            if(!Config.main.enableResetError) {
-                return;
-            }
             $scope.registrationData[fieldName] = '';
             $scope.resetError[fieldName] = true;
             $scope.registerform[fieldName].blur = false;
@@ -892,6 +937,10 @@ angular.module('vbet5').controller('RegistrationController', ['$scope', '$rootSc
             }
         };
 
+        $scope.$on('recaptcha.response', function (event, response) {
+            $scope.registrationData.g_recaptcha_response = response;
+        });
+
         /**
          * @ngdoc method
          * @name selectCountryForChangeCurrency
@@ -901,10 +950,24 @@ angular.module('vbet5').controller('RegistrationController', ['$scope', '$rootSc
 
         Geoip.getGeoData().then(function (data) {
             var country = data.countryCode.toUpperCase();
-            var currency = CountryCodes[country] &&  CountryCodes[country].currency;
-            if (currency && Config.main.availableCurrencies.indexOf(currency) !== -1) {
-                $scope.registrationData.currency_name =  currency;
-            }
             setCountryCode(country);
         });
+
+        $scope.nextKeyPress = function nextKeyPress(event) {
+            if(event.keyCode == 9 || event.keyCode == 13){
+                $scope.registration.step = 2;
+            }
+            event.preventDefault();
+        };
+
+        /**
+         * @ngdoc method
+         * @name checkNationalId
+         * @methodOf vbet5.controller:RegistrationController
+         * @description check national id
+         */
+        $scope.checkNationalId = function checkNationalId() {
+            $scope.registerform.doc_number.$dirty = $scope.registerform.doc_number.$invalid = $scope.registerform.doc_number.$error.docinvalid = !Utils.checkNationalId($scope.registrationData.doc_number);
+        };
+
 }]);

@@ -9,16 +9,16 @@
                 <div class="casino-left-menu-v-2">
                     <div class="search-category-nav-contain">
                         <div class="left-column-casino-nav" no-animate>
-                            <ul ng-show="providerOptions.length > 1">
-                                <li ng-repeat="provider in providerOptions track by $index"
-                                    ng-class="{'active': $parent.selectedProvider === provider}"
-                                    ng-click="$parent.selectedProvider = provider">
+                            <ul ng-show="liveGamesData.providerOptions.length > 1">
+                                <li ng-repeat="provider in liveGamesData.providerOptions track by $index"
+                                    ng-class="{'active': liveGamesData.selectedProvider === provider}"
+                                    ng-click="liveGamesData.selectedProvider = provider">
                                     {{provider|translate }}
 
                                     <ul>
-                                        <li ng-repeat="studio in devidedGames[selectedProvider].studios track by $index"
-                                            ng-class="{'active': studio === devidedGames[selectedProvider].defaultStudio}">
-                                            <a >{{ ($parent.selectedProvider + '_STUDIO_' + studio)|translate }}</a>
+                                        <li ng-repeat="studio in liveGamesData.devidedGames[liveGamesData.selectedProvider].studios track by $index"
+                                            ng-class="{'active': studio === liveGamesData.devidedGames[liveGamesData.selectedProvider].defaultStudio}">
+                                            <a >{{ (liveGamesData.selectedProvider + '_STUDIO_' + studio)|translate }}</a>
                                         </li>
                                     </ul>
                                 </li>
@@ -29,14 +29,14 @@
             </div>
 
             <div class="wrapper-separator-games">
-                <div class="all-games-casino-list" no-animate ng-class="{'no-left-menu': providerOptions.length == 0}">
+                <div class="all-games-casino-list" no-animate ng-class="{'no-left-menu': liveGamesData.providerOptions.length == 0}">
                     <ul>
-                        <div ng-repeat="provider in providerOptions track by $index">
-                            <li ng-repeat="game in devidedGames[provider].games track by $index"
-                                ng-show="liveGamesConf.hiddenGamesIds.indexOf(game.id) === -1 && (selectedProvider === provider || selectedProvider === 'All') && (!game.markets || game.markets.available.indexOf(devidedGames[selectedProvider].defaultStudio) !== -1)"
+                        <div ng-repeat="provider in liveGamesData.providerOptions track by $index">
+                            <li ng-repeat="game in liveGamesData.devidedGames[provider].games track by $index"
+                                ng-show="confData.liveCasino.hiddenGamesIds.indexOf(game.id) === -1 && (liveGamesData.selectedProvider === provider || liveGamesData.selectedProvider === 'All') && (!game.markets || game.markets.available.indexOf(liveGamesData.devidedGames[liveGamesData.selectedProvider].defaultStudio) !== -1)"
                                 class="list-games-casino-view-b"
                                 no-animate>
-                                <a ng-click="openGame(game, 'real', devidedGames[selectedProvider].defaultStudio); $event.stopPropagation();">
+                                <a ng-click="openGame(game, 'real', liveGamesData.devidedGames[liveGamesData.selectedProvider].defaultStudio); $event.stopPropagation();">
                                     <p class="game-img-box-b" ng-style="{'background-image': 'url({{useBigIcons ? game.icon_3 : game.icon_2}})'}"></p>
                                     <p class="game-name-b-favorite">
                                         <span >{{ game.name|translate }}</span>
@@ -44,10 +44,10 @@
                                     </p>
                                     <div class="casino-resize-buttons">
                                         <div>
-                                            <button ng-click="openGame(game, 'real', devidedGames[selectedProvider].defaultStudio); $event.stopPropagation();">
+                                            <button ng-click="openGame(game, 'real', liveGamesData.devidedGames[liveGamesData.selectedProvider].defaultStudio); $event.stopPropagation();">
                                                 <span trans>Play now</span>
                                             </button>
-                                            <button ng-if="game.types.viewMode && !env.authorized" ng-click="openGame(game, null, devidedGames[selectedProvider].defaultStudio); $event.stopPropagation();">
+                                            <button ng-if="game.types.viewMode && !env.authorized" ng-click="openGame(game, null, liveGamesData.devidedGames[liveGamesData.selectedProvider].defaultStudio); $event.stopPropagation();">
                                                 <span trans>View</span>
                                             </button>
                                         </div>

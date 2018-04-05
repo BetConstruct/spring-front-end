@@ -6,12 +6,29 @@
  * Utility functions
  */
 
-CASINO.service('casinoManager', ['$rootScope', '$q', '$window', '$sce', '$location', '$timeout', 'analytics', 'casinoData', 'Storage', 'DomHelper', 'Zergling', 'Config', 'CConfig', 'Translator', 'LanguageCodes', function ($rootScope, $q, $window,  $sce, $location, $timeout, analytics, casinoData, Storage, DomHelper, Zergling, Config, CConfig, Translator, LanguageCodes) {
+CASINO.service('casinoManager', ['$rootScope', '$q', '$window', '$sce', '$location', '$timeout', 'analytics', 'casinoData', 'Storage', 'DomHelper', 'Zergling', 'Config', 'CConfig', 'Translator', 'LanguageCodes', 'AuthData', function ($rootScope, $q, $window,  $sce, $location, $timeout, analytics, casinoData, Storage, DomHelper, Zergling, Config, CConfig, Translator, LanguageCodes, AuthData) {
     'use strict';
     var casinoManager = {};
 
     var realityCheckIntervalPromise;
     var profileActiveTimePromise;
+
+    /**
+     * @ngdoc method
+     * @name clearLocation
+     * @methodOf CASINO.service:casinoManager
+     * @description deletes location specific search params
+     *
+     */
+    function clearLocation () {
+        $location.search('type', undefined);
+        $location.search('game', undefined);
+        $location.search('studio', undefined);
+        $location.search('table', undefined);
+        $location.search('limit', undefined);
+        $location.search('room', undefined);
+    }
+
     /**
      * @ngdoc method
      * @name toggleSaveToMyCasinoGames
@@ -71,7 +88,6 @@ CASINO.service('casinoManager', ['$rootScope', '$q', '$window', '$sce', '$locati
                     }
                 }
             });
-
             return;
         }
         gameInfo.gameMode = gameInfo.gameMode === 'fun' ? 'real' : 'fun';
@@ -85,7 +101,7 @@ CASINO.service('casinoManager', ['$rootScope', '$q', '$window', '$sce', '$locati
      * @description find game by id in opened games and relaod it
      *
      * @param {Object} scope the scope
-     * @param {Int} id gameInfo id
+     * @param {String} id the gameInfo id
      */
     casinoManager.refreshCasinoGame = function refreshCasinoGame(scope, id) {
         var i , length = scope.gamesInfo.length;
@@ -94,8 +110,9 @@ CASINO.service('casinoManager', ['$rootScope', '$q', '$window', '$sce', '$locati
                 var mode = scope.gamesInfo[i].gameMode;
                 var currentGame = scope.gamesInfo[i].game;
                 var studio = scope.gamesInfo[i].studio;
+                var urlSuffix = scope.gamesInfo[i].urlSuffix;
                 scope.gamesInfo[i] = {gameUrl: '', id: id, toAdd: true};
-                scope.openGame(currentGame, mode, studio);
+                scope.openGame(currentGame, mode, studio, urlSuffix, i);
                 break;
             }
         }
@@ -106,26 +123,37 @@ CASINO.service('casinoManager', ['$rootScope', '$q', '$window', '$sce', '$locati
      * @name refreshOpenedGames
      * @methodOf CASINO.service:casinoManager
      * @description  if user logged in refresh open games that do not have mode "play for fun" and open in real mode, or
-     *               if user logged out close games that opened in real mode
      *
      * @param {Object} scope the scope
      */
     casinoManager.refreshOpenedGames = function refreshOpenedGames(scope) {
-        for (var i = 0, count = scope.gamesInfo.length; i < count; i += 1) {
-            if (scope.gamesInfo[i].game) {
-                if (scope.gamesInfo[i].game.id !== CConfig.backgammon.id || $rootScope.env.authorized) {
-                    if (scope.gamesInfo[i].game.types.viewMode) {
+        var refreshFunk = function () {
+            for (var i = 0, count = scope.gamesInfo.length; i < count; i += 1) {
+                if (scope.gamesInfo[i].game && scope.gamesInfo[i].gameUrl !== '' && ($rootScope.env.authorized || scope.gamesInfo[i].game.id !== CConfig.backgammon.id)) {
+                    if (scope.gamesInfo[i].gameMode === 'real') {
+                        casinoManager.closeGame(scope, scope.gamesInfo[i].id);
+                    } else if ($rootScope.env.authorized && scope.gamesInfo[i].game.types.realMode && !scope.gamesInfo[i].game.types.funMode) {
                         var infoId = scope.gamesInfo[i].id;
                         var currentGame = scope.gamesInfo[i].game;
                         var studio = scope.gamesInfo[i].studio;
+                        var urlSuffix = scope.gamesInfo[i].urlSuffix;
                         var gameMode = $rootScope.env.authorized ? 'real' : 'fun';
                         scope.gamesInfo[i] = {gameUrl: '', id: infoId, toAdd: true};
-                        scope.openGame(currentGame, gameMode, studio);
-                    } else if (scope.gamesInfo[i].gameUrl !== '' && scope.gamesInfo[i].gameMode === 'real' && !$rootScope.env.authorized) {
-                        casinoManager.closeGame(scope, scope.gamesInfo[i].id);
+                        scope.openGame(currentGame, gameMode, studio, urlSuffix);
                     }
                 }
             }
+        };
+
+        if (!$rootScope.env.authorized || $rootScope.profile || Config.main.GmsPlatform) {
+            refreshFunk();
+        } else {
+            var profileWathcerPromise = scope.$watch('profile', function (newValue) {
+                if (newValue) {
+                    profileWathcerPromise();
+                    refreshFunk();
+                }
+            });
         }
     };
 
@@ -149,7 +177,7 @@ CASINO.service('casinoManager', ['$rootScope', '$q', '$window', '$sce', '$locati
                 break;
             }
         }
-        var game = gameInfo.game, gameMode = gameInfo.gameMode === "real" ? "real" : "fun";
+        var game = gameInfo.game;
 
         if (game.width && game.height) {
             scaleWidth = percent * screenResolution.x / game.width;
@@ -167,104 +195,58 @@ CASINO.service('casinoManager', ['$rootScope', '$q', '$window', '$sce', '$locati
         }
         var windowParam = 'width=' + windowWidth + ',height=' + windowHeight + ',menubar=no,toolbar=no,location=no,scrollbars=no,resizable=yes';
 
-        getGameUrl(gameInfo).then(function(url) {
-            if (url) {
-                openGameWindow(url, gameInfo, windowParam);
-            } else {
-                showMessage('casino_auth_error');
-            }
-        })['finally'](function () {
-            casinoManager.closeGame(scope, id);
-        });
+        openGameWindow(casinoManager.getGameUrl(gameInfo), gameInfo, windowParam);
+        casinoManager.closeGame(scope, id);
     };
 
-    function getGameUrl (gameInfo) {
-        var data = $q.defer();
-        var urlPromise = data.promise;
+    /**
+     * @ngdoc method
+     * @name getGameUrl
+     * @methodOf CASINO.service:casinoManager
+     * @description Get casino game url
+     * @param {Object} gameInfo the game info
+     */
+    casinoManager.getGameUrl = function getGameUrl (gameInfo) {
         var gameUrl;
-
         var isSpecialLiveGame = (gameInfo.game.categories.indexOf(CConfig.liveCasino.categoryId) !== -1 && gameInfo.game.show_as_provider === CConfig.liveCasino.provider);
 
-        if (gameInfo.game.gameOpenUrl || CConfig.main.providersThatWorkWithSwarm.indexOf(gameInfo.game.provider) === -1 || isSpecialLiveGame) {
-            if (isSpecialLiveGame) {
-                var subDomain = CConfig.staticUrlForLiveCasino || CConfig.cUrlPrefix.substring(CConfig.cUrlPrefix.indexOf('.') + 1);
-                gameUrl = CConfig.liveCasino.lcGameUrlPrefix + subDomain + '/web/' + (LanguageCodes[$rootScope.env.lang] || 'en') + '/' + CConfig.main.partnerID + '/table?activeGroupId=' + (CConfig.liveCasino.lobbyGroupsMap[gameInfo.game.extearnal_game_id] || 0) + '&frameId=' + gameInfo.id;
+        if (isSpecialLiveGame) {
+            var urlPrefix = $window.location.protocol + CConfig.liveCasino.lcGameUrlPrefix + (CConfig.liveCasino.staticDomain || CConfig.cUrlPrefix.substring(CConfig.cUrlPrefix.indexOf('.') + 1));
+            if (gameInfo.urlSuffix) {
+                gameUrl = urlPrefix + gameInfo.urlSuffix + (gameInfo.urlSuffix.indexOf('?') === -1 ? '?' : '&') + 'frameId=' + gameInfo.id;
             } else {
-                var urlPrefix = CConfig.main.providersThatWorkWithCasinoBackend && CConfig.main.providersThatWorkWithCasinoBackend.providers && CConfig.main.providersThatWorkWithCasinoBackend.providers.indexOf(gameInfo.game.provider) !== -1 ? CConfig.main.providersThatWorkWithCasinoBackend.url : CConfig.cUrlPrefix + CConfig.cGamesUrl;
-
-                gameUrl = urlPrefix + '?gameid=' + gameInfo.game.front_game_id + '&mode=' + gameInfo.gameMode + '&provider=' + gameInfo.game.provider + (gameInfo.game.game_options ? gameInfo.game.game_options : "") +
-                    '&lan=' + $rootScope.env.lang + '&partnerid=' + CConfig.main.partnerID;
-            }
-
-            if (gameInfo.gameMode === 'real') {
-                Zergling.get({'game_id': parseInt(gameInfo.game.extearnal_game_id)}, 'casino_auth').then(function (response) {
-                    if (response && response.result) {
-                        if (response.result.has_error == "False") {
-                            var userInfo = gameInfo.game.gameOpenUrl ? response.result.token + '&username=' + response.result.username : '&token=' + response.result.token + '&username=' + response.result.username + '&balance=' + response.result.balance + '&currency=' + response.result.currency + '&userid=' + response.result.id;
-                            gameUrl = gameInfo.game.gameOpenUrl ?  $sce.trustAsResourceUrl(gameInfo.game.gameOpenUrl + userInfo) : $sce.trustAsResourceUrl(addNeededDataInUrl(gameInfo, gameUrl + userInfo));
-                            data.resolve(gameUrl);
-                        } else  {
-                            data.resolve(null);
-                        }
-                    }
-                }, function (failResponse) {
-                    data.resolve(null);
-                });
-            } else {
-                gameUrl = gameInfo.game.gameOpenUrl ?  $sce.trustAsResourceUrl(gameInfo.game.gameOpenUrl) : $sce.trustAsResourceUrl(addNeededDataInUrl(gameInfo,gameUrl));
-                data.resolve(gameUrl);
+                var tableInfo = '/table' + ($location.search().table ? ('/table/' + $location.search().table) : '') + ($location.search().limit ? ('/' + $location.search().limit) : '');
+                gameUrl = urlPrefix + '/web/' + (LanguageCodes[$rootScope.env.lang] || 'en') + '/' + Config.main.site_id + tableInfo + '?activeGroupId=' + (CConfig.liveCasino.lobbyGroupsMap[gameInfo.game.extearnal_game_id] || 0) + '&frameId=' + gameInfo.id + ($location.search().room ? ('&roomNumber=' + $location.search().room) : '');
             }
         } else {
-            if (gameInfo.gameMode !== "real") {
-                gameInfo.gameMode = "fun";
-            }
-            var request = {
-                'provider': gameInfo.game.provider,
-                'game_id': gameInfo.game.front_game_id,
-                'external_game_id': gameInfo.game.extearnal_game_id,
-                'mode': gameInfo.gameMode,
-                'skin_host': CConfig.cUrlPrefix
-            };
-            if (gameInfo.studio) {
-                request.studio = parseInt(gameInfo.studio);
-            }
-            if (gameInfo.game.game_options) {
-                addOptionsInRequest(gameInfo.game.game_options, request);
-            }
-
-            Zergling.get(request, 'casino_game_url').then(function (response) {
-                if (response && response.url) {
-                    gameUrl = $sce.trustAsResourceUrl(addNeededDataInUrl(gameInfo, response.url));
-                    data.resolve(gameUrl);
-                } else {
-                    data.resolve(null);
-
-                }
-            }, function () {
-                data.resolve(null);
-            });
+            gameInfo.gameMode !== 'real' && (gameInfo.gameMode = 'fun');
+            gameUrl = CConfig.cUrlPrefix + CConfig.gamesUrl + '?partnerId=' + Config.main.site_id + '&gameId=' + gameInfo.game.extearnal_game_id + '&language=' + LanguageCodes[$rootScope.env.lang] + '&openType=' + gameInfo.gameMode;
+            gameInfo.studio && (gameUrl += '&studio=' + gameInfo.studio);
+            gameInfo.game.game_options && (gameUrl += gameInfo.game.game_options);
         }
 
-        return urlPromise;
-    }
+        gameUrl += "&devicetypeid=" + CConfig.deviceTypeId;
+        gameInfo.gameMode === 'real' && (gameUrl += '&token=' + AuthData.getAuthToken() + (!Config.main.GmsPlatform ? '&username=' + $rootScope.profile.username : ''));
 
+        return $sce.trustAsResourceUrl(gameUrl);
+    };
+
+    /**
+     * @ngdoc method
+     * @name openGameWindow
+     * @methodOf CASINO.service:casinoManager
+     * @description Opens a game in the window
+     * @param {String} url the url
+     * @param {Object} gameInfo info object
+     * @param {String} param  params
+     */
     function openGameWindow(url, gameInfo, param) {
-        var windowName = gameInfo.game.front_game_id;
+        var windowName = gameInfo.id; //gameInfo.game.front_game_id
 
         url = addNeededDataInUrl(gameInfo, url + '&popup=true');
         var popup = $window.open(url, windowName, param);
         casinoManager.checkIfPopupIsBlocked(popup);
     }
-
-     function addOptionsInRequest(options, request) {
-         var list = options.split('&');
-         for (var i = 0; i < list.length; i += 1) {
-             var option = list[i].split("=");
-             if (option.length === 2) {
-                 request[option[0]] = option[1];
-             }
-         }
-     }
 
     /**
      * @ngdoc method
@@ -277,14 +259,18 @@ CASINO.service('casinoManager', ['$rootScope', '$q', '$window', '$sce', '$locati
     casinoManager.gpTransfer = function gpTransfer(transferModel) {
         transferModel.transferInProgress = true;
         var request;
-        if (transferModel.method === 'get_balance_poker_klas') {
+        if (transferModel.method !== 'transfer') {
+            // Request for getting available balance
             request = {external_game_id: transferModel.externalGameId};
         } else {
+            // Request for making the actual transfer
             request = {
                 'from_product': transferModel.from,
                 'to_product': transferModel.to,
+                // the amount is taken from the input boxes of respective forms
                 'amount': transferModel.from === 'Casino' ? transferModel.fromCasinoAmount : transferModel.fromGameAmount
-            }
+            };
+            transferModel.showTransferPopUp = true;
         }
 
         Zergling.get(request, transferModel.method).then(function (response) {
@@ -293,9 +279,11 @@ CASINO.service('casinoManager', ['$rootScope', '$q', '$window', '$sce', '$locati
             transferModel.transferInProgress = false;
 
             if (response) {
-                if (response.code === 0) {
+                if (response.code === 0 || response.balance) {
+                    // Getting game balance
                     transferModel.gpAmount = response.balance;
                 } else if (response.result === 0) {
+                    // Successful balance transfer
                     transferModel.gpAmount = response.details.balance;
                     transferModel.messageType = 'success';
                     updateCasinoBalance();
@@ -303,12 +291,20 @@ CASINO.service('casinoManager', ['$rootScope', '$q', '$window', '$sce', '$locati
                     transferModel.messageType = 'error';
                 }
             }
-        })['catch'](function (reason) {
+        })['catch'](function () {
             transferModel.transferInProgress = false;
             transferModel.messageType = 'error';
+        })['finally'](function() {
+            transferModel.showTransferPopUp = true;
         });
     };
 
+    /**
+     * @ngdoc method
+     * @name updateCasinoBalance
+     * @methodOf CASINO.service:casinoManager
+     * @description Update casino balance
+     */
     function updateCasinoBalance() {
         Zergling.get({product: 'Casino'}, 'get_balance').then(function (response) {
             $rootScope.env.casinoBalance = response;
@@ -317,17 +313,73 @@ CASINO.service('casinoManager', ['$rootScope', '$q', '$window', '$sce', '$locati
 
     /**
      * @ngdoc method
+     * @name  initProvidersData
+     * @methodOf CASINO.service:casinoManager
+     * @description
+     * @param {Array} gamesList the list of games
+     */
+    casinoManager.initProvidersData = function initProvidersData (gamesList) {
+        var i, length = gamesList.length, providers = [], devidedGames = {};
+
+        for (i = 0; i < length; i += 1) {
+            if (providers.indexOf(gamesList[i].provider) === -1) {
+                providers.push(gamesList[i].provider);
+            }
+            if (gamesList[i].markets && (typeof gamesList[i].markets) === 'string') {
+                gamesList[i].markets = JSON.parse(gamesList[i].markets);
+            }
+            if (!devidedGames[gamesList[i].provider]) {
+                devidedGames[gamesList[i].provider] = {
+                    games:[],
+                    defaultStudio: '',
+                    studios: []
+                };
+            }
+
+            var devidedItem = devidedGames[gamesList[i].provider];
+            devidedItem.games.push(gamesList[i]);
+
+            if (gamesList[i].markets && gamesList[i].markets.available) {
+                if (gamesList[i].markets.default && !devidedItem.defaultStudio) {
+                    devidedItem.defaultStudio = gamesList[i].markets.default;
+                }
+                for (var j = 0, stLength = gamesList[i].markets.available.length; j < stLength; j += 1) {
+                    if (devidedItem.studios.indexOf(gamesList[i].markets.available[j]) === -1) {
+                        devidedItem.studios.push(gamesList[i].markets.available[j]);
+                    }
+                }
+            }
+        }
+
+        if (CConfig.liveCasino.enableAllProviders && providers.length > 1) {
+            providers.unshift('All');
+        }
+
+        return {
+            providerOptions: providers,
+            selectedProvider: CConfig.liveCasino.selectedDefaultProvider && providers.indexOf(CConfig.liveCasino.selectedDefaultProvider) !== -1 ? CConfig.liveCasino.selectedDefaultProvider : providers[0],
+            devidedGames: devidedGames
+        };
+    };
+
+    /**
+     * @ngdoc method
      * @name openGame
      * @methodOf CASINO.service:casinoManager
-     *
+     * @param {Object} scope the scope object
+     * @param {Object} game the game object
+     * @param {String} gameType the type of game
+     * @param {int} studio the sutdio's id
+     * @param {String} urlSuffix the url's suffix
+     * @param {Number} multiViewWindowIndex - passed when the window in multiview is refreshed
      * @description  opens login form if it needed, or generates casino game url and opens it
      *
      */
-    casinoManager.openCasinoGame = function openCasinoGame(scope, game, gameType, studio) {
+    casinoManager.openCasinoGame = function openCasinoGame(scope, game, gameType, studio, urlSuffix, multiViewWindowIndex) {
         $rootScope.env.showSlider = false;
         $rootScope.env.sliderContent = '';
 
-        if (!game.types.realMode && !game.types.viewMode && !game.types.funMode) {
+        if (!game || (!game.types.realMode && !game.types.viewMode && !game.types.funMode)) {
             return;
         }
 
@@ -339,15 +391,18 @@ CASINO.service('casinoManager', ['$rootScope', '$q', '$window', '$sce', '$locati
             gameType = 'fun';
         }
 
-        if ((gameType === 'real' && !$rootScope.env.authorized) || (gameType === 'fun' && !game.types.viewMode && !game.types.funMode)) {
-            $rootScope.$broadcast("openLoginForm");
-            var infoIndex, count = scope.gamesInfo.length;
-            for (infoIndex = 0; infoIndex < count; infoIndex += 1) {
-                scope.gamesInfo[infoIndex].toAdd = false;
-            }
+        if ((!$rootScope.env.authorized && (gameType === 'real' || (gameType === 'fun' && !game.types.viewMode && !game.types.funMode)))) {
+            $rootScope.$broadcast("openLoginForm", {key: 'casinoGamesList.openGame', data: {game: game, playMode: 'real', skipFavorite: true}});
             return;
         }
 
+        var showWarning = function (message) {
+            $rootScope.$broadcast("globalDialogs.addDialog", {
+                type: "warning",
+                title: "Warning",
+                content: message
+            });
+        };
         var gameInfo = {};
         gameInfo.gameID = game.front_game_id;
         gameInfo.id = Math.random().toString(36).substr(2, 9);
@@ -355,28 +410,19 @@ CASINO.service('casinoManager', ['$rootScope', '$q', '$window', '$sce', '$locati
         gameInfo.toAdd = false;
         gameInfo.game = game; //need for refresh some games after loggin
         gameInfo.studio = studio;
-
-
+        gameInfo.urlSuffix = urlSuffix;
 
         if (scope.gamesInfo && scope.gamesInfo.length > 1) {
             if (game.ratio === '0') {
-                $rootScope.$broadcast("globalDialogs.addDialog", {
-                    type: "warning",
-                    title: "Warning",
-                    content: Translator.get('Sorry, this game cannot be opened in multi-view mode')
-                });
-                return;
+                /*showWarning('Sorry, this game cannot be opened in multi-view mode');
+                return;*/
             }
             var toAddIndex, usedProviders = [], usedGames = [];
             for (var i = 0, length = scope.gamesInfo.length; i < length; i += 1) {
                 var usedGame = scope.gamesInfo[i].game;
                 if (usedGame) {
                     if (gameType === 'real' && game.id === usedGame.id && game.categories.indexOf(CConfig.liveCasino.categoryId) !== -1) { //@TODO actually can't open live casino same table
-                        $rootScope.$broadcast("globalDialogs.addDialog", {
-                            type: "warning",
-                            title: "Warning",
-                            content: Translator.get('This game Is Already Opened In Multi Game View. Please Choose Another game.')
-                        });
+                        showWarning('This game Is Already Opened In Multi Game View. Please Choose Another game.');
                         return;
                     }
                     usedGames.push(usedGame);
@@ -384,34 +430,28 @@ CASINO.service('casinoManager', ['$rootScope', '$q', '$window', '$sce', '$locati
                         usedProviders.push(usedGame.provider);
                     }
                 }
-                if (scope.gamesInfo[i].toAdd) {
-                    toAddIndex = i;
+                if (toAddIndex === undefined) {
+                    if (multiViewWindowIndex !== undefined) {
+                        toAddIndex = multiViewWindowIndex;
+                    } else if (scope.gamesInfo[i].toAdd) {
+                        toAddIndex = i;
+                    }
                 }
             }
             if (usedProviders.indexOf(game.provider) !== -1) {
                 for (var j = 0; j < usedGames.length; j += 1) {
                     if (game.id === usedGames[j].id) {
-                        $rootScope.$broadcast("globalDialogs.addDialog", {
-                            type: "warning",
-                            title: "Warning",
-                            content: Translator.get('This game Is Already Opened In Multi Game View. Please Choose Another game.')
-                        });
+                        showWarning('This game Is Already Opened In Multi Game View. Please Choose Another game.');
                         return;
                     }
                 }
                 if (j === usedGames.length) {
-                    $rootScope.$broadcast("globalDialogs.addDialog", {
-                        type: "warning",
-                        title: "Warning",
-                        content: Translator.get('It Is Possible To Play Only One Game Of The Same Provider In Multi Game View. Please Choose Another Game.')
-                    });
+                    showWarning('It Is Possible To Play Only One Game Of The Same Provider In Multi Game View. Please Choose Another Game.');
                     return;
                 }
             } else {
                 if (toAddIndex !== undefined) {
-                    $location.search('type', undefined);
-                    $location.search('game', undefined);
-                    $location.search('studio', undefined);
+                    clearLocation();
                 }
             }
         } else {
@@ -421,35 +461,40 @@ CASINO.service('casinoManager', ['$rootScope', '$q', '$window', '$sce', '$locati
         }
 
         scope.gamesInfo[toAddIndex || 0] = gameInfo;
-        gameInfo.loadingUserData = true;
+        //gameInfo.loadingUserData = true;
 
         $rootScope.casinoGameOpened = scope.gamesInfo.length;
 
-        getGameUrl(gameInfo).then(function(data) {
-            gameInfo.loadingUserData = false;
-            if (data) {
-                gameInfo.gameUrl = data;
-                if (gameInfo.gameMode === 'real') { // check and set reality functionality
-                    checkAndStartRealityInterval(scope);
-                } else {
-                    checkAndStopRealityInterval(scope.gamesInfo);
-                }
-            } else {
-                showMessage('casino_auth_error');
-                casinoManager.closeGame(scope, gameInfo.id);
-            }
-        });
+        gameInfo.gameUrl = casinoManager.getGameUrl(gameInfo);
 
-        if($rootScope.env.authorized && CConfig.main.providersCustomMessages && CConfig.main.providersCustomMessages[game.provider] && !Storage.get(game.provider)){
-            Storage.set(game.provider, 'Popup time delay for ' + game.provider + ' provider', CConfig.main.providersCustomMessages[game.provider].timeDelay);
-            $rootScope.$broadcast("globalDialogs.addDialog", {
-                type: 'warning',
-                title: 'Warning',
-                content: Translator.get(CConfig.main.providersCustomMessages[game.provider].message)
+        if (gameInfo.gameMode === 'real') { // check and set reality functionality
+            checkAndStartRealityInterval(scope);
+        } else {
+            checkAndStopRealityInterval(scope.gamesInfo);
+        }
+
+        if ($rootScope.env.authorized && CConfig.main.providersCustomMessages && CConfig.main.providersCustomMessages[game.provider] && !Storage.get(game.provider + '_provider_message')) {
+            $rootScope.geoDataAvailable = $rootScope.geoDataAvailable || Geoip.getGeoData(false);
+            $rootScope.geoDataAvailable.then(function (data) {
+                var country = data && data.countryCode && data.countryCode.toUpperCase();
+                if (!country || !CConfig.main.providersCustomMessages[game.provider].showForCountries || CConfig.main.providersCustomMessages[game.provider].showForCountries.indexOf(country) !== -1) {
+                    Storage.set(game.provider + '_provider_message', CConfig.main.providersCustomMessages[game.provider].timeDelay);
+                    $rootScope.$broadcast("globalDialogs.addDialog", {
+                        type: 'warning',
+                        title: 'Warning',
+                        content: Translator.get(CConfig.main.providersCustomMessages[game.provider].message)
+                    });
+                }
             });
         }
     };
 
+    /**
+     * @ngdoc method
+     * @name checkAndStartRealityInterval
+     * @methodOf CASINO.service:casinoManager
+     * @description Check and start reality interval
+     */
     function checkAndStartRealityInterval(scope) {
         if (Config.main.realityCheck.enabled && !realityCheckIntervalPromise) { // there isn't active timer for popup and enabled from config
             if ($rootScope.profile.active_time_in_casino) {
@@ -497,6 +542,12 @@ CASINO.service('casinoManager', ['$rootScope', '$q', '$window', '$sce', '$locati
         }
     }
 
+    /**
+     * @ngdoc method
+     * @name checkAndStopRealityInterval
+     * @methodOf CASINO.service:casinoManager
+     * @description Check and stop reality interval
+     */
     function checkAndStopRealityInterval(openedGamesList) {
         if (realityCheckIntervalPromise) { // there is active timer for popup
             if (openedGamesList && openedGamesList.length) {
@@ -513,6 +564,14 @@ CASINO.service('casinoManager', ['$rootScope', '$q', '$window', '$sce', '$locati
         }
     }
 
+    /**
+     * @ngdoc method
+     * @name addNeededDataInUrl
+     * @methodOf CASINO.service:casinoManager
+     * @description Add needed data in url
+     * @param {Object} gameInfo info object
+     * @param {String} initialUrl url
+     */
     function addNeededDataInUrl(gameInfo, initialUrl) {
         if (gameInfo.studio) {
             initialUrl += "&studio=" + gameInfo.studio;
@@ -521,6 +580,13 @@ CASINO.service('casinoManager', ['$rootScope', '$q', '$window', '$sce', '$locati
         return initialUrl;
     }
 
+    /**
+     * @ngdoc method
+     * @name showMessage
+     * @methodOf CASINO.service:casinoManager
+     * @description Show message dialog
+     * @param {Object} message data
+     */
     function showMessage(message) {
         $rootScope.$broadcast("globalDialogs.addDialog", {
             type: 'warning',
@@ -538,7 +604,7 @@ CASINO.service('casinoManager', ['$rootScope', '$q', '$window', '$sce', '$locati
      * @param {Object} popup object
      */
     casinoManager.checkIfPopupIsBlocked = function checkIfPopupIsBlocked(popup) {
-        if(!popup || popup.closed || typeof popup.closed=='undefined')
+        if(!popup || popup.closed || typeof popup.closed === 'undefined')
         {
             $rootScope.$broadcast('globalDialogs.addDialog', {
                 type: 'info',
@@ -555,7 +621,7 @@ CASINO.service('casinoManager', ['$rootScope', '$q', '$window', '$sce', '$locati
      * @description change view for applying functionality of multiple view in casino
      *
      * @param {Object} scope the rootScope
-     * @param {Int} view int
+     * @param {int} view int
      */
     casinoManager.changeView = function changeView(scope, view) {
         var i, gameInfo, uniqueId;
@@ -601,6 +667,15 @@ CASINO.service('casinoManager', ['$rootScope', '$q', '$window', '$sce', '$locati
         analytics.gaSend('send', 'event', 'multiview',  {'page': $location.path(), 'eventLabel': 'multiview changed to ' + view});
     };
 
+    /**
+     * @ngdoc method
+     * @name getGameById
+     * @methodOf CASINO.service:casinoManager
+     * @description Get game by id
+     * @param {Array} games list
+     * @param {int} id the game id
+     * @returns game with selected id
+     */
     casinoManager.getGameById = function getGameById(games, id) {
         for(var i = 0, count = games.length; i < count;  i += 1) {
             if (games[i].id === id) {
@@ -611,6 +686,14 @@ CASINO.service('casinoManager', ['$rootScope', '$q', '$window', '$sce', '$locati
         return null;
     };
 
+    /**
+     * @ngdoc method
+     * @name findAndCloseGame
+     * @methodOf CASINO.service:casinoManager
+     * @description Find and close game with selected id
+     * @param {Object} scope
+     * @param {int} gameId the game's id
+     */
     casinoManager.findAndCloseGame = function findAndCloseGame(scope, gameId) {
         if (scope.gamesInfo && scope.gamesInfo.length) {
             if (gameId === undefined) {
@@ -618,7 +701,7 @@ CASINO.service('casinoManager', ['$rootScope', '$q', '$window', '$sce', '$locati
             } else {
                 var i, length = scope.gamesInfo.length;
                 for (i = 0; i < length; i += 1) {
-                    if (scope.gamesInfo[i].game && (scope.gamesInfo[i].game.id == gameId || scope.gamesInfo[i].game.server_game_id == gameId)) {
+                    if (scope.gamesInfo[i].game && (scope.gamesInfo[i].game.id === gameId || scope.gamesInfo[i].game.server_game_id === gameId)) {
                         casinoManager.closeGame(scope, scope.gamesInfo[i].id);
                         break;
                     }
@@ -627,6 +710,14 @@ CASINO.service('casinoManager', ['$rootScope', '$q', '$window', '$sce', '$locati
         }
     };
 
+    /**
+     * @ngdoc method
+     * @name closeGame
+     * @methodOf CASINO.service:casinoManager
+     * @description Close game
+     * @param {Object} scope
+     * @param {int} id of game
+     */
     casinoManager.closeGame = function closeGame(scope, id) {
         if (id === undefined) {
             scope.gamesInfo = [];
@@ -653,10 +744,16 @@ CASINO.service('casinoManager', ['$rootScope', '$q', '$window', '$sce', '$locati
 
         checkAndStopRealityInterval(scope.gamesInfo);
 
-        $location.search('type', undefined);
-        $location.search('game', undefined);
+        clearLocation();
     };
 
+    /**
+     * @ngdoc method
+     * @name openGameDetailsPopUp
+     * @methodOf CASINO.service:casinoManager
+     * @description Open game details pop up
+     * @param {int} gameId the game id
+     */
     casinoManager.openGameDetailsPopUp = function openGameDetailsPopUp (gameId) {
         var url = '#/popup/?u=' + ($rootScope.profile && $rootScope.profile.unique_id ? $rootScope.profile.unique_id : '') + '&action=gamedetails&game_skin_id=' + gameId;
         var param = "scrollbars=1,width=1000,height=600,resizable=yes";
@@ -665,8 +762,37 @@ CASINO.service('casinoManager', ['$rootScope', '$q', '$window', '$sce', '$locati
         casinoManager.checkIfPopupIsBlocked(popup);
     };
 
+    /**
+     * @ngdoc method
+     * @name clearAllPromises
+     * @methodOf CASINO.service:casinoManager
+     * @description Clear all promises
+     */
     casinoManager.clearAllPromises = function clearAllPromises() {
         checkAndStopRealityInterval();
+    };
+
+    /**
+     * @ngdoc method
+     * @name setCurrentFrameUrlPrefix
+     * @methodOf CASINO.service:casinoManager
+     * @description Finds the corresponding frame and changes the url Prefix (actualy used for only betconstruct's live casino)
+     * @param {Object} gamesInfo the openes games info
+     * @param {Object} frameData the data of frame
+     */
+    casinoManager.setCurrentFrameUrlSuffix = function setCurrentFrameUrlSuffix(gamesInfo, frameData) {
+        for (var i = 0, length = gamesInfo.length; i < length; i += 1) {
+            if (gamesInfo[i].id === frameData.frameId) {
+                gamesInfo[i].urlSuffix = frameData.url + (frameData.roomNumber && ('?roomNumber=' + frameData.roomNumber) || '');
+                if ($location.search().game) { //it means there is only one opened game and it's  from betconstryct's live casino
+                    var frameUrlParams = frameData.url.split('/');
+                    frameUrlParams[6] && $location.search('table', frameUrlParams[6]);
+                    frameUrlParams[7] && $location.search('limit', frameUrlParams[7]);
+                    frameData.roomNumber && $location.search('room', frameData.roomNumber);
+                }
+                return;
+            }
+        }
     };
 
     return casinoManager;

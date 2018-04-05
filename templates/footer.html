@@ -1,4 +1,4 @@
-<div class="float-left width-100" ng-if="!conf.integrationMode && !conf.disableFooterNav && !conf.disableFooter && $location.path() !='/popup/'"> 
+<div class="float-left width-100" ng-if="!conf.integrationMode && !conf.footer.disable && $location.path() !='/popup/' && $location.path().indexOf('/widget/') === -1"> 
     <div class="guide" ng-controller="footerCtrl">
         <div class="footer-j">
             <div class="footer-section left" ng-include="getTemplate('templates/footer/helppages.html')"></div>
@@ -7,22 +7,44 @@
                 <ng-include src="getTemplate('templates/footer/copyright.html')"></ng-include>
                 <ng-include src="getTemplate('templates/footer/links.html')"></ng-include>
                 <div class="back-block-j">
-                    <div class="age-restriction-j" ng-show="conf.ageRestrictionInFooter">{{conf.ageRestrictionInFooter}}+</div>
-                    <button ng-click="broadcast('feedback.toggle')" ng-if="(env.authorized && conf.feedbackButton.enabledLogin) || (!env.authorized && conf.feedbackButton.enabledLogOut)" trans>Feedback</button>
-                    <button ng-click="scrollToTop(true)" trans>back to top</button>
+                    <div class="age-restriction-j" ng-show="conf.footer.ageRestriction">{{ ::conf.footer.ageRestriction[$location.host()] || conf.footer.ageRestriction['default'] || conf.footer.ageRestriction }}+</div>
+                    <button ng-click="broadcast('feedback.toggle')" ng-if="(env.authorized && conf.footer.feedbackButton.enabledLogin) || (!env.authorized && conf.footer.feedbackButton.enabledLogOut)" trans>Feedback</button>
+                    <button ng-click="scrollToTop(true)" ng-show="conf.footer.enableToTopButton" trans>back to top</button>
                 </div>
             </div>
         </div>
-        <div class="extended-license-footer" ng-if="conf.footer_license_logos || conf.about_company_text[env.lang]">
+        <div class="extended-license-footer" ng-if="conf.cegSealId || conf.apgSealId || conf.footer.license_logos || conf.footer.about_company_text[env.lang] || conf.footer.about_company_text['eng']">
+            <div ng-show="conf.footer.license_logos && conf.footer.enableLicenseRowVersion" class="gamble-logos-j">
+                <div ng-repeat="row in conf.footer.license_logos">
+                    <div ng-repeat="logo in row" class="{{logo.class}}" ng-hide="logo.hide_on ? logo.hide_on.indexOf(env.lang) !== -1 : logo.show_on ? logo.show_on.indexOf(env.lang) === -1 : false">
+                            <span ng-switch="logo.type">
+                                <iframe ng-switch-when="iframe" ng-src="{{logo.iframe | html : 'url'}}" style="{{logo.css}}" width="{{logo.width}}" height="{{logo.height}}" frameborder="0" scrolling="no"></iframe>
+                                <div ng-switch-when="ceg" id="ceg-seal-container" data-ceg-seal-id="{{logo.id}}" data-ceg-image-size="{{logo.size}}" data-ceg-image-type="basic-small"></div>
+                                <div ng-switch-when="apg" id="apg-seal-container" data-apg-seal-id="{{logo.id}}" data-apg-image-size="{{logo.size}}" data-apg-image-type="basic-small"></div>
+                                <a ng-switch-default ng-href="{{logo.href}}" target="{{logo.target ? logo.target : '_blank'}}" style="{{logo.css}}"><img ng-src="{{logo.img}}" width="{{logo.width}}" height="{{logo.height}}"> </a>
+                            </span>
+                    </div>
+                </div>
+            </div>
             <ul>
-                <li ng-bind-html="conf.about_company_text[env.lang]"></li>
-                <li ng-show="conf.footer_license_logos" class="gamble-logos-j">
-                    <ul ng-repeat="row in conf.footer_license_logos">
-                        <li ng-repeat="logo in row"  ng-hide="logo.hide_on ? logo.hide_on.indexOf(env.lang) !== -1 : logo.show_on ? logo.show_on.indexOf(env.lang) === -1 : false">
-                            <a ng-if="!logo.iframe" ng-href="{{logo.href}}" target="{{logo.target ? logo.target : '_blank'}}" style="{{logo.css}}"><img ng-src="{{logo.img}}" width="{{logo.width}}" height="{{logo.height}}"> </a>
-                            <iframe ng-if="logo.iframe" ng-src="{{logo.iframe | html : 'url'}}" style="{{logo.css}}" width="{{logo.width}}" height="{{logo.height}}" frameborder="0" scrolling="no"></iframe>
+                <li ng-bind-html="(conf.footer.about_company_text[env.lang] || conf.footer.about_company_text['eng'])|html"></li>
+                <li ng-show="conf.footer.license_logos && !conf.footer.enableLicenseRowVersion" class="gamble-logos-j">
+                    <ul ng-repeat="row in conf.footer.license_logos">
+                        <li ng-repeat="logo in row" class="{{logo.class}}" ng-hide="logo.hide_on ? logo.hide_on.indexOf(env.lang) !== -1 : logo.show_on ? logo.show_on.indexOf(env.lang) === -1 : false">
+                            <span ng-switch="logo.type">
+                                <iframe ng-switch-when="iframe" ng-src="{{logo.iframe | html : 'url'}}" style="{{logo.css}}" width="{{logo.width}}" height="{{logo.height}}" frameborder="0" scrolling="no"></iframe>
+                                <div ng-switch-when="ceg" id="ceg-seal-container" data-ceg-seal-id="{{logo.id}}" data-ceg-image-size="{{logo.size}}" data-ceg-image-type="basic-small"></div>
+                                <div ng-switch-when="apg" id="apg-seal-container" data-apg-seal-id="{{logo.id}}" data-apg-image-size="{{logo.size}}" data-apg-image-type="basic-small"></div>
+                                <a ng-switch-default ng-href="{{logo.href}}" target="{{logo.target ? logo.target : '_blank'}}" style="{{logo.css}}"><img ng-src="{{logo.img}}" width="{{logo.width}}" height="{{logo.height}}"> </a>
+                            </span>
                         </li>
                     </ul>
+                </li>
+                <li ng-if="conf.cegSealId" class="ceg-seal-t">
+                    <div id="ceg-seal-container" data-ceg-seal-id="{{conf.cegSealId}}" data-ceg-image-size="96" data-ceg-image-type="basic-small"></div>
+                </li>
+                <li ng-if="conf.apgSealId" class="ceg-seal-t">
+                    <div id="apg-seal-container" data-apg-seal-id="{{conf.apgSealId}}" data-apg-image-size="96" data-apg-image-type="basic-small"></div>
                 </li>
             </ul>
         </div>

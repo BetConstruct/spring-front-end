@@ -5,31 +5,39 @@
  * @description Changes item visibility depending on menu wrapper width.
  */
 
-VBET5.directive("subMenuCreator", ['DomHelper', "$timeout", "$window", "$rootScope", function (DomHelper, $timeout, $window, $rootScope) {
+VBET5.directive("subMenuCreator", [function () {
     'use strict';
     return {
-        link: function (scope, element, attrs, ctrl) {
-            var watcherPromise, oldWidth = 0;
 
-            var updateSubMenu = function (newVal, oldVal) {
+        link: function (scope, element, attrs) {
+
+            var updateSubMenu = function () {
                 var menuItems = element[0].children;
+
+                var setItemsClasses = function () {
+                    for (var i = 0; i < menuItems.length; i++) {
+                        menuItems[i].className = menuItems[i].className.replace(' sub-menu-item', '');
+                    }
+                };
+
                 switch (attrs.subMenuCreator) {
                     case 'main':
                     case 'veryTopMenu':
                         scope.subMenuItemCount = 0;
+                        setItemsClasses();
                         break;
                     case 'casino':
                         scope.subMenuItemShowBtn = false;
+                        setItemsClasses();
                         break;
-                }
-
-                for (var i = 0; i < menuItems.length; i++) {
-                    menuItems[i].className = menuItems[i].className.replace(' sub-menu-item', '');
+                    case 'newsWidget':
+                        var invisibleItems = 0;
+                        break;
                 }
 
                 if (menuItems[1]) {
                     var index, j;
-                    if (attrs.subMenuCreator === 'veryTopMenu') {
+                    if (attrs.subMenuCreator === 'veryTopMenu' || attrs.subMenuCreator === 'newsWidget') {
                         index = 0;
                         j = 1;
                     } else {
@@ -49,6 +57,9 @@ VBET5.directive("subMenuCreator", ['DomHelper', "$timeout", "$window", "$rootSco
                                 case 'casino':
                                     scope.subMenuItemShowBtn = true;
                                     break;
+                                case 'newsWidget':
+                                    invisibleItems++;
+                                    break;
                             }
                         }
                     }
@@ -58,36 +69,20 @@ VBET5.directive("subMenuCreator", ['DomHelper', "$timeout", "$window", "$rootSco
                         } else {
                             element.parent().parent().removeClass('toggled');
                         }
+                    } else if (attrs.subMenuCreator === 'newsWidget') {
+                        scope.$emit('update.count', menuItems.length - invisibleItems - 2);
                     }
                 }
             };
 
             scope.$on('$routeChangeSuccess',function(){
-                $timeout(updateSubMenu, 10);
+                updateSubMenu();
             });
-            $timeout(function () {  // initial call
-                if (element[0].children.length) {
-                    updateSubMenu();
-                } else {
-                    watcherPromise = scope.$watch(function () {
-                        return element[0].children.length;
-                    }, function() {
-                        if (element[0].children.length) {
-                            updateSubMenu();
-                            watcherPromise();
-                        }
-                    });
-                }
-            }, 1000);
 
-
-
-            angular.element($window).bind('resize', function () {
-                var curerntWidth = element[0].clientWidth;
-                if (oldWidth !== curerntWidth) {
+            scope.$watch(function() {return element[0].clientWidth}, function(newVal, oldVal) {
+                if (newVal !== oldVal) {
                     updateSubMenu();
                 }
-                oldWidth = curerntWidth;
             });
         }
     }

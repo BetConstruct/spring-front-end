@@ -8,11 +8,19 @@
  *          when adding dependencies to this controller, you must add them also in classicViewLeftController(classicExplorerCtrl)
  *          and pass it to this controller when extending it
  */
-angular.module('vbet5.betting').controller('classicViewCenterController', ['$rootScope', '$scope', '$filter', 'Config', 'ConnectionService', 'Utils', 'Storage', 'GameInfo', 'partner', 'TimeoutWrapper', '$location', function ($rootScope, $scope, $filter, Config, ConnectionService, Utils, Storage, GameInfo, partner, TimeoutWrapper, $location) {
+angular.module('vbet5.betting').controller('classicViewCenterController', ['$rootScope', '$scope', '$filter', 'Config', 'ConnectionService', 'StreamService', 'Utils', 'Storage', 'GameInfo', 'partner', 'TimeoutWrapper', '$location', function ($rootScope, $scope, $filter, Config, ConnectionService, StreamService, Utils, Storage, GameInfo, partner, TimeoutWrapper, $location) {
     'use strict';
     $rootScope.footerMovable = true;
     TimeoutWrapper = TimeoutWrapper($scope);
+
+    $scope.getVideoData = GameInfo.getVideoData;
+    $scope.displayBase = GameInfo.displayBase;
+    $scope.displayEventLimit = GameInfo.displayEventLimit;
+    $scope.cancelDisplayEventLimit = GameInfo.cancelDisplayEventLimit;
+    $scope.isEventInBetSlip = GameInfo.isEventInBetSlip;
+
     var connectionService = new ConnectionService($scope);
+    var streamService = new StreamService($scope);
 
     var firstTimeLoaded = false;
     var openGameId;
@@ -31,93 +39,55 @@ angular.module('vbet5.betting').controller('classicViewCenterController', ['$roo
         count: 0
     };
 
+    var marketsPreDividedByColumns = [
+        'MatchWinningMargin',
+        'SetWinningMargin',
+        'WinningMargin',
+        'CorrectScore',
+        'Firstset/match',
+        'SetsEffectiveness',
+        'SeriesCorrectScore',
+        'CurrectScoreGroup',
+        'MatchBettingAndTeamsToScore',
+        'HalfTimeFullTime',
+        'HalfTimeFullTimeDoubleChance',
+        'ExtraTimeHomeTeamCorrectTotal',
+        'ExtraTimeAwayTeamCorrectTotal',
+        'OutcomeandBothTeamToScore',
+        'DoubleChanceAndBothTeamToScore',
+        'DoubleChanceAndBothTeamToScore',
+        'TotalAndBothTeamsToScore',
+        'FirstHalfOutcomeAndBothTeamToScore',
+        'SecondHalfOutcomeAndBothTeamToScore',
+        '1stHalf-2ndHalfBothToScore',
+        'GameCorrectScore',
+        'MatchTieBreakCorrectScore',
+        'SetTieBreakCorrectScore',
+        '1stSet-Match',
+        '1stGame/2ndGameWinner',
+        '2ndGame/3thGameWinner',
+        '3thGame/4thGameWinner',
+        '4thGame/5thGameWinner',
+        '5thGame/6thGameWinner',
+        '6thGame/7thGameWinner',
+        '7thGame/8thGameWinner',
+        '8thGame/9thGameWinner',
+        '9thGame/10thGameWinner',
+        '10thGame/11thGameWinner',
+        '11thGame/12thGameWinner',
+        'SetScore',
+        'MatchTieBreakCorrectScore',
+        'OutcomeAndTotal15',
+        'OutcomeAndTotal25',
+        'OutcomeAndTotal35',
+        'OutcomeAndTotal45'
+    ]; // Market types which are pre-divided by back-end into 2 columns
+
     var hoveredLiveGameFullData;
     $scope.visibleSetsNumber = 5; // number of sets to be visible for multiset games
-
-    $scope.eachWayPlace = GameInfo.eachWayPlace;
-    $scope.framesCount = GameInfo.framesCount;
-    $scope.isExtraTime = GameInfo.isExtraTime;
-    $scope.getCurrentTime = GameInfo.getCurrentTime;
-    $scope.showFrameAlias = GameInfo.showFrameAlias;
-    $scope.displayBase = GameInfo.displayBase;
     $scope.isEventInBetSlip = GameInfo.isEventInBetSlip;
-    $scope.displayEventLimit = GameInfo.displayEventLimit;
-    $scope.cancelDisplayEventLimit = GameInfo.cancelDisplayEventLimit;
-    $scope.GamesWithStatsBlock =  GameInfo.GamesWithStatsBlock;
-    $scope.liveGamesSoccerTemplate = GameInfo.liveGamesSoccerTemplate;
-    $scope.dotaGamesList = GameInfo.dotaGamesList;
-    $scope.slideSets = GameInfo.slideSets;
-
-    //make video available as soon as user logs in
-    $scope.$on('loggedIn', checkVideoAvailability);     // restoring login case
-    $scope.$on('login.loggedIn', checkVideoAvailability); //normal login case
-
-    /**
-     * @ngdoc method
-     * @name checkVideoAvailability
-     * @methodOf vbet5.controller:classicViewCenterController
-     * @description Check video availability
-     */
-    function checkVideoAvailability() {
-        if ($scope.openGame && Config.main.video.autoPlay) {
-            if (!$scope.openGame.video_id && Config.main.defaultStreaming && Config.main.defaultStreaming.enabled) {
-                $scope.openGame.tv_type = Config.main.defaultStreaming.tvType;
-                $scope.openGame.video_data = Config.main.defaultStreaming.streamUrl;
-                return;
-            }
-            if ($rootScope.profile) {
-                GameInfo.getVideoData($scope.openGame);
-            } else {
-                var profilePromise = $rootScope.$watch('profile', function () {
-                    if ($rootScope.profile) {
-                        profilePromise();
-                        GameInfo.getVideoData($scope.openGame);
-                    }
-                });
-            }
-        }
-    }
-
-    //and unavailable when he logs out
-    $scope.$on('login.loggedOut', function () {
-        if ($scope.openGame && $scope.openGame.video_data) {
-            $scope.openGame.video_data = null;
-        }
-        if ($scope.pinnedGames) {
-            $scope.pinnedGames = {};
-        }
-    });
-
-    //synchronize video with user balance
-    $scope.$watch('profile.balance', function (newValue, oldValue) {
-        if ($scope.openGame && Config.main.video.autoPlay) {
-            if (newValue === 0 && $rootScope.profile.initial_balance === 0) {
-                $scope.openGame.video_data = null;
-            } else if (oldValue === 0 && newValue > 0 && !$scope.openGame.video_data) {
-                GameInfo.getVideoData($scope.openGame);
-            }
-        }
-    });
-
-    /**
-     * @ngdoc method
-     * @name restoreVideo
-     * @methodOf vbet5.controller:classicViewCenterController
-     * @description Restore video
-     */
-    $scope.restoreVideo = function restoreVideo(game) {
-        if ($rootScope.conf.video) {
-            $rootScope.conf.video.autoPlay = true;
-        }
-        var hasVideo = GameInfo.hasVideo(game);
-        if (hasVideo) {
-            GameInfo.getVideoData(game);
-        } else if (Config.main.defaultStreaming && Config.main.defaultStreaming.enabled) {
-            game.tv_type = Config.main.defaultStreaming.tvType;
-            game.video_data = Config.main.defaultStreaming.streamUrl;
-        }
-    };
-
+    $scope.GamesWithStatsBlock = GameInfo.GamesWithStatsBlock;
+    
     /**
      * @ngdoc method
      * @name populateExpandedMarkets
@@ -169,7 +139,7 @@ angular.module('vbet5.betting').controller('classicViewCenterController', ['$roo
                 filteredMarkets = $scope.openGame.sport.favouriteMarkets;
                 break;
             default:
-                filteredMarkets = markets.filter(function (market){
+                filteredMarkets = markets.filter(function (market) {
                     return $scope.openGame.selectedMarketGroupId === market[0].group_id || $scope.openGame.selectedMarketGroupId === market[0].second_group_id || (!market[0].group_id && !market[0].second_group_id && $scope.openGame.selectedMarketGroupId === MARKET_GROUP_OTHER);
                 });
 
@@ -223,9 +193,12 @@ angular.module('vbet5.betting').controller('classicViewCenterController', ['$roo
             angular.forEach(sport.region, function (region) {
                 angular.forEach(region.competition, function (competition) {
                     angular.forEach(competition.game, function (game) {
+                        if (!Config.main.GmsPlatform) {
+                            competition.name = $filter('removeParts')(competition.name, [region.name]);
+                        }
                         var availableMarketGroups = {};
                         game.sport = {id: sport.id, alias: sport.alias, name: sport.name};
-                        game.region = {id: region.id, alias: region.alias};
+                        game.region = {id: region.id, alias: region.alias, name: region.name};
                         game.competition = {id: competition.id, name: competition.name};
                         $scope.openGame = game;
                         if(Config.main.showPlayerRegion) {
@@ -254,33 +227,7 @@ angular.module('vbet5.betting').controller('classicViewCenterController', ['$roo
                             GameInfo.getHorseRaceInfo($scope.openGame.info, $scope.openGame.market, "Winner");
                         }
 
-                        var hasVideo = GameInfo.hasVideo($scope.openGame);
-                        if (hasVideo) {
-                            if ($scope.openGame.video_data === undefined && Config.main.video.autoPlay) {
-                                $scope.openGame.video_data = null; //not to call this several times before getVideoData fills the field
-                                if ($scope.pinnedGames && !$scope.pinnedGames[$scope.openGame.id]) {
-                                    GameInfo.getVideoData($scope.openGame);
-                                    if ($scope.enlargedGame && $scope.enlargedGame.id !== $scope.openGame.id) {
-                                        $scope.enlargedGame = !Config.main.detachedVideoSizes[$scope.openGame.tv_type] ? $scope.openGame : null;
-                                    }
-                                } else {
-                                    $scope.openGame.activeFieldType = 'field';
-                                }
-                            }
-                        } else if ($scope.openGame.type === 1 && Config.main.defaultStreaming && Config.main.defaultStreaming.enabled) {
-                            $scope.openGame.tv_type = Config.main.defaultStreaming.tvType;
-                            $scope.openGame.video_data = Config.main.defaultStreaming.streamUrl;
-                            if ($scope.enlargedGame) {
-                                $scope.enlargedGame = $scope.openGame;
-                            }
-                            hasVideo = true;
-                        } else if($scope.enlargedGame) {
-                            $scope.enlargedGame = null;
-                        }
-
-                        if ($scope.openGame.activeFieldType === undefined) {
-                            $scope.openGame.activeFieldType = hasVideo && !$scope.enlargedGame && (Config.env.authorized || $rootScope.loginInProgress || !$scope.openGame.has_animation) ? 'video' : 'field';
-                        }
+                        streamService.monitoring($scope, 'openGame', 'pinnedGames', 'enlargedGame');
 
                         GameInfo.updateOpenGameTextInfo($scope.openGame);
 
@@ -318,8 +265,10 @@ angular.module('vbet5.betting').controller('classicViewCenterController', ['$roo
                                     event.name = $filter('improveName')(event.name, game);
                                 }
                             });
-                            if(market.display_key === 'CORRECT SCORE') {
-                                GameInfo.reorderCSMarketEvents(market);
+                            if (market.display_key === 'CORRECT SCORE') {
+                                GameInfo.reorderMarketEvents(market, 'correctScore');
+                            } else if (marketsPreDividedByColumns.indexOf(market.market_type) > -1) {
+                                GameInfo.reorderMarketEvents(market, 'preDivided');
                             } else {
                                 market.events = Utils.objectToArray(market.event);
                                 Utils.createDummyEvents(market);
@@ -328,7 +277,7 @@ angular.module('vbet5.betting').controller('classicViewCenterController', ['$roo
                         availableMarketGroups = Utils.objectToArray(availableMarketGroups);
                         var additionalGroups = [MARKET_GROUP_FAVORITE, MARKET_GROUP_ALL];
 
-                        game.availableMarketGroups = availableMarketGroups.length > 1 ? additionalGroups.concat(availableMarketGroups) : additionalGroups;
+                        game.availableMarketGroups = availableMarketGroups.length > 1 || (availableMarketGroups.length === 1 && availableMarketGroups[0].id !== MARKET_GROUP_OTHER.id) ? additionalGroups.concat(availableMarketGroups) : additionalGroups;
 
                         if (Config.main.sportMarketGroupsOrder) {
                             var index;
@@ -344,14 +293,14 @@ angular.module('vbet5.betting').controller('classicViewCenterController', ['$roo
                         }
 
                         game.selectedMarketGroupId = game.selectedMarketGroupId || game.availableMarketGroups[1].id;
-
                     });
                 });
             });
         });
 
         if ($scope.openGame) {
-            $scope.openGame.markets = Utils.objectToArray(Utils.groupByItemProperties($scope.openGame.market, ['type', 'name']));
+            var groupKey = Config.main.GmsPlatform ? ['market_type', 'name_template', 'sequence', 'point_sequence'] : ['type', 'name'];
+            $scope.openGame.markets = Utils.objectToArray(Utils.groupByItemProperties($scope.openGame.market, groupKey));
 
             if ($scope.openGame.markets) {
                 $scope.openGame.markets.sort(function (a, b) {
@@ -360,9 +309,8 @@ angular.module('vbet5.betting').controller('classicViewCenterController', ['$roo
                 angular.forEach($scope.openGame.markets, function (groupedMarkets) {
                     groupedMarkets[0].name = $filter('improveName')(groupedMarkets[0].name, $scope.openGame);
                     groupedMarkets.events = groupedMarkets.event ? Utils.objectToArray(groupedMarkets.event) : '';
-                    if(groupedMarkets[0].type) {
-                        groupedMarkets[0].fullType = (groupedMarkets[0].type || '') + (groupedMarkets[0].period || '');
-                    }
+
+                    groupedMarkets[0].fullType = (groupedMarkets[0].market_type || groupedMarkets[0].type || '') + (groupedMarkets[0].period || '');
                 });
             }
 
@@ -389,7 +337,6 @@ angular.module('vbet5.betting').controller('classicViewCenterController', ['$roo
             $scope.onlyFirstMarket = $scope.openGame.initialMarkets ? $scope.openGame.initialMarkets[0] : null;
             initFavouriteMarkets($scope.openGame);
             divideMarketsArray($scope.openGame.markets);
-            console.log('open game', $scope.openGame);
         }
     };
 
@@ -441,8 +388,9 @@ angular.module('vbet5.betting').controller('classicViewCenterController', ['$roo
      * @param {Object} game game data object
      * @param {Boolean} fromCustomWidget if it from custom widget
      * @param {Object} competition competition data object
+     * @param {Boolean} fully is responsible for covering the entire central part of the
      */
-    $scope.openGameFullDetails = function openGameFullDetails(game, competition, fromCustomWidget, fromLeftMenu) {
+    $scope.openGameFullDetails = function openGameFullDetails(game, competition, fromCustomWidget, fromLeftMenu, fully) {
         if ($scope.selectedGame && $scope.selectedGame.id === game.id) {
             console.log("game already selected");
             return;
@@ -461,7 +409,7 @@ angular.module('vbet5.betting').controller('classicViewCenterController', ['$roo
         console.log('openGameFullDetails', game, competition);
         $scope.selectedGame = game;
 
-        $scope.favoriteGameIsSelected = ($rootScope.myGames.indexOf(game.id) !== -1);
+        $scope.favoriteGameIsSelected = fully || $rootScope.myGames.indexOf(game.id) !== -1;
         $scope.favoriteGameFromLeftMenu = $scope.favoriteGameIsSelected && fromLeftMenu;
 
         if (competition) {
@@ -483,14 +431,22 @@ angular.module('vbet5.betting').controller('classicViewCenterController', ['$roo
                 'what': {
                     'sport': ['id', 'name', 'alias'],
                     'competition': ['id', 'name'],
-                    'region': ['id', 'alias'],
+                    'region': ['id', 'alias', 'name'],
                     'game': [],
                     'market': [],
                     'event': []
                 },
                 'where': {'game': {'id': game.id}}
             };
-            /*Utils.setCustomSportAliasesFilter(request);*/
+
+            game.sport && game.sport.id && (request.where.sport = {'id': game.sport.id});
+
+            if (Config.main.customSportsBook.classic.showLive === false || Config.main.customSportsBook.classic.showLive === 0) {
+                request.where.game.type = {'@in': [0, 2]};
+            } else if (Config.main.customSportsBook.classic.showPrematch === false || Config.main.customSportsBook.classic.showPrematch === 0) {
+                request.where.game.type = 1;
+            }
+
             connectionService.subscribe(
                 request,
                 $scope.updateOpenGame,
@@ -502,7 +458,7 @@ angular.module('vbet5.betting').controller('classicViewCenterController', ['$roo
                         $scope.openGameLoading = false;
                     }
                 },
-                $location.path() === '/multiview/' ? true : false
+                $location.path() === '/multiview/'
             );
         }
     };
@@ -598,16 +554,16 @@ angular.module('vbet5.betting').controller('classicViewCenterController', ['$roo
      * @description pins/unpin live score section at the top of middle section
      */
     $scope.toggleLiveSectionPin = function toggleLiveSectionPin() {
-        $scope.isLiveGamePinned = !$scope.isLiveGamePinned;
-        if ($scope.isLiveGamePinned && Config.env.hideLiveStats) {
+        $rootScope.env.isLiveGamePinned = !$rootScope.env.isLiveGamePinned;
+        if ($rootScope.env.isLiveGamePinned && Config.env.hideLiveStats) {
             Config.env.hideLiveStats = false;
             $scope.showStatsBlock = !Config.env.hideLiveStats;
         }
-        Storage.set('LiveGamePin', $scope.isLiveGamePinned);
+        Storage.set('LiveGamePin', $rootScope.env.isLiveGamePinned);
     };
 
     if (Storage.get('LiveGamePin')) {
-        $scope.isLiveGamePinned = Storage.get('LiveGamePin');
+        $rootScope.env.isLiveGamePinned = Storage.get('LiveGamePin');
     }
 
     //initial values for ordering of horse_cards
@@ -791,9 +747,9 @@ angular.module('vbet5.betting').controller('classicViewCenterController', ['$roo
      * @name getArrayObjectElementHavingFieldValue
      * @methodOf vbet5.controller:classicViewCenterController
      * @description Returns item with specefied field and value
-     * @param {Object} Input array
-     * @param {String} Field
-     * @param {String} Value
+     * @param {Array} array
+     * @param {String} field
+     * @param {String} value
      * Returns {Object} Matched item
      */
     $scope.getArrayObjectElementHavingFieldValue = function getArrayObjectElementHavingFieldValue (array, field, value) {
@@ -805,4 +761,9 @@ angular.module('vbet5.betting').controller('classicViewCenterController', ['$roo
         }
         return null;
     };
+
+    // Unable to find nicer way to do this
+    $scope.$on('sportsbook.updateStatsBlockState', function (e, data) {
+        $scope.showStatsBlock = !!data;
+    });
 }]);

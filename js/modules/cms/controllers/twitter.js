@@ -41,11 +41,11 @@ angular.module('CMS').controller('twitterController', ['$location', '$scope', '$
         var geocodeParam = data.geocode ? '&geocode=' + data.geocode : '';
         var noCacheParam = '&r=' + new Date().getTime() + Math.random() * 10;
         var slug = '&slug=' + data.slug;
-
+        var wpUrl = Config.main.cmsDataDomain ? Config.main.cmsDataDomain + '/json' : WPConfig.wpUrl;
         return $http.get(
             WPConfig.twitterUrl +
             '?json=get-twitter-feed' + 
-            (WPConfig.wpUrl.split(":/")[0].toLowerCase() === 'https' ? "&ssl=1" : "") +
+            (wpUrl.split(":/")[0].toLowerCase() === 'https' ? "&ssl=1" : "") +
             countParam + 
             hashtagParam +
             usernameParam +
@@ -89,11 +89,13 @@ angular.module('CMS').controller('twitterController', ['$location', '$scope', '$
         getTwitterFeed(requestData).then(function (response) {
             $scope.tweets = [];
             angular.forEach(response.data, function (tweet) {
-                var v = tweet.created_at.split(' ');
-                var parseDate = new Date(Date.parse(v[1] + " " + v[2] + ", " + v[5] + " " + v[3] + " UTC"));
-                var pieces = moment(parseDate).fromNow(true).split(' ');
-                tweet.created_at = (isNaN(parseInt(pieces[0])) ? Translator.get('now') : pieces[0] + pieces[1][0]);
-                $scope.tweets.push(tweet);
+                if (tweet.created_at && tweet.created_at.split) {
+                    var v = tweet.created_at.split(' ');
+                    var parseDate = new Date(Date.parse(v[1] + " " + v[2] + ", " + v[5] + " " + v[3] + " UTC"));
+                    var pieces = moment(parseDate).fromNow(true).split(' ');
+                    tweet.created_at = (isNaN(parseInt(pieces[0])) ? Translator.get('now') : pieces[0] + pieces[1][0]);
+                    $scope.tweets.push(tweet);
+                }
             });
 
             $scope.activeTweetIndex = 0;

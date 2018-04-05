@@ -37,6 +37,7 @@ VBET5.service('ConnectionService', ['$q', 'Zergling', 'Utils', function ($q, Zer
             self.allSubscriptionSubIds = {};
             self.allSubscriptionPromises = {};
             self.allSubscriptionHashes = {};
+            self.destroyed = true;
         });
     }
 
@@ -103,18 +104,25 @@ VBET5.service('ConnectionService', ['$q', 'Zergling', 'Utils', function ($q, Zer
         Zergling.subscribe(request, successCallback)
         .then(function (result) {
             if (result.subid) {
-                self.allSubscriptionSubIds[result.subid] = requestHash;
                 subscribingProgress.resolve(result.subid);
+                if (self.destroyed) {
+                    Zergling.unsubscribe(result.subid);
+                } else {
+                    self.allSubscriptionSubIds[result.subid] = requestHash;
+                }
             }
 
-            if (result.data) {
-                successCallback(result.data, result.subid);
+            if (!self.destroyed) {
+                if (result.data) {
+                    successCallback(result.data, result.subid);
+                }
+                additionalCallbacks && additionalCallbacks.thenCallback && additionalCallbacks.thenCallback(result);
             }
-
-            additionalCallbacks && additionalCallbacks.thenCallback && additionalCallbacks.thenCallback(result);
         })['catch'](function (reason) {
-            subscribingProgress.resolve(null);
-            additionalCallbacks && additionalCallbacks.failureCallback && additionalCallbacks.failureCallback(reason);
+            if (!self.destroyed) {
+                subscribingProgress.resolve(null);
+                additionalCallbacks && additionalCallbacks.failureCallback && additionalCallbacks.failureCallback(reason);
+            }
         });
     };
 

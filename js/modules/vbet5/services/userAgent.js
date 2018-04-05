@@ -101,12 +101,28 @@ VBET5.service('UserAgent', function () {
          */
         getOSVersion: function getOSVersion() {
             var name;
-            if (navigator.userAgent.indexOf("Windows NT 10.0")!= -1) name = "Windows10";
-            if (navigator.userAgent.indexOf("Windows NT 6.2") != -1) name = "Windows8";
-            if (navigator.userAgent.indexOf("Windows NT 6.1") != -1) name = "Windows7";
-            if (navigator.userAgent.indexOf("Windows NT 6.0") != -1) name = "WindowsVista";
-            if (navigator.userAgent.indexOf("Windows NT 5.1") != -1) name = "WindowsXP";
-            if (navigator.userAgent.indexOf("Windows NT 5.0") != -1) name = "Windows2000";
+            switch (true) {
+                case navigator.userAgent.indexOf("Windows NT 10.0") != -1:
+                    name = "Windows10";
+                    break;
+                case navigator.userAgent.indexOf("Windows NT 6.2") != -1:
+                case navigator.userAgent.indexOf("Windows NT 6.3") != -1:
+                    name = "Windows8";
+                    break;
+                case navigator.userAgent.indexOf("Windows NT 6.1") != -1:
+                    name = "Windows7";
+                    break;
+                case navigator.userAgent.indexOf("Windows NT 6.0") != -1:
+                    name = "WindowsVista";
+                    break;
+                case navigator.userAgent.indexOf("Windows NT 5.1") != -1:
+                case navigator.userAgent.indexOf("Windows NT 5.2") != -1:
+                    name = "WindowsXP";
+                    break;
+                case navigator.userAgent.indexOf("Windows NT 5.0") != -1:
+                    name = "Windows2000";
+                    break;
+            }
 
             return name;
         }
