@@ -80,5 +80,9 @@ VBET5.directive('resizer', ['$document', '$rootScope', '$window', '$timeout', fu
 
         setUp();
 
+        scope.$on('$destroy', function() {
+            element.off('mousedown');
+        })
+
     };
 }]);

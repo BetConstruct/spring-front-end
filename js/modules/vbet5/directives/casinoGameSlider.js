@@ -17,7 +17,6 @@ VBET5.directive('casinoGameSlider', ['$interval', '$window', '$location', 'Confi
         link: function (scope) {
             var bannersInterval;
             scope.selectedIndex = 0;
-            scope.conf = Config.main;
 
             /**
              * @ngdoc method
@@ -87,6 +86,7 @@ VBET5.directive('casinoGameSlider', ['$interval', '$window', '$location', 'Confi
              */
             scope.$on('$destroy', function () {
                 $interval.cancel(bannersInterval);
+                bannersInterval = undefined;
             });
         }
     };

@@ -83,7 +83,7 @@ angular.module('vbet5.betting').controller('gameCtrl', ['$rootScope', '$scope', 
                 $scope.corectScoreMode.dividedGames.currentPairPrice = $filter('oddConvert')($scope.corectScoreMode.dividedGames.eventsArr[i].price);
                 $scope.corectScoreMode.dividedGames.currentEvent = $scope.corectScoreMode.dividedGames.eventsArr[i];
 
-                $scope.corectScoreMode.dividedGames.currentEvent.isEventInBetSlip = $scope.isEventInBetSlip(corectScoreMode.dividedGames.currentEvent);
+                $scope.corectScoreMode.dividedGames.currentEvent.isEventInBetSlip = $scope.isEventInBetSlip($scope.corectScoreMode.dividedGames.currentEvent);
                 break;
             } else {
                 $scope.corectScoreMode.dividedGames.currentPairPrice = null;
@@ -580,6 +580,7 @@ angular.module('vbet5.betting').controller('gameCtrl', ['$rootScope', '$scope', 
      * @description Check if event already exists in betslip
      */
     $scope.isEventInBetSlip = function isEventInBetSlip () {
+        if (!arguments[0]) return false;
         var isInBetSlip = GameInfo.isEventInBetSlip.apply(this, arguments);
         var event = arguments[0];
 

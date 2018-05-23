@@ -11,9 +11,13 @@ VBET5.directive('errSrc', function () {
     return {
         link: function (scope, element, attrs) {
             element.bind('error', function () {
-                if (attrs.src != attrs.errSrc) {
+                if (attrs.src !== attrs.errSrc) {
                     attrs.$set('src', attrs.errSrc);
                 }
+            });
+
+            scope.$on('$destroy', function() {
+                element.unbind('error');
             });
         }
     };

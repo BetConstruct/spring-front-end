@@ -91,11 +91,9 @@ VBET5.directive('draggable', ['$document', '$rootScope', '$window', 'DomHelper',
             }
             scope.dragging = false;
 
-            $document.unbind('mousemove', mousemove);
-            $document.unbind('mouseup', mouseup);
+            $document.off('mousemove', mousemove);
+            $document.off('mouseup', mouseup);
         }
-
-
 
         element.on('mousedown', function (event) {
             if (!isNowDraggable || (attr.dragFrom && event.target.parentElement.id !== attr.dragFrom)) {
@@ -112,5 +110,8 @@ VBET5.directive('draggable', ['$document', '$rootScope', '$window', 'DomHelper',
             $document.on('mouseup', mouseup);
         });
 
+        scope.$on('$destroy', function() {
+            element.off('mousedown');
+        });
     };
 }]);

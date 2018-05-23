@@ -13,7 +13,7 @@ VBET5.directive('counter', ['$rootScope', 'Translator', '$interval', 'Moment', f
         scope: {},
         link: function (scope, elem, attrs) {
             var counterInterval, doBroadcast = false;
-            scope.timer = {}
+            scope.timer = {};
 
             function initTimer () {
                 scope.finishText = attrs.finishText;
@@ -29,7 +29,7 @@ VBET5.directive('counter', ['$rootScope', 'Translator', '$interval', 'Moment', f
                 }
 
                 updateTimerValues();
-            };
+            }
 
             function updateTimerValues () {
                 scope.timer.s = scope.timer.time % 60;
@@ -52,14 +52,14 @@ VBET5.directive('counter', ['$rootScope', 'Translator', '$interval', 'Moment', f
 
             initTimer();
 
-
             scope.timerText = Translator.get('D H M S').split(' ');
+
+            attrs.$observe('start', initTimer);
 
             scope.$on('$destroy', function () {
                 $interval.cancel(counterInterval);
+                counterInterval = undefined;
             });
-
-            attrs.$observe('start', initTimer);
         }
     };
 }]);

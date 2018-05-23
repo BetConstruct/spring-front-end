@@ -5,8 +5,8 @@
  * @description Renders promotion news by given slug from wordpress
  */
 VBET5.directive('promotionNews',
-    ['$routeParams', '$window', '$rootScope', '$sce', '$location', '$timeout', 'Config', 'WPConfig', 'content', 'Utils', 'analytics', 'DomHelper',
-        function ($routeParams, $window, $rootScope, $sce, $location, $timeout, Config, WPConfig, content, Utils, analytics, DomHelper) {
+    ['$routeParams', '$window', '$sce', '$location', '$timeout', 'Config', 'WPConfig', 'content', 'Utils', 'analytics', 'DomHelper',
+        function ($routeParams, $window, $sce, $location, $timeout, Config, WPConfig, content, Utils, analytics, DomHelper) {
             'use strict';
             var templates = {
                 slider: 'templates/directive/promotion-news-slider.html',
@@ -40,7 +40,18 @@ VBET5.directive('promotionNews',
                     $scope.promotionsFilter = {};
                     $scope.count = $scope.count || WPConfig.news.numberOfRecentNews;
                     $scope.showDates = !$scope.hideDates;
-                    $scope.conf = Config.main;
+
+                    function initSliderMode() {
+                        $scope.slideLeft = function () {
+                            $scope.selectedGroupId--;
+                        };
+                        $scope.slideRight = function () {
+                            $scope.selectedGroupId++;
+                        };
+                        $scope.pickFirstGroup = function (group) {
+                            $scope.selectedGroupId = group.id;
+                        };
+                    }
 
                     $scope.getTemplate = function () {
                         var url;
@@ -101,7 +112,7 @@ VBET5.directive('promotionNews',
                         if ($scope.sharePath) {
                             link = origin + $window.document.location.pathname + $scope.sharePath;
                         } else if (WPConfig.seoFilesGenerationActive) {
-                            link = origin + $window.document.location.pathname + $scope.path + '/' + decodeURIComponent(news.slug) + '-id' + news.id + '.html';
+                            link = origin + $window.document.location.pathname + $scope.path + '/' + encodeURIComponent((news.slug || news.title || '').replace(/ /g,"-")) + '-id-' + news.id + '.html';
                         } else {
                             link = origin + $window.document.location.pathname + '%23' + $location.path() + '%3Fnews=' + news.id + '%23news-' + news.id;
                         }
@@ -137,8 +148,8 @@ VBET5.directive('promotionNews',
                                     var i, length = recentNews.length;
                                     for (i = 0; i < length; i += 1) {
                                         recentNews[i].titleRaw = angular.element('<div/>').html(recentNews[i].title).text(); //decode html entities
-                                        recentNews[i].title = $sce.trustAsHtml(recentNews[i].title);
                                         recentNews[i].permalink = getPermaLink(recentNews[i]);
+                                        recentNews[i].title = $sce.trustAsHtml(recentNews[i].title);
                                         recentNews[i].content = $sce.trustAsHtml(recentNews[i].content);
                                     }
 
@@ -212,17 +223,6 @@ VBET5.directive('promotionNews',
                         $scope.selectedNews = null;
                         $location.search('news', undefined);
                     };
-                    function initSliderMode() {
-                        $scope.slideLeft = function () {
-                            $scope.selectedGroupId--;
-                        };
-                        $scope.slideRight = function () {
-                            $scope.selectedGroupId++;
-                        };
-                        $scope.pickFirstGroup = function (group) {
-                            $scope.selectedGroupId = group.id;
-                        };
-                    }
                     /**
                      * @ngdoc method
                      * @name setSlug

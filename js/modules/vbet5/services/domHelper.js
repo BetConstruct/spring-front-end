@@ -294,8 +294,20 @@ VBET5.service('DomHelper', ['$window', '$timeout', 'Config', function ($window, 
      * @returns {boolean} is screen small for scrolling or not
      */
     DomHelper.onWindowResize = function onWindowResize(callback) {
-        angular.element($window).bind("resize", callback);
+        angular.element($window).on("resize", callback);
     };
+
+    /**
+     * @ngdoc method
+     * @name onWindowScroll
+     * @methodOf vbet5.service:DomHelper
+     * @description
+     * @param {Function} callback function to call on windows scroll
+     */
+    DomHelper.onWindowScroll = function onWindowResize(callback) {
+        angular.element($window).on("scroll", callback);
+    };
+
 
     /**
      * @ngdoc method

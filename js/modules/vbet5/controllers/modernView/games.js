@@ -21,6 +21,8 @@ BettingModule.controller('gamesCtrl', ['$rootScope', '$scope', '$location', '$fi
     $scope.openGames = {0: {}, 1: {}, 2: {}};
 
     $scope.pinnedGames = {};
+    $scope.displayEventLimit = GameInfo.displayEventLimit;
+    $scope.cancelDisplayEventLimit = GameInfo.cancelDisplayEventLimit;
 
     $scope.isInArray = Utils.isInArray;
     /**

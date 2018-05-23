@@ -13,7 +13,7 @@ VBET5.directive('preventFastClick', ['$timeout', function ($timeout) {
         scope: {
             preventFastClick: '='
         },
-        link: function (scope, element, attr) {
+        link: function (scope, element) {
             var locked = false;
             var clickTimeout = parseInt(scope.preventFastClick * 1000 || 1000);
             function clickIsLocked() {
@@ -38,8 +38,11 @@ VBET5.directive('preventFastClick', ['$timeout', function ($timeout) {
                     event.stopImmediatePropagation();
                 }
             });
-        }
 
+            scope.$on('$destroy', function() {
+                element.unbind("click");
+            });
+        }
     };
 
 }]);

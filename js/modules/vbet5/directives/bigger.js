@@ -18,7 +18,7 @@ VBET5.directive('bigger', function () {
             scope.$watch(function () {
                 return ((ctrl.$pristine || attrs.validUndefined) && angular.isUndefined(ctrl.$modelValue)) || scope.bigger <= ctrl.$modelValue;
             }, function (currentValue) {
-                ctrl.$setValidity('bigger', currentValue || !scope.bigger ? true : false);
+                ctrl.$setValidity('bigger', !!(currentValue || !scope.bigger));
             });
         }
     };

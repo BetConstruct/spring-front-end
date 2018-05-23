@@ -122,13 +122,14 @@ VBET5.controller('paymentsCtrl', ['$scope', '$rootScope', '$sce', '$q', '$window
     };
     /**
      * @ngdoc method
-     * @name filterPaymentsByCountry
+     * @name filterPaymentsByCountryAndLanguage
      * @methodOf vbet5.controller:paymentsCtrl
      * @description Returns payments filtered by user country if needed
      * @param {Array} input all payment methods
+     * @param {String} type the payment type: deposit or withdraw
      * @returns {Array} filtered payment methods
      */
-    function filterPaymentsByCountry(input) {
+    function filterPaymentsByCountryAndLanguage(input, type) {
         var countryCode = $rootScope.profile.country_code || $scope.userDetails.country_code || '';
         if (!countryCode) {
             return input;
@@ -136,7 +137,7 @@ VBET5.controller('paymentsCtrl', ['$scope', '$rootScope', '$sce', '$q', '$window
         return input.reduce(function (availablePayments, current) {
             if ((current.countryAllow && current.countryAllow.indexOf(countryCode) === -1) || (current.countryRestrict && current.countryRestrict.indexOf(countryCode) !== -1)) {
                 console.log(countryCode, "restricted for", current.name);
-            } else {
+            } else if (!current[type + 'DisableByLanguage'] || current[type + 'DisableByLanguage'].indexOf(Config.env.lang) === -1) {
                 availablePayments.push(current);
             }
             return availablePayments;
@@ -152,9 +153,8 @@ VBET5.controller('paymentsCtrl', ['$scope', '$rootScope', '$sce', '$q', '$window
      */
     function getCurrencyRate(currencyName) {
 
-        console.log('Get currency rate for:', currencyName);
-        if ($rootScope.currency) {
-            currencyRates[$rootScope.currency.name] = $rootScope.currency.rate;
+        if (!$rootScope.profile || !$rootScope.profile.currency_name) {
+            return;
         }
 
         if (currencyRates[currencyName] !== undefined || !currencyName) {
@@ -163,20 +163,11 @@ VBET5.controller('paymentsCtrl', ['$scope', '$rootScope', '$sce', '$q', '$window
         }
 
         Zergling.get({
-            'source': 'config.currency',
-            'what': {
-                'currency': []
-            },
-            'where': {
-                'currency': {
-                    'name': currencyName
-                }
-            }
-        }).then(function (response) {
-            if (response.data && response.data.currency) {
-                angular.forEach(response.data.currency, function (currency) {
-                    currencyRates[currency.name] = currency.rate;
-                });
+            'from_currency': $rootScope.profile.currency_name,
+            'to_currency': currencyName
+        }, 'get_currency_rate').then(function (response) {
+            if (response.details) {
+                currencyRates[currencyName] = response.details;
             }
         })['finally'](function () {
             startWatchingWithdrawAmount();
@@ -217,7 +208,7 @@ VBET5.controller('paymentsCtrl', ['$scope', '$rootScope', '$sce', '$q', '$window
      * @param {String} type deposit or withdraw
      */
     function initPaymentConfig(type) {
-        if (!$scope.userDetails && (Config.main.paymentsGetUserDetails || !$rootScope.profile.country_code)) {
+        if (!$scope.userDetails && (Config.main.paymentsGetUserDetails || !($rootScope.profile && $rootScope.profile.country_code))) {
             getUserPromise = getUserPromise || Zergling.get({}, 'get_user');
             getUserPromise.then(function (data) {
                 data.sur_name = data.last_name || data.sur_name;
@@ -244,7 +235,7 @@ VBET5.controller('paymentsCtrl', ['$scope', '$rootScope', '$sce', '$q', '$window
             $scope.paymentConfig = filteredPayments;
         }
 
-        $scope.paymentConfig = filterPaymentsByCountry($scope.paymentConfig);
+        $scope.paymentConfig = filterPaymentsByCountryAndLanguage($scope.paymentConfig, type);
 
         //payment description text may contain html, mark it as safe to show
         angular.forEach($scope.paymentConfig, function (pSystem) {
@@ -323,13 +314,11 @@ VBET5.controller('paymentsCtrl', ['$scope', '$rootScope', '$sce', '$q', '$window
                 custom = $scope.selectedPaymentSystem.customCurrency,
                 currency = $rootScope.profile.currency_name;
 
-            if (rates[currency] && rates[custom]) {
-                if (currency !== custom) {
-                    if (backwards) {
-                        return amount * rates[custom] / rates[currency];
-                    } else {
-                        return amount * rates[currency] / rates[custom];
-                    }
+            if (rates[custom] && currency !== custom) {
+                if (backwards) {
+                    return amount / rates[custom];
+                } else {
+                    return amount * rates[custom];
                 }
             }
         }
@@ -962,14 +951,14 @@ VBET5.controller('paymentsCtrl', ['$scope', '$rootScope', '$sce', '$q', '$window
      */
     $scope.selectPaymentSystem = function selectPaymentSystem(paymentSystem, customTemplate) {
 
-        if (paymentSystem[$rootScope.env.sliderContent + 'Iframe']) {
+        if (paymentSystem && paymentSystem[$rootScope.env.sliderContent + 'Iframe']) {
             customTemplate = 'mixedIframe';
             $scope.iframeUrl = iframeUrl || paymentSystem[$rootScope.env.sliderContent + 'Iframe'].toString();
         }
 
         if (customTemplate) {
             $scope.selectedPaymentSystem = {
-                name: paymentSystem.name || customTemplate,
+                name: (paymentSystem && paymentSystem.name) || customTemplate,
                 showPromotions: Config.main.buddyTransfer.version === 1,
                 customDepositTemplate: 'templates/livebox/' + customTemplate + '.html',
                 customWithdrawTemplate: 'templates/livebox/' + customTemplate + '.html'
@@ -990,8 +979,12 @@ VBET5.controller('paymentsCtrl', ['$scope', '$rootScope', '$sce', '$q', '$window
 
             paymentSystem = userConfirmationConfig;
         }
-        $scope.withdrawCustomAmounts = (paymentSystem.info && paymentSystem.info[$rootScope.profile.currency_name] && paymentSystem.info[$rootScope.profile.currency_name].default && paymentSystem.info[$rootScope.profile.currency_name].default.withdraw) || paymentSystem.withdrawCustomAmounts || null;
-        $scope.depositCustomAmounts = (paymentSystem.info && paymentSystem.info[$rootScope.profile.currency_name] && paymentSystem.info[$rootScope.profile.currency_name].default && paymentSystem.info[$rootScope.profile.currency_name].default.deposit) || paymentSystem.depositCustomAmounts || null;
+
+        if ($rootScope.profile && $rootScope.profile.currency_name) {
+            $scope.withdrawCustomAmounts = (paymentSystem.info && paymentSystem.info[$rootScope.profile.currency_name] && paymentSystem.info[$rootScope.profile.currency_name].default && paymentSystem.info[$rootScope.profile.currency_name].default.withdraw) || paymentSystem.withdrawCustomAmounts || null;
+            $scope.depositCustomAmounts = (paymentSystem.info && paymentSystem.info[$rootScope.profile.currency_name] && paymentSystem.info[$rootScope.profile.currency_name].default && paymentSystem.info[$rootScope.profile.currency_name].default.deposit) || paymentSystem.depositCustomAmounts || null;
+        }
+
         $scope.selectedPaymentSystem = paymentSystem;
         if ($scope.selectedPaymentSystem.twoStepWithdraw && $scope.env.sliderContent === 'withdraw') {
             Zergling
@@ -1535,6 +1528,10 @@ VBET5.controller('paymentsCtrl', ['$scope', '$rootScope', '$sce', '$q', '$window
                             field.dontSend = fieldValue === 'hidden';
                         }
                     });
+                }
+                if (option.customCurrency) {
+                    $scope.selectedPaymentSystem.customCurrency = option.customCurrency;
+                    getCurrencyRate(option.customCurrency);
                 }
             }
         });

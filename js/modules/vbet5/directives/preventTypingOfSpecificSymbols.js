@@ -35,6 +35,10 @@ angular.module("vbet5").directive('preventInput', function () {
                         event.preventDefault();
                     }
                 });
+
+                scope.$on('$destroy', function() {
+                    element.unbind('keypress');
+                })
             }
         }
     };

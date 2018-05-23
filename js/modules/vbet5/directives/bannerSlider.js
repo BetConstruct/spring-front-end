@@ -8,12 +8,12 @@
  * @param {Number} [interval] optional. Rotation interval in milliseconds (default is 10000)
  *
  */
-VBET5.directive('bannerSlider', ['$rootScope', '$location', '$interval', 'analytics', 'WPConfig', 'content', 'Config', function ($rootScope, $location, $interval, analytics, WPConfig, content, Config) {
+VBET5.directive('bannerSlider', ['$location', '$interval', 'analytics', 'WPConfig', 'content', function ($location, $interval, analytics, WPConfig, content) {
     'use strict';
     return {
         restrict: 'EA',
         replace: false,
-        templateUrl: $rootScope.getTemplate('templates/directive/bannerslider.html'),
+        templateUrl: 'templates/directive/bannerslider.html',
         scope: {
             //slug: '=',
             ngHide: '=?'
@@ -22,7 +22,6 @@ VBET5.directive('bannerSlider', ['$rootScope', '$location', '$interval', 'analyt
             scope.slide = 0;
             scope.over = false;
             scope.banners = [];
-            scope.conf = Config.main;
             var intervalPromise;
 
             function animateBanners() {
@@ -72,7 +71,7 @@ VBET5.directive('bannerSlider', ['$rootScope', '$location', '$interval', 'analyt
                     }
 
                 });
-            };
+            }
 
             /**
              * @ngdoc method
@@ -97,6 +96,7 @@ VBET5.directive('bannerSlider', ['$rootScope', '$location', '$interval', 'analyt
 
             scope.$on('$destroy', function () {
                 $interval.cancel(intervalPromise);
+                intervalPromise = undefined;
             });
         }
     };

@@ -14,15 +14,16 @@ VBET5.directive("classOnScroll", ['$window', function ($window) {
         var class1 = classNames[0];
         var class2 = classNames[1];
 
-        var changeClass = function () {
-            if (this.pageYOffset >= 1) {
+        function changeClass() {
+            if ($window.pageYOffset >= 1) {
                 element.addClass(class1);
                 element.removeClass(class2);
             } else {
                 element.addClass(class2);
                 element.removeClass(class1);
             }
-        };
-        angular.element($window).bind("scroll", changeClass);
+        }
+
+        scope.$on('onWindowScroll', changeClass);
     };
 }]);

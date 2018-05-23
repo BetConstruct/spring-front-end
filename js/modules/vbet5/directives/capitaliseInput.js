@@ -9,9 +9,13 @@
 VBET5.directive('capitaliseinput', function () {
     'use strict';
     return {
-        link: function ($scope, element, attrs) {
+        link: function (scope, element) {
             element.bind('blur', function () {
                 element[0].value = element[0].value.charAt(0).toUpperCase() + element[0].value.slice(1);
+            });
+
+            scope.$on('$destroy', function() {
+                element.unbind('blur');
             });
         }
     };

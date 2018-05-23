@@ -17,6 +17,10 @@ VBET5.directive('uiPrefix', function () {
                 }
                 element[0].value = val;
             });
+
+            $scope.$on('$destroy', function() {
+                element.unbind('change');
+            })
         }
     };
 });

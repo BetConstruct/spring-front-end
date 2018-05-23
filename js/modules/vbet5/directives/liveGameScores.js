@@ -17,9 +17,6 @@ VBET5.directive('liveGameScores', ['$window', 'Config', 'Storage', 'GameInfo', '
         },
         templateUrl: 'templates/directive/live-game-scores.html',
         link: function (scope) {
-
-            scope.conf = Config.main;
-            scope.env = Config.env;
             scope.Math = Math;
             scope.liveGamesSoccerTemplate = GameInfo.liveGamesSoccerTemplate;
             scope.dotaGamesList = GameInfo.dotaGamesList;

@@ -87,7 +87,7 @@ angular.module('vbet5.betting').controller('classicViewCenterController', ['$roo
     $scope.visibleSetsNumber = 5; // number of sets to be visible for multiset games
     $scope.isEventInBetSlip = GameInfo.isEventInBetSlip;
     $scope.GamesWithStatsBlock = GameInfo.GamesWithStatsBlock;
-    
+
     /**
      * @ngdoc method
      * @name populateExpandedMarkets
@@ -354,7 +354,7 @@ angular.module('vbet5.betting').controller('classicViewCenterController', ['$roo
         }
         if (Config.main.specialMarkets && Config.main.specialMarkets.length) {
             var length = Config.main.specialMarkets.length;
-            $scope.specialMarkets = markets.filter(function (value, index) {
+            $scope.specialMarkets = markets.filter(function (value) {
                 var i, found = false;
                 for (i = 0; i < length; i++) {
                     if (value[0].type === Config.main.specialMarkets[i].type) {
@@ -387,7 +387,8 @@ angular.module('vbet5.betting').controller('classicViewCenterController', ['$roo
      *
      * @param {Object} game game data object
      * @param {Boolean} fromCustomWidget if it from custom widget
-     * @param {Object} competition competition data object
+     * @param {Object} competition competition data objectD
+     * @param {Boolean} fromLeftMenu from where come event
      * @param {Boolean} fully is responsible for covering the entire central part of the
      */
     $scope.openGameFullDetails = function openGameFullDetails(game, competition, fromCustomWidget, fromLeftMenu, fully) {
@@ -655,7 +656,7 @@ angular.module('vbet5.betting').controller('classicViewCenterController', ['$roo
      * @name isMarketClosed
      * @methodOf vbet5.controller:classicViewCenterController
      * @description Checks if the market is closed
-     * @param {String} Market name
+     * @param {String} marketName the market's name
      */
     $scope.isMarketClosed = function isMarketClosed(marketName) {
         if ($scope.openGame) {

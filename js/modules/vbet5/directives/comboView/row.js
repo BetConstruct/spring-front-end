@@ -6,10 +6,10 @@
  * @description directive for displaying game, market information in 'comboView'
  *
  */
- VBET5.directive('comboViewRow', ['$rootScope', function ($rootScope) {
+ VBET5.directive('comboViewRow', ['$filter', function ($filter) {
      return {
         templateUrl: function templateUrl (el, attr) {
-            return $rootScope.getTemplate(attr.templatePath);
+            return $filter('fixPath')(attr.templatePath);
         },
 
         link: function (scope, element, attr) {

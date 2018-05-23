@@ -43,7 +43,7 @@ VBET5.directive('popularInSportsbook', ['$location', 'Config', 'ConnectionServic
 
                 switch (scope.type) {
                     case 'game':
-                        request.what.game = ['id', 'team1_name', 'team2_name', 'type', 'order'];
+                        request.what.game = ['id', 'team1_name', 'team2_name', 'type', 'order', 'favorite_order'];
                         request.where.game = {
                             'type': Config.main.GmsPlatform ? {'@in': [0, 2]} : 0,
                             'promoted': Config.main.GmsPlatform ? true : {'@contains': parseInt(Config.main.site_id)}
@@ -94,7 +94,7 @@ VBET5.directive('popularInSportsbook', ['$location', 'Config', 'ConnectionServic
                         });
                     });
                     if (scope.popular.data && scope.popular.data.length) {
-                        var sortKey = scope.type === 'game' || scope.popular.data[0].favorite_order === null ? 'order' : 'favorite_order';
+                        var sortKey = scope.popular.data[0].favorite_order === null ? 'order' : 'favorite_order';
                         scope.popular.data.sort(function (a, b) {
                             return a[sortKey] - b[sortKey];
                         });

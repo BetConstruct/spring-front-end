@@ -752,7 +752,7 @@ angular.module('vbet5.betting').controller('classicViewMainCtrl', ['$rootScope',
      * @param {Object} requestMarketTypes object
      */
     function addMarketTypesInRequest(request, requestMarketTypes) {
-        if (Config.main.GmsPlatform && Config.main.prematchMultiColumnEnabled) {
+        if (Config.main.GmsPlatform) {
             request.where.market = {'@or': [
                 {'type': {'@in': requestMarketTypes}},
                 {'display_key': {'@in': ['WINNER', 'HANDICAP', 'TOTALS']}}
@@ -1152,8 +1152,8 @@ angular.module('vbet5.betting').controller('classicViewMainCtrl', ['$rootScope',
         $rootScope.$broadcast('bet', {event: event, market: market, game: game, oddType: oddType});
     };
 
-    $scope.$on('$destroy', function() {
+    /*$scope.$on('$destroy', function() {
         // Need this to avoid side effect with $location.search()
         $scope.selectGame = function() {};
-    })
+    })*/
 }]);

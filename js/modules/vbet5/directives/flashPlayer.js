@@ -33,7 +33,7 @@ VBET5.directive('flashplayer', ['$window', '$timeout', '$rootScope', 'Translator
                 element.append(frame);
                 parent.videoIsLoaded = false; // for hiding player controlls
             } else { // for another all streams
-                var swfPath = "swf/LiveVideo.swf?anticache=" + $rootScope.env.appVersion;
+                var swfPath = providerId === '5' ? "swf/imgStream.swf" : "swf/LiveVideo.swf?anticache=" + $rootScope.env.appVersion;
                 var callbackGlobalFuncName = 'flashPlayerCallback' + scope.$id;
 
                 var params = {};
@@ -87,7 +87,7 @@ VBET5.directive('flashplayer', ['$window', '$timeout', '$rootScope', 'Translator
 
                                     obj.ref.setErrorMessages(
                                         Translator.get('Cannot play this video in your region.'),
-                                        Translator.get('Cannot play video stream.Sorry.')
+                                        Translator.get('Sorry, there is no live stream at the moment. Please check back later.')
                                     );
                                     parent.videoIsLoaded = false;
 

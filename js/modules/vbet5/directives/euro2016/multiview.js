@@ -6,17 +6,14 @@
  * @description directive for displaying game, market information in 'comboView'
  *
  */
- VBET5.directive('euro2016Multiview', ['$rootScope', 'Config', function ($rootScope, Config) {
+ VBET5.directive('euro2016Multiview', ['Config', function (Config) {
      return {
         scope: {
             multiViewLiveOpenedGames: '=*'
         },
-        templateUrl: function templateUrl (el, attr) {
-            return $rootScope.getTemplate('templates/sport/euro2016/center/multiview.html');
-        },
-        link: function (scope, element, attr) {
+        templateUrl: 'templates/sport/euro2016/center/multiview.html',
+        link: function (scope) {
             scope.Math=Math;
-            scope.conf = Config.main;
             scope.getTemplate = function getTemplate(path) {
                 if (Config.customTemplates) {
                     var replacedPath = path.replace(/(.*)(\/version_.+\/)(.*)/i, "$1/$3");

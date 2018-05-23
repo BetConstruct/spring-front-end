@@ -6,12 +6,12 @@
  * @description displays provided/or all sports results
  *
  */
-VBET5.directive('sportsResults', ['Utils', 'Config', 'GameInfo', 'Moment', 'Zergling', 'Translator', '$location', '$q', '$rootScope', function (Utils, Config, GameInfo, Moment, Zergling, Translator, $location, $q, $rootScope) {
+VBET5.directive('sportsResults', ['Utils', 'Config', 'GameInfo', 'Moment', 'Zergling', 'Translator', '$location', '$q', '$filter', function (Utils, Config, GameInfo, Moment, Zergling, Translator, $location, $q, $filter) {
     'use strict';
     return {
         restrict: 'E',
         replace: false,
-        templateUrl: $rootScope.getTemplate('templates/directive/sports-results.html'),
+        templateUrl: $filter('fixPath')('templates/directive/sports-results.html'),
         scope: {
             sportList: '=?sportList',
             competitionsList: '=?competitionsList',

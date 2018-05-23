@@ -1,6 +1,9 @@
 angular.module('vbet5').constant('Config', {
     'main': {
-        enableDomainFixesForPartners: [29, 33, 43, 50, 112, 117, 132, 137, 138, 151, 157, 158, 200, 204, 260, 263, 266, 275, 279, 294, 297, 311, 323, 372, 373, 397, 425, 460, 463, 543, 544, 566, 574, 575, 585, 607, 620, 621, 625, 627, 628, 631, 635, 640, 642, 647, 668, 678, 680, 706, 707, 722, 723, 732, 737, 744, 745, 749, 753, 780, 787, 814, 815, 816, 818, 822, 823, 837, 838, 846, 911],
+        enableDomainFixesForPartners: [29, 33, 43, 50, 112, 117, 132, 137, 138, 151, 157, 158, 200, 204, 260, 263, 266, 275,
+            279, 294, 297, 311, 323, 372, 373, 397, 425, 460, 463, 543, 544, 566, 574, 575, 585, 607, 620, 621, 625, 627, 628,
+            631, 635, 640, 642, 647, 668, 678, 680, 699, 706, 707, 722, 723, 732, 737, 744, 745, 747, 749, 753, 756, 780, 787,
+            814, 815, 816, 818, 822, 823, 835, 837, 838, 839, 846, 869, 911],
         prefetchLeftMenuHoveredLivesGames: {
             enabled: false,
             prefetchAfter: 250
@@ -129,6 +132,7 @@ angular.module('vbet5').constant('Config', {
         geoIPLangSwitch: {
             enabled: false
         },
+        liveCalendarSelectAllSports: true,
         sportsWithAnimations: ['Soccer', 'Tennis', 'Basketball'],
         collapseMenuInLive: false,
         defaultTimeFormat: null,
@@ -420,7 +424,7 @@ angular.module('vbet5').constant('Config', {
             enabled: false  //external (Gaspar's) sportsbook
         },
         multiLevelMenu: {},
-        defaultAvailablePaths: ['/news', '/promos', '/cas-promos', '/about','/first_deposit_bonus', '/first_deposit_bonus_and_20_free_spins', '/404', '/draw', '/exchange-shop', '/registration'],
+        defaultAvailablePaths: ['/news', '/promos', '/cas-promos', '/about','/first_deposit_bonus', '/first_deposit_bonus_and_20_free_spins', '/404', '/draw', '/exchange-shop', '/registration', '/vrlivedealer'],
         disableLiveChatPaths: ['/popup', '/widget'],
         'rfid': {
             loginWIthRFID: false,
@@ -493,6 +497,7 @@ angular.module('vbet5').constant('Config', {
 //            'tur' : '+03:00'
         },
         allowCustomHtml: false, // allow custom html scripts and html tags
+        customLanguageCss: [],
         poolBettingCurrencyName: 'EUR', //currency in which jackpot will be displayed in top menu
         availableCurrencies: ["AMD", "USD", "EUR", "GEL", "RUB", "UAH", "IRR", "GBP", "KGS", "KZT", "MDL", "LTL", "XAF", "TRY", "AZN", "BYR", "NGN", "VND", "KRW", "TJS", "RSD", "UGX", "LVL", "CHF", "MYR", "SGD", "HRK", "GHS", "RON", "CNY", "CPI", "BRL"],
         balanceFractionSize: 2, //number of decimal places to round the balance value to(when displaying)
@@ -790,6 +795,7 @@ angular.module('vbet5').constant('Config', {
             historyBalanceFormatDate: 'MM/dd/yyyy',
             newsDataFormat: {
                 'tur': 'DD MMMM YYYY',
+                'fre': 'DD MMMM YYYY',
                 'default': 'MMMM DD YYYY',
                 'newsDate': 'LT - ll'
             },
@@ -826,7 +832,6 @@ angular.module('vbet5').constant('Config', {
                 10000: '$24.99'
             }
         },
-        customLanguageCss: ['arm', 'geo'],
         subHeaderItems: [
             {
                 alias: "sport",
@@ -1051,6 +1056,11 @@ angular.module('vbet5').constant('Config', {
     },
     deberc: {
         redirectOnGame: false
+    },
+    vrlivedealer: {
+        "redirectOnGame": false,
+        "showDownloadSection": true,
+        "showPromotionsInVRCasino": false
     },
     geoIP: {
         callbackUrl: '//geoapi.betcoapps.com',

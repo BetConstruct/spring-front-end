@@ -20,7 +20,6 @@ VBET5.directive('scriptRunner', function () {
         var str = scope.scriptData || '',
             matchedTags = str.match(MATCH_TAGS),
             isScript;
-        debugger;
 
         if (matchedTags) {
 

@@ -15,16 +15,11 @@ VBET5.directive('fixonscroll', ['$window', 'DomHelper', 'UserAgent', function ($
         if (attrs.ignoreIe && UserAgent.IEVersion()) {
             return;
         }
-        var positioning = function () {
-            var y = ($window.pageYOffset !== undefined) ? $window.pageYOffset : ($window.document.documentElement || $window.document.body.parentNode || $window.document.body).scrollTop;
-            var footerElement = $window.document.getElementById(attrs.footerId);
-            var footerOffset = footerElement ? footerElement.offsetTop - y : $window.document.body.offsetHeight;
+        function positioning() {
             var scrollableAreaContainerElement = $window.document.getElementById(attrs.scrollableAreaId);
             if (scrollableAreaContainerElement === null) { //in case we're in another view
                 return;
             }
-            var containerHeight = scrollableAreaContainerElement.scrollHeight;
-            var elementHeight = element[0].scrollHeight;
             var elementDefaultOffset =  parseInt(attrs.defaultOffset, 10);
             var headerHeight = $window.document.getElementById(attrs.headerId).offsetHeight || 0;
             if(!elementDefaultOffset) {
@@ -42,26 +37,20 @@ VBET5.directive('fixonscroll', ['$window', 'DomHelper', 'UserAgent', function ($
                     element[0].style="";
                 }
             } else {
-                /*if (footerOffset <= element[0].scrollHeight) {
-                    angular.element(element[0]).addClass('scrollable-absolute');
-
-                } else {*/
-                    angular.element(element[0]).removeClass('scrollable-absolute');
-                    angular.element(element[0]).addClass('scrollable-fixed');
-                    element[0].parentElement.style.minHeight = parentHeight;
-                    if(attrs.autoPositon === "left" || attrs.autoPositon === "true") {
-                        element[0].style.left = parentLeftPosition;
-                    }
-                    if(attrs.autoPositon === "top" || attrs.autoPositon === "true") {
-                        element[0].style.top = headerHeight + "px";
-                    }
-                    if(attrs.parentWidth === "true") {
-                        element[0].style.width = parentWidth;
-                    }
-               // }
+               angular.element(element[0]).removeClass('scrollable-absolute');
+               angular.element(element[0]).addClass('scrollable-fixed');
+               element[0].parentElement.style.minHeight = parentHeight;
+               if(attrs.autoPositon === "left" || attrs.autoPositon === "true") {
+                   element[0].style.left = parentLeftPosition;
+               }
+               if(attrs.autoPositon === "top" || attrs.autoPositon === "true") {
+                   element[0].style.top = headerHeight + "px";
+               }
+               if(attrs.parentWidth === "true") {
+                   element[0].style.width = parentWidth;
+               }
             }
-
-        };
+        }
 
         if (attrs.watchElements) {
             angular.forEach(attrs.watchElements.split(' '), function (id) {
@@ -72,8 +61,8 @@ VBET5.directive('fixonscroll', ['$window', 'DomHelper', 'UserAgent', function ($
         }
 
         DomHelper.onDocumentHeightChange(positioning);
-        DomHelper.onWindowResize(positioning);
-        angular.element($window).bind("scroll", positioning);
+        scope.$on('onWindowResize', positioning);
+        scope.$on('onWindowScroll', positioning);
 
         /**
          * @description forces the element to stay fixed on the page

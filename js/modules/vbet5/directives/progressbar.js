@@ -1,13 +1,13 @@
-VBET5.directive('progressbar', ['$rootScope', function ($rootScope) {
+VBET5.directive('progressbar', ['$filter', function ($filter) {
      return {
         templateUrl: function templateUrl (el, attr) {
-            return $rootScope.getTemplate(attr.templatePath);
+            return $filter('fixPath')(attr.templatePath);
         },
         scope: {
             progressbarPosition: '<?',
             templatePath: '='
         },
-        link: function (scope, element, attr) {
+        link: function (scope) {
             scope.progressbarPositionLocal = scope.progressbarPosition;
 
             if (scope.progressbarPosition < 0) {

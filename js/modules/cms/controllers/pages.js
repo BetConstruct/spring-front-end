@@ -197,7 +197,6 @@ angular.module('CMS').controller('cmsPagesCtrl', ['$location', '$rootScope', '$s
      */
     $scope.startSFChat = function startSFChat() {
         if ($location.search().u) {
-            $rootScope.env.authorized = true;
             liveChat.setSFChatData({
                 user_id: $location.search().u,
                 first_name: " ",
@@ -470,14 +469,13 @@ angular.module('CMS').controller('cmsPagesCtrl', ['$location', '$rootScope', '$s
      * @param {string} containerId id of container to get backgrounds for
      */
     $scope.loadFeatureGamesBackgrounds = function loadFeatureGamesBackgrounds(containerId) {
+        console.log('LFGB');
         content.getWidgetData(containerId).then(function (response) {
-            if (response.data && response.data.categories) {
-                $scope.featureGamesBackgrounds = {};
-                angular.forEach(response.data.categories, function (category) {
-                    $scope.featureGamesBackgrounds[category.name] = category;
-                });
-
-            }
+            $scope.featureGamesBackgrounds = {};
+            angular.forEach(response.data && (response.data.categories || (response.data.page && response.data.page.children)), function (category) {
+                category.image = (category.thumbnail_images && category.thumbnail_images.full.url) || category.image || category.thumbnail;
+                $scope.featureGamesBackgrounds[category.slug || category.name] = category;
+            });
         });
     };
 

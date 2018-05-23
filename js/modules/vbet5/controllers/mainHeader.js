@@ -14,7 +14,6 @@ VBET5.controller('mainHeaderCtrl', ['$rootScope', '$scope', '$interval', '$filte
     $scope.env.showRegistrationForm = false;
     $scope.timezonesExpanded = false;
     $scope.isCssLoading = false;
-    //$scope.StartDemoTour = DemoTour.startTour;
     $scope.logoUrl = Config.main.logo.url;
     TimeoutWrapper = TimeoutWrapper($scope);
     $rootScope.timezoneIsAvailable = $q.defer();
@@ -435,8 +434,6 @@ VBET5.controller('mainHeaderCtrl', ['$rootScope', '$scope', '$interval', '$filte
      */
     $scope.openCustomDialog = function openCustomDialog(type) {
         if (Config.dialog && Config.dialog[type]) {
-
-            //add params in iframe
             var dialog = angular.copy(Config.dialog[type]);
             if (dialog.iframeURL && dialog.params) {
                 var sep = '?';
@@ -452,9 +449,9 @@ VBET5.controller('mainHeaderCtrl', ['$rootScope', '$scope', '$interval', '$filte
 
             $rootScope.globalDialog = dialog;
             return true;
-        } else {
-            return false;
         }
+
+        return false;
     };
 
     /**
@@ -652,10 +649,7 @@ VBET5.controller('mainHeaderCtrl', ['$rootScope', '$scope', '$interval', '$filte
                     Storage.remove('timezone');
                 }
                 $rootScope.$broadcast('login.loggedOut');
-                //DemoTour.endCurrentTour();
-                /*TimeoutWrapper(function() {
-                 DemoTour.startTour(['demo', 'header']);
-                 }, 2000);*/
+
                 $scope.closeSlider();
                 liveChat.initSFChat();
                 if (Config.main.liveModule.enabled) {
@@ -793,9 +787,7 @@ VBET5.controller('mainHeaderCtrl', ['$rootScope', '$scope', '$interval', '$filte
 
         $rootScope.env.isNewMessage = $rootScope.profile.unread_count !== $rootScope.profile.unreadCountOld;
 
-        if ($rootScope.liveAgentProfileUpdate) {
-            $rootScope.liveAgentProfileUpdate();
-        }
+        liveChat.liveAgentProfileUpdate && liveChat.liveAgentProfileUpdate();
     }
 
     $scope.$on('profile', function (event, data) {
@@ -810,13 +802,6 @@ VBET5.controller('mainHeaderCtrl', ['$rootScope', '$scope', '$interval', '$filte
         }
     });
 
-    $scope.$on('login.loggedIn', function() {
-        getAllowedPaymentSystems();
-    });
-    $scope.$on('loggedIn', function() {
-        getAllowedPaymentSystems();
-    });
-
     $scope.$on('profile.refresh', function () {
         Zergling.get({}, 'get_user').then(function (data) {
             if (data && data.user_id) {
@@ -827,6 +812,20 @@ VBET5.controller('mainHeaderCtrl', ['$rootScope', '$scope', '$interval', '$filte
                 updateProfile(null, profileData);
             }
         });
+    });
+
+    /**
+     * notifies controllers about window size changing
+     */
+    DomHelper.onWindowResize(function () {
+        $rootScope.$broadcast('onWindowResize');
+    });
+
+    /**
+     * notifies controllers about window scrolling
+     */
+    DomHelper.onWindowScroll(function () {
+        $rootScope.$broadcast('onWindowScroll');
     });
 
     /**
@@ -845,6 +844,12 @@ VBET5.controller('mainHeaderCtrl', ['$rootScope', '$scope', '$interval', '$filte
                     console.log('login restore ok', data);
                     //$scope.env.authorized = true;
                     //$rootScope.loginInProgress = false;
+
+                    if ($scope.env.sliderContent === 'login' || $scope.env.sliderContent === 'register') {
+                        $scope.env.showSlider = false;
+                        $scope.env.sliderContent = '';
+                    }
+
                     Zergling
                         .subscribe({'source': 'user', 'what': {'profile': []}, 'subscribe': true}, function (data) {updateProfile(null, data); })
                         .then(function (result) {
@@ -1247,6 +1252,10 @@ VBET5.controller('mainHeaderCtrl', ['$rootScope', '$scope', '$interval', '$filte
             $window.showZopimChat();
         });
 
+        $scope.$on('comm100.start', function() {
+            $window.startLiveChat();
+        });
+
         if ($location.search().tablet) {
             $scope.isTablet = true;
         }
@@ -1485,8 +1494,8 @@ VBET5.controller('mainHeaderCtrl', ['$rootScope', '$scope', '$interval', '$filte
      */
     $scope.startLiveAgent = function () {
         var chat = Config.main.liveChat && (Config.main.liveChat[Config.env.lang] || Config.main.liveChat);
-        if ($rootScope.liveAgentButton && $rootScope.liveAgentButton.onClick && ($rootScope.liveAgentButton.chat || chat.liveAgentVersion === 2)) {
-            $rootScope.liveAgentButton.onClick();
+        if (liveChat.liveAgentButton && liveChat.liveAgentButton.onClick && (liveChat.liveAgentButton.chat || chat.liveAgentVersion === 2)) {
+            liveChat.liveAgentButton.onClick();
             return;
         }
         TimeoutWrapper($scope.startLiveAgent, 500);
@@ -1500,7 +1509,6 @@ VBET5.controller('mainHeaderCtrl', ['$rootScope', '$scope', '$interval', '$filte
      * @description  opens FAQ popup window
      */
     $scope.openFaq = function openFaq() {
-        //$rootScope.$broadcast('openHelpPage', {slug: '#/popup/?action=help'});
         $rootScope.$broadcast('openHelpPage', {slug: 'faq'});
     };
 
@@ -1552,10 +1560,6 @@ VBET5.controller('mainHeaderCtrl', ['$rootScope', '$scope', '$interval', '$filte
      * @param {String} type "live" or "prematch"
      */
     $scope.switchIntegratedTo = function switchIntegratedTo(type) {
-        //if ($location.path() !== '/sb/') {
-        //    $location.path('/sb/');
-        //    $window.location.reload();
-        //}
         $window.htmlHelper.switchTo(type);
     };
 
@@ -1589,6 +1593,7 @@ VBET5.controller('mainHeaderCtrl', ['$rootScope', '$scope', '$interval', '$filte
     // custom css
     if ($location.search().css) {
         DomHelper.addCss($location.search().css, null, 'externalCss');
+        $location.search('css', undefined);
     }
 
     /**
@@ -1665,11 +1670,8 @@ VBET5.controller('mainHeaderCtrl', ['$rootScope', '$scope', '$interval', '$filte
         }
     }
 
-    $scope.$on('login.loggedIn', function () {
-        performDeepLinkedAction();
-        if ($location.path() === '/landing/') {
-            $location.path("/");
-        }
+    function doLoginActions() {
+        getAllowedPaymentSystems();
         sendLoginEventToIntegratedApp();
         checkAndAddUserReport();
         watchAuthData();
@@ -1679,26 +1681,26 @@ VBET5.controller('mainHeaderCtrl', ['$rootScope', '$scope', '$interval', '$filte
         $rootScope.$broadcast('globalDialogs.removeDialogsByTag', 'rfid');
 
         Config.main.domainSpecificPrefixes &&  domainSpecificCheck('#' + $location.path());
-    });
+    }
+
     //normal login
+    $scope.$on('login.loggedIn', function () {
+        performDeepLinkedAction();
+        doLoginActions();
+    });
+
+    // restoring login
+    $scope.$on('loggedIn', doLoginActions);
+
     $scope.$on('login.loggedOut', function () {
         TopMenu.refresh();
+        liveChat.liveAgentProfileClear && liveChat.liveAgentProfileClear();
     });
     $scope.$on('loggedOut', function () {
         partner.call('loggedOut');
         TopMenu.refresh();
+        liveChat.liveAgentProfileClear && liveChat.liveAgentProfileClear();
     });     // logged out
-    $scope.$on('loggedIn', function () {
-        sendLoginEventToIntegratedApp();
-        checkAndAddUserReport();
-        watchAuthData();
-        loginTermsCheck();
-        TopMenu.refresh();
-        partner.call('loginRestored');
-        $rootScope.$broadcast('globalDialogs.removeDialogsByTag', 'rfid');
-
-        Config.main.domainSpecificPrefixes &&  domainSpecificCheck('#' + $location.path());
-    });     // restoring login
 
     $scope.$on('analytics.button', function (event, name) {
         console.log('button clicked',  name);
@@ -1939,7 +1941,6 @@ VBET5.controller('mainHeaderCtrl', ['$rootScope', '$scope', '$interval', '$filte
             $rootScope.passwordRules['ng-pattern'] = pattern;
         }
     }
-
 
     //Chrome extension check
     if (window.chrome && window.chrome.app && !window.chrome.app.isInstalled) {

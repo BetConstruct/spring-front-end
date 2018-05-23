@@ -4,7 +4,7 @@
  * @name vbet5.directive:vbetBigSlider
  * @description Big slider widget
  */
-VBET5.directive('vbetBigSlider', ['$rootScope', '$timeout', '$route', '$interval', 'Config', '$sce', function ($rootScope, $timeout, $route, $interval, Config, $sce) {
+VBET5.directive('vbetBigSlider', ['$rootScope', '$timeout', '$route', '$interval', 'Config', function ($rootScope, $timeout, $route, $interval, Config) {
     'use strict';
     return {
         restrict: 'E',
@@ -17,12 +17,10 @@ VBET5.directive('vbetBigSlider', ['$rootScope', '$timeout', '$route', '$interval
         },
         link: function (scope) {
             scope.index = 0;
-            scope.$sce = $sce;
-            scope.conf = Config.main;
             var stopInterval;
             /**
              * @description Slides click handler
-             * @param {String} bannerLink
+             * @param {String} banner the banner Object
              */
             scope.linkClick = function (banner) {
                 if (banner.isYouTubeVideo) {
@@ -34,9 +32,7 @@ VBET5.directive('vbetBigSlider', ['$rootScope', '$timeout', '$route', '$interval
             };
 
             scope.changeActiveBanner = function changeActiveBanner(activeIndex) {
-                scope.index = activeIndex;
-                scope.index = scope.index < 0 ? scope.images.length - 1 : scope.index;
-                scope.index = scope.index > scope.images.length - 1 ? 0 : scope.index;
+                scope.index = activeIndex < 0 ? scope.images.length - 1 : activeIndex > scope.images.length - 1 ? 0 : activeIndex;
             };
             
             /**
@@ -57,6 +53,7 @@ VBET5.directive('vbetBigSlider', ['$rootScope', '$timeout', '$route', '$interval
 
             scope.$on('$destroy', function () {
                 $interval.cancel(stopInterval);
+                stopInterval = undefined;
             });
         }
     };

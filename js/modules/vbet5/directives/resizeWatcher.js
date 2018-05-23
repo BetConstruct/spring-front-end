@@ -11,7 +11,7 @@ VBET5.directive('watchResize', ['Config', 'DomHelper', function (Config, DomHelp
     'use strict';
     return function (scope, element, attr) {
         var wideScreen, middleScreen;
-        var broadcastWindowSize = function () {
+        function broadcastWindowSize() {
             var windowWidth = DomHelper.getWindowSize().width;
             if (windowWidth >= 1833 && wideScreen !== 'on') {
                 wideScreen = 'on';
@@ -29,8 +29,9 @@ VBET5.directive('watchResize', ['Config', 'DomHelper', function (Config, DomHelp
                     scope.$parent.$broadcast('middlescreen.off');
                 }
             }
-        };
-        DomHelper.onWindowResize(broadcastWindowSize);
+        }
+
+        scope.$on('onWindowResize', broadcastWindowSize);
         broadcastWindowSize();
     };
 }]);

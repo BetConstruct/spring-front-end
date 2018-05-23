@@ -22,10 +22,9 @@ var BettingModule = angular.module('vbet5.betting', ['ngMap']);
  * @description #Bootstrap
  * makes Config.main and Config.env available at root scope
  *
- * defines getTemplate function which returns template path(needed to override templates in skins if needed)
  */
-angular.module('vbet5').run(['$rootScope', '$location', '$routeParams', '$timeout', '$window', '$cookies', 'Utils', 'Config', 'SkinConfig', 'Storage', 'analytics', 'UserAgent', 'DomHelper', 'liveChat', 'partner', 'RegConfig', 'RuntimeConfig', 'Zergling', 'Tracking', 'Moment', 'Translator','facebookPixel', 'everCookie',
-    function ($rootScope, $location, $routeParams, $timeout, $window, $cookies, Utils, Config, SkinConfig, Storage, analytics, UserAgent, DomHelper, liveChat, partner, RegConfig, RuntimeConfig, Zergling, Tracking, Moment, Translator,facebookPixel, everCookie) {
+angular.module('vbet5').run(['$rootScope', '$location', '$routeParams', '$timeout', '$window', '$cookies', 'Utils', 'Config', 'SkinConfig', 'Storage', 'analytics', 'UserAgent', 'DomHelper', 'liveChat', 'partner', 'RegConfig', 'RuntimeConfig', 'Zergling', 'Tracking', 'Moment', 'Translator','facebookPixel', 'everCookie', 'Geoip',
+    function ($rootScope, $location, $routeParams, $timeout, $window, $cookies, Utils, Config, SkinConfig, Storage, analytics, UserAgent, DomHelper, liveChat, partner, RegConfig, RuntimeConfig, Zergling, Tracking, Moment, Translator,facebookPixel, everCookie, Geoip) {
         'use strict';
 
         $rootScope.availableModules = availableModules;
@@ -92,13 +91,19 @@ angular.module('vbet5').run(['$rootScope', '$location', '$routeParams', '$timeou
                 $location.search('sportsBookLayout', undefined);
             } else if ($cookies.get("sportsBookLayout") !== undefined){
                 Config.main.sportsLayout = $cookies.get("sportsBookLayout");
-            } else if (Storage.get('sportsBookLayout') !== undefined) {
-                Config.main.sportsLayout = Utils.getActiveSportsLayout();
             } else if ($location.search().classic) {
                 Config.main.sportsLayout = "classic";
+            } else if (Storage.get('sportsBookLayout') !== undefined && (Config.main.availableSportsbookViews[Storage.get('sportsBookLayout')] || (Config.additionalModules && Config.additionalModules.indexOf(Storage.get('sportsBookLayout')+'View') !== -1))) {
+                Config.main.sportsLayout = Storage.get('sportsBookLayout');
+            } else if (Config.main.defaultSportsLayoutByCountry) {
+                Geoip.getGeoData(false).then(function(data) {
+                    if (Config.main.defaultSportsLayoutByCountry[data.countryCode]) {
+                        Config.main.sportsLayout = Config.main.defaultSportsLayoutByCountry[data.countryCode];
+                    }
+                });
             }
             // need to remove after refactor
-            Config.main.sportsLayout === "classic" && !Config.main.availableSportsbookViews['classic'] && Config.main.availableSportsbookViews['euro2016'] && (Config.main.sportsLayout = 'euro2016');
+            Config.main.sportsLayout === "classic" && !Config.main.availableSportsbookViews.classic && Config.main.availableSportsbookViews.euro2016 && (Config.main.sportsLayout = 'euro2016');
         }
         $rootScope.domainClass = $window.location.hostname.replace(/[\.\-]/g, '');
 
@@ -141,23 +146,6 @@ angular.module('vbet5').run(['$rootScope', '$location', '$routeParams', '$timeou
             if (msg) {
                 $rootScope.$broadcast(msg, args);
             }
-        };
-
-        /**
-         * @description returns template path(needed to override templates in skins if needed)
-         * @param {string} path template path
-         * @returns {string} skin template path
-         */
-        $rootScope.getTemplate = function getTemplate(path) {
-            if (Config.customTemplates) {
-                var replacedPath = path.replace(/(.*)(\/version_.+\/)(.*)/i, "$1/$3");
-                var templatesPath = replacedPath.match(/.*(templates[^\/]*)\//)[1];
-                var pathExcludedVersion = replacedPath.split(templatesPath + '/')[1];
-                if (Config.customTemplates.indexOf(pathExcludedVersion) !== -1) {
-                    return "skins/" + Config.main.skin + "/" + templatesPath + "/"  + pathExcludedVersion;
-                }
-            }
-            return path;
         };
 
         partner.init(); //init partner stuff  (for cases when we're opened in iframe and Gaspars sportsbook)
@@ -363,6 +351,7 @@ angular.module('vbet5').run(['$rootScope', '$location', '$routeParams', '$timeou
             angular.forEach (menuPaths, function (value) {
                 if (value.path === path){
                     $rootScope.calculatedConfigs[value.config] = true;
+                    $rootScope.validPaths[path] = true;
                 }
             });
         };

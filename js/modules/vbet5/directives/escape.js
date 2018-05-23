@@ -13,7 +13,7 @@ VBET5.directive('ngEscape', ['$document', function ($document) {
         restrict: 'A',
         link: function (scope, element, attrs) {
 
-            var escapeFunc = function (event) {
+            function escapeFunc(event) {
                 if (event.keyCode === 27) {
                     scope.$eval(attrs.ngEscape);
                     event.stopPropagation && event.stopPropagation();
@@ -23,7 +23,7 @@ VBET5.directive('ngEscape', ['$document', function ($document) {
                     event.preventDefault && event.preventDefault();
                     event.stopPropagation && event.stopPropagation();
                 }
-            };
+            }
 
             $document.on('keydown', escapeFunc);
 
