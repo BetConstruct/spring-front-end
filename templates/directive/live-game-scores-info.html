@@ -1,11 +1,11 @@
 <div class="live-game-template-wrapper live-score-background-custom live-score-background-{{openGame.sport.alias.toLowerCase()}}">
     <!-- soccer live game template-->
-    <div class="game-score soccer-template" ng-if="openGame.show_type != 'OUTRIGHT' && (liveGamesSoccerTemplate.indexOf(openGame.sport.alias) !== -1 || conf.esportsGames.indexOf(openGame.sport.alias) !== -1)">
+    <div class="game-score soccer-template" ng-if="openGame.show_type != 'OUTRIGHT' && (liveGamesSoccerTemplate.indexOf(openGame.sport.alias) !== -1 || $root.conf.esportsGames.indexOf(openGame.sport.alias) !== -1)">
         <div>
             <ul>
                 <li ng-style="{'border-left-color': '#'+ openGame.info.shirt1_color}" ng-class="{active: openGame.info.pass_team === 'team1'}">
-                    <img ng-if="conf.esportsGames.indexOf(openGame.sport.alias) !== -1" ng-src="{{conf.teamLogosPath}}e/m/{{conf.GmsPlatform?Math.floor(openGame.team1_id / 2000):Math.floor(openGame.team1_external_id / 2000)}}/{{conf.GmsPlatform?openGame.team1_id:openGame.team1_external_id}}.png" />
-                    <div class="team-form" ng-if="conf.esportsGames.indexOf(openGame.sport.alias) === -1"><tshirt shorts="{{openGame.info.short1_color}}" shirt="{{openGame.info.shirt1_color}}"></tshirt></div>
+                    <img ng-if="$root.conf.esportsGames.indexOf(openGame.sport.alias) !== -1" ng-src="{{$root.conf.teamLogosPath}}e/m/{{$root.conf.GmsPlatform?Math.floor(openGame.team1_id / 2000):Math.floor(openGame.team1_external_id / 2000)}}/{{$root.conf.GmsPlatform?openGame.team1_id:openGame.team1_external_id}}.png" />
+                    <div class="team-form" ng-if="$root.conf.esportsGames.indexOf(openGame.sport.alias) === -1"><tshirt shorts="{{openGame.info.short1_color}}" shirt="{{openGame.info.shirt1_color}}"></tshirt></div>
                     <p><span>{{ openGame.team1_name ?  openGame.team1_name: '' }}</span></p>
                 </li>
                 <li class="score-total" ng-show="openGame.info.score1 !== undefined"><span><i ng-bind="openGame.info.score1"></i></span></li>
@@ -17,8 +17,8 @@
             </ul>
             <ul>
                 <li ng-style="{'border-left-color': '#'+ openGame.info.shirt2_color}" ng-class="{active: openGame.info.pass_team === 'team2'}">
-                    <img ng-if="conf.esportsGames.indexOf(openGame.sport.alias) !== -1" ng-src="{{conf.teamLogosPath}}e/m/{{conf.GmsPlatform?Math.floor(openGame.team2_id / 2000):Math.floor(openGame.team2_external_id / 2000)}}/{{conf.GmsPlatform? openGame.team2_id:openGame.team2_external_id}}.png" />
-                    <div class="team-form" ng-if="conf.esportsGames.indexOf(openGame.sport.alias) === -1"><tshirt shorts="{{openGame.info.short2_color}}" shirt="{{openGame.info.shirt2_color}}"></tshirt></div>
+                    <img ng-if="$root.conf.esportsGames.indexOf(openGame.sport.alias) !== -1" ng-src="{{$root.conf.teamLogosPath}}e/m/{{$root.conf.GmsPlatform?Math.floor(openGame.team2_id / 2000):Math.floor(openGame.team2_external_id / 2000)}}/{{$root.conf.GmsPlatform? openGame.team2_id:openGame.team2_external_id}}.png" />
+                    <div class="team-form" ng-if="$root.conf.esportsGames.indexOf(openGame.sport.alias) === -1"><tshirt shorts="{{openGame.info.short2_color}}" shirt="{{openGame.info.shirt2_color}}"></tshirt></div>
                     <p><span>{{ openGame.team2_name ?  openGame.team2_name: '' }}</span></p>
                 </li>
                 <li class="score-total" ng-show="openGame.info.score2 !== undefined"><span><i ng-bind="openGame.info.score2"></i></span></li>
@@ -31,14 +31,14 @@
         </div>
     </div>
     <!-- generic multiset games template -->
-    <div class="game-score-multiset" ng-if="openGame.show_type != 'OUTRIGHT' && (openGame.sport.alias !== 'HorseRacing' && liveGamesSoccerTemplate.indexOf(openGame.sport.alias) === -1 && conf.esportsGames.indexOf(openGame.sport.alias) == -1)">
-        <ul class="title" title="{{ conf.edition.enabled ? (('Edition'|translate) + ': ' + (openGame.start_ts|formatDate:'edition')) : '' }}" ng-click="broadcast('liveGame.headerClicked', openGame);$event.stopPropagation();">
+    <div class="game-score-multiset" ng-if="openGame.show_type != 'OUTRIGHT' && (openGame.sport.alias !== 'HorseRacing' && liveGamesSoccerTemplate.indexOf(openGame.sport.alias) === -1 && $root.conf.esportsGames.indexOf(openGame.sport.alias) == -1)">
+        <ul class="title" title="{{ $root.conf.edition.enabled ? (('Edition'|translate) + ': ' + (openGame.start_ts|formatDate:'edition')) : '' }}" ng-click="broadcast('liveGame.headerClicked', openGame);$event.stopPropagation();">
             <li>
                 <dl>
                     <dt>
                         <b class=" mini-icon-1 mini-icon-{{openGame.sport.id}} {{openGame.sport.alias}}"></b>
                         <span class="ellipsis-text" title="{{openGame.competition.name}}">
-                            <b ng-show="conf.showGameIds">№ {{openGame.game_number}}</b> {{openGame.region.name}} - {{openGame.competition.name}}
+                            <b ng-show="$root.conf.showGameIds">№ {{openGame.game_number}}</b> {{openGame.region.name}} - {{openGame.competition.name}}
                         </span>
                         <span class="game-time">{{getCurrentTime(openGame.info.current_game_time) | translate}}</span>
                     </dt>
@@ -150,7 +150,7 @@
         </p>
     </div>
 
-    <div class="current-game-info-line" ng-show="openGame.show_type != 'OUTRIGHT' && (liveGamesSoccerTemplate.indexOf(openGame.sport.alias) !== -1 || conf.esportsGames.indexOf(openGame.sport.alias) !== -1)">
+    <div class="current-game-info-line" ng-show="openGame.show_type != 'OUTRIGHT' && (liveGamesSoccerTemplate.indexOf(openGame.sport.alias) !== -1 || $root.conf.esportsGames.indexOf(openGame.sport.alias) !== -1)">
         <p>
             <span>{{ openGame.info.current_game_state|convertSetName:openGame.sport.alias|translate }} </span> <span ng-if="openGame.info.current_game_state !== 'notstarted' && openGame.info.current_game_state !== 'timeout'">{{ (openGame.info.current_game_time)[0] === '-'? ('will start in'|translate)+' '+ (openGame.info.current_game_time).substring(1): openGame.info.current_game_time }}</span>
         </p>

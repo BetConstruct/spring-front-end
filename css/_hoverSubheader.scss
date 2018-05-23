@@ -1,0 +1,64 @@
+.category-nav ul li:hover > a {
+  background: darken( desaturate( $header-nav-line-background, 1), 7);
+  color: set-color(darken( desaturate( $header-nav-line-background, 1), 7));
+}
+.sub-menu-view {
+  position: absolute;
+  top: 40px;
+  width: 190px;
+  left: -999em;
+  transition-delay: 200ms;
+  @media screen and (max-width: 1359px) { 
+    width: 200px;
+  }
+}
+.sub-menu-view > ul {
+  float: left;
+  width: auto;
+  margin: 0;
+  padding: 0 !important;
+  display: block;
+  width: 100%;
+  &:before, &:after {
+    display: none !important;
+  }
+}
+.sub-menu-view > ul:before,
+.sub-menu-view > ul:after {
+  display: none;
+}
+.sub-menu-view > ul > li {
+  float: left;
+  width: 100%;
+  min-width: 150px;
+  white-space: nowrap;
+  display: block;
+  background: darken( desaturate( $header-nav-line-background, 1), 7);
+  color: set-color(darken( desaturate( $header-nav-line-background, 1), 7));
+}
+.sub-menu-view > ul > li > a {
+  float: left;
+  width: 100%;
+  display: block;
+  max-width: inherit;
+  text-align: left;
+  box-sizing: border-box;
+  padding: 12px 8px 10px;
+  border-top: 1px solid lighten( desaturate( $header-nav-line-background, 25 ), 3 );
+  text-align: right;
+}
+.sub-menu-view > ul > li:first-child > a {
+  border: none;
+}
+.sub-menu-view > ul > li > a:hover {
+  background: darken( $header-nav-line-background, 12 );
+}
+.category-nav ul li:hover .sub-menu-view {
+  left: auto;
+  right: 0;
+  display: block;
+  animation: popup-bg-enter 600ms ease-in-out;
+}
+.body-wrapper .category-nav  ul li.new-top-nav .sub-menu-view a:before {
+  display: none;
+}

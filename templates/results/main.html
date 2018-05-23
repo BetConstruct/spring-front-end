@@ -1,4 +1,4 @@
-<ng-include ng-if="conf.results.version===1 && calculatedConfigs.sportEnabled" src="getTemplate('templates/results/classic.html')"></ng-include>
+<ng-include class="size-h-container" ng-if="conf.results.version===1 && calculatedConfigs.sportEnabled" src="::'templates/results/classic.html'|fixPath"></ng-include>
 <div class="block-size-visible-b classic-version-euro2016" ng-if="conf.results.version===2 && calculatedConfigs.sportEnabled">
-    <ng-include class="classic-view-wrapper-v3" src="getTemplate('templates/results/euro2016.html')"></ng-include>
+    <ng-include class="classic-view-wrapper-v3" src="::'templates/results/euro2016.html'|fixPath"></ng-include>
 </div>

@@ -11,7 +11,7 @@
                     <div class="select-holder">
                         <select required ng-model="accountVerificationData.selectedImageType" name="selectedImageType">
                             <option value="" trans>Not selected</option>
-                            <option ng-repeat="(key, value) in imageTypes track by key" value="{{value.value}}">{{::value.name|translate}}</option>
+                            <option ng-repeat="(key, value) in imageTypes track by key" value="{{key}}">{{::value|translate}}</option>
                         </select>
                     </div>
                 </label>
@@ -33,5 +33,34 @@
         </ul>
         <button ng-disabled="disablePassportVerificationSubmitButton" type="submit" title="{{'Please upload an image and select the type of your ID'|translate}}" trans>Verify</button>
     </form>
+    <div class="uploads-table" ng-if="!loadingProgress && documentImages">
+        <table>
+            <tr>
+                <td class="type-cell" trans>Document type</td>
+                <td trans>Upload date</td>
+                <td trans>Document name</td>
+                <td trans>Status</td>
+            </tr>
+            <tr ng-repeat="image in documentImages track by image.Id">
+                <td class="type-cell">
+                    <div class="upload-doc-type {{::image.ImageType}}">
+                        <strong>{{::image.ImageType | translate}}</strong>
+                    </div>
+                </td>
+                <td>{{::image.CreatedDate|formatDate}}</td>
+                <td>
+                    <span>{{::image.Name}}</span>
+                    <i class="cms-jcon-eye" ng-click="openImage(image)" title="{{'Click to open the file'|translate}}"></i>
+                    <a download="{{image.Name}}" ng-href="{{image.Src}}" title="{{'Click to download the file'|translate}}"><i class="cms-jcon-download-arrow"></i></a>
+                </td>
+                <td>
+                    <div class="uploaded-doc-status" ng-class="image.IsChecked ? 'approved' : 'rejected'">
+                        <span ng-bind="(image.IsChecked ? 'Approved' : 'Rejected')|translate"></span>
+                    </div>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div id="document-view"></div>
     <center><vbet-loader ng-show="loadingProgress"></vbet-loader></center>
 </div>

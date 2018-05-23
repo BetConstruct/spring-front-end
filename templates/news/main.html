@@ -93,7 +93,7 @@
                                     <ul>
                                         <li class="mini-facebook"><a ng-href="https://www.facebook.com/sharer/sharer.php?u={{selectedNews.permalink}}" target="_blank">facebook</a></li>
                                         <li class="mini-twitter">
-                                            <a ng-href="https://twitter.com/share?text={{selectedNews.titleRaw}}&url=1&via={{conf.twitterAccount}}&hashtags={{conf.twitterHashTag}},{{selectedNews.categoryTitle}}" target="_blank">Tweet</a>
+                                            <a ng-href="https://twitter.com/share?text={{selectedNews.titleRaw|uri}}&url=1&via={{conf.twitterAccount}}&hashtags={{conf.twitterHashTag}},{{selectedNews.categoryTitle}}" target="_blank">Tweet</a>
                                         </li>
                                         <li class="mini-google"><a ng-href="https://plus.google.com/share?url={{selectedNews.permalink}}" target="_blank">google+</a></li>
                                         <li class="mini-permalink"><a href="" ng-click="showPermaLink(selectedNews.permalink)">permalink</a></li>

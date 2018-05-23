@@ -80,7 +80,7 @@
                                             <li trans>Bonus</li>
                                             <li trans>Time to wager</li>
                                             <li trans>Wagering req</li>
-                                            <li ng-hide="conf.hideMinMaxColumn" trans>Min/Max Deposit</li>
+                                            <li ng-hide="conf.hideMinMaxColumn || (!bonus.min_amount && !bonus.max_amount)" trans>Min/Max Deposit</li>
                                         </ul>
                                         <ul ng-hide="bonus.bonus_type === backendBonusConstants.BonusType.FreeBet">
                                             <li><span ng-show="bonus.name">{{bonus.name}}</span></li>

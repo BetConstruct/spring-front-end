@@ -162,9 +162,9 @@
             </h5>
 
             <div>
-                <div ng-include="getTemplate(selectedPaymentSystem.customDepositTemplate)"
+                <div ng-include="selectedPaymentSystem.customDepositTemplate|fixPath"
                      ng-if="!env.paymentListShown && selectedPaymentSystem && !isProfilePartial && env.sliderContent === 'deposit'"></div>
-                <div ng-include="getTemplate(selectedPaymentSystem.customWithdrawTemplate)"
+                <div ng-include="selectedPaymentSystem.customWithdrawTemplate|fixPath"
                      ng-if="!env.paymentListShown && selectedPaymentSystem && !isProfilePartial && env.sliderContent === 'withdraw'"></div>
 
                 <div class="verfiy-account-balance-j"
@@ -279,7 +279,8 @@
                                            maxlength="{{field.maxlength}}" ng-required="field.required"
                                            prevent-input="{{field.restrict}}" allow-spaces="{{field.allowSpaces}}"
                                            ng-disabled="field.disabled" ui-mask="{{field.mask}}"
-                                           placeholder="{{field.placeholder}}"
+                                           ng-readonly="field.readonly"
+                                           placeholder="{{field.placeholder|translate}}"
                                     >
                                 </div>
                                 <div ng-switch-when="time">
@@ -422,7 +423,7 @@
                                 </div>
                                 <div class="text-payment-contain" ng-switch-when="html" ng-bind-html="field.html"></div>
                                 <div ng-switch-when="template">
-                                    <ng-include src="getTemplate(field.path)"></ng-include>
+                                    <ng-include src="field.path|fixPath"></ng-include>
                                 </div>
                             </label>
                         </div>
@@ -500,7 +501,7 @@
                                 <button class="button-confirm" ng-hide="selectedPaymentSystem.hideWithdrawButton"
                                         title="{{(!paymentAmount.withdraw || paymentAmount.withdraw >= paymentAmount.availableWithdrawAmount ? 'Please enter the correct amount' : withdrawForm.$invalid ? 'Please select a bet-shop from the list.'  : '')|translate}}"
                                         ng-click="withdraw(paymentFormData, paymentAmount.withdraw)"
-                                        ng-disabled="busy || (paymentForm.$invalid && !hideWithdrawAmount) "
+                                        ng-disabled="paymentForm.$invalid || busy || (paymentForm.$invalid && !hideWithdrawAmount) "
                                         >
                                         <span ng-bind="(selectedPaymentSystem.withdrawButtonCaption || 'Withdraw')|translate"></span>
                                         <vbet-loader ng-if="busy" class="small-progress"></vbet-loader>
@@ -546,7 +547,7 @@
                                         class="button-confirm"
                                         ng-if="env.sliderContent === 'deposit' && !selectedPaymentSystem.hideDepositButton"
                                         ng-click="deposit(paymentFormData, paymentAmount.deposit)"
-                                        ng-disabled="((!paymentAmount.deposit && selectedPaymentSystem.depositPrefilledAmount === undefined)|| busy) || (selectedPaymentSystem.name == 'card' && paymentFormData.pin_code === undefined) || userAge < conf.registration.minimumAllowedAge  || (selectedPaymentSystem.agreeTermsExists && !selectedPaymentSystem.agreeTerms)"
+                                        ng-disabled="paymentForm.$invalid || ((!paymentAmount.deposit && selectedPaymentSystem.depositPrefilledAmount === undefined)|| busy) || (selectedPaymentSystem.name == 'card' && paymentFormData.pin_code === undefined) || userAge < conf.registration.minimumAllowedAge  || (selectedPaymentSystem.agreeTermsExists && !selectedPaymentSystem.agreeTerms)"
                                         >
                                         <span ng-bind="(depositInProgress ? 'Start over' : ((selectedPaymentSystem.depositButtonCaption|translate) || 'Deposit'))|translate"></span>
                                         <vbet-loader ng-if="busy" class="small-progress"></vbet-loader>

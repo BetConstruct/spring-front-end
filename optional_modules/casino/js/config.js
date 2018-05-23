@@ -82,12 +82,14 @@ CASINO.constant('CConfig', {
             {
                 name: 'Status',
                 field: 'State',
+                okButton: true,
+                noRefresh: true,
                 filters: [
                     {name: 'All', all: true, active: false},
-                    {name: 'Upcoming', value: 3, active: true},
-                    {name: 'Live', value: 2, active: true},
-                    {name: 'Finished', value: 1, active: false},
-                    {name: 'Canceled', value: -1, active: false}
+                    {name: 'Upcoming', value: 3, active: true, stageList: 3},
+                    {name: 'Live', value: 2, active: true, stageList: 2},
+                    {name: 'Finished', value: 1, active: false, stageList: 1},
+                    {name: 'Canceled', value: -1, active: false, stageList: -1}
                 ]
             },
             {
@@ -281,5 +283,8 @@ CASINO.constant('CConfig', {
     },
     vrcasino: {
         id: "6490"
+    },
+    vrlivedealer: {
+        id: "8013"
     }
 });

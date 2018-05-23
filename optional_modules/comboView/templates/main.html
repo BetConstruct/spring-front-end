@@ -1,13 +1,13 @@
 <!--Alternative-sportsbook-wrapper-->
-<div class="alternative-sportsbook-wrapper-template" no-animate ng-controller="comboViewMainController" ng-init="setTitle('Sport')">
+<div class="alternative-sportsbook-wrapper-template" ng-controller="comboViewMainController" ng-init="setTitle('Sport')">
     <div ng-switch="mainView" class="optimal-contain-b-view">
         <div ng-switch-default class="optimal-contain-b">
             <!--Left column-->
-            <div class="left-column-view-contain" ng-include="getTemplate('optional_modules/comboView/templates/leftmenu.html')"></div>
+            <div class="left-column-view-contain" ng-include="'optional_modules/comboView/templates/leftmenu.html'|fixPath"></div>
             <!--Left column END-->
             <!-- System Calculator-->
             <div id="system-claculator-container" ng-if="$root.showSystemCalculator" draggable allow-other-mouse-events drag-from="calculator-draggable-header">
-                <ng-include src="getTemplate('templates/sport/classic/systemCalculator.html')"></ng-include>
+                <ng-include src="::'templates/sport/classic/systemCalculator.html'|fixPath"></ng-include>
             </div>
             <!--Period filter -->
             <div class="period-filter-container">
@@ -19,14 +19,14 @@
             </div>
             <!--Period filter END-->
             <!--Centre column-->
-            <div class="centre-column-view-contain" ng-include="getTemplate('optional_modules/comboView/templates/center.html')"></div>
+            <div class="centre-column-view-contain" ng-include="'optional_modules/comboView/templates/center.html'|fixPath"></div>
             <!--Centre column END-->
         </div>
 
         <div ng-switch-when="overview">
             <!--Overview-->
             <div ng-controller="overviewCtrl" 
-                ng-include="getTemplate('templates/sport/overview/overview.html')" 
+                ng-include="::'templates/sport/overview/overview.html'|fixPath"
                 class="live-overview-contanier-b" 
                 ng-init="initOverview(); $root.footerMovable = false;">
             </div>
@@ -36,11 +36,11 @@
 
     <!--Right column-->
     <div class="right-column-view-contain">
-        <ng-include class="include-viewSwitcher-j" src="getTemplate('templates/sport/viewswitcher.html')"></ng-include>
+        <ng-include class="include-viewSwitcher-j" src="::'templates/sport/viewswitcher.html'|fixPath"></ng-include>
         <div class="animation-control" ng-if="openGame.type === 1 && (openGame.has_animation || openGame.video_id)">
-            <ng-include src="getTemplate('templates/sport/classic/animation_video.html')"></ng-include>
+            <ng-include src="::'templates/sport/classic/animation_video.html'|fixPath"></ng-include>
         </div>
-	    <div class="list-bet-block" ng-if="$location.path() !== '/poolbetting/'" ng-include="getTemplate('templates/sport/betslip.html')"></div>
+	    <div class="list-bet-block" ng-if="$location.path() !== '/poolbetting/'" ng-include="::'templates/sport/betslip.html'|fixPath"></div>
     </div>
     <!--Right column END-->
 </div>

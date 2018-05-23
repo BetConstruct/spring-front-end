@@ -9,7 +9,7 @@
     </a>
     <ul ng-show="leftMenuState.favoriteTeam.expanded" class="favorite-team-group-j">
         <div class="favorite-nav favorite-team-change-form" ng-class="{'active': leftMenuState.favoriteTeamForm.expanded}">
-            <ng-include src="getTemplate('templates/sport/classic/leftmenu/favoriteTeamForm.html')"></ng-include>
+            <ng-include src="::'templates/sport/classic/leftmenu/favoriteTeamForm.html'|fixPath"></ng-include>
         </div>
     </ul>
 </li>

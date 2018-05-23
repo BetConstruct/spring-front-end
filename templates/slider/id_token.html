@@ -15,7 +15,7 @@
                                     <h2 ng-click="$root.env.sliderContent = 'login'; $event.stopPropagation()" trans>Cancel and use your login and password</h2>
                                 </div>
                             </div>
-                            <div ng-include="getTemplate('templates/slider/contact_support.html')"></div>
+                            <div ng-include="::'templates/slider/contact_support.html'|fixPath"></div>
                         </div>
                     </div>
                 </div>

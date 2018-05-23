@@ -3,20 +3,20 @@
         <div class="live-game-container no-select-j" ng-show="openGame.type == 1">
             <div class="game-content">
                 <div class="game-info game-{{openGame.sport.alias.toLowerCase()}}" ng-show="!openGameLoading">
-                    <button class="unpin-button" ng-class="{'active': env.isLiveGamePinned && !noClassicScroll}" ng-show="conf.enableLiveSectionPin && (openGame.sport.alias !== 'HorseRacing') && !(enlargedGame && openGame.id === enlargedGame.id) && conf.sportsLayout === 'euro2016'" ng-click="toggleLiveSectionPin()" trans="attr-only" title="Pin/Unpin"></button>
-                    <div class="sport-title" ng-click="broadcast('liveGame.headerClicked', openGame);$event.stopPropagation();" ng-if="liveGamesSoccerTemplate.indexOf(openGame.sport.alias) !== -1 || conf.esportsGames.indexOf(openGame.sport.alias) !== -1">
+                    <button class="unpin-button" ng-class="{'active': $root.env.isLiveGamePinned && !noClassicScroll}" ng-show="$root.conf.enableLiveSectionPin && (openGame.sport.alias !== 'HorseRacing') && !(enlargedGame && openGame.id === enlargedGame.id) && $root.conf.sportsLayout === 'euro2016'" ng-click="toggleLiveSectionPin()" trans="attr-only" title="Pin/Unpin"></button>
+                    <div class="sport-title" ng-click="broadcast('liveGame.headerClicked', openGame);$event.stopPropagation();" ng-if="liveGamesSoccerTemplate.indexOf(openGame.sport.alias) !== -1 || $root.conf.esportsGames.indexOf(openGame.sport.alias) !== -1">
                         <b class="mini-icon-1 mini-icon-{{openGame.sport.id}} {{openGame.sport.alias}}" title="{{openGame.sport.alias}}"></b>
                         <span class="ellipsis-text" title="{{openGame.competition.name}}">
-                        <b ng-show="conf.showGameIds">{{openGame.game_number}}</b> {{openGame.region.name}} - {{openGame.competition.name}}
+                        <b ng-show="$root.conf.showGameIds">{{openGame.game_number}}</b> {{openGame.region.name}} - {{openGame.competition.name}}
                     </span>
                         <span ng-if="openGame.sport.alias === 'HorseRacing'" title="{{ openGame.team2_name ?  openGame.team2_name: '' }}">{{ openGame.team2_name ?  openGame.team2_name: '' }} {{ openGame.start_ts| formatDate: "LT"}}</span>
                     </div>
                     <div class="live-score-include-holder">
-                        <ng-include src="'templates/directive/live-game-scores-info.html'" class="float-width"></ng-include>
+                        <ng-include src="::'templates/directive/live-game-scores-info.html'" class="float-width"></ng-include>
                         <div class="last-event-and-stats-toggle">
                             <ul>
                                 <li>
-                                    <div class="game-detailed-stats" ng-if="(liveGamesSoccerTemplate.indexOf(openGame.sport.alias) !== -1 || conf.esportsGames.indexOf(openGame.sport.alias) !== -1) && openGame.live_events">
+                                    <div class="game-detailed-stats" ng-if="(liveGamesSoccerTemplate.indexOf(openGame.sport.alias) !== -1 || $root.conf.esportsGames.indexOf(openGame.sport.alias) !== -1) && openGame.live_events">
                                         <div class="hover-sp items-{{openGame.live_events.length}}">
                                             <div class="football-gamer-name" ng-repeat="gameEvent in openGame.live_events|orderBy:'add_info_order':true">
                                                 <div ng-class="gameEvent.event_type+'-icon'" class="{{gameEvent.event_icon}}"></div>
@@ -39,7 +39,7 @@
                             </ul>
                         </div>
                     </div>
-                    <ng-include src="'templates/directive/live-game-scores-statistics.html'" class="float-width"></ng-include>
+                    <ng-include src="::'templates/directive/live-game-scores-statistics.html'" class="float-width"></ng-include>
                 </div>
             </div>
         </div>
@@ -51,7 +51,7 @@
         </p>
         <div class="game-additional-icons">
             <i class="statistics-icon-j"
-               ng-show="conf.enableH2HStat && openGame.is_stat_available"
+               ng-show="$root.conf.enableH2HStat && openGame.is_stat_available"
                ng-click="openStatistics(openGame);$event.stopPropagation();"
                statistics-on-hover
                stats-game ="{'game': openGame, 'competition': openGame.competition.name}"></i>

@@ -1,5 +1,5 @@
 $skin-second: true;
-@import '../../../css/skinConstruction';
+@import '../../../css/mixins'; @import 'functions/colors'; @import '../../../css/createSkin';
 .market-title-v3, .mini-title-box-gameview-v3:not(.active):not(:hover) {
   background: #f3f3f5;
 }

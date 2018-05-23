@@ -42,8 +42,8 @@
         <include-template class="betslip-include-v3" template-path="templates/sport/euro2016/right/betslip.html"></include-template>
         <!--Betslip END-->
         <!--Mini Games-->
-        <div class="mini-games" ng-if="conf.enableMiniGameUnderBetslip && $root.casinoEnabled" ng-include="getTemplate('optional_modules/casino/templates/specialgames/minigames.html')"></div>
+        <div class="mini-games" ng-if="conf.enableMiniGameUnderBetslip && $root.casinoEnabled" ng-include="'optional_modules/casino/templates/specialgames/minigames.html'|fixPath"></div>
         <!--Mini Games-->
-        <div class="right-banner-container" ng-if="conf.enableBannerUnderBetslip" ng-controller="cmsSportNewsCtrl" ng-include="getTemplate('templates/sport/classic/banners.html')"></div>
+        <div class="right-banner-container" ng-if="conf.enableBannerUnderBetslip" ng-controller="cmsSportNewsCtrl" ng-include="::'templates/sport/classic/banners.html'|fixPath"></div>
     </div>
 </div>

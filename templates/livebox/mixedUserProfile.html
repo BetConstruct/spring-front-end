@@ -10,9 +10,11 @@
                         <li ng-show="(conf.enableAccountVerification || conf.accountVerificationMessage)" ng-click="env.mixedSettingsPage = 'verifyaccount'" ng-class="{'active': env.mixedSettingsPage==='verifyaccount'}"><span  trans>Verify Account</span></li>
                         <li ng-show="conf.userTimeOut.enabled" ng-click="env.mixedSettingsPage='usertimeout'" ng-class="{'active': env.mixedSettingsPage==='usertimeout'}"><span trans>Time-Out</span></li>
                         <li ng-show="conf.selfExclusion.enabled" ng-click="env.mixedSettingsPage='selfexclusion'" ng-class="{'active': env.mixedSettingsPage==='selfexclusion'}"><span trans>Self-Exclusion</span></li>
+                        <li ng-show="conf.gamstop.enabled" ng-click="env.mixedSettingsPage='gamstop'" ng-class="{'active': env.mixedSettingsPage==='gamstop'}"><span trans>Gamstop</span></li>
                         <li ng-show="conf.realityCheck.enabled" ng-click="env.mixedSettingsPage='realitycheck'" ng-class="{'active': env.mixedSettingsPage==='realitycheck'}"><span trans>Reality Checks</span></li>
                         <li ng-show="conf.enableDepositLimits" ng-click="env.mixedSettingsPage='depositlimits'" ng-class="{'active': env.mixedSettingsPage==='depositlimits'}"><span trans>Deposit Limits</span></li>
                         <li ng-show="conf.betLimits.enabled && !(conf.betLimits.hideSportsbookLimits && conf.betLimits.hideCasinoLimits)" ng-click="env.mixedSettingsPage='betlimits'" ng-class="{'active': env.mixedSettingsPage==='betlimits'}"><span trans>Bet Limits</span></li>
+                        <li ng-show="$root.conf.enableCampaign" ng-click="env.mixedSettingsPage='campaign'" ng-class="{'active': env.mixedSettingsPage==='campaign'}"><span trans>Campaign</span></li>
                     </ul>
                 </div>
             </div>
@@ -20,12 +22,12 @@
 
         <div class="profile-tab-contain-b">
 
-            <div ng-show="env.mixedSettingsPage==='verifyaccount' && (conf.enableAccountVerification || conf.accountVerificationMessage)">
-                <ng-include src="getTemplate('templates/livebox/mixedVerifyAccount.html')"></ng-include>
+            <div ng-if="env.mixedSettingsPage==='verifyaccount' && (conf.enableAccountVerification || conf.accountVerificationMessage)">
+                <ng-include src="::'templates/livebox/mixedVerifyAccount.html'|fixPath"></ng-include>
             </div>
 
             <div ng-if="env.mixedSettingsPage==='settingsV2'">
-                <ng-include src="getTemplate('templates/livebox/mixedUserProfileV2.html')"></ng-include>
+                <ng-include src="::'templates/livebox/mixedUserProfileV2.html'|fixPath"></ng-include>
             </div>
 
 
@@ -287,11 +289,11 @@
                                     </div>
                                     <div class="active-field">
                                         <label class="custom-radio">
-                                            <input type="radio" ng-model="details.sex" name="gender" value="M">
+                                            <input type="radio" ng-model="details.gender" name="gender" value="M">
                                             <span trans>Male</span>
                                         </label>
                                         <label class="custom-radio">
-                                            <input type="radio" ng-model="details.sex" name="gender" value="F">
+                                            <input type="radio" ng-model="details.gender" name="gender" value="F">
                                             <span trans>Female</span>
                                         </label>
                                     </div>
@@ -577,13 +579,15 @@
                 </div>
                 <!--Change Password END-->
             </div>
-            <ng-include src="getTemplate('templates/livebox/mixedDepositLimits.html')"></ng-include>
-            <ng-include src="getTemplate('templates/livebox/mixedBetLimits.html')"></ng-include>
+            <ng-include src="::'templates/livebox/mixedDepositLimits.html'|fixPath"></ng-include>
+            <ng-include src="::'templates/livebox/mixedBetLimits.html'|fixPath"></ng-include>
 
-            <ng-include ng-if="env.mixedSettingsPage==='usertimeout'" src="getTemplate('templates/livebox/mixedUserTimeOut.html')"></ng-include>
-            <ng-include ng-if="env.mixedSettingsPage==='selfexclusion'" src="getTemplate('templates/livebox/mixedSelfExclusion.html')"></ng-include>
-            <ng-include ng-if="env.mixedSettingsPage==='realitycheck'" src="getTemplate('templates/livebox/mixedRealitycheck.html')"></ng-include>
-            <ng-include ng-if="env.mixedSettingsPage==='promoCode'" src="getTemplate('templates/livebox/mixedPromoCode.html')"></ng-include>
+            <ng-include ng-if="env.mixedSettingsPage==='usertimeout'" src="::'templates/livebox/mixedUserTimeOut.html'|fixPath"></ng-include>
+            <ng-include ng-if="env.mixedSettingsPage==='selfexclusion'" src="::'templates/livebox/mixedSelfExclusion.html'|fixPath"></ng-include>
+            <ng-include ng-if="env.mixedSettingsPage==='gamstop'" src="::'templates/livebox/gamstop.html'|fixPath"></ng-include>
+            <ng-include ng-if="env.mixedSettingsPage==='realitycheck'" src="::'templates/livebox/mixedRealitycheck.html'|fixPath"></ng-include>
+            <ng-include ng-if="env.mixedSettingsPage==='promoCode'" src="::'templates/livebox/mixedPromoCode.html'|fixPath"></ng-include>
+            <ng-include ng-if="env.mixedSettingsPage==='campaign'" src="::'templates/livebox/campaign.html'|fixPath"></ng-include>
 
             <div ng-if="env.friendReferral.enabled && env.mixedSettingsPage ==='friendReferral'" class="friend-referral" ng-init="initFriendReferral()">
                 <h3 trans>Friend Referral</h3>

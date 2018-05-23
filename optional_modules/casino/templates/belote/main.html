@@ -1,33 +1,27 @@
-<div ng-controller="cmsPagesCtrl" ng-init="setTitle('Belote');" get-casino-game="547">
-    <div ng-if="!globalConfig.belote.redirectOnGame">
-        <div ng-show="!showNestedFrame">
-            <div class="skillgame-landing-j belote-j"  ng-init="loadPage('belote.mainPageSlugs', true)">
-                <vbet-loader ng-show="!pages"></vbet-loader>
-                <div ng-if="pages">
-                    <div class="intro-section-j" ng-init="initProductBanners('belote')">
-                        <casino-game-slider product-slides="productSlides" page-name = "Belote"></casino-game-slider>
-                        <div class="skillgame-landing-guide button-group-j">
-                            <ul>
-                                <li>
-                                    <button ng-click="openNestedFrame()" trans>Play now</button>
-                                </li>
-                            </ul>
+<div ng-controller="cmsPagesCtrl" ng-init="setTitle('Belote');" get-casino-game="547" class="float-width">
+    <div ng-if="!globalConfig.belote.redirectOnGame" class="float-width">
+        <div class="skillgame-landing-j" ng-show="!showNestedFrame" ng-init="loadPage('belote.mainPageSlugs', true)">
+            <vbet-loader ng-show="!pages"></vbet-loader>
+            <div ng-if="pages" class="float-width">
+                <div class="intro-section-j" ng-init="initProductBanners('belote')">
+                    <casino-game-slider product-slides="productSlides" page-name = "Belote"></casino-game-slider>
+                    <div class="slider-landing-overlay">
+                        <div class="guide">
+                            <div class="button-group-j">
+                                <a ng-click="openNestedFrame()" trans>Play now</a>
+                            </div>
                         </div>
                     </div>
-
-                    <promotion-news template="slider" slug="belote" hide-dates="true" main-class="block-meny-news promo" use-custom-base-host="true" ng-if="!showDownloadLinks" share-path="belote"></promotion-news>
-
-                    <div class="game-torunament-section-j">
-                        <div ng-init="tounamentTable = getPageBySlug(pages,'belote-table')" ng-bind-html="tounamentTable.content"></div>
-                    </div>
+                </div>
+                <promotion-news template="slider" slug="belote" hide-dates="true" main-class="block-meny-news promo" use-custom-base-host="true" ng-if="!showDownloadLinks" share-path="belote"></promotion-news>
+                <div class="game-torunament-section-j belote-j">
+                    <div ng-init="tounamentTable = getPageBySlug(pages,'belote-table')" ng-bind-html="tounamentTable.content"></div>
                 </div>
             </div>
         </div>
-
-        <div ng-if="showNestedFrame && game" ng-controller="casinoSpecialGamesCtrl" ng-init="loadGame('belote');"  class="big-games-overflow" ng-include="getTemplate('optional_modules/casino/templates/specialgames/skillgame.html')"></div>
+        <div ng-if="showNestedFrame && game" ng-controller="casinoSpecialGamesCtrl" ng-init="loadGame('belote');"  class="big-games-overflow" ng-include="'optional_modules/casino/templates/specialgames/skillgame.html'|fixPath"></div>
     </div>
-
-    <div ng-if="globalConfig.belote.redirectOnGame && game" class="belote-with-fullscreen" ng-controller="casinoSpecialGamesCtrl" ng-init="loadGame('belote')" ng-include="getTemplate('optional_modules/casino/templates/specialgames/main.html')"></div>
+    <div ng-if="globalConfig.belote.redirectOnGame && game" class="belote-with-fullscreen" ng-controller="casinoSpecialGamesCtrl" ng-init="loadGame('belote')" ng-include="'optional_modules/casino/templates/specialgames/main.html'|fixPath"></div>
 </div>
 
 

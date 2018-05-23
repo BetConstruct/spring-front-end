@@ -44,11 +44,11 @@
                            <li ng-repeat="item in groups track by $index"
                              ng-init="data = item.Item"
                              ng-show="matchOrder === 0"
-                             ng-include="getTemplate('templates/sport/championship/euro2016/matchTable.html')">
+                             ng-include="::'templates/sport/championship/euro2016/matchTable.html'|fixPath">
                         </li>
                         <li ng-repeat="data in dateOrderedMatches track by $index"
                              ng-show="matchOrder === 1"
-                             ng-include="getTemplate('templates/sport/championship/euro2016/matchTable.html')">
+                             ng-include="::'templates/sport/championship/euro2016/matchTable.html'|fixPath">
                         </li>
                     </ul>
                 </div>
@@ -76,13 +76,13 @@
                 </ul>
             </div>
             <div class="playoff-list-view-wrapper"
-                 ng-include="getTemplate('templates/sport/championship/euro2016/playoff.html')">
+                 ng-include="::'templates/sport/championship/euro2016/playoff.html'|fixPath">
             </div>
         </div>
 
         <div class="groups-wrapper-view-b" ng-show="currentTab === 3">
             <div class="playoff-list-view-wrapper"
-                 ng-include="getTemplate('templates/sport/championship/euro2016/teamsGroup.html')">
+                 ng-include="::'templates/sport/championship/euro2016/teamsGroup.html'|fixPath">
             </div>
         </div>
     </div>

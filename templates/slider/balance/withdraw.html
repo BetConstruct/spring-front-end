@@ -12,7 +12,7 @@
             <li ng-class="{'active': withdrawTab == 'withdraw' }" ng-click="withdrawTab = 'withdraw'" trans>Withdraw</li>
             <li ng-class="{'active': withdrawTab == 'status' }" prevent-fast-click="1.5" ng-click="withdrawTab = 'status'" trans>Status</li>
         </ul>
-        <div class="form-contain deposit withdraw status" ng-if="withdrawTab == 'status'" ng-include="getTemplate('templates/slider/balance/withdraw_status.html')"></div>
+        <div class="form-contain deposit withdraw status" ng-if="withdrawTab == 'status'" ng-include="::'templates/slider/balance/withdraw_status.html'|fixPath"></div>
 
         <div class="form-contain deposit withdraw" ng-show="withdrawTab == 'withdraw'">
             <h4> <span trans>Withdraw from main wallet</span> <br>
@@ -30,7 +30,7 @@
             <div ng-if="selectedPaymentSystem.withdrawIframe">
                 <iframe class="payment-iframe" ng-src="{{selectedPaymentSystem.withdrawIframe}}"></iframe>
             </div>
-            <div ng-if="selectedPaymentSystem.customWithdrawTemplate" ng-include="getTemplate(selectedPaymentSystem.customWithdrawTemplate)"></div>
+            <div ng-if="selectedPaymentSystem.customWithdrawTemplate" ng-include="selectedPaymentSystem.customWithdrawTemplate|fixPath"></div>
             <form ng-model="withdrawFormData" name="withdrawForm" ng-show="withdrawReady && !selectedPaymentSystem.customWithdrawTemplate">
                 <div class="form-sign-in {{selectedPaymentSystem.name}}-left" ng-class="{'single-column':selectedPaymentSystem.onlyInfoTextOnWithdraw || (!selectedPaymentSystem.withdrawFormFields.length && !selectedPaymentSystem.hasBetShops && !selectedPaymentSystem.isTransferToLinkedService)}">
                     <div class="text-payment-contain">
@@ -119,7 +119,7 @@
                         <div class="text-payment-contain" ng-switch-when="html" ng-bind-html="field.html">
                         </div>
                         <div ng-switch-when="template">
-                            <ng-include src="getTemplate(field.path)"></ng-include>
+                            <ng-include src="field.path|fixPath"></ng-include>
                         </div>
                         <div ng-switch-when="checkbox">
                              <label class="no-select-j" ng-if="selectedPaymentSystem.agreeTermsText">

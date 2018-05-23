@@ -8,7 +8,7 @@
             'animate-star-even': $first && openGame.sport.favouriteMarkets.length % 2 == 0,
             'to-dropdown': $index > ($root.env.live ? 5 : 3), 'column-3':  ($root.env.live ? 5 : 3) == 3}"
             ng-click="selectMarketGroup(group.id)" data-count="{{ group.count }}">
-            <span><i><b>{{ group.name|translate }}</b></i> <i ng-show="group.count !== undefined">({{ group.count }})</i></span></li>
+            <span><i>{{ group.name|translate }}</i> <i ng-show="group.count !== undefined">({{ group.count }})</i></span></li>
     </ul>
 </div>
 
@@ -34,19 +34,14 @@
                     <div class="arrow-view-v3"  ng-click="toggleGroupedMarket(groupedMarkets[0].name)"></div>
                 </div>
             </div>
-            <ul ng-repeat="market in groupedMarkets|orderBy: 'order' track by market.id" class="l-b column-{{market.col_count || 1}}" ng-class="{'default': market.col_count > 5}">
-                <!--<li class="market-each-way" ng-show="conf.showEachWay && (market.ew_coeff > 1)">
-                    <div><span>Each Way:</span>{{'1/'+ market.ew_coeff}}&nbsp;{{eachWayPlace(market.ew_place)}}</div>
-                </li>-->
-                <li class="s-box" ng-repeat="event in market.events|orderBy:(market.display_key == 'OUTRIGHT' ? 'price' : 'order') track by event.id" ng-click="bet(event, market, openGame)" ng-mouseover="($location.path() !='/multiview/') && displayEventLimit(event, openGame, false, market)" ng-mouseleave="($location.path() !='/multiview/') && cancelDisplayEventLimit(event)" ng-class="{'pointer-events-none': event.is_empty}">
-                    <div class="single-events-b-v3" title="{{event.name}} {{ displayBase(event, market)}}" ng-class="{'pointer-events-none': event.is_empty, 'active': isEventInBetSlip(event), 'blocked': ((event.price | oddConvert:'decimal') == 1 || openGame.is_blocked)}">
-                        <div class="max-bet-tooltip-v3" ng-show="$root.env.authorized && event.maxBet !== undefined" ng-class="{'maxbet-enabled': $root.env.authorized}">
-                            <p>Max: <b ng-bind="conf.onlyDecimalStakeAmount ? Math.floor(event.maxBet) : event.maxBet"></b> {{$root.profile.currency_name|currency }}</p>
-                        </div>
-                        <b class="p-v" ng-show="(event.price | oddConvert:'decimal') != 1 && !openGame.is_blocked" ng-class="{'factor-top': event.price_change > 0, 'factor-bottom': event.price_change < 0}">{{event.price|oddConvert:$root.env.oddFormat:null:market.display_key}}</b>
+            <div ng-repeat="market in groupedMarkets|orderBy: 'order' track by market.id" class="l-b column-{{market.col_count || 1}}" ng-class="{'default': market.col_count > 5}">
+                <div class="single-events-b-v3"  ng-repeat="event in market.events|orderBy:(market.display_key == 'OUTRIGHT' ? 'price' : 'order') track by event.id" ng-click="bet(event, market, openGame)" title="{{event.name}} {{ displayBase(event, market)}}" ng-class="{'pointer-events-none': event.is_empty, 'active': isEventInBetSlip(event), 'blocked': ((event.price | oddConvert:'decimal') == 1 || openGame.is_blocked)}" ng-mouseover="($location.path() !='/multiview/') && displayEventLimit(event, openGame, false, market)" ng-mouseleave="($location.path() !='/multiview/') && cancelDisplayEventLimit(event)">
+                    <div class="max-bet-tooltip-v3" ng-show="$root.env.authorized && event.maxBet !== undefined" ng-class="{'maxbet-enabled': $root.env.authorized}">
+                        <p>Max: <b ng-bind="conf.onlyDecimalStakeAmount ? Math.floor(event.maxBet) : event.maxBet"></b> {{$root.profile.currency_name|currency }}</p>
                     </div>
-                </li>
-            </ul>
+                    <b class="p-v" ng-show="(event.price | oddConvert:'decimal') != 1 && !openGame.is_blocked" ng-class="{'factor-top': event.price_change > 0, 'factor-bottom': event.price_change < 0}">{{event.price|oddConvert:$root.env.oddFormat:null:market.display_key}}</b>
+                </div>
+            </div>
         </div>
     </div>
     <!--End Of Left Part Markets-->
@@ -71,19 +66,14 @@
                     <div class="arrow-view-v3"  ng-click="toggleGroupedMarket(groupedMarkets[0].name)"></div>
                 </div>
             </div>
-            <ul ng-repeat="market in groupedMarkets|orderBy: 'order' track by market.id" class="l-b column-{{market.col_count || 1}}" ng-class="{'default': market.col_count > 5}">
-                    <!--<li class="market-each-way" ng-show="conf.showEachWay && (market.ew_coeff > 1)">
-                        <div><span>Each Way:</span>{{'1/'+ market.ew_coeff}}&nbsp;{{eachWayPlace(market.ew_place)}}</div>
-                    </li>-->
-                    <li class="s-box" ng-repeat="event in market.events|orderBy:'order' track by $index" ng-click="!event.dummy && bet(event, market, openGame)" ng-mouseover="($location.path() !='/multiview/') && displayEventLimit(event, openGame, false, market)" ng-mouseleave="($location.path() !='/multiview/') && cancelDisplayEventLimit(event)" ng-class="{'pointer-events-none': event.is_empty}">
-                        <div class="single-events-b-v3"  title="{{event.name}} {{ displayBase(event, market)}}" ng-class="{'pointer-events-none': event.is_empty, 'active': isEventInBetSlip(event), 'blocked': ((event.price | oddConvert:'decimal') == 1 || openGame.is_blocked)}">
-                            <div class="max-bet-tooltip-v3" ng-show="$root.env.authorized && event.maxBet !== undefined" ng-class="{'maxbet-enabled': $root.env.authorized}">
-                                <p>Max:<b ng-bind="conf.onlyDecimalStakeAmount ? Math.floor(event.maxBet) : event.maxBet"></b> {{$root.profile.currency_name|currency }}</p>
-                            </div>
-                            <b class="p-v" ng-show="(event.price | oddConvert:'decimal') != 1 && !openGame.is_blocked" ng-class="{'factor-top': event.price_change > 0, 'factor-bottom': event.price_change < 0}">{{event.price|oddConvert:$root.env.oddFormat:null:market.display_key}}</b>
-                        </div>
-                    </li>
-                </ul>
+            <div ng-repeat="market in groupedMarkets|orderBy: 'order' track by market.id" class="l-b column-{{market.col_count || 1}}" ng-class="{'default': market.col_count > 5}">
+               <div class="single-events-b-v3" ng-repeat="event in market.events|orderBy:'order' track by $index" ng-click="!event.dummy && bet(event, market, openGame)" ng-mouseover="($location.path() !='/multiview/') && displayEventLimit(event, openGame, false, market)" ng-mouseleave="($location.path() !='/multiview/') && cancelDisplayEventLimit(event)"  title="{{event.name}} {{ displayBase(event, market)}}" ng-class="{'pointer-events-none': event.is_empty, 'active': isEventInBetSlip(event), 'blocked': ((event.price | oddConvert:'decimal') == 1 || openGame.is_blocked)}">
+                   <div class="max-bet-tooltip-v3" ng-show="$root.env.authorized && event.maxBet !== undefined" ng-class="{'maxbet-enabled': $root.env.authorized}">
+                      <p>Max: <b ng-bind="conf.onlyDecimalStakeAmount ? Math.floor(event.maxBet) : event.maxBet"></b> {{$root.profile.currency_name|currency }}</p>
+                   </div>
+                   <b class="p-v" ng-show="(event.price | oddConvert:'decimal') != 1 && !openGame.is_blocked" ng-class="{'factor-top': event.price_change > 0, 'factor-bottom': event.price_change < 0}">{{event.price|oddConvert:$root.env.oddFormat:null:market.display_key}}</b>
+                </div>
+            </div>
         </div>
     </div>
     <!--End Of Right Part Markets-->

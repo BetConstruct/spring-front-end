@@ -1,20 +1,28 @@
-<div class="intro-slider-j" no-animate="disable">
-    <div ng-class="{'pag-j': !conf.sliderArrows, 'pag-arrows-j': conf.sliderArrows}">
-        <ul class="skillgame-landing-guide" ng-mouseover="rotationPaused = true" ng-mouseleave="rotationPaused = false">
-            <li ng-click="selectSlide(selectedIndex - 1)" ng-show="conf.sliderArrows && productSlides.length > 1"></li>
-            <li ng-click="selectSlide(selectedIndex + 1)" ng-show="conf.sliderArrows && productSlides.length > 1"></li>
-            <li ng-class="{'active': $index == selectedIndex}" ng-repeat="slide in productSlides" ng-click="selectSlide($index)" ng-show="!conf.sliderArrows && productSlides.length > 1"></li>
-        </ul>
+<div class="hp-slider-17">
+    <div class="hp-slide-17" no-animate ng-repeat="slide in productSlides  track by $index" ng-class="{'active': $index === selectedIndex}">
+        <a ng-href="{{::slide.url}}" target="{{:: slide.custom_fields.target[0] || '_self'}}" ng-class="{'pointer-events-none': !slide.url}"  ng-click="openUrl(slide.url)">
+            <img ng-src="{{slide.thumbnail_images.full.url}}"/>
+            <div class="slider-landing-overlay">
+                <div class="guide">
+                    <h2>{{slide.title}}</h2>
+                    <div class="float-width">
+                        <p class="primary-info-slide" ng-bind-html="slide.content|html:'p'"></p>
+                    </div>
+                </div>
+            </div>
+        </a>
     </div>
-    <div class="intro-s-j" ng-repeat="slide in productSlides" ng-show="$index === selectedIndex" ng-class="{'active': $index === selectedIndex}">
-        <div class="intro-s-j-slider-contain" ng-style="{'background-image': 'url({{slide.thumbnail_images.full.url}})'}">
-            <a class="clickable-slider" ng-href="{{::slide.url}}" target="{{:: slide.custom_fields.target[0] || '_self'}}" ng-show="slide.url"  ng-click="openUrl(slide.url)"></a>
-            <div class="skillgame-landing-guide">
-                <h1 ng-if="pageName + ' label'|translate:null:true">{{pageName + ' label' | translate}}</h1>
-                <h1 ng-if="!(pageName + ' label'|translate:null:true)">{{pageName | translate}}</h1>
-                <h2>{{slide.title}}</h2>
-                <div class="primary-j">
-                    <p ng-bind-html="slide.content|html:'p'"></p>
+    <div class="slider-landing-overlay">
+        <div class="guide">
+            <h1 class="{{pageName}}-icon" ng-if="pageName && pageName + ' label'|translate:null:true">{{pageName + ' label' | translate}}</h1>
+            <h1 class="{{pageName}}-icon" ng-if="pageName && !(pageName + ' label'|translate:null:true)">{{pageName | translate}}</h1>
+            <div class="hp-slider-pagination" ng-mouseover="rotationPaused = true" ng-mouseleave="rotationPaused = false" ng-show="productSlides.length > 1">
+                <div class="display-float" ng-if="!$root.conf.sliderArrows">
+                    <small ng-class="{'active': $index == selectedIndex}" ng-repeat="slide in productSlides track by $index" ng-click="selectSlide($index)"></small>
+                </div>
+                <div class="display-float" ng-if="$root.conf.sliderArrows">
+                    <button ng-click="selectSlide(selectedIndex - 1)"></button>
+                    <button ng-click="selectSlide(selectedIndex + 1)"></button>
                 </div>
             </div>
         </div>

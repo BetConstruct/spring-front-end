@@ -16,20 +16,17 @@
                     <!-- defoult 3 columns ---------- or add class="column-2" 2 columns ---- class="column-1" one column-->
                     <li ng-repeat="game in featuredGamesGroups[multiSlideIndex].games track by game.id">
                         <div class="date-championship-logo">
-                            <p ng-style="{'background-image': 'url({{conf.teamLogosPath}}c/b/{{Math.floor(game.import_id / 2000)}}/{{game.import_id}}.png)'}">
+                            <p ng-style="{'background-image': $root.conf.teamDefaultLogo ? 'url(images/team-logo-default.png)' : 'url({{$root.conf.teamLogosPath}}c/b/{{Math.floor(game.import_id / 2000)}}/{{game.import_id}}.png)'}">
                                 {{ game.start_ts|formatDate:'full':null:env.timeFormat }}
                             </p>
                         </div>
-                        <div
-                                no-animate="disable"
-                                class="game-full-information-w game-bg-{{ game.sport.alias }}"
-                                ng-init="bgImage = featureGamesBackgrounds[game.sport.alias].image || featureGamesBackgrounds['Default'].image || (backgroundsCompetitionsMaps[game.competition.id] && conf.featuredGames.backgroundsCompetitionsPath + backgroundsCompetitionsMaps[game.competition.id]) || (backgroundsCompetitionsMaps['default'] && conf.featuredGames.backgroundsCompetitionsPath + backgroundsCompetitionsMaps['default'])"
-                                style="{{(bgImage?'background-image: url('+bgImage+')':'')}}"
-                        >
+                        <div no-animate="disable" class="game-full-information-w game-bg-{{ game.sport.alias }}"
+                             ng-init="bgImage = featureGamesBackgrounds[game.sport.alias].image || featureGamesBackgrounds['Default'].image || (backgroundsCompetitionsMaps[game.competition.id] && $root.conf.featuredGames.backgroundsCompetitionsPath + backgroundsCompetitionsMaps[game.competition.id]) || (backgroundsCompetitionsMaps['default'] && $root.conf.featuredGames.backgroundsCompetitionsPath + backgroundsCompetitionsMaps['default'])"
+                             style="{{(bgImage?'background-image: url('+bgImage+')':'')}}">
                             <div class="team-names-wrapper-b">
                                 <ul>
                                     <li>
-                                        <p ng-style="{'background-image': 'url({{conf.teamLogosPath}}e/s/{{Math.floor(game.team1_id / 2000)}}/{{game.team1_id}}.png)'}">
+                                        <p ng-style="{'background-image': $root.conf.teamDefaultLogo ? 'url(images/team-logo-default.png)' : 'url({{$root.conf.teamLogosPath}}e/s/{{Math.floor(game.team1_id / 2000)}}/{{game.team1_id}}.png)'}">
                                             <b>{{ game.team1_name }}</b>
                                         </p>
                                         <span ng-if="game.events.P1.price" ng-class="{'factor-top': game.events.P1.price_change > 0, 'factor-bottom': game.events.P1.price_change < 0}">
@@ -37,7 +34,7 @@
                                         </span>
                                     </li>
                                     <li>
-                                        <p ng-style="{'background-image': 'url({{conf.teamLogosPath}}e/s/{{Math.floor(game.team2_id / 2000)}}/{{game.team2_id}}.png)'}">
+                                        <p ng-style="{'background-image': $root.conf.teamDefaultLogo ? 'url(images/team-logo-default.png)' : 'url({{$root.conf.teamLogosPath}}e/s/{{Math.floor(game.team2_id / 2000)}}/{{game.team2_id}}.png)'}">
                                             <b>{{ game.team2_name }}</b>
                                         </p>
                                         <span ng-if="game.events.P2.price" ng-class="{'factor-top': game.events.P2.price_change > 0, 'factor-bottom': game.events.P2.price_change < 0}">

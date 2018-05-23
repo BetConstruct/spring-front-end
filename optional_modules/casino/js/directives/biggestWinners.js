@@ -6,7 +6,7 @@
  *
  * @description Makes gets and updates list of biggest winners of casino
  */
-CASINO.directive('casinoBiggestWinners', ['$rootScope', '$location', '$interval', 'CConfig', 'Zergling', 'Utils', 'casinoData', 'Geoip', 'Config', function ($rootScope, $location, $interval, CConfig, Zergling, Utils, casinoData, Geoip, Config) {
+CASINO.directive('casinoBiggestWinners', ['$rootScope', '$location', '$interval', 'CConfig', 'Zergling', 'Utils', 'casinoData', 'Geoip', function ($rootScope, $location, $interval, CConfig, Zergling, Utils, casinoData, Geoip) {
     'use strict';
     return {
         restrict: 'E',
@@ -24,8 +24,6 @@ CASINO.directive('casinoBiggestWinners', ['$rootScope', '$location', '$interval'
             scope.imagePath = CConfig.cUrlPrefix + CConfig.winnersIconsUrl;
             scope.biggestWinners = CConfig.main.biggestWinners;
             scope.externalIds = {};
-            scope.conf = Config.main;
-
             /**
              * @ngdoc method
              * @name changeTab
@@ -114,7 +112,7 @@ CASINO.directive('casinoBiggestWinners', ['$rootScope', '$location', '$interval'
                 if ($location.$$path === pagePath) {
                     $rootScope.$broadcast(page + '.openGame', game, gameType);
                 } else {
-                    var unregisterRouteChangeSuccess =  $rootScope.$on('$routeChangeSuccess', function () {
+                    var unregisterRouteChangeSuccess =  scope.$on('$routeChangeSuccess', function () {
 
                         if (!$location.$$replace) {
                             $rootScope.$broadcast(page + '.openGame', game, gameType);
@@ -149,6 +147,7 @@ CASINO.directive('casinoBiggestWinners', ['$rootScope', '$location', '$interval'
              */
             scope.$on('$destroy', function () {
                 $interval.cancel(updateInterval);
+                updateInterval = undefined;
             });
         }
     };

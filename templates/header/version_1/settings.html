@@ -1,6 +1,6 @@
 <div class="contain-all-settings">
     <div class="settings">
-        <ng-include class="notifications-fix-on-creload-j" src="getTemplate('templates/header/version_' + conf.header.version + '/notifications.html')"></ng-include>
+        <ng-include class="notifications-fix-on-creload-j" src="::'templates/header/version_' + conf.header.version + '/notifications.html'|fixPath"></ng-include>
 
         <div ng-if="(conf.header.enableSettings.authorized && env.authorized) || (conf.header.enableSettings.notAuthorized && !env.authorized)" class="settings-button" ng-class="{'open': showSettingsDropDown}" ng-click="showSettingsDropDown=!showSettingsDropDown" hide-on-click state-flag-var="showSettingsDropDown">
             <span class="set-icon" title="Settings" trans></span>
@@ -8,7 +8,7 @@
                 <div class="arrow-sport"></div>
                 <ul>
                     <div ng-show="isInSports()">
-                        <div ng-include="getTemplate('templates/header/oddformatswitcher.html');"></div>
+                        <div ng-include="::'templates/header/oddformatswitcher.html'|fixPath;"></div>
                         <li class="title-sep"><span trans>Event sounds:</span></li>
                         <li ng-click="setSound(0.75)" ng-class="{'active-format': env.sound > 0}" trans>On</li>
                         <li ng-click="setSound(0)" ng-class="{'active-format': env.sound === 0}" trans>Off</li>
@@ -23,7 +23,7 @@
                         <li ng-click="setTimeFormat(env.longTimeFormats.HALF)" ng-class="{'active-format': env.timeFormat === env.longTimeFormats.HALF}" trans>12 hours</li>
                         <li ng-click="setTimeFormat(env.longTimeFormats.FULL)" ng-class="{'active-format': env.timeFormat === env.longTimeFormats.FULL}" trans>24 hours</li>
                     </div>
-                    <ng-include src="getTemplate('templates/header/layoutswitcher.html')"></ng-include>
+                    <ng-include src="::'templates/header/layoutswitcher.html'|fixPath"></ng-include>
                     <div ng-show="conf.themes.length">
                         <li class="title-sep"><span trans>Choose color scheme:</span></li>
                         <li ng-repeat="theme in conf.themes" ng-click="setTheme(theme)" ng-bind="theme.name" ng-class="{'active-format': $root.theme === theme}"></li>
@@ -48,7 +48,7 @@
         </div>
     </div>
 
-    <ng-include src="getTemplate('templates/header/version_' + conf.header.version + '/livechat.html')"></ng-include>
+    <ng-include src="::'templates/header/version_' + conf.header.version + '/livechat.html'|fixPath"></ng-include>
 
     <div title="FAQ" trans class="help-b faq" ng-click="openFaq()" ng-if="conf.header.haveFaq">FAQ</div>
 

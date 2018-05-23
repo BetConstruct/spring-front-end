@@ -1,10 +1,10 @@
 <div ng-controller="casinoTournamentsCtrl" watch-resize middle-screen-mode="true">
 
-    <ng-include ng-show="!gamesInfo.length" ng-if="!$location.search().tournament_id" src="getTemplate('optional_modules/casino/templates/tournament/tournaments.html')"></ng-include>
-    <ng-include ng-show="!gamesInfo.length" ng-if="$location.search().tournament_id" src="getTemplate('optional_modules/casino/templates/tournament/details.html')"></ng-include>
+    <ng-include ng-show="!gamesInfo.length" ng-if="!$location.search().tournament_id" src="'optional_modules/casino/templates/tournament/tournaments.html'|fixPath"></ng-include>
+    <ng-include ng-show="!gamesInfo.length" ng-if="$location.search().tournament_id" src="'optional_modules/casino/templates/tournament/details.html'|fixPath"></ng-include>
 
     <multiview-control wide-mode="wideMode" middle-mode="middleMode" view-count="viewCount" games-info="gamesInfo"></multiview-control>
-    <div ng-include="getTemplate('optional_modules/casino/templates/big-game.html')" ng-if="gamesInfo.length" class="big-games-overflow"></div>
+    <div ng-include="'optional_modules/casino/templates/big-game.html'|fixPath" ng-if="gamesInfo.length" class="big-games-overflow"></div>
 </div>
 <style ng-controller="cmsPagesCtrl" ng-init="loadPage('casino-backgrounds-' + env.lang, 'lang')">
     .body-wrapper.tournaments {

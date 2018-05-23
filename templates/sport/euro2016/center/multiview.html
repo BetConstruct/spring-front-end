@@ -15,11 +15,10 @@
                  dnd-moved="$root.multiViewLiveOpenedGames.splice($index, 1);"
                  dnd-disable-if="$root.multiViewLiveOpenedGames.length === 1">
                 <div class="multi-game-view-game-v3
-                    game-pinned
-                    {{!env.live ? 'prematch-view-v3' : ''}}
-                    {{favoriteGameIsSelected && favoriteGameFromLeftMenu ? 'favorite-game-open-euro2016': ''}}">
+                    game-pinned"
+                     ng-class="{'prematch-view-v3': !$root.env.live, 'favorite-game-open-euro2016': favoriteGameIsSelected && favoriteGameFromLeftMenu}">
                     <live-game-scores show-stats-block="showStatsBlock" class="multi-view-statistic-v3" open-game="openGame" enlarged-game="enlargedGame"></live-game-scores>
-                    <div class="multi-view-game-info-v3" ng-init="openGameFullDetails(game)" ng-include="getTemplate('templates/sport/euro2016/center/game.html')"></div>
+                    <div class="multi-view-game-info-v3" ng-init="openGameFullDetails(game)" ng-include="::'templates/sport/euro2016/center/game.html'|fixPath"></div>
                 </div>
             </div>
         </div>

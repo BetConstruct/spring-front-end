@@ -1,0 +1,266 @@
+.animated {
+    animation-fill-mode: both;
+    animation-duration: 0.6s;
+}
+@keyframes fadeInUp {
+    0% {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+.fade-in-up {animation-name: fadeInUp;}
+@keyframes fadeInDown {
+    0% {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+.fade-in-down {animation-name: fadeInDown;}
+@keyframes fadeInRight {
+    0% {
+        opacity: 0;
+        transform: translateX(-20px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+.fade-in-right {animation-name: fadeInRight;}
+@keyframes fadeInLeft {
+    0% {
+        opacity: 0;
+        transform: translateX(20px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+.fade-in-left {animation-name: fadeInLeft;}
+.hopscotch-bubble .hopscotch-nav-button {
+    border-width: 1px;
+    border-style: solid;
+    cursor: pointer;
+    margin: 0;
+    overflow: visible;
+    text-decoration: none !important;
+    width: auto;
+    padding: 0 10px;
+    height: 26px;
+    font: 11px/24px $font-f;
+    text-transform: uppercase;
+    white-space: nowrap;
+    display: inline-block;
+    zoom: 1;
+    vertical-align: middle;
+    box-sizing: border-box;
+    transition: color 200ms, border 200ms, background 200ms;
+}
+.hopscotch-bubble .hopscotch-nav-button.next {
+    border-color: #1a7151;
+    color: #fff;
+    margin: 0 0 0 5px;
+    background-color: #1a7151;
+}
+.hopscotch-bubble .hopscotch-nav-button.next:hover {
+    background-color: #208c65;
+    border-color: #208c65;
+}
+.hopscotch-bubble .hopscotch-nav-button.prev {
+    border-color: #7b8191;
+    color: #2e323e;
+    background-color: transparent;
+}
+.hopscotch-bubble .hopscotch-nav-button.prev:hover{
+    background-color: #f3f3f5;
+    border-color: #f3f3f5;
+}
+.hopscotch-bubble .hopscotch-nav-button.prev:hover {
+    color: #121623;
+}
+.hopscotch-bubble {
+    background-color: #c3c6ce;
+    color: #3f4553;
+    font: 12px/16px $font-f;
+    position: absolute;
+    z-index: 99999999;
+    box-sizing: content-box;
+    -moz-background-clip: padding;
+    -webkit-background-clip: padding;
+    background-clip: padding-box;
+}
+.hopscotch-bubble * {
+    box-sizing: content-box;
+}
+.hopscotch-bubble.animate {
+    -moz-transition-property: top, left;
+    -moz-transition-duration: 0.3s;
+    -moz-transition-timing-function: ease-in-out;
+    -ms-transition-property: top, left;
+    -ms-transition-duration: 0.3s;
+    -ms-transition-timing-function: ease-in-out;
+    -o-transition-property: top, left;
+    -o-transition-duration: 0.3s;
+    -o-transition-timing-function: ease-in-out;
+    -webkit-transition-property: top, left;
+    -webkit-transition-duration: 0.3s;
+    -webkit-transition-timing-function: ease-in-out;
+    transition-property: top, left;
+    transition-duration: 0.3s;
+    transition-timing-function: ease-in-out;
+}
+.hopscotch-bubble.invisible {
+    opacity: 0;
+}
+.hopscotch-bubble.hide, div.hopscotch-bubble .hide, div.hopscotch-bubble .hide-all {
+    display: none;
+}
+.hopscotch-bubble h3 {
+    color: #2e323e;
+    font: 14px/20px $font-f;
+    font-weight: bold;
+    margin: 0 15px 0 0;
+    padding: 0;
+}
+.hopscotch-bubble .hopscotch-bubble-container {
+    box-shadow: 0 0 10px #000;
+    padding: 10px;
+    position: relative;
+    text-align: left;
+    -webkit-font-smoothing: antialiased;
+}
+.hopscotch-bubble .hopscotch-content {
+    font: 12px/16px $font-f;
+    font-weight: normal;
+    margin: -5px 0 11px;
+    padding-top: 8px;
+}
+.hopscotch-bubble .hopscotch-bubble-content {
+    margin: -5px 0 0 50px;
+}
+.hopscotch-bubble.no-number .hopscotch-bubble-content {
+    margin: 0;
+}
+.hopscotch-bubble .hopscotch-bubble-close {
+    border: 0;
+    color: #7b8191;
+    display: block;
+    padding: 8px;
+    position: absolute;
+    text-decoration: none;
+    text-indent: -9999px;
+    width: 8px;
+    height: 8px;
+    top: 10px;
+    right: 8px;
+    background: none;
+    transition: color 200ms;
+    cursor: pointer;
+}
+.hopscotch-bubble .hopscotch-bubble-close:hover{
+    color: #2e323e;
+}
+.hopscotch-bubble .hopscotch-bubble-close:before{
+    text-indent: 0;
+    position: absolute;
+    left: 4px;
+    top: 4px;
+    font: 8px/8px icomoon;
+    content: "\e6f2";
+}
+.hopscotch-bubble .hopscotch-bubble-close.hide,
+.hopscotch-bubble .hopscotch-bubble-close.hide-all {
+    display: none;
+}
+.hopscotch-bubble .hopscotch-bubble-number {
+    color: #C3C6CE;
+    display: block;
+    float: left;
+    font: 20px/26px icomoon;
+    padding: 0;
+    text-align: center;
+    width: 50px;
+    height: 100%;
+    position: absolute;
+    left: 0;
+    top: 0;
+    background: #1f7355;
+    text-indent: -9999em;
+}
+.hopscotch-bubble .hopscotch-bubble-number:before{
+    text-indent: 0;
+    content: "\e6e4";
+    position: absolute;
+    left: 14px;
+    top: 8px;
+}
+.hopscotch-bubble .hopscotch-bubble-arrow-container {
+    position: absolute;
+    width: 0;
+    height: 0;
+}
+.hopscotch-bubble .hopscotch-bubble-arrow-container .hopscotch-bubble-arrow, div.hopscotch-bubble .hopscotch-bubble-arrow-container .hopscotch-bubble-arrow-border {
+    width: 0;
+    height: 0;
+}
+.hopscotch-bubble .hopscotch-bubble-arrow-container.up {
+    top: -6px;
+    left: 10px;
+}
+.hopscotch-bubble .hopscotch-bubble-arrow-container.up .hopscotch-bubble-arrow {
+    border-bottom: 10px solid #1f7355;
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent;
+    position: relative;
+    top: -3px;
+    left: 4px;
+}
+.hopscotch-bubble .hopscotch-bubble-arrow-container.down {
+    bottom: -39px;
+    left: 10px;
+}
+.hopscotch-bubble .hopscotch-bubble-arrow-container.down .hopscotch-bubble-arrow {
+    border-top: 10px solid #1F7355;
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent;
+    position: relative;
+    top: -40px;
+    left: 4px;
+}
+.hopscotch-bubble .hopscotch-bubble-arrow-container.left {
+    top: 10px;
+    left: 1px;
+}
+.hopscotch-bubble .hopscotch-bubble-arrow-container.left .hopscotch-bubble-arrow {
+    border-bottom: 10px solid transparent;
+    border-right: 10px solid #1f7355;
+    border-top: 10px solid transparent;
+    position: relative;
+    left: -9px;
+    top: -2px;
+}
+.hopscotch-bubble .hopscotch-bubble-arrow-container.right {
+    top: 10px;
+    right: 0;
+}
+.hopscotch-bubble .hopscotch-bubble-arrow-container.right .hopscotch-bubble-arrow {
+    border-bottom: 10px solid transparent;
+    border-left: 10px solid #C3C6CE;
+    border-top: 10px solid transparent;
+    position: relative;
+    left: -2px;
+    top: -2px;
+}
+.hopscotch-bubble .hopscotch-actions {
+    margin: 10px 0 0;
+    text-align: right;
+}

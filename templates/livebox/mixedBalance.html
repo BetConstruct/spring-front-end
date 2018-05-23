@@ -117,14 +117,14 @@
     </div>
 
     <div class="balance-lightbox-j" ng-class="{'withdraw-selected-j': env.sliderContent === 'withdraw' || env.sliderContent === 'deposit'}">
-        <section ng-if="env.sliderContent === 'cashier'" ng-controller="cashierCtrl" ng-init="initCashier();" ng-include="getTemplate('templates/livebox/mixedWallet.html')" class="mixedWallet-iwrap-j"></section>
-        <section ng-if="env.sliderContent === 'withdraw' || env.sliderContent === 'deposit'" ng-include="getTemplate('templates/livebox/mixedPayments.html')"></section>
+        <section ng-if="env.sliderContent === 'cashier'" ng-controller="cashierCtrl" ng-init="initCashier();" ng-include="::'templates/livebox/mixedWallet.html'|fixPath" class="mixedWallet-iwrap-j"></section>
+        <section ng-if="($root.env.sliderContent === 'withdraw' && !$root.conf.disableWithdrawPage) || ($root.env.sliderContent === 'deposit' && !$root.conf.disableDepositPage)" ng-include="::'templates/livebox/mixedPayments.html'|fixPath"></section>
         <section ng-if="env.sliderContent === 'balanceHistory'">
             <vbet-loader ng-show="!balanceHistoryLoaded"></vbet-loader>
-            <ng-include ng-show="balanceHistoryLoaded" src="getTemplate('templates/livebox/mixedBalanceHistory.html')"></ng-include>
+            <ng-include ng-show="balanceHistoryLoaded" src="::'templates/livebox/mixedBalanceHistory.html'|fixPath"></ng-include>
         </section>
         <section ng-if="env.sliderContent === 'buddytransfer'">
-            <ng-include src="getTemplate('templates/livebox/mixedBuddyTransfer.html');"></ng-include>
+            <ng-include src="::'templates/livebox/mixedBuddyTransfer.html'|fixPath;"></ng-include>
         </section>
     </div>
 </div>

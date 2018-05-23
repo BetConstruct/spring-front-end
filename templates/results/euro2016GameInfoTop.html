@@ -4,7 +4,7 @@
             <h3 ng-bind="openGameDetails.competition_name + ' - ' + openGameDetails.game_name"></h3>
             <div class="market-icons-view-v3">
                 <ul>
-                    <li class="tv-icon-market-v3" ng-show="openGameDetails.video_id && conf.videoEnabled"></li>
+                    <li class="tv-icon-market-v3" ng-show="openGameDetails.video_id && $root.conf.videoEnabled"></li>
                     <li class="statistic-icon-market-v3"
                         ng-if="$root.conf.enableH2HStat &&  openGameDetails.is_stat_available"
                         ng-click="openStatistics(openGameDetails); $event.stopPropagation();"></li>
@@ -16,8 +16,8 @@
                 <table>
                     <tr>
                         <td>
-                            <div class="liga-icon-view-v3" ng-if="conf.teamLogosPath && openGameDetails.team1_external_id">
-                                <img ng-src="{{conf.teamLogosPath}}e/m/0/{{openGameDetails.team1_external_id}}.png"
+                            <div class="liga-icon-view-v3" ng-if="$root.conf.teamLogosPath && openGameDetails.team1_external_id">
+                                <img ng-src="{{$root.conf.teamDefaultLogo}} ? 'images/team-logo-default.png' : {{$root.conf.teamLogosPath}}e/m/0/{{openGameDetails.team1_external_id}}.png"
                                      err-src="images/team-logo-default.png" alt="">
                             </div>
                         </td>
@@ -27,8 +27,8 @@
                     </tr>
                     <tr>
                         <td>
-                            <div class="liga-icon-view-v3" ng-if="conf.teamLogosPath && openGameDetails.team2_external_id">
-                                <img ng-src="{{conf.teamLogosPath}}e/m/0/{{openGameDetails.team2_external_id}}.png"
+                            <div class="liga-icon-view-v3" ng-if="$root.conf.teamLogosPath && openGameDetails.team2_external_id">
+                                <img ng-src="{{$root.conf.teamDefaultLogo}} ? 'images/team-logo-default.png' : {{$root.conf.teamLogosPath}}e/m/0/{{openGameDetails.team2_external_id}}.png"
                                      err-src="images/team-logo-default.png" alt="">
                             </div>
                         </td>

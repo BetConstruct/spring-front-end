@@ -1,6 +1,7 @@
 <div ng-controller="euro2016multiColumnCtrl" class="asian-in-classic-table-wrapper no-select-j" ng-show="!prematchGamesLoading">
     <div class="multicolumn-table aic-head" ng-class="{'hide-handicaps-mc': !multiColumn.prematchGamesEvents.Handicap && !multiColumn.liveGamesEvents.Handicap}" ng-show="multiColumn.prematchGamesEvents || multiColumn.liveGamesEvents" >
         <table class="aic-table-head-first">
+            <colgroup span="5"></colgroup>
            <tr>
                <td class="aic-team-names-wrapper"></td>
                <td class="aic-winner-cell">
@@ -15,6 +16,7 @@
            </tr>
         </table>
         <table class="aic-table-head-second">
+            <colgroup span="11"></colgroup>
             <tr>
                 <td class="aic-team-names-wrapper"></td>
                 <td class="aic-winner-cell">
@@ -40,7 +42,7 @@
             </tr>
         </table>
     </div>
-    <div ng-repeat="prematchGames in multiColumn.viewData track by $index" ng-class="{'hide-handicaps-mc': !multiColumn.prematchGamesEvents.Handicap && !multiColumn.liveGamesEvents.Handicap}">
+    <div class="float-width" ng-repeat="prematchGames in multiColumn.viewData track by $index" ng-class="{'hide-handicaps-mc': !multiColumn.prematchGamesEvents.Handicap && !multiColumn.liveGamesEvents.Handicap}">
         <div class="time-title-view-v3" ng-show="prematchGames.label && env.preMatchMultiSelection && !outrightSelected">
             <div class="closed-game-icon-v3"
                  title="close"
@@ -68,9 +70,11 @@
                 <caption class="closed-game-icon-v3" title="close" trans="attr-only"
                      ng-if="!groupGames.live && env.preMatchMultiSelection && !outrightSelected"
                      ng-click="broadcast('prematchMultiView.removeGameFromSelection', {id: game.id, competition: prematchGames.competition}); $event.stopPropagation()"></caption>
+                <colgroup span="11"></colgroup>
                <tr>
                    <td class="aic-team-names-wrapper">
                        <table>
+                           <colgroup span="2"></colgroup>
                            <tr>
                                <td title="{{game.team1_name}} {{game.team2_name ? 'vs ' + game.team2_name : game.team2_name}}">
                                    <div class="aic-team-names">
@@ -86,6 +90,7 @@
                            </tr>
                        </table>
                        <table ng-show="game.team2_name">
+                           <colgroup span="2"></colgroup>
                            <tr>
                                <td title="{{game.team1_name}} {{game.team2_name ? 'vs ' + game.team2_name : game.team2_name}}">
                                    <div class="aic-team-names">
@@ -105,9 +110,9 @@
                                    </div>
                                </td>
                            </tr>
-
                        </table>
                        <table ng-show="groupGames.live && game.info.current_game_state">
+                           <colgroup span="1"></colgroup>
                            <tr>
                                <td>
                                    <p>{{ game.info.current_game_state|convertSetName:selectedSport.alias|translate }}</p>

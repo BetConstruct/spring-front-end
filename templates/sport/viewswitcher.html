@@ -20,7 +20,7 @@
             <p>{{env.oddFormat|capitalise|translate}}</p>
             <ul>
                 <li ng-repeat="oddFormat in ::conf.oddFormats track by oddFormat.name" ng-click="broadcast('setOddsFormat', oddFormat.format)"
-                    ng-class="{'active': env.oddFormat === oddFormat.format}"><span>{{ oddFormat.name | translate }}</span></li>
+                    ng-class="{'active': $root.env.oddFormat === oddFormat.format, 'ng-hide': $root.conf.disableOddFormatsSpecialCase[selectedBetType.name][oddFormat.format]}"><span>{{ oddFormat.name | translate }}</span></li>
             </ul>
         </li>
         <li class="systemCalculator"

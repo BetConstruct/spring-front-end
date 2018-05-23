@@ -1,7 +1,7 @@
  <!--results-games-list-->
 <div class="classic-view-row-v3 results-view-b" ng-controller="ResultsV2Controller as resV2Ctrl" ng-init="setTitle('Results')">
     <div class="classic-view-column-v3">
-    <ng-include class="left-column-v3" src="getTemplate('templates/results/euro2016LeftMenu.html')"></ng-include>
+    <ng-include class="left-column-v3" src="::'templates/results/euro2016LeftMenu.html'|fixPath"></ng-include>
 
         <div class="center-column-v3">
             <div class="games-view-wrapper-v3">
@@ -94,7 +94,7 @@
                 <vbet-loader ng-if="additionalDetailsAreLoading"></vbet-loader>
                 <div class="results-markets-list-n" ng-show="openGameDetails">
                     <div class="results-markets-view-container-n">
-                        <ng-include src="getTemplate('templates/results/euro2016GameInfo.html')"></ng-include>
+                        <ng-include src="::'templates/results/euro2016GameInfo.html'|fixPath"></ng-include>
                     </div>
                 </div>
 

@@ -36,8 +36,10 @@ angular.module('casino').controller('casinoTournamentsCtrl', ['$rootScope', '$sc
      * @methodOf CASINO.controller:casinoTournamentsCtrl
      * @description Update tournaments by filter once loaded or changed
      */
-    $scope.updateFilters = function updateFilters(filterGroupSource, filterSource) {
-        $scope.tournament.filteredList = [];
+    $scope.updateFilters = function updateFilters(filterGroupSource, filterSource, okButton) {
+        if (!(filterGroupSource && filterGroupSource.noRefresh && !okButton)) {
+            $scope.tournament.filteredList = [];
+        }
         angular.forEach($scope.tournament.fullList, function (tournament) {
             var addTournament = true;
             angular.forEach($scope.tournament.filterList, function (filterGroup) {
@@ -62,7 +64,7 @@ angular.module('casino').controller('casinoTournamentsCtrl', ['$rootScope', '$sc
                         }
                     });
 
-                    if (filterSource.all && allSelected) {
+                    if (filterSource && filterSource.all && allSelected) {
                         angular.forEach(filterGroup.filters, function (filter) {
                             if (!filter.all) {
                                 filter.active = false;
@@ -70,7 +72,7 @@ angular.module('casino').controller('casinoTournamentsCtrl', ['$rootScope', '$sc
                         });
                     }
 
-                    if (!filterSource.all && filterSource.active) {
+                    if (filterSource && !filterSource.all && filterSource.active) {
                         angular.forEach(filterGroup.filters, function (filter) {
                             if (filter.all) {
                                 filter.active = false;
@@ -96,16 +98,19 @@ angular.module('casino').controller('casinoTournamentsCtrl', ['$rootScope', '$sc
                     addTournament = false;
                 }
             });
-
-            if (addTournament) {
+            if (addTournament && !(filterGroupSource && filterGroupSource.noRefresh && !okButton)) {
                 //tournament.DetailsBannerImagesFiltered = filterImagesByLang(tournament.DetailsBannerImages);
-
                 $scope.tournament.sliderIndex[tournament.Id] = $scope.tournament.sliderIndex[tournament.Id] || 0;
                 loadTournamentCasinoGames(tournament);
-
                 $scope.tournament.filteredList.push(tournament);
             }
         });
+
+        if (filterGroupSource && (filterGroupSource.refresh || okButton)) {
+            $scope.tournament.fullList = null;
+            $scope.tournament.filteredList = null;
+            refreshTournamentData();
+        }
     };
 
     /**
@@ -128,7 +133,8 @@ angular.module('casino').controller('casinoTournamentsCtrl', ['$rootScope', '$sc
          };
          */
 
-        Zergling.get({}, 'get_tournament_list').then(
+        var request = getFilteredRequest();
+        Zergling.get(request, 'get_tournament_list').then(
             function (data) {
                 if (data && data.result) {
 
@@ -156,6 +162,30 @@ angular.module('casino').controller('casinoTournamentsCtrl', ['$rootScope', '$sc
         timeoutPromise = $timeout(getTournamentList, 25000);
 
     };
+
+    function getFilteredRequest () {
+        var stageList = [], registrationStarted = [], request = {};
+        angular.forEach($scope.tournament.filterList, function (filterGroup) {
+            angular.forEach(filterGroup.filters, function (filter) {
+                if (filter.stageList && filter.active) {
+                    stageList.push(filter.stageList);
+                }
+                if (filter.registrationStarted !== undefined && filter.active) {
+                    registrationStarted.push(filter.registrationStarted);
+                }
+            });
+        });
+
+        if (stageList.length) {
+            request.stage_list = stageList;
+        }
+
+        if (registrationStarted.length === 1 && registrationStarted[0]) {
+            request.registration_started = registrationStarted[0];
+        }
+
+        return request;
+    }
 
     /**
      * @name findAndOpenGame

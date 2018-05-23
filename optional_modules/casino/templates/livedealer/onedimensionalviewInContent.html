@@ -1,22 +1,33 @@
-<ul class="provider-navigation-j" ng-show="liveGamesData.providerOptions.length > 1">
-    <li class="game-provider-{{provider}}" ng-repeat="provider in liveGamesData.providerOptions track by $index" ng-click="liveGamesData.selectedProvider = provider" ng-class="{'active-j': liveGamesData.selectedProvider === provider}">{{ provider|translate }}</li>
-</ul>
-<div class="subtop-game-menu-j" ng-show="liveGamesData.devidedGames[liveGamesData.selectedProvider].defaultStudio && liveGamesData.devidedGames[liveGamesData.selectedProvider].studios.length > 1">
-    <div class="contein-nav-g">
-        <li ng-repeat="studio in liveGamesData.devidedGames[liveGamesData.selectedProvider].studios track by $index" ng-class="{'active': studio === liveGamesData.devidedGames[liveGamesData.selectedProvider].defaultStudio}">
-            <a ng-click="liveGamesData.devidedGames[liveGamesData.selectedProvider].defaultStudio = studio">{{ (liveGamesData.selectedProvider + '_STUDIO_' + studio)|translate }}</a>
-        </li>
+<div class="{{pageOptions.b_container}}">
+    <div class="live-casino-providers" ng-show="liveGamesData.providerOptions.length > 1">
+        <button ng-repeat="provider in liveGamesData.providerOptions track by $index" ng-click="liveGamesData.selectedProvider = provider" ng-class="{'active': liveGamesData.selectedProvider === provider}">{{ provider|translate }}</button>
+    </div>
+    <div class="live-casino-providers-submenu" ng-show="liveGamesData.devidedGames[liveGamesData.selectedProvider].defaultStudio && liveGamesData.devidedGames[liveGamesData.selectedProvider].studios.length > 1">
+        <a ng-repeat="studio in liveGamesData.devidedGames[liveGamesData.selectedProvider].studios track by $index" ng-class="{'active': studio === liveGamesData.devidedGames[liveGamesData.selectedProvider].defaultStudio}" ng-click="liveGamesData.devidedGames[liveGamesData.selectedProvider].defaultStudio = studio">{{ (liveGamesData.selectedProvider + '_STUDIO_' + studio)|translate }}</a>
     </div>
 </div>
-<ul class="live-casino-games-by-ul-column lc-studio-{{ liveGamesData.devidedGames[liveGamesData.selectedProvider].defaultStudio }}">
-    <li ng-repeat="game in liveGamesData.devidedGames[liveGamesData.selectedProvider].games track by $index"
-        ng-show="confData.liveCasino.hiddenGamesIds.indexOf(game.id) === -1 && (!game.markets || game.markets.available.indexOf(liveGamesData.devidedGames[liveGamesData.selectedProvider].defaultStudio) !== -1)"
-        ng-click="openGame(game, null, liveGamesData.devidedGames[liveGamesData.selectedProvider].defaultStudio); $event.stopPropagation();"><!-- ng-click="openTables(game, null, devidedGames[selectedProvider].defaultStudio); $event.stopPropagation();"-->
-
-        <i class="game-icon-by-id-j-{{game.gameID || game.front_game_id}}"></i>
-        <div class="float-left-of-icon-lss-j">
-            <p ng-bind-html="(game.gameName || game.name)|translate|html"></p>
-            <button  trans>play now</button>
-        </div>
-    </li>
-</ul>
+<div class="{{pageOptions.g_container}}">
+    <div class="live-casino-games">
+        <ul ng-style="{'justify-content' : pageOptions.g_align, 'width' : 'calc(100% + '+pageOptions.g_container_gaps+'px)', 'padding' : (halfPadding + ' 0'), 'margin' : ('0 0 0 -' + halfPadding)}">
+            <li ng-repeat="game in liveGamesData.devidedGames[liveGamesData.selectedProvider].games track by $index"
+                ng-show="confData.liveCasino.hiddenGamesIds.indexOf(game.id) === -1 && (!game.markets || game.markets.available.indexOf(liveGamesData.devidedGames[liveGamesData.selectedProvider].defaultStudio) !== -1)"
+                ng-style="{'width' : 100 / pageOptions.g_columns + '%', 'padding' : halfPadding}">
+                <div class="float-width" ng-click="openGame(game, null, liveGamesData.devidedGames[liveGamesData.selectedProvider].defaultStudio); $event.stopPropagation();">
+                    <div class="live-casino-game-default" ng-if="!(pageOptions.image_type === 'images' && (!!game.icon_3 || !!game.icon_2))">
+                        <div class="live-casino-icon" ng-class="(game.gameID || game.front_game_id) | removeUselessSymbolsByRegexp: '[,\%,\(,\) ]+': 'g': 'true'"></div>
+                        <div class="live-casino-game-name">
+                            <div class="lc-game-name" ng-bind-html="(game.gameName || game.name)|translate|html"></div>
+                            <button trans>play now</button>
+                        </div>
+                    </div>
+                    <div class="live-casino-game-as-image" ng-if="pageOptions.image_type === 'images' && (!!game.icon_3 || !!game.icon_2)">
+                        <div class="live-casino-image-splash-play">
+                            <button trans>play now</button>
+                        </div>
+                        <img ng-src="{{game.icon_3 ? game.icon_3 : game.icon_2}}"/>
+                    </div>
+                </div>
+            </li>
+        </ul>
+    </div>
+</div>

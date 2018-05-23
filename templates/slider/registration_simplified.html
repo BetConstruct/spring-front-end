@@ -82,7 +82,7 @@
                             <div class="reg-form-steps" ng-show="registration.byEmail">
                                 <div ng-repeat="regItem in RegConfig.step1 track by $index"
                                      class="{{regItem.name}} field-separator"
-                                     ng-include="getTemplate('templates/slider/registration-fields.html')">
+                                     ng-include="::'templates/slider/registration-fields.html'|fixPath">
                                 </div>
                             </div>
                             <include-template ng-if="conf.registration.type === 'partial'" template-path="templates/slider/registration/tcCheckbox.html"></include-template>
@@ -109,10 +109,10 @@
                         </div>
                         <div class="reg-s-steps step-2" ng-class="{'active': registration.step === 2}" ng-if="conf.registration.type !== 'partial' && step1DataIsValid()">
                             <div class="float-width" ng-class="{'reg-s-left-col': RegConfig.step2.rightCol.length}">
-                                <div ng-repeat="regItem in RegConfig.step2.leftCol track by $index" class="field-separator {{regItem.name}}" ng-include="getTemplate('templates/slider/registration-fields.html')"></div>
+                                <div ng-repeat="regItem in RegConfig.step2.leftCol track by $index" class="field-separator {{regItem.name}}" ng-include="::'templates/slider/registration-fields.html'|fixPath"></div>
                             </div>
                             <div class="float-width" ng-class="{'reg-s-right-col': RegConfig.step2.rightCol.length}">
-                                <div ng-repeat="regItem in RegConfig.step2.rightCol track by $index" class="field-separator {{regItem.name}}" ng-include="getTemplate('templates/slider/registration-fields.html')"></div>
+                                <div ng-repeat="regItem in RegConfig.step2.rightCol track by $index" class="field-separator {{regItem.name}}" ng-include="::'templates/slider/registration-fields.html'|fixPath"></div>
                             </div>
                             <include-template template-path="templates/slider/registration/tcCheckbox.html"></include-template>
                             <div class="account-link-b" ng-if="conf.registration.footerTitle && conf.registration.simplified && conf.registration.type !== 'partial'">

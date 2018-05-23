@@ -1,7 +1,7 @@
 <div class="game-control soccer" ng-if="openGame.stats && openGame.last_event && (openGame.sport.alias === 'Soccer' || openGame.sport.alias === 'CyberFootball')">
-    <div class="statistics-toggle flip-contain" ng-class="{'hide-stats': env.hideLiveStats, 'hide-stats-multiview' : !showStatsBlock }">
+    <div class="statistics-toggle flip-contain" ng-class="{'hide-stats': $root.env.hideLiveStats, 'hide-stats-multiview' : !showStatsBlock }">
         <!-- soccer stats -->
-        <div class="flip-card flipped-{{env.liveStatsFlipMode || flipMode || 0}}" ng-class="{'flipped-multivew-0': !flipMode, 'flipped-multivew-1': flipMode === 1, 'flipped-multivew-2': flipMode === 2}">
+        <div class="flip-card flipped-{{$root.env.liveStatsFlipMode || flipMode || 0}}" ng-class="{'flipped-multivew-0': !flipMode, 'flipped-multivew-1': flipMode === 1, 'flipped-multivew-2': flipMode === 2}">
             <ul class="game-statistics front">
                 <li>
                     <div trans class="title">Dangerous Attack</div>
@@ -97,7 +97,7 @@
                     <td ng-show="openGame.stats.foul">{{ openGame.stats.foul.team2_value}}</td>
                 </tr>
             </table>
-            <div class="timeline-container" ng-class="{'hide-stats': env.hideLiveStats}">
+            <div class="timeline-container" ng-class="{'hide-stats': $root.env.hideLiveStats}">
                 <soccertimeline ng-class="{'tl-80': openGame.last_event.match_length === '80', 'extra': isExtraTime(openGame.info)}"></soccertimeline>
                 <div class="tl-data">
                     <div class="current-minute" ng-style="openGame.tlCurrentMinute"></div>
@@ -111,11 +111,11 @@
             </div>
         </div>
     </div>
-    <div class="toggle-stats" ng-class="{'hide': env.hideLiveStats}"  ng-click="toggleStatsVisibility()" title="Show / Hide statistics" trans></div>
+    <div class="toggle-stats" ng-class="{'hide': $root.env.hideLiveStats}"  ng-click="toggleStatsVisibility()" title="Show / Hide statistics" trans></div>
 </div>
 
 <div class="game-control tennis" ng-if="openGame.stats && openGame.last_event && openGame.sport.alias === 'Tennis'">
-    <div class="statistics-toggle" ng-class="{'hide-stats': env.hideLiveStats, 'hide-stats-multiview' : !showStatsBlock }">
+    <div class="statistics-toggle" ng-class="{'hide-stats': $root.env.hideLiveStats, 'hide-stats-multiview' : !showStatsBlock }">
         <!-- tennis stats -->
         <ul class="game-statistics">
             <li>
@@ -136,12 +136,12 @@
             </li>
         </ul>
     </div>
-    <div class="toggle-stats" ng-class="{'hide': env.hideLiveStats}"  ng-click="toggleStatsVisibility()" title="Show / Hide statistics" trans></div>
+    <div class="toggle-stats" ng-class="{'hide': $root.env.hideLiveStats}"  ng-click="toggleStatsVisibility()" title="Show / Hide statistics" trans></div>
 </div>
 
 
 <div class="game-control basketball" ng-if="openGame.stats && openGame.last_event && openGame.sport.alias === 'Basketball'">
-    <div class="statistics-toggle " ng-class="{'hide-stats': env.hideLiveStats, 'hide-stats-multiview' : !showStatsBlock }">
+    <div class="statistics-toggle " ng-class="{'hide-stats': $root.env.hideLiveStats, 'hide-stats-multiview' : !showStatsBlock }">
         <!-- basketball stats -->
         <ul class="game-statistics">
             <li>
@@ -186,12 +186,12 @@
             </li>
         </ul>
     </div>
-    <div class="toggle-stats" ng-class="{'hide': env.hideLiveStats}"  ng-click="toggleStatsVisibility()" title="Show / Hide statistics" trans></div>
+    <div class="toggle-stats" ng-class="{'hide': $root.env.hideLiveStats}"  ng-click="toggleStatsVisibility()" title="Show / Hide statistics" trans></div>
 </div>
 
 <!-- Dota game template -->
 <div class="game-control dota" ng-if="openGame.stats && dotaGamesList.indexOf(openGame.sport.alias) !== -1">
-    <div class="statistics-toggle " ng-class="{'hide-stats': env.hideLiveStats, 'hide-stats-multiview' : !showStatsBlock }">
+    <div class="statistics-toggle " ng-class="{'hide-stats': $root.env.hideLiveStats, 'hide-stats-multiview' : !showStatsBlock }">
         <ul class="game-statistics" ng-hide="true"><!-- change this staff-->
             <li>
                 <div trans class="title">Kills</div>
@@ -250,5 +250,5 @@
             </tr>
         </table>
     </div>
-    <div class="toggle-stats" ng-class="{'hide': env.hideLiveStats}"  ng-click="toggleStatsVisibility()" title="Show / Hide statistics" trans></div>
+    <div class="toggle-stats" ng-class="{'hide': $root.env.hideLiveStats}"  ng-click="toggleStatsVisibility()" title="Show / Hide statistics" trans></div>
 </div>

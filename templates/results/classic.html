@@ -1,7 +1,7 @@
-<div class="container-p" ng-controller="ResultsController as resCtrl" ng-init="setTitle('Results')">
+<div class="container-p results-v" ng-controller="ResultsController as resCtrl" ng-init="setTitle('Results')">
     <!-- System Calculator-->
     <div id="system-claculator-container" ng-if="$root.showSystemCalculator" draggable allow-other-mouse-events drag-from="calculator-draggable-header">
-        <ng-include src="getTemplate('templates/sport/classic/systemCalculator.html')"></ng-include>
+        <ng-include src="::'templates/sport/classic/systemCalculator.html'|fixPath"></ng-include>
     </div>
     <!-- System Calculator-->
     <div class="center-container-p">
@@ -121,7 +121,7 @@
                 <div ng-show="(gamesResult !== null) && !gamesResult[0]" class="no-result-to-show-j" trans>No Results</div>
             </div>
             <!-- RESULTS END -->
-            <vbet-loader ng-show="gameListLoaded" class="centered-j"></vbet-loader>
+            <vbet-loader ng-show="gameListLoaded || !competitionList" class="centered-j"></vbet-loader>
         </div>
     </div>
     <div class="right-container-p">

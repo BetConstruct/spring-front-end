@@ -25,7 +25,7 @@
         <div ng-if="selectedPaymentSystem.depositIframe">
             <iframe class="payment-iframe" ng-src="{{selectedPaymentSystem.depositIframe}}"></iframe>
         </div>
-        <div ng-if="selectedPaymentSystem.customDepositTemplate" ng-include="getTemplate(selectedPaymentSystem.customDepositTemplate)"></div>
+        <div ng-if="selectedPaymentSystem.customDepositTemplate" ng-include="selectedPaymentSystem.customDepositTemplate|fixPath"></div>
         <form ng-model="depositFormDataData"  name="depositFormData" novalidate ng-show="!selectedPaymentSystem.customDepositTemplate">
             <div class="form-sign-in {{selectedPaymentSystem.name}}-left" ng-class="{'single-column': !selectedPaymentSystem.depositFormFields.length && !showConfirmation && !showGetStatusForm && !paymentIsDone && !selectedPaymentSystem.hasBetShops}">
                 <div ng-show="selectedPaymentSystem.depositText" class="text-payment-contain">
@@ -170,7 +170,7 @@
                     <div class="text-payment-contain" ng-switch-when="html" ng-bind-html="field.html">
                     </div>
                     <div ng-switch-when="template">
-                        <ng-include src="getTemplate(field.path)"></ng-include>
+                        <ng-include src="field.path|fixPath"></ng-include>
                     </div>
                     <div ng-switch-when="checkbox" class="no-select-j">
                         <label ng-if="selectedPaymentSystem.agreeTermsText">

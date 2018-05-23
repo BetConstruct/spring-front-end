@@ -47,9 +47,7 @@ CASINO.directive('frameControl', ['$window', '$timeout', 'UserAgent', function (
                             definitiveHeight = wHeight; //- 50;
                         }
                     }
-
                     break;
-
                 case "2":
                 case "4":
                     wWidth = $window.innerWidth - 120;
@@ -69,7 +67,6 @@ CASINO.directive('frameControl', ['$window', '$timeout', 'UserAgent', function (
                         definitiveWidth = scale * originWidth;
                         definitiveHeight = scale * definitiveHeight;
                     }
-
                     break;
             }
 
@@ -82,17 +79,13 @@ CASINO.directive('frameControl', ['$window', '$timeout', 'UserAgent', function (
             element.css({ width: definitiveWidth + 'px', height: definitiveHeight + 'px'});
         };
 
-        attr.$observe('hasSidebar', function (value) {
-            windowResize();
-        });
+        attr.$observe('hasSidebar', windowResize);
 
-        attr.$observe('numberOfWindow', function (value) {
-            windowResize();
-        });
+        attr.$observe('numberOfWindow', windowResize);
 
         windowResize();
 
-        angular.element($window).bind('resize', function () {
+        scope.$on('onWindowResize', function() {
             if (resizeWatcherPromise) {
                 $timeout.cancel(resizeWatcherPromise);
             }
@@ -106,5 +99,12 @@ CASINO.directive('frameControl', ['$window', '$timeout', 'UserAgent', function (
                 element[0].parentNode.removeChild(element[0]);
             });
         }
+
+        scope.$on('$destroy', function() {
+            if (resizeWatcherPromise) {
+                $timeout.cancel(resizeWatcherPromise);
+                resizeWatcherPromise = undefined;
+            }
+        })
     };
 }]);

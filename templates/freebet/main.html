@@ -79,7 +79,7 @@
                         <h6 trans>Rules</h6>
                         <p trans>freebet_info</p>
                     </div>
-                    <div class="right-banner-container" ng-if="conf.enableBannerUnderBetslip" ng-controller="cmsSportNewsCtrl" ng-include="getTemplate('templates/sport/classic/banners.html')"></div>
+                    <div class="right-banner-container" ng-if="conf.enableBannerUnderBetslip" ng-controller="cmsSportNewsCtrl" ng-include="::'templates/sport/classic/banners.html'|fixPath"></div>
                 </li>
             </ul>
         </div>

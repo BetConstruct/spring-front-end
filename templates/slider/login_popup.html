@@ -33,7 +33,7 @@
                                             </div>
                                         </div>
                                         <iframe id="nemid_iframe" title="NemID" allowfullscreen="true" scrolling="no" frameborder="0" width="300px" height="350px" ng-if="nemIDSrc" ng-src="{{nemIDSrc}}"></iframe>
-                                        <ng-include ng-if="conf.registration.inputBirthDateOnLogin" src="getTemplate('templates/slider/login_popup_birth_date.html');"></ng-include>
+                                        <ng-include ng-if="conf.registration.inputBirthDateOnLogin" src="::'templates/slider/login_popup_birth_date.html'|fixPath;"></ng-include>
 
                                         <div ng-if="params.displayRecaptcha" ng-controller="recaptchaCtrl" class="field-separator">
                                             <input type="hidden" name="g_recaptcha_response" ng-model="user.g_recaptcha_response" ng-required="false"/>
@@ -102,7 +102,7 @@
                                     </div>
                                 </form>
                              </div>
-                            <div ng-include="getTemplate('templates/slider/contact_support.html')"></div>
+                            <div ng-include="::'templates/slider/contact_support.html'|fixPath"></div>
                         </div>
                     </div>
                 </div>

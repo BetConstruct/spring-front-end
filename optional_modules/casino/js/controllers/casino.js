@@ -5,7 +5,7 @@
  * casino page controller
  */
 
-CASINO.controller('casinoCtrl', ['$rootScope', '$scope', '$sce', '$location', '$filter', 'Geoip', 'CConfig', 'Zergling', 'casinoData', 'Utils', 'casinoManager', 'Translator',  '$interval', 'TimeoutWrapper', 'analytics', 'content', function ($rootScope, $scope, $sce, $location, $filter, Geoip, CConfig, Zergling, casinoData,  Utils, casinoManager, Translator, $interval, TimeoutWrapper, analytics, content) {
+CASINO.controller('casinoCtrl', ['$rootScope', '$scope', '$sce', '$location', 'Geoip', 'CConfig', 'Zergling', 'casinoData', 'Utils', 'casinoManager', 'Translator',  '$interval', 'TimeoutWrapper', 'analytics', 'content', function ($rootScope, $scope, $sce, $location, Geoip, CConfig, Zergling, casinoData,  Utils, casinoManager, Translator, $interval, TimeoutWrapper, analytics, content) {
     'use strict';
 
     TimeoutWrapper = TimeoutWrapper($scope);
@@ -434,25 +434,6 @@ CASINO.controller('casinoCtrl', ['$rootScope', '$scope', '$sce', '$location', '$
         casinoManager.closeGame($scope, id);
     };
 
-    /**
-     * @ngdoc method
-     * @name isFromSaved
-     * @methodOf CASINO.controller:casinoCtrl
-     * @description  checks if game (that has gameID) is in myCasinoGames
-     * @param {Number} gameId Number
-     * @returns {boolean} true if current game is in myCasinoGames, false otherwise
-     */
-    $scope.isFromSaved = function isFromSaved(gameId) {
-        var games = $rootScope.myCasinoGames || [], i, j;
-
-        for (i = 0, j = games.length; i < j; i += 1) {
-            if (games[i].id === gameId) {
-                return true;
-            }
-        }
-
-        return false;
-    };
 
     /**
      * @ngdoc method

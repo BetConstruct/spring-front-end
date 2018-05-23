@@ -534,7 +534,7 @@ CASINO.service('casinoManager', ['$rootScope', '$q', '$window', '$sce', '$locati
             if (!profileActiveTimePromise) {
                 profileActiveTimePromise = $rootScope.$watch('profile.active_time_in_casino', function () {
                     realityCheckIntervalPromise && $timeout.cancel(realityCheckIntervalPromise) && (realityCheckIntervalPromise = undefined);
-                    if ($rootScope.profile.active_time_in_casino) {
+                    if ($rootScope.profile && $rootScope.profile.active_time_in_casino) {
                         checkAndStartRealityInterval(scope);
                     }
                 });

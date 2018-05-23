@@ -3,7 +3,6 @@
         <li class="sports-item-v3 sports-group-item-v3" ng-show="group.hasHeader"
             ng-class="{'active': leftMenuState.live.groups[group.id]}"
             ng-click="leftMenuState.live.groups[group.id] = !leftMenuState.live.groups[group.id]">
-            <div class="sport-icon-v3 sport-group-{{group.alias}} {{group.name}}"></div>
             <p>{{group.name}}</p>
             <div class="arrow-view-v3"></div>
             <div class="sport-games-count-v3">
@@ -19,18 +18,15 @@
                     {{leftMenuState.live.sport[sport.id].expanded || (virtualSportsSelected && sport.isVirtualSport) ||($parent.todaysBetsSelected && sport.isTodayBets) ? 'active' : ''}}"
                          ng-click="expandLeftMenuLiveSport();  leftMenuState.live.sport[sport.id].expanded = !leftMenuState.live.sport[sport.id].expanded; leftMenuClosed ? toggleLeftMenu() : void(); selectSport(sport, !leftMenuState.live.sport[sport.id].expanded);closeOtherSportsIfNeed(leftMenuState.live.sport[sport.id].expanded);"
                          title="{{sport.name + (sport.game ? '(' + sport.game  + ')' : '') }}">
-                        <div class="sport-icon-v3 {{sport.alias}}"></div>
-                        <p>{{sport.name}}</p>
+                        {{sport.name}}
                         <div class="arrow-view-v3"></div>
                         <div class="sport-games-count-v3">
                             <span ng-show="sport.game">{{sport.game}}</span>
                         </div>
                     </div>
 
-
                     <div class="region-item-row-v3">
                         <div class="region-items-box">
-
                             <div class="full-region-info-v3
                         {{leftMenuState.live.region[region.id].expanded ? 'active' : ''}}
                         {{liveFilters.disableRegions ? 'no-regions' : ''}}
@@ -41,7 +37,7 @@
                                      ng-click="leftMenuState.live.region[region.id].expanded = !leftMenuState.live.region[region.id].expanded; selectSport(sport); selectRegion(region);"
                                      ng-hide="liveFilters.disableRegions">
                                     <div class="flag-view-v3 flag-icon flag-{{::region.alias | removeUselessSymbolsByRegexp: '[,\' ]+': 'g': 'true'}}"></div>
-                                    <p>{{::region.name}} ({{region.game}})</p>
+                                    {{::region.name}} ({{region.game}})
                                     <div class="arrow-view-v3"></div>
                                 </div>
                                 <div class="games-list-nav-v3">
@@ -55,8 +51,6 @@
                                             <div class="competition-title-v3"
                                                  title="{{competition.name}}"
                                                  ng-click="leftMenuState.live.competition[competition.id].collapsed = !leftMenuState.live.competition[competition.id].collapsed; selectSport(sport); selectRegion(region)">
-                                                <p>{{competition.name}}</p>
-                                                <div class="arrow-view-v3"></div>
                                             </div>
                                             <div class="single-game-item-v3 {{game.id === activeGameId && '/multiview/' !== $location.path() ? 'active' : ''}}"
                                                  ng-repeat="game in competition.games track by game.id"
@@ -101,19 +95,18 @@
                                                              title="{{'statistic'|translate}}"></div>
                                                     </div>
                                                 </div>
-                                                <ul class="l-b column-{{game.marketInfo.markets.length}}" ng-hide="conf.hideMarketFromLeftMenu">
-                                                    <li class="s-box" ng-repeat="market in game.marketInfo.markets track by market.id" ng-class="{'active': isEventInBetSlip(market), 'blocked': market.price === 1}" ng-click="bet(market, game.marketInfo, game); $event.stopPropagation()">
-                                                        <div class="single-events-b-v3" title="{{::market.type_1}}"
-                                                            ng-class="{'pointer-events-none': market.is_empty, 'active': isEventInBetSlip(market), 'blocked': ((market.price | oddConvert:'decimal') == 1 || game.is_blocked)}"
-                                                            ng-mouseover="displayEventLimit(market)"
-                                                            ng-mouseleave="cancelDisplayEventLimit(market)">
-                                                            <div class="max-bet-tooltip-v3" ng-show="env.authorized && market.maxBet !== undefined" ng-class="{'maxbet-enabled': env.authorized}">
-                                                                <p>Max: <b ng-bind="conf.onlyDecimalStakeAmount ? Math.floor(market.maxBet) : market.maxBet"></b> {{profile.currency_name|currency }}</p>
-                                                            </div>
-                                                            <b ng-show="(market.price | oddConvert:'decimal') != 1 && !game.is_blocked" class="p-v price{{arrowHide}}" ng-class="{'factor-top': market.price_change > 0, 'factor-bottom': market.price_change < 0}">{{market.price|oddConvert:$root.env.oddFormat}}</b>
+                                                <div class="l-b column-{{game.marketInfo.markets.length}}" ng-hide="conf.hideMarketFromLeftMenu">
+                                                    <div class="single-events-b-v3" ng-repeat="market in game.marketInfo.markets track by market.id" title="{{::market.type_1}}"
+                                                        ng-class="{'pointer-events-none': market.is_empty, 'active': isEventInBetSlip(market), 'blocked': ((market.price | oddConvert:'decimal') == 1 || game.is_blocked)}"
+                                                        ng-click="bet(market, game.marketInfo, game); $event.stopPropagation()"
+                                                        ng-mouseover="displayEventLimit(market)"
+                                                        ng-mouseleave="cancelDisplayEventLimit(market)">
+                                                        <div class="max-bet-tooltip-v3" ng-show="env.authorized && market.maxBet !== undefined" ng-class="{'maxbet-enabled': env.authorized}">
+                                                            <p>Max: <b ng-bind="conf.onlyDecimalStakeAmount ? Math.floor(market.maxBet) : market.maxBet"></b> {{profile.currency_name|currency }}</p>
                                                         </div>
-                                                    </li>
-                                                </ul>
+                                                        <b ng-show="(market.price | oddConvert:'decimal') != 1 && !game.is_blocked" class="p-v price{{arrowHide}}" ng-class="{'factor-top': market.price_change > 0, 'factor-bottom': market.price_change < 0}">{{market.price|oddConvert:$root.env.oddFormat}}</b>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
