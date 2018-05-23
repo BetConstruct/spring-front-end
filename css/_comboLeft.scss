@@ -125,6 +125,9 @@
   z-index: 33;
   transition: box-shadow 250ms;
   border-radius: 0;
+  @include rtl {
+    padding: 0 10px 0 30px;
+  }
 }
 
 .search-f-contain .block-search input[type="text"]:focus {
@@ -135,6 +138,10 @@
   left: auto;
   right: 7px;
   color: #DBE1E6;
+  @include rtl {
+    left: 7px;
+    right: auto;
+  }
 }
 
 .search-f-contain .search-results-container, .search-f-contain .search-results-container-scroll {
@@ -143,12 +150,21 @@
   top: 0;
   left: 100%;
   margin: 0 0 0 20px;
+  @include rtl {
+    left: auto;
+    right: 100%;
+    margin: 0 20px 0 0;
+  }
 }
 
 .search-f-contain .arrow-sport {
   top: 6px;
   right: auto;
   left: -18px;
+  @include rtl {
+    left: auto;
+    right: -18px;
+  }
 }
 
 .search-f-contain .arrow-sport:before {
@@ -157,6 +173,10 @@
   right: auto;
   top: 6px;
   border-color: transparent #ffffff transparent transparent;
+  @include rtl {
+    border-width: 9px 0 9px 18px;
+    border-color: transparent transparent transparent #ffffff;
+  }
 }
 
 .search-f-contain #result-search dl dt {
@@ -227,6 +247,9 @@
   position: relative;
   cursor: pointer;
   transition: background 250ms;
+  @include rtl {
+    padding: 0 55px 0 60px;
+  }
 }
 
 .icon-sports-contain {
@@ -238,6 +261,10 @@
   width: 20px;
   height: 20px;
   color: #3f4553;
+  @include rtl {
+    left: auto;
+    right: 9px;
+  }
 }
 
 .arrow-icon-separator {
@@ -251,10 +278,17 @@
   color: #3f4553;
   cursor: pointer;
   z-index: 22;
+  @include rtl {
+    left: auto;
+    right: 32px;
+  }
 }
 
 .arrow-icon-separator:before {
   content: "\e672";
+  @include rtl {
+    content: "\e66f";
+  }
 }
 
 .item-naw-row:hover {
@@ -296,6 +330,11 @@
   font-weight: bold;
   color: #3f4553;
   z-index: 22;
+  @include rtl {
+    left: 9px;
+    right: auto;
+    text-align: left;
+  }
 }
 
 .menu-sport-contain > ul > li.selected > .item-naw-row {
@@ -317,6 +356,9 @@
   padding: 0 0 0 30px;
   position: relative;
   display: none;
+  @include rtl {
+    padding: 0 30px 0 0;
+  }
 }
 
 .second-l-nav-wrapper > div {
@@ -370,6 +412,9 @@
   height: 26px;
   cursor: pointer;
   transition: background 250ms;
+  @include rtl {
+    padding: 0 25px 0 55px;
+  }
 }
 
 .second-level-sport-nav:hover,
@@ -399,12 +444,21 @@
   width: 10px;
   height: 10px;
   color: #BDBCBC;
+  @include rtl {
+    content: "\e67b";
+    left: auto;
+    right: -14px;
+  }
 }
 
 .third-level-nav-wrapper:before {
   top: auto;
   bottom: -5px;
   left: -15px;
+  @include rtl {
+    left: auto;
+    right: -15px;
+  }
 }
 
 .second-level-sport-nav:after {
@@ -416,6 +470,10 @@
   width: 1px;
   height: 100%;
   background: #BDBCBC;
+  @include rtl {
+    left: auto;
+    right: -15px;
+  }
 }
 
 .second-level-sport-nav.active:after {
@@ -440,12 +498,20 @@
   width: 1px;
   height: 100%;
   background: #BDBCBC;
+  @include rtl {
+    left: auto;
+    right: -15px;
+  }
 }
 
 .second-level-sport-nav > .arrow-icon-separator {
   left: 2px;
   top: 2px;
   font-size: 14px;
+  @include rtl {
+    left: auto;
+    right: 2px;
+  }
 }
 
 .second-level-sport-nav > .amount-games-number {
@@ -481,6 +547,9 @@
   border-top: 1px solid #DBE1E6;
   border-bottom: 1px solid #BDBCBC;
   display: none;
+  @include rtl {
+    padding: 0 15px 10px 0;
+  }
 }
 
 .third-level-nav-wrapper > div {
@@ -499,6 +568,9 @@
   padding: 0 40px 0 15px;
   height: 24px;
   cursor: pointer;
+  @include rtl {
+    padding: 0 15px 0 40px;
+  }
 }
 
 .third-level-row.selected:before {
@@ -511,6 +583,10 @@
   top: 0;
   right: 0;
   z-index: 2;
+  @include rtl {
+    left: 0;
+    right: auto;
+  }
 }
 
 .third-level-row.selected > .arrow-icon-separator,
@@ -545,6 +621,10 @@
   left: -9px;
   top: 2px;
   font-size: 12px;
+  @include rtl {
+    left: auto;
+    right: -9px;
+  }
 }
 
 .third-level-row > .amount-games-number {
@@ -591,6 +671,9 @@
   -webkit-animation-fill-mode: both;
   animation-fill-mode: both;
   animation-name: spaceInDown;
+  @include rtl {
+    padding: 0 24px 0 40px;
+  }
 }
 
 .third-level-row.active + .fourth-level-nav-wrapper {
@@ -625,6 +708,10 @@
   left: 2px;
   top: 2px;
   font-size: 10px;
+  @include rtl {
+    left: auto;
+    right: 2px;
+  }
 }
 
 .select-left-nav-b > .amount-games-number {
@@ -655,6 +742,9 @@
   padding: 0 0 10px;
   cursor: default;
   display: none;
+  @include rtl {
+    float: right;
+  }
 }
 
 .fourth-level-row.active > .fifth-level-nav-wrapper,

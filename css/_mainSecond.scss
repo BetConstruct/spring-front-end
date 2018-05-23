@@ -9,8 +9,8 @@ body {
   &.freebet {
     background: #{$free-bet-background};
   }
-  &, &.sport.classic {
-    background: $body-background;
+  &, &.sport.classic, &.euro2016 {
+    background: $classic-view-background;
   }
   &.homepage {
     background: #{$homepage-background};
@@ -28,6 +28,10 @@ body {
   height: 73px;
   position: relative;
   z-index: 99;
+  @include rtl {
+    border-left: 1px solid set-color($modern-view-navigation, $color-dark: darken($modern-view-navigation, 6), $color-light: lighten($modern-view-navigation, 6));
+    border-right: none;
+  }
   &.active {
     background: $hero-color;
     box-shadow: 0 -2px 0 $hero-color inset;
@@ -171,6 +175,10 @@ body {
         width: 0;
         position: absolute;
         pointer-events: none;
+        @include rtl {
+          left: 7px;
+          right: auto;
+        }
       }
       &:before {
         border-color: transparent;
@@ -412,19 +420,28 @@ body {
             width: 0;
             position: absolute;
             pointer-events: none;
+            @include rtl {
+              left: 3px;
+              right: auto;
+            }
           }
           &:after {
             border-color: transparent;
             border-top-color: #fff;
             border-width: 4px;
-            margin-right: 1px;
-            margin-top: -1px;
+            margin: -1px 1px 0 0;
+            @include rtl {
+              margin: -1px 0 0 1px;
+            }
           }
           &:before {
             border-color: transparent;
             border-top-color: $hero-color;
             border-width: 5px;
-            margin-left: -5px;
+            margin: 0 0 0 -5px;
+            @include rtl {
+              margin: 0 -5px 0 0;
+            }
           }
         }
       }
@@ -671,6 +688,11 @@ div.star {
       position: absolute;
       right: 0;
       top: 0;
+      @include rtl {
+        left: 0;
+        right: auto;
+        content: "\e677";
+      }
     }
     span {
       &:before {
@@ -882,7 +904,7 @@ div.star {
 .cash-game tr td {
   font: 13px $font-f;
   background: darken($modern-view-game-background, 9);
-  border-color: darken($modern-view-game-background, 19);
+  box-shadow: 0 0 0 1px darken($modern-view-game-background, 19);
   color: set-color(darken($modern-view-game-background, 9));
 }
 
@@ -899,7 +921,7 @@ div.star {
 }
 
 .cash-game tr .winner {
-  box-shadow: inset 0 -1px 0 $hero-color;
+  border-bottom: 1px solid $hero-color;
 }
 
 .cash-game tr .active-cash.winner {
@@ -1075,6 +1097,11 @@ div.game-video-detached {
 .game-team-soccer .right-block-flash, .right-block-flash-soccer {
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.3), inset 0 40px 110px rgba(14, 34, 0, 0.56);
   overflow: hidden;
+  .statistics-toggle {
+    @include rtl {
+      direction: ltr;
+    }
+  }
 }
 
 .right-block-flash.right-block-flash-icehockey {
@@ -1126,6 +1153,11 @@ div.game-video-detached {
   font: 16px/14px icomoon;
   content: "\e676";
   color: $hero-color;
+  @include rtl {
+    content: "\e673";
+    left: 0;
+    right: auto;
+  }
 }
 
 .cotegory-game .fav-monitor a:after {
@@ -1141,6 +1173,11 @@ div.game-video-detached {
   content: "\e676";
   color: $hero-color;
   text-indent: 3px;
+  @include rtl {
+    content: "\e673";
+    left: 0;
+    right: auto;
+  }
 }
 
 .active-game:before {
@@ -1186,6 +1223,10 @@ div.game-video-detached {
     .arrow-sport {
       top: -6px;
       right: 1px;
+      @include rtl {
+        left: 1px;
+        right: auto;
+      }
     }
   }
   span {
@@ -1346,6 +1387,10 @@ div.game-video-detached {
   left: -6px;
   top: 0;
   text-indent: 0;
+  @include rtl {
+    left: auto;
+    right: -24px;
+  }
 }
 
 .list-result ul li {
@@ -1365,12 +1410,12 @@ div.game-video-detached {
   text-shadow: inherit;
 }
 
-.list-result ul li p {
+.list-result ul li .game-row-item p {
   color: $modern-view-market-item-color;
   font: 13px/16px $font-f;
 }
 
-.list-result ul li span {
+.list-result ul li .game-row-item span {
   color: $modern-view-coeff-color;
   font: 14px/16px $font-f;
   font-weight: $bold-text;
@@ -1391,6 +1436,10 @@ div.game-video-detached {
   font: 16px 'icomoon';
   color: #390;
   text-shadow: none;
+  @include rtl {
+    left: auto;
+    right: -4px;
+  }
 }
 
 .list-result ul li .bot-arrow:before,
@@ -1402,6 +1451,10 @@ div.game-video-detached {
   content: "\e66c";
   font: 16px 'icomoon';
   color: #f00;
+  @include rtl {
+    left: auto;
+    right: -4px;
+  }
 }
 
 .open-game .game-live-row .team span.top-arrow span:before,
@@ -1463,6 +1516,10 @@ div.game-video-detached {
   position: absolute;
   top: -2px;
   right: -4px;
+  @include rtl {
+    left: -4px;
+    right: auto;
+  }
 }
 
 .list-bet-block {
@@ -1474,6 +1531,9 @@ div.game-video-detached {
   font: 24px/26px $font-f;
   color: set-color($modern-view-betslip-palette);
   text-transform: uppercase;
+  @include rtl {
+    font: 22px/24px $font-f;
+  }
 }
 
 .modern .name-b-list {
@@ -1490,6 +1550,10 @@ div.game-video-detached {
   left: -8px;
   bottom: 0;
   text-indent: 0;
+  @include rtl {
+    left: auto;
+    right: -8px;
+  }
 }
 
 .bs-type-switcher, .betslip-system-chenge {
@@ -2039,6 +2103,7 @@ form.ng-pristine .form-error-icon:before, form.registration-form.ng-dirty .form-
   border-radius: 0;
   transition: 300ms border-color;
   -webkit-text-fill-color: $text-palette-4;
+  caret-color: $text-palette-4;
   @include placeholder {
     color: $text-palette-4;
     font-style: normal;
@@ -2202,6 +2267,9 @@ form.ng-pristine .form-text.error input {
 .menu-games .contain-menu-games ul.favorites-first li.sport-favorites {
   box-shadow: -1px 0 0 set-color($modern-view-navigation, $color-dark: darken($modern-view-navigation, 6), $color-light: lighten($modern-view-navigation, 6));
   z-index: 100;
+  @include rtl {
+    box-shadow: 1px 0 0 set-color($modern-view-navigation, $color-dark: darken($modern-view-navigation, 6), $color-light: lighten($modern-view-navigation, 6));
+  }
 }
 
 .menu-games .contain-menu-games ul.favorites-first li.sport-favorites.active {
@@ -2393,10 +2461,9 @@ form.ng-pristine .form-text.error input {
 }
 
 .right-block-news span {
-  color: $text-palette-5;
-  font: 12px/16px $font-f;
-  font-weight: $bold-text;
-  width: 100%;
+  float: none;
+  width: auto;
+  font: 16px/26px $font-f;
 }
 
 .right-block-news p {
@@ -2456,6 +2523,9 @@ form.ng-pristine .form-text.error input {
 
 .mini-social-icons ul li {
   margin: 0 0 0 4px;
+  @include rtl {
+    margin: 0 4px 0 0;
+  }
 }
 
 .left-block-news .mini-social-icons ul li a {
@@ -2757,7 +2827,7 @@ form.ng-pristine .form-text.error input {
 }
 
 .All-Bets-history {
-  background: $skin-palette-1;
+  background: white;
   h3 {
     color: #000000;
     font: 28px/30px $font-f;
@@ -2947,8 +3017,12 @@ form.ng-pristine .form-text.error input {
   font: 32px icomoon;
   color: $text-palette-4;
   position: absolute;
-  right: 3px;
   top: 0;
+  right: 3px;
+  @include rtl {
+    left: 3px;
+    right: auto;
+  }
 }
 
 .form-contain h4 {
@@ -3115,23 +3189,21 @@ form.ng-pristine .form-text.error input {
 }
 
 .message-title-contain p {
-  color: $text-palette-8;
+  color: #121623;
   font: 14px/16px $font-f;
-  font-style: $style-text;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
 .message-time p {
-  color: $text-palette-4;
-  font: 11px/16px $font-f;
-  font-weight: $bold-text;
+  color: #7b8191;
+  font: $bold-text 11px/16px $font-f;
 }
 
 .message-delete a:before {
   font: 120px/32px icomoon;
-  color: $text-palette-11;
+  color: #171c2c;
   content: "\e6a9";
   text-indent: 0;
   position: absolute;
@@ -3141,10 +3213,10 @@ form.ng-pristine .form-text.error input {
 
 .open-message-contain {
   background: $skin-palette-1;
-  box-shadow: 0 0 7px $text-palette-7;
+  box-shadow: 0 0 7px rgba(0,0,0,0.2);
   p {
     font: 14px/18px $font-f;
-    color: $text-palette-8;
+    color: #212532;
   }
   .arrow-sport {
     top: -6px;
@@ -3612,6 +3684,10 @@ form.ng-pristine .form-text.error input {
         &:last-child {
           border-right: 1px solid lighten(desaturate(adjust-hue($classic-skinning-color, -1deg), 16), 8);
           border-radius: 0 3px 3px 0;
+          @include rtl {
+            border-left: 1px solid lighten(desaturate(adjust-hue($classic-skinning-color, -1deg), 16), 8);
+            border-right: 0;
+          }
         }
         &.disabled-cell {
           box-shadow: none;
@@ -3654,6 +3730,9 @@ form.ng-pristine .form-text.error input {
         background: none;
         border-color: transparent;
         box-shadow: none;
+        @include rtl {
+          border-color: transparent;
+        }
       }
     }
   }
@@ -3735,7 +3814,8 @@ form.ng-pristine .form-text.error input {
         color: $text-palette-4;
         border: 1px solid lighten(desaturate(adjust-hue($classic-skinning-color, -1deg), 16), 8);
         &.active {
-          @include bg-and-color($hero-color, $border: yes);
+          background: $hero-color;
+          color: set-color($hero-color);
         }
         &.upcoming-title {
           color: $hero-color;
@@ -4829,11 +4909,6 @@ form.ng-pristine .form-text.error input {
   border-bottom-color: $modern-view-game-league-count-colors;
 }
 
-.big-buner:hover .block-black-hover {
-  z-index: 999;
-  opacity: 0;
-}
-
 .body-wrapper .deposit .form-contain h4 {
   border-bottom: 1px solid $form-elements-bg;
 }
@@ -5242,4 +5317,9 @@ li.active-format:before {
 .live-table:hover ul.game-live-row li div.star-active:before {
   content: "\f005";
   color: #E7EE16;
+}
+.modern .game-statistics {
+  @include rtl {
+    direction: ltr;
+  }
 }

@@ -51,17 +51,26 @@
   float: left;
   font: 12px/36px $font-f;
   color: #ffffff;
-  padding: 0 0 0 10px;
   margin: 0 0 0 10px;
+  padding: 0 0 0 10px;
   position: relative;
   display: inline-block;
   cursor: pointer;
   transition: color 250ms;
+  @include rtl {
+    float: right;
+    margin: 0 10px 0 0;
+    padding: 0 10px 0 0;
+  }
 }
 
 .breadcrumbs-nav-contain > ul > li:first-child {
   margin: 0;
   padding: 0;
+  @include rtl {
+    margin: 0;
+    padding: 0;
+  }
 }
 
 .breadcrumbs-nav-contain > ul > li:before {
@@ -74,6 +83,11 @@
   font: 10px/36px icomoon;
   content: "\e67e";
   //color: #3f4553;
+  @include rtl {
+    left: auto;
+    right: -5px;
+    content: "\e67b";
+  }
 }
 
 .breadcrumbs-nav-contain > ul > li > p {
@@ -154,6 +168,9 @@
   padding: 0 0 0 10px;
   position: relative;
   top: 45px;
+  @include rtl {
+    padding: 0 10px 0 0;
+  }
 }
 
 @media screen and (max-width: 1359px) {
@@ -187,10 +204,17 @@
   white-space: nowrap;
   text-overflow: ellipsis;
   overflow: hidden;
+  @include rtl {
+    float: right;
+    margin: 0 5px 0 0;
+  }
 }
 
 .period-filter-container > ul > li:first-child {
   margin: 0;
+  @include rtl {
+    margin: 0;
+  }
 }
 
 .period-filter-container > ul > li.active,
@@ -234,6 +258,10 @@
   position: absolute;
   right: 30px;
   top: 6px;
+  @include rtl {
+    left: 30px;
+    right: auto;
+  }
   .md-inner .md-gap {
     border-top-color: #ffffff;
     border-bottom-color: #ffffff;
@@ -272,6 +300,9 @@
   position: relative;
   background: #cfd6dc;
   cursor: pointer;
+  @include rtl {
+    padding: 0 50px 0 20px;
+  }
 }
 
 .title-region-markets-b > h4 {
@@ -290,6 +321,10 @@
 .title-region-markets-b > .icon-sports-contain {
   top: 8px;
   left: 20px;
+  @include rtl {
+    left: auto;
+    right: 20px;
+  }
 }
 
 .title-region-markets-b > h4 > i {
@@ -311,7 +346,10 @@
 }
 
 .title-separator-b.region {
-  padding-right: 36px;
+  padding: 0 36px 0 20px;
+  @include rtl {
+    padding: 0 20px 0 36px;
+  }
 }
 
 .title-region-markets-b > .arrow-icon-separator,
@@ -322,6 +360,10 @@
   width: 36px;
   height: 36px;
   line-height: 36px;
+  @include rtl {
+    left: 0;
+    right: auto;
+  }
 }
 
 .title-separator-b.region .arrow-icon-separator {
@@ -344,6 +386,9 @@
   padding: 10px 70px 30px 20px;
   position: relative;
   background: #ffffff;
+  @include rtl {
+    padding: 10px 20px 30px 70px;
+  }
 }
 
 .markets-filter-events-contain > ul {
@@ -365,6 +410,9 @@
   border-radius: 5px;
   cursor: pointer;
   transition: background 250ms;
+  @include rtl {
+    float: right;
+  }
 }
 
 .markets-filter-events-contain > ul > li:hover,
@@ -405,6 +453,10 @@
   background: #e8edf1;
   border-radius: 5px;
   cursor: pointer;
+  @include rtl {
+    left: 20px;
+    right: auto;
+  }
 }
 
 .filter-more-button-c:before {
@@ -491,11 +543,19 @@
   width: 70px;
   padding: 0 10px 0 0;
   border-right: 1px solid #3f4553;
+  @include rtl {
+    padding: 0 0 0 10px;
+    border-left: 1px solid #3f4553;
+    border-right: none;
+  }
 }
 
 .single-game-mini-view > ul > li:last-child {
   width: 50px;
   padding: 0 0 0 10px;
+  @include rtl {
+    padding: 0 10px 0 0;
+  }
 }
 
 .date-info-box,
@@ -577,6 +637,10 @@
   cursor: pointer;
   transition: background 250ms;
   position: relative;
+  @include rtl {
+    float: right;
+    margin: 2px 5px 2px 0;
+  }
 }
 
 .game-events-contain-b > ul.column-2 > li {
@@ -763,6 +827,9 @@
   background: #cfd6dc;
   position: relative;
   cursor: pointer;
+  @include rtl {
+    padding: 0 10px 0 30px;
+  }
 }
 
 .live-game-market-title > h4 {
@@ -844,6 +911,9 @@
 
 .live-game-all-markets-b .single-game-mini-view > ul > li:first-child {
   border: none;
+  @include rtl {
+    border: none;
+  }
 }
 
 .live-game-market-title > .arrow-icon-separator {
@@ -853,6 +923,10 @@
   width: 36px;
   height: 36px;
   line-height: 36px;
+  @include rtl {
+    left: 0;
+    right: auto;
+  }
 }
 
 .live-game-market-title.active > .arrow-icon-separator:before {
@@ -871,7 +945,7 @@
 
 .live-game-all-markets-b > .region-games-list-view > .live-game-market-title + .game-view-market-row > .single-game-mini-view .game-events-contain-b > ul > li .small-title-event-b {
   display: block;
-  top: -16px;
+  top: -19px;
   color: $hero-color;
 }
 

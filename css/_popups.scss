@@ -1,5 +1,5 @@
-$popup-overlay-background-opacity: 0.95 !default;
-$popup-overlay-background: $skin-palette-12 !default;
+$popup-overlay-background-opacity: 0.8 !default;
+$popup-overlay-background: #121623 !default;
 .new-default-popup-j {
   position: fixed;
   top: 0;
@@ -8,6 +8,9 @@ $popup-overlay-background: $skin-palette-12 !default;
   bottom: 0;
   z-index: 999999999;
   animation: popup-bg-enter .3s ease-in-out;
+  @include rtl {
+    direction: rtl;
+  }
   @include scroll($scroll: auto);
   background: rgba($popup-overlay-background, $popup-overlay-background-opacity);
   @-moz-document url-prefix() {
@@ -110,6 +113,9 @@ $popup-overlay-background: $skin-palette-12 !default;
     .pu-contain-j {
       text-align: left;
       padding-bottom: 20px;
+      @include rtl {
+        text-align: right;
+      }
       > p {
         margin-bottom: 35px;
       }
@@ -132,6 +138,7 @@ $popup-overlay-background: $skin-palette-12 !default;
         box-shadow: none;
         outline: 0;
         background: $skin-palette-10;
+        caret-color: $text-palette-2;
         @include placeholder {
           color: $text-palette-4;
           font: normal 12px/36px $font-f;
@@ -438,6 +445,91 @@ $popup-overlay-background: $skin-palette-12 !default;
       height: calc(80vh - 140px);
     }
   }
+  &.pokerklas {
+    .contein-smoll-loader {
+      top: 56px;
+      width: 650px;
+      height: 224px;
+    }
+    .transfer-form-game-j {
+      float: left;
+      width: 100%;
+      padding: 30px;
+      .transfer-form-content {
+        float: left;
+        width: 100%;
+        ul {
+          float: left;
+          width: 100%;
+          margin-bottom: 6px;
+          li {
+            padding: 0 30px 14px 0;
+            display: block;
+            float: left;
+            width: 50%;
+            &:last-child {
+              padding: 0 0 14px 30px;
+              border-left: 1px solid #b2b2b2;
+            }
+            input {
+              display: block;
+              float: left;
+              width: 100%;
+              height: 36px;
+              background: none;
+              padding: 0 0 0 15px;
+              color: $text-palette-3;
+              border: 1px solid $registration-fields-background-border;
+              font: 12px $font-f;
+              transition-duration: 300ms;
+              margin: 0 0 30px 0;
+              &:focus {
+                border-color: $form-elements-focus;
+              }
+            }
+            button {
+              float: left;
+              width: 100%;
+              height: 36px;
+              background: $brand-color-1;
+              border: 1px solid $brand-color-1;
+              color: set-color($brand-color-1);
+              font: 14px $font-f;
+              text-transform: uppercase;
+              transition: opacity 500ms, border 300ms, background 300ms, color 300ms;
+              cursor: pointer;
+              &:disabled {
+                background: none;
+                opacity: 0.4;
+                pointer-events: none;
+                border: 1px solid $button-border-color;
+                color: $text-palette-1;
+              }
+              &:hover {
+                background: lighten($brand-color-1, 10);
+                border: 1px solid lighten($brand-color-1, 10);
+              }
+            }
+          }
+        }
+        p {
+          float: left;
+          width: 100%;
+          text-align: center;
+          font: 12px/14px $font-f;
+          text-transform: uppercase;
+          color: #737888;
+          margin: 14px 0 0;
+          &.transfer-form-success {
+            color: $brand-color-1;
+          }
+          &.transfer-form-error {
+            color: #bf4751;
+          }
+        }
+      }
+    }
+  }
 }
 
 .pp-table-j {
@@ -461,6 +553,10 @@ $popup-overlay-background: $skin-palette-12 !default;
     height: 20px;
     right: 8px;
     top: 7px;
+    @include rtl {
+      left: 8px;
+      right: auto;
+    }
     &:before {
       font: 18px/22px icomoon;
       content: "\e6eb";
@@ -481,6 +577,11 @@ $popup-overlay-background: $skin-palette-12 !default;
     z-index: 99;
     position: absolute;
     left: calc(100% + 10px);
+    @include rtl {
+      left: auto;
+      right: calc(100% + 10px);
+      text-align: right;
+    }
     &:before {
       display: block;
       content: "";
@@ -492,6 +593,12 @@ $popup-overlay-background: $skin-palette-12 !default;
       position: absolute;
       left: -6px;
       top: 13px;
+      @include rtl {
+        left: auto;
+        right: -6px;
+        border-width: 6px 0 6px 6px;
+        border-color: rgba(0, 0, 0, 0) rgba(0, 0, 0, 0) rgba(0, 0, 0, 0) $skin-palette-3;
+      }
     }
   }
 }
@@ -735,13 +842,19 @@ $popup-overlay-background: $skin-palette-12 !default;
     background: rgba(invert(set-color($skin-palette-9)), 0.2);
     box-shadow: inset 0 -1px 0 rgba(invert(set-color($skin-palette-9)), 0.38);
     color: $text-palette-3;
+    @include rtl {
+      padding: 0 25px 0 40px;
+    }
     > span, > p {
+      float: left;
+      display: block;
+      max-width: 100%;
       overflow: hidden;
       white-space: nowrap;
       text-overflow: ellipsis;
-      display: block;
-      max-width: 100%;
-      float: left;
+      @include rtl {
+        float: right;
+      }
     }
     &:after {
       content: "";
@@ -798,12 +911,16 @@ $popup-overlay-background: $skin-palette-12 !default;
     cursor: pointer;
     display: block;
     position: absolute;
-    right: 0;
     top: 0;
+    right: 0;
     transition: color 200ms;
     width: 58px;
     text-align: center;
     color: $text-palette-5;
+    @include rtl {
+      left: 0;
+      right: auto;
+    }
     &:hover {
       color: $text-palette-2;
     }
@@ -834,7 +951,7 @@ $popup-overlay-background: $skin-palette-12 !default;
     width: 100%;
     button {
       width: calc(50% - 5px);
-      margin-left: 9px;
+      margin: 0 0 0 9px;
       font: normal 14px $font-f;
       display: block;
       float: left;
@@ -846,8 +963,15 @@ $popup-overlay-background: $skin-palette-12 !default;
       text-transform: uppercase;
       cursor: pointer;
       outline: 0;
+      @include rtl {
+        float: right;
+        margin: 0 9px 0 0;
+      }
       &:first-child {
         margin: 0;
+        @include rtl {
+          margin: 0;
+        }
       }
       &:only-of-type {
         width: auto;
@@ -855,6 +979,10 @@ $popup-overlay-background: $skin-palette-12 !default;
         min-width: 180px;
         margin: 0 auto;
         max-width: 100%;
+        @include rtl {
+          float: none;
+          margin: 0 auto;
+        }
       }
       &:disabled {
         border-color: $button-disable-bg;
