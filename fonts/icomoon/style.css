@@ -1,10 +1,10 @@
 @font-face {
   font-family: 'icomoon';
-  src:  url('fonts/icomoon.eot?r0hesi');
-  src:  url('fonts/icomoon.eot?r0hesi#iefix') format('embedded-opentype'),
-    url('fonts/icomoon.ttf?r0hesi') format('truetype'),
-    url('fonts/icomoon.woff?r0hesi') format('woff'),
-    url('fonts/icomoon.svg?r0hesi#icomoon') format('svg');
+  src:  url('fonts/icomoon.eot?er4h45');
+  src:  url('fonts/icomoon.eot?er4h45#iefix') format('embedded-opentype'),
+    url('fonts/icomoon.ttf?er4h45') format('truetype'),
+    url('fonts/icomoon.woff?er4h45') format('woff'),
+    url('fonts/icomoon.svg?er4h45#icomoon') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -24,6 +24,21 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+.cms-jcon-Auto-Roulette-icon:before {
+  content: "\e999";
+}
+.cms-jcon-russia-2018-logo:before {
+  content: "\e997";
+}
+.cms-jcon-world-cup:before {
+  content: "\e998";
+}
+.cms-jcon-image:before {
+  content: "\e995";
+}
+.cms-jcon-document:before {
+  content: "\e996";
+}
 .cms-jcon-checkmark2:before {
   content: "\e992";
 }
@@ -1152,7 +1167,7 @@
 .cms-jcon-text2:before {
   content: "\e644";
 }
-.cms-jcon-document:before {
+.cms-jcon-document2:before {
   content: "\e645";
 }
 .cms-jcon-docs:before {
