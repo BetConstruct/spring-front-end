@@ -1,0 +1,10 @@
+{
+  "main": {
+    "availableLanguages": {
+      "@replace": true,
+      "eng": {
+        "short": "EN", "full": "English","order": 1
+      }
+    }
+  }
+}
