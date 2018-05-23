@@ -1,28 +1,20 @@
 <div class="left-nav-view-v3 favorite-nav" ng-show="myGames.length">
     <ul>
         <li>
-            <div class="
-                    sports-item-v3 {{sport.alias}}
-                    {{leftMenuState.favorites.expanded ? 'active' : ''}}
-                "
+            <div class="sports-item-v3 favorite-nav-icon-v3 {{sport.alias}} {{leftMenuState.favorites.expanded ? 'active' : ''}}"
                  ng-if="myGames.length > 0" ng-init="leftMenuState.favorites.expanded = true"
                  ng-click="leftMenuState.favorites.expanded = !leftMenuState.favorites.expanded; leftMenuClosed ? toggleLeftMenu() : void()">
-                <div class="sport-icon-v3 favorite-nav-icon-v3"></div>
-                <p>{{'Favorite games'|translate}}</p>
+                {{'Favorite games'|translate}}
                 <div class="sport-games-count-v3">
                     <span ng-show="myGames.length">{{myGames.length}}</span>
                 </div>
                 <div class="arrow-view-v3"></div>
             </div>
 
-
             <div class="region-item-row-v3">
                 <div class="region-items-box">
-
                     <div class="full-region-info-v3">
-
                         <div class="games-list-nav-v3">
-
                             <div class="games-list-mini-view-v3">
                                 <div class="competition-view-v-3">
                                     <div class="single-game-item-v3 {{game.id == activeGameId && $location.path() !== '/dashboard/' ? 'active' : ''}}"

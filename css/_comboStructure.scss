@@ -22,6 +22,9 @@
   float: left;
   width: calc(100% - 320px);
   box-sizing: border-box;
+  @include rtl {
+    float: right;
+  }
 }
 
 .optimal-contain-b {
@@ -29,6 +32,11 @@
   width: 100%;
   box-sizing: border-box;
   border-right: 10px solid #DBE1E6;
+  @include rtl {
+    border-left: 10px solid #DBE1E6;
+    border-right: none;
+  }
+
 }
 
 .left-column-view-contain {
@@ -36,6 +44,9 @@
   width: 320px;
   box-sizing: border-box;
   background: #e8edf1;
+  @include rtl {
+    float: right;
+  }
 }
 
 .centre-column-view-contain {
@@ -44,6 +55,10 @@
   box-sizing: border-box;
   background: #e8edf1;
   border-left: 10px solid #DBE1E6;
+  @include rtl {
+    border-left: none;
+    border-right: 10px solid #DBE1E6;
+  }
 }
 
 .right-column-view-contain {
@@ -51,6 +66,9 @@
   width: 320px;
   box-sizing: border-box;
   background: #e8edf1;
+  @include rtl {
+    float: left;
+  }
 }
 
 .live-overview-contanier-b {

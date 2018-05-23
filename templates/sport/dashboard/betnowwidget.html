@@ -22,7 +22,7 @@
                     <div class="game-full-information-b">
                         <ul>
                             <li class="first-team-n-contain">
-                                <div class="logo-team-new" ng-if="conf.teamLogosPath && mostPopularLiveGame.team1_external_id"><img ng-src="{{conf.teamLogosPath}}e/m/0/{{mostPopularLiveGame.team1_external_id}}.png" err-src="images/team-logo-default.png" /></div>
+                                <div class="logo-team-new" ng-if="$root.conf.teamLogosPath && mostPopularLiveGame.team1_external_id"><img ng-src="{{$root.conf.teamDefaultLogo}} ? 'images/team-logo-default.png' : {{$root.conf.teamLogosPath}}e/m/0/{{mostPopularLiveGame.team1_external_id}}.png" err-src="images/team-logo-default.png" /></div>
                                 <p>{{mostPopularLiveGame.team1_name}}</p>
                             </li>
                             <li class="icon-b-wrapper" ng-if="mostPopularLiveGame.type == 1">
@@ -44,7 +44,7 @@
                                 <span trans>VS</span>
                             </li>
                             <li class="second-team-n-contain">
-                                <div class="logo-team-new" ng-if="conf.teamLogosPath && mostPopularLiveGame.team2_external_id"><img ng-src="{{conf.teamLogosPath}}e/m/0/{{mostPopularLiveGame.team2_external_id}}.png" err-src="images/team-logo-default.png"/></div>
+                                <div class="logo-team-new" ng-if="$root.conf.teamLogosPath && mostPopularLiveGame.team2_external_id"><img ng-src="{{$root.conf.teamLogosPath}}e/m/0/{{mostPopularLiveGame.team2_external_id}}.png" err-src="images/team-logo-default.png"/></div>
                                 <p>{{mostPopularLiveGame.team2_name}}</p>
                             </li>
                         </ul>

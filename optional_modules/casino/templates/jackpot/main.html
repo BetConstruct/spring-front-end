@@ -50,7 +50,7 @@
                                                 <p class="fun-game"><a class="game-fun-link" ng-click="openJackpotGame(game, 'fun')"><span trans>Play For Free</span></a></p>
                                                 <div class="popular-game-name">
                                                     <p><a ng-click="openJackpotGame(game, 'real'); $event.stopPropagation();" title="{{game.gameName}}"> {{game.gameName}} </a></p>
-                                                    <div class="fav-block"><a ng-click="toggleSaveToMyCasinoGames(game)" ng-class="{'star-active': isFromSaved(game.id)}">star</a></div>
+                                                    <div class="fav-block"><a ng-click="toggleSaveToMyCasinoGames(game)" ng-class="{'star-active': $root.myCasinoGamesIds[game.id]}">star</a></div>
                                                 </div>
                                             </li>
                                         </ul>

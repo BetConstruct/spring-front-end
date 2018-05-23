@@ -6,9 +6,6 @@ $skin-color: #1e2639;
 $text-color: #1e2639;
 
 $asian-view-custom: true;
-$live-casino-background: #181b2e url(../../../images/backgrounds/new-background-live-casino.jpg#{$delete-cache}) no-repeat 50% 0;
-@include footer-hide-this-payments((".card"), ".VivaroBet");
-
 
 @if ($skin-second==true) {
   $white-skin: true !global;

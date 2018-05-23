@@ -1,30 +1,19 @@
-<!--New chinese poker-->
-<div ng-controller="cmsPagesCtrl" ng-init="setTitle('Chinese Poker');" get-casino-game="1540" class="skillgame-landing-j chinese-poker-j">
+<div ng-controller="cmsPagesCtrl" ng-init="setTitle('Chinese Poker');" get-casino-game="1540" class="skillgame-landing-j">
     <div class="intro-section-j" ng-init="loadPage('chinese-poker.mainPageSlugs', true)">
         <casino-game-slider product-slides="productSlides" page-name = "Chinese Poker"></casino-game-slider>
-        <div class="skillgame-landing-guide button-group-j" ng-if="pages" ng-init="initProductBanners('chinese-poker')">
-            <ul>
-                <li ng-if="userOS === 'Windows' && game.downloads.windows">
-                    <a ng-href="{{ (game.downloads.windows.indexOf('http') === -1 ? $root.cUrlPrefix + '/' : '') + game.downloads.windows }}" ng-click="broadcast('analytics.button', 'OFC poker')">
-                        <button trans>Download</button>
-                    </a>
-                </li>
-                <li ng-if="userOS === 'MacOS' && game.downloads.mac">
-                    <a ng-href="{{ (game.downloads.mac.indexOf('http') === -1 ? $root.cUrlPrefix + '/' : '') + game.downloads.mac }}" ng-click="broadcast('analytics.button', 'OFC poker')">
-                        <button trans>Download</button>
-                    </a>
-                </li>
-                <li ng-if="userOS === 'Linux' && game.downloads.linux">
-                    <a ng-href="{{ (game.downloads.linux.indexOf('http') === -1 ? $root.cUrlPrefix + '/' : '') + game.downloads.linux }}" ng-click="broadcast('analytics.button', 'OFC poker')">
-                        <button trans>Download</button>
-                    </a>
-                </li>
-            </ul>
+        <div class="slider-landing-overlay" ng-if="pages" ng-init="initProductBanners('chinese-poker')">
+            <div class="guide">
+                <div class="button-group-j">
+                    <a ng-if="userOS === 'Windows' && game.downloads.windows" ng-href="{{ (game.downloads.windows.indexOf('http') === -1 ? $root.cUrlPrefix + '/' : '') + game.downloads.windows }}" ng-click="broadcast('analytics.button', 'OFC poker')" trans>Download</a>
+                    <a ng-if="userOS === 'MacOS' && game.downloads.mac" ng-href="{{ (game.downloads.mac.indexOf('http') === -1 ? $root.cUrlPrefix + '/' : '') + game.downloads.mac }}" ng-click="broadcast('analytics.button', 'OFC poker')" trans>Download</a>
+                    <a ng-if="userOS === 'Linux' && game.downloads.linux" ng-href="{{ (game.downloads.linux.indexOf('http') === -1 ? $root.cUrlPrefix + '/' : '') + game.downloads.linux }}" ng-click="broadcast('analytics.button', 'OFC poker')" trans>Download</a>
+                </div>
+            </div>
         </div>
     </div>
     <div class="select-os-section-j" ng-if="!globalConfig.chinesePoker.hideDownloadLinkSection">
         <div>
-            <ul class="skillgame-landing-guide">
+            <ul class="guide">
                 <li ng-if="(userOS === 'Windows' || userOS === 'WindowsXP') && game.downloads.windows">
                     <div class="head-j windows">
                         <h1>Windows OS</h1>
@@ -58,7 +47,7 @@
             </ul>
         </div>
         <div>
-            <ul class="skillgame-landing-guide get-section-j">
+            <ul class="guide get-section-j">
                 <li ng-if="(userOS === 'Windows' || userOS === 'WindowsXP') && game.downloads.windows">
                     <a ng-href="{{ (game.downloads.windows.indexOf('http') === -1 ? $root.cUrlPrefix + '/' : '') + game.downloads.windows }}">
                         <button trans>Download</button>
@@ -77,9 +66,5 @@
             </ul>
         </div>
     </div>
-
     <promotion-news template="slider" slug="chinese-poker" hide-dates="true" main-class="block-meny-news promo" use-custom-base-host="true" ng-if="!showDownloadLinks" share-path="chinese-poker"></promotion-news>
-
-
 </div>
-<!--End of New chinese poker-->

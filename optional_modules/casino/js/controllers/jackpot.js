@@ -187,25 +187,6 @@ CASINO.controller('casinoJackpotCtrl', ['$rootScope', '$scope', '$sce', '$locati
         //casinoUtils.toggleSaveToMyCasinoGames($rootScope, game);
     };
 
-    /**
-     * @ngdoc method
-     * @name isFromSaved
-     * @methodOf CASINO.controller:casinoJackpotCtrl
-     * @description  checks if game (that has gameID) is in myCasinoGames
-     * @param {Number} gameId Number
-     * @returns {boolean} true if current game is in myCasinoGames, false otherwise
-     */
-    $scope.isFromSaved = function isFromSaved(gameId) {
-        var games = $rootScope.myCasinoGames || [], i, j;
-
-        for (i = 0, j = games.length; i < j; i += 1) {
-            if (games[i].id === gameId) {
-                return true;
-            }
-        }
-
-        return false;
-    };
 
     /**
      * @ngdoc method

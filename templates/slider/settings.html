@@ -239,11 +239,11 @@
                                 </div>
                                 <div class="active-field">
                                     <label class="custom-radio">
-                                        <input type="radio" ng-model="details.sex" name="gender" value="M">
+                                        <input type="radio" ng-model="details.gender" name="gender" value="M">
                                         <span trans>Male</span>
                                     </label>
                                     <label class="custom-radio">
-                                        <input type="radio" ng-model="details.sex" name="gender" value="F">
+                                        <input type="radio" ng-model="details.gender" name="gender" value="F">
                                         <span trans>Female</span>
                                     </label>
                                 </div>
@@ -506,8 +506,8 @@
 
         </div>
 
-        <ng-include ng-if="settingsPage==='usertimeout'" src="getTemplate('templates/slider/userTimeOut.html')"></ng-include>
-        <ng-include ng-if="settingsPage==='selfexclusion'" src="getTemplate('templates/slider/selfExclusion.html')"></ng-include>
+        <ng-include ng-if="settingsPage==='usertimeout'" src="::'templates/slider/userTimeOut.html'|fixPath"></ng-include>
+        <ng-include ng-if="settingsPage==='selfexclusion'" src="::'templates/slider/selfExclusion.html'|fixPath"></ng-include>
 
         <div ng-if="conf.friendReferral.enabled && settingsPage ==='friendReferral'" class="friend-referral" ng-init="initFriendReferral()">
             <h3 trans>Friend Referral</h3>

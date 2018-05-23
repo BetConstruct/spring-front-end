@@ -78,6 +78,9 @@ VBET5.directive('multiMenuConstructor', ['$window', function ($window) {
 
             element.on('mouseenter ', updateTopPosition);
 
+            scope.$on('$destroy', function() {
+                element.off('mouseenter ', updateTopPosition);
+            })
         }
     };
 }]);

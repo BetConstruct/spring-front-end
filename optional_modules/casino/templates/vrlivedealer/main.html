@@ -1,0 +1,88 @@
+<div ng-controller="cmsPagesCtrl" ng-init="setTitle('VR Live Dealer');" get-casino-game="8013" class="float-width">
+    <div ng-if="!globalConfig.vrlivedealer.redirectOnGame" class="float-width">
+        <div class="skillgame-landing-j"  ng-init="loadPage('vr-live-dealer-' + env.lang, true)" ng-show="!showNestedFrame">
+            <vbet-loader ng-show="!pages"></vbet-loader>
+            <div ng-if="pages" class="float-width">
+                <div class="intro-section-j" ng-init="initProductBanners('vr-live-casino')">
+                    <casino-game-slider product-slides="productSlides" page-name = "VR Live Dealer"></casino-game-slider>
+                    <div class="slider-landing-overlay">
+                        <div class="guide">
+                            <div class="button-group-j" id="vrlivedealer-buttons">
+                                <a ng-if="game.types.realMode" ng-click="openNestedFrame();$event.stopPropagation()" trans>Play now!</a>
+                                <a ng-show="!globalConfig.vrlivedealer.showDownloadSection" ng-if="userOS === 'Windows' && game.downloads.windows" ng-href="{{(game.downloads.windows.indexOf('http') === -1 ? $root.cUrlPrefix + '/' : '') + game.downloads.windows }}" ng-click="broadcast('analytics.button', 'VRLiveDealer')" trans>download</a>
+                                <a ng-show="!globalConfig.vrlivedealer.showDownloadSection" ng-if="userOS === 'MacOS' && game.downloads.mac" ng-href="{{ (game.downloads.mac.indexOf('http') === -1 ? $root.cUrlPrefix + '/' : '') + game.downloads.mac }}" ng-click="broadcast('analytics.button', 'VRLiveDealer')" trans>download</a>
+                                <a ng-show="globalConfig.vrlivedealer.showDownloadSection" ng-click="toggleDownloadLink('vrlivedealer-buttons')" trans>download</a>
+                                <a href="https://vrcasino.betconstruct.com/" target="_blank" trans>Learn more</a>
+                            </div>
+                            <div class="intro-info-j" ng-if="false">
+                                <a ng-click="broadcast('openHelpPage', {slug: 'faq&subsub=rules&sub=VR Live Dealer'})" class="how-to-lplay-j" trans>How To Play</a>
+                                <a ng-if="globalConfig.vrlivedealer.videoTutorial" ng-click="broadcast('youtube.videourl', globalConfig.vrlivedealer.videoTutorial[env.lang] || globalConfig.vrlivedealer.videoTutorial['eng'])" trans>Video Tutorial</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="select-os-section-j" ng-show="globalConfig.vrlivedealer.showDownloadSection">
+                    <div>
+                        <ul class="guide">
+                            <li ng-if="game.downloads.windows">
+                                <div class="head-j windows">
+                                    <h1 trans>Windows OS</h1>
+                                    <p trans>Windows XP or higher</p>
+                                </div>
+                                <div class="os-rquirments-j">
+                                    <p trans>vrcasino_requirements_windows</p>
+                                    <p trans>vrcasino_download_description_windows</p>
+                                </div>
+                            </li>
+                            <li ng-if="game.downloads.mac">
+                                <div class="head-j mac">
+                                    <h1 trans>Mac OS</h1>
+                                    <p trans>Mac OS 9 or higher</p>
+                                </div>
+                                <div class="os-rquirments-j">
+                                    <p trans>vrlivedealer_requirements_mac</p>
+                                    <p trans>vrlivedealer_download_description_mac</p>
+                                </div>
+                            </li>
+                            <li ng-if="false">
+                                <div class="head-j platforms">
+                                </div>
+                                <div class="os-rquirments-j">
+                                    <p trans>Platforms</p>
+                                    <p trans>Android, iOS, Gear VR, Daydream, OSVR, Playstation VR</p>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                    <div>
+                        <ul class="guide get-section-j">
+                            <li ng-if="game.downloads.windows">
+                                <a ng-href="{{ (game.downloads.windows.indexOf('http') === -1 ? $root.cUrlPrefix + '/' : '') + game.downloads.windows }}">
+                                    <button trans>Download</button>
+                                </a>
+                            </li>
+                            <li  ng-if="game.downloads.mac">
+                                <a ng-href="{{ (game.downloads.mac.indexOf('http') === -1 ? $root.cUrlPrefix + '/' : '') + game.downloads.mac }}">
+                                    <button trans>Download</button>
+                                </a>
+                            </li>
+                            <li ng-if="false">
+                                <a ng-href="https://vrlivedealer.betconstruct.com/" target="_blank">
+                                    <button trans>Coming soon</button>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <promotion-news ng-if="globalConfig.vrlivedealer.showPromotionsInVRLiveDealer" template="slider" slug="vrlivedealer" hide-dates="true" main-class="block-meny-news promo" use-custom-base-host="true" ng-if="!showDownloadLinks" share-path="vrlivedealer"></promotion-news>
+            </div>
+        </div>
+        <div ng-if="showNestedFrame && game" ng-controller="casinoSpecialGamesCtrl" ng-init="loadGame('vrlivedealer');"  class="big-games-overflow" ng-include="'optional_modules/casino/templates/specialgames/skillgame.html'|fixPath"></div>
+    </div>
+    <div ng-if="globalConfig.vrlivedealer.redirectOnGame && game" class="vrlivedealer-with-fullscreen" ng-controller="casinoSpecialGamesCtrl" ng-init="loadGame('vrlivedealer')" ng-include="'optional_modules/casino/templates/specialgames/main.html'|fixPath"></div>
+</div>
+
+
+
+
+

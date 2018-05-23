@@ -16,6 +16,9 @@
                                 <span>{{filter.name|translate}}</span>
                             </label>
                         </li>
+                        <li ng-if="filterGroup.okButton">
+                            <button ng-click="filterGroup.expanded=false;updateFilters(filterGroup, null, true)" trans>OK</button>
+                        </li>
                     </ul>
                 </div>
             </div>
@@ -37,9 +40,9 @@
                             <figure style="background-image: url({{item.LobbyBannerImagesFiltered[tournament.sliderIndex[item.Id]].ImageUrl}})"></figure>
                             <div class="ct-game-prize-amount">{{item.PrizeFund|number}} {{item.CurrencyId}}</div>
                             <counter start="{{item.State === 3 ? item.StartDate : item.EndDate}}" finish-text="{{item.State === 3 ? 'Started' : ''}}" class="status-color"></counter>
-                            <div class="hp-slider-arrows-17" ng-show="item.LobbyBannerImagesFiltered.length > 1">
-                                <small ng-click="tournament.sliderIndex[item.Id] = tournament.sliderIndex[item.Id] - 1;tournament.sliderIndex[item.Id] = tournament.sliderIndex[item.Id] < 0 ? item.LobbyBannerImagesFiltered.length - 1 : tournament.sliderIndex[item.Id];$event.stopPropagation();"></small>
-                                <small ng-click="tournament.sliderIndex[item.Id] = tournament.sliderIndex[item.Id] + 1;tournament.sliderIndex[item.Id] = tournament.sliderIndex[item.Id] > item.LobbyBannerImagesFiltered.length - 1 ? 0 : tournament.sliderIndex[item.Id];$event.stopPropagation();"></small>
+                            <div class="hp-slider-pagination" ng-show="item.LobbyBannerImagesFiltered.length > 1">
+                                <button ng-click="tournament.sliderIndex[item.Id] = tournament.sliderIndex[item.Id] - 1;tournament.sliderIndex[item.Id] = tournament.sliderIndex[item.Id] < 0 ? item.LobbyBannerImagesFiltered.length - 1 : tournament.sliderIndex[item.Id];$event.stopPropagation();"></button>
+                                <button ng-click="tournament.sliderIndex[item.Id] = tournament.sliderIndex[item.Id] + 1;tournament.sliderIndex[item.Id] = tournament.sliderIndex[item.Id] > item.LobbyBannerImagesFiltered.length - 1 ? 0 : tournament.sliderIndex[item.Id];$event.stopPropagation();"></button>
                             </div>
                         </div>
                     </li>

@@ -10,10 +10,10 @@
  * 2. http://www.bennadel.com/blog/2740-replacing-nginclude-with-component-directives-in-angularjs.htm
  *
  */
- VBET5.directive('includeTemplate', ['$rootScope', function ($rootScope) {
+ VBET5.directive('includeTemplate', ['$filter', function ($filter) {
      return {
         templateUrl: function templateUrl (el, attr) {
-            return $rootScope.getTemplate(attr.templatePath);
+            return $filter('fixPath')(attr.templatePath);
         }
      };
  }]);

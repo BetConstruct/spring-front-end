@@ -63,7 +63,6 @@ angular.module('vbet5.betting').controller('classicViewLeftController', ['$rootS
         Storage.set('multiViewFirstSportExpanded', true);
     }
 
-    var favoriteGames = {};
     var deepLinkedGameId = null;
 
     /**
@@ -376,7 +375,7 @@ angular.module('vbet5.betting').controller('classicViewLeftController', ['$rootS
         }
         var restrictedsportIds = Config.main.showVirtualsInSportList ? Config.main.virtualSportIds.insvirtualsports : GameInfo.getVirtualSportIds();
         request.where.sport = {'id': {'@nin': restrictedsportIds}};
-        
+
         Utils.setCustomSportAliasesFilter(request);
 
         if (type && $scope.liveFilters.withVideo) {
@@ -634,11 +633,10 @@ angular.module('vbet5.betting').controller('classicViewLeftController', ['$rootS
             $scope.toggleLeftMenu(true);
         }
     }
-
     closeLeftMenuDependingWindowSize();
 
-    DomHelper.onWindowResize(closeLeftMenuDependingWindowSize);
-    
+    $scope.$on('onWindowResize', closeLeftMenuDependingWindowSize);
+
     /**
      * @ngdoc method
      * @name gameClicked
@@ -983,6 +981,7 @@ angular.module('vbet5.betting').controller('classicViewLeftController', ['$rootS
                 });
             }
         }
+        groups.clean(undefined);
         return groups.concat(others).sort(Utils.orderSorting);
     }
 
@@ -1791,9 +1790,9 @@ angular.module('vbet5.betting').controller('classicViewLeftController', ['$rootS
         });
     })();
 
-    $scope.$on('$destroy', function() {
+    /*$scope.$on('$destroy', function() {
         // Need this to avoid side effect with $location.search()
         $scope.expandCompetition = function(){};
         $scope.expandLeftMenuPrematchRegion = function() {};
-    });
+    });*/
 }]);

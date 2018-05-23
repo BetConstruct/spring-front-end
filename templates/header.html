@@ -1,8 +1,6 @@
-<div id="header" class="block-size-visible-b" ng-include="getTemplate('templates/mainheader.html')" ng-if="$location.path() !='/popup/'"></div>
-<ng-include src="getTemplate('templates/dialogs/globaldialog.html')"></ng-include>
-<div ng-controller="pokerLoginCtrl" ng-if="calculatedConfigs.pokerEnabled && !conf.enableNewPoker && $location.path() !='/popup/'"></div>
-
-<ng-include src="getTemplate('templates/dialogs/renewreminder.html')"></ng-include>
+<div id="header" class="block-size-visible-b" ng-include="::'templates/mainheader.html'|fixPath" ng-if="$location.path() !='/popup/'"></div>
+<ng-include src="::'templates/dialogs/globaldialog.html'|fixPath"></ng-include>
+<ng-include src="::'templates/dialogs/renewreminder.html'|fixPath"></ng-include>
 
 <div ng-controller="headerCtrl"  ng-if="$location.path() !='/popup/'" ng-init="headerInit();">
     <div class="popup-bg-contain" ng-class="{'active': $root.globalPopup}">
@@ -30,11 +28,11 @@
             </div>
         </div>
     </div>
-    <ng-include src="getTemplate('templates/dialogs/youtubevideo.html')"></ng-include>
+    <ng-include src="::'templates/dialogs/youtubevideo.html'|fixPath"></ng-include>
 </div>
 
-<ng-include src="getTemplate('templates/dialogs/survey.html')"></ng-include>
-<ng-include src="getTemplate('templates/dialogs/rfidlogin.html')"></ng-include>
+<ng-include src="::'templates/dialogs/survey.html'|fixPath"></ng-include>
+<ng-include src="::'templates/dialogs/rfidlogin.html'|fixPath"></ng-include>
 
 <div class="faq-container" draggable ng-if="showFaq" ng-controller="cmsPagesCtrl" ng-init="loadFaq()">
     <h3>FAQ</h3>
@@ -50,10 +48,10 @@
 </div>
 <!--Menu sport end-->
 
-<ng-include src="getTemplate('templates/dialogs/feedback.html')"></ng-include>
+<ng-include src="::'templates/dialogs/feedback.html'|fixPath"></ng-include>
 
-<ng-include src="getTemplate('templates/dialogs/counteroffer.html')"></ng-include>
-<ng-include src="getTemplate('templates/dialogs/skype_authorization_request.html')"></ng-include>
-<ng-include src="getTemplate('templates/dialogs/couponCheck.html')"></ng-include>
-<ng-include ng-if="conf.header.customTemplate" src="getTemplate(conf.header.customTemplate)"></ng-include>
+<ng-include src="::'templates/dialogs/counteroffer.html'|fixPath"></ng-include>
+<ng-include src="::'templates/dialogs/skype_authorization_request.html'|fixPath"></ng-include>
+<ng-include src="::'templates/dialogs/couponCheck.html'|fixPath"></ng-include>
+<ng-include ng-if="conf.header.customTemplate" src="conf.header.customTemplate|fixPath"></ng-include>
 

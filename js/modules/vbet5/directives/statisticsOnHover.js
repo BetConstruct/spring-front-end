@@ -509,7 +509,7 @@ VBET5.directive('statisticsOnHover', ['$document', '$http', '$compile', '$q', '$
                     }, 500);
                 };
 
-                statsBlock.on('mouseenter', function() {scope.keepOpen = true; console.log("statblock mouseenter");});
+                statsBlock.on('mouseenter', function() {scope.keepOpen = true});
                 statsBlock.on('mouseleave', statsBlockLeave);
                 body.append($compile(statsBlock)(scope));
                 if (statisticsCache[scope.statsGame && scope.statsGame.game && scope.statsGame.game.id]) {
@@ -545,6 +545,8 @@ VBET5.directive('statisticsOnHover', ['$document', '$http', '$compile', '$q', '$
                 }
                 isStatisticsOpened = false;
                 var mystats = angular.element(document.getElementsByClassName('statistic-on-hover')[0]);
+                mystats.off('mouseenter');
+                mystats.off('mouseleave');
                 mystats.html = '';
                 mystats.remove();
             }
@@ -574,9 +576,11 @@ VBET5.directive('statisticsOnHover', ['$document', '$http', '$compile', '$q', '$
                 closePopup();
             });
 
-            /*scope.$on('$destroy', function () {
-                //delete statisticsCache;
-            });*/
+            scope.$on('$destroy', function () {
+                element.off('click');
+                element.off('mouseenter');
+                element.off('mouseleave');
+            });
         }
     };
 }]);

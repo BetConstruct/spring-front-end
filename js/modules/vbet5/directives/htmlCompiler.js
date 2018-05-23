@@ -35,8 +35,6 @@ VBET5.directive('vbHtmlCompiler', ['$compile', '$parse', function ($compile, $pa
                 }
                 $compile($element.contents())($scope);
             });
-
-
         }
     };
 }]);

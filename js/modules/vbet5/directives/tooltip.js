@@ -16,7 +16,6 @@ VBET5.directive('tooltipElement', ['$timeout', '$window', function ($timeout, $w
 
     var delay = 500;
 
-
     return {
         restrict: 'A',
         scope: {
@@ -55,9 +54,6 @@ VBET5.directive('tooltipElement', ['$timeout', '$window', function ($timeout, $w
 
             setUp();
 
-            //if (manualPosition) {
-            //    element.css({ position: 'relative' });
-            //}
             element.bind('mouseover', function hover(event) {
                 var toolTip = angular.element($window.document.getElementById(attr.tooltipElement));
                 isHovered = true;
@@ -97,9 +93,12 @@ VBET5.directive('tooltipElement', ['$timeout', '$window', function ($timeout, $w
 
                 }
             });
+
+            scope.$on('$destroy', function() {
+                element.unbind('mouseover');
+                element.unbind('mouseout');
+            });
         }
     };
-
-
 }]);
 

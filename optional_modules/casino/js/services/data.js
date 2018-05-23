@@ -4,7 +4,7 @@
  * @description
  * provides methods for getting content from casino server
  */
-CASINO.service('casinoData', ['CConfig', 'Config', '$http', function (CConfig, Config, $http) {
+CASINO.service('casinoData', ['CConfig', 'Config', 'WPConfig', 'content', '$http', function (CConfig, Config, WPConfig, content, $http) {
     'use strict';
 
     // maybe it's not a good idea keeping this in $http, but it's needed in $http.post
@@ -13,6 +13,8 @@ CASINO.service('casinoData', ['CConfig', 'Config', '$http', function (CConfig, C
     var casinoData = {};
 
     var DATA_URL = Config.main.cmsDataDomain ? Config.main.cmsDataDomain + '/casino/' : CConfig.dataUrl;
+    var WP_URL = Config.main.cmsDataDomain ? Config.main.cmsDataDomain + '/json' : WPConfig.wpUrl;
+
 
     /**
      * @ngdoc method
@@ -108,6 +110,30 @@ CASINO.service('casinoData', ['CConfig', 'Config', '$http', function (CConfig, C
 
     casinoData.getGameWinners = function getGameWinners() {
         return $http.get(DATA_URL + 'getGameWinners?site_id=' + Config.main.site_id);
+    };
+
+
+    casinoData.getPageOptions = function getPageOptions(scope, withBackgrounds) {
+        var url = WP_URL + '/getPageOptions?partner_id=' + Config.main.site_id + '&type=live-casino';
+        $http.get(url, {cache: true}).then(function (data) {
+            if (data && data.data && data.data.options) {
+                scope.pageOptions = data.data.options;
+                scope.halfPadding = scope.pageOptions.g_container_gaps === '0' ? 0 : scope.pageOptions.g_container_gaps / 2 + 'px';
+            }
+        }, function (e) {
+            console.log('Failed to load page options');
+        });
+
+        if (withBackgrounds) {
+            content.getPage('live-casino-backgrounds-' + Config.env.lang).then(function (data) {
+                if (data && data.data && data.data.page) {
+                    scope.pageBackgrounds = data.data.page;
+                }
+            }, function (e) {
+                console.log('Failed to load page backgrounds');
+            });
+        }
+
     };
 
     return casinoData;

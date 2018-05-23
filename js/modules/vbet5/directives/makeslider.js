@@ -72,6 +72,7 @@ VBET5.directive('makeSlider', ['Config', '$interval', function (Config, $interva
             scope.$on('$destroy', function () {
                 if (multiSlideInterval) {
                     $interval.cancel(multiSlideInterval);
+                    multiSlideInterval = undefined;
                 }
             });
 

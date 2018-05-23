@@ -1,14 +1,89 @@
-<div ng-controller="cmsPagesCtrl"
-     ng-if="!conf.enableNewPoker"
-     ng-init="loadPages('poker'); setTitle('Poker')"
-     ng-include="getTemplate('optional_modules/casino/templates/poker/old.html')"
-     ng-class="'poker-'+selectedPokerPage.slug"
-     class="poker-background"
-     watch-resize></div>
 
-<div ng-controller="cmsPagesCtrl"
-     ng-if="conf.enableNewPoker"
-     ng-include="getTemplate('optional_modules/casino/templates/poker/new.html')"
-     ng-class="'poker-'+selectedPokerPage.slug"
-     class="poker-background new-poker"
-     watch-resize></div>
+<div ng-controller="cmsPagesCtrl" ng-class="'poker-'+selectedPokerPage.slug" class="poker-background new-poker" watch-resize>
+    <div ng-init="loadPages('poker'); loadPage('poker.mainPageSlugs', true); setTitle('Poker');" get-casino-game="5639">
+        <div ng-show="!showNestedFrame">
+            <div ng-if="pokerPages && pages" class="skillgame-landing-j">
+                <div class="intro-section-j" ng-init="initProductBanners('poker')">
+                    <div class="winner-block-j" ng-init="winnersList = getPageBySlug(pokerPages, 'poker-winners').content" ng-show="winnersList">
+                        <div class="guide" id="winner-list" ng-bind-html="winnersList"></div>
+                    </div>
+                    <casino-game-slider product-slides="productSlides" page-name="Poker"></casino-game-slider>
+                    <div class="slider-landing-overlay">
+                        <div class="guide">
+                            <div class="button-group-j">
+                                <a ng-if="game.types.realMode" ng-class="{'play-now-top-item': globalConfig.poker.showTopItem}" ng-click="openNestedFrame();$event.stopPropagation()" data-content="{{globalConfig.poker.showTopItem|translate}}" trans>Play now!</button></a>
+                                <a class="download-now" ng-if="userOSVersion === 'WindowsXP' && game.downloads.windowsXp" ng-href="{{ (game.downloads.windowsXp.indexOf('http') === -1 ? $root.cUrlPrefix + '/' : '') + game.downloads.windowsXp }}" ng-click="broadcast('analytics.button', 'poker')" trans>download</a>
+                                <a class="download-now" ng-if="(userOSVersion !== 'WindowsXP' || !game.downloads.windowsXp) && userOS === 'Windows' && game.downloads.windows" ng-href="{{ (game.downloads.windows.indexOf('http') === -1 ? $root.cUrlPrefix + '/' : '') + game.downloads.windows }}" ng-click="broadcast('analytics.button', 'poker')" trans>download</a>
+                                <a class="download-now" ng-if="userOS === 'MacOS' && game.downloads.mac" ng-href="{{ (game.downloads.mac.indexOf('http') === -1 ? $root.cUrlPrefix + '/' : '') + game.downloads.mac}}" ng-click="broadcast('analytics.button', 'poker')" trans>download</a>
+                                <a class="download-now" ng-if="((userOS !== 'Windows' || !game.downloads.windows) && (userOS!=='MacOS' || !game.downloads.mac)) && winnersList" ng-click="broadcast('analytics.button', 'poker');scrollToSelectedItem('winner-list');$event.stopPropagation();" trans>download</a>
+                            </div>
+                            <div class="intro-info-j">
+                                <a ng-hide="globalConfig.poker.hideHowToPlayLink" ng-click="broadcast('openHelpPage', {slug: 'faq&subsub=rules&sub=poker'})" class="how-to-lplay-j" trans>How To Play</a>
+                                <a ng-if="globalConfig.poker.tournamentListEnabled" ng-click="broadcast('window.openPopup', {url:'#/popup/?action=tournamentlist', title: conf.skin, params: 'toolbar=no,resizable=yes,scrollbars=yes,width=900,height=700'}); $event.stopPropagation()" class="tournament-llist-j" trans>Tournament List</a>
+                                <a ng-if="globalConfig.poker.rakeRaceEnabled" ng-click="broadcast('window.openPopup', {url:'#/popup/?action=rakerace', title: conf.skin, params: 'toolbar=no,resizable=yes,scrollbars=yes,width=900,height=700'}); $event.stopPropagation()" class="rakerace-llist-j" trans>Rake Race</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="select-os-section-j" ng-if="!globalConfig.poker.hideDownloadLinkSectionInPokerPage">
+                    <div>
+                        <ul class="guide">
+                            <li ng-show="game.downloads.windows">
+                                <div class="head-j windows">
+                                    <h1 trans>Windows OS</h1>
+                                    <p trans>Windows XP or higher</p>
+                                </div>
+                                <div class="os-rquirments-j">
+                                    <p trans>poker_requirements_windows</p>
+                                    <p trans>poker_download_description_windows</p>
+                                </div>
+                            </li>
+                            <li ng-show="game.downloads.mac">
+                                <div class="head-j mac">
+                                    <h1 trans>Mac OS</h1>
+                                    <p trans>Mac OS 9 or higher</p>
+                                </div>
+                                <div class="os-rquirments-j">
+                                    <p trans>poker_requirements_mac</p>
+                                    <p trans>poker_download_description_mac</p>
+                                </div>
+                            </li>
+                            <li ng-show="game.downloads.android">
+                                <div class="head-j android">
+                                    <h1>Android</h1>
+                                    <p>Android version 4.0 or higher</p>
+                                </div>
+                                <div class="os-rquirments-j">
+                                    <p trans>poker_requirements_android</p>
+                                    <p trans>poker_download_description_android</p>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                    <div>
+                        <ul class="guide get-section-j">
+                            <li ng-show="game.downloads.windows">
+                                <a ng-href="{{ (game.downloads.windows.indexOf('http') === -1 ? $root.cUrlPrefix + '/' : '') + game.downloads.windows }}">
+                                    <button trans>Download</button>
+                                </a>
+                            </li>
+                            <li ng-show="game.downloads.mac">
+                                <a ng-href="{{ (game.downloads.mac.indexOf('http') === -1 ? $root.cUrlPrefix + '/' : '') +game.downloads.mac }}">
+                                    <button trans>Download</button>
+                                </a>
+                            </li>
+                            <li ng-show="game.downloads.android">
+                                <a ng-href="{{ (game.downloads.android.indexOf('http') === -1 ? $root.cUrlPrefix + '/' : '') + game.downloads.android }}">
+                                    <button trans>Download</button>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <promotion-news template="slider" slug="poker" hide-dates="true" main-class="block-meny-news promo" use-custom-base-host="true" ng-if="!showDownloadLinks" share-path="poker"></promotion-news>
+            </div>
+            <vbet-loader class="centered-j" ng-show="!pokerPagesLoaded"></vbet-loader>
+        </div>
+        <div ng-if="showNestedFrame && game" class="big-games-overflow" ng-controller="casinoSpecialGamesCtrl" ng-init="loadGame('poker')" ng-include="'optional_modules/casino/templates/specialgames/skillgame.html'|fixPath"></div>
+    </div>
+</div>

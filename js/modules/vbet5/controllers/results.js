@@ -17,8 +17,8 @@ angular.module('vbet5.betting').controller('ResultsController', ['$rootScope', '
         Moment.updateWeekDaysLocale();
 
         $rootScope.footerMovable = true; // make footer movable
-        $scope.today = Moment.get().format("YYYY-MM-DD");
-        $scope.maxDay = new Date(Moment.moment($scope.today).format()); // This adjusts max day if a there is a timezone config
+        $scope.today = Moment.get().lang("en").format("YYYY-MM-DD");
+        $scope.maxDay = new Date(Moment.moment($scope.today).lang("en").format()); // This adjusts max day if a there is a timezone config
         $scope.requestData = {
             dateFrom: $scope.maxDay,
             dateTo: $scope.maxDay,
@@ -40,7 +40,7 @@ angular.module('vbet5.betting').controller('ResultsController', ['$rootScope', '
             greyhounds_id: 1124639301
         };
 
-        var previousDate = Moment.moment($scope.requestData.dateFrom).format("YYYY-MM-DD");
+        var previousDate = Moment.moment($scope.requestData.dateFrom).lang("en").format("YYYY-MM-DD");
 
         /**
          * @ngdoc method
@@ -194,7 +194,7 @@ angular.module('vbet5.betting').controller('ResultsController', ['$rootScope', '
                     daySeconds = 60 * 60 * 24 * 1000,
                     editionInt = parseInt($scope.editionNumber || 0, 10) - parseInt(Config.main.edition.offset || 0, 10) - 1,
                     processedTime = currentYearTimestamp + editionInt * daySeconds,
-                    getEditionDay = Moment.moment(processedTime).format('YYYY-MM-DD');
+                    getEditionDay = Moment.moment(processedTime).lang("en").format('YYYY-MM-DD');
                 $scope.requestData.dateFrom = getEditionDay;
                 $scope.requestData.dateTo = getEditionDay;
             }
@@ -275,24 +275,24 @@ angular.module('vbet5.betting').controller('ResultsController', ['$rootScope', '
          * @methodOf vbet5.controller:ResultsController
          */
         $scope.adjustDate = function adjustDate(type) {
-            previousDate = Moment.moment($scope.requestData.dateFrom).format("YYYY-MM-DD");
+            previousDate = Moment.moment($scope.requestData.dateFrom).lang("en").format("YYYY-MM-DD");
             switch (type) {
                 case 'from':
                     if (Moment.get($scope.requestData.dateFrom).unix() > Moment.get($scope.requestData.dateTo).unix() || (Config.main.edition && Config.main.edition.enabled)) {
-                        $scope.requestData.dateTo = Moment.moment($scope.requestData.dateFrom).format();
+                        $scope.requestData.dateTo = Moment.moment($scope.requestData.dateFrom).lang("en").format();
                         adjustEditionFromDate();
                     }
                     if(Moment.get($scope.requestData.dateFrom).unix() < Moment.get($scope.requestData.dateTo).add((-1 * (showResultsMaxDays)), 'days').unix()) {
-                        $scope.requestData.dateTo  = Moment.moment($scope.requestData.dateFrom).add((showResultsMaxDays), 'days').format();
+                        $scope.requestData.dateTo  = Moment.moment($scope.requestData.dateFrom).add((showResultsMaxDays), 'days').lang("en").format();
                     }
                     $scope.minFromDate = Moment.moment($scope.requestData.dateTo).add((-1 * (showResultsMaxDays)), 'days');
                     break;
                 case 'to':
                     if (Moment.get($scope.requestData.dateFrom).unix() > Moment.get($scope.requestData.dateTo).unix()) {
-                        $scope.requestData.dateFrom = Moment.moment($scope.requestData.dateTo).format();
+                        $scope.requestData.dateFrom = Moment.moment($scope.requestData.dateTo).lang("en").format();
                     }
                     if(Moment.get($scope.requestData.dateFrom).unix() < Moment.get($scope.requestData.dateTo).add((-1 * (showResultsMaxDays)), 'days').unix()){
-                        $scope.requestData.dateFrom = Moment.moment($scope.requestData.dateTo).add((-1 * (showResultsMaxDays)), 'days').format();
+                        $scope.requestData.dateFrom = Moment.moment($scope.requestData.dateTo).add((-1 * (showResultsMaxDays)), 'days').lang("en").format();
                     }
                     $scope.minFromDate = Moment.moment($scope.requestData.dateTo).add((-1 * (showResultsMaxDays)), 'days');
                     break;
@@ -319,7 +319,7 @@ angular.module('vbet5.betting').controller('ResultsController', ['$rootScope', '
             // If the previous date we received info on is different from today we request active competitions, if not - we just process its competitions data
             Moment.get($scope.today).unix() !== Moment.get(previousDate).unix() ? $scope.loadSportsAndCompetitions(false, true) : $scope.processCompetitionData(sport);
             $scope.todayResult = true;
-            previousDate = Moment.moment($scope.requestData.dateFrom).format("YYYY-MM-DD");
+            previousDate = Moment.moment($scope.requestData.dateFrom).lang("en").format("YYYY-MM-DD");
         };
 
         /**

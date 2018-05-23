@@ -14,7 +14,7 @@
                             <h3 ng-bind="winner.player_user_name"></h3>
                             <p ng-bind="winner.game_name"></p>
                         </div>
-                        <span>{{winner.win_amount|number:conf.balanceFractionSize}} {{winner.currency_id|currency}}</span>
+                        <span>{{winner.win_amount|number:$root.conf.balanceFractionSize}} {{winner.currency_id|currency}}</span>
                     </div>
                 </div>
             </li>

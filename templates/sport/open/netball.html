@@ -44,7 +44,7 @@
             <th ng-repeat="setName in ::setNames track by $index" ng-class="{'active-set': game.info.current_game_state == setName}">{{$index + 1}}</th>
         </tr>
         <tr>
-            <td class="team-1" ng-style="{'border-left-color': '#'+ game.info.shirt1_color}">
+            <td class="team-1" ng-style="{'border-color': '#'+ game.info.shirt1_color}">
                 <div><tshirt shorts="{{game.info.short1_color}}" shirt="{{game.info.shirt1_color}}"></tshirt></div>
                 <span>{{ game.team1_name }}</span>
             </td>
@@ -55,7 +55,7 @@
             </td>
         </tr>
         <tr>
-            <td class="team-2" ng-style="{'border-left-color': '#'+ game.info.shirt2_color}">
+            <td class="team-2" ng-style="{'border-color': '#'+ game.info.shirt2_color}">
                 <div><tshirt shorts="{{game.info.short2_color}}" shirt="{{game.info.shirt2_color}}"></tshirt></div>
                 <span>{{ game.team2_name }}</span>
             </td>

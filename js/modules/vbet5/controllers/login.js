@@ -469,6 +469,15 @@ angular.module('vbet5').controller('loginCtrl', ['$scope', '$rootScope', 'Timeou
             });
         }
 
+        // NotAllowedLicenseSelfExcluded
+        if (data.data === "login error (2467)" || data.data.status === "2467") {
+            $rootScope.$broadcast("globalDialogs.addDialog", {
+                type: 'info',
+                title: 'Login',
+                content: Translator.get('We cannot proceed with your request. Contact "Customer Support" for further information.')
+            });
+        }
+
         // Self Exclusion
         if (data.data.status === 2008 || data.data.status === "2008") {
             $rootScope.$broadcast("globalDialogs.addDialog", {

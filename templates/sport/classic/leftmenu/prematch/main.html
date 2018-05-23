@@ -1,5 +1,5 @@
-<ng-include ng-if="conf.favoriteTeam.enabled" src="getTemplate('templates/sport/classic/leftmenu/prematch/favoriteTeam.html')"></ng-include>
-<div ng-repeat="group in prematchSportGroups track by group.id" ng-show="group && (showPanel.expanded || $index < prematchSportCount + 1)">
+<ng-include ng-if="conf.favoriteTeam.enabled" src="::'templates/sport/classic/leftmenu/prematch/favoriteTeam.html'|fixPath"></ng-include>
+<div class="float-width" ng-repeat="group in prematchSportGroups track by group.id" ng-show="group && (showPanel.expanded || $index < prematchSportCount + 1)">
     <li ng-class="{'active': leftMenuState.prematch.groups[group.id]}">
         <a ng-click="leftMenuState.prematch.groups[group.id] = !leftMenuState.prematch.groups[group.id]"
            ng-show="group.hasHeader"
@@ -23,7 +23,7 @@
             </a>
             <a ng-click="todaysBetsSelected = true; expandLeftMenuPrematchSport(sport); clickLiveCalendar()"
                title="{{::sport.name}}"
-               ng-if="conf.todayBets.enabled && sport.link"
+               ng-if="$root.conf.todayBets.enabled && sport.link"
                class="daily-wrap-b">
                 <!-- TODAY BETS -->
                 <p ng-show="sport.id === -11" class="daily-coupon-b">
@@ -82,9 +82,9 @@
 
 
                         <h4 title="{{competition.region.name}}" ng-click="expandCompetition(competition, sport);" ng-show="!env.preMatchMultiSelection" ng-class="{'active': (selectedCompetition.id == competition.id) && !outrightSelected}">
-                            <img ng-if="conf.teamLogosPath && !conf.showPopularCompetitionsSportIcons" ng-src="{{conf.teamLogosPath}}c/s/1/{{competition.id}}.png"/>
-                            <span ng-if="conf.showPopularCompetitionsSportIcons" class="sport-icon-pcj {{competition.sport_alias}}"></span>
-                            <i> {{conf.enableOlympicGames ? competition.name : (competition.name|removeParts:[competition.sport_name])}}</i><b class="arrow-rotate icon-arrow-right6"></b>
+                            <img ng-if="$root.conf.teamLogosPath && !$root.conf.showPopularCompetitionsSportIcons" ng-src="{{$root.conf.teamDefaultLogo}} ? 'images/team-logo-default.png' : {{$root.conf.teamLogosPath}}c/s/1/{{competition.id}}.png"/>
+                            <span ng-if="$root.conf.showPopularCompetitionsSportIcons" class="sport-icon-pcj {{competition.sport_alias}}"></span>
+                            <i> {{$root.conf.enableOlympicGames ? competition.name : (competition.name|removeParts:[competition.sport_name])}}</i><b class="arrow-rotate icon-arrow-right6"></b>
                         </h4>
                         <h4 title="{{competition.region.name}}" ng-show="env.preMatchMultiSelection">
                             <input name="" ng-model="prematchMultiViewCompetitions[competition.id]" type="checkbox" value="" id="checkbox-competition{{competition.id}}" ng-change="competitionToMultiview(competition)">

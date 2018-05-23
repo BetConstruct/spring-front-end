@@ -23,7 +23,6 @@ VBET5.directive('hideOnClick', ['$window',  '$rootScope', 'Config', function ($w
     'use strict';
 
     var elements = [];
-
     /**
      * Hides element by adding ng-hide class or changing specified scope flag variable
      * @param {Object} element
@@ -63,27 +62,32 @@ VBET5.directive('hideOnClick', ['$window',  '$rootScope', 'Config', function ($w
 
     return function (scope, element, attr) {
         elements.push({scope: scope, element: element, attr: attr});
-        angular.element($window).bind("click", function (event) {
+        angular.element($window).on("click", function (event) {
             if (event.button !== 2 && !Config.env.isGlobalDialog) { //event.button 2 is right button
                 hideElement(element, attr, scope);
             }
         });
 
         // prevent propagation of event to $window not to hide it
-        element.bind("click", function (event) {
+        element.on("click", function (event) {
             hideOthers(element, attr);
             event.stopPropagation();
         });
 
         // clicking on this element will also prevent hiding
+        var exceptElem;
         if (attr.except) {
-            var exceptElem = angular.element($window.document.getElementById(attr.except));
-            exceptElem.bind("click", function (event) {
+            exceptElem = angular.element($window.document.getElementById(attr.except));
+            exceptElem.on("click", function (event) {
                 hideOthers(element, attr);
                 event.stopPropagation();
             });
         }
 
-
+        scope.$on('$destroy', function() {
+            angular.element($window).off("click");
+            element.off("click");
+            exceptElem && exceptElem.off("click");
+        });
     };
 }]);

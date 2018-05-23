@@ -103,6 +103,9 @@ VBET5.service('analytics', ['$rootScope', '$window', '$location', 'Config', func
      */
     analytics.gaSend = function gaSend() {
         if ($window.ga) {
+            if (arguments.length >= 5 && angular.isObject(arguments[4]) && $rootScope.profile && $rootScope.profile.unique_id) {
+                arguments[4].eventValue = $rootScope.profile.unique_id;
+            }
             $window.ga.apply(this, arguments);
         }
 
@@ -110,8 +113,6 @@ VBET5.service('analytics', ['$rootScope', '$window', '$location', 'Config', func
             console.log('Hotjar', arguments[3], arguments[4].eventLabel);
             $window.hj(arguments[3], arguments[4].eventLabel);
         }
-
-        console.warn('analytics defined');
     };
 
     $rootScope.gaSend = analytics.gaSend;

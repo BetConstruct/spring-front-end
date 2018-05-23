@@ -1,16 +1,18 @@
-<div class="new-live-casino-j overwrite-j" ng-init="initSlidingView();">
-    <div class="live-casino-second-new-j">
-        <div class="j-resize-950-1280" ng-controller="cmsPagesCtrl" ng-init="loadPage('live-casino-most-popular-game-' + env.lang, true)">
-            <div ng-if="widgets[0].instance.image" class="single-game-contain-wp">
-                <div class="single-game-screen-wrapper">
-                    <p style="background-image: url({{widgets[0].instance.image}});"></p>
-                    <a class="banner-clickable-full" ng-href="{{widgets[0].instance.link}}" target="{{widgets[0].instance.linktarget}}"></a>
-                </div>
-            </div>
-            <div class="j-float-100-rel live-casino-slider-second-v-j" ng-hide="confData.liveCasino.hideTopSlider">
-                <casino-game-slider product-slides="productSlides"></casino-game-slider>
-            </div>
-            <div ng-include="getTemplate('optional_modules/casino/templates/livedealer/onedimensionalviewInContent.html')"></div>
+<div class="live-casino-page" ng-init="initSlidingView();">
+    <div class="float-width" ng-controller="cmsPagesCtrl" ng-init="loadPage('live-casino-most-popular-game-' + env.lang, true)">
+        <div class="{{pageOptions.b_container}}">
+            <casino-game-slider product-slides="productSlides" class="liveDealer" ng-hide="confData.liveCasino.hideTopSlider"></casino-game-slider>
         </div>
+        <div class="float-width" ng-include="'optional_modules/casino/templates/livedealer/onedimensionalviewInContent.html'"></div>
     </div>
 </div>
+<style>
+    .body-wrapper {
+        {{pageBackgrounds.thumbnail_images.full.url ? 'background-image: url('+pageBackgrounds.thumbnail_images.full.url+');' : ''}}
+        {{pageBackgrounds.custom_fields.size ? "background-size: " + pageBackgrounds.custom_fields.size[0] + ";" : pageBackgrounds.thumbnail_images.full.url ? "background-size: 100%;" : ""}}
+        {{pageBackgrounds.custom_fields.position ? 'background-position: ' + pageBackgrounds.custom_fields.position[0] : pageBackgrounds.thumbnail_images.full.url ? "background-position: 50% 0" : ""}};
+        {{pageBackgrounds.custom_fields.attachment ? "background-attachment:" + pageBackgrounds.custom_fields.attachment[0] + ";" : ""}}
+        {{pageBackgrounds.custom_fields.color ? "background-color: " + pageBackgrounds.custom_fields.color[0] + ";" : ""}}
+        {{pageBackgrounds.custom_fields.repeat ? "background-repeat: " + pageBackgrounds.custom_fields.repeat[0] : pageBackgrounds.thumbnail_images.full.url ? "background-repeat: no-repeat" : ""}};
+    }
+</style>

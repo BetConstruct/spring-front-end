@@ -2,7 +2,7 @@
     <div class="guide">
         <div class="payment-content-block" >
             <ul>
-                <li ng-repeat="payment in paymentSystemNames track by payment.name" class="{{payment.name}}" ng-click="openDepositWithPayment($event, payment.name)" ng-class="{'default-cursor': !conf.footerPaymentsClickable}">
+                <li ng-repeat="payment in paymentSystemNames track by $index" class="{{payment.name}}" ng-click="openDepositWithPayment($event, payment.name)" ng-class="{'default-cursor': !conf.footerPaymentsClickable}">
                     <span ng-hide="payment.image" class="{{payment.name}} paymentIcon"></span>
                     <img ng-src="{{payment.image}}" class="paymentImage" ng-show="payment.image">
                 </li>

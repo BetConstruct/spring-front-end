@@ -122,13 +122,11 @@
                         <div class="arrow-view-v3" ng-click="toggleMarket(market.market_type)"></div>
                     </div>
                 </div>
-                <ul class="l-b column-{{market.col_count}}" ng-class="{'default': market.col_count > 5}">
-                    <li class="s-box" ng-repeat="event in market.events track by $index" ng-class="{'active': isEventInBetSlip(event), 'blocked': event.price === 1}" ng-click="bet(event, market, gameToShow)">
-                        <div class="single-events-b-v3" title="{{event.name}} {{event.base}}" ng-class="{'pointer-events-none': event.is_empty, 'active': isEventInBetSlip(event), 'blocked': ((event.price | oddConvert:'decimal') == 1 || openGame.is_blocked)}">
-                            <b ng-show="(event.price | oddConvert:'decimal') != 1 && !openGame.is_blocked" class="p-v price{{arrowHide}}" ng-class="{'factor-top': event.price_change > 0, 'factor-bottom': event.price_change < 0}">{{event.price|oddConvert:env.oddFormat:null:market.display_key}}</b>
-                        </div>
-                    </li>
-                </ul>
+                <div class="l-b column-{{market.col_count}}" ng-class="{'default': market.col_count > 5}">
+                    <div class="single-events-b-v3" ng-repeat="event in market.events track by $index" title="{{event.name}} {{event.base}}" ng-class="{'pointer-events-none': event.is_empty, 'active': isEventInBetSlip(event), 'blocked': ((event.price | oddConvert:'decimal') == 1 || openGame.is_blocked)}" ng-click="bet(event, market, gameToShow)">
+                        <b ng-show="(event.price | oddConvert:'decimal') != 1 && !openGame.is_blocked" class="p-v price{{arrowHide}}" ng-class="{'factor-top': event.price_change > 0, 'factor-bottom': event.price_change < 0}">{{event.price|oddConvert:env.oddFormat:null:market.display_key}}</b>
+                    </div>
+            </div>
             </div>
             <!-- race markets -->
             <div class="race-market" ng-if="nonRaceSports.ids.indexOf(selectedVirtualSport.id) === -1 && gameToShow.markets.length">

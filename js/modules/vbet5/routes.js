@@ -11,9 +11,6 @@ angular.module('vbet5').config(['$routeProvider', '$anchorScrollProvider', 'Skin
     }
 
     $routeProvider
-//        .when('/:page/', {
-//            templateUrl: function (params) { return 'templates/' + params.page + '/main.html'; }
-//        })
         .when('/about/:section?', {
             templateUrl: getTemplate('templates/about/main.html'),
             reloadOnSearch: false
@@ -172,6 +169,10 @@ angular.module('vbet5').config(['$routeProvider', '$anchorScrollProvider', 'Skin
         })
         .when('/vrcasino/', {
             templateUrl: getTemplate('optional_modules/casino/templates/vrcasino/main.html'),
+            reloadOnSearch: false
+        })
+        .when('/vrlivedealer/', {
+            templateUrl: getTemplate('optional_modules/casino/templates/vrlivedealer/main.html'),
             reloadOnSearch: false
         })
         .when('/backgammon/', {

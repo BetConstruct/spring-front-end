@@ -23,25 +23,27 @@
                         </li>
                     </ul>
                     <input type="checkbox" id="header-collapse">
-                    <ul class="responsive-header-mainMenu-j">
-                        <li ng-style="{'padding' :  '0 ' + (conf.logo.height ? '0' : conf.logo.paddingMenu || logoWidth)  + 'px'}">
-                            <div class="header-bottom-row ng-scope">
-                                <div class="header-nav-contain">
-                                    <ul ng-class="{'menu-dropdown': $root.topMenuDropDown, 'menu-dropdown-show': subMenuItemCount > 0}" sub-menu-creator="main">
-                                        <div class="top-menu-more" ng-show="subMenuItemCount > 0" title="More"
-                                             ng-click="$root.topMenuDropDown=!$root.topMenuDropDown;" hide-on-click
-                                             state-flag-var="$root.topMenuDropDown" trans="attr-only">{{subMenuItemCount}}
-                                        </div>
-                                        <li ng-repeat="topPage in navigation track by topPage.id" ng-class="{'active': $parent.selectedTopPage.slug==topPage.slug}">
-                                            <div class="top-menu-sub-a-t">
-                                                <a ng-click="selectPopupTopPage(topPage)"  ng-bind="(topPage.slug.toLowerCase() == 'payments'?'Payments':topPage.title)|translate"></a>
+                    <div class="header-small-view-hide">
+                        <ul class="responsive-header-mainMenu-j">
+                            <li ng-style="{'padding' :  '0 ' + (conf.logo.height ? '0' : conf.logo.paddingMenu || logoWidth)  + 'px'}">
+                                <div class="header-bottom-row ng-scope">
+                                    <div class="header-nav-contain">
+                                        <ul ng-class="{'menu-dropdown': $root.topMenuDropDown, 'menu-dropdown-show': subMenuItemCount > 0}" sub-menu-creator="main">
+                                            <div class="top-menu-more" ng-show="subMenuItemCount > 0" title="More"
+                                                 ng-click="$root.topMenuDropDown=!$root.topMenuDropDown;" hide-on-click
+                                                 state-flag-var="$root.topMenuDropDown" trans="attr-only">{{subMenuItemCount}}
                                             </div>
-                                        </li>
-                                    </ul>
+                                            <li ng-repeat="topPage in navigation track by topPage.id" ng-class="{'active': $parent.selectedTopPage.slug==topPage.slug}">
+                                                <div class="top-menu-sub-a-t">
+                                                    <a ng-click="selectPopupTopPage(topPage)"  ng-bind="(topPage.slug.toLowerCase() == 'payments'?'Payments':topPage.title)|translate"></a>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </div>
                                 </div>
-                            </div>
-                        </li>
-                    </ul>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
             </div>
         </div>

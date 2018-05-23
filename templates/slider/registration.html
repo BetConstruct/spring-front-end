@@ -1,7 +1,6 @@
-<div ng-controller="RegistrationController as regCtrl">
+<div ng-controller="RegistrationController as regCtrl" class="float-width">
 
-    <div class="register" ng-show="conf.facebookIntegration.enable"
-         ng-include="getTemplate('templates/slider/fbsignup.html')"></div>
+    <div class="float-width" ng-show="conf.facebookIntegration.enable" ng-include="::'templates/slider/fbsignup.html'|fixPath"></div>
 
     <div ng-show="!conf.facebookIntegration.enable">
         
@@ -15,7 +14,7 @@
                     <ul>
                         <li ng-show="RegConfig.leftCol.length > 0">
                             <div ng-repeat="regItem in RegConfig.leftCol track by $index" class="reg-list-item-wrapper-j {{regItem.name}} {{regItem.type}}">
-                                <ng-include src="'templates/slider/registration-fields.html'"></ng-include>
+                                <ng-include src="::'templates/slider/registration-fields.html'"></ng-include>
                             </div>
                             <div ng-if="conf.registration.showCallVerificationMessage" class="reg-list-item-wrapper-j registrationCallVerificationMessage-j">
                                 <p trans>Your registration will be approved after verification call</p>
@@ -23,7 +22,7 @@
                         </li>
                         <li ng-show="RegConfig.rightCol.length > 0">
                             <div ng-repeat="regItem in RegConfig.rightCol track by $index" class="reg-list-item-wrapper-j {{regItem.name}} {{regItem.type}}">
-                                <ng-include src="'templates/slider/registration-fields.html'"></ng-include>
+                                <ng-include src="::'templates/slider/registration-fields.html'"></ng-include>
                             </div>
                         </li>
                     </ul>
@@ -66,7 +65,7 @@
                                 </label>
                             </div>
                             <div ng-repeat="regItem in RegConfig.bottomCol track by $index">
-                                <ng-include src="'templates/slider/registration-fields.html'"></ng-include>
+                                <ng-include src="::'templates/slider/registration-fields.html'"></ng-include>
                             </div>
                         </li>
                         <li>

@@ -7,11 +7,6 @@
              ng-class="{'active': $index === selectedGameIndex,
                         'right': conf.enableNewBannerAnimation && (previousBanner || previousBanner === 0)}">
             <a no-animate ng-href="{{bannerClick(selectedHomepageGame, true)}}" ng-click="!bannerClick(selectedHomepageGame, true) ? bannerClick(selectedHomepageGame) : null">
-                <div class="hp-splash-17" ng-show="selectedHomepageGame.content">
-                    <div>
-                        <span ng-bind-html="selectedHomepageGame.content"></span>
-                    </div>
-                </div>
                 <img ng-src="{{selectedHomepageGame.thumbnail_images.full.url}}" />
                 <!--<object ng-show="selectedHomepageGame.flash_banner_url" class="flash_banner" width="100%" height="100%">
                     <param name="scale" value="exactFit" />
@@ -19,14 +14,14 @@
                 </object>-->
             </a>
         </div>
-        <div class="hp-slider-pagination-17" ng-show="!conf.sliderArrows && selectedHomepageGames.length >1">
-            <small ng-repeat="selectedHomepageGame in selectedHomepageGames" ng-class="{'active': $index === selectedGameIndex}" ng-click="$parent.selectedGameIndex = $index"></small>
-        </div>
-        <div class="hp-slider-arrows-17" ng-class="item.sliderArrowsClass" ng-show="conf.sliderArrows && selectedHomepageGames.length > 1">
-            <!-- SDC-27978  previousBanner = undefined; -->
-            <small ng-click="previousBanner = undefined; selectedGameIndex = selectedGameIndex - 1;selectedGameIndex = selectedGameIndex < 0 ? selectedHomepageGames.length - 1 : selectedGameIndex"></small>
-            <!-- SDC-27978  previousBanner = true; -->
-            <small ng-click="previousBanner = true; selectedGameIndex = selectedGameIndex + 1;selectedGameIndex = selectedGameIndex > selectedHomepageGames.length - 1 ? 0 : selectedGameIndex"></small>
+        <div class="hp-slider-pagination" ng-show="selectedHomepageGames.length > 1">
+            <div class="display-float" ng-show="!$root.conf.sliderArrows">
+                <small ng-repeat="selectedHomepageGame in selectedHomepageGames" ng-class="{'active': $index === selectedGameIndex}" ng-click="$parent.selectedGameIndex = $index"></small>
+            </div>
+            <div class="display-float" ng-show="$root.conf.sliderArrows">
+                <button ng-click="previousBanner = undefined; selectedGameIndex = selectedGameIndex - 1;selectedGameIndex = selectedGameIndex < 0 ? selectedHomepageGames.length - 1 : selectedGameIndex"></button>
+                <button ng-click="previousBanner = true; selectedGameIndex = selectedGameIndex + 1;selectedGameIndex = selectedGameIndex > selectedHomepageGames.length - 1 ? 0 : selectedGameIndex"></button>
+            </div>
         </div>
     </div>
     <vbet-loader ng-show="!selectedHomepageGames.length"></vbet-loader>

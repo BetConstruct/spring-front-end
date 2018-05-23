@@ -45,37 +45,6 @@
                             <input ng-disabled="$parent.agSelectedCategory === 'LiveDealer'" type="search"
                                    ng-model="$parent.popUpSearchInput">
                         </div>
-
-                      <!--  <ul ng-show="$parent.agSelectedCategory !== 'LiveDealer'">
-                            <li ng-repeat="game in popUpGames | limitTo: popUpGamesLimit track by game.id">
-                            <a ng-click="openGame(game, 'real'); $event.stopPropagation();">
-                                    <p class="play-button"><span trans>play now</span></p>
-                                    <img ng-src="{{cConf.iconsUrl + game.gameID}}.jpg" alt="">
-                                </a>
-
-                                <p ng-show="game.hasFunMode && (!env.authorized || game.id !== '1314')"
-                                   class="fun-game"><a
-                                        ng-show="game.gameCategory !== 'LiveDealer' && game.gameCategory !== 'SkillGames' && game.gameCategory !== 'VirtualBetting'"
-                                        class="game-fun-link"
-                                        ng-click="openGame(game, 'fun'); $event.stopPropagation();"><span trans>PLAY FOR FUN</span></a>
-                                    <a ng-show="!env.authorized && (game.gameCategory === 'LiveDealer' || game.gameCategory === 'SkillGames' || game.gameCategory === 'VirtualBetting')"
-                                       class="game-fun-link"
-                                       ng-click="openGame(game, 'demo'); $event.stopPropagation();"><span
-                                            trans>VIEW</span></a></p>
-
-                                <div class="popular-game-name">
-                                    <p><a ng-click="openGame(game, 'real'); $event.stopPropagation();"
-                                          title="{{game.gameName}}"> {{game.gameName}} </a></p>
-
-                                    <div class="fav-block"><a ng-click="toggleSaveToMyCasinoGames(game)"
-                                                              ng-class="{'star-active': isFromSaved(game.id)}">star</a>
-                                    </div>
-                                </div>
-                            </li>
-                            <div class="load-more-news multiview" ng-show="popUpGamesLimit < popUpGames.length"><a
-                                    ng-click="popUpGamesLimit = popUpGamesLimit + 40"><p trans>Load more</p>
-                                <span></span></a></div>
-                        </ul>-->
                         <casino-games-list class="all-games-casino-list"
                                 show-conditions="true"
                                 games-list="popUpGames"

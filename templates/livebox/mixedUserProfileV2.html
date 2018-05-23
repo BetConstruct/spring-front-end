@@ -12,7 +12,7 @@
         <form name="registerform" class="registration-form" novalidate="novalidate" id="simplified-reg-form">
             <ul>
                 <li ng-repeat="regItem in userInputFields track by $index" class="field-separator">
-                    <ng-include src="getTemplate('templates/slider/registration-fields.html')"></ng-include>
+                    <ng-include src="::'templates/slider/registration-fields.html'|fixPath"></ng-include>
                 </li>
                 <li ng-if="userInputFields.length">
                     <button class="submit-but-j" ng-click="saveUserData();" trans>Save</button>

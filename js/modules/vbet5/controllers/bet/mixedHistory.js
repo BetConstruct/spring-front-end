@@ -35,7 +35,7 @@ VBET5.controller('mixedMyBetsCtrl', ['$rootScope', '$scope', '$controller', '$lo
      * @description Initialization
      */
     function initScope() {
-        $scope.today = Moment.get().format("YYYY-MM-DD");
+        $scope.today = Moment.get().lang("en").format("YYYY-MM-DD");
         $scope.productMode = 'Sportsbook';
         $scope.datePickerFormat = Config.main.layoutTimeFormat[Config.main.sportsLayout] == 'MM/DD' ?  Config.main.dateFormat.historyBalanceFormatDate : Config.main.dateFormat.datepicker;
 
@@ -71,7 +71,7 @@ VBET5.controller('mixedMyBetsCtrl', ['$rootScope', '$scope', '$controller', '$lo
             initRequestData();
 
             if (product  === 'Casino') {
-                $scope.requestData.dateFrom = Moment.moment($scope.today).add(-1, "w").format("YYYY-MM-DD");
+                $scope.requestData.dateFrom = Moment.moment($scope.today).add(-1, "w").lang("en").format("YYYY-MM-DD");
                 $scope.requestData.dateTo = $scope.today;
                 $scope.betHistoryParams.betTypeSelector = undefined;
                 $scope.betHistoryParams.betIdFilter = null;
@@ -225,28 +225,28 @@ VBET5.controller('mixedMyBetsCtrl', ['$rootScope', '$scope', '$controller', '$lo
         switch (type) {
             case 'from':
                 if (Moment.get($scope.requestData.dateFrom).unix() > Moment.get($scope.requestData.dateTo).unix()) {
-                    $scope.requestData.dateTo = Moment.moment($scope.requestData.dateFrom).format("YYYY-MM-DD");
+                    $scope.requestData.dateTo = Moment.moment($scope.requestData.dateFrom).lang("en").format("YYYY-MM-DD");
                 }
                 if ($scope.productMode === "Sportsbook") {
                     if (Moment.get($scope.requestData.dateFrom).add(monthCount, "M").isAfter($scope.today)){
                         $scope.datePickerLimits.maxToDate = $scope.today;
                     } else {
-                        $scope.requestData.dateTo = Moment.get($scope.requestData.dateFrom).add(monthCount, "M").format("YYYY-MM-DD");
-                        $scope.datePickerLimits.maxToDate = Moment.moment($scope.requestData.dateFrom).add(monthCount, "M").format("YYYY-MM-DD");
+                        $scope.requestData.dateTo = Moment.get($scope.requestData.dateFrom).add(monthCount, "M").lang("en").format("YYYY-MM-DD");
+                        $scope.datePickerLimits.maxToDate = Moment.moment($scope.requestData.dateFrom).add(monthCount, "M").lang("en").format("YYYY-MM-DD");
                     }
                 } else {
                     if (Moment.get($scope.requestData.dateFrom).add(1, "w").isAfter($scope.today)){
                         $scope.datePickerLimits.maxToDate = $scope.today;
                     } else {
-                        $scope.requestData.dateTo = Moment.get($scope.requestData.dateFrom).add(1, "w").format("YYYY-MM-DD");
-                        $scope.datePickerLimits.maxToDate = Moment.moment($scope.requestData.dateFrom).add(1, "w").format("YYYY-MM-DD");
+                        $scope.requestData.dateTo = Moment.get($scope.requestData.dateFrom).add(1, "w").lang("en").format("YYYY-MM-DD");
+                        $scope.datePickerLimits.maxToDate = Moment.moment($scope.requestData.dateFrom).add(1, "w").lang("en").format("YYYY-MM-DD");
                     }
                 }
 
                 break;
             case 'to':
                 if (Moment.get($scope.requestData.dateFrom).unix() > Moment.get($scope.requestData.dateTo).unix()) {
-                    $scope.requestData.dateFrom = Moment.moment($scope.requestData.dateTo).format("YYYY-MM-DD");
+                    $scope.requestData.dateFrom = Moment.moment($scope.requestData.dateTo).lang("en").format("YYYY-MM-DD");
                 }
                 break;
         }

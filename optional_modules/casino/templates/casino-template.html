@@ -75,7 +75,7 @@
                     <div class="search-category-nav-contain">
                         <!--search-->
                         <div class="search-casino-box-b">
-                            <div ng-include="getTemplate('optional_modules/casino/templates/search.html')"></div>
+                            <div ng-include="'optional_modules/casino/templates/search.html'|fixPath"></div>
                         </div>
                         <!--search END-->
                         <div class="left-column-casino-nav" ng-if="confData.main.filterByProviderEnabled" no-animate>

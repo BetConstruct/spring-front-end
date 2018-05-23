@@ -135,25 +135,6 @@ CASINO.controller('liveCasinoMainCtrl', ['$rootScope', '$scope', '$sce', '$locat
         casinoManager.closeGame($scope, id);
     };
 
-    /**
-     * @ngdoc method
-     * @name isFromSaved
-     * @methodOf CASINO.controller:liveCasinoMainCtrl
-     * @description  checks if game (that has gameID) is in myCasinoGames
-     * @param {Number} gameId Number
-     * @returns {boolean} true if current game is in myCasinoGames, false otherwise
-     */
-    $scope.isFromSaved = function isFromSaved(gameId) {
-        var games = $rootScope.myCasinoGames || [], i, j;
-
-        for (i = 0, j = games.length; i < j; i += 1) {
-            if (games[i].id === gameId) {
-                return true;
-            }
-        }
-
-        return false;
-    };
 
     /**
      * @ngdoc method
@@ -332,7 +313,7 @@ CASINO.controller('liveCasinoMainCtrl', ['$rootScope', '$scope', '$sce', '$locat
                 $scope.dealerPagesLoaded = true;
             });
         }
-    };
+    }
 
     function checkForDealerPageDeepLink(){
         if ($location.search().page) {
@@ -704,10 +685,8 @@ CASINO.controller('liveCasinoMainCtrl', ['$rootScope', '$scope', '$sce', '$locat
     };
 
     (function init() {
-        if ($scope.confData.liveCasino.view3DEnabled || $scope.confData.liveCasino.viewStyle === '3DView') { //footer must be movable for only for 3D View
-            $rootScope.footerMovable = true;
-        }
         loadDealerPages();
+        casinoData.getPageOptions($scope, true);
         Geoip.getGeoData(false).then(function (data) {
             data && data.countryCode && (countryCode = data.countryCode);
         })['finally'](function () {

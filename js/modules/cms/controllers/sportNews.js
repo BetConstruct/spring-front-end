@@ -75,7 +75,7 @@ CMS.controller('cmsSportNewsCtrl', ['$rootScope', '$scope', '$sce', '$location',
     function getPermaLink(news) {
         var link, origin = $window.location.protocol + "//" + $window.location.hostname + ($window.location.port ? ':' + $window.location.port : '');
         if (WPConfig.seoFilesGenerationActive) {
-            link = origin + $window.document.location.pathname + 'news/' + decodeURIComponent(news.slug) + '-id' + news.id + '.html';
+            link = origin + $window.document.location.pathname + 'news/' + encodeURIComponent((news.slug || news.title || '').replace(/ /g,"-")) + '-id-' + news.id + '.html';
         } else {
             link = origin + $window.document.location.pathname + '%23' + $location.path() + '%3Fnews=' + news.id + '%23lnews-' + news.id;
         }
@@ -144,9 +144,9 @@ CMS.controller('cmsSportNewsCtrl', ['$rootScope', '$scope', '$sce', '$location',
             content.getNewsById(searchparams.news, searchparams.secret).then(function (data) {
                 if (data.data.status === 'ok') {
                     $scope.landingNews = data.data.post;
+                    $scope.landingNews.permalink = getPermaLink($scope.landingNews);
                     $scope.landingNews.title = $sce.trustAsHtml($scope.landingNews.title);
                     $scope.landingNews.content = $sce.trustAsHtml($scope.landingNews.content);
-                    $scope.landingNews.permalink = getPermaLink($scope.landingNews);
                     ckeckIfLinkedGameExists($scope.landingNews);
                     TimeoutWrapper($anchorScroll, 500);
                 }
@@ -212,9 +212,10 @@ CMS.controller('cmsSportNewsCtrl', ['$rootScope', '$scope', '$sce', '$location',
         var i;
         for (i = 0; i < posts.length; i++) {
             posts[i].titleRaw = angular.element('<div/>').html(posts[i].title).text(); //decode html entities
+            posts[i].permalink = getPermaLink(posts[i]);
             posts[i].title = $sce.trustAsHtml(posts[i].title);
             posts[i].content = $sce.trustAsHtml(posts[i].content);
-            posts[i].permalink = getPermaLink(posts[i]);
+
         }
     }
 
@@ -561,6 +562,18 @@ CMS.controller('cmsSportNewsCtrl', ['$rootScope', '$scope', '$sce', '$location',
 
     $scope.$on('betslip.isEmpty', function () {$scope.hideRightBanner = false; $scope.showSportNewsSidebar = true;});
     $scope.$on('betslip.hasEvents', function () {$scope.hideRightBanner = true; $scope.showSportNewsSidebar = false;});
+
+
+    $scope.getBetslipBanners = function getBetslipBanners() {
+        var pathSlugMap = {
+            '/sport/': 'under-betslip-banners-classic-',
+            '/virtualsports/': 'under-betslip-banners-virtualsports-',
+            '/insvirtualsports/': 'under-betslip-banners-virtualsports-',
+            '/customsport/cyber/': 'under-betslip-banners-customsport-cyber-'
+        };
+
+        $scope.getBanners(pathSlugMap[$location.path()] + $scope.env.lang);
+    };
 
     /**
      * @ngdoc method

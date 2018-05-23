@@ -1,109 +1,72 @@
-<div ng-controller="cmsPagesCtrl" ng-init="setTitle('VR Casino');" get-casino-game="6490">
-    <div ng-if="!globalConfig.vrcasino.redirectOnGame">
-        <div ng-show="!showNestedFrame">
-            <div class="skillgame-landing-j vrcasino-j"  ng-init="loadPage('vr-casino-' + env.lang, true)">
-                <vbet-loader ng-show="!pages"></vbet-loader>
-                <div ng-if="pages">
-                    <div class="intro-section-j" ng-init="initProductBanners('vrcasino')">
-                        <casino-game-slider product-slides="productSlides" page-name = "VR Casino"></casino-game-slider>
-                        <div class="skillgame-landing-guide button-group-j">
-                            <ul id="vrcasino-buttons">
-                                <li>
-                                    <div ng-if="game.types.realMode">
-                                        <a ng-click="openNestedFrame();$event.stopPropagation()">
-                                            <button trans>Play now!</button>
-                                        </a>
-                                    </div>
-                                </li>
-                                <li ng-show="!globalConfig.vrcasino.showDownloadSection">
-                                    <a ng-if="userOS === 'Windows' && game.downloads.windows" ng-href="{{(game.downloads.windows.indexOf('http') === -1 ? $root.cUrlPrefix + '/' : '') + game.downloads.windows }}" ng-click="broadcast('analytics.button', 'VRCasino')">
-                                        <button trans>download</button>
-                                    </a>
-                                    <a ng-if="userOS === 'MacOS' && game.downloads.mac" ng-href="{{ (game.downloads.mac.indexOf('http') === -1 ? $root.cUrlPrefix + '/' : '') + game.downloads.mac }}" ng-click="broadcast('analytics.button', 'VRCasino')">
-                                        <button trans>download</button>
-                                    </a>
-                                </li>
-                                <li ng-show="globalConfig.vrcasino.showDownloadSection">
-                                    <a>
-                                        <button ng-click="toggleDownloadLink('vrcasino-buttons')" trans>download</button>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="https://vrcasino.betconstruct.com/" target="_blank">
-                                        <button trans>Learn more</button>
-                                    </a>
-                                </li>
-                                <div class="intro-info-j">
-                                    <a ng-click="broadcast('openHelpPage', {slug: 'faq&subsub=rules&sub=VR Casino'})" class="how-to-lplay-j" trans>How To Play</a>
-                                    <a ng-if="globalConfig.vrcasino.videoTutorial" ng-click="broadcast('youtube.videourl', globalConfig.vrcasino.videoTutorial[env.lang] || globalConfig.vrcasino.videoTutorial['eng'])" trans>Video Tutorial</a>
-                                </div>
-
-                            </ul>
+<div ng-controller="cmsPagesCtrl" ng-init="setTitle('VR Casino');" get-casino-game="6490" class="float-width">
+    <div ng-if="!globalConfig.vrcasino.redirectOnGame" class="float-width">
+        <div ng-show="!showNestedFrame" class="skillgame-landing-j"  ng-init="loadPage('vr-casino-' + env.lang, true)">
+            <vbet-loader ng-show="!pages"></vbet-loader>
+            <div ng-if="pages" class="float-width">
+                <div class="intro-section-j" ng-init="initProductBanners('vrcasino')">
+                    <casino-game-slider product-slides="productSlides" page-name = "VR Casino"></casino-game-slider>
+                    <div class="slider-landing-overlay">
+                        <div class="guide">
+                            <div class="button-group-j" id="vrcasino-buttons">
+                                <a ng-if="game.types.realMode" ng-click="openNestedFrame();$event.stopPropagation()" trans>Play now!</a>
+                                <a ng-show="!globalConfig.vrcasino.showDownloadSection" ng-if="userOS === 'Windows' && game.downloads.windows" ng-href="{{(game.downloads.windows.indexOf('http') === -1 ? $root.cUrlPrefix + '/' : '') + game.downloads.windows }}" ng-click="broadcast('analytics.button', 'VRCasino')" trans>download</a>
+                                <a ng-show="!globalConfig.vrcasino.showDownloadSection" ng-if="userOS === 'MacOS' && game.downloads.mac" ng-href="{{ (game.downloads.mac.indexOf('http') === -1 ? $root.cUrlPrefix + '/' : '') + game.downloads.mac }}" ng-click="broadcast('analytics.button', 'VRCasino')" trans>download</a>
+                                <a ng-show="globalConfig.vrcasino.showDownloadSection" ng-click="toggleDownloadLink('vrcasino-buttons')" trans>download</a>
+                                <a href="https://vrcasino.betconstruct.com/" target="_blank" trans>Learn more</a>
+                            </div>
+                            <div class="intro-info-j">
+                                <a ng-click="broadcast('openHelpPage', {slug: 'faq&subsub=rules&sub=vr-casino'})" class="how-to-lplay-j" trans>How To Play</a>
+                                <a ng-if="globalConfig.vrcasino.videoTutorial" ng-click="broadcast('youtube.videourl', globalConfig.vrcasino.videoTutorial[env.lang] || globalConfig.vrcasino.videoTutorial['eng'])" trans>Video Tutorial</a>
+                            </div>
                         </div>
                     </div>
-                   <div class="select-os-section-j" ng-show="globalConfig.vrcasino.showDownloadSection">
-                        <div>
-                            <ul class="skillgame-landing-guide">
-                                <li ng-if="game.downloads.windows">
-                                    <div class="head-j windows">
-                                        <h1 trans>Windows OS</h1>
-                                        <p trans>Windows XP or higher</p>
-                                    </div>
-                                    <div class="os-rquirments-j">
-                                        <p trans>vrcasino_requirements_windows</p>
-                                        <p trans>vrcasino_download_description_windows</p>
-                                    </div>
-                                </li>
-                                <li ng-if="game.downloads.mac">
-                                    <div class="head-j mac">
-                                        <h1 trans>Mac OS</h1>
-                                        <p trans>Mac OS 9 or higher</p>
-                                    </div>
-                                    <div class="os-rquirments-j">
-                                        <p trans>vrcasino_requirements_mac</p>
-                                        <p trans>vrcasino_download_description_mac</p>
-                                    </div>
-                                </li>
-                                <li>
-                                    <div class="head-j platforms">
-                                    </div>
-                                    <div class="os-rquirments-j">
-                                        <p trans>Platforms</p>
-                                        <p trans>Android, iOS, Gear VR, Daydream, OSVR, Playstation VR</p>
-                                    </div>
-                                </li>
-                            </ul>
-                        </div>
-                        <div>
-                            <ul class="skillgame-landing-guide get-section-j">
-                                <li ng-if="game.downloads.windows">
-                                    <a ng-href="{{ (game.downloads.windows.indexOf('http') === -1 ? $root.cUrlPrefix + '/' : '') + game.downloads.windows }}">
-                                        <button trans>Download</button>
-                                    </a>
-                                </li>
-                                <li  ng-if="game.downloads.mac">
-                                    <a ng-href="{{ (game.downloads.mac.indexOf('http') === -1 ? $root.cUrlPrefix + '/' : '') + game.downloads.mac }}">
-                                        <button trans>Download</button>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a ng-href="https://vrcasino.betconstruct.com/" target="_blank">
-                                        <button trans>Coming soon</button>
-                                    </a>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                    <promotion-news ng-if="globalConfig.vrcasino.showPromotionsInVRCasino" template="slider" slug="vrcasino" hide-dates="true" main-class="block-meny-news promo" use-custom-base-host="true" ng-if="!showDownloadLinks" share-path="vrcasino"></promotion-news>
-
                 </div>
+                <div class="select-os-section-j" ng-show="globalConfig.vrcasino.showDownloadSection">
+                    <div>
+                        <ul class="guide">
+                            <li ng-if="game.downloads.windows">
+                                <div class="head-j windows">
+                                    <h1 trans>Windows OS</h1>
+                                    <p trans>Windows XP or higher</p>
+                                </div>
+                                <div class="os-rquirments-j">
+                                    <p trans>vrcasino_requirements_windows</p>
+                                    <p trans>vrcasino_download_description_windows</p>
+                                </div>
+                            </li>
+                            <li ng-if="game.downloads.mac">
+                                <div class="head-j mac">
+                                    <h1 trans>Mac OS</h1>
+                                    <p trans>Mac OS 9 or higher</p>
+                                </div>
+                                <div class="os-rquirments-j">
+                                    <p trans>vrcasino_requirements_mac</p>
+                                    <p trans>vrcasino_download_description_mac</p>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                    <div>
+                        <ul class="guide get-section-j">
+                            <li ng-if="game.downloads.windows">
+                                <a ng-href="{{ (game.downloads.windows.indexOf('http') === -1 ? $root.cUrlPrefix + '/' : '') + game.downloads.windows }}">
+                                    <button trans>Download</button>
+                                </a>
+                            </li>
+                            <li  ng-if="game.downloads.mac">
+                                <a ng-href="{{ (game.downloads.mac.indexOf('http') === -1 ? $root.cUrlPrefix + '/' : '') + game.downloads.mac }}">
+                                    <button trans>Download</button>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <promotion-news ng-if="globalConfig.vrcasino.showPromotionsInVRCasino" template="slider" slug="vrcasino" hide-dates="true" main-class="block-meny-news promo" use-custom-base-host="true" ng-if="!showDownloadLinks" share-path="vrcasino"></promotion-news>
             </div>
         </div>
-
-        <div ng-if="showNestedFrame && game" ng-controller="casinoSpecialGamesCtrl" ng-init="loadGame('vrcasino');"  class="big-games-overflow" ng-include="getTemplate('optional_modules/casino/templates/specialgames/skillgame.html')"></div>
+        <div ng-if="showNestedFrame && game" ng-controller="casinoSpecialGamesCtrl" ng-init="loadGame('vrcasino');"  class="big-games-overflow" ng-include="'optional_modules/casino/templates/specialgames/skillgame.html'|fixPath"></div>
     </div>
-
-    <div ng-if="globalConfig.vrcasino.redirectOnGame && game" class="vrcasino-with-fullscreen" ng-controller="casinoSpecialGamesCtrl" ng-init="loadGame('vrcasino')" ng-include="getTemplate('optional_modules/casino/templates/specialgames/main.html')"></div>
+    <div ng-if="globalConfig.vrcasino.redirectOnGame && game" class="vrcasino-with-fullscreen" ng-controller="casinoSpecialGamesCtrl" ng-init="loadGame('vrcasino')" ng-include="'optional_modules/casino/templates/specialgames/main.html'|fixPath"></div>
 </div>
 
 

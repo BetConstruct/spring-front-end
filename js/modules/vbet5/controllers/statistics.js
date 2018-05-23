@@ -12,16 +12,6 @@ VBET5.controller('statisticsCtrl', ['$rootScope', '$scope', '$sce', 'Config','Mo
      */
     $scope.initStatistics = function initStatistics() {
         $scope.setTitle('Statistics');
-
-        /*
-        * Temporary solution for Statistics URL
-        */
-        if (Config.main.header.statisticsLink && $location.host().search('betcon.net') !== -1) {
-            $scope.statsUrl = $sce.trustAsResourceUrl(Config.main.header.statisticsLink + '#/' + Moment.getStatisticsLang());
-        }
-        else {
-            $scope.statsUrl = $sce.trustAsResourceUrl(Config.main.header.statisticsLink + '/#/' + Moment.getStatisticsLang());
-        }
-
-    }
+        $scope.statsUrl = $sce.trustAsResourceUrl(Config.main.header.statisticsLink + (Config.main.header.statisticsPostfix || '/#/') + Moment.getStatisticsLang());
+    };
 }]);

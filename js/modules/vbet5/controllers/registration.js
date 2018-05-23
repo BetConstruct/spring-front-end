@@ -392,9 +392,12 @@ angular.module('vbet5').controller('RegistrationController', ['$scope', '$rootSc
          *  and  sets corresponding **countryIsRestricted** scope variable value
          */
         $scope.checkIfCountryIsRestricted = function checkIfCountryIsRestricted() {
-             if (Config.main.registration.noWarningForCountries && !(Config.main.registration.noWarningForCountries[$scope.registrationData.country_id && $scope.registrationData.country_id.key] !== undefined)) {
+             if (Config.main.registration.warningForCountries && Config.main.registration.warningForCountries[$scope.registrationData.country_id && $scope.registrationData.country_id.key] !== undefined) {
+                $scope.countryIsRestricted = true;
+                $scope.altUrl4RestrictedCountry = Config.main.registration.warningForCountries[$scope.registrationData.country_id && $scope.registrationData.country_id.key];
+             } else if (Config.main.registration.noWarningForCountries && !(Config.main.registration.noWarningForCountries[$scope.registrationData.country_id && $scope.registrationData.country_id.key] !== undefined)) {
                  $scope.countryIsRestricted = true;
-                 $scope.altUrl4RestrictedCountry = Config.main.registration.noWarningForCountries[$scope.registrationData.country_id];
+                 $scope.altUrl4RestrictedCountry = Config.main.registration.noWarningForCountries[$scope.registrationData.country_id && $scope.registrationData.country_id.key];
              } else {
                  $scope.countryIsRestricted = false;
              }
@@ -647,86 +650,82 @@ angular.module('vbet5').controller('RegistrationController', ['$scope', '$rootSc
                                 'page': $location.path(),
                                 'eventLabel': 'Failed (' + data.result + ')'
                             });
-                            switch (data.result) {
-                            case '-1013': // password is too short
-                                $scope.registerform.password.$dirty = $scope.registerform.password.$invalid = $scope.registerform.password.$error.tooShort = true;
-                                break;
-                            case '-1012': // Incorrect phone number
-                                $scope.registerform.phone_number.$dirty = $scope.registerform.phone_number.$invalid = $scope.registerform.phone_number.$error.invalid = true;
-                                break;
-                            case '-1134': // Incorrect phone number
-                                $scope.registerform.phone_number.$dirty = $scope.registerform.phone_number.$invalid = $scope.registerform.phone_number.$error.exist = true;
-                                break;
-                            case '-1135': // Duplicate BankInfo
-                                $scope.registerform.bank_name.$dirty = $scope.registerform.bank_name.$invalid = $scope.registerform.bank_name.$error.exist = true;
-                                break;
-                            case 1127:
-                            case -1127:
-                            case '1127':
-                            case '-1127': // Duplicate phone number
-                                $scope.registerform.phone_number.$dirty = $scope.registerform.phone_number.$invalid = $scope.registerform.phone_number.$error.duplicate = true;
-                                resetFormFieldErrorOnChange('phone_number', 'duplicate');
-                                break;
-                            case '-1014': // Failed to send sms
-                                $scope.registerform.phone_number.$dirty = $scope.registerform.phone_number.$invalid = $scope.registerform.phone_number.$error.failedsms = true;
-                                break;
-                            case '-1118': // user exists
-                                if($scope.registerform.username) {
-                                    $scope.registerform.username.$dirty = $scope.registerform.username.$invalid = $scope.registerform.username.$error.exists = true;
-                                    resetFormFieldErrorOnChange('username', 'exists');
-                                } else if(!$scope.registerform.username && $scope.registerform.email) {
-                                    $scope.registerform.email.$dirty = $scope.registerform.email.$invalid = $scope.registerform.email.$error.exists = true;
-                                    resetFormFieldErrorOnChange('email', 'exists');
-                                } else if(Config.main.registration.simplified && Config.main.registration.type == 'partial') {
+                            switch (Math.abs(parseInt(data.result, 10) || 0)) {
+                                case 1013: // password is too short
+                                    $scope.registerform.password.$dirty = $scope.registerform.password.$invalid = $scope.registerform.password.$error.tooShort = true;
+                                    break;
+                                case 1012: // Incorrect phone number
+                                    $scope.registerform.phone_number.$dirty = $scope.registerform.phone_number.$invalid = $scope.registerform.phone_number.$error.invalid = true;
+                                    break;
+                                case 1134: // Incorrect phone number
+                                    $scope.registerform.phone_number.$dirty = $scope.registerform.phone_number.$invalid = $scope.registerform.phone_number.$error.exist = true;
+                                    break;
+                                case 1135: // Duplicate BankInfo
+                                    $scope.registerform.bank_name.$dirty = $scope.registerform.bank_name.$invalid = $scope.registerform.bank_name.$error.exist = true;
+                                    break;
+                                case 1127: // Duplicate phone number
                                     $scope.registerform.phone_number.$dirty = $scope.registerform.phone_number.$invalid = $scope.registerform.phone_number.$error.duplicate = true;
                                     resetFormFieldErrorOnChange('phone_number', 'duplicate');
-                                } else if(Config.main.registration.simplified) {
+                                    break;
+                                case 1014: // Failed to send sms
+                                    $scope.registerform.phone_number.$dirty = $scope.registerform.phone_number.$invalid = $scope.registerform.phone_number.$error.failedsms = true;
+                                    break;
+                                case 1118: // user exists
+                                    if($scope.registerform.username) {
+                                        $scope.registerform.username.$dirty = $scope.registerform.username.$invalid = $scope.registerform.username.$error.exists = true;
+                                        resetFormFieldErrorOnChange('username', 'exists');
+                                    } else if(!$scope.registerform.username && $scope.registerform.email) {
+                                        $scope.registerform.email.$dirty = $scope.registerform.email.$invalid = $scope.registerform.email.$error.exists = true;
+                                        resetFormFieldErrorOnChange('email', 'exists');
+                                    } else if(Config.main.registration.simplified && Config.main.registration.type == 'partial') {
+                                        $scope.registerform.phone_number.$dirty = $scope.registerform.phone_number.$invalid = $scope.registerform.phone_number.$error.duplicate = true;
+                                        resetFormFieldErrorOnChange('phone_number', 'duplicate');
+                                    } else if(Config.main.registration.simplified) {
+                                        $scope.registerform.email.$dirty = $scope.registerform.email.$invalid = $scope.registerform.email.$error.exists = true;
+                                        resetFormFieldErrorOnChange('email', 'exists');
+                                    }
+                                    break;
+                                case 1119: // email exists
                                     $scope.registerform.email.$dirty = $scope.registerform.email.$invalid = $scope.registerform.email.$error.exists = true;
                                     resetFormFieldErrorOnChange('email', 'exists');
-                                }
-                                break;
-                            case '-1119': // email exists
-                                $scope.registerform.email.$dirty = $scope.registerform.email.$invalid = $scope.registerform.email.$error.exists = true;
-                                resetFormFieldErrorOnChange('email', 'exists');
-                                break;
-                            case '-1010': // password same as login
-                                $scope.registerform.password.$dirty = $scope.registerform.password.$invalid = $scope.registerform.password.$error.sameAsLogin = true;
-                                break;
-                            case '-1123': // dublicate docnum
-                                $scope.registerform.doc_number.$dirty = $scope.registerform.doc_number.$invalid = $scope.registerform.doc_number.$error.exists = true;
-                                resetFormFieldErrorOnChange('doc_number', 'exists');
-                                break;
-                            case 21:
-                            case '21':
-                                if ($scope.registerform.captcha_text) {
-                                    $scope.registerform.captcha_text.$dirty = $scope.registerform.captcha_text.$invalid = $scope.registerform.captcha_text.$error.notmatching = true;
-                                    resetFormFieldErrorOnChange('captcha_text', 'notmatching');
-                                }
-                                if ($scope.registerform.g_recaptcha_response) {
-                                    $scope.registerform.g_recaptcha_response.$dirty = $scope.registerform.g_recaptcha_response.$invalid = $scope.registerform.g_recaptcha_response.$error.notmatching = true;
-                                    resetFormFieldErrorOnChange('g_recaptcha_response', 'notmatching');
-                                }
-                                break;
-                            case -1122:
-                            case '-1122':
-                                $scope.registerform.personal_id_6.$dirty = $scope.registerform.personal_id_6.$invalid = $scope.registerform.personal_id_6.$error.duplicate = true;
-                                resetFormFieldErrorOnChange('personal_id_6', 'duplicate');
-                                break;
-                            case -2074:
-                            case '-2074':
-                                if (Config.main.GmsPlatform){
+                                    break;
+                                case 1010: // password same as login
                                     $scope.registerform.password.$dirty = $scope.registerform.password.$invalid = $scope.registerform.password.$error.sameAsLogin = true;
-                                    resetFormFieldErrorOnChange('password', 'sameAsLogin');
-                                    resetFieldError('password2');
-                                }
-                            break;
-                            case -2442:
-                            case '-2442':
-                                $scope.registration.failed = 'Your details match a self-excluded customer in our database. Please contact customer support.';
-                                break;
-                            default:
-                                $scope.registration.failed = 'Registration failed due to technical error.';
-                                break;
+                                    break;
+                                case 1123: // dublicate docnum
+                                    $scope.registerform.doc_number.$dirty = $scope.registerform.doc_number.$invalid = $scope.registerform.doc_number.$error.exists = true;
+                                    resetFormFieldErrorOnChange('doc_number', 'exists');
+                                    break;
+                                case 21:
+                                    if ($scope.registerform.captcha_text) {
+                                        $scope.registerform.captcha_text.$dirty = $scope.registerform.captcha_text.$invalid = $scope.registerform.captcha_text.$error.notmatching = true;
+                                        resetFormFieldErrorOnChange('captcha_text', 'notmatching');
+                                    }
+                                    if ($scope.registerform.g_recaptcha_response) {
+                                        $scope.registerform.g_recaptcha_response.$dirty = $scope.registerform.g_recaptcha_response.$invalid = $scope.registerform.g_recaptcha_response.$error.notmatching = true;
+                                        resetFormFieldErrorOnChange('g_recaptcha_response', 'notmatching');
+                                    }
+                                    break;
+                                case 1122:
+                                    $scope.registerform.personal_id_6.$dirty = $scope.registerform.personal_id_6.$invalid = $scope.registerform.personal_id_6.$error.duplicate = true;
+                                    resetFormFieldErrorOnChange('personal_id_6', 'duplicate');
+                                    break;
+                                case 2074:
+                                    if (Config.main.GmsPlatform){
+                                        $scope.registerform.password.$dirty = $scope.registerform.password.$invalid = $scope.registerform.password.$error.sameAsLogin = true;
+                                        resetFormFieldErrorOnChange('password', 'sameAsLogin');
+                                        resetFieldError('password2');
+                                    }
+                                    break;
+                                case 2442:
+                                    $scope.registration.failed = 'Your details match a self-excluded customer in our database. Please contact customer support.';
+                                    break;
+                                case 2467:
+                                    $scope.registration.failed = 'We cannot proceed with your request. Contact "Customer Support" for further information.';
+                                    break;
+                                default:
+                                    $scope.registration.failed = 'Registration failed due to technical error.';
+                                    break;
                             }
                             var thereAreinvalidStepOneFields = step1Fields.reduce(function (prev, field) { return $scope.registerform[field].$invalid || prev; }, false);
                             if (thereAreinvalidStepOneFields) {

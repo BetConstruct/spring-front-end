@@ -1,7 +1,7 @@
 <div class="r-single-competition-view">
     <div class="r-competition-info-holder" ng-class="{'hide-animation-result': !openGame.has_animation}">
-        <ng-include ng-if="openGameDetails.game_id" class="float-width" src="getTemplate('templates/results/euro2016GameInfoTop.html')"></ng-include>
-        <ng-include ng-if="requestData.live && openGameDetails.game_id" ng-show="openGame.has_animation" class="display-float" src="getTemplate('templates/results/euro2016GameAnimation.html')"></ng-include>
+        <ng-include ng-if="openGameDetails.game_id" class="float-width" src="::'templates/results/euro2016GameInfoTop.html'|fixPath"></ng-include>
+        <ng-include ng-if="requestData.live && openGameDetails.game_id" ng-show="openGame.has_animation" class="display-float" src="::'templates/results/euro2016GameAnimation.html'|fixPath"></ng-include>
     </div>
 
     <div class="all-result-list-view-n">

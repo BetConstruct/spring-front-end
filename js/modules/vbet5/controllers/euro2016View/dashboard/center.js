@@ -64,12 +64,12 @@ VBET5.controller('euro2016DashboardCenterController', ['$rootScope', '$scope', '
      * @methodOf vbet5.controllers:euro2016DashboardCenterController
      * @description Check if selected central view is toggable (true by default)
      */
-    function isSelectedCentralViewTogglable () {
+    /*function isSelectedCentralViewTogglable () {
         return true;
 //         return ['sport', 'liveToday', 'popularEvents'].indexOf(parentMainScope.selectedCentralView) !== -1;
-    }
+    }*/
 
-    $scope.isSelectedCentralViewTogglable = isSelectedCentralViewTogglable;
+    $scope.isSelectedCentralViewTogglable = true; //isSelectedCentralViewTogglable;
 
     /**
      * @ngdoc method
@@ -105,23 +105,21 @@ VBET5.controller('euro2016DashboardCenterController', ['$rootScope', '$scope', '
 
             });
 
-            if (isSelectedCentralViewTogglable()) {
-                if (!subId || !$scope[source].length) {
-                    return;
-                }
-
-                var region = angular.extend(
-                    {},
-                    {
-                        type: source == 'centerViewLiveData' ? 1 : 0,
-                        isClosed: false,
-                        'region': !$scope.hideRegionsInDashboard ? $scope[source][0].region[$scope[source][0].regions[0].id].id : "",
-                        'sport': $scope[source][0].id
-                    }
-                );
-
-                $scope.toggleItem(region);
+            if (!subId || !$scope[source].length) {
+                return;
             }
+
+            var region = angular.extend(
+                {},
+                {
+                    type: source == 'centerViewLiveData' ? 1 : 0,
+                    isClosed: false,
+                    'region': !$scope.hideRegionsInDashboard ? $scope[source][0].region[$scope[source][0].regions[0].id].id : "",
+                    'sport': $scope[source][0].id
+                }
+            );
+
+            $scope.toggleItem(region);
         }
     }
 
@@ -341,9 +339,7 @@ VBET5.controller('euro2016DashboardCenterController', ['$rootScope', '$scope', '
                     }
                 }
 
-                if (isSelectedCentralViewTogglable()) { // Why do we need this part?
-                    sport.region[sport.regions[0].id].isLoading = true;
-                }
+                sport.region[sport.regions[0].id].isLoading = true;
             }
 
             sportCallback(sport);
@@ -651,12 +647,6 @@ VBET5.controller('euro2016DashboardCenterController', ['$rootScope', '$scope', '
      * @param {Object} item object
      */
     $scope.toggleItem = function toggleItem(item) {
-        if (!isSelectedCentralViewTogglable()) {
-            stopRegionLoading(item);
-
-            return;
-        }
-
         if (!item.isClosed) {
             var where = angular.copy(item);
             where.region = item.region;
@@ -702,7 +692,7 @@ VBET5.controller('euro2016DashboardCenterController', ['$rootScope', '$scope', '
         }
     };
 
-    parentMainScope.$on('comboView.leftMenu.gameSelected', function (event, game) {
+    var parentGameSelected = parentMainScope.$on('comboView.leftMenu.gameSelected', function (event, game) {
         if (game.opened && parentMainScope.selectedCentralView == 'gameView' && $scope.selectedGame && $scope.selectedGame.id == game.id && !game.force) {
             return;
         }
@@ -713,7 +703,7 @@ VBET5.controller('euro2016DashboardCenterController', ['$rootScope', '$scope', '
         $scope.openGameView(game);
     });
 
-    parentMainScope.$on('comboView.leftMenu.competitionSelected', function (event, response) {
+    var parentCompetitionSelected = parentMainScope.$on('comboView.leftMenu.competitionSelected', function (event, response) {
         var competition = response.competition;
 
         if (competition.opened && parentMainScope.selectedCentralView == 'competition' && $scope.selectedCompetition && $scope.selectedCompetition.id == competition.id && !response.force) {
@@ -741,7 +731,7 @@ VBET5.controller('euro2016DashboardCenterController', ['$rootScope', '$scope', '
         $scope.updatePathInComboView(response.sport, response.region, competition);
     });
 
-    parentMainScope.$on('comboView.leftMenu.regionSelected', function (event, response) {
+    var parentRegionSelected = parentMainScope.$on('comboView.leftMenu.regionSelected', function (event, response) {
         var region = response.region;
 
         if (region.opened && parentMainScope.selectedCentralView === 'region' && $scope.selectedRegion && $scope.selectedRegion.id == region.id && !response.force) {
@@ -769,7 +759,7 @@ VBET5.controller('euro2016DashboardCenterController', ['$rootScope', '$scope', '
         $scope.updatePathInComboView(response.sport, region);
     });
 
-    parentMainScope.$on('comboView.leftMenu.sportSelected', function (event, response) {
+    var parentSportSelected = parentMainScope.$on('comboView.leftMenu.sportSelected', function (event, response) {
         var sport = response.sport;
 
         if (sport.opened && parentMainScope.selectedCentralView === 'sport' && $scope.selectedSport && $scope.selectedSport.id === sport.id && !response.force) {
@@ -798,7 +788,7 @@ VBET5.controller('euro2016DashboardCenterController', ['$rootScope', '$scope', '
         $scope.updatePathInComboView(sport);
     });
 
-    parentMainScope.$on('comboView.leftMenu.liveTodaySelected', function (event, data) {
+    var parentLiveTodaySelected = parentMainScope.$on('comboView.leftMenu.liveTodaySelected', function (event, data) {
         var force = data && data.force;
         if (parentMainScope.selectedCentralView === 'liveToday' && !force) {
             return;
@@ -860,7 +850,7 @@ VBET5.controller('euro2016DashboardCenterController', ['$rootScope', '$scope', '
         connectionService.subscribe(request, updateCentralLiveView);
     });
 
-    parentMainScope.$on('comboView.leftMenu.popularEventsSelected', function (event, data) {
+    var parentPopularEventsSelected = parentMainScope.$on('comboView.leftMenu.popularEventsSelected', function (event, data) {
         var force = data && data.force;
         if (parentMainScope.selectedCentralView === 'popularEvents' && !force) {
             return;
@@ -887,7 +877,7 @@ VBET5.controller('euro2016DashboardCenterController', ['$rootScope', '$scope', '
         $scope.updatePathInComboView({name: 'Popular Events'});
     });
 
-    parentMainScope.$on('comboView.timeFilter.changed', function (event) {
+    var parentTimeFilterChanged = parentMainScope.$on('comboView.timeFilter.changed', function (event) {
         var eventForView = {
             'liveToday': 'liveTodaySelected',
             'popularEvents': 'popularEventsSelected',
@@ -1048,4 +1038,17 @@ VBET5.controller('euro2016DashboardCenterController', ['$rootScope', '$scope', '
 
         $scope.$broadcast("euro2016.comboView.leftMenu.liveNow");
     };
+
+    /**
+     * removes event listeners from parent scope
+     */
+    $scope.$on('$destroy', function() {
+        parentGameSelected();
+        parentCompetitionSelected();
+        parentRegionSelected();
+        parentPopularEventsSelected();
+        parentSportSelected();
+        parentLiveTodaySelected();
+        parentTimeFilterChanged();
+    });
 }]);

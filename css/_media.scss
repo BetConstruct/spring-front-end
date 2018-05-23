@@ -1,0 +1,239 @@
+@media screen and (min-width: 1850px) {
+  .category-nav ul li {
+    float: left;
+  }
+  .header {
+    max-width: 1770px;
+  }
+  .contain-all-settings {
+    position: relative;
+    right: 0;
+  }
+  .menu-games .contain-menu-games, .country-b .country-block-contain {
+    width: 1760px;
+  }
+  .contein-nav-g, .menu-casino .contain-menu-games ul .contein-nav-g {
+    max-width: 1560px;
+    width: auto;
+  }
+  .content {
+    width: 1762px;
+  }
+  .games-center, .casino-main-contain {
+    width: 1762px;
+  }
+  .left-b-game {
+    width: 1500px;
+  }
+  .left-b-game h1 {
+    width: 100%;
+  }
+  .left-b-game h1.fav-header {
+    margin-top: -41px;
+  }
+  .competition-columns-container {
+    float: left;
+    width: 710px;
+    @include rtl {
+      float: right;
+    }
+  }
+  .competition-columns-container.column-0 {
+    padding: 0 40px 0 0;
+    @include rtl {
+      padding: 0 0 0 40px;
+    }
+  }
+  .load-more-news, .nav-news-sport, .contain-baners {
+    width: 1760px;
+  }
+  .news-sport-contain {
+    width: 1570px;
+  }
+  .list-news, .big-news-block {
+    width: 1306px;
+  }
+  .promos-container .list-news, .promos-container .big-news-block {
+    width: 980px;
+  }
+  .poker .list-news {
+    width: 980px;
+  }
+  .right-block-news {
+    width: 1286px;
+  }
+  .right-block-news h3, .right-block-news span {
+    width: 966px;
+  }
+  .not-sign .dinamic-message {
+    right: 75px;
+  }
+  .list-news ul.news-column-3 {
+    display: block;
+  }
+  .casino-main .load-more-news {
+    width: 1690px;
+  }
+  .contein-slider, .games-slider, .nav-news-sport, .contain-baners {
+    width: 1690px;
+  }
+  .prof-name a {
+    max-width: 240px;
+  }
+  .totalizator {
+    width: 1470px;
+  }
+  .list-totalizator ul li.time-totalizator-game {
+    width: 203px;
+  }
+  .list-totalizator ul li.name-team-totalizator, .conteiner-content.free .list-totalizator ul li.name-team-totalizator {
+    width: 416px;
+    text-align: center;
+    font-size: 13px !important;
+    font-weight: bold !important;
+  }
+  .list-totalizator ul li.link-to-game {
+    Float: right;
+    width: 50px;
+  }
+  .list-totalizator ul li.events-totalizator {
+    width: 100px;
+  }
+  .list-totalizator ul li.events-totalizator label {
+    width: 78px;
+    margin: 6px 0 0 10px;
+  }
+  .list-totalizator ul li.events-totalizator label span {
+    width: 60px;
+  }
+  .list-totalizator ul li:first-child {
+    width: 50px;
+  }
+  .conteiner-content.free .list-totalizator ul li:first-child, .conteiner-content.free .category-sport-name-list ul li {
+    width: 104px;
+  }
+  .conteiner-content.free .list-totalizator ul li:first-child p {
+    text-indent: 20px;
+  }
+  .conteiner-content.free .list-totalizator ul li:first-child .mini-icon-1 {
+    left: 5px;
+  }
+  .saved-games-container .centr-tabs-block {
+    width: 1305px;
+  }
+  .saved-games-container.block-sign-in-form {
+    width: 1305px;
+  }
+  .save-games-contain .block-sign-in-form {
+    width: 1310px;
+  }
+  .save-games-contain .my-games-save {
+    width: 1305px;
+  }
+  .save-games-contain .games-save-slider, .block-slider .games-slider {
+    width: 1305px;
+  }
+  .save-games-contain .games-slider ul {
+    margin: 0 0 0 60px;
+  }
+  .body-wrapper.livedealer .casino-main .contein-slider, .body-wrapper.livedealer .casino-main .games-slider {
+    width: 1030px;
+  }
+  .games-slider ul li.ng-scope.casino-live-dealer {
+    width: 300px;
+    height: 240px;
+    margin: 0 18px 15px 24px;
+  }
+  .body-wrapper.livedealer .casino-main .games-slider ul li.ng-scope.casino-live-dealer {
+    margin: 0 18px 15px 20px;
+  }
+  .games-slider ul li.ng-scope.casino-live-dealer a {
+    width: 300px;
+    height: 210px;
+  }
+  .games-slider ul li.ng-scope.casino-live-dealer .popular-game-name p a {
+    height: auto;
+  }
+  .games-slider ul li.ng-scope.casino-live-dealer img {
+    max-width: 300px;
+    width: 300px;
+    transform: none;
+    -moz-transform: none;
+    -ms-transform: none;
+    -o-transform: none;
+    -webkit-transform: none;
+    transition-duration: 0ms;
+  }
+  .games-slider ul li.ng-scope.casino-live-dealer .fun-game {
+    top: 125px;
+  }
+  .games-slider ul li.ng-scope.casino-live-dealer .play-button {
+    top: 80px;
+  }
+  .games-slider ul li.ng-scope.casino-live-dealer a.game-fun-link {
+    width: auto;
+    height: auto;
+  }
+  .category-sport-name-list ul {
+    width: 300px;
+    right: 14px;
+  }
+  .category-sport-name-list ul li {
+    width: 102px;
+  }
+  .slider-upcomming {
+    width: 1294px;
+  }
+  .iphone-content {
+    width: 1780px;
+  }
+  .conteiner .old-version-link {
+    right: 410px;
+  }
+  .additional-link {
+    right: 462px;
+  }
+  .category-sport-name-list p {
+    max-width: 1100px;
+  }
+  .contain-livedealer-centr {
+    width: 1430px;
+  }
+  .right-text-dealer {
+    width: 1060px;
+  }
+  .remove-all-fav {
+    right: 50px;
+    top: 4px;
+  }
+  .centr-jackpot-info {
+    width: 1600px;
+  }
+}
+
+@media screen and (max-height: 900px) {
+  .cashier-button {
+    margin: 18px 0 0 0;
+  }
+  .form-contain.withdraw .form-sign-in.moneta-left .text-payment-contain {
+    max-height: 179px;
+  }
+  .form-contain.withdraw .form-sign-in.moneta-left {
+    min-height: 189px;
+  }
+  .button-sign {
+    padding: 10px 30px 10px 0;
+  }
+  .form-contain.deposit div.button-sign {
+    padding: 10px 30px 0 0;
+  }
+  .sms-code-block.active .button-sms.code {
+    margin: 4px 0 0 4px;
+  }
+  .sms-code-block.active .button-sms {
+    margin: 24px 0 0 0;
+  }
+  .settings-info-contain .personal-details-left ul li .select-block p {
+    padding: 8px 0 0 12px;
+  }
+}

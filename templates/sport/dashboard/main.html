@@ -1,6 +1,6 @@
 <div class="container-p gameing-wrapper" ng-controller="dashboardCtrl" ng-init="setTitle(('Dashboard'|translate))" ng-class="{'dashboard-live': env.live, 'dashboard-prematch': !env.live}" no-animate>
     <div class="left-container-p" ng-class="{'mini-p': leftMenuClosed}">
-        <ng-include src="getTemplate('templates/sport/classic/leftmenu/main.html')" class="left-menu-wrapper-j" no-animate></ng-include>
+        <ng-include src="::'templates/sport/classic/leftmenu/main.html'|fixPath" class="left-menu-wrapper-j" no-animate></ng-include>
     </div>
     <div class="center-container-p">
         <div class="old-classic-scroll-contain">
@@ -9,7 +9,7 @@
 
                 <!-- System Calculator-->
                 <div id="system-claculator-container" ng-if="$root.showSystemCalculator" draggable allow-other-mouse-events drag-from="calculator-draggable-header">
-                    <ng-include src="getTemplate('templates/sport/classic/systemCalculator.html')"></ng-include>
+                    <ng-include src="::'templates/sport/classic/systemCalculator.html'|fixPath"></ng-include>
                 </div>
                 <!-- System Calculator-->
 
@@ -30,7 +30,7 @@
                     </div>
 
                     <div class="dashboard-left-column">
-                        <div ng-if="conf.dashboard.version==1" class="contein-cash" ng-include="getTemplate('templates/sport/dashboard/betnowwidget.html')"></div>
+                        <div ng-if="conf.dashboard.version==1" class="contein-cash" ng-include="::'templates/sport/dashboard/betnowwidget.html'|fixPath"></div>
                         <div ng-if="conf.dashboard.version==2" class="bet-now-multiple-widget-j">
                             <div ng-if="showGames && (showGames[1].length === 0 && showGames[0].length === 0)" class="full-widget-game-info dashboard-loading-t">
                                 <vbet-loader></vbet-loader>
@@ -40,13 +40,13 @@
                                     <td ng-if="showGames[1].length > 0">
                                         <div class="left-row-t" ng-repeat="game in showGames[1]" ng-init="showGameId = game"
                                              class="contein-cash"
-                                             ng-include="getTemplate('templates/sport/dashboard/betnowwidget.html')">
+                                             ng-include="::'templates/sport/dashboard/betnowwidget.html'|fixPath">
                                         </div>
                                     </td>
                                     <td ng-if="showGames[0].length > 0">
                                         <div class="left-row-t" ng-repeat="game in showGames[0]" ng-init="showGameId = game"
                                              class="contein-cash"
-                                             ng-include="getTemplate('templates/sport/dashboard/betnowwidget.html')">
+                                             ng-include="::'templates/sport/dashboard/betnowwidget.html'|fixPath">
                                         </div>
                                     </td>
                                 </tr>
@@ -61,7 +61,7 @@
                             </div>
                             <div ng-repeat="game in showGames[0].concat(showGames[1])" ng-init="showGameId = game" ng-show="$index===currentIndex"
                                  class="contein-cash"
-                                 ng-include="getTemplate('templates/sport/dashboard/betnowwidget.html')">
+                                 ng-include="::'templates/sport/dashboard/betnowwidget.html'|fixPath">
                             </div>
                         </div>
 
@@ -118,19 +118,19 @@
             <div class="right-betslip-contain"
                  ng-show="conf.customSportsBook.classic.showBetSlip"
                  ng-class="{'video-and-animation': hideVideoAndAnimationBox && (openGame.has_animation || (openGame.video_id && conf.videoEnabled)), 'video-and-animation-opened': !hideVideoAndAnimationBox && (openGame.has_animation || openGame.video_id) && !isVideoDetached}">
-                <ng-include class="include-viewSwitcher-j" src="getTemplate('templates/sport/viewswitcher.html')"></ng-include>
+                <ng-include class="include-viewSwitcher-j" src="::'templates/sport/viewswitcher.html'|fixPath"></ng-include>
                 <!-- Animation control start -->
                 <div class="block-size-visible-b" ng-if="!conf.animationAndVideoOnLeft && (env.live || !virtualSportsSelected) && (((openGame.video_id || openGame.video_data) && conf.videoEnabled && !pinnedGames[openGame.id] && !enlargedGame) || openGame.has_animation)">
-                    <div class="animation-control" ng-include="getTemplate('templates/sport/classic/animation_video.html')"></div>
+                    <div class="animation-control" ng-include="::'templates/sport/classic/animation_video.html'|fixPath"></div>
                 </div>
 
                 <!-- Animation control end -->
                 <div class="betslip-toggle" ng-click="betslipOpen=!betslipOpen" ng-class="{'betslip-button-open':betslipOpen }"><p>BetSlip</p><span class="betslip-bets-count" ng-bind="$root.betSlipBetsCount"></span></div>
-                <div class="list-bet-block" ng-if="$location.path() !== '/poolbetting/'" ng-include="getTemplate('templates/sport/betslip.html')"></div> 
-                <div class="mini-games" ng-if="conf.enableMiniGameUnderBetslip && $root.casinoEnabled" ng-include="getTemplate('optional_modules/casino/templates/specialgames/minigames.html')"></div>
-                <div class="right-banner-container" ng-if="conf.enableBannerUnderBetslip" ng-controller="cmsSportNewsCtrl" ng-include="getTemplate('templates/sport/classic/banners.html')"></div>
+                <div class="list-bet-block" ng-if="$location.path() !== '/poolbetting/'" ng-include="::'templates/sport/betslip.html'|fixPath"></div>
+                <div class="mini-games" ng-if="conf.enableMiniGameUnderBetslip && $root.casinoEnabled" ng-include="'optional_modules/casino/templates/specialgames/minigames.html'|fixPath"></div>
+                <div class="right-banner-container" ng-if="conf.enableBannerUnderBetslip" ng-controller="cmsSportNewsCtrl" ng-include="::'templates/sport/classic/banners.html'|fixPath"></div>
                 <!--Спортивные новости-->
-                <div ng-if="conf.enableNews && conf.showNewsInClassicView" ng-show="(!betSlipBetsCount || betSlipBetsCount === 0) && showNewsBlock && showNewsBetSet && (hideVideoAndAnimationBox || (!openGame.has_animation && (!openGame.video_id || !conf.videoEnabled || pinnedGames[openGame.id] || enlargedGame)))" class="sport-news" ng-include="getTemplate('templates/sport/sportnews.html')" id="sport-news-sidebar"></div>
+                <div ng-if="conf.enableNews && conf.showNewsInClassicView" ng-show="(!betSlipBetsCount || betSlipBetsCount === 0) && showNewsBlock && showNewsBetSet && (hideVideoAndAnimationBox || (!openGame.has_animation && (!openGame.video_id || !conf.videoEnabled || pinnedGames[openGame.id] || enlargedGame)))" class="sport-news" ng-include="::'templates/sport/sportnews.html'|fixPath" id="sport-news-sidebar"></div>
 
             </div>
         </div>

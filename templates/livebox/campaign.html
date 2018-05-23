@@ -1,0 +1,35 @@
+<div ng-controller="campaignCtrl" class="dilijan-pp balance-lightbox-j" ng-init="loadCampaignCodes()">
+    <article>
+        <ul>
+            <li>
+                <h5 ng-show="!campaignCode.loadingCodes" trans></h5>
+                <form ng-show="!campaignCode.loadingCodes">
+                    <label>
+                        <input type="text" ng-model="campaignCode.value" prevent-input="[^a-zA-Z0-9]">
+                    </label>
+                    <button ng-click="checkCampaignCode()" ng-disabled="campaignCode.value === '' || campaignCode.checkingCode" trans>Check</button>
+                </form>
+            </li>
+            <li>
+                <div class="game-torunament-section-j" ng-show="!campaignCode.loadingCodes">
+                    <table>
+                        <tr>
+                            <td trans>Code</td>
+                            <td trans>Instant Winning</td>
+                            <td trans>Draw Number</td>
+                        </tr>
+                        <tr ng-repeat="code in codes track by code.Id">
+                            <td ng-bind="code.Code" trans></td>
+                            <td ng-if="code.WonType == 0" trans>No instant winning</td>
+                            <td ng-if="code.WonType == 1" trans>Won Ball</td>
+                            <td ng-if="code.WonType == 2" trans>Won T-Shirt</td>
+                            <td ng-if="code.WonType == 3" trans>Won 1 Box of Dilijan beer</td>
+                            <td ng-bind="code.CodeId" trans></td>
+                        </tr>
+                    </table>
+                </div>
+                <vbet-loader ng-show="campaignCode.loadingCodes"></vbet-loader>
+            </li>
+        </ul>
+    </article>
+</div>

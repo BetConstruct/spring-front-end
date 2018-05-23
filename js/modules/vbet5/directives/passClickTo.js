@@ -33,5 +33,9 @@ VBET5.directive('passClickTo', ['$window', function ($window) {
 
             }
         });
+
+        scope.$on('$destroy', function() {
+            element.unbind("click");
+        });
     };
 }]);

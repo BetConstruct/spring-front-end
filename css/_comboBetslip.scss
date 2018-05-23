@@ -18,6 +18,9 @@
   background: none;
   padding: 0 3px 5px 3px;
   box-sizing: border-box;
+  @include rtl {
+    float: right;
+  }
 }
 
 .quick-bet-price-box > ul > li > select {
@@ -486,6 +489,9 @@
       background: #e8edf1;
       text-align: center;
       color: #404654;
+      @include rtl {
+        text-align: center;
+      }
     }
     label {
       float: none;

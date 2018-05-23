@@ -537,7 +537,7 @@ VBET5.controller('comboViewCenterController', ['$rootScope', '$scope', 'OddServi
         }
     };
 
-    parentMainScope.$on('comboView.leftMenu.gameSelected', function (event, game) {
+    var parentGameSelected = parentMainScope.$on('comboView.leftMenu.gameSelected', function (event, game) {
         if (game.opened && parentMainScope.selectedCentralView == 'gameView' && $scope.selectedGame && $scope.selectedGame.id == game.id && !game.force) {
             return;
         }
@@ -548,7 +548,7 @@ VBET5.controller('comboViewCenterController', ['$rootScope', '$scope', 'OddServi
         $scope.openGameView(game);
     });
 
-    parentMainScope.$on('comboView.leftMenu.competitionSelected', function (event, response) {
+    var parentCompetitionSelected = parentMainScope.$on('comboView.leftMenu.competitionSelected', function (event, response) {
         var competition = response.competition;
 
         if (competition.opened && parentMainScope.selectedCentralView == 'competition' && $scope.selectedCompetition && $scope.selectedCompetition.id == competition.id && !response.force) {
@@ -575,7 +575,7 @@ VBET5.controller('comboViewCenterController', ['$rootScope', '$scope', 'OddServi
         $scope.updatePathInComboView(response.sport, response.region, competition);
     });
 
-    parentMainScope.$on('comboView.leftMenu.regionSelected', function (event, response) {
+    var parentRegionSelected = parentMainScope.$on('comboView.leftMenu.regionSelected', function (event, response) {
         var region = response.region;
 
         if (region.opened && parentMainScope.selectedCentralView === 'region' && $scope.selectedRegion && $scope.selectedRegion.id == region.id && !response.force) {
@@ -602,7 +602,7 @@ VBET5.controller('comboViewCenterController', ['$rootScope', '$scope', 'OddServi
         $scope.updatePathInComboView(response.sport, region);
     });
 
-    parentMainScope.$on('comboView.leftMenu.sportSelected', function (event, response) {
+    var parentSportSelected = parentMainScope.$on('comboView.leftMenu.sportSelected', function (event, response) {
         var sport = response.sport;
 
         if (sport.opened && parentMainScope.selectedCentralView === 'sport' && $scope.selectedSport && $scope.selectedSport.id === sport.id && !response.force) {
@@ -630,7 +630,7 @@ VBET5.controller('comboViewCenterController', ['$rootScope', '$scope', 'OddServi
         $scope.updatePathInComboView(sport);
     });
 
-    parentMainScope.$on('comboView.leftMenu.liveTodaySelected', function (event, data) {
+    var parentLiveTodaySelected = parentMainScope.$on('comboView.leftMenu.liveTodaySelected', function (event, data) {
         var force = data && data.force;
         if (parentMainScope.selectedCentralView === 'liveToday' && !force) {
             return;
@@ -664,7 +664,7 @@ VBET5.controller('comboViewCenterController', ['$rootScope', '$scope', 'OddServi
         $scope.updatePathInComboView({name: 'Live Today'});
     });
 
-    parentMainScope.$on('comboView.leftMenu.popularEventsSelected', function (event, data) {
+    var parentPopularEventSelected = parentMainScope.$on('comboView.leftMenu.popularEventsSelected', function (event, data) {
         var force = data && data.force;
         if (parentMainScope.selectedCentralView === 'popularEvents' && !force) {
             return;
@@ -691,7 +691,7 @@ VBET5.controller('comboViewCenterController', ['$rootScope', '$scope', 'OddServi
         $scope.updatePathInComboView({name: 'Popular Events'});
     });
 
-    parentMainScope.$on('comboView.timeFilter.changed', function (event) {
+    var parentTimeFilterChanged = parentMainScope.$on('comboView.timeFilter.changed', function (event) {
         var eventForView = {
             'liveToday': 'liveTodaySelected',
             'popularEvents': 'popularEventsSelected',
@@ -738,4 +738,17 @@ VBET5.controller('comboViewCenterController', ['$rootScope', '$scope', 'OddServi
             }
         );
     };
+
+    /**
+     * removes event listeners from parent scope
+     */
+    $scope.$on('$destroy', function() {
+        parentGameSelected();
+        parentCompetitionSelected();
+        parentRegionSelected();
+        parentSportSelected();
+        parentLiveTodaySelected();
+        parentTimeFilterChanged();
+        parentPopularEventSelected();
+    });
 }]);

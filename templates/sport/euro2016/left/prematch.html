@@ -8,7 +8,6 @@
                 <li class="sports-item-v3 sports-group-item-v3" ng-show="group.hasHeader"
                      ng-class="{'active': leftMenuState.prematch.groups[group.id]}"
                      ng-click="leftMenuState.prematch.groups[group.id] = !leftMenuState.prematch.groups[group.id]">
-                    <div class="sport-icon-v3 sport-group-{{group.alias}} {{group.name}}"></div>
                     <p>{{group.name}}</p>
                     <div class="arrow-view-v3"></div>
                     <div class="sport-games-count-v3">
@@ -23,14 +22,12 @@
                          ng-class="{'active': leftMenuState.prematch.sport[sport.id].expanded || (virtualSportsSelected && sport.isVirtualSport) ||($parent.todaysBetsSelected && sport.isTodayBets ||(outrightSelected && sport.isOutright))}"
                          ng-click="expandLeftMenuPrematchSport(sport, null, null, true); selectSport(sport, !leftMenuState.prematch.sport[sport.id].expanded);  closeOtherSportsIfNeed(leftMenuState.prematch.sport[sport.id].expanded);"
                          ng-show="!sport.link">
-                        <div class="sport-icon-v3 {{sport.alias}}"></div>
-                        <p>{{sport.name}}</p>
+                        {{sport.name}}
                         <div class="arrow-view-v3"></div>
                         <div class="sport-games-count-v3">
                             <span ng-show="sport.game">{{sport.game}}</span>
                         </div>
                     </div>
-
 
                     <a class="sports-item-v3 {{sport.alias}}" ng-class="{'active': $parent.todaysBetsSelected && sport.isTodayBets}" ng-if="conf.todayBets.enabled && sport.alias === 'todaybets'"
                        ng-click="!$parent.todaysBetsSelected ? expandLeftMenuPrematchSport(sport):'';clickLiveCalendar()">
@@ -48,13 +45,11 @@
 
                                      ng-click="expandLeftMenuPrematchRegion(region, sport); selectRegion(region)">
                                     <div class="flag-view-v3 flag-icon flag-{{::region.alias | removeUselessSymbolsByRegexp: '[,\' ]+': 'g': 'true'}}"></div>
-                                    <p>{{::region.name}} <span> <!-- ??? -->({{region.game}})</span></p>
+                                    {{::region.name}} ({{region.game}})
                                     <div class="arrow-view-v3"></div>
                                 </div>
                                 <div class="games-list-nav-v3" ng-show="region.competitions">
-
                                     <div class="games-list-mini-view-v3">
-
                                         <div class="competition-view-v-3">
                                             <div class="competition-title-v3"
                                                  ng-repeat="competition in region.competitions track by competition.id"
@@ -62,17 +57,16 @@
                                                  multi-menu-constructor
                                                  element-to-add-class="sum-menu-multi-items"
                                                  container-class="left-menu-wrapper-v3"
-                                                 default-offset="135">
+                                                 default-offset="26">
                                                 <label title="{{competition.name}}" ng-click="($location.path() === '/dashboard/' ? $location.path('/sport') : void()); env.preMatchMultiSelection ? '' : expandCompetition(competition, sport);">
                                                     <input type="checkbox"
                                                            ng-show="env.preMatchMultiSelection"
                                                            ng-model="prematchMultiViewCompetitions[competition.id]"
                                                            id="checkbox-competition{{competition.id}}"
                                                            ng-change="competitionToMultiview(competition)">
-                                                    <span>{{competition.name}} </span>
+                                                    <span>{{competition.name}}</span>
                                                 </label>
 
-                                                <!--sub-menu multiselect-->
                                                 <div class="sub-menu-multiselect-view-v3" >
                                                     <div class="sub-menu-contain-multiselect-v3">
                                                         <div class="sum-menu-multi-items" >
@@ -89,23 +83,13 @@
                                                                         </label>
                                                                     </div>
                                                                 </li>
-
-
                                                             </ul>
-
                                                         </div>
                                                     </div>
-
                                                 </div>
-                                                <!--sub-menu multiselect END-->
-
-
                                             </div>
-
                                         </div>
                                     </div>
-
-
                                 </div>
                             </div>
                             <!-- popular competitions add class to open competitions-->
@@ -119,7 +103,7 @@
                                                  multi-menu-constructor
                                                  element-to-add-class="sum-menu-multi-items"
                                                  container-class="left-menu-wrapper-v3"
-                                                 default-offset="135">
+                                                 default-offset="26">
                                                 <label title="{{competition.region.name}}"
                                                        ng-click="($location.path() === '/dashboard/' ? $location.path('/sport') : void()); env.preMatchMultiSelection ? '' : expandCompetition(competition, sport);"
                                                 >

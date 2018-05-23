@@ -1,4 +1,4 @@
-<div class="subtop-game-menu-j" ng-hide="casinoGameOpened > 0" no-animate>
+<div class="subtop-game-menu-j" ng-hide="casinoGameOpened > 0" ng-class="{'stretch-items': gamePages.length > 6}" no-animate>
     <ul class="j-resize-950-1280">
         <li ng-repeat="page in gamePages track by page.id" ng-click="selectPage(page);" ng-class="{'active' : selectedPage.id === page.id}">
             <a>{{ page.name | translate }} </a>
@@ -10,7 +10,7 @@
         <div class="gamesp-container-j">
             <ul class="j-resize-950-1280">
 
-                <li class="{{game.front_game_id}}" ng-repeat="game in games track by game.id" ng-class="{'added-to-favorite-j': isFromSaved(game.id)}">
+                <li class="{{game.front_game_id}}" ng-repeat="game in games track by game.id" ng-class="{'added-to-favorite-j': $root.myCasinoGamesIds[game.id]}">
                     <div ng-click="toggleSaveToMyCasinoGames(game)" class="fav-bar-game-j" ng-show="game.types.realMode === 1">
                         <span></span>
                     </div>
@@ -50,10 +50,11 @@
     </div>
 </div>
 
-<div ng-if="selectedPage.id === confData.backgammon.id" ng-include="getTemplate('optional_modules/casino/templates/backgammon/main.html')"></div>
-<div ng-if="selectedPage.id === confData.belote.id" ng-include="getTemplate('optional_modules/casino/templates/belote/main.html')"></div>
-<div ng-if="selectedPage.id === confData.poker.id" ng-include="getTemplate('optional_modules/casino/templates/poker/main.html')"></div>
-<div ng-if="selectedPage.id === confData.chinesePoker.id" ng-include="getTemplate('optional_modules/casino/templates/poker/chinesepoker.html')"></div>
-<div ng-if="selectedPage.id === confData.deberc.id" ng-include="getTemplate('optional_modules/casino/templates/belote/deberc.html')"></div>
-<div ng-if="selectedPage.id === confData.ogwil.id" ng-include="getTemplate('optional_modules/casino/templates/specialgames/ogwil.html')"></div>
-<div ng-if="selectedPage.id === confData.vrcasino.id" ng-include="getTemplate('optional_modules/casino/templates/vrcasino/main.html')"></div>
+<div ng-if="selectedPage.id === confData.backgammon.id" ng-include="'optional_modules/casino/templates/backgammon/main.html'|fixPath"></div>
+<div ng-if="selectedPage.id === confData.belote.id" ng-include="'optional_modules/casino/templates/belote/main.html'|fixPath"></div>
+<div ng-if="selectedPage.id === confData.poker.id" ng-include="'optional_modules/casino/templates/poker/main.html'|fixPath"></div>
+<div ng-if="selectedPage.id === confData.chinesePoker.id" ng-include="'optional_modules/casino/templates/poker/chinesepoker.html'|fixPath"></div>
+<div ng-if="selectedPage.id === confData.deberc.id" ng-include="'optional_modules/casino/templates/belote/deberc.html'|fixPath"></div>
+<div ng-if="selectedPage.id === confData.ogwil.id" ng-include="'optional_modules/casino/templates/specialgames/ogwil.html'|fixPath"></div>
+<div ng-if="selectedPage.id === confData.vrcasino.id" ng-include="'optional_modules/casino/templates/vrcasino/main.html'|fixPath"></div>
+<div ng-if="selectedPage.id === confData.vrlivedealer.id" ng-include="'optional_modules/casino/templates/vrlivedealer/main.html'|fixPath"></div>

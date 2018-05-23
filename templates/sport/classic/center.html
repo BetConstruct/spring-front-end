@@ -71,7 +71,7 @@
                                         <li class="names-block-command">
                                             {{prematchGame.team1_name}}
                                             <span ng-if="prematchGame.team2_name">{{prematchGame.team2_name}}</span>
-                                            <b class="statistics-h2h" ng-show="conf.enableH2HStat && prematchGame.is_stat_available" ng-click="openStatistics(prematchGame);$event.stopPropagation();" title="statistic" trans></b>
+                                            <b class="statistics-h2h" ng-show="conf.enableH2HStat && prematchGame.is_stat_available" ng-click="openStatistics(prematchGame);$event.stopPropagation();" title="Statistics" trans></b>
                                         </li>
                                         <li class="more-info-button">
                                             <span>{{prematchGame.additionalEvents ? '+' + prematchGame.additionalEvents : ''}}</span>
@@ -166,7 +166,7 @@
                                 </ul>
                                 <ul class="alt-stats" ng-show="conf.alternativeClassicGamesLayout" >
                                     <li ng-if="conf.enableH2HStat && prematchGame.is_stat_available">
-                                        <b class="statistics-h2h" ng-click="openStatistics(prematchGame);$event.stopPropagation();" title="statistic" trans></b>
+                                        <b class="statistics-h2h" ng-click="openStatistics(prematchGame);$event.stopPropagation();" title="Statistics" trans></b>
                                     </li>
                                     <li class="more-info-button" ng-click="openGameFullDetails(prematchGame, selectedCompetition);selectGame(prematchGame.id);selectCompetition()">
                                         <div class="market-info-b white"><span>{{prematchGame.additionalEvents ? '+' + prematchGame.additionalEvents : ''}}</span><span ng-hide="prematchGame.additionalEvents" class="more-info-icon"></span></div>
@@ -256,7 +256,7 @@
                         </div>
                     </div>
                 </div>
-                <ng-include src="getTemplate('templates/sport/classic/game/main.html')"></ng-include>
+                <ng-include src="::'templates/sport/classic/game/main.html'|fixPath"></ng-include>
 
                 <div class="big-banner-box" ng-show="sportsBookBanners" ng-if="conf.enableBannersInsideSportsbookGames" ng-init="loadSportsBookBanners()" ng-controller="cmsPagesCtrl">
                     <a ng-repeat="banner in sportsBookBanners" ng-show="banner" ng-href="{{ banner.link }}" target="{{ banner.linktarget }}" ng-click="gaSend('send', 'event', 'news', {'page': $location.path(), 'eventLabel': 'sportsbook banner click'})">

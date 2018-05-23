@@ -149,7 +149,7 @@ angular.module('vbet5').controller('systemCalculatorController', ['$scope', 'Uti
                 }
 
                 //tempPosWin += tempOdd;
-                tempPosWin = tempPosWin + Utils.mathCuttingFunction(tempOdd * 100)/100;
+                tempPosWin = tempPosWin + tempOdd;
 
                 indexArray[tempIterator]++;
             } else {

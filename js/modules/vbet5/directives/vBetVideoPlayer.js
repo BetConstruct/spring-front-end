@@ -67,8 +67,6 @@ VBET5.directive('vbetVideoPlayer', ['$timeout', '$q', function ($timeout, $q) {
                     videoElement.play();
                 }
             });
-
-
         }
     };
 }]);

@@ -43,7 +43,6 @@
                             <input ng-disabled="selectedCategory === confData.liveCasino.categoryId" type="search" ng-model="searchCommand">
                         </div>
 
-                        <!-- show-conditions="selectedCategory !== confData.liveCasino.categoryId"-->
                         <div class="casino-games-list">
                             <casino-games-list class="all-games-casino-list"
                                                show-conditions="true"
@@ -57,18 +56,9 @@
                         <div ng-show="games.length === 0 && !loadingProcess && selectedCategory !== confData.liveCasino.categoryId" class="no-games"><p trans>No games found</p></div>
                     </div>
 
-                    <ng-include ng-if="selectedCategory === confData.liveCasino.categoryId"  src="'optional_modules/casino/templates/livedealer/onedimensionalviewInContent.html'"></ng-include>
+                    <ng-include class="live-casino-content-import" ng-if="selectedCategory === confData.liveCasino.categoryId"  src="'optional_modules/casino/templates/livedealer/onedimensionalviewInContent.html'"></ng-include>
                 </div>
             </div>
-
-            <!--Featured games END-->
-
-            <!--<div class="live-casino-tables">
-                <casino-lobby ng-if="confData.liveCasino.lobby.getDataViaSwarm && selectedCategory && selectedCategory === confData.liveCasino.categoryId" active-game-id="all"></casino-lobby>
-                <iframe ng-if="!confData.liveCasino.lobby.getDataViaSwarm && selectedCategory && selectedCategory === confData.liveCasino.categoryId && liveCasinoTablesInfo.url" ng-src="{{ liveCasinoTablesInfo.url }}"></iframe>
-                <vbet-loader ng-show="loadingProcess && !games.length"></vbet-loader>
-            </div>-->
-
         </div>
     </div>
 </div>

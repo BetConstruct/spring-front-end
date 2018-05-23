@@ -18,7 +18,8 @@ VBET5.directive('loadMore', ['$window', '$timeout', function ($window, $timeout)
         },
         link: function (scope, element) {
             var clicked = false,
-            bottomOffset = scope.bottomOffset || 10;
+                timeoutPromise,
+                bottomOffset = scope.bottomOffset || 10;
 
             function elementInViewport() {
                 var windowHeight = "innerHeight" in window ? window.innerHeight : document.documentElement.offsetHeight;
@@ -28,13 +29,21 @@ VBET5.directive('loadMore', ['$window', '$timeout', function ($window, $timeout)
                 return scope.blockOffset === undefined ? windowBottom + bottomOffset >= docHeight : windowBottom + scope.blockOffset >= docHeight + 7;
             }
 
-            angular.element($window).bind("scroll", function () {
+            scope.$on('onWindowScroll', function () {
                 if (!scope.exception && elementInViewport() && !clicked) {
                     element.triggerHandler('click');
                     clicked = true;
-                    $timeout(function () {
+                    timeoutPromise && $timeout.cancel(timeoutPromise);
+                    timeoutPromise = $timeout(function () {
                         clicked = false;
                     }, 200);
+                }
+            });
+
+            scope.$on('$destroy', function() {
+                if (timeoutPromise) {
+                    $timeout.cancel(timeoutPromise);
+                    timeoutPromise = undefined;
                 }
             });
         }

@@ -1,0 +1,394 @@
+.asian-in-classic-table-wrapper {
+  float: left;
+  width: 100%;
+  .multicolumn-table {
+    float: left;
+    width: 100%;
+    > table {
+      float: left;
+      width: 100%;
+      > tbody > tr > td {
+        position: relative;
+        box-sizing: border-box;
+        vertical-align: middle;
+        &.aic-winner-cell {
+          width: 55px;
+          .single-events-b-v3.blocked:before {
+            right: 23px;
+          }
+        }
+        &.aic-handicup-cell {
+          width: 55px;
+          &.first {
+            width: 57px;
+            padding: 0 1px 0 0;
+          }
+          .single-events-b-v3.blocked:before {
+            right: 23px;
+          }
+        }
+        &.aic-over-under-cell {
+          width: 55px;
+          &.first {
+            width: 57px;
+            padding: 0 1px 0 0;
+          }
+          .single-events-b-v3.blocked:before {
+            right: 23px;
+          }
+        }
+      }
+    }
+  }
+  .aic-head {
+    background: $brand-color-1;
+    color: set-color($brand-color-1);
+    text-align: center;
+    position: sticky;
+    top: 0;
+    z-index: 400;
+    p {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      font-size: 4 + $size-font;
+      line-height: 20px;
+      text-transform: uppercase;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      overflow: hidden;
+      @include rtl {
+        left: auto;
+        right: 0;
+      }
+    }
+    &.ng-hide {
+      ~ div {
+        .multicolumn-table {
+          .time-info-game-box-v3 {
+            top: 0;
+          }
+        }
+      }
+      ~ .time-title-view-v3 {
+        &.ng-hide ~ {
+          .multicolumn-table {
+            .time-info-game-box-v3 {
+              top: 0;
+            }
+          }
+        }
+      }
+    }
+    table {
+      &.aic-table-head-first {
+        background: rgba(0, 0, 0, 0.1);
+        td {
+          height: 20px;
+          &.aic-winner-cell {
+            width: 165px;
+          }
+          &:not([class]) {
+            width: 57px;
+            &:last-child {
+              width: 56px;
+            }
+          }
+          &.aic-handicup-cell,
+          &.aic-over-under-cell {
+            width: 167px;
+            p {
+              padding: 0 0 0 29px;
+              @include rtl {
+                padding: 0 29px 0 0;
+              }
+            }
+          }
+        }
+      }
+      &.aic-table-head-second {
+        td {
+          height: 20px;
+          &:not([class]):last-child {
+            width: 56px;
+          }
+          p {
+            font-size: 5 + $size-font;
+          }
+        }
+      }
+    }
+  }
+  .hide-handicaps-mc {
+    .aic-handicup-cell {
+      display: none;
+    }
+  }
+  .time-info-game-box-v3 {
+    position: static;
+    position: sticky;
+    top: 40px;
+    z-index: 300;
+    background: $classic-view-background;
+    &, &.closed {
+      max-height: 28px;
+      animation: none;
+    }
+  }
+  .time-title-view-v3 .competition-title {
+    margin: 0 0 0 17px;
+    @include rtl {
+      margin: 0 17px 0 0;
+    }
+  }
+  .time-title-view-v3 .arrow-view-v3.open:before {
+    content: "\e671";
+  }
+  .time-title-view-v3 {
+    margin: 2px 0;
+  }
+  .aic-hdp-row {
+    border-radius: 2px;
+    margin: 0 0 5px;
+    overflow: hidden;
+    position: relative;
+    background: darken( desaturate( adjust-hue( $c16-sp-8, 5deg ), 2 ), 5 );
+    box-shadow: inset 0 1px 0 rgba(set-color(darken( desaturate( adjust-hue( $c16-sp-8, 5deg ), 2 ), 5 )), 0.06);
+    transition: 240ms background;
+    .closed-game-icon-v3 + tbody tr .aic-team-names-wrapper {
+      padding: 5px 8px 5px 28px;
+      @include rtl {
+        padding: 5px 28px 5px 8px;
+      }
+    }
+    .closed-game-icon-v3 + colgroup + tbody tr .aic-team-names-wrapper {
+      padding: 5px 8px 5px 28px;
+      @include rtl {
+        padding: 5px 28px 5px 8px;
+      }
+    }
+  }
+}
+.aic-odd-container {
+  background: $c16-sp-10;
+  box-shadow: inset 0 1px 0 rgba(set-color($c16-sp-3), 0.1);
+  color: map-get($coeff-color-map, classic);
+  height: 30px;
+  width: 54px;
+  overflow: hidden;
+  box-sizing: border-box;
+  text-align: center;
+  font-size: 6 + $size-font;
+  line-height: 30px;
+  float: left;
+  margin: 7px 0;
+  > .max-bet-tooltip-v3{
+    left: auto;
+    right: 0;
+    z-index: 666;
+    > p{
+      float: right;
+    }
+  }
+  &:hover {
+    overflow: inherit;
+    > .max-bet-tooltip-v3 {
+      height: auto;
+      overflow: inherit;
+      opacity: 1;
+    }
+  }
+  &.first {
+    border-radius: 2px 0 0 2px;
+  }
+  &.last {
+    margin-right: 0;
+    border-radius: 0 2px 2px 0;
+  }
+  &.active {
+    background: $hero-color;
+    color: set-color($hero-color);
+    > span:before {
+      color: inherit;
+    }
+  }
+  &:not(.alt):not(.active):hover {
+    background: $c16-sp-8;
+  }
+  &.alt {
+    float: right;
+    border: 1px solid $c16-sp-10;
+    box-shadow: none;
+    border-radius: 2px;
+    background: none;
+    color: $c16-tp-4;
+    line-height: 28px;
+    width: 44px;
+    transition: 240ms color, 240ms border-color;
+  }
+  > span {
+    display: block;
+    float: left;
+    width: 100%;
+    @include rtl {
+      direction: ltr;
+    }
+    &:before {
+      display: inline-block;
+      vertical-align: top;
+      font: 12px/30px icomoon;
+      margin: 0 0 0 -5px;
+    }
+  }
+  .arrow-up:before {
+    content: "\e66d";
+    color: #04e914;
+  }
+  .arrow-down:before {
+    content: "\e66c";
+    color: #e9044a;
+  }
+}
+.aic-more-count {
+  width: 56px;
+  font-size: 5 + $size-font;
+  color: $c16-tp-6;
+  padding: 0 10px;
+  transition: 240ms color;
+  p {
+    width: 36px;
+    position: relative;
+    &:after {
+      content: "\e672";
+      color: $c16-tp-7;
+      font: 16px/14px icomoon;
+      display: block;
+      position: absolute;
+      top: 0;
+      right: -5px;
+      transition: 240ms color;
+      @include rtl {
+        left: -5px;
+        right: auto;
+        transform: rotateY(180deg)
+      }
+    }
+  }
+}
+.aic-more-count-outright{
+  font-size: 5 + $size-font;
+  line-height: 28px;
+  p:after {
+    font: 16px/28px icomoon;
+  }
+}
+.aic-team-names-wrapper {
+  z-index: 50;
+  padding: 5px 8px 5px 10px;
+  font-size: 5 + $size-font;
+  line-height: 17px;
+  color: $c16-tp-3;
+  transition: 240ms color;
+  @include rtl {
+    padding: 5px 10px 5px 8px;
+  }
+  > table {
+    float: left;
+    width: 100%;
+    > tbody > tr > td {
+      vertical-align: top;
+      width: 100%;
+      .aic-team-names {
+        float: left;
+        width: calc(100% - 34px);
+        position: relative;
+        height: 17px;
+        box-sizing: border-box;
+        @include rtl {
+          float: right;
+        }
+        p {
+          width: 100%;
+          position: absolute;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
+      }
+      &:last-child {
+        width: 1%;
+        white-space: nowrap;
+        position: relative;
+        .time-game-v3 {
+          padding: 0;
+          > p {
+            padding: inherit;
+            line-height: inherit;
+          }
+        }
+      }
+    }
+  }
+  span {
+    color: $c16-tp-6;
+    transition: 240ms color;
+  }
+  .game-info-icons-v3 {
+    position: static;
+  }
+  .icon-separator-v3 {
+    color: $c16-tp-4;
+    float: none;
+    display: inline-block;
+    vertical-align: top;
+    margin: 0;
+    @include rtl {
+      float: none;
+      margin: 0;
+    }
+    &.favorite {
+      color: $c16-tp-11;
+    }
+  }
+}
+.aic-hdp-row {
+  &:hover{overflow: inherit;}
+  &.active, &:hover {
+    background: $c16-sp-8;
+    .aic-team-names-wrapper {
+      color: $c16-tp-2;
+      span {
+        color: $c16-tp-5;
+      }
+    }
+    .aic-odd-container.alt {
+      border-color: lighten( desaturate( adjust-hue( $c16-sp-11, -8deg ), 18 ), 1 );
+      color: $c16-tp-2;
+    }
+    .aic-more-count {
+      color: $c16-tp-4;
+      p:after {
+        color: $c16-tp-6;
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 1770px) and (min-width: 1280px){
+  .aic-handicup-cell {
+    display: none !important;
+  }
+}
+@media screen and (max-width: 1500px) and (min-width: 1280px){
+  .aic-over-under-cell {
+    display: none !important;
+  }
+}
+@media screen and (max-width: 1279px) {
+  .classic-view-column-v3:not(.left-menu-closed-v3) {
+    .aic-handicup-cell, .aic-over-under-cell {
+      display: none !important;
+    }
+  }
+}

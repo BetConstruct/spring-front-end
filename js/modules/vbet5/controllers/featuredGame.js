@@ -56,6 +56,11 @@ angular.module('vbet5.betting').controller('featuredgameCtrl', ['$rootScope', '$
                 $scope.selectedFeaturedGameId = $scope.featuredGames[0].id;
             }
         } else if ($scope.featuredGames.length > 1) {
+            if ($scope.featuredGames[0].favorite_order !== null) {
+                $scope.featuredGames.sort(function sortByFavOrder(a, b) {
+                    return a.favorite_order - b.favorite_order;
+                });
+            }
             prepareMultiSlideFeaturedGames();
         }
     }
@@ -270,6 +275,9 @@ angular.module('vbet5.betting').controller('featuredgameCtrl', ['$rootScope', '$
             },
             'where': {market: {type: {'@in': ['P1XP2', 'P1P2']}}}
         };
+        if (gameOrCompetition === 'game') {
+            request.what.game.push('favorite_order');
+        }
         request.where.game = {};
         request.where[gameOrCompetition] = {'promoted': Config.main.GmsPlatform || gameOrCompetition === 'competition' ? true : {'@contains': parseInt($rootScope.conf.site_id)}};
         request.where.game['@limit'] = Config.main.featuredGames.limitation;

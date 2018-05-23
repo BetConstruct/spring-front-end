@@ -53,6 +53,9 @@ CMS.constant('WPConfig', {
         headerSmallBanner: {
             'default': 'header-small-banner'
         },
+        headerSmallBanner2: {
+            'default': 'header-small-banner-2'
+        },
         homepageRotatingBanners: {
             //isWidget: true,
             'default': 'homepage-selected-game'

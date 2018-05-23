@@ -38,11 +38,12 @@
                             <label for="header-collapse" class="menu-visible-icon-b" trans>Menu</label>
                         </li>
                         <li class="responsive-header-item-j very-top-menu-wrapper-j auto-width">
-                            <div class="original" ng-include="getTemplate('templates/header/version_2/veryTopMenu.html')"></div>
-                            <div class="duplicate" ng-include="getTemplate('templates/header/version_2/veryTopMenu.html')"></div>
+                            <div class="original" ng-include="::'templates/header/version_2/veryTopMenu.html'|fixPath"></div>
+                            <div class="duplicate" ng-include="::'templates/header/version_2/veryTopMenu.html'|fixPath"></div>
                         </li>
-                        <li class="responsive-header-item-j" ng-if="conf.header.customButtons || conf.header.textForLanguage">
+                        <li class="responsive-header-item-j" ng-if="conf.header.customButtons || conf.header.textForLanguage || conf.showLastLoginTime">
                             <div class="additional-header-buttons-j">
+                                <a ng-if="conf.showLastLoginTime && profile.previous_login_time" class="text-only"><span trans>Last login:</span> {{profile.previous_login_time|formatDate}}</a>
                                 <a ng-if="conf.header.textForLanguage[env.lang] || conf.header.textForLanguage.default" ng-href="{{conf.header.textForLanguage.href}}" class="text-only">{{conf.header.textForLanguage[env.lang] || conf.header.textForLanguage.default}}</a>
                                 <a
                                         ng-init="button.storageEnv && (env[button.toggleEnv] = getStorageState(button.storageEnv))"
@@ -105,19 +106,19 @@
                             </li>
                             <li ng-hide="!conf.registration.enable">
                                 <button ng-click="register()" trans>Register</button>
-                                <ng-include src="getTemplate('templates/header/dynamicmessage.html')"></ng-include>
+                                <ng-include src="::'templates/header/dynamicmessage.html'|fixPath"></ng-include>
                             </li>
                         </ul>
                     </div>
                 </li>
                 <li class="responsive-header-item-j">
-                    <ng-include class="settings-include-contain" src="getTemplate('templates/header/version_2/whatsNewNotifications.html')"></ng-include>
+                    <ng-include class="settings-include-contain" src="::'templates/header/version_2/whatsNewNotifications.html'|fixPath"></ng-include>
                 </li>
                 <li class="responsive-header-item-j" ng-show="env.authorized">
-                    <ng-include class="settings-include-contain" src="getTemplate('templates/header/version_2/profileMenu.html')"></ng-include>
+                    <ng-include class="settings-include-contain" src="::'templates/header/version_2/profileMenu.html'|fixPath"></ng-include>
                 </li>
                 <li class="responsive-header-item-j" ng-show="env.authorized">
-                    <ng-include class="settings-include-contain" src="getTemplate('templates/header/version_2/balance.html')"></ng-include>
+                    <ng-include class="settings-include-contain" src="::'templates/header/version_2/balance.html'|fixPath"></ng-include>
                 </li>
                 <li class="responsive-header-item-j" ng-show="env.authorized && (conf.betHistoryEnabled || conf.enableCasinoBetHistory)">
                     <div class="separator-contain-nav"
@@ -131,7 +132,7 @@
                 <li class="responsive-header-item-j" ng-repeat="icon in conf.header.customIcons track by $index" title="{{icon.title|translate}}">
                     <div ng-switch="icon.type">
                         <div ng-switch-when="a" class="separator-contain-nav">
-                            <a class="{{icon.class}}" id="{{icon.id}}" href="{{icon.href}}" target="{{icon.target}}" ng-click="$root[icon.onclick]()">{{icon.text|translate}}</a>
+                            <a class="settings-icon-contain {{icon.class}}" id="{{icon.id}}" href="{{icon.href}}" target="{{icon.target}}" ng-click="$root[icon.onclick] && $root[icon.onclick](icon)" ng-init="$root[icon.oninit] && $root[icon.oninit](icon)">{{icon.text|translate}}</a>
                         </div>
                         <div ng-switch-when="help" class="separator-contain-nav"
                              prevent-fast-click ng-click="broadcast('openHelpPage', {slug: icon.action, from: icon.target || 'footer'});">
@@ -149,7 +150,7 @@
                     ng-show="!conf.rfid.loginWIthRFID || conf.rfid.loginWIthRFID && env.authorized" ng-if="(calculatedConfigs.sportEnabled || casinoEnabled) && conf.header.showFavoriteIcon" >
                     <div class="separator-contain-nav"
                          prevent-fast-click ng-click="myGamesToggle()">
-                        <div class="settings-icon-contain favorite-icon-b">
+                        <div class="settings-icon-contain favorite-icon-b" title="Favorites" trans="attr-only">
                             <i class="favorite-count-view"
                                ng-show="myGames.length || (!env.hideCasinoFavorites && casinoEnabled && myCasinoGames.length)"
                                >{{myGames.length + ((env.hideCasinoFavorites || !casinoEnabled) ? 0 : myCasinoGames.length)}}</i>
@@ -234,7 +235,7 @@
                                                 </li>
                                                 <li  ng-if="conf.liveChat.template" title="Live Chat">
                                                     <i class="icon-livechat-new-b"></i>
-                                                    <ng-include src="getTemplate(conf.liveChat.template)"></ng-include>
+                                                    <ng-include src="conf.liveChat.template|fixPath"></ng-include>
                                                 </li>
 
 
@@ -255,7 +256,7 @@
                                 <div class="settings-icon-contain clock-set-b"
                                      ng-click="headerVersion2Icons.timezoneIsToggled = !headerVersion2Icons.timezoneIsToggled">
                                     <span>
-                                        <b ng-bind="env.clock|formatDate:'fullHourWithoutAmPm':null:env.timeFormat"></b>
+                                        <b>{{env.clock|formatDate:'fullHourWithoutAmPm':null:env.timeFormat}}</b>
                                     </span>
                                     <i ng-bind="env.clock|formatDate:'onlyAmPm':null:env.timeFormat"></i>
                                 </div>
@@ -310,7 +311,7 @@
                         </li>
                         <li class="responsive-header-item-j"
                             ng-if="(conf.header.enableSettings.authorized && env.authorized) || (conf.header.enableSettings.notAuthorized && !env.authorized)">
-                            <ng-include class="settings-include-contain" src="getTemplate('templates/header/version_' + conf.header.version + '/settings.html')"
+                            <ng-include class="settings-include-contain" src="::'templates/header/version_' + conf.header.version + '/settings.html'|fixPath"
                                         hide-on-click state-flag-var="headerVersion2Icons.settingsIsToggled"></ng-include>
                         </li>
                     </ul>
@@ -329,21 +330,23 @@
             </li>
         </ul>
         <input type="checkbox" id="header-collapse">
-        <ul class="responsive-header-mainMenu-j">
-            <li class="header-left-small-b-j" ng-controller="cmsPagesCtrl" ng-init="loadBanners(getSlug('bannerSlugs.headerSmallBanner'));slider.index = 0;" ng-show="bannerObjects[getSlug('bannerSlugs.headerSmallBanner')]">
-                <a ng-href="{{bannerObjects[getSlug('bannerSlugs.headerSmallBanner')][slider.index].link}}" target="{{bannerObjects[getSlug('bannerSlugs.headerSmallBanner')][slider.index].linktarget}}">
-                    <img ng-src="{{ bannerObjects[getSlug('bannerSlugs.headerSmallBanner')][slider.index].imageurl }}">
-                </a>
-            </li>
-            <li ng-style="{'padding' : conf.logo.padding || ('0 ' + (conf.logo.height ? '0' : conf.logo.paddingMenu || logoWidth)  + 'px')}">
-                <ng-include ng-if="!conf.header.hideTopMenu" class="include-menu-header-b" src="getTemplate('templates/header/version_2/topMenu.html')"></ng-include>
-            </li>
-        </ul>
+        <div class="header-small-view-hide">
+            <ul class="responsive-header-mainMenu-j">
+                <li class="header-left-small-b-j" ng-controller="cmsPagesCtrl" ng-init="loadBanners(getSlug('bannerSlugs.headerSmallBanner'));" ng-show="bannerObjects[getSlug('bannerSlugs.headerSmallBanner')]"  >
+                    <a ng-repeat="banner in bannerObjects[getSlug('bannerSlugs.headerSmallBanner')]"  ng-href="{{banner.link}}" target="{{banner.linktarget}}">
+                        <img ng-src="{{ banner.imageurl }}">
+                    </a>
+                </li>
+                <li ng-style="{'padding' : conf.logo.padding || ('0 ' + (conf.logo.height ? '0' : conf.logo.paddingMenu || logoWidth)  + 'px')}">
+                    <ng-include ng-if="!conf.header.hideTopMenu" class="include-menu-header-b" src="::'templates/header/version_2/topMenu.html'|fixPath"></ng-include>
+                </li>
+            </ul>
+        </div>
     </div>
 </div>
 <!--header END-->
 
-<ng-include ng-show="currentPageHasSubHeader() && isInSports() && $location.path() !== '/' && $location.path() !== '/virtualsports/'" no-animate src="getTemplate('templates/sport/toptab.html')"></ng-include>
+<ng-include class="float-width" ng-show="currentPageHasSubHeader() && isInSports() && $location.path() !== '/' && $location.path() !== '/virtualsports/'" no-animate src="::'templates/sport/toptab.html'|fixPath"></ng-include>
 
 <div class="guide header-wrapper" ng-if="subMenuItems && subMenuItems.length > 1">
     <div class="subtop-header-menu-j"  no-animate>

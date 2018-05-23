@@ -60,12 +60,12 @@
                     <div ng-show="!isPopup" ng-click="env.showSlider=false; env.sliderContent='';" class="my-bets-closed-icon-b"></div>
                 </div>
             </div>
-                <ng-include src="getTemplate('templates/livebox/mixedBetHistory.html')" ng-if="env.sliderContent === 'recentBets' || env.sliderContent === 'casinoBetHistory'"></ng-include>
-                <ng-include src="getTemplate('templates/livebox/mixedBalance.html')" ng-if="['deposit', 'withdraw', 'balanceHistory', 'casinoBalanceHistory', 'cashier', 'buddytransfer'].indexOf(env.sliderContent) !== -1"></ng-include>
-                <ng-include src="getTemplate('templates/livebox/mixedUserProfile.html')" ng-if="env.sliderContent === 'settings'"></ng-include>
-                <ng-include src="getTemplate('templates/livebox/promotionalBonuses/main.html')" ng-if="conf.GmsPlatform && env.sliderContent === 'promotionalBonuses'"></ng-include>
-                <ng-include src="getTemplate('templates/livebox/loyaltyPoints.html')" ng-if="conf.GmsPlatform && env.sliderContent === 'loyaltyPoints'"></ng-include>
-                <ng-include src="getTemplate('templates/livebox/mixedTickets.html')" ng-if="conf.GmsPlatform && env.sliderContent === 'tickets'"></ng-include>
+                <ng-include src="::'templates/livebox/mixedBetHistory.html'|fixPath" ng-if="env.sliderContent === 'recentBets' || env.sliderContent === 'casinoBetHistory'"></ng-include>
+                <ng-include src="::'templates/livebox/mixedBalance.html'|fixPath" ng-if="['deposit', 'withdraw', 'balanceHistory', 'casinoBalanceHistory', 'cashier', 'buddytransfer'].indexOf(env.sliderContent) !== -1"></ng-include>
+                <ng-include src="::'templates/livebox/mixedUserProfile.html'|fixPath" ng-if="env.sliderContent === 'settings'"></ng-include>
+                <ng-include src="::'templates/livebox/promotionalBonuses/main.html'|fixPath" ng-if="conf.GmsPlatform && env.sliderContent === 'promotionalBonuses'"></ng-include>
+                <ng-include src="::'templates/livebox/loyaltyPoints.html'|fixPath" ng-if="conf.GmsPlatform && env.sliderContent === 'loyaltyPoints'"></ng-include>
+                <ng-include src="::'templates/livebox/mixedTickets.html'|fixPath" ng-if="conf.GmsPlatform && env.sliderContent === 'tickets'"></ng-include>
 
         </div>
     </div>

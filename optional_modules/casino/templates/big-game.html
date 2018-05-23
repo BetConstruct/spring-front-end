@@ -13,7 +13,7 @@
                         <div class="icon-delete refresh"><a title="{{ 'Refresh'|translate }}" ng-click="refreshGame(gameInfo.id)">refresh</a></div>
                         <!--  <div class="icon-delete change"><a title="{{ 'change'|translate }}" ng-click="enableToAddGame(gameInfo.id)">change</a></div> -->
                         <div class="icon-delete favourite">
-                            <a title="{{ (!isFromSaved(gameInfo.game.id) ? 'Add to My Games' : 'Remove from My Games')|translate}}" ng-class="{'favourite-active': isFromSaved(gameInfo.game.id)}" ng-click="toggleSaveToMyCasinoGames(gameInfo.game)">Favorite</a>
+                            <a title="{{ (!$root.myCasinoGamesIds[gameInfo.game.id] ? 'Add to My Games' : 'Remove from My Games')|translate}}" ng-class="{'favourite-active': $root.myCasinoGamesIds[gameInfo.game.id]}" ng-click="toggleSaveToMyCasinoGames(gameInfo.game)">Favorite</a>
                         </div>
                         <div class="icon-delete favourite {{gameInfo.gameMode}}"  ng-show="gameInfo.game.types.funMode  && confData.main.funModeEnabled" title="{{('Click to change to ' + ('fun' === gameInfo.gameMode ? 'real mode' : 'fun mode'))|translate}}">
                             <a ng-click="togglePlayForReal(gameInfo);$event.stopPropagation();" trans>really/for fun</a>
@@ -24,7 +24,7 @@
                     </div>
                     <vbet-loader ng-show="gameInfo.loadingUserData"></vbet-loader>
                     <div class="add-casino-game" ng-show="gameInfo.gameUrl == '' && casinoGameOpened > 1 && !gameInfo.loadingUserData"><a title="{{ 'Add a Game'|translate }}" ng-click="enableToAddGame(gameInfo.id)">+</a></div>
-                    <ng-include ng-if="$root.casinoGameOpened === 1 && env.authorized && gameInfo.game.id && hasTournaments" src="getTemplate('optional_modules/casino/templates/tournament/iframe-info.html')"></ng-include>
+                    <ng-include ng-if="$root.casinoGameOpened === 1 && env.authorized && gameInfo.game.id && hasTournaments" src="'optional_modules/casino/templates/tournament/iframe-info.html'|fixPath"></ng-include>
                     <iframe ng-class="{'iframe-tournament-sidebar-padding': $root.casinoGameOpened === 1 && env.authorized && gameInfo.game.id && hasTournaments && env.casinoHasTournamentInfo}" frame-control sidebar-width="{{220}}" has-sidebar="{{!!($root.casinoGameOpened === 1 && env.authorized && gameInfo.game.id && hasTournaments && env.casinoHasTournamentInfo)}}" allowfullscreen="true" number-of-window="{{ gamesInfo.length }}" initial-width="{{gameInfo.game.width}}" initial-height="{{gameInfo.game.height}}" element-id="{{gameInfo.front_game_id}}" aspect-ratio="{{gameInfo.game.ratio}}"  ng-src="{{gameInfo.gameUrl}}"></iframe>
                     <div class="casino-deposit-button" ng-show="confData.main.depositButtonUnderGame.enabled && (confData.main.depositButtonUnderGame.disableOptions.providers.indexOf(gameInfo.game.provider) === -1 || confData.main.depositButtonUnderGame.disableOptions.categories.indexOf(gameInfo.game.categories[0]) === -1)">
                         <button ng-click="!env.authorized ? broadcast('openLoginForm', {key: 'toggleSliderTab', data: 'deposit'}) && $event.stopPropagation() : broadcast('toggleSliderTab','deposit');$event.stopPropagation();" trans>Deposit</button>

@@ -20,6 +20,7 @@ VBET5.controller('headerCtrl', ['$scope', '$rootScope', '$sce', '$window', '$loc
      */
     $scope.headerInit = function headerInit(){
         $scope.$on('login.loggedIn', setCurrencyConfig);
+        $scope.$on('loggedIn', setCurrencyConfig);
         $scope.$on('login.loggedOut', setCurrencyConfig);
         $scope.$on('gotoSelectedGame', gotoSelectedGame);
         //this isn't really the best place for this listener
@@ -38,15 +39,15 @@ VBET5.controller('headerCtrl', ['$scope', '$rootScope', '$sce', '$window', '$loc
      * sets $rootScope **currency** variable with retrieved data
      * currency name sent to swarm is taken from config(default for site) or from user profile if user is logged in
      */
-    function setCurrencyConfig(event, data) {
+    function setCurrencyConfig(event) {
         if (event === undefined && initialCurrecyConfigDone) { //this happens when called by timeout, but was already called by 'profile' event
             return;
         }
         initialCurrecyConfigDone = true;
         var currencyName;
-        console.log('setCurrencyConfig', data, event, initialCurrecyConfigDone);
-        if (data && data.profile && !Utils.isObjectEmpty(data.profile)) {
-            currencyName = $filter('firstElement')(data.profile).currency_name || ($rootScope.profile && $rootScope.profile.currency_name);
+
+        if ($rootScope.profile && $rootScope.profile.currency_name) {
+            currencyName = $rootScope.profile.currency_name;
         } else {
             currencyName = $rootScope.conf.registration.defaultCurrency;
         }

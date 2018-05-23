@@ -9,6 +9,7 @@ angular.module('casino').controller('casinoSpecialGamesCtrl', ['$rootScope', '$s
     'use strict';
 
     var gameName;
+    var demo_id;
     $rootScope.footerMovable = true; // make footer movable
     /**
      * @ngdoc method
@@ -16,9 +17,11 @@ angular.module('casino').controller('casinoSpecialGamesCtrl', ['$rootScope', '$s
      * @methodOf CASINO.controller:casinoSpecialGamesCtrl
      * @description depending on  product,  prepares URL and open the game
      * @param {String} product name of product
+     * @param {String} gameDemoId game demo id received from CMS
      */
-    $scope.loadGame = function loadGame (product) {
+    $scope.loadGame = function loadGame (product, gameDemoId) {
         gameName = product;
+        demo_id = gameDemoId;
         var title;
         switch (product) {
             case 'ogwil':
@@ -79,7 +82,7 @@ angular.module('casino').controller('casinoSpecialGamesCtrl', ['$rootScope', '$s
                 externalID: pathContent[6],
                 tableID: pathContent[8]
             };
-            if ((game.gameID === 'TLCTLC' || game.provider === 'TAK' || game.gameID === 'GDRdog6') && !$rootScope.env.authorized) { //it must be reverted after changing finbet's page
+            if ((game.gameID === 'TLCTLC' || game.gameID === 'GDRdog6') && !$rootScope.env.authorized) { //it must be reverted after changing finbet's page
                 $timeout(function () {
                     if (!$rootScope.loginInProgress) {
                         $rootScope.$broadcast('openLoginForm');
@@ -128,7 +131,7 @@ angular.module('casino').controller('casinoSpecialGamesCtrl', ['$rootScope', '$s
                 var tableInfo = '/table/table/'  + game.tableID + ($location.search().limit ? ('/' + $location.search().limit) : '');
                 gameUrl = urlPrefix + '/web/' + (LanguageCodes[$rootScope.env.lang] || 'en') + '/' + Config.main.site_id + tableInfo + '?activeGroupId=' + (CConfig.liveCasino.lobbyGroupsMap[game.externalID] || 0) + ($location.search().room ? ('&roomNumber=' + $location.search().room) : '');
             } else {
-                gameUrl = CConfig.cUrlPrefix + CConfig.gamesUrl + '?partnerId=' + Config.main.site_id + '&gameId=' + game.externalID + '&language=' + LanguageCodes[$rootScope.env.lang] + '&openType=' + ($rootScope.env.authorized ? 'real' : 'fun');
+                gameUrl = CConfig.cUrlPrefix + CConfig.gamesUrl + '?partnerId=' + Config.main.site_id + '&gameId=' + (demo_id || game.externalID) + '&language=' + LanguageCodes[$rootScope.env.lang] + '&openType=' + ($rootScope.env.authorized ? 'real' : 'fun');
                 $location.search().studio && (gameUrl += '&studio=' + $location.search().studio);
             }
 

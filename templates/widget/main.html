@@ -1,6 +1,6 @@
 <div ng-switch="$routeParams.widgetid">
     <!-- Live Games Slider Widget -->
-    <div class="list-bet-block" ng-if="conf.enableAddToBetSlipFromWidget" ng-show="false" ng-include="getTemplate('templates/sport/betslip.html')"></div>
+    <div class="list-bet-block" ng-if="conf.enableAddToBetSlipFromWidget" ng-show="false" ng-include="::'templates/sport/betslip.html'|fixPath"></div>
 
     <div ng-switch-when="livegame" ng-controller="widgetCtrl" ng-init="getLiveGamesList()" class="gameing-wrapper">
         <div class="contain-gameing" ng-controller="classicViewCenterController">
@@ -47,11 +47,11 @@
                                     </span>
                                                         <span ng-if="openGame.sport.alias === 'HorseRacing'" title="{{ openGame.team2_name ?  openGame.team2_name: '' }}">{{ openGame.team2_name ?  openGame.team2_name: '' }}&nbsp;&nbsp;&nbsp; {{ openGame.start_ts| formatDate: "LT"}}</span>
                                                     </div>
-                                                    <ng-include src="getTemplate('templates/directive/live-game-scores-info.html')"></ng-include>
+                                                    <ng-include src="::'templates/directive/live-game-scores-info.html'|fixPath"></ng-include>
                                                     <div class="add-info" ng-if="!!openGame.info.current_game_state">
                                                         {{ openGame.info.current_game_state|convertSetName:openGame.sport.alias|translate }} {{ (openGame.info.current_game_time)[0] === '-'? ('will start in'|translate)+' '+ (openGame.info.current_game_time).substring(1): openGame.info.current_game_time }}
                                                     </div>
-                                                    <ng-include src="getTemplate('templates/directive/live-game-scores-statistics.html')"></ng-include>
+                                                    <ng-include src="::'templates/directive/live-game-scores-statistics.html'|fixPath"></ng-include>
                                                 </div>
                                             </div>
                                         </div>
@@ -243,19 +243,19 @@
     <!-- Bet Now Widget bets Games Widget -->
     <div ng-switch-when="betnow">
         <div ng-init="isIframe=true">
-            <ng-include src="getTemplate('templates/sport/dashboard/betnowwidget.html')"></ng-include>
+            <ng-include src="::'templates/sport/dashboard/betnowwidget.html'|fixPath"></ng-include>
         </div>
     </div>
 
     <div ng-switch-when="euro2016">
         <div>
-            <ng-include src="getTemplate('templates/sport/championship/euro2016/main.html')"></ng-include>
+            <ng-include src="::'templates/sport/championship/euro2016/main.html'|fixPath"></ng-include>
         </div>
     </div>
     <div ng-switch-when="news">
         <div ng-init="isWidget=true">
             <div class="news-block-section">
-                <div ng-include="getTemplate('templates/homepage/newsWidget.html')" class="tpl-container"></div>
+                <div ng-include="::'templates/homepage/newsWidget.html'|fixPath" class="tpl-container"></div>
             </div>
         </div>
     </div>
@@ -263,14 +263,14 @@
     <!--featuredgames widget-->
     <div ng-switch-when="featuredgames">
         <div ng-init="isIframe=true">
-            <ng-include src="getTemplate('templates/homepage/featuredGamesSlider.html')"></ng-include>
+            <ng-include src="::'templates/homepage/featuredGamesSlider.html'|fixPath"></ng-include>
         </div>
     </div>
 
     <!--freebet widget-->
     <div ng-switch-when="freebet">
         <div ng-init="isIframe=true">
-            <ng-include src="getTemplate('templates/freebet/main.html')"></ng-include>
+            <ng-include src="::'templates/freebet/main.html'|fixPath"></ng-include>
         </div>
     </div>
 

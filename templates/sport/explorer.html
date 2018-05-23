@@ -42,11 +42,11 @@
                     <a ng-show="sport.link" ng-href="{{sport.link}}"><span></span>{{sport.name}}</a>
                 </li>
             </div>
-            <li class="more-games" ng-show="sportsByLetterDividedToColumns"><a> <span class="more-text" trans>more</span><span class="more-count">{{ sports_list.length - sportListMaxVisibleItems }}</span> </a>
-            <div class="contein-games" ng-include="getTemplate('templates/sport/sportlist.html')" ng-show="!hideSportListDropdown"></div>
+            <li class="more-games" ng-show="sportsByLetterDividedToColumns"><a> <span class="more-text" trans>more</span><span class="more-count ng-binding">{{ sports_list.length - sportListMaxVisibleItems }}</span> </a>
+            <div class="contein-games" ng-include="::'templates/sport/sportlist.html'|fixPath" ng-show="!hideSportListDropdown"></div>
             </li>
         </ul>
-        <div ng-include="getTemplate('templates/search/sport.html')"></div>
+        <div ng-include="::'templates/search/sport.html'|fixPath"></div>
     </div>
 </div>
 <!--Menu games end-->
@@ -71,7 +71,7 @@
                 </div>
             </li>
         </div>
-        <div class="contein-games" ng-include="getTemplate('templates/sport/regionslist.html')"></div>
+        <div class="contein-games" ng-include="::'templates/sport/regionslist.html'|fixPath"></div>
     </ul>
 </div>
 </div>

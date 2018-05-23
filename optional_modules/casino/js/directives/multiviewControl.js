@@ -6,7 +6,7 @@
  *
  * @description Makes gets and updates list of biggest winners of casino
  */
-CASINO.directive('multiviewControl', ['$interval', '$timeout', 'CConfig', 'casinoData', 'casinoManager', 'Geoip', function ($interval, $timeout, CConfig, casinoData, casinoManager, Geoip) {
+CASINO.directive('multiviewControl', ['$interval', '$timeout', 'CConfig', 'casinoData', 'casinoManager', 'Geoip', 'content', function ($interval, $timeout, CConfig, casinoData, casinoManager, Geoip, content) {
     'use strict';
     return {
         restrict: 'E',
@@ -42,6 +42,10 @@ CASINO.directive('multiviewControl', ['$interval', '$timeout', 'CConfig', 'casin
                 }
                 scope.selectedCategory = categoryId;
                 reset();
+
+                if (scope.selectedCategory === scope.confData.liveCasino.categoryId) {
+                    casinoData.getPageOptions(scope);
+                }
 
                 getGames();
             };

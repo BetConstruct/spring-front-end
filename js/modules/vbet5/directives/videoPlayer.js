@@ -21,7 +21,7 @@ VBET5.directive('videoPlayer', ['$window', '$timeout', '$rootScope', '$sce', 'Tr
     'use strict';
     return {
         restrict: 'E',
-        templateUrl: $rootScope.getTemplate('templates/directive/videoPlayer.html'),
+        templateUrl: 'templates/directive/videoPlayer.html',
 
         link: function (scope, element, attrs) {
             var initPlayer = function () {
@@ -36,7 +36,7 @@ VBET5.directive('videoPlayer', ['$window', '$timeout', '$rootScope', '$sce', 'Tr
                     scope.videoState.frameUrl = $sce.trustAsResourceUrl(streamUrl);
                     scope.videoState.videoIsLoaded = false; // for hiding player controlls
                 } else { // for another all streams
-                    var swfPath = "swf/LiveVideo.swf?anticache=" + $rootScope.env.appVersion;
+                    var swfPath = providerId === '5' ? "swf/imgStream.swf" : "swf/LiveVideo.swf?anticache=" + $rootScope.env.appVersion;
                     var callbackGlobalFuncName = 'flashPlayerCallback' + scope.$id;
 
                     var params = {};
@@ -88,7 +88,7 @@ VBET5.directive('videoPlayer', ['$window', '$timeout', '$rootScope', '$sce', 'Tr
 
                                         obj.ref.setErrorMessages(
                                             Translator.get('Cannot play this video in your region.'),
-                                            Translator.get('Cannot play video stream.Sorry.')
+                                            Translator.get('Sorry, there is no live stream at the moment. Please check back later.')
                                         );
                                         scope.videoState.videoIsLoaded = false;
 

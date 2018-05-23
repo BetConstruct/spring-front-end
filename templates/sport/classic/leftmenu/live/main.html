@@ -1,4 +1,4 @@
-<ng-include ng-if="conf.favoriteTeam.enabled" src="getTemplate('templates/sport/classic/leftmenu/live/favoriteTeam.html')"></ng-include>
+<ng-include ng-if="conf.favoriteTeam.enabled" src="::'templates/sport/classic/leftmenu/live/favoriteTeam.html'|fixPath"></ng-include>
 
 <div ng-repeat="group in liveSportGroups track by group.id">
     <li ng-class="{'active': leftMenuState.live.groups[group.id]}">

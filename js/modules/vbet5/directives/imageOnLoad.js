@@ -17,8 +17,12 @@ VBET5.directive('imageOnLoad', function () {
         link: function (scope, element) {
             element.on('load', function () {
                     scope.successCallBack();
-                    scope.imageWidth = element[0].clientWidth
+                    scope.imageWidth = element[0].clientWidth;
             });
+
+            scope.$on('$destroy', function() {
+                element.off('load');
+            })
         }
     };
 });

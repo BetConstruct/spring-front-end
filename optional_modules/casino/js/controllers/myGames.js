@@ -13,6 +13,14 @@ CASINO.controller('casinoMyGamesCtrl', ['$scope', '$rootScope', 'Storage', '$loc
 
     $scope.casinoGamesLoaded = false;
     $rootScope.myCasinoGames = $cookies.getObject("myCasinoGames") || Storage.get("myCasinoGames") || [];
+    if ($rootScope.myCasinoGames.length) { // This needs to be done for properly adding 'active' class for fav games
+        $rootScope.myCasinoGamesIds = $rootScope.myCasinoGames.reduce(function makeObject(acc, curr) {
+            acc[curr.id] = true;
+            return acc;
+        }, {});
+    } else {
+        $rootScope.myCasinoGamesIds = {};
+    }
     $scope.confData = CConfig;
 
     /**
@@ -84,6 +92,7 @@ CASINO.controller('casinoMyGamesCtrl', ['$scope', '$rootScope', 'Storage', '$loc
 
     $scope.removeGameFromSaved = function removeGameFromSaved(gameID) {
         var games = $rootScope.myCasinoGames, i, j;
+        $rootScope.myCasinoGamesIds[gameID] = false;
 
         for (i = 0, j = games.length; i < j; i += 1) {
             if (games[i].id === gameID) {
@@ -170,6 +179,7 @@ CASINO.controller('casinoMyGamesCtrl', ['$scope', '$rootScope', 'Storage', '$loc
             $rootScope.myCasinoGames = [];
         }
         $rootScope.myCasinoGames.push(game);
+        $rootScope.myCasinoGamesIds[game.id] = true;
 
         Storage.set('myCasinoGames', $rootScope.myCasinoGames);
         checkAndSetCookie('myCasinoGames', $rootScope.myCasinoGames);

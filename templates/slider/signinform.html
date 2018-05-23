@@ -1,7 +1,7 @@
 <div ng-controller="loginCtrl">
 
-    <div class="form-contain" ng-if="env.sliderContent === 'login'  && !conf.registration.simplified" ng-include="getTemplate('templates/slider/login.html')"></div>
-    <div class="form-contain" ng-if="env.sliderContent === 'login' && conf.registration.simplified" ng-include="getTemplate('templates/slider/login_popup.html')"></div>
+    <div class="form-contain" ng-if="env.sliderContent === 'login'  && !conf.registration.simplified" ng-include="::'templates/slider/login.html'|fixPath"></div>
+    <div class="form-contain" ng-if="env.sliderContent === 'login' && conf.registration.simplified" ng-include="::'templates/slider/login_popup.html'|fixPath"></div>
 
     <div class="block-sign-in-form" ng-init="resetPasswordResult(true)" ng-if="env.sliderContent === 'forgotPasswordForm' && !conf.registration.simplified">
      <div class="form-contain">
@@ -139,7 +139,7 @@
 </div>
     <!--- END of POPUP forgot password -->
 
-    <div class=" block-sign-in-form" ng-if="env.sliderContent === 'reset_password'" ng-include="getTemplate('templates/slider/resetpasswordform.html')"></div>
+    <div class=" block-sign-in-form" ng-if="env.sliderContent === 'reset_password'" ng-include="::'templates/slider/resetpasswordform.html'|fixPath"></div>
 </div>
-<ng-include src="getTemplate('templates/slider/registration.html')" ng-if="env.sliderContent === 'register' && !conf.registration.simplified"></ng-include>
-<ng-include src="getTemplate('templates/slider/registration_simplified.html')" ng-if="env.sliderContent === 'register'  && conf.registration.simplified"></ng-include>
+<ng-include src="::'templates/slider/registration.html'|fixPath" ng-if="env.sliderContent === 'register' && !conf.registration.simplified"></ng-include>
+<ng-include src="::'templates/slider/registration_simplified.html'|fixPath" ng-if="env.sliderContent === 'register'  && conf.registration.simplified"></ng-include>

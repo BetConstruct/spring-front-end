@@ -1,43 +1,57 @@
 <div>
-    <ul ng-show="showConditions">
-        <li ng-repeat="game in gamesList | limitTo: gamesLimit track by game.id" ng-show="gameShowConditions" class="list-games-casino-view-b" no-animate>
-            <div class="icon-delete" ng-show="showDeleteBtn"><a ng-click="removeGameFromSaved(game.id); $event.stopPropagation();">delete</a></div>
-            <p class="casino-game-download-version-2" ng-show="cConf.downloadEnabled && game.gameType.isDownloadClient === 1" ng-click="gaSend('send', 'event', 'games', game.gameCategory||game.gameCat, {'page': $location.path(), 'eventLabel': ('Download '+game.gameName)}); $event.stopPropagation();">
+    <div class="float-width">
+        <ul ng-show="showConditions">
+            <li ng-repeat="game in gamesList track by game.id" class="list-games-casino-view-b" ng-show="!game.has_age_restriction || $root.env.authorized" no-animate>
+                <div class="icon-delete" ng-show="showDeleteBtn"><a ng-click="removeGameFromSaved(game.id); $event.stopPropagation();">delete</a></div>
+                <p class="casino-game-download-version-2" ng-if="confData.main.downloadEnabled && game.downloads" ng-click="gaSend('send', 'event', 'games', game.provider, {'page': $location.path(), 'eventLabel': ('Download '+ game.name)}); $event.stopPropagation();">
 
-                <a ng-show="(userOS!=='Windows' && userOS !== 'MacOS' && userOS !== 'Linux' && userOS !== 'UNIX') || (!game.gameInfo.downloadLink && (userOS==='Windows' || userOS==='Linux' || userOS==='UNIX')) || (userOS==='MacOS' && !game.gameInfo.downloadLinkMac)"
-                   ng-click="$parent.globalPopup=('There is no downloadable client for your operating system'|translate)">
-                    <span trans>DOWNLOAD</span>
-                </a>
-                <a ng-href="{{game.gameInfo.downloadLink}}" ng-show="(userOS==='Windows' || userOS==='UNIX') && game.gameInfo.downloadLink">
-                    <span trans>DOWNLOAD</span>
-                </a>
-                <a ng-href="{{game.gameInfo.downloadLinkMac}}" ng-show="userOS==='MacOS' && game.gameInfo.downloadLinkMac">
-                    <span trans>DOWNLOAD</span>
-                </a>
-                <a ng-href="{{game.gameInfo.downloadLinkLinux}}" ng-show="userOS==='Linux' && game.gameInfo.downloadLinkLinux">
-                    <span trans>DOWNLOAD</span>
-                </a>
-            </p>
-            <a ng-click="openGame(game, 'real'); $event.stopPropagation();">
-                <p class="game-img-box-b" ng-style="{'background-image': 'url({{cConf.iconsUrl + game.gameID}}.jpg)'}"></p>
-
-                <p class="game-name-b-favorite">
-                    <span title="Double Double Bonus Poker">{{game.gameName}}</span>
-                    <i class="favorite-icon-view" ng-show="!showDeleteBtn" ng-click="toggleSaveToMyCasinoGames(game); $event.stopPropagation();" ng-class="{'active': isFromSaved(game.id)}"></i>
+                    <a ng-if="(!game.downloads.windows && ($root.userOS==='Windows' || $root.userOS==='UNIX')) || (!game.downloads.mac && $root.userOS==='MacOS') || (!game.downloads.linux && $root.userOS==='Linux') || ($root.userOS!=='Windows' && $root.userOS !== 'MacOS' && $root.userOS !== 'Linux' && $root.userOS !== 'UNIX')"
+                       ng-click="$parent.globalPopup=('There is no downloadable client for your operating system'|translate)">
+                        <span trans>DOWNLOAD</span>
+                    </a>
+                    <a ng-href="{{(game.downloads.windows.indexOf('http') === -1 ? $root.cUrlPrefix + '/' : '') + game.downloads.windows}}" ng-if="($root.userOS==='Windows' || $root.userOS==='UNIX') && game.downloads.windows">
+                        <span trans>DOWNLOAD</span>
+                    </a>
+                    <a ng-href="{{(game.downloads.mac.indexOf('http') === -1 ? $root.cUrlPrefix + '/' : '') + game.downloads.mac}}" ng-if="$root.userOS==='MacOS' && game.downloads.mac">
+                        <span trans>DOWNLOAD</span>
+                    </a>
+                    <a ng-href="{{(game.downloads.linux.indexOf('http') === -1 ? $root.cUrlPrefix + '/' : '') + game.downloads.linux}}" ng-if="$root.userOS==='Linux' && game.downloads.linux">
+                        <span trans>DOWNLOAD</span>
+                    </a>
                 </p>
-                <div class="casino-resize-buttons">
-                    <div>
-                        <button ng-click="openGame(game, 'real'); $event.stopPropagation();" ng-if="cConf.realModeEnabled" >
-                            <span trans>Play now</span>
-                        </button>
-                        <button ng-show="game.hasFunMode && (!env.authorized || game.id !== '1314')" ng-click="openGame(game, 'fun'); $event.stopPropagation();">
-                            <!-- <span ng-show="selectedCategory.id != '35'" ng-click="openGame(game, 'fun'); $event.stopPropagation();" trans>PLAY FOR FUN</span>
-                             <span ng-show="!env.authorized && selectedCategory.id == '35'" ng-click="openGame(game, 'fun'); $event.stopPropagation();" trans>VIEW</span>-->
-                            <span>{{game.funModeText | translate}}</span>
-                        </button>
+                <a ng-click="openGame(game, 'real'); $event.stopPropagation();">
+                    <div ng-if="game.badge" class="casino-game-badge">
+                        <span ng-if="game.badge === '1'" class="casino-new" trans>New</span>
+                        <span ng-if="game.badge === '2'" class="casino-jackpot" trans>Jackpot</span>
                     </div>
-                </div>
-            </a>
-        </li>
-    </ul>
+                    <div class="game-img-box-b" ng-style="{'background-image': 'url({{useBigIcons ? game.icon_3 : game.icon_2}})'}">
+                        <div class="jackpot-status-holder" ng-if="additionalData[game.extearnal_game_id]">
+                            <small trans>Jackpot up to</small>
+                            <p>
+                                <strong ng-bind="additionalData[game.extearnal_game_id]['FirstLevelAmount'] | number"></strong>
+                                <span ng-bind="additionalData[game.extearnal_game_id]['CurrencyId'] | currency"></span>
+                            </p>
+                        </div>
+                    </div>
+                    <p class="game-name-b-favorite">
+                        <span title="Double Double Bonus Poker">{{game.name}}</span>
+                        <i class="favorite-icon-view" ng-show="!showDeleteBtn" ng-click="toggleSaveToMyCasinoGames(game); $event.stopPropagation();" ng-class="{'active': $root.myCasinoGamesIds[game.id]}"></i>
+                    </p>
+                    <div class="casino-resize-buttons">
+                        <div>
+                            <button ng-click="openGame(game, 'real'); $event.stopPropagation();" ng-if="game.types.realMode">
+                                <span trans>Play now</span>
+                            </button>
+                            <button ng-if="game.types.funMode && (confData.main.funModeEnabled === 2 && $root.env.authorized || confData.main.funModeEnabled === 1)" ng-click="openGame(game, 'fun'); $event.stopPropagation();">
+                                <span trans>Play For Free</span>
+                            </button>
+                            <button ng-if="game.types.viewMode && !$root.env.authorized" ng-click="openGame(game, 'fun'); $event.stopPropagation();">
+                                <span trans>View</span>
+                            </button>
+                        </div>
+                    </div>
+                </a>
+            </li>
+        </ul>
+    </div>
 </div>

@@ -39,7 +39,7 @@ VBET5.controller('mixedBalanceCtrl', ['$scope', '$controller', 'Config', '$sce',
     $scope.dateOptions = { showWeeks: 'false' };
     $scope.$sce = $sce;
 
-    $scope.today = Moment.get().format("YYYY-MM-DD");
+    $scope.today = Moment.get().lang("en").format("YYYY-MM-DD");
     $scope.datePickerLimits = {
         maxToDate: $scope.today,
         maxFromDate: $scope.today
@@ -91,8 +91,8 @@ VBET5.controller('mixedBalanceCtrl', ['$scope', '$controller', 'Config', '$sce',
     $scope.initMixedBalanceHistory = function initMixedBalanceHistory () {
         var balanceHistoryDataRangeChanged = $scope.$watch("balanceHistoryParams.dateRange", function() {
             if("balanceHistory" === $scope.env.sliderContent) {
-                $scope.requestData.dateFrom = moment.unix($scope.balanceHistoryParams.dateRange.fromDate).format('YYYY-MM-DD');
-                $scope.requestData.dateTo = moment.unix($scope.balanceHistoryParams.dateRange.toDate).format('YYYY-MM-DD');
+                $scope.requestData.dateFrom = moment.unix($scope.balanceHistoryParams.dateRange.fromDate).lang("en").format('YYYY-MM-DD');
+                $scope.requestData.dateTo = moment.unix($scope.balanceHistoryParams.dateRange.toDate).lang("en").format('YYYY-MM-DD');
                 balanceHistoryDataRangeChanged();
             }
         }, true);
@@ -109,21 +109,21 @@ VBET5.controller('mixedBalanceCtrl', ['$scope', '$controller', 'Config', '$sce',
         switch (type) {
             case 'from':
                 if (Moment.get($scope.requestData.dateFrom).unix() > Moment.get($scope.requestData.dateTo).unix()) {
-                    $scope.requestData.dateTo = Moment.moment($scope.requestData.dateFrom).format("YYYY-MM-DD");
+                    $scope.requestData.dateTo = Moment.moment($scope.requestData.dateFrom).lang("en").format("YYYY-MM-DD");
                 }
 
                 if (Moment.get($scope.requestData.dateFrom).add(monthCount, "M").isAfter($scope.today)) {
                     $scope.datePickerLimits.maxToDate = $scope.today;
                 } else {
-                    $scope.requestData.dateTo = Moment.get($scope.requestData.dateFrom).add(monthCount, "M").format("YYYY-MM-DD");
-                    $scope.datePickerLimits.maxToDate = Moment.moment($scope.requestData.dateFrom).add(monthCount, "M").format("YYYY-MM-DD");
+                    $scope.requestData.dateTo = Moment.get($scope.requestData.dateFrom).add(monthCount, "M").lang("en").format("YYYY-MM-DD");
+                    $scope.datePickerLimits.maxToDate = Moment.moment($scope.requestData.dateFrom).add(monthCount, "M").lang("en").format("YYYY-MM-DD");
                 }
 
                 break;
             case 'to':
                 if (Moment.get($scope.requestData.dateFrom).unix() > Moment.get($scope.requestData.dateTo).unix()) {
-                    $scope.requestData.dateFrom = Moment.moment($scope.requestData.dateTo).format("YYYY-MM-DD");
-                    $scope.datePickerLimits.maxToDate = Moment.moment($scope.requestData.dateFrom).add(monthCount, "M").format("YYYY-MM-DD");
+                    $scope.requestData.dateFrom = Moment.moment($scope.requestData.dateTo).lang("en").format("YYYY-MM-DD");
+                    $scope.datePickerLimits.maxToDate = Moment.moment($scope.requestData.dateFrom).add(monthCount, "M").lang("en").format("YYYY-MM-DD");
                 }
                 break;
         }

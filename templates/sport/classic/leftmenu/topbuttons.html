@@ -19,5 +19,5 @@
     </li>
 </ul>
 <div class="left-list-menu">
-    <div class="search-menu-wrapper-j" ng-click="toggleLeftMenu(true)" ng-if="conf.enableMenuSearch" ng-include="getTemplate('templates/search/sport.html')"></div>
+    <div class="search-menu-wrapper-j" ng-click="toggleLeftMenu(true)" ng-if="conf.enableMenuSearch" ng-include="::'templates/search/sport.html'|fixPath"></div>
 </div>

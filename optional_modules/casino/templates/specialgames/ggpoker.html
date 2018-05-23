@@ -1,38 +1,42 @@
-<div ng-controller="casinoSpecialGamesCtrl" ng-init="loadGame('ggpoker');">
+<div ng-controller="casinoSpecialGamesCtrl" ng-init="loadGame('ggpoker');" class="float-width">
     <div class="skillgame-landing-j">
        <div class="new-default-popup-j" ng-show="amountTransferModel.transferInProgress && !amountTransferModel.showTransferPopUp">
            <vbet-loader></vbet-loader>
        </div>
         <div class="intro-section-j">
-            <div class="intro-slider-j">
-                <div class="intro-s-j">
-                    <div class="skillgame-landing-guide">
-                        <h1 trans>GG Poker</h1>
-                        <h2 trans>Welcome to Poker</h2>
-                        <div class="primary-j">
-                            <p trans></p>
+            <div class="hp-slider-17">
+                <div class="hp-slide-17 active">
+                    <a href="#" class="pointer-events-none">
+                        <img src="images/backgrounds/pokerklasspubg.jpg"/>
+                        <div class="slider-landing-overlay">
+                            <div class="guide">
+                                <h2 trans>Welcome to Poker</h2>
+                                <div class="float-width">
+                                    <p class="primary-info-slide" trans>Enjoy the GG Poker...</p>
+                                </div>
+                            </div>
                         </div>
+                    </a>
+                </div>
+                <div class="slider-landing-overlay">
+                    <div class="guide">
+                        <h1 trans>GG Poker</h1>
                     </div>
                 </div>
             </div>
-            <div class="skillgame-landing-guide button-group-j">
-                <ul>
-                    <li>
-                        <a ng-if="(userOS!=='Windows' && userOS !== 'MacOS') || (!game.downloadLink && userOS==='Windows') || (userOS==='MacOS' && !game.downloadLinkMac)" ng-click="broadcast('globalDialogs.addDialog', {type: 'error',title: 'Error',content: 'There is no downloadable client for your operating system'})"><button trans>Download</button></a>
-                        <a ng-href="{{game.downloadLink}}" ng-if="userOS==='Windows' && game.downloadLink"><button trans>Download</button></a>
-                        <a ng-href="{{game.downloadLinkMac}}" ng-if="userOS==='MacOS' && game.downloadLinkMac"><button trans>Download</button></a>
-                    </li>
-                    <li ng-show="env.authorized">
-                        <button class="skin-j" ng-click="amountTransfer('get_balance_gg_poker', null, null, '154000')" trans>TRANSFER</button>
-                    </li>
-                </ul>
+            <div class="slider-landing-overlay">
+                <div class="guide">
+                    <div class="button-group-j">
+                        <a ng-if="(userOS!=='Windows' && userOS !== 'MacOS') || (!game.downloadLink && userOS==='Windows') || (userOS==='MacOS' && !game.downloadLinkMac)" ng-click="broadcast('globalDialogs.addDialog', {type: 'error',title: 'Error',content: 'There is no downloadable client for your operating system'})" trans>Download</a>
+                        <a ng-href="{{game.downloadLink}}" ng-if="userOS==='Windows' && game.downloadLink" trans>Download</a>
+                        <a ng-href="{{game.downloadLinkMac}}" ng-if="userOS==='MacOS' && game.downloadLinkMac" trans>Download</a>
+                        <a ng-show="env.authorized" ng-click="amountTransfer('get_balance_gg_poker', null, null, '154000')" trans>TRANSFER</a>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
-
-
-    <div class="new-default-popup-j pokerklas" ng-show="amountTransferModel.showTransferPopUp"
-         ng-escape="amountTransferModel.showTransferPopUp = false;">
+    <div class="new-default-popup-j pokerklas" ng-show="amountTransferModel.showTransferPopUp" ng-escape="amountTransferModel.showTransferPopUp = false;">
         <div class="pp-table-j">
             <div class="table-row-j">
                 <div class="table-cell-j">
@@ -68,5 +72,4 @@
             </div>
         </div>
     </div>
-
 </div>

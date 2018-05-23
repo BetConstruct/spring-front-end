@@ -6,7 +6,7 @@
  * @description directive for displaying game, market information in 'comboView'
  *
  */
- VBET5.directive('comboViewMarketEvents', ['$rootScope', 'Utils', 'GameInfo', function ($rootScope, Utils, GameInfo) {
+ VBET5.directive('comboViewMarketEvents', ['$filter', 'Utils', 'GameInfo', function ($filter, Utils, GameInfo) {
     var map = {};
 
     map['FirstTeamTotal'] = 'differentNames';
@@ -168,8 +168,6 @@
                 }
             }
         },
-        templateUrl: function templateUrl (el, attr) {
-            return $rootScope.getTemplate('optional_modules/comboView/templates/market/events.html');
-        }
+        templateUrl: $filter('fixPath')('optional_modules/comboView/templates/market/events.html')
      };
  }]);

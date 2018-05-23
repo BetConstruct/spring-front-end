@@ -111,7 +111,7 @@ angular.module('vbet5.betting').controller('multiViewCtrl', ['$rootScope', '$sco
         }
     });
 
-    $rootScope.$on('liveGame.gameRemoved', function (event, gameId) {
+    $scope.$on('liveGame.gameRemoved', function (event, gameId) {
         if (gameId) {
             $scope.removeGameFromList(gameId);
         }

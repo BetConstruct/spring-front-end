@@ -6,17 +6,13 @@
  * @description game widget for last minute bets and game blocks in dashboard
  *
  */
-VBET5.directive('gameWidget', ['Utils', 'Config', 'ConnectionService', 'GameInfo', 'Translator', '$rootScope', '$location', '$route', '$window', function (Utils, Config, ConnectionService, GameInfo, Translator, $rootScope, $location, $route, $window) {
+VBET5.directive('gameWidget', ['Utils', 'Config', 'ConnectionService', 'GameInfo', 'Translator', '$rootScope', '$location', '$route', '$window', '$filter', function (Utils, Config, ConnectionService, GameInfo, Translator, $rootScope, $location, $route, $window, $filter) {
     'use strict';
     return {
         restrict: 'E',
         replace: false,
         templateUrl: function templateUrl(el, attrs) {
-          if(attrs.templatePath) {
-              return $rootScope.getTemplate(attrs.templatePath);
-          }  else {
-              return $rootScope.getTemplate('templates/directive/gamewidget.html')
-          }
+            return  $filter('fixPath')(attrs.templatePath || 'templates/directive/gamewidget.html');
         },
         scope: {
             sportTabsQuantity: '=',
@@ -291,7 +287,6 @@ VBET5.directive('gameWidget', ['Utils', 'Config', 'ConnectionService', 'GameInfo
              */
             scope.toggleGameFavorite = function toggleGameFavorite(game) {
                 $rootScope.$broadcast('game.toggleGameFavorite', game);
-                console.log('scope.favorites', scope.favorites);
             };
 
             init();

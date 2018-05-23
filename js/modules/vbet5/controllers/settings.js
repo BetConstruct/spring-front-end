@@ -123,7 +123,7 @@ VBET5.controller('settingsCtrl', ['$scope', '$rootScope', '$location', '$documen
                     if(index === 'birth_date' && $scope.birthDate && $scope.birthDate.year && $scope.birthDate.month && $scope.birthDate.day) {
                         $scope.details[index] = $scope.birthDate.year.toString() + '-' + $scope.birthDate.month.toString() + '-' + $scope.birthDate.day.toString();
                     }
-                    request.user_info[fieldNamesInUpdateUserInfo[index] || index] = index === 'gender' ? $scope.details.sex : $scope.details[index];
+                    request.user_info[fieldNamesInUpdateUserInfo[index] || index] = $scope.details[index];
                 }
             }
             request.user_info.password = $scope.details.password;
@@ -243,15 +243,15 @@ VBET5.controller('settingsCtrl', ['$scope', '$rootScope', '$location', '$documen
     function prepareOnceEditableFields () {
         var index;
 
-        if (!$scope.details.sex) {
-            $scope.details.sex = 'M';
+        if (!$scope.details.gender) {
+            $scope.details.gender = 'M';
         } else {
             index = $scope.personalDetails.editableFields.indexOf('gender');
             if (index > -1) {
                 $scope.personalDetails.readOnlyFields.push($scope.personalDetails.editableFields.splice(index, 1)[0]);
             }
         }
-        $scope.details.viewGender = Translator.get({'M': 'Male', 'F': 'Female'}[$scope.details.sex]);
+        $scope.details.viewGender = Translator.get({'M': 'Male', 'F': 'Female'}[$scope.details.gender]);
 
         if ($scope.details.first_name) {
             index = $scope.personalDetails.editableFields.indexOf('first_name');

@@ -1,13 +1,15 @@
 <div class="better-homepage" ng-init="setTitle('')">
-    <div ng-repeat="row in conf.homepage track by $index" class="row"
+    <div ng-repeat="row in $root.conf.homepage track by $index" class="row"
          ng-style="{'max-width': row.maxWidth}"
          ng-class="{'guide': !row.fullWidth}">
         <div class="row-child">
             <div ng-repeat="item in row.items track by $index" class="{{item.class}} {{item.templateUrl}}">
-                <div ng-if="item.templateUrl"
-                     ng-class="{'kill-height-til-media': item.mediaHeight}"
-                     ng-style="{'height': (item.height || item.mediaHeight), 'max-height': item.maxHeight}"
-                     ng-include="getTemplate(item.templateUrl)"></div>
+                <div ng-if="item.templateUrl && item.templateUrl.indexOf('productsSlider') === -1"
+                            ng-class="{'kill-height-til-media': item.mediaHeight}" ng-style="{'height': (item.height || item.mediaHeight), 'max-height': item.maxHeight}"
+                     ng-include="item.templateUrl|fixPath"></div>
+                <products-slider ng-if="item.templateUrl && item.templateUrl.indexOf('productsSlider') !== -1"
+                            ng-class="{'kill-height-til-media': item.mediaHeight}" ng-style="{'height': (item.height || item.mediaHeight), 'max-height': item.maxHeight}"
+                            slug="item.slug"></products-slider>
                 <div ng-if="item.sliderSlug"
                      ng-class="{'kill-height-til-media': item.mediaHeight}"
                      ng-style="{'height': (item.height || item.mediaHeight), 'max-height': item.maxHeight}"

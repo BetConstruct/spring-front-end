@@ -161,6 +161,7 @@ VBET5.controller('asianViewMainController', ['$rootScope', '$scope', '$filter', 
                     $scope.leftMenuState[$scope.selectedMenuType.active][leftMenuSports[i].id] = true;
                 }
             }
+            groups.clean(undefined);
             $scope.sportsGroup = groups.concat(otherGroups).sort(Utils.orderSorting);
         }
 

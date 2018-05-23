@@ -441,4 +441,11 @@ VBET5.controller('poolBettingCtrl', ['$scope', '$rootScope', '$interval', '$filt
             $scope.addToBetslip();
         }
     };
+
+    $scope.$on('$destroy', function() {
+        if (clockPromise) {
+            $interval.cancel(clockPromise);
+            clockPromise = undefined;
+        }
+    });
 }]);

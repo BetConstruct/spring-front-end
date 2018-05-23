@@ -973,6 +973,16 @@ VBET5.service('Utils', ['$timeout', '$filter', '$location', '$window', 'Config',
         return this.map(fn).reduce(function (x, y) { return x.concat(y); }, []);
     };
 
+    Array.prototype.clean = function(deleteValue) {
+        for (var i = 0; i < this.length; i++) {
+            if (this[i] === deleteValue) {
+                this.splice(i, 1);
+                i--;
+            }
+        }
+        return this;
+    };
+
 
     /**
      * @ngdoc method
@@ -1166,14 +1176,6 @@ VBET5.service('Utils', ['$timeout', '$filter', '$location', '$window', 'Config',
         !config.main.availableSportsbookViews && (config.main.availableSportsbookViews = availableSportsbookViews);
 
         return availableSportsbookViews;
-    };
-
-    Utils.getActiveSportsLayout = function getActiveSportsLayout () {
-        if (Config.main.availableSportsbookViews[Storage.get('sportsBookLayout')] || (Config.additionalModules && Config.additionalModules.indexOf(Storage.get('sportsBookLayout')+'View') !== -1)) {
-            return Storage.get('sportsBookLayout');
-        }
-
-        return Config.main.sportsLayout;
     };
 
     Utils.getBrowserLanguage = function getBrowserLanguage () {

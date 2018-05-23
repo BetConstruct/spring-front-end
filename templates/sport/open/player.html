@@ -15,12 +15,12 @@
         <div ng-if="env.authorized && game.video_data && ((profile.calculatedBalance + profile.calculatedBonus) > 0 || profile.initial_balance > 0)" class="video-player-container" ng-init="soundVolume = env.sound">
 
             <div class="video-player-control" ng-show="videoIsLoaded">
-                <span ng-click="togglePause();" ng-show="!paused" class="video-pause">Pause</span>
-                <span ng-click="togglePause();" ng-show="paused" class="video-play">Play</span>
+                <span ng-click="togglePause();" ng-show="!paused" class="video-pause"></span>
+                <span ng-click="togglePause();" ng-show="paused" class="video-play"></span>
             </div>
             <div class="video-player-control sounds" ng-show="videoIsLoaded">
-                <span ng-click="soundVolume = 0;" ng-show="soundVolume > 0" class="video-mute">Mute</span>
-                <span ng-click="soundVolume = 0.75;" ng-show="soundVolume === 0" class="video-unmute">UnMute</span>
+                <span ng-click="soundVolume = 0;" ng-show="soundVolume > 0" class="video-mute"></span>
+                <span ng-click="soundVolume = 0.75;" ng-show="soundVolume === 0" class="video-unmute"></span>
                 <div class="sound-volume">
                     <div>
                         <rzslider rz-slider-model="soundVolume" rz-slider-floor="0" rz-slider-ceil="1" rz-slider-step="0.01" rz-slider-precision="1" rz-slider-always-show-bar="true"></rzslider>
