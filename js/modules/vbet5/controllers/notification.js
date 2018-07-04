@@ -108,7 +108,7 @@ VBET5.controller('notificationCtrl', ['$rootScope', '$scope', '$location', 'Conf
      */
     $rootScope.geoDataAvailable.then(function () {
         if (Config.dialog && Config.dialog.runtimePopup && !Storage.get('runtimePopupShowed')) {
-            if (!Config.dialog.runtimePopup.countryAllow || Config.dialog.runtimePopup.countryAllow.indexOf($rootScope.geoCountryInfo.countryCode) === -1) {
+            if (!Config.dialog.runtimePopup.countryAllow || ($rootScope.geoCountryInfo && Config.dialog.runtimePopup.countryAllow.indexOf($rootScope.geoCountryInfo.countryCode) === -1)) {
                 $rootScope.globalDialog = Config.dialog.runtimePopup;
                 Storage.set('runtimePopupShowed', true);
             }

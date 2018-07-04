@@ -261,11 +261,12 @@ VBET5.directive('statisticsOnHover', ['$document', '$http', '$compile', '$q', '$
                 container[0].style.width = popup.width +'px';
                 container[0].style.height = popup.height +'px';
                 var pageSize = DomHelper.getScreenResolution();
+                var scrollY = typeof window.scrollY === 'undefined' ? window.pageYOffset : window.scrollY; // IE support reasons
                 if(pageSize.y - element[0].getBoundingClientRect().top < popup.height + 40) {
                     container.addClass('stats-on-top');
-                    container[0].style.top = element[0].getBoundingClientRect().bottom - popup.height + 'px';
+                    container[0].style.top = (element[0].getBoundingClientRect().bottom + scrollY - popup.height) + 'px';
                 } else{
-                    container[0].style.top = element[0].getBoundingClientRect().top + 'px';
+                    container[0].style.top = (element[0].getBoundingClientRect().top + scrollY) + 'px';
                 }
                 if(element[0].getBoundingClientRect().left < popup.width) {
                     container[0].style.left = '20px';

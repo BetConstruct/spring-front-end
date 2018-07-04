@@ -449,8 +449,8 @@ angular.module('CMS').controller('cmsPagesCtrl', ['$location', '$rootScope', '$s
      *
      * @param {string} containerId id of container to get banner for
      */
-    $scope.loadBanners = function loadBanners(containerId) {
-        content.getWidget(containerId).then(function (response) {
+    $scope.loadBanners = function loadBanners(containerId, addLang) {
+        content.getWidget(containerId + (addLang ? '-' + Config.env.lang : '')).then(function (response) {
             if (response.data && response.data.widgets && response.data.widgets[0]) {
                 $scope.bannerObjects[containerId] = [];
                 angular.forEach(response.data.widgets, function (widget) {
@@ -782,7 +782,7 @@ angular.module('CMS').controller('cmsPagesCtrl', ['$location', '$rootScope', '$s
             content.getPage(slug, !!withChildren).then(function (data) {
                 console.log('loadPage', data);
                 $scope.mainPage = data.data.page;
-                $scope.pages = data.data.page ? data.data.page.children : [];
+                $scope.pages = data.data.page && data.data.page.children ? data.data.page.children : [];
                 $scope.widgets = data.data.widgets;
                 var i, length = $scope.pages.length;
                 for (i = 0; i < length; i++) {

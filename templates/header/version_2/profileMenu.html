@@ -52,13 +52,13 @@
                                 <i class="bonuses-icon-b"></i>
                                 <span trans>Bonuses</span>
                                 <b ng-if="calculatedConfigs.sportEnabled"
-                                    ng-show="!env.hideBalance && profile.bonus_balance && (conf.GmsPlatform || (!isInCasino() && !isInPoker()))"
+                                    ng-show="!env.hideBalance && profile.bonus_balance && (conf.GmsPlatform || (!$root.currentPage.isInCasino && !$root.currentPage.isInPoker))"
                                 >
                                     {{profile.calculatedBonus}} {{profile.currency_name|currency}}
                                 </b>
 
                                 <b ng-if="::(!conf.GmsPlatform && (casinoEnabled || calculatedConfigs.pokerEnabled))"
-                                    ng-show="!env.hideBalance && (env.casinoBalance !== undefined && (isInCasino() || isInPoker()) || !calculatedConfigs.sportEnabled)"
+                                    ng-show="!env.hideBalance && (env.casinoBalance !== undefined && ($root.currentPage.isInCasino || $root.currentPage.isInPoker) || !calculatedConfigs.sportEnabled)"
                                 >
                                     {{env.casinoBalance.bonus || env.casinoBalance.bonus_balance}} {{profile.currency_name|currency}}
                                 </b>

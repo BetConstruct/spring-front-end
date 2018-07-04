@@ -231,7 +231,7 @@
   border-bottom: 1px solid #DBE1E6;
   border-left: 1px solid #e8edf1;
   border-right: 1px solid #e8edf1;
-  overflow: hidden;
+  //overflow: hidden;
 }
 
 .menu-sport-contain > ul > li:first-child {
@@ -797,10 +797,9 @@
   border-radius: 3px;
   background: #e8edf1;
   cursor: pointer;
-  transition: background 250ms, color 250ms;
+  //transition: background 250ms, color 250ms;
   position: relative;
 }
-
 .simple-fiealds-b > ul > li:first-child {
   margin: 0;
 }
@@ -808,7 +807,20 @@
 .simple-fiealds-b > ul.column-3 > li {
   width: calc((100% - 4px) / 3);
 }
-
+@supports (display: grid){
+  .simple-fiealds-b > ul {
+    display: grid;
+    grid-gap: 0 2px;
+    grid-template-columns: repeat(auto-fit, minmax(32%, 1fr));
+    &.column-3 > li{
+      width: 100%;
+    }
+    > li{
+      width: 100%;
+      float: none;
+    }
+  }
+}
 .simple-fiealds-b > ul > li:hover,
 .simple-fiealds-b > ul > li.active {
   color: #ffffff;

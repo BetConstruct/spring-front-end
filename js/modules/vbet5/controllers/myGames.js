@@ -276,7 +276,7 @@ VBET5.controller('myGamesCtrl', ['$scope', '$rootScope', '$location', '$route', 
             Storage.set('myGames', $rootScope.myGames);
             checkAndSetCookie('myGames', $rootScope.myGames);
             if ($rootScope.myGames.length === 0) {
-                if ($rootScope.myCasinoGames.length) {
+                if ($rootScope.myCasinoGames && $rootScope.myCasinoGames.length) {
                     $rootScope.env.sliderContent = 'casinoSavedGames';
                 } else {
                     $rootScope.env.showSlider = false;

@@ -187,14 +187,16 @@
     left: auto;
     right: 0;
     z-index: 666;
-    > p{
-      float: right;
-    }
+    transform: translateX(0);
+    //> p{
+    //  float: right;
+    //}
   }
   &:hover {
     overflow: inherit;
     > .max-bet-tooltip-v3 {
       height: auto;
+      display: block;
       overflow: inherit;
       opacity: 1;
     }

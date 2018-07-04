@@ -4,7 +4,7 @@
     <a ng-repeat="banner in banners"
        ng-if="banner.active"
        ng-href="{{ banner.link }}" target="{{ banner.linktarget }}"
-       ng-click="gaSend('send', 'event', 'news', {'page': $location.path(), 'eventLabel': 'betslip banner click'})">
+       ng-click="underBetSlipBannerClick(banner);">
         <div ng-show="banner.imageurl">
             <img ng-src="{{ banner.imageurl }}" alt="{{ banner.alt }}">
 

@@ -109,13 +109,7 @@ VBET5.directive('promotionNews',
 
                     function getPermaLink(news) {
                         var link, origin = $window.location.protocol + "//" + $window.location.hostname + ($window.location.port ? ':' + $window.location.port : '');
-                        if ($scope.sharePath) {
-                            link = origin + $window.document.location.pathname + $scope.sharePath;
-                        } else if (WPConfig.seoFilesGenerationActive) {
-                            link = origin + $window.document.location.pathname + $scope.path + '/' + encodeURIComponent((news.slug || news.title || '').replace(/ /g,"-")) + '-id-' + news.id + '.html';
-                        } else {
-                            link = origin + $window.document.location.pathname + '%23' + $location.path() + '%3Fnews=' + news.id + '%23news-' + news.id;
-                        }
+                        link = origin + $window.document.location.pathname + 'google/' +$scope.path + '/' + encodeURIComponent(Utils.generatePermaLink(news));
                         return link;
                     }
 

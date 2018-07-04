@@ -133,6 +133,10 @@ VBET5.directive('suggestedBets', ['$rootScope', '$http', '$filter', 'Zergling', 
              * @description Adds suggested bets to the betslip
              */
             scope.addToBetslip = function addToBetslip() {
+                if($rootScope.editBet && $rootScope.editBet.edit) {
+                    $rootScope.editBet.edit = false;
+                    $rootScope.$broadcast('close.edit.mode');
+                }
                 var oddType = 'odd',
                     i,
                     eventIds = [],
@@ -180,6 +184,7 @@ VBET5.directive('suggestedBets', ['$rootScope', '$http', '$filter', 'Zergling', 
 
                 if (permanent) {
                     Storage.set("suggestedBets", "hide");
+                    $rootScope.$broadcast("turnOffSuggestedBets");
                 }
                 if (eventSubId) {
                     Zergling.unsubscribe(eventSubId);

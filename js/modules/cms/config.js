@@ -2,12 +2,12 @@
 CMS.constant('WPConfig', {
 //    wpUrl: 'http://10.32.5.1/wordpress/',
 //    wpUrl: 'http://vbet5admin.betconstruct.int/',
-    wpUrl: '',  // WordpResss instance serving pages, banners
+    wpUrl: 'https://cmsbetconstruct.com/json',  // WordpResss instance serving pages, banners
     wpDirectUrl: '//cmsbetconstruct.com/getjson',  // Get direct data by slug
     exchangeShopUrl: '//cmsbetconstruct.com/productapi/get', // exchange shop url
     twitterUrl: '//twitter.betconstruct.com/twitter.php',
     wpNewsUrl: {
-        main: 'http://www.vbet.com/json'
+        main: 'https://cmsbetconstruct.com/json'
     },  // WordpResss instance serving news
     wpPokerPromoUrl: null, // can be url of json interface serving poker promo "news". if null, news url from wpNewsUrl will be used
     wpPromoUrl: null, // can be url of json interface serving poker promo "news". if null, news url from wpNewsUrl will be used

@@ -2,8 +2,8 @@ angular.module('vbet5').constant('Config', {
     'main': {
         enableDomainFixesForPartners: [29, 33, 43, 50, 112, 117, 132, 137, 138, 151, 157, 158, 200, 204, 260, 263, 266, 275,
             279, 294, 297, 311, 323, 372, 373, 397, 425, 460, 463, 543, 544, 566, 574, 575, 585, 607, 620, 621, 625, 627, 628,
-            631, 635, 640, 642, 647, 668, 678, 680, 699, 706, 707, 722, 723, 732, 737, 744, 745, 747, 749, 753, 756, 780, 787,
-            814, 815, 816, 818, 822, 823, 835, 837, 838, 839, 846, 869, 911],
+            631, 635, 640, 642, 647, 668, 678, 680, 699, 706, 707, 722, 723, 732, 737, 743, 744, 745, 747, 749, 753, 756, 780, 787,
+            814, 815, 816, 818, 822, 823, 835, 837, 838, 839, 846, 869, 897, 898, 911, 948, 951, 952, 953, 957, 960, 961, 962, 963, 966, 973, 974, 977, 978, 979, 980, 984, 986, 987],
         prefetchLeftMenuHoveredLivesGames: {
             enabled: false,
             prefetchAfter: 250
@@ -124,6 +124,7 @@ angular.module('vbet5').constant('Config', {
             // paddingMenu: 80,
             favicon: "favicon.ico"
         },
+        disableTeamPlayersLogo: true, // disables team players logos : implemented for russia 2018 cup
         appPokeristUrl: false,
         defaultTransLang: 'eng',  //default translation language: // translator will translate strings to default language if translation is not available for selected language
         site_id: '13', //13 is test id
@@ -165,6 +166,21 @@ angular.module('vbet5').constant('Config', {
             enabled: false,
             refreshPeriod: 2000,
             apiUrl: 'http://demostagingskillgames.betconstruct.com:5538'
+        },
+        gdpr: {
+            enabled: false,
+            popup: true,
+            profile: true,
+            options: {
+                subscribe_to_internal_message: 'Internal Messages',
+                subscribe_to_push_notification: 'Push Notifications',
+                subscribe_to_phone_call: 'Phone Call',
+                subscribe_to_email: 'Email',
+                subscribe_to_sms: 'SMS'
+            }
+        },
+        betStatus: {
+            enabled: false
         },
         drawDataUrl: 'https://cptca.betconstruct.com/niva/json.php',
         drawStreamUrl: 'rtmp://stream-eu2hz.betconstruct.com:1935/livedealer1/shanttv',
@@ -670,8 +686,8 @@ angular.module('vbet5').constant('Config', {
         },
         multiColumnMarketFilterTypesGms: {
             P1XP2: {key: 'WINNER', subKey: 'MATCH'},
-            Handicap: {key: 'HANDICAP', subKey: 'MATCH', eventTypes: ['Home', 'Away'], optimalMarkets: [1, 2, 3, 4]},
-            OverUnder: {key: 'TOTALS', subKey: 'MATCH', eventTypes: ['Over', 'Under'], optimalMarkets: [1, 2, 3, 4]}
+            Handicap: {key: 'HANDICAP', subKey: 'MATCH', eventTypes: ['Home', 'Away'], optimalMarkets: [1]},
+            OverUnder: {key: 'TOTALS', subKey: 'MATCH', eventTypes: ['Over', 'Under'], optimalMarkets: [1]}
         },
         oddFormats: [
             {name: 'Decimal', format: 'decimal'},

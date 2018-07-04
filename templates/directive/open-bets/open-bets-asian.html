@@ -1,0 +1,65 @@
+<div class="open-bets-buttons">
+    <button ng-click="closeOpenBets()" ng-class="{'active': openBetsState.open === false}" trans>Bet slip</button>
+    <button data-count="{{openBets.length}}" ng-click="openOpenBets()" ng-class="{'active': openBetsState.open === true}" trans>Open bets</button>
+</div>
+<div class="contain-open-bets single-open-bets" ng-if="openBetsState.open">
+    <p>
+        {{::'You can view all your bets in'|translate}}
+        <span ng-click="$root.broadcast('open.history');goToTop(true);$event.stopPropagation()" trans>Bet History</span>
+    </p>
+    <div class="slider-open-bets" ng-repeat="bet in openBets" ng-class="{'open': bet.openEvents}"
+         ng-init="bet.openEvents = true" ng-hide="openBetsLoading || $root.editBet.loading">
+        <p ng-click="bet.openEvents = !bet.openEvents">
+            <span ng-bind="betTypes[bet.type]|translate"></span>
+            <span ng-if="bet.type === 3"> {{::bet.system_min_count}}/{{::bet.events.length}}</span>
+            <i class="edit-bets-icon"
+               ng-show="bet.cashoutEnabled && (bet.type == 2 || bet.type == 1)  && minCashoutValue <= bet.cash_out && !$root.editBet.edit"
+               ng-click="$event.stopPropagation(); addEvents(bet, true, closeOpenBets);">
+            </i>
+        </p>
+        <div class="open-bets-time-id">
+            <p ng-bind="bet.date_time|formatDate:'noLocaleTranslate':null:$root.env.timeFormat"></p>
+            <span>ID: <b>{{::bet.id}}</b></span>
+        </div>
+        <div id="betEventsContainer-openbet"  class="bet-container" no-animate>
+            <ul ng-repeat="event in bet.events">
+                <li class="clock-status" ng-class="{'won': event.outcome == 3 , 'lost':event.outcome == 1 }">
+                    <p ng-bind="event.game_start_date|formatDate:'noLocaleTranslate':null:$root.env.timeFormat"></p>
+                    <a class="bet-event-title" ng-click="gotoBetGame(matchInfo[event.game_id].gamePointer)">{{::event.game_name }}</a>
+                    <b class="open-bets-games-score" ng-bind="matchInfo[event.game_id].text_info"></b>
+                    <div class="status-icon-open-bets" title="{{event.outcome == 3 ? 'Won' : 'Unsettled'}}"></div>
+                </li>
+                <li class="open-bets-games-info" ng-show="event.is_live" ng-class="{'won': event.outcome == 3 , 'lost':event.outcome == 1 }">
+                    <b>Live</b>
+                </li>
+                <li ng-class="{'won': event.outcome == 3 , 'lost':event.outcome == 1 }">
+                    <p>
+                        <span>{{::event.market_name ? event.market_name : ''}}</span>
+                        <span>{{::event.eventName ? event.eventName : event.event_name}}</span>
+                    </p>
+                    <span class="betprice" ng-bind="event.coeficient|oddConvert:$root.env.oddFormat"></span>
+                </li>
+
+            </ul>
+            <div class="bet-accept-changes-b-v3" ng-show="bet.outcome == 0 && bet.cash_out !== undefined">
+                <div class="button-view-contain-v3">
+                    <button class="open-bets-cashout-button" ng-click="$root.broadcast('open.cashoutDialog', {bet: bet});$event.stopPropagation();">
+                        <p>Cash-out</p>
+                        <span>{{bet.cash_out}} {{::$root.profile.currency_name|currency}}</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="open-bets-possible-wrapper">
+            <p class="total-poswin" ng-show="!taxOnStake.enabled">
+                <span trans>Stake:</span>
+                <span>{{::bet.amount | number:$root.conf.balanceFractionSize}} {{$root.profile.currency_name|currency}}</span>
+            </p>
+            <p class="total-poswin" ng-show="!taxOnStake.enabled">
+                <span trans>Possible win:</span>
+                <span>{{::bet.possible_win | number:$root.conf.balanceFractionSize}} {{$root.profile.currency_name|currency}}</span>
+            </p>
+        </div>
+    </div>
+    <vbet-loader ng-show="openBetsLoading || $root.editBet.loading"></vbet-loader>
+</div>

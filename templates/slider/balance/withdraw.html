@@ -22,7 +22,7 @@
                 <ul>
                     <li ng-repeat="paymentSystem in paymentConfig|orderBy:'order'"
                         ng-class="{'active-deposit': $parent.selectedPaymentSystem==paymentSystem}"
-                        ng-show="paymentSystem.canWithdraw && (!isInCasino() || paymentSystem.canWithdrawFromCasino === undefined || paymentSystem.canWithdrawFromCasino)">
+                        ng-show="paymentSystem.canWithdraw && (!$root.currentPage.isInCasino || paymentSystem.canWithdrawFromCasino === undefined || paymentSystem.canWithdrawFromCasino)">
                         <div class="{{paymentSystem.name}}"><a class="paymentIcon {{paymentSystem.name}}" ng-click="$parent.selectedPaymentSystem.name !== paymentSystem.name && selectPaymentSystem(paymentSystem)">{{paymentSystem.name}} <span class="deposit-arrow"></span></a></div>
                     </li>
                 </ul>

@@ -24,10 +24,18 @@
                     </div>
                 </div>
             </li>
-            <li ng-show="isInSports()">
+            <li ng-show="$root.currentPage.isInSports">
                 <div class="switcher-t-view-b" ng-click="setSound(env.sound); env.sound > 0 ? env.sound = 0 : env.sound = 0.75">
                     <p trans>Events sounds</p>
                     <div class="switcher-box-b {{env.sound > 0 ? 'on' : ''}}">
+                        <div class="sw-circle-b"></div>
+                    </div>
+                </div>
+            </li>
+            <li ng-if="$root.profile && conf.enableSuggestedBets" class="suggested-bets-setting">
+                <div class="switcher-t-view-b" ng-click="setSuggestedBets()">
+                    <p trans>Suggested Bets</p>
+                    <div class="switcher-box-b {{suggestedBets != 'hide' ? 'on' : ''}}">
                         <div class="sw-circle-b"></div>
                     </div>
                 </div>

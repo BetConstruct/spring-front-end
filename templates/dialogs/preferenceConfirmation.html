@@ -1,0 +1,24 @@
+<div class="preferenc-popup-contain">
+    <p ng-bind-html="'pref-confirmation-text'|translate|nl2br|html"></p>
+    <h2 trans>Notify me about news and offers by:</h2>
+    <table>
+        <tr ng-repeat="(prefKey, prefVal) in prefConfirmation track by $index">
+            <td>{{prefVal|translate}}</td>
+            <td>
+                <label>
+                    <input name="{{prefKey}}" value="true" ng-model="prefModel[prefKey]" ng-click="prefConfirmationValid()" type="radio">
+                    <small trans>Yes</small>
+                    <i></i>
+                </label>
+            </td>
+            <td>
+                <label>
+                    <input name="{{prefKey}}" value="false" ng-model="prefModel[prefKey]" ng-click="prefConfirmationValid()" type="radio">
+                    <small trans>No</small>
+                    <i></i>
+                </label>
+            </td>
+        </tr>
+    </table>
+    <a href="#?help=privacy-policy" target="_blank" trans>Privacy Policy</a>
+</div>

@@ -336,7 +336,7 @@ angular.module('vbet5.betting').controller('modernViewManCtrl', ['$rootScope', '
                     }
                     angular.forEach(competition.game, function (game) {
                         game.competition = {id: competition.id};
-                        game.region = {id: region.id};
+                        game.region = {id: region.id, name: region.name};
                         game.sport = {id: sport.id, alias: sport.alias};
                         game.indexInMyGames = Utils.isInArray($rootScope.myGames, game.id);
                     });

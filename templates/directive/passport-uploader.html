@@ -30,8 +30,10 @@
                     </ul>
                 </label>
             </li>
+            <li>
+                <button ng-disabled="disablePassportVerificationSubmitButton" type="submit" title="{{'Please upload an image and select the type of your ID'|translate}}" trans>Verify</button>
+            </li>
         </ul>
-        <button ng-disabled="disablePassportVerificationSubmitButton" type="submit" title="{{'Please upload an image and select the type of your ID'|translate}}" trans>Verify</button>
     </form>
     <div class="uploads-table" ng-if="!loadingProgress && documentImages">
         <table>

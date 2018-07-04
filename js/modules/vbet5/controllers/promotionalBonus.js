@@ -6,13 +6,39 @@
  * @description  promotional bonuses controller.
  */
 
-VBET5.controller('promotionalBonusCtrl', ['$scope', 'Zergling', 'BackendConstants', '$rootScope', 'Translator', '$q', '$filter', 'Config', function($scope, Zergling, BackendConstants, $rootScope, Translator, $q, $filter, Config) {
+VBET5.controller('promotionalBonusCtrl', ['$scope', '$location', 'Zergling', 'BackendConstants', '$rootScope', 'Translator', '$q', '$filter', 'Config', function($scope, $location, Zergling, BackendConstants, $rootScope, Translator, $q, $filter, Config) {
     'use strict';
 
     $scope.backendBonusConstants = BackendConstants.PromotionalBonus;
     $scope.bonusList = [];
-    $scope.activeBonusTab = Config.main.promotionalBonuses.casino && $rootScope.isInCasino() ? $scope.backendBonusConstants.BonusSource.Casino : $scope.backendBonusConstants.BonusSource.SportsBook;
+    if ($location.search().bonustab) {
+        var isAllowed = false;
+        var bonusTab = $location.search().bonustab;
+        switch(bonusTab) {
+            case "1":
+                isAllowed = $scope.conf.promotionalBonuses.sportsbook;
+                break;
+            case "2":
+                isAllowed = $scope.conf.promotionalBonuses.casino && $scope.casinoEnabled;
+                break;
+        }
+        $location.search("bonustab", undefined);
+        if (!isAllowed) {
+            $scope.env.sliderContent = "";
+            $scope.env.showSlider = false;
+        }else {
+            $scope.activeBonusTab = parseInt(bonusTab);
+        }
+
+    } else {
+        $scope.activeBonusTab = Config.main.promotionalBonuses.casino && $rootScope.currentPage.isInCasino ? $scope.backendBonusConstants.BonusSource.Casino : $scope.backendBonusConstants.BonusSource.SportsBook;
+    }
     $scope.loadingBonus = false;
+
+    $scope.bonusesAmount = {
+        sportsBook: 0,
+        casino: 0
+    };
 
     /**
      * @ngdoc method
@@ -129,11 +155,32 @@ VBET5.controller('promotionalBonusCtrl', ['$scope', 'Zergling', 'BackendConstant
         $scope.loadingBonus = true;
         Zergling.get(request,'get_bonus_details').then(function (data) {
             processBonusData(data);
+            if(request.free_bonuses === true) {
+                $scope.bonusesAmount.sportsBook = data.bonuses.length;
+            } else {
+                $scope.bonusesAmount.casino = data.bonuses.length;
+            }
             $rootScope.$broadcast('promotionalbonuses.data', {data: data, product: request.free_bonuses ? 'sportsbook' : 'casino'});
         })['catch'](function (reason) {
             showConfirmationDialog(BackendConstants.ErrorCodesByValue[reason.result], 'error');
         })['finally'](function () {
             $scope.loadingBonus = false;
+        });
+    }
+
+    /**
+     * @ngdoc method
+     * @name getCasinoBonusesAmount
+     * @methodOf vbet5.controller:promotionalBonusCtrl
+     *
+     * @description get casino bonus data from backend
+     */
+    function getCasinoBonusesAmount() {
+        var request = {
+            free_bonuses: $scope.activeBonusTab === $scope.backendBonusConstants.BonusSource.Casino
+        };
+        Zergling.get(request,'get_bonus_details').then(function (data) {
+            $scope.bonusesAmount.casino = data.bonuses.length;
         });
     }
 
@@ -149,6 +196,7 @@ VBET5.controller('promotionalBonusCtrl', ['$scope', 'Zergling', 'BackendConstant
             amount: 50,
             currency: 'USD'
         };
+        getPromotionalBonus();
         $scope.cancelBonusResponse(bonusId, response);
     };
 
@@ -221,5 +269,6 @@ VBET5.controller('promotionalBonusCtrl', ['$scope', 'Zergling', 'BackendConstant
         }
     };
 
+    getCasinoBonusesAmount();
     getPromotionalBonus(); //first step
 }]);

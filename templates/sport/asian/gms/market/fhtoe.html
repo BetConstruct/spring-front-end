@@ -95,7 +95,8 @@
                 </div>
                 <div class="asian-status-icons">
                     <div class="icon-favorite" ng-click="toggleGameFavorite(game)" ng-class="{'active': myGames.indexOf(game.id) !== -1}" title="{{'Favorite'|translate}}"></div>
-                    <div ng-show="conf.enableH2HStat && game.is_stat_available" ng-click="openStatistics(game);$event.stopPropagation();" class="h2h-stats" title="{{'statistic'|translate}}"></div>
+                    <div ng-show="conf.enableH2HStat && game.is_stat_available" ng-click="openStatistics(game);$event.stopPropagation();"
+                         statistics-on-hover stats-game="{'game': game, competition: competition.name}" class="h2h-stats" title="{{'statistic'|translate}}"></div>
                 </div>
                 <div class="info-bl" ng-click="loadAllEvents(game.id)" title="{{'More Markets'|translate}}">
                     <p>+{{::game.moreMarketsCount || ''}}</p>

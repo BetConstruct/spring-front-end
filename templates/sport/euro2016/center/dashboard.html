@@ -170,7 +170,7 @@
                                                          ng-show="event && event.name"
                                                          ng-click="bet(event, game.filteredMarket[0], game); $event.stopPropagation();">
                                                         <div class="max-bet-tooltip-v3" ng-show="env.authorized && event.maxBet !== undefined" ng-class="{'maxbet-enabled': env.authorized}">
-                                                            <p>Max: <b ng-bind="conf.onlyDecimalStakeAmount ? Math.floor(event.maxBet) : event.maxBet"></b> {{profile.currency_name|currency }}</p>
+                                                            Max: <b ng-bind="conf.onlyDecimalStakeAmount ? Math.floor(event.maxBet) : event.maxBet"></b> {{profile.currency_name|currency }}
                                                         </div>
                                                         <b class="p-v" ng-show="(event.price | oddConvert:'decimal') != 1 && !openGame.is_blocked" ng-class="{'factor-top': event.price_change > 0, 'factor-bottom': event.price_change < 0}">
                                                             {{event.price|oddConvert:env.oddFormat:null:game.filteredMarket[0].display_key}}

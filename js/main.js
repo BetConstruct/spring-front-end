@@ -22,8 +22,8 @@ angular.module('app').config(['$compileProvider', function ($compileProvider) {
     'use strict';
     $compileProvider.aHrefSanitizationWhitelist(/^\s*(https?|ftp|mailto|file|javascript|tel|viber|skype|data):/);
     // $compileProvider.debugInfoEnabled(false);
-    //$compileProvider.commentDirectivesEnabled(false);
-    //$compileProvider.cssClassDirectivesEnabled(false);
+    $compileProvider.commentDirectivesEnabled(false);
+    $compileProvider.cssClassDirectivesEnabled(false);
 }]);
 
 (function () {

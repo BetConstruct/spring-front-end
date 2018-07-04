@@ -185,8 +185,7 @@ VBET5.controller('paymentsCtrl', ['$scope', '$rootScope', '$sce', '$q', '$window
      */
     function generateInfoText (text) {
         if (!text || typeof text === 'object') {
-            text = '';
-            return text;
+            return $sce.trustAsHtml('');
         }
         text = Translator.get(text.toString());
         if (text && text.substring) {
@@ -372,7 +371,7 @@ VBET5.controller('paymentsCtrl', ['$scope', '$rootScope', '$sce', '$q', '$window
                 amountWatcher();
             }
 
-            if ((Config.main.GmsPlatform && !Config.main.GmsPlatformMultipleBalance) || $rootScope.isInSports()) {
+            if ((Config.main.GmsPlatform && !Config.main.GmsPlatformMultipleBalance) || $rootScope.currentPage.isInSports) {
                 amountWatcher = $scope.$watch('profile.balance', function () {
                     $scope.paymentAmount.availableWithdrawAmount = $scope.profile.calculatedBalance;
                     convertCustomCurrency();
@@ -459,7 +458,7 @@ VBET5.controller('paymentsCtrl', ['$scope', '$rootScope', '$sce', '$q', '$window
                         $location.search('system', undefined);
                         break;
                     }
-                    if (isNaN(defaultPaymentIndex) && (($scope.env.sliderContent === 'withdraw' && (!Config.enableDefaultPaymentSelection || Config.enableDefaultPaymentSelection.withdraw) && (!$rootScope.isInCasino() || $scope.paymentConfig[i].canWithdrawFromCasino === undefined || $scope.paymentConfig[i].canWithdrawFromCasino)) || ($scope.env.sliderContent === 'deposit' && (!Config.enableDefaultPaymentSelection || Config.enableDefaultPaymentSelection.withdraw)))) {
+                    if (isNaN(defaultPaymentIndex) && (($scope.env.sliderContent === 'withdraw' && (!Config.enableDefaultPaymentSelection || Config.enableDefaultPaymentSelection.withdraw) && (!$rootScope.currentPage.isInCasino || $scope.paymentConfig[i].canWithdrawFromCasino === undefined || $scope.paymentConfig[i].canWithdrawFromCasino)) || ($scope.env.sliderContent === 'deposit' && (!Config.enableDefaultPaymentSelection || Config.enableDefaultPaymentSelection.withdraw)))) {
                         defaultPaymentIndex = i;
                     }
                 }
@@ -832,7 +831,7 @@ VBET5.controller('paymentsCtrl', ['$scope', '$rootScope', '$sce', '$q', '$window
             $scope.withdrawFormData = paymentFormData || $scope.withdrawFormData;
         }
         $scope.busy = true;
-        var forProduct = $rootScope.isInSports() ? "sport" : "casino";
+        var forProduct = $rootScope.currentPage.isInSports ? "sport" : "casino";
 
         var request = {
             amount: null,
@@ -1033,7 +1032,7 @@ VBET5.controller('paymentsCtrl', ['$scope', '$rootScope', '$sce', '$q', '$window
 
         if ($scope.selectedPaymentSystem) {
             for (itemKey in $scope.selectedPaymentSystem) {
-                if ($scope.selectedPaymentSystem[itemKey] && !paymentSystem[itemKey]) {
+                if ($scope.selectedPaymentSystem[itemKey] !== undefined && !paymentSystem[itemKey]) {
                     paymentSystem[itemKey] = $scope.selectedPaymentSystem[itemKey];
                 }
             }
@@ -1234,7 +1233,7 @@ VBET5.controller('paymentsCtrl', ['$scope', '$rootScope', '$sce', '$q', '$window
             $scope.paymentAmount.deposit = depositAmount || $scope.paymentAmount.deposit;
             $scope.busy = true;
 
-            var forProduct = $rootScope.isInSports() ? "sport" : "casino";
+            var forProduct = $rootScope.currentPage.isInSports ? "sport" : "casino";
             var request = {
                 amount: parseFloat($scope.selectedPaymentSystem.depositPrefilledAmount || $scope.paymentAmount.deposit),
                 service: $scope.selectedPaymentSystem.paymentID || $scope.selectedPaymentSystem.name,

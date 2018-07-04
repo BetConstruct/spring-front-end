@@ -307,8 +307,6 @@ BettingModule.controller('gamesCtrl', ['$rootScope', '$scope', '$location', '$fi
             }
         };
 
-        /*Utils.setCustomSportAliasesFilter(request);*/
-
         var gameUpdateCallback = function gameUpdateCallback(data) {
             updateGame(data);
             callback();

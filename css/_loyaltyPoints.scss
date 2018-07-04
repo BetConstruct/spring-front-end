@@ -790,6 +790,8 @@
 @include loaylty-points-coloring-by-pack(#9E9DA1, #e6e5e5, "Platinum", #D3D0CF);
 @include loaylty-points-coloring-by-pack(#0D788F, #0DCCFF, "Diamond", #11A1C2);
 .balance-lightbox-j.loyalty-points-lightbox-j {
+    padding: 0;
+    background: $skin-palette-7;
     .promotions-balance-j {
         width: 310px;
         float: right;

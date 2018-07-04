@@ -9,7 +9,7 @@ VBET5.controller('mainHeaderCtrl', ['$rootScope', '$scope', '$interval', '$filte
     'use strict';
     var intergratedHtmlHelperAvailable = null;
     var connectionService = new ConnectionService($scope);
-
+    var appHasBeenUpdated = false;
     $scope.env.showSignInForm = false;
     $scope.env.showRegistrationForm = false;
     $scope.timezonesExpanded = false;
@@ -17,7 +17,7 @@ VBET5.controller('mainHeaderCtrl', ['$rootScope', '$scope', '$interval', '$filte
     $scope.logoUrl = Config.main.logo.url;
     TimeoutWrapper = TimeoutWrapper($scope);
     $rootScope.timezoneIsAvailable = $q.defer();
-
+    $rootScope.env.appVersion = Config.releaseDate;
     if (Config.env.selectedTimeZone) {
         $rootScope.timezoneIsAvailable.resolve(Config.env.selectedTimeZone);
     } else {
@@ -28,6 +28,19 @@ VBET5.controller('mainHeaderCtrl', ['$rootScope', '$scope', '$interval', '$filte
             }
         });
     }
+
+    var pathTypes = {
+        'casino': ['/casino', '/games', '/poker', '/game', '/livedealer', '/keno', '/fantasy', '/ogwil', '/jackpot', '/financials', '/backgammon', '/belote', '/pokerklas', '/ggpoker', '/gameslanding', '/vrcasino', '/csbpoolbetting', '/tournaments'],
+        'sport': ['/sport', '/freebet', '/poolbetting', '/livecalendar', '/results', '/virtualsports', '/overview', '/multiview', '/dashboard', '/exchange', '/statistics', '/customsport'],
+        'poker': ['/poker']
+    };
+    if (Config.main.integrationMode) {  //TODO remove after the world cup
+        pathTypes.sport.push('/russia2018');
+    }
+    pathTypes[Config.main.homepagePageType].push('/');
+
+    $rootScope.currentPage = {};
+    $rootScope.casinoPaths = pathTypes.casino;
 
     Utils.setBodyClass(Config.main.bodyWrapperClass, 'body');
 
@@ -47,7 +60,14 @@ VBET5.controller('mainHeaderCtrl', ['$rootScope', '$scope', '$interval', '$filte
                 $location.search().type = 0;
             }
         }
-        $rootScope.currentPath = $location.path().split("/").slice(0, 2).join("/");
+
+        $rootScope.currentPage.path = $location.path().split("/").slice(0, 2).join("/");
+
+        $rootScope.currentPage.isInCasino = !$rootScope.calculatedConfigs.sportEnabled || pathTypes.casino.indexOf($rootScope.currentPage.path) !== -1;
+        $rootScope.currentPage.isInSports = pathTypes.sport.indexOf($rootScope.currentPage.path) !== -1;
+        $rootScope.currentPage.isInPoker = pathTypes.poker.indexOf($rootScope.currentPage.path) !== -1;
+        $rootScope.currentPage.hasSubHeader = ($scope.subMenuItems && $scope.subMenuItems.length > 0) || (Config.main.enableSubHeader && $rootScope.currentPage.isInSports && !{'/':1, '/poolbetting':1, '/virtualsports':1}[$rootScope.currentPage.path]);
+
     }
     setCurrentPath();
 
@@ -74,58 +94,6 @@ VBET5.controller('mainHeaderCtrl', ['$rootScope', '$scope', '$interval', '$filte
         checkActions();
     });
 
-    var pathTypes = {
-        'casino': ['/casino', '/games', '/poker', '/game', '/livedealer', '/keno', '/fantasy', '/ogwil', '/jackpot', '/financials', '/backgammon', '/belote', '/pokerklas', '/ggpoker', '/gameslanding', '/vrcasino', '/csbpoolbetting', '/tournaments'],
-        'sport': ['/sport', '/freebet', '/poolbetting', '/livecalendar', '/results', '/virtualsports', '/overview', '/multiview', '/dashboard', '/exchange', '/statistics', '/customsport'],
-        'poker': ['/poker']
-    };
-    pathTypes[Config.main.homepagePageType].push('/');
-
-    /**
-     * @ngdoc object
-     * @name isInCasino
-     * @description returns true if we are in casino
-     */
-    function isInCasino() {
-        if (!$rootScope.calculatedConfigs.sportEnabled) {
-            return true;
-        }
-        return pathTypes.casino.indexOf($rootScope.currentPath) !== -1;
-    }
-
-    /**
-     * @ngdoc object
-     * @name isInSports
-     * @description returns true if we are in sportsbook
-     */
-    function isInSports() {
-        return pathTypes.sport.indexOf($rootScope.currentPath) !== -1;
-    }
-
-    /**
-     * @ngdoc object
-     * @name isInPoker
-     * @description returns true if we are in poker
-     */
-    function isInPoker() {
-        return pathTypes.poker.indexOf($rootScope.currentPath) !== -1;
-    }
-
-    /**
-     * @ngdoc object
-     * @name currentPageHasSubHeader
-     * @description returns true if current section should have a subheader
-     */
-    function currentPageHasSubHeader() {
-        return (Config.main.enableSubHeader && isInSports() && $rootScope.currentPath !== '/' && $rootScope.currentPath !== '/poolbetting' && $rootScope.currentPath !== '/virtualsports') || ($scope.subMenuItems && $scope.subMenuItems.length);
-    }
-
-    $rootScope.casinoPaths = pathTypes.casino;
-    $rootScope.isInCasino = isInCasino;
-    $rootScope.isInSports = isInSports;
-    $rootScope.isInPoker = isInPoker;
-    $rootScope.currentPageHasSubHeader = currentPageHasSubHeader;
-
     if (Config.main.favoriteTeam && Config.main.favoriteTeam.deleteFavoritesOnReload) {
         Storage.remove('myGames');
     }
@@ -144,7 +112,7 @@ VBET5.controller('mainHeaderCtrl', ['$rootScope', '$scope', '$interval', '$filte
     $rootScope.geoDataAvailable.then(
         function (data) {
             $rootScope.geoCountryInfo = data;
-            if ($rootScope.geoCountryInfo.countryCode && Config.main.registration.restrictedCountriesByIp && Config.main.registration.restrictedCountriesByIp.indexOf($rootScope.geoCountryInfo.countryCode) !== -1) {
+            if ($rootScope.geoCountryInfo && $rootScope.geoCountryInfo.countryCode && Config.main.registration.restrictedCountriesByIp && Config.main.registration.restrictedCountriesByIp.indexOf($rootScope.geoCountryInfo.countryCode) !== -1) {
                 if(Config.main.registration.restrictedCountriesLoginAndRegistration) {
                     //disable register and login for specific countries by ip
                     Config.main.header.disableRegistrationAndLogin = true;
@@ -205,8 +173,8 @@ VBET5.controller('mainHeaderCtrl', ['$rootScope', '$scope', '$interval', '$filte
             url: 'appVersion.json?anticache=' + Math.floor(Math.random() * 1000)
         }).then(function(data) {
             if (data.data && data.data.appVersion) {
-                if ($rootScope.env.appVersion && $rootScope.env.appVersion !== data.data.appVersion) {
-                    Config.env.appHasBeenUpdated = true;
+                if ($rootScope.env.appVersion && $rootScope.env.appVersion !== Config.releaseDate && $rootScope.env.appVersion !== data.data.appVersion) {
+                    appHasBeenUpdated = true;
                 }
                 $rootScope.env.appVersion = data.data.appVersion;
             }
@@ -281,7 +249,7 @@ VBET5.controller('mainHeaderCtrl', ['$rootScope', '$scope', '$interval', '$filte
                         sliderWatcherPromise();
                         $scope.env.authorized && $rootScope.$broadcast(action.key, action.data);
                     }
-                })
+                });
             }
         } else if (Config.partner.enableSigninRegisterCallbacks) {
             partner.call('login');
@@ -315,7 +283,7 @@ VBET5.controller('mainHeaderCtrl', ['$rootScope', '$scope', '$interval', '$filte
                             $location.search('settingspage', message.data.page);
                         }
                         if ($scope.env.authorized) {
-                            if (message.data.tab === 'login' || message.data.tab === 'register' || message.data.tab === 'signInForm') return;
+                            if (message.data.tab === 'login' || message.data.tab === 'register' || message.data.tab === 'signInForm') {return;}
                         } else if (message.data.tab === 'deposit' || message.data.tab === 'balanceHistory' || message.data.tab === 'login' || message.data.tab === 'settings' || message.data.tab === 'signInForm') {
                             openSigninForm();
                             //$location.search('action', message.data.tab);
@@ -544,7 +512,7 @@ VBET5.controller('mainHeaderCtrl', ['$rootScope', '$scope', '$interval', '$filte
      * @param {Boolean} open optional. if true, will only open tab (won't close if it's already open)
      */
     $scope.myGamesToggle = function myGamesToggle(open) {
-        var myGamesTabName = $rootScope.isInCasino() || !Config.main.sportSavedGamesEnabled || !$rootScope.calculatedConfigs.sportEnabled ? 'casinoSavedGames' : 'savedGames';
+        var myGamesTabName = $rootScope.currentPage.isInCasino || !Config.main.sportSavedGamesEnabled || !$rootScope.calculatedConfigs.sportEnabled ? 'casinoSavedGames' : 'savedGames';
         $scope.toggleSliderTab(myGamesTabName, open);
     };
 
@@ -557,9 +525,10 @@ VBET5.controller('mainHeaderCtrl', ['$rootScope', '$scope', '$interval', '$filte
      * @param {Boolean} open optional. if true, will only open tab (won't close if it's already open)
      */
     $scope.myBetsToggle = function myBetsToggle(open) {
+        $rootScope.$broadcast('closeOpenBets');
         var sliderContent;
 
-        if (open === undefined && $rootScope.conf.enableCasinoBetHistory && ($rootScope.isInCasino() || !$rootScope.calculatedConfigs.sportEnabled)) {
+        if (open === undefined && $rootScope.conf.enableCasinoBetHistory && ($rootScope.currentPage.isInCasino || !$rootScope.calculatedConfigs.sportEnabled)) {
             sliderContent = 'casinoBetHistory';
         } else {
             sliderContent = 'recentBets';
@@ -621,6 +590,11 @@ VBET5.controller('mainHeaderCtrl', ['$rootScope', '$scope', '$interval', '$filte
      * @param {Boolean} dontClearAllData don't clear local storage data
      */
     function logOutUser(dontClearAllData) {
+        if($rootScope.editBet && $rootScope.editBet.edit) {
+            $rootScope.editBet.edit = false;
+            $rootScope.editBet.oldBetId = 0;
+            $rootScope.$broadcast('close.edit.mode');
+        }
         dontClearAllData = dontClearAllData || false;
         var logoutDone = false;
         var doLogoutStuff = function () {
@@ -979,10 +953,10 @@ VBET5.controller('mainHeaderCtrl', ['$rootScope', '$scope', '$interval', '$filte
 
         if (AuthData.integrationMode && AuthData.partnerAuthData) { // need to write data in location for  restoring login after layout switching
             if (AuthData.partnerAuthData.auth_token) {
-                $location.search('AuthToken', AuthData.partnerAuthData.auth_token)
+                $location.search('AuthToken', AuthData.partnerAuthData.auth_token);
             }
             if (AuthData.partnerAuthData.user_id) {
-                $location.search('UserId', AuthData.partnerAuthData.user_id)
+                $location.search('UserId', AuthData.partnerAuthData.user_id);
             }
         }
         $rootScope.broadcast("changingSportsbookLayout");
@@ -1094,6 +1068,29 @@ VBET5.controller('mainHeaderCtrl', ['$rootScope', '$scope', '$interval', '$filte
             Utils.setJustForMoment($scope, 'topMessage', Translator.get('Connection restored'), 5000);
         }
 
+    });
+
+
+    /**
+     * @ngdoc method
+     * @name setSuggestedBets
+     * @methodOf vbet5.controller:mainHeaderCtrl
+     * @description  changes the value of suggested bets in Storage
+     */
+    $scope.setSuggestedBets = function setSuggestedBets() {
+        if($scope.suggestedBets !== 'hide') {
+            $scope.suggestedBets = 'hide';
+            Storage.set("suggestedBets", "hide");
+        } else {
+            $scope.suggestedBets = true;
+            Storage.set("suggestedBets", true);
+        }
+    };
+
+    $scope.suggestedBets = Storage.get('suggestedBets') || true;
+
+    $scope.$on("turnOffSuggestedBets", function() {
+        $scope.setSuggestedBets();
     });
 
     /**
@@ -1315,7 +1312,7 @@ VBET5.controller('mainHeaderCtrl', ['$rootScope', '$scope', '$interval', '$filte
             partner.call('routeUpdate', routeParams);
         }
 
-        if (Config.env.appHasBeenUpdated) {
+        if (appHasBeenUpdated) {
             TimeoutWrapper(function () {$window.location.reload(); }, 100);
         }
 
@@ -1335,11 +1332,11 @@ VBET5.controller('mainHeaderCtrl', ['$rootScope', '$scope', '$interval', '$filte
         if (path !== '/' && lastCharacter === '/') {
             path = path.substr(0, path.length - 1);
         }
-        var defaultAvailability = path === '/' || path.indexOf('/game/') !== -1 || path.indexOf('/skinning') !== -1 || path.indexOf('/widget/') !== -1 || Config.main.defaultAvailablePaths.indexOf(path) !== -1;
+        var defaultAvailability = path === '/' || path.indexOf('/russia2018') !== -1 || path.indexOf('/game/') !== -1 || path.indexOf('/skinning') !== -1 || path.indexOf('/widget/') !== -1 || Config.main.defaultAvailablePaths.indexOf(path) !== -1;
         path = "#" + path;
 
         if(defaultAvailability && defaultAvailability[defaultAvailability.length - 1] !== '/') {
-            defaultAvailability += '/'
+            defaultAvailability += '/';
         }
 
         if(!defaultAvailability && !$rootScope.ignorePathValidation  && !$rootScope.validPaths[path] && !$rootScope.validPaths[path + "/"]) {
@@ -1606,7 +1603,7 @@ VBET5.controller('mainHeaderCtrl', ['$rootScope', '$scope', '$interval', '$filte
 
     $scope.openBalancePage = function openBalancePage() {
         $scope.env.showSlider = true;
-        $scope.env.sliderContent = $scope.isInSports() ? Config.main.balanceDefaultPage : (Config.main.casinoBalanceDefaultPage || 'cashier');
+        $scope.env.sliderContent = $rootScope.currentPage.isInSports ? Config.main.balanceDefaultPage : (Config.main.casinoBalanceDefaultPage || 'cashier');
     };
 
     /**

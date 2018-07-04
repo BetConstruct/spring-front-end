@@ -54,7 +54,7 @@
         </div>
     </div>
     <div ng-if="activeDialog" ng-escape="!activeDialog.hideCloseButton && closeDialog(activeDialog, 'closeButton');">
-        <div class="new-default-popup-j {{activeDialog.tag}}" ng-class="[activeDialog.type || 'info', (activeDialog.content|translate).length >= 600 ? 'extended' : null , activeDialog.scrollContent ? 'extended-scroll' : null]"> <!--info warning error success feedback-->
+        <div class="new-default-popup-j {{activeDialog.tag}}" ng-class="[activeDialog.type || 'info', (activeDialog.content|translate).length >= 600 ? 'extended' : null , activeDialog.scrollContent ? 'extended-scroll' : null, activeDialog.class]"> <!--info warning error success feedback-->
             <div class="pp-table-j">
                 <div class="table-row-j">
                     <div class="table-cell-j">
@@ -77,6 +77,8 @@
                                 <h3 ng-show="activeDialog.subTitle" ng-bind-html="activeDialog.subTitle|translate|html"></h3>
                                 <p ng-if="!activeDialog.link" ng-bind-html="activeDialog.content|translate:activeDialog.contentPlaceholders|html"></p>
 
+                                <ng-include ng-if="activeDialog.template" src="::activeDialog.template|fixPath"></ng-include>
+
                                 <p ng-if="activeDialog.link">
                                     <a ng-href="{{activeDialog.link}}" ng-click="closeDialog(activeDialog, 'content');$event.stopPropagation();" ng-bind-html="activeDialog.content|translate:activeDialog.contentPlaceholders|html"></a>
                                 </p>
@@ -97,7 +99,7 @@
                                 </div>
 
                                 <div ng-if="activeDialog.buttons">
-                                    <button ng-repeat="button in activeDialog.buttons track by $index" ng-click="closeDialog(activeDialog, '', button);$event.stopPropagation();" ng-bind="button.title|translate"></button>
+                                    <button ng-repeat="button in activeDialog.buttons track by $index" ng-click="closeDialog(activeDialog, '', button);$event.stopPropagation();" ng-bind="button.title|translate" ng-disabled="activeDialog.buttonsDisabled || button.disabled"></button>
                                 </div>
                             </div>
                         </div>

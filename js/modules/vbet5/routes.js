@@ -303,6 +303,10 @@ angular.module('vbet5').config(['$routeProvider', '$anchorScrollProvider', 'Skin
             templateUrl: getTemplate('templates/skinning/main.html'),
             reloadOnSearch: false
         })
+        .when('/russia2018/', {
+            templateUrl: 'templates/sport/russia2018/main.html',
+            reloadOnSearch: false
+        })
         .otherwise({
             redirectTo: '/sport/'
         });

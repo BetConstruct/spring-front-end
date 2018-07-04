@@ -701,6 +701,13 @@ angular.module('vbet5.betting').controller('virtualSportsCtrl', ['$scope', '$roo
             return '';
         }
     };
-
+    $scope.$on('sportsbook.handleDeepLinking', function () {
+        if ($location.search().vsport && $scope.selectedRanges.selectedSportId !== parseInt($location.search().vsport, 10) ) {
+            var sportToLoad = Utils.getArrayObjectElementHavingFieldValue($scope.sections, 'id', parseInt($location.search().vsport, 10));
+            if (sportToLoad) {
+                $scope.loadCompetitions(sportToLoad);
+            }
+        }
+    });
     loadVirtualSports();
 }]);

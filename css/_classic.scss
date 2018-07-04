@@ -1190,6 +1190,10 @@ div.prematch-live-buttons {
   border-radius: 20px;
   background: $skin-palette-8;
   color: $skin-palette-8;
+  @if $white-skin == true {
+    background: rgba(black, 0.15);
+    color: rgba(black, 0.25);
+  }
   z-index: 20;
   transition-duration: 200ms;
   display: none;
@@ -1618,6 +1622,9 @@ div.prematch-live-buttons {
   margin: 0;
   background: none;
   box-shadow: none;
+  @include rtl {
+    float: right;
+  }
   &:first-child {
     li:first-child {
     }
@@ -1632,6 +1639,10 @@ div.prematch-live-buttons {
   width: calc(100% - 70px);
   font: 16px/30px $font-f;
   text-align: right;
+  @include rtl {
+    float: right;
+    text-align: left;
+  }
 }
 .game-score.soccer-template ul li:first-child {
   padding-left: 0;
@@ -1650,6 +1661,9 @@ div.prematch-live-buttons {
   display: table-cell;
   vertical-align: middle;
   padding: 0 30px 0 0;
+  @include rtl {
+    padding: 0 0 0 30px;
+  }
 }
 .game-score.soccer-template ul li .team-form {
   left: 0;
@@ -1663,6 +1677,9 @@ div.prematch-live-buttons {
 }
 .game-score.soccer-template ul:last-child li:first-child p span {
   padding: 0 0 0 30px;
+  @include rtl {
+    padding: 0 30px 0 0;
+  }
 }
 .game-score.soccer-template ul li.set-scores {
   display: none;
@@ -1672,6 +1689,9 @@ div.prematch-live-buttons {
   width: 60px;
   padding: 0 10px 0 0;
   box-shadow: none;
+  @include rtl {
+    padding: 0 0 0 10px;
+  }
 }
 .game-score.soccer-template ul li.score-total span {
   position: relative;
@@ -1689,10 +1709,17 @@ div.prematch-live-buttons {
 .game-score.soccer-template ul:last-child li {
   float: right;
   text-align: left;
+  @include rtl {
+    float: left;
+    text-align: right;
+  }
 }
 .game-score.soccer-template ul:last-child li.score-total {
   padding: 0 0 0 10px;
   position: relative;
+  @include rtl {
+    padding: 0 10px 0 0;
+  }
 }
 .game-score.soccer-template ul:last-child li.score-total:before {
   content: ":";
@@ -1700,6 +1727,10 @@ div.prematch-live-buttons {
   left: -9px;
   top: 6px;
   font-family: monospace;
+  @include rtl {
+    left: auto;
+    right: -10px;
+  }
 }
 
 /*outright live score template */
@@ -3134,9 +3165,6 @@ div.prematch-live-buttons {
   height: 100%;
   position: absolute;
   &.flipped-0 {
-    @include rtl {
-      direction: ltr;
-    }
   }
 }
 .body-wrapper:not(.multiview):not(.widgetlivegame) {
@@ -3146,26 +3174,27 @@ div.prematch-live-buttons {
   .statistics-toggle.flip-contain .flip-card.flipped-1 .timeline-container,
   .statistics-toggle.flip-contain .flip-card.flipped-2 .front,
   .statistics-toggle.flip-contain .flip-card.flipped-2 .back {
-    will-change: transform;
-    -webkit-transform: rotateX(90deg);
-    transform: rotateX(90deg);
-    -webkit-transform-origin: 50% 100%;
-    transform-origin: 50% 100%;
-    opacity: 0;
+    //will-change: transform;
+    //-webkit-transform: rotateX(90deg);
+    //transform: rotateX(90deg);
+    //-webkit-transform-origin: 50% 100%;
+    //transform-origin: 50% 100%;
+    //opacity: 0;
+    display: none;
   }
-  .statistics-toggle.flip-contain .flip-card.flipped-1 .back {
-    will-change: transform;
-    -webkit-transform: rotateX(0deg);
-    transform: rotateX(0deg);
-    opacity: 1;
-  }
+  //.statistics-toggle.flip-contain .flip-card.flipped-1 .back {
+    //will-change: transform;
+    //-webkit-transform: rotateX(0deg);
+    //transform: rotateX(0deg);
+    //opacity: 1;
+  //}
 }
 .statistics-toggle.flip-contain .flip-card .timeline-container {
   display: block;
   position: absolute;
-  -webkit-transform-origin: 50% 0;
-  transform-origin: 50% 0;
-  transition-duration: 400ms;
+  //-webkit-transform-origin: 50% 0;
+  //transform-origin: 50% 0;
+  //transition-duration: 400ms;
 }
 .statistics-toggle.flip-contain .flip-card .front,
 .statistics-toggle.flip-contain .flip-card .back {
@@ -3173,19 +3202,19 @@ div.prematch-live-buttons {
   position: absolute;
   width: 100%;
   height: 100%;
-  will-change: transform;
-  -webkit-transform-origin: 50% 0;
-  transform-origin: 50% 0;
-  transition-duration: 400ms;
+  //will-change: transform;
+  //-webkit-transform-origin: 50% 0;
+  //transform-origin: 50% 0;
+  //transition-duration: 400ms;
 }
-.statistics-toggle.flip-contain .flip-card .back {
-  will-change: transform;
-  -webkit-transform: rotateX(-90deg);
-  transform: rotateX(-90deg);
-  -webkit-transform-origin: 50% 0;
-  transform-origin: 50% 0;
-  opacity: 0;
-}
+//.statistics-toggle.flip-contain .flip-card .back {
+  //will-change: transform;
+  //-webkit-transform: rotateX(-90deg);
+  //transform: rotateX(-90deg);
+  //-webkit-transform-origin: 50% 0;
+  //transform-origin: 50% 0;
+  //opacity: 0;
+//}
 .statistics-toggle.flip-contain .flip-btn {
   position: absolute;
   left: 50%;
@@ -3200,11 +3229,11 @@ div.prematch-live-buttons {
   border-radius: 3px 3px 0 0;
   text-shadow: none;
   text-align: center;
-  transition-duration: 200ms;
+  //transition-duration: 200ms;
 }
 .statistics-toggle.flip-contain .flip-btn:hover {
   background: $skin-palette-1;
-  opacity: 1;
+  //opacity: 1;
 }
 .statistics-toggle.flip-contain .flip-btn:before {
   content: '\e63f';
@@ -6907,7 +6936,7 @@ rzslider span.rz-pointer.rz-active:after {
   background-color: $skin-palette-8;
   width: 150px;
   border-radius: 3px;
-  z-index: 20;
+  z-index: 412;
   margin-top: 5px;
 }
 .custom-select-for-todays-bets-j:after {

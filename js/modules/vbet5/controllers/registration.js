@@ -171,6 +171,13 @@ angular.module('vbet5').controller('RegistrationController', ['$scope', '$rootSc
                     Config.main.registration.hasCaptcha = true;
                     $scope.loadCaptchaImage(regItem);
                 }
+                if (regItem.button) {
+                    switch (regItem.button.broadcast) {
+                        case 'getSwedishInfo':
+                            $scope.$on('getSwedishInfo', getSwedishInfo);
+                            break;
+                    }
+                }
                 if (regItem.defaultValue !== undefined) {
                     $scope.registrationData[regItem.name] = regItem.defaultValue;
                 }
@@ -536,6 +543,12 @@ angular.module('vbet5').controller('RegistrationController', ['$scope', '$rootSc
                 regInfo["promo_code"] = customDataType["promo_code"].call();
             }
 
+            if (Config.main.gdpr.enabled) {
+                angular.forEach(Config.main.gdpr.options, function (value, key) {
+                    regInfo[key] = $scope.registrationData[key] === 'true';
+                });
+            }
+
             return regInfo;
         }
 
@@ -577,6 +590,7 @@ angular.module('vbet5').controller('RegistrationController', ['$scope', '$rootSc
          */
         $scope.register = function register() {
             $scope.resetError = {};
+            $scope.resetError.gdprTouched = true;
             $scope.registration.busy = true;
             $scope.registration.submitted = true;
 
@@ -760,7 +774,7 @@ angular.module('vbet5').controller('RegistrationController', ['$scope', '$rootSc
             if (Config.main.registration.sliderPageAfterRegistration) {
                 if ($rootScope.env.authorized) {
                     if (['deposit', 'withdraw', 'renew', 'cashier', 'casinoBalanceHistory', 'balanceHistory', 'promotionalBonuses'].indexOf(Config.main.registration.sliderPageAfterRegistration) !== -1) {
-                        $location.search({});
+                        // $location.search({});
                         $rootScope.env.sliderContent = Config.main.registration.sliderPageAfterRegistration;
                         $rootScope.env.showSlider = true;
                     } else {
@@ -968,5 +982,84 @@ angular.module('vbet5').controller('RegistrationController', ['$scope', '$rootSc
         $scope.checkNationalId = function checkNationalId() {
             $scope.registerform.doc_number.$dirty = $scope.registerform.doc_number.$invalid = $scope.registerform.doc_number.$error.docinvalid = !Utils.checkNationalId($scope.registrationData.doc_number);
         };
+
+
+        function getSwedishInfo() {
+            if ($scope.buttonLoading || !$scope.registrationData.doc_number || $scope.registrationData.country_id.code !== '46') { return; }
+
+            $scope.buttonLoading = true;
+
+            var paramsMap = {
+                COaddress: '',
+                City: 'city',
+                FirstName: 'first_name',
+                LastName: 'last_name',
+                StreetAddress: 'address',
+                ZIP: 'zip_code'
+            };
+
+            Zergling.get(
+                { id_number: $scope.registrationData.doc_number },
+                'get_personal_info_from_swedish_db'
+            ).then(
+                function success(response) {
+                    if (response.details) {
+                        switch (response.result) {
+                            case 0: // Success
+                                var data = response.details;
+                                if (data.PersonIdNo === null) {
+                                    $rootScope.$broadcast('globalDialogs.addDialog', {
+                                        type: 'error',
+                                        title: 'Error',
+                                        content: 'User not found'
+                                    });
+                                    break;
+                                }
+                                for (var key in data) {
+                                    var mappedKey = paramsMap[key];
+                                    if ($scope.registrationData[mappedKey] !== undefined) {
+                                        $scope.registrationData[mappedKey] = data[key];
+                                    }
+                                }
+
+                                $scope.registrationData.birth_year = data.PersonIdNo.substring(0, 4);
+                                $scope.registrationData.birth_month = data.PersonIdNo.substring(4, 6);
+                                $scope.registrationData.birth_day = data.PersonIdNo.substring(6, 8);
+
+                                $rootScope.$broadcast('globalDialogs.addDialog', {
+                                    type: 'success',
+                                    title: Translator.get('Personal information successfully retrieved'),
+                                    content: (
+                                        'First name: ' + data.FirstName +
+                                        '</br>Last name: ' + data.LastName +
+                                        '</br>Birth date: ' + $scope.registrationData.birth_year + '-' + $scope.registrationData.birth_month + '-' + $scope.registrationData.birth_day +
+                                        '</br>City: ' + data.City +
+                                        '</br>Street address: ' + data.StreetAddress +
+                                        '</br>Zip code: ' + data.ZIP
+                                    ),
+                                    buttons: [
+                                        {
+                                            title: 'Ok',
+                                            callback: function() {
+                                                if ($scope.step1DataIsValid()) {
+                                                    $scope.registration.step = 2;
+                                                }
+                                            }
+                                        }
+                                    ]
+                                });
+                                break;
+                            case 400: // Error
+                                $rootScope.$broadcast('globalDialogs.addDialog', {
+                                    type: 'error',
+                                    title: 'Error',
+                                    content: response.details.Message || 'The request is invalid.'
+                                });
+                                break;
+                        }
+                    }
+                }
+            )['finally'](function stopLoading() { $scope.buttonLoading = false; });
+        }
 
 }]);

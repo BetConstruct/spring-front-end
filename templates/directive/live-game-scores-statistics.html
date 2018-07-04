@@ -59,10 +59,11 @@
                     <th><span class="y-card" title="Yellow cards" trans></span></th>
                     <th><span class="r-card" title="Red cards" trans></span></th>
                     <th><span class="corner" title="Corners" trans><span></span></span></th>
+                    <th ng-show="openGame.stats.throw_in"><span title="Throw In" trans>TI</span></th>
                     <th><span class="penalty" title="Penalties" trans><span></span></span></th>
                     <th ng-show="openGame.stats.offside"><span title="Offsides" class="icon-offside" trans></span></th>
                     <th ng-show="openGame.stats.substitution"><span title="Substitutions" class="icon-substitution" trans></span></th>
-                    <th ng-show="openGame.stats.foul"><span title="Foul">Foul</span></th>
+                    <th ng-show="openGame.stats.foul"><span title="Foul" trans="attr-only">F</span></th>
                 </tr>
                 <tr>
                     <td>
@@ -75,6 +76,7 @@
                     <td>{{ openGame.stats.yellow_card.team1_value }}</td>
                     <td>{{ openGame.stats.red_card.team1_value }}</td>
                     <td>{{ openGame.stats.corner.team1_value }}</td>
+                    <td ng-show="openGame.stats.throw_in">{{ openGame.stats.throw_in.team1_value}}</td>
                     <td>{{ openGame.stats.penalty.team1_value }}</td>
                     <td ng-show="openGame.stats.offside">{{ openGame.stats.offside.team1_value}}</td>
                     <td ng-show="openGame.stats.substitution">{{ openGame.stats.substitution.team1_value}}</td>
@@ -91,6 +93,7 @@
                     <td>{{ openGame.stats.yellow_card.team2_value }}</td>
                     <td>{{ openGame.stats.red_card.team2_value }}</td>
                     <td>{{ openGame.stats.corner.team2_value }}</td>
+                    <td ng-show="openGame.stats.throw_in">{{ openGame.stats.throw_in.team2_value}}</td>
                     <td>{{ openGame.stats.penalty.team2_value }}</td>
                     <td ng-show="openGame.stats.offside">{{ openGame.stats.offside.team2_value}}</td>
                     <td ng-show="openGame.stats.substitution">{{ openGame.stats.substitution.team2_value}}</td>
@@ -98,7 +101,7 @@
                 </tr>
             </table>
             <div class="timeline-container" ng-class="{'hide-stats': $root.env.hideLiveStats}">
-                <soccertimeline ng-class="{'tl-80': openGame.last_event.match_length === '80', 'extra': isExtraTime(openGame.info)}"></soccertimeline>
+                <soccertimeline ng-class="{'tl-80': openGame.last_event.match_length === '80','tl-70': openGame.last_event.match_length === '70', 'tl-60': openGame.last_event.match_length === '60', 'extra': isExtraTime(openGame.info)}"></soccertimeline>
                 <div class="tl-data">
                     <div class="current-minute" ng-style="openGame.tlCurrentMinute"></div>
                     <div ng-repeat="tlEvent in openGame.tlEvents" ng-style="tlEvent.timeline_position" class="{{tlEvent.team + '-' + tlEvent.type}}">

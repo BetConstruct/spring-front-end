@@ -1671,7 +1671,7 @@ div.game-video-detached {
   color: $modern-view-betslip-text-palette;
 }
 
-.list-bet-block ul li span {
+.list-bet-block ul li > span {
   color: $hero-color;
 }
 
@@ -1686,13 +1686,13 @@ div.game-video-detached {
   display: block;
 }
 
-.list-bet-block ul li p, .list-bet-block ul li p span.pick {
+.list-bet-block ul li > p, .list-bet-block ul li > p span.pick {
   font: 12px/14px $font-f;
   color: set-color($modern-view-betslip-palette);
   font-weight: $bold-text;
 }
 
-.list-bet-block ul li p span {
+.list-bet-block ul li > p span {
   font: 12px/14px $font-f;
   color: $modern-view-betslip-text-palette;
   font-weight: $style-text;
@@ -3068,6 +3068,9 @@ form.ng-pristine .form-text.error input {
         background: $skin-palette-7;
         color: $text-palette-3;
         box-shadow: inset 2px 0 $brand-color-1;
+        @include rtl {
+          box-shadow: inset -2px 0 $brand-color-1;
+        }
       }
       a {
         font: 14px/16px $font-f;
@@ -3170,6 +3173,10 @@ form.ng-pristine .form-text.error input {
   right: 0;
   bottom: 12px;
   font: 24px/32px icomoon;
+  @include rtl {
+    left: 0;
+    right: auto;
+  }
 }
 
 .right-block-history.message h3.compose:before {
@@ -4746,7 +4753,7 @@ form.ng-pristine .form-text.error input {
 }
 .modern {
   .hover-sp {
-    width: 500px;
+    width: 380px;
   }
   .football-gamer-name {
     width: 100%;
@@ -5318,8 +5325,82 @@ li.active-format:before {
   content: "\f005";
   color: #E7EE16;
 }
-.modern .game-statistics {
+.modern {
+  .add-bet-selections {
+    color: #293043;
+    background: #e6e6e6;
+    border-color:  darken($modern-view-betslip-palette, 15);;
+  }
+  .edit-bets-contain {
+    background: #e6e6e6;
+    .edit-bets-time-id {
+      > p {
+        color: #293043;
+      }
+      > span {
+        color: #293043;
+        b {
+          color: set-color($modern-view-betslip-palette);
+        }
+      }
+    }
+  }
+  .empty-edit-bet-list {
+    color: set-color($modern-view-betslip-palette);
+  }
+
+  .open-bets-buttons button {
+    color: #616161;
+    background: #e6e6e6;
+    &.active {
+      color: #293043;
+      background: #cccccc;
+    }
+  }
+  .open-bets-time-id {
+    background: #e6e6e6;
+  }
+  .slider-open-bets > p {
+    color: #293043;
+    background: #cccccc;
+    &:after {
+      color: #293043;
+    }
+  }
+}
+
+.modern, .combo {
+  .open-bets-possible-wrapper {
+    background: none;
+  }
+  .title-event-b-v3 > span {
+    color: #3f4553;
+  }
+}
+.modern .game-control .game-statistics li .stat-l {
   @include rtl {
-    direction: ltr;
+    text-align: right;
+  }
+}
+
+.modern {
+  .bet-status-container {
+    background: none;
+    border-radius: 0;
+    box-shadow: 0 1px 0 darken($modern-view-betslip-palette, 15) inset;
+  }
+  .bet-status-select {
+    color: #293043;
+    box-shadow: 0 -1px 0 darken($modern-view-betslip-palette, 15) inset;
+  }
+  .bet-status-input {
+    border-color: darken($modern-view-betslip-palette, 15);
+  }
+  .bet-status-get > div > button {
+    color: rgba(255,255,255,.8);
+    background: #737887;
+    &:hover {
+      background: lighten(#737887, 10);
+    }
   }
 }

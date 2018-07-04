@@ -4,7 +4,7 @@
  * @description
  *  New bet history controller.
  */
-VBET5.controller('mixedBalanceCtrl', ['$scope', '$controller', 'Config', '$sce', 'Moment', '$filter', '$rootScope', function($scope, $controller, Config, $sce, Moment, $filter, $rootScope) {
+VBET5.controller('mixedBalanceCtrl', ['$scope', '$controller', 'Config', '$sce', 'Moment', '$filter', '$rootScope', 'Zergling', function($scope, $controller, Config, $sce, Moment, $filter, $rootScope, Zergling) {
     'use strict';
     angular.extend(this, $controller('paymentsCtrl', {
         $scope: $scope
@@ -18,6 +18,7 @@ VBET5.controller('mixedBalanceCtrl', ['$scope', '$controller', 'Config', '$sce',
     Moment.updateMonthLocale();
     Moment.updateWeekDaysLocale();
 
+    $scope.balanceHistoryFilter = 'all';
     $scope.requestData = {
         dateFrom: $scope.today,
         dateTo: $scope.today,
@@ -105,7 +106,7 @@ VBET5.controller('mixedBalanceCtrl', ['$scope', '$controller', 'Config', '$sce',
     };
 
     $scope.adjustDate = function adjustDate(type) {
-        var monthCount = Config.main.balanceHistoryMonthCount || 1;
+        var monthCount = $scope.balanceHistoryFilter === 'all' ? (Config.main.balanceHistoryMonthCount || 1) : 3;
         switch (type) {
             case 'from':
                 if (Moment.get($scope.requestData.dateFrom).unix() > Moment.get($scope.requestData.dateTo).unix()) {
@@ -130,6 +131,62 @@ VBET5.controller('mixedBalanceCtrl', ['$scope', '$controller', 'Config', '$sce',
 
         $scope.balanceHistoryParams.dateRange.fromDate = Moment.get(Moment.moment($scope.requestData.dateFrom).format().split('T')[0] + 'T00:00:00').unix();
         $scope.balanceHistoryParams.dateRange.toDate = Moment.get(Moment.moment($scope.requestData.dateTo).format().split('T')[0] + 'T23:59:59').unix();
+    };
+
+
+    /**
+     * @ngdoc function
+     * @name filterBalanceHistory
+     * @methodOf vbet5.controller:mixedBalanceCtrl
+     * @description  Filters balance history tabs
+     * @param {String} status: all - all transactions, net - net deposit
+     */
+    $scope.filterBalanceHistory = function filterBalanceHistory(status) {
+        if ($scope.balanceHistoryFilter === status) { return; }
+        $scope.balanceHistoryFilter = status;
+        switch (status) {
+            case 'net':
+                $scope.loadNetDeposit();
+                break;
+            default:
+                $scope.adjustDate('from');
+                $scope.loadMixedBalanceHistory();
+        }
+    };
+
+
+    /**
+     * @ngdoc function
+     * @name loadNetDeposit
+     * @methodOf vbet5.controller:mixedBalanceCtrl
+     * @description  Loads net deposit history
+     */
+    $scope.loadNetDeposit = function loadNetDeposit() {
+        $scope.balanceHistoryLoaded = false;
+        $scope.netDepositHistoryTotal = {};
+        Zergling.get(
+            {
+                'from_date': $scope.balanceHistoryParams.dateRange.fromDate,
+                'to_date': $scope.balanceHistoryParams.dateRange.toDate
+            },
+            'get_client_net_deposit_withdraw_history'
+        ).then(
+            function success(response) {
+                if (response.details && response.details.Objects) {
+                    $scope.netDepositHistory = response.details.Objects;
+                    if ($scope.netDepositHistory.length && response.details.Totals) {
+                        $scope.netDepositHistoryTotal = response.details.Totals;
+                    }
+                } else {
+                    $scope.netDepositHistory = [];
+                    $rootScope.$broadcast("globalDialogs.addDialog", {
+                        type: 'error',
+                        title: 'Error',
+                        content: 'Failed to load net deposit history'
+                    });
+                }
+            }
+        )['finally'](function stopLoader() { $scope.balanceHistoryLoaded = true; });
     };
 
 }]);

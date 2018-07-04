@@ -15,7 +15,7 @@ VBET5.directive("classOnScroll", ['$window', function ($window) {
         var class2 = classNames[1];
 
         function changeClass() {
-            if ($window.pageYOffset >= 1) {
+            if ($window.pageYOffset >= 100) {
                 element.addClass(class1);
                 element.removeClass(class2);
             } else {

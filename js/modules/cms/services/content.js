@@ -23,7 +23,9 @@ CMS.service('content', ['WPConfig', 'Config', '$http', '$rootScope', '$location'
     var countryQuery = '';
     $rootScope.geoDataAvailable = $rootScope.geoDataAvailable || Geoip.getGeoData(false);
     $rootScope.geoDataAvailable.then(function (data) {
-        countryQuery = data && data.countryCode && (countryQuery = '&country=' + data.countryCode);
+        if (data && data.countryCode) {
+            countryQuery = '&country=' + data.countryCode;
+        }
     });
 
     /**

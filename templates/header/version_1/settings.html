@@ -7,7 +7,7 @@
             <div class="open-lang">
                 <div class="arrow-sport"></div>
                 <ul>
-                    <div ng-show="isInSports()">
+                    <div ng-show="$root.currentPage.isInSports">
                         <div ng-include="::'templates/header/oddformatswitcher.html'|fixPath;"></div>
                         <li class="title-sep"><span trans>Event sounds:</span></li>
                         <li ng-click="setSound(0.75)" ng-class="{'active-format': env.sound > 0}" trans>On</li>

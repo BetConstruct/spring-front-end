@@ -4,7 +4,7 @@
  * @description
  *  New bet history controller.
  */
-VBET5.controller('mixedMyBetsCtrl', ['$rootScope', '$scope', '$controller', '$location', 'Config', 'GameInfo', 'Moment', 'Utils', function($rootScope, $scope, $controller, $location, Config, GameInfo, Moment, Utils) {
+VBET5.controller('mixedMyBetsCtrl', ['$rootScope', '$scope', '$controller', '$location', 'Config', 'GameInfo', 'Moment', 'Utils', 'Zergling', function($rootScope, $scope, $controller, $location, Config, GameInfo, Moment, Utils, Zergling) {
     'use strict';
 
     // Initialize the super class and extend it.
@@ -81,6 +81,8 @@ VBET5.controller('mixedMyBetsCtrl', ['$rootScope', '$scope', '$controller', '$lo
                 $scope.customPeriodApplied = false;
                 $scope.selectBetHistoryTimePeriod($scope.selectedUpcomingPeriod); // prepare data range for selected (or default) period
             }
+        } else {
+            $scope.unsubscribeFromCashOut();
         }
 
         var betHistoryLoadingCallback = function betHistoryLoadingCallback(){
@@ -96,6 +98,8 @@ VBET5.controller('mixedMyBetsCtrl', ['$rootScope', '$scope', '$controller', '$lo
         }
 
     };
+
+    $scope.$on('loadMixedBetHistory', function() { $scope.loadMixedBetHistory(); });
 
     var initDatePickerLimits = initFactory('datePickerLimits', {
         'minFromDate': undefined,
@@ -221,7 +225,7 @@ VBET5.controller('mixedMyBetsCtrl', ['$rootScope', '$scope', '$controller', '$lo
      * @methodOf vbet5.controller:mixedMyBetsCtrl
      */
     $scope.adjustDate = function adjustDate(type) {
-        var monthCount = Config.main.mixedViewMonthRange || 1;
+        var monthCount = $scope.betStatusFilter === -1 ? 3 : (Config.main.mixedViewMonthRange || 1);
         switch (type) {
             case 'from':
                 if (Moment.get($scope.requestData.dateFrom).unix() > Moment.get($scope.requestData.dateTo).unix()) {
@@ -313,6 +317,66 @@ VBET5.controller('mixedMyBetsCtrl', ['$rootScope', '$scope', '$controller', '$lo
         $scope.openBetTypeFilter = false;
         $scope.openedTo = !$scope.openedTo;
         $scope.periodDropdownOpened = false;
+    };
+
+
+    /**
+     * @ngdoc function
+     * @name filterBetHistory
+     * @methodOf vbet5.controller:mixedMyBetsCtrl
+     * @description  Filters bet history tabs
+     * @param {Number} [newStatus]: undefined - all bets, 0 - open, 1 - lost, 2 - returned, 3 - won, 5 - cashed out, -1 - profit/loss tab
+     */
+    $scope.filterBetHistory = function filterBetHistory(newStatus) {
+        var previousStatus = $scope.betStatusFilter;
+        if (newStatus !== previousStatus) {
+            $scope.betStatusFilter = newStatus;
+            if (newStatus === -1) {
+                $scope.betHistoryParams.betTypeSelector = undefined;
+                $scope.openBetTypeFilter = false;
+                $scope.betHistoryParams.betIdFilter = null;
+                // User clicked the 'Profit/Loss' tab for the first time so we load the data and unsubscribe from cash out events
+                $scope.unsubscribeFromCashOut();
+                $scope.loadProfitLoss();
+            } else if (previousStatus === -1) {
+                // User clicked away from the 'Profit/Loss' tab so we load the standard bet history
+                $scope.adjustDate('from');
+                $scope.loadMixedBetHistory();
+            }
+        }
+    };
+
+
+    /**
+     * @ngdoc function
+     * @name loadProfitLoss
+     * @methodOf vbet5.controller:mixedMyBetsCtrl
+     * @description  Loads profit/loss history
+     */
+    $scope.loadProfitLoss = function loadProfitLoss() {
+        $scope.betHistoryLoaded = false;
+        Zergling.get(
+            {
+                'from_date': $scope.betHistoryParams.dateRange.fromDate,
+                'to_date': $scope.betHistoryParams.dateRange.toDate
+            },
+            'get_bet_pl_history'
+        ).then(
+            function success(response) {
+                if (response.details && response.details.bet_pl_objects && response.details.bet_pl_totals) {
+                    $scope.betHistory = response.details.bet_pl_objects;
+                    $scope.profitLossTotal = response.details.bet_pl_totals;
+                } else {
+                    $scope.betHistory = [];
+                    $scope.profitLossTotal = {};
+                    $rootScope.$broadcast("globalDialogs.addDialog", {
+                        type: 'error',
+                        title: 'Error',
+                        content: 'Failed to load bet history'
+                    });
+                }
+            }
+        )['finally'](function stopLoader() { $scope.betHistoryLoaded = true; });
     };
 
     initScope();

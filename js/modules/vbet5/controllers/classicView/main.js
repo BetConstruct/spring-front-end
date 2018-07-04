@@ -315,7 +315,7 @@ angular.module('vbet5.betting').controller('classicViewMainCtrl', ['$rootScope',
                         game.sport = {id: sport.id, alias: sport.alias, name: sport.name};
                         game.region = {id: region.id, name: region.name, alias: region.alias};
                         game.competition = {id: competition.id, order: competition.order};
-                        game.firstMarket = Utils.getFirstMarket(game.market, $filter);
+                        game.firstMarket = Utils.getFirstMarket(game.market);
                         game.additionalEvents = Config.main.showEventsCountInMoreLink ? game.events_count : game.markets_count;
                         game.groupDate = Date.parse((moment(game.start_ts*1000).utcOffset(Config.env.selectedTimeZone || 0).lang("en").format("YYYY-MM-DD")))/1000;
                         if(Config.main.showPlayerRegion) {

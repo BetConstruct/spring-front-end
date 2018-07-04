@@ -77,8 +77,7 @@
                     <li>{{ game.team2_name }}</li>
                 </ul>
                 <div class="field">
-                    <!--div ng-include="game.Event.url" class="animation-container {{game.last_event.type}} {{game.last_event.side}}"></div-->
-                    <div class="animation-container {{game.last_event.type}}" ng-class="{1:'home', 2:'away'}[game.last_event.side]">
+                    <div class="animation-container {{game.last_event.type}}" ng-class="{1:'home', 2:'away'}[(game.last_event|rtlConvert:'side')]">
                         <div ng-if="game.last_event.type === 'FirstQuarter'">
                             <div trans class="text-event" title="First Quarter">First Quarter</div>
                         </div>

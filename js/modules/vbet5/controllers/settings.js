@@ -13,11 +13,11 @@ VBET5.controller('settingsCtrl', ['$scope', '$rootScope', '$location', '$documen
     $scope.countryCodes = Utils.objectToArray(Utils.getAvailableCountries(CountryCodes), 'key');
 
     $scope.countryCodes = $scope.countryCodes.sort(Utils.alphabeticalSorting);
+    $scope.registrationData = {};
 
     $scope.personalDetails = angular.copy(Config.main.personalDetails);
     $scope.patterns = Config.main.personalDetails.patterns;
-    $scope.settingsPage = $location.search().settingspage || Config.main.settingsDefaultPage; //deep linking
-    $location.search('settingspage', undefined);
+    checkSettingsDeeplink();
     $scope.changepasswordData = {
         oldpassword: '',
         password: '',
@@ -132,6 +132,12 @@ VBET5.controller('settingsCtrl', ['$scope', '$rootScope', '$location', '$documen
                 request.user_info.last_name = request.user_info.last_name || request.user_info.sur_name;
             }
 
+            if (Config.main.gdpr.profile) {
+                angular.forEach(Config.main.gdpr.options, function (value, key) {
+                    request.user_info[key] = $scope.registrationData[key] === 'true';
+                });
+            }
+
             console.log("changeDetails", $scope.personalDetails.editableFields, request, $scope.details);
             Zergling.get(request, 'update_user').then(function (response) {
                 if (response.result === 0) {
@@ -141,8 +147,8 @@ VBET5.controller('settingsCtrl', ['$scope', '$rootScope', '$location', '$documen
                         content: 'Personal information updated.',
                         buttons: [
                             {title: 'Ok', callback: function() {
-                                /*$rootScope.$broadcast('toggleSliderTab', 'deposit');*/
-                            }}
+                                    /*$rootScope.$broadcast('toggleSliderTab', 'deposit');*/
+                                }}
                         ]
                     });
                     prepareOnceEditableFields();
@@ -224,6 +230,14 @@ VBET5.controller('settingsCtrl', ['$scope', '$rootScope', '$location', '$documen
                                 $scope.personalDetails.readOnlyFields.push($scope.personalDetails.editableFields.splice(index, 1)[0]);
                             }
                         }
+                    }
+                });
+            }
+
+            if (Config.main.gdpr.profile) {
+                angular.forEach(Config.main.gdpr.options, function (value, key) {
+                    if ($scope.details[key] !== undefined) {
+                        $scope.registrationData[key] = $scope.details[key] ? 'true' : 'false';
                     }
                 });
             }
@@ -726,4 +740,58 @@ VBET5.controller('settingsCtrl', ['$scope', '$rootScope', '$location', '$documen
                 $scope.forms.detailsForm[fieldName].$setUntouched();
         }
     };
+
+    /**
+     * Check settings deep link if given page is not available not open it
+     */
+    function checkSettingsDeeplink() {
+        var page = $rootScope.env.mixedSettingsPage || $location.search().settingspage;
+        var isAllowed = false;
+        if (page) {
+            switch(page) {
+                case 'details':
+                    isAllowed = true;
+                    break;
+                case 'changepassword':
+                    isAllowed = !$scope.conf.disableChangePassword;
+                    break;
+                case 'verifyaccount':
+                    isAllowed = $scope.conf.enableAccountVerification || $scope.conf.accountVerificationMessage;
+                    break;
+                case 'usertimeout':
+                    isAllowed = $scope.conf.userTimeOut.enabled;
+                    break;
+                case 'promoCode':
+                    isAllowed = $scope.conf.profilePromoCodeUrl;
+                    break;
+                case 'selfexclusion':
+                    isAllowed = $scope.conf.selfExclusion.enabled;
+                    break;
+                case 'gamstop':
+                    isAllowed = $scope.conf.gamstop && $scope.conf.gamstop.enabled;
+                    break;
+                case 'realitycheck':
+                    isAllowed = $scope.conf.realityCheck.enabled;
+                    break;
+                case 'depositlimits':
+                    isAllowed = $scope.conf.enableDepositLimits;
+                    break;
+                case 'betlimits':
+                    isAllowed = $scope.conf.betLimits && $scope.conf.betLimits.enabled && !($scope.conf.betLimits.hideSportsbookLimits && $scope.conf.betLimits.hideCasinoLimits);
+                    break;
+                case 'campaign':
+                    isAllowed = $scope.conf.enableCampaign;
+                    break;
+            }
+            $location.search('settingspage', undefined);
+            if(!isAllowed) {
+                $scope.env.sliderContent = "";
+                $scope.env.showSlider = false;
+            }else  {
+                $scope.env.mixedSettingsPage = page;
+            }
+        } else {
+            $scope.env.mixedSettingsPage = Config.main.settingsDefaultPage; //deep linking
+        }
+    }
 }]);

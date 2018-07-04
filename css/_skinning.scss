@@ -13,11 +13,11 @@ $vbet-colors: false !default;
 
 $white-skin: false !global !default;                      $white-default: $white-skin !default;
 
-$disable-hero-color-sc: false, white !default;
-$disable-brand-color-1-sc: false, white !default;
-$disable-button-bg-sc: false, white !default;
-$disable-brand-color-2-sc: false, white !default;
-$disable-popup-form-palette-sc: false, white !default;
+$disable-hero-color-sc: false, #ffffff !default;
+$disable-brand-color-1-sc: false, #ffffff !default;
+$disable-button-bg-sc: false, #ffffff !default;
+$disable-brand-color-2-sc: false, #ffffff !default;
+$disable-popup-form-palette-sc: false, #ffffff !default;
 
 $popup-form-opacify: 0 !default;
 
@@ -268,7 +268,7 @@ $header-lang-with-flag: false !default;
 $header-first-line-height: 52px !default;
 $header-nav-line-height: 42px !default;
 $subheader-height: 36px !default;
-$pages-with-full-width-header: ("[class*='game']:not(.games)", ".sport", ".winninglimits", ".insvirtualsports", ".virtualsports", ".multiview", ".full-screen", ".livecalendar", ".statistics", ".financials", ".results",  ".news", ".dashboard", ".csbpoolbetting", ".overview") !default;
+$pages-with-full-width-header: (".russia2018", "[class*='game']:not(.games):not(.wwwgoodgames12com)", ".sport", ".winninglimits", ".insvirtualsports", ".virtualsports", ".multiview", ".full-screen", ".livecalendar", ".statistics", ".financials", ".results",  ".news", ".dashboard", ".csbpoolbetting", ".overview") !default;
 $pages-with-full-width-header-background: (".about", ".vrcasino", ".livedealer", ".vip-promos", ".external", ".ogwil",  ".games", ".backgammon", ".belote", ".gameslanding", ".pokerklas ", ".poolbetting", ".fantasy", ".freebet", ".gameCSB1providerCSBexid152000", ".csbpoolbetting", ".first_deposit_bonus", ".first_deposit_bonus_and_20_free_spins", ".poker") !default;
 $header-hero-color: $hero-color !default;
 $header-brand-color-1: $brand-color-1 !default;

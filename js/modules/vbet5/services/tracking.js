@@ -133,6 +133,16 @@ VBET5.service('Tracking', ['$rootScope', '$location', 'Config', 'Storage', 'Zerg
                     fbq('track', item.fbq);
                 }
 
+                // reconvert tracking
+                if (item.reconvert && window.RECONVERT && window.RECONVERT[item.reconvert]) {
+                    window.RECONVERT[item.reconvert]();
+                }
+
+                // tfa tracking
+                if (item.tfa && window._tfa) {
+                    window._tfa.push({notify: 'event', name: item.tfa});
+                }
+
                 if (item.ga) {
                     analytics.gaSend('send', 'event', 'tracking', item.event, item.ga);
                 }

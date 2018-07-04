@@ -7,7 +7,7 @@
     </div>
 </div>
 <style>
-    .body-wrapper {
+    .body-wrapper.livedealer {
         {{pageBackgrounds.thumbnail_images.full.url ? 'background-image: url('+pageBackgrounds.thumbnail_images.full.url+');' : ''}}
         {{pageBackgrounds.custom_fields.size ? "background-size: " + pageBackgrounds.custom_fields.size[0] + ";" : pageBackgrounds.thumbnail_images.full.url ? "background-size: 100%;" : ""}}
         {{pageBackgrounds.custom_fields.position ? 'background-position: ' + pageBackgrounds.custom_fields.position[0] : pageBackgrounds.thumbnail_images.full.url ? "background-position: 50% 0" : ""}};

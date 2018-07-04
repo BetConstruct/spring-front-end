@@ -1,0 +1,224 @@
+<div class="russia2018-tree-background-head">
+    <div class="russia2018-tree">
+        <ul class="russia2018-tree-head">
+            <li>
+                <div class="russia2018-tree-name" trans>1/8 Finals</div>
+            </li>
+            <li class="russia-tree-branch-wrapper"></li>
+            <li>
+                <div class="russia2018-tree-name" trans>1/4 Finals</div>
+            </li>
+            <li class="russia-tree-branch-wrapper"></li>
+            <li>
+                <div class="russia2018-tree-name" trans>Semi-finals</div>
+            </li>
+            <li class="russia-tree-branch-wrapper"></li>
+            <li>
+                <div class="russia2018-tree-name" trans>Final</div>
+            </li>
+        </ul>
+    </div>
+</div>
+<div class="russia2018-tree-background">
+    <div class="russia2018-tree">
+        <ul class="russia2018-tree-main">
+            <li>
+                <div class="r18-tree-market-holder" ng-repeat="match in tree['198557'] track by match.Id">
+                    <div class="r18-tree-market-title">
+                        <div class="r18-tree-market-date" ng-class="{'live-now': treeData[match.Id].is_live}"
+                             ng-bind="match.Date|formatDate:'full':null:$root.env.timeFormat"></div>
+                        <a class="more-markets" ng-show="treeData[match.Id].markets_count" ng-click="goToGame(treeData[match.Id])" ng-bind="'+' + treeData[match.Id].markets_count"></a>
+                    </div>
+                    <ul>
+                        <li ng-class="{'disabled': treeData[match.Id] === undefined && (match.HomeScore - match.AwayScore < 0)}" title="{{match.HomeTeam.name}}">
+                            <div class="r18-tree-flag" ng-style="{'background-image': match.HomeTeamLogo}"></div>
+                            <div class="r18-tree-country-name" ng-bind="treeData[match.Id].team1_name || match.HomeTeam.name"></div>
+                            <div class="r18-tree-country-info" ng-bind="(treeData[match.Id].info.current_game_state !== 'notstarted' && treeData[match.Id].info.score1) || match.HomeScore"></div>
+                            <div class="r18-tree-market-btn" ng-show="treeData[match.Id].market.event.P1"
+                                 ng-class="{'up': treeData[match.Id].market.event.P1.price_change > 0,
+                                            'down': treeData[match.Id].market.event.P1.price_change < 0,
+                                            'active': isEventInBetSlip(treeData[match.Id].market.event.P1),
+                                            'blocked': ((treeData[match.Id].market.event.P1.price | oddConvert:'decimal') == 1 || treeData[match.Id].is_blocked)}"
+                                 ng-click="bet(treeData[match.Id].market.event.P1, treeData[match.Id].market, treeData[match.Id])"
+                                 ng-bind="treeData[match.Id].market.event.P1.price|oddConvert:$root.env.oddFormat:null:'WINNER'"></div>
+                        </li>
+                        <li ng-class="{'disabled': treeData[match.Id] === undefined && (match.HomeScore - match.AwayScore > 0)}" title="{{match.AwayTeam.name}}">
+                            <div class="r18-tree-flag" ng-style="{'background-image': match.AwayTeamLogo}"></div>
+                            <div class="r18-tree-country-name" ng-bind="treeData[match.Id].team2_name || match.AwayTeam.name"></div>
+                            <div class="r18-tree-country-info" ng-bind="(treeData[match.Id].info.current_game_state !== 'notstarted' && treeData[match.Id].info.score2) || match.AwayScore"></div>
+                            <div class="r18-tree-market-btn"  ng-show="treeData[match.Id].market.event.P2"
+                                 ng-class="{'up': treeData[match.Id].market.event.P2.price_change > 0,
+                                            'down': treeData[match.Id].market.event.P2.price_change < 0,
+                                            'active': isEventInBetSlip(treeData[match.Id].market.event.P2),
+                                            'blocked': ((treeData[match.Id].market.event.P2.price | oddConvert:'decimal') == 1 || treeData[match.Id].is_blocked)}"
+                                 ng-click="bet(treeData[match.Id].market.event.P2, treeData[match.Id].market, treeData[match.Id])"
+                                 ng-bind="treeData[match.Id].market.event.P2.price|oddConvert:$root.env.oddFormat:null:'WINNER'"></div>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+            <li class="russia-tree-branch-wrapper first-segment">
+                <div class="russia-tree-branch" ng-repeat="i in [1,2,3,4]">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </li>
+            <li class="second-segment">
+                <div class="r18-tree-market-holder" ng-repeat="match in tree['198558'] track by match.Id">
+                    <div class="r18-tree-market-title">
+                        <div class="r18-tree-market-date" ng-class="{'live-now': treeData[match.Id].is_live}"
+                             ng-bind="match.Date|formatDate:'full':null:$root.env.timeFormat"></div>
+                        <a class="more-markets" ng-show="treeData[match.Id].markets_count" ng-click="goToGame(treeData[match.Id])" ng-bind="'+' + treeData[match.Id].markets_count"></a>
+                    </div>
+                    <ul>
+                        <li ng-class="{'disabled': treeData[match.Id] === undefined && (match.HomeScore - match.AwayScore < 0)}" title="{{match.HomeTeam.name}}">
+                            <div class="r18-tree-flag" ng-style="{'background-image': match.HomeTeamLogo}"></div>
+                            <div class="r18-tree-country-name" ng-bind="treeData[match.Id].team1_name || match.HomeTeam.name"></div>
+                            <div class="r18-tree-country-info" ng-bind="(treeData[match.Id].info.current_game_state !== 'notstarted' && treeData[match.Id].info.score1) || match.HomeScore"></div>
+                            <div class="r18-tree-market-btn" ng-show="treeData[match.Id].market.event.P1"
+                                 ng-class="{'up': treeData[match.Id].market.event.P1.price_change > 0,
+                                            'down': treeData[match.Id].market.event.P1.price_change < 0,
+                                            'active': isEventInBetSlip(treeData[match.Id].market.event.P1),
+                                            'blocked': ((treeData[match.Id].market.event.P1.price | oddConvert:'decimal') == 1 || treeData[match.Id].is_blocked)}"
+                                 ng-click="bet(treeData[match.Id].market.event.P1, treeData[match.Id].market, treeData[match.Id])"
+                                 ng-bind="treeData[match.Id].market.event.P1.price|oddConvert:$root.env.oddFormat:null:'WINNER'"></div>
+                        </li>
+                        <li ng-class="{'disabled': treeData[match.Id] === undefined && (match.HomeScore - match.AwayScore > 0)}" title="{{match.AwayTeam.name}}">
+                            <div class="r18-tree-flag" ng-style="{'background-image': match.AwayTeamLogo}"></div>
+                            <div class="r18-tree-country-name" ng-bind="treeData[match.Id].team2_name || match.AwayTeam.name"></div>
+                            <div class="r18-tree-country-info" ng-bind="(treeData[match.Id].info.current_game_state !== 'notstarted' && treeData[match.Id].info.score2) || match.AwayScore"></div>
+                            <div class="r18-tree-market-btn"  ng-show="treeData[match.Id].market.event.P2"
+                                 ng-class="{'up': treeData[match.Id].market.event.P2.price_change > 0,
+                                            'down': treeData[match.Id].market.event.P2.price_change < 0,
+                                            'active': isEventInBetSlip(treeData[match.Id].market.event.P2),
+                                            'blocked': ((treeData[match.Id].market.event.P2.price | oddConvert:'decimal') == 1 || treeData[match.Id].is_blocked)}"
+                                 ng-click="bet(treeData[match.Id].market.event.P2, treeData[match.Id].market, treeData[match.Id])"
+                                 ng-bind="treeData[match.Id].market.event.P2.price|oddConvert:$root.env.oddFormat:null:'WINNER'"></div>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+            <li class="russia-tree-branch-wrapper second-segment">
+                <div class="russia-tree-branch" ng-repeat="i in [1,2]">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </li>
+            <li class="third-segment">
+                <div class="r18-tree-market-holder" ng-repeat="match in tree['198559'] track by match.Id">
+                    <div class="r18-tree-market-title">
+                        <div class="r18-tree-market-date" ng-class="{'live-now': treeData[match.Id].is_live}"
+                             ng-bind="match.Date|formatDate:'full':null:$root.env.timeFormat"></div>
+                        <a class="more-markets" ng-show="treeData[match.Id].markets_count" ng-click="goToGame(treeData[match.Id])" ng-bind="'+' + treeData[match.Id].markets_count"></a>
+                    </div>
+                    <ul>
+                        <li ng-class="{'disabled': treeData[match.Id] === undefined && (match.HomeScore - match.AwayScore < 0)}" title="{{match.HomeTeam.name}}">
+                            <div class="r18-tree-flag" ng-style="{'background-image': match.HomeTeamLogo}"></div>
+                            <div class="r18-tree-country-name" ng-bind="treeData[match.Id].team1_name || match.HomeTeam.name"></div>
+                            <div class="r18-tree-country-info" ng-bind="(treeData[match.Id].info.current_game_state !== 'notstarted' && treeData[match.Id].info.score1) || match.HomeScore"></div>
+                            <div class="r18-tree-market-btn" ng-show="treeData[match.Id].market.event.P1"
+                                 ng-class="{'up': treeData[match.Id].market.event.P1.price_change > 0,
+                                            'down': treeData[match.Id].market.event.P1.price_change < 0,
+                                            'active': isEventInBetSlip(treeData[match.Id].market.event.P1),
+                                            'blocked': ((treeData[match.Id].market.event.P1.price | oddConvert:'decimal') == 1 || treeData[match.Id].is_blocked)}"
+                                 ng-click="bet(treeData[match.Id].market.event.P1, treeData[match.Id].market, treeData[match.Id])"
+                                 ng-bind="treeData[match.Id].market.event.P1.price|oddConvert:$root.env.oddFormat:null:'WINNER'"></div>
+                        </li>
+                        <li ng-class="{'disabled': treeData[match.Id] === undefined && (match.HomeScore - match.AwayScore > 0)}" title="{{match.AwayTeam.name}}">
+                            <div class="r18-tree-flag" ng-style="{'background-image': match.AwayTeamLogo}"></div>
+                            <div class="r18-tree-country-name" ng-bind="treeData[match.Id].team2_name || match.AwayTeam.name"></div>
+                            <div class="r18-tree-country-info" ng-bind="(treeData[match.Id].info.current_game_state !== 'notstarted' && treeData[match.Id].info.score2) || match.AwayScore"></div>
+                            <div class="r18-tree-market-btn" ng-show="treeData[match.Id].market.event.P2"
+                                 ng-class="{'up': treeData[match.Id].market.event.P2.price_change > 0,
+                                            'down': treeData[match.Id].market.event.P2.price_change < 0,
+                                            'active': isEventInBetSlip(treeData[match.Id].market.event.P2),
+                                            'blocked': ((treeData[match.Id].market.event.P2.price | oddConvert:'decimal') == 1 || treeData[match.Id].is_blocked)}"
+                                 ng-click="bet(treeData[match.Id].market.event.P2, treeData[match.Id].market, treeData[match.Id])"
+                                 ng-bind="treeData[match.Id].market.event.P2.price|oddConvert:$root.env.oddFormat:null:'WINNER'"></div>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+            <li class="russia-tree-branch-wrapper third-segment">
+                <div class="russia-tree-branch">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </li>
+            <li>
+                <div class="r28-tree-last-market">
+                    <div class="r18-tree-market-holder" ng-repeat="match in tree['198560'] track by match.Id" ng-show="$first">
+                        <div class="r18-tree-market-title">
+                            <div class="r18-tree-market-date" ng-class="{'live-now': treeData[match.Id].is_live}"
+                                 ng-bind="match.Date|formatDate:'full':null:$root.env.timeFormat"></div>
+                            <a class="more-markets" ng-show="treeData[match.Id].markets_count" ng-click="goToGame(treeData[match.Id])" ng-bind="'+' + treeData[match.Id].markets_count"></a>
+                        </div>
+                        <ul>
+                            <li ng-class="{'disabled': treeData[match.Id] === undefined && (match.HomeScore - match.AwayScore < 0)}" title="{{match.HomeTeam.name}}">
+                                <div class="r18-tree-flag" ng-style="{'background-image': match.HomeTeamLogo}"></div>
+                                <div class="r18-tree-country-name" ng-bind="treeData[match.Id].team1_name || match.HomeTeam.name"></div>
+                                <div class="r18-tree-country-info" ng-bind="(treeData[match.Id].info.current_game_state !== 'notstarted' && treeData[match.Id].info.score1) || match.HomeScore"></div>
+                                <div class="r18-tree-market-btn" ng-show="treeData[match.Id].market.event.P1"
+                                     ng-class="{'up': treeData[match.Id].market.event.P1.price_change > 0,
+                                            'down': treeData[match.Id].market.event.P1.price_change < 0,
+                                            'active': isEventInBetSlip(treeData[match.Id].market.event.P1),
+                                            'blocked': ((treeData[match.Id].market.event.P1.price | oddConvert:'decimal') == 1 || treeData[match.Id].is_blocked)}"
+                                     ng-click="bet(treeData[match.Id].market.event.P1, treeData[match.Id].market, treeData[match.Id])"
+                                     ng-bind="treeData[match.Id].market.event.P1.price|oddConvert:$root.env.oddFormat:null:'WINNER'"></div>
+                            </li>
+                            <li ng-class="{'disabled': treeData[match.Id] === undefined && (match.HomeScore - match.AwayScore > 0)}" title="{{match.AwayTeam.name}}">
+                                <div class="r18-tree-flag" ng-style="{'background-image': match.AwayTeamLogo}"></div>
+                                <div class="r18-tree-country-name" ng-bind="treeData[match.Id].team2_name || match.AwayTeam.name"></div>
+                                <div class="r18-tree-country-info" ng-bind="(treeData[match.Id].info.current_game_state !== 'notstarted' && treeData[match.Id].info.score2) || match.AwayScore"></div>
+                                <div class="r18-tree-market-btn" ng-show="treeData[match.Id].market.event.P2"
+                                     ng-class="{'up': treeData[match.Id].market.event.P2.price_change > 0,
+                                            'down': treeData[match.Id].market.event.P2.price_change < 0,
+                                            'active': isEventInBetSlip(treeData[match.Id].market.event.P2),
+                                            'blocked': ((treeData[match.Id].market.event.P2.price | oddConvert:'decimal') == 1 || treeData[match.Id].is_blocked)}"
+                                     ng-click="bet(treeData[match.Id].market.event.P2, treeData[match.Id].market, treeData[match.Id])"
+                                     ng-bind="treeData[match.Id].market.event.P2.price|oddConvert:$root.env.oddFormat:null:'WINNER'"></div>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="r18-tree-market-holder abs" ng-repeat="match in tree['198561'] track by match.Id" ng-show="$first">
+                        <h3 trans>3rd place game</h3>
+                        <div class="r18-tree-market-title">
+                            <div class="r18-tree-market-date" ng-class="{'live-now': treeData[match.Id].is_live}"
+                                 ng-bind="match.Date|formatDate:'full':null:$root.env.timeFormat"></div>
+                            <a class="more-markets" ng-show="treeData[match.Id].markets_count" ng-click="goToGame(treeData[match.Id])" ng-bind="'+' + treeData[match.Id].markets_count"></a>
+                        </div>
+                        <ul>
+                            <li ng-class="{'disabled': treeData[match.Id] === undefined && (match.HomeScore - match.AwayScore < 0)}" title="{{match.HomeTeam.name}}">
+                                <div class="r18-tree-flag" ng-style="{'background-image': match.HomeTeamLogo}"></div>
+                                <div class="r18-tree-country-name" ng-bind="treeData[match.Id].team1_name || match.HomeTeam.name"></div>
+                                <div class="r18-tree-country-info" ng-bind="(treeData[match.Id].info.current_game_state !== 'notstarted' && treeData[match.Id].info.score1) || match.HomeScore"></div>
+                                <div class="r18-tree-market-btn" ng-show="treeData[match.Id].market.event.P1"
+                                     ng-class="{'up': treeData[match.Id].market.event.P1.price_change > 0,
+                                            'down': treeData[match.Id].market.event.P1.price_change < 0,
+                                            'active': isEventInBetSlip(treeData[match.Id].market.event.P1),
+                                            'blocked': ((treeData[match.Id].market.event.P1.price | oddConvert:'decimal') == 1 || treeData[match.Id].is_blocked)}"
+                                     ng-click="bet(treeData[match.Id].market.event.P1, treeData[match.Id].market, treeData[match.Id])"
+                                     ng-bind="treeData[match.Id].market.event.P1.price|oddConvert:$root.env.oddFormat:null:'WINNER'"></div>
+                            </li>
+                            <li ng-class="{'disabled': treeData[match.Id] === undefined && (match.HomeScore - match.AwayScore > 0)}" title="{{match.AwayTeam.name}}">
+                                <div class="r18-tree-flag" ng-style="{'background-image': match.HomeTeamLogo}"></div>
+                                <div class="r18-tree-country-name" ng-bind="treeData[match.Id].team2_name || match.AwayTeam.name"></div>
+                                <div class="r18-tree-country-info" ng-bind="(treeData[match.Id].info.current_game_state !== 'notstarted' && treeData[match.Id].info.score2) || match.AwayScore"></div>
+                                <div class="r18-tree-market-btn" ng-show="treeData[match.Id].market.event.P2"
+                                     ng-class="{'up': treeData[match.Id].market.event.P2.price_change > 0,
+                                            'down': treeData[match.Id].market.event.P2.price_change < 0,
+                                            'active': isEventInBetSlip(treeData[match.Id].market.event.P2),
+                                            'blocked': ((treeData[match.Id].market.event.P2.price | oddConvert:'decimal') == 1 || treeData[match.Id].is_blocked)}"
+                                     ng-click="bet(treeData[match.Id].market.event.P2, treeData[match.Id].market, treeData[match.Id])"
+                                     ng-bind="treeData[match.Id].market.event.P2.price|oddConvert:$root.env.oddFormat:null:'WINNER'"></div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </li>
+        </ul>
+    </div>
+</div>

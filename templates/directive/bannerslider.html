@@ -1,6 +1,6 @@
 <div>
-    <div class="hp-slider-17" ng-show="banners.length" ng-mouseover="over=true" ng-mouseleave="over=false">
-        <div class="hp-slide-17" no-animate ng-repeat="banner in banners track by $index" ng-class="{'active': $parent.slide==$index}">
+    <div class="hp-slider-17" ng-show="!loadingProcess" ng-mouseover="over=true" ng-mouseleave="over=false">
+        <div class="hp-slide-17" no-animate ng-repeat="banner in banners track by $index" cms-analytics="banner" ng-class="{'active': $parent.slide==$index}">
             <a ng-if="banner.linkType=='url' && !banner.videoLink"
                route-reload
                ng-href="{{banner.link}}"
@@ -31,5 +31,5 @@
             </div>
         </div>
     </div>
-    <vbet-loader ng-show="!banners.length"></vbet-loader>
+    <vbet-loader ng-show="loadingProcess"></vbet-loader>
 </div>

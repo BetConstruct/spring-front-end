@@ -1,0 +1,30 @@
+<div
+        class="reg-commercial-banner"
+        ng-controller="cmsPagesCtrl"
+        ng-init="loadBanners('registration-banner', true);"
+        ng-show="bannerObjects['registration-banner'].length"
+>
+    <div class="reg-commercial-scroll">
+        <div
+                class="reg-commercial-content"
+                ng-if="bannerObjects['registration-banner'].length"
+                ng-init="sliderRotate(5, bannerObjects['registration-banner'])"
+                ng-mouseover="slider.over=true"
+                ng-mouseleave="slider.over=false"
+        >
+            <a ng-href="{{bannerObjects['registration-banner'][slider.index].link}}" target="{{bannerObjects['registration-banner'][slider.index].linktarget}}">
+                <img src="{{bannerObjects['registration-banner'][slider.index].image}}">
+            </a>
+            <h3 class="commercial-title" ng-show="bannerObjects['registration-banner'][slider.index].title" ng-bind="bannerObjects['registration-banner'][slider.index].title"></h3>
+            <div ng-show="bannerObjects['registration-banner'][slider.index].content" ng-bind-html="bannerObjects['registration-banner'][slider.index].content|html"></div>
+        </div>
+    </div>
+    <div class="reg-steps-footer" ng-if="bannerObjects['registration-banner'].length">
+        <div class="reg-pagination">
+            <small ng-class="{active: slider.index === $index}" ng-click="slider.index = $index" ng-repeat="sliderDots in bannerObjects['registration-banner'] track by $index"></small>
+        </div>
+        <div class="red-social">
+            <a class="cms-jcon-{{key}}" ng-repeat="(key, value) in $root.conf.footer.socialLinks" ng-href="{{value.url[env.lang] || value.url.default}}" target="{{value.target || '_blank'}}" title="{{value.title[env.lang] || value.title.default}}"></a>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,137 @@
+<ul class="russia2018-home" ng-class="{'match-groups-type': $routeParams.p==='groups'}">
+    <li>
+        <div class="russia2018-component-header">
+            <h3 trans>Group Matches</h3>
+        </div>
+
+        <matches-list season-id="groups[groupStats.selectedIndex].id" sport-id="1" from-date="groups[groupStats.selectedIndex].fromDate" to-date="groups[groupStats.selectedIndex].toDate" competition-id="2969" stadium-data="stadiumData"></matches-list>
+    </li>
+    <li>
+        <div class="russia2018-component-header">
+            <h3 trans>Groups</h3>
+        </div>
+        <div class="russia2018-group-holder"
+             ng-repeat="group in groups track by group.id"
+             ng-class="{'active': $index === groupStats.selectedIndex}"
+             ng-click="selectGroup($index)">
+            <div class="russia2018-group-heading">
+                <h2>{{::group.name}}</h2>
+            </div>
+            <div class="russia2018-group-table-wrapper" ng-show="$index === groupStats.selectedIndex">
+                <div class="russia2018-group-table">
+                    <table>
+                        <tr>
+                            <td class="name">
+                                <div class="name-abs">
+                                    <strong trans>Teams</strong>
+                                </div>
+                            </td>
+                            <td>
+                                <strong trans>P</strong>
+                            </td>
+                            <td>
+                                <strong trans>W</strong>
+                            </td>
+                            <td>
+                                <strong trans>D</strong>
+                            </td>
+                            <td>
+                                <strong trans>L</strong>
+                            </td>
+                            <td>
+                                <strong trans>F</strong>
+                            </td>
+                            <td>
+                                <strong trans>A</strong>
+                            </td>
+                            <td>
+                                <strong trans>+/-</strong>
+                            </td>
+                            <td>
+                                <strong trans>Pt</strong>
+                            </td>
+                        </tr>
+                        <tr ng-repeat="teamInfo in groupStats.info[group.id] track by teamInfo.EntityId">
+                            <td class="name" ng-click="selectTeam(teamInfo.EntityId)">
+                                <div class="name-abs">
+                                    <strong class="index" ng-bind="teamInfo.PositionTotal"></strong>
+                                    <div class="russia2018-flag-small"
+                                         ng-style="{'background-image': 'url({{$root.conf.teamLogosPath}}e/s/{{Math.floor(teamInfo.EntityId / 2000)}}/{{teamInfo.EntityId}}.png)'}"></div>
+                                    <strong ng-bind="::teamInfo.EntityName|translate"></strong>
+                                </div>
+                            </td>
+                            <td ng-bind="teamInfo.PlayedTotal"></td>
+                            <td ng-bind="teamInfo.WinTotal"></td>
+                            <td ng-bind="teamInfo.DrawTotal"></td>
+                            <td ng-bind="teamInfo.LostTotal"></td>
+                            <td ng-bind="teamInfo.ScoredTotal"></td>
+                            <td ng-bind="teamInfo.AgainstTotal"></td>
+                            <td ng-bind="teamInfo.DifferenceTotal"></td>
+                            <td>
+                                <strong ng-bind="teamInfo.PointsTotal"></strong>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+
+                <div class="russia2018-gtst-markets" ng-show="!outright.game.is_blocked">
+                    <div class="market-title-v3">
+                        <h3 ng-show="groupData[group.gameId].market.events.length" ng-bind="::groupData[group.gameId].market.name"></h3>
+                    </div>
+                    <div class="l-b column-2">
+                        <div class="single-events-b-v3" ng-repeat="event in groupData[group.gameId].market.events track by event.id" title="{{event.name}}"
+                             ng-class="{'pointer-events-none': event.is_empty, 'active': isEventInBetSlip(event), 'blocked': (event.price | oddConvert:'decimal') == 1}"
+                             ng-click="bet(event, groupData[group.gameId].market, groupData[group.gameId].game)">
+                            <b class="p-v"
+                               ng-class="{'factor-top': event.price_change > 0, 'factor-bottom': event.price_change < 0}"
+                               ng-bind="event.price|oddConvert:$root.env.oddFormat:null:groupData[group.gameId].market.display_key"></b>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </li>
+    <li>
+        <div ng-class="{'kill-height-til-media': item.mediaHeight}"
+             ng-style="{'height': (item.height || item.mediaHeight), 'max-height': item.maxHeight}"
+                banner-slider interval="5000" category-slug=world-cup-russia></div>
+
+        <div class="russia2018-component-header second-color" ng-show="outright.markets[118542576] || outright.markets[121884776]">
+            <h3 trans>Special Bets</h3>
+        </div>
+        <div class="russia2018-specialbet" ng-if="outright.markets[118542576] && outright.markets[118542576].events">
+            <div class="russia2018-specialbet-title" trans>FIFA World Cup 2018 Winner</div>
+            <div class="russia2018-specialbet-chosen">
+                <div class="russia2018-specialbet-chosen-select">
+                    <div class="russia2018-specialbet-chosen-flag" ng-show="backgroundUrl"
+                         ng-style="{'background-image': backgroundUrl}"></div>
+                    <select ng-options="event as event.name for event in (outright.markets[118542576].events | limitTo:10) track by event.id"
+                            ng-init="optionsChange('winner')" ng-model="selected.winner" ng-change="optionsChange('winner', eventTeamIdMap[selected.winner.id])">
+                    </select>
+                </div>
+                <strong ng-bind="selected.winner.price|oddConvert:$root.env.oddFormat:null:outright.markets[118542576].display_key"></strong>
+            </div>
+            <div class="russia2018-specialbet-minor">
+                <div class="float-width" ng-click="bet(selected.winner, outright.markets[118542576], outright.game)">
+                    <b trans>Add to BetSlip</b>
+                </div>
+            </div>
+        </div>
+        <div class="russia2018-specialbet" ng-if="outright.markets[121884776] && outright.markets[121884776].events">
+            <div class="russia2018-specialbet-title" trans>FIFA World Cup 2018 Top Goalscorer</div>
+            <div class="russia2018-specialbet-chosen">
+                <div class="russia2018-specialbet-chosen-select">
+                    <select ng-options="event as event.name for event in (outright.markets[121884776].events | limitTo:10) track by event.id"
+                            ng-init="optionsChange('goalscorer')" ng-model="selected.goalscorer" ng-change="optionsChange('goalscorer')">
+                    </select>
+                </div>
+                <strong ng-bind="selected.goalscorer.price|oddConvert:$root.env.oddFormat:null:outright.markets[121884776].display_key"></strong>
+            </div>
+            <div class="russia2018-specialbet-minor">
+                <div class="float-width" ng-click="bet(selected.goalscorer, outright.markets[121884776], outright.game)">
+                    <b trans>Add to BetSlip</b>
+                </div>
+            </div>
+        </div>
+    </li>
+</ul>

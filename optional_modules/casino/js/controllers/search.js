@@ -46,7 +46,15 @@ VBET5.controller('casinoSearchCtrl', ['$rootScope', '$scope', '$timeout', '$loca
             var countryCode = $rootScope.geoCountryInfo && $rootScope.geoCountryInfo.countryCode || '';
             casinoData.getGames(null, null, countryCode, null, null, command).then(function (response) {
                 if (response && response.data && response.data.status !== -1) {
-                    var games = response.data.games;
+                    var games;
+                    if (CConfig.main.disableAgeRestrictedGames) {
+                        games = response.data.games.filter(function(game) {
+                            return !game.has_age_restriction || $rootScope.env.authorized;
+                        });
+                    } else {
+                        games = response.data.games;
+                    }
+
                     $scope.searchCommandResultGameIds = []; //needed for keyboard navigation
                     var i, length = games.length;
                     for (i = 0; i < length; i += 1) {
@@ -108,7 +116,7 @@ VBET5.controller('casinoSearchCtrl', ['$rootScope', '$scope', '$timeout', '$loca
         }
 
         if (page !== 'casino') {
-            var unregisterRouteChangeSuccess =  $rootScope.$on('$routeChangeSuccess', function () {
+            var unregisterRouteChangeSuccess =  $scope.$on('$routeChangeSuccess', function () {
                 if (!$location.$$replace) {
                     $rootScope.$broadcast(page + '.openGame', game, gameType);
                     unregisterRouteChangeSuccess();

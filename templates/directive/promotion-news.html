@@ -65,14 +65,14 @@
                                 alt=""></a>
 
                         </div>
-                        <div class="mini-social-icons">
+                        <div ng-if="$root.conf.recentbetsSharing" class="mini-social-icons">
                             <p trans>Share</p>
                             <ul>
                                 <li class="mini-facebook"><a
                                         ng-href="https://www.facebook.com/sharer/sharer.php?u={{selectedNews.permalink}}"
                                         target="_blank"></a></li>
                                 <li class="mini-twitter">
-                                    <a ng-href="https://twitter.com/share?text={{selectedNews.titleRaw|uri}}&url=1&via={{$root.conf.twitterAccount[env.lang] || $root.conf.twitterAccount.default || $root.conf.twitterAccount}}&hashtags={{$root.conf.twitterHashTag}},{{selectedNews.categories[0].title}}"
+                                    <a ng-href="https://twitter.com/share?text={{selectedNews.titleRaw|uri}}&url={{selectedNews.permalink}}&via={{$root.conf.twitterAccount[env.lang] || $root.conf.twitterAccount.default || $root.conf.twitterAccount}}&hashtags={{$root.conf.twitterHashTag}},{{selectedNews.categories[0].title}}"
                                        target="_blank"></a>
                                 </li>
                                 <li class="mini-google"><a

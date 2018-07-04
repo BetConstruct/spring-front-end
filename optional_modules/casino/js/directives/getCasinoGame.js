@@ -19,7 +19,7 @@ CASINO.directive('getCasinoGame', ['casinoData', function(casinoData) {
                 if (response && response.data && response.data.status !== -1) {
                     scope.game = response.data.games[0];
                 }
-            })
+            });
         }
     };
 }]);

@@ -173,10 +173,6 @@
                                         <p><span trans>Choose Help</span></p>
                                         <div class="drop-items-contain-b icon-view-box">
                                             <ul>
-                                                <!--<li id="start-demo-tour" ng-if="conf.header.demoTour.enabled && conf.header.haveHints && env.authorized" ng-click="StartDemoTour((isInCasino() && !conf.GmsPlatform) ? ['demo', 'casino'] : ['demo', 'header'], true)">
-                                                    <i class="icon-faq-new-b"></i>
-                                                    <span trans>View Hints</span>
-                                                </li>-->
                                                 <li ng-click="openFaq();$event.stopPropagation()" ng-if="conf.header.haveFaq && conf.header.haveFaq==true">
                                                     <i class="icon-faq-new-b"></i>
                                                     <span trans>FAQ</span>
@@ -333,7 +329,7 @@
         <div class="header-small-view-hide">
             <ul class="responsive-header-mainMenu-j">
                 <li class="header-left-small-b-j" ng-controller="cmsPagesCtrl" ng-init="loadBanners(getSlug('bannerSlugs.headerSmallBanner'));" ng-show="bannerObjects[getSlug('bannerSlugs.headerSmallBanner')]"  >
-                    <a ng-repeat="banner in bannerObjects[getSlug('bannerSlugs.headerSmallBanner')]"  ng-href="{{banner.link}}" target="{{banner.linktarget}}">
+                    <a ng-repeat="banner in bannerObjects[getSlug('bannerSlugs.headerSmallBanner')]" cms-analytics="banner" ng-href="{{banner.link}}" target="{{banner.linktarget}}">
                         <img ng-src="{{ banner.imageurl }}">
                     </a>
                 </li>
@@ -346,7 +342,7 @@
 </div>
 <!--header END-->
 
-<ng-include class="float-width" ng-show="currentPageHasSubHeader() && isInSports() && $location.path() !== '/' && $location.path() !== '/virtualsports/'" no-animate src="::'templates/sport/toptab.html'|fixPath"></ng-include>
+<ng-include class="float-width" ng-show="$root.currentPage.hasSubHeader && $root.currentPage.isInSports && $location.path() !== '/' && $location.path() !== '/virtualsports/'" no-animate src="::'templates/sport/toptab.html'|fixPath"></ng-include>
 
 <div class="guide header-wrapper" ng-if="subMenuItems && subMenuItems.length > 1">
     <div class="subtop-header-menu-j"  no-animate>

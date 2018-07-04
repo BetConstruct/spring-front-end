@@ -13,25 +13,6 @@ VBET5.controller('headerCtrl', ['$scope', '$rootScope', '$sce', '$window', '$loc
 
     /**
      * @ngdoc method
-     * @name headerInit
-     * @methodOf vbet5.controller:headerCtrl
-     * @description  header initialization.
-     * starts to listen needed events
-     */
-    $scope.headerInit = function headerInit(){
-        $scope.$on('login.loggedIn', setCurrencyConfig);
-        $scope.$on('loggedIn', setCurrencyConfig);
-        $scope.$on('login.loggedOut', setCurrencyConfig);
-        $scope.$on('gotoSelectedGame', gotoSelectedGame);
-        //this isn't really the best place for this listener
-        $scope.$on('$routeChangeSuccess', routeChangeSuccess);
-        $scope.$on('youtube.videourl', handleVideoUrl);
-
-        TimeoutWrapper(setCurrencyConfig, 1000); //call once in the beginning(with delay to let user login happen if user is logged in)
-    };
-
-    /**
-     * @ngdoc method
      * @name setCurrencyConfig
      * @methodOf vbet5.controller:headerCtrl
      * @description
@@ -152,8 +133,21 @@ VBET5.controller('headerCtrl', ['$scope', '$rootScope', '$sce', '$window', '$loc
      * @description Converts youtube URL to trusted
      */
     function handleVideoUrl(event, url) {
-        url = url.replace('watch?v=', 'embed/')
+        url = url.replace('watch?v=', 'embed/');
         $scope.youtubeVideoUrl = $sce.trustAsResourceUrl(url);
+    }
+
+    /**
+     * @ngdoc method
+     * @name showGoogleMap
+     * @methodOf vbet5.controller:headerCtrl
+     * @description handles map data
+     */
+    function showGoogleMap(event, data) {
+        $scope.mapData = {
+            name: data.name || 'Stadium',
+            coords: '[' + data.latitude + ', ' + data.longitude + ']'
+        };
     }
 
     /**
@@ -170,4 +164,24 @@ VBET5.controller('headerCtrl', ['$scope', '$rootScope', '$sce', '$window', '$loc
         }
         console.log("$routeChangeSuccess:", $location.path());
     }
+
+    /**
+     * @ngdoc method
+     * @name headerInit
+     * @methodOf vbet5.controller:headerCtrl
+     * @description  header initialization.
+     * starts to listen needed events
+     */
+    $scope.headerInit = function headerInit(){
+        $scope.$on('login.loggedIn', setCurrencyConfig);
+        $scope.$on('loggedIn', setCurrencyConfig);
+        $scope.$on('login.loggedOut', setCurrencyConfig);
+        $scope.$on('gotoSelectedGame', gotoSelectedGame);
+        //this isn't really the best place for this listener
+        $scope.$on('$routeChangeSuccess', routeChangeSuccess);
+        $scope.$on('youtube.videourl', handleVideoUrl);
+        $scope.$on('google.map', showGoogleMap);
+
+        TimeoutWrapper(setCurrencyConfig, 1000); //call once in the beginning(with delay to let user login happen if user is logged in)
+    };
 }]);

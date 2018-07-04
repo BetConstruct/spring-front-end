@@ -1,4 +1,5 @@
 <div class="checkbox-separator">
+    <ng-include ng-if="conf.gdpr.enabled" src="::'templates/slider/registration/gdpr.html'|fixPath"></ng-include>
     <div class="tooltip-wrapper-j">
         <div class="mini-checkbox-b" ng-init="resetError[agree] = true" ng-class="{'error': !resetError[agree] && registerform.agree.$error.required}">
             <input ng-model="registrationData.agree" type="checkbox" id="checkbox-id1" name="agree" required>

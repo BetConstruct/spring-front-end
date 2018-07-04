@@ -53,18 +53,29 @@
   box-sizing: border-box;
   white-space: normal;
 }
-.register-steps-b{
+
+.register-container  {
   float: left;
-  width: 360px;
-  display: block;
+  display: table;
+  width: 100%;
   margin: 20px 0;
-  background: $popup-form-palette;
   box-shadow: 0 0 0 6px rgba($skin-palette-13, 0.15);
+  animation: popup-enter .3s ease-in-out;
+  transition: 200ms width;
+  > ng-include {
+    display: table-cell;
+    vertical-align: top;
+    position: relative;
+  }
+}
+.register-steps-b {
+  width: 360px;
+  max-width: 360px;
+  display: table-cell;
+  background: $popup-form-palette;
   position: relative;
   box-sizing: border-box;
   z-index: 33;
-  animation: popup-enter .3s ease-in-out;
-  transition: 200ms width;
   overflow: hidden;
   white-space: nowrap;
   font-size: 0;
@@ -82,6 +93,7 @@
   }
   &.two-column {
     width: 650px;
+    max-width: 650px;
   }
   .reg-s-steps {
     display: inline-block;
@@ -100,7 +112,7 @@
       direction: rtl;
     }
     &.active {
-      max-height: 150vh;
+      max-height: 450vh;
       opacity: 1;
     }
     &.show-second {
@@ -145,6 +157,145 @@
     }
   }
 }
+.reg-commercial-banner {
+  float: left;
+  width: 360px;
+  height: 100%;
+  display: block;
+  text-align: left;
+}
+.reg-commercial-scroll {
+  float: left;
+  width: 100%;
+  height: 100%;
+  padding: 20px 0 41px 30px;
+  box-sizing: border-box;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  background: $skin-palette-12;
+}
+.reg-commercial-content {
+  float: left;
+  width: 100%;
+  height: 100%;
+  padding: 0 4px 0 0;
+  box-sizing: border-box;
+  @include scroll(auto);
+  > a {
+    float: left;
+    display: block;
+    width: 100%;
+    img {
+      float: left;
+      width: 100%;
+      display: block;
+    }
+  }
+  > div {
+    float: left;
+    width: 100%;
+    > p {
+      float: left;
+      width: 100%;
+      color: $text-palette-4;
+      padding: 0 4px 0 0;
+      box-sizing: border-box;
+      white-space: normal;
+      font: 12px/16px $font-f;
+      @include rtl {
+        padding: 0 0 0 4px;
+        text-align: right;
+      }
+      & + p {
+        margin: 8px 0 0;
+      }
+    }
+  }
+}
+.commercial-title {
+  float: left;
+  width: 100%;
+  margin: 26px 0 20px;
+  color: $text-palette-3;
+  font: 16px/18px $font-f;
+  text-transform: uppercase;
+  white-space: normal;
+  line-height: 22px;
+}
+.reg-steps-footer {
+  float: left;
+  width: 100%;
+  height: 41px;
+  padding: 0 10px 0 30px;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  background: $skin-palette-12;
+  box-sizing: border-box;
+  border-top: 1px solid rgba($popup-overlay-background, 0.44);
+}
+.reg-pagination {
+  float: left;
+  line-height: 41px;
+  @include rtl {
+    float: right;
+  }
+  small {
+    display: inline-block;
+    vertical-align: middle;
+    width: 10px;
+    height: 10px;
+    margin: 0 2px;
+    cursor: pointer;
+    border-radius: 50%;
+    background: set-color($skin-palette-12);
+    transition: 250ms background;
+    &:hover {
+      background: set-color(lighten($skin-palette-12,10));
+    }
+    &.active {
+      background: $hero-color;
+    }
+  }
+}
+.red-social {
+  float: right;
+  line-height: 41px;
+  @include rtl {
+    float: left;
+  }
+  > a {
+    display: inline-block;
+    vertical-align: middle;
+    width: 24px;
+    height: 24px;
+    margin: 0 3px;
+    color: $text-palette-6;
+    text-decoration: none;
+    border-radius: 50%;
+    transition: color 250ms;
+    text-align: center;
+    font-size: 30px;
+    line-height: 24px;
+    position: relative;
+    &:before {
+      position: absolute;
+      top: 0;
+      left: -2px;
+      width: 100%;
+      height: 100%;
+      @include rtl {
+        left: auto;
+        right: -2px;
+      }
+    }
+    &:hover {
+      color: lighten($text-palette-6,15);
+    }
+  }
+}
+
 .reg-s-pagination {
   float: left;
   width: 100%;
@@ -319,7 +470,7 @@
 }
 .input-separator-b input,
 .form-register-layout.signin .field-separator .form-text input,
-.register-steps-b input,
+.register-steps-b input:not([type="radio"]),
 .register-steps-b .registration-form-city input,
 .register-steps-b .reg-form-input-number input,
 .reg-list-item-wrapper-j input,
@@ -407,7 +558,7 @@
 }
 
 
-.register-steps-b label{
+.register-steps-b label:not(.label-reg-radio) {
   float: left;
   width: 100%;
   text-align: left;
@@ -418,11 +569,14 @@
     direction: rtl;
     text-align: right;
   }
+  > span {
+    white-space: normal;
+  }
 }
 .register-steps-b label.wrap{
   white-space: normal;
 }
-.registration-list-columns-j .reg-list-item-wrapper-j, .register-steps-b label {
+.registration-list-columns-j .reg-list-item-wrapper-j, .register-steps-b label:not(.label-reg-radio) {
   color: opacify(rgba(set-color($popup-form-palette),0.39), $popup-form-opacify);
   font: 12px/14px $font-f;
 }
@@ -505,6 +659,7 @@
   right: 15px;
   left: auto;
   z-index: 10;
+  margin: 0;
   @include rtl {
     left: 15px;
     right: auto;
@@ -693,6 +848,94 @@
   @include rtl {
     left: auto;
     right: 0;
+  }
+}
+.reg-s-steps.step-1:not(.show-second) {
+  .reg-radio {
+    width: calc(100% + 5px);
+    margin-left: -5px;
+    > div {
+      width: 50%;
+      padding: 0 10px;
+      box-sizing: border-box;
+    }
+  }
+}
+.reg-radio {
+  float: left;
+  width: 100%;
+  > h2 {
+    float: left;
+    width: 100%;
+    margin: 4px 0 10px;
+    color: opacify(rgba(set-color($popup-form-palette),0.39), $popup-form-opacify);
+    font: 12px/14px $font-f;
+  }
+  > div {
+    float: left;
+    width: 100%;
+    margin: 0 0 10px;
+    font: 12px/14px $font-f;
+    > p {
+      float: left;
+      padding: 0;
+      text-align: left;
+      color: opacify(rgba(set-color($popup-form-palette),0.39), $popup-form-opacify);
+    }
+    > input[type="radio"] {
+      display: none;
+      &:checked + label:after {
+        display: block;
+      }
+    }
+    > label {
+      float: right;
+      width: auto;
+      margin: 0;
+      padding: 0 0 0 16px;
+      box-sizing: border-box;
+      cursor: pointer;
+      position: relative;
+      color: opacify(rgba(set-color($popup-form-palette),0.39), $popup-form-opacify);
+      > span {
+        float: left;
+        display: block;
+        margin: 0 0 0 4px;
+      }
+      &:before {
+        content: "";
+        width: 14px;
+        height: 14px;
+        position: absolute;
+        left: 0;
+        top: 0;
+        display: block;
+        border-radius: 50%;
+        background: rgba(0, 0, 0, 0.37);
+      }
+      &:after {
+        content: "";
+        width: 6px;
+        height: 6px;
+        position: absolute;
+        left: 4px;
+        top: 4px;
+        display: none;
+        border-radius: 50%;
+        background: lighten( desaturate( adjust-hue( $header-brand-color-1, 9deg ), 51 ), 40 );
+      }
+      & ~ label {
+        margin: 0 10px 0 0;
+      }
+    }
+    &:last-child {
+      margin: 0 0 20px;
+    }
+    &.error {
+      > p, > label {
+        color: #9d2c45;
+      }
+    }
   }
 }
 .select-wrap-contain{
@@ -1077,7 +1320,8 @@ label.sign-in-checkbox-j {
 .form-register-layout.partial-registration {
   .register-steps-b {
     width: 660px;
-    label {
+    max-width: 660px;
+    label:not(.label-reg-radio) {
       margin-top: 12px;
     }
     .mini-checkbox-b > label {
@@ -1383,7 +1627,7 @@ $disable-middle-name: false !default;
       content: '';
       display: block;
       box-sizing: border-box;
-      border: 1px solid $skin-palette-5;
+      border: 1px solid $registration-fields-background-border;
       width: 16px;
       height: 16px;
       position: absolute;
@@ -1489,4 +1733,26 @@ $disable-middle-name: false !default;
   input {
     display: none;
   }
+}
+
+
+.reg-steps-padding {
+  float: left;
+  max-width: 1010px;
+  width: 1010px;
+  height: 600px;
+  margin: 0 auto;
+  padding: 20px 10px;
+  box-sizing: border-box;
+}
+.reg-steps-left,
+.reg-steps-right {
+  float: left;
+  width: 50%;
+  height: 100%;
+}
+
+.reg-steps-left {
+  background: #121623;
+
 }

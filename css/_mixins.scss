@@ -45,6 +45,7 @@ $delete-cache: '?v=' + random(666);
   }
   &::-webkit-scrollbar {
     width: $width;
+    height: $width;
     background: $background;
     border-radius: $border-radius;
   }
@@ -88,12 +89,6 @@ $delete-cache: '?v=' + random(666);
         box-shadow: -3px 0 0 $sports-color inset;
       }
     }
-    + .region-item-row-v3 .single-game-item-v3.active:before {
-      box-shadow: 2px 0 0 $sports-color inset;
-      @include rtl {
-        box-shadow: -2px 0 0 $sports-color inset;
-      }
-    }
   }
   .game-header-view-v3.#{$sports-name} {
     box-shadow: 0 -1px 0 $sports-color inset, inset 0 -2px 0 darken( adjust-hue( $c16-sp-11, -18deg ), 2 );
@@ -118,6 +113,7 @@ $delete-cache: '?v=' + random(666);
     background: -moz-linear-gradient(left, rgba($sports-color,0.635) 0%, rgba($c16-sp-9,1) 60%,  rgba($c16-sp-9,1) 100%);
     background: -webkit-linear-gradient(left, rgba($sports-color,0.635) 0%, rgba($c16-sp-9,1) 60%,  rgba($c16-sp-9,1) 100%);
     background: linear-gradient(to right, rgba($sports-color,0.635) 0%, rgba($c16-sp-9,1) 60%,  rgba($c16-sp-9,1) 100%);
+    box-shadow: 2px 0 0 $sports-color inset;
   }
 }
 @mixin liveScoreBackgrounds($alias, $imageName: $alias, $imagePath: "../../../images/live-score/") {

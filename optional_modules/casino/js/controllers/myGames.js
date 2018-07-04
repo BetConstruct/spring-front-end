@@ -162,7 +162,7 @@ CASINO.controller('casinoMyGamesCtrl', ['$scope', '$rootScope', 'Storage', '$loc
                 if (domainSpecificPrefix) {
                     $window.location.href =  domainSpecificPrefix + "/?game=" + game.id + '&type=' + gameType;
                 } else {
-                    var unregisterRouteChangeSuccess =  $rootScope.$on('$routeChangeSuccess', function () {
+                    var unregisterRouteChangeSuccess =  $scope.$on('$routeChangeSuccess', function () {
                         if (!$location.$$replace) {
                             $rootScope.$broadcast(page + '.openGame', game, gameType);
                             unregisterRouteChangeSuccess();

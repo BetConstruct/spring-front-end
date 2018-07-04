@@ -676,7 +676,5 @@ angular.module('vbet5.betting').controller('gameCtrl', ['$rootScope', '$scope', 
      * @description Get first market from markets object / array
      * @param {Object} markets array
      */
-    $scope.getFirstMarket = function getFirstMarket(markets){
-        return Utils.getFirstMarket(markets, $filter);
-    };
+    $scope.getFirstMarket = Utils.getFirstMarket;
 }]);

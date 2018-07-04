@@ -380,6 +380,8 @@ $skin-palette-8: $skin-palette-8 !default;
 }
 .input-group .dropdown-menu table {
     background: $skin-palette-8;
+    box-shadow: 0 0 0 3px rgba(0,0,0,0.2);
+    border-radius: 0;
 }
 .input-group .dropdown-menu table tr th{
     background: $skin-palette-8;
@@ -448,7 +450,7 @@ $skin-palette-8: $skin-palette-8 !default;
     }
 }
 .date-p:before{
-    font: 16px/18px "icomoon";
+    font: 12px/18px "icomoon";
     content: "\e907";
     color: $text-palette-4;
 }

@@ -102,7 +102,8 @@
 
                                 <div class="cashout-print-contain">
                                    <div class="cashout-button-resentbets" ng-show="((bet.events[0].is_live == 0 && !!partnerConfig.is_cashout_prematch) || (bet.events[0].is_live == 1 && !!partnerConfig.is_cashout_live)) && bet.outcome == 0 && bet.cash_out !==undefined">
-                                        <button ng-click="broadcast('open.cashoutDialog', bet)" ng-disabled="!bet.cash_out || !bet.cashoutEnabled" title="{{bet.cash_out ? bet.cash_out + ' ' + bet.currency  : ('Cash-out Temporary unavailable'|translate)}}">
+                                        <button ng-click="broadcast('open.cashoutDialog', {bet: bet, dateRange: betHistoryParams.dateRange, selectedUpcomingPeriod: selectedUpcomingPeriod})"
+                                                ng-disabled="!bet.cash_out || !bet.cashoutEnabled" title="{{bet.cash_out ? bet.cash_out + ' ' + bet.currency  : ('Cash-out Temporary unavailable'|translate)}}">
                                             <b trans>Cash-out</b>
                                             <b ng-if="bet.cash_out">{{bet.cash_out}} {{bet.currency}}</b>
                                         </button>
@@ -137,5 +138,4 @@
 
     <vbet-loader class="contein-recentbets" ng-show="!myBetsLoaded && !errorLoadingBets"></vbet-loader>
 
-    <ng-include src="::'templates/dialogs/cashout.html'|fixPath"></ng-include>
 </div>

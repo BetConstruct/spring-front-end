@@ -1,15 +1,14 @@
 <div class="classic-view-wrapper-v3" ng-controller="classicViewMainCtrl" ng-class="{'betslip-expanded': (env.live ? resizeButton.live : resizeButton.prematch)}">
+    <!-- System Calculator-->
+    <div id="system-claculator-container"
+         ng-if="$root.showSystemCalculator"
+         draggable
+         allow-other-mouse-events
+         drag-from="calculator-draggable-header">
+        <include-template template-path="templates/sport/classic/systemCalculator.html"></include-template>
+    </div>
+    <!-- System Calculator-->
     <div class="classic-view-column-v3 {{leftMenuClosed ? 'left-menu-closed-v3' : ''}}">
-
-            <!-- System Calculator-->
-            <div id="system-claculator-container"
-                 ng-if="$root.showSystemCalculator"
-                 draggable
-                 allow-other-mouse-events
-                 drag-from="calculator-draggable-header">
-                <include-template template-path="templates/sport/classic/systemCalculator.html"></include-template>
-            </div>
-            <!-- System Calculator-->
 
             <!--left-column-->
             <div ng-controller="classicViewLeftController" class="left-column-v3">
@@ -17,7 +16,7 @@
                     <div class="l-t-box">
                         <div class="view-switcher-v3">
                             <ul>
-                                <li ng-class="{'active': $location.path() === '/dashboard/'}" ng-show="conf.dashboard.showLeftDashboard" title="Dashboard">
+                                <li ng-class="{'active': $location.path() === '/dashboard/'}" ng-show="conf.dashboard.showLeftDashboard" title="Dashboard" trans="attr-only">
                                     <button ng-click="$location.path('/dashboard/')">
                                         <i class="dashboard-icon-b"></i>
                                     </button>
@@ -57,7 +56,7 @@
                                         <p class="bigbet-switcher-item" ng-class="{'active': bigBetFilter[+env.live]}" ng-click="toggleBigBetFilter()"><i></i></p>
                                     </li>
                                     <li ng-show="!bigBetFilter['0'] && !env.live && $location.path() !== '/dashboard/'"
-                                        ng-if="isMultiViewVisible"
+                                        ng-if="isMultiViewVisible && !conf.disablePreMatchMultiSelect"
                                         ng-click="toggleMultiView()"
                                         ng-class="{'active': env.preMatchMultiSelection}"
                                         title="Multiselect"
@@ -82,6 +81,7 @@
                                     </li>
                                     <li ng-show="validPaths.indexOf('#/multiview') !== -1 && env.live && $location.path() !== '/dashboard/' && conf.liveMultiViewEnabled"
                                         title="Multiview"
+                                        trans="attr-only"
                                         ng-class="{'active': $location.path() === '/multiview/'}"
                                         ng-click="$location.path() === '/multiview/' ? $location.path('/sport') : $location.path('/multiview')">
                                         <i class="cms-jcon-two"></i>
@@ -91,7 +91,7 @@
 
                             <div class="second-row-filter-v3">
                                 <include-template template-path="templates/search/sport.html" class="search-box-v3" ng-if="conf.enableMenuSearch"></include-template>
-                                <div class="closed-left-nav-v3" ng-click="toggleLeftMenu(); collapseExpandButton = !collapseExpandButton" title="{{collapseExpandButton ? 'Expand' : 'Collapse'}}"></div>
+                                <div class="closed-left-nav-v3" ng-click="toggleLeftMenu(); collapseExpandButton = !collapseExpandButton" title="{{(collapseExpandButton ? 'Expand' : 'Collapse')|translate}}"></div>
 
                             </div>
                         </div>
@@ -205,7 +205,7 @@
                                                             <div class="team-data-tc">
                                                                 <div class="time-game-v3 " ng-class="{'animation-rotate-soon' : prematchGame.type === 2 && prematchGame.sport.alias === 'Mma'}">
                                                                     <p>{{prematchGame.start_ts|formatDate:'noLocaleTime':null:$root.env.timeFormat}}</p>
-                                                                    <span trans>soon</span>
+                                                                    <span class="soon-v" trans>soon</span>
                                                                 </div>
                                                             </div>
                                                             <div class="team-name-tc">
@@ -222,10 +222,7 @@
                                                     </div>
                                                     <div class="game-icons-view-list-v3">
                                                         <ul>
-                                                            <!--<li class="tv-icon-market-v3" ></li>-->
-                                                            <li class="statistic-icon-market-v3" statistics-on-hover stats-game ="{'game': prematchGame, 'competition': prematchGameViewData[0].name}" popup-height="" popup-width="" ng-show="conf.enableH2HStat && prematchGame.is_stat_available" ng-click="openStatistics(prematchGame);$event.stopPropagation();" title="Statistics" trans>
-
-                                                            </li>
+                                                            <li class="statistic-icon-market-v3" statistics-on-hover stats-game ="{'game': prematchGame, 'competition': prematchGameViewData[0].name}" popup-height="" popup-width="" ng-show="conf.enableH2HStat && prematchGame.is_stat_available" ng-click="openStatistics(prematchGame);$event.stopPropagation();" title="Statistics" trans></li>
                                                             <li class="favorite-icon-market-v3"  ng-show="!env.preMatchMultiSelection || outrightSelected" ng-class="{'active': myGames.indexOf(prematchGame.id) !== -1}" ng-click="toggleGameFavorite(prematchGame); $event.stopPropagation()"></li>
                                                             <li ng-show="conf.showGameIds && prematchGame.game_number" title="game number" class="game-id-v3">№{{prematchGame.game_number}}</li>
                                                         </ul>
@@ -237,56 +234,54 @@
                                                 <div class="arrow-icon-b-v3"></div>
                                             </div>
                                         </div>
-                                        <div class="events-list-view-v3">
-                                            <div ng-if="prematchGame.sport.alias !== 'Soccer' && selectedMarketFilter === marketFilterTypes[0]" class="l-b column-{{ prematchGame.firstMarket.col_count || (prematchGame.firstMarket.type == 'P1XP2' ? 3 : '2 two-odds') }}" ng-class="{'two-odds': prematchGame.firstMarket.col_count == 2}">
-                                                <div class="single-events-b-v3" title="{{prematchGame.firstMarket.events.P1.name}}"
-                                                     ng-mouseover="displayEventLimit(prematchGame.firstMarket.events.P1, prematchGame, false, prematchGame.firstMarket)" ng-mouseleave="cancelDisplayEventLimit(prematchGame.firstMarket.events.P1)"
-                                                     ng-show="prematchGame.firstMarket.events.P1"
-                                                     ng-click="bet(prematchGame.firstMarket.events.P1, prematchGame.firstMarket, prematchGame)"
-                                                     ng-class="{'active': isEventInBetSlip(prematchGame.firstMarket.events.P1), 'blocked': ((prematchGame.firstMarket.events.P1.price | oddConvert:'decimal') == 1 || prematchGame.is_blocked)}">
-                                                    <div class="max-bet-tooltip-v3" ng-show="env.authorized && event.maxBet !== undefined" ng-class="{'maxbet-enabled': env.authorized}">
-                                                        <p>Max: <b ng-bind="conf.onlyDecimalStakeAmount ? Math.floor(event.maxBet) : event.maxBet"></b> {{profile.currency_name|currency }}</p>
-                                                    </div>
-                                                    <b class="p-v" ng-show="(prematchGame.firstMarket.events.P1.price | oddConvert:'decimal') !== 1 && !prematchGame.is_blocked"
-                                                           ng-class="{'factor-top': event.price_change > 0, 'factor-bottom': event.price_change < 0}">{{prematchGame.firstMarket.events.P1.price|oddConvert:env.oddFormat:null:'WINNER'}}</b>
+                                        <div ng-if="prematchGame.sport.alias !== 'Soccer' && selectedMarketFilter === marketFilterTypes[0]" class="l-b column-{{ prematchGame.firstMarket.col_count || (prematchGame.firstMarket.type == 'P1XP2' ? 3 : '2 two-odds') }}" ng-class="{'two-odds': prematchGame.firstMarket.col_count == 2}">
+                                            <div class="single-events-b-v3" title="{{prematchGame.firstMarket.events.P1.name}}"
+                                                 ng-mouseover="displayEventLimit(prematchGame.firstMarket.events.P1, prematchGame, false, prematchGame.firstMarket)" ng-mouseleave="cancelDisplayEventLimit(prematchGame.firstMarket.events.P1)"
+                                                 ng-show="prematchGame.firstMarket.events.P1"
+                                                 ng-click="bet(prematchGame.firstMarket.events.P1, prematchGame.firstMarket, prematchGame)"
+                                                 ng-class="{'active': isEventInBetSlip(prematchGame.firstMarket.events.P1), 'blocked': ((prematchGame.firstMarket.events.P1.price | oddConvert:'decimal') == 1 || prematchGame.is_blocked)}">
+                                                <div class="max-bet-tooltip-v3" ng-show="env.authorized && event.maxBet !== undefined" ng-class="{'maxbet-enabled': env.authorized}">
+                                                    Max: <b ng-bind="conf.onlyDecimalStakeAmount ? Math.floor(event.maxBet) : event.maxBet"></b> {{profile.currency_name|currency }}
                                                 </div>
-                                                <div class="single-events-b-v3" title="{{prematchGame.firstMarket.events.X.name}}"
-                                                     ng-mouseover="displayEventLimit(prematchGame.firstMarket.events.X, prematchGame, false, prematchGame.firstMarket)" ng-mouseleave="cancelDisplayEventLimit(prematchGame.firstMarket.events.X)"
-                                                     ng-show="prematchGame.firstMarket.events.X"
-                                                     ng-click="bet(prematchGame.firstMarket.events.X, prematchGame.firstMarket, prematchGame)"
-                                                     ng-class="{'active': isEventInBetSlip(prematchGame.firstMarket.events.X), 'blocked': ((prematchGame.firstMarket.events.X.price | oddConvert:'decimal') == 1 || prematchGame.is_blocked)}">
-                                                    <div class="max-bet-tooltip-v3" ng-show="env.authorized && event.maxBet !== undefined" ng-class="{'maxbet-enabled': env.authorized}">
-                                                        <p>Max: <b ng-bind="conf.onlyDecimalStakeAmount ? Math.floor(event.maxBet) : event.maxBet"></b> {{profile.currency_name|currency }}</p>
-                                                    </div>
-                                                    <b class="p-v" ng-show="(prematchGame.firstMarket.events.X.price | oddConvert:'decimal') != 1 && !prematchGame.is_blocked"
-                                                            ng-class="{'factor-top': event.price_change > 0, 'factor-bottom': event.price_change < 0}">{{prematchGame.firstMarket.events.X.price|oddConvert:env.oddFormat:null:'WINNER'}}</b>
-                                                </div>
-                                                <div class="single-events-b-v3" title="{{prematchGame.firstMarket.events.P2.name}}"
-                                                     ng-mouseover="displayEventLimit(prematchGame.firstMarket.events.P2, prematchGame, false, prematchGame.firstMarket)" ng-mouseleave="cancelDisplayEventLimit(prematchGame.firstMarket.events.P2)"
-                                                     ng-show="prematchGame.firstMarket.events.P2"
-                                                     ng-click="bet(prematchGame.firstMarket.events.P2, prematchGame.firstMarket, prematchGame)"
-                                                     ng-class="{'active': isEventInBetSlip(prematchGame.firstMarket.events.P2), 'blocked': ((prematchGame.firstMarket.events.P2.price | oddConvert:'decimal') == 1 || prematchGame.is_blocked)}">
-                                                    <div class="max-bet-tooltip-v3" ng-show="env.authorized && event.maxBet !== undefined" ng-class="{'maxbet-enabled': env.authorized}">
-                                                        <p>Max: <b ng-bind="conf.onlyDecimalStakeAmount ? Math.floor(event.maxBet) : event.maxBet"></b> {{profile.currency_name|currency }}</p>
-                                                    </div>
-                                                    <b class="p-v" ng-show="(prematchGame.firstMarket.events.P2.price | oddConvert:'decimal') != 1 && !prematchGame.is_blocked"
-                                                           ng-class="{'factor-top': event.price_change > 0, 'factor-bottom': event.price_change < 0}">{{prematchGame.firstMarket.events.P2.price|oddConvert:env.oddFormat:null:'WINNER'}}</b>
-                                                </div>
+                                                <b class="p-v" ng-show="(prematchGame.firstMarket.events.P1.price | oddConvert:'decimal') !== 1 && !prematchGame.is_blocked"
+                                                       ng-class="{'factor-top': event.price_change > 0, 'factor-bottom': event.price_change < 0}">{{prematchGame.firstMarket.events.P1.price|oddConvert:env.oddFormat:null:'WINNER'}}</b>
                                             </div>
-                                            <div ng-if="prematchGame.sport.alias === 'Soccer'" class="l-b column-{{(selectedMarketFilter.type == 'P1XP2' || selectedMarketFilter.type == '1X12X2' || selectedMarketFilter.type == 'CornersResult') && prematchGame.filteredMarkets[selectedMarketFilter.type].realType != 'P1P2' ? 3 : '2'}}">
+                                            <div class="single-events-b-v3" title="{{prematchGame.firstMarket.events.X.name}}"
+                                                 ng-mouseover="displayEventLimit(prematchGame.firstMarket.events.X, prematchGame, false, prematchGame.firstMarket)" ng-mouseleave="cancelDisplayEventLimit(prematchGame.firstMarket.events.X)"
+                                                 ng-show="prematchGame.firstMarket.events.X"
+                                                 ng-click="bet(prematchGame.firstMarket.events.X, prematchGame.firstMarket, prematchGame)"
+                                                 ng-class="{'active': isEventInBetSlip(prematchGame.firstMarket.events.X), 'blocked': ((prematchGame.firstMarket.events.X.price | oddConvert:'decimal') == 1 || prematchGame.is_blocked)}">
+                                                <div class="max-bet-tooltip-v3" ng-show="env.authorized && event.maxBet !== undefined" ng-class="{'maxbet-enabled': env.authorized}">
+                                                    Max: <b ng-bind="conf.onlyDecimalStakeAmount ? Math.floor(event.maxBet) : event.maxBet"></b> {{profile.currency_name|currency }}
+                                                </div>
+                                                <b class="p-v" ng-show="(prematchGame.firstMarket.events.X.price | oddConvert:'decimal') != 1 && !prematchGame.is_blocked"
+                                                        ng-class="{'factor-top': event.price_change > 0, 'factor-bottom': event.price_change < 0}">{{prematchGame.firstMarket.events.X.price|oddConvert:env.oddFormat:null:'WINNER'}}</b>
+                                            </div>
+                                            <div class="single-events-b-v3" title="{{prematchGame.firstMarket.events.P2.name}}"
+                                                 ng-mouseover="displayEventLimit(prematchGame.firstMarket.events.P2, prematchGame, false, prematchGame.firstMarket)" ng-mouseleave="cancelDisplayEventLimit(prematchGame.firstMarket.events.P2)"
+                                                 ng-show="prematchGame.firstMarket.events.P2"
+                                                 ng-click="bet(prematchGame.firstMarket.events.P2, prematchGame.firstMarket, prematchGame)"
+                                                 ng-class="{'active': isEventInBetSlip(prematchGame.firstMarket.events.P2), 'blocked': ((prematchGame.firstMarket.events.P2.price | oddConvert:'decimal') == 1 || prematchGame.is_blocked)}">
+                                                <div class="max-bet-tooltip-v3" ng-show="env.authorized && event.maxBet !== undefined" ng-class="{'maxbet-enabled': env.authorized}">
+                                                    Max: <b ng-bind="conf.onlyDecimalStakeAmount ? Math.floor(event.maxBet) : event.maxBet"></b> {{profile.currency_name|currency }}
+                                                </div>
+                                                <b class="p-v" ng-show="(prematchGame.firstMarket.events.P2.price | oddConvert:'decimal') != 1 && !prematchGame.is_blocked"
+                                                       ng-class="{'factor-top': event.price_change > 0, 'factor-bottom': event.price_change < 0}">{{prematchGame.firstMarket.events.P2.price|oddConvert:env.oddFormat:null:'WINNER'}}</b>
+                                            </div>
+                                        </div>
+                                        <div ng-if="prematchGame.sport.alias === 'Soccer'" class="l-b column-{{(selectedMarketFilter.type == 'P1XP2' || selectedMarketFilter.type == '1X12X2' || selectedMarketFilter.type == 'CornersResult') && prematchGame.filteredMarkets[selectedMarketFilter.type].realType != 'P1P2' ? 3 : '2'}}">
                                                 <div class="single-events-b-v3" title="{{event.name}}{{displayBase(event, prematchGame.filteredMarkets[selectedMarketFilter.type])}}"
                                                      ng-repeat="event in prematchGame.filteredMarkets[selectedMarketFilter.type + selectedMarketFilter.base].events|orderBy:'order'"
                                                      ng-mouseover="displayEventLimit(event, prematchGame, false, prematchGame.firstMarket)" ng-mouseleave="cancelDisplayEventLimit(event)"
                                                      ng-show="event && event.name"
-                                                     ng-click="bet(event, prematchGame.filteredMarkets[selectedMarketFilter.type][0], prematchGame)"
+                                                     ng-click="bet(event, prematchGame.filteredMarkets[selectedMarketFilter.type][0], prematchGame);"
                                                      ng-class="{'active': isEventInBetSlip(event), 'blocked': ((event.price | oddConvert:'decimal') == 1 || prematchGame.is_blocked)}">
                                                     <div class="max-bet-tooltip-v3" ng-show="env.authorized && event.maxBet !== undefined" ng-class="{'maxbet-enabled': env.authorized}">
-                                                        <p>Max: <b ng-bind="conf.onlyDecimalStakeAmount ? Math.floor(event.maxBet) : event.maxBet"></b> {{profile.currency_name|currency }}</p>
+                                                        Max: <b ng-bind="conf.onlyDecimalStakeAmount ? Math.floor(event.maxBet) : event.maxBet"></b> {{profile.currency_name|currency }}
                                                     </div>
                                                     <b class="p-v" ng-show="(event.price | oddConvert:'decimal') != 1 && !prematchGame.is_blocked" ng-class="{'factor-top': event.price_change > 0, 'factor-bottom': event.price_change < 0}">{{event.price|oddConvert:env.oddFormat:null:prematchGame.filteredMarkets[selectedMarketFilter.type + selectedMarketFilter.base][0].display_key}}</b>
                                                 </div>
                                             </div>
-                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -415,7 +410,7 @@
                     <ul>
                         <li>
                             <div class="time-filter-v3"
-                                 ng-show="calculatedConfigs.sportEnabled && conf.enableSportsbookLayoutSwitcher && isInSports()"
+                                 ng-show="calculatedConfigs.sportEnabled && conf.enableSportsbookLayoutSwitcher && $root.currentPage.isInSports"
                                  ng-class="{'active': showLayoutSubMenu}"
                                  ng-click="showLayoutSubMenu = !showLayoutSubMenu"
                                  state-flag-var="showLayoutSubMenu" hide-on-click>
@@ -501,10 +496,14 @@
                     <!--Betslip-->
                     <include-template class="betslip-include-v3" template-path="templates/sport/euro2016/right/betslip.html"></include-template>
                     <!--Betslip END-->
+
                     <!--Mini Games-->
                     <div class="mini-games" ng-if="conf.enableMiniGameUnderBetslip && $root.casinoEnabled" ng-include="'optional_modules/casino/templates/specialgames/minigames.html'|fixPath"></div>
                     <!--Mini Games-->
                     <div class="right-banner-container" ng-if="conf.enableBannerUnderBetslip" ng-controller="cmsSportNewsCtrl" ng-include="::'templates/sport/classic/banners.html'|fixPath"></div>
+                    <div class="right-banner-container" ng-if="conf.customBetSlipWidgetScript">
+                        <iframe class="bet-slip-iframe" ng-src="{{(conf.customBetSlipWidgetScript + 'lang=' + $root.env.lang + '&amp;odds=' + $root.env.oddFormat)|url}}"></iframe>
+                    </div>
                 </div>
 
             </div>

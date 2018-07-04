@@ -15,7 +15,7 @@ angular.module('vbet5').service('TopMenu', ['$rootScope', '$location', '$timeout
     var topMenuItems = {
         'news': {
             displayName : Translator.get("News"),
-            href: "#/news",
+            href: "#/news/",
             click: null,
             classObject: {'active': false},
             staticClass: "menu-live",
@@ -33,7 +33,7 @@ angular.module('vbet5').service('TopMenu', ['$rootScope', '$location', '$timeout
         },
         live: {
             displayName : Translator.get("Live"),
-            href: Config.main.sportsLayout == 'combo' ? "#/overview" : "#/sport/?type=1",
+            href: Config.main.sportsLayout == 'combo' ? "#/overview/" : "#/sport/?type=1",
             click: function () { $rootScope.topMenuDropDown = false; $scope.closeSlider(); $scope.setGamesType(true); $scope.goToTop(); },
             classObject: {'active': false},
             staticClass: "menu-live",
@@ -49,22 +49,22 @@ angular.module('vbet5').service('TopMenu', ['$rootScope', '$location', '$timeout
         },
         'event-view': {
             displayName: Translator.get("Event View"),
-            href: '#/sport',
+            href: '#/sport/',
             showCondition: true
         },
         'dashboard': {
             displayName: Translator.get("Dashboard"),
-            href: '#/dashboard',
+            href: '#/dashboard/',
             showCondition: $rootScope.calculatedConfigs.dashboardEnabled
         },
         overview: {
             displayName: Translator.get("Live Overview"),
-            href: '#/overview',
+            href: '#/overview/',
             showCondition: $rootScope.calculatedConfigs["liveOverviewEnabled"] && (Config.main.sportsLayout !== 'modern')
         },
         multiview: {
             displayName: Translator.get("Live MultiView"),
-            href: '#/multiview',
+            href: '#/multiview/',
             showCondition: $rootScope.calculatedConfigs["liveMultiViewEnabled"] && (Config.main.sportsLayout !== 'modern')
         },
         statistics: {
@@ -74,7 +74,7 @@ angular.module('vbet5').service('TopMenu', ['$rootScope', '$location', '$timeout
         },
         results: {
             displayName: Translator.get("Results"),
-            href: '#/results',
+            href: '#/results/',
             showCondition: $rootScope.calculatedConfigs["showResultsTabInSportsbook"]
         },
         sport: {
@@ -95,7 +95,7 @@ angular.module('vbet5').service('TopMenu', ['$rootScope', '$location', '$timeout
         },
         livecalendar: {
             displayName : Translator.get("Live calendar"),
-            href: "#/livecalendar",
+            href: "#/livecalendar/",
             click: function () { $rootScope.topMenuDropDown = false; $scope.closeSlider(); $scope.goToTop(); },
             classObject: {'active': false},
             staticClass: "menu-livecalendar",
@@ -103,7 +103,7 @@ angular.module('vbet5').service('TopMenu', ['$rootScope', '$location', '$timeout
         },
         'virtual-sports': {
             displayName : Translator.get("Virtual sports"),
-            href: '#/virtualsports',
+            href: '#/virtualsports/',
             click: function () { $rootScope.topMenuDropDown = false; $scope.closeSlider(); $scope.goToTop();},
             classObject: {'active': false},
             staticClass: "casino fantasy ",
@@ -113,7 +113,7 @@ angular.module('vbet5').service('TopMenu', ['$rootScope', '$location', '$timeout
         poolbetting: {
             specialCase: 'poolbetting',
             displayName : Translator.get("Pool Betting"),
-            href: "#/poolbetting",
+            href: "#/poolbetting/",
             click: function () { $rootScope.topMenuDropDown = false; $scope.closeSlider(); $scope.goToTop(); },
             classObject: {'active': false },
             staticClass: "poolbetting-menu-item ",
@@ -131,7 +131,7 @@ angular.module('vbet5').service('TopMenu', ['$rootScope', '$location', '$timeout
         },
         belote: {
             displayName : Translator.get("Belote"),
-            href: Config.belote.redirectOnInstantPlay ? Config.belote.instantPlayLink : "#/belote",
+            href: Config.belote.redirectOnInstantPlay ? Config.belote.instantPlayLink : "#/belote/",
             click: function () { $rootScope.topMenuDropDown = false; $scope.closeSlider(); $scope.goToTop(); },
             classObject: {'active': false},
             staticClass: "games ",
@@ -141,7 +141,7 @@ angular.module('vbet5').service('TopMenu', ['$rootScope', '$location', '$timeout
         },
         backgammon: {
             displayName : Translator.get("Backgammon"),
-            href: Config.backgammon.redirectOnInstantPlay ? Config.backgammon.instantPlayLink : "#/backgammon",
+            href: Config.backgammon.redirectOnInstantPlay ? Config.backgammon.instantPlayLink : "#/backgammon/",
             click: function () { $rootScope.topMenuDropDown = false; $scope.closeSlider(); $scope.goToTop(); },
             classObject: {'active': false},
             staticClass: "games ",
@@ -151,7 +151,7 @@ angular.module('vbet5').service('TopMenu', ['$rootScope', '$location', '$timeout
         },
         pokerklas: {
             displayName : Translator.get("Poker Klas"),
-            href: "#/pokerklas",
+            href: "#/pokerklas/",
             click: function () { $rootScope.topMenuDropDown = false; $scope.closeSlider(); $scope.goToTop(); },
             classObject: {'active': false},
             staticClass: "games ",
@@ -160,7 +160,7 @@ angular.module('vbet5').service('TopMenu', ['$rootScope', '$location', '$timeout
         },
         ggpoker: {
             displayName : Translator.get("GG Poker"),
-            href: "#/ggpoker",
+            href: "#/ggpoker/",
             click: function () { $rootScope.topMenuDropDown = false; $scope.closeSlider(); $scope.goToTop(); },
             classObject: {'active': false},
             staticClass: "games ",
@@ -169,7 +169,7 @@ angular.module('vbet5').service('TopMenu', ['$rootScope', '$location', '$timeout
         },
         casino: {
             displayName : Translator.get("Casino"),
-            href: "#/casino",
+            href: "#/casino/",
             click: function () { $rootScope.topMenuDropDown = false; $scope.closeSlider(); $scope.goToTop(); },
             classObject: {'active': false},
             staticClass: "games ",
@@ -178,7 +178,7 @@ angular.module('vbet5').service('TopMenu', ['$rootScope', '$location', '$timeout
         },
         tournaments: {
             displayName : Translator.get("Tournaments"),
-            href: "#/tournaments",
+            href: "#/tournaments/",
             click: function () { $rootScope.topMenuDropDown = false; $scope.closeSlider(); $scope.goToTop(); $rootScope.$broadcast('goToHomepage') },
             classObject: {'active': false},
             staticClass: "tournaments ",
@@ -187,7 +187,7 @@ angular.module('vbet5').service('TopMenu', ['$rootScope', '$location', '$timeout
         },
         poker: {
             displayName : Translator.get("Poker"),
-            href: Config.poker.redirectOnInstantPlay ? Config.poker.instantPlayLink : "#/poker",
+            href: Config.poker.redirectOnInstantPlay ? Config.poker.instantPlayLink : "#/poker/",
             click: function () { $rootScope.topMenuDropDown = false; $scope.closeSlider(); $scope.goToTop(); },
             classObject: {'active': false},
             staticClass: "poker ",
@@ -197,7 +197,7 @@ angular.module('vbet5').service('TopMenu', ['$rootScope', '$location', '$timeout
         },
         'chinese-poker': {
             displayName : Translator.get("Chinese Poker"),
-            href: "#/chinesepoker",
+            href: "#/chinesepoker/",
             click: function () { $rootScope.topMenuDropDown = false; $scope.closeSlider(); $scope.goToTop(); },
             classObject: {'active': false},
             staticClass: "games ",
@@ -207,7 +207,7 @@ angular.module('vbet5').service('TopMenu', ['$rootScope', '$location', '$timeout
         livedealer: {
             specialCase: Config.main.liveDealerMenuSpecialText ? 'liveDealerMenuSpecialText' : false,
             displayName : Translator.get("Live casino"),
-            href: "#/livedealer",
+            href: "#/livedealer/",
             click: function () { $rootScope.topMenuDropDown = false; $scope.closeSlider(); $scope.goToTop(); },
             classObject: {'active': false},
             staticClass: "livecasino ",
@@ -216,7 +216,7 @@ angular.module('vbet5').service('TopMenu', ['$rootScope', '$location', '$timeout
         },
         keno: {
             displayName : Translator.get("Keno"),
-            href: "#/keno",
+            href: "#/keno/",
             click: function () { $rootScope.topMenuDropDown = false; $scope.closeSlider(); $scope.goToTop(); },
             classObject: {'active': false},
             staticClass: "keno ",
@@ -226,7 +226,7 @@ angular.module('vbet5').service('TopMenu', ['$rootScope', '$location', '$timeout
         games: {
             specialCase: Config.main.gameMenuSpecialText ? 'gamesSpecialText' : false,
             displayName : Translator.get("Games"),
-            href: "#/games",
+            href: "#/games/",
             click: function () { $rootScope.topMenuDropDown = false; $scope.closeSlider(); $scope.goToTop(); },
             classObject: {'active': false},
             staticClass: "games ",
@@ -235,7 +235,7 @@ angular.module('vbet5').service('TopMenu', ['$rootScope', '$location', '$timeout
         },
         ogwil: {
             displayName : Translator.get("OGWIL"),
-            href: "#/ogwil",
+            href: "#/ogwil/",
             click: function () { $rootScope.topMenuDropDown = false; $scope.closeSlider(); $scope.goToTop(); },
             classObject: {'active': false},
             staticClass: "games ",
@@ -244,7 +244,7 @@ angular.module('vbet5').service('TopMenu', ['$rootScope', '$location', '$timeout
         },
         freebet: {
             displayName : Translator.get("Free Bet"),
-            href: "#/freebet",
+            href: "#/freebet/",
             click: function () { $rootScope.topMenuDropDown = false; $scope.closeSlider(); $scope.goToTop(); },
             classObject: {'active': false},
             staticClass: "freebet ",
@@ -253,7 +253,7 @@ angular.module('vbet5').service('TopMenu', ['$rootScope', '$location', '$timeout
         },
         fantasy: {
             displayName : Translator.get("Fantasy Sports"),
-            href: "#/fantasy",
+            href: "#/fantasy/",
             click: function () { $rootScope.topMenuDropDown = false; $scope.closeSlider(); $scope.goToTop(); },
             classObject: {'active': false},
             staticClass: "fantasy ",
@@ -262,7 +262,7 @@ angular.module('vbet5').service('TopMenu', ['$rootScope', '$location', '$timeout
         },
         jackpot: {
             displayName : Translator.get("Jackpot"),
-            href: "#/jackpot",
+            href: "#/jackpot/",
             click: function () { $rootScope.topMenuDropDown = false; $scope.closeSlider(); $scope.goToTop(); },
             classObject: {'active': false},
             staticClass: "jackpot ",
@@ -271,7 +271,7 @@ angular.module('vbet5').service('TopMenu', ['$rootScope', '$location', '$timeout
         },
         financials: {
             displayName : Translator.get("Finbet"),
-            href: "#/financials",
+            href: "#/financials/",
             click: function () { $rootScope.topMenuDropDown = false; $scope.closeSlider(); $scope.goToTop(); },
             classObject: {'active': false},
             staticClass: "financials ",
@@ -281,7 +281,7 @@ angular.module('vbet5').service('TopMenu', ['$rootScope', '$location', '$timeout
         financials1: {
             displayName : Translator.get("Finbet"),
             supDisplayName: 'v1',
-            href: "#/financials",
+            href: "#/financials/",
             click: function () { $rootScope.topMenuDropDown = false; $scope.closeSlider(); $scope.goToTop(); },
             classObject: {'active': false},
             staticClass: "financials ",
@@ -309,7 +309,7 @@ angular.module('vbet5').service('TopMenu', ['$rootScope', '$location', '$timeout
         },
         winners: {
             displayName : Translator.get("Winners"),
-            href: "#/winners",
+            href: "#/winners/",
             click: function () { $rootScope.topMenuDropDown = false; $scope.closeSlider(); $scope.goToTop(); },
             classObject: {'active': false},
             staticClass: "winners ",
@@ -346,6 +346,32 @@ angular.module('vbet5').service('TopMenu', ['$rootScope', '$location', '$timeout
             }
         }
         return "";
+    }
+
+    /**
+     * @ngdoc method
+     * @name handleSubMenuState
+     * @methodOf vbet5.service:TopMenu
+     * @description Change sub meni item state based on url data
+     * @param {Object} [params]  Menu item object
+     */
+    function handleSubMenuState(menuItem) {
+        var subItem;
+        if (menuItem.subMenu) {
+            for (var i = 0, length = menuItem.subMenu.length; i < length; ++i) {
+                subItem = menuItem.subMenu[i];
+                subItem.classObject = subItem.classObject || {};
+                subItem.classObject.active = !subItem.excludeParam && (('#' + $location.path() === subItem.href || '#' + $location.path() === subItem.href + '/') || ($location.path() === (subItem.activeLink ? subItem.activeLink : ('/' + subItem.name + '/')) || $location.url() === (subItem.activeLink ? subItem.activeLink : ('/' + subItem.name + '/'))));
+                if (subItem.classObject.active) {
+                    menuItem.classObject.active = true;
+                }
+            }
+        }
+
+        if (menuItem.classObject.active) {
+            $scope.subMenuItems = menuItem.subMenu;
+            $rootScope.currentPage.hasSubHeader = true;
+        }
     }
 
     /**
@@ -416,31 +442,6 @@ angular.module('vbet5').service('TopMenu', ['$rootScope', '$location', '$timeout
 
     /**
      * @ngdoc method
-     * @name handleSubMenuState
-     * @methodOf vbet5.service:TopMenu
-     * @description Change sub meni item state based on url data
-     * @param {Object} [params]  Menu item object
-     */
-    function handleSubMenuState(menuItem) {
-        var subItem;
-        if (menuItem.subMenu) {
-            for (var i = 0, length = menuItem.subMenu.length; i < length; ++i) {
-                subItem = menuItem.subMenu[i];
-                subItem.classObject = subItem.classObject || {};
-                subItem.classObject.active = !subItem.excludeParam && (('#' + $location.path() === subItem.href || '#' + $location.path() === subItem.href + '/') || ($location.path() === (subItem.activeLink ? subItem.activeLink : ('/' + subItem.name + '/')) || $location.url() === (subItem.activeLink ? subItem.activeLink : ('/' + subItem.name + '/'))));
-                if (subItem.classObject.active) {
-                    menuItem.classObject.active = true;
-                }
-            }
-        }
-
-        if (menuItem.classObject.active) {
-            $scope.subMenuItems = menuItem.subMenu;
-        }
-    }
-
-    /**
-     * @ngdoc method
      * @name isVisible
      * @methodOf vbet5.service:TopMenu
      * @description Returns true or false based on country code  for each menu item
@@ -452,6 +453,43 @@ angular.module('vbet5').service('TopMenu', ['$rootScope', '$location', '$timeout
             return Config.main.menuCountryFilter[countryCode].indexOf(menuItem.name) !== -1;
         }
         return true;
+    }
+
+    //TODO remove after the world cup
+    function addRussia2018() {
+        if (Config.main.integrationMode) {
+            Config.main.subHeaderItems.splice(1, 0, {
+                alias: "russia2018",
+                displayName: Translator.get("Russia 2018"),
+                badge: 'new'
+            });
+            return;
+        }
+
+        for (var i = 0; i < $scope.topMenu.length; ++i) {
+            if ($scope.topMenu[i].href.indexOf('#/sport') !== -1) {
+                $scope.topMenu.splice(0, 0, {
+                    "name": "Russia 2018",
+                        "displayName": Translator.get("Russia 2018"),
+                    "href": "#/russia2018/?p=calendar",
+                    "classObject": {
+                        "active": false
+                    },
+                    "supDisplayName": null,
+                    "dynamicClass": 'new-top-nav',
+                    "subMenu": [],
+                    "target": "",
+                    "staticClass": "undefined ",
+                    "showCondition": true,
+                    "activeLink": "/russia2018/",
+                    "authorizedOnly": false,
+                    "reload": "false"
+                });
+
+                $rootScope.validPaths['#/russia2018'] = true;
+                break;
+            }
+        }
     }
 
     /**
@@ -580,6 +618,8 @@ angular.module('vbet5').service('TopMenu', ['$rootScope', '$location', '$timeout
         } else {
             Utils.sortByField($scope.topMenu, menuData);
         }
+
+        addRussia2018();
 
         $rootScope.$on('$locationChangeSuccess', TopMenu.updateMenuItemsState);
         $timeout(TopMenu.updateMenuItemsState); //initial

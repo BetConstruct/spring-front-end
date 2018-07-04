@@ -32,4 +32,4 @@
         <div ng-include="::'templates/header/version_' + conf.header.version + '/topmenu.html'|fixPath"></div>
     </div>
 </div>
-<ng-include class="subtop-header-menu-j" ng-show="currentPageHasSubHeader() && isInSports() && $location.path() !== '/'" no-animate src="::'templates/sport/toptab.html'|fixPath"></ng-include>
+<ng-include class="subtop-header-menu-j" ng-show="$root.currentPage.hasSubHeader && $root.currentPage.isInSports && $location.path() !== '/'" no-animate src="::'templates/sport/toptab.html'|fixPath"></ng-include>

@@ -5,9 +5,7 @@
                  ng-if="myGames.length > 0" ng-init="leftMenuState.favorites.expanded = true"
                  ng-click="leftMenuState.favorites.expanded = !leftMenuState.favorites.expanded; leftMenuClosed ? toggleLeftMenu() : void()">
                 {{'Favorite games'|translate}}
-                <div class="sport-games-count-v3">
-                    <span ng-show="myGames.length">{{myGames.length}}</span>
-                </div>
+                <div class="sport-games-count-v3" ng-show="myGames.length">{{myGames.length}}</div>
                 <div class="arrow-view-v3"></div>
             </div>
 

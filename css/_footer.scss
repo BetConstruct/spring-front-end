@@ -15,12 +15,15 @@
     position: fixed;
     z-index: 100009;
     bottom: 0;
-    transform: translate3d(0, 102%, 0);
-    -webkit-transform: translate3d(0, 102%, 0);
+    max-height: 0;
+    //transform: translate3d(0, 102%, 0);
+    //-webkit-transform: translate3d(0, 102%, 0);
     &.active {
-      animation: footer-fixed-active 300ms;
-      transform: translate3d(0, 0, 0);
-      -webkit-transform: translate3d(0, 0, 0);
+      //animation: footer-fixed-active 300ms;
+      //transform: translate3d(0, 0, 0);
+      //-webkit-transform: translate3d(0, 0, 0);
+      max-height: 999px;
+      transition: max-height 400ms;
     }
   }
   .payment-content-block {

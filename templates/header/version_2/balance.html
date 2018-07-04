@@ -1,7 +1,7 @@
 <!--balance-->
 <div class="separator-contain-nav {{headerVersion2Icons.balanceIsToggled ? 'active' : ''}}">
     <div class="settings-icon-contain balance-box" no-animate
-        ng-show="(conf.GmsPlatform && !conf.GmsPlatformMultipleBalance) || (!isInCasino() && !isInPoker())"
+        ng-show="(conf.GmsPlatform && !conf.GmsPlatformMultipleBalance) || (!$root.currentPage.isInCasino && !$root.currentPage.isInPoker)"
         ng-class="{'bonus': profile.bonus_balance !== undefined && profile.calculatedBonus !== 0}"
         ng-click="headerVersion2Icons.balanceIsToggled = !headerVersion2Icons.balanceIsToggled; $event.stopPropagation()"
 		id="wallet"
@@ -25,7 +25,7 @@
     </div>
     <div ng-controller="casinoLoginCtrl" id="walletCasino" class="settings-icon-contain balance-box" no-animate
        ng-if="::((!conf.GmsPlatform || conf.GmsPlatformMultipleBalance) && (casinoEnabled || calculatedConfigs.pokerEnabled || calculatedConfigs.backgammonEnabled) && availableModules.indexOf('casino') > -1)"
-       ng-show="(env.casinoBalance !== undefined || conf.GmsPlatformMultipleBalance) && (isInCasino() || isInPoker()) || !calculatedConfigs.sportEnabled"
+       ng-show="(env.casinoBalance !== undefined || conf.GmsPlatformMultipleBalance) && ($root.currentPage.isInCasino || $root.currentPage.isInPoker) || !calculatedConfigs.sportEnabled"
        ng-class="{'bonus': (env.casinoBalance.bonus || env.casinoBalance.bonus_balance)}"
        ng-click="headerVersion2Icons.balanceIsToggled = !headerVersion2Icons.balanceIsToggled; $event.stopPropagation()">
         <b class="mybets-icon-box-b cms-jcon-Wallet" ng-show="env.hideBalance"></b>
@@ -59,7 +59,7 @@
                               </div>
                           </div>
                           <div class="user-info-box-b"
-                               ng-show="env.hideBalance && ((conf.GmsPlatform && !conf.GmsPlatformMultipleBalance) || (!isInCasino() && !isInPoker()))">
+                               ng-show="env.hideBalance && ((conf.GmsPlatform && !conf.GmsPlatformMultipleBalance) || (!$root.currentPage.isInCasino && !$root.currentPage.isInPoker))">
                               <h4>
                                   {{ profile.calculatedBalance|number:conf.balanceFractionSize }} {{profile.currency_name|currency}}
                               </h4>
@@ -69,7 +69,7 @@
                           </div>
                           <div class="user-info-box-b" ng-controller="casinoLoginCtrl"
                                ng-if="::((!conf.GmsPlatform || conf.GmsPlatformMultipleBalance) && (casinoEnabled || calculatedConfigs.pokerEnabled || calculatedConfigs.backgammonEnabled) && availableModules.indexOf('casino') > -1)"
-                               ng-show="env.hideBalance && ((env.casinoBalance !== undefined || conf.GmsPlatformMultipleBalance) && (isInCasino() || isInPoker()) || !calculatedConfigs.sportEnabled)">
+                               ng-show="env.hideBalance && ((env.casinoBalance !== undefined || conf.GmsPlatformMultipleBalance) && ($root.currentPage.isInCasino || $root.currentPage.isInPoker) || !calculatedConfigs.sportEnabled)">
                               <h4>
                                   {{conf.showOnlyMainBalance ? profile.calculatedBalance : conf.GmsPlatformMultipleBalance ? profile.casino_balance : env.casinoBalance.balance|number:conf.balanceFractionSize }} {{profile.currency_name|currency}}
                               </h4>

@@ -13,7 +13,7 @@ VBET5.directive('routeReload', ['$timeout', '$route', function ($timeout, $route
             exception: '='
         },
         link: function (scope, elem, attr) {
-            if(attr.reload !== 'false') {
+            if(attr.reload !== 'false' && attr.target !== '_blank') {
                 if (!scope.exception) {
                     elem.on('click', function () {
                         $timeout(function () {

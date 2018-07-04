@@ -636,3 +636,21 @@
     padding-right: 5px;
   }
 }
+.right-column-view-contain .edit-bets-contain {
+  background: #e8edf1;
+  > p {
+    color: #3f4553;
+  }
+  > span {
+    color: #3f4553;
+    b {
+      color: #a4a9bc;
+    }
+  }
+}
+.right-column-view-contain .empty-edit-bet-list {
+  color: #3f4553;
+}
+.combo .open-bets-time-id + div > ul > li {
+  background: #f0f0f0;
+}

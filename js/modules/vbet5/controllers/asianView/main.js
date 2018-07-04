@@ -1484,6 +1484,9 @@ VBET5.controller('asianViewMainController', ['$rootScope', '$scope', '$filter', 
             });
 
             var compareFn = $scope.sortAscending ? function (a, b) {
+                if (a.start_ts === b.start_ts) {
+                    return a.id - b.id;
+                }
                 return a.start_ts - b.start_ts;
             } : function (a, b) {
                 return b.start_ts - a.start_ts;

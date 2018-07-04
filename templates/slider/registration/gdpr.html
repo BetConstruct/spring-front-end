@@ -1,0 +1,14 @@
+<div class="reg-radio">
+    <h2 trans>Notify me about news and offers by:</h2>
+    <div ng-repeat="(key, val) in conf.gdpr.options" ng-class="{'error': (registerform[key].$error.required && resetError.gdprTouched) || forms.detailsForm[key].$invalid}">
+        <p ng-class="{'error': !resetError[agree] && registerform.agree.$error.required}">{{val|translate}}</p>
+        <input id="reg-radio-{{key}}-no" ng-model="registrationData[key]" ng-click="resetError.gdprTouched=true" type="radio" name="{{key}}" value="false" required>
+        <label for="reg-radio-{{key}}-no" class="label-reg-radio">
+            <span trans>No</span>
+        </label>
+        <input id="reg-radio-{{key}}-yes" ng-model="registrationData[key]" ng-click="resetError.gdprTouched=true" type="radio" name="{{key}}" value="true" required>
+        <label for="reg-radio-{{key}}-yes" class="label-reg-radio">
+            <span trans>Yes</span>
+        </label>
+    </div>
+</div>

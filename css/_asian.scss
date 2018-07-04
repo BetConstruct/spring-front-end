@@ -14,7 +14,8 @@
   .md-progress-circular.md-theme {
     left: 50%;
     margin-left: -50px;
-    padding: 20px 0 40px !important;
+    margin-top: 40px;
+    //padding: 20px 0 40px !important;
     @include rtl {
       left: auto;
       right: 50%;
@@ -32,6 +33,10 @@
     content: "";
     display: block;
     clear: both;
+  }
+  .contain-open-bets > .md-progress-circular.md-theme {
+    top: 0 !important;
+    left: 50% !important;
   }
 }
 
@@ -508,10 +513,6 @@
   font-size: 11px;
 }
 
-.asian-left-contain-menu .list-bet-block .name-b-list ul {
-  left: 1px;
-}
-
 .asian-left-contain-menu .betslip-system-chenge .open-type-switcher ul li a {
   width: 85px;
   white-space: nowrap;
@@ -526,10 +527,6 @@
 .asian-left-contain-menu .betslip-system-chenge .open-type-switcher ul li:last-child a {
   border-radius: inherit;
   border-top: none;
-}
-
-.asian-left-contain-menu .list-bet-block .name-b-list ul li:hover {
-  background: none;
 }
 
 .asian-left-contain-menu .bs-type-switcher p,
@@ -2850,4 +2847,11 @@ table.hdp-contain-j {
   top: 38px;
   z-index: 300;
   box-shadow: 0 0 0 2px rgba(black, 0.2)
+}
+.body-wrapper.asian .asian-left-contain-menu .list-bet-block .bets-selections-content .bet-container ul:last-child {
+  border-bottom: 0;
+}
+.asian .bet-status-container {
+  background: darken(desaturate(adjust-hue($skin-color, 4deg), 15), 1);
+  border-radius: 0;
 }

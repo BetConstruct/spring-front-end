@@ -223,8 +223,7 @@
                     </tr>
                 </table>
             </div>
-            <div ng-if="!env.paymentListShown">
-                <div>
+            <div class="descriptions-c-b" ng-if="!env.paymentListShown">
                     <h5 ng-if="env.authorized && isProfilePartial && !('profile-partial-text'|translate:null:true)" class="please-complete-profile">
                         <p trans>It is very important to keep your personal information up to date. Hence our request to you is to submit your personal information in My Profile / Personal Details as soon as possible.</p>
                         <span trans>To be able to make a deposit and/or withdrawal please complete your</span>
@@ -266,8 +265,9 @@
                             </ul>
                         </div>
                         <div ng-repeat="field in selectedPaymentSystem[env.sliderContent + 'FormFields'] track by field.name" ng-switch
-                             on="field.type" class="{{field.name}} {{field.class}}"
-                             ng-show="!selectedPaymentSystem.hasBetShops"
+                             on="field.type"
+                             ng-class="[field.name, field.class]"
+                             ng-show="!selectedPaymentSystem.hasBetShops && (!field.showIfHigher || paymentAmount[env.sliderContent] >= field.showIfHigher)"
                              title="{{field.tooltip|translate}}"
                         >
                             <label>
@@ -331,9 +331,9 @@
                                             ng-options="keyName as  country.name for (keyName, country) in countryCodes"></select>
                                 </div>
                                 <div ng-switch-when="checkbox" class="primary-checkbox">
-                                    <label ng-if="selectedPaymentSystem.agreeTermsText">
+                                    <label ng-if="selectedPaymentSystem.agreeTermsText || field.agreeTermsText">
                                         <input class="notthis" name="{{field.name}}" ng-attr-id="{{field.id}}" ng-model="selectedPaymentSystem.agreeTerms" ng-init="selectedPaymentSystem.agreeTermsExists = true" type="checkbox" ng-required="field.required" >
-                                        <span ng-bind-html="selectedPaymentSystem.agreeTermsText"></span>
+                                        <span ng-bind-html="(selectedPaymentSystem.agreeTermsText || field.agreeTermsText)|translate|html"></span>
                                     </label>
                                 </div>
                                 <div class="select-block birthdayForm" ng-switch-when="birthDay">
@@ -598,8 +598,6 @@
                         </ul>
                     </div>
                 </div>
-            </div>
         </article>
     </div>
-
 </div>

@@ -133,7 +133,7 @@
                         <h6></h6>
                         <div class="casino-tournament-scroll">
                             <div class="ct-stat-rules">
-                                <p>{{tournament.details.Description}}</p>
+                                <p ng-bind-html="tournament.details.Description|nl2br|html"></p>
                                 <a ng-show="false" href="#">Read full info</a>
                             </div>
                         </div>

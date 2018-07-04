@@ -22,7 +22,8 @@ VBET5.directive('productsSlider', ['$rootScope', '$sce', 'Translator', 'content'
              */
             (function() {
                 scope.loading = true;
-                scope.slug = (scope.slug || 'products-banners') + '-' + $rootScope.env.lang;
+                scope.slug = scope.slug || ('products-banners-' + $rootScope.env.lang);
+                scope.slug = scope.slug.replace('{lang}', $rootScope.env.lang);
                 content.getWidget(scope.slug).then(function (response) {
                     if (response.data && response.data.widgets && response.data.widgets[0]) {
                         var banners = [];

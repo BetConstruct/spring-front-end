@@ -1,5 +1,5 @@
-<div class="info-scroll-contain-b-new" ng-controller="mixedBalanceCtrl"   ng-class="{'mixedBalanceHistory-j':env.sliderContent === 'balanceHistory', 'custom-payment-template-j': !selectedPaymentSystem.showPromotions && (selectedPaymentSystem.customWithdrawTemplate || selectedPaymentSystem.customDepositTemplate)}" no-animate>
-    <div class="any-tabs-wrapper-b" ng-init="env.paymentsSubTub = 'paymentsMainPage'">
+<div class="mixed-view-content" ng-controller="mixedBalanceCtrl">
+    <div class="mixed-view-head" ng-init="env.paymentsSubTub = 'paymentsMainPage'">
         <div class="group-tabs-wrapper">
             <div class="first-level-history-tab">
                 <ul>
@@ -10,17 +10,23 @@
                     <li ng-click="env.sliderContent = 'buddytransfer'" ng-class="{'active':env.sliderContent === 'buddytransfer'}" ng-if="env.authorized && conf.buddyTransfer.enabled && conf.buddyTransfer.iconInTab"><span trans>Buddy transfer</span></li>
                 </ul>
             </div>
-            <div ng-if="env.sliderContent === 'withdraw' || 'deposit'" class="second-level-history-tab">
+            <div ng-if="env.sliderContent === 'withdraw' || env.sliderContent ===  'deposit'" class="second-level-history-tab">
                 <ul ng-init="env.paymentsSubTub = 'paymentsMainPage'">
                     <li ng-click="env.paymentsSubTub = 'paymentsMainPage'" ng-class="{'active': (env.paymentsSubTub == 'paymentsMainPage')}"><span ng-if="env.sliderContent === 'withdraw'" trans>Make withdraw</span><span ng-if="env.sliderContent === 'deposit'"trans>Make deposit</span></li>
                     <li ng-click="env.paymentsSubTub = 'status'" ng-class="{'active': (env.paymentsSubTub == 'status')}" ng-show="env.authorized"><span ng-if="env.sliderContent === 'withdraw'"  trans>Withdraw status</span><span ng-if="env.sliderContent === 'deposit'"  trans>Deposit status</span></li>
                 </ul>
             </div>
-            <div class="second-view-nav-box-w" ng-if="env.authorized && env.sliderContent === 'balanceHistory'" >
-                <div class="all-history-filter-container" ng-init="balanceHistoryParams.balanceCategory =((isInCasino() && conf.enableCasinoBalanceHistory) ? '1' : '0');initMixedBalanceHistory();">
+            <div class="float-width" ng-if="env.authorized && env.sliderContent === 'balanceHistory'">
+                <div class="second-level-history-tab" ng-if="conf.showProfitLossTab">
+                    <ul>
+                        <li ng-click="filterBalanceHistory('all')" ng-class="{'active': (balanceHistoryFilter === 'all')}"><span trans>All transactions</span></li>
+                        <li ng-click="filterBalanceHistory('net')" ng-class="{'active': (balanceHistoryFilter === 'net')}"><span trans>Net deposit</span></li>
+                    </ul>
+                </div>
+                <div class="all-history-filter-container">
                     <div class="filter-columns-container">
                         <ul>
-                            <li>
+                            <li ng-show="balanceHistoryFilter === 'all'">
                                 <p trans>Transaction Type</p>
                                 <div class="select-box-period-b" ng-click="transactionDropdownOpened=!transactionDropdownOpened;openedTo = false; openedFrom = false; categoryDropdownOpened = false;" ng-class="{'active': transactionDropdownOpened}"> <!--active-->
                                     <p >{{balanceHistoryParams.balanceTypes[balanceHistoryParams.balanceType]}}</p>
@@ -33,7 +39,7 @@
                                 </div>
                             </li>
 
-                            <li ng-show="balanceHistoryParams.availableProducts[0] && balanceHistoryParams.availableProducts[1]">
+                            <li ng-show="balanceHistoryFilter === 'all' && balanceHistoryParams.availableProducts[0] && balanceHistoryParams.availableProducts[1]">
                                 <p trans>Category</p>
                                 <div class="select-box-period-b" ng-click="categoryDropdownOpened=!categoryDropdownOpened;openedTo = false; openedFrom = false; transactionDropdownOpened = false;"
                                      ng-class="{'active': categoryDropdownOpened}" > <!--active-->
@@ -105,26 +111,50 @@
                                     </div>
                                 </div>
                             </li>
+                            <li ng-if="balanceHistoryFilter === 'net'" class="total-gold-card">
+                                <ul>
+                                    <li>
+                                        <p trans>Total deposits</p>
+                                        <strong ng-show="netDepositHistoryTotal.InAmount !== undefined">
+                                            {{::netDepositHistoryTotal.InAmount|number:conf.balanceFractionSize}} {{currency_name|currency}}
+                                        </strong>
+                                    </li>
+                                    <li>
+                                        <p trans>Total withdrawals</p>
+                                        <strong ng-show="netDepositHistoryTotal.OutAmount !== undefined">
+                                            {{::netDepositHistoryTotal.OutAmount|number:conf.balanceFractionSize}} {{currency_name|currency}}
+                                        </strong>
+                                    </li>
+                                    <li>
+                                        <p trans>Net deposit</p>
+                                        <strong ng-show="netDepositHistoryTotal.NetDeposit !== undefined">
+                                            {{::netDepositHistoryTotal.NetDeposit|number:conf.balanceFractionSize}} {{currency_name|currency}}
+                                        </strong>
+                                    </li>
+                                </ul>
+                            </li>
                         </ul>
                     </div>
                     <div class="mybets-filter-show-b">
-                        <button trans="" ng-click="loadMixedBalanceHistory()" ng-disabled="!balanceHistoryLoaded">SHOW</button>
+                        <button trans="" ng-click="balanceHistoryFilter === 'all' ? loadMixedBalanceHistory() : loadNetDeposit()" ng-disabled="!balanceHistoryLoaded">SHOW</button>
                     </div>
                 </div>
             </div>
-
         </div>
     </div>
-
-    <div class="balance-lightbox-j" ng-class="{'withdraw-selected-j': env.sliderContent === 'withdraw' || env.sliderContent === 'deposit'}">
-        <section ng-if="env.sliderContent === 'cashier'" ng-controller="cashierCtrl" ng-init="initCashier();" ng-include="::'templates/livebox/mixedWallet.html'|fixPath" class="mixedWallet-iwrap-j"></section>
-        <section ng-if="($root.env.sliderContent === 'withdraw' && !$root.conf.disableWithdrawPage) || ($root.env.sliderContent === 'deposit' && !$root.conf.disableDepositPage)" ng-include="::'templates/livebox/mixedPayments.html'|fixPath"></section>
-        <section ng-if="env.sliderContent === 'balanceHistory'">
-            <vbet-loader ng-show="!balanceHistoryLoaded"></vbet-loader>
-            <ng-include ng-show="balanceHistoryLoaded" src="::'templates/livebox/mixedBalanceHistory.html'|fixPath"></ng-include>
-        </section>
-        <section ng-if="env.sliderContent === 'buddytransfer'">
-            <ng-include src="::'templates/livebox/mixedBuddyTransfer.html'|fixPath;"></ng-include>
-        </section>
+    <div class="mixed-view-body">
+        <div class="mixed-view-body-ins">
+            <div class="balance-lightbox-j">
+                <section ng-if="env.sliderContent === 'cashier'" ng-controller="cashierCtrl" ng-init="initCashier();" ng-include="::'templates/livebox/mixedWallet.html'|fixPath" class="mixedWallet-iwrap-j"></section>
+                <section ng-if="($root.env.sliderContent === 'withdraw' && !$root.conf.disableWithdrawPage) || ($root.env.sliderContent === 'deposit' && !$root.conf.disableDepositPage)" ng-include="::'templates/livebox/mixedPayments.html'|fixPath"></section>
+                <section ng-if="env.sliderContent === 'balanceHistory'">
+                    <vbet-loader ng-show="!balanceHistoryLoaded"></vbet-loader>
+                    <ng-include ng-show="balanceHistoryLoaded" src="::'templates/livebox/mixedBalanceHistory.html'|fixPath"></ng-include>
+                </section>
+                <section ng-if="env.sliderContent === 'buddytransfer'">
+                    <ng-include src="::'templates/livebox/mixedBuddyTransfer.html'|fixPath;"></ng-include>
+                </section>
+            </div>
+        </div>
     </div>
 </div>

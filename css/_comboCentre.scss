@@ -23,9 +23,10 @@
 }
 
 .centre-column-view-contain-template .md-progress-circular.central-view-loader {
-  position: absolute;
+  position:fixed;
   top: 50%;
   left: 50%;
+  margin-top: -50px;
   margin-left: -50px;
 }
 
@@ -284,7 +285,7 @@
   padding: 0;
   box-sizing: border-box;
   height: 36px;
-  overflow: hidden;
+  //overflow: hidden;
 }
 
 .all-games-markets-b.active {
@@ -300,6 +301,7 @@
   position: relative;
   background: #cfd6dc;
   cursor: pointer;
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.03);
   @include rtl {
     padding: 0 50px 0 20px;
   }
@@ -409,11 +411,13 @@
   background: #e8edf1;
   border-radius: 5px;
   cursor: pointer;
-  transition: background 250ms;
+  //transition: background 250ms;
   @include rtl {
     float: right;
   }
 }
+
+
 
 .markets-filter-events-contain > ul > li:hover,
 .markets-filter-events-contain > ul > li.active {
@@ -537,6 +541,10 @@
   box-sizing: border-box;
   vertical-align: top;
   padding: 0 10px;
+  > combo-view-market-events{
+    float: left;
+    width: 100%;
+  }
 }
 
 .single-game-mini-view > ul > li:first-child {
@@ -635,14 +643,13 @@
   margin: 2px 0 2px 5px;
   border-radius: 5px;
   cursor: pointer;
-  transition: background 250ms;
+  //transition: background 250ms;
   position: relative;
   @include rtl {
     float: right;
     margin: 2px 5px 2px 0;
   }
 }
-
 .game-events-contain-b > ul.column-2 > li {
   width: calc((100% - 10px) / 2);
 }
@@ -651,7 +658,6 @@
   width: 100%;
   margin-left: 0;
 }
-
 .game-events-contain-b > ul.total-over-under > li:nth-child(2) {
   cursor: default;
   background: none;
@@ -849,24 +855,25 @@
   float: left;
   width: 100%;
   cursor: default;
-  transform: translate3d(0, 0, 0);
+  //transform: translate3d(0, 0, 0);
 }
 
 .mini-game-container-template > .markets-filter-events-contain,
 .mini-game-container-template > .mini-game-container-template {
   display: block;
-  animation: market-open-anime 500ms ease-in-out;
-  max-height: 99999px;
-  transition: padding-top 200ms, padding-bottom 200ms;
+  //animation: market-open-anime 500ms ease-in-out;
+  //max-height: 99999px;
+  //transition: padding-top 200ms, padding-bottom 200ms;
 }
 
 .mini-game-container-template.active > .markets-filter-events-contain,
 .mini-game-container-template.active > .mini-game-container-template {
-  animation: market-closed-anime 240ms ease;
-  overflow: hidden;
-  max-height: 0;
-  padding-top: 0;
-  padding-bottom: 0;
+  display: none;
+  //animation: market-closed-anime 240ms ease;
+  //overflow: hidden;
+  //max-height: 0;
+  //padding-top: 0;
+  //padding-bottom: 0;
 }
 
 .title-separator-b.region ~ .region-games-list-view,
@@ -877,13 +884,13 @@
 .title-separator-b.region.active ~ .region-games-list-view,
 .title-separator-b.region.active ~ .mini-game-container-template {
   display: block;
-  animation: market-open-anime 600ms ease-in-out;
-  max-height: 99999px;
+  //animation: market-open-anime 600ms ease-in-out;
+  //max-height: 99999px;
 }
 
 .mini-game-container-template.active > .title-region-markets-b {
   margin: 0 0 10px;
-  transition: margin-bottom 200ms;
+  //transition: margin-bottom 200ms;
 }
 
 .title-separator-b.region ~ .region-games-list-view .mini-game-container-template:last-child .title-region-markets-b {
@@ -945,7 +952,7 @@
 
 .live-game-all-markets-b > .region-games-list-view > .live-game-market-title + .game-view-market-row > .single-game-mini-view .game-events-contain-b > ul > li .small-title-event-b {
   display: block;
-  top: -19px;
+  top: -18px;
   color: $hero-color;
 }
 
@@ -1105,15 +1112,16 @@
 
 /*animation END*/
 .live-game-all-markets-b > .region-games-list-view > .live-game-market-title ~ .game-view-market-row {
-  animation: market-closed-anime 200ms ease;
-  overflow: hidden;
-  max-height: 0;
+  //animation: market-closed-anime 200ms ease;
+  //overflow: hidden;
+  //max-height: 0;
+  display: none;
 }
 
 .live-game-all-markets-b > .region-games-list-view > .live-game-market-title.active ~ .game-view-market-row {
   display: block;
-  animation: market-open-anime 600ms ease-in-out;
-  max-height: 9999px;
+  //animation: market-open-anime 600ms ease-in-out;
+  //max-height: 9999px;
 }
 
 @keyframes market-open-anime {
@@ -1137,5 +1145,60 @@
     display: block;
     max-height: 0;
     opacity: 0;
+  }
+}
+@supports (display: grid){
+  .period-filter-container > ul{
+    display: grid;
+    grid-gap: 0 6px;
+    grid-template-columns: repeat(auto-fit, minmax(5%, 1fr));
+    padding: 0;
+    > li{
+      width: 100%;
+      margin: 0;
+      float: none;
+    }
+  }
+  .game-events-contain-b > ul{
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(30%, 1fr));
+    grid-template-rows: auto;
+    grid-gap: 4px 10px;
+    padding-top: 2px;
+    > li {
+      float: none;
+      margin: 0;
+      width: 100%;
+      height: 100%;
+      min-height: 32px;
+    }
+    &.column-2{
+      > li {
+        width: 100%;
+      }
+    }
+    &.column-1{
+      > li{
+        width: 100%;
+      }
+    }
+  }
+  .markets-filter-events-contain{
+    > ul {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+    grid-template-rows: auto;
+    grid-gap: 3px;
+    left: 0;
+    padding: 5px 10px 0 0;
+      > li {
+        float: none;
+        margin: 0;
+        width: 100%;
+        height: 100%;
+        padding: 5px 3px;
+        min-height: 40px;
+      }
+    }
   }
 }

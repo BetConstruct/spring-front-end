@@ -13,6 +13,7 @@ $spinner-2017-enabled: false !default;
     text-align: center;
     content: "\e97b";
     animation: 1500ms spinner-w linear infinite;
+    border: none;
   }
   .full-menu-wrapper-box-v3 .md-progress-circular:before {
     width: 60px;

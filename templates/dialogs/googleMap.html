@@ -1,0 +1,15 @@
+<div class="new-default-popup-j" ng-if="mapData" style="z-index: 9999999999;">
+    <div class="pp-table-j">
+        <div class="table-row-j">
+            <div class="table-cell-j">
+                <div class="popup-wrapper-j" map-lazy-load="https://maps.google.com/maps/api/js?key=AIzaSyBnU4JWa8z7e_pqvw5fjOM8WsaaJAZoqf8">
+                    <div class="pu-head-j">
+                        <span ng-bind="::mapData.name"></span>
+                        <a class="close-j" ng-click="$parent.$parent.mapData=undefined"></a>
+                    </div>
+                    <ng-map center="{{mapData.coords}}" zoom="16" style="width: 50vw; height: 56vh" class="float-width" map-type-id="SATELLITE"></ng-map>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

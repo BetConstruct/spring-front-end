@@ -16,7 +16,7 @@
                 <!-- Pinned  games-->
                 <ng-include ng-if="conf.videoEnabled && pinnedGameType === 'dragable'" src="::'templates/sport/classic/pinnedvideo.html'|fixPath"></ng-include>
                 <!-- ! Pinned games  -->
-                
+
                 <!--centr-market-->
                 <!--<div class="centr-market-contain virtual-games" ng-if="virtualSportsSelected && conf.customSportsBook.classic.showMarkets"><div ng-include="::'templates/sport/virtualsports.html'|fixPath"></div></div>-->
                 <div class="centr-market-contain" ng-class="{'favorite-game-open': favoriteGameIsSelected && favoriteGameFromLeftMenu, 'premathch-in-live': (env.live && openGame.type == 0)}" ng-show="!virtualSportsSelected" ng-if="conf.customSportsBook.classic.showMarkets" ng-include="::'templates/sport/classic/center.html'|fixPath"></div>

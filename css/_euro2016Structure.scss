@@ -13,6 +13,9 @@
   width: 100%;
   height: 100%;
   background: $classic-view-background;
+  //*:not(.soon-v):not(.md-progress-circular):not(.max-bet-tooltip-v3):not(.animation-video-box-v3 ){
+  //  transform: none !important;
+  //}
 }
 .container-p {
   font-family: $font-f;
@@ -35,7 +38,7 @@
   grid-template-rows: 12fr;
   grid-gap: 0;
   grid-template-areas: "left center right";
-  align-content: start;
+  //align-content: start;
   border-top: 7px solid transparent;
   > include-template:last-child,
   > .right-column-v3{
@@ -43,7 +46,7 @@
     grid-area: right;
     -ms-grid-column: 3;
     @include scroll;
-    transform: translate3d(0, 0, 0);
+    //transform: translate3d(0, 0, 0);
   }
   > include-template:last-child{
     > .right-column-v3{
@@ -75,6 +78,7 @@
   -webkit-user-select: none;
   -ms-user-select: none;
   position: relative;
+  z-index: 999;
   @include rtl {
     direction: rtl;
   }
@@ -349,6 +353,174 @@
     transform: translate3d(0, 0, 0);
   }
 }
-.modern{
-
+//Old browsers
+@supports not (display: grid) {
+  .body-wrapper {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+  }
+  .classic-view-column-v3{
+    position: static;
+    display: table;
+    table-layout: fixed;
+    > .include-template, > div{
+      display: table-cell;
+      vertical-align: top;
+    }
+  }
+  .euro2016-multiview{
+    float: left;
+    width: 100%;
+  }
+  .left-column-v3-header{
+    display: flex;
+    flex-direction: row;
+    position: static !important;
+    flex-wrap: wrap;
+    align-content: flex-start;
+    min-height: calc(100vh - 140px);
+  }
+  .full-menu-wrapper-box-v3{
+    min-height: inherit !important;
+    float: left;
+    width: 100%;
+  }
+  .full-menu-wrapper-box-v3,
+  .classic-view-column-v3 > include-template:last-child, .classic-view-column-v3 > .right-column-v3{
+    overflow: inherit !important;
+    max-width: 300px;
+    min-height: calc(100vh - 138px);
+  }
+  .classic-view-column-v3 .right-column-v3{
+    overflow: hidden !important;
+  }
+  .center-column-v3{
+    width: calc(100vw - 620px);
+  }
+  .left-menu-closed-v3 {
+    > .left-column-v3 {
+      width: 36px;
+    }
+    > .center-column-v3{
+      width: calc(100vw - 356px);
+    }
+  }
+  .livecalendar {
+    .center-column-v3{
+      width: calc(100vw - 316px);
+      overflow: inherit;
+    }
+  }
+  .russia2018 .classic-version-euro2016 .classic-view-column-v3{
+    .center-column-v3 {
+      width: calc(100vw - 316px);
+      height: 100vh;
+    }
+  }
+  .virtualsports, .insvirtualsports{
+    .center-column-v3{
+      width: calc(100vw - 316px);
+      height: 100vh;
+    }
+  }
+  .virtual-games .market-contain-b .race-market ul li .single-events-b-v3{
+    width: 100%;
+  }
+  .single-events-b-v3 {
+    float: left;
+    box-shadow: 1px 0 0 rgba(0, 0, 0, 0.4) inset;
+  }
+  .l-b {
+    display: block;
+    &.column-1 > .single-events-b-v3 {
+      width: 100%;
+    }
+    &.column-2 > .single-events-b-v3,
+    &.default > .single-events-b-v3,
+    &.column-0 > .single-events-b-v3 {
+      width: 50% !important;
+    }
+    &.column-3 > .single-events-b-v3 {
+      width: 33.3%;
+    }
+    &.column-4 > .single-events-b-v3 {
+      width: 25%;
+    }
+    &.column-5 > .single-events-b-v3 {
+      width: 20%;
+    }
+    &.column-2 > .single-events-b-v3:nth-child(2n+1),
+    &.column-3 > .single-events-b-v3:nth-child(3n+1),
+    &.column-4 > .single-events-b-v3:nth-child(4n+1),
+    &.column-5 > .single-events-b-v3:nth-child(5n+1),
+    &.column-0 > .single-events-b-v3:nth-child(2n+1),
+    &.default > .single-events-b-v3:nth-child(2n+1),
+    &.column-2.two-odds > .single-events-b-v3:nth-child(3n+1) {
+      box-shadow: none;
+    }
+    &.column-2.two-odds > .single-events-b-v3:nth-child(2) {
+      display: none;
+      box-shadow: none;
+    }
+  }
+  .container-p{
+    height: calc(100vh - 136px);
+  }
+  @media screen and (max-width: 1359px){
+    .center-column-v3{
+      width: calc(100vw - 532px);
+    }
+    .full-menu-wrapper-box-v3{
+      max-width: 250px;
+    }
+    .left-menu-closed-v3 {
+      > .center-column-v3{
+        width: calc(100vw - 316px) !important;
+      }
+    }
+    .virtualsports, .insvirtualsports, .livecalendar, .russia2018 .classic-version-euro2016 .classic-view-column-v3 {
+      .center-column-v3{
+        width: calc(100vw - 280px);
+        min-width: 690px;
+      }
+    }
+  }
+  @media screen and (max-width: 1000px){
+    .russia2018 .classic-version-euro2016 .classic-view-column-v3 {
+      .center-column-v3{
+        width: 710px;
+      }
+    }
+  }
+  .size-h-container{
+    min-height: calc(100vh - 136px);
+  }
+  .integration {
+    .size-h-container , .container-p{
+      min-height: calc(100vh - 36px);
+    }
+  }
+  .integration.livecalendar {
+    .classic-view-wrapper-v3{
+      height: calc(100vh - 46px);
+    }
+    .classic-view-column-v3 > include-template:last-child{
+      overflow-y: auto !important;
+      overflow-x: hidden !important;
+      height: calc(100vh - 46px);
+    }
+  }
+  .l-t-box{
+    z-index: 1111 !important;
+  }
+  .subtop-game-menu-j.stretch-items ul{
+    display: block;
+    width: 100%;
+    text-align: center;
+    > li{
+      margin: 0 10px;
+    }
+  }
 }
+//Old browsers END

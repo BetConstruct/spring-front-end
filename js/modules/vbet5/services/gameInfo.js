@@ -118,12 +118,15 @@ angular.module('vbet5').service('GameInfo', ['$rootScope', '$http', '$filter', '
                 game.tv_type = 3;
                 return true;
             }
+            if (game.tv_type === 26 && Config.main.availableVideoProviderIds.indexOf(game.tv_type) !== -1 && game.video_id) {
+                return true;
+            }
             if (game.video_id2 && Config.main.availableVideoProviderIds.indexOf(6) !== -1 && (!game.tv_type || (game.tv_type !== 19 && game.tv_type !== 16) )) {
                 game.video_id = game.video_id2;
                 game.tv_type = 6;
                 return true;
             }
-            if ([7, 8, 11, 12, 16, 19, 26, 31].indexOf(game.tv_type) !== -1 && Config.main.availableVideoProviderIds.indexOf(game.tv_type) !== -1) {
+            if ([7, 8, 11, 12, 16, 19, 31].indexOf(game.tv_type) !== -1 && Config.main.availableVideoProviderIds.indexOf(game.tv_type) !== -1) {
                 return true;
             }
             if (game.video_id === 999999 && Config.main.availableVideoProviderIds.indexOf(999999) !== -1) { // the horse racing case
@@ -943,8 +946,9 @@ angular.module('vbet5').service('GameInfo', ['$rootScope', '$http', '$filter', '
         }
         if (checkExtraTime(game.info)) {
             currentMinutePosition = (curentMinute - 90) <= 30 ? ((curentMinute - 90) * 10 / 3) + '%' : '100%';
-        } else if (game.last_event && game.last_event.match_length === '80') {
-            currentMinutePosition = curentMinute <= 80 ? (curentMinute * 10 / 8) + '%' : '100%';
+        } else if (game.last_event &&  parseInt(game.last_event.match_length, 10) < 90) {
+            var matchLength = parseInt(game.last_event.match_length, 10);
+            currentMinutePosition = curentMinute <= matchLength ? (curentMinute * 10 / (matchLength/ 10)) + '%' : '100%';
         } else {
             currentMinutePosition = curentMinute <= 90 ? (curentMinute * 10 / 9) + '%' : '100%';
         }
@@ -962,8 +966,8 @@ angular.module('vbet5').service('GameInfo', ['$rootScope', '$http', '$filter', '
             return;
         }
 
-        if (timelineEvent.matchLength === "80") {
-            multiplier = 8;
+        if (parseInt(timelineEvent.matchLength, 10) < 90) {
+            multiplier = parseInt(timelineEvent.matchLength, 10)/ 10;
         }
         
         if (theMinute > (multiplier-5) && theMinute < multiplier*10) {
@@ -999,7 +1003,7 @@ angular.module('vbet5').service('GameInfo', ['$rootScope', '$http', '$filter', '
         if (checkExtraTime(game.info)) {
             currentEvent.extraTime = true;
             //if extra time push only tl events after 90th minute
-            if (currEvent.minute > 90) {
+            if (currentEvent.minute > 90) {
                 game.tlEvents.push(currentEvent);
             }
         } else {

@@ -128,6 +128,9 @@
         margin: 110px auto !important;
       }
     }
+    .last-minute-bets-j .md-progress-circular {
+      margin: -50px 0 0 -50px !important;
+    }
     > div {
       display: table-cell;
       position: relative;
@@ -562,6 +565,8 @@ body .better-homepage {
   > ul {
     float: left;
     width: 100%;
+    position: relative;
+    z-index: 200;
     > li {
       float: left;
       width: 100%;
@@ -907,7 +912,7 @@ body .better-homepage {
     position: absolute;
     width: 100%;
     height: 100%;
-    background: url(../../../images/russia2018/wc-countdown.png#{$delete-cache}) no-repeat 0 0 / 100%;
+    background: url(../../../images/russia2018/wc-countdown.png#{$delete-cache}) no-repeat 25% 0 / 150%;
   }
   a {
     display: block;
@@ -920,6 +925,16 @@ body .better-homepage {
     margin: -10px 0 0;
     z-index: 10;
     transition: 300ms color;
+    &.wc-start-text{
+      position: static;
+      margin: 0;
+      display: inline-block;
+      vertical-align: top;
+      width: 100%;
+      height: 100%;
+      font-size: 22px;
+      line-height: 64px;
+    }
     &:hover {
       color: rgba(white, 0.8);
     }
@@ -990,14 +1005,11 @@ body .better-homepage {
       content: "";
       display: block;
       height: 1px;
-      width: 65%;
+      width: 20%;
       top: 49%;
       left: 103%;
       background: rgba(255, 255, 255, 0.4);
       position: absolute;
-      @media screen and (max-width: 1280px){
-        width: 30%;
-      }
     }
     &:after {
       left: auto;
@@ -1027,8 +1039,8 @@ body .better-homepage {
           display: block;
           position: absolute;
           top: 0;
-          left: 0;
-          width: 100%;
+          right: 0;
+          min-width: 100%;
           height: 100%;
         }
       }

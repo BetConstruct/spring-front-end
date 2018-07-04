@@ -72,13 +72,9 @@ CMS.controller('cmsSportNewsCtrl', ['$rootScope', '$scope', '$sce', '$location',
      * @description get permalink for news
      * @param {Object} news object
      */
-    function getPermaLink(news) {
+    function getPermaLink(news, redirected) {
         var link, origin = $window.location.protocol + "//" + $window.location.hostname + ($window.location.port ? ':' + $window.location.port : '');
-        if (WPConfig.seoFilesGenerationActive) {
-            link = origin + $window.document.location.pathname + 'news/' + encodeURIComponent((news.slug || news.title || '').replace(/ /g,"-")) + '-id-' + news.id + '.html';
-        } else {
-            link = origin + $window.document.location.pathname + '%23' + $location.path() + '%3Fnews=' + news.id + '%23lnews-' + news.id;
-        }
+        link = origin + $window.document.location.pathname + (!redirected ? 'google/' : '') + 'news/' + encodeURIComponent(Utils.generatePermaLink(news));
         return link;
     }
 
@@ -145,6 +141,7 @@ CMS.controller('cmsSportNewsCtrl', ['$rootScope', '$scope', '$sce', '$location',
                 if (data.data.status === 'ok') {
                     $scope.landingNews = data.data.post;
                     $scope.landingNews.permalink = getPermaLink($scope.landingNews);
+                    $scope.landingNews.permalinkRedirected = getPermaLink($scope.landingNews, true);
                     $scope.landingNews.title = $sce.trustAsHtml($scope.landingNews.title);
                     $scope.landingNews.content = $sce.trustAsHtml($scope.landingNews.content);
                     ckeckIfLinkedGameExists($scope.landingNews);
@@ -495,6 +492,22 @@ CMS.controller('cmsSportNewsCtrl', ['$rootScope', '$scope', '$sce', '$location',
     }
 
     /**
+     * @ngdoc method
+     * @name underBetSlipBannerClick
+     * @methodOf CMS.controller:cmsSportNewsCtrl
+     * @description   handles banner click
+     *
+     * @param {Object} banner the banner's object
+     */
+    $scope.underBetSlipBannerClick = function(banner) {
+        analytics.gaSend('send', 'event', 'news', {'page': $location.path(), 'eventLabel': 'betslip banner click'});
+
+        if (banner.link.indexOf($location.path()) !== -1) {
+            $rootScope.$broadcast('sportsbook.handleDeepLinking');
+        }
+    };
+
+    /**
      * @description Set video banner duration
      * @param duration (Number)
      */
@@ -556,7 +569,11 @@ CMS.controller('cmsSportNewsCtrl', ['$rootScope', '$scope', '$sce', '$location',
             } else {
                 $scope.banners.map(function (banner) {banner.active = true; });
             }
-            console.log('banners:', $scope.banners);
+
+            if ($location.search().adpage && $scope.banners.length) {
+                $scope.banners.map(function (banner) {banner.link = $location.search().adpage; });
+                $location.search('adpage', undefined);
+            }
         });
     };
 
@@ -569,10 +586,11 @@ CMS.controller('cmsSportNewsCtrl', ['$rootScope', '$scope', '$sce', '$location',
             '/sport/': 'under-betslip-banners-classic-',
             '/virtualsports/': 'under-betslip-banners-virtualsports-',
             '/insvirtualsports/': 'under-betslip-banners-virtualsports-',
-            '/customsport/cyber/': 'under-betslip-banners-customsport-cyber-'
+            '/customsport/cyber/': 'under-betslip-banners-customsport-cyber-',
+            '/russia2018/': 'under-betslip-banners-russia-'
         };
 
-        $scope.getBanners(pathSlugMap[$location.path()] + $scope.env.lang);
+        $scope.getBanners((pathSlugMap[$location.path()] || pathSlugMap['/sport/']) + $scope.env.lang);
     };
 
     /**

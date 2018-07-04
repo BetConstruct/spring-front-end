@@ -11,148 +11,224 @@
         <div class="popup-layout-registration" ng-show="!registration.complete && !registration.failed">
             <div class="vertical-middle-wrapper">
                 <div class="all-popup-separator">
-                    <div class="register-steps-b" ng-class="{'two-column': registration.step === 2 && RegConfig.step2.rightCol.length}">
-                        <div class="closed-popup-form" ng-click="broadcast('slider.close')"></div>
-                        <div class="reg-s-steps step-1" ng-class="{'show-second': registration.step === 2, 'active' : registration.step === 1}">
-                            <div class="logo-form-b">
-                                <img ng-src="{{conf.logo.secondImage ? conf.logo.secondImage : 'skins/' + conf.skin + '/images/logo.png'}}"/>
-                            </div>
-                            <div class="register-information-b">
-                                <h2>{{"New to {1} ?"|translate:[conf.site_name]}}</h2>
-                                <h3 trans>Sign up now, it's easy!</h3>
-                            </div>
-                            <div class="mail-use-b" ng-show="conf.registration.enableRegisterByPhoneNumber">
-                                <p ng-class="{active: registration.byEmail}" ng-click="registerByPhone=false; registration.byEmail=true">Use your email</p>
-                                <p ng-class="{active: registerByPhone}" ng-click="registration.byEmail=false; registerByPhone=true">Use phone number</p>
-                            </div>
-                            <div class="reg-form-steps phone-number" ng-if="registerByPhone">
-                                <div ng-show="!registrationByPhoneFailed && !registrationByPhoneSuccessFul">
-                                    <div class="name-info-registration-b">
-                                        <p trans>Enter your mobile phone number and choose your currency.</p>
-                                        <p trans>Your password will be sent to your mobile phone by SMS.</p>
-                                    </div>
-                                    <div class="input-separator-b"
-                                         ng-class="{'error': (registerform.regphonenumber.invalid || registerform.regphonenumber.dublicate) && registerform.regphonenumber.$pristine}">
-                                        <div class="form-error-text">
-                                            <div class="error-icon-f"></div>
-                                            <p ng-show="registerform.regphonenumber.invalid" trans>Please enter a valid
-                                                phone number.</p>
-                                            <p ng-show="registerform.regphonenumber.dublicate" trans>Dublicate phone
-                                                number.</p>
+                    <div class="register-container">
+                        <ng-include src="::'templates/slider/commercial-content.html'|fixPath"></ng-include>
+                        <div class="register-steps-b" ng-class="{'two-column': registration.step === 2 && RegConfig.step2.rightCol.length}">
+                            <div class="closed-popup-form" ng-click="broadcast('slider.close')"></div>
+                            <div class="reg-s-steps step-1" ng-class="{'show-second': registration.step === 2, 'active' : registration.step === 1}">
+                                <div class="logo-form-b">
+                                    <img ng-src="{{conf.logo.secondImage ? conf.logo.secondImage : 'skins/' + conf.skin + '/images/logo.png'}}"/>
+                                </div>
+                                <div class="register-information-b">
+                                    <h2>{{"New to {1} ?"|translate:[conf.site_name]}}</h2>
+                                    <h3 trans>Sign up now, it's easy!</h3>
+                                </div>
+                                <div class="mail-use-b" ng-show="conf.registration.enableRegisterByPhoneNumber">
+                                    <p ng-class="{active: registration.byEmail}" ng-click="registerByPhone=false; registration.byEmail=true">Use your email</p>
+                                    <p ng-class="{active: registerByPhone}" ng-click="registration.byEmail=false; registerByPhone=true">Use phone number</p>
+                                </div>
+                                <div class="reg-form-steps phone-number" ng-if="registerByPhone">
+                                    <div ng-show="!registrationByPhoneFailed && !registrationByPhoneSuccessFul">
+                                        <div class="name-info-registration-b">
+                                            <p trans>Enter your mobile phone number and choose your currency.</p>
+                                            <p trans>Your password will be sent to your mobile phone by SMS.</p>
                                         </div>
-                                        <label trans>Phone number</label>
-                                        <input type="text" placeholder="Enter your phone number" name="regphonenumber"
-                                               ng-model="$parent.registrationPhoneNumber" required
-                                               prevent-input="[^0-9]+" ng-pattern="conf.registration.phoneNumberPattern"
-                                               trans>
-                                    </div>
+                                        <div class="input-separator-b"
+                                             ng-class="{'error': (registerform.regphonenumber.invalid || registerform.regphonenumber.dublicate) && registerform.regphonenumber.$pristine}">
+                                            <div class="form-error-text">
+                                                <div class="error-icon-f"></div>
+                                                <p ng-show="registerform.regphonenumber.invalid" trans>Please enter a valid
+                                                    phone number.</p>
+                                                <p ng-show="registerform.regphonenumber.dublicate" trans>Dublicate phone
+                                                    number.</p>
+                                            </div>
+                                            <label trans>Phone number</label>
+                                            <input type="text" placeholder="Enter your phone number" name="regphonenumber"
+                                                   ng-model="$parent.registrationPhoneNumber" required
+                                                   prevent-input="[^0-9]+" ng-pattern="conf.registration.phoneNumberPattern"
+                                                   trans>
+                                        </div>
 
-                                    <div class="input-separator-b">
-                                        <label trans>Currency</label>
-                                        <div class="select-block">
-                                            <select name="regcurrency" ng-model="registrationData.currency_name"
-                                                    ng-options="c for c in  conf.availableCurrencies track by c"
-                                                    ng-disabled="currencyDisabled"></select>
+                                        <div class="input-separator-b">
+                                            <label trans>Currency</label>
+                                            <div class="select-block">
+                                                <select name="regcurrency" ng-model="registrationData.currency_name"
+                                                        ng-options="c for c in  conf.availableCurrencies track by c"
+                                                        ng-disabled="currencyDisabled"></select>
+                                            </div>
+                                        </div>
+                                        <div class="button-confirm">
+                                            <button type="button"
+                                                    ng-click="registerUsingPhoneNumber(); $event.stopPropagation();"
+                                                    ng-disabled="registerform.regphonenumber.$invalid" trans>Confirm
+                                            </button>
                                         </div>
                                     </div>
-                                    <div class="button-confirm">
-                                        <button type="button"
-                                                ng-click="registerUsingPhoneNumber(); $event.stopPropagation();"
-                                                ng-disabled="registerform.regphonenumber.$invalid" trans>Confirm
-                                        </button>
-                                    </div>
-                                </div>
 
-                                <div ng-show="registrationByPhoneFailed" class="error">
-                                    <p trans>Failed to send sms</p>
-                                    <p trans>Please try later or contact support.</p>
-                                    <div class="button-confirm">
-                                        <button type="button" ng-click="broadcast('slider.close')" trans>OK</button>
+                                    <div ng-show="registrationByPhoneFailed" class="error">
+                                        <p trans>Failed to send sms</p>
+                                        <p trans>Please try later or contact support.</p>
+                                        <div class="button-confirm">
+                                            <button type="button" ng-click="broadcast('slider.close')" trans>OK</button>
+                                        </div>
                                     </div>
-                                </div>
-                                <div ng-show="registrationByPhoneSuccessFul" class="success">
-                                    <p trans>Registration complete.</p>
-                                    <p trans>You will receive SMS with your password shortly.</p>
-                                    <div class="button-confirm">
-                                        <button type="button" ng-click="broadcast('slider.close')" trans>OK</button>
+                                    <div ng-show="registrationByPhoneSuccessFul" class="success">
+                                        <p trans>Registration complete.</p>
+                                        <p trans>You will receive SMS with your password shortly.</p>
+                                        <div class="button-confirm">
+                                            <button type="button" ng-click="broadcast('slider.close')" trans>OK</button>
+                                        </div>
                                     </div>
-                                </div>
 
-                            </div>
-                            <div class="reg-form-steps" ng-show="registration.byEmail">
-                                <div ng-repeat="regItem in RegConfig.step1 track by $index"
-                                     class="{{regItem.name}} field-separator"
-                                     ng-include="::'templates/slider/registration-fields.html'|fixPath">
                                 </div>
-                            </div>
-                            <include-template ng-if="conf.registration.type === 'partial'" template-path="templates/slider/registration/tcCheckbox.html"></include-template>
-                            <div class="button-confirm">
-                                <button trans type="button"
-                                        ng-show="conf.registration.simplified && conf.registration.type !== 'partial'"
-                                        ng-click="registration.step = 2"
-                                        ng-keydown="nextKeyPress($event)"
-                                        ng-disabled="!step1DataIsValid() || registration.busy"
-                                        title="{{step1DataIsValid()? '': ('Please enter username and password to continue'|translate)}}">Next</button>
-                                <button trans type="button"
-                                        ng-show="conf.registration.type === 'partial'"
-                                        ng-click="register();"
-                                        ng-disabled="!step1DataIsValid() || registration.busy || (userAge !== undefined && userAge < conf.registration.minimumAllowedAge)"
-                                        title="{{step1DataIsValid()? ('Continue'|translate): ('Please enter username and password to continue'|translate)}}">Register</button>
-                            </div>
-                            <div class="account-link-b">
-                                <p trans>Already have an account?</p>
-                                <span ng-click="broadcast('openLoginForm')" trans>sign in</span>
-                            </div>
-                            <div class="account-link-b" ng-if="conf.registration.footerTitle && conf.registration.type === 'partial'">
-                                <p ng-bind="(conf.registration.footerTitle[env.lang] || conf.registration.footerTitle['eng'])|translate"></p>
-                            </div>
-                        </div>
-                        <div class="reg-s-steps step-2" ng-class="{'active': registration.step === 2}" ng-if="conf.registration.type !== 'partial' && step1DataIsValid()">
-                            <div class="float-width" ng-class="{'reg-s-left-col': RegConfig.step2.rightCol.length}">
-                                <div ng-repeat="regItem in RegConfig.step2.leftCol track by $index" class="field-separator {{regItem.name}}" ng-include="::'templates/slider/registration-fields.html'|fixPath"></div>
-                            </div>
-                            <div class="float-width" ng-class="{'reg-s-right-col': RegConfig.step2.rightCol.length}">
-                                <div ng-repeat="regItem in RegConfig.step2.rightCol track by $index" class="field-separator {{regItem.name}}" ng-include="::'templates/slider/registration-fields.html'|fixPath"></div>
-                            </div>
-                            <include-template template-path="templates/slider/registration/tcCheckbox.html"></include-template>
-                            <div class="account-link-b" ng-if="conf.registration.footerTitle && conf.registration.simplified && conf.registration.type !== 'partial'">
-                                <p ng-bind="(conf.registration.footerTitle[env.lang] || conf.registration.footerTitle['eng'])|translate"></p>
-                            </div>
-                            <div class="finish-register-buttons">
-                                <div class="button-confirm step-2">
-                                    <vbet-loader class="small-progress" ng-show="registration.busy"></vbet-loader>
-                                    <button type="button" ng-click="registration.step = 1" trans>Back</button>
-                                    <button type="button"
+                                <div class="reg-form-steps" ng-show="registration.byEmail">
+                                    <div ng-repeat="regItem in RegConfig.step1 track by $index"
+                                         class="{{regItem.name}} field-separator"
+                                         ng-include="::'templates/slider/registration-fields.html'|fixPath">
+                                    </div>
+                                </div>
+                                <include-template ng-if="conf.registration.type === 'partial'" template-path="templates/slider/registration/tcCheckbox.html"></include-template>
+                                <div class="button-confirm">
+                                    <button trans type="button"
+                                            ng-show="conf.registration.simplified && conf.registration.type !== 'partial'"
+                                            ng-click="registration.step = 2"
+                                            ng-keydown="nextKeyPress($event)"
+                                            ng-disabled="!step1DataIsValid() || registration.busy"
+                                            title="{{step1DataIsValid()? '': ('Please enter username and password to continue'|translate)}}">Next</button>
+                                    <button trans type="button"
+                                            ng-show="conf.registration.type === 'partial'"
                                             ng-click="register();"
-                                            ng-class="{'loading':registration.busy}"
-                                            disabled="true"
-                                            ng-disabled="registration.busy || (registrationData.g_recaptcha_response !== undefined && !registrationData.g_recaptcha_response) || userAge < conf.registration.minimumAllowedAge">{{'Register'|translate}}</button>
+                                            ng-disabled="!step1DataIsValid() || registration.busy || (userAge !== undefined && userAge < conf.registration.minimumAllowedAge)"
+                                            title="{{step1DataIsValid()? ('Continue'|translate): ('Please enter username and password to continue'|translate)}}">Register</button>
+                                </div>
+                                <div class="account-link-b">
+                                    <p trans>Already have an account?</p>
+                                    <span ng-click="broadcast('openLoginForm')" trans>sign in</span>
+                                </div>
+                                <div class="account-link-b" ng-if="conf.registration.footerTitle && conf.registration.type === 'partial'">
+                                    <p ng-bind="(conf.registration.footerTitle[env.lang] || conf.registration.footerTitle['eng'])|translate"></p>
                                 </div>
                             </div>
-                        </div>
-                        <div class="reg-s-pagination" ng-if="conf.registration.type !== 'partial'" ng-class="{'pointer-events-none': !step1DataIsValid() || registration.busy}">
-                            <small ng-class="{'active': registration.step === 1}" ng-click="registration.step = 1"></small>
-                            <small ng-class="{'active': registration.step === 2}" ng-click="registration.step = 2"></small>
-                        </div>
-                        <div class="live-chat-b-contain">
-                            <div ng-click="" class="help-b"
-                                 ng-if="!conf.liveChat.isSfChat && conf.liveChat.siteId && conf.liveChat.codePlan">
-                                <span ng-show="conf.registration.supportText">{{conf.registration.supportText|translate}}</span>
-                                <a pass-click-to="{{ conf.liveChat.buttonId ? conf.liveChat.buttonId : 'live-chat-button1' }}"  ng-attr-iframe="{{!conf.liveChat.buttonIsDiv ? 'true' : ''}}" ng-attr-find="{{!conf.liveChat.buttonIsDiv ? 'a' : ''}}"><span trans>Contact Support</span></a>
+                            <div class="reg-s-steps step-2" ng-class="{'active': registration.step === 2}" ng-if="conf.registration.type !== 'partial' && step1DataIsValid()">
+                                <div class="float-width" ng-class="{'reg-s-left-col': RegConfig.step2.rightCol.length}">
+                                    <div ng-repeat="regItem in RegConfig.step2.leftCol track by $index" class="field-separator {{regItem.name}}" ng-include="::'templates/slider/registration-fields.html'|fixPath"></div>
+                                </div>
+                                <div class="float-width" ng-class="{'reg-s-right-col': RegConfig.step2.rightCol.length}">
+                                    <div ng-repeat="regItem in RegConfig.step2.rightCol track by $index" class="field-separator {{regItem.name}}" ng-include="::'templates/slider/registration-fields.html'|fixPath"></div>
+                                </div>
+                                <include-template template-path="templates/slider/registration/tcCheckbox.html"></include-template>
+                                <div class="account-link-b" ng-if="conf.registration.footerTitle && conf.registration.simplified && conf.registration.type !== 'partial'">
+                                    <p ng-bind="(conf.registration.footerTitle[env.lang] || conf.registration.footerTitle['eng'])|translate"></p>
+                                </div>
+                                <div class="finish-register-buttons">
+                                    <div class="button-confirm step-2">
+                                        <vbet-loader class="small-progress" ng-show="registration.busy"></vbet-loader>
+                                        <button type="button" ng-click="registration.step = 1" trans>Back</button>
+                                        <button type="button"
+                                                ng-click="register();"
+                                                ng-class="{'loading':registration.busy}"
+                                                disabled="true"
+                                                ng-disabled="registration.busy || (registrationData.g_recaptcha_response !== undefined && !registrationData.g_recaptcha_response) || userAge < conf.registration.minimumAllowedAge">{{'Register'|translate}}</button>
+                                    </div>
+                                </div>
                             </div>
-                            <div ng-if="conf.liveChat.isSfChat" ng-click="startSFChat()" title="Live Chat" trans="attr-only" class="help-b"><a><span trans>Contact Support</span></a></div>
-                            <div title="Live Agent" trans="attr-only" class="help-b" ng-show="!!isLiveAgent"
-                                 ng-click="startLiveAgent()">
-                                <span ng-show="conf.registration.supportText">{{conf.registration.supportText|translate}}</span>
-                                <a trans>Contact Support</a>
+                            <div class="reg-s-pagination" ng-if="conf.registration.type !== 'partial'" ng-class="{'pointer-events-none': !step1DataIsValid() || registration.busy}">
+                                <small ng-class="{'active': registration.step === 1}" ng-click="registration.step = 1"></small>
+                                <small ng-class="{'active': registration.step === 2}" ng-click="registration.step = 2"></small>
                             </div>
-                            <div title="Live Agent" trans="attr-only" class="help-b"
-                                 ng-show="!!conf.liveChat.zopimInHeader" ng-click="" onclick="showZopimChat();">
-                                <span ng-show="conf.registration.supportText">{{conf.registration.supportText|translate}}</span>
-                                <a trans>Contact Support</a>
+                            <div class="live-chat-b-contain">
+                                <div ng-click="" class="help-b"
+                                     ng-if="!conf.liveChat.isSfChat && conf.liveChat.siteId && conf.liveChat.codePlan">
+                                    <span ng-show="conf.registration.supportText">{{conf.registration.supportText|translate}}</span>
+                                    <a pass-click-to="{{ conf.liveChat.buttonId ? conf.liveChat.buttonId : 'live-chat-button1' }}"  ng-attr-iframe="{{!conf.liveChat.buttonIsDiv ? 'true' : ''}}" ng-attr-find="{{!conf.liveChat.buttonIsDiv ? 'a' : ''}}"><span trans>Contact Support</span></a>
+                                </div>
+                                <div ng-if="conf.liveChat.isSfChat" ng-click="startSFChat()" title="Live Chat" trans="attr-only" class="help-b"><a><span trans>Contact Support</span></a></div>
+                                <div title="Live Agent" trans="attr-only" class="help-b" ng-show="!!isLiveAgent"
+                                     ng-click="startLiveAgent()">
+                                    <span ng-show="conf.registration.supportText">{{conf.registration.supportText|translate}}</span>
+                                    <a trans>Contact Support</a>
+                                </div>
+                                <div title="Live Agent" trans="attr-only" class="help-b"
+                                     ng-show="!!conf.liveChat.zopimInHeader" ng-click="" onclick="showZopimChat();">
+                                    <span ng-show="conf.registration.supportText">{{conf.registration.supportText|translate}}</span>
+                                    <a trans>Contact Support</a>
+                                </div>
                             </div>
                         </div>
                     </div>
+                <!--    <div class="reg-steps-padding">
+                        <div class="reg-steps-left">
+                            <div class="reg-steps-content">
+                                <h2>Promotions</h2>
+                                <div class="reg-banner" style="background-image: url(https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQanSuCl-a-Bd8xJ5QDRRID-dtHvElqrZdooz82geoD7kwbj80Q6Q)"></div>
+                                <h3>Get 2 VIP tickets at Emirates stadium VIP BOX</h3>
+                                <article>
+                                    <p>Rake Race our  new promotion for Chinese Poker active players. Every player who plays on Chinese Poker automatically participate to this promotion with 1000 Euro guaranteed prize.</p>
+                                    <p>Rake Race our  new promotion for Chinese Poker active players. Every player who plays on Chinese Poker automatically participate to this promotion with 1000 Euro guaranteed prize.</p>
+                                    <p>Rake Race our  new promotion for Chinese Poker active players. Every player who plays on Chinese Poker automatically participate to this promotion with 1000 Euro guaranteed prize.</p>
+                                </article>
+                            </div>
+                            <div class="reg-steps-footer">
+
+                            </div>
+                        </div>
+                        <div class="reg-steps-right">
+                            <h2>Join now and get your bonus</h2>
+                            <div class="">
+                                <input type="text">
+                            </div>
+                            <div class="">
+                                <input type="password">
+                            </div>
+                            <div class="">
+                                <input type="password">
+                            </div>
+                            <div class="">
+                                <input type="email">
+                            </div>
+                            <div class="rag-steps-radio">
+                                <div>
+                                    <input id="reg-male" type="radio">
+                                    <label for="reg-male">
+                                        <span>Male</span>
+                                    </label>
+                                </div>
+                                <div>
+                                    <input id="reg-female" type="radio">
+                                    <label for="reg-female">
+                                        <span>Female</span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="">
+                                <select name="">
+                                    <option value="?" selected="selected"></option>
+                                    <option value="1">1</option>
+                                </select>
+                            </div>
+                            <div class="">
+                                <select name="">
+                                    <option value="?" selected="selected"></option>
+                                    <option value="1">1</option>
+                                </select>
+                            </div>
+                            <div class="">
+                                <select name="">
+                                    <option value="?" selected="selected"></option>
+                                    <option value="1">1</option>
+                                </select>
+                            </div>
+                            <div class="">
+                                <button>Continue</button>
+                            </div>
+                            <div class="">
+                                <a href="">Already have an account yet?</a>
+                            </div>
+                            <div class="">
+                                <button>Log in</button>
+                            </div>
+                        </div>
+                    </div>-->
                 </div>
             </div>
         </div>

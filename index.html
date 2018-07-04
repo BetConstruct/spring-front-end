@@ -6,6 +6,7 @@
     <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no">
     <meta charset="utf-8">
     <!--metas-->
+    <!--header-scripts-->
     <!-- build:template
     <title ng-bind="siteTitle"><%=title%></title>
     <meta name="description" content="<%=description%>">
@@ -23,12 +24,15 @@
     <link ng-if="conf.customLanguageCss.indexOf(env.lang) !== -1" rel="stylesheet" ng-href="skins/{{conf.skin}}/css/fonts/{{env.lang}}.css"/>
     <!-- /build -->
 
-    <!-- build:template -->
+    <!-- build:template
+        <!--
+        <link rel="stylesheet" href="custom.css"/>
+        -->
     <!-- /build -->
     <!-- build:remove -->
-        <title ng-bind="siteTitle"></title>
-
-        <link rel="stylesheet" ng-href="skins/{{conf.skin}}/css/skin.css"/>
+    <title ng-bind="siteTitle"></title>
+    <link rel="stylesheet" ng-href="skins/{{conf.skin}}/css/skin.css"/>
+    <link rel="stylesheet" ng-href="//cmsbetconstruct.com/general/getCustomCss?skin_id={{conf.site_id}}"/>
     <!-- /build -->
 </head>
 <body class="{{::conf.site_name.split('.').join('')}}">
@@ -47,7 +51,7 @@
         theme-{{theme.id}}
         {{::conf.site_name}}
         {{::domainClass}}
-        {{(['/poolbetting/', '/freebet/'].indexOf($location.path()) > -1) ? 'modern' : (['/dashboard/', '/livecalendar/', '/results/', '/multiview/', '/overview/', '/virtualsports/', '/insvirtualsports/'].indexOf($location.path()) > -1 || conf.sportsLayout == 'classic') ? 'classic' : conf.sportsLayout}}
+        {{(['/poolbetting/', '/freebet/'].indexOf($location.path()) > -1) ? 'modern' : (['/dashboard/', '/livecalendar/', '/russia2018/', '/results/', '/multiview/', '/overview/', '/virtualsports/', '/insvirtualsports/'].indexOf($location.path()) > -1 || conf.sportsLayout == 'classic') ? 'classic' : conf.sportsLayout}}
         {{env.bodyWrapperClass||''}}
     " no-animate>
 
@@ -68,6 +72,10 @@
         <!-- build:template
         <script src="app.min.js?<%=buildDate%>-<%=gitinfo%>" id="bc-main-js"></script>
         /build -->
+
+        <!--build:template
+            <script src="//maps.google.com/maps/api/js?key=AIzaSyBnU4JWa8z7e_pqvw5fjOM8WsaaJAZoqf8"></script>
+            /build -->
 
         <!-- build:remove -->
         <script src="lib/swfobject.js"></script>
@@ -137,10 +145,12 @@
         <script src="js/modules/vbet5/services/euro.js"></script>
         <script src="js/modules/vbet5/services/activeStep.js"></script>
         <script src="js/modules/vbet5/services/everCookie.js"></script>
+        <script src="js/modules/vbet5/services/betService.js"></script>
 
         <script src="js/modules/cms/main.js"></script>
         <script src="js/modules/cms/config.js"></script>
         <script src="js/modules/cms/services/content.js"></script>
+        <script src="js/modules/cms/directives/cmsAnalytics.js"></script>
         <script src="js/modules/cms/controllers/sportNews.js"></script>
         <script src="js/modules/cms/controllers/pages.js"></script>
         <script src="js/modules/cms/controllers/pageSlider.js"></script>
@@ -213,6 +223,9 @@
         <script src="js/modules/vbet5/directives/suggestedBets.js"></script>
         <script src="js/modules/vbet5/directives/statsLogo.js"></script>
         <script src="js/modules/vbet5/directives/productsSlider.js"></script>
+        <script src="js/modules/vbet5/directives/cashOutDialog.js"></script>
+        <script src="js/modules/vbet5/directives/openBets.js"></script>
+        <script src="js/modules/vbet5/directives/matchesList.js"></script>
         <script src="js/modules/vbet5/filters/firstElement.js"></script>
         <script src="js/modules/vbet5/filters/translate.js"></script>
         <script src="js/modules/vbet5/filters/oddConvert.js"></script>
@@ -240,6 +253,7 @@
         <script src="js/modules/vbet5/filters/shortNumberFormat.js"></script>
         <script src="js/modules/vbet5/filters/handicapBaseFormat.js"></script>
         <script src="js/modules/vbet5/filters/fixPath.js"></script>
+        <script src="js/modules/vbet5/filters/rtlConvert.js"></script>
         <script src="js/modules/vbet5/controllers/modernView/main.js"></script>
         <script src="js/modules/vbet5/controllers/classicView/main.js"></script>
         <script src="js/modules/vbet5/controllers/classicView/center.js"></script>
@@ -313,6 +327,8 @@
         <script src="js/modules/vbet5/controllers/exchangeShop.js"></script>
         <script src="js/modules/vbet5/controllers/recaptcha.js"></script>
         <script src="js/modules/vbet5/controllers/subscriptions.js"></script>
+        <script src="js/modules/vbet5/controllers/russia2018/main.js"></script>
+        <script src="js/modules/vbet5/controllers/betStatus.js"></script>
             <!--<script src="js/modules/vbet5/translations.js"></script>-->
 
         <!--optional js files-->
@@ -322,7 +338,7 @@
 
         <!--skin js files-->
         <!-- /build -->
-        <div class="contain-header tpl-container block-size-visible-b" ng-include="::'templates/header.html'|fixPath" ng-class="{'subheader-enabled': currentPageHasSubHeader() }"></div>
+        <div class="contain-header tpl-container block-size-visible-b" ng-include="::'templates/header.html'|fixPath" ng-class="{'subheader-enabled': $root.currentPage.hasSubHeader }"></div>
         <div ng-view ng-class="$location.path().split('/').join('')" class="view-container"></div>
         <div class="footer-group">
             <div class="footer-cell">
@@ -338,5 +354,6 @@
         </div>
 </div>
     <!--about-->
+    <!--scripts-->
 </body>
 </html>

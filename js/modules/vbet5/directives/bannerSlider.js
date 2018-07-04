@@ -43,6 +43,7 @@ VBET5.directive('bannerSlider', ['$location', '$interval', 'analytics', 'WPConfi
              * @param {string} slug  slug id (key in WPConfig.bannerSlugs)
              */
             function getBanners(slug, container) {
+                scope.loadingProcess = true;
                 var cmd, containerId;
                 containerId = container || content.getSlug('bannerSlugs.' + slug);
                 content.getWidget(containerId).then(function (response) {
@@ -69,7 +70,8 @@ VBET5.directive('bannerSlider', ['$location', '$interval', 'analytics', 'WPConfi
                     } else {
                         scope.ngHide = true;
                     }
-
+                })['finally'](function () {
+                    scope.loadingProcess = false;
                 });
             }
 
@@ -87,11 +89,34 @@ VBET5.directive('bannerSlider', ['$location', '$interval', 'analytics', 'WPConfi
                     'eventLabel': attrs.slug + ' banner click: ' + banner.title
                 });
             };
+            //@TODO need to remove this case after the end of the games in Russia in 2018
+            if (attrs.categorySlug) {
+                scope.loadingProcess = true;
+                content.getPostsByCategorySlug(attrs.categorySlug, 'get_recent_posts', 999, false, WPConfig.wpPromoUrl, WPConfig.wpPromoCustomBaseHost).then(function (response) {
+                    if (response.data && response.data.posts) {
+                        var recentNews = response.data.posts;
+                        var i, length = recentNews.length;
+                        for (i = 0; i < length; i += 1) {
+                            recentNews[i].imageurl  = recentNews[i].image;
+                            recentNews[i].linkType = 'url';
+                        }
 
-            if(typeof attrs.container !== 'undefined') {
-                getBanners(false, attrs.container);
+                        scope.banners = recentNews;
+
+                        intervalPromise = $interval(animateBanners, attrs.interval || 10000);
+
+                    } else {
+                        scope.ngHide = true;
+                    }
+                })['finally'](function () {
+                    scope.loadingProcess = false;
+                });
             } else {
-                getBanners(attrs.slug);
+                if(typeof attrs.container !== 'undefined') {
+                    getBanners(false, attrs.container);
+                } else {
+                    getBanners(attrs.slug);
+                }
             }
 
             scope.$on('$destroy', function () {

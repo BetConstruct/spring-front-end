@@ -6,7 +6,7 @@
   min-width: 980px;
   margin: 0;
   background: #DBE1E6;
-  overflow: hidden;
+  //overflow: hidden;
 }
 
 .alternative-sportsbook-wrapper-template {
@@ -15,7 +15,7 @@
   box-sizing: border-box;
   width: 100%;
   background: #DBE1E6;
-  overflow: hidden;
+  //overflow: hidden;
 }
 
 .optimal-contain-b-view {
@@ -70,7 +70,31 @@
     float: left;
   }
 }
-
+@supports (position: sticky) or (position: -webkit-sticky){
+  .right-column-view-contain{
+    position: sticky;
+    position: -webkit-sticky;
+    top: 46px;
+  }
+  .title-separator-b.region{
+    position: sticky;
+    position: -webkit-sticky;
+    top: 74px;
+    z-index: 77
+  }
+  .live-game-market-title, .item-naw-row, .title-separator-b.sub-header{
+    position: sticky;
+    position: -webkit-sticky;
+    top: 38px;
+    z-index: 88;
+  }
+  .title-region-markets-b{
+    position: sticky;
+    position: -webkit-sticky;
+    top: 110px;
+    z-index: 66;
+  }
+}
 .live-overview-contanier-b {
   float: left;
   width: 100%;
@@ -86,7 +110,7 @@
     width: calc(100% - 265px);
   }
   .optimal-contain-b {
-    border-width: 0px;
+    border-width: 0;
   }
   .left-column-view-contain {
     width: 240px;

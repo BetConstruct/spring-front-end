@@ -1,2 +1,24 @@
 $skin-second: false;
 @import '../../../css/mixins'; @import 'functions/colors'; @import '../../../css/createSkin';
+.header-nav-contain > ul > li > .top-menu-sub-a-t > a[href*="#/russia2018"]{
+   background: #05527f;
+  &:hover{
+    background: #066298;
+  }
+ }
+.header-nav-contain > ul > li.active > .top-menu-sub-a-t > a[href*="#/russia2018"]{
+  background: #066298;
+}
+.live-chat-round-icon{
+  transition: transform 240ms;
+  transform: translate3d(136px,0,0);
+  @include rtl {
+    transform: translate3d(-136px,0,0);
+  }
+  &:hover{
+    transform: translate3d(24px,0,0);
+    @include rtl {
+      transform: translate3d(-24px,0,0);
+    }
+  }
+}

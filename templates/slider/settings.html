@@ -1,24 +1,24 @@
-<div class="bet-history" ng-if="!conf.enableMixedView && env.sliderContent === 'settings'" ng-controller="settingsCtrl" ng-init="settingsPage = popupSettingsPage || settingsPage">
+<div class="bet-history" ng-if="!conf.enableMixedView && env.sliderContent === 'settings'" ng-controller="settingsCtrl" ng-init="env.mixedSettingsPage = popupSettingsPage || env.mixedSettingsPage">
     <div class="closed-popup-form" ng-click="broadcast('slider.close')"></div>
     <div class="general-left-block">
         <div class="settings-nav-contain">
             <h3 trans class="user-icon"></h3>
             <ul>
-                <li ng-show="!conf.disableEditingPersonalInfo" ng-class="{'active': settingsPage==='details'}"><a ng-click="settingsPage='details'" trans>Personal Details</a></li>
-                <li ng-class="{'active': settingsPage==='changepassword'}" ng-show="!conf.disableChangePassword"><a ng-click="settingsPage='changepassword'" trans>Change Password</a></li>
-                <li ng-show="conf.enableAccountVerification || conf.accountVerificationMessage" ng-class="{'active': settingsPage==='verifyaccount'}"><a ng-click="settingsPage='verifyaccount'" trans>Verify Account</a></li>
-                <li ng-show="conf.userTimeOut.enabled" ng-class="{'active': settingsPage==='usertimeout'}"><a ng-click="settingsPage='usertimeout'" trans>Time-Out</a></li>
-                <li ng-show="conf.selfExclusion.enabled" ng-class="{'active': settingsPage==='selfexclusion'}"><a ng-click="settingsPage='selfexclusion'" trans>Self-Exclusion</a></li>
-                <li ng-show="conf.enableDepositLimits" ng-class="{'active': settingsPage==='depositlimits'}"><a ng-click="settingsPage='depositlimits'" trans>Deposit Limits</a></li>
+                <li ng-show="!conf.disableEditingPersonalInfo" ng-class="{'active': env.mixedSettingsPage==='details'}"><a ng-click="env.mixedSettingsPage='details'" trans>Personal Details</a></li>
+                <li ng-class="{'active': env.mixedSettingsPage==='changepassword'}" ng-show="!conf.disableChangePassword"><a ng-click="env.mixedSettingsPage='changepassword'" trans>Change Password</a></li>
+                <li ng-show="conf.enableAccountVerification || conf.accountVerificationMessage" ng-class="{'active': env.mixedSettingsPage==='verifyaccount'}"><a ng-click="env.mixedSettingsPage='verifyaccount'" trans>Verify Account</a></li>
+                <li ng-show="conf.userTimeOut.enabled" ng-class="{'active': env.mixedSettingsPage==='usertimeout'}"><a ng-click="env.mixedSettingsPage='usertimeout'" trans>Time-Out</a></li>
+                <li ng-show="conf.selfExclusion.enabled" ng-class="{'active': env.mixedSettingsPage==='selfexclusion'}"><a ng-click="env.mixedSettingsPage='selfexclusion'" trans>Self-Exclusion</a></li>
+                <li ng-show="conf.enableDepositLimits" ng-class="{'active': env.mixedSettingsPage==='depositlimits'}"><a ng-click="env.mixedSettingsPage='depositlimits'" trans>Deposit Limits</a></li>
                 <!--ng-show="conf.enableFriendReferralBonus && user should have referral related field" -->
-                <li ng-show="conf.friendReferral.enabled" ng-class="{'active': settingsPage==='friendReferral'}"><a ng-click="settingsPage = 'friendReferral'" trans>Friend Referral</a></li>
+                <li ng-show="conf.friendReferral.enabled" ng-class="{'active': env.mixedSettingsPage==='friendReferral'}"><a ng-click="env.mixedSettingsPage = 'friendReferral'" trans>Friend Referral</a></li>
             </ul>
         </div>
     </div>
 
 
     <div class="right-block-history settings">
-        <div ng-show="settingsPage==='verifyaccount' && (conf.enableAccountVerification || conf.accountVerificationMessage)">
+        <div ng-show="env.mixedSettingsPage==='verifyaccount' && (conf.enableAccountVerification || conf.accountVerificationMessage)">
 
             <!--Preferences-->
             <h3 trans>Verify Account</h3>
@@ -35,7 +35,7 @@
 
         </div>
 
-        <div ng-show="settingsPage==='changepassword'" class="change-password-section-j">
+        <div ng-show="env.mixedSettingsPage==='changepassword'" class="change-password-section-j">
 
 
             <!--Change Password-->
@@ -99,7 +99,7 @@
             <!--Change Password END-->
 
         </div>
-        <div ng-show="settingsPage==='details'" ng-init="loadUserInfo()">
+        <div ng-show="env.mixedSettingsPage==='details'" ng-init="loadUserInfo()">
             <!--Change Password-->
             <h3 trans>Personal Details</h3>
 
@@ -434,7 +434,7 @@
             <!--Change Password END-->
 
         </div>
-        <div ng-if="settingsPage==='depositlimits'" ng-init="getLimits()">
+        <div ng-if="env.mixedSettingsPage==='depositlimits'" ng-init="getLimits()">
 
 
             <!--Change Password-->
@@ -506,10 +506,10 @@
 
         </div>
 
-        <ng-include ng-if="settingsPage==='usertimeout'" src="::'templates/slider/userTimeOut.html'|fixPath"></ng-include>
-        <ng-include ng-if="settingsPage==='selfexclusion'" src="::'templates/slider/selfExclusion.html'|fixPath"></ng-include>
+        <ng-include ng-if="env.mixedSettingsPage==='usertimeout'" src="::'templates/slider/userTimeOut.html'|fixPath"></ng-include>
+        <ng-include ng-if="env.mixedSettingsPage==='selfexclusion'" src="::'templates/slider/selfExclusion.html'|fixPath"></ng-include>
 
-        <div ng-if="conf.friendReferral.enabled && settingsPage ==='friendReferral'" class="friend-referral" ng-init="initFriendReferral()">
+        <div ng-if="conf.friendReferral.enabled && env.mixedSettingsPage ==='friendReferral'" class="friend-referral" ng-init="initFriendReferral()">
             <h3 trans>Friend Referral</h3>
             <div class="settings-info-contain deposit-limit">
                 <p trans>Please add friend referral description</p>

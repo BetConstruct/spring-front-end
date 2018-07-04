@@ -126,14 +126,21 @@
 			width: (100%/3 - 2%);
 			/*divide width depending on number of statistics in a row , for tennis number = 2, for soccer 3*/
 			margin: 0.3em 2.9% 0.3em 0;
+			@include rtl {
+				float: right;
+				margin: 0.3em 0 0.3em 2.9%;
+			}
 			&:nth-child(3n) {
 				/* number 3 is number of statistics in the row*/
 				margin: 0.3em 0;
+				@include rtl {
+					margin: 0.3em 0;
+				}
 			}
 			.title {
 				margin-bottom: 0.3em;
 				font-size: 8px;
-				color: #fff;
+				color: #ffffff;
 				text-align: center;
 				text-transform: uppercase;
 				text-overflow: ellipsis;
@@ -147,9 +154,15 @@
 				font-size: 9px;
 				line-height: 0.5em;
 				min-height: 4px;
+				@include rtl {
+					float: right;
+				}
 			}
 			.stat-r {
 				text-align: right;
+				@include rtl {
+					text-align: left;
+				}
 			}
 			.team-2 {
 				float: left;
@@ -157,10 +170,16 @@
 				height: 0.3em;
 				background: #f00;
 				box-shadow: 0 0 3px 0 rgba(117, 117, 117, 1);
+				@include rtl {
+					float: right;
+				}
 				.team-1 {
 					width: 50%;
 					height: 0.3em;
 					background: #ccc;
+					@include rtl {
+						float: right;
+					}
 				}
 			}
 			&.persent {
@@ -201,13 +220,14 @@
 				white-space: nowrap;
 				color: #fff;
 				@include rtl {
-					text-align: left;
+					float: right;
 				}
 				&:last-child {
-					text-align: right;
 					float: right;
+					text-align: right;
 					@include rtl {
-						text-align: right;
+						float: left;
+						text-align: left;
 					}
 				}
 			}
@@ -598,7 +618,7 @@
 		animation: text-slide 1.5s 0.2s 1 ease-out, shadow-pulse 3.5s 1s infinite;
 		animation-fill-mode: forwards;
 	}
-	>div {
+	> div {
 		position: absolute;
 		top: 0;
 		left: 0;

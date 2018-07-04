@@ -1,7 +1,7 @@
 <div class="copyright-j" ng-show="!conf.footer.disableCopyrightBlock">
     <div>&copy; <span ng-show="(now|date:'yyyy') > conf.footer.copyrightSince">{{conf.footer.copyrightSince}} - </span>{{now|date:'yyyy'}}
         <a href="#/" ng-show="!conf.footer.poweredByText">{{conf.footer.siteName || conf.site_name}}</a>
-        <a href="#/" ng-show="conf.footer.poweredByText">{{conf.footer.poweredByText|translate}}</a>
+        <a href="#/" ng-show="conf.footer.poweredByText" ng-bind-html="::conf.footer.poweredByText|translate|html"></a>
     </div>
     <div ng-if="conf.footer.poweredBy">
         <a ng-href="{{conf.footer.poweredBy == 1 ? '//www.betconstruct.com' : ''}}" ng-if="conf.footer.poweredBy != 3"  target="_blank" ng-bind-html="'Powered by BetConstruct'|translate|html:'p'"></a>

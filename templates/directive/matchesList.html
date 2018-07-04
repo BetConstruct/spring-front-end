@@ -1,0 +1,97 @@
+<div class="russia2018-calendar-upcoming" ng-repeat="date in dates" id="{{date.start_ts}}">
+    <ul class="contained-games-{{date.matches.length + date.results.length}}">
+        <li ng-if="showDates && (date.matches.length || date.results.length)">
+            <div class="russia2018-calendar-upcoming-event with-border">
+                <h3 ng-bind="date.day"></h3>
+                <p ng-bind="date.month"></p>
+            </div>
+        </li>
+        <li ng-show="!loadingProcess">
+            <div class="russia2018-upcoming result" ng-repeat="match in date.results track by match.id">
+                <ul class="russia2018-upcoming-head">
+                    <li>
+                        <a class="info-stadium-icon" ng-show="stadiumData && stadiumData[match.id].latitude && stadiumData[match.id].longitude"
+                           ng-click="$root.broadcast('google.map', {latitude: stadiumData[match.id].latitude, longitude: stadiumData[match.id].longitude, name: stadiumData[match.id].name})"></a>
+                        <span ng-bind="stadiumData && stadiumData[match.id].name" trans></span>
+                    </li>
+                    <li></li>
+                </ul>
+                <ul class="russia2018-upcoming-game">
+                    <li>
+                        <div class="russia2018-upcoming-game-team">
+                            <p ng-bind="match.team1_name"></p>
+                            <div class="russia2018-upcoming-game-flag"
+                                 ng-style="{'background-image': match.team1_logo}"></div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="russia2018-upcoming-game-score">
+                            <h6 ng-if="showTime" ng-bind="match.start_ts | formatDate:'hour':null:$root.env.timeFormat"></h6>
+                            <h6 ng-if="!showTime" ng-bind="match.start_ts | formatDate:'DD.MM.YY':null:$root.env.timeFormat"></h6>
+                            <h5 class="score-rtl" ng-bind="match.scores"></h5>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="russia2018-upcoming-game-team">
+                            <div class="russia2018-upcoming-game-flag"
+                                 ng-style="{'background-image': match.team2_logo}"></div>
+                            <p ng-bind="match.team2_name"></p>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            <div class="russia2018-upcoming" ng-repeat="match in date.matches track by match.id">
+                <ul class="russia2018-upcoming-head">
+                    <li>
+                        <a class="info-stadium-icon" ng-show="stadiumData && stadiumData[match.id].latitude && stadiumData[match.id].longitude"
+                           ng-click="$root.broadcast('google.map', {latitude: stadiumData[match.id].latitude, longitude: stadiumData[match.id].longitude, name: stadiumData[match.id].name})"></a>
+                        <span ng-bind="stadiumData && stadiumData[match.id].name" trans></span>
+                    </li>
+                    <li></li>
+                    <li>
+                        <a class="more-markets" ng-hide="match.markets_count <= 0" ng-bind="'+' + match.markets_count" ng-click="goToGame(match)"></a>
+                        <a class="favorite-icon-market-v3" ng-click="toggleGameFavorite(match)" ng-class="{'active': $root.myGames.indexOf(match.id) !== -1}"></a>
+                        <a ng-show="$root.conf.enableH2HStat && match.is_stat_available"
+                           statistics-on-hover stats-game="{'game': match, 'competition': match.competition.name}"
+                           ng-click="openStatistics(match);$event.stopPropagation();" class="h2h-stats" title="{{'statistic'|translate}}"></a>
+                    </li>
+                </ul>
+                <ul class="russia2018-upcoming-game">
+                    <li>
+                        <div class="russia2018-upcoming-game-team">
+                            <p ng-bind="match.team1_name"></p>
+                            <div class="russia2018-upcoming-game-flag"
+                                 ng-style="{'background-image': match.team1_logo}"></div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="russia2018-upcoming-game-score">
+                            <h6 ng-bind="match.start_ts | formatDate:'DD.MM.YY':null:$root.env.timeFormat"></h6>
+                            <h5 ng-hide="match.type === 1" ng-bind="match.start_ts | formatDate:'hour':null:$root.env.timeFormat"></h5>
+                            <h5 ng-show="match.type === 1" class="live-game-v">Live</h5>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="russia2018-upcoming-game-team">
+                            <div class="russia2018-upcoming-game-flag"
+                                 ng-style="{'background-image': match.team2_logo}"></div>
+                            <p ng-bind="match.team2_name"></p>
+                        </div>
+                    </li>
+                </ul>
+                <div class="russia2018-upcoming-markets">
+                    <div class="l-b column-3">
+                        <div class="single-events-b-v3" ng-repeat="event in match.market.events track by event.id"
+                             title="{{event.type_1}}" ng-class="{'pointer-events-none': event.is_empty, 'active': isEventInBetSlip(event), 'blocked': (event.price | oddConvert:'decimal') == 1 || match.is_blocked}"
+                             ng-click="bet(event, match.market, match)">
+                            <b class="p-v price" ng-class="{'factor-top': event.price_change > 0, 'factor-bottom': event.price_change < 0}"
+                               ng-bind="event.price|oddConvert:$root.env.oddFormat:null:match.market.display_key"></b>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </li>
+    </ul>
+</div>
+<!--<div ng-if="!date.matches.length && !date.results.length && !loadingProcess" class="no-data" trans>No data for you selection</div>-->
+<vbet-loader ng-if="loadingProcess"></vbet-loader>

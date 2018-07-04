@@ -27,9 +27,9 @@
             <div class="slider-landing-overlay">
                 <div class="guide">
                     <div class="button-group-j">
-                        <a ng-if="(userOS!=='Windows' && userOS !== 'MacOS') || (!game.downloadLink && userOS==='Windows') || (userOS==='MacOS' && !game.downloadLinkMac)" ng-click="broadcast('globalDialogs.addDialog', {type: 'error',title: 'Error',content: 'There is no downloadable client for your operating system'})" trans>Download</a>
-                        <a ng-href="{{game.downloadLink}}" ng-if="userOS==='Windows' && game.downloadLink" trans>Download</a>
-                        <a ng-href="{{game.downloadLinkMac}}" ng-if="userOS==='MacOS' && game.downloadLinkMac" trans>Download</a>
+                        <a ng-if="!game.downloads || (userOS!=='Windows' && userOS !== 'MacOS') || (!game.downloads.windows && userOS==='Windows') || (userOS==='MacOS' && !game.downloads.mac)" ng-click="broadcast('globalDialogs.addDialog', {type: 'error',title: 'Error',content: 'There is no downloadable client for your operating system'})" trans>Download</a>
+                        <a ng-href="{{game.downloads.windows}}" ng-if="userOS==='Windows' && game.downloads.windows" trans>Download</a>
+                        <a ng-href="{{game.downloads.mac}}" ng-if="userOS==='MacOS' && game.downloads.mac" trans>Download</a>
                         <a ng-show="env.authorized" ng-click="amountTransfer('get_balance_gg_poker', null, null, '154000')" trans>TRANSFER</a>
                     </div>
                 </div>

@@ -45,5 +45,10 @@
         <div class="mini-games" ng-if="conf.enableMiniGameUnderBetslip && $root.casinoEnabled" ng-include="'optional_modules/casino/templates/specialgames/minigames.html'|fixPath"></div>
         <!--Mini Games-->
         <div class="right-banner-container" ng-if="conf.enableBannerUnderBetslip" ng-controller="cmsSportNewsCtrl" ng-include="::'templates/sport/classic/banners.html'|fixPath"></div>
+
+        <div class="right-banner-container" ng-if="conf.customBetSlipWidgetScript">
+            <iframe class="bet-slip-iframe" ng-src="{{(conf.customBetSlipWidgetScript + 'lang=' + $root.env.lang + '&amp;odds=' + $root.env.oddFormat)|url}}"></iframe>
+        </div>
+
     </div>
 </div>

@@ -127,7 +127,9 @@
                                                         <b trans>Phone only market</b><br><span trans>To place a bet, please call</span> <span>{{conf.phoneOnlyMarkets.phoneNumber}}</span>
                                                     </div>
                                                     <div class="game-row-item"><div class="icon-v" ng-show="events.P2 && isEventInBetSlip(events.P2)"></div><p  title="{{ game.team2_name }}">{{ game.team2_name }}</p> <span ng-class="getArrow(events.P2.price_change)"><span>{{ events.P2.price|oddConvert:env.oddFormat:null:'WINNER' }}</span></span></div></li>
-                                                <li class="statistic" ng-click="game.is_stat_available ? openStatistics(game) : toggleGame()"><a ng-show="conf.enableH2HStat && game.is_stat_available" title="Statistics" trans></a></li>
+                                                <li class="statistic" ng-click="game.is_stat_available ? openStatistics(game) : toggleGame()">
+                                                    <a ng-show="conf.enableH2HStat && game.is_stat_available" statistics-on-hover stats-game="{'game': game, competition: competition.name}" title="Statistics" trans></a>
+                                                </li>
                                                 <li class="factor-game" ng-click="toggleGame()">
 
                                                     <a ng-show="!game.loading" >
@@ -172,7 +174,9 @@
                                                     <b trans>Phone only market</b><br><span trans>To place a bet, please call</span> <span>{{conf.phoneOnlyMarkets.phoneNumber}}</span>
                                                 </div>
                                                 <div class="game-row-item"><div class="icon-v" ng-show="events.P2 && isEventInBetSlip(events.P2)"></div><p title="{{ game.team2_name }}">{{ game.team2_name }}</p> <span ng-class="getArrow(events.P2.price_change)"><span>{{ events.P2.price|oddConvert:env.oddFormat:null:'WINNER' }}</span></span></div></li>
-                                            <li class="statistic" ng-click="game.is_stat_available ? openStatistics(game) : toggleGame()"><a ng-show="conf.enableH2HStat && game.is_stat_available" title="Statistics" trans></a></li>
+                                            <li class="statistic" ng-click="game.is_stat_available ? openStatistics(game) : toggleGame()">
+                                                <a ng-show="conf.enableH2HStat && game.is_stat_available" statistics-on-hover stats-game="{'game': game, competition: competition.name}" title="Statistics" trans></a>
+                                            </li>
                                             <li class="factor-game" ng-click="toggleGame()"><a></a></li>
                                         </ul>
                                     </div>
@@ -412,7 +416,7 @@
                                                         <ul ng-repeat="row in rows track by $index">
                                                             <li class="modern-max-bet-t" ng-mouseover="displayEventLimit(event, openGame, false, market)" ng-mouseleave="cancelDisplayEventLimit(event)" ng-repeat="event in row track by event.id" ng-click="bet(event, market, game)" ng-class="{'blocked': (event.price | oddConvert:'decimal') ===1}">
                                                                 <div class="max-bet-tooltip-v3" ng-show="env.authorized && event.maxBet !== undefined" ng-class="{'maxbet-enabled': env.authorized}">
-                                                                    <p>Max: <b ng-bind="conf.onlyDecimalStakeAmount ? Math.floor(event.maxBet) : event.maxBet"></b> {{profile.currency_name|currency }}</p>
+                                                                    Max: <b ng-bind="conf.onlyDecimalStakeAmount ? Math.floor(event.maxBet) : event.maxBet"></b> {{profile.currency_name|currency }}
                                                                 </div>
                                                                 <div class="betting-tooltip" ng-show="game.type==1 && conf.phoneOnlyMarkets.enable">
                                                                     <b trans>Phone only market</b><br><span trans>To place a bet, please call</span> <span>{{conf.phoneOnlyMarkets.phoneNumber}}</span>
@@ -497,7 +501,7 @@
                                                         <ul ng-repeat="row in rows track by $index">
                                                             <li class="modern-max-bet-t" ng-mouseover="displayEventLimit(event, openGame, false, market)" ng-mouseleave="cancelDisplayEventLimit(event)" ng-repeat="event in row track by event.id" ng-click="bet(event, market, game)" ng-class="{'blocked': (event.price | oddConvert:'decimal') ===1}">
                                                                 <div class="max-bet-tooltip-v3" ng-show="env.authorized && event.maxBet !== undefined" ng-class="{'maxbet-enabled': env.authorized}">
-                                                                    <p>Max: <b ng-bind="conf.onlyDecimalStakeAmount ? Math.floor(event.maxBet) : event.maxBet"></b> {{profile.currency_name|currency }}</p>
+                                                                    Max: <b ng-bind="conf.onlyDecimalStakeAmount ? Math.floor(event.maxBet) : event.maxBet"></b> {{profile.currency_name|currency }}
                                                                 </div>
                                                                 <div class="betting-tooltip" ng-show="game.type==1 && conf.phoneOnlyMarkets.enable">
                                                                     <b trans>Phone only market</b><br><span trans>To place a bet, please call</span> <span>{{conf.phoneOnlyMarkets.phoneNumber}}</span>

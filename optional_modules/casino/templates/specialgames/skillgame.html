@@ -9,7 +9,7 @@
                         <div class="icon-delete popup"><a title="{{ 'Open In Pop-Up Window'|translate }}" ng-click="frameControll('popup'); broadcast('closeNestedFrame');">popUp</a></div>
                         <div class="icon-delete refresh"><a title="{{ 'Refresh'|translate }}" ng-click="frameControll('refresh');">refresh</a></div>
                     </div>
-                    <iframe ng-if="frameUrl && !loadingUserData" frame-control allowfullscreen="true" number-of-window="1" initial-width="{{initialFrameSize.width}}" initial-height="{{initialFrameSize.height}}" ng-src="{{frameUrl}}"></iframe>
+                    <iframe ng-if="frameUrl && !loadingUserData" frame-control allowfullscreen="true" number-of-window="1"initial-width="{{game.width}}" initial-height="{{game.height}}"  aspect-ratio="{{game.ratio}}" ng-src="{{frameUrl}}"></iframe>
                     <vbet-loader ng-show="loadingUserData"></vbet-loader>
                 </div>
             </div>

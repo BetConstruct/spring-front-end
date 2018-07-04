@@ -86,7 +86,8 @@
                             <div class="accumlator-bonus-m" ng-show="bet.outcome == 0 && bet.bonus">
                                 <b title="Accumulator bonus">{{bet.bonus}} {{bet.currency|currency}}</b>
                             </div>
-                            <button ng-click="broadcast('open.cashoutDialog', bet)" ng-disabled="!bet.cash_out || !bet.cashoutEnabled" title="{{bet.cash_out ? bet.cash_out + ' ' + bet.currency  : ('Cash-out Temporary unavailable'|translate)}}">
+                            <button ng-click="broadcast('open.cashoutDialog', {bet: bet, dateRange: betHistoryParams.dateRange, selectedUpcomingPeriod: selectedUpcomingPeriod})"
+                                    ng-disabled="!bet.cash_out || !bet.cashoutEnabled" title="{{bet.cash_out ? bet.cash_out + ' ' + bet.currency  : ('Cash-out Temporary unavailable'|translate)}}">
                                 <b trans>Cash-out</b>
                                 <b ng-if="bet.cash_out" ng-bind="bet.cash_out + ' ' + bet.currency"></b>
                             </button>
@@ -141,5 +142,4 @@
     </div>
     <vbet-loader class="contein-recentbets" ng-show="!myBetsLoaded && !errorLoadingBets"></vbet-loader>
 
-    <ng-include src="::'templates/dialogs/cashout.html'|fixPath"></ng-include>
 </div>

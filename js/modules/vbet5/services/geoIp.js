@@ -76,8 +76,12 @@ VBET5.service('Geoip', ['$http', '$q', '$location', 'Config', '$timeout', functi
             .success(function (response) {
                 if (promise !== null) {
                     promise = null;
-                    data = response;
-                    deferred.resolve(response);
+                    if (response && response.statusCode === 'OK') {
+                        data = response;
+                        deferred.resolve(response);
+                    } else {
+                        deferred.resolve();
+                    }
                 }
             }).error(function (response) {
                  if (promise !== null) {

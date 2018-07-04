@@ -5,14 +5,12 @@
 
         <li ng-repeat="group in prematchSportGroups track by group.id" ng-show="group && (showPanel.expanded || $index < prematchSportCount + 1)">
             <ul class="float-width">
-                <li class="sports-item-v3 sports-group-item-v3" ng-show="group.hasHeader"
+                <li class="sports-item-v3 sports-group-item-v3 {{group.name}}" ng-show="group.hasHeader"
                      ng-class="{'active': leftMenuState.prematch.groups[group.id]}"
                      ng-click="leftMenuState.prematch.groups[group.id] = !leftMenuState.prematch.groups[group.id]">
                     <p>{{group.name}}</p>
                     <div class="arrow-view-v3"></div>
-                    <div class="sport-games-count-v3">
-                        <span>{{group.count}}</span>
-                    </div>
+                    <div class="sport-games-count-v3">{{group.count}}</div>
                 </li>
                 <li ng-repeat="sport in group.sports track by sport.id"
                     id="sport-{{sport.alias}}"
@@ -24,9 +22,7 @@
                          ng-show="!sport.link">
                         {{sport.name}}
                         <div class="arrow-view-v3"></div>
-                        <div class="sport-games-count-v3">
-                            <span ng-show="sport.game">{{sport.game}}</span>
-                        </div>
+                        <div class="sport-games-count-v3" ng-show="sport.game">{{sport.game}}</div>
                     </div>
 
                     <a class="sports-item-v3 {{sport.alias}}" ng-class="{'active': $parent.todaysBetsSelected && sport.isTodayBets}" ng-if="conf.todayBets.enabled && sport.alias === 'todaybets'"

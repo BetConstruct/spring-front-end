@@ -5,154 +5,72 @@
  * special games pages controller
  */
 
-angular.module('casino').controller('casinoSpecialGamesCtrl', ['$rootScope', '$scope', '$sce', '$location', '$window', 'CConfig', 'Config', 'DomHelper', 'Translator', 'Zergling', 'AuthData', 'casinoManager', '$timeout', 'LanguageCodes', function ($rootScope, $scope, $sce, $location, $window, CConfig, Config, DomHelper, Translator, Zergling, AuthData, casinoManager, $timeout, LanguageCodes) {
+angular.module('casino').controller('casinoSpecialGamesCtrl', ['$rootScope', '$scope', '$sce', '$location', '$window', 'CConfig', 'Config', 'DomHelper', 'Translator', 'Zergling', 'AuthData', 'casinoManager', 'casinoData', '$timeout', 'LanguageCodes', 'Utils', function ($rootScope, $scope, $sce, $location, $window, CConfig, Config, DomHelper, Translator, Zergling, AuthData, casinoManager, casinoData, $timeout, LanguageCodes, Utils) {
     'use strict';
 
-    var gameName;
+    var tableId;
     var demo_id;
     $rootScope.footerMovable = true; // make footer movable
-    /**
-     * @ngdoc method
-     * @name loadGame
-     * @methodOf CASINO.controller:casinoSpecialGamesCtrl
-     * @description depending on  product,  prepares URL and open the game
-     * @param {String} product name of product
-     * @param {String} gameDemoId game demo id received from CMS
-     */
-    $scope.loadGame = function loadGame (product, gameDemoId) {
-        gameName = product;
-        demo_id = gameDemoId;
-        var title;
-        switch (product) {
-            case 'ogwil':
-                title = 'OGWIL';
-                break;
-            case 'financials':
-                title = 'Financials';
-                break;
-            case 'fantasy':
-                title = 'Fantasy Sports';
-                break;
-            case 'game':
-                title = 'Casino';
-                break;
-            case 'deberc':
-                title = 'Deberc';
-                break;
-            case 'pokerklas':
-                title = 'Poker Klas';
-                break;
-            case 'ggpoker':
-                title = 'GG Poker';
-                break;
-        }
-        if (title) {
-            $rootScope.setTitle(title);
-        }
-
-        getUrl();
-    };
 
     function getUrl() {
         $scope.frameUrl = null;
-        var game;
 
-        switch (gameName) {
-        case 'poker':
-            game = CConfig.poker;
-            $scope.initialFrameSize = CConfig.poker.initialSize;
-            break;
-        case 'fantasy':
-            game = CConfig.fantasySports;
-            break;
-        case 'ogwil':
-            game = CConfig.ogwil;
-            break;
-        case 'financials':
-            game = CConfig.financials;
-            break;
-            case 'csbpoolbetting':
-                game = CConfig.csbPoolBetting;
-                break;
-        case 'game':
-            var pathContent = $location.path().split('/');
-            game = {
-                gameID: pathContent[2],
-                provider: pathContent[4],
-                externalID: pathContent[6],
-                tableID: pathContent[8]
-            };
-            if ((game.gameID === 'TLCTLC' || game.gameID === 'GDRdog6') && !$rootScope.env.authorized) { //it must be reverted after changing finbet's page
-                $timeout(function () {
-                    if (!$rootScope.loginInProgress) {
-                        $rootScope.$broadcast('openLoginForm');
-                    } else {
-                        var loginProccesWatcher = $scope.$watch('loginInProgress', function () {
-                            if (!$rootScope.loginInProgress) {
-                                loginProccesWatcher();
-                                if (!$rootScope.env.authorized) {
-                                    $rootScope.$broadcast('openLoginForm');
-                                }
+        if (!$rootScope.env.authorized && !$scope.game.types.viewMode && !$scope.game.types.funMode) {
+            $timeout(function () {
+                if (!$rootScope.loginInProgress) {
+                    $rootScope.$broadcast('openLoginForm');
+                } else {
+                    var loginProccesWatcher = $scope.$watch('loginInProgress', function () {
+                        if (!$rootScope.loginInProgress) {
+                            loginProccesWatcher();
+                            if (!$rootScope.env.authorized) {
+                                $rootScope.$broadcast('openLoginForm');
                             }
-                        });
-                    }
-                }, 100);
-                return;
-            }
-            break;
-        case 'belote':
-            game = CConfig.belote;
-            $scope.initialFrameSize = CConfig.belote.initialSize;
-            break;
-        case 'deberc':
-            game = CConfig.deberc;
-            $scope.initialFrameSize = CConfig.deberc.initialSize;
-            break;
-        case 'backgammon':
-            game = CConfig.backgammon;
-            $scope.initialFrameSize = CConfig.backgammon.initialSize;
-            break;
-        case 'checkers':
-            game = CConfig.checkers;
-            $scope.initialFrameSize = CConfig.checkers.initialSize;
-            break;
-        case 'pokerklas':
-            game = $scope.game = CConfig.pokerklas;
-            break;
-        case 'ggpoker':
-            game = $scope.game = CConfig.ggpoker;
-            break;
+                        }
+                    });
+                }
+            }, 100);
+            return;
         }
-        if (game) {
-            var gameUrl;
 
-            if (game.tableID && game.provider === CConfig.liveCasino.provider) {
-                var urlPrefix = $window.location.protocol + CConfig.liveCasino.lcGameUrlPrefix + (CConfig.liveCasino.staticDomain || CConfig.cUrlPrefix.substring(CConfig.cUrlPrefix.indexOf('.') + 1));
-                var tableInfo = '/table/table/'  + game.tableID + ($location.search().limit ? ('/' + $location.search().limit) : '');
-                gameUrl = urlPrefix + '/web/' + (LanguageCodes[$rootScope.env.lang] || 'en') + '/' + Config.main.site_id + tableInfo + '?activeGroupId=' + (CConfig.liveCasino.lobbyGroupsMap[game.externalID] || 0) + ($location.search().room ? ('&roomNumber=' + $location.search().room) : '');
-            } else {
-                gameUrl = CConfig.cUrlPrefix + CConfig.gamesUrl + '?partnerId=' + Config.main.site_id + '&gameId=' + (demo_id || game.externalID) + '&language=' + LanguageCodes[$rootScope.env.lang] + '&openType=' + ($rootScope.env.authorized ? 'real' : 'fun');
-                $location.search().studio && (gameUrl += '&studio=' + $location.search().studio);
-            }
+        var gameUrl;
 
-            gameUrl += "&devicetypeid=" + CConfig.deviceTypeId;
+        if (tableId && $scope.game.provider === CConfig.liveCasino.provider) {
+            var urlPrefix = $window.location.protocol + CConfig.liveCasino.lcGameUrlPrefix + (CConfig.liveCasino.staticDomain || CConfig.cUrlPrefix.substring(CConfig.cUrlPrefix.indexOf('.') + 1));
+            var tableInfo = '/table/table/'  + tableId + ($location.search().limit ? ('/' + $location.search().limit) : '');
+            gameUrl = urlPrefix + '/web/' + (LanguageCodes[$rootScope.env.lang] || 'en') + '/' + Config.main.site_id + tableInfo + '?activeGroupId=' + (CConfig.liveCasino.lobbyGroupsMap[$scope.game.extearnal_game_id] || 0) + ($location.search().room ? ('&roomNumber=' + $location.search().room) : '');
+        } else {
+            gameUrl = CConfig.cUrlPrefix + CConfig.gamesUrl + '?partnerId=' + Config.main.site_id + '&gameId=' + (demo_id || $scope.game.extearnal_game_id) + '&language=' + LanguageCodes[$rootScope.env.lang] + '&openType=' + ($rootScope.env.authorized ? 'real' : 'fun');
+            $location.search().studio && (gameUrl += '&studio=' + $location.search().studio);
+        }
 
-            $rootScope.env.authorized && (gameUrl += '&token=' + AuthData.getAuthToken() + (!Config.main.GmsPlatform ? '&username=' + $rootScope.profile.username : ''));
+        gameUrl += "&devicetypeid=" + CConfig.deviceTypeId;
 
-            if (gameName === 'pokerklas') {
-                var popup = $window.open(gameUrl, 'PokerKlas', 'width=800,height=800,menubar=yes,toolbar=yes,location=yes,scrollbars=yes,resizable=yes');
-                casinoManager.checkIfPopupIsBlocked(popup);
-                $scope.showTransferPopUp = true;
-            } else {
-                $timeout(function () {
-                    $scope.frameUrl = $sce.trustAsResourceUrl(gameUrl);
-                }, 20);
-            }
+        //receives location parameters and adds as additional parameters to the game URL
+        var locationObject = $location.search();
+        if (locationObject.lang) {
+            delete locationObject.lang;
+        }
+        if (!Utils.isObjectEmpty(locationObject)) {
+            gameUrl += "&additionalparams=" + JSON.stringify(locationObject);
+            $location.search({});
+        }
+
+        $rootScope.env.authorized && (gameUrl += '&token=' + AuthData.getAuthToken() + (!Config.main.GmsPlatform ? '&username=' + $rootScope.profile.username : ''));
+
+        if ($scope.game.extearnal_game_id === CConfig.pokerklas.externalID) {
+            var popup = $window.open(gameUrl, 'PokerKlas', 'width=800,height=800,menubar=yes,toolbar=yes,location=yes,scrollbars=yes,resizable=yes');
+            casinoManager.checkIfPopupIsBlocked(popup);
+            $scope.showTransferPopUp = true;
+        } else {
+            $timeout(function () {
+                $scope.frameUrl = $sce.trustAsResourceUrl(gameUrl);
+            }, 20);
         }
     }
 
     $scope.$watch('env.authorized', function (newValue, oldValue) {
-        if (newValue === oldValue || gameName === 'pokerklas' || (!newValue && gameName === 'backgammon')) return;
+        if (!$scope.game || newValue === oldValue || $scope.game.extearnal_game_id === CConfig.pokerklas.externalID || (!newValue && $scope.game.extearnal_game_id === CConfig.backgammon.externalID)) return;
 
         if (!newValue || $rootScope.profile || Config.main.GmsPlatform) {
             getUrl();
@@ -180,13 +98,22 @@ angular.module('casino').controller('casinoSpecialGamesCtrl', ['$rootScope', '$s
         var percent = 0.85, windowWidth = 900, windowHeight = 900; // initial size of popUp
         var screenResolution = DomHelper.getScreenResolution();
 
-        if ($scope.initialFrameSize) {
-            scaleWidth = percent * screenResolution.x / $scope.initialFrameSize.width;
-            scaleHeight = percent * screenResolution.y / $scope.initialFrameSize.height;
+
+        if ($scope.game.width && $scope.game.height) {
+            scaleWidth = percent * screenResolution.x / $scope.game.width;
+            scaleHeight = percent *  screenResolution.y / $scope.game.height;
             scale = Math.min(scaleWidth, scaleHeight);
-            windowWidth = scale * $scope.initialFrameSize.width;
-            windowHeight = scale * $scope.initialFrameSize.height;
+            windowWidth = scale * $scope.game.width;
+            windowHeight = scale * $scope.game.height;
+        } else if ($scope.game.ratio) {
+            var ratios =  $scope.game.ratio.split(':');
+            var initialWidth = percent * screenResolution.y * ratios[0] / ratios[1];
+            scaleWidth = percent *  screenResolution.x / initialWidth;
+            scale = Math.min(scaleWidth, 1);
+            windowWidth = scale * initialWidth;
+            windowHeight = scale * screenResolution.y * percent;
         }
+
         var popup = $window.open($scope.frameUrl, '', 'width=' + windowWidth + ',height=' + windowHeight + ',menubar=no,toolbar=no,location=no,scrollbars=no,resizable=yes');
         casinoManager.checkIfPopupIsBlocked(popup);
     }
@@ -231,6 +158,72 @@ angular.module('casino').controller('casinoSpecialGamesCtrl', ['$rootScope', '$s
         casinoManager.gpTransfer($scope.amountTransferModel);
     };
 
+
+    /**
+     * @ngdoc method
+     * @name loadGame
+     * @methodOf CASINO.controller:casinoSpecialGamesCtrl
+     * @description depending on  product,  prepares URL and open the game
+     * @param {String} product name of product
+     * @param {String} gameDemoId game demo id received from CMS
+     */
+    $scope.loadGame = function loadGame (product, gameDemoId) {
+        demo_id = gameDemoId;
+
+        var exId;
+        switch (product) {
+            case 'poker':
+                exId = CConfig.poker.externalID;
+                break;
+            case 'fantasy':
+                exId = CConfig.fantasySports.externalID;
+                break;
+            case 'ogwil':
+                exId = CConfig.ogwil.externalID;
+                break;
+            case 'financials':
+                exId = CConfig.financials.externalID;
+                break;
+            case 'csbpoolbetting':
+                exId = CConfig.csbPoolBetting.externalID;
+                break;
+            case 'belote':
+                exId = CConfig.belote.externalID;
+                break;
+            case 'deberc':
+                exId = CConfig.deberc.externalID;
+                break;
+            case 'backgammon':
+                exId = CConfig.backgammon.externalID;
+                break;
+            case 'checkers':
+                exId = CConfig.checkers.externalID;
+                break;
+            case 'pokerklas':
+                exId = CConfig.pokerklas.externalID;
+                break;
+            case 'ggpoker':
+                exId = CConfig.ggpoker.externalID;
+                break;
+            case 'game':
+                var pathContent = $location.path().split('/');
+                exId = pathContent[6];
+                tableId = pathContent[8];
+                break;
+        }
+        $scope.loadingUserData = true;
+        casinoData.getGames(null, null, null, null, null, null, null, null, [exId]).then(function (response) {
+            if (response && response.data && response.data.games[0]) {
+                $scope.game = response.data.games[0];
+
+                $rootScope.setTitle($scope.game.name);
+
+                getUrl();
+            }
+        })['finally'](function () {
+            $scope.loadingUserData = false;
+        });
+    };
 
     $scope.$on("$destroy", function () {
         $scope.frameUrl = null;

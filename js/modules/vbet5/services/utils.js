@@ -1381,22 +1381,26 @@ VBET5.service('Utils', ['$timeout', '$filter', '$location', '$window', 'Config',
      * @ngdoc method
      * @name getFirstMarket
      * @methodOf vbet5.service:Utils
-     * @description Returns P1XP2 market if it exsists or first market
+     * @description Returns P1XP2 or P1P2 market if they exist or the first market
      * @param {Object} markets market object from backend
-     * @param {Object} $filter angular $filter object
      */
-    Utils.getFirstMarket = function getFirstMarket(markets, $filter){
-        var firstMarket;
-        var firstMarketName = "P1XP2";
-        angular.forEach(markets, function (market) {
-            if (market.type  === firstMarketName) {
-                firstMarket = market;
+    Utils.getFirstMarket = function getFirstMarket(markets) {
+        function searchForMarket(markets, marketType) {
+            var marketFound;
+            for (var market in markets) {
+                if (markets[market].type  === marketType) {
+                    marketFound = markets[market];
+                    break;
+                }
             }
-        });
-        if (firstMarket === undefined) {
-            firstMarket =  $filter("firstElement")(markets);
+            return marketFound;
         }
-        return firstMarket;
+
+        var firstMarket = searchForMarket(markets, 'P1XP2');
+        if (firstMarket === undefined) {
+            firstMarket = searchForMarket(markets, 'P1P2');
+        }
+        return firstMarket || $filter("firstElement")(markets);
     };
 
     /**
@@ -1588,6 +1592,15 @@ VBET5.service('Utils', ['$timeout', '$filter', '$location', '$window', 'Config',
             }
             return acc;
         }, []);
+    };
+    /**
+     * @ngdoc method
+     * @name generatePermaLink
+     * @methodOf vbet5.service:Utils
+     * @description Generate permalink file name for facebook twitter e.t.c.
+     */
+    Utils.generatePermaLink = function generatePermaLink (news) {
+        return (news.slug || news.title || '').replace(/ /g,"-") + '-id-' + news.id + '.html';
     };
 
     return Utils;

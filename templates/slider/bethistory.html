@@ -145,7 +145,8 @@
                                 </p>
                             </div>
                             <div class="cash-out-button" ng-show="bet.outcome == 0 && bet.cash_out !==undefined">
-                                <button ng-click="broadcast('open.cashoutDialog', bet)" ng-disabled="!bet.cash_out || !bet.cashoutEnabled" title="{{bet.cash_out ? bet.cash_out + ' ' + bet.currency  : ('Cash-out is not available at the moment'|translate)}}">
+                                <button ng-click="broadcast('open.cashoutDialog', {bet: bet, dateRange: betHistoryParams.dateRange, selectedUpcomingPeriod: selectedUpcomingPeriod})"
+                                        ng-disabled="!bet.cash_out || !bet.cashoutEnabled" title="{{bet.cash_out ? bet.cash_out + ' ' + bet.currency  : ('Cash-out is not available at the moment'|translate)}}">
                                     <b trans>Cash-out</b>
                                     <b ng-bind="bet.cash_out + ' ' + bet.currency" ng-show="bet.cash_out"></b>
                                 </button>
@@ -173,5 +174,4 @@
         <!--all bets block END-->
     </div>
 
-    <ng-include src="::'templates/dialogs/cashout.html'|fixPath"></ng-include>
 </div>

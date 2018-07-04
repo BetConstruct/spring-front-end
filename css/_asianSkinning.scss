@@ -257,9 +257,6 @@
     color: set-color($hero-color);
     background: $hero-color;
   }
-  .asian-left-contain-menu .list-bet-block .name-b-list ul li:hover {
-    background: none;
-  }
   .asian-left-contain-menu .bs-type-switcher p,
   .asian-left-contain-menu .betslip-system-chenge p {
     color: $text-palette-1;
@@ -1370,6 +1367,15 @@
     &:before {
       border-color: set-color($skin-color);
     }
+  }
+  .open-bets-buttons {
+    margin: 0;
+    border-top: 1px solid darken(saturate(adjust-hue($skin-color, 4deg), 1), 7);
+    border-bottom-color: darken(saturate(adjust-hue($skin-color, 4deg), 1), 7);
+  }
+  .status-icon-open-bets {
+    top: 16px;
+    right: 4px;
   }
   .viewSwitcher-j.select-pagination > span {
     color: $text-palette-7;

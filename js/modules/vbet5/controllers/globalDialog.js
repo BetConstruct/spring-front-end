@@ -19,7 +19,7 @@
  *          content: "content of first dialog" // required field
  *      }
  */
-VBET5.controller('globalDialogCtrl', ['$rootScope', '$scope', '$location', '$window', '$filter', '$cookies', 'Config', 'Storage', 'Utils', 'content', 'Geoip', 'TimeoutWrapper', 'Moment', 'Translator', 'Tracking', 'analytics', function ($rootScope, $scope, $location, $window, $filter, $cookies, Config, Storage, Utils, content, Geoip, TimeoutWrapper, Moment, Translator, Tracking, analytics) {
+VBET5.controller('globalDialogCtrl', ['$rootScope', '$scope', '$location', '$window', '$filter', '$cookies', 'Config', 'Storage', 'Utils', 'content', 'Geoip', 'TimeoutWrapper', 'Moment', 'Translator', 'Tracking', 'Zergling', 'analytics', function ($rootScope, $scope, $location, $window, $filter, $cookies, Config, Storage, Utils, content, Geoip, TimeoutWrapper, Moment, Translator, Tracking, Zergling, analytics) {
     'use strict';
 
     // $scope.globalDialogs is array where the dialogs are stored
@@ -76,8 +76,9 @@ VBET5.controller('globalDialogCtrl', ['$rootScope', '$scope', '$location', '$win
      * @description adds dialog and updates its arrays
      */
     function addDialog(dialog) {
-        if (!dialog || !dialog.type || ('image' === dialog.type && !dialog.src) || ('image' !== dialog.type && !dialog.content)) {
-            return null;
+
+        if (!(dialog && dialog.type && (('image' === dialog.type && dialog.src) || ('image' !== dialog.type && dialog.content) || dialog.template))) {
+            return;
         }
 
         dialog.tag && removeDialogByTag(dialog.tag);
@@ -86,6 +87,15 @@ VBET5.controller('globalDialogCtrl', ['$rootScope', '$scope', '$location', '$win
 
         $scope.globalDialogs.unshift(dialog);
         updateActiveDialog();
+    }
+
+    function disableButtons (state) {
+        if ($scope.activeDialog && $scope.activeDialog.buttons) {
+            $scope.activeDialog.disableButtons = state;
+            angular.forEach($scope.activeDialog.buttons, function (button) {
+                button.disabled = state;
+            });
+        }
     }
 
     $scope.$on("globalDialogs.addDialog", function (event, dialog) {
@@ -449,4 +459,55 @@ VBET5.controller('globalDialogCtrl', ['$rootScope', '$scope', '$location', '$win
             }
         }
     });
+
+    function showPrefConfirmation () {
+        if ($rootScope.profile && $rootScope.profile.is_gdpr_passed === false && !$rootScope.env.showSlider) {
+            $scope.prefModel = {};
+            $scope.prefConfirmation = Config.main.gdpr.options;
+            addDialog({
+                type: 'profile',
+                class: 'preference-confirmation-t',
+                template: 'templates/dialogs/preferenceConfirmation.html',
+                info: {},
+                buttons: [
+                    {
+                        title: 'Confirm',
+                        disabled: true,
+                        callback: function () {
+                            var request = {};
+                            angular.forEach($scope.prefModel, function (val, key) {
+                                request[key] = val === 'true';
+                            });
+                            Zergling.get(request, 'update_client_gdpr_terms').then(function (response) {
+                                console.log(response);
+                            });
+                        }
+                    },
+                    {
+                        title: 'Remind me later'
+                    }
+
+                ]
+            });
+        }
+    }
+
+    $scope.prefConfirmationValid = function prefConfirmationValid() {
+        var enableConfirmation = true;
+        angular.forEach($scope.prefConfirmation, function (val, key) {
+            if ($scope.prefModel[key] === undefined) {
+                enableConfirmation = false;
+            }
+        });
+        enableConfirmation && disableButtons(false);
+    };
+
+    if (Config.main.gdpr.enabled && Config.main.gdpr.popup) {
+        $scope.$on('login.loggedIn', function () {
+            TimeoutWrapper(function () {
+                showPrefConfirmation();
+            }, 2000);
+        });
+        $scope.$on('loggedIn', showPrefConfirmation);
+    }
 }]);

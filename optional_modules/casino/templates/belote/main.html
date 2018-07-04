@@ -1,4 +1,4 @@
-<div ng-controller="cmsPagesCtrl" ng-init="setTitle('Belote');" get-casino-game="547" class="float-width">
+<div ng-controller="cmsPagesCtrl" ng-init="setTitle('Belote');" get-casino-game="547" class="size-h-container">
     <div ng-if="!globalConfig.belote.redirectOnGame" class="float-width">
         <div class="skillgame-landing-j" ng-show="!showNestedFrame" ng-init="loadPage('belote.mainPageSlugs', true)">
             <vbet-loader ng-show="!pages"></vbet-loader>
@@ -21,7 +21,7 @@
         </div>
         <div ng-if="showNestedFrame && game" ng-controller="casinoSpecialGamesCtrl" ng-init="loadGame('belote');"  class="big-games-overflow" ng-include="'optional_modules/casino/templates/specialgames/skillgame.html'|fixPath"></div>
     </div>
-    <div ng-if="globalConfig.belote.redirectOnGame && game" class="belote-with-fullscreen" ng-controller="casinoSpecialGamesCtrl" ng-init="loadGame('belote')" ng-include="'optional_modules/casino/templates/specialgames/main.html'|fixPath"></div>
+    <div ng-if="globalConfig.belote.redirectOnGame && game" class="size-h-container" ng-controller="casinoSpecialGamesCtrl" ng-init="loadGame('belote')" ng-include="'optional_modules/casino/templates/specialgames/main.html'|fixPath"></div>
 </div>
 
 

@@ -1,5 +1,5 @@
-$popup-overlay-background-opacity: 0.8 !default;
-$popup-overlay-background: #121623 !default;
+$popup-overlay-background-opacity: 0.7 !default;
+$popup-overlay-background: black !default;
 .new-default-popup-j {
   position: fixed;
   top: 0;
@@ -19,11 +19,9 @@ $popup-overlay-background: #121623 !default;
   * {
     box-sizing: border-box;
   }
-  img {
-    max-width: calc(100vw - 100px);
-    max-height: calc(100vh - 230px);
-    width: auto;
-    height: auto;
+  .descriptions-c-b img{
+    max-width: 100%;
+    max-height: 100%;
   }
   &.rfid {
     height: calc(100% - 94px);
@@ -130,27 +128,24 @@ $popup-overlay-background: #121623 !default;
         width: 100%;
         color: $text-palette-2;
         font: normal 12px/36px $font-f;
-        border: 1px solid $skin-palette-10;
+        border: 1px solid $skin-palette-5;
         transition: 200ms border-color;
         padding: 0 14px;
         height: 36px;
         margin-bottom: 20px;
         box-shadow: none;
         outline: 0;
-        background: $skin-palette-10;
+        background: none;
         caret-color: $text-palette-2;
         @include placeholder {
           color: $text-palette-4;
           font: normal 12px/36px $font-f;
         }
         &:-webkit-autofill {
-          border-width: 5px;
-          box-shadow: inset 0 0 0 50px $skin-palette-10;
           -webkit-text-fill-color: $text-palette-2;
-          padding: 0 10px;
           &:focus {
-            border-color: $skin-palette-10;
-            box-shadow: 0 0 0 1px $form-elements-focus, 0 0 0 100px $skin-palette-10 inset;
+            border-color: $form-elements-focus;
+            box-shadow: 0 0 0 100px $skin-palette-8 inset;
           }
         }
         &:focus {
@@ -162,12 +157,12 @@ $popup-overlay-background: #121623 !default;
         width: 100%;
         color: $text-palette-2;
         font: normal 12px/16px $font-f;
-        border: 1px solid $skin-palette-10;
+        border: 1px solid $skin-palette-5;
         transition: 200ms border-color;
         padding: 12px 14px;
         height: 133px;
         resize: none;
-        background: $skin-palette-10;
+        background: none;
         &:focus {
           border-color: $form-elements-focus;
         }
@@ -222,7 +217,7 @@ $popup-overlay-background: #121623 !default;
         padding: 10px 0;
       }
       .warning-j {
-        color: #ff335a;
+        color: #ef6653;
       }
     }
     .cashout-id-wrapper {
@@ -235,18 +230,6 @@ $popup-overlay-background: #121623 !default;
       }
       p {
         font: 18px/22px $font-f;
-      }
-    }
-    .cashout-amount-slider {
-      float: left;
-      width: 100%;
-      p {
-        text-align: left;
-        font: 12px/14px $font-f;
-        color: $text-palette-4;
-        float: left;
-        width: 100%;
-        margin: 10px 0 5px;
       }
     }
     .cashout-amount-head {
@@ -274,8 +257,14 @@ $popup-overlay-background: #121623 !default;
         > li {
           float: left;
           display: block;
+          @include rtl {
+            float: right;
+          }
           &:last-child {
             float: right;
+            @include rtl {
+              float: left;
+            }
           }
         }
       }
@@ -283,16 +272,22 @@ $popup-overlay-background: #121623 !default;
 
     .cashout-options {
       width: calc(100% + 60px);
-      margin: -30px 0 -30px -30px;
+      margin: -30px 0 10px -30px;
+      @include rtl {
+        margin: -30px -30px 0 0;
+      }
       > li {
         display: block;
         float: left;
         width: 100%;
         padding: 20px 24px;
+        background: rgba(white, 0.02);
         &:nth-child(2) {
-          border-top: 1px solid #101219;
+          border: 1px solid #101219;
+          border-width: 1px 0;
         }
         &.disabled {
+          background: none;
           strong, .cashout-amount-slider {
             opacity: 0.3;
             pointer-events: none;
@@ -316,12 +311,18 @@ $popup-overlay-background: #121623 !default;
         width: 100%;
         position: relative;
         padding: 0 0 0 22px;
+        @include rtl {
+          padding: 0 22px 0 0;
+        }
         > strong {
           display: block;
           float: left;
           width: 100%;
           font: 700 18px $font-f;
           color: $text-palette-3;
+          @include rtl {
+            text-align: right;
+          }
         }
         > input {
           opacity: 0;
@@ -329,6 +330,10 @@ $popup-overlay-background: #121623 !default;
           pointer-events: none;
           top: 0;
           left: 0;
+          @include rtl {
+            left: auto;
+            right: 0;
+          }
           &:checked ~ p {
             &:after {
               transform: scale(1);
@@ -338,8 +343,15 @@ $popup-overlay-background: #121623 !default;
         > p {
           float: left;
           width: 100%;
-          font: 500 14px/16px $font-f;
-          text-transform: uppercase;
+          font: 14px/16px $font-f;
+          @include rtl {
+            text-align: right;
+          }
+          b {
+            display: inline-block;
+            vertical-align: top;
+            text-transform: uppercase;
+          }
           &:before, &:after {
             content: "";
             display: block;
@@ -350,6 +362,10 @@ $popup-overlay-background: #121623 !default;
             position: absolute;
             top: 0;
             left: 0;
+            @include rtl {
+              left: auto;
+              right: 0;
+            }
           }
           &:after {
             width: 8px;
@@ -389,6 +405,10 @@ $popup-overlay-background: #121623 !default;
         left: 0;
         top: 50%;
         z-index: 100;
+        @include rtl {
+          left: auto;
+          right: 0;
+        }
         &:before {
           content: "";
           display: block;
@@ -401,6 +421,10 @@ $popup-overlay-background: #121623 !default;
           position: absolute;
           right: -6px;
           top: -6px;
+          @include rtl {
+            left: -6px;
+            right: auto;
+          }
         }
         &:after {
           content: "";
@@ -413,6 +437,10 @@ $popup-overlay-background: #121623 !default;
           position: absolute;
           right: -2px;
           top: -1px;
+          @include rtl {
+            left: -2px;
+            right: auto;
+          }
         }
       }
       input {
@@ -546,6 +574,21 @@ $popup-overlay-background: #121623 !default;
   }
 }
 
+.cashout-amount-slider {
+  float: left;
+  width: 100%;
+  p {
+    text-align: left;
+    font: 12px/14px $font-f;
+    color: $text-palette-4;
+    float: left;
+    width: 100%;
+    margin: 10px 0 5px;
+    @include rtl {
+      text-align: right;
+    }
+  }
+}
 .form-error-text-j {
   .error-icon-f-j {
     position: absolute;
@@ -831,7 +874,7 @@ $popup-overlay-background: #121623 !default;
   margin: 20px 0;
   animation: popup-enter .3s ease-in-out;
   box-shadow: 0 0 0 6px rgba($skin-palette-13, 0.2);
-  background: $skin-palette-9;
+  background: $skin-palette-8;
   position: relative;
   .pu-head-j {
     font: normal 18px/61px $font-f;
@@ -844,6 +887,7 @@ $popup-overlay-background: #121623 !default;
     color: $text-palette-3;
     @include rtl {
       padding: 0 25px 0 40px;
+      text-align: right;
     }
     > span, > p {
       float: left;
@@ -929,6 +973,8 @@ $popup-overlay-background: #121623 !default;
     }
   }
   .pu-contain-j {
+    float: left;
+    width: 100%;
     padding: 30px 30px 26px;
     position: relative;
     color: $text-palette-4;
@@ -942,6 +988,55 @@ $popup-overlay-background: #121623 !default;
       color: $text-palette-4;
       a {
         color: $text-palette-2;
+      }
+    }
+  }
+  .auto-cashout-rule {
+    float: left;
+    width: 100%;
+    min-height: 68px;
+    text-align: center;
+    > h4 {
+      display: inline-block;
+      padding: 0 26px 0 0;
+      box-sizing: border-box;
+      text-transform: uppercase;
+      color: $text-palette-3;
+      text-align: center;
+      font: 18px/20px $font-f;
+      margin-bottom: 8px;
+      position: relative;
+      @include rtl {
+        padding: 0 0 0 26px;
+      }
+      &:after {
+        content: "\e6ec";
+        position: absolute;
+        top: 0;
+        right: 0;
+        color: #208c65;
+        font: 18px/20px icomoon;
+        @include rtl {
+          left: 0;
+          right: auto;
+        }
+      }
+    }
+    > p {
+      width: 100%;
+      display: inline-block;
+      margin-bottom: 4px;
+      text-align: center;
+      color: $text-palette-4;
+      font: 14px/16px $font-f;
+      > span {
+        display: inline-block;
+      }
+      > b {
+        display: inline-block;
+        color: $text-palette-3;
+        text-transform: uppercase;
+        font-weight: normal;
       }
     }
   }
@@ -984,21 +1079,24 @@ $popup-overlay-background: #121623 !default;
           margin: 0 auto;
         }
       }
-      &:disabled {
+      &:disabled, &.brand-color-1[disabled="disabled"] {
         border-color: $button-disable-bg;
         color: $button-disable-bg;
         pointer-events: none;
         background: none;
       }
-      &.cancel-j + button:not(:disabled) {
+      &:hover {
+        background: lighten($brand-color-1, 10);
+        border-color: lighten($brand-color-1, 10);
+      }
+      &.cancel-j + button:not(:disabled), &.brand-color-1 {
         background: $brand-color-1;
         border-color: $brand-color-1;
         color: set-color($brand-color-1);
-      }
-      &:hover, &.cancel-j + button:hover {
-        background: $hero-color;
-        border-color: $hero-color;
-        color: set-color($hero-color);
+        &:hover {
+          background: lighten($brand-color-1, 10);
+          border-color: lighten($brand-color-1, 10);
+        }
       }
     }
   }
@@ -1058,6 +1156,12 @@ $popup-overlay-background: #121623 !default;
   }
   .cashout-j & {
     width: 330px;
+    .pu-button-wrap-j button {
+      width: 100%;
+      + button {
+        margin: 14px 0 0;
+      }
+    }
   }
   .winners-rules-pu-j & {
     width: 650px;
@@ -1075,6 +1179,34 @@ $popup-overlay-background: #121623 !default;
     width: 80vw;
     background: $classic-view-background;
   }
+  .preference-confirmation-t & {
+    ng-include {
+      display: inline-block;
+      text-align: left;
+      width: 320px;
+    }
+    .pu-contain-j {
+      padding-bottom: 0;
+    }
+    .pu-button-wrap-j button {
+      width: 100%;
+      margin: 0;
+      &:first-child {
+        margin: 0 0 15px;
+        background: $brand-color-1;
+        border-color: $brand-color-1;
+        color: set-color($brand-color-1);
+        &:hover {
+          background: lighten($brand-color-1, 10);
+          border-color: lighten($brand-color-1, 10);
+        }
+        &:disabled {
+          opacity: 0.4;
+          pointer-events: none;
+        }
+      }
+    }
+  }
   .scrolable-t {
     overflow-y: scroll;
     width: 100%;
@@ -1091,4 +1223,181 @@ input[type='number'] {
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
   -webkit-appearance: none;
+}
+.preferenc-popup-contain {
+  > p {
+    padding: 0 0 20px;
+  }
+  h2 {
+    font: 14px/16px $font-f;
+    color: $text-palette-3;
+    padding: 0 0 12px;
+  }
+  table {
+    border-spacing: 0 2px;
+    width: 100%;
+    border-collapse: separate;
+    font: 500 16px/44px $font-f;
+    color: $text-palette-1;
+    td {
+      background: rgba($skin-palette-5, 0.5);
+      padding: 0 10px;
+      &:not(:first-child) {
+        width: 1%;
+        white-space: nowrap;
+        text-transform: uppercase;
+      }
+    }
+  }
+  a {
+    display: inline-block;
+    vertical-align: top;
+    margin: 14px 0 16px;
+    text-decoration: underline;
+    color: $text-palette-4;
+    transition: 300ms color;
+    &:hover {
+      color: $text-palette-3;
+    }
+  }
+  label {
+    display: block;
+    cursor: pointer;
+    color: $c16-tp-4;
+    transition: 300ms color;
+    input {
+      display: none;
+      &:checked ~ {
+        small {
+          color: $text-palette-1;
+        }
+        i {
+          border-color: $text-palette-1;
+          &:before {
+            transform: scale(1);
+          }
+        }
+      }
+    }
+    small {
+      display: inline-block;
+      vertical-align: middle;
+    }
+    i {
+      display: inline-block;
+      vertical-align: middle;
+      width: 20px;
+      height: 20px;
+      border-radius: 100%;
+      border: 2px solid $text-palette-4;
+      position: relative;
+      transition: 300ms border;
+      &:before {
+        content: "";
+        display: block;
+        width: 10px;
+        height: 10px;
+        border-radius: 100%;
+        background: $text-palette-1;
+        margin: 3px;
+        transition: 300ms transform;
+        transform: scale(0);
+      }
+    }
+  }
+}
+.pu-cont-tabs {
+  border-bottom: 1px solid $skin-palette-12;
+  &:after {
+    content: "";
+    display: block;
+    clear: both;
+  }
+  ul {
+    float: left;
+    width: 100%;
+    border-bottom: 2px solid $skin-palette-5;
+    li {
+      display: block;
+      float: left;
+      width: 50%;
+      border-bottom: 1px solid $skin-palette-8;
+      background: $skin-palette-7;
+      font: 12px/34px $font-f;
+      color: $text-palette-4;
+      @include rtl {
+        float: right;
+      }
+      i {
+        display: inline-block;
+        vertical-align: top;
+        font: 12px/36px icomoon;
+        height: 34px;
+        color: rgba(set-color($skin-palette-7), 0.4);
+        margin: 0 6px 0 0;
+        @include rtl {
+          margin: 0 0 0 6px;
+        }
+      }
+      + li {
+        border-left: 1px solid $skin-palette-8;
+      }
+      &.active {
+        background: $skin-palette-5;
+        border-bottom-color: $skin-palette-5;
+        &, i {
+          color: $text-palette-2;
+        }
+      }
+    }
+  }
+}
+.auto-cashout-wrapper {
+  float: left;
+  width: 100%;
+  clear: both;
+  text-align: left;
+  &:after {
+    clear: both;
+    content: "";
+    display: block;
+  }
+  p {
+    float: left;
+    width: 100%;
+    font: 12px $font-f;
+    color: #7C8190;
+    margin: 0 0 10px;
+  }
+  > ul {
+    float: left;
+    width: 100%;
+    > li {
+      float: left;
+      width: 100%;
+      border-top: 1px solid #0e141a;
+      .cashout-option {
+        > label {
+          margin: 13px 0;
+          > p {
+            margin: 0;
+          }
+        }
+      }
+      &.disabled {
+        .cashout-amount-slider {
+          opacity: 0.3;
+          pointer-events: none;
+        }
+      }
+    }
+  }
+  .cashout-amount-slider {
+    p {
+      margin-top: 0;
+    }
+  }
+  .cashout-range-box {
+    margin: 0 0 12px;
+  }
 }

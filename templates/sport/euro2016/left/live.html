@@ -1,12 +1,11 @@
 <div class="left-nav-view-v3">
     <ul ng-repeat="group in liveSportGroups track by group.id">
-        <li class="sports-item-v3 sports-group-item-v3" ng-show="group.hasHeader"
+        <li class="sports-item-v3 sports-group-item-v3 {{group.name}}" ng-show="group.hasHeader"
             ng-class="{'active': leftMenuState.live.groups[group.id]}"
             ng-click="leftMenuState.live.groups[group.id] = !leftMenuState.live.groups[group.id]">
             <p>{{group.name}}</p>
             <div class="arrow-view-v3"></div>
-            <div class="sport-games-count-v3">
-                <span>{{group.count}}</span>
+            <div class="sport-games-count-v3">{{group.count}}
             </div>
         </li>
         <li ng-show="!group.hasHeader || leftMenuState.live.groups[group.id]" class="float-width">
@@ -20,8 +19,7 @@
                          title="{{sport.name + (sport.game ? '(' + sport.game  + ')' : '') }}">
                         {{sport.name}}
                         <div class="arrow-view-v3"></div>
-                        <div class="sport-games-count-v3">
-                            <span ng-show="sport.game">{{sport.game}}</span>
+                        <div class="sport-games-count-v3" ng-show="sport.game">{{sport.game}}
                         </div>
                     </div>
 
@@ -63,9 +61,9 @@
                                                  dnd-disable-if="'/multiview/' !== $location.path() || multiViewLiveOpenedGamesIds.length === conf.liveMultiViewItemsAmount">
                                                 <div class="team-name-1-v3">
                                                     <p>{{game.team1_name}}</p>
-                                                    <span>{{game.info.score1}}</span>
+                                                    <span ng-hide="game.show_type === 'OUTRIGHT'">{{game.info.score1}}</span>
                                                 </div>
-                                                <div class="team-name-1-v3" ng-hide="game.show_type == 'OUTRIGHT'">
+                                                <div class="team-name-1-v3" ng-hide="game.show_type === 'OUTRIGHT'">
                                                     <p>{{game.team2_name ? game.team2_name : ''}}</p>
                                                     <span>{{game.info.score2}}</span>
                                                 </div>
@@ -102,7 +100,7 @@
                                                         ng-mouseover="displayEventLimit(market)"
                                                         ng-mouseleave="cancelDisplayEventLimit(market)">
                                                         <div class="max-bet-tooltip-v3" ng-show="env.authorized && market.maxBet !== undefined" ng-class="{'maxbet-enabled': env.authorized}">
-                                                            <p>Max: <b ng-bind="conf.onlyDecimalStakeAmount ? Math.floor(market.maxBet) : market.maxBet"></b> {{profile.currency_name|currency }}</p>
+                                                            Max: <b ng-bind="conf.onlyDecimalStakeAmount ? Math.floor(market.maxBet) : market.maxBet"></b> {{profile.currency_name|currency }}
                                                         </div>
                                                         <b ng-show="(market.price | oddConvert:'decimal') != 1 && !game.is_blocked" class="p-v price{{arrowHide}}" ng-class="{'factor-top': market.price_change > 0, 'factor-bottom': market.price_change < 0}">{{market.price|oddConvert:$root.env.oddFormat}}</b>
                                                     </div>

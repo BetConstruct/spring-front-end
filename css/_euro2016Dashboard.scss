@@ -249,12 +249,6 @@
   @include rtl {
     padding: 0 2px 0 1px;
   }
-  > .l-b.column-3 {
-    grid-template-columns: repeat(3, 33.18%);
-  }
-  > .l-b.column-2, > .l-b.column-0, > .l-b.default {
-    grid-template-columns: repeat(2, 49.9%);
-  }
 }
 
 .market-name-d-v3 {
@@ -676,8 +670,8 @@
   border-radius: 2px;
   overflow: hidden;
   margin: 0 0 4px;
-  max-height: 30000px;
-  animation: upcoming-open-animate-b 500ms ease-in-out;
+  //max-height: 30000px;
+  //animation: upcoming-open-animate-b 500ms ease-in-out;
 }
 
 .region-list-view-d-v3 {
@@ -736,28 +730,28 @@
 .single-sport-box-v3.sport-closed {
   box-sizing: border-box;
   max-height: 30px;
-  animation: upcoming-closed-animate-b 240ms ease;
+  //animation: upcoming-closed-animate-b 240ms ease;
 }
 
-@keyframes upcoming-open-animate-b {
-  0% {
-    max-height: 30px;
-  }
-  100% {
-    max-height: 999px;
-  }
-}
-
-@keyframes upcoming-closed-animate-b {
-  0% {
-    display: block;
-    max-height: 500px;
-  }
-  100% {
-    display: block;
-    max-height: 30px;
-  }
-}
+//@keyframes upcoming-open-animate-b {
+//  0% {
+//    max-height: 30px;
+//  }
+//  100% {
+//    max-height: 999px;
+//  }
+//}
+//
+//@keyframes upcoming-closed-animate-b {
+//  0% {
+//    display: block;
+//    max-height: 500px;
+//  }
+//  100% {
+//    display: block;
+//    max-height: 30px;
+//  }
+//}
 
 .sport-name-up-game-v3 > .sport-icon-v3 {
   box-sizing: border-box;

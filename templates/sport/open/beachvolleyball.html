@@ -61,7 +61,7 @@
                     <li>{{ game.team2_name }}</li>
                 </ul>
                 <div class="field">
-                    <div class="{{game.last_event.type}} side_{{game.last_event.side}}">
+                    <div class="{{game.last_event.type}} side_{{game.last_event|rtlConvert:'side'}}">
                         <div ng-if="game.last_event.type === 'BallInPlay'">
                             <div class="ball_container">
                                 <div class="v_ball"></div>

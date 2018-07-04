@@ -101,8 +101,24 @@ div.draws-contain,
         font: normal 12px/36px $font-f;
         transition: box-shadow 250ms;
         color: rgba(set-color($subheader-background), 0.73);
+        position: relative;
         &:hover {
           color: set-color($subheader-background);
+        }
+        &[data-badge]:not([data-badge=""]) {
+          &:before {
+            content: attr(data-badge);
+            display: block;
+            position: absolute;
+            top: 2px;
+            right: -20%;
+            height: 14px;
+            background: rgba($hero-color, 0.8);
+            color: set-color($hero-color);
+            font: 700 9px/14px $font-f;
+            padding: 0 4px;
+            border-radius: 1px;
+          }
         }
       }
       &.active {
@@ -2623,6 +2639,7 @@ input[type="password"]:focus ~ .capslock-is-on-j {
 @include liveScoreBackgrounds("australianfootball");
 @include liveScoreBackgrounds("volleyball");
 @include liveScoreBackgrounds("icehockey");
+@include liveScoreBackgrounds("e-iceHockey");
 @include liveScoreBackgrounds("basketball");
 @include liveScoreBackgrounds("tennis");
 @include liveScoreBackgrounds("americanfootball");
@@ -2794,6 +2811,19 @@ input[type="password"]:focus ~ .capslock-is-on-j {
     }
     &.rejected:after {
       content: "\e993";
+    }
+  }
+}
+@supports not (-webkit-box-pack: space-evenly) {
+  .subtop-game-menu-j.stretch-items {
+    height: auto;
+    ul{
+      display: block;
+      text-align: center;
+      > li{
+        vertical-align: top;
+        margin: 0 5px;
+      }
     }
   }
 }

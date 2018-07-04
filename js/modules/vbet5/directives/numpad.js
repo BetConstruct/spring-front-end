@@ -125,6 +125,10 @@ VBET5.directive('numpad', ['$compile', 'Config', function ($compile, Config) {
                 element.after($compile(!Config.main.terminalNumpadLetter || attrs.numpadLetters === 'disabled' ? keyboardNumbers : keyboardLetters)(scope));
                 event.stopPropagation();
             });
+
+            scope.$on('$destroy', function () {
+                element.off('click');
+            });
         }
     };
 

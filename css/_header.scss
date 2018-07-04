@@ -30,6 +30,7 @@ body > {
       max-width: 100%;
       width: 100%;
       padding: 0;
+      transition: width 200ms;
     }
   }
   #{$pages-with-full-width-header-background} {
@@ -59,7 +60,7 @@ body > {
         }
       }
     }
-    .subheader-enabled .headerVersion_2 .conteiner {
+    .subheader-enabled .headerVersion_2 .conteiner:not(.show-fix):not(.show-game) {
       &:before {
         bottom: 36px;
       }
@@ -131,6 +132,7 @@ body > {
   font: 12px/26px  $font-f;
   color: rgba(set-color($header-first-line-background),0.74);
   cursor: pointer;
+  white-space: nowrap;
   @include rtl {
     padding: 0 30px 0 0;
   }
@@ -357,7 +359,7 @@ body > {
   display: inline-block;
   width: 20px;
   text-align: center;
-  margin-left: 1px;
+  vertical-align: middle;
 }
 .mybets-icon-box-b.user-icon-view{
   font: 16px/20px icomoon;
@@ -690,6 +692,19 @@ body > {
   min-height: 30px;
   background: $skin-palette-7;
   border-bottom: 1px solid $skin-palette-6;
+  &.suggested-bets-setting {
+    background: #8360c3;
+    background: -webkit-linear-gradient(to left, #2ebf91, #8360c3);
+    background: linear-gradient(to left, #2ebf91, #8360c3);
+    .switcher-t-view-b > p {
+      color: white;
+    }
+    .switcher-box-b:not(.on) {
+      .sw-circle-b {
+        background: #9ae4d0;
+      }
+    }
+  }
 }
 .nav-open-view-contain > ul > li:last-child{border: none;}
 .user-info-box-b{
@@ -1047,13 +1062,18 @@ body > {
   box-sizing: border-box;
   text-align: center;
   display: inline-block;
-  //float: left;
+  vertical-align: top;
+  float: left;
   margin: 0;
   padding: 0;
   font: 14px/40px $font-f;
   color: $text-palette-1;
   text-transform: uppercase;
   position: relative;
+  transform: translate3d(0,0,0);
+  @include rtl {
+    float: right;
+  }
 }
 .header-nav-contain > ul > li.new-top-nav a:before {
   content: attr(data-content);
@@ -1532,7 +1552,12 @@ body > {
       white-space: nowrap;
       font-size: 0;
       &:not(.ng-hide) + li {
-        padding-right: 0 !important;
+        @at-root html[dir='ltr'] & {
+          padding-right: 0 !important;
+        }
+        @include rtl {
+          padding-left: 0 !important;
+        }
       }
       a {
         display: inline-block;

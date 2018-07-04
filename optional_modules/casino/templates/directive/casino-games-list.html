@@ -1,7 +1,7 @@
 <div>
     <div class="float-width">
         <ul ng-show="showConditions">
-            <li ng-repeat="game in gamesList track by game.id" class="list-games-casino-view-b" ng-show="!game.has_age_restriction || $root.env.authorized" no-animate>
+            <li ng-repeat="game in gamesList track by game.id" class="list-games-casino-view-b" ng-show="!confData.main.disableAgeRestrictedGames || !game.has_age_restriction || $root.env.authorized" no-animate>
                 <div class="icon-delete" ng-show="showDeleteBtn"><a ng-click="removeGameFromSaved(game.id); $event.stopPropagation();">delete</a></div>
                 <p class="casino-game-download-version-2" ng-if="confData.main.downloadEnabled && game.downloads" ng-click="gaSend('send', 'event', 'games', game.provider, {'page': $location.path(), 'eventLabel': ('Download '+ game.name)}); $event.stopPropagation();">
 

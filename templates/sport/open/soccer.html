@@ -110,109 +110,109 @@
                     <audio id="{{game.id}}" ng-src="{{animationSoundsMap[game.last_event.type] + '.mp3'}}" autoplay="" ng-if="!game.isAnimationMute && game.activeFieldType !='video' && animationSoundsMap[game.last_event.type] && !isVideoDetached && env.sound > 0" ng-init="changeVolume()"></audio>
                     <audio id="{{game.id}}" ng-src="{{animationSoundsMap[game.last_event.type] + '.ogg'}}" autoplay="" ng-if="!game.isAnimationMute && game.activeFieldType !='video' && animationSoundsMap[game.last_event.type] && !isVideoDetached && env.sound > 0 && !isMp3Supported" ng-init="changeVolume()"></audio>
 
-                    <div ng-if="game.last_event.type === 'Attack'" class="animation-container {{game.last_event.type}}" ng-class="{'home': game.last_event.side === '1', 'away': game.last_event.side === '2'}">
+                    <div ng-if="game.last_event.type === 'Attack'" class="animation-container {{game.last_event.type}}" ng-class="{'home': (game.last_event|rtlConvert:'side') === '1', 'away': (game.last_event|rtlConvert:'side') === '2'}">
                         <div class=" attack-div">
                             <div class="attack-dir"></div>
                         </div>
                         <p trans title="Attack">Attack</p>
                     </div>
-                    <div ng-if="game.last_event.type === 'BallSafe'" class="animation-container {{game.last_event.type}} " ng-class="{'home': game.last_event.side === '1', 'away': game.last_event.side === '2'}">
+                    <div ng-if="game.last_event.type === 'BallSafe'" class="animation-container {{game.last_event.type}} " ng-class="{'home': (game.last_event|rtlConvert:'side') === '1', 'away': (game.last_event|rtlConvert:'side') === '2'}">
                         <div>
                             <div trans title="Ball Safe">Ball Safe</div>
-                            <div>{{game['team'+game.last_event.side + '_name']}}</div>
+                            <div ng-bind="game['team' + game.last_event.side + '_name']"></div>
                         </div>
                     </div>
-                    <div ng-if="game.last_event.type === 'Corner'" class="animation-container {{game.last_event.type}}" ng-class="{'home': game.last_event.side === '1', 'away': game.last_event.side === '2'}">
+                    <div ng-if="game.last_event.type === 'Corner'" class="animation-container {{game.last_event.type}}" ng-class="{'home': (game.last_event|rtlConvert:'side') === '1', 'away': (game.last_event|rtlConvert:'side') === '2'}">
                         <div>
                             <div class=" ball"></div>
                         </div>
                         <p class="text-event" trans title="Corner">Corner</p>
                     </div>
-                    <div ng-if="game.last_event.type === 'DangerousAttack'" class="animation-container {{game.last_event.type}} " ng-class="{'home': game.last_event.side === '1', 'away': game.last_event.side === '2'}">
+                    <div ng-if="game.last_event.type === 'DangerousAttack'" class="animation-container {{game.last_event.type}} " ng-class="{'home': (game.last_event|rtlConvert:'side') === '1', 'away': (game.last_event|rtlConvert:'side') === '2'}">
                         <div class=" attack-div">
                             <div class="attack-dir"></div>
                         </div>
                         <p trans title="Dangerous Attack">Dangerous Attack</p>
                     </div>
-                    <div ng-if="game.last_event.type === 'ExtraTimeFirstHalf'" class="animation-container {{game.last_event.type}}" ng-class="{'home': game.last_event.side === '1', 'away': game.last_event.side === '2'}">
+                    <div ng-if="game.last_event.type === 'ExtraTimeFirstHalf'" class="animation-container {{game.last_event.type}}" ng-class="{'home': (game.last_event|rtlConvert:'side') === '1', 'away': (game.last_event|rtlConvert:'side') === '2'}">
                         <div class=" text-event" trans title="Extra Time First Half">Extra Time First Half</div>
                     </div>
-                    <div ng-if="game.last_event.type === 'ExtraTimeHalfTime'" class="animation-container {{game.last_event.type}}" ng-class="{'home': game.last_event.side === '1', 'away': game.last_event.side === '2'}">
+                    <div ng-if="game.last_event.type === 'ExtraTimeHalfTime'" class="animation-container {{game.last_event.type}}" ng-class="{'home': (game.last_event|rtlConvert:'side') === '1', 'away': (game.last_event|rtlConvert:'side') === '2'}">
                         <div class=" text-event" trans title="Extra Time Half Time">Extra Time Half Time</div>
                     </div>
-                    <div ng-if="game.last_event.type === 'ExtraTimeSecondHalf'" class="animation-container {{game.last_event.type}}" ng-class="{'home': game.last_event.side === '1', 'away': game.last_event.side === '2'}">
+                    <div ng-if="game.last_event.type === 'ExtraTimeSecondHalf'" class="animation-container {{game.last_event.type}}" ng-class="{'home': (game.last_event|rtlConvert:'side') === '1', 'away': (game.last_event|rtlConvert:'side') === '2'}">
                         <div class=" text-event" trans title="Extra Time Second Half">Extra Time Second Half</div>
                     </div>
-                    <div ng-if="game.last_event.type === 'Finished'" class="animation-container {{game.last_event.type}}" ng-class="{'home': game.last_event.side === '1', 'away': game.last_event.side === '2'}">
+                    <div ng-if="game.last_event.type === 'Finished'" class="animation-container {{game.last_event.type}}" ng-class="{'home': (game.last_event|rtlConvert:'side') === '1', 'away': (game.last_event|rtlConvert:'side') === '2'}">
                         <div class=" text-event" trans title="Finished">Finished</div>
                     </div>
-                    <div ng-if="game.last_event.type === 'FirstHalf'" class="animation-container {{game.last_event.type}}" ng-class="{'home': game.last_event.side === '1', 'away': game.last_event.side === '2'}">
+                    <div ng-if="game.last_event.type === 'FirstHalf'" class="animation-container {{game.last_event.type}}" ng-class="{'home': (game.last_event|rtlConvert:'side') === '1', 'away': (game.last_event|rtlConvert:'side') === '2'}">
                         <div class=" text-event" trans title="First Half">First Half</div>
                     </div>
-                    <div ng-if="game.last_event.type === 'FreeKick'" class="animation-container {{game.last_event.type}}" ng-class="{'home': game.last_event.side === '1', 'away': game.last_event.side === '2'}">
+                    <div ng-if="game.last_event.type === 'FreeKick'" class="animation-container {{game.last_event.type}}" ng-class="{'home': (game.last_event|rtlConvert:'side') === '1', 'away': (game.last_event|rtlConvert:'side') === '2'}">
                         <div class=" ripple"></div>
                         <div class="arrow"></div>
                         <div class="ball"></div>
                         <div class="text-event" trans title="Free Kick">Free Kick</div>
                     </div>
-                    <div ng-if="game.last_event.type === 'Goal'" class="animation-container {{game.last_event.type}}" ng-class="{'home': game.last_event.side === '1', 'away': game.last_event.side === '2'}">
+                    <div ng-if="game.last_event.type === 'Goal'" class="animation-container {{game.last_event.type}}" ng-class="{'home': (game.last_event|rtlConvert:'side') === '1', 'away': (game.last_event|rtlConvert:'side') === '2'}">
                         <div class=" ball-cont">
                             <div class="ball"></div>
                         </div>
                         <p class="goal-text"><span trans title="Goal">Goal</span>!!!</p>
-                        <p class="team" title="{{game['team'+game.last_event.side + '_name']}}">{{game['team'+game.last_event.side + '_name']}}</p>
+                        <p class="team" title="{{game['team'+ game.last_event.side + '_name']}}" ng-bind="game['team'+ game.last_event.side + '_name']"></p>
                     </div>
-                    <div ng-if="game.last_event.type === 'GoalKick'" class="animation-container {{game.last_event.type}}" ng-class="{'home': game.last_event.side === '1', 'away': game.last_event.side === '2'}">
+                    <div ng-if="game.last_event.type === 'GoalKick'" class="animation-container {{game.last_event.type}}" ng-class="{'home': (game.last_event|rtlConvert:'side') === '1', 'away': (game.last_event|rtlConvert:'side') === '2'}">
                         <div class=" ripple"></div>
                         <div class="arrow"></div>
                         <div class="ball"></div>
                         <div class="text-event" trans title="Goal Kick">Goal Kick</div>
                     </div>
-                    <div ng-if="game.last_event.type === 'HalfTime'" class="animation-container {{game.last_event.type}}" ng-class="{'home': game.last_event.side === '1', 'away': game.last_event.side === '2'}">
+                    <div ng-if="game.last_event.type === 'HalfTime'" class="animation-container {{game.last_event.type}}" ng-class="{'home': (game.last_event|rtlConvert:'side') === '1', 'away': (game.last_event|rtlConvert:'side') === '2'}">
                         <div class=" text-event" trans title="Half Time">Half Time</div>
                     </div>
-                    <div ng-if="game.last_event.type === 'NotStarted'" class="animation-container {{game.last_event.type}}" ng-class="{'home': game.last_event.side === '1', 'away': game.last_event.side === '2'}">
+                    <div ng-if="game.last_event.type === 'NotStarted'" class="animation-container {{game.last_event.type}}" ng-class="{'home': (game.last_event|rtlConvert:'side') === '1', 'away': (game.last_event|rtlConvert:'side') === '2'}">
                         <div class=" text-event" trans title="Not Started">Not Started</div>
                     </div>
-                    <div ng-if="game.last_event.type === 'Offside'" class="animation-container {{game.last_event.type}}" ng-class="{'home': game.last_event.side === '1', 'away': game.last_event.side === '2'}">
+                    <div ng-if="game.last_event.type === 'Offside'" class="animation-container {{game.last_event.type}}" ng-class="{'home': (game.last_event|rtlConvert:'side') === '1', 'away': (game.last_event|rtlConvert:'side') === '2'}">
                         <div class=" line"></div>
                         <div class="ball"></div>
                         <p trans title="Offside">Offside</p>
                     </div>
-                    <div ng-if="game.last_event.type === 'Penalty'" class="animation-container {{game.last_event.type}}" ng-class="{'away': game.last_event.side === '1', 'home': game.last_event.side === '2'}">
+                    <div ng-if="game.last_event.type === 'Penalty'" class="animation-container {{game.last_event.type}}" ng-class="{'away': (game.last_event|rtlConvert:'side') === '1', 'home': (game.last_event|rtlConvert:'side') === '2'}">
                         <div class=" arrow"></div>
                         <div class="ball"></div>
                         <div class="text-event" trans title="Penalty">Penalty</div>
                     </div>
-                    <div ng-if="game.last_event.type === 'PreExtraHalf'" class="animation-container {{game.last_event.type}}" ng-class="{'home': game.last_event.side === '1', 'away': game.last_event.side === '2'}">
+                    <div ng-if="game.last_event.type === 'PreExtraHalf'" class="animation-container {{game.last_event.type}}" ng-class="{'home': (game.last_event|rtlConvert:'side') === '1', 'away': (game.last_event|rtlConvert:'side') === '2'}">
                         <div class=" text-event" trans title="Pre Extra Half">Pre Extra Half</div>
                     </div>
-                    <div ng-if="game.last_event.type === 'RedCard'" class="animation-container {{game.last_event.type}}" ng-class="{'home': game.last_event.side === '1', 'away': game.last_event.side === '2'}">
+                    <div ng-if="game.last_event.type === 'RedCard'" class="animation-container {{game.last_event.type}}" ng-class="{'home': (game.last_event|rtlConvert:'side') === '1', 'away': (game.last_event|rtlConvert:'side') === '2'}">
                         <div class=" rotator">
                             <div class="card"></div>
                         </div>
                         <div class="text-event" trans title="Red Card">Red Card</div>
                     </div>
-                    <div ng-if="game.last_event.type === 'SecondHalf'" class="animation-container {{game.last_event.type}}" ng-class="{'home': game.last_event.side === '1', 'away': game.last_event.side === '2'}">
+                    <div ng-if="game.last_event.type === 'SecondHalf'" class="animation-container {{game.last_event.type}}" ng-class="{'home': (game.last_event|rtlConvert:'side') === '1', 'away': (game.last_event|rtlConvert:'side') === '2'}">
                         <div class=" text-event" trans title="Second Half">Second Half</div>
                     </div>
-                    <div ng-if="game.last_event.type === 'Substitution'" class="animation-container {{game.last_event.type}}" ng-class="{'home': game.last_event.side === '1', 'away': game.last_event.side === '2'}">
+                    <div ng-if="game.last_event.type === 'Substitution'" class="animation-container {{game.last_event.type}}" ng-class="{'home': (game.last_event|rtlConvert:'side') === '1', 'away': (game.last_event|rtlConvert:'side') === '2'}">
                         <div class=" sub-cont"></div>
                         <div class="text-event" trans title="Substitution">Substitution</div>
                     </div>
-                    <div ng-if="game.last_event.type === 'ThrowIn'" class="animation-container {{game.last_event.type}}" ng-class="{'home': game.last_event.side === '1', 'away': game.last_event.side === '2'}">
+                    <div ng-if="game.last_event.type === 'ThrowIn'" class="animation-container {{game.last_event.type}}" ng-class="{'home': (game.last_event|rtlConvert:'side') === '1', 'away': (game.last_event|rtlConvert:'side') === '2'}">
                         <p trans title="Throw In">Throw In</p>
                         <div>
                             <div class="ball"></div>
                         </div>
                     </div>
-                    <div ng-if="game.last_event.type === 'YellowCard'" class="animation-container {{game.last_event.type}}" ng-class="{'home': game.last_event.side === '1', 'away': game.last_event.side === '2'}">
+                    <div ng-if="game.last_event.type === 'YellowCard'" class="animation-container {{game.last_event.type}}" ng-class="{'home': (game.last_event|rtlConvert:'side') === '1', 'away': (game.last_event|rtlConvert:'side') === '2'}">
                         <div class="rotator">
                             <div class="card"></div>
                         </div>
                         <div class="text-event" trans title="Yellow Card">Yellow Card</div>
                     </div>
-                    <div ng-if="game.last_event.type === 'GoalkeeperSave'" class ="animation-container {{game.last_event.type}}" ng-class="{'home': game.last_event.side === '1', 'away': game.last_event.side === '2'}">
+                    <div ng-if="game.last_event.type === 'GoalkeeperSave'" class ="animation-container {{game.last_event.type}}" ng-class="{'home': (game.last_event|rtlConvert:'side') === '1', 'away': (game.last_event|rtlConvert:'side') === '2'}">
                         <div></div>
                         <p trans title="Goalkeeper Save">Goalkeeper Save</p>
                     </div>

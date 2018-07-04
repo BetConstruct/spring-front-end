@@ -65,7 +65,7 @@
         <div class="asian-market-wrap-j asian-market-overflow-j"
              ng-repeat="event in market.events|orderBy:'order' track by event.id"
              ng-class="{'empty': event.is_empty, 'locked': (event.price | oddConvert:'decimal') == 1 || openGame.is_blocked, up: event.price_change == '1', down: event.price_change == '-1', 'active': isEventInBetSlip(event)}"
-             ng-click="bet(event, market, openGame)">
+             ng-click="bet(event, market, openGame);">
             <div class="asian-market-j">
                 <div class="asian-market-cell-j">
                     <div class="asian-market-rub-j" ng-bind="event.name + ' ' + (event.base|handicapBaseFormat: true:false:(conf.asian.hideHandicapSignsInOverview && market.display_key === 'HANDICAP'):market.home_score:market.away_score:event.type_1)"></div>

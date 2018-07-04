@@ -6,9 +6,6 @@
 		margin: 0;
 		font-size: 14px;
 		box-shadow: 0 0 150px rgba(0, 0, 0, 0.55) inset;
-		@include rtl {
-			direction: ltr;
-		}
 		.game-team-names {
 			float: left;
 			width: 100%;
@@ -29,6 +26,9 @@
 				text-overflow: ellipsis;
 				color: #efefef;
 				text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.5);
+				@include rtl {
+					float: right;
+				}
 				&.teams-score {
 					width: 84px;
 					padding: 0;
@@ -51,6 +51,9 @@
 			overflow: hidden;
 			height: 100%;
 			background: url(../../../images/animation/classic/field-bg-pattern.png#{$delete-cache});
+			@include rtl {
+				direction: ltr;
+			}
 			.field {
 				position: relative;
 				width: 92%;
@@ -476,13 +479,13 @@
 			box-shadow: -1px 3px 5px rgba(0, 0, 0, 0.75), inset 0 0 5px rgba(0, 0, 0, 1);
 		}
 		.Corner {
-			&.away >div {
+			&.away > div {
 				animation: cl-ball-y-away 1.8s 0.3s infinite cubic-bezier(0, 0, 0.35, 1);
 				.ball {
 					animation: cl-ball-x-away 1.8s 0.3s infinite cubic-bezier(0, 0, 0.65, 1);
 				}
 			}
-			&.home >div {
+			&.home > div {
 				animation: cl-ball-y-home 1.9s 0.3s infinite cubic-bezier(0, 0, 0.35, 1);
 				.ball {
 					position: absolute;
@@ -491,13 +494,13 @@
 					animation: cl-ball-x-home 1.9s 0.3s infinite cubic-bezier(0, 0, 0.65, 1);
 				}
 			}
-			>div {
+			> div {
 				position: absolute;
 				top: 0;
 				left: 0;
 				right: 0;
 				bottom: 0;
-				transform: translateY(85%);
+				transform: translateY(85%) !important;
 			}
 		}
 		.YellowCard.home,
@@ -506,7 +509,7 @@
 				left: 25%;
 				animation: cl-rotate 4s infinite ease-in-out;
 				.card {
-					animation: cl-fadeIn 4s infinite ease-in-out; //, cl-rotate 1.1s 1.5s infinite ease-out; 
+					animation: cl-fadeIn 4s infinite ease-in-out; //, cl-rotate 1.1s 1.5s infinite ease-out;
 				}
 			}
 		}
@@ -516,7 +519,7 @@
 				right: 25%;
 				animation: cl-rotate 4s infinite ease-in-out;
 				.card {
-					animation: cl-fadeIn 4s infinite ease-in-out; //, cl-rotate 1.1s 1.5s infinite ease-out; 
+					animation: cl-fadeIn 4s infinite ease-in-out; //, cl-rotate 1.1s 1.5s infinite ease-out;
 				}
 			}
 		}
@@ -556,6 +559,7 @@
 				opacity: 0;
 				animation: cl-text-slide 1.5s 0.2s 1 ease-out, cl-shadow-pulse 3.5s 1s infinite;
 				animation-fill-mode: forwards;
+
 			}
 			>div {
 				position: absolute;
@@ -597,7 +601,7 @@
 			font-size: 1em;
 			text-align: center;
 			text-shadow: 1px 1px 10px #000;
-			color: #fff;
+			color: #ffffff;
 			animation: cl-text-slide 1.5s 0.2s 1 ease-out, cl-shadow-pulse 3.5s 1s infinite;
 		}
 		.Attack,
@@ -720,7 +724,7 @@
 					text-overflow: ellipsis;
 					white-space: nowrap;
 					text-align: center;
-					color: #fff;
+					color: #ffffff;
 					&:first-child {
 						top: 38%;
 					}
@@ -765,7 +769,7 @@
 				border: 3px solid;
 				border-color: #f00 #f00 #0f0 #0f0;
 				transform: rotate(-45deg);
-				box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5), inset 0px 0px 10px rgba(0, 0, 0, 0.5);
+				box-shadow: 0 0 10px rgba(0, 0, 0, 0.5), inset 0 0 10px rgba(0, 0, 0, 0.5);
 				animation: cl-substitute 1.5s infinite ease-in-out;
 				animation-fill-mode: forwards;
 				&:before,
@@ -816,7 +820,7 @@
 			}
 			p {
 				position: absolute;
-				top: 27%;
+				top: 37%;
 				left: 25%;
 				width: 50%;
 				overflow: hidden;
@@ -959,7 +963,7 @@
 					top: 48%;
 					left: 16%;
 					transform-origin: 0 0;
-					transform: rotate(180deg);
+					transform: rotate(180deg) !important;
 					&:after {
 						left: 100%;
 						border-color: transparent transparent transparent #fff;
@@ -976,7 +980,7 @@
 					top: 48%;
 					right: 16%;
 					transform-origin: 100% 0;
-					transform: rotate(180deg);
+					transform: rotate(180deg) !important;
 					&:after {
 						right: 100%;
 						border-color: transparent #fff transparent transparent;
@@ -1075,7 +1079,7 @@
 				top: 0;
 				width: 6%;
 				height: 13%;
-				box-shadow: inset 1px 1px 4px 3px rgba(0, 0, 0, 0.6), 0px 1px 3px rgba(0, 0, 0, 0.6);
+				box-shadow: inset 1px 1px 4px 3px rgba(0, 0, 0, 0.6), 0 1px 3px rgba(0, 0, 0, 0.6);
 				opacity: 0;
 			}
 			&.home {
@@ -1200,7 +1204,7 @@
 	0% {
 		transform: translateX(0%);
 		background-position: 0 0;
-		box-shadow: 0 0px 3px rgba(0, 0, 0, 0.5), inset 0 0 5px rgba(0, 0, 0, 1);
+		box-shadow: 0 0 3px rgba(0, 0, 0, 0.5), inset 0 0 5px rgba(0, 0, 0, 1);
 	}
 	50% {
 		transform: translateX(500%);
@@ -1217,7 +1221,7 @@
 	0% {
 		transform: translateX(0%);
 		background-position: 0 0;
-		box-shadow: 0 0px 3px rgba(0, 0, 0, 0.5), inset 0 0 5px rgba(0, 0, 0, 1);
+		box-shadow: 0 0 3px rgba(0, 0, 0, 0.5), inset 0 0 5px rgba(0, 0, 0, 1);
 	}
 	50% {
 		transform: translateX(-500%);
@@ -1773,7 +1777,7 @@
 		animation-timing-function: ease;
 	}
 	100% {
-		right: 0%;
+		right: 0;
 		opacity: 1;
 		transform: scale(0.65);
 	}
@@ -1857,7 +1861,7 @@
 @keyframes cl-goal-to-center-away {
 	0% {
 		left: 4%;
-		transform: scale(0.65)
+		transform: scale(0.65);
 	}
 	100% {
 		left: 47%;

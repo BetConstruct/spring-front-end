@@ -49,9 +49,16 @@
 			float: left;
 			width: (100%/2 - 2%); /*divide width depending on number of statistics in a row , for tennis number = 2, for soccer 3*/
 			margin: 0.3em 0;
-			margin-right: 2.9%;		
+			margin-right: 2.9%;
+			@include rtl {
+				margin-left: 2.9%;
+				margin-right: 0;
+			}
 			&:nth-child(2n){ 	/* number 3 is number of statistics in the row*/
-				margin-right: 0; 				
+				margin-right: 0;
+				@include rtl {
+					margin-left: 0;
+				}
 			}
 		}
 	}
@@ -108,7 +115,7 @@
 			height: 14px !important;
 		  	text-align: center;
 			color: #e8e000;
-		  	text-shadow: 0 0 1px #000000;
+		  	text-shadow: 0 0 1px rgba(black, 0.5);
 		  	text-indent: 2px;
 			display: block;
 		  	box-shadow: none !important;
@@ -187,11 +194,19 @@
 				left: 38%;
 				animation: point_text_1 0.8s 1 ease-out;
 				animation-fill-mode: forwards;
+				@include rtl {
+					left: auto;
+					right: 38%;
+				}
 			}
 			.score_2{
 				right: 37%;
 				animation: point_text_2 0.8s 1 ease-out;
 				animation-fill-mode: forwards;
+				@include rtl {
+					right: auto;
+					left: 37%;
+				}
 			}
 		}
 
@@ -479,12 +494,12 @@
 	transform: translate3d(500%, 350%, 0);
   }
   100% {
-	transform: translate3d(1900%, 0%, 0);
+	transform: translate3d(1500%, 0%, 0);
   }
 }
 @keyframes ball_in_play_2_left{
   0% {
-	transform: translate3d(1900%, 350%, 0);
+	transform: translate3d(1500%, 350%, 0);
   }
   100% {
 	transform: translate3d(500%, 0%, 0);
@@ -547,7 +562,7 @@
 	transform: translate3d(1900%, 0%, 0);
   }
   50% {
-	transform: translate3d(1000%, 350%, 0) scaleY(0.6);
+	transform: translate3d(800%, 350%, 0) scaleY(0.6);
   }
   90%{
 	opacity: 1;
