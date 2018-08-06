@@ -36,7 +36,7 @@
                             <div class="video-animation-vox-v3 animation-control">
                                 <video-player ng-if="openGame.activeFieldType === 'video' && !hideVideoAndAnimationBox && conf.videoEnabled && !enlargedGame && !pinnedGames[openGame.id]"
                                               class="game-video"
-                                              ng-class="{'animation-start': !videoState.videoIsLoaded && openGame.video_data, 'animation-end': videoState.videoIsLoaded}"
+                                              ng-class="{'animation-start': !$root.conf.videoProvidersThatWorkWithIframe[openGame.tv_type] && !videoState.videoIsLoaded && openGame.video_data, 'animation-end': videoState.videoIsLoaded}"
                                               player-id="gamevideo{{openGame.id}}"
                                               stream-url="{{openGame.video_data}}"
                                               provider-id="{{openGame.tv_type}}"
@@ -123,6 +123,7 @@
         <!-- System Calculator-->
         <!--Game-wrapper-->
         <div class="game-contain" ng-class="'type-' + selectedMenuType.active">
+
             <!--filter-->
             <div class="big-filter-wrapper">
                 <div ng-if="conf.availableAsianViewThemes.length > 1" class="selectSportsbookColor-j" ng-class="{active: themeSelector.show}">

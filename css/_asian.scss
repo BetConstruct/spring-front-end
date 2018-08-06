@@ -11,7 +11,7 @@
   min-width: 970px;
   height: 100%;
   font: 10px/12px $font-f !important;
-  .md-progress-circular.md-theme {
+  .md-progress-circular.md-theme:not(.not-main) {
     left: 50%;
     margin-left: -50px;
     margin-top: 40px;
@@ -2854,4 +2854,17 @@ table.hdp-contain-j {
 .asian .bet-status-container {
   background: darken(desaturate(adjust-hue($skin-color, 4deg), 15), 1);
   border-radius: 0;
+}
+.balance-int-row {
+  float: left;
+  width: 100%;
+  text-align: right;
+  font: 13px/26px $font-f;
+  overflow: hidden;
+  margin: 1px 0 6px;
+  box-sizing: border-box;
+  padding: 0 24px;
+  background: lighten(desaturate($skin-color, 17), 12);
+  color: $text-palette-2;
+  word-spacing: 4px;
 }

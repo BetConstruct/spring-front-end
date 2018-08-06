@@ -26,7 +26,7 @@ CASINO.controller('casinoCtrl', ['$rootScope', '$scope', '$sce', '$location', 'G
     };
     $scope.confData = CConfig;
     $scope.providersMenuState = {
-        isClosed: !CConfig.main.providersMenuPermanentlyExpanded// true
+        isClosed: !(CConfig.main.providersMenuPermanentlyExpanded || CConfig.main.providersMenuExpanded)
     };
 
     $scope.selections = {

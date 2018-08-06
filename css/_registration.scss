@@ -1756,3 +1756,35 @@ $disable-middle-name: false !default;
   background: #121623;
 
 }
+.sms-confirmation-wrap {
+  float: left;
+  width: 100%;
+  display: table;
+  > li {
+    display: table-cell;
+    vertical-align: bottom;
+    &:last-child {
+      width: 1%;
+      white-space: nowrap;
+      padding: 0 0 0 12px;
+    }
+  }
+  button {
+    height: 36px;
+    float: right;
+    border: 0;
+    background: $brand-color-1;
+    color: set-color($brand-color-1);
+    text-transform: uppercase;
+    font: 12px $font-f;
+    padding: 0 20px;
+    transition: 300ms background, 300ms color;
+    &:hover {
+      background: lighten($brand-color-1, 10);
+    }
+    &:disabled {
+      background: rgba(invert(set-color($popup-form-palette)), 0.15);
+      color: rgba(set-color($popup-form-palette), 0.5);
+    }
+  }
+}

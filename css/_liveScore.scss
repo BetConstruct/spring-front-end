@@ -61,6 +61,7 @@ live-game-scores {
     display: block;
     float: left;
     width: 100%;
+    contain: layout;
 }
 
 .last-event-and-stats-toggle {

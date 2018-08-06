@@ -209,7 +209,9 @@ angular.module('vbet5.betting').controller('classicViewMainCtrl', ['$rootScope',
         if ($location.path() === '/multiview/') {
             return;
         }
-
+        if (data.fully) {
+            $scope.todaysBetsSelected = false;
+        }
         $scope.openGameFullDetails(data.game, data.competition, false, true, data.fully);
     });
 
@@ -883,7 +885,7 @@ angular.module('vbet5.betting').controller('classicViewMainCtrl', ['$rootScope',
         $scope.todaysBetsSelectedSport = sport;
         $scope.prematchGamesLoading = true;
         $scope.favoriteTeamExpanded = false;
-
+        $scope.favoriteGameIsSelected = false;
 
         var dayShift;
         if ($location.search().dayshift) {
@@ -934,6 +936,7 @@ angular.module('vbet5.betting').controller('classicViewMainCtrl', ['$rootScope',
             updateTodaysBetsGames,
             {
                 'thenCallback': function (result) {
+                    $scope.prematchGamesLoading = false;
                     if (result.subid) {
                         subIds.todaysBets = result.subid;
                     }

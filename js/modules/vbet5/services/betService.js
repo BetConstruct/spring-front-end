@@ -285,5 +285,38 @@ VBET5.service('BetService', ['$rootScope', 'Zergling', 'Config', '$q', 'Utils', 
         }
     };
 
+
+    /**
+     * @ngdoc method
+     * @name getEventData
+     * @methodOf vbet5.service:BetService
+     * @description gets event data from SWARM
+     * @param {array} eventIds
+     * @returns {Promise}
+     */
+    BetService.getEventData = function getEventData(eventIds) {
+        var promise = $q.defer();
+
+        Zergling.get({
+            'source': 'betting',
+            'what': {
+                'sport': ['id', 'name', 'alias', 'order'],
+                'competition': ['id', 'order', 'name'],
+                'region': ['id', 'name', 'alias'],
+                'game': ['id', 'team1_id', 'team1_name', 'team2_id', 'team2_name', 'type'],
+                'market': ['base', 'type', 'name', 'express_id'],
+                'event': []
+            },
+            'where': {
+                'event': {
+                    'id': {'@in': eventIds}
+                }
+            }})
+            .then(function resolve(response) { promise.resolve(response); }, function reject(response) { promise.reject(response); });
+
+        return promise.promise;
+
+    };
+
     return BetService;
 }]);

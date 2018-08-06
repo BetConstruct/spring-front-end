@@ -872,7 +872,7 @@ angular.module('vbet5.betting').controller('classicViewLeftController', ['$rootS
      *
      * @param {Boolean} force overrides value if set
      */
-    $scope.expandLeftMenuAllSports = function expandLeftMenuAllSports(force) {
+    function expandLeftMenuAllSports(force) {
         var showPanel = additionalLeftMenuItems.SHOW_ALL_SPORTS;
         showPanel.expanded = force !== undefined ? force : !showPanel.expanded;
         showPanel.name = $filter('translate')(showPanel.expanded ? 'Less sports' : 'More sports');
@@ -882,7 +882,7 @@ angular.module('vbet5.betting').controller('classicViewLeftController', ['$rootS
             showPanel.game += $scope.prematchSportGroups[i].sports.length;
         }
         $scope.showPanel = showPanel;
-    };
+    }
 
     /**
      * @ngdoc method
@@ -930,11 +930,9 @@ angular.module('vbet5.betting').controller('classicViewLeftController', ['$rootS
                 });
                 if (firstTime) {
                     $scope.leftMenuState.prematch.sport[additionalLeftMenuItems.SHOW_ALL_SPORTS.id] = $scope.leftMenuState.prematch.sport[additionalLeftMenuItems.SHOW_ALL_SPORTS.id] || {};
-                    if (Config.main.expandMoreSportsByDefault) {
-                        $scope.leftMenuState.prematch.sport[additionalLeftMenuItems.SHOW_ALL_SPORTS.id].expanded = true;
-                        expandedPrematchSports[additionalLeftMenuItems.SHOW_ALL_SPORTS.id] = true;
-                    }
-                    $scope.expandLeftMenuAllSports($scope.leftMenuState.prematch.sport[additionalLeftMenuItems.SHOW_ALL_SPORTS.id].expanded);
+                    $scope.leftMenuState.prematch.sport[additionalLeftMenuItems.SHOW_ALL_SPORTS.id].expanded = Config.main.expandMoreSportsByDefault;
+                    expandedPrematchSports[additionalLeftMenuItems.SHOW_ALL_SPORTS.id] = Config.main.expandMoreSportsByDefault;
+                    expandLeftMenuAllSports(Config.main.expandMoreSportsByDefault);
                 }
             }
         }
@@ -1209,7 +1207,7 @@ angular.module('vbet5.betting').controller('classicViewLeftController', ['$rootS
         }
 
         if (sport.id === additionalLeftMenuItems.SHOW_ALL_SPORTS.id) {
-            $scope.expandLeftMenuAllSports();
+            expandLeftMenuAllSports();
             return;
         }
 
@@ -1721,7 +1719,7 @@ angular.module('vbet5.betting').controller('classicViewLeftController', ['$rootS
     $scope.$on('sportsbook.selectData', function (event, data) {
         switch (data.type) {
             case 'popular.game':
-                $scope.selectFavoriteGame(data.data, true);
+                $scope.selectFavoriteGame(data.data);
                 break;
             case 'popular.competition':
                 if ($location.path() === '/dashboard/') {
@@ -1742,7 +1740,7 @@ angular.module('vbet5.betting').controller('classicViewLeftController', ['$rootS
      * @param {Object} game object
      * @param {Boolean} fully is responsible for covering the entire central part of the
      */
-    $scope.selectFavoriteGame = function selectFavoriteGame(game, fully) {
+    $scope.selectFavoriteGame = function selectFavoriteGame(game) {
         if (game.id === $scope.activeGameId && $location.path() !== '/dashboard/') {
             return;
         }

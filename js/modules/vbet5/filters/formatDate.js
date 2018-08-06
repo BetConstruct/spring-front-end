@@ -68,8 +68,8 @@ VBET5.filter('formatDate', ['Moment', 'Config', 'Utils', function (Moment, Confi
                 case 'edition':
                     var edition = Moment.get(timestamp).locale(localeLang);
                     return parseInt(edition.format('DDD'), 10) + ((Config.main.edition && Config.main.edition.offset) || 0);
-                case 'tornament':
-                    return Moment.moment.utc(input).local().format("YY-MM-DD HH:mm");
+                case 'tournament':
+                    return Moment.moment.utc(input).local().format("DD/MM/YYYY HH:mm");
                 case 'duration':
                     return Moment.moment.utc(timestamp).format("HH:mm:ss");
             }

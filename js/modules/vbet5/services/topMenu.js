@@ -33,7 +33,7 @@ angular.module('vbet5').service('TopMenu', ['$rootScope', '$location', '$timeout
         },
         live: {
             displayName : Translator.get("Live"),
-            href: Config.main.sportsLayout == 'combo' ? "#/overview/" : "#/sport/?type=1",
+            href: Config.main.sportsLayout === 'combo' ? "#/overview/" : Config.main.topMenuCustomUrl && Config.main.topMenuCustomUrl.live ? Config.main.topMenuCustomUrl.live : "#/sport/?type=1",
             click: function () { $rootScope.topMenuDropDown = false; $scope.closeSlider(); $scope.setGamesType(true); $scope.goToTop(); },
             classObject: {'active': false},
             staticClass: "menu-live",
@@ -128,6 +128,11 @@ angular.module('vbet5').service('TopMenu', ['$rootScope', '$location', '$timeout
             staticClass: "casino fantasy ",
             dynamicClass: correctDynamicClass(Config.main.newMenuItems.virtualBetting),
             showCondition: $rootScope.calculatedConfigs.virtualBettingEnabledInTopMenu
+        },
+        betonpolitics: {
+            displayName: Translator.get("Bet On Politics"),
+            href: '#/betonpolitics/',
+            showCondition: $rootScope.calculatedConfigs.betOnPoliticsEnabled
         },
         belote: {
             displayName : Translator.get("Belote"),
@@ -370,7 +375,9 @@ angular.module('vbet5').service('TopMenu', ['$rootScope', '$location', '$timeout
 
         if (menuItem.classObject.active) {
             $scope.subMenuItems = menuItem.subMenu;
-            $rootScope.currentPage.hasSubHeader = true;
+            if ($scope.subMenuItems && $scope.subMenuItems.length) {
+                $rootScope.currentPage.hasSubHeader = true;
+            }
         }
     }
 
@@ -421,6 +428,9 @@ angular.module('vbet5').service('TopMenu', ['$rootScope', '$location', '$timeout
                 case 'Promotions':
                     menuItem.classObject.active = ($location.path() === '/promos/');
                     break;
+                case 'betonpolitics':
+                    menuItem.classObject.active = ($location.path() === '/betonpolitics/');
+                    break;
                 default:
                     menuItem.classObject.active = ($location.path() === (menuItem.activeLink ? menuItem.activeLink : ('/' + menuItem.name + '/')) || $location.url() === (menuItem.activeLink ? menuItem.activeLink : ('/' + menuItem.name + '/')));
                     break;
@@ -453,43 +463,6 @@ angular.module('vbet5').service('TopMenu', ['$rootScope', '$location', '$timeout
             return Config.main.menuCountryFilter[countryCode].indexOf(menuItem.name) !== -1;
         }
         return true;
-    }
-
-    //TODO remove after the world cup
-    function addRussia2018() {
-        if (Config.main.integrationMode) {
-            Config.main.subHeaderItems.splice(1, 0, {
-                alias: "russia2018",
-                displayName: Translator.get("Russia 2018"),
-                badge: 'new'
-            });
-            return;
-        }
-
-        for (var i = 0; i < $scope.topMenu.length; ++i) {
-            if ($scope.topMenu[i].href.indexOf('#/sport') !== -1) {
-                $scope.topMenu.splice(0, 0, {
-                    "name": "Russia 2018",
-                        "displayName": Translator.get("Russia 2018"),
-                    "href": "#/russia2018/?p=calendar",
-                    "classObject": {
-                        "active": false
-                    },
-                    "supDisplayName": null,
-                    "dynamicClass": 'new-top-nav',
-                    "subMenu": [],
-                    "target": "",
-                    "staticClass": "undefined ",
-                    "showCondition": true,
-                    "activeLink": "/russia2018/",
-                    "authorizedOnly": false,
-                    "reload": "false"
-                });
-
-                $rootScope.validPaths['#/russia2018'] = true;
-                break;
-            }
-        }
     }
 
     /**
@@ -618,8 +591,6 @@ angular.module('vbet5').service('TopMenu', ['$rootScope', '$location', '$timeout
         } else {
             Utils.sortByField($scope.topMenu, menuData);
         }
-
-        addRussia2018();
 
         $rootScope.$on('$locationChangeSuccess', TopMenu.updateMenuItemsState);
         $timeout(TopMenu.updateMenuItemsState); //initial

@@ -61,6 +61,7 @@ angular.module('vbet5.betting').controller('euro2016multiColumnCtrl', ['$scope',
     function updateGames() {
         $scope.multiColumn.viewData = [];
         $scope.multiColumn.prematchGamesEvents = false;
+        $scope.multiColumn.selectedSport = '';
 
         if ($scope.multiColumn.liveGames && $scope.multiColumn.liveGames.length > 0) {
 
@@ -81,6 +82,7 @@ angular.module('vbet5.betting').controller('euro2016multiColumnCtrl', ['$scope',
 
                 angular.forEach(competition.gamesGroupedByDate, function (gamesGroupedByDate, date) {
                     angular.forEach(gamesGroupedByDate, function (game) {
+                        $scope.multiColumn.selectedSport = $scope.multiColumn.selectedSport || game.sport.alias;
                         game.filteredEvents = {};
                         angular.forEach($scope.multiColumnMarketFilterTypes, function (filter, filterType) {
                             var events = getMultiColumnEvents(game.market, filter.marketType, filter.key, filter.subKey, filter.eventTypes, filter.optimalMarkets, filter.remapTypes);

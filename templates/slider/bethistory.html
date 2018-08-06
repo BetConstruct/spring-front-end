@@ -119,7 +119,7 @@
                             <span ng-show="bet.bonus_bet_amount && !bet.amount" title="Bet placed from bonus." class="bonus" trans="attr-only">{{bet.bonus_bet_amount}}</span>
                             <span ng-show="bet.bonus_bet_amount && bet.amount" title="{{('Part of bet placed from bonus.'|translate) + ' (' + bet.amount + ' + ' + bet.bonus_bet_amount + ')'}}" class="bonus-combined">{{(bet.bonus_bet_amount + bet.amount)|number:conf.balanceFractionSize}}</span>
                             {{bet.currency|currency}}
-                            <span class="cms-jcon-bonus2" title="Made with Bonus money" ng-if="bet.is_bonus_money" ></span>
+                            <span class="cms-jcon-bonus2" title="Made with Bonus money" trans="attr-only" ng-if="bet.is_bonus_money" ></span>
                         </li>
                         <li class="rezult-rate">
                             <span class="unsettled-rezult"  ng-show="bet.outcome == -5" trans>On Hold</span>

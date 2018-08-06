@@ -16,7 +16,7 @@
                                                 <span ng-if="bet.type==='3'"> {{bet.system_min_count}}/{{bet.system_max_count}}</span>
                                                 <i ng-if="bet.type==='1' && bet.events[0].is_live === '1'">live</i>
                                             </span>
-                                            <span class="cms-jcon-bonus2" ng-if="bet.is_bonus_money" title="Made with Bonus money"></span>
+                                            <span class="cms-jcon-bonus2" ng-if="bet.is_bonus_money" title="Made with Bonus money" trans="attr-only"></span>
                                             <span class="date-info-recentbet">{{bet.date_time|formatDate}}</span>
                                         </p>
                                     </div>

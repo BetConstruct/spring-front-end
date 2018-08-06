@@ -14,6 +14,9 @@ VBET5.controller('paymentsCtrl', ['$scope', '$rootScope', '$sce', '$q', '$window
     $scope.depositFormData = {};
     $scope.paymentHistory = [];
     $scope.infoText = Config.paymentsInfoText;
+    $scope.parseNum = function parseNum(num) {
+        return parseInt(num, 10);
+    };
 
     $scope.countryCodes = Utils.getAvailableCountries(CountryCodes);
     var currencyRates = {};
@@ -548,6 +551,7 @@ VBET5.controller('paymentsCtrl', ['$scope', '$rootScope', '$sce', '$q', '$window
         var i, j, k, m;
         var reorderedBetshops = [];
         var topCities = [];
+
         //loop through cities
         for (i = cities.length - 1; i >= 0; i--) {
            // for each city loop through betshops and find top betshops
@@ -584,6 +588,21 @@ VBET5.controller('paymentsCtrl', ['$scope', '$rootScope', '$sce', '$q', '$window
             $scope.selectedPaymentSystem.betShops = data.result;
 
             var cities = $scope.selectedPaymentSystem.betShops.cities;
+            cities.sort(function (a, b) {
+                return (a.name || '').trim().localeCompare((b.name || '').trim());
+            });
+            if (cities && cities.length) {
+                var k;
+                for (k = 0; k < cities.length; k++) {
+                    if(cities[k].betshops && cities[k].betshops.length)
+                    {
+                        cities[k].betshops.sort(function (a, b) {
+                            return (a.address || '').trim().localeCompare((b.address || '').trim());
+                        });
+                    }
+                }
+            }
+
             // make default selection
             if (cities &&
                 cities.length &&
@@ -700,7 +719,7 @@ VBET5.controller('paymentsCtrl', ['$scope', '$rootScope', '$sce', '$q', '$window
      */
     function depositConfirmationAsDialog() {
         $rootScope.$broadcast("globalDialogs.addDialog", {
-            type: 'confirm',
+            type: 'info',
             title: 'Confirm',
             yesno: true,
             content: Translator.get('Please confirm money transfer') + ': ' + ($scope.paymentAmount.withdraw || $scope.paymentAmount.deposit) + ' ' + ($scope.selectedPaymentSystem.customCurrency || $rootScope.profile.currency_name),

@@ -4,7 +4,7 @@ CMS.constant('WPConfig', {
 //    wpUrl: 'http://vbet5admin.betconstruct.int/',
     wpUrl: 'https://cmsbetconstruct.com/json',  // WordpResss instance serving pages, banners
     wpDirectUrl: '//cmsbetconstruct.com/getjson',  // Get direct data by slug
-    exchangeShopUrl: '//cmsbetconstruct.com/productapi/get', // exchange shop url
+    exchangeShopUrl: 'https://cmsbetconstruct.com/productapi/get', // exchange shop url
     twitterUrl: '//twitter.betconstruct.com/twitter.php',
     wpNewsUrl: {
         main: 'https://cmsbetconstruct.com/json'

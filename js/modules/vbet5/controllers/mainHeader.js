@@ -34,13 +34,28 @@ VBET5.controller('mainHeaderCtrl', ['$rootScope', '$scope', '$interval', '$filte
         'sport': ['/sport', '/freebet', '/poolbetting', '/livecalendar', '/results', '/virtualsports', '/overview', '/multiview', '/dashboard', '/exchange', '/statistics', '/customsport'],
         'poker': ['/poker']
     };
-    if (Config.main.integrationMode) {  //TODO remove after the world cup
-        pathTypes.sport.push('/russia2018');
-    }
     pathTypes[Config.main.homepagePageType].push('/');
 
     $rootScope.currentPage = {};
     $rootScope.casinoPaths = pathTypes.casino;
+
+    if (Config.main.header.acceptCookies) {
+        $scope.cookiesNotification = {
+            cookiesAccepted: !!Storage.get('cookiesAccepted')
+        };
+
+        $scope.cookiesNotification.cookiesText = Translator.get('By using this website, you accept the placement and use of cookies. For more information please read our {1}', [
+            '<a href="#?help=privacy-policy&amp;lang=' + Config.env.lang + '" target="_blank">' + Translator.get('Privacy Policy') + '</a>',
+            '<a href="#?help=general-terms-and-conditions&amp;lang=' + Config.env.lang + '" target="_blank">' + Translator.get('Terms &amp; Conditions') + '</a>',
+            Config.main.registration.minimumAllowedAge || ''
+        ]);
+
+        $scope.acceptCookies = function acceptCookies() {
+            $scope.cookiesNotification.cookiesAccepted = true;
+            Storage.set('cookiesAccepted', true);
+        };
+    }
+
 
     Utils.setBodyClass(Config.main.bodyWrapperClass, 'body');
 
@@ -762,6 +777,7 @@ VBET5.controller('mainHeaderCtrl', ['$rootScope', '$scope', '$interval', '$filte
         $rootScope.env.isNewMessage = $rootScope.profile.unread_count !== $rootScope.profile.unreadCountOld;
 
         liveChat.liveAgentProfileUpdate && liveChat.liveAgentProfileUpdate();
+        liveChat.zopimProfileUpdate && liveChat.zopimProfileUpdate($rootScope.profile);
     }
 
     $scope.$on('profile', function (event, data) {
@@ -1332,7 +1348,7 @@ VBET5.controller('mainHeaderCtrl', ['$rootScope', '$scope', '$interval', '$filte
         if (path !== '/' && lastCharacter === '/') {
             path = path.substr(0, path.length - 1);
         }
-        var defaultAvailability = path === '/' || path.indexOf('/russia2018') !== -1 || path.indexOf('/game/') !== -1 || path.indexOf('/skinning') !== -1 || path.indexOf('/widget/') !== -1 || Config.main.defaultAvailablePaths.indexOf(path) !== -1;
+        var defaultAvailability = path === '/' || path.indexOf('/game/') !== -1 || path.indexOf('/skinning') !== -1 || path.indexOf('/widget/') !== -1 || path.indexOf('/landpage') !== -1 || Config.main.defaultAvailablePaths.indexOf(path) !== -1;
         path = "#" + path;
 
         if(defaultAvailability && defaultAvailability[defaultAvailability.length - 1] !== '/') {
@@ -1842,8 +1858,10 @@ VBET5.controller('mainHeaderCtrl', ['$rootScope', '$scope', '$interval', '$filte
 
     if (!Utils.isObjectEmpty(Config.main.domainSpecificPrefixes)) {
         routChangePromise = $scope.$on('$routeChangeStart', function(event, next) {
-            var nextPath = '#' + next.$$route.originalPath;
-            domainSpecificCheck(nextPath, event);
+            if (next.$$route) {
+                var nextPath = '#' + next.$$route.originalPath;
+                domainSpecificCheck(nextPath, event);
+            }
         });
 
         domainSpecificCheck('#' + $location.path()); //initial state

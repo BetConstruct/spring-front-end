@@ -143,7 +143,7 @@
 
                                       <tr class="block-info" ng-class="{'open': system.infoBlockExpanded}">
                                         <td colspan="7">
-                                            <p ng-bind-html="selectedTopPage.systems[selectedPaymentsType + '-' + system.name] || selectedTopPage.systems[system.name] "></p>
+                                            <p ng-bind-html="selectedTopPage.systems[selectedPaymentsType + '-' + system.name] || selectedTopPage.systems[system.name] || selectedTopPage.systems[selectedPaymentsType + '-' + system.paymentID]"></p>
                                             <div class="payment-b-contain">
                                             	<ul>
                                                 	<li></li>

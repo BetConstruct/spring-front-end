@@ -7,3 +7,6 @@
         </li>
     </ul>
 </div>
+<div ng-if="$root.conf.asian.showUserInfoInSubHeader && $root.profile && $root.env.authorized" class="balance-int-row">
+    {{'Account'|translate}} : {{$root.profile.nick_name}} | {{'BBIN balance'|translate}}: {{$root.profile.calculatedBalance|number:conf.balanceFractionSize}}
+</div>

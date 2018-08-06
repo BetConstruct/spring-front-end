@@ -12,6 +12,7 @@ angular.module('vbet5').controller('loginCtrl', ['$scope', '$rootScope', 'Timeou
     var refreshBalancePromise, keepAlivePromise;
     var connectionService = new ConnectionService($scope);
     var nemIDMsgListener;
+    var isGettingBalanceInProgress = false;
 
     $scope.busy = false;
 
@@ -22,7 +23,9 @@ angular.module('vbet5').controller('loginCtrl', ['$scope', '$rootScope', 'Timeou
         needVerificationCode: false,
         needUserAuthorization: false,
         allowSMSResend: true,
-        smsErrMsg: ''
+        smsErrMsg: '',
+        smsMsg: '',
+        smsTimer: 0
     };
 
     // mail confirmation and mail password reset
@@ -109,6 +112,40 @@ angular.module('vbet5').controller('loginCtrl', ['$scope', '$rootScope', 'Timeou
         });
     };
 
+
+    /**
+     * @ngdoc method
+     * @name sendSms
+     * @methodOf vbet5.controller:loginCtrl
+     * @description Sends sms verification code to user's mobile phone
+     */
+    $scope.sendSms = function sendSms() {
+        $scope.params.allowSMSResend = false;
+        clearSMSParams();
+
+        Zergling.get({ 'login': $scope.user.username }, 'send_sms_with_username')
+            .then(
+                function success(response) {
+                    switch (response.result) {
+                        case 0:
+                            $scope.params.smsTimer = Config.main.smsVerificationLogin.timer + new Date().getTime() / 1000;
+                            $scope.params.smsMsg = 'SMS Successfully Sent';
+                            break;
+                        default:
+                            $scope.params.smsErrMsg = Translator.get(response.result_text);
+                    }
+                }, function error() {
+                    $scope.params.smsErrMsg = Translator.get('Service unavailable');
+                })['finally'](function enableButton() { $scope.params.allowSMSResend = true; });
+    };
+
+
+    function clearSMSParams() {
+        $scope.params.smsMsg = '';
+        $scope.params.smsErrMsg = '';
+        $scope.params.smsTimer = 0;
+    }
+
     /**
      * @ngdoc method
      * @name loginFormInit
@@ -183,7 +220,7 @@ angular.module('vbet5').controller('loginCtrl', ['$scope', '$rootScope', 'Timeou
      * should get response of same format as 'profile' command
      */
     function refreshBalance() {
-        if (!Config.partner.balanceRefreshPeriod && !Config.main.rfid.balanceRefreshPeriod) {
+        if (!Config.partner.balanceRefreshPeriod && !Config.main.rfid.balanceRefreshPeriod || isGettingBalanceInProgress) {
             return;
         }
 
@@ -191,17 +228,20 @@ angular.module('vbet5').controller('loginCtrl', ['$scope', '$rootScope', 'Timeou
             TimeoutWrapper.cancel(refreshBalancePromise);
         }
 
+        isGettingBalanceInProgress = true;
+
         Zergling.get({}, 'get_balance').then(function (response) {
             var profile = response.data || {profile: {rfid: response}}; // this must be fixed from basalt side.
             updateProfile(profile);
             if (response.data) {
                 partner.call('balance', $filter('firstElement')(response.data.profile));
             }
-            if (response.code && (response.code === 12 || response.code === '12')) {
+            if ((response.code && (response.code === 12 || response.code === '12')) || (response.result && response.result === '-1002')) {
                 $rootScope.$broadcast('doLogOut');
             }
         })['finally'](function () {
             refreshBalancePromise = TimeoutWrapper(refreshBalance, Config.partner.balanceRefreshPeriod || Config.main.rfid.balanceRefreshPeriod);
+            isGettingBalanceInProgress = false;
         })['catch'](function (reason) {
             partner.call('balance', reason);
         });
@@ -280,6 +320,10 @@ angular.module('vbet5').controller('loginCtrl', ['$scope', '$rootScope', 'Timeou
         if ($scope.params.needVerificationCode) {
             additionalParams.login_code = $scope.user.login_code;
             $scope.params.needVerificationCode = false;
+        }
+
+        if (Config.main.smsVerificationLogin.enabled) {
+            additionalParams.confirmation_code = $scope.user.confirmation_code;
         }
 
         if ($scope.user && $scope.user.birth_date) {
@@ -409,6 +453,11 @@ angular.module('vbet5').controller('loginCtrl', ['$scope', '$rootScope', 'Timeou
             if ($scope.env.sliderContent === 'login') {
                 $scope.env.showSlider = false;
                 $scope.env.sliderContent = '';
+
+                if (Config.main.smsVerificationLogin.enabled) {
+                    clearSMSParams();
+                    $scope.params.allowSMSResend = true;
+                }
             }
         }, 500);
     }
@@ -489,7 +538,7 @@ angular.module('vbet5').controller('loginCtrl', ['$scope', '$rootScope', 'Timeou
         }
 
         //Email verification
-        if (data.data.status === 99 || data.data.status === "99" || data.data.status === 2413 || data.data.status === "2413") {
+        if (data.msg !== 'Invalid credentials' && (data.data.status === 99 || data.data.status === "99" || data.data.status === 2413 || data.data.status === "2413")) {
             //$scope.params.needUserAuthorization = true;
             $rootScope.$broadcast("globalDialogs.addDialog", {
                 type: 'success',
@@ -497,6 +546,14 @@ angular.module('vbet5').controller('loginCtrl', ['$scope', '$rootScope', 'Timeou
                 content: 'To the specified e-mail address we have sent the letter. Click on the link to continue registration. If you do not receive the email, contact support.'
             });
             $scope.env.showSlider = false;
+        }
+
+        //Sms verification
+        if (Config.main.smsVerificationLogin.enabled) {
+            $scope.signInError = data.data.details.Message || '';
+            if (data.data.status === 2472 || data.data.status === 2474) {
+                $scope.params.smsErrMsg = $scope.signInError;
+            }
         }
     }
 
@@ -879,6 +936,10 @@ angular.module('vbet5').controller('loginCtrl', ['$scope', '$rootScope', 'Timeou
             nemIDMsgListener = null;
             $scope.nemIDSrc = '';
             $scope.busy = false;
+        }
+        if (Config.main.smsVerificationLogin.enabled) {
+            clearSMSParams();
+            $scope.params.allowSMSResend = true;
         }
     });
 }]);

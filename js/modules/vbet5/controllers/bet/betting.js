@@ -6,7 +6,7 @@
  * @description
  * Explorer controller
  */
-BettingModule.controller('betSlipController', ['$q', '$scope', '$rootScope', '$filter', 'Config', 'Zergling', 'Storage', 'Translator', '$location', '$route', '$window', '$injector', 'analytics', 'DomHelper', 'Utils', 'partner', 'TimeoutWrapper', 'UserAgent', '$timeout', function ($q, $scope, $rootScope, $filter, Config, Zergling, Storage, Translator, $location, $route, $window, $injector, analytics, DomHelper, Utils, partner, TimeoutWrapper, UserAgent, $timeout) {
+BettingModule.controller('betSlipController', ['$q', '$scope', '$rootScope', '$filter', 'Config', 'Zergling', 'Storage', 'Translator', '$location', '$route', '$window', '$injector', 'analytics', 'DomHelper', 'Utils', 'partner', 'TimeoutWrapper', 'UserAgent', '$timeout', 'BetService', function ($q, $scope, $rootScope, $filter, Config, Zergling, Storage, Translator, $location, $route, $window, $injector, analytics, DomHelper, Utils, partner, TimeoutWrapper, UserAgent, $timeout, BetService) {
     'use strict';
 
     TimeoutWrapper = TimeoutWrapper($scope);
@@ -66,7 +66,7 @@ BettingModule.controller('betSlipController', ['$q', '$scope', '$rootScope', '$f
 
     $scope.fullCoverBet = {
         enabled: Config.betting.enableFullCoverBetTypes,
-        expanded: true, // make expanded by default
+        expanded: false, // make colapsed by default
         types: {}
     };
 
@@ -637,7 +637,7 @@ BettingModule.controller('betSlipController', ['$q', '$scope', '$rootScope', '$f
             eachWayMode: false,
             divisionCoefficient: 1,
             superbet: {
-                selector: false,
+                selector: $scope.acceptPriceChanges === '-1',
                 possible: true // If there's a virtual sport event in the bet slip superbet is turned off
             },
             counterOfferPossible: true // If there's a virtual sport event in the bet slip counter offer is turned off
@@ -1307,9 +1307,7 @@ BettingModule.controller('betSlipController', ['$q', '$scope', '$rootScope', '$f
                 console.log("request =", request);
                 $scope.isBetsInProgress = false;
                 if (result.result === 'OK') {
-                    if (Config.partner.balanceRefreshPeriod || Config.main.rfid.balanceRefreshPeriod) {
-                        $rootScope.$broadcast('refreshBalance');
-                    }
+                    $rootScope.$broadcast('refreshBalance');
                     $scope.quickBet.status = 'accepted';
                     $scope.massage = getBetSlipError(result);
                     if(!data.game.isVirtual){
@@ -1679,214 +1677,221 @@ BettingModule.controller('betSlipController', ['$q', '$scope', '$rootScope', '$f
         var requests = prepareBetsData(singleBetEvent);
 
         var betCounter = 0, haveAcceptedEvent = false, enablePopupAfterBet = false;
-        angular.forEach(requests, function (request) {
-            var processBetResults = function (result) {
-                if (result.result === 'OK') {
-                    if (request.mode == 3) {
-                        $rootScope.offersCount += 1;
-                    }
-
-                    if($rootScope.editBet) {
-                        $rootScope.editBet.edit = false;
-                        $scope.disableAddBets.addBet = false;
-                    }
-
-                    if(Config.betting.enableRetainSelectionAfterPlacment){
-                        $scope.showRetainsButtons = true;
-                    }
-                    haveAcceptedEvent = true;
-                    if ($scope.betConf.popupMessageAfterBet && $scope.betConf.popupMessageAfterBet[$rootScope.currency.name] && result.details.amount >= $scope.betConf.popupMessageAfterBet[$rootScope.currency.name]) {
-                        enablePopupAfterBet = true;
-                    }
-                    if (Config.main.enableSuggestedBets) {
-                        $rootScope.$broadcast('successfulBet');
-                    }
-                    if (result.details && result.details.FreeBetAmount) {
-                        checkFreeBet();
-                    }
-                    analytics.gaSend('send', 'event', 'betting', 'AcceptedBet ' + (Config.main.sportsLayout) + ($scope.env.live ? '(LIVE)' : '(PM)'), {'page': $location.path(), 'eventLabel': ({1: 'single', 2: 'express', 3: 'system', 4: 'chain'}[$scope.betSlip.type.value])});
-
-                    if (betAcceptedWatcherPromise) {
-                        TimeoutWrapper.cancel(betAcceptedWatcherPromise);
-                    }
-                    $scope.isBetAccepted = true;
-                    $scope.isSuperbet = result.details.is_superbet;
-
-                    var hasCounterOffer = false;
-                    betAcceptedWatcherPromise = TimeoutWrapper(function () { $scope.isBetAccepted = false; }, Config.betting.betAcceptedMessageTime);
-                    angular.forEach($scope.betSlip.bets, function (value) {
-                        if (!value.gamePointer.vsport) {
-                            addGameToFavorites({id: value.gameId});
+        if (requests.length) {
+            angular.forEach(requests, function (request) {
+                var processBetResults = function (result) {
+                    if (result.result === 'OK') {
+                        if (request.mode == 3) {
+                            $rootScope.offersCount += 1;
                         }
 
-                        if (value.counterOffer && parseFloat(value.counterOffer) > value.price) {
-                            hasCounterOffer = true;
+                        if($rootScope.editBet) {
+                            $rootScope.editBet.edit = false;
+                            $scope.disableAddBets.addBet = false;
                         }
-                        if (request.type !== 1 || request.bets[0].event_id == value.eventId) {
-                            $scope.betslipRemoveBetsProcess = true; // bad solution for disable place bet button until removing betslip
-                            value.isAccepted = true;
-                            value.result = getBetSlipError(result);
-                            if (Config.betting.alternativeBetSlip) {
-                                $rootScope.notificationPopup = {title: Translator.get('Your bet is accepted.')};
+
+                        if(Config.betting.enableRetainSelectionAfterPlacment){
+                            $scope.showRetainsButtons = true;
+                            if ($scope.betSlip.superbet.selector) {
+                                $scope.togglesSuperbetSelector();
                             }
-                            TimeoutWrapper(function () {
-                                if(!Config.betting.enableRetainSelectionAfterPlacment) {
-                                    $scope.removeBet(value);
-                                    if (Config.betting.resetAmountAfterBet) {
-                                        $scope.betSlip.stake = undefined;
-                                    }
-                                }
-                                $scope.betslipRemoveBetsProcess = false;
-                                value.processing = false;
-
-                            }, 1000);
                         }
-                    });
-                    //superbet for spring================================= // also for counter offer
-                    if (Config.main.GmsPlatform && parseInt($scope.acceptPriceChanges, 10) === -1 && !$scope.counterOffer.enabled) {
-                        $scope.isBetOnHold = true;
-                        /*$rootScope.$broadcast("globalDialogs.addDialog", {
-                            type: 'info',
-                            tag: 'onHoldConfirm',
-                            title: 'On hold',
-                            content: 'message_' + result.result
-                        });*/
-                        $scope.acceptPriceChanges = '0';
-                    }
-                    //superbet for spring end==============================
-                } else if (result.result === -1) {
-                    // if($rootScope.editBet) {
-                    //     $rootScope.editBet.edit = true;
-                    // }
-                    console.log('Error:', result.details);
-                    $scope.betSlip.generalBetResult = getBetSlipError(result);
-                    analytics.gaSend('send', 'event', 'betting', 'RejectedBet ' + (Config.main.sportsLayout) + ($scope.env.live ? '(LIVE)' : '(PM)'),  {'page': $location.path(), 'eventLabel': ('err(' + result.result + ') - ' + result.details)});
-                    if (Config.betting.alternativeBetSlip) {
-                        $rootScope.notificationPopup = {title: Translator.get('Your bet is not accepted'), message: $scope.betSlip.generalBetResult};
-                    }
-                    angular.forEach($scope.betSlip.bets, function (value) {
-                        value.processing = false;
-                    });
-                } else if (result.result === 3019) {
-                    // if($rootScope.editBet) {
-                    //     $rootScope.editBet.edit = true;
-                    // }
-                    console.log('Error:', result.details);
-                    $scope.betSlip.generalBetResult = Translator.get("Incompatible bet") + ' (' + result.result + ')';
-                    analytics.gaSend('send', 'event', 'betting', 'RejectedBet ' + (Config.main.sportsLayout) + ($scope.env.live ? '(LIVE)' : '(PM)'),  {'page': $location.path(), 'eventLabel': ('err(' + result.result + ') - ' + result.details)});
-                    if (Config.betting.alternativeBetSlip) {
-                        $rootScope.notificationPopup = {title: Translator.get('Incompatible bet'), message: $scope.betSlip.generalBetResult};
-                    }
-                    angular.forEach($scope.betSlip.bets, function (value) {
-                        value.processing = false;
-                    });
-                } else {
-                    // if($rootScope.editBet) {
-                    //     $rootScope.editBet.edit = true;
-                    // }
-                    $scope.betSlip.generalBetResult = getBetSlipError(result);
+                        haveAcceptedEvent = true;
+                        if ($scope.betConf.popupMessageAfterBet && $scope.betConf.popupMessageAfterBet[$rootScope.currency.name] && result.details.amount >= $scope.betConf.popupMessageAfterBet[$rootScope.currency.name]) {
+                            enablePopupAfterBet = true;
+                        }
+                        if (Config.main.enableSuggestedBets) {
+                            $rootScope.$broadcast('successfulBet');
+                        }
+                        if (result.details && result.details.FreeBetAmount) {
+                            checkFreeBet();
+                        }
+                        analytics.gaSend('send', 'event', 'betting', 'AcceptedBet ' + (Config.main.sportsLayout) + ($scope.env.live ? '(LIVE)' : '(PM)'), {'page': $location.path(), 'eventLabel': ({1: 'single', 2: 'express', 3: 'system', 4: 'chain'}[$scope.betSlip.type.value])});
 
-                    if (Config.betting.alternativeBetSlip) {
-                        $rootScope.notificationPopup = {title: Translator.get('Your bet is not accepted'), message: $scope.betSlip.generalBetResult};
-                    }
+                        if (betAcceptedWatcherPromise) {
+                            TimeoutWrapper.cancel(betAcceptedWatcherPromise);
+                        }
+                        $scope.isBetAccepted = true;
+                        $scope.isSuperbet = result.details.is_superbet;
 
-                    analytics.gaSend('send', 'event', 'betting', 'RejectedBet ' + (Config.main.sportsLayout) + ($scope.env.live ? '(LIVE)' : '(PM)'),  {'page': $location.path(), 'eventLabel': ('err(' + result.result + ') - ' + result.details)});
-                    if (result.result == '1800' && !Storage.get('settingAutoShowOneDayDelay')) {
-                        Storage.set('settingAutoShowOneDayDelay', true, 86400000);
-                        $scope.showBetSettings = true;
-                    }
-                    if (!Config.main.GmsPlatform && result.result === 'ONHOLD') {
-                        if (result.details && result.details.bet_id && result.details.bet_id !== -1) {
-                            $rootScope.$broadcast('checkSuperBet', result.details.bet_id);
+                        var hasCounterOffer = false;
+                        betAcceptedWatcherPromise = TimeoutWrapper(function () { $scope.isBetAccepted = false; }, Config.betting.betAcceptedMessageTime);
+                        angular.forEach($scope.betSlip.bets, function (value) {
+                            if (!value.gamePointer.vsport) {
+                                addGameToFavorites({id: value.gameId});
+                            }
+
+                            if (value.counterOffer && parseFloat(value.counterOffer) > value.price) {
+                                hasCounterOffer = true;
+                            }
+                            if (request.type !== 1 || request.bets[0].event_id == value.eventId) {
+                                $scope.betslipRemoveBetsProcess = true; // bad solution for disable place bet button until removing betslip
+                                value.isAccepted = true;
+                                value.result = getBetSlipError(result);
+                                if (Config.betting.alternativeBetSlip) {
+                                    $rootScope.notificationPopup = {title: Translator.get('Your bet is accepted.')};
+                                }
+                                TimeoutWrapper(function () {
+                                    if(!Config.betting.enableRetainSelectionAfterPlacment) {
+                                        $scope.removeBet(value);
+                                        if (Config.betting.resetAmountAfterBet) {
+                                            $scope.betSlip.stake = undefined;
+                                        }
+                                    }
+                                    $scope.betslipRemoveBetsProcess = false;
+                                    value.processing = false;
+
+                                }, 1000);
+                            }
+                        });
+                        //superbet for spring================================= // also for counter offer
+                        if (Config.main.GmsPlatform && parseInt($scope.acceptPriceChanges, 10) === -1 && !$scope.counterOffer.enabled) {
                             $scope.isBetOnHold = true;
-
-                            $rootScope.$broadcast("globalDialogs.addDialog", {
+                            /*$rootScope.$broadcast("globalDialogs.addDialog", {
                                 type: 'info',
                                 tag: 'onHoldConfirm',
                                 title: 'On hold',
                                 content: 'message_' + result.result
-                            });
-
+                            });*/
                             $scope.acceptPriceChanges = '0';
-                            analytics.gaSend('send', 'event', 'betting', 'SuperBet ' + (Config.main.sportsLayout) + ($scope.env.live ? '(LIVE)' : '(PM)'), {'page': $location.path(), 'eventLabel': 'place superbet'});
                         }
-                    }
-                    angular.forEach($scope.betSlip.bets, function (bet) {
+                        //superbet for spring end==============================
+                    } else if (result.result === -1) {
+                        // if($rootScope.editBet) {
+                        //     $rootScope.editBet.edit = true;
+                        // }
+                        console.log('Error:', result.details);
+                        $scope.betSlip.generalBetResult = getBetSlipError(result);
+                        analytics.gaSend('send', 'event', 'betting', 'RejectedBet ' + (Config.main.sportsLayout) + ($scope.env.live ? '(LIVE)' : '(PM)'),  {'page': $location.path(), 'eventLabel': ('err(' + result.result + ') - ' + result.details)});
+                        if (Config.betting.alternativeBetSlip) {
+                            $rootScope.notificationPopup = {title: Translator.get('Your bet is not accepted'), message: $scope.betSlip.generalBetResult};
+                        }
+                        angular.forEach($scope.betSlip.bets, function (value) {
+                            value.processing = false;
+                        });
+                    } else if (result.result === 3019) {
+                        // if($rootScope.editBet) {
+                        //     $rootScope.editBet.edit = true;
+                        // }
+                        console.log('Error:', result.details);
+                        $scope.betSlip.generalBetResult = Translator.get("Incompatible bet") + ' (' + result.result + ')';
+                        analytics.gaSend('send', 'event', 'betting', 'RejectedBet ' + (Config.main.sportsLayout) + ($scope.env.live ? '(LIVE)' : '(PM)'),  {'page': $location.path(), 'eventLabel': ('err(' + result.result + ') - ' + result.details)});
+                        if (Config.betting.alternativeBetSlip) {
+                            $rootScope.notificationPopup = {title: Translator.get('Incompatible bet'), message: $scope.betSlip.generalBetResult};
+                        }
+                        angular.forEach($scope.betSlip.bets, function (value) {
+                            value.processing = false;
+                        });
+                    } else {
+                        // if($rootScope.editBet) {
+                        //     $rootScope.editBet.edit = true;
+                        // }
+                        $scope.betSlip.generalBetResult = getBetSlipError(result);
+
+                        if (Config.betting.alternativeBetSlip) {
+                            $rootScope.notificationPopup = {title: Translator.get('Your bet is not accepted'), message: $scope.betSlip.generalBetResult};
+                        }
+
+                        analytics.gaSend('send', 'event', 'betting', 'RejectedBet ' + (Config.main.sportsLayout) + ($scope.env.live ? '(LIVE)' : '(PM)'),  {'page': $location.path(), 'eventLabel': ('err(' + result.result + ') - ' + result.details)});
+                        if (result.result == '1800' && !Storage.get('settingAutoShowOneDayDelay')) {
+                            Storage.set('settingAutoShowOneDayDelay', true, 86400000);
+                            $scope.showBetSettings = true;
+                        }
                         if (!Config.main.GmsPlatform && result.result === 'ONHOLD') {
-                            TimeoutWrapper(function () {
-                                $scope.removeBet(bet);
-                                bet.processing = false;
-                                if (Config.betting.resetAmountAfterBet) {
-                                    $scope.betSlip.stake = undefined;
-                                }
-                            }, 1000);
-                            bet.processing = false;
-                        } else if (result.details && result.details !== null) {
-                            processBetEvents(result, bet);
-                        } else {
-                            bet.processing = false;
+                            if (result.details && result.details.bet_id && result.details.bet_id !== -1) {
+                                $rootScope.$broadcast('checkSuperBet', result.details.bet_id);
+                                $scope.isBetOnHold = true;
+
+                                $rootScope.$broadcast("globalDialogs.addDialog", {
+                                    type: 'info',
+                                    tag: 'onHoldConfirm',
+                                    title: 'On hold',
+                                    content: 'message_' + result.result
+                                });
+
+                                $scope.acceptPriceChanges = '0';
+                                analytics.gaSend('send', 'event', 'betting', 'SuperBet ' + (Config.main.sportsLayout) + ($scope.env.live ? '(LIVE)' : '(PM)'), {'page': $location.path(), 'eventLabel': 'place superbet'});
+                            }
                         }
-                    });
+                        angular.forEach($scope.betSlip.bets, function (bet) {
+                            if (!Config.main.GmsPlatform && result.result === 'ONHOLD') {
+                                TimeoutWrapper(function () {
+                                    $scope.removeBet(bet);
+                                    bet.processing = false;
+                                    if (Config.betting.resetAmountAfterBet) {
+                                        $scope.betSlip.stake = undefined;
+                                    }
+                                }, 1000);
+                                bet.processing = false;
+                            } else if (result.details && result.details !== null) {
+                                processBetEvents(result, bet);
+                            } else {
+                                bet.processing = false;
+                            }
+                        });
+                    }
+                    //$scope.betInProgress = false;
+                    hideBetProcessLoaders();
+
+                };
+
+                if (Config.betting.bonusBetCheckbox) {
+                    request.wallet_type = $scope.bonusBet.enabled ? 2 : 1;
                 }
-                //$scope.betInProgress = false;
-                hideBetProcessLoaders();
 
-            };
+                if ($scope.freeBetSelected()) {
+                    request.bonus_id = $scope.freeBet.selected.id;
+                }
 
-            if (Config.betting.bonusBetCheckbox) {
-                request.wallet_type = $scope.bonusBet.enabled ? 2 : 1;
-            }
+                if ($scope.bonusBet.enabled) {
+                    request.is_bonus_money = true;
+                }
 
-            if ($scope.freeBetSelected()) {
-                request.bonus_id = $scope.freeBet.selected.id;
-            }
+                if (Config.main.enableSuggestedBets) {
+                    request.tags = 0;
 
-            if ($scope.bonusBet.enabled) {
-                request.is_bonus_money = true;
-            }
+                    if ($rootScope.suggestedBets && $rootScope.suggestedBets.eventIds) {
+                        var suggestedBetsIds = $rootScope.suggestedBets.eventIds;
 
-            if (Config.main.enableSuggestedBets) {
-                request.tags = 0;
-
-                if ($rootScope.suggestedBets && $rootScope.suggestedBets.eventIds) {
-                    var suggestedBetsIds = $rootScope.suggestedBets.eventIds;
-
-                    if (request.type === 2 /* express */ && suggestedBetsIds.length === request.bets.length) {
-                        request.tags = $rootScope.suggestedBets.tags;
-                        for (var i = 0; i < request.bets.length; i++) {
-                            if (suggestedBetsIds.indexOf(request.bets[i].event_id) === -1) {
-                                request.tags = 0;
-                                break;
+                        if (request.type === 2 /* express */ && suggestedBetsIds.length === request.bets.length) {
+                            request.tags = $rootScope.suggestedBets.tags;
+                            for (var i = 0; i < request.bets.length; i++) {
+                                if (suggestedBetsIds.indexOf(request.bets[i].event_id) === -1) {
+                                    request.tags = 0;
+                                    break;
+                                }
                             }
                         }
                     }
+
                 }
 
-            }
-
-            Zergling
-                .get(request, 'do_bet').then(processBetResults)['catch'](function (reason) {
-                console.log('Error:', reason);
-                $scope.betInProgress = false;
-                $scope.betSlip.generalBetResult = getBetSlipError(reason);
-                if (Config.betting.alternativeBetSlip) {
-                    $rootScope.notificationPopup = {title: Translator.get('Your bet is not accepted'), message: $scope.betSlip.generalBetResult};
-                }
-                analytics.gaSend('send', 'event', 'betting', 'RejectedBet ' + (Config.main.sportsLayout) + ($scope.env.live ? '(LIVE)' : '(PM)'), {'page': $location.path(), 'eventLabel': ('err(' + reason.code + ') - ' + reason.msg)});
-                angular.forEach($scope.betSlip.bets, function (value) {
-                    value.processing = false;
-                });
-            })['finally'](function () {
-                betCounter++;
-                if (haveAcceptedEvent && requests.length === betCounter) {
-                    if (Config.partner.balanceRefreshPeriod || Config.main.rfid.balanceRefreshPeriod) { // refresh balance right after doing bet in integration skin
-                        $rootScope.$broadcast('refreshBalance');
+                Zergling
+                    .get(request, 'do_bet').then(processBetResults)['catch'](function (reason) {
+                    console.log('Error:', reason);
+                    $scope.betInProgress = false;
+                    $scope.betSlip.generalBetResult = getBetSlipError(reason);
+                    if (Config.betting.alternativeBetSlip) {
+                        $rootScope.notificationPopup = {title: Translator.get('Your bet is not accepted'), message: $scope.betSlip.generalBetResult};
                     }
-                    enablePopupAfterBet && $rootScope.$broadcast('showPopupBySlug', 'after_bet');
-                }
-                $scope.betInProgress = false;
+                    analytics.gaSend('send', 'event', 'betting', 'RejectedBet ' + (Config.main.sportsLayout) + ($scope.env.live ? '(LIVE)' : '(PM)'), {'page': $location.path(), 'eventLabel': ('err(' + reason.code + ') - ' + reason.msg)});
+                    angular.forEach($scope.betSlip.bets, function (value) {
+                        value.processing = false;
+                    });
+                })['finally'](function () {
+                    betCounter++;
+                    if (haveAcceptedEvent && requests.length === betCounter) {
+                        if (Config.partner.balanceRefreshPeriod || Config.main.rfid.balanceRefreshPeriod) { // refresh balance right after doing bet in integration skin
+                            $rootScope.$broadcast('refreshBalance');
+                        }
+                        enablePopupAfterBet && $rootScope.$broadcast('showPopupBySlug', 'after_bet');
+                    }
+                    $scope.betInProgress = false;
+                });
             });
-        });
+        } else {
+            $scope.betInProgress = false;
+        }
     }
 
     /**
@@ -1948,7 +1953,7 @@ BettingModule.controller('betSlipController', ['$q', '$scope', '$rootScope', '$f
                         tempEwOdd = 0;
                     }
                 }
-                tempPosWin = tempPosWin +  tempOdd;
+                tempPosWin = (tempPosWin * 10 * 10 + mathCuttingFunction(tempOdd * 10 * 10)) / 100;
                 tempPosEwWin = tempPosEwWin + tempEwOdd;
 
                 indexArray[tempIterator]++;
@@ -1971,7 +1976,7 @@ BettingModule.controller('betSlipController', ['$q', '$scope', '$rootScope', '$f
             sysPerBetStake /= 2;
         }
 
-        return {win: Utils.mathCuttingFunction(tempPosWin * sysPerBetStake*100)/100, ewWin: Utils.mathCuttingFunction(tempPosEwWin * sysPerBetStake*100), options: numOfSysOptions};
+        return {win: mathCuttingFunction(tempPosWin * sysPerBetStake*100)/100, ewWin: mathCuttingFunction(tempPosEwWin * sysPerBetStake*100), options: numOfSysOptions};
     }
 
     /**
@@ -2233,8 +2238,8 @@ BettingModule.controller('betSlipController', ['$q', '$scope', '$rootScope', '$f
     }
 
     function calcCustomAmountAndTotalStake(bet, price) {
-        bet.customSingleStake = parseFloat(bet.singleStake) / (price - 1);
-        bet.singlePosWin = setMaxWinLimit(mathCuttingFunction(bet.customSingleStake * price * 10 * 10) / 100);
+        bet.customSingleStake = mathCuttingFunction(bet.singleStake / (price - 1) * 10 * 10) / 100;
+        bet.singlePosWin = bet.customSingleStake + bet.singleStake;
         $scope.betSlip.totalStake += bet.customSingleStake * 1;
     }
 
@@ -2545,13 +2550,13 @@ BettingModule.controller('betSlipController', ['$q', '$scope', '$rootScope', '$f
         if ($scope.betSlip.expBonus) {
             $scope.totalPossibleWin = $scope.taxOnStake.enabled ? $scope.betSlip.expBonus + $scope.taxOnStake.posWin : parseFloat(possibleWin + $scope.betSlip.expBonus).toFixed(2);
         }
-        $scope.finalWinValue = parseFloat(setMaxWinLimit(mathCuttingFunction(possibleWin * 10 * 10 || 0) / 100));
-        if (Config.betting.taxPercent) {
-            $scope.possibleWinTax = ($scope.finalWinValue - $scope.betSlip.stake) * (Config.betting.taxPercent / 100);
+         $scope.finalWinValue = parseFloat(setMaxWinLimit(mathCuttingFunction(possibleWin * 10 * 10 || 0) / 100));
+        if ($rootScope.partnerConfig && $rootScope.partnerConfig.tax_percent && $rootScope.partnerConfig.tax_type === 1) { // 1 - tax on profit ; 4 - tax on stack
+            $scope.possibleWinTax = ($scope.finalWinValue - $scope.betSlip.stake) * ($rootScope.partnerConfig.tax_percent / 100);
             $scope.finalWinTaxValue = $scope.finalWinValue - $scope.possibleWinTax;
 
             if ($scope.betSlip.expBonus) {
-                $scope.possibleWinBonusTax = ($scope.finalWinValue + $scope.betSlip.expBonus) * (Config.betting.taxPercent / 100);
+                $scope.possibleWinBonusTax = ($scope.finalWinValue + $scope.betSlip.expBonus - $scope.betSlip.stake) * ($rootScope.partnerConfig.tax_percent / 100);
                 $scope.finalWinBonusTaxValue = $scope.totalPossibleWin - $scope.possibleWinBonusTax;
             }
         }
@@ -2770,6 +2775,12 @@ BettingModule.controller('betSlipController', ['$q', '$scope', '$rootScope', '$f
             betData['expOdds'] = $scope.betSlip.expOdds;
             betData['hasSpOddTypes'] = $scope.betSlip.hasSpOddTypes;
         }
+        if ($rootScope.partnerConfig && $rootScope.partnerConfig.tax_type && $rootScope.partnerConfig.tax_percent) {
+            betData['tax'] = {
+                'type': $rootScope.partnerConfig.tax_type,
+                'percent': $rootScope.partnerConfig.tax_percent
+            };
+        }
         var encodedBetData = encodeURIComponent(JSON.stringify(betData));
 
         if (encodedBetData.length > 1020 && UserAgent.IEVersion()) {
@@ -2856,6 +2867,7 @@ BettingModule.controller('betSlipController', ['$q', '$scope', '$rootScope', '$f
             $scope.acceptPriceChanges = '0';
             $scope.showBetSettings = false;
         }
+        Storage.set('betslip', $scope.betSlip, Config.betting.storedBetslipLifetime);
     };
 
     /**
@@ -3062,22 +3074,7 @@ BettingModule.controller('betSlipController', ['$q', '$scope', '$rootScope', '$f
             }
             if (eventIds) {
                 $location.search('event', undefined);
-                Zergling.get({
-                    'source': 'betting',
-                    'what': {
-                        'sport': ['id', 'name', 'alias', 'order'],
-                        'competition': ['id', 'order', 'name'],
-                        'region': ['id', 'name', 'alias'],
-                        'game': ['id', 'team1_id', 'team1_name', 'team2_id', 'team2_name', 'type'],
-                        'market': ['base', 'type', 'name', 'express_id'],
-                        'event': []
-                    },
-                    'where': {
-                        'event': {
-                            'id': {'@in': eventIds}
-                        }
-                    }
-                }).then(function success(response) {
+                BetService.getEventData(eventIds).then(function success(response) {
                     if (response.data) {
                         var betsToPlace = Utils.formatEventData(response.data),
                             oddType = 'odd';

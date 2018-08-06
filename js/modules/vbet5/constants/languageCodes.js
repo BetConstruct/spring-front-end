@@ -44,9 +44,11 @@ angular.module('vbet5').constant('LanguageCodes',
         'translit': 'rt',  // translit
         'nor': 'no',   // norway
         'nld': 'nl',   // dutch
+        'dut': 'nl',   // dutch
         'fas': 'fa',   //farsi
         'heb': 'he',   //hebrew
         'swe': 'sv',   //swedish
-        'slv': 'sl'    // slovene
+        'slv': 'sl',    // slovene
+        'tha': 'th'     // thai
     }
 );

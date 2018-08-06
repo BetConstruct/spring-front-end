@@ -323,3 +323,8 @@ VBET5.directive('matchesList', ['$timeout', '$q', 'ConnectionService', '$filter'
         }
     };
 }]);
+
+//examples
+// <matches-list season-id="groups[groupStats.selectedIndex].id" sport-id="1" from-date="groups[groupStats.selectedIndex].fromDate" to-date="groups[groupStats.selectedIndex].toDate" competition-id="2969" stadium-data="stadiumData"></matches-list>
+// <matches-list competition-id="2969" ng-if="calendarData.selected" sport-id="1" show-dates="true" show-time="true" from-date="calendarData.fromDate" to-date="calendarData.toDate" stadium-data="stadiumData"></matches-list>
+// <matches-list competition-id="2969" team-id="teamData.selectedTeamId" sport-id="1" stadium-data="stadiumData"></matches-list>

@@ -494,6 +494,10 @@ $skin-palette-8: $skin-palette-8 !default;
     line-height: 18px;
     border-bottom: 1px solid darken( saturate( adjust-hue( $skin-palette-7, 4deg ), 15 ), 14 );
     box-shadow: 0 1px 0 lighten( desaturate( adjust-hue( $skin-palette-7, 1deg ), 2 ), 4 );
+    transition: 300ms background;
+    &:hover {
+        background: $skin-palette-6;
+    }
 }
 .button-container-j button{
     color: set-color($brand-color-1);

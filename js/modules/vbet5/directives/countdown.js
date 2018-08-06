@@ -16,7 +16,7 @@ VBET5.directive('countdown', ['$timeout', 'Moment', 'Translator', function ($tim
 
             $scope.timerText = Translator.get('D H M S').split(' ');
 
-            (function calcRemainingTime() {
+            function calcRemainingTime() {
                 var currTime = (new Date().getTime() / 1000);
                 var eventTime = attrs.countdown;
                 var diffTime = eventTime - currTime;
@@ -33,7 +33,7 @@ VBET5.directive('countdown', ['$timeout', 'Moment', 'Translator', function ($tim
                         minutes: format(minutes),
                         seconds: format(seconds)
                     };
-                    timeoutPromise = $timeout(calcRemainingTime, 1000)
+                    timeoutPromise = $timeout(calcRemainingTime, 1000);
                 } else {
                     $scope.countdown = {
                         days: '00',
@@ -42,12 +42,13 @@ VBET5.directive('countdown', ['$timeout', 'Moment', 'Translator', function ($tim
                         seconds: '00'
                     };
                 }
-            })();
+            }
 
             function format(number) {
                 return number < 10 ? '0' + number : number;
             }
 
+            attrs.$observe('countdown', calcRemainingTime);
             $scope.$on('$destroy', function cancelTimeout() { $timeout.cancel(timeoutPromise); });
         }
     };

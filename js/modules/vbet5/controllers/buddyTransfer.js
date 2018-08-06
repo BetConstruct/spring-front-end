@@ -5,7 +5,7 @@
  * @description
  *  buddy transfer controller
  */
-VBET5.controller('buddyCtrl', ['$rootScope', '$scope', 'Translator', 'Zergling', 'Config', 'Utils', function ($rootScope, $scope, Translator, Zergling, Config, Utils) {
+VBET5.controller('buddyCtrl', ['$rootScope', '$scope', 'Translator', 'Zergling', 'Config', 'Utils', '$sce', '$filter', function ($rootScope, $scope, Translator, Zergling, Config, Utils, $sce, $filter) {
     'use strict';
 
     var request = {};
@@ -17,7 +17,9 @@ VBET5.controller('buddyCtrl', ['$rootScope', '$scope', 'Translator', 'Zergling',
         buddyUsername: ''
     };
     $scope.transferData = {};
-    $scope.currentStep = 'step1';
+    $scope.attr = {
+        currentStep: 'step1'
+    };
     $scope.friendList = [];
     $scope.confirmResponse = null;
     $scope.friendListLoaded = true;
@@ -74,13 +76,13 @@ VBET5.controller('buddyCtrl', ['$rootScope', '$scope', 'Translator', 'Zergling',
             $scope.transferData = {};
             $scope.transferFormModel.buddyUsername = '';
             $scope.transferFormModel.amount = 0;
-            $scope.currentStep = 'step1';
+            $scope.attr.currentStep = 'step1';
             return;
         }
 
         $scope.transferData.account = ($scope.transferFormModel.myAccount === 'Sport') ? 'Main' : $scope.transferFormModel.myAccount;
         $scope.transferData.amount = $scope.transferFormModel.amount;
-        $scope.currentStep = 'step3';
+        $scope.attr.currentStep = 'step3';
 
         console.log($scope.transferData);
     };
@@ -106,7 +108,7 @@ VBET5.controller('buddyCtrl', ['$rootScope', '$scope', 'Translator', 'Zergling',
     $scope.confirm = function confirm(type) {
         if (!type) {
             $scope.transferData.amount = 0;
-            $scope.currentStep = 'step2';
+            $scope.attr.currentStep = 'step2';
             return;
         }
 
@@ -138,7 +140,7 @@ VBET5.controller('buddyCtrl', ['$rootScope', '$scope', 'Translator', 'Zergling',
                 message += Translator.get("Please try later or contact support.");
                 messageType = 'error';
             }
-            $scope.currentStep = 'step4';
+            $scope.attr.currentStep = 'step4';
             $scope.confirmResponse = {
                 type: messageType === 'success' ? 'Success' : 'Error',
                 message: message
@@ -150,7 +152,7 @@ VBET5.controller('buddyCtrl', ['$rootScope', '$scope', 'Translator', 'Zergling',
                 type: 'Error',
                 message: 'Request failed'
             };
-            $scope.currentStep = 'step4';
+            $scope.attr.currentStep = 'step4';
         });
     };
 
@@ -234,7 +236,27 @@ VBET5.controller('buddyCtrl', ['$rootScope', '$scope', 'Translator', 'Zergling',
      * @methodOf vbet5.controller:buddyCtrl
      * @description do trasnfer for Gms
      */
-    $scope.makeTransfer = function makeTransfer() {
+    $scope.makeTransfer = function makeTransfer(confirmed) {
+
+
+        if (!confirmed && Config.main.buddyTransfer.version === 2) {
+            $rootScope.$broadcast("globalDialogs.addDialog", {
+                type: 'info',
+                title: 'Info',
+                content: 'Please confirm money transfer',
+                hideCloseButton: true,
+                buttons: [
+                    {title: 'Confirm', callback: function () {
+                        $scope.makeTransfer(true);
+                        }},
+                    {title: 'Cancel', callback: function () {
+                        $scope.attr.currentStep = 'step2';
+                        }}
+                ]
+            });
+            return;
+        }
+
         var request;
 
         if (Config.main.buddyTransfer.version === 1) {
@@ -266,6 +288,7 @@ VBET5.controller('buddyCtrl', ['$rootScope', '$scope', 'Translator', 'Zergling',
                         type: 'Success',
                         message: 'Your transfer is successfully completed'
                     };
+                    $scope.transferFormModel.amount = 0;
                 } else {
                     $scope.confirmResponse = {
                         type: 'Error',
@@ -304,12 +327,35 @@ VBET5.controller('buddyCtrl', ['$rootScope', '$scope', 'Translator', 'Zergling',
         });
     };
 
-    if (Config.main.GmsPlatform) {
-        if (Config.main.buddyTransfer.version === 2) {
-            userTransfersGms();
+
+    function getInfoText(payments) {
+        var i = payments.length,
+            text = '';
+
+        while (i--) {
+            if (payments[i].name === 'BuddyToBuddyTransfer' && payments[i].withdrawInfoText) {
+                text = payments[i].withdrawInfoText[Config.env.lang] || payments[i].withdrawInfoText.eng || payments[i].withdrawInfoText || '';
+                i = 0;
+            }
         }
-    } else {
-        userTransfers();
+
+        if ($rootScope.profile && $rootScope.profile.currency_name && text && text.split) {
+            text = text.split('{currency}').join($filter('currency')($rootScope.profile.currency_name));
+        }
+
+        return $sce.trustAsHtml(text);
     }
+
+
+    (function init() {
+        if (Config.main.GmsPlatform) {
+            $scope.b2bInfoText = getInfoText(Config.payments);
+            if (Config.main.buddyTransfer.version === 2) {
+                userTransfersGms();
+            }
+        } else {
+            userTransfers();
+        }
+    })();
 
 }]);

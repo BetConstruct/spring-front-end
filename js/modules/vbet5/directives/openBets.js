@@ -16,7 +16,7 @@ VBET5.directive('openBets', ['$rootScope', 'Zergling', 'BetService', 'Utils', 'G
             profile: '='
         },
         templateUrl: function getTemplateUrl() {
-            return ($rootScope.conf.sportsLayout === 'asian' && $rootScope.currentPath === "/sport") ? 'templates/directive/open-bets/open-bets-asian.html' : 'templates/directive/open-bets/open-bets.html';
+            return ($rootScope.conf.sportsLayout === 'asian' && $rootScope.currentPage.path === "/sport") ? 'templates/directive/open-bets/open-bets-asian.html' : 'templates/directive/open-bets/open-bets.html';
         },
         link: function ($scope) {
             var openBetsSubId, cashoutableBets = [];
@@ -26,6 +26,12 @@ VBET5.directive('openBets', ['$rootScope', 'Zergling', 'BetService', 'Utils', 'G
                 2: 'Express',
                 3: 'System',
                 4: 'Chain'
+            };
+
+            $scope.autoCashoutRule = {
+                theValueReaches: undefined,
+                isPartial: undefined,
+                showInfo: false
             };
 
             (function init() {
@@ -226,6 +232,43 @@ VBET5.directive('openBets', ['$rootScope', 'Zergling', 'BetService', 'Utils', 'G
                 } else {
                     $route.reload();
                 }
+            };
+
+            var startTimeout;
+
+            $scope.getAutoCashOutDetails = function getAutoCashOutDetails(betId, rule) {
+                $scope.autoCashoutRule.theValueReaches = undefined;
+                if(startTimeout) {
+                    $timeout.cancel(startTimeout);
+                }
+                if (rule != null) {
+                    startTimeout = $timeout(function() {
+                        if ($scope.autoCashoutRule.showInfo) {
+                            Zergling.get({'bet_id': betId}, 'get_bet_auto_cashout')
+                                .then(function (response) {
+                                    if (response.result === 0) {
+                                        $scope.autoCashoutRule.theValueReaches = response.details.MinAmount;
+                                        $scope.autoCashoutRule.isPartial = !!response.details.PartialAmount;
+                                    }
+                                });
+                        }
+                    }, 500);
+                }
+            };
+
+
+            $scope.cancelAutoCashOutRule = function cancelAutoCashOutRule(betId) {
+                Zergling.get({bet_id: betId}, 'cancel_bet_auto_cashout')
+                    .then(function (response) {
+                        if(response.result === 0) {
+                            $rootScope.$broadcast("globalDialogs.addDialog", {
+                                type: "success",
+                                title: 'Cash-out',
+                                content: "Auto Cash-Out rule has been canceled."
+                            });
+                            updateAfterCashout(betId);
+                        }
+                    });
             };
 
             $scope.addEvents = BetService.repeatBet.addEvents;

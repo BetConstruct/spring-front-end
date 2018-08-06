@@ -1,0 +1,4 @@
+<div class="container-p" ng-controller="betOnPoliticsCtrl" ng-init="$root.setTitle('Bet On Politics');">
+    <iframe ng-hide="loading" id="bet-on-politics" ng-src="{{frameUrl}}" width="100%" height="100%"></iframe>
+    <vbet-loader class="page-center" ng-show="loading"></vbet-loader>
+</div>

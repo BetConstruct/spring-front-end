@@ -343,8 +343,11 @@ angular.module('vbet5').run(['$rootScope', '$location', '$routeParams', '$timeou
             "winners": {
                 path: "#/winners",
                 config: "winnersEnabled"
+            },
+            "betonpolitics": {
+                path: "#/betonpolitics",
+                config: "betOnPoliticsEnabled"
             }
-
         };
 
         var findAndChangeConfig = function (path) {

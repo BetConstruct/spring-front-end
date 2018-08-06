@@ -7,9 +7,11 @@
                <td class="aic-winner-cell">
                    <p ng-show="multiColumn.prematchGamesEvents.P1XP2 || multiColumn.liveGamesEvents.P1XP2" trans>Winner</p>
                </td>
-               <td class="aic-handicup-cell"><p
-                       ng-show="multiColumn.prematchGamesEvents.Handicap || multiColumn.liveGamesEvents.Handicap"
-                       trans>Handicap</p></td>
+               <td class="aic-handicup-cell">
+                   <p ng-show="multiColumn.prematchGamesEvents.Handicap || multiColumn.liveGamesEvents.Handicap">
+                       {{'Handicap'|translate:null:'MultiColumnHandicap'+multiColumn.selectedSport}}
+                   </p>
+               </td>
                <td class="aic-over-under-cell"><p
                        ng-show="multiColumn.prematchGamesEvents.OverUnder || multiColumn.liveGamesEvents.OverUnder" trans>Over / Under</p></td>
                <td></td>

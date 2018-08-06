@@ -7,6 +7,6 @@
 VBET5.filter('nl2br', ['Utils', function (Utils) {
     'use strict';
     return function (html) {
-        return Utils.nl2br(html);
+        return Utils.nl2br(html || '');
     };
 }]);

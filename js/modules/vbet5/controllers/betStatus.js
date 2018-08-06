@@ -13,18 +13,23 @@ VBET5.controller('betStatusCtrl', ['$scope', 'Config', 'Zergling', function ($sc
         'Won': 'won',
         'Lost': 'lose',
         'Accepted': 'wait',
+        'CashOut': 'won',
+        'Returned': 'lose',
         'Ticket number not found.': 'lose'
     };
 
     $scope.getBetStatus = function getBetStatus() {
-        if (!$scope.betStatus.ticketNumber) {
-            return;
-        }
+        if (!$scope.betStatus.ticketNumber) { return; }
 
         var request = {
-            ticket_number: parseInt($scope.betStatus.ticketNumber, 10),
             g_recaptcha_response: $scope.betStatus.g_recaptcha_response
         };
+
+        if ($scope.betStatus.ticketNumber.length < 15) { // If the number contains less than 15 characters then it's a bet id, otherwise - a bet ticket id
+            request.bet_id = parseInt($scope.betStatus.ticketNumber, 10);
+        } else {
+            request.ticket_number = parseInt($scope.betStatus.ticketNumber, 10);
+        }
 
         $scope.betStatus.loading = true;
         $scope.clearBetStatus();
@@ -43,7 +48,7 @@ VBET5.controller('betStatusCtrl', ['$scope', 'Config', 'Zergling', function ($sc
     $scope.clearBetStatus = function clearBetStatus () {
         $scope.betStatus.details = false;
         $scope.betStatus.ticketNumber = '';
-    }
+    };
 
     $scope.$on('recaptcha.response', function (event, response) {
         $scope.betStatus.g_recaptcha_response = response;

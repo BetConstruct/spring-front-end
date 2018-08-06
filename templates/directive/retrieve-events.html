@@ -1,0 +1,21 @@
+<div class="bet-status-container retrieve" ng-class="{closed: !retrieveEvents.open}">
+    <p class="bet-status-select" ng-click="retrieveEvents.open = !retrieveEvents.open" trans>Retrieve booked events</p>
+    <div class="bet-status-content" ng-if="retrieveEvents.open && !$root.env.sliderContent && !$root.env.showSlider">
+        <p ng-show="retrieveEvents.notFound">
+            <span ng-bind="'Ticket number not found.'|translate"></span>
+            <i class="remove-icon-betslip-v3" title="Clear" trans ng-click="clear()"></i>
+        </p>
+        <vbet-loader ng-show="retrieveEvents.loading" class="small-progress not-main"></vbet-loader>
+        <div class="bet-status-input">
+            <span trans>Ticket Number</span>
+            <div class="bet-status-get">
+                <div>
+                    <input type="text" ng-model="retrieveEvents.bookingId" prevent-input="[^0-9]">
+                </div>
+                <div ng-click="getEvents()">
+                    <button ng-disabled="!retrieveEvents.bookingId" trans></button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

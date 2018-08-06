@@ -199,6 +199,10 @@ angular.module('vbet5').config(['$routeProvider', '$anchorScrollProvider', 'Skin
             templateUrl: getTemplate('templates/affiliate/main.html'),
             reloadOnSearch: false
         })
+        .when('/landpage/', {
+            templateUrl: getTemplate('templates/affiliate/landpage.html'),
+            reloadOnSearch: false
+        })
         .when('/landing/', {
             templateUrl: getTemplate('templates/landing/main.html'),
             reloadOnSearch: false
@@ -303,8 +307,8 @@ angular.module('vbet5').config(['$routeProvider', '$anchorScrollProvider', 'Skin
             templateUrl: getTemplate('templates/skinning/main.html'),
             reloadOnSearch: false
         })
-        .when('/russia2018/', {
-            templateUrl: 'templates/sport/russia2018/main.html',
+        .when('/betonpolitics/', {
+            templateUrl: 'templates/bet-on-politics/main.html',
             reloadOnSearch: false
         })
         .otherwise({

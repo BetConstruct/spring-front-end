@@ -171,8 +171,8 @@
                             <th class="arrow-cell {{expandState ? 'cms-jcon-my-bets-view-2' : 'cms-jcon-my-bets-view'}}" ng-show="productMode == 'Sportsbook' && betStatusFilter !== -1" ng-click="expandCollapseAll(!expandState)"></th>
                         </tr>
                     </thead>
-                    <tbody ng-repeat="bet in betHistory | orderBy:'date_time':true track by bet.id"
-                           ng-if="productMode === 'Sportsbook' && (betStatusFilter == undefined || betStatusFilter == -1 || betStatusFilter == bet.outcome) && (betHistoryParams.betTypeSelector == undefined ||betHistoryParams.betTypeSelector.value == bet.type)"
+                    <tbody ng-repeat="bet in betHistory | orderBy:'date_time':true"
+                           ng-if="productMode === 'Sportsbook' && !bet.parent_bet_id && (betStatusFilter == undefined || betStatusFilter == -1 || betStatusFilter == bet.outcome) && (betHistoryParams.betTypeSelector == undefined ||betHistoryParams.betTypeSelector.value == bet.type)"
                            ng-class="{'active': bet.expand, 'default-cursor': betStatusFilter === -1}"
                            ng-click="betStatusFilter !== -1 ? bet.expand = !bet.expand : ''">
                         <tr class="main">
@@ -188,7 +188,7 @@
                                     </li>
                                     <li class="icons-holder" ng-show="bet.super_bet || bet.is_bonus_money">
                                         <i class="cms-jcon-souperman" ng-show="bet.super_bet"></i>
-                                        <i class="cms-jcon-bonus2"  title="Made with Bonus money" ng-if="bet.is_bonus_money"></i>
+                                        <i class="cms-jcon-bonus2" title="Made with Bonus money" trans="attr-only" ng-if="bet.is_bonus_money"></i>
                                     </li>
                                     <li class="buttons-holder">
                                         <button class="cms-jcon-Print" ng-if="conf.enableBetPrint" ng-click="openPrintPreview(bet)"></button>
@@ -237,7 +237,7 @@
                             <td class="status-icon-b status-cell" ng-class="{'-5': 'cms-jcon-29', '-4': 'cms-jcon-error-pu', '0': 'cms-jcon-29', '1': 'cms-jcon-error-pu', '2': 'cms-jcon-returned', '3': 'cms-jcon-success-pu', '5': 'cms-jcon-success-pu'}[bet.outcome]"></td>
                             <td class="arrow-cell cms-jcon-arrow-down5" ng-class="{'cms-jcon-arrow-up4': bet.expand}" ng-hide="betStatusFilter === -1"></td>
                         </tr>
-                        <tr class="sub-child" ng-show="bet.expand" ng-if="bet.type !== 'Toto'" ng-repeat="event in bet.events track by $index" ng-click="openCorrespondingGame(event);$event.stopPropagation();">
+                        <tr class="sub-child" ng-class="{'last-child': $last}" ng-show="bet.expand" ng-if="bet.type !== 'Toto'" ng-repeat="event in bet.events track by $index" ng-click="openCorrespondingGame(event);$event.stopPropagation();">
                             <td class="date-id">
                                 {{event.game_start_date|formatDate:(conf.layoutTimeFormat[conf.sportsLayout] || 'noLocaleTranslate')}} {{conf.layoutTimeFormat[conf.sportsLayout] ? (event.game_start_date|formatDate:'hour':null:env.timeFormat) : ''}}
                             </td>
@@ -250,13 +250,13 @@
                                         <span>{{event.team2}}</span>
                                     </li>
                                     <li class="mixed-history-name-child-result">
-                                        <span class="second-color" ng-if="!conf.GmsPlatform" title="{{event.market_name ? event.market_name + ' - ': ''}}{{event.event_name}} {{(event.basis ? (' (' + event.basis + ')') : '')}}">{{event.market_name ? event.market_name + " - ": ""}}{{event.event_name}} {{(event.basis ? (' (' + event.basis + ')') : '')}}</span>
-                                        <span class="second-color" ng-if="conf.GmsPlatform" title="{{event.market_name ? event.market_name + ' - ': ''}}{{event.event_name}}">{{event.market_name ? event.market_name + " - ": ""}} <b>{{event.basis ? event.event_name.replace(event.basis, (event.basis|handicapBaseFormat)) : event.event_name}}</b></span>
+                                        <span class="second-color" ng-if="!conf.GmsPlatform">{{event.market_name ? event.market_name + " - ": ""}}{{event.event_name}} {{(event.basis ? (' (' + event.basis + ')') : '')}}</span>
+                                        <span class="second-color" ng-if="conf.GmsPlatform">{{event.market_name ? event.market_name + " - ": ""}} <b>{{event.basis ? event.event_name.replace(event.basis, (event.basis|handicapBaseFormat)) : event.event_name}}</b></span>
                                     </li>
                                     <li class="icons-holder" ng-mouseover="getGameInfo(event)">
                                         <div class="game-finished-tooltip">
                                             <p ng-show="!gamePointers[event.game_id]" trans>This Game is already finished</p>
-                                            <span ng-if="event.scores">{{('Result:'|translate) + ' ' + event.scores}}</span>
+                                            <span ng-if="event.scores">{{('Result:'|translate)}} <b>{{event.scores}}</b></span>
                                         </div>
                                         <i class="cms-jcon-infou"></i>
                                     </li>
@@ -272,7 +272,7 @@
                             <td class="status-icon-b status-cell" ng-class="{'-5': 'cms-jcon-pendding', '-4': 'cms-jcon-close_mark', '0': 'cms-jcon-pendding', '1': 'cms-jcon-close_mark', '2': 'cms-jcon-returned', '3': 'cms-jcon-checkmark2', '5': 'cms-jcon-checkmark2'}[event.outcome]"></td>
                             <td class="arrow-cell"></td>
                         </tr>
-                        <tr class="sub-child" ng-show="bet.expand" ng-if="bet.type === 'Toto'" ng-repeat="event in bet.events track by $index">
+                        <tr class="sub-child" ng-class="{'last-child': $last}" ng-show="bet.expand" ng-if="bet.type === 'Toto'" ng-repeat="event in bet.events track by $index">
                             <td class="date-id">{{event.game_start_date|formatDate:'noLocaleTranslate'}}</td>
                             <td class="status-icon-b hh-cell sport-icon" ng-class="event.sport_index"></td>
                             <td class="auto-cell" colspan="2">
@@ -291,6 +291,49 @@
                                 <span class="second-color">{{{'-5': 'On Hold', '-4': 'Declined', '0': 'UNSETTLED', '1': 'Lost', '2': 'Returned', '3': 'Won', '5': 'Cashed out'}[event.outcome]|translate}}</span>
                             </td>
                             <td class="status-icon-b status-cell" ng-class="{'-5': 'cms-jcon-pendding', '-4': 'cms-jcon-close_mark', '0': 'cms-jcon-pendding', '1': 'cms-jcon-close_mark', '2': 'cms-jcon-returned', '3': 'cms-jcon-checkmark2', '5': 'cms-jcon-checkmark2'}[event.outcome]"></td>
+                            <td class="arrow-cell"></td>
+                        </tr>
+                        <tr class="sub-child last-child cash-out-history-row" ng-show="bet.expand && childBets[bet.id]">
+                            <td colspan="8" ng-init="cashOutHistoryExpanded = true">
+                                <h2 ng-class="{active: cashOutHistoryExpanded}" ng-click="cashOutHistoryExpanded = !cashOutHistoryExpanded; $event.stopPropagation();" trans>Cash Out History</h2>
+                                <div class="cash-out-history-w-c">
+                                    <ul class="cash-out-history-head">
+                                        <li>
+                                            <strong trans>Date/Time</strong>
+                                        </li>
+                                        <li>
+                                            <strong trans>Stake Used</strong>
+                                        </li>
+                                        <li>
+                                            <strong trans>Cash Out Amount</strong>
+                                        </li>
+                                    </ul>
+                                    <ul ng-repeat="cashedOutBet in childBets[bet.id].bets track by cashedOutBet.id">
+                                        <li>
+                                            <small>{{::cashedOutBet.date_time|formatDate:(conf.layoutTimeFormat[conf.sportsLayout] || 'noLocaleTranslate')}} {{::conf.layoutTimeFormat[conf.sportsLayout]? (cashedOutBet.date_time|formatDate:'hour':null:env.timeFormat): ''}}</small>
+                                        </li>
+                                        <li>
+                                            <small ng-bind="cashedOutBet.totalAmount"></small>
+                                        </li>
+                                        <li>
+                                            <small ng-bind="cashedOutBet.payout"></small>
+                                        </li>
+                                    </ul>
+                                    <ul>
+                                        <li></li>
+                                        <li>
+                                            <strong>Remaining Stake :
+                                                <span ng-bind="bet.outcome != 5 ? ((bet.totalAmount - childBets[bet.id].totalStake) | number:conf.balanceFractionSize) : 0"></span>
+                                            </strong>
+                                        </li>
+                                        <li>
+                                            <strong>Total Cash Out :
+                                                <span ng-bind="bet.outcome != 5 ? (childBets[bet.id].totalCashOut | number:conf.balanceFractionSize) : ( (childBets[bet.id].totalCashOut + bet.payout) | number:conf.balanceFractionSize) "></span>
+                                            </strong>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </td>
                             <td class="arrow-cell"></td>
                         </tr>
                     </tbody>

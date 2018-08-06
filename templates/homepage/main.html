@@ -9,7 +9,7 @@
                      ng-include="item.templateUrl|fixPath"></div>
                 <products-slider ng-if="item.templateUrl && item.templateUrl.indexOf('productsSlider') !== -1"
                             ng-class="{'kill-height-til-media': item.mediaHeight}" ng-style="{'height': (item.height || item.mediaHeight), 'max-height': item.maxHeight}"
-                            slug="item.slug"></products-slider>
+                            slug="{{item.slug || item.sliderSlug}}"></products-slider>
                 <div ng-if="item.sliderSlug"
                      ng-class="{'kill-height-til-media': item.mediaHeight}"
                      ng-style="{'height': (item.height || item.mediaHeight), 'max-height': item.maxHeight}"

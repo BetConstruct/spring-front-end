@@ -7,13 +7,13 @@
         </p>
         <vbet-loader ng-if="betStatus.loading" class="small-progress"></vbet-loader>
         <div class="bet-status-input">
-            <span trans>Ticket Number</span>
+            <span trans>Bet/Ticket Number</span>
             <div class="bet-status-get">
                 <div>
                     <input type="text" ng-model="betStatus.ticketNumber" prevent-input="[^0-9]">
                 </div>
                 <div ng-click="getBetStatus()">
-                    <button ng-disabled="!betStatus.ticketNumber || !betStatus.g_recaptcha_response" trans>Get</button>
+                    <button ng-disabled="!betStatus.ticketNumber || !betStatus.g_recaptcha_response" trans></button>
                 </div>
             </div>
             <div class="bet-status-recaptcha" ng-if="betStatus.displayRecaptcha" ng-controller="recaptchaCtrl">

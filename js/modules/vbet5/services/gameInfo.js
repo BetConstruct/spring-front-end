@@ -784,8 +784,8 @@ angular.module('vbet5').service('GameInfo', ['$rootScope', '$http', '$filter', '
     };
 
     var GAME_STATISTICS = {
-        soccer: ['dangerous_attack', 'shot_on_target', 'shot_off_target', 'corner', 'yellow_card', 'red_card'],
-        cyberfootball: ['dangerous_attack', 'shot_on_target', 'shot_off_target', 'corner', 'yellow_card', 'red_card'],
+        soccer: ['dangerous_attack', 'shot_on_target', 'shot_off_target', 'corner', 'yellow_card', 'red_card', 'penalty'],
+        cyberfootball: ['dangerous_attack', 'shot_on_target', 'shot_off_target', 'corner', 'yellow_card', 'red_card', 'penalty'],
         tennis: ['aces', 'double_fault']
     };
 
@@ -806,9 +806,9 @@ angular.module('vbet5').service('GameInfo', ['$rootScope', '$http', '$filter', '
             var statisticsList = GAME_STATISTICS[game.sport.alias.toLowerCase()];
             var i = 0;
             var length = statisticsList.length;
-            game.statsFromLastEvent = game.statsFromLastEvent ||[];
+
             for(i = 0; i < length; i++) {
-                if(game.stats[statisticsList[i]] &&  game.statsFromLastEvent.indexOf(statisticsList[i]) === -1) {
+                if(game.stats[statisticsList[i]]) {
                     var team1_value = parseInt(game.stats[statisticsList[i]].team1_value, 10);
                     var team2_value = parseInt(game.stats[statisticsList[i]].team2_value, 10);
                     game.stats[statisticsList[i]].team1_width = (team1_value + team2_value) === 0 ? 50 : (team1_value * 100) / (team1_value + team2_value);
@@ -822,10 +822,6 @@ angular.module('vbet5').service('GameInfo', ['$rootScope', '$http', '$filter', '
                         game.stats[statisticsList[i]].team2_value = parseInt((game.last_event[statisticsList[i] + '_score']).substr((game.last_event[statisticsList[i] + '_score']).indexOf(':') + 1), 10);
                         game.stats[statisticsList[i]].team1_width = (game.stats[statisticsList[i]].team1_value +  game.stats[statisticsList[i]].team2_value) === 0 ? 50 : (game.stats[statisticsList[i]].team1_value * 100) / (game.stats[statisticsList[i]].team1_value + game.stats[statisticsList[i]].team2_value);
                     }
-                    if( game.statsFromLastEvent.indexOf(statisticsList[i]) === -1) {
-                        game.statsFromLastEvent.push(statisticsList[i]);
-                    }
-
                 }
             }
         }

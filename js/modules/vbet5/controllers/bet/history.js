@@ -559,6 +559,7 @@ VBET5.controller('myBetsCtrl', ['$scope', 'Utils', 'ConnectionService', 'Zerglin
                         $scope.betHistoryGotoPage(1);
                     } else {
                         $scope.betHistory = betHistory;
+                        $scope.childBets = groupPartiallyCashedOut(betHistory);
                     }
 
                     if ($scope.profit.checkAfterLoad) {
@@ -721,6 +722,24 @@ VBET5.controller('myBetsCtrl', ['$scope', 'Utils', 'ConnectionService', 'Zerglin
             });
         }
     };
+
+    function groupPartiallyCashedOut(bets) {
+        var childBets = {},
+            i = bets.length;
+
+        while (i--) {
+            if (bets[i].parent_bet_id) {
+                childBets[bets[i].parent_bet_id] = childBets[bets[i].parent_bet_id] || {bets: [], totalStake: 0, totalCashOut: 0};
+                bets[i].totalAmount = bets[i].bonus_bet_amount ? bets[i].bonus_bet_amount : bets[i].amount || 0;
+                childBets[bets[i].parent_bet_id].bets.push(bets[i]);
+
+                childBets[bets[i].parent_bet_id].totalStake += bets[i].totalAmount;
+                childBets[bets[i].parent_bet_id].totalCashOut += bets[i].payout;
+            }
+        }
+
+        return childBets;
+    }
 
     /**
      * @ngdoc method

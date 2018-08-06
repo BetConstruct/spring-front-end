@@ -1,4 +1,4 @@
-<div class="live-game-template-wrapper live-score-background-custom live-score-background-{{openGame.sport.alias.toLowerCase()}}">
+<div class="live-game-template-wrapper live-score-background-custom live-score-background-{{openGame.sport.alias.toLowerCase()}}{{openGame.sport.alias==='Tennis' && openGame.info.field === 2 ? 'grass' : ''}}">
     <!-- soccer live game template-->
     <div class="game-score soccer-template" ng-if="openGame.show_type != 'OUTRIGHT' && (liveGamesSoccerTemplate.indexOf(openGame.sport.alias) !== -1 || $root.conf.esportsGames.indexOf(openGame.sport.alias) !== -1)">
         <div>

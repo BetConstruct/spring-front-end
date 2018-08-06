@@ -66,7 +66,7 @@
                                 <ul ng-show="!conf.disableCashOut.partial">
                                     <li>
                                         <div class="cashout-option">
-                                            <label ng-click="cashoutPopup.inputValue = cashoutBet.cash_out; cashoutPopup.sliderValue = 100; canCashOut.enabled = true">
+                                            <label ng-click="cashoutPopup.inputValue = triggerAutoCashOut.amount; cashoutPopup.sliderValue = 100; canCashOut.enabled = true">
                                                 <input type="radio" name="autoCashoutType" ng-model="cashoutTypes.auto" value="full">
                                                 <p trans>Full Cash Out</p>
                                             </label>
@@ -90,7 +90,7 @@
                                             <div class="cashout-range-box">
                                                 <ul>
                                                     <li ng-if="$root.partnerConfig.min_bet_stakes[$root.profile.currency_name] < cashoutBet.cash_out || cashoutDialog.type == 'autoCashout'">0 {{cashoutBet.currency|currency}}</li>
-                                                    <li ng-if="$root.partnerConfig.min_bet_stakes[$root.profile.currency_name] < cashoutBet.cash_out || cashoutDialog.type == 'autoCashout'">{{(cashoutTypes.auto == 'full' ? cashoutBet.cash_out : triggerAutoCashOut.amount)|number:conf.balanceFractionSize}} {{cashoutBet.currency|currency}}</li>
+                                                    <li ng-if="$root.partnerConfig.min_bet_stakes[$root.profile.currency_name] < cashoutBet.cash_out || cashoutDialog.type == 'autoCashout'">{{triggerAutoCashOut.amount|number:conf.balanceFractionSize}} {{cashoutBet.currency|currency}}</li>
                                                 </ul>
                                                 <div class="cashout-range-input-wrapper" ng-if="cashoutBet.cash_out > $root.partnerConfig.min_bet_stakes[$root.profile.currency_name] || cashoutDialog.type == 'autoCashout'">
                                                     <small style="width: {{cashoutPopup.sliderValue}}%"></small>
@@ -103,8 +103,8 @@
                             </div>
                             <div class="auto-cashout-rule" ng-if="cashoutDialog.type == 'autoCashout' && cashoutBet.auto_cash_out_amount != null">
                                 <h4 ng-show="!cashoutRule.loading" trans>Rule active</h4>
-                                <p ng-show="!cashoutRule.loading">{{('If the value reaches '| translate)}}<span>{{ cashoutRule.valueReachesAmount }}</span> <b>{{cashoutBet.currency|currency}}</b></p>
-                                <p ng-show="!cashoutRule.loading">{{('Cash out '| translate)}}<span>{{ cashoutRule.partialAmount }}</span> <b>{{cashoutBet.currency|currency}}</b></p>
+                                <p ng-show="!cashoutRule.loading">{{::'If the value reaches'|translate}} <span>{{ cashoutRule.valueReachesAmount }}</span> <b>{{cashoutBet.currency|currency}}</b></p>
+                                <p ng-show="!cashoutRule.loading">{{::'Cash out'| translate}} <span ng-if="!cashoutRule.isPartial"><span>{{ cashoutRule.valueReachesAmount }}</span> <b>{{cashoutBet.currency|currency}}</b></span></p>
                                 <vbet-loader class="page-center" ng-show="cashoutRule.loading"></vbet-loader>
                             </div>
                             <ul class="cashout-options" ng-if="cashoutDialog.type == 'cashout'">

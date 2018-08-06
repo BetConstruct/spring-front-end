@@ -1,6 +1,6 @@
 <div class="product-list-contain">
     <vbet-loader ng-if="loading"></vbet-loader>
-    <ul ng-if="!loading && banners.length" class="column-{{ banners.length }}">
+    <ul ng-if="!loading && banners.length" class="column-{{ banners.length }}" data-slug="{{slugProcessed}}">
         <li ng-repeat="banner in banners track by $index" ng-if="!banner.custom_fields.authorized[0] || ($root.env.authorized && banner.custom_fields.authorized[0])">
             <a ng-if="!(banner.title == 'Sportsbook' || banner.custom_fields.sportsbook[0])"
                ng-href="{{banner.custom_fields.openSlider ? '' : banner.link}}"

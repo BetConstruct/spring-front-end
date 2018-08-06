@@ -1,4 +1,4 @@
-VBET5.controller('mainHeaderVersion2Controller', ['$rootScope', '$scope', '$location', 'Config', 'Zergling', 'Storage', 'ActiveStep', 'BackendConstants', function ($rootScope, $scope, $location, Config, Zergling, Storage, ActiveStep, BackendConstants) {
+VBET5.controller('mainHeaderVersion2Controller', ['$rootScope', '$scope', '$location', 'Config', 'Zergling', 'Storage', 'ActiveStep', 'BackendConstants', 'Translator', function ($rootScope, $scope, $location, Config, Zergling, Storage, ActiveStep, BackendConstants, Translator) {
     'use strict';
 
     /**
@@ -328,6 +328,7 @@ VBET5.controller('mainHeaderVersion2Controller', ['$rootScope', '$scope', '$loca
         if (Config.main.promotionalBonuses.sportsbook) getProductBonuses('sportsbook');
         if (Config.main.promotionalBonuses.casino) getProductBonuses('casino');
     };
+
 
     function calculateBonusesCount(data, product) {
         if (data && data.bonuses) {

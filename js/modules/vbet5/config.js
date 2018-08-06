@@ -1,9 +1,5 @@
 angular.module('vbet5').constant('Config', {
     'main': {
-        enableDomainFixesForPartners: [29, 33, 43, 50, 112, 117, 132, 137, 138, 151, 157, 158, 200, 204, 260, 263, 266, 275,
-            279, 294, 297, 311, 323, 372, 373, 397, 425, 460, 463, 543, 544, 566, 574, 575, 585, 607, 620, 621, 625, 627, 628,
-            631, 635, 640, 642, 647, 668, 678, 680, 699, 706, 707, 722, 723, 732, 737, 743, 744, 745, 747, 749, 753, 756, 780, 787,
-            814, 815, 816, 818, 822, 823, 835, 837, 838, 839, 846, 869, 897, 898, 911, 948, 951, 952, 953, 957, 960, 961, 962, 963, 966, 973, 974, 977, 978, 979, 980, 984, 986, 987],
         prefetchLeftMenuHoveredLivesGames: {
             enabled: false,
             prefetchAfter: 250
@@ -153,7 +149,8 @@ angular.module('vbet5').constant('Config', {
         promotionalBonuses: {
             enable: true,
             sportsbook: true,
-            casino: true
+            casino: true,
+            showApplyButton: false
         },
         enableBonusSectionInWallet: true,
         enablePointsSectionInWallet: true,
@@ -198,6 +195,7 @@ angular.module('vbet5').constant('Config', {
             offsetDays: [0, 1, 2, 3, 4, 5, 6],
             disableDaysFilter: false
         },
+        betOnPolitics: 'https://bop1.betconstruct.me/',
         teamLogosPath: 'https://statistics.betcoapps.com/images/',
         disableAsianBetSlipTooltip: false,
         hideLiveCalendarNumber: false,
@@ -378,7 +376,7 @@ angular.module('vbet5').constant('Config', {
             }
         },
         expandOnlyOneSport: false,
-        expandMoreSportsByDefault: false,
+        expandMoreSportsByDefault: true,
         expandFirstSportByDefault: true,
         showPrematchLimit: 10, // 0 if disabled
         selectRegionsByDefault: false, // will filter by region
@@ -491,6 +489,11 @@ angular.module('vbet5').constant('Config', {
         maxMessageLength: 4000,
         offlineMessage: false,
         iovationLoginScripts: false,
+        smsVerificationLogin: {
+            enabled: false,
+            timer: 120, // seconds
+            allowResend: 5 // seconds
+        },
         convertCurrencyName: {},
         search: {   //limits of search results
             limitGames: 15,
@@ -523,7 +526,7 @@ angular.module('vbet5').constant('Config', {
             enableSignIn: true,
             enableRegisterByPhoneNumber: false,
             simplified: false, //simplified 2-step registration
-            promoCodeLifetime: 2592000000, //(in milliseconds)  30 days
+            promoCodeLifetime: 1296000000, //(in milliseconds)  15 days
             defaultPromoCode: null,
             deaultPromocodePerDomain: null,  // see bt848.com skin for options
             defaultCurrency: 'USD',
@@ -676,8 +679,8 @@ angular.module('vbet5').constant('Config', {
             {name: 'Double Chance', type: '1X12X2'},
             {name: '1st Half Total Goals', type: 'HalfTimeOverUnder'},
             {name: '2nd Half Total Goals', type: '2ndHalfTotalOver/Under'},
-            {name: 'Asian Handicap', type: 'Handicap'},
-            {name: 'Handicap', type: 'AsianHandicap'}
+            {name: 'Asian Handicap', type: 'AsianHandicap'},
+            {name: 'Handicap', type: 'Handicap'}
         ],
         multiColumnMarketFilterTypes: {
             P1XP2: {key: 'WINNER'},
@@ -722,7 +725,14 @@ angular.module('vbet5').constant('Config', {
         showPromotedGames: {}, //  retrieve(from swarm) and show promoted games in specified location(s).   see bonanzawin config for example
         showPopularGames: false, //show "popular" games selector (as region)
         availableVideoProviderIds: [1, 3, 5, 7, 8, 11, 12, 15, 16, 19, 999999], //list of available providers
-        videoProvidersThatWorkWithIframe: ['21', '22', '23', '24', '29', '30'],
+        videoProvidersThatWorkWithIframe: {
+            21: 1,
+            22: 1,
+            23: 1,
+            24: 1,
+            29: 1,
+            30: 1
+        },
         videoEnabled: true, //enable game videos
         video: {
             autoPlay: true //disable autoplaying implemented only for classic view

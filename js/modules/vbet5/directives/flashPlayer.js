@@ -28,7 +28,7 @@ VBET5.directive('flashplayer', ['$window', '$timeout', '$rootScope', 'Translator
             var streamUrl = attrs.streamUrl.toString();
             var providerId = attrs.providerId.toString();
             var parent = scope.$parent;
-            if ($rootScope.conf.videoProvidersThatWorkWithIframe.indexOf(providerId) !== -1) { // for dota and windbet stream we must show streams in iframe
+            if ($rootScope.conf.videoProvidersThatWorkWithIframe[+providerId]) { // for dota and windbet stream we must show streams in iframe
                 frame = angular.element('<iframe  src="'+streamUrl+'" width="100%" height="100%" frameborder="0" scrolling="no" allowfullscreen></iframe>');
                 element.append(frame);
                 parent.videoIsLoaded = false; // for hiding player controlls
@@ -162,7 +162,7 @@ VBET5.directive('flashplayer', ['$window', '$timeout', '$rootScope', 'Translator
                     return; //  don't update if it's same
                 }
                 streamUrl = attrs.streamUrl.toString();
-                if ($rootScope.conf.videoProvidersThatWorkWithIframe.indexOf(providerId) !== -1) {
+                if ($rootScope.conf.videoProvidersThatWorkWithIframe[+providerId]) {
                     frame && frame.remove();
                     frame = angular.element('<iframe  src="'+streamUrl+'" width="100%" height="100%" frameborder="0" scrolling="no" allowfullscreen></iframe>');
                     element.append(frame);

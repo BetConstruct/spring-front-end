@@ -1459,10 +1459,11 @@ VBET5.service('Utils', ['$timeout', '$filter', '$location', '$window', 'Config',
      *  Fix domain changes
      */
     Utils.fixDomainChanges = function fixDomainChanges(config, product) {
-        if (Config.main.enableDomainFixesForPartners.indexOf(parseInt(Config.main.site_id)) === -1 || $window.location.hostname ==="localhost") return;
-        var oldDomain = $window.location.hostname.split(/\./);
-        var existedDomain, currentDomain = (oldDomain.length === 4) ? oldDomain.slice(-3).join(".") : oldDomain.slice(-2).join(".");
+        if ($window.location.hostname ==="localhost") {return;}
 
+        var locationHost = $window.location.hostname.split(/\./);
+        var existedDomain, currentDomain = (locationHost.length === 4) ? locationHost.slice(-3).join(".") : locationHost.slice(-2).join(".");
+        var oldDomain;
         switch (product) {
             case 'sportsbook': {
                 oldDomain = config.main.redirectOnTablets && config.main.redirectOnTablets.split(/\./);
@@ -1485,6 +1486,7 @@ VBET5.service('Utils', ['$timeout', '$filter', '$location', '$window', 'Config',
                     }
                     return;
                 }
+                break;
             }
             case 'casino': {
                 oldDomain = config.cUrlPrefix && config.cUrlPrefix.split(/\./);
@@ -1492,7 +1494,6 @@ VBET5.service('Utils', ['$timeout', '$filter', '$location', '$window', 'Config',
                     existedDomain = (oldDomain.length === 4) ? oldDomain.slice(-3).join(".") : oldDomain.slice(-2).join(".");
                     if (existedDomain !== currentDomain) {
                         config.cUrlPrefix = config.cUrlPrefix.replace(existedDomain, currentDomain);
-                        config.fantasySports && config.fantasySports.externalURL && (config.fantasySports.externalURL = config.fantasySports.externalURL.replace(existedDomain, currentDomain));
                     }
                     return;
                 }

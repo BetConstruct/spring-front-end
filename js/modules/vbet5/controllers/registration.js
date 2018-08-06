@@ -980,7 +980,7 @@ angular.module('vbet5').controller('RegistrationController', ['$scope', '$rootSc
          * @description check national id
          */
         $scope.checkNationalId = function checkNationalId() {
-            $scope.registerform.doc_number.$dirty = $scope.registerform.doc_number.$invalid = $scope.registerform.doc_number.$error.docinvalid = !Utils.checkNationalId($scope.registrationData.doc_number);
+            $scope.registerform.doc_number.$setValidity('docinvalid', Utils.checkNationalId($scope.registrationData.doc_number));
         };
 
 

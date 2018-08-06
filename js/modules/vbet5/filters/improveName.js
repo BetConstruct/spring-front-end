@@ -116,7 +116,9 @@ VBET5.filter('improveName', ['Config', function (Config) {
             },
             'ger': {
                 'Spieler 1': 'team1_name',
-                'Spieler 2': 'team2_name'
+                'Spieler 2': 'team2_name',
+                'S1': 'team1_name',
+                'S2': 'team2_name'
             },
             'fre': {
                 'Joueur 1': 'team1_name',

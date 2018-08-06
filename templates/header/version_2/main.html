@@ -21,6 +21,10 @@
             <img ng-src="{{conf.header.license.image}}">
         </a>
     </div>
+    <div class="accept-cookies-t" ng-if="conf.header.acceptCookies && !cookiesNotification.cookiesAccepted">
+        <p ng-bind-html="::cookiesNotification.cookiesText|nl2br|html"></p>
+        <button ng-click="acceptCookies()" trans>Accept</button>
+    </div>
     <div class="header-container-b">
         <ul class="responsive-header-contain-j">
             <li class="responsive-header-item-j">
@@ -219,6 +223,11 @@
                                                 <li ng-if="!conf.liveChat.isSfChat && conf.liveChat.siteId && conf.liveChat.codePlan && !conf.liveChat.disableFromHeader">
                                                     <i class="icon-faq-new-b"></i>
                                                     <span id="live-chat-button1" title="Live Chat" trans>Live Chat</span>
+                                                </li>
+
+                                                <li ng-if="conf.liveChat.jivositeWidgetId && !conf.liveChat.disableFromHeader" onclick="jivo_api.open()">
+                                                    <i class="icon-faq-new-b"></i>
+                                                    <span title="Live Chat" trans>Live Chat</span>
                                                 </li>
 
                                                 <li id="live-chat-popup-button" ng-if="conf.liveChat.popup" title="Live Chat" trans onclick="startLiveChat()">

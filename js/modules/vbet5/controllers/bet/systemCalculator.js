@@ -39,6 +39,75 @@ angular.module('vbet5').controller('systemCalculatorController', ['$scope', 'Uti
 
     /**
      * @ngdoc method
+     * @name calculateSystemPossibleWin
+     * @methodOf betting.controller:systemCalculatorController
+     * @returns {Object} possible win and options count
+     * @description calculate system possible winning sets system selected value
+     */
+    function calculateSystemPossibleWin() {
+        var tempPosWin = 0;
+        var indexArray = [];
+        var indexMaxArray = [];
+        var tempOdd;
+        var tempIterator;
+        var numOfSysOptions;
+        var sysPerBetStake;
+        var k = $scope.params.selectedSysOption.sysValue;
+        var i;
+        for (i = 0; i < k; i++) {
+            indexArray[i] = i;
+            indexMaxArray[i] = $scope.params.events.length - i;
+        }
+
+        indexMaxArray = indexMaxArray.reverse();
+        tempIterator = k - 1;
+
+        var m, j;
+        while (indexArray[0] <= indexMaxArray[0]) {
+            if (indexArray[tempIterator] < indexMaxArray[tempIterator]) {
+                if (tempIterator !== k - 1) {
+                    tempIterator = k - 1;
+                    continue;
+                }
+                tempOdd = 1;
+                for (m = 0; m < k; m++) {
+                    if ($scope.params.events[indexArray[m]].flag === 0) {
+                        tempOdd *= $scope.params.events[indexArray[m]].odd;
+                    } else if ($scope.params.events[indexArray[m]].flag === 1) {
+                        tempOdd = 0;
+                    }
+
+                }
+
+                //tempPosWin += tempOdd;
+                tempPosWin = (tempPosWin * 10 * 10 + Utils.mathCuttingFunction(tempOdd * 10 * 10)) / 100;
+
+                indexArray[tempIterator]++;
+            } else {
+                tempIterator--;
+
+                indexArray[tempIterator]++;
+
+                for (j = tempIterator; j < k - 1; j++) {
+                    indexArray[j + 1] = indexArray[j] + 1;
+                }
+            }
+        }
+
+        numOfSysOptions = Math.round(
+            Utils.factorial($scope.params.events.length) / (Utils.factorial(k) * Utils.factorial($scope.params.events.length - k))
+        );
+
+        sysPerBetStake = $scope.params.stake / numOfSysOptions;
+
+        //$scope.params.stakePerBet = sysPerBetStake.toFixed(2);
+        $scope.params.stakePerBet = (Utils.mathCuttingFunction(sysPerBetStake*10*10)/100).toFixed(2);
+
+        return {win: (Utils.mathCuttingFunction(tempPosWin * sysPerBetStake*10*10)/100).toFixed(2), options: numOfSysOptions};
+    }
+
+    /**
+     * @ngdoc method
      * @name reCalculate
      * @methodOf betting.controller:systemCalculatorController
      * @description Recalculate
@@ -100,80 +169,6 @@ angular.module('vbet5').controller('systemCalculatorController', ['$scope', 'Uti
      * @description calculate system options count
      */
     $scope.calculateSystemOptionsCount = function calculateSystemOptionsCount(k) {
-        return Math.round(
-            Utils.factorial($scope.params.events.length)
-            / (Utils.factorial(k) * Utils.factorial($scope.params.events.length - k))
-        );
+        return Math.round(Utils.factorial($scope.params.events.length) / (Utils.factorial(k) * Utils.factorial($scope.params.events.length - k)));
     };
-
-    /**
-     * @ngdoc method
-     * @name calculateSystemPossibleWin
-     * @methodOf betting.controller:systemCalculatorController
-     * @returns {Object} possible win and options count
-     * @description calculate system possible winning sets system selected value
-     */
-    function calculateSystemPossibleWin() {
-        var tempPosWin = 0;
-        var indexArray = [];
-        var indexMaxArray = [];
-        var tempOdd;
-        var tempIterator;
-        var numOfSysOptions;
-        var sysPerBetStake;
-        var k = $scope.params.selectedSysOption.sysValue;
-        var i;
-        for (i = 0; i < k; i++) {
-            indexArray[i] = i;
-            indexMaxArray[i] = $scope.params.events.length - i;
-        }
-
-        indexMaxArray = indexMaxArray.reverse();
-        tempIterator = k - 1;
-
-        var m, j;
-        while (indexArray[0] <= indexMaxArray[0]) {
-            if (indexArray[tempIterator] < indexMaxArray[tempIterator]) {
-                if (tempIterator !== k - 1) {
-                    tempIterator = k - 1;
-                    continue;
-                }
-                tempOdd = 1;
-                for (m = 0; m < k; m++) {
-                    if ($scope.params.events[indexArray[m]].flag === 0) {
-                        tempOdd *= $scope.params.events[indexArray[m]].odd;
-                    } else if ($scope.params.events[indexArray[m]].flag === 1) {
-                        tempOdd = 0;
-                    }
-
-                }
-
-                //tempPosWin += tempOdd;
-                tempPosWin = tempPosWin + tempOdd;
-
-                indexArray[tempIterator]++;
-            } else {
-                tempIterator--;
-
-                indexArray[tempIterator]++;
-
-                for (j = tempIterator; j < k - 1; j++) {
-                    indexArray[j + 1] = indexArray[j] + 1;
-                }
-            }
-        }
-
-        numOfSysOptions = Math.round(
-            Utils.factorial($scope.params.events.length) / (Utils.factorial(k) * Utils.factorial($scope.params.events.length - k))
-        );
-
-        sysPerBetStake = $scope.params.stake / numOfSysOptions;
-
-        //$scope.params.stakePerBet = sysPerBetStake.toFixed(2);
-        $scope.params.stakePerBet = (Utils.mathCuttingFunction(sysPerBetStake*100)/100).toFixed(2);
-
-        return {win: (Utils.mathCuttingFunction(tempPosWin * sysPerBetStake*100)/100).toFixed(2), options: numOfSysOptions};
-
-
-    }
 }]);

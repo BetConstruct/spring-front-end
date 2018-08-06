@@ -238,7 +238,7 @@
                                         <div class="b-date active-field birth-date-fields">
                                             <div class="tooltip-wrapper-j b-date">
                                                 <div class="select-block">
-                                                    <select name="birth_day" ng-change="calculateAge()" ng-required="personalDetails.requiredEditableFields.indexOf('birth_date') !== -1"
+                                                    <select name="birth_day" ng-change="calculateAge()" ng-required="personalDetails.requiredEditableFields.indexOf('birth_date') !== -1 && !details.birth_date"
                                                             ng-options="d for d in days"
                                                             day-selector
                                                             month-model="birthDate.month"
@@ -251,7 +251,7 @@
                                                     </select>
                                                 </div>
                                                 <div class="select-block">
-                                                    <select name="birth_month" ng-change="calculateAge()" ng-required="personalDetails.requiredEditableFields.indexOf('birth_date') !== -1"
+                                                    <select name="birth_month" ng-change="calculateAge()" ng-required="personalDetails.requiredEditableFields.indexOf('birth_date') !== -1 && !details.birth_date"
                                                             ng-model="birthDate.month"
                                                             ng-disabled="personalDetails.disabledFields.indexOf('birth_date') !== -1"
                                                             title="{{personalDetails.disabledFields.indexOf('birth_date') !== -1 ? ('This field cannot be edited.'|translate) : ''}}">
@@ -260,7 +260,7 @@
                                                     </select>
                                                 </div>
                                                 <div class="select-block">
-                                                    <select name="birth_year" ng-change="calculateAge()" ng-required="personalDetails.requiredEditableFields.indexOf('birth_date') !== -1"
+                                                    <select name="birth_year" ng-change="calculateAge()" ng-required="personalDetails.requiredEditableFields.indexOf('birth_date') !== -1 && !details.birth_date"
                                                             ng-model="birthDate.year"
                                                             ng-options="y for (y,y) in birthDate.years"
                                                             title="{{personalDetails.disabledFields.indexOf('birth_date') !== -1 ? ('This field cannot be edited.'|translate) : ''}}"

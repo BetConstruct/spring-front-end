@@ -30,7 +30,6 @@ body > {
       max-width: 100%;
       width: 100%;
       padding: 0;
-      transition: width 200ms;
     }
   }
   #{$pages-with-full-width-header-background} {
@@ -310,10 +309,10 @@ body > {
   height: 14px;
   padding: 0 3px;
   border-radius: 8px;
-  background: darken( desaturate( $brand-color-2, 1 ), 7 );
+  background: $brand-color-2;
   text-align: center;
   font: 9px/14px $font-f;
-  color: set-color(darken( desaturate( $brand-color-2, 1 ), 7 ));
+  color: set-color($brand-color-2);
   position: absolute;
   top: -4px;
   right: -5px;
@@ -1075,8 +1074,7 @@ body > {
     float: right;
   }
 }
-.header-nav-contain > ul > li.new-top-nav a:before {
-  content: attr(data-content);
+.header-nav-contain > ul > li a:before {
   display: inline-block;
   color: set-color($header-hero-color);
   background: $header-hero-color;
@@ -1086,77 +1084,28 @@ body > {
   font: 8px/11px $font-f;
   padding: 0 2px;
   border-radius: 3px 0 3px 0;
-  right: 4px;
+  right: 8px;
   top: 5px;
   box-sizing: border-box;
   @include rtl {
-    left: 4px;
+    left: 8px;
     right: auto;
   }
+}
+.header-nav-contain > ul > li.new-top-nav a:before {
+  content: attr(data-content);
 }
 .header-nav-contain > ul > li.demo-top-nav a:before {
   content: "DEMO";
-  display: inline-block;
-  color: set-color($header-hero-color);
-  background: $header-hero-color;
-  box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.6);
-  position: absolute;
-  height: 10px;
-  font: 8px/11px $font-f;
-  padding: 0 2px;
-  border-radius: 3px 0 3px 0;
-  right: 4px;
-  top: 5px;
-  box-sizing: border-box;
 }
 .header-nav-contain > ul > li.air-top-nav a:before {
   content: "ON AIR";
-  display: inline-block;
-  color: set-color($header-hero-color);
-  background: $header-hero-color;
-  box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.6);
-  position: absolute;
-  height: 10px;
-  font: 8px/11px $font-f;
-  padding: 0 2px;
-  border-radius: 3px 0 3px 0;
-  right: 4px;
-  top: 5px;
-  box-sizing: border-box;
 }
 .header-nav-contain > ul > li.web-top-nav a:before {
   content: "WEB";
-  display: inline-block;
-  color: set-color($header-hero-color);
-  background: $header-hero-color;
-  box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.6);
-  position: absolute;
-  height: 10px;
-  font: 8px/11px $font-f;
-  padding: 0 2px;
-  border-radius: 3px 0;
-  top: 5px;
-  right: 4px;
-  box-sizing: border-box;
-  @include rtl {
-    left: 4px;
-    right: auto;
-  }
 }
 .header-nav-contain > ul > li.Bonus a:before{
   content: attr(data-content);
-  display: inline-block;
-  color: set-color($header-hero-color);
-  background: $header-hero-color;
-  box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.6);
-  position: absolute;
-  height: 10px;
-  font: 8px/11px $font-f;
-  padding: 0 2px;
-  border-radius: 3px 0;
-  right: 4px;
-  top: 5px;
-  box-sizing: border-box;
 }
 .header-nav-contain > ul > li.sub-menu-item {
   clear: both;
@@ -1281,7 +1230,7 @@ body > {
   font-size: 11px;
   line-height: 11px;
   z-index: 565;
-  color: darken(desaturate($brand-color-2, 1), 7);
+  color: $brand-color-2;
 }
 
 //user menu
@@ -1343,6 +1292,51 @@ body > {
         max-height: 0;
         overflow: hidden;
       }
+    }
+  }
+}
+@if $custom-very-top-menu == true {
+  .subheader-enabled .headerVersion_2 {
+    min-height: $header-first-line-height + $header-nav-line-height + $subheader-height + 20px;
+  }
+  .block-slider{
+    padding-top: $header-first-line-height + $header-nav-line-height + 20px;
+    .close-slider-button-j{
+      top: $header-first-line-height + $header-nav-line-height + 20px;
+    }
+  }
+  .conteiner.show-game ~ .block-slider, .block-slider.slider-scroll{
+    padding-top: 94px;
+  }
+  .headerVersion_2 {
+    min-height: $header-first-line-height + $header-nav-line-height + 20px;
+    .conteiner {
+      .duplicate{display: none;}
+      .original {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        background: rgba($skin-palette-10, 0.5);
+        border-bottom: 1px solid rgba($hero-color, 0.5);
+        .simple-nav-j {
+          a, p {
+            font-size: 10px;
+            line-height: 16px;
+            min-height: inherit;
+          }
+        }
+      }
+    }
+    .header-container-b{padding-top: 20px;}
+  }
+  .headerVersion_2 .conteiner.show-fix, .headerVersion_2 .conteiner.show-game {
+    .header-container-b {
+      padding-top: 0;
+    }
+    .original {
+      max-height: 0;
+      overflow: hidden;
     }
   }
 }
@@ -1524,7 +1518,7 @@ body > {
     display: table-cell;
     vertical-align: middle;
     width: 1%;
-    position: relative;
+    //position: relative;
     &.auto-width {
       width: auto;
     }
@@ -1720,5 +1714,44 @@ html[dir="rtl"] {
   }
   .VivaroBet .responsive-header-mainMenu-j > li.header-left-small-b-j:not(.ng-hide) ~ li:not(.header-left-small-b-j) {
     padding-right: 210px !important;
+  }
+}
+.accept-cookies-t {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  z-index: 100000000;
+  box-shadow: 0 -6px 0 rgba(0,0,0,0.1);
+  width: 100%;
+  background: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 12px;
+  color: #121623;
+  box-sizing: border-box;
+  font-size: 13px;
+  button {
+    background: none;
+    height: 36px;
+    border: 1px solid $hero-color;
+    color: $hero-color;
+    text-transform: uppercase;
+    font: 700 12px $font-f;
+    padding: 0 24px;
+    margin: 0 20px;
+    transition: 300ms color, 300ms background;
+    &:hover {
+      background: $hero-color;
+      color: set-color($hero-color);
+    }
+  }
+  a {
+    font-weight: 700;
+    color: $hero-color;
+    transition: 300ms color;
+    &:hover {
+      color: darken($hero-color, 20);
+    }
   }
 }

@@ -2,3 +2,13 @@
 <div class="promos-container" ng-init="setTitle('Promotions')" no-animate>
     <promotion-news slug="all" main-class="promo block-meny-news" path="news" categories-list="true" use-custom-base-host="true" count="999"></promotion-news>
 </div>
+<style ng-controller="cmsPagesCtrl" ng-init="loadPage('promo-section-backgrounds-' + env.lang, 'lang')">
+    .body-wrapper.promos {
+    {{mainPage.thumbnail ? 'background-image: url('+mainPage.thumbnail+');' : ''}}
+    {{mainPage.custom_fields.size.length ? "background-size: " + mainPage.custom_fields.size[0] + ";" : mainPage.thumbnail ? "background-size: 100%;" : ""}}
+    {{mainPage.custom_fields.position.length ? 'background-position: ' + mainPage.custom_fields.position[0] : mainPage.thumbnail ? "background-position: 50% 0" : ""}};
+    {{mainPage.custom_fields.attachment.length ? "background-attachment:" + mainPage.custom_fields.attachment[0] + ";" : ""}}
+    {{mainPage.custom_fields.color.length ? "background-color: " + mainPage.custom_fields.color[0] + ";" : ""}}
+    {{mainPage.custom_fields.repeat.length ? "background-repeat: " + mainPage.custom_fields.repeat[0] : mainPage.thumbnail ? "background-repeat: no-repeat" : ""}};
+    }
+</style>

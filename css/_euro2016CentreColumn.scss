@@ -42,9 +42,7 @@
   float: left;
   width: 100%;
   display: block;
-  //transform: translate3d(0, 0, 0);
 }
-
 .games-view-wrapper-v3 .md-progress-circular,
 .prematch-list-view-v3 .md-progress-circular {
   box-sizing: border-box;
@@ -135,6 +133,7 @@
   float: left;
   width: 100%;
   border-radius: 2px 2px 0 0;
+  contain: strict;
   //position: relative;
   height: 28px;
   display: flex;
@@ -316,6 +315,7 @@
   font-size: 0;
   grid-column-gap: 1px;
   grid-template-rows: auto;
+  contain: style;
   &.column-1 {
     grid-template-columns: repeat(1, 100%);
   }
@@ -440,6 +440,7 @@
   position: relative;
   cursor: pointer;
   margin: 1px 0 0;
+  contain: layout;
   &:before {
     content: "" attr(title) "";
     box-sizing: border-box;

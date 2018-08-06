@@ -1031,6 +1031,9 @@ matches-list {
   top: 60px;
   z-index: 500;
   background: $classic-view-background;
+  @media screen and (max-width: 1379px) {
+    top: 48px;
+  }
   .russia2018-calendar-scroll {
     float: left;
     width: 100%;

@@ -1380,6 +1380,10 @@
   .viewSwitcher-j.select-pagination > span {
     color: $text-palette-7;
   }
+  .balance-int-row {
+    background: lighten(desaturate($skin-color, 17), 12);
+    color: $text-palette-2;
+  }
 }
 
 .body-wrapper.asian {

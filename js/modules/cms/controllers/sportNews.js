@@ -287,7 +287,9 @@ CMS.controller('cmsSportNewsCtrl', ['$rootScope', '$scope', '$sce', '$location',
             return;
         }
         $scope.selectedNews = $scope.recentNews[currentNewsIndex];
-        scrolledOffset = DomHelper.scrollVisible('newsBlockID', $scope.selectedNews.id, scrolled, 65, 259, scrolledOffset);
+        if ($scope.selectedNews && $scope.selectedNews.id) {
+            scrolledOffset = DomHelper.scrollVisible('newsBlockID', $scope.selectedNews.id, scrolled, 65, 259, scrolledOffset);
+        }
         currentNewsIndex++;
         currentNewsIndex = currentNewsIndex >= $scope.recentNews.length ? 0 : currentNewsIndex;
         timer = TimeoutWrapper(function () {loopThroughNews(); }, 3000);
@@ -502,7 +504,7 @@ CMS.controller('cmsSportNewsCtrl', ['$rootScope', '$scope', '$sce', '$location',
     $scope.underBetSlipBannerClick = function(banner) {
         analytics.gaSend('send', 'event', 'news', {'page': $location.path(), 'eventLabel': 'betslip banner click'});
 
-        if (banner.link.indexOf($location.path()) !== -1) {
+        if (Object.prototype.toString.call(banner.link) === '[object Array]' && banner.link.indexOf($location.path()) !== -1) {
             $rootScope.$broadcast('sportsbook.handleDeepLinking');
         }
     };
@@ -586,8 +588,7 @@ CMS.controller('cmsSportNewsCtrl', ['$rootScope', '$scope', '$sce', '$location',
             '/sport/': 'under-betslip-banners-classic-',
             '/virtualsports/': 'under-betslip-banners-virtualsports-',
             '/insvirtualsports/': 'under-betslip-banners-virtualsports-',
-            '/customsport/cyber/': 'under-betslip-banners-customsport-cyber-',
-            '/russia2018/': 'under-betslip-banners-russia-'
+            '/customsport/cyber/': 'under-betslip-banners-customsport-cyber-'
         };
 
         $scope.getBanners((pathSlugMap[$location.path()] || pathSlugMap['/sport/']) + $scope.env.lang);

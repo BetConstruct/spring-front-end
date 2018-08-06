@@ -120,4 +120,7 @@ $delete-cache: '?v=' + random(666);
   .live-score-background-#{$alias} {
     background: url(#{$imagePath + $imageName}.jpg#{$delete-cache}) no-repeat 50% 50% / cover;
   }
+  .live-score-background-#{$alias + grass} {
+    background: url(#{$imagePath + $imageName + grass}.jpg#{$delete-cache}) no-repeat 50% 50% / cover;
+  }
 }

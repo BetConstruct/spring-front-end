@@ -128,6 +128,8 @@
   float: left;
   width: 100%;
   display: block;
+  position: relative;
+  z-index: 10;
 }
 
 .right-b-view-wrapper-v3 {
@@ -1063,6 +1065,7 @@
     animation: betslip-open-animate-b 300ms ease-in-out;
     //animation-delay: 80ms;
     position: relative;
+    z-index: 100;
     //transform: translate3d(0,0,0);
   }
 }
@@ -1417,6 +1420,10 @@
 .mini-list-events-b-v3 > ul > li .stake-form-contain-v3 > ul > li > .stake-max-bet-v3 {
   box-sizing: border-box;
   margin-left: 4px;
+  @include rtl {
+    margin-left: 0;
+    margin-right: 4px;
+  }
 }
 
 .stake-form-contain-v3.two-fields-v3 > ul > li:first-child {
@@ -1481,6 +1488,9 @@
   font-style: normal;
   font: 12px/20px icomoon;
   color: $c16-tp-6;
+  @include rtl {
+    box-shadow: 1px 0 0 $c16-sp-9 inset;
+  }
 }
 
 .single-bet-stake-repeat-v3 > i:before {
@@ -2128,8 +2138,100 @@
   width: 100%;
   height: 30px;
   position: relative;
+  .open-bets-cashout-button {
+    display: flex;
+    flex-flow: wrap;
+    flex-direction: row;
+    overflow: visible;
+    position: relative;
+    > span {
+      -webkit-box-flex: 1;
+      -ms-flex: 1;
+      flex: 1;
+      text-align: left;
+      padding: 0 5px 0 0;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      @include rtl {
+        text-align: right;
+        padding: 0 0 0 5px;
+      }
+    }
+    > b {
+      font-weight: normal;
+      display: inline-block;
+    }
+    &:after {
+      position: absolute;
+      top: -3px;
+      right: -3px;
+      width: 8px;
+      height: 8px;
+      display: block;
+      border-radius: 50%;
+      background: $c16-sp-3;
+      box-shadow: 0 0 0 1px $c16-sp-9;
+      @include rtl {
+        left: -3px;
+        right: auto;
+      }
+    }
+    &.rule-active:after {
+      content: "";
+    }
+  }
+  &:hover .hover-auto-cashout-rule {
+    display: block;
+  }
 }
-
+.hover-auto-cashout-rule {
+  position: absolute;
+  bottom: -130px;
+  left: 0;
+  display: none;
+  width: 100%;
+  min-height: 130px;
+  padding: 6px 0 0;
+  z-index: 100;
+  box-sizing: border-box;
+  .auto-cashout-rule {
+    padding: 10px;
+    box-sizing: border-box;
+    position: relative;
+    &:before {
+      content: "";
+      position: absolute;
+      top: -5px;
+      right: 10px;
+      border-style: solid;
+      border-width: 0 5px 6px 5px;
+      border-color: transparent transparent $skin-palette-8 transparent;
+      @include rtl {
+        left: 10px;
+        right: auto;
+      }
+    }
+  }
+  > button  {
+    height: 36px;
+    width: 100%;
+    font: normal 14px $font-f;
+    display: block;
+    float: left;
+    transition: 200ms;
+    text-transform: uppercase;
+    cursor: pointer;
+    outline: 0;
+    background: $brand-color-1;
+    border: 1px solid $brand-color-1;
+    color: set-color($brand-color-1);
+    &:hover {
+      background: lighten($brand-color-1, 10);
+      border-color: lighten($brand-color-1, 10);
+    }
+  }
+}
 .button-view-contain-v3 > .md-progress-circular.small-progress {
   box-sizing: border-box;
   position: absolute;
@@ -2545,9 +2647,8 @@
     .stake-max-bet-v3 {
       width: 44px;
       &.ng-hide {
-        display: block !important;
+        display: table !important;
         opacity: 0;
-        width: 100%;
         pointer-events: none;
       }
     }
@@ -2556,6 +2657,9 @@
       font-size: 6 + $size-font;
       line-height: 30px;
       color: $c16-tp-6;
+      @include rtl {
+        padding: 0 0 0 8px;
+      }
     }
   }
 }
@@ -2957,28 +3061,6 @@
     }
   }
 }
-.button-view-contain-v3 .open-bets-cashout-button {
-  display: flex;
-  flex-flow: wrap;
-  flex-direction: row;
-  > p {
-    -webkit-box-flex: 1;
-    -ms-flex: 1;
-    flex: 1;
-    text-align: left;
-    padding: 0 5px 0 0;
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    @include rtl {
-      text-align: right;
-      padding: 0 0 0 5px;
-    }
-  }
-  > span {
-    display: inline-block;
-  }
-}
 .empty-edit-bet-list {
   float: left;
   width: 100%;
@@ -3169,8 +3251,6 @@
   width: 100%;
   max-height: 30px;
   margin: 2px 0 0 0;
-  overflow: hidden;
-  transition: max-height 250ms;
   > p {
     float: left;
     width: 100%;
@@ -3200,10 +3280,16 @@
       }
     }
   }
+  > div {
+    display: none;
+  }
   &.open {
     max-height: 4000px;
     > p:after {
       content: "\e671";
+    }
+    > div {
+      display: block;
     }
   }
   .edit-bets-icon {
@@ -3225,6 +3311,9 @@
   background: $c16-sp-9;
   border-radius: 2px 2px 0 0;
   transition: max-height 240ms;
+  &.retrieve {
+    margin-bottom: 1px;
+  }
   &.closed {
     max-height: 36px;
     .bet-status-select:after {
@@ -3351,18 +3440,17 @@
     }
     > button {
       float: left;
-      width: 100%;
+      width: 32px;
       display: block;
       height: 28px;
       color: $c16-tp-4;
-      padding: 0 10px;
       border: none;
       background: $c16-sp-8;
       text-align: center;
-      box-sizing: border-box;
       cursor: pointer;
       white-space: nowrap;
-      font: #{5+$size-font}/28px $font-f;
+      position: relative;
+      font: #{6+$size-font}/28px icomoon;
       transition: background 240ms;
       @if $white-skin == true {
         background: $c16-sp-11;
@@ -3372,6 +3460,9 @@
         @if $white-skin == true {
           background: darken($c16-sp-11, 10);
         }
+      }
+      &:before {
+        content: "\e6d4";
       }
     }
     &:nth-child(2) {

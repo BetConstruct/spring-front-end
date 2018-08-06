@@ -5745,7 +5745,7 @@ div.expanded-tabs .list-result {
   height: 11px;
 }
 
-.list-bet-block ul li:not(:first-child) p, .list-bet-block ul li p span.pick {
+.list-bet-block ul li:not(:first-child) > p, .list-bet-block ul li > p span.pick {
   float: left;
   width: 83%;
   @include rtl {
@@ -5753,7 +5753,7 @@ div.expanded-tabs .list-result {
   }
 }
 
-.list-bet-block ul li p span {
+.list-bet-block ul li > p span {
   float: left;
   @include rtl {
     float: right;
@@ -17702,8 +17702,9 @@ div.draws-contain {
 /*new deposit page END*/
 
 .right-block-news span.news-date-b {
-  margin: 12px 0 10px;
   width: calc(100% - 350px);
+  margin: 12px 0 10px;
+  color: $text-palette-1;
 }
 
 .body-wrapper .country-b .country-block-contain ul .flag-more a:after,

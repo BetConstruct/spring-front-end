@@ -55,7 +55,7 @@ angular.module('vbet5.betting').controller('featuredgameCtrl', ['$rootScope', '$
             if (!$scope.selectedFeaturedGameId && $scope.featuredGames && $scope.featuredGames.length) {
                 $scope.selectedFeaturedGameId = $scope.featuredGames[0].id;
             }
-        } else if ($scope.featuredGames.length > 1) {
+        } else if ($scope.featuredGames.length > 0) {
             if ($scope.featuredGames[0].favorite_order !== null) {
                 $scope.featuredGames.sort(function sortByFavOrder(a, b) {
                     return a.favorite_order - b.favorite_order;

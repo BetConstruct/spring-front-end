@@ -1,7 +1,7 @@
 <div class="mixed-view-content" ng-controller="promotionalBonusCtrl">
     <div class="mixed-view-head" ng-show="conf.promotionalBonuses.casino || (conf.promotionalBonuses.sportsbook && conf.promotionalBonuses.casino && casinoEnabled)">
-        <div class="balance-view-progress-b" ng-show="conf.promotionalBonuses.casino" ng-class="{'progress-bar-disabled' : activeBonusTab !== backendBonusConstants.BonusSource.Casino}">
-            <ul>
+        <div class="balance-view-progress-b" ng-show="conf.promotionalBonuses.casino">
+            <ul ng-class="{'progress-bar-disabled' : activeBonusTab !== backendBonusConstants.BonusSource.Casino}">
                 <li>
                     <div class="bonus-progress-info">
                         <div class="progress-bonus-info-box">
@@ -24,6 +24,14 @@
                     </div>
                 </li>
             </ul>
+            <div class="bonus-promo-code" ng-show="conf.promotionalBonuses.showApplyButton">
+                <label>
+                    <span ng-bind="'Promo Code'|translate"></span>
+                    <input name="promo_code" placeholder="{{'Promo Code' | translate}}" ng-model="promoCode" type="text">
+                </label>
+                <button ng-disabled="applyingBonus || loadingBonus" ng-hide="applyingBonus" ng-click="applyBonus()" trans>Apply</button>
+                <button disabled="disabled" ng-show="applyingBonus" trans>Wait...</button>
+            </div>
         </div>
         <div class="group-tabs-wrapper">
             <div class="first-level-history-tab">

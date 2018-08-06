@@ -32,7 +32,7 @@ VBET5.directive('videoPlayer', ['$window', '$timeout', '$rootScope', '$sce', 'Tr
                 scope.videoState = {};
                 var streamUrl = attrs.streamUrl.toString();
                 var providerId = attrs.providerId.toString();
-                if ($rootScope.conf.videoProvidersThatWorkWithIframe.indexOf(providerId) !== -1) { // for dota and windbet stream we must show streams in iframe
+                if ($rootScope.conf.videoProvidersThatWorkWithIframe[+providerId]) { // for dota and windbet stream we must show streams in iframe
                     scope.videoState.frameUrl = $sce.trustAsResourceUrl(streamUrl);
                     scope.videoState.videoIsLoaded = false; // for hiding player controlls
                 } else { // for another all streams

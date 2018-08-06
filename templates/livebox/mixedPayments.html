@@ -298,7 +298,7 @@
                                            prevent-input="{{field.restrict}}" allow-spaces="{{field.allowSpaces}}"
                                            ng-disabled="field.disabled">
                                 </div>
-                                <div ng-switch-when="dateMask">
+                                <div ng-switch-when="dateInput">
                                     <input name="{{field.name}}" ng-attr-id="{{field.id}}"
                                            ng-model="paymentFormData[field.name]" type="text" size="{{field.size}}"
                                            maxlength="{{field.maxlength}}" ui-mask="99/99/9999"
@@ -402,6 +402,25 @@
                                         </div>
                                     </div>
                                 </div>
+                                <div ng-switch-when="dateMask">
+                                    <div class="picker-contain">
+                                        <div class="input-group" ng-click="openDatePicker(field.name, $event)">
+                                            <input type="text" class="form-control deposit-form-control"
+                                                   datepicker-popup="{{field.format || 'dd/MM/yyyy'}}"
+                                                   ng-attr-id="{{field.id || env.sliderContent + '_date_' + field.name}}"
+                                                   ng-model="paymentFormData[field.name]"
+                                                   is-open="datePickers[field.name]"
+                                                   datepicker-options="dateOptions"
+                                                   disabled="disabled"
+                                                   ng-change="adjustPaymentDate(field.id || env.sliderContent + '_date_' + field.name, field.name)"
+                                                   ng-required="true" close-text="Close"/>
+                                            <span class="input-group-btn"><button type="button"
+                                                                                  class="btn btn-default date-view deposit-btn deposit-data-view"
+                                                                                  ng-click="openDatePicker(field.name, $event)">
+                                                <i class="date-p"></i></button></span>
+                                        </div>
+                                    </div>
+                                </div>
                                 <div ng-switch-when="select" class="select-j">
                                     <select name="{{field.name}}" ng-model="paymentFormData[field.name]"
                                             ng-required="field.required"
@@ -431,7 +450,7 @@
                             <div class="float-width" ng-if="!conf.customAmountReplace" ng-show="(env.sliderContent === 'deposit' && depositCustomAmounts.length) || (env.sliderContent === 'withdraw' && withdrawCustomAmounts.length)">
                                 <div class="custom-amounts-list" ng-if="env.sliderContent === 'deposit' && !isProfilePartial">
                                     <button ng-repeat="customAmount in depositCustomAmounts track by $index"
-                                            ng-click="paymentAmount.deposit = (paymentAmount.deposit || 0) + customAmount"
+                                            ng-click="paymentAmount.deposit = (parseNum(paymentAmount.deposit) || 0) + customAmount"
                                             class="btn-sm">
                                         {{customAmount|number}}
                                     </button>
@@ -439,7 +458,7 @@
 
                                 <div class="custom-amounts-list" ng-if="env.sliderContent === 'withdraw' && !isProfilePartial">
                                     <button ng-repeat="customAmount in withdrawCustomAmounts track by $index"
-                                            ng-click="paymentAmount.withdraw = (paymentAmount.withdraw || 0) + customAmount"
+                                            ng-click="paymentAmount.withdraw = (parseNum(paymentAmount.withdraw) || 0) + customAmount"
                                             class="btn-sm">
                                         {{customAmount|number}}
                                     </button>

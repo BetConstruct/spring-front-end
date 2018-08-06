@@ -180,7 +180,11 @@ VBET5.controller('promotionalBonusCtrl', ['$scope', '$location', 'Zergling', 'Ba
             free_bonuses: $scope.activeBonusTab === $scope.backendBonusConstants.BonusSource.Casino
         };
         Zergling.get(request,'get_bonus_details').then(function (data) {
-            $scope.bonusesAmount.casino = data.bonuses.length;
+            if(request.free_bonuses === true) {
+                $scope.bonusesAmount.sportsBook = data.bonuses.length;
+            } else {
+                $scope.bonusesAmount.casino = data.bonuses.length;
+            }
         });
     }
 
@@ -267,6 +271,47 @@ VBET5.controller('promotionalBonusCtrl', ['$scope', '$location', 'Zergling', 'Ba
             $scope.activeBonusTab = target;
             getPromotionalBonus();
         }
+    };
+
+
+
+    $scope.applyBonus = function applyBonus() {
+        if ($scope.applyingBonus || $scope.loadingBonus || !$scope.promoCode) { return; }
+
+        $scope.applyingBonus = true;
+        Zergling.get({ 'code': $scope.promoCode }, 'apply_promo_codes')
+            .then(function success(response) {
+                var dialogOpts = {
+                    type: '',
+                    title: '',
+                    content: ''
+                };
+
+                switch (response.result) {
+                    case 0:
+                        dialogOpts.type = 'success';
+                        dialogOpts.title = 'Success';
+                        dialogOpts.content = Translator.get('Your promo code has been applied');
+                        break;
+                    case '-99':
+                        dialogOpts.content = Translator.get('Promo code has been already applied');
+                    default:
+                        dialogOpts.type = 'error';
+                        dialogOpts.title = 'Error';
+                        dialogOpts.content = dialogOpts.content || Translator.get('Invalid promo code');
+                }
+
+                if (dialogOpts.type === 'success') {
+                    dialogOpts.buttons = [
+                        {
+                            title: 'Ok',
+                            callback: getPromotionalBonus
+                        }
+                    ];
+                }
+
+                $rootScope.$broadcast("globalDialogs.addDialog", dialogOpts);
+            })['finally'](function() { $scope.applyingBonus = false; });
     };
 
     getCasinoBonusesAmount();

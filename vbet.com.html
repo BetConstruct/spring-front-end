@@ -49,7 +49,7 @@
         theme-{{theme.id}}
         {{::conf.site_name}}
         {{::domainClass}}
-        {{(['/poolbetting/', '/freebet/'].indexOf($location.path()) > -1) ? 'modern' : (['/dashboard/', '/livecalendar/', '/russia2018/', '/results/', '/multiview/', '/overview/', '/virtualsports/', '/insvirtualsports/'].indexOf($location.path()) > -1 || conf.sportsLayout == 'classic') ? 'classic' : conf.sportsLayout}}
+        {{(['/poolbetting/', '/freebet/'].indexOf($location.path()) > -1) ? 'modern' : (['/dashboard/', '/livecalendar/', '/results/','/multiview/', '/overview/', '/virtualsports/', '/insvirtualsports/'].indexOf($location.path()) > -1 || conf.sportsLayout == 'classic') ? 'classic' : conf.sportsLayout}}
         {{env.bodyWrapperClass||''}}
     " no-animate>
 
@@ -324,8 +324,9 @@
         <script src="js/modules/vbet5/controllers/exchangeShop.js"></script>
         <script src="js/modules/vbet5/controllers/recaptcha.js"></script>
         <script src="js/modules/vbet5/controllers/subscriptions.js"></script>
-        <script src="js/modules/vbet5/controllers/russia2018/main.js"></script>
+        <script src="js/modules/vbet5/controllers/betOnPolitics.js"></script>
         <script src="js/modules/vbet5/controllers/betStatus.js"></script>
+        <script src="js/modules/vbet5/controllers/affiliate.js"></script>
             <!--<script src="js/modules/vbet5/translations.js"></script>-->
 
         
@@ -383,6 +384,7 @@
             </div>
         </div>
 </div>
-
+    
+    
 </body>
 </html>

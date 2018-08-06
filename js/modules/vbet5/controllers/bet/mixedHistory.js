@@ -170,26 +170,28 @@ VBET5.controller('mixedMyBetsCtrl', ['$rootScope', '$scope', '$controller', '$lo
         initBetEventCounts();
 
         angular.forEach($scope.betHistory, function(b) {
-            switch (parseInt(b.outcome)) {
-                case 0:
-                    $scope.betEventCounts.unsettled++;
-                    break;
-                case 1:
-                    $scope.betEventCounts.lost++;
-                    break;
-                case 2:
-                    $scope.betEventCounts.returned++;
-                    break;
-                case 3:
-                    $scope.betEventCounts.won++;
-                    break;
-                case 5:
-                    $scope.betEventCounts.cashout++;
-                    break;
-            }
+            if (!b.parent_bet_id) {
+                switch (parseInt(b.outcome)) {
+                    case 0:
+                        $scope.betEventCounts.unsettled++;
+                        break;
+                    case 1:
+                        $scope.betEventCounts.lost++;
+                        break;
+                    case 2:
+                        $scope.betEventCounts.returned++;
+                        break;
+                    case 3:
+                        $scope.betEventCounts.won++;
+                        break;
+                    case 5:
+                        $scope.betEventCounts.cashout++;
+                        break;
+                }
 
-            $scope.betEventCounts.all++;
-            b.totalAmount = (b.bonus_bet_amount ? b.bonus_bet_amount : '' + b.amount ? b.amount : '').toString();
+                $scope.betEventCounts.all++;
+                b.totalAmount = (b.bonus_bet_amount ? b.bonus_bet_amount : '' + b.amount ? b.amount : '').toString();
+            }
         });
     };
 

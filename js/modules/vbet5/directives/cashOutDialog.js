@@ -30,8 +30,8 @@ VBET5.directive('cashOutDialog', ['$rootScope', '$timeout', 'Moment', 'Zergling'
                     canceled: false,
                     error: false,
                     manualError: false,
-                    partialAmount: '',
                     valueReachesAmount: '',
+                    isPartial: '',
                     loading: false
                 };
                 $scope.cashoutTypes = {
@@ -58,12 +58,15 @@ VBET5.directive('cashOutDialog', ['$rootScope', '$timeout', 'Moment', 'Zergling'
                 };
                 $scope.cashoutPopup.inputValue = $scope.cashoutBet.cash_out;
                 $scope.autoCashOutAmount = {
-                    min: ($scope.cashoutBet.cash_out + $scope.cashoutBet.cash_out/100).toFixed(2),
-                    max: ($scope.cashoutBet.possible_win - $scope.cashoutBet.possible_win/100).toFixed(2)
+                    min: ($scope.cashoutBet.cash_out + $scope.cashoutBet.cash_out / 100).toFixed(2),
+                    max: ($scope.cashoutBet.possible_win - $scope.cashoutBet.possible_win / 100).toFixed(2)
                 };
                 if (data.dateRange && data.selectedUpcomingPeriod) {
                     dateRange = data.dateRange;
                     selectedUpcomingPeriod = data.selectedUpcomingPeriod;
+                }
+                if ($scope.cashoutBet.auto_cash_out_amount != null) {
+                    getAutoCashOutDetails($scope.cashoutBet.id);
                 }
             }
 
@@ -80,14 +83,13 @@ VBET5.directive('cashOutDialog', ['$rootScope', '$timeout', 'Moment', 'Zergling'
                     bet_id: betId,
                     min_amount: $scope.triggerAutoCashOut.amount
                 };
-                if($scope.cashoutTypes.auto === 'partial') {
+                if ($scope.cashoutTypes.auto === 'partial') {
                     data.partial_amount = $scope.cashoutPopup.inputValue;
                 }
-
                 Zergling.get(data, 'set_bet_auto_cashout')
                     .then(function (response) {
                         $scope.cashoutDialog.type = 'confirm';
-                        if(response.result === 0) {
+                        if (response.result === 0) {
                             $scope.cashoutRule.created = true;
                             $scope.cashoutRule.canceled = false;
                             $scope.cashoutRule.error = false;
@@ -137,8 +139,8 @@ VBET5.directive('cashOutDialog', ['$rootScope', '$timeout', 'Moment', 'Zergling'
                             if (response.result === "Ok") {
                                 if ($rootScope.env.sliderContent === 'recentBets') {
                                     var currentTimestamp = Moment.get().unix();
-                                    if (suggested.partial_price && ((dateRange.fromDate <= currentTimestamp && currentTimestamp <= dateRange.toDate) || selectedUpcomingPeriod !== 0)){
-                                        $timeout(function() { //need to remove timeout after backend's fix
+                                    if (suggested.partial_price && ((dateRange.fromDate <= currentTimestamp && currentTimestamp <= dateRange.toDate) || selectedUpcomingPeriod !== 0)) {
+                                        $timeout(function () { //need to remove timeout after backend's fix
                                             $rootScope.$broadcast('loadMixedBetHistory');
                                         }, 950);
                                     } else {
@@ -154,9 +156,12 @@ VBET5.directive('cashOutDialog', ['$rootScope', '$timeout', 'Moment', 'Zergling'
                                 $scope.cashoutDialog.type = 'cashout';
                                 $scope.newCashoutData = response.details;
                                 $scope.newCashoutData.priceChanged = true;
-                                $scope.changeCashoutValue($scope.cashoutPopup.sliderValue, $scope.newCashoutData.new_price);
+                                // $scope.changeCashoutValue($scope.cashoutPopup.sliderValue, $scope.newCashoutData.new_price);
+                                if ($scope.cashoutTypes.manual === 'partial') {
+                                    $scope.newCashoutData.partial_price = $scope.cashoutPopup.inputValue;
+                                }
                                 bet.cash_out = $scope.newCashoutData.new_price;
-                                $scope.cashoutPopup.inputValue = bet.cash_out;
+                                // $scope.cashoutPopup.inputValue = bet.cash_out;
                             } else if (response.result === "NotAvailable" || response.result === "Fail") {
                                 $scope.cashoutDialog.type = 'confirm';
                                 $scope.cashoutSuccess = false;
@@ -190,7 +195,9 @@ VBET5.directive('cashOutDialog', ['$rootScope', '$timeout', 'Moment', 'Zergling'
             $scope.changeCashoutValue = function changeCashoutValue(value, calculated) {
                 $scope.canCashOut.enabled = true;
 
-                if (calculated < $scope.minCashoutValue) { return; }
+                if (calculated < $scope.minCashoutValue) {
+                    return;
+                }
 
                 var price = 0.01 * calculated * value;
                 if (price === 0) {
@@ -227,25 +234,32 @@ VBET5.directive('cashOutDialog', ['$rootScope', '$timeout', 'Moment', 'Zergling'
              */
             function updatePopUpInfo(event, data) {
                 if ($scope.cashoutBet && $scope.cashoutBet.id && data.cashOutMap[$scope.cashoutBet.id]) { // $scope.cashoutBet is the active bet that we want to cash out
-                    if (data.cashOutMap[$scope.cashoutBet.id]['CashoutAmount'] === null) { return $scope.closePopUp(); }
-                    if($scope.cashoutDialog.type !== 'autoCashout') {
-                        $scope.cashoutPopup.inputValue = data.cashOutMap[$scope.cashoutBet.id]['CashoutAmount'];
-                        $scope.cashoutPopup.sliderValue = 100; // 100 is the maximum slider value (100%)
+                    if (data.cashOutMap[$scope.cashoutBet.id]['CashoutAmount'] === null) {
+                        return $scope.closePopUp();
                     }
 
-
-                    $scope.autoCashOutAmount.min = (data.cashOutMap[$scope.cashoutBet.id]['CashoutAmount'] + (data.cashOutMap[$scope.cashoutBet.id]['CashoutAmount'])/100).toFixed(2);
-                    $scope.autoCashOutAmount.max = ($scope.cashoutBet.possible_win - $scope.cashoutBet.possible_win/100).toFixed(2);
+                    $scope.autoCashOutAmount.min = (data.cashOutMap[$scope.cashoutBet.id]['CashoutAmount'] + (data.cashOutMap[$scope.cashoutBet.id]['CashoutAmount']) / 100).toFixed(2);
+                    $scope.autoCashOutAmount.max = ($scope.cashoutBet.possible_win - $scope.cashoutBet.possible_win / 100).toFixed(2);
 
                     $scope.triggerAutoCashOut.amount = $scope.autoCashOutAmount.min;
 
+                    if (($scope.cashoutDialog.type !== 'autoCashout' && $scope.cashoutTypes.manual === 'full') || ($scope.cashoutDialog.type === 'autoCashout' && $scope.cashoutTypes.auto === 'full')) {
+                        $scope.cashoutPopup.inputValue = $scope.cashoutDialog.type !== 'autoCashout' ? data.cashOutMap[$scope.cashoutBet.id]['CashoutAmount'] : $scope.autoCashOutAmount.min;
+                        $scope.cashoutPopup.sliderValue = 100; // 100 is the maximum slider value (100%)
+                    }
+
                     /* $scope.newCashoutData is created when pop up is opened and contains info on cash out price
                        It is sent as the full cash out price (in case we don't manipulate either input value or slider value) */
-                    if ($scope.newCashoutData && $scope.newCashoutData.new_price) {
-                        $scope.newCashoutData.new_price = data.cashOutMap[$scope.cashoutBet.id]['CashoutAmount'];
+                    if ($scope.newCashoutData) {
+                        if ($scope.cashoutTypes.manual === 'partial') {
+                            $scope.newCashoutData.partial_price = $scope.cashoutPopup.inputValue;
+                        }
+                        if ($scope.newCashoutData.new_price) {
+                            $scope.newCashoutData.new_price = data.cashOutMap[$scope.cashoutBet.id]['CashoutAmount'];
+                        }
 
                         // We delete the partial price because it doesn't need to be sent if the cash out is 'full'
-                        if ($scope.newCashoutData.partial_price) {
+                        if ($scope.newCashoutData.partial_price && $scope.cashoutTypes.manual === 'full') {
                             $scope.newCashoutData.partial_price = '';
                         }
                     }
@@ -259,8 +273,8 @@ VBET5.directive('cashOutDialog', ['$rootScope', '$timeout', 'Moment', 'Zergling'
              * @methodOf vbet5.directive:cashOutDialog
              * @description converts cash-out price to percent value
              */
-            $scope.changeBackCashoutValue = function changeBackCashoutValue(calculated){
-                if(isNaN(calculated)) {
+            $scope.changeBackCashoutValue = function changeBackCashoutValue(calculated) {
+                if (isNaN(calculated)) {
                     $scope.canCashOut.enabled = true;
                     return;
                 }
@@ -272,17 +286,17 @@ VBET5.directive('cashOutDialog', ['$rootScope', '$timeout', 'Moment', 'Zergling'
                     $scope.cashoutPopup.sliderValue = 0;
                     $scope.canCashOut.enabled = false;
                     return;
-                } else if((price > calculated - $scope.minCashoutValue && price < calculated) || (price > calculated)) {
+                } else if ((price > calculated - $scope.minCashoutValue && price < calculated) || (price > calculated)) {
                     $scope.cashoutPopup.sliderValue = 100;
                     $scope.canCashOut.enabled = false;
                     return;
                 }
 
-                if((calculated - price >= $scope.minCashoutValue) || price === calculated) {
+                if ((calculated - price >= $scope.minCashoutValue) || price === calculated) {
                     $scope.canCashOut.enabled = true;
-                    var value = price / (calculated * 0.01) ;
+                    var value = price / (calculated * 0.01);
                     value = Math.round(value);
-                    if(price === calculated) {
+                    if (price === calculated) {
                         $scope.newCashoutData.partial_price = '';
                         $scope.cashoutPopup.sliderValue = value;
                         $scope.newCashoutData.price = price;
@@ -300,14 +314,14 @@ VBET5.directive('cashOutDialog', ['$rootScope', '$timeout', 'Moment', 'Zergling'
              * @methodOf vbet5.directive:cashOutDialog
              * @description get details about autoCashOuted bet
              */
-            function  getAutoCashOutDetails(betId) {
+            function getAutoCashOutDetails(betId) {
                 $scope.cashoutRule.loading = true;
                 Zergling.get({'bet_id': betId}, 'get_bet_auto_cashout')
-                    .then(function(response) {
+                    .then(function (response) {
                         $scope.cashoutRule.loading = false;
-                        if(response.result === 0) {
+                        if (response.result === 0) {
                             $scope.cashoutRule.valueReachesAmount = response.details.MinAmount;
-                            $scope.cashoutRule.partialAmount = response.details.PartialAmount ? response.details.PartialAmount : response.details.MinAmount;
+                            $scope.cashoutRule.isPartial = !!response.details.PartialAmount;
                         }
                     });
             }
@@ -321,18 +335,18 @@ VBET5.directive('cashOutDialog', ['$rootScope', '$timeout', 'Moment', 'Zergling'
             $scope.switchCashOutDialogType = function switchCashOutDialogType(dialogType, cashOutAmount) {
                 if (dialogType === 'cashout') {
                     $scope.cashoutTypes.manual = 'full';
+                    $scope.cashoutPopup.inputValue = $scope.cashoutBet.cash_out;
                 } else if (dialogType === 'autoCashout') {
                     if ($scope.cashoutBet.auto_cash_out_amount != null) {
                         $scope.triggerAutoCashOut.amount = $scope.cashoutBet.auto_cash_out_amount;
-                        getAutoCashOutDetails($scope.cashoutBet.id);
                     } else {
-                        $scope.triggerAutoCashOut.amount = (cashOutAmount + cashOutAmount/100).toFixed(2);
+                        $scope.triggerAutoCashOut.amount = (cashOutAmount + cashOutAmount / 100).toFixed(2);
+                        $scope.cashoutPopup.inputValue = $scope.triggerAutoCashOut.amount;
                     }
                     $scope.cashoutTypes.auto = 'full';
                     $scope.triggerAutoCashOut.error = false;
                 }
                 $scope.cashoutPopup.sliderValue = 100;
-                $scope.cashoutPopup.inputValue = cashOutAmount;
                 $scope.canCashOut.enabled = true;
             };
 
@@ -362,7 +376,7 @@ VBET5.directive('cashOutDialog', ['$rootScope', '$timeout', 'Moment', 'Zergling'
                 Zergling.get({bet_id: betId}, 'cancel_bet_auto_cashout')
                     .then(function (response) {
                         $scope.cashoutDialog.type = 'confirm';
-                        if(response.result === 0) {
+                        if (response.result === 0) {
                             $scope.cashoutRule.canceled = true;
                             $scope.cashoutRule.error = false;
                             $scope.cashoutRule.created = false;
@@ -381,17 +395,16 @@ VBET5.directive('cashOutDialog', ['$rootScope', '$timeout', 'Moment', 'Zergling'
 
 
             $scope.closePopUp = function closePopUp() {
-              //  $scope.changeBackCashoutValue();
+                //  $scope.changeBackCashoutValue();
                 if ($scope.cashoutPopup) {
                     $scope.cashoutPopup.active = false;
                 }
             };
 
-
-            $scope.$on('closeCashOutPopUp',  $scope.closePopUp);
+            $scope.$on('closeCashOutPopUp', $scope.closePopUp);
             $scope.$on('updatePopUpInfo', updatePopUpInfo);
             $scope.$on('open.cashoutDialog', openDialog);
-            $scope.$on('$destroy',  $scope.closePopUp);
+            $scope.$on('$destroy', $scope.closePopUp);
         }
     };
 }]);

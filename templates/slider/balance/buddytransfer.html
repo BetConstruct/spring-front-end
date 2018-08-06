@@ -6,7 +6,7 @@
       </div>
       <div class="transb-group-j">
         <!--step1-->
-        <div class="transfer-block-j  choose-user-j" ng-class="{'active': currentStep === 'step1'}">
+        <div class="transfer-block-j  choose-user-j" ng-class="{'active': attr.currentStep === 'step1'}">
           <div class="transferb-title-j">
             <h3 trans>Choose User</h3>
           </div>
@@ -37,11 +37,11 @@
           </div>
           <vbet-loader class="page-center" ng-show="!friendListLoaded"></vbet-loader>
           <div class="tb-button-w-j">
-            <button ng-click="chooseBuddy(); currentStep = 'step2'" ng-disabled="transferFormModel.buddyUsername === ''" trans>Continue</button>
+            <button ng-click="chooseBuddy(); attr.currentStep = 'step2'" ng-disabled="transferFormModel.buddyUsername === ''" trans>Continue</button>
           </div>
         </div>
         <!--step2-->
-        <div class="transfer-block-j transfer-options-j" ng-class="{'active': currentStep === 'step2'}">
+        <div class="transfer-block-j transfer-options-j" ng-class="{'active': attr.currentStep === 'step2'}">
           <div class="transferb-title-j">
             <h3 trans>Transfer Options</h3>
           </div>
@@ -76,7 +76,7 @@
           </div>
         </div>
         <!--step3-->
-        <div class="transfer-block-j confirmation-j" ng-class="{'active': currentStep === 'step3'}">
+        <div class="transfer-block-j confirmation-j" ng-class="{'active': attr.currentStep === 'step3'}">
           <div class="transferb-title-j">
             <h3 trans>Confirmation</h3>
           </div>
@@ -106,7 +106,7 @@
           </div>
         </div>
           <!--step4-->
-          <div class="transfer-block-j " ng-class="{'active': currentStep === 'step4', 'success-j': confirmResponse.type === 'Success', 'success-j error-j': confirmResponse.type === 'Error'}">
+          <div class="transfer-block-j " ng-class="{'active': attr.currentStep === 'step4', 'success-j': confirmResponse.type === 'Success', 'success-j error-j': confirmResponse.type === 'Error'}">
             <div ng-show="confirmResponse && confirmationLoaded">
               <div class="transferb-title-j">
                 <h3>{{confirmResponse.type | translate}}</h3>

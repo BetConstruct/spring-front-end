@@ -353,6 +353,16 @@ CASINO.service('casinoManager', ['$rootScope', '$q', '$window', '$sce', '$locati
 
         if (CConfig.liveCasino.enableAllProviders && providers.length > 1) {
             providers.unshift('All');
+            devidedGames.All = {
+                games: [],
+                defaultStudio: '',
+                studios: []
+            };
+            angular.forEach(devidedGames, function(provider, key) {
+                if (key !== 'All') {
+                    devidedGames.All.games = devidedGames.All.games.concat(provider.games);
+                }
+            });
         }
 
         return {

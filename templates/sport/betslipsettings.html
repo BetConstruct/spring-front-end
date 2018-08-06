@@ -1,21 +1,21 @@
 <div class="betSettingsContainer-j" 
      ng-class="{'active': $parent.showBetSettings}" 
      ng-show="$parent.betSlip.mode === 'betting' && !$parent.betSlip.superbet.selector">
-    <i ng-click="$parent.showBetSettings=!$parent.showBetSettings; $parent.newsDependBetSetting()"></i>
+    <i ng-click="$parent.$parent.showBetSettings=!$parent.$parent.showBetSettings; $parent.newsDependBetSetting()"></i>
     <div class="betslipOptions-j">
         <div>
             <p trans>Betting options</p>
             <span trans>Automatically accept price changes</span>
             <label>
-                <input type="radio" ng-model="$parent.acceptPriceChanges" value="0" ng-disabled="$parent.isBetsInProgress" ng-click="$parent.showBetSettings=!$parent.showBetSettings">
+                <input type="radio" ng-model="$parent.$parent.acceptPriceChanges" value="0" ng-disabled="$parent.$parent.isBetsInProgress" ng-click="$parent.$parent.showBetSettings=!$parent.$parent.showBetSettings">
                 <span trans>Always ask</span>
             </label>
             <label>
-                <input type="radio" ng-model="$parent.acceptPriceChanges" value="1" ng-disabled="$parent.isBetsInProgress" ng-click="$parent.showBetSettings=!$parent.showBetSettings">
+                <input type="radio" ng-model="$parent.$parent.acceptPriceChanges" value="1" ng-disabled="$parent.$parent.isBetsInProgress" ng-click="$parent.$parent.showBetSettings=!$parent.$parent.showBetSettings">
                 <span trans>Accept Higher odds</span>
             </label>
             <label>
-                <input type="radio" ng-model="$parent.acceptPriceChanges" value="2" ng-disabled="$parent.isBetsInProgress" ng-click="$parent.showBetSettings=!$parent.showBetSettings">
+                <input type="radio" ng-model="$parent.$parent.acceptPriceChanges" value="2" ng-disabled="$parent.$parent.isBetsInProgress" ng-click="$parent.$parent.showBetSettings=!$parent.$parent.showBetSettings">
                 <span trans>Accept Any odds</span>
             </label>
         </div>

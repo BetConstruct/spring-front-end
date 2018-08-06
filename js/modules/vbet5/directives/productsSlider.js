@@ -9,10 +9,8 @@ VBET5.directive('productsSlider', ['$rootScope', '$sce', 'Translator', 'content'
     return {
         restrict: 'E',
         templateUrl: 'templates/directive/productsSlider.html',
-        scope: {
-            slug: '='
-        },
-        link: function (scope) {
+        scope: {},
+        link: function (scope, e, attr) {
             scope.banners = [];
             /**
              * @ngdoc method
@@ -20,25 +18,25 @@ VBET5.directive('productsSlider', ['$rootScope', '$sce', 'Translator', 'content'
              * @description   populates scope's **banner** variable with banner information got from cms
              *
              */
-            (function() {
-                scope.loading = true;
-                scope.slug = scope.slug || ('products-banners-' + $rootScope.env.lang);
-                scope.slug = scope.slug.replace('{lang}', $rootScope.env.lang);
-                content.getWidget(scope.slug).then(function (response) {
-                    if (response.data && response.data.widgets && response.data.widgets[0]) {
-                        var banners = [];
-                        angular.forEach(response.data.widgets, function (widget) {
-                            widget.instance.custom_fields.label && (widget.instance.custom_fields.label[0] = $sce.trustAsHtml(Translator.get(widget.instance.custom_fields.label[0])));
-                            widget.instance.trustedTitle = $sce.trustAsHtml(widget.instance.title);
-                            banners.push(widget.instance);
-                        });
 
-                        scope.banners = banners;
-                    }
-                })['finally'](function () {
-                    scope.loading = false;
-                });
-            }());
+            scope.loading = true;
+            var slugProcessed = attr.slug || ('products-banners-' + $rootScope.env.lang);
+            slugProcessed = slugProcessed.replace('{lang}', $rootScope.env.lang);
+
+            content.getWidget(slugProcessed).then(function (response) {
+                if (response.data && response.data.widgets && response.data.widgets[0]) {
+                    var banners = [];
+                    angular.forEach(response.data.widgets, function (widget) {
+                        widget.instance.custom_fields.label && (widget.instance.custom_fields.label[0] = $sce.trustAsHtml(Translator.get(widget.instance.custom_fields.label[0])));
+                        widget.instance.trustedTitle = $sce.trustAsHtml(widget.instance.title);
+                        banners.push(widget.instance);
+                    });
+
+                    scope.banners = banners;
+                }
+            })['finally'](function () {
+                scope.loading = false;
+            });
         }
     };
 }]);

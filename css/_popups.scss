@@ -463,8 +463,13 @@ $popup-overlay-background: black !default;
     iframe {
       display: block;
       float: left;
-      width: 640px;
-      height: 360px;
+      width: 1280px;
+      height: 720px;
+      transition: 300ms width, 300ms height;
+      @media screen and (max-width: 1290px), screen and (max-height: 730px){
+        width: 640px;
+        height: 360px;
+      }
     }
   }
   &.results-popup {
@@ -991,55 +996,6 @@ $popup-overlay-background: black !default;
       }
     }
   }
-  .auto-cashout-rule {
-    float: left;
-    width: 100%;
-    min-height: 68px;
-    text-align: center;
-    > h4 {
-      display: inline-block;
-      padding: 0 26px 0 0;
-      box-sizing: border-box;
-      text-transform: uppercase;
-      color: $text-palette-3;
-      text-align: center;
-      font: 18px/20px $font-f;
-      margin-bottom: 8px;
-      position: relative;
-      @include rtl {
-        padding: 0 0 0 26px;
-      }
-      &:after {
-        content: "\e6ec";
-        position: absolute;
-        top: 0;
-        right: 0;
-        color: #208c65;
-        font: 18px/20px icomoon;
-        @include rtl {
-          left: 0;
-          right: auto;
-        }
-      }
-    }
-    > p {
-      width: 100%;
-      display: inline-block;
-      margin-bottom: 4px;
-      text-align: center;
-      color: $text-palette-4;
-      font: 14px/16px $font-f;
-      > span {
-        display: inline-block;
-      }
-      > b {
-        display: inline-block;
-        color: $text-palette-3;
-        text-transform: uppercase;
-        font-weight: normal;
-      }
-    }
-  }
   .pu-button-wrap-j {
     padding: 0 30px 30px;
     display: inline-block;
@@ -1215,6 +1171,56 @@ $popup-overlay-background: black !default;
     margin: 10px 0px 10px 0px;
     text-align: justify;
     @include scroll($scroll: auto, $background: $skin-palette-10);
+  }
+}
+.auto-cashout-rule {
+  float: left;
+  width: 100%;
+  min-height: 68px;
+  text-align: center;
+  background: $skin-palette-8;
+  > h4 {
+    display: inline-block;
+    padding: 0 26px 0 0;
+    box-sizing: border-box;
+    text-transform: uppercase;
+    color: rgba(set-color($skin-palette-8), 0.7);
+    text-align: center;
+    font: 18px/20px $font-f;
+    margin-bottom: 8px;
+    position: relative;
+    @include rtl {
+      padding: 0 0 0 26px;
+    }
+    &:after {
+      content: "\e6ec";
+      position: absolute;
+      top: 0;
+      right: 0;
+      color: #208c65;
+      font: 18px/20px icomoon;
+      @include rtl {
+        left: 0;
+        right: auto;
+      }
+    }
+  }
+  > p {
+    width: 100%;
+    display: inline-block;
+    margin-bottom: 4px;
+    text-align: center;
+    color: rgba(set-color($skin-palette-8), 0.34);
+    font: 14px/16px $font-f;
+    > span {
+      display: inline-block;
+    }
+    > b {
+      display: inline-block;
+      color: rgba(set-color($skin-palette-8), 0.7);
+      text-transform: uppercase;
+      font-weight: normal;
+    }
   }
 }
 input[type='number'] {

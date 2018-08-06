@@ -15,7 +15,7 @@
                                     <h3 trans>Cool, just login.</h3>
                                 </div>
 
-                                <form name="forms.signinform" ng-submit="params.needVerification? verifySmsCode(): login()">
+                                <form name="forms.signinform" ng-submit="params.needVerification? verifySmsCode(): login()" novalidate="novalidate">
 
                                     <div class="form-sign-in odno-ki" ng-class="{'error-animation':signInError  && forms.signinform.$pristine}">
                                         <div class="field-separator" ng-hide="nemIDSrc">
@@ -41,7 +41,24 @@
                                                 <div class="g-recaptcha" data-callback="recaptchaUpdateCallback" data-sitekey="{{recaptcha.key}}" data-theme="{{recaptcha.theme || 'dark'}}" data-size="{{recaptcha.size || 'normal'}}"></div>
                                             </div>
                                         </div>
-
+                                        <div class="field-separator" ng-if="conf.smsVerificationLogin.enabled">
+                                            <label trans>SMS confirmation code</label>
+                                            <ul class="sms-confirmation-wrap">
+                                                <li>
+                                                    <div class="tooltip-wrapper-j" ng-class="{'error': params.smsErrMsg }">
+                                                        <input ng-model="user.confirmation_code" type="text" placeholder="Enter verification code" required="required" ng-change="params.smsErrMsg = ''" trans>
+                                                        <div class="tooltip-j" ng-hide="forms.signinform.$pristine" ng-bind="params.smsErrMsg"></div>
+                                                    </div>
+                                                </li>
+                                                <li>
+                                                    <button ng-click="sendSms()" ng-disabled="!params.allowSMSResend || !user.username">
+                                                        <span ng-bind="'Get code'|translate"></span>
+                                                        <span ng-show="countdown.minutes + ':' + countdown.seconds !== '00:00'" countdown="{{params.smsTimer}}" ng-bind="countdown.minutes + ':' + countdown.seconds"></span>
+                                                    </button>
+                                                </li>
+                                            </ul>
+                                            <label ng-show="params.smsMsg" ng-bind="params.smsMsg" trans></label>
+                                        </div>
                                         <div class="field-separator" ng-show="conf.rememberMeCheckbox.enabled">
                                             <label for="signinform-remember-me" class="sign-in-checkbox-j">
                                                 <input ng-model="user.remember" id="signinform-remember-me" type="checkbox">
@@ -70,15 +87,14 @@
                                                     <button ng-click="resendSMS()" ng-disabled="!params.allowSMSResend">Resend</button>
                                                 </div>
                                             </div>
-
                                         </div>
-
                                         <div class="signin-error-message" ng-show="forms.signinform.$error.maxlength && !params.needVerification && !params.lockedUser">
                                             <p trans>Username and password should be less than 50 characters.</p>
                                         </div>
                                         <div class="signin-error-message" ng-show="signInError && forms.signinform.$pristine && !params.needVerification && !params.lockedUser">
-                                            <p ng-if="!conf.registration.inputBirthDateOnLogin" trans>Invalid username or password.</p>
-                                            <p ng-if="conf.registration.inputBirthDateOnLogin" trans>Invalid username or password or birthdate.</p>
+                                            <p ng-if="!conf.registration.inputBirthDateOnLogin && !conf.smsVerificationLogin.enabled" trans>Invalid username or password.</p>
+                                            <p ng-if="conf.registration.inputBirthDateOnLogin && !conf.smsVerificationLogin.enabled" trans>Invalid username or password or birthdate.</p>
+                                            <p ng-if="conf.smsVerificationLogin.enabled" ng-bind="signInError || 'Invalid username, password or confirmation code'" trans></p>
                                         </div>
                                         <div class="signin-error-message" ng-show="signInError && forms.signinform.$pristine && params.needVerification && !params.lockedUser">
                                             <p trans>Please verify your account to be able to log in.</p>

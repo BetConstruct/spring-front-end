@@ -1582,6 +1582,7 @@
   cursor: pointer;
   padding: 3px 8px 1px;
   box-shadow: inset 2px 0 0 rgba(set-color(lighten(desaturate(adjust-hue($c16-sp, -1deg), 14), 6)),0.05);
+  contain: layout;
   @include rtl {
     margin-left: 4px;
     box-shadow: inset -2px 0 0 rgba(set-color(lighten(desaturate(adjust-hue($c16-sp, -1deg), 14), 6)),0.05);

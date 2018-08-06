@@ -6,6 +6,7 @@ $skin-color: #1e2639;
 $text-color: $skin-color;
 
 $asian-view-custom: true;
+$custom-very-top-menu: true;
 
 @if ($skin-second==true) {
   $white-skin: true !global;

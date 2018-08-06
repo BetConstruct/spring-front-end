@@ -5352,6 +5352,7 @@ li.active-format:before {
   .open-bets-buttons button {
     color: #616161;
     background: #e6e6e6;
+
     &.active {
       color: #293043;
       background: #cccccc;
@@ -5367,23 +5368,26 @@ li.active-format:before {
       color: #293043;
     }
   }
-}
-
-.modern, .combo {
-  .open-bets-possible-wrapper {
-    background: none;
+  .button-view-contain-v3 .open-bets-cashout-button:after {
+    box-shadow: 0 0 0 1px #ffffff;
   }
-  .title-event-b-v3 > span {
-    color: #3f4553;
+  .hover-auto-cashout-rule {
+    .auto-cashout-rule {
+      background: $c16-sp-3;
+      > h4 {
+        color: $c16-tp-9;
+      }
+      > p {
+        color: $c16-tp-7;
+        > b {
+          color: $c16-tp-9;
+        }
+      }
+      &:before {
+        border-color: transparent transparent $c16-sp-3 transparent;
+      }
+    }
   }
-}
-.modern .game-control .game-statistics li .stat-l {
-  @include rtl {
-    text-align: right;
-  }
-}
-
-.modern {
   .bet-status-container {
     background: none;
     border-radius: 0;
@@ -5402,5 +5406,19 @@ li.active-format:before {
     &:hover {
       background: lighten(#737887, 10);
     }
+  }
+}
+
+.modern, .combo {
+  .open-bets-possible-wrapper {
+    background: none;
+  }
+  .title-event-b-v3 > span {
+    color: #3f4553;
+  }
+}
+.modern .game-control .game-statistics li .stat-l {
+  @include rtl {
+    text-align: right;
   }
 }

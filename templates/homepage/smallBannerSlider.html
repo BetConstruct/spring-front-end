@@ -1,4 +1,4 @@
-<div ng-controller="cmsPagesCtrl" ng-init="loadBanners('homepage-small-banners-'+env.lang,true);" class="product-list-contain no-select-j">
+<div ng-controller="cmsPagesCtrl" ng-init="loadBanners('homepage-small-banners-'+env.lang,false);" class="product-list-contain no-select-j">
     <vbet-loader ng-show="!bannerObjects['homepage-small-banners-'+env.lang]"></vbet-loader>
     <ul class="column-{{ bannerObjects['homepage-small-banners-'+env.lang].length }}" ng-show="bannerObjects['homepage-small-banners-'+env.lang]">
         <li ng-repeat="banner in bannerObjects['homepage-small-banners-'+env.lang] track by $index">

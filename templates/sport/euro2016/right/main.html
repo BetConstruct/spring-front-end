@@ -16,7 +16,7 @@
                     </div>
                 </div>
             </li>
-            <li>
+            <li ng-controller="sportsbookSwitchersCtrl">
                 <div class="time-filter-v3" ng-show="!conf.disableDecimalSubMenu"
                      ng-click="showDecimalSubMenu = !showDecimalSubMenu"
                      state-flag-var="showDecimalSubMenu"
@@ -27,7 +27,8 @@
                         <ul>
                             <li ng-repeat="oddFormat in ::conf.oddFormats track by oddFormat.name"
                                 ng-click="broadcast('setOddsFormat', oddFormat.format)"
-                                ng-class="{'active': env.oddFormat === oddFormat.format}">
+                                ng-class="{'active': env.oddFormat === oddFormat.format}"
+                                ng-hide="conf.disableOddFormatsSpecialCase[selectedBetType.name][oddFormat.format]">
                                 <span>{{ oddFormat.name | translate }}</span>
                             </li>
                         </ul>

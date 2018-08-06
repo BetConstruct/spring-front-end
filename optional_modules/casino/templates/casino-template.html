@@ -68,7 +68,8 @@
                         <!-- </div>-->
                     </ul>
                     <div ng-show="subMenuItemShowBtn" class="more-button-prviter-nav" ng-click="toggleProvidersMenu()">
-                        <span trans>More</span>
+                        <span ng-show="providersMenuState.isClosed" trans>More</span>
+                        <span ng-hide="providersMenuState.isClosed" trans>Less</span>
                     </div>
                 </div>
                 <div class="casino-left-menu-v-2">

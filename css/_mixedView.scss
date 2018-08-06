@@ -1992,7 +1992,7 @@
 .bet-info-list-separator-b.open-view .icon-st-bet.info:before {
   content: "\e6e4";
 }
-.balance-view-progress-b.progress-bar-disabled {
+.progress-bar-disabled {
   opacity: 0.3;
   pointer-events: none;
 }
@@ -2448,9 +2448,17 @@
         }
         }
       }
+      .input-group ul {
+        width: 100%;
+      }
+      .input-group-btn {
+        position: absolute;
+        top: 0;
+        right: 0;
+        pointer-events: none;
+      }
       .deposit-data-view {
         float: right;
-        top: -36px;
         background: none;
       }
       .input-error-message {
@@ -3734,6 +3742,11 @@ button.button-confirm .md-progress-circular.small-progress {
       color: rgba(set-color($skin-palette-7), 0.37);
       font-size: 10px;
       min-width: 120px;
+      -webkit-user-select: all;
+      -khtml-user-select: all;
+      -moz-user-select: all;
+      -ms-user-select: all;
+      user-select: all;
       a {
         color: rgba(set-color($skin-palette-7), 0.57);
       }
@@ -3870,8 +3883,8 @@ button.button-confirm .md-progress-circular.small-progress {
       > b {
         font-weight: normal;
         @include rtl {
-          direction: ltr;
-          unicode-bidi: bidi-override;
+          direction: rtl;
+          unicode-bidi: isolate;
         }
       }
     }
@@ -3909,10 +3922,7 @@ button.button-confirm .md-progress-circular.small-progress {
         border-left: 1px solid $bg;
         padding-right: 5px;
         @include rtl {
-          padding-left: 5px;
-          padding-right: 2px;
-          border-left: none;
-          border-right: 1px solid $bg;
+          display: none;
         }
       }
       &.auto-cell ~ td {
@@ -3939,13 +3949,29 @@ button.button-confirm .md-progress-circular.small-progress {
         background-color: darken( desaturate( adjust-hue( $skin-palette-9, 4deg ), 13 ), 2 );
       }
     }
-    &:last-child td {
-      border-bottom: 10px solid $bg;
-      box-shadow: inset 0 -1px 0 $brand-color-2;
-      &.auto-cell ~ td:not(:last-child) {
-        box-shadow: inset 0 -1px 0 $brand-color-2, inset 1px 0 0 $bg;
-        @include rtl {
-          box-shadow: inset 0 -1px 0 $brand-color-2, inset -1px 0 0 $bg;
+    &.last-child {
+      td {
+        border-bottom: 10px solid $bg;
+      }
+      &:not(.cash-out-history-row) {
+        td:not(.arrow-cell) {
+          box-shadow: inset 0 -1px 0 $brand-color-2;
+          &.auto-cell ~ td:not(:last-child) {
+            box-shadow: inset 0 -1px 0 $brand-color-2, inset 1px 0 0 $bg;
+            @include rtl {
+              box-shadow: inset 0 -1px 0 $brand-color-2, inset -1px 0 0 $bg;
+            }
+          }
+        }
+      }
+      &:not(:last-child) {
+        td {
+          border-bottom-width: 5px;
+        }
+      }
+      &.cash-out-history-row {
+        td {
+          padding: 0;
         }
       }
     }
@@ -4128,7 +4154,8 @@ button.button-confirm .md-progress-circular.small-progress {
     padding: 0 0 6px;
     margin: 0 0 5px;
   }
-  > span {
+  > span > b {
+    font-weight: normal;
     @include rtl {
       direction: rtl;
       unicode-bidi: bidi-override;
@@ -4162,9 +4189,154 @@ button.button-confirm .md-progress-circular.small-progress {
     text-align: center;
     font-size: 14px;
     margin: 0 6px 0 0;
+    @include rtl {
+      margin: 0 0 0 6px;
+    }
     &:hover {
       border-color: lighten($brand-color-2, 20);
       color: lighten($brand-color-2, 30);
     }
+  }
+}
+.buddy-transfer-mixed-view-t {
+  float: left;
+  width: 100%;
+  > h5 {
+    float: left;
+    width: 100%;
+    padding: 18px 18px 0;
+    box-sizing: border-box;
+  }
+}
+.bonus-promo-code {
+  float: left;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 8px 0 10px 15px;
+  background: $skin-palette-8;
+  @include rtl {
+    padding: 8px 15px 10px 0;
+  }
+  > label {
+    display: inline-block;
+    width: 142px;
+    > span {
+      float: left;
+      width: 100%;
+      margin-bottom: 4px;
+      color: $text-palette-4;
+      font: 11px/13px $font-f;
+    }
+    > input {
+      width: 100%;
+      height: 28px;
+      display: inline-block;
+      border: none;
+      padding: 0 12px;
+      background: $skin-palette-8;
+      font: 11px/16px $font-f;
+      color: $text-palette-15;
+      box-shadow: 0 0 0 1px $skin-palette-6;
+      cursor: text;
+      @include placeholder {
+        color: $text-palette-15;
+        font-size: 11px;
+        font-family: $font-f;
+      }
+    }
+  }
+  > button {
+    display: inline-block;
+    min-width: 168px;
+    border: none;
+    margin: 0 0 0 10px;
+    padding: 0 14px;
+    background: $brand-color-1;
+    text-align: center;
+    text-transform: uppercase;
+    font: 12px/30px $font-f;
+    color: set-color($brand-color-1);
+    transition: 300ms background;
+    @include rtl {
+      margin: 0 10px 0 0;
+    }
+    &:not(:disabled):hover {
+      background: lighten($brand-color-1, 10);
+    }
+    &:disabled {
+      background: $skin-palette-6;
+      color: $text-palette-8;
+    }
+  }
+}
+.cash-out-history-row {
+  h2 {
+    float: left;
+    width: 100%;
+    background: $skin-palette-5;
+    padding: 0 12px;
+    color: $text-palette-3;
+    position: relative;
+    transition: 300ms background;
+    &:hover {
+      background: lighten($skin-palette-5, 5);
+    }
+    &:before {
+      content: "\e670";
+      width: 36px;
+      display: block;
+      position: absolute;
+      top: 0;
+      right: 0;
+      font: 14px/30px icomoon;
+      text-align: center;
+      color: $text-palette-4;
+      box-shadow: inset 1px 0 0 $skin-palette-12;
+      @include rtl {
+        right: auto;
+        left: 0;
+      }
+    }
+    &.active {
+      &:before {
+        content: "\e671";
+      }
+      + .cash-out-history-w-c {
+        display: table;
+      }
+    }
+  }
+}
+.cash-out-history-w-c {
+  float: left;
+  width: 100%;
+  table-layout: fixed;
+  color: $c16-tp-5;
+  background: $skin-palette-7;
+  cursor: default;
+  border-top: 1px solid $skin-palette-12;
+  display: none;
+  > ul {
+    display: table-row;
+    > li {
+      display: table-cell;
+      vertical-align: middle;
+      padding: 0 18px;
+      font: 12px/36px $font-f;
+    }
+    &.cash-out-history-head {
+      > li {
+        background: $skin-palette-8;
+      }
+    }
+    &:nth-child(even) {
+      > li {
+        background: rgba(set-color($skin-palette-7), 0.03);
+      }
+    }
+  }
+  small {
+    color: $text-palette-4;
+    font-size: 10px;
   }
 }

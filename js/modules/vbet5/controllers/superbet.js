@@ -212,34 +212,35 @@ VBET5.controller('superBetCtrl', ['$rootScope', '$scope', '$interval', 'Storage'
             var superBets = Utils.objectToArray($scope.profile.super_bet);
             var superBet = superBets && superBets.filter(function(value) { // remove null items
                 return value;
-            });
-            if (superBet[0].super_bet_status === -1 || superBet[0].super_bet_status === '-1') {
-                showSuperBetNotification(Translator.get('Your offer ({1}) request is declined', [superBet[0].super_bet_id]));
-                $rootScope.offersCount = ($rootScope.offersCount === 1) ? 0 : $rootScope.offersCount-1;
+            }).sort(function sortDescending(a, b) { return b.super_bet_id - a.super_bet_id; });
+            superBet = superBet[0];
+            if (superBet.super_bet_status === -1 || superBet.super_bet_status === '-1') {
+                showSuperBetNotification(Translator.get('Your offer ({1}) request is declined', [superBet.super_bet_id]));
+                $rootScope.offersCount = $rootScope.offersCount >= 1 ? $rootScope.offersCount - 1: 0;
                 $rootScope.$broadcast('globalDialogs.removeDialogsByTag', 'onHoldConfirm');
                 analytics.gaSend('send', 'event', 'betting', 'SuperBet ' + (Config.main.sportsLayout) + ($rootScope.env.live ? '(LIVE)' : '(PM)'), {'page': $location.path(), 'eventLabel': 'declined'});
             } else {
                 Zergling.get({
                     'where': {
-                        'bet_id': superBet[0].super_bet_id,
+                        'bet_id': superBet.super_bet_id,
                         'outcome': 0
                     }
                 }, 'bet_history')
                     .then(function (response) {
                         var event = response.bets && response.bets[0] && response.bets[0].events && response.bets[0].events[0];
-                        var message = !event ? superBet[0].super_bet_id : event.team1 + (event.team2 && (" - " + event.team2)) + " : " + event.event_name;
-                        if(superBet[0].super_bet_status === 0 || superBet[0].super_bet_status === '0') {//Counter Offer part
+                        var message = !event ? superBet.super_bet_id : event.team1 + (event.team2 && (" - " + event.team2)) + " : " + event.event_name;
+                        if(superBet.super_bet_status === 0 || superBet.super_bet_status === '0') {//Counter Offer part
                             $rootScope.$broadcast("globalDialogs.addDialog", {
                                 type: 'info',//what type of image to choose???
                                 title: 'Counter offer',
                                 hideCloseButton: true,
-                                content: Translator.get('Do you wish to accept our counter offer ({1}) with the following conditions? Offered Odd: {2} Offered Amount: {3}', [message , superBet[0].super_bet_price , superBet[0].super_bet_amount]),
+                                content: Translator.get('Do you wish to accept our counter offer ({1}) with the following conditions? Offered Odd: {2} Offered Amount: {3}', [message , superBet.super_bet_price , superBet.super_bet_amount]),
                                 yesno: true,
-                                yesButton: ['acceptCounterOffer', superBet[0]],
-                                noButton: ['declineCounterOffer', superBet[0]]
+                                yesButton: ['acceptCounterOffer', superBet],
+                                noButton: ['declineCounterOffer', superBet]
                             });
                         } else {
-                            $rootScope.offersCount = ($rootScope.offersCount === 1) ? 0 : $rootScope.offersCount-1;
+                            $rootScope.offersCount = $rootScope.offersCount >= 1 ? $rootScope.offersCount - 1: 0;
                             showSuperBetNotification(Translator.get('Your offer ({1}) request is accepted', [message]));
                             analytics.gaSend('send', 'event', 'betting', 'SuperBet ' + (Config.main.sportsLayout) + ($rootScope.env.live ? '(LIVE)' : '(PM)'), {'page': $location.path(), 'eventLabel': 'accepted'});
                         }
