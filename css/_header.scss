@@ -1525,6 +1525,9 @@ body > {
     &.header-icon-menu {
       display: none;
     }
+    &.header-notifications-section {
+      width: 0.01%;
+    }
   }
 }
 .responsive-header-mainMenu-j {

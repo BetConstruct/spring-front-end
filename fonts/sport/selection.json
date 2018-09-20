@@ -4,6 +4,32 @@
     {
       "icon": {
         "paths": [
+          "M841.728 489.472c-60.416-12.288-66.56-13.312-124.928-9.216-93.184 6.144-149.504 67.584-177.152 97.28-2.048 2.048-3.072 4.096-5.12 5.12-15.36-12.288-48.128-36.864-117.76-24.576-60.416 10.24-90.112 48.128-107.52 70.656-2.048 3.072-5.12 6.144-7.168 9.216-5.12-15.36-16.384-64.512-17.408-211.968-1.024-68.608 18.432-128 26.624-142.336 3.072 1.024 8.192 2.048 12.288 4.096 15.36 5.12 36.864 12.288 62.464 10.24 47.104-4.096 112.64-23.552 145.408-65.536 16.384-21.504 22.528-46.080 17.408-71.68-7.168-39.936-35.84-61.44-54.272-74.752-1.024-2.048-3.072-4.096-5.12-5.12-44.032-33.792-92.16-30.72-118.784-14.336-27.648 17.408-103.424 51.2-144.384 67.584-10.24 4.096-24.576 10.24-107.52 201.728-36.864 84.992-87.040 201.728-90.112 319.488-1.024 26.624-6.144 52.224-10.24 76.8-8.192 39.936-14.336 74.752-1.024 104.448 33.792 70.656 251.904 130.048 417.792 133.12 89.088 2.048 150.528-17.408 199.68-33.792 35.84-11.264 64.512-20.48 91.136-17.408 53.248 6.144 82.944 28.672 162.816 6.144 159.744-47.104 187.392-388.096-47.104-435.2zM130.048 545.792c-12.288 29.696-17.408 121.856-18.432 154.624 0 9.216-8.192 16.384-16.384 16.384 0 0 0 0 0 0-9.216 0-16.384-8.192-16.384-17.408 0-12.288 4.096-124.928 20.48-165.888 3.072-8.192 13.312-13.312 21.504-9.216 8.192 3.072 12.288 12.288 9.216 21.504zM811.008 575.488c-2.048 9.216-11.264 14.336-20.48 12.288-1.024 0-36.864-9.216-76.8 6.144-8.192 3.072-18.432-1.024-21.504-10.24-3.072-8.192 1.024-18.432 10.24-21.504 22.528-8.192 45.056-11.264 61.44-11.264 20.48 0 33.792 3.072 34.816 4.096 9.216 3.072 14.336 12.288 12.288 20.48z"
+        ],
+        "attrs": [],
+        "isMulticolor": false,
+        "isMulticolor2": false,
+        "grid": 0,
+        "tags": [
+          "Bodybuilding icon"
+        ],
+        "colorPermutations": {}
+      },
+      "attrs": [],
+      "properties": {
+        "order": 1633,
+        "id": 168,
+        "name": "Bodybuilding-icon",
+        "prevSize": 32,
+        "code": 59677
+      },
+      "setIdx": 0,
+      "setId": 0,
+      "iconIdx": 0
+    },
+    {
+      "icon": {
+        "paths": [
           "M108.062 727.181v-173.274h116.159v-84.812h-116.159v-68.599c0 0 1.084-21.613 23.778-21.613h137.211v-86.438h-175.026c-21.613 0-86.987 20.007-86.987 86.991v347.742h101.019z",
           "M545.749 727.181v-173.274h116.159v-84.812h-116.159v-68.599c0 0 1.084-21.613 23.778-21.613h137.211v-86.438h-175.026c-21.613 0-86.987 20.007-86.987 86.991v347.742h101.019z",
           "M297.7 292.451h103.946v439.109h-103.946v-439.109z",
@@ -17,10 +43,6 @@
         ],
         "isMulticolor": false,
         "isMulticolor2": false,
-        "grid": 0,
-        "tags": [
-          "fifa"
-        ],
         "colorPermutations": {
           "111112552552551": [
             {},
@@ -28,7 +50,11 @@
             {},
             {}
           ]
-        }
+        },
+        "tags": [
+          "fifa"
+        ],
+        "grid": 0
       },
       "attrs": [
         {},
@@ -38,14 +64,14 @@
       ],
       "properties": {
         "order": 3,
-        "id": 167,
+        "id": 0,
         "name": "fifa",
         "prevSize": 32,
         "code": 59676
       },
       "setIdx": 0,
       "setId": 0,
-      "iconIdx": 0
+      "iconIdx": 1
     },
     {
       "icon": {
@@ -72,14 +98,14 @@
       ],
       "properties": {
         "order": 1622,
-        "id": 0,
+        "id": 1,
         "name": "circuit",
         "prevSize": 32,
         "code": 59675
       },
       "setIdx": 0,
       "setId": 0,
-      "iconIdx": 1
+      "iconIdx": 2
     },
     {
       "icon": {
@@ -110,14 +136,14 @@
       "attrs": [],
       "properties": {
         "order": 1568,
-        "id": 1,
+        "id": 2,
         "name": "ps4games",
         "prevSize": 32,
         "code": 59674
       },
       "setIdx": 0,
       "setId": 0,
-      "iconIdx": 2
+      "iconIdx": 3
     },
     {
       "icon": {
@@ -139,14 +165,14 @@
       "attrs": [],
       "properties": {
         "order": 1567,
-        "id": 2,
+        "id": 3,
         "name": "E-Ice-Hockey",
         "prevSize": 32,
         "code": 59673
       },
       "setIdx": 0,
       "setId": 0,
-      "iconIdx": 3
+      "iconIdx": 4
     },
     {
       "icon": {
@@ -173,14 +199,14 @@
       ],
       "properties": {
         "order": 1387,
-        "id": 3,
+        "id": 4,
         "name": "penalty",
         "prevSize": 32,
         "code": 59672
       },
       "setIdx": 0,
       "setId": 0,
-      "iconIdx": 4
+      "iconIdx": 5
     },
     {
       "icon": {
@@ -231,14 +257,14 @@
       ],
       "properties": {
         "order": 1388,
-        "id": 4,
+        "id": 5,
         "name": "betonblackjack",
         "prevSize": 32,
         "code": 59670
       },
       "setIdx": 0,
       "setId": 0,
-      "iconIdx": 5
+      "iconIdx": 6
     },
     {
       "icon": {
@@ -281,14 +307,14 @@
       ],
       "properties": {
         "order": 1389,
-        "id": 5,
+        "id": 6,
         "name": "betonpoker",
         "prevSize": 32,
         "code": 59671
       },
       "setIdx": 0,
       "setId": 0,
-      "iconIdx": 6
+      "iconIdx": 7
     },
     {
       "icon": {
@@ -310,14 +336,14 @@
       "attrs": [],
       "properties": {
         "order": 1390,
-        "id": 6,
+        "id": 7,
         "name": "eSports_logo_sportbook",
         "prevSize": 32,
         "code": 59669
       },
       "setIdx": 0,
       "setId": 0,
-      "iconIdx": 7
+      "iconIdx": 8
     },
     {
       "icon": {
@@ -473,14 +499,14 @@
       ],
       "properties": {
         "order": 1391,
-        "id": 7,
+        "id": 8,
         "name": "king-of-glory",
         "prevSize": 32,
         "code": 59665
       },
       "setIdx": 0,
       "setId": 0,
-      "iconIdx": 8
+      "iconIdx": 9
     },
     {
       "icon": {
@@ -523,14 +549,14 @@
       ],
       "properties": {
         "order": 1392,
-        "id": 8,
+        "id": 9,
         "name": "PUBG",
         "prevSize": 32,
         "code": 59666
       },
       "setIdx": 0,
       "setId": 0,
-      "iconIdx": 9
+      "iconIdx": 10
     },
     {
       "icon": {
@@ -562,14 +588,14 @@
       ],
       "properties": {
         "order": 1393,
-        "id": 9,
+        "id": 10,
         "name": "Rocket-League",
         "prevSize": 32,
         "code": 59667
       },
       "setIdx": 0,
       "setId": 0,
-      "iconIdx": 10
+      "iconIdx": 11
     },
     {
       "icon": {
@@ -612,14 +638,14 @@
       ],
       "properties": {
         "order": 1394,
-        "id": 10,
+        "id": 11,
         "name": "Warcraft-III",
         "prevSize": 32,
         "code": 59668
       },
       "setIdx": 0,
       "setId": 0,
-      "iconIdx": 11
+      "iconIdx": 12
     },
     {
       "icon": {
@@ -640,14 +666,14 @@
       "attrs": [],
       "properties": {
         "order": 1395,
-        "id": 11,
+        "id": 12,
         "name": "StreetFighterSymbol",
         "prevSize": 32,
         "code": 59664
       },
       "setIdx": 0,
       "setId": 0,
-      "iconIdx": 12
+      "iconIdx": 13
     },
     {
       "icon": {
@@ -678,14 +704,14 @@
       ],
       "properties": {
         "order": 1396,
-        "id": 12,
+        "id": 13,
         "name": "eSports-icon-01",
         "prevSize": 32,
         "code": 59663
       },
       "setIdx": 0,
       "setId": 0,
-      "iconIdx": 13
+      "iconIdx": 14
     },
     {
       "icon": {
@@ -724,14 +750,14 @@
       ],
       "properties": {
         "order": 1397,
-        "id": 13,
+        "id": 14,
         "name": "Crossfire_Icon",
         "prevSize": 32,
         "code": 59662
       },
       "setIdx": 0,
       "setId": 0,
-      "iconIdx": 14
+      "iconIdx": 15
     },
     {
       "icon": {
@@ -762,14 +788,14 @@
       ],
       "properties": {
         "order": 1398,
-        "id": 14,
+        "id": 15,
         "name": "halo-icon",
         "prevSize": 32,
         "code": 59661
       },
       "setIdx": 0,
       "setId": 0,
-      "iconIdx": 15
+      "iconIdx": 16
     },
     {
       "icon": {
@@ -796,14 +822,14 @@
       ],
       "properties": {
         "order": 1399,
-        "id": 15,
+        "id": 16,
         "prevSize": 32,
         "code": 58992,
         "name": "blank"
       },
       "setIdx": 0,
       "setId": 0,
-      "iconIdx": 16
+      "iconIdx": 17
     },
     {
       "icon": {
@@ -906,7 +932,7 @@
       ],
       "properties": {
         "order": 1400,
-        "id": 16,
+        "id": 17,
         "prevSize": 32,
         "code": 59654,
         "codes": [
@@ -921,7 +947,7 @@
       },
       "setIdx": 0,
       "setId": 0,
-      "iconIdx": 17
+      "iconIdx": 18
     },
     {
       "icon": {
@@ -931,60 +957,19 @@
           "M819.2 0h-614.4c-112.6 0-204.8 90.1-204.8 204.8v614.4c0 114.7 92.2 204.8 204.8 204.8h614.4c112.6 0 204.8-90.1 204.8-204.8v-614.4c0-112.6-92.2-204.8-204.8-204.8zM325.6 243.7c0-6.1 2-8.2 8.2-8.2 8.2 0 18.4 0 26.6 0 6.1 0 8.2 2 8.2 8.2 0 32.8 0 65.5 0 96.3 0 30.7 0 63.5 0 94.2 0 6.1-2 8.2-8.2 8.2-8.2 0-18.4 0-26.6 0-6.1 0-8.2-2-8.2-8.2 0-63.5 0-127 0-190.5zM116.7 440.3c-18.4-41-38.9-84-57.3-124.9-10.2-22.5-20.5-47.1-32.8-69.6-4.1-8.2-2-10.2 6.1-10.2 10.2 0 22.5 0 32.8 0 6.1 0 8.2 2 10.2 6.1 14.3 32.8 28.7 65.5 45.1 100.4 4.1 2 4.1 4.1 6.1 6.1 2-2 2-4.1 2-6.1 14.3-32.8 30.7-65.5 45.1-100.4 2-4.1 4.1-6.1 10.2-6.1 10.2 0 22.5 0 32.8 0 8.2 0 10.2 2 6.1 10.2-28.7 61.4-55.3 120.8-84 182.3-2 4.1-4.1 8.2-6.1 12.3s-4.1 6.1-8.2 6.1c-4.1-0-6-2.1-8.1-6.2zM299 645.1c-36.9 18.4-75.8 26.6-116.7 8.2-36.9-16.4-55.3-45.1-59.4-86-6.1-55.3 32.8-106.5 90.1-114.7 32.8-4.1 61.4 4.1 86 24.6 4.1 4.1 4.1 6.1 2 10.2-6.1 8.2-14.3 14.3-20.5 22.5-4.1 4.1-6.1 4.1-10.2 0-18.4-14.3-38.9-16.4-61.4-8.2-22.5 10.2-32.8 28.7-34.8 51.2-2 30.7 24.6 59.4 55.3 59.4 8.2 0 16.4-2 24.6-2 4.1 0 6.1-2 6.1-6.1-2 0 0-4.1 0-8.2-6.1 0-12.3 0-16.4 0-6.1 0-8.2-2-8.2-8.2 0-8.2 0-16.4 0-26.6 0-4.1 2-6.1 6.1-6.1 18.4 0 36.9 0 55.3 0 4.1 0 6.1 2 6.1 6.1 0.1 24.5 0.1 51.2 0.1 75.7-0 2-2 6.1-4.1 8.2zM309.2 430.1c0 2 0 4.1 0 4.1 0 8.2-2 10.2-10.2 10.2s-18.4 0-26.6 0-10.2-4.1-10.2-10.2c0-6.1 0-12.3 0-18.4-8.2 0-16.4 0-26.6 0-12.3 0-12.3 0-16.4 12.3 0 2-2 6.1-2 8.2-2 6.1-4.1 8.2-12.3 8.2-14.3 0-26.6 0-41 0-6.1 0-8.2-2-6.1-8.2 6.1-12.3 12.3-26.6 18.4-38.9 22.5-51.2 47.1-100.4 69.6-151.6 2-6.1 6.1-8.2 12.3-8.2 16.1 0 32.2 0 48.3 0 0.3 0 0.6 0 0.8 0 0.5 0 1.3 0 2 0 0 8.2 0 18.4 0 26.6 0 55.3 0 110.6 0 165.9zM436.2 659.5c-34.8 0-71.7 0-106.5 0-6.1 0-8.2-2-8.2-8.2 0-63.5 0-127 0-190.5 0-6.1 2-8.2 8.2-8.2 10.2 0 20.5 0 30.7 0 6.1 0 8.2 2 8.2 8.2 0 49.2 0 98.3 0 147.5 2 4.1 2 6.1 2 8.2 2 0 4.1 0 6.1 0 20.5 0 41 0 59.4 0 6.1 0 8.2 2 8.2 8.2 0.1 8.1 0.1 18.4 0.1 26.6-0 6.1-2 8.2-8.2 8.2zM567.3 665.6c-2 0-2 2-4.1 2 6.1 2 6.1 8.2 6.1 12.3-2 38.9-6.1 79.9-8.2 118.8-2 26.6-4.1 55.3-6.1 81.9-2 16.4-4.1 32.8-6.1 49.2 0 2 0 2-2 4.1 0-8.2-2-16.4-2-24.6-4.1-51.2-8.2-100.4-12.3-151.6-2-26.6-4.1-55.3-6.1-81.9 0-2 2-6.1 4.1-8.2-8.2-2-14.3-4.1-22.5-8.2-36.9-16.4-71.7-55.3-67.6-110.6 4.1-41 34.8-79.9 75.8-94.2 2 0 4.1 0 4.1-2-26.6-28.7-55.3-59.4-84-90.1 0 2 0 4.1 0 6.1 0 22.5 0 47.1 0 69.6 0 6.1 0 8.2-8.2 8.2-10.2 0-20.5 0-30.7 0-6.1 0-8.2-2-8.2-8.2 0-63.5 0-127 0-190.5 0-4.1 0-8.2 4.1-8.2 4.1-2 8.2-2 12.3 2 20.5 20.5 38.9 43 59.4 65.5l57.3 69.6c0-30.7 0-61.4 0-94.2 0-10.2 0-22.5 0-32.8 0-8.2 0-10.2 10.2-10.2 8.2 0 18.4 0 26.6 0s10.2 2 10.2 10.2c0 65.5 0 131.1 0 196.6 0 4.1 2 6.1 6.1 8.2 43 10.2 73.7 51.2 77.8 96.3 4.1 55.5-34.8 104.7-86 114.9zM819.2 649.2c4.1 8.2 2 12.3-6.1 12.3-10.2 0-22.5 0-32.8 0-4.1 0-8.2-2-10.2-6.1-12.3-22.5-22.5-47.1-34.8-69.6-2-4.1-4.1-4.1-8.2-4.1-4.1-2-8.2-2-14.3-2 0 2 0 4.1 0 6.1 0 22.5 0 43 0 65.5 0 6.1-2 8.2-8.2 8.2-10.2 0-20.5 0-30.7 0-6.1 0-8.2-2-8.2-8.2 0-63.5 0-127 0-188.4 0-6.1 2-8.2 8.2-8.2 28.7 0 59.4 0 88.1 0s53.2 20.5 59.4 49.2c6.1 28.7-6.1 55.3-32.8 69.6-2 2-6.1 2-8.2 4.1 12.2 24.5 26.5 47 38.8 71.6zM991.2 464.9c-20.5 30.7-41 61.4-61.4 92.2-2 2-2 6.1-2 8.2 0 28.7 0 57.3 0 84 0 8.2-2 10.2-10.2 10.2-10.2 0-18.4 0-28.7 0-8.2 0-8.2-2-8.2-8.2 0-28.7 0-57.3 0-86 0-2 0-6.1-2-8.2-20.5-30.7-38.9-59.4-59.4-90.1-2-2-4.1-6.1-2-8.2s6.1-4.1 8.2-4.1c10.2 0 20.5 0 30.7 0 4.1 0 8.2 2 10.2 6.1 12.3 18.4 22.5 34.8 34.8 51.2 4.1 2 6.1 4.1 6.1 6.1 12.3-16.4 22.5-32.8 32.8-49.2 12.3-16.4 6.1-12.3 24.6-14.3 8.2 0 14.3 0 22.5 0 2 0 6.1 2 6.1 4.1s0 4.1-2.1 6.2z",
           "M237.6 366.6c8.2 0 14.3 0 22.5 0 0-14.3 0-28.7 0-43-4.1 2-20.5 34.8-22.5 43z"
         ],
-        "attrs": [
-          {
-            "fill": "rgb(0, 0, 0)"
-          },
-          {
-            "fill": "rgb(0, 0, 0)"
-          },
-          {
-            "fill": "rgb(0, 0, 0)"
-          },
-          {
-            "fill": "rgb(0, 0, 0)"
-          }
-        ],
+        "attrs": [],
         "isMulticolor": false,
         "isMulticolor2": false,
-        "colorPermutations": {
-          "111112552552551": [
-            {
-              "f": 0
-            },
-            {
-              "f": 0
-            },
-            {
-              "f": 0
-            },
-            {
-              "f": 0
-            }
-          ]
-        },
+        "colorPermutations": {},
         "tags": [
           "vainglory"
         ],
         "grid": 0
       },
-      "attrs": [
-        {
-          "fill": "rgb(0, 0, 0)"
-        },
-        {
-          "fill": "rgb(0, 0, 0)"
-        },
-        {
-          "fill": "rgb(0, 0, 0)"
-        },
-        {
-          "fill": "rgb(0, 0, 0)"
-        }
-      ],
+      "attrs": [],
       "properties": {
         "order": 1401,
-        "id": 17,
+        "id": 18,
         "prevSize": 32,
         "code": 59660,
         "codes": [
@@ -1002,7 +987,7 @@
       },
       "setIdx": 0,
       "setId": 0,
-      "iconIdx": 18
+      "iconIdx": 19
     },
     {
       "icon": {
@@ -1023,14 +1008,14 @@
       "attrs": [],
       "properties": {
         "order": 1550,
-        "id": 18,
+        "id": 19,
         "prevSize": 32,
         "code": 59653,
         "name": "virtualcarracing"
       },
       "setIdx": 0,
       "setId": 0,
-      "iconIdx": 19
+      "iconIdx": 20
     },
     {
       "icon": {
@@ -1051,14 +1036,14 @@
       "attrs": [],
       "properties": {
         "order": 1402,
-        "id": 19,
+        "id": 20,
         "prevSize": 32,
         "code": 59652,
         "name": "callofduty"
       },
       "setIdx": 0,
       "setId": 0,
-      "iconIdx": 20
+      "iconIdx": 21
     },
     {
       "icon": {
@@ -1080,14 +1065,14 @@
       "attrs": [],
       "properties": {
         "order": 1403,
-        "id": 20,
+        "id": 21,
         "prevSize": 32,
         "code": 33,
         "name": "counter-strike"
       },
       "setIdx": 0,
       "setId": 0,
-      "iconIdx": 21
+      "iconIdx": 22
     },
     {
       "icon": {
@@ -1109,14 +1094,14 @@
       "attrs": [],
       "properties": {
         "order": 1404,
-        "id": 21,
+        "id": 22,
         "prevSize": 32,
         "code": 34,
         "name": "league-of-legends"
       },
       "setIdx": 0,
       "setId": 0,
-      "iconIdx": 22
+      "iconIdx": 23
     },
     {
       "icon": {
@@ -1138,14 +1123,14 @@
       "attrs": [],
       "properties": {
         "order": 1405,
-        "id": 22,
+        "id": 23,
         "prevSize": 32,
         "code": 35,
         "name": "halo"
       },
       "setIdx": 0,
       "setId": 0,
-      "iconIdx": 23
+      "iconIdx": 24
     },
     {
       "icon": {
@@ -1167,14 +1152,14 @@
       "attrs": [],
       "properties": {
         "order": 1406,
-        "id": 23,
+        "id": 24,
         "prevSize": 32,
         "code": 36,
         "name": "dota"
       },
       "setIdx": 0,
       "setId": 0,
-      "iconIdx": 24
+      "iconIdx": 25
     },
     {
       "icon": {
@@ -1196,14 +1181,14 @@
       "attrs": [],
       "properties": {
         "order": 1407,
-        "id": 24,
+        "id": 25,
         "prevSize": 32,
         "code": 37,
         "name": "heroes-of-the-storm"
       },
       "setIdx": 0,
       "setId": 0,
-      "iconIdx": 25
+      "iconIdx": 26
     },
     {
       "icon": {
@@ -1228,14 +1213,14 @@
       "attrs": [],
       "properties": {
         "order": 1408,
-        "id": 25,
+        "id": 26,
         "prevSize": 32,
         "code": 38,
         "name": "hearthstone"
       },
       "setIdx": 0,
       "setId": 0,
-      "iconIdx": 26
+      "iconIdx": 27
     },
     {
       "icon": {
@@ -1257,14 +1242,14 @@
       "attrs": [],
       "properties": {
         "order": 1409,
-        "id": 26,
+        "id": 27,
         "prevSize": 32,
         "code": 39,
         "name": "mortal-kombat"
       },
       "setIdx": 0,
       "setId": 0,
-      "iconIdx": 27
+      "iconIdx": 28
     },
     {
       "icon": {
@@ -1286,14 +1271,14 @@
       "attrs": [],
       "properties": {
         "order": 1410,
-        "id": 27,
+        "id": 28,
         "prevSize": 32,
         "code": 40,
         "name": "world-of-tanks"
       },
       "setIdx": 0,
       "setId": 0,
-      "iconIdx": 28
+      "iconIdx": 29
     },
     {
       "icon": {
@@ -1323,14 +1308,14 @@
       "attrs": [],
       "properties": {
         "order": 1411,
-        "id": 28,
+        "id": 29,
         "prevSize": 32,
         "code": 41,
         "name": "world-of-warcraft"
       },
       "setIdx": 0,
       "setId": 0,
-      "iconIdx": 29
+      "iconIdx": 30
     },
     {
       "icon": {
@@ -1353,14 +1338,14 @@
       "attrs": [],
       "properties": {
         "order": 1412,
-        "id": 29,
+        "id": 30,
         "prevSize": 32,
         "code": 42,
         "name": "overwatch"
       },
       "setIdx": 0,
       "setId": 0,
-      "iconIdx": 30
+      "iconIdx": 31
     },
     {
       "icon": {
@@ -1383,14 +1368,14 @@
       "attrs": [],
       "properties": {
         "order": 1413,
-        "id": 30,
+        "id": 31,
         "prevSize": 32,
         "code": 43,
         "name": "smite"
       },
       "setIdx": 0,
       "setId": 0,
-      "iconIdx": 31
+      "iconIdx": 32
     },
     {
       "icon": {
@@ -1415,14 +1400,14 @@
       "attrs": [],
       "properties": {
         "order": 1414,
-        "id": 31,
+        "id": 32,
         "prevSize": 32,
         "code": 44,
         "name": "smash"
       },
       "setIdx": 0,
       "setId": 0,
-      "iconIdx": 32
+      "iconIdx": 33
     },
     {
       "icon": {
@@ -1461,14 +1446,14 @@
       "attrs": [],
       "properties": {
         "order": 1415,
-        "id": 32,
+        "id": 33,
         "prevSize": 32,
         "code": 45,
         "name": "starcraft"
       },
       "setIdx": 0,
       "setId": 0,
-      "iconIdx": 33
+      "iconIdx": 34
     },
     {
       "icon": {
@@ -1492,14 +1477,14 @@
       "attrs": [],
       "properties": {
         "order": 1549,
-        "id": 33,
+        "id": 34,
         "prevSize": 32,
         "code": 59651,
         "name": "Outright"
       },
       "setIdx": 0,
       "setId": 0,
-      "iconIdx": 34
+      "iconIdx": 35
     },
     {
       "icon": {
@@ -1520,14 +1505,14 @@
       "attrs": [],
       "properties": {
         "order": 1416,
-        "id": 34,
+        "id": 35,
         "prevSize": 32,
         "code": 59650,
         "name": "Financials"
       },
       "setIdx": 0,
       "setId": 0,
-      "iconIdx": 35
+      "iconIdx": 36
     },
     {
       "icon": {
@@ -1549,14 +1534,14 @@
       "attrs": [],
       "properties": {
         "order": 1417,
-        "id": 35,
+        "id": 36,
         "prevSize": 32,
         "code": 59648,
         "name": "EBasketball"
       },
       "setIdx": 0,
       "setId": 0,
-      "iconIdx": 36
+      "iconIdx": 37
     },
     {
       "icon": {
@@ -1584,14 +1569,14 @@
       "attrs": [],
       "properties": {
         "order": 1418,
-        "id": 36,
+        "id": 37,
         "prevSize": 32,
         "code": 59649,
         "name": "CyberFootball"
       },
       "setIdx": 0,
       "setId": 0,
-      "iconIdx": 37
+      "iconIdx": 38
     },
     {
       "icon": {
@@ -1599,40 +1584,26 @@
           "M702.4 665.6c172-197.6 107.2-489.6-96.8-609.6-196-115.2-444.8-47.2-554.4 152-53.6 97.6-66.4 200.8-32.8 306.4 46.4 145.6 148 235.2 293.6 276 0 20 1.6 39.2 5.6 56 19.2 95.2 86.4 146.4 146.4 166.4 87.2 28.8 184.8-0.8 241.6-73.6 46.4-58.4 67.2-148.8 19.2-239.2-6.4-11.2-13.6-23.2-22.4-34.4zM470.4 65.6c33.6-5.6 65.6 2.4 96 16.8 56 26.4 96.8 68 122.4 124 4.8 11.2 9.6 23.2 11.2 35.2 8 56.8-24 91.2-81.6 90.4-91.2-0.8-196-89.6-211.2-179.2-8-44 17.6-80 63.2-87.2zM408 524.8c2.4 0 4.8 0 7.2-0.8 7.2-2.4 13.6-8.8 16-17.6 0-0.8 0-2.4 0.8-3.2 0.8-7.2-0.8-14.4-5.6-19.2 4 0.8 28 24 19.2 35.2v0.8c-2.4 8.8-8.8 15.2-16.8 17.6-12.8 4-24-3.2-28.8-14.4 1.6 0 4.8 1.6 8 1.6zM361.6 477.6c7.2-2.4 13.6-8.8 16-17.6 0-1.6 0-2.4 0.8-4 0.8-7.2-1.6-14.4-5.6-19.2 3.2 0.8 11.2 4 10.4 5.6 8 6.4 12 17.6 8.8 29.6 0 0.8 0 0.8 0 1.6-2.4 8.8-8.8 15.2-16.8 17.6-9.6 3.2-19.2-0.8-24.8-8-1.6-2.4-3.2-4.8-4-7.2 3.2 2.4 8.8 4 15.2 1.6zM174.4 128.8c1.6 4 4.8 8 9.6 10.4 5.6 2.4 12.8 2.4 18.4-0.8 5.6-4 8.8-9.6 8.8-16 4 5.6 4.8 12 3.2 18.4-0.8 8.8-6.4 14.4-15.2 16.8-9.6 2.4-16-0.8-20-7.2-5.6-7.2-7.2-15.2-4.8-21.6zM176.8 200c-4-4-5.6-8.8-5.6-14.4 0-0.8 0-0.8 0-0.8 0-1.6 0-3.2 0.8-4.8 1.6 4 4.8 8 9.6 10.4 2.4 1.6 5.6 1.6 8.8 1.6 0.8 0 1.6 0 2.4 0h0.8c5.6-1.6 10.4-6.4 15.2-14.4 0-1.6 0.8-2.4 0.8-4 0 0.8 0.8 0.8 0.8 1.6 0 0 0 0 0-0.8 0 0.8 0.8 1.6 0.8 2.4 0.8 2.4 1.6 4.8 1.6 8 1.6 10.4-3.2 18.4-14.4 21.6-9.6 3.2-17.6 0-21.6-6.4zM196 262.4c-9.6-4-15.2-12.8-16-21.6-1.6-1.6-1.6-2.4 0-1.6 0-1.6 0-3.2 0-5.6 2.4 4.8 6.4 8.8 12 11.2 4.8 1.6 10.4 1.6 15.2 0 11.2-5.6 14.4-22.4 16-23.2 9.6 10.4 8.8 28-4 37.6-3.2 2.4-8 4-12 4-5.6 0.8-8.8 0-6.4-0.8-1.6 0.8-3.2 0.8-4.8 0zM234.4 324c-0.8 0-2.4 0.8-3.2 0.8s-2.4 0-3.2 0.8h-0.8c-3.2 0-6.4 0-9.6-1.6-8-3.2-13.6-9.6-15.2-16.8-0.8-1.6-0.8-3.2-0.8-3.2 0-2.4 0-5.6 0-8 2.4 4.8 6.4 8.8 12 11.2 0.8 0 1.6 0 2.4 0.8 21.6 3.2 30.4-22.4 31.2-23.2 9.6 16.8 5.6 32-8.8 39.2-0.8 0.8-1.6 0.8-2.4 0.8-0.8-1.6-1.6-1.6-1.6-0.8zM264.8 381.6c-9.6-1.6-16-8-18.4-15.2-2.4-2.4-5.6-5.6-8-8.8 2.4 0.8 4.8 0.8 6.4 0.8 0-0.8 0-0.8 0-1.6 0.8 0.8 0.8 1.6 1.6 2.4 20.8 2.4 33.6-4.8 36.8-27.2 3.2 4 4.8 8 6.4 11.2 6.4 9.6 7.2 22.4-2.4 32-5.6 4.8-14.4 8-22.4 6.4zM315.2 439.2c-9.6 1.6-24.8-21.6-24.8-23.2 2.4 2.4 4.8 4.8 8.8 6.4 1.6 0.8 4 1.6 5.6 1.6 8 0.8 16-2.4 20.8-8.8s5.6-13.6 3.2-19.2c0-0.8 0-0.8 0-1.6 0 0 0.8 0 0.8 0.8v-0.8c0.8 0.8 0.8 1.6 1.6 1.6 10.4 8 12.8 24 3.2 35.2-5.6 4.8-12.8 8-19.2 8zM531.2 1006.4c-95.2 0-175.2-67.2-195.2-156.8-3.2-14.4-4.8-30.4-4.8-45.6 0.8-112.8 92-202.4 204-200.8 77.6 0.8 144.8 46.4 177.6 112 14.4 28 22.4 60 21.6 94.4-1.6 108.8-92 197.6-203.2 196.8z"
         ],
         "width": 802,
-        "attrs": [
-          {
-            "fill": "rgb(1, 1, 1)"
-          }
-        ],
+        "attrs": [],
         "isMulticolor": false,
         "isMulticolor2": false,
-        "colorPermutations": {
-          "111112552552551": [
-            {
-              "f": 1
-            }
-          ]
-        },
+        "colorPermutations": {},
         "tags": [
           "All sports_bowls"
         ],
         "grid": 0
       },
-      "attrs": [
-        {
-          "fill": "rgb(1, 1, 1)"
-        }
-      ],
+      "attrs": [],
       "properties": {
         "order": 1419,
-        "id": 37,
+        "id": 38,
         "prevSize": 32,
         "code": 59392,
         "name": "Allsports_bowls"
       },
       "setIdx": 0,
       "setId": 0,
-      "iconIdx": 38
+      "iconIdx": 39
     },
     {
       "icon": {
@@ -1683,14 +1654,14 @@
       ],
       "properties": {
         "order": 1420,
-        "id": 38,
+        "id": 39,
         "prevSize": 32,
         "code": 46,
         "name": "vbet-sport-icons_futsal"
       },
       "setIdx": 0,
       "setId": 0,
-      "iconIdx": 39
+      "iconIdx": 40
     },
     {
       "icon": {
@@ -1717,14 +1688,14 @@
       ],
       "properties": {
         "order": 1421,
-        "id": 39,
+        "id": 40,
         "prevSize": 32,
         "code": 47,
         "name": "vbet-sport-icons_tablehockey"
       },
       "setIdx": 0,
       "setId": 0,
-      "iconIdx": 40
+      "iconIdx": 41
     },
     {
       "icon": {
@@ -1751,14 +1722,14 @@
       ],
       "properties": {
         "order": 1422,
-        "id": 40,
+        "id": 41,
         "prevSize": 32,
         "code": 48,
         "name": "vbet-sport-icons_tabletennis"
       },
       "setIdx": 0,
       "setId": 0,
-      "iconIdx": 41
+      "iconIdx": 42
     },
     {
       "icon": {
@@ -1789,14 +1760,14 @@
       ],
       "properties": {
         "order": 1423,
-        "id": 41,
+        "id": 42,
         "prevSize": 32,
         "code": 49,
         "name": "vbet-sport-icons_taekwondo"
       },
       "setIdx": 0,
       "setId": 0,
-      "iconIdx": 42
+      "iconIdx": 43
     },
     {
       "icon": {
@@ -1831,14 +1802,14 @@
       ],
       "properties": {
         "order": 1424,
-        "id": 42,
+        "id": 43,
         "prevSize": 32,
         "code": 50,
         "name": "vbet-sport-icons_tankbiathlon"
       },
       "setIdx": 0,
       "setId": 0,
-      "iconIdx": 43
+      "iconIdx": 44
     },
     {
       "icon": {
@@ -1869,14 +1840,14 @@
       ],
       "properties": {
         "order": 1425,
-        "id": 43,
+        "id": 44,
         "prevSize": 32,
         "code": 51,
         "name": "vbet-sport-icons_telecast"
       },
       "setIdx": 0,
       "setId": 0,
-      "iconIdx": 44
+      "iconIdx": 45
     },
     {
       "icon": {
@@ -1907,14 +1878,14 @@
       ],
       "properties": {
         "order": 1426,
-        "id": 44,
+        "id": 45,
         "prevSize": 32,
         "code": 52,
         "name": "vbet-sport-icons_tennis"
       },
       "setIdx": 0,
       "setId": 0,
-      "iconIdx": 45
+      "iconIdx": 46
     },
     {
       "icon": {
@@ -1945,14 +1916,14 @@
       ],
       "properties": {
         "order": 1427,
-        "id": 45,
+        "id": 46,
         "prevSize": 32,
         "code": 53,
         "name": "vbet-sport-icons_triathlon"
       },
       "setIdx": 0,
       "setId": 0,
-      "iconIdx": 46
+      "iconIdx": 47
     },
     {
       "icon": {
@@ -1983,14 +1954,14 @@
       ],
       "properties": {
         "order": 1428,
-        "id": 46,
+        "id": 47,
         "prevSize": 32,
         "code": 54,
         "name": "vbet-sport-icons_UFC"
       },
       "setIdx": 0,
       "setId": 0,
-      "iconIdx": 47
+      "iconIdx": 48
     },
     {
       "icon": {
@@ -2021,14 +1992,14 @@
       ],
       "properties": {
         "order": 1429,
-        "id": 47,
+        "id": 48,
         "prevSize": 32,
         "code": 55,
         "name": "vbet-sport-icons_ultimatefighting"
       },
       "setIdx": 0,
       "setId": 0,
-      "iconIdx": 48
+      "iconIdx": 49
     },
     {
       "icon": {
@@ -2055,14 +2026,14 @@
       ],
       "properties": {
         "order": 1548,
-        "id": 48,
+        "id": 49,
         "prevSize": 32,
         "code": 56,
         "name": "vbet-sport-icons_virtualdogs"
       },
       "setIdx": 0,
       "setId": 0,
-      "iconIdx": 49
+      "iconIdx": 50
     },
     {
       "icon": {
@@ -2089,14 +2060,14 @@
       ],
       "properties": {
         "order": 1430,
-        "id": 49,
+        "id": 50,
         "prevSize": 32,
         "code": 57,
         "name": "vbet-sport-icons_virtualhorses"
       },
       "setIdx": 0,
       "setId": 0,
-      "iconIdx": 50
+      "iconIdx": 51
     },
     {
       "icon": {
@@ -2135,14 +2106,14 @@
       ],
       "properties": {
         "order": 1431,
-        "id": 50,
+        "id": 51,
         "prevSize": 32,
         "code": 58,
         "name": "vbet-sport-icons_virtualtennis"
       },
       "setIdx": 0,
       "setId": 0,
-      "iconIdx": 51
+      "iconIdx": 52
     },
     {
       "icon": {
@@ -2169,14 +2140,14 @@
       ],
       "properties": {
         "order": 1432,
-        "id": 51,
+        "id": 52,
         "prevSize": 32,
         "code": 59,
         "name": "vbet-sport-icons_volleyball"
       },
       "setIdx": 0,
       "setId": 0,
-      "iconIdx": 52
+      "iconIdx": 53
     },
     {
       "icon": {
@@ -2215,14 +2186,14 @@
       ],
       "properties": {
         "order": 1433,
-        "id": 52,
+        "id": 53,
         "prevSize": 32,
         "code": 60,
         "name": "vbet-sport-icons_waterpolo"
       },
       "setIdx": 0,
       "setId": 0,
-      "iconIdx": 53
+      "iconIdx": 54
     },
     {
       "icon": {
@@ -2261,14 +2232,14 @@
       ],
       "properties": {
         "order": 1434,
-        "id": 53,
+        "id": 54,
         "prevSize": 32,
         "code": 61,
         "name": "vbet-sport-icons_whatwherewhen"
       },
       "setIdx": 0,
       "setId": 0,
-      "iconIdx": 54
+      "iconIdx": 55
     },
     {
       "icon": {
@@ -2303,14 +2274,14 @@
       ],
       "properties": {
         "order": 1435,
-        "id": 54,
+        "id": 55,
         "prevSize": 32,
         "code": 62,
         "name": "vbet-sport-icons_yachting"
       },
       "setIdx": 0,
       "setId": 0,
-      "iconIdx": 55
+      "iconIdx": 56
     },
     {
       "icon": {
@@ -2331,14 +2302,14 @@
       "attrs": [],
       "properties": {
         "order": 1436,
-        "id": 55,
+        "id": 56,
         "prevSize": 32,
         "code": 58991,
         "name": "soccer"
       },
       "setIdx": 0,
       "setId": 0,
-      "iconIdx": 56
+      "iconIdx": 57
     },
     {
       "icon": {
@@ -2373,14 +2344,14 @@
       ],
       "properties": {
         "order": 1437,
-        "id": 56,
+        "id": 57,
         "prevSize": 32,
         "code": 58880,
         "name": "Allsports_allsporticon"
       },
       "setIdx": 0,
       "setId": 0,
-      "iconIdx": 57
+      "iconIdx": 58
     },
     {
       "icon": {
@@ -2411,14 +2382,14 @@
       ],
       "properties": {
         "order": 1438,
-        "id": 57,
+        "id": 58,
         "prevSize": 32,
         "code": 58881,
         "name": "Allsports_alpinskiing"
       },
       "setIdx": 0,
       "setId": 0,
-      "iconIdx": 58
+      "iconIdx": 59
     },
     {
       "icon": {
@@ -2445,14 +2416,14 @@
       ],
       "properties": {
         "order": 1439,
-        "id": 58,
+        "id": 59,
         "prevSize": 32,
         "code": 58882,
         "name": "Allsports_americanfootball"
       },
       "setIdx": 0,
       "setId": 0,
-      "iconIdx": 59
+      "iconIdx": 60
     },
     {
       "icon": {
@@ -2483,14 +2454,14 @@
       ],
       "properties": {
         "order": 1440,
-        "id": 59,
+        "id": 60,
         "prevSize": 32,
         "code": 58883,
         "name": "Allsports_angling"
       },
       "setIdx": 0,
       "setId": 0,
-      "iconIdx": 60
+      "iconIdx": 61
     },
     {
       "icon": {
@@ -2537,14 +2508,14 @@
       ],
       "properties": {
         "order": 1441,
-        "id": 60,
+        "id": 61,
         "prevSize": 32,
         "code": 58884,
         "name": "Allsports_archery"
       },
       "setIdx": 0,
       "setId": 0,
-      "iconIdx": 61
+      "iconIdx": 62
     },
     {
       "icon": {
@@ -2583,14 +2554,14 @@
       ],
       "properties": {
         "order": 1442,
-        "id": 61,
+        "id": 62,
         "prevSize": 32,
         "code": 58885,
         "name": "Allsports_australianfootball"
       },
       "setIdx": 0,
       "setId": 0,
-      "iconIdx": 62
+      "iconIdx": 63
     },
     {
       "icon": {
@@ -2617,14 +2588,14 @@
       ],
       "properties": {
         "order": 1443,
-        "id": 62,
+        "id": 63,
         "prevSize": 32,
         "code": 58886,
         "name": "Allsports_badminton"
       },
       "setIdx": 0,
       "setId": 0,
-      "iconIdx": 63
+      "iconIdx": 64
     },
     {
       "icon": {
@@ -2659,14 +2630,14 @@
       ],
       "properties": {
         "order": 1547,
-        "id": 63,
+        "id": 64,
         "prevSize": 32,
         "code": 58887,
         "name": "Allsports_balls"
       },
       "setIdx": 0,
       "setId": 0,
-      "iconIdx": 64
+      "iconIdx": 65
     },
     {
       "icon": {
@@ -2693,14 +2664,14 @@
       ],
       "properties": {
         "order": 1444,
-        "id": 64,
+        "id": 65,
         "prevSize": 32,
         "code": 58888,
         "name": "Allsports_baseball"
       },
       "setIdx": 0,
       "setId": 0,
-      "iconIdx": 65
+      "iconIdx": 66
     },
     {
       "icon": {
@@ -2727,14 +2698,14 @@
       ],
       "properties": {
         "order": 1445,
-        "id": 65,
+        "id": 66,
         "prevSize": 32,
         "code": 58889,
         "name": "Allsports_basketball"
       },
       "setIdx": 0,
       "setId": 0,
-      "iconIdx": 66
+      "iconIdx": 67
     },
     {
       "icon": {
@@ -2765,14 +2736,14 @@
       ],
       "properties": {
         "order": 1446,
-        "id": 66,
+        "id": 67,
         "prevSize": 32,
         "code": 58890,
         "name": "Allsports_beachhandball"
       },
       "setIdx": 0,
       "setId": 0,
-      "iconIdx": 67
+      "iconIdx": 68
     },
     {
       "icon": {
@@ -2803,14 +2774,14 @@
       ],
       "properties": {
         "order": 1447,
-        "id": 67,
+        "id": 68,
         "prevSize": 32,
         "code": 58891,
         "name": "Allsports_beachsoccer"
       },
       "setIdx": 0,
       "setId": 0,
-      "iconIdx": 68
+      "iconIdx": 69
     },
     {
       "icon": {
@@ -2841,14 +2812,14 @@
       ],
       "properties": {
         "order": 1448,
-        "id": 68,
+        "id": 69,
         "prevSize": 32,
         "code": 58892,
         "name": "Allsports_beachvolleyball"
       },
       "setIdx": 0,
       "setId": 0,
-      "iconIdx": 69
+      "iconIdx": 70
     },
     {
       "icon": {
@@ -2887,14 +2858,14 @@
       ],
       "properties": {
         "order": 1449,
-        "id": 69,
+        "id": 70,
         "prevSize": 32,
         "code": 58893,
         "name": "Allsports_biathlon"
       },
       "setIdx": 0,
       "setId": 0,
-      "iconIdx": 70
+      "iconIdx": 71
     },
     {
       "icon": {
@@ -2957,14 +2928,14 @@
       ],
       "properties": {
         "order": 1450,
-        "id": 70,
+        "id": 71,
         "prevSize": 32,
         "code": 58894,
         "name": "Allsports_bobsleigh"
       },
       "setIdx": 0,
       "setId": 0,
-      "iconIdx": 71
+      "iconIdx": 72
     },
     {
       "icon": {
@@ -2991,14 +2962,14 @@
       ],
       "properties": {
         "order": 1451,
-        "id": 71,
+        "id": 72,
         "prevSize": 32,
         "code": 58895,
         "name": "Allsports_boxing"
       },
       "setIdx": 0,
       "setId": 0,
-      "iconIdx": 72
+      "iconIdx": 73
     },
     {
       "icon": {
@@ -3029,14 +3000,14 @@
       ],
       "properties": {
         "order": 1452,
-        "id": 72,
+        "id": 73,
         "prevSize": 32,
         "code": 58896,
         "name": "Allsports_bridge"
       },
       "setIdx": 0,
       "setId": 0,
-      "iconIdx": 73
+      "iconIdx": 74
     },
     {
       "icon": {
@@ -3067,14 +3038,14 @@
       ],
       "properties": {
         "order": 1453,
-        "id": 73,
+        "id": 74,
         "prevSize": 32,
         "code": 58897,
         "name": "Allsports_canoe"
       },
       "setIdx": 0,
       "setId": 0,
-      "iconIdx": 74
+      "iconIdx": 75
     },
     {
       "icon": {
@@ -3117,14 +3088,14 @@
       ],
       "properties": {
         "order": 1454,
-        "id": 74,
+        "id": 75,
         "prevSize": 32,
         "code": 58898,
         "name": "Allsports_chess"
       },
       "setIdx": 0,
       "setId": 0,
-      "iconIdx": 75
+      "iconIdx": 76
     },
     {
       "icon": {
@@ -3151,14 +3122,14 @@
       ],
       "properties": {
         "order": 1455,
-        "id": 75,
+        "id": 76,
         "prevSize": 32,
         "code": 58899,
         "name": "Allsports_cricket"
       },
       "setIdx": 0,
       "setId": 0,
-      "iconIdx": 76
+      "iconIdx": 77
     },
     {
       "icon": {
@@ -3193,14 +3164,14 @@
       ],
       "properties": {
         "order": 1456,
-        "id": 76,
+        "id": 77,
         "prevSize": 32,
         "code": 58900,
         "name": "Allsports_curling"
       },
       "setIdx": 0,
       "setId": 0,
-      "iconIdx": 77
+      "iconIdx": 78
     },
     {
       "icon": {
@@ -3235,14 +3206,14 @@
       ],
       "properties": {
         "order": 1457,
-        "id": 77,
+        "id": 78,
         "prevSize": 32,
         "code": 58901,
         "name": "Allsports_cycling"
       },
       "setIdx": 0,
       "setId": 0,
-      "iconIdx": 78
+      "iconIdx": 79
     },
     {
       "icon": {
@@ -3277,14 +3248,14 @@
       ],
       "properties": {
         "order": 1546,
-        "id": 78,
+        "id": 79,
         "prevSize": 32,
         "code": 58902,
         "name": "Allsports_cyclocross"
       },
       "setIdx": 0,
       "setId": 0,
-      "iconIdx": 79
+      "iconIdx": 80
     },
     {
       "icon": {
@@ -3319,14 +3290,14 @@
       ],
       "properties": {
         "order": 1458,
-        "id": 79,
+        "id": 80,
         "prevSize": 32,
         "code": 58903,
         "name": "Allsports_darts"
       },
       "setIdx": 0,
       "setId": 0,
-      "iconIdx": 80
+      "iconIdx": 81
     },
     {
       "icon": {
@@ -3353,14 +3324,14 @@
       ],
       "properties": {
         "order": 1459,
-        "id": 80,
+        "id": 81,
         "prevSize": 32,
         "code": 58904,
         "name": "Allsports_diving"
       },
       "setIdx": 0,
       "setId": 0,
-      "iconIdx": 81
+      "iconIdx": 82
     },
     {
       "icon": {
@@ -3387,14 +3358,14 @@
       ],
       "properties": {
         "order": 1460,
-        "id": 81,
+        "id": 82,
         "prevSize": 32,
         "code": 58905,
         "name": "Allsports_electronicsports"
       },
       "setIdx": 0,
       "setId": 0,
-      "iconIdx": 82
+      "iconIdx": 83
     },
     {
       "icon": {
@@ -3421,14 +3392,14 @@
       ],
       "properties": {
         "order": 1461,
-        "id": 82,
+        "id": 83,
         "prevSize": 32,
         "code": 58906,
         "name": "Allsports_eurovision"
       },
       "setIdx": 0,
       "setId": 0,
-      "iconIdx": 83
+      "iconIdx": 84
     },
     {
       "icon": {
@@ -3463,14 +3434,14 @@
       ],
       "properties": {
         "order": 1462,
-        "id": 83,
+        "id": 84,
         "prevSize": 32,
         "code": 58907,
         "name": "Allsports_extremsport"
       },
       "setIdx": 0,
       "setId": 0,
-      "iconIdx": 84
+      "iconIdx": 85
     },
     {
       "icon": {
@@ -3513,14 +3484,14 @@
       ],
       "properties": {
         "order": 1463,
-        "id": 84,
+        "id": 85,
         "prevSize": 32,
         "code": 58908,
         "name": "Allsports_fencing"
       },
       "setIdx": 0,
       "setId": 0,
-      "iconIdx": 85
+      "iconIdx": 86
     },
     {
       "icon": {
@@ -3547,14 +3518,14 @@
       ],
       "properties": {
         "order": 1464,
-        "id": 85,
+        "id": 86,
         "prevSize": 32,
         "code": 58909,
         "name": "Allsports_figureskating"
       },
       "setIdx": 0,
       "setId": 0,
-      "iconIdx": 86
+      "iconIdx": 87
     },
     {
       "icon": {
@@ -3581,14 +3552,14 @@
       ],
       "properties": {
         "order": 1465,
-        "id": 86,
+        "id": 87,
         "prevSize": 32,
         "code": 58910,
         "name": "Allsports_floorball"
       },
       "setIdx": 0,
       "setId": 0,
-      "iconIdx": 87
+      "iconIdx": 88
     },
     {
       "icon": {
@@ -3627,14 +3598,14 @@
       ],
       "properties": {
         "order": 1466,
-        "id": 87,
+        "id": 88,
         "prevSize": 32,
         "code": 58911,
         "name": "Allsports_formula1"
       },
       "setIdx": 0,
       "setId": 0,
-      "iconIdx": 88
+      "iconIdx": 89
     },
     {
       "icon": {
@@ -3685,14 +3656,14 @@
       ],
       "properties": {
         "order": 1467,
-        "id": 88,
+        "id": 89,
         "prevSize": 32,
         "code": 58912,
         "name": "Allsports_freestylewrestling"
       },
       "setIdx": 0,
       "setId": 0,
-      "iconIdx": 89
+      "iconIdx": 90
     },
     {
       "icon": {
@@ -3719,14 +3690,14 @@
       ],
       "properties": {
         "order": 1468,
-        "id": 89,
+        "id": 90,
         "prevSize": 32,
         "code": 58913,
         "name": "Allsports_gaelicfootball"
       },
       "setIdx": 0,
       "setId": 0,
-      "iconIdx": 90
+      "iconIdx": 91
     },
     {
       "icon": {
@@ -3753,14 +3724,14 @@
       ],
       "properties": {
         "order": 1469,
-        "id": 90,
+        "id": 91,
         "prevSize": 32,
         "code": 58914,
         "name": "Allsports_golf"
       },
       "setIdx": 0,
       "setId": 0,
-      "iconIdx": 91
+      "iconIdx": 92
     },
     {
       "icon": {
@@ -3791,14 +3762,14 @@
       ],
       "properties": {
         "order": 1470,
-        "id": 91,
+        "id": 92,
         "prevSize": 32,
         "code": 58915,
         "name": "Allsports_grasshockey"
       },
       "setIdx": 0,
       "setId": 0,
-      "iconIdx": 92
+      "iconIdx": 93
     },
     {
       "icon": {
@@ -3841,14 +3812,14 @@
       ],
       "properties": {
         "order": 1471,
-        "id": 92,
+        "id": 93,
         "prevSize": 32,
         "code": 58916,
         "name": "Allsports_greyhounds"
       },
       "setIdx": 0,
       "setId": 0,
-      "iconIdx": 93
+      "iconIdx": 94
     },
     {
       "icon": {
@@ -3879,14 +3850,14 @@
       ],
       "properties": {
         "order": 1545,
-        "id": 93,
+        "id": 94,
         "prevSize": 32,
         "code": 58917,
         "name": "Allsports_gymnastics"
       },
       "setIdx": 0,
       "setId": 0,
-      "iconIdx": 94
+      "iconIdx": 95
     },
     {
       "icon": {
@@ -3913,14 +3884,14 @@
       ],
       "properties": {
         "order": 1472,
-        "id": 94,
+        "id": 95,
         "prevSize": 32,
         "code": 58918,
         "name": "Allsports_handball"
       },
       "setIdx": 0,
       "setId": 0,
-      "iconIdx": 95
+      "iconIdx": 96
     },
     {
       "icon": {
@@ -3971,14 +3942,14 @@
       ],
       "properties": {
         "order": 1473,
-        "id": 95,
+        "id": 96,
         "prevSize": 32,
         "code": 58919,
         "name": "Allsports_hardathletics"
       },
       "setIdx": 0,
       "setId": 0,
-      "iconIdx": 96
+      "iconIdx": 97
     },
     {
       "icon": {
@@ -4009,14 +3980,14 @@
       ],
       "properties": {
         "order": 1474,
-        "id": 96,
+        "id": 97,
         "prevSize": 32,
         "code": 58920,
         "name": "Allsports_hockey-02"
       },
       "setIdx": 0,
       "setId": 0,
-      "iconIdx": 97
+      "iconIdx": 98
     },
     {
       "icon": {
@@ -4043,14 +4014,14 @@
       ],
       "properties": {
         "order": 1475,
-        "id": 97,
+        "id": 98,
         "prevSize": 32,
         "code": 58921,
         "name": "Allsports_hockey-26"
       },
       "setIdx": 0,
       "setId": 0,
-      "iconIdx": 98
+      "iconIdx": 99
     },
     {
       "icon": {
@@ -4081,14 +4052,14 @@
       ],
       "properties": {
         "order": 1476,
-        "id": 98,
+        "id": 99,
         "prevSize": 32,
         "code": 58922,
         "name": "Allsports_horsseracing"
       },
       "setIdx": 0,
       "setId": 0,
-      "iconIdx": 99
+      "iconIdx": 100
     },
     {
       "icon": {
@@ -4127,14 +4098,14 @@
       ],
       "properties": {
         "order": 1477,
-        "id": 99,
+        "id": 100,
         "prevSize": 32,
         "code": 58923,
         "name": "Allsports_hurling"
       },
       "setIdx": 0,
       "setId": 0,
-      "iconIdx": 100
+      "iconIdx": 101
     },
     {
       "icon": {
@@ -4161,14 +4132,14 @@
       ],
       "properties": {
         "order": 1478,
-        "id": 100,
+        "id": 101,
         "prevSize": 32,
         "code": 58924,
         "name": "Allsports_icehockey"
       },
       "setIdx": 0,
       "setId": 0,
-      "iconIdx": 101
+      "iconIdx": 102
     },
     {
       "icon": {
@@ -4199,14 +4170,14 @@
       ],
       "properties": {
         "order": 1479,
-        "id": 101,
+        "id": 102,
         "prevSize": 32,
         "code": 58925,
         "name": "Allsports_judo"
       },
       "setIdx": 0,
       "setId": 0,
-      "iconIdx": 102
+      "iconIdx": 103
     },
     {
       "icon": {
@@ -4233,14 +4204,14 @@
       ],
       "properties": {
         "order": 1480,
-        "id": 102,
+        "id": 103,
         "prevSize": 32,
         "code": 58926,
         "name": "Allsports_lacross"
       },
       "setIdx": 0,
       "setId": 0,
-      "iconIdx": 103
+      "iconIdx": 104
     },
     {
       "icon": {
@@ -4279,14 +4250,14 @@
       ],
       "properties": {
         "order": 1481,
-        "id": 103,
+        "id": 104,
         "prevSize": 32,
         "code": 58927,
         "name": "Allsports_lightathletic"
       },
       "setIdx": 0,
       "setId": 0,
-      "iconIdx": 104
+      "iconIdx": 105
     },
     {
       "icon": {
@@ -4329,14 +4300,14 @@
       ],
       "properties": {
         "order": 1482,
-        "id": 104,
+        "id": 105,
         "prevSize": 32,
         "code": 58928,
         "name": "Allsports_livemonitor"
       },
       "setIdx": 0,
       "setId": 0,
-      "iconIdx": 105
+      "iconIdx": 106
     },
     {
       "icon": {
@@ -4363,14 +4334,14 @@
       ],
       "properties": {
         "order": 1483,
-        "id": 105,
+        "id": 106,
         "prevSize": 32,
         "code": 58929,
         "name": "Allsports_lottery"
       },
       "setIdx": 0,
       "setId": 0,
-      "iconIdx": 106
+      "iconIdx": 107
     },
     {
       "icon": {
@@ -4409,14 +4380,14 @@
       ],
       "properties": {
         "order": 1484,
-        "id": 106,
+        "id": 107,
         "prevSize": 32,
         "code": 58930,
         "name": "Allsports_luge"
       },
       "setIdx": 0,
       "setId": 0,
-      "iconIdx": 107
+      "iconIdx": 108
     },
     {
       "icon": {
@@ -4447,14 +4418,14 @@
       ],
       "properties": {
         "order": 1485,
-        "id": 107,
+        "id": 108,
         "prevSize": 32,
         "code": 58931,
         "name": "Allsports_mafia"
       },
       "setIdx": 0,
       "setId": 0,
-      "iconIdx": 108
+      "iconIdx": 109
     },
     {
       "icon": {
@@ -4481,14 +4452,14 @@
       ],
       "properties": {
         "order": 1544,
-        "id": 108,
+        "id": 109,
         "prevSize": 32,
         "code": 58932,
         "name": "Allsports_minisoccer"
       },
       "setIdx": 0,
       "setId": 0,
-      "iconIdx": 109
+      "iconIdx": 110
     },
     {
       "icon": {
@@ -4539,14 +4510,14 @@
       ],
       "properties": {
         "order": 1486,
-        "id": 109,
+        "id": 110,
         "prevSize": 32,
         "code": 58933,
         "name": "Allsports_modernpentathlon"
       },
       "setIdx": 0,
       "setId": 0,
-      "iconIdx": 110
+      "iconIdx": 111
     },
     {
       "icon": {
@@ -4573,14 +4544,14 @@
       ],
       "properties": {
         "order": 1487,
-        "id": 110,
+        "id": 111,
         "prevSize": 32,
         "code": 58934,
         "name": "Allsports_motorbike"
       },
       "setIdx": 0,
       "setId": 0,
-      "iconIdx": 111
+      "iconIdx": 112
     },
     {
       "icon": {
@@ -4607,14 +4578,14 @@
       ],
       "properties": {
         "order": 1488,
-        "id": 111,
+        "id": 112,
         "prevSize": 32,
         "code": 58935,
         "name": "Allsports_motorsport"
       },
       "setIdx": 0,
       "setId": 0,
-      "iconIdx": 112
+      "iconIdx": 113
     },
     {
       "icon": {
@@ -4665,14 +4636,14 @@
       ],
       "properties": {
         "order": 1489,
-        "id": 112,
+        "id": 113,
         "prevSize": 32,
         "code": 58936,
         "name": "Allsports_nascar"
       },
       "setIdx": 0,
       "setId": 0,
-      "iconIdx": 113
+      "iconIdx": 114
     },
     {
       "icon": {
@@ -4703,14 +4674,14 @@
       ],
       "properties": {
         "order": 1490,
-        "id": 113,
+        "id": 114,
         "prevSize": 32,
         "code": 58937,
         "name": "Allsports_netball"
       },
       "setIdx": 0,
       "setId": 0,
-      "iconIdx": 114
+      "iconIdx": 115
     },
     {
       "icon": {
@@ -4749,14 +4720,14 @@
       ],
       "properties": {
         "order": 1491,
-        "id": 114,
+        "id": 115,
         "prevSize": 32,
         "code": 58938,
         "name": "Allsports_nordicCombined"
       },
       "setIdx": 0,
       "setId": 0,
-      "iconIdx": 115
+      "iconIdx": 116
     },
     {
       "icon": {
@@ -4783,14 +4754,14 @@
       ],
       "properties": {
         "order": 1492,
-        "id": 115,
+        "id": 116,
         "prevSize": 32,
         "code": 58939,
         "name": "Allsports_olympic"
       },
       "setIdx": 0,
       "setId": 0,
-      "iconIdx": 116
+      "iconIdx": 117
     },
     {
       "icon": {
@@ -4821,14 +4792,14 @@
       ],
       "properties": {
         "order": 1493,
-        "id": 116,
+        "id": 117,
         "prevSize": 32,
         "code": 58940,
         "name": "Allsports_oscar"
       },
       "setIdx": 0,
       "setId": 0,
-      "iconIdx": 117
+      "iconIdx": 118
     },
     {
       "icon": {
@@ -4855,14 +4826,14 @@
       ],
       "properties": {
         "order": 1494,
-        "id": 117,
+        "id": 118,
         "prevSize": 32,
         "code": 58941,
         "name": "Allsports_padel"
       },
       "setIdx": 0,
       "setId": 0,
-      "iconIdx": 118
+      "iconIdx": 119
     },
     {
       "icon": {
@@ -4889,14 +4860,14 @@
       ],
       "properties": {
         "order": 1495,
-        "id": 118,
+        "id": 119,
         "prevSize": 32,
         "code": 58942,
         "name": "Allsports_pesapallo"
       },
       "setIdx": 0,
       "setId": 0,
-      "iconIdx": 119
+      "iconIdx": 120
     },
     {
       "icon": {
@@ -4927,14 +4898,14 @@
       ],
       "properties": {
         "order": 1496,
-        "id": 119,
+        "id": 120,
         "prevSize": 32,
         "code": 58943,
         "name": "Allsports_pokerlive"
       },
       "setIdx": 0,
       "setId": 0,
-      "iconIdx": 120
+      "iconIdx": 121
     },
     {
       "icon": {
@@ -4973,14 +4944,14 @@
       ],
       "properties": {
         "order": 1497,
-        "id": 120,
+        "id": 121,
         "prevSize": 32,
         "code": 58944,
         "name": "Allsports_poker"
       },
       "setIdx": 0,
       "setId": 0,
-      "iconIdx": 121
+      "iconIdx": 122
     },
     {
       "icon": {
@@ -5007,14 +4978,14 @@
       ],
       "properties": {
         "order": 1498,
-        "id": 121,
+        "id": 122,
         "prevSize": 32,
         "code": 58945,
         "name": "Allsports_politics"
       },
       "setIdx": 0,
       "setId": 0,
-      "iconIdx": 122
+      "iconIdx": 123
     },
     {
       "icon": {
@@ -5041,14 +5012,14 @@
       ],
       "properties": {
         "order": 1499,
-        "id": 122,
+        "id": 123,
         "prevSize": 32,
         "code": 58946,
         "name": "Allsports_pool"
       },
       "setIdx": 0,
       "setId": 0,
-      "iconIdx": 123
+      "iconIdx": 124
     },
     {
       "icon": {
@@ -5075,14 +5046,14 @@
       ],
       "properties": {
         "order": 1543,
-        "id": 123,
+        "id": 124,
         "prevSize": 32,
         "code": 58947,
         "name": "Allsports_rally"
       },
       "setIdx": 0,
       "setId": 0,
-      "iconIdx": 124
+      "iconIdx": 125
     },
     {
       "icon": {
@@ -5113,14 +5084,14 @@
       ],
       "properties": {
         "order": 1500,
-        "id": 124,
+        "id": 125,
         "prevSize": 32,
         "code": 58948,
         "name": "Allsports_rinkhockey"
       },
       "setIdx": 0,
       "setId": 0,
-      "iconIdx": 125
+      "iconIdx": 126
     },
     {
       "icon": {
@@ -5147,14 +5118,14 @@
       ],
       "properties": {
         "order": 1501,
-        "id": 125,
+        "id": 126,
         "prevSize": 32,
         "code": 58949,
         "name": "Allsports_rowing"
       },
       "setIdx": 0,
       "setId": 0,
-      "iconIdx": 126
+      "iconIdx": 127
     },
     {
       "icon": {
@@ -5185,14 +5156,14 @@
       ],
       "properties": {
         "order": 1502,
-        "id": 126,
+        "id": 127,
         "prevSize": 32,
         "code": 58950,
         "name": "Allsports_rugby7"
       },
       "setIdx": 0,
       "setId": 0,
-      "iconIdx": 127
+      "iconIdx": 128
     },
     {
       "icon": {
@@ -5223,14 +5194,14 @@
       ],
       "properties": {
         "order": 1503,
-        "id": 127,
+        "id": 128,
         "prevSize": 32,
         "code": 58951,
         "name": "Allsports_rugbyL_rugbyL"
       },
       "setIdx": 0,
       "setId": 0,
-      "iconIdx": 128
+      "iconIdx": 129
     },
     {
       "icon": {
@@ -5261,14 +5232,14 @@
       ],
       "properties": {
         "order": 1504,
-        "id": 128,
+        "id": 129,
         "prevSize": 32,
         "code": 58952,
         "name": "Allsports_rugbyU"
       },
       "setIdx": 0,
       "setId": 0,
-      "iconIdx": 129
+      "iconIdx": 130
     },
     {
       "icon": {
@@ -5315,14 +5286,14 @@
       ],
       "properties": {
         "order": 1505,
-        "id": 129,
+        "id": 130,
         "prevSize": 32,
         "code": 58953,
         "name": "Allsports_schwingen"
       },
       "setIdx": 0,
       "setId": 0,
-      "iconIdx": 130
+      "iconIdx": 131
     },
     {
       "icon": {
@@ -5357,14 +5328,14 @@
       ],
       "properties": {
         "order": 1506,
-        "id": 130,
+        "id": 131,
         "prevSize": 32,
         "code": 58954,
         "name": "Allsports_shooting"
       },
       "setIdx": 0,
       "setId": 0,
-      "iconIdx": 131
+      "iconIdx": 132
     },
     {
       "icon": {
@@ -5407,14 +5378,14 @@
       ],
       "properties": {
         "order": 1507,
-        "id": 131,
+        "id": 132,
         "prevSize": 32,
         "code": 58955,
         "name": "Allsports_Shorttrackspeedskating-sportsbook"
       },
       "setIdx": 0,
       "setId": 0,
-      "iconIdx": 132
+      "iconIdx": 133
     },
     {
       "icon": {
@@ -5461,14 +5432,14 @@
       ],
       "properties": {
         "order": 1508,
-        "id": 132,
+        "id": 133,
         "prevSize": 32,
         "code": 58956,
         "name": "Allsports_skeleton"
       },
       "setIdx": 0,
       "setId": 0,
-      "iconIdx": 133
+      "iconIdx": 134
     },
     {
       "icon": {
@@ -5499,14 +5470,14 @@
       ],
       "properties": {
         "order": 1509,
-        "id": 133,
+        "id": 134,
         "prevSize": 32,
         "code": 58957,
         "name": "Allsports_skijumping"
       },
       "setIdx": 0,
       "setId": 0,
-      "iconIdx": 134
+      "iconIdx": 135
     },
     {
       "icon": {
@@ -5545,14 +5516,14 @@
       ],
       "properties": {
         "order": 1510,
-        "id": 134,
+        "id": 135,
         "prevSize": 32,
         "code": 58958,
         "name": "Allsports_skis"
       },
       "setIdx": 0,
       "setId": 0,
-      "iconIdx": 135
+      "iconIdx": 136
     },
     {
       "icon": {
@@ -5587,14 +5558,14 @@
       ],
       "properties": {
         "order": 1511,
-        "id": 135,
+        "id": 136,
         "prevSize": 32,
         "code": 58959,
         "name": "Allsports_snooker"
       },
       "setIdx": 0,
       "setId": 0,
-      "iconIdx": 136
+      "iconIdx": 137
     },
     {
       "icon": {
@@ -5633,14 +5604,14 @@
       ],
       "properties": {
         "order": 1512,
-        "id": 136,
+        "id": 137,
         "prevSize": 32,
         "code": 58960,
         "name": "Allsports_snowboard"
       },
       "setIdx": 0,
       "setId": 0,
-      "iconIdx": 137
+      "iconIdx": 138
     },
     {
       "icon": {
@@ -5667,14 +5638,14 @@
       ],
       "properties": {
         "order": 1513,
-        "id": 137,
+        "id": 138,
         "prevSize": 32,
         "code": 58961,
         "name": "Allsports_Soccer"
       },
       "setIdx": 0,
       "setId": 0,
-      "iconIdx": 138
+      "iconIdx": 139
     },
     {
       "icon": {
@@ -5713,14 +5684,14 @@
       ],
       "properties": {
         "order": 1542,
-        "id": 138,
+        "id": 139,
         "prevSize": 32,
         "code": 58962,
         "name": "Allsports_soccerWC2014"
       },
       "setIdx": 0,
       "setId": 0,
-      "iconIdx": 139
+      "iconIdx": 140
     },
     {
       "icon": {
@@ -5747,14 +5718,14 @@
       ],
       "properties": {
         "order": 1514,
-        "id": 139,
+        "id": 140,
         "prevSize": 32,
         "code": 58963,
         "name": "Allsports_softball"
       },
       "setIdx": 0,
       "setId": 0,
-      "iconIdx": 140
+      "iconIdx": 141
     },
     {
       "icon": {
@@ -5793,14 +5764,14 @@
       ],
       "properties": {
         "order": 1515,
-        "id": 140,
+        "id": 141,
         "prevSize": 32,
         "code": 58964,
         "name": "Allsports_specialbet"
       },
       "setIdx": 0,
       "setId": 0,
-      "iconIdx": 141
+      "iconIdx": 142
     },
     {
       "icon": {
@@ -5851,14 +5822,14 @@
       ],
       "properties": {
         "order": 1516,
-        "id": 141,
+        "id": 142,
         "prevSize": 32,
         "code": 58965,
         "name": "Allsports_speedskating"
       },
       "setIdx": 0,
       "setId": 0,
-      "iconIdx": 142
+      "iconIdx": 143
     },
     {
       "icon": {
@@ -5885,14 +5856,14 @@
       ],
       "properties": {
         "order": 1517,
-        "id": 142,
+        "id": 143,
         "prevSize": 32,
         "code": 58966,
         "name": "Allsports_speedway"
       },
       "setIdx": 0,
       "setId": 0,
-      "iconIdx": 143
+      "iconIdx": 144
     },
     {
       "icon": {
@@ -5919,14 +5890,14 @@
       ],
       "properties": {
         "order": 1518,
-        "id": 143,
+        "id": 144,
         "prevSize": 32,
         "code": 58967,
         "name": "Allsports_sportandfun"
       },
       "setIdx": 0,
       "setId": 0,
-      "iconIdx": 144
+      "iconIdx": 145
     },
     {
       "icon": {
@@ -5957,14 +5928,14 @@
       ],
       "properties": {
         "order": 1519,
-        "id": 144,
+        "id": 145,
         "prevSize": 32,
         "code": 58968,
         "name": "Allsports_sportfight"
       },
       "setIdx": 0,
       "setId": 0,
-      "iconIdx": 145
+      "iconIdx": 146
     },
     {
       "icon": {
@@ -5991,14 +5962,14 @@
       ],
       "properties": {
         "order": 1520,
-        "id": 145,
+        "id": 146,
         "prevSize": 32,
         "code": 58969,
         "name": "Allsports_squash"
       },
       "setIdx": 0,
       "setId": 0,
-      "iconIdx": 146
+      "iconIdx": 147
     },
     {
       "icon": {
@@ -6053,14 +6024,14 @@
       ],
       "properties": {
         "order": 1521,
-        "id": 146,
+        "id": 147,
         "prevSize": 32,
         "code": 58970,
         "name": "Allsports_sumo"
       },
       "setIdx": 0,
       "setId": 0,
-      "iconIdx": 147
+      "iconIdx": 148
     },
     {
       "icon": {
@@ -6115,14 +6086,14 @@
       ],
       "properties": {
         "order": 1522,
-        "id": 147,
+        "id": 148,
         "prevSize": 32,
         "code": 58971,
         "name": "Allsports_surfing"
       },
       "setIdx": 0,
       "setId": 0,
-      "iconIdx": 148
+      "iconIdx": 149
     },
     {
       "icon": {
@@ -6153,14 +6124,14 @@
       ],
       "properties": {
         "order": 1523,
-        "id": 148,
+        "id": 149,
         "prevSize": 32,
         "code": 58972,
         "name": "Allsports_swimming"
       },
       "setIdx": 0,
       "setId": 0,
-      "iconIdx": 149
+      "iconIdx": 150
     },
     {
       "icon": {
@@ -6231,14 +6202,14 @@
       ],
       "properties": {
         "order": 1524,
-        "id": 149,
+        "id": 150,
         "prevSize": 32,
         "code": 58973,
         "name": "Allsports_SynchronizedSwimming"
       },
       "setIdx": 0,
       "setId": 0,
-      "iconIdx": 150
+      "iconIdx": 151
     },
     {
       "icon": {
@@ -6265,14 +6236,14 @@
       ],
       "properties": {
         "order": 1525,
-        "id": 150,
+        "id": 151,
         "prevSize": 32,
         "code": 58974,
         "name": "Allsports_tablehockey"
       },
       "setIdx": 0,
       "setId": 0,
-      "iconIdx": 151
+      "iconIdx": 152
     },
     {
       "icon": {
@@ -6299,14 +6270,14 @@
       ],
       "properties": {
         "order": 1526,
-        "id": 151,
+        "id": 152,
         "prevSize": 32,
         "code": 58975,
         "name": "Allsports_tabletennis"
       },
       "setIdx": 0,
       "setId": 0,
-      "iconIdx": 152
+      "iconIdx": 153
     },
     {
       "icon": {
@@ -6337,14 +6308,14 @@
       ],
       "properties": {
         "order": 1527,
-        "id": 152,
+        "id": 153,
         "prevSize": 32,
         "code": 58976,
         "name": "Allsports_taekwondo"
       },
       "setIdx": 0,
       "setId": 0,
-      "iconIdx": 153
+      "iconIdx": 154
     },
     {
       "icon": {
@@ -6379,14 +6350,14 @@
       ],
       "properties": {
         "order": 1541,
-        "id": 153,
+        "id": 154,
         "prevSize": 32,
         "code": 58977,
         "name": "Allsports_tankbiathlon"
       },
       "setIdx": 0,
       "setId": 0,
-      "iconIdx": 154
+      "iconIdx": 155
     },
     {
       "icon": {
@@ -6417,14 +6388,14 @@
       ],
       "properties": {
         "order": 1540,
-        "id": 154,
+        "id": 155,
         "prevSize": 32,
         "code": 58978,
         "name": "Allsports_telecast"
       },
       "setIdx": 0,
       "setId": 0,
-      "iconIdx": 155
+      "iconIdx": 156
     },
     {
       "icon": {
@@ -6455,14 +6426,14 @@
       ],
       "properties": {
         "order": 1539,
-        "id": 155,
+        "id": 156,
         "prevSize": 32,
         "code": 58979,
         "name": "Allsports_tennis"
       },
       "setIdx": 0,
       "setId": 0,
-      "iconIdx": 156
+      "iconIdx": 157
     },
     {
       "icon": {
@@ -6493,14 +6464,14 @@
       ],
       "properties": {
         "order": 1538,
-        "id": 156,
+        "id": 157,
         "prevSize": 32,
         "code": 58980,
         "name": "Allsports_triathlon"
       },
       "setIdx": 0,
       "setId": 0,
-      "iconIdx": 157
+      "iconIdx": 158
     },
     {
       "icon": {
@@ -6531,14 +6502,14 @@
       ],
       "properties": {
         "order": 1537,
-        "id": 157,
+        "id": 158,
         "prevSize": 32,
         "code": 58981,
         "name": "Allsports_UFC"
       },
       "setIdx": 0,
       "setId": 0,
-      "iconIdx": 158
+      "iconIdx": 159
     },
     {
       "icon": {
@@ -6569,14 +6540,14 @@
       ],
       "properties": {
         "order": 1536,
-        "id": 158,
+        "id": 159,
         "prevSize": 32,
         "code": 58982,
         "name": "Allsports_ultimatefighting"
       },
       "setIdx": 0,
       "setId": 0,
-      "iconIdx": 159
+      "iconIdx": 160
     },
     {
       "icon": {
@@ -6603,14 +6574,14 @@
       ],
       "properties": {
         "order": 1535,
-        "id": 159,
+        "id": 160,
         "prevSize": 32,
         "code": 58983,
         "name": "Allsports_virtualdogs"
       },
       "setIdx": 0,
       "setId": 0,
-      "iconIdx": 160
+      "iconIdx": 161
     },
     {
       "icon": {
@@ -6637,14 +6608,14 @@
       ],
       "properties": {
         "order": 1534,
-        "id": 160,
+        "id": 161,
         "prevSize": 32,
         "code": 58984,
         "name": "Allsports_virtualhorses"
       },
       "setIdx": 0,
       "setId": 0,
-      "iconIdx": 161
+      "iconIdx": 162
     },
     {
       "icon": {
@@ -6683,14 +6654,14 @@
       ],
       "properties": {
         "order": 1533,
-        "id": 161,
+        "id": 162,
         "prevSize": 32,
         "code": 58985,
         "name": "Allsports_virtualtennis"
       },
       "setIdx": 0,
       "setId": 0,
-      "iconIdx": 162
+      "iconIdx": 163
     },
     {
       "icon": {
@@ -6717,14 +6688,14 @@
       ],
       "properties": {
         "order": 1532,
-        "id": 162,
+        "id": 163,
         "prevSize": 32,
         "code": 58986,
         "name": "Allsports_volleyball"
       },
       "setIdx": 0,
       "setId": 0,
-      "iconIdx": 163
+      "iconIdx": 164
     },
     {
       "icon": {
@@ -6763,14 +6734,14 @@
       ],
       "properties": {
         "order": 1531,
-        "id": 163,
+        "id": 164,
         "prevSize": 32,
         "code": 58987,
         "name": "Allsports_waterpolo"
       },
       "setIdx": 0,
       "setId": 0,
-      "iconIdx": 164
+      "iconIdx": 165
     },
     {
       "icon": {
@@ -6809,14 +6780,14 @@
       ],
       "properties": {
         "order": 1530,
-        "id": 164,
+        "id": 165,
         "prevSize": 32,
         "code": 58988,
         "name": "Allsports_whatwherewhen"
       },
       "setIdx": 0,
       "setId": 0,
-      "iconIdx": 165
+      "iconIdx": 166
     },
     {
       "icon": {
@@ -6851,14 +6822,14 @@
       ],
       "properties": {
         "order": 1529,
-        "id": 165,
+        "id": 166,
         "prevSize": 32,
         "code": 58989,
         "name": "Allsports_wrestling"
       },
       "setIdx": 0,
       "setId": 0,
-      "iconIdx": 166
+      "iconIdx": 167
     },
     {
       "icon": {
@@ -6893,14 +6864,14 @@
       ],
       "properties": {
         "order": 1528,
-        "id": 166,
+        "id": 167,
         "prevSize": 32,
         "code": 58990,
         "name": "Allsports_yachting"
       },
       "setIdx": 0,
       "setId": 0,
-      "iconIdx": 167
+      "iconIdx": 168
     }
   ],
   "height": 1024,

@@ -1,29 +1,49 @@
-<div class="suggest-contain-list" ng-if="showSuggestions && suggestedBetsList.length">
-    <div class="suggest-text">
-        <h2 trans>Suggested bets</h2>
-        <p trans>We think that these bets may also be interesting to you. Try to win even more.</p>
-    </div>
-    <div class="suggest-list">
-        <div>
-            <div ng-repeat="bet in suggestedBetsList track by bet.eventInfo.id">
-                <div class="suggest-mini-list">
-                    <div class="suggest-teams-name">
-                        <div class="suggest-title-event">
-                            <p>{{ ::bet.gameInfo.title }}</p>
-                        </div>
-                    </div>
-                    <div class="suggest-single-event-info">
-                        <div>
-                            <div>
-                                <p>{{ ::bet.marketInfo.name }}</p>
+<div class="float-width" ng-if="betSlip.mode === 'suggested'">
+    <vbet-loader ng-show="!suggestedBetsList.length && !noSuggestions"></vbet-loader>
+    <p class="info-all-bets" ng-show="noSuggestions">
+        {{::'Suggestions are not available at the moment. '|translate}}
+        <span ng-click="getSuggestedBets('suggestedBets.get', 'live')" trans>Try again</span>
+        or
+        <span ng-click="selectBetSlipMode('betting')" trans>Go To BetSlip</span>
+    </p>
+    <div class="suggest-contain-list" ng-if="!noSuggestions && showSuggestions && suggestedBetsList.length" ng-class="{'suggested-prematch': type === 'preMatch'}">
+        <div class="suggest-text">
+            <h2 trans ng-bind="type === 'preMatch' ? 'Suggested pre-match' : 'Suggested live'"></h2>
+            <p trans ng-show="type === 'preMatch'">We think that these bets may also be interesting to you. Try to win even more.</p>
+        </div>
+        <div class="suggest-list">
+            <div>
+                <div ng-repeat="bet in suggestedBetsList track by bet.eventInfo.id" ng-click="type === 'live' ? addSingleEvent(bet) : ''" ng-class="{'active': isEventInBetSlip(bet.eventInfo)}">
+                    <div class="suggest-mini-list">
+                        <div class="suggest-teams-name" ng-switch="type">
+                            <div class="suggest-title-event-live" ng-switch-when="live">
+                                <p>{{ ::bet.gameInfo.team1_name }} <span ng-bind="bet.gameInfo.info.score1"></span></p>
+                                <p>{{ ::bet.gameInfo.team2_name }} <span ng-bind="bet.gameInfo.info.score2"></span></p>
+                                <div class="suggest-info-sport-time">
+                                    <b class="{{bet.gameInfo.sport.alias}}"></b>
+                                    <p>
+                                        <span ng-bind="bet.gameInfo.info.current_game_state|convertSetName:bet.gameInfo.sport.alias|translate"></span>
+                                        <span trans="attr-only" title="Game time"  ng-hide="bet.gameInfo.info.current_game_state == 'notstarted' && bet.gameInfo.current_game_time == 0" ng-bind="bet.gameInfo.info.current_game_time"></span>
+                                    </p>
+                                </div>
                             </div>
+                            <div class="suggest-title-event-prematch" ng-switch-when="preMatch">
+                                <p><i class="{{bet.gameInfo.sport.alias}}"></i>{{ ::bet.gameInfo.title }}</p>
+                            </div>
+                        </div>
+                        <div class="suggest-single-event-info">
                             <div>
-                                <p>
+                                <div class="suggest-market-info">
+                                    <p>{{ ::bet.marketInfo.name }}</p>
+                                </div>
+                                <div class="suggest-event-info">
+                                    <p>
                                  <span ng-bind="(bet.eventInfo.type === 'P1' && bet.gameInfo.team1_name) || (bet.eventInfo.type === 'P2' && bet.gameInfo.team2_name) ||
                                    (bet.eventInfo.base !== undefined ? (bet.eventInfo.name + bet.eventInfo.base) : bet.eventInfo.name)"></span>
-                                </p>
-                                <div class="suggest-bet-price">
-                                    <span>{{bet.eventInfo.price|oddConvert:$root.env.oddFormat}}</span>
+                                    </p>
+                                    <div class="suggest-bet-price" ng-class="{'factor-top': bet.eventInfo.price_change > 0, 'factor-bottom': bet.eventInfo.price_change < 0}">
+                                        <span>{{bet.eventInfo.price|oddConvert:$root.env.oddFormat}}</span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -31,10 +51,12 @@
                 </div>
             </div>
         </div>
-    </div>
-    <button ng-click="addToBetslip()" trans>Add to BetSlip</button>
-    <button ng-click="hide()" trans>No, thanks</button>
-    <div class="suggest-no-show">
-        <p ng-click="hide(true)" trans>Don`t show again</p>
+        <div class="suggest-buttons">
+            <button ng-click="addToBetslip()" trans>Add to BetSlip</button>
+            <button ng-click="hide()" ng-show="type === 'preMatch'" trans>No, thanks</button>
+        </div>
+        <div class="suggest-no-show">
+            <p ng-click="hide(true)" ng-show="type === 'preMatch'" trans>Don`t show again</p>
+        </div>
     </div>
 </div>

@@ -124,7 +124,7 @@ div.draws-contain,
       &.active {
         pointer-events: none;
         > a {
-          box-shadow: inset 0 -3px 0 $header-hero-color;
+          box-shadow: inset 0 -3px 0 $subheader-hero-color;
           color: set-color($subheader-background);
         }
       }
@@ -330,7 +330,7 @@ div.draws-contain,
     min-width: 40px;
     position: absolute;
     top: 0;
-    right: 0px;
+    right: 0;
     border-radius: 3px;
     padding: 0;
     &:before {
@@ -391,7 +391,7 @@ div.draws-contain,
     height: 73px;
     margin: 0;
     position: relative;
-    z-index: 990;
+    z-index: 9999;
     box-sizing: border-box;
     .block-search {
       margin: 0;
@@ -404,6 +404,7 @@ div.draws-contain,
       top: 0;
       right: 0;
       border-radius: 0;
+      z-index: 9999;
       @include rtl {
         left: 0;
         right: auto;
@@ -1707,6 +1708,10 @@ input[type="password"]:focus ~ .capslock-is-on-j {
       left: 8px;
       padding: 0 !important;
       margin: 0 !important;
+      @include rtl {
+        left: auto;
+        right: 8px;
+      }
       .md-inner .md-gap{  border-top-color: $hero-color; border-bottom-color: $hero-color;}
       .md-inner .md-left .md-half-circle{ border-left-color: $hero-color; border-top-color: $hero-color;}
       .md-inner .md-right .md-half-circle{ border-right-color: $hero-color;  border-top-color: $hero-color;}
@@ -1998,47 +2003,6 @@ input[type="password"]:focus ~ .capslock-is-on-j {
     }
   }
 }
-
-.bookingTabs-j {
-  float: left;
-  width: 100%;
-  button{
-    float: left;
-    width: 50%;
-    border: 0;
-    background: #d9d9d9;
-    color: #505768;
-    height: 30px;
-    padding: 0;
-    text-transform: uppercase;
-    font: 12px/30px $font-f;
-    text-align: center;
-    &:only-child {
-      width: 100%;
-    }
-    &.active {
-      pointer-events: none;
-      background: #fff;
-      color: #505768;
-      box-shadow: 0 1px 0 $brand-color-1 inset, 0 -1px 0 $brand-color-1;
-    }
-    &[data-count]:not([data-count='0']) {
-      &:after {
-        content: attr(data-count);
-        display: inline-block;
-        vertical-align: text-top;
-        background: $hero-color;
-        color: set-color($hero-color);
-        font: 700 11px/14px $font-f;
-        height: 12px;
-        padding: 0 3px;
-        border-radius: 2px;
-        box-shadow: 0 1px 0 rgba(black, 0.3);
-        margin: 0 0 0 6px;
-      }
-    }
-  }
-}
 .bsTypeSwitchers-j {
   bottom: 5px;
   position: absolute;
@@ -2215,17 +2179,6 @@ input[type="password"]:focus ~ .capslock-is-on-j {
           color: set-color($brand-color-1);
           background: $brand-color-1;
         }
-      }
-    }
-  }
-  .bookingTabs-j {
-    button{
-      background: $skin-palette-7;
-      color: $text-palette-4;
-      &.active {
-        background: darken( desaturate( adjust-hue( $skin-color, -3deg ), 8 ), 5 );
-        color: $brand-color-1;
-        box-shadow: 0 1px 0 $brand-color-1 inset, 0 -1px 0 $brand-color-1;
       }
     }
   }
@@ -2825,5 +2778,28 @@ input[type="password"]:focus ~ .capslock-is-on-j {
         margin: 0 5px;
       }
     }
+  }
+}
+.slider-jackpot-badge {
+  position: absolute;
+  top: 40px;
+  left: 26px;
+  z-index: 30;
+  .slider-jackpot-badge-title {
+    background: rgba(#121623, 0.8);
+    color: white;
+    float: left;
+    clear: both;
+    padding: 0 26px;
+    font: 700 16px/36px $font-f;
+  }
+  .slider-jackpot-badge-number {
+    background: $brand-color-2;
+    color: set-color($brand-color-2);
+    float: left;
+    clear: both;
+    font: 700 28px/58px $font-f;
+    padding: 0 26px;
+    text-transform: uppercase;
   }
 }

@@ -20,6 +20,7 @@
   box-sizing: border-box;
   @include rtl {
     float: right;
+    padding: 0 3px 5px 3px;
   }
 }
 
@@ -529,17 +530,6 @@
       }
     }
   }
-  .bookingTabs-j {
-    button {
-      background: #3F4553;
-      color: #7b8191;
-      &.active {
-        background: #2e323e;
-        color: #dbe1e6;
-        box-shadow: none;
-      }
-    }
-  }
   .bsTypeSwitchers-j {
     background: #2e323e;
     position: static;
@@ -651,6 +641,56 @@
 .right-column-view-contain .empty-edit-bet-list {
   color: #3f4553;
 }
-.combo .open-bets-time-id + div > ul > li {
-  background: #f0f0f0;
+.combo {
+  .open-bets-time-id + div > ul > li {
+    background: #f0f0f0;
+  }
+  .open-bets-possible-wrapper {
+    background: none;
+  }
+  .title-event-b-v3 > span {
+    color: #3f4553;
+  }
+  .button-view-contain-v3,
+  .bs-cash-out-btn {
+    > button:disabled {
+      box-shadow: 0 0 0 1px #000000 inset;
+      color: #000000;
+    }
+  }
+  .open-bets-buttons > div.suggested-bets-button.active {
+    background: -moz-linear-gradient(left, rgba($hero-color,0.4) 0%,rgba($skin-color,0.4) 80%,rgba($skin-color,0.5) 100%);
+    background: -webkit-linear-gradient(left, rgba($hero-color,0.4) 0%,rgba($skin-color,0.4) 80%,rgba($skin-color,0.5) 100%);
+    background: linear-gradient(to right, rgba($hero-color,0.4) 0%,rgba($skin-color,0.4) 80%,rgba($skin-color,0.5) 100%);
+    @include rtl {
+      background: -moz-linear-gradient(right, rgba($hero-color,0.4) 0%,rgba($skin-color,0.4) 80%,rgba($skin-color,0.5) 100%);
+      background: -webkit-linear-gradient(right, rgba($hero-color,0.4) 0%,rgba($skin-color,0.4) 80%,rgba($skin-color,0.5) 100%);
+      background: linear-gradient(to left, rgba($hero-color,0.4) 0%,rgba($skin-color,0.4) 80%,rgba($skin-color,0.5) 100%);
+    }
+    box-shadow: none;
+  }
+  .suggest-contain-list {
+    background: -moz-linear-gradient(left, rgba($hero-color, 0.5) 0%,  rgba($skin-color, 0.7) 100%);
+    background: -webkit-linear-gradient(left, rgba($hero-color, 0.5) 0%,  rgba($skin-color, 0.7) 100%);
+    background: linear-gradient(to right, rgba($hero-color, 0.5) 0%,  rgba($skin-color, 0.7) 100%);
+    @include rtl {
+      background: -moz-linear-gradient(right, rgba($hero-color, 0.5) 0%,  rgba($skin-color, 0.7) 100%);
+      background: -webkit-linear-gradient(right, rgba($hero-color, 0.5) 0%,  rgba($skin-color, 0.7) 100%);
+      background: linear-gradient(to left, rgba($hero-color, 0.5) 0%,  rgba($skin-color, 0.7) 100%);
+    }
+    &.suggested-prematch {
+      background: -moz-linear-gradient(45deg, rgba($skin-color, 0.9) 0%, rgba($hero-color, 0.3) 100%);
+      background: -webkit-linear-gradient(45deg, rgba($skin-color, 0.9) 0%, rgba($hero-color, 0.3) 100%);
+      background: linear-gradient(45deg, rgba($skin-color, 0.9) 0%, rgba($hero-color, 0.3) 100%);
+      @include rtl {
+        background: -moz-linear-gradient(-45deg, rgba($skin-color, 0.9) 0%, rgba($hero-color, 0.3) 100%);
+        background: -webkit-linear-gradient(-45deg, rgba($skin-color, 0.9) 0%, rgba($hero-color, 0.3) 100%);
+        background: linear-gradient(-45deg, rgba($skin-color, 0.9) 0%, rgba($hero-color, 0.3) 100%);
+      }
+    }
+  }
+  .suggest-title-event-live > p,
+  .suggest-single-event-info > div > div {
+    color: $c16-tp-1;
+  }
 }

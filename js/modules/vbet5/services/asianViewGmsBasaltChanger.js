@@ -95,8 +95,6 @@ angular.module('vbet5').service('asianViewGmsBasaltChanger', ['Config', 'Utils',
                     setGmsMarketSequence(market);
                 }
 
-                availableSequences[market.display_sub_key] = availableSequences[market.display_sub_key] || [];
-
                 if (ACTIVE_SEQUENCES_GMS.indexOf(market.display_sub_key) !== -1 && (!Utils.getArrayObjectElementHavingFieldValue(availableSequences, 'subKey', market.display_sub_key, true)
                     || !Utils.getArrayObjectElementHavingFieldValue(availableSequences, 'sequence', market.sequence, true))) {
                     availableSequences.push({
@@ -154,7 +152,7 @@ angular.module('vbet5').service('asianViewGmsBasaltChanger', ['Config', 'Utils',
                         if (seq[availableMarket] && seq[availableMarket].length > 1) {
                             seq[availableMarket].sort(sortingFunc);
                         }
-                    })
+                    });
                 });
             }
         });
@@ -247,90 +245,6 @@ angular.module('vbet5').service('asianViewGmsBasaltChanger', ['Config', 'Utils',
         game.markets = markets;
     }
 
-    /**
-     * @ngdoc method
-     * @name groupBySequenceAndTypes
-     * @methodOf vbet5.controller:asianViewMainController
-     * @description Performs grouping of markets by sequence and show_type.
-     * additionally groups events inside markets
-     *
-     * @param {Object} game the game object
-     */
-    function groupByTypesAndSequenceForGms(game) {
-        var markets = {};
-        game.marketRows = {};
-        game.otherMarkets = [];
-        game.availableSequences = {};
-        game.selectedSequence = game.selectedSequence || {};
-        var currentSequence;
-        angular.forEach(game.market, function (market) {
-
-            var groupingNeeded = groupMarketEvents(market);          // if special grouping is needed for market,
-            if (groupingNeeded) {                                    // the normal grouping won't be done
-                angular.forEach(market.event, function (event) {
-                    var key = event.show_type || event.type_1 || event.type;
-                    key = key === 'W1' ? 'P1': (key === 'W2' ? 'P2': key);
-                    market[key] = event;
-                });
-            }
-            if(market.display_key === "HANDICAP") {
-                console.log("market");
-            }
-
-            if("PERIOD" === market.display_sub_key && 0 === market.sequence) {
-                setGmsMarketSequence(market);
-            }
-            currentSequence = "PERIOD" === market.display_sub_key ? game.sport.alias + market.sequence : market.display_sub_key;
-
-            if (market.display_key) {
-                game.availableSequences[market.display_key] = game.availableSequences[market.display_key] || [];
-                if (currentSequence) {
-                    if(ACTIVE_SEQUENCES_GMS.indexOf(market.display_sub_key) !== -1 && (!Utils.getArrayObjectElementHavingFieldValue(game.availableSequences[market.display_key], 'subKey', market.display_sub_key)
-                        || !Utils.getArrayObjectElementHavingFieldValue(game.availableSequences[market.display_key], 'sequence', market.sequence))) {
-                        game.availableSequences[market.display_key].push({
-                            'subKey': market.display_sub_key,
-                            'sequence': market.sequence
-                        });
-                    }
-                }
-                if (market.display_sub_key) {
-                    markets[market.display_key] = markets[market.display_key] || {};
-                    markets[market.display_key][market.display_sub_key] = markets[market.display_key][market.display_sub_key] || {};
-                    markets[market.display_key][market.display_sub_key][market.sequence] = markets[market.display_key][market.display_sub_key][market.sequence] || [];
-                    markets[market.display_key][market.display_sub_key][market.sequence].push(market);
-                } else if (market.display_key) {
-                    markets[market.display_key] = markets[market.display_key] || [];
-                    markets[market.display_key].push(market);
-                }
-            } else {
-                game.otherMarkets.push(market);
-            }
-        });
-
-        angular.forEach(game.availableSequences, function (sequences, key) {
-            sortAvailableSequences(sequences);
-
-            if (!game.selectedSequence[key]) {
-                if (Config.main.customSelectedSequenceInAsianSportsbook) {
-                    var i, length = sequences.length;
-                    for (i = 0; i < length; i += 1) {
-                        if (sequences[i].subKey === Config.main.customSelectedSequenceInAsianSportsbook) {
-                            game.selectedSequence[key] = sequences[i];
-                            break;
-                        }
-                    }
-                    game.selectedSequence[key] = game.selectedSequence[key] || sequences[0];
-                }
-            }
-        });
-
-        angular.forEach(game.marketRows, function (marketRow, key) {
-            game.marketRows[key] = new Array(game.marketRows[key] - 1);
-        });
-
-        game.markets = markets;
-    }
-
     function sortAvailableSequences(sequences) {
         var sort1 = function(a,b) {
             if(a.subKey === b.subKey){
@@ -353,60 +267,6 @@ angular.module('vbet5').service('asianViewGmsBasaltChanger', ['Config', 'Utils',
         sequences.sort(Config.main.asian && Config.main.asian.firstSequence ? sort2 : sort1);
     }
 
-    /**
-     * @ngdoc method
-     * @name groupBySequenceAndTypes
-     * @methodOf vbet5.controller:asianViewMainController
-     * @description Performs grouping of markets by sequence and show_type.
-     * additionally groups events inside markets
-     *
-     * @param {Object} game the game object
-     */
-    function groupByTypesAndSequenceForBazalt(game) {
-        var markets = {};
-        game.marketRows = {};
-        game.otherMarkets = [];
-        game.availableSequences = {};
-        game.selectedSequence = game.selectedSequence || {};
-        angular.forEach(game.market, function (market) {
-
-            var groupingNeeded = groupMarketEvents(market);          // if special grouping is needed for market,
-            if (groupingNeeded) {                                    // the normal grouping won't be done
-                angular.forEach(market.event, function (event) {
-                    market[event.show_type || event.type] = event;
-                });
-            }
-            if (market.show_type) {
-                game.availableSequences[market.show_type] = game.availableSequences[market.show_type] || [];
-                if (market.sequence) {
-                    if (game.availableSequences[market.show_type].indexOf(market.sequence) === -1) {
-                        game.availableSequences[market.show_type].push(market.sequence);
-                    }
-                    game.availableSequences[market.show_type].sort();
-                    game.selectedSequence[market.show_type] = game.selectedSequence[market.show_type] || game.availableSequences[market.show_type][0];
-
-                }
-                markets[market.show_type] = markets[market.show_type] || {};
-                markets[market.show_type][market.sequence] = markets[market.show_type][market.sequence] || [];
-                markets[market.show_type][market.sequence].push(market);
-            } else {
-                game.otherMarkets.push(market);
-            }
-        });
-        if (markets.HANDICAP) {
-            angular.forEach(markets.HANDICAP, function (seq) {
-                if (seq.length > 1) {
-                    seq.sort(handicapSortFunc);
-                }
-            });
-        }
-        angular.forEach(game.marketRows, function (marketRow, key) {
-            game.marketRows[key] = new Array(game.marketRows[key] - 1);
-        });
-
-        game.markets = markets;
-    }
-
     function setGmsMarketSequence(market) {
         if(FIRST_HALF.indexOf(market.market_type) > -1) {
             market.sequence = 1;
@@ -417,8 +277,5 @@ angular.module('vbet5').service('asianViewGmsBasaltChanger', ['Config', 'Utils',
         }
     }
 
-    return {
-        groupBySequenceAndTypes: Config.main.GmsPlatform ? groupBySequenceAndTypesForGms : groupBySequenceAndTypesForBasalt,
-        groupByTypesAndSequence: Config.main.GmsPlatform ? groupByTypesAndSequenceForGms : groupByTypesAndSequenceForBazalt
-    }
+    return Config.main.GmsPlatform ? groupBySequenceAndTypesForGms : groupBySequenceAndTypesForBasalt;
 }]);

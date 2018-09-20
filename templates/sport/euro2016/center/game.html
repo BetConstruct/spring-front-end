@@ -18,26 +18,17 @@
 
         <div class="market-ciew-v3"
              ng-repeat="(marketId, groupedMarkets) in marketsFirstPack track by marketId">
-            <div class="market-title-v3"  ng-class="{'closed': isMarketClosed(groupedMarkets[0].name)}">
-                <h3 ng-click="toggleGroupedMarket(groupedMarkets[0].name)">
-                    {{groupedMarkets[0].name}}
-                </h3>
-                <div class="market-icons-view-v3">
-                    <ul>
-                        <li class="link-icon-market-v3" ng-show="!conf.hideExpressIds && (groupedMarkets[0].express_id || groupedMarkets[0].express_id == 0)" title="Events from different groups can be combined in combined bets" trans="attr-only">
-                            <span ng-hide="conf.hideExpressIds" title="Events from different groups can be combined in combined bets" trans="attr-only">{{groupedMarkets[0].express_id}}</span>
-                        </li>
-
-                        <li class="cashout-icon-market-v3" title="Cash-out available" trans ng-show="groupedMarkets[0].cashout && ((!$root.env.live && !!$root.partnerConfig.is_cashout_prematch) || ($root.env.live && !!$root.partnerConfig.is_cashout_live))"></li>
-                        <li class="favorite-icon-market-v3" ng-class="{'remove': openGame.sport.favouriteMarkets.indexOf(groupedMarkets) !== -1 }" ng-click="addToFavouriteMarkets(groupedMarkets)"></li>
-                    </ul>
-                    <div class="arrow-view-v3"  ng-click="toggleGroupedMarket(groupedMarkets[0].name)"></div>
-                </div>
+            <div class="market-title-v3" ng-click="toggleGroupedMarket(groupedMarkets[0].name)" ng-class="{'closed': isMarketClosed(groupedMarkets[0].name)}" data-title="{{groupedMarkets[0].name}}">
+                <ul class="market-icons-t-r" ng-click="$event.stopPropagation()">
+                    <li class="link-icon-market-v3" ng-show="!conf.hideExpressIds && (groupedMarkets[0].express_id || groupedMarkets[0].express_id == 0)" title="Events from different groups can be combined in combined bets" trans="attr-only" ng-bind="groupedMarkets[0].express_id"></li>
+                    <li class="cashout-icon-market-v3" title="Cash-out available" trans ng-show="groupedMarkets[0].cashout && ((!$root.env.live && !!$root.partnerConfig.is_cashout_prematch) || ($root.env.live && !!$root.partnerConfig.is_cashout_live))"></li>
+                    <li class="favorite-icon-market-v3" ng-class="{'remove': openGame.sport.favouriteMarkets.indexOf(groupedMarkets) !== -1 }" ng-click="addToFavouriteMarkets(groupedMarkets)"></li>
+                </ul>
             </div>
             <div ng-repeat="market in groupedMarkets|orderBy: 'order' track by market.id" class="l-b column-{{market.col_count || 1}}" ng-class="{'default': market.col_count > 5}">
                 <div class="single-events-b-v3"  ng-repeat="event in market.events|orderBy:(market.display_key == 'OUTRIGHT' ? 'price' : 'order') track by event.id" ng-click="bet(event, market, openGame);" title="{{event.name}} {{ displayBase(event, market)}}" ng-class="{'pointer-events-none': event.is_empty, 'active': isEventInBetSlip(event), 'blocked': ((event.price | oddConvert:'decimal') == 1 || openGame.is_blocked)}" ng-mouseover="($location.path() !='/multiview/') && displayEventLimit(event, openGame, false, market)" ng-mouseleave="($location.path() !='/multiview/') && cancelDisplayEventLimit(event)">
-                    <div class="max-bet-tooltip-v3" ng-show="$root.env.authorized && event.maxBet !== undefined" ng-class="{'maxbet-enabled': $root.env.authorized}">
-                        Max: <b ng-bind="conf.onlyDecimalStakeAmount ? Math.floor(event.maxBet) : event.maxBet"></b> {{$root.profile.currency_name|currency }}
+                    <div class="max-bet-tooltip-v3" ng-show="$root.env.authorized && event.maxBet !== undefined" ng-class="{'maxbet-enabled': $root.env.authorized}" title="{{conf.onlyDecimalStakeAmount ? Math.floor(event.maxBet) : event.maxBet}} {{$root.profile.currency_name|currency }}">
+                        Max:
                     </div>
                     <b class="p-v" ng-show="(event.price | oddConvert:'decimal') != 1 && !openGame.is_blocked" ng-class="{'factor-top': event.price_change > 0, 'factor-bottom': event.price_change < 0}">{{event.price|oddConvert:$root.env.oddFormat:null:market.display_key}}</b>
                 </div>
@@ -50,26 +41,19 @@
     <div class="live-events-column-v3">
         <div class="market-ciew-v3"
              ng-repeat="(marketId, groupedMarkets) in marketsSecondPack track by marketId">
-            <div class="market-title-v3"  ng-class="{'closed': isMarketClosed(groupedMarkets[0].name)}">
-                <h3 ng-click="toggleGroupedMarket(groupedMarkets[0].name)">
-                    {{groupedMarkets[0].name}}
-                </h3>
-                <div class="market-icons-view-v3">
-                    <ul>
-                        <li class="link-icon-market-v3" ng-show="!conf.hideExpressIds && (groupedMarkets[0].express_id || groupedMarkets[0].express_id == 0)" title="Events from different groups can be combined in combined bets" trans="attr-only">
-                            <span ng-hide="conf.hideExpressIds" title="Events from different groups can be combined in combined bets" trans="attr-only">{{groupedMarkets[0].express_id}}</span>
-                        </li>
-
-                        <li class="cashout-icon-market-v3" title="Cash-out available" trans ng-show="groupedMarkets[0].cashout && ((!$root.env.live && !!$root.partnerConfig.is_cashout_prematch) || ($root.env.live && !!$root.partnerConfig.is_cashout_live))"></li>
-                        <li class="favorite-icon-market-v3" ng-class="{'remove': openGame.sport.favouriteMarkets.indexOf(groupedMarkets) !== -1 }" ng-click="addToFavouriteMarkets(groupedMarkets)"></li>
-                    </ul>
-                    <div class="arrow-view-v3"  ng-click="toggleGroupedMarket(groupedMarkets[0].name)"></div>
-                </div>
+            <div class="market-title-v3" ng-click="toggleGroupedMarket(groupedMarkets[0].name)" ng-class="{'closed': isMarketClosed(groupedMarkets[0].name)}" data-title="{{groupedMarkets[0].name}}">
+                <ul class="market-icons-t-r" ng-click="$event.stopPropagation()">
+                    <li class="link-icon-market-v3" ng-show="!conf.hideExpressIds && (groupedMarkets[0].express_id || groupedMarkets[0].express_id == 0)" title="Events from different groups can be combined in combined bets" trans="attr-only">
+                        <span ng-hide="conf.hideExpressIds" title="Events from different groups can be combined in combined bets" trans="attr-only">{{groupedMarkets[0].express_id}}</span>
+                    </li>
+                    <li class="cashout-icon-market-v3" title="Cash-out available" trans ng-show="groupedMarkets[0].cashout && ((!$root.env.live && !!$root.partnerConfig.is_cashout_prematch) || ($root.env.live && !!$root.partnerConfig.is_cashout_live))"></li>
+                    <li class="favorite-icon-market-v3" ng-class="{'remove': openGame.sport.favouriteMarkets.indexOf(groupedMarkets) !== -1 }" ng-click="addToFavouriteMarkets(groupedMarkets)"></li>
+                </ul>
             </div>
             <div ng-repeat="market in groupedMarkets|orderBy: 'order' track by market.id" class="l-b column-{{market.col_count || 1}}" ng-class="{'default': market.col_count > 5}">
                <div class="single-events-b-v3" ng-repeat="event in market.events|orderBy:'order' track by $index" ng-click="!event.dummy && bet(event, market, openGame);" ng-mouseover="($location.path() !='/multiview/') && displayEventLimit(event, openGame, false, market)" ng-mouseleave="($location.path() !='/multiview/') && cancelDisplayEventLimit(event)"  title="{{event.name}} {{ displayBase(event, market)}}" ng-class="{'pointer-events-none': event.is_empty, 'active': isEventInBetSlip(event), 'blocked': ((event.price | oddConvert:'decimal') == 1 || openGame.is_blocked)}">
-                   <div class="max-bet-tooltip-v3" ng-show="$root.env.authorized && event.maxBet !== undefined" ng-class="{'maxbet-enabled': $root.env.authorized}">
-                      Max: <b ng-bind="conf.onlyDecimalStakeAmount ? Math.floor(event.maxBet) : event.maxBet"></b> {{$root.profile.currency_name|currency }}
+                   <div class="max-bet-tooltip-v3" ng-show="$root.env.authorized && event.maxBet !== undefined" ng-class="{'maxbet-enabled': $root.env.authorized}" title="{{conf.onlyDecimalStakeAmount ? Math.floor(event.maxBet) : event.maxBet}} {{$root.profile.currency_name|currency }}">
+                      Max:
                    </div>
                    <b class="p-v" ng-show="(event.price | oddConvert:'decimal') != 1 && !openGame.is_blocked" ng-class="{'factor-top': event.price_change > 0, 'factor-bottom': event.price_change < 0}">{{event.price|oddConvert:$root.env.oddFormat:null:market.display_key}}</b>
                 </div>

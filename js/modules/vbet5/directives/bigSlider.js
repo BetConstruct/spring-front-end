@@ -13,6 +13,7 @@ VBET5.directive('vbetBigSlider', ['$rootScope', '$timeout', '$route', '$interval
         scope: {
             sliderTemplate: '=',
             images: '=',
+            additionalData: '=',
             linkClickHandler: '&'
         },
         link: function (scope) {

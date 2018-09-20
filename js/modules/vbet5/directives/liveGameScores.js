@@ -44,6 +44,20 @@ VBET5.directive('liveGameScores', ['$window', 'Config', 'Storage', 'GameInfo', '
 
             /**
              * @ngdoc method
+             * @name switchMarketsInOneColumn
+             * @methodOf vbet5.controller:classicViewMainCtrl
+             * @description  switch markets to one or two columns
+             * @param {boolean} enabled
+             */
+            scope.switchMarketsInOneColumn = function switchMarketsInOneColumn(enabled) {
+                if (scope.marketsInOneColumn.enabled !== enabled) {
+                    scope.marketsInOneColumn.enabled = enabled;
+                    Storage.set('markets_in_one_column', enabled);
+                }
+            };
+
+            /**
+             * @ngdoc method
              * @name changeStatsMode
              * @methodOf vbet5.directive:liveGameScores
              * @description  changes live games stats mode from chart to details and back

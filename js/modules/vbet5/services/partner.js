@@ -51,7 +51,7 @@ VBET5.service('partner', ['$rootScope', '$window', '$location', '$document', 'Co
         if (Config.partner.documentDomain) {
             try {
                 if (Config.partner.documentDomain === true) {
-                    $window.document.domain = $window.location.hostname.split(/\./).slice(-2).join(".");
+                    $window.document.domain = $window.location.hostname.split(/\./).slice(1).join(".");
                 } else {
                     $window.document.domain = Config.partner.documentDomain;
                 }

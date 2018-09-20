@@ -381,23 +381,28 @@
 //  box-sizing: border-box;
 //  height: 22px;
 //}
-.popular-game-view-wrapper-v3 .market-title-v3 > h3 {
-  box-sizing: border-box;
-  line-height: 22px;
-  color: $text-palette-4;
+.popular-game-view-wrapper-v3 .market-title-v3 {
+  &:after{
+    display: none;
+  }
+  &:before {
+    box-sizing: border-box;
+    line-height: 22px;
+    color: $text-palette-4;
+  }
 }
 
-.popular-game-view-wrapper-v3 .market-icons-view-v3 > ul > li:before {
+.popular-game-view-wrapper-v3 .market-icons-t-r > li:before {
   box-sizing: border-box;
   font-size: 14px;
 }
 
-.popular-game-view-wrapper-v3 .market-icons-view-v3 > ul {
+.popular-game-view-wrapper-v3 .market-icons-t-r {
   box-sizing: border-box;
   padding: 0;
 }
 
-.popular-game-view-wrapper-v3 .market-icons-view-v3 > ul > li {
+.popular-game-view-wrapper-v3 .market-icons-t-r > li {
   box-sizing: border-box;
   border: none;
   @include rtl {

@@ -480,6 +480,7 @@
   margin-right: 4px;
 }
 
+
 .asian-left-contain-menu .single-bet-container [type="text"] {
   box-shadow: none;
   font-size: 11px;
@@ -1544,19 +1545,17 @@
 
 .block-filter-hdp ul {
   float: left;
+  display: table;
+  border-spacing: 1px 0;
 }
 
 .block-filter-hdp ul li {
-  float: left;
-  display: inline-block;
-  padding: 0 10px;
-  height: 18px;
-  font: 9px/18px $font-f;
-  margin: 0 0 0 1px;
+  display: table-cell;
+  padding: 4px;
+  font: 9px/10px $font-f;
   transition: 240ms color, 240ms background;
   box-sizing: border-box;
   @include rtl {
-    float: right;
     margin: 0 1px 0 0;
   }
 }
@@ -2179,13 +2178,6 @@
 }
 
 .asian-left-contain-menu {
-  .bookingTabs-j {
-    button {
-      &.active {
-        box-shadow: none;
-      }
-    }
-  }
   .bsTypeSwitchers-j {
     position: static;
     float: left;
@@ -2747,7 +2739,31 @@ table.hdp-contain-j {
     }
   }
 }
-
+[class*="betcoapps.com"] {
+  min-width: 1400px;
+  table.hdp-contain-j {
+    td, th {
+      &.xs-s, &.ms, &.xs:not(:last-child):not(:first-child) {
+        width: 7%;
+        min-width: 102px;
+        max-width: 102px;
+      }
+    }
+    tr td:nth-child(6):nth-last-child(6),
+    tr td:nth-child(5):nth-last-child(6) {
+      border-right-color: #0be493;
+    }
+    &.hdp-titile-j tr td:nth-child(5):nth-last-child(6) {
+      border-right: 1px solid #0be493;
+    }
+    &.hdp-titile-j td:not(:first-child) > p {
+      padding: 0 6px;
+    }
+    td table {
+      table-layout: auto;
+    }
+  }
+}
 .asian-pagination {
   float: left;
   width: 100%;
@@ -2850,6 +2866,11 @@ table.hdp-contain-j {
 }
 .body-wrapper.asian .asian-left-contain-menu .list-bet-block .bets-selections-content .bet-container ul:last-child {
   border-bottom: 0;
+}
+.body-wrapper.asian .asian-left-contain-menu .bet-form form .increase-stake-input input[type="text"] {
+  color: #686767;
+  background: none;
+  border: 1px solid #c9c9c9;
 }
 .asian .bet-status-container {
   background: darken(desaturate(adjust-hue($skin-color, 4deg), 15), 1);

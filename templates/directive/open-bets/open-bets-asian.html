@@ -1,20 +1,16 @@
-<div class="open-bets-buttons">
-    <button ng-click="closeOpenBets()" ng-class="{'active': openBetsState.open === false}" trans>Bet slip</button>
-    <button data-count="{{openBets.length}}" ng-click="openOpenBets()" ng-class="{'active': openBetsState.open === true}" trans>Open bets</button>
-</div>
-<div class="contain-open-bets single-open-bets" ng-if="openBetsState.open">
-    <p>
+<div class="contain-open-bets single-open-bets" ng-if="betSlip.mode === 'openBets'">
+    <p class="info-all-bets">
         {{::'You can view all your bets in'|translate}}
         <span ng-click="$root.broadcast('open.history');goToTop(true);$event.stopPropagation()" trans>Bet History</span>
     </p>
-    <div class="slider-open-bets" ng-repeat="bet in openBets" ng-class="{'open': bet.openEvents}"
+    <div class="slider-open-bets" ng-repeat="bet in shared.openBets" ng-class="{'open': bet.openEvents}"
          ng-init="bet.openEvents = true" ng-hide="openBetsLoading || $root.editBet.loading">
         <p ng-click="bet.openEvents = !bet.openEvents">
             <span ng-bind="betTypes[bet.type]|translate"></span>
             <span ng-if="bet.type === 3"> {{::bet.system_min_count}}/{{::bet.events.length}}</span>
             <i class="edit-bets-icon"
                ng-show="bet.cashoutEnabled && (bet.type == 2 || bet.type == 1)  && minCashoutValue <= bet.cash_out && !$root.editBet.edit"
-               ng-click="$event.stopPropagation(); addEvents(bet, true, closeOpenBets);">
+               ng-click="$event.stopPropagation(); editBet(bet);">
             </i>
         </p>
         <div class="open-bets-time-id">
@@ -41,17 +37,22 @@
                 </li>
 
             </ul>
-            <div class="bet-accept-changes-b-v3" ng-show="bet.outcome == 0 && bet.cash_out !== undefined">
+            <div class="bet-accept-changes-b-v3" ng-show="bet.outcome == 0 && bet.cash_out !== undefined || bet.auto_cash_out_amount !== null">
                 <div class="button-view-contain-v3">
-                    <button class="open-bets-cashout-button" ng-class="{'rule-active': bet.auto_cash_out_amount != null}" ng-mouseover="autoCashoutRule.showInfo = true; getAutoCashOutDetails(bet.id, bet.auto_cash_out_amount)" ng-mouseleave="autoCashoutRule.showInfo = false" ng-click="$root.broadcast('open.cashoutDialog', {bet: bet});$event.stopPropagation();">
-                        <span>Cash-out</span>
-                        <b>{{bet.cash_out}} {{::$root.profile.currency_name|currency}}</b>
-                    </button>
+                    <div class="bs-cash-out-btn" ng-mouseover="autoCashoutRule.showInfo = true; getAutoCashOutDetails(bet.id, bet.auto_cash_out_amount)" ng-mouseleave="autoCashoutRule.showInfo = false">
+                        <button class="open-bets-cashout-button"
+                                ng-class="{'rule-active': bet.auto_cash_out_amount != null}"
+                                ng-click="$root.broadcast('open.cashoutDialog', {bet: bet});$event.stopPropagation();"
+                                ng-disabled="bet.id === $root.editBet.oldBetId || !(bet.outcome == 0 && bet.cash_out !== undefined)">
+                            <span>Cash-out</span>
+                            <b>{{bet.cash_out}} <span ng-show="bet.cash_out">{{::$root.profile.currency_name|currency}}</span></b>
+                        </button>
+                    </div>
                     <div class="hover-auto-cashout-rule" ng-show="bet.auto_cash_out_amount != null && autoCashoutRule.theValueReaches">
                         <div class="auto-cashout-rule">
                             <h4 trans>Rule active</h4>
                             <p>{{('If the value reaches '| translate)}}<span>{{ autoCashoutRule.theValueReaches}}</span> <b>{{ $root.profile.currency_name|currency}}</b></p>
-                            <p>{{('Cash out '| translate)}}<span ng-if="!autoCashoutRule.isPartial"><span>{{ autoCashoutRule.theValueReaches}}</span> <b>{{ $root.profile.currency_name|currency}}</b></span></p>
+                            <p>{{('Cash out '| translate)}}<span ng-if="autoCashoutRule.partialAmount"><span>{{ autoCashoutRule.partialAmount}}</span> <b>{{ $root.profile.currency_name|currency}}</b></span></p>
                         </div>
                         <button ng-click="cancelAutoCashOutRule(bet.id)" trans>Cancel rule</button>
                     </div>

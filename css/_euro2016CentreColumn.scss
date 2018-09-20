@@ -150,14 +150,27 @@
   }
 }
 
-.market-title-v3 > .arrow-view-v3 {
-  box-sizing: border-box;
-  width: 26px;
-  line-height: 28px;
-  color: $c16-tp-6;
-  cursor: pointer;
+.market-title-v3 {
+  &:after{
+    display: inline-block;
+    vertical-align: top;
+    width: 26px;
+    font: 16px/28px icomoon;
+    color: $c16-tp-6;
+    content: "\e671";
+    text-align: center;
+  }
+  &.closed:after{
+    content: "\e670";
+  }
+  > .arrow-view-v3 {
+    box-sizing: border-box;
+    width: 26px;
+    line-height: 28px;
+    color: $c16-tp-6;
+    cursor: pointer;
+  }
 }
-
 .market-title-v3 > .arrow-view-v3:before {
   box-sizing: border-box;
   content: "\e671";
@@ -188,8 +201,27 @@
   //top: 0;
   //left: 0;
 }
-
 .market-title-v3 > h3 {
+  box-sizing: border-box;
+  -webkit-box-flex: 1;
+  -ms-flex: 1;
+  flex: 1;
+  padding: 0 0 0 10px;
+  font-size: 6 + $size-font;
+  line-height: 28px;
+  font-weight: normal;
+  color: $c16-tp-3;
+  //position: relative;
+  //width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  @include rtl {
+    padding: 0 10px 0 0;
+  }
+}
+.market-title-v3:before {
+  content: ""attr(data-title)"";
   box-sizing: border-box;
   -webkit-box-flex: 1;
   -ms-flex: 1;
@@ -249,33 +281,62 @@
     float: right;
   }
 }
-
-.market-icons-view-v3 > ul > li {
+.market-icons-t-r{
   box-sizing: border-box;
-  height: 20px;
-  min-width: 30px;
   display: inline-block;
   vertical-align: top;
-  float: left;
-  border-right: 1px solid rgba($c16-tp-12, 0.25);
-  font-size: 8 + $size-font;
-  line-height: 20px;
-  padding: 0 5px;
-  text-align: center;
-  white-space: nowrap;
-  color: $c16-tp-3;
-  @include rtl {
-    float: right;
-    border-left: 1px solid rgba($c16-tp-12, 0.25);
-    border-right: none;
+  padding: 4px 0 3px;
+  > li{
+    box-sizing: border-box;
+    height: 20px;
+    min-width: 30px;
+    display: inline-block;
+    vertical-align: top;
+    float: left;
+    border-right: 1px solid rgba($c16-tp-12, 0.25);
+    font-size: 8 + $size-font;
+    line-height: 20px;
+    padding: 0 5px;
+    text-align: center;
+    white-space: nowrap;
+    color: $c16-tp-3;
+    &:before {
+      box-sizing: border-box;
+      font: 14px/20px icomoon;
+    }
+    @include rtl {
+      float: right;
+      border-left: 1px solid rgba($c16-tp-12, 0.25);
+      border-right: none;
+    }
   }
 }
 
-.market-icons-view-v3 > ul > li:before {
-  box-sizing: border-box;
-  font: 14px/20px icomoon;
-}
-
+//.market-icons-view-v3 > ul > li {
+//  box-sizing: border-box;
+//  height: 20px;
+//  min-width: 30px;
+//  display: inline-block;
+//  vertical-align: top;
+//  float: left;
+//  border-right: 1px solid rgba($c16-tp-12, 0.25);
+//  font-size: 8 + $size-font;
+//  line-height: 20px;
+//  padding: 0 5px;
+//  text-align: center;
+//  white-space: nowrap;
+//  color: $c16-tp-3;
+//  @include rtl {
+//    float: right;
+//    border-left: 1px solid rgba($c16-tp-12, 0.25);
+//    border-right: none;
+//  }
+//}
+//
+//.market-icons-view-v3 > ul > li:before {
+//  box-sizing: border-box;
+//  font: 14px/20px icomoon;
+//}
 .favorite-icon-market-v3:before {
   box-sizing: border-box;
   content: "\f005";
@@ -283,20 +344,17 @@
   cursor: pointer;
   //transition: color 240ms;
 }
-
 .favorite-icon-market-v3.active:before,
 .favorite-icon-market-v3:hover:before,
 .favorite-icon-market-v3.remove:before {
   box-sizing: border-box;
   color: $brand-color-2;
 }
-
 .cashout-icon-market-v3:before {
   box-sizing: border-box;
   content: "\e68a";
   color: #028947;
 }
-
 .link-icon-market-v3:before {
   box-sizing: border-box;
   content: "\e613";
@@ -344,6 +402,15 @@
   }
   &.column-4 {
     grid-template-columns: repeat( auto-fit, minmax(24%, 1fr));
+    > .single-events-b-v3:nth-child(5):nth-last-child(1){
+      grid-column: 1 / 5;
+    }
+    > .single-events-b-v3:nth-child(5):nth-last-child(2){
+      grid-column: 1 / 3;
+      + .single-events-b-v3{
+        grid-column: 3 / 5;
+      }
+    }
   }
   &.column-5 {
     grid-template-columns: repeat( auto-fit, minmax(19%, 1fr));
@@ -520,6 +587,7 @@
   color: set-color($brand-color-1);
   white-space: nowrap;
   overflow: hidden;
+  pointer-events: none;
   &:before {
     box-sizing: border-box;
     content: "";
@@ -533,6 +601,10 @@
     border-style: solid;
     border-width: 6px 6px 0;
     border-color: $brand-color-1 transparent transparent;
+  }
+  &:after{
+    content: "" attr(title) "";
+    font-weight: bold;
   }
 }
 .single-events-b-v3:hover > .max-bet-tooltip-v3,
@@ -804,18 +876,15 @@
     }
   }
 }
-
 .favorite-game-open-euro2016 > .prematch-games-list {
   box-sizing: border-box;
   display: none;
 }
-
 .prematch-view-v3.favorite-game-open-euro2016 > .live-game-view-contain-v3 {
   box-sizing: border-box;
   width: 100%;
   padding: 0;
 }
-
 .prematch-view-v3.favorite-game-open-euro2016 .all-game-info-container-v3 {
   box-sizing: border-box;
   padding-left: 0;
@@ -940,7 +1009,6 @@
     }
   }
 }
-
 .prematch-view-v3 .live-game-view-contain-v3 {
   box-sizing: border-box;
   float: none;
@@ -956,7 +1024,6 @@
     padding: 0 5px 0 0;
   }
 }
-
 .close-multiv-j:empty {
   display: none;
 }
@@ -986,7 +1053,27 @@
     padding: 0 6px 0 5px;
   }
 }
-
+@supports (display: grid) {
+  .prematch-games-list, .prematch-view-v3 .live-game-view-contain-v3{
+    display: grid;
+    grid-template-rows: auto 11fr;
+    grid-auto-columns: 100%;
+    grid-gap: 5px 0;
+    grid-template-areas: "prematch-top"
+    "prematch-bottom";
+  }
+  .prematch-games-list-title-v3, .game-header-view-v3{
+    float: none;
+    grid-area: prematch-top;
+  }
+  .prematch-list-view-v3, .prematch-view-v3 .all-game-info-container-v3{
+    position: static;
+    top: 0;
+    height: auto;
+    grid-area: prematch-bottom;
+    padding-left: 0;
+  }
+}
 .prematch-view-v3 {
   .game-additional-icons > ul {
     display: none;
@@ -1002,9 +1089,9 @@
   box-sizing: border-box;
   float: left;
   width: 100%;
-  max-height: 30000px;
+  //max-height: 30000px;
   //animation: region-open-animate-b 500ms ease-in-out;
-  overflow: hidden;
+  //overflow: hidden;
   @include rtl {
     margin: 0 0 0 4px;
   }
@@ -1012,8 +1099,11 @@
 
 .prematch-game-view-contain-v3.closed {
   box-sizing: border-box;
-  max-height: 29px;
+  //max-height: 29px;
   //animation: region-closed-animate-b 240ms ease;
+  > .title-championship-v3 ~ .time-info-game-box-v3{
+    display: none;
+  }
 }
 
 @keyframes region-open-animate-b {
@@ -1162,14 +1252,15 @@
   box-sizing: border-box;
   float: left;
   width: 100%;
-  overflow: hidden;
-  max-height: 30000px;
+  //overflow: hidden;
+  //max-height: 30000px;
   //animation: prematch-open-animate-b 500ms ease-in-out;
 }
 
 .time-info-game-box-v3.closed {
-  max-height: 26px;
+  //max-height: 26px;
   //animation: prematch-closed-animate-b 240ms ease;
+  > .time-title-view-v3 ~ .game-events-view-v3{display: none;}
 }
 
 .time-info-game-box-v3.closed > .time-title-view-v3 {
@@ -1671,7 +1762,7 @@
           display: block;
           width: 100%;
           font: 18px/33px icomoon;
-          color: #ac8336;
+          color: $brand-color-2;
         }
         &:not([data-count='0']):after {
           content: attr(data-count);

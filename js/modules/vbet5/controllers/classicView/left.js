@@ -33,7 +33,7 @@ angular.module('vbet5.betting').controller('classicViewLeftController', ['$rootS
     }
     //setting some initial values
     $scope.liveFilters = {
-        withVideo: Config.main.forgetFiltersSettings ? false : !!Storage.get('liveFiltersWithVideo'),
+        withVideo: Config.main.forgetFiltersSettings ? false : !!Storage.get('liveFiltersWithVideo') || !!$location.search().withvideo,
         disableRegions: Config.main.forgetFiltersSettings ? true : (Storage.get('liveFiltersDisableRegions') === undefined) ? !Config.main.selectRegionsByDefault : Storage.get('liveFiltersDisableRegions')
     };
 
@@ -54,13 +54,12 @@ angular.module('vbet5.betting').controller('classicViewLeftController', ['$rootS
         $scope.leftMenuState.prematch = {sport: {}, region: {}, groups: {}};
     }
     if (Config.main.disableSavingLiveMenuState || Config.main.expandOnlyOneSport) {
-        $scope.leftMenuState.live = { sport: {}, region: {}, competition: {}, groups: {}}
+        $scope.leftMenuState.live = { sport: {}, region: {}, competition: {}, groups: {}};
     }
 
-    if ($location.path() === '/multiview/' && Config.main.expandFirstSportInMultiview && !Storage.get('multiViewFirstSportExpanded')) {
+    if ($location.path() === '/multiview/' && Config.main.expandFirstSportInMultiview) {
         $scope.leftMenuState.live.sport[1] = {expanded: true};
         $scope.leftMenuState.prematch.sport[1] = {expanded: true};
-        Storage.set('multiViewFirstSportExpanded', true);
     }
 
     var deepLinkedGameId = null;
@@ -209,7 +208,7 @@ angular.module('vbet5.betting').controller('classicViewLeftController', ['$rootS
             if (Number($location.search().type) === Number(Config.env.live)) {
                 handleDeepLinking();
             } else {
-                $scope.toggleLive();
+                $scope.toggleLive(true);
             }
         }, 100);
     });
@@ -289,8 +288,8 @@ angular.module('vbet5.betting').controller('classicViewLeftController', ['$rootS
      * @description Toggles  live/pre-match
      *
      */
-    $scope.toggleLive = function toggleLive() {
-        if (Config.main.expandOnlyOneSport) {
+    $scope.toggleLive = function toggleLive(disableLocationBackup) {
+        if (Config.main.expandOnlyOneSport && !disableLocationBackup) {
             backupLocation(Config.env.live);
         }
         Config.env.live = !Config.env.live;
@@ -298,7 +297,7 @@ angular.module('vbet5.betting').controller('classicViewLeftController', ['$rootS
         $scope.$emit('toggleLive');
         if (Config.env.live && liveGamesData) {
             updateMenuLiveGames({sport: liveGamesData});
-            if (Config.main.expandOnlyOneSport) {
+            if (Config.main.expandOnlyOneSport && !disableLocationBackup) {
                 restoreLocation(true);
             }
             if (liveGamesData && liveGamesData.length) {
@@ -315,7 +314,7 @@ angular.module('vbet5.betting').controller('classicViewLeftController', ['$rootS
             return;
         }
         if (!Config.env.live) {
-            if (Config.main.expandOnlyOneSport) {
+            if (Config.main.expandOnlyOneSport && !disableLocationBackup) {
                 restoreLocation(false);
             } else if (Config.main.disableSavingPreMatchMenuState) {
                 $location.search('region', undefined);

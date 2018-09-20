@@ -108,7 +108,7 @@ angular.module('vbet5.betting').controller('overviewCtrl', ['$rootScope', '$scop
                     ['id', 'start_ts', 'team1_name', 'team2_name', 'type', 'info', 'stats', 'events_count', 'markets_count', 'is_blocked', 'tv_type', 'video_id', 'video_id2', 'video_id3', 'video_provider']
                 ],
                 'event': ['id', 'price', 'type', 'name'],
-                'market': ['type', 'express_id', 'name']
+                'market': ['type', 'express_id', 'name', 'home_score', 'away_score']
             },
             'where': {
                 'game': {'type': 1},

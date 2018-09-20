@@ -1,0 +1,14 @@
+<div class="egt-table" ng-show="egtJackpot && jackpotValues">
+    <div class="egt-tcell">
+        <div class="egt-container">
+            <div class="egt-content" ng-repeat="(jackpotKey, jackpotValue) in jackpotValues track by $index">
+                <div class="egt-bg {{jackpotKey}}">
+                    <ul>
+                        <li>{{egtJackpot.currency[0]}}<br>{{egtJackpot.currency[1]}}<br>{{egtJackpot.currency[2]}}</li>
+                        <li ng-repeat="val in jackpotValue track by $index">{{val}}</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

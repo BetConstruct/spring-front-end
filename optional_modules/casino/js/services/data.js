@@ -92,8 +92,8 @@ CASINO.service('casinoData', ['CConfig', 'Config', 'WPConfig', 'content', '$http
      * @param {string} countryCode user's country code id
      * @returns {Object} promise
      */
-    casinoData.getOptions = function getOptions(countryCode) {
-        return $http.get(DATA_URL + 'getOptions?partner_id=' + Config.main.site_id + (countryCode && ('&country=' + countryCode) || ''));
+    casinoData.getOptions = function getOptions(countryCode, categoryId, providerName) {
+        return $http.get(DATA_URL + 'getOptions?partner_id=' + Config.main.site_id + (countryCode && ('&country=' + countryCode) || '') + (categoryId && ('&categories=' + categoryId) || '') + (providerName && ('&providers=' + providerName + '&only_categories=1') || ''));
     };
 
     casinoData.getJackpotGames = function getJackpotGames () {

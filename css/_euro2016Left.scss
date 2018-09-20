@@ -794,6 +794,7 @@
     margin-left: 4px;
     padding: 0 37px 0 30px;
     text-align: right;
+    transform: translate3d(0,0,0);
   }
   &.sports-group-item-v3 {
     height: 36px;
@@ -1405,6 +1406,9 @@
   @include rtl {
     padding: 0;
   }
+  &:after {
+    content: none;
+  }
 }
 
 .prematch-view .competition-title-v3.active,
@@ -1584,7 +1588,6 @@
   box-shadow: inset 2px 0 0 rgba(set-color(lighten(desaturate(adjust-hue($c16-sp, -1deg), 14), 6)),0.05);
   contain: layout;
   @include rtl {
-    margin-left: 4px;
     box-shadow: inset -2px 0 0 rgba(set-color(lighten(desaturate(adjust-hue($c16-sp, -1deg), 14), 6)),0.05);
   }
   .l-b {
@@ -1658,26 +1661,25 @@
   z-index: 8;
   min-height: 14px;
   font-size: 0;
-}
-
-.team-name-1-v3 > p {
-  box-sizing: border-box;
-  -webkit-box-flex: 1;
-  -ms-flex: 1;
-  flex: 1;
-  font-size: 5 + $size-font;
-  line-height: 14px;
-  color: $c16-tp-1;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  overflow: hidden;
-  //transform: translate3d(0, 0, 0);
-  @include rtl {
-    text-align: right;
+  &:before{
+    content: ""attr(data-title)"";
+    box-sizing: border-box;
+    -webkit-box-flex: 1;
+    -ms-flex: 1;
+    flex: 1;
+    font-size: 5 + $size-font;
+    line-height: 14px;
+    color: $c16-tp-1;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    //transform: translate3d(0, 0, 0);
+    @include rtl {
+      text-align: right;
+    }
   }
 }
-
-.single-game-item-v3.no-events .team-name-1-v3 > p {
+.single-game-item-v3.no-events .team-name-1-v3:before{
   box-sizing: border-box;
   color: rgba($c16-tp-1, 0.4);
 }
@@ -1689,7 +1691,7 @@
   text-align: right;
   font-size: 6 + $size-font;
   line-height: 14px;
-  color: #aa8136;
+  color: $brand-color-2;
   padding: 0 0 0 3px;
   transform: translate3d(0, 0, 0);
 }
@@ -1813,7 +1815,7 @@
 .icon-separator-v3.favorite:hover:before,
 .icon-separator-v3.favorite.active:before {
   box-sizing: border-box;
-  color: #aa8136;
+  color: $brand-color-2;
   cursor: pointer;
 }
 
@@ -2029,14 +2031,13 @@
 //  left menu closed END
 .classic-view-column-v3 {
   .sports-item-v3 {
-    & + .region-item-row-v3 .single-game-item-v3.active:after {
+    & ~ .region-item-row-v3 .single-game-item-v3.active:after {
       content: "";
       position: absolute;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
-      background: #474d5a;
       background: -moz-linear-gradient(left, $c16-sp-8 0%, $c16-sp-8 27%, $c16-sp-9 58%, $c16-sp-9 100%);
       background: -webkit-linear-gradient(left, $c16-sp-8 0%, $c16-sp-8 27%, $c16-sp-9 58%, $c16-sp-9 100%);
       background: linear-gradient(to right, $c16-sp-8 0%, $c16-sp-8 27%, $c16-sp-9 58%, $c16-sp-9 100%);

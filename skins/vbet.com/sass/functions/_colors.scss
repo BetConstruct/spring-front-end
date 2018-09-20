@@ -1,11 +1,14 @@
 $hero-color:        #a61f67;
 $brand-color-1:     #1a7051;
-$brand-color-2:     #A48243;
+$brand-color-2:     #c29440;
 
 $skin-color: #1e2639;
 $text-color: $skin-color;
 
+$disable-brand-color-2-sc: true, #ffffff;
+
 $asian-view-custom: true;
+$new-casino: true;
 $custom-very-top-menu: true;
 
 @if ($skin-second==true) {

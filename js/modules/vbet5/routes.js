@@ -23,6 +23,10 @@ angular.module('vbet5').config(['$routeProvider', '$anchorScrollProvider', 'Skin
             templateUrl: getTemplate('templates/sport/main.html'),
             reloadOnSearch: false
         })
+        .when('/help/:part1?/:part2?/:part3?', {
+            templateUrl: getTemplate('templates/help-page/main.html'),
+            reloadOnSearch: false
+        })
         .when('/overview/', {
             templateUrl: function () {
 
@@ -309,6 +313,10 @@ angular.module('vbet5').config(['$routeProvider', '$anchorScrollProvider', 'Skin
         })
         .when('/betonpolitics/', {
             templateUrl: 'templates/bet-on-politics/main.html',
+            reloadOnSearch: false
+        })
+        .when('/esports/', {
+            templateUrl: getTemplate('optional_modules/esports/templates/main.html'),
             reloadOnSearch: false
         })
         .otherwise({

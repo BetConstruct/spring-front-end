@@ -153,6 +153,7 @@ angular.module('vbet5').constant('BackendConstants', (function () {
             "WrongCurrencyCode": 2098,
             "WrongInputParameters": 2099,
             "InvalidClientBonus": 2412,
+            "BonusEngineError": 2445,
             "WrongLoginAttempts": 3000,
             "NotSupportedCurrency": 3001,
             "WrongOldPassword": 3002,

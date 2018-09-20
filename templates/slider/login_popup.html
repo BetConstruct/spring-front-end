@@ -41,7 +41,7 @@
                                                 <div class="g-recaptcha" data-callback="recaptchaUpdateCallback" data-sitekey="{{recaptcha.key}}" data-theme="{{recaptcha.theme || 'dark'}}" data-size="{{recaptcha.size || 'normal'}}"></div>
                                             </div>
                                         </div>
-                                        <div class="field-separator" ng-if="conf.smsVerificationLogin.enabled">
+                                        <div class="field-separator" ng-if="conf.smsVerification.login">
                                             <label trans>SMS confirmation code</label>
                                             <ul class="sms-confirmation-wrap">
                                                 <li>
@@ -92,9 +92,9 @@
                                             <p trans>Username and password should be less than 50 characters.</p>
                                         </div>
                                         <div class="signin-error-message" ng-show="signInError && forms.signinform.$pristine && !params.needVerification && !params.lockedUser">
-                                            <p ng-if="!conf.registration.inputBirthDateOnLogin && !conf.smsVerificationLogin.enabled" trans>Invalid username or password.</p>
-                                            <p ng-if="conf.registration.inputBirthDateOnLogin && !conf.smsVerificationLogin.enabled" trans>Invalid username or password or birthdate.</p>
-                                            <p ng-if="conf.smsVerificationLogin.enabled" ng-bind="signInError || 'Invalid username, password or confirmation code'" trans></p>
+                                            <p ng-if="!conf.registration.inputBirthDateOnLogin && !conf.smsVerification.login" trans>Invalid username or password.</p>
+                                            <p ng-if="conf.registration.inputBirthDateOnLogin && !conf.smsVerification.login" trans>Invalid username or password or birthdate.</p>
+                                            <p ng-if="conf.smsVerification.login" ng-bind="signInError || 'Invalid username, password or confirmation code'" trans></p>
                                         </div>
                                         <div class="signin-error-message" ng-show="signInError && forms.signinform.$pristine && params.needVerification && !params.lockedUser">
                                             <p trans>Please verify your account to be able to log in.</p>
@@ -106,7 +106,7 @@
                                     <div class="button-sign">
                                         <ul >
                                             <li class="create-account-icon" ng-hide="!conf.registration.enable || conf.header.disableRegistrationAndLogin || conf.registration.registrationBlocked"><a ng-click="register();$event.stopPropagation()" trans>Create an account</a></li>
-                                            <li class="forgot-password-icon" ng-hide="conf.header.disableRegistrationAndLogin || conf.nemIDAuthentication.enabled"><a ng-click="env.showSlider = true; env.sliderContent = 'forgotPasswordForm';$event.stopPropagation()" title="Forgot your password?" trans>Forgot your password?</a></li>
+                                            <li class="forgot-password-icon" ng-hide="!conf.enableForgotPassword || conf.header.disableRegistrationAndLogin || conf.nemIDAuthentication.enabled"><a ng-click="env.showSlider = true; env.sliderContent = 'forgotPasswordForm';$event.stopPropagation()" title="Forgot your password?" trans>Forgot your password?</a></li>
                                         </ul>
                                     </div>
                                     <div class="button-confirm">

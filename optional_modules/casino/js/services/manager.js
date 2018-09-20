@@ -225,7 +225,7 @@ CASINO.service('casinoManager', ['$rootScope', '$q', '$window', '$sce', '$locati
             gameInfo.game.game_options && (gameUrl += gameInfo.game.game_options);
         }
 
-        gameUrl += "&devicetypeid=" + CConfig.deviceTypeId;
+        gameUrl += "&devicetypeid=" + CConfig.deviceTypeId + "&platformType=" + CConfig.platformType;
         gameInfo.gameMode === 'real' && (gameUrl += '&token=' + AuthData.getAuthToken() + (!Config.main.GmsPlatform ? '&username=' + $rootScope.profile.username : ''));
 
         return $sce.trustAsResourceUrl(gameUrl);
@@ -507,7 +507,7 @@ CASINO.service('casinoManager', ['$rootScope', '$q', '$window', '$sce', '$locati
      */
     function checkAndStartRealityInterval(scope) {
         if (Config.main.realityCheck.enabled && !realityCheckIntervalPromise) { // there isn't active timer for popup and enabled from config
-            if ($rootScope.profile.active_time_in_casino) {
+            if ($rootScope.profile && $rootScope.profile.active_time_in_casino) {
                 var handleRealityCheck = function () {
 
                     realityCheckIntervalPromise = undefined;

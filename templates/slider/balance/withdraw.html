@@ -44,7 +44,7 @@
                         <p trans>Please confirm money transfer</p>
                         <p><span trans>Amount: </span> <span class="amount">{{paymentAmount.withdraw}} {{selectedPaymentSystem.customCurrency?(selectedPaymentSystem.customCurrency|translate):(currency_name|currency)}}</span></p>
                     </div>
-                    <external-form  form-target="{{selectedPaymentSystem.stayInSameTabOnDeposit ? '_self' : '_blank'}}" params="externalFormParams" additional-fields="addFields" on-submit="confirmDeposit" button-caption="Confirm"></external-form>
+                    <external-form  form-target="{{::selectedPaymentSystem.stayInSameTabOnDeposit}}" params="externalFormParams" additional-fields="addFields" on-submit="confirmDeposit" button-caption="Confirm"></external-form>
                 </div>
 
                 <div ng-if="selectedPaymentSystem.hasBetShops" ng-init="loadBetShops(true)" class="radio-contein-withdraw">

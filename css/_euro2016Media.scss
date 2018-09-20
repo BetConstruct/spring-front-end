@@ -27,14 +27,15 @@
     display: none;
   }
 }
-
-@media screen and (max-width: 1279px) {
+@media screen and (max-width: 1440px) {
   .live-events-column-v3 {
     width: 100%;
-    &:first-child{
+    &:first-child {
       padding-right: 0;
     }
   }
+}
+@media screen and (max-width: 1279px) {
   .game-additional-icons > ul {
     display: none;
   }

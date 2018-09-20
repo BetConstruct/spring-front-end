@@ -6,8 +6,8 @@ VBET5.controller('affiliateCtrl', ['$scope', '$window', '$http', '$location', '$
     'use strict';
     (function() {
         var btag = Storage.get('promo_code') || $cookies.get('promo_code');
-        var defaultPath = '/sport/';
-
+        var defaultPath = '#/sport/';
+        var defaultLocation = $window.origin + defaultPath;
         if (!btag) {
             $location.path(defaultPath);
             return;
@@ -25,7 +25,7 @@ VBET5.controller('affiliateCtrl', ['$scope', '$window', '$http', '$location', '$
         };
         var handleRedirection = function(path) {
             cancelTimeOut();
-            $location.path(path);
+            $window.location = path;
         };
 
         $http({
@@ -41,20 +41,18 @@ VBET5.controller('affiliateCtrl', ['$scope', '$window', '$http', '$location', '$
             },
             timeout : canceller.promise
         }).success(function(response) {
-            var path = defaultPath;
+            var path = defaultLocation;
             if (response.status && response.result) {
-                if (response.result.indexOf($window.origin) === -1) {
-                    $window.location = response.result;
-                    return;
-                } else if (response.result.indexOf('#') !== -1) {
+                if (response.result.indexOf($window.origin) === -1 || response.result.indexOf('#') !== -1) {
                     path = response.result;
+                    return;
                 } else {
                     path = $window.origin + response.result.replace($window.origin, '/#');
                 }
             }
             handleRedirection(path);
         }).error(function() {
-            handleRedirection(defaultPath);
+            handleRedirection(defaultLocation);
         });
 
         timeoutPrimise = $timeout(function() {

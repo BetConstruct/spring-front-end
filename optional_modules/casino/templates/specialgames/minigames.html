@@ -7,7 +7,7 @@
         <ul class="mini-game-type-p">
             <li ng-repeat="game in gameOptions.games track by game.id"><a ng-class="{'active': $index == gameOptions.selectedIndex}" ng-click="selectMiniGame($index)">{{game.name}}</a></li>
         </ul>
-        <div ng-if="gameOptions.frameUrl === ''" ng-click="loadGame();stopAutoSlideGames()"  class="mini-ifram-p" style="background-image: url({{gameOptions.games[gameOptions.selectedIndex].icon_2}})">
+        <div ng-if="gameOptions.frameUrl === '' && gameOptions.games[gameOptions.selectedIndex].icon_2" ng-click="loadGame();stopAutoSlideGames()"  class="mini-ifram-p" style="background-image: url({{gameOptions.games[gameOptions.selectedIndex].icon_2 || ''}});">
         </div>
         <div ng-if="gameOptions.frameUrl !== '' && !gameOptions.hideIframe && gameOptions.showGames" class="mini-ifram-p">
             <iframe ng-src="{{gameOptions.frameUrl}}"></iframe>

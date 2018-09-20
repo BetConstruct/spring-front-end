@@ -44,7 +44,6 @@ VBET5.controller('asianViewMainController', ['$rootScope', '$scope', '$filter', 
         };
 
         var asianConf = Config.main.asian;
-        var GroupBySequenceAndTypes = asianViewGmsBasaltChanger.groupBySequenceAndTypes;
 
         var MARKET_GROUP_ALL = {
             id: -2,
@@ -313,6 +312,43 @@ VBET5.controller('asianViewMainController', ['$rootScope', '$scope', '$filter', 
             }
         }
 
+        function updateHdpSequence (game, sequenceIndex) {
+            if (sequenceIndex.all) {
+                return;
+            }
+            var k, s;
+            if (game.availableSequences && game.availableSequences.length) {
+                for (k = 0; k < game.availableSequences.length; k++) {
+                    s = game.availableSequences[k];
+
+                    if (sequenceIndex.sequencesExclude && sequenceIndex.sequencesExclude.indexOf(s.sequence) === -1 && game['selectedSequence' + sequenceIndex.index]) {
+                        if (game['selectedSequence' + sequenceIndex.index].subKey === s.subKey && game['selectedSequence' + sequenceIndex.index].sequence === s.sequence) {
+                            return;
+                        }
+                    }
+
+                    if (sequenceIndex.sequences && sequenceIndex.sequences.indexOf(s.sequence) !== -1 && game['selectedSequence' + sequenceIndex.index]) {
+                        if (game['selectedSequence' + sequenceIndex.index].subKey === s.subKey && game['selectedSequence' + sequenceIndex.index].sequence === s.sequence) {
+                            return;
+                        }
+                    }
+                }
+                for (k = 0; k < game.availableSequences.length; k++) {
+                    s = game.availableSequences[k];
+
+                    if (sequenceIndex.sequencesExclude && sequenceIndex.sequencesExclude.indexOf(s.sequence) === -1) {
+                        game['selectedSequence' + sequenceIndex.index] = s;
+                        return;
+                    }
+
+                    if (sequenceIndex.sequences && sequenceIndex.sequences.indexOf(s.sequence) !== -1) {
+                        game['selectedSequence' + sequenceIndex.index] = s;
+                        return;
+                    }
+                }
+            }
+        }
+
         function updateGames(data) {
             var centerData = {};
             centerData.competitions = [];
@@ -335,7 +371,13 @@ VBET5.controller('asianViewMainController', ['$rootScope', '$scope', '$filter', 
                                     game.team1_name = game.team1_reg_name && game.team1_name.indexOf(game.team1_reg_name) === -1 ? game.team1_name + ' (' + game.team1_reg_name + ')' : game.team1_name;
                                     game.team2_name = game.team2_reg_name && game.team2_name.indexOf(game.team2_reg_name) === -1 ? game.team2_name + ' (' + game.team2_reg_name + ')' : game.team2_name;
                                 }
-                                GroupBySequenceAndTypes(game, AsianMarkets);
+                                asianViewGmsBasaltChanger(game, AsianMarkets);
+
+                                if (Config.main.GmsPlatform && $scope.selectedMarket.key === 'HDP' && Config.main.asian && Config.main.asian.separateMatchEventsOnHDP) {
+                                    angular.forEach(Config.main.asian.separateMatchEventsOnHDP, function (sequenceIndex) {
+                                        updateHdpSequence(game, sequenceIndex);
+                                    })
+                                }
                             });
                         }
                         centerData.competitions[sportData.id].push(competition);
@@ -786,7 +828,7 @@ VBET5.controller('asianViewMainController', ['$rootScope', '$scope', '$filter', 
                         id: game.region.id
                     };
                     gameDetails[game.id].competition = {name: game.competition.name, id: game.competition.id};
-                    GroupBySequenceAndTypes(gameDetails[game.id], AsianMarkets);
+                    asianViewGmsBasaltChanger(gameDetails[game.id], AsianMarkets);
 
                     $scope.expandedHdpGames[game.id] = gameDetails[game.id];
 

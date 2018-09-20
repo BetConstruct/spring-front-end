@@ -523,6 +523,7 @@ angular.module('vbet5').service('TopMenu', ['$rootScope', '$location', '$timeout
                             });
                         });
                     }
+                    menuItem.href = menuData[menuName].href || menuData[menuName].link || menuItem.href;
                     menuItem.authorized = menuData[menuName].authorized || false;
                     menuItem.authorizedOnly = menuData[menuName].authorizedOnly || false;
                     menuItem.positiveBalanceOnly = menuData[menuName].positiveBalanceOnly || false;

@@ -2,7 +2,7 @@ $delete-cache: '?v=' + random(666);
 
 $hero-color: #a61f67 !default;
 $brand-color-1: #1a7051 !default;
-$brand-color-2: #ac8336 !default;
+$brand-color-2: #c29440 !default;
 
 $vbet-colors: false !default;
 @if $vbet-colors == true {
@@ -198,7 +198,6 @@ $logo-fix-width:    156px !default;            $logo-fix-height:            36px
 
 $asian-switch-odds-state-colors: false !default;
 $classic-switch-odds-state-colors: false !default;
-$custom-footer-sprite: false !default;
 $menu-padding: 0 $logo-width !default;
 $coeff-color-map: (
   modern: red,
@@ -269,10 +268,11 @@ $custom-very-top-menu: false !default;
 $header-first-line-height: 52px !default;
 $header-nav-line-height: 42px !default;
 $subheader-height: 36px !default;
-$pages-with-full-width-header: (".russia2018", ".betonpolitics", ".betonpolitics", "[class*='game']:not(.games):not(.wwwgoodgames12com)", ".sport", ".winninglimits", ".insvirtualsports", ".virtualsports", ".multiview", ".full-screen", ".livecalendar", ".statistics", ".financials", ".results",  ".news", ".dashboard", ".csbpoolbetting", ".overview") !default;
+$pages-with-full-width-header: (".russia2018", ".betonpolitics", ".betonpolitics", "[class*='game']:not(.games):not(.wwwgoodgames12com):not(.wwwgamebetcom)", ".sport", ".winninglimits", ".insvirtualsports", ".virtualsports", ".multiview", ".full-screen", ".livecalendar", ".statistics", ".financials", ".results",  ".news", ".dashboard", ".csbpoolbetting", ".overview") !default;
 $pages-with-full-width-header-background: (".about", ".vrcasino", ".livedealer", ".vip-promos", ".external", ".ogwil",  ".games", ".backgammon", ".belote", ".gameslanding", ".pokerklas ", ".poolbetting", ".fantasy", ".freebet", ".gameCSB1providerCSBexid152000", ".csbpoolbetting", ".first_deposit_bonus", ".first_deposit_bonus_and_20_free_spins", ".poker") !default;
 $header-hero-color: $hero-color !default;
 $header-brand-color-1: $brand-color-1 !default;
+$subheader-hero-color: $hero-color !default;
 
 $registration-fields-background: $popup-form-palette !default;
 $registration-fields-background-border: opacify(rgba(set-color($popup-form-palette),0.19), $popup-form-opacify) !default;

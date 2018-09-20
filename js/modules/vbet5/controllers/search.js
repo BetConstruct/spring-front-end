@@ -13,6 +13,8 @@ VBET5.controller('searchCtrl', ['$rootScope', '$scope', 'TimeoutWrapper', '$rout
     $scope.showSearchCommandResults = false;
 
     var customSportAliasFilter = Utils.getCustomSportAliasFilter();
+    var eSports = $location.path() === '/esports/';
+
     /**
      * @ngdoc method
      * @name processResults
@@ -110,6 +112,11 @@ VBET5.controller('searchCtrl', ['$rootScope', '$scope', 'TimeoutWrapper', '$rout
             if (termIsNumber && Config.main.search.enableSearchByGameNumber) {
                 request.where.game['@or'].push({game_number: parseInt(term, 10)});
             }
+
+            if (eSports) {
+                request.where.sport = { type: 0 };
+            }
+
            Utils.setCustomSportAliasesFilter(request);
 
             promiseGame = Zergling.get(request);
@@ -132,6 +139,10 @@ VBET5.controller('searchCtrl', ['$rootScope', '$scope', 'TimeoutWrapper', '$rout
                     }
                 }
             };
+
+            if (eSports) {
+                compRequest.where.sport = { type: 0 };
+            }
 
             Utils.setCustomSportAliasesFilter(compRequest);
             promiseComp = Zergling.get(compRequest);
@@ -181,14 +192,14 @@ VBET5.controller('searchCtrl', ['$rootScope', '$scope', 'TimeoutWrapper', '$rout
 
         var currentParams = $location.search();
 
-        if (currentParams.type == result.game.type && currentParams.sport == result.sport.id && currentParams.competition == result.competition.id && currentParams.region == result.region.id &&  currentParams.game == result.game.id) {
+        if (currentParams.sport == result.sport.id && currentParams.competition == result.competition.id && currentParams.region == result.region.id &&  currentParams.game == result.game.id) {
             return;
         }
-        if($location.path() !== "/sport/"){
+        if($location.path() !== "/sport/" && !eSports){
             $location.path("/sport/");
         }
         $location.search({
-            type: result.game.type === 2 ? 0 : result.game.type,
+            type: eSports ? (result.game.type === 1 ? 'live' : 'preMatch') : (result.game.type === 2 ? 0 : result.game.type),
             sport: result.sport.id,
             competition: result.competition.id,
             region: result.region.id,

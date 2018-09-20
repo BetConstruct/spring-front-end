@@ -1270,7 +1270,7 @@ VBET5.service('Utils', ['$timeout', '$filter', '$location', '$window', 'Config',
      */
     Utils.setCustomSportAliasesFilter = function setCustomSportAliasesFilter(request, customIds) {
         if (Config.main.cyberSkin) {
-            customIds = Config.main.customSportIds && Config.main.customSportIds.cyber
+            customIds = Config.main.customSportIds && Config.main.customSportIds.cyber;
         } else {
             customIds = customIds || Utils.getCustomSportAliasFilter();
         }
@@ -1602,6 +1602,40 @@ VBET5.service('Utils', ['$timeout', '$filter', '$location', '$window', 'Config',
      */
     Utils.generatePermaLink = function generatePermaLink (news) {
         return (news.slug || news.title || '').replace(/ /g,"-") + '-id-' + news.id + '.html';
+    };
+
+    /**
+     * @ngdoc method
+     * @name copyObj
+     * @methodOf vbet5.service:Utils
+     * @description Copies seriazable object (no methods)
+     */
+    Utils.copyObj = function copyObj(o) {
+        var newO,
+            i;
+
+        if (typeof o !== 'object') {
+            return o;
+        }
+        if (!o) {
+            return o;
+        }
+
+        if ('[object Array]' === Object.prototype.toString.apply(o)) {
+            newO = [];
+            for (i = 0; i < o.length; i += 1) {
+                newO[i] = Utils.copyObj(o[i]);
+            }
+            return newO;
+        }
+
+        newO = {};
+        for (i in o) {
+            if (o.hasOwnProperty(i)) {
+                newO[i] = Utils.copyObj(o[i]);
+            }
+        }
+        return newO;
     };
 
     return Utils;

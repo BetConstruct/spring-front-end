@@ -580,7 +580,13 @@ VBET5.filter('convertSetName', function () {
         "Cricketset": "Innings",
         "Cricketset0": "Innings 0",
         "Cricketset1": "1st Innings",
-        "Cricketset2": "2nd Innings"
+        "Cricketset2": "2nd Innings",
+        "Floorballset": "Period",
+        "Floorballset0": "Period 0",
+        "Floorballset1": "Period 1",
+        "Floorballset2": "Period 2",
+        "Floorballset3": "Period 3",
+        "Floorballset4": "Period 4"
     };
     return function (rawName, sportAlias) {
         if (replacements[sportAlias + rawName] !== undefined) {

@@ -17,7 +17,7 @@ CMS.constant('WPConfig', {
         'default': 'vbet'
     },
     wpNewsBaseHost: {
-        main: 'www.vbet.com'
+        main: 'vbet'
     }, // this parameter will be passed to JSON api and all links in NEWS response(e.g. images) will have this host
     hiddenNewsCategoryIds: [113, 119, 114, 120, 121, 112],  //hide specific news categories from menu
     news: {

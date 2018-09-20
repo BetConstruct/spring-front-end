@@ -104,7 +104,7 @@
                             <div class="auto-cashout-rule" ng-if="cashoutDialog.type == 'autoCashout' && cashoutBet.auto_cash_out_amount != null">
                                 <h4 ng-show="!cashoutRule.loading" trans>Rule active</h4>
                                 <p ng-show="!cashoutRule.loading">{{::'If the value reaches'|translate}} <span>{{ cashoutRule.valueReachesAmount }}</span> <b>{{cashoutBet.currency|currency}}</b></p>
-                                <p ng-show="!cashoutRule.loading">{{::'Cash out'| translate}} <span ng-if="!cashoutRule.isPartial"><span>{{ cashoutRule.valueReachesAmount }}</span> <b>{{cashoutBet.currency|currency}}</b></span></p>
+                                <p ng-show="!cashoutRule.loading">{{::'Cash out'| translate}} <span ng-if="cashoutRule.partialAmount"><span>{{ cashoutRule.partialAmount }}</span> <b>{{cashoutBet.currency|currency}}</b></span></p>
                                 <vbet-loader class="page-center" ng-show="cashoutRule.loading"></vbet-loader>
                             </div>
                             <ul class="cashout-options" ng-if="cashoutDialog.type == 'cashout'">

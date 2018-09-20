@@ -347,6 +347,10 @@ angular.module('vbet5').run(['$rootScope', '$location', '$routeParams', '$timeou
             "betonpolitics": {
                 path: "#/betonpolitics",
                 config: "betOnPoliticsEnabled"
+            },
+            "esports": {
+                path: "#/esports",
+                config: "esportsEnabled"
             }
         };
 

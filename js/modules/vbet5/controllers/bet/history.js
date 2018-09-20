@@ -384,6 +384,15 @@ VBET5.controller('myBetsCtrl', ['$scope', 'Utils', 'ConnectionService', 'Zerglin
         }
     };
 
+    function calculateTaxAndBonus(bets) {
+        for (var i = bets.length; i--;) {
+            var score = (bets[i].outcome === 0 && bets[i].possible_win) || (bets[i].outcome !== 0 && bets[i].payout);
+            if (score) {
+                bets[i].tax = bets[i].winningBonus = score * $rootScope.partnerConfig.tax_percent / 100 ;
+            }
+        }
+    }
+
     /**
      * @ngdoc method
      * @name initBetHistory
@@ -565,7 +574,9 @@ VBET5.controller('myBetsCtrl', ['$scope', 'Utils', 'ConnectionService', 'Zerglin
                     if ($scope.profit.checkAfterLoad) {
                         $scope.calculateProfit();
                     }
-
+                    if ($rootScope.partnerConfig && $rootScope.partnerConfig.tax_percent && $rootScope.partnerConfig.tax_type === 20 && product !== 'Casino') {
+                        calculateTaxAndBonus($scope.betHistory);
+                    }
                     $scope.betHistoryLoaded = true;
                     console.log('bet history:', betHistory, where);
                     if(callbackFunction){

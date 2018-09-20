@@ -615,6 +615,7 @@
 .promo-icon-tab-b:before{content: "\e916";}
 .help-icon-tab-b:before{content: "\e6ef";}
 .bonuses-icon-tab-b:before{content: "\e916";}
+.profits-icon-tab:before{content: "\e950";}
 .all-main-tabs-b > ul > li > i.cms-jcon-ticket {
   font-size: 16px;
   line-height: 48px;
@@ -2334,6 +2335,12 @@
           &[type="number"] {
             padding-right: 0;
           }
+          &[placeholder*="____"] {
+            @include rtl {
+              direction: ltr;
+              text-align: right;
+            }
+          }
           &:focus {
             background: darken( desaturate( adjust-hue( $skin-color, 3deg ), 11 ), 1 );
             border-color: $skin-palette-6;
@@ -2571,21 +2578,10 @@
     @include rtl {
       float: left;
     }
-    > div {
-      float: left;
-      width: 100%;
-      height: 100%;
-    }
     h1 {
       font: 18px/20px $font-f;
       color: $text-palette-3;
       padding: 0 0 25px 0;
-    }
-    img {
-      max-width: calc(100vw - 100px);
-      max-height: calc(100vh - 230px);
-      width: auto;
-      height: auto;
     }
     .slider-optional-b-casino {
       height: 66px;
@@ -3742,13 +3738,13 @@ button.button-confirm .md-progress-circular.small-progress {
       color: rgba(set-color($skin-palette-7), 0.37);
       font-size: 10px;
       min-width: 120px;
-      -webkit-user-select: all;
-      -khtml-user-select: all;
-      -moz-user-select: all;
-      -ms-user-select: all;
-      user-select: all;
       a {
         color: rgba(set-color($skin-palette-7), 0.57);
+        -webkit-user-select: all;
+        -khtml-user-select: all;
+        -moz-user-select: all;
+        -ms-user-select: all;
+        user-select: all;
       }
       &.win-car {
         padding-right: 32px;

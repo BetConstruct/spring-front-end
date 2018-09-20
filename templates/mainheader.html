@@ -19,7 +19,7 @@
          hide-on-click="{{env.sliderContent!=='register' && env.sliderContent!=='login' && env.sliderContent!=='forgotPasswordForm'}}" state-flag-var="env.showSlider" broadcast-on-close="slider.close" except="header"
          ng-show="env.showSlider &&
             (!conf.enableMixedView || ['recentBetsCashout', 'recentBets', 'betHistory', 'casinoBetHistory','shukaBetHistory',
-                    'settings','deposit', 'withdraw', 'balanceHistory', 'casinoBalanceHistory', 'cashier', 'loyaltyPoints', 'tickets', 'buddytransfer'].indexOf(env.sliderContent) === -1)
+                    'settings','deposit', 'withdraw', 'balanceHistory', 'casinoBalanceHistory', 'cashier', 'loyaltyPoints', 'tickets', 'buddytransfer','profits'].indexOf(env.sliderContent) === -1)
             && (!conf.enableBonuses || env.sliderContent !== 'bonuses') && env.sliderContent !== 'promotionalBonuses' " >
 
         <div ng-click="closeSlider()" class="close-slider-button-j"></div>
@@ -119,7 +119,7 @@
     <div ng-include="::'templates/livebox/mixedView.html'|fixPath"
         ng-if="env.showSlider &&
             ((conf.enableMixedView && ['recentBetsCashout', 'recentBets', 'betHistory', 'casinoBetHistory', 'shukaBetHistory',
-                'settings', 'deposit', 'withdraw', 'balanceHistory', 'casinoBalanceHistory', 'cashier', 'loyaltyPoints', 'tickets', 'buddytransfer'].indexOf(env.sliderContent) !== -1)
+                'settings', 'deposit', 'withdraw', 'balanceHistory', 'casinoBalanceHistory', 'cashier', 'loyaltyPoints', 'tickets', 'buddytransfer','profits'].indexOf(env.sliderContent) !== -1)
                 || env.sliderContent === 'promotionalBonuses') ">
     </div>
 

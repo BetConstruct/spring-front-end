@@ -174,7 +174,7 @@ VBET5.directive('gameWidget', ['Utils', 'Config', 'ConnectionService', 'GameInfo
                         'game': ['id', 'start_ts', 'team1_name', 'team2_name', 'type', 'info', 'markets_count', 'is_blocked',
                             'video_id', 'video_id2', 'video_id3', 'video_provider', 'last_event', 'is_stat_available', 'team1_external_id', 'team2_external_id', 'game_external_id', 'is_live'],
                         'event': ['id', 'price', 'type', 'name'],
-                        'market': ['type', 'express_id', 'name']
+                        'market': ['type', 'express_id', 'name', 'home_score', 'away_score']
                     },
                     'where': {
                         'game': {'@limit': Config.main.showPromotedGamesOnWidget.gameLimit},

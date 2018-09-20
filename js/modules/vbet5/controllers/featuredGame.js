@@ -189,7 +189,7 @@ angular.module('vbet5.betting').controller('featuredgameCtrl', ['$rootScope', '$
                 'competition' : ['id', 'name'],
                 'region' : ['id', 'name'],
                 'event': ['id', 'price', 'type', 'name'],
-                'market': ['type', 'express_id', 'name'],
+                'market': ['type', 'express_id', 'name', 'home_score', 'away_score'],
                 'game': ['id', 'start_ts', 'team1_name', 'team2_name', 'info', 'events_count', 'markets_count', 'type', 'team1_id', 'team2_id', 'team1_external_id', 'team2_external_id', 'is_live']
             },
             'where': {game: {}}

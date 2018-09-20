@@ -368,7 +368,7 @@ VBET5.controller('euro2016DashboardCenterController', ['$rootScope', '$scope', '
                     'exclude_ids', 'is_stat_available', 'game_number', 'game_external_id', 'is_live', 'tv_type', 'video_id', 'video_id2', 'video_id3', 'video_provider'
                 ],
                 'event': ['id', 'price', 'type', 'name', 'order', 'base'],
-                'market': ['type', 'express_id', 'name', 'base', 'order']
+                'market': ['type', 'express_id', 'name', 'base', 'order', 'home_score', 'away_score']
             },
             'where': {
                 'game': {}

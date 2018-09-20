@@ -1,4 +1,12 @@
 <div class="mixed-view-content" ng-controller="promotionalBonusCtrl">
+    <div class="bonus-promo-code" ng-show="conf.promotionalBonuses.showApplyButton">
+        <label>
+            <span ng-bind="'Promo Code'|translate"></span>
+            <input name="promo_code" placeholder="{{'Promo Code' | translate}}" ng-model="promoCode" type="text">
+        </label>
+        <button ng-disabled="applyingBonus || loadingBonus" ng-hide="applyingBonus" ng-click="applyBonus()" trans>Apply</button>
+        <button disabled="disabled" ng-show="applyingBonus" trans>Wait...</button>
+    </div>
     <div class="mixed-view-head" ng-show="conf.promotionalBonuses.casino || (conf.promotionalBonuses.sportsbook && conf.promotionalBonuses.casino && casinoEnabled)">
         <div class="balance-view-progress-b" ng-show="conf.promotionalBonuses.casino">
             <ul ng-class="{'progress-bar-disabled' : activeBonusTab !== backendBonusConstants.BonusSource.Casino}">
@@ -24,20 +32,12 @@
                     </div>
                 </li>
             </ul>
-            <div class="bonus-promo-code" ng-show="conf.promotionalBonuses.showApplyButton">
-                <label>
-                    <span ng-bind="'Promo Code'|translate"></span>
-                    <input name="promo_code" placeholder="{{'Promo Code' | translate}}" ng-model="promoCode" type="text">
-                </label>
-                <button ng-disabled="applyingBonus || loadingBonus" ng-hide="applyingBonus" ng-click="applyBonus()" trans>Apply</button>
-                <button disabled="disabled" ng-show="applyingBonus" trans>Wait...</button>
-            </div>
         </div>
         <div class="group-tabs-wrapper">
             <div class="first-level-history-tab">
                 <ul>
                     <li ng-if="conf.promotionalBonuses.sportsbook" ng-click="switchBonusTab(backendBonusConstants.BonusSource.SportsBook)" ng-class="{'active': (activeBonusTab === backendBonusConstants.BonusSource.SportsBook)}"><span>{{'sportsbook' | translate }} <i ng-if="bonusesAmount.sportsBook && bonusesAmount.sportsBook > 0">{{bonusesAmount.sportsBook}}</i> </span></li>
-                    <li ng-if="conf.promotionalBonuses.casino && casinoEnabled" ng-click="switchBonusTab(backendBonusConstants.BonusSource.Casino)" ng-class="{'active': (activeBonusTab === backendBonusConstants.BonusSource.Casino)}"><span>{{'Casino' | translate }} <i ng-if="bonusesAmount.casino && bonusesAmount.casino > 0">{{bonusesAmount.casino}}</i> </span></li>
+                    <li ng-if="conf.promotionalBonuses.casino" ng-click="switchBonusTab(backendBonusConstants.BonusSource.Casino)" ng-class="{'active': (activeBonusTab === backendBonusConstants.BonusSource.Casino)}"><span>{{'Casino' | translate }} <i ng-if="bonusesAmount.casino && bonusesAmount.casino > 0">{{bonusesAmount.casino}}</i> </span></li>
                 </ul>
             </div>
         </div>

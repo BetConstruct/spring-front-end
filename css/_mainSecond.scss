@@ -1084,6 +1084,15 @@ div.game-video-detached {
   background: rgba(15, 84, 158, 0.4);
   overflow: hidden;
   box-shadow: inset 0 0 1px rgba(0, 0, 0, 1);
+  .video-player-container{
+    overflow: hidden;
+  }
+  .video-player-container object, .video-player-container flashplayer, .game-video-container video-player, .game-video-container video-player .video-player-container{
+    width: 200%;
+    height: 200%;
+    transform: scale(0.5);
+    transform-origin: left top;
+  }
 }
 
 .element-monitor {
@@ -5349,10 +5358,9 @@ li.active-format:before {
     color: set-color($modern-view-betslip-palette);
   }
 
-  .open-bets-buttons button {
+  .open-bets-buttons > div {
     color: #616161;
     background: #e6e6e6;
-
     &.active {
       color: #293043;
       background: #cccccc;
@@ -5408,17 +5416,58 @@ li.active-format:before {
     }
   }
 }
-
-.modern, .combo {
+.modern {
   .open-bets-possible-wrapper {
     background: none;
   }
   .title-event-b-v3 > span {
     color: #3f4553;
   }
-}
-.modern .game-control .game-statistics li .stat-l {
-  @include rtl {
-    text-align: right;
+  .game-control .game-statistics li .stat-l {
+    @include rtl {
+      text-align: right;
+    }
+  }
+  .button-view-contain-v3,
+  .bs-cash-out-btn {
+    > button:disabled {
+      box-shadow: 0 0 0 1px #000000 inset;
+      color: #000000;
+    }
+  }
+  .open-bets-buttons > div.suggested-bets-button.active {
+    background: -moz-linear-gradient(left, rgba($hero-color,0.4) 0%,rgba($skin-color,0.4) 80%,rgba($skin-color,0.5) 100%);
+    background: -webkit-linear-gradient(left, rgba($hero-color,0.4) 0%,rgba($skin-color,0.4) 80%,rgba($skin-color,0.5) 100%);
+    background: linear-gradient(to right, rgba($hero-color,0.4) 0%,rgba($skin-color,0.4) 80%,rgba($skin-color,0.5) 100%);
+    @include rtl {
+      background: -moz-linear-gradient(right, rgba($hero-color,0.4) 0%,rgba($skin-color,0.4) 80%,rgba($skin-color,0.5) 100%);
+      background: -webkit-linear-gradient(right, rgba($hero-color,0.4) 0%,rgba($skin-color,0.4) 80%,rgba($skin-color,0.5) 100%);
+      background: linear-gradient(to left, rgba($hero-color,0.4) 0%,rgba($skin-color,0.4) 80%,rgba($skin-color,0.5) 100%);
+    }
+    box-shadow: none;
+  }
+  .suggest-contain-list {
+    background: -moz-linear-gradient(left, rgba($hero-color, 0.5) 0%,  rgba($skin-color, 0.7) 100%);
+    background: -webkit-linear-gradient(left, rgba($hero-color, 0.5) 0%,  rgba($skin-color, 0.7) 100%);
+    background: linear-gradient(to right, rgba($hero-color, 0.5) 0%,  rgba($skin-color, 0.7) 100%);
+    @include rtl {
+      background: -moz-linear-gradient(right, rgba($hero-color, 0.5) 0%,  rgba($skin-color, 0.7) 100%);
+      background: -webkit-linear-gradient(right, rgba($hero-color, 0.5) 0%,  rgba($skin-color, 0.7) 100%);
+      background: linear-gradient(to left, rgba($hero-color, 0.5) 0%,  rgba($skin-color, 0.7) 100%);
+    }
+    &.suggested-prematch {
+      background: -moz-linear-gradient(45deg, rgba($skin-color, 0.9) 0%, rgba($hero-color, 0.3) 100%);
+      background: -webkit-linear-gradient(45deg, rgba($skin-color, 0.9) 0%, rgba($hero-color, 0.3) 100%);
+      background: linear-gradient(45deg, rgba($skin-color, 0.9) 0%, rgba($hero-color, 0.3) 100%);
+      @include rtl {
+        background: -moz-linear-gradient(-45deg, rgba($skin-color, 0.9) 0%, rgba($hero-color, 0.3) 100%);
+        background: -webkit-linear-gradient(-45deg, rgba($skin-color, 0.9) 0%, rgba($hero-color, 0.3) 100%);
+        background: linear-gradient(-45deg, rgba($skin-color, 0.9) 0%, rgba($hero-color, 0.3) 100%);
+      }
+    }
+  }
+  .suggest-title-event-live > p,
+  .suggest-single-event-info > div > div {
+    color: $c16-tp-1;
   }
 }

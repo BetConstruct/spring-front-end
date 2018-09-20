@@ -1,5 +1,6 @@
 CASINO.constant('CConfig', {
     //
+    version: 1,
     cUrl: '/global/casinoGamesLoad.php',
     iconsUrl: '/global/img/games/gameIcons/gameIcons2/',
     bigIconsUrl: '/global/img/games/gameIcons/gameIcons3/',
@@ -11,6 +12,7 @@ CASINO.constant('CConfig', {
     casinoDomain: 'http://games.vivarobet.am',
     bonusPopUpUrl: '', //for example: 'http://www.youtube.com/embed/ft6pQz_9S6M?rel=0&autoplay=1&controls=1'
     deviceTypeId: 1,
+    platformType: 0,
     main: {
         enableGameInfoButton: false,
         moreColumnNumber: 6, //number of columns in categories  "more" dropdown block

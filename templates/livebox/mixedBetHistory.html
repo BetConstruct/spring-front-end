@@ -18,13 +18,12 @@
                     <li ng-click="filterBetHistory(3)" ng-class="{'active': (betStatusFilter == 3)}"><span trans>Won</span> <i ng-show="betEventCounts.won">{{betEventCounts.won}}</i></li>
                     <li ng-click="filterBetHistory(1)" ng-class="{'active': (betStatusFilter == 1)}" ng-show="!conf.disableLostTabInMyBets"><span trans>Lost</span> <i ng-show="betEventCounts.lost">{{betEventCounts.lost}}</i></li>
                     <li ng-click="filterBetHistory(2)" ng-class="{'active': (betStatusFilter == 2)}"><span trans>Returned</span> <i ng-show="betEventCounts.returned">{{betEventCounts.returned}}</i></li>
-                    <li ng-if="conf.showProfitLossTab" ng-click="filterBetHistory(-1)" ng-class="{'active': (betStatusFilter == -1)}"><span trans>Profit</span> <i ng-show="betEventCounts.all && betEventCounts.all - betEventCounts.unsettled !== 0">{{betEventCounts.all - betEventCounts.unsettled}}</i></li>
                 </ul>
             </div>
             <div class="all-history-filter-container">
                 <div class="filter-columns-container">
                     <ul>
-                        <li ng-show="productMode == 'Sportsbook' && !conf.betHistoryHideId  && betStatusFilter !== -1" >
+                        <li ng-show="productMode == 'Sportsbook' && !conf.betHistoryHideId">
                             <p trans>bet id:</p>
                             <div class="mini-form-box-b">
                                 <input type="text" ng-model="betHistoryParams.betIdFilter" placeholder="#"
@@ -32,7 +31,7 @@
                             </div>
                         </li>
 
-                        <li ng-show="productMode == 'Sportsbook' && betStatusFilter !== -1">
+                        <li ng-show="productMode == 'Sportsbook'">
                             <p trans>Bet Type</p>
                             <div class="select-box-period-b" ng-click="openBetTypeFilter = !openBetTypeFilter" ng-class="{'active': openBetTypeFilter}">
                                 <p>{{(betHistoryParams.betTypeSelector ? betHistoryParams.betTypeSelector.name : 'All')|translate}}</p>
@@ -139,7 +138,7 @@
                     </ul>
                 </div>
                 <div class="mybets-filter-show-b">
-                    <button prevent-fast-click="1.5" ng-click="betStatusFilter === -1 ? loadProfitLoss() : loadMixedBetHistory()" trans>SHOW</button>
+                    <button prevent-fast-click="1.5" ng-click="loadMixedBetHistory()" trans>SHOW</button>
                 </div>
             </div>
         </div>
@@ -165,16 +164,17 @@
                             <th class="hh-cell" trans>Stake</th>
                             <th class="hh-cell" trans>Odds</th>
                             <th class="hh-cell" trans>Outcome</th>
-                            <th class="hh-cell" ng-show="betStatusFilter === -1" trans>Profit</th>
+                            <th class="hh-cell" ng-if="$root.partnerConfig.tax_percent && $root.partnerConfig.tax_type===20" trans>Tax</th>
+                            <th class="hh-cell" ng-if="$root.partnerConfig.tax_percent && $root.partnerConfig.tax_type===20" trans>Bonus</th>
                             <th class="status-cell" trans>Status</th>
                             <th class="status-icon-b"></th>
-                            <th class="arrow-cell {{expandState ? 'cms-jcon-my-bets-view-2' : 'cms-jcon-my-bets-view'}}" ng-show="productMode == 'Sportsbook' && betStatusFilter !== -1" ng-click="expandCollapseAll(!expandState)"></th>
+                            <th class="arrow-cell {{expandState ? 'cms-jcon-my-bets-view-2' : 'cms-jcon-my-bets-view'}}" ng-show="productMode == 'Sportsbook'" ng-click="expandCollapseAll(!expandState)"></th>
                         </tr>
                     </thead>
                     <tbody ng-repeat="bet in betHistory | orderBy:'date_time':true"
-                           ng-if="productMode === 'Sportsbook' && !bet.parent_bet_id && (betStatusFilter == undefined || betStatusFilter == -1 || betStatusFilter == bet.outcome) && (betHistoryParams.betTypeSelector == undefined ||betHistoryParams.betTypeSelector.value == bet.type)"
-                           ng-class="{'active': bet.expand, 'default-cursor': betStatusFilter === -1}"
-                           ng-click="betStatusFilter !== -1 ? bet.expand = !bet.expand : ''">
+                           ng-if="productMode === 'Sportsbook' && !bet.parent_bet_id && (betStatusFilter == undefined || betStatusFilter == bet.outcome) && (betHistoryParams.betTypeSelector == undefined ||betHistoryParams.betTypeSelector.value == bet.type)"
+                           ng-class="{'active': bet.expand}"
+                           ng-click=" bet.expand = !bet.expand">
                         <tr class="main">
                             <td class="date-id" ng-class="{'win-car': bet.outcome != 5 && bet.showBetDrawIcon && bet.outcome != 2}">
                                 <span>{{bet.date_time|formatDate:(conf.layoutTimeFormat[conf.sportsLayout] || 'noLocaleTranslate')}} {{conf.layoutTimeFormat[conf.sportsLayout]? (bet.date_time|formatDate:'hour':null:env.timeFormat): ''}}</span>
@@ -215,8 +215,11 @@
                                     <span class="second-color">{{bet.payout|number:conf.balanceFractionSize}}</span> {{bet.currency|currency}}
                                 </div>
                             </td>
-                            <td class="hh-cell" ng-show="betStatusFilter === -1">
-                                <span class="second-color">{{::bet.profit|number:conf.balanceFractionSize}}</span> {{bet.currency|currency}}
+                            <td class="hh-cell" ng-if="$root.partnerConfig.tax_percent && $root.partnerConfig.tax_type===20">
+                                <span ng-show="bet.tax" class="second-color">{{bet.tax|number:conf.balanceFractionSize}} {{bet.currency|currency}}</span>
+                            </td>
+                            <td class="hh-cell" ng-if="$root.partnerConfig.tax_percent && $root.partnerConfig.tax_type===20">
+                                <span ng-show="bet.winningBonus" class="second-color">{{bet.winningBonus|number:conf.balanceFractionSize}} {{bet.currency|currency}}</span>
                             </td>
                             <td>
                                 <ul class="edit-bet-or-cashout">
@@ -235,7 +238,7 @@
                                 </ul>
                             </td>
                             <td class="status-icon-b status-cell" ng-class="{'-5': 'cms-jcon-29', '-4': 'cms-jcon-error-pu', '0': 'cms-jcon-29', '1': 'cms-jcon-error-pu', '2': 'cms-jcon-returned', '3': 'cms-jcon-success-pu', '5': 'cms-jcon-success-pu'}[bet.outcome]"></td>
-                            <td class="arrow-cell cms-jcon-arrow-down5" ng-class="{'cms-jcon-arrow-up4': bet.expand}" ng-hide="betStatusFilter === -1"></td>
+                            <td class="arrow-cell cms-jcon-arrow-down5" ng-class="{'cms-jcon-arrow-up4': bet.expand}" ></td>
                         </tr>
                         <tr class="sub-child" ng-class="{'last-child': $last}" ng-show="bet.expand" ng-if="bet.type !== 'Toto'" ng-repeat="event in bet.events track by $index" ng-click="openCorrespondingGame(event);$event.stopPropagation();">
                             <td class="date-id">
@@ -267,7 +270,7 @@
                             </td>
                             <td class="hh-cell"></td>
                             <td>
-                                <span class="second-color">{{{'-5': 'On Hold', '-4': 'Declined', '0': 'UNSETTLED', '1': 'Lost', '2': 'Returned', '3': 'Won', '5': 'Cashed out'}[event.outcome]|translate}}</span>
+                                <span class="second-color">{{{'0': 'UNSETTLED', '1': 'Lost', '2': 'Returned', '3': 'Won', '5': 'Won Return', '6': 'Lost Return'}[event.outcome]|translate}}</span>
                             </td>
                             <td class="status-icon-b status-cell" ng-class="{'-5': 'cms-jcon-pendding', '-4': 'cms-jcon-close_mark', '0': 'cms-jcon-pendding', '1': 'cms-jcon-close_mark', '2': 'cms-jcon-returned', '3': 'cms-jcon-checkmark2', '5': 'cms-jcon-checkmark2'}[event.outcome]"></td>
                             <td class="arrow-cell"></td>
@@ -384,34 +387,7 @@
                             <td colspan="9" class="second-color center-text" trans>There are no bets for the selected time period.</td>
                         </tr>
                     </tbody>
-                    <tfoot ng-if="productMode === 'Sportsbook' && profitLossTotal && betStatusFilter === -1" class="pointer-events-none">
-                        <tr>
-                            <td class="date-id"></td>
-                            <td class="status-icon-b hh-cell"></td>
-                            <td class="auto-cell">
-                                <ul class="cell-inner mixed-bet-history-flex">
-                                    <li class="ellipsis-text"><strong trans>Total</strong></li>
-                                </ul>
-                            </td>
-                            <td class="hh-cell">
-                                <input disabled type="text" ng-model="profitLossTotal.amount_total" comma class="second-color" size="{{profitLossTotal.amount_total.toString().length}}"
-                                       comma-enable={{conf.enableCommaSeparateNumber}}
-                                       comma-decimal="enable" comma-dot="{{conf.enableDotInsteadComma}}">
-                                <span>{{$root.profile.currency|currency}}</span>
-                            </td>
-                            <td class="hh-cell"></td>
-                            <td class="hh-cell">
-                                <span class="second-color" ng-bind="profitLossTotal.winning_amount_total|number:conf.balanceFractionSize"></span>
-                                <span ng-bind="::$root.profile.currency|currency"></span>
-                            </td>
-                            <td class="hh-cell">
-                                <span class="second-color" ng-bind="profitLossTotal.profit_total|number:conf.balanceFractionSize"></span>
-                                <span ng-bind="::$root.profile.currency|currency"></span>
-                            </td>
-                            <td></td>
-                            <td class="status-icon-b status-cell"></td>
-                        </tr>
-                    </tfoot>
+
                 </table>
             </div>
         </div>

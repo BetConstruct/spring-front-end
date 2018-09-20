@@ -5,7 +5,7 @@
  * @description
  * footer controller
  */
-VBET5.controller('footerCtrl', ['$scope', '$rootScope', '$window', '$sce', '$location', 'Config', 'DomHelper', 'smoothScroll', 'UserAgent', 'Utils', function ($scope, $rootScope, $window, $sce, $location, Config, DomHelper, smoothScroll, UserAgent, Utils) {
+VBET5.controller('footerCtrl', ['$scope', '$rootScope', '$window', '$sce', '$location', 'Config', 'DomHelper', 'smoothScroll', 'UserAgent', 'Utils', 'WPConfig', function ($scope, $rootScope, $window, $sce, $location, Config, DomHelper, smoothScroll, UserAgent, Utils, WPConfig) {
     'use strict';
 
     /**
@@ -72,5 +72,8 @@ VBET5.controller('footerCtrl', ['$scope', '$rootScope', '$window', '$sce', '$loc
             }
             return accumulator;
         }, []);
+    }
+    if (Config.main.footer.imageInsteadPayments) {
+        $scope.spriteURL = (Config.main.cmsDataDomain ||  WPConfig.wpUrl.split("/json")[0]) +  Config.main.footer.imageInsteadPayments;
     }
 }]);

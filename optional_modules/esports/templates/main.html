@@ -1,0 +1,55 @@
+<div class="content-wrapper-t" ng-controller="eSportsMainController">
+    <div class="classic-version-euro2016">
+        <div class="classic-view-wrapper-v3">
+            <div class="classic-view-column-v3">
+                <div class="left-column-v3" ng-include="'optional_modules/esports/templates/left.html'"></div>
+                <div class="center-column-v3" ng-include="'optional_modules/esports/templates/center/main.html'"></div>
+                <div class="right-column-v3">
+
+                    <!--video and animation-->
+                    <div class="animation-video-box-v3" ng-class="{'active': hideVideoAndAnimationBox}" ng-if="openGame.video_id && conf.videoEnabled && !pinnedGames[openGame.id] && !enlargedGame">
+                        <div class="animation-video-contain-v3" ng-if="openGame.type===1">
+                            <div class="animation-video-title-row-v3">
+                                <div class="anime-video-switcher-v3">
+                                    <ul>
+                                        <li class="video-view-icon-v3" ng-click="openGame.activeFieldType='video'; playerRemoved = false;"
+                                            ng-show="conf.videoEnabled && (openGame.video_id || openGame.video_data) && !pinnedGames[openGame.id] && (!enlargedGame || openGame.id !== enlargedGame.id)"
+                                            ng-class="{'active': openGame.activeFieldType==='video' && !playerRemoved}">
+                                        </li>
+                                        <li class="animation-view-icon-v3" ng-show="openGame.has_animation" ng-click="openGame.activeFieldType='field'"
+                                            ng-class="{'active': openGame.activeFieldType==='field' || playerRemoved || pinnedGames[openGame.id]}">
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="contain-v-a-fanction-icons-v3">
+                                    <ul>
+                                        <li class="arrow-closed-anime-b-v3" ng-click="toggleVideoAndAnimationBox()" ng-class="{'active': hideVideoAndAnimationBox}"></li>
+                                        <li class="pin-icon-video-v3" ng-class="{'disabled': !env.authorized}" ng-show="openGame.video_data && openGame.activeFieldType == 'video' && openGame.tv_type !== conf.defaultStreaming.tvType && !pinnedGames[openGame.id]" ng-click="openGame.activeFieldType='field'; detachVideo('dragable');"></li>
+                                        <li class="resize-icon-full-video-v3" ng-show="openGame.video_data && openGame.activeFieldType == 'video'" ng-class="{'active': env.authorized && openGame.activeFieldType == 'video' &&!conf.detachedVideoSizes[openGame.tv_type],'disabled': !(env.authorized && openGame.activeFieldType == 'video' &&!conf.detachedVideoSizes[openGame.tv_type])}" ng-click="openGame.activeFieldType='field'; detachVideo('fullScreen');"></li>
+                                        <li class="sound-icon-v3 " ng-click="env.sound = 0;" ng-show="openGame.activeFieldType==='field' && env.sound > 0" title="Sound" trans="attr-only"></li>
+                                        <li class="sound-icon-v3 active" ng-click="env.sound = 0.75;" ng-show="openGame.activeFieldType==='field' && env.sound === 0" title="Sound" trans="attr-only"></li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="video-animation-vox-v3 animation-control">
+                                <video-player ng-if="openGame.activeFieldType === 'video' && !hideVideoAndAnimationBox && conf.videoEnabled && !enlargedGame && !pinnedGames[openGame.id]"
+                                              class="game-video"
+                                              ng-class="{'animation-start': !$root.conf.videoProvidersThatWorkWithIframe[openGame.tv_type] && !videoState.videoIsLoaded && openGame.video_data, 'animation-end': videoState.videoIsLoaded}"
+                                              player-id="gamevideo{{openGame.id}}"
+                                              stream-url="{{openGame.video_data}}"
+                                              provider-id="{{openGame.tv_type}}"
+                                              initially-muted="{{ env.sound }}"></video-player>
+                            </div>
+                        </div>
+                    </div>
+                    <!--video and animation END-->
+
+
+                    <include-template class="virtual-sports-right-b" template-path="templates/sport/euro2016/right/main.html"></include-template>
+
+                </div>
+            </div>
+            <ng-include ng-if="conf.videoEnabled && pinnedGameType === 'dragable'" src="::'templates/sport/classic/av-pinned.html'|fixPath" style="position: fixed; z-index: 999999999;"></ng-include>
+        </div>
+    </div>
+</div>

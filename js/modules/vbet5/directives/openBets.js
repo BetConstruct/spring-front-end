@@ -12,8 +12,9 @@ VBET5.directive('openBets', ['$rootScope', 'Zergling', 'BetService', 'Utils', 'G
         restrict: 'E',
         replace: false,
         scope: {
-            openBetsState: '=',
-            profile: '='
+            betSlip: '=',
+            profile: '=',
+            shared: '=sharedData'
         },
         templateUrl: function getTemplateUrl() {
             return ($rootScope.conf.sportsLayout === 'asian' && $rootScope.currentPage.path === "/sport") ? 'templates/directive/open-bets/open-bets-asian.html' : 'templates/directive/open-bets/open-bets.html';
@@ -30,7 +31,7 @@ VBET5.directive('openBets', ['$rootScope', 'Zergling', 'BetService', 'Utils', 'G
 
             $scope.autoCashoutRule = {
                 theValueReaches: undefined,
-                isPartial: undefined,
+                partialAmount: undefined,
                 showInfo: false
             };
 
@@ -43,9 +44,9 @@ VBET5.directive('openBets', ['$rootScope', 'Zergling', 'BetService', 'Utils', 'G
                 Zergling.get({'where': { 'outcome': 0 } }, 'bet_history')
                     .then(function (response) {
                         if (response.bets) {
-                            $scope.openBets = response.bets;
+                            $scope.shared.openBets = response.bets;
                             cashoutableBets = [];
-                            angular.forEach($scope.openBets, function improveName(bet) {
+                            angular.forEach($scope.shared.openBets, function improveName(bet) {
                                 // Need to filter bets that have cash out so we don't make unnecessary 'calculate_cashout_amount' requests
                                 if (bet.cash_out !== undefined) {
                                     cashoutableBets.push(bet.id);
@@ -58,7 +59,7 @@ VBET5.directive('openBets', ['$rootScope', 'Zergling', 'BetService', 'Utils', 'G
                                     event.eventName = $filter('improveName')(event.event_name, event);
                                 });
                             });
-                            if ($scope.openBetsState.open) {
+                            if ($scope.betSlip.mode === 'openBets') {
                                 unsubscribeFromOpenBets();
                                 subscribeToOpenBets();
                             }
@@ -71,7 +72,7 @@ VBET5.directive('openBets', ['$rootScope', 'Zergling', 'BetService', 'Utils', 'G
                 var openBetEventsIds = [],
                     openBetSportIds = [],
                     openBetGameIds = [];
-                angular.forEach($scope.openBets, function iterateBets(bet) {
+                angular.forEach($scope.shared.openBets, function iterateBets(bet) {
                     angular.forEach(bet.events, function getEventId(event) {
                         var eventId = parseInt(($rootScope.conf.GmsPlatform ? event.selection_id : event.id), 10);
                         openBetEventsIds.push(eventId);
@@ -103,14 +104,18 @@ VBET5.directive('openBets', ['$rootScope', 'Zergling', 'BetService', 'Utils', 'G
                         function success(response) {
                             openBetsSubId = response.subid;
                             if (response.data) {
-                                updateOpenBets(response.data);
+                                updateOpenBets(response.data, true); // true - for forcefully calculating cash out amount when we first load data
                             }
                         })['finally'](function closeLoader() { $scope.openBetsLoading = false; });
                 }
             }
 
 
-            function updateOpenBets(data) {
+            function updateOpenBets(data, forceCalculateCashOut) {
+                if ($scope.betSlip.mode !== 'openBets') {
+                    unsubscribeFromOpenBets();
+                    return;
+                }
                 var events = {};
                 angular.forEach(data.sport, function (sport) {
                    angular.forEach(sport.region, function (region) {
@@ -136,16 +141,16 @@ VBET5.directive('openBets', ['$rootScope', 'Zergling', 'BetService', 'Utils', 'G
                    });
                 });
                 if (cashoutableBets.length) {
-                    updateOpenBetsCashOut(events);
+                    updateOpenBetsCashOut(events, forceCalculateCashOut);
                 }
             }
 
 
-            function updateOpenBetsCashOut(data) {
-                var cashOutBetIds = BetService.cashOut.filterEvents($scope.openBets, data, cashoutableBets);
+            function updateOpenBetsCashOut(data, forceCalculateCashOut) {
+                var cashOutBetIds = BetService.cashOut.filterEvents($scope.shared.openBets, data, cashoutableBets, forceCalculateCashOut);
                 if(cashOutBetIds.length) {
                     BetService.cashOut.getData(cashOutBetIds)
-                        .then(function success(cashOutMap) { BetService.cashOut.processData($scope.openBets, cashOutMap); });
+                        .then(function success(cashOutMap) { BetService.cashOut.processData($scope.shared.openBets, cashOutMap); });
                 }
             }
 
@@ -165,15 +170,24 @@ VBET5.directive('openBets', ['$rootScope', 'Zergling', 'BetService', 'Utils', 'G
                                     // Parameters assigned above are necessary for 'improveName' filter to work properly
                                     event.eventName = $filter('improveName')(event.event_name, event);
                                 });
-                                for (var i = $scope.openBets.length; i--;) {
-                                    if ($scope.openBets[i].id === cashedOutBet.id) {
-                                        cashedOutBet.cashoutEnabled = $scope.openBets[i].cashoutEnabled;
-                                        $scope.openBets[i] = cashedOutBet;
+                                for (var i = $scope.shared.openBets.length; i--;) {
+                                    if ($scope.shared.openBets[i].id === cashedOutBet.id) {
+                                        cashedOutBet.cashoutEnabled = $scope.shared.openBets[i].cashoutEnabled;
+                                        $scope.shared.openBets[i] = cashedOutBet;
                                         break;
                                     }
                                 }
                             }
                         });
+                }, 950);
+            }
+
+
+            function updateCashOutAmount(e, data) {
+                // Updates single bet's cash out amount after it has been partially cashed out (back end currently doesn't send 'bet_settlement', for this to be done automatically)
+                $timeout(function() {
+                    BetService.cashOut.getData([data.betId])
+                        .then(function success(cashOutMap) { BetService.cashOut.processData($scope.shared.openBets, cashOutMap); });
                 }, 950);
             }
 
@@ -185,18 +199,12 @@ VBET5.directive('openBets', ['$rootScope', 'Zergling', 'BetService', 'Utils', 'G
                 }
             }
 
-            $scope.openOpenBets = function openOpenBets() {
-                if ($scope.openBetsState.open) { return; }
 
-                $scope.openBetsState.open = true;
-                subscribeToOpenBets();
-            };
-
-
-            $scope.closeOpenBets = function closeOpenBets() {
-                $scope.openBetsState.open = false;
-                unsubscribeFromOpenBets();
-            };
+            function closeOpenBets() {
+                if ($scope.betSlip.mode === 'openBets') {
+                    $scope.betSlip.mode = 'betting';
+                }
+            }
 
             $scope.gotoBetGame = function gotoBetGame(gamePointer) {
                 if (!gamePointer) {return;}
@@ -248,7 +256,7 @@ VBET5.directive('openBets', ['$rootScope', 'Zergling', 'BetService', 'Utils', 'G
                                 .then(function (response) {
                                     if (response.result === 0) {
                                         $scope.autoCashoutRule.theValueReaches = response.details.MinAmount;
-                                        $scope.autoCashoutRule.isPartial = !!response.details.PartialAmount;
+                                        $scope.autoCashoutRule.partialAmount = response.details.PartialAmount;
                                     }
                                 });
                         }
@@ -271,17 +279,29 @@ VBET5.directive('openBets', ['$rootScope', 'Zergling', 'BetService', 'Utils', 'G
                     });
             };
 
-            $scope.addEvents = BetService.repeatBet.addEvents;
+            $scope.editBet = function editBet(bet) {
+                BetService.repeatBet.addEvents(bet, true).then(function() { $scope.betSlip.mode = 'betting'; });
+            };
 
 
-            $scope.$on('closeOpenBets', $scope.closeOpenBets);
+            $scope.$watch('betSlip.mode', function openBetsWatcher(newVal, oldVal) {
+                if (oldVal === newVal) { return; }
+                if (newVal === 'openBets') {
+                    subscribeToOpenBets();
+                } else if (oldVal === 'openBets') {
+                    unsubscribeFromOpenBets();
+                }
+            });
             $scope.$watch('profile.bet_settlement', getOpenBets, true);
+
+            $scope.$on('openBets.close', closeOpenBets);
+            $scope.$on('openBets.updateCashOutAmount', updateCashOutAmount);
             $scope.$on('updateAfterCashout', function(event, data) {
                 if (data.autoCashout) {
                     updateAfterCashout(data.betId);
                 }
             });
-            $scope.$on('$destroy', $scope.closeOpenBets);
+            $scope.$on('$destroy', unsubscribeFromOpenBets);
         }
     };
 }]);

@@ -275,10 +275,13 @@ VBET5.controller('paymentsCtrl', ['$scope', '$rootScope', '$sce', '$q', '$window
             if (pSystem.agreeTermsInfoText) {
                 pSystem.agreeTermsText = generateInfoText(pSystem.agreeTermsInfoText[Config.env.sliderContent][Config.env.lang] || pSystem.agreeTermsInfoText[Config.env.sliderContent]['default'] || pSystem.agreeTermsInfoText[Config.env.sliderContent]['eng']);
             }
-            if (Config.main.stayInSameTabOnDeposit !== undefined) {
-                pSystem.stayInSameTabOnDeposit = Config.main.stayInSameTabOnDeposit;
+            if (pSystem.stayInSameTabOnDeposit === true || pSystem.stayInSameTabOnDeposit === false) {
+                pSystem.stayInSameTabOnDeposit = pSystem.stayInSameTabOnDeposit ? '_self' : '_blank';
+            } else if (Config.main.stayInSameTabOnDeposit !== undefined) {
+                pSystem.stayInSameTabOnDeposit = Config.main.stayInSameTabOnDeposit ? '_self' : '_blank';
+            }else if (!angular.isString(pSystem.stayInSameTabOnDeposit)) {
+                pSystem.stayInSameTabOnDeposit = '_self';
             }
-
         });
     }
 

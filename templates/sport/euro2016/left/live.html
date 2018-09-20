@@ -59,12 +59,10 @@
                                                  dnd-draggable="game"
                                                  dnd-type="sport.alias + region.alias + competition.id"
                                                  dnd-disable-if="'/multiview/' !== $location.path() || multiViewLiveOpenedGamesIds.length === conf.liveMultiViewItemsAmount">
-                                                <div class="team-name-1-v3">
-                                                    <p>{{game.team1_name}}</p>
+                                                <div class="team-name-1-v3" data-title="{{game.team1_name}}">
                                                     <span ng-hide="game.show_type === 'OUTRIGHT'">{{game.info.score1}}</span>
                                                 </div>
-                                                <div class="team-name-1-v3" ng-hide="game.show_type === 'OUTRIGHT'">
-                                                    <p>{{game.team2_name ? game.team2_name : ''}}</p>
+                                                <div class="team-name-1-v3" ng-hide="game.show_type === 'OUTRIGHT'" data-title="{{game.team2_name ? game.team2_name : ''}}">
                                                     <span>{{game.info.score2}}</span>
                                                 </div>
                                                 <div class="game-info-mini-v3"
@@ -93,14 +91,14 @@
                                                              title="{{'statistic'|translate}}"></div>
                                                     </div>
                                                 </div>
-                                                <div class="l-b column-{{game.marketInfo.markets.length}}" ng-hide="conf.hideMarketFromLeftMenu">
+                                                <div class="l-b column-{{game.marketInfo.markets.length}}" ng-hide="conf.hideMarketFromLeftMenu || !game.marketInfo.markets.length">
                                                     <div class="single-events-b-v3" ng-repeat="market in game.marketInfo.markets track by market.id" title="{{::market.type_1}}"
                                                         ng-class="{'pointer-events-none': market.is_empty, 'active': isEventInBetSlip(market), 'blocked': ((market.price | oddConvert:'decimal') == 1 || game.is_blocked)}"
                                                         ng-click="bet(market, game.marketInfo, game); $event.stopPropagation()"
                                                         ng-mouseover="displayEventLimit(market)"
                                                         ng-mouseleave="cancelDisplayEventLimit(market)">
-                                                        <div class="max-bet-tooltip-v3" ng-show="env.authorized && market.maxBet !== undefined" ng-class="{'maxbet-enabled': env.authorized}">
-                                                            Max: <b ng-bind="conf.onlyDecimalStakeAmount ? Math.floor(market.maxBet) : market.maxBet"></b> {{profile.currency_name|currency }}
+                                                        <div class="max-bet-tooltip-v3" ng-show="env.authorized && market.maxBet !== undefined" ng-class="{'maxbet-enabled': env.authorized}" title="{{conf.onlyDecimalStakeAmount ? Math.floor(market.maxBet) : market.maxBet}} {{profile.currency_name|currency }}">
+                                                            Max:
                                                         </div>
                                                         <b ng-show="(market.price | oddConvert:'decimal') != 1 && !game.is_blocked" class="p-v price{{arrowHide}}" ng-class="{'factor-top': market.price_change > 0, 'factor-bottom': market.price_change < 0}">{{market.price|oddConvert:$root.env.oddFormat}}</b>
                                                     </div>

@@ -44,7 +44,7 @@ angular.module('casino').controller('casinoSpecialGamesCtrl', ['$rootScope', '$s
             $location.search().studio && (gameUrl += '&studio=' + $location.search().studio);
         }
 
-        gameUrl += "&devicetypeid=" + CConfig.deviceTypeId;
+        gameUrl += "&devicetypeid=" + CConfig.deviceTypeId + "&platformType=" + CConfig.platformType;
 
         //receives location parameters and adds as additional parameters to the game URL
         var locationObject = $location.search();

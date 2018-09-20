@@ -15,7 +15,7 @@ VBET5.directive("cegSealId", [function () {
             cegScript.src = '//' + attrs.cegSealId + '.curacao-egaming.com/ceg-seal.js';
             var cegScriptS = window.document.getElementsByTagName('script')[0];
             cegScriptS.parentNode.insertBefore(cegScript, cegScriptS);
-            cegScriptS.onload = function () {
+            cegScript.onload = function () {
                 setTimeout(function () {
                     if (window.CEG) {
                         window.CEG.init();
@@ -44,7 +44,7 @@ VBET5.directive("apgSealId", [function () {
 
             var apgScriptS = window.document.getElementsByTagName('script')[0];
             apgScriptS.parentNode.insertBefore(apgScript, apgScriptS);
-            apgScriptS.onload = function () {
+            apgScript.onload = function () {
                 setTimeout(function () {
                     if (window.APG && window.APG.init) {
                         window.APG.init();

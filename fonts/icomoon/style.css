@@ -1,10 +1,10 @@
 @font-face {
   font-family: 'icomoon';
-  src:  url('fonts/icomoon.eot?l00cav');
-  src:  url('fonts/icomoon.eot?l00cav#iefix') format('embedded-opentype'),
-    url('fonts/icomoon.ttf?l00cav') format('truetype'),
-    url('fonts/icomoon.woff?l00cav') format('woff'),
-    url('fonts/icomoon.svg?l00cav#icomoon') format('svg');
+  src:  url('fonts/icomoon.eot?eig9xy');
+  src:  url('fonts/icomoon.eot?eig9xy#iefix') format('embedded-opentype'),
+    url('fonts/icomoon.ttf?eig9xy') format('truetype'),
+    url('fonts/icomoon.woff?eig9xy') format('woff'),
+    url('fonts/icomoon.svg?eig9xy#icomoon') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -24,8 +24,53 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+.cms-jcon-card_game:before {
+  content: "\e9a5";
+}
+.cms-jcon-cards:before {
+  content: "\e9a6";
+}
 .cms-jcon-Buddy-to-Buddy:before {
   content: "\e978";
+}
+.cms-jcon-booking-icon:before {
+  content: "\e9b3";
+}
+.cms-jcon-Virtual-Games:before {
+  content: "\e9aa";
+}
+.cms-jcon-Video-Slots:before {
+  content: "\e9ab";
+}
+.cms-jcon-Video-Poker:before {
+  content: "\e9ac";
+}
+.cms-jcon-New:before {
+  content: "\e9ad";
+}
+.cms-jcon-Table-Games:before {
+  content: "\e9ae";
+}
+.cms-jcon-Scratch-Games:before {
+  content: "\e9af";
+}
+.cms-jcon-Lottery-Games:before {
+  content: "\e9b0";
+}
+.cms-jcon-Classic-Slots:before {
+  content: "\e9b1";
+}
+.cms-jcon-All-Games:before {
+  content: "\e9b2";
+}
+.cms-jcon-bet-slip-icon:before {
+  content: "\e9a7";
+}
+.cms-jcon-open-bets-icon:before {
+  content: "\e9a8";
+}
+.cms-jcon-suggested-live-icon:before {
+  content: "\e9a9";
 }
 .cms-jcon-lotterygames:before {
   content: "\e9a4";

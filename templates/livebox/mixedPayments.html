@@ -223,7 +223,7 @@
                     </tr>
                 </table>
             </div>
-            <div class="descriptions-c-b" ng-if="!env.paymentListShown">
+            <div ng-if="!env.paymentListShown">
                     <h5 ng-if="env.authorized && isProfilePartial && !('profile-partial-text'|translate:null:true)" class="please-complete-profile">
                         <p trans>It is very important to keep your personal information up to date. Hence our request to you is to submit your personal information in My Profile / Personal Details as soon as possible.</p>
                         <span trans>To be able to make a deposit and/or withdrawal please complete your</span>
@@ -592,7 +592,7 @@
 
                     </form>
                     <form ng-model="custumPaymentFields" ng-if="externalFormParams && !isProfilePartial"
-                          target="{{selectedPaymentSystem.stayInSameTabOnDeposit || selectedPaymentSystem.stayInSameTabOnDeposit === undefined ? '_self' : '_blank'}}"
+                          target="{{::selectedPaymentSystem.stayInSameTabOnDeposit}}"
                           novalidate id="custum-payment-fields"
                           action="{{$sce.trustAsResourceUrl(externalFormParams.action)}}"
                           method="{{externalFormParams.method || 'post'}}" ng-show="false">

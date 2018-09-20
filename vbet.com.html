@@ -25,12 +25,12 @@
     <!-- /build -->
 
     <!-- build:template
-            <link rel="stylesheet" href="custom.css"/>
-        <!-- /build -->
+        <link rel="stylesheet" href="custom.css"/>
+    <!-- /build -->
     <!-- build:remove -->
     <title ng-bind="siteTitle"></title>
     <link rel="stylesheet" ng-href="skins/{{conf.skin}}/css/skin.css"/>
-    <link rel="stylesheet" ng-href="//new.cmsbetconstruct.com/general/getCustomCss?skin_id={{conf.site_id}}"/>
+    <link rel="stylesheet" ng-href="//cmsbetconstruct.com/general/getCustomCss?skin_id={{conf.site_id}}"/>
     <!-- /build -->
 </head>
 <body class="{{::conf.site_name.split('.').join('')}}">
@@ -49,7 +49,7 @@
         theme-{{theme.id}}
         {{::conf.site_name}}
         {{::domainClass}}
-        {{(['/poolbetting/', '/freebet/'].indexOf($location.path()) > -1) ? 'modern' : (['/dashboard/', '/livecalendar/', '/results/','/multiview/', '/overview/', '/virtualsports/', '/insvirtualsports/'].indexOf($location.path()) > -1 || conf.sportsLayout == 'classic') ? 'classic' : conf.sportsLayout}}
+        {{(['/poolbetting/', '/freebet/'].indexOf($location.path()) > -1) ? 'modern' : (['/dashboard/', '/livecalendar/', '/results/', '/multiview/', '/overview/', '/virtualsports/', '/insvirtualsports/'].indexOf($location.path()) > -1 || conf.sportsLayout == 'classic') ? 'classic' : conf.sportsLayout}}
         {{env.bodyWrapperClass||''}}
     " no-animate>
 
@@ -66,14 +66,10 @@
             <script src="lib/angular/1.5.9/angular-cookies.min.js"></script>
             <!-- /build -->
 
-        <script id="app-config" data-config-url-path="" data-id="4" data-config-is-externall="false"></script>
+        <script id="app-config" data-config-url-path="" data-id="4" data-config-is-externall="true"></script>
         <!-- build:template
         <script src="app.min.js?<%=buildDate%>-<%=gitinfo%>" id="bc-main-js"></script>
         /build -->
-
-        <!--build:template
-            <script src="//maps.google.com/maps/api/js?key=AIzaSyBnU4JWa8z7e_pqvw5fjOM8WsaaJAZoqf8"></script>
-            /build -->
 
         <!-- build:remove -->
         <script src="lib/swfobject.js"></script>
@@ -148,8 +144,10 @@
         <script src="js/modules/cms/main.js"></script>
         <script src="js/modules/cms/config.js"></script>
         <script src="js/modules/cms/services/content.js"></script>
+        <script src="js/modules/cms/directives/cmsAnalytics.js"></script>
         <script src="js/modules/cms/controllers/sportNews.js"></script>
         <script src="js/modules/cms/controllers/pages.js"></script>
+        <script src="js/modules/cms/controllers/help.js"></script>
         <script src="js/modules/cms/controllers/pageSlider.js"></script>
         <script src="js/modules/cms/controllers/pagePrint.js"></script>
         <script src="js/modules/cms/controllers/twitter.js"></script>
@@ -223,6 +221,9 @@
         <script src="js/modules/vbet5/directives/cashOutDialog.js"></script>
         <script src="js/modules/vbet5/directives/openBets.js"></script>
         <script src="js/modules/vbet5/directives/matchesList.js"></script>
+        <script src="js/modules/vbet5/directives/egtJackpot.js"></script>
+        <script src="js/modules/vbet5/directives/retrieveEvents.js"></script>
+        <script src="js/modules/vbet5/directives/autofocus.js"></script>
         <script src="js/modules/vbet5/filters/firstElement.js"></script>
         <script src="js/modules/vbet5/filters/translate.js"></script>
         <script src="js/modules/vbet5/filters/oddConvert.js"></script>

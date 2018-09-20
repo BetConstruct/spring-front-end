@@ -2,53 +2,60 @@
  * @ngdoc controller
  * @name vbet5.controller:betOnPolitics
  */
-VBET5.controller('betOnPoliticsCtrl', ['$rootScope', '$scope', '$sce', 'Config', 'AuthData', 'LanguageCodes', function($rootScope, $scope, $sce, Config, AuthData, LanguageCodes) {
+VBET5.controller('betOnPoliticsCtrl', ['$rootScope', '$scope', '$sce', '$location', 'Config', 'AuthData', 'LanguageCodes', function($rootScope, $scope, $sce, $location, Config, AuthData, LanguageCodes) {
     'use strict';
     $rootScope.footerMovable = true;
-    var iframe, canLogIn = false;
+    var iframe, socketConnected = false;
 
-    function initBetOnPolitics() {
-        $scope.frameUrl = '';
-        $scope.loading = true;
-
+    function createUrl() {
         var url = Config.main.betOnPolitics;
         url = url.substring(url.length-1) === '/' ? url : url + '/';
         var lang = 'en';
         if ($rootScope.env) {
             lang = LanguageCodes[$rootScope.env.lang];
         }
-        url += lang + '/iframe-sportsbook/?show-layout=body'; // hides header and footer of iframe content
-        if ($rootScope.profile) {
-            var authToken = AuthData.getAuthToken();
-            var userId = $rootScope.profile.id;
-            url += '&userID=' + userId + '&authToken=' + authToken;
-            canLogIn = true;
+        url += lang + '/iframe-sportsbook/';// hides header and footer of iframe content
+
+        //handle and add deeplinking parameters
+        var params = $location.search();
+        if (params.page) {
+            url += params.page + '/';
         }
-        $scope.frameUrl = $sce.trustAsResourceUrl(url);
+        if (params.category) {
+            url += params.category + '/';
+        }
+        if (params.alias) {
+            url += params.alias + '/';
+        }
+        url += '?show-layout=body';
+
+        return $sce.trustAsResourceUrl(url);
+    }
+
+    function initBetOnPolitics() {
+        $scope.loading = true;
+        $scope.frameUrl = createUrl();
         iframe = document.querySelector('#bet-on-politics');
 
         iframe.onload = function stopLoader() {
             $scope.loading = false;
         };
 
-        if (!canLogIn) {
-            window.addEventListener('message', listenForOpenSocket);
-            angular.element(iframe).on('$destroy', function onDestroy() {
-                window.removeEventListener('message', listenForOpenSocket);
-            });
-        }
+        window.addEventListener('message', listenForOpenSocket);
+        angular.element(iframe).on('$destroy', function onDestroy() {
+            window.removeEventListener('message', listenForOpenSocket);
+        });
     }
 
     function listenForOpenSocket(message) {
         if (message.data && message.data.info === "socketConnected") {
-            canLogIn = true;
+            socketConnected = true;
             login();
-            window.removeEventListener('message', listenForOpenSocket);
         }
     }
 
     function login() {
-        if (canLogIn && $rootScope.profile) {
+        if (socketConnected && $rootScope.profile) {
             var authToken = AuthData.getAuthToken();
             var userId = $rootScope.profile.id;
             iframe.contentWindow.postMessage({

@@ -111,22 +111,13 @@ angular.module('vbet5').service('GameInfo', ['$rootScope', '$http', '$filter', '
             return true;
         }
         if (game.type === 1 || enablePrematchCheck) {
-            if ([1, 5, 25, 28].indexOf(game.tv_type) !== -1 && game.video_id && Config.main.availableVideoProviderIds.indexOf(game.tv_type) !== -1 && (!Config.main.getProviderAvailableEventsAndEnableFiltering || Config.main.getProviderAvailableEventsAndEnableFiltering.indexOf(game.tv_type) === -1 || !GameInfo.PROVIDER_AVAILABLE_EVENTS || !GameInfo.PROVIDER_AVAILABLE_EVENTS[game.tv_type] || GameInfo.PROVIDER_AVAILABLE_EVENTS[game.tv_type].indexOf(game.video_id) !== -1)) {
-                return true;
-            }
-            if (game.video_id < 0 && Config.main.availableVideoProviderIds.indexOf(3) !== -1 && (!Config.main.getProviderAvailableEventsAndEnableFiltering || Config.main.getProviderAvailableEventsAndEnableFiltering.indexOf(3) === -1 || !GameInfo.PROVIDER_AVAILABLE_EVENTS || !GameInfo.PROVIDER_AVAILABLE_EVENTS[3] || GameInfo.PROVIDER_AVAILABLE_EVENTS[3].indexOf(game.video_id) !== -1)) {
-                game.tv_type = 3;
-                return true;
-            }
-            if (game.tv_type === 26 && Config.main.availableVideoProviderIds.indexOf(game.tv_type) !== -1 && game.video_id) {
-                return true;
-            }
             if (game.video_id2 && Config.main.availableVideoProviderIds.indexOf(6) !== -1 && (!game.tv_type || (game.tv_type !== 19 && game.tv_type !== 16) )) {
                 game.video_id = game.video_id2;
                 game.tv_type = 6;
                 return true;
             }
-            if ([7, 8, 11, 12, 16, 19, 31].indexOf(game.tv_type) !== -1 && Config.main.availableVideoProviderIds.indexOf(game.tv_type) !== -1) {
+            if (game.video_id < 0 && Config.main.availableVideoProviderIds.indexOf(3) !== -1 && (!Config.main.getProviderAvailableEventsAndEnableFiltering || Config.main.getProviderAvailableEventsAndEnableFiltering.indexOf(3) === -1 || !GameInfo.PROVIDER_AVAILABLE_EVENTS || !GameInfo.PROVIDER_AVAILABLE_EVENTS[3] || GameInfo.PROVIDER_AVAILABLE_EVENTS[3].indexOf(game.video_id) !== -1)) {
+                game.tv_type = 3;
                 return true;
             }
             if (game.video_id === 999999 && Config.main.availableVideoProviderIds.indexOf(999999) !== -1) { // the horse racing case
@@ -138,10 +129,19 @@ angular.module('vbet5').service('GameInfo', ['$rootScope', '$http', '$filter', '
                 game.tv_type = 17;
                 return true;
             }
-            if (game.video_id3 && [21, 22, 23, 30].indexOf(game.tv_type) !== -1 && Config.main.availableVideoProviderIds.indexOf(game.tv_type) !== -1) {
-                game.video_id = game.video_id3;
-                return true;
+            if (Config.main.availableVideoProviderIds.indexOf(game.tv_type) !== -1) {
+                if ([7, 8, 11, 12, 16, 19, 25, 26, 28].indexOf(game.tv_type) !== -1 && game.video_id) {
+                    return true;
+                }
+                if ([1, 5, 31].indexOf(game.tv_type) !== -1 && game.video_id && (!Config.main.getProviderAvailableEventsAndEnableFiltering || Config.main.getProviderAvailableEventsAndEnableFiltering.indexOf(game.tv_type) === -1 || !GameInfo.PROVIDER_AVAILABLE_EVENTS || !GameInfo.PROVIDER_AVAILABLE_EVENTS[game.tv_type] || GameInfo.PROVIDER_AVAILABLE_EVENTS[game.tv_type].indexOf(game.video_id) !== -1)) {
+                    return true;
+                }
+                if (game.video_id3 && [21, 22, 23, 30].indexOf(game.tv_type) !== -1) {
+                    game.video_id = game.video_id3;
+                    return true;
+                }
             }
+
             if (game.partner_video_id && Config.main.availableVideoProviderIds.indexOf(24) !== -1) {
                 game.video_id = game.partner_video_id;
                 game.tv_type = 24;
@@ -211,8 +211,7 @@ angular.module('vbet5').service('GameInfo', ['$rootScope', '$http', '$filter', '
             switch (availableProviders[i]) {
                 case 1:         // PerformGroup
                 case 5:         // IMG
-                case 25:        // dota streaming
-                case 28:         // Alba solution
+                case 31:        // FRIENDSHIP_STREAMING
                     idsFilter = (!Config.main.getProviderAvailableEventsAndEnableFiltering || Config.main.getProviderAvailableEventsAndEnableFiltering.indexOf(availableProviders[i]) === -1 || !GameInfo.PROVIDER_AVAILABLE_EVENTS || !GameInfo.PROVIDER_AVAILABLE_EVENTS[availableProviders[i]]) ? {'@gt': 0} : {'@in': GameInfo.PROVIDER_AVAILABLE_EVENTS[availableProviders[i]]};
                     filterList.push({tv_type: availableProviders[i], video_id: idsFilter});
                     break;
@@ -232,15 +231,17 @@ angular.module('vbet5').service('GameInfo', ['$rootScope', '$http', '$filter', '
                 case 26:        // private vivaro
                 case 29:        //
                 case 30:        // youtube streaming
-                case 31:        //     NEW_LIVE_STREAMING
                     filterList.push({tv_type: availableProviders[i]});
                     break;
                 case 17:        // urakulas_tv
                 case 21:        // dota streaming
                 case 22:        // dota streaming
                 case 23:        // dota streaming
-                case 30:        // youtube video
                     filterList.indexOf(videoId3Filter) === - 1 &&(filterList.push(videoId3Filter));
+                    break;
+                case 25:        // dota streaming
+                case 28:         // Alba solution
+                    filterList.push({tv_type: availableProviders[i], video_id: {'@gt': 0}});
                     break;
                 case 15:         // VIRTAUL_SPORTS
                     filterList.push({tv_type: 15, video_id: {'@gt': 0}});
@@ -1157,8 +1158,26 @@ angular.module('vbet5').service('GameInfo', ['$rootScope', '$http', '$filter', '
         if (Config.main.hideGmsMarketBase || event === undefined || (event.base === null  || event.base === undefined) && (event.base1 === null  || event.base1 === undefined)) {
             return '';
         }
-        var prefix = market.type && market.type.substr(-8) === 'Handicap' && event.base > 0 ? '+' : '';
-        var base =  event.base1 !== undefined && event.base2 !== undefined && !Config.main.displayEventsMainBase ? event.base1 + '-' + event.base2 : event.base;
+        var base, prefix = '';
+        if (event.base1 !== undefined && event.base2 !== undefined && !Config.main.displayEventsMainBase) {
+            base = event.base1 + '-' + event.base2;
+        } else  {
+            base = parseFloat(event.base);
+            if (Config.main.asian.homeAwayBaseRecalculationEnabled && market.home_score !== undefined && market.away_score !== undefined && (event.type === 'Home' || event.type === 'Away')) {
+                var delta = market.home_score - market.away_score;
+                switch (event.type_1) {
+                    case "Home":
+                        base += delta;
+                        break;
+                    case "Away":
+                        base -= delta;
+                        break;
+                }
+
+            } else if (market.type && market.type.substr(-8) === 'Handicap' && event.base > 0) {
+                prefix = '+';
+            }
+        }
 
         if (Config.main.disableBracketsForLanguages && Config.main.disableBracketsForLanguages.indexOf(Config.env.lang) > -1) {
             return ' ' + prefix + base + ' ';

@@ -106,7 +106,7 @@
                                                     <span class="game-is-neutral" title="is neutral venue" trans="attr-only"></span>
                                                 </li>
                                                 <li class="time-date" ng-if="game.type !== 1 && game.start_ts" ng-click="toggleGame();">
-                                                <span ng-class="{'animation-rotate-soon' : game.type === 2 && game.sport.alias === 'Mma'}">
+                                                <span ng-class="{'animation-rotate-soon' : !conf.hideGameSoonLabel &&  game.type === 2 && game.sport.alias === 'Mma'}">
                                                     <b ng-bind="game.start_ts|formatDate:'full':null:env.timeFormat"></b> <b class="game-id" title="{{game.game_number}}" ng-bind="'№'+game.game_number" ng-if="conf.showGameIds"></b>
                                                     <i trans>soon</i>
                                                 </span>
@@ -415,8 +415,8 @@
                                                         <span ng-init="rows = getDividedToRows(market.event, market.col_count)" class="hide"></span>
                                                         <ul ng-repeat="row in rows track by $index">
                                                             <li class="modern-max-bet-t" ng-mouseover="displayEventLimit(event, openGame, false, market)" ng-mouseleave="cancelDisplayEventLimit(event)" ng-repeat="event in row track by event.id" ng-click="bet(event, market, game)" ng-class="{'blocked': (event.price | oddConvert:'decimal') ===1}">
-                                                                <div class="max-bet-tooltip-v3" ng-show="env.authorized && event.maxBet !== undefined" ng-class="{'maxbet-enabled': env.authorized}">
-                                                                    Max: <b ng-bind="conf.onlyDecimalStakeAmount ? Math.floor(event.maxBet) : event.maxBet"></b> {{profile.currency_name|currency }}
+                                                                <div class="max-bet-tooltip-v3" ng-show="env.authorized && event.maxBet !== undefined" ng-class="{'maxbet-enabled': env.authorized}" title="{{conf.onlyDecimalStakeAmount ? Math.floor(event.maxBet) : event.maxBet}} {{profile.currency_name|currency }}">
+                                                                    Max:
                                                                 </div>
                                                                 <div class="betting-tooltip" ng-show="game.type==1 && conf.phoneOnlyMarkets.enable">
                                                                     <b trans>Phone only market</b><br><span trans>To place a bet, please call</span> <span>{{conf.phoneOnlyMarkets.phoneNumber}}</span>
@@ -500,8 +500,8 @@
 
                                                         <ul ng-repeat="row in rows track by $index">
                                                             <li class="modern-max-bet-t" ng-mouseover="displayEventLimit(event, openGame, false, market)" ng-mouseleave="cancelDisplayEventLimit(event)" ng-repeat="event in row track by event.id" ng-click="bet(event, market, game)" ng-class="{'blocked': (event.price | oddConvert:'decimal') ===1}">
-                                                                <div class="max-bet-tooltip-v3" ng-show="env.authorized && event.maxBet !== undefined" ng-class="{'maxbet-enabled': env.authorized}">
-                                                                    Max: <b ng-bind="conf.onlyDecimalStakeAmount ? Math.floor(event.maxBet) : event.maxBet"></b> {{profile.currency_name|currency }}
+                                                                <div class="max-bet-tooltip-v3" ng-show="env.authorized && event.maxBet !== undefined" ng-class="{'maxbet-enabled': env.authorized}" title="{{conf.onlyDecimalStakeAmount ? Math.floor(event.maxBet) : event.maxBet}} {{profile.currency_name|currency }}">
+                                                                    Max:
                                                                 </div>
                                                                 <div class="betting-tooltip" ng-show="game.type==1 && conf.phoneOnlyMarkets.enable">
                                                                     <b trans>Phone only market</b><br><span trans>To place a bet, please call</span> <span>{{conf.phoneOnlyMarkets.phoneNumber}}</span>

@@ -167,7 +167,7 @@ angular.module('CMS').controller('cmsPagesCtrl', ['$location', '$rootScope', '$s
         helpPagesLoaded = loadingHelpPages.promise;
         if (Utils.isObjectEmpty($rootScope.helpPages)) {
             console.log('loading help pages');
-            content.getPage('help.' + (forPopup ? 'popupPageSlugs' : 'pageSlugs'), true).then(function (data) {
+            content.getPage('help.' + (forPopup ? 'popupPageSlugs' : 'pageSlugs'), true, true).then(function (data) {
                 if (!data.data.page) {
                     return;
                 }
@@ -350,7 +350,11 @@ angular.module('CMS').controller('cmsPagesCtrl', ['$location', '$rootScope', '$s
      * @param {String} slug page slug
      * @param {String} from source
      */
-    $scope.openHelpPage = function openHelpPage(slug, from) {
+    $scope.openHelpPage = function openHelpPage(slug, from, topLevelPage, childPage) {
+        if (topLevelPage && childPage && Config.main.newHelpPage) {
+            $scope.openMultilevelHelpPage(topLevelPage, childPage);
+            return;
+        }
         if (Config.main.openHelpAsPopup === 'popup') {
             $window.open('#/popup/?action=helpPopup&help=' + slug, Config.main.skin + 'help.popup', "scrollbars=1,width=1000,height=500,resizable=yes");
         } else if (Config.main.openHelpAsPopup === 'all' || (Config.main.openHelpAsPopup === 'OnlyHeaderPopup' && from !== 'footer')) {
@@ -376,6 +380,10 @@ angular.module('CMS').controller('cmsPagesCtrl', ['$location', '$rootScope', '$s
                 $location.search('lang', $rootScope.env.lang);
             });
         }
+    };
+
+    $scope.openMultilevelHelpPage = function openMultilevelHelpPage(topPage, childPage) {
+        $location.path('/help/' + (topPage.slug || topPage.id) + '/' + (childPage.slug || childPage.id));
     };
 
     $scope.$on('openHelpPage', function (event, obj) {

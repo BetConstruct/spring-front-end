@@ -31,7 +31,7 @@ VBET5.controller('mainHeaderCtrl', ['$rootScope', '$scope', '$interval', '$filte
 
     var pathTypes = {
         'casino': ['/casino', '/games', '/poker', '/game', '/livedealer', '/keno', '/fantasy', '/ogwil', '/jackpot', '/financials', '/backgammon', '/belote', '/pokerklas', '/ggpoker', '/gameslanding', '/vrcasino', '/csbpoolbetting', '/tournaments'],
-        'sport': ['/sport', '/freebet', '/poolbetting', '/livecalendar', '/results', '/virtualsports', '/overview', '/multiview', '/dashboard', '/exchange', '/statistics', '/customsport'],
+        'sport': ['/sport', '/freebet', '/poolbetting', '/livecalendar', '/results', '/virtualsports', '/overview', '/multiview', '/dashboard', '/exchange', '/statistics', '/customsport', '/esports'],
         'poker': ['/poker']
     };
     pathTypes[Config.main.homepagePageType].push('/');
@@ -77,7 +77,7 @@ VBET5.controller('mainHeaderCtrl', ['$rootScope', '$scope', '$interval', '$filte
         }
 
         $rootScope.currentPage.path = $location.path().split("/").slice(0, 2).join("/");
-
+        $rootScope.currentPage.params = $location.search();
         $rootScope.currentPage.isInCasino = !$rootScope.calculatedConfigs.sportEnabled || pathTypes.casino.indexOf($rootScope.currentPage.path) !== -1;
         $rootScope.currentPage.isInSports = pathTypes.sport.indexOf($rootScope.currentPage.path) !== -1;
         $rootScope.currentPage.isInPoker = pathTypes.poker.indexOf($rootScope.currentPage.path) !== -1;
@@ -298,8 +298,8 @@ VBET5.controller('mainHeaderCtrl', ['$rootScope', '$scope', '$interval', '$filte
                             $location.search('settingspage', message.data.page);
                         }
                         if ($scope.env.authorized) {
-                            if (message.data.tab === 'login' || message.data.tab === 'register' || message.data.tab === 'signInForm') {return;}
-                        } else if (message.data.tab === 'deposit' || message.data.tab === 'balanceHistory' || message.data.tab === 'login' || message.data.tab === 'settings' || message.data.tab === 'signInForm') {
+                            if (message.data.tab === 'login' || message.data.tab === 'register' || message.data.tab === 'signInForm' || message.data.tab === 'sign-in') {return;}
+                        } else if (message.data.tab === 'deposit' || message.data.tab === 'balanceHistory' || message.data.tab === 'login' || message.data.tab === 'settings' || message.data.tab === 'signInForm' || message.data.tab === 'sign-in') {
                             openSigninForm();
                             //$location.search('action', message.data.tab);
                             return;
@@ -540,7 +540,7 @@ VBET5.controller('mainHeaderCtrl', ['$rootScope', '$scope', '$interval', '$filte
      * @param {Boolean} open optional. if true, will only open tab (won't close if it's already open)
      */
     $scope.myBetsToggle = function myBetsToggle(open) {
-        $rootScope.$broadcast('closeOpenBets');
+        $rootScope.$broadcast('openBets.close');
         var sliderContent;
 
         if (open === undefined && $rootScope.conf.enableCasinoBetHistory && ($rootScope.currentPage.isInCasino || !$rootScope.calculatedConfigs.sportEnabled)) {
@@ -1089,12 +1089,12 @@ VBET5.controller('mainHeaderCtrl', ['$rootScope', '$scope', '$interval', '$filte
 
     /**
      * @ngdoc method
-     * @name setSuggestedBets
+     * @name setSuggestedExpress
      * @methodOf vbet5.controller:mainHeaderCtrl
-     * @description  changes the value of suggested bets in Storage
+     * @description  changes the value of suggested bets (pre match type) in Storage
      */
-    $scope.setSuggestedBets = function setSuggestedBets() {
-        if($scope.suggestedBets !== 'hide') {
+    $scope.setSuggestedExpress = function setSuggestedExpress() {
+        if ($scope.suggestedBets !== 'hide') {
             $scope.suggestedBets = 'hide';
             Storage.set("suggestedBets", "hide");
         } else {
@@ -1103,11 +1103,13 @@ VBET5.controller('mainHeaderCtrl', ['$rootScope', '$scope', '$interval', '$filte
         }
     };
 
-    $scope.suggestedBets = Storage.get('suggestedBets') || true;
+    if (Config.main.enableSuggestedBets) {
+        $scope.suggestedBets = Storage.get('suggestedBets') || true;
 
-    $scope.$on("turnOffSuggestedBets", function() {
-        $scope.setSuggestedBets();
-    });
+        $scope.$on("turnOffSuggestedExpress", function() {
+            $scope.setSuggestedExpress();
+        });
+    }
 
     /**
      * @ngdoc method
@@ -1348,7 +1350,7 @@ VBET5.controller('mainHeaderCtrl', ['$rootScope', '$scope', '$interval', '$filte
         if (path !== '/' && lastCharacter === '/') {
             path = path.substr(0, path.length - 1);
         }
-        var defaultAvailability = path === '/' || path.indexOf('/game/') !== -1 || path.indexOf('/skinning') !== -1 || path.indexOf('/widget/') !== -1 || path.indexOf('/landpage') !== -1 || Config.main.defaultAvailablePaths.indexOf(path) !== -1;
+        var defaultAvailability = path === '/' || path.indexOf('/game/') !== -1 || path.indexOf('/skinning') !== -1 || path.indexOf('/widget/') !== -1 || path.indexOf('/landpage') !== -1 || path.indexOf('/help') !== -1 || Config.main.defaultAvailablePaths.indexOf(path) !== -1;
         path = "#" + path;
 
         if(defaultAvailability && defaultAvailability[defaultAvailability.length - 1] !== '/') {

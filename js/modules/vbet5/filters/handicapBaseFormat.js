@@ -39,5 +39,5 @@ VBET5.filter('handicapBaseFormat',['Config', function(Config) {
         } else {
             return hideSign ? Math.abs(value) : value;
         }
-    }
+    };
 }]);

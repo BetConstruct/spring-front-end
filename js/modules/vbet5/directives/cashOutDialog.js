@@ -31,7 +31,7 @@ VBET5.directive('cashOutDialog', ['$rootScope', '$timeout', 'Moment', 'Zergling'
                     error: false,
                     manualError: false,
                     valueReachesAmount: '',
-                    isPartial: '',
+                    partialAmount: '',
                     loading: false
                 };
                 $scope.cashoutTypes = {
@@ -146,6 +146,9 @@ VBET5.directive('cashOutDialog', ['$rootScope', '$timeout', 'Moment', 'Zergling'
                                     } else {
                                         $rootScope.$broadcast('updateAfterCashout', {betId: bet.id});
                                     }
+                                } else if (suggested.partial_price) {
+                                    // Updates single bet's cash out amount in 'Open Bets' section, after it has been partially cashed out (back end currently doesn't send 'bet_settlement', for this to be done automatically)
+                                    $rootScope.$broadcast('openBets.updateCashOutAmount', {betId: bet.id});
                                 }
                                 $scope.cashoutDialog.type = 'confirm';
                                 $scope.cashoutSuccess = (response.details && (response.details.cash_out_price || response.details.price)) || true;
@@ -321,7 +324,7 @@ VBET5.directive('cashOutDialog', ['$rootScope', '$timeout', 'Moment', 'Zergling'
                         $scope.cashoutRule.loading = false;
                         if (response.result === 0) {
                             $scope.cashoutRule.valueReachesAmount = response.details.MinAmount;
-                            $scope.cashoutRule.isPartial = !!response.details.PartialAmount;
+                            $scope.cashoutRule.partialAmount = response.details.PartialAmount;
                         }
                     });
             }

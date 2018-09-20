@@ -143,7 +143,6 @@ angular.module('vbet5').constant('Config', {
         googleAnalyticsEnableDisplayFeatures: false, // enable GA display features plugin
         yandexMetricaId: false,
         redirectOnTablets: false, //  if URL is provided will redirect to that URL on tablet devices
-        virtualsportsEnabled: true, //enable virtual sports
         sportsLeftMenuSortingFunctionName: 'orderSorting', // the name of sorting function 'orderSorting' or 'alphabeticalSorting'
         enableNewPoker: false,
         promotionalBonuses: {
@@ -183,9 +182,6 @@ angular.module('vbet5').constant('Config', {
         drawStreamUrl: 'rtmp://stream-eu2hz.betconstruct.com:1935/livedealer1/shanttv',
         gamesEnabled: true,
         virtualBettingEnabled: true,
-        virtualBettingEnabledInTopMenu: false, // show/hide virtual betting in top menu
-        backGammonEnabledInTopMenu: false, // show/hide backgammon in top menu
-        beloteEnabledInTopMenu: false, // show/hide belote in top menu
         visibleItemsInTopMenu: 7, // visible items quantity in Top Menu in small view
         sportSavedGamesEnabled: true, //enable sports saved games slider tab
         casinoSavedGamesEnabled: true, //enable casino saved games slider tab
@@ -222,6 +218,12 @@ angular.module('vbet5').constant('Config', {
         customSelectedSequenceInAsianSportsbook: false,
         asian: {
             competitionsPerPage: 10,
+            separateMatchEventsOnHDP: [
+                {
+                    index: '',
+                    all: true
+                }
+            ],
             storageFilterData: 86400000,
             asianLeftMenuDefaultType: 1,
             asianDefaultTheme: false, //'black' or 'white'
@@ -409,7 +411,9 @@ angular.module('vbet5').constant('Config', {
         enableBetPrint: false,
         downloadPDFButtons: false,
         sportsLayout: "classic",
-        customSportIds: {},
+        customSportIds: {
+            cyber: [71,73,74,75,76,77,78,79,80,81,82,83,84,85,120,123,139,140,141,142,144,145]
+        },
         openHelpAsPopup: 'OnlyHeaderPopup',
         messagesPageMenu: ['inbox', 'sent', 'new'],
         openFaqAsPopup: false,
@@ -438,7 +442,7 @@ angular.module('vbet5').constant('Config', {
             enabled: false  //external (Gaspar's) sportsbook
         },
         multiLevelMenu: {},
-        defaultAvailablePaths: ['/news', '/promos', '/cas-promos', '/about','/first_deposit_bonus', '/first_deposit_bonus_and_20_free_spins', '/404', '/draw', '/exchange-shop', '/registration', '/vrlivedealer'],
+        defaultAvailablePaths: ['/news', '/promos', '/cas-promos', '/about','/first_deposit_bonus', '/first_deposit_bonus_and_20_free_spins', '/404', '/draw', '/exchange-shop', '/registration', '/vrlivedealer', '/help'],
         disableLiveChatPaths: ['/popup', '/widget'],
         'rfid': {
             loginWIthRFID: false,
@@ -466,6 +470,7 @@ angular.module('vbet5').constant('Config', {
         loyaltyPointsShowAlwaysNextLevel: false,
         settingsDefaultPage: 'details', // details, changepassword
         passwordNewResetMode: false,
+        enableForgotPassword: true,
         enableFreeRenew: false,  //  'renew' for getting free money (available in free.vbet.com)
        //statsHostname: 'http://statistics.betconstruct.com/#/en/external/page/',  // hostname for statistics. when clicking on game statistics icon, popup on this hostname is open,
         statsHostname: {
@@ -489,8 +494,9 @@ angular.module('vbet5').constant('Config', {
         maxMessageLength: 4000,
         offlineMessage: false,
         iovationLoginScripts: false,
-        smsVerificationLogin: {
-            enabled: false,
+        smsVerification: {
+            login: false,
+            registration: false,
             timer: 120, // seconds
             allowResend: 5 // seconds
         },
@@ -731,7 +737,8 @@ angular.module('vbet5').constant('Config', {
             23: 1,
             24: 1,
             29: 1,
-            30: 1
+            30: 1,
+            31: 1
         },
         videoEnabled: true, //enable game videos
         video: {
@@ -994,7 +1001,8 @@ angular.module('vbet5').constant('Config', {
     expandAllInBetHistory: false,
     stakeAmountPreventInput: "[^\\d\\.\\,]",
     enableRuntimePopup: true,
-    promoCodeFieldName: 'promo_code'
+    promoCodeFieldName: 'promo_code',
+    hideGameSoonLabel: false
     },
 
     partner: {
@@ -1068,8 +1076,11 @@ angular.module('vbet5').constant('Config', {
             enableCashoutButton: false,
             betRulesLink: ''
         },
-        defaultPriceChangeSetting: "1"
-
+        defaultPriceChangeSetting: "1",
+        fullCoverBetTypes: {
+            enabled: false,
+            expanded: false
+        }
     },
     poker: {
         disableChinesePoker: true,

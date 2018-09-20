@@ -39,7 +39,7 @@
   margin: 10px 0 26px;
   background: $skin-palette-7;
   position: relative;
-  z-index: 100;
+  z-index: 1100;
 }
 .casino-tournament-filter {
   float: left;
@@ -877,15 +877,25 @@
   z-index: 100;
   width: 220px;
   background: $skin-palette-10;
+  @include rtl {
+    left: 39px;
+    right: auto;
+  }
   .cst-stat-list {
     @include scroll($scroll: auto);
     height: calc(100% - 210px);
     width: calc(100% + 12px);
     padding: 0 12px 0 0;
+    @include rtl {
+      padding: 0 0 0 12px;
+    }
   }
 }
 .iframe-tournament-sidebar-padding {
   padding: 0 220px 0 0;
+  @include rtl {
+    padding: 0 0 0 220px;
+  }
 }
 .waved-decor-7-white {
   background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAOCAMAAAB5Au6AAAAAM1BMVEX////////////////////////////////////////////////////////////////////lEOhHAAAAEXRSTlMAAQMHDRQdJzI8PUVMUlZYWSlzVBoAAABmSURBVHjadVFHDsAwCMsezfL/X9tKOTiNwBckLIwN5oQt+FCsUeAqMCdQncz7BowYB9C8xIcO9MB6Y09S6ebTBB53eEl/Pq/tnmlWJsuGMKBJJsalKdG0Fot95TBU5i759EZ+DtO94LYGgkPphBwAAAAASUVORK5CYII=) repeat-x 50% 50% / auto 7px;
@@ -1037,6 +1047,7 @@
 .ct-games-no-results {
   float: left;
   width: 100%;
+  color: $text-palette-3;
   font: 20px $font-f;
   text-align: center;
   margin: 84px 0 110px;

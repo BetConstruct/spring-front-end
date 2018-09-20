@@ -95,12 +95,11 @@ angular.module('vbet5').controller('RegistrationController', ['$scope', '$rootSc
 
         /**
          * @description Automatically set currency if it enabled and defined in config
-         * @param {String} newVal
-         * @param {String} oldVal
+         * @param {String} countryCode the code of country
          */
-        function autoSetCurrency(newVal, oldVal) {
-            if (Config.main.registration.autoSetCurrency.availableList[newVal]) {
-                $scope.registrationData.currency_name = Config.main.registration.autoSetCurrency.availableList[newVal];
+        function autoSetCurrency(countryCode) {
+            if (Config.main.registration.autoSetCurrency.availableList[countryCode]) {
+                $scope.registrationData.currency_name = Config.main.registration.autoSetCurrency.availableList[countryCode];
                 if (Config.main.registration.autoSetCurrency.disableChangeAfterSelect) {
                     $scope.currencyDisabled = true;
                 }
@@ -176,6 +175,9 @@ angular.module('vbet5').controller('RegistrationController', ['$scope', '$rootSc
                         case 'getSwedishInfo':
                             $scope.$on('getSwedishInfo', getSwedishInfo);
                             break;
+                        case 'sendSMSCode':
+                            $scope.$on('sendSMSCode', sendSMSCode);
+                            break;
                     }
                 }
                 if (regItem.defaultValue !== undefined) {
@@ -221,7 +223,7 @@ angular.module('vbet5').controller('RegistrationController', ['$scope', '$rootSc
          */
         $scope.step1DataIsValid = function step1DataIsValid() {
             return step1Fields.reduce(function (prevResult, fieldName) {
-                if(fieldName === 'province' || fieldName === 'state'){
+                if(fieldName === 'province' || fieldName === 'state' || fieldName === 'io_black_box'){
                     return prevResult;
                 }
 
@@ -300,7 +302,7 @@ angular.module('vbet5').controller('RegistrationController', ['$scope', '$rootSc
             setCountryCode(newVal.key);
 
             if (Config.main.registration.autoSetCurrency && Config.main.registration.autoSetCurrency.enabled) {
-                autoSetCurrency(newVal, oldVal);
+                autoSetCurrency(newVal.key);
             }  else {
                 setCurrencyByCountryCode(newVal.key);
             }
@@ -737,6 +739,29 @@ angular.module('vbet5').controller('RegistrationController', ['$scope', '$rootSc
                                 case 2467:
                                     $scope.registration.failed = 'We cannot proceed with your request. Contact "Customer Support" for further information.';
                                     break;
+                                case 2469:
+                                    if ($scope.registerform.loyalty_code) {
+                                        $scope.registerform.loyalty_code.$setValidity('invalid', false);
+                                        resetFormFieldErrorOnChange('loyalty_code', 'invalid');
+                                    }
+                                    break;
+                                case 2474: // InvalidCode
+                                    $scope.registerform.confirmation_code.$dirty = $scope.registerform.confirmation_code.$invalid = $scope.registerform.confirmation_code.$error.invalid = true;
+                                    resetFormFieldErrorOnChange('confirmation_code', 'invalid');
+                                    break;
+                                case 2476: // CodeExpired
+                                case 2481: // CodeAlreadyUsed
+                                    $scope.registerform.confirmation_code.$dirty = $scope.registerform.confirmation_code.$invalid = $scope.registerform.confirmation_code.$error.used = true;
+                                    resetFormFieldErrorOnChange('confirmation_code', 'used');
+                                    break;
+                                case 2482: // PhoneNumberOrContentAreInvalid
+                                    $scope.registerform.phone_number.$dirty = $scope.registerform.phone_number.$invalid = $scope.registerform.phone_number.$error.invalid = true;
+                                    resetFormFieldErrorOnChange('phone_number', 'invalid');
+                                    break;
+                                case 2483: // PhoneNumberIsBlackListed
+                                    $scope.registerform.phone_number.$dirty = $scope.registerform.phone_number.$invalid = $scope.registerform.phone_number.$error.blacklisted = true;
+                                    resetFormFieldErrorOnChange('phone_number', 'blacklisted');
+                                    break;
                                 default:
                                     $scope.registration.failed = 'Registration failed due to technical error.';
                                     break;
@@ -1058,6 +1083,39 @@ angular.module('vbet5').controller('RegistrationController', ['$scope', '$rootSc
                                 break;
                         }
                     }
+                }
+            )['finally'](function stopLoading() { $scope.buttonLoading = false; });
+        }
+
+        function sendSMSCode() {
+            if ($scope.buttonLoading || !($scope.registrationData.phone_number && $scope.registrationData.phone_code)) { return; }
+
+            $scope.buttonLoading = true;
+
+            Zergling.get(
+                {
+                    action_type: 1,
+                    phone_number: $scope.registrationData.phone_code + $scope.registrationData.phone_number
+                },
+                'send_sms_to_phone_number'
+            ).then(
+                function success(response) {
+                    if (response.result === 0) {
+                        // Do something if sms was sent successfully
+                    } else {
+                        $rootScope.$broadcast('globalDialogs.addDialog', {
+                            type: 'error',
+                            title: 'SMS not sent',
+                            content: response.details || 'Invalid request'
+                        });
+                    }
+                },
+                function error() {
+                    $rootScope.$broadcast('globalDialogs.addDialog', {
+                        type: 'error',
+                        title: 'Service unavailable',
+                        content: 'Service unavailable'
+                    });
                 }
             )['finally'](function stopLoading() { $scope.buttonLoading = false; });
         }

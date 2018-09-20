@@ -19,9 +19,11 @@ $popup-overlay-background: black !default;
   * {
     box-sizing: border-box;
   }
-  .descriptions-c-b img{
-    max-width: 100%;
-    max-height: 100%;
+  img {
+    max-width: calc(100vw - 100px);
+    max-height: calc(100vh - 230px);
+    width: auto;
+    height: auto;
   }
   &.rfid {
     height: calc(100% - 94px);
@@ -1072,6 +1074,9 @@ $popup-overlay-background: black !default;
       text-align: right;
       padding: 0 10px;
       box-sizing: border-box;
+      @include rtl {
+        text-align: left;
+      }
     }
     .bs-print-icon {
       position: absolute;
@@ -1080,6 +1085,10 @@ $popup-overlay-background: black !default;
       display: block;
       color: $c16-tp-3;
       font: 12px/36px icomoon;
+      @include rtl {
+        left: auto;
+        right: 50px;
+      }
       &:before {
         content: "\e6fc";
       }
@@ -1140,18 +1149,28 @@ $popup-overlay-background: black !default;
       display: inline-block;
       text-align: left;
       width: 320px;
+      @include rtl {
+        text-align: right;
+      }
     }
     .pu-contain-j {
+      float: none;
       padding-bottom: 0;
     }
     .pu-button-wrap-j button {
       width: 100%;
       margin: 0;
+      @include rtl {
+        margin: 0;
+      }
       &:first-child {
         margin: 0 0 15px;
         background: $brand-color-1;
         border-color: $brand-color-1;
         color: set-color($brand-color-1);
+        @include rtl {
+          margin: 0 0 15px;
+        }
         &:hover {
           background: lighten($brand-color-1, 10);
           border-color: lighten($brand-color-1, 10);
@@ -1168,7 +1187,7 @@ $popup-overlay-background: black !default;
     width: 100%;
     height: calc(100vh - 370px);
     padding-right: 10px;
-    margin: 10px 0px 10px 0px;
+    margin: 10px 0 10px 0;
     text-align: justify;
     @include scroll($scroll: auto, $background: $skin-palette-10);
   }
@@ -1243,11 +1262,12 @@ input::-webkit-inner-spin-button {
     border-spacing: 0 2px;
     width: 100%;
     border-collapse: separate;
-    font: 500 16px/44px $font-f;
+    font: 500 16px/20px $font-f;
     color: $text-palette-1;
     td {
+      vertical-align: middle;
       background: rgba($skin-palette-5, 0.5);
-      padding: 0 10px;
+      padding: 6px 10px;
       &:not(:first-child) {
         width: 1%;
         white-space: nowrap;

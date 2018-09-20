@@ -460,11 +460,13 @@ angular.module('vbet5.betting').controller('modernViewManCtrl', ['$rootScope', '
                         if (Config.main.showFavoriteGamesInSportList && searchSportParam === VIRTUAL_SPORT_FAVORITE.id) {
                             sportToSelect = VIRTUAL_SPORT_FAVORITE;
                         }
-                        if(Config.main.popularMatches && Config.main.popularMatches.enabled && searchSportParam === VIRTUAL_MOST_POPULAR.id) {
-                            sportToSelect = VIRTUAL_MOST_POPULAR;
-                        }
-                        if (Config.main.showVirtualsInSportList && searchSportParam === VIRTUAL_SPORT_VIRTUALS.id && !Config.env.live) {
-                            sportToSelect = VIRTUAL_SPORT_VIRTUALS;
+                        if (!Config.env.live) {
+                            if(Config.main.popularMatches && Config.main.popularMatches.enabled && searchSportParam === VIRTUAL_MOST_POPULAR.id) {
+                                sportToSelect = VIRTUAL_MOST_POPULAR;
+                            }
+                            if (Config.main.showVirtualsInSportList && searchSportParam === VIRTUAL_SPORT_VIRTUALS.id) {
+                                sportToSelect = VIRTUAL_SPORT_VIRTUALS;
+                            }
                         }
                     } else {
                         sportToSelect = $rootScope.myGames && $rootScope.myGames.length ? VIRTUAL_SPORT_FAVORITE : $scope.sports_list[defaultSportListIndex];
@@ -541,7 +543,7 @@ angular.module('vbet5.betting').controller('modernViewManCtrl', ['$rootScope', '
                         ['id', 'start_ts', 'team1_name', 'team2_name', 'team1_external_id', 'team2_external_id', 'type', 'info', 'events_count', 'markets_count', 'extra', 'is_blocked', 'game_number', 'exclude_ids', 'is_stat_available', 'is_live', 'is_neutral_venue']
                     ],
                     'event': ['id', 'price', 'type', 'name'],
-                    'market': ['type', 'express_id', 'name']
+                    'market': ['type', 'express_id', 'name', 'home_score', 'away_score']
                 },
                 'where': {
                     'game': {
@@ -838,7 +840,7 @@ angular.module('vbet5.betting').controller('modernViewManCtrl', ['$rootScope', '
                         ['id', 'start_ts', 'team1_name', 'team2_name', 'team1_external_id', 'team2_external_id', 'type', 'info', 'events_count', 'markets_count', 'extra', 'is_blocked', 'game_number', 'exclude_ids', 'is_stat_available', 'is_live', 'is_neutral_venue']
                     ],
                     'event': ['id', 'price', 'type', 'name'],
-                    'market': ['type', 'express_id', 'name']
+                    'market': ['type', 'express_id', 'name', 'home_score', 'away_score']
                 }
             };
             request.where = {

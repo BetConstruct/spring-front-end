@@ -2,7 +2,7 @@
     <div class="casino-top-slider-wrapper" ng-class="(confData.main.topBanners.showPopularGameBannerDoubleSize && !confData.main.topBanners.showPopularGameBanner) ? 'single-game-contain-wp-double' : '' ">
         <!--Slider-->
         <div ng-controller="cmsPagesCtrl" ng-init="getCasinoBanners();"  class="slider-view-casino-b" ng-if="confData.main.topBanners.showSlider" ng-class="{'full-width-slider-casino-j': (!confData.main.topBanners.showBannerInsteadWinners && !confData.main.topBanners.showBannerInsteadOfBiggestWinners && confData.main.topBanners.showPopularGameBanner)}">
-            <vbet-big-slider class="big-slider-casino-directive" ng-if="casinoTopBanners" images="casinoTopBanners" link-click-handler="openCBannerLink" slider-template="true"></vbet-big-slider>
+            <vbet-big-slider class="big-slider-casino-directive" ng-if="casinoTopBanners" images="casinoTopBanners" link-click-handler="openCBannerLink" slider-template="true" additional-data="gamesAdditionalData" ></vbet-big-slider> <!-- todo   gamesAdditionalData2  -->
         </div>
         <!--Slider END-->
         <div class="casino-right-b-modules" ng-if="confData.main.topBanners.showPopularGameBanner || confData.main.topBanners.showBannerInsteadWinners || confData.main.topBanners.showBannerInsteadOfBiggestWinners || confData.main.topBanners.showBiggestWinners || confData.main.topBanners.showPopularGameBannerDoubleSize">

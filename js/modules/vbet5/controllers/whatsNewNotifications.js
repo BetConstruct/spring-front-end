@@ -116,8 +116,14 @@ VBET5.controller('whatsNewNotificationsCtrl', ['$scope', 'Config', 'Storage', 'M
             });
             if ($scope.notificationsGrouped && notificationsGroup.items && notificationsGroup.items.length === 0) {
                 $scope.notificationsGrouped.splice(notificationsGroupKey, 1);
+                angular.forEach(notificationsGroup.items, function (notification) {
+                    $scope.notifications.showed[notification.id] = 1;
+                });
             } else if (dateGroup && dateGroup === notificationsGroup.date) {
                 $scope.notificationsGrouped.splice(notificationsGroupKey, 1);
+                angular.forEach(notificationsGroup.items, function (notification) {
+                    $scope.notifications.showed[notification.id] = 1;
+                });
             }
         });
 

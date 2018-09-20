@@ -17,8 +17,6 @@
             <div class="mini-games" ng-if="conf.enableMiniGameUnderBetslip && $root.casinoEnabled" ng-include="'optional_modules/casino/templates/specialgames/minigames.html'|fixPath"></div>
 
 
-            <!--Спортивные новости-->
-            <div ng-show="((betSlipBetsCount === 0) || !betSlipBetsCount) && (hideVideoAndAnimationBox || !env.live) && showNewsBlock && showNewsBetSet && showNewsInClassicView" class="sport-news" ng-include="::'templates/sport/sportnews.html'|fixPath" id="sport-news-sidebar" ng-if="conf.enableNews"></div>
 
         </div>
     </div>

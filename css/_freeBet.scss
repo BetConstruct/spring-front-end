@@ -40,7 +40,7 @@
       }
       &:last-child {
         width: 33.333333%;
-        padding: 90px 0 0;
+        padding: 95px 0 0;
       }
       > h4 {
         margin: 80px 0;
@@ -164,6 +164,9 @@
       display: block;
       margin: 0 3px;
       float: left;
+      @include rtl {
+        float: right;
+      }
     }
   }
   button {
@@ -195,6 +198,9 @@
     &.random-choice {
       &:before {
         content: "\7b";
+        @include rtl {
+          direction: ltr;
+        }
       }
     }
     &.favourite-choice {

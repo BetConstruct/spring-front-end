@@ -2,13 +2,10 @@
   float: left;
   width: 100%;
   position: relative;
-  z-index: 1000;
+  z-index: 9999;
   background: $footer-background;
   .paymen-icons-list {
     background: $footer-payments-line-background;
-    @if $custom-footer-sprite == true {
-      display: block !important;
-    }
   }
   &.footer-fixed {
     overflow: hidden;
@@ -48,13 +45,6 @@
           display: inline-block;
           vertical-align: middle;
           float: none;
-        }
-      }
-      @if $custom-footer-sprite == true {
-        background: url(../images/custom-footer-sprite.png#{$delete-cache}) no-repeat 50% 50%;
-        height: 100px;
-        > li {
-          display: none;
         }
       }
     }
@@ -394,5 +384,14 @@
     a:hover {
       text-decoration: underline;
     }
+  }
+}
+.footer-custom-sprite {
+  float: left;
+  width: 100%;
+  img {
+    display: block;
+    margin: 50px auto;
+    max-width: 100%;
   }
 }

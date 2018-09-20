@@ -45,9 +45,10 @@ VBET5.service('BetService', ['$rootScope', 'Zergling', 'Config', '$q', 'Utils', 
      * @param {Array} bets - an array of bet objects (that have cash out option)
      * @param {Object} updatedData - updated info from SWARM
      * @param {Array} [cashoutableBets] - bets that have cash out
+     * @param {Boolean} forceCalculate
      * @returns {Array} ids of bets that need to have their cash out info updated
      */
-    BetService.cashOut.filterEvents = function filterEvents(bets, updatedData, cashoutableBets) {
+    BetService.cashOut.filterEvents = function filterEvents(bets, updatedData, cashoutableBets, forceCalculate) {
         var cashOutBetIds = [];
         angular.forEach(bets, function (betData) {
             var shouldFilter = true;
@@ -57,7 +58,7 @@ VBET5.service('BetService', ['$rootScope', 'Zergling', 'Config', '$q', 'Utils', 
             // Only look at 'Single' and 'Multiple' bets that are not settled
             if (shouldFilter && (betData.type == '1' || betData.type == '2') && betData.outcome == '0') {
                 var hasInactiveEvents = false,
-                    needsCalculation;
+                    needsCalculation = forceCalculate;
 
                 angular.forEach(betData.events, function (betEvent) {
                     var isEventActive = betEvent.outcome == 3;
@@ -216,13 +217,21 @@ VBET5.service('BetService', ['$rootScope', 'Zergling', 'Config', '$q', 'Utils', 
      * @param {Function} [callbackFn] - callback function to be invoked when event info is received
      */
     BetService.repeatBet.addEvents = function addEvents(eventsFromBetHistory, editBet, callbackFn) {
+        var promise = $q.defer();
+
         var betsToPlace,
             oddType = 'odd';
         if (editBet) {
             $rootScope.editBet = {
+                increaseStake: {
+                    tooltip: false,
+                    amount: '',
+                    savedAmount: ''
+                },
                 loading: true,
                 edit: true,
                 oldBetId: eventsFromBetHistory.id,
+                originalEventIds: eventsFromBetHistory.events.map(function getSelectionIds(event) { return event.selection_id; }),
                 stakeAmount: eventsFromBetHistory.cash_out,
                 openSelectionsPart: false,
                 dateTime: eventsFromBetHistory.date_time,
@@ -235,7 +244,7 @@ VBET5.service('BetService', ['$rootScope', 'Zergling', 'Config', '$q', 'Utils', 
 
         var eventIds = [];
         angular.forEach(eventsFromBetHistory.events, function(event) {
-            if(event.outcome === null) {
+            if(event.outcome === null || event.outcome === 0) {
                 eventIds.push(event.selection_id);
             }
         });
@@ -271,7 +280,11 @@ VBET5.service('BetService', ['$rootScope', 'Zergling', 'Config', '$q', 'Utils', 
                         if (typeof callbackFn === 'function') {
                             callbackFn();
                         }
+                        promise.resolve();
                     }
+                },
+                function error() {
+                    promise.reject();
                 })['finally'](
                     function() {
                         if (editBet) {
@@ -283,6 +296,8 @@ VBET5.service('BetService', ['$rootScope', 'Zergling', 'Config', '$q', 'Utils', 
             $location.path() !== '/multiview/' && $location.path() !== '/livecalendar/') {
             $location.url('/sport/?type=1');
         }
+
+        return promise.promise;
     };
 
 

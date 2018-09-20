@@ -5,7 +5,7 @@
 
     <p ng-if="env.authorized && (profile.calculatedBalance + profile.calculatedBonus) === 0 && !profile.initial_balance" trans ng-class="{'pointer-events-none': conf.integrationMode}" ng-click="!conf.disableDepositPage && broadcast('toggleSliderTab', 'deposit');$event.stopPropagation();">You need to have non-zero balance to be able to play video.</p>
 
-    <div class="flash-loader-overlay" ng-hide="videoState.frameUrl || videoState.videoIsLoaded">
+    <div class="flash-loader-overlay" ng-hide="!$root.env.authorized || videoState.frameUrl || videoState.videoIsLoaded">
         <div class="box">
             <div class="container cylinder">
                 <div class="hand"></div>

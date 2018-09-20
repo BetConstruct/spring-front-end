@@ -128,7 +128,7 @@ angular.module('vbet5').controller('loginCtrl', ['$scope', '$rootScope', 'Timeou
                 function success(response) {
                     switch (response.result) {
                         case 0:
-                            $scope.params.smsTimer = Config.main.smsVerificationLogin.timer + new Date().getTime() / 1000;
+                            $scope.params.smsTimer = Config.main.smsVerification.timer + new Date().getTime() / 1000;
                             $scope.params.smsMsg = 'SMS Successfully Sent';
                             break;
                         default:
@@ -322,7 +322,7 @@ angular.module('vbet5').controller('loginCtrl', ['$scope', '$rootScope', 'Timeou
             $scope.params.needVerificationCode = false;
         }
 
-        if (Config.main.smsVerificationLogin.enabled) {
+        if (Config.main.smsVerification.login) {
             additionalParams.confirmation_code = $scope.user.confirmation_code;
         }
 
@@ -454,7 +454,7 @@ angular.module('vbet5').controller('loginCtrl', ['$scope', '$rootScope', 'Timeou
                 $scope.env.showSlider = false;
                 $scope.env.sliderContent = '';
 
-                if (Config.main.smsVerificationLogin.enabled) {
+                if (Config.main.smsVerification.login) {
                     clearSMSParams();
                     $scope.params.allowSMSResend = true;
                 }
@@ -532,7 +532,7 @@ angular.module('vbet5').controller('loginCtrl', ['$scope', '$rootScope', 'Timeou
             $rootScope.$broadcast("globalDialogs.addDialog", {
                 type: 'error',
                 title: 'Login',
-                content: Translator.get(data.data.details)
+                content: Translator.get(data.data.details.Message || 'Your account will only be re-opened if you contact us to request it after the Self-Exclusion period has expired.')
             });
             $scope.env.showSlider = false;
         }
@@ -549,7 +549,7 @@ angular.module('vbet5').controller('loginCtrl', ['$scope', '$rootScope', 'Timeou
         }
 
         //Sms verification
-        if (Config.main.smsVerificationLogin.enabled) {
+        if (Config.main.smsVerification.login) {
             $scope.signInError = data.data.details.Message || '';
             if (data.data.status === 2472 || data.data.status === 2474) {
                 $scope.params.smsErrMsg = $scope.signInError;
@@ -937,7 +937,7 @@ angular.module('vbet5').controller('loginCtrl', ['$scope', '$rootScope', 'Timeou
             $scope.nemIDSrc = '';
             $scope.busy = false;
         }
-        if (Config.main.smsVerificationLogin.enabled) {
+        if (Config.main.smsVerification.login) {
             clearSMSParams();
             $scope.params.allowSMSResend = true;
         }

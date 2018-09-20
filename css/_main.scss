@@ -42,6 +42,9 @@ html {
   &[dir="rtl"] {
     direction: ltr;
   }
+  &[lang="ka"] *{
+    text-transform: none !important;
+  }
 }
 body {
   width: 100%;
@@ -669,32 +672,6 @@ a {
   color: $hero-color;
 }
 
-.conteiner.show-fix .message-info, .conteiner.show-game .message-info {
-  display: none;
-}
-
-.conteiner.show-fix .help-b, .conteiner.show-game .help-b {
-  position: absolute;
-  right: -60px;
-  top: 0;
-  height: 41px;
-  background-size: contain;
-  width: 35px;
-  @media screen and (max-width: 1359px) {
-    display: none;
-  }
-}
-
-.conteiner.show-fix .help-b.faq, .conteiner.show-game .help-b.faq {
-  right: auto;
-}
-
-.conteiner.show-fix .help-b a, .conteiner.show-game .help-b a {
-  height: 41px;
-  background-size: contain !important;
-  width: 35px;
-}
-
 .prof-name {
   float: right;
   display: block;
@@ -702,11 +679,6 @@ a {
   position: relative;
   z-index: 999;
   margin: 0 10px 0 0;
-}
-
-.conteiner.show-fix .prof-name, .conteiner.show-game .prof-name,
-.conteiner.show-fix .category-nav ul li a:before, .conteiner.show-game .category-nav ul li a:before {
-  display: none;
 }
 
 .prof-name a {
@@ -8415,7 +8387,6 @@ div[class*="pagemobile"] .page-main .page-content p {
 
 .right-block-news p {
   margin: 13px 0 0;
-  text-align: justify;
   word-spacing: -1px;
 }
 
@@ -9165,10 +9136,14 @@ div[class*="pagemobile"] .page-main .page-content p {
 
 .All-Bets-history h3 {
   float: left;
-  width: 650px;
+  width: calc(100% - 10px);
+  box-sizing: border-box;
   border-bottom: 2px solid #000;
   padding: 0 0 15px 0;
-  margin: 0 0 0 10px;
+}
+
+.All-Bets-history .general-text-icons + h3 {
+  padding: 0 70px 15px 0;
 }
 
 .pagination {
@@ -14354,6 +14329,10 @@ div.draws-contain {
   margin-top: -12px;
   width: 24px;
   height: 24px;
+  @include rtl {
+    left: auto;
+    right: 7px;
+  }
 }
 
 .accepted-bet-icon:before {
@@ -14377,6 +14356,10 @@ div.draws-contain {
   font-weight: bold;
   text-align: center;
   transition-duration: 250ms;
+  @include rtl {
+    left: 4px;
+    right: auto;
+  }
 }
 
 .betslit-top-name-box .tabs-booking {
@@ -14405,6 +14388,9 @@ div.draws-contain {
   font: 11px/24px $font-f;
   font-weight: bold;
   max-width: 79%;
+  @include rtl {
+    float: right;
+  }
 }
 
 .booking-id-text {
@@ -14414,6 +14400,10 @@ div.draws-contain {
   font: 11px/14px $font-f;
   color: #111;
   z-index: 420;
+  @include rtl {
+    left: auto;
+    right: 5px;
+  }
 }
 
 .print-button {
@@ -14422,6 +14412,10 @@ div.draws-contain {
   position: relative;
   top: 0;
   left: 2px;
+  @include rtl {
+    left: auto;
+    right: 2px;
+  }
 }
 
 .print-button:before {
@@ -14433,25 +14427,25 @@ div.draws-contain {
   left: 0;
   padding: 0 4px;
   border-radius: 1px;
+  @include rtl {
+    left: auto;
+    right: 0;
+  }
 }
-
 .info-booking {
   width: 300px;
   float: left;
   padding: 10px;
   background: white;
 }
-
 .info-booking p {
   font: 15px/20px $font-f;
   padding: 5px 0;
 }
-
 .info-booking h1 {
   font: 30px/42px $font-f;
   margin: 12px 0;
 }
-
 /*accepted-noification END*/
 .betslip-toggle {
   position: fixed;
@@ -14464,8 +14458,11 @@ div.draws-contain {
   border-radius: 5px 0 0 5px;
   padding: 34px 5px 2px;
   width: 18px;
+  @include rtl {
+    left: 0;
+    right: auto;
+  }
 }
-
 .betslip-toggle p {
   padding: 0;
   font: 20px/21px $font-f;
@@ -14475,7 +14472,6 @@ div.draws-contain {
   text-align: center;
   text-transform: uppercase;
 }
-
 .betslip-toggle span {
   font: 12px/16px $font-f;
   color: #ffffff;
@@ -14488,22 +14484,18 @@ div.draws-contain {
   box-shadow: 0 0 1px #ffffff;
   border-radius: 50%;
 }
-
 .betslip-toggle:hover {
   opacity: 1;
   transition: opacity 300ms;
 }
-
 .body-wrapper.no-animation .betslip-toggle:hover {
   transition: inherit;
 }
-
 .animate-repeat {
   animation-name: add-ticket;
   animation-duration: 800ms;
   transition-timing-function: linear;
 }
-
 @keyframes add-ticket {
   0% {
     display: none;
@@ -14517,11 +14509,9 @@ div.draws-contain {
     max-height: 150px;
   }
 }
-
 .body-wrapper.no-animations .show-extra {
   transition: none;
 }
-
 .betting-tooltip {
   position: absolute;
   bottom: 100%;
@@ -14533,11 +14523,9 @@ div.draws-contain {
   z-index: 999;
   transition: opacity 300ms;
 }
-
 .body-wrapper.no-animations .betting-tooltip {
   transition: none;
 }
-
 .betting-tooltip:after {
   content: "";
   position: absolute;
@@ -14547,8 +14535,11 @@ div.draws-contain {
   height: 0;
   border-width: 5px;
   border-style: solid;
+  @include rtl {
+    left: auto;
+    right: 20px;
+  }
 }
-
 .list-result ul li .betting-tooltip span, .game-live-row .team .betting-tooltip span {
   display: inline;
   width: auto;
@@ -14556,59 +14547,47 @@ div.draws-contain {
   float: none;
   padding: 0;
 }
-
 .data-range-week {
   color: #444444;
 }
-
 .data-range-month {
   color: $hero-color;
   background: #F5F5F5;
 }
-
 .body-wrapper.no-footer-nav .wrapper-contein {
   padding: 0 !important;
 }
-
 .list-result.overs-list {
   border-spacing: 0;
   margin: 0 16px;
 }
-
 .body-wrapper.no-footer-nav ~ .footer-button {
   display: none !important;
 }
-
 .list-result.overs-list.large {
   display: block;
 }
-
 .list-result.overs-list ul li {
   border-right: 1px solid #cccccc;
   border-bottom: 1px solid #cccccc;
   padding: 8px 5px;
   display: block;
 }
-
 .list-result.overs-list ul li span {
   display: block;
   float: right;
 }
-
 .list-result.overs-list.large ul li {
   width: 156px;
   float: left;
 }
-
 .list-result.overs-list ul li:nth-child(4n+1) {
   border-left: 1px solid #cccccc;
 }
-
 .list-result.overs-list ul li:hover {
   border-bottom: 1px solid #cccccc;
   background: #f7f7f7;
 }
-
 /*feedback*/
 .feedback-button p {
   float: left;
@@ -19817,34 +19796,35 @@ div.right-column-view-contain > .list-bet-block .quick-bet-button {
     pointer-events: inherit;
   }
 }
-
 .tooltip-wrapper-j {
   position: relative;
   float: left;
   width: 100%;
-  > b {
+  > button {
     position: absolute;
     top: 1px;
     right: 1px;
-    width: 34px;
+    width: 68px;
     height: 34px;
     display: block;
+    border: none;
     color: set-color($brand-color-1);
     background: $brand-color-1;
-    font: normal 20px/34px icomoon;
+    font: normal 11px/13px $font-f;
     transition: background 240ms;
-    &:after {
-      content: "\e612";
-    }
     &:hover {
       background: lighten( saturate( $brand-color-1, 1 ), 7 );
     }
     & + div > input[type="text"] {
       padding-right: 34px;
     }
+    &:disabled {
+      color: invert(rgba(set-color($popup-form-palette),0.47));
+      background: rgba(set-color($popup-form-palette),0.09);
+      cursor: default;
+    }
   }
 }
-
 .tooltip-j {
   width: 280px;
   padding: 10px;
@@ -19867,7 +19847,6 @@ div.right-column-view-contain > .list-bet-block .quick-bet-button {
     text-align: right;
   }
 }
-
 .register-steps-b.step-2 .tooltip-j,
 .partial-registration .tooltip-j,
 .personal-details-right .tooltip-j,
@@ -20537,14 +20516,11 @@ html.integration-auto-height .sport.asian {
     box-sizing: border-box;
   }
 }
-
 .paymentImage {
   display: block;
   float: left;
-  width: auto;
-  height: auto;
-  max-width: 110px;
-  max-height: 38px;
+  max-width: 110px !important;
+  max-height: 38px !important;
   box-sizing: border-box;
   @include rtl {
     float: right;
@@ -20894,7 +20870,7 @@ html.integration-auto-height .sport.asian {
 }
 // Promotions news
 .promotions-menu-p {
-  width: 960px;
+  max-width: 960px;
   margin: 0 auto 10px;
   box-shadow: 0 2px 0 $hero-color;
   overflow: hidden;
@@ -21189,7 +21165,7 @@ html.integration-auto-height .sport.asian {
   position: sticky;
   position: -webkit-sticky;
   top: 48px;
-  z-index: 300;
+  z-index: 1010;
 }
 .header-license {
   .block-slider {

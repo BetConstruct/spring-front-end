@@ -1,10 +1,10 @@
 @font-face {
   font-family: 'icomoon';
-  src:  url('fonts/icomoon.eot?2pxco5');
-  src:  url('fonts/icomoon.eot?2pxco5#iefix') format('embedded-opentype'),
-    url('fonts/icomoon.ttf?2pxco5') format('truetype'),
-    url('fonts/icomoon.woff?2pxco5') format('woff'),
-    url('fonts/icomoon.svg?2pxco5#icomoon') format('svg');
+  src:  url('fonts/icomoon.eot?cqsgcd');
+  src:  url('fonts/icomoon.eot?cqsgcd#iefix') format('embedded-opentype'),
+    url('fonts/icomoon.ttf?cqsgcd') format('truetype'),
+    url('fonts/icomoon.woff?cqsgcd') format('woff'),
+    url('fonts/icomoon.svg?cqsgcd#icomoon') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -24,6 +24,9 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+.icon-Bodybuilding-icon:before {
+  content: "\e91d";
+}
 .icon-fifa:before {
   content: "\e91c";
 }
@@ -106,7 +109,6 @@
 }
 .icon-Vainglory:before {
   content: "\e90c";
-  color: #000;
 }
 .icon-virtualcarracing:before {
   content: "\e905";
@@ -167,7 +169,6 @@
 }
 .icon-Allsports_bowls:before {
   content: "\e800";
-  color: #010101;
 }
 .icon-vbet-sport-icons_futsal:before {
   content: "\2e";

@@ -10,7 +10,7 @@
                             </a>
                             <button ng-if="!$root.env.authorized && banner.action && banner.action === 'register'" trans ng-click="$root.$broadcast('openRegForm');$event.stopPropagation();">Register</button>
                             <button ng-if="!$root.env.authorized && banner.action && banner.action === 'login'" trans ng-click="$root.$broadcast('openLoginForm');$event.stopPropagation();">Sign in</button>
-                            <button ng-if="banner.custom_fields.button[0]" trans ng-click="$event.stopPropagation();$root.broadcast('casinoGamesList.openGame', {gameId: banner.custom_fields.id[0]});" ng-bind="::(banner.custom_fields.button[0] || 'Play now')|translate"></button>
+                            <button ng-if="banner.custom_fields.button[0] && banner.custom_fields.id[0]" trans ng-click="$event.stopPropagation();$root.broadcast('casinoGamesList.openGame', {gameId: banner.custom_fields.id[0]});" ng-bind="::banner.custom_fields.button[0]"></button>
                         </div>
                     </div>
                 </div>
@@ -40,16 +40,23 @@
              class="slide-container-repeat-b" no-animate="disable">
             <div class="slide-casino-new-img-b">
                 <a ng-href="{{!banner.isYouTubeVideo ? banner.link : ''}}" target="{{banner.linktarget}}" ng-click="linkClick(banner)" style="background-image: url({{banner.imageurl}});"></a>
+                <div ng-if="banner.custom_fields.provider[0] === 'MGS'" class="slider-jackpot-badge">
+                    <div class="slider-jackpot-badge-title" trans>Progressive Jackpot</div>
+                    <div class="slider-jackpot-badge-number">
+                        {{additionalData[banner.custom_fields.id[1]]['FirstLevelAmount'] | number}}
+                        {{additionalData[banner.custom_fields.id[1]]['CurrencyId'] | currency}}
+                    </div>
+                </div>
                 <div class="promotions-in-mixed-balance">
                     <h1 ng-if="banner.title">{{banner.title}}</h1>
                     <p ng-if="banner.custom_fields.label.length || banner.content" ng-bind-html="banner.custom_fields.label[0] || banner.content|html"></p>
                 </div>
                 <button ng-if="!$root.env.authorized && banner.action && banner.action === 'register'" trans ng-click="$root.$broadcast('openRegForm'); $event.stopPropagation();">Register</button>
                 <button ng-if="!$root.env.authorized && banner.action && banner.action === 'login'" trans ng-click="$root.$broadcast('openLoginForm');  $event.stopPropagation();">Sign in</button>
-                <button ng-if="banner.custom_fields.id[0]" trans ng-click="$event.stopPropagation();$root.broadcast('casinoGamesList.openGame', {gameId: banner.custom_fields.id[0]});" ng-bind="::(banner.custom_fields.button[0] || 'Play now')|translate"></button>
+                <button ng-if="banner.custom_fields.button[0] && banner.custom_fields.id[0]" trans ng-click="$event.stopPropagation();$root.broadcast('casinoGamesList.openGame', {gameId: banner.custom_fields.id[0]});" ng-bind="::banner.custom_fields.button[0]"></button>
             </div>
-
-            
+            <egt-jackpot ng-if="banner.custom_fields.provider[0] === 'EGT'"></egt-jackpot>
         </div>
     </div>
 </div>
+

@@ -1,0 +1,20 @@
+<div ng-controller="eftCountdownCtrl" ng-if="conf.depositNotificationBanner.enabled">
+
+    <div class="eft-countdown">
+        <ul>
+            <li>
+                <p ng-show="eft.show">
+                    <b trans>Text for Payment Warning</b>
+                    <span ng-bind="
+                        '{1} hours {2} minutes {3} seconds'|translate:[eft.h, eft.m, eft.s]"></span>
+                </p>
+                <p ng-show="!eft.show">
+                    <b trans>Warning Countdown end</b>
+                </p>
+            </li>
+            <li ng-show="eft.show">
+                <a href="#/?action=deposit" ng-click="$event.stopPropagation();" trans>Deposit</a>
+            </li>
+        </ul>
+    </div>
+</div>

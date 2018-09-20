@@ -1,7 +1,7 @@
 (function () {
     'use strict';
     try {
-        document.domain = window.location.hostname.split(/\./).slice(-2).join(".");
+        document.domain = window.location.hostname.split(/\./).slice(1).join(".");
     } catch (e) {
         console.log(e);
     }

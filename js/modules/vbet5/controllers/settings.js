@@ -151,15 +151,10 @@ VBET5.controller('settingsCtrl', ['$scope', '$rootScope', '$location', '$documen
                                 }}
                         ]
                     });
-                    prepareOnceEditableFields();
+                    
+                    $scope.env.showSlider = false;
+                    $scope.env.sliderContent = '';
 
-                    // Need to check if the detailsForm is available to setPristine & setUntouched (to avoid errors)
-                    if ($scope.forms.detailsForm) {
-                        // Clearing password field & 'resetting' the form after successful profile change
-                        $scope.details.password = "";
-                        $scope.forms.detailsForm.$setPristine();
-                        $scope.forms.detailsForm.$setUntouched();
-                    }
                 } else if (response.result === '-1002' || response.result === '-1003' || response.result === '-1005') {
                     $rootScope.$broadcast("globalDialogs.addDialog", {
                         type: 'error',

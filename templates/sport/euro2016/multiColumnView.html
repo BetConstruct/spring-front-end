@@ -84,7 +84,7 @@
                                    </div>
                                </td>
                                <td>
-                                   <div class="time-game-v3 " ng-class="{'animation-rotate-soon' : game.type === 2 && game.sport.alias === 'Mma'}">
+                                  <div class="time-game-v3 " ng-class="{'animation-rotate-soon' : !conf.hideGameSoonLabel && game.type === 2 && game.sport.alias === 'Mma'}">
                                        <p>{{game.start_ts|formatDate:'noLocaleTime':null:$root.env.timeFormat}}</p>
                                        <span class="soon-v" trans>soon</span>
                                    </div>
@@ -130,8 +130,8 @@
                             ng-click="bet(game.filteredEvents.P1XP2.P1, game.filteredEvents.P1XP2.market, game);$event.stopPropagation()"
                             class="aic-odd-container first"
                             ng-class="{'active': isEventInBetSlip(game.filteredEvents.P1XP2.P1), 'single-events-b-v3 blocked': ((game.filteredEvents.P1XP2.P1.price | oddConvert:'decimal') == 1 || game.is_blocked)}">
-                           <div class="max-bet-tooltip-v3" ng-show="env.authorized && game.filteredEvents.P1XP2.P1.maxBet !== undefined" ng-class="{'maxbet-enabled': env.authorized}">
-                               Max: <b ng-bind="conf.onlyDecimalStakeAmount ? Math.floor(game.filteredEvents.P1XP2.P1.maxBet) : game.filteredEvents.P1XP2.P1.maxBet"></b> {{profile.currency_name|currency }}
+                           <div class="max-bet-tooltip-v3" ng-show="env.authorized && game.filteredEvents.P1XP2.P1.maxBet !== undefined" ng-class="{'maxbet-enabled': env.authorized}" title="{{conf.onlyDecimalStakeAmount ? Math.floor(game.filteredEvents.P1XP2.P1.maxBet) : game.filteredEvents.P1XP2.P1.maxBet}} {{profile.currency_name|currency }}">
+                               Max:
                            </div>
                            <span ng-show="!game.is_blocked" ng-class="{'arrow-up': game.filteredEvents.P1XP2.P1.price_change > 0, 'arrow-down': game.filteredEvents.P1XP2.P1.price_change < 0}">{{game.filteredEvents.P1XP2.P1.price|oddConvert:env.oddFormat:null}}</span>
                        </div>
@@ -143,8 +143,8 @@
                             ng-click="bet(game.filteredEvents.P1XP2.X, game.filteredEvents.P1XP2.market, game);$event.stopPropagation()"
                             class="aic-odd-container"
                             ng-class="{'active': isEventInBetSlip(game.filteredEvents.P1XP2.X), 'single-events-b-v3 blocked': ((game.filteredEvents.P1XP2.X.price | oddConvert:'decimal') == 1 || game.is_blocked)}">
-                           <div class="max-bet-tooltip-v3" ng-show="env.authorized && game.filteredEvents.P1XP2.X.maxBet !== undefined" ng-class="{'maxbet-enabled': env.authorized}">
-                               Max: <b ng-bind="conf.onlyDecimalStakeAmount ? Math.floor(game.filteredEvents.P1XP2.X.maxBet) : game.filteredEvents.P1XP2.X.maxBet"></b> {{profile.currency_name|currency }}
+                           <div class="max-bet-tooltip-v3" ng-show="env.authorized && game.filteredEvents.P1XP2.X.maxBet !== undefined" ng-class="{'maxbet-enabled': env.authorized}" title="{{conf.onlyDecimalStakeAmount ? Math.floor(game.filteredEvents.P1XP2.P1.maxBet) : game.filteredEvents.P1XP2.P1.maxBet}} {{profile.currency_name|currency }}">
+                               Max:
                            </div>
                            <span ng-show="!game.is_blocked" ng-class="{'arrow-up': game.filteredEvents.P1XP2.X.price_change > 0, 'arrow-down': game.filteredEvents.P1XP2.X.price_change < 0}">{{game.filteredEvents.P1XP2.X.price|oddConvert:env.oddFormat:null}}</span>
                        </div>
@@ -156,8 +156,8 @@
                             ng-click="bet(game.filteredEvents.P1XP2.P2, game.filteredEvents.P1XP2.market, game);$event.stopPropagation()"
                             class="aic-odd-container last"
                             ng-class="{'active': isEventInBetSlip(game.filteredEvents.P1XP2.P2), 'single-events-b-v3 blocked': ((game.filteredEvents.P1XP2.P2.price | oddConvert:'decimal') == 1 || game.is_blocked)}">
-                           <div class="max-bet-tooltip-v3" ng-show="env.authorized && game.filteredEvents.P1XP2.P2.maxBet !== undefined" ng-class="{'maxbet-enabled': env.authorized}">
-                               Max: <b ng-bind="conf.onlyDecimalStakeAmount ? Math.floor(game.filteredEvents.P1XP2.P2.maxBet) : game.filteredEvents.P1XP2.P2.maxBet"></b> {{profile.currency_name|currency }}
+                           <div class="max-bet-tooltip-v3" ng-show="env.authorized && game.filteredEvents.P1XP2.P2.maxBet !== undefined" ng-class="{'maxbet-enabled': env.authorized}" title="{{conf.onlyDecimalStakeAmount ? Math.floor(game.filteredEvents.P1XP2.P1.maxBet) : game.filteredEvents.P1XP2.P1.maxBet}} {{profile.currency_name|currency }}">
+                               Max:
                            </div>
                            <span ng-show="!game.is_blocked" ng-class="{'arrow-up': game.filteredEvents.P1XP2.P2.price_change > 0, 'arrow-down': game.filteredEvents.P1XP2.P2.price_change < 0}">{{game.filteredEvents.P1XP2.P2.price|oddConvert:env.oddFormat:null}}</span>
                        </div>
@@ -177,8 +177,8 @@
                             ng-mouseleave="cancelDisplayEventLimit(game.filteredEvents.Handicap.Home)"
                             ng-click="bet(game.filteredEvents.Handicap.Home, game.filteredEvents.Handicap.market, game);$event.stopPropagation()"
                             ng-class="{'active': isEventInBetSlip(game.filteredEvents.Handicap.Home), 'single-events-b-v3 blocked': ((game.filteredEvents.Handicap.Home.price | oddConvert:'decimal') == 1 || game.is_blocked)}">
-                           <div class="max-bet-tooltip-v3" ng-show="env.authorized && game.filteredEvents.Handicap.Home.maxBet !== undefined" ng-class="{'maxbet-enabled': env.authorized}">
-                               Max: <b ng-bind="conf.onlyDecimalStakeAmount ? Math.floor(game.filteredEvents.Handicap.Home.maxBet) : game.filteredEvents.Handicap.Home.maxBet"></b> {{profile.currency_name|currency }}
+                           <div class="max-bet-tooltip-v3" ng-show="env.authorized && game.filteredEvents.Handicap.Home.maxBet !== undefined" ng-class="{'maxbet-enabled': env.authorized}" title="{{conf.onlyDecimalStakeAmount ? Math.floor(game.filteredEvents.Handicap.Home.maxBet) : game.filteredEvents.Handicap.Home.maxBet}} {{profile.currency_name|currency }}">
+                               Max:
                            </div>
                            <span ng-class="{'arrow-up': game.filteredEvents.Handicap.Home.price_change > 0, 'arrow-down': game.filteredEvents.Handicap.Home.price_change < 0}" ng-show="!game.is_blocked">{{game.filteredEvents.Handicap.Home.price|oddConvert:env.oddFormat:null}}</span>
                        </div>
@@ -190,8 +190,8 @@
                             ng-mouseleave="cancelDisplayEventLimit(game.filteredEvents.Handicap.Away)"
                             ng-click="bet(game.filteredEvents.Handicap.Away, game.filteredEvents.Handicap.market, game);$event.stopPropagation()"
                             ng-class="{'active': isEventInBetSlip(game.filteredEvents.Handicap.Away), 'single-events-b-v3 blocked': ((game.filteredEvents.Handicap.Away | oddConvert:'decimal') == 1 || game.is_blocked)}">
-                           <div class="max-bet-tooltip-v3" ng-show="env.authorized && game.filteredEvents.Handicap.Away.maxBet !== undefined" ng-class="{'maxbet-enabled': env.authorized}">
-                               Max: <b ng-bind="conf.onlyDecimalStakeAmount ? Math.floor(game.filteredEvents.Handicap.Away.maxBet) : game.filteredEvents.Handicap.Away.maxBet"></b> {{profile.currency_name|currency }}
+                           <div class="max-bet-tooltip-v3" ng-show="env.authorized && game.filteredEvents.Handicap.Away.maxBet !== undefined" ng-class="{'maxbet-enabled': env.authorized}" title="{{conf.onlyDecimalStakeAmount ? Math.floor(game.filteredEvents.Handicap.Away.maxBet) : game.filteredEvents.Handicap.Away.maxBet}} {{profile.currency_name|currency }}">
+                               Max:
                            </div>
                            <span ng-class="{'arrow-up': game.filteredEvents.Handicap.Away.price_change > 0, 'arrow-down': game.filteredEvents.Handicap.Away.price_change < 0}" ng-show="!game.is_blocked">{{game.filteredEvents.Handicap.Away.price|oddConvert:env.oddFormat:null}}</span>
                        </div>
@@ -208,8 +208,8 @@
                             ng-mouseleave="cancelDisplayEventLimit(game.filteredEvents.OverUnder.Over)"
                             ng-click="bet(game.filteredEvents.OverUnder.Over, game.filteredEvents.OverUnder.market, game);$event.stopPropagation()"
                             ng-class="{'active': isEventInBetSlip(game.filteredEvents.OverUnder.Over), 'single-events-b-v3 blocked': ((game.filteredEvents.OverUnder.Over | oddConvert:'decimal') == 1 || game.is_blocked)}">
-                           <div class="max-bet-tooltip-v3" ng-show="env.authorized && game.filteredEvents.OverUnder.Over.maxBet !== undefined" ng-class="{'maxbet-enabled': env.authorized}">
-                               Max: <b ng-bind="conf.onlyDecimalStakeAmount ? Math.floor(game.filteredEvents.OverUnder.Over.maxBet) : game.filteredEvents.OverUnder.Over.maxBet"></b> {{profile.currency_name|currency }}
+                           <div class="max-bet-tooltip-v3" ng-show="env.authorized && game.filteredEvents.OverUnder.Over.maxBet !== undefined" ng-class="{'maxbet-enabled': env.authorized}" title="{{conf.onlyDecimalStakeAmount ? Math.floor(game.filteredEvents.OverUnder.Over.maxBet) : game.filteredEvents.OverUnder.Over.maxBet}} {{profile.currency_name|currency }}">
+                               Max:
                            </div>
                            <span ng-class="{'arrow-up': game.filteredEvents.OverUnder.Over.price_change > 0, 'arrow-down': game.filteredEvents.OverUnder.Over.price_change < 0}" ng-show="!game.is_blocked">{{game.filteredEvents.OverUnder.Over.price|oddConvert:env.oddFormat:null}}</span>
                        </div>
@@ -221,8 +221,8 @@
                             ng-mouseleave="cancelDisplayEventLimit(game.filteredEvents.OverUnder.Under)"
                             ng-click="bet(game.filteredEvents.OverUnder.Under, game.filteredEvents.OverUnder.market, game);$event.stopPropagation()"
                             ng-class="{'active': isEventInBetSlip(game.filteredEvents.OverUnder.Under), 'single-events-b-v3 blocked': ((game.filteredEvents.OverUnder.Under | oddConvert:'decimal') == 1 || game.is_blocked)}">
-                           <div class="max-bet-tooltip-v3" ng-show="env.authorized && game.filteredEvents.OverUnder.Under.maxBet !== undefined" ng-class="{'maxbet-enabled': env.authorized}">
-                               Max: <b ng-bind="conf.onlyDecimalStakeAmount ? Math.floor(game.filteredEvents.OverUnder.Under.maxBet) : game.filteredEvents.OverUnder.Under.maxBet"></b> {{profile.currency_name|currency }}
+                           <div class="max-bet-tooltip-v3" ng-show="env.authorized && game.filteredEvents.OverUnder.Under.maxBet !== undefined" ng-class="{'maxbet-enabled': env.authorized}" title="{{conf.onlyDecimalStakeAmount ? Math.floor(game.filteredEvents.OverUnder.Under.maxBet) : game.filteredEvents.OverUnder.Under.maxBet}} {{profile.currency_name|currency }}">
+                               Max:
                            </div>
                            <span ng-class="{'arrow-up': game.filteredEvents.OverUnder.Under.price_change > 0, 'arrow-down': game.filteredEvents.OverUnder.Under.price_change < 0}" ng-show="!game.is_blocked">{{game.filteredEvents.OverUnder.Under.price|oddConvert:env.oddFormat:null}}</span>
                        </div>

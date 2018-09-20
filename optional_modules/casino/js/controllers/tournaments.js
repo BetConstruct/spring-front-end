@@ -28,7 +28,7 @@ angular.module('casino').controller('casinoTournamentsCtrl', ['$rootScope', '$sc
 
     $scope.hasTournaments = true;
 
-    var timeoutPromise, countryCode;
+    var timeoutPromise, timeoutStatsPromise, countryCode;
 
     /**
      * @ngdoc method
@@ -348,9 +348,9 @@ angular.module('casino').controller('casinoTournamentsCtrl', ['$rootScope', '$sc
                         }
                     });
                 }
-                timeoutPromise = $timeout(updateTournamentStatus, 15000);
+                timeoutStatsPromise = $timeout(updateTournamentStatus, 15000);
             }, function () {
-                timeoutPromise = $timeout(updateTournamentStatus, 30000);
+                timeoutStatsPromise = $timeout(updateTournamentStatus, 30000);
             }
         );
     }
@@ -561,7 +561,10 @@ angular.module('casino').controller('casinoTournamentsCtrl', ['$rootScope', '$sc
      * @description Cancel timeout requests
      */
     function cancelRequests() {
-        $timeout.cancel(timeoutPromise);
+        timeoutPromise && $timeout.cancel(timeoutPromise);
+        timeoutStatsPromise && $timeout.cancel(timeoutStatsPromise);
+        timeoutPromise = null;
+        timeoutStatsPromise = null;
     }
 
     $scope.$on('counterFinished.tournamentList', $scope.getTournamentList);

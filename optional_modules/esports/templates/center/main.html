@@ -1,0 +1,31 @@
+<div class="games-view-wrapper-v3" ng-controller="eSportsCenterController">
+    <div class="live-game-view-contain-v3">
+        <div class="all-game-info-container-v3">
+            <vbet-loader ng-show="loading"></vbet-loader>
+            <div class="all-l-e-games" ng-show="!loading">
+                <div class="all-l-e-title">
+                    <p ng-if="games" ng-bind="games[0].competition.name || games[0].sport.name"></p>
+                    <p class="back-a-v" ng-if="game" ng-click="getCompetitionData({sport:game.sport, competition:game.competition, region:game.region, game:{id:undefined}});"
+                       ng-bind="(game.competition.id ? 'Go to competition' : 'Go to sport')|translate"></p>
+                    <ul class="view-switcher">
+                        <li ng-repeat="(key, value) in ::layout.types track by key" ng-click="layout.selected=key;layout.expanded=!layout.expanded"
+                            ng-class="{'active': layout.selected === key}" ng-bind="key|translate"></li>
+                    </ul>
+                </div>
+                <div class="e-live-games-list">
+                    <div class="s-l-game-v" ng-repeat="game in games track by game.id">
+                        <div class="t-row-l-game">
+                            <p>{{::game.start_ts| formatDate:'full':null:env.timeFormat}}<i ng-show="game.type === 2 && $root.conf.asian.showLiveIconForUpcomingGames" class="live-indicator">live</i></p>
+                            <!--<div class="e-game-arrow"></div>-->
+                        </div>
+
+                        <div class="e-p-table">
+                            <ng-include class="float-width" src="'optional_modules/esports/templates/center/'+ layout.selected + '.html'"></ng-include>
+                        </div>
+                    </div>
+                </div>
+                <ng-include class="float-width" ng-if="game" src="::'optional_modules/esports/templates/center/game.html'|fixPath"></ng-include>
+            </div>
+        </div>
+    </div>
+</div>

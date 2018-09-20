@@ -20,7 +20,7 @@ angular.module('vbet5.betting').controller('euro2016multiColumnCtrl', ['$scope',
     function getMultiColumnEvents(markets, marketType, displayKey, displaySubKey, eventTypes, optimalMarkets) {
         var output = false, outputCache, price, currentPrice;
         angular.forEach(markets, function (market) {
-            if ((!marketType || market.type === marketType) &&(!displayKey || market.display_key === displayKey) && (!displaySubKey || market.display_sub_key === displaySubKey)) {
+            if (!output && (!marketType || market.type === marketType) &&(!displayKey || market.display_key === displayKey) && (!displaySubKey || market.display_sub_key === displaySubKey)) {
                 if (!optimalMarkets || !eventTypes || (optimalMarkets && market.main_order && optimalMarkets.indexOf(market.main_order) !== -1)) {
                     outputCache = {
                         market: market
@@ -138,7 +138,7 @@ angular.module('vbet5.betting').controller('euro2016multiColumnCtrl', ['$scope',
                 region: ['id', 'name', 'alias'],
                 game: ['id', 'start_ts', 'team1_name', 'team2_name', 'team1_external_id', 'team2_external_id', 'team1_id', 'team2_id', 'type', 'show_type', 'info', 'events_count', 'markets_count', 'extra', 'is_blocked', 'exclude_ids', 'is_stat_available', 'game_number', 'game_external_id', 'is_live'],
                 event: ['id', 'price', 'type', 'name', 'order', 'base', 'price_change'],
-                market: ['type', 'express_id', 'name', 'base', 'display_key', 'display_sub_key', 'main_order']
+                market: ['type', 'express_id', 'name', 'base', 'display_key', 'display_sub_key', 'main_order', 'home_score', 'away_score']
             },
             'where': {
                 'competition': {'id': parseInt($scope.selectedCompetition.id, 10)},

@@ -1,0 +1,29 @@
+<div class="single-game-item-v3" ng-repeat="game in favoriteGames track by game.id"
+     ng-class="{'active': $root.currentPage.params.game === game.id }"
+     ng-click="selectFavoriteGame(game.requestInfo)"><!-- active-->
+    <div class="team-name-1-v3" data-title="{{game.team1_name}}">
+        <span ng-show="game.type === 1" ng-bind="game.info.score1"></span>
+    </div>
+    <div class="team-name-1-v3" data-title="{{game.team2_name}}">
+        <span ng-show="game.type === 1" ng-bind="game.info.score2"></span>
+    </div>
+    <div class="game-info-mini-v3">
+        <p ng-show="game.info.score1!=undefined || game.info.score2 !=undefined || game.info.current_game_state || game.info.current_game_time">
+            <span ng-show="game.type === 1" ng-bind="game.info.current_game_state|convertSetName:sport.alias|translate"></span>
+            <span ng-show="game.type !== 1" ng-bind="game.start_ts|formatDate:'full':null:env.timeFormat"></span>
+            <span trans="attr-only" title="Game time"  ng-show="game.type === 1" ng-bind="game.info.current_game_time"></span>
+            <i class="blocked-icon-v3" ng-show="(!(game.events_count || game.markets_count) || game.is_blocked)"></i>
+        </p>
+        <div class="game-info-icons-v3">
+            <div class="icon-separator-v3 favorite active"
+                 ng-click="toggleFavoriteGame(game.id);"
+            ></div>
+            <div class="icon-separator-v3 market-count-v3">
+                <span ng-bind="'+' + game.markets_count" title="Number of markets"></span>
+            </div>
+            <div class="icon-separator-v3 video" ng-show="game.hasVideo && conf.videoEnabled"></div>
+            <div class="icon-separator-v3 statistic" ng-show="conf.enableH2HStat && game.is_stat_available"></div>
+        </div>
+    </div>
+
+</div>

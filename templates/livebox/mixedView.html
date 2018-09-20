@@ -41,6 +41,12 @@
                         <i class="cms-jcon-ticket"></i>
                         <h4 trans>Tickets</h4>
                     </li>
+                    <li ng-class="{'active': (env.sliderContent === 'profits')}"
+                        ng-click="env.sliderContent = 'profits'"
+                        ng-if="env.authorized && conf.showProfitLossTab">
+                        <i class="profits-icon-tab"></i>
+                        <h4 trans>Profits</h4>
+                    </li>
                 </ul>
                 <div ng-show="!isPopup" ng-click="env.showSlider=false; env.sliderContent='';" class="my-bets-closed-icon-b"></div>
             </div>
@@ -50,6 +56,7 @@
             <ng-include class="float-width mixed-view-holder" src="::'templates/livebox/promotionalBonuses/main.html'|fixPath" ng-if="conf.GmsPlatform && env.sliderContent === 'promotionalBonuses'"></ng-include>
             <ng-include class="float-width mixed-view-holder" src="::'templates/livebox/loyaltyPoints.html'|fixPath" ng-if="conf.GmsPlatform && env.sliderContent === 'loyaltyPoints'"></ng-include>
             <ng-include class="float-width mixed-view-holder" src="::'templates/livebox/mixedTickets.html'|fixPath" ng-if="conf.GmsPlatform && env.sliderContent === 'tickets'"></ng-include>
+            <ng-include class="float-width mixed-view-holder" src="::'templates/livebox/profitLoss.html'|fixPath" ng-if="conf.GmsPlatform && env.sliderContent === 'profits'"></ng-include>
         </div>
     </div>
 </div>

@@ -54,7 +54,6 @@
     }
   }
 }
-
 @media screen and (-ms-high-contrast: active), screen and (-ms-high-contrast: none) {
   .classic-view-column-v3{
     display: -ms-grid;
@@ -359,6 +358,10 @@
     display: flex;
     flex-direction: column;
     flex-wrap: wrap;
+    > .view-container{
+      min-height: 100%;
+      height: auto;
+    }
   }
   .classic-view-column-v3{
     position: static;

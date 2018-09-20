@@ -1,0 +1,27 @@
+<div class="guide height-100" ng-controller="helpPagesCtrl">
+    <div class="faq-subheader">
+        <a ng-class="{active: $index===nav.top}"
+           ng-repeat="topNavigation in faq track by $index" ng-click="nav.top=$index;setRoute();">{{topNavigation.title }}</a>
+    </div>
+    <ul class="faq-columns">
+        <li>
+            <div class="faq-scroll">
+                <a ng-class="{active: $index===nav.left}"
+                   ng-click="nav.left=$index;setRoute();"
+                   ng-repeat="leftNavigation in faq[nav.top].children track by $index">{{leftNavigation.title}}</a>
+            </div>
+        </li>
+        <li>
+            <h2>{{faq[nav.top].children[nav.left].title}}</h2>
+            <div class="faq-scroll">
+                <a ng-class="{active: $index===nav.mid}"
+                   ng-click="nav.mid=$index;setRoute();"
+                   ng-repeat="middleNavigation in faq[nav.top].children[nav.left].children track by $index">{{middleNavigation.title}}</a>
+            </div>
+        </li>
+        <li>
+            <div class="faq-scroll" ng-bind-html="faq[nav.top].children[nav.left].children[nav.mid].content|html">
+            </div>
+        </li>
+    </ul>
+</div>

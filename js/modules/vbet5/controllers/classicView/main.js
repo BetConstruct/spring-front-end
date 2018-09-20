@@ -45,9 +45,8 @@ angular.module('vbet5.betting').controller('classicViewMainCtrl', ['$rootScope',
     $scope.isPopularGames = false;
     $scope.popularGamesLastState = false;
     $scope.showNewsBlock = !Config.betting.enableShowBetSettings;
-    $scope.showNewsBetSet = true;
     $scope.marketsInOneColumn = { // Need to store value in an object to be able to change it from the directive
-        enabled: false
+        enabled: Storage.get('markets_in_one_column') !== undefined ? !!Storage.get('markets_in_one_column') : !!Config.main.marketsInOneColumn
     };
     $scope.marketFilterTypes = Config.main.GmsPlatform ? Config.main.marketFilterTypesGms : Config.main.marketFilterTypes;
     $scope.selectedMarketFilter = $scope.marketFilterTypes[0];
@@ -78,15 +77,6 @@ angular.module('vbet5.betting').controller('classicViewMainCtrl', ['$rootScope',
         Config.env.live ? $scope.resizeButton.live = !$scope.resizeButton.live : $scope.resizeButton.prematch = !$scope.resizeButton.prematch;
     };
 
-    /**
-     * @ngdoc method
-     * @name newsDependBetSetting
-     * @methodOf vbet5.controller:classicViewMainCtrl
-     * @description  show/hide News block, depend BetSetting
-     */
-    $scope.newsDependBetSetting = function () {
-        $scope.showNewsBetSet = !$scope.showNewsBetSet;
-    };
 
     /**
      * @ngdoc method
@@ -833,7 +823,7 @@ angular.module('vbet5.betting').controller('classicViewMainCtrl', ['$rootScope',
         unsubscribeOldSubscriptions('teamGames');
 
         $scope.favoriteGameIsSelected = false;
-        if ($location.search().game && (!$scope.openGame || $scope.openGame.id !== Number($location.search().game))) { 
+        if ($location.search().game && (!$scope.openGame || $scope.openGame.id !== Number($location.search().game))) {
             //open if deeplinked and different from now open
             $scope.openGameFullDetails({id: Number($location.search().game)});
         }
@@ -908,7 +898,7 @@ angular.module('vbet5.betting').controller('classicViewMainCtrl', ['$rootScope',
                 game: [
                     ['id', 'start_ts', 'team1_name', 'team2_name', 'team1_external_id', 'team2_external_id', 'type', 'info', 'events_count', 'markets_count', 'extra', 'is_blocked', 'exclude_ids', 'is_stat_available', 'game_number', 'is_live','is_neutral_venue']
                 ],
-                'market': ['type', 'express_id', 'name'],
+                'market': ['type', 'express_id', 'name', 'home_score', 'away_score'],
                 'event': ['id', 'price', 'type', 'name', 'order']
             },
             'where': {
@@ -1051,6 +1041,11 @@ angular.module('vbet5.betting').controller('classicViewMainCtrl', ['$rootScope',
         TimeoutWrapper(populateOutright);
     });
 
+    $scope.$on('leftMenu.fullGmeSelected', function(event) {
+        event.stopPropagation();
+        unsubscribeOldSubscriptions();
+    });
+
     /**
      * @ngdoc method
      * @name populateOutright
@@ -1154,9 +1149,4 @@ angular.module('vbet5.betting').controller('classicViewMainCtrl', ['$rootScope',
         }
         $rootScope.$broadcast('bet', {event: event, market: market, game: game, oddType: oddType});
     };
-
-    /*$scope.$on('$destroy', function() {
-        // Need this to avoid side effect with $location.search()
-        $scope.selectGame = function() {};
-    })*/
 }]);

@@ -188,7 +188,6 @@ angular.module('vbet5.betting').controller('classicViewCenterController', ['$roo
         } else {
             $scope.openGameFinished = false;
         }
-        var siteId = parseInt(Config.main.site_id, 10);
         angular.forEach(data.sport, function (sport) {
             angular.forEach(sport.region, function (region) {
                 angular.forEach(region.competition, function (competition) {
@@ -235,10 +234,6 @@ angular.module('vbet5.betting').controller('classicViewCenterController', ['$roo
                             if (!market.group_id && !market.second_group_id) {
                                 market.group_id = MARKET_GROUP_OTHER.id;
                                 market.group_name = MARKET_GROUP_OTHER.name;
-                            }
-
-                            if (game.is_cashout_disabled && game.is_cashout_disabled.length && game.is_cashout_disabled.indexOf(siteId) > -1) {
-                                market.cashout = false;
                             }
 
                             if (availableMarketGroups[market.group_id]) {
@@ -461,6 +456,10 @@ angular.module('vbet5.betting').controller('classicViewCenterController', ['$roo
                 },
                 $location.path() === '/multiview/'
             );
+
+            if (fully || game.type === 1) { //notify main to unsubscribe from previous subscriptions
+                $scope.$emit('leftMenu.fullGmeSelected');
+            }
         }
     };
 

@@ -4,7 +4,7 @@
  * @description
  * Popular matches controller
  */
-VBET5.directive('popularInSportsbook', ['$location', 'Config', 'ConnectionService', 'Utils', '$filter',function ($location, Config, ConnectionService, Utils, $filter) {
+VBET5.directive('popularInSportsbook', ['$rootScope', '$location', 'Config', 'ConnectionService', 'Utils', '$filter', 'analytics', function ($rootScope, $location, Config, ConnectionService, Utils, $filter, analytics) {
     'use strict';
     var connectionService, subId;
 
@@ -111,6 +111,12 @@ VBET5.directive('popularInSportsbook', ['$location', 'Config', 'ConnectionServic
             scope.toggle = function toggle() {
                 scope.popular.expanded = !scope.popular.expanded;
                 scope.popular.expanded ? loadPopulars() : connectionService.unsubscribe(subId);
+            };
+
+            scope.selectPopular = function selectPopular(type, item) {
+                var name = ($rootScope.env.live ? 'Live' : 'Prematch') + ' ' + type + ' ' + item.id + ' ' + item.name;
+                analytics.gaSend('send', 'event', 'explorer', 'show popular game markets',  {'page': $location.path(), 'eventLabel': name});
+                $rootScope.$broadcast('sportsbook.selectData', {type: 'popular.' + type, data: item});
             };
 
             //initial

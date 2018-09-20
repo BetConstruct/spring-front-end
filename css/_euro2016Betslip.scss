@@ -22,9 +22,6 @@
   top: 0;
   z-index: 444;
   transform: translate3d(0, 0, 0);
-  @include rtl {
-    margin-left: 4px;
-  }
   .resize-icon-b-v3 {
     display: none;
   }
@@ -145,7 +142,7 @@
   //@include scroll;
   transform: translate3d(0, 0, 0);
   @include rtl {
-    padding: 0 0 0 1px;
+    padding: 0 0 80px 1px;
   }
 }
 
@@ -158,9 +155,6 @@
   //animation: animation-open-animate-b 500ms ease-in-out;
   max-height: 400px;
   margin: 0;
-  @include rtl {
-    margin-left: 4px;
-  }
 }
 
 .game-video.animation-start {
@@ -225,9 +219,6 @@
   background: $c16-sp-9;
   border-bottom: 1px solid $c16-sp-7;
   border-radius: 2px 2px 0 0;
-  @include rtl {
-    margin-left: -4px;
-  }
 }
 
 .anime-video-switcher-v3 {
@@ -1318,7 +1309,7 @@
 }
 
 .single-event-info-view-v3 > ul > li:nth-child(2) > p {
-  color: #aa8136;
+  color: $brand-color-2;
 }
 
 .single-event-info-view-v3 > ul > li .gone {
@@ -1344,7 +1335,7 @@
   display: block;
   font-size: 6 + $size-font;
   line-height: 14px;
-  color: #b6862e;
+  color: $brand-color-2;
 }
 
 .bet-price-view-b-v3 > span.bet-price-change-v3 {
@@ -1554,7 +1545,7 @@
     }
     &.acc-bonus-v3 {
       > p, > span {
-        color: #aa8136;
+        color: $brand-color-2;
       }
     }
     > span,
@@ -1569,6 +1560,9 @@
       color: $c16-tp-3;
       white-space: nowrap;
       transform: translate3d(0, 0, 0);
+      &.max-odds-info-text {
+        white-space: normal;
+      }
     }
   }
 }
@@ -2057,7 +2051,7 @@
 
 .odds-contain-ew-v3 > p > span {
   box-sizing: border-box;
-  color: #b6862e;
+  color: $brand-color-2;
   display: inline-block;
   vertical-align: top;
   padding: 0 0 0 10px;
@@ -2098,9 +2092,9 @@
 
 .ew-box-v3 > input[type="checkbox"]:checked + .ew-total-view-v3 {
   box-sizing: border-box;
-  background: #b6862e;
-  color: #2e323e;
-  box-shadow: 0 0 1px #b6862e inset;
+  background: $brand-color-2;
+  color: set-color($brand-color-2);
+  box-shadow: 0 0 1px $brand-color-2 inset;
 }
 
 //Bet button
@@ -2183,6 +2177,74 @@
   }
   &:hover .hover-auto-cashout-rule {
     display: block;
+  }
+}
+.bs-cash-out-btn {
+  float: left;
+  width: 100%;
+  height: 100%;
+  > button {
+    box-sizing: border-box;
+    float: left;
+    width: 100%;
+    height: 30px;
+    padding: 0 10px;
+    text-align: center;
+    font-family: $font-f;
+    font-size: 6 + $size-font;
+    line-height: 30px;
+    text-transform: uppercase;
+    cursor: pointer;
+    border: none;
+    transition: background 240ms, color 240ms, box-shadow 240ms;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    background: $brand-color-1;
+    box-shadow: 0 0 0 1px $brand-color-1;
+    color: set-color($brand-color-1);
+    &:hover {
+      background: lighten($brand-color-1, 10);
+      box-shadow: 0 0 0 1px lighten($brand-color-1, 10);
+    }
+    &:disabled {
+      color: rgba(set-color($c16-sp-10), 0.2);
+      background: none;
+      box-shadow: 0 0 0 1px rgba(set-color($c16-sp-10), 0.16) inset;
+    }
+    > span {
+      -webkit-box-flex: 1;
+      -ms-flex: 1;
+      flex: 1;
+      text-align: left;
+      padding: 0 5px 0 0;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      @include rtl {
+        text-align: right;
+        padding: 0 0 0 5px;
+      }
+    }
+    > b {
+      font-weight: normal;
+      display: inline-block;
+    }
+    &:after {
+      position: absolute;
+      top: -3px;
+      right: -3px;
+      width: 8px;
+      height: 8px;
+      display: block;
+      border-radius: 50%;
+      background: $c16-sp-3;
+      box-shadow: 0 0 0 1px $c16-sp-9;
+      @include rtl {
+        left: -3px;
+        right: auto;
+      }
+    }
   }
 }
 .hover-auto-cashout-rule {
@@ -2400,7 +2462,7 @@
   content: '\e6b2';
   display: block;
   font: 16px/16px icomoon;
-  color: #b6862e;
+  color: $brand-color-2;
   position: absolute;
   left: 0;
   top: 0;
@@ -2430,6 +2492,9 @@
   background: $c16-sp-3;
   padding: 10px 32px 10px 37px;
   position: relative;
+  @include rtl {
+    padding: 10px 37px 10px 32px;
+  }
 }
 
 .notification-box-v3 > p {
@@ -2449,6 +2514,10 @@
   font: 16px/16px icomoon;
   width: 16px;
   height: 16px;
+  @include rtl {
+    left: auto;
+    right: 10px;
+  }
 }
 
 .accept-icon:before {
@@ -2470,24 +2539,9 @@
   top: 10px;
   line-height: 16px;
   cursor: pointer;
-}
-
-//Betslip END
-.right-b-view-wrapper-v3 .bookingTabs-j {
-  margin: 1px 0;
-  button {
-    color: $c16-tp-6;
-    font-family: $font-f;
-    font-size: 5 + $size-font;
-    line-height: 24px;
-    height: 25px;
-    border-bottom: 1px solid $c16-sp-9;
-    background: darken(desaturate(adjust-hue($c16-sp, -16deg), 1), 5);
-    &.active {
-      background: $c16-sp-9;
-      box-shadow: none;
-      color: $c16-tp-3;
-    }
+  @include rtl {
+    left: 12px;
+    right: auto;
   }
 }
 
@@ -2511,6 +2565,10 @@
     position: absolute;
     top: 0;
     right: 0;
+    @include rtl {
+      left: 0;
+      right: auto;
+    }
     &:before {
       content: "\e6fc";
     }
@@ -2668,135 +2726,273 @@
 .suggest-contain-list {
   float: left;
   width: 100%;
-  margin-top: 4px;
-  padding: 16px 10px;
   box-sizing: border-box;
-  border-radius: 4px;
-  background: $skin-color;
-  background: -moz-linear-gradient(45deg, rgba($skin-color, 0.9) 0%, rgba($hero-color, 0.3) 100%);
-  background: -webkit-linear-gradient(45deg, rgba($skin-color, 0.9) 0%, rgba($hero-color, 0.3) 100%);
-  background: linear-gradient(45deg, rgba($skin-color, 0.9) 0%, rgba($hero-color, 0.3) 100%);
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#1e2639', endColorstr='#a61f67', GradientType=1);
-  .suggest-text {
-    float: left;
-    width: 100%;
-    padding: 0 6px;
-    color: $c16-tp-1;
-    box-sizing: border-box;
-    h2 {
-      margin: 0 0 6px;
-      text-transform: uppercase;
-      font: 16px/18px $font-f;
+  border-radius: 0 0 4px 4px;
+  background: -moz-linear-gradient(left, rgba($hero-color, 0.3) 0%,  rgba($skin-color, 0.7) 100%);
+  background: -webkit-linear-gradient(left, rgba($hero-color, 0.3) 0%,  rgba($skin-color, 0.7) 100%);
+  background: linear-gradient(to right, rgba($hero-color, 0.3) 0%,  rgba($skin-color, 0.7) 100%);
+  @include rtl {
+    background: -moz-linear-gradient(right, rgba($hero-color, 0.3) 0%,  rgba($skin-color, 0.7) 100%);
+    background: -webkit-linear-gradient(right, rgba($hero-color, 0.3) 0%,  rgba($skin-color, 0.7) 100%);
+    background: linear-gradient(to left, rgba($hero-color, 0.3) 0%,  rgba($skin-color, 0.7) 100%);
+  }
+  &.suggested-prematch {
+    background: -moz-linear-gradient(45deg, rgba($skin-color, 0.9) 0%, rgba($hero-color, 0.3) 100%);
+    background: -webkit-linear-gradient(45deg, rgba($skin-color, 0.9) 0%, rgba($hero-color, 0.3) 100%);
+    background: linear-gradient(45deg, rgba($skin-color, 0.9) 0%, rgba($hero-color, 0.3) 100%);
+    @include rtl {
+      background: -moz-linear-gradient(-45deg, rgba($skin-color, 0.9) 0%, rgba($hero-color, 0.3) 100%);
+      background: -webkit-linear-gradient(-45deg, rgba($skin-color, 0.9) 0%, rgba($hero-color, 0.3) 100%);
+      background: linear-gradient(-45deg, rgba($skin-color, 0.9) 0%, rgba($hero-color, 0.3) 100%);
     }
-    p {
-      font: 12px/14px $font-f;
+    .suggest-text {
+      border: none;
+    }
+    .suggest-list > div > div {
+      cursor: auto;
     }
   }
-  .suggest-list {
-    margin: 18px 0 8px;
+  &:not(.suggested-prematch) {
+    .suggest-list > div > div:hover,
+    .suggest-list > div > div.active {
+      background: transparent;
+      div.suggest-event-info {
+        color: set-color($hero-color);
+        > p {
+          background: $hero-color;
+        }
+      }
+      .factor-top:before, .factor-bottom:before {
+        color: set-color($hero-color);
+      }
+    }
+  }
+}
+.suggest-text {
+  float: left;
+  width: 100%;
+  min-height: 36px;
+  color: $c16-tp-1;
+  border-bottom: 1px solid $c16-sp-12;
+  h2 {
+    padding: 0 12px;
+    box-sizing: border-box;
+    text-transform: uppercase;
+    font: #{8+$size-font}/36px $font-f;
+  }
+  p {
+    font: #{6+$size-font}/14px $font-f;
+    padding: 0 12px;
+    box-sizing: border-box;
+    margin-bottom: 10px;
+  }
+}
+.suggest-list {
+  padding: 0 6px 10px;
+  box-sizing: border-box;
+  float: left;
+  width: 100%;
+  > div {
     box-sizing: border-box;
     float: left;
     width: 100%;
-    padding: 2px 0;
+    > div {
+      background: rgba($c16-tp-12, 0.2);
+      box-sizing: border-box;
+      float: left;
+      width: 100%;
+      margin: 8px 0 0;
+      padding: 0 2px 2px;
+      border-radius: 2px;
+      transition: background 240ms;
+      animation: betslip-open-animate-b 500ms ease-in-out;
+      &.changed {
+        background: rgba($c16-tp-12, 0.25);
+      }
+    }
+  }
+}
+.suggest-mini-list {
+  box-sizing: border-box;
+  float: left;
+  width: 100%;
+  padding: 2px 0;
+}
+.suggest-teams-name {
+  box-sizing: border-box;
+  float: left;
+  width: 100%;
+  position: relative;
+  padding: 4px 10px 6px 4px;
+}
+.suggest-info-sport-time {
+  float: left;
+  width: 100%;
+  margin-top: 10px;
+  > b {
+    float: left;
+    display: block;
+    width: 14px;
+    height: 14px;
+    margin: 0 4px 0 0;
+    color: rgba($c16-tp-1,0.8);
+    font: #{5+$size-font}/13px sport-icon;
+    @include rtl {
+      float: right;
+      margin: 0 0 0 4px;
+    }
+  }
+  > p {
+    float: left;
+    padding: 0 4px;
+    box-sizing: border-box;
+    color: set-color($brand-color-1);
+    background: $brand-color-1;
+    font: #{5+$size-font}/14px $font-f;
+    @include rtl {
+      float: right;
+    }
+  }
+}
+.suggest-title-event-live {
+  float: left;
+  width: 100%;
+  > p {
+    float: left;
+    width: 100%;
+    padding: 0 40px 0 0;
+    box-sizing: border-box;
+    font: #{6+$size-font}/16px $font-f;
+    color: $c16-tp-3;
+    position: relative;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    @include rtl {
+      padding: 0 0 0 40px;
+    }
+    > span {
+      position: absolute;
+      top: 0;
+      right: 0;
+      color: $brand-color-2;
+      @include rtl {
+        left: 0;
+        right: auto;
+      }
+    }
+  }
+}
+.suggest-title-event-prematch {
+  float: left;
+  width: 100%;
+  > p {
+    float: left;
+    width: 100%;
+    color: $c16-tp-3;
+    font: #{6+$size-font}/14px $font-f;
+    > i {
+      float: left;
+      width: 12px;
+      height: 12px;
+      margin: 0 6px 0 0;
+      color: rgba($c16-tp-1,0.8);
+      font: #{6+$size-font}/14px sport-icon;
+      @include rtl {
+        float: right;
+        margin: 0 0 0 6px;
+      }
+    }
+  }
+}
+.suggest-single-event-info {
+  box-sizing: border-box;
+  float: left;
+  width: 100%;
+  > div {
+    box-sizing: border-box;
+    float: left;
+    width: 100%;
+    border: none;
     > div {
       box-sizing: border-box;
       float: left;
       width: 100%;
-      > div {
-        background: rgba($c16-tp-12, 0.35);
+      position: relative;
+      margin: 4px 0 0;
+      color: $c16-tp-6;
+      > p {
         box-sizing: border-box;
         float: left;
         width: 100%;
-        margin: 2px 0 0;
-        padding: 7px 8px 10px;
-        border-radius: 2px;
-        animation: betslip-open-animate-b 500ms ease-in-out;
-        &.changed {
-          background: rgba($c16-tp-12, 0.25);
+        font: #{6+$size-font}/14px $font-f;
+        padding: 0 80px 0 0;
+        @include rtl {
+          padding: 0 0 0 80px;
         }
       }
-    }
-    .suggest-mini-list {
-      box-sizing: border-box;
-      float: left;
-      width: 100%;
-      padding: 2px 0;
-      .suggest-teams-name {
+      &:first-child {
         box-sizing: border-box;
-        float: left;
-        width: 100%;
-        position: relative;
-        padding: 0 0 6px;
-        .suggest-title-event > p {
+        margin: 0;
+      }
+      .suggest-bet-price {
+        box-sizing: border-box;
+        position: absolute;
+        right: 8px;
+        top: 0;
+        text-align: right;
+        @include rtl {
+          left: 8px;
+          right: auto;
+        }
+        > span {
           box-sizing: border-box;
-          font: 12px/16px $font-f;
-          color: $c16-tp-3;
+          float: right;
+          display: block;
+          font: #{6+$size-font}/28px $font-f;
+          @include rtl {
+            float: left;
+          }
         }
       }
-    }
-    .suggest-single-event-info {
-      box-sizing: border-box;
-      float: left;
-      width: 100%;
-      > div {
+      &.suggest-market-info {
+        padding: 0 4px;
         box-sizing: border-box;
-        float: left;
-        width: 100%;
-        border: none;
-        > div {
-          box-sizing: border-box;
+      }
+      &.suggest-event-info {
+        color: $brand-color-2;
+        > p {
           float: left;
           width: 100%;
-          position: relative;
-          margin: 2px 0 0;
-          > p {
-            box-sizing: border-box;
-            float: left;
-            width: 100%;
-            font-size: 6 + $size-font;
-            line-height: 14px;
-            color: $c16-tp-6;
-            padding: 0 80px 0 0;
-            @include rtl {
-              padding: 0 0 0 80px;
-            }
-          }
-          &:first-child {
-            box-sizing: border-box;
-            margin: 0;
-          }
-          &:nth-child(2) > p {
-            color: #aa8136;
-          }
-          .suggest-bet-price {
-            box-sizing: border-box;
-            position: absolute;
-            right: 0;
-            top: 0;
-            text-align: right;
-            @include rtl {
-              left: 0;
-              right: auto;
-            }
-            > span {
-              box-sizing: border-box;
-              float: right;
-              display: block;
-              font-size: 6 + $size-font;
-              line-height: 14px;
-              color: #b6862e;
-            }
+          height: 28px;
+          padding: 0 40px 0 6px;
+          box-sizing: border-box;
+          line-height: 28px;
+          background: rgba($c16-tp-12, 0.2);
+          border-radius: 4px;
+          transition: color 240ms, background 240ms;
+          overflow: hidden;
+          white-space: nowrap;
+          text-overflow: ellipsis;
+          @include rtl {
+            padding: 0 6px 0 40px;
           }
         }
       }
     }
   }
+}
+.suggest-buttons {
+  float: left;
+  width: 100%;
+  padding: 0 8px;
+  box-sizing: border-box;
   > button {
     float: left;
     width: 100%;
     height: 30px;
     text-transform: uppercase;
-    font: 12px/14px $font-f;
+    font: #{6+$size-font}/14px $font-f;
     color: $c16-tp-1;
     background: none;
     border: 1px solid $c16-tp-1;
@@ -2818,24 +3014,18 @@
       margin-top: 8px;
     }
   }
-  .suggest-no-show {
-    float: left;
-    width: 100%;
-    text-align: center;
-    margin-top: 10px;
-    p {
-      color: $c16-tp-1;
-      font: 12px/14px $font-f;
-    }
+}
+.suggest-no-show {
+  float: left;
+  width: 100%;
+  text-align: center;
+  padding: 10px 0 14px;
+  box-sizing: border-box;
+  p {
+    color: $c16-tp-1;
+    font: #{6+$size-font}/14px $font-f;
   }
 }
-
-.combo, .modern {
-  .suggest-list .suggest-single-event-info > div > div > p {
-    color: #e6e6e6;
-  }
-}
-
 .total-possible-win-j {
   float: left;
   width: 100%;
@@ -2851,7 +3041,7 @@
     font-weight: normal;
   }
   p {
-    font: 12px/14px $font-f;
+    font: #{6+$size-font}/14px $font-f;
     float: left;
     width: 100%;
     color: $c16-tp-3;
@@ -2859,11 +3049,11 @@
   }
   span {
     color: $c16-tp-2;
-    font: 18px/20px $font-f;
+    font: #{12+$size-font}/20px $font-f;
   }
 }
-
-.expanded-notifications-j {
+.expanded-notifications-j,
+.edit-bet-notifications {
   width: 100%;
   float: left;
   margin: 0 0 10px;
@@ -2877,7 +3067,7 @@
       position: relative;
       background: #C2C5CC;
       color: #404552;
-      font: 12px/16px $font-f;
+      font: #{6+$size-font}/16px $font-f;
       padding: 12px 34px;
       box-sizing: border-box;
     }
@@ -2889,7 +3079,7 @@
     position: absolute;
     left: 12px;
     top: 12px;
-    font: 16px/16px icomoon;
+    font: #{10+$size-font}/16px icomoon;
     width: 16px;
     height: 16px;
     @include rtl {
@@ -2905,7 +3095,7 @@
       position: absolute;
       left: 12px;
       top: 12px;
-      font: 16px/16px icomoon;
+      font: #{10+$size-font}/16px icomoon;
       width: 16px;
       height: 16px;
       @include rtl {
@@ -2917,7 +3107,7 @@
   .guest-box {
     text-align: center;
     h4 {
-      font: 16px/18px $font-f;
+      font: #{10+$size-font}/18px $font-f;
       float: left;
       width: 100%;
       margin: 0 0 4px;
@@ -2926,7 +3116,7 @@
       font-weight: 700;
     }
     h3 {
-      font: 14px/16px $font-f;
+      font: #{8+$size-font}/16px $font-f;
       float: left;
       width: 100%;
       margin: 0 0 4px;
@@ -2940,6 +3130,10 @@
     }
   }
 }
+.edit-bet-notifications > ul > li + li {
+  margin-top: 1px;
+}
+
 .edit-bets-contain {
   float: left;
   width: 100%;
@@ -3077,6 +3271,9 @@
   padding: 5px 4px 5px 7px;
   box-sizing: border-box;
   background: $brand-color-1;
+  @include rtl {
+    padding: 5px 7px 5px 4px;
+  }
   > p {
     float: left;
     color: set-color($brand-color-1);
@@ -3108,6 +3305,9 @@
     box-sizing: border-box;
     background: $c16-sp-1;
     font: #{5+$size-font}/20px $font-f;
+    @include rtl {
+      float: left;
+    }
     &:disabled {
       pointer-events: none;
       opacity: 0.8;
@@ -3151,31 +3351,92 @@
     padding: 0 16px 0 0;
     position: relative;
     box-sizing: border-box;
+    @include rtl {
+      float: left;
+      padding: 0 0 0 16px;
+    }
     &:after {
       content: "\e98c";
       position: absolute;
       top: 0;
       right: 0;
       font: #{4+$size-font}/30px icomoon;
+      @include rtl {
+        left: 0;
+        right: auto;
+      }
     }
   }
 }
 .open-bets-buttons {
   float: left;
   width: 100%;
+  display: table;
+  table-layout: fixed;
   margin: 0 0 1px 0;
   border-bottom: 1px solid $c16-sp-9;
-  button {
-    float: left;
-    width: 50%;
+  > div {
+    display: table-cell;
+    vertical-align: middle;
     border: 0;
     color: $c16-tp-6;
     background: $classic-view-background;
-    height: 24px;
+    height: 28px;
     padding: 0;
+    position: relative;
     text-transform: uppercase;
     text-align: center;
-    font: #{5+$size-font}/24px $font-f;
+    font: 0/0 $font-f;
+    &:before {
+      content: "";
+      display: inline-block;
+      vertical-align: middle;
+      font: 18px/28px icomoon;
+    }
+    &.bet-slip-button:before {
+      content: "\e9a7";
+      font-size: 14px;
+    }
+    &.booking-button:before {
+      content: "\e9b3";
+      font-size: 20px;
+    }
+    &.open-bets-button:before {
+      content: "\e9a8";
+    }
+    &.suggested-bets-button {
+      &:before {
+        content: "\e9a9";
+      }
+      &:after {
+        content: attr(data-content);
+        display: inline-block;
+        vertical-align: middle;
+        background: $hero-color;
+        color: set-color($hero-color);
+        height: 10px;
+        font: 8px/11px $font-f;
+        padding: 0 3px;
+        border-radius: 2px;
+        box-shadow: 0 1px 0 rgba(black, 0.3);
+        margin: -10px 0 0 -4px;
+        box-sizing: border-box;
+        @include rtl {
+          margin: -10px -4px 0 0;
+        }
+      }
+      &.active {
+        background: -moz-linear-gradient(left, rgba($hero-color,0.7) 0%,rgba($skin-color,0.3) 80%,rgba($skin-color,0.7) 100%);
+        background: -webkit-linear-gradient(left, rgba($hero-color,0.7) 0%,rgba($skin-color,0.3) 80%,rgba($skin-color,0.7) 100%);
+        background: linear-gradient(to right, rgba($hero-color,0.7) 0%,rgba($skin-color,0.3) 80%,rgba($skin-color,0.7) 100%);
+        box-shadow: 0 1px 0 $hero-color;
+        @include rtl {
+          background: -moz-linear-gradient(right, rgba($hero-color,0.7) 0%,rgba($skin-color,0.3) 80%,rgba($skin-color,0.7) 100%);
+          background: -webkit-linear-gradient(right, rgba($hero-color,0.7) 0%,rgba($skin-color,0.3) 80%,rgba($skin-color,0.7) 100%);
+          background: linear-gradient(to left, rgba($hero-color,0.7) 0%,rgba($skin-color,0.3) 80%,rgba($skin-color,0.7) 100%);
+        }
+      }
+    }
     &.active {
       color: $c16-tp-3;
       background: $c16-sp-9;
@@ -3184,7 +3445,7 @@
       &:after {
         content: attr(data-count);
         display: inline-block;
-        vertical-align: text-top;
+        vertical-align: middle;
         background: $hero-color;
         color: set-color($hero-color);
         font: 700 #{5+$size-font}/14px $font-f;
@@ -3192,10 +3453,25 @@
         padding: 0 3px;
         border-radius: 2px;
         box-shadow: 0 1px 0 rgba(black, 0.3);
-        margin: 2px 0 0 6px;
+        margin: -10px 0 0 -2px;
         box-sizing: border-box;
         @include rtl {
-          margin: 2px 6px 0 ;
+          margin: -10px -2px 0 0;
+        }
+      }
+    }
+    &:only-child,
+    &:first-child:nth-last-child(2),
+    &:nth-child(2):last-child {
+      font: #{5+$size-font}/28px $font-f;
+      &:before {
+        content: none;
+      }
+      &:after {
+        vertical-align: text-top;
+        margin: 0 0 0 6px !important;
+        @include rtl {
+          margin: 0 6px 0 0 !important;
         }
       }
     }
@@ -3207,24 +3483,21 @@
   @include rtl {
     transform: translate3d(0,0,0);
   }
-  > p {
-    float: left;
-    width: 100%;
-    height: 30px;
-    text-align: center;
-    color: $c16-tp-9;
-    background: $c16-sp-3;
-    font: #{6+$size-font}/30px $font-f;
-    > span {
-      display: inline-block;
-      padding: 0 5px;
-      font-weight: 700;
-      text-decoration: underline;
-    }
-  }
-  .slider-open-bets + .md-progress-circular.md-theme {
-    left: 0;
-    top: 5px;
+}
+.info-all-bets {
+  float: left;
+  width: 100%;
+  padding: 6px 0;
+  box-sizing: border-box;
+  text-align: center;
+  color: $c16-tp-9;
+  background: $c16-sp-3;
+  font: #{6+$size-font}/18px $font-f;
+  > span {
+    display: inline-block;
+    padding: 0 5px;
+    font-weight: 700;
+    text-decoration: underline;
   }
 }
 .list-bet-block .contain-open-bets  ul li:first-child span {
@@ -3486,4 +3759,123 @@
       transform-origin: right;
     }
   }
+}
+.editing-stake-wrapper {
+  float: left;
+  width: 100%;
+  color: $c16-tp-3;
+  .modern &, .combo & {
+    color: #121623;
+  }
+  > .editing-stake-wrapper-p {
+    float: left;
+    width: 100%;
+    font: 12px/24px $font-f;
+    text-align: center;
+    border-bottom: 1px solid $c16-sp-8;
+    padding: 0 0 6px;
+  }
+  .editing-stake-wrapper-con {
+    float: left;
+    padding: 12px 6px;
+    box-sizing: border-box;
+    width: 100%;
+    .editing-stake-wrapper-p {
+      float: left;
+      width: 100%;
+    }
+  }
+}
+.editing-stake-amount {
+  float: left;
+  width: 100%;
+  margin: 4px 0 0;
+  line-height: 20px;
+  color: #ac8336;
+  strong {
+    display: inline-block;
+    background: #ac8336;
+    color: white;
+    padding: 0 4px;
+    border-radius: 2px;
+    margin: 0 0 0 6px;
+  }
+  .disabled {
+    opacity: 0.4;
+  }
+}
+.editing-stake-pos-rel {
+  display: inline-block;
+  vertical-align: middle;
+  position: relative;
+}
+.bet-form form .increase-stake-tooltip input[type="text"] {
+  width: 100%;
+  height: 24px;
+  margin-left: 0;
+  margin-right: 0;
+}
+.increase-stake-tooltip {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 260px;
+  background: #f3f3f5;
+  color: #121623;
+  z-index: 10000000;
+  box-sizing: border-box;
+  box-shadow: 0 0 0 6px rgba(black, 0.2);
+  @include rtl {
+    left: auto;
+    right: 0;
+  }
+  .editing-stake-wrapper-p {
+    text-align: center;
+    padding: 4px 0;
+  }
+  &:before {
+    content: "";
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-width: 0 6px 6px 6px;
+    border-color: transparent transparent #f3f3f5 transparent;
+    display: block;
+    position: absolute;
+    bottom: 100%;
+    left: 6px;
+    @include rtl {
+      left: auto;
+      right: 6px;
+    }
+  }
+}
+.increase-stake-input {
+  float: left;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0 12px;
+  input {
+    display: block;
+    float: left;
+    width: 100%;
+    height: 36px;
+    background: none;
+    border: 1px solid #121623;
+    color: #121623;
+    font: 12px $font-f;
+    box-sizing: border-box;
+    padding: 0 12px;
+    @include placeholder {
+      font-size: 12px;
+      font-family: $font-f;
+      color: #121623;
+    }
+  }
+}
+.increase-stake-footer {
+  float: left;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0 12px 12px;
 }

@@ -1,0 +1,167 @@
+<div class="left-column-v3" ng-controller="eSportsLeftController">
+    <div class="left-column-v3-header">
+
+        <div class="l-t-box">
+            <div class="view-switcher-v3 es-left-v">
+                <ul>
+                    <li ng-class="{'active': leftMenuState.selectedType === 'preMatch'}">
+                        <button ng-click="selectMenu('preMatch')">
+                            <span trans>Upcoming</span>
+                            <b ng-bind="leftMenu.preMatch.count.total"></b>
+                        </button>
+                    </li>
+                    <li ng-class="{'active': leftMenuState.selectedType === 'live'}">
+                        <button ng-click="selectMenu('live')">
+                            <span trans>Live</span>
+                            <b ng-bind="leftMenu.live.count.total"></b>
+                        </button>
+                    </li>
+                </ul>
+
+            </div>
+            <div class="filter-view-v3">
+                <div class="filter-row-v3">
+                    <ul>
+                        <li ng-show="leftMenuState.selectedType === 'preMatch'">
+                            <div class="time-filter-v3" ng-class="{'active': leftMenuState.filters.time.expanded}">
+                                <p ng-click="leftMenuState.filters.time.expanded =! leftMenuState.filters.time.expanded">
+                                    <span ng-bind="(leftMenuState.filters.time.selected ? leftMenuState.filters.time.selected + ' hours' : 'All')|translate"></span><i class="arrow-rotate-filter-v3"></i>
+                                </p>
+                                <div class="sub-nav-filter-time-v3">
+                                    <ul>
+                                        <li ng-repeat="period in leftMenuState.filters.time.available track by $index" ng-click="selectTimePeriod(period)" ng-class="{'active': period == leftMenuState.filters.time.selected}">
+                                            <span ng-bind="(period ? period + ' hours' : 'All')|translate"></span>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </li>
+                        <li ng-class="{'active': leftMenuState.filters.region}"
+                            ng-show="leftMenuState.selectedType === 'live'"
+                            ng-click="toggleFilter('region')"
+                            title="Disable regions" trans="attr-only"
+                        >
+                            <i class="region-icon-v3"></i>
+                        </li>
+                        <li ng-show="leftMenuState.selectedType === 'live' && conf.videoEnabled"
+                            ng-click="toggleFilter('video')"
+                            ng-class="{'active': leftMenuState.filters.video}"
+                            title="With video"
+                            trans="attr-only"
+                        >
+                            <i class="video-icon-v3"></i>
+                        </li>
+                        <li>
+
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="second-row-filter-v3 esport-s-r">
+                    <include-template template-path="templates/search/sport.html" class="search-box-v3" ng-if="conf.enableMenuSearch"></include-template>
+                    <!--<div class="closed-left-nav-v3" ng-click="toggleLeftMenu(); collapseExpandButton = !collapseExpandButton" title="{{(collapseExpandButton ? 'Expand' : 'Collapse')|translate}}"></div>-->
+                </div>
+            </div>
+        </div>
+
+        <div class="full-menu-wrapper-box-v3 left-nav-view-v3" style="color: white">
+            <div class="md-progress-circular md-theme" ng-show="loading"></div>
+            <div class="left-nav-view-v3 esports-nav-b" ng-show="!loading" ng-class="{'prematch-view': leftMenuState.selectedType === 'preMatch'}">
+                <ul>
+                    <li ng-show="sharedData.favoriteGames.count > 0">
+                        <div class="sports-item-v3 favorite-nav-icon-v3" ng-class="{'active': !leftMenuState.collapsed.favorites}"
+                             ng-click="toggleCollapse('favorites'); $event.stopPropagation()"><!--active-->
+                            <span trans>Favorites</span>
+                            <div class="arrow-view-v3"></div>
+                            <div class="sport-games-count-v3" ng-bind="sharedData.favoriteGames.count"></div>
+                        </div>
+                        <favorite-games key="eSports" keep-in-storage="true" ng-show="!leftMenuState.collapsed.favorites" store-in="sharedData.favoriteGames"></favorite-games>
+                    </li>
+                    <li class="float-width" ng-repeat="sport in leftMenu[leftMenuState.selectedType].data track by sport.id" >
+                        <div class="sports-item-v3 {{sport.alias}}" ng-class="{'active': !leftMenuState.collapsed[leftMenuState.selectedType].sport[sport.id]}"
+                             ng-click="
+                             toggleCollapse('sport', sport.id);
+                             !leftMenuState.collapsed[leftMenuState.selectedType].sport[sport.id] ? requestData({type: leftMenuState.selectedType, sport: sport}): '';
+                             $event.stopPropagation()"><!--active-->
+                            <img src="images/e-icons/{{sport.alias}}.png" alt="">
+                            <span ng-bind="sport.name"></span>
+                            <div class="arrow-view-v3"></div>
+                            <div class="sport-games-count-v3" ng-bind="leftMenu[leftMenuState.selectedType].count[sport.id]"></div>
+                        </div>
+                        <div class="region-item-row-v3" ng-repeat="region in sport.region track by region.id">
+                            <div class="region-items-box">
+                                <div class="full-region-info-v3" ng-class="{'active': !leftMenuState.collapsed[leftMenuState.selectedType].region[region.id], 'no-regions': leftMenuState.selectedType === 'live' && !leftMenuState.filters.region}"
+                                     ng-click="toggleCollapse('region', region.id); $event.stopPropagation()"><!--active no-regions-->
+                                    <div class="region-item-v3" ng-show="leftMenuState.selectedType !== 'live' || leftMenuState.filters.region"><!--ng-hide-->
+                                        <div class="flag-view-v3 flag-icon flag-{{::region.alias | removeUselessSymbolsByRegexp: '[,\' ]+': 'g': 'true'}}"></div>
+                                        <span ng-bind="region.name"></span>
+                                        <span ng-bind="'(' + region.competition.length + ')'"></span>
+                                        <div class="arrow-view-v3"></div>
+                                    </div>
+                                    <div class="games-list-nav-v3">
+                                        <div class="games-list-mini-view-v3" ng-repeat="competition in region.competition track by competition.id">
+                                            <div class="competition-view-v-3"
+                                                 ng-class="{
+                                                 'closed': leftMenuState.selectedType === 'live' && leftMenuState.collapsed[leftMenuState.selectedType].competition[competition.id],
+                                                 'competition-empty': leftMenuState.selectedType === 'live' && !leftMenuState.filters.region
+                                                 }"><!--  competition-empty-->
+                                                <div class="competition-title-v3" ng-class="{'active': leftMenuState.selectedType === 'preMatch' && leftMenuState.selected.preMatch.competition.id === competition.id}" title="{{competition.name}}"
+                                                     ng-click="leftMenuState.selectedType === 'preMatch' ? requestData({type: leftMenuState.selectedType, competition: competition, region: region, sport: sport}) : toggleCollapse('competition', competition.id); $event.stopPropagation()"></div>
+                                                <div class="single-game-item-v3" ng-repeat="game in competition.game track by game.id"
+                                                     ng-class="{'active': leftMenuState.selected.live.game.id === game.id, 'no-events': (!(game.events_count || game.markets_count) || game.is_blocked)}"
+                                                     ng-click="requestData({type: leftMenuState.selectedType, game: game, competition: competition, region: region, sport: sport}); $event.stopPropagation()"><!-- active-->
+                                                    <div class="team-name-1-v3" data-title="{{game.team1_name}}">
+                                                        <span ng-bind="game.info.score1"></span>
+                                                    </div>
+                                                    <div class="team-name-1-v3"  data-title="{{game.team2_name}}">
+                                                        <span ng-bind="game.info.score2"></span>
+                                                    </div>
+
+                                                    <div class="game-info-mini-v3">
+                                                        <p ng-show="game.info.score1!=undefined || game.info.score2 !=undefined || game.info.current_game_state || game.info.current_game_time">
+                                                            <span ng-bind="game.info.current_game_state|convertSetName:sport.alias|translate"></span>
+                                                            <span trans="attr-only" title="Game time"  ng-hide="game.info.current_game_state == 'notstarted' && game.info.current_game_time == 0"
+                                                            ng-bind="game.info.current_game_time"></span>
+                                                            <i class="blocked-icon-v3" ng-show="(!(game.events_count || game.markets_count) || game.is_blocked)"></i>
+                                                        </p>
+                                                        <div class="game-info-icons-v3">
+                                                            <div class="icon-separator-v3 favorite" ng-class="{'active': sharedData.favoriteGames[game.id]}"></div>
+                                                            <div class="icon-separator-v3 market-count-v3">
+                                                                <span ng-bind="'+' + game.markets_count" title="Number of markets"></span>
+                                                            </div>
+                                                            <div class="icon-separator-v3 video" ng-show="game.hasVideo && conf.videoEnabled"></div>
+                                                            <div class="icon-separator-v3 statistic" ng-show="conf.enableH2HStat && game.is_stat_available"></div>
+                                                        </div>
+                                                    </div>
+
+
+                                                    <div class="l-b column-{{game.market.event.length}}" ng-hide="conf.hideMarketFromLeftMenu">
+                                                        <div class="single-events-b-v3" ng-repeat="event in game.market.event track by event.id" title="{{::event.type_1}}"
+                                                             ng-class="{'pointer-events-none': event.is_empty, 'active': isEventInBetSlip(event), 'blocked': ((event.price | oddConvert:'decimal') == 1 || game.is_blocked)}"
+                                                             ng-click="bet(event, game.market, game); $event.stopPropagation()"
+                                                             ng-mouseover="displayEventLimit(event)"
+                                                             ng-mouseleave="cancelDisplayEventLimit(event)">
+                                                            <div class="max-bet-tooltip-v3" ng-show="env.authorized && event.maxBet !== undefined" ng-class="{'maxbet-enabled': env.authorized}">
+                                                                Max: <b ng-bind="conf.onlyDecimalStakeAmount ? Math.floor(event.maxBet) : event.maxBet"></b> {{profile.currency_name|currency }}
+                                                            </div>
+                                                            <b ng-show="(event.price | oddConvert:'decimal') != 1 && !game.is_blocked"
+                                                               class="p-v price" ng-class="{'factor-top': event.price_change > 0, 'factor-bottom': event.price_change < 0}"
+                                                               ng-bind="event.price|oddConvert:$root.env.oddFormat"></b>
+                                                        </div>
+                                                    </div>
+
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+    </div>
+</div>

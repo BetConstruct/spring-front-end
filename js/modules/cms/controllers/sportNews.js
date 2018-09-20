@@ -502,9 +502,9 @@ CMS.controller('cmsSportNewsCtrl', ['$rootScope', '$scope', '$sce', '$location',
      * @param {Object} banner the banner's object
      */
     $scope.underBetSlipBannerClick = function(banner) {
-        analytics.gaSend('send', 'event', 'news', {'page': $location.path(), 'eventLabel': 'betslip banner click'});
+        analytics.gaSend('send', 'event', 'news', {'page': $location.path(), 'eventLabel': 'betslip banner click: ' + banner.link });
 
-        if (Object.prototype.toString.call(banner.link) === '[object Array]' && banner.link.indexOf($location.path()) !== -1) {
+        if (banner.link && banner.link.indexOf($location.path()) !== -1) {
             $rootScope.$broadcast('sportsbook.handleDeepLinking');
         }
     };
@@ -671,47 +671,6 @@ CMS.controller('cmsSportNewsCtrl', ['$rootScope', '$scope', '$sce', '$location',
         }
     };
 
-    /**
-     * @ngdoc method
-     * @name getSelectedHomepageGames
-     * @methodOf CMS.controller:cmsSportNewsCtrl
-     * @description   populates $scope's **selectedHomepageGames** variable with featured games and selects random one
-     */
-    $scope.getSelectedHomepageGames = function getSelectedHomepageGames() {
-        var getPageFn = WPConfig.bannerSlugs.homepageRotatingBanners.isWidget ? 'getWidget' : 'getPage';
-        content[getPageFn](content.getSlug('bannerSlugs.homepageRotatingBanners'), true).then(function (data) {
-            if (data.data.status === 'ok') {
-                var rootPage = data.data.page;
-                $scope.selectedHomepageGames = [];
-                if (rootPage && rootPage.children && rootPage.children.length > 0) {
-                    var i, regexp = /^(?:https?:\/\/)?(?:www\.)?(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))((\w|-){11})(?:\S+)?$/;
-                    for (i = 0; i < rootPage.children.length; i++) {
-//                if (new Date() - Date.parse(page.children[i].modified)  < Config.main.homepageSelectedGameLifetime) {
-                        if (rootPage.children[i].status === 'future') {
-                            rootPage.children[i].content = $sce.trustAsHtml(rootPage.children[i].content);
-                            if (rootPage.children[i].custom_fields.link && rootPage.children[i].custom_fields.link[0] && rootPage.children[i].custom_fields.link[0].length > 1) {
-                                rootPage.children[i].link = rootPage.children[i].custom_fields.link[0];
-                                rootPage.children[i].isExternal = true;
-                                if (rootPage.children[i].link.match(regexp)) {
-                                    rootPage.children[i].isYouTubeVideo = true;
-                                }
-                                rootPage.children[i].target = rootPage.children[i].custom_fields.new_window[0] === '1' ? "_blank" : "_self";
-                            } else {
-                                rootPage.children[i].link = "#/sport/?type=" + rootPage.children[i].custom_fields.type[0] + "&sport=" + rootPage.children[i].custom_fields.sport[0] + "&game=" + rootPage.children[i].custom_fields.game[0]  + "&competition=" + rootPage.children[i].custom_fields.competition[0]  + "&region=" + rootPage.children[i].custom_fields.region[0];
-                                rootPage.children[i].target = "_self";
-                            }
-                            if (rootPage.children[i].custom_fields.flash_banner_url) {
-                                rootPage.children[i].flash_banner_url = $sce.trustAsResourceUrl(rootPage.children[i].custom_fields.flash_banner_url + "");
-                            }
-                            $scope.selectedHomepageGames.push(rootPage.children[i]);
-                        }
-                    }
-                }
-                $scope.selectedGameIndex = $scope.selectedHomepageGames.length < 6 ? -1 : Math.floor(Math.random() * $scope.selectedHomepageGames.length);
-            }
-            rotateFeaturedGames();
-        });
-    };
 
     /**
      * @ngdoc method

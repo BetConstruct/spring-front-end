@@ -887,7 +887,7 @@
         }
       }
     }
-    .bookingTabs-j {
+    .open-bets-buttons {
       button {
         background: lighten(desaturate(adjust-hue($skin-color, 3deg), 16), 4);
         color: $text-palette-4;
@@ -897,6 +897,10 @@
           box-shadow: none;
         }
       }
+    }
+    .open-bets-buttons button {
+      height: 30px;
+      font: #{6+$size-font}/30px $font-f;
     }
     .bsTypeSwitchers-j {
       background: lighten(desaturate(adjust-hue($skin-color, 3deg), 16), 4);
@@ -1081,7 +1085,7 @@
     }
     .single-game-item-v3 {
       background: darken(desaturate(adjust-hue($skin-color, 4deg), 15), 1);
-      .team-name-1-v3 > p {
+      .team-name-1-v3:before {
         color: $text-palette-3;
       }
       .game-info-mini-v3 > p {

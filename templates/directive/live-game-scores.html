@@ -56,8 +56,8 @@
                statistics-on-hover
                stats-game ="{'game': openGame, 'competition': openGame.competition.name}"></i>
             <ul>
-                <li class="column-view-j" ng-click="marketsInOneColumn.enabled = false" ng-class="{'active': !marketsInOneColumn.enabled}"></li>
-                <li class="list-view-j" ng-click="marketsInOneColumn.enabled = true" ng-class="{'active': marketsInOneColumn.enabled}"></li>
+                <li class="column-view-j" ng-click="switchMarketsInOneColumn(false)" ng-class="{'active': !marketsInOneColumn.enabled}"></li>
+                <li class="list-view-j" ng-click="switchMarketsInOneColumn(true)" ng-class="{'active': marketsInOneColumn.enabled}"></li>
             </ul>
         </div>
     </div>

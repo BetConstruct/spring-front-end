@@ -1,0 +1,125 @@
+<!--enlarged video-->
+<div  ng-if="conf.videoEnabled && pinnedGameType === 'fullScreen' && !conf.detachedVideoSizes[openGame.tv_type]">
+    <div ng-if="enlargedGame && enlargedGame.video_data" class="game-video game-video-detached game-video-fullscreen">
+        <div class="game-video-container detached-game-container" id="detached-game-container-{{enlargedGame.id}}">
+
+            <video-player
+                    player-id="gamevideo{{enlargedGame.id}}full"
+                    stream-url="{{enlargedGame.video_data}}"
+                    provider-id="{{enlargedGame.tv_type}}"
+                    initially-muted="{{ env.sound }}"></video-player>
+            <!--<flashplayer id="gamevideo{{enlargedGame.id}}full" stream-url="{{enlargedGame.video_data}}" provider-id="{{enlargedGame.tv_type}}"  initially-muted="{{ env.sound }}"></flashplayer>-->
+            <div class="video-player-control">
+                <div class="detached-info">
+                    {{enlargedGame.info.current_game_state|convertSetName:enlargedGame.sport.alias|translate}}
+                    {{ enlargedGame.info.current_game_state? ' ' + ('Score:'|translate) + ' '
+                    :''}}{{enlargedGame.info.score1}} {{enlargedGame.info.score2 ? '&ndash; ' +
+                    enlargedGame.info.score2 : ''}}
+                    {{enlargedGame.stats.passes.team1_value && enlargedGame.sport.alias === 'Tennis'? '&#40;' +
+                    enlargedGame.stats.passes.team1_value:''}} {{ enlargedGame.stats.passes.team2_value &&
+                    enlargedGame.sport.alias === 'Tennis'? '&#58; '+ enlargedGame.stats.passes.team2_value + '&#41;':
+                    '' }}
+                    {{enlargedGame.stats[enlargedGame.info.current_game_state] && enlargedGame.sport.alias !==
+                    'Tennis'? '&#40;' + enlargedGame.stats[enlargedGame.info.current_game_state].team1_value +
+                    ' &ndash; ':''}}
+                    {{enlargedGame.stats[enlargedGame.info.current_game_state] && enlargedGame.sport.alias !==
+                    'Tennis' ? enlargedGame.stats[enlargedGame.info.current_game_state].team2_value + '&#41;'
+                    :''}}
+                </div>
+            </div>
+            <a ng-click="attachPinnedVideo(enlargedGame, 'fullScreen'); $parent.mute = undefined; $parent.paused = undefined;">
+                <span trans>close</span>
+            </a>
+        </div>
+    </div>
+</div>
+<!--enlarged video END-->
+
+
+<div ng-if="game.type === 1" class="e-sport-l-score">
+    <div class="bg-e-sport-l-t live-score-background-{{(game.sport.alias).toLowerCase()}}">
+        <h2>{{game.sport.name}} - {{game.competition.name}}</h2>
+    </div>
+    <div class="score-row-e-g">
+        <ul class="score-t-v">
+            <li><p class="additional-g-info" ng-bind="game.info.add_info || game.text_info"></p></li>
+            <li ng-repeat="frame_num in framesCount(game.stats)" ng-class="{'active-cash':game.info.current_game_state === 'set'+frame_num}" ng-bind="showFrameAlias(frame_num, game.sport.alias)"></li>
+            <li>{{ "set"|convertSetName:game.sport.alias|translate }}</li>
+        </ul>
+        <ul class="score-t-v">
+            <li><h6 class="e-team-name-r"><i class="team-logo-b" ng-style="{'background-image': $root.conf.teamDefaultLogo ? 'url(images/team-logo-default.png)' : 'url({{$root.conf.teamLogosPath}}e/s/{{Math.floor(game.team1_id / 2000)}}/{{game.team1_id}}.png)'}"></i> {{::game.team1_name}}</h6></li>
+            <li ng-repeat="frame_num in framesCount(game.stats)" ng-class="{'active-cash':game.info.current_game_state === 'set'+frame_num,'winner':isSetWinner(game.stats['score_set'+frame_num],1)}">
+                {{game.stats['score_set' + frame_num].team1_value ? game.stats['score_set' + frame_num].team1_value : 0}}
+            </li>
+            <li class="sets-score"><span>{{ game.info.score1 ?  game.info.score1 : '' | translate}}</span></li>
+        </ul>
+        <ul class="score-t-v">
+            <li><h6 class="e-team-name-r"><i class="team-logo-b" ng-style="{'background-image': $root.conf.teamDefaultLogo ? 'url(images/team-logo-default.png)' : 'url({{$root.conf.teamLogosPath}}e/s/{{Math.floor(game.team2_id / 2000)}}/{{game.team2_id}}.png)'}"></i> {{::game.team2_name}}</h6></li>
+            <li ng-repeat="frame_num in framesCount(game.stats)" ng-class="{'active-cash':game.info.current_game_state === 'set'+frame_num,'winner':isSetWinner(game.stats['score_set'+frame_num],2)}">
+                {{game.stats['score_set' + frame_num].team2_value ? game.stats['score_set' + frame_num].team2_value : 0}}
+            </li>
+            <li class="sets-score"><span>{{ game.info.score2 ?  game.info.score2 : '' | translate}}</span></li>
+        </ul>
+    </div>
+</div>
+<div class="all-markets-e-s">
+    <div class="game-mini-t-row" ng-if="game.type !== 1">
+        <ul>
+            <li>
+                <p>{{::game.region.name}}</p>
+                <p>{{::game.competition.name}}</p>
+            </li>
+            <li class="team-n-l-v a-right">
+                <h6 class="e-team-name-r">{{::game.team1_name}} <i class="team-logo-b" ng-style="{'background-image': $root.conf.teamDefaultLogo ? 'url(images/team-logo-default.png)' : 'url({{$root.conf.teamLogosPath}}e/s/{{Math.floor(game.team1_id / 2000)}}/{{game.team1_id}}.png)'}"></i></h6>
+            </li>
+            <li class="g-vs-v" trans>vs</li>
+            <li class="team-n-l-v">
+                <h6 class="e-team-name-r"><i class="team-logo-b" ng-style="{'background-image': $root.conf.teamDefaultLogo ? 'url(images/team-logo-default.png)' : 'url({{$root.conf.teamLogosPath}}e/s/{{Math.floor(game.team2_id / 2000)}}/{{game.team2_id}}.png)'}"></i> {{::game.team2_name}}</h6>
+            </li>
+            <li>
+                <p ng-bind="::game.start_ts|formatDate:'noLocaleTranslate':null:$root.env.timeFormat"></p>
+            </li>
+        </ul>
+    </div>
+    <div class="filter-markets-l" ng-show="game.markets">
+        <div class="markets-group-wrap-v3">
+            <ul ng-class="{'show-dropdown': marketGroupFilterExpanded, 'has-dropdown': game.availableMarketGroups.length > (($root.env.live ? 5 : 3) + 1)}">
+                <li class="more-j" ng-click="marketGroupFilterExpanded = !marketGroupFilterExpanded" hide-on-click state-flag-var="marketGroupFilterExpanded"><span>+ {{ game.availableMarketGroups.length - (($root.env.live ? 5 : 3) + 1) }}</span></li>
+                <li ng-repeat="group in game.availableMarketGroups track by group.id"
+                    ng-class="{active: game.selectedMarketGroupId === group.id,
+                'favorte-markets-group-j': $first, 'animate-star-odd' : $first && game.sport.favouriteMarkets.length % 2 == 1,
+                'animate-star-even': $first && game.sport.favouriteMarkets.length % 2 == 0,
+                'to-dropdown': $index > ($root.env.live ? 5 : 3), 'column-3':  ($root.env.live ? 5 : 3) == 3}"
+                    ng-click="selectMarketsGroup(group.id)" data-count="{{ group.count }}">
+                    <span><i>{{ group.name|translate }}</i> <i ng-show="group.count !== undefined">({{ group.count }})</i></span></li>
+            </ul>
+        </div>
+        <div class="right-left-events-wrapper one-column-view">
+            <!--Start Of Left Part Markets-->
+            <div class="live-events-column-v3"  ng-class="{'single-market-showed': marketsFirstPack.length + marketsSecondPack.length === 1}">
+
+                <div class="market-ciew-v3"
+                     ng-repeat="groupedMarkets in game.selectedMarketsGroup track by $index">
+                    <div class="market-title-v3" ng-click="collapsedMarkets[game.id][groupedMarkets[0].name] = !collapsedMarkets[game.id][groupedMarkets[0].name]" ng-class="{'closed': collapsedMarkets[game.id][groupedMarkets[0].name] }" data-title="{{groupedMarkets[0].name}}">
+                            <ul class="market-icons-t-r" ng-click="$event.stopPropagation()">
+                                <li class="link-icon-market-v3" ng-show="!$root.conf.hideExpressIds && (groupedMarkets[0].express_id || groupedMarkets[0].express_id == 0)" title="Events from different groups can be combined in combined bets" trans="attr-only">
+                                    <span ng-hide="$root.conf.hideExpressIds" title="Events from different groups can be combined in combined bets" trans="attr-only">{{groupedMarkets[0].express_id}}</span>
+                                </li>
+                                <li class="cashout-icon-market-v3" title="Cash-out available" trans ng-show="groupedMarkets[0].cashout && ((!$root.env.live && !!$root.partnerConfig.is_cashout_prematch) || ($root.env.live && !!$root.partnerConfig.is_cashout_live))"></li>
+                                <li class="favorite-icon-market-v3" ng-class="{'remove': game.sport.favouriteMarkets.indexOf(groupedMarkets) !== -1 }" ng-click="addToFavouriteMarkets(groupedMarkets)"></li>
+                            </ul>
+                    </div>
+                    <div ng-repeat="market in groupedMarkets|orderBy: 'order' track by market.id" class="l-b column-{{market.col_count || 1}}" ng-class="{'default': market.col_count > 5}">
+                        <div class="single-events-b-v3"  ng-repeat="event in market.events|orderBy:(market.display_key == 'OUTRIGHT' ? 'price' : 'order') track by event.id" ng-click="bet(event, market, game);" title="{{event.name}} {{ displayBase(event, market)}}" ng-class="{'pointer-events-none': event.is_empty, 'active': isEventInBetSlip(event), 'blocked': ((event.price | oddConvert:'decimal') == 1 || game.is_blocked)}" ng-mouseover="displayEventLimit(event, game, false, market)" ng-mouseleave="cancelDisplayEventLimit(event)">
+                            <div class="max-bet-tooltip-v3" ng-show="$root.env.authorized && event.maxBet !== undefined" ng-class="{'maxbet-enabled': $root.env.authorized}">
+                                Max: <b ng-bind="conf.onlyDecimalStakeAmount ? Math.floor(event.maxBet) : event.maxBet"></b> {{$root.profile.currency_name|currency }}
+                            </div>
+                            <b class="p-v" ng-show="(event.price | oddConvert:'decimal') != 1 && !game.is_blocked" ng-class="{'factor-top': event.price_change > 0, 'factor-bottom': event.price_change < 0}">{{event.price|oddConvert:$root.env.oddFormat:null:market.display_key}}</b>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--End Of Left Part Markets-->
+        </div>
+    </div>
+</div>

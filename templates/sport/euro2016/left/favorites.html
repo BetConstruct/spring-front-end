@@ -20,12 +20,10 @@
                                          ng-click="selectFavoriteGame(game)"
                                          ng-show="myGames.indexOf(game.id) !== -1 && (!$root.multiViewLiveOpenedGames || $root.multiViewLiveOpenedGames.indexOf(game.id) === -1)"
                                     >
-                                        <div class="team-name-1-v3">
-                                            <p>{{::game.team1_name}}</p>
+                                        <div class="team-name-1-v3" data-title="{{::game.team1_name}}">
                                             <span ng-if="game.type == 1 && (game.info.score1 != undefined)">{{game.info.score1}}</span>
                                         </div>
-                                        <div class="team-name-1-v3">
-                                            <p>{{::game.team2_name ? game.team2_name : ''}}</p>
+                                        <div class="team-name-1-v3" data-title="{{::game.team2_name ? game.team2_name : ''}}">
                                             <span ng-if="game.type == 1 && (game.info.score1 != undefined)">{{game.info.score2}}</span>
                                         </div>
                                         <div class="game-info-mini-v3">

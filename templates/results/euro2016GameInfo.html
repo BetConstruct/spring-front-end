@@ -7,12 +7,7 @@
     <div class="all-result-list-view-n">
         <div class="live-events-column-v3" ng-repeat="detailsColumn in [0, 1]">
             <div class="market-ciew-v3" ng-repeat="detail in openGameDetails.details2Columns[detailsColumn] track by $index">
-                <div class="market-title-v3" ng-class="{closed: detail.closed}">
-                    <h3 ng-click="detail.closed = !detail.closed">
-                        {{detail.line_name}}
-                    </h3>
-                    <div class="arrow-view-v3" ng-click="detail.closed = !detail.closed"></div>
-                </div>
+                <div class="market-title-v3" ng-click="detail.closed = !detail.closed" ng-class="{closed: detail.closed}" data-title="{{detail.line_name}}"></div>
                 <ul class="column-{{detail.event_name.length > 1 ? '2' : '1'}}">
                     <li ng-repeat="event in detail.event_name track by $index">
                         <div class="single-events-b-v3 pointer-events-none" title="{{event}}"></div>
