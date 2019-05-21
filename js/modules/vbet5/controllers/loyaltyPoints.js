@@ -133,6 +133,9 @@ VBET5.controller('loyaltyPointsCtrl', ['$scope', '$rootScope', 'Translator', 'Ze
                 } else if(response.code === 2084) {
                     console.log('2084', response);
                     dialog.content = Translator.get('Transaction amount error.');
+                }else {
+                    console.log(response.code, response);
+                    dialog.content = Translator.get('message_'+response.code);
                 }
             },
             function (response) {

@@ -22,6 +22,9 @@ VBET5.filter('formatDate', ['Moment', 'Config', 'Utils', function (Moment, Confi
         });
     }
     return Utils.memoize(function (timestamp, format, calendarDays, longDateFormat) {
+        if (!timestamp) {
+            return;
+        }
         var localeIsFixed = false, input = timestamp;
         calendarDays = calendarDays || 1;
         if (typeof timestamp === 'string' && timestamp.indexOf(':') !== -1 && timestamp.indexOf('-') !== -1) {

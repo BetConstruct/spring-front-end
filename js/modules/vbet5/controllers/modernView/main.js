@@ -4,7 +4,7 @@
  * @description
  * Explorer controller
  */
-angular.module('vbet5.betting').controller('modernViewManCtrl', ['$rootScope', '$scope', 'Config', 'Zergling', 'Utils', '$filter', '$location', 'TimeoutWrapper', '$q', 'analytics', 'Storage', 'Translator', 'GameInfo', function ($rootScope, $scope, Config, Zergling, Utils, $filter, $location, TimeoutWrapper, $q, analytics, Storage, Translator, GameInfo) {
+angular.module('vbet5.betting').controller('modernViewManCtrl', ['$rootScope', '$scope', 'Config', 'Zergling', 'Utils', '$filter', '$location', 'TimeoutWrapper', '$q', 'analytics', 'Storage', 'Translator', 'GameInfo', 'partner', function ($rootScope, $scope, Config, Zergling, Utils, $filter, $location, TimeoutWrapper, $q, analytics, Storage, Translator, GameInfo, partner) {
     'use strict';
 
     TimeoutWrapper = TimeoutWrapper($scope);
@@ -188,6 +188,8 @@ angular.module('vbet5.betting').controller('modernViewManCtrl', ['$rootScope', '
      */
     $scope.toggleLive = function toggleLive() {
         $scope.env.live = !$scope.env.live;
+        partner.call('liveActive', Config.env.live);
+
         $scope.gameType = $scope.env.live ? 1 : 0;
         analytics.gaSend('send', 'event', 'explorer', 'switch PM/LIVE', {'page': $location.path(), 'eventLabel': ($scope.env.live ? 'Live' : 'Prematch')});
         $location.search('type', $scope.gameType);
@@ -323,22 +325,17 @@ angular.module('vbet5.betting').controller('modernViewManCtrl', ['$rootScope', '
         angular.forEach(data.sport, function (sport) {
             angular.forEach(sport.region, function (region) {
                 angular.forEach(region.competition, function (competition) {
-                    if (!Config.main.GmsPlatform) {
-                        competition.name = $filter('removeParts')(competition.name, [$rootScope.selectedSportName]);
-                        competition.name = $filter('removeParts')(competition.name, [region.name]);
-                    }
                     competition.region = {id: region.id, name: region.name, alias: region.alias};
                     competition.gamesArray = Utils.objectToArray(competition.game) || [];
                     $rootScope.selectedCompetitions.push(competition);
 
-                    if (Utils.isInArray($rootScope.myCompetitions, competition.id) > -1) {
-                        addToMyGames(competition.gamesArray);
-                    }
                     angular.forEach(competition.game, function (game) {
                         game.competition = {id: competition.id};
                         game.region = {id: region.id, name: region.name};
                         game.sport = {id: sport.id, alias: sport.alias};
                         game.indexInMyGames = Utils.isInArray($rootScope.myGames, game.id);
+
+                        GameInfo.checkITFAvailability(game);
                     });
                 });
             });
@@ -366,46 +363,8 @@ angular.module('vbet5.betting').controller('modernViewManCtrl', ['$rootScope', '
                 isFirstColumn = false;
             });
         }
-
-        angular.forEach($rootScope.selectedCompetitionsInColumns, function (column) {
-            angular.forEach(column, function (competition) {
-                competition.indexInMyCompetitions = Utils.isInArray($rootScope.myCompetitions, competition.id);
-            });
-        });
     }
 
-    /**
-     * @ngdoc method
-     * @name addToMyGames
-     * @methodOf vbet5.controller:modernViewManCtrl
-     * @description check if updated game data has games which are not included in
-     * $rootScope.myGames but owned by  favourite competition
-     * @param {Array} gamesArray games array
-     */
-    function addToMyGames(gamesArray) {
-        var newGames = [],
-            hashKey;
-        angular.forEach(gamesArray, function (value) {
-            newGames.push(parseInt(value.id, 10));
-        });
-
-        hashKey = newGames.slice().join("");
-
-        // exit function because we already added this games
-        if (addToMyGames.cache[hashKey]) {
-            return;
-        }
-        addToMyGames.cache[hashKey] = newGames;
-
-        angular.forEach(gamesArray, function (game) {
-            if (Utils.isInArray($rootScope.myGames, game.id) < 0) {
-                console.log('ADD TO MY GAMES', game);
-                $rootScope.$emit('game.addToMyGames', game);
-            }
-        });
-    }
-
-    addToMyGames.cache = {};
 
     /**
      * @ngdoc method
@@ -423,11 +382,11 @@ angular.module('vbet5.betting').controller('modernViewManCtrl', ['$rootScope', '
         var request = {
             'source': 'betting', 'what': {'sport': [], 'game': '@count'},
             'where': {
-                'game': (Config.main.enableVisibleInPrematchGames && !Config.env.live ? {'@or': ([{ 'type': Config.env.live ? 1 : Config.main.GmsPlatform ? {'@in':[0,2]} : 0 }, {'visible_in_prematch': 1, 'type': 1}])} : {'type': Config.env.live ? 1 : Config.main.GmsPlatform ? {'@in':[0,2]} : 0})
+                'game': (Config.main.enableVisibleInPrematchGames && !Config.env.live ? {'@or': ([{ 'type': Config.env.live ? 1 : {'@in':[0,2]} }, {'visible_in_prematch': 1, 'type': 1}])} : {'type': Config.env.live ? 1 : {'@in':[0,2]}})
             }
         };
 
-        request.where.sport = {'id': {'@nin': GameInfo.getVirtualSportIds()}};
+        request.where.sport = {'type': {'@ne': 1}};
 
         if (Config.env.gameTimeFilter) {
             request.where.game.start_ts = Config.env.gameTimeFilter;
@@ -436,7 +395,8 @@ angular.module('vbet5.betting').controller('modernViewManCtrl', ['$rootScope', '
         Utils.setCustomSportAliasesFilter(request);
 
         if ($scope.withVideo && Config.env.live) {
-            request.where.game['@or'] = GameInfo.getVideoFilter();
+            var sKey = Config.main.video.enableOptimization ? 'id' : '@or';
+            request.where.game[sKey] = GameInfo.getVideoFilter();
         }
 
         Zergling.subscribe(
@@ -495,8 +455,8 @@ angular.module('vbet5.betting').controller('modernViewManCtrl', ['$rootScope', '
             'source': 'betting', 'what': {'sport': [], 'game': '@count'},
             'where': {
                 'game': {
-                    'type': Config.main.GmsPlatform ? {'@in': [0, 2]} : 0,
-                    'promoted': Config.main.GmsPlatform ? true : {'@contains': parseInt(Config.main.site_id)}
+                    'type': {'@in': [0, 2]},
+                    'promoted': true
                 }
             }
         };
@@ -515,7 +475,7 @@ angular.module('vbet5.betting').controller('modernViewManCtrl', ['$rootScope', '
         VIRTUAL_MOST_POPULAR.game = 0;
         angular.forEach(data.sport, function (sport) {
             VIRTUAL_MOST_POPULAR.game += sport.game;
-        })
+        });
     }
 
     /**
@@ -526,11 +486,7 @@ angular.module('vbet5.betting').controller('modernViewManCtrl', ['$rootScope', '
      */
     function showFavoriteGames() {
         function doSubscribe() {
-            var subscribingProgress = $q.defer(),
-                myGamesPromise,
-                myCompetitionPromise,
-                promises,
-                subscribingCallback;
+            var subscribingProgress = $q.defer();
             gameSubsciptionProgress = subscribingProgress.promise;
 
             var requestMyGame = {
@@ -540,7 +496,7 @@ angular.module('vbet5.betting').controller('modernViewManCtrl', ['$rootScope', '
                     'region': ['id', 'name', 'alias'],
                     'competition': [],
                     'game': [
-                        ['id', 'start_ts', 'team1_name', 'team2_name', 'team1_external_id', 'team2_external_id', 'type', 'info', 'events_count', 'markets_count', 'extra', 'is_blocked', 'game_number', 'exclude_ids', 'is_stat_available', 'is_live', 'is_neutral_venue']
+                        ['id', 'start_ts', 'team1_name', 'team2_name', 'team1_external_id', 'team2_external_id', 'type', 'info', 'events_count', 'markets_count', 'extra', 'is_blocked', 'game_number', 'exclude_ids', 'is_stat_available', 'is_live', 'is_neutral_venue', 'is_itf']
                     ],
                     'event': ['id', 'price', 'type', 'name'],
                     'market': ['type', 'express_id', 'name', 'home_score', 'away_score']
@@ -553,43 +509,14 @@ angular.module('vbet5.betting').controller('modernViewManCtrl', ['$rootScope', '
                 }
             };
 
-            var requestMyCompetition = {
-                'source': 'betting',
-                'what': {
-                    'game': ['id']
-                },
-                'where': {
-                    'competition': {
-                        'id': {'@in': $rootScope.myCompetitions}
-                    },
-                    'game': {
-                        'type': {'@in': [0, 1]}
-                    }
-                }
-            };
-
             Utils.setCustomSportAliasesFilter(requestMyGame);
-            Utils.setCustomSportAliasesFilter(requestMyCompetition);
 
-            subscribingCallback = function (result) {
-                var subIds = [];
-                updateGames(result[0].data, true);
-                competitionCallback(result[1].data, true);
-                angular.forEach(result, function (item) {
-                    subIds.push(item.subid);
+            Zergling.subscribe(requestMyGame, updateGames)
+                .then(function (result) {
+                    updateGames(result.data, true);
+                    gamesSubId = result.subid;
+                    subscribingProgress.resolve(result.subid);
                 });
-                subscribingProgress.resolve(subIds);
-                gamesSubId = subIds;
-            };
-
-            myGamesPromise = Zergling.subscribe(requestMyGame, updateGames);
-            myCompetitionPromise = Zergling.subscribe(requestMyCompetition, competitionCallback);
-
-            promises = $q.all([
-                myGamesPromise,
-                myCompetitionPromise
-            ]);
-            promises.then(subscribingCallback);
         }
 
         if (gameSubsciptionProgress) {
@@ -606,36 +533,6 @@ angular.module('vbet5.betting').controller('modernViewManCtrl', ['$rootScope', '
         }
     }
 
-    /**
-     * @ngdoc method
-     * @name competitionCallback
-     * @methodOf vbet5.controller:modernViewManCtrl
-     * @param {Object} data data
-     * @description This method registered as a callback of myCompetitionPromise subscriptions
-     * and adding the new games to $rootScope.myGames if its necessary
-     */
-    function competitionCallback(data) {
-        var newGames = [],
-            gamesToUpdate,
-            hashKey,
-            existingGames = $rootScope.myGames;
-        angular.forEach(data.game, function (game) {
-            newGames.push(parseInt(game.id, 10));
-        });
-
-        hashKey = newGames.slice().join("");
-
-        if (!competitionCallback.cache[hashKey]) {
-            competitionCallback.cache[hashKey] = newGames;
-        }
-
-        if (!Utils.arrayEquals(existingGames, newGames)) {
-            gamesToUpdate = Utils.gamesArrayToObjectArray(competitionCallback.cache[hashKey]);
-            $rootScope.$emit('game.addToMyGames', gamesToUpdate);
-        }
-    }
-
-    competitionCallback.cache = {};
 
     $scope.$watch('myGames.length', function (length) {
         if ($rootScope.favoriteGamesSelectedAsSport) {
@@ -644,11 +541,6 @@ angular.module('vbet5.betting').controller('modernViewManCtrl', ['$rootScope', '
         VIRTUAL_SPORT_FAVORITE.game = length;
     });
 
-    $scope.$watch('myCompetitions.length', function () {
-        if ($rootScope.favoriteGamesSelectedAsSport) {
-            showFavoriteGames();
-        }
-    });
 
     /**
      * @ngdoc method
@@ -667,7 +559,7 @@ angular.module('vbet5.betting').controller('modernViewManCtrl', ['$rootScope', '
             'source': 'betting',
             'what': { game: '@count'},
             'where': {
-                'game': (Config.main.enableVisibleInPrematchGames && !Config.env.live ? {'@or': ([{ 'type': Config.env.live ? 1 : Config.main.GmsPlatform ? {'@in':[0,2]} : 0 }, {'visible_in_prematch': 1, 'type': 1}])} : {'type': Config.env.live ? 1 : Config.main.GmsPlatform ? {'@in':[0,2]} : 0}),
+                'game': (Config.main.enableVisibleInPrematchGames && !Config.env.live ? {'@or': ([{ 'type': Config.env.live ? 1 : {'@in':[0,2]} }, {'visible_in_prematch': 1, 'type': 1}])} : {'type': Config.env.live ? 1 : {'@in':[0,2]}}),
                 sport: {id: sport.id},
                 competition: {'favorite': true}
             }
@@ -735,12 +627,12 @@ angular.module('vbet5.betting').controller('modernViewManCtrl', ['$rootScope', '
 
             request.where = sport.id === VIRTUAL_MOST_POPULAR.id ? {
                 'game': {
-                    'type': Config.main.GmsPlatform ? {'@in': [0, 2]} : 0,
-                    'promoted': Config.main.GmsPlatform ? true : {'@contains': parseInt(Config.main.site_id)}
+                    'type': {'@in': [0, 2]},
+                    'promoted': true
                 }
             } : {
                 'sport': {'id': $scope.selectedSportId},
-                'game': (Config.main.enableVisibleInPrematchGames && !Config.env.live ? {'@or': ([{ 'type': Config.env.live ? 1 : Config.main.GmsPlatform ? {'@in':[0,2]} : 0 }, {'visible_in_prematch': 1, 'type': 1}])} : {'type': Config.env.live ? 1 : Config.main.GmsPlatform ? {'@in':[0,2]} : 0})
+                'game': (Config.main.enableVisibleInPrematchGames && !Config.env.live ? {'@or': ([{ 'type': Config.env.live ? 1 : {'@in':[0,2]} }, {'visible_in_prematch': 1, 'type': 1}])} : {'type': Config.env.live ? 1 : {'@in':[0,2]}})
             };
 
             if (!sport.id) {
@@ -752,7 +644,8 @@ angular.module('vbet5.betting').controller('modernViewManCtrl', ['$rootScope', '
             }
 
             if ($scope.withVideo && Config.env.live) {
-                request.where.game['@or'] = GameInfo.getVideoFilter();
+                var sKey = Config.main.video.enableOptimization ? 'id' : '@or';
+                request.where.game[sKey] = GameInfo.getVideoFilter();
             }
             /*Utils.setCustomSportAliasesFilter(request);*/
             Zergling.subscribe(
@@ -837,7 +730,7 @@ angular.module('vbet5.betting').controller('modernViewManCtrl', ['$rootScope', '
                     'region': ['id', 'name', 'alias'],
                     'competition': [],
                     'game': [
-                        ['id', 'start_ts', 'team1_name', 'team2_name', 'team1_external_id', 'team2_external_id', 'type', 'info', 'events_count', 'markets_count', 'extra', 'is_blocked', 'game_number', 'exclude_ids', 'is_stat_available', 'is_live', 'is_neutral_venue']
+                        ['id', 'start_ts', 'team1_name', 'team2_name', 'team1_external_id', 'team2_external_id', 'type', 'info', 'events_count', 'markets_count', 'extra', 'is_blocked', 'game_number', 'exclude_ids', 'is_stat_available', 'is_live', 'is_neutral_venue', 'is_itf', 'stats']
                     ],
                     'event': ['id', 'price', 'type', 'name'],
                     'market': ['type', 'express_id', 'name', 'home_score', 'away_score']
@@ -848,11 +741,11 @@ angular.module('vbet5.betting').controller('modernViewManCtrl', ['$rootScope', '
             };
             if ($scope.selectedSportId === VIRTUAL_MOST_POPULAR.id) {
                 request.where.game = {
-                    'type': Config.main.GmsPlatform ? {'@in': [0, 2]} : 0,
-                    'promoted': Config.main.GmsPlatform ? true : {'@contains': parseInt(Config.main.site_id)}
-                }
+                    'type': {'@in': [0, 2]},
+                    'promoted': true
+                };
             } else {
-                request.where.game = Config.main.enableVisibleInPrematchGames && !Config.env.live ? {'@or': ([{ 'type': Config.env.live ? 1 : Config.main.GmsPlatform ? {'@in':[0,2]} : 0 }, {'visible_in_prematch': 1, 'type': 1}])} : {'type': Config.env.live ? 1 : Config.main.GmsPlatform ? {'@in':[0,2]} : 0};
+                request.where.game = Config.main.enableVisibleInPrematchGames && !Config.env.live ? {'@or': ([{ 'type': Config.env.live ? 1 : {'@in':[0,2]} }, {'visible_in_prematch': 1, 'type': 1}])} : {'type': Config.env.live ? 1 : {'@in':[0,2]}};
                 request.where.sport = { 'id': $scope.selectedSportId };
             }
 
@@ -874,7 +767,8 @@ angular.module('vbet5.betting').controller('modernViewManCtrl', ['$rootScope', '
             if ($scope.selectedRegionId === VIRTUAL_REGION_UPCOMING.id) {
                 request.where.game.start_ts = {'@now': {'@gte': 0, '@lt': $scope.selectedUpcomingPeriod * 3600}};
             } else if ($scope.selectedRegionId === VIRTUAL_REGION_WITHVIDEO.id || $scope.withVideo) {
-                request.where.game['@or'] = GameInfo.getVideoFilter();
+                var sKey = Config.main.video.enableOptimization ? 'id' : '@or';
+                request.where.game[sKey] = GameInfo.getVideoFilter();
             } else if ($scope.selectedRegionId === VIRTUAL_REGION_POPULAR.id) {
                 request.where.competition = {'favorite': true};
             }

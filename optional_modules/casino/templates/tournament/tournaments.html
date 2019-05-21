@@ -1,4 +1,4 @@
-<div class="casino-tournaments-include" ng-init="getTournamentList(true);tournament.readMore=false; setTitle('Tournaments')">
+<div class="casino-tournaments-include" ng-init="getTournamentList(true);tournament.readMore=false; setTitle('Tournaments');casinoMultiviewValues();">
     <div class="guide">
         <div class="casino-tournaments-filters-wrapper">
             <div ng-repeat="filterGroup in tournament.filterList track by $index" class="casino-tournament-filter no-select-j" ng-class="{'active': filterGroup.expanded}" ng-mouseover="filterGroup.expanded=true" ng-mouseleave="filterGroup.expanded=false">
@@ -30,16 +30,15 @@
         <div class="casino-tournaments-games">
 
             <div class="ct-games-no-results" ng-show="tournament.filteredList.length === 0" trans>There are no tournaments with selected filters.</div>
-
             <div class="casino-tournament-game" ng-repeat="item in tournament.filteredList track by item.Id"
                  ng-show="tournament.casinoGames[item.Id].length > 0"
-                 ng-class="{finished: item.State === 1, live: item.State === 2, upcoming: item.State === 3}" ng-click="selectTournament(item.Id)">
+                 ng-class="{finished: item.Stage === 1, live: item.Stage === 2, upcoming: item.Stage === 3, canceled : item.Stage === -1}" ng-click="selectTournament(item.Id)">
                 <ul>
                     <li>
                         <div class="ctournament-image-wrapper hp-slider-17">
                             <figure style="background-image: url({{item.LobbyBannerImagesFiltered[tournament.sliderIndex[item.Id]].ImageUrl}})"></figure>
                             <div class="ct-game-prize-amount">{{item.PrizeFund|number}} {{item.CurrencyId}}</div>
-                            <counter start="{{item.State === 3 ? item.StartDate : item.EndDate}}" finish-text="{{item.State === 3 ? 'Started' : ''}}" class="status-color"></counter>
+                            <counter start="{{item.Stage === 3 ? item.StartDate : item.EndDate}}" finish-text="{{item.Stage === 3 ? 'Started' : item.Stage === -1 ? 'Canceled' : ''}}" class="status-color"></counter>
                             <div class="hp-slider-pagination" ng-show="item.LobbyBannerImagesFiltered.length > 1">
                                 <button ng-click="tournament.sliderIndex[item.Id] = tournament.sliderIndex[item.Id] - 1;tournament.sliderIndex[item.Id] = tournament.sliderIndex[item.Id] < 0 ? item.LobbyBannerImagesFiltered.length - 1 : tournament.sliderIndex[item.Id];$event.stopPropagation();"></button>
                                 <button ng-click="tournament.sliderIndex[item.Id] = tournament.sliderIndex[item.Id] + 1;tournament.sliderIndex[item.Id] = tournament.sliderIndex[item.Id] > item.LobbyBannerImagesFiltered.length - 1 ? 0 : tournament.sliderIndex[item.Id];$event.stopPropagation();"></button>
@@ -65,9 +64,10 @@
                                 <li>
                                     <p><span trans>Status</span></p>
                                     <p class="status-color">
-                                        <strong ng-show="item.State == 1" trans>Finished</strong>
-                                        <strong ng-show="item.State == 2" trans>Live</strong>
-                                        <strong ng-show="item.State == 3" trans>Upcoming</strong>
+                                        <strong ng-show="item.Stage == 1" trans>Finished</strong>
+                                        <strong ng-show="item.Stage == 2" trans>tournament_live</strong>
+                                        <strong ng-show="item.Stage == 3" trans>Upcoming</strong>
+                                        <strong ng-show="item.Stage == -1" trans>Canceled</strong>
                                     </p>
                                 </li>
                                 <li>

@@ -1,8 +1,8 @@
-<div ng-controller="drawCtrl" ng-init="setTitle('draw')" class="draw-view-wrapper-b">
+<div ng-controller="drawCtrl" ng-init="setTitle('draw')" style="background-image: url({{pageData.background}})" class="draw-view-wrapper-b">
     <div class="center-view-draw-b">
         <div class="draw-content-contain-b">
-            <h2 ng-if="conf.enableDrawInfoText">
-                <span trans>The draw will take place today at 19:00</span>
+            <h2 ng-if="pageData.title">
+                <span>{{pageData.title}}</span>
             </h2>
 
             <div class="video-wrap-draw-row">
@@ -40,11 +40,11 @@
                 <h3><span trans>Winner</span> : <span ng-bind="data.winner"></span></h3>
             </div>
 
-            <div class="full-list-user-bet-id-b">
+            <div class="full-list-user-bet-id-b" ng-if="pageData.promoUrl">
                 <ul>
                     <li>
                         <h4>
-                            <span trans>For more info please click</span> <a ng-href="{{ resultUrl }}" trans>here</a>
+                            <span trans>For more info please click</span> <a ng-href="{{ pageData.promoUrl }}" target="{{pageData.target}}" trans>here</a>
                         </h4>
                     </li>
                 </ul>

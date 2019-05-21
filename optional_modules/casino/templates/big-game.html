@@ -5,9 +5,9 @@
         <div class="casual-game">
             <div class="casino-game-contain">
                 <!--Флеш игра-->
-                <div class="flash-game-contain" ng-repeat="gameInfo in gamesInfo">
+                <div class="flash-game-contain" ng-repeat-start="gameInfo in gamesInfo" ng-class="{'four-columns-bonus': gameInfo.bonusDefId && viewCount === 4}">
                     <!--<div class="dont-game-info-text" ng-show="!gameInfo.game.types.funMode && gameInfo.gameMode === 'fun'"><p trans>Sorry the game which you chose doesn't have the type of play for fun</p></div>-->
-                    <div class="big-game-control" ng-show="gameInfo.gameUrl !==''">
+                    <div  class="big-game-control" ng-show="gameInfo.gameUrl !==''">
                         <div class="icon-delete"><a title="{{ 'close'|translate }}" ng-click="closeGame(gameInfo.id)">Close</a></div>
                         <div class="icon-delete popup"><a title="{{ 'Open In Pop-Up Window'|translate }}" ng-click="openGameInNewWindow(gameInfo.id)">popUp</a></div>
                         <div class="icon-delete refresh"><a title="{{ 'Refresh'|translate }}" ng-click="refreshGame(gameInfo.id)">refresh</a></div>
@@ -15,8 +15,11 @@
                         <div class="icon-delete favourite">
                             <a title="{{ (!$root.myCasinoGamesIds[gameInfo.game.id] ? 'Add to My Games' : 'Remove from My Games')|translate}}" ng-class="{'favourite-active': $root.myCasinoGamesIds[gameInfo.game.id]}" ng-click="toggleSaveToMyCasinoGames(gameInfo.game)">Favorite</a>
                         </div>
-                        <div class="icon-delete favourite {{gameInfo.gameMode}}"  ng-show="gameInfo.game.types.funMode  && confData.main.funModeEnabled" title="{{('Click to change to ' + ('fun' === gameInfo.gameMode ? 'real mode' : 'fun mode'))|translate}}">
+                        <div class="icon-delete favourite {{gameInfo.gameMode}}"  ng-show="gameInfo.game.types.funMode && (confData.main.funModeEnabled === 2 && $root.env.authorized || confData.main.funModeEnabled === 1 || (confData.main.funModeEnabled === 3 && $root.profile.is_verified))" title="{{('Click to change to ' + ('fun' === gameInfo.gameMode ? 'real mode' : 'fun mode'))|translate}}">
                             <a ng-click="togglePlayForReal(gameInfo);$event.stopPropagation();" trans>really/for fun</a>
+                        </div>
+                        <div ng-if="((wideMode && viewCount === 2) || viewCount === 1) && (!!hasIframeJackpot[gameInfo.game.id] || env.authorized && gameInfo.game.id && hasTournaments && hasIframeTournamentInfo[gameInfo.game.id])" class="icon-delete closed-iframe-info">
+                            <a trans ng-click="iframeTab[gameInfo.game.id].show = !iframeTab[gameInfo.game.id].show"></a>
                         </div>
                         <div class="icon-delete game-info" ng-if="gameInfo.game.game_skin_id && confData.main.enableGameInfoButton" title="">
                             <a ng-click="openCasinoGameDetails(gameInfo.game.game_skin_id);" trans>O</a>
@@ -24,16 +27,24 @@
                     </div>
                     <vbet-loader ng-show="gameInfo.loadingUserData"></vbet-loader>
                     <div class="add-casino-game" ng-show="gameInfo.gameUrl == '' && casinoGameOpened > 1 && !gameInfo.loadingUserData"><a title="{{ 'Add a Game'|translate }}" ng-click="enableToAddGame(gameInfo.id)">+</a></div>
-                    <ng-include ng-if="$root.casinoGameOpened === 1 && env.authorized && gameInfo.game.id && hasTournaments" src="'optional_modules/casino/templates/tournament/iframe-info.html'|fixPath"></ng-include>
-                    <iframe ng-class="{'iframe-tournament-sidebar-padding': $root.casinoGameOpened === 1 && env.authorized && gameInfo.game.id && hasTournaments && env.casinoHasTournamentInfo}" frame-control sidebar-width="{{220}}" has-sidebar="{{!!($root.casinoGameOpened === 1 && env.authorized && gameInfo.game.id && hasTournaments && env.casinoHasTournamentInfo)}}" allowfullscreen="true" number-of-window="{{ gamesInfo.length }}" initial-width="{{gameInfo.game.width}}" initial-height="{{gameInfo.game.height}}" element-id="{{gameInfo.front_game_id}}" aspect-ratio="{{gameInfo.game.ratio}}"  ng-src="{{gameInfo.gameUrl}}"></iframe>
-                    <div class="casino-deposit-button" ng-show="confData.main.depositButtonUnderGame.enabled && (confData.main.depositButtonUnderGame.disableOptions.providers.indexOf(gameInfo.game.provider) === -1 || confData.main.depositButtonUnderGame.disableOptions.categories.indexOf(gameInfo.game.categories[0]) === -1)">
-                        <button ng-click="!env.authorized ? broadcast('openLoginForm', {key: 'toggleSliderTab', data: 'deposit'}) && $event.stopPropagation() : broadcast('toggleSliderTab','deposit');$event.stopPropagation();" trans>Deposit</button>
+                    <ng-include ng-show="((wideMode && viewCount === 2) || viewCount === 1) && iframeTab[gameInfo.game.id].show && (!!hasIframeJackpot[gameInfo.game.id] || env.authorized && gameInfo.game.id && hasTournaments && hasIframeTournamentInfo[gameInfo.game.id])" src="'optional_modules/casino/templates/tournament/iframe-info.html'|fixPath"></ng-include>
+                    <iframe ng-class="{'iframe-tournament-sidebar-padding':((wideMode && viewCount === 2) || viewCount === 1) && iframeTab[gameInfo.game.id].show && (!!hasIframeJackpot[gameInfo.game.id] || env.authorized && gameInfo.game.id && hasTournaments && hasIframeTournamentInfo[gameInfo.game.id])}" frame-control has-bottom-bar="{{!!gameInfo.bonusDefId}}" has-sidebar="{{(wideMode && viewCount === 2 && (!hasIframeJackpot.empty || !hasIframeTournamentInfo.empty)) || (viewCount === 1 && !!hasIframeJackpot[gameInfo.game.id]) || !!(((wideMode && viewCount === 2) || viewCount === 1) && env.authorized && gameInfo.game.id && hasTournaments && hasIframeTournamentInfo[gameInfo.game.id])}}" allow="autoplay; fullscreen" number-of-window="{{ gamesInfo.length }}" initial-width="{{gameInfo.game.width}}" initial-height="{{gameInfo.game.height}}" element-id="{{gameInfo.front_game_id}}"  games-info="{{gamesInfo}}" aspect-ratio="{{gameInfo.game.ratio}}"  all-ratio="{{allRatio}}"  ng-src="{{gameInfo.gameUrl}}" allowfullscreen></iframe>
+                    <div ng-if="gameInfo.bonusDefId && viewCount === 1" class="iframe-balance-content">
+                        <div class="iframe-balance">
+                            <p class="brand-color-1">{{'Balance'|translate}}: <span>{{$root.profile.calculatedBalance|number:conf.balanceFractionSize}} {{$root.profile.currency_name|currency}}</span></p>
+                            <p class="brand-color-2">{{'Bonus Balance'|translate}}: <span>{{$root.profile.calculatedBonus|number:conf.balanceFractionSize}} {{$root.profile.currency_name|currency}}</span></p>
+                            <img src="images/gambling-commission.png" alt="">
+                        </div>
+                        <div class="iframe-balance-info">
+                            <p>{{'Playing with Bonus funds' | translate}}: <span ng-click="$root.$location.search('defId', gameInfo.bonusDefId); broadcast('toggleSliderTab','promotionalBonuses');$event.stopPropagation();">for details go to terms and conditions</span></p>
+                        </div>
                     </div>
                     <div class="casino-license-logo" ng-if="confData.main.licenseLogo.enabled">
                         <!--the license image is added through CSS (as a font)-->
                         <a ng-href="{{confData.main.licenseLogo.href}}" target="{{confData.main.licenseLogo.target ? confData.main.licenseLogo.target : '_blank'}}"></a>
                     </div>
                 </div>
+                <br ng-if="$index === 1" ng-repeat-end>
 
                 <!--Флеш игра END-->
             </div>

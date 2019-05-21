@@ -6,7 +6,7 @@
  * @description directive for displaying game, market information in 'comboView'
  *
  */
- VBET5.directive('comboViewMarketEvents', ['$filter', 'Utils', 'GameInfo', function ($filter, Utils, GameInfo) {
+VBET5.directive('comboViewMarketEvents', ['$filter', 'Utils', 'GameInfo', function ($filter, Utils, GameInfo) {
     var map = {};
 
     map['FirstTeamTotal'] = 'differentNames';
@@ -164,10 +164,9 @@
             if (!scope.market) {
                 return;
             }
+            scope.events = Utils.objectToArray(scope.market.event).sort(Utils.orderSorting);
 
             scope.displayBase = GameInfo.displayBase;
-            scope.displayEventLimit = GameInfo.displayEventLimit;
-            scope.cancelDisplayEventLimit = GameInfo.cancelDisplayEventLimit;
             scope.isEventInBetSlip = GameInfo.isEventInBetSlip;
 
             if (!scope.market.type) {
@@ -175,44 +174,20 @@
             }
 
             if (['Total', 'AsianTotal', 'TotalAsian', 'FirstHalfTotal', 'SecondHalfTotal', 'SetTotal', 'OverUnder'].indexOf(scope.market.type) >= 0) {
-                scope.market.events = Utils.objectToArray(scope.market.event);
-
-                var middleEvent = angular.copy(scope.market.events[0]);
+                var middleEvent = angular.copy(scope.events[0]);
                 middleEvent.name = '';
-                scope.market.events.splice(1, 0, middleEvent);
+                scope.events.splice(1, 0, middleEvent);
             }
 
             if (map[scope.market.type] === 'correctScore') {
-                var marketEventsWithTypeAsKey = {};
-                angular.forEach(scope.market.event, function (event) {
-                    marketEventsWithTypeAsKey[event.name] = event;
-                });
-
-                var i, j;
-                var keys = Object.keys(marketEventsWithTypeAsKey);
-                var keysLength = keys.length;
-                var leftColumn = [];
-                var middleColumn = [];
-                var rightColumn = [];
-                for (i = 0; i < 10; i++) {
-                    for (j = 0; j < keysLength; j++) {
-                        var type = keys[j].split(/[:,\/ -]/);
-
-                        if (type[0] == i && type[0] > type[1]) {
-                            leftColumn.push(marketEventsWithTypeAsKey[keys[j]]);
-                        }
-
-                        if (type[0] == i && type[0] === type[1]) {
-                            middleColumn.push(marketEventsWithTypeAsKey[keys[j]]);
-                        }
-
-                        if (type[1] == i && type[0] < type[1]) {
-                            rightColumn.push(marketEventsWithTypeAsKey[keys[j]]);
-                        }
-                    }
-                }
+                var columns = GameInfo.divideIntoColumns(scope.market, 'correctScore');
+                var leftColumn = columns[0],
+                    middleColumn = columns[1],
+                    rightColumn = columns[2];
 
                 var length = Math.max(leftColumn.length, middleColumn.length, rightColumn.length);
+                var i;
+
                 scope.market.correctScoreEvents = [];
                 for (i = 0; i < length; i++) {
                     var leftColumnValue = leftColumn[i] || {};
@@ -222,10 +197,10 @@
                     scope.market.correctScoreEvents.push(middleColumnValue);
 
                     var rightColumnValue = rightColumn[i] || {};
-                    scope.market.correctScoreEvents.push(rightColumnValue);                                    
+                    scope.market.correctScoreEvents.push(rightColumnValue);
                 }
             }
         },
         templateUrl: $filter('fixPath')('optional_modules/comboView/templates/market/events.html')
-     };
- }]);
+    };
+}]);

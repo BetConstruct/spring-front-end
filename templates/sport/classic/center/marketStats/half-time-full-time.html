@@ -1,0 +1,31 @@
+<div class="statistic-quality-contain">
+    <p class="statistic-no-available" ng-if="!templateData || !templateData.HalfTimeFullTimePerformanceList.length" trans>No Statistics available</p>
+    <div ng-if="templateData && templateData.HalfTimeFullTimePerformanceList.length">
+        <h4 class="main-title-statistic-quality" ng-bind="::('Last 5 Matches ' + widgetMapping[marketType].title) | translate"></h4>
+        <ul class="tab-statistic-quality" ng-init="tab = openGame.team1_id">
+            <li ng-click="tab = openGame.team1_id"
+                ng-class="{'active': tab === openGame.team1_id}"
+                ng-bind="openGame.team1_name">
+            </li>
+            <li ng-click="tab = openGame.team2_id"
+                ng-class="{'active': tab === openGame.team2_id}"
+                ng-bind="openGame.team2_name">
+            </li>
+        </ul>
+        <div class="float-width" ng-repeat="HalfTimeFullTimePerformance in templateData.HalfTimeFullTimePerformanceList">
+            <ul ng-if="tab === HalfTimeFullTimePerformance.EntityId" class="last-statistic-quality">
+                <li ng-repeat="result in HalfTimeFullTimePerformance.HalfTimeFullTimeWDLList">
+                    <div class="{{result.HalfTime}}-bg">
+                        <p>45'</p>
+                        <p ng-bind="::result.HalfTime"></p>
+                    </div>
+                    <div class="{{result.FullTime}}-bg">
+                        <p>90'</p>
+                        <p ng-bind="::result.FullTime"></p>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <p ng-click="openStatistics(openGame);$event.stopPropagation();" class="more-statistic-quality" trans>View all statistics</p>
+</div>

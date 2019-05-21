@@ -85,7 +85,9 @@ div.draws-contain,
     > li {
       display: inline-block;
       height: 36px;
-      margin: 0 40px 0 0;
+      @include ltr {
+        margin: 0 40px 0 0;
+      }
       @include rtl {
         margin: 0 0 0 40px;
       }
@@ -206,12 +208,10 @@ div.draws-contain,
 }
 #result-search dl dt {
   margin: 0;
-  text-align: left;
   float: left;
   width: 100%;
   height: 28px;
   border-bottom: 1px solid #b7b7b7;
-  padding: 0 20px 0 10px;
   background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, #FFF), color-stop(1, #E8E8E8));
   background-image: -o-linear-gradient(bottom, #FFFFFF 0%, #E8E8E8 100%);
   background-image: -moz-linear-gradient(bottom, #FFFFFF 0%, #E8E8E8 100%);
@@ -222,6 +222,10 @@ div.draws-contain,
   font: 11px/28px $font-f;
   font-weight: bold;
   text-transform: uppercase;
+  @include ltr {
+    padding: 0 20px 0 10px;
+    text-align: left;
+  }
   @include rtl {
     padding: 0 10px 0 20px;
     text-align: right;
@@ -237,11 +241,13 @@ div.draws-contain,
   float: left;
   width: 100%;
   background: none;
-  text-align: left;
-  padding: 10px 20px 10px 15px;
   border-bottom: 1px solid #d8d8d8;
   font: 12px/14px $font-f;
   transition: 300ms background, border 300ms;
+  @include ltr {
+    padding: 10px 20px 10px 15px;
+    text-align: left;
+  }
   @include rtl {
     padding: 10px 15px 10px 20px;
     text-align: right;
@@ -402,12 +408,13 @@ div.draws-contain,
       max-width: inherit;
       position: absolute;
       top: 0;
-      right: 0;
       border-radius: 0;
       z-index: 9999;
+      @include ltr {
+        right: 0;
+      }
       @include rtl {
         left: 0;
-        right: auto;
       }
       &:before {
         content: "\e612";
@@ -421,10 +428,11 @@ div.draws-contain,
         box-shadow: 0 0 0 2px #5f626d inset;
         top: 50%;
         margin-top: -15px;
-        left: 24px;
         position: absolute;
+        @include ltr {
+          left: 24px;
+        }
         @include rtl {
-          left: auto;
           right: 24px;
         }
       }
@@ -441,7 +449,6 @@ div.draws-contain,
         box-sizing: border-box;
         height: 74px;
         border-radius: 0;
-        padding: 8px 10px 8px 67px;
         box-shadow: inset -1px 0 0 set-color($modern-view-navigation, $color-dark: darken($modern-view-navigation, 6), $color-light: lighten($modern-view-navigation, 6));
         border-left: 1px solid set-color($modern-view-navigation, $color-dark: darken($modern-view-navigation, 6), $color-light: lighten($modern-view-navigation, 6));
         color: #5f626d;
@@ -450,6 +457,9 @@ div.draws-contain,
         position: relative;
         z-index: 22;
         background: none !important;
+        @include ltr {
+          padding: 8px 10px 8px 67px;
+        }
         @include rtl {
           padding: 8px 67px 8px 10px;
         }
@@ -472,13 +482,14 @@ div.draws-contain,
     }
     .search-results-container,
     .search-results-container-scroll {
-      right: 0;
       top: 75px;
       width: 410px;
       box-shadow: 0 14px 60px -15px #000;
+      @include ltr {
+        right: 0;
+      }
       @include rtl {
         left: 0;
-        right: auto;
       }
     }
     .search-results-inner .arrow-sport {
@@ -516,7 +527,9 @@ div.draws-contain,
     min-width: auto;
     height: 36px;
     > li {
-      margin: 0 20px 0 0;
+      @include ltr {
+        margin: 0 20px 0 0;
+      }
       @include rtl {
         margin: 0 0 0 20px;
       }
@@ -825,6 +838,7 @@ div.draws-contain,
 }
 .video-player-container object,
 .video-player-container flashplayer,
+.video-player-container hls-player,
 .game-video-container video-player,
 .game-video-container video-player .video-player-container{
   float: left;
@@ -834,6 +848,7 @@ div.draws-contain,
 }
 .video-player-container object,
 .video-player-container flashplayer,
+.video-player-container hls-player,
 .game-video-container video-player .video-player-container{
   animation: video-player-autoplay 4000ms ease-in-out;
 }
@@ -841,19 +856,22 @@ video-player{
   .video-control-buttons{
     position: absolute;
     top: -30px;
-    right: 86px;
+    @include ltr {
+      right: 86px;
+    }
     @include rtl {
       left: 86px;
-      right: auto;
     }
     > div {
-      float: left;
       width: 20px;
       height: 30px;
-      margin: 0 0 0 5px;
       text-align: center;
       font: 16px/28px icomoon;
       color:  $text-palette-3;
+      @include ltr {
+        float: left;
+        margin: 0 0 0 5px;
+      }
       @include rtl {
         float: right;
         margin: 0 5px 0 0;
@@ -873,10 +891,11 @@ video-player{
     display: none;
     position: absolute;
     top: -26px;
-    left: 10px;
     width: calc(100% - 100px);
+    @include ltr {
+      left: 10px;
+    }
     @include rtl {
-      left: auto;
       right: 10px;
     }
     > div{
@@ -894,19 +913,21 @@ video-player{
 .game-video-detached.game-video-fullscreen video-player {
   margin-top: 26px;
   .video-control-buttons{
-    right: 30px;
     top: -28px;
+    @include ltr {
+      right: 30px;
+    }
     @include rtl {
       left: 30px;
-      right: auto;
     }
   }
   .video-player-container .video-player-control{
     top: -26px;
-    right: 57px;
+    @include ltr {
+      right: 57px;
+    }
     @include rtl {
       left: 57px;
-      right: auto;
     }
   }
   .video-detached-game-name {
@@ -1146,11 +1167,12 @@ $hide-plus-four: false !default;
   background: url("../../../images/superbet-logo.png#{$delete-cache}") no-repeat 50% 0;
   width: 152px;
   height: 126px;
-  right: 0;
   top: -16px;
+  @include ltr {
+    right: 0;
+  }
   @include rtl {
     left: 0;
-    right: auto;
   }
 }
 .superbet-info-block.active:before{
@@ -1288,6 +1310,7 @@ input[type="password"]:focus ~ .capslock-is-on-j {
     padding: 0;
     bottom: 26px;
     background: none;
+    left: 0;
     > span {
       width: 30px;
       height: 30px;
@@ -1297,18 +1320,24 @@ input[type="password"]:focus ~ .capslock-is-on-j {
       border-radius: 0;
       font: 16px/30px icomoon;
       &:before {
-        content: "\e677";
+        @include ltr {
+          content: "\e677";
+        }
         @include rtl {
           content: "\e67a";
         }
       }
       + span {
-        margin: 0 0 0 4px;
+        @include ltr {
+          margin: 0 0 0 4px;
+        }
         @include rtl {
           margin: 0 4px 0 0;
         }
         &:before {
-          content: "\e67a";
+          @include ltr {
+            content: "\e67a";
+          }
           @include rtl {
             content: "\e677";
           }
@@ -1331,6 +1360,9 @@ input[type="password"]:focus ~ .capslock-is-on-j {
   height: 320px;
   box-sizing: border-box;
   display: block;
+  .promotions-in-mixed-balance > h1 {
+    display: none;
+  }
 }
 .slide-container-repeat-b.ng-hide-remove-active{
   display: block !important;
@@ -1404,8 +1436,10 @@ input[type="password"]:focus ~ .capslock-is-on-j {
   z-index: 600;
   &.select-pagination {
     display: table;
-    float: right;
     margin: 0 0 10px;
+    @include ltr {
+      float: right;
+    }
     @include rtl {
       float: left;
     }
@@ -1451,12 +1485,14 @@ input[type="password"]:focus ~ .capslock-is-on-j {
     border-radius: 2px;
     color: $text-palette-14;
     > li {
-      float: left;
       display: block;
       width: 100%;
       padding: 0 2px;
       position: relative;
       box-sizing: border-box;
+      @include ltr {
+        float: left;
+      }
       @include rtl {
         float: right;
       }
@@ -1497,21 +1533,24 @@ input[type="password"]:focus ~ .capslock-is-on-j {
         width: 1px;
         background: darken( desaturate( adjust-hue( $skin-color, 5deg ), 9 ), 9 );
         top: 4px;
-        right: 0;
+        @include ltr {
+          right: 0;
+        }
         @include rtl {
           left: 0;
-          right: auto;
         }
       }
       p {
         float: left;
         width: 100%;
-        padding: 0 20px 0 7px;
         box-sizing: border-box;
         white-space: nowrap;
         text-overflow: ellipsis;
         overflow: hidden;
         position: relative;
+        @include ltr {
+          padding: 0 20px 0 7px;
+        }
         @include rtl {
           padding: 0 7px 0 20px;
         }
@@ -1521,14 +1560,15 @@ input[type="password"]:focus ~ .capslock-is-on-j {
           height: 24px;
           position: absolute;
           top: 0;
-          right: 0;
           display: block;
           color: $text-palette-5;
           font: normal 16px/24px icomoon;
           text-align: center;
+          @include ltr {
+            right: 0;
+          }
           @include rtl {
             left: 0;
-            right: auto;
           }
         }
       }
@@ -1634,19 +1674,12 @@ input[type="password"]:focus ~ .capslock-is-on-j {
     }
   }
 }
-
 .right-betslip-contain .viewSwitcher-j {
   margin: 0 0 5px;
   > ul {
     background: $skin-palette-8;
     color: $text-palette-14;
     > li {
-      &.scrollToggle,
-      &.systemCalculator {
-        &:hover, &.active {
-          color: $text-palette-1;
-        }
-      }
       &:not(:only-child):not(:last-child):after {
         background: darken( desaturate( adjust-hue( $skin-color, 5deg ), 9 ), 9 );
       }
@@ -1695,26 +1728,26 @@ input[type="password"]:focus ~ .capslock-is-on-j {
     float: left;
     width: 100%;
     font: 12px/16px $font-f;
-    padding: 5px 32px 5px 40px;
     box-sizing: border-box;
     position: relative;
     min-height: 26px;
+    @include ltr {
+      padding: 5px 32px 5px 40px;
+    }
     @include rtl {
       padding: 5px 40px 5px 32px;
     }
     .md-progress-circular.small-progress {
       position: absolute;
       top: 3px;
-      left: 8px;
       padding: 0 !important;
       margin: 0 !important;
+      @include ltr {
+        left: 8px;
+      }
       @include rtl {
-        left: auto;
         right: 8px;
       }
-      .md-inner .md-gap{  border-top-color: $hero-color; border-bottom-color: $hero-color;}
-      .md-inner .md-left .md-half-circle{ border-left-color: $hero-color; border-top-color: $hero-color;}
-      .md-inner .md-right .md-half-circle{ border-right-color: $hero-color;  border-top-color: $hero-color;}
     }
     i {
       display: block;
@@ -1724,19 +1757,19 @@ input[type="password"]:focus ~ .capslock-is-on-j {
       background: #737887;
       transition: background 240ms;
       position: absolute;
-      left: 8px;
       top: 5px;
       border-radius: 20px;
       margin: 0;
+      @include ltr {
+        left: 8px;
+      }
       @include rtl {
-        left: auto;
         right: 8px;
       }
       &:before {
         content: "";
         display: block;
         position: absolute;
-        left: 1px;
         top: 1px;
         width: 14px;
         height: 14px;
@@ -1745,8 +1778,10 @@ input[type="password"]:focus ~ .capslock-is-on-j {
         transform: translate3d(0,0,0);
         transition: left 240ms,background 240ms;
         cursor: pointer;
+        @include ltr {
+          left: 1px;
+        }
         @include rtl {
-          left: auto;
           right: 1px;
         }
       }
@@ -1762,10 +1797,11 @@ input[type="password"]:focus ~ .capslock-is-on-j {
     &.active i {
       background: $brand-color-1;
       &:before {
-        left: 11px;
         background: set-color($brand-color-1);
+        @include ltr {
+          left: 11px;
+        }
         @include rtl {
-          left: auto;
           right: 11px;
         }
       }
@@ -1818,14 +1854,15 @@ input[type="password"]:focus ~ .capslock-is-on-j {
     position: absolute;
     color: #737887;
     bottom: 100%;
-    right: 0;
     font: 12px/26px icomoon;
     text-align: center;
     transform: rotate(0deg) translate3d(0, 0, 0);
     transition: transform 500ms;
+    @include ltr {
+      right: 0;
+    }
     @include rtl {
       left: 0;
-      right: auto;
     }
     &:before {
       content: "\e920";
@@ -1850,9 +1887,11 @@ input[type="password"]:focus ~ .capslock-is-on-j {
     width: 100%;
     box-sizing: border-box;
     background: #fff;
-    text-align: left;
     font: 12px/16px $font-f;
     float: left;
+    @include ltr {
+      text-align: left;
+    }
     @include rtl {
       text-align: right;
     }
@@ -1874,16 +1913,16 @@ input[type="password"]:focus ~ .capslock-is-on-j {
     input {
       position: absolute;
       top: 0;
-      left: 0;
       opacity: 0;
       pointer-events: none;
+      @include ltr {
+        left: 0;
+      }
       @include rtl {
-        left: auto;
         right: 0;
       }
     }
     span {
-      padding: 0 0 0 22px;
       height: 16px;
       margin: 5px 0;
       box-sizing: border-box;
@@ -1891,6 +1930,9 @@ input[type="password"]:focus ~ .capslock-is-on-j {
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
+      @include ltr {
+        padding: 0 0 0 22px;
+      }
       @include rtl {
         padding: 0 22px 0 0;
       }
@@ -1903,9 +1945,10 @@ input[type="password"]:focus ~ .capslock-is-on-j {
         position: absolute;
         border-radius: 50%;
         top: 0;
-        left: 0;
+        @include ltr {
+          left: 0;
+        }
         @include rtl {
-          left: auto;
           right: 0;
         }
       }
@@ -1922,13 +1965,14 @@ input[type="password"]:focus ~ .capslock-is-on-j {
       width: 6px;
       height: 6px;
       position: absolute;
-      left: 5px;
       top: 5px;
       border-radius: 50%;
       background: #fff;
       z-index: 33;
+      @include ltr {
+        left: 5px;
+      }
       @include rtl {
-        left: auto;
         right: 5px;
       }
     }
@@ -2006,18 +2050,21 @@ input[type="password"]:focus ~ .capslock-is-on-j {
 .bsTypeSwitchers-j {
   bottom: 5px;
   position: absolute;
-  right: 0;
   z-index: 300;
+  @include ltr {
+    right: 0;
+  }
   @include rtl {
     left: 0;
-    right: auto;
   }
   .bsTypeSwitcher-j {
-    float: left;
     width: calc(50% - 10px);
     min-width: 85px;
     position: relative;
     margin: 0 5px;
+    @include ltr {
+      float: left;
+    }
     @include rtl {
       float: right;
     }
@@ -2026,13 +2073,15 @@ input[type="password"]:focus ~ .capslock-is-on-j {
       float: left;
       width: 100%;
       position: relative;
-      padding: 0 20px 0 8px;
       font: 12px/24px $font-f;
       white-space: nowrap;
       text-overflow: ellipsis;
       overflow: hidden;
       text-transform: capitalize;
       box-sizing: border-box;
+      @include ltr {
+        padding: 0 20px 0 8px;
+      }
       @include rtl {
         padding: 0 8px 0 20px;
       }
@@ -2042,16 +2091,17 @@ input[type="password"]:focus ~ .capslock-is-on-j {
         width: 28px;
         height: 24px;
         position: absolute;
-        right: 0;
         top: 0;
         display: block;
         color: #505768;
         font: 16px/24px icomoon;
         text-align: center;
         font-style: normal;
+        @include ltr {
+          right: 0;
+        }
         @include rtl {
           left: 0;
-          right: auto;
         }
       }
     }
@@ -2094,7 +2144,9 @@ input[type="password"]:focus ~ .capslock-is-on-j {
           white-space: nowrap;
           text-overflow: ellipsis;
           overflow: hidden;
-          text-align: left;
+          @include ltr {
+            text-align: left;
+          }
           @include rtl {
             text-align: right;
           }
@@ -2112,6 +2164,13 @@ input[type="password"]:focus ~ .capslock-is-on-j {
         }
       }
     }
+  }
+}
+.quickBetButton-j {
+  .print-icon-betslip-v3 {
+    position: absolute;
+    top: 5px;
+    right: 30px;
   }
 }
 .right-betslip-contain {
@@ -2579,6 +2638,140 @@ input[type="password"]:focus ~ .capslock-is-on-j {
     }
   }
 }
+egt-jackpot {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+.egt-table {
+  float: left;
+  width: 100%;
+  height: 100%;
+  display: table;
+}
+.egt-tcell {
+  display: table-cell;
+  text-align: center;
+  vertical-align: bottom;
+}
+.egt-container {
+  float: left;
+  width: 100%;
+  padding: 0 20px 62px;
+  box-sizing: border-box;
+}
+.egt-content {
+  float: left;
+  width: 25%;
+  padding: 5px 10px;
+  position: relative;
+  align-items: center;
+  z-index: 50;
+  box-sizing: border-box;
+  .amount-animation-container {
+    height: 100%;
+    text-align: right;
+    @include rtl {
+      direction: ltr;
+    }
+    > span {
+      width: 9.9%;
+      text-align: center;
+      vertical-align: middle;
+      box-shadow: -1px 0 0 #111522, -2px 0 0 #2e323e;
+      > i {
+        margin-left: -1px;
+        height: 22px;
+        line-height: 22px;
+        &.with-point {
+          margin-left: -10%;
+          + strong {
+            top: -10px;
+            right: 14%;
+            height: 100%;
+          }
+        }
+      }
+    }
+  }
+}
+.egt-bg {
+  float: left;
+  width: 100%;
+  padding: 0 0 0 14px;
+  position: relative;
+  border: 2px solid $skin-palette-6;
+  border-radius: 6px;
+  box-sizing: border-box;
+  background: $skin-palette-7;
+  background: -moz-linear-gradient(top, $skin-palette-7 0%, $skin-palette-9 10%, $skin-palette-8 35%, $skin-palette-8 65%, $skin-palette-9 90%, $skin-palette-7 100%);
+  background: -webkit-linear-gradient(top, $skin-palette-7 0%, $skin-palette-9 10%, $skin-palette-8 35%, $skin-palette-8 65%, $skin-palette-9 90%, $skin-palette-7 100%);
+  background: linear-gradient(to bottom, $skin-palette-7 0%, $skin-palette-9 10%, $skin-palette-8 35%, $skin-palette-8 65%, $skin-palette-9 90%, $skin-palette-7 100%);
+  @if $white-skin == true {
+    border-color: #bbbbbb;
+    background: -moz-linear-gradient(top, #eeeeee 0%, #ffffff 10%, #cccccc 35%, #cccccc 65%, #ffffff 90%, #eeeeee 100%);
+    background: -webkit-linear-gradient(top, #eeeeee 0%, #ffffff 10%, #cccccc 35%, #cccccc 65%, #ffffff 90%, #eeeeee 100%);
+    background: linear-gradient(to bottom, #eeeeee 0%, #ffffff 10%, #cccccc 35%, #cccccc 65%, #ffffff 90%, #eeeeee 100%);
+  }
+  > ul {
+    float: left;
+    width: 100%;
+    > li {
+      float: right;
+      width: 91%;
+      height: 44px;
+      color: $text-palette-1;
+      text-align: center;
+      font: 11px/44px $font-f;
+      box-sizing: border-box;
+      @if $white-skin == true {
+        box-shadow: -1px 0 0 #bbbbbb, -2px 0 0 #cccccc;
+      }
+      &:first-child {
+        width: 9%;
+        padding: 5px 0 0 2px;
+        color: lighten( desaturate( adjust-hue( $text-color, -222deg ), 31 ), 43 );
+        font-weight: 700;
+        line-height: 12px;
+        text-transform: uppercase;
+        box-shadow: -1px 0 0 $skin-palette-12, -2px 0 0 $skin-palette-7;
+      }
+      &:empty {
+        box-shadow: none;
+      }
+    }
+  }
+  &:before {
+    content: "";
+    position: absolute;
+    left: -21.5px;
+    top: 1.5px;
+    width: 41px;
+    height: 41px;
+  }
+  &.clover:before {
+    background: url(../../../images/EGT/clover.png#{$delete-cache}) no-repeat 0 0 / 100%;
+  }
+  &.heart:before {
+    background: url(../../../images/EGT/heart.png#{$delete-cache}) no-repeat 0 0 / 100%;
+  }
+  &.spade:before {
+    background: url(../../../images/EGT/spade.png#{$delete-cache}) no-repeat 0 0 / 100%;
+  }
+  &.diamond:before {
+    background: url(../../../images/EGT/diamond.png#{$delete-cache}) no-repeat 0 0 / 100%;
+  }
+}
+
+@media screen and (max-width: 1260px) {
+  .egt-content {
+    width: 50%;
+  }
+}
+
 @include liveScoreBackgrounds("custom");
 @include liveScoreBackgrounds("soccer");
 @include liveScoreBackgrounds("cyberfootball");
@@ -2592,9 +2785,11 @@ input[type="password"]:focus ~ .capslock-is-on-j {
 @include liveScoreBackgrounds("australianfootball");
 @include liveScoreBackgrounds("volleyball");
 @include liveScoreBackgrounds("icehockey");
-@include liveScoreBackgrounds("e-iceHockey");
+@include liveScoreBackgrounds("e-icehockey", "icehockey");
 @include liveScoreBackgrounds("basketball");
 @include liveScoreBackgrounds("tennis");
+@include liveScoreBackgrounds("etennis", "tennis");
+@include liveScoreBackgrounds("tennisgrass");
 @include liveScoreBackgrounds("americanfootball");
 @include liveScoreBackgrounds("baseball");
 @include liveScoreBackgrounds("beachvolleyball");
@@ -2644,18 +2839,20 @@ input[type="password"]:focus ~ .capslock-is-on-j {
     tr {
       td {
         vertical-align: middle;
-        text-align: left;
-        padding: 0 16px 0 10px;
         font: 14px/48px $font-f;
         color: $text-palette-3;
-        @include rtl {
-          padding: 0 10px 0 16px;
+        @include ltr {
+          padding: 0 16px 0 10px;
+          text-align: left;
         }
         @include rtl {
+          padding: 0 10px 0 16px;
           text-align: right;
         }
         &:last-child {
-          text-align: right;
+          @include ltr {
+            text-align: right;
+          }
           @include rtl {
             text-align: left;
           }
@@ -2669,10 +2866,12 @@ input[type="password"]:focus ~ .capslock-is-on-j {
         }
         i {
           display: block;
-          float: right;
           font-style: normal;
           margin: 0 6px;
           font-size: 16px;
+          @include ltr {
+            float: right;
+          }
           @include rtl {
             float: left;
           }
@@ -2701,24 +2900,28 @@ input[type="password"]:focus ~ .capslock-is-on-j {
     }
   }
   .upload-doc-type {
-    float: left;
     font-size: 16px;
     color: $c16-tp-4;
+    @include ltr {
+      float: left;
+    }
     @include rtl {
       float: right;
     }
     &:before {
       content: "\e996";
       display: block;
-      float: left;
       width: 28px;
       height: 28px;
       background: $c16-sp-5;
       border-radius: 100%;
-      margin: 10px 14px 10px 0;
       color: $text-palette-1;
       text-align: center;
       font: 14px/28px icomoon;
+      @include ltr {
+        float: left;
+        margin: 10px 14px 10px 0;
+      }
       @include rtl {
         float: right;
         margin: 10px 0 10px 14px;
@@ -2733,17 +2936,21 @@ input[type="password"]:focus ~ .capslock-is-on-j {
     }
   }
   .uploaded-doc-status {
-    float: right;
     color: #c3953c;
+    @include ltr {
+      float: right;
+    }
     @include rtl {
       float: left;
     }
     &:after {
       content: "\e994";
       display: block;
-      float: left;
-      margin: 0 0 0 10px;
       font: 15px/48px icomoon;
+      @include ltr {
+        float: left;
+        margin: 0 0 0 10px;
+      }
       @include rtl {
         float: right;
         margin: 0 10px 0 0;
@@ -2751,7 +2958,9 @@ input[type="password"]:focus ~ .capslock-is-on-j {
     }
     span {
       display: block;
-      float: left;
+      @include ltr {
+        float: left;
+      }
       @include rtl {
         float: right;
       }
@@ -2775,7 +2984,7 @@ input[type="password"]:focus ~ .capslock-is-on-j {
       text-align: center;
       > li{
         vertical-align: top;
-        margin: 0 5px;
+        margin: 0 10px;
       }
     }
   }

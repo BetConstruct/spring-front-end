@@ -3,14 +3,16 @@
         {{::'You can view all your bets in'|translate}}
         <span ng-click="$root.broadcast('open.history');goToTop(true);$event.stopPropagation()" trans>Bet History</span>
     </p>
-    <div class="slider-open-bets" ng-repeat="bet in shared.openBets" ng-class="{'open': bet.openEvents}"
-         ng-init="bet.openEvents = true" ng-hide="openBetsLoading || $root.editBet.loading">
+    <div class="slider-open-bets" ng-repeat="bet in openBets.data" ng-class="{'open': bet.openEvents}"
+         ng-init="bet.openEvents = true" ng-hide="openBets.loading || $root.editBet.loading">
         <p ng-click="bet.openEvents = !bet.openEvents">
-            <span ng-bind="betTypes[bet.type]|translate"></span>
+            <span ng-class="{'EW-bh-indicator': bet.each_way}" ng-bind="betTypes[bet.type]|translate"></span>
             <span ng-if="bet.type === 3"> {{::bet.system_min_count}}/{{::bet.events.length}}</span>
             <i class="edit-bets-icon"
-               ng-show="bet.cashoutEnabled && (bet.type == 2 || bet.type == 1)  && minCashoutValue <= bet.cash_out && !$root.editBet.edit"
-               ng-click="$event.stopPropagation(); editBet(bet);">
+               ng-class="{'disabled': bet.cash_out < minCashoutValue}"
+               ng-show="!betConf.fullCoverBetTypes.enabled && bet.cash_out && (bet.type == 2 || bet.type == 1)  && !$root.editBet.edit"
+               ng-click="$event.stopPropagation(); editBet(bet);"
+               title="{{ (bet.cash_out < minCashoutValue ? 'Editing isn\'t possible as Min bet amount isn\'t reached.' : 'Editing functionality is available for this bet.') | translate }}">
             </i>
         </p>
         <div class="open-bets-time-id">
@@ -33,7 +35,7 @@
                         <span>{{::event.market_name ? event.market_name : ''}}</span>
                         <span>{{::event.eventName ? event.eventName : event.event_name}}</span>
                     </p>
-                    <span class="betprice" ng-bind="event.coeficient|oddConvert:$root.env.oddFormat"></span>
+                    <span class="betprice" ng-bind="event.k_type === 11 ? 'SP' : event.coeficient|oddConvert:$root.env.oddFormat"></span>
                 </li>
 
             </ul>
@@ -70,5 +72,5 @@
             </p>
         </div>
     </div>
-    <vbet-loader ng-show="openBetsLoading || $root.editBet.loading"></vbet-loader>
+    <vbet-loader ng-show="openBets.loading || $root.editBet.loading"></vbet-loader>
 </div>

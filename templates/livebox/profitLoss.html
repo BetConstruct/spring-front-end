@@ -200,16 +200,20 @@
                         <td>
                             <ul class="edit-bet-or-cashout">
                                 <li>
-                                    <button class="cms-jcon-edit"
-                                            ng-if="conf.openBetsAndEditBet && bet.cashoutEnabled && (bet.type == 2 || bet.type == 1)  && minCashoutValue <= bet.cash_out && !$root.editBet.edit"
-                                            ng-click="$event.stopPropagation();addEvents(bet, true);"></button>
+                                    <button
+                                            class="cms-jcon-edit"
+                                            ng-if="conf.openBetsAndEditBet && !betConf.fullCoverBetTypes.enabled && bet.cash_out && (bet.type == 2 || bet.type == 1) && !$root.editBet.edit"
+                                            ng-click="$event.stopPropagation();addEvents(bet, true);"
+                                            title="{{ (bet.cash_out < minCashoutValue ? 'Editing isn\'t possible as Min bet amount isn\'t reached.' : 'Editing functionality is available for this bet.') | translate }}"
+                                            ng-disabled="bet.cash_out < minCashoutValue"
+                                    ></button>
                                 </li>
                                 <li>
                                     <span class="second-color">{{{'-5': 'On Hold', '-4': 'Declined', '0': 'Unsettled', '1': 'Lost', '2': 'Returned', '3': 'Won', '5': 'Cashed out'}[bet.outcome]|translate}}</span>
-                                    <div ng-show="bet.outcome == 0 && bet.cash_out !== undefined"
-                                         title="{{(bet.cash_out ? 'Cash-out' : 'Cash-out is not available at the moment')|translate}}">
+                                    <div ng-show="bet.cash_out"
+                                         title="{{'Cash-out'|translate}}">
                                         <button ng-click="broadcast('open.cashoutDialog', {bet: bet, dateRange: betHistoryParams[productMode].dateRange, selectedUpcomingPeriod: selectedUpcomingPeriod});$event.stopPropagation();"
-                                                ng-disabled="!bet.cashoutEnabled || ($root.editBet.edit && bet.id === $root.editBet.oldBetId)"
+                                                ng-disabled="!bet.cash_out || ($root.editBet.edit && bet.id === $root.editBet.oldBetId)"
                                                 class="cashout-from-mixed"
                                         >{{bet.cash_out|number:conf.balanceFractionSize}} {{bet.currency|currency}}
                                         </button>
@@ -238,8 +242,7 @@
                                     <span>{{event.team2}}</span>
                                 </li>
                                 <li class="mixed-history-name-child-result">
-                                    <span class="second-color" ng-if="!conf.GmsPlatform">{{event.market_name ? event.market_name + " - ": ""}}{{event.event_name}} {{(event.basis ? (' (' + event.basis + ')') : '')}}</span>
-                                    <span class="second-color" ng-if="conf.GmsPlatform">{{event.market_name ? event.market_name + " - ": ""}} <b>{{event.basis ? event.event_name.replace(event.basis, (event.basis|handicapBaseFormat)) : event.event_name}}</b></span>
+                                    <span class="second-color">{{event.market_name ? event.market_name + " - ": ""}} <b>{{event.basis ? event.event_name.replace(event.basis, (event.basis|handicapBaseFormat)) : event.event_name}}</b></span>
                                 </li>
                                 <li class="icons-holder" ng-mouseover="getGameInfo(event)">
                                     <div class="game-finished-tooltip">
@@ -321,13 +324,13 @@
                                 <ul>
                                     <li></li>
                                     <li>
-                                        <strong>Remaining Stake :
-                                            <span ng-bind="bet.outcome != 5 ? ((bet.totalAmount - childBets[bet.id].totalStake) | number:conf.balanceFractionSize) : 0"></span>
+                                        <strong>{{'Remaining Stake'|translate}} :
+                                            <span ng-bind="bet.outcome == 0 ? ((+bet.totalAmount - childBets[bet.id].totalStake) | number:conf.balanceFractionSize) : 0"></span>
                                         </strong>
                                     </li>
                                     <li>
-                                        <strong>Total Cash Out :
-                                            <span ng-bind="bet.outcome != 5 ? (childBets[bet.id].totalCashOut | number:conf.balanceFractionSize) : ( (childBets[bet.id].totalCashOut + bet.payout) | number:conf.balanceFractionSize) "></span>
+                                        <strong>{{'Total Cash Out'|translate}} :
+                                            <span ng-bind="bet.outcome === 5 ? bet.payout : bet.total_partial_cashout_amount | number:conf.balanceFractionSize"></span>
                                         </strong>
                                     </li>
                                 </ul>

@@ -6,19 +6,6 @@
         <p trans>Deposit limits allow you to limit the amount of funds you can deposit into the account. The amount can be chosen over a daily, weekly or monthly period. The deposit limit will allow you to restrict the amount of money entering your account, before betting takes place.</p>
 
         <form name="forms.depositLimitsForm" class="registration-form">
-            <label ng-if="!conf.GmsPlatform"><span trans>Amount</span></label>
-
-            <div ng-if="!conf.GmsPlatform" class="form-text" ng-class="{'error': forms.depositLimitsForm.max_single_deposit.$touched && forms.depositLimitsForm.max_single_deposit.$invalid}">
-                <div class="tooltip-wrapper-j">
-                    <input name="max_single_deposit" ng-model="$parent.depositLimitsData.max_single_deposit" ng-blur="forms.depositLimitsForm.max_single_deposit.$touched=true" type="text" placeholder="Enter amount" prevent-input="[^0-9]+" required trans>
-
-                    <div class="form-error-icon-j" ng-click="resetFieldError('max_single_deposit', 'depositLimits')"></div>
-                    <div class="tooltip-j">
-
-                        <div trans ng-show="forms.depositLimitsForm.max_single_deposit.$error.required">This field is required</div>
-                    </div>
-                </div>
-            </div>
 
             <label><span context="Deposit limits" trans>Day</span></label>
 
@@ -68,6 +55,6 @@
                 </div>
             </div>
         </form>
-        <div class="info"><span class="note-highlight" trans>Please note that you'll be able to increase your limits only after seven days from your 1st request.</span></div>
+        <div class="info"><span class="note-highlight" trans>deposit_limits_text</span></div>
     </div>
 </div>

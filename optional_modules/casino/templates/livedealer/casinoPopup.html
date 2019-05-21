@@ -19,7 +19,7 @@
                             <div class="lobby-balance-view" >
                                 <p>
                                     <span>Balance:</span>
-                                    <b>{{(conf.GmsPlatform ? (conf.GmsPlatformMultipleBalance ? profile.casino_balance: profile.balance) : env.casinoBalance.balance)|number:conf.balanceFractionSize}}&nbsp;{{profile.currency_name|currency }}</b>
+                                    <b>{{($root.profile.casino_balance !== null ? $root.profile.casino_balance : $root.profile.calculatedBalance)|number:$root.conf.balanceFractionSize}}&nbsp;{{$root.profile.currency_name|currency }}</b>
                                 </p>
                             </div>
                         </div>

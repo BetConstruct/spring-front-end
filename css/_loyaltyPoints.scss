@@ -2,11 +2,14 @@
     float: left;
     height: 100%;
     width: calc(100% - 320px);
-    padding: 0 0 0 10px;
-    margin: 0 0 0 -10px;
     box-sizing: content-box;
+    @include ltr {
+        margin: 0 0 0 -10px;
+        padding: 0 0 0 10px;
+    }
     @include rtl {
         margin: 0 -10px 0 0;
+        padding: 0 0 0 -10px;
     }
     @media screen and (max-width: 1260px) {
         width: 100%;
@@ -39,10 +42,11 @@
                     position: relative;
                     + li {
                         width: 1%;
-                        border-left: 1px solid lighten( desaturate( adjust-hue( $skin-color, 1deg ), 23 ), 16 );
                         padding: 0 56px;
+                        @include ltr {
+                            border-left: 1px solid lighten( desaturate( adjust-hue( $skin-color, 1deg ), 23 ), 16 );
+                        }
                         @include rtl {
-                            border-left: 0;
                             border-right: 1px solid lighten( desaturate( adjust-hue( $skin-color, 1deg ), 23 ), 16 );
                         }
                     }
@@ -59,19 +63,22 @@
                     position: absolute;
                     font: 14px/14px icomoon;
                     top: 3px;
-                    right: 18px;
                     color: $text-palette-4;
+                    @include ltr {
+                        right: 18px;
+                    }
                     @include rtl {
                         left: 18px;
-                        right: auto;
                     }
                     .tooltip-j {
-                        float: right;
                         top: 100%;
-                        left: auto;
-                        right: -6px;
                         position: relative;
                         max-width: inherit;
+                        @include ltr {
+                            float: right;
+                            left: auto;
+                            right: -6px;
+                        }
                         @include rtl {
                             float: left;
                             left: -6px;
@@ -81,8 +88,10 @@
                             top: -6px;
                             border-width: 0 6px 6px 6px;
                             border-color: rgba(0, 0, 0, 0) rgba(0, 0, 0, 0) #c1c4cd rgba(0, 0, 0, 0);
-                            left: auto;
-                            right: 6px;
+                            @include ltr {
+                                left: auto;
+                                right: 6px;
+                            }
                             @include rtl {
                                 left: 6px;
                                 right: auto;
@@ -150,24 +159,18 @@
                     }
                 }
                 > h3 {
-                    font: 12px/12px $font-f;
+                    font: 12px/14px $font-f;
                     color: $text-palette-2;
                     text-transform: uppercase;
                     float: left;
                     width: 100%;
-                    white-space: nowrap;
-                    overflow: hidden;
-                    text-overflow: ellipsis;
                     margin: 0 0 4px;
                 }
                 > p {
-                    font: 11px/11px $font-f;
+                    font: 11px/13px $font-f;
                     color: $text-palette-4;
                     float: left;
                     width: 100%;
-                    white-space: nowrap;
-                    overflow: hidden;
-                    text-overflow: ellipsis;
                     margin-bottom: -2px;
                 }
             }
@@ -184,9 +187,11 @@
             .tooltip-j {
                 max-width: inherit;
                 top: calc(100% + 10px);
-                left: -4px;
-                right: auto;
                 bottom: auto;
+                @include ltr {
+                    left: -4px;
+                    right: auto;
+                }
                 @include rtl {
                     left: auto;
                     right: -4px;
@@ -194,10 +199,12 @@
                 &:before {
                     top: auto;
                     bottom: 100%;
-                    left: 8px;
-                    right: auto;
                     border-width: 0 6px 6px 6px;
                     border-color: transparent transparent #c1c4cd transparent;
+                    @include ltr {
+                        left: 8px;
+                        right: auto;
+                    }
                     @include rtl {
                         left: auto;
                         right: 8px;
@@ -277,9 +284,7 @@
             }
         }
         button {
-            float: left;
             height: 30px;
-            margin: 0 6px 6px 0;
             border: 1px solid lighten( desaturate( adjust-hue( $text-color, 5deg ), 27 ), 38 );
             background: none;
             text-transform: uppercase;
@@ -287,6 +292,10 @@
             color: $text-palette-2;
             padding: 0 15px;
             transition: 300ms color, 300ms background, 240ms border-color;
+            @include ltr {
+                float: left;
+                margin: 0 6px 6px 0;
+            }
             @include rtl {
                 float: right;
                 margin: 0 0 6px 6px;
@@ -316,8 +325,8 @@
         margin: 0 0 7px;
         .lp-progress-j {
             float: left;
-            width: calc(100% - 20px);
-            margin: 13px 10px 11px;
+            width: calc(100% - 40px);
+            margin: 13px 20px 11px;
             background: $skin-palette-8;
             height: 5px;
             padding: 1px;
@@ -344,6 +353,7 @@
             color: $text-palette-3;
             font: 11px/11px $font-f;
             margin: 0 0 12px;
+            padding: 0 13px;
         }
     }
     .lp-packs-group-wrap-j {
@@ -358,8 +368,10 @@
         padding: 0 5px;
         > li {
             width: calc(20% - 10px);
-            float: left;
             margin: 0 5px;
+            @include ltr {
+                float: left;
+            }
             @include rtl {
                 float: right;
             }
@@ -557,24 +569,26 @@
             .lp-current-status-j {
                 .lp-current-status-icon-holder-j {
                     &:before {
-                        background: -moz-linear-gradient(-45deg, rgba($lp-border-color, 0.5) 0%, rgba(0,0,0,0) 53%, rgba(0,0,0,0) 100%);
-                        background: -webkit-linear-gradient(-45deg, rgba($lp-border-color, 0.5) 0%,rgba(0,0,0,0) 53%,rgba(0,0,0,0) 100%);
-                        background: linear-gradient(135deg, rgba($lp-border-color, 0.5) 0%,rgba(0,0,0,0) 53%,rgba(0,0,0,0) 100%);
                         content: "";
                         width: 800px;
                         height: 600px;
                         display: block;
                         position: absolute;
                         top: -122px;
-                        left: -252px;
-                        transform: skewX(-41deg);
                         pointer-events: none;
+                        @include ltr {
+                            left: -252px;
+                            transform: skewX(-41deg);
+                            background: -moz-linear-gradient(-45deg, rgba($lp-border-color, 0.5) 0%, rgba(0,0,0,0) 53%, rgba(0,0,0,0) 100%);
+                            background: -webkit-linear-gradient(-45deg, rgba($lp-border-color, 0.5) 0%,rgba(0,0,0,0) 53%,rgba(0,0,0,0) 100%);
+                            background: linear-gradient(135deg, rgba($lp-border-color, 0.5) 0%,rgba(0,0,0,0) 53%,rgba(0,0,0,0) 100%);
+                        }
                         @include rtl {
+                            right: -252px;
+                            transform: skewX(41deg);
                             background: -moz-linear-gradient(45deg, rgba($lp-border-color, 0.5) 0%, rgba(0,0,0,0) 53%, rgba(0,0,0,0) 100%);
                             background: -webkit-linear-gradient(45deg, rgba($lp-border-color, 0.5) 0%,rgba(0,0,0,0) 53%,rgba(0,0,0,0) 100%);
                             background: linear-gradient(-135deg, rgba($lp-border-color, 0.5) 0%,rgba(0,0,0,0) 53%,rgba(0,0,0,0) 100%);
-                            right: -252px;
-                            transform: skewX(41deg);
                         }
                     }
                     i {

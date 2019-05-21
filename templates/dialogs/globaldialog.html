@@ -75,23 +75,23 @@
                             </div>
                             <div class="pu-contain-j">
                                 <h3 ng-show="activeDialog.subTitle" ng-bind-html="activeDialog.subTitle|translate|html"></h3>
-                                <p ng-if="!activeDialog.link" ng-bind-html="activeDialog.content|translate:activeDialog.contentPlaceholders|html"></p>
+                                <p ng-if="!activeDialog.link" ng-bind-html="activeDialog.content|translate:activeDialog.contentPlaceholders|html" ng-click="activeDialog.type === 'cms-popup' && contentClicked()" route-reload></p>
 
                                 <ng-include ng-if="activeDialog.template" src="::activeDialog.template|fixPath"></ng-include>
 
                                 <p ng-if="activeDialog.link">
-                                    <a ng-href="{{activeDialog.link}}" ng-click="closeDialog(activeDialog, 'content');$event.stopPropagation();" ng-bind-html="activeDialog.content|translate:activeDialog.contentPlaceholders|html"></a>
+                                    <a ng-href="{{activeDialog.link}}" target="{{activeDialog.linktarget}}" ng-click="closeDialog(activeDialog, 'content');$event.stopPropagation();" ng-bind-html="activeDialog.content|translate:activeDialog.contentPlaceholders|html"></a>
                                 </p>
                                 <p class="scrolable-t" ng-if="activeDialog.scrollContent" ng-bind-html="activeDialog.scrollContent"></p>
 
                                 <div class="dialog-text-box-b" ng-if="activeDialog.contentBox">
-                                    <input type="text" ng-model="activeDialog.contentBox" readonly/>
+                                    <input type="text" ng-model="activeDialog.contentBox" title="{{activeDialog.contentBox}}" readonly/>
                                     <i class="bs-print-icon" ng-if="activeDialog.showCustomButton" ng-click="$root.broadcast('openBetBookingPrintPopup', activeDialog.contentBox)"></i>
                                 </div>
                             </div>
                             <div class="pu-button-wrap-j" ng-if="!activeDialog.hideButtons">
                                 <div ng-if="!activeDialog.buttons">
-                                    <a ng-if="!activeDialog.yesno && activeDialog.link" ng-href="{{ activeDialog.link }}" target="{{activeDialog.custom_fields.new_window[0] == 1 ? '_blank' : '_self'}}"><button ng-click="closeDialog(activeDialog, 'okButton');$event.stopPropagation();" trans>OK</button></a>
+                                    <a ng-if="!activeDialog.yesno && activeDialog.link" ng-href="{{ activeDialog.link }}" target="{{activeDialog.linktarget}}"><button ng-click="closeDialog(activeDialog, 'okButton');$event.stopPropagation();" trans>OK</button></a>
                                     <button ng-if="!activeDialog.yesno && !activeDialog.link" ng-click="closeDialog(activeDialog, 'okButton');$event.stopPropagation();" trans>OK</button>
                                     <button ng-if="activeDialog.cancel" ng-click="closeDialog(activeDialog, 'cancelButton');$event.stopPropagation();" trans>Cancel</button>
                                     <button ng-if="activeDialog.yesno" ng-click="closeDialog(activeDialog, 'yesButton');$event.stopPropagation();" trans>Yes</button>

@@ -337,7 +337,7 @@ VBET5.filter('convertSetName', function () {
         "Baseballset7": "7th Inning",
         "Baseballset8": "8th Inning",
         "Baseballset9": "9th Inning",
-        "Baseballset10": "10th Inning",
+        "Baseballset10": "Extra Inning",
         "Baseballset11": "11th Inning",
         "Baseballset12": "12th Inning",
         "Baseballset13": "13th Inning",
@@ -467,6 +467,7 @@ VBET5.filter('convertSetName', function () {
         "Netballset2": "Quarter 2",
         "Netballset3": "Quarter 3",
         "Netballset4": "Quarter 4",
+        "Dotaset": "Game",
         "Dotaset1": "Game-1",
         "Dotaset2": "Game-2",
         "Dotaset3": "Game-3",
@@ -474,6 +475,7 @@ VBET5.filter('convertSetName', function () {
         "Dotaset5": "Game-5",
         "Dotaset6": "Game-6",
         "Dotaset7": "Game-7",
+        "Dota2set": "Game",
         "Dota2set1": "Game-1",
         "Dota2set2": "Game-2",
         "Dota2set3": "Game-3",
@@ -586,7 +588,18 @@ VBET5.filter('convertSetName', function () {
         "Floorballset1": "Period 1",
         "Floorballset2": "Period 2",
         "Floorballset3": "Period 3",
-        "Floorballset4": "Period 4"
+        "Floorballset4": "Period 4",
+        "Hockeyset": "Period",
+        "Hockeyset0": "Period 0",
+        "Hockeyset1": "Period 1",
+        "Hockeyset2": "Period 2",
+        "Hockeyset3": "Period 3",
+        "Hockeyset4": "Period 4",
+        "Dartsset1": "Leg 1",
+        "Dartsset2": "Leg 2",
+        "Dartsset3": "Leg 3",
+        "Dartsset4": "Leg 4",
+        "Dartsset5": "Leg 5"
     };
     return function (rawName, sportAlias) {
         if (replacements[sportAlias + rawName] !== undefined) {

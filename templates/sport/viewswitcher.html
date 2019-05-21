@@ -1,32 +1,37 @@
 <div class="viewSwitcher-j no-select-j" ng-controller="sportsbookSwitchersCtrl">
     <ul>
-        <li ng-if="calculatedConfigs.sportEnabled && conf.enableSportsbookLayoutSwitcher"
+        <li ng-if="calculatedConfigs.sportEnabled && $root.conf.enableSportsbookLayoutSwitcher"
             ng-class="{'active': showLayoutSwitcher}"
             ng-click="showLayoutSwitcher = !showLayoutSwitcher"
             state-flag-var="showLayoutSwitcher" hide-on-click>
-            <p>{{({modern: 'Modern', classic: 'Classic', asian: 'Asian', external: 'Eastern',combo: 'Combo', 'euro2016': 'Classic'}[conf.sportsLayout])|translate}}</p>
+            <p>{{({modern: 'Modern', asian: 'Asian', external: 'Eastern',combo: 'Combo', 'classic': 'Classic'}[$root.conf.sportsLayout])|translate}}</p>
             <ul>
-                <li ng-repeat="(view, value ) in sportsbookAvailableViews track by $index" 
-                    ng-click="switchSportsbookLayout(view)" 
-                    ng-class="{'active': conf.sportsLayout === view}">
-                    <span ng-bind="view == 'euro2016'? ('Classic'|translate) : view|capitalise|translate"></span>
+                <li ng-repeat="(view, value ) in sportsbookAvailableViews track by $index"
+                    ng-click="switchSportsbookLayout(view)"
+                    ng-class="{'active': $root.conf.sportsLayout === view}">
+                    <span ng-bind="view|capitalise|translate"></span>
                 </li>
             </ul>
         </li>
-        <li ng-if="conf.sportsLayout !== 'external'"
+        <li ng-if="$root.conf.sportsLayout !== 'external'"
             ng-class="{'active': showOddsSwitcher}"
             ng-click="showOddsSwitcher = !showOddsSwitcher"
             state-flag-var="showOddsSwitcher" hide-on-click>
             <p>{{env.oddFormat|capitalise|translate}}</p>
             <ul>
-                <li ng-repeat="oddFormat in ::conf.oddFormats track by oddFormat.name" ng-click="broadcast('setOddsFormat', oddFormat.format)"
-                    ng-class="{'active': $root.env.oddFormat === oddFormat.format}" ng-hide="conf.disableOddFormatsSpecialCase[selectedBetType.name][oddFormat.format]"><span>{{ oddFormat.name | translate }}</span></li>
+                <li ng-repeat="oddFormat in ::$root.conf.oddFormats track by oddFormat.name" ng-click="broadcast('setOddsFormat', oddFormat.format)"
+                    ng-class="{'active': $root.env.oddFormat === oddFormat.format}" ng-hide="$root.conf.disableOddFormatsSpecialCase[selectedBetType.name][oddFormat.format]"><span>{{ oddFormat.name | translate }}</span></li>
             </ul>
         </li>
         <li class="systemCalculator"
-            ng-if="conf.enableSystemCalculator"
+            ng-if="$root.conf.enableSystemCalculator"
             ng-click="$root.showSystemCalculator = !$root.showSystemCalculator"
             ng-class="{'active': $root.showSystemCalculator}"
             ></li>
     </ul>
 </div>
+<!--sportsbook-jackpot Start-->
+<div ng-if="$root.conf.enableSportsbookJackpotOnBetSlip">
+    <sportsbook-jackpot ></sportsbook-jackpot>
+</div>
+<!--sportsbook jackpot End-->

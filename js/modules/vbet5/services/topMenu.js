@@ -7,10 +7,11 @@
 angular.module('vbet5').service('TopMenu', ['$rootScope', '$location', '$timeout' ,'$window', '$route', 'Translator', 'Config', 'Utils', 'Moment', function ($rootScope, $location, $timeout, $window, $route, Translator, Config, Utils, Moment) {
     'use strict';
     var TopMenu = {};
-
+    var countryCode;
     var $scope; // this is set to scope of mainHeaderCtrl in init()
+
     /**
-     * The huge top menu objects array
+     * The huge top menu objects array.
      */
     var topMenuItems = {
         'news': {
@@ -21,16 +22,6 @@ angular.module('vbet5').service('TopMenu', ['$rootScope', '$location', '$timeout
             staticClass: "menu-live",
             showCondition: $rootScope.calculatedConfigs.enableNewsLinkInMenu
         },
-        'livemodule-live': {
-            displayName : Translator.get("Live"),
-            click: function () { $scope.switchIntegratedTo('live'); },
-            showCondition: Config.main.liveModule.enabled
-        },
-        'livemodule-sport': {
-            displayName : Translator.get("Sports"),
-            click: function () { $scope.switchIntegratedTo('prematch'); },
-            showCondition: Config.main.liveModule.enabled
-        },
         live: {
             displayName : Translator.get("Live"),
             href: Config.main.sportsLayout === 'combo' ? "#/overview/" : Config.main.topMenuCustomUrl && Config.main.topMenuCustomUrl.live ? Config.main.topMenuCustomUrl.live : "#/sport/?type=1",
@@ -38,14 +29,12 @@ angular.module('vbet5').service('TopMenu', ['$rootScope', '$location', '$timeout
             classObject: {'active': false},
             staticClass: "menu-live",
             showCondition: $rootScope.calculatedConfigs.sportEnabled
-            && (
-                   (Config.main.sportsLayout === 'modern' && Config.main.customSportsBook.modern.showLive)
-                || (Config.main.sportsLayout === 'classic' && Config.main.customSportsBook.classic.showLive)
-                || (Config.main.sportsLayout === 'combo' && Config.main.customSportsBook.combo.showLive)
-                || (Config.main.sportsLayout === 'external' && Config.main.customSportsBook.external.showLive)
-                || (Config.main.sportsLayout === 'asian' && Config.main.customSportsBook.asian.showLive)
-                || (Config.main.sportsLayout === 'euro2016' && Config.main.customSportsBook.euro2016.showLive)
-            )
+                && (
+                    (Config.main.sportsLayout === 'modern' && Config.main.customSportsBook.modern.showLive)
+                    || (Config.main.sportsLayout === 'combo' && Config.main.customSportsBook.combo.showLive)
+                    || (Config.main.sportsLayout === 'asian' && Config.main.customSportsBook.asian.showLive)
+                    || (Config.main.sportsLayout === 'classic' && (Config.main.customSportsBook.classic.showLive || Config.main.customSportsBook.euro2016.showLive)) //TODO remove euro2016
+                )
         },
         'event-view': {
             displayName: Translator.get("Event View"),
@@ -84,14 +73,13 @@ angular.module('vbet5').service('TopMenu', ['$rootScope', '$location', '$timeout
             classObject: {'active': false},
             staticClass: "menu-live",
             showCondition: $rootScope.calculatedConfigs.sportEnabled &&
-            (
-                   (Config.main.sportsLayout === 'modern' && Config.main.customSportsBook.modern.showPrematch)
-                || (Config.main.sportsLayout === 'classic' && Config.main.customSportsBook.classic.showPrematch)
-                || (Config.main.sportsLayout === 'euro2016' && Config.main.customSportsBook.euro2016.showPrematch)
-                || (Config.main.sportsLayout === 'combo' && Config.main.customSportsBook.combo.showPrematch)
-                || (Config.main.sportsLayout === 'external' && Config.main.customSportsBook.external.showPrematch)
-                || (Config.main.sportsLayout === 'asian' && Config.main.customSportsBook.asian.showPrematch)
-            )
+                (
+                    (Config.main.sportsLayout === 'modern' && Config.main.customSportsBook.modern.showPrematch)
+                    || (Config.main.sportsLayout === 'classic' && Config.main.customSportsBook.classic.showPrematch)
+                    || (Config.main.sportsLayout === 'combo' && Config.main.customSportsBook.combo.showPrematch)
+                    || (Config.main.sportsLayout === 'external' && Config.main.customSportsBook.external.showPrematch)
+                    || (Config.main.sportsLayout === 'asian' && Config.main.customSportsBook.asian.showPrematch)
+                )
         },
         livecalendar: {
             displayName : Translator.get("Live calendar"),
@@ -388,63 +376,64 @@ angular.module('vbet5').service('TopMenu', ['$rootScope', '$location', '$timeout
      * @description updates objects passed to ng-class (will be called on location change)
      */
     TopMenu.updateMenuItemsState = function updateMenuItemsState() {
+        if(!$scope) return;
+
         var isActive = false;
-        angular.forEach($scope.topMenu, function (menuItem) {
-            menuItem.classObject = menuItem.classObject || {};
-            switch (menuItem.name) {
-                case 'live':
-                    menuItem.classObject.active = (($location.path() === '/sport/' && Config.env.live) || $location.path() === '/overview/' || $location.path() === '/multiview/');
-                    break;
-                case 'sport':
-                    menuItem.classObject.active = ($location.path() === '/sport/' && !Config.env.live && ($location.search().sport != '-3' || !$rootScope.calculatedConfigs.virtualSportsEnabled)) || $location.path() === '/livecalendar/';
-                    break;
-                case 'virtual-sports':
-                    menuItem.classObject.active = ($location.path() === '/virtualsports/');
-                    break;
-                case 'virtual-betting':
-                    menuItem.classObject.active = ($location.path() === '/casino/' && $location.search().category == "35");
-                    break;
-                case 'casino':
-                    menuItem.classObject.active = $location.path() === '/casino/' && ($location.search().category != 35 || !$rootScope.calculatedConfigs.virtualBettingEnabledInTopMenu);
-                    break;
-                case 'poker':
-                    menuItem.classObject.active = ($location.path() === '/poker/' || $location.path() === '/poker');
-                    break;
-                case 'games':
-                    menuItem.classObject.active = ($location.path() === '/games/');
-                    break;
-                case 'financials':
-                    menuItem.classObject.active = ($location.path() === '/financials/') || ($location.path() === '/game/TLCTLC/provider/TLC/exid/14000');
-                    break;
-                case 'financials1':
-                    menuItem.classObject.active = ($location.path() === '/financials/');
-                    break;
-                case 'financials2':
-                    menuItem.classObject.active = ($location.path() === '/game/TLCTLC/provider/TLC/exid/14000');
-                    break;
-                case 'cyber':
-                    menuItem.classObject.active = ($location.path() === '/customsport/cyber/');
-                    break;
-                case 'Promotions':
-                    menuItem.classObject.active = ($location.path() === '/promos/');
-                    break;
-                case 'betonpolitics':
-                    menuItem.classObject.active = ($location.path() === '/betonpolitics/');
-                    break;
-                default:
-                    menuItem.classObject.active = ($location.path() === (menuItem.activeLink ? menuItem.activeLink : ('/' + menuItem.name + '/')) || $location.url() === (menuItem.activeLink ? menuItem.activeLink : ('/' + menuItem.name + '/')));
-                    break;
-            }
+        setTimeout(function () {
+            angular.forEach($scope.topMenu, function (menuItem) {
+                menuItem.classObject = menuItem.classObject || {};
+                switch (menuItem.name) {
+                    case 'live':
+                        menuItem.classObject.active = (($location.path() === '/sport/' && Config.env.live) || $location.path() === '/overview/' || $location.path() === '/multiview/');
+                        break;
+                    case 'sport':
+                        menuItem.classObject.active = ($location.path() === '/sport/' && !Config.env.live && ($location.search().sport != '-3' || !$rootScope.calculatedConfigs.virtualSportsEnabled)) || $location.path() === '/livecalendar/';
+                        break;
+                    case 'virtual-sports':
+                        menuItem.classObject.active = ($location.path() === '/virtualsports/');
+                        break;
+                    case 'virtual-betting':
+                        menuItem.classObject.active = ($location.path() === '/casino/' && $location.search().category == "35");
+                        break;
+                    case 'casino':
+                        menuItem.classObject.active = $location.path() === '/casino/' && ($location.search().category != 35 || !$rootScope.calculatedConfigs.virtualBettingEnabledInTopMenu);
+                        break;
+                    case 'poker':
+                        menuItem.classObject.active = ($location.path() === '/poker/' || $location.path() === '/poker');
+                        break;
+                    case 'games':
+                        menuItem.classObject.active = ($location.path() === '/games/');
+                        break;
+                    case 'financials':
+                        menuItem.classObject.active = ($location.path() === '/financials/') || ($location.path() === '/game/TLCTLC/provider/TLC/exid/14000');
+                        break;
+                    case 'financials1':
+                        menuItem.classObject.active = ($location.path() === '/financials/');
+                        break;
+                    case 'financials2':
+                        menuItem.classObject.active = ($location.path() === '/game/TLCTLC/provider/TLC/exid/14000');
+                        break;
+                    case 'cyber':
+                        menuItem.classObject.active = ($location.path() === '/customsport/cyber/');
+                        break;
+                    case 'Promotions':
+                        menuItem.classObject.active = ($location.path() === '/promos/');
+                        break;
+                    case 'betonpolitics':
+                        menuItem.classObject.active = ($location.path() === '/betonpolitics/');
+                        break;
+                    default:
+                        menuItem.classObject.active = ($location.path() === (menuItem.activeLink ? menuItem.activeLink : ('/' + menuItem.name + '/')) || $location.url().indexOf(menuItem.activeLink ? menuItem.activeLink : ('/' + menuItem.name + '/')) > -1);
+                        break;
+                }
 
-            handleSubMenuState(menuItem);
+                handleSubMenuState(menuItem);
 
-            if (menuItem.classObject.active) {
-                isActive = true;
-            }
-
-
-        });
-
+                if (menuItem.classObject.active) {
+                    isActive = true;
+                }
+            });
+        }, 0);
         if (!isActive) {
             $scope.subMenuItems = null;
         }
@@ -473,12 +462,22 @@ angular.module('vbet5').service('TopMenu', ['$rootScope', '$location', '$timeout
      *
      * @param {Object} scope scope to use
      */
-    TopMenu.init = function init(scope, countryCode) {
+    TopMenu.init = function init(scope, geoCountryCode) {
         $scope = scope;
+        countryCode = geoCountryCode;
 
         $scope.topMenuItemsCount = ['sport', 'casino', 'poker', 'games', 'poolbetting', 'livedealer', 'financials']
-            .reduce(function (count, current) { return $rootScope.calculatedConfigs[current  + "Enabled"] ? count + 1 : count; }, 0);
+            .reduce(function (count, current) {
+                return $rootScope.calculatedConfigs[current + "Enabled"] ? count + 1 : count;
+            }, 0);
 
+        TopMenu.update();
+
+        $rootScope.$on('$locationChangeSuccess', TopMenu.updateMenuItemsState);
+        $timeout(TopMenu.updateMenuItemsState); //initial
+    };
+
+    TopMenu.update = function update () {
         $scope.topMenu = [];
 
         // in order to have multi level (actually 2) menu
@@ -535,7 +534,7 @@ angular.module('vbet5').service('TopMenu', ['$rootScope', '$location', '$timeout
 
                 menuItem.name = menuName;
                 if (isVisible(menuItem, countryCode)) {
-                   $scope.topMenu.push(menuItem);
+                    $scope.topMenu.push(menuItem);
                 }
             }
         });
@@ -586,15 +585,11 @@ angular.module('vbet5').service('TopMenu', ['$rootScope', '$location', '$timeout
         });
 
         TopMenu.refresh();
-
         if (menuData.indexOf) {
             Utils.sortByIndex($scope.topMenu, menuData);
         } else {
             Utils.sortByField($scope.topMenu, menuData);
         }
-
-        $rootScope.$on('$locationChangeSuccess', TopMenu.updateMenuItemsState);
-        $timeout(TopMenu.updateMenuItemsState); //initial
     };
 
     function productAvailibilityForAge(item, age) {

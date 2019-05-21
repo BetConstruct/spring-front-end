@@ -8,15 +8,15 @@
         <div class="transparent-line"></div>
         <div>
             <div class="additional-deposit-j popup-messages-icon-t">
-                <div class="message-info" ng-if="(conf.header.messageIcon.alwaysShow || profile.unread_count > 0) && env.authorized && conf.header.messageIcon.enabled" ng-click="$location.search('user', 'messages');">
+                <div class="message-info" ng-if="($root.conf.header.messageIcon.alwaysShow || profile.unread_count > 0) && env.authorized && $root.conf.header.messageIcon.enabled" ng-click="$location.search('user', 'messages');">
                     <span ng-bind="profile.unread_count" ng-show="profile.unread_count" ng-class="{'new-m':env.isNewMessage}" class="ng-binding new-m">2</span>
                 </div>
             </div>
-            <div ng-click="$location.search('user', 'balanceHistory')" class="additional-deposit-j">{{profile.calculatedBalance|number:conf.balanceFractionSize}} {{profile.currency_name|currency}}</div>
+            <div ng-click="$location.search('user', 'balanceHistory')" class="additional-deposit-j">{{profile.calculatedBalance|number:$root.conf.balanceFractionSize}} {{profile.currency_name|currency}}</div>
             <div ng-click="$location.search('user', 'settings')" class="additional-deposit-j" trans>Settings</div>
         </div>
         <div>
-            <div class="logo noflip" ng-class="::conf.site_name">
+            <div class="logo noflip" ng-class="::$root.conf.site_name">
                 <a>
                     <p class="animated-vbet"></p>
                     <p class="animated-vivarobet"></p>

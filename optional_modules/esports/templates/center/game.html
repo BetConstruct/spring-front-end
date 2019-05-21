@@ -1,39 +1,4 @@
-<!--enlarged video-->
-<div  ng-if="conf.videoEnabled && pinnedGameType === 'fullScreen' && !conf.detachedVideoSizes[openGame.tv_type]">
-    <div ng-if="enlargedGame && enlargedGame.video_data" class="game-video game-video-detached game-video-fullscreen">
-        <div class="game-video-container detached-game-container" id="detached-game-container-{{enlargedGame.id}}">
 
-            <video-player
-                    player-id="gamevideo{{enlargedGame.id}}full"
-                    stream-url="{{enlargedGame.video_data}}"
-                    provider-id="{{enlargedGame.tv_type}}"
-                    initially-muted="{{ env.sound }}"></video-player>
-            <!--<flashplayer id="gamevideo{{enlargedGame.id}}full" stream-url="{{enlargedGame.video_data}}" provider-id="{{enlargedGame.tv_type}}"  initially-muted="{{ env.sound }}"></flashplayer>-->
-            <div class="video-player-control">
-                <div class="detached-info">
-                    {{enlargedGame.info.current_game_state|convertSetName:enlargedGame.sport.alias|translate}}
-                    {{ enlargedGame.info.current_game_state? ' ' + ('Score:'|translate) + ' '
-                    :''}}{{enlargedGame.info.score1}} {{enlargedGame.info.score2 ? '&ndash; ' +
-                    enlargedGame.info.score2 : ''}}
-                    {{enlargedGame.stats.passes.team1_value && enlargedGame.sport.alias === 'Tennis'? '&#40;' +
-                    enlargedGame.stats.passes.team1_value:''}} {{ enlargedGame.stats.passes.team2_value &&
-                    enlargedGame.sport.alias === 'Tennis'? '&#58; '+ enlargedGame.stats.passes.team2_value + '&#41;':
-                    '' }}
-                    {{enlargedGame.stats[enlargedGame.info.current_game_state] && enlargedGame.sport.alias !==
-                    'Tennis'? '&#40;' + enlargedGame.stats[enlargedGame.info.current_game_state].team1_value +
-                    ' &ndash; ':''}}
-                    {{enlargedGame.stats[enlargedGame.info.current_game_state] && enlargedGame.sport.alias !==
-                    'Tennis' ? enlargedGame.stats[enlargedGame.info.current_game_state].team2_value + '&#41;'
-                    :''}}
-                </div>
-            </div>
-            <a ng-click="attachPinnedVideo(enlargedGame, 'fullScreen'); $parent.mute = undefined; $parent.paused = undefined;">
-                <span trans>close</span>
-            </a>
-        </div>
-    </div>
-</div>
-<!--enlarged video END-->
 
 
 <div ng-if="game.type === 1" class="e-sport-l-score">
@@ -66,8 +31,8 @@
     <div class="game-mini-t-row" ng-if="game.type !== 1">
         <ul>
             <li>
-                <p>{{::game.region.name}}</p>
-                <p>{{::game.competition.name}}</p>
+                <p ng-bind="game.region.name"></p>
+                <p ng-bind="game.competition.name"></p>
             </li>
             <li class="team-n-l-v a-right">
                 <h6 class="e-team-name-r">{{::game.team1_name}} <i class="team-logo-b" ng-style="{'background-image': $root.conf.teamDefaultLogo ? 'url(images/team-logo-default.png)' : 'url({{$root.conf.teamLogosPath}}e/s/{{Math.floor(game.team1_id / 2000)}}/{{game.team1_id}}.png)'}"></i></h6>
@@ -75,6 +40,9 @@
             <li class="g-vs-v" trans>vs</li>
             <li class="team-n-l-v">
                 <h6 class="e-team-name-r"><i class="team-logo-b" ng-style="{'background-image': $root.conf.teamDefaultLogo ? 'url(images/team-logo-default.png)' : 'url({{$root.conf.teamLogosPath}}e/s/{{Math.floor(game.team2_id / 2000)}}/{{game.team2_id}}.png)'}"></i> {{::game.team2_name}}</h6>
+            </li>
+            <li>
+                <p countdown="{{game.start_ts}}" ng-bind="countdown.days +  ':' + countdown.hours + ':' + countdown.minutes + ':' + countdown.seconds"></p>
             </li>
             <li>
                 <p ng-bind="::game.start_ts|formatDate:'noLocaleTranslate':null:$root.env.timeFormat"></p>
@@ -110,9 +78,8 @@
                             </ul>
                     </div>
                     <div ng-repeat="market in groupedMarkets|orderBy: 'order' track by market.id" class="l-b column-{{market.col_count || 1}}" ng-class="{'default': market.col_count > 5}">
-                        <div class="single-events-b-v3"  ng-repeat="event in market.events|orderBy:(market.display_key == 'OUTRIGHT' ? 'price' : 'order') track by event.id" ng-click="bet(event, market, game);" title="{{event.name}} {{ displayBase(event, market)}}" ng-class="{'pointer-events-none': event.is_empty, 'active': isEventInBetSlip(event), 'blocked': ((event.price | oddConvert:'decimal') == 1 || game.is_blocked)}" ng-mouseover="displayEventLimit(event, game, false, market)" ng-mouseleave="cancelDisplayEventLimit(event)">
-                            <div class="max-bet-tooltip-v3" ng-show="$root.env.authorized && event.maxBet !== undefined" ng-class="{'maxbet-enabled': $root.env.authorized}">
-                                Max: <b ng-bind="conf.onlyDecimalStakeAmount ? Math.floor(event.maxBet) : event.maxBet"></b> {{$root.profile.currency_name|currency }}
+                        <div class="single-events-b-v3"  ng-repeat="event in market.events|orderBy:(market.display_key == 'OUTRIGHT' ? 'price' : 'order') track by event.id" ng-click="bet(event, market, game);" title="{{event.name}} {{ displayBase(event, market)}}" ng-class="{'pointer-events-none': event.is_empty, 'active': isEventInBetSlip(event), 'blocked': ((event.price | oddConvert:'decimal') == 1 || game.is_blocked)}">
+                            <div class="max-bet-tooltip-v3" onmouseover="displayEventLimit(event)" onmouseleave="cancelDisplayEventLimit(event)" data-id="{{event.id}}" ng-class="{'maxbet-enabled': $root.env.authorized && $root.conf.displayEventsMaxBet}">
                             </div>
                             <b class="p-v" ng-show="(event.price | oddConvert:'decimal') != 1 && !game.is_blocked" ng-class="{'factor-top': event.price_change > 0, 'factor-bottom': event.price_change < 0}">{{event.price|oddConvert:$root.env.oddFormat:null:market.display_key}}</b>
                         </div>

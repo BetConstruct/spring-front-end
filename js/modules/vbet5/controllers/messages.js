@@ -46,27 +46,19 @@ VBET5.controller('messagesCtrl', ['$scope', '$rootScope', 'Utils', 'Zergling', '
         inboxLoading: false,
         outboxLoading: false
     };
-    $scope.newMessage = {subject: '', body: ''};
+    if (Config.main.newMessageSubjectValues) {
+        Config.main.newMessageSubjectValues = Config.main.newMessageSubjectValues.map(function (subject) {
+            return Translator.get(subject);
+        });
+    }
+    function getInitialSubject(){
+        return Config.main.newMessageSubjectValues && Config.main.newMessageSubjectValues.length > 0? Config.main.newMessageSubjectValues[0] : '';
+    }
+
+    $scope.newMessage = {subject: getInitialSubject(), body: ''};
 
     $scope.$on('messages.delete', function (event, data) {
-        console.log(JSON.stringify(data.message));
-        var callData = undefined;
-        var commandName = undefined;
-        if(Config.main.GmsPlatform){
-            callData = {"message_id": data.message.id};
-            commandName = "delete_user_message";
-        }else{
-            callData = {
-                messages: [
-                    {message_id: data.message.id}
-                ]
-            };
-            commandName = "delete_internal_messages";
-        }
-        // zergling call here
-
-
-        Zergling.get(callData, commandName).then(function (response) {
+        Zergling.get({'message_id': data.message.id}, 'delete_user_message').then(function (response) {
             TimeoutWrapper(function () {
                 $scope.loadMessages(data.message.isInbox, !data.message.isInbox);
             }, 1500);
@@ -224,7 +216,7 @@ VBET5.controller('messagesCtrl', ['$scope', '$rootScope', 'Utils', 'Zergling', '
                 });
             }
             $scope.working = false;
-            $scope.newMessage = {subject: '', body: ''};
+            $scope.newMessage = {subject: getInitialSubject(), body: ''};
             $scope.sendMessageForm.$setPristine();
             TimeoutWrapper(function () {
                 $scope.loadMessages(false, true); // to make sent message visible in sent messages

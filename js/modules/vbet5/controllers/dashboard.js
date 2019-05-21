@@ -71,7 +71,7 @@ angular.module('vbet5.betting').controller('dashboardCtrl', ['$rootScope', '$sco
         };
 
         if (promoted) {
-            request.where.game[promoted] = Config.main.GmsPlatform ? true : {'@contains': parseInt(Config.main.site_id)};
+            request.where.game[promoted] = true;
         } else {
             request.where.game.type = type;
         }
@@ -82,7 +82,7 @@ angular.module('vbet5.betting').controller('dashboardCtrl', ['$rootScope', '$sco
                     $scope.showGames[type].push(game.id);
                 });
 
-                if (promoted && $scope.showGames[type].length == 0) {
+                if (promoted && $scope.showGames[type].length === 0) {
                     dashboardGetGames(type, Config.main.dashboard.v2WidgetGamesCount);
                 }
 

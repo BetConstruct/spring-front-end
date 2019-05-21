@@ -16,7 +16,7 @@
     width: 1180px;
     padding: 40px 30px;
     display: inline-block;
-    background: white;
+    background: #ffffff;
     @include rtl {
         float: left;
     }
@@ -142,8 +142,10 @@
         float: left;
     }
     .print-a4-j .bet-info-j td.big-bet-j {
-        text-align: left;
         border-top: 2px solid #000;
+        @include ltr {
+            text-align: left;
+        }
         @include rtl {
             text-align: right;
         }
@@ -160,9 +162,13 @@
     }
     .booking-logo img {
         max-height: 80px;
+        max-width: 80%;
     }
 }
 $enable-print-8cm: false !default;
 @if $enable-print-8cm == true {
     @include print8cm;
+}
+.booking-singles {
+    border-bottom: 1px solid #000000;
 }

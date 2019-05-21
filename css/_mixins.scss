@@ -1,4 +1,4 @@
-$delete-cache: '?v=' + random(666);
+$delete-cache: '?v=' + random(777);
 @function set-color($color, $color-dark: #000000, $color-light: #ffffff) {
   @if ($color == $brand-color-1 and nth($disable-button-bg-sc, 1) == true) {
     @return nth($disable-button-bg-sc, 2);
@@ -22,6 +22,11 @@ $delete-cache: '?v=' + random(666);
     }
   }
 }
+@mixin ltr {
+  html[dir="ltr"] & {
+    @content;
+  }
+}
 @mixin rtl {
   html[dir="rtl"] & {
     @content;
@@ -40,12 +45,14 @@ $delete-cache: '?v=' + random(666);
   scrollbar-shadow-color: $background;
   scrollbar-base-color: $scroll-main-thumb-color;
   scrollbar-arrow-color: $scroll-main-thumb-color;
+  scrollbar-color: $scroll-main-thumb-color $background;
+  scrollbar-width: thin;
   &::-webkit-scrollbar-track {
     border-radius: $border-radius;
   }
   &::-webkit-scrollbar {
     width: $width;
-    height: $width;
+    //height: $width;
     background: $background;
     border-radius: $border-radius;
   }
@@ -64,7 +71,8 @@ $delete-cache: '?v=' + random(666);
   }
 }
 @mixin coloring-by-sports ($sports-name, $sports-color) {
-  .sports-item-v3.#{$sports-name} {
+  .sports-item-v3.#{$sports-name},
+  .suggest-sport-icon.#{$sports-name} {
     &:before{color: $sports-color;}
     &.Soccer:before {
       color: set-color($c16-sp-9);
@@ -84,7 +92,9 @@ $delete-cache: '?v=' + random(666);
       }
     }
     &:before {
-      box-shadow: 3px 0 0 $sports-color inset;
+      @include ltr {
+        box-shadow: 3px 0 0 $sports-color inset;
+      }
       @include rtl {
         box-shadow: -3px 0 0 $sports-color inset;
       }
@@ -97,30 +107,76 @@ $delete-cache: '?v=' + random(666);
     box-shadow: 0 -1px 0 $sports-color inset;
   }
   .inplay-game-wrapper.#{$sports-name} {
-    border-color: $sports-color;
-    &.closed {
+    box-shadow: 0 0 0 1px $sports-color inset;
+    > .title-sport-inplay{
       background: $sports-color;
-      border-color: lighten( desaturate( adjust-hue( $classic-skinning-color, -1deg), 16), 8);
-      .title-sport-inplay > p,
-      .arrow-toggle-inplay,
-      .sport-icon-inplay.mini-icon-1:before {
-        color: set-color($sports-color);
+      background: -moz-linear-gradient(left, $sports-color 0%, $skin-palette-7 25%, $skin-palette-7 75%, $sports-color 100%);
+      background: -webkit-linear-gradient(left, $sports-color 0%, $skin-palette-7 25%, $skin-palette-7 75%, $sports-color 100%);
+      background: linear-gradient(to right, $sports-color 0%, $skin-palette-5 25%, $skin-palette-5 75%, $sports-color 100%);
+    }
+    .title-sport-inplay > p,
+    .sport-icon-inplay.mini-icon-1:before {
+      color: set-color($sports-color);
+    }
+  }
+  .all-l-e-title{
+    &.#{$sports-name} {
+      background: rgba($sports-color, 1);
+      background: -moz-linear-gradient(left, rgba($sports-color, 1) 0%, rgba($skin-color, 1) 100%);
+      background: -webkit-linear-gradient(left, rgba($sports-color, 1) 0%, rgba($skin-color, 1) 100%);
+      background: linear-gradient(to right, rgba($sports-color, 1) 0%, rgba($skin-color, 1) 100%);
+      + .e-live-games-list > .s-l-game-v > .e-p-table{
+        background: rgba($sports-color, 0.2);
+        background: -moz-linear-gradient(left, rgba($sports-color, 0.2) 0%, rgba($skin-color, 0.06) 60%);
+        background: -webkit-linear-gradient(left, rgba($sports-color, 0.2) 0%, rgba($skin-color, 0.06) 60%);
+        background: linear-gradient(to right, rgba($sports-color, 0.2) 0%, rgba($skin-color, 0.06) 60%);
+        transition: background 240ms;
+        &:hover {
+          background: rgba($sports-color, 0.4);
+          background: -moz-linear-gradient(left, rgba($sports-color, 0.4) 0%, rgba($skin-color, 0.09) 60%);
+          background: -webkit-linear-gradient(left, rgba($sports-color, 0.4) 0%, rgba($skin-color, 0.09) 60%);
+          background: linear-gradient(to right, rgba($sports-color, 0.4) 0%, rgba($skin-color, 0.09) 60%);
+        }
       }
+    }
+    > p {
+      color: set-color($sports-color);
     }
   }
   .classic-view-column-v3 .sports-item-v3.#{$sports-name} ~ .region-item-row-v3 .single-game-item-v3.active:after {
     background: rgba($sports-color,0.635);
-    background: -moz-linear-gradient(left, rgba($sports-color,0.635) 0%, rgba($c16-sp-9,1) 60%,  rgba($c16-sp-9,1) 100%);
-    background: -webkit-linear-gradient(left, rgba($sports-color,0.635) 0%, rgba($c16-sp-9,1) 60%,  rgba($c16-sp-9,1) 100%);
-    background: linear-gradient(to right, rgba($sports-color,0.635) 0%, rgba($c16-sp-9,1) 60%,  rgba($c16-sp-9,1) 100%);
     box-shadow: 2px 0 0 $sports-color inset;
+    @include ltr {
+      box-shadow: 2px 0 0 $sports-color inset;
+      background: -moz-linear-gradient(left, rgba($sports-color,0.635) 0%, rgba($c16-sp-9,1) 60%,  rgba($c16-sp-9,1) 100%);
+      background: -webkit-linear-gradient(left, rgba($sports-color,0.635) 0%, rgba($c16-sp-9,1) 60%,  rgba($c16-sp-9,1) 100%);
+      background: linear-gradient(to right, rgba($sports-color,0.635) 0%, rgba($c16-sp-9,1) 60%,  rgba($c16-sp-9,1) 100%);
+    }
+    @include rtl {
+      box-shadow: -2px 0 0 $sports-color inset;
+      background: -moz-linear-gradient(right, rgba($sports-color,0.635) 0%, rgba($c16-sp-9,1) 60%,  rgba($c16-sp-9,1) 100%);
+      background: -webkit-linear-gradient(right, rgba($sports-color,0.635) 0%, rgba($c16-sp-9,1) 60%,  rgba($c16-sp-9,1) 100%);
+      background: linear-gradient(to left, rgba($sports-color,0.635) 0%, rgba($c16-sp-9,1) 60%,  rgba($c16-sp-9,1) 100%);
+    }
+  }
+  .suggest-mini-list.suggested-sport-#{$sports-name} {
+    background: rgba($sports-color,0.5);
+    @include ltr {
+      background: -moz-linear-gradient(left, rgba($sports-color,0.5) 0%, rgba($c16-sp-9,1) 60%,  rgba($c16-sp-9,1) 100%);
+      background: -webkit-linear-gradient(left, rgba($sports-color,0.5) 0%, rgba($c16-sp-9,1) 60%,  rgba($c16-sp-9,1) 100%);
+      background: linear-gradient(to right, rgba($sports-color,0.5) 0%, rgba($c16-sp-9,1) 60%,  rgba($c16-sp-9,1) 100%);
+    }
+    @include rtl {
+      background: -moz-linear-gradient(right, rgba($sports-color,0.5) 0%, rgba($c16-sp-9,1) 60%,  rgba($c16-sp-9,1) 100%);
+      background: -webkit-linear-gradient(right, rgba($sports-color,0.5) 0%, rgba($c16-sp-9,1) 60%,  rgba($c16-sp-9,1) 100%);
+      background: linear-gradient(to left, rgba($sports-color,0.5) 0%, rgba($c16-sp-9,1) 60%,  rgba($c16-sp-9,1) 100%);
+    }
   }
 }
+
+
 @mixin liveScoreBackgrounds($alias, $imageName: $alias, $imagePath: "../../../images/live-score/") {
   .live-score-background-#{$alias} {
     background: url(#{$imagePath + $imageName}.jpg#{$delete-cache}) no-repeat 50% 50% / cover;
-  }
-  .live-score-background-#{$alias + grass} {
-    background: url(#{$imagePath + $imageName + grass}.jpg#{$delete-cache}) no-repeat 50% 50% / cover;
   }
 }

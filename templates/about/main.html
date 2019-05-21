@@ -1,7 +1,7 @@
 <div class="page-about" ng-controller="cmsPagesCtrl" ng-init="loadPage('about-us-'+env.lang, true)">
 
     <div class="full-screen-sections" snap-index="snapIndex" ng-if="pages">
-        <div class="section-about past" id="about" ng-init="main = getPageBySlug(pages,'main')">
+        <div class="section-about past" id="about" ng-init="main = getPageBySlug(pages,'main')" ng-style="main.thumbnail && {'background-image':'url({{main.thumbnail || ''}})'}">
             <div class="section-content">
                 <i class="about-icon"></i>
 
@@ -20,7 +20,7 @@
             </div>
         </div>
 
-        <div class="section-details" id="details" ng-init="statistics = getPageBySlug(pages, 'statistics')">
+        <div class="section-details" id="details" ng-init="statistics = getPageBySlug(pages, 'statistics')"  ng-style="statistics.thumbnail && {'background-image':'url({{statistics.thumbnail || ''}})'}">
             <div class="section-content">
                 <div class="active-title">
                     <span>{{statistics.custom_fields.label_value[0] || '30,000'}}</span>

@@ -20,7 +20,7 @@
                           'new-info-item-sup': item.supDisplayName
                           }">
                 <div ng-if="!item.popup && !item.broadcast" class="top-menu-sub-a-t">
-                    <a ng-href="{{item.classObject.active ? $location.absUrl() : item.href}}" ng-click="item.click()" data-content="{{(item.subTitle || 'new')|translate}}"
+                    <a ng-href="{{item.href}}" ng-click="item.click()" data-content="{{(item.subTitle || 'new')|translate}}"
                        ng-show="!item.specialCase && !item.subDisplayName && !item.supDisplayName" target="{{ item.target || '_self' }}" route-reload reload="{{item.reload}}">
                         <span ng-bind="item.displayName"></span>
                     </a>
@@ -49,9 +49,6 @@
                     <a ng-if="item.broadcast" ng-click="$root.topMenuDropDown=false;closeSlider(); broadcast(item.broadcast)" ng-bind="item.title" data-content="{{'new'|translate}}"></a>
                 </div>
             </li>
-        </ul>
-        <ul ng-controller="cmsPagesCtrl" ng-init="initSections()">
-            <li ng-if="section.rootPageSlug[env.lang] && section.placement === 'topmenu'" ng-repeat="section in additionalSections" ng-class="{ 'active' : $location.path() === '/section/' + section.id }" class="noflip"><a href="#/section/{{section.id}}">{{section.name}}</a></li>
         </ul>
     </div>
 </div>

@@ -1,0 +1,306 @@
+// homepage jackpot
+.size-7 .jackpot-banner-amount .amount-animation-container > span {
+  width: 7%;
+  &.with-point,
+  &.with-comma {
+    padding-right: 3%;
+  }
+}
+.size-8 .jackpot-banner-amount .amount-animation-container > span {
+  width: 6.5%;
+}
+.size-10 .jackpot-banner-amount .amount-animation-container > span {
+  width: 5%;
+}
+.size-11 .jackpot-banner-amount .amount-animation-container > span {
+  width: 5%;
+  &.with-point,
+  &.with-comma {
+    padding-right: 1.5%;
+  }
+}
+.size-12 .jackpot-banner-amount .amount-animation-container > span {
+  width: 5%;
+  &.with-point,
+  &.with-comma {
+    padding-right: 1%;
+  }
+}
+@media screen and (max-width: 1260px) {
+  .size-7 .jackpot-banner-amount .amount-animation-container > span {
+    &.with-point,
+    &.with-comma {
+      padding-right: 3.5%;
+    }
+  }
+  .size-8 .jackpot-banner-amount .amount-animation-container > span {
+    width: 7%;
+  }
+  .size-9 .jackpot-banner-amount .amount-animation-container > span {
+    width: 6.5%;
+  }
+  .size-10 .jackpot-banner-amount .amount-animation-container > span {
+    width: 5%;
+  }
+  .size-11 .jackpot-banner-amount .amount-animation-container > span {
+    width: 5%;
+    &.with-point,
+    &.with-comma {
+      padding-right: 1.5%;
+    }
+  }
+  .size-12 .jackpot-banner-amount .amount-animation-container > span {
+    width: 5%;
+    &.with-point,
+    &.with-comma {
+      padding-right: 1%;
+    }
+  }
+}
+// homepage jackpot end
+
+/*jackpot animation styles*/
+.s-j-balance {
+  .sportsbook-jackpot-amount .amount-animation-container > span > i.amount-animation {
+    animation-name: sportsbook-amount-animation;
+  }
+}
+@keyframes sportsbook-amount-animation {
+  0% {
+    transform: translateY(0em);
+  }
+  100% {
+    transform: translateY(-9.17em);
+  }
+}
+
+.sportsbook-jackpot-amount {
+  width: 100%;
+  height: 100%;
+  color: $brand-color-2;
+  display: inline-block;
+  vertical-align: middle;
+  font-size: 18 + $size-font;
+  @include rtl{
+    direction: ltr;
+  }
+  .amount-animation-container {
+    > span {
+      width: 16px;
+      @media screen and (max-width: 1260px) {
+        width: 14px;
+      }
+      &.with-comma,
+      &.with-point {
+        padding-right: 1%;
+        @media screen and (max-width: 1260px) {
+          padding-right: 2%;
+        }
+      }
+    }
+    > sup {
+      color: $c16-tp-2;
+      font-weight: 700;
+      font-size: 10 + $size-font;
+    }
+  }
+}
+.sportsbook-jackpot-info-amount {
+  width: 100%;
+  height: 100%;
+  color: $brand-color-2;
+  display: inline-block;
+  vertical-align: middle;
+  .amount-animation-container {
+    height: 22px;
+    font-size: 18px;
+    line-height: 20px;
+    @media screen and (max-width: 1260px) {
+      font-size: 15px;
+    }
+    > span {
+      width: 11px;
+      @media screen and (max-width: 1260px) {
+        width: 9px;
+      }
+      &.with-comma,
+      &.with-point {
+        padding-right: 2.3%;
+      }
+      > strong {
+        @include ltr {
+          right: 1px;
+        }
+        @include rtl {
+          left: 1px;
+        }
+      }
+    }
+    > sup {
+      margin-left: 2px;
+      color: $c16-tp-2;
+      font-weight: 700;
+      font-size: 8 + $size-font;
+    }
+  }
+}
+//sportsbook-jeckpot End
+
+.amount-animation-container {
+  float: left;
+  position: relative;
+  width: 100%;
+  height: 100%;
+  z-index: 50;
+  font-weight: normal;
+  overflow: hidden;
+  @include rtl {
+    direction: ltr;
+  }
+  > sup {
+    vertical-align: top;
+  }
+  > span {
+    width: 6%;
+    display: inline-block;
+    position: relative;
+    text-align: left;
+    vertical-align: top;
+    > i {
+      display: block;
+      font-style: normal;
+      > span {
+        display: block;
+      }
+      &.amount-animation {
+        animation: amount-animation infinite linear;
+        animation-duration: 5000ms;
+      }
+    }
+    > strong {
+      position: absolute;
+      top: 2px;
+      right: 0
+    }
+    &.with-point,
+    &.with-comma {
+      padding-right: 2.3%;
+    }
+  }
+  &[style="background-image: url();"]{
+    color: set-color($skin-palette-8);
+    background-color: $skin-palette-8;
+    text-shadow: 1px 1px 1px set-color($skin-palette-8);
+  }
+}
+
+.jackpot-banner-amount {
+  float: left;
+  width: 100%;
+  height: 100px;
+  .amount-animation-container {
+    @media screen and (max-width: 1260px) {
+      font-size: 72px;
+      &.amount-animation-container {
+        > span {
+          width: 7%;
+        }
+      }
+    }
+    > sup {
+      font: bold 30px/60px $font-f;
+      @media screen and (max-width: 1260px) {
+        font-size: 24px;
+      }
+    }
+  }
+}
+
+.jackpot-widget-amount {
+  float: left;
+  width: 100%;
+  height: 24px;
+  color: set-color($skin-color);
+  .amount-animation-container {
+    opacity: 1;
+    > sup {
+      font: normal 20px/22px $font-f;
+    }
+  }
+}
+
+.jackpot-iframe-amount {
+  width: 100%;
+  height: 16px;
+  color: set-color($skin-palette-10);
+  display: inline-block;
+  vertical-align: middle;
+  .amount-animation-container {
+    > span {
+      width: 7%;
+      > i {
+        font-style: normal;
+      }
+      &.with-point,
+      &.with-comma {
+        padding-right: 9%;
+      }
+    }
+    > sup {
+      font: normal 12px/14px $font-f
+    }
+  }
+}
+
+// egt jackpot animation
+.egt-content {
+  .amount-animation-container {
+    text-align: right;
+    @include rtl {
+      direction: ltr;
+    }
+    > span {
+      width: 9.9%;
+      overflow: hidden;
+      text-align: center;
+      vertical-align: middle;
+      box-shadow: -1px 0 0 #111522, -2px 0 0 #2e323e;
+      &.with-point,
+      &.with-comma {
+        padding-right: 1.5%;
+      }
+      > i {
+        margin-left: -1px;
+        height: 22px;
+        line-height: 22px;
+      }
+      > strong {
+        top: -10px;
+        right: 14%;
+        height: 100%;
+      }
+    }
+  }
+}
+// egt jackpot animation end
+
+.win-blink-jackpots > b {
+  animation: blink-jackpot 1500ms 300ms infinite;
+}
+@keyframes blink-jackpot {
+  0%, 50%, 100% {
+    opacity: 1;
+  }
+  25%, 75% {
+    opacity: 0.3;
+  }
+}
+
+@keyframes amount-animation {
+  0% {
+    transform: translateY(0em);
+  }
+  100% {
+    transform: translateY(-10.17em);
+  }
+}

@@ -31,6 +31,7 @@ VBET5.directive('gameWidget', ['Utils', 'Config', 'ConnectionService', 'GameInfo
             scope.liveGameViewData = [];
             scope.isEventInBetSlip = GameInfo.isEventInBetSlip;
             scope.timeFormat = (scope.gameWidgetType === 'highlights' && Config.main.showPromotedGamesOnWidget.timeFormat) ? Config.main.showPromotedGamesOnWidget.timeFormat : 'LT';
+
             scope.widgetMode = scope.gameWidgetMode;
             scope.collapsedAll = true;
 
@@ -181,7 +182,7 @@ VBET5.directive('gameWidget', ['Utils', 'Config', 'ConnectionService', 'GameInfo
                         'market': {type: { '@in': ['P1XP2','P1P2'] } }
                     }
                 };
-                request.where.sport = {'id': {'@nin': GameInfo.getVirtualSportIds()}};
+                request.where.sport = {'type': {'@ne': 1}};
 
                 if (scope.gameWidgetType === 'lastMinutesBets') {
                     request.where.game.start_ts = {'@now': {'@gte': 0, '@lt': scope.minutesFilter * 60}};
@@ -192,13 +193,13 @@ VBET5.directive('gameWidget', ['Utils', 'Config', 'ConnectionService', 'GameInfo
                     if (Config.main.showPromotedGamesOnWidget.level === 'competition') {
                         request.where[Config.main.showPromotedGamesOnWidget.level] = {};
                         request.where[Config.main.showPromotedGamesOnWidget.level][Config.main.showPromotedGamesOnWidget.type] = true;
-                    } else if (Config.main.showPromotedGamesOnWidget.level === 'game'){
-                        request.where.game[Config.main.showPromotedGamesOnWidget.type] = Config.main.GmsPlatform ? true : {'@contains': parseInt(Config.main.site_id)};
+                    } else if (Config.main.showPromotedGamesOnWidget.level === 'game') {
+                        request.where.game[Config.main.showPromotedGamesOnWidget.type] = true;
                     }
                 } else if (scope.gameWidgetType === 'liveNow') {
                     request.where.game.type = 1;
                 } else if (scope.gameWidgetType === 'upcoming') {
-                    if(Config.main.availableSportsbookViews.euro2016) {
+                    if(Config.main.availableSportsbookViews.classic) {
                         request.where.game.start_ts = {'@now': {'@gte': 0, '@lt': scope.minutesFilter * 60}};
                     } else {
                         request.where.game.type = 2;
@@ -259,7 +260,10 @@ VBET5.directive('gameWidget', ['Utils', 'Config', 'ConnectionService', 'GameInfo
                 $window.open(GameInfo.getStatsLink(game), game.id, "width=940,height=600,resizable=yes,scrollbars=yes");
             };
 
-            scope.bet = function bet(event, game) {
+            scope.bet = function bet(event, game, $event) {
+                if ($event && $event.stopPropagation) {
+                    $event.stopPropagation();
+                }
                 var oddType = 'odd';
                 if (!game || !event || Config.main.phoneOnlyMarkets && Config.main.phoneOnlyMarkets.enable && game.type == 1) {
                     return;
@@ -270,11 +274,37 @@ VBET5.directive('gameWidget', ['Utils', 'Config', 'ConnectionService', 'GameInfo
                 if (scope.widgetMode === 'iframe') {
                     $window.parent.postMessage({
                         action: 'place_bet',
-                        data: {event: event, market: market, game: game, oddType: oddType}
+                        data: {
+                            'event': event.id,
+                            'type': game.type,
+                            'sport': game.sport.id,
+                            'region': game.region.id,
+                            'competition': game.competition.id,
+                            'game': game.id
+                        }
                     }, '*');
                 }
                 if (scope.widgetMode !== 'iframe' || Config.main.enableAddToBetSlipFromWidget) {
-                    $rootScope.$broadcast('bet', {event: event, market: market, game: game, oddType: oddType});
+
+                    if (scope.widgetMode === 'homepage') {
+                        $location.search({
+                            'event': event.id.toString(),
+                            'type': game.type === 2 ? 0 : game.type,
+                            'sport': game.sport.id,
+                            'region': game.region.id,
+                            'competition': game.competition.id,
+                            'game': game.id
+                        });
+
+                        var neededPath = Utils.getPathAccordintToAlias(game.sport.alias);
+                        if ($location.path() !== neededPath + '/') {
+                            $location.path(neededPath);
+                        } else {
+                            $route.reload();
+                        }
+                    } else {
+                        $rootScope.$broadcast('bet', {event: event, market: market, game: game, oddType: oddType});
+                    }
                 }
             };
 

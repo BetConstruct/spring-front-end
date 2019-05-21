@@ -1,4 +1,4 @@
-    <div class="buner-b" ng-init="getBanners()" ng-hide="hideRightBanner && conf.hideBetslipBannerWhenBetslipIsNotEmpty" id="sport-news-sidebar-container">
+    <div class="buner-b" ng-init="getBanners()" ng-show="showRightBanners" id="sport-news-sidebar-container">
 
         <a ng-repeat="banner in banners" ng-show="banner.active" ng-href="{{ banner.link }}" target="{{ banner.linktarget }}" ng-click="gaSend('send', 'event', 'news', {'page': $location.path(), 'eventLabel': 'betslip banner click'})" route-reload>
             <img ng-src="{{ banner.imageurl }}" alt="{{ banner.alt }}">

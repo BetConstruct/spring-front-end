@@ -6,14 +6,14 @@ VBET5.controller('affiliateCtrl', ['$scope', '$window', '$http', '$location', '$
     'use strict';
     (function() {
         var btag = Storage.get('promo_code') || $cookies.get('promo_code');
-        var defaultPath = '#/sport/';
+        var defaultPath = '#/';
         var defaultLocation = $window.origin + defaultPath;
         if (!btag) {
             $location.path(defaultPath);
             return;
         }
 
-        var apiUrl =  'https://betco.link/global/api/linkCreator/getRedirectUrl';
+        var apiUrl =  'https://betco.link/global/api/linkCreator/getUrl';
         var canceller = $q.defer();
         var timeoutPrimise;
 
@@ -33,25 +33,30 @@ VBET5.controller('affiliateCtrl', ['$scope', '$window', '$http', '$location', '$
             url: apiUrl,
             data: {
                 btag: btag,
-                partnerId: Config.main.site_id
+                partnerId: Config.main.site_id,
+                type: "front"
             },
             headers: {
                 'Accept': 'application/json, text/plain, */*',
                 'Content-Type': 'application/x-www-form-urlencoded'
             },
             timeout : canceller.promise
-        }).success(function(response) {
+        }).then(function(response) {
             var path = defaultLocation;
-            if (response.status && response.result) {
-                if (response.result.indexOf($window.origin) === -1 || response.result.indexOf('#') !== -1) {
-                    path = response.result;
-                    return;
+            if (response.data.status && response.data.result) {
+                if (response.data.result.indexOf($window.origin) === -1) {
+                    path = response.data.result;
                 } else {
-                    path = $window.origin + response.result.replace($window.origin, '/#');
+                    var decodedResult = decodeURIComponent(response.data.result);
+                    if (decodedResult.indexOf('#') !== -1) {
+                        path = decodedResult;
+                    } else {
+                        path = $window.origin + decodedResult.replace($window.origin, '/#');
+                    }
                 }
             }
             handleRedirection(path);
-        }).error(function() {
+        }, function() {
             handleRedirection(defaultLocation);
         });
 

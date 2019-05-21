@@ -21,6 +21,7 @@ angular.module('CMS').controller('cmsPagesCtrl', ['$location', '$rootScope', '$s
         index: 0
     };
     TimeoutWrapper = TimeoutWrapper($scope);
+    $scope.env = $rootScope.env;
 
     var sliderIntervalPromise;
 
@@ -116,14 +117,15 @@ angular.module('CMS').controller('cmsPagesCtrl', ['$location', '$rootScope', '$s
      */
     function generateNavObject(children) {
         return children.map(function (page) {
-            $rootScope.helpPages[page.slug] = page;
-            $rootScope.helpPages[page.slug].content = $sce.trustAsHtml($rootScope.helpPages[page.slug].content);
+            $rootScope.helpPages[page.id] = page;
+            $rootScope.helpPages[page.id].content = $sce.trustAsHtml($rootScope.helpPages[page.id].content);
             return {
                 id: page.id,
                 slug: page.slug,
                 custom_fields: page.custom_fields,
+                linktarget: page.linktarget,
                 title: page.title,
-                content: $rootScope.helpPages[page.slug].content,
+                content: $rootScope.helpPages[page.id].content,
                 parent: page.parent,
                 children: page.children.length ? generateNavObject(page.children) : []
             };
@@ -141,15 +143,38 @@ angular.module('CMS').controller('cmsPagesCtrl', ['$location', '$rootScope', '$s
             return;
         }
         if (page.children && page.children.length > 0) {
-            $scope.selectedPage = $rootScope.helpPages[page.slug].children[0];
+            $scope.selectedPage = $rootScope.helpPages[page.id].children[0];
             $scope.selectedPageParent = page.id;
         } else {
-            $scope.selectedPage = $rootScope.helpPages[page.slug];
+            $scope.selectedPage = $rootScope.helpPages[page.id];
             $scope.selectedPageParent = page.parent;
         }
 
         $scope.downloadPDFLink = Config.main.enableDownloadPDFInHelpPages && ((Config.main.cmsDataDomain ? Config.main.cmsDataDomain + '/json' : WPConfig.wpUrl) + '?json=pdf&pdf=' +  (WPConfig.wpBaseHost[$location.host()] || WPConfig.wpBaseHost['default'] || WPConfig.wpBaseHost) + '&page_id=' + page.id);
+        var contentContainer = document.getElementsByClassName('general-text-list');
+        if (contentContainer && contentContainer[0]) {
+            contentContainer[0].scrollTop = 0; // Resetting scroll
+        }
     };
+
+    function getHelpPageByField(value) {
+        var parsedValue = parseInt(value, 10), field, data;
+        if (parsedValue) {
+            field = 'id';
+            data = parsedValue;
+        } else {
+            field = 'slug';
+            data = value;
+        }
+        var helpPage = {};
+        angular.forEach($rootScope.helpPages, function (page) {
+            if (page[field] === data) {
+                helpPage = page;
+            }
+        });
+
+        return helpPage;
+    }
 
     var helpPagesLoaded = null;
     /**
@@ -166,7 +191,6 @@ angular.module('CMS').controller('cmsPagesCtrl', ['$location', '$rootScope', '$s
         var loadingHelpPages = $q.defer();
         helpPagesLoaded = loadingHelpPages.promise;
         if (Utils.isObjectEmpty($rootScope.helpPages)) {
-            console.log('loading help pages');
             content.getPage('help.' + (forPopup ? 'popupPageSlugs' : 'pageSlugs'), true, true).then(function (data) {
                 if (!data.data.page) {
                     return;
@@ -176,13 +200,12 @@ angular.module('CMS').controller('cmsPagesCtrl', ['$location', '$rootScope', '$s
                 $scope.selectedPage = data.data.page;
                 $scope.selectedPage.content = $sce.trustAsHtml($scope.selectedPage.content);
                 loadingHelpPages.resolve(true);
-                console.log('loadHelpPages', $rootScope.navigation, $rootScope.helpPages);
             });
         } else {
             loadingHelpPages.resolve(true);
         }
         if ($scope.env.selectedHelpPageSlug) {
-            var pageToOpen = parseInt($scope.env.selectedHelpPageSlug) ? getPageById($scope.env.selectedHelpPageSlug) : $rootScope.helpPages[$scope.env.selectedHelpPageSlug];
+            var pageToOpen = getHelpPageByField($scope.env.selectedHelpPageSlug);
             $scope.openPage(pageToOpen);
         }
         return helpPagesLoaded;
@@ -268,7 +291,6 @@ angular.module('CMS').controller('cmsPagesCtrl', ['$location', '$rootScope', '$s
             $scope.selectPopupSecondLevelPage(null);
             $scope.displayPage = page;
         }
-        console.log($rootScope.helpPages);
     };
 
     /**
@@ -398,7 +420,7 @@ angular.module('CMS').controller('cmsPagesCtrl', ['$location', '$rootScope', '$s
 
     $scope.$watch('env.selectedHelpPageSlug', function () {
         if ($scope.env.selectedHelpPageSlug) {
-            var pageToOpen = parseInt($scope.env.selectedHelpPageSlug) ? getPageById($scope.env.selectedHelpPageSlug) : $rootScope.helpPages[$scope.env.selectedHelpPageSlug];
+            var pageToOpen = getHelpPageByField($scope.env.selectedHelpPageSlug);
             $scope.openPage(pageToOpen);
         }
     });
@@ -411,12 +433,13 @@ angular.module('CMS').controller('cmsPagesCtrl', ['$location', '$rootScope', '$s
      */
     function openDeepLinkedHelpPage() {
         if ($location.search().help) {
+            var help = $location.search().help;
             $scope.loadHelpPages().then(function () {
-                var page = parseInt($location.search().help) ? getPageById($location.search().help) : $rootScope.helpPages[$location.search().help];
+                var page = getHelpPageByField(help);
                 if (page) {
                     $rootScope.env.showSlider = true;
                     $rootScope.env.sliderContent = 'help';
-                    $rootScope.env.selectedHelpPageSlug = $location.search().help;
+                    $rootScope.env.selectedHelpPageSlug = help;
                     $location.search('help', undefined);
                     $location.search('lang', undefined);
                 }
@@ -494,18 +517,39 @@ angular.module('CMS').controller('cmsPagesCtrl', ['$location', '$rootScope', '$s
      * @description   populates $scope's **casinoTopBanners** variable with banner information got from cms
      *
      * @param {string} [containerId] optional. id of container to get banner for
+     *
+     * @param {boolean} [separate] optional. separate banners by login status
      */
-    $scope.getCasinoBanners = function getCasinoBanners(containerId) {
+    $scope.getCasinoBanners = function getCasinoBanners(containerId, separate) {
         containerId = containerId || content.getSlug('bannerSlugs.casino');
         content.getWidget(containerId).then(function (response) {
             if (response.data && response.data.widgets && response.data.widgets[0]) {
-                $scope.casinoTopBanners = [];
+                if (separate) {
+                    $scope.casinoTopBanners = {
+                        true: [], /*authorized*/
+                        false: [] /*not authorized*/
+                    };
+                } else {
+                    $scope.casinoTopBanners = [];
+                }
+
                 var regexp = /^(?:https?:\/\/)?(?:www\.)?(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))((\w|-){11})(?:\S+)?$/;
                 angular.forEach(response.data.widgets, function (widget) {
-                    if (widget.instance && widget.instance.link && widget.instance.link.match(regexp)) {
-                        widget.instance.isYouTubeVideo = true;
+                    if (widget.instance){
+                        if (widget.instance.link && widget.instance.link.match(regexp)) {
+                            widget.instance.isYouTubeVideo = true;
+                        }
+                        if (separate) {
+                            if (widget.instance.show_for === '1' || widget.instance.show_for === '0' || !widget.instance.show_for) {
+                                $scope.casinoTopBanners.true.push(widget.instance);
+                            }
+                            if (widget.instance.show_for === '2' || widget.instance.show_for === '0' || !widget.instance.show_for) {
+                                $scope.casinoTopBanners.false.push(widget.instance);
+                            }
+                        }else {
+                            $scope.casinoTopBanners.push(widget.instance);
+                        }
                     }
-                    $scope.casinoTopBanners.push(widget.instance);
                 });
             }
         });
@@ -692,21 +736,6 @@ angular.module('CMS').controller('cmsPagesCtrl', ['$location', '$rootScope', '$s
                 return pages[i];
             }
         }
-    };
-
-    /**
-     * @ngdoc method
-     * @name initSections
-     * @methodOf CMS.controller:cmsPagesCtrl
-     * @description initializes sections by reading from config and transforming for use in template
-     */
-    $scope.initSections = function initSections() {
-        $scope.additionalSections = [];
-        angular.forEach(WPConfig.additionalSections, function (section, id) {
-            section.id = id;
-            section.name = Translator.get(section.name);
-            $scope.additionalSections.push(section);
-        });
     };
 
     /**
@@ -1118,16 +1147,4 @@ angular.module('CMS').controller('cmsPagesCtrl', ['$location', '$rootScope', '$s
             $scope.pokerPopup = data.data.page;
         });
     };
-
-    function getPageById(id) {
-        var page;
-
-        angular.forEach($rootScope.helpPages, function (helpPage) {
-            if (helpPage.id === parseInt(id)) {
-                page = helpPage;
-            }
-        });
-
-        return page;
-    }
 }]);

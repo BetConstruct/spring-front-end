@@ -44,10 +44,10 @@
                                 <ul>
                                     <li class="mini-facebook"><a ng-href="https://www.facebook.com/sharer/sharer.php?u={{landingNews.permalink}}" target="_blank">facebook</a></li>
                                     <li class="mini-twitter">
-                                        <a ng-href="https://twitter.com/share?text={{landingNews.titleRaw}}&url=1&via={{conf.twitterAccount}}&hashtags={{conf.twitterHashTag}},{{landingNews.categoryTitle}}" target="_blank">Tweet</a>
+                                        <a ng-href="https://twitter.com/share?text={{landingNews.titleRaw}}&url=1&via={{$root.conf.twitterAccount}}&hashtags={{$root.conf.twitterHashTag}},{{landingNews.categoryTitle}}" target="_blank">Tweet</a>
                                     </li>
                                     <li class="mini-google"><a ng-href="https://plus.google.com/share?url={{landingNews.permalink}}" target="_blank">google+</a></li>
-                                    <li class="mini-permalink"><a href="" ng-click="showPermaLink(landingNews.permalinkRedirected)">permalink</a></li>
+                                    <li class="mini-permalink"><a href="" ng-click="showPermaLink(landingNews.permalink)">permalink</a></li>
                                 </ul>
                             </div>
                         </div>
@@ -93,10 +93,10 @@
                                     <ul>
                                         <li class="mini-facebook"><a ng-href="https://www.facebook.com/sharer/sharer.php?u={{selectedNews.permalink}}" target="_blank">facebook</a></li>
                                         <li class="mini-twitter">
-                                            <a ng-href="https://twitter.com/share?text={{selectedNews.titleRaw|uri}}&url={{selectedNews.permalink}}&via={{conf.twitterAccount}}&hashtags={{conf.twitterHashTag}},{{selectedNews.categoryTitle}}" target="_blank">Tweet</a>
+                                            <a ng-href="https://twitter.com/share?text={{selectedNews.titleRaw|uri}}&url={{selectedNews.permalink}}&via={{$root.conf.twitterAccount}}&hashtags={{$root.conf.twitterHashTag}},{{selectedNews.categoryTitle}}" target="_blank">Tweet</a>
                                         </li>
                                         <li class="mini-google"><a ng-href="https://plus.google.com/share?url={{selectedNews.permalink}}" target="_blank">google+</a></li>
-                                        <li class="mini-permalink"><a href="" ng-click="showPermaLink(selectedNews.permalinkRedirected)">permalink</a></li>
+                                        <li class="mini-permalink"><a href="" ng-click="showPermaLink(selectedNews.permalink)">permalink</a></li>
                                     </ul>
                                 </div>
                             </div>
@@ -110,8 +110,8 @@
             </div>
 
             <div class="load-more-news" ng-show="!noMoreNews">
-                <a ng-if="conf.autoLoadNews" load-more bottom-offset="600" block-offset="getBlockHeigth" exception="newsAreLoading" ng-click="loadMoreNews()" ng-show="!newsAreLoading"><p trans>Load more</p><span></span></a>
-                <a ng-if="!conf.autoLoadNews" ng-click="loadMoreNews()" ng-show="!newsAreLoading"><p trans>Load more</p><span></span></a>
+                <a ng-if="$root.conf.autoLoadNews" load-more bottom-offset="600" block-offset="getBlockHeigth" exception="newsAreLoading" ng-click="loadMoreNews()" ng-show="!newsAreLoading"><p trans>Load more</p><span></span></a>
+                <a ng-if="!$root.conf.autoLoadNews" ng-click="loadMoreNews()" ng-show="!newsAreLoading"><p trans>Load more</p><span></span></a>
                 <a trans class="loading-more" ng-show="newsAreLoading">Loading</a>
             </div>
         </div>

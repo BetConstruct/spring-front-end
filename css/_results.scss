@@ -13,9 +13,11 @@ $skin-palette-8: $skin-palette-8 !default;
     position: absolute;
     top: 46px !important;
     z-index: 9999;
-    right: 0 !important;
-    left: auto !important;
     display: inline-block;
+    @include ltr {
+        left: auto !important;
+        right: 0 !important;
+    }
     @include rtl {
         left: 0 !important;
         right: auto !important;
@@ -32,11 +34,12 @@ $skin-palette-8: $skin-palette-8 !default;
     border-width: 0 6px 8px 6px;
     position: absolute;
     top: -8px;
-    right: 10px;
     z-index: 22;
+    @include ltr {
+        right: 10px;
+    }
     @include rtl {
         left: 10px;
-        right: auto;
     }
 }
 .input-group .dropdown-menu table {
@@ -88,10 +91,11 @@ $skin-palette-8: $skin-palette-8 !default;
 .input-group .dropdown-menu table tr th .pull-left:before,
 .input-group .dropdown-menu table tr th .pull-right:after{
     position: absolute;
-    left: 0;
     top: 1px;
+    @include ltr {
+        left: 0;
+    }
     @include rtl {
-        left: auto;
         right: 0;
     }
 }
@@ -101,13 +105,15 @@ $skin-palette-8: $skin-palette-8 !default;
     left: 6px;
 }
 .date-view{
-    float: left;
-    border-radius: 0 5px 5px 0;
     height: 36px;
-    padding: 0;
     width: 30px;
     position: relative;
     border: 0;
+    @include ltr {
+        float: left;
+        padding: 0;
+        border-radius: 0 5px 5px 0;
+    }
     @include rtl {
         float: right;
         padding: 0 14px 0 0;
@@ -115,13 +121,15 @@ $skin-palette-8: $skin-palette-8 !default;
     }
 }
 .form-control{
-    float: left;
-    border-radius: 5px 0 0 5px;
     height: 36px;
     box-sizing: border-box;
-    padding: 0 0 0 14px;
     width: calc(100% - 30px);
     border: 0;
+    @include ltr {
+        float: left;
+        padding: 0 0 0 14px;
+        border-radius: 5px 0 0 5px;
+    }
     @include rtl {
         float: right;
         padding: 0 14px 0 0;
@@ -142,8 +150,13 @@ $skin-palette-8: $skin-palette-8 !default;
     float: left;
     width: 100%;
     text-transform: uppercase;
-    padding: 68px 0 0 14px;
     box-sizing: border-box;
+    @include ltr {
+        padding: 68px 0 0 14px;
+    }
+    @include rtl {
+        padding: 68px 14px 0 0;
+    }
 }
 .results-table-j {
     float: left;
@@ -160,23 +173,36 @@ $skin-palette-8: $skin-palette-8 !default;
 .results-table-j table .icon-arrow-down5-j-sort {
     display: inline-block;
     font-family: 'icomoon';
-    margin: 0 8px 0 0;
     vertical-align: baseline;
+    @include ltr {
+        margin: 0 8px 0 0;
+    }
     @include rtl {
         margin: 0 0 0 8px;
     }
 }
-.results-table-j table .icon-arrow-down5-j-sort:before {content: "\e670";}
-.results-table-j table .icon-arrow-down5-j-sort.up-j-icon:before { content: "\e671";}
+.results-table-j table .icon-arrow-down5-j-sort:before {
+    content: "\e670";
+}
+.results-table-j table .icon-arrow-down5-j-sort.up-j-icon:before {
+    content: "\e671";
+}
 .results-table-j table tr td, .results-table-j table tr th {
     padding: 0 10px;
-    text-align: left;
     font-weight: normal;
     height: 30px;
     line-height: 30px;
     vertical-align: top;
+    @include ltr {
+        text-align: left;
+    }
     @include rtl {
         text-align: right;
+    }
+}
+.results-table-j table tr td:last-child > div {
+    @include rtl {
+        unicode-bidi: bidi-override;
     }
 }
 .results-table-j table tr td > div, .results-table-j table tr th > div {
@@ -209,7 +235,6 @@ $skin-palette-8: $skin-palette-8 !default;
     z-index: 22;
 }
 .results-table-j ul li{
-    float: left;
     box-sizing: border-box;
     width: 50%;
     padding: 0 10px;
@@ -217,14 +242,22 @@ $skin-palette-8: $skin-palette-8 !default;
     margin: 0;
     color: $text-palette-3;
     box-shadow: 0 1px 0 $skin-palette-8 inset;
+    @include ltr {
+        float: left;
+    }
+    @include rtl {
+        float: right;
+    }
 }
 .results-table-j ul li:first-child, .results-table-j ul li:nth-child(2){
     box-shadow: none;
 }
-.results-table-j ul li:only-child{width: 100%;}
+.results-table-j ul li:only-child {
+    width: 100%;
+}
 .results-table-j ul li span{
-    color: map-get($coeff-color-map, classic);
     padding-left: 5px;
+    color: map-get($coeff-color-map, classic);
 }
 .results-table-j td.result-details{
     padding: 10px;
@@ -251,9 +284,11 @@ $skin-palette-8: $skin-palette-8 !default;
     width: 100%;
 }
 .results-header-j h2 {
-    float: left;
     display: block;
-    padding: 12px 0 13px 18px;
+    @include ltr {
+        float: left;
+        padding: 12px 0 13px 18px;
+    }
     @include rtl {
         float: right;
         padding: 12px 18px 13px 0;
@@ -289,8 +324,10 @@ $skin-palette-8: $skin-palette-8 !default;
 .results-table-cell-j.button-container-j {
     width: 1%;
     vertical-align: bottom;
-    padding: 0 0 0 8px;
     white-space: nowrap;
+    @include ltr {
+        padding: 0 0 0 8px;
+    }
     @include rtl {
         padding: 0 8px 0 0;
         transform: translate3d(0,0,0);
@@ -351,25 +388,28 @@ $skin-palette-8: $skin-palette-8 !default;
     content: "\e674";
     font: 18px icomoon;
     position: absolute;
-    right: 14px;
     top: calc((100% - 18px) / 2);
     height: 12px;
+    @include ltr {
+        right: 14px;
+    }
     @include rtl {
         left: 14px;
-        right: auto;
     }
 }
 .results-select-j select {
     display: block;
     width: calc(100% + 24px);
     height: 100%;
-    float: left;
     background: transparent;
-    padding: 0 39px 0 14px;
     border: 0;
     position: relative;
     box-sizing: border-box;
     z-index: 50;
+    @include ltr {
+        float: left;
+        padding: 0 39px 0 14px;
+    }
     @include rtl {
         float: right;
         padding: 0 14px 0 39px;
@@ -434,17 +474,21 @@ $skin-palette-8: $skin-palette-8 !default;
     text-align: center;
 }
 .input-group .dropdown-menu table tr th .pull-left:before{
-    font: 18px/30px "icomoon";
-    content: "\e673";
     left: 6px;
+    font: 18px/30px "icomoon";
+    @include ltr {
+        content: "\e673";
+    }
     @include rtl {
         content: "\e676";
     }
 }
 .input-group .dropdown-menu table tr th .pull-right:after{
-    content: "\e676";
     right: 0;
     font: 18px/30px "icomoon";
+    @include ltr {
+        content: "\e676";
+    }
     @include rtl {
         content: "\e673";
     }
@@ -540,8 +584,10 @@ label.results-live-j {
     float: none;
     vertical-align: top;
     cursor: pointer;
-    margin: 0 0 0 15px;
-    padding: 0 0 0 25px;
+    @include ltr {
+        margin: 0 0 0 15px;
+        padding: 0 0 0 25px;
+    }
     @include rtl {
         margin: 0 15px 0 0;
         padding: 0 25px 0 0;
@@ -550,11 +596,12 @@ label.results-live-j {
 label.results-live-j input {
     position: absolute;
     top: 0;
-    left: 0;
     opacity: 0;
     cursor: pointer;
+    @include ltr {
+        left: 0;
+    }
     @include rtl {
-        left: auto;
         right: 0;
     }
 }
@@ -566,9 +613,10 @@ label.results-live-j input + i {
     border-radius: 2px;
     position: absolute;
     top: -2px;
-    left: 0;
+    @include ltr {
+        left: 0;
+    }
     @include rtl {
-        left: auto;
         right: 0;
     }
 }

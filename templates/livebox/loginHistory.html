@@ -1,0 +1,103 @@
+<div ng-controller="loginHistoryCtrl" class="login-history-container">
+    <div class="all-history-filter-container">
+        <div class="filter-columns-container">
+            <ul>
+                <li>
+                    <p trans>Period</p>
+                    <select class="select-box-period-b" ng-model="customPeriod" ng-change="selectLoginHistoryTimePeriod();">
+                        <option value="" ng-show="!customPeriod" trans>Custom</option>
+                        <option value="24" trans>24 hours</option>
+                        <option value="48" trans>48 hours</option>
+                        <option value="72" trans>78 hours</option>
+                    </select>
+                </li>
+                <li class="range-filter-box">
+                    <p trans>Range</p>
+                    <div class="mini-form-box-b">
+                        <div class="date-picker-b">
+                            <div class="picker-contain">
+                                <div class="input-group" ng-click="toggleDatePicker($event, 'from')">
+                                    <input type="text"
+                                           class="form-control"
+                                           placeholder="{{'From'|translate}}"
+                                           datepicker-popup="{{$root.conf.dateFormat.datepicker}}"
+                                           max-date="maxDay"
+                                           ng-model="datePickerRange.dateFrom"
+                                           is-open="datePickerOpen.from"
+                                           disabled="disabled"
+                                           datepicker-options="dateOptions"
+                                           ng-change="adjustDate('from')"
+                                           ng-required="true"
+                                           close-text="Close"/>
+                                    <span class="input-group-btn">
+                                        <button type="button" class="btn btn-default date-view">
+                                            <i class="date-p"></i>
+                                        </button>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                <li>
+                    <p></p>
+                    <div class="mini-form-box-b">
+                        <div class="date-picker-b">
+                            <div class="picker-contain">
+                                <div class="input-group" ng-click="toggleDatePicker($event, 'to')">
+                                    <input type="text"
+                                           class="form-control"
+                                           placeholder="{{'To'|translate}}"
+                                           datepicker-popup="{{$root.conf.dateFormat.datepicker}}"
+                                           min-date="minToDate"
+                                           max-date="maxDay"
+                                           ng-model="datePickerRange.dateTo"
+                                           is-open="datePickerOpen.to"
+                                           disabled="disabled"
+                                           datepicker-options="dateOptions"
+                                           ng-change="adjustDate('to')"
+                                           ng-required="true"
+                                           close-text="Close"/>
+                                    <span class="input-group-btn">
+                                        <button type="button" class="btn btn-default date-view">
+                                            <i class="date-p"></i>
+                                        </button>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+        <div class="mybets-filter-show-b">
+            <button prevent-fast-click="1.5" ng-click="getLoginHistory()" trans>SHOW</button>
+        </div>
+    </div>
+    <div class="login-history-content">
+        <ul class="login-history-table">
+            <li class="login-history-tr" ng-if="loginHistoryLoaded">
+                <div class="login-history-tc"><p trans>Login Date</p></div>
+                <div class="login-history-tc"><p trans>Logout Date</p></div>
+                <div class="login-history-tc"><p trans>Source</p></div>
+                <div class="login-history-tc"><p trans>IP</p></div>
+            </li>
+        </ul>
+        <div class="login-history-table-list">
+            <ul class="login-history-table">
+                <li class="login-history-tr" ng-repeat="login in netLoginHistory track by login.StartTime">
+                    <div class="login-history-tc">
+                        <p>{{::login.StartTime|formatDate:'unixDate'}} | {{::login.StartTime|formatDate:'noLocaleTime':null:$root.env.timeFormat}}</p>
+                    </div>
+                    <div class="login-history-tc">
+                        <p><span  ng-if="login.EndTime" ng-bind="::(login.EndTime|formatDate:'unixDate') + ' | ' + (login.EndTime|formatDate:'noLocaleTime':null:$root.env.timeFormat)"></span></p>
+                    </div>
+                    <div class="login-history-tc"><p ng-bind="::login.SourceName"></p></div>
+                    <div class="login-history-tc"><p ng-bind="::login.LoginIP"></p></div>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <vbet-loader ng-if="!loginHistoryLoaded"></vbet-loader>
+
+</div>

@@ -2,8 +2,8 @@
 <div class="save-games-contain" ng-show="env.sliderContent === 'savedGames'" ng-controller="myGamesCtrl" ng-if="conf.sportSavedGamesEnabled" watch-resize>
     <div class="my-games-save">
         <div class="games-save-slider" >
-            <div class="arrow-left-s" ng-show="offset > 0"><a ng-click="slide('left')">left-arrow</a></div>
-            <div class="arrow-right-s" ng-show="offset < allGamesCount - gamesToShow"><a ng-click="slide('right')">right-arrow</a></div>
+            <div class="arrow-left-s" ng-show="offset > 0"><a ng-click="slide('left')"></a></div>
+            <div class="arrow-right-s" ng-show="offset < allGamesCount - gamesToShow"><a ng-click="slide('right')"></a></div>
             <ul ng-show="games.length > 0">
                 <li ng-repeat="game in games track by game.id" ng-click="chooseFavorite(game)" ng-class="{'first': $first, 'last': $last}">
                     <div class="game-status" ng-class="{'game-status-live': game.type === 1}">
@@ -19,11 +19,11 @@
                     <div ng-show="game.type === 1">
                         <div class="teams" ng-class="{'racing': game.sport.alias === 'HorseRacing'}">
                             <div class="team-1">
-                                <div class="score">{{ game.info.score1 }}</div>
+                                <div class="score" ng-bind="game.info.set_count === 1 ? game.stats.score_set1.team1_value : game.info.score1"></div>
                                 <div class="name" title="{{game.team1_name}}"><span>{{ game.team1_name }}</span></div>
                             </div>
                             <div class="team-2">
-                                <div class="score">{{ game.info.score2 }}</div>
+                                <div class="score" ng-bind="game.info.set_count === 1 ? game.stats.score_set1.team2_value : game.info.score2"></div>
                                 <div class="name" title="{{game.team2_name}}"><span>{{ game.team2_name }}</span></div>
                             </div>
                         </div>
@@ -77,7 +77,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="save-horseracing-stats" ng-if="game.sport.alias === 'HorseRacing'">                         
+                        <div class="save-horseracing-stats" ng-if="game.sport.alias === 'HorseRacing'">
                             <table>
                                 <tr>
                                     <td trans>Time</td>

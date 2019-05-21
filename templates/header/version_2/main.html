@@ -29,7 +29,7 @@
         <ul class="responsive-header-contain-j">
             <li class="responsive-header-item-j">
                 <div class="logo-nav-wrapper">
-                    <a ng-href="{{::logoUrl}}" ng-click="closeSlider();">
+                    <a ng-href="{{::$root.conf.logo.url}}" ng-click="closeSlider();">
                         <img ng-src="{{(conf.logo.image ? conf.logo.image : 'skins/' + conf.skin + '/images/logo.png') + '?v=' + env.appVersion}}" image-on-load image-width="logoWidth" ng-style="{'width' : conf.logo.width ? (conf.logo.width + 'px') : '', 'height' : conf.logo.height ? (conf.logo.height + 'px') : ''}"/>
                         <img ng-src="{{(conf.logo.imageFix ? conf.logo.imageFix : 'skins/' + conf.skin + '/images/logo2.png') + '?v=' + env.appVersion}}" ng-style="{'width' : conf.logo.widthFix ? (conf.logo.widthFix + 'px') : '', 'height' : conf.logo.heightFix ? (conf.logo.heightFix + 'px') : ''}"/>
                     </a>
@@ -38,7 +38,7 @@
             <li class="responsive-header-item-j auto-width">
                 <div class="header-top-row">
                     <ul class="responsive-header-contain-j">
-                        <li class="responsive-header-item-j header-icon-menu">
+                        <li ng-if="!$root.conf.header.hideTopMenu" class="responsive-header-item-j header-icon-menu">
                             <label for="header-collapse" class="menu-visible-icon-b" trans>Menu</label>
                         </li>
                         <li class="responsive-header-item-j very-top-menu-wrapper-j auto-width">
@@ -82,17 +82,9 @@
                                 </div>
                             </div>
                         </li>
-                        <li class="responsive-header-item-j"
-                            ng-if="loginTime !== undefined">
-                            <div class="separator-contain-nav">
-                                <div class="settings-icon-contain clock-set-b" >
-                                    {{'Active Time:'|translate}} <span ng-bind="loginTime|formatDate:'duration'"></span>
-
-                        </div>
-                    </div>
-                </li>
                 <li class="responsive-header-item-j"
-                    ng-if="env.authorized && conf.GmsPlatform && conf.promotionalBonuses.enable">
+                    ng-show="(!conf.hideBonusSectionIfNoBonus || (conf.hideBonusSectionIfNoBonus && $root.allBonusesCount.sportsbook + $root.allBonusesCount.casino > 0))"
+                    ng-if="env.authorized && conf.promotionalBonuses.enable">
                     <div class="separator-contain-nav" ng-click="toggleSliderTab('promotionalBonuses')">
                         <div class="settings-icon-contain my-bets-b">
                             <b class="mybets-icon-box-b cms-jcon-bonus2"></b>
@@ -104,11 +96,11 @@
                     ng-show="!env.authorized">
                     <div class="signin-reg-buttons-b" id="signin-reg-buttons">
                         <ul ng-hide="conf.header.disableRegistrationAndLogin">
-                            <li ng-hide="!conf.registration.enableSignIn"
+                            <li ng-if="conf.registration.enableSignIn"
                                 ng-if="!conf.rfid.loginWIthRFID || conf.rfid.loginWIthRFID && conf.rfid.allowAccessWithoutRfid">
                                 <button ng-class="{'active-s': env.sliderContent === 'login'}" ng-click="signin()" trans>Sign in</button>
                             </li>
-                            <li ng-hide="!conf.registration.enable">
+                            <li ng-if="conf.registration.enable">
                                 <button ng-click="register()" trans>Register</button>
                                 <ng-include src="::'templates/header/dynamicmessage.html'|fixPath"></ng-include>
                             </li>
@@ -154,7 +146,7 @@
                     ng-show="!conf.rfid.loginWIthRFID || conf.rfid.loginWIthRFID && env.authorized" ng-if="(calculatedConfigs.sportEnabled || casinoEnabled) && conf.header.showFavoriteIcon" >
                     <div class="separator-contain-nav"
                          prevent-fast-click ng-click="myGamesToggle()">
-                        <div class="settings-icon-contain favorite-icon-b" title="Favorites" trans="attr-only">
+                        <div class="settings-icon-contain favorite-icon-b" title="Favorite Games" trans="attr-only">
                             <i class="favorite-count-view"
                                ng-show="myGames.length || (!env.hideCasinoFavorites && casinoEnabled && myCasinoGames.length)"
                                >{{myGames.length + ((env.hideCasinoFavorites || !casinoEnabled) ? 0 : myCasinoGames.length)}}</i>
@@ -196,7 +188,8 @@
                                                 <!-- Additional help icons (SDC-27785) -->
                                                 <li ng-repeat="helpItem in (conf.header.additionalHelpIcons[env.lang] || conf.header.additionalHelpIcons.eng)">
                                                     <i ng-class="helpItem.icon"></i>
-                                                    <a ng-if="helpItem.title" ng-click="broadcast('scrollTo', 'header')" ng-href="#/?help={{helpItem.slug}}" ng-bind="helpItem.title" trans></a>
+                                                    <a ng-if="helpItem.title && helpItem.slug" ng-click="broadcast('scrollTo', 'header')" ng-href="#/?help={{helpItem.slug}}" ng-bind="helpItem.title" trans></a>
+                                                    <a ng-if="helpItem.title && helpItem.src" target="{{helpItem.target ? helpItem.target : '_self'}}" ng-href="{{helpItem.src}}" ng-bind="helpItem.title|translate"></a>
                                                 </li>
 
                                                 <li ng-show="!!isLiveAgent && !conf.liveChat.disableFromHeader && !conf.liveChat[env.lang].notLiveAgentIsLang" ng-click="startLiveAgent()">
@@ -262,10 +255,9 @@
                                      ng-click="headerVersion2Icons.timezoneIsToggled = !headerVersion2Icons.timezoneIsToggled">
                                     <span>
                                         <b>{{env.clock|formatDate:'fullHourWithoutAmPm':null:env.timeFormat}}</b>
+                                        <b ng-if="env.loginTime" ng-bind="env.loginTime"></b>
                                     </span>
-                                    <i ng-bind="env.clock|formatDate:'onlyAmPm':null:env.timeFormat"></i>
                                 </div>
-
                                 <div class="nav-open-view-contain" ng-if="conf.header.enableTimeZoneSelect">
                                     <ul>
                                         <li>
@@ -347,6 +339,21 @@
                 </li>
             </ul>
         </div>
+        <div class="swedish-license" ng-if="conf.header.licenseLogos">
+            <div class="s-l-logo" ng-repeat="logo in conf.header.licenseLogos" ng-switch="logo.type" ng-class="{'s-l-icon': logo.type === 'icon'}">
+                <div class="swedish-license-icon-info" ng-switch-when="icon">
+                    <div>
+                        <p ng-bind="::(logo.text[env.lang] || logo.text.default)"></p>
+                    </div>
+                </div>
+                <a ng-switch-default
+                   ng-href="{{::logo.href}}"
+                   target="{{::logo.target || '_blank'}}"
+                   ng-click="logo.broadcast ? (env.authorized ? $root.broadcast(logo.broadcast.key, logo.broadcast.data) : $root.broadcast('openLoginForm', logo.broadcast)) : void()">
+                    <img ng-src="{{::logo.imgSrc}}">
+                </a>
+            </div>
+        </div>
     </div>
 </div>
 <!--header END-->
@@ -357,7 +364,10 @@
     <div class="subtop-header-menu-j"  no-animate>
         <ul>
             <li ng-repeat="subMenuItem in subMenuItems track by $index" ng-class="{'active': subMenuItem.classObject.active}" ng-if="subMenuItem.showCondition">
-                <a ng-href="{{subMenuItem.href}}">{{subMenuItem.displayName | translate}}</a>
+                <a ng-href="{{subMenuItem.href}}">
+                    {{subMenuItem.displayName | translate}}
+                    <!--<img src="images/virtual-sport/{{::subMenuItem.displayName.split(' ').join('_').toLowerCase()}}.png"> todo -->
+                </a>
             </li>
         </ul>
     </div>

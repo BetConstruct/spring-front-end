@@ -8,7 +8,7 @@
  *  Games ids' list is kept in $rootScope.myGames
  *  and is syncronized with local storage on every update(adding or removing a game)
  */
-VBET5.controller('myGamesCtrl', ['$scope', '$rootScope', '$location', '$route', 'Utils', 'Storage', 'ConnectionService', 'Zergling', 'Config', 'GameInfo', '$cookies', '$window',  function ($scope, $rootScope, $location, $route, Utils, Storage, ConnectionService, Zergling, Config, GameInfo, $cookies, $window) {
+VBET5.controller('myGamesCtrl', ['$scope', '$rootScope', '$location', '$route', 'Utils', 'Storage', 'ConnectionService', 'Zergling', 'Config', 'GameInfo', '$cookies', '$window', 'analytics',  function ($scope, $rootScope, $location, $route, Utils, Storage, ConnectionService, Zergling, Config, GameInfo, $cookies, $window, analytics) {
     'use strict';
 
     $scope.myGamesloaded = false;
@@ -20,7 +20,6 @@ VBET5.controller('myGamesCtrl', ['$scope', '$rootScope', '$location', '$route', 
     var connectionService = new ConnectionService($scope);
 
     $rootScope.myGames = $cookies.getObject("myGames") || Storage.get('myGames') || [];
-    $rootScope.myCompetitions = Storage.get('myCompetitions') || [];
 
     /**
      * @ngdoc method
@@ -44,7 +43,6 @@ VBET5.controller('myGamesCtrl', ['$scope', '$rootScope', '$location', '$route', 
         $scope.gamesToShow = 3;
         $scope.games = allGames && getVisibleGames(allGames);
     });
-
 
     /**
      * @ngdoc method
@@ -82,6 +80,36 @@ VBET5.controller('myGamesCtrl', ['$scope', '$rootScope', '$location', '$route', 
                         }
 
                         GameInfo.hasVideo(game); // check availability of video
+                        GameInfo.checkITFAvailability(game);
+                        if (game.market) {
+                            // Adding P1XP2 or P1P2 info to the game object
+                            var marketIds = Object.keys(game.market),
+                                numberOfMarkets = marketIds.length,
+                                market;
+
+                            // If we've received two markets (making marketIds.length = 2), then we always want to pick P1XP2...
+                            if (numberOfMarkets > 1) {
+                                for (var i = 0; i < numberOfMarkets; i++) {
+                                    if (game.market[marketIds[i]].type === "P1XP2") {
+                                        market = marketIds[i];
+                                        break;
+                                    }
+                                }
+                            } else { //... if not that we pick the first one
+                                market = marketIds[0];
+                            }
+                            if (market) {
+                                game.marketInfo = game.market[market];
+                                game.marketInfo.markets = [];
+                                for (var events in game.marketInfo.event) {
+                                    game.marketInfo.markets.push(game.marketInfo.event[events]);
+                                }
+                                game.marketInfo.markets.sort(Utils.orderSorting);
+                                game.competition = {id: competition.id};
+                            } else {
+                                game.marketInfo = {};
+                            }
+                        }
 
                         games.push(game);
                     });
@@ -94,7 +122,7 @@ VBET5.controller('myGamesCtrl', ['$scope', '$rootScope', '$location', '$route', 
         $rootScope.myGames = games.map(function (game) {return game.id; }).reduce(function (acc, curr) {if ($rootScope.myGames.indexOf(curr) !== -1) {acc.push(curr); }  return acc; }, []);
 
         Storage.set('myGames', $rootScope.myGames);
-        checkAndSetCookie('myGames', $rootScope.myGames);
+        Utils.checkAndSetCookie('myGames', $rootScope.myGames, Config.main.authSessionLifetime);
         allGames = games;
         $scope.allGamesCount = allGames.length;
         if ($scope.offset > 0 && $scope.offset + $scope.gamesToShow > $scope.allGamesCount) {
@@ -144,21 +172,33 @@ VBET5.controller('myGamesCtrl', ['$scope', '$rootScope', '$location', '$route', 
             return;
         }
 
-        connectionService.subscribe(
-            {
-                'source': 'betting',
-                'what': {
-                    'game': [],
-                    'sport': ['id', 'alias', 'name'],
-                    'competition': ['id', 'name'],
-                    'region': ['id']
-                },
-                'where': {
-                    'game': {
-                        'id': {'@in': $rootScope.myGames }
-                    }
-                }
+        var request = {
+            'source': 'betting',
+            'what': {
+                'game': [],
+                'sport': ['id', 'alias', 'name'],
+                'competition': ['id', 'name'],
+                'region': ['id']
             },
+            'where': {
+                'game': {
+                    'id': {'@in': $rootScope.myGames }
+                }
+            }
+        };
+
+        if (!Config.main.hideMarketFromLeftMenu) {
+            request.what.game = [request.what.game]; // outer join for games that don't have P1XP2 or P1P2
+            request.what.market = ['base', 'type', 'name', 'express_id'];
+            request.what.event = [];
+            request.where.market = {
+                display_key: 'WINNER',
+                display_sub_key: 'MATCH'
+            };
+        }
+
+        connectionService.subscribe(
+            request,
             updateMyGames,
             {
                 'thenCallback': function (response) {
@@ -183,19 +223,6 @@ VBET5.controller('myGamesCtrl', ['$scope', '$rootScope', '$location', '$route', 
         if (myGamesWatcher) {
             myGamesWatcher();
         }
-    });
-
-    $rootScope.$on('game.addToMyCompetition', function (event, competition) {
-        if ($rootScope.myCompetitions === undefined) {
-            $rootScope.myCompetitions = [];
-        }
-        if ($rootScope.myCompetitions.indexOf(competition.id) === -1) {
-            competition.indexInMyCompetitions = 0;
-            $rootScope.myCompetitions.push(competition.id);
-        }
-
-        Storage.set('myCompetitions', $rootScope.myCompetitions);
-        loadMyGames();
     });
 
 
@@ -223,16 +250,15 @@ VBET5.controller('myGamesCtrl', ['$scope', '$rootScope', '$location', '$route', 
         }
 
         Storage.set('myGames', $rootScope.myGames);
-        checkAndSetCookie('myGames', $rootScope.myGames);
+        analytics.gaSend('send', 'event', 'explorer', 'addToMyGames' + (Config.main.sportsLayout),  {'page': $location.path(), 'eventLabel': "addToMyGames"});
+        console.info('gaSend-','addToMyGames');
+        Utils.checkAndSetCookie('myGames', $rootScope.myGames, Config.main.authSessionLifetime);
     });
 
     $rootScope.$on('game.removeGameFromMyGames', function (event, game) {
         $scope.removeGameFromSaved(game);
     });
 
-    $rootScope.$on('game.removeGameFromMyCompetition', function (event, competition) {
-        $scope.removeGameFromMyCompetition(competition);
-    });
 
 
     /**
@@ -244,8 +270,7 @@ VBET5.controller('myGamesCtrl', ['$scope', '$rootScope', '$location', '$route', 
      * @param {Object} game game object
      */
     $scope.removeFavoriteGame = function (game) {
-        $scope.$emit('game.removeGameFromMyGames', game);
-        $scope.$emit('game.removeGameFromMyCompetition', game.competition);
+        $rootScope.$broadcast('game.removeGameFromMyGames', game);
     };
 
     /**
@@ -274,8 +299,9 @@ VBET5.controller('myGamesCtrl', ['$scope', '$rootScope', '$location', '$route', 
 
             $rootScope.myGames.splice(pos, 1);
             Storage.set('myGames', $rootScope.myGames);
-            checkAndSetCookie('myGames', $rootScope.myGames);
-            if ($rootScope.myGames.length === 0) {
+
+            Utils.checkAndSetCookie('myGames', $rootScope.myGames, Config.main.authSessionLifetime);
+            if ($rootScope.myGames.length === 0 && $rootScope.env.sliderContent === 'savedGames') {
                 if ($rootScope.myCasinoGames && $rootScope.myCasinoGames.length) {
                     $rootScope.env.sliderContent = 'casinoSavedGames';
                 } else {
@@ -293,41 +319,11 @@ VBET5.controller('myGamesCtrl', ['$scope', '$rootScope', '$location', '$route', 
         } else {
             removeGame(data);
         }
+
+        analytics.gaSend('send', 'event', 'explorer', 'removeFromMyGames' + (Config.main.sportsLayout),  {'page': $location.path(), 'eventLabel': "removeFromMyGames"});
+        console.info('gaSend-','removeFromMyGames');
     };
 
-    /**
-     * @ngdoc method
-     * @name removeGameFromMyCompetition
-     * @methodOf vbet5.controller:myGamesCtrl
-     * @description removes competition from "my competitions" and updates scope and local storage
-     *
-     * @param {Array} || {String}
-     */
-    $scope.removeGameFromMyCompetition = function removeGameFromMyCompetition(competition) {
-        function removeCompetition(competition) {
-            var pos = $rootScope.myCompetitions.indexOf(competition);
-            if (pos > -1) {
-                $rootScope.myCompetitions.splice(pos, 1);
-
-                Storage.set('myCompetitions', $rootScope.myCompetitions);
-
-                if ($rootScope.myCompetitions.length !== 0) {
-                    loadMyGames();
-                }
-            }
-        }
-        if (angular.isArray(competition)) {
-            var i;
-            for (i = 0; i < competition.length; i++) {
-                removeCompetition(competition[i]);
-            }
-        } else {
-            competition.indexInMyCompetitions = -1;
-            removeCompetition(competition.id);
-        }
-
-
-    };
 
 
 
@@ -349,7 +345,7 @@ VBET5.controller('myGamesCtrl', ['$scope', '$rootScope', '$location', '$route', 
             'type': game.type === 2 ? 0 : game.type,
             'region': game.region.id
         };
-        var absoluteLink = getPrefixLink('#' + neededPath);
+        var absoluteLink = Utils.getPrefixLink('#' + neededPath);
         if (!absoluteLink) {
             $location.search(locationParams);
             if ($location.path() !== neededPath + '/') {
@@ -360,7 +356,7 @@ VBET5.controller('myGamesCtrl', ['$scope', '$rootScope', '$location', '$route', 
         } else {
             $window.location.href = absoluteLink + '/?game=' + locationParams.game + '&sport=' + locationParams.sport + '&competition=' + locationParams.competition + '&region=' + locationParams.region + '&type=' + locationParams.type;
         }
-    };
+    }
 
 
     /**
@@ -374,7 +370,6 @@ VBET5.controller('myGamesCtrl', ['$scope', '$rootScope', '$location', '$route', 
         if (Config.main.sportsLayout !== "modern" && $location.path() === "/sport/") {
             switch (Config.main.sportsLayout) {
                 case "classic":
-                case "euro2016":
                     $rootScope.$broadcast("sportsbook.selectData", {type: "popular.game", data: game});
                     break;
                 case "asian":
@@ -398,40 +393,4 @@ VBET5.controller('myGamesCtrl', ['$scope', '$rootScope', '$location', '$route', 
             gotoGame(game);
         }
     };
-
-    /**
-     * @ngdoc method
-     * @name checkAndSetCookie
-     * @methodOf vbet5.controller:myGamesCtrl
-     * @description  Sets cookie if enabled in config
-     * @param {String} Cookie key
-     * @param {String} Cookie value
-     */
-    function checkAndSetCookie(key, value) {
-        if (Config.main.useAuthCookies) {
-            var cookieOptions = {
-                domain: $window.location.hostname.split(/\./).slice(-2).join("."),
-                path: "/",
-                expires: new Date((new Date()).getTime() + Config.main.authSessionLifetime)
-            };
-            $cookies.putObject(key, value, cookieOptions);
-        }
-    }
-
-    /**
-     * @ngdoc method
-     * @name prefixLinkIfNeeded
-     * @methodOf vbet5.service.TopMenu
-     * @description prefixes given link with hostname depending on config
-     *
-     * @param {String} link relative link
-     * @returns {String} absolute or relative link depending on match in config
-     */
-    function getPrefixLink(link) {
-        if (Config.main.domainSpecificPrefixes && Config.main.domainSpecificPrefixes[$window.location.hostname] && (Config.main.domainSpecificPrefixes[$window.location.hostname][link] || Config.main.domainSpecificPrefixes[$window.location.hostname][link + '/'])) {
-            return (Config.main.domainSpecificPrefixes[$window.location.hostname][link] || Config.main.domainSpecificPrefixes[$window.location.hostname][link + '/']) + link;
-        }
-        return null;
-    }
-    
 }]);

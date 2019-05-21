@@ -1,0 +1,55 @@
+<div class="mixed-view-body-ins always-scroll">
+    <vbet-loader ng-if="!betHistoryLoaded"></vbet-loader>
+    <div class="mixed-history-table" ng-show="betHistoryLoaded">
+        <table>
+            <thead>
+            <tr>
+                <th class="date-id">
+                    <span trans>Date</span>
+                </th>
+                <!-- <th class="status-icon-b"></th>-->
+                <th class="hh-cell" trans>Balance</th>
+                <th class="hh-cell" trans>Deposit</th>
+                <th class="hh-cell" trans>Bet</th>
+                <th class="hh-cell" trans>Win</th>
+                <th class="hh-cell" trans>Withdrawal</th>
+                <th class="hh-cell" trans>Profit</th>
+            </tr>
+            </thead>
+            <tbody ng-repeat="bet in agentBetHistory | orderBy:'date_time':true">
+            <tr class="main">
+                <td class="date-id">
+                    <span ng-if="bet.Date !== 0">{{bet.Date|formatDate:(conf.layoutTimeFormat[conf.sportsLayout] || 'noLocaleTranslate')}} {{conf.layoutTimeFormat[conf.sportsLayout]? (bet.Date|formatDate:'hour':null:env.timeFormat): ''}}</span>
+                    <span ng-if="bet.Date === 0" trans>Total</span>
+                </td>
+                <td class="hh-cell odd-color center-text">
+                    <span ng-bind="bet.Balance"></span>
+                </td>
+                <td class="hh-cell odd-color center-text">
+                    <span ng-bind="bet.DepositAmount"></span>
+                </td>
+                <td class="hh-cell odd-color center-text">
+                    <span ng-bind="bet.SportBetAmount"></span>
+                </td>
+                <td class="hh-cell odd-color center-text">
+                    <span ng-bind="bet.SportWinAmount"></span>
+                </td>
+                <td class="hh-cell odd-color center-text">
+                    <span ng-bind="bet.WithdrawalAmount"></span>
+                </td>
+                <td class="hh-cell odd-color center-text">
+                    <span ng-bind="bet.SportBetAmount - bet.SportWinAmount"></span>
+                </td>
+            </tr>
+            </tbody>
+
+            <tbody ng-if="agentBetHistory && agentBetHistory.length == 0">
+            <tr>
+                <td colspan="9" class="second-color center-text" trans>There are no bets for the selected time period.
+                </td>
+            </tr>
+            </tbody>
+
+        </table>
+    </div>
+</div>

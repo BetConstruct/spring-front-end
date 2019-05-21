@@ -1,0 +1,67 @@
+<div class="left-nav-view-v3 favorite-nav" ng-show="myGames.length">
+    <ul>
+        <li>
+            <div class="sports-item-v3 favorite-nav-icon-v3 {{sport.alias}} {{leftMenuState.favorites.expanded ? 'active' : ''}}"
+                 ng-if="myGames.length > 0" ng-init="leftMenuState.favorites.expanded = true"
+                 ng-click="leftMenuState.favorites.expanded = !leftMenuState.favorites.expanded; leftMenuClosed ? toggleLeftMenu() : void()">
+                {{'Favorite games'|translate}}
+                <div class="sport-games-count-v3" ng-show="myGames.length">{{myGames.length}}</div>
+                <div class="arrow-view-v3"></div>
+            </div>
+
+            <div class="region-item-row-v3">
+                <div class="region-items-box">
+                    <div class="full-region-info-v3">
+                        <div class="games-list-nav-v3">
+                            <div class="games-list-mini-view-v3">
+                                <div class="competition-view-v-3">
+                                    <div class="single-game-item-v3 {{game.id == activeGameId && $location.path() !== '/dashboard/' ? 'active' : ''}}"
+                                         ng-repeat="game in leftMenuFavorites track by game.id"
+                                         ng-class="{'no-events': (!(game.events_count || game.markets_count) || game.is_blocked)}"
+                                         ng-click="selectFavoriteGame(game)"
+                                         ng-show="myGames.indexOf(game.id) !== -1 && (!$root.multiViewLiveOpenedGames || $root.multiViewLiveOpenedGames.indexOf(game.id) === -1)"
+                                    >
+                                        <div class="team-name-1-v3" data-title="{{::game.team1_name}}">
+                                            <span ng-if="game.type == 1 && game.show_type !== 'OUTRIGHT'" ng-bind="game.info.set_count === 1 ? game.stats.score_set1.team1_value : game.info.score1"></span>
+                                        </div>
+                                        <div class="team-name-1-v3" data-title="{{::game.team2_name ? game.team2_name : ''}}">
+                                            <span ng-if="game.type == 1 && game.show_type !== 'OUTRIGHT'" ng-bind="game.info.set_count === 1 ? game.stats.score_set1.team2_value : game.info.score2"></span>
+                                        </div>
+                                        <div class="game-info-mini-v3">
+                                            <p>
+                                                <span ng-show="game.type === 1">{{game.info.current_game_state|convertSetName:game.sport.alias|translate}}</span>
+                                                <span ng-show="game.type !==1">{{game.start_ts|formatDate:'full':null:env.timeFormat}}</span>
+                                                <span ng-show="game.type === 1" trans="attr-only" title="Game time">&nbsp;{{getCurrentTime(game.info.current_game_time)}}</span>
+                                                <i class="blocked-icon-v3" ng-show="(!(game.events_count || game.markets_count) || game.is_blocked)"></i>
+                                            </p>
+                                            <div class="game-info-icons-v3">
+                                                <div class="icon-separator-v3 favorite {{myGames.indexOf(game.id) !== -1 ? 'active' : ''}}"
+                                                     ng-click="toggleGameFavorite(game); $event.stopPropagation()"
+                                                ></div>
+                                                <div class="icon-separator-v3 market-count-v3" trans="attr-only" title="Number of markets">
+                                                    <span>+{{game.markets_count}}</span>
+                                                </div>
+                                                <div class="icon-separator-v3 video" ng-show="game.video_id && $root.conf.videoEnabled"></div>
+                                                <!--<div class="icon-separator-v3 tv"></div>-->
+                                                <div class="icon-separator-v3 statistic" ng-click="openStatistics(game);$event.stopPropagation();" ng-show="$root.conf.enableH2HStat && game.is_stat_available" title="{{'statistic'|translate}}"></div>
+                                            </div>
+                                            <div class="l-b column-{{game.marketInfo.markets.length}}" ng-hide="$root.conf.hideMarketFromLeftMenu || !game.marketInfo.markets.length">
+                                                <div class="single-events-b-v3" ng-repeat="market in game.marketInfo.markets track by market.id" title="{{::market.type_1}}"
+                                                     ng-class="{'pointer-events-none': market.is_empty, 'active': isEventInBetSlip(market), 'blocked': ((market.price | oddConvert:'decimal') == 1 || game.is_blocked)}"
+                                                     ng-click="bet(market, game.marketInfo, game); $event.stopPropagation()">
+                                                    <div class="max-bet-tooltip-v3"onmouseover="displayEventLimit(event)" onmouseleave="cancelDisplayEventLimit(event)" data-id="{{market.id}}" ng-class="{'maxbet-enabled': $root.env.authorized && $root.conf.displayEventsMaxBet}">
+                                                    </div>
+                                                    <b ng-show="(market.price | oddConvert:'decimal') != 1 && !game.is_blocked" class="p-v price{{arrowHide}}" ng-class="{'factor-top': market.price_change > 0, 'factor-bottom': market.price_change < 0}">{{market.price|oddConvert:$root.env.oddFormat}}</b>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </li>
+    </ul>
+</div>

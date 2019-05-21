@@ -52,11 +52,13 @@
     box-sizing: border-box;
 }
 .icons-how-to-play-b > ul > li{
-    float: left;
     display: inline-block;
     box-sizing: border-box;
     padding: 0 15px;
     text-align: center;
+    @include ltr {
+        float: left;
+    }
     @include rtl {
         float: right;
     }
@@ -83,10 +85,12 @@
     box-sizing: border-box;
 }
 .buttons-how-to-play-contain > ul > li{
-    float: left;
     display: inline-block;
     box-sizing: border-box;
     margin: 0 10px;
+    @include ltr {
+        float: left;
+    }
     @include rtl {
         float: right;
     }
@@ -122,9 +126,11 @@
     font: 32px/32px icomoon;
     color: set-color($hero-color);
     text-align: center;
-    margin: 0 10px 0 0;
     position: relative;
     top: 6px;
+    @include ltr {
+        margin: 0 10px 0 0;
+    }
     @include rtl {
         margin: 0 0 0 10px;
     }
@@ -226,13 +232,15 @@
     box-sizing: border-box;
 }
 .rules-slider-box-b > ul > li{
-    float: left;
     box-sizing: border-box;
     width: 25%;
     height: 380px;
     padding: 65px 10px 35px;
     position: relative;
     text-align: center;
+    @include ltr {
+        float: left;
+    }
     @include rtl {
         float: right;
     }

@@ -1,7 +1,9 @@
-<div class="simple-nav-j" ng-init="menuItems = conf.theVeryTopMenu[env.lang] || conf.theVeryTopMenu['default'] || conf.theVeryTopMenu" ng-show="menuItems.length > 0">
+<div class="simple-nav-j" ng-show="$root.conf.theVeryTopMenu.length > 0">
    <p></p>
    <ul sub-menu-creator="veryTopMenu">
-      <li ng-repeat="item in menuItems track by $index" ng-if="!item.showCondition || item.showCondition.authorized === env.authorized">
+      <li ng-repeat="item in $root.conf.theVeryTopMenu track by $index"
+          ng-click="$root.gaSend('send', 'event', 'top menu', item.label, {'label': item.label, 'navigate': item.href || item.help || item.sliderAuthorized})"
+          ng-if="!item.showCondition || item.showCondition.authorized === env.authorized">
          <a ng-if="item.href || (item.broadcast && !env.authorized)" target="{{item.target || '_self'}}"
             ng-href="{{item.href}}"
             ng-click="$root.topMenuDropDown=false;closeSlider();$parent.verytopMenuExpanded = false;broadcast(item.broadcast)"

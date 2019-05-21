@@ -157,8 +157,8 @@
                     </div>
                     <div class="select-block" ng-switch-when="select">
                         <select name="{{field.name}}" ng-model="$parent.$parent.depositFormData[field.name]"
-                                ng-init="$parent.$parent.depositFormData[field.name] = field.options[0].value;setInfo(field.options, $parent.$parent.depositFormData[field.name], 'depositText')"
-                                ng-change="setInfo(field.options, $parent.$parent.depositFormData[field.name], 'depositText')">
+                                ng-init="$parent.$parent.depositFormData[field.name] = field.options[0].value;setInfo(field, $parent.$parent.depositFormData[field.name], 'depositText')"
+                                ng-change="setInfo(field, $parent.$parent.depositFormData[field.name], 'depositText')">
                             <option ng-repeat="option in field.options" value="{{option.value}}" ng-selected="$first">{{option.text|translate}}</option>
                         </select>
                     </div>

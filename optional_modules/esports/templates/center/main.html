@@ -1,10 +1,13 @@
-<div class="games-view-wrapper-v3" ng-controller="eSportsCenterController">
+<div class="games-view-wrapper-v3" ng-controller="eSportsCenterController" ng-class="{'video-maximize-sportsbook':pinnedGameType === 'fullScreen' && enlargedGame && enlargedGame.video_data}">
     <div class="live-game-view-contain-v3">
         <div class="all-game-info-container-v3">
             <vbet-loader ng-show="loading"></vbet-loader>
             <div class="all-l-e-games" ng-show="!loading">
-                <div class="all-l-e-title">
-                    <p ng-if="games" ng-bind="games[0].competition.name || games[0].sport.name"></p>
+                <div class="all-l-e-title {{games[0].sport.alias || game.sport.alias}}">
+                    <p ng-if="games">
+                        <span ng-bind="games[0].competition.id ? games[0].competition.name : games[0].sport.name"></span>
+                        <i ng-if="page && page.content" ng-click="openGameRulesPopup(page.content)" trans>Games rules</i>
+                    </p>
                     <p class="back-a-v" ng-if="game" ng-click="getCompetitionData({sport:game.sport, competition:game.competition, region:game.region, game:{id:undefined}});"
                        ng-bind="(game.competition.id ? 'Go to competition' : 'Go to sport')|translate"></p>
                     <ul class="view-switcher">
@@ -16,7 +19,23 @@
                     <div class="s-l-game-v" ng-repeat="game in games track by game.id">
                         <div class="t-row-l-game">
                             <p>{{::game.start_ts| formatDate:'full':null:env.timeFormat}}<i ng-show="game.type === 2 && $root.conf.asian.showLiveIconForUpcomingGames" class="live-indicator">live</i></p>
+                            <p ng-bind="game.competition.id ? '' : game.competition.name"></p>
                             <!--<div class="e-game-arrow"></div>-->
+                        </div>
+
+                        <div ng-if="game.availableSequences.length > 1" class="time-filter-v3" ng-class="{'active': game.seqExpanded}">
+                            <p ng-click="game.seqExpanded = !game.seqExpanded">
+                                <span ng-bind="('PERIOD' === game.selectedSequence.subKey) ? (asianMarkets.periodsBySports[game.sport.alias] + ' ' + game.selectedSequence.sequence): (game.selectedSequence.sequence? game.selectedSequence.subKey + ' ' + game.selectedSequence.sequence : game.selectedSequence.subKey)|translate"></span>
+                                <i class="arrow-rotate-filter-v3"></i>
+                            </p>
+                            <div class="sub-nav-filter-time-v3">
+                                <ul>
+                                    <li ng-repeat="sequence in game.availableSequences track by $index"
+                                        ng-bind="('PERIOD' === sequence.subKey) ? (asianMarkets.periodsBySports[game.sport.alias] + ' ' + sequence.sequence): (sequence.sequence? sequence.subKey + ' ' + sequence.sequence : sequence.subKey)|translate"
+                                        ng-class="{active: game.selectedSequence.subKey === sequence.subKey && game.selectedSequence.sequence === sequence.sequence}"
+                                        ng-click="game.selectedSequence = sequence; game.seqExpanded = false"></li>
+                                </ul>
+                            </div>
                         </div>
 
                         <div class="e-p-table">
@@ -27,5 +46,43 @@
                 <ng-include class="float-width" ng-if="game" src="::'optional_modules/esports/templates/center/game.html'|fixPath"></ng-include>
             </div>
         </div>
+    </div>
+    <div class="live-game-view-contain-v3" ng-if="conf.videoEnabled && pinnedGameType === 'fullScreen' && !conf.detachedVideoSizes[openGame.tv_type]" ng-show="!loading">
+             <!--enlarged video-->
+        <div >
+            <div ng-if="enlargedGame && enlargedGame.video_data" class="game-video game-video-detached game-video-fullscreen">
+                <div class="game-video-container detached-game-container" id="detached-game-container-{{enlargedGame.id}}">
+
+                    <video-player
+                            player-id="gamevideo{{enlargedGame.id}}full"
+                            stream-url="{{enlargedGame.video_data}}"
+                            provider-id="{{enlargedGame.tv_type}}"
+                            initially-muted="{{ env.sound }}"></video-player>
+                    <!--<flashplayer id="gamevideo{{enlargedGame.id}}full" stream-url="{{enlargedGame.video_data}}" provider-id="{{enlargedGame.tv_type}}"  initially-muted="{{ env.sound }}"></flashplayer>-->
+                    <div class="video-player-control">
+                        <div class="detached-info">
+                            {{enlargedGame.info.current_game_state|convertSetName:enlargedGame.sport.alias|translate}}
+                            {{ enlargedGame.info.current_game_state? ' ' + ('Score:'|translate) + ' '
+                            :''}}{{enlargedGame.info.score1}} {{enlargedGame.info.score2 ? '&ndash; ' +
+                            enlargedGame.info.score2 : ''}}
+                            {{enlargedGame.stats.passes.team1_value && enlargedGame.sport.alias === 'Tennis'? '&#40;' +
+                            enlargedGame.stats.passes.team1_value:''}} {{ enlargedGame.stats.passes.team2_value &&
+                            enlargedGame.sport.alias === 'Tennis'? '&#58; '+ enlargedGame.stats.passes.team2_value + '&#41;':
+                            '' }}
+                            {{enlargedGame.stats[enlargedGame.info.current_game_state] && enlargedGame.sport.alias !==
+                            'Tennis'? '&#40;' + enlargedGame.stats[enlargedGame.info.current_game_state].team1_value +
+                            ' &ndash; ':''}}
+                            {{enlargedGame.stats[enlargedGame.info.current_game_state] && enlargedGame.sport.alias !==
+                            'Tennis' ? enlargedGame.stats[enlargedGame.info.current_game_state].team2_value + '&#41;'
+                            :''}}
+                        </div>
+                    </div>
+                    <a ng-click="attachPinnedVideo(enlargedGame, 'fullScreen'); $parent.mute = undefined; $parent.paused = undefined;">
+                        <span trans>close</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <!--enlarged video END-->
     </div>
 </div>

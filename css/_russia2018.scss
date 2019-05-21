@@ -84,8 +84,10 @@ matches-list {
       padding: 0 10px;
       order: 1;
       @media screen and (max-width: 1260px) {
-        padding-right: 0;
         width: 62%;
+        @include ltr {
+          padding-right: 0;
+        }
         @include rtl {
           padding-right: 10px;
           padding-left: 0;
@@ -106,13 +108,17 @@ matches-list {
   }
   &.match-groups-type {
     > li{
-      padding: 0 5px 0 0;
+      @include ltr {
+        padding: 0 5px 0 0;
+      }
       @include rtl {
         padding: 0 0 0 5px;
       }
       &:first-child {
         order: 1;
-        padding: 0 0 0 5px;
+        @include ltr {
+          padding: 0 0 0 5px;
+        }
         @include rtl {
           padding: 0 5px 0 0;
         }
@@ -124,7 +130,9 @@ matches-list {
     @media screen and (min-width: 1380px) {
       .russia2018-group-table {
         box-shadow: inset 0 45px 0 $skin-palette-5;
-        padding: 0 20px 1px 14px;
+        @include ltr {
+          padding: 0 20px 1px 14px;
+        }
         @include rtl {
           padding: 0 14px 1px 20px;
         }
@@ -151,7 +159,9 @@ matches-list {
         .russia2018-flag-small {
           height: 45px;
           width: 23px;
-          margin: 0 12px 0 0;
+          @include ltr {
+            margin: 0 12px 0 0;
+          }
           @include rtl {
             margin: 0 0 0 12px;
           }
@@ -166,7 +176,9 @@ matches-list {
   background: $skin-palette-7;
   color: set-color($skin-palette-7);
   border-radius: 3px 3px 0 0;
-  padding: 0 12px 0 16px;
+  @include ltr {
+    padding: 0 12px 0 16px;
+  }
   @include rtl {
     padding: 0 16px 0 12px;
   }
@@ -228,7 +240,9 @@ matches-list {
   background: #05527f;
   color: white;
   position: relative;
-  padding: 0 32px 0 16px;
+  @include ltr {
+    padding: 0 32px 0 16px;
+  }
   @include rtl {
     padding: 0 16px 0 32px;
   }
@@ -252,15 +266,18 @@ matches-list {
     display: block;
     position: absolute;
     top: 18px;
-    right: 12px;
     font: 14px/20px icomoon;
+    @include ltr {
+      right: 12px;
+    }
     @include rtl {
       left: 12px;
-      right: auto;
     }
   }
   .active > &:after {
-    content: "\e672";
+    @include ltr {
+      content: "\e672";
+    }
     @include rtl {
       content: "\e66f";
     }
@@ -300,13 +317,17 @@ matches-list {
       }
       &.name {
         width: auto;
-        text-align: left;
+        @include ltr {
+          text-align: left;
+        }
         @include rtl {
           text-align: right;
         }
       }
       &:last-child {
-        text-align: right;
+        @include ltr {
+          text-align: right;
+        }
         @include rtl {
           text-align: left;
         }
@@ -332,7 +353,9 @@ matches-list {
     left: 0;
     width: 100%;
     strong {
-      float: left;
+      @include ltr {
+        float: left;
+      }
       @include rtl {
         float: right;
       }
@@ -349,11 +372,13 @@ matches-list {
     }
   }
   .russia2018-flag-small {
-    float: left;
     width: 15px;
     height: 30px;
-    margin: 0 8px 0 0;
     background: no-repeat 50% 50% / 120%;
+    @include ltr {
+      float: left;
+      margin: 0 8px 0 0;
+    }
     @include rtl {
       float: right;
       margin: 0 0 0 8px;
@@ -411,8 +436,10 @@ matches-list {
     > li {
       display: block;
       width: calc(50% - 52px);
-      float: left;
       min-height: 16px;
+      @include ltr {
+        float: left;
+      }
       @include rtl {
         float: right;
       }
@@ -439,13 +466,17 @@ matches-list {
   }
   .single-events-b-v3 {
     &:first-child {
-      border-radius: 2px 0 0 2px;
+      @include ltr {
+        border-radius: 2px 0 0 2px;
+      }
       @include rtl {
         border-radius: 0 2px 2px 0;
       }
     }
     &:last-child {
-      border-radius: 0 2px 2px 0;
+      @include ltr {
+        border-radius: 0 2px 2px 0;
+      }
       @include rtl {
         border-radius: 2px 0 0 2px;
       }
@@ -470,7 +501,9 @@ matches-list {
   text-align: left;
   a {
     display: block;
-    float: right;
+    @include ltr {
+      float: right;
+    }
     @include rtl {
       float: left;
     }
@@ -487,16 +520,18 @@ matches-list {
       color: lighten($text-palette-3, 10);
     }
     &:after {
-      content: "\e672";
       color: $c16-tp-4;
       display: block;
-      float: right;
-      margin: 0 -5px 0 0;
       font: 14px/14px icomoon;
+      @include ltr {
+        content: "\e672";
+        float: right;
+        margin: 0 -5px 0 0;
+      }
       @include rtl {
+        content: "\e66f";
         float: left;
         margin: 0 0 0 -5px;
-        content: "\e66f";
       }
     }
   }
@@ -509,12 +544,14 @@ matches-list {
     }
   }
   .info-stadium-icon {
-    float: left;
     display: block;
     color: rgba(set-color($skin-palette-7), 0.7);
     font: 16px/1 icomoon;
     transition: 300ms color;
-    margin: 0 4px 0 0;
+    @include ltr {
+      float: left;
+      margin: 0 4px 0 0;
+    }
     @include rtl {
       float: right;
       margin: 0 0 0 4px;
@@ -575,15 +612,17 @@ matches-list {
   width: 100%;
   color: $text-palette-1;
   p {
-    float: left;
     box-sizing: border-box;
-    padding: 0 16px 0 0;
-    text-align: right;
     width: calc(100% - 38px);
     font: 18px/24px $font-f;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    @include ltr {
+      float: left;
+      padding: 0 16px 0 0;
+      text-align: right;
+    }
     @include rtl {
       float: right;
       padding: 0 0 0 16px;
@@ -591,21 +630,27 @@ matches-list {
     }
     @media screen and (max-width: 1379px) {
       font-size: 15px;
-      padding: 0 12px 0 0;
       width: calc(100% - 26px);
+      @include ltr {
+        padding: 0 12px 0 0;
+      }
       @include rtl {
         padding: 0 0 0 12px;
       }
     }
     &:last-child {
-      padding: 0 0 0 16px;
-      text-align: left;
+      @include ltr {
+        padding: 0 0 0 16px;
+        text-align: left;
+      }
       @include rtl {
-        text-align: right;
         padding: 0 16px 0 0;
+        text-align: right;
       }
       @media screen and (max-width: 1379px) {
-        padding: 0 0 0 12px;
+        @include ltr {
+          padding: 0 0 0 12px;
+        }
         @include rtl {
           padding: 0 12px 0 0;
         }
@@ -613,11 +658,13 @@ matches-list {
     }
   }
   .russia2018-upcoming-game-flag {
-    float: left;
     width: 38px;
     height: 26px;
     border-radius: 4px;
     background: no-repeat 50% 50% / 120%;
+    @include ltr {
+      float: left;
+    }
     @include rtl {
       float: right;
     }
@@ -663,7 +710,9 @@ matches-list {
   padding: 15px 0;
   b {
     display: block;
-    float: left;
+    @include ltr {
+      float: left;
+    }
     @include rtl {
       float: right;
     }
@@ -677,7 +726,9 @@ matches-list {
   }
   a {
     display: block;
-    float: left;
+    @include ltr {
+      float: left;
+    }
     @include rtl {
       float: right;
     }
@@ -775,25 +826,28 @@ matches-list {
     background: rgba(white, 0.7);
     &:first-child {
       top: 0;
-      right: 50%;
+      @include ltr {
+        right: 50%;
+      }
       @include rtl {
-        right: auto;
         left: 50%;
       }
     }
     &:nth-child(2) {
       bottom: 0;
-      right: 50%;
+      @include ltr {
+        right: 50%;
+      }
       @include rtl {
-        right: auto;
         left: 50%;
       }
     }
     &:last-child {
       top: 50%;
-      left: 50%;
+      @include ltr {
+        left: 50%;
+      }
       @include rtl {
-        left: auto;
         right: 50%;
       }
     }
@@ -875,11 +929,13 @@ matches-list {
       color: #c2c5cd;
       transition: 300ms color;
       &:after {
-        content: "\e672";
         font: 10px/16px icomoon;
         display: block;
         float: right;
-        margin: 0 -3px 0 0;
+        @include ltr {
+          content: "\e672";
+          margin: 0 -3px 0 0;
+        }
         @include rtl {
           content: "\e66f";
           margin: 0 0 0 -3px;
@@ -927,7 +983,9 @@ matches-list {
     text-overflow: ellipsis;
   }
   .r18-tree-country-info {
-    margin: 0 5px 0 3px;
+    @include ltr {
+      margin: 0 5px 0 3px;
+    }
     @include rtl {
       margin: 0 3px 0 5px;
     }
@@ -947,17 +1005,20 @@ matches-list {
       display: block;
       position: absolute;
       top: 0;
-      left: 3px;
       animation: arrow-blick-v3 300ms ease;
       transform: translate3d(0, 0, 0);
       font: 8px/22px icomoon;
+      @include ltr {
+        left: 3px;
+      }
       @include rtl {
-        left: auto;
         right: 3px;
       }
     }
     &.up, &.down {
-      padding: 0 6px 0 10px;
+      @include ltr {
+        padding: 0 6px 0 10px;
+      }
       @include rtl {
         padding: 0 10px 0 6px;
       }
@@ -1165,7 +1226,9 @@ matches-list {
         max-width: 326px;
       }
       &:nth-child(2) {
-        padding: 0 0 0 4px;
+        @include ltr {
+          padding: 0 0 0 4px;
+        }
         @include rtl {
           padding: 0 4px 0 0;
         }
@@ -1228,22 +1291,25 @@ matches-list {
     display: block;
     position: absolute;
     top: 0;
-    right: 6px;
     font: 13px/46px icomoon;
     color: set-color($skin-palette-7);
     pointer-events: none;
     transition: 300ms color;
+    @include ltr {
+      right: 6px;
+    }
     @include rtl {
-      right: auto;
       left: 6px;
     }
   }
   .russia2018-specialbet-chosen-flag {
-    float: left;
     width: 24px;
     height: 16px;
-    margin: 13px 10px 13px 0;
     background: no-repeat 50% 50% / 110%;
+    @include ltr {
+      float: left;
+      margin: 13px 10px 13px 0;
+    }
     @include rtl {
       float: right;
       margin: 13px 0 13px 10px;
@@ -1254,16 +1320,18 @@ matches-list {
   }
   select {
     display: block;
-    float: left;
     width: 100%;
     height: 42px;
     background: none;
     color: set-color($skin-palette-7);
     font: 18px $font-f;
     border: 0;
-    padding: 0 20px 0 0;
     transition: 300ms color;
     cursor: pointer;
+    @include ltr {
+      float: left;
+      padding: 0 20px 0 0;
+    }
     @include rtl {
       float: right;
       padding: 0 0 0 20px;
@@ -1375,8 +1443,10 @@ matches-list {
     animation: arrow-blick-v3 300ms ease;
     transform: translate3d(0, 0, 0);
     font: 12px/25px icomoon;
-    margin: 0 3px 0 0;
     transition: 300ms color;
+    @include ltr {
+      margin: 0 3px 0 0;
+    }
     @include rtl {
       margin: 0 0 0 3px;
     }
@@ -1416,8 +1486,10 @@ matches-list {
   margin: 20px 0;
   box-shadow: 0 0 0 6px rgba(black, 0.15);
   background: $skin-palette-8 url(../../../images/russia2018/teams-popup-head.png) repeat-x 50% 0;
-  text-align: left;
   position: relative;
+  @include ltr {
+    text-align: left;
+  }
   @include rtl {
     text-align: right;
   }
@@ -1432,10 +1504,11 @@ matches-list {
     color: rgba(white, 0.5);
     transition: 300ms color;
     top: 20px;
-    right: 20px;
     font: 15px/1 icomoon;
+    @include ltr {
+      right: 20px;
+    }
     @include rtl {
-      right: auto;
       left: 20px;
     }
     &:before {
@@ -1449,7 +1522,9 @@ matches-list {
     background: rgba(invert(set-color($skin-palette-8)), 0.3);
   }
   .active > .russia2018-group-heading:after {
-    content: "\e671";
+    @include ltr {
+      content: "\e671";
+    }
     @include rtl {
       content: "\e671";
     }
@@ -1461,32 +1536,38 @@ matches-list {
   padding: 24px 36px;
   box-sizing: border-box;
   .russia2018-teamsp-flag {
-    float: left;
     width: 64px;
     height: 44px;
     border-radius: 6px;
-    margin: 3px 20px 0 0;
     background: no-repeat 50% 50% / 120%;
+    @include ltr {
+      float: left;
+      margin: 3px 20px 0 0;
+    }
     @include rtl {
       float: right;
       margin: 3px 0 0 20px;
     }
   }
   h4 {
-    float: left;
     font: 28px/1 $font-f;
     color: white;
     width: 50%;
     margin: 0 0 4px;
+    @include ltr {
+      float: left;
+    }
     @include rtl {
       float: right;
     }
   }
   h5 {
-    float: left;
     width: 50%;
     font: 18px/1 $font-f;
     color: rgba(white, 0.5);
+    @include ltr {
+      float: left;
+    }
     @include rtl {
       float: right;
     }
@@ -1505,8 +1586,8 @@ matches-list {
       width: 50%;
       padding: 0 5px;
       box-sizing: border-box;
-      @include scroll(auto);
       height: calc(100vh - 146px);
+      @include scroll(auto);
       @include rtl {
         direction: ltr;
         matches-list {
@@ -1527,14 +1608,18 @@ matches-list {
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
   background: $skin-palette-7;
   box-sizing: border-box;
-  padding: 25px 0 25px 25px;
+  @include ltr {
+    padding: 25px 0 25px 25px;
+  }
   @include rtl {
     padding: 25px 25px 25px 0;
     direction: rtl;
   }
   color: set-color($skin-palette-7);
   @media screen and (max-width: 1340px) {
-    padding: 18px 0 18px 18px;
+    @include ltr {
+      padding: 18px 0 18px 18px;
+    }
     @include rtl {
       padding: 18px 18px 18px 0;
     }
@@ -1559,7 +1644,9 @@ matches-list {
         }
       }
       + li {
-        border-left: 1px solid rgba(black, 0.2);
+        @include ltr {
+          border-left: 1px solid rgba(black, 0.2);
+        }
         @include rtl {
           border: 0;
           border-right: 1px solid rgba(black, 0.2);
@@ -1601,21 +1688,25 @@ matches-list {
   float: left;
   width: 100%;
   > ul {
-    float: left;
-    margin: 0 20px 0 0;
+    @include ltr {
+      float: left;
+      margin: 0 20px 0 0;
+    }
     @include rtl {
-      margin: 0 0 0 20px;
       float: right;
+      margin: 0 0 0 20px;
     }
     > li {
       display: block;
       width: 60px;
       height: 60px;
-      float: left;
       background: #aa8136 no-repeat 50% 50% / cover;
       text-align: center;
       color: white;
       font: 700 34px/60px $font-f;
+      @include ltr {
+        float: left;
+      }
       @include rtl {
         float: right;
       }
@@ -1628,10 +1719,12 @@ matches-list {
     }
   }
   h5 {
-    float: left;
     width: calc(100% - 140px);
     font: 700 18px $font-f;
     margin: 0 0 2px;
+    @include ltr {
+      float: left;
+    }
     @include rtl {
       float: right;
     }
@@ -1640,9 +1733,11 @@ matches-list {
     }
   }
   p {
-    float: left;
     width: calc(100% - 140px);
     opacity: 0.5;
+    @include ltr {
+      float: left;
+    }
     @include rtl {
       float: right;
     }

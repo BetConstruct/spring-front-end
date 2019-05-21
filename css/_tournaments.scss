@@ -42,18 +42,21 @@
   z-index: 1100;
 }
 .casino-tournament-filter {
-  float: left;
   width: 100%;
   position: relative;
+  @include ltr {
+    float: left;
+  }
   @include rtl {
     float: right;
   }
   .casino-tournaments-filters-wrapper & {
-    border-right: 1px solid darken( desaturate( adjust-hue( $skin-color, 1deg ), 6 ), 3 );
     width: 267px;
+    @include ltr {
+      border-right: 1px solid darken( desaturate( adjust-hue( $skin-color, 1deg ), 6 ), 3 );
+    }
     @include rtl {
       border-left: 1px solid darken( desaturate( adjust-hue( $skin-color, 1deg ), 6 ), 3 );
-      border-right: 0;
     }
   }
   > p {
@@ -88,12 +91,13 @@
       display: block;
       position: absolute;
       top: 9px;
-      right: 12px;
       font: 19px icomoon;
       color: $text-palette-4;
+      @include ltr {
+        right: 12px;
+      }
       @include rtl {
         left: 12px;
-        right: auto;
       }
     }
   }
@@ -145,13 +149,15 @@
             display: block;
             float: left;
             width: 100%;
-            padding: 0 0 0 26px;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
             position: relative;
             transition: 300ms color;
             color: $text-palette-4;
+            @include ltr {
+              padding: 0 0 0 26px;
+            }
             @include rtl {
               padding: 0 26px 0 0;
             }
@@ -165,15 +171,16 @@
               display: block;
               position: absolute;
               top: 50%;
-              left: 0;
               margin: -8px 0 0;
               background: rgba($skin-palette-12, 0.5);
               border-radius: 3px;
               font: 7px/16px icomoon;
               color: $text-palette-4;
               text-align: center;
+              @include ltr {
+                left: 0;
+              }
               @include rtl {
-                left: auto;
                 right: 0;
               }
             }
@@ -252,15 +259,19 @@
     > li {
       display: block;
       &:first-child {
-        float: left;
         width: 310px;
+        @include ltr {
+          float: left;
+        }
         @include rtl {
           float: right;
         }
       }
       &:last-child {
         width: calc(100% - 20px - 310px);
-        float: right;
+        @include ltr {
+          float: right;
+        }
         @include rtl {
           float: left;
         }
@@ -465,7 +476,9 @@
     > div > ul > li {
       width: 20%;
       &:first-child {
-        padding: 0 0 15px 0;
+        @include ltr {
+          padding: 0 0 15px 0;
+        }
         @include rtl {
           padding: 0 0 15px 0;
         }
@@ -476,14 +489,15 @@
     float: right;
     width: 20%;
     height: 168px;
-    margin: 0 0 0 10px;
     position: absolute;
     top: 0;
-    right: 0;
+    @include ltr {
+      margin: 0 0 0 10px;
+      right: 0;
+    }
     @include rtl {
-      left: 0;
-      right: auto;
       margin: 0 10px 0 0;
+      left: 0;
     }
     > li {
       position: relative;
@@ -577,6 +591,9 @@
   .live & {
     color: #278B66;
   }
+  .canceled & {
+    color: $text-palette-3;
+  }
 }
 .casino-tournament-page-intro {
   float: left;
@@ -644,10 +661,12 @@
     }
   }
   counter {
-    border-radius: 60px 0 0 60px;
     background: #D0D1D3;
     color: #3F4552;
-    padding: 0 25px 0 36px;
+    @include ltr {
+      padding: 0 25px 0 36px;
+      border-radius: 60px 0 0 60px;
+    }
     @include rtl {
       padding: 0 36px 0 25px;
       border-radius: 0 60px 60px 0;
@@ -678,9 +697,11 @@
     color: set-color($brand-color-1);
     text-transform: uppercase;
     border: 0;
-    border-radius: 0 60px 60px 0;
     font: 700 18px $font-f;
     transition: 300ms background, 300ms color;
+    @include ltr {
+      border-radius: 0 60px 60px 0;
+    }
     @include rtl {
       border-radius: 60px 0 0 60px;
     }
@@ -703,7 +724,7 @@
   .list-games-casino-view-b {
     padding: 5px;
   }
-  .all-casino-games-list-box > div > ul {
+  .all-casino-games-list-box {
     padding: 0 36px 36px;
   }
 }
@@ -779,7 +800,9 @@
           font-weight: 700;
           text-align: center;
           width: 20px;
-          margin: 0 10px 0 0;
+          @include ltr {
+            margin: 0 10px 0 0;
+          }
           @include rtl {
             margin: 0 0 0 10px;
           }
@@ -872,27 +895,31 @@
   display: block;
   position: absolute;
   top: 20px;
-  right: 39px;
-  height: calc(100% - 71px);
+  height: calc(100% - 68px);
   z-index: 100;
   width: 220px;
-  background: $skin-palette-10;
+  @include ltr {
+    right: 40px;
+  }
   @include rtl {
-    left: 39px;
-    right: auto;
+    left: 40px;
   }
   .cst-stat-list {
     @include scroll($scroll: auto);
     height: calc(100% - 210px);
     width: calc(100% + 12px);
-    padding: 0 12px 0 0;
+    @include ltr {
+      padding: 0 12px 0 0;
+    }
     @include rtl {
       padding: 0 0 0 12px;
     }
   }
 }
 .iframe-tournament-sidebar-padding {
-  padding: 0 220px 0 0;
+  @include ltr {
+    padding: 0 220px 0 0;
+  }
   @include rtl {
     padding: 0 0 0 220px;
   }

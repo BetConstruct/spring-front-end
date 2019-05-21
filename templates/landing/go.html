@@ -1,0 +1,80 @@
+<div class="vivaro-go" ng-controller="goCtrl">
+    <div class="row guide">
+        <div class="row-child">
+            <div>
+                <div>
+                    <div>
+                        <casino-game-slider product-slides="vivaroGoData.sliders"></casino-game-slider>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row guide">
+        <div class="row-child">
+            <div>
+                <div>
+                    <div>
+                        <div class="v-go-banner" ng-repeat="appInfo in vivaroGoData.appInfo track by appInfo.id">
+                            <img ng-src="{{::appInfo.thumbnail}}">
+                            <div class="v-go-info-banner">
+                                <p trans>VivaroGO app is a totally new approach to gaming. It is a quest which takes people out of their homes to the streets to find their winnings. It allows you to win physical prizes with little afford or none.</p>
+                                <img class="v-go-qr" src="images/vivaro-go/qr.png">
+                                <a target="_blank" href="https://itunes.apple.com/am/app/vivaro-go/id1353826665?mt=8">
+                                    <img class="v-go-apple" src="images/vivaro-go/go-apple.png">
+                                </a>
+                                <a target="_blank" href="https://play.google.com/store/apps/details?id=com.pandavr.vivarogo">
+                                    <img class="v-go-android" src="images/vivaro-go/go-android.png">
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row guide">
+        <div class="row-child">
+            <div>
+                <div>
+                    <div>
+                        <div class="v-go-global">
+                            <div class="v-go-global-c" ng-repeat="sectionInfo in vivaroGoData.sectionInfo track by sectionInfo.id">
+                                <div class="v-go-t">
+                                    <div class="v-go-global-t-r-c image">
+                                        <div class="v-go-inner-t">
+                                            <div class="v-go-inner-c">
+                                                <img ng-src="{{::sectionInfo.thumbnail}}">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="v-go-global-t-r-c text">
+                                    <div class="v-go-inner-t">
+                                        <div class="v-go-inner-c">
+                                            <h3>{{::sectionInfo.title}}</h3>
+                                            <span ng-bind-html="::sectionInfo.content|html"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <style>
+        .body-wrapper.go {
+        {{vivaroGoData.background.thumbnail ? 'background-image: url('+vivaroGoData.background.thumbnail+');' : ''}}
+        {{vivaroGoData.background.custom_fields.size ? "background-size: " + vivaroGoData.background.custom_fields.size[0] + ";" : vivaroGoData.background.thumbnail ? "background-size: 100%;" : ""}}
+        {{vivaroGoData.background.custom_fields.position ? 'background-position: ' + vivaroGoData.background.custom_fields.position[0] : vivaroGoData.background.thumbnail ? "background-position: 50% 0" : ""}};
+        {{vivaroGoData.background.custom_fields.attachment ? "background-attachment:" + vivaroGoData.background.custom_fields.attachment[0] + ";" : ""}}
+        {{vivaroGoData.background.custom_fields.color ? "background-color: " + vivaroGoData.background.custom_fields.color[0] + ";" : ""}}
+        {{vivaroGoData.background.custom_fields.repeat ? "background-repeat: " + vivaroGoData.background.custom_fields.repeat[0] : vivaroGoData.background.thumbnail ? "background-repeat: no-repeat" : ""}};
+        .seo-about-text-j:not(.ng-hide) {
+            display: block !important;
+        }
+    </style>
+</div>
+

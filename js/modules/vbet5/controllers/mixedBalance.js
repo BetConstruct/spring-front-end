@@ -4,7 +4,7 @@
  * @description
  *  New bet history controller.
  */
-VBET5.controller('mixedBalanceCtrl', ['$scope', '$controller', 'Config', '$sce', 'Moment', '$filter', '$rootScope', 'Zergling', function($scope, $controller, Config, $sce, Moment, $filter, $rootScope, Zergling) {
+VBET5.controller('mixedBalanceCtrl', ['$scope', '$controller', 'Config', '$sce', 'Moment', '$filter', '$rootScope', 'Zergling', 'content', 'analytics','$location', function($scope, $controller, Config, $sce, Moment, $filter, $rootScope, Zergling, content, analytics, $location) {
     'use strict';
     angular.extend(this, $controller('paymentsCtrl', {
         $scope: $scope
@@ -28,7 +28,7 @@ VBET5.controller('mixedBalanceCtrl', ['$scope', '$controller', 'Config', '$sce',
 
     $scope.balanceHistoryParams.availableProducts = {};
 
-    if ($rootScope.calculatedConfigs.sportEnabled || Config.main.GmsPlatform) {
+    if ($rootScope.calculatedConfigs.sportEnabled) {
         $scope.balanceHistoryParams.availableProducts[0] = 'Main';
     }
 
@@ -62,8 +62,9 @@ VBET5.controller('mixedBalanceCtrl', ['$scope', '$controller', 'Config', '$sce',
         current_systems[0] && $scope.selectPaymentSystem(current_systems[0]);
     };
 
-    $scope.$watch("env.sliderContent", function() {
-        if ("deposit" === $scope.env.sliderContent || "withdraw" === $scope.env.sliderContent) {
+    $scope.$watch("env.sliderContent", function(sliderContent) {
+        if (sliderContent === 'deposit' || sliderContent === 'withdraw') {
+            analytics.gaSend('send', 'event', 'slider', 'open slider',  {'page': $location.path(), 'eventLabel': sliderContent});
             $scope.currencyHolder.selectedCurrency = $scope.currencyHolder.selectedCurrency || ($scope.env.authorized && $scope.profile ? $scope.profile.currency_name : $scope.conf.availableCurrencies[0]);
             if($scope.env.authorized){
                 $scope.init($scope.env.sliderContent);
@@ -188,5 +189,35 @@ VBET5.controller('mixedBalanceCtrl', ['$scope', '$controller', 'Config', '$sce',
             }
         )['finally'](function stopLoader() { $scope.balanceHistoryLoaded = true; });
     };
+
+    /**
+     * @ngdoc function
+     * @name loadPaymentInfoFromCMS
+     * @methodOf vbet5.controller:mixedBalanceCtrl
+     * @description  load payment info from cms with slug payment-info
+     */
+    function loadPaymentInfoFromCMS() {
+        var paymentInfoSlugs = {
+            "deposit": "deposit-bottom-text",
+        };
+        content.getPage("payment-info-" + $rootScope.env.lang, true).then(function (response) {
+            if (response.data && response.data.page && response.data.page.children) {
+                $scope.cmsPaymentInfo = $scope.cmsPaymentInfo || {};
+                response.data.page.children.forEach(function processItem(item) {
+                    for (var key in paymentInfoSlugs) {
+                        if (paymentInfoSlugs.hasOwnProperty(key)) {
+                            if (item.slug === paymentInfoSlugs[key]) {
+                                $scope.cmsPaymentInfo[key] = $sce.trustAsHtml(item.content);
+                                break;
+                            }
+                        }
+                    }
+
+                });
+            }
+        });
+    }
+
+    (function init() { loadPaymentInfoFromCMS(); })();
 
 }]);

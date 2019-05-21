@@ -1,4 +1,4 @@
-VBET5.controller('eSportsLeftController', ['$rootScope', '$scope',  '$location', '$q', 'Utils', 'ConnectionService', 'GameInfo', 'Storage', 'Config', function ($rootScope, $scope, $location, $q, Utils, ConnectionService, GameInfo, Storage, Config) {
+VBET5.controller('eSportsLeftController', ['$rootScope', '$scope',  '$location', '$q', 'Utils', 'ConnectionService', 'GameInfo', 'Storage', '$timeout', function ($rootScope, $scope, $location, $q, Utils, ConnectionService, GameInfo, Storage, $timeout) {
     'use strict';
     ////////////////////////////////////////////////////////////////////////////////
     // GLOBAL VARIABLES
@@ -8,7 +8,7 @@ VBET5.controller('eSportsLeftController', ['$rootScope', '$scope',  '$location',
     var defaultLeftMenuState = {
         selectedType: 'preMatch',
         filters: $scope.sharedData.filters,
-        collapsed: {
+        collapsed: { // The initial state of all menu items/sub-items is open
             preMatch: {
                 sport: {},
                 region: {}
@@ -23,7 +23,16 @@ VBET5.controller('eSportsLeftController', ['$rootScope', '$scope',  '$location',
         selected: $scope.sharedData.selected
     };
 
+    var menuTypeMap = {
+        'preMatch':'preMatch',
+        0: 'preMatch',
+        2: 'preMatch',
+        'live':'live',
+        1: 'live'
+    };
+
     var subIds = {};
+    var inThrottle = false;
     ////////////////////////////////////////////////////////////////////////////////
     // GLOBAL VARIABLES - END
     ////////////////////////////////////////////////////////////////////////////////
@@ -52,6 +61,11 @@ VBET5.controller('eSportsLeftController', ['$rootScope', '$scope',  '$location',
     ////////////////////////////////////////////////////////////////////////////////
     // FUNCTIONS
     ////////////////////////////////////////////////////////////////////////////////
+    function setThrottle() {
+        inThrottle = true;
+        $timeout(function stopThrottle() { inThrottle = false; }, 500);
+    }
+
     function setGameCount(sportId, competition, type) {
         $scope.leftMenu[type].count[sportId] = ($scope.leftMenu[type].count[sportId] || 0) + (type === 'preMatch' ? competition.game : Object.keys(competition.game).length);
         return competition;
@@ -91,6 +105,10 @@ VBET5.controller('eSportsLeftController', ['$rootScope', '$scope',  '$location',
         $scope.leftMenu[type].count = { total: $scope.leftMenu[type].count.total }; // We reset count (except total) on every update
         data = makeArrayAndSort(Utils.copyObj(data).sport, 'order');
         data.forEach(function processRegions(sport) {
+            if ($scope.leftMenuState.collapsed[type].sport[sport.id] === undefined) {
+                // Because the initial state of all menu items/sub-items is 'expanded' we need to close all sports an then open one if needed.
+                $scope.leftMenuState.collapsed[type].sport[sport.id] = true;
+            }
             sport.region = makeArrayAndSort(sport.region, 'order');
             sport.region.forEach(function processCompetitions(region) {
                 region.competition = makeArrayAndSort(region.competition, 'order', function countGames(competition) { return setGameCount(sport.id, competition, type); });
@@ -147,11 +165,15 @@ VBET5.controller('eSportsLeftController', ['$rootScope', '$scope',  '$location',
                 request.what.event = [];
                 request.where.game = { 'type': 1 };
                 request.where.market = {
-                    type: { '@in': ['P1XP2','P1P2'] }
+                    '@or': [
+                        {type: { '@in': ['P1XP2', 'P1P2'] }},
+                        {'display_key': 'WINNER'}
+                    ]
                 };
 
                 if (videoFilter) {
-                    request.where.game['@or'] = GameInfo.getVideoFilter();
+                    var sKey = $rootScope.conf.video.enableOptimization ? 'id' : '@or';
+                    request.where.game[sKey] = GameInfo.getVideoFilter();
                 }
                 break;
         }
@@ -167,7 +189,6 @@ VBET5.controller('eSportsLeftController', ['$rootScope', '$scope',  '$location',
                 thenCallback: function thenCallback(result) {
                     $scope.loading = false;
                     subIds[type] = result.subid;
-                    Object.keys(result.data.sport).forEach(function collapseAllSports(id) { $scope.leftMenuState.collapsed[type].sport[id] = true; });
                     promise.resolve();
                 },
                 failureCallback: function failureCallback() {
@@ -225,7 +246,7 @@ VBET5.controller('eSportsLeftController', ['$rootScope', '$scope',  '$location',
             // This object will be first used to expand the menu and then to request data from SWARM
             var expandObj = {
                 sport: sport,
-                region: region
+                region: region.id
             };
 
             if (menuType === 'live') {
@@ -239,7 +260,8 @@ VBET5.controller('eSportsLeftController', ['$rootScope', '$scope',  '$location',
             });
 
             // We modify the expandObj for it to be used for requesting data from SWARM
-            expandObj.competition = competition; // We may have set it previously if the menu type was 'live'
+            expandObj.region = region; // Because we previously set only the 'id' we now have to assign the whole object, so the createSelectedObj works properly
+            expandObj.competition = competition;
             expandObj.game = game; // No need to worry if the game.id is undefined - centre.js will take care of it
             expandObj.type = menuType;
             $scope.requestData(expandObj);
@@ -314,10 +336,13 @@ VBET5.controller('eSportsLeftController', ['$rootScope', '$scope',  '$location',
     };
 
     $scope.requestData = function requestData(params) {
-        var selected = $scope.createSelectedObj(params);
-        if (!angular.equals($scope.leftMenuState.selected[params.type], selected)) {
-            $scope.leftMenuState.selected[params.type] = selected;
-            $rootScope.$broadcast('eSports.requestData', selected);
+        if (!inThrottle) {
+            setThrottle();
+            var selected = $scope.createSelectedObj(params);
+            if (!angular.equals($scope.leftMenuState.selected[params.type], selected)) {
+                $scope.leftMenuState.selected[params.type] = selected;
+                $rootScope.$broadcast('eSports.requestData', selected);
+            }
         }
     };
 
@@ -329,6 +354,22 @@ VBET5.controller('eSportsLeftController', ['$rootScope', '$scope',  '$location',
             collapsed[id] = forceExpand ? false : typeof collapsed[id] === 'undefined' || !collapsed[id];
         }
     };
+
+    $scope.selectSport = function selectSport(sport, event) {
+        event.stopPropagation();
+        if ($scope.leftMenuState.collapsed[$scope.leftMenuState.selectedType].sport[sport.id]) {
+            // sport was collapsed
+            $scope.toggleCollapse('sport', sport.id);
+            $scope.requestData({type: $scope.leftMenuState.selectedType, sport: sport});
+        } else {
+            // sport was expanded
+            if (event.target.dataset.arrowClick) {
+                $scope.toggleCollapse('sport', sport.id);
+            } else {
+                $scope.requestData({type: $scope.leftMenuState.selectedType, sport: sport});
+            }
+        }
+    };
     ////////////////////////////////////////////////////////////////////////////////
     // $SCOPE METHODS - END
     ////////////////////////////////////////////////////////////////////////////////
@@ -337,13 +378,22 @@ VBET5.controller('eSportsLeftController', ['$rootScope', '$scope',  '$location',
     ////////////////////////////////////////////////////////////////////////////////
     // $SCOPE EVENT LISTENERS
     ////////////////////////////////////////////////////////////////////////////////
-    $scope.$on('favoriteGames.selected', function requestData(event, data) { $scope.requestData(data); });
+    $scope.$on('favoriteGames.selected', function selectFavoriteGame(event, data) {
+        var type = menuTypeMap[data.type];
+        if (!type) { return; }
+        if (type === $scope.leftMenuState.selectedType) {
+            $scope.requestData(data);
+        } else {
+            $scope.leftMenuState.selected[type] = $scope.createSelectedObj(data);
+            $scope.selectMenu(type);
+        }
+    });
     ////////////////////////////////////////////////////////////////////////////////
     // $SCOPE EVENT LISTENERS - END
     ////////////////////////////////////////////////////////////////////////////////
 
     (function init() {
-        $scope.selectMenu({'preMatch':'preMatch','live':'live'}[$location.search().type] || $scope.leftMenuState.selectedType, true);
+        $scope.selectMenu(menuTypeMap[$location.search().type] || $scope.leftMenuState.selectedType, true);
         subscribeToAllGameCounts();
     })();
 }]);

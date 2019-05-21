@@ -52,7 +52,7 @@
                         <a class="more-markets" ng-hide="match.markets_count <= 0" ng-bind="'+' + match.markets_count" ng-click="goToGame(match)"></a>
                         <a class="favorite-icon-market-v3" ng-click="toggleGameFavorite(match)" ng-class="{'active': $root.myGames.indexOf(match.id) !== -1}"></a>
                         <a ng-show="$root.conf.enableH2HStat && match.is_stat_available"
-                           statistics-on-hover stats-game="{'game': match, 'competition': match.competition.name}"
+                           statistics-on-hover stats-game="match" stats-competition-name="{{match.competition.name}}"
                            ng-click="openStatistics(match);$event.stopPropagation();" class="h2h-stats" title="{{'statistic'|translate}}"></a>
                     </li>
                 </ul>

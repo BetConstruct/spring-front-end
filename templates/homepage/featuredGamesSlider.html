@@ -44,7 +44,7 @@
                                 </ul>
                             </div>
                             <div class="game-link-wrapper-b">
-                                <a ng-href="#/sport/?type={{game.type === 2 ? 0 : game.type}}&sport={{ game.sport.id }}&game={{ game.id }}&competition={{ game.competition.id }}&region={{ game.region.id  }}" trans>Bet Now</a>
+                                <a ng-click="goToUrl(game, isIframe ? 'iframe' : '')" trans>Bet Now</a>
                             </div>
                         </div>
                     </li>

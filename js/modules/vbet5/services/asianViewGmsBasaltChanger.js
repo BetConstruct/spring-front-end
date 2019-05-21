@@ -1,33 +1,13 @@
-/**
- * Created by anna on 5/4/16.
- */
-angular.module('vbet5').service('asianViewGmsBasaltChanger', ['Config', 'Utils', '$filter', function (Config, Utils, $filter) {
+/* global VBET5 */
+VBET5.service('asianViewGmsBasaltChanger', ['Config', 'Utils', '$filter', 'GameInfo', 'AsianMarkets', function (Config, Utils, $filter, GameInfo, AsianMarkets) {
+    'use strict';
+
+    var FIRST_HALF = ['HalfTimeResult', 'HalfTimeAsianHandicap', 'HalfTimeOverUnder', 'HalfTimeCorrectScore', '1stInningOver/Under', 'FirstHalfEvenOddTotal', 'HalfTimeCornersOverUnder', 'HalfTimeOverUnderAsian', 'HalfTimeAsianHandicapAsian'];
+    var SECOND_HALF = ['SecondHalfResult', '2ndHalfAsianHandicap', '2ndHalfTotalOver/Under', '2ndHalfCorrectScore', 'SecondHalfEvenOddTotal', 'SecondHalfTotalGoals'];
+    var ACTIVE_SEQUENCES_GMS = ['MATCH', 'PERIOD', 'HALF', 'SET'];
 
     function eventCompareFunc(a, b) { return a.price - b.price;}
-    var correctScorePattern = /\d:\d/;
 
-    var FIRST_HALF = ['HalfTimeResult', 'HalfTimeAsianHandicap', 'HalfTimeOverUnder', 'HalfTimeCorrectScore', '1stInningOver/Under', 'FirstHalfEvenOddTotal', 'HalfTimeCornersOverUnder'];
-    var SECOND_HALF = ['SecondHalfResult', '2ndHalfAsianHandicap', '2ndHalfTotalOver/Under', '2ndHalfCorrectScore', 'SecondHalfEvenOddTotal'];
-    var ACTIVE_SEQUENCES_GMS = ['MATCH', 'PERIOD', 'HALF', 'SET'];
-    function handicapSortFunc(market1, market2) {
-        if (!market1.hasOwnProperty('Handicap1') || !market1.hasOwnProperty('Handicap2')) {
-            return 1;
-        }
-        if (!market2.hasOwnProperty('Handicap1') || !market2.hasOwnProperty('Handicap2')) {
-            return -1;
-        }
-        return Math.abs(market1.Handicap1.price - market1.Handicap2.price) - Math.abs(market2.Handicap1.price - market2.Handicap2.price);
-    }
-
-    function overUnderSortFunc(market1, market2) {
-        if (!market1.hasOwnProperty('OVER') || !market1.hasOwnProperty('UNDER')) {
-            return 1;
-        }
-        if (!market2.hasOwnProperty('OVER') || !market2.hasOwnProperty('UNDER')) {
-            return -1;
-        }
-        return Math.abs(market1.OVER.price - market1.UNDER.price) - Math.abs(market2.OVER.price - market2.UNDER.price);
-    }
     /**
      * @ngdoc method
      * @name groupMarketEvents
@@ -39,22 +19,17 @@ angular.module('vbet5').service('asianViewGmsBasaltChanger', ['Config', 'Utils',
      */
     function groupMarketEvents(market) {
         if (market.show_type === 'CORRECTSCORE' || market.display_key === 'CORRECT SCORE') {
-            var scores, index1 = 0, index2 = 0, index3 = 0;
             market.linesEvents = [];
-            angular.forEach(market.event, function (event) {
-                event.scores = '' + (correctScorePattern.exec(event.name) || event.name);
-                scores =  event.scores.split("-");
-                if (scores[0] > scores[1]) {
-                    market.linesEvents[index1] = market.linesEvents[index1] || {};
-                    market.linesEvents[index1++].firstWin = event;
-                } else if (scores[0] < scores[1]) {
-                    market.linesEvents[index2] = market.linesEvents[index2] || {};
-                    market.linesEvents[index2++].secondWin = event;
-                } else {
-                    market.linesEvents[index3] = market.linesEvents[index3] || {};
-                    market.linesEvents[index3++].handicap = event;
-                }
-            });
+            var columns = GameInfo.divideIntoColumns(market, 'correctScore');
+            var leftCol = columns[0], midCol = columns[1], rightCol = columns[2];
+            var maxLength = Math.max(leftCol.length, midCol.length, rightCol.length);
+            for (var i = 0; i < maxLength; i++) {
+                market.linesEvents.push({
+                    firstWin: leftCol[i],
+                    handicap: midCol[i],
+                    secondWin: rightCol[i]
+                });
+            }
             return false;
         }
         if (market.show_type === 'OUTRIGHT' || market.display_key === 'OUTRIGHT') {
@@ -62,6 +37,35 @@ angular.module('vbet5').service('asianViewGmsBasaltChanger', ['Config', 'Utils',
             return false;
         }
         return true;
+    }
+
+    function sortAvailableSequences(sequences) {
+        var sort1 = function(a,b) {
+            if(a.subKey === b.subKey){
+                return a.sequence - b.sequence;
+            }
+            return a.subKey < b.subKey ? -1 : 1;
+        };
+        var sort2 = function(a,b) {
+            if (a.subKey === Config.main.asian.firstSequence) {
+                return -1;
+            }
+            if (b.subKey === Config.main.asian.firstSequence) {
+                return 1;
+            }
+            return sort1(a, b);
+        };
+        sequences.sort(Config.main.asian && Config.main.asian.firstSequence ? sort2 : sort1);
+    }
+
+    function setGmsMarketSequence(market) {
+        if(FIRST_HALF.indexOf(market.market_type) > -1) {
+            market.sequence = 1;
+        } else if(SECOND_HALF.indexOf(market.market_type) > -1) {
+            market.sequence = 2;
+        } else {
+            market.sequence = parseInt(market.name, 10) || parseInt(market.market_type.replace(/[^\d.-]/g, ''), 10);
+        }
     }
 
     /**
@@ -73,7 +77,7 @@ angular.module('vbet5').service('asianViewGmsBasaltChanger', ['Config', 'Utils',
      *
      * @param {Object} game the game object
      */
-    function groupBySequenceAndTypesForGms(game, AsianMarkets) {
+    function groupBySequenceAndTypesForGms(game) {
         var markets = {};
         game.marketRows = {};
         var availableSequences = [];
@@ -95,8 +99,8 @@ angular.module('vbet5').service('asianViewGmsBasaltChanger', ['Config', 'Utils',
                     setGmsMarketSequence(market);
                 }
 
-                if (ACTIVE_SEQUENCES_GMS.indexOf(market.display_sub_key) !== -1 && (!Utils.getArrayObjectElementHavingFieldValue(availableSequences, 'subKey', market.display_sub_key, true)
-                    || !Utils.getArrayObjectElementHavingFieldValue(availableSequences, 'sequence', market.sequence, true))) {
+                if (ACTIVE_SEQUENCES_GMS.indexOf(market.display_sub_key) !== -1 && (!Utils.getArrayObjectElementHavingFieldValue(availableSequences, 'subKey', market.display_sub_key, true) ||
+                    !Utils.getArrayObjectElementHavingFieldValue(availableSequences, 'sequence', market.sequence, true))) {
                     availableSequences.push({
                         'subKey': market.display_sub_key,
                         'sequence': market.sequence
@@ -158,7 +162,7 @@ angular.module('vbet5').service('asianViewGmsBasaltChanger', ['Config', 'Utils',
         });
 
 
-        angular.forEach(game.marketRows, function (marketRow, key) {
+        angular.forEach(game.marketRows, function (marketRow) {
             angular.forEach(marketRow, function (sequence, index) {
                 marketRow[index] = new Array(marketRow[index]);
             });
@@ -168,114 +172,6 @@ angular.module('vbet5').service('asianViewGmsBasaltChanger', ['Config', 'Utils',
         game.markets = markets;
     }
 
-    /**
-     * @ngdoc method
-     * @name groupBySequenceAndTypes
-     * @methodOf vbet5.controller:asianViewMainController
-     * @description Performs grouping of markets by sequence and show_type.
-     * additionally groups events inside markets
-     *
-     * @param {Object} game the game object
-     */
-    function groupBySequenceAndTypesForBasalt(game, AsianMarkets) {
-        var markets = {};
-        game.marketRows = {};
-        game.availableSequences = game.availableSequences || [];
-        angular.forEach(game.market, function (market) {
-            var groupingNeeded = groupMarketEvents(market);          // if special grouping is needed for market,
-            if (groupingNeeded) {                                    // the normal grouping won't be done
-                angular.forEach(market.event, function (event) {
-                    market[event.show_type || event.type] = event;
-                });
-            }
-            game.avalableMarketTypes = game.avalableMarketTypes || {};
-            game.avalableMarketTypes[market.show_type] = market.show_type;
 
-            if (market.sequence) {
-                if (game.availableSequences.indexOf(market.sequence) === -1) {
-                    game.availableSequences.push(market.sequence);
-                }
-                markets[market.sequence] = markets[market.sequence] || {};
-                markets[market.sequence][market.show_type] = markets[market.sequence][market.show_type] || [];
-                markets[market.sequence][market.show_type].push(market);
-                game.marketRows[market.sequence] = Math.max(markets[market.sequence][market.show_type].length, game.marketRows[market.sequence] || 0);
-            }
-        });
-        if (game.availableSequences.length) {
-            game.availableSequences.sort(function(a,b) {
-                return a.subKey > b.subKey;
-            });
-         //   markets = Utils.objectToArray(game.market);
-        }
-
-        if (!game.selectedSequence) {
-            if (Config.main.customSelectedSequenceInAsianSportsbook) {
-                angular.forEach(game.availableSequences, function (sequences) {
-                    if (Config.main.customSelectedSequenceInAsianSportsbook === sequences) {
-                        game.selectedSequence = sequences;
-                    }
-                });
-            }
-            game.selectedSequence = game.selectedSequence || game.availableSequences[0];
-        }
-
-        if (game.avalableMarketTypes.HANDICAP) {
-            angular.forEach(markets, function (seq) {
-                if (seq.HANDICAP && seq.HANDICAP.length > 1) {
-                    seq.HANDICAP.sort(handicapSortFunc);
-                }
-            });
-        }
-
-        var sportType = AsianMarkets.marketsBySport[game.sport.alias] || AsianMarkets.marketsBySport.Default;
-        var pointsTypeForMarket = sportType.HDP[sportType.HDP.length - 1];
-        if (game.avalableMarketTypes[pointsTypeForMarket]) {
-            angular.forEach(markets, function (seq) {
-                if (seq[pointsTypeForMarket] && seq[pointsTypeForMarket].length > 1) {
-                    seq[pointsTypeForMarket].sort(overUnderSortFunc);
-                }
-            });
-        }
-
-        angular.forEach(game.marketRows, function (marketRow, key) {
-            game.marketRows[key] = new Array(game.marketRows[key] - 1);
-        });
-        game.halfTimeSequence = '1STHALF'; //  markets['1STHALF'] ? '1STHALF' : '2NDHALF';  //for now it always 1st half
-        game.moreMarketsCount = game.markets_count - $filter("count")(game.avalableMarketTypes);
-        game.markets = markets;
-    }
-
-    function sortAvailableSequences(sequences) {
-        var sort1 = function(a,b) {
-            if(a.subKey === b.subKey){
-                return a.sequence > b.sequence;
-            }
-            return a.subKey > b.subKey;
-        };
-        var sort2 = function(a,b) {
-            if (a.subKey === Config.main.asian.firstSequence) {
-                return -1;
-            }
-            if (b.subKey === Config.main.asian.firstSequence) {
-                return 1;
-            }
-            if(a.subKey === b.subKey){
-                return a.sequence > b.sequence;
-            }
-            return a.subKey > b.subKey;
-        };
-        sequences.sort(Config.main.asian && Config.main.asian.firstSequence ? sort2 : sort1);
-    }
-
-    function setGmsMarketSequence(market) {
-        if(FIRST_HALF.indexOf(market.market_type) > -1) {
-            market.sequence = 1;
-        } else if(SECOND_HALF.indexOf(market.market_type) > -1) {
-            market.sequence = 2;
-        } else {
-            market.sequence = parseInt(market.name) || parseInt(market.market_type.replace(/[^\d.-]/g, ''));
-        }
-    }
-
-    return Config.main.GmsPlatform ? groupBySequenceAndTypesForGms : groupBySequenceAndTypesForBasalt;
+    return groupBySequenceAndTypesForGms;
 }]);

@@ -52,18 +52,12 @@
                                 <i class="bonuses-icon-b"></i>
                                 <span trans>Bonuses</span>
                                 <b ng-if="calculatedConfigs.sportEnabled"
-                                    ng-show="!env.hideBalance && profile.bonus_balance && (conf.GmsPlatform || (!$root.currentPage.isInCasino && !$root.currentPage.isInPoker))"
+                                    ng-show="!env.hideBalance && profile.bonus_balance"
                                 >
                                     {{profile.calculatedBonus}} {{profile.currency_name|currency}}
                                 </b>
-
-                                <b ng-if="::(!conf.GmsPlatform && (casinoEnabled || calculatedConfigs.pokerEnabled))"
-                                    ng-show="!env.hideBalance && (env.casinoBalance !== undefined && ($root.currentPage.isInCasino || $root.currentPage.isInPoker) || !calculatedConfigs.sportEnabled)"
-                                >
-                                    {{env.casinoBalance.bonus || env.casinoBalance.bonus_balance}} {{profile.currency_name|currency}}
-                                </b>
                             </li>
-                            <li ng-show="conf.GmsPlatform && conf.promotionalBonuses.enable"
+                            <li ng-show="conf.promotionalBonuses.enable && (!conf.hideBonusSectionIfNoBonus || (conf.hideBonusSectionIfNoBonus && $root.allBonusesCount.sportsbook + $root.allBonusesCount.casino > 0))"
                                 ng-click="toggleSliderTab('promotionalBonuses'); headerVersion2Icons.profileToggled = false; $event.stopPropagation()"
                                 prevent-fast-click="1.5"
                                 ng-class="{'active': env.sliderContent === 'promotionalBonuses'}"

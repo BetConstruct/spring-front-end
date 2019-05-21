@@ -1,11 +1,13 @@
+/* global VBET5 */
 /**
  * @ngdoc controller
  * @name vbet5.controller:mixedMyBetsCtrl extended from myBetsCtrl
  * @description
  *  New bet history controller.
  */
-VBET5.controller('mixedMyBetsCtrl', ['$rootScope', '$scope', '$controller', '$location', 'Config', 'GameInfo', 'Moment', 'Utils', 'Zergling', function($rootScope, $scope, $controller, $location, Config, GameInfo, Moment, Utils, Zergling) {
+VBET5.controller('mixedMyBetsCtrl', ['$rootScope', '$scope', '$controller', '$location', 'Config', 'GameInfo', 'Moment', 'Utils', 'BetService', function($rootScope, $scope, $controller, $location, Config, GameInfo, Moment, Utils, BetService) {
     'use strict';
+
 
     // Initialize the super class and extend it.
     angular.extend(this, $controller('myBetsCtrl', {
@@ -15,6 +17,8 @@ VBET5.controller('mixedMyBetsCtrl', ['$rootScope', '$scope', '$controller', '$lo
     Moment.setLang(Config.env.lang);
     Moment.updateMonthLocale();
     Moment.updateWeekDaysLocale();
+    $scope.betConf = Config.betting;
+    var timeZone = Config.env.selectedTimeZone || '';
 
     /**
      * @ngdoc method
@@ -50,8 +54,8 @@ VBET5.controller('mixedMyBetsCtrl', ['$rootScope', '$scope', '$controller', '$lo
         $scope.dateOptions = { showWeeks: 'false' };
 
         $scope.expandState = Config.main.expandAllInBetHistory;
-        $scope.betStatusFilter = undefined;
         $scope.betTypeSelector = undefined;
+        $scope.betTypes = BetService.constants.betTypes;
 
         initMixedBetHistory();
     }
@@ -81,8 +85,6 @@ VBET5.controller('mixedMyBetsCtrl', ['$rootScope', '$scope', '$controller', '$lo
                 $scope.customPeriodApplied = false;
                 $scope.selectBetHistoryTimePeriod($scope.selectedUpcomingPeriod); // prepare data range for selected (or default) period
             }
-        } else {
-            $scope.unsubscribeFromCashOut();
         }
 
         var betHistoryLoadingCallback = function betHistoryLoadingCallback(){
@@ -99,7 +101,7 @@ VBET5.controller('mixedMyBetsCtrl', ['$rootScope', '$scope', '$controller', '$lo
 
     };
 
-    $scope.$on('loadMixedBetHistory', function() { $scope.loadMixedBetHistory(); });
+    $scope.$on('loadMixedBetHistory', $scope.loadMixedBetHistory);
 
     var initDatePickerLimits = initFactory('datePickerLimits', {
         'minFromDate': undefined,
@@ -139,25 +141,6 @@ VBET5.controller('mixedMyBetsCtrl', ['$rootScope', '$scope', '$controller', '$lo
         });
 
         $scope.expandState = state;
-    };
-
-    $scope.openCorrespondingGame = function openCorrespondingGame (event) {
-        var game = $scope.gamePointers[event.game_id];
-        if(game && GameInfo.getVirtualSportIds().indexOf(parseInt(game.sport.id, 10)) === -1) {
-            $location.search({
-                'type': game.type === '0' ? 0 : 1,
-                'sport': game.sport.id,
-                'region': game.region,
-                'competition': game.competition,
-                'game': game.game
-            });
-
-            var neededPath = Utils.getPathAccordintToAlias(game.sport.alias);
-            $location.path(neededPath);
-
-            $scope.env.showSlider = false;
-            $scope.env.sliderContent = '';
-        }
     };
 
     /**
@@ -259,8 +242,8 @@ VBET5.controller('mixedMyBetsCtrl', ['$rootScope', '$scope', '$controller', '$lo
 
         $scope.customPeriodApplied = true;
         $scope.selectedUpcomingPeriod = 0;
-        $scope.betHistoryParams.dateRange.fromDate = Moment.get(Moment.moment($scope.requestData.dateFrom).format().split('T')[0] + 'T00:00:00').unix();
-        $scope.betHistoryParams.dateRange.toDate = Moment.get(Moment.moment($scope.requestData.dateTo).format().split('T')[0] + 'T23:59:59').unix();
+        $scope.betHistoryParams.dateRange.fromDate = Moment.get(Moment.moment($scope.requestData.dateFrom).format().split('T')[0] + 'T00:00:00' + timeZone).unix();
+        $scope.betHistoryParams.dateRange.toDate = Moment.get(Moment.moment($scope.requestData.dateTo).format().split('T')[0] + 'T23:59:59' + timeZone).unix();
     };
 
     /**
@@ -319,21 +302,6 @@ VBET5.controller('mixedMyBetsCtrl', ['$rootScope', '$scope', '$controller', '$lo
         $scope.openBetTypeFilter = false;
         $scope.openedTo = !$scope.openedTo;
         $scope.periodDropdownOpened = false;
-    };
-
-
-    /**
-     * @ngdoc function
-     * @name filterBetHistory
-     * @methodOf vbet5.controller:mixedMyBetsCtrl
-     * @description  Filters bet history tabs
-     * @param {Number} [newStatus]: undefined - all bets, 0 - open, 1 - lost, 2 - returned, 3 - won, 5 - cashed out
-     */
-    $scope.filterBetHistory = function filterBetHistory(newStatus) {
-        var previousStatus = $scope.betStatusFilter;
-        if (newStatus !== previousStatus) {
-            $scope.betStatusFilter = newStatus;
-        }
     };
 
     initScope();

@@ -1,0 +1,215 @@
+<div ng-controller="classicMultiColumnCtrl" class="asian-in-classic-table-wrapper no-select-j" ng-show="!prematchGamesLoading">
+    <div class="multicolumn-table aic-head" ng-class="{'hide-handicaps-mc': !multiColumn.prematchGamesEvents.Handicap && !multiColumn.liveGamesEvents.Handicap}" ng-show="multiColumn.prematchGamesEvents || multiColumn.liveGamesEvents" >
+        <table class="aic-table-head-first">
+            <colgroup span="5"></colgroup>
+           <tr>
+               <td class="aic-team-names-wrapper"></td>
+               <td class="aic-winner-cell">
+                   <p ng-show="multiColumn.prematchGamesEvents.P1XP2 || multiColumn.liveGamesEvents.P1XP2" trans>Winner</p>
+               </td>
+               <td class="aic-handicup-cell">
+                   <p ng-show="multiColumn.prematchGamesEvents.Handicap || multiColumn.liveGamesEvents.Handicap">
+                       {{'Handicap'|translate:null:'MultiColumnHandicap'+multiColumn.selectedSport}}
+                   </p>
+               </td>
+               <td class="aic-over-under-cell"><p
+                       ng-show="multiColumn.prematchGamesEvents.OverUnder || multiColumn.liveGamesEvents.OverUnder" trans>Over / Under</p></td>
+               <td></td>
+           </tr>
+        </table>
+        <table class="aic-table-head-second">
+            <colgroup span="11"></colgroup>
+            <tr>
+                <td class="aic-team-names-wrapper"></td>
+                <td class="aic-winner-cell">
+                    <p ng-show="multiColumn.prematchGamesEvents.P1XP2 || multiColumn.liveGamesEvents.P1XP2">1</p>
+                </td>
+                <td class="aic-winner-cell">
+                    <p ng-show="multiColumn.prematchGamesEvents.P1XP2 || multiColumn.liveGamesEvents.P1XP2">X</p>
+                </td>
+                <td class="aic-winner-cell last">
+                    <p ng-show="multiColumn.prematchGamesEvents.P1XP2 || multiColumn.liveGamesEvents.P1XP2">2</p>
+                </td>
+                <td class="aic-handicup-cell first"></td>
+                <td class="aic-handicup-cell"><p
+                        ng-show="multiColumn.prematchGamesEvents.Handicap || multiColumn.liveGamesEvents.Handicap">1</p></td>
+                <td class="aic-handicup-cell last"><p
+                        ng-show="multiColumn.prematchGamesEvents.Handicap || multiColumn.liveGamesEvents.Handicap">2</p></td>
+                <td class="aic-over-under-cell first"></td>
+                <td class="aic-over-under-cell"><p
+                        ng-show="multiColumn.prematchGamesEvents.OverUnder || multiColumn.liveGamesEvents.OverUnder" trans>Over</p></td>
+                <td class="aic-over-under-cell last"><p
+                        ng-show="multiColumn.prematchGamesEvents.OverUnder || multiColumn.liveGamesEvents.OverUnder" trans>Under</p></td>
+                <td></td>
+            </tr>
+        </table>
+    </div>
+    <div class="float-width" ng-repeat="prematchGames in multiColumn.viewData track by $index" ng-class="{'hide-handicaps-mc': !multiColumn.prematchGamesEvents.Handicap && !multiColumn.liveGamesEvents.Handicap}">
+        <div class="time-title-view-v3" ng-show="prematchGames.label && env.preMatchMultiSelection && !outrightSelected">
+            <div class="closed-game-icon-v3"
+                 title="close"
+                 trans="attr-only"
+                 ng-show="!groupGames.live && env.preMatchMultiSelection && !outrightSelected && prematchGames.competition" ng-click="broadcast('prematchMultiView.removeCompetitionFromSelection', {competition: prematchGames.competition}); $event.stopPropagation()"></div>
+
+            <p class="competition-title">{{prematchGames.competition.games[0].sport.name}}. {{prematchGames.competition.games[0].region.name}} - {{prematchGames.label}}</p>
+            <div class="arrow-view-v3" ng-class="{open: !prematchGames.closed}" ng-click="prematchGames.closed = !prematchGames.closed"></div>
+        </div>
+        <div class="multicolumn-table" ng-repeat="groupGames in prematchGames.gameData track by $index" ng-show="!prematchGames.closed && prematchGames.gameData.length">
+            <div class="time-info-game-box-v3" ng-click="competitionTimeGroupe[$parent.$index + '-' + $index] = !competitionTimeGroupe[$parent.$index + '-' + $index]"
+                 ng-class="{'closed': competitionTimeGroupe[$parent.$index + '-' + $index]}">
+                <div class="time-title-view-v3">
+                    <p ng-show="groupGames.date || groupGames.label">{{groupGames.label ? '• ' + (groupGames.label|translate) :
+                        (groupGames.date|formatDate:'unixDate')}}</p>
+                    <div class="arrow-view-v3"></div>
+
+                </div>
+            </div>
+            <table class="aic-hdp-row"
+                ng-show="!competitionTimeGroupe[$parent.$parent.$index + '-' + $parent.$index]"
+                ng-repeat="game in groupGames.games track by $index"
+                ng-class="{'active': selectedGame.id === game.id}"
+                ng-click="openGameFullDetails(game, selectedCompetition);selectGame(game.id);selectCompetition();$event.stopPropagation();">
+                <caption class="closed-game-icon-v3" title="close" trans="attr-only"
+                     ng-if="!groupGames.live && env.preMatchMultiSelection && !outrightSelected"
+                     ng-click="broadcast('prematchMultiView.removeGameFromSelection', {id: game.id, competition: prematchGames.competition}); $event.stopPropagation()"></caption>
+                <colgroup span="11"></colgroup>
+               <tr>
+                   <td class="aic-team-names-wrapper">
+                       <table>
+                           <colgroup span="2"></colgroup>
+                           <tr>
+                               <td title="{{game.team1_name}} {{game.team2_name ? 'vs ' + game.team2_name : game.team2_name}}">
+                                   <div class="aic-team-names">
+                                       <p>{{game.team1_name}}</p>
+                                   </div>
+                               </td>
+                               <td>
+                                  <div class="time-game-v3 " ng-class="{'animation-rotate-soon' : !$root.conf.hideGameSoonLabel && game.type === 2 && game.sport.alias === 'Mma'}">
+                                       <p>{{game.start_ts|formatDate:'noLocaleTime':null:$root.env.timeFormat}}</p>
+                                       <span class="soon-v" trans>soon</span>
+                                   </div>
+                                   <div class="icon-separator-v3 favorite" ng-show="!env.preMatchMultiSelection || outrightSelected"
+                                        ng-class="{'active': myGames.indexOf(game.id) !== -1}"
+                                        ng-click="toggleGameFavorite(game); $event.stopPropagation()"></div>
+                               </td>
+                           </tr>
+                       </table>
+                       <table ng-show="game.team2_name">
+                           <colgroup span="2"></colgroup>
+                           <tr>
+                               <td title="{{game.team1_name}} {{game.team2_name ? 'vs ' + game.team2_name : game.team2_name}}">
+                                   <div class="aic-team-names">
+                                       <p>{{game.team2_name}}</p>
+                                   </div>
+                               </td>
+                               <td>
+                                   <div class="game-info-icons-v3">
+                                       <div class="icon-separator-v3 statistic"
+                                            ng-show="$root.conf.enableH2HStat && game.is_stat_available" statistics-on-hover
+                                            stats-game="game" stats-competition-name="{{prematchGames.competition.name}}"
+                                            ng-click="openStatistics(game);$event.stopPropagation();"></div>
+                                   </div>
+                               </td>
+                           </tr>
+                       </table>
+                       <table ng-show="groupGames.live && game.info.current_game_state">
+                           <colgroup span="1"></colgroup>
+                           <tr>
+                               <td>
+                                   <p>{{ game.info.current_game_state|convertSetName:selectedSport.alias|translate }}</p>
+                               </td>
+                           </tr>
+
+                       </table>
+                   </td>
+                   <td class="aic-winner-cell">
+                       <div ng-show="game.filteredEvents.P1XP2.P1.price"
+                            ng-click="bet(game.filteredEvents.P1XP2.P1, game.filteredEvents.P1XP2.market, game);$event.stopPropagation()"
+                            class="aic-odd-container first"
+                            ng-class="{'active': isEventInBetSlip(game.filteredEvents.P1XP2.P1), 'single-events-b-v3 blocked': ((game.filteredEvents.P1XP2.P1.price | oddConvert:'decimal') == 1 || game.is_blocked)}">
+                           <div class="max-bet-tooltip-v3" onmouseover="displayEventLimit(event)" onmouseleave="cancelDisplayEventLimit(event)" data-id="{{game.filteredEvents.P1XP2.P1.id}}"  ng-class="{'maxbet-enabled': $root.env.authorized && $root.conf.displayEventsMaxBet}">
+                           </div>
+                           <span ng-show="!game.is_blocked" ng-class="{'arrow-up': game.filteredEvents.P1XP2.P1.price_change > 0, 'arrow-down': game.filteredEvents.P1XP2.P1.price_change < 0}">{{game.filteredEvents.P1XP2.P1.price|oddConvert:env.oddFormat:null}}</span>
+                       </div>
+                   </td>
+                   <td class="aic-winner-cell">
+                       <div ng-show="game.filteredEvents.P1XP2.X.price"
+                            ng-click="bet(game.filteredEvents.P1XP2.X, game.filteredEvents.P1XP2.market, game);$event.stopPropagation()"
+                            class="aic-odd-container"
+                            ng-class="{'active': isEventInBetSlip(game.filteredEvents.P1XP2.X), 'single-events-b-v3 blocked': ((game.filteredEvents.P1XP2.X.price | oddConvert:'decimal') == 1 || game.is_blocked)}">
+                           <div class="max-bet-tooltip-v3" onmouseover="displayEventLimit(event)" onmouseleave="cancelDisplayEventLimit(event)" data-id="{{game.filteredEvents.P1XP2.X.id}}" ng-class="{'maxbet-enabled': $root.env.authorized && $root.conf.displayEventsMaxBet}">
+                           </div>
+                           <span ng-show="!game.is_blocked" ng-class="{'arrow-up': game.filteredEvents.P1XP2.X.price_change > 0, 'arrow-down': game.filteredEvents.P1XP2.X.price_change < 0}">{{game.filteredEvents.P1XP2.X.price|oddConvert:env.oddFormat:null}}</span>
+                       </div>
+                   </td>
+                   <td class="aic-winner-cell last">
+                       <div ng-show="game.filteredEvents.P1XP2.P2.price"
+                            ng-click="bet(game.filteredEvents.P1XP2.P2, game.filteredEvents.P1XP2.market, game);$event.stopPropagation()"
+                            class="aic-odd-container last"
+                            ng-class="{'active': isEventInBetSlip(game.filteredEvents.P1XP2.P2), 'single-events-b-v3 blocked': ((game.filteredEvents.P1XP2.P2.price | oddConvert:'decimal') == 1 || game.is_blocked)}">
+                           <div class="max-bet-tooltip-v3" onmouseover="displayEventLimit(event)" onmouseleave="cancelDisplayEventLimit(event)" data-id="{{game.filteredEvents.P1XP2.P2.id}}" ng-class="{'maxbet-enabled': $root.env.authorized && $root.conf.displayEventsMaxBet}">
+                           </div>
+                           <span ng-show="!game.is_blocked" ng-class="{'arrow-up': game.filteredEvents.P1XP2.P2.price_change > 0, 'arrow-down': game.filteredEvents.P1XP2.P2.price_change < 0}">{{game.filteredEvents.P1XP2.P2.price|oddConvert:env.oddFormat:null}}</span>
+                       </div>
+                   </td>
+                   <td class="aic-handicup-cell first">
+                       <div class="aic-odd-container alt" ng-show="game.filteredEvents.Handicap.Home.base">
+                           <span>{{game.filteredEvents.Handicap.Home.base >=0 ? '+' : ''}}{{game.filteredEvents.Handicap.Home.base}}{{game.filteredEvents.Handicap.Away.base >=0 ? '+' : '-'}}</span>
+                       </div>
+                       <div class="aic-odd-container alt" ng-show="!game.filteredEvents.Handicap.Home.base && game.filteredEvents.Handicap.Home.price">
+                           <span>0</span>
+                       </div>
+                   </td>
+                   <td class="aic-handicup-cell">
+                       <div class="aic-odd-container first"
+                            ng-show="game.filteredEvents.Handicap.Home.price"
+                            ng-click="bet(game.filteredEvents.Handicap.Home, game.filteredEvents.Handicap.market, game);$event.stopPropagation()"
+                            ng-class="{'active': isEventInBetSlip(game.filteredEvents.Handicap.Home), 'single-events-b-v3 blocked': ((game.filteredEvents.Handicap.Home.price | oddConvert:'decimal') == 1 || game.is_blocked)}">
+                           <div class="max-bet-tooltip-v3" onmouseover="displayEventLimit(event)" onmouseleave="cancelDisplayEventLimit(event)"  data-id="{{game.filteredEvents.Handicap.Home.id}}"  ng-class="{'maxbet-enabled': $root.env.authorized && $root.conf.displayEventsMaxBet}">
+                           </div>
+                           <span ng-class="{'arrow-up': game.filteredEvents.Handicap.Home.price_change > 0, 'arrow-down': game.filteredEvents.Handicap.Home.price_change < 0}" ng-show="!game.is_blocked">{{game.filteredEvents.Handicap.Home.price|oddConvert:env.oddFormat:null}}</span>
+                       </div>
+                   </td>
+                   <td class="aic-handicup-cell last">
+                       <div class="aic-odd-container last"
+                            ng-show="game.filteredEvents.Handicap.Away.price"
+                            ng-click="bet(game.filteredEvents.Handicap.Away, game.filteredEvents.Handicap.market, game);$event.stopPropagation()"
+                            ng-class="{'active': isEventInBetSlip(game.filteredEvents.Handicap.Away), 'single-events-b-v3 blocked': ((game.filteredEvents.Handicap.Away | oddConvert:'decimal') == 1 || game.is_blocked)}">
+                           <div class="max-bet-tooltip-v3" onmouseover="displayEventLimit(event)" onmouseleave="cancelDisplayEventLimit(event)" data-id="{{game.filteredEvents.Handicap.Away.id}}" ng-class="{'maxbet-enabled': $root.env.authorized && $root.conf.displayEventsMaxBet}">
+                           </div>
+                           <span ng-class="{'arrow-up': game.filteredEvents.Handicap.Away.price_change > 0, 'arrow-down': game.filteredEvents.Handicap.Away.price_change < 0}" ng-show="!game.is_blocked">{{game.filteredEvents.Handicap.Away.price|oddConvert:env.oddFormat:null}}</span>
+                       </div>
+                   </td>
+                   <td class="aic-over-under-cell first">
+                       <div class="aic-odd-container alt" ng-show="game.filteredEvents.OverUnder.Over.base">
+                           <span>{{game.filteredEvents.OverUnder.Over.base}}</span>
+                       </div>
+                   </td>
+                   <td class="aic-over-under-cell">
+                       <div class="aic-odd-container first"
+                            ng-show="game.filteredEvents.OverUnder.Over.price"
+                            ng-click="bet(game.filteredEvents.OverUnder.Over, game.filteredEvents.OverUnder.market, game);$event.stopPropagation()"
+                            ng-class="{'active': isEventInBetSlip(game.filteredEvents.OverUnder.Over), 'single-events-b-v3 blocked': ((game.filteredEvents.OverUnder.Over | oddConvert:'decimal') == 1 || game.is_blocked)}">
+                           <div class="max-bet-tooltip-v3"  onmouseover="displayEventLimit(event)" onmouseleave="cancelDisplayEventLimit(event)" data-id="{{game.filteredEvents.OverUnder.Over.id}}"  ng-class="{'maxbet-enabled': $root.env.authorized && $root.conf.displayEventsMaxBet}">
+                           </div>
+                           <span ng-class="{'arrow-up': game.filteredEvents.OverUnder.Over.price_change > 0, 'arrow-down': game.filteredEvents.OverUnder.Over.price_change < 0}" ng-show="!game.is_blocked">{{game.filteredEvents.OverUnder.Over.price|oddConvert:env.oddFormat:null}}</span>
+                       </div>
+                   </td>
+                   <td class="aic-over-under-cell last">
+                       <div class="aic-odd-container last"
+                            ng-show="game.filteredEvents.OverUnder.Under.price"
+                            ng-click="bet(game.filteredEvents.OverUnder.Under, game.filteredEvents.OverUnder.market, game);$event.stopPropagation()"
+                            ng-class="{'active': isEventInBetSlip(game.filteredEvents.OverUnder.Under), 'single-events-b-v3 blocked': ((game.filteredEvents.OverUnder.Under | oddConvert:'decimal') == 1 || game.is_blocked)}">
+                           <div class="max-bet-tooltip-v3" onmouseover="displayEventLimit(event)" onmouseleave="cancelDisplayEventLimit(event)" data-id="{{game.filteredEvents.OverUnder.Under.id}}" ng-class="{'maxbet-enabled': $root.env.authorized && $root.conf.displayEventsMaxBet}">
+                           </div>
+                           <span ng-class="{'arrow-up': game.filteredEvents.OverUnder.Under.price_change > 0, 'arrow-down': game.filteredEvents.OverUnder.Under.price_change < 0}" ng-show="!game.is_blocked">{{game.filteredEvents.OverUnder.Under.price|oddConvert:env.oddFormat:null}}</span>
+                       </div>
+                   </td>
+                   <td class="aic-more-count" ng-class="{'aic-more-count-outright': !game.team2_name}">
+                       <p>+{{game.markets_count}}</p>
+                   </td>
+               </tr>
+            </table>
+        </div>
+    </div>
+</div>

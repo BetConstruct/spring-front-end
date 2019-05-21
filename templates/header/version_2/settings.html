@@ -10,7 +10,7 @@
                     </div>
                 </div>
             </li>
-            <li ng-show="conf.sportsLayout !== 'external'">
+            <li>
                 <div class="drop-nav-new-b {{headerVersion2Icons.oddsInIsToggled ? 'closed' : ''}}">
                     <p ng-click="headerVersion2Icons.oddsInIsToggled = !headerVersion2Icons.oddsInIsToggled">
                         <span trans>Odds in</span>
@@ -62,7 +62,7 @@
                     </p>
                     <div class="drop-items-contain-b">
                         <ul>
-                            <li ng-repeat="(key, value) in sportsbookAvailableViews track by $index" ng-click="switchSportsbookLayout(key)" ng-class="{'active': conf.sportsLayout === key}" ng-bind="key == 'euro2016'? ('Classic'|translate) : key|capitalise|translate"></li>
+                            <li ng-repeat="(key, value) in sportsbookAvailableViews track by $index" ng-click="switchSportsbookLayout(key)" ng-class="{'active': conf.sportsLayout === key}" ng-bind="key|capitalise|translate"></li>
                         </ul>
                     </div>
                 </div>

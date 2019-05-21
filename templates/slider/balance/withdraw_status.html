@@ -10,8 +10,7 @@
         </tr>
         <tr ng-repeat="history in paymentHistory | orderBy: 'date': true"  ng-show="paymentHistory.length">
             <td>
-                <div ng-show="!conf.GmsPlatform" class="icon-deposit-logo" ng-class="history.name"><a class="paymentIcon" ng-class="history.name">{{paymentSystem.name}}</a></div>
-                <p ng-show="conf.GmsPlatform">{{history.payment_system_name|translate}}</p>
+                <p>{{history.payment_system_name|translate}}</p>
             </td>
             <td><p>{{history.date|formatDate:'ll'}}</p></td>
             <td><p>{{history.date|formatDate:'h:mm a'}}</p></td>

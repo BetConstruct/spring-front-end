@@ -4,7 +4,7 @@
  * @description
  * login controller
  */
-angular.module('vbet5').controller('loginCtrl', ['$scope', '$rootScope', 'TimeoutWrapper', '$filter', '$q', '$location', '$window', '$cookies', '$sce', 'Script', 'Config', 'ConnectionService', 'Zergling', 'Tracking', 'Storage', 'Translator', 'partner', 'Utils', 'content', 'analytics', 'AuthData', 'LocalIp', function ($scope, $rootScope, TimeoutWrapper, $filter, $q, $location, $window, $cookies, $sce, Script, Config, ConnectionService, Zergling, Tracking, Storage, Translator, partner, Utils, content, analytics, AuthData, LocalIp) {
+angular.module('vbet5').controller('loginCtrl', ['$scope', '$rootScope', 'TimeoutWrapper', '$filter', '$q', '$location', '$window', '$sce', 'Script', 'Config', 'ConnectionService', 'Zergling', 'Tracking', 'Storage', 'Translator', 'partner', 'Utils', 'content', 'analytics', 'AuthData', 'LocalIp', function ($scope, $rootScope, TimeoutWrapper, $filter, $q, $location, $window, $sce, Script, Config, ConnectionService, Zergling, Tracking, Storage, Translator, partner, Utils, content, analytics, AuthData, LocalIp) {
     'use strict';
     TimeoutWrapper = TimeoutWrapper($scope);
 
@@ -43,14 +43,15 @@ angular.module('vbet5').controller('loginCtrl', ['$scope', '$rootScope', 'Timeou
                         title: 'E-mail confirmation',
                         content: 'Your E-mail Has been confirmed'
                     });
-
+                    analytics.gaSend('send', 'event', 'slider', 'email_confirmation',  {'page': $location.path(), 'eventLabel': 'Success'});
                     $scope.loginAction = 'mail_confirmed';
-                } else if (response.result === -2408 || response.result === '-2408') {
+                } else if (response.result === -2408 || response.result === '-2408' || response.result === '-2462') {
                     $rootScope.$broadcast("globalDialogs.addDialog", {
                         type: 'info',
                         title: 'E-mail confirmation error',
                         content: 'Verification process failed. Please try again.'
                     });
+                    analytics.gaSend('send', 'event', 'slider', 'email_confirmation',  {'page': $location.path(), 'eventLabel': 'Error'});
                 }
             });
         }
@@ -147,27 +148,6 @@ angular.module('vbet5').controller('loginCtrl', ['$scope', '$rootScope', 'Timeou
     }
 
     /**
-     * @ngdoc method
-     * @name loginFormInit
-     * @methodOf vbet5.controller:loginCtrl
-     * @description broadcast corresponding event in case when login form opens
-     */
-    $scope.loginFormInit = function loginFormInit() {
-        //initial values
-        $scope.user = {username: $location.search().username || Storage.get('lastLoggedInUsername')} || {};
-        $scope.user.remember = Config.main.rememberMeCheckbox.checked || false;
-        $scope.forms = {};
-        $scope.signInError = false;
-
-        TimeoutWrapper(function () {
-            $scope.$broadcast('login.formOpened');
-            if (Storage.get('lastLoggedInUsername')) {
-                $scope.$broadcast('login.formOpened.andUsernameIsAvailable');
-            }
-        }, 200);
-    };
-
-    /**
      * Broadcasts 'profile' message with profile data on rootScope
      *
      * @param {Object} data profile data
@@ -190,15 +170,7 @@ angular.module('vbet5').controller('loginCtrl', ['$scope', '$rootScope', 'Timeou
             if (authData && !authData.never_expires) {
                 dataToProlong.push('auth_data');
 
-                if (Config.main.useAuthCookies) {
-                    var cookieOptions = {
-                        domain: $window.location.hostname.split(/\./).slice(-2).join("."),
-                        path: "/",
-                        expires: new Date((new Date()).getTime() + Config.main.authSessionLifetime)
-                    };
-
-                    $cookies.putObject("auth_data", authData, cookieOptions);
-                }
+                Utils.checkAndSetCookie("auth_data", authData, Config.main.authSessionLifetime);
             }
             angular.forEach(dataToProlong, function (key) {
                 var val = Storage.get(key);
@@ -224,9 +196,7 @@ angular.module('vbet5').controller('loginCtrl', ['$scope', '$rootScope', 'Timeou
             return;
         }
 
-        if (refreshBalancePromise) {
-            TimeoutWrapper.cancel(refreshBalancePromise);
-        }
+        TimeoutWrapper.cancel(refreshBalancePromise); // TimeoutWrapper checks the existence of promise by itself
 
         isGettingBalanceInProgress = true;
 
@@ -260,13 +230,8 @@ angular.module('vbet5').controller('loginCtrl', ['$scope', '$rootScope', 'Timeou
         $scope.registrationComplete = false;
         partner.call('logout');
 
-        if (refreshBalancePromise) {
-            TimeoutWrapper.cancel(refreshBalancePromise);
-        }
-
-        if (keepAlivePromise) {
-            TimeoutWrapper.cancel(keepAlivePromise);
-        }
+        TimeoutWrapper.cancel(refreshBalancePromise);
+        TimeoutWrapper.cancel(keepAlivePromise);
     });
 
     /**
@@ -293,6 +258,117 @@ angular.module('vbet5').controller('loginCtrl', ['$scope', '$rootScope', 'Timeou
                 pushIncomingMessage(result);
             });
     }
+    /**
+     * @ngdoc method
+     * @name showAuthenticationPopup
+     * @methodOf vbet5.controller:login
+     * @description show two factor authentication popup and after verification call callback function
+     * @param {String} qrCodeOrigin
+     * @param {Function} callback
+     */
+    function showAuthenticationPopup(qrCodeOrigin, callback) {
+        $scope.showAuthenticationPopup = true;
+        $scope.authenticationData = {
+            period: "30",
+            isDeviceTrusted: false,
+            code: {}
+        };
+        for(var i = 1; i < 7; i++) {
+            $scope.authenticationData.code["k" + i] = "";
+        }
+        if (qrCodeOrigin) {
+            $scope.authenticationData.qrCodeURL = 'https://chart.googleapis.com/chart?chs=114x114&chld=L|0&cht=qr&chl='+ encodeURIComponent(qrCodeOrigin);
+        }
+        /**
+         *   This method is handle autofocus for token inputs.
+         *   Method is check if value is not empty string focus next sibling element
+         *   and drive cursor to left and right by keybord arrows.
+         *
+         *   @param {object} $event - Inputted dom element.
+         *   @param {string} value - Inputted value.
+         */
+        $scope.autofocusHandler = function($event, value) {
+            if (value !== '' && value !== undefined && $event.keyCode !== 39 && $event.keyCode !== 37) {
+                $event.target.nextElementSibling && $event.target.nextElementSibling.focus();
+            }
+
+            if ($event.keyCode === 39) {
+                $event.target.nextElementSibling && $event.target.nextElementSibling.focus();
+            } else if ($event.keyCode === 37 || $event.keyCode === 8) {
+                $event.target.previousElementSibling && $event.target.previousElementSibling.focus();
+            }
+        };
+        /**
+         *   This method is handle focus event for token inputs.
+         *   Method is select existing value from input element.
+         *
+         *   @param {object} $event - Inputted dom element.
+         */
+        $scope.focusHandler = function($event) {
+            $event.target && $event.target.select();
+        };
+
+        $scope.checkAuthenticationCode = function (event) {
+            event.preventDefault();
+            var code = "";
+            for(var i = 1; i < 7; i++) {
+                code += $scope.authenticationData.code["k" + i];
+            }
+            var request = {
+                code: code,
+                is_device_trusted: $scope.authenticationData.isDeviceTrusted,
+                device_fingerprint: Fingerprint2.getAuthenticationCode()
+            };
+
+            if ($scope.authenticationData.isDeviceTrusted) {
+                request.trust_period = +$scope.authenticationData.period;
+            }
+            $scope.isLoading = true;
+            Zergling.get(request, "apply_two_factor_authentication_code").then(function (data) {
+                if (data.result === 0){
+                    callback();
+
+                } else {
+                    $rootScope.$broadcast("globalDialogs.addDialog", {
+                        type: 'error',
+                        title: 'Error',
+                        content: 'Invalid code'
+                    });
+                    for(var i = 1; i < 7; i++) {
+                        $scope.authenticationData.code["k" + i] = "";
+                    }
+                }
+            })['finally'](function () {
+                $scope.isLoading = false;
+            });
+
+        };
+
+        $scope.onAuthenticationClose = function onAuthenticationClose() {
+            $scope.showAuthenticationPopup = false;
+            closeSignInForm();
+            $rootScope.broadcast("doLogOut");
+            $rootScope.broadcast("slider.close");
+        };
+
+        $scope.showBarcode = function showBarcode() {
+            var match = RegExp('[?&]secret=([^&]*)').exec(qrCodeOrigin);
+            $scope.authenticationData.barcode = match && match[1];
+        };
+
+
+        /**
+         * @ngdoc method
+         * @name verify
+         * @methodOf vbet5.controller:loginCtrl
+         * @description copy barcode to clipboard
+         */
+        $scope.copyToClipboard = function copyToClipboard() {
+            Utils.copyToClipboard($scope.authenticationData.barcode);
+        };
+
+    }
+
 
     /**
      * @ngdoc method
@@ -342,22 +418,34 @@ angular.module('vbet5').controller('loginCtrl', ['$scope', '$rootScope', 'Timeou
             jsobject.loginAdmin('1', password);
         }
 
+
         $rootScope.loginInProgress = true;
         Zergling
             .login(loginObj, remember, additionalParams)
             .then(
                 function (data) {
                     console.log('login ok', data);
-                    $rootScope.loginInProgress = false;
-                    analytics.gaSend('send', 'event', 'slider', 'login',  {'page': $location.path(), 'eventLabel': 'Success'});
-                    $scope.env.authorized = true;
-                    Storage.set('lastLoggedInUsername', loginObj.username);
-                    if (!Config.partner.profileNotAvailable) { // for some skins profile is not available in swarm
-                        subscribeToProfile(action);
-                    }
-                    subscribeForMessages();
+                    function onSuccesfulLogin() {
+                        $rootScope.loginInProgress = false;
 
-                    login.resolve(data);
+                        $rootScope.$broadcast('authentication.success',action); //todo  SDC-37579
+                        analytics.gaSend('send', 'event', 'slider', 'login',  {'page': $location.path(), 'eventLabel': 'Success'});
+
+                        $scope.env.authorized = true;
+                        Storage.set('lastLoggedInUsername', loginObj.username);
+                        if (!Config.partner.profileNotAvailable) { // for some skins profile is not available in swarm
+                            subscribeToProfile(action);
+                        }
+                        subscribeForMessages();
+
+                        login.resolve(data);
+                    }
+                    if (!data.data.qr_code_origin && data.data.authentication_status !== 4) {
+                        onSuccesfulLogin();
+                    }else {
+                        showAuthenticationPopup(data.data.qr_code_origin, onSuccesfulLogin);
+                    }
+
                 },
                 function (data) {
                     data.data = data.data || {};
@@ -399,7 +487,7 @@ angular.module('vbet5').controller('loginCtrl', ['$scope', '$rootScope', 'Timeou
             updateProfile,
             {
                 'thenCallback': function (result) {
-                    $rootScope.$broadcast('login.loggedIn');
+                    $rootScope.$broadcast('login.loggedIn',action);
                     keepAlive();
                     action = $scope.loginAction || action || 'logged_in';
                     $scope.loginAction = null;
@@ -453,6 +541,7 @@ angular.module('vbet5').controller('loginCtrl', ['$scope', '$rootScope', 'Timeou
             if ($scope.env.sliderContent === 'login') {
                 $scope.env.showSlider = false;
                 $scope.env.sliderContent = '';
+                $scope.showAuthenticationPopup = false;
 
                 if (Config.main.smsVerification.login) {
                     clearSMSParams();
@@ -472,7 +561,7 @@ angular.module('vbet5').controller('loginCtrl', ['$scope', '$rootScope', 'Timeou
     function handleLoginFailure(data) {
         data.data = data.data || {};
         $scope.busy = false;
-        $scope.signInError = Translator.get(data.msg || data.data || data.code || true);
+        $scope.signInError = Translator.get((data.data.details && data.data.details.Message) || data.msg || data.data || data.code || true);
         if (data.code !== ERROR_SERVICE_UNAVAILABLE) {
             if ($scope.forms.signinform && $scope.forms.signinform.$setPristine) {
                 $scope.forms.signinform.$setPristine();
@@ -533,17 +622,6 @@ angular.module('vbet5').controller('loginCtrl', ['$scope', '$rootScope', 'Timeou
                 type: 'error',
                 title: 'Login',
                 content: Translator.get(data.data.details.Message || 'Your account will only be re-opened if you contact us to request it after the Self-Exclusion period has expired.')
-            });
-            $scope.env.showSlider = false;
-        }
-
-        //Email verification
-        if (data.msg !== 'Invalid credentials' && (data.data.status === 99 || data.data.status === "99" || data.data.status === 2413 || data.data.status === "2413")) {
-            //$scope.params.needUserAuthorization = true;
-            $rootScope.$broadcast("globalDialogs.addDialog", {
-                type: 'success',
-                title: '',
-                content: 'To the specified e-mail address we have sent the letter. Click on the link to continue registration. If you do not receive the email, contact support.'
             });
             $scope.env.showSlider = false;
         }
@@ -740,11 +818,16 @@ angular.module('vbet5').controller('loginCtrl', ['$scope', '$rootScope', 'Timeou
 
     $scope.resetPasswordData = {
         email: '',
+        phone: '',
         username: '',
         password: '',
         password1: '',
         password2: '',
         error: {}
+    };
+
+    $scope.resetPasswordState = {
+        page: 'main'
     };
 
     /**
@@ -863,12 +946,17 @@ angular.module('vbet5').controller('loginCtrl', ['$scope', '$rootScope', 'Timeou
      * @description resets to initial state and  closes the "passsword reset done" message and slider if not skipped
      *
      * @param {Boolean} skipClosingSlider. In true case skips closing of slider
+     * @param {String} page 'main' or 'phone' or 'email' or undefined
      */
-    $scope.resetPasswordResult = function resetPasswordResult(skipClosingSlider) {
+    $scope.resetPasswordResult = function resetPasswordResult(skipClosingSlider, page) {
         $scope.passwordResetComplete = false;
+        $scope.passwordResetCompleteViaSms = false;
         $scope.passwordResetFailed = '';
         $scope.usernameOrEmailInvalid = false;
         $scope.resetPasswordData.email = '';
+        $scope.resetPasswordData.phone = '';
+        $scope.resetPasswordData.g_recaptcha_response = '';
+        $scope.resetPasswordState.page = page || 'main';
 
         if (!skipClosingSlider) {
             $rootScope.env.sliderContent = '';
@@ -882,23 +970,12 @@ angular.module('vbet5').controller('loginCtrl', ['$scope', '$rootScope', 'Timeou
      * @methodOf vbet5.controller:loginCtrl
      * @description starts iovation call
      */
-    $scope.initIovation = function initIovation() {
-        if (Config.main.iovationLoginScripts) {
-            angular.forEach(Config.main.iovationLoginScripts, function(iovationScript) {
-                Script(iovationScript + '?login&' + Date.now());
-            });
+    function initIovation() {
+        if (Config.main.iovationLoginScripts && window.IGLOO) {
+            var ioData = window.IGLOO.getBlackbox();
+            $scope.user.ioBlackBox = ioData.blackbox;
         }
-    };
-
-    $scope.$on('$destroy', function () {
-        if (refreshBalancePromise) {
-            TimeoutWrapper.cancel(refreshBalancePromise);
-        }
-
-        if (keepAlivePromise) {
-            TimeoutWrapper.cancel(keepAlivePromise);
-        }
-    });
+    }
 
     /**
      * @ngdoc method
@@ -930,6 +1007,29 @@ angular.module('vbet5').controller('loginCtrl', ['$scope', '$rootScope', 'Timeou
         }
     };
 
+    /**
+     * @ngdoc method
+     * @name loginFormInit
+     * @methodOf vbet5.controller:loginCtrl
+     * @description broadcast corresponding event in case when login form opens
+     */
+    $scope.loginFormInit = function loginFormInit() {
+        //initial values
+        $scope.user = {username: $location.search().username || Storage.get('lastLoggedInUsername')} || {};
+        $scope.user.remember = Config.main.rememberMeCheckbox.checked || false;
+        $scope.forms = {};
+        $scope.signInError = false;
+
+        TimeoutWrapper(function () {
+            $scope.$broadcast('login.formOpened');
+            if (Storage.get('lastLoggedInUsername')) {
+                $scope.$broadcast('login.formOpened.andUsernameIsAvailable');
+            }
+        }, 200);
+
+        initIovation();
+    };
+
     $scope.$on('slider.close', function() {
         if ($scope.nemIDSrc) {
             nemIDMsgListener();
@@ -942,5 +1042,48 @@ angular.module('vbet5').controller('loginCtrl', ['$scope', '$rootScope', 'Timeou
             $scope.params.allowSMSResend = true;
         }
     });
+
+    if (Config.main.smsVerification.resetPassword) {
+        $scope.$on('recaptcha.response', function (event, response) {
+            $scope.resetPasswordData.g_recaptcha_response = response;
+        });
+        /**
+         * @ngdoc method
+         * @name resetPasswordViaSms
+         * @methodOf vbet5.controller:loginCtrl
+         * @description reset password via sms
+         * @param {Object} resetPasswordViaSmsForm form
+         */
+        $scope.resetPasswordViaSms = function resetPasswordViaSms(resetPasswordViaSmsForm) {
+            if ($scope.sendingForgotPasswordViaSms) {
+                return;
+            }
+
+            $scope.sendingForgotPasswordViaSms = true;
+
+            Zergling
+                .get({"key": $scope.resetPasswordData.phone, "g_recaptcha_response": $scope.resetPasswordData.g_recaptcha_response}, 'reset_password_via_sms')
+                .then(
+                    function (successResponse) {
+                        console.log("forgot_password response", successResponse);
+                        if (successResponse.result === 0) {
+                            $scope.passwordResetCompleteViaSms = true;
+                        } else if (successResponse.result == '-1001') {
+                            resetPasswordViaSmsForm.phone.$setValidity('wrong', false);
+                            $scope.resetPasswordData.phone = "";
+                            $scope.$broadcast('recaptcha.reload');
+                            $scope.resetPasswordData.g_recaptcha_response = "";
+                        } else {
+                            $scope.passwordResetFailed = 'Password reset failed.';
+                        }
+                        $scope.sendingForgotPasswordViaSms = false;
+                    },
+                    function (failResponse) {
+                        $scope.passwordResetFailed = 'Password reset failed.';
+                        $scope.sendingForgotPasswordViaSms = false;
+                    }
+                );
+        };
+    }
 }]);
 

@@ -23,7 +23,8 @@
                             <li ng-repeat="notification in notificationGroup.items track by notification.id" style="cursor: {{notification.url ? 'pointer' : 'default'}};" ng-click="openNotification(notification);$event.stopPropagation();"
                                 ng-class="{'notification-read': notifications.showed[notification.id] === 2, active: notifications.showed[notification.id] !== 2 && notification.custom_fields.highlight_notification[0]}">
                                 <h4>
-                                    <b class="cms-jcon-sport"></b>
+                                    <b class="cms-jcon-sport" ng-if="!notification.thumbnail"></b>
+                                    <img ng-if="notification.thumbnail" ng-src="{{notification.thumbnail}}">
                                     <span ng-bind-html="notification.title|html"></span>
                                     <i ng-click="clearNotifications(notification.id);$event.stopPropagation();"></i>
                                 </h4>

@@ -2,16 +2,16 @@
 <!--Menu games-->
 <div class="menu-games" ng-init="initModernView()">
     <div class="contain-menu-games modern-menu-j block-size-visible-b">
-        <ul ng-class="{'favorites-first': conf.showFavoriteGamesInSportList}">
+        <ul ng-class="{'favorites-first': $root.conf.showFavoriteGamesInSportList}">
 
-            <li ng-show="env.live && sports_list && sports_list.length && conf.customSportsBook.modern.toggleLiveButton" data-step="1" data-position="right" class="with-video-filter" ng-class="{'active': withVideo}">
+            <li ng-show="env.live && sports_list && sports_list.length && $root.conf.customSportsBook.modern.toggleLiveButton" data-step="1" data-position="right" class="with-video-filter" ng-class="{'active': withVideo}">
                 <a ng-click="toggleVideo(); resetSearchParams('game');">
                     <span class="cms-jcon-video-tv">
                     </span>{{'Live TV'|translate}}
                 </a>
             </li>
             <!--Переключатель при неактивном состоянии заменить  class="live-b" на  class="live-b2"-->
-            <li data-step="1" data-position="right" data-intro="Use this selector to switch between Live and Pre-match games" ng-show="conf.customSportsBook.modern.showPrematch && conf.customSportsBook.modern.showLive" class="live-prematch-toggle-li-j" trans="attr-only">
+            <li data-step="1" data-position="right" data-intro="Use this selector to switch between Live and Pre-match games" ng-show="$root.conf.customSportsBook.modern.showPrematch && $root.conf.customSportsBook.modern.showLive" class="live-prematch-toggle-li-j" trans="attr-only">
                 <div class="pl-ie8" ng-class="{'live-b2': !env.live, 'live-b':env.live}">
                     <a ng-click="toggleLive()" trans ng-show="env.live" title="click to switch to pre-match">live</a>
                     <a ng-click="toggleLive()" trans ng-show="!env.live" title="click to swicth to Live games">live</a>
@@ -20,7 +20,7 @@
                     <a trans>pre-match</a>
                     <a trans>live</a>
                 </div>-->
-                <div class="pl-toggle animate" ng-class="{'animate': env, 'no-header': conf.integrationMode}">
+                <div class="pl-toggle animate" ng-class="{'animate': env, 'no-header': $root.conf.integrationMode}">
                     <div class="container" ng-class="{'live-on': env.live,'live-off': !env.live}" ng-mousedown="toggleLive()">
                         <div>
                             <a trans>pre-match</a>

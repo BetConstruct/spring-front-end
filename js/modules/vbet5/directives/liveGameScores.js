@@ -16,7 +16,7 @@ VBET5.directive('liveGameScores', ['$window', 'Config', 'Storage', 'GameInfo', '
             marketsInOneColumn: '='
         },
         templateUrl: 'templates/directive/live-game-scores.html',
-        link: function (scope) {
+        link: function (scope,element,attr) {
             scope.Math = Math;
             scope.liveGamesSoccerTemplate = GameInfo.liveGamesSoccerTemplate;
             scope.dotaGamesList = GameInfo.dotaGamesList;
@@ -26,7 +26,7 @@ VBET5.directive('liveGameScores', ['$window', 'Config', 'Storage', 'GameInfo', '
             scope.getCurrentTime = Utils.memoize(GameInfo.getCurrentTime);
             scope.visibleSetsNumber = 5;
             scope.openGameLoading = false;
-            
+
             /**
              * @ngdoc method
              * @name toggleLiveSectionPin
@@ -98,6 +98,28 @@ VBET5.directive('liveGameScores', ['$window', 'Config', 'Storage', 'GameInfo', '
                     scope.$emit('sportsbook.updateStatsBlockState', !!state);
                 }
             };
+
+            if (scope.openGame && (!Config.main.disableITFGamesInfo || !scope.openGame.is_itf)) {
+                scope.$watch("openGame", function () {
+                    var outputText = "";
+                    if (scope.openGame) {
+                        if(scope.openGame.is_live){
+                            outputText =
+                                (scope.openGame.text_info ? (scope.openGame.text_info.split(';').join().replace(/,\s*$/, "")) + ", " : "") +
+                                (scope.openGame.add_info_name ? scope.openGame.add_info_name + " " : "") +
+                                (scope.openGame.info && scope.openGame.info.add_info ? scope.openGame.info.add_info + ", " : "") +
+                                (scope.openGame.tv_info ? scope.openGame.tv_info + "," : "");
+                            outputText = outputText ? outputText.replace(/,\s*$/, "") : "";
+                        }else{
+                            outputText =
+                                (scope.openGame.text_info ? (scope.openGame.text_info) + " " : "") +
+                                (scope.openGame.add_info_name ? scope.openGame.add_info_name + " " : "") +
+                                (scope.openGame.info && scope.openGame.info.add_info ? scope.openGame.info.add_info + " " : "");
+                        }
+                    }
+                    scope.getGameAdditionalInfoV3 = outputText;
+                }, true);
+            }
         }
     };
 }]);

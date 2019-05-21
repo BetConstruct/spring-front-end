@@ -1,5 +1,4 @@
-<div class="buner-b" ng-init="getBetslipBanners()"
-     ng-hide="hideRightBanner && conf.hideBetslipBannerWhenBetslipIsNotEmpty" id="sport-news-sidebar-container">
+<div class="buner-b" ng-init="getBetslipBanners()" ng-show="showRightBanners" id="sport-news-sidebar-container">
 
     <a ng-repeat="banner in banners"
        ng-if="banner.active"
@@ -19,5 +18,6 @@
                                set-duration="setBannerVideoDuration"
                                play="startPlayVideoBanner"></vbet-video-player>
         </div>
+        <div ng-if="banner.content" ng-bind-html="banner.content|html"></div>
     </a>
 </div>

@@ -111,8 +111,10 @@ $popup-overlay-background: black !default;
   }
   &.feedback {
     .pu-contain-j {
-      text-align: left;
       padding-bottom: 20px;
+      @include ltr {
+        text-align: left;
+      }
       @include rtl {
         text-align: right;
       }
@@ -229,6 +231,9 @@ $popup-overlay-background: black !default;
         float: left;
         width: 100%;
         display: block;
+        @include rtl {
+          text-align: right;
+        }
       }
       p {
         font: 18px/22px $font-f;
@@ -257,13 +262,17 @@ $popup-overlay-background: black !default;
         width: 100%;
         margin: 5px 0 1px;
         > li {
-          float: left;
           display: block;
+          @include ltr {
+            float: left;
+          }
           @include rtl {
             float: right;
           }
           &:last-child {
-            float: right;
+            @include ltr {
+              float: right;
+            }
             @include rtl {
               float: left;
             }
@@ -274,7 +283,9 @@ $popup-overlay-background: black !default;
 
     .cashout-options {
       width: calc(100% + 60px);
-      margin: -30px 0 10px -30px;
+      @include ltr {
+        margin: -30px 0 10px -30px;
+      }
       @include rtl {
         margin: -30px -30px 0 0;
       }
@@ -312,7 +323,9 @@ $popup-overlay-background: black !default;
         float: left;
         width: 100%;
         position: relative;
-        padding: 0 0 0 22px;
+        @include ltr {
+          padding: 0 0 0 22px;
+        }
         @include rtl {
           padding: 0 22px 0 0;
         }
@@ -331,9 +344,10 @@ $popup-overlay-background: black !default;
           position: absolute;
           pointer-events: none;
           top: 0;
-          left: 0;
+          @include ltr {
+            left: 0;
+          }
           @include rtl {
-            left: auto;
             right: 0;
           }
           &:checked ~ p {
@@ -363,9 +377,10 @@ $popup-overlay-background: black !default;
             background: $text-palette-4;
             position: absolute;
             top: 0;
-            left: 0;
+            @include ltr {
+              left: 0;
+            }
             @include rtl {
-              left: auto;
               right: 0;
             }
           }
@@ -404,11 +419,12 @@ $popup-overlay-background: black !default;
         position: absolute;
         background: #128C49;
         pointer-events: none;
-        left: 0;
         top: 50%;
         z-index: 100;
+        @include ltr {
+          left: 0;
+        }
         @include rtl {
-          left: auto;
           right: 0;
         }
         &:before {
@@ -421,11 +437,12 @@ $popup-overlay-background: black !default;
           border-radius: 100%;
           box-shadow: 0 0 0 2px rgba(white,0.2);
           position: absolute;
-          right: -6px;
           top: -6px;
+          @include ltr {
+            right: -6px;
+          }
           @include rtl {
             left: -6px;
-            right: auto;
           }
         }
         &:after {
@@ -437,11 +454,12 @@ $popup-overlay-background: black !default;
           background: $text-palette-12;
           box-shadow: 0 2px 0 $text-palette-12;
           position: absolute;
-          right: -2px;
           top: -1px;
+          @include ltr {
+            right: -2px;
+          }
           @include rtl {
             left: -2px;
-            right: auto;
           }
         }
       }
@@ -585,12 +603,14 @@ $popup-overlay-background: black !default;
   float: left;
   width: 100%;
   p {
-    text-align: left;
     font: 12px/14px $font-f;
     color: $text-palette-4;
     float: left;
     width: 100%;
     margin: 10px 0 5px;
+    @include ltr {
+      text-align: left;
+    }
     @include rtl {
       text-align: right;
     }
@@ -601,11 +621,12 @@ $popup-overlay-background: black !default;
     position: absolute;
     width: 20px;
     height: 20px;
-    right: 8px;
     top: 7px;
+    @include ltr {
+      right: 8px;
+    }
     @include rtl {
       left: 8px;
-      right: auto;
     }
     &:before {
       font: 18px/22px icomoon;
@@ -615,7 +636,6 @@ $popup-overlay-background: black !default;
     }
   }
   span {
-    text-align: left;
     display: block;
     color: $text-palette-6;
     font: 12px/16px $font-f;
@@ -626,9 +646,11 @@ $popup-overlay-background: black !default;
     background: $skin-palette-3;
     z-index: 99;
     position: absolute;
-    left: calc(100% + 10px);
+    @include ltr {
+      text-align: left;
+      left: calc(100% + 10px);
+    }
     @include rtl {
-      left: auto;
       right: calc(100% + 10px);
       text-align: right;
     }
@@ -638,13 +660,14 @@ $popup-overlay-background: black !default;
       width: 0;
       height: 0;
       border-style: solid;
-      border-width: 6px 6px 6px 0;
-      border-color: rgba(0, 0, 0, 0) $skin-palette-3 rgba(0, 0, 0, 0) rgba(0, 0, 0, 0);
       position: absolute;
-      left: -6px;
       top: 13px;
+      @include ltr {
+        left: -6px;
+        border-width: 6px 6px 6px 0;
+        border-color: rgba(0, 0, 0, 0) $skin-palette-3 rgba(0, 0, 0, 0) rgba(0, 0, 0, 0);
+      }
       @include rtl {
-        left: auto;
         right: -6px;
         border-width: 6px 0 6px 6px;
         border-color: rgba(0, 0, 0, 0) rgba(0, 0, 0, 0) rgba(0, 0, 0, 0) $skin-palette-3;
@@ -885,24 +908,28 @@ $popup-overlay-background: black !default;
   position: relative;
   .pu-head-j {
     font: normal 18px/61px $font-f;
-    text-align: left;
-    padding: 0 40px 0 25px;
     position: relative;
     z-index: 120;
     background: rgba(invert(set-color($skin-palette-9)), 0.2);
     box-shadow: inset 0 -1px 0 rgba(invert(set-color($skin-palette-9)), 0.38);
     color: $text-palette-3;
+    @include ltr {
+      padding: 0 40px 0 25px;
+      text-align: left;
+    }
     @include rtl {
       padding: 0 25px 0 40px;
       text-align: right;
     }
     > span, > p {
-      float: left;
       display: block;
       max-width: 100%;
       overflow: hidden;
       white-space: nowrap;
       text-overflow: ellipsis;
+      @include ltr {
+        float: left;
+      }
       @include rtl {
         float: right;
       }
@@ -963,14 +990,15 @@ $popup-overlay-background: black !default;
     display: block;
     position: absolute;
     top: 0;
-    right: 0;
     transition: color 200ms;
     width: 58px;
     text-align: center;
     color: $text-palette-5;
+    @include ltr {
+      right: 0;
+    }
     @include rtl {
       left: 0;
-      right: auto;
     }
     &:hover {
       color: $text-palette-2;
@@ -1004,10 +1032,8 @@ $popup-overlay-background: black !default;
     width: 100%;
     button {
       width: calc(50% - 5px);
-      margin: 0 0 0 9px;
       font: normal 14px $font-f;
       display: block;
-      float: left;
       border: 1px solid $button-border-color;
       background: none;
       transition: 200ms;
@@ -1016,22 +1042,30 @@ $popup-overlay-background: black !default;
       text-transform: uppercase;
       cursor: pointer;
       outline: 0;
+      @include ltr {
+        float: left;
+        margin: 0 0 0 9px;
+      }
       @include rtl {
         float: right;
         margin: 0 9px 0 0;
       }
       &:first-child {
-        margin: 0;
+        @include ltr {
+          margin: 0;
+        }
         @include rtl {
           margin: 0;
         }
       }
       &:only-of-type {
         width: auto;
-        float: none;
         min-width: 180px;
-        margin: 0 auto;
         max-width: 100%;
+        @include ltr {
+          float: none;
+          margin: 0 auto;
+        }
         @include rtl {
           float: none;
           margin: 0 auto;
@@ -1064,29 +1098,38 @@ $popup-overlay-background: black !default;
     text-align: center;
     margin: 12px 0;
     position: relative;
+    box-sizing: border-box;
+    text-align: center;
     input {
       display: inline-block;
-      background: rgba($skin-palette-13, 0.3);
       border: 0;
+      background: rgba($skin-palette-13, 0.3);
       font: bold 14px/36px $font-f;
       color: $text-palette-1;
       height: 36px;
-      text-align: right;
-      padding: 0 10px;
-      box-sizing: border-box;
+      width: 180px;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      overflow: hidden;
+      @include ltr {
+        padding: 0 30px 0 30px;
+        text-align: center;
+      }
       @include rtl {
         text-align: left;
+        padding: 0 30px 0 10px;
       }
     }
     .bs-print-icon {
       position: absolute;
       top: 0;
-      left: 50px;
       display: block;
       color: $c16-tp-3;
       font: 12px/36px icomoon;
+      @include ltr {
+        left: 50px;
+      }
       @include rtl {
-        left: auto;
         right: 50px;
       }
       &:before {
@@ -1147,8 +1190,10 @@ $popup-overlay-background: black !default;
   .preference-confirmation-t & {
     ng-include {
       display: inline-block;
-      text-align: left;
       width: 320px;
+      @include ltr {
+        text-align: left;
+      }
       @include rtl {
         text-align: right;
       }
@@ -1159,15 +1204,19 @@ $popup-overlay-background: black !default;
     }
     .pu-button-wrap-j button {
       width: 100%;
-      margin: 0;
+      @include ltr {
+        margin: 0;
+      }
       @include rtl {
         margin: 0;
       }
       &:first-child {
-        margin: 0 0 15px;
         background: $brand-color-1;
         border-color: $brand-color-1;
         color: set-color($brand-color-1);
+        @include ltr {
+          margin: 0 0 15px;
+        }
         @include rtl {
           margin: 0 0 15px;
         }
@@ -1200,7 +1249,6 @@ $popup-overlay-background: black !default;
   background: $skin-palette-8;
   > h4 {
     display: inline-block;
-    padding: 0 26px 0 0;
     box-sizing: border-box;
     text-transform: uppercase;
     color: rgba(set-color($skin-palette-8), 0.7);
@@ -1208,6 +1256,9 @@ $popup-overlay-background: black !default;
     font: 18px/20px $font-f;
     margin-bottom: 8px;
     position: relative;
+    @include ltr {
+      padding: 0 26px 0 0;
+    }
     @include rtl {
       padding: 0 0 0 26px;
     }
@@ -1215,12 +1266,13 @@ $popup-overlay-background: black !default;
       content: "\e6ec";
       position: absolute;
       top: 0;
-      right: 0;
       color: #208c65;
       font: 18px/20px icomoon;
+      @include ltr {
+        right: 0;
+      }
       @include rtl {
         left: 0;
-        right: auto;
       }
     }
   }
@@ -1345,12 +1397,14 @@ input::-webkit-inner-spin-button {
     border-bottom: 2px solid $skin-palette-5;
     li {
       display: block;
-      float: left;
       width: 50%;
       border-bottom: 1px solid $skin-palette-8;
       background: $skin-palette-7;
       font: 12px/34px $font-f;
       color: $text-palette-4;
+      @include ltr {
+        float: left;
+      }
       @include rtl {
         float: right;
       }
@@ -1360,7 +1414,9 @@ input::-webkit-inner-spin-button {
         font: 12px/36px icomoon;
         height: 34px;
         color: rgba(set-color($skin-palette-7), 0.4);
-        margin: 0 6px 0 0;
+        @include ltr {
+          margin: 0 6px 0 0;
+        }
         @include rtl {
           margin: 0 0 0 6px;
         }
@@ -1425,5 +1481,42 @@ input::-webkit-inner-spin-button {
   }
   .cashout-range-box {
     margin: 0 0 12px;
+  }
+}
+.limit {
+  .popup-wrapper-j {
+    width: 954px;
+    background: $skin-palette-7;
+    .pu-head-j {
+      background: $skin-palette-7;
+      box-shadow: inset 0 -1px 0 rgba(invert(set-color($skin-palette-9)), 0.2);
+    }
+    .pu-contain-j {
+      padding: 0 25px;
+      h3, p {
+        margin: 0;
+        padding: 20px 0;
+        text-align: left;
+        font: 18px/24px $font-f;
+        box-shadow: inset 0 -1px 0 rgba(invert(set-color($skin-palette-9)), 0.2);
+      }
+    }
+    .pu-button-wrap-j {
+      padding: 12px 25px;
+      button {
+        width: calc((100% / 3) - 10px);
+        background: $brand-color-1;
+        border-color: $brand-color-1;
+        &:first-child {
+          border: none;
+          background: none;
+        }
+        &:hover {
+          background: lighten($brand-color-1, 10);
+          border-color: lighten($brand-color-1, 10);
+        }
+
+      }
+    }
   }
 }

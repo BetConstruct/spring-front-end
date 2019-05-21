@@ -1,4 +1,4 @@
-$delete-cache: '?v=' + random(666);
+$delete-cache: '?v=' + random(777);
 
 $hero-color: #a61f67 !default;
 $brand-color-1: #1a7051 !default;
@@ -35,6 +35,7 @@ $skin-palette-10: $skin-color !default;                                         
 $skin-palette-11: darken( adjust-hue( $skin-color, 4deg ), 4 ) !default;                     //#171c2c;
 $skin-palette-12: darken( saturate( adjust-hue( $skin-color, 4deg ), 1 ), 7 ) !default;      //#121623;
 $skin-palette-13: #000000 !default;
+
 
 $text-palette-1: #ffffff !default;                                                           //#ffffff;
 $text-palette-2: lighten( desaturate( adjust-hue( $text-color, 18deg ), 22 ), 79 ) !default; //#f3f3f5;
@@ -138,6 +139,9 @@ $header-first-line-background: $skin-palette-11 !default;
 $header-nav-line-background: lighten( desaturate( adjust-hue( $header-first-line-background, -2deg ), 7 ), 8 ) !default;
 $footer-background: $skin-palette-12 !default;
 $footer-payments-line-background: $skin-palette-11 !default;
+
+// Contact us
+$contact-us: $skin-palette-7 !default;
 
 // UI elements
 $form-elements-bg: $skin-palette-10 !default;
@@ -258,7 +262,6 @@ $coeff-color-map: (
 }
 
 $lcasino-games-pattern-bg: url(../../../images/backgrounds/new-card-pattern-j.png#{$delete-cache}) repeat 50% 0 !default;
-$colorized-social-icons: false !default;
 $classic-prematch-group-title-active-bg: lighten( $c16-sp-7, 2) !default;
 $classic-view-background: darken( adjust-hue( $c16-sp-11, -18deg ), 2 ) !default;
 $promotion-open-background: #dcdcdc !default;
@@ -268,8 +271,8 @@ $custom-very-top-menu: false !default;
 $header-first-line-height: 52px !default;
 $header-nav-line-height: 42px !default;
 $subheader-height: 36px !default;
-$pages-with-full-width-header: (".russia2018", ".betonpolitics", ".betonpolitics", "[class*='game']:not(.games):not(.wwwgoodgames12com):not(.wwwgamebetcom)", ".sport", ".winninglimits", ".insvirtualsports", ".virtualsports", ".multiview", ".full-screen", ".livecalendar", ".statistics", ".financials", ".results",  ".news", ".dashboard", ".csbpoolbetting", ".overview") !default;
-$pages-with-full-width-header-background: (".about", ".vrcasino", ".livedealer", ".vip-promos", ".external", ".ogwil",  ".games", ".backgammon", ".belote", ".gameslanding", ".pokerklas ", ".poolbetting", ".fantasy", ".freebet", ".gameCSB1providerCSBexid152000", ".csbpoolbetting", ".first_deposit_bonus", ".first_deposit_bonus_and_20_free_spins", ".poker") !default;
+$pages-with-full-width-header: (".pmu", ".russia2018", ".betonpolitics", ".betonpolitics", "[class*='game']:not(.games):not(.wwwgoodgames12com):not(.wwwgamebetcom):not(.gamebcartcom)", ".sport", ".winninglimits", ".insvirtualsports", ".virtualsports", ".multiview", ".full-screen", ".livecalendar", ".statistics", ".financials", ".results",  ".news", ".dashboard", ".csbpoolbetting", ".overview") !default;
+$pages-with-full-width-header-background: (".draw", ".about", ".vrcasino", ".livedealer", ".vip-promos", ".external", ".ogwil",  ".games", ".backgammon", ".belote", ".gameslanding", ".pokerklas ", ".poolbetting", ".fantasy", ".freebet", ".gameCSB1providerCSBexid152000", ".csbpoolbetting", ".first_deposit_bonus", ".first_deposit_bonus_and_20_free_spins", ".poker") !default;
 $header-hero-color: $hero-color !default;
 $header-brand-color-1: $brand-color-1 !default;
 $subheader-hero-color: $hero-color !default;

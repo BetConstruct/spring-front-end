@@ -41,7 +41,7 @@ angular.module('vbet5').controller('idTokenCtrl', ['$scope', '$rootScope', '$htt
     }
 
     (function init() {
-        $http.get(Config.main.idToken.apiUrl + '/QRCode/').then(function (response) {
+        $http.get(Config.main.idToken.apiUrl + '/QRCode/?partner=' + Config.main.site_id).then(function (response) {
             if (response && response.status === 200) {
                 processToAuthData(response.data.Id);
                 $scope.qrCode = response.data.QRCodePNG;

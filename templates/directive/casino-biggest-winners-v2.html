@@ -1,0 +1,26 @@
+<div class="casino-gamer">
+    <div class="tab-winners">
+        <ul>
+            <li ng-if="biggestWinners.lastWinners" ng-class="{'active': activeTab === 'last'}"
+                            ng-click="changeTab('last')" trans>Last Winners
+            </li>
+            <li ng-if="biggestWinners.topWinners" ng-class="{'active': activeTab === 'top'}" ng-click="changeTab('top')"
+                trans>Top Winners
+            </li>
+
+        </ul>
+    </div>
+    <ul ng-repeat="winner in winners track by $index" ng-show="!winnersLoading || winners">
+        <!--<li class="winners-avatar" ng-click="openGameByExternalId(winner.game_id)"><span style="background-image: url({{externalImages[winner.game_id]}});"></span>--><!--todo comment SDC-40634-->
+
+        <li class="winners-avatar"><span style="background-image: url({{externalImages[winner.game_id]}});"></span>
+        </li>
+        <li class="info-winners">
+            <p ng-bind="winner.player_user_name"></p>
+            <!--<b ng-click="openGameByExternalId(winner.game_id)" ng-bind="winner.game_name"></b>--><!--todo comment SDC-40634-->
+            <b ng-bind="winner.game_name"></b>
+        </li>
+        <li class="winner-cost"><p>{{winner.win_amount|number:$root.conf.balanceFractionSize}} {{winner.currency_id|currency}}</p></li>
+    </ul>
+    <vbet-loader ng-if="!winners && winnersLoading"></vbet-loader>
+</div>

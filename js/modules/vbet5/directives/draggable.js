@@ -17,7 +17,7 @@
  * Message data is an object of element attributes.
  *
  */
-VBET5.directive('draggable', ['$document', '$rootScope', '$window', 'DomHelper',  function ($document, $rootScope, $window, DomHelper) {
+VBET5.directive('draggable', ['Config', '$document', '$rootScope', '$window', 'DomHelper',  function (Config, $document, $rootScope, $window, DomHelper) {
     'use strict';
     return function (scope, element, attr) {
 
@@ -42,7 +42,9 @@ VBET5.directive('draggable', ['$document', '$rootScope', '$window', 'DomHelper',
                 backup.left     = element.css('left');
                 x = leftShift;
                 y = DomHelper.getOffset(element[0]).top;
-
+                if(Config.main.sportsLayout === "combo" && y < 0) {
+                     y = $window.innerHeight/4 // at what height to show the popup on browser window "px"
+                }
                 if (container) {
                     angular.element(container).append(element);
                 }

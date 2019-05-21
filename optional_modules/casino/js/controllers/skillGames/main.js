@@ -5,7 +5,7 @@
  * skillGamesMainCtrl page controller
  */
 
-CASINO.controller('skillGamesMainCtrl', ['$rootScope', '$scope', '$location', 'Config', 'CConfig', 'casinoData', 'Utils', 'casinoManager', 'Translator', 'analytics', 'content', 'TimeoutWrapper', 'Geoip', function ($rootScope, $scope, $location, Config, CConfig, casinoData, Utils, casinoManager, Translator, analytics, content, TimeoutWrapper, Geoip) {
+CASINO.controller('skillGamesMainCtrl', ['$rootScope', '$scope', '$location', 'Config', 'CConfig', 'casinoData', 'Utils', 'casinoManager', 'Translator', 'analytics', 'content', 'TimeoutWrapper', 'Geoip', 'casinoMultiviewValues', function ($rootScope, $scope, $location, Config, CConfig, casinoData, Utils, casinoManager, Translator, analytics, content, TimeoutWrapper, Geoip, casinoMultiviewValues) {
     'use strict';
 
     $scope.gamesInfo = [];
@@ -26,6 +26,8 @@ CASINO.controller('skillGamesMainCtrl', ['$rootScope', '$scope', '$location', 'C
         $scope.middleMode = false;
     });
     $scope.hasTournaments = $rootScope.conf.multiLevelMenu.hasOwnProperty('tournaments');
+
+    casinoMultiviewValues.init($scope);
 
     var countryCode = '';
     /**
@@ -154,7 +156,7 @@ CASINO.controller('skillGamesMainCtrl', ['$rootScope', '$scope', '$location', 'C
             }
         } else {
             //games that are not resizable
-            if (game.gameType.ratio == "0") {
+            if (game.gameType && game.gameType.ratio == "0") {
                 $rootScope.$broadcast("globalDialogs.addDialog", {
                     type: "warning",
                     title: "Warning",

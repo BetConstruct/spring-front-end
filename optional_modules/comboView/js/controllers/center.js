@@ -13,8 +13,6 @@ VBET5.controller('comboViewCenterController', ['$rootScope', '$scope', 'OddServi
     var updateCentralPrematchViewWithExpandedRegionForLiveToday = updateCentralViewWithExpandedRegionFactory('centerViewPrematchData', updateLinkedGames);
 
     $scope.displayBase = GameInfo.displayBase;
-    $scope.displayEventLimit = GameInfo.displayEventLimit;
-    $scope.cancelDisplayEventLimit = GameInfo.cancelDisplayEventLimit;
     $scope.isEventInBetSlip = GameInfo.isEventInBetSlip;
 
     (function initScope () {
@@ -52,7 +50,7 @@ VBET5.controller('comboViewCenterController', ['$rootScope', '$scope', 'OddServi
                     angular.forEach($scope[source], function (templateSport, key) {
                         if (templateSport.id == sport.id) {
                             existingSportKey = key;
-                            return;
+
                         }
                     });
 
@@ -94,7 +92,7 @@ VBET5.controller('comboViewCenterController', ['$rootScope', '$scope', 'OddServi
             }
 
             var where = {
-                type: Config.main.GmsPlatform ? 1 : {'@in': [0, 2]},
+                type: 1,
                 game: {'@in': region.exclude_ids}
             };
 
@@ -272,9 +270,9 @@ VBET5.controller('comboViewCenterController', ['$rootScope', '$scope', 'OddServi
                 'region': ['id', 'name', 'order'],
                 'competition': ['id', 'name', 'order'],
                 'game': [
-                    'id', 'start_ts', 'team1_name', 'team2_name', 
-                    'team1_external_id', 'team2_external_id', 'type', 'info', 
-                    'events_count', 'markets_count', 'extra', 'is_blocked', 
+                    'id', 'start_ts', 'team1_name', 'team2_name',
+                    'team1_external_id', 'team2_external_id', 'type', 'info',
+                    'events_count', 'markets_count', 'extra', 'is_blocked',
                     'exclude_ids', 'is_stat_available', 'game_number', 'game_external_id', 'is_live', 'show_type'
                 ],
                 'event': ['id', 'price', 'type', 'name', 'order', 'base'],
@@ -430,63 +428,74 @@ VBET5.controller('comboViewCenterController', ['$rootScope', '$scope', 'OddServi
         $scope.sport = sport;
 
         // 3) request full game details
-        connectionService.subscribe(request, function updateCentralGameView (response, subId) {
-            if (subId) {
-                connectionSubIds[subId] = subId;
-            }
-
-            response.game[game.id].availableMarketGroups = {};
-            response.game[game.id].sport = {id: sport.id, alias: sport.alias, name: sport.name};
-            response.game[game.id].region = {id: region.id, name: region.name};
-            response.game[game.id].competition = {id: competition.id, name: competition.name};
-
-            $scope.openGame = response.game[game.id];
-            $scope.openGame.setsOffset = $scope.openGame.setsOffset || 0;
-
-            // if teams shirt colors equal we change them to default colors
-            if ($scope.openGame.info && $scope.openGame.info.shirt1_color === $scope.openGame.info.shirt2_color) {
-                $scope.openGame.info.shirt1_color = "ccc";
-                $scope.openGame.info.shirt2_color = "f00";
-            }
-
-            if ($scope.openGame.type === 1) {
-                GameInfo.updateGameStatistics($scope.openGame);
-                GameInfo.extendLiveGame($scope.openGame);
-
-                if($scope.openGame.sport.alias === "Soccer" || $scope.openGame.sport.alias === "CyberFootball") {
-                    GameInfo.generateTimeLineEvents($scope.openGame, $scope);
-                    GameInfo.addOrderingDataToSoccerGameEvents($scope.openGame);
+        connectionService.subscribe(
+            request,
+            function updateCentralGameView(response, subId) {
+                if (Utils.isObjectEmpty(response.game)) {
+                    $scope.openGame = {};
+                    parentMainScope.$broadcast('comboView.leftMenu.liveTodaySelected');
+                    return;
                 }
-            }
 
-            if ($scope.openGame.sport.alias === "HorseRacing") {
-                GameInfo.getHorseRaceInfo($scope.openGame.info, $scope.openGame.market, "Winner");
-            }
-            streamService.monitoring($scope, 'openGame', 'null', 'enlargedGame');
-
-            // move to GameInfo service and pass $scope.openGame
-            GameInfo.updateOpenGameTextInfo($scope.openGame);
-
-            $scope.$emit('animation.video.available', $scope.openGame);
-
-            if ($scope.openGame) {
-                $scope.openGame.markets = Utils.objectToArray(Utils.groupByItemProperties($scope.openGame.market, ['type', 'name']));
-
-                if ($scope.openGame.markets) {
-                    $scope.openGame.markets.sort(function (a, b) {
-                        return a[0].order - b[0].order;
-                    });
-                    angular.forEach($scope.openGame.markets, function (groupedMarkets) {
-                        groupedMarkets[0].name = $filter('improveName')(groupedMarkets[0].name, $scope.openGame);
-
-                        if(groupedMarkets[0].type) {
-                            groupedMarkets[0].fullType = (groupedMarkets[0].type || '') + (groupedMarkets[0].period || '');
-                        }
-                    });
+                if (subId) {
+                    connectionSubIds[subId] = subId;
                 }
+
+                response.game[game.id].availableMarketGroups = {};
+                response.game[game.id].sport = {id: sport.id, alias: sport.alias, name: sport.name};
+                response.game[game.id].region = {id: region.id, name: region.name};
+                response.game[game.id].competition = {id: competition.id, name: competition.name};
+
+                $scope.openGame = response.game[game.id];
+                $scope.openGame.setsOffset = $scope.openGame.setsOffset || 0;
+
+                // if teams shirt colors equal we change them to default colors
+                if ($scope.openGame.info && $scope.openGame.info.shirt1_color === $scope.openGame.info.shirt2_color) {
+                    $scope.openGame.info.shirt1_color = "ccc";
+                    $scope.openGame.info.shirt2_color = "f00";
+                }
+
+                if ($scope.openGame.type === 1) {
+                    GameInfo.updateGameStatistics($scope.openGame);
+                    GameInfo.extendLiveGame($scope.openGame);
+
+                    if ($scope.openGame.sport.alias === "Soccer" || $scope.openGame.sport.alias === "CyberFootball") {
+                        GameInfo.generateTimeLineEvents($scope.openGame, $scope);
+                        GameInfo.addOrderingDataToSoccerGameEvents($scope.openGame);
+                    }
+                }
+
+                if ($scope.openGame.sport.alias === "HorseRacing") {
+                    GameInfo.getHorseRaceInfo($scope.openGame.info, $scope.openGame.market, "Winner");
+                }
+                streamService.monitoring($scope, 'openGame', 'null', 'enlargedGame');
+
+                // move to GameInfo service and pass $scope.openGame
+                GameInfo.updateOpenGameTextInfo($scope.openGame);
+
+                $scope.$emit('animation.video.available', $scope.openGame);
+
+                if ($scope.openGame) {
+                    $scope.openGame.markets = Utils.objectToArray(Utils.groupByItemProperties($scope.openGame.market, ['type', 'name']));
+
+                    if ($scope.openGame.markets) {
+                        $scope.openGame.markets.sort(function (a, b) {
+                            return a[0].order - b[0].order;
+                        });
+                        angular.forEach($scope.openGame.markets, function (groupedMarkets) {
+                            groupedMarkets.sort(Utils.orderSorting);
+                            groupedMarkets[0].name = $filter('improveName')(groupedMarkets[0].name, $scope.openGame);
+                            // Uncomment next line and add BetService as a dependency if necessary - https://betconstruct.atlassian.net/browse/SDC-39502
+                            // groupedMarkets[0].eachWayTerms = BetService.getEachWayTerms(groupedMarkets[0]);
+                            if (groupedMarkets[0].type) {
+                                groupedMarkets[0].fullType = (groupedMarkets[0].type || '') + (groupedMarkets[0].period || '');
+                            }
+                        });
+                    }
+                }
+                $scope.liveGameLoading = false;
             }
-            $scope.liveGameLoading = false;
-        });
+        );
     };
 
     $scope.changeStatsMode = function changeStatsMode(mode) {
@@ -569,8 +578,8 @@ VBET5.controller('comboViewCenterController', ['$rootScope', '$scope', 'OddServi
         $scope.mainHeaderTitle = competition.name;
 
         $scope.centerViewLoading = true;
-        connectionService.subscribe(requestLive, updateCentralLiveView);
-        connectionService.subscribe(requestPrematch, updateCentralPrematchView);
+        connectionService.subscribe(requestLive, updateCentralLiveView, null, true);
+        connectionService.subscribe(requestPrematch, updateCentralPrematchView, null, true);
 
         $scope.updatePathInComboView(response.sport, response.region, competition);
     });
@@ -596,8 +605,8 @@ VBET5.controller('comboViewCenterController', ['$rootScope', '$scope', 'OddServi
         parentMainScope.selectedCentralView = 'region';
         $scope.mainHeaderTitle = region.name;
 
-        connectionService.subscribe(requestLive, updateCentralLiveView);
-        connectionService.subscribe(requestPrematch, updateCentralPrematchView);
+        connectionService.subscribe(requestLive, updateCentralLiveView, null, true);
+        connectionService.subscribe(requestPrematch, updateCentralPrematchView, null, true);
 
         $scope.updatePathInComboView(response.sport, region);
     });
@@ -624,8 +633,8 @@ VBET5.controller('comboViewCenterController', ['$rootScope', '$scope', 'OddServi
         parentMainScope.selectedCentralView = 'sport';
         $scope.mainHeaderTitle = sport.name;
 
-        connectionService.subscribe(requestLive, updateCentralLiveView);
-        connectionService.subscribe(requestPrematch, updateCentralPrematchView);
+        connectionService.subscribe(requestLive, updateCentralLiveView, null, true);
+        connectionService.subscribe(requestPrematch, updateCentralPrematchView, null, true);
 
         $scope.updatePathInComboView(sport);
     });

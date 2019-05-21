@@ -1,7 +1,8 @@
+<style>.support-messenger{display: none}</style>
 <div class="print-a4-j" ng-controller="betPrint" ng-init="printBetEvent()">
     <div class="header-j">
         <div class="logo-j">
-            <img ng-src="./skins/{{conf.skin}}/images/logo.png" onload="print()">
+            <img ng-src="./skins/{{$root.conf.skin}}/images/logo.png" onload="print()">
         </div>
         <div class="bar-code-j">
             <div class="qr-code-b" barcode-generator="{{betData.id}}"></div>
@@ -37,7 +38,7 @@
         <div class="bet-table-j" ng-if="events">
             <ul ng-repeat="event_group in events">
                 <li ng-repeat="event in event_group">
-                    <p>{{event.game_name}} / {{event.event_name}} / {{event.coeficient|number:2}}</p>
+                    <p>{{event.game_name}} / {{event.market_name ? event.market_name + " - ": ""}} {{event.basis ? event.event_name.replace(event.basis, (event.basis|handicapBaseFormat)) : event.event_name}} / {{event.coeficient|number:2}}</p>
                     <p>{{event.sport_name}}</p>
                     <p>{{event.competition_name}} <span ng-if="event.is_live">(LIVE)</span></p>
                     <p>{{event.game_start_date|formatDate:'full'}}</p>

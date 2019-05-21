@@ -59,10 +59,4 @@
              state-flag-var="$root.topMenuDropDown" trans="attr-only">{{topMenuLength - conf.visibleItemsInTopMenu}}
         </div>
     </ul>
-    <ul ng-controller="cmsPagesCtrl" ng-init="initSections()">
-        <li ng-if="section.rootPageSlug[env.lang] && section.placement === 'topmenu'"
-            ng-repeat="section in additionalSections"
-            ng-class="{ 'active' : $location.path() === '/section/' + section.id }" class="noflip"><a
-                href="#/section/{{section.id}}">{{section.name}}</a></li>
-    </ul>
 </div>

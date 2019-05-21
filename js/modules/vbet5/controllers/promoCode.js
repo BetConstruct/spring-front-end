@@ -25,13 +25,13 @@ VBET5.controller('promoCodeCtrl', ['$scope', '$rootScope', '$http', 'Config', fu
             url: Config.main.profilePromoCodeUrl,
             data: serialize(data),
             headers: {'Content-Type': 'application/x-www-form-urlencoded'}
-        }).success(function (response) {
-            if (response && response.result) {
+        }).then(function (response) {
+            if (response.data && response.data.result) {
                 showAlert('Your promo code has been accepted', true);
             } else {
                 showAlert('Not valid promo code (' + response.error_massage + ')');
             }
-        }).error(function () {
+        }).catch(function () {
             showAlert('There was an error processing your request.');
         });
     };

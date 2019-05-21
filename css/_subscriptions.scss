@@ -58,8 +58,10 @@
             }
             span {
               position: relative;
-              padding: 0 0 0 45px;
               box-sizing: border-box;
+              @include ltr {
+                padding: 0 0 0 45px;
+              }
               @include rtl {
                 padding: 0 45px 0 0;
               }
@@ -67,13 +69,14 @@
                 content: "";
                 position: absolute;
                 top: 12px;
-                left: 0;
                 width: 29px;
                 height: 29px;
                 border: 1px solid rgba(set-color($skin-palette-12),0.5);
                 border-radius: 3px;
+                @include ltr {
+                  left: 0;
+                }
                 @include rtl {
-                  left: auto;
                   right: 0;
                 }
               }
@@ -81,12 +84,13 @@
                 content: "";
                 position: absolute;
                 top: 0;
-                left: 6px;
                 color: #b6862e;
                 text-align: center;
                 font: 18px/54px icomoon;
+                @include ltr {
+                  left: 6px;
+                }
                 @include rtl {
-                  left: auto;
                   right: 6px;
                 }
               }

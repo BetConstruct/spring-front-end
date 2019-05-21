@@ -13,24 +13,29 @@
   width: 100%;
   height: 100%;
   background: $classic-view-background;
+	position: relative;
   //*:not(.soon-v):not(.md-progress-circular):not(.max-bet-tooltip-v3):not(.animation-video-box-v3 ){
   //  transform: none !important;
   //}
 }
 .container-p {
+  height: 100%;
   font-family: $font-f;
 }
 .classic-view-wrapper-v3 {
+  display: block;
   box-sizing: border-box;
   width: 100%;
   height: 100%;
-  position: relative;
-}
-.classic-view-column-v3 {
-  box-sizing: border-box;
   position: absolute;
   left: 0;
   top: 0;
+}
+.classic-view-column-v3 {
+  box-sizing: border-box;
+  //position: absolute;
+  //left: 0;
+  //top: 0;
   width: 100%;
   height: 100%;
   display: grid;
@@ -45,13 +50,37 @@
     display: block;
     grid-area: right;
     -ms-grid-column: 3;
-    @include scroll;
+		position: relative;
     //transform: translate3d(0, 0, 0);
   }
   > include-template:last-child{
     > .right-column-v3{
-      float: left;
+      displaY: inline-block;
+			vertical-align: top;
+			height: 100%;
+			position: relative;
+      contain: style;
     }
+  }
+}
+.right-column-v3{
+	> .scroll-c-b{
+		@include scroll;
+		position: absolute;
+		top: 0;
+		left: 0;
+		height: 100%;
+		width: 100%;
+      .scroll-c-b{
+        position: static;
+        height: auto;
+      }
+	}
+  > .virtual-sports-right-b{
+    position: static;
+    height: auto;
+    width: 100%;
+    display: block;
   }
 }
 @media screen and (-ms-high-contrast: active), screen and (-ms-high-contrast: none) {
@@ -76,7 +105,6 @@
   user-select: none;
   -webkit-user-select: none;
   -ms-user-select: none;
-  position: relative;
   z-index: 999;
   @include rtl {
     direction: rtl;
@@ -113,11 +141,18 @@
   box-sizing: border-box;
   width: 296px;
   position: relative;
-  padding: 0;
   border-radius: 0 3px 0 0;
   transform: translate3d(0,0,0);
+  contain: strict;
+  @include ltr {
+    padding: 0;
+  }
   @include rtl {
     direction: rtl;
+    padding-left: 4px;
+  }
+  .right-column-v3{
+    contain: initial;
   }
 }
 
@@ -232,6 +267,21 @@
   content: "\e650";
 }
 
+.game-video.game-video-detached.game-video-fullscreen {
+  position: relative;
+  top: 0;
+  left: 5px;
+  padding-bottom: 56.5%;
+  z-index: 990;
+  width: calc(100% - 10px) !important;
+  margin-bottom: 46px;
+}
+.game-video.game-video-detached.game-video-fullscreen .detached-game-container {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}
+
 .classic-version-euro2016 .game-video.game-video-detached.game-video-fullscreen .detached-game-container {
   box-sizing: border-box;
   height: calc(100% - 28px);
@@ -240,10 +290,11 @@
   }
   .detached-info {
     position: absolute;
-    right: 75px;
+    @include ltr {
+      right: 75px;
+    }
     @include rtl {
       left: 75px;
-      right: auto;
     }
   }
 }
@@ -264,14 +315,16 @@
 
 .classic-version-euro2016 .game-video.game-video-detached.game-video-fullscreen .video-player-control {
   box-sizing: border-box;
-  left: auto;
-  right: 20px;
   width: 100%;
   max-width: 100%;
   top: -6px;
   text-align: right;
   color: $c16-tp-5;
   border: none;
+  @include ltr {
+    left: auto;
+    right: 20px;
+  }
   @include rtl {
     left: 20px;
     right: auto;
@@ -303,13 +356,13 @@
   font: 9px/24px icomoon;
   color: $c16-tp-2;
   top: -8px;
-  right: 0;
-  border-left: 1px solid lighten(desaturate(adjust-hue($c16-sp, -1deg), 16), 3);
   text-indent: 9999em;
+  @include ltr {
+    right: 0;
+    border-left: 1px solid lighten(desaturate(adjust-hue($c16-sp, -1deg), 16), 3);
+  }
   @include rtl {
     left: 0;
-    right: auto;
-    border-left: none;
     border-right: 1px solid lighten(desaturate(adjust-hue($c16-sp, -1deg), 16), 3);
 
   }

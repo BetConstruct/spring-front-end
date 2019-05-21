@@ -1,10 +1,19 @@
 /* timeline control */
 
+.game-info .timeline-container {
+    width: 94%;
+    height: 36px;
+    margin: 8px 0 5px 3%;
+}
+
 .timeline-container {
     position: relative;
     float: left;
     width: 100%;
     height: 36px;
+}
+.game-info .timeline-container .timeline-control:before {
+    box-shadow: none;
 }
 .timeline-control {
     position: absolute;
@@ -359,6 +368,7 @@
     position: relative;
     height: 100%;
     width: 97%;
+    /* the width of actual 90 minutes of game */
     .current-minute {
         position: absolute;
         top: 10%;
@@ -371,7 +381,28 @@
         width: 17px;
         height: 37px;
         margin-left: -9px;
-        background: url("../../../images/timeline/stats_tl.png") no-repeat;
+        background: url("../../../images/timeline/stats_tl.png#{$delete-cache}") no-repeat;
+        .hover-sp {
+            display: none;
+        }
+        &:hover {
+            .hover-sp {
+                left: -10px;
+                max-height: 200px;
+                overflow: hidden;
+                overflow-y: auto;
+                background: #494949;
+                box-shadow: 0 2px 5px #111;
+                display: block;
+                &.to-center {
+                    left: -150px;
+                }
+                &.to-right {
+                    left: auto;
+                    right: -4px;
+                }
+            }
+        }
     }
     .team1-tl-corner,
     .team1-tl-goal,
@@ -435,12 +466,17 @@
         border-radius: 20%;
         box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.5);
     }
-    .tl-yellow_card {
+    .tl-yellow_card,
+    .tl-red_card {
         @extend .tl-card;
+        width: 11px;
+        height: 14px;
+        box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.5);
+    }
+    .tl-yellow_card {
         background: #fc0;
     }
     .tl-red_card {
-        @extend .tl-card;
         background: #f00;
     }
     .tl-exchange {
@@ -459,6 +495,7 @@
         box-shadow: 0 1px 2px #111;
         background: #fff;
         color: #000;
+        font-size: 13px;
         white-space: nowrap;
         vertical-align: bottom;
         text-transform: capitalize;
@@ -480,10 +517,27 @@
             border-color: transparent transparent rgba(0, 0, 0, 0.5) transparent;
             bottom: calc(100% + 1px);
         }
+        &.to-right {
+            left: auto;
+            right: -8px;
+            margin: 0 -20px 0 0;
+            &:before,
+            &:after {
+                left: auto;
+                right: 15px;
+            }
+        }
+    }
+    .hover-sp .football-gamer-name{
+        background: #494949;
+        color: #ccc;
     }
     > div:hover .tl-details {
         display: block;
     }
+}
+.statistics-toggle .tl-data .tl-info:hover {
+    background: url("../../../images/animation/stats_tl.png#{$delete-cache}") no-repeat;
 }
 //----------------------------------------------------
 

@@ -238,7 +238,7 @@ VBET5.controller('widgetCtrl', ['$rootScope', '$scope', 'TimeoutWrapper', '$wind
             }
         };
 
-        request.where.game[Config.main.loadLiveWidgetGamesFrom.type] = Config.main.GmsPlatform ? true : {'@contains': parseInt(Config.main.site_id, 10)};
+        request.where.game[Config.main.loadLiveWidgetGamesFrom.type] = true;
 
         connectionService.subscribe(
             request,

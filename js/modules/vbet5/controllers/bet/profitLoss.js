@@ -139,25 +139,6 @@ VBET5.controller('profitLossCtrl', ['$rootScope', '$scope', '$controller', '$loc
 
     initRequestData();
 
-    $scope.openCorrespondingGame = function openCorrespondingGame(event) {
-        var game = $scope.gamePointers[event.game_id];
-        if (game && GameInfo.getVirtualSportIds().indexOf(parseInt(game.sport.id, 10)) === -1) {
-            $location.search({
-                'type': game.type === '0' ? 0 : 1,
-                'sport': game.sport.id,
-                'region': game.region,
-                'competition': game.competition,
-                'game': game.game
-            });
-
-            var neededPath = Utils.getPathAccordintToAlias(game.sport.alias);
-            $location.path(neededPath);
-
-            $scope.env.showSlider = false;
-            $scope.env.sliderContent = '';
-        }
-    };
-
     /**
      * @ngdoc method
      * @name adjustDate

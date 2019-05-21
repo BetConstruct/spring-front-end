@@ -13,6 +13,7 @@
                     ng-disabled="buttonLoading"
                     ng-show="regItem.button.requiredLength ? (registrationData[regItem.name].length === regItem.button.requiredLength && !registerform[regItem.name].$invalid) : !registerform[regItem.name].$invalid">
                 {{regItem.button.text|translate}}
+                <span ng-show="countdown.minutes + ':' + countdown.seconds !== '00:00'" countdown="{{registration.smsTimer}}" ng-bind="countdown.minutes + ':' + countdown.seconds"></span>
             </button>
             <div vb-html-compiler="<input type='text' name='{{regItem.name}}' ng-blur='registerform[regItem.name].blur=true' ng-model='registrationData[regItem.name]' placeholder='{{regItem.placeholder|translate}}' title='{{regItem.placeholder|translate}}'/>" custom-attrs="regItem.customAttrs"></div>
             <div ng-if="regItem.customValidation" vb-html-compiler="{{regItem.customValidation}}"></div>
@@ -122,9 +123,10 @@
         <label ng-bind="regItem.title | translate" ng-class="{'hintReq' : regItem.required}"></label>
         <div class="tooltip-wrapper-j">
             <div ng-if="regItem.customValidation" vb-html-compiler="{{regItem.customValidation}}"></div>
-            <div class="select-j" vb-html-compiler="<select name='{{regItem.name}}' ng-blur='registerform[regItem.name].blur=true' ng-model='registrationData[regItem.name]' ng-disabled='registerform[regItem.name].disabled'></select>"
+            <div class="select-j" vb-html-compiler="<select name='{{regItem.name}}' ng-blur='registerform[regItem.name].blur=true' ng-model='registrationData[regItem.name]' ng-disabled='registerform[regItem.name].disabled || registerform[regItem.name].loading'></select>"
                  append-to-html="{{regItem.optionsData}}"
                  custom-attrs="regItem.customAttrs"></div>
+            <div ng-if="registerform[regItem.name].loading" class="small-progress md-progress-circular md-theme registration-fields-loading"></div>
             <div class="tooltip-j" ng-hide="registerform[regItem.name].$error.required">
                 <div ng-repeat="val in regItem.validation"
                    ng-show="registerform[regItem.name].$error[val.name]">
@@ -156,7 +158,6 @@
     <div ng-switch-when="div">
         <label class="wrap" ng-bind-html="regItem.content|translate|html"></label>
     </div>
-    <input ng-switch-when="iovation" ng-if="conf.iovationLoginScripts" ng-init="initIovation()" ng-model="registrationData[regItem.name]" name="ioBlackBox" id="ioBlackBox" class="ng-hide" value="" />
 </div>
 
 

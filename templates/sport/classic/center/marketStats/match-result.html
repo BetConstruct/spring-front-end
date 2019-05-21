@@ -1,0 +1,16 @@
+<div class="statistic-quality-contain">
+    <h5 class="title-statistic-quality">
+        Last 5 Matches Avg.
+        <i class="close-statistic-quality" ng-click="closePopup(true)"></i>
+    </h5>
+    <h6 class="sub-title-statistic-quality">
+        Previous Matches
+    </h6>
+    <ul class="half-statistic-quality">
+        <li  ng-repeat="matchResults in templateData.GeneralStatsInfoResult track by $index">
+            <p ng-repeat="matchResult in matchResults.GeneralInfoWDL track by $index" class="{{matchResult}}-bg" ng-bind="::matchResult"></p>
+        </li>
+    </ul>
+
+    <p ng-click="openStatistics(openGame);$event.stopPropagation();" class="more-statistic-quality">View all statistics</p>
+</div>

@@ -9,12 +9,39 @@
         <div ng-if="'time-out-text'|translate:null:true">
             <p ng-bind-html="'time-out-text'|translate|html:'p'"><p trans>
         </div>
-        <form name="selfExclusionForm" class="registration-form">
-            <div class="form-text" >
-                <label ng-repeat="option in conf.userTimeOut.options track by $index">
-                    <input type="radio" name="period" ng-click="selectPeriod(option.limit)" ng-model="$parent.periodValue" value="{{ $index }}">
-                    <span ng-bind="option.name|translate"></span>
-                </label>
+        <form name="selfExclusionForm" class="registration-form" ng-init="initUserTimout()">
+            <div class="form-text">
+                <div class="limit-section" ng-repeat="option in conf.userTimeOut.options track by $index">
+                    <label>
+                        <input type="radio" name="period" ng-click="selectPeriod(option.limit);timeoutContainsDatepicker&&(dateState.openedTo = false);"  ng-model="$parent.periodValue" value="{{ $index }}">
+                        <span ng-bind="option.name|translate"></span>
+                    </label>
+                </div>
+                <div class="mini-form-box-b" ng-if="timeoutContainsDatepicker" ng-class="{'disabled': !selfExclusionData || selfExclusionData.type !== 'custom'}">
+                    <div class="date-picker-b">
+                        <div class="picker-contain">
+                            <div class="input-group" ng-click="dateState.openedTo = !dateState.openedTo;$event.preventDefault();$event.stopPropagation();">
+                                <input type="text"
+                                       class="form-control"
+                                       placeholder="{{'To'| translate}}"
+                                       datepicker-popup="{{conf.dateFormat.datepicker}}"
+                                       min-date="minToDate"
+                                       ng-model="customTimeout.date"
+                                       is-open="dateState.openedTo"
+                                       disabled="disabled"
+                                       datepicker-options="dateOptions"
+                                       ng-required="true"
+                                       close-text="Close"
+                                />
+                                <span class="input-group-btn">
+                                                    <button type="button" class="btn btn-default date-view" ng-click="openedTo = !openedTo;$event.stopPropagation();">
+                                                        <i class="date-p"></i>
+                                                    </button>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
             <div class="change-button-container password">
 
@@ -23,7 +50,7 @@
                 </div>
 
                 <div class="cashier-button">
-                    <button ng-disabled="!periodValue" ng-show="!working" trans ng-click="setSelfExclusion(conf.userTimeOut.type, 'userTimeOut')">Save</button>
+                    <button ng-disabled="!periodValue || (selfExclusionData.type === 'custom' && customTimeout && !customTimeout.date)" ng-show="!working" trans ng-click="setSelfExclusion(conf.userTimeOut.type, 'userTimeOut')">Save</button>
                     <button disabled="disabled" ng-show="working" trans>Wait...</button>
                 </div>
             </div>

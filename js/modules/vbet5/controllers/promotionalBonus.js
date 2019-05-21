@@ -238,9 +238,10 @@ VBET5.controller('promotionalBonusCtrl', ['$scope', '$location', 'Zergling', 'Ba
      * @name claimBonus
      * @methodOf vbet5.controller:promotionalBonusCtrl
      * @param {Number} Bonus id
+     * @param {boolean} navigateToDeposit is navigate after successful claim into deposit page
      * @description Claim bonus
      */
-    $scope.claimBonus = function claimBonus(bonusId) {
+    $scope.claimBonus = function claimBonus(bonusId, navigateToDeposit) {
         var promise = showConfirmationDialog('Are you sure you want to claim this bonus?', 'prompt');
         var request = {bonus_id: bonusId};
         promise.then(function () {
@@ -248,6 +249,7 @@ VBET5.controller('promotionalBonusCtrl', ['$scope', '$location', 'Zergling', 'Ba
                 if (response.result === 0){
                     showConfirmationDialog('Bonus claimed', 'success');
                     getPromotionalBonus();
+                    navigateToDeposit && $rootScope.broadcast("toggleSliderTab", "deposit");
                 } else {
                     showConfirmationDialog(BackendConstants.ErrorCodesByValue[response.result], 'error');
                 }
@@ -269,7 +271,9 @@ VBET5.controller('promotionalBonusCtrl', ['$scope', '$location', 'Zergling', 'Ba
         if (target !== $scope.activeBonusTab){
             $scope.bonusList = [];
             $scope.activeBonusTab = target;
-            getPromotionalBonus();
+            if (target !== 'bonus-request') {
+                getPromotionalBonus();
+            }
         }
     };
 

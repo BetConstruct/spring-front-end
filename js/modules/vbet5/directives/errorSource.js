@@ -6,13 +6,13 @@
  *
  * @param {String} bigger value
  */
-VBET5.directive('errSrc', function () {
+VBET5.directive('errSrc', ['$$sanitizeUri', function($$sanitizeUri) {
     'use strict';
     return {
         link: function (scope, element, attrs) {
             element.bind('error', function () {
                 if (attrs.src !== attrs.errSrc) {
-                    attrs.$set('src', attrs.errSrc);
+                    attrs.$set('src', $$sanitizeUri(attrs.errSrc));
                 }
             });
 
@@ -21,4 +21,4 @@ VBET5.directive('errSrc', function () {
             });
         }
     };
-});
+}]);

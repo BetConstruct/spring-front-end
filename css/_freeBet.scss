@@ -26,11 +26,13 @@
     }
     > li {
       display: block;
-      float: left;
       padding: 5px;
       box-sizing: border-box;
       position: relative;
       z-index: 10;
+      @include ltr {
+        float: left;
+      }
       @include rtl {
         float: right;
         text-align: right;
@@ -55,12 +57,14 @@
   float: left;
   width: 100%;
   > h6 {
-    float: left;
     background: $skin-palette-8;
     padding: 0 16px;
     color: $text-palette-3;
     font: 700 14px/45px $font-f;
     text-transform: uppercase;
+    @include ltr {
+      float: left;
+    }
     @include rtl {
       float: right;
     }
@@ -78,10 +82,11 @@
 .free-bet-calendar-switcher {
   position: absolute;
   top: 18px;
-  right: 20px;
   width: 137px;
+  @include ltr {
+    right: 20px;
+  }
   @include rtl {
-    right: auto;
     left: 20px;
   }
   select {
@@ -93,10 +98,12 @@
     height: 24px;
     font: 12px $font-f;
     color: $text-palette-3;
-    padding: 0 20px 0 8px;
+    @include ltr {
+      padding: 0 20px 0 8px;
+    }
     @include rtl {
-      padding: 0 8px 0 20px;
       direction: rtl;
+      padding: 0 8px 0 20px;
     }
   }
   &:after {
@@ -104,12 +111,13 @@
     font: 18px/20px icomoon;
     pointer-events: none;
     position: absolute;
-    right: 8px;
     top: 50%;
     margin: -10px 0 0;
     color: $text-palette-4;
+    @include ltr {
+      right: 8px;
+    }
     @include rtl {
-      right: auto;
       left: 8px;
     }
   }
@@ -140,30 +148,38 @@
   background: rgba($skin-palette-8, 0.8);
   float: left;
   width: 100%;
-  padding: 10px 7px 0 10px;
   height: 45px;
   box-sizing: border-box;
+  @include ltr {
+    padding: 10px 7px 0 10px;
+  }
   @include rtl {
     padding: 10px 10px 0 7px;
   }
   h3 {
-    float: left;
     font: 700 14px/24px $font-f;
     color: $text-palette-4;
+    @include ltr {
+      float: left;
+    }
     @include rtl {
       float: right;
       direction: rtl;
     }
   }
   ul {
-    float: right;
+    @include ltr {
+      float: right;
+    }
     @include rtl {
       float: left;
     }
     li {
       display: block;
       margin: 0 3px;
-      float: left;
+      @include ltr {
+        float: left;
+      }
       @include rtl {
         float: right;
       }
@@ -175,12 +191,14 @@
     border: 1px solid $text-palette-4;
     background: none;
     height: 24px;
-    padding: 0 8px 0 26px;
     position: relative;
     color: $text-palette-3;
     font: 11px/22px $font-f;
     text-transform: uppercase;
     transition: 300ms color, 300ms background, 300ms border;
+    @include ltr {
+      padding: 0 8px 0 26px;
+    }
     @include rtl {
       padding: 0 26px 0 8px;
     }
@@ -189,9 +207,10 @@
       position: absolute;
       top: 0;
       font: 12px/22px icomoon;
-      left: 7px;
+      @include ltr {
+        left: 7px;
+      }
       @include rtl {
-        left: auto;
         right: 7px;
       }
     }
@@ -227,7 +246,6 @@
   padding: 10px;
   box-sizing: border-box;
   button {
-    float: right;
     display: block;
     border: 1px solid $text-palette-4;
     height: 30px;
@@ -237,6 +255,9 @@
     font: 12px $font-f;
     background: none;
     transition: 300ms color, 300ms background, 300ms border;
+    @include ltr {
+      float: right;
+    }
     @include rtl {
       float: left;
     }
@@ -298,25 +319,26 @@
         padding: 9px 4px;
       }
       &.events-cell {
-        border-left: 1px solid $skin-palette-12;
         width: 12.8%;
         transition: 300ms background, 300ms color;
         color: #c29440;
         padding: 0;
-        text-align: right;
         cursor: pointer;
+        @include ltr {
+          text-align: right;
+          border-left: 1px solid $skin-palette-12;
+        }
         @include rtl {
-          border-left: 0;
-          border-right: 1px solid $skin-palette-12;
           text-align: left;
+          border-right: 1px solid $skin-palette-12;
         }
         &:hover {
           background: $skin-palette-6;
         }
         &.selected {
           pointer-events: none;
-          background: #366E53;
-          color: white;
+          background: $brand-color-1;
+          color: set-color($brand-color-1);
         }
       }
     }
@@ -332,9 +354,11 @@
   label {
     display: block;
     height: 46px;
-    padding: 0 16px 0 38px;
     font: 700 12px/46px $font-f;
     position: relative;
+    @include ltr {
+      padding: 0 16px 0 38px;
+    }
     @include rtl {
       padding: 0 38px 0 16px;
     }
@@ -350,23 +374,24 @@
         display: block;
         position: absolute;
         top: 15px;
-        left: 16px;
         border-radius: 100%;
+        @include ltr {
+          left: 16px;
+        }
         @include rtl {
-          left: auto;
           right: 16px;
         }
       }
       &:before {
         width: 16px;
         height: 16px;
-        background: rgba(black, 0.3);
+        background: rgba(#000000, 0.3);
       }
       &:after {
         width: 6px;
         height: 6px;
         margin: 5px;
-        background: white;
+        background: set-color(#000000);
         transition: 300ms transform;
         transform: scale(0);
       }

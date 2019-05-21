@@ -11,13 +11,13 @@
                     <div class="select-holder">
                         <select required ng-model="accountVerificationData.selectedImageType" name="selectedImageType">
                             <option value="" trans>Not selected</option>
-                            <option ng-repeat="(key, value) in imageTypes track by key" value="{{key}}">{{::value|translate}}</option>
+                            <option ng-repeat="type in $root.conf.imageTypes track by $index" value="{{type.id}}">{{::type.name|translate}}</option>
                         </select>
                     </div>
                 </label>
             </li>
             <li>
-                <label>
+                <div>
                     <input type="file" name="passportImage" id="{{inputId}}" accept="image/*" class="passportUpload"/>
                     <p trans>File location</p>
                     <ul class="fileUpload-button">
@@ -28,7 +28,7 @@
                             <span trans>Browse</span>
                         </li>
                     </ul>
-                </label>
+                </div>
             </li>
             <li>
                 <button ng-disabled="disablePassportVerificationSubmitButton" type="submit" title="{{'Please upload an image and select the type of your ID'|translate}}" trans>Verify</button>

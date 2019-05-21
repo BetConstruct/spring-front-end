@@ -28,11 +28,18 @@
   background: $c16-sp-9;
   height: 36px;
   border-radius: 2px 2px 0 0;
-  margin: 0 0 5px;
-  padding: 0 30px 0 34px;
+  @include ltr {
+    margin: 0 0 5px;
+    padding: 0 30px 0 34px;
+  }
   @include rtl {
     margin: 0 0 5px 4px;
     padding: 0 34px 0 30px;
+  }
+}
+.live-column-title-v3 {
+  @include rtl {
+    margin: 0 0 5px 0;
   }
 }
 
@@ -45,7 +52,6 @@
 
 .upcoming-column-title-v3 > h2, .live-column-title-v3 > h2 {
   box-sizing: border-box;
-  float: left;
   white-space: nowrap;
   text-overflow: ellipsis;
   overflow: hidden;
@@ -53,6 +59,9 @@
   font-size: 6 + $size-font;
   line-height: 36px;
   font-weight: normal;
+  @include ltr {
+    float: left;
+  }
   @include rtl {
     float: right;
   }
@@ -63,7 +72,9 @@
   position: relative;
   display: inline-block;
   vertical-align: top;
-  padding: 0 18px 0 0;
+  @include ltr {
+    padding: 0 18px 0 0;
+  }
   @include rtl {
     padding: 0 0 0 18px;
   }
@@ -94,14 +105,15 @@
   position: absolute;
   width: 30px;
   height: 36px;
-  right: 0;
   top: 0;
   font: 12px/36px icomoon;
   text-align: center;
   color: lighten(desaturate($c16-tp, 23), 37);
+  @include ltr {
+    right: 0;
+  }
   @include rtl {
     left: 0;
-    right: auto;
   }
 }
 
@@ -245,12 +257,13 @@
   box-sizing: border-box;
   float: left;
   width: 100%;
-  padding: 0 1px 0 2px;
+  @include ltr {
+    padding: 0 1px 0 2px;
+  }
   @include rtl {
     padding: 0 2px 0 1px;
   }
 }
-
 .market-name-d-v3 {
   box-sizing: border-box;
   float: left;
@@ -273,7 +286,22 @@
   font-weight: normal;
   padding: 0 10px;
 }
-
+.market-empty-h{
+  float: left;
+  width: 100%;
+  font-size: 12px;
+  margin: 1px 0 0;
+  padding: 0 5px;
+  height: 28px;
+  line-height: 26px;
+  text-align: center;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+  color: $text-palette-6;
+  background: $skin-palette-8;
+  box-sizing: border-box;
+}
 .all-markets-favorite-d-v3 {
   box-sizing: border-box;
   float: left;
@@ -306,11 +334,13 @@
   box-sizing: border-box;
   font: 16px/20px icomoon;
   width: 30px;
-  float: right;
   height: 20px;
   position: relative;
   text-align: center;
   top: 4px;
+  @include ltr {
+    float: right;
+  }
   @include rtl {
     float: left;
   }
@@ -404,7 +434,9 @@
 
 .popular-game-view-wrapper-v3 .market-icons-t-r > li {
   box-sizing: border-box;
-  border: none;
+  @include ltr {
+    border: none;
+  }
   @include rtl {
     border: none;
   }
@@ -419,7 +451,9 @@
 
 .popular-game-team-name-v3 > table {
   box-sizing: border-box;
-  float: left;
+  @include ltr {
+    float: left;
+  }
   @include rtl {
     float: right;
   }
@@ -457,8 +491,10 @@
   white-space: nowrap;
   text-overflow: ellipsis;
   overflow: hidden;
-  padding: 0 30px 0 0;
   max-width: 350px;
+  @include ltr {
+    padding: 0 30px 0 0;
+  }
   @include rtl {
     padding: 0 0 0 30px;
   }
@@ -469,6 +505,10 @@
   font-size: 10 + $size-font;
   line-height: 18px;
   color: #b6862e;
+  @include rtl {
+    direction: ltr;
+    unicode-bidi: isolate-override;
+  }
 }
 
 .events-view-p-game-v3 {
@@ -477,7 +517,9 @@
   width: 100%;
   position: relative;
   height: 28px;
-  padding: 0 60px 0 8px;
+  @include ltr {
+    padding: 0 60px 0 8px;
+  }
   @include rtl {
     padding: 0 8px 0 60px;
   }
@@ -493,7 +535,9 @@
 
 .events-view-p-game-v3 .markets-count-view-v3 {
   box-sizing: border-box;
-  right: 6px;
+  @include ltr {
+    right: 6px;
+  }
 }
 
 .events-view-p-game-v3 .events-list-view-v3 > ul > li:first-child > .single-events-b-v3 {
@@ -558,9 +602,11 @@
   height: 24px;
   border-radius: 2px 2px 0 0;
   background: lighten(desaturate(adjust-hue($c16-sp, 2deg), 20), 13);
-  padding: 0 24px 0 6px;
   position: relative;
   margin: 0 0 2px;
+  @include ltr {
+    padding: 0 24px 0 6px;
+  }
   @include rtl {
     padding: 0 6px 0 24px;
   }
@@ -578,7 +624,9 @@
     overflow: hidden;
   }
   > .flag-view-v3 + h5 {
-    padding: 0 0 0 26px;
+    @include ltr {
+      padding: 0 0 0 26px;
+    }
     @include rtl {
       padding: 0 26px 0 0;
     }
@@ -620,15 +668,16 @@
   width: 34px;
   height: 100%;
   position: absolute;
-  left: 0;
   top: 0;
   font: 16px/36px icomoon;
   text-indent: 10px;
   color: $c16-tp-1;
   background: $c16-sp-7;
-  border-radius: 2px 0 0;
+  @include ltr {
+    left: 0;
+    border-radius: 2px 0 0;
+  }
   @include rtl {
-    left: auto;
     right: 0;
     border-radius: 0 2px 0;
   }
@@ -651,9 +700,11 @@
 }
 
 .upcoming-games-filter-v3 {
-  float: left;
   height: 36px;
   padding: 6px 0 0;
+  @include ltr {
+    float: left;
+  }
   @include rtl {
     float: right;
   }
@@ -661,8 +712,10 @@
 
 .upcoming-games-filter-v3 .time-filter-v3 > p {
   box-sizing: border-box;
-  padding: 0 28px 0 10px;
   text-transform: none;
+  @include ltr {
+    padding: 0 28px 0 10px;
+  }
   @include rtl {
     padding: 0 10px 0 28px;
   }
@@ -699,10 +752,12 @@
   line-height: 30px;
   background: $c16-sp-9;
   position: relative;
-  padding: 0 30px 0 34px;
   border-radius: 2px 2px 0 0;
   cursor: pointer;
   margin: 0 0 3px;
+  @include ltr {
+    padding: 0 30px 0 34px;
+  }
   @include rtl {
     padding: 0 34px 0 30px;
   }
@@ -761,7 +816,9 @@
 .sport-name-up-game-v3 > .sport-icon-v3 {
   box-sizing: border-box;
   width: 34px;
-  box-shadow: none;
+  @include ltr {
+    box-shadow: none;
+  }
   @include rtl {
     box-shadow: none;
   }
@@ -782,10 +839,11 @@
     margin: 0;
     position: absolute;
     top: 4px;
-    right: 30px;
+    @include ltr {
+      right: 30px;
+    }
     @include rtl {
       left: 30px;
-      right: auto;
     }
   }
 }
@@ -802,7 +860,9 @@
 
 .single-sport-box-v3 .mini-title-box-gameview-v3 {
   box-sizing: border-box;
-  padding: 0 50px 0 10px;
+  @include ltr {
+    padding: 0 50px 0 10px;
+  }
   @include rtl {
     padding: 0 10px 0 50px;
   }

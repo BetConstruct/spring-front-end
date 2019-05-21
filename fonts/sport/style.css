@@ -1,15 +1,15 @@
 @font-face {
   font-family: 'icomoon';
-  src:  url('fonts/icomoon.eot?cqsgcd');
-  src:  url('fonts/icomoon.eot?cqsgcd#iefix') format('embedded-opentype'),
-    url('fonts/icomoon.ttf?cqsgcd') format('truetype'),
-    url('fonts/icomoon.woff?cqsgcd') format('woff'),
-    url('fonts/icomoon.svg?cqsgcd#icomoon') format('svg');
+  src:  url('fonts/icomoon.eot?zbivee');
+  src:  url('fonts/icomoon.eot?zbivee#iefix') format('embedded-opentype'),
+    url('fonts/icomoon.ttf?zbivee') format('truetype'),
+    url('fonts/icomoon.woff?zbivee') format('woff'),
+    url('fonts/icomoon.svg?zbivee#icomoon') format('svg');
   font-weight: normal;
   font-style: normal;
 }
 
-[class^="icon-"], [class*=" icon-"] {
+[class^="cms-jcon-"], [class*=" cms-jcon-"] {
   /* use !important to prevent issues with browser extensions that change fonts */
   font-family: 'icomoon' !important;
   speak: none;
@@ -24,536 +24,557 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-.icon-Bodybuilding-icon:before {
+.cms-jcon-icon:before {
+  content: "\e924";
+}
+.cms-jcon-nba-2k:before {
+  content: "\e923";
+}
+.cms-jcon-kabaddi:before {
+  content: "\e921";
+}
+.cms-jcon-Rainbow-Six:before {
+  content: "\e922";
+}
+.cms-jcon-PETANQUE:before {
+  content: "\e920";
+}
+.cms-jcon-clash-royale:before {
+  content: "\e91f";
+}
+.cms-jcon-e-tennis-copy:before {
+  content: "\e91e";
+}
+.cms-jcon-Bodybuilding-icon:before {
   content: "\e91d";
 }
-.icon-fifa:before {
+.cms-jcon-fifa:before {
   content: "\e91c";
 }
-.icon-circuit:before {
+.cms-jcon-circuit:before {
   content: "\e91b";
 }
-.icon-ps4games:before {
+.cms-jcon-ps4games:before {
   content: "\e91a";
 }
-.icon-E-Ice-Hockey:before {
+.cms-jcon-E-Ice-Hockey:before {
   content: "\e919";
 }
-.icon-penalty:before {
+.cms-jcon-penalty:before {
   content: "\e918";
 }
-.icon-betonblackjack:before {
+.cms-jcon-betonblackjack:before {
   content: "\e916";
 }
-.icon-betonpoker:before {
+.cms-jcon-betonpoker:before {
   content: "\e917";
 }
-.icon-eSports_logo_sportbook:before {
+.cms-jcon-eSports_logo_sportbook:before {
   content: "\e915";
 }
-.icon-king-of-glory:before {
+.cms-jcon-king-of-glory:before {
   content: "\e911";
 }
-.icon-PUBG:before {
+.cms-jcon-PUBG:before {
   content: "\e912";
 }
-.icon-Rocket-League:before {
+.cms-jcon-Rocket-League:before {
   content: "\e913";
 }
-.icon-Warcraft-III:before {
+.cms-jcon-Warcraft-III:before {
   content: "\e914";
 }
-.icon-StreetFighterSymbol:before {
+.cms-jcon-StreetFighterSymbol:before {
   content: "\e910";
 }
-.icon-eSports-icon-01:before {
+.cms-jcon-eSports-icon-01:before {
   content: "\e90f";
 }
-.icon-Crossfire_Icon:before {
+.cms-jcon-Crossfire_Icon:before {
   content: "\e90e";
 }
-.icon-halo-icon:before {
+.cms-jcon-halo-icon:before {
   content: "\e90d";
 }
-.icon-blank:before {
+.cms-jcon-blank:before {
   content: "\e670";
 }
-.icon-HON .path1:before {
+.cms-jcon-HON .path1:before {
   content: "\e906";
   color: rgb(0, 0, 0);
 }
-.icon-HON .path2:before {
+.cms-jcon-HON .path2:before {
   content: "\e907";
   margin-left: -1em;
   color: rgb(0, 0, 0);
 }
-.icon-HON .path3:before {
+.cms-jcon-HON .path3:before {
   content: "\e908";
   margin-left: -1em;
   color: rgb(255, 255, 255);
 }
-.icon-HON .path4:before {
+.cms-jcon-HON .path4:before {
   content: "\e909";
   margin-left: -1em;
   color: rgb(255, 255, 255);
 }
-.icon-HON .path5:before {
+.cms-jcon-HON .path5:before {
   content: "\e90a";
   margin-left: -1em;
   color: rgb(255, 255, 255);
 }
-.icon-HON .path6:before {
+.cms-jcon-HON .path6:before {
   content: "\e90b";
   margin-left: -1em;
   color: rgb(255, 255, 255);
 }
-.icon-Vainglory:before {
+.cms-jcon-Vainglory:before {
   content: "\e90c";
 }
-.icon-virtualcarracing:before {
+.cms-jcon-virtualcarracing:before {
   content: "\e905";
 }
-.icon-callofduty:before {
+.cms-jcon-callofduty:before {
   content: "\e904";
 }
-.icon-counter-strike:before {
+.cms-jcon-counter-strike:before {
   content: "\21";
 }
-.icon-league-of-legends:before {
+.cms-jcon-league-of-legends:before {
   content: "\22";
 }
-.icon-halo:before {
+.cms-jcon-halo:before {
   content: "\23";
 }
-.icon-dota:before {
+.cms-jcon-dota:before {
   content: "\24";
 }
-.icon-heroes-of-the-storm:before {
+.cms-jcon-heroes-of-the-storm:before {
   content: "\25";
 }
-.icon-hearthstone:before {
+.cms-jcon-hearthstone:before {
   content: "\26";
 }
-.icon-mortal-kombat:before {
+.cms-jcon-mortal-kombat:before {
   content: "\27";
 }
-.icon-world-of-tanks:before {
+.cms-jcon-world-of-tanks:before {
   content: "\28";
 }
-.icon-world-of-warcraft:before {
+.cms-jcon-world-of-warcraft:before {
   content: "\29";
 }
-.icon-overwatch:before {
+.cms-jcon-overwatch:before {
   content: "\2a";
 }
-.icon-smite:before {
+.cms-jcon-smite:before {
   content: "\2b";
 }
-.icon-smash:before {
+.cms-jcon-smash:before {
   content: "\2c";
 }
-.icon-starcraft:before {
+.cms-jcon-starcraft:before {
   content: "\2d";
 }
-.icon-Outright:before {
+.cms-jcon-Outright:before {
   content: "\e903";
 }
-.icon-Financials:before {
+.cms-jcon-Financials:before {
   content: "\e902";
 }
-.icon-EBasketball:before {
+.cms-jcon-EBasketball:before {
   content: "\e900";
 }
-.icon-CyberFootball:before {
+.cms-jcon-CyberFootball:before {
   content: "\e901";
 }
-.icon-Allsports_bowls:before {
+.cms-jcon-Allsports_bowls:before {
   content: "\e800";
 }
-.icon-vbet-sport-icons_futsal:before {
+.cms-jcon-vbet-sport-icons_futsal:before {
   content: "\2e";
 }
-.icon-vbet-sport-icons_tablehockey:before {
+.cms-jcon-vbet-sport-icons_tablehockey:before {
   content: "\2f";
 }
-.icon-vbet-sport-icons_tabletennis:before {
+.cms-jcon-vbet-sport-icons_tabletennis:before {
   content: "\30";
 }
-.icon-vbet-sport-icons_taekwondo:before {
+.cms-jcon-vbet-sport-icons_taekwondo:before {
   content: "\31";
 }
-.icon-vbet-sport-icons_tankbiathlon:before {
+.cms-jcon-vbet-sport-icons_tankbiathlon:before {
   content: "\32";
 }
-.icon-vbet-sport-icons_telecast:before {
+.cms-jcon-vbet-sport-icons_telecast:before {
   content: "\33";
 }
-.icon-vbet-sport-icons_tennis:before {
+.cms-jcon-vbet-sport-icons_tennis:before {
   content: "\34";
 }
-.icon-vbet-sport-icons_triathlon:before {
+.cms-jcon-vbet-sport-icons_triathlon:before {
   content: "\35";
 }
-.icon-vbet-sport-icons_UFC:before {
+.cms-jcon-vbet-sport-icons_UFC:before {
   content: "\36";
 }
-.icon-vbet-sport-icons_ultimatefighting:before {
+.cms-jcon-vbet-sport-icons_ultimatefighting:before {
   content: "\37";
 }
-.icon-vbet-sport-icons_virtualdogs:before {
+.cms-jcon-vbet-sport-icons_virtualdogs:before {
   content: "\38";
 }
-.icon-vbet-sport-icons_virtualhorses:before {
+.cms-jcon-vbet-sport-icons_virtualhorses:before {
   content: "\39";
 }
-.icon-vbet-sport-icons_virtualtennis:before {
+.cms-jcon-vbet-sport-icons_virtualtennis:before {
   content: "\3a";
 }
-.icon-vbet-sport-icons_volleyball:before {
+.cms-jcon-vbet-sport-icons_volleyball:before {
   content: "\3b";
 }
-.icon-vbet-sport-icons_waterpolo:before {
+.cms-jcon-vbet-sport-icons_waterpolo:before {
   content: "\3c";
 }
-.icon-vbet-sport-icons_whatwherewhen:before {
+.cms-jcon-vbet-sport-icons_whatwherewhen:before {
   content: "\3d";
 }
-.icon-vbet-sport-icons_yachting:before {
+.cms-jcon-vbet-sport-icons_yachting:before {
   content: "\3e";
 }
-.icon-soccer:before {
+.cms-jcon-soccer:before {
   content: "\e66f";
 }
-.icon-Allsports_allsporticon:before {
+.cms-jcon-Allsports_allsporticon:before {
   content: "\e600";
 }
-.icon-Allsports_alpinskiing:before {
+.cms-jcon-Allsports_alpinskiing:before {
   content: "\e601";
 }
-.icon-Allsports_americanfootball:before {
+.cms-jcon-Allsports_americanfootball:before {
   content: "\e602";
 }
-.icon-Allsports_angling:before {
+.cms-jcon-Allsports_angling:before {
   content: "\e603";
 }
-.icon-Allsports_archery:before {
+.cms-jcon-Allsports_archery:before {
   content: "\e604";
 }
-.icon-Allsports_australianfootball:before {
+.cms-jcon-Allsports_australianfootball:before {
   content: "\e605";
 }
-.icon-Allsports_badminton:before {
+.cms-jcon-Allsports_badminton:before {
   content: "\e606";
 }
-.icon-Allsports_balls:before {
+.cms-jcon-Allsports_balls:before {
   content: "\e607";
 }
-.icon-Allsports_baseball:before {
+.cms-jcon-Allsports_baseball:before {
   content: "\e608";
 }
-.icon-Allsports_basketball:before {
+.cms-jcon-Allsports_basketball:before {
   content: "\e609";
 }
-.icon-Allsports_beachhandball:before {
+.cms-jcon-Allsports_beachhandball:before {
   content: "\e60a";
 }
-.icon-Allsports_beachsoccer:before {
+.cms-jcon-Allsports_beachsoccer:before {
   content: "\e60b";
 }
-.icon-Allsports_beachvolleyball:before {
+.cms-jcon-Allsports_beachvolleyball:before {
   content: "\e60c";
 }
-.icon-Allsports_biathlon:before {
+.cms-jcon-Allsports_biathlon:before {
   content: "\e60d";
 }
-.icon-Allsports_bobsleigh:before {
+.cms-jcon-Allsports_bobsleigh:before {
   content: "\e60e";
 }
-.icon-Allsports_boxing:before {
+.cms-jcon-Allsports_boxing:before {
   content: "\e60f";
 }
-.icon-Allsports_bridge:before {
+.cms-jcon-Allsports_bridge:before {
   content: "\e610";
 }
-.icon-Allsports_canoe:before {
+.cms-jcon-Allsports_canoe:before {
   content: "\e611";
 }
-.icon-Allsports_chess:before {
+.cms-jcon-Allsports_chess:before {
   content: "\e612";
 }
-.icon-Allsports_cricket:before {
+.cms-jcon-Allsports_cricket:before {
   content: "\e613";
 }
-.icon-Allsports_curling:before {
+.cms-jcon-Allsports_curling:before {
   content: "\e614";
 }
-.icon-Allsports_cycling:before {
+.cms-jcon-Allsports_cycling:before {
   content: "\e615";
 }
-.icon-Allsports_cyclocross:before {
+.cms-jcon-Allsports_cyclocross:before {
   content: "\e616";
 }
-.icon-Allsports_darts:before {
+.cms-jcon-Allsports_darts:before {
   content: "\e617";
 }
-.icon-Allsports_diving:before {
+.cms-jcon-Allsports_diving:before {
   content: "\e618";
 }
-.icon-Allsports_electronicsports:before {
+.cms-jcon-Allsports_electronicsports:before {
   content: "\e619";
 }
-.icon-Allsports_eurovision:before {
+.cms-jcon-Allsports_eurovision:before {
   content: "\e61a";
 }
-.icon-Allsports_extremsport:before {
+.cms-jcon-Allsports_extremsport:before {
   content: "\e61b";
 }
-.icon-Allsports_fencing:before {
+.cms-jcon-Allsports_fencing:before {
   content: "\e61c";
 }
-.icon-Allsports_figureskating:before {
+.cms-jcon-Allsports_figureskating:before {
   content: "\e61d";
 }
-.icon-Allsports_floorball:before {
+.cms-jcon-Allsports_floorball:before {
   content: "\e61e";
 }
-.icon-Allsports_formula1:before {
+.cms-jcon-Allsports_formula1:before {
   content: "\e61f";
 }
-.icon-Allsports_freestylewrestling:before {
+.cms-jcon-Allsports_freestylewrestling:before {
   content: "\e620";
 }
-.icon-Allsports_gaelicfootball:before {
+.cms-jcon-Allsports_gaelicfootball:before {
   content: "\e621";
 }
-.icon-Allsports_golf:before {
+.cms-jcon-Allsports_golf:before {
   content: "\e622";
 }
-.icon-Allsports_grasshockey:before {
+.cms-jcon-Allsports_grasshockey:before {
   content: "\e623";
 }
-.icon-Allsports_greyhounds:before {
+.cms-jcon-Allsports_greyhounds:before {
   content: "\e624";
 }
-.icon-Allsports_gymnastics:before {
+.cms-jcon-Allsports_gymnastics:before {
   content: "\e625";
 }
-.icon-Allsports_handball:before {
+.cms-jcon-Allsports_handball:before {
   content: "\e626";
 }
-.icon-Allsports_hardathletics:before {
+.cms-jcon-Allsports_hardathletics:before {
   content: "\e627";
 }
-.icon-Allsports_hockey-02:before {
+.cms-jcon-Allsports_hockey-02:before {
   content: "\e628";
 }
-.icon-Allsports_hockey-26:before {
+.cms-jcon-Allsports_hockey-26:before {
   content: "\e629";
 }
-.icon-Allsports_horsseracing:before {
+.cms-jcon-Allsports_horsseracing:before {
   content: "\e62a";
 }
-.icon-Allsports_hurling:before {
+.cms-jcon-Allsports_hurling:before {
   content: "\e62b";
 }
-.icon-Allsports_icehockey:before {
+.cms-jcon-Allsports_icehockey:before {
   content: "\e62c";
 }
-.icon-Allsports_judo:before {
+.cms-jcon-Allsports_judo:before {
   content: "\e62d";
 }
-.icon-Allsports_lacross:before {
+.cms-jcon-Allsports_lacross:before {
   content: "\e62e";
 }
-.icon-Allsports_lightathletic:before {
+.cms-jcon-Allsports_lightathletic:before {
   content: "\e62f";
 }
-.icon-Allsports_livemonitor:before {
+.cms-jcon-Allsports_livemonitor:before {
   content: "\e630";
 }
-.icon-Allsports_lottery:before {
+.cms-jcon-Allsports_lottery:before {
   content: "\e631";
 }
-.icon-Allsports_luge:before {
+.cms-jcon-Allsports_luge:before {
   content: "\e632";
 }
-.icon-Allsports_mafia:before {
+.cms-jcon-Allsports_mafia:before {
   content: "\e633";
 }
-.icon-Allsports_minisoccer:before {
+.cms-jcon-Allsports_minisoccer:before {
   content: "\e634";
 }
-.icon-Allsports_modernpentathlon:before {
+.cms-jcon-Allsports_modernpentathlon:before {
   content: "\e635";
 }
-.icon-Allsports_motorbike:before {
+.cms-jcon-Allsports_motorbike:before {
   content: "\e636";
 }
-.icon-Allsports_motorsport:before {
+.cms-jcon-Allsports_motorsport:before {
   content: "\e637";
 }
-.icon-Allsports_nascar:before {
+.cms-jcon-Allsports_nascar:before {
   content: "\e638";
 }
-.icon-Allsports_netball:before {
+.cms-jcon-Allsports_netball:before {
   content: "\e639";
 }
-.icon-Allsports_nordicCombined:before {
+.cms-jcon-Allsports_nordicCombined:before {
   content: "\e63a";
 }
-.icon-Allsports_olympic:before {
+.cms-jcon-Allsports_olympic:before {
   content: "\e63b";
 }
-.icon-Allsports_oscar:before {
+.cms-jcon-Allsports_oscar:before {
   content: "\e63c";
 }
-.icon-Allsports_padel:before {
+.cms-jcon-Allsports_padel:before {
   content: "\e63d";
 }
-.icon-Allsports_pesapallo:before {
+.cms-jcon-Allsports_pesapallo:before {
   content: "\e63e";
 }
-.icon-Allsports_pokerlive:before {
+.cms-jcon-Allsports_pokerlive:before {
   content: "\e63f";
 }
-.icon-Allsports_poker:before {
+.cms-jcon-Allsports_poker:before {
   content: "\e640";
 }
-.icon-Allsports_politics:before {
+.cms-jcon-Allsports_politics:before {
   content: "\e641";
 }
-.icon-Allsports_pool:before {
+.cms-jcon-Allsports_pool:before {
   content: "\e642";
 }
-.icon-Allsports_rally:before {
+.cms-jcon-Allsports_rally:before {
   content: "\e643";
 }
-.icon-Allsports_rinkhockey:before {
+.cms-jcon-Allsports_rinkhockey:before {
   content: "\e644";
 }
-.icon-Allsports_rowing:before {
+.cms-jcon-Allsports_rowing:before {
   content: "\e645";
 }
-.icon-Allsports_rugby7:before {
+.cms-jcon-Allsports_rugby7:before {
   content: "\e646";
 }
-.icon-Allsports_rugbyL_rugbyL:before {
+.cms-jcon-Allsports_rugbyL_rugbyL:before {
   content: "\e647";
 }
-.icon-Allsports_rugbyU:before {
+.cms-jcon-Allsports_rugbyU:before {
   content: "\e648";
 }
-.icon-Allsports_schwingen:before {
+.cms-jcon-Allsports_schwingen:before {
   content: "\e649";
 }
-.icon-Allsports_shooting:before {
+.cms-jcon-Allsports_shooting:before {
   content: "\e64a";
 }
-.icon-Allsports_Shorttrackspeedskating-sportsbook:before {
+.cms-jcon-Allsports_Shorttrackspeedskating-sportsbook:before {
   content: "\e64b";
 }
-.icon-Allsports_skeleton:before {
+.cms-jcon-Allsports_skeleton:before {
   content: "\e64c";
 }
-.icon-Allsports_skijumping:before {
+.cms-jcon-Allsports_skijumping:before {
   content: "\e64d";
 }
-.icon-Allsports_skis:before {
+.cms-jcon-Allsports_skis:before {
   content: "\e64e";
 }
-.icon-Allsports_snooker:before {
+.cms-jcon-Allsports_snooker:before {
   content: "\e64f";
 }
-.icon-Allsports_snowboard:before {
+.cms-jcon-Allsports_snowboard:before {
   content: "\e650";
 }
-.icon-Allsports_Soccer:before {
+.cms-jcon-Allsports_Soccer:before {
   content: "\e651";
 }
-.icon-Allsports_soccerWC2014:before {
+.cms-jcon-Allsports_soccerWC2014:before {
   content: "\e652";
 }
-.icon-Allsports_softball:before {
+.cms-jcon-Allsports_softball:before {
   content: "\e653";
 }
-.icon-Allsports_specialbet:before {
+.cms-jcon-Allsports_specialbet:before {
   content: "\e654";
 }
-.icon-Allsports_speedskating:before {
+.cms-jcon-Allsports_speedskating:before {
   content: "\e655";
 }
-.icon-Allsports_speedway:before {
+.cms-jcon-Allsports_speedway:before {
   content: "\e656";
 }
-.icon-Allsports_sportandfun:before {
+.cms-jcon-Allsports_sportandfun:before {
   content: "\e657";
 }
-.icon-Allsports_sportfight:before {
+.cms-jcon-Allsports_sportfight:before {
   content: "\e658";
 }
-.icon-Allsports_squash:before {
+.cms-jcon-Allsports_squash:before {
   content: "\e659";
 }
-.icon-Allsports_sumo:before {
+.cms-jcon-Allsports_sumo:before {
   content: "\e65a";
 }
-.icon-Allsports_surfing:before {
+.cms-jcon-Allsports_surfing:before {
   content: "\e65b";
 }
-.icon-Allsports_swimming:before {
+.cms-jcon-Allsports_swimming:before {
   content: "\e65c";
 }
-.icon-Allsports_SynchronizedSwimming:before {
+.cms-jcon-Allsports_SynchronizedSwimming:before {
   content: "\e65d";
 }
-.icon-Allsports_tablehockey:before {
+.cms-jcon-Allsports_tablehockey:before {
   content: "\e65e";
 }
-.icon-Allsports_tabletennis:before {
+.cms-jcon-Allsports_tabletennis:before {
   content: "\e65f";
 }
-.icon-Allsports_taekwondo:before {
+.cms-jcon-Allsports_taekwondo:before {
   content: "\e660";
 }
-.icon-Allsports_tankbiathlon:before {
+.cms-jcon-Allsports_tankbiathlon:before {
   content: "\e661";
 }
-.icon-Allsports_telecast:before {
+.cms-jcon-Allsports_telecast:before {
   content: "\e662";
 }
-.icon-Allsports_tennis:before {
+.cms-jcon-Allsports_tennis:before {
   content: "\e663";
 }
-.icon-Allsports_triathlon:before {
+.cms-jcon-Allsports_triathlon:before {
   content: "\e664";
 }
-.icon-Allsports_UFC:before {
+.cms-jcon-Allsports_UFC:before {
   content: "\e665";
 }
-.icon-Allsports_ultimatefighting:before {
+.cms-jcon-Allsports_ultimatefighting:before {
   content: "\e666";
 }
-.icon-Allsports_virtualdogs:before {
+.cms-jcon-Allsports_virtualdogs:before {
   content: "\e667";
 }
-.icon-Allsports_virtualhorses:before {
+.cms-jcon-Allsports_virtualhorses:before {
   content: "\e668";
 }
-.icon-Allsports_virtualtennis:before {
+.cms-jcon-Allsports_virtualtennis:before {
   content: "\e669";
 }
-.icon-Allsports_volleyball:before {
+.cms-jcon-Allsports_volleyball:before {
   content: "\e66a";
 }
-.icon-Allsports_waterpolo:before {
+.cms-jcon-Allsports_waterpolo:before {
   content: "\e66b";
 }
-.icon-Allsports_whatwherewhen:before {
+.cms-jcon-Allsports_whatwherewhen:before {
   content: "\e66c";
 }
-.icon-Allsports_wrestling:before {
+.cms-jcon-Allsports_wrestling:before {
   content: "\e66d";
 }
-.icon-Allsports_yachting:before {
+.cms-jcon-Allsports_yachting:before {
   content: "\e66e";
 }

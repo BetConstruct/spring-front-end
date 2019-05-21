@@ -242,37 +242,75 @@
     content: "\e97e";
   }
 }
+.new-games-page-j li.VGSFantasySport {
+  background: #181B2C url(../../../images/games-page/fantasy-sport.png#{$delete-cache}) no-repeat 0 -412px;
+  &:before {
+    background: url(../../../images/games-page/fantasy-sport.png#{$delete-cache}) no-repeat 0 0;
+  }
+  p:before {
+    content: "\e9c1";
+  }
+}
+.new-games-page-j li.VGS12121 {
+  background: #181B2C url(../../../images/games-page/keno-vgs.png#{$delete-cache}) no-repeat 0 -412px;
+  &:before {
+    background: url(../../../images/games-page/keno-vgs.png#{$delete-cache}) no-repeat 0 0;
+  }
+  p:before {
+    content: "\e6d8";
+  }
+}
+.new-games-page-j li.VGSfarkle {
+  background: #181B2C url(../../../images/games-page/zonk.png#{$delete-cache}) no-repeat 0 -412px;
+  &:before {
+    background: url(../../../images/games-page/zonk.png#{$delete-cache}) no-repeat 0 0;
+  }
+  p:before {
+    content: "\ea40";
+  }
+}
+.new-games-page-j li.VGS1181 {
+  background: #181B2C url(../../../images/games-page/talisman.jpg#{$delete-cache}) no-repeat 0 -412px;
+  &:before {
+    background: url(../../../images/games-page/talisman.jpg#{$delete-cache}) no-repeat 0 0;
+  }
+  p:before {
+    content: "\ea42";
+  }
+}
 .fav-bar-game-j {
   width: 105px;
   height: 105px;
   position: absolute;
   top: 0;
-  right: 0;
   opacity: 0;
   z-index: 20;
   color: #302307;
   overflow: hidden;
+  @include ltr {
+    right: 0;
+  }
   @include rtl {
     left: 0;
-    right: auto;
   }
 }
 .fav-bar-game-j:before {
   content: '';
   display: block;
   background: #ddbe62;
-  background: -moz-linear-gradient(45deg,  #ddbe62 0%, #decb92 20%, #a8852e 74%, #b08a36 100%);
-  background: -webkit-linear-gradient(45deg,  #ddbe62 0%,#decb92 20%,#a8852e 74%,#b08a36 100%);
-  background: linear-gradient(45deg,  #ddbe62 0%,#decb92 20%,#a8852e 74%,#b08a36 100%);
-  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ddbe62', endColorstr='#b08a36',GradientType=1 );
   width: 220px;
   height: 26px;
-  transform: rotate(45deg);
   position: absolute;
   top: 30px;
-  left: -47px;
+  @include ltr {
+    left: -47px;
+    transform: rotate(45deg);
+    background: -moz-linear-gradient(45deg,  #ddbe62 0%, #decb92 20%, #a8852e 74%, #b08a36 100%);
+    background: -webkit-linear-gradient(45deg,  #ddbe62 0%,#decb92 20%,#a8852e 74%,#b08a36 100%);
+    background: linear-gradient(45deg,  #ddbe62 0%,#decb92 20%,#a8852e 74%,#b08a36 100%);
+
+  }
   @include rtl {
-    left: auto;
     right: -47px;
     transform: rotate(-45deg);
     background: -moz-linear-gradient(-45deg,  #ddbe62 0%, #decb92 20%, #a8852e 74%, #b08a36 100%);
@@ -287,12 +325,14 @@
   height: 20px;
   position: absolute;
   top: 33px;
-  right: 33px;
-  transform: rotate(42deg);
-  text-shadow: 1px 1px 0 #D0BB7E;
+  @include ltr {
+    right: 33px;
+    transform: rotate(42deg);
+    text-shadow: 1px 1px 0 #D0BB7E;
+
+  }
   @include rtl {
     left: 33px;
-    right: auto;
     transform: rotate(-42deg);
     text-shadow: -1px 1px 0 #D0BB7E;
   }
@@ -309,7 +349,6 @@
   left: 20px;
   right: 20px; }
 .games-pw-buttonset-j button {
-  float: left;
   height: 36px;
   background: $skin-palette-1;
   color: $text-palette-8;
@@ -321,6 +360,9 @@
   cursor: pointer;
   display: block;
   transition-duration: 300ms;
+  @include ltr {
+    float: left;
+  }
   @include rtl {
     float: right;
   }
@@ -337,16 +379,20 @@
   color: set-color($hero-color);
 }
 .action-button-set-j {
-  float: right;
   height: 36px;
   overflow: hidden;
+  @include ltr {
+    float: right;
+  }
   @include rtl {
     float: left;
   }
 }
 .action-button-set-j > div {
-  float: left;
   width: 36px;
+  @include ltr {
+    float: left;
+  }
   @include rtl {
     float: right;
   }

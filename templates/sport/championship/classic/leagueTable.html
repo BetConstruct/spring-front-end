@@ -1,0 +1,45 @@
+<div class="single-group-view-b" ng-show="items_ordered">
+    <div class="grout-view-separator">
+        <ul>
+            <li><p ng-bind="::blockTitle"></p></li>
+            <li ng-repeat="vs in ::items_ordered "  >
+                <b  ng-if="items_ordered.length <= 4" class="flag-country-view flag-{{::vs.EntityId}}" title="{{::vs.EntityName }}"></b>
+            </li>
+            <li><p>P</p></li>
+            <li><p>W</p></li>
+            <li><p>D</p></li>
+            <li><p>L</p></li>
+            <li><p>F</p></li>
+            <li><p>A</p></li>
+            <li><p>+/-</p></li>
+            <li><p>Pts</p></li>
+        </ul>
+         <ul ng-repeat="item in ::items_ordered ">
+            <li ng-click="expand(item.EntityId,item.EntityName)">
+                <p>
+                    <i ng-bind="getField(item, 'Position')"></i>
+                    <b class="flag-country-view flag-{{::item.EntityId}}"></b>
+                    <span title="{{::item.EntityName}}"  ng-bind="::item.EntityName"> </span>
+                </p>
+            </li>
+            <li ng-repeat="vs in items_ordered ">
+                <p ng-show="::matches[item.EntityId + '_' + vs.EntityId]">
+                    {{::matches[item.EntityId + '_' + vs.EntityId].HomeScore }} -
+                    {{::matches[item.EntityId + '_' + vs.EntityId].AwayScore }}
+                </p>
+                <p ng-show="::matches[vs.EntityId  + '_' +  item.EntityId]">
+                    {{::matches[vs.EntityId + '_' + item.EntityId].AwayScore }} -
+                    {{::matches[vs.EntityId + '_' + item.EntityId].HomeScore }}
+                </p>
+            </li>
+            <li><p ng-bind="getField(item, 'Played')"></p></li>
+            <li><p ng-bind="getField(item, 'Win')"></p></li>
+            <li><p ng-bind="getField(item, 'Draw')"></p></li>
+            <li><p ng-bind="getField(item, 'Lost')"></p></li>
+            <li><p ng-bind="getField(item, 'Scored')"></p></li>
+            <li><p ng-bind="getField(item, 'Against')"></p></li>
+            <li><p ng-bind="getField(item, 'Difference')"></p></li>
+            <li><p ng-bind="getField(item, 'Points')"></p></li>
+        </ul>
+    </div>
+</div>

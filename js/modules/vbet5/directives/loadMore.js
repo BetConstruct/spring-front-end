@@ -7,7 +7,7 @@
  * @description Automatically triggers click once page is scrolled to the element
  *
  */
-VBET5.directive('loadMore', ['$window', '$timeout', function ($window, $timeout) {
+VBET5.directive('loadMore', ['$window', '$timeout', 'CConfig', function ($window, $timeout, CConfig) {
     'use strict';
     return {
         restrict: 'A',
@@ -17,6 +17,10 @@ VBET5.directive('loadMore', ['$window', '$timeout', function ($window, $timeout)
             blockOffset: '='
         },
         link: function (scope, element) {
+            if (CConfig.disableAutoLoadMore) {
+                return;
+            }
+
             var clicked = false,
                 timeoutPromise,
                 bottomOffset = scope.bottomOffset || 10;

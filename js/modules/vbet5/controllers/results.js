@@ -4,8 +4,8 @@
  * @description
  * ResultsController controller
  */
-angular.module('vbet5.betting').controller('ResultsController', ['$rootScope', '$scope', '$q', 'Zergling', 'Config', 'Moment', 'Translator', 'Utils',
-    function ($rootScope, $scope, $q, Zergling, Config, Moment, Translator, Utils) {
+angular.module('vbet5.betting').controller('ResultsController', ['$rootScope', '$scope', '$q', 'Zergling', 'Config', 'Moment', 'Translator', 'Utils','$location',
+    function ($rootScope, $scope, $q, Zergling, Config, Moment, Translator, Utils, $location) {
         'use strict';
 
         var timeZone = Config.env.selectedTimeZone || '';
@@ -200,6 +200,8 @@ angular.module('vbet5.betting').controller('ResultsController', ['$rootScope', '
             }
         }
 
+
+
         /**
          * @ngdoc method
          * @name searchGames
@@ -215,6 +217,13 @@ angular.module('vbet5.betting').controller('ResultsController', ['$rootScope', '
             // Forming request
             var request = {};
             request.is_date_ts = 1;
+
+            var params = $location.search();
+
+            if(params.sport_type){
+              request.sport_type = params.sport_type;
+            }
+
             if (!sportId) {
                 request.sport_id = $scope.requestData.sport.id;
                 request.competition_id = $scope.requestData.competition.Id >= 0 ? $scope.requestData.competition.Id : "";
@@ -245,28 +254,13 @@ angular.module('vbet5.betting').controller('ResultsController', ['$rootScope', '
                     } else if (result.games.game.date <= Moment.get()) {
                         games[0] = result.games.game;
                     }
-                    $scope.gamesResult = adjustGames(games);
+                    $scope.gamesResult = games;
                 }
             })['catch'](function (reason) {
                 console.log('Error:', reason);
                 $scope.gameListLoaded = false;
             });
         };
-
-        /**
-         * adjust competition's name
-         */
-        function adjustGames(games) {
-            if (!$scope.requestData.live) {
-                if(!Config.main.GmsPlatform) {
-                    for (var i = 0, length = games.length; i < length; i += 1) {
-                        games[i].competition_name = games[i].competition_name.split(".").splice(1, 10).join();
-                    }
-                }
-            }
-
-            return games;
-        }
 
         /**
          * @ngdoc method

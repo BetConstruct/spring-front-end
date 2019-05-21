@@ -1,0 +1,31 @@
+<div class="games-type-icon" ng-show="$location.path() == '/casino/'" ng-controller="casinoSearchCtrl">
+    <div class="casino-games-search">
+        <div class="block-games-search">
+            <input type="text" ng-model="searchCommand" ng-keypress="searchEnter($event)" placeholder="Search for game or provider" trans>
+            <i></i>
+        </div>
+
+        <div class="casino-games-results" ng-show="showSearchCommandResults && !!searchCommandResults.length" hide-on-click state-flag-var="showSearchCommandResults" broadcast-on-close="search.ResultsClosed">
+            <div class="games-results">
+                <ul ng-repeat="game in searchCommandResults">
+                    <li>
+                        <img ng-src="{{game.icon_2}}" alt="">
+                    </li>
+                    <li>
+                        <p>
+                            {{game.name}}
+                            <i ng-click="toggleSaveToMyCasinoGames(game); $event.stopPropagation();" ng-class="{'active': $root.myCasinoGamesIds[game.id]}"></i>
+                        </p>
+                        <div class="results-buttons">
+                            <div trans ng-show="game.types.realMode" ng-click="openCasinoGame(game, 'real');$event.stopPropagation();">play now</div>
+                            <div trans ng-show="!game.types.viewMode && game.types.funMode && (confData.main.funModeEnabled === 2 && $root.env.authorized || confData.main.funModeEnabled === 1 || (confData.main.funModeEnabled === 3 && $root.profile.is_verified))" ng-click="openCasinoGame(game, 'fun');$event.stopPropagation();">Play For Free</div>
+                            <div trans ng-show="game.types.viewMode && !game.types.funMode" ng-click="openCasinoGame(game, 'fun');$event.stopPropagation();">View</div>
+
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+<p trans>Search</p>

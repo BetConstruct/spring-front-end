@@ -28,11 +28,7 @@ VBET5.controller('comboViewLeftController', ['$scope', 'Config', 'GameInfo', 'Ut
             }
         };
 
-        request.where.sport = {'id': {'@nin': GameInfo.getVirtualSportIds()}};
-
-        if(!Config.main.GmsPlatform) {
-            request.where.game.type = {'@in': [0,1]};
-        }
+        request.where.sport = {'type': {'@ne': 1}};
 
         if ($scope.selectedUpcomingPeriod) {
             request.where.game.start_ts = {'@now': {'@gte': 0, '@lt': $scope.selectedUpcomingPeriod * 3600}};
@@ -79,9 +75,6 @@ VBET5.controller('comboViewLeftController', ['$scope', 'Config', 'GameInfo', 'Ut
                 'game': {}
             }
         };
-        if(!Config.main.GmsPlatform) {
-            request.where.game.type = {'@in': [0,1]};
-        }
 
         if ($scope.selectedUpcomingPeriod) {
             request.where.game.start_ts = {'@now': {'@gte': 0, '@lt': $scope.selectedUpcomingPeriod * 3600}};
@@ -163,9 +156,6 @@ VBET5.controller('comboViewLeftController', ['$scope', 'Config', 'GameInfo', 'Ut
                 'game': {}
             }
         };
-        if(!Config.main.GmsPlatform) {
-            request.where.game.type = {'@in': [0,1]};
-        }
 
         if ($scope.selectedUpcomingPeriod) {
             request.where.game.start_ts = {'@now': {'@gte': 0, '@lt': $scope.selectedUpcomingPeriod * 3600}};
@@ -188,7 +178,7 @@ VBET5.controller('comboViewLeftController', ['$scope', 'Config', 'GameInfo', 'Ut
             }
         };
 
-        connectionService.subscribe(request, updateLeftMenuCompetitionsForTheRegion);
+        connectionService.subscribe(request, updateLeftMenuCompetitionsForTheRegion, null, true);
     };
 
     $scope.selectLeftMenuRegion = function selectLeftMenuRegion(region, sport) {
@@ -250,9 +240,6 @@ VBET5.controller('comboViewLeftController', ['$scope', 'Config', 'GameInfo', 'Ut
             }
         };
 
-        if(!Config.main.GmsPlatform) {
-            request.where.game.type = {'@in': [0,1]};
-        }
         if (Config.env.gameTimeFilter) {
             request.where.game.start_ts = Config.env.gameTimeFilter;
         }

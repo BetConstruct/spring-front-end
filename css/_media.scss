@@ -32,14 +32,18 @@
     margin-top: -41px;
   }
   .competition-columns-container {
-    float: left;
     width: 710px;
+    @include ltr {
+      float: left;
+    }
     @include rtl {
       float: right;
     }
   }
   .competition-columns-container.column-0 {
-    padding: 0 40px 0 0;
+    @include ltr {
+      padding: 0 40px 0 0;
+    }
     @include rtl {
       padding: 0 0 0 40px;
     }

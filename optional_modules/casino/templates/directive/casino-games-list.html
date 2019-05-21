@@ -1,7 +1,7 @@
 <div>
     <div class="float-width">
         <ul ng-show="showConditions">
-            <li ng-repeat="game in gamesList track by game.id" class="list-games-casino-view-b" ng-show="!confData.main.disableAgeRestrictedGames || !game.has_age_restriction || $root.env.authorized" no-animate>
+            <li ng-repeat="game in gamesList track by game.id" class="list-games-casino-view-b" ng-class="{'disabled' : confData.main.disableAgeRestrictedGames && game.has_age_restriction && !$root.env.authorized}" no-animate>
                 <div class="icon-delete" ng-show="showDeleteBtn"><a ng-click="removeGameFromSaved(game.id); $event.stopPropagation();">delete</a></div>
                 <p class="casino-game-download-version-2" ng-if="confData.main.downloadEnabled && game.downloads" ng-click="gaSend('send', 'event', 'games', game.provider, {'page': $location.path(), 'eventLabel': ('Download '+ game.name)}); $event.stopPropagation();">
 
@@ -34,7 +34,7 @@
                         </div>
                     </div>
                     <p class="game-name-b-favorite">
-                        <span title="Double Double Bonus Poker">{{game.name}}</span>
+                        <span title="{{::game.name}}" ng-bind="::game.name"></span>
                         <i class="favorite-icon-view" ng-show="!showDeleteBtn" ng-click="toggleSaveToMyCasinoGames(game); $event.stopPropagation();" ng-class="{'active': $root.myCasinoGamesIds[game.id]}"></i>
                     </p>
                     <div class="casino-resize-buttons">
@@ -42,7 +42,7 @@
                             <button ng-click="openGame(game, 'real'); $event.stopPropagation();" ng-if="game.types.realMode">
                                 <span trans>Play now</span>
                             </button>
-                            <button ng-if="game.types.funMode && (confData.main.funModeEnabled === 2 && $root.env.authorized || confData.main.funModeEnabled === 1)" ng-click="openGame(game, 'fun'); $event.stopPropagation();">
+                            <button ng-if="game.types.funMode && (confData.main.funModeEnabled === 2 && $root.env.authorized || confData.main.funModeEnabled === 1 || (confData.main.funModeEnabled === 3 && $root.profile.is_verified))" ng-click="openGame(game, 'fun'); $event.stopPropagation();">
                                 <span trans>Play For Free</span>
                             </button>
                             <button ng-if="game.types.viewMode && !$root.env.authorized" ng-click="openGame(game, 'fun'); $event.stopPropagation();">

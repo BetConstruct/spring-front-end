@@ -21,7 +21,7 @@
                     <ul class="cell-inner mixed-bet-history-flex">
                         <li class="ellipsis-text">
                             <span ng-if="balance.product_category === 2">{{ balance.game }}</span>
-                            <span>{{ balanceTypes[balance.operation] || (balance.operation_name|translate) }}</span>
+                            <span>{{ balance.name }}</span>
                             <span ng-show="balance.buddy_id || balance.buddy_name">: ({{balance.buddy_id}} : {{balance.buddy_name}})</span>
                         </li>
                     </ul>

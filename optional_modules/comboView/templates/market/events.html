@@ -4,11 +4,11 @@
     <ul ng-switch-when="correctScore">
         <li ng-repeat="event in market.correctScoreEvents track by $index"
             title="{{event.name}}{{displayBase(event, market)}}"
-            ng-mouseover="displayEventLimit(event, game, false, market)"
-            ng-mouseleave="cancelDisplayEventLimit(event)"
             ng-class="{'active': isEventInBetSlip(event), 'blocked': ((event.price | oddConvert:'decimal') == 1 || game.is_blocked), 'correct-score-empty-cell': !event.price && !event.name}"
             ng-click="bet()(event, game, sport.id, region.id, competition.id, market, sport.alias); $event.stopPropagation();"
         >
+            <div class="max-bet-tooltip-v3" onmouseover="displayEventLimit(event)" onmouseleave="cancelDisplayEventLimit(event)" data-id="{{event.id}}"  ng-class="{'maxbet-enabled': $root.env.authorized && $root.conf.displayEventsMaxBet}">
+            </div>
             <div class="small-title-event-b"></div>
             <p>
                 <span ng-class="{'up': event.price_change == 1, 'down': event.price_change == -1}">
@@ -22,14 +22,14 @@
     </ul>
 
     <ul ng-class="{'column-2': market.col_count === 2}" ng-switch-when="differentNames">
-        <li ng-repeat="event in market.event track by event.id"
+        <li ng-repeat="event in events track by event.id"
             title="{{event.name}}{{displayBase(event, market)}}"
-            ng-mouseover="displayEventLimit(event, game, false, market)"
-            ng-mouseleave="cancelDisplayEventLimit(event)"
             ng-class="{'active': isEventInBetSlip(event), 'blocked': ((event.price | oddConvert:'decimal') == 1 || game.is_blocked)}"
             ng-show="event && event.name"
             ng-click="bet()(event, game, sport.id, region.id, competition.id, market, sport.alias); $event.stopPropagation();"
         >
+            <div class="max-bet-tooltip-v3" onmouseover="displayEventLimit(event)" onmouseleave="cancelDisplayEventLimit(event)" data-id="{{event.id}}"  ng-class="{'maxbet-enabled': $root.env.authorized && $root.conf.displayEventsMaxBet}">
+            </div>
             <div class="small-title-event-b"></div>
             <p>
                 <span ng-class="{'up': event.price_change == 1, 'down': event.price_change == -1}">
@@ -43,14 +43,14 @@
     </ul>
 
     <ul class="column-1" ng-switch-when="noMarketType">
-        <li ng-repeat="event in market.event track by event.id"
+        <li ng-repeat="event in events track by event.id"
             title="{{event.name}}"
-            ng-mouseover="displayEventLimit(event, game, false, market)"
-            ng-mouseleave="cancelDisplayEventLimit(event)"
             ng-class="{'active': isEventInBetSlip(event), 'blocked': ((event.price | oddConvert:'decimal') == 1 || game.is_blocked)}"
             ng-show="event && event.name"
             ng-click="bet()(event, game, sport.id, region.id, competition.id, market, sport.alias); $event.stopPropagation();"
         >
+            <div class="max-bet-tooltip-v3" onmouseover="displayEventLimit(event)" onmouseleave="cancelDisplayEventLimit(event)" data-id="{{event.id}}"  ng-class="{'maxbet-enabled': $root.env.authorized && $root.conf.displayEventsMaxBet}">
+            </div>
             <div class="small-title-event-b"></div>
             <p>
                 <span>
@@ -65,13 +65,13 @@
     </ul>
 
     <ul ng-switch-when="total" class="total-over-under">
-        <li ng-repeat="event in market.events track by $index"
+        <li ng-repeat="event in events track by $index"
             title="{{event.name}}{{displayBase(event, market)}}"
-            ng-mouseover="displayEventLimit(event, game, false, market)"
-            ng-mouseleave="cancelDisplayEventLimit(event)"
             ng-class="{'active': isEventInBetSlip(event), 'blocked': ((event.price | oddConvert:'decimal') == 1 || game.is_blocked)}"
             ng-click="bet()(event, game, sport.id, region.id, competition.id, market, sport.alias); $event.stopPropagation();"
         >
+            <div class="max-bet-tooltip-v3" onmouseover="displayEventLimit(event)" onmouseleave="cancelDisplayEventLimit(event)" data-id="{{event.id}}"  ng-class="{'maxbet-enabled': $root.env.authorized && $root.conf.displayEventsMaxBet}">
+            </div>
             <div class="small-title-event-b">{{event.name}}</div>
             <p>
                 <span ng-if="event.name" ng-class="{'up': event.price_change == 1, 'down': event.price_change == -1}">
@@ -85,14 +85,14 @@
     </ul>
 
     <ul ng-class="{'column-2': market.col_count === 2}" ng-switch-default>
-        <li ng-repeat="event in market.event track by event.id"
+        <li ng-repeat="event in events track by event.id"
             title="{{event.name}}{{displayBase(event, market)}}"
-            ng-mouseover="displayEventLimit(event, game, false, market)" 
-            ng-mouseleave="cancelDisplayEventLimit(event)"
             ng-class="{'active': isEventInBetSlip(event), 'blocked': ((event.price | oddConvert:'decimal') == 1 || game.is_blocked)}"
             ng-show="event && event.name"
             ng-click="bet()(event, game, sport.id, region.id, competition.id, market, sport.alias); $event.stopPropagation();"
         >
+            <div class="max-bet-tooltip-v3" onmouseover="displayEventLimit(event)" onmouseleave="cancelDisplayEventLimit(event)" data-id="{{event.id}}"  ng-class="{'maxbet-enabled': $root.env.authorized && $root.conf.displayEventsMaxBet}">
+            </div>
             <div class="small-title-event-b">{{event.name}}</div>
             <p>
                 <span ng-class="{'up': event.price_change == 1, 'down': event.price_change == -1}">

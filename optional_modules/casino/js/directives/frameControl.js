@@ -16,13 +16,20 @@ CASINO.directive('frameControl', ['$window', '$timeout', 'UserAgent', function (
         var definitiveWidth, definitiveHeight;
         var resizeWatcherPromise;
 
+        var SIDEBAR_WIDTH = 220;
+        var BOTTOM_BAR_HEIGHT = 68;
+
         var windowResize = function () {
-            var wWidth, wHeight;
+            var wWidth, wHeight, aspectRationNumber;
+
+
+
+            console.info('ratio',attr.allRatio);
 
             switch (attr.numberOfWindow) {
                 case "1":
-                    wWidth = $window.innerWidth - 60;
-                    wHeight = $window.innerHeight - 95;
+                    wWidth = $window.innerWidth - 60; // 60px - game controls
+                    wHeight = $window.innerHeight - 95; // 95px - header
                     if (attr.aspectRatio && attr.aspectRatio !== '0' && attr.aspectRatio !== '') {
                         var ratios = attr.aspectRatio.split(':');
                         var originWidth = wHeight * ratios[0] / ratios[1];
@@ -47,6 +54,11 @@ CASINO.directive('frameControl', ['$window', '$timeout', 'UserAgent', function (
                             definitiveHeight = wHeight; //- 50;
                         }
                     }
+                    if (attr.hasBottomBar === "true") {
+                        aspectRationNumber = definitiveWidth / definitiveHeight;
+                        definitiveHeight = definitiveHeight - BOTTOM_BAR_HEIGHT;
+                        definitiveWidth = definitiveHeight * aspectRationNumber;
+                    }
                     break;
                 case "2":
                 case "4":
@@ -56,36 +68,48 @@ CASINO.directive('frameControl', ['$window', '$timeout', 'UserAgent', function (
                     definitiveWidth = wWidth / 2;
                     definitiveHeight = wHeight / (attr.numberOfWindow == "4" ? 2 : 3 / 2);
 
-                    if (definitiveWidth / definitiveHeight > 16 / 9 || definitiveWidth / definitiveHeight < 4 / 3) {
-                        var ratio = definitiveWidth / definitiveHeight > 16 / 9 ? 16 / 9 : 4 / 3;
-                        var originWidth = definitiveHeight * ratio;
+                    if (attr.allRatio || definitiveWidth / definitiveHeight > 16 / 9 || definitiveWidth / definitiveHeight < 4 / 3) {
+
+                        var ratio, originWidth;
+
+                        if (attr.allRatio) {
+                            ratios = attr.allRatio.split(':');
+                            originWidth = definitiveHeight * ratios[0] / ratios[1];
+                        } else {
+                            ratio = definitiveWidth / definitiveHeight > 16 / 9 ? 16 / 9 : 4 / 3;
+                            originWidth = definitiveHeight * ratio;
+                        }
+
 
                         scaleWidth = definitiveWidth / originWidth;
                         scaleHeight = 1;
                         scale = scaleWidth <= scaleHeight ? scaleWidth : scaleHeight;
 
+
                         definitiveWidth = scale * originWidth;
-                        definitiveHeight = scale * definitiveHeight;
+                        definitiveHeight = scale * ( definitiveHeight);
                     }
                     break;
             }
 
             if (attr.hasSidebar === "true") {
-                var aspectRationNumber = definitiveWidth / definitiveHeight;
-                definitiveWidth = definitiveWidth - attr.sidebarWidth;
+                aspectRationNumber = definitiveWidth / definitiveHeight;
+                definitiveWidth = definitiveWidth - SIDEBAR_WIDTH;
                 definitiveHeight = definitiveWidth / aspectRationNumber;
             }
 
-            element.css({ width: definitiveWidth + 'px', height: definitiveHeight + 'px'});
+            element.css({width: definitiveWidth + 'px', height: definitiveHeight + 'px'});
         };
 
         attr.$observe('hasSidebar', windowResize);
+        attr.$observe('hasBottomBar', windowResize);
+        attr.$observe('allRatio', windowResize);
 
         attr.$observe('numberOfWindow', windowResize);
 
         windowResize();
 
-        scope.$on('onWindowResize', function() {
+        scope.$on('onWindowResize', function () {
             if (resizeWatcherPromise) {
                 $timeout.cancel(resizeWatcherPromise);
             }
@@ -94,13 +118,13 @@ CASINO.directive('frameControl', ['$window', '$timeout', 'UserAgent', function (
 
         //ie 11 bug fix
         if (UserAgent.IEVersion()) {
-            scope.$on("$destroy", function() {
+            scope.$on("$destroy", function () {
                 element[0].src = "about:blank";
                 element[0].parentNode.removeChild(element[0]);
             });
         }
 
-        scope.$on('$destroy', function() {
+        scope.$on('$destroy', function () {
             if (resizeWatcherPromise) {
                 $timeout.cancel(resizeWatcherPromise);
                 resizeWatcherPromise = undefined;

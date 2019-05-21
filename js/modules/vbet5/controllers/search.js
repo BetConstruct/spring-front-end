@@ -12,7 +12,6 @@ VBET5.controller('searchCtrl', ['$rootScope', '$scope', 'TimeoutWrapper', '$rout
     $scope.showSearchResults = false;
     $scope.showSearchCommandResults = false;
 
-    var customSportAliasFilter = Utils.getCustomSportAliasFilter();
     var eSports = $location.path() === '/esports/';
 
     /**
@@ -99,8 +98,7 @@ VBET5.controller('searchCtrl', ['$rootScope', '$scope', 'TimeoutWrapper', '$rout
 
             var types = [];
             if (Config.main.customSportsBook[Config.main.sportsLayout].showPrematch) {
-                types.push(0);
-                Config.main.GmsPlatform && types.push(2);
+                types = [0, 2];
             }
             if (Config.main.customSportsBook[Config.main.sportsLayout].showLive) {
                 types.splice(1,0,1);
@@ -230,9 +228,7 @@ VBET5.controller('searchCtrl', ['$rootScope', '$scope', 'TimeoutWrapper', '$rout
     function searchWatcher() {
         if ($scope.searchTerm && currentSearchTermValue !== $scope.searchTerm) {
             currentSearchTermValue = $scope.searchTerm;
-            if (searchWatcherPromise) {
-                TimeoutWrapper.cancel(searchWatcherPromise);
-            }
+            TimeoutWrapper.cancel(searchWatcherPromise); // TimeoutWrapper checks the existence of promise by itself
             searchWatcherPromise = TimeoutWrapper(searchWatcher, 500);
         } else {
             doSearch($scope.searchTerm);

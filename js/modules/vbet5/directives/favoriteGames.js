@@ -6,7 +6,7 @@
  * @description
  *
  */
-VBET5.directive('favoriteGames', ['$rootScope', '$filter', 'ConnectionService', 'Utils', 'Storage', function ($rootScope, $filter, ConnectionService, Utils, Storage) {
+VBET5.directive('favoriteGames', ['$rootScope', '$filter', 'ConnectionService', 'Utils', 'Storage', 'GameInfo', 'Config', function ($rootScope, $filter, ConnectionService, Utils, Storage, GameInfo, Config) {
     'use strict';
     return {
         restrict: 'E',
@@ -36,7 +36,7 @@ VBET5.directive('favoriteGames', ['$rootScope', '$filter', 'ConnectionService', 
                         sport: ['id', 'name', 'alias'],
                         competition: ['id', 'name'],
                         region: ['id', 'name', 'alias'],
-                        game: ['id', 'team1_id', 'team1_name', 'team2_id', 'team2_name', 'type', 'start_ts', 'info', 'markets_count', 'is_blocked', 'is_stat_available', 'is_live']
+                        game: ['id', 'team1_id', 'team1_name', 'team2_id', 'team2_name', 'type', 'start_ts', 'info', 'markets_count', 'is_blocked', 'is_stat_available', 'is_live', 'tv_type', 'video_id', 'video_id2', 'video_id3', 'video_provider', 'partner_video_id']
                     },
                     where: {
                         game: {
@@ -66,6 +66,8 @@ VBET5.directive('favoriteGames', ['$rootScope', '$filter', 'ConnectionService', 
                     angular.forEach(sport.region, function(region) {
                         angular.forEach(region.competition, function(competition) {
                             angular.forEach(competition.game, function(game) {
+                                game.hasVideo = Config.main.videoEnabled && GameInfo.hasVideo(game);
+                                game.enableH2HStat = Config.main.enableH2HStat && game.is_stat_available;
                                 // Grouping data so that we can properly broadcast to centre.js
                                 game.requestInfo = {
                                     type: $scope.key === 'eSports' ? (game.type === 1 ? 'live' : 'preMatch') : (game.type === 2 ? 0 : game.type),
@@ -100,23 +102,31 @@ VBET5.directive('favoriteGames', ['$rootScope', '$filter', 'ConnectionService', 
                 Storage.set('favoriteGames', state);
             }
 
+            function addToFavorites(gameID) {
+                favoriteGamesIDs.push(gameID);
+                updateStorageState();
+                subscribeToFavorites();
+            }
+
+            $scope.removeFromFavorites = function removeFromFavorites(gameID, index) {
+                index = index || favoriteGamesIDs.indexOf(gameID);
+                if (index > -1) {
+                    favoriteGamesIDs.splice(index, 1);
+                    updateStorageState();
+
+                    if (favoriteGamesIDs.length) {
+                        subscribeToFavorites();
+                    } else {
+                        $scope.favoriteGames = [];
+                        $scope.sharedData = { count: 0 };
+                        connectionService.unsubscribe(subID);
+                    }
+                }
+            };
+
             $scope.toggleFavoriteGame = function toggleFavoriteGame(gameID) {
                 var index = favoriteGamesIDs.indexOf(gameID);
-                if (index < 0) {
-                    favoriteGamesIDs.push(gameID);
-                } else {
-                    favoriteGamesIDs.splice(index, 1);
-                }
-
-                updateStorageState();
-
-                if (favoriteGamesIDs.length) {
-                    subscribeToFavorites();
-                } else {
-                    $scope.favoriteGames = [];
-                    $scope.sharedData = { count: 0 };
-                    connectionService.unsubscribe(subID);
-                }
+                index < 0 ? addToFavorites(gameID) : $scope.removeFromFavorites(gameID, index);
             };
 
             $scope.selectFavoriteGame = function selectFavoriteGame(data) {
@@ -125,6 +135,7 @@ VBET5.directive('favoriteGames', ['$rootScope', '$filter', 'ConnectionService', 
 
 
             $scope.$on('favoriteGames.toggle', function(event, data) { $scope.toggleFavoriteGame(data); });
+            $scope.$on('favoriteGames.remove', function(event, data) { $scope.removeFromFavorites(data); });
 
             (function init() {
                 subscribeToFavorites();

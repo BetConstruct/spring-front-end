@@ -144,11 +144,7 @@ angular.module('vbet5.betting').controller('multiViewCtrl', ['$rootScope', '$sco
     };
 
     //switch to prematch sportsbook when prematch is selected from left menu
-    $scope.$on('toggleLive', function () {
-        if (!Config.env.live) {
-            $location.path("/sport").search('type', 0);
-        }
-    });
+
 
     $rootScope.$watch("multiViewLiveOpenedGamesIds", function (newValue) {
         Storage.set('multiViewLiveOpenedGamesIds', newValue);

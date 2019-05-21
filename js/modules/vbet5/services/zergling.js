@@ -124,8 +124,10 @@ VBET5.factory('Zergling', ['Config', 'WS', '$http', '$q', '$timeout', '$rootScop
     function resubscribe() {
         console.log('resubscribing', useWebSocket, subscriptions);
         angular.forEach(subscriptions, function (subData, subId) {
-            //delete subscriptions[subId];   //@TODO  clear previous data because we'll receive full data when resubscribing
-            Zergling.subscribe(subData.request, subData.callback);
+            Zergling.subscribe(subData.request, subData.callback).then(function (response) {
+                subData.callback(response.data);
+            });
+            //delete subscriptions[subId];   //clear previous data because we'll receive full data when resubscribing
         });
     }
 
@@ -134,20 +136,22 @@ VBET5.factory('Zergling', ['Config', 'WS', '$http', '$q', '$timeout', '$rootScop
      */
     var processPromise;
     function checkLoggedInState(sessionRestored) {
-        if (Config.env.authorized) {
+        if (Config.env.authorized && !$rootScope.inactiveMode) {
             var showDialog = function () {
-                $rootScope.$broadcast("globalDialogs.addDialog", {
-                    type: 'error',
-                    title: 'Error',
-                    tag: 'disconnected',
-                    content: 'Your session has timed out. We apologize for the inconvenience.',
-                    hideCloseButton: true,
-                    buttons: [
-                        {title: 'Ok', callback: function() {
-                            Config.env.authorized = false;
-                        }}
-                    ]
-                });
+                if (!$rootScope.inactiveMode) {
+                    $rootScope.$broadcast("globalDialogs.addDialog", {
+                        type: 'error',
+                        title: 'Error',
+                        tag: 'disconnected',
+                        content: 'Your session has timed out. We apologize for the inconvenience.',
+                        hideCloseButton: true,
+                        buttons: [
+                            {title: 'Ok', callback: function() {
+                                    Config.env.authorized = false;
+                                }}
+                        ]
+                    });
+                }
             };
             if (!processPromise) {
                 processPromise = $timeout(function () {
@@ -235,14 +239,14 @@ VBET5.factory('Zergling', ['Config', 'WS', '$http', '$q', '$timeout', '$rootScop
         if (!session) {
             session = $q.defer();
             result = session.promise;
-
             var sessionRequestCmd = { 'command': "request_session", 'params': { 'language': Utils.getLanguageCode(Config.env.lang), 'site_id': Config.main.site_id} };
-
             if (Config.everCookie.enabled) {
                 var clId = $cookies.get("afec");
                 if (clId && clId.length > 0) {
                     sessionRequestCmd.params.afec = clId;
                 }
+            } else if (Config.main.enableTwoFactorAuthentication) {
+                sessionRequestCmd.params.afec = Fingerprint2.getAuthenticationCode();
             }
 
             if (Config.swarm.sendSourceInRequestSession && Config.main.source !== undefined) {
@@ -262,7 +266,7 @@ VBET5.factory('Zergling', ['Config', 'WS', '$http', '$q', '$timeout', '$rootScop
 
                     if (isLoggedIn) {
                         isLoggedIn = false;
-                        Zergling.login(null).then(resubscribe);
+                        Zergling.login(null)['finally'](resubscribe);
                     } else {
                         resubscribe();
                     }
@@ -284,11 +288,11 @@ VBET5.factory('Zergling', ['Config', 'WS', '$http', '$q', '$timeout', '$rootScop
             } else {
                 console.log('requesting new session (LP)');
                 $http.post(getLongPollUrl(), JSON.stringify(sessionRequestCmd))
-                    .success(function (data) { // extra 'data' is used to make structure same as when using data returned by $http.post promise resolve
-                        result = processSessionResponse({data: data});
-                    })['catch'](function (reason) {
+                    .then(function (response) { // extra 'data' is used to make structure same as when using data returned by $http.post promise resolve
+                        result = processSessionResponse({data: response.data});
+                    })['catch'](function (response) {
                         session = null;
-                        result = $q.reject(reason);
+                        result = $q.reject(response.data);
                     });
             }
             return result;
@@ -323,7 +327,7 @@ VBET5.factory('Zergling', ['Config', 'WS', '$http', '$q', '$timeout', '$rootScop
                 })['catch'](function (reason) {
                     console.log(reason);
                     if (reason.status === 404) {
-                        session = null
+                        session = null;
                     }
                     $timeout(whatsUp, 5000);
                 });
@@ -453,14 +457,18 @@ VBET5.factory('Zergling', ['Config', 'WS', '$http', '$q', '$timeout', '$rootScop
      * @returns {promise} promise
      */
     Zergling.login = function login(user, remember, additionalParams) {
-        var data;
-        var loginAuthData = AuthData.get();
+        var data, loginAuthData;
         if (user === null) {
+            loginAuthData = AuthData.get();
             if (!loginAuthData) {
                 console.warn("cannot login, no saved credentials");
                 return $q.reject(null);
             }
-            data = {'command': 'restore_login', 'params':  {'user_id': loginAuthData.user_id, 'auth_token': loginAuthData.auth_token} };
+            if (loginAuthData.jwe_token) {
+                data = {'command': 'login_encrypted', 'params':  {'jwe_token': loginAuthData.jwe_token, 'auth_token': loginAuthData.auth_token} };
+            } else {
+                data = {'command': 'restore_login', 'params':  {'user_id': loginAuthData.user_id, 'auth_token': loginAuthData.auth_token} };
+            }
         } else if (user.facebook) {
             data = {'command': 'facebook_login', 'params': {'access_token': user.access_token}};
         } else if (user.odnoklassniki) {
@@ -476,8 +484,10 @@ VBET5.factory('Zergling', ['Config', 'WS', '$http', '$q', '$timeout', '$rootScop
                     'login': user.login
                 }
             };
+        } else if (user.authZero) {
+            data = {'command': 'social_network_login', 'params': {'code': user.token, 'social_network_domain': user.domain, 'social_network_type': 'auth0'}};
         } else {
-            data = {'command': 'login', 'params': {'username': user.username, 'password': user.password}};
+            data = {'command': 'login', 'params': {'username': user.username, 'password': user.password, 'encrypted_token': true}};
         }
 
         $rootScope.loginInProgress = true;
@@ -493,17 +503,22 @@ VBET5.factory('Zergling', ['Config', 'WS', '$http', '$q', '$timeout', '$rootScop
                 if (response.data.code === Zergling.codes.OK && response.data.data.auth_token) {
                     console.log('zergling got login response', response);
                     isLoggedIn = true;
+                    if (!response.data.data.qr_code_origin && response.data.data.authentication_status !== 4) {
+                        Config.env.authorized = true;
+                    }
 
-                    Config.env.authorized = true;
+                    if (user || data.command === 'login_encrypted') { //when restoring a login, if the login_encrypted command is used, then we get a new authData and should update the storage
+                        var authData = {auth_token: response.data.data.auth_token, user_id: response.data.data.user_id, never_expires: remember || undefined, jwe_token: response.data.data.jwe_token || (loginAuthData && loginAuthData.jwe_token)};
 
-                    if (user) {
-                        var authData = {auth_token: response.data.data.auth_token, user_id: response.data.data.user_id, never_expires: remember || undefined};
-                        if (user.nemIDAuthentication) {
-                            authData.nemIDToken = response.data.data.nem_id_token;
+                        if (user) {
+                            if (user.nemIDAuthentication) {
+                                authData.nemIDToken = response.data.data.nem_id_token;
+                            }
+                            if (user.username) {
+                                authData.login = user.username;
+                            }
                         }
-                        if (user.username) {
-                            authData.login = user.username;
-                        }
+
                         AuthData.set(authData);
                     }
                     return response.data;
@@ -617,8 +632,8 @@ VBET5.factory('Zergling', ['Config', 'WS', '$http', '$q', '$timeout', '$rootScop
      */
     Zergling.subscribe = function subscribe(request, onupdate) {
         request.subscribe = true;
-        var data = { 'command': 'get', 'params': request };
-        console.log('subscribing', JSON.stringify(request));
+        var data = {'command': 'get', 'params': request};
+
         return sendRequest(data)
             .then(function (response) {
                 if (response.data.code === Zergling.codes.OK && response.data.data.subid) {
@@ -717,6 +732,14 @@ VBET5.factory('Zergling', ['Config', 'WS', '$http', '$q', '$timeout', '$rootScop
             return $q.all(responses);
         }
 
+    };
+
+    Zergling.closeConnection = function closeConnection() {
+        WS.closeConnection();
+    };
+
+    Zergling.restoreConnection = function restoreConnection() {
+        WS.restoreConnection();
     };
 
     return Zergling;

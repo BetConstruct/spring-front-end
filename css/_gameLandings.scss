@@ -50,7 +50,9 @@
       font: 18px/18px 'icomoon';
       display: inline-block;
       vertical-align: top;
-      margin: 0 8px 0 0;
+      @include ltr {
+        margin: 0 8px 0 0;
+      }
       @include rtl {
         margin: 0 0 0 8px;
       }
@@ -143,12 +145,14 @@
       display: inline-block;
       font: normal 46px/64px "icomoon";
       color: #FFF;
-      margin: 0 0 0 30px;
       width: 64px;
       height: 64px;
       text-align: center;
       vertical-align: top;
       border-radius: 100%;
+      @include ltr {
+        margin: 0 0 0 30px;
+      }
       @include rtl {
         margin: 0 30px 0 0;
       }
@@ -305,15 +309,19 @@
     width: 100%;
   }
   > div > ul > li {
-    float: left;
     display: block;
     width: calc((100% - 181px) / 3);
     margin: 0 90px 0 0;
+    @include ltr {
+      float: left;
+    }
     @include rtl {
       float: right;
     }
     &:last-child {
-      margin: 0;
+      @include ltr {
+        margin: 0;
+      }
       @include rtl {
         margin: 0 90px 0 0;
       }
@@ -329,8 +337,10 @@
     float: left;
     height: 170px;
     margin: 0 0 65px;
-    padding: 0 0 0 75px;
     position: relative;
+    @include ltr {
+      padding: 0 0 0 75px;
+    }
     @include rtl {
       padding: 0 75px 0 0;
     }
@@ -352,10 +362,11 @@
       font: 50px "icomoon";
       display: block;
       position: absolute;
-      left: 0;
       top: calc(50% - 27px);
+      @include ltr {
+        left: 0;
+      }
       @include rtl {
-        left: auto;
         right: 0;
       }
     }
@@ -418,8 +429,10 @@
     }
     a {
       display: block;
-      float: left;
       text-decoration: none;
+      @include ltr {
+        float: left;
+      }
       @include rtl {
         float: right;
       }
@@ -492,24 +505,26 @@
     position: absolute;
     width: 30px;
     height: 30px;
-    left: 20px;
     top: 155px;
     transition: left 300ms;
+    @include ltr {
+      left: 20px;
+    }
     @include rtl {
-      left: auto;
       right: 20px;
     }
     &:before {
-      content: "\e673";
       font: 48px/30px icomoon;
       color: #171D2C;
       position: absolute;
       top: 0;
-      left: -10px;
       width: 30px;
+      @include ltr {
+        content: "\e673";
+        left: -10px;
+      }
       @include rtl {
         content: "\e676";
-        left: auto;
         right: -10px;
       }
     }
@@ -518,24 +533,26 @@
     position: absolute;
     width: 30px;
     height: 30px;
-    right: 20px;
     top: 155px;
     transition: right 300ms;
+    @include ltr {
+      right: 20px;
+    }
     @include rtl {
       left: 20px;
-      right: auto;
     }
     &:before {
       color: #171D2C;
-      content: "\e676";
       font: 48px/30px icomoon;
       position: absolute;
       top: 0;
-      left: -8px;
       width: 30px;
+      @include ltr {
+        content: "\e676";
+        left: -8px;
+      }
       @include rtl {
         content: "\e673";
-        left: auto;
         right: -8px;
       }
     }
@@ -577,10 +594,12 @@
         p {
           float: left;
           width: 100%;
-          text-align: left;
           color: #171c2c;
           font: bold 16px/18px $font-f;
           padding: 0 0 15px;
+          @include ltr {
+            text-align: left;
+          }
           @include rtl {
             text-align: right;
           }
@@ -668,11 +687,12 @@
       width: 32px;
       height: 32px;
       position: absolute;
-      right: 15px;
       z-index: 222;
+      @include ltr {
+        right: 15px;
+      }
       @include rtl {
         left: 15px;
-        right: auto;
       }
       &:before {
         content: "\e117";
@@ -681,10 +701,11 @@
         transition: 250ms color;
         position: absolute;
         top: 0;
-        right: 0;
+        @include ltr {
+          right: 0;
+        }
         @include rtl {
           left: 0;
-          right: auto;
         }
       }
       &:hover:before {
@@ -695,7 +716,9 @@
       width: 100%;
       margin: 0;
       padding: 50px 0;
-      text-align: left;
+      @include ltr {
+        text-align: left;
+      }
       @include rtl {
         text-align: right;
       }
@@ -709,10 +732,12 @@
         text-transform: uppercase;
       }
       > p {
-        float: right;
-        width: calc(100% - 394px);
         margin: 0;
+        width: calc(100% - 394px);
         text-align: justify;
+        @include ltr {
+          float: right;
+        }
         @include rtl {
           float: left;
         }
@@ -726,18 +751,22 @@
       }
     }
     .left-block-news {
-      float: left;
       width: 370px;
       margin: 0 0 10px;
+      @include ltr {
+        float: left;
+      }
       @include rtl {
         float: right;
       }
       span {
-        float: left;
         width: auto;
         margin: 0 0 5px;
         color: #505768;
         font: 12px/16px $font-f;
+        @include ltr {
+          float: left;
+        }
         @include rtl {
           float: right;
         }
@@ -768,30 +797,36 @@
       width: 100%;
       margin: 20px 0 0 0;
       p {
-        float: left;
         margin: 0;
         color: #121623;
+        @include ltr {
+          float: left;
+        }
         @include rtl {
           float: right;
         }
       }
       ul {
-        float: left;
         width: auto;
         display: inline-block;
         position: relative;
         padding: 0;
+        @include ltr {
+          float: left;
+        }
         @include rtl {
           float: right;
         }
         li {
-          margin: 0 0 0 4px;
           display: block;
           width: auto;
           padding: 0;
-          float: left;
           text-indent: -9999em;
           overflow: visible;
+          @include ltr {
+            float: left;
+            margin: 0 0 0 4px;
+          }
           @include rtl {
             float: right;
             margin: 0 4px 0 0;

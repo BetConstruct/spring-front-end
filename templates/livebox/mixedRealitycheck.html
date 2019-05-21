@@ -9,9 +9,9 @@
             <p ng-bind-html="'reality-check-text'|translate|html"><p trans>
         </div>
         <form class="registration-form" ng-class="{'disable-reality-form' : working}" ng-init="realityCheck.selectedValue=($root.profile.active_time_in_casino !== null ? $root.profile.active_time_in_casino : '0')">
-            <div class="form-text">
-                <label ng-repeat="option in conf.realityCheck.options track by $index">
-                    <input type="radio" name="period" ng-model="realityCheck.selectedValue" value="{{ option.value }}">
+            <div class="form-text" ng-repeat="option in conf.realityCheck.options track by $index">
+                <label>
+                    <input type="radio" name="period" ng-model="realityCheck.selectedValue" ng-value="option.value">
                     <span ng-bind="option.name|translate"></span>
                 </label>
             </div>

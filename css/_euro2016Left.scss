@@ -44,15 +44,19 @@
 .view-switcher-v3 > ul > li {
   box-sizing: border-box;
   display: table-cell;
-  padding: 0 0 0 2px;
+  @include ltr {
+    padding: 0 0 0 2px;
+  }
   @include rtl {
     padding: 0 2px 0 0;
   }
 }
 .view-switcher-v3 > ul > li:first-child {
-  padding: 0 0 0 0;
+  @include ltr {
+    padding: 0;
+  }
   @include rtl {
-    padding: 0 0 0 0;
+    padding: 0;
   }
 }
 .view-switcher-v3 > ul > li:first-child:nth-last-child(3) {
@@ -72,12 +76,14 @@
   font-size: 6 + $size-font;
   line-height: 36px;
   color: $c16-tp-4;
-  padding: 0 8px 0 15px;
   position: relative;
   border: none;
   text-transform: uppercase;
   cursor: pointer;
   transition: background 240ms, color 240ms;
+  @include ltr {
+    padding: 0 8px 0 15px;
+  }
   @include rtl {
     padding: 0 15px 0 8px;
   }
@@ -87,11 +93,22 @@
   padding: 0 8px;
 }
 .view-switcher-v3 > ul > li:last-child > button {
-  border-radius: 0 2px 0 0;
+  @include ltr {
+    border-radius: 0 2px 0 0;
+  }
+  @include rtl {
+    border-radius: 2px 0 0 0;
+  }
 }
 .view-switcher-v3 > ul > li > button > span {
   box-sizing: border-box;
-  float: left;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 90px;
+  overflow: hidden;
+  @include ltr {
+    float: left;
+  }
   @include rtl {
     float: right;
   }
@@ -99,7 +116,6 @@
 .view-switcher-v3 > ul > li > button > b {
   box-sizing: border-box;
   position: absolute;
-  right: 8px;
   font-weight: normal;
   top: 9px;
   font-family: $font-f;
@@ -110,9 +126,11 @@
   background: darken(desaturate(adjust-hue($c16-sp, -1deg), 16), 2);
   border-radius: 10px;
   transition: background 240ms, color 240ms;
+  @include ltr {
+    right: 8px;
+  }
   @include rtl {
     left: 8px;
-    right: auto;
   }
 }
 .view-switcher-v3 > ul > li.active > button,
@@ -147,18 +165,22 @@
   height: 70px;
   background: $c16-sp-10;
   margin: 0 0 1px;
-  padding: 3px 8px 0 5px;
+  @include ltr {
+    padding: 3px 8px 0 5px;
+  }
   @include rtl {
     padding: 3px 5px 0 8px;
   }
 }
 .filter-row-v3 {
   box-sizing: border-box;
-  float: left;
   width: 100%;
   height: 24px;
   position: relative;
   z-index: 999;
+  @include ltr {
+    float: left;
+  }
   @include rtl {
     float: right;
   }
@@ -166,35 +188,42 @@
 
 .filter-row-v3 > ul {
   box-sizing: border-box;
-  float: left;
+  @include ltr {
+    float: left;
+  }
   @include rtl {
     float: right;
   }
 }
 .filter-row-v3 > ul > li {
   box-sizing: border-box;
-  float: left;
-  border-left: 1px solid darken(desaturate(adjust-hue($c16-sp, -1deg), 12), 1);
   padding: 0 1px;
   cursor: pointer;
+  @include ltr {
+    float: left;
+    border-left: 1px solid darken(desaturate(adjust-hue($c16-sp, -1deg), 12), 1);
+  }
   @include rtl {
     float: right;
-    border-left: none;
     border-right: 1px solid darken(desaturate(adjust-hue($c16-sp, -1deg), 12), 1);
   }
   &.bigbet-switcher {
-    border: 0;
     padding: 3px 4px;
+    @include ltr {
+      border: 0;
+    }
     @include rtl {
       border: 0;
     }
     .bigbet-switcher-item {
-      padding: 0 20px 0 6px;
       border-radius: 2px;
       background: #f3f3f5;
       color: black;
       font: 12px/18px icomoon;
       position: relative;
+      @include ltr {
+        padding: 0 20px 0 6px;
+      }
       @include rtl {
         padding: 0 6px 0 20px;
       }
@@ -205,31 +234,28 @@
         display: block;
         position: absolute;
         top: 3px;
-        right: 3px;
         width: 13px;
         height: 11px;
         background: rgba(0, 0, 0, 0.3);
         border-radius: 2px;
+        @include ltr {
+          right: 3px;
+        }
         @include rtl {
           left: 3px;
-          right: auto;
         }
         &:before {
           content: "";
           display: block;
           position: absolute;
-          left: 1px;
           top: 1px;
+          left: 1px;
           width: 6px;
           height: 9px;
           border-radius: 1px;
           background: white;
           box-shadow: 1px 0 0 rgba(black, 0.3);
           transition: 300ms left;
-          @include rtl {
-            left: auto;
-            right: 1px;
-          }
         }
       }
       &.active {
@@ -243,8 +269,10 @@
   }
 }
 .filter-row-v3 > ul > li:first-child {
-  border: none;
   padding-left: 0;
+  @include ltr {
+    border: 0;
+  }
   @include rtl {
     border: 0;
   }
@@ -263,8 +291,10 @@
   transition: background 240ms, color 240ms;
 }
 .dash-region-icon {
-  float: left;
   height: 36px;
+  @include ltr {
+    float: left;
+  }
   @include rtl {
     float: right;
   }
@@ -312,12 +342,14 @@
 }
 .time-filter-v3 {
   box-sizing: border-box;
-  float: left;
   height: 24px;
   position: relative;
   z-index: 271;
   cursor: pointer;
   //transform: translate3d(0, 0, 0);
+  @include ltr {
+    float: left;
+  }
   @include rtl {
     float: right;
   }
@@ -337,19 +369,20 @@
   text-transform: uppercase;
 }
 .filter-row-v3 > ul > li > .time-filter-v3 > p:before {
+  content: "\e6e2";
   box-sizing: border-box;
   width: 28px;
   height: 24px;
   position: absolute;
-  left: 0;
   top: 0;
   display: block;
   color: $c16-tp-6;
   font: 16px/24px icomoon;
   text-align: center;
-  content: "\e6e2";
+  @include ltr {
+    left: 0;
+  }
   @include rtl {
-    left: auto;
     right: 0;
   }
 }
@@ -358,16 +391,17 @@
   width: 28px;
   height: 24px;
   position: absolute;
-  right: 0;
   top: 0;
   display: block;
   color: $c16-tp-7;
   font: 16px/24px icomoon;
   text-align: center;
   font-style: normal;
+  @include ltr {
+    right: 0;
+  }
   @include rtl {
     left: 0;
-    right: auto;
   }
 }
 .arrow-rotate-filter-v3:before {
@@ -463,7 +497,6 @@
 .sw-button-v3 {
   box-sizing: border-box;
   position: absolute;
-  left: 1px;
   top: 1px;
   width: 14px;
   height: 14px;
@@ -472,9 +505,11 @@
   transform: translate3d(0, 0, 0);
   transition: left 240ms, background 240ms;
   cursor: pointer;
+  @include ltr {
+    left: 1px;
+  }
   @include rtl {
     right: 1px;
-    left: auto;
   }
 }
 .switcher-view-b.active {
@@ -483,11 +518,12 @@
 }
 .switcher-view-b.active .sw-button-v3 {
   box-sizing: border-box;
-  left: 11px;
   background: set-color($brand-color-1);
+  @include ltr {
+    left: 11px;
+  }
   @include rtl {
     right: 15px;
-    left: auto;
   }
 }
 .second-row-filter-v3 {
@@ -496,7 +532,9 @@
   width: 100%;
   position: relative;
   margin: 8px 0 0;
-  padding: 0 32px 0 0;
+  @include ltr {
+    padding: 0 32px 0 0;
+  }
   @include rtl {
     padding: 0 0 0 32px;
   }
@@ -517,12 +555,13 @@
   content: "\e6d4";
   color: $c16-tp-6;
   display: block;
-  right: 12px;
   top: 0;
   z-index: 5;
+  @include ltr {
+    right: 12px;
+  }
   @include rtl {
     left: 12px;
-    right: auto;
   }
 }
 .search-box-v3 > form {
@@ -553,7 +592,6 @@
   background: none;
   border: none;
   width: 100%;
-  padding: 0 30px 0 10px;
   height: 100%;
   box-shadow: 0 0 0 1px rgba(set-color($c16-sp-10), 0.4) inset;
   font-family: $font-f;
@@ -564,6 +602,9 @@
   border-radius: inherit;
   transition: box-shadow 240ms;
   margin: 0;
+  @include ltr {
+    padding: 0 30px 0 10px;
+  }
   @include rtl {
     padding: 0 10px 0 30px;
   }
@@ -586,10 +627,12 @@
 }
 .search-box-v3 .search-results-container {
   box-sizing: border-box;
-  right: auto;
-  left: 100%;
   top: 0;
-  margin: 0 0 0 10px;
+  @include ltr {
+    left: 100%;
+    right: auto;
+    margin: 0 0 0 10px;
+  }
   @include rtl {
     left: auto;
     right: 100%;
@@ -608,8 +651,10 @@
   width: 0;
   height: 0;
   border-style: solid;
-  border-width: 5px 6px 5px 0;
-  border-color: transparent #ffffff transparent transparent;
+  @include ltr {
+    border-width: 5px 6px 5px 0;
+    border-color: transparent #ffffff transparent transparent;
+  }
   @include rtl {
     border-width: 5px 0 5px 6px;
     border-color: transparent transparent transparent #ffffff;
@@ -617,9 +662,11 @@
 }
 .search-box-v3 .search-results-inner .arrow-sport {
   box-sizing: border-box;
-  right: auto;
-  left: -5px;
   top: 10px;
+  @include ltr {
+    left: -5px;
+    right: auto;
+  }
   @include rtl {
     left: auto;
     right: -5px;
@@ -663,15 +710,16 @@
   width: 20px;
   height: 16px;
   position: absolute;
-  right: 3px;
   top: 7px;
   color: $c16-tp-3;
   font: 19px/16px icomoon;
   z-index: 111;
   transform: translate3d(0, 0, 0);
+  @include ltr {
+    right: 3px;
+  }
   @include rtl {
     left: 3px;
-    right: auto;
   }
 }
 .closed-left-nav-v3:before {
@@ -680,14 +728,24 @@
 }
 .full-menu-wrapper-box-v3 {
   box-sizing: border-box;
-  @include scroll;
   grid-area: sport-menu;
   -ms-grid-row: 2;
   text-align: left;
+  position: relative;
+  @include scroll;
   padding: 0 1px 0 0;
   //transform: translate3d(0, 0, 0);
   &.multi-selection {
     transform: none;
+  }
+}
+@-moz-document url-prefix() {
+  .full-menu-wrapper-box-v3 {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
   }
 }
 .full-menu-wrapper-box-v3 > .md-progress-circular {
@@ -696,21 +754,12 @@
   height: 60px;
 }
 
-.full-menu-wrapper-box-v3 .md-progress-circular,
-.full-menu-wrapper-box-v3 .md-progress-circular .md-inner,
-.full-menu-wrapper-box-v3 .md-progress-circular .md-inner .md-left .md-half-circle,
-.full-menu-wrapper-box-v3 .md-progress-circular .md-inner .md-right .md-half-circle {
+.full-menu-wrapper-box-v3 .md-progress-circular {
   width: 60px;
   height: 60px;
 }
 
-.full-menu-wrapper-box-v3 .md-progress-circular .md-inner .md-left,
-.full-menu-wrapper-box-v3 .md-progress-circular .md-inner .md-right {
-  height: 60px;
-  width: 30px;
-}
-
-.full-menu-wrapper-v3 {
+.full-menu-wrapper-v3, .esports-nav-b {
   box-sizing: border-box;
   float: left;
   width: 100%;
@@ -782,16 +831,17 @@
   margin: 0;
   position: relative;
   background: $c16-sp-9;
-  padding: 0 30px 0 37px;
   color: $c16-tp-3;
   white-space: nowrap;
   text-overflow: ellipsis;
   overflow: hidden;
-  box-shadow: 0 1px 0 lighten(desaturate(adjust-hue($c16-sp, -4deg), 18), 13) inset;
   cursor: pointer;
+  box-shadow: 0 1px 0 lighten(desaturate(adjust-hue($c16-sp, -4deg), 18), 13) inset;
   //transform: translate3d(0, 0, 0);
+  @include ltr {
+    padding: 0 30px 0 37px;
+  }
   @include rtl {
-    margin-left: 4px;
     padding: 0 37px 0 30px;
     text-align: right;
     transform: translate3d(0,0,0);
@@ -843,16 +893,17 @@
   width: 37px;
   height: 100%;
   position: absolute;
-  left: 0;
   top: 0;
   font: 16px sport-icon;
   line-height: inherit;
   color: $c16-tp-6;
   padding: 0;
   text-align: center;
-  box-shadow: 3px 0 0 rgba(255, 255, 255, 0.15) inset;
+  @include ltr {
+    left: 0;
+    box-shadow: 3px 0 0 rgba(255, 255, 255, 0.15) inset;
+  }
   @include rtl {
-    left: auto;
     right: 0;
     box-shadow: -3px 0 0 rgba(255, 255, 255, 0.15) inset;
   }
@@ -863,15 +914,16 @@
   width: 37px;
   height: 100%;
   position: absolute;
-  left: 0;
   top: 0;
   font: 14px sport-icon;
   line-height: inherit;
   color: $c16-tp-6;
   padding: 0;
   text-align: center;
+  @include ltr {
+    left: 0;
+  }
   @include rtl {
-    left: auto;
     right: 0;
   }
 }
@@ -901,19 +953,45 @@
   content: "\e6dd";
 }
 
+.sports-item-v3.outright > .arrow-view-v3:before, .sports-item-v3.outright.active > .arrow-view-v3:before,
 .sports-item-v3.todaybets > .arrow-view-v3:before, .sports-item-v3.todaybets.active > .arrow-view-v3:before {
-  content: "\e672";
   color: $c16-tp-3;
+  @include ltr {
+    content: "\e672";
+  }
+  @include rtl {
+    content: "\e66f";
+  }
 }
 
+.sports-item-v3.outright.active > .arrow-view-v3:before,
 .sports-item-v3.todaybets.active > .arrow-view-v3:before {
-  content: "\e672";
+  @include ltr {
+    content: "\e672";
+  }
+  @include rtl {
+    content: "\e66f";
+  }
 }
 
+.sports-item-v3.outright:before {
+  @include ltr {
+    box-shadow: 3px 0 0 $hero-color inset;
+  }
+  @include rtl {
+    box-shadow: -3px 0 0 $hero-color inset;
+  }
+}
 .sports-item-v3.todaybets > .sport-icon-v3.todaybets {
-  box-shadow: 3px 0 0 $hero-color inset;
+  @include ltr {
+    box-shadow: 3px 0 0 $hero-color inset;
+  }
+  @include rtl {
+    box-shadow: -3px 0 0 $hero-color inset;
+  }
 }
 
+.sports-item-v3.outright.active > .arrow-view-v3,
 .sports-item-v3.todaybets.active > .arrow-view-v3 {
   background: $hero-color;
   &:before {
@@ -922,7 +1000,9 @@
 }
 
 .sports-item-v3.showallsports + .region-item-row-v3 .single-game-item-v3.active:before {
-  box-shadow: 2px 0 0 #5caaa7 inset;
+  @include ltr {
+    box-shadow: 2px 0 0 #5caaa7 inset;
+  }
   @include rtl {
     box-shadow: -2px 0 0 #5caaa7 inset;
   }
@@ -981,16 +1061,17 @@
   width: 30px;
   height: 100%;
   position: absolute;
-  right: 0;
   top: 0;
   font: 16px icomoon;
   line-height: inherit;
   color: transparent;
   text-align: center;
   transition: color 240ms;
+  @include ltr {
+    right: 0;
+  }
   @include rtl {
     left: 0;
-    right: auto;
   }
 }
 
@@ -1023,16 +1104,17 @@
 .sport-games-count-v3 {
   box-sizing: border-box;
   position: absolute;
-  right: 0;
-  padding: 0 10px 0 0;
   top: 0;
   color: $c16-tp-6;
   font-size: 6 + $size-font;
   line-height: inherit;
   transition: opacity 240ms;
+  @include ltr {
+    right: 0;
+    padding: 0 10px 0 0;
+  }
   @include rtl {
     left: 0;
-    right: auto;
     padding: 0 0 0 10px;
   }
 }
@@ -1077,7 +1159,7 @@
   display: block;
   //max-height: 15999px;
   //transform: translate3d(0,0,0);
-  animation: open-animate-b 360ms ease-in;
+  //animation: open-animate-b 360ms ease-in;
   > .region-items-box{display: block;}
 }
 
@@ -1113,7 +1195,6 @@
   height: 30px;
   margin: 1px 0 0;
   background: $c16-sp-10;
-  padding: 0 30px 0 36px;
   position: relative;
   cursor: pointer;
   transition: background 240ms, color 240ms;
@@ -1123,6 +1204,9 @@
   white-space: nowrap;
   text-overflow: ellipsis;
   overflow: hidden;
+  @include ltr {
+    padding: 0 30px 0 36px;
+  }
   @include rtl {
     padding: 0 36px 0 30px;
     text-align: right;
@@ -1174,10 +1258,11 @@
 .flag-view-v3 {
   box-sizing: border-box;
   position: absolute;
-  left: 10px;
   top: 7px;
+  @include ltr {
+    left: 10px;
+  }
   @include rtl {
-    left: auto;
     right: 10px;
   }
 }
@@ -1220,9 +1305,6 @@
   float: left;
   width: 100%;
   display: none;
-  @include rtl {
-    transform: translate3d(0, 0, 0);
-  }
   //animation: closed-animate-b 240ms ease;
 }
 
@@ -1350,11 +1432,13 @@
   display: flex;
   flex-flow: wrap;
   flex-direction: row;
-  padding: 0 0 0 10px;
   height: 24px;
   border-radius: 2px 2px 0 0;
   background: lighten(desaturate(adjust-hue($c16-sp, -1deg), 14), 6);
   margin: 5px 0 0;
+  @include ltr {
+    padding: 0 0 0 10px;
+  }
   @include rtl {
     padding: 0 10px 0 0;
     text-align: right;
@@ -1399,10 +1483,12 @@
 .prematch-view .competition-title-v3 {
   box-sizing: border-box;
   border-radius: inherit;
-  padding: 0;
   background: lighten(desaturate(adjust-hue($c16-sp, -1deg), 14), 6);
   transition: background 240ms;
   height: 30px;
+  @include ltr {
+    padding: 0;
+  }
   @include rtl {
     padding: 0;
   }
@@ -1461,8 +1547,10 @@
   cursor: pointer;
   position: relative;
   > div {
-    left: auto;
-    right: 10px;
+    @include ltr {
+      left: auto;
+      right: 10px;
+    }
     @include rtl {
       left: 10px;
       right: auto;
@@ -1471,7 +1559,9 @@
 }
 
 .prematch-view .favoritecompetitions + .region-item-row-v3 .competition-title-v3 > label {
-  padding: 0 34px 0 10px;
+  @include ltr {
+    padding: 0 34px 0 10px;
+  }
   @include rtl {
     padding: 0 10px 0 34px;
     text-align: right;
@@ -1484,10 +1574,12 @@
 
 .competition-title-v3 > label > input[type="checkbox"] {
   box-sizing: border-box;
-  float: left;
-  margin: 8px 7px 0 0;
   opacity: 0;
   display: none;
+  @include ltr {
+    float: left;
+    margin: 8px 7px 0 0;
+  }
   @include rtl {
     float: right;
     margin: 8px 0 0 7px;
@@ -1520,11 +1612,12 @@
     background: rgba(black, 0.15);
   }
   border-radius: 2px;
-  left: 7px;
   top: 7px;
   z-index: 6;
+  @include ltr {
+    left: 7px;
+  }
   @include rtl {
-    left: auto;
     right: 7px;
   }
 }
@@ -1537,12 +1630,13 @@
   height: 16px;
   content: '\e6f3';
   font: 7px/16px icomoon;
-  left: 7px;
   top: 7px;
   color: $c16-tp-11;
   z-index: 10;
+  @include ltr {
+    left: 7px;
+  }
   @include rtl {
-    left: auto;
     right: 7px;
   }
 }
@@ -1555,20 +1649,21 @@
   box-sizing: border-box;
   position: absolute;
   font-style: normal;
-  left: 30px;
   top: 23px;
   font-size: 4 + $size-font;
   line-height: 12px;
   color: $text-palette-5;
+  @include ltr {
+    left: 30px;
+  }
   @include rtl {
-    left: auto;
     right: 30px;
   }
 }
 
 .competition-title-v3 > .arrow-view-v3:before {
-  box-sizing: border-box;
   content: "\e671";
+  box-sizing: border-box;
 }
 
 .competition-view-v-3.closed > .competition-title-v3 > .arrow-view-v3:before {
@@ -1585,8 +1680,10 @@
   position: relative;
   cursor: pointer;
   padding: 3px 8px 1px;
-  box-shadow: inset 2px 0 0 rgba(set-color(lighten(desaturate(adjust-hue($c16-sp, -1deg), 14), 6)),0.05);
   contain: layout;
+  @include ltr {
+    box-shadow: inset 2px 0 0 rgba(set-color(lighten(desaturate(adjust-hue($c16-sp, -1deg), 14), 6)),0.05);
+  }
   @include rtl {
     box-shadow: inset -2px 0 0 rgba(set-color(lighten(desaturate(adjust-hue($c16-sp, -1deg), 14), 6)),0.05);
   }
@@ -1736,7 +1833,9 @@
   display: inline-block;
   font: 10px/14px icomoon;
   font-style: normal;
-  padding: 0 0 0 3px;
+  @include ltr {
+    padding: 0 0 0 3px;
+  }
   @include rtl {
     padding: 0 3px 0 0;
   }
@@ -1749,22 +1848,23 @@
   padding: 0;
   position: absolute;
   top: 0;
-  right: 18px;
   z-index: 444;
   width: 26px;
   height: 13px;
   border-radius: 3px;
   background: darken(desaturate(adjust-hue($c16-sp, -9deg), 9), 1);
   text-align: center;
+  @include ltr {
+    right: 18px;
+  }
   @include rtl {
     left: 18px;
-    right: auto;
   }
 }
 
 .blocked-icon-v3:before {
-  box-sizing: border-box;
   content: "\e68f";
+  box-sizing: border-box;
 }
 
 .game-info-icons-v3 {
@@ -1779,12 +1879,14 @@
 
 .icon-separator-v3 {
   box-sizing: border-box;
-  float: right;
-  margin: 0 0 0 8px;
   font: 11px/14px icomoon;
   color: $c16-tp-5;
   height: 14px;
   transition: color 240ms;
+  @include ltr {
+    float: right;
+    margin: 0 0 0 8px;
+  }
   @include rtl {
     float: left;
     margin: 0 8px 0 0;
@@ -1844,7 +1946,6 @@
   position: absolute;
   top: 0;
   min-height: 50px;
-  background: #0a356b;
   z-index: 433;
   display: none;
 }
@@ -1858,9 +1959,10 @@
 
 .multiselect-view-v3 .competition-title-v3:hover > .sub-menu-multiselect-view-v3,
 .multiselect-view-v3 .competition-title-v3:hover > .sub-menu-multiselect-view-v3:before {
-  left: 300px;
+  @include ltr {
+    left: 300px;
+  }
   @include rtl {
-    left: auto;
     right: 300px;
   }
 }
@@ -1869,15 +1971,15 @@
   box-sizing: border-box;
   position: fixed;
   width: 300px;
-  height: calc(100vh - 133px);
+  height: calc(100vh - 146px);
   bottom: 0;
 }
-
 .sum-menu-multi-items {
   box-sizing: border-box;
   position: absolute;
   left: 0;
   top: 0;
+  margin-top: -120px;
   width: 100%;
   max-height: 100%;
   border-radius: 2px;
@@ -1947,17 +2049,14 @@
     display: none;
   }
 }
-
-.left-menu-closed-v3 .full-menu-wrapper-box-v3 > .md-progress-circular,
-.left-menu-closed-v3 .full-menu-wrapper-box-v3 .now-games-menu {
-  display: none;
-}
 //
 //.left-menu-closed-v3 > .center-column-v3 {
 //  width: calc(100% - 332px);
 //}
-
-.left-menu-closed-v3 .sports-item-v3.active ~ .region-item-row-v3 {
+.left-menu-closed-v3 .full-menu-wrapper-box-v3 > .md-progress-circular,
+.left-menu-closed-v3 .full-menu-wrapper-box-v3 .now-games-menu,
+.left-menu-closed-v3 .sports-item-v3.active ~ .region-item-row-v3,
+.left-menu-closed-v3 .sport-games-count-v3 {
   display: none;
 }
 
@@ -1981,24 +2080,28 @@
   display: none;
 }
 .left-menu-closed-v3 .view-switcher-v3 > ul > li:first-child:nth-last-child(3){
-  float: left;
+  @include ltr {
+    float: left;
+  }
   @include rtl {
     float: right;
   }
 }
 .left-menu-closed-v3 .closed-left-nav-v3 {
-  right: 9px;
+  @include ltr {
+    right: 9px;
+  }
   @include rtl {
     left: 9px;
-    right: auto;
   }
 }
 
 .left-menu-closed-v3 .filter-view-v3 .switcher-view-b {
-  right: -2px;
+  @include ltr {
+    right: -2px;
+  }
   @include rtl {
     left: -2px;
-    right: auto;
   }
 }
 
@@ -2015,7 +2118,7 @@
   }
   .sports-item-v3:before {
     @include rtl {
-      left: 0;
+      left: -4px;
       right: auto;
     }
   }
@@ -2045,11 +2148,154 @@
     }
   }
 }
-
-@include coloring-by-sports("Soccer", #1a7051);
-@include coloring-by-sports("Tennis", #8c893a);
-@include coloring-by-sports("Basketball", #fca601);
-@include coloring-by-sports("Volleyball", #e5e795);
-@include coloring-by-sports("IceHockey", #50a2c6);
-@include coloring-by-sports("AmericanFootball", #e7685c);
-@include coloring-by-sports("Baseball", #5caaa7);
+@include coloring-by-sports(favoritecompetitions, #ffd700);
+@include coloring-by-sports(AlpineSkiing, #93c6e5);
+@include coloring-by-sports(AustralianFootball, #119a18);
+@include coloring-by-sports(AmericanFootball, #e7685c);
+@include coloring-by-sports(Badminton, #70c2a7);
+@include coloring-by-sports(Baseball, #5caaa7);
+@include coloring-by-sports(Basketball, #fca601);
+@include coloring-by-sports(BeachHandball, #ccbb87);
+@include coloring-by-sports(BeachSoccer, #bfaf7e);
+@include coloring-by-sports(BeachFootball, #bfaf7e);
+@include coloring-by-sports(BeachVolleyball, #d9c68f);
+@include coloring-by-sports(Biathlon, #bedbed);
+@include coloring-by-sports(BallHockey, #168763);
+@include coloring-by-sports(Bandy, #5da167);
+@include coloring-by-sports(Boxing, #0e7acc);
+@include coloring-by-sports(Canoe, #0d72bf);
+@include coloring-by-sports(Chess, #edbd6f);
+@include coloring-by-sports(Cricket, #1bab7d);
+@include coloring-by-sports(Curling, #76bbef);
+@include coloring-by-sports(Cycling, #d9c68f);
+@include coloring-by-sports(Cyclo-Cross, #d9c68f);
+@include coloring-by-sports(Bowls, #2a8c4c);
+@include coloring-by-sports(Darts, #d32939);
+@include coloring-by-sports(Diving, #118be9);
+@include coloring-by-sports(EBasketball, #b04913);
+@include coloring-by-sports(Electronic, #5e55a1);
+@include coloring-by-sports(FigureSkating, #b1cdde);
+@include coloring-by-sports(Floorball, #72cddb);
+@include coloring-by-sports(Formula1, #b8292b);
+@include coloring-by-sports(Futsal, #65b5c2);
+@include coloring-by-sports(Football, #1a7051);
+@include coloring-by-sports(Freestyle, #edbe13);
+@include coloring-by-sports(FreestyleWrestling, #edbe13);
+@include coloring-by-sports(GaelicFootball, #358014);
+@include coloring-by-sports(Golf, #189946);
+@include coloring-by-sports(GrassHockey, #189443);
+@include coloring-by-sports(Gymnastics, #03b5a5);
+@include coloring-by-sports(Handball, #42777f);
+@include coloring-by-sports(HardAthletics, #0b5b99);
+@include coloring-by-sports(Hockey, #168763);
+@include coloring-by-sports(HorseRacing, #6d5e4d);
+@include coloring-by-sports(Hurling, #189946);
+@include coloring-by-sports(IceHockey, #50a2c6);
+@include coloring-by-sports(Judo, #0b5b99);
+@include coloring-by-sports(LeagueOfLegends , #01586c);
+@include coloring-by-sports(Lacross, #168763 );
+@include coloring-by-sports(LightAthletics, #0b5b99);
+@include coloring-by-sports(Athletics, #0b5b99);
+@include coloring-by-sports(Luge, #99c4de);
+@include coloring-by-sports(MixedFootball, #f94d4b);
+@include coloring-by-sports(Motorbikes, #8d612e);
+@include coloring-by-sports(Motorsport, #8d612e);
+@include coloring-by-sports(Nascar, #b92f93);
+@include coloring-by-sports(Netball, #b71b1b);
+@include coloring-by-sports(Pesapallo, #db8e48);
+@include coloring-by-sports(PokerLive, #116b4f);
+@include coloring-by-sports(Poker, #116b4f);
+@include coloring-by-sports(Pool, #a155a0);
+@include coloring-by-sports(Rally, #c28540);
+@include coloring-by-sports(AutoRacing, #ac9afd);
+@include coloring-by-sports(RinkHockey, #e3bb6d);
+@include coloring-by-sports(Rowing, #0f81d9);
+@include coloring-by-sports(Rugby, #799755);
+@include coloring-by-sports(RugbyLeague, #799755);
+@include coloring-by-sports(RugbyUnion, #799755);
+@include coloring-by-sports(RugbySevens, #799755);
+@include coloring-by-sports(Shooting, #d5d345);
+@include coloring-by-sports(Shorttrackspeedskating, #b1cdde);
+@include coloring-by-sports(SkiJump, #c4dae8);
+@include coloring-by-sports(SkiJumping, #c4dae8);
+@include coloring-by-sports(CrossCountrySkiing, #bedbed);
+@include coloring-by-sports(Snooker, #37b764);
+@include coloring-by-sports(Snowboard, #9dd3f5);
+@include coloring-by-sports(Soccer, #1a7051);
+@include coloring-by-sports(VirtualFootball, #8555a1);
+@include coloring-by-sports(CyberFootball, #308231);
+@include coloring-by-sports(Speedway, #aca696);
+@include coloring-by-sports(Squash, #e1b93f);
+@include coloring-by-sports(Sumo, #b0a174);
+@include coloring-by-sports(Surfing, #3598e4);
+@include coloring-by-sports(Swimming, #118be9);
+@include coloring-by-sports(Tablehockey, #168763);
+@include coloring-by-sports(TableTennis, #839d24);
+@include coloring-by-sports(Tennis, #8c893a);
+@include coloring-by-sports(Triathlon, #a1c4c6);
+@include coloring-by-sports(Mma, #868686);
+@include coloring-by-sports(MortalKombatXL, #a76812);
+@include coloring-by-sports(virtualsports, #8555a1);
+@include coloring-by-sports(virtualdogs, #8555a1);
+@include coloring-by-sports(virtualhorses, #8555a1);
+@include coloring-by-sports(VirtualTennis, #8555a1);
+@include coloring-by-sports(Volleyball, #e5e795);
+@include coloring-by-sports(WaterPolo, #338fd6);
+@include coloring-by-sports(Wrestling, #b80f20);
+@include coloring-by-sports(X-Sports, #a61f2d);
+@include coloring-by-sports(GlobalOffensive, #c28503);
+@include coloring-by-sports(CounterStrike, #cc581f);
+@include coloring-by-sports(Dota, #5e55a1);
+@include coloring-by-sports(Dota2, #9b1013);
+@include coloring-by-sports(HeroesOfTheStorm, #655e8a);
+@include coloring-by-sports(WorldOfTanks, #464a37);
+@include coloring-by-sports(Hearthstone, #9d7337);
+@include coloring-by-sports(StarCraft, #326d5d);
+@include coloring-by-sports(StarCraft2, #005895);
+@include coloring-by-sports(WorldOfWarcraft, #d09214);
+@include coloring-by-sports(CallOfDuty, #564a37);
+@include coloring-by-sports(AllianceofValiantArms, #847120);
+@include coloring-by-sports(Battlefield, #da6123);
+@include coloring-by-sports(CrossFire, #926b25);
+@include coloring-by-sports(Doom, #be291e);
+@include coloring-by-sports(E-IceHockey, #4196c2);
+@include coloring-by-sports(ETennis, #829d24);
+@include coloring-by-sports(FIFA, #efb724);
+//
+@include coloring-by-sports(AllianceofValiantArms, #847221);
+@include coloring-by-sports(FortiteBattleRoyale, #5e3151);
+@include coloring-by-sports(GearsofWar, #a2191d);
+@include coloring-by-sports(GuildWars2, #c11d1f);
+@include coloring-by-sports(Halo, #0a61a5);
+@include coloring-by-sports(HeroesofNewerth, #76650f);
+@include coloring-by-sports(iRacing, #163885);
+@include coloring-by-sports(KillerInstinct, #00503b);
+@include coloring-by-sports(KingOfGlory, #73588e);
+@include coloring-by-sports(Madden, #9c1417);
+@include coloring-by-sports(MarvelvsCapcom, #1d418c);
+@include coloring-by-sports(NBA2K, #ed174b);
+@include coloring-by-sports(Overwatch, #f68720);
+@include coloring-by-sports(Painkiller, #871D1F);
+@include coloring-by-sports(Pokémon, #e8bc08);
+@include coloring-by-sports(ProEvolutionSoccer, #ca171e);
+@include coloring-by-sports(ProjectCARS, #036185);
+@include coloring-by-sports(PUBGPlayerUnknwnsBattleground, #d6751c);
+@include coloring-by-sports(Quake, #744428);
+@include coloring-by-sports(Rainbow_Six_Siege, #754428);
+@include coloring-by-sports(RealSubspaceHockeyLeague, #e56220);
+@include coloring-by-sports(RocketLeague, #04477f);
+@include coloring-by-sports(Smite, #ac7311);
+@include coloring-by-sports(SpecialForce2, #917d1d);
+@include coloring-by-sports(StreetFighter, #c63a20);
+@include coloring-by-sports(StreetFighter5, #c63a20);
+@include coloring-by-sports(SuperSmashBros, #37466f);
+@include coloring-by-sports(TeamFortress2, #9e411a);
+@include coloring-by-sports(Tekken, #bf231b);
+@include coloring-by-sports(Trackmania, #0267a8);
+@include coloring-by-sports(UnrealTournament, #354d94);
+@include coloring-by-sports(Vainglory, #9c5f50);
+@include coloring-by-sports(WarcraftIII, #bb7013);
+@include coloring-by-sports(WarThunder, #b6171c);
+@include coloring-by-sports(Halo, #0a61a5);
+@include coloring-by-sports(RainbowSix, #666d72);
+@include coloring-by-sports(ArenaOfValor, #657672);

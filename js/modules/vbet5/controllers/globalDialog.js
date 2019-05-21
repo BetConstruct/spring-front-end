@@ -19,7 +19,8 @@
  *          content: "content of first dialog" // required field
  *      }
  */
-VBET5.controller('globalDialogCtrl', ['$rootScope', '$scope', '$location', '$window', '$filter', '$cookies', 'Config', 'Storage', 'Utils', 'content', 'Geoip', 'TimeoutWrapper', 'Moment', 'Translator', 'Tracking', 'Zergling', 'analytics', function ($rootScope, $scope, $location, $window, $filter, $cookies, Config, Storage, Utils, content, Geoip, TimeoutWrapper, Moment, Translator, Tracking, Zergling, analytics) {
+VBET5.controller('globalDialogCtrl', ['$rootScope', '$scope', '$location', '$window', '$filter', '$cookies', 'Config', 'Storage', 'Utils', 'content', 'Geoip', 'TimeoutWrapper', 'Moment', 'Translator', 'Tracking', 'Zergling', 'analytics',
+    function ($rootScope, $scope, $location, $window, $filter, $cookies, Config, Storage, Utils, content, Geoip, TimeoutWrapper, Moment, Translator, Tracking, Zergling, analytics) {
     'use strict';
 
     // $scope.globalDialogs is array where the dialogs are stored
@@ -297,6 +298,19 @@ VBET5.controller('globalDialogCtrl', ['$rootScope', '$scope', '$location', '$win
 
     /**
      * @ngdoc method
+     * @name storeData
+     * @methodOf vbet5.controller:globalDialogCtrl
+     * @param {String} key the id of stored data
+     * @param {Number} value the stored value
+     * @description stores value in Storage or cookie
+     */
+    function storeData(key, value) {
+        Utils.checkAndSetCookie(key, value, 8640000000); //8640000000 = 100 day
+        Storage.set(key, value);
+    }
+
+    /**
+     * @ngdoc method
      * @name showRuntimePopup
      * @methodOf vbet5.controller:globalDialogCtrl
      * @description Get custom popup content from cms
@@ -350,34 +364,14 @@ VBET5.controller('globalDialogCtrl', ['$rootScope', '$scope', '$location', '$win
                 };
                 popup.link && (dialog.link = popup.link);
                 popup.custom_fields && (dialog.custom_fields = popup.custom_fields);
+                popup.linktarget && (dialog.linktarget = popup.linktarget);
                 addDialog(dialog);
                 storeData('popup' + (popup.id || '') + 'ShowedTime', userTime);
             }
         }
     }
 
-    /**
-     * @ngdoc method
-     * @name storeData
-     * @methodOf vbet5.controller:globalDialogCtrl
-     * @param {String} key the id of stored data
-     * @param {Number} value the stored value
-     * @description stores value in Storage or cookie
-     */
-    function storeData(key, value) {
-        if (Config.main.useAuthCookies) {
-            var cookieOptions = {
-                domain: $window.location.hostname.split(/\./).slice(-2).join("."),
-                path: "/",
-                expires: new Date((new Date()).getTime() + 8640000000) //8640000000 = 100 day
-            };
-            $cookies.putObject(key, value, cookieOptions);
-        } else {
-            Storage.set(key, value);
-        }
-    }
-
-    if (Config.main.enableRuntimePopup && $location.path() != '/popup/') {
+    if (Config.main.enableRuntimePopup && $location.path() !== '/popup/') {
 
         var callRuntimePopup = function callRuntimePopup() {
             content.getPopups().then(function (data) {
@@ -410,7 +404,7 @@ VBET5.controller('globalDialogCtrl', ['$rootScope', '$scope', '$location', '$win
     function showOnAnotherPage (popups) {
         $scope.$on('$routeChangeSuccess', function () {
             for (var i = 0; i < popups.length; i++) {
-                if($location.path().indexOf(popups[i].show_on_page) !== -1 || (popups[i].show_on_page === 'home' && $location.path() === '/')) {
+                if ($location.path().replace(/\//g, '') === popups[i].show_on_page || (popups[i].show_on_page === 'home' && $location.path() === '/')) {
                     showRuntimePopup(popups[i]);
                 }
             }
@@ -427,7 +421,7 @@ VBET5.controller('globalDialogCtrl', ['$rootScope', '$scope', '$location', '$win
         var dependPopups = [];
         angular.forEach(runtimePopupCache, function (popup) {
             if (popup.slug !== 'registration-popup' && popup.slug !== 'after_bet') {
-                if($location.path().indexOf(popup.show_on_page) !== -1 || (popup.show_on_page === 'home' && $location.path() === '/')) {
+                if($location.path().replace(/\//g, '') === popup.show_on_page || (popup.show_on_page === 'home' && $location.path() === '/')) {
                     showRuntimePopup(popup);
                 } else {
                     dependPopups.push(popup);
@@ -500,6 +494,12 @@ VBET5.controller('globalDialogCtrl', ['$rootScope', '$scope', '$location', '$win
             }
         });
         enableConfirmation && disableButtons(false);
+    };
+    
+    $scope.contentClicked = function () {
+        if($scope.activeDialog.content.match(/href="([^"]+)"/)[1]) {
+            $scope.closeDialog($scope.activeDialog, 'closeButton');
+        }
     };
 
     if (Config.main.gdpr.enabled && Config.main.gdpr.popup) {

@@ -122,17 +122,21 @@
 			display: none;
 		}
 		li {
-			float: left;
 			width: (100%/3 - 2%);
 			/*divide width depending on number of statistics in a row , for tennis number = 2, for soccer 3*/
-			margin: 0.3em 2.9% 0.3em 0;
+			@include ltr {
+				float: left;
+				margin: 0.3em 2.9% 0.3em 0;
+			}
 			@include rtl {
 				float: right;
 				margin: 0.3em 0 0.3em 2.9%;
 			}
 			&:nth-child(3n) {
 				/* number 3 is number of statistics in the row*/
-				margin: 0.3em 0;
+				@include ltr {
+					margin: 0.3em 0;
+				}
 				@include rtl {
 					margin: 0.3em 0;
 				}
@@ -149,27 +153,33 @@
 			}
 			.stat-l,
 			.stat-r {
-				float: left;
 				width: 12%;
 				font-size: 9px;
 				line-height: 0.5em;
 				min-height: 4px;
+				@include ltr {
+					float: left;
+				}
 				@include rtl {
 					float: right;
 				}
 			}
 			.stat-r {
-				text-align: right;
+				@include ltr {
+					text-align: right;
+				}
 				@include rtl {
 					text-align: left;
 				}
 			}
 			.team-2 {
-				float: left;
 				width: 76%;
 				height: 0.3em;
 				background: #f00;
 				box-shadow: 0 0 3px 0 rgba(117, 117, 117, 1);
+				@include ltr {
+					float: left;
+				}
 				@include rtl {
 					float: right;
 				}
@@ -212,19 +222,23 @@
 			overflow: hidden;
 			margin: 0 10px;
 			li {
-				float: left;
 				width: 48%;
 				line-height: 35px;
 				overflow: hidden;
 				text-overflow: ellipsis;
 				white-space: nowrap;
 				color: #fff;
+				@include ltr {
+					float: left;
+				}
 				@include rtl {
 					float: right;
 				}
 				&:last-child {
-					float: right;
-					text-align: right;
+					@include ltr {
+						float: right;
+						text-align: right;
+					}
 					@include rtl {
 						float: left;
 						text-align: left;
@@ -446,12 +460,13 @@
 		width: 17px;
 		height: 37px;
 		&:hover .hover-sp {
-			left: -10px;
 			height: 200px;
 			overflow: hidden;
 			overflow-y: auto;
+			@include ltr {
+				left: -10px;
+			}
 			@include rtl {
-				left: auto;
 				right: -10px;
 			}
 		}

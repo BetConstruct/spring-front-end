@@ -16,11 +16,11 @@
 
     <!------------------------------------------------------------------      Slider  ------------------------------------------------------------------------------------------>
     <div class="block-slider block-slider-{{env.sliderContent}}-t" no-animate class-on-scroll="slider-scroll" id="block-slider-container" ng-class="{'popup': env.sliderAsPopup[env.sliderContent]}"
-         hide-on-click="{{env.sliderContent!=='register' && env.sliderContent!=='login' && env.sliderContent!=='forgotPasswordForm'}}" state-flag-var="env.showSlider" broadcast-on-close="slider.close" except="header"
+         hide-on-click="{{env.sliderContent!=='register' && env.sliderContent!=='login' && env.sliderContent!=='forgotPasswordForm' && env.sliderContent !== 'deposit'}}" state-flag-var="env.showSlider" broadcast-on-close="slider.close" except="header"
          ng-show="env.showSlider &&
             (!conf.enableMixedView || ['recentBetsCashout', 'recentBets', 'betHistory', 'casinoBetHistory','shukaBetHistory',
-                    'settings','deposit', 'withdraw', 'balanceHistory', 'casinoBalanceHistory', 'cashier', 'loyaltyPoints', 'tickets', 'buddytransfer','profits'].indexOf(env.sliderContent) === -1)
-            && (!conf.enableBonuses || env.sliderContent !== 'bonuses') && env.sliderContent !== 'promotionalBonuses' " >
+                    'settings','deposit', 'withdraw', 'balanceHistory', 'casinoBalanceHistory', 'cashier', 'myWallets', 'loyaltyPoints', 'tickets', 'buddytransfer','profits'].indexOf(env.sliderContent) === -1)
+            && (!conf.enableBonuses || env.sliderContent !== 'bonuses') && env.sliderContent !== 'promotionalBonuses' ">
 
         <div ng-click="closeSlider()" class="close-slider-button-j"></div>
 
@@ -57,12 +57,13 @@
 
         <!--tabs-->
 
-        <div ng-if="env.authorized && profile && (env.sliderContent === 'cashier' || env.sliderContent === 'balanceHistory' || env.sliderContent === 'casinoBalanceHistory' || env.sliderContent === 'renew' || env.sliderContent === 'deposit' || env.sliderContent === 'withdraw' || env.sliderContent === 'buddytransfer') ">
+        <div ng-if="env.authorized && profile && (env.sliderContent === 'cashier' || env.sliderContent === 'myWallets' ||env.sliderContent === 'balanceHistory' || env.sliderContent === 'casinoBalanceHistory' || env.sliderContent === 'renew' || env.sliderContent === 'deposit' || env.sliderContent === 'withdraw' || env.sliderContent === 'buddytransfer') ">
             <div class="tab-contain-bets">
                 <div class="centr-tabs-block">
                     <ul>
-                        <li ng-show="(casinoEnabled || calculatedConfigs.pokerEnabled) && conf.transferEnabled" ng-class="{'active-tab': env.sliderContent === 'cashier'}" ng-click="env.sliderContent = 'cashier'" trans>Wallet</li>
-                        <li ng-hide="!calculatedConfigs.sportEnabled && !virtualsportsEnabled && !pokerEnabled && !poolBettingEnabled && !conf.GmsPlatform" ng-class="{'active-tab': env.sliderContent === 'balanceHistory'}" ng-click="env.sliderContent = 'balanceHistory'">{{'History'|translate:null:'Balance History'}}</li>
+                        <li ng-show="(casinoEnabled || calculatedConfigs.pokerEnabled) && conf.transferEnabled" ng-class="{'active-tab': env.sliderContent === 'cashier'}" ng-click="env.sliderContent = 'cashier'" trans>Transfer</li>
+                        <li ng-show="$root.conf.myWalletsEnabled" ng-class="{'active-tab': env.sliderContent === 'myWallets'}" ng-click="env.sliderContent = 'myWallets'" trans>My Wallets</li>
+                        <li ng-class="{'active-tab': env.sliderContent === 'balanceHistory'}" ng-click="env.sliderContent = 'balanceHistory'">{{'History'|translate:null:'Balance History'}}</li>
                         <li ng-hide="!conf.enableCasinoBalanceHistory" ng-class="{'active-tab': env.sliderContent === 'casinoBalanceHistory'}" ng-click="env.sliderContent = 'casinoBalanceHistory'">{{"History"|translate}} ({{"Casino"|translate}})</li>
                         <li ng-class="{'active-tab': env.sliderContent === 'renew'}" ng-click="env.sliderContent = 'renew'" ng-hide="!conf.enableFreeRenew" trans>Renew</li>
                         <li ng-class="{'active-tab': env.sliderContent === 'deposit'}" ng-click="env.sliderContent = 'deposit'" ng-hide="conf.disableDepositPage" trans>Deposit</li>
@@ -76,6 +77,7 @@
             <div ng-include="::'templates/slider/balance/deposit.html'|fixPath" ng-if="env.sliderContent == 'deposit' && !conf.enableMixedView && !conf.depositDisabled"></div>
             <div ng-include="::'templates/slider/balance/withdraw.html'|fixPath" ng-if="env.sliderContent == 'withdraw' && !conf.enableMixedView && !conf.withdrawDisabled"></div>
             <div ng-include="::'templates/slider/balance/cashier.html'|fixPath" ng-if="env.sliderContent == 'cashier' && !conf.enableMixedView"></div>
+            <div ng-include="::'templates/livebox/myWallets.html'|fixPath" ng-if="env.sliderContent == 'myWallets' && !conf.enableMixedView"></div>
             <div ng-include="::'templates/slider/balance/buddytransfer.html'|fixPath" ng-if="env.sliderContent == 'buddytransfer' && !conf.enableMixedView"></div>
 
             <!--All transactions-->
@@ -119,7 +121,7 @@
     <div ng-include="::'templates/livebox/mixedView.html'|fixPath"
         ng-if="env.showSlider &&
             ((conf.enableMixedView && ['recentBetsCashout', 'recentBets', 'betHistory', 'casinoBetHistory', 'shukaBetHistory',
-                'settings', 'deposit', 'withdraw', 'balanceHistory', 'casinoBalanceHistory', 'cashier', 'loyaltyPoints', 'tickets', 'buddytransfer','profits'].indexOf(env.sliderContent) !== -1)
+                'settings', 'deposit', 'withdraw', 'balanceHistory', 'casinoBalanceHistory', 'cashier', 'myWallets', 'loyaltyPoints', 'tickets', 'buddytransfer','profits'].indexOf(env.sliderContent) !== -1)
                 || env.sliderContent === 'promotionalBonuses') ">
     </div>
 
@@ -127,4 +129,9 @@
 
 
     <cash-out-dialog ng-if="$root.profile && $root.partnerConfig"></cash-out-dialog>
+
+    <div ng-if="inactiveMode" class="tooltip-system-info tooltip-system-info-show">
+        <h3 trans>Hope you'll be back soon</h3>
+        <p trans>As you have been inactive for some time your session is disconnected but it'll be reconnected again right after you show a sign of activity.</p>
+    </div>
 </div>

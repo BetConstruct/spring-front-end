@@ -106,8 +106,8 @@
                         </div>
                         <div class="select-block" ng-switch-when="select">
                             <select name="{{field.name}}" ng-model="$parent.$parent.withdrawFormData[field.name]" ng-required="field.required"
-                                    ng-init="$parent.$parent.withdrawFormData[field.name] = field.options[0].value;setInfo(field.options, $parent.$parent.withdrawFormData[field.name], 'withdrawText')"
-                                    ng-change="setInfo(field.options, $parent.$parent.withdrawFormData[field.name], 'withdrawText');">
+                                    ng-init="$parent.$parent.withdrawFormData[field.name] = field.options[0].value;setInfo(field, $parent.$parent.withdrawFormData[field.name], 'withdrawText')"
+                                    ng-change="setInfo(field, $parent.$parent.withdrawFormData[field.name], 'withdrawText');">
                                 <option ng-repeat="option in field.options" value="{{option.value}}" ng-selected="$first">{{option.text|translate}}</option>
                             </select>
                         </div>

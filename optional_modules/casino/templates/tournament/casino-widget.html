@@ -1,0 +1,18 @@
+<div class="tournaments-content" ng-controller="casinoTournamentsCtrl" ng-init="getTournamentList(true,true);">
+   <p trans>Tournaments</p>
+   <vbet-loader ng-if="!tournament.filteredList"></vbet-loader>
+   <ul
+           ng-repeat="item in tournament.filteredList track by $index"
+           ng-if="$index < 3"
+           ng-click="selectTournament(item.Id)"
+   >
+       <li class="winners-avatar">
+           <span style="background-image: url({{item.LobbyBannerImagesFiltered[tournament.sliderIndex[item.Id]].ImageUrl}});"></span>
+       </li>
+       <li class="info-winners">
+           <p>{{item.Name}}</p>
+           <b>{{item.PrizeFund|number}} {{item.CurrencyId}}</b>
+       </li>
+   </ul>
+   <a ng-href="#/tournaments" trans>View All</a>
+</div>

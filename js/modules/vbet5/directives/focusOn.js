@@ -12,6 +12,10 @@
 VBET5.directive('focusOn', ['$timeout', '$window', 'DomHelper', function ($timeout, $window, DomHelper) {
     'use strict';
     return function (scope, elem, attr) {
+        if (attr.isFocus) {
+            attr.isFocus === 'true' && elem[0].focus();
+            return;
+        }
         scope.$on(attr.focusOn, function () {
             var pos = DomHelper.getWindowScrollPosition();
             $timeout(function () {

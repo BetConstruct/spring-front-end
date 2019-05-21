@@ -10,28 +10,28 @@
                             <span class="id-view-tab">ID: {{profile.unique_id}}</span>
                         </p>
                     </li>
-                    <li ng-class="{'active': ['deposit', 'withdraw', 'balanceHistory', 'casinoBalanceHistory', 'cashier', 'buddytransfer'].indexOf(env.sliderContent) !== -1}" ng-if="conf.enableMixedView && conf.enableMixedViewBalance"
+                    <li ng-class="{'active': ['deposit', 'withdraw', 'balanceHistory', 'casinoBalanceHistory', 'cashier', 'myWallets', 'buddytransfer'].indexOf(env.sliderContent) !== -1}" ng-if="conf.enableMixedView && conf.enableMixedViewBalance"
                         ng-click="env.sliderContent !== 'withdraw' && env.sliderContent !== 'deposit' && env.sliderContent !== 'balanceHistory' ? env.sliderContent = conf.balanceDefaultPage:''">
                         <i class="balance-icon-tab-b"></i>
                         <p>
                             <i trans>Balance</i>
-                            <span class="balance-view-tab">{{(!$root.currentPage.isInCasino || (conf.GmsPlatform && !conf.GmsPlatformMultipleBalance) ? profile.calculatedBalance : (conf.GmsPlatformMultipleBalance ? profile.casino_balance : env.casinoBalance.balance))|number:conf.balanceFractionSize}} {{profile.currency_name|currency}}</span>
+                            <span class="balance-view-tab">{{(!$root.currentPage.isInCasino || profile.casino_balance === null ? profile.calculatedBalance : profile.casino_balance)|number:conf.balanceFractionSize}} {{profile.currency_name|currency}}</span>
                         </p>
                     </li>
                     <li ng-class="{'active': (env.sliderContent === 'recentBets'|| env.sliderContent === 'casinoBetHistory')}"
-                        ng-click="!conf.GmsPlatform && $root.currentPage.isInCasino ? env.sliderContent = 'casinoBetHistory' : env.sliderContent = 'recentBets'"  ng-if="env.authorized && conf.betHistoryEnabled">
+                        ng-click="env.sliderContent = 'recentBets'"  ng-if="env.authorized && conf.betHistoryEnabled">
                         <i class="my-bets-icon-tab-b"></i>
                         <h4 trans>My bets</h4>
                     </li>
                     <li ng-class="{'active': env.sliderContent === 'loyaltyPoints'}"
                         ng-click="env.sliderContent = 'loyaltyPoints'"
-                        ng-if="conf.enableLoyaltyPoints && env.authorized && casinoEnabled">
+                        ng-if="conf.enableLoyaltyPoints && env.authorized">
                         <i class="balance-icon-tab-b"></i>
                         <h4 trans>Loyalty Points</h4>
                     </li>
                     <li ng-class="{'active': env.sliderContent === 'promotionalBonuses'}"
                         ng-click="env.sliderContent = 'promotionalBonuses'"
-                        ng-if="conf.promotionalBonuses.enable && env.authorized">
+                        ng-if="conf.promotionalBonuses.enable && env.authorized && (!conf.hideBonusSectionIfNoBonus || (conf.hideBonusSectionIfNoBonus && $root.allBonusesCount.sportsbook + $root.allBonusesCount.casino > 0))">
                         <i class="bonuses-icon-tab-b"></i>
                         <h4 trans>Bonuses</h4>
                     </li>
@@ -48,15 +48,15 @@
                         <h4 trans>Profits</h4>
                     </li>
                 </ul>
-                <div ng-show="!isPopup" ng-click="env.showSlider=false; env.sliderContent='';" class="my-bets-closed-icon-b"></div>
+                <div ng-show="!isPopup" ng-click="env.sliderContent=''; env.showSlider=false;" class="my-bets-closed-icon-b"></div>
             </div>
             <ng-include class="float-width mixed-view-holder" src="::'templates/livebox/mixedBetHistory.html'|fixPath" ng-if="env.sliderContent === 'recentBets' || env.sliderContent === 'casinoBetHistory'"></ng-include>
-            <ng-include class="float-width mixed-view-holder" src="::'templates/livebox/mixedBalance.html'|fixPath" ng-if="['deposit', 'withdraw', 'balanceHistory', 'casinoBalanceHistory', 'cashier', 'buddytransfer'].indexOf(env.sliderContent) !== -1"></ng-include>
+            <ng-include class="float-width mixed-view-holder" src="::'templates/livebox/mixedBalance.html'|fixPath" ng-if="['deposit', 'withdraw', 'balanceHistory', 'casinoBalanceHistory', 'cashier', 'myWallets', 'buddytransfer'].indexOf(env.sliderContent) !== -1"></ng-include>
             <ng-include class="float-width mixed-view-holder" src="::'templates/livebox/mixedUserProfile.html'|fixPath" ng-if="env.sliderContent === 'settings'"></ng-include>
-            <ng-include class="float-width mixed-view-holder" src="::'templates/livebox/promotionalBonuses/main.html'|fixPath" ng-if="conf.GmsPlatform && env.sliderContent === 'promotionalBonuses'"></ng-include>
-            <ng-include class="float-width mixed-view-holder" src="::'templates/livebox/loyaltyPoints.html'|fixPath" ng-if="conf.GmsPlatform && env.sliderContent === 'loyaltyPoints'"></ng-include>
-            <ng-include class="float-width mixed-view-holder" src="::'templates/livebox/mixedTickets.html'|fixPath" ng-if="conf.GmsPlatform && env.sliderContent === 'tickets'"></ng-include>
-            <ng-include class="float-width mixed-view-holder" src="::'templates/livebox/profitLoss.html'|fixPath" ng-if="conf.GmsPlatform && env.sliderContent === 'profits'"></ng-include>
+            <ng-include class="float-width mixed-view-holder" src="::'templates/livebox/promotionalBonuses/main.html'|fixPath" ng-if="env.sliderContent === 'promotionalBonuses'"></ng-include>
+            <ng-include class="float-width mixed-view-holder" src="::'templates/livebox/loyaltyPoints.html'|fixPath" ng-if="env.sliderContent === 'loyaltyPoints'"></ng-include>
+            <ng-include class="float-width mixed-view-holder" src="::'templates/livebox/mixedTickets.html'|fixPath" ng-if="env.sliderContent === 'tickets'"></ng-include>
+            <ng-include class="float-width mixed-view-holder" src="::'templates/livebox/profitLoss.html'|fixPath" ng-if="env.sliderContent === 'profits'"></ng-include>
         </div>
     </div>
 </div>

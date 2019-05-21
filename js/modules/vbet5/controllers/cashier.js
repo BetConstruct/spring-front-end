@@ -5,7 +5,7 @@
  * @description
  *  cashier controller
  */
-VBET5.controller('cashierCtrl', ['$scope', '$rootScope', '$location', 'Translator', 'Zergling', 'Config', function ($scope, $rootScope, $location, Translator, Zergling, Config) {
+VBET5.controller('cashierCtrl', ['$scope', '$rootScope', '$location', '$filter', 'Translator', 'Zergling', 'Config', function ($scope, $rootScope, $location, $filter, Translator, Zergling, Config) {
     'use strict';
 
     $scope.cashierFormModel = {
@@ -14,9 +14,6 @@ VBET5.controller('cashierCtrl', ['$scope', '$rootScope', '$location', 'Translato
         toProduct: null
     };
 
-    // set  initial available values
-    $scope.casinoBalance = $rootScope.env.casinoBalance;
-    //$scope.pokerBalance = {pokerBalance: $rootScope.env.pokerBalance};
     $scope.transferMinLimit = 1 / Math.pow(10, $rootScope.conf.balanceFractionSize);
 
     /**
@@ -154,13 +151,6 @@ VBET5.controller('cashierCtrl', ['$scope', '$rootScope', '$location', 'Translato
                 $scope.cashierFormModel.toProduct = 'Sport';
             }
         }
-
-        if (!Config.main.GmsPlatform) {
-            Zergling.get({product: 'Casino'}, 'get_balance').then(function (response) {
-                console.log('Casino balance(swarm)', response);
-                $scope.casinoBalance = $rootScope.env.casinoBalance = response;
-            });
-        }
     };
 
     /**
@@ -187,19 +177,18 @@ VBET5.controller('cashierCtrl', ['$scope', '$rootScope', '$location', 'Translato
      * @description return max possible transfer amount
      */
     $scope.getMaxTransferAmount = function getMaxTransferAmount() {
+        // We use counterOfferRounding filter to 'cut' digits after dot, do the 'Transfer' button won't be disabled due to invalid 'step' on the input
         switch ($scope.cashierFormModel.fromProduct) {
         case 'Sport':
-            $scope.cashierFormModel.amount = $scope.profile.calculatedBalance;
+            $scope.cashierFormModel.amount = +$filter('counterOfferRounding')($rootScope.profile.calculatedBalance, Config.main.balanceFractionSize);
             break;
         case 'Casino':
         case 'Poker':
-            $scope.cashierFormModel.amount = Config.main.GmsPlatformMultipleBalance ? $rootScope.profile.casino_balance : $scope.casinoBalance.balance;
+            $scope.cashierFormModel.amount = +$filter('counterOfferRounding')($rootScope.profile.casino_balance, Config.main.balanceFractionSize);
             break;
         default:
             $scope.cashierFormModel.amount = 0;
             break;
         }
     };
-
-
 }]);

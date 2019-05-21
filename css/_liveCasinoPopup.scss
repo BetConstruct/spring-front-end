@@ -37,7 +37,8 @@
 .casino-game-contain .icon-delete,
 .casino-game-contain .icon-delete.popup,
 .casino-game-contain .icon-delete.refresh,
-.casino-game-contain .icon-delete.favourite{
+.casino-game-contain .icon-delete.favourite,
+.casino-game-contain .icon-delete.closed-iframe-info {
     top: 0;
     right: 0;
     width: 40px;
@@ -64,7 +65,8 @@
 }
 .casino-game-contain .icon-delete.popup a,
 .casino-game-contain .icon-delete.refresh a,
-.casino-game-contain .icon-delete.favourite a{
+.casino-game-contain .icon-delete.favourite a,
+.casino-game-contain .icon-delete.closed-iframe-info a {
     width: 40px;
     height: 40px;
     background: $skin-palette-10;
@@ -92,6 +94,14 @@
 }
 .casino-game-contain .icon-delete.favourite a:before{
     content: "\f005";
+    font: 18px/40px "icomoon";
+    position: absolute;
+    right: 12px;
+    top: -1px;
+    text-indent: 0;
+}
+.casino-game-contain .icon-delete.closed-iframe-info a:before{
+    content: "\10ff14";
     font: 18px/40px "icomoon";
     position: absolute;
     right: 12px;
@@ -128,23 +138,152 @@
 //save-games-contain END
 
 //big game casino
+
 .flash-game-contain {
-    padding: 20px 40px 20px 0;
     border: none;
     border-radius: 0;
     background: none;
     box-shadow: none;
+    @include ltr {
+        padding: 20px 40px 20px 0;
+    }
     @include rtl {
         padding: 20px 0 20px 40px;
     }
 }
+.jackpot-win-animation-off {
+  background: #1f2639;
+  opacity: 0;
+  transform: scale(0);
+  transition: opacity 240ms ease-out, transform 240ms ease-out;
+}
+.jackpot-win-animation-on {
+  background: #1f2639;
+  opacity: 1;
+  transform: scale(1);
+  transition: opacity 240ms ease-out, transform 240ms ease-out;
+}
+.jackpot-table {
+  display: table;
+  width: 100%;
+  height: 100%;
+}
+.jackpot-trow {
+  display: table-row;
+}
+.jackpot-tcell {
+  display: table-cell;
+  vertical-align: middle;
+  text-align: center;
+}
+.jackpot-twrapper {
+  display: inline-block;
+  position: relative;
+  img {
+    width: auto;
+    height: auto;
+    max-width: 100vw;
+    max-height: 100vh;
+    visibility: hidden;
+  }
+}
+.jackpot-win-popup {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    bottom: 0;
+    background: url(../../../images/jackpot-coins/jackpot-win-bg.jpg#{$delete-cache}) no-repeat 0 0 / contain;
+    > p {
+        position: absolute;
+        top: 11%;
+        left: 50%;
+        color: #ece9dd;
+        transform: translateX(-50%);
+        text-transform: uppercase;
+        font: bold 10vh $font-f;
+        text-shadow: 4px 10px 24px rgba(0,0,0,0.7);
+    }
+    > span {
+        position: absolute;
+        bottom: 25.5%;
+        left: 50%;
+        color: #ffffff;
+        transform: translateX(-50%);
+        font: bold 8vh $font-f;
+        z-index: 120;
+    }
+}
+.jackpot-win-coins-first,
+.jackpot-win-coins-second,
+.jackpot-win-coins-third {
+    width: 100%;
+    height: 100%;
+    z-index: 110;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background: url(../../../images/jackpot-coins/jackpot-win-coins.png#{$delete-cache}) no-repeat 50% 0/ contain;
+    opacity: 0.2;
+    transform: scale(0.2);
+    animation: jackpot-win-first 1000ms linear infinite 240ms;
+}
+.jackpot-win-coins-second {
+    animation: jackpot-win-second 1500ms linear infinite 740ms;
+}
+.jackpot-win-coins-third {
+    animation: jackpot-win-third 2000ms linear infinite 1240ms;
+}
+@keyframes jackpot-win-first {
+    0% {
+        opacity: 0.5;
+        transform: scale(0.2);
+    }
+    50% {
+        opacity: 1;
+        transform: scale(1);
+    }
+    100% {
+        opacity: 0;
+        transform: scale(2);
+    }
+}
+@keyframes jackpot-win-second {
+    0% {
+        opacity: 0.5;
+        transform: scale(0.2);
+    }
+    50% {
+        opacity: 1;
+        transform: scale(1);
+    }
+    100% {
+        opacity: 0;
+        transform: scale(2);
+    }
+}
+@keyframes jackpot-win-third {
+    0% {
+        opacity: 0.5;
+        transform: scale(0.2);
+    }
+    50% {
+        opacity: 1;
+        transform: scale(1);
+    }
+    100% {
+        opacity: 0;
+        transform: scale(2);
+    }
+}
 .big-game-control{
     position: absolute;
-    right: 0;
     width: 40px;
+    @include ltr {
+        right: 0;
+    }
     @include rtl {
         left: 0;
-        right: auto;
     }
 }
 .dont-game-info-text p {
@@ -157,8 +296,13 @@
     box-shadow: none;
     text-shadow: none;
     color: #454a5a;
-    left: calc((100% - 140px) / 2);
     border-radius: 20%;
+    @include ltr {
+        left: calc((100% - 140px) / 2);
+    }
+    @include rtl {
+        right: calc((100% - 110px) / 2);
+    }
 }
 .add-casino-game a, .add-casino-game a:active{
     text-shadow: none;
@@ -837,11 +981,12 @@
 }
 .deposit-alert-contain.popup-multigame-b .icon-delete{
     z-index: 99;
-    right: 10px;
     top: 8px;
+    @include ltr {
+        right: 10px;
+    }
     @include rtl {
         left: 10px;
-        right: auto;
     }
 }
 .deposit-alert-contain.popup-multigame-b .icon-delete a:before{
@@ -869,9 +1014,11 @@
     background: none;
 }
 .deposit-alert-contain.popup-multigame-b  .Featured-casino-games .contein-slider h3{
-    text-align: left;
     color: $text-palette-3;
     text-indent: -9999em;
+    @include ltr {
+        text-align: left;
+    }
     @include rtl {
         text-align: right;
     }
@@ -886,23 +1033,25 @@
 .deposit-alert-contain.popup-multigame-b .casino-multisearch{
     width: 350px;
     top: 25px;
-    right: 20px;
+    @include ltr {
+        right: 20px;
+    }
     @include rtl {
         left: 20px;
-        right: auto;
     }
 }
 .deposit-alert-contain.popup-multigame-b .casino-multisearch:before{
     font: 16px/32px icomoon;
     display: block;
     position: absolute;
-    right: 0;
     top: 0;
     content: "\e6d4";
     color: $text-palette-4;
+    @include ltr {
+        right: 0;
+    }
     @include rtl {
         left: 0;
-        right: auto;
     }
 }
 .deposit-alert-contain.popup-multigame-b .casino-multisearch input[type="search"]{
@@ -925,7 +1074,6 @@
     position: absolute;
     width: 290px;
     top: -28px;
-    left: 20px;
     height: auto;
     overflow: hidden;
     box-sizing: border-box;
@@ -935,8 +1083,10 @@
     background: $skin-palette-8;
     padding: 0;
     z-index: 222;
+    @include ltr {
+        left: 20px;
+    }
     @include rtl {
-        left: 0;
         right: 20px;
     }
 }
@@ -945,15 +1095,16 @@
     height: 30px;
     display: block;
     font: 16px/30px icomoon;
-    right: 0;
     top: 1px;
     position: absolute;
     text-align: center;
     content: "\e670";
     color: $text-palette-3;
+    @include ltr {
+        right: 0;
+    }
     @include rtl {
         left: 0;
-        right: auto;
     }
 }
 .deposit-alert-contain.popup-multigame-b ul.countrylist:hover:before{
@@ -962,8 +1113,10 @@
 .deposit-alert-contain.popup-multigame-b ul.countrylist li{
     width: 100%;
     box-sizing: border-box;
-    margin: 0;
     max-width: inherit;
+    @include ltr {
+        margin: 0;
+    }
     @include rtl {
         margin: 0;
     }
@@ -973,9 +1126,11 @@
     width: 100%;
 }
 .popup-multigame-b .country-b .country-block-contain ul .contaien-country li:first-child{
-    margin: 0;
     border: none;
     position: static;
+    @include ltr {
+        margin: 0;
+    }
     @include rtl {
         margin: 0;
     }
@@ -1007,9 +1162,11 @@
     border-bottom: 1px solid darken( desaturate( adjust-hue( $skin-palette-12, -8deg ), 1 ), 5 );
     box-sizing: border-box;
     line-height: 28px;
-    padding: 0 30px 0 10px;
     text-transform: uppercase;
     transition: color 200ms;
+    @include ltr {
+        padding: 0 30px 0 10px;
+    }
     @include rtl {
         padding: 0 10px 0 30px;
     }

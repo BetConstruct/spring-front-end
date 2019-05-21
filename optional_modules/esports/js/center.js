@@ -1,10 +1,13 @@
-VBET5.controller('eSportsCenterController', ['$rootScope', '$scope',  '$location', '$filter', '$route', '$q', 'DomHelper', 'Utils', 'Zergling', 'ConnectionService', 'GameInfo', 'AsianMarkets', 'asianViewGmsBasaltChanger', 'Storage', 'Config', 'Translator', 'analytics', 'TimeoutWrapper',
-    function ($rootScope, $scope, $location, $filter, $route, $q, DomHelper, Utils, Zergling, ConnectionService, GameInfo, AsianMarkets, asianViewGmsBasaltChanger, Storage, Config, Translator, analytics, TimeoutWrapper) {
+/* global VBET5 */
+VBET5.controller('eSportsCenterController', ['$rootScope', '$scope',  '$location', '$filter', '$route', '$q', 'DomHelper', 'Utils', 'Zergling', 'ConnectionService', 'GameInfo', 'asianViewGmsBasaltChanger', 'Storage', 'Config', 'Translator', 'analytics', 'TimeoutWrapper',
+    function ($rootScope, $scope, $location, $filter, $route, $q, DomHelper, Utils, Zergling, ConnectionService, GameInfo, asianViewGmsBasaltChanger, Storage, Config, Translator, analytics, TimeoutWrapper) {
     'use strict';
 
+        TimeoutWrapper = TimeoutWrapper($scope);
         var connectionService = new ConnectionService($scope);
         var asianConf = Config.main.asian;
 
+        $scope.displayBase = GameInfo.displayBase;
         $scope.framesCount = Utils.memoize(GameInfo.framesCount);
         $scope.showFrameAlias = Utils.memoize(GameInfo.showFrameAlias);
         $scope.collapsedMarkets = {};
@@ -44,32 +47,48 @@ VBET5.controller('eSportsCenterController', ['$rootScope', '$scope',  '$location
             });
         }
 
-        function updateGames(data, matchesInfo) {
+        function updateGame(game, matchesInfo) {
+            game.sport = matchesInfo.sport;
+            game.region = matchesInfo.region;
+            game.competition = matchesInfo.competition;
+            if(Config.main.showPlayerRegion) {
+                game.team1_name = game.team1_reg_name && game.team1_name.indexOf(game.team1_reg_name) === -1 ? game.team1_name + ' (' + game.team1_reg_name + ')' : game.team1_name;
+                game.team2_name = game.team2_reg_name && game.team2_name.indexOf(game.team2_reg_name) === -1 ? game.team2_name + ' (' + game.team2_reg_name + ')' : game.team2_name;
+            }
+            asianViewGmsBasaltChanger(game);
+            return game;
+        }
+
+        function processUpdates(data, matchesInfo) {
+            matchesInfo = Utils.copyObj(matchesInfo);
             var games = [];
-            angular.forEach(data.game, function (game) {
-                game.sport = matchesInfo.sport;
-                game.region = matchesInfo.region;
-                game.competition = matchesInfo.competition;
-                if(Config.main.showPlayerRegion) {
-                    game.team1_name = game.team1_reg_name && game.team1_name.indexOf(game.team1_reg_name) === -1 ? game.team1_name + ' (' + game.team1_reg_name + ')' : game.team1_name;
-                    game.team2_name = game.team2_reg_name && game.team2_name.indexOf(game.team2_reg_name) === -1 ? game.team2_name + ' (' + game.team2_reg_name + ')' : game.team2_name;
-                }
-                asianViewGmsBasaltChanger(game, AsianMarkets);
-                games.push(game);
-            });
+            if (data.competition) {
+                angular.forEach(data.competition, function(competition) {
+                    matchesInfo.competition = { name: competition.name };
+                    angular.forEach(competition.game, function(game) {
+                        games.push(updateGame(game, matchesInfo));
+                    });
+                });
+            } else {
+                angular.forEach(data.game, function(game) {
+                    games.push(updateGame(game, matchesInfo));
+                });
+            }
 
             $scope.games = games.sort(function (a, b) {return a.start_ts - b.start_ts;});
         }
 
         function getSportData(params) {
+            unsubscribeFromPreviousData('games');
             $scope.getCompetitionData(params, true);
         }
 
         $scope.getCompetitionData = function getCompetitionData(params, getAllCompetitions) {
-            if (!getAllCompetitions && $scope.games && $scope.games[0] && $scope.games[0].competition.id === params.competition.id) {
+            if ($scope.loading || (!getAllCompetitions && $scope.games && $scope.games[0] && $scope.games[0].competition.id === params.competition.id) ) {
                 return;
             }
             unsubscribeFromPreviousData('game');
+            unsubscribeFromPreviousData('sport');
             updateLocation(params);
             $scope.loading = true;
             params.type = params.type || $location.search().type;
@@ -80,7 +99,7 @@ VBET5.controller('eSportsCenterController', ['$rootScope', '$scope',  '$location
                 what: {
                     game: [['id', 'team1_name', 'team2_name', 'team1_id', 'team2_id', 'team1_reg_name', 'team2_reg_name', 'info', 'start_ts', 'type', 'text_info', 'events_count', 'is_blocked', 'markets_count', 'stats', 'strong_team', 'is_neutral_venue', 'is_stat_available', 'tv_type', 'video_id', 'video_id2', 'video_id3', 'video_provider', 'show_type']],
                     market: ['base', 'id', 'name', 'order', 'sequence', 'show_type', 'display_key', 'display_sub_key', 'market_type', 'home_score', 'away_score', 'main_order'],
-                    event: ['name', 'id', 'base', 'type', 'type_1', 'price', 'show_type']
+                    event: ['name', 'id', 'base', 'type', 'type_1', 'price', 'show_type', 'home_value', 'away_value']
                 },
                 where: {
                     sport: {id: params.sport.id},
@@ -89,6 +108,9 @@ VBET5.controller('eSportsCenterController', ['$rootScope', '$scope',  '$location
                 }
             };
 
+            if (getAllCompetitions) {
+                request.what.competition = ['name'];
+            }
             if (params.region.id) {
                 request.where.region = { id: params.region.id };
             }
@@ -99,12 +121,12 @@ VBET5.controller('eSportsCenterController', ['$rootScope', '$scope',  '$location
             connectionService.subscribe(
                 request,
                 function(data) {
-                    updateGames(data, params);
+                    processUpdates(data, params);
                 },
                 {
                     thenCallback: function (result) {
                         if (result.subid) {
-                            subIds.games = result.subid;
+                            subIds[getAllCompetitions ? 'sport' : 'games'] = result.subid;
                         }
                         var selected = $scope.createSelectedObj(params);
                         if ( !angular.equals($scope.sharedData.selected[selected.type], selected) ) {
@@ -269,10 +291,11 @@ VBET5.controller('eSportsCenterController', ['$rootScope', '$scope',  '$location
         }
 
         $scope.getGameData = function getGameData(data) {
-            if ($scope.game && $scope.game.id === data.game.id) {
+            if ($scope.loading || ($scope.game && $scope.game.id === data.game.id) ) {
                 return;
             }
             unsubscribeFromPreviousData('games');
+            unsubscribeFromPreviousData('sport');
             updateLocation(data);
             $scope.loading = true;
             var request = {
@@ -352,11 +375,14 @@ VBET5.controller('eSportsCenterController', ['$rootScope', '$scope',  '$location
          * @param {Array} groupedMarkets array of market(s) of same type
          */
         $scope.addToFavouriteMarkets = function addToFavouriteMarkets(groupedMarkets) {
+            var analyticsText = "";
             var index = $scope.game.sport.favouriteMarkets.indexOf(groupedMarkets);
             if (index === -1) {
+                analyticsText = "addToFavouriteMarkets";
                 $scope.game.sport.favouriteMarkets.push(groupedMarkets);
                 $scope.game.sport.favouriteMarketsTypes[groupedMarkets[0].fullType] = 1;
             } else {
+                analyticsText = "removeFromFavouriteMarkets";
                 delete $scope.game.sport.favouriteMarketsTypes[groupedMarkets[0].fullType];
                 $scope.game.sport.favouriteMarkets.splice(index, 1);
 
@@ -370,10 +396,12 @@ VBET5.controller('eSportsCenterController', ['$rootScope', '$scope',  '$location
 
             MARKET_GROUP_FAVORITE.count = $scope.game.sport.favouriteMarkets.length;
 
-            var store = Storage.get('favouriteMarketsTypes') || {'0': {}, '1': {}, '2': {}};
+            var store =  Storage.get('favouriteMarketsTypes') || {'0': {}, '1': {}, '2': {}};
             store[$scope.game.type] = store[$scope.game.type] || {}; // Should be deleted after some time: type 2 was added after implementing this functionality, so people who has favourite markets, will receive an error when adding market  with type=2
             store[$scope.game.type][$scope.game.sport.id] = $scope.game.sport.favouriteMarketsTypes;
             Storage.set('favouriteMarketsTypes', store);
+            analytics.gaSend('send', 'event', 'explorer', analyticsText + (Config.main.sportsLayout),  {'page': $location.path(), 'eventLabel': analyticsText});
+            console.log('gaSend-',analyticsText);
         };
 
         $scope.prefixBase = function prefixBase(market, marketType) {
@@ -392,8 +420,8 @@ VBET5.controller('eSportsCenterController', ['$rootScope', '$scope',  '$location
             if (recalculatedBase > 0) {
                 return '';
             } else if (recalculatedBase === 0) {
-                if (basePrice === nonBasePrice && marketType === 'Home') return '';
-                if (basePrice > nonBasePrice)  return '';
+                if (basePrice === nonBasePrice && marketType === 'Home') { return ''; }
+                if (basePrice > nonBasePrice) { return ''; }
             }
 
             return $filter('handicapBaseFormat')(recalculatedBase, undefined, true, true);
@@ -402,4 +430,20 @@ VBET5.controller('eSportsCenterController', ['$rootScope', '$scope',  '$location
         $scope.$on('eSports.requestData', function requestData(event, data) {
             data.game.id ? $scope.getGameData(data) : ( data.competition.id ? $scope.getCompetitionData(data) : getSportData(data) );
         });
+
+        /**
+         * @ngdoc method
+         * @name openGameRulesPopup
+         * @methodOf vbet5.controller:eSportsCenterController
+         * @description Open game rules popup with passed content
+         * @param {String} data
+         */
+        $scope.openGameRulesPopup = function openGameRulesPopup(data) {
+            $rootScope.broadcast("globalDialogs.addDialog", {
+                title: "Game rules",
+                type: "dialog",
+                content: data,
+                hideButtons: true
+            });
+        };
 }]);

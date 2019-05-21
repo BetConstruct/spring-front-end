@@ -25,7 +25,7 @@
             <div class="buttons-how-to-play-contain">
                 <ul>
                     <li>
-                        <button ng-click="broadcast('youtube.videourl', howToPlayPage.learnToWin.custom_fields.url[0]);$event.stopPropagation();"><i></i><span trans>Visit the studio</span></button>
+                        <button ng-click="broadcast('youtube.videourl', howToPlayPage.learnToWin.url);$event.stopPropagation();"><i></i><span trans>Visit the studio</span></button>
                     </li>
                     <li>
                         <button ng-click="scrollToSelectedItem('liveCasinoRules')"><span ng-bind-html="selectedDealerPage.title"></span></button>
@@ -60,8 +60,8 @@
                         </div>
                         <h3><span ng-bind-html="item.title"></span></h3>
                         <p ng-bind-html="item.content"></p>
-                        <div ng-show="item.custom_fields.url[0]" class="read-more-button-box">
-                            <button ng-click="$root.globalDialog={type:'gamerules',title: '',iframeURL:item.custom_fields.url[0]};$event.stopPropagation();" trans>Read</button>
+                        <div ng-show="item.url" class="read-more-button-box">
+                            <button ng-click="$root.globalDialog={type:'gamerules',title: '',iframeURL:item.url};$event.stopPropagation();" trans>Read</button>
                         </div>
                     </li>
                 </ul>

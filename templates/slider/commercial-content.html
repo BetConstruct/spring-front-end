@@ -20,11 +20,19 @@
         </div>
     </div>
     <div class="reg-steps-footer" ng-if="bannerObjects['registration-banner'].length">
-        <div class="reg-pagination">
-            <small ng-class="{active: slider.index === $index}" ng-click="slider.index = $index" ng-repeat="sliderDots in bannerObjects['registration-banner'] track by $index"></small>
+
+        <div class="hp-slider-pagination" ng-show="bannerObjects['registration-banner'].length > 1">
+            <div class="reg-pagination" ng-show="!$root.conf.sliderArrows">
+                <small ng-class="{active: slider.index === $index}" ng-click="slider.index = $index" ng-repeat="sliderDots in bannerObjects['registration-banner'] track by $index"></small>
+            </div>
+            <div class="reg-pagination" ng-show="$root.conf.sliderArrows">
+                <button ng-click="slider.index = slider.index - 1;slider.index = slider.index < 0 ? bannerObjects['registration-banner'].length - 1 : slider.index"></button>
+                <button ng-click="slider.index = slider.index + 1;slider.index = slider.index > bannerObjects['registration-banner'].length - 1 ? 0 : slider.index"></button>
+            </div>
         </div>
+
         <div class="red-social">
-            <a class="cms-jcon-{{key}}" ng-repeat="(key, value) in $root.conf.footer.socialLinks" ng-href="{{value.url[env.lang] || value.url.default}}" target="{{value.target || '_blank'}}" title="{{value.title[env.lang] || value.title.default}}"></a>
+            <a class="cms-jcon-{{::value.key}}" ng-repeat="value in ::$root.conf.footer.socialLinks track by value.key" ng-href="{{::value.url[env.lang] || value.url.default}}" target="{{::value.target || '_blank'}}" title="{{::value.title[env.lang] || value.title.default}}"></a>
         </div>
     </div>
 </div>

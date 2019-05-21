@@ -120,14 +120,13 @@ VBET5.service('partner', ['$rootScope', '$window', '$location', '$document', 'Co
             $window.getZergling = function () {
                 return {Zergling: Zergling};
             };
-            if (!Config.main.liveModule || !Config.main.liveModule.enabled) {
-                $window.parent.htmlHelper = {
-                    /**
-                     * Switch to live or pre-match
-                     * @param {String} page 'live' or 'prematch'
-                     */
-                    switchTo: function switchTo(page) {
-                        switch (page) {
+            $window.parent.htmlHelper = {
+                /**
+                 * Switch to live or pre-match
+                 * @param {String} page 'live' or 'prematch'
+                 */
+                switchTo: function switchTo(page) {
+                    switch (page) {
                         case 'live':
                             $rootScope.$broadcast('setGamesType', true);
                             break;
@@ -136,31 +135,30 @@ VBET5.service('partner', ['$rootScope', '$window', '$location', '$document', 'Co
                             break;
                         default:
                             break;
-                        }
-                    },
-                    /**
-                     *  Returns page location
-                     * @returns {String} location
-                     */
-                    getSportsbookUrl: function getSportsbookUrl() {
-                        return $window.location.href;
-                    },
-                    /**
-                     * Sets odds type
-                     * @param {String} type one of 'decimal' , 'fractional' or 'american'
-                     */
-                    setOddsType: function setOddsType(type) {
-                        $rootScope.$broadcast('setOddsFormat', type);
-                    },
-                    /**
-                     * Opens specified slider tab
-                     * @param {String} what tab name ('mygames', 'history')
-                     */
-                    open: function open(what) {
-                        $rootScope.$broadcast('open.' + what);
                     }
-                };
-            }
+                },
+                /**
+                 *  Returns page location
+                 * @returns {String} location
+                 */
+                getSportsbookUrl: function getSportsbookUrl() {
+                    return $window.location.href;
+                },
+                /**
+                 * Sets odds type
+                 * @param {String} type one of 'decimal' , 'fractional' or 'american'
+                 */
+                setOddsType: function setOddsType(type) {
+                    $rootScope.$broadcast('setOddsFormat', type);
+                },
+                /**
+                 * Opens specified slider tab
+                 * @param {String} what tab name ('mygames', 'history')
+                 */
+                open: function open(what) {
+                    $rootScope.$broadcast('open.' + what);
+                }
+            };
 
         } catch (e) {
             console.warn(e);

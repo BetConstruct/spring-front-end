@@ -319,6 +319,11 @@ VBET5.controller('mainHeaderVersion2Controller', ['$rootScope', '$scope', '$loca
             'casino': 0
         };
 
+        $rootScope.allBonusesCount = {
+            'sportsbook': 0,
+            'casino': 0
+        };
+
         var getProductBonuses  = function (product) {
             Zergling.get({free_bonuses: product === 'sportsbook'},'get_bonus_details').then(function (data) {
                 calculateBonusesCount(data, product);
@@ -332,12 +337,14 @@ VBET5.controller('mainHeaderVersion2Controller', ['$rootScope', '$scope', '$loca
 
     function calculateBonusesCount(data, product) {
         if (data && data.bonuses) {
-            var i = 0, length = data.bonuses.length, count = 0;
+            var i = 0, length = data.bonuses.length, count = 0, allCount = 0;
             for (; i < length; i += 1) {
                 data.bonuses[i].acceptance_type === BackendConstants.PromotionalBonus.BonusAcceptanceType.None && data.bonuses[i].can_accept && (count += 1);
+                allCount += 1; //todo condition  SDC-37886
             }
 
             $scope.bonusesCount[product] = count;
+            $rootScope.allBonusesCount[product] = allCount;
         }
     }
 

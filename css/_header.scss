@@ -430,19 +430,30 @@ body > {
     vertical-align: top;
     position: absolute;
     left: 2px;
-    top: 0;
+    top: -5px;
     transform: translate3d(0,0,0);
     @include rtl {
       left: auto;
       right: 2px;
     }
+    + b {
+      top: 8px;
+      color: rgba(set-color($header-first-line-background),0.4);
+      padding-left: 8px;
+      font-weight: normal;
+      &:before {
+        content: "\e6e4";
+        position: absolute;
+        top: 0;
+        left: -6px;
+        color: rgba(set-color($header-first-line-background),0.6);
+        font: 9px/22px icomoon;
+      }
+    }
+    &:only-child {
+      top: 0;
+    }
   }
-}
-.settings-icon-contain.clock-set-b > i{
-  font: 8px/20px $font-f;
-  font-style: normal;
-  position: relative;
-  top: -5px;
 }
 .separator-contain-nav.active .settings-b{
   transform: rotate(90deg) translate3d(0,0,0);
@@ -603,6 +614,15 @@ body > {
               right: 0;
             }
           }
+          > img {
+            display: block;
+            width: 18px;
+            height: 18px;
+            position: absolute;
+            top: 0;
+            left: 0;
+            border-radius: 2px;
+          }
           > i {
             display: block;
             width: 8px;
@@ -693,8 +713,14 @@ body > {
   border-bottom: 1px solid $skin-palette-6;
   &.suggested-bets-setting {
     background: #8360c3;
-    background: -webkit-linear-gradient(to left, #2ebf91, #8360c3);
-    background: linear-gradient(to left, #2ebf91, #8360c3);
+    @include ltr {
+      background: -webkit-linear-gradient(to left, #2ebf91, #8360c3);
+      background: linear-gradient(to left, #2ebf91, #8360c3);
+    }
+    @include rtl {
+      background: -webkit-linear-gradient(to right, #2ebf91, #8360c3);
+      background: linear-gradient(to right, #2ebf91, #8360c3);
+    }
     .switcher-t-view-b > p {
       color: white;
     }
@@ -894,6 +920,9 @@ body > {
   &.arm, &.arb, &.fas{
     font-family: Tahoma;
   }
+  > a {
+    color: inherit;
+  }
 }
 .drop-items-contain-b > ul > li:hover{
   background: lighten( desaturate( adjust-hue( $skin-color, 2deg ), 19 ), 15 );
@@ -1043,7 +1072,8 @@ body > {
   font-size: 0;
 }
 .header-nav-contain > ul{
-  display: inline-block;
+  float: left;
+  width: 100%;
   box-sizing: border-box;
   height: 40px;
   text-align: center;
@@ -1053,6 +1083,9 @@ body > {
   @include rtl {
     direction: rtl;
   }
+  &:first-child {
+    z-index: 10;
+  }
 }
 .header-nav-contain > ul:first-child {
   padding: 0 38px;
@@ -1060,9 +1093,8 @@ body > {
 .header-nav-contain > ul > li{
   box-sizing: border-box;
   text-align: center;
-  display: inline-block;
   vertical-align: top;
-  float: left;
+  display: inline-block;
   margin: 0;
   padding: 0;
   font: 14px/40px $font-f;
@@ -1070,9 +1102,6 @@ body > {
   text-transform: uppercase;
   position: relative;
   transform: translate3d(0,0,0);
-  @include rtl {
-    float: right;
-  }
 }
 .header-nav-contain > ul > li a:before {
   display: inline-block;
@@ -1288,28 +1317,33 @@ body > {
         font-size: 11px;
         line-height: 14px;
       }
-      #header-collapse:not(:checked) ~ .header-small-view-hide {
-        max-height: 0;
-        overflow: hidden;
+      #header-collapse:not(:checked) {
+        ~ .header-small-view-hide {
+          max-height: 0;
+          overflow: hidden;
+        }
+        ~ .swedish-license {
+          top: 38px;
+        }
       }
     }
   }
 }
 @if $custom-very-top-menu == true {
   .subheader-enabled .headerVersion_2 {
-    min-height: $header-first-line-height + $header-nav-line-height + $subheader-height + 20px;
+    min-height: $header-first-line-height + $header-nav-line-height + $subheader-height + 21px;
   }
   .block-slider{
-    padding-top: $header-first-line-height + $header-nav-line-height + 20px;
+    padding-top: $header-first-line-height + $header-nav-line-height + 21px;
     .close-slider-button-j{
-      top: $header-first-line-height + $header-nav-line-height + 20px;
+      top: $header-first-line-height + $header-nav-line-height + 21px;
     }
   }
   .conteiner.show-game ~ .block-slider, .block-slider.slider-scroll{
-    padding-top: 94px;
+    padding-top: 95px;
   }
   .headerVersion_2 {
-    min-height: $header-first-line-height + $header-nav-line-height + 20px;
+    min-height: $header-first-line-height + $header-nav-line-height + 21px;
     .conteiner {
       .duplicate{display: none;}
       .original {
@@ -1328,7 +1362,9 @@ body > {
         }
       }
     }
-    .header-container-b{padding-top: 20px;}
+    .header-container-b{
+      padding-top: 21px;
+    }
   }
   .headerVersion_2 .conteiner.show-fix, .headerVersion_2 .conteiner.show-game {
     .header-container-b {
@@ -1337,6 +1373,50 @@ body > {
     .original {
       max-height: 0;
       overflow: hidden;
+    }
+    .swedish-license {
+      top: 78px;
+      .s-l-logo {
+        padding-top: 10px;
+        padding-bottom: 10px;
+        background: rgba($header-first-line-background,0.7);
+        &:first-child {
+          position: relative;
+          &:before {
+            content: "";
+            position: absolute;
+            top: 0;
+            border-style: solid;
+            @include ltr {
+              left: -24px;
+              border-width: 36px 0 0 24px;
+              border-color: rgba($header-first-line-background,0.7) transparent transparent transparent;
+            }
+            @include rtl {
+              right: -24px;
+              border-width: 36px 24px 0 0;
+              border-color: rgba($header-first-line-background,0.7) transparent transparent transparent;
+            }
+          }
+        }
+        .swedish-license-icon-info {
+          display: none;
+        }
+      }
+      .s-l-icon {
+        display: none;
+      }
+    }
+  }
+}
+.full-screen:not(.casino) {
+  .headerVersion_2{min-height: 36px;}
+  .subheader-enabled {
+    .headerVersion_2{min-height: 36px + $subheader-height;}
+    .conteiner.show-game {
+      .subtop-header-menu-j {
+        display: block;
+      }
     }
   }
 }
@@ -1381,40 +1461,45 @@ body > {
   }
 }
 .simple-nav-j {
-  float: left;
   width: 100%;
   padding: 0 12px;
-  border-radius: 2px 0 0 2px;
   position: relative;
   z-index: 300;
   box-sizing: border-box;
   border: 1px solid transparent;
-  border-right: 0;
+  @include ltr {
+    float: left;
+    border-right: 0;
+    border-radius: 2px 0 0 2px;
+  }
   @include rtl {
     float: right;
-    border-radius: 0 2px 2px 0;
-    border: 1px solid transparent;
     border-left: 0;
+    border-radius: 0 2px 2px 0;
   }
   ul{
-    float: left;
     box-sizing: border-box;
     border: 1px solid transparent;
-    border-left: none;
-    border-radius: 0 2px 2px 0;
     overflow: hidden;
+    @include ltr {
+      float: left;
+      border-left: none;
+      border-radius: 0 2px 2px 0;
+
+    }
     @include rtl {
       float: right;
-      border-radius: 2px 0 0 2px;
-      border-left: 1px solid transparent;
       border-right: 0;
+      border-radius: 2px 0 0 2px;
     }
   }
   li {
     float: left;
     display: block;
     &:not(:last-child) {
-      margin: 0 12px 0 0;
+      @include ltr {
+        margin: 0 12px 0 0;
+      }
       @include rtl {
         float: right;
         margin: 0 0 0 12px;
@@ -1434,7 +1519,9 @@ body > {
       display: inline-block;
       font-size: 16px;
       vertical-align: top;
-      margin: 0 6px 0 0;
+      @include ltr {
+        margin: 0 6px 0 0;
+      }
       @include rtl {
         margin: 0 0 0 6px;
       }
@@ -1467,12 +1554,13 @@ body > {
       white-space: nowrap;
       position: absolute;
       top: -1px;
-      left: 100%;
       max-width: 0;
       transition: 500ms max-width, 500ms padding;
       background: $header-first-line-background;
+      @include ltr {
+        left: 100%;
+      }
       @include rtl {
-        left: auto;
         right: 100%;
       }
       li {
@@ -1487,9 +1575,11 @@ body > {
       border-color: lighten( desaturate( adjust-hue( $header-first-line-background, -1deg ), 16 ), 8 );
       ul {
         max-width: 1000px;
-        padding: 0 18px 0 0;
         border-color: lighten( desaturate( adjust-hue( $header-first-line-background, -1deg ), 16 ), 8 );
-        box-shadow: 4px 0 5px rgba(saturate( $header-first-line-background, 2 ), 0.8);
+        @include ltr {
+          padding: 0 18px 0 0;
+          box-shadow: 4px 0 5px rgba(saturate( $header-first-line-background, 2 ), 0.8);
+        }
         @include rtl {
           padding: 0 0 0 18px;
           box-shadow: -4px 0 5px rgba(saturate( $header-first-line-background, 2 ), 0.8);
@@ -1535,7 +1625,9 @@ body > {
   display: table;
   float: left;
   width: 100%;
-  direction: rtl;
+  @include ltr {
+    direction: rtl;
+  }
   @include rtl {
     direction: ltr;
   }
@@ -1548,8 +1640,11 @@ body > {
       width: 1%;
       white-space: nowrap;
       font-size: 0;
+      @include rtl {
+        direction: rtl;
+      }
       &:not(.ng-hide) + li {
-        @at-root html[dir='ltr'] & {
+        @include ltr {
           padding-right: 0 !important;
         }
         @include rtl {
@@ -1565,9 +1660,131 @@ body > {
           max-height: 40px;
         }
         + a {
-          margin: 0 0 0 6px;
+          @include ltr {
+            margin-left: 6px;
+          }
+        }
+        &:first-child {
+          @include rtl {
+            margin-left: 6px;
+          }
         }
       }
+    }
+  }
+}
+.swedish-license {
+  position: absolute;
+  width: auto;
+  top: 2px;
+  z-index: 300;
+  @include ltr {
+    right: 0;
+  }
+  @include rtl {
+    left: 0;
+  }
+}
+.s-l-logo {
+  display: inline-block;
+  line-height: 0;
+  height: 16px;
+  padding-left: 6px;
+  > a {
+    display: inline-block;
+    line-height: 0;
+    > img {
+      height: 16px
+    }
+  }
+  &:last-child {
+    @include ltr {
+      padding-right: 10px;
+    }
+  }
+  &:first-child {
+    @include ltr {
+      padding-left: 10px;
+    }
+  }
+  &.s-l-icon {
+    @include ltr {
+      padding-right: 10px;
+    }
+    @include rtl {
+      padding-left: 10px;
+    }
+    .swedish-license-icon-info {
+      margin: 0;
+    }
+  }
+}
+.swedish-license-icon-info {
+  width: 12px;
+  height: 16px;
+  position: relative;
+  display: inline-block;
+  @include ltr {
+    margin-right: 4px;
+  }
+  @include rtl {
+    margin-left: 4px;
+  }
+  &:before {
+    content: "\e6e4";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    color: rgba(set-color($header-first-line-background),0.74);
+    font: 12px/16px icomoon;
+  }
+  > div {
+    position: absolute;
+    top: 14px;
+    padding-top: 10px;
+    box-sizing: border-box;
+    opacity: 0;
+    transform: scale(0);
+    transition: transform 240ms, opacity 240ms;
+    @include ltr {
+      right: -7px;
+    }
+    @include rtl {
+      left: -7px;
+    }
+    > p {
+      width: 200px;
+      max-height: 160px;
+      padding: 10px;
+      box-sizing: border-box;
+      color: set-color($skin-palette-6);
+      background: $skin-palette-6;
+      border-radius: 2px;
+      box-shadow: 0 0 0 2px rgba(0,0,0,0.2);
+      font: 12px/14px $font-f;
+      @include scroll(auto);
+    }
+    &:after {
+      content: "";
+      position: absolute;
+      top: 4px;
+      border-style: solid;
+      border-width: 0 6px 6px 6px;
+      border-color: transparent transparent $skin-palette-6 transparent;
+      @include ltr {
+        right: 6px;
+      }
+      @include rtl {
+        left: 6px;
+      }
+    }
+  }
+  &:hover {
+    > div {
+      opacity: 1;
+      transform: scale(1);
     }
   }
 }
@@ -1712,10 +1929,10 @@ body > {
   }
 }
 html[dir="rtl"] {
-  .VBET .responsive-header-mainMenu-j > li.header-left-small-b-j:not(.ng-hide) ~ li:not(.header-left-small-b-j) {
+  .VBET .conteiner:not(.show-fix):not(.show-game) .responsive-header-mainMenu-j > li.header-left-small-b-j:not(.ng-hide) ~ li:not(.header-left-small-b-j) {
     padding-right: 130px !important;
   }
-  .VivaroBet .responsive-header-mainMenu-j > li.header-left-small-b-j:not(.ng-hide) ~ li:not(.header-left-small-b-j) {
+  .VivaroBet .conteiner:not(.show-fix):not(.show-game) .responsive-header-mainMenu-j > li.header-left-small-b-j:not(.ng-hide) ~ li:not(.header-left-small-b-j) {
     padding-right: 210px !important;
   }
 }

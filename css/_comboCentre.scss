@@ -5,23 +5,6 @@
   background: #DBE1E6;
 }
 
-.centre-column-view-contain .md-progress-circular.md-theme .md-inner .md-gap {
-  border-top-color: #3f4553;
-  border-bottom-color: #3f4553;
-}
-
-.centre-column-view-contain .md-progress-circular.md-theme .md-inner .md-left .md-half-circle {
-  border-left-color: #3f4553;
-}
-
-.centre-column-view-contain .md-progress-circular.md-theme .md-inner .md-left .md-half-circle, .centre-column-view-contain .md-progress-circular.md-theme .md-inner .md-right .md-half-circle {
-  border-top-color: #3f4553;
-}
-
-.centre-column-view-contain .md-progress-circular.md-theme .md-inner .md-right .md-half-circle {
-  border-right-color: #3f4553;
-}
-
 .centre-column-view-contain-template .md-progress-circular.central-view-loader {
   position:fixed;
   top: 50%;
@@ -49,15 +32,17 @@
 }
 
 .breadcrumbs-nav-contain > ul > li {
-  float: left;
   font: 12px/36px $font-f;
   color: #ffffff;
-  margin: 0 0 0 10px;
-  padding: 0 0 0 10px;
   position: relative;
   display: inline-block;
   cursor: pointer;
   transition: color 250ms;
+  @include ltr {
+    float: left;
+    margin: 0 0 0 10px;
+    padding: 0 0 0 10px;
+  }
   @include rtl {
     float: right;
     margin: 0 10px 0 0;
@@ -66,8 +51,10 @@
 }
 
 .breadcrumbs-nav-contain > ul > li:first-child {
-  margin: 0;
-  padding: 0;
+  @include ltr {
+    margin: 0;
+    padding: 0;
+  }
   @include rtl {
     margin: 0;
     padding: 0;
@@ -79,13 +66,13 @@
   width: 20px;
   height: 30px;
   position: absolute;
-  left: -5px;
   top: 0;
   font: 10px/36px icomoon;
-  content: "\e67e";
-  //color: #3f4553;
+  @include ltr {
+    content: "\e67e";
+    left: -5px;
+  }
   @include rtl {
-    left: auto;
     right: -5px;
     content: "\e67b";
   }
@@ -166,9 +153,11 @@
   width: calc(100% - 320px);
   box-sizing: border-box;
   margin: 0 0 10px;
-  padding: 0 0 0 10px;
   position: relative;
   top: 45px;
+  @include ltr {
+    padding: 0 0 0 10px;
+  }
   @include rtl {
     padding: 0 10px 0 0;
   }
@@ -188,10 +177,8 @@
 }
 
 .period-filter-container > ul > li {
-  float: left;
   width: calc((100% - 40px) / 9);
   box-sizing: border-box;
-  margin: 0 0 0 5px;
   padding: 7px 5px;
   text-align: center;
   font: 12px/14px $font-f;
@@ -205,6 +192,10 @@
   white-space: nowrap;
   text-overflow: ellipsis;
   overflow: hidden;
+  @include ltr {
+    float: left;
+    margin: 0 0 0 5px;
+  }
   @include rtl {
     float: right;
     margin: 0 5px 0 0;
@@ -212,7 +203,9 @@
 }
 
 .period-filter-container > ul > li:first-child {
-  margin: 0;
+  @include ltr {
+    margin: 0;
+  }
   @include rtl {
     margin: 0;
   }
@@ -257,24 +250,12 @@
 
 .title-separator-b .md-progress-circular.md-theme.small-progress {
   position: absolute;
-  right: 30px;
   top: 6px;
+  @include ltr {
+    right: 30px;
+  }
   @include rtl {
     left: 30px;
-    right: auto;
-  }
-  .md-inner .md-gap {
-    border-top-color: #ffffff;
-    border-bottom-color: #ffffff;
-  }
-  .md-inner .md-left .md-half-circle {
-    border-left-color: #ffffff;
-  }
-  .md-inner .md-left .md-half-circle, .md-inner .md-right .md-half-circle {
-    border-top-color: #ffffff;
-  }
-  .md-inner .md-right .md-half-circle {
-    border-right-color: #ffffff;
   }
 }
 
@@ -296,12 +277,14 @@
   float: left;
   width: 100%;
   box-sizing: border-box;
-  padding: 0 20px 0 50px;
   height: 36px;
   position: relative;
   background: #cfd6dc;
   cursor: pointer;
   box-shadow: 0 1px 0 rgba(0, 0, 0, 0.03);
+  @include ltr {
+    padding: 0 20px 0 50px;
+  }
   @include rtl {
     padding: 0 50px 0 20px;
   }
@@ -322,9 +305,10 @@
 
 .title-region-markets-b > .icon-sports-contain {
   top: 8px;
-  left: 20px;
+  @include ltr {
+    left: 20px;
+  }
   @include rtl {
-    left: auto;
     right: 20px;
   }
 }
@@ -348,7 +332,9 @@
 }
 
 .title-separator-b.region {
-  padding: 0 36px 0 20px;
+  @include ltr {
+    padding: 0 36px 0 20px;
+  }
   @include rtl {
     padding: 0 20px 0 36px;
   }
@@ -356,12 +342,14 @@
 
 .title-region-markets-b > .arrow-icon-separator,
 .title-separator-b.region .arrow-icon-separator {
-  left: auto;
-  right: 0;
   top: 0;
   width: 36px;
   height: 36px;
   line-height: 36px;
+  @include ltr {
+    left: auto;
+    right: 0;
+  }
   @include rtl {
     left: 0;
     right: auto;
@@ -385,9 +373,11 @@
   float: left;
   width: 100%;
   box-sizing: border-box;
-  padding: 10px 70px 30px 20px;
   position: relative;
   background: #ffffff;
+  @include ltr {
+    padding: 10px 70px 30px 20px;
+  }
   @include rtl {
     padding: 10px 20px 30px 70px;
   }
@@ -402,7 +392,6 @@
 }
 
 .markets-filter-events-contain > ul > li {
-  float: left;
   width: calc((100% - 24px) / 3);
   margin: 3px;
   box-sizing: border-box;
@@ -412,6 +401,9 @@
   border-radius: 5px;
   cursor: pointer;
   //transition: background 250ms;
+  @include ltr {
+    float: left;
+  }
   @include rtl {
     float: right;
   }
@@ -446,7 +438,6 @@
 
 .filter-more-button-c {
   position: absolute;
-  right: 20px;
   top: 14px;
   width: 50px;
   text-align: center;
@@ -457,9 +448,11 @@
   background: #e8edf1;
   border-radius: 5px;
   cursor: pointer;
+  @include ltr {
+    right: 20px;
+  }
   @include rtl {
     left: 20px;
-    right: auto;
   }
 }
 
@@ -538,9 +531,14 @@
 
 .single-game-mini-view > ul > li {
   display: table-cell;
+  vertical-align: middle;
   box-sizing: border-box;
-  vertical-align: top;
-  padding: 0 10px;
+  @include ltr {
+    padding: 0 10px;
+  }
+  @include rtl {
+    padding: 0 10px;
+  }
   > combo-view-market-events{
     float: left;
     width: 100%;
@@ -549,18 +547,21 @@
 
 .single-game-mini-view > ul > li:first-child {
   width: 70px;
-  padding: 0 10px 0 0;
-  border-right: 1px solid #3f4553;
+  @include ltr {
+    padding: 0 10px 0 0;
+    border-right: 1px solid #3f4553;
+  }
   @include rtl {
     padding: 0 0 0 10px;
     border-left: 1px solid #3f4553;
-    border-right: none;
   }
 }
 
 .single-game-mini-view > ul > li:last-child {
   width: 50px;
-  padding: 0 0 0 10px;
+  @include ltr {
+    padding: 0 0 0 10px;
+  }
   @include rtl {
     padding: 0 10px 0 0;
   }
@@ -632,7 +633,6 @@
 }
 
 .game-events-contain-b > ul > li {
-  float: left;
   width: calc((100% - 16px) / 3);
   display: table;
   box-sizing: border-box;
@@ -640,11 +640,14 @@
   background: #e8edf1;
   height: 32px;
   text-align: center;
-  margin: 2px 0 2px 5px;
   border-radius: 5px;
   cursor: pointer;
-  //transition: background 250ms;
   position: relative;
+  //transition: background 250ms;
+  @include ltr {
+    float: left;
+    margin: 2px 0 2px 5px;
+  }
   @include rtl {
     float: right;
     margin: 2px 5px 2px 0;
@@ -829,10 +832,12 @@
   width: 100%;
   box-sizing: border-box;
   height: 36px;
-  padding: 0 30px 0 10px;
   background: #cfd6dc;
   position: relative;
   cursor: pointer;
+  @include ltr {
+    padding: 0 30px 0 10px;
+  }
   @include rtl {
     padding: 0 10px 0 30px;
   }
@@ -917,19 +922,23 @@
 }
 
 .live-game-all-markets-b .single-game-mini-view > ul > li:first-child {
-  border: none;
+  @include ltr {
+    border: none;
+  }
   @include rtl {
     border: none;
   }
 }
 
 .live-game-market-title > .arrow-icon-separator {
-  left: auto;
-  right: 0;
   top: 0;
   width: 36px;
   height: 36px;
   line-height: 36px;
+  @include ltr {
+    right: 0;
+    left: auto;
+  }
   @include rtl {
     left: 0;
     right: auto;
@@ -986,12 +995,6 @@
 .live-game-title-b span {
   display: inline-block;
   width: calc(100% - 185px);
-}
-
-.live-game-title-b .curr-minute-info {
-  float: right;
-  width: auto;
-  max-width: 150px;
 }
 
 .alternative-sportsbook-wrapper .game-score-multiset ul.title li {
@@ -1073,7 +1076,7 @@
       display: none;
     }
   }
-  .animation-control .game-control, .animation-control .game-video .video-player-container {
+  .animation-control .game-video .video-player-container {
     height: 191px;
     @media screen and (max-width: 1359px) {
       height: 150px;
@@ -1190,7 +1193,12 @@
     grid-template-rows: auto;
     grid-gap: 3px;
     left: 0;
-    padding: 5px 10px 0 0;
+      @include ltr {
+        padding: 5px 10px 0 0;
+      }
+      @include rtl {
+        padding: 5px 0 0 10px;
+      }
       > li {
         float: none;
         margin: 0;

@@ -539,8 +539,10 @@
 .highlits-contain.live-now .lmb-table-j li:nth-child(3){
   width: 60px;
 }
-.highlits-contain.live-now .lmb-table-j li:nth-child(3) .market-info-b{display: none;}
-.score-live-game-b{
+.highlits-contain.live-now .lmb-table-j li:nth-child(3) .market-info-b{
+  display: none;
+}
+  .score-live-game-b{
   width: 100%;
   height: 30px;
   font: 11px/30px $font-f;
@@ -642,13 +644,6 @@
 }
 .dashboard-wrapper .contein-cash {
   margin: 0 0 10px 0;
-}
-.dashboard-wrapper .generic-slider.widget-closed {
-  height: 41px;
-  min-height: 41px;
-}
-.dashboard-wrapper .generic-slider.widget-closed .contein-cash .full-widget-game-info{
-  display: none;
 }
 .highlits-contain .lmb-table-j li.active {
   .market-info-b span.price-1:before, .mini-b-events-overview > ul > li > span.price-1:before {

@@ -24,16 +24,15 @@
   width: 100%;
   height: 100%;
 }
-.register-contain-new{
-  float: left;
-  width: 100%;
-}
 .popup-layout-registration{
   margin: 0 auto;
   display: block;
   height: 100%;
   text-align: center;
   @include scroll($scroll: auto);
+  + .registration-form {
+    display: none;
+  }
 }
 .popup-layout-registration:after{
   content: "";
@@ -49,6 +48,8 @@
   vertical-align: middle;
 }
 .register-contain-new {
+  float: left;
+  width: 100%;
   padding: 28px;
   box-sizing: border-box;
   white-space: normal;
@@ -118,7 +119,9 @@
     &.show-second {
       transform: translate3d(-100%,0,0);
       + .reg-s-steps {
-        transform: translate3d(-100%,0,0);
+        @include ltr {
+          transform: translate3d(-100%,0,0);
+        }
         @include rtl {
           transform: translate3d(100%,0,0);
         }
@@ -126,8 +129,10 @@
     }
   }
   .field-separator {
-    float: left;
     width: 100%;
+    @include ltr {
+      float: left;
+    }
     @include rtl {
       float: right;
     }
@@ -173,7 +178,7 @@
   position: absolute;
   top: 0;
   bottom: 0;
-  background: $skin-palette-12;
+  background: $popup-form-palette;
 }
 .reg-commercial-content {
   float: left;
@@ -199,10 +204,12 @@
       float: left;
       width: 100%;
       color: $text-palette-4;
-      padding: 0 4px 0 0;
       box-sizing: border-box;
       white-space: normal;
       font: 12px/16px $font-f;
+      @include ltr {
+        padding: 0 4px 0 0;
+      }
       @include rtl {
         padding: 0 0 0 4px;
         text-align: right;
@@ -231,37 +238,50 @@
   position: absolute;
   bottom: 0;
   left: 0;
-  background: $skin-palette-12;
+  background: $popup-form-palette;
   box-sizing: border-box;
-  border-top: 1px solid rgba($popup-overlay-background, 0.44);
-}
-.reg-pagination {
-  float: left;
-  line-height: 41px;
-  @include rtl {
-    float: right;
+  .hp-slider-pagination {
+    padding: 0 20px;
+    bottom: 4px;
+    .reg-pagination {
+      line-height: 30px;
+      @include ltr {
+        float: left;
+      }
+      @include rtl {
+        float: right;
+      }
+      small {
+        display: inline-block;
+        vertical-align: middle;
+        width: 10px;
+        height: 10px;
+        margin: 0 2px;
+        cursor: pointer;
+        border-radius: 50%;
+        background: set-color($skin-palette-12);
+        transition: 250ms background;
+        &:hover {
+          background: set-color(lighten($skin-palette-12,10));
+        }
+        &.active {
+          background: $hero-color;
+        }
+      }
+    }
   }
-  small {
-    display: inline-block;
-    vertical-align: middle;
-    width: 10px;
-    height: 10px;
-    margin: 0 2px;
-    cursor: pointer;
-    border-radius: 50%;
-    background: set-color($skin-palette-12);
-    transition: 250ms background;
-    &:hover {
-      background: set-color(lighten($skin-palette-12,10));
-    }
-    &.active {
-      background: $hero-color;
-    }
+}
+.register-container .hp-slider-pagination {
+  @include rtl {
+    right: 0;
+    left: auto;
   }
 }
 .red-social {
-  float: right;
   line-height: 41px;
+  @include ltr {
+    float: right;
+  }
   @include rtl {
     float: left;
   }
@@ -271,7 +291,7 @@
     width: 24px;
     height: 24px;
     margin: 0 3px;
-    color: $text-palette-6;
+    color: opacify(rgba(set-color($popup-form-palette),0.1), $popup-form-opacify);
     text-decoration: none;
     border-radius: 50%;
     transition: color 250ms;
@@ -282,16 +302,17 @@
     &:before {
       position: absolute;
       top: 0;
-      left: -2px;
       width: 100%;
       height: 100%;
+      @include ltr {
+        left: -2px;
+      }
       @include rtl {
-        left: auto;
         right: -2px;
       }
     }
     &:hover {
-      color: lighten($text-palette-6,15);
+      color: opacify(rgba(set-color($popup-form-palette),0.2), $popup-form-opacify);
     }
   }
 }
@@ -318,17 +339,39 @@
     }
   }
 }
+.back-popup-form{
+  position: absolute;
+  top: 20px;
+  z-index: 55;
+  @include ltr {
+    left: 20px;
+  }
+  @include rtl {
+    right: 20px;
+  }
+  &:before{
+    font: 12px/12px icomoon;
+    color: opacify(rgba(set-color($popup-form-palette),0.39), $popup-form-opacify);
+    content: "\e677";
+    cursor: pointer;
+    transition: 250ms color;
+  }
+  &:hover:before {
+    color: opacify(rgba(set-color($popup-form-palette),0.7), $popup-form-opacify);
+  }
+}
 .closed-popup-form{
   position: absolute;
   top: 20px;
-  right: 20px;
   z-index: 55;
+  @include ltr {
+    right: 20px;
+  }
   @include rtl {
     left: 20px;
-    right: auto;
   }
   &:before{
-    font: 10px/10px icomoon;
+    font: 12px/12px icomoon;
     color: opacify(rgba(set-color($popup-form-palette),0.39), $popup-form-opacify);
     content: "\e6ee";
     cursor: pointer;
@@ -452,7 +495,9 @@
       }
     }
     input {
-      padding: 0 38px 0 14px;
+      @include ltr {
+        padding: 0 38px 0 14px;
+      }
       @include rtl {
         padding: 0 14px 0 38px;
       }
@@ -477,8 +522,8 @@
 .send-message-j input[type="text"]{
   background: $registration-fields-background;
   box-sizing: border-box;
-  padding: 0 14px 0 14px;
   margin: 0;
+  padding: 0 14px 0 14px;
   font: 12px $font-f;
   height: 36px;
   border-radius: 0;
@@ -524,26 +569,30 @@
 .register-steps-b,
 .reg-list-item-wrapper-j {
   input[autocomplete="new-password"] {
-    padding: 0 30px 0 14px;
+    @include ltr {
+      padding: 0 30px 0 14px;
+    }
     @include rtl {
       padding: 0 14px 0 30px;
     }
   }
   div.error {
     input[autocomplete="new-password"] {
-      padding: 0 74px 0 14px;
+      @include ltr {
+        padding: 0 74px 0 14px;
+      }
       @include rtl {
         padding: 0 14px 0 74px;
       }
     }
     .tooltip-wrapper-j > i {
-      right: 38px;
-      border-right: 1px solid #8e263a;
+      @include ltr {
+        right: 38px;
+        border-right: 1px solid #8e263a;
+      }
       @include rtl {
         left: 38px;
-        right: auto;
         border-left: 1px solid #8e263a;
-        border-right: 0;
       }
     }
   }
@@ -561,10 +610,12 @@
 .register-steps-b label:not(.label-reg-radio) {
   float: left;
   width: 100%;
-  text-align: left;
   margin: 20px 0 8px;
   white-space: nowrap;
   min-height: 14px;
+  @include ltr {
+    text-align: left;
+  }
   @include rtl {
     direction: rtl;
     text-align: right;
@@ -582,16 +633,17 @@
 }
 .view-passward{
   position: absolute;
-  right: 0;
   top: 0;
   height: 36px;
   width: 37px;
   box-sizing: border-box;
   cursor: pointer;
   text-align: center;
+  @include ltr {
+    right: 0;
+  }
   @include rtl {
     left: 0;
-    right: auto;
   }
 }
 .view-passward:before{
@@ -630,12 +682,14 @@
   }
 }
 .account-link-b > p{
-  display: inline-block;
-  padding: 0 10px 0 0;
-  color: opacify(rgba(set-color($popup-form-palette),0.39), $popup-form-opacify);
-  margin: 0;
-  width: auto;
   float: none;
+  width: auto;
+  margin: 0;
+  display: inline-block;
+  color: opacify(rgba(set-color($popup-form-palette),0.39), $popup-form-opacify);
+  @include ltr {
+    padding: 0 10px 0 0;
+  }
   @include rtl {
     padding: 0 0 0 10px;
   }
@@ -656,17 +710,18 @@
 .button-confirm .md-progress-circular.small-progress{
   position: absolute;
   top: 8px;
-  right: 15px;
-  left: auto;
   z-index: 10;
   margin: 0;
+  @include ltr {
+    left: auto;
+    right: 2px;
+  }
   @include rtl {
-    left: 15px;
+    left: 2px;
     right: auto;
   }
 }
 .button-confirm > button{
-  float: left;
   width: 100%;
   box-sizing: border-box;
   border: none;
@@ -683,6 +738,9 @@
   border: 0;
   transition: 200ms background, 200ms border-color;
   transform: translate3d(0,0,0);
+  @include ltr {
+    float: left;
+  }
   @include rtl {
     float: right;
   }
@@ -714,6 +772,78 @@
   color: invert(rgba(set-color($popup-form-palette),0.47));
   background: rgba(set-color($popup-form-palette),0.09);
   cursor: default;
+}
+.forgot-password .bet-status-recaptcha .tooltip-wrapper-j {
+  transform: scale(1);
+}
+.via-reset {
+  float: left;
+  width: 100%;
+  margin-top: 16px;
+  color: opacify(rgba(set-color($popup-form-palette),0.36), $popup-form-opacify);
+  font: 14px/16px $font-f;
+  @include ltr {
+    text-align: left;
+  }
+  @include rtl {
+    text-align: right;
+  }
+}
+.reg-or {
+  float: left;
+  width: 100%;
+  overflow: hidden;
+  > span {
+    display: inline-block;
+    color: opacify(rgba(set-color($popup-form-palette),0.32), $popup-form-opacify);
+    position: relative;
+    margin-top: 14px;
+    padding: 0 10px;
+    box-sizing: border-box;
+    text-transform: uppercase;
+    font: 13px/15px $font-f;
+    &:before,
+    &:after {
+      content: '';
+      position: absolute;
+      top: calc(50% - 1px);
+      width: 100vw;
+      height: 1px;
+      background: opacify(rgba(set-color($popup-form-palette),0.07), $popup-form-opacify);
+    }
+    &:before {
+      left: 100%;
+    }
+    &:after {
+      right: 100%;
+    }
+  }
+}
+.button-sms,
+.button-mail {
+  float: left;
+  width: 100%;
+  margin-top: 14px;
+  > button {
+    float: left;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    color: set-color($brand-color-1);
+    background: none;
+    box-sizing: border-box;
+    border: 1px solid $brand-color-1;
+    text-transform: uppercase;
+    height: 36px;
+    cursor: pointer;
+    font: 14px $font-f;
+    transition: color 200ms, background 200ms, border-color 200ms;
+    &:hover {
+      color: set-color($brand-color-1);
+      border-color: lighten( saturate( $brand-color-1, 1 ), 7 );
+      background: lighten( saturate( $brand-color-1, 1 ), 7 );
+    }
+  }
 }
 .input-separator-b > label{
   float: left;
@@ -815,8 +945,10 @@
 .register-steps-b .mini-checkbox-b > label{
   margin: 0;
   box-sizing: border-box;
-  padding: 0 0 0 23px;
   white-space: normal;
+  @include ltr {
+    padding: 0 0 0 23px;
+  }
   @include rtl {
     padding: 0 23px 0 0;
   }
@@ -827,12 +959,13 @@
   width: 16px;
   height: 16px;
   top: 0;
-  left: 0;
   display: block;
   border: 1px solid $registration-fields-background-border;
   box-sizing: border-box;
+  @include ltr {
+    left: 0;
+  }
   @include rtl {
-    left: auto;
     right: 0;
   }
 }
@@ -843,10 +976,11 @@
   width: 16px;
   height: 16px;
   top: 0;
-  left: 0;
   text-align: center;
+  @include ltr {
+    left: 0;
+  }
   @include rtl {
-    left: auto;
     right: 0;
   }
 }
@@ -877,10 +1011,15 @@
     margin: 0 0 10px;
     font: 12px/14px $font-f;
     > p {
-      float: left;
       padding: 0;
       text-align: left;
       color: opacify(rgba(set-color($popup-form-palette),0.39), $popup-form-opacify);
+      @include ltr {
+        float: left;
+      }
+      @include rtl {
+        float: right;
+      }
     }
     > input[type="radio"] {
       display: none;
@@ -889,7 +1028,6 @@
       }
     }
     > label {
-      float: right;
       width: auto;
       margin: 0;
       padding: 0 0 0 16px;
@@ -897,6 +1035,12 @@
       cursor: pointer;
       position: relative;
       color: opacify(rgba(set-color($popup-form-palette),0.39), $popup-form-opacify);
+      @include ltr {
+        float: right;
+      }
+      @include rtl {
+        float: left;
+      }
       > span {
         float: left;
         display: block;
@@ -925,7 +1069,12 @@
         background: lighten( desaturate( adjust-hue( $header-brand-color-1, 9deg ), 51 ), 40 );
       }
       & ~ label {
-        margin: 0 10px 0 0;
+        @include ltr {
+          margin: 0 10px 0 0;
+        }
+        @include rtl {
+          margin: 0 0 0 10px;
+        }
       }
     }
     &:last-child {
@@ -960,12 +1109,14 @@
   background: $registration-fields-background;
   height: 36px;
   color: opacify(rgba(set-color($registration-fields-background),0.39), $popup-form-opacify);
-  padding: 0 33px 0 10px;
   width: 100%;
   transition: border-color 200ms;
   border-radius: 0;
   font: 12px $font-f;
   box-sizing: border-box;
+  @include ltr {
+    padding: 0 33px 0 10px;
+  }
   @include rtl {
     padding: 0 10px 0 33px;
   }
@@ -1019,7 +1170,9 @@
   padding: 0;
 }
 .block-slider.popup .form-register-layout.signin .button-sign ul li{
-  margin: 0 15px 0 0;
+  @include ltr {
+    margin: 0 15px 0 0;
+  }
   @include rtl {
     margin: 0 0 0 15px;
   }
@@ -1029,8 +1182,10 @@
   border: none;
   font: 11px/14px $font-f;
   color: opacify(rgba(set-color($popup-form-palette),0.39), $popup-form-opacify);
-  padding: 0 0 0 15px;
   position: relative;
+  @include ltr {
+    padding: 0 0 0 15px;
+  }
   @include rtl {
     padding: 0 15px 0 0;
   }
@@ -1039,10 +1194,11 @@
   font: 10px/16px icomoon;
   content: "\2b";
   position: absolute;
-  left: 0;
   top: 0;
+  @include ltr {
+    left: 0;
+  }
   @include rtl {
-    left: auto;
     right: 0;
   }
 }
@@ -1050,10 +1206,11 @@
   font: 10px/16px icomoon;
   content: "\e6ef";
   position: absolute;
-  left: 1px;
   top: 0;
+  @include ltr {
+    left: 1px;
+  }
   @include rtl {
-    left: auto;
     right: 1px;
   }
 }
@@ -1061,7 +1218,6 @@
   float: left;
   width: 100%;
   position: relative;
-  border-top: 1px solid rgba($popup-overlay-background, 0.44);
   box-sizing: border-box;
 }
 .block-slider.popup .live-chat-b-contain .help-b{
@@ -1109,14 +1265,15 @@
   display: none;
 }
 .block-slider.popup .signin-error-message p:before, .input-error-message:before{
-  font: 18px/22px icomoon;
   content: "\e6eb";
+  font: 18px/22px icomoon;
   color: #ef6653;
-  left: 0;
   top: -5px;
   position: absolute;
+  @include ltr {
+    left: 0;
+  }
   @include rtl {
-    left: auto;
     right: 0;
   }
 }
@@ -1256,7 +1413,12 @@
     text-overflow: ellipsis;
   }
   div input {
-    padding: 0 8px 0 146px;
+    @include ltr {
+      padding: 0 8px 0 146px;
+    }
+    @include rtl {
+      padding: 0 146px 0 8px;
+    }
   }
 }
 // End captcha
@@ -1264,9 +1426,14 @@ label.sign-in-checkbox-j {
   position: relative;
   cursor: pointer;
   box-sizing: border-box;
-  padding-left: 25px;
   color: opacify(rgba(set-color($popup-form-palette),0.39), $popup-form-opacify);
   font: 12px/14px $font-f;
+  @include ltr {
+    padding-left: 25px;
+  }
+  @include rtl {
+    padding-right: 25px;
+  }
   input[type="checkbox"] {
     position: absolute;
     top: 0;
@@ -1290,16 +1457,26 @@ label.sign-in-checkbox-j {
     height: 16px;
     position: absolute;
     top: 0;
-    left: 0;
     text-align: center;
+    @include ltr {
+      left: 0;
+    }
+    @include rtl {
+      right: 0;
+    }
   }
   span:after {
     border: none;
     content: '\e6f3';
     color: transparent;
     font: 6px/16px icomoon;
-    left: 1px;
     transition: color 150ms;
+    @include ltr {
+      left: 1px;
+    }
+    @include rtl {
+      right: 1px;
+    }
   }
 }
 .block-slider.popup.block-slider-register-t, .block-slider.popup.block-slider-login-t, .block-slider.popup.block-slider-forgotPasswordForm-t {
@@ -1372,20 +1549,23 @@ label.sign-in-checkbox-j {
 .registration-list-columns-j, .form-sign-in.fb, .profile-tab-contain-b {
   .tooltip-j {
     left: auto;
-    right: 0;
     top: auto;
     bottom: calc(100% + 5px);
     max-width: 100%;
+    @include ltr {
+      right: 0;
+    }
     @include rtl {
       left: 0;
-      right: auto;
     }
     &:before{
-      left: auto;
-      right: 14px;
       top: 100%;
       border-width: 6px 6px 0 6px;
       border-color: #c1c4cd rgba(0, 0, 0, 0) rgba(0, 0, 0, 0) rgba(0, 0, 0, 0);
+      @include ltr {
+        left: auto;
+        right: 14px;
+      }
       @include rtl {
         left: 14px;
         right: auto;
@@ -1558,16 +1738,19 @@ $disable-middle-name: false !default;
   .tooltip-wrapper-j:before {
     content: "+";
     position: absolute;
-    left: 11px;
     bottom: 0;
     font: 12px/36px normal;
+    @include ltr {
+      left: 11px;
+    }
     @include rtl {
-      left: auto;
       right: 11px;
     }
   }
   input{
-    padding: 0 10px 0 20px;
+    @include ltr {
+      padding: 0 10px 0 20px;
+    }
     @include rtl {
       padding: 0 20px 0 10px;
     }
@@ -1581,7 +1764,9 @@ $disable-middle-name: false !default;
   + .field-separator.phone_number {
     width: calc(100% - 100px);
     float: left;
-    margin: 0 0 0 10px;
+    @include ltr {
+      margin: 0 0 0 10px;
+    }
     @include rtl {
       margin: 0 10px 0 0;
     }
@@ -1714,13 +1899,15 @@ $disable-middle-name: false !default;
     }
   }
 }
-.VBET {
+.VBET:not(div.wwwvbetdk) {
   .register-steps-b .field-separator.country_id{
     width: calc(100% - 90px);
   }
   .register-steps-b .field-separator.currency_name{
-    float: right;
     width: 80px;
+    @include ltr {
+      float: right;
+    }
     @include rtl {
       float: left;
     }
@@ -1785,6 +1972,174 @@ $disable-middle-name: false !default;
     &:disabled {
       background: rgba(invert(set-color($popup-form-palette)), 0.15);
       color: rgba(set-color($popup-form-palette), 0.5);
+    }
+  }
+}
+#zimpler-authorize {
+  position: relative;
+  height: 582px;
+  width: 341px;
+  padding: 10px;
+  background: rgba($popup-form-palette,0.7);
+  box-sizing: border-box;
+  .md-progress-circular {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    margin: -50px 0 0 -50px;
+  }
+  .closed-popup-form {
+    top: 13px;
+    right: 15px;
+    &:before  {
+      color: rgba(set-color($popup-form-palette),0.39);
+    }
+    &:hover:before {
+      color: rgba(set-color($popup-form-palette),0.7);
+    }
+    &:first-child:before {
+      color: rgba(set-color(#ffffff),0.39);
+      &:hover:before {
+        color: rgba(set-color(#ffffff),0.7);
+      }
+    }
+  }
+}
+.recaptcha-v3 {
+  color: opacify(rgba(set-color($popup-form-palette),0.39), $popup-form-opacify);
+  font: 12px/14px $font-f;
+  a {
+    color: opacify(rgba(set-color($popup-form-palette),0.6), $popup-form-opacify);
+    text-decoration: none;
+  }
+}
+.block-slider.popup .form-verification {
+  .register-information-b {
+    h2 {
+      margin-top: 10px;
+      color: opacify(rgba(set-color($popup-form-palette),0.5), $popup-form-opacify);
+      font: normal 16px/18px $font-f;
+    }
+    h3 {
+      margin-top: 30px;
+      color: opacify(rgba(set-color($popup-form-palette),0.36), $popup-form-opacify);
+      font: normal 12px/14px $font-f !important;
+    }
+    > p {
+      color: #4285f4;
+      text-align: center;
+      font: 14px/16px $font-f;
+      text-transform: uppercase;
+    }
+  }
+  .field-separator label {
+    margin-top: 30px !important;
+  }
+}
+.qr-code-popup {
+  display: inline-block;
+  margin: 30px 0 14px;
+  padding: 12px;
+  border-radius: 10px;
+  border: 1px solid opacify(rgba(set-color($registration-fields-background),0.1), $popup-form-opacify);
+  > img {
+    display: inline-block;
+    padding: 10px;
+    border-radius: 10px;
+    background: #ffffff;
+  }
+}
+.barcod-authentication-popup {
+  float: left;
+  width: 100%;
+  margin-top: 30px;
+  text-align: left;
+  > h5 {
+    float: left;
+    width: 100%;
+    color: opacify(rgba(set-color($popup-form-palette),0.5), $popup-form-opacify);
+    font: normal 14px/16px $font-f;
+  }
+  > p {
+    float: left;
+    width: 100%;
+    margin-top: 12px;
+    color: opacify(rgba(set-color($popup-form-palette),0.36), $popup-form-opacify);
+    font: normal 14px/20px $font-f;
+    > span {
+      color: #4285f4;
+    }
+  }
+  > button {
+    color: #4285f4;
+    min-width: 304px;
+    height: 60px;
+    margin: 14px 0 10px;
+    padding: 0 5px;
+    background: none;
+    border-radius: 10px;
+    border: 1px solid opacify(rgba(set-color($registration-fields-background),0.1), $popup-form-opacify);;
+    font: normal 12px/60px $font-f;
+    > i {
+      display: inline-block;
+      width: 12px;
+      height: 14px;
+      font: 12px/14px icomoon;
+      @include ltr {
+        margin-left: 4px;
+      }
+      @include rtl {
+        margin-right: 4px;
+      }
+      &:before {
+        content: "\ea30";
+      }
+    }
+  }
+}
+.field-verification {
+  margin-top: 22px;
+  > p {
+    float: left;
+    width: 100%;
+    margin-bottom: 20px;
+    text-align: center;
+    font: 14px/16px $font-f;
+    color: opacify(rgba(set-color($popup-form-palette),0.36), $popup-form-opacify);
+  }
+  .verification-input {
+    float: left;
+    width: 100%;
+    padding: 0 16px;
+    margin-bottom: 10px;
+    box-sizing: border-box;
+    > input {
+      width: calc((100% / 6) - 10px);
+      height: 48px;
+      padding: 0;
+      border-width: 2px;
+      border-radius: 2px;
+      font-size: 28px;
+      @include ltr {
+        float: left;
+        text-align: center;
+      }
+      @include rtl {
+        float: right;
+        text-align: center;
+      }
+      &:focus {
+        border-width: 2px;
+        caret-color: transparent;
+      }
+      + input {
+        @include ltr {
+          margin-left: 12px;
+        }
+        @include rtl {
+          margin-right: 12px;
+        }
+      }
     }
   }
 }

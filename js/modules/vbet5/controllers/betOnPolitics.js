@@ -14,18 +14,18 @@ VBET5.controller('betOnPoliticsCtrl', ['$rootScope', '$scope', '$sce', '$locatio
         if ($rootScope.env) {
             lang = LanguageCodes[$rootScope.env.lang];
         }
-        url += lang + '/iframe-sportsbook/';// hides header and footer of iframe content
+        url += lang + '/iframe-sportsbook';// hides header and footer of iframe content
 
         //handle and add deeplinking parameters
         var params = $location.search();
         if (params.page) {
-            url += params.page + '/';
+            url += '/' + params.page;
         }
         if (params.category) {
-            url += params.category + '/';
+            url += '/' + params.category;
         }
         if (params.alias) {
-            url += params.alias + '/';
+            url += '/' + params.alias;
         }
         url += '?show-layout=body';
 

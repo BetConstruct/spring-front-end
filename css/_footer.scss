@@ -108,13 +108,15 @@
       vertical-align: middle;
       height: 32px;
       padding: 0 18px;
-      margin: 0 0 0 12px;
       font: 12px $font-f;
       border: 1px solid $hero-color;
       background: $hero-color;
       color: set-color($hero-color);
       text-transform: uppercase;
       transition: 300ms background, 300ms border;
+      @include ltr {
+        margin: 0 0 0 12px;
+      }
       @include rtl {
         margin: 0 12px 0 0;
       }
@@ -191,7 +193,9 @@
       width: 204px;
       max-width: inherit;
       display: table-cell;
-      padding: 0 20px 0 0;
+      @include ltr {
+        padding: 0 20px 0 0;
+      }
       @include rtl {
         padding: 0 0 0 20px;
       }
@@ -265,7 +269,9 @@
       display: table-cell;
       vertical-align: top;
       width: 1%;
-      padding: 0 0 0 10px;
+      @include ltr {
+        padding: 0 0 0 10px;
+      }
       @include rtl {
         padding: 0 10px 0 0;
       }
@@ -287,7 +293,9 @@
             display: table-cell;
             vertical-align: middle;
             + li {
-              padding: 0 0 0 16px;
+              @include ltr {
+                padding: 0 0 0 16px;
+              }
               @include rtl {
                 padding: 0 16px 0 0;
               }

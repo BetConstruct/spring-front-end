@@ -22,7 +22,7 @@ CASINO.directive('multiviewControl', ['$interval', '$timeout', 'CConfig', 'casin
             scope.confData = CConfig;
             scope.searchCommand = '';
             scope.games = [];
-            scope.gamesLimit = 40;
+            scope.gamesLimit = 36;
             scope.maxCount = 0;
             var countryCode = '';
 
@@ -52,7 +52,7 @@ CASINO.directive('multiviewControl', ['$interval', '$timeout', 'CConfig', 'casin
 
             scope.loadMoreGames = function loadMoreGames() {
                 if (scope.gamesLimit < scope.maxCount && !scope.loadingProcess) {
-                    scope.gamesLimit += 40;
+                    scope.gamesLimit += 36;
                     getGames();
                 }
             };
@@ -91,7 +91,7 @@ CASINO.directive('multiviewControl', ['$interval', '$timeout', 'CConfig', 'casin
 
             function reset(keepSearchCommand) {
                 scope.games = [];
-                scope.gamesLimit = 40;
+                scope.gamesLimit = 36;
                 if (!keepSearchCommand) {
                     scope.searchCommand = '';
                 }
@@ -100,7 +100,7 @@ CASINO.directive('multiviewControl', ['$interval', '$timeout', 'CConfig', 'casin
             function getGames() {
                 scope.loadingProcess = true;
                 var openedGameIds = getOpenedGamesIds();
-                casinoData.getGames(scope.selectedCategory, null, countryCode, scope.gamesLimit - 40, scope.gamesLimit, scope.searchCommand, openedGameIds).then(function (response) {
+                casinoData.getGames(scope.selectedCategory, null, countryCode, scope.gamesLimit - 36, scope.gamesLimit, scope.searchCommand, openedGameIds).then(function (response) {
                     if (response && response.data && response.data.status !== -1) {
                         if (scope.selectedCategory === scope.confData.liveCasino.categoryId) {
                             scope.liveGamesData = scope.liveGamesData || casinoManager.initProvidersData(response.data.games);

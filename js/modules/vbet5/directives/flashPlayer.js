@@ -31,7 +31,7 @@ VBET5.directive('flashplayer', ['$window', '$timeout', '$rootScope', 'Translator
             if ($rootScope.conf.videoProvidersThatWorkWithIframe[+providerId]) { // for dota and windbet stream we must show streams in iframe
                 frame = angular.element('<iframe  src="'+streamUrl+'" width="100%" height="100%" frameborder="0" scrolling="no" allowfullscreen></iframe>');
                 element.append(frame);
-                parent.videoIsLoaded = false; // for hiding player controlls
+                scope.vPlayerState.isLoaded = false; // for hiding player controls
             } else { // for another all streams
                 var swfPath = providerId === '5' ? "swf/imgStream.swf" : "swf/LiveVideo.swf?anticache=" + $rootScope.env.appVersion;
                 var callbackGlobalFuncName = 'flashPlayerCallback' + scope.$id;
@@ -89,12 +89,12 @@ VBET5.directive('flashplayer', ['$window', '$timeout', '$rootScope', 'Translator
                                         Translator.get('Cannot play this video in your region.'),
                                         Translator.get('Sorry, there is no live stream at the moment. Please check back later.')
                                     );
-                                    parent.videoIsLoaded = false;
+                                    scope.vPlayerState.isLoaded = false;
 
                                     $window[callbackGlobalFuncName] = function (event) {
                                         console.log('video Player callback function', event);
                                         if (event === "NetStream.Buffer.Full") {
-                                            parent.videoIsLoaded = true;
+                                            scope.vPlayerState.isLoaded = true;
                                         }
                                     };
                                     obj.ref.setCallBackFunction(callbackGlobalFuncName);

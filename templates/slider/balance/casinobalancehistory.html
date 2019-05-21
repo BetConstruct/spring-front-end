@@ -36,10 +36,9 @@
 
                         <li class="transactions-money"><span>{{(balance.game || 'Casino')|translate}}</span></li>
                         <li class="transactions-money">
-                            <span>{{conf.GmsPlatform ? (balance.operation_name|translate) : casinoBalanceTypes[balance.id]}}</span></li>
+                            <span>{{balance.operation_name|translate}}</span></li>
                         <li class="transactions-money">
-                            <span ng-show="[0, 4, 5].indexOf(balance.id) !== -1" ng-if="!conf.GmsPlatform">-</span>
-                            <span ng-show="conf.GmsPlatform ? balance.amount > 0 : [0, 4, 5].indexOf(balance.id) === -1">+</span>
+                            <span ng-show="balance.amount > 0">+</span>
                             <span>{{balance.amount}} {{currency_name|currency}}</span>
                         </li>
                         <li class="transactions-money"><span>{{balance.balance}} {{currency_name|currency}}</span></li>

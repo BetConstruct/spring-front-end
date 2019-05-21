@@ -8,7 +8,7 @@
  *  and is syncronized with local storage on every update(adding or removing a casino game)
  */
 
-CASINO.controller('casinoMyGamesCtrl', ['$scope', '$rootScope', 'Storage', '$location', 'CConfig', 'Config', '$window', '$cookies', function($scope, $rootScope, Storage, $location, CConfig, Config, $window, $cookies) {
+CASINO.controller('casinoMyGamesCtrl', ['$scope', '$rootScope', 'Storage', '$location', 'CConfig', 'Config', '$window', '$cookies', 'analytics', 'casinoManager', 'Utils', function($scope, $rootScope, Storage, $location, CConfig, Config, $window, $cookies, analytics, casinoManager, Utils) {
     'use strict';
 
     $scope.casinoGamesLoaded = false;
@@ -50,12 +50,12 @@ CASINO.controller('casinoMyGamesCtrl', ['$scope', '$rootScope', 'Storage', '$loc
     }
 
     $scope.$on('widescreen.on', function () {
-        $scope.GAMES_TO_SHOW = 5;
+        $scope.GAMES_TO_SHOW = 6;
         showVisibleGames();
     });
 
     $scope.$on('widescreen.off', function () {
-        $scope.GAMES_TO_SHOW = 4;
+        $scope.GAMES_TO_SHOW = 6;
         showVisibleGames();
     });
 
@@ -107,8 +107,10 @@ CASINO.controller('casinoMyGamesCtrl', ['$scope', '$rootScope', 'Storage', '$loc
 
         $scope.myCasinoSavedGames = getVisibleGames(games);
 
-        Storage.set("myCasinoGames", games);
-        checkAndSetCookie("myCasinoGames", games);
+        Storage.set('myCasinoGames', games);
+        analytics.gaSend('send', 'event', 'explorer', "removeFromMyCasinoGames" + (Config.main.sportsLayout),  {'page': $location.path(), 'eventLabel': "removeFromMyCasinoGames"});
+        console.info('gaSend-',"removeFromMyCasinoGames");
+        Utils.checkAndSetCookie("myCasinoGames", games, Config.main.authSessionLifetime);
 
         if (games.length === 0) {
             if ($rootScope.myGames.length) {
@@ -131,47 +133,7 @@ CASINO.controller('casinoMyGamesCtrl', ['$scope', '$rootScope', 'Storage', '$loc
         $rootScope.env.sliderContent = '';
         $rootScope.env.showSlider = false;
 
-        var page, pagePath;
-        if ($rootScope.casinoGameOpened > 1) {
-            pagePath = $location.path();
-            switch (pagePath) {
-                case '/casino/':
-                    page = 'casino';
-                    break;
-                case '/livedealer/':
-                    page = 'livedealer';
-                    break;
-                case '/games/':
-                    page = 'games';
-            }
-            $rootScope.$broadcast(page + '.openGame', game, gameType);
-        } else {
-            if (game.categories.indexOf(CConfig.skillGames.categoryId) !== -1) {
-                page = 'games';
-            } else if (game.categories.indexOf(CConfig.liveCasino.categoryId) !== -1) {
-                page = 'livedealer';
-            } else {
-                page = 'casino';
-            }
-
-            pagePath =  '/' + page + '/';
-            if ($location.$$path === pagePath) {
-                $rootScope.$broadcast(page + '.openGame', game, gameType);
-            } else {
-                var domainSpecificPrefix = getPrefixLink('#/' + page);
-                if (domainSpecificPrefix) {
-                    $window.location.href =  domainSpecificPrefix + "/?game=" + game.id + '&type=' + gameType;
-                } else {
-                    var unregisterRouteChangeSuccess =  $scope.$on('$routeChangeSuccess', function () {
-                        if (!$location.$$replace) {
-                            $rootScope.$broadcast(page + '.openGame', game, gameType);
-                            unregisterRouteChangeSuccess();
-                        }
-                    });
-                    $location.url(pagePath);
-                }
-            }
-        }
+        casinoManager.navigateToRightRouteAndOpenGame(game, gameType);
     };
 
     $scope.$on('game.addToMyCasinoGames', function (event, game) {
@@ -182,7 +144,9 @@ CASINO.controller('casinoMyGamesCtrl', ['$scope', '$rootScope', 'Storage', '$loc
         $rootScope.myCasinoGamesIds[game.id] = true;
 
         Storage.set('myCasinoGames', $rootScope.myCasinoGames);
-        checkAndSetCookie('myCasinoGames', $rootScope.myCasinoGames);
+        analytics.gaSend('send', 'event', 'explorer', "addToMyCasinoGames" + (Config.main.sportsLayout),  {'page': $location.path(), 'eventLabel': "addToMyCasinoGames"});
+        console.info('gaSend-',"addToMyCasinoGames");
+        Utils.checkAndSetCookie('myCasinoGames', $rootScope.myCasinoGames, Config.main.authSessionLifetime);
 
         $scope.myCasinoSavedGames = getVisibleGames($rootScope.myCasinoGames);
     });
@@ -190,35 +154,12 @@ CASINO.controller('casinoMyGamesCtrl', ['$scope', '$rootScope', 'Storage', '$loc
     $scope.$on('game.removeGameFromMyCasinoGames', function (event, game) {
         $scope.removeGameFromSaved(game.id);
     });
+
+    $scope.$on('casinoGamesList.toggleSaveToMyCasinoGames', function (event, game) { // casino game list v2  favorite remove
+        $scope.removeGameFromSaved(game.id);
+    });
     $scope.$on('casinoGamesList.openGame', function(e, data) {
         if (data.skipFavorite || !data.game) return;
         $scope.openGame(data.game, data.playMode);
     });
-
-    function checkAndSetCookie(key, value) {
-        if (Config.main.useAuthCookies) {
-            var cookieOptions = {
-                domain: $window.location.hostname.split(/\./).slice(-2).join("."),
-                path: "/",
-                expires: new Date((new Date()).getTime() + Config.main.authSessionLifetime)
-            };
-            $cookies.putObject(key, value, cookieOptions);
-        }
-    }
-
-    /**
-     * @ngdoc method
-     * @name prefixLinkIfNeeded
-     * @methodOf CASINO.controller:getPrefixLink
-     * @description prefixes given link with hostname depending on config
-     *
-     * @param {String} link relative link
-     * @returns {String} absolute or relative link depending on match in config
-     */
-    function getPrefixLink(link) {
-        if (Config.main.domainSpecificPrefixes && Config.main.domainSpecificPrefixes[$window.location.hostname] && (Config.main.domainSpecificPrefixes[$window.location.hostname][link] || Config.main.domainSpecificPrefixes[$window.location.hostname][link + '/'])) {
-            return (Config.main.domainSpecificPrefixes[$window.location.hostname][link] || Config.main.domainSpecificPrefixes[$window.location.hostname][link + '/']) + link;
-        }
-        return null;
-    }
 }]);

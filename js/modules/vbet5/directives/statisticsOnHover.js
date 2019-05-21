@@ -1,11 +1,12 @@
 
-VBET5.directive('statisticsOnHover', ['$document', '$http', '$compile', '$q', '$timeout', 'DomHelper','Zergling', 'Config', 'Translator', 'LanguageCodes', function($document, $http, $compile, $q, $timeout, DomHelper, Zergling, Config, Translator, LanguageCodes) {
+VBET5.directive('statisticsOnHover', ['$document', '$http', '$compile', '$q', '$timeout', 'DomHelper','Zergling', 'Config', 'Translator', 'LanguageCodes', 'Utils', function($document, $http, $compile, $q, $timeout, DomHelper, Zergling, Config, Translator, LanguageCodes, Utils) {
     'use strict';
     return {
         restrict: 'A',
         replace: false,
         scope: {
-            statsGame: '='
+            statsGame: '=',
+            statsCompetitionName: '@'
         },
         link: function(scope, element, attrs) {
             if(!Config.main.statisticsOnHover || !Config.main.statisticsOnHover.enabled) {
@@ -362,7 +363,7 @@ VBET5.directive('statisticsOnHover', ['$document', '$http', '$compile', '$q', '$
 
                 //add filter to count agpm by periods if needed
                 if (scope.statistics.H2H && scope.statistics.H2H.team1 && scope.statistics.H2H.team1.all) {
-                    var scoreType = scope.sportBasedStats[scope.statsGame.game.sport.alias] ? scope.sportBasedStats[scope.statsGame.game.sport.alias].AGPM1.value : 'goals';
+                    var scoreType = scope.sportBasedStats[scope.statsGame.sport.alias] ? scope.sportBasedStats[scope.statsGame.sport.alias].AGPM1.value : 'goals';
                     scope.statistics.H2H.team1.AGPM = scope.statistics.H2H.team1.all.games ? (scope.statistics.H2H.team1[scoreType]/scope.statistics.H2H.team1.all.games).toFixed(1) : 0;
                     scope.statistics.H2H.team2.AGPM = scope.statistics.H2H.team1.all.games ? (scope.statistics.H2H.team2[scoreType]/scope.statistics.H2H.team1.all.games).toFixed(1) : 0;
                     scope.statistics.H2H.AGPM = scope.statistics.H2H.team1.all.games ? ((scope.statistics.H2H.team1[scoreType] + scope.statistics.H2H.team2[scoreType]) / scope.statistics.H2H.team1.all.games).toFixed(1) : 0;
@@ -449,10 +450,10 @@ VBET5.directive('statisticsOnHover', ['$document', '$http', '$compile', '$q', '$
                 }
 
 
-                var scoreType = scope.sportBasedStats[scope.statsGame.game.sport.alias] ? scope.sportBasedStats[scope.statsGame.game.sport.alias].AGPM1.value : 'goals';
+                var scoreType = scope.sportBasedStats[scope.statsGame.sport.alias] ? scope.sportBasedStats[scope.statsGame.sport.alias].AGPM1.value : 'goals';
                 scope.statistics.playedMatches.team1.AGPM = (scope.statistics.playedMatches.team1[scoreType] / scope.statistics.playedMatches.team1.scores.length).toFixed(1);
                 scope.statistics.playedMatches.team2.AGPM = (scope.statistics.playedMatches.team2[scoreType] / scope.statistics.playedMatches.team2.scores.length).toFixed(1);
-                var totalScoreType = scope.sportBasedStats[scope.statsGame.game.sport.alias] ? scope.sportBasedStats[scope.statsGame.game.sport.alias].AGPM2.value : 'total_goals';
+                var totalScoreType = scope.sportBasedStats[scope.statsGame.sport.alias] ? scope.sportBasedStats[scope.statsGame.sport.alias].AGPM2.value : 'total_goals';
                 scope.statistics.playedMatches.team1.totalAGPM = (scope.statistics.playedMatches.team1[totalScoreType] / scope.statistics.playedMatches.team1.scores.length).toFixed(1);
                 scope.statistics.playedMatches.team2.totalAGPM = (scope.statistics.playedMatches.team2[totalScoreType] / scope.statistics.playedMatches.team2.scores.length).toFixed(1);
             }
@@ -486,7 +487,7 @@ VBET5.directive('statisticsOnHover', ['$document', '$http', '$compile', '$q', '$
                 calculatePlayedMatches(stats);
 
                     //cache the statistics
-                statisticsCache[scope.statsGame.game.id] = scope.statistics;
+                statisticsCache[scope.statsGame.id] = scope.statistics;
             }
 
             /**
@@ -513,8 +514,8 @@ VBET5.directive('statisticsOnHover', ['$document', '$http', '$compile', '$q', '$
                 statsBlock.on('mouseenter', function() {scope.keepOpen = true});
                 statsBlock.on('mouseleave', statsBlockLeave);
                 body.append($compile(statsBlock)(scope));
-                if (statisticsCache[scope.statsGame && scope.statsGame.game && scope.statsGame.game.id]) {
-                    scope.statistics = statisticsCache[scope.statsGame.game.id];
+                if (statisticsCache[scope.statsGame && scope.statsGame.id]) {
+                    scope.statistics = statisticsCache[scope.statsGame.id];
                     scope.isLoading = false;
                     return;
                 }
@@ -525,10 +526,10 @@ VBET5.directive('statisticsOnHover', ['$document', '$http', '$compile', '$q', '$
                 scope.statistics.playedMatches = {};
                 $http({
                     method: 'GET',
-                    url: statsUrlPrefix.replace('en', LanguageCodes[Config.env.lang] || 'en') + (Config.main.GmsPlatform && scope.statsGame.game.id || scope.statsGame.game.game_external_id),
+                    url: statsUrlPrefix.replace('en', LanguageCodes[Config.env.lang] || 'en') + scope.statsGame.id,
                     timeout: canceler.promise
                 }).then(function(response) {
-                    updateStatistics(response.data, scope.statsGame.game.id);
+                    updateStatistics(response.data, scope.statsGame.id);
                     scope.isLoading = false;
                 },
                     function(error) {

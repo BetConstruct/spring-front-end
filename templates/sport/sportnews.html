@@ -1,6 +1,6 @@
-<div ng-controller="cmsSportNewsCtrl" ng-init="loadRecentNews(0, 5); showSportNewsSidebar = conf.disableModernNewsTab ? true : false">
+<div ng-controller="cmsSportNewsCtrl" ng-init="loadRecentNews(0, 5); showSportNewsSidebar = $root.conf.disableModernNewsTab ? true : false">
 
-    <div ng-hide="conf.disableModernNewsTab" ng-click="showSportNewsSidebar = !showSportNewsSidebar">
+    <div ng-hide="$root.conf.disableModernNewsTab" ng-click="showSportNewsSidebar = !showSportNewsSidebar">
         <h2 trans>sport news</h2> <span class="toggle-news" ng-class="{'open': showSportNewsSidebar, 'closed': !showSportNewsSidebar}"></span>
     </div>
 

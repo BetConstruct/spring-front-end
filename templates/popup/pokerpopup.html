@@ -6,9 +6,9 @@
                     <ul class="responsive-header-contain-j">
                         <li class="responsive-header-item-j">
                             <div class="logo-nav-wrapper">
-                                <a ng-href="{{::logoUrl}}" class="pointer-events-none">
-                                    <img ng-src="{{conf.logo.image ? conf.logo.image : 'skins/' + conf.skin + '/images/logo.png'}}" image-on-load image-width="logoWidth" class-on-scroll="ng-hide,ng-show" ng-style="{'width' : conf.logo.width ? (conf.logo.width + 'px') : '', 'height' : conf.logo.height ? (conf.logo.height + 'px') : ''}"/>
-                                    <img ng-src="{{conf.logo.imageFix ? conf.logo.imageFix : 'skins/' + conf.skin + '/images/logo2.png'}}" class="ng-hide" class-on-scroll="ng-show,ng-hide" ng-style="{'width' : conf.logo.widthFix ? (conf.logo.widthFix + 'px') : '', 'height' : conf.logo.heightFix ? (conf.logo.heightFix + 'px') : ''}"/>
+                                <a ng-href="{{::$root.conf.logo.url}}" class="pointer-events-none">
+                                    <img ng-src="{{$root.conf.logo.image ? $root.conf.logo.image : 'skins/' + $root.conf.skin + '/images/logo.png'}}" image-on-load image-width="logoWidth" class-on-scroll="ng-hide,ng-show" ng-style="{'width' : $root.conf.logo.width ? ($root.conf.logo.width + 'px') : '', 'height' : $root.conf.logo.height ? ($root.conf.logo.height + 'px') : ''}"/>
+                                    <img ng-src="{{$root.conf.logo.imageFix ? $root.conf.logo.imageFix : 'skins/' + $root.conf.skin + '/images/logo2.png'}}" class="ng-hide" class-on-scroll="ng-show,ng-hide" ng-style="{'width' : $root.conf.logo.widthFix ? ($root.conf.logo.widthFix + 'px') : '', 'height' : $root.conf.logo.heightFix ? ($root.conf.logo.heightFix + 'px') : ''}"/>
                                 </a>
                             </div>
                         </li>

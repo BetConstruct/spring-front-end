@@ -8,11 +8,9 @@
 	/* statistics on bottom of field 
 		----------------------------------------------------------------------------------------------*/
 	.statistics-toggle{
-		background: #223451;
 		color: #ffffff;
 		overflow: hidden;
 		height: 51px;
-		
 		button{	
 			display: block;			
 			width: 40px;
@@ -49,13 +47,16 @@
 			float: left;
 			width: (100%/2 - 2%); /*divide width depending on number of statistics in a row , for tennis number = 2, for soccer 3*/
 			margin: 0.3em 0;
-			margin-right: 2.9%;
+			@include ltr {
+				margin-right: 2.9%;
+			}
 			@include rtl {
 				margin-left: 2.9%;
-				margin-right: 0;
 			}
 			&:nth-child(2n){ 	/* number 3 is number of statistics in the row*/
-				margin-right: 0;
+				@include ltr {
+					margin-right: 0;
+				}
 				@include rtl {
 					margin-left: 0;
 				}
@@ -100,7 +101,7 @@
 			}
 		}
 	/* Animated controls 
-		-----------------------------------------------------------------------------------------------------*/
+		--------------------------------------------------------------------------------------------------------------------------*/
 		.animation-container{
 			position: absolute;
 			top: 0;
@@ -191,20 +192,22 @@
 				}
 			}
 			.score_1{
-				left: 38%;
 				animation: point_text_1 0.8s 1 ease-out;
 				animation-fill-mode: forwards;
+				@include ltr {
+					left: 38%;
+				}
 				@include rtl {
-					left: auto;
 					right: 38%;
 				}
 			}
 			.score_2{
-				right: 37%;
 				animation: point_text_2 0.8s 1 ease-out;
 				animation-fill-mode: forwards;
+				@include ltr {
+					right: 37%;
+				}
 				@include rtl {
-					right: auto;
 					left: 37%;
 				}
 			}

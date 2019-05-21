@@ -9,7 +9,7 @@
                 $root.ignorePathValidation = true; $event.stopPropagation();"
                target="{{banner.linktarget}}"
                class="{{ banner.custom_fields.css[0] || banner.title }}">
-                <img class="product-slider-image {{(banner.custom_fields.image[0] ? 'show hide-button' : '')}} {{ banner.custom_fields.css[0] || banner.title }}" ng-src="{{banner.custom_fields.image[0] ? banner.image : banner.imageurl}}"/>
+                <img class="product-slider-image {{(!banner.custom_fields.label[0] ? 'show hide-button' : '')}} {{ banner.custom_fields.css[0] || banner.title }}" ng-src="{{banner.imageurl}}"/>
                 <p class="icon-container-product">
                     <b class="{{ banner.custom_fields.css[0] || banner.title }}"></b>
                 </p>

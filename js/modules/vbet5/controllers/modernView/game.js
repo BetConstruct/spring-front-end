@@ -4,7 +4,7 @@
  * @description
  * Open Games controller
  */
-angular.module('vbet5.betting').controller('gameCtrl', ['$rootScope', '$scope', '$location', '$filter', '$window', 'Config', 'Utils', 'GameInfo', 'StreamService', 'analytics',  function ($rootScope, $scope, $location, $filter, $window, Config, Utils, GameInfo, StreamService, analytics ) {
+angular.module('vbet5.betting').controller('gameCtrl', ['$rootScope', '$scope', '$location', '$filter', '$window', 'Config', 'Utils', 'GameInfo', 'StreamService', 'analytics', 'BetService',  function ($rootScope, $scope, $location, $filter, $window, Config, Utils, GameInfo, StreamService, analytics, BetService) {
     'use strict';
 
     /**
@@ -35,27 +35,32 @@ angular.module('vbet5.betting').controller('gameCtrl', ['$rootScope', '$scope', 
      * @methodOf vbet5.controller:gameCtrl
      * @description Returns events divided to rows according to number of columns specified
      *
-     * @param {object} events object containing events
-     * @param {number} cols number of columns in each row. If not specified or 0, default value is 2.
-     * Maximum number of columns is 4, so if greater than 4 it will be changed to 4
+     * @param {Object} market - game's market object
+     * @param {String} sportAlias - selected sport alias
      * @returns {Array} array of rows, cols columns in each
      */
-    $scope.getDividedToRows = function getDividedToRows(events, cols) {
+    $scope.getDividedToRows = function getDividedToRows(market, sportAlias) {
+        var cols = market.col_count;
         if (!cols) {
             cols = 2;
-        }
-
-        if (cols > 5) {
+        } else if (cols > 5) {
             cols = 5;
         }
 
-        angular.forEach(events, function (event) {
+        angular.forEach(market.event, function (event) {
             event.isEventInBetSlip = $scope.isEventInBetSlip(event);
         });
 
-        var results = [];
-        var eventsArr = Utils.objectToArray(events);
-        eventsArr.sort(Utils.orderSorting);
+        var results = [], eventsArr = [];
+        if (market.display_key === 'CORRECT SCORE' && BetService.constants.customCorrectScoreLogic.indexOf(sportAlias) > -1) {
+            GameInfo.reorderMarketEvents(market, 'correctScore');
+            eventsArr = market.events.slice();
+        } else if (BetService.constants.marketsPreDividedByColumns.indexOf(market.market_type) > -1) {
+            GameInfo.reorderMarketEvents(market, 'preDivided');
+            eventsArr = market.events.slice();
+        } else {
+            eventsArr = Utils.objectToArray(market.event).sort(Utils.orderSorting);
+        }
 
         while (eventsArr.length) {
             results.push(eventsArr.splice(0, cols));
@@ -146,7 +151,7 @@ angular.module('vbet5.betting').controller('gameCtrl', ['$rootScope', '$scope', 
             }
         }
         function sortNumerical(a, b) {
-            return a > b;
+            return a - b;
         }
 
         dividedGames.firstGameList.sort(sortNumerical);
@@ -237,12 +242,11 @@ angular.module('vbet5.betting').controller('gameCtrl', ['$rootScope', '$scope', 
      *
      * @param {Object} game game object
      */
-    $scope.toggleSaveToMyGames = function toggleSaveToMyGames(game, competition) {
+    $scope.toggleSaveToMyGames = function toggleSaveToMyGames(game) {
         if (!$rootScope.myGames || $rootScope.myGames.indexOf(game.id) === -1) {
             $scope.$emit('game.addToMyGames', game);
         } else {
             $scope.$emit('game.removeGameFromMyGames', game);
-            $scope.$emit('game.removeGameFromMyCompetition', competition);
         }
     };
 
@@ -343,6 +347,7 @@ angular.module('vbet5.betting').controller('gameCtrl', ['$rootScope', '$scope', 
     $scope.isExtraTime = GameInfo.isExtraTime;
     $scope.getCurrentTime = GameInfo.getCurrentTime;
     $scope.framesCount = GameInfo.framesCount;
+    $scope.showFrameAlias = GameInfo.showFrameAlias;
 
     // curried  'improveName'filter
 
@@ -369,11 +374,12 @@ angular.module('vbet5.betting').controller('gameCtrl', ['$rootScope', '$scope', 
         if (!$scope.game) {
             return;
         }
-
-        angular.forEach($scope.game.stats, function (stat) {
-            stat.isTeam1SetWinner = $scope.isSetWinner(stat, 1);
-            stat.isTeam2SetWinner = $scope.isSetWinner(stat, 2);
-        });
+        if (!Config.main.disableITFGamesInfo || !$scope.game.is_itf) {
+            angular.forEach($scope.game.stats, function (stat) {
+                stat.isTeam1SetWinner = $scope.isSetWinner(stat, 1);
+                stat.isTeam2SetWinner = $scope.isSetWinner(stat, 2);
+            });
+        }
 
         if ($scope.game.sport.alias === "Soccer" && $scope.game.info) {
             $scope.game.info.isExtraTime = $scope.isExtraTime($scope.game.info);
@@ -428,6 +434,7 @@ angular.module('vbet5.betting').controller('gameCtrl', ['$rootScope', '$scope', 
                     //and make replacements in market and event names
                     markets.map(function (m) {
                         m.name = improveNameForThisGame(m.name, $scope.game);
+                        m.eachWayTerms = BetService.getEachWayTerms(m);
                         angular.forEach(m.event, function (e) {
                             e.name = $filter('removeParts')(e.name, [m.name]);
                             e.name = improveNameForThisGame(e.name, $scope.game);
@@ -444,7 +451,7 @@ angular.module('vbet5.betting').controller('gameCtrl', ['$rootScope', '$scope', 
             $scope.game.info.shirt2_color = "f00";
         }
 
-        if($scope.game.type === 1 && $scope.game.open && $scope.game.sport.alias){
+        if($scope.game.type === 1 && $scope.game.open && $scope.game.sport.alias) {
             GameInfo.updateGameStatistics($scope.game);
             GameInfo.extendLiveGame($scope.game);
 

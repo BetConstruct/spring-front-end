@@ -2,7 +2,7 @@
     <div class="wrapper-sub">
         <div class="header-sub">
             <a href="#/">
-                <img src="skins/{{conf.skin}}/images/logo.png" alt="">
+                <img src="skins/{{$root.conf.skin}}/images/logo.png" alt="">
             </a>
         </div>
         <div class="content-sub">
@@ -21,7 +21,7 @@
                 </label>
             </p>
             <button ng-click="saveSubscription()" trans>Save</button>
-            <footer ng-bind-html="'If you have unsubscribed by mistake, change your settings in your {1} account'|translate:[conf.skin]|html:'p'"></footer>
+            <footer ng-bind-html="'If you have unsubscribed by mistake, change your settings in your {1} account'|translate:[$root.conf.skin]|html:'p'"></footer>
         </div>
     </div>
 </div>

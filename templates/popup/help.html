@@ -6,9 +6,9 @@
                     <ul class="responsive-header-contain-j">
                         <li class="responsive-header-item-j">
                             <div class="logo-nav-wrapper">
-                                <a ng-href="{{::logoUrl}}" class="pointer-events-none">
-                                    <img ng-src="{{conf.logo.image ? conf.logo.image : 'skins/' + conf.skin + '/images/logo.png'}}" image-on-load image-width="logoWidth" class-on-scroll="ng-hide,ng-show" ng-style="{'width' : conf.logo.width ? (conf.logo.width + 'px') : '', 'height' : conf.logo.height ? (conf.logo.height + 'px') : ''}"/>
-                                    <img ng-src="{{conf.logo.imageFix ? conf.logo.imageFix : 'skins/' + conf.skin + '/images/logo2.png'}}" class="ng-hide" class-on-scroll="ng-show,ng-hide" ng-style="{'width' : conf.logo.widthFix ? (conf.logo.widthFix + 'px') : '', 'height' : conf.logo.heightFix ? (conf.logo.heightFix + 'px') : ''}"/>
+                                <a ng-href="{{::$root.conf.logo.url}}" class="pointer-events-none">
+                                    <img ng-src="{{$root.conf.logo.image ? $root.conf.logo.image : 'skins/' + $root.conf.skin + '/images/logo.png'}}" image-on-load image-width="logoWidth" class-on-scroll="ng-hide,ng-show" ng-style="{'width' : $root.conf.logo.width ? ($root.conf.logo.width + 'px') : '', 'height' : $root.conf.logo.height ? ($root.conf.logo.height + 'px') : ''}"/>
+                                    <img ng-src="{{$root.conf.logo.imageFix ? $root.conf.logo.imageFix : 'skins/' + $root.conf.skin + '/images/logo2.png'}}" class="ng-hide" class-on-scroll="ng-show,ng-hide" ng-style="{'width' : $root.conf.logo.widthFix ? ($root.conf.logo.widthFix + 'px') : '', 'height' : $root.conf.logo.heightFix ? ($root.conf.logo.heightFix + 'px') : ''}"/>
                                 </a>
                             </div>
                         </li>
@@ -25,7 +25,7 @@
                     <input type="checkbox" id="header-collapse">
                     <div class="header-small-view-hide">
                         <ul class="responsive-header-mainMenu-j">
-                            <li ng-style="{'padding' :  '0 ' + (conf.logo.height ? '0' : conf.logo.paddingMenu || logoWidth)  + 'px'}">
+                            <li ng-style="{'padding' :  '0 ' + ($root.conf.logo.height ? '0' : $root.conf.logo.paddingMenu || logoWidth)  + 'px'}">
                                 <div class="header-bottom-row ng-scope">
                                     <div class="header-nav-contain">
                                         <ul ng-class="{'menu-dropdown': $root.topMenuDropDown, 'menu-dropdown-show': subMenuItemCount > 0}" sub-menu-creator="main">
@@ -50,7 +50,7 @@
     </div>
         <div class="sub-nav-faq" ng-if="selectedTopPage.slug.toLowerCase() != 'payments'">
         	<ul>
-                <li ng-repeat="secondLevelPage in helpPages[selectedTopPage.slug].children track by secondLevelPage.id" ng-class="{'active': $parent.selectedSecondLevelPage.slug== secondLevelPage.slug}">
+                <li ng-repeat="secondLevelPage in helpPages[selectedTopPage.id].children track by secondLevelPage.id" ng-class="{'active': $parent.selectedSecondLevelPage.slug== secondLevelPage.slug}">
                     <a ng-bind="secondLevelPage.title" ng-click="selectPopupSecondLevelPage(secondLevelPage)"></a>
                 </li>
 
@@ -89,7 +89,7 @@
                     <div class="currency-block" ng-if="selectedPaymentsType!='betshop'">
                           <div class="select-block">
 
-                                <select ng-options="currency|currency for currency in conf.availableCurrencies" ng-model="currencyHolder.selectedCurrency"></select>
+                                <select ng-options="currency|currency for currency in $root.conf.availableCurrencies" ng-model="currencyHolder.selectedCurrency"></select>
                                 </div>
                           <label trans>Currency</label>
                    </div>
@@ -98,7 +98,7 @@
                         	<ul>
                             	<li ng-class="{'active': selectedPaymentsType === 'deposit'}" ng-click="selectedPaymentsType = 'deposit'" trans>Deposit</li>
                                 <li ng-class="{'active': selectedPaymentsType === 'withdraw'}" ng-click="selectedPaymentsType = 'withdraw'" trans>Withdraw</li>
-                                <li ng-show="conf.showBetshopsInFaq" ng-class="{'active': selectedPaymentsType === 'betshop'}" ng-click="selectedPaymentsType = 'betshop'" trans>Betshop</li>
+                                <li ng-show="$root.conf.showBetshopsInFaq" ng-class="{'active': selectedPaymentsType === 'betshop'}" ng-click="selectedPaymentsType = 'betshop'" trans>Betshop</li>
                             </ul>
                         </div>
 

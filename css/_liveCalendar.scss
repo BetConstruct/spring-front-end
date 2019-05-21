@@ -28,7 +28,9 @@ $disable-live-calendar-coeff-styling: false !default;
     }
     .lc16-right-section-j {
         width: 75.5%;
-        padding: 0 0 0 2px;
+        @include ltr {
+            padding: 0 0 0 2px;
+        }
         @include rtl {
             padding: 0 2px 0 0;
         }
@@ -40,15 +42,17 @@ $disable-live-calendar-coeff-styling: false !default;
             li {
                 width: calc((100% - 13px) / 7);
                 height: 36px;
-                margin: 0 2px 0 0;
                 background: $skin-palette-8;
-                float: left;
                 display: block;
                 border-radius: 5px 5px 0 0;
                 border-bottom: 1px solid darken( desaturate( adjust-hue( $skin-palette-10, -12deg ), 1 ), 9 );
                 text-align: center;
                 padding-top: 7px;
                 transition: background 300ms, border-color 300ms;
+                @include ltr {
+                    float: left;
+                    margin: 0 2px 0 0;
+                }
                 @include rtl {
                     float: right;
                     margin: 0 0 0 2px;
@@ -57,7 +61,9 @@ $disable-live-calendar-coeff-styling: false !default;
                     background: $skin-palette-7;
                 }
                 &:last-child {
-                    margin: 0;
+                    @include ltr {
+                        margin: 0;
+                    }
                     @include rtl {
                         margin: 0;
                     }
@@ -90,10 +96,12 @@ $disable-live-calendar-coeff-styling: false !default;
 }
 .lc16-sport-selector-j {
     display: block;
-    float: left;
     width: 183px;
     position: relative;
     white-space: nowrap;
+    @include ltr {
+        float: left;
+    }
     @include rtl {
         float: right;
     }
@@ -107,8 +115,10 @@ $disable-live-calendar-coeff-styling: false !default;
         text-transform: uppercase;
         font-size: 4 + $size-font;
         line-height: 24px;
-        padding: 0 23px 0 10px;
         position: relative;
+        @include ltr {
+            padding: 0 23px 0 10px;
+        }
         @include rtl {
             padding: 0 10px 0 23px;
         }
@@ -118,22 +128,24 @@ $disable-live-calendar-coeff-styling: false !default;
             display: block;
             position: absolute;
             top: 0;
-            right: 7px;
             color: $text-palette-3;
+            @include ltr {
+                right: 7px;
+            }
             @include rtl {
                 left: 7px;
-                right: auto;
             }
         }
     }
     input[type="checkbox"] {
         position: absolute;
         top: 0;
-        left: 0;
         opacity: 0;
         cursor: pointer;
+        @include ltr {
+            left: 0;
+        }
         @include rtl {
-            left: auto;
             right: 0;
         }
     }
@@ -164,13 +176,15 @@ $disable-live-calendar-coeff-styling: false !default;
         li {
             border-bottom: 1px solid $skin-palette-7;
             height: 25px;
-            padding: 0 23px 0 25px;
             text-transform: uppercase;
             font-size: 4 + $size-font;
             line-height: 24px;
             color: $text-palette-4;
             position: relative;
             transition: background 250ms, color 250ms;
+            @include ltr {
+                padding: 0 23px 0 25px;
+            }
             @include rtl {
                 padding: 0 25px 0 23px;
             }
@@ -193,11 +207,12 @@ $disable-live-calendar-coeff-styling: false !default;
                     height: 14px;
                     border-radius: 3px;
                     position: absolute;
-                    right: -18px;
                     top: 5px;
+                    @include ltr {
+                        right: -18px;
+                    }
                     @include rtl {
                         left: -18px;
-                        right: auto;
                     }
                 }
                 &:after {
@@ -211,10 +226,11 @@ $disable-live-calendar-coeff-styling: false !default;
                     border-radius: 3px;
                     position: absolute;
                     top: 5px;
-                    right: -18px;
+                    @include ltr {
+                        right: -18px;
+                    }
                     @include rtl {
                         left: -18px;
-                        right: auto;
                     }
                 }
             }
@@ -229,9 +245,10 @@ $disable-live-calendar-coeff-styling: false !default;
                 font: normal 16px/16px sport-icon;
                 text-transform: none;
                 top: 4px;
-                left: 5px;
+                @include ltr {
+                    left: 5px;
+                }
                 @include rtl {
-                    left: auto;
                     right: 5px;
                 }
                 &.all-sports-j:before {
@@ -241,6 +258,44 @@ $disable-live-calendar-coeff-styling: false !default;
             }
         }
     }
+}
+.extra-b-contain {
+    width: 100%;
+    position: relative;
+}
+.game-extra-info {
+    position: absolute;
+    right: 0;
+    top: 34px;
+    z-index: 33;
+    display: none;
+}
+.game-extra-info:before {
+    content: "";
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-width: 0 9px 10px 9px;
+    position: absolute;
+    display: block;
+    right: 6px;
+    top: -7px;
+}
+.live-view-information-b ul li .game-extra-info p {
+    float: right;
+    width: 100%;
+    white-space: nowrap;
+    padding: 5px;
+    line-height: 20px;
+}
+.live-view-information-b ul li.video-info-calendar:hover .game-extra-info {
+    display: block;
+}
+.live-view-information-b ul li .game-extra-info p:first-child {
+    border-radius: 5px 5px 0 0;
+}
+.live-view-information-b ul li .game-extra-info p:last-child {
+    border-radius: 0 0 5px 5px;
 }
 .live-calendar-16-content-j {
     display: table;
@@ -282,7 +337,9 @@ $disable-live-calendar-coeff-styling: false !default;
                 }
             }
             &.country-column-j, &.sport-column-j {
-                padding: 0 10px;
+                @include ltr {
+                    padding: 0 10px;
+                }
                 @include rtl {
                     padding: 0 10px;
                 }
@@ -318,12 +375,13 @@ $disable-live-calendar-coeff-styling: false !default;
             width: 81px;
             text-align: center;
             @if ($disable-live-calendar-coeff-styling == false) {
-                border-top: 1px solid lighten( desaturate( $skin-palette-10, 19 ), 11 );
-                border-left: 1px solid darken( desaturate( adjust-hue( $skin-palette-10, 7deg ), 1 ), 10 );
                 border-bottom: 1px solid darken( desaturate( adjust-hue( $skin-palette-10, 7deg ), 1 ), 10 );
-                box-shadow: inset 1px 0 0 lighten( desaturate( adjust-hue( $skin-palette-10, 4deg ), 19 ), 11 );
+                border-top: 1px solid lighten( desaturate( $skin-palette-10, 19 ), 11 );
+                @include ltr {
+                    border-left: 1px solid darken( desaturate( adjust-hue( $skin-palette-10, 7deg ), 1 ), 10 );
+                    box-shadow: inset 1px 0 0 lighten( desaturate( adjust-hue( $skin-palette-10, 4deg ), 19 ), 11 );
+                }
                 @include rtl {
-                    border-left: none;
                     border-right: 1px solid darken( desaturate( adjust-hue( $skin-palette-10, 7deg ), 1 ), 10 );
                     box-shadow: inset -1px 0 0 lighten( desaturate( adjust-hue( $skin-palette-10, 4deg ), 19 ), 11 );
                 }
@@ -332,14 +390,15 @@ $disable-live-calendar-coeff-styling: false !default;
             transition: background 250ms, border-color 250ms, box-shadow 250ms, color 250ms;
             color: map-get($coeff-color-map, classic);
             & + .coeff-column-j + .coeff-column-j {
+                width: 82px;
                 @if ($disable-live-calendar-coeff-styling == false) {
-                    border-right: 1px solid $skin-palette-12;
+                    @include ltr {
+                        border-right: 1px solid $skin-palette-12;
+                    }
                     @include rtl {
                         border-left: 1px solid $skin-palette-12;
-                        border-right: none;
                     }
                 }
-                width: 82px;
             }
             @if ($disable-live-calendar-coeff-styling == false) {
                 &:hover {
@@ -358,10 +417,12 @@ $disable-live-calendar-coeff-styling: false !default;
         }
         &.more-column-j {
             width: 91px;
-            text-align: right;
-            padding: 0 10px 0 0;
             color: $text-palette-4;
             position: relative;
+            @include ltr {
+                padding: 0 10px 0 0;
+                text-align: right;
+            }
             @include rtl {
                 padding: 0 0 0 10px;
                 text-align: left;
@@ -372,16 +433,26 @@ $disable-live-calendar-coeff-styling: false !default;
                 height: 30px;
                 position: absolute;
                 top: 0;
-                left: 7px;
                 font: 12px/30px icomoon;
                 text-align: center;
                 color: $text-palette-4;
+                @include ltr {
+                    left: 7px;
+                }
+                @include rtl {
+                    right: 7px;
+                }
                 &:before {
                     content: "\e90f";
                     transition: color 250ms;
                     font-size: 8px;
-                    right: 8px;
                     top: 10px;
+                    @include ltr {
+                        right: 8px;
+                    }
+                    @include rtl {
+                        left: 8px;
+                    }
                 }
             }
             .extra-b-contain:hover b:before, i:hover:before {
@@ -403,19 +474,30 @@ $disable-live-calendar-coeff-styling: false !default;
             .extra-b-contain {
                 position: absolute;
                 top: 1px;
-                left: 37px;
                 width: auto;
                 height: 29px;
+                @include ltr {
+                    left: 37px;
+                }
+                @include rtl {
+                    right: 37px;
+                }
                 .game-extra-info {
-                    right: -8px;
+                    @include ltr {
+                        right: -8px;
+                    }
+                     @include rtl {
+                        left: -8px;
+                    }
                 }
             }
             .video{
                 position: absolute;
                 top: 8px;
-                left: 13px;
+                @include ltr {
+                    left: 13px;
+                }
                 @include rtl {
-                    left: auto;
                     right: 13px;
                 }
             }
@@ -450,7 +532,9 @@ $disable-live-calendar-coeff-styling: false !default;
         }
         &.sport-column-j {
             width: 13.3%;
-            padding: 0 10px 0 35px;
+            @include ltr {
+                padding: 0 10px 0 35px;
+            }
             @include rtl {
                 padding: 0 35px 0 10px;
             }
@@ -460,18 +544,21 @@ $disable-live-calendar-coeff-styling: false !default;
                 height: 16px;
                 border-radius: 100%;
                 position: absolute;
-                left: 10px;
                 top: 7px;
                 font: 16px/16px sport-icon;
+                @include ltr {
+                    left: 10px;
+                }
                 @include rtl {
-                    left: auto;
                     right: 10px;
                 }
             }
         }
         &.country-column-j {
             width: 14.6%;
-            padding: 0 10px 0 35px;
+            @include ltr {
+                padding: 0 10px 0 35px;
+            }
             @include rtl {
                 padding: 0 35px 0 10px;
             }
@@ -481,9 +568,10 @@ $disable-live-calendar-coeff-styling: false !default;
                 height: 16px;
                 position: absolute;
                 top: 7px;
-                left: 10px;
+                @include ltr {
+                    left: 10px;
+                }
                 @include rtl {
-                    left: auto;
                     right: 10px;
                 }
             }

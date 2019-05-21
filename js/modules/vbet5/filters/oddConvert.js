@@ -266,8 +266,21 @@ VBET5.filter('oddConvert', [ 'Config', 'Utils', function (Config, Utils) {
         401: '400/1',
         501: '500/1',
         751: '750/1',
-        1001: '1000/1'
+        1001: '1000/1',
+        1501: '1500/1',
+        2001: '2000/1',
+        2501: '2500/1',
+        3001: '3000/1',
+        3501: '3500/1',
+        4001: '4000/1'
       };
+    var customLadder;
+    if (Config.main.showCustomNameForFractionalFormat ) {
+        customLadder = {
+            "EVS": "1/1"
+        };
+        ladder[2] = "EVS";
+    }
 
     // ladder decimals list
      var ladderKeys = Object.keys(ladder);
@@ -299,7 +312,7 @@ VBET5.filter('oddConvert', [ 'Config', 'Utils', function (Config, Utils) {
         var val;
         if(ladder[dec]) {
             return ladder[dec];
-        } else{
+        } else {
             val = findNearestLadderKey(0, ladderKeys.length-1, dec);
             return ladder[val];
         }
@@ -354,7 +367,6 @@ VBET5.filter('oddConvert', [ 'Config', 'Utils', function (Config, Utils) {
      * @returns {string} converted odd
      */
     function convert(value, format) {
-
         var fValue = parseFloat(value);
         var iValue = parseInt(value, 10);
         var rValue = (value !== undefined && value !== '') ? Math.round(parseFloat(value) * 1000 || 0) / 1000 : value;
@@ -386,7 +398,7 @@ VBET5.filter('oddConvert', [ 'Config', 'Utils', function (Config, Utils) {
                 if (fValue === 2) {
                     return '1.00';
                 } else if (fValue > 2) {
-                    return (Math.round(((1 / (1 - fValue)).toFixed(Config.main.roundDecimalCoefficients + 2)) * Math.pow(10, Config.main.roundDecimalCoefficients)) / Math.pow(10, Config.main.roundDecimalCoefficients)).toFixed(Config.main.roundDecimalCoefficients);
+                    return (Math.round(((1 / (1 - fValue)).toFixed(Config.main.roundDecimalCoefficients + 3)) * Math.pow(10, Config.main.roundDecimalCoefficients + 3)) / Math.pow(10, Config.main.roundDecimalCoefficients + 3)).toFixed(Config.main.roundDecimalCoefficients);
                 }
                 return (fValue - 1).toFixed(Config.main.roundDecimalCoefficients);
             case 'indo':
@@ -395,13 +407,13 @@ VBET5.filter('oddConvert', [ 'Config', 'Utils', function (Config, Utils) {
                 } else if (fValue > 2) {
                     return (fValue - 1).toFixed(Config.main.roundDecimalCoefficients);
                 }
-                return (Math.round(((1 / (1 - fValue)).toFixed(Config.main.roundDecimalCoefficients + 2)) * Math.pow(10, Config.main.roundDecimalCoefficients)) / Math.pow(10, Config.main.roundDecimalCoefficients)).toFixed(Config.main.roundDecimalCoefficients);
+                return (Math.round(((1 / (1 - fValue)).toFixed(Config.main.roundDecimalCoefficients + 3)) * Math.pow(10, Config.main.roundDecimalCoefficients + 3)) / Math.pow(10, Config.main.roundDecimalCoefficients + 3)).toFixed(Config.main.roundDecimalCoefficients);
             default:
                 return rValue;
         }
     }
 
-    return function (value, format, type, displayKey) {
+    return function (value, format, type, displayKey, showCustomFractionalFormat) {
         if (value === null || value === undefined || isNaN(value)) {
             return value;
         }
@@ -411,7 +423,6 @@ VBET5.filter('oddConvert', [ 'Config', 'Utils', function (Config, Utils) {
         if(Config.main.specialOddFormat && Config.main.specialOddFormat[format]) {
             format = Config.main.specialOddFormat[format].displayKey[displayKey] || Config.main.specialOddFormat[format].default;
         }
-
         var cacheKey = (format || Config.env.oddFormat).concat(value);
         if (cache[cacheKey] === undefined) {
             format = format || Config.env.oddFormat;
@@ -424,6 +435,9 @@ VBET5.filter('oddConvert', [ 'Config', 'Utils', function (Config, Utils) {
             } else {
                 cache[cacheKey] = convert(value, format);
             }
+        }
+        if (showCustomFractionalFormat && customLadder[cache[cacheKey]]){
+            return customLadder[cache[cacheKey]];
         }
         return cache[cacheKey];
     };

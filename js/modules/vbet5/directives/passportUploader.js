@@ -15,16 +15,7 @@ VBET5.directive('passportUploader', ['Zergling', 'Config', '$rootScope', functio
             forms: '=forms' // Connecting account verification form to the object which stores all forms (settings.js)
         },
         link: function ($scope) {
-            $scope.imageTypes = {
-                1: 'Bank Slip',
-                2: 'Document',
-                3: 'Passport',
-                4: 'Driver License',
-                5: 'IBAN',
-                6: 'Social Card ID',
-                7: 'Other'
-            };
-            $scope.accountVerificationData = {};
+             $scope.accountVerificationData = {};
 
             (function init() {
                 getUploadedImages();
@@ -104,6 +95,7 @@ VBET5.directive('passportUploader', ['Zergling', 'Config', '$rootScope', functio
                         function success(response) {
                             if (response.code === 0 && response.data.length) {
                                 $scope.documentImages = response.data.map(function processImgData(image) {
+                                    // Mutating the original image
                                     image.FileType = image.Name.substring(image.Name.indexOf('.')+1);
                                     switch (image.FileType) {
                                         case 'pdf':

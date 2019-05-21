@@ -12,6 +12,8 @@ angular.module('casino').controller('casinoSpecialGamesCtrl', ['$rootScope', '$s
     var demo_id;
     $rootScope.footerMovable = true; // make footer movable
 
+  $rootScope.casinoGameOpened = 1;
+
     function getUrl() {
         $scope.frameUrl = null;
 
@@ -53,10 +55,9 @@ angular.module('casino').controller('casinoSpecialGamesCtrl', ['$rootScope', '$s
         }
         if (!Utils.isObjectEmpty(locationObject)) {
             gameUrl += "&additionalparams=" + JSON.stringify(locationObject);
-            $location.search({});
         }
 
-        $rootScope.env.authorized && (gameUrl += '&token=' + AuthData.getAuthToken() + (!Config.main.GmsPlatform ? '&username=' + $rootScope.profile.username : ''));
+        $rootScope.env.authorized && (gameUrl += '&token=' + AuthData.getAuthToken());
 
         if ($scope.game.extearnal_game_id === CConfig.pokerklas.externalID) {
             var popup = $window.open(gameUrl, 'PokerKlas', 'width=800,height=800,menubar=yes,toolbar=yes,location=yes,scrollbars=yes,resizable=yes');
@@ -72,16 +73,7 @@ angular.module('casino').controller('casinoSpecialGamesCtrl', ['$rootScope', '$s
     $scope.$watch('env.authorized', function (newValue, oldValue) {
         if (!$scope.game || newValue === oldValue || $scope.game.extearnal_game_id === CConfig.pokerklas.externalID || (!newValue && $scope.game.extearnal_game_id === CConfig.backgammon.externalID)) return;
 
-        if (!newValue || $rootScope.profile || Config.main.GmsPlatform) {
-            getUrl();
-        } else {
-            var profileWatcherPromise = $scope.$watch('profile', function (newValue) {
-                if (newValue) {
-                    profileWatcherPromise();
-                    getUrl();
-                }
-            });
-        }
+        getUrl();
 
         if ($rootScope.env.authorized && $rootScope.env.sliderContent === 'login') {
             $rootScope.env.showSlider = false;

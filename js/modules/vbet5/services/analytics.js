@@ -10,6 +10,29 @@ VBET5.service('analytics', ['$rootScope', '$window', '$location', 'Config', func
 
 
     var analytics = {};
+    /**
+     * @ngdoc method
+     * @name initGtag
+     * @methodOf vbet5.service:analytics
+     * @description Gtag initialization
+     */
+    function initGtag(googleTagManagerId,googleTagManagerDomain) {
+        if (googleTagManagerId) {
+            var s = document.body.getElementsByTagName('script')[0];
+            var newScript = document.createElement('script');
+            var src = googleTagManagerDomain || 'https://www.googletagmanager.com/gtag/js?id=';
+
+            newScript.setAttribute('src', src + googleTagManagerId);
+            newScript.setAttribute("async", "");
+            s.parentNode.insertBefore(newScript, s);
+            $window.dataLayer = $window.dataLayer || [];
+            $window.gtag = function () {
+                dataLayer.push(arguments);
+            };
+            $window.gtag('js', new Date());
+            $window.gtag('config', googleTagManagerId);
+        }
+    }
 
     /**
      * @ngdoc method
@@ -32,18 +55,21 @@ VBET5.service('analytics', ['$rootScope', '$window', '$location', 'Config', func
      * @methodOf vbet5.service:analytics
      * @description Hotjar initialization
      */
-    function initHotjar (hotjarId) {
-        (function (h, o, t, j, a, r) {
-            h.hj = h.hj || function () {
-                    (h.hj.q = h.hj.q || []).push(arguments);
+    function initHotjar(hotjarId, hotjarSV) {
+        (function (window, document, url, sv, head, script) {
+            window.hj = window.hj || function () {
+                    (window.hj.q = window.hj.q || []).push(arguments);
                 };
-            h._hjSettings = {hjid: parseInt(hotjarId, 10), hjsv: 5};
-            a = o.getElementsByTagName('head')[0];
-            r = o.createElement('script');
-            r.async = 1;
-            r.src = t + h._hjSettings.hjid + j + h._hjSettings.hjsv;
-            a.appendChild(r);
-        })(window, document, '//static.hotjar.com/c/hotjar-', '.js?sv=');
+            window._hjSettings = {
+                hjid: parseInt(hotjarId, 10),
+                hjsv: parseInt(hotjarSV, 10)
+            };
+            head = document.getElementsByTagName('head')[0];
+            script = document.createElement('script');
+            script.async = 1;
+            script.src = url + window._hjSettings.hjid + sv + window._hjSettings.hjsv;
+            head.appendChild(script);
+        })(window, document,'//static.hotjar.com/c/hotjar-', '.js?sv=');
     }
 
     /**
@@ -61,7 +87,11 @@ VBET5.service('analytics', ['$rootScope', '$window', '$location', 'Config', func
         }
 
         if (Config.main.hotjarAnalyticsId) {
-            initHotjar(Config.main.hotjarAnalyticsId);
+            initHotjar(Config.main.hotjarAnalyticsId, Config.main.hotjarAnalyticsSV || 5);
+        }
+
+        if (Config.main.googleTagManagerId) {
+            initGtag(Config.main.googleTagManagerId,Config.main.googleTagManagerDomain);
         }
 
         if (Config.main.yandexMetricaId) {

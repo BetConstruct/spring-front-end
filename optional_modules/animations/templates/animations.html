@@ -1,0 +1,31 @@
+<div class="feedconstruct-animation">
+    <div class="game-control soccer" ng-if="openGame.sport.alias === 'Soccer'" ng-controller="SoccerCtrl">
+        <ul class="game-team-names">
+            <li title="{{ openGame.team1_name }}">{{ openGame.team1_name }}</li>
+            <li class="teams-score"><span>{{openGame.info.score1}} : {{openGame.info.score2}}</span></li>
+            <li title="{{ openGame.team2_name }}">{{ openGame.team2_name }}</li>
+        </ul>
+        <canvas style="position: absolute; width: 0; height: 0;" id="canvasBall"></canvas>
+        <canvas dir="ltr" style="width: 100%" height="250" width="470" ng-init="animateReady()" id="canvas"></canvas>
+
+    </div>
+    <div class="game-control basketball" ng-if="openGame.sport.alias === 'Basketball'" ng-controller="BasketBallCtrl">
+        <ul class="game-team-names">
+            <li title="{{ openGame.team1_name }}">{{ openGame.team1_name }}</li>
+            <li class="teams-score"><span>{{openGame.info.score1}} : {{openGame.info.score2}}</span></li>
+            <li title="{{ openGame.team2_name }}">{{ openGame.team2_name }}</li>
+        </ul>
+        <canvas dir="ltr" style="width: 100%" height="250" width="470" ng-init="animateReady()"
+                id="basketball-canvas"></canvas>
+    </div>
+
+    <div class="game-control icehockey" ng-if="openGame.sport.alias === 'IceHockey'" ng-controller="IceHockeyCtrl">
+        <ul class="game-team-names">
+            <li title="{{ openGame.team1_name }}">{{ openGame.team1_name }}</li>
+            <li class="teams-score"><span>{{openGame.info.score1}} : {{openGame.info.score2}}</span></li>
+            <li title="{{ openGame.team2_name }}">{{ openGame.team2_name }}</li>
+        </ul>
+        <canvas dir="ltr" style="width: 100%" height="250" width="470" ng-init="animateReady()"
+                id="hockey-canvas"></canvas>
+    </div>
+</div>

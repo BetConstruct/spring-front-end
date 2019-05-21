@@ -1,0 +1,21 @@
+<div>
+    <h3 trans>Set up a login time</h3>
+    <div class="settings-info-contain deposit-limit">
+        <div>
+            <p ng-bind-html="'login-limit-text'|translate|html"></p>
+        </div>
+        <form class="registration-form {{$root.conf.loginLimit.selectedValue}}" ng-class="{'disable-reality-form' : working}" ng-init="loginLimit.currentValue=$root.conf.loginLimit.selectedValue">
+            <div class="form-text">
+                <label ng-repeat="option in $root.conf.loginLimit.options track by $index">
+                    <input type="radio" name="period" ng-model="loginLimit.currentValue" ng-value="option.value">
+                    <span ng-bind="option.name|translate"></span>
+                </label>
+            </div>
+            <div class="change-button-container password">
+                <div class="cashier-button">
+                    <button ng-disabled="loginLimit.currentValue==$root.conf.loginLimit.selectedValue" trans ng-click="$root.broadcast('loginLimit.change', {value: loginLimit.currentValue})">Save</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

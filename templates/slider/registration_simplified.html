@@ -1,14 +1,16 @@
 <div ng-controller="RegistrationController as regCtrl"
-     ng-init="registration.byEmail = true; registration.step = 1;regFormInit()"
+     ng-init="registration.byEmail = true; regFormInit()"
      class="form-register-layout {{conf.registration.type}}-registration"
      ng-escape="broadcast('slider.close')">
+
+    <zimpler ng-if="registration.step === 0"></zimpler>
 
     <form name="registerform"
           ng-keypress="keyPress($event)"
           class="registration-form"
           novalidate="novalidate"
           id="simplified-reg-form">
-        <div class="popup-layout-registration" ng-show="!registration.complete && !registration.failed">
+        <div class="popup-layout-registration" ng-show="!registration.complete && !registration.failed && registration.step !== 0">
             <div class="vertical-middle-wrapper">
                 <div class="all-popup-separator">
                     <div class="register-container">
@@ -87,19 +89,21 @@
                                          ng-include="::'templates/slider/registration-fields.html'|fixPath">
                                     </div>
                                 </div>
-                                <include-template ng-if="conf.registration.type === 'partial'" template-path="templates/slider/registration/tcCheckbox.html"></include-template>
+                                <div ng-if="conf.registration.type === 'partial'">
+                                    <include-template template-path="templates/slider/registration/tcCheckbox.html"></include-template>
+                                    <include-template ng-if="conf.recaptchaV3" template-path="templates/slider/registration/grecaptcha.html"></include-template>
+                                </div>
                                 <div class="button-confirm">
                                     <button trans type="button"
                                             ng-show="conf.registration.simplified && conf.registration.type !== 'partial'"
-                                            ng-click="registration.step = 2"
+                                            ng-click="goToNextStep()"
                                             ng-keydown="nextKeyPress($event)"
                                             ng-disabled="!step1DataIsValid() || registration.busy"
                                             title="{{step1DataIsValid()? '': ('Please enter username and password to continue'|translate)}}">Next</button>
                                     <button trans type="button"
                                             ng-show="conf.registration.type === 'partial'"
                                             ng-click="register();"
-                                            ng-disabled="!step1DataIsValid() || registration.busy || (userAge !== undefined && userAge < conf.registration.minimumAllowedAge)"
-                                            title="{{step1DataIsValid()? ('Continue'|translate): ('Please enter username and password to continue'|translate)}}">Register</button>
+                                            ng-disabled="registration.busy || (userAge !== undefined && userAge < conf.registration.minimumAllowedAge)">Register</button>
                                 </div>
                                 <div class="account-link-b">
                                     <p trans>Already have an account?</p>
@@ -117,13 +121,14 @@
                                     <div ng-repeat="regItem in RegConfig.step2.rightCol track by $index" class="field-separator {{regItem.name}}" ng-include="::'templates/slider/registration-fields.html'|fixPath"></div>
                                 </div>
                                 <include-template template-path="templates/slider/registration/tcCheckbox.html"></include-template>
+                                <include-template ng-if="conf.recaptchaV3" template-path="templates/slider/registration/grecaptcha.html"></include-template>
                                 <div class="account-link-b" ng-if="conf.registration.footerTitle && conf.registration.simplified && conf.registration.type !== 'partial'">
                                     <p ng-bind="(conf.registration.footerTitle[env.lang] || conf.registration.footerTitle['eng'])|translate"></p>
                                 </div>
                                 <div class="finish-register-buttons">
                                     <div class="button-confirm step-2">
                                         <vbet-loader class="small-progress" ng-show="registration.busy"></vbet-loader>
-                                        <button type="button" ng-click="registration.step = 1" trans>Back</button>
+                                        <button type="button" ng-click="goToBack()" trans>Back</button>
                                         <button type="button"
                                                 ng-click="register();"
                                                 ng-class="{'loading':registration.busy}"
@@ -248,7 +253,6 @@
                             <h3 trans>Registration complete.</h3>
                             <p ng-if="conf.registration.mailIsSentAfterRegistration">
                                 <span trans>Please check your email.</span>
-                                <u ng-if="!conf.GmsPlatform" ng-click="resendEmail()" trans>Resend</u>
                             </p>
                         </div>
                         <div class="pu-button-wrap-j">

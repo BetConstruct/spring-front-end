@@ -18,12 +18,16 @@ var availableModules = ['vbet5', 'CMS', 'casino'].reduce(function (acc, curr) {
 console.log("available modules:", availableModules);
 angular.module('app', availableModules);
 
-angular.module('app').config(['$compileProvider', function ($compileProvider) {
+angular.module('app').config(['$compileProvider', '$locationProvider', '$qProvider', function ($compileProvider, $locationProvider, $qProvider) {
     'use strict';
     $compileProvider.aHrefSanitizationWhitelist(/^\s*(https?|ftp|mailto|file|javascript|tel|viber|skype|data):/);
-    // $compileProvider.debugInfoEnabled(false);
+    $compileProvider.debugInfoEnabled(window.location.hostname === "localhost"); //@TODO need to disable for some skins
     $compileProvider.commentDirectivesEnabled(false);
     $compileProvider.cssClassDirectivesEnabled(false);
+
+    $locationProvider.hashPrefix('');
+
+    $qProvider.errorOnUnhandledRejections(false);
 }]);
 
 (function () {
@@ -160,7 +164,9 @@ angular.module('app').config(['$compileProvider', function ($compileProvider) {
 
     function bootstrapApplication() {
         angular.element(document).ready(function () {
-            angular.bootstrap(document, ["app"]);
+            angular.bootstrap(document, ["app"], {
+                strictDi: true
+            });
         });
     }
 

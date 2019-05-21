@@ -27,11 +27,11 @@ VBET5.service('Geoip', ['$http', '$q', '$location', 'Config', '$timeout', functi
     Geoip.getCountry = function getCountry() {
         var promise = $q.defer();
 
-        $http.jsonp(Config.geoIP.callbackUrl)
-             .success(function (response) {
-                return promise.resolve(response);
-            }).error(function (response) {
-                return $q.reject(response);
+        $http.get(Config.geoIP.callbackUrl)
+             .then(function (response) {
+                return promise.resolve(response.data);
+            }, function (reason) {
+                return $q.reject(reason.data);
             });
         return promise.promise;
     };
@@ -72,21 +72,21 @@ VBET5.service('Geoip', ['$http', '$q', '$location', 'Config', '$timeout', functi
         if (promise) {
             return promise;
         }
-        $http.jsonp(Config.geoIP.callbackUrlCity)
-            .success(function (response) {
+        $http.get(Config.geoIP.callbackUrlCity)
+            .then(function (response) {
                 if (promise !== null) {
                     promise = null;
-                    if (response && response.statusCode === 'OK') {
-                        data = response;
-                        deferred.resolve(response);
+                    if (response.data && response.data.statusCode === 'OK') {
+                        data = response.data;
+                        deferred.resolve(response.data);
                     } else {
                         deferred.resolve();
                     }
                 }
-            }).error(function (response) {
+            }, function (reason) {
                  if (promise !== null) {
                      promise = null;
-                     deferred.reject(response);
+                     deferred.reject(reason.data);
                  }
             });
         $timeout(function () {

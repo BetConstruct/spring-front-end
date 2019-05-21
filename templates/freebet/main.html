@@ -16,10 +16,10 @@
                                     <h3>{{competition.length}} <span trans>events</span></h3>
                                     <ul ng-show="victorinas && competition.length && !competition[0].have_bet">
                                         <li>
-                                            <button class="random-choice" ng-click="randomChoice(victorinaId)" trans>Random Choice</button>
+                                            <button class="random-choice" ng-click="randomChoice(victorinaId, $index)" trans>Random Choice</button>
                                         </li>
                                         <li ng-show="(victorinas[victorinaId][0].events['p1'].k && victorinas[victorinaId][0].events['p1'].k  !== 'W1') || (victorinas[victorinaId].events['p2'].k && victorinas[victorinaId].events['p2'].k !== 'W2')">
-                                            <button class="favourite-choice" ng-click="favouriteChoice(victorinaId)" trans>Favourite Choice</button>
+                                            <button class="favourite-choice" ng-click="favouriteChoice(victorinaId, $index)" trans>Favourite Choice</button>
                                         </li>
                                     </ul>
                                 </div>
@@ -65,7 +65,7 @@
                                     </table>
                                 </div>
                                 <div class="free-bet-game-footer" ng-show="victorinas && competition.length && !competition[0].have_bet">
-                                    <button ng-click="doFreeBet(victorinaId, $event)" trans ng-disabled="!complete[victorinaId]" trans>Place bets!</button>
+                                    <button ng-click="doFreeBet(victorinaId, $event, $index)" trans ng-disabled="!complete[victorinaId]" trans>Place bets!</button>
                                 </div>
                             </div>
                         </div>

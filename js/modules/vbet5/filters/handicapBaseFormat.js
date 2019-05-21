@@ -6,6 +6,7 @@ VBET5.filter('handicapBaseFormat',['Config', function(Config) {
             return;
         }
         var value = parseFloat(base);
+        var sign = value <= 0 ? '' : ( ('' + base).indexOf('+') > -1 ? '+' : '');
         if (Config.main.asian.homeAwayBaseRecalculationEnabled && homeScore !== undefined && awayScore !== undefined) {
             var delta = homeScore - awayScore;
             switch (type) {
@@ -19,7 +20,7 @@ VBET5.filter('handicapBaseFormat',['Config', function(Config) {
         }
 
         if (Config.main.fractionalBaseFormat && (filterCondition || filterCondition === undefined)) {
-            var sign = value < 0 ? '-' : '';
+            sign = value < 0 ? '-' : ''; // There might be some error here. Most likely the correct sign calculations are value <= 0 ? '' : (base.indexOf('+') > -1 ? '+' : '');
             if ((value / 0.25) % 2 === 0) {
                 return hideSign ? Math.abs(value) : value;
             } else {
@@ -37,7 +38,7 @@ VBET5.filter('handicapBaseFormat',['Config', function(Config) {
                 return (value - 0.25) + ' / ' + Math.abs((value + 0.25));
             }
         } else {
-            return hideSign ? Math.abs(value) : value;
+            return hideSign ? Math.abs(value) : sign + value;
         }
     };
 }]);

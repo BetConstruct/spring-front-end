@@ -1,0 +1,49 @@
+<div class="popular-game-view-wrapper-v3" style="background-image: url('images/featured-games-backgrounds/soccer.png');">
+    <div class="popular-game-t-row-v3">
+        <div class="market-title-v3" data-title="{{openGameDetails.competition_name + ' - ' + openGameDetails.game_name}}">
+            <ul class="market-icons-t-r">
+                <li class="tv-icon-market-v3" ng-show="openGameDetails.video_id && $root.conf.videoEnabled"></li>
+                <li class="statistic-icon-market-v3"
+                    ng-if="$root.conf.enableH2HStat &&  openGameDetails.is_stat_available"
+                    ng-click="openStatistics(openGameDetails); $event.stopPropagation();"></li>
+            </ul>
+        </div>
+        <div class="popular-game-dashboard-v3">
+            <div class="popular-game-team-name-v3">
+                <table>
+                    <tr>
+                        <td>
+                            <div class="liga-icon-view-v3" ng-if="$root.conf.teamLogosPath && openGameDetails.team1_external_id">
+                                <img ng-src="{{$root.conf.teamDefaultLogo}} ? 'images/team-logo-default.png' : {{$root.conf.teamLogosPath}}e/m/0/{{openGameDetails.team1_external_id}}.png"
+                                     err-src="images/team-logo-default.png" alt="">
+                            </div>
+                        </td>
+                        <td>
+                            <p>{{openGameDetails.team1_name}}</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="liga-icon-view-v3" ng-if="$root.conf.teamLogosPath && openGameDetails.team2_external_id">
+                                <img ng-src="{{$root.conf.teamDefaultLogo}} ? 'images/team-logo-default.png' : {{$root.conf.teamLogosPath}}e/m/0/{{openGameDetails.team2_external_id}}.png"
+                                     err-src="images/team-logo-default.png" alt="">
+                            </div>
+                        </td>
+                        <td>
+                            <p>{{openGameDetails.team2_name}}</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>
+                            <p trans>Score:</p>
+                        </td>
+                        <td>
+                            <span>{{openGame.scores || openGameDetails.scores}}</span>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

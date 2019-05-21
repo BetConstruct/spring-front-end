@@ -14,6 +14,7 @@ VBET5.directive('cashOutDialog', ['$rootScope', '$timeout', 'Moment', 'Zergling'
         templateUrl: 'templates/directive/cashout-dialog.html',
         link: function ($scope) {
             var dateRange, selectedUpcomingPeriod;
+            var minAmountMap = [1, 0.1, 0.01];
 
 
             function initParams() {
@@ -44,23 +45,23 @@ VBET5.directive('cashOutDialog', ['$rootScope', '$timeout', 'Moment', 'Zergling'
             function openDialog(event, data) {
                 initParams();
                 $scope.cashoutPopup.active = true;
-                $scope.cashoutPopup.sliderValue = 100;
+                $scope.cashoutPopup.sliderValue = 0;
                 $scope.cashoutDialog.type = 'cashout';
                 $scope.cashoutTypes.manual = 'full';
                 $scope.cashoutTypes.auto = 'full';
                 $scope.cashoutBet = data.bet;
-                $scope.cashoutBet.originalPrice = data.bet.cash_out;
+                $scope.cashoutPopup.originalPrice = data.bet.cash_out;
                 $scope.newCashoutData = {
                     new_price: parseFloat(data.bet.cash_out)
                 };
                 $scope.triggerAutoCashOut = {
-                    amount: parseFloat($scope.cashoutBet.cash_out)
+                    amount: ''
                 };
-                $scope.cashoutPopup.inputValue = $scope.cashoutBet.cash_out;
                 $scope.autoCashOutAmount = {
-                    min: ($scope.cashoutBet.cash_out + $scope.cashoutBet.cash_out / 100).toFixed(2),
-                    max: ($scope.cashoutBet.possible_win - $scope.cashoutBet.possible_win / 100).toFixed(2)
+                    min: ($scope.cashoutBet.cash_out + minAmountMap[$rootScope.currency.rounding]).toFixed(2),
+                    max: ($scope.cashoutBet.possible_win - minAmountMap[$rootScope.currency.rounding]).toFixed(2)
                 };
+                $scope.autoCashOutAmount.disabled = parseFloat($scope.autoCashOutAmount.min) >= parseFloat($scope.autoCashOutAmount.max);
                 if (data.dateRange && data.selectedUpcomingPeriod) {
                     dateRange = data.dateRange;
                     selectedUpcomingPeriod = data.selectedUpcomingPeriod;
@@ -139,16 +140,13 @@ VBET5.directive('cashOutDialog', ['$rootScope', '$timeout', 'Moment', 'Zergling'
                             if (response.result === "Ok") {
                                 if ($rootScope.env.sliderContent === 'recentBets') {
                                     var currentTimestamp = Moment.get().unix();
-                                    if (suggested.partial_price && ((dateRange.fromDate <= currentTimestamp && currentTimestamp <= dateRange.toDate) || selectedUpcomingPeriod !== 0)) {
+                                    if (suggested.partial_price && dateRange && ((dateRange.fromDate <= currentTimestamp && currentTimestamp <= dateRange.toDate) || selectedUpcomingPeriod !== 0)) {
                                         $timeout(function () { //need to remove timeout after backend's fix
                                             $rootScope.$broadcast('loadMixedBetHistory');
                                         }, 950);
                                     } else {
                                         $rootScope.$broadcast('updateAfterCashout', {betId: bet.id});
                                     }
-                                } else if (suggested.partial_price) {
-                                    // Updates single bet's cash out amount in 'Open Bets' section, after it has been partially cashed out (back end currently doesn't send 'bet_settlement', for this to be done automatically)
-                                    $rootScope.$broadcast('openBets.updateCashOutAmount', {betId: bet.id});
                                 }
                                 $scope.cashoutDialog.type = 'confirm';
                                 $scope.cashoutSuccess = (response.details && (response.details.cash_out_price || response.details.price)) || true;
@@ -203,7 +201,7 @@ VBET5.directive('cashOutDialog', ['$rootScope', '$timeout', 'Moment', 'Zergling'
                 }
 
                 var price = 0.01 * calculated * value;
-                if (price === 0) {
+                if (+price.toFixed(2) === 0) {
                     $scope.canCashOut.enabled = false;
                 }
                 if (calculated >= 100 || $rootScope.conf.balanceFractionSize === 0) {
@@ -232,23 +230,19 @@ VBET5.directive('cashOutDialog', ['$rootScope', '$timeout', 'Moment', 'Zergling'
              * @name updatePopUpInfo
              * @methodOf vbet5.directive:cashOutDialog
              * @description This function dynamically updates pop up info
-             * @param {Object} event - ignore this parameter, this is passed from listener
-             * @param {Object} data - cashout map
              */
-            function updatePopUpInfo(event, data) {
-                if ($scope.cashoutBet && $scope.cashoutBet.id && data.cashOutMap[$scope.cashoutBet.id]) { // $scope.cashoutBet is the active bet that we want to cash out
-                    if (data.cashOutMap[$scope.cashoutBet.id]['CashoutAmount'] === null) {
+            function updatePopUpInfo() {
+                if ($scope.cashoutBet) { // $scope.cashoutBet is the active bet that we want to cash out
+                    if (!$scope.cashoutBet.cash_out && $scope.cashoutDialog.type !== 'confirm') {
                         return $scope.closePopUp();
                     }
 
-                    $scope.autoCashOutAmount.min = (data.cashOutMap[$scope.cashoutBet.id]['CashoutAmount'] + (data.cashOutMap[$scope.cashoutBet.id]['CashoutAmount']) / 100).toFixed(2);
-                    $scope.autoCashOutAmount.max = ($scope.cashoutBet.possible_win - $scope.cashoutBet.possible_win / 100).toFixed(2);
+                    $scope.autoCashOutAmount.min = ($scope.cashoutBet.cash_out + minAmountMap[$rootScope.currency.rounding]).toFixed(2);
+                    $scope.autoCashOutAmount.max = ($scope.cashoutBet.possible_win - minAmountMap[$rootScope.currency.rounding]).toFixed(2);
+                    $scope.autoCashOutAmount.disabled = parseFloat($scope.autoCashOutAmount.min) >= parseFloat($scope.autoCashOutAmount.max);
 
-                    $scope.triggerAutoCashOut.amount = $scope.autoCashOutAmount.min;
-
-                    if (($scope.cashoutDialog.type !== 'autoCashout' && $scope.cashoutTypes.manual === 'full') || ($scope.cashoutDialog.type === 'autoCashout' && $scope.cashoutTypes.auto === 'full')) {
-                        $scope.cashoutPopup.inputValue = $scope.cashoutDialog.type !== 'autoCashout' ? data.cashOutMap[$scope.cashoutBet.id]['CashoutAmount'] : $scope.autoCashOutAmount.min;
-                        $scope.cashoutPopup.sliderValue = 100; // 100 is the maximum slider value (100%)
+                    if ($scope.cashoutDialog.type === 'autoCashout' && $scope.cashoutBet.auto_cash_out_amount === null) {
+                        $scope.changeTriggerAmount();
                     }
 
                     /* $scope.newCashoutData is created when pop up is opened and contains info on cash out price
@@ -256,9 +250,10 @@ VBET5.directive('cashOutDialog', ['$rootScope', '$timeout', 'Moment', 'Zergling'
                     if ($scope.newCashoutData) {
                         if ($scope.cashoutTypes.manual === 'partial') {
                             $scope.newCashoutData.partial_price = $scope.cashoutPopup.inputValue;
+                            $scope.changeBackCashoutValue($scope.cashoutBet.cash_out);
                         }
                         if ($scope.newCashoutData.new_price) {
-                            $scope.newCashoutData.new_price = data.cashOutMap[$scope.cashoutBet.id]['CashoutAmount'];
+                            $scope.newCashoutData.new_price = $scope.cashoutBet.cash_out;
                         }
 
                         // We delete the partial price because it doesn't need to be sent if the cash out is 'full'
@@ -277,7 +272,7 @@ VBET5.directive('cashOutDialog', ['$rootScope', '$timeout', 'Moment', 'Zergling'
              * @description converts cash-out price to percent value
              */
             $scope.changeBackCashoutValue = function changeBackCashoutValue(calculated) {
-                if (isNaN(calculated)) {
+                if ($scope.cashoutDialog.type === 'autoCashout' && $scope.cashoutTypes.auto === 'full' || isNaN(calculated)) {
                     $scope.canCashOut.enabled = true;
                     return;
                 }
@@ -289,13 +284,14 @@ VBET5.directive('cashOutDialog', ['$rootScope', '$timeout', 'Moment', 'Zergling'
                     $scope.cashoutPopup.sliderValue = 0;
                     $scope.canCashOut.enabled = false;
                     return;
-                } else if ((price > calculated - $scope.minCashoutValue && price < calculated) || (price > calculated)) {
-                    $scope.cashoutPopup.sliderValue = 100;
+                } else if ((price > +(calculated - $scope.minCashoutValue).toFixed(2) && price < calculated) || (price > calculated)) {
+                    var sliderValue = Math.round(price / (calculated * 0.01));
+                    $scope.cashoutPopup.sliderValue = Math.min(sliderValue, 100);
                     $scope.canCashOut.enabled = false;
                     return;
                 }
 
-                if ((calculated - price >= $scope.minCashoutValue) || price === calculated) {
+                if ( ( +(calculated - price).toFixed(2) >= $scope.minCashoutValue) || price === calculated) {
                     $scope.canCashOut.enabled = true;
                     var value = price / (calculated * 0.01);
                     value = Math.round(value);
@@ -335,21 +331,22 @@ VBET5.directive('cashOutDialog', ['$rootScope', '$timeout', 'Moment', 'Zergling'
              * @methodOf vbet5.directive:cashOutDialog
              * @description switches cash out dialog type
              */
-            $scope.switchCashOutDialogType = function switchCashOutDialogType(dialogType, cashOutAmount) {
+            $scope.switchCashOutDialogType = function switchCashOutDialogType(dialogType) {
+                $scope.cashoutDialog.type = dialogType;
+                $scope.cashoutPopup.inputValue = '';
+
                 if (dialogType === 'cashout') {
                     $scope.cashoutTypes.manual = 'full';
-                    $scope.cashoutPopup.inputValue = $scope.cashoutBet.cash_out;
                 } else if (dialogType === 'autoCashout') {
                     if ($scope.cashoutBet.auto_cash_out_amount != null) {
                         $scope.triggerAutoCashOut.amount = $scope.cashoutBet.auto_cash_out_amount;
                     } else {
-                        $scope.triggerAutoCashOut.amount = (cashOutAmount + cashOutAmount / 100).toFixed(2);
-                        $scope.cashoutPopup.inputValue = $scope.triggerAutoCashOut.amount;
+                        $scope.triggerAutoCashOut.amount = '';
                     }
                     $scope.cashoutTypes.auto = 'full';
                     $scope.triggerAutoCashOut.error = false;
                 }
-                $scope.cashoutPopup.sliderValue = 100;
+                $scope.cashoutPopup.sliderValue = 0;
                 $scope.canCashOut.enabled = true;
             };
 
@@ -360,10 +357,9 @@ VBET5.directive('cashOutDialog', ['$rootScope', '$timeout', 'Moment', 'Zergling'
              * @methodOf vbet5.directive:cashOutDialog
              * @description changes input value, shows message if amount is not valid
              */
-            $scope.changeTriggerAmount = function changeTriggerAmount(cashOutAmount) {
-                $scope.triggerAutoCashOut.error = (parseFloat($scope.triggerAutoCashOut.amount) < parseFloat($scope.autoCashOutAmount.min) || parseFloat($scope.triggerAutoCashOut.amount) > parseFloat($scope.autoCashOutAmount.max) || !$scope.triggerAutoCashOut.amount);
-                $scope.cashoutPopup.sliderValue = 100;
-                $scope.cashoutTypes.auto === 'full' ? $scope.cashoutPopup.inputValue = cashOutAmount : $scope.cashoutPopup.inputValue = $scope.triggerAutoCashOut.amount;
+            $scope.changeTriggerAmount = function changeTriggerAmount() {
+                $scope.triggerAutoCashOut.error = !$scope.triggerAutoCashOut.amount || parseFloat($scope.triggerAutoCashOut.amount) < parseFloat($scope.autoCashOutAmount.min) || parseFloat($scope.triggerAutoCashOut.amount) > parseFloat($scope.autoCashOutAmount.max);
+                $scope.changeBackCashoutValue($scope.triggerAutoCashOut.amount);
             };
 
 
@@ -401,8 +397,13 @@ VBET5.directive('cashOutDialog', ['$rootScope', '$timeout', 'Moment', 'Zergling'
                 //  $scope.changeBackCashoutValue();
                 if ($scope.cashoutPopup) {
                     $scope.cashoutPopup.active = false;
+                    $scope.cashoutBet = null;
                 }
             };
+
+            $scope.$watch('conf.balanceFractionSize', function changeInputRegEx(newVal) {
+                $scope.inputRegEx = newVal === 0 ? '[^\\d]' : '(?<=\\..{' + newVal + '})[^\\]]+';
+            });
 
             $scope.$on('closeCashOutPopUp', $scope.closePopUp);
             $scope.$on('updatePopUpInfo', updatePopUpInfo);

@@ -19,9 +19,11 @@
 }
 
 .optimal-contain-b-view {
-  float: left;
   width: calc(100% - 320px);
   box-sizing: border-box;
+  @include ltr {
+    float: left;
+  }
   @include rtl {
     float: right;
   }
@@ -31,19 +33,22 @@
   float: left;
   width: 100%;
   box-sizing: border-box;
-  border-right: 10px solid #DBE1E6;
+  @include ltr {
+    border-right: 10px solid #DBE1E6;
+  }
   @include rtl {
     border-left: 10px solid #DBE1E6;
-    border-right: none;
   }
 
 }
 
 .left-column-view-contain {
-  float: left;
   width: 320px;
   box-sizing: border-box;
   background: #e8edf1;
+  @include ltr {
+    float: left;
+  }
   @include rtl {
     float: right;
   }
@@ -54,18 +59,21 @@
   width: calc(100% - 320px);
   box-sizing: border-box;
   background: #e8edf1;
-  border-left: 10px solid #DBE1E6;
+  @include ltr {
+    border-left: 10px solid #DBE1E6;
+  }
   @include rtl {
-    border-left: none;
     border-right: 10px solid #DBE1E6;
   }
 }
 
 .right-column-view-contain {
-  float: right;
   width: 320px;
   box-sizing: border-box;
   background: #e8edf1;
+  @include ltr {
+    float: right;
+  }
   @include rtl {
     float: left;
   }

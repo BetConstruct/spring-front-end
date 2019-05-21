@@ -59,6 +59,20 @@
   font-display: fallback;
 }
 @font-face {
+  font-family: Roboto;
+  font-weight: bold;
+  font-style: normal;
+  src: local('IRAN_SemiBold'),
+  url('../../../fonts/farsi/IRAN_SemiBold.woff2#{$delete-cache}') format('woff2'),
+  url('../../../fonts/farsi/IRAN_SemiBold.woff#{$delete-cache}') format('woff'),
+  url('../../../fonts/farsi/IRAN_SemiBold.ttf#{$delete-cache}') format('truetype'),
+  url('../../../fonts/farsi/IRAN_SemiBold.eot#{$delete-cache}');
+  unicode-range: U+0600-06FF;
+  font-display: fallback;
+}
+
+
+@font-face {
   font-family: 'sport-icon';
   src: url('../../../fonts/sport/fonts/icomoon.eot#{$delete-cache}');
   src: url('../../../fonts/sport/fonts/icomoon.eot#{$delete-cache}') format('embedded-opentype'),

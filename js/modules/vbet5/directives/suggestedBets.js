@@ -6,7 +6,7 @@
  * @description displays suggested bets
  *
  */
-VBET5.directive('suggestedBets', ['$rootScope', '$http', '$filter', 'Zergling', 'GameInfo', 'Storage', '$timeout', function ($rootScope, $http, $filter, Zergling, GameInfo, Storage, $timeout) {
+VBET5.directive('suggestedBets', ['$rootScope', '$http', '$filter', 'Zergling', 'GameInfo', 'Storage', '$timeout', 'Config', function ($rootScope, $http, $filter, Zergling, GameInfo, Storage, $timeout, Config) {
     'use strict';
     return {
         restrict: 'E',
@@ -66,9 +66,9 @@ VBET5.directive('suggestedBets', ['$rootScope', '$http', '$filter', 'Zergling', 
              * @description Gets suggested bets from an API
              */
             function getCombos() {
-                if ($rootScope.profile) {
+                if ($rootScope.profile && $rootScope.partnerConfig) {
                     var apiUrl;
-                    switch ($scope.type) {
+                    switch ($scope.params.type) {
                         case 'preMatch':
                             if ($scope.showSuggestions !== 'hide') {
                                 apiUrl = 'https://varys.betconstruct.com/api/v3/recommendations/client/';
@@ -86,6 +86,8 @@ VBET5.directive('suggestedBets', ['$rootScope', '$http', '$filter', 'Zergling', 
                             }).then(handleResponse, handleResponseError);
                             break;
                     }
+                } else {
+                    $scope.noSuggestions = true;
                 }
             }
 
@@ -164,7 +166,7 @@ VBET5.directive('suggestedBets', ['$rootScope', '$http', '$filter', 'Zergling', 
                         'sport': ['id', 'name', 'alias', 'order'],
                         'competition': ['id', 'order', 'name'],
                         'region': ['id', 'name', 'alias'],
-                        'game': ['id', 'team1_id', 'team1_name', 'team2_id', 'team2_name', 'type'],
+                        'game': ['id', 'team1_id', 'team1_name', 'team2_id', 'team2_name', 'type', 'stats'],
                         'market': ['base', 'type', 'name', 'express_id'],
                         'event': []
                     },
@@ -175,7 +177,7 @@ VBET5.directive('suggestedBets', ['$rootScope', '$http', '$filter', 'Zergling', 
                     }
                 };
 
-                if ($scope.type === 'live') {
+                if ($scope.params.type === 'live') {
                     request.what.game.push('info');
                 }
 
@@ -185,7 +187,7 @@ VBET5.directive('suggestedBets', ['$rootScope', '$http', '$filter', 'Zergling', 
                             if (response.subid) {
                                 eventSubId = response.subid;
                             }
-                            if ($scope.type === 'preMatch') {
+                            if ($scope.params.type === 'preMatch' || $scope.params.initialLoad) {
                                 $scope.selectBetSlipMode('suggested');
                             }
                             handleUpdates(response.data);
@@ -205,14 +207,22 @@ VBET5.directive('suggestedBets', ['$rootScope', '$http', '$filter', 'Zergling', 
                 $timeout(function stopThrottle() { inThrottle = false; }, 2000);
             }
 
-
-            $scope.getSuggestedBets = function getSuggestedBets(event, type) {
+            /**
+             * @ngdoc method
+             * @name getSuggestedBets
+             * @description Starts the process of getting suggested bets
+             * @param {Event} event - angular event
+             * @param {Object} params
+             * @param {String} params.type - 'live'/'preMatch' - type of suggested bets
+             * @param {Boolean} params.initialLoad - true if done during the initial load of bet slip
+             */
+            $scope.getSuggestedBets = function getSuggestedBets(event, params) {
                 if (inThrottle) { return; }
                 setThrottle();
                 unsubscribe();
-                $scope.type = type;
+                $scope.params = params;
                 $scope.noSuggestions = false;
-                $scope.showSuggestions = $scope.type === 'live' ? true : Storage.get('suggestedBets') || true;
+                $scope.showSuggestions = $scope.params.type === 'live' ? true : Storage.get('suggestedBets') || true;
                 $scope.suggestedBetsList = [];
                 $rootScope.suggestedBets = {
                     eventIds: [],
@@ -264,7 +274,8 @@ VBET5.directive('suggestedBets', ['$rootScope', '$http', '$filter', 'Zergling', 
              * @name addToBetslip
              * @description Adds single suggested event to bet slip
              */
-            $scope.addSingleEvent = function addSingleEvent(event) {
+            $scope.addSingleEvent = function addSingleEvent(event, e) {
+                e.stopPropagation();
                 closeEditBetMode();
                 event.eventInfo.isSuggested = true; // We add isSuggested flag, so we can track it while preparing 'do_bet' request;
 
@@ -301,7 +312,9 @@ VBET5.directive('suggestedBets', ['$rootScope', '$http', '$filter', 'Zergling', 
 
             $scope.$on('suggestedBets.get', $scope.getSuggestedBets);
             $scope.$on('$destroy', function onDestroy() {
-                $scope.selectBetSlipMode('betting');
+                if ($scope.betSlip.mode !== 'betting' && $scope.betSlip.mode !== 'booking') {
+                    $scope.selectBetSlipMode(Config.main.enableBetBooking && !$rootScope.env.authorized ? 'booking' : 'betting');
+                }
                 unsubscribe();
             });
             $scope.$watch('betSlip.mode', function betSlipModeWatcher(newVal, oldVal) {

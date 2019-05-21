@@ -49,10 +49,10 @@ VBET5.controller('footerCtrl', ['$scope', '$rootScope', '$window', '$sce', '$loc
      * @param {String} name name of payment method
      */
     $scope.openDepositWithPayment = function openDepositWithPayment(event, name) {
-        if(!Config.main.header.version === 2 || !Config.main.footerPaymentsClickable) {
+        if (Config.main.header.version !== 2 || !Config.main.footerPaymentsClickable) {
             return;
         }
-        if(Config.env.authorized) {
+        if (Config.env.authorized) {
             $rootScope.$broadcast('openPayment.deposit', {event: event, name: name});
             $rootScope.env.selectedPayment = name;
         } else {
@@ -74,6 +74,12 @@ VBET5.controller('footerCtrl', ['$scope', '$rootScope', '$window', '$sce', '$loc
         }, []);
     }
     if (Config.main.footer.imageInsteadPayments) {
-        $scope.spriteURL = (Config.main.cmsDataDomain ||  WPConfig.wpUrl.split("/json")[0]) +  Config.main.footer.imageInsteadPayments;
+        $scope.spriteURL = (Config.main.cmsDataDomain ||  WPConfig.wpUrl.split("/json")[0]) +  Config.main.footer.imageInsteadPayments + "?v=" + Config.releaseDate;
     }
+
+    (function init() {
+        if (Config.main.apgSealId && Config.main.apgSealIdByDomain && !Config.main.apgSealIdByDomain[$location.host()]) {
+            Config.main.apgSealId = '';
+        }
+    })();
 }]);

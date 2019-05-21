@@ -1,43 +1,44 @@
 <!--Overview-->
-<div class="all-inplay-wrapper" ng-repeat="sports in [favoriteGames, allSports] track by $index" ng-show="sports[0].competitions.length">
-    <div
-        class="inplay-game-wrapper {{sport.alias}}"
-        ng-repeat="sport in sports track by sport.id"
-        ng-class="{'closed': states.sport[sport.id].collapsed, 'pointer-events-none': isSportCollapsed[sport.id]}"
+<vbet-loader ng-if="loading.overview"></vbet-loader>
+<div class="all-inplay-wrapper" ng-if="!loading.overview">
+    <div class="inplay-game-wrapper {{sport.alias}}"
+            ng-repeat="sport in allSports track by sport.id"
+            ng-class="{'closed': !states.sportExpanded[sport.id]}"
     >
-
-        <div class="title-sport-inplay" ng-click="states.sport[sport.id].collapsed = !states.sport[sport.id].collapsed">
+        <div class="title-sport-inplay" ng-click="toggleMenuItem('sport', sport.id)">
             <div class="sport-icon-inplay mini-icon-1 mini-icon-{{sport.id}} {{sport.alias}}"></div>
             <p ng-bind="sport.name"></p>
+            <vbet-loader class="small-progress" ng-if="loading[sport.id]"></vbet-loader>
             <div class="arrow-toggle-inplay"></div>
         </div>
-        <div class="all-info-game-inplay-container" ng-repeat="competition in sport.competitions track by competition.id" ng-show="competition.games.length">
-            <div class="mini-wrapper-info-inplay" ng-class="{'closed': states.competition[sport.id + competition.id].collapsed}">
-                <div class="overview-championship-info" ng-click="states.competition[sport.id + competition.id].collapsed = !states.competition[sport.id + competition.id].collapsed">
-                    <div class="arrow-toggle-inplay"></div>
-                    <div class="sport-icon-inplay mini-icon-1 mini-icon-{{competition.sport.id}} {{competition.sport.alias}}" ng-show="!sport.id"></div>
-
-                    <h4>
-                        <span ng-bind="competition.sport.name" ng-show="!sport.id" class="fav-name-overview-b-sport"></span>
+        <div class="float-width" ng-if="states.sportExpanded[sport.id]">
+            <div class="all-info-game-inplay-container" ng-repeat="competition in sportData[sport.id].competitions track by competition.id" ng-if="competition.games.length">
+                <div class="mini-wrapper-info-inplay" ng-class="{'closed': states.competitionCollapsed[competition.id]}">
+                    <div class="overview-championship-info" ng-click="toggleMenuItem('competition', competition.id)">
+                        <div class="arrow-toggle-inplay"></div>
+                        <h4>
                         <span class="championship-name-country-overview">
                             <b class="flag-overview flag-icon flag-{{competition.region.alias | removeUselessSymbolsByRegexp: '[,\' ]+': 'g': 'true'}}"></b>
                             <i ng-bind="competition.name"></i>
                         </span>
-                    </h4>
-                </div>
-                <div class="overview-game-info" ng-class="{'blocked': (!(game.events_count || game.markets_count) || game.is_blocked)}" ng-repeat="game in competition.games track by game.id">
-                    <div class="overview-name-column">
-                        <a ng-href="#/sport/?game={{game.id}}&sport={{sport.id || competition.sport.id}}&competition={{competition.id}}&type=1&region={{game.region.id}}">
-                            <div class="name-team-overview">
+                        </h4>
+                    </div>
+                    <div class="overview-game-info" ng-class="{'blocked': (!(game.events_count || game.markets_count) || game.is_blocked)}" ng-repeat="game in competition.games track by game.id">
+                        <div class="overview-name-column">
+                            <a ng-href="#/sport/?game={{game.id}}&sport={{sport.id || competition.sport.id}}&competition={{competition.id}}&type=1&region={{game.region.id}}">
+                                <div class="name-team-overview">
                                     <p title="{{game.team1_name + ' - ' + game.team2_name}}">
                                         <span ng-bind="game.team1_name"></span>
                                         <span ng-bind="game.team2_name"></span>
                                     </p>
-                                <div class="video-icon-overview" ng-show="game.hasVideo && conf.videoEnabled"></div>
+                                <div class="video-icon-overview" ng-show="game.hasVideo && $root.conf.videoEnabled"></div>
                             </div>
                             <div class="detail-info-overview">
                                 <p>
-                                    <span class="score-contain-overview-b" ng-show="game.info.score1!==undefined"><b>{{game.info.score1}} </b><b>{{game.info.score2}}</b></span>
+                                    <span class="score-contain-overview-b" ng-show="game.info.score1!==undefined">
+                                        <b ng-bind="game.info.set_count === 1 ? game.stats.score_set1.team1_value : game.info.score1"></b>
+                                        <b ng-bind="game.info.set_count === 1 ? game.stats.score_set1.team2_value : game.info.score2"></b>
+                                    </span>
                                     <span class="overview-game-team-inform">
                                         {{game.info.current_game_state|convertSetName:game.sport.alias|translate}}
                                         <i ng-if="sport.alias === 'Soccer' || sport.alias === 'CyberFootball'">
@@ -49,55 +50,157 @@
                                             {{game.stats['score_'+game.info.current_game_state].team2_value ?  game.stats['score_'+game.info.current_game_state].team2_value + ')' : ' 0)'}}
                                         </i>
                                     </span>
-                                </p>
-                                <div class="overview-blocked-icon"></div>
-                                <div class="time-match-overview">
-                                    <span ng-bind="getCurrentTime(game.info.current_game_time)"></span>
+                                    </p>
+                                    <div class="overview-blocked-icon"></div>
+                                    <div class="time-match-overview">
+                                        <span ng-bind="getCurrentTime(game.info.current_game_time)"></span>
+                                    </div>
                                 </div>
-                            </div>
-                        </a>
-                    </div>
-                    <div class="overview-markets-column">
-                        <div class="separator-overview-b" ng-if="game.firstMarket && (game.firstMarket.events.P1.price || game.firstMarket.events.X.price || game.firstMarket.events.P2.price)">
-                            <div class="name-market-overview">
-                                <div class="change-markets-box">
-                                    <p ng-bind="game.firstMarket.name"></p>
-                                    <ul class="market-selector-not-working-yet">
-                                        <li ng-repeat="market in markets"></li>
-                                    </ul>
+                            </a>
+                        </div>
+                        <div class="overview-markets-column" ng-if="!game.processedMarkets">
+                            <p trans>Game is currently unavailable</p>
+                        </div>
+                        <div class="overview-markets-column" ng-if="game.processedMarkets.WINNER && (game.processedMarkets.WINNER.events.W1 || game.processedMarkets.WINNER.events.W2)">
+                            <div class="separator-overview-b">
+                                <div class="name-market-overview">
+                                    <div class="change-markets-box">
+                                        <p ng-bind="game.processedMarkets.WINNER.name" title="{{game.processedMarkets.WINNER.name}}"></p>
+                                    </div>
+                                    <div class="chain-cashout-icons">
+                                        <span class="chain-icon-overview"  ng-show="game.processedMarkets.WINNER.express_id" title="Events from different groups can be combined in combined bets" trans="attr-only"></span>
+                                        <span class="combined-bets-overview" ng-bind="game.processedMarkets.WINNER.express_id"></span>
+                                        <span class="cashout-b-overview" title="Cash-out available" ng-show="game.processedMarkets.WINNER.cashout && !!partnerConfig.is_cashout_live" trans></span>
+                                    </div>
                                 </div>
-                                <div class="chain-cashout-icons">
-                                    <span class="chain-icon-overview"  ng-show="game.firstMarket.express_id" title="Events from different groups can be combined in combined bets" trans="attr-only"></span>
-                                    <span class="combined-bets-overview" ng-bind="game.firstMarket.express_id">1</span>
-                                    <span class="cashout-b-overview" title="Cash-out available" ng-show="game.firstMarket.cashout && ((!env.live && !!partnerConfig.is_cashout_prematch) || (env.live && !!partnerConfig.is_cashout_live))" trans></span>
+                                <div class="mini-b-events-overview">
+                                    <div class="l-b column-3" ng-class="{'default': game.processedMarkets.WINNER.col_count > 5}">
+                                        <div class="single-events-b-v3"
+                                             ng-if="game.processedMarkets.WINNER.events.W1"
+                                             ng-click="bet(game.processedMarkets.WINNER.events.W1, game.processedMarkets.WINNER, game)"
+                                             title="{{game.processedMarkets.WINNER.events.W1.name}}"
+                                             ng-class="{'active': isEventInBetSlip(game.processedMarkets.WINNER.events.W1), 'blocked': ((game.processedMarkets.WINNER.events.W1.price | oddConvert:'decimal') == 1 || game.is_blocked)}">
+                                            <b class="p-v"
+                                               ng-show="(game.processedMarkets.WINNER.events.W1.price | oddConvert:'decimal') != 1 && !game.is_blocked"
+                                               ng-class="{'factor-top': game.processedMarkets.WINNER.events.W1.price_change > 0, 'factor-bottom': game.processedMarkets.WINNER.events.W1.price_change < 0}"
+                                               ng-bind="game.processedMarkets.WINNER.events.W1.price | oddConvert:env.oddFormat:null:'WINNER'">
+                                            </b>
+                                        </div>
+                                        <div class="single-events-b-v3"
+                                             ng-if="game.processedMarkets.WINNER.events.X"
+                                             ng-click="bet(game.processedMarkets.WINNER.events.X, game.processedMarkets.WINNER, game)"
+                                             title="{{game.processedMarkets.WINNER.events.X.name}}"
+                                             ng-class="{'active': isEventInBetSlip(game.processedMarkets.WINNER.events.X), 'blocked': ((game.processedMarkets.WINNER.events.X.price | oddConvert:'decimal') == 1 || game.is_blocked)}">
+                                            <b class="p-v"
+                                               ng-show="(game.processedMarkets.WINNER.events.X.price | oddConvert:'decimal') != 1 && !game.is_blocked"
+                                               ng-class="{'factor-top': game.processedMarkets.WINNER.events.X.price_change > 0, 'factor-bottom': game.processedMarkets.WINNER.events.X.price_change < 0}"
+                                               ng-bind="game.processedMarkets.WINNER.events.X.price | oddConvert:env.oddFormat:null:'WINNER'">
+                                            </b>
+                                        </div>
+                                        <div class="single-events-b-v3"
+                                             ng-if="game.processedMarkets.WINNER.events.W2"
+                                             ng-click="bet(game.processedMarkets.WINNER.events.W2, game.processedMarkets.WINNER, game)"
+                                             title="{{game.processedMarkets.WINNER.events.W2.name}}"
+                                             ng-class="{'active': isEventInBetSlip(game.processedMarkets.WINNER.events.W2), 'blocked': ((game.processedMarkets.WINNER.events.W2.price | oddConvert:'decimal') == 1 || game.is_blocked)}">
+                                            <b class="p-v"
+                                               ng-show="(game.processedMarkets.WINNER.events.W2.price | oddConvert:'decimal') != 1 && !game.is_blocked"
+                                               ng-class="{'factor-top': game.processedMarkets.WINNER.events.W2.price_change > 0, 'factor-bottom': game.processedMarkets.WINNER.events.W2.price_change < 0}"
+                                               ng-bind="game.processedMarkets.WINNER.events.W2.price | oddConvert:env.oddFormat:null:'WINNER'">
+                                            </b>
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="mini-b-events-overview">
-                                <ul ng-class="{'column-3': game.firstMarket.events.X, 'column-2': game.firstMarket.events.X === undefined}">
-                                    <li ng-class="{'active': isEventInBetSlip(game.firstMarket.events.P1), 'blocked': ((game.firstMarket.events.P1.price | oddConvert:'decimal') == 1 || game.is_blocked)}"
-                                            ng-click="bet(game.firstMarket.events.P1, game.firstMarket, game)" title="{{game.firstMarket.events.P1.name}}">
-                                        <p ng-bind="game.firstMarket.events.P1.name"></p>
-                                        <span class="price{{game.firstMarket.events.P1.price_change}}" ng-bind="game.firstMarket.events.P1.price|oddConvert:env.oddFormat:null:'WINNER'"></span>
-                                    </li>
-                                    <li ng-class="{'active': isEventInBetSlip(game.firstMarket.events.X), 'blocked': ((game.firstMarket.events.X.price | oddConvert:'decimal') == 1 || game.is_blocked)}"
-                                        ng-click="bet(game.firstMarket.events.X, game.firstMarket, game)" title="{{game.firstMarket.events.X.name}}"
-                                            ng-show="game.firstMarket.events.X">
-                                        <p ng-bind="game.firstMarket.events.X.name"></p>
-                                        <span class="price{{game.firstMarket.events.X.price_change}}" ng-bind="game.firstMarket.events.X.price|oddConvert:env.oddFormat:null:'WINNER'"></span>
-                                    </li>
-                                    <li ng-class="{'active': isEventInBetSlip(game.firstMarket.events.P2), 'blocked': ((game.firstMarket.events.P2.price | oddConvert:'decimal') == 1 || game.is_blocked)}"
-                                        ng-click="bet(game.firstMarket.events.P2, game.firstMarket, game)" title="{{game.firstMarket.events.P2.name}}">
-                                        <p ng-bind="game.firstMarket.events.P2.name"></p>
-                                        <span class="price{{game.firstMarket.events.P2.price_change}}" ng-bind="game.firstMarket.events.P2.price|oddConvert:env.oddFormat:null:'WINNER'"></span>
-                                    </li>
-                                </ul>
                             </div>
                         </div>
-                    </div>
-                    <div class="overview-more-events-column">
-                        <div class="favorite-overview-icon" ng-class="{'active': myGames.indexOf(game.id) !== -1}" ng-click="toggleGameFavorite(game); $event.stopPropagation()"></div>
-                        <div class="any-events-b" ng-show="game.additionalEvents" >
-                            <a ng-bind="'+' + game.additionalEvents" ng-href="#/sport/?game={{game.id}}&sport={{sport.id || competition.sport.id}}&competition={{competition.id}}&type=1&region={{game.region.id}}"></a>
+                        <div class="overview-markets-column" ng-if="game.processedMarkets.HANDICAP">
+                            <div class="separator-overview-b">
+                                <div class="name-market-overview">
+                                    <div class="change-markets-box">
+                                        <p title="{{game.processedMarkets.HANDICAP.name}}">
+                                        <span class="base-i-v"
+                                              ng-bind="game.processedMarkets.HANDICAP.base === 0 ? game.processedMarkets.HANDICAP.base :
+                                              game.processedMarkets.HANDICAP.events.Home.base > 0 ? ( '+' + game.processedMarkets.HANDICAP.events.Home.base + '-' ) : (game.processedMarkets.HANDICAP.events.Home.base + '+' ) "></span>
+                                            {{game.processedMarkets.HANDICAP.name}}
+                                        </p>
+                                    </div>
+                                    <div class="chain-cashout-icons">
+                                        <span class="chain-icon-overview"  ng-show="game.processedMarkets.HANDICAP.express_id" title="Events from different groups can be combined in combined bets" trans="attr-only"></span>
+                                        <span class="combined-bets-overview" ng-bind="game.processedMarkets.HANDICAP.express_id">1</span>
+                                        <span class="cashout-b-overview" title="Cash-out available" ng-show="game.processedMarkets.HANDICAP.cashout && !!partnerConfig.is_cashout_live" trans></span>
+                                    </div>
+                                </div>
+                                <div class="mini-b-events-overview">
+                                    <div class="l-b column-2" ng-class="{'default': game.processedMarkets.HANDICAP.col_count > 5}">
+                                        <div class="single-events-b-v3"
+                                             ng-click="bet(game.processedMarkets.HANDICAP.events.Home, game.processedMarkets.HANDICAP, game)"
+                                             title="{{game.processedMarkets.HANDICAP.events.Home.name}}"
+                                             ng-class="{'active': isEventInBetSlip(game.processedMarkets.HANDICAP.events.Home), 'blocked': ((game.processedMarkets.HANDICAP.events.Home.price | oddConvert:'decimal') == 1 || game.is_blocked)}">
+                                            <b class="p-v"
+                                               ng-show="(game.processedMarkets.HANDICAP.events.Home.price | oddConvert:'decimal') != 1 && !game.is_blocked"
+                                               ng-class="{'factor-top': game.processedMarkets.HANDICAP.events.Home.price_change > 0, 'factor-bottom': game.processedMarkets.HANDICAP.events.Home.price_change < 0}"
+                                               ng-bind="game.processedMarkets.HANDICAP.events.Home.price | oddConvert:env.oddFormat:null:'HANDICAP'">
+                                            </b>
+                                        </div>
+                                        <div class="single-events-b-v3"
+                                             ng-click="bet(game.processedMarkets.HANDICAP.events.Away, game.processedMarkets.HANDICAP, game)"
+                                             title="{{game.processedMarkets.HANDICAP.events.Away.name}}"
+                                             ng-class="{'active': isEventInBetSlip(game.processedMarkets.HANDICAP.events.Away), 'blocked': ((game.processedMarkets.HANDICAP.events.Away.price | oddConvert:'decimal') == 1 || game.is_blocked)}">
+                                            <b class="p-v"
+                                               ng-show="(game.processedMarkets.HANDICAP.events.Away.price | oddConvert:'decimal') != 1 && !game.is_blocked"
+                                               ng-class="{'factor-top': game.processedMarkets.HANDICAP.events.Away.price_change > 0, 'factor-bottom': game.processedMarkets.HANDICAP.events.Away.price_change < 0}"
+                                               ng-bind="game.processedMarkets.HANDICAP.events.Away.price | oddConvert:env.oddFormat:null:'HANDICAP'">
+                                            </b>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="overview-markets-column" ng-if="game.processedMarkets.TOTALS">
+                            <div class="separator-overview-b">
+                                <div class="name-market-overview">
+                                    <div class="change-markets-box">
+                                        <p title="{{game.processedMarkets.TOTALS.name}}">
+                                            <span class="base-i-v" ng-bind="game.processedMarkets.TOTALS.base"></span>
+                                            {{game.processedMarkets.TOTALS.name}}
+                                        </p>
+                                    </div>
+                                    <div class="chain-cashout-icons">
+                                        <span class="chain-icon-overview"  ng-show="game.processedMarkets.TOTALS.express_id" title="Events from different groups can be combined in combined bets" trans="attr-only"></span>
+                                        <span class="combined-bets-overview" ng-bind="game.processedMarkets.TOTALS.express_id">1</span>
+                                        <span class="cashout-b-overview" title="Cash-out available" ng-show="game.processedMarkets.TOTALS.cashout && !!partnerConfig.is_cashout_live" trans></span>
+                                    </div>
+                                </div>
+                                <div class="mini-b-events-overview">
+                                    <div class="l-b column-2" ng-class="{'default': game.processedMarkets.TOTALS.col_count > 5}">
+                                        <div class="single-events-b-v3"
+                                             ng-click="bet(game.processedMarkets.TOTALS.events.Over, game.processedMarkets.TOTALS, game)"
+                                             title="{{game.processedMarkets.TOTALS.events.Over.name}}"
+                                             ng-class="{'active': isEventInBetSlip(game.processedMarkets.TOTALS.events.Over), 'blocked': ((game.processedMarkets.TOTALS.events.Over.price | oddConvert:'decimal') == 1 || game.is_blocked)}">
+                                            <b class="p-v"
+                                               ng-show="(game.processedMarkets.TOTALS.events.Over.price | oddConvert:'decimal') != 1 && !game.is_blocked"
+                                               ng-class="{'factor-top': game.processedMarkets.TOTALS.events.Over.price_change > 0, 'factor-bottom': game.processedMarkets.TOTALS.events.Over.price_change < 0}"
+                                               ng-bind="game.processedMarkets.TOTALS.events.Over.price | oddConvert:env.oddFormat:null:'TOTALS'">
+                                            </b>
+                                        </div>
+                                        <div class="single-events-b-v3"
+                                             ng-click="bet(game.processedMarkets.TOTALS.events.Under, game.processedMarkets.TOTALS, game)"
+                                             title="{{game.processedMarkets.TOTALS.events.Under.name}}"
+                                             ng-class="{'active': isEventInBetSlip(game.processedMarkets.TOTALS.events.Under), 'blocked': ((game.processedMarkets.TOTALS.events.Under.price | oddConvert:'decimal') == 1 || game.is_blocked)}">
+                                            <b class="p-v"
+                                               ng-show="(game.processedMarkets.TOTALS.events.Under.price | oddConvert:'decimal') != 1 && !game.is_blocked"
+                                               ng-class="{'factor-top': game.processedMarkets.TOTALS.events.Under.price_change > 0, 'factor-bottom': game.processedMarkets.TOTALS.events.Under.price_change < 0}"
+                                               ng-bind="game.processedMarkets.TOTALS.events.Under.price | oddConvert:env.oddFormat:null:'TOTALS'">
+                                            </b>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="overview-more-events-column">
+                            <div class="favorite-overview-icon" ng-class="{'active': myGames.indexOf(game.id) !== -1}" ng-click="toggleGameFavorite(game); $event.stopPropagation()"></div>
+                            <div class="any-events-b" ng-show="game.markets_count" >
+                                <a ng-bind="'+' + game.markets_count" ng-href="#/sport/?game={{game.id}}&sport={{sport.id || competition.sport.id}}&competition={{competition.id}}&type=1&region={{game.region.id}}"></a>
+                            </div>
                         </div>
                     </div>
                 </div>

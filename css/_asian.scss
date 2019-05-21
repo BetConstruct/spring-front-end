@@ -12,14 +12,14 @@
   height: 100%;
   font: 10px/12px $font-f !important;
   .md-progress-circular.md-theme:not(.not-main) {
-    left: 50%;
-    margin-left: -50px;
     margin-top: 40px;
     //padding: 20px 0 40px !important;
+    @include ltr {
+      left: 50%;
+      margin-left: -50px;
+    }
     @include rtl {
-      left: auto;
       right: 50%;
-      margin-left: 0;
       margin-right: -50px;
     }
   }
@@ -94,8 +94,10 @@
 
 /*left block*/
 .asian-left-menu-fixed {
-  float: left;
   width: 280px;
+  @include ltr {
+    float: left;
+  }
   @include rtl {
     float: right;
   }
@@ -113,13 +115,14 @@
 }
 
 .asian-left-contain-menu {
-  padding: 0 1px 0 0;
   float: left;
   width: 100%;
   height: 100%;
   box-sizing: border-box;
-  overflow-y: scroll;
-  overflow-x: hidden;
+  @include scroll;
+  @include ltr {
+    padding: 0 1px 0 0;
+  }
   @include rtl {
     padding: 0 0 0 1px;
   }
@@ -132,7 +135,6 @@
 //animation & video
 .asian-left-contain-menu {
   .video-animation-vox-v3 {
-    height: 138px;
     .video-player-container {
       height: 138px;
     }
@@ -217,12 +219,13 @@
 
 .gaming-wrapper-asia .game-video-fullscreen .detached-game-container .video-player-control {
   width: 100%;
-  right: 24px;
   top: 0;
   height: 18px;
+  @include ltr {
+    right: 24px;
+  }
   @include rtl {
     left: 24px;
-    right: auto;
   }
 }
 
@@ -273,10 +276,11 @@
   height: 24px;
   font: 9px/24px icomoon;
   top: 0;
-  right: 0;
+  @include ltr {
+    right: 0;
+  }
   @include rtl {
     left: 0;
-    right: auto;
   }
   &:before {
     box-sizing: border-box;
@@ -296,12 +300,13 @@
 
 .gaming-wrapper-asia .detached-info {
   line-height: 13px;
-  padding: 0 10px 0 0;
   position: absolute;
-  right: 75px;
+  @include ltr {
+    padding: 0 10px 0 0;
+    right: 75px;
+  }
   @include rtl {
     left: 75px;
-    right: auto;
     padding: 0 0 0 10px;
   }
 }
@@ -317,19 +322,12 @@
     margin: 0 0 10px;
     border: none;
   }
-  .quick-bet-button {
-    top: 32px;
-    left: 10px;
-  }
   .bankers-button-container {
     top: 0;
     right: 24px;
   }
   .betting-result-info {
     margin: 0;
-  }
-  .quickbet-processing-info {
-    top: -14px;
   }
 }
 
@@ -356,7 +354,6 @@
   font-size: 10px;
 }
 
-.asian-left-contain-menu .eachway-selector,
 .asian-left-contain-menu .empty-betslip,
 .asian-left-contain-menu .quickbet-mode-betslip,
 .asian-left-contain-menu .detached-info {
@@ -365,12 +362,29 @@
 
 .asian-left-contain-menu .bet-event-title {
   display: table;
-  padding: 0 10px 0 0;
+  @include ltr {
+    padding: 0 10px 0 0;
+  }
   @include rtl {
     padding: 0 0 0 10px;
   }
 }
-
+.asian-l-m-cashout {
+  font-size: 17px;
+  display: block;
+  line-height: 17px;
+  width: 17px;
+  height: 17px;
+  text-align: center;
+  @include ltr {
+    float: right;
+    margin: 0 10px 0 0;
+  }
+  @include rtl {
+    float: left;
+    margin: 0 0 0 10px;
+  }
+}
 .asian-left-contain-menu .bet-event-notifications {
   top: 0;
 }
@@ -414,16 +428,22 @@
   font-size: 10px;
 }
 
-.asian-left-contain-menu .betslip-options label {
-  font-size: 10px;
-}
-
 .asian-left-contain-menu .button-bet .bet-button-wrapper {
-  padding: 0;
+  @include ltr {
+    padding: 0;
+  }
+  @include rtl {
+    padding: 0;
+  }
 }
 
 .asian-left-contain-menu .button-bet .bet-notification-update-container {
-  padding: 0 10px 0 0;
+  @include ltr {
+    padding: 0 10px 0 0;
+  }
+  @include rtl {
+    padding: 0 10px 0 0;
+  }
 }
 
 .asian-left-contain-menu .button-bet {
@@ -454,10 +474,6 @@
   position: relative;
   display: block;
   float: left;
-}
-
-.asian-left-contain-menu .quick-bet-button p {
-  line-height: 18px;
 }
 
 .asian-left-contain-menu .superbet-checkbox label {
@@ -491,46 +507,20 @@
 }
 
 .asian-left-contain-menu .bet-form form .bet-currency-value p {
-  padding-top: 7px;
+  @include ltr {
+    padding-top: 7px;
+  }
+  @include rtl {
+    padding-top: 7px;
+  }
 }
 
-.asian-left-contain-menu .bs-type-switcher,
 .asian-left-contain-menu .betslip-system-chenge {
   box-shadow: none;
   border: none;
   padding: 6px 4px 6px 6px;
 }
 
-.asian-left-contain-menu .open-type-switcher {
-  box-shadow: none;
-  right: 0;
-  top: 24px;
-}
-
-.asian-left-contain-menu .open-type-switcher ul li a {
-  min-width: 100px;
-  border-left: none;
-  border-right: none;
-  font-size: 11px;
-}
-
-.asian-left-contain-menu .betslip-system-chenge .open-type-switcher ul li a {
-  width: 85px;
-  white-space: nowrap;
-  font-size: 10px;
-}
-
-.asian-left-contain-menu .open-type-switcher ul li:last-child a,
-.asian-left-contain-menu .betslip-system-chenge .open-type-switcher ul:last-child li:last-child a {
-  border-radius: 0 0 3px 3px;
-}
-
-.asian-left-contain-menu .betslip-system-chenge .open-type-switcher ul li:last-child a {
-  border-radius: inherit;
-  border-top: none;
-}
-
-.asian-left-contain-menu .bs-type-switcher p,
 .asian-left-contain-menu .betslip-system-chenge p {
   font-size: 11px;
   line-height: 11px;
@@ -563,16 +553,18 @@
 }
 
 .asian-left-contain-menu .name-b-list h2 {
-  margin: 0;
-  padding: 0;
   width: 100%;
   text-indent: 10px;
-  font-size: 11px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   height: 24px;
   border-radius: 3px 3px 0 0;
+  @include ltr {
+    margin: 0;
+    padding: 0;
+    font-size: 11px;
+  }
   @include rtl {
     margin: 0;
     padding: 0;
@@ -581,7 +573,9 @@
 }
 
 .asian-left-contain-menu .list-bet-block ul li {
-  padding: 5px 16px 5px 5px;
+  @include ltr {
+    padding: 5px 16px 5px 5px;
+  }
   @include rtl {
     padding: 5px 5px 5px 16px;
   }
@@ -635,13 +629,17 @@
       padding: 10px 5px;
       &:first-child {
         border: none;
-        border-radius: 5px 0 0 5px;
+        @include ltr {
+          border-radius: 5px 0 0 5px;
+        }
         @include rtl {
           border-radius: 0 5px 5px 0;
         }
       }
       &:last-child {
-        border-radius: 0 5px 5px 0;
+        @include ltr {
+          border-radius: 0 5px 5px 0;
+        }
         @include rtl {
           border-radius: 5px 0 0 5px;
         }
@@ -701,15 +699,16 @@
 .icon-sport-asia {
   position: absolute;
   z-index: 22;
-  left: 10px;
   top: 4px;
   width: 18px;
   height: 16px;
   font: 16px/16px 'sport-icon';
   text-align: center;
   transition: color 200ms;
+  @include ltr {
+    left: 10px;
+  }
   @include rtl {
-    left: auto;
     right: 10px;
   }
 }
@@ -720,14 +719,16 @@
 }
 
 .sport-name-asia {
-  float: left;
-  padding: 0 0 0 36px;
   width: calc(100% - 24px);
   box-sizing: border-box;
   position: relative;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  @include ltr {
+    float: left;
+    padding: 0 0 0 36px;
+  }
   @include rtl {
     float: right;
     padding: 0 36px 0 0;
@@ -738,22 +739,24 @@
   position: absolute;
   width: 24px;
   height: 24px;
-  right: 0;
   top: 0;
   text-align: center;
+  @include ltr {
+    right: 0;
+  }
   @include rtl {
     left: 0;
-    right: auto;
   }
   &:before {
     font: 16px/24px "icomoon";
     content: "\e674";
     position: absolute;
     display: block;
-    left: 4px;
     top: 0;
+    @include ltr {
+      left: 4px;
+    }
     @include rtl {
-      left: auto;
       right: 4px;
     }
   }
@@ -765,11 +768,12 @@
 
 .sport-market-counts {
   position: absolute;
-  right: 0;
   top: 0;
+  @include ltr {
+    right: 0;
+  }
   @include rtl {
     left: 0;
-    right: auto;
   }
 }
 
@@ -786,21 +790,24 @@
 }
 
 .market-neme-asia {
-  padding: 0 36px 0 10px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   position: relative;
   width: 100%;
   box-sizing: border-box;
+  @include ltr {
+    padding: 0 36px 0 10px;
+  }
   @include rtl {
     padding: 0 10px 0 36px;
   }
   .sport-market-counts {
-    right: 6px;
+    @include ltr {
+      right: 6px;
+    }
     @include rtl {
       left: 6px;
-      right: auto;
     }
   }
 }
@@ -816,9 +823,11 @@
 /*Game wrapper*/
 
 .game-contain {
-  float: right;
   width: calc(100% - 290px);
   padding: 0;
+  @include ltr {
+    float: right;
+  }
   @include rtl {
     float: left;
   }
@@ -830,6 +839,17 @@
   margin: 0 0 10px;
   overflow: hidden;
   border-radius: 4px;
+    .ew-total-view-v3{
+    color: $c16-sp-1;
+    margin-top: 5px;
+      @include ltr {
+        margin-left: 5px;
+      }
+      @include rtl {
+        margin-right: 5px;
+        float: right;
+      }
+  }
 }
 
 /*filter*/
@@ -863,7 +883,9 @@
 
 .big-filter-wrapper ul li:first-child {
   border: none;
-  border-radius: 4px 0 0 4px;
+  @include ltr {
+    border-radius: 4px 0 0 4px;
+  }
   @include rtl {
     border-radius: 0 4px 4px 0;
   }
@@ -888,13 +910,15 @@
   .sub-menu-filter ul li:last-child {
     height: auto;
     button {
-      float: right;
       margin: 10px 12px;
       height: 24px;
       padding: 0 24px;
       text-transform: uppercase;
       font: 12px $font-f;
       transition: 300ms color, 300ms background, 300ms border-color;
+      @include ltr {
+        float: right;
+      }
       @include rtl {
         float: left;
       }
@@ -903,12 +927,14 @@
 }
 
 .filter-icon {
-  float: left;
   width: 24px;
   height: 24px;
   text-align: center;
   position: relative;
   overflow: hidden;
+  @include ltr {
+    float: left;
+  }
   @include rtl {
     float: right;
   }
@@ -919,18 +945,21 @@
   content: "";
   position: absolute;
   display: block;
-  left: -4px;
   top: 0;
   width: 24px;
   text-align: center;
+  @include ltr {
+    left: -4px;
+  }
   @include rtl {
-    left: auto;
     right: -4px;
   }
 }
 
 .filter-icon.back:before {
-  content: "\e66f";
+  @include ltr {
+    content: "\e66f";
+  }
   @include rtl {
     content: "\e672";
   }
@@ -958,9 +987,10 @@
 }
 
 .contein-mini-filtr .menu-arrow-asia:before {
-  left: -10px;
+  @include ltr {
+    left: -10px;
+  }
   @include rtl {
-    left: auto;
     right: -10px;
   }
 }
@@ -1027,9 +1057,10 @@
 .sub-menu-filter ul li input[type="checkbox"],
 .popup-asian-info input[type="checkbox"] {
   position: absolute;
-  left: -9999em;
+  @include ltr {
+    left: -9999em;
+  }
   @include rtl {
-    left: auto;
     right: -9999px;
   }
 }
@@ -1052,10 +1083,11 @@
   width: 13px;
   height: 13px;
   border-radius: 2px;
-  left: 8px;
   top: 6px;
+  @include ltr {
+    left: 8px;
+  }
   @include rtl {
-    left: auto;
     right: 8px;
   }
 }
@@ -1069,11 +1101,12 @@
   border-radius: 2px;
   line-height: 0;
   font-size: 6px;
-  left: 11px;
   top: 12px;
   text-indent: 0;
+  @include ltr {
+    left: 11px;
+  }
   @include rtl {
-    left: auto;
     right: 10px;
   }
 }
@@ -1102,24 +1135,37 @@
   height: 24px;
   overflow: hidden;
   position: relative;
-}
-
-.name-chempionship-asia h3 {
-  position: absolute;
-  left: 0;
-  top: 0;
-  max-width: 99%;
-  display: block;
-  line-height: 24px;
-  text-indent: 28px;
-  font-size: 11px;
-  text-transform: uppercase;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  overflow: hidden;
-  @include rtl {
-    left: auto;
-    right: 0;
+  h3 {
+    display: block;
+    line-height: 26px;
+    text-indent: 28px;
+    font-size: 11px;
+    text-transform: uppercase;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    @include ltr {
+      float: left;
+      left: 0;
+    }
+    @include rtl {
+      right: 0;
+      float: right;
+    }
+  }
+  .cashout-icon-market-v3 {
+    margin: 0 6px;
+    @include ltr {
+      float: left;
+    }
+    @include rtl {
+      float: left;
+    }
+    &:before {
+      box-sizing: border-box;
+      font-size: 14px;
+      line-height: 24px;
+    }
   }
 }
 
@@ -1136,10 +1182,11 @@
   content: "\e671";
   position: absolute;
   display: block;
-  left: -21px;
   top: 0;
+  @include ltr {
+    left: -21px;
+  }
   @include rtl {
-    left: auto;
     right: -21px;
   }
 }
@@ -1214,7 +1261,9 @@
   max-width: 230px;
   width: 230px;
   text-transform: uppercase;
-  text-align: left;
+  @include ltr {
+    text-align: left;
+  }
   @include rtl {
     text-align: right;
   }
@@ -1231,7 +1280,9 @@
 }
 
 .game-list-compitishion table tr td.big-row p {
-  padding: 5px 5px 5px 38px;
+  @include ltr {
+    padding: 5px 5px 5px 38px;
+  }
   @include rtl {
     padding: 5px 38px 5px 5px;
   }
@@ -1246,7 +1297,9 @@
   max-width: 144px;
   width: 144px;
   text-transform: uppercase;
-  text-align: left;
+  @include ltr {
+    text-align: left;
+  }
   @include rtl {
     text-align: right;
   }
@@ -1265,7 +1318,9 @@
 }
 
 .game-list-compitishion table tr td.outiright-odds-asia {
-  text-align: left;
+  @include ltr {
+    text-align: left;
+  }
   @include rtl {
     text-align: right;
   }
@@ -1283,7 +1338,9 @@
   min-width: 464px;
   max-width: 464px;
   width: 464px;
-  text-align: left;
+  @include ltr {
+    text-align: left;
+  }
   @include rtl {
     text-align: right;
   }
@@ -1293,7 +1350,9 @@
   min-width: 154px;
   max-width: 154px;
   width: 154px;
-  text-align: left;
+  @include ltr {
+    text-align: left;
+  }
   @include rtl {
     text-align: right;
   }
@@ -1316,7 +1375,6 @@
   max-width: 26px;
   width: 26px;
 }
-
 .game-list-compitishion table tr td.factor-name {
   min-width: 60px;
   max-width: 60px;
@@ -1408,8 +1466,10 @@
 }
 
 .time-g-asia span {
-  padding: 0 4px 0 0;
   display: inline-block;
+  @include ltr {
+    padding: 0 4px 0 0;
+  }
   @include rtl {
     padding: 0 0 0 4px;
   }
@@ -1427,9 +1487,11 @@
 
 .teams-n-account-asia span.name-team-asian-1x2 {
   max-width: 100px;
-  text-align: left;
   text-overflow: ellipsis;
   overflow: hidden;
+  @include ltr {
+    text-align: left;
+  }
   @include rtl {
     text-align: right;
   }
@@ -1440,16 +1502,21 @@
 }
 
 .teams-n-account-asia span.account-asian-1x2 {
-  text-align: right;
   white-space: nowrap;
   min-width: 40px;
   max-width: 40px;
   width: 40px;
+  @include ltr {
+    text-align: right;
+  }
+  @include rtl {
+    text-align: left;
+  }
 }
 
 .teams-n-account-asia span.account-asian-1x2 b {
-  background: black;
-  color: white;
+  background: lighten(desaturate(adjust-hue($skin-color, 3deg), 16), 4);;
+  color: set-color($skin-color);
   display: inline-block;
   padding: 3px 7px;
   border-radius: 3px;
@@ -1481,14 +1548,24 @@
 }
 
 .teams-n-account-asia span.account-asian-1x2 b:first-child {
-  margin-right: 5px;
+  @include ltr {
+    margin-right: 5px;
+  }
+  @include rtl {
+    margin-left: 5px;
+  }
 }
 
 .teams-n-account-asia span.account-asian-1x2 b:first-child:after {
   content: ":";
   position: absolute;
-  right: -5px;
   top: 3px;
+  @include ltr {
+    right: -5px;
+  }
+  @include rtl {
+    left: -5px;
+  }
 }
 
 .match-odd1X2.ft-ht .teams-n-account-asia span.account-asian-1x2 b:first-child:after {
@@ -1537,7 +1614,9 @@
 }
 
 .block-filter-hdp {
-  float: right;
+  @include ltr {
+    float: right;
+  }
   @include rtl {
     float: left;
   }
@@ -1618,7 +1697,9 @@
 }
 
 .match-odd1X2.correct-score .block-filter-hdp {
-  margin: 1px 54px 2px 0;
+  @include ltr {
+    margin: 1px 54px 2px 0;
+  }
   @include rtl {
     margin: 1px 0 2px 54px;
   }
@@ -1640,12 +1721,13 @@
 }
 
 .big-row .info-bl .icon-sport-asia {
-  left: 0;
   top: 0;
   width: 26px;
   height: 100%;
+  @include ltr {
+    left: 0;
+  }
   @include rtl {
-    left: auto;
     right: 0;
   }
 }
@@ -1842,7 +1924,9 @@
 }
 
 .name-filter-asian {
-  float: left;
+  @include ltr {
+    float: left;
+  }
   @include rtl {
     float: right;
   }
@@ -1856,7 +1940,9 @@
 }
 
 .filter-function-b {
-  float: right;
+  @include ltr {
+    float: right;
+  }
   @include rtl {
     float: left;
   }
@@ -1867,9 +1953,11 @@
 }
 
 .filter-function-b ul li {
-  float: left;
-  margin: 0 0 0 10px;
   position: relative;
+  @include ltr {
+    float: left;
+    margin: 0 0 0 10px;
+  }
   @include rtl {
     float: right;
     margin: 0 10px 0 0;
@@ -1877,7 +1965,6 @@
 }
 
 .popup-asian-info label {
-  float: left;
   height: 24px;
   width: 100%;
   font-size: 12px;
@@ -1886,14 +1973,19 @@
   white-space: nowrap;
   text-overflow: ellipsis;
   overflow: hidden;
+  @include ltr {
+    float: left;
+  }
   @include rtl {
     float: right;
   }
 }
 
 .filter-function-b ul li label {
-  margin: 0 20px 0 0;
   overflow: inherit;
+  @include ltr {
+    margin: 0 20px 0 0;
+  }
   @include rtl {
     margin: 0 0 0 20px;
   }
@@ -1927,7 +2019,6 @@
   float: left;
   width: 100%;
   position: relative;
-  left: -5px;
   -webkit-column-count: 3;
   -moz-column-count: 3;
   -ms-column-count: 3;
@@ -1936,8 +2027,10 @@
   -moz-column-gap: 0;
   -ms-column-gap: 0;
   column-gap: 0;
+  @include ltr {
+    left: -5px;
+  }
   @include rtl {
-    left: auto;
     right: -9px;
   }
 }
@@ -1948,11 +2041,13 @@
   max-width: 294px;
   height: 24px;
   border-top: none;
-  margin: 0 0 0 5px;
   position: relative;
   display: inline-block;
   vertical-align: middle;
   transform: translateZ(0);
+  @include ltr {
+    margin: 0 0 0 5px;
+  }
   @include rtl {
     margin: 0 5px 0 0;
   }
@@ -1962,86 +2057,8 @@
 
 /*top swicher*/
 
-.gaming-wrapper-asia .sportsbook-top-tab-t {
-  float: left;
-  width: 100%;
-  height: 28px;
-  border-radius: 3px 3px 0 0;
-  margin: 0 0 10px;
-  text-align: center;
-}
-
-.gaming-wrapper-asia .layout-switcher {
-}
-
-.gaming-wrapper-asia .layout-switcher > ul {
-  float: none;
-}
-
-.gaming-wrapper-asia .sportsbook-top-tab-t > ul li {
-  line-height: 26px;
-}
-
-.gaming-wrapper-asia .layout-switcher > ul li,
-.gaming-wrapper-asia .sportsbook-top-tab-t > ul li a {
-  float: none;
-  height: 28px;
-  display: inline-block;
-  position: relative;
-  font: 12px/28px $font-f;
-  padding: 0 20px 0 42px;
-  margin: 0;
-  text-transform: uppercase;
-  transition-duration: 250ms;
-
-}
-
-.gaming-wrapper-asia .layout-switcher > ul li.title-sep {
-  font: 12px/26px $font-f;
-  display: none;
-}
-
-.gaming-wrapper-asia .layout-switcher > ul li.active-format:before {
-  display: none;
-}
-
 .gaming-wrapper-asia .game-score-multiset > ul.title li:first-child span {
   text-indent: 10px;
-}
-
-.gaming-wrapper-asia .layout-switcher > ul li i {
-  width: 16px;
-  height: 16px;
-  position: absolute;
-  border-radius: 50%;
-  display: block;
-  left: 20px;
-  top: 6px;
-  text-align: center;
-  font: 10px/15px $font-f;
-}
-
-.gaming-wrapper-asia .factor-change-wrapper {
-  right: 10px;
-  height: 28px;
-}
-
-.gaming-wrapper-asia .factor-change-wrapper > p {
-  font: 12px/28px $font-f;
-}
-
-.gaming-wrapper-asia .factor-change-wrapper > p:after {
-  font: 16px/28px icomoon;
-}
-
-.gaming-wrapper-asia .sportsbook-top-tab-t > ul li .statistics-icon-new {
-  top: 9px;
-  font-size: 12px;
-}
-
-.gaming-wrapper-asia .sportsbook-top-tab-t > ul li .calendar-icon-new {
-  font-size: 16px;
-  top: 6px;
 }
 
 /*top swicher end*/
@@ -2223,7 +2240,9 @@
   .sport-games-count-v3 {
     line-height: 24px;
     font-size: 11px;
-    padding: 0 26px 0 0;
+    @include ltr {
+      padding: 0 26px 0 0;
+    }
     @include rtl {
       padding: 0 0 0 26px;
     }
@@ -2253,8 +2272,10 @@
 .game-is-neutral {
   display: inline-block;
   vertical-align: middle;
-  margin: 0 5px 0 0;
   font: 11px/20px icomoon;
+  @include ltr {
+    margin: 0 5px 0 0;
+  }
   @include rtl {
     margin: 0 0 0 5px;
   }
@@ -2266,8 +2287,10 @@
 .has-video {
   display: inline-block;
   vertical-align: middle;
-  margin: 0 5px 0 0;
   font: 11px/20px icomoon;
+  @include ltr {
+    margin: 0 5px 0 0;
+  }
   @include rtl {
     margin: 0 0 0 5px;
   }
@@ -2361,9 +2384,11 @@
   &.cols-3 {
     width: calc(100% + 2px);
     > div {
-      float: left;
       margin: 1px 0 0 0;
       width: calc((100% - 1px) / 3);
+      @include ltr {
+        float: left;
+      }
       @include rtl {
         float: right;
       }
@@ -2447,9 +2472,11 @@
         width: 100%;
         overflow: hidden;
         text-overflow: ellipsis;
-        padding: 0 0 0 12px;
         box-sizing: border-box;
-        text-align: left;
+        @include ltr {
+          padding: 0 0 0 12px;
+          text-align: left;
+        }
         @include rtl {
           padding: 0 12px 0 0;
           text-align: right;
@@ -2564,7 +2591,9 @@ table.hdp-contain-j {
         font: 16px/16px "icomoon";
         vertical-align: sub;
         display: inline-block;
-        margin: 0 0 0 3px;
+        @include ltr {
+          margin: 0 0 0 3px;
+        }
         @include rtl {
           margin: 0 3px 0 0;
         }
@@ -2581,11 +2610,13 @@ table.hdp-contain-j {
     }
   }
   th {
-    text-align: left;
     height: 20px;
     font-weight: normal;
     vertical-align: middle;
     text-transform: uppercase;
+    @include ltr {
+      text-align: left;
+    }
     @include rtl {
       text-align: right;
     }
@@ -2620,7 +2651,9 @@ table.hdp-contain-j {
         width: 1%;
         font: 0/0 $font-f;
         white-space: nowrap;
-        padding: 0 4px 0 0;
+        @include ltr {
+          padding: 0 4px 0 0;
+        }
         @include rtl {
           padding: 0 0 0 4px;
         }
@@ -2631,12 +2664,14 @@ table.hdp-contain-j {
         left: 0;
         right: 0;
         bottom: 0;
-        padding: 0 0 0 10px;
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
         height: 26px;
         line-height: 26px;
+        @include ltr {
+          padding: 0 0 0 10px;
+        }
         @include rtl {
           padding: 0 10px 0 0;
         }
@@ -2649,7 +2684,9 @@ table.hdp-contain-j {
         text-align: center;
         border-radius: 3px;
         + b {
-          margin: 0 0 0 3px;
+          @include ltr {
+            margin: 0 0 0 3px;
+          }
           @include rtl {
             margin: 0 3px 0 0;
           }
@@ -2697,8 +2734,10 @@ table.hdp-contain-j {
       }
       &:first-child {
         > p {
-          padding: 0 10px 0 34px;
-          text-align: left;
+          @include ltr {
+            padding: 0 10px 0 34px;
+            text-align: left;
+          }
           @include rtl {
             padding: 0 34px 0 10px;
             text-align: right;
@@ -2715,22 +2754,28 @@ table.hdp-contain-j {
         position: static;
         float: left;
         width: 100%;
-        padding: 0 3px 0 0;
-        text-align: right;
+        @include ltr {
+          padding: 0 3px 0 0;
+          text-align: right;
+        }
         @include rtl {
           padding: 0 0 0 3px;
           text-align: left;
         }
       }
       &:nth-last-child(2) {
-        text-align: right;
+        @include ltr {
+          text-align: right;
+        }
         @include rtl {
           text-align: left;
         }
       }
       &:nth-child(2) {
-        padding: 0 0 0 3px;
-        text-align: left;
+        @include ltr {
+          padding: 0 0 0 3px;
+          text-align: left;
+        }
         @include rtl {
           padding: 0 3px 0 0;
           text-align: right;
@@ -2739,7 +2784,7 @@ table.hdp-contain-j {
     }
   }
 }
-[class*="betcoapps.com"] {
+.body-wrapper[class*="betcoapps.com"] {
   min-width: 1400px;
   table.hdp-contain-j {
     td, th {
@@ -2751,10 +2796,10 @@ table.hdp-contain-j {
     }
     tr td:nth-child(6):nth-last-child(6),
     tr td:nth-child(5):nth-last-child(6) {
-      border-right-color: #0be493;
+      border-right-color: $hero-color;
     }
     &.hdp-titile-j tr td:nth-child(5):nth-last-child(6) {
-      border-right: 1px solid #0be493;
+      border-right: 1px solid #000000;
     }
     &.hdp-titile-j td:not(:first-child) > p {
       padding: 0 6px;
@@ -2840,7 +2885,6 @@ table.hdp-contain-j {
 }
 
 .asian-live-game {
-  margin: 0 5px 0 0;
   background: #1A7051;
   height: 16px;
   color: white;
@@ -2851,6 +2895,9 @@ table.hdp-contain-j {
   font: 9px/16px $font-f;
   letter-spacing: 0.5px;
   text-transform: uppercase;
+  @include ltr {
+    margin: 0 5px 0 0;
+  }
   @include rtl {
     margin: 0 0 0 5px;
   }
@@ -2872,9 +2919,45 @@ table.hdp-contain-j {
   background: none;
   border: 1px solid #c9c9c9;
 }
-.asian .bet-status-container {
-  background: darken(desaturate(adjust-hue($skin-color, 4deg), 15), 1);
-  border-radius: 0;
+.asian {
+  .bet-status-container {
+    background: darken(desaturate(adjust-hue($skin-color, 4deg), 15), 1);
+    border-radius: 0;
+  }
+  .ew-box-v3 {
+    @include ltr {
+      float: right;
+      margin: 2px 6px 0 0;
+    }
+    @include rtl {
+      float: left;
+      margin: 2px 0 0 6px;
+    }
+  }
+  .sp-odd-selector {
+    position: absolute;
+    top: 16px;
+    @include ltr {
+      right: 4px;
+    }
+    @include rtl {
+      left: 4px;
+    }
+    &:after {
+      font-size: 18px;
+      top: calc((100% - 18px) / 2);
+    }
+    > select {
+      height: 18px;
+      font-size: 10px;
+      @include ltr {
+        padding: 0 15px 0 6px;
+      }
+      @include rtl {
+        padding: 0 6px 0 15px;
+      }
+    }
+  }
 }
 .balance-int-row {
   float: left;
@@ -2888,4 +2971,7 @@ table.hdp-contain-j {
   background: lighten(desaturate($skin-color, 17), 12);
   color: $text-palette-2;
   word-spacing: 4px;
+}
+.additionalButtonsBetslip-j {
+  margin-bottom: 2px;
 }

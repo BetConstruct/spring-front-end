@@ -1,0 +1,29 @@
+<div class="title-date-playoff-game-b">
+    <h3>
+        <span  ng-show="::title" ng-bind ="::title"> </span>
+        <span ng-click="showMap(match[0].StadiumId)" class="stadium-name-j">{{::match[0].StadiumName}}</span>
+        <a ng-if="!$routeParams.widgetid &&  marginedTime <= match[0].DateObject" ng-show="match[0] && match[0].Sort < 100 "
+           ng-href="#/sport/?type={{::(match[0].DateObject < now && match[0].DateObject >= marginedTime)  ? betting.typeLive : betting.typePrematch}}&sport={{::betting.sport }}&game={{::match[0].Id}}&competition={{::betting.competition }}&region={{::betting.region}}" trans>BET NOW</a>
+    </h3>
+</div>
+<div class="team-names-box-view">
+    <ul>
+        <li ng-class="{active : match[0].HomeScore > match[0].AwayScore}" ng-click="match[0].Sort < 100 && expandTeam(match[0].HomeTeam[0].id,match[0].HomeTeam[0].name)">
+            <div class="third-place-game-title" ng-show="match.game_title">
+                <h3  ng-bind="::match.game_title"></h3>
+            </div>
+            <div ng-show="::match[0].HomeTeam[0].name" class="flag-wrapper-view flag-{{::match[0].HomeTeam[0].id}}"></div>
+            <div class="country-b-contain-w">
+                <p><i ng-bind="::match[0].HomeTeam[0].name"></i></p>
+                <span ng-bind="::match[0].HomeScore"></span>
+            </div>
+        </li>
+        <li ng-class="{active : match[0].AwayScore > match[0].HomeScore}" ng-click="match[0].Sort < 100 && expandTeam(match[0].AwayTeam[0].id,match[0].AwayTeam[0].name)">
+            <div ng-show="::match[0].AwayTeam[0].name" class="flag-wrapper-view flag-{{::match[0].AwayTeam[0].id}}" ></div>
+            <div class="country-b-contain-w">
+                <p><i ng-bind="::match[0].AwayTeam[0].name"></i></p>
+                <span ng-bind="::match[0].AwayScore"></span>
+            </div>
+        </li>
+    </ul>
+</div>

@@ -40,7 +40,6 @@
         {{casinoGameOpened ? 'full-screen' : ''}}
         {{env.sliderContent ? 'slider-open' : ''}}
         {{noClassicScroll ? 'no-classic-scroll' : ''}}
-        {{conf.sportsLayout === 'external' ? 'sb': ''}}
         {{$location.path() == '/' ? 'homepage' : ''}}
         {{$location.path().indexOf('customsport') !== -1 ? 'sport' : ''}}
         {{footerMovable ? 'footer-movable' : ''}}
@@ -49,22 +48,22 @@
         theme-{{theme.id}}
         {{::conf.site_name}}
         {{::domainClass}}
-        {{(['/poolbetting/', '/freebet/'].indexOf($location.path()) > -1) ? 'modern' : (['/dashboard/', '/livecalendar/', '/results/', '/multiview/', '/overview/', '/virtualsports/', '/insvirtualsports/'].indexOf($location.path()) > -1 || conf.sportsLayout == 'classic') ? 'classic' : conf.sportsLayout}}
+{{(['/poolbetting/', '/freebet/'].indexOf($location.path()) > -1) ? 'modern' : ['/dashboard/', '/livecalendar/', '/results/', '/multiview/', '/overview/', '/virtualsports/', '/insvirtualsports/'].indexOf($location.path()) > -1? 'classic' : conf.sportsLayout}}
         {{env.bodyWrapperClass||''}}
     " no-animate>
 
-            <!-- build:[src] //ajax.googleapis.com/ajax/libs/angularjs/1.5.9/angular.min.js -->
-            <script src="lib/angular/1.5.9/angular.min.js"></script>
-            <!-- /build -->
-            <!-- build:[src] //ajax.googleapis.com/ajax/libs/angularjs/1.5.9/angular-route.min.js -->
-            <script src="lib/angular/1.5.9/angular-route.min.js"></script>
-            <!-- /build -->
-            <!-- build:[src] //ajax.googleapis.com/ajax/libs/angularjs/1.5.9/angular-animate.min.js -->
-            <script src="lib/angular/1.5.9/angular-animate.min.js"></script>
-            <!-- /build -->
-            <!-- build:[src] //ajax.googleapis.com/ajax/libs/angularjs/1.5.9/angular-cookies.min.js -->
-            <script src="lib/angular/1.5.9/angular-cookies.min.js"></script>
-            <!-- /build -->
+        <!-- build:[src] //ajax.googleapis.com/ajax/libs/angularjs/1.7.7/angular.min.js?v=1.7.7 -->
+        <script src="lib/angular/1.7.7/angular.min.js"></script>
+        <!-- /build -->
+        <!-- build:[src] //ajax.googleapis.com/ajax/libs/angularjs/1.7.7/angular-route.min.js?v=1.7.7 -->
+        <script src="lib/angular/1.7.7/angular-route.min.js"></script>
+        <!-- /build -->
+        <!-- build:[src] //ajax.googleapis.com/ajax/libs/angularjs/1.7.7/angular-animate.min.js?v=1.7.7 -->
+        <script src="lib/angular/1.7.7/angular-animate.min.js"></script>
+        <!-- /build -->
+        <!-- build:[src] //ajax.googleapis.com/ajax/libs/angularjs/1.7.7/angular-cookies.min.js?v=1.7.7 -->
+        <script src="lib/angular/1.7.7/angular-cookies.min.js"></script>
+        <!-- /build -->
 
         <script id="app-config" data-config-url-path="" data-id="" data-config-is-externall=""></script>
         <!-- build:template
@@ -94,7 +93,8 @@
 
     <!--     <script src="lib/modules/ui.calendar/ui-bootstrap-custom-0.12.1.js"></script> -->
         <script src="lib/modules/ui.calendar/ui-bootstrap-custom-tpls-0.12.1.js"></script>
-         <script src="lib/ng-map.js"></script>
+        <script src="lib/ng-map.js"></script>
+        <script src="lib/hls.js"></script>
 
         <script src="js/modules/vbet5/main.js"></script>
         <script src="js/modules/vbet5/config.js"></script>
@@ -130,6 +130,7 @@
         <script src="js/modules/vbet5/services/facebookPixel.js"></script>
         <script src="js/modules/vbet5/services/authData.js"></script>
         <script src="js/modules/vbet5/services/topMenu.js"></script>
+        <script src="js/modules/vbet5/services/routesValidity.js"></script>
         <script src="js/modules/vbet5/services/connection.js"></script>
         <script src="js/modules/vbet5/services/stream.js"></script>
         <script src="js/modules/vbet5/services/timezone.js"></script>
@@ -140,6 +141,8 @@
         <script src="js/modules/vbet5/services/activeStep.js"></script>
         <script src="js/modules/vbet5/services/everCookie.js"></script>
         <script src="js/modules/vbet5/services/betService.js"></script>
+        <script src="js/modules/vbet5/services/betIntelligent.js"></script>
+        <script src="js/modules/vbet5/services/recaptchaV3.js"></script>
 
         <script src="js/modules/cms/main.js"></script>
         <script src="js/modules/cms/config.js"></script>
@@ -186,6 +189,7 @@
         <script src="js/modules/vbet5/directives/passportUploader.js"></script>
         <script src="js/modules/vbet5/directives/promotionNews.js"></script>
         <script src="js/modules/vbet5/directives/vBetVideoPlayer.js"></script>
+        <script src="js/modules/vbet5/directives/hlsPlayer.js"></script>
         <script src="js/modules/vbet5/directives/preventTypingOfSpecificSymbols.js"></script>
         <script src="js/modules/vbet5/directives/preventFastClick.js"></script>
         <script src="js/modules/vbet5/directives/htmlCompiler.js"></script>
@@ -205,17 +209,20 @@
         <script src="js/modules/vbet5/directives/championship/leagueTable.js"></script>
         <script src="js/modules/vbet5/directives/loadMore.js"></script>
         <script src="js/modules/vbet5/directives/progressbar.js"></script>
-        <script src="js/modules/vbet5/directives/euro2016/multiview.js"></script>
+        <script src="js/modules/vbet5/directives/classic/multiview.js"></script>
         <script src="js/modules/vbet5/directives/subMenuCreator.js"></script>
         <script src="js/modules/vbet5/directives/videoPlayer.js"></script>
         <script src="js/modules/vbet5/directives/statisticsOnHover.js"></script>
+        <script src="js/modules/vbet5/directives/marketStats.js"></script>
         <script src="js/modules/vbet5/directives/sportsResults.js"></script>
         <script src="js/modules/vbet5/directives/escape.js"></script>
         <script src="js/modules/vbet5/directives/curacao.js"></script>
         <script src="js/modules/vbet5/directives/counter.js"></script>
         <script src="js/modules/vbet5/directives/popularInSportsbook.js"></script>
         <script src="js/modules/vbet5/directives/countdown.js"></script>
+        <script src="js/modules/vbet5/directives/fileUpload.js"></script>
         <script src="js/modules/vbet5/directives/suggestedBets.js"></script>
+        <script src="js/modules/vbet5/directives/externalLiveMatchAnimation.js"></script>
         <script src="js/modules/vbet5/directives/statsLogo.js"></script>
         <script src="js/modules/vbet5/directives/productsSlider.js"></script>
         <script src="js/modules/vbet5/directives/cashOutDialog.js"></script>
@@ -224,6 +231,11 @@
         <script src="js/modules/vbet5/directives/egtJackpot.js"></script>
         <script src="js/modules/vbet5/directives/retrieveEvents.js"></script>
         <script src="js/modules/vbet5/directives/autofocus.js"></script>
+        <script src="js/modules/vbet5/directives/visibleSets.js"></script>
+        <script src="optional_modules/jackpot/js/directives/sportsbookJackpot.js"></script>
+
+        <script src="js/modules/vbet5/directives/togglePlaceholder.js"></script>
+
         <script src="js/modules/vbet5/filters/firstElement.js"></script>
         <script src="js/modules/vbet5/filters/translate.js"></script>
         <script src="js/modules/vbet5/filters/oddConvert.js"></script>
@@ -256,9 +268,9 @@
         <script src="js/modules/vbet5/controllers/classicView/main.js"></script>
         <script src="js/modules/vbet5/controllers/classicView/center.js"></script>
         <script src="js/modules/vbet5/controllers/classicView/left.js"></script>
-        <script src="js/modules/vbet5/controllers/euro2016View/dashboard/main.js"></script>
-        <script src="js/modules/vbet5/controllers/euro2016View/dashboard/center.js"></script>
-        <script src="js/modules/vbet5/controllers/euro2016View/multiColumn.js"></script>
+        <script src="js/modules/vbet5/controllers/classicView/dashboard/main.js"></script>
+        <script src="js/modules/vbet5/controllers/classicView/dashboard/center.js"></script>
+        <script src="js/modules/vbet5/controllers/classicView/multiColumn.js"></script>
         <script src="js/modules/vbet5/controllers/overview.js"></script>
         <script src="js/modules/vbet5/controllers/multiView.js"></script>
         <script src="js/modules/vbet5/controllers/virtualSports.js"></script>
@@ -283,7 +295,9 @@
         <script src="js/modules/vbet5/controllers/payments.js"></script>
         <script src="js/modules/vbet5/controllers/euro88Payments.js"></script>
         <script src="js/modules/vbet5/controllers/cashier.js"></script>
+        <script src="js/modules/vbet5/controllers/myWallets.js"></script>
         <script src="js/modules/vbet5/controllers/settings.js"></script>
+        <script src="js/modules/vbet5/controllers/mixedAuthentication.js"></script>
         <script src="js/modules/vbet5/controllers/settingsV2.js"></script>
         <script src="js/modules/vbet5/controllers/messages.js"></script>
         <script src="js/modules/vbet5/controllers/poolBetting.js"></script>
@@ -311,7 +325,6 @@
         <script src="js/modules/vbet5/controllers/favoriteTeam.js"></script>
         <script src="js/modules/vbet5/controllers/widget.js"></script>
         <script src="js/modules/vbet5/controllers/statistics.js"></script>
-        <script src="js/modules/vbet5/controllers/sportsbook.js"></script>
         <script src="js/modules/vbet5/controllers/winners.js"></script>
         <script src="js/modules/vbet5/controllers/promotionalBonus.js"></script>
         <script src="js/modules/vbet5/controllers/promoCode.js"></script>
@@ -329,7 +342,15 @@
         <script src="js/modules/vbet5/controllers/betOnPolitics.js"></script>
         <script src="js/modules/vbet5/controllers/betStatus.js"></script>
         <script src="js/modules/vbet5/controllers/affiliate.js"></script>
+        <script src="js/modules/vbet5/controllers/loginHistory.js"></script>
+        <script src="js/modules/vbet5/controllers/pmu.js"></script>
             <!--<script src="js/modules/vbet5/translations.js"></script>-->
+        <script src='js/modules/vbet5/services/jackpotSocket.js'></script>
+        <script src='js/modules/vbet5/services/jackpotManager.js'></script>
+
+        <script src='js/modules/vbet5/directives/jackpotCounter.js'></script>
+        <script src='js/modules/vbet5/directives/jackpotSlider.js'></script>
+        <script src='js/modules/vbet5/directives/sportsbookJackpot.js'></script>
 
         <!--optional js files-->
 

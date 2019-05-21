@@ -1,0 +1,57 @@
+<div>
+    <div class="all-games-container" ng-show="showConditions" ng-if="!jackpotGames">
+        <a ng-repeat="game in gamesList track by game.id"
+           ng-class="{'disabled' : confData.main.disableAgeRestrictedGames && game.has_age_restriction && !$root.env.authorized}"
+           ng-style="{'background-image': 'url({{useBigIcons && game.icon_3 ? game.icon_3 : game.icon_2}})'}">
+           <span class="games-buttons">
+               <strong>
+                   <button ng-click="openGame(game, 'real'); $event.stopPropagation();" ng-if="game.types.realMode"
+                           trans>Play now</button>
+                   <button ng-if="game.types.funMode && (confData.main.funModeEnabled === 2 && $root.env.authorized || confData.main.funModeEnabled === 1 || (confData.main.funModeEnabled === 3 && $root.profile.is_verified))"
+                           ng-click="openGame(game, 'fun'); $event.stopPropagation();" trans>Play For Free</button>
+                   <button ng-if="game.types.viewMode && !$root.env.authorized"
+                           ng-click="openGame(game, 'fun'); $event.stopPropagation();" trans>View</button>
+               </strong>
+           </span>
+            <p class="games-name">{{game.name}}</p>
+            <i class="games-favorite-icon" ng-show="!hideFavoriteButton"
+               ng-click="toggleSaveToMyCasinoGames(game); $event.stopPropagation();"
+               ng-class="{'active': $root.myCasinoGamesIds[game.id]}">
+            </i>
+            <b ng-show="showDeleteBtn" ng-click="removeGameFromSaved(game.id); $event.stopPropagation();" class="games-close-fav"></b>
+        </a>
+    </div>
+
+    <div class="slider-games" ng-if="jackpotGames" ng-show="showConditions">
+        <a ng-repeat="game in gamesList track by game.id"
+           ng-class="{'disabled' : confData.main.disableAgeRestrictedGames && game.has_age_restriction && !$root.env.authorized}"
+        >
+            <div class="slider-games-bg"
+                 ng-style="{'background-image': 'url({{useBigIcons && game.icon_3 ? game.icon_3 : game.icon_2}})'}"
+            >
+                <div class="jackpot-status"  ng-if="additionalData[game.extearnal_game_id]">
+                    <small trans>Jackpot up to</small>
+                    <p>
+                        <strong ng-bind="additionalData[game.extearnal_game_id]['FirstLevelAmount'] | number"></strong>
+                        <span ng-bind="additionalData[game.extearnal_game_id]['CurrencyId'] | currency"></span>
+                    </p>
+                </div>
+            </div>
+            <p class="slider-games-footer">{{game.name}}
+                <i ng-show="!hideFavoriteButton"
+                   ng-click="toggleSaveToMyCasinoGames(game); $event.stopPropagation();"
+                   ng-class="{'active': $root.myCasinoGamesIds[game.id]}"></i>
+            </p>
+            <span class="games-buttons">
+                <strong>
+                   <button ng-click="openGame(game, 'real'); $event.stopPropagation();" ng-if="game.types.realMode"
+                           trans>Play now</button>
+                   <button ng-if="game.types.funMode && (confData.main.funModeEnabled === 2 && $root.env.authorized || confData.main.funModeEnabled === 1 || (confData.main.funModeEnabled === 3 && $root.profile.is_verified))"
+                           ng-click="openGame(game, 'fun'); $event.stopPropagation();" trans>Play For Free</button>
+                   <button ng-if="game.types.viewMode && !$root.env.authorized"
+                           ng-click="openGame(game, 'fun'); $event.stopPropagation();" trans>View</button>
+               </strong>
+            </span>
+        </a>
+    </div>
+</div>

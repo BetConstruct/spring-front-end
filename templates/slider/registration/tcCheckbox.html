@@ -24,6 +24,7 @@
                 </a>
                 <span ng-show="conf.registration.minimumAllowedAge==18" class="hintReq" trans>and I am over 18 years of age and have read and accepted the general terms and conditions.</span>
                 <span ng-show="conf.registration.minimumAllowedAge==21" class="hintReq" trans>and I am over 21 years of age and have read and accepted the general terms and conditions.</span>
+                <span ng-show="conf.registration.ageRestrictionMessage" class="hintReq" ng-bind="conf.registration.ageRestrictionMessage | translate"></span>
             </label>
         </div>
     </div>

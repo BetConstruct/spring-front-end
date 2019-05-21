@@ -1,11 +1,10 @@
-.body-wrapper.draw{
-  background: #1f2536 url("../../../images/draw-bg.jpg#{$delete-cache}") no-repeat 50% 0;
-}
 .draw-view-wrapper-b{
   float: left;
   width: 100%;
   box-sizing: border-box;
-  margin: 48px 0 0;
+  background-color: #151d30;
+  background-repeat: no-repeat;
+  background-position: 50% 0;
 }
 .center-view-draw-b{
   width: 980px;

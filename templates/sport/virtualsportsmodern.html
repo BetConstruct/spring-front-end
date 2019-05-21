@@ -3,13 +3,13 @@
         <ul>
             <li ng-repeat="section in sections track by $index" ng-click="loadCompetitions(section)" class="{{section.alias.toLowerCase() + '-icon'}}" ng-class="{'active': selectedVirtualSport.id == section.id}">
                 <span>{{section.name}}</span>
-            </li>           
+            </li>
         </ul>
     </div>
-    <h1>Virtual Games <span>{{selectedVirtualSport.name}}</span></h1>   
-    
+    <h1>Virtual Games <span>{{selectedVirtualSport.name}}</span></h1>
 
-    
+
+
     <div class="competition-columns-container column-0">
         <div class="group-container">
             <div class="competition-switch">
@@ -62,26 +62,26 @@
                     <li ng-repeat="game in games track by game.id" ng-click="openGame(game)" ng-bind="game.start_ts | formatDate:'hour':null:env.timeFormat" ng-class="{'active': game.id == selectedGame.id}"></li>
                 </ul>
             </div>
-        </div>         
+        </div>
     </div>
-  
+
 
 
     <div class="competition-columns-container column-1" ng-show="selectedGame">
         <div class="game-title">
             <div class="ew" ng-if="(selectedGame.market|firstElement).ew_coeff && (selectedGame.market|firstElement).ew_coeff > 1">
-                <span>Each Way:</span>
+                <span>EW:</span>
                 {{'1/'+ (selectedGame.market|firstElement).ew_coeff}}&nbsp;
                 {{eachWayPlace((selectedGame.market|firstElement).ew_place)}}
             </div>
             <div>{{selectedGame.team1_name}}</div>
-        </div>  
+        </div>
         <!-- tennis markets -->
         <div class="market-container" ng-repeat="market in selectedGame.markets track by $index" ng-if="selectedVirtualSport.alias === 'VirtualTennis' || selectedVirtualSport.alias === 'VirtualFootball'">
             <div class="result-match">
                 <ul>
                     <li>
-                        <p class="chain-holder" ng-show="market.express_id && !conf.hideExpressIds" title="Events from different groups can be combined in combined bets" trans="attr-only">
+                        <p class="chain-holder" ng-show="market.express_id && !$root.conf.hideExpressIds" title="Events from different groups can be combined in combined bets" trans="attr-only">
                             <span class="market-chain"></span>{{market.express_id}}
                         </p>
                         {{market.name}}

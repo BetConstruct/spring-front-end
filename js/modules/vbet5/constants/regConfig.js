@@ -179,7 +179,7 @@ angular.module('vbet5').constant('RegConfig', {
         "type": "select",
         "required": true,
         "classes": "",
-        "customAttrs": [{"ng-options": "c for c in  conf.availableCurrencies track by c"}, {"ng-value": "c"}, {"ng-disabled": "currencyDisabled"}],
+        "customAttrs": [{"ng-options": "c for c in  conf.availableCurrencies track by c"}, {"ng-disabled": "currencyDisabled"}],
         "validation": []
     }, {
         "title": "Promo code",

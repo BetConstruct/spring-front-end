@@ -61,7 +61,7 @@ VBET5.constant('SkinConfig', {
         enableCasinoBalanceHistory: true, //enable casino balance history in top menu
         enableCasinoBetHistory: true, //enable casino balance history in top menu
         aocEnabled: true, // enable AOC link in main menu
-        availableVideoProviderIds: [1, 3, 5, 7, 8, 11, 12, 15, 21, 22, 23, 999999],
+        availableVideoProviderIds: [1, 3, 5, 7, 8, 11, 12, 15, 21, 22, 23, 999999, 31],
         aocLink: "#/section/aoc",
         theVeryTopMenu: [{href: "#/fantasy/", label: "Fantasy Sports"}, {href: '`', label: "Financials"}, {href: "#/section/aoc", label: "AOC"}, {href: "#/freebet/", label: "Free Quiz"}, {href: "#/jackpot/", label: "Jackpot"}, {href: "#/promos/", label: "Promotions"}],
         multiLevelMenu: {

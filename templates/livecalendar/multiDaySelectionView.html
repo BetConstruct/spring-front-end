@@ -126,9 +126,7 @@
                                             <p>{{marketEvents[game.pointerId].events.P2[0].price|oddConvert:env.oddFormat:null:'WINNER'}}</p>
                                         </li>
                                         <li class="soom-events-b">
-                                            <p ng-show="!conf.GmsPlatform && game.pointerId && marketEvents[game.pointerId].game.events_count-(marketEvents[game.pointerId].events|count) > 0"
-                                               ng-click="openMore(sportGroup.sport.id, marketEvents[game.pointerId].game)">+{{marketEvents[game.pointerId].game.events_count-(marketEvents[game.pointerId].events|count)}}</p>
-                                            <p ng-show="conf.GmsPlatform && game.pointerId && marketEvents[game.pointerId].game.markets_count > 0"
+                                            <p ng-show="game.pointerId && marketEvents[game.pointerId].game.markets_count > 0"
                                                ng-click="openMore(sportGroup.sport.id, marketEvents[game.pointerId].game)">+{{marketEvents[game.pointerId].game.markets_count}}</p>
                                         </li>
                                         <li class="video-info-calendar" >

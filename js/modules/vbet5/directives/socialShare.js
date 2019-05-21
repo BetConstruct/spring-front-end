@@ -39,17 +39,17 @@ VBET5.directive('socialShare',  ['$rootScope', '$window', '$http', 'Config', fun
                         paramSerializer: '$httpParamSerializerJQLike',
                         headers: {'Content-Type': 'application/x-www-form-urlencoded'}
 
-                    }).success(function (response) {
-                        if (response && response.status && response.status === 'ok' && response.link) {
-                            openSharePopUp(response.link, shareWindow);
+                    }).then(function (response) {
+                        if (response.data && response.data.status === 'ok' && response.data.link) {
+                            openSharePopUp(response.data.link, shareWindow);
                         } else {
                             shareWindow.close();
                             openErrorPopUp();
                         }
-                    }).error(function(){
+                    }).catch(function(){
                         shareWindow.close();
                         openErrorPopUp();
-                    })
+                    });
                 }
             });
 

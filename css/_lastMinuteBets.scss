@@ -37,7 +37,6 @@ $last-minute-bets-widget: $skin-color !default;
   color: $text-palette-4;
 }
 .lmb-sport-select-j .sport-icon-j {
-  float: left;
   display: block;
   margin: 7px;
   height: 16px;
@@ -45,25 +44,32 @@ $last-minute-bets-widget: $skin-color !default;
   color: $text-palette-4;
   font: 16px/16px 'sport-icon';
   text-align: center;
+  @include ltr {
+    float: left;
+  }
   @include rtl {
     float: right;
   }
 }
 .lmb-sport-select-j ul {
   margin: 1px 0 0;
-  float: left;
+  @include ltr {
+    float: left;
+  }
   @include rtl {
     float: right;
   }
 }
 .lmb-sport-select-j ul li {
   display: block;
-  float: left;
   height: 30px;
   max-width: 30px;
   cursor: pointer;
   white-space: nowrap;
   overflow: hidden;
+  @include ltr {
+    float: left;
+  }
   @include rtl {
     float: right;
   }
@@ -74,8 +80,10 @@ $last-minute-bets-widget: $skin-color !default;
   height: 30px;
   font-size: 12px;
   line-height: 30px;
-  padding: 0 14px 0 0;
   color: set-color($brand-color-1, black, white);
+  @include ltr {
+    padding: 0 14px 0 0;
+  }
   @include rtl {
     padding: 0 0 0 14px;
   }
@@ -89,17 +97,17 @@ $last-minute-bets-widget: $skin-color !default;
   background-color: rgba(255, 255, 255, 0.05);
 }
 .lmb-time-selector li {
-  float: right;
   display: block;
   margin: 0 10px;
   color: $text-palette-4;
   font: 12px/50px $font-f;
   cursor: pointer;
   transition: 250ms color, 250ms box-shadow;
-  @include rtl {
-    float: left;
+  @include ltr {
+    float: right;
   }
   @include rtl {
+    float: left;
     direction: ltr;
   }
 }
@@ -111,21 +119,25 @@ $last-minute-bets-widget: $skin-color !default;
   box-shadow: inset 0 -2px 0 $hero-color;
 }
 .lmb-time-selector li:first-child {
-  float: left;
   margin: 0;
   cursor: default;
+  @include ltr {
+    float: left;
+  }
   @include rtl {
     float: right;
   }
 }
 .lmb-time-selector h3 {
-  float: left;
   font: 16px/50px $font-f;
   text-transform: uppercase;
   color: $text-palette-3;
   text-indent: 25px;
+  @include ltr {
+    float: left;
+  }
   @include rtl {
-    flat: right;
+    float: right;
   }
 }
 .lmb-table-wrap-j {
@@ -157,7 +169,7 @@ $last-minute-bets-widget: $skin-color !default;
 .lmb-table-j .lmb-title-j li {
   background-color: darken( saturate( adjust-hue( $last-minute-bets-widget, 4deg), 1), 7);
   color: $text-palette-4;
-  text-align: center;
+  text-align: left;
   font-size: 10px;
   text-transform: uppercase;
 }
@@ -203,14 +215,17 @@ $last-minute-bets-widget: $skin-color !default;
 .lmb-table-j li:nth-child(7) {
   width: 72px;
   text-align: center;
-  border-left: 1px solid darken( adjust-hue( $last-minute-bets-widget, 2deg), 5);
+  @include ltr {
+    border-left: 1px solid darken( adjust-hue( $last-minute-bets-widget, 2deg), 5);
+  }
   @include rtl {
-    border-left: 0;
     border-right: 1px solid darken( adjust-hue( $last-minute-bets-widget, 2deg), 5);
   }
 }
 .lmb-table-j li:nth-child(7) {
-  border-right: 1px solid darken( adjust-hue( $last-minute-bets-widget, 2deg), 5);
+  @include ltr {
+    border-right: 1px solid darken( adjust-hue( $last-minute-bets-widget, 2deg), 5);
+  }
   @include rtl {
     border-left: 1px solid darken( adjust-hue( $last-minute-bets-widget, 2deg), 5);
   }
@@ -268,7 +283,9 @@ $last-minute-bets-widget: $skin-color !default;
   top: 160px;
 }
 .lmb-table-j li:nth-child(2) {
-  text-align: right;
+  @include ltr {
+    text-align: right;
+  }
   @include rtl {
     text-align: left;
   }

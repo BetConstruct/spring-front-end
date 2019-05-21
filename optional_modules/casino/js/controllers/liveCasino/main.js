@@ -5,7 +5,7 @@
  * casino page controller
  */
 
-CASINO.controller('liveCasinoMainCtrl', ['$rootScope', '$scope', '$sce', '$location', '$interval', '$window', 'Storage', 'CConfig', 'casinoData', 'Utils', 'casinoManager', 'Translator', 'Zergling', 'WPConfig', 'content', 'analytics', 'smoothScroll', 'Geoip', function ($rootScope, $scope, $sce, $location, $interval, $window, Storage, CConfig, casinoData, Utils, casinoManager, Translator, Zergling, WPConfig, content, analytics, smoothScroll, Geoip) {
+CASINO.controller('liveCasinoMainCtrl', ['$rootScope', '$scope', '$sce', '$location', '$interval', '$window', 'Storage', 'CConfig', 'casinoData', 'Utils', 'casinoManager', 'Translator', 'Zergling', 'WPConfig', 'content', 'analytics', 'smoothScroll', 'Geoip','casinoMultiviewValues', function ($rootScope, $scope, $sce, $location, $interval, $window, Storage, CConfig, casinoData, Utils, casinoManager, Translator, Zergling, WPConfig, content, analytics, smoothScroll, Geoip, casinoMultiviewValues) {
     'use strict';
 
     $scope.games = [];
@@ -20,6 +20,8 @@ CASINO.controller('liveCasinoMainCtrl', ['$rootScope', '$scope', '$sce', '$locat
     $scope.$on('widescreen.off', function () { $scope.wideMode = false; });
     $scope.$on('middlescreen.on', function () { $scope.middleMode = true; });
     $scope.$on('middlescreen.off', function () { $scope.middleMode = false; });
+
+    casinoMultiviewValues.init($scope);
 
     var countryCode = '';
     /**

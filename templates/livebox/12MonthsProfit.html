@@ -1,0 +1,74 @@
+<div class="balance-lightbox-j" ng-init="init12MonthsProfit()">
+    <section>
+        <div>
+            <ul>
+                <li trans>12 Months profit</li>
+            </ul>
+            <div  class="switchPaymenthMethodScroll">
+                <article>
+                    <div>
+                        <div  class="twelve-months-profit-container">
+                            <p trans>Set the exact Specific Date which you want to see the detailed profit</p>
+                            <div class="fr-period">
+                                <span trans>Period</span>
+                                <div class="fr-select-block">
+                                    <select ng-model="twelweMonthsProfitData.period" ng-change="get12MonthsProfit()" ng-options="month as (month + ' ' +  ('Month'|translate)) for month in twelweMonthsProfitData.periods track by month">
+                                    </select>
+                                </div>
+                            </div>
+                            <vbet-loader ng-show="twelweMonthsProfitData.isLoading"></vbet-loader>
+
+                            <ul class="fr-statistic" ng-show="!twelweMonthsProfitData.isLoading" ng-if="twelweMonthsProfitData.details">
+                                <li>
+                                    <p trans>Field name</p>
+                                    <p></p>
+                                    <p trans>Amount</p>
+                                </li>
+                                <li>
+                                    <p trans>Total Sport Stake</p>
+                                    <p></p>
+                                    <p ng-bind="twelweMonthsProfitData.details.TotalSportStake|number:$root.conf.balanceFractionSize"></p>
+                                </li>
+                                <li>
+                                    <p trans>Total Sport Win</p>
+                                    <p></p>
+                                    <p ng-bind="twelweMonthsProfitData.details.TotalSportWin|number:$root.conf.balanceFractionSize"></p>
+                                </li>
+                                <li>
+                                    <p trans>Total Sports Return Amount</p>
+                                    <p></p>
+                                    <p ng-bind="twelweMonthsProfitData.details.TotalSportReturnAmount|number:$root.conf.balanceFractionSize"></p>
+                                </li>
+                                <li>
+                                    <p trans>Total Casino Stake</p>
+                                    <p></p>
+                                    <p ng-bind="twelweMonthsProfitData.details.TotalCasinoStake|number:$root.conf.balanceFractionSize"></p>
+                                </li>
+                                <li>
+                                    <p trans>Total Casino Win</p>
+                                    <p></p>
+                                    <p ng-bind="twelweMonthsProfitData.details.TotalCasinoWin|number:$root.conf.balanceFractionSize"></p>
+                                </li>
+                            </ul>
+                            <ul class="fr-statistic-total" ng-show="!twelweMonthsProfitData.isLoading" ng-if="twelweMonthsProfitData.details">
+                                <li>
+                                    <p trans>Profit</p>
+                                </li>
+                                <li>
+                                    <p ng-bind="twelweMonthsProfitData.details.Profit|number:$root.conf.balanceFractionSize"></p>
+                                </li>
+                            </ul>
+                            <ul class="fr-statistic" ng-show="!twelweMonthsProfitData.isLoading" ng-if="!twelweMonthsProfitData.details">
+                                <li>
+                                    <h3 trans>There is no data available</h3>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </article>
+            </div>
+        </div>
+    </section>
+</div>
+
+

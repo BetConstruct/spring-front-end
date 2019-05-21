@@ -13,11 +13,13 @@
 }
 
 .quick-bet-price-box > ul > li {
-  float: left;
   width: auto;
   background: none;
-  padding: 0 3px 5px 3px;
   box-sizing: border-box;
+  @include ltr {
+    float: left;
+    padding: 0 3px 5px 3px;
+  }
   @include rtl {
     float: right;
     padding: 0 3px 5px 3px;
@@ -56,29 +58,17 @@
 /*Quickbet END*/
 
 /*Betslip*/
-.right-column-view-contain > .list-bet-block {
-  width: 100%;
-  margin: 0;
-  padding: 0;
-  background: #e8edf1;
-  border: none;
-}
-
-.right-column-view-contain > .list-bet-block .quick-bet-button {
-  left: 0;
-  top: 0;
-  position: relative;
-  z-index: 88;
-  float: left;
-  width: 100%;
-  box-sizing: border-box;
-  padding: 8px 10px 3px;
-}
-
-.right-column-view-contain > .list-bet-block .bet-notification-zone.quick-bet-notifications {
-  width: 100%;
-  box-sizing: border-box;
-  padding: 5px 5px 10px;
+.right-column-view-contain {
+  .quickBetButton-j .print-icon-betslip-v3 {
+    right: 8px;
+  }
+  > .list-bet-block {
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    background: #e8edf1;
+    border: none;
+  }
 }
 
 .right-column-view-contain > .list-bet-block .name-b-list {
@@ -133,79 +123,6 @@
   max-height: inherit;
 }
 
-.right-column-view-contain > .list-bet-block .bs-type-switcher {
-  float: left;
-  width: 100%;
-  box-sizing: border-box;
-  left: 0;
-  top: 0;
-  right: auto;
-  margin: 0;
-  padding: 5px 0;
-  border: none;
-  height: 30px;
-  box-shadow: none;
-}
-
-.right-column-view-contain > .list-bet-block .bs-type-switcher > p,
-.right-column-view-contain > .list-bet-block .bs-type-switcher > span {
-  display: none;
-}
-
-.right-column-view-contain > .list-bet-block .bs-type-switcher > .open-type-switcher {
-  float: left;
-  width: 100%;
-  display: block;
-  position: relative;
-  top: 0;
-  left: 0;
-  right: auto;
-  box-sizing: border-box;
-  height: auto;
-  padding: 0;
-}
-
-.right-column-view-contain > .list-bet-block .bs-type-switcher > .open-type-switcher > ul {
-  float: left;
-  width: 100%;
-  display: table;
-  box-sizing: border-box;
-  padding: 0;
-}
-
-.right-column-view-contain > .list-bet-block .bs-type-switcher > .open-type-switcher > ul > li {
-  display: table-cell;
-  box-sizing: border-box;
-  float: none;
-  margin: 0;
-  padding: 0 3px;
-  border: none;
-  border-radius: inherit;
-  background: none;
-  cursor: default;
-  min-width: inherit;
-  box-shadow: none;
-}
-
-.right-column-view-contain > .list-bet-block .bs-type-switcher > .open-type-switcher > ul > li > a {
-  min-width: inherit;
-  box-sizing: border-box;
-  padding: 3px 0;
-  font-size: 10px;
-  font-weight: normal;
-  color: #3f4553;
-  border: none;
-  background: #cfd6dc;
-  border-radius: 4px;
-  transition: color 200ms, background 200ms;
-}
-
-.right-column-view-contain > .list-bet-block .bs-type-switcher > .open-type-switcher > ul > li > a.active,
-.right-column-view-contain > .list-bet-block .bs-type-switcher > .open-type-switcher > ul > li > a:hover {
-  background: #3f4553;
-  color: #ffffff;
-}
-
 .right-column-view-contain > .list-bet-block .betslip-system-chenge {
   height: 11px;
   position: relative;
@@ -218,83 +135,6 @@
   border-radius: 3px;
   min-width: 96px;
   top: 0;
-}
-
-.right-column-view-contain > .list-bet-block .betslip-system-chenge.open .open-type-switcher {
-  box-shadow: 0 3px 10px -3px #3f4553;
-}
-
-.right-column-view-contain > .list-bet-block .betslip-system-chenge > .open-type-switcher > ul {
-  padding: 0;
-}
-
-.right-column-view-contain > .list-bet-block .betslip-system-chenge > .open-type-switcher > ul > li {
-  padding: 0;
-  margin: 0;
-  background: none;
-  border: none;
-  min-width: inherit;
-  border-radius: inherit;
-  text-align: left;
-}
-
-.right-column-view-contain > .list-bet-block .betslip-system-chenge > .arrow-bs-type-switcher {
-  top: 2px;
-}
-
-.right-column-view-contain > .list-bet-block .betslip-system-chenge > .arrow-bs-type-switcher:before {
-  content: "\e670";
-  font: 12px/14px icomoon;
-  color: #3f4553;
-}
-
-.right-column-view-contain > .list-bet-block .betslip-system-chenge.open > .arrow-bs-type-switcher:before {
-  content: "\e671";
-}
-
-.right-column-view-contain > .list-bet-block .settings-icon-bet {
-  z-index: 355;
-  background: none;
-  display: none;
-}
-
-.right-column-view-contain > .list-bet-block .settings-icon-bet:before {
-  content: "\e6a0";
-  font: 16px/22px icomoon;
-  color: #3f4553;
-}
-
-.right-column-view-contain > .list-bet-block .bet-settings-container {
-  border-bottom: none;
-}
-
-.right-column-view-contain > .list-bet-block .bet-settings-container .betslip-options {
-  width: 100%;
-  box-sizing: border-box;
-  background: #cfd6dc;
-  border-bottom: none;
-  max-height: inherit;
-  height: auto;
-  padding: 5px 10px;
-  overflow: inherit;
-}
-
-.right-column-view-contain > .list-bet-block .bet-settings-container .betslip-options > span {
-  display: inline-block;
-  width: 100%;
-}
-
-.right-column-view-contain > .list-bet-block .bet-settings-container .betslip-options > label {
-  display: inline-block;
-  float: none;
-  width: auto;
-  left: 0;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  overflow: hidden;
-  max-width: 33%;
-  padding: 0 5px;
-  box-sizing: border-box;
 }
 
 .right-column-view-contain > .list-bet-block .bet-container > ul {
@@ -408,14 +248,6 @@
   color: #a6a7ab;
 }
 
-.right-column-view-contain > .list-bet-block .bet-notification-zone {
-  background: #ffffff;
-}
-
-.right-column-view-contain > .list-bet-block .button-bet .bet-notification-zone:before {
-  color: #ffffff;
-}
-
 .right-column-view-contain > .list-bet-block .swicher-right-block-odd {
   background: #3f4553;
   top: 8px;
@@ -428,10 +260,6 @@
   border-color: rgba(0, 0, 0, 0);
   margin: 0 5px 0 0;
   top: 5px;
-}
-
-.open-type-switcher {
-  box-shadow: none;
 }
 
 .right-column-view-contain {
@@ -451,18 +279,6 @@
         left: 8px;
         padding: 0 !important;
         margin: 0 !important;
-        .md-inner .md-gap {
-          border-top-color: white;
-          border-bottom-color: white;
-        }
-        .md-inner .md-left .md-half-circle {
-          border-left-color: white;
-          border-top-color: white;
-        }
-        .md-inner .md-right .md-half-circle {
-          border-right-color: white;
-          border-top-color: white;
-        }
       }
       i {
         background: #3f4553;
@@ -488,8 +304,10 @@
     max-height: 200px;
     > div {
       background: #e8edf1;
-      text-align: center;
       color: #404654;
+      @include ltr {
+        text-align: center;
+      }
       @include rtl {
         text-align: center;
       }
@@ -659,29 +477,35 @@
     }
   }
   .open-bets-buttons > div.suggested-bets-button.active {
-    background: -moz-linear-gradient(left, rgba($hero-color,0.4) 0%,rgba($skin-color,0.4) 80%,rgba($skin-color,0.5) 100%);
-    background: -webkit-linear-gradient(left, rgba($hero-color,0.4) 0%,rgba($skin-color,0.4) 80%,rgba($skin-color,0.5) 100%);
-    background: linear-gradient(to right, rgba($hero-color,0.4) 0%,rgba($skin-color,0.4) 80%,rgba($skin-color,0.5) 100%);
+    box-shadow: none;
+    @include ltr {
+      background: -moz-linear-gradient(left, rgba($hero-color,0.4) 0%,rgba($skin-color,0.4) 80%,rgba($skin-color,0.5) 100%);
+      background: -webkit-linear-gradient(left, rgba($hero-color,0.4) 0%,rgba($skin-color,0.4) 80%,rgba($skin-color,0.5) 100%);
+      background: linear-gradient(to right, rgba($hero-color,0.4) 0%,rgba($skin-color,0.4) 80%,rgba($skin-color,0.5) 100%);
+    }
     @include rtl {
       background: -moz-linear-gradient(right, rgba($hero-color,0.4) 0%,rgba($skin-color,0.4) 80%,rgba($skin-color,0.5) 100%);
       background: -webkit-linear-gradient(right, rgba($hero-color,0.4) 0%,rgba($skin-color,0.4) 80%,rgba($skin-color,0.5) 100%);
       background: linear-gradient(to left, rgba($hero-color,0.4) 0%,rgba($skin-color,0.4) 80%,rgba($skin-color,0.5) 100%);
     }
-    box-shadow: none;
   }
   .suggest-contain-list {
-    background: -moz-linear-gradient(left, rgba($hero-color, 0.5) 0%,  rgba($skin-color, 0.7) 100%);
-    background: -webkit-linear-gradient(left, rgba($hero-color, 0.5) 0%,  rgba($skin-color, 0.7) 100%);
-    background: linear-gradient(to right, rgba($hero-color, 0.5) 0%,  rgba($skin-color, 0.7) 100%);
+    @include ltr {
+      background: -moz-linear-gradient(left, rgba($hero-color, 0.5) 0%,  rgba($skin-color, 0.7) 100%);
+      background: -webkit-linear-gradient(left, rgba($hero-color, 0.5) 0%,  rgba($skin-color, 0.7) 100%);
+      background: linear-gradient(to right, rgba($hero-color, 0.5) 0%,  rgba($skin-color, 0.7) 100%);
+    }
     @include rtl {
       background: -moz-linear-gradient(right, rgba($hero-color, 0.5) 0%,  rgba($skin-color, 0.7) 100%);
       background: -webkit-linear-gradient(right, rgba($hero-color, 0.5) 0%,  rgba($skin-color, 0.7) 100%);
       background: linear-gradient(to left, rgba($hero-color, 0.5) 0%,  rgba($skin-color, 0.7) 100%);
     }
     &.suggested-prematch {
-      background: -moz-linear-gradient(45deg, rgba($skin-color, 0.9) 0%, rgba($hero-color, 0.3) 100%);
-      background: -webkit-linear-gradient(45deg, rgba($skin-color, 0.9) 0%, rgba($hero-color, 0.3) 100%);
-      background: linear-gradient(45deg, rgba($skin-color, 0.9) 0%, rgba($hero-color, 0.3) 100%);
+      @include ltr {
+        background: -moz-linear-gradient(45deg, rgba($skin-color, 0.9) 0%, rgba($hero-color, 0.3) 100%);
+        background: -webkit-linear-gradient(45deg, rgba($skin-color, 0.9) 0%, rgba($hero-color, 0.3) 100%);
+        background: linear-gradient(45deg, rgba($skin-color, 0.9) 0%, rgba($hero-color, 0.3) 100%);
+      }
       @include rtl {
         background: -moz-linear-gradient(-45deg, rgba($skin-color, 0.9) 0%, rgba($hero-color, 0.3) 100%);
         background: -webkit-linear-gradient(-45deg, rgba($skin-color, 0.9) 0%, rgba($hero-color, 0.3) 100%);
@@ -692,5 +516,46 @@
   .suggest-title-event-live > p,
   .suggest-single-event-info > div > div {
     color: $c16-tp-1;
+  }
+  .ew-box-v3 {
+    padding: 0 5px;
+    @include ltr {
+      float: right;
+    }
+    @include rtl {
+      float: left;
+    }
+  }
+  .ew-total-view-v3 {
+    color: #293043;
+    background: #e6e6e6;
+    box-shadow: 0 0 0 1px #cccccc inset;
+  }
+  .sp-odd-selector {
+    position: absolute;
+    top: 20px;
+    @include ltr {
+      right: 4px;
+    }
+    @include rtl {
+      left: 4px;
+    }
+    &:after {
+      font-size: 18px;
+      top: calc((100% - 18px) / 2);
+    }
+    > select {
+      height: 18px;
+      font-size: 10px;
+      color: #293043;
+      background: #e6e6e6;
+      box-shadow: 0 0 0 1px #cccccc inset;
+      @include ltr {
+        padding: 0 15px 0 6px;
+      }
+      @include rtl {
+        padding: 0 6px 015px;
+      }
+    }
   }
 }

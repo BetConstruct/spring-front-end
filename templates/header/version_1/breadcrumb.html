@@ -1,5 +1,5 @@
 <div class="topmenu-sport-and-region" ng-click="scrollToElement('header')"><span ng-show="$location.path() === '/sport/'">{{ selectedSportName }} {{ selectedRegionName }}</span></div>
-<div class="topmenu-sport-and-region" ng-click="scrollToElement('header')"><span ng-show="$root.currentPage.isInPoker" trans>Poker</span></div>
+<div class="topmenu-sport-and-region" ng-click="scrollToElement('header')"><span ng-show="$location.path() === '/poker/'" trans>Poker</span></div>
 <div class="topmenu-sport-and-region" ng-click="scrollToElement('header');broadcast('casino.action', {action: 'closeGame'});"><span ng-show="$location.path() === '/casino/'" trans>Casino</span></div>
 <div class="topmenu-sport-and-region" ng-click="scrollToElement('header');broadcast('casino.action', {action: 'closeGame'});"><span ng-show="$location.path() === '/livedealer/'" trans>Live casino</span></div>
 <div class="topmenu-sport-and-region" ng-click="scrollToElement('header')"><span ng-show="$location.path() === '/fantasy/'" trans>Fantasy Sports</span></div>

@@ -1,0 +1,57 @@
+<div class="right-column-v3">
+    <div class="scroll-c-b">
+    <!--View settings-->
+    <div class="view-settings-b-v3">
+        <ul>
+            <li>
+                <div class="time-filter-v3"
+                     ng-show="calculatedConfigs.sportEnabled && $root.conf.enableSportsbookLayoutSwitcher"
+                     ng-class="{'active': showLayoutSubMenu}"
+                     ng-click="showLayoutSubMenu = !showLayoutSubMenu"
+                     state-flag-var="showLayoutSubMenu" hide-on-click>
+                    <p><span>{{({modern: 'Modern', asian: 'Asian', external: 'Eastern',combo: 'Combo', classic: 'Classic'}[$root.conf.sportsLayout])|translate}}</span> <i class="arrow-rotate-filter-v3"></i></p>
+                    <div class="sub-nav-filter-time-v3">
+                        <ul>
+                            <li ng-repeat="(key, value) in $root.conf.availableSportsbookViews track by $index" ng-click="switchSportsbookLayout(key)" ng-class="{'active': $root.conf.sportsLayout === key}"><span ng-bind="key|capitalise|translate"></span></li>
+                        </ul>
+                    </div>
+                </div>
+            </li>
+            <li ng-controller="sportsbookSwitchersCtrl">
+                <div class="time-filter-v3" ng-show="!$root.conf.disableDecimalSubMenu"
+                     ng-click="showDecimalSubMenu = !showDecimalSubMenu"
+                     state-flag-var="showDecimalSubMenu"
+                     ng-class="{'active': showDecimalSubMenu}"
+                     hide-on-click>
+                    <p><span>{{env.oddFormat|capitalise|translate}}</span> <i class="arrow-rotate-filter-v3"></i></p>
+                    <div class="sub-nav-filter-time-v3">
+                        <ul>
+                            <li ng-repeat="oddFormat in ::$root.conf.oddFormats track by oddFormat.name"
+                                ng-click="broadcast('setOddsFormat', oddFormat.format)"
+                                ng-class="{'active': env.oddFormat === oddFormat.format}"
+                                ng-hide="$root.conf.disableOddFormatsSpecialCase[selectedBetType.name][oddFormat.format]">
+                                <span>{{ oddFormat.name | translate }}</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </li>
+        </ul>
+    </div>
+    <!--View settings END-->
+    <div class="right-b-view-wrapper-v3">
+        <!--Betslip-->
+        <include-template class="betslip-include-v3" template-path="templates/sport/classic/right/betslip.html"></include-template>
+        <!--Betslip END-->
+        <!--Mini Games-->
+        <div class="mini-games" ng-if="$root.conf.enableMiniGameUnderBetslip && $root.casinoEnabled" ng-include="'optional_modules/casino/templates/specialgames/minigames.html'|fixPath"></div>
+        <!--Mini Games-->
+        <div class="right-banner-container" ng-if="$root.conf.enableBannerUnderBetslip" ng-controller="cmsSportNewsCtrl" ng-include="::'templates/sport/classic/banners.html'|fixPath"></div>
+
+        <div class="right-banner-container" ng-if="$root.conf.customBetSlipWidgetScript">
+            <iframe class="bet-slip-iframe" ng-src="{{($root.conf.customBetSlipWidgetScript + 'lang=' + $root.env.lang + '&amp;odds=' + $root.env.oddFormat)|url}}"></iframe>
+        </div>
+
+    </div>
+</div>
+</div>

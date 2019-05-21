@@ -1,4 +1,4 @@
-<div class="casino-tournaments-include" ng-init="openTournamentDetails($location.search().tournament_id, false, true)">
+<div class="casino-tournaments-include" ng-init="openTournamentDetails($location.search().tournament_id, false, true);casinoMultiviewValues();">
     <vbet-loader ng-if="!tournament.details"></vbet-loader>
     <div class="guide" ng-if="tournament.details">
         <div class="casino-tournament-page-intro" ng-style="{'background-image': 'url({{tournament.details.DetailsBannerImagesFiltered[0].ImageUrl}})'}">
@@ -9,7 +9,7 @@
                 <div class="ct-page-countdown-holder">
                     <ul>
                         <li>
-                            <counter start="{{tournament.details.State === 3 ? tournament.details.StartDate : tournament.details.EndDate}}" finish-text="{{tournament.details.State === 3 ? 'Started' : ''}}" class="status-color"></counter>
+                            <counter start="{{tournament.details.Stage === 3 ? tournament.details.StartDate : tournament.details.EndDate}}" finish-text="{{tournament.details.Stage === 3 ? 'Started' : tournament.details.Stage === -1 ? 'Canceled' : ''}}" class="status-color"></counter>
                         </li>
                         <li>
                             <button ng-click="participateInTournament(tournament.details);$event.stopPropagation()" ng-disabled="!tournament.details.canParticipate || tournament.details.IsParticipated">
@@ -23,10 +23,11 @@
         <ul class="ctournament-status-boxes ct-page-type-details">
             <li>
                 <p><span trans>Status</span></p>
-                <p class="status-color" ng-class="{finished: tournament.details.State === 1, live: tournament.details.State === 2, upcoming: tournament.details.State === 3}">
-                    <strong ng-show="tournament.details.State == 1" trans>Finished</strong>
-                    <strong ng-show="tournament.details.State == 2" trans>Live</strong>
-                    <strong ng-show="tournament.details.State == 3" trans>Upcoming</strong>
+                <p class="status-color" ng-class="{finished: tournament.details.Stage === 1, live: tournament.details.Stage === 2, upcoming: tournament.details.Stage === 3, canceled : tournament.details.Stage === -1}">
+                    <strong ng-show="tournament.details.Stage == 1" trans>Finished</strong>
+                    <strong ng-show="tournament.details.Stage == 2" trans>Live</strong>
+                    <strong ng-show="tournament.details.Stage == 3" trans>Upcoming</strong>
+                    <strong ng-show="tournament.details.Stage == -1" trans>Canceled</strong>
                 </p>
             </li>
             <li>

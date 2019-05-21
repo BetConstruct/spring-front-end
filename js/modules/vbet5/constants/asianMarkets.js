@@ -23,7 +23,7 @@ angular.module('vbet5').constant('AsianMarkets', {
         'CORNERHANDICAP': true,
         'CORNERODD/EVEN': true
     },
-    marketsBySportGms: {
+    marketsBySport: {
         Soccer: {
             HDP: ['ODD/EVEN', 'WINNER', 'HANDICAP', 'TOTALS'],
            // HDP: ['WINNER', 'HANDICAP', 'TOTALS'],
@@ -42,91 +42,6 @@ angular.module('vbet5').constant('AsianMarkets', {
         'Default': {
             HDP: ['ODD/EVEN', 'WINNER', 'HANDICAP', 'TOTALS'],
             //HDP: ['WINNER', 'HANDICAP', 'TOTALS'],
-            OUR: ['OUTRIGHT']
-        }
-    },
-    marketsBySportBazalt: {
-        Soccer: {
-            HDP: ['WINNER', 'HANDICAP', 'GOALS'],
-            MODDS: ['WINNER'],
-            FHTCS: ['CORRECTSCORE'],
-            FHTOE: ['ODDEVEN'],
-            FHTG: ['GOALGROUP'],
-            HTFT: ['HTFT'],
-            FLG: ['FGLG'],
-            FTDC: ['DOUBLECHANCE'],
-            OUR: ['OUTRIGHT']
-        },
-        Tennis: {
-            HDP: ['WINNER', 'HANDICAP', 'GAMES'],
-            OUR: ['OUTRIGHT']
-        },
-        Basketball: {
-            HDP: ['WINNER', 'HANDICAP', 'POINTS'],
-            OUR: ['OUTRIGHT']
-        },
-        Volleyball: {
-            HDP: ['WINNER', 'HANDICAP', 'POINTS'],
-            OUR: ['OUTRIGHT']
-        },
-        IceHockey: {
-            HDP: ['WINNER', 'HANDICAP', 'GOALS'],
-            OUR: ['OUTRIGHT']
-        },
-        Baseball: {
-            HDP: ['WINNER', 'HANDICAP', 'RUNS'],
-            OUR: ['OUTRIGHT']
-        },
-        Handball: {
-            HDP: ['WINNER', 'HANDICAP', 'GOALS'],
-            OUR: ['OUTRIGHT']
-        },
-        BeachVolleyball: {
-            HDP: ['WINNER', 'HANDICAP', 'POINTS'],
-            OUR: ['OUTRIGHT']
-        },
-        Boxing: {
-            HDP: ['WINNER', 'HANDICAP', 'ROUNDS'],
-            OUR: ['OUTRIGHT']
-        },
-        WaterPolo: {
-            HDP: ['WINNER', 'HANDICAP', 'GOALS'],
-            OUR: ['OUTRIGHT']
-        },
-        TableTennis: {
-            HDP: ['WINNER', 'HANDICAP', 'POINTS'],
-            OUR: ['OUTRIGHT']
-        },
-        Badminton: {
-            HDP: ['WINNER', 'HANDICAP', 'POINTS'],
-            OUR: ['OUTRIGHT']
-        },
-        AmericanFootball: {
-            HDP: ['WINNER', 'HANDICAP', 'POINTS'],
-            OUR: ['OUTRIGHT']
-        },
-        Golf: {
-            HDP: ['WINNER', 'HANDICAP', 'HOLES'],
-            OUR: ['OUTRIGHT']
-        },
-        Darts: {
-            HDP: ['WINNER', 'HANDICAP', 'LEGS'],
-            OUR: ['OUTRIGHT']
-        },
-        Cricket: {
-            HDP: ['WINNER', 'HANDICAP', 'RUNS'],
-            OUR: ['OUTRIGHT']
-        },
-        Rugby: {
-            HDP: ['WINNER', 'HANDICAP', 'POINTS'],
-            OUR: ['OUTRIGHT']
-        },
-        'Electronic sports': {
-            HDP: ['WINNER', 'HANDICAP', 'POINTS'],
-            OUR: ['OUTRIGHT']
-        },
-        'Default': {
-            HDP: ['WINNER', 'HANDICAP', 'POINTS'],
             OUR: ['OUTRIGHT']
         }
     },

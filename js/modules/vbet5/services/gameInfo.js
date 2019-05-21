@@ -1,3 +1,4 @@
+/* global Hls */
 /**
  * @ngdoc service
  * @name vbet5.service:GameInfo
@@ -13,7 +14,8 @@ angular.module('vbet5').service('GameInfo', ['$rootScope', '$http', '$filter', '
     GameInfo.PROVIDER_AVAILABLE_EVENTS = null;
     GameInfo.SPORT_GROUPS = null;
 
-    var virtualSportIds;
+    var gameIdsHavingStreaming;
+
     /**
      * @ngdoc method
      * @name groupRegionsIfNeeded
@@ -99,16 +101,20 @@ angular.module('vbet5').service('GameInfo', ['$rootScope', '$http', '$filter', '
      */
     GameInfo.hasVideo = function hasVideo(game, enablePrematchCheck) {
         if (Config.main.video.enableOptimization) {
-            if (game.video_provider && (game.video_provider[0] !== Config.main.getProviderAvailableEventsAndEnableFiltering || !GameInfo.PROVIDER_AVAILABLE_EVENTS || GameInfo.PROVIDER_AVAILABLE_EVENTS.indexOf(game.video_provider[1]) !== -1)) {
-                game.tv_type = game.video_provider[0];
-                game.video_id = game.video_provider[1];
+            if (!GameInfo.PROVIDER_AVAILABLE_EVENTS || !GameInfo.PROVIDER_AVAILABLE_EVENTS[game.id]) {
+                game.video_id = undefined;
+                return false;
+            }
+
+            game.tv_type = GameInfo.PROVIDER_AVAILABLE_EVENTS[game.id][0];
+            game.video_id = GameInfo.PROVIDER_AVAILABLE_EVENTS[game.id][1];
+
+            return true;
+        }
+        if ([15, 29].indexOf(game.tv_type)!== -1 && game.video_id) {
+            if (game.tv_type === 15 || Config.main.availableVideoProviderIds.indexOf(game.tv_type) !== -1) {
                 return true;
             }
-            game.video_id = undefined;
-            return false;
-        }
-        if ([15, 29].indexOf(game.tv_type)!== -1 && game.video_id && Config.main.availableVideoProviderIds.indexOf(game.tv_type) !== -1) {
-            return true;
         }
         if (game.type === 1 || enablePrematchCheck) {
             if (game.video_id2 && Config.main.availableVideoProviderIds.indexOf(6) !== -1 && (!game.tv_type || (game.tv_type !== 19 && game.tv_type !== 16) )) {
@@ -197,8 +203,12 @@ angular.module('vbet5').service('GameInfo', ['$rootScope', '$http', '$filter', '
      */
     GameInfo.getVideoFilter = function getVideoFilter() {
         if (Config.main.video.enableOptimization) {
+            gameIdsHavingStreaming = Object.keys(GameInfo.PROVIDER_AVAILABLE_EVENTS).map(
+                function(id) {
+                    return parseInt(id, 10);
+                });
             return {
-                video_provider: {'@ne': null}
+                '@in': gameIdsHavingStreaming
             };
         }
 
@@ -278,7 +288,8 @@ angular.module('vbet5').service('GameInfo', ['$rootScope', '$http', '$filter', '
             is_animation: true
         } : {
             video_id: game.video_id,
-            provider: game.tv_type
+            provider: game.tv_type,
+            use_hls: !!Config.main.videoProvidersThatSupportHls[game.tv_type]
         };
 
         return Zergling
@@ -298,19 +309,35 @@ angular.module('vbet5').service('GameInfo', ['$rootScope', '$http', '$filter', '
     GameInfo.getProviderAvailableEvents = function getProviderAvailableEvents() {
         var filterLoaded = $q.defer();
         var result = filterLoaded.promise;
-        if (!Config.main.getProviderAvailableEventsAndEnableFiltering || GameInfo.PROVIDER_AVAILABLE_EVENTS) {
+        if (GameInfo.PROVIDER_AVAILABLE_EVENTS || !Config.main.video.enableOptimization && !Config.main.getProviderAvailableEventsAndEnableFiltering) {
             filterLoaded.resolve(null);
-        } else {
+        } else if (!Config.main.video.enableOptimization) {
             Zergling
                 .get({provider: Config.main.getProviderAvailableEventsAndEnableFiltering}, 'get_video_ids')
                 .then(function (data) {
                     if (data && data.videos) {
                         GameInfo.PROVIDER_AVAILABLE_EVENTS = data.videos;
-                        filterLoaded.resolve(data.videos);
-                    } else {
-                        filterLoaded.resolve(null);
                     }
-                })['catch'](function() {
+                })['finally'](function() {
+                filterLoaded.resolve(null);
+            });
+        } else {
+            var onStreamUpdate = function(response) {
+                if (response.stream_configs) {
+                    GameInfo.PROVIDER_AVAILABLE_EVENTS = response.stream_configs;
+                }
+            };
+
+            Zergling
+                .subscribe({
+                    "source": "notifications",
+                    "what": {"partner_streams":[]}
+                }, onStreamUpdate)
+                .then(function (response) {
+                    if (response && response.data) {
+                        onStreamUpdate(response.data);
+                    }
+                })['finally'](function() {
                 filterLoaded.resolve(null);
             });
         }
@@ -387,8 +414,8 @@ angular.module('vbet5').service('GameInfo', ['$rootScope', '$http', '$filter', '
         var path = Config.main.horceRacingXmlUrl + raceXml;
         var raceData = {};
         //Does not work for localhost
-        $http.get(path).success(function (data) {
-            raceData = X2js.xml_str2json(data);   
+        $http.get(path).then(function (response) {
+            raceData = X2js.xml_str2json(response.data);
             if (raceData) {
                 var raceDate = 's' + raceData.HorseRacingCard.Meeting._date.substring(6, 8) + raceData.HorseRacingCard.Meeting._date.substring(4, 6) + raceData.HorseRacingCard.Meeting._date.substring(2, 4);
                 var currentRace = getCurrentRace(raceData.HorseRacingCard.Meeting.Race, raceId);
@@ -398,10 +425,10 @@ angular.module('vbet5').service('GameInfo', ['$rootScope', '$http', '$filter', '
                     gameInfo.race.courceIcon = 'http://horseracing.vivaro.am/stadium/' + raceData.HorseRacingCard.Meeting._course.toLowerCase().split(' ').join('') + '.png';
                     gameInfo.race.courceName = raceData.HorseRacingCard.Meeting._course;
 
-                 //   gameInfo.race.currentRace = currentRace;
+                    //   gameInfo.race.currentRace = currentRace;
 
                     if(!currentRace.Horse.length){
-                       loadHorseDataFromMarket(market, gameInfo.race);
+                        loadHorseDataFromMarket(market, gameInfo.race);
                     }else{
                         var horseList = getHorseList(currentRace, market, marketName, raceDate); //this contains horseList.Horses, horseList.NonRunners
                         gameInfo.race.horseStats = horseList.horses;
@@ -416,7 +443,7 @@ angular.module('vbet5').service('GameInfo', ['$rootScope', '$http', '$filter', '
             }
             else{ loadHorseDataFromMarket(market, gameInfo.race);}
         })
-            .error(function(data){
+            .catch(function(){
                 loadHorseDataFromMarket(market, gameInfo.race);
             });
     };
@@ -428,7 +455,7 @@ angular.module('vbet5').service('GameInfo', ['$rootScope', '$http', '$filter', '
      * @description we load horse data from market when there are no horse details available
      * @param {Object} market with data
      * @param {Object} raceData where to add horse data
-    **/
+     **/
     var loadHorseDataFromMarket = function loadHorseDataFromMarket(market, raceData){
         raceData.horseStats = [];
         raceData.nonRunners = [];
@@ -468,7 +495,7 @@ angular.module('vbet5').service('GameInfo', ['$rootScope', '$http', '$filter', '
      * @name getHorseMarket
      * @methodOf vbet5.service:GameInfo
      * @description
-     * helper function, returns 
+     * helper function, returns
      * @param {Object} existing markets, the name of market to select, the horse name which market needed
      * @returns {Object} market event related to the horse
      */
@@ -478,7 +505,7 @@ angular.module('vbet5').service('GameInfo', ['$rootScope', '$http', '$filter', '
         angular.forEach(markets, function (market) {
             if (market.type === marketName && keepGoing) {
                 angular.forEach(market.event, function (event) {
-                    if ((event.type === horseName || event.type === horseId) && keepGoing) {
+                    if ((event.type.toLowerCase().trim() === horseName.toLowerCase().trim() || event.type === horseId) && keepGoing) {
                         raceMarket = event;
 
                         keepGoing = false;
@@ -490,12 +517,12 @@ angular.module('vbet5').service('GameInfo', ['$rootScope', '$http', '$filter', '
     };
 
 
-    /**    
-    * @description helper function
-    * @param {Object} allRaces  all race data
-    * @param {Number} raceId current race id
-    * @returns {Object} current race data
-    */
+    /**
+     * @description helper function
+     * @param {Object} allRaces  all race data
+     * @param {Number} raceId current race id
+     * @returns {Object} current race data
+     */
     var getCurrentRace = function getCurrentRace(allRaces, raceId) {
         if (allRaces.length > 1) {
             for (var i = 0; i < allRaces.length; i++) {
@@ -509,13 +536,13 @@ angular.module('vbet5').service('GameInfo', ['$rootScope', '$http', '$filter', '
         }
     };
 
-    /**    
-    * @description helper function
-    * @param {Object} currentRace current race full data
-    * @returns {Object} race related info
-    */
+    /**
+     * @description helper function
+     * @param {Object} currentRace current race full data
+     * @returns {Object} race related info
+     */
     var getRaceInfo = function getRaceInfo(currentRace) {
-        var race = {};        
+        var race = {};
 
         race.prize = 0;
         race.track_type = currentRace._trackType;
@@ -542,16 +569,16 @@ angular.module('vbet5').service('GameInfo', ['$rootScope', '$http', '$filter', '
         return race;
     };
 
-    /**    
-    * @description helper function
-    * @param {Object} raceData current race full data
-    * @param {Object} market race market
-    * @param {String} marketName market name
-    * @param {String} raceDate race date
-    * @returns {Object} merges horse info with market event and returns horses list
-    */
+    /**
+     * @description helper function
+     * @param {Object} raceData current race full data
+     * @param {Object} market race market
+     * @param {String} marketName market name
+     * @param {String} raceDate race date
+     * @returns {Object} merges horse info with market event and returns horses list
+     */
     var getHorseList = function getHorseList(raceData, market, marketName, raceDate) {
-        
+
         var statisticsArray = [];
         var nonRunnersArray = [];
         var rule4 = false;
@@ -582,7 +609,7 @@ angular.module('vbet5').service('GameInfo', ['$rootScope', '$http', '$filter', '
                 }
                 if (raceData.Horse[k].RaceHistoryStat) {
                     horseStatistics.historyStats = getCdWon(raceData.Horse[k].RaceHistoryStat);
-               
+
                 }
                 horseStatistics.jockey_colors = Config.main.horceRacingXmlUrl + raceDate + '/' + raceData.Horse[k].JockeyColours._filename;
                 horseStatistics.trainer = raceData.Horse[k].Trainer ? raceData.Horse[k].Trainer._name : '';
@@ -614,17 +641,17 @@ angular.module('vbet5').service('GameInfo', ['$rootScope', '$http', '$filter', '
                 }
             }
         }
-        
+
         return {'horses': statisticsArray, 'nonRunners': nonRunnersArray, 'rule4': rule4};
     };
 
 
 
-    /**    
-    * @description helper function
-    * @param {Object} historyStat horse statistics history
-    * @returns {Object} formatted statistics history
-    */
+    /**
+     * @description helper function
+     * @param {Object} historyStat horse statistics history
+     * @returns {Object} formatted statistics history
+     */
     var getCdWon = function getCdWon(historyStat){
         var horseHistoryStat = {};
         if (historyStat.length) {
@@ -643,7 +670,7 @@ angular.module('vbet5').service('GameInfo', ['$rootScope', '$http', '$filter', '
                         horseHistoryStat.bf = 'BF';
                         break;
                 }
-            }            
+            }
         }
         else {
             switch (historyStat._type) {
@@ -659,10 +686,9 @@ angular.module('vbet5').service('GameInfo', ['$rootScope', '$http', '$filter', '
                 case 'BeatenFavourite':
                     horseHistoryStat.bf = 'BF';
                     break;
-            }  
+            }
         }
-                
-       
+
         return horseHistoryStat;
     };
 
@@ -687,101 +713,97 @@ angular.module('vbet5').service('GameInfo', ['$rootScope', '$http', '$filter', '
         return places;
     };
 
-
-
-
-
-/*********************   SPRING PLATFORM SUPPORT FUNCTIONS     **********************************/
+    /*********************   SPRING PLATFORM SUPPORT FUNCTIONS     **********************************/
 
     var GAME_EVENTS_MAP = {
-    //    soccer
-             1: 'Goal',
-             2: 'RedCard',
-             3: 'YellowCard',
-             4: 'Corner',
-             5: 'Penalty',
-             6: 'Substitution',
-             10: 'Period',
-             20: 'BallSafe',
-             21: 'DangerousAttack',
-             22: 'KickOff',
-             23: 'GoalKick',
-             24: 'FreeKick',
-             25: 'ThrowIn',
-             26: 'ShotOffTarget',
-             27: 'ShotOnTarget',
-             28: 'Offside',
-             29: 'GoalkeeperSave',
-             30: 'ShotBlocked',
-             100: 'NotStarted',
-             101: 'FirstHalf',
-             102: 'HalfTime',
-             103: 'SecondHalf',
-             104: 'PreExtraHalf',
-             105: 'ExtraTimeFirstHalf',
-             106: 'ExtraTimeHalfTime',
-             107: 'ExtraTimeSecondHalf',
-             108: 'Finished',
-             199: 'Timeout',
-    //    tennis
-             200: 'FirstSet',
-             201: 'SecondSet',
-             202: 'ThirdSet',
-             203: 'FourthSet',
-             204: 'FifthSet',
-             205: 'Point',
-             206: 'BallInPlay',
-             207: 'ServiceFault',
-             208: 'DoubleFault',
-             209: 'Ace',
-             210: 'InjuryBreak',
-             211: 'RainDelay',
-             212: 'Challenge',
-             213: 'FinalSet',
-             214: 'Let1stServe',
-             215: 'Retired',
-             216: 'Walkover',
-             217: 'Game',
-             218: 'Set',
-    //    basketball
-             300: 'FirstQuarter',
-             301: 'FirstQuarterEnded',
-             302: 'SecondQuarter',
-             303: 'SecondQuarterEnded',
-             304: 'ThirdQuarter',
-             305: 'ThirdQuarterEnded',
-             306: 'FourthQuarter',
-             307: 'FourthQuarterEnded',
-             308: 'OverTime',
-             309: 'OverTimeEnded',
-             320: 'Foul',
-             321: 'FreeThrow',
-             322: 'Free1Throw',
-             323: 'Free2Throws',
-             324: 'Free3Throws',
-             325: 'MissedFreeThrow',
-             326: 'Attack',
-             327: 'OnePoint',
-             328: 'TwoPoints',
-             329: 'ThreePoints',
-    //    icehockey
-             400: 'FirstPeriod',
-             401: 'FirstPeriodEnded',
-             402: 'SecondPeriod',
-             403: 'SecondPeriodEnded',
-             404: 'ThirdPeriod',
-             405: 'ThirdPeriodEnded',
-             410: 'TimerStatus',
-             420: 'Suspension',
-             421: 'SuspensionOver',
-    //    handball
-            500: 'Throw_In',
-            501: 'Throw_Out',
-            502: 'GoalKeeper_Throw',
-            503: 'Free_Throw',
-            504: 'SevenMeter_Throw',
-            505: 'PenaltyScored',
-            506: 'PenaltyMissed'
+        //    soccer
+        1: 'Goal',
+        2: 'RedCard',
+        3: 'YellowCard',
+        4: 'Corner',
+        5: 'Penalty',
+        6: 'Substitution',
+        10: 'Period',
+        20: 'BallSafe',
+        21: 'DangerousAttack',
+        22: 'KickOff',
+        23: 'GoalKick',
+        24: 'FreeKick',
+        25: 'ThrowIn',
+        26: 'ShotOffTarget',
+        27: 'ShotOnTarget',
+        28: 'Offside',
+        29: 'GoalkeeperSave',
+        30: 'ShotBlocked',
+        100: 'NotStarted',
+        101: 'FirstHalf',
+        102: 'HalfTime',
+        103: 'SecondHalf',
+        104: 'PreExtraHalf',
+        105: 'ExtraTimeFirstHalf',
+        106: 'ExtraTimeHalfTime',
+        107: 'ExtraTimeSecondHalf',
+        108: 'Finished',
+        199: 'Timeout',
+        //    tennis
+        200: 'FirstSet',
+        201: 'SecondSet',
+        202: 'ThirdSet',
+        203: 'FourthSet',
+        204: 'FifthSet',
+        205: 'Point',
+        206: 'BallInPlay',
+        207: 'ServiceFault',
+        208: 'DoubleFault',
+        209: 'Ace',
+        210: 'InjuryBreak',
+        211: 'RainDelay',
+        212: 'Challenge',
+        213: 'FinalSet',
+        214: 'Let1stServe',
+        215: 'Retired',
+        216: 'Walkover',
+        217: 'Game',
+        218: 'Set',
+        //    basketball
+        300: 'FirstQuarter',
+        301: 'FirstQuarterEnded',
+        302: 'SecondQuarter',
+        303: 'SecondQuarterEnded',
+        304: 'ThirdQuarter',
+        305: 'ThirdQuarterEnded',
+        306: 'FourthQuarter',
+        307: 'FourthQuarterEnded',
+        308: 'OverTime',
+        309: 'OverTimeEnded',
+        320: 'Foul',
+        321: 'FreeThrow',
+        322: 'Free1Throw',
+        323: 'Free2Throws',
+        324: 'Free3Throws',
+        325: 'MissedFreeThrow',
+        326: 'Attack',
+        327: 'OnePoint',
+        328: 'TwoPoints',
+        329: 'ThreePoints',
+        //    icehockey
+        400: 'FirstPeriod',
+        401: 'FirstPeriodEnded',
+        402: 'SecondPeriod',
+        403: 'SecondPeriodEnded',
+        404: 'ThirdPeriod',
+        405: 'ThirdPeriodEnded',
+        410: 'TimerStatus',
+        420: 'Suspension',
+        421: 'SuspensionOver',
+        //    handball
+        500: 'Throw_In',
+        501: 'Throw_Out',
+        502: 'GoalKeeper_Throw',
+        503: 'Free_Throw',
+        504: 'SevenMeter_Throw',
+        505: 'PenaltyScored',
+        506: 'PenaltyMissed'
     };
 
     var GAME_STATISTICS = {
@@ -856,6 +878,28 @@ angular.module('vbet5').service('GameInfo', ['$rootScope', '$http', '$filter', '
             }
         }
     };
+    /**
+     * @ngdoc method
+     * @name checkITFAvailability
+     * @methodOf vbet5.service:GameInfo
+     * @description  removed itf data from game
+     * @param game {Object} the game object
+     */
+    GameInfo.checkITFAvailability = function checkITFAvailability(game) {
+        if (Config.main.disableITFGamesInfo && game.is_itf && game.type === 1) {
+            if (game.info) {
+                game.info.score1 = '-';
+                game.info.score2 = '-';
+                game.info.pass_team = "";
+            }
+            game.text_info = "";
+            game.has_animation = false;
+            angular.forEach(game.stats, function (stat) {
+                stat.team1_value !== undefined && (stat.team1_value = '-');
+                stat.team2_value !== undefined && (stat.team2_value = '-');
+            });
+        }
+    };
 
     /**
      * @ngdoc method
@@ -875,7 +919,7 @@ angular.module('vbet5').service('GameInfo', ['$rootScope', '$http', '$filter', '
             if(game.sport.alias === 'Tennis') {
                 GameInfo.setTennisCourtSide(game.last_event, game);
             }
-            game.has_animation = !!(Config.main.sportsWithAnimations.indexOf(game.sport.alias)+1);
+            game.has_animation = !!(Config.main.sportsWithAnimations[game.sport.alias]);
         }
         if (game.video_provider && game.video_provider[2]) {
             if (Config.main.enableCustomAnimations) {
@@ -889,30 +933,15 @@ angular.module('vbet5').service('GameInfo', ['$rootScope', '$http', '$filter', '
         }
         if(game.live_events && game.live_events.length > 0  ) {
             var i, length = game.live_events.length;
-            if(Config.main.GmsPlatform) {// new backend
-                for(i = 0; i < length; i++) {
-                    game.live_events[i].event_type = (GAME_EVENTS_MAP[game.live_events[i].type_id] || '').split(/(?=[A-Z])/).join(' ');
-                    game.live_events[i].event_icon = ((GAME_EVENTS_MAP[game.live_events[i].type_id] || '').split(/(?=[A-Z])/).join('_')).toLowerCase() + '-icon';
-                    game.live_events[i].team = game.live_events[i].side === 0 ? '' : 'team' + game.live_events[i].side;
-                    game.live_events[i].add_info = game.live_events[i].current_minute || 0;
-                }
+            for (i = 0; i < length; i++) {
+                game.live_events[i].event_type = (GAME_EVENTS_MAP[game.live_events[i].type_id] || '').split(/(?=[A-Z])/).join(' ');
+                game.live_events[i].event_icon = ((GAME_EVENTS_MAP[game.live_events[i].type_id] || '').split(/(?=[A-Z])/).join('_')).toLowerCase() + '-icon';
+                game.live_events[i].team = game.live_events[i].side === 0 ? '' : 'team' + game.live_events[i].side;
+                game.live_events[i].add_info = game.live_events[i].current_minute || 0;
             }
         }
-        if (Config.main.disableITFGamesInfo && game.is_itf) {
-            if (game.info) {
-                game.info.score1 = '-';
-                game.info.score2 = '-';
-                game.info.pass_team = "";
-            }
-            game.has_animation = false;
-            angular.forEach(game.stats, function (stat) {
-                stat.team1_value !== undefined && (stat.team1_value = '-');
-                stat.team2_value !== undefined && (stat.team2_value = '-');
-            });
-        }
+        GameInfo.checkITFAvailability(game);
     };
-
-
 
     /* checks if extra time of the game is played
      * need this function for generating timeline events */
@@ -950,7 +979,7 @@ angular.module('vbet5').service('GameInfo', ['$rootScope', '$http', '$filter', '
             currentMinutePosition = curentMinute <= 90 ? (curentMinute * 10 / 9) + '%' : '100%';
         }
 
-        return currentMinutePosition;        
+        return currentMinutePosition;
     }
 
 
@@ -966,11 +995,11 @@ angular.module('vbet5').service('GameInfo', ['$rootScope', '$http', '$filter', '
         if (parseInt(timelineEvent.matchLength, 10) < 90) {
             multiplier = parseInt(timelineEvent.matchLength, 10)/ 10;
         }
-        
+
         if (theMinute > (multiplier-5) && theMinute < multiplier*10) {
             return {  position: 'absolute', right: (102 - theMinute * 10 / multiplier) + '%'};
         }
-        
+
         if (theMinute >= multiplier*10) {
             return { position: 'absolute', right: 0 +'%'};
         }
@@ -1047,7 +1076,7 @@ angular.module('vbet5').service('GameInfo', ['$rootScope', '$http', '$filter', '
      * @methodOf vbet5.service:GameInfo
      * @description  slides to next/previous set
      */
-     GameInfo.slideSets = function slideSets(direction, game, visibleSetsNumber, allSets) {
+    GameInfo.slideSets = function slideSets(direction, game, visibleSetsNumber, allSets) {
         if (direction === 'left') {
             if (game.setsOffset > 0) {
                 game.setsOffset--;
@@ -1099,7 +1128,8 @@ angular.module('vbet5').service('GameInfo', ['$rootScope', '$http', '$filter', '
     var liveGameSetsAliases = {
         'Basketball5': 'OT', //basketball 5th quarter is called overtime 'OT'
         "BeachFootball4": 'OT',
-        "BeachFootball5": 'PT'
+        "BeachFootball5": 'PT',
+        'Baseball10': 'EX'
     };
 
     /**
@@ -1155,7 +1185,7 @@ angular.module('vbet5').service('GameInfo', ['$rootScope', '$http', '$filter', '
      * @returns {String} base to display
      */
     GameInfo.displayBase = function displayBase(event, market) {
-        if (Config.main.hideGmsMarketBase || event === undefined || (event.base === null  || event.base === undefined) && (event.base1 === null  || event.base1 === undefined)) {
+        if (event === undefined || (event.base === null  || event.base === undefined) && (event.base1 === null  || event.base1 === undefined)) {
             return '';
         }
         var base, prefix = '';
@@ -1238,7 +1268,8 @@ angular.module('vbet5').service('GameInfo', ['$rootScope', '$http', '$filter', '
         'YellowCard': 'audio/soccer/YellowCard',
         'BallInPlay': 'audio/tennis/BallInPlay',
         'Ace': 'audio/tennis/Ace',
-        'ServiceFault': 'audio/tennis/ServiceFault'
+        'ServiceFault': 'audio/tennis/ServiceFault',
+        'beep' : 'audio/beep.mp3'
     };
     /**
      * @ngdoc method
@@ -1280,13 +1311,7 @@ angular.module('vbet5').service('GameInfo', ['$rootScope', '$http', '$filter', '
     GameInfo.getStatsLink = function getStatsLink(game) {
         var statLang = Moment.getStatisticsLang() || 'en';
         var hostName = Config.main.statsHostname.prefixUrl + statLang + Config.main.statsHostname.subUrl;
-        if(Config.main.GmsPlatform) {
-            return hostName + 'redirect/' + game.id;
-        }
-        if (game.game_external_id) {
-            return hostName + 'redirect/' + game.game_external_id;
-        }
-        return hostName + 'h2h/' + game.team1_external_id + '/' + game.team2_external_id;
+        return hostName + 'redirect/' + game.id;
     };
 
     if (Storage.get('sound') !== undefined) {
@@ -1310,22 +1335,26 @@ angular.module('vbet5').service('GameInfo', ['$rootScope', '$http', '$filter', '
      * @name displayEventLimit
      * @methodOf vbet5.service:GameInfo
      * @param {Object} event  event object
+     * @param {Function} callback function to update data-tile
      * @description loads max bet for event and stores it in event's maxBet property
      */
-    GameInfo.displayEventLimit = function displayEventLimit(event, game, market) {
+    GameInfo.displayEventLimit = function displayEventLimit(event, callback) {
 
-         // call this function from template if functional will be divided
+
+        // call this function from template if functional will be divided
         /*GameInfo.getExchangeEventFairPrice(event, game, false, market);*/
 
-        if (!Config.main.displayEventsMaxBet || !Config.env.authorized || GameInfo.maxBetRequests[event.id]) {
+        if (GameInfo.maxBetRequests[event.id]) {
             return;
         }
         event.maxBet = undefined;
         GameInfo.maxBetRequests[event.id] = $timeout(function () {
-            Zergling.get({events: [event.id]}, 'get_max_bet').then(function (response) {
+            Zergling.get({events: [event.id]}, 'get_max_bet').then(function(response) {
                 if (GameInfo.maxBetRequests[event.id]) {
-                    response && !response.result_text && (event.maxBet = (Config.main.onlyDecimalStakeAmount ? Math.floor(response.result) : parseFloat(response.result)));
-
+                    if (!response.result_text) {
+                        event.maxBet = Config.main.onlyDecimalStakeAmount ? Math.floor(response.details.amount) : parseFloat(response.details.amount);
+                    }
+                    if (callback) { callback(); }
                     GameInfo.maxBetRequests[event.id] = undefined;
                 }
             });
@@ -1373,27 +1402,28 @@ angular.module('vbet5').service('GameInfo', ['$rootScope', '$http', '$filter', '
                     event.exchangePrice = undefined;
                     event.exchangeDeepLink = undefined;
                 }
-            GameInfo.exchangeEventsMap[event.id] = undefined;
+                GameInfo.exchangeEventsMap[event.id] = undefined;
             });
         }, 500);
     };
-
 
     /**
      * @ngdoc method
      * @name cancelDisplayEventLimit
      * @methodOf vbet5.service:GameInfo
      * @param {Object} event  event object
+     * @param {Function} callback function to update data-title
      * @description cancels displayEventLimit request for event
      */
-    GameInfo.cancelDisplayEventLimit = function cancelDisplayEventLimit(event) {
+    GameInfo.cancelDisplayEventLimit = function cancelDisplayEventLimit(event, callback) {
         if (GameInfo.maxBetRequests[event.id]) {
             $timeout.cancel(GameInfo.maxBetRequests[event.id]);
             GameInfo.maxBetRequests[event.id] = undefined;
             event.maxBet = undefined;
+            callback && callback();
         }
 
-         // call this function from template if functional will be divided
+        // call this function from template if functional will be divided
         /*GameInfo.getExchangeEventFairPrice(event, null, true, null);*/
     };
 
@@ -1431,13 +1461,13 @@ angular.module('vbet5').service('GameInfo', ['$rootScope', '$http', '$filter', '
      * @description Add ordering data to soccer events
      */
     GameInfo.addOrderingDataToSoccerGameEvents = function addOrderingDataToSoccerGameEvents (game) {
-       if (!game.live_events) {
-           return;
-       }
+        if (!game.live_events) {
+            return;
+        }
 
-       game.live_events.map(function (event) {
-           event.add_info_order = parseInt(event.add_info, 10);
-       });
+        game.live_events.map(function (event) {
+            event.add_info_order = parseInt(event.add_info, 10);
+        });
     };
 
     /**
@@ -1463,16 +1493,17 @@ angular.module('vbet5').service('GameInfo', ['$rootScope', '$http', '$filter', '
         }
     };
 
+
     /**
      * @ngdoc method
-     * @name reorderMarketEvents
+     * @name divideIntoColumns
      * @methodOf vbet5.service:GameInfo
-     * @description change market events (listed in marketsPreDividedByColumns variable in center.js and virtualSports.js) order for 2 & 3 columns view
+     * @description divides market events into columns
      * @param {Object} market the market Object
      * @param {String} type the market's type
-     * @returns {Array} array of virtual sport ids
+     * @returns {Array} array of columns
      */
-    GameInfo.reorderMarketEvents = function reorderMarketEvents(market, type) {
+    GameInfo.divideIntoColumns = function divideIntoColumns(market, type) {
         var leftCol = [], midCol = [], rightCol = [];
         switch (type) {
             case 'preDivided':
@@ -1495,6 +1526,9 @@ angular.module('vbet5').service('GameInfo', ['$rootScope', '$http', '$filter', '
                         }
                     });
                 }
+                leftCol.sort(Utils.orderSorting);
+                midCol.sort(Utils.orderSorting);
+                rightCol.sort(Utils.orderSorting);
                 break;
             case 'correctScore':
                 angular.forEach(market.event, function(event) {
@@ -1506,11 +1540,34 @@ angular.module('vbet5').service('GameInfo', ['$rootScope', '$http', '$filter', '
                         midCol.push(event);
                     }
                 });
-                leftCol.sort(function(a,b) {return a.home_value - b.home_value});
+                leftCol.sort(function(a,b) {
+                    return Utils.compare(a.home_value, b.home_value) || Utils.compare(a.away_value, b.away_value);
+                });
                 midCol.sort(function(a,b) {return a.home_value - b.home_value});
-                rightCol.sort(function(a,b) {return a.away_value - b.away_value});
+                rightCol.sort(function(a,b) {
+                    return Utils.compare(a.away_value, b.away_value) || Utils.compare(a.home_value, b.home_value);
+                });
                 break;
         }
+
+        return [leftCol, midCol, rightCol];
+    };
+
+
+    /**
+     * @ngdoc method
+     * @name reorderMarketEvents
+     * @methodOf vbet5.service:GameInfo
+     * @description change market events (listed in marketsPreDividedByColumns variable in center.js and virtualSports.js) order for 2 & 3 columns view
+     * @param {Object} market the market Object
+     * @param {String} type the market's type
+     * @returns {Array} array of virtual sport ids
+     */
+    GameInfo.reorderMarketEvents = function reorderMarketEvents(market, type) {
+        var columns = GameInfo.divideIntoColumns(market, type);
+        var leftCol = columns[0],
+            midCol = columns[1],
+            rightCol = columns[2];
 
         market.events = [];
         var length;
@@ -1547,23 +1604,6 @@ angular.module('vbet5').service('GameInfo', ['$rootScope', '$http', '$filter', '
         }
     };
 
-    /**
-     * @ngdoc method
-     * @name getVirtualSportIds
-     * @methodOf vbet5.service:GameInfo
-     * @description returns ids of all virtual sports
-     * @param {Number} id id of "parent' region
-     * @returns {Array} array of virtual sport ids
-     */
-    GameInfo.getVirtualSportIds = function getVirtualSportIds() {
-        if (!virtualSportIds) {
-            virtualSportIds = [];
-            angular.forEach(Config.main.virtualSportIds, function (value) {
-                virtualSportIds = virtualSportIds.concat(value);
-            });
-        }
-        return virtualSportIds;
-    };
 
     return GameInfo;
 }]);

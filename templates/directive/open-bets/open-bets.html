@@ -3,14 +3,16 @@
         {{::'You can view all your bets in'|translate}}
         <span ng-click="$root.broadcast('open.history'); goToTop(true); $event.stopPropagation()" trans>Bet History</span>
     </p>
-    <div class="slider-open-bets" ng-repeat="bet in shared.openBets" ng-class="{'open': bet.openEvents}"
-         ng-init="bet.openEvents = true" ng-hide="openBetsLoading || $root.editBet.loading">
+    <div class="slider-open-bets" ng-repeat="bet in openBets.data" ng-class="{'open': bet.openEvents}"
+         ng-init="bet.openEvents = true" ng-if="!openBets.loading && !$root.editBet.loading">
         <p ng-click="bet.openEvents = !bet.openEvents">
-            <span ng-bind="betTypes[bet.type]|translate"></span>
+            <span ng-class="{'EW-bh-indicator': bet.each_way}" ng-bind="betTypes[bet.type]|translate"></span>
             <span ng-if="bet.type === 3"> {{::bet.system_min_count}}/{{::bet.events.length}}</span>
             <i class="edit-bets-icon"
-               ng-show="bet.cashoutEnabled && (bet.type == 2 || bet.type == 1)  && minCashoutValue <= bet.cash_out && !$root.editBet.edit"
-               ng-click="$event.stopPropagation(); editBet(bet);">
+               ng-class="{'disabled': bet.cash_out < minCashoutValue}"
+               ng-show="!betConf.fullCoverBetTypes.enabled && bet.cash_out && (bet.type == 2 || bet.type == 1)  && !$root.editBet.edit"
+               ng-click="$event.stopPropagation(); editBet(bet);"
+               title="{{ (bet.cash_out < minCashoutValue ? 'Editing isn\'t possible as Min bet amount isn\'t reached.' : 'Editing functionality is available for this bet.') | translate }}">
             </i>
         </p>
         <div class="open-bets-time-id">
@@ -39,7 +41,7 @@
                             <li>
                                 <p>{{::event.eventName ? event.eventName : event.event_name}}</p>
                                 <div class="bet-price-view-b-v3">
-                                    <span class="bet-price-v3" ng-bind="event.coeficient|oddConvert:$root.env.oddFormat"></span>
+                                    <span class="bet-price-v3" ng-bind="event.k_type === 11 ? 'SP' : event.coeficient|oddConvert:$root.env.oddFormat"></span>
                                 </div>
                             </li>
                         </ul>
@@ -50,7 +52,7 @@
                         <div class="bs-cash-out-btn" ng-mouseover="autoCashoutRule.showInfo = true; getAutoCashOutDetails(bet.id, bet.auto_cash_out_amount)" ng-mouseleave="autoCashoutRule.showInfo = false">
                             <button class="open-bets-cashout-button" ng-class="{'rule-active': bet.auto_cash_out_amount != null}"
                                     ng-click="$root.broadcast('open.cashoutDialog', {bet: bet}); $event.stopPropagation();" ng-disabled="bet.id === $root.editBet.oldBetId || !(bet.outcome == 0 && bet.cash_out !== undefined)">
-                                <span>Cash-out</span>
+                                <span trans>Cash-out</span>
                                 <b>{{bet.cash_out}} <span ng-show="bet.cash_out">{{::$root.profile.currency_name|currency}}</span></b>
                             </button>
                         </div>
@@ -85,5 +87,5 @@
             </div>
         </div>
     </div>
-    <vbet-loader ng-show="openBetsLoading || $root.editBet.loading"></vbet-loader>
+    <vbet-loader ng-show="openBets.loading || $root.editBet.loading"></vbet-loader>
 </div>

@@ -20,7 +20,8 @@ CASINO.directive('casinoBiggestWinners', ['$rootScope', '$location', '$interval'
         link: function (scope) {
             var updateInterval, countryCode = '';
             scope.externalImages = {};
-            scope.activeTab = CConfig.main.biggestWinners.activeTab !== undefined ? CConfig.main.biggestWinners.activeTab : (CConfig.main.biggestWinners.topWinners ? 'top' : 'last');
+            scope.activeTab = CConfig.main.biggestWinners.activeTab !== undefined ? CConfig.main.biggestWinners.activeTab : 'last';
+
             scope.imagePath = CConfig.cUrlPrefix + CConfig.winnersIconsUrl;
             scope.biggestWinners = CConfig.main.biggestWinners;
             scope.externalIds = {};
@@ -41,6 +42,15 @@ CASINO.directive('casinoBiggestWinners', ['$rootScope', '$location', '$interval'
                 getWinners();
             };
 
+            // todo SDC-40634
+            // scope.openGameByExternalId = function openGameByExternalId(game_id) {
+            //     casinoData.getGames(null, null, countryCode, null, null, null, null, null,[game_id]).then(function (response) {
+            //         if(response && response.data && response.data.games && response.data.games.length > 0){
+            //             $rootScope.$broadcast('casino.openGame',response.data.games[0],'real');
+            //         }
+            //     });
+            // };
+
             function processExternalGames() {
                 var gameExternalIds = [], i, length;
                 for (i = 0, length = scope.winners.length; i < length; ++i) {
@@ -48,7 +58,7 @@ CASINO.directive('casinoBiggestWinners', ['$rootScope', '$location', '$interval'
                 }
 
                 if (gameExternalIds.length) {
-                    casinoData.getGames(null, null, countryCode, null, null, null, null, null, gameExternalIds).then(function(response) {
+                    casinoData.getGames(null, null, countryCode, null, null, null, null, null, gameExternalIds,'&only_images=1').then(function(response) {
                         if(response && response.data && response.data.games) {
                             var games = response.data.games;
                             for (i = 0, length = games.length; i < length; ++i) {
@@ -65,6 +75,9 @@ CASINO.directive('casinoBiggestWinners', ['$rootScope', '$location', '$interval'
              * @description  get winners data
              */
             function getWinners() {
+                if ($rootScope.inactiveMode) {
+                    return;
+                }
                 scope.winnersLoading = true;
                 var activeTab = scope.activeTab;
                 var command = (scope.activeTab === 'top') ? 'get_partner_last_big_wins' : 'get_partner_last_wins';
@@ -91,7 +104,7 @@ CASINO.directive('casinoBiggestWinners', ['$rootScope', '$location', '$interval'
             function openGame(game, gameType) {
                 var page, pagePath;
                 var gameId = game.front_game_id;
-                if (gameId == CConfig.ogwil.gameID) {
+                if (gameId === CConfig.ogwil.gameID) {
                     if (gameType === 'real' && !$rootScope.env.authorized) {
                         $rootScope.$broadcast("openLoginForm");
                     } else {

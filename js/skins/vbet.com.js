@@ -230,6 +230,7 @@ VBET5.constant('SkinConfig', {
         enableLandingPage: false,
         liveCalendarView: 'oneDaySelectionView',
         enableSystemCalculator: true,
+        // enableSportsbookJackpotOnBetSlip: true,
 
         accountVerificationMessage: 'account-verification-text', // value used as key for getting translation from translation tool
         visibleItemsInTopMenu: 9, // visible items quantity in Top Menu in small view
@@ -299,57 +300,61 @@ VBET5.constant('SkinConfig', {
             }
         ],
         sliderArrows: true,
-        homepage: [
+        "homepage": [
             {
-                items: [
+                "items": [
                     {
-                        class: "size-7",
-                        templateUrl: "templates/homepage/mainSlider.html"
+                        "class": "size-7",
+                        "templateUrl": "templates/homepage/mainSlider.html"
                     },
                     {
-                        class: "size-5",
-                        sliderSlug: "homepageRightBanners"
+                        "class": "size-5",
+                        "sliderSlug": "homepageRightBanners"
                     }
-                ]
+                ],
+                "order": 10
             },
             {
-                items: [
+                "items": [
                     {
-                        class: "size-12",
-                        templateUrl: "templates/homepage/productsSlider.html"
+                        "class": "size-12",
+                        "templateUrl": "templates/homepage/productsSlider.html"
                     }
-                ]
+                ],
+                "order": 20
             },
             {
-                items: [
+                "items": [
                     {
-                        class: "size-12",
-                        templateUrl: "templates/homepage/wcCountdown.html"
+                        "class": "size-12",
+                        "templateUrl": "templates/homepage/featuredGamesSlider.html"
                     }
-                ]
+                ],
+                "order": 30
             },
             {
-                items: [
+                "items": [
                     {
-                        class: "size-12",
-                        templateUrl: "templates/homepage/featuredGamesSlider.html"
-                    }
-                ]
-            },
-            {
-                items: [
-                    {
-                        class: "size-10",
-                        templateUrl: "templates/homepage/lastMinuteBets.html"
+                        "class": "size-10",
+                        "templateUrl": "templates/homepage/lastMinuteBets.html"
                     },
                     {
-                        class: "size-2",
-                        sliderSlug: "homepageBottomBanners"
+                        "class": "size-5",
+                        "sliderSlug": "homepageBottomBanners"
                     }
-                ]
+                ],
+                "order": 40
+            },
+            {
+                "items": [
+                    {
+                        "class": "size-12",
+                        "dataType": "casinoPromotedGames"
+                    }
+                ],
+                "order": 200
             }
         ],
-
         homePageLastMinuteBets: {
             enable: true,
             timeOptions: [15, 30, 60]
@@ -376,8 +381,8 @@ VBET5.constant('SkinConfig', {
             skin: "vbet.com"
         },
         showNewsInClassicView: false,
-        sportsLayout: "euro2016",
-        availableSportsbookViews: {modern: true, classic: false, asian: true, external: false, euro2016: true},
+        sportsLayout: "classic",
+        availableSportsbookViews: {modern: true, classic: true, asian: true, external: false},
         asianLoadDays: 0,
         showFavoriteCompetitions: true, // show "popular competitions" in classic view
         popularMatches: {
@@ -420,6 +425,7 @@ VBET5.constant('SkinConfig', {
         showFavoriteGamesInSportList: true,
         displayEventsMaxBet: true,
         showEachWay: true,
+        numberOfExpandedMarkets: 5,
         nonActivityAction: {
             action: 'logout', // 'reload'
             actionDelay: 0, // milliseconds
@@ -504,7 +510,7 @@ VBET5.constant('SkinConfig', {
         runtimePopupCount: 2,
         showPopupBeforeRegistration: false,
         aocEnabled: true, // enable AOC link in main menu
-        availableVideoProviderIds: [1, 3, 5, 7, 8, 11, 12, 15, 16, 19, 21, 22, 23, 29, 999999],
+        availableVideoProviderIds: [1, 3, 5, 7, 8, 11, 12, 15, 16, 19, 21, 22, 23, 29, 999999, 31],
         aocLink: "#/section/aoc",
         theVeryTopMenu: [{href: "#/promos/", label: "Promotions"}, {href: "http://www.vbetnews.com/", label: "VbetNews", target: '_blank'}, {help: 'payments', label: 'Payments'}, {href: "https://free.vbet.com", label: 'Free Vbet',target: '_blank'},{href: "http://new.vbet.com/", label: 'New VBet',target: '_blank'}],
         balanceDefaultPage: 'deposit',
@@ -530,7 +536,7 @@ VBET5.constant('SkinConfig', {
             'kor': { 'short': 'KO', 'full': "한국어", order: 8},
             'jpn': { 'short': 'JP', 'full': "日本語", order: 9},
             'chi': { 'short': 'CH', 'full': "繁體中文", order: 10},
-            'zhh': {'short': 'ZH', 'full': "简体中文", order: 11},
+            'zhh': {'short': 'ZH', 'full': "简体中文O", order: 11},
             'geo': {'short': 'KA', 'full': "ქართული", order: 12},
             'swe': {'short': 'SE', 'full': "Swedish", order: 3},
             'arb' : { 'short': 'AR', 'full': "العربية", order: 16, rtl: true},
@@ -726,7 +732,7 @@ VBET5.constant('SkinConfig', {
             simplified: true, //not ready yet
             enableRegisterByPhoneNumber: false,
             phoneNumberPattern: "^[0-9 ]{6,12}$",
-            defaultCurrency: 'USD',
+            defaultCurrency: 'IRR',
             disableTermsLink: false,
             mailIsSentAfterRegistration: 'Please check your email.',
             loginRightAfterRegistration: true,
@@ -881,7 +887,7 @@ VBET5.constant('SkinConfig', {
                     "type": "select",
                     "required": true,
                     "classes": "",
-                    "customAttrs": [{"ng-options":"item as item.name for item in countryCodes track by item.key"}, {"ng-init": "preFillRegionalData()"}, {"ng-change": "checkIfCountryIsRestricted();"}, {"required": "required"}],
+                    "customAttrs": [{"ng-options":"item as item.name for item in countryCodes track by item.key"}, {"ng-init": "preFillRegionalData(false,true)"}, {"ng-change": "checkIfCountryIsRestricted();"}, {"required": "required"}],
                     "validation": [{"name": "required", "message": "This field is required"}],
                     "customValidation": "<div  ng-class=\"{error: countryIsRestricted}\"> <div class=\"tooltip-j\"> <p trans ng-show=\"countryIsRestricted\">Registration on this site is not permitted in selected country.</p><p ng-show=\"altUrl4RestrictedCountry\"><span trans>You can register here:</span> <a href=\"{{altUrl4RestrictedCountry}}\">{{altUrl4RestrictedCountry}}</a></p></div>"
                 },
@@ -892,7 +898,7 @@ VBET5.constant('SkinConfig', {
                     "type": "select",
                     "required": true,
                     "classes": "",
-                    "customAttrs": [{"ng-options": "c for c in  conf.availableCurrencies track by c"}, {"ng-value": "c"}, {"ng-disabled": "currencyDisabled"}],
+                    "customAttrs": [{"ng-options": "c for c in  conf.availableCurrencies track by c"}, {"ng-disabled": "currencyDisabled"}],
                     "validation": []
                 },
                 {
@@ -931,7 +937,7 @@ VBET5.constant('SkinConfig', {
                     "placeholder": "Enter here",
                     "classes": "",
                     "customAttrs": [],
-                    "validation": []
+                    "validation": [{"name": "invalid", "message": 'Promo code is not valid.'}]
                 },
                 {
                     "title": "",
@@ -954,36 +960,9 @@ VBET5.constant('SkinConfig', {
         showSportsbookToolTip: true
     },
     'betting': {
-        enableExpressBonus: false,
-        expressBonusVisibilityQty: 2,
-        expressBonusMap: {
-            '0': 0,
-            '1': 0,
-            '2': 0,
-            '3': 3,
-            '4': 4,
-            '5': 5,
-            '6': 5,
-            '7': 7,
-            '8': 7,
-            '9': 7,
-            '10': 15,
-            '11': 20,
-            '12': 20,
-            '13': 20,
-            '14': 20,
-            '15': 20,
-            '16': 35,
-            '17': 35,
-            '18': 35,
-            '19': 35,
-            '20': 35,
-            default: 50
-        }, //1: regular bonus 2,3,4,5..% ; 2: 2-5,10,15,20,25,30,30..30 %;: regular bonus 2,3,4,5..% ; 2: 2-5,10,15,20,25,30,30..30 %;
         enableEachWayBetting: true,
         enableHorseRacingBetSlip: true, // SP, new bet types, etc.
         enableSuperBet: true,
-        expressBonusMinOdd: 1.3,
         defaultPriceChangeSetting: 1,
         allowManualSuperBet: true,
         clearOnLogout: false,
@@ -999,7 +978,9 @@ VBET5.constant('SkinConfig', {
         showSuperBetNotificationsViaPopup: true,
         totalOddsMax : 10000,
         enableRetainSelectionAfterPlacment: true,
-        enableFullCoverBetTypes: false
+        fullCoverBetTypes: {
+            enabled: false
+        }
     },
     "everCookie": {
         "enabled": true
@@ -1007,8 +988,8 @@ VBET5.constant('SkinConfig', {
     'swarm': {
         url: [{ url: "https://eu-swarm-lp.betconstruct.com/"}],
         websocket: [{ url: "wss://eu-swarm-ws.betconstruct.com/"}]
-        //url: [{ url: "http://10.25.57.76:8091"}],
-        //websocket: [{ url: "ws://10.25.57.76:8091"}]
+        // url: [{ url: "http://192.168.100.42:8085"}],
+        // websocket: [{ url: "ws://192.168.100.42:8085"}]
     },
     poker: {
         rakeRaceEnabled: true,
@@ -2515,6 +2496,8 @@ CASINO.constant('SkinCConfig', {
     cUrlPrefix: 'https://games.vbet.com',
     cGamesUrl: '/authorization.php',
     cUrl: '/global/casinoGamesLoad.php',
+    "socketUrl": "wss://rgs-wss.betconstructapps.com/jackpot",
+    "version": 2,
     main : {
         enableGameInfoButton: false,
         showAllGamesOnHomepage: true,

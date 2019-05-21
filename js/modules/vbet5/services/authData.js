@@ -4,7 +4,7 @@
  * @name vbet5.service:AuthData
  * @description  Authentication data storage (stores in local storage or memory depending on integration mode)
  */
-VBET5.service('AuthData', ['$window', '$cookies', 'Config', 'Storage', function ($window, $cookies, Config, Storage) {
+VBET5.service('AuthData', ['$window', '$cookies', 'Config', 'Storage', 'Utils', function ($window, $cookies, Config, Storage, Utils) {
     'use strict';
     var AuthData = {};
     AuthData.partnerAuthData = null;
@@ -23,16 +23,8 @@ VBET5.service('AuthData', ['$window', '$cookies', 'Config', 'Storage', function 
             AuthData.partnerAuthData = data;
         } else {
             Storage.set('auth_data', data, data.never_expires ? null : Config.main.authSessionLifetime);
-            if (Config.main.useAuthCookies) {
-                var cookieOptions = {
-                    domain: $window.location.hostname.split(/\./).slice(-2).join("."),
-                    path: "/",
-                    expires: new Date((new Date()).getTime() + (data.never_expires ? Config.main.saveLoginDataLifeTime : Config.main.authSessionLifetime))
-                };
-                $cookies.putObject("auth_data", data, cookieOptions);
-            }
+            Utils.checkAndSetCookie("auth_data", data, data.never_expires ? Config.main.saveLoginDataLifeTime : Config.main.authSessionLifetime);
         }
-
     };
 
     /**
@@ -61,7 +53,10 @@ VBET5.service('AuthData', ['$window', '$cookies', 'Config', 'Storage', function 
         } else {
             Storage.remove('auth_data');
             if (Config.main.useAuthCookies) {
-                $cookies.remove('auth_data');
+                $cookies.remove('auth_data', {
+                    domain: $window.location.hostname.split(/\./).slice(-2).join("."),
+                    path: "/"
+                });
                 AuthData.set('');
             }
         }

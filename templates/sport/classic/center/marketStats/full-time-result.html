@@ -1,0 +1,48 @@
+<div class="statistic-quality-contain" ng-init="tab = 'overview'">
+    <p class="statistic-no-available" ng-if="!templateData" trans>No Statistics available</p>
+    <div ng-show="templateData">
+        <h4 class="main-title-statistic-quality" ng-bind="::('Last 5 Meetings ' + widgetMapping[marketType].title) | translate"></h4>
+        <ul class="tab-statistic-quality">
+            <li ng-class="{'active': tab === 'overview'}" ng-click="tab = 'overview'" trans>Overview</li>
+            <li ng-class="{'active': tab === 'detail'}" ng-click="tab = 'detail'" trans>Detail</li>
+        </ul>
+    </div>
+
+    <div class="last-ht-ft" ng-if="tab === 'overview'">
+        <p class="statistic-no-available" ng-if="templateData.WDLResult.length === 0 || !templateData.WDLResult" trans>
+            No Statistics available</p>
+        <ul ng-repeat="results in templateData.WDLResult" ng-if="results.Abbrevation === (marketType === 'HalfTimeResult' ? 'HT' : 'FT')" class="overview-statistic-quality">
+            <li>
+                <span class="W-color" ng-bind="::results.HomeWinCount"></span>
+                <p ng-bind="::openGame.team1_name"></p>
+            </li>
+            <li>
+                <span class="D-color" ng-bind="::results.DrawCount"></span>
+                <p>Draw</p>
+            </li>
+            <li>
+                <span class="W-color" ng-bind="::results.AwayWinCount"></span>
+                <p ng-bind="::openGame.team2_name"></p>
+            </li>
+        </ul>
+    </div>
+    <div ng-if="tab === 'detail'">
+        <p class="statistic-no-available" ng-if="templateData.StatsForMatch.length === 0 " trans>No Statistics available</p>
+        <div class="float-width" ng-repeat="matchStats in templateData.StatsForMatch track by $index">
+            <div class="detail-count-statistic-qualit" ng-if="marketType === 'MatchResult' && stats.TypeAbbrevation === 'HT'" ng-repeat="stats in matchStats.MatchDetails.MatchListItem track by $index">
+                <span  ng-bind="::stats.HomeScore"></span>
+                <span  ng-bind="::stats.AwayScore"></span>
+            </div>
+            <ul class="detail-statistic-qualit" ng-if="stats.TypeAbbrevation === (marketType === 'HalfTimeResult' ? 'HT' : 'FT')" ng-repeat="stats in matchStats.MatchDetails.MatchListItem track by $index">
+                <li ng-bind="::stats.HomeTeamId === openGame.team1_id ? openGame.team1_name : openGame.team2_name"></li>
+                <li>
+                    <span class="{{::stats.HomeScore > stats.AwayScore ? 'W' : (stats.HomeScore === stats.AwayScore ? 'D' : 'L')}}-color" ng-bind="::stats.HomeScore"></span>
+                    <span class="{{::stats.AwayScore > stats.HomeScore ? 'W' : (stats.AwayScore === stats.HomeScore ? 'D' : 'L')}}-color" ng-bind="::stats.AwayScore"></span>
+                    <p ng-bind="::matchStats.MatchDetails.MatchDate | formatDate:'full':null:$root.env.timeFormat"></p>
+                </li>
+                <li ng-bind="::stats.AwayTeamId === openGame.team2_id ? openGame.team2_name : openGame.team1_name"></li>
+            </ul>
+        </div>
+    </div>
+    <p ng-click="openStatistics(openGame);$event.stopPropagation();" class="more-statistic-quality" trans>View all statistics</p>
+</div>

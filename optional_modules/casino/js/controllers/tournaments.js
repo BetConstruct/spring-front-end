@@ -5,7 +5,7 @@
  * tournaments page controller
  */
 
-angular.module('casino').controller('casinoTournamentsCtrl', ['$rootScope', '$scope', '$location', '$timeout', 'CConfig', 'Config', 'Translator', 'Zergling', 'AuthData', 'casinoManager', 'casinoData', 'LanguageCodes', 'Moment',  'Geoip', function ($rootScope, $scope, $location, $timeout, CConfig, Config, Translator, Zergling, AuthData, casinoManager, casinoData, LanguageCodes, Moment, Geoip) {
+angular.module('casino').controller('casinoTournamentsCtrl', ['$rootScope', '$scope', '$location', '$timeout', 'CConfig', 'Config', 'Translator', 'Zergling', 'AuthData', 'casinoManager', 'casinoData', 'LanguageCodes', 'Moment', 'Geoip', 'casinoMultiviewValues', function ($rootScope, $scope, $location, $timeout, CConfig, Config, Translator, Zergling, AuthData, casinoManager, casinoData, LanguageCodes, Moment, Geoip, casinoMultiviewValues) {
     'use strict';
 
     $scope.confData = CConfig;
@@ -25,6 +25,11 @@ angular.module('casino').controller('casinoTournamentsCtrl', ['$rootScope', '$sc
         '2': 'nd',
         '3': 'rd'
     };
+    $scope.casinoMultiviewValues = function () {
+        casinoMultiviewValues.init($scope);
+    };
+
+    var gameId;
 
     $scope.hasTournaments = true;
 
@@ -36,7 +41,7 @@ angular.module('casino').controller('casinoTournamentsCtrl', ['$rootScope', '$sc
      * @methodOf CASINO.controller:casinoTournamentsCtrl
      * @description Update tournaments by filter once loaded or changed
      */
-    $scope.updateFilters = function updateFilters(filterGroupSource, filterSource, okButton) {
+    $scope.updateFilters = function updateFilters(filterGroupSource, filterSource, okButton, forCasinoWidget) {
         if (!(filterGroupSource && filterGroupSource.noRefresh && !okButton)) {
             $scope.tournament.filteredList = [];
         }
@@ -99,9 +104,10 @@ angular.module('casino').controller('casinoTournamentsCtrl', ['$rootScope', '$sc
                 }
             });
             if (addTournament && !(filterGroupSource && filterGroupSource.noRefresh && !okButton)) {
-                //tournament.DetailsBannerImagesFiltered = filterImagesByLang(tournament.DetailsBannerImages);
                 $scope.tournament.sliderIndex[tournament.Id] = $scope.tournament.sliderIndex[tournament.Id] || 0;
-                loadTournamentCasinoGames(tournament);
+                if (!forCasinoWidget) {
+                    loadTournamentCasinoGames(tournament);
+                }
                 $scope.tournament.filteredList.push(tournament);
             }
         });
@@ -119,19 +125,9 @@ angular.module('casino').controller('casinoTournamentsCtrl', ['$rootScope', '$sc
      * @methodOf CASINO.controller:casinoTournamentsCtrl
      * @description Load tournaments
      */
-    $scope.getTournamentList = function getTournamentList(firstTime) {
-        $scope.tournament.pageType = 'main';
+    $scope.getTournamentList = function getTournamentList(firstTime, forCasinoWidget) {
+        $scope.tournament.pageType = forCasinoWidget ? 'casino' : 'main';
         cancelRequests();
-        /*
-         var request = {
-         'registration_status': 2,
-         'stage': 3,
-         'from_date': 0,
-         'to_date': 999999999999,
-         'type_id': 1,
-         'tournament_id': 0
-         };
-         */
 
         var request = getFilteredRequest();
         Zergling.get(request, 'get_tournament_list').then(
@@ -145,33 +141,33 @@ angular.module('casino').controller('casinoTournamentsCtrl', ['$rootScope', '$sc
                         tournament.buyInStatus = buyInCheck(tournament);
                     });
 
-
-                    console.log('TOURNAMENTS', data.result);
                     $scope.tournament.fullList = data.result;
-                    $scope.updateFilters();
+                    $scope.updateFilters(null, null, null, forCasinoWidget);
+
                     if (firstTime) {
                         findAndOpenGame($location.search());
                     }
                 }
 
-            },
-            function (data) {
             }
         );
 
-        timeoutPromise = $timeout(getTournamentList, 25000);
-
+        timeoutPromise = $timeout(function(){
+            getTournamentList(undefined,forCasinoWidget);
+        }, 25000);
     };
 
-    function getFilteredRequest () {
+    function getFilteredRequest() {
         var stageList = [], registrationStarted = [], request = {};
         angular.forEach($scope.tournament.filterList, function (filterGroup) {
             angular.forEach(filterGroup.filters, function (filter) {
-                if (filter.stageList && filter.active) {
-                    stageList.push(filter.stageList);
-                }
-                if (filter.registrationStarted !== undefined && filter.active) {
-                    registrationStarted.push(filter.registrationStarted);
+                if(filter.active){
+                    if (filter.stageList) {
+                        stageList.push(filter.stageList);
+                    }
+                    if (filter.registrationStarted !== undefined) {
+                        registrationStarted.push(filter.registrationStarted);
+                    }
                 }
             });
         });
@@ -275,7 +271,7 @@ angular.module('casino').controller('casinoTournamentsCtrl', ['$rootScope', '$sc
             return false;
         }
 
-        return !(tournament.IsParticipated || tournament.State === 1);
+        return !(tournament.IsParticipated || tournament.Stage === 1);
     }
 
     /**
@@ -315,6 +311,9 @@ angular.module('casino').controller('casinoTournamentsCtrl', ['$rootScope', '$sc
      * @description Get tournamnt detailed information
      */
     $scope.selectTournament = function selectTournament(tournamentId) {
+        if ($location.path() !== '/tournaments/') {
+            $location.path('/tournaments/');
+        }
         $location.search('tournament_id', tournamentId);
     };
 
@@ -423,7 +422,6 @@ angular.module('casino').controller('casinoTournamentsCtrl', ['$rootScope', '$sc
             'tournament_id': parseInt(tournament.Id, 10)
         };
         Zergling.get(request, 'join_to_tournament').then(function (response) {
-            console.log('Join tournament response', response);
             var error = 'Error occured.';
 
             switch (Math.abs(parseInt(response.result || 0, 10))) {
@@ -439,7 +437,6 @@ angular.module('casino').controller('casinoTournamentsCtrl', ['$rootScope', '$sc
             }
 
             if (response.result && response.result.TournamentId) {
-                refreshTournamentData();
                 tournament.IsParticipated = true;
             } else {
                 $rootScope.$broadcast("globalDialogs.addDialog", {
@@ -449,7 +446,7 @@ angular.module('casino').controller('casinoTournamentsCtrl', ['$rootScope', '$sc
                 });
             }
 
-        }, function (error) {
+        }, function () {
             $rootScope.$broadcast("globalDialogs.addDialog", {
                 type: "error",
                 title: "Error",
@@ -480,13 +477,17 @@ angular.module('casino').controller('casinoTournamentsCtrl', ['$rootScope', '$sc
             buttons: [
                 {
                     title: 'Yes', callback: function () {
-                    participateConfirmed(tournament);
-                }
+                        participateConfirmed(tournament);
+                    }
                 },
                 {title: 'No'}
             ]
         });
     };
+
+    if ($rootScope.casinoGameOpened === 1 && $scope.hasIframeTournamentInfo) {
+        $scope.hasIframeTournamentInfo.empty = true;
+    }
 
     /**
      * @ngdoc method
@@ -498,13 +499,11 @@ angular.module('casino').controller('casinoTournamentsCtrl', ['$rootScope', '$sc
         cancelRequests();
         console.log('GAME INFO:', game);
 
-        if (initialCall) {
-            $rootScope.env.casinoHasTournamentInfo = false;
-        }
-
         if (!game || !game.game || !game.game.extearnal_game_id) {
             return;
         }
+
+        gameId = game.game.id;
 
         var request = {
             'game_id': parseInt(game.game.extearnal_game_id, 10)
@@ -512,21 +511,25 @@ angular.module('casino').controller('casinoTournamentsCtrl', ['$rootScope', '$sc
 
         Zergling.get(request, 'get_top_player_list').then(
             function (data) {
-                $rootScope.env.casinoHasTournamentInfo = false;
                 if (data && data.result) {
                     if (data.result.CurrentPlayer) {
                         $scope.tournament.iframeInfo = {};
-                        processTopPlayerList ($scope.tournament.iframeInfo, data.result);
-                        $rootScope.env.casinoHasTournamentInfo = $scope.tournament.iframeInfo && $scope.tournament.iframeInfo.playerList && $scope.tournament.iframeInfo.playerList.length;
+                        processTopPlayerList($scope.tournament.iframeInfo, data.result);
+                        if ($scope.hasIframeTournamentInfo) {
+                            $scope.hasIframeTournamentInfo[game.game.id] = $scope.tournament.iframeInfo && $scope.tournament.iframeInfo.playerList && !!$scope.tournament.iframeInfo.playerList.length;
+                            $scope.hasIframeTournamentInfo.empty = !$scope.hasIframeTournamentInfo[game.game.id];
+                        }
                     }
                     timeoutPromise = $timeout(function () {
                         $scope.loadCasinoIframeInfo(game);
                     }, 15000);
                 }
             },
-            function (error) {
+            function () {
                 timeoutPromise = $timeout(function () {
-                    $rootScope.env.casinoHasTournamentInfo = false;
+                    if ($scope.hasIframeTournamentInfo) {
+                        $scope.hasIframeTournamentInfo[game.game.id] = false;
+                    }
                     $scope.loadCasinoIframeInfo(game);
                 }, 60000);
             }
@@ -578,7 +581,7 @@ angular.module('casino').controller('casinoTournamentsCtrl', ['$rootScope', '$sc
      * @methodOf CASINO.controller:casinoTournamentsCtrl
      * @description Filter player list in different ways from different calls with alternative properties
      */
-    function processTopPlayerList (tournament, topPlayerList, currentPlayer) {
+    function processTopPlayerList(tournament, topPlayerList, currentPlayer) {
         tournament.currentPlayer = topPlayerList.CurrentPlayer || currentPlayer || {};
         tournament.playerList = [];
         var placeCounter = 1;
@@ -610,20 +613,18 @@ angular.module('casino').controller('casinoTournamentsCtrl', ['$rootScope', '$sc
                 $scope.getTournamentList();
                 break;
             case 'details':
-                if ($scope.tournament.detailsTournamentId) {
-                    $scope.openTournamentDetails($scope.tournament.detailsTournamentId, true);
-                } else {
-                    updateTournamentStatus();
-                }
+                $scope.tournament.detailsTournamentId
+                   ? $scope.openTournamentDetails($scope.tournament.detailsTournamentId, true)
+                   : updateTournamentStatus();
                 break;
         }
     }
 
     // ******************** 'BIG-GAME' RELATED ********************
-    $scope.$on('casinoGamesList.openGame', function(e, data) {
+    $scope.$on('casinoGamesList.openGame', function (e, data) {
         if (!data.game && data.gameId) {
-            casinoData.getGames(null, null, countryCode, null, null, null, null, [data.gameId]).then(function(response) {
-                if(response && response.data) {
+            casinoData.getGames(null, null, countryCode, null, null, null, null, [data.gameId]).then(function (response) {
+                if (response && response.data) {
                     $scope.openGame(response.data.games[0]);
                 }
             });
@@ -644,7 +645,7 @@ angular.module('casino').controller('casinoTournamentsCtrl', ['$rootScope', '$sc
         casinoManager.openPopUpWindow($scope, id);
     };
 
-    $scope.togglePlayForReal = function togglePlayForReal (gameInfo) {
+    $scope.togglePlayForReal = function togglePlayForReal(gameInfo) {
         casinoManager.togglePlayMode($scope, gameInfo);
     };
 
@@ -694,12 +695,20 @@ angular.module('casino').controller('casinoTournamentsCtrl', ['$rootScope', '$sc
     $scope.$on('loggedOut', refreshTournamentData);
     $scope.$on('loggedIn', refreshTournamentData);
 
-    $scope.$on('goToHomepage', function() {
+    $scope.$on('goToHomepage', function () {
         $location.search('tournament_id', undefined);
     });
-    $scope.$on('casinoGamesList.toggleSaveToMyCasinoGames', function(e, game) {
+    $scope.$on('casinoGamesList.toggleSaveToMyCasinoGames', function (e, game) {
         $scope.toggleSaveToMyCasinoGames(game);
     });
 
-    $scope.$on('$destroy', cancelRequests);
+    $scope.$on('$destroy', function () {
+        cancelRequests();
+        if ($scope.hasIframeTournamentInfo && gameId) {
+            delete  $scope.hasIframeTournamentInfo[gameId];
+            if (Object.keys($scope.hasIframeTournamentInfo).length === 1) {
+                $scope.hasIframeTournamentInfo.empty = true;
+            }
+        }
+    });
 }]);

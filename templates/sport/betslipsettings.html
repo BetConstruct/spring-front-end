@@ -7,15 +7,15 @@
             <p trans>Betting options</p>
             <span trans>Automatically accept price changes</span>
             <label>
-                <input type="radio" ng-model="shared.acceptPriceChanges" value="0" ng-disabled="shared.isBetsInProgress" ng-click="shared.showBetSettings=!shared.showBetSettings">
+                <input type="radio" ng-model="shared.acceptPriceChanges" value="0" ng-disabled="shared.isBetsInProgress || shared.betInProgress" ng-click="shared.showBetSettings=!shared.showBetSettings">
                 <span trans>Always ask</span>
             </label>
             <label>
-                <input type="radio" ng-model="shared.acceptPriceChanges" value="1" ng-disabled="shared.isBetsInProgress" ng-click="shared.showBetSettings=!shared.showBetSettings">
+                <input type="radio" ng-model="shared.acceptPriceChanges" value="1" ng-disabled="shared.isBetsInProgress || shared.betInProgress" ng-click="shared.showBetSettings=!shared.showBetSettings">
                 <span trans>Accept Higher odds</span>
             </label>
             <label>
-                <input type="radio" ng-model="shared.acceptPriceChanges" value="2" ng-disabled="shared.isBetsInProgress" ng-click="shared.showBetSettings=!shared.showBetSettings">
+                <input type="radio" ng-model="shared.acceptPriceChanges" value="2" ng-disabled="shared.isBetsInProgress || shared.betInProgress" ng-click="shared.showBetSettings=!shared.showBetSettings">
                 <span trans>Accept Any odds</span>
             </label>
         </div>

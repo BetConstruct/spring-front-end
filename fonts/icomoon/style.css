@@ -1,10 +1,10 @@
 @font-face {
   font-family: 'icomoon';
-  src:  url('fonts/icomoon.eot?eig9xy');
-  src:  url('fonts/icomoon.eot?eig9xy#iefix') format('embedded-opentype'),
-    url('fonts/icomoon.ttf?eig9xy') format('truetype'),
-    url('fonts/icomoon.woff?eig9xy') format('woff'),
-    url('fonts/icomoon.svg?eig9xy#icomoon') format('svg');
+  src:  url('fonts/icomoon.eot?2moipp');
+  src:  url('fonts/icomoon.eot?2moipp#iefix') format('embedded-opentype'),
+    url('fonts/icomoon.ttf?2moipp') format('truetype'),
+    url('fonts/icomoon.woff?2moipp') format('woff'),
+    url('fonts/icomoon.svg?2moipp#icomoon') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -24,14 +24,479 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+.cms-jcon-edit1:before {
+  content: "\ea32";
+}
+.cms-jcon-clover .path1:before {
+  content: "\ea25";
+  color: rgb(48, 60, 66);
+}
+.cms-jcon-clover .path2:before {
+  content: "\ea26";
+  margin-left: -1em;
+  color: rgb(105, 179, 66);
+}
+.cms-jcon-clover .path3:before {
+  content: "\ea27";
+  margin-left: -1em;
+  color: rgb(255, 255, 255);
+  opacity: 0.2;
+}
+.cms-jcon-clover .path4:before {
+  content: "\ea28";
+  margin-left: -1em;
+  color: rgb(105, 179, 66);
+}
+.cms-jcon-clover .path5:before {
+  content: "\ea29";
+  margin-left: -1em;
+  color: rgb(255, 255, 255);
+  opacity: 0.2;
+}
+.cms-jcon-clover .path6:before {
+  content: "\ea2a";
+  margin-left: -1em;
+  color: rgb(105, 179, 66);
+}
+.cms-jcon-clover .path7:before {
+  content: "\ea2b";
+  margin-left: -1em;
+  color: rgb(0, 0, 0);
+  opacity: 0.1;
+}
+.cms-jcon-clover .path8:before {
+  content: "\ea2c";
+  margin-left: -1em;
+  color: rgb(105, 179, 66);
+}
+.cms-jcon-clover .path9:before {
+  content: "\ea2d";
+  margin-left: -1em;
+  color: rgb(0, 0, 0);
+  opacity: 0.1;
+}
+.cms-jcon-clover .path10:before {
+  content: "\ea2e";
+  margin-left: -1em;
+  color: rgb(0, 0, 0);
+}
+.cms-jcon-Powered-By-Feedconstruct:before {
+  content: "\ea24";
+}
+.cms-jcon-Card-Magical:before {
+  content: "\ea14";
+}
+.cms-jcon-dices:before {
+  content: "\ea15";
+}
+.cms-jcon-roulette-wheel-in-casino:before {
+  content: "\ea16";
+}
+.cms-jcon-Valentine:before {
+  content: "\ea17";
+}
 .cms-jcon-card_game:before {
   content: "\e9a5";
 }
 .cms-jcon-cards:before {
   content: "\e9a6";
 }
+.cms-jcon-open-bets-ru:before {
+  content: "\ea3e";
+  color: #4b4b4b;
+}
+.cms-jcon-new-bet-ru:before {
+  content: "\ea3f";
+  color: #4b4b4b;
+}
+.cms-jcon-booking-ru:before {
+  content: "\ea3d";
+  color: #4b4b4b;
+}
+.cms-jcon-booking-ee:before {
+  content: "\ea34";
+  color: #4b4b4b;
+}
+.cms-jcon-booking-lt:before {
+  content: "\ea35";
+  color: #4b4b4b;
+}
+.cms-jcon-booking-lv:before {
+  content: "\ea36";
+  color: #4b4b4b;
+}
+.cms-jcon-new-bet-ee:before {
+  content: "\ea37";
+  color: #4b4b4b;
+}
+.cms-jcon-new-bet-lt:before {
+  content: "\ea38";
+  color: #4b4b4b;
+}
+.cms-jcon-new-bet-lv:before {
+  content: "\ea39";
+  color: #4b4b4b;
+}
+.cms-jcon-open-bets-ee:before {
+  content: "\ea3a";
+  color: #4b4b4b;
+}
+.cms-jcon-open-bets-lt:before {
+  content: "\ea3b";
+  color: #4b4b4b;
+}
+.cms-jcon-open-bets-lv:before {
+  content: "\ea3c";
+  color: #4b4b4b;
+}
+.cms-jcon-error1:before {
+  content: "\ea33";
+}
+.cms-jcon-Vector1:before {
+  content: "\ea23";
+  color: #4b4b4b;
+}
+.cms-jcon-info1:before {
+  content: "\ea20";
+}
+.cms-jcon-checked:before {
+  content: "\ea1f";
+}
+.cms-jcon-clock1:before {
+  content: "\ea21";
+}
+.cms-jcon-error:before {
+  content: "\ea22";
+}
+.cms-jcon-round-error-symbol:before {
+  content: "\ea1e";
+}
+.cms-jcon-Vector:before {
+  content: "\ea1d";
+}
+.cms-jcon-booking-grey:before {
+  content: "\ea1a";
+  color: #4b4b4b;
+}
+.cms-jcon-new-bet-grey:before {
+  content: "\ea1b";
+  color: #4b4b4b;
+}
+.cms-jcon-open-bets-grey:before {
+  content: "\ea1c";
+  color: #4b4b4b;
+}
 .cms-jcon-Buddy-to-Buddy:before {
   content: "\e978";
+}
+.cms-jcon-talisman:before {
+  content: "\ea42";
+}
+.cms-jcon-Easter:before {
+  content: "\ea41";
+}
+.cms-jcon-zonk_icon:before {
+  content: "\ea40";
+}
+.cms-jcon-content_copy:before {
+  content: "\ea30";
+}
+.cms-jcon-farkle:before {
+  content: "\ea2f";
+}
+.cms-jcon-artifact:before {
+  content: "\ea19";
+}
+.cms-jcon-super-6:before {
+  content: "\ea18";
+}
+.cms-jcon-jackpot-icon:before {
+  content: "\ea13";
+}
+.cms-jcon-super6last1-1:before {
+  content: "\ea12";
+}
+.cms-jcon-Dragon-Tiger:before {
+  content: "\ea11";
+}
+.cms-jcon-Xmas-icon:before {
+  content: "\ea10";
+}
+.cms-jcon-start-top-slot:before {
+  content: "\ea0f";
+}
+.cms-jcon-flash:before {
+  content: "\ea0c";
+}
+.cms-jcon-chess-horse:before {
+  content: "\ea0d";
+}
+.cms-jcon-7777:before {
+  content: "\ea0e";
+}
+.cms-jcon-All--icon-new:before {
+  content: "\ea0b";
+}
+.cms-jcon-LTC:before {
+  content: "\e9c2";
+}
+.cms-jcon-ETH:before {
+  content: "\e9c3";
+}
+.cms-jcon-ZMW:before {
+  content: "\e9c4";
+}
+.cms-jcon-ZAR:before {
+  content: "\e9c5";
+}
+.cms-jcon-XOF:before {
+  content: "\e9c6";
+}
+.cms-jcon-VND:before {
+  content: "\e9c7";
+}
+.cms-jcon-VEF:before {
+  content: "\e9c8";
+}
+.cms-jcon-UZS:before {
+  content: "\e9c9";
+}
+.cms-jcon-UYU:before {
+  content: "\e9ca";
+}
+.cms-jcon-UGX:before {
+  content: "\e9cb";
+}
+.cms-jcon-UAH:before {
+  content: "\e9cc";
+}
+.cms-jcon-TZS:before {
+  content: "\e9cd";
+}
+.cms-jcon-TTD:before {
+  content: "\e9ce";
+}
+.cms-jcon-TND:before {
+  content: "\e9cf";
+}
+.cms-jcon-TJS:before {
+  content: "\e9d0";
+}
+.cms-jcon-THB:before {
+  content: "\e9d1";
+}
+.cms-jcon-SYP:before {
+  content: "\e9d2";
+}
+.cms-jcon-SLL:before {
+  content: "\e9d3";
+}
+.cms-jcon-SGD:before {
+  content: "\e9d4";
+}
+.cms-jcon-SAR:before {
+  content: "\e9d5";
+}
+.cms-jcon-RSD:before {
+  content: "\e9d6";
+}
+.cms-jcon-RON:before {
+  content: "\e9d7";
+}
+.cms-jcon-QAR:before {
+  content: "\e9d8";
+}
+.cms-jcon-PYG:before {
+  content: "\e9d9";
+}
+.cms-jcon-PLN:before {
+  content: "\e9da";
+}
+.cms-jcon-PEN:before {
+  content: "\e9db";
+}
+.cms-jcon-PAB:before {
+  content: "\e9dc";
+}
+.cms-jcon-NGN:before {
+  content: "\e9dd";
+}
+.cms-jcon-MZN:before {
+  content: "\e9de";
+}
+.cms-jcon-MYR:before {
+  content: "\e9df";
+}
+.cms-jcon-MXN:before {
+  content: "\e9e0";
+}
+.cms-jcon-MKD:before {
+  content: "\e9e1";
+}
+.cms-jcon-MDL:before {
+  content: "\e9e2";
+}
+.cms-jcon-MAD:before {
+  content: "\e9e3";
+}
+.cms-jcon-LKR:before {
+  content: "\e9e4";
+}
+.cms-jcon-LBP:before {
+  content: "\e9e5";
+}
+.cms-jcon-KZT:before {
+  content: "\e9e6";
+}
+.cms-jcon-KGS:before {
+  content: "\e9e7";
+}
+.cms-jcon-KES:before {
+  content: "\e9e8";
+}
+.cms-jcon-JOD:before {
+  content: "\e9e9";
+}
+.cms-jcon-JMD:before {
+  content: "\e9ea";
+}
+.cms-jcon-IRR:before {
+  content: "\e9eb";
+}
+.cms-jcon-IQD:before {
+  content: "\e9ec";
+}
+.cms-jcon-INR:before {
+  content: "\e9ed";
+}
+.cms-jcon-ILS:before {
+  content: "\e9ee";
+}
+.cms-jcon-IDR:before {
+  content: "\e9ef";
+}
+.cms-jcon-HUF:before {
+  content: "\e9f0";
+}
+.cms-jcon-HTG:before {
+  content: "\e9f1";
+}
+.cms-jcon-HRK:before {
+  content: "\e9f2";
+}
+.cms-jcon-HNL:before {
+  content: "\e9f3";
+}
+.cms-jcon-HKD:before {
+  content: "\e9f4";
+}
+.cms-jcon-GTQ:before {
+  content: "\e9f5";
+}
+.cms-jcon-GMD:before {
+  content: "\e9f6";
+}
+.cms-jcon-GEL:before {
+  content: "\e9f7";
+}
+.cms-jcon-DOP:before {
+  content: "\e9f8";
+}
+.cms-jcon-CZK:before {
+  content: "\e9f9";
+}
+.cms-jcon-CRC:before {
+  content: "\e9fa";
+}
+.cms-jcon-COP:before {
+  content: "\e9fb";
+}
+.cms-jcon-CLP:before {
+  content: "\e9fc";
+}
+.cms-jcon-CAD:before {
+  content: "\e9fd";
+}
+.cms-jcon-BYR:before {
+  content: "\e9fe";
+}
+.cms-jcon-BSD:before {
+  content: "\e9ff";
+}
+.cms-jcon-BRL:before {
+  content: "\ea00";
+}
+.cms-jcon-BOB:before {
+  content: "\ea01";
+}
+.cms-jcon-BMD:before {
+  content: "\ea02";
+}
+.cms-jcon-BGN:before {
+  content: "\ea03";
+}
+.cms-jcon-BDT:before {
+  content: "\ea04";
+}
+.cms-jcon-BAM:before {
+  content: "\ea05";
+}
+.cms-jcon-AZN:before {
+  content: "\ea06";
+}
+.cms-jcon-AUD:before {
+  content: "\ea07";
+}
+.cms-jcon-AOA:before {
+  content: "\ea08";
+}
+.cms-jcon-AED:before {
+  content: "\ea09";
+}
+.cms-jcon-AMD:before {
+  content: "\ea0a";
+}
+.cms-jcon-fantasy-sports:before {
+  content: "\e9c1";
+}
+.cms-jcon-pound-symbol:before {
+  content: "\e9b7";
+}
+.cms-jcon-australian-dollar-symbol:before {
+  content: "\e9b8";
+}
+.cms-jcon-swiss-franc-symbol:before {
+  content: "\e9b9";
+}
+.cms-jcon-euro-symbol:before {
+  content: "\e9ba";
+}
+.cms-jcon-yen-symbol:before {
+  content: "\e9bb";
+}
+.cms-jcon-lira-symbol:before {
+  content: "\e9bc";
+}
+.cms-jcon-south-korean-won:before {
+  content: "\e9bd";
+}
+.cms-jcon-swedish-krona:before {
+  content: "\e9be";
+}
+.cms-jcon-peso-symbol:before {
+  content: "\e9bf";
+}
+.cms-jcon-cent-symbol:before {
+  content: "\e9c0";
+}
+.cms-jcon-bitcoin-icon:before {
+  content: "\e9b4";
+}
+.cms-jcon-ruble-icon:before {
+  content: "\e9b5";
+}
+.cms-jcon-dollar-icon:before {
+  content: "\e9b6";
 }
 .cms-jcon-booking-icon:before {
   content: "\e9b3";
@@ -870,7 +1335,7 @@
 .cms-jcon-wallet:before {
   content: "\e6cc";
 }
-.cms-jcon-google-plus:before {
+.cms-jcon-googlePlus:before {
   content: "\e6c4";
 }
 .cms-jcon-twitter:before {
@@ -1490,6 +1955,9 @@
 }
 .cms-jcon-envelope:before {
   content: "\e69f";
+}
+.cms-jcon-floppy-o:before {
+  content: "\ea31";
 }
 .cms-jcon-star-big:before {
   content: "\f005";

@@ -38,12 +38,13 @@
                 <ul>
                     <li ng-if="conf.promotionalBonuses.sportsbook" ng-click="switchBonusTab(backendBonusConstants.BonusSource.SportsBook)" ng-class="{'active': (activeBonusTab === backendBonusConstants.BonusSource.SportsBook)}"><span>{{'sportsbook' | translate }} <i ng-if="bonusesAmount.sportsBook && bonusesAmount.sportsBook > 0">{{bonusesAmount.sportsBook}}</i> </span></li>
                     <li ng-if="conf.promotionalBonuses.casino" ng-click="switchBonusTab(backendBonusConstants.BonusSource.Casino)" ng-class="{'active': (activeBonusTab === backendBonusConstants.BonusSource.Casino)}"><span>{{'Casino' | translate }} <i ng-if="bonusesAmount.casino && bonusesAmount.casino > 0">{{bonusesAmount.casino}}</i> </span></li>
+                    <li ng-if="conf.promotionalBonuses.bonusRequestURL"  ng-click="switchBonusTab('bonus-request')" ng-class="{'active': (activeBonusTab === 'bonus-request')}"><span>{{'Bonus request' | translate }} </span></li>
                 </ul>
             </div>
         </div>
     </div>
     <div class="mixed-view-body">
-        <div class="mixed-view-body-ins">
+        <div class="mixed-view-body-ins" ng-if="activeBonusTab !== 'bonus-request'">
             <vbet-loader ng-if="loadingBonus"></vbet-loader>
             <div class="bet-view-information-box" ng-if="!loadingBonus">
 
@@ -132,7 +133,7 @@
                                         </li>
                                         <li class="claim-cancel-bonus">
                                             <div class="bonus-function-b" ng-show="bonus.acceptance_type === backendBonusConstants.BonusAcceptanceType.None && bonus.can_accept">
-                                                <button ng-click="claimBonus(bonus.partner_bonus_id); $event.stopPropagation();" trans>Claim</button>
+                                                <button ng-click="claimBonus(bonus.partner_bonus_id, bonus['deposit_wagering_factor'] !== 0); $event.stopPropagation();" trans>Claim</button>
                                             </div>
                                             <div ng-if="!conf.promotionalBonuses.disableCancelButton" class="bonus-function-b cancel-bonus" ng-show="bonus.bonus_type !== backendBonusConstants.BonusType.FreeBet && (bonus.acceptance_type === backendBonusConstants.BonusAcceptanceType.Accepted || bonus.acceptance_type === backendBonusConstants.BonusAcceptanceType.Activated)">
                                                 <button ng-click="cancelBonus(bonus.partner_bonus_id); $event.stopPropagation();" trans>Cancel</button>
@@ -156,6 +157,10 @@
                     </div>
                 </div>
             </div>
+        </div>
+        <div class="mixed-view-body-ins" ng-if="activeBonusTab === 'bonus-request'">
+            <iframe ng-src="{{conf.promotionalBonuses.bonusRequestURL|url}}"></iframe>
+
         </div>
     </div>
 </div>

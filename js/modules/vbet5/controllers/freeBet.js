@@ -104,9 +104,17 @@ VBET5.controller('freeBetCtrl', ['$scope', '$rootScope', 'Config', 'Utils', 'Zer
      * @name randomChoice
      * @methodOf vbet5.controller:freeBetCtrl
      * @param {Number} victorinaId id
+     * @param {Number} index
      * @description
      */
-    $scope.randomChoice = function randomChoice(victorinaId) {
+    $scope.randomChoice = function randomChoice(victorinaId, index) {
+        if (Config.main.googleTagManagerId) {
+            $rootScope.$emit('gtagEvent', {
+                category: 'FreeBet',
+                label: 'Random_choice_' + (index + 1)
+            });
+        }
+
         angular.forEach($scope.victorinas[victorinaId], function (game) {
             var availableKeys = [];
             angular.forEach(['p1', 'p2', 'x'], function (type) {
@@ -125,9 +133,17 @@ VBET5.controller('freeBetCtrl', ['$scope', '$rootScope', 'Config', 'Utils', 'Zer
      * @name favouriteChoice
      * @methodOf vbet5.controller:freeBetCtrl
      * @param {Number} victorinaId id
+     * @param {Number} index
      * @description
      */
-    $scope.favouriteChoice = function favouriteChoice(victorinaId) {
+    $scope.favouriteChoice = function favouriteChoice(victorinaId, index) {
+        if (Config.main.googleTagManagerId) {
+            $rootScope.$emit('gtagEvent', {
+                category: 'FreeBet',
+                label: 'Favourites_' + (index + 1)
+            });
+        }
+
         angular.forEach($scope.victorinas[victorinaId], function (game) {
             var selections = {};
             angular.forEach(['p1', 'p2', 'x'], function (type) {
@@ -145,13 +161,22 @@ VBET5.controller('freeBetCtrl', ['$scope', '$rootScope', 'Config', 'Utils', 'Zer
      * @name doFreeBet
      * @methodOf vbet5.controller:freeBetCtrl
      * @param {Number} victorinaId id
+     * @param {MouseEvent} $event
+     * @param {Number} index
      * @description
      */
-    $scope.doFreeBet = function doFreeBet(victorinaId, $event) {
+    $scope.doFreeBet = function doFreeBet(victorinaId, $event, index) {
         if(!Config.env.authorized ) {
             $rootScope.$broadcast("openLoginForm");
             $event.stopPropagation();
             return;
+        }
+
+        if (Config.main.googleTagManagerId) {
+            $rootScope.$emit('gtagEvent', {
+                category: 'FreeBet',
+                label: 'Place Bet_' + (index + 1)
+            });
         }
 
         var selections = [];

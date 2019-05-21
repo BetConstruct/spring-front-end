@@ -4,8 +4,8 @@
  * @description
  * LiveCalendarController controller
  */
-angular.module('vbet5.betting').controller('LiveCalendarController', ['$scope', '$rootScope', '$location', '$window', 'ConnectionService', 'Moment', 'Translator', 'Utils', 'Config', 'GameInfo',
-    function ($scope, $rootScope, $location, $window, ConnectionService, Moment, Translator, Utils, Config, GameInfo) {
+angular.module('vbet5.betting').controller('LiveCalendarController', ['$scope', '$rootScope', '$location', '$window', 'ConnectionService', 'Moment', 'Translator', 'Utils', 'Config', 'GameInfo', 'partner',
+    function ($scope, $rootScope, $location, $window, ConnectionService, Moment, Translator, Utils, Config, GameInfo, partner) {
         'use strict';
         $rootScope.footerMovable = true;
 
@@ -192,12 +192,7 @@ angular.module('vbet5.betting').controller('LiveCalendarController', ['$scope', 
                                     game.dayOffset = $scope.dayFilter[i].id;
                                 }
                             }
-                            if (!Config.main.GmsPlatform && game.exclude_ids) {
-                                game.pointerId = game.exclude_ids;
-                                excludeIds.push(game.pointerId);
-                            } else {
-                                game.pointerId = game.id;
-                            }
+                            game.pointerId = game.id;
 
                             GameInfo.hasVideo(game, true); // check availability of video
 
@@ -211,7 +206,7 @@ angular.module('vbet5.betting').controller('LiveCalendarController', ['$scope', 
                         getLinkedGames();
                         excludeIdsKey = excludeIds.join();
                     }
-                } else if (Config.main.calendarPrematchSelection || Config.main.GmsPlatform) {
+                } else  {
                     updateLinkedGames(data);
                 }
                 $scope.liveCalendarGames.push({sport: sport, order: sport.order, games: Utils.groupByItemProperty(allGames, 'dayOffset')});
@@ -275,7 +270,7 @@ angular.module('vbet5.betting').controller('LiveCalendarController', ['$scope', 
                 }
             };
 
-            if (Config.main.GmsPlatform || Config.main.calendarPrematchSelection) {
+            if (!Config.main.hideLiveCalendarMarkets) {
                 request.what.market = ['type', 'name', 'id', 'base', 'express_id'];
                 request.what.event = ['type', 'id', 'price', 'name', 'base'];
                 request.where.market = {type: {'@in': ['P1XP2', 'P1P2']}};
@@ -337,6 +332,7 @@ angular.module('vbet5.betting').controller('LiveCalendarController', ['$scope', 
             if (!game) {
                 return;
             }
+            partner.call('gameInfo', {type: 0});
             $location.url('/sport/?type=0&sport=' + sportId + '&region=' + game.region.id + '&competition=' + game.competition.id + '&game=' + game.id);
         };
 

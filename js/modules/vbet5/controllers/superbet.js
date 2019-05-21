@@ -20,18 +20,16 @@ VBET5.controller('superBetCtrl', ['$rootScope', '$scope', '$interval', 'Storage'
      */
 
     function showSuperBetNotification (message) {
-        if (Config.main.GmsPlatform || $scope.superBetId > 0) {
-            if (Config.betting.showSuperBetNotificationsViaPopup) {
+        if (Config.betting.showSuperBetNotificationsViaPopup) {
 
-                $rootScope.$broadcast("globalDialogs.addDialog", {
-                    type: 'info',
-                    title: 'Offer',
-                    content: message
-                });
+            $rootScope.$broadcast("globalDialogs.addDialog", {
+                type: 'info',
+                title: 'Offer',
+                content: message
+            });
 
-            } else {
-                $rootScope.broadcast("notification", {title: "Note:", content:  message, type: "superBetResult", hideCheckBox: true});
-            }
+        } else {
+            $rootScope.broadcast("notification", {title: "Note:", content:  message, type: "superBetResult", hideCheckBox: true});
         }
     }
 
@@ -202,12 +200,12 @@ VBET5.controller('superBetCtrl', ['$rootScope', '$scope', '$interval', 'Storage'
 
     /**
      * @ngdoc method
-     * @name checkSuperBetStatusGMS
+     * @name checkSuperBetStatus
      * @methodOf betting.controller:superBetCtrl
      * @description check if super bet is accepted or declined
      */
 
-    function checkSuperBetStatusGMS() {
+    function checkSuperBetStatus() {
         if($scope.profile && $scope.profile.super_bet && $scope.profile.super_bet !== -1) {
             var superBets = Utils.objectToArray($scope.profile.super_bet);
             var superBet = superBets && superBets.filter(function(value) { // remove null items
@@ -249,12 +247,9 @@ VBET5.controller('superBetCtrl', ['$rootScope', '$scope', '$interval', 'Storage'
         }
     }
 
-    if(Config.main.GmsPlatform){
-        profilePromise = $scope.$watch('profile.super_bet', function () {
-            checkSuperBetStatusGMS();
-        }, true);
-    }
-
+    profilePromise = $scope.$watch('profile.super_bet', function () {
+        checkSuperBetStatus();
+    }, true);
 
     $scope.$on('acceptCounterOffer', function (event, superBet) {
         Zergling.get({bet_id: superBet.super_bet_id, accept: true}, 'super_bet_answer').then(function (data){console.log(data);})['catch'](function (reason) {

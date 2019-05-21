@@ -4,7 +4,7 @@
         <div>
             <ul>
                 <li ng-style="{'border-left-color': '#'+ openGame.info.shirt1_color}" ng-class="{active: openGame.info.pass_team === 'team1'}">
-                    <img ng-if="$root.conf.esportsGames.indexOf(openGame.sport.alias) !== -1" ng-src="{{$root.conf.teamLogosPath}}e/m/{{$root.conf.GmsPlatform?Math.floor(openGame.team1_id / 2000):Math.floor(openGame.team1_external_id / 2000)}}/{{$root.conf.GmsPlatform?openGame.team1_id:openGame.team1_external_id}}.png" />
+                    <img ng-if="$root.conf.esportsGames.indexOf(openGame.sport.alias) !== -1" ng-src="{{$root.conf.teamLogosPath}}e/m/{{Math.floor(openGame.team1_id / 2000)}}/{{openGame.team1_id}}.png" />
                     <div class="team-form" ng-if="$root.conf.esportsGames.indexOf(openGame.sport.alias) === -1"><tshirt shorts="{{openGame.info.short1_color}}" shirt="{{openGame.info.shirt1_color}}"></tshirt></div>
                     <p><span>{{ openGame.team1_name ?  openGame.team1_name: '' }}</span></p>
                 </li>
@@ -17,7 +17,7 @@
             </ul>
             <ul>
                 <li ng-style="{'border-left-color': '#'+ openGame.info.shirt2_color}" ng-class="{active: openGame.info.pass_team === 'team2'}">
-                    <img ng-if="$root.conf.esportsGames.indexOf(openGame.sport.alias) !== -1" ng-src="{{$root.conf.teamLogosPath}}e/m/{{$root.conf.GmsPlatform?Math.floor(openGame.team2_id / 2000):Math.floor(openGame.team2_external_id / 2000)}}/{{$root.conf.GmsPlatform? openGame.team2_id:openGame.team2_external_id}}.png" />
+                    <img ng-if="$root.conf.esportsGames.indexOf(openGame.sport.alias) !== -1" ng-src="{{$root.conf.teamLogosPath}}e/m/{{Math.floor(openGame.team2_id / 2000)}}/{{openGame.team2_id}}.png" />
                     <div class="team-form" ng-if="$root.conf.esportsGames.indexOf(openGame.sport.alias) === -1"><tshirt shorts="{{openGame.info.short2_color}}" shirt="{{openGame.info.shirt2_color}}"></tshirt></div>
                     <p><span>{{ openGame.team2_name ?  openGame.team2_name: '' }}</span></p>
                 </li>
@@ -31,7 +31,7 @@
         </div>
     </div>
     <!-- generic multiset games template -->
-    <div class="game-score-multiset" ng-if="openGame.show_type != 'OUTRIGHT' && (openGame.sport.alias !== 'HorseRacing' && liveGamesSoccerTemplate.indexOf(openGame.sport.alias) === -1 && $root.conf.esportsGames.indexOf(openGame.sport.alias) == -1)">
+    <div class="game-score-multiset" ng-if="openGame.show_type != 'OUTRIGHT' && (openGame.sport.alias !== 'HorseRacing' && liveGamesSoccerTemplate.indexOf(openGame.sport.alias) === -1 && $root.conf.esportsGames.indexOf(openGame.sport.alias) == -1)" visible-sets>
         <ul class="title" title="{{ $root.conf.edition.enabled ? (('Edition'|translate) + ': ' + (openGame.start_ts|formatDate:'edition')) : '' }}" ng-click="broadcast('liveGame.headerClicked', openGame);$event.stopPropagation();">
             <li>
                 <dl>
@@ -51,10 +51,10 @@
                 <span ng-bind="showFrameAlias(frame_num, openGame.sport.alias)"></span>
             </li>
             <li class="right-arrow" ng-class="{'disabled': openGame.setsOffset === framesCount(openGame.stats).length - visibleSetsNumber}" ng-click="slideSets('right', openGame, visibleSetsNumber, framesCount(openGame.stats).length)" ng-if="visibleSetsNumber < framesCount(openGame.stats).length"></li>
-            <li class="sets-score">
+            <li class="sets-score" ng-if="openGame.sport.id !== 22 || openGame.info.set_count > 1">
                 <span>{{ "set"|convertSetName:openGame.sport.alias|translate }}</span>
             </li>
-            <li class="total-score" ng-if="openGame.sport.alias==='Tennis'"><span trans>Points</span></li>
+            <li class="total-score" ng-if="openGame.sport.alias==='Tennis' || openGame.sport.alias === 'ETennis'"><span trans>Points</span></li>
             <li></li>
         </ul>
         <ul>
@@ -63,7 +63,7 @@
                     <dt>
                     <div class="team-form"><tshirt shorts="{{openGame.info.short1_color}}" shirt="{{openGame.info.shirt1_color}}"></tshirt></div>
                     <p title="{{ openGame.team1_name ?  openGame.team1_name: '' }}">
-                        <stats-logo ng-show="openGame.sport.alias === 'MortalKombatXL' || openGame.sport.alias === 'StreetFighterV'" team-id="openGame.team1_id"></stats-logo>
+                        <stats-logo ng-if="['MortalKombatXL', 'StreetFighterV', 'Dota', 'Dota2', 'CounterStrike', 'LeagueOfLegends'].indexOf(openGame.sport.alias) > -1" team-id="openGame.team1_id"></stats-logo>
                         {{ openGame.team1_name ?  openGame.team1_name: '' }}
                     </p>
                     </dt>
@@ -76,8 +76,8 @@
                 <span>{{openGame.stats['score_set' + frame_num].team1_value ? openGame.stats['score_set' + frame_num].team1_value : 0}}</span>
             </li>
             <li ng-if="visibleSetsNumber < framesCount(openGame.stats).length"></li>
-            <li class="sets-score"><span>{{ openGame.info.score1 ?  openGame.info.score1 : '' | translate}}</span></li>
-            <li class="total-score" ng-if="openGame.sport.alias==='Tennis'"><span>{{ openGame.stats.passes.team1_value || 0 }}</span></li>
+            <li class="sets-score" ng-if="openGame.sport.id !== 22 || openGame.info.set_count > 1"><span>{{ openGame.info.score1 ?  openGame.info.score1 : '' | translate}}</span></li>
+            <li class="total-score" ng-if="openGame.sport.alias==='Tennis' || openGame.sport.alias === 'ETennis'"><span>{{ openGame.stats.passes.team1_value || 0 }}</span></li>
             <li class="serve-team" ng-class="{active: openGame.info.pass_team === 'team1'}"><b class="mini-icon-1 mini-icon-{{openGame.sport.id}} {{openGame.sport.alias}}"></b></li>
         </ul>
         <ul>
@@ -86,7 +86,7 @@
                     <dt>
                     <div class="team-form"><tshirt shorts="{{openGame.info.short2_color}}" shirt="{{openGame.info.shirt2_color}}"></tshirt></div>
                     <p title="{{ openGame.team2_name ?  openGame.team2_name: '' }}">
-                        <stats-logo ng-show="openGame.sport.alias === 'MortalKombatXL' || openGame.sport.alias === 'StreetFighterV'" team-id="openGame.team2_id"></stats-logo>
+                        <stats-logo ng-if="['MortalKombatXL', 'StreetFighterV', 'Dota', 'Dota2', 'CounterStrike', 'LeagueOfLegends'].indexOf(openGame.sport.alias) > -1" team-id="openGame.team2_id"></stats-logo>
                         {{ openGame.team2_name ?  openGame.team2_name: '' }}
                     </p>
                     </dt>
@@ -100,8 +100,8 @@
                 <span>{{openGame.stats['score_set' + frame_num].team2_value ? openGame.stats['score_set' + frame_num].team2_value : 0}}</span>
             </li>
             <li ng-if="visibleSetsNumber < framesCount(openGame.stats).length"></li>
-            <li class="sets-score"><span>{{ openGame.info.score2 ?  openGame.info.score2 : '' | translate}}</span></li>
-            <li class="total-score" ng-if="openGame.sport.alias==='Tennis'"><span>{{ openGame.stats.passes.team2_value || 0 }}</span></li>
+            <li class="sets-score" ng-if="openGame.sport.id !== 22 || openGame.info.set_count > 1"><span>{{ openGame.info.score2 ?  openGame.info.score2 : '' | translate}}</span></li>
+            <li class="total-score" ng-if="openGame.sport.alias==='Tennis' || openGame.sport.alias === 'ETennis'"><span>{{ openGame.stats.passes.team2_value || 0 }}</span></li>
             <li class="serve-team" ng-class="{active: openGame.info.pass_team === 'team2'}"><b class="mini-icon-1 mini-icon-{{openGame.sport.id}} {{openGame.sport.alias}}"></b></li>
         </ul>
     </div>
@@ -155,4 +155,5 @@
             <span>{{ openGame.info.current_game_state|convertSetName:openGame.sport.alias|translate }} </span> <span ng-if="openGame.info.current_game_state !== 'notstarted' && openGame.info.current_game_state !== 'timeout'">{{ (openGame.info.current_game_time)[0] === '-'? ('will start in'|translate)+' '+ (openGame.info.current_game_time).substring(1): openGame.info.current_game_time }}</span>
         </p>
     </div>
+    <ng-include src="::'templates/directive/live-game-scores-statistics.html'" class="float-width"></ng-include>
 </div>

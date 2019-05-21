@@ -1,0 +1,82 @@
+<div class="sportsbook-jackpot-wrapper">
+    <ul class="s-j-details">
+        <li>
+            <h3 trans>sport jackpot</h3>
+        </li>
+        <li class="s-j-balance">
+           <div class="sportsbook-jackpot-amount">
+
+               <jackpot-counter ng-if="jackpotData.CollectedAmountTotal" max-duration-speed="400"
+                                       point="jackpotData.CurrencyFraction"
+                                       comma="true"
+                                       currency="jackpotData.Currency"
+                                       amount="jackpotData.CollectedAmountTotal">
+               </jackpot-counter>
+           </div>
+        </li>
+        <li>
+            <p ng-click="viewDetails = !viewDetails; expandedPool.name = 'closeAll'" trans>view details</p>
+        </li>
+    </ul>
+    <!--sportsbook jackpot details end-->
+
+    <ul ng-show="viewDetails" class="s-j-lists">
+        <li class="s-j-title">
+            <span trans>Jackpot</span>
+            <div ng-click="viewDetails = false;expandedPool.name = 'closeAll'" class="closed-popup-form"></div>
+        </li>
+
+        <li ng-repeat="pool in jackpotData.PoolGroup.PoolList track by $index"
+            class="s-j-{{pool.DisplayName.toLowerCase()}}">
+            <div class="s-j-list" ng-click="expandedPool.name !== pool.Name ? expandedPool.name = pool.Name : expandedPool.name = 'closeAll'">
+                <div class="s-j-coin"></div>
+                <div class="s-j-money">
+                    <p>{{pool.DisplayName|translate}}</p>
+                    <div class="sportsbook-jackpot-info-amount">
+                        <jackpot-counter
+                                ng-if="pool.CollectedAmount"
+                                max-duration-speed="400"
+                                point="jackpotData.CurrencyFraction"
+                                comma="true" currency="jackpotData.Currency"
+                                amount="pool.CollectedAmount"
+                                max-length="false"
+                        >
+                        </jackpot-counter>
+                    </div>
+                </div>
+                <i ng-class="{'rotate' : expandedPool.name == pool.Name}"></i>
+            </div>
+
+            <!--sportsbook jackpot winner tab Start-->
+            <ul class="s-j-winners" ng-class="{'expanded': expandedPool.name === pool.Name}">
+                <li class="s-j-w-total">
+                    <p trans>winners and total</p>
+                    <div class="s-j-w-info">
+                        <p> {{pool.TotalWinCount}}</p>
+                        <span>{{pool.TotalWinAmount|number:jackpot.CurrencyFraction}} <i>{{jackpotData.Currency|currency}}</i></span>
+                    </div>
+                </li>
+
+                <li ng-if="pool.JackPotPoolStat.BiggestJackpotWin.Amount" class="s-j-w-largest">
+                    <p trans>Largest Winner</p>
+                    <div class="s-j-w-info">
+                        <span>{{pool.JackPotPoolStat.BiggestJackpotWin.Amount|number:jackpotData.CurrencyFraction}} <i>{{jackpotData.Currency|currency}}</i></span>
+                        <h3>{{pool.JackPotPoolStat.BiggestJackpotWin.BetId}}</h3>
+                        <p>{{pool.JackPotPoolStat.BiggestJackpotWin.PlayerId}}<i>{{pool.JackPotPoolStat.BiggestJackpotWin.CreationDate|formatDate:'tournament'}}</i>
+                        </p>
+                    </div>
+                </li>
+
+                <li ng-if="pool.JackPotPoolStat.LastJackPotWin.Amount" class="s-j-w-latest">
+                    <p trans>Latest Winner</p>
+                    <div class="s-j-w-info">
+                        <span>{{pool.JackPotPoolStat.LastJackPotWin.Amount|number:jackpotData.CurrencyFraction}} <i>{{jackpotData.Currency|currency}}</i></span>
+                        <h3>{{pool.JackPotPoolStat.LastJackPotWin.BetId}}</h3>
+                        <p>{{pool.JackPotPoolStat.LastJackPotWin.PlayerId}}<i>{{pool.JackPotPoolStat.LastJackPotWin.CreationDate|formatDate:'tournament'}}</i>
+                        </p>
+                    </div>
+                </li>
+            </ul>
+        </li>
+    </ul>
+</div>

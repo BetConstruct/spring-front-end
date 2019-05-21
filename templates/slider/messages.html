@@ -93,7 +93,8 @@
             <label><span trans>Subject</span></label>
 
             <div class="tooltip-wrapper-j" ng-class="{'error': sendMessageForm.subject.$dirty && sendMessageForm.subject.$invalid}">
-                <input name="subject" ng-model="newMessage.subject" type="text" maxlength="255" required trans>
+                <input name="subject" ng-model="newMessage.subject" type="text" maxlength="255" required trans ng-if="!$root.conf.newMessageSubjectValues">
+                <select name="subject" ng-model="newMessage.subject" ng-if="$root.conf.newMessageSubjectValues" ng-options="subject for subject in ::$root.conf.newMessageSubjectValues track by subject"></select>
 
                 <div class="form-error-icon-j"></div>
                 <div class="tooltip-j">

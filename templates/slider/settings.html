@@ -189,7 +189,7 @@
                                     <p>{{details.birth_date}}</p>
                                 </div>
 
-                                <div class="b-date active-field">
+                                <div class="float-width b-date active-field">
                                     <div class="select-block">
                                         <div class="select-j">
                                             <select name="birth_day"
@@ -508,58 +508,8 @@
 
         <ng-include ng-if="env.mixedSettingsPage==='usertimeout'" src="::'templates/slider/userTimeOut.html'|fixPath"></ng-include>
         <ng-include ng-if="env.mixedSettingsPage==='selfexclusion'" src="::'templates/slider/selfExclusion.html'|fixPath"></ng-include>
+        <ng-include ng-if="env.mixedSettingsPage==='friendReferral'" src="::'templates/livebox/friendReferral.html'|fixPath"></ng-include>
 
-        <div ng-if="conf.friendReferral.enabled && env.mixedSettingsPage ==='friendReferral'" class="friend-referral" ng-init="initFriendReferral()">
-            <h3 trans>Friend Referral</h3>
-            <div class="settings-info-contain deposit-limit">
-                <p trans>Please add friend referral description</p>
-                <div class="referral-info">
-                    <div>
-                        <label trans>Promo code</label>
-                        <div>{{profile.username}}</div>
-                    </div>
-                    <div>
-                        <label trans>Period</label>
-                        <div class="select-block">
-                            <select ng-model="selectedFriendRefData.date" ng-options="date.text for date in refDatesArray" ng-change="loadFriendReferralData()">
-                            </select>
-                        </div>
-                    </div>
-                </div>
-                <label class="results-live-j" ng-init="showOnlyActivePlayers = !!conf.friendReferral.activePlayers">
-                    <input type="checkbox" ng-model="showOnlyActivePlayers">
-                    <i></i>
-                    <span trans>Active players only</span>
-                </label>
-                <vbet-loader ng-show="loadingReferralsList"></vbet-loader>
-                <div ng-show="!loadingReferralsList">
-                    <table>
-                        <tr>
-                            <th trans>Player Name</th>
-                            <th trans>Win or Loss</th>
-                        </tr>
-                    </table>
-                    <div class="referral-table">
-                        <table>
-                            <tr ng-repeat="subClient in friendReferralList track by subClient.client_id" ng-show="!showOnlyActivePlayers || subClient.is_active == 1">
-                                <td ng-bind="subClient.name"></td>
-                                <td ng-bind="subClient.profit|number:conf.balanceFractionSize"></td>
-                            </tr>
-                        </table>
-                    </div>
-                    <table class="ref-total">
-                        <tr>
-                            <th trans>Total</th>
-                            <th>{{friendReferralData.bonus_percent}}%</th>
-                        </tr>
-                        <tr>
-                            <td ng-bind="(friendReferralData.total_amount|number:conf.balanceFractionSize) || 0"></td>
-                            <td ng-bind="(friendReferralData.bonus_amount|number:conf.balanceFractionSize) || 0"></td>
-                        </tr>
-                    </table>
-                </div>
-            </div>
-        </div>
     </div>
 </div>
 

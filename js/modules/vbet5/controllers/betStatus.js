@@ -1,3 +1,4 @@
+/* global VBET5 */
 /**
  * @ngdoc controller
  * @name vbet5.controller:betStatusCtrl
@@ -6,7 +7,7 @@ VBET5.controller('betStatusCtrl', ['$scope', 'Config', 'Zergling', function ($sc
     'use strict';
     $scope.betStatus = {
         open: false,
-        displayRecaptcha: true
+        displayRecaptcha: !Config.main.recaptchaV3
     };
 
     $scope.resultMap = {
@@ -21,10 +22,11 @@ VBET5.controller('betStatusCtrl', ['$scope', 'Config', 'Zergling', function ($sc
     $scope.getBetStatus = function getBetStatus() {
         if (!$scope.betStatus.ticketNumber) { return; }
 
-        var request = {
-            g_recaptcha_response: $scope.betStatus.g_recaptcha_response
-        };
+        var request = {};
 
+        if ($scope.betStatus.displayRecaptcha) {
+            request.g_recaptcha_response = $scope.betStatus.g_recaptcha_response;
+        }
         if ($scope.betStatus.ticketNumber.length < 15) { // If the number contains less than 15 characters then it's a bet id, otherwise - a bet ticket id
             request.bet_id = parseInt($scope.betStatus.ticketNumber, 10);
         } else {
@@ -38,8 +40,10 @@ VBET5.controller('betStatusCtrl', ['$scope', 'Config', 'Zergling', function ($sc
             console.log('BET STATUS', response);
             $scope.betStatus.details = (response && response.details) || {StateName: 'Ticket number not found.'};
             $scope.betStatus.ticketNumber = '';
-            $scope.$broadcast('recaptcha.reload');
-            $scope.betStatus.g_recaptcha_response = '';
+            if ($scope.betStatus.displayRecaptcha) {
+                $scope.$broadcast('recaptcha.reload');
+                $scope.betStatus.g_recaptcha_response = '';
+            }
         })['finally'](function () {
             $scope.betStatus.loading = false;
         });
@@ -50,7 +54,9 @@ VBET5.controller('betStatusCtrl', ['$scope', 'Config', 'Zergling', function ($sc
         $scope.betStatus.ticketNumber = '';
     };
 
-    $scope.$on('recaptcha.response', function (event, response) {
-        $scope.betStatus.g_recaptcha_response = response;
-    });
+    if ($scope.betStatus.displayRecaptcha) {
+        $scope.$on('recaptcha.response', function (event, response) {
+            $scope.betStatus.g_recaptcha_response = response;
+        });
+    }
 }]);

@@ -105,9 +105,6 @@
 .body-wrapper.widgetlivegame .live-game-container .game-info .unpin-button{
   display: none;
 }
-.body-wrapper.widgetlivegame .fav-markets-contain-wrapper .mini-market-b{
-  float: left;
-}
 .body-wrapper.widgetlivegame .mini-market-left{
   width: 100%;
 }
@@ -302,5 +299,122 @@
 .headerVersion_2 {
   &.no-header-navigation {
     min-height: 0;
+  }
+}
+.body-wrapper.widgetanimation {
+  .conteiner {
+    min-width: auto;
+  }
+}
+.widgetcasino-jackpot-counter {
+  min-width: 100%;
+  .contain-header {
+    display: none;
+  }
+  .jackpot-pools {
+    margin: 0;
+  }
+  .jp-banner {
+    height: 140px;
+    margin: 0;
+    font: 84px/86px $font-f;
+    > span {
+      padding: 6px 10px;
+    }
+  }
+  .jackpot-banner-amount {
+    height: 90px;
+  }
+  .amount-animation-container > span {
+    width: 4%;
+    &.with-comma,
+    &.with-point {
+      padding-right: 0.5%;
+    }
+  }
+}
+@media screen and (max-width: 1600px) {
+  .widgetcasino-jackpot-counter .amount-animation-container > span {
+    width: 5%;
+    &.with-comma,
+    &.with-point {
+      padding-right: 0;
+    }
+  }
+}
+@media screen and (max-width: 1260px) {
+  .widgetcasino-jackpot-counter .jackpot-banner-amount .amount-animation-container.amount-animation-container > span {
+    width: 6%;
+    > strong {
+      right: 6px;
+    }
+  }
+}
+@media screen and (max-width: 980px) {
+  .widgetcasino-jackpot-counter .jackpot-banner-amount .amount-animation-container.amount-animation-container > span {
+    width: 7%;
+    > strong {
+      right: 2px;
+    }
+  }
+}
+@media screen and (max-width: 800px) {
+  .widgetcasino-jackpot-counter .jackpot-banner-amount .amount-animation-container {
+    font-size: 62px;
+    &.amount-animation-container > span {
+      width: 7%;
+    }
+    > strong {
+      right: 0;
+    }
+    > sup {
+      font-size: 16px;
+    }
+  }
+}
+@media screen and (max-width: 720px) {
+  .widgetcasino-jackpot-counter .jackpot-banner-amount .amount-animation-container.amount-animation-container > span {
+    width: 7%;
+    > strong {
+      right: 0;
+    }
+  }
+}
+@media screen and (max-width: 640px) {
+  .widgetcasino-jackpot-counter .jackpot-banner-amount .amount-animation-container.amount-animation-container > span {
+    width: 7%;
+    > strong {
+      right: -4px;
+    }
+  }
+}
+@media screen and (max-width: 580px) {
+  .widgetcasino-jackpot-counter .jackpot-banner-amount .amount-animation-container.amount-animation-container > span {
+    width: 9%;
+    > strong {
+      right: 0;
+    }
+  }
+}
+@media screen and (max-width: 480px) {
+  .widgetcasino-jackpot-counter .jackpot-banner-amount .amount-animation-container {
+    font-size: 42px;
+    &.amount-animation-container > span {
+      width: 9%;
+      > strong {
+        right: 4px;
+      }
+    }
+  }
+}
+@media screen and (max-width: 400px) {
+  .widgetcasino-jackpot-counter .jackpot-banner-amount .amount-animation-container {
+    font-size: 32px;
+    &.amount-animation-container > span {
+      width: 8.5%;
+      > strong {
+        right: 2px;
+      }
+    }
   }
 }

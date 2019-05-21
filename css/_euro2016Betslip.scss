@@ -1,7 +1,6 @@
 .right-column-v3 .game-video-container p {
   box-sizing: border-box;
   font-size: 9 + $size-font;
-  margin-top: 65px;
   color: $c16-tp-6;
   position: relative;
   z-index: 10;
@@ -22,6 +21,9 @@
   top: 0;
   z-index: 444;
   transform: translate3d(0, 0, 0);
+  @include rtl {
+    padding-left: 1px;
+  }
   .resize-icon-b-v3 {
     display: none;
   }
@@ -120,6 +122,493 @@
 }
 
 //view settings END
+
+//sportsbook-jeckpot Start
+
+.sportsbook-jackpot-wrapper {
+  float: left;
+  width: 100%;
+  -moz-user-select: none;
+  -khtml-user-select: none;
+  user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+}
+
+.s-j-details {
+  line-height: 18px;
+  width: 100%;
+  margin: 6px 0 10px 0;
+  min-height: 80px;
+  padding: 8px 10px 8px 12px;
+  background: $hero-color;
+  box-sizing: border-box;
+  background: $skin-color;
+  background: -moz-linear-gradient(45deg,
+          lighten( desaturate( adjust-hue( $skin-color, 2deg ), 7 ), 4 ) 0%,
+          lighten( saturate( adjust-hue( $skin-color, 27deg ), 3 ), 9 ) 50%,
+          lighten( saturate( adjust-hue( $skin-color, 27deg ), 3 ), 9 ) 50%,
+          lighten( saturate( adjust-hue( $skin-color, 18deg ), 6 ), 12 ) 80%,
+          lighten( saturate( adjust-hue( $skin-color, 3deg ), 23 ), 14 ) 105%);
+  background: -webkit-linear-gradient(45deg,
+          lighten( desaturate( adjust-hue( $skin-color, 2deg ), 7 ), 4 ) 0%,
+          lighten( saturate( adjust-hue( $skin-color, 27deg ), 3 ), 9 ) 50%,
+          lighten( saturate( adjust-hue( $skin-color, 27deg ), 3 ), 9 ) 50%,
+          lighten( saturate( adjust-hue( $skin-color, 18deg ), 6 ), 12 ) 80%,
+          lighten( saturate( adjust-hue( $skin-color, 3deg ), 23 ), 14 ) 105%);
+  background: linear-gradient(45deg,
+          lighten( desaturate( adjust-hue( $skin-color, 2deg ), 7 ), 4 ) 0%,
+          lighten( saturate( adjust-hue( $skin-color, 27deg ), 3 ), 9 ) 50%,
+          lighten( saturate( adjust-hue( $skin-color, 27deg ), 3 ), 9 ) 50%,
+          lighten( saturate( adjust-hue( $skin-color, 18deg ), 6 ), 12 ) 80%,
+          lighten( saturate( adjust-hue( $skin-color, 3deg ), 23 ), 14 ) 105%);
+  transform: translate3d(0, 0, 0);
+  overflow: hidden;
+  &:before {
+    content: "";
+    width: 300%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 25%;
+    opacity: 0;
+    transform: translate3d(-50%, 0%, 0);
+    transform-origin: center center;
+    background-image: -moz-linear-gradient(23deg, $hero-color 0%, lighten( saturate( adjust-hue( $skin-color, -9deg ), 47 ), 14 ) 100%);
+    background-image: -webkit-linear-gradient(23deg, $hero-color 0%, lighten( saturate( adjust-hue( $skin-color, -9deg ), 47 ), 14 ) 100%);
+    background-image: -ms-linear-gradient(23deg, $hero-color 0%, lighten( saturate( adjust-hue( $skin-color, -9deg ), 47 ), 14 ) 100%);
+    animation: jackpot-bg-wave 4s 3 ease-in-out 4s;
+    //animation-iteration-count: 3;
+  }
+
+  @keyframes jackpot-bg-wave {
+    0% {
+      opacity: 0;
+      transform: translate3d(-50%, 0, 0);
+    }
+    25% {
+      transform: translate3d(-75%, 0, 0);
+      opacity: 0.94;
+    }
+    75%{
+      transform: translate3d(-25%, 0, 0);
+      opacity: 0.94;
+    }
+    100% {
+      transform: translate3d(-50%, 0, 0);
+    }
+  }
+
+  li {
+    float: left;
+    width: 100%;
+    > h3,
+    > span,
+    > p {
+      text-transform: uppercase;
+      font-weight: normal;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      overflow: hidden;
+    }
+    > h3 {
+      position: relative;
+      z-index: 100;
+      color: rgba($c16-tp-2, 0.6);
+      font-size: 8 + $size-font;
+    }
+    > span {
+      color: $c16-tp-2;
+      position: relative;
+      &:before {
+        position: absolute;
+        text-transform: uppercase;
+        top: 2px;
+        font-size: 11px;
+        @include ltr {
+          right: -35px;
+        }
+        @include rtl {
+          left: -35px;
+        }
+      }
+    }
+    > p {
+      text-transform: capitalize;
+      position: relative;
+      z-index: 100;
+      color: rgba($c16-tp-2, 0.6);
+      font-size: 4 + $size-font;
+      text-decoration: underline;
+      cursor: pointer;
+      [dir=ltr] & {
+        float: left;
+      }
+      [dir=rtl] & {
+        float: right;
+      }
+    }
+    b {
+      span {
+        width: 16px !important;
+        i {
+          font-size: 18 + $size-font !important;
+          height: 24px !important;
+          &.with-point {
+            margin-left: -7%;
+            + strong {
+              top: 4px;
+            }
+          }
+        }
+        strong {
+          top: 2px;
+          right: 0;
+          font-size: 16px;
+        }
+      }
+    }
+  }
+}
+
+.s-j-balance {
+  line-height: 24px;
+  height: 24px;
+  padding-top: 4px;
+}
+
+.s-j-lists {
+  background: lighten( desaturate( adjust-hue( $skin-color, 65deg ), 2 ), 6 );
+  background: -moz-linear-gradient(45deg, lighten( desaturate( adjust-hue( $skin-color, 65deg ), 2 ), 6 ) 0%, lighten( saturate( adjust-hue( $skin-color, 66deg ), 4 ), 2 ) 100%);
+  background: -webkit-linear-gradient(45deg, lighten( desaturate( adjust-hue( $skin-color, 65deg ), 2 ), 6 ) 0%, lighten( saturate( adjust-hue( $skin-color, 66deg ), 4 ), 2 ) 100%);
+  background: linear-gradient(45deg, lighten( desaturate( adjust-hue( $skin-color, 65deg ), 2 ), 6 ) 0%, lighten( saturate( adjust-hue( $skin-color, 66deg ), 4 ), 2 ) 100%);
+  transform: translate3d(0, 0, 0);
+  float: left;
+  width: 100%;
+  [dir=ltr] & {
+    animation: jackpot-swipe-l 0.24s;
+  }
+  [dir=rtl] & {
+    animation: jackpot-swipe-r 0.24s;
+  }
+  > li {
+    min-height: 54px;
+    border-bottom: 1px solid lighten( desaturate( adjust-hue( $skin-color, 65deg ), 5 ), 7 );
+    box-sizing: border-box;
+    color: $c16-tp-3;
+    text-transform: uppercase;
+    position: relative;
+    float: left;
+    width: 100%;
+    @if($white-skin == true) {
+      border-color: $c16-sp-10;
+    }
+    .closed-popup-form {
+      top: 0;
+      &:before {
+        color: rgba($c16-tp-5, 0.6);
+      }
+      @include ltr {
+        right: 8px;
+      }
+      @include rtl {
+        left: 8px;
+      }
+    }
+    .s-j-amount-animation sup {
+      margin: 0;
+      font-size: 8 + $size-font;
+    }
+  }
+  .s-j-title {
+    min-height: 48px;
+    background: lighten( desaturate( adjust-hue( $skin-color, 52deg ), 6 ), 3 );
+    line-height: 48px;
+    padding: 0 20px 0 15px;
+    span {
+      font-size: 10 + $size-font;
+      color: set-color(lighten( desaturate( adjust-hue( $skin-color, 52deg ), 6 ), 3 ));
+      position: relative;
+      @include ltr {
+        padding-left: 34px;
+      }
+      @include rtl {
+        padding-right: 34px;
+      }
+      &:before {
+        content: "\ea13";
+        position: absolute;
+        top: -13px;
+        width: 28px;
+        height: 22px;
+        font-size: 20px;
+        font-family: icomoon;
+        color: set-color(lighten( desaturate( adjust-hue( $skin-color, 52deg ), 6 ), 3 ));
+        @include ltr {
+          left: 0;
+        }
+        @include rtl {
+          right: 0;
+        }
+      }
+    }
+  }
+}
+
+.s-j-list {
+  padding: 6px;
+  box-sizing: border-box;
+  position: relative;
+  width: 100%;
+  float: left;
+  .s-j-amount-animation span {
+    > strong {
+      top: 9px
+    }
+    > i.with-point + strong {
+      top: 11px;
+    }
+  }
+  > i {
+    width: 16px;
+    height: 16px;
+    color: rgba($c16-tp-5, 0.6);
+    cursor: pointer;
+    font-size: 10 + $size-font;
+    font-style: normal;
+    font-family: icomoon;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    margin: auto 0;
+    transition: transform 0.24s;
+    @include ltr {
+      right: 5px;
+    }
+    @include rtl {
+      left: 5px;
+    }
+    &:before {
+      content: "\e670";
+    }
+
+    &.rotate {
+      transform: rotateX(180deg);
+    }
+  }
+}
+
+.s-j-coin {
+  display: inline-block;
+  height: 32px;
+  width: 66px;
+  background: no-repeat 50% bottom;
+  vertical-align: top;
+  @include rtl{
+    direction: ltr;
+    width: 70px;
+    float: right;
+  }
+}
+
+.s-j-money {
+  width: 100%;
+  max-width: calc(100% - 90px);
+  display: inline-block;
+  position: relative;
+  vertical-align: top;
+  @include ltr {
+    padding-left: 6px;
+  }
+  @include rtl {
+    padding-right: 6px;
+  }
+  > p {
+    color: rgba($c16-tp-2, 0.6);
+    font-size: 6 + $size-font;
+    @include ltr {
+      text-align: left;
+    }
+    @include rtl {
+      text-align: left;
+    }
+  }
+  @include rtl {
+    float: right;
+  }
+}
+
+.s-j-winners {
+  background: darken( desaturate( adjust-hue( $skin-color, 36deg ), 9 ), 2 );
+  min-height: 60px;
+  padding: 0 10px 0 15px;
+  box-sizing: border-box;
+  color: set-color(darken( desaturate( adjust-hue( $skin-color, 36deg ), 9 ), 2 ));
+  display: none;
+  float: left;
+  width: 100%;
+  &.expanded {
+    display: block;
+  }
+  li {
+    min-height: 70px;
+    padding: 10px 0;
+    box-sizing: border-box;
+    &:not(:last-child) {
+      border-bottom: 1px solid lighten( desaturate( adjust-hue( $skin-color, 34deg ), 19 ), 7 );
+    }
+    > p {
+      color: $brand-color-2;
+      text-transform: capitalize;
+      font-size: 9 + $size-font;
+      padding-bottom: 8px;
+    }
+  }
+}
+
+.s-j-w-info {
+  span {
+    margin-bottom: 6px;
+    display: block;
+    font-size: 8 + $size-font;
+    &:after {
+      padding-left: 4px;
+    }
+    > i {
+      font-style: normal;
+    }
+  }
+  h3 {
+    font-size: 6 + $size-font;
+    font-weight: normal;
+  }
+  p {
+    color: $c16-tp-1;
+    font-size: 4 + $size-font;
+    i {
+      color: $c16-tp-7;
+      font-style: normal;
+      padding: 0 4px;
+      display: inline-block;
+    }
+  }
+}
+
+.s-j-w-total {
+  .s-j-w-info {
+    float: left;
+    width: 100%;
+    > p {
+
+      font-size: 10 + $size-font;
+      @include ltr {
+        float: left;
+      }
+      @include rtl {
+        float: right;
+      }
+      &:before {
+        content: "\2b";
+        font-family: icomoon;
+      }
+    }
+    span {
+      position: relative;
+      font-size: 10 + $size-font;
+      color: $c16-tp-1;
+      @include ltr {
+        float: right;
+      }
+      @include rtl {
+        float: left;
+      }
+      i {
+        font-style: normal;
+      }
+    }
+  }
+}
+
+//  coin logo
+.s-j-mini {
+  .s-j-coin {
+    background-image: url(../../../images/jackpot-coins/mini.png);
+  }
+}
+
+.s-j-minor {
+  .s-j-coin {
+    background-image: url(../../../images/jackpot-coins/minor.png);
+  }
+}
+
+.s-j-major {
+  .s-j-coin {
+    background-image: url(../../../images/jackpot-coins/major.png);
+  }
+}
+
+.s-j-mega {
+  .s-j-coin {
+    background-image: url(../../../images/jackpot-coins/mega.png);
+  }
+}
+// coin logo end
+
+@keyframes jackpot-swipe-l {
+  0% {
+    transform: translate3d(100%, 0, 0);
+  }
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes jackpot-swipe-r {
+  0% {
+    transform: translate3d(-100%, 0, 0);
+  }
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+/*new casino, jackpot animation styles owerite*/
+.sportsbook-jackpot-wrapper .s-j-amount-animation {
+  width: 100%;
+  height: 100%;
+  color: $brand-color-2;
+  display: inline-block;
+  vertical-align: middle;
+  @include rtl{
+    direction: ltr;
+  }
+  span > i {
+    height: 22px !important;
+    font-size: 18px;
+    line-height: 22px;
+    @media screen and (max-width: 1260px) {
+      font-size: 15px;
+    }
+  }
+  span {
+    width: 11px;
+    @media screen and (max-width: 1260px) {
+      width: 10px;
+    }
+  }
+  sup {
+    color: $c16-tp-2;
+    display: inline-block;
+    vertical-align: top;
+    font-weight: 700;
+    margin: -3px 0 0;
+    font-size: 10 + $size-font;
+  }
+}
+
+//sportsbook-jeckpot End
+
 .betslip-include-v3 {
   box-sizing: border-box;
   float: left;
@@ -153,7 +642,7 @@
   width: 100%;
   overflow: hidden;
   //animation: animation-open-animate-b 500ms ease-in-out;
-  max-height: 400px;
+  max-height: 100%;
   margin: 0;
 }
 
@@ -398,7 +887,6 @@
   float: left;
   width: 100%;
   background: $c16-sp-10;
-  height: 162px;
   margin: 0;
   overflow: inherit;
 }
@@ -560,6 +1048,37 @@
 
 .calculator-icon-betslip-v3:before {
   content: "\e029";
+}
+
+.print-icon-betslip-v3 {
+  &:before {
+    content: "\e6fc";
+  }
+  &.disabled {
+    opacity: 0.3;
+    pointer-events: none;
+  }
+  &.active {
+    &:before {
+      display: block;
+      animation: 1000ms print-process linear infinite;
+    }
+  }
+}
+
+@keyframes print-process {
+  0% {
+    color: $hero-color;
+  }
+  33% {
+    color: $brand-color-1;
+  }
+  66% {
+    color: $brand-color-2;
+  }
+  100% {
+    color: $hero-color;
+  }
 }
 
 .settings-contain-betslip-v3 {
@@ -1026,7 +1545,6 @@
 .betslip-all-events-list-v3 {
   box-sizing: border-box;
   float: left;
-
   width: 100%;
 }
 
@@ -1049,14 +1567,18 @@
   width: 100%;
   background: $c16-sp-9;
   margin: 2px 0 0;
-  padding: 7px 8px 10px;
   border-radius: 2px;
   border: 1px solid rgba(set-color($c16-sp-9), 0.3);
-  &:last-child{
-    animation: betslip-open-animate-b 300ms ease-in-out;
-    //animation-delay: 80ms;
-    position: relative;
-    z-index: 100;
+  @include ltr {
+    padding: 7px 8px 10px;
+  }
+  @include rtl {
+    padding: 7px 8px 10px;
+  }
+  &:last-child {
+    animation: betslip-open-animate-b 300ms linear;
+    //position: relative;
+    //z-index: 100;
     //transform: translate3d(0,0,0);
   }
 }
@@ -1067,9 +1589,6 @@
 
 .mini-list-events-b-v3 > ul > li.deleted {
   opacity: 0.7;
-  @include rtl {
-    margin-left: 4px;
-  }
 }
 
 .mini-list-events-b-v3 > ul > li.conflict {
@@ -1082,16 +1601,10 @@
 
 @keyframes betslip-open-animate-b {
   0% {
-    top: 0;
-  }
-  25% {
-    top: 3px;
-  }
-  75% {
-    top: -4px;
+    opacity: 0.2;
   }
   100% {
-    top: 0;
+    opacity: 1;
   }
 }
 
@@ -1105,8 +1618,11 @@
   width: 100%;
   position: relative;
   padding: 0 15px 6px 0;
+  @include ltr {
+    padding: 0 28px 6px 0;
+  }
   @include rtl {
-    padding: 0 0 6px 15px;
+    padding: 0 0 6px 28px;
   }
 }
 
@@ -1131,6 +1647,23 @@
   box-sizing: border-box;
   float: left;
   width: 100%;
+  position: relative;
+  .asian-l-m-cashout {
+    position: absolute;
+    top: 0;
+    width: 14px;
+    height: 14px;
+    font-size: 14px;
+    line-height: 14px;
+    @include ltr {
+      margin: 0;
+      right: -14px;
+    }
+    @include rtl {
+      margin: 0;
+      left: -14px;
+    }
+  }
 }
 
 .sistem-checkbox-view-v3 {
@@ -1143,6 +1676,9 @@
   vertical-align: top;
   display: inline-block;
   border-radius: 2px;
+  @include rtl {
+    margin: 0 0 0 5px;
+  }
 }
 
 .sistem-checkbox-view-v3 > input[type="checkbox"] {
@@ -1288,6 +1824,9 @@
   width: 100%;
   position: relative;
   margin: 2px 0 0;
+  > .ew-box-v3 {
+    margin-top: 2px;
+  }
 }
 
 .single-event-info-view-v3 > ul > li:first-child {
@@ -1327,6 +1866,12 @@
     left: 0;
     right: auto;
   }
+  .ew-box-v3 {
+    margin: 0 4px 0 0;
+    @include rtl {
+      margin: 0 0 0 4px;
+    }
+  }
 }
 
 .bet-price-view-b-v3 > span {
@@ -1344,7 +1889,18 @@
   top: -15px;
   right: 0;
   color: #c33451;
-  text-decoration: line-through;
+  &:before {
+    content: "";
+    position: absolute;
+    top: 36%;
+    left: 0;
+    width: 100%;
+    display: block;
+    height: 1px;
+    background: rgba(set-color(#c33451), 0.6);
+    z-index: 33;
+  }
+  //text-decoration: line-through;
 }
 
 .bet-price-view-b-v3 > i {
@@ -1387,7 +1943,7 @@
   padding: 0 0 0 4px;
   @include rtl {
     padding: 0 4px 0 0;
-    transform: translate3d(0,0,0);
+    transform: translate3d(0, 0, 0);
   }
 }
 
@@ -1560,6 +2116,9 @@
       color: $c16-tp-3;
       white-space: nowrap;
       transform: translate3d(0, 0, 0);
+      @include rtl {
+        padding: 0 10px 0 0;
+      }
       &.max-odds-info-text {
         white-space: normal;
       }
@@ -1611,7 +2170,7 @@
   .multi-view-sw-v3 {
     > p {
       &:after {
-        content: "New";
+        content: attr(data-content);
         display: inline-block;
         vertical-align: top;
         text-transform: uppercase;
@@ -1628,28 +2187,206 @@
   }
 }
 
+//freebet and profit-boost
+.freebe-view-info-b,
+.profit-boost-view-info-b {
+  float: left;
+  width: 100%;
+  margin-top: 4px;
+  position: relative;
+  z-index: 88;
+  max-height: 33px;
+  overflow: hidden;
+  transition: max-height 300ms;
+  &.active {
+    max-height: 400px;
+  }
+}
+.freebet-button-view-b,
+.profit-boost-button-view-b {
+  float: left;
+  width: 100%;
+  box-sizing: border-box;
+  > label {
+    float: left;
+    padding: 8px 10px 10px 5px;
+    color: $skin-palette-13;
+    font: 12px/14px $font-f;
+    text-transform: uppercase;
+    cursor: pointer;
+    > span {
+      padding: 0 0 0 5px;
+      color: #EFBF00;;
+    }
+  }
+}
+.freebe-view-info-b.active .freebet-button-view-b > label {
+  background: rgb(169, 101, 67);
+  background: -moz-linear-gradient(left, rgba(169, 101, 67, 1) 0%, rgba(169, 84, 76, 1) 83%, rgba(169, 84, 77, 1) 100%);
+  background: -webkit-linear-gradient(left, rgba(169, 101, 67, 1) 0%, rgba(169, 84, 76, 1) 83%, rgba(169, 84, 77, 1) 100%);
+  background: linear-gradient(to right, rgba(169, 101, 67, 1) 0%, rgba(169, 84, 76, 1) 83%, rgba(169, 84, 77, 1) 100%);
+  color: white;
+}
+.freebe-view-info-b input {
+  position: relative;
+  top: 2px;
+}
+.frebet-full-info-contain {
+  float: left;
+  width: 100%;
+  background: #aa8136;
+  background: -moz-linear-gradient(45deg, #aa8136 0%, #aa8036 4%, #a9743c 8%, #a9544d 42%);
+  background: -webkit-linear-gradient(45deg, #aa8136 0%, #aa8036 4%, #a9743c 8%, #a9544d 42%);
+  background: linear-gradient(45deg, #aa8136 0%, #aa8036 4%, #a9743c 8%, #a9544d 42%);
+  box-sizing: border-box;
+  padding: 10px 0;
+  position: relative;
+  margin: 0 0 5px;
+  min-height: 84px;
+}
+.frebet-full-info-contain:before {
+  content: "";
+  display: block;
+  position: absolute;
+  left: 10px;
+  top: 10px;
+  width: 64px;
+  height: 64px;
+  background: url(../../../images/freebet-star.png#{$delete-cache}) no-repeat 0 0;
+}
+.profit-boost-view-info-b.active .profit-boost-button-view-b > label {
+  background: #7d0b41;
+  background: -moz-linear-gradient(left, #530f4e 0%, #301358 100%);
+  background: -webkit-linear-gradient(left, #530f4e 0%, #301358 100%);
+  background: linear-gradient(to right, #530f4e 0%, #301358 100%);
+}
+.profit-boost-full-info-contain {
+  float: left;
+  width: 100%;
+  background: #7d0b41;
+  background: -moz-linear-gradient(45deg, #7d0b41 0%, #001867 100%);
+  background: -webkit-linear-gradient(45deg, #7d0b41 0%, #001867 100%);
+  background: linear-gradient(45deg, #7d0b41 0%, #001867 100%);
+  box-sizing: border-box;
+  padding: 10px 0;
+  position: relative;
+  margin: 0 0 5px;
+  min-height: 84px;
+}
+.profit-boost-full-info-contain:before {
+  content: "";
+  display: block;
+  position: absolute;
+  left: 10px;
+  top: 10px;
+  width: 64px;
+  height: 64px;
+  background: url(../../../images/profit-boost.png#{$delete-cache}) no-repeat 0 0;
+}
+.icon-info-contain-freebet,
+.icon-info-contain-profit-boost {
+  float: left;
+  width: 100%;
+  position: relative;
+  padding: 0 36px 0 84px;
+  box-sizing: border-box;
+}
+.information-freebet-icon-view,
+.information-profit-boost-icon-view {
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  top: 2px;
+  right: 10px;
+  color: $skin-palette-1;
+  font: 16px/16px icomoon;
+  text-align: center;
+  cursor: pointer;
+  &:before {
+    content: "\e6e4";
+  }
+}
+.freebet-amount-view-b,
+.profit-boost-amount-view-b {
+  float: left;
+  width: 100%;
+  display: table;
+  padding: 0 10px 0 84px;
+  box-sizing: border-box;
+  font: 12px/14px $font-f;
+  margin: 4px 0;
+}
+.amount-change-list-b {
+  display: table-cell;
+  color: $skin-palette-1;
+  box-sizing: border-box;
+}
+.amount-change-list-b > label {
+  float: left;
+  width: 100%;
+  text-align: right;
+  box-sizing: border-box;
+  white-space: nowrap;
+}
+//freebet and profit boost END
+
 .superbet-contain-view-v3.active {
   background: #196e51;
   background: -moz-linear-gradient(45deg, #196e51 0%, #1c6a52 10%, #1c6a52 10%, #1a6850 11%, #1b6453 14%, #1b6250 16%, #1a6153 19%, #1b5f50 20%, #1d5c53 24%, #1a5b53 26%, #1c5751 29%, #1b5352 32%, #1e5152 35%, #1e5152 35%, #1e5152 35%, #1b5151 35%, #1e4f53 35%, #1b5151 35%, #1e5152 35%, #1b4c51 40%, #1b4c51 40%, #1e4b51 42%, #1c4654 47%, #1c4654 47%, #1e4652 47%, #1e4353 51%, #1f3e53 58%, #1f3e53 58%, #1c3c53 61%, #1f3b53 63%, #1e3853 69%, #1f3753 100%);
   background: -webkit-linear-gradient(45deg, #196e51 0%, #1c6a52 10%, #1c6a52 10%, #1a6850 11%, #1b6453 14%, #1b6250 16%, #1a6153 19%, #1b5f50 20%, #1d5c53 24%, #1a5b53 26%, #1c5751 29%, #1b5352 32%, #1e5152 35%, #1e5152 35%, #1e5152 35%, #1b5151 35%, #1e4f53 35%, #1b5151 35%, #1e5152 35%, #1b4c51 40%, #1b4c51 40%, #1e4b51 42%, #1c4654 47%, #1c4654 47%, #1e4652 47%, #1e4353 51%, #1f3e53 58%, #1f3e53 58%, #1c3c53 61%, #1f3b53 63%, #1e3853 69%, #1f3753 100%);
   background: linear-gradient(45deg, #196e51 0%, #1c6a52 10%, #1c6a52 10%, #1a6850 11%, #1b6453 14%, #1b6250 16%, #1a6153 19%, #1b5f50 20%, #1d5c53 24%, #1a5b53 26%, #1c5751 29%, #1b5352 32%, #1e5152 35%, #1e5152 35%, #1e5152 35%, #1b5151 35%, #1e4f53 35%, #1b5151 35%, #1e5152 35%, #1b4c51 40%, #1b4c51 40%, #1e4b51 42%, #1c4654 47%, #1c4654 47%, #1e4652 47%, #1e4353 51%, #1f3e53 58%, #1f3e53 58%, #1c3c53 61%, #1f3b53 63%, #1e3853 69%, #1f3753 100%);
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#196e51', endColorstr='#1f3753', GradientType=1);
+  @include ltr {
+    background: -moz-linear-gradient(45deg, #196e51 0%, #1c6a52 10%, #1c6a52 10%, #1a6850 11%, #1b6453 14%, #1b6250 16%, #1a6153 19%, #1b5f50 20%, #1d5c53 24%, #1a5b53 26%, #1c5751 29%, #1b5352 32%, #1e5152 35%, #1e5152 35%, #1e5152 35%, #1b5151 35%, #1e4f53 35%, #1b5151 35%, #1e5152 35%, #1b4c51 40%, #1b4c51 40%, #1e4b51 42%, #1c4654 47%, #1c4654 47%, #1e4652 47%, #1e4353 51%, #1f3e53 58%, #1f3e53 58%, #1c3c53 61%, #1f3b53 63%, #1e3853 69%, #1f3753 100%);
+    background: -webkit-linear-gradient(45deg, #196e51 0%, #1c6a52 10%, #1c6a52 10%, #1a6850 11%, #1b6453 14%, #1b6250 16%, #1a6153 19%, #1b5f50 20%, #1d5c53 24%, #1a5b53 26%, #1c5751 29%, #1b5352 32%, #1e5152 35%, #1e5152 35%, #1e5152 35%, #1b5151 35%, #1e4f53 35%, #1b5151 35%, #1e5152 35%, #1b4c51 40%, #1b4c51 40%, #1e4b51 42%, #1c4654 47%, #1c4654 47%, #1e4652 47%, #1e4353 51%, #1f3e53 58%, #1f3e53 58%, #1c3c53 61%, #1f3b53 63%, #1e3853 69%, #1f3753 100%);
+    background: linear-gradient(45deg, #196e51 0%, #1c6a52 10%, #1c6a52 10%, #1a6850 11%, #1b6453 14%, #1b6250 16%, #1a6153 19%, #1b5f50 20%, #1d5c53 24%, #1a5b53 26%, #1c5751 29%, #1b5352 32%, #1e5152 35%, #1e5152 35%, #1e5152 35%, #1b5151 35%, #1e4f53 35%, #1b5151 35%, #1e5152 35%, #1b4c51 40%, #1b4c51 40%, #1e4b51 42%, #1c4654 47%, #1c4654 47%, #1e4652 47%, #1e4353 51%, #1f3e53 58%, #1f3e53 58%, #1c3c53 61%, #1f3b53 63%, #1e3853 69%, #1f3753 100%);
+  }
+  @include rtl {
+    background: -moz-linear-gradient(-45deg, #196e51 0%, #1c6a52 10%, #1c6a52 10%, #1a6850 11%, #1b6453 14%, #1b6250 16%, #1a6153 19%, #1b5f50 20%, #1d5c53 24%, #1a5b53 26%, #1c5751 29%, #1b5352 32%, #1e5152 35%, #1e5152 35%, #1e5152 35%, #1b5151 35%, #1e4f53 35%, #1b5151 35%, #1e5152 35%, #1b4c51 40%, #1b4c51 40%, #1e4b51 42%, #1c4654 47%, #1c4654 47%, #1e4652 47%, #1e4353 51%, #1f3e53 58%, #1f3e53 58%, #1c3c53 61%, #1f3b53 63%, #1e3853 69%, #1f3753 100%);
+    background: -webkit-linear-gradient(-45deg, #196e51 0%, #1c6a52 10%, #1c6a52 10%, #1a6850 11%, #1b6453 14%, #1b6250 16%, #1a6153 19%, #1b5f50 20%, #1d5c53 24%, #1a5b53 26%, #1c5751 29%, #1b5352 32%, #1e5152 35%, #1e5152 35%, #1e5152 35%, #1b5151 35%, #1e4f53 35%, #1b5151 35%, #1e5152 35%, #1b4c51 40%, #1b4c51 40%, #1e4b51 42%, #1c4654 47%, #1c4654 47%, #1e4652 47%, #1e4353 51%, #1f3e53 58%, #1f3e53 58%, #1c3c53 61%, #1f3b53 63%, #1e3853 69%, #1f3753 100%);
+    background: linear-gradient(-45deg, #196e51 0%, #1c6a52 10%, #1c6a52 10%, #1a6850 11%, #1b6453 14%, #1b6250 16%, #1a6153 19%, #1b5f50 20%, #1d5c53 24%, #1a5b53 26%, #1c5751 29%, #1b5352 32%, #1e5152 35%, #1e5152 35%, #1e5152 35%, #1b5151 35%, #1e4f53 35%, #1b5151 35%, #1e5152 35%, #1b4c51 40%, #1b4c51 40%, #1e4b51 42%, #1c4654 47%, #1c4654 47%, #1e4652 47%, #1e4353 51%, #1f3e53 58%, #1f3e53 58%, #1c3c53 61%, #1f3b53 63%, #1e3853 69%, #1f3753 100%);
+  }
 }
 
 .freebet-wrapper-view-v3 > .superbet-contain-view-v3.active {
   background: #b6832f;
-  background: -moz-linear-gradient(45deg, #b6832f 0%, #b57b34 8%, #b1693e 27%, #ac4254 48%, #a82564 63%, #a71f67 73%, #a71f67 100%);
-  background: -webkit-linear-gradient(45deg, #b6832f 0%, #b57b34 8%, #b1693e 27%, #ac4254 48%, #a82564 63%, #a71f67 73%, #a71f67 100%);
-  background: linear-gradient(45deg, #b6832f 0%, #b57b34 8%, #b1693e 27%, #ac4254 48%, #a82564 63%, #a71f67 73%, #a71f67 100%);
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#b6832f', endColorstr='#a71f67', GradientType=1);
+  @include ltr {
+    background: -moz-linear-gradient(45deg, #b6832f 0%, #b57b34 8%, #b1693e 27%, #ac4254 48%, #a82564 63%, #a71f67 73%, #a71f67 100%);
+    background: -webkit-linear-gradient(45deg, #b6832f 0%, #b57b34 8%, #b1693e 27%, #ac4254 48%, #a82564 63%, #a71f67 73%, #a71f67 100%);
+    background: linear-gradient(45deg, #b6832f 0%, #b57b34 8%, #b1693e 27%, #ac4254 48%, #a82564 63%, #a71f67 73%, #a71f67 100%);
+  }
+  @include rtl {
+    background: -moz-linear-gradient(-45deg, #b6832f 0%, #b57b34 8%, #b1693e 27%, #ac4254 48%, #a82564 63%, #a71f67 73%, #a71f67 100%);
+    background: -webkit-linear-gradient(-45deg, #b6832f 0%, #b57b34 8%, #b1693e 27%, #ac4254 48%, #a82564 63%, #a71f67 73%, #a71f67 100%);
+    background: linear-gradient(-45deg, #b6832f 0%, #b57b34 8%, #b1693e 27%, #ac4254 48%, #a82564 63%, #a71f67 73%, #a71f67 100%);
+  }
 }
 
 .counter-offer-wrapper-view-v3 > .superbet-contain-view-v3.active {
   background: rgb(15, 105, 132);
-  background: -moz-linear-gradient(left, rgba(15, 105, 132, 1) 0%, rgba(29, 88, 120, 1) 20%, rgba(45, 73, 112, 1) 35%, rgba(46, 68, 107, 1) 39%, rgba(49, 68, 108, 1) 40%, rgba(51, 63, 103, 1) 45%, rgba(54, 63, 104, 1) 46%, rgba(53, 61, 100, 1) 48%, rgba(54, 61, 103, 1) 48%, rgba(56, 59, 100, 1) 49%, rgba(68, 46, 92, 1) 65%, rgba(76, 38, 87, 1) 80%, rgba(76, 38, 87, 1) 90%, rgba(75, 37, 84, 1) 91%, rgba(76, 38, 87, 1) 91%, rgba(76, 38, 87, 1) 100%);
-  background: -webkit-linear-gradient(left, rgba(15, 105, 132, 1) 0%, rgba(29, 88, 120, 1) 20%, rgba(45, 73, 112, 1) 35%, rgba(46, 68, 107, 1) 39%, rgba(49, 68, 108, 1) 40%, rgba(51, 63, 103, 1) 45%, rgba(54, 63, 104, 1) 46%, rgba(53, 61, 100, 1) 48%, rgba(54, 61, 103, 1) 48%, rgba(56, 59, 100, 1) 49%, rgba(68, 46, 92, 1) 65%, rgba(76, 38, 87, 1) 80%, rgba(76, 38, 87, 1) 90%, rgba(75, 37, 84, 1) 91%, rgba(76, 38, 87, 1) 91%, rgba(76, 38, 87, 1) 100%);
-  background: linear-gradient(to right, rgba(15, 105, 132, 1) 0%, rgba(29, 88, 120, 1) 20%, rgba(45, 73, 112, 1) 35%, rgba(46, 68, 107, 1) 39%, rgba(49, 68, 108, 1) 40%, rgba(51, 63, 103, 1) 45%, rgba(54, 63, 104, 1) 46%, rgba(53, 61, 100, 1) 48%, rgba(54, 61, 103, 1) 48%, rgba(56, 59, 100, 1) 49%, rgba(68, 46, 92, 1) 65%, rgba(76, 38, 87, 1) 80%, rgba(76, 38, 87, 1) 90%, rgba(75, 37, 84, 1) 91%, rgba(76, 38, 87, 1) 91%, rgba(76, 38, 87, 1) 100%);
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#0f6984', endColorstr='#4c2657', GradientType=1);
+  @include ltr {
+   background: -moz-linear-gradient(left, rgba(15, 105, 132, 1) 0%, rgba(29, 88, 120, 1) 20%, rgba(45, 73, 112, 1) 35%, rgba(46, 68, 107, 1) 39%, rgba(49, 68, 108, 1) 40%, rgba(51, 63, 103, 1) 45%, rgba(54, 63, 104, 1) 46%, rgba(53, 61, 100, 1) 48%, rgba(54, 61, 103, 1) 48%, rgba(56, 59, 100, 1) 49%, rgba(68, 46, 92, 1) 65%, rgba(76, 38, 87, 1) 80%, rgba(76, 38, 87, 1) 90%, rgba(75, 37, 84, 1) 91%, rgba(76, 38, 87, 1) 91%, rgba(76, 38, 87, 1) 100%);
+   background: -webkit-linear-gradient(left, rgba(15, 105, 132, 1) 0%, rgba(29, 88, 120, 1) 20%, rgba(45, 73, 112, 1) 35%, rgba(46, 68, 107, 1) 39%, rgba(49, 68, 108, 1) 40%, rgba(51, 63, 103, 1) 45%, rgba(54, 63, 104, 1) 46%, rgba(53, 61, 100, 1) 48%, rgba(54, 61, 103, 1) 48%, rgba(56, 59, 100, 1) 49%, rgba(68, 46, 92, 1) 65%, rgba(76, 38, 87, 1) 80%, rgba(76, 38, 87, 1) 90%, rgba(75, 37, 84, 1) 91%, rgba(76, 38, 87, 1) 91%, rgba(76, 38, 87, 1) 100%);
+   background: linear-gradient(to right, rgba(15, 105, 132, 1) 0%, rgba(29, 88, 120, 1) 20%, rgba(45, 73, 112, 1) 35%, rgba(46, 68, 107, 1) 39%, rgba(49, 68, 108, 1) 40%, rgba(51, 63, 103, 1) 45%, rgba(54, 63, 104, 1) 46%, rgba(53, 61, 100, 1) 48%, rgba(54, 61, 103, 1) 48%, rgba(56, 59, 100, 1) 49%, rgba(68, 46, 92, 1) 65%, rgba(76, 38, 87, 1) 80%, rgba(76, 38, 87, 1) 90%, rgba(75, 37, 84, 1) 91%, rgba(76, 38, 87, 1) 91%, rgba(76, 38, 87, 1) 100%);
+  }
+  @include rtl {
+    background: -moz-linear-gradient(right, rgba(15, 105, 132, 1) 0%, rgba(29, 88, 120, 1) 20%, rgba(45, 73, 112, 1) 35%, rgba(46, 68, 107, 1) 39%, rgba(49, 68, 108, 1) 40%, rgba(51, 63, 103, 1) 45%, rgba(54, 63, 104, 1) 46%, rgba(53, 61, 100, 1) 48%, rgba(54, 61, 103, 1) 48%, rgba(56, 59, 100, 1) 49%, rgba(68, 46, 92, 1) 65%, rgba(76, 38, 87, 1) 80%, rgba(76, 38, 87, 1) 90%, rgba(75, 37, 84, 1) 91%, rgba(76, 38, 87, 1) 91%, rgba(76, 38, 87, 1) 100%);
+    background: -webkit-linear-gradient(right, rgba(15, 105, 132, 1) 0%, rgba(29, 88, 120, 1) 20%, rgba(45, 73, 112, 1) 35%, rgba(46, 68, 107, 1) 39%, rgba(49, 68, 108, 1) 40%, rgba(51, 63, 103, 1) 45%, rgba(54, 63, 104, 1) 46%, rgba(53, 61, 100, 1) 48%, rgba(54, 61, 103, 1) 48%, rgba(56, 59, 100, 1) 49%, rgba(68, 46, 92, 1) 65%, rgba(76, 38, 87, 1) 80%, rgba(76, 38, 87, 1) 90%, rgba(75, 37, 84, 1) 91%, rgba(76, 38, 87, 1) 91%, rgba(76, 38, 87, 1) 100%);
+    background: linear-gradient(to left, rgba(15, 105, 132, 1) 0%, rgba(29, 88, 120, 1) 20%, rgba(45, 73, 112, 1) 35%, rgba(46, 68, 107, 1) 39%, rgba(49, 68, 108, 1) 40%, rgba(51, 63, 103, 1) 45%, rgba(54, 63, 104, 1) 46%, rgba(53, 61, 100, 1) 48%, rgba(54, 61, 103, 1) 48%, rgba(56, 59, 100, 1) 49%, rgba(68, 46, 92, 1) 65%, rgba(76, 38, 87, 1) 80%, rgba(76, 38, 87, 1) 90%, rgba(75, 37, 84, 1) 91%, rgba(76, 38, 87, 1) 91%, rgba(76, 38, 87, 1) 100%);
+  }
+}
+
+.profit-boost-wrapper-view-v3 > .superbet-contain-view-v3.active {
+  background: #7d0b41;
+  @include ltr {
+    background: -moz-linear-gradient(left, #7d0b41 0%, #001867 100%);
+    background: -webkit-linear-gradient(left, #7d0b41 0%, #001867 100%);
+    background: linear-gradient(to right, #7d0b41 0%, #001867 100%);
+  }
+  @include rtl {
+    background: -moz-linear-gradient(right, #7d0b41 0%, #001867 100%);
+    background: -webkit-linear-gradient(right, #7d0b41 0%, #001867 100%);
+    background: linear-gradient(to left, #7d0b41 0%, #001867 100%);
+  }
 }
 
 .superbet-contain-view-v3.waiting-for-review {
@@ -1752,6 +2489,11 @@
   background: #00b2b3;
 }
 
+.profit-boost-wrapper-view-v3 > .superbet-contain-view-v3.active .pin-betslip-v3 > .multi-view-sw-v3 .switcher-view-b {
+  box-sizing: border-box;
+  background: #c42479;
+}
+
 .super-bet-view-contain-v3 {
   box-sizing: border-box;
   float: left;
@@ -1779,6 +2521,10 @@
 
 .counter-offer-wrapper-view-v3 .text-superbet-view-v3 {
   padding-right: 100px;
+}
+
+.profit-boost-wrapper-view-v3 .text-superbet-view-v3 {
+  padding-right: 104px;
 }
 
 .text-superbet-view-v3 > p {
@@ -1826,6 +2572,19 @@
   }
 }
 
+.profit-boost-wrapper-view-v3 .superbet-contain-view-v3 .icon-superbet-view-v3 {
+  box-sizing: border-box;
+  background: url("../../../images/profit-boost-logo.png#{$delete-cache}") no-repeat 0 0;
+  right: 0;
+  top: auto;
+  width: 190px;
+  height: 98px;
+  bottom: 0;
+  @include rtl {
+    left: 0;
+    right: auto;
+  }
+}
 .lang-ukr .freebet-wrapper-view-v3 .superbet-contain-view-v3 .icon-superbet-view-v3 {
   background: url("../../../images/freebet-star-v3-ukr.png#{$delete-cache}") no-repeat 0 0;
 }
@@ -1844,6 +2603,11 @@
 }
 
 .freebet-wrapper-view-v3 > .superbet-contain-view-v3.active + .choose-stake-freebet-v3 {
+  box-sizing: border-box;
+  display: block;
+}
+
+.profit-boost-wrapper-view-v3 > .superbet-contain-view-v3.active + .choose-stake-freebet-v3 {
   box-sizing: border-box;
   display: block;
 }
@@ -2023,9 +2787,12 @@
   box-sizing: border-box;
   float: left;
   width: 100%;
-  border-bottom: 1px solid darken( desaturate( adjust-hue( $c16-sp, -16deg ), 1 ), 5 );
+  border-bottom: 1px solid darken(desaturate(adjust-hue($c16-sp, -16deg), 1), 5);
   min-height: 23px;
   margin: 6px 0 0;
+  &.event-block-freebet {
+    border-bottom: none;
+  }
 }
 
 .odds-contain-ew-v3 > p {
@@ -2061,15 +2828,20 @@
 }
 
 .ew-box-v3 {
-  box-sizing: border-box;
   float: left;
-  position: relative;
+  @include rtl {
+    float: right;
+  }
 }
 
 .ew-box-v3 > input[type="checkbox"] {
   box-sizing: border-box;
   position: absolute;
   left: -9999em;
+  @include rtl {
+    left: auto;
+    right: -9999em;
+  }
 }
 
 .ew-total-view-v3 {
@@ -2082,11 +2854,11 @@
   font-size: 3 + $size-font;
   line-height: 16px;
   color: $c16-tp-7;
-  background: #212532;
+  background: $c16-sp-10;
   border-radius: 2px;
   text-align: center;
   font-weight: bold;
-  box-shadow: 0 0 0 1px $c16-sp-7 inset;
+  box-shadow: 0 0 0 1px $c16-sp-8;
   cursor: pointer;
 }
 
@@ -2108,7 +2880,7 @@
   background: $c16-sp-10;
   border-radius: 0 0 2px 2px;
   @include rtl {
-    transform: translate3d(0,0,0);
+    transform: translate3d(0, 0, 0);
   }
 }
 
@@ -2179,6 +2951,7 @@
     display: block;
   }
 }
+
 .bs-cash-out-btn {
   float: left;
   width: 100%;
@@ -2247,6 +3020,7 @@
     }
   }
 }
+
 .hover-auto-cashout-rule {
   position: absolute;
   bottom: -130px;
@@ -2275,7 +3049,7 @@
       }
     }
   }
-  > button  {
+  > button {
     height: 36px;
     width: 100%;
     font: normal 14px $font-f;
@@ -2294,6 +3068,7 @@
     }
   }
 }
+
 .button-view-contain-v3 > .md-progress-circular.small-progress {
   box-sizing: border-box;
   position: absolute;
@@ -2555,7 +3330,7 @@
   line-height: 26px;
   color: $c16-tp-6;
   position: relative;
-  span + span {
+  span > span {
     color: $c16-tp-2;
   }
   i {
@@ -2594,6 +3369,9 @@
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
+  @include rtl {
+    padding: 0 10px 0 30px;
+  }
   &:before {
     content: "\e670";
     display: block;
@@ -2602,6 +3380,10 @@
     right: 10px;
     font: 12px/32px icomoon;
     color: $c16-tp-5;
+    @include rtl {
+      left: 10px;
+      right: auto;
+    }
   }
   &.active:before {
     content: "\e671";
@@ -2631,6 +3413,9 @@
         vertical-align: top;
         width: 50%;
         text-align: left;
+        @include rtl {
+          text-align: right;
+        }
         > p {
           position: absolute;
           top: 0;
@@ -2657,12 +3442,25 @@
       box-sizing: border-box;
       border-bottom: 1px solid $c16-sp-10;
       position: relative;
-      vertical-align: top;
+      vertical-align: middle;
       width: 1%;
+      > .ew-box-v3 {
+        margin: 1px 1px 0 0;
+        @include rtl {
+          margin: 1px 0 0 1px;
+        }
+      }
       &:first-child {
         width: 100%
       }
       &:first-child {
+        > p.accumulator-total-coef {
+          line-height: 28px;
+          + p {
+            line-height: 24px;
+            top: 18px;
+          }
+        }
         > p {
           color: $c16-tp-4;
           font-size: 6 + $size-font;
@@ -2676,13 +3474,6 @@
           text-overflow: ellipsis;
           white-space: nowrap;
           box-sizing: border-box;
-        }
-        > p.accumulator-total-coef {
-          line-height: 28px;
-          + p {
-            line-height: 24px;
-            top: 18px;
-          }
         }
         .info-icon {
           font: 16px/42px icomoon;
@@ -2728,13 +3519,13 @@
   width: 100%;
   box-sizing: border-box;
   border-radius: 0 0 4px 4px;
-  background: -moz-linear-gradient(left, rgba($hero-color, 0.3) 0%,  rgba($skin-color, 0.7) 100%);
-  background: -webkit-linear-gradient(left, rgba($hero-color, 0.3) 0%,  rgba($skin-color, 0.7) 100%);
-  background: linear-gradient(to right, rgba($hero-color, 0.3) 0%,  rgba($skin-color, 0.7) 100%);
+  background: -moz-linear-gradient(left, rgba($hero-color, 0.3) 0%, rgba($skin-color, 0.7) 100%);
+  background: -webkit-linear-gradient(left, rgba($hero-color, 0.3) 0%, rgba($skin-color, 0.7) 100%);
+  background: linear-gradient(to right, rgba($hero-color, 0.3) 0%, rgba($skin-color, 0.7) 100%);
   @include rtl {
-    background: -moz-linear-gradient(right, rgba($hero-color, 0.3) 0%,  rgba($skin-color, 0.7) 100%);
-    background: -webkit-linear-gradient(right, rgba($hero-color, 0.3) 0%,  rgba($skin-color, 0.7) 100%);
-    background: linear-gradient(to left, rgba($hero-color, 0.3) 0%,  rgba($skin-color, 0.7) 100%);
+    background: -moz-linear-gradient(right, rgba($hero-color, 0.3) 0%, rgba($skin-color, 0.7) 100%);
+    background: -webkit-linear-gradient(right, rgba($hero-color, 0.3) 0%, rgba($skin-color, 0.7) 100%);
+    background: linear-gradient(to left, rgba($hero-color, 0.3) 0%, rgba($skin-color, 0.7) 100%);
   }
   &.suggested-prematch {
     background: -moz-linear-gradient(45deg, rgba($skin-color, 0.9) 0%, rgba($hero-color, 0.3) 100%);
@@ -2748,26 +3539,9 @@
     .suggest-text {
       border: none;
     }
-    .suggest-list > div > div {
-      cursor: auto;
-    }
-  }
-  &:not(.suggested-prematch) {
-    .suggest-list > div > div:hover,
-    .suggest-list > div > div.active {
-      background: transparent;
-      div.suggest-event-info {
-        color: set-color($hero-color);
-        > p {
-          background: $hero-color;
-        }
-      }
-      .factor-top:before, .factor-bottom:before {
-        color: set-color($hero-color);
-      }
-    }
   }
 }
+
 .suggest-text {
   float: left;
   width: 100%;
@@ -2787,6 +3561,7 @@
     margin-bottom: 10px;
   }
 }
+
 .suggest-list {
   padding: 0 6px 10px;
   box-sizing: border-box;
@@ -2797,63 +3572,77 @@
     float: left;
     width: 100%;
     > div {
-      background: rgba($c16-tp-12, 0.2);
       box-sizing: border-box;
       float: left;
       width: 100%;
       margin: 8px 0 0;
-      padding: 0 2px 2px;
+      padding: 2px 4px 4px;
       border-radius: 2px;
       transition: background 240ms;
-      animation: betslip-open-animate-b 500ms ease-in-out;
-      &.changed {
-        background: rgba($c16-tp-12, 0.25);
-      }
     }
   }
 }
+
 .suggest-mini-list {
   box-sizing: border-box;
   float: left;
   width: 100%;
   padding: 2px 0;
+  background: -moz-linear-gradient(left, $c16-sp-8 0%, $c16-sp-8 27%, $c16-sp-9 58%, $c16-sp-9 100%);
+  background: -webkit-linear-gradient(left, $c16-sp-8 0%, $c16-sp-8 27%, $c16-sp-9 58%, $c16-sp-9 100%);
+  background: linear-gradient(to right, $c16-sp-8 0%, $c16-sp-8 27%, $c16-sp-9 58%, $c16-sp-9 100%);
+  @include rtl {
+    background: -moz-linear-gradient(right, $c16-sp-8 0%, $c16-sp-8 27%, $c16-sp-9 58%, $c16-sp-9 100%);
+    background: -webkit-linear-gradient(right, $c16-sp-8 0%, $c16-sp-8 27%, $c16-sp-9 58%, $c16-sp-9 100%);
+    background: linear-gradient(to left, $c16-sp-8 0%, $c16-sp-8 27%, $c16-sp-9 58%, $c16-sp-9 100%);
+  }
 }
+
 .suggest-teams-name {
   box-sizing: border-box;
   float: left;
   width: 100%;
   position: relative;
   padding: 4px 10px 6px 4px;
+  @include rtl {
+    padding: 4px 4px 6px 10px;
+  }
 }
+
 .suggest-info-sport-time {
   float: left;
   width: 100%;
-  margin-top: 10px;
-  > b {
-    float: left;
-    display: block;
-    width: 14px;
-    height: 14px;
-    margin: 0 4px 0 0;
-    color: rgba($c16-tp-1,0.8);
-    font: #{5+$size-font}/13px sport-icon;
-    @include rtl {
-      float: right;
-      margin: 0 0 0 4px;
-    }
-  }
+  margin-top: 6px;
   > p {
     float: left;
     padding: 0 4px;
     box-sizing: border-box;
     color: set-color($brand-color-1);
     background: $brand-color-1;
-    font: #{5+$size-font}/14px $font-f;
+    font: #{5+$size-font}/16px $font-f;
     @include rtl {
       float: right;
     }
   }
 }
+
+.suggest-sport-icon {
+  float: left;
+  display: block;
+  width: 14px;
+  height: 14px;
+  margin: 0 4px 0 0;
+  color: $c16-tp-6;
+  font: #{5+$size-font}/16px sport-icon;
+  @include rtl {
+    float: right;
+    margin: 0 0 0 4px;
+  }
+  &:before {
+    text-shadow: 0 0 1px rgba(0, 0, 0, 0.7);
+  }
+}
+
 .suggest-title-event-live {
   float: left;
   width: 100%;
@@ -2863,11 +3652,12 @@
     padding: 0 40px 0 0;
     box-sizing: border-box;
     font: #{6+$size-font}/16px $font-f;
-    color: $c16-tp-3;
+    color: rgba($c16-tp-1, 0.7);
     position: relative;
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
+    transition: color 240ms;
     @include rtl {
       padding: 0 0 0 40px;
     }
@@ -2882,7 +3672,24 @@
       }
     }
   }
+  &:hover > p {
+    color: $c16-tp-1;
+  }
 }
+
+.suggested-prematch {
+  .single-events-b-v3 {
+    cursor: auto;
+    &:hover {
+      color: $c16-tp-5;
+      background: rgba($c16-tp-12, 0.2);
+      .p-v {
+        color: map-get($coeff-color-map, classic);
+      }
+    }
+  }
+}
+
 .suggest-title-event-prematch {
   float: left;
   width: 100%;
@@ -2896,7 +3703,7 @@
       width: 12px;
       height: 12px;
       margin: 0 6px 0 0;
-      color: rgba($c16-tp-1,0.8);
+      color: rgba($c16-tp-1, 0.8);
       font: #{6+$size-font}/14px sport-icon;
       @include rtl {
         float: right;
@@ -2904,88 +3711,43 @@
       }
     }
   }
+
 }
+
 .suggest-single-event-info {
-  box-sizing: border-box;
   float: left;
   width: 100%;
-  > div {
-    box-sizing: border-box;
-    float: left;
-    width: 100%;
-    border: none;
-    > div {
-      box-sizing: border-box;
-      float: left;
-      width: 100%;
-      position: relative;
-      margin: 4px 0 0;
-      color: $c16-tp-6;
-      > p {
-        box-sizing: border-box;
-        float: left;
-        width: 100%;
-        font: #{6+$size-font}/14px $font-f;
-        padding: 0 80px 0 0;
-        @include rtl {
-          padding: 0 0 0 80px;
-        }
-      }
-      &:first-child {
-        box-sizing: border-box;
-        margin: 0;
-      }
-      .suggest-bet-price {
-        box-sizing: border-box;
-        position: absolute;
-        right: 8px;
-        top: 0;
-        text-align: right;
-        @include rtl {
-          left: 8px;
-          right: auto;
-        }
-        > span {
-          box-sizing: border-box;
-          float: right;
-          display: block;
-          font: #{6+$size-font}/28px $font-f;
-          @include rtl {
-            float: left;
-          }
-        }
-      }
-      &.suggest-market-info {
-        padding: 0 4px;
-        box-sizing: border-box;
-      }
-      &.suggest-event-info {
-        color: $brand-color-2;
-        > p {
-          float: left;
-          width: 100%;
-          height: 28px;
-          padding: 0 40px 0 6px;
-          box-sizing: border-box;
-          line-height: 28px;
-          background: rgba($c16-tp-12, 0.2);
-          border-radius: 4px;
-          transition: color 240ms, background 240ms;
-          overflow: hidden;
-          white-space: nowrap;
-          text-overflow: ellipsis;
-          @include rtl {
-            padding: 0 6px 0 40px;
-          }
-        }
-      }
+  .single-events-b-v3 {
+    border-radius: 4px;
+    &:not(:hover):not(.active) {
+      background: rgba($c16-tp-12, 0.2);
     }
   }
 }
+
+.suggest-market-info {
+  float: left;
+  width: 100%;
+  position: relative;
+  margin: 0 0 4px;
+  padding: 0 4px;
+  box-sizing: border-box;
+  > p {
+    box-sizing: border-box;
+    float: left;
+    width: 100%;
+    color: rgba($c16-tp-1, 0.6);
+    font: #{6+$size-font}/14px $font-f;
+    @include rtl {
+      padding: 0 0 0 80px;
+    }
+  }
+}
+
 .suggest-buttons {
   float: left;
   width: 100%;
-  padding: 0 8px;
+  padding: 0 8px 10px;
   box-sizing: border-box;
   > button {
     float: left;
@@ -3015,17 +3777,19 @@
     }
   }
 }
+
 .suggest-no-show {
   float: left;
   width: 100%;
   text-align: center;
-  padding: 10px 0 14px;
+  padding: 0 0 14px;
   box-sizing: border-box;
   p {
     color: $c16-tp-1;
     font: #{6+$size-font}/14px $font-f;
   }
 }
+
 .total-possible-win-j {
   float: left;
   width: 100%;
@@ -3052,6 +3816,7 @@
     font: #{12+$size-font}/20px $font-f;
   }
 }
+
 .expanded-notifications-j,
 .edit-bet-notifications {
   width: 100%;
@@ -3130,6 +3895,7 @@
     }
   }
 }
+
 .edit-bet-notifications > ul > li + li {
   margin-top: 1px;
 }
@@ -3151,6 +3917,7 @@
     font: #{6+$size-font}/30px $font-f;
   }
 }
+
 .edit-bets-time-id,
 .open-bets-time-id {
   float: left;
@@ -3189,9 +3956,10 @@
     }
   }
 }
+
 .open-bets-time-id {
   background: $skin-palette-8;
-  & +  div > ul > li {
+  & + div > ul > li {
     border: 0;
     border-radius: 0;
     position: relative;
@@ -3220,7 +3988,7 @@
         color: #208c65;
       }
       &:after {
-        background: rgba(#208c65,0.15);
+        background: rgba(#208c65, 0.15);
       }
     }
     &.lost {
@@ -3229,7 +3997,7 @@
         color: #e9044a;
       }
       &:after {
-        background: rgba(#cb184e,0.15);
+        background: rgba(#cb184e, 0.15);
       }
     }
     &:after {
@@ -3243,6 +4011,7 @@
     }
   }
 }
+
 .bets-selections-content {
   float: left;
   width: 100%;
@@ -3255,6 +4024,7 @@
     }
   }
 }
+
 .empty-edit-bet-list {
   float: left;
   width: 100%;
@@ -3264,6 +4034,7 @@
   text-align: center;
   font: #{6+$size-font}/16px $font-f;
 }
+
 .all-bet-selections {
   float: left;
   width: 100%;
@@ -3314,6 +4085,7 @@
     }
   }
 }
+
 .add-bet-selections {
   float: left;
   width: 100%;
@@ -3368,6 +4140,7 @@
     }
   }
 }
+
 .open-bets-buttons {
   float: left;
   width: 100%;
@@ -3415,25 +4188,34 @@
         background: $hero-color;
         color: set-color($hero-color);
         height: 10px;
-        font: 8px/11px $font-f;
+        font: #{2+$size-font}/11px $font-f;
         padding: 0 3px;
         border-radius: 2px;
         box-shadow: 0 1px 0 rgba(black, 0.3);
-        margin: -10px 0 0 -4px;
         box-sizing: border-box;
+        position: relative;
+        @include ltr {
+          margin: -10px 0 0 -4px;
+        }
         @include rtl {
           margin: -10px -4px 0 0;
         }
       }
       &.active {
-        background: -moz-linear-gradient(left, rgba($hero-color,0.7) 0%,rgba($skin-color,0.3) 80%,rgba($skin-color,0.7) 100%);
-        background: -webkit-linear-gradient(left, rgba($hero-color,0.7) 0%,rgba($skin-color,0.3) 80%,rgba($skin-color,0.7) 100%);
-        background: linear-gradient(to right, rgba($hero-color,0.7) 0%,rgba($skin-color,0.3) 80%,rgba($skin-color,0.7) 100%);
+        background: -moz-linear-gradient(left, rgba($hero-color, 0.7) 0%, rgba($skin-color, 0.3) 80%, rgba($skin-color, 0.7) 100%);
+        background: -webkit-linear-gradient(left, rgba($hero-color, 0.7) 0%, rgba($skin-color, 0.3) 80%, rgba($skin-color, 0.7) 100%);
+        background: linear-gradient(to right, rgba($hero-color, 0.7) 0%, rgba($skin-color, 0.3) 80%, rgba($skin-color, 0.7) 100%);
         box-shadow: 0 1px 0 $hero-color;
         @include rtl {
-          background: -moz-linear-gradient(right, rgba($hero-color,0.7) 0%,rgba($skin-color,0.3) 80%,rgba($skin-color,0.7) 100%);
-          background: -webkit-linear-gradient(right, rgba($hero-color,0.7) 0%,rgba($skin-color,0.3) 80%,rgba($skin-color,0.7) 100%);
-          background: linear-gradient(to left, rgba($hero-color,0.7) 0%,rgba($skin-color,0.3) 80%,rgba($skin-color,0.7) 100%);
+          background: -moz-linear-gradient(right, rgba($hero-color, 0.7) 0%, rgba($skin-color, 0.3) 80%, rgba($skin-color, 0.7) 100%);
+          background: -webkit-linear-gradient(right, rgba($hero-color, 0.7) 0%, rgba($skin-color, 0.3) 80%, rgba($skin-color, 0.7) 100%);
+          background: linear-gradient(to left, rgba($hero-color, 0.7) 0%, rgba($skin-color, 0.3) 80%, rgba($skin-color, 0.7) 100%);
+        }
+      }
+      &:nth-child(2):last-child:after {
+        margin: -6px 0 0 -6px !important;
+        @include rtl {
+          margin: -6px -6px 0 0 !important;
         }
       }
     }
@@ -3453,8 +4235,11 @@
         padding: 0 3px;
         border-radius: 2px;
         box-shadow: 0 1px 0 rgba(black, 0.3);
-        margin: -10px 0 0 -2px;
         box-sizing: border-box;
+        position: relative;
+        @include ltr {
+          margin: -10px 0 0 -2px;
+        }
         @include rtl {
           margin: -10px -2px 0 0;
         }
@@ -3477,13 +4262,15 @@
     }
   }
 }
+
 .contain-open-bets {
   float: left;
   width: 100%;
   @include rtl {
-    transform: translate3d(0,0,0);
+    transform: translate3d(0, 0, 0);
   }
 }
+
 .info-all-bets {
   float: left;
   width: 100%;
@@ -3494,18 +4281,19 @@
   background: $c16-sp-3;
   font: #{6+$size-font}/18px $font-f;
   > span {
-    display: inline-block;
     padding: 0 5px;
     font-weight: 700;
     text-decoration: underline;
   }
 }
-.list-bet-block .contain-open-bets  ul li:first-child span {
+
+.list-bet-block .contain-open-bets ul li:first-child span {
   text-indent: inherit;
   position: static;
   margin: 0;
   right: auto;
 }
+
 .status-icon-open-bets {
   width: 16px;
   height: 16px;
@@ -3519,6 +4307,7 @@
     right: auto;
   }
 }
+
 .slider-open-bets {
   float: left;
   width: 100%;
@@ -3566,16 +4355,17 @@
     }
   }
   .edit-bets-icon {
-    margin: 0;
     top: 2px;
-    right: 26px;
+    margin: 0;
+    @include ltr {
+      right: 26px;
+    }
     @include rtl {
-      margin: 0;
       left: 26px;
-      right: auto;
     }
   }
 }
+
 .bet-status-container {
   float: left;
   width: 100%;
@@ -3609,6 +4399,7 @@
     }
   }
 }
+
 .bet-status-select {
   float: left;
   width: 100%;
@@ -3639,6 +4430,7 @@
     }
   }
 }
+
 .bet-status-content {
   float: left;
   width: 100%;
@@ -3673,6 +4465,7 @@
     }
   }
 }
+
 .bet-status-input {
   float: left;
   width: 100%;
@@ -3691,6 +4484,7 @@
     font: #{8+$size-font}/16px $font-f;
   }
 }
+
 .bet-status-get {
   float: left;
   width: 100%;
@@ -3705,7 +4499,7 @@
       height: 28px;
       padding: 0 12px;
       color: $c16-tp-4;
-      background: rgba(0,0,0,0.1);
+      background: rgba(0, 0, 0, 0.1);
       border: none;
       box-sizing: border-box;
       font: #{6+$size-font}/28px $font-f;
@@ -3747,6 +4541,7 @@
     }
   }
 }
+
 .bet-status-recaptcha {
   float: left;
   width: 100%;
@@ -3760,6 +4555,7 @@
     }
   }
 }
+
 .editing-stake-wrapper {
   float: left;
   width: 100%;
@@ -3786,6 +4582,7 @@
     }
   }
 }
+
 .editing-stake-amount {
   float: left;
   width: 100%;
@@ -3804,17 +4601,20 @@
     opacity: 0.4;
   }
 }
+
 .editing-stake-pos-rel {
   display: inline-block;
   vertical-align: middle;
   position: relative;
 }
+
 .bet-form form .increase-stake-tooltip input[type="text"] {
   width: 100%;
   height: 24px;
   margin-left: 0;
   margin-right: 0;
 }
+
 .increase-stake-tooltip {
   position: absolute;
   top: 100%;
@@ -3850,6 +4650,7 @@
     }
   }
 }
+
 .increase-stake-input {
   float: left;
   width: 100%;
@@ -3873,9 +4674,197 @@
     }
   }
 }
+
 .increase-stake-footer {
   float: left;
   width: 100%;
   box-sizing: border-box;
   padding: 0 12px 12px;
+}
+.sp-odd-selector {
+  float: right;
+  top: 0;
+  position: relative;
+  @include rtl {
+    float: right;
+  }
+  &:after {
+    content: "\e674";
+    font: 18px icomoon;
+    pointer-events: none;
+    position: absolute;
+    right: 0;
+    top: calc((100% - 18px) / 2);
+    color: $text-palette-4;
+    @include rtl {
+      left: 0;
+      right: auto;
+    }
+  }
+  > select {
+    box-shadow: 0 0 0 1px $skin-palette-6;
+    background: $skin-palette-8;
+    height: 20px;
+    color: $brand-color-2;
+    padding: 0 18px 0 6px;
+    width: 100%;
+    border-radius: 0;
+    font: 12px $font-f;
+    box-sizing: border-box;
+    border: 0;
+    @include rtl {
+      padding: 0 6px 0 18px;
+    }
+  }
+  &.no-bet-price {
+    &:after {
+      content: none;
+    }
+    > select {
+      background: none;
+      box-shadow: none;
+      padding: 0;
+    }
+  }
+}
+// iframe animation
+
+#external-animation .loader {
+  top: -25px;
+  left: 0;
+  margin-top: 20%;
+}
+
+#betradar-container * {
+  box-sizing: border-box;
+}
+
+#betradar-container {
+  width: auto;
+}
+
+#statscore-tracker-container {
+  transform: scale(0.9156);
+  min-width: 320px;
+  transform-origin: top left;
+  transition: margin-bottom 200ms;
+  @include rtl {
+    transform-origin: top right;
+  }
+}
+
+@media screen and (min-width: 1440px) {
+  .betslip-expanded #statscore-tracker-container {
+    transform: none;
+  }
+}
+
+@media screen and (max-width: 1359px) {
+  #statscore-tracker-container {
+    transform: scale(0.796);
+    min-width: 320px;
+    transform-origin: top left;
+  }
+}
+
+// iframe animation end
+
+// feedconstruct animation
+.animation-control .feedconstruct-animation .game-control  {
+  &.soccer {
+    background: #228b5b;
+  }
+  &.basketball {
+    background: #c8a569;
+  }
+}
+// feedconstruct animation
+
+.active-stake-buttons {
+  float: left;
+  width: 100%;
+  margin-top: 1px;
+  padding: 8px 0;
+  box-sizing: border-box;
+  background: $c16-sp-10;
+  > ol {
+    float: left;
+    width: 100%;
+    display: table;
+    table-layout: fixed;
+    > li {
+      display: table-cell;
+      vertical-align: middle;
+      text-align: center;
+      @include ltr {
+        padding-left: 4px;
+      }
+      @include rtl {
+        padding-right: 4px;
+      }
+      > input {
+        width: 100%;
+        height:30px;
+        border: 1px solid $brand-color-1;
+        text-align: center;
+        padding: 0 2px;
+        box-sizing: border-box;
+        color: set-color($brand-color-1);
+        background: $brand-color-1;
+        font: #{6+$size-font}/28px $font-f;
+        transition: background 240ms, border-color 240ms;
+        &:hover {
+          background: lighten($brand-color-1, 10);
+          border-color: lighten($brand-color-1, 10);
+        }
+        &.ng-valid.ng-not-empty.ng-valid-maxlength {
+          background: none;
+          &:hover {
+            background: none;
+          }
+        }
+        &.ng-empty,
+        &.ng-invalid {
+          background: none;
+          border-color: #8e263a;
+          &:hover {
+            background: none;
+            border-color: #8e263a;
+          }
+        }
+      }
+      > i {
+        display: block;
+        width: 26px;
+        height: 26px;
+        text-align: center;
+        box-sizing: border-box;
+        font: 14px/26px icomoon;
+        transition: 240ms color, 240ms border;
+      }
+      &.edit-stake-button > i {
+        color: lighten($brand-color-2, 20);
+        &:before {
+          content: "\ea32"
+        }
+        &:hover {
+          color: rgba(lighten($brand-color-2, 20),0.7);
+        }
+      }
+      &.save-stake-button > i {
+        color: lighten($brand-color-1, 20);
+        &:before {
+          content: "\ea31";
+        }
+        &:hover {
+          color: rgba(lighten($brand-color-1, 20),0.5);
+        }
+      }
+      &:last-child {
+        width: 26px;
+        height: 26px;
+        padding: 0;
+      }
+    }
+  }
 }

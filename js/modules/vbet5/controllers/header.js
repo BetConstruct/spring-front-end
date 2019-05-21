@@ -5,7 +5,7 @@
  * @description
  * header controller
  */
-VBET5.controller('headerCtrl', ['$scope', '$rootScope', '$sce', '$window', '$location', '$filter', 'TimeoutWrapper', 'Zergling', 'Utils', '$route', 'Storage', 'Config', function ($scope, $rootScope, $sce, $window, $location, $filter, TimeoutWrapper, Zergling, Utils, $route, Storage, Config) {
+VBET5.controller('headerCtrl', ['$scope', '$rootScope', '$sce', '$window', '$location', '$filter', 'TimeoutWrapper', 'Zergling', 'Utils', '$route', 'Storage', 'Config', 'RecaptchaV3', function ($scope, $rootScope, $sce, $window, $location, $filter, TimeoutWrapper, Zergling, Utils, $route, Storage, Config, RecaptchaV3) {
     'use strict';
 
     TimeoutWrapper = TimeoutWrapper($scope);
@@ -65,16 +65,12 @@ VBET5.controller('headerCtrl', ['$scope', '$rootScope', '$sce', '$window', '$loc
      */
     function getPartnerConfig() {
         $rootScope.partnerConfig = {};
-        function updatePartnerConfig(response) {
-            console.log(response);
-            if (response && response.data && response.data.partner) {
-                $rootScope.partnerConfig = Utils.objectToArray(response.data.partner)[0];
+        function updatePartnerConfig(data) {
+            if (data && data.partner) {
+                $rootScope.partnerConfig = Utils.objectToArray(data.partner)[0];
+                Config.main.availableCurrencies = $rootScope.partnerConfig.supported_currencies;
 
-                //TODO request came from Emil Hakobian, KHIKAR Danielyan and so on : need to delete as soon as possible
-                if (659 === +Config.main.site_id) {
-                    $rootScope.partnerConfig.tax_percent = 15;
-                    $rootScope.partnerConfig.tax_type = 20;
-                }
+                $rootScope.$broadcast('partnerConfig.updated');
             }
             if(Config.partner && Config.partner.profileNotAvailable && $rootScope.partnerConfig) {
                 $rootScope.partnerConfig.profileNotAvailable = Config.partner.profileNotAvailable;
@@ -84,10 +80,17 @@ VBET5.controller('headerCtrl', ['$scope', '$rootScope', '$sce', '$window', '$loc
             "source": "partner.config",
             'what': {'partner': []}
             //'where': {}
-        }, updatePartnerConfig).then(updatePartnerConfig);
+        }, updatePartnerConfig).then(function(response) {
+            if (response) {
+                updatePartnerConfig(response.data);
+            }
+        });
     }
 
     if ($rootScope.partnerConfig === undefined) {
+        if (!Config.main.availableCurrencies) {
+            Config.main.availableCurrencies = []; // initial
+        }
         getPartnerConfig();
     }
 
@@ -124,8 +127,6 @@ VBET5.controller('headerCtrl', ['$scope', '$rootScope', '$sce', '$window', '$loc
         var neededPath = Utils.getPathAccordintToAlias(data.sport.alias);
         if ($location.path() !== neededPath + '/') {
             $location.path(neededPath);
-        } else {
-            $route.reload();
         }
 
         $route.reload();
@@ -168,6 +169,11 @@ VBET5.controller('headerCtrl', ['$scope', '$rootScope', '$sce', '$window', '$loc
         } else {
             $rootScope.env.preMatchMultiSelection = Storage.get('preMatchMultiSelection') !== undefined ? Storage.get('preMatchMultiSelection') : $rootScope.env.preMatchMultiSelection;
         }
+
+        if ($rootScope.currentPage) {
+            RecaptchaV3.execute($rootScope.currentPage.path, { cancelLastExecution: !$rootScope.currentPage.isInSports });
+        }
+
         console.log("$routeChangeSuccess:", $location.path());
     }
 

@@ -70,7 +70,7 @@
   @include scroll;
   overflow-y: auto;
 }
-.settings-info-contain table{
+.settings-info-contain > div > table{
   float: left;
   width: 100%;
   border-collapse: separate;
@@ -111,11 +111,13 @@
   display: inline-block;
   width: auto;
   height: 14px;
-  float: none;
   vertical-align: top;
   cursor: pointer;
-  padding: 0 0 0 25px;
   margin-top: 33px;
+  @include ltr {
+    float: none;
+    padding: 0 0 0 25px;
+  }
   @include rtl {
     float: none;
     padding: 0 25px 0 0;
@@ -123,11 +125,12 @@
   input {
     position: absolute;
     top: 0;
-    left: 0;
     opacity: 0;
     cursor: pointer;
+    @include ltr {
+      left: 0;
+    }
     @include rtl {
-      left: auto;
       right: 0;
     }
     + span:before {
@@ -139,9 +142,10 @@
       border-radius: 2px;
       position: absolute;
       top: -2px;
-      left: 0;
+      @include ltr {
+        left: 0;
+      }
       @include rtl {
-        left: auto;
         right: 0;
       }
     }
@@ -149,11 +153,12 @@
       content: '\e6f3';
       font: 6px/16px "icomoon";
       position: absolute;
-      left: 4px;
       top: -2px;
       color: $text-palette-4;
+      @include ltr {
+        left: 4px;
+      }
       @include rtl {
-        left: auto;
         right: 4px;
       }
     }
@@ -161,7 +166,13 @@
 } 
 .right-block-history.message.compose.send-message-j .settings-info-contain {
   input[type="text"] {
-    background: $skin-palette-7;
+    color: rgba(set-color($contact-us),0.7);
+    background: $contact-us;
+    border-color: rgba(set-color($contact-us),0.7);
+    -webkit-text-fill-color: rgba(set-color($contact-us),0.7);
+    @include placeholder {
+      color: rgba(set-color($contact-us),0.7);
+    }
   }
   .form-text {
     width: 100%;
@@ -170,32 +181,36 @@
     margin: 8px 0;
   }
   textarea {
-    background: $skin-palette-7;
+    background: $contact-us;
     box-sizing: border-box;
     width: 100%;
     font: 12px $font-f;
-    border: 1px solid $registration-fields-background-border;
-    color: $text-palette-4;
+    border: 1px solid rgba(set-color($contact-us),0.7);
+    color: rgba(set-color($contact-us),0.7);
     transition: border-color 200ms;
     box-shadow: none;
     height: 150px;
     padding: 14px;
     margin: 0;
-    -webkit-text-fill-color: $text-palette-4;
+    -webkit-text-fill-color: rgba(set-color($contact-us),0.7);
     @include placeholder {
       color: $text-palette-4;
       font-style: normal;
     }
     &:focus{
-      border: 1px solid $form-elements-focus;
+      border: 1px solid rgba(set-color($contact-us),0.7);
       transition: border-color 300ms;
     }
   }
   input, textarea {
-    caret-color: $text-palette-4;
+    caret-color: rgba(set-color($contact-us),0.7);
     &:-webkit-autofill, &:-webkit-autofill:focus{
-      box-shadow: 0 0 0 100px $skin-palette-7 inset;
-      -webkit-text-fill-color: $text-palette-4;
+      box-shadow: 0 0 0 100px $contact-us inset;
+      -webkit-text-fill-color: $contact-us;
     }
+  }
+  button:disabled{
+    background: rgba(set-color($contact-us),0.2);
+    color: rgba(set-color(rgba(set-color($contact-us),0.7)),0.4);
   }
 }

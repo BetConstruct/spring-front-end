@@ -20,7 +20,7 @@ VBET5.directive('productsSlider', ['$rootScope', '$sce', 'Translator', 'content'
              */
 
             scope.loading = true;
-            var slugProcessed = attr.slug || ('products-banners-' + $rootScope.env.lang);
+            var slugProcessed = (attr.slug || 'products-banners') + '-' + $rootScope.env.lang;
             slugProcessed = slugProcessed.replace('{lang}', $rootScope.env.lang);
 
             content.getWidget(slugProcessed).then(function (response) {

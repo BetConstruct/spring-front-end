@@ -1,0 +1,64 @@
+<ul class="container-authentication" ng-controller="mixedAuthenticationCtrl">
+    <li ng-if="!isLoading && !showPasswordForm">
+        <div class="activate-switcher">
+            <img src="images/two-facor-authentication/activate.png" alt="">
+            <span trans>Activate two-factor authentication</span>
+        </div>
+        <div class="switcher-authentication" ng-class="{'active': data.isAuthenticate}" ng-click="toggleAuthenticator()">
+            <div class="switcher-button"></div>
+        </div>
+    </li>
+    <li ng-if="showPasswordForm">
+        <div class="change-password-section-j">
+            <div class="settings-info-contain">
+                <form name="forms.currentPasswordForm" class="registration-form">
+                    <label><span trans>Current Password</span></label>
+                    <div class="form-text"  ng-class="{'error': (!resetPassword || forms.currentPasswordForm['oldpassword'].$touched) && ((forms.currentPasswordForm.oldpassword.$dirty && forms.currentPasswordForm.oldpassword.$error.required) || (forms.currentPasswordForm.oldpassword.$error.incorrect && !forms.currentPasswordForm.oldpassword.$dirty))}">
+                        <div class="tooltip-wrapper-j">
+                            <input name="oldpassword" id="changePasswordOld" numpad ng-model="data.password" ng-change="onPasswordChange()" type="password" placeholder="Current Password" required trans>
+                            <div class="form-error-icon-j" ng-click="resetPasswordError()"></div>
+                            <div class="tooltip-j">
+                                <div trans ng-show="forms.currentPasswordForm.oldpassword.$error.required">This field is required</div>
+                                <div trans ng-show="forms.currentPasswordForm.oldpassword.$pristine && forms.currentPasswordForm.oldpassword.$error.incorrect">Password incorrect</div>
+                            </div>
+                        </div>
+                    </div>
+                    <button type="submit" ng-disabled="!forms.currentPasswordForm.$valid" ng-click="confirmPassword()" trans>Confirm</button>
+                </form>
+            </div>
+        </div>
+    </li>
+    <vbet-loader ng-show="isLoading"></vbet-loader>
+    <li class="qr-authentication" ng-if="!isLoading && data.qrCodeUrl">
+        <div class="set-up-authentication">
+            <h5 trans>Set up Authenticator</h5>
+            <p>
+                {{'Get the Google Authenticator App from the'|translate}} <span trans>Play Store, App Store</span>
+                {{'In the Google Authenticator App select' |translate}} <b trans>Set up account</b>.
+            </p>
+            <p>
+                {{'Choose'|translate}} <b trans>Scan a barcode</b>.
+            </p>
+        </div>
+        <div class="qr-section">
+            <div>
+                <img src="{{data.qrCodeUrl}}" alt="">
+            </div>
+            <span trans ng-click="showBarcode()">CAN’T SCAN IT?</span>
+        </div>
+    </li>
+    <li class="barcod-authentication" ng-if="!isLoading && data.barcode">
+        <h5 trans>Can’t scan the barcode?</h5>
+        <p>1. {{'Tap'|translate}} <b trans>menu</b> then <b trans>Setup Account</b>.</p>
+        <p>2. {{'Tap'|translate}} <b trans>Enter manually key</b>.</p>
+        <p>3. {{'Enter your account name and this key:'|translate}}</p>
+        <button ng-click="copyToClipboard()">{{data.barcode}} <i></i></button>
+        <p>4. {{"Make sure that" | translate}} <b trans>Time</b> {{'based is turned on, tap'|translate}} <b trans>Add</b> {{'to finish.' |translate}}</p>
+    </li>
+    <li class="verify-authentication" ng-if="!isLoading && data.qrCodeUrl">
+        <h5 trans>Set up Authenticator</h5>
+        <p trans>Enter the 6-digit code that you see in the App</p>
+        <input type="text" maxlength="6" placeholder="Enter code" ng-model="data.code" prevent-input="[^0-9]+" autocomplete="off">
+        <button trans ng-click="verify()" ng-disabled="!data.code || data.code.length !== 6">Verify</button>
+    </li>
+</ul>

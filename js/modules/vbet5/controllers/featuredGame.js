@@ -11,8 +11,9 @@ angular.module('vbet5.betting').controller('featuredgameCtrl', ['$rootScope', '$
     var featuredGamesSubId, featuredGameSubId;
 
     $scope.isEventInBetSlip = GameInfo.isEventInBetSlip;
-    $scope.backgroundsCompetitionsMaps = Config.main.GmsPlatform ? Config.main.featuredGames.backgroundsCompetitionsMapsGms : Config.main.featuredGames.backgroundsCompetitionsMaps;
+    $scope.backgroundsCompetitionsMaps = Config.main.featuredGames.backgroundsCompetitionsMaps;
 
+    $scope.goToUrl = Utils.goToUrl;
     /**
      * @ngdoc method
      * @name updateFeaturedGames
@@ -122,8 +123,7 @@ angular.module('vbet5.betting').controller('featuredgameCtrl', ['$rootScope', '$
             angular.forEach(sport.region, function (region) {
                 angular.forEach(region.competition, function (competition) {
                     angular.forEach(competition.game, function (game) {
-                        var marketEventCount = Config.main.GmsPlatform ? 'markets_count' : 'events_count';
-                        if (game[marketEventCount] > maxEventsCount) {
+                        if (game.markets_count > maxEventsCount) {
                             mostPopularGame = game;
                             mostPopularGame.sport = sport;
                             mostPopularGame.competition = competition;
@@ -131,7 +131,7 @@ angular.module('vbet5.betting').controller('featuredgameCtrl', ['$rootScope', '$
                             mostPopularGame.choosenMarket = null;
                             mostPopularGame.game_bg = getImageFromAlias(sport.alias);
                             markets = Utils.groupByItemProperty(game.market, 'type');
-                            maxEventsCount = game[marketEventCount];
+                            maxEventsCount = game.markets_count;
                             if(markets) {
                                 if (markets.P1XP2) {
                                     mostPopularGame.choosenMarket = markets.P1XP2[0];
@@ -180,7 +180,7 @@ angular.module('vbet5.betting').controller('featuredgameCtrl', ['$rootScope', '$
      */
     $scope.getOneLiveGame = function getOneLiveGame(minEventsCount, showGameId) {
         var getPreMatch = (minEventsCount === 0);
-        minEventsCount = minEventsCount || (Config.main.GmsPlatform ? 45 : 512);
+        minEventsCount = minEventsCount || 45; // default value
 
         var request = {
             'source': 'betting',
@@ -205,11 +205,7 @@ angular.module('vbet5.betting').controller('featuredgameCtrl', ['$rootScope', '$
                 'type': getPreMatch ? 0 : 1,
                 '@limit': 10
             };
-            if(Config.main.GmsPlatform) {
-                request.where.game.markets_count =  {'@gt': getPreMatch ? 1 : minEventsCount };
-            } else {
-                request.where.game.events_count =  {'@gt': getPreMatch ? 1 : minEventsCount };
-            }
+            request.where.game.markets_count =  {'@gt': getPreMatch ? 1 : minEventsCount };
         }
 
         if (showGameId) {
@@ -279,7 +275,7 @@ angular.module('vbet5.betting').controller('featuredgameCtrl', ['$rootScope', '$
             request.what.game.push('favorite_order');
         }
         request.where.game = {};
-        request.where[gameOrCompetition] = {'promoted': Config.main.GmsPlatform || gameOrCompetition === 'competition' ? true : {'@contains': parseInt($rootScope.conf.site_id)}};
+        request.where[gameOrCompetition] = {'promoted': true};
         request.where.game['@limit'] = Config.main.featuredGames.limitation;
 
         Zergling.subscribe(request, updateFeaturedGames).then(function (response) {

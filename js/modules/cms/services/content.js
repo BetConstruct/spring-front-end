@@ -21,7 +21,6 @@ CMS.service('content', ['WPConfig', 'Config', '$http', '$rootScope', '$location'
     var wpBaseHost = WPConfig.wpBaseHost[$location.host()] || WPConfig.wpBaseHost['default'] || WPConfig.wpBaseHost;
 
     var countryQuery = '';
-    var anticacheQuery = '&ac=' + parseInt(Math.random() * 9999, 10);
     $rootScope.geoDataAvailable = $rootScope.geoDataAvailable || Geoip.getGeoData(false);
     $rootScope.geoDataAvailable.then(function (data) {
         if (data && data.countryCode) {
@@ -78,7 +77,7 @@ CMS.service('content', ['WPConfig', 'Config', '$http', '$rootScope', '$location'
             countStr = count === undefined ? '' : '&limit=' + parseInt(offset + count, 10),
             categoryStr = categoryId === undefined ? '&cat=' + rootCategory : '&cat=' + categoryId;
         var requestUrl = customNewsUrl || newsUrl;
-        return $http.get(requestUrl + '?base_host=' + (customNewsBaseHost || newsBaseHost) + addHttpsFlag(requestUrl) + '&json=get_recent_posts&lang=' + newsLang +  offsetStr + countStr + categoryStr + countryQuery + anticacheQuery + excludedFields + tags);
+        return $http.get(requestUrl + '?base_host=' + (customNewsBaseHost || newsBaseHost) + addHttpsFlag(requestUrl) + '&json=get_recent_posts&lang=' + newsLang +  offsetStr + countStr + categoryStr + countryQuery + excludedFields + tags);
     };
 
 
@@ -133,14 +132,14 @@ CMS.service('content', ['WPConfig', 'Config', '$http', '$rootScope', '$location'
     content.getWidget = function getWidget(sidebarId) {
         sidebarId = content.getSlug(sidebarId);
         sidebarId = sidebarId || 'sidebar-1';
-        var url = WP_URL + '?base_host=' + wpBaseHost +  addHttpsFlag(WP_URL) + '&lang=' + Config.env.lang + '&json=widgets/get_sidebar&sidebar_id=' + sidebarId + countryQuery + anticacheQuery;
+        var url = WP_URL + '?base_host=' + wpBaseHost +  addHttpsFlag(WP_URL) + '&lang=' + Config.env.lang + '&json=widgets/get_sidebar&sidebar_id=' + sidebarId + countryQuery;
         return $http.get(url, {cache: true});
     };
 
     content.getWidgetData = function getWidgetData (sidebarId) { // All CMS widget calls should be done through this function instead of getWidget after CMS part is ready
         sidebarId = content.getSlug(sidebarId);
         sidebarId = sidebarId || 'sidebar-1';
-        var url = WP_URL + '?base_host=' + wpBaseHost +  addHttpsFlag(WP_URL) + '&lang=' + Config.env.lang + '&json=' + sidebarId + countryQuery + anticacheQuery;
+        var url = WP_URL + '?base_host=' + wpBaseHost +  addHttpsFlag(WP_URL) + '&lang=' + Config.env.lang + '&json=' + sidebarId + countryQuery;
         return $http.get(url, {cache: true});
     };
 
@@ -160,7 +159,7 @@ CMS.service('content', ['WPConfig', 'Config', '$http', '$rootScope', '$location'
         withChildren = withChildren || false;
         cache = cache || false;
         var childrenParam = withChildren ? '&children=1' : '';
-        var url = WP_URL + '?base_host=' + wpBaseHost +  addHttpsFlag(WP_URL) + '&lang=' + Config.env.lang + '&json=get_page&slug=' + slug + childrenParam + countryQuery + anticacheQuery + excludedFields;
+        var url = WP_URL + '?base_host=' + wpBaseHost +  addHttpsFlag(WP_URL) + '&lang=' + Config.env.lang + '&json=get_page&slug=' + slug + childrenParam + countryQuery + excludedFields;
         return cache ? $http.get(url, {cache: true}) : $http.get(url);
     };
 
@@ -176,7 +175,7 @@ CMS.service('content', ['WPConfig', 'Config', '$http', '$rootScope', '$location'
      * @returns {Object} promise
      */
     content.getPopups = function getPopups() {
-        var url = WP_URL + '?base_host=' + wpBaseHost +  addHttpsFlag(WP_URL) + '&lang=' + Config.env.lang + '&json=get_popup' + countryQuery + anticacheQuery + excludedFields;
+        var url = WP_URL + '?base_host=' + wpBaseHost +  addHttpsFlag(WP_URL) + '&lang=' + Config.env.lang + '&json=get_popup' + countryQuery + excludedFields;
         return $http.get(url);
     };
 
@@ -240,7 +239,7 @@ CMS.service('content', ['WPConfig', 'Config', '$http', '$rootScope', '$location'
      * @description returns promotion menu categories
      */
     content.getPromotionCategories = function getPromotionCategories(){
-        var url = WP_URL + '?base_host=' + wpBaseHost +  addHttpsFlag(WP_URL) + '&lang=' + Config.env.lang + '&ssl=1&json=promo' + countryQuery + anticacheQuery;
+        var url = WP_URL + '?base_host=' + wpBaseHost +  addHttpsFlag(WP_URL) + '&lang=' + Config.env.lang + '&ssl=1&json=promo' + countryQuery;
         return $http.get(url);
 
     };
@@ -252,7 +251,7 @@ CMS.service('content', ['WPConfig', 'Config', '$http', '$rootScope', '$location'
      * @description returns promotion menu categories
      */
     content.getExchangeShopData = function getExchangeShopData(){
-        var url = WPConfig.exchangeShopUrl + '?lang=' + Config.env.lang + '&partner_id=' + Config.main.site_id + countryQuery + anticacheQuery;
+        var url = WPConfig.exchangeShopUrl + '?lang=' + Config.env.lang + '&partner_id=' + Config.main.site_id + countryQuery;
         return $http.get(url);
 
     };
@@ -264,7 +263,7 @@ CMS.service('content', ['WPConfig', 'Config', '$http', '$rootScope', '$location'
      * @description returns terms and conditions
      */
     content.getTermsAndConditions = function getTermsAndConditions(){
-        var url = WPConfig.wpDirectUrl + '?base_host=' + wpBaseHost +  addHttpsFlag(WP_URL) + '&lang=' + Config.env.lang + '&json=general-terms-and-conditions' + countryQuery + anticacheQuery;
+        var url = WPConfig.wpDirectUrl + '?base_host=' + wpBaseHost +  addHttpsFlag(WP_URL) + '&lang=' + Config.env.lang + '&json=general-terms-and-conditions' + countryQuery;
         return $http.get(url);
 
     };

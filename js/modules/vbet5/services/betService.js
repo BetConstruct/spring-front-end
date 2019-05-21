@@ -1,195 +1,189 @@
-/* global VBET5 */
+/* global VBET5, JSON */
+/* jshint -W024 */
+
 /**
  * @ngdoc service
  * @name vbet5.service:BetService
- * @description
- * Cash out functionality
  */
-VBET5.service('BetService', ['$rootScope', 'Zergling', 'Config', '$q', 'Utils', '$location', 'GameInfo', function ($rootScope, Zergling, Config, $q, Utils, $location, GameInfo) {
+VBET5.factory('BetService', ['$rootScope', 'Zergling', 'Config', '$q', 'Utils', '$location', 'GameInfo', '$window', 'Translator', function betService($rootScope, Zergling, Config, $q, Utils, $location, GameInfo, $window, Translator) {
     'use strict';
 
     var BetService = {
         cashOut: {},
-        repeatBet: {}
-    };
-
-    /**
-     * @ngdoc function
-     * @name adjustBetData
-     * @methodOf vbet5.service:BetService
-     * @description Checks whether cash out option should be active or not.
-     * ! Warning: this function mutates betData object !
-     * @param {Object} betData - Object containing all bet info
-     * @param {Boolean} [hasInactiveEvents] - true if a bet contains an event which has been calculated (has an outcome)
-     */
-    BetService.cashOut.adjustBetData = function adjustBetData(betData, hasInactiveEvents) {
-        if (hasInactiveEvents || parseFloat(betData.cash_out) == 0 || betData.cash_out === null) {
-            betData.cashoutEnabled = false;
-            betData.cash_out = undefined;
-        } else {
-            betData.cashoutEnabled = true;
+        print: {
+            state: { // Used for storing the state necessary to print last best (in bet slip)
+                id: null,
+                inProgress: false
+            }
+        },
+        constants: {
+            customCorrectScoreLogic: ['Soccer', 'Tennis', 'IceHockey', 'Baseball', 'TableTennis', 'Snooker'],
+            marketsPreDividedByColumns:  [
+                'MatchWinningMargin',
+                'SetWinningMargin',
+                'WinningMargin',
+                'CorrectScore',
+                'Firstset/match',
+                'SetsEffectiveness',
+                'SeriesCorrectScore',
+                'SeriesCorrectScoreAfterGame3',
+                'SeriesCorrectScoreAfterGame4',
+                'CurrectScoreGroup',
+                'MatchBettingAndTeamsToScore',
+                'HalfTimeFullTime',
+                'HalfTimeFullTimeDoubleChance',
+                'ExtraTimeHomeTeamCorrectTotal',
+                'ExtraTimeAwayTeamCorrectTotal',
+                'OutcomeandBothTeamToScore',
+                'DoubleChanceAndBothTeamToScore',
+                'DoubleChanceAndBothTeamToScore',
+                'TotalAndBothTeamsToScore',
+                'FirstHalfOutcomeAndBothTeamToScore',
+                'SecondHalfOutcomeAndBothTeamToScore',
+                '1stHalf-2ndHalfBothToScore',
+                'GameCorrectScore',
+                'MatchTieBreakCorrectScore',
+                'SetTieBreakCorrectScore',
+                '1stSet-Match',
+                '1stGame/2ndGameWinner',
+                '2ndGame/3thGameWinner',
+                '3thGame/4thGameWinner',
+                '4thGame/5thGameWinner',
+                '5thGame/6thGameWinner',
+                '6thGame/7thGameWinner',
+                '7thGame/8thGameWinner',
+                '8thGame/9thGameWinner',
+                '9thGame/10thGameWinner',
+                '10thGame/11thGameWinner',
+                '11thGame/12thGameWinner',
+                'SetScore',
+                'SetCorrectScore',
+                '5thSetCorrectScore',
+                'MatchTieBreakCorrectScore',
+                'OutcomeAndTotal15',
+                'OutcomeAndTotal25',
+                'OutcomeAndTotal35',
+                'OutcomeAndTotal45'
+            ], // Market types which are pre-divided by back-end into columns
+            betTypes: {
+                1: 'Single',
+                2: 'Express',
+                3: 'System',
+                4: 'Chain',
+                5: 'Trixie',
+                6: 'Yankee',
+                8: 'Super Yankee',
+                9: 'Heinz',
+                10: 'Super Heinz',
+                11: 'Goliath',
+                12: 'Patent',
+                14: 'Lucky 15',
+                15: 'Lucky 31',
+                16: 'Lucky 63',
+                'Toto': 'Pool Betting'
+            }
         }
     };
 
+    ////////////////////////////////////////////////////////////////////////////////
+    // PRIVATE VARIABLES
+    ////////////////////////////////////////////////////////////////////////////////
+    var _cache = {};
 
-    /**
-     * @ngdoc method
-     * @name filterEvents
-     * @methodOf vbet5.service:BetService
-     * @description Filters bets that need to have their cash out info updated
-     * This function is applicable only for bets that have cash out.
-     * It doesn't filter out bets that don't have cash out - it needs to be done separately, outside this function.
-     * That is why the third parameter - cashoutableBets - may be used.
-     *
-     * ! Warning: this function uses BetService.cashOut.adjustBetData method which mutates betData object !
-     * @param {Array} bets - an array of bet objects (that have cash out option)
-     * @param {Object} updatedData - updated info from SWARM
-     * @param {Array} [cashoutableBets] - bets that have cash out
-     * @param {Boolean} forceCalculate
-     * @returns {Array} ids of bets that need to have their cash out info updated
-     */
-    BetService.cashOut.filterEvents = function filterEvents(bets, updatedData, cashoutableBets, forceCalculate) {
-        var cashOutBetIds = [];
-        angular.forEach(bets, function (betData) {
-            var shouldFilter = true;
-            if (cashoutableBets && cashoutableBets.indexOf(betData.id) === -1) {
-                shouldFilter = false;
-            }
-            // Only look at 'Single' and 'Multiple' bets that are not settled
-            if (shouldFilter && (betData.type == '1' || betData.type == '2') && betData.outcome == '0') {
-                var hasInactiveEvents = false,
-                    needsCalculation = forceCalculate;
-
-                angular.forEach(betData.events, function (betEvent) {
-                    var isEventActive = betEvent.outcome == 3;
-                    var betEventId = Config.main.GmsPlatform ? betEvent.selection_id : betEvent.id;
-
-                    angular.forEach(updatedData, function (currentEvent) {
-                        if (betEventId == currentEvent.id && currentEvent.price && currentEvent.price > 1) {
-                            isEventActive = true;
-                            // We only need to make the call if there was a price change
-                            needsCalculation = needsCalculation || currentEvent.price_change || !betData.cash_out;
-                        }
-                    });
-
-                    if (!isEventActive) {
-                        hasInactiveEvents = true;
-                    }
-                });
-                /* If a bet doesn't have any inactive event and its cash out needs to be recalculated we push it to the array where the ids of those bets are stored.
-                   If it doesn't need any recalculation, but all events are active, we keep the same amount which was set previously.
-                   Finally, if none of the cases apply, we set it to undefined */
-                if (!hasInactiveEvents && needsCalculation) {
-                    cashOutBetIds.push(betData.id);
-                } else {
-                    BetService.cashOut.adjustBetData(betData, hasInactiveEvents);
-                }
-
-            }
-        });
-        return cashOutBetIds;
+    var _cashOut = {
+        subId: null,
+        subscriptionInProgress: false,
+        callbacks: {},
+        unsubQueue: []
     };
+    ////////////////////////////////////////////////////////////////////////////////
+    // PRIVATE VARIABLES - END
+    ////////////////////////////////////////////////////////////////////////////////
+
+    ////////////////////////////////////////////////////////////////////////////////
+    // PRIVATE METHODS
+    ////////////////////////////////////////////////////////////////////////////////
+    _cashOut.generateSubId = function generateSubId() {
+        return Date.now();
+    };
+    ////////////////////////////////////////////////////////////////////////////////
+    // PRIVATE METHODS - END
+    ////////////////////////////////////////////////////////////////////////////////
 
 
+    ////////////////////////////////////////////////////////////////////////////////
+    // PUBLIC METHODS
+    ////////////////////////////////////////////////////////////////////////////////
     /**
      * @ngdoc method
-     * @name getData
+     * @name subscribe
      * @methodOf vbet5.service:BetService
-     * @description Makes a call to get updated cash out price
-     * @param {Array} betIds - an array of bet objects
-     * @returns {Promise} if successful returns an object where bet id is the key and its cash out info is the value
+     * @description Subscribes to cash out notifications. Currently only used for bet history and 'Open bets'
+     * @param {Function} callback
+     * @returns {Number} internalSubId - a sub id generated internally
      */
-    BetService.cashOut.getData = function getData(betIds) {
-        var promise = $q.defer();
-        Zergling.get({"bet_ids": betIds}, "calculate_cashout_amount")
-            .then(
-                function success(response) {
-                    if (response.details) {
-                        var cashOutMap = Utils.createMapFromObjItems(response.details, 'Id');
-                        promise.resolve(cashOutMap);
+    BetService.cashOut.subscribe = function cashOutSubscribe(callback) {
+        if (!callback || typeof callback !== 'function') {
+            throw new Error('Please provide a callback function');
+        }
+
+        var internalSubId = _cashOut.generateSubId();
+        if (_cashOut.subId || _cashOut.subscriptionInProgress) {
+            _cashOut.callbacks[internalSubId] = callback;
+        } else {
+            _cashOut.subscriptionInProgress = true;
+            Zergling.subscribe(
+                {
+                    'source': 'notifications',
+                    'what': {
+                        'user': []
                     }
                 },
-                function error() {
-                    promise.reject('No response');
-                }
-            )
-            ['catch'](function error() { promise.reject(); });
+                function updatingCashOutSubscribers(data) {
+                    if (data.cashout) {
+                        angular.forEach(_cashOut.callbacks, function(cb) {
+                            cb(data.cashout);
+                        });
+                    }
+                })
+                .then(function storeSubId(response) {
+                    _cashOut.subId = response.subid;
+                    _cashOut.subscriptionInProgress = false;
+                    _cashOut.callbacks[internalSubId] = callback;
 
-        return promise.promise;
-    };
-
-
-    /**
-     * @ngdoc method
-     * @name findAndSubscribe
-     * @methodOf vbet5.service:BetService
-     * @description Subscribes to events that have cash out option
-     * @param {Array} data - an array of bet objects
-     * @param {Function} callbackFn
-     * @returns {Promise}
-     */
-    BetService.cashOut.findAndSubscribe = function findAndSubscribe(data, callbackFn) {
-        var promise = $q.defer();
-        if (data.length) {
-            var cashOutEventIds = [],
-                sportIds = [],
-                gameIds = [];
-            angular.forEach(data, function (bet) {
-                if (bet.cash_out !== undefined) {
-                    angular.forEach(bet.events, function (betEvent) {
-                        var betEventId = parseInt((Config.main.GmsPlatform ? betEvent.selection_id : betEvent.id), 10);
-                        cashOutEventIds.push(betEventId);
-                        sportIds.push(betEvent.sport_id);
-                        gameIds.push(betEvent.game_id);
-                    });
-                }
-            });
-
-            if (cashOutEventIds.length) {
-                sportIds = Utils.uniqueNum(sportIds);
-                gameIds = Utils.uniqueNum(gameIds);
-
-                return Zergling
-                    .subscribe({
-                            'source': 'betting',
-                            'what': {
-                                'event': ['id', 'price']
-                            },
-                            'where': {
-                                'event': { 'id': { '@in': cashOutEventIds } },
-                                'sport': { 'id': { '@in': sportIds } },
-                                'game': { 'id': { '@in': gameIds } }
-                            }
-                        },
-                        callbackFn);
-            } else {
-                promise.reject();
-            }
-        } else {
-            promise.reject();
+                    _cashOut.unsubQueue.forEach(BetService.cashOut.unsubscribe);
+                    _cashOut.unsubQueue = [];
+                })
+                .catch(function(err) {
+                    _cashOut.subscriptionInProgress = false;
+                    _cashOut.callbacks = {};
+                    _cashOut.unsubQueue = [];
+                    console.warn('Couldn\'t subscribe to cash out notifications: ' +  err);
+                });
         }
 
-        return promise.promise;
+        return internalSubId;
     };
 
 
     /**
      * @ngdoc method
-     * @name processData
+     * @name unsubscribe
      * @methodOf vbet5.service:BetService
-     * @description Updates cash out info of a bet
-     * ! Warning: this function mutates betData object !
-     * @param {Array} currentBets - an array of bet objects
-     * @param {Object} cashOutMap - the object received from BetService.cashOut.getData method
+     * @param {Number} internalSubId - internal id of a subscription (callback)
+     * @description Removes a callback from the callback array and unsubscribes from cash out notifications if necessary
      */
-    BetService.cashOut.processData = function processData(currentBets, cashOutMap) {
-        angular.forEach(currentBets, function(betData) {
-            if (cashOutMap[betData.id]) {
-                betData.cash_out = cashOutMap[betData.id].CashoutAmount;
-                $rootScope.$broadcast('updatePopUpInfo', {cashOutMap: cashOutMap});
-                BetService.cashOut.adjustBetData(betData);
-            }
-        });
+    BetService.cashOut.unsubscribe = function cashOutUnsubscribe(internalSubId) {
+        if (!_cashOut.callbacks[internalSubId]) {
+            _cashOut.unsubQueue.push(internalSubId);
+            return;
+        }
+
+        delete _cashOut.callbacks[internalSubId];
+        if (Utils.isObjectEmpty(_cashOut.callbacks)) {
+            Zergling.unsubscribe(_cashOut.subId);
+            _cashOut.subId = null;
+        }
     };
 
 
@@ -200,10 +194,10 @@ VBET5.service('BetService', ['$rootScope', 'Zergling', 'Config', '$q', 'Utils', 
      * @description Calculates minimum cash out value
      */
     BetService.cashOut.getMinCashOutValue = function getMinCashOutValue() {
-        if (BetService.cashOut.minCashOutValue === undefined && $rootScope.profile && $rootScope.partnerConfig) {
-            BetService.cashOut.minCashOutValue = parseFloat($rootScope.partnerConfig.min_bet_stakes && $rootScope.partnerConfig.min_bet_stakes[$rootScope.profile.currency_name]) || 0.1;
+        if (!_cache.minCashOutValue && $rootScope.profile && $rootScope.partnerConfig) {
+            _cache.minCashOutValue = parseFloat($rootScope.partnerConfig.min_bet_stakes && $rootScope.partnerConfig.min_bet_stakes[$rootScope.profile.currency_name]) || 0.1;
         }
-        return BetService.cashOut.minCashOutValue;
+        return _cache.minCashOutValue;
     };
 
 
@@ -216,11 +210,16 @@ VBET5.service('BetService', ['$rootScope', 'Zergling', 'Config', '$q', 'Utils', 
      * @param {Boolean} [editBet] - if true turns on edit bet mode
      * @param {Function} [callbackFn] - callback function to be invoked when event info is received
      */
-    BetService.repeatBet.addEvents = function addEvents(eventsFromBetHistory, editBet, callbackFn) {
+    BetService.repeatBet = function repeatBet(eventsFromBetHistory, editBet, callbackFn) {
         var promise = $q.defer();
+        if ( editBet && (Config.betting.fullCoverBetTypes.enabled || eventsFromBetHistory.cash_out < BetService.cashOut.getMinCashOutValue()) ) {
+            promise.reject();
+            return promise.promise;
+        }
 
         var betsToPlace,
             oddType = 'odd';
+
         if (editBet) {
             $rootScope.editBet = {
                 increaseStake: {
@@ -235,12 +234,19 @@ VBET5.service('BetService', ['$rootScope', 'Zergling', 'Config', '$q', 'Utils', 
                 stakeAmount: eventsFromBetHistory.cash_out,
                 openSelectionsPart: false,
                 dateTime: eventsFromBetHistory.date_time,
-                changed: false
+                changed: false,
+                cashOutSubId: null,
+                unsubPromise: null
             };
 
             $rootScope.$broadcast('clear.bets', editBet);
+            // Subscribing to cash out for updating stake amount
+            $rootScope.editBet.cashOutSubId = BetService.cashOut.subscribe(function updateStakeAmount(data) {
+                if (data[$rootScope.editBet.oldBetId]) {
+                    $rootScope.editBet.stakeAmount = data[$rootScope.editBet.oldBetId].amount;
+                }
+            });
         }
-
 
         var eventIds = [];
         angular.forEach(eventsFromBetHistory.events, function(event) {
@@ -332,6 +338,146 @@ VBET5.service('BetService', ['$rootScope', 'Zergling', 'Config', '$q', 'Utils', 
         return promise.promise;
 
     };
+
+
+    /**
+     * @ngdoc method
+     * @name getBetHistory
+     * @methodOf vbet5.service:BetService
+     * @description gets bets' history
+     * @param {Number} betId
+     * @returns {Promise}
+     */
+    BetService.getBetHistory = function getBetHistory(betId) {
+        var deferred = $q.defer();
+        if ($rootScope.profile) {
+            Zergling.get({ where: { bet_id: betId }}, 'bet_history')
+                .then(function success(response) {
+                    if (response.bets && response.bets.length) {
+                        deferred.resolve(response.bets[0]);
+                    } else {
+                        deferred.reject('No data');
+                    }
+                })
+                .catch(function error(err) { //jshint ignore:line
+                    deferred.reject(err);
+                });
+        } else {
+            deferred.reject('Not logged in');
+        }
+
+        return deferred.promise;
+    };
+
+
+    /**
+     * @ngdoc method
+     * @name openPrintPreview
+     * @methodOf vbet5.service:BetService
+     * @description opens printPreview page specified by bet
+     *
+     * @param {object} betData bet data
+     */
+    BetService.print.openPrintPreview = function openPrintPreview(betData) {
+        var betDataInfo = Utils.copyObj(betData);
+        betDataInfo.userId = ($rootScope.profile && ($rootScope.profile.id || $rootScope.profile.unique_id)) || '';
+        betDataInfo.userName = ($rootScope.profile && $rootScope.profile.username) || '';
+        var encodedBetData = encodeURIComponent(JSON.stringify(betDataInfo));
+        $window.open('#/popup/?action=betprintpreview&data=' + encodedBetData, Config.main.skin + 'betprintpreview.popup', "scrollbars=1,width=1000,height=600,resizable=yes");
+    };
+
+
+    /**
+     * @ngdoc method
+     * @name getExpressBonusRules
+     * @methodOf vbet5.service:BetService
+     * @description gets express bonus rules
+     */
+    BetService.getExpressBonusRules = function getExpressBonusRules() {
+        var deferred = $q.defer();
+
+        if (_cache.expressBonus) {
+            deferred.resolve(Utils.copyObj(_cache.expressBonus));
+            return deferred.promise;
+        }
+
+        var expressBonus = {
+            enabled: false
+        };
+
+        Zergling.get({}, 'get_sport_bonus_rules').then(function(response) {
+            if (response.details) {
+                var rules = response.details;
+
+                for (var i = 0, x = rules.length; i < x; i++) {
+                    if (rules[i].BetType !== 2) {
+                        expressBonus.enabled = false;
+                        break;
+                    }
+
+                    if (!expressBonus.enabled) {
+                        expressBonus = {
+                            enabled: true,
+                            minOdds: rules[i].MinOdds,
+                            ignoreLowOdds: rules[i].IgnoreLowOddSelection,
+                            map: {
+                                minTotalCoefficient: rules[i].MinBetOdds
+                            }
+                        };
+                    }
+
+                    var minimumSelections = rules[i].MinimumSelections;
+                    var maximumSelections = rules[i].MaximumSelections;
+                    // If maximum selections are not set then we try to get it from the next rule's minimum selection
+                    if (maximumSelections === null && rules[i+1] && rules[i+1].MinimumSelections) {
+                        maximumSelections = rules[i+1].MinimumSelections - 1;
+                    }
+                    expressBonus.map[minimumSelections] = rules[i].AmountPercent;
+
+                    if (minimumSelections !== maximumSelections) {
+                        if (maximumSelections === null) {
+                            expressBonus.map.default = rules[i].AmountPercent; //jshint ignore:line
+                        } else if (maximumSelections > minimumSelections) {
+                            while (++minimumSelections <= maximumSelections) {
+                                expressBonus.map[minimumSelections] = rules[i].AmountPercent;
+                            }
+                        }
+                    }
+
+                }
+
+                if (expressBonus.enabled) {
+                    expressBonus.visibilityQty = Math.min.apply(
+                        null,
+                        Object.keys(expressBonus.map).filter(function filterNaN(val) { return +val === +val; })
+                    ) - 1;
+
+                    var noBonusSelections = expressBonus.visibilityQty;
+                    while (noBonusSelections >= 0) {
+                        expressBonus.map[noBonusSelections--] = 0;
+                    }
+                }
+
+            }
+        })['finally'](function cacheAndResolve() {
+            _cache.expressBonus = expressBonus;
+            deferred.resolve(Utils.copyObj(expressBonus));
+        });
+
+        return deferred.promise;
+    };
+
+
+    BetService.getEachWayTerms = function getEachWayTerms(market) {
+        if (Config.main.showEachWay && market.extra_info && market.extra_info.EachWayPlace > 1) {
+           return ' EW: ' + '1/' + market.extra_info.EachWayK + ' ' + Translator.get('Odds') + ' ' + market.extra_info.EachWayPlace + ' ' + Translator.get('Places');
+        }
+        return '';
+    };
+    ////////////////////////////////////////////////////////////////////////////////
+    // PUBLIC METHODS - END
+    ////////////////////////////////////////////////////////////////////////////////
+
 
     return BetService;
 }]);

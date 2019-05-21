@@ -52,8 +52,8 @@ VBET5.directive('daySelector', function () {
                     i = i.toString();
                     scope.options.push(i.length < 2 ? '0' + i : i);
                 }
-                if (!scope.ngModel || scope.options.indexOf(scope.ngModel) === -1) {
-                    scope.ngModel = '';
+                if (scope.options.indexOf(scope.ngModel) === -1) {
+                    scope.ngModel = undefined;
                 } else if (scope.tmpDay) {
                     scope.ngModel = scope.tmpDay;
                 }

@@ -4,7 +4,7 @@
  * @description
  * virtualSports controller
  */
-angular.module('vbet5.betting').controller('virtualSportsCtrl', ['$scope', '$rootScope', '$filter', 'Config', 'ConnectionService', 'Utils', '$location', 'GameInfo', 'Storage', function ($scope, $rootScope, $filter, Config, ConnectionService, Utils, $location, GameInfo, Storage) {
+angular.module('vbet5.betting').controller('virtualSportsCtrl', ['$scope', '$rootScope', '$filter', 'Config', 'ConnectionService', 'Utils', '$location', 'GameInfo', 'Storage', 'analytics', 'DomHelper', function ($scope, $rootScope, $filter, Config, ConnectionService, Utils, $location, GameInfo, Storage, analytics, DomHelper) {
     'use strict';
     $rootScope.footerMovable = true;
 
@@ -93,12 +93,52 @@ angular.module('vbet5.betting').controller('virtualSportsCtrl', ['$scope', '$roo
     $scope.results = {
         open: false
     };
-    $scope.fullScreenVideo = {enabled: false};
+    $scope.vPlayerState = {
+        isLoaded: false,
+        fullscreen: false,
+        data: null
+    };
     $scope.favoriteMarketTypes = Storage.get('vs_favorite_market_types') || {};
     $scope.selectedGroup = {
         id: undefined
     };
     $scope.collapsedMarkets = {};
+
+    $scope.leftMenuClosed = false;
+
+
+    /**
+     * @ngdoc method
+     * @name toggleLeftMenu
+     * @methodOf vbet5.controller:virtualSportsCtrl
+     * @description  expands(or collapses if expanded) left menu
+     *
+     */
+    $scope.toggleLeftMenu = function toggleLeftMenu() {
+        $scope.leftMenuClosed = !$scope.leftMenuClosed;
+    };
+
+
+    /**
+     * @ngdoc method
+     * @name closeLeftMenuDependingWindowSize
+     * @methodOf vbet5.controller:virtualSportsCtrl
+     * @description Close left menu depending on window size
+     */
+    function closeLeftMenuDependingWindowSize() {
+        var width = DomHelper.getWindowSize().width;
+
+        if (width <= 1279 && !$scope.leftMenuClosed) {
+            $scope.toggleLeftMenu();
+        } else if (width > 1279 && $scope.leftMenuClosed) {
+            $scope.toggleLeftMenu();
+        }
+    }
+
+    closeLeftMenuDependingWindowSize();
+    $scope.$on('onWindowResize', closeLeftMenuDependingWindowSize);
+
+
     /**
      * @ngdoc method
      * @name updateSections
@@ -124,29 +164,27 @@ angular.module('vbet5.betting').controller('virtualSportsCtrl', ['$scope', '$roo
                 section.label = Config.main.virtualSportLabels[section.alias];
             });
         }
+
+        angular.forEach($scope.sections, function (section) {
+
+            section.game = Utils.objectToArray(section.game);
+            if (section.game && section.game.length) {
+                section.game.sort(function (a, b) {
+                    return (a.start_ts - b.start_ts);
+                });
+                section.game = section.game.filter(function (a) {
+                    return (a.start_ts > Math.round((new Date()).getTime() / 1000));
+                });
+                section.prematch_ts = section.game[0] ? section.game[0].start_ts : "";
+            }
+
+        });
     }
 
     $scope.toggleResultsPopUp = function toggleResultsPopUp(state) {
         $scope.results.open = state;
     };
 
-    /**
-     * @ngdoc method
-     * @name resetVideoAndCountDown
-     * @methodOf vbet5.controller:virtualSportsCtrl
-     * @description name says it
-     *
-     * @param {boolean} needToResetVideo true or false
-     */
-    function resetVideoAndCountDown(needToResetVideo) {
-        if ($scope.videoIsLoaded && needToResetVideo && $scope.videoData) {
-            $scope.videoData = null;
-            //$scope.stopVideo();
-        }
-        //TimeoutWrapper.cancel(countdownPromise);
-        //$scope.remainingSeconds = 0;
-        //$scope.countdown = 0;
-    }
 
     /**
      * @ngdoc method
@@ -155,11 +193,10 @@ angular.module('vbet5.betting').controller('virtualSportsCtrl', ['$scope', '$roo
      * @description Load virtualSports sections from swarm
      */
     function loadVirtualSports() {
-        resetVideoAndCountDown(true);
         var virtualSportIdsKey = $location.path().split('/').join('');
         var request = {
             'source': 'betting',
-            'what': {'sport': ['id', 'name', 'alias', 'order'], 'game': '@count'},
+            'what': {'sport': ['id', 'name', 'alias', 'order'], 'game': ['@count','start_ts', 'text_info']},
             'where': {
                 'game' : {
                     '@or' : [{ type: 0}, {visible_in_prematch: true, type: 4}]
@@ -182,6 +219,7 @@ angular.module('vbet5.betting').controller('virtualSportsCtrl', ['$scope', '$roo
      * @param {Object} data competitions data object
      */
     function updateCompetitions(data) {
+
         $scope.competitions = Utils.objectToArray(data.competition);
         angular.forEach($scope.competitions, function (competition) {
             competition.name = $filter('removeParts')(competition.name, [$scope.selectedVirtualSport.name]);
@@ -203,12 +241,10 @@ angular.module('vbet5.betting').controller('virtualSportsCtrl', ['$scope', '$roo
      */
     $scope.loadCompetitions = function loadCompetitions(sport, isUpdateSectionsCallback) {
 
-        if ($scope.gameIsLoading || $scope.gamesAreLoading || $scope.selectedVirtualSport && $scope.selectedVirtualSport.id === sport.id) {
+        if ($scope.competitionsLoading || $scope.gameIsLoading || $scope.gamesAreLoading || $scope.selectedVirtualSport && $scope.selectedVirtualSport.id === sport.id) {
             return;
         }
 
-        var needToResetVideo = sport.id !== $scope.selectedRanges.selectedSportId;
-        resetVideoAndCountDown(needToResetVideo);
 
         $scope.selectedRanges.selectedSportId = sport.id;
         $scope.selectedVirtualCompetition = null;
@@ -232,11 +268,9 @@ angular.module('vbet5.betting').controller('virtualSportsCtrl', ['$scope', '$roo
             },
             updateCompetitions,
             {
-                'thenCallback': function () {
-                    $scope.competitionsLoading = false;
-                },
                 'failureCallback': function () {
                     $scope.competitionsLoading = false;
+                    $scope.vPlayerState.data = null;
                 }
             }
         );
@@ -273,8 +307,6 @@ angular.module('vbet5.betting').controller('virtualSportsCtrl', ['$scope', '$roo
             return;
         }
 
-        var needToResetVideo = competition.id !== $scope.selectedRanges.selectedCompetitionId;
-        resetVideoAndCountDown(needToResetVideo);
         $scope.selectedRanges.selectedCompetitionId = competition.id;
         $scope.selectedVirtualCompetition = null;
 
@@ -407,6 +439,7 @@ angular.module('vbet5.betting').controller('virtualSportsCtrl', ['$scope', '$roo
                         game.sport = {id: sport.id, alias: sport.alias};
                         game.region = {id: region.id};
                         game.competition = {id: competition.id, name: competition.name};
+                        game.additionalGameInfo = '№ ' + game.game_number + ' / ' + game.team1_name + (game.team2_name ? ' vs ' + game.team2_name : '');
                         selectedGame = game;
                     });
                 });
@@ -502,14 +535,18 @@ angular.module('vbet5.betting').controller('virtualSportsCtrl', ['$scope', '$roo
             }
         }
 
+        $scope.vSMarketsFirstPack = $scope.gameToShow.markets.slice(); // Clone array elements
+        $scope.vSMarketsSecondPack = $scope.vSMarketsFirstPack.splice( $scope.gameToShow.markets.length / 2);
+
         if (GameInfo.hasVideo($scope.gameToShow)) {
-            if (!$scope.videoData || $scope.gameToShow.tv_type !== streamDetails.tvType || $scope.gameToShow.video_id !== streamDetails.videoId) {
+            if ($scope.gameToShow.tv_type !== streamDetails.tvType || $scope.gameToShow.video_id !== streamDetails.videoId) {
+                $scope.vPlayerState.data = null;
                 $scope.providerId = $scope.gameToShow.tv_type;
                 GameInfo.getVideoData($scope.gameToShow, true).then(function () {
                     if ($scope.gameToShow) {
                         streamDetails.tvType = $scope.gameToShow.tv_type;
                         streamDetails.videoId = $scope.gameToShow.video_id;
-                        $scope.videoData = $scope.gameToShow.video_data;
+                        $scope.vPlayerState.data = $scope.gameToShow.video_data;
                     }
                 });
             }
@@ -517,6 +554,21 @@ angular.module('vbet5.betting').controller('virtualSportsCtrl', ['$scope', '$roo
         $scope.gameToShow.isVirtual = true;
         $scope.gameToShow.displayTitle = $scope.gameToShow.text_info;
     }
+
+    /**
+     * @ngdoc method
+     * @name switchMarketsColumnView
+     * @methodOf vbet5.controller:virtualSportsCtrl
+     * @description switch virtual sport column view(1 or 2 column)
+     */
+    $scope.marketIsOneColumn = Storage.get('markets_in_one_column') === undefined
+        ? !!Config.main.marketsInOneColumn
+        : Storage.get('markets_in_one_column');
+
+    $scope.switchMarketsColumnView = function() {
+        $scope.marketIsOneColumn = !$scope.marketIsOneColumn;
+        Storage.set('markets_in_one_column', $scope.marketIsOneColumn);
+    };
 
     /**
      * @ngdoc method
@@ -550,9 +602,11 @@ angular.module('vbet5.betting').controller('virtualSportsCtrl', ['$scope', '$roo
             {
                 'thenCallback': function () {
                     $scope.gameIsLoading = false;
+                    $scope.competitionsLoading = false;
                 },
                 'failureCallback': function () {
                     $scope.gameIsLoading = false;
+                    $scope.competitionsLoading = false;
                 }
             }
         );
@@ -664,20 +718,25 @@ angular.module('vbet5.betting').controller('virtualSportsCtrl', ['$scope', '$roo
 
     $scope.addToFavouriteMarkets = function addToFavouriteMarkets(market) {
         if (!market) { return }
+        var analyticsText = "";
         $scope.favoriteMarketTypes[$scope.selectedVirtualSport.id] = $scope.favoriteMarketTypes[$scope.selectedVirtualSport.id] || [];
         var index = $scope.favoriteMarketTypes[$scope.selectedVirtualSport.id].indexOf(market.market_type);
         if (index !== -1) {
+            analyticsText = "removeFromVSFavouriteMarkets";
             $scope.favoriteMarketTypes[$scope.selectedVirtualSport.id].splice(index, 1);
             market.isFavorite = false;
             MARKET_GROUP_FAVORITE.count--;
             !MARKET_GROUP_FAVORITE.count && $scope.selectedGroup.id === -3 && ($scope.selectedGroup.id = $scope.gameToShow.availableMarketGroups[1].id);
         } else {
+            analyticsText = "addToVSFavouriteMarkets";
             $scope.favoriteMarketTypes[$scope.selectedVirtualSport.id].push(market.market_type);
             market.isFavorite = true;
             MARKET_GROUP_FAVORITE.count++;
         }
 
         Storage.set("vs_favorite_market_types", $scope.favoriteMarketTypes);
+        analytics.gaSend('send', 'event', 'explorer', analyticsText + (Config.main.sportsLayout),  {'page': $location.path(), 'eventLabel': analyticsText});
+        console.log('gaSend-',analyticsText);
     };
 
     /**

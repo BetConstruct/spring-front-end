@@ -44,7 +44,7 @@
                             <img ng-src="{{getPageByTitle(selectedFreePage.children, winner.client_id.toString()).thumbnail_images.full.url}}">
                             <span class="date">{{winner.date}} <i class="client-id">(id: {{winner.client_id}})</i></span>
                             <span class="name">{{winner.name}}</span>
-                            <span class="amount">{{winner.amount}} {{(profile.currency_name || conf.registration.defaultCurrency)|currency }}</span>
+                            <span class="amount">{{winner.amount}} {{(profile.currency_name || $root.conf.registration.defaultCurrency)|currency }}</span>
                         </li>
 
                     </ul>

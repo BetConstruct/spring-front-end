@@ -5,7 +5,7 @@
  * casino page controller
  */
 
-CASINO.controller('casinoCtrl', ['$rootScope', '$scope', '$sce', '$location', 'Geoip', 'CConfig', 'Zergling', 'casinoData', 'Utils', 'casinoManager', 'Translator',  '$interval', 'TimeoutWrapper', 'analytics', 'content', function ($rootScope, $scope, $sce, $location, Geoip, CConfig, Zergling, casinoData,  Utils, casinoManager, Translator, $interval, TimeoutWrapper, analytics, content) {
+CASINO.controller('casinoCtrl', ['$rootScope', '$scope', '$sce', '$location', 'Geoip', 'Config', 'CConfig', 'Zergling', 'casinoData', 'Utils', 'casinoManager', 'Translator', '$interval', 'TimeoutWrapper', 'analytics', 'content', 'casinoMultiviewValues','jackpotManager', function ($rootScope, $scope, $sce, $location, Geoip, Config, CConfig, Zergling, casinoData, Utils, casinoManager, Translator, $interval, TimeoutWrapper, analytics, content, casinoMultiviewValues, jackpotManager) {
     'use strict';
 
     TimeoutWrapper = TimeoutWrapper($scope);
@@ -15,12 +15,30 @@ CASINO.controller('casinoCtrl', ['$rootScope', '$scope', '$sce', '$location', 'G
     $scope.slideIndex = 0;
     $scope.gamesInfo = [];
     $scope.viewCount = 1;
-    $rootScope.footerMovable = true;
-    $scope.providerMenuDefaultOffset =  CConfig.main.hideCasinoJackpotSlider ? 366 :666;
+    $scope.providerMenuDefaultOffset = CConfig.main.hideCasinoJackpotSlider ? 366 : 666;
     $scope.categoryMenuDefaultOffset = 710;
     $scope.jackpotSlideIndex = 0;
+    $scope.jackpotGames = [];
+
+
+    if (!CConfig.disableAutoLoadMore) {
+        $rootScope.footerMovable = true;
+    }
+    var jackpotTotalGames = 0;
+    var jackpotSliderAllGames = [];
+    $scope.jackpotWidgets = {
+        widgetIndex: 0
+    };
+    $scope.tab = {selected: 'tournaments'};
+
+    $scope.changeJackpotSlider = function (index) {
+        $scope.jackpotWidgets.widgetIndex = index < 0 ? $scope.jackpotData.length - 1 : index > $scope.jackpotData.length - 1 ? 0 : index;
+    };
+    casinoMultiviewValues.init($scope);
+
+    var jackpotWinnerTimeout;
     //new casino design
-    $scope.jackpotSliderVisibleGamesCount = 4;
+    $scope.jackpotSliderVisibleGamesCount = CConfig.version === 2 ? 3 : 4;
     $scope.selectedProvider = {
         name: ''
     };
@@ -31,13 +49,25 @@ CASINO.controller('casinoCtrl', ['$rootScope', '$scope', '$sce', '$location', 'G
 
     $scope.selections = {
         categoryId: null,
-        providerName: null
+        providerName: null,
+        providers: []
     };
 
-    var FAVOURITE_CATEGORY = {
-        id: -1,
+    $scope.favouriteCategory = {
+        id: '-1',
         name: 'favouriteGames',
         title: 'Favourite Games'
+    };
+    $scope.providersOpened = true;
+
+    var providersString = '';
+
+
+
+    var RECOMMENDED_CATEGORY = {
+        id: '3',
+        name: 'RecommendedGames',
+        title: 'Recommended Games'
     };
     var ALL_GAMES_CATEGORY = {
         id: 'all',
@@ -54,58 +84,77 @@ CASINO.controller('casinoCtrl', ['$rootScope', '$scope', '$sce', '$location', 'G
         title: 'All Providers'
     };
 
-    var favouriteGamesWatcherPromise, updateInterval, countryCode = '', allCategories;
+    var favouriteGamesWatcherPromise, updateInterval, countryCode = '', allProviders, allCategories;
+
+    var lastCategoriesStartIndex, CATEGORIES_LIMIT = 10;
 
 
-    function getOptions() {
+    function getOptions(profileId) {
         $scope.loadingProcess = true;
         //get categories and providers lists
-        casinoData.getOptions(countryCode).then(function (response) {
-            if(response && response.data && response.data.status !== -1) {
+        casinoData.getOptions(countryCode, null, null, profileId).then(function (response) {
+
+            if (response && response.data && response.data.status !== -1) {
                 $scope.categories = response.data.categories;
                 allCategories = $scope.categories;
                 if (CConfig.main.showAllGamesOnHomepage) {
                     $scope.categories.unshift(ALL_GAMES_CATEGORY);
                 }
-                if (CConfig.main.favourtieGamesCategoryEnabled) {
-                    $scope.categories.unshift(FAVOURITE_CATEGORY);
-
-                }
                 if (CConfig.main.filterByProviderEnabled) {
                     $scope.providers = response.data.providers;
                     $scope.providers.unshift(ALL_PRIVIDERS);
+                    allProviders = $scope.providers;
                 }
                 if (response.data.hasTournaments) {
                     $scope.hasTournaments = true;
                 }
 
                 $scope.loadingProcess = false;
+
                 handlefirstSelection();
+                if (CConfig.version === 2) {
+                    $scope.moveCategories(undefined, true);
+                    $scope.selectCategory($scope.categories[0]);
+                }
             }
         });
     }
 
-    function updateCategoriesByProviderName(providerName) {
+
+    function updateProvidersByCategoryId(categoryId) {
+        if (categoryId === 'all') {
+            $scope.providers = allProviders;
+            return;
+        }
+        if (categoryId !== '-1') {
+            casinoData.getOptions(countryCode, categoryId, null, ($rootScope.profile ? $rootScope.profile.id : null), true).then(function (response) {
+                $scope.providers = response.data.providers;
+                $scope.providers.unshift(ALL_PRIVIDERS);
+            });
+        }
+    }
+
+    function updateCategoriesByProviderName(providersString) {
         if (CConfig.version === 1) {
-            if (providerName ===ALL_PRIVIDERS.name) {
+            if (providersString === ALL_PRIVIDERS.name) {
                 $scope.categories = allCategories;
                 return;
             }
-            casinoData.getOptions(countryCode, null, providerName).then(function (response) {
-                $scope.categories = response.data.categories;
-                if (CConfig.main.showAllGamesOnHomepage) {
-                    $scope.categories.unshift(ALL_GAMES_CATEGORY);
+            casinoData.getOptions(countryCode, null, providersString, $rootScope.profile ? $rootScope.profile.id : null).then(function (response) {
+                if (response && response.data && response.data.categories) {
+                    $scope.categories = response.data.categories;
+                    if (CConfig.main.showAllGamesOnHomepage) {
+                        $scope.categories.unshift(ALL_GAMES_CATEGORY);
+                    }
                 }
-                if (CConfig.main.favourtieGamesCategoryEnabled) {
-                    $scope.categories.unshift(FAVOURITE_CATEGORY);
 
-                }
             });
         }
     }
 
     function handlefirstSelection() {
         var searchParams = $location.search();
+
         if (searchParams.category !== undefined) {
             for (var i = 0, length = $scope.categories.length; i < length; i += 1) {
                 if ($scope.categories[i].id === searchParams.category) {
@@ -115,15 +164,20 @@ CASINO.controller('casinoCtrl', ['$rootScope', '$scope', '$sce', '$location', 'G
             }
         }
         if (!$scope.selections.category && $scope.categories) {
-            $scope.selections.category = $scope.categories[0].id !== FAVOURITE_CATEGORY.id || ($rootScope.myCasinoGames && $rootScope.myCasinoGames.length !== 0) ? $scope.categories[0] : $scope.categories[1];
+            $scope.selections.category = ALL_GAMES_CATEGORY;
             $location.search('category', $scope.selections.category.id);
         }
+
         if ($scope.providers) {
-            $scope.selections.providerName = searchParams.provider || $scope.providers[0].name;
-            $location.search('provider', $scope.selections.providerName);
+            providersString = searchParams.provider || $scope.providers[0].name;
         } else {
-            $scope.selections.providerName = 'all';
+            providersString = 'all';
         }
+
+        getSelectedProvidersArray(providersString);
+        $location.search('provider', providersString);
+        updateProvidersByCategoryId($scope.selections.category.id);
+
         resetGamesOptions();
         $scope.getGames();
 
@@ -131,16 +185,30 @@ CASINO.controller('casinoCtrl', ['$rootScope', '$scope', '$sce', '$location', 'G
     }
 
     $scope.getGames = function getGames() {
+
+        if ($scope.loadingProcess) {
+            return;
+        }
         favouriteGamesWatcherPromise && favouriteGamesWatcherPromise();
-        if ($scope.selections.category.id === FAVOURITE_CATEGORY.id) { // favourite category state
+        if ($scope.selections.category.id === $scope.favouriteCategory.id) { // favourite category state
             favouriteGamesWatcherPromise = $scope.$watch('myCasinoGames.length', function () {
                 if ($rootScope.myCasinoGames.length === 0) {
-                    $scope.selectCategory($scope.categories[1]);
+                    if (CConfig.main.showAllGamesOnHomepage) {
+                        $scope.selectCategory(ALL_GAMES_CATEGORY);
+                    }else{
+                        $scope.selectCategory($scope.categories[0]);
+                    }
+                     $scope.moveCategories(undefined,true);
                 } else {
                     $scope.games = getAppropriateFavoriteGames();
                 }
+                if ($scope.games.length === 0 && providersString !== ALL_PRIVIDERS.name) {
+                    $scope.loadingProcess = false;
+                    $scope.setProviders();
+                }
             });
             $scope.games = getAppropriateFavoriteGames();
+
             return;
         }
 
@@ -151,60 +219,132 @@ CASINO.controller('casinoCtrl', ['$rootScope', '$scope', '$sce', '$location', 'G
         }
 
         $scope.loadingProcess = true;
-        casinoData.getGames(categoryToLoad, $scope.selections.providerName, countryCode, $scope.limits.from, $scope.limits.to).then(function (response) {
+
+        var additionalParams;
+        if (CConfig.main.recommendedGamesCategoryEnabled && categoryToLoad && categoryToLoad === RECOMMENDED_CATEGORY.id) {
+            additionalParams = $rootScope.profile ? '&player_id=' + $rootScope.profile.id : '';
+        }
+        casinoData.getGames(categoryToLoad, providersString, countryCode, $scope.limits.from, $scope.limits.to, null, null, null, null, additionalParams).then(function (response) {
             if (response && response.data && response.data.status !== -1) {
                 Array.prototype.push.apply($scope.games, response.data.games);
                 $scope.limits.max = parseInt(response.data.total_count, 10);
 
-                if(parseInt(response.data.total_count, 10) === 0 && ALL_GAMES_CATEGORY.id !== $scope.selections.category.id){
-                    $scope.selectCategory(ALL_GAMES_CATEGORY);
+                if (parseInt(response.data.total_count, 10) === 0 && providersString !== ALL_PRIVIDERS.name) {
+                    $scope.loadingProcess = false;
+                    $scope.setProviders();
                 }
             }
         })['finally'](function () {
             $scope.loadingProcess = false;
-        });
+        })
     };
 
     $scope.selectCategory = function selectCategory(category) {
-        if ($scope.selections.category.id === category.id || $scope.loadingProcess) {
+        if ($scope.selections.category && $scope.selections.category.id === category.id || $scope.loadingProcess) {
             return;
         }
 
-        if (category.id === FAVOURITE_CATEGORY.id) {
-            $scope.selections.providerName = ALL_PRIVIDERS.name;
+        if (category.id === $scope.favouriteCategory.id) {
+            //   $scope.selections.providerName = ALL_PRIVIDERS.name;
             $scope.categories = allCategories;
         }
 
+        // if (category.id === FAVOURITE_CATEGORY.id && CConfig.version === 2) {
+        //     $scope.setProviders([ALL_PRIVIDERS.name]);
+        // }
+
         $scope.selections.category = category;
         $location.search('category', category.id);
+
+        updateProvidersByCategoryId(category.id);
+
         resetGamesOptions();
         $scope.getGames();
+        analytics.gaSend('send', 'event', 'explorer', 'Select Casino Games Category', {'page': $location.path(), 'eventLabel': category.name});
     };
 
-    $scope.selectProvider = function selectProvider(provider) {
-        if ($scope.selections.providerName === provider.name || $scope.loadingProcess) {
+    function showPermittedMessage() {
+        $rootScope.$broadcast("globalDialogs.addDialog", {
+            type: "warning",
+            title: "Warning",
+            content: "Please note, the games of this provider is not available for residents in Your area."
+        });
+    }
+
+    function getSelectedProvidersString() {
+        var string = '';
+        var array = $scope.selections.providers;
+        if (array && array.length) {
+            for (var i = 0; i < array.length; i++) {
+                string += array[i];
+                if (array.length - 1 !== i) {
+                    string += ',';
+                }
+            }
+        } else {
+            return ALL_PRIVIDERS.name;
+        }
+        return string;
+    }
+
+    function getSelectedProvidersArray(providersString) {
+        return $scope.selections.providers = providersString.split(',');
+    }
+
+    function onProvidersChange() {
+        $scope.selections.providers = $scope.selections.providers.length ? $scope.selections.providers : [ALL_PRIVIDERS.name];
+
+        if ($scope.loadingProcess) {
             return;
         }
 
-        if (!isProviderPermitted(provider)) {
-            $rootScope.$broadcast("globalDialogs.addDialog", {
-                type: "warning",
-                title: "Warning",
-                content: "Please note, the games of this provider is not available for residents in Your area."
-            });
-        }
-
         if (CConfig.version === 1) {
-            updateCategoriesByProviderName(provider.name);
+            updateCategoriesByProviderName($scope.selections.providers[0]);
         }
-
-        $scope.selections.providerName = provider.name;
-        $location.search('provider', $scope.selections.providerName);
+        providersString = getSelectedProvidersString();
+        $location.search('provider', providersString);
         resetGamesOptions();
         $scope.getGames();
+    }
+
+
+    $scope.toggleProvider = function toggleProvider(provider) {
+        if ($scope.loadingProcess) {
+            return;
+        }
+        if (provider === ALL_PRIVIDERS.name) {
+            $scope.selections.providers = [ALL_PRIVIDERS.name];
+        } else {
+            var index = $scope.selections.providers.indexOf(provider);
+            var allIndex = $scope.selections.providers.indexOf(ALL_PRIVIDERS.name);
+
+            if (allIndex !== -1) {
+                $scope.selections.providers.splice(allIndex, 1);
+            }
+
+            if (index === -1) {
+                if (!isProviderPermitted(provider)) {
+                    showPermittedMessage();
+                } else {
+                    $scope.selections.providers.push(provider);
+                    analytics.gaSend('send', 'event', 'explorer', 'Select Casino Games Provider', {'page': $location.path(), 'eventLabel': provider});
+                }
+            } else {
+                $scope.selections.providers.splice(index, 1);
+                analytics.gaSend('send', 'event', 'explorer', 'Unselect Casino Games Provider', {'page': $location.path(), 'eventLabel': provider});
+            }
+        }
+
+        onProvidersChange();
+
     };
 
-    function isProviderPermitted (provider) {
+    $scope.setProviders = function setProviders(providers) {
+        $scope.selections.providers = providers && providers.length ? providers : [ALL_PRIVIDERS.name];
+        onProvidersChange();
+    };
+
+    function isProviderPermitted(provider) {
         var countries = CConfig.main.restrictProvidersInCountries;
         if (countries && countries[provider.name] && $rootScope.geoCountryInfo && $rootScope.geoCountryInfo.countryCode && $rootScope.profile) {
             if (countries[provider.name].indexOf($rootScope.geoCountryInfo.countryCode) !== -1 || countries[provider.name].indexOf($rootScope.geoCountryInfo.countryCode + '-' + $rootScope.profile.currency_name) !== -1) {
@@ -214,18 +354,18 @@ CASINO.controller('casinoCtrl', ['$rootScope', '$scope', '$sce', '$location', 'G
         return true;
     }
 
-    function resetGamesOptions () {
+    function resetGamesOptions() {
         $scope.games = [];
         $scope.limits = {
             from: 0,
             to: $scope.wideMode ? CConfig.main.increaseByWide : CConfig.main.increaseBy,
             max: 0
-        };
+        }
     }
 
-    function loadPopularGames () {
+    function loadPopularGames() {
         $scope.popularsPerGroups = [];
-        casinoData.getGames(CConfig.popularGames.categoryId, $scope.selections.providerName, countryCode).then(function (response) {
+        casinoData.getGames(CConfig.popularGames.categoryId, providersString, countryCode).then(function (response) {
             if (response && response.data && response.data.status !== -1) {
                 $scope.popularGames = response.data.games;
                 createPopularsPerGroups();
@@ -255,8 +395,12 @@ CASINO.controller('casinoCtrl', ['$rootScope', '$scope', '$sce', '$location', 'G
         $scope.wideMode = false;
     });
 
-    $scope.$on('middlescreen.on', function () { $scope.middleMode = true; });
-    $scope.$on('middlescreen.off', function () { $scope.middleMode = false; });
+    $scope.$on('middlescreen.on', function () {
+        $scope.middleMode = true;
+    });
+    $scope.$on('middlescreen.off', function () {
+        $scope.middleMode = false;
+    });
 
     /**
      * @name findAndOpenGame
@@ -312,14 +456,31 @@ CASINO.controller('casinoCtrl', ['$rootScope', '$scope', '$sce', '$location', 'G
         }
     }
 
-    $scope.slideJackpotGames = function slideJackpotGames(direction) {
-        if(direction == 'prev') {
-            $scope.jackpotSlideIndex--;
+    function filterByField(list, field) {
+        if ($rootScope.env.authorized) {
+            return list;
+        }
+        return list.filter(function(item) {
+            return !item[field];
+        });
+    }
 
+    function calculateJackpotSliderGames() {
+        $scope.jackpotSliderGames = jackpotSliderAllGames.slice($scope.jackpotSlideIndex, $scope.jackpotSlideIndex + $scope.jackpotSliderVisibleGamesCount);
+    }
+
+    $scope.slideJackpotGames = function slideJackpotGames(direction) {
+        if (direction === 'prev') {
+            $scope.jackpotSlideIndex--;
         } else {
             $scope.jackpotSlideIndex++;
         }
-        $scope.jackpotSliderGames = $scope.jackpotGames.slice($scope.jackpotSlideIndex, $scope.jackpotSlideIndex + $scope.jackpotSliderVisibleGamesCount);
+
+        if (CConfig.main.jackpotSubstituteCategory && jackpotTotalGames > 10 && $scope.jackpotSlideIndex === $scope.jackpotGames.length - 1 - $scope.jackpotSliderVisibleGamesCount) {
+            getJackPotData();
+        }
+
+        calculateJackpotSliderGames();
     };
 
     /**
@@ -339,33 +500,92 @@ CASINO.controller('casinoCtrl', ['$rootScope', '$scope', '$sce', '$location', 'G
             });
     }
 
-    // If the user authorizes/deauthorizes we need to immediately make the call for displaying correct currency (in case it changes)
-    $scope.$on('login.loggedIn', function () {
-        getJackpotAmount();
-    });
-    $scope.$on('login.loggedOut', function () {
-        getJackpotAmount();
+    function subscribeForJackpotData() {
+       if (CConfig.version === 2 && ($rootScope.casinoGameOpened === 0 || $rootScope.casinoGameOpened === undefined)) {
+            jackpotManager.unsubscribeFromJackpotData();
+            jackpotManager.subscribeForJackpotData(-1, subscribeForJackpotDataCallback,null, 'casino');  // -1 all games
+        }
+    }
+
+    function subscribeForJackpotDataCallback(data) {
+        var sliderIndex = false;
+        data = Utils.objectToArray(data);
+        angular.forEach(data, function (jackpot, index) {
+            if (jackpot && jackpot.Winner && jackpot.Winner.PlayerId) {
+
+                sliderIndex = index;
+
+                if ($rootScope.profile && jackpot.Winner.PlayerId === $rootScope.profile.id) {
+
+                    TimeoutWrapper.cancel(jackpotWinnerTimeout); // TimeoutWrapper checks the existence of promise by itself
+
+                    $scope.jackpotWinnerCoinsRain = true;
+                    jackpotWinnerTimeout = TimeoutWrapper(function () {
+                        $scope.jackpotWinnerCoinsRain = false;
+                    }, 5000);
+                }
+            }
+        });
+        $scope.jackpotData = data;
+
+        if (sliderIndex !== false) {
+            $scope.tab.selected = 'jackpots';
+            $scope.changeJackpotSlider(sliderIndex);
+            sliderIndex = false;
+        }
+    }
+
+    var jackpotDataWatcher = $scope.$watch('jackpotData', function (data) {
+        if (data && data.length > 0) {
+            jackpotDataWatcher();
+            $scope.tab.selected = 'jackpots';
+            $scope.hasJackpots = true;
+        }
     });
 
     function getJackPotData() {
         getJackpotAmount();
         // Requesting data every 2 minutes (120,000 ms) because Casino refreshes its feed with that frequency
         updateInterval = $interval(getJackpotAmount, 120000);
-        (CConfig.main.jackpotSubstituteCategory ? casinoData.getGames(CConfig.main.jackpotSubstituteCategory.id, null, countryCode) : casinoData.getJackpotGames()).then(function (response) {
 
-
-            if (response && response.data && response.data.status !== -1) {
-
-                if (response.data.games && response.data.games.length) {
-                    $scope.jackpotGames = response.data.games;
-                    $scope.jackpotSliderGames = $scope.jackpotGames.slice($scope.jackpotSlideIndex, $scope.jackpotSlideIndex + $scope.jackpotSliderVisibleGamesCount);
-                } else {
-                    $scope.providerMenuDefaultOffset = CConfig.main.providerMenuDefaultOffset ? CConfig.main.providerMenuDefaultOffset : 366;
-                    $scope.categoryMenuDefaultOffset = 370;
-                }
-
+        if (CConfig.main.jackpotSubstituteCategory) {
+            if (jackpotTotalGames === $scope.jackpotGames.length && jackpotTotalGames > 0) {
+                return;
             }
-        });
+
+            var bufferSize = 10;
+            var from = $scope.jackpotGames.length;
+            var to = jackpotTotalGames ? ($scope.jackpotGames.length + bufferSize > jackpotTotalGames ? jackpotTotalGames :  $scope.jackpotGames.length + bufferSize) : bufferSize;
+
+
+            casinoData.getGames(CConfig.main.jackpotSubstituteCategory.id, null, countryCode, from, to).then(function (response) {
+                if (response && response.data && response.data.status !== -1) {
+                    if (response.data.games && response.data.games.length) {
+                        $scope.jackpotGames = $scope.jackpotGames.concat(response.data.games);
+                        jackpotTotalGames = parseInt(response.data.total_count, 10);
+                        jackpotSliderAllGames = filterByField($scope.jackpotGames, 'has_age_restriction');
+                        calculateJackpotSliderGames();
+                    } else {
+                        $scope.providerMenuDefaultOffset = CConfig.main.providerMenuDefaultOffset ? CConfig.main.providerMenuDefaultOffset : 366;
+                        $scope.categoryMenuDefaultOffset = 370;
+                    }
+
+                }
+            });
+        } else {
+            casinoData.getJackpotGames().then(function (response) {
+                if (response && response.data && response.data.status !== -1) {
+                    if (response.data.games && response.data.games.length) {
+                        $scope.jackpotGames = response.data.games;
+                        jackpotSliderAllGames = filterByField($scope.jackpotGames, 'has_age_restriction');
+                        calculateJackpotSliderGames();
+                    } else {
+                        $scope.providerMenuDefaultOffset = CConfig.main.providerMenuDefaultOffset ? CConfig.main.providerMenuDefaultOffset : 366;
+                        $scope.categoryMenuDefaultOffset = 370;
+                    }
+                }
+            });
+        }
     }
 
 
@@ -390,7 +610,11 @@ CASINO.controller('casinoCtrl', ['$rootScope', '$scope', '$sce', '$location', 'G
      * @description  Increases number of recent games to show
      */
     $scope.loadMoreGames = function loadMoreGames() {
-        if ($scope.limits && $scope.limits.to < $scope.limits.max) {
+        if ($scope.loadingProcess) {
+            return;
+        }
+
+        if ($scope.limits && $scope.limits.to < $scope.limits.max && !$scope.gamesInfo.length) {
             $scope.limits.from = $scope.limits.to;
             $scope.limits.to += $scope.wideMode ? CConfig.main.increaseByWide : CConfig.main.increaseBy;
 
@@ -402,7 +626,7 @@ CASINO.controller('casinoCtrl', ['$rootScope', '$scope', '$sce', '$location', 'G
      * @description broadcasts event to fixElementOnScroll directive to force element stay fixed
      * @param targetId the id of dom element
      */
-    $scope.setTargetElementFixed = function setTargetElementFixed(targetId){
+    $scope.setTargetElementFixed = function setTargetElementFixed(targetId) {
         $rootScope.$broadcast('forceElementFix', {id: targetId});
     };
 
@@ -438,7 +662,7 @@ CASINO.controller('casinoCtrl', ['$rootScope', '$scope', '$sce', '$location', 'G
         casinoManager.openPopUpWindow($scope, id);
     };
 
-    $scope.togglePlayForReal = function togglePlayForReal (gameInfo) {
+    $scope.togglePlayForReal = function togglePlayForReal(gameInfo) {
         casinoManager.togglePlayMode($scope, gameInfo);
     };
 
@@ -454,6 +678,13 @@ CASINO.controller('casinoCtrl', ['$rootScope', '$scope', '$sce', '$location', 'G
      * @description  opens login form if it needed, or generates casino game url and opens it
      */
     $scope.openGame = function openGame(game, gameType, studio, urlSuffix, multiViewWindowIndex) {
+        var countries = CConfig.main.restrictProvidersInCountries;
+        if (countries && countries[game.provider] && countries[game.provider].indexOf(countryCode) !== -1) {
+            showPermittedMessage();
+
+            return;
+        }
+
         casinoManager.openCasinoGame($scope, game, gameType, studio, urlSuffix, multiViewWindowIndex);
     };
 
@@ -515,10 +746,24 @@ CASINO.controller('casinoCtrl', ['$rootScope', '$scope', '$sce', '$location', 'G
 
     function getAppropriateFavoriteGames() {
         var favGames = [];
+
+        var favoriteGamesProviders = [ALL_PRIVIDERS.name];
+
         for (var i = 0, length = $rootScope.myCasinoGames.length; i < length; i += 1) {
-            if ($scope.selections.providerName === ALL_PRIVIDERS.name || $rootScope.myCasinoGames[i].show_as_provider === $scope.selections.providerName) {
+            var game = $rootScope.myCasinoGames[i];
+            if (favoriteGamesProviders.indexOf(game.show_as_provider) === -1) {
+                favoriteGamesProviders.push(game.show_as_provider);
+            }
+
+            if ($scope.selections.providers.indexOf(ALL_PRIVIDERS.name) !== -1 || $scope.selections.providers.indexOf($rootScope.myCasinoGames[i].show_as_provider) !== -1) {
                 favGames.push($rootScope.myCasinoGames[i]);
             }
+        }
+        $scope.providers = [];
+        if (favoriteGamesProviders.length > 0 && allProviders) {
+            $scope.providers = allProviders.filter(function (item) {
+                return favoriteGamesProviders.indexOf(item.name) !== -1;
+            });
         }
         return favGames;
     }
@@ -552,7 +797,7 @@ CASINO.controller('casinoCtrl', ['$rootScope', '$scope', '$sce', '$location', 'G
         $scope.selectCategory({id: undefined});
     });
 
-    $scope.$on('casino.action', function(event, data) {
+    $scope.$on('casino.action', function (event, data) {
         switch (data.action) {
             case 'setUrlData':
                 data.url && data.frameId && casinoManager.setCurrentFrameUrlSuffix($scope.gamesInfo, data);
@@ -563,14 +808,55 @@ CASINO.controller('casinoCtrl', ['$rootScope', '$scope', '$sce', '$location', 'G
         }
     });
 
-    $scope.$watch('env.authorized', function (newValue, oldValue) {
-        if (newValue === oldValue) {
-            return;
-        }
-        if ($scope.gamesInfo && $scope.gamesInfo.length) {
-            casinoManager.refreshOpenedGames($scope);
-        }
-    });
+    function createAuthorizedWatcher() {
+        $scope.$watch('env.authorized', function (newValue, oldValue) {
+            if (newValue === oldValue) {
+                return;
+            }
+            if ($scope.gamesInfo && $scope.gamesInfo.length) {
+                casinoManager.refreshOpenedGames($scope);
+            }
+
+            if (!newValue) {
+                getJackpotAmount();
+
+                if (CConfig.main.recommendedGamesCategoryEnabled) {
+                    $scope.categories = $scope.categories.filter(function (category) {
+                        return category.id !== RECOMMENDED_CATEGORY.id;
+                    });
+
+                    if (CConfig.version === 2) {
+                        $scope.moveCategories(undefined, true);
+                        $scope.selectCategory($scope.categories[0]);
+                    }
+                }
+            } else {
+                var profileWatcherPromise = $scope.$watch('profile', function (newValue) {
+                    if (newValue) {
+                        profileWatcherPromise();
+                        getJackpotAmount();
+
+                        if (CConfig.version === 1) {
+                            updateCategoriesByProviderName($scope.selections.providers[0]);
+                        }
+
+                        if (CConfig.main.recommendedGamesCategoryEnabled) {
+                            getOptions( $rootScope.profile.id);
+                        }
+                    }
+                });
+            }
+
+            if ($scope.jackpotSliderGames) {
+                $scope.jackpotSlideIndex = 0;
+                jackpotSliderAllGames = filterByField($scope.jackpotGames, 'has_age_restriction');
+                calculateJackpotSliderGames();
+            }
+        });
+    }
+
+
+    var iframeGameCloseWatcher = $rootScope.$on('iframe.game.close', subscribeForJackpotData);
 
     $scope.$on('casino.selectCategory', function (event, category) {
         $scope.selectCategory(category);
@@ -613,7 +899,7 @@ CASINO.controller('casinoCtrl', ['$rootScope', '$scope', '$sce', '$location', 'G
     };
 
     $scope.toggleProvidersMenu = function toggleProvidersMenu() {
-        $scope.providersMenuState.isClosed = ! $scope.providersMenuState.isClosed;
+        $scope.providersMenuState.isClosed = !$scope.providersMenuState.isClosed;
     };
 
     $scope.loadBannerInsteadWinners = function loadBannerInsteadWinners(slug) {
@@ -625,10 +911,10 @@ CASINO.controller('casinoCtrl', ['$rootScope', '$scope', '$sce', '$location', 'G
     };
 
     // casino games list directive events
-    $scope.$on('casinoGamesList.openGame', function(e, data) {
+    $scope.$on('casinoGamesList.openGame', function (e, data) {
         if (!data.game && data.gameId) {
-            casinoData.getGames(null, null, countryCode, null, null, null, null, [data.gameId]).then(function(response) {
-                if(response && response.data && response.data.games && response.data.games.length) {
+            casinoData.getGames(null, null, countryCode, null, null, null, null, [data.gameId]).then(function (response) {
+                if (response && response.data && response.data.games && response.data.games.length) {
                     $scope.openGame(response.data.games[0]);
                 }
             });
@@ -637,34 +923,62 @@ CASINO.controller('casinoCtrl', ['$rootScope', '$scope', '$sce', '$location', 'G
         }
     });
 
-    $scope.$on('casinoGamesList.toggleSaveToMyCasinoGames', function(e, game) {
+
+    $scope.$on('casinoGamesList.toggleSaveToMyCasinoGames', function (e, game) {
         $scope.toggleSaveToMyCasinoGames(game);
     });
 
-    $scope.openCasinoGameDetails = function openCasinoGameDetails (game_skin_id) {
+    $scope.openCasinoGameDetails = function openCasinoGameDetails(game_skin_id) {
         casinoManager.openGameDetailsPopUp(game_skin_id);
     };
 
+    var initProfileWatcher = false;
 
     (function init() {
         Geoip.getGeoData(false).then(function (data) {
             data && data.countryCode && (countryCode = data.countryCode);
         })['finally'](function () {
-            getOptions();
+            if (CConfig.main.recommendedGamesCategoryEnabled && !$rootScope.profile && $rootScope.loginInProgress) {
+                var loginProccesWatcher = $scope.$watch('loginInProgress', function (loginInProgress, oldValLoginInProgress) {
+                    if (loginInProgress !== oldValLoginInProgress) {
+                        loginProccesWatcher();
+                        if (!loginInProgress && $rootScope.env.authorized) {
+                            initProfileWatcher = $rootScope.$watch('profile', function (profile) {
+                                if (profile) {
+                                    initProfileWatcher();
+                                    initProfileWatcher = false;
+                                    getOptions(profile.id);
+                                    createAuthorizedWatcher();
+                                    console.info('recommended-', 'loginInProgress -true');
+                                }
+                            });
+                        } else {
+                            getOptions($rootScope.profile && CConfig.main.recommendedGamesCategoryEnabled ? $rootScope.profile.id : null);
+                            createAuthorizedWatcher();
+                            console.info('recommended-', 'loginInProgress -false');
+                        }
+                    }
+                });
+            } else {
+                getOptions($rootScope.profile && CConfig.main.recommendedGamesCategoryEnabled ? $rootScope.profile.id : null);
+                createAuthorizedWatcher();
+                console.info('recommended-', 'loginInProgress -false');
+            }
             getJackPotData();
+            subscribeForJackpotData();
         });
     })();
 
     $scope.$on('$destroy', function () {
         casinoManager.clearAllPromises();
-
+        iframeGameCloseWatcher();
 
         if (updateInterval) {
             $interval.cancel(updateInterval);
         } else { // This is an optional part. During testing this never happened
 
             // if for some reason (e.g. fast route change) the promise wasn't created we wait for it to be defined
-            (function() {
+            (function () {
                 var timesCalled = 0;
                 console.warn('Jackpot request promise was not created, waiting for it to be defined');
                 TimeoutWrapper(function waitForPromise() {
@@ -676,7 +990,41 @@ CASINO.controller('casinoCtrl', ['$rootScope', '$scope', '$sce', '$location', 'G
                 }, 120000);
             })();
         }
-
-
     });
+
+    /**
+     * @ngdoc method
+     * @name moveCategories
+     * @methodOf CASINO.controller:casinoCtrl
+     * @description move categories right or left by limir size
+     * @param {Boolean} isNext is  move right
+     * @param {Boolean} initialize is initialize
+     */
+    $scope.moveCategories = function moveCategories(isNext, initialize) {
+        var startIndex;
+        if(initialize) {
+            $scope.categoriesGroupCount = Math.floor($scope.categories.length / CATEGORIES_LIMIT);
+            $scope.categoriesIndex = 0;
+           if ($scope.categoriesGroupCount * CATEGORIES_LIMIT < $scope.categories.length) {
+                lastCategoriesStartIndex = $scope.categories.length - CATEGORIES_LIMIT;
+               $scope.categoriesGroupCount += 1;
+           }
+           startIndex = 0;
+
+        } else if (isNext) {
+            $scope.categoriesIndex += 1;
+            if ($scope.categoriesIndex === $scope.categoriesGroupCount - 1 && lastCategoriesStartIndex !== undefined){
+                startIndex = lastCategoriesStartIndex;
+            } else {
+                startIndex = CATEGORIES_LIMIT * $scope.categoriesIndex;
+            }
+        } else {
+            $scope.categoriesIndex -= 1;
+            startIndex = CATEGORIES_LIMIT * $scope.categoriesIndex;
+        }
+        $scope.availableCategories = $scope.categories.slice(startIndex, startIndex + CATEGORIES_LIMIT);
+
+    };
+
+
 }]);

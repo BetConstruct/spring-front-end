@@ -10,6 +10,7 @@ BettingModule.controller('gamesCtrl', ['$rootScope', '$scope', '$location', '$fi
 
     TimeoutWrapper = TimeoutWrapper($scope);
     var connectionService = new ConnectionService($scope);
+    var subscriptionInProgress;
     var subIds = {};
     /**
      * @ngdoc object
@@ -21,8 +22,6 @@ BettingModule.controller('gamesCtrl', ['$rootScope', '$scope', '$location', '$fi
     $scope.openGames = {0: {}, 1: {}, 2: {}};
 
     $scope.pinnedGames = {};
-    $scope.displayEventLimit = GameInfo.displayEventLimit;
-    $scope.cancelDisplayEventLimit = GameInfo.cancelDisplayEventLimit;
 
     $scope.isInArray = Utils.isInArray;
     /**
@@ -84,24 +83,6 @@ BettingModule.controller('gamesCtrl', ['$rootScope', '$scope', '$location', '$fi
         return states[key].state;
     };
 
-    /**
-     * @ngdoc function
-     * @name toggleSaveToMyCompetitions
-     * @methodOf vbet5.controller:gamesCtrl
-     * @description Toggle "save to my competitions"
-     * @param {Object} competition object
-     */
-    $scope.toggleSaveToMyCompetitions = function toggleSaveToMyCompetitions(competition) {
-        if (Utils.isInArray($rootScope.myCompetitions, competition.id) < 0) {
-            $scope.$emit('game.addToMyGames', competition.gamesArray);
-            $scope.$emit('game.addToMyCompetition', competition);
-        }
-        else {
-            $scope.$emit('game.removeGameFromMyGames', competition.gamesArray);
-            $scope.$emit('game.removeGameFromMyCompetition', competition);
-        }
-
-    };
 
     /**
      * @ngdoc function
@@ -290,6 +271,9 @@ BettingModule.controller('gamesCtrl', ['$rootScope', '$scope', '$location', '$fi
      * @param {function} callback function that will be called upon successful subscription and further updates
      */
     $scope.subscribeToGame = function subscribeToGame(game, callback) {
+        if (subscriptionInProgress === game.id) { return; }
+
+        subscriptionInProgress = game.id;
         var request = {
             'source': 'betting',
             'what': {
@@ -307,22 +291,22 @@ BettingModule.controller('gamesCtrl', ['$rootScope', '$scope', '$location', '$fi
             }
         };
 
-        var gameUpdateCallback = function gameUpdateCallback(data) {
-            updateGame(data);
-            callback();
-        };
-
         connectionService.subscribe(
             request,
-            gameUpdateCallback,
+            function gameUpdateCallback(data) {
+                updateGame(data);
+                callback();
+            },
             {
                 'thenCallback': function (result) {
                     if (result.subid) {
                         subIds[game.id] = result.subid;
+                        subscriptionInProgress = false;
                     }
                 },
                 'failureCallback': function (reason) {
                     console.log('Error:', reason);
+                    subscriptionInProgress = false;
                 }
             },
             true

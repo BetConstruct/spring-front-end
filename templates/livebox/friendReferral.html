@@ -1,0 +1,51 @@
+<div class="friend-referral" ng-init="initFriendReferral()">
+    <h3 trans>Friend Referral</h3>
+    <div class="settings-info-contain deposit-limit">
+        <p>Please add friend referral description</p>
+        <div class="referral-info">
+            <div>
+                <label trans>Promo Code</label>
+                <div>{{profile.username}}</div>
+            </div>
+            <div>
+                <label trans>Period</label>
+                <div class="select-block">
+                    <select ng-model="selectedFriendRefData.date" ng-options="date.text for date in refDatesArray" ng-change="loadFriendReferralData()">
+                    </select>
+                </div>
+            </div>
+        </div>
+        <label class="results-live-j" ng-hide="true">
+            <input type="checkbox">
+            <i></i>
+            <span trans>Active players only</span>
+        </label>
+        <vbet-loader ng-show="loadingReferralsList"></vbet-loader>
+        <div ng-show="!loadingReferralsList">
+            <table>
+                <tr>
+                    <th trans>Player Name</th>
+                    <th trans>Win or loss</th>
+                </tr>
+            </table>
+            <div class="referral-table">
+                <table>
+                    <tr ng-repeat="subClient in friendReferralList track by subClient.client_id">
+                        <td ng-bind="subClient.name"></td>
+                        <td ng-bind="subClient.profit"></td>
+                    </tr>
+                </table>
+            </div>
+            <table class="ref-total">
+                <tr>
+                    <th trans>Total</th>
+                    <th>{{friendReferralData.bonus_percent}}%</th>
+                </tr>
+                <tr>
+                    <td ng-bind="friendReferralData.total_amount || 0"></td>
+                    <td ng-bind="friendReferralData.bonus_amount || 0"></td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>

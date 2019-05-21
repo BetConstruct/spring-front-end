@@ -6,10 +6,10 @@
             </div>
          </div>
         <div class="header">
-        	<div class="logo" ng-class="conf.site_name"><a>logo</a></div>
+        	<div class="logo" ng-class="$root.conf.site_name"><a>logo</a></div>
             	<div class="contain-all-settings">
-                    <div id="live-chat-button1" ng-if="!conf.liveChat.isSfChat && conf.liveChat.siteId && conf.liveChat.codePlan"  title="Live Chat" trans class="help-b"></div>
-                    <div class="help-b" ng-if="conf.liveChat.isSfChat" ng-click="startSFChat()" title="Live Chat" trans="attr-only">
+                    <div id="live-chat-button1" ng-if="!$root.conf.liveChat.isSfChat && $root.conf.liveChat.siteId && $root.conf.liveChat.codePlan"  title="Live Chat" trans class="help-b"></div>
+                    <div class="help-b" ng-if="$root.conf.liveChat.isSfChat" ng-click="startSFChat()" title="Live Chat" trans="attr-only">
                         <li><a trans>Contact Support</a></li>
                     </div>
             	</div>

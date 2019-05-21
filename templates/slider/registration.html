@@ -3,7 +3,7 @@
     <div class="float-width" ng-show="conf.facebookIntegration.enable" ng-include="::'templates/slider/fbsignup.html'|fixPath"></div>
 
     <div ng-show="!conf.facebookIntegration.enable">
-        
+
         <div class="registration-list-columns-wrapper-j" ng-show="!registration.complete && !registration.failed" ng-init="regFormInit()">
             <ul class="registartion-title-wrapper-j">
                 <li><h3 trans>Register</h3></li>
@@ -28,11 +28,11 @@
                     </ul>
                 </div>
                 <div class="registration-list-columns-footer-j">
-                    <ul> 
+                    <ul>
                         <li>
-                            <div class="no-select-j checkbox-reg-j" ng-init="resetError[agree] = true"> 
-                                
-                                
+                            <div class="no-select-j checkbox-reg-j" ng-init="resetError[agree] = true">
+
+
                                 <input ng-model="registrationData.agree" type="checkbox" id="checkbox-id" name="agree" required>
                                 <label ng-if="!conf.registration.customTerms" for="checkbox-id"  ng-class="{'error': !resetError[agree] && registerform.agree.$error.required}">
                                     <span trans>I agree to all</span>
@@ -47,7 +47,7 @@
                                     <span ng-show="conf.registration.minimumAllowedAge==18" class="hintReq" trans>and I am over 18 years of age and have read and accepted the general terms and conditions.</span>
                                     <span ng-show="conf.registration.minimumAllowedAge==21" class="hintReq" trans>and I am over 21 years of age and have read and accepted the general terms and conditions.</span>
 
-                                    
+
                                 </label>
                                 <label ng-if="conf.registration.customTerms" for="checkbox-id"  ng-class="{'error': !resetError[agree] && registerform.agree.$error.required}">
                                     <span ng-bind-html="conf.registration.customTerms.prefix|translate|html"></span>
@@ -105,7 +105,6 @@
                                 </h5>
                                 <h6 ng-if="conf.registration.mailIsSentAfterRegistration">
                                     <span>{{ conf.registration.mailIsSentAfterRegistration | translate }}</span>
-                                    <a ng-if="!conf.GmsPlatform" ng-click="resendEmail()" trans>Resend</a>
                                 </h6>
                             </div>
                             <div class="finish-register-buttons">

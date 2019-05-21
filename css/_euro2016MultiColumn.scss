@@ -50,7 +50,6 @@
     p {
       position: absolute;
       top: 0;
-      left: 0;
       width: 100%;
       font-size: 4 + $size-font;
       line-height: 20px;
@@ -58,8 +57,10 @@
       text-overflow: ellipsis;
       white-space: nowrap;
       overflow: hidden;
+      @include ltr {
+        left: 0;
+      }
       @include rtl {
-        left: auto;
         right: 0;
       }
     }
@@ -68,6 +69,16 @@
         .multicolumn-table {
           .time-info-game-box-v3 {
             top: 0;
+          }
+          .aic-team-names-wrapper .icon-separator-v3.favorite {
+            @include ltr {
+              right: -14px;
+              bottom: 0;
+            }
+            @include rtl {
+              left: -14px;
+              bottom: 0;
+            }
           }
         }
       }
@@ -99,7 +110,9 @@
           &.aic-over-under-cell {
             width: 167px;
             p {
-              padding: 0 0 0 29px;
+              @include ltr {
+                padding: 0 0 0 29px;
+              }
               @include rtl {
                 padding: 0 29px 0 0;
               }
@@ -137,7 +150,9 @@
     }
   }
   .time-title-view-v3 .competition-title {
-    margin: 0 0 0 17px;
+    @include ltr {
+      margin: 0 0 0 17px;
+    }
     @include rtl {
       margin: 0 17px 0 0;
     }
@@ -157,13 +172,17 @@
     box-shadow: inset 0 1px 0 rgba(set-color(darken( desaturate( adjust-hue( $c16-sp-8, 5deg ), 2 ), 5 )), 0.06);
     transition: 240ms background;
     .closed-game-icon-v3 + tbody tr .aic-team-names-wrapper {
-      padding: 5px 8px 5px 28px;
+      @include ltr {
+        padding: 5px 8px 5px 28px;
+      }
       @include rtl {
         padding: 5px 28px 5px 8px;
       }
     }
     .closed-game-icon-v3 + colgroup + tbody tr .aic-team-names-wrapper {
-      padding: 5px 8px 5px 28px;
+      @include ltr {
+        padding: 5px 8px 5px 28px;
+      }
       @include rtl {
         padding: 5px 28px 5px 8px;
       }
@@ -183,23 +202,34 @@
   line-height: 30px;
   float: left;
   margin: 7px 0;
+  position: relative;
   > .max-bet-tooltip-v3{
-    left: auto;
     right: 0;
     z-index: 666;
-    transform: translateX(0);
+    //transform: translateX(0);
     //> p{
     //  float: right;
     //}
+    &:after{
+      float: right;
+      bottom: 17px;
+      //margin-bottom: 33px;
+    }
+    &:before{
+      top: auto;
+      left: auto;
+      bottom: 21px;
+      right: 12px;
+    }
   }
   &:hover {
     overflow: inherit;
-    > .max-bet-tooltip-v3 {
-      height: auto;
-      display: block;
-      overflow: inherit;
-      opacity: 1;
-    }
+    //> .max-bet-tooltip-v3 {
+      //height: auto;
+      //display: block;
+      //overflow: inherit;
+      //opacity: 1;
+    //}
   }
   &.first {
     border-radius: 2px 0 0 2px;
@@ -268,11 +298,12 @@
       display: block;
       position: absolute;
       top: 0;
-      right: -5px;
       transition: 240ms color;
+      @include ltr {
+        right: -5px;
+      }
       @include rtl {
         left: -5px;
-        right: auto;
         transform: rotateY(180deg)
       }
     }
@@ -287,11 +318,13 @@
 }
 .aic-team-names-wrapper {
   z-index: 50;
-  padding: 5px 8px 5px 10px;
   font-size: 5 + $size-font;
   line-height: 17px;
   color: $c16-tp-3;
   transition: 240ms color;
+  @include ltr {
+    padding: 5px 8px 5px 10px;
+  }
   @include rtl {
     padding: 5px 10px 5px 8px;
   }
@@ -302,11 +335,13 @@
       vertical-align: top;
       width: 100%;
       .aic-team-names {
-        float: left;
         width: calc(100% - 34px);
         position: relative;
         height: 17px;
         box-sizing: border-box;
+        @include ltr {
+          float: left;
+        }
         @include rtl {
           float: right;
         }
@@ -341,16 +376,35 @@
   }
   .icon-separator-v3 {
     color: $c16-tp-4;
-    float: none;
     display: inline-block;
     vertical-align: top;
-    margin: 0 0 0 2px;
+    @include ltr {
+      float: none;
+    }
     @include rtl {
       float: none;
       margin: 0 2px 0 0;
     }
     &.favorite {
+      position: absolute;
+      bottom: -15px;
+      margin: 0;
       color: $c16-tp-11;
+      z-index: 1;
+      @include ltr {
+        right: 0;
+      }
+      @include rtl {
+        left: 0;
+      }
+    }
+    &.statistic {
+      @include ltr {
+        margin: 0 14px 0 0;
+      }
+      @include rtl {
+        margin: 0 0 0 14px;
+      }
     }
   }
 }

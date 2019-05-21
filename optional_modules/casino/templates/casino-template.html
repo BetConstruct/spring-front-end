@@ -1,8 +1,8 @@
 <div ng-show="!gamesInfo.length" class="center-contain-casino-b" id="casinoScrollable">
     <div class="casino-top-slider-wrapper" ng-class="(confData.main.topBanners.showPopularGameBannerDoubleSize && !confData.main.topBanners.showPopularGameBanner) ? 'single-game-contain-wp-double' : '' ">
         <!--Slider-->
-        <div ng-controller="cmsPagesCtrl" ng-init="getCasinoBanners();"  class="slider-view-casino-b" ng-if="confData.main.topBanners.showSlider" ng-class="{'full-width-slider-casino-j': (!confData.main.topBanners.showBannerInsteadWinners && !confData.main.topBanners.showBannerInsteadOfBiggestWinners && confData.main.topBanners.showPopularGameBanner)}">
-            <vbet-big-slider class="big-slider-casino-directive" ng-if="casinoTopBanners" images="casinoTopBanners" link-click-handler="openCBannerLink" slider-template="true" additional-data="gamesAdditionalData" ></vbet-big-slider> <!-- todo   gamesAdditionalData2  -->
+        <div ng-controller="cmsPagesCtrl" ng-init="getCasinoBanners(null, true);"  class="slider-view-casino-b" ng-if="confData.main.topBanners.showSlider" ng-class="{'full-width-slider-casino-j': (!confData.main.topBanners.showBannerInsteadWinners && !confData.main.topBanners.showBannerInsteadOfBiggestWinners && confData.main.topBanners.showPopularGameBanner)}">
+            <vbet-big-slider class="big-slider-casino-directive" ng-if="casinoTopBanners[$root.env.authorized]" images="casinoTopBanners[$root.env.authorized]" link-click-handler="openCBannerLink" slider-template="true" additional-data="gamesAdditionalData" ></vbet-big-slider>
         </div>
         <!--Slider END-->
         <div class="casino-right-b-modules" ng-if="confData.main.topBanners.showPopularGameBanner || confData.main.topBanners.showBannerInsteadWinners || confData.main.topBanners.showBannerInsteadOfBiggestWinners || confData.main.topBanners.showBiggestWinners || confData.main.topBanners.showPopularGameBannerDoubleSize">
@@ -53,15 +53,22 @@
                     <ul sub-menu-creator="casino">
                         <!-- <div class="contaien-country" data-step="3" data-position="bottom" data-intro="Select region" trans="attr-only">-->
                         <li ng-if="confData.main.filterByProviderEnabled" ng-repeat="provider in providers track by $index">
-                            <a ng-click="selectProvider(provider)"
-                               ng-class="{'active': selections.providerName === provider.name}">
+                            <a ng-click="setProviders([provider.name])"
+                               ng-class="{'active': selections.providers.indexOf(provider.name) !== -1}">
                                 <span>{{ provider.title|translate }}</span>
+                            </a>
+                        </li>
+                        <li ng-if="!confData.main.filterByProviderEnabled">
+                            <a  ng-class="{'active': selections.category.id === favouriteCategory.id}"
+                                ng-click="selectCategory(favouriteCategory)"
+                                ng-show="confData.main.favourtieGamesCategoryEnabled && myCasinoGames.length !== 0">
+                                <span>{{ favouriteCategory.title | translate : null : 'Casino ' + favouriteCategory.title }}</span>
                             </a>
                         </li>
                         <li ng-if="!confData.main.filterByProviderEnabled" ng-repeat="category in categories track by category.id">
                             <a  ng-class="{'active': selections.category.id === category.id}"
                                 ng-click="selectCategory(category)"
-                                ng-show="category.id !== -1 || myCasinoGames.length !== 0">
+                            >
                                 <span>{{ category.title | translate : null : 'Casino ' + category.title }}</span>
                             </a>
                         </li>
@@ -81,8 +88,13 @@
                         <!--search END-->
                         <div class="left-column-casino-nav" ng-if="confData.main.filterByProviderEnabled" no-animate>
                             <ul>
+                                <li ng-class="{'active': selections.category.id === favouriteCategory.id}"
+                                    ng-click="selectCategory(favouriteCategory)"
+                                    ng-show="confData.main.favourtieGamesCategoryEnabled && myCasinoGames.length !== 0"
+                                    class="{{'cat-id-' + favouriteCategory.id}}">
+                                    {{ favouriteCategory.title | translate : null : 'Casino ' + favouriteCategory.title }}
+                                </li>
                                 <li ng-repeat="category in categories track by category.id"
-                                    ng-show="category.id !== -1 || myCasinoGames.length !== 0"
                                     ng-class="{'active': selections.category.id === category.id}"
                                     ng-click="selectCategory(category)"
                                     class="{{'cat-id-' + category.id}}">
@@ -103,7 +115,7 @@
                                    game-show-conditions="true">
                 </casino-games-list>
                 <vbet-loader ng-show="loadingProcess"></vbet-loader>
-                <div ng-show="games.length > numberOfRecentGames" class="more-casino-games-load-b"><p load-more ng-click="loadMoreGames(); setTargetElementFixed('casinoCategories')"><span trans>Load more</span></p></div>
+                <div ng-show="limits.max > games.length" class="more-casino-games-load-b"><p load-more ng-click="loadMoreGames(); setTargetElementFixed('casinoCategories')"><span trans>Load more</span></p></div>
                 <div ng-show="!loadingProcess && !games.length" class="new-casino-no-games-text"><p trans>No games found</p></div>
             </div>
         </div>

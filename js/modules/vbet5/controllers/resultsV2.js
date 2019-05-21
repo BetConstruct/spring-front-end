@@ -102,6 +102,9 @@ angular.module('vbet5.betting').controller('ResultsV2Controller', ['$rootScope',
             angular.forEach($scope.games, function (game, competitionId) {
                 if (!$scope.selectedCompetitions[$scope.requestData.live ? 1 : 0][competitionId]) {
                     delete $scope.games[competitionId];
+                    if ($scope.openGameDetails && $scope.openGameDetails.competition_id === +competitionId) {
+                        $scope.openGameDetails = false;
+                    }
                 }
             });
 
@@ -270,7 +273,7 @@ angular.module('vbet5.betting').controller('ResultsV2Controller', ['$rootScope',
                     }
                 };
                 if (Config.main.disableVirtualSportsInResults) {
-                    requestSportList.where = {'sport': {'id': {'@nin': GameInfo.getVirtualSportIds()}}};
+                    requestSportList.where = {'sport': {'type': {'@ne': 1}}};
                 }
 
                 Utils.setCustomSportAliasesFilter(requestSportList);
@@ -438,6 +441,9 @@ angular.module('vbet5.betting').controller('ResultsV2Controller', ['$rootScope',
             delete $scope.games[competitionId];
             $scope.selectedCompetitions[$scope.requestData.live ? 1 : 0][competitionId] = false;
             $scope.requestData.gamesCount = countGames();
+            if ($scope.openGameDetails && +competitionId === $scope.openGameDetails.competition_id) {
+                $scope.openGameDetails = false;
+            }
         };
 
         /**
@@ -593,7 +599,7 @@ angular.module('vbet5.betting').controller('ResultsV2Controller', ['$rootScope',
         $scope.clearAllResultGames = function clearAllResultGames () {
             $scope.games = {};
             $scope.requestData.gamesCount = 0;
-
+            $scope.openGameDetails = false;
             $scope.selectedCompetitions = {
                 '0': {},
                 '1': {}

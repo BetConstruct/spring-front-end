@@ -156,7 +156,6 @@ VBET5.controller('buddyCtrl', ['$rootScope', '$scope', 'Translator', 'Zergling',
         });
     };
 
-
     /**
      * @ngdoc method
      * @name userTransfers
@@ -164,49 +163,6 @@ VBET5.controller('buddyCtrl', ['$rootScope', '$scope', 'Translator', 'Zergling',
      * @description prepare and show data in step1
      */
     function userTransfers() {
-        $scope.friendListLoaded = false;
-        Zergling.get({}, 'user_transfers').then(function (response) {
-            $scope.friendListLoaded = true;
-            console.log('user_transfers response', response);
-            $scope.friendList = [];
-
-            if (response && response.details && response.details.transfers_to && response.details.transfers_to.transfer && response.details.transfers_to.transfer.length) {
-
-                var friendList, friendListLength, i, j, k;
-                friendList = response.details.transfers_to.transfer;
-                friendListLength = response.details.transfers_to.transfer.length;
-
-
-                for (j = 0; j < friendListLength; j++) {
-                    for (i = 0; i < j; i++) {
-                        if (friendList[i].id === friendList[j].id) {
-                            friendList.splice(j--, 1);
-                            friendListLength--;
-                        }
-                    }
-                }
-
-                for (k = 0; k < friendListLength; k++) {
-                    $scope.friendList.push({
-                        id: friendList[k].id,
-                        username: friendList[k].to_login,
-                        fullName: friendList[k].to_name
-                    });
-                }
-            }
-        }, function (failResponse) {
-            $scope.friendListLoaded = true;
-            console.log('user_transfers failResponse', failResponse);
-        });
-    }
-
-    /**
-     * @ngdoc method
-     * @name userTransfersGms
-     * @methodOf vbet5.controller:buddyCtrl
-     * @description prepare and show data in step1
-     */
-    function userTransfersGms() {
         $scope.friendListLoaded = false;
         Zergling.get({}, 'get_buddy_list').then(function (response) {
             $scope.friendListLoaded = true;
@@ -329,6 +285,7 @@ VBET5.controller('buddyCtrl', ['$rootScope', '$scope', 'Translator', 'Zergling',
 
 
     function getInfoText(payments) {
+        if (!payments) { return; }
         var i = payments.length,
             text = '';
 
@@ -348,12 +305,8 @@ VBET5.controller('buddyCtrl', ['$rootScope', '$scope', 'Translator', 'Zergling',
 
 
     (function init() {
-        if (Config.main.GmsPlatform) {
-            $scope.b2bInfoText = getInfoText(Config.payments);
-            if (Config.main.buddyTransfer.version === 2) {
-                userTransfersGms();
-            }
-        } else {
+        $scope.b2bInfoText = getInfoText(Config.payments);
+        if (Config.main.buddyTransfer.version === 2) {
             userTransfers();
         }
     })();

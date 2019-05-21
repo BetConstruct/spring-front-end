@@ -9,13 +9,13 @@
 
                     <!--video and animation-->
                     <div class="animation-video-box-v3" ng-class="{'active': hideVideoAndAnimationBox}"
-                         ng-if="(openGame.type === 1 || !virtualSportsSelected) && (((openGame.video_id || openGame.video_data) && conf.videoEnabled && !pinnedGames[openGame.id] && !enlargedGame) || openGame.has_animation)">
+                         ng-if="(openGame.type === 1 || !virtualSportsSelected) && (((openGame.video_id || openGame.video_data) && $root.conf.videoEnabled && !pinnedGames[openGame.id] && !enlargedGame) || openGame.has_animation)">
                         <div class="animation-video-contain-v3" ng-if="openGame.type===1">
                             <div class="animation-video-title-row-v3">
                                 <div class="anime-video-switcher-v3">
                                     <ul>
                                         <li class="video-view-icon-v3" ng-click="openGame.activeFieldType='video'; playerRemoved = false;"
-                                            ng-show="conf.videoEnabled && (openGame.video_id || openGame.video_data) && !pinnedGames[openGame.id] && (!enlargedGame || openGame.id !== enlargedGame.id)"
+                                            ng-show="$root.conf.videoEnabled && (openGame.video_id || openGame.video_data) && !pinnedGames[openGame.id] && (!enlargedGame || openGame.id !== enlargedGame.id)"
                                             ng-class="{'active': openGame.activeFieldType==='video' && !playerRemoved}">
                                         </li>
                                         <li class="animation-view-icon-v3" ng-show="openGame.has_animation" ng-click="openGame.activeFieldType='field'"
@@ -26,15 +26,15 @@
                                 <div class="contain-v-a-fanction-icons-v3">
                                     <ul>
                                         <li class="arrow-closed-anime-b-v3" ng-click="toggleVideoAndAnimationBox()" ng-class="{'active': hideVideoAndAnimationBox}"></li>
-                                        <li class="pin-icon-video-v3" ng-class="{'disabled': !env.authorized}" ng-show="openGame.video_data && openGame.activeFieldType == 'video' && openGame.tv_type !== conf.defaultStreaming.tvType && !pinnedGames[openGame.id]" ng-click="openGame.activeFieldType='field'; detachVideo('dragable');"></li>
-                                        <li class="resize-icon-full-video-v3" ng-show="openGame.video_data && openGame.activeFieldType == 'video'" ng-class="{'active': env.authorized && openGame.activeFieldType == 'video' &&!conf.detachedVideoSizes[openGame.tv_type],'disabled': !(env.authorized && openGame.activeFieldType == 'video' &&!conf.detachedVideoSizes[openGame.tv_type])}" ng-click="openGame.activeFieldType='field'; detachVideo('fullScreen');"></li>
+                                        <li class="pin-icon-video-v3" ng-class="{'disabled': !env.authorized}" ng-show="openGame.video_data && openGame.activeFieldType == 'video' && openGame.tv_type !== $root.conf.defaultStreaming.tvType && !pinnedGames[openGame.id]" ng-click="openGame.activeFieldType='field'; detachVideo('dragable');"></li>
+                                        <li class="resize-icon-full-video-v3" ng-show="openGame.video_data && openGame.activeFieldType == 'video'" ng-class="{'active': env.authorized && openGame.activeFieldType == 'video' &&!$root.conf.detachedVideoSizes[openGame.tv_type],'disabled': !(env.authorized && openGame.activeFieldType == 'video' &&!$root.conf.detachedVideoSizes[openGame.tv_type])}" ng-click="openGame.activeFieldType='field'; detachVideo('fullScreen');"></li>
                                         <li class="sound-icon-v3 " ng-click="env.sound = 0;" ng-show="openGame.activeFieldType==='field' && env.sound > 0" title="Sound" trans="attr-only"></li>
                                         <li class="sound-icon-v3 active" ng-click="env.sound = 0.75;" ng-show="openGame.activeFieldType==='field' && env.sound === 0" title="Sound" trans="attr-only"></li>
                                     </ul>
                                 </div>
                             </div>
                             <div class="video-animation-vox-v3 animation-control">
-                                <video-player ng-if="openGame.activeFieldType === 'video' && !hideVideoAndAnimationBox && conf.videoEnabled && !enlargedGame && !pinnedGames[openGame.id]"
+                                <video-player ng-if="openGame.activeFieldType === 'video' && !hideVideoAndAnimationBox && $root.conf.videoEnabled && !enlargedGame && !pinnedGames[openGame.id]"
                                               class="game-video"
                                               ng-class="{'animation-start': !$root.conf.videoProvidersThatWorkWithIframe[openGame.tv_type] && !videoState.videoIsLoaded && openGame.video_data, 'animation-end': videoState.videoIsLoaded}"
                                               player-id="gamevideo{{openGame.id}}"
@@ -42,14 +42,14 @@
                                               provider-id="{{openGame.tv_type}}"
                                               initially-muted="{{ env.sound }}"></video-player>
 
-                                <!--<include-template template-path="templates/sport/classic/video.html" ng-if="openGame.activeFieldType === 'video' && !hideVideoAndAnimationBox && conf.videoEnabled && !enlargedGame && !pinnedGames[openGame.id]" class="game-video"></include-template>-->
+                                <!--<include-template template-path="templates/sport/classic/video.html" ng-if="openGame.activeFieldType === 'video' && !hideVideoAndAnimationBox && $root.conf.videoEnabled && !enlargedGame && !pinnedGames[openGame.id]" class="game-video"></include-template>-->
                                 <include-template template-path="templates/sport/classic/animations.html"></include-template>
                             </div>
                         </div>
                     </div>
                     <!--video and animation END-->
                     <!--betslip-->
-                    <div ng-if="::!conf.disableBetSlip" class="right-block-list" ng-class="{'betslip-open':betslipOpen}">
+                    <div ng-if="::!$root.conf.disableBetSlip" class="right-block-list" ng-class="{'betslip-open':betslipOpen}">
                         <div class="betslip-toggle" ng-click="betslipOpen=!betslipOpen" ng-class="{'betslip-button-open':betslipOpen }"><p>BetSlip</p><span class="betslip-bets-count" ng-bind="$root.betSlipBetsCount"></span></div>
                         <div class="list-bet-block" ng-if="$location.path() !== '/poolbetting/'" ng-include="::'templates/sport/betslip.html'|fixPath"></div>
                     </div>
@@ -69,7 +69,7 @@
 
                     <!--Menu tabs-->
                     <!--Favorite games-->
-                    <include-template class="left-menu-wrapper-v3" template-path="templates/sport/euro2016/left/favorites.html"></include-template>
+                    <include-template class="left-menu-wrapper-v3" template-path="templates/sport/classic/left/favorites.html"></include-template>
                     <div class="asian-left-nav">
                         <vbet-loader ng-show="leftMenuIsLoading"></vbet-loader>
                         <div ng-if="!leftMenuIsLoading" class="asian-left-menu">
@@ -126,13 +126,13 @@
 
             <!--filter-->
             <div class="big-filter-wrapper">
-                <div ng-if="conf.availableAsianViewThemes.length > 1" class="selectSportsbookColor-j" ng-class="{active: themeSelector.show}">
+                <div ng-if="$root.conf.availableAsianViewThemes.length > 1" class="selectSportsbookColor-j" ng-class="{active: themeSelector.show}">
                     <p ng-click="themeSelector.show = !themeSelector.show"></p>
                     <div>
-                        <div ng-repeat="theme in conf.availableAsianViewThemes track by $index" ng-class="{active: themeSelector.name == theme.name}" ng-click="loadTheme(theme)" class="{{theme.displayName || theme.name}}"></div>
+                        <div ng-repeat="theme in $root.conf.availableAsianViewThemes track by $index" ng-class="{active: themeSelector.name == theme.name}" ng-click="loadTheme(theme)" class="{{theme.displayName || theme.name}}"></div>
                     </div>
                 </div>
-                <div ng-if="conf.asian.countdown.enabled" class="refresh-asian-view">
+                <div ng-if="$root.conf.asian.countdown.enabled" class="refresh-asian-view">
                     <button ng-class="{'loading-proccess' : countDown.remaining === 0}" ng-click="resetCountDown()" ng-bind="countDown.remaining || ''"></button>
                 </div>
                 <ul>
@@ -154,7 +154,7 @@
                             </div>
                         </div>
                     </li>
-                    <li ng-show="openGame" ng-click="goBackFromOpenGame(); resetCountDown(true);">
+                    <li ng-show="openGame" ng-click="goBackFromOpenGame(true); resetCountDown(true);">
                         <div class="contein-mini-filtr">
                             <div class="filter-icon back"></div>
                             <p trans>Back</p>
@@ -215,42 +215,42 @@
             <div class="asian-separator-container-b" ng-switch=":selectedMarket-change:selectedMarket.key" ng-show="!marketGamesAreLoading && (centerData.competitions.length || selectedMarket.key === 'FULLGAME')">
                 <!-- first goal last goal-->
                 <div class="asian-separator-container-b" ng-switch-when="FLG">
-                    <ng-include class="asian-separator-container-b" src="::'templates/sport/asian/' + (conf.GmsPlatform ? 'gms/' : '') + 'market/flg.html'|fixPath"></ng-include>
+                    <ng-include class="asian-separator-container-b" src="::'templates/sport/asian/market/flg.html'|fixPath"></ng-include>
                 </div>
                 <!-- first goal last goal-->
                 <!--Outright-->
                 <div class="asian-separator-container-b" ng-switch-when="OUR">
-                    <ng-include class="asian-separator-container-b" src="::'templates/sport/asian/' + (conf.GmsPlatform ? 'gms/' : '') + 'market/our.html'|fixPath"></ng-include>
+                    <ng-include class="asian-separator-container-b" src="::'templates/sport/asian/market/our.html'|fixPath"></ng-include>
                 </div>
                 <!--Outright END-->
                 <!--match odds 1X2-->
                 <div class="asian-separator-container-b" ng-switch-when="MODDS" >
-                    <ng-include class="asian-separator-container-b" src="::'templates/sport/asian/' + (conf.GmsPlatform ? 'gms/' : '') + 'market/modds.html'|fixPath"></ng-include>
+                    <ng-include class="asian-separator-container-b" src="::'templates/sport/asian/market/modds.html'|fixPath"></ng-include>
                 </div>
                 <!--match odds 1X2-->
                 <!--HT FT -->
                 <div class="asian-separator-container-b" ng-switch-when="HTFT">
-                    <ng-include class="asian-separator-container-b" src="::'templates/sport/asian/' + (conf.GmsPlatform ? 'gms/' : '') + 'market/htft.html'|fixPath"></ng-include>
+                    <ng-include class="asian-separator-container-b" src="::'templates/sport/asian/market/htft.html'|fixPath"></ng-include>
                 </div>
                 <!--HT FT END-->
                 <!-- HDP & OU -->
                 <div class="asian-separator-container-b" ng-switch-when="HDP">
-                    <ng-include class="asian-separator-container-b" src="::'templates/sport/asian/' + (conf.GmsPlatform ? 'gms/' : '') + 'market/hdp.html'|fixPath"></ng-include>
+                    <ng-include class="asian-separator-container-b" src="::'templates/sport/asian/market/hdp.html'|fixPath"></ng-include>
                 </div>
                 <!-- HDP & OU END-->
                 <!-- Ft & HT Odd/Even-->
                 <div class="asian-separator-container-b" ng-switch-when="FHTOE">
-                    <ng-include class="asian-separator-container-b" src="::'templates/sport/asian/' + (conf.GmsPlatform ? 'gms/' : '') + 'market/fhtoe.html'|fixPath"></ng-include>
+                    <ng-include class="asian-separator-container-b" src="::'templates/sport/asian/market/fhtoe.html'|fixPath"></ng-include>
                 </div>
                 <!-- Ft & HT Odd/Even-->
                 <!--FT & HT Correct Score-->
                 <div class="asian-separator-container-b" ng-switch-when="FHTCS">
-                    <ng-include class="asian-separator-container-b" src="::'templates/sport/asian/' + (conf.GmsPlatform ? 'gms/' : '') + 'market/fhtcs.html'|fixPath"></ng-include>
+                    <ng-include class="asian-separator-container-b" src="::'templates/sport/asian/market/fhtcs.html'|fixPath"></ng-include>
                 </div>
                 <!--FT & HT Correct Score END-->
                 <!-- FT & HT Double Chance -->
                 <div class="asian-separator-container-b" ng-switch-when="FTDC">
-                    <ng-include class="asian-separator-container-b" src="::'templates/sport/asian/' + (conf.GmsPlatform ? 'gms/' : '') + 'market/ftdc.html'|fixPath"></ng-include>
+                    <ng-include class="asian-separator-container-b" src="::'templates/sport/asian/market/ftdc.html'|fixPath"></ng-include>
                 </div>
                 <!-- FT & HT Double Chance END -->
                 <!-- FT & HT Total Goal -->
@@ -259,7 +259,7 @@
                 </div>
                 <!--FT & HT Total Goal END -->
                  <div class="asian-separator-container-b fullgame-j" ng-switch-when="FULLGAME">
-                    <ng-include class="asian-separator-container-b" src="::'templates/sport/asian/' + (conf.GmsPlatform ? 'gms/' : '') + 'fullgame.html'|fixPath"></ng-include>
+                    <ng-include class="asian-separator-container-b" src="::'templates/sport/asian/fullgame.html'|fixPath"></ng-include>
                 </div>
             </div>
 
@@ -294,7 +294,7 @@
                                     <div class="filter-function-b">
                                         <ul>
                                             <li>
-                                                <input name="" type="checkbox" value="" id="checkbox-00" ng-model="selectedAll" ng-click="checkAll(true)">
+                                                <input name="" type="checkbox" value="" id="checkbox-00" ng-model="selectedAll" ng-change="checkAll(true)">
                                                 <label for="checkbox-00" trans>Check all</label>
                                             </li>
                                             <li>
@@ -310,7 +310,7 @@
                                 <div class="all-filter-competitions">
                                     <ul>
                                         <li ng-repeat="competition in competitionsFilter | orderBy: 'regionName' track by competition.id">
-                                            <input type="checkbox" ng-model="$parent.selectedCompetitionsModel[competition.id]" ng-click="allCompatitionsCheck($parent.selectedCompetitionsModel[competition.id])" id="comp{{::competition.id}}">
+                                            <input type="checkbox" ng-model="$parent.selectedCompetitionsModel[competition.id]" ng-change="allCompatitionsCheck($parent.selectedCompetitionsModel[competition.id])" id="comp{{::competition.id}}">
                                             <label for="comp{{::competition.id}}" ng-bind="competition.regionName + ' - ' + competition.name"></label>
                                         </li>
                                      </ul>
@@ -321,8 +321,8 @@
             </div>
             <!--filter popup END-->
         </div>
-        <ng-include ng-if="conf.videoEnabled && pinnedGameType === 'dragable'" src="::'templates/sport/classic/av-pinned.html'|fixPath" style="position: fixed; z-index: 999999999;"></ng-include>
-        <div ng-if="conf.asian.countdown.enabled" class="asian-fix-buttons">
+        <ng-include ng-if="$root.conf.videoEnabled && pinnedGameType === 'dragable'" src="::'templates/sport/classic/av-pinned.html'|fixPath" style="position: fixed; z-index: 999999999;"></ng-include>
+        <div ng-if="$root.conf.asian.countdown.enabled" class="asian-fix-buttons">
             <button class="asian-button-refresh-view loading-proccess" ng-class="{'loading-proccess' : countDown.remaining === 0}" ng-click="resetCountDown()" ng-bind="countDown.remaining || ''"></button>
             <button class="asian-button-to-top" ng-click="$root.broadcast('scrollTo', 'header'); $event.stopPropagation();">Back to top</button>
         </div>

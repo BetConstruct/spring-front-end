@@ -11,7 +11,7 @@ VBET5.directive('leagueTable', ['$filter', function ($filter) {
     return {
         restrict: 'E',
         replace: false,
-        templateUrl: $filter('fixPath')('templates/sport/championship/euro2016/leagueTable.html'),
+        templateUrl: $filter('fixPath')('templates/sport/championship/classic/leagueTable.html'),
         scope: {
             items: '=',
             blockTitle: '=',

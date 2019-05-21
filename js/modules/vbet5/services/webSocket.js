@@ -33,8 +33,12 @@ VBET5.factory('WS', ['$q', '$rootScope', '$timeout', '$window', 'Config', 'Utils
 
     var selectedSwarmInstance;
 
+    var reconnectionDisabled = false; // when true, the reconnection strategy is disabled
+                                      //it would be better to use the codes for the socket close event,
+                                      // and then process it with the provided code. but at the moment chrome has a problem
+
                                    // indicates that client was able to make websocket connection (will try to
-    var wasAbleToConnect = false;  // use websockets(reconnect) instead of switching to LP when disconnected)
+    var wasAbleToConnect = false;  // use webSockets(reconnect) instead of switching to LP when disconnected)
 
     WS.isAvailable = (typeof WebSocket === 'function' || typeof WebSocket === 'object');
 
@@ -201,6 +205,11 @@ VBET5.factory('WS', ['$q', '$rootScope', '$timeout', '$window', 'Config', 'Utils
                     console.log('WS calling onClose callback');
                     onClose();
                 }
+
+                if (reconnectionDisabled) {
+                    return;
+                }
+
                 if (retryCount < Config.swarm.maxWebsocketRetries || wasAbleToConnect) {
                     WS.isAvailable = true;
                     connection = null;
@@ -354,6 +363,19 @@ VBET5.factory('WS', ['$q', '$rootScope', '$timeout', '$window', 'Config', 'Utils
         onNotAvailableCallback = callback;
     };
 
-    return WS;
+    WS.closeConnection = function closeConnection() {
+        reconnectionDisabled = true;
+        socket.close();
+        connection = null;
+    };
 
+    WS.restoreConnection = function restoreConnection() {
+        reconnectionDisabled = false;
+        WS.isAvailable = true;
+        selectedSwarmInstance.instanceRetryCount = selectedSwarmInstance.instanceRetryCount || 0;
+
+        get_connection();
+    };
+
+    return WS;
 }]);

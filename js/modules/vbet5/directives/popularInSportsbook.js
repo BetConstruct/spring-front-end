@@ -1,6 +1,6 @@
 /**
  * @ngdoc controller
- * @name vbet5.controller:euro2016popularMatchesCtrl
+ * @name vbet5.controller:classicPopularMatchesCtrl
  * @description
  * Popular matches controller
  */
@@ -13,7 +13,8 @@ VBET5.directive('popularInSportsbook', ['$rootScope', '$location', 'Config', 'Co
         templateUrl: 'templates/directive/popular-in-sportsbook.html',
         scope: {
             type: '@',
-            title: '@'
+            title: '@',
+            leftMenu: '='
         },
         link: function (scope, elem, attrs) {
             connectionService = new ConnectionService(scope);
@@ -45,8 +46,8 @@ VBET5.directive('popularInSportsbook', ['$rootScope', '$location', 'Config', 'Co
                     case 'game':
                         request.what.game = ['id', 'team1_name', 'team2_name', 'type', 'order', 'favorite_order'];
                         request.where.game = {
-                            'type': Config.main.GmsPlatform ? {'@in': [0, 2]} : 0,
-                            'promoted': Config.main.GmsPlatform ? true : {'@contains': parseInt(Config.main.site_id)}
+                            'type': {'@in': [0, 2]},
+                            'promoted': true
                         };
                         break;
                     case 'competition':
@@ -72,9 +73,6 @@ VBET5.directive('popularInSportsbook', ['$rootScope', '$location', 'Config', 'Co
                     angular.forEach(result.sport, function (sport) {
                         angular.forEach(sport.region, function (region) {
                             angular.forEach(region.competition, function (competition) {
-                                if (!Config.main.GmsPlatform) {
-                                    competition.name = $filter('removeParts')(competition.name, [sport.name]);
-                                }
                                 switch (scope.type) {
                                     case 'game':
                                         angular.forEach(competition.game, function (game) {
@@ -111,6 +109,10 @@ VBET5.directive('popularInSportsbook', ['$rootScope', '$location', 'Config', 'Co
             scope.toggle = function toggle() {
                 scope.popular.expanded = !scope.popular.expanded;
                 scope.popular.expanded ? loadPopulars() : connectionService.unsubscribe(subId);
+
+                if (scope.leftMenu.closed) {
+                    scope.leftMenu.toggle();
+                }
             };
 
             scope.selectPopular = function selectPopular(type, item) {

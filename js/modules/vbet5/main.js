@@ -23,20 +23,21 @@ var BettingModule = angular.module('vbet5.betting', ['ngMap']);
  * makes Config.main and Config.env available at root scope
  *
  */
-angular.module('vbet5').run(['$rootScope', '$location', '$routeParams', '$timeout', '$window', '$cookies', 'Utils', 'Config', 'SkinConfig', 'Storage', 'analytics', 'UserAgent', 'DomHelper', 'liveChat', 'partner', 'RegConfig', 'RuntimeConfig', 'Zergling', 'Tracking', 'Moment', 'Translator','facebookPixel', 'everCookie', 'Geoip',
-    function ($rootScope, $location, $routeParams, $timeout, $window, $cookies, Utils, Config, SkinConfig, Storage, analytics, UserAgent, DomHelper, liveChat, partner, RegConfig, RuntimeConfig, Zergling, Tracking, Moment, Translator,facebookPixel, everCookie, Geoip) {
+angular.module('vbet5').run(['$rootScope', '$location', '$routeParams', '$route', '$timeout', '$window', '$cookies', 'Utils', 'Config', 'SkinConfig', 'Storage', 'analytics', 'UserAgent', 'DomHelper', 'liveChat', 'partner', 'RegConfig', 'RuntimeConfig', 'Zergling', 'Tracking', 'Moment', 'Translator','facebookPixel', 'everCookie', 'Geoip', 'RoutesValidity', 'RecaptchaV3',
+    function ($rootScope, $location, $routeParams, $route, $timeout, $window, $cookies, Utils, Config, SkinConfig, Storage, analytics, UserAgent, DomHelper, liveChat, partner, RegConfig, RuntimeConfig, Zergling, Tracking, Moment, Translator,facebookPixel, everCookie, Geoip, RoutesValidity, RecaptchaV3) {
         'use strict';
 
         $rootScope.availableModules = availableModules;
-
-        if (SkinConfig.regConfig) {
-            Utils.MergeRecursive(RegConfig, SkinConfig.regConfig);
-        }
-        if (RuntimeConfig && !Utils.isObjectEmpty(RuntimeConfig)) {
-            Utils.MergeRecursive(Config, RuntimeConfig.SkinConfig);
-        } else {
-            Utils.MergeRecursive(Config, SkinConfig);
-        }
+        (function manageConfigs() {
+            if (SkinConfig.regConfig) {
+                Utils.MergeRecursive(RegConfig, SkinConfig.regConfig);
+            }
+            if (RuntimeConfig && !Utils.isObjectEmpty(RuntimeConfig)) {
+                Utils.MergeRecursive(Config, RuntimeConfig.SkinConfig);
+            } else {
+                Utils.MergeRecursive(Config, SkinConfig);
+            }
+        })();
 
         Utils.fixDomainChanges(Config, 'sportsbook');
 
@@ -44,7 +45,7 @@ angular.module('vbet5').run(['$rootScope', '$location', '$routeParams', '$timeou
             Storage.setKeyNamePrefix(Config.main.localStorageKeyNamePrefix);
         }
 
-        if (Config.main.integrationMode){
+        if (Config.main.integrationMode) {
             Config.main.multiLevelMenu = {};
         }
 
@@ -53,7 +54,6 @@ angular.module('vbet5').run(['$rootScope', '$location', '$routeParams', '$timeou
         }
 
         everCookie.init();
-
         Zergling.init();
 
         var lang = $location.search().lang || $cookies.get('lang') || Storage.get('lang') || (Config.main.getBrowserLanguage && Utils.getBrowserLanguage());
@@ -91,19 +91,18 @@ angular.module('vbet5').run(['$rootScope', '$location', '$routeParams', '$timeou
                 $location.search('sportsBookLayout', undefined);
             } else if ($cookies.get("sportsBookLayout") !== undefined){
                 Config.main.sportsLayout = $cookies.get("sportsBookLayout");
-            } else if ($location.search().classic) {
-                Config.main.sportsLayout = "classic";
-            } else if (Storage.get('sportsBookLayout') !== undefined && (Config.main.availableSportsbookViews[Storage.get('sportsBookLayout')] || (Config.additionalModules && Config.additionalModules.indexOf(Storage.get('sportsBookLayout')+'View') !== -1))) {
-                Config.main.sportsLayout = Storage.get('sportsBookLayout');
-            } else if (Config.main.defaultSportsLayoutByCountry) {
-                Geoip.getGeoData(false).then(function(data) {
-                    if (Config.main.defaultSportsLayoutByCountry[data.countryCode]) {
-                        Config.main.sportsLayout = Config.main.defaultSportsLayoutByCountry[data.countryCode];
-                    }
-                });
+            } else {
+                var layout = Storage.get('sportsBookLayout');
+                if (layout !== undefined && (Config.main.availableSportsbookViews[layout] || (Config.additionalModules && Config.additionalModules.indexOf(layout+'View') !== -1))) {
+                    Config.main.sportsLayout = layout;
+                } else if (Config.main.defaultSportsLayoutByCountry) {
+                    Geoip.getGeoData(false).then(function(data) {
+                        if (Config.main.defaultSportsLayoutByCountry[data.countryCode]) {
+                            Config.main.sportsLayout = Config.main.defaultSportsLayoutByCountry[data.countryCode];
+                        }
+                    });
+                }
             }
-            // need to remove after refactor
-            Config.main.sportsLayout === "classic" && !Config.main.availableSportsbookViews.classic && Config.main.availableSportsbookViews.euro2016 && (Config.main.sportsLayout = 'euro2016');
         }
         $rootScope.domainClass = $window.location.hostname.replace(/[\.\-]/g, '');
 
@@ -130,11 +129,25 @@ angular.module('vbet5').run(['$rootScope', '$location', '$routeParams', '$timeou
         analytics.init();
         facebookPixel.init();
 
+
+        Config.main.theVeryTopMenu  = Config.main.theVeryTopMenu && (Config.main.theVeryTopMenu[Config.env.lang] || Config.main.theVeryTopMenu.default || Config.main.theVeryTopMenu) || [];
+        //need to sort them before adding a reference to the conf property of rootScope
+        Utils.sortItemsArray(Config.main.theVeryTopMenu);
+
+        // do filter and remove unavailable components for current host
+        Config.main.homepage = Config.main.homepage.filter(function(item) {
+            return (!item.availableHosts || item.availableHosts.indexOf($location.host()) !== -1);
+        });
+
+        Utils.sortItemsArray(Config.main.homepage);
+        if (Config.main.footer.socialLinks) {
+            Config.main.footer.socialLinks = Utils.objectToArray(Config.main.footer.socialLinks, 'key');
+            Utils.sortItemsArray(Config.main.footer.socialLinks);
+        }
         // make these available to all scopes
         $rootScope.conf = Config.main;
         $rootScope.releaseDate = Config.releaseDate;
         $rootScope.confPartner = Config.partner;
-        $rootScope.poker = Config.poker;
         $rootScope.env = Config.env;
         $rootScope.$location = $location;
         $rootScope.$routeParams = $routeParams;
@@ -181,17 +194,6 @@ angular.module('vbet5').run(['$rootScope', '$location', '$routeParams', '$timeou
             $rootScope.siteTitle = (title ? Translator.get(title) + ' @ ' : '') +  Config.main.siteTitle['eng'] ;
         };
 
-        if ($location.search().btag) {
-            Storage.set('promo_code', $location.search().btag, Config.main.registration.promoCodeLifetime);
-            $cookies.putObject('promo_code', $location.search().btag, Config.main.registration.promoCodeLifetime);
-        }
-
-        Tracking.init();
-        Tracking.event('NUV');
-        Tracking.event('runtime', null, true);
-
-        $location.search().btag && $location.search('btag', undefined);
-
         // handle online-offline status
         if (Config.main.offlineMessage) {
             $rootScope.$on('zergling.gotSession', function () {
@@ -207,238 +209,56 @@ angular.module('vbet5').run(['$rootScope', '$location', '$routeParams', '$timeou
             });
         }
 
-        if (Config.main.preventPuttingInIFrame && $window.top.location != $window.location) {
+        if (Config.main.preventPuttingInIFrame && $window.top.location !== $window.location) {
             $window.top.location = $window.location.href;
         }
 
+        RoutesValidity.manage();
 
-        $rootScope.validPaths = {};
-        $rootScope.calculatedConfigs = {};
+        (function init() {
+            //in some cases the application runs with encoded url and it come from affiliate
+            // this is the bad solution and need to remove after affiliates fix
+            var url = $window.location.href;
+            var decodedUrl = decodeURIComponent(url);
+            if (url !== decodedUrl && decodedUrl.indexOf('AFFAGG') !== -1) {
+                var spitedUrl = decodedUrl.split('#/');
+                $window.location.href = spitedUrl[0] + '#/' + spitedUrl[spitedUrl.length - 1];
+                $route.reload();
+            }
 
-        var menuPaths = {
-            "news": {
-                path: "#/news",
-                config: "enableNewsLinkInMenu"
-            },
-            "live": {
-                path: Config.main.sportsLayout == 'combo' ? "#/overview" : "#/sport",
-                config: "sportEnabled"
-            },
-            "dashboard": {
-                path: '#/dashboard',
-                config: "dashboardEnabled"
-            },
-            "overview": {
-                path: "#/overview",
-                config: "liveOverviewEnabled"
-            },
-            "multiview": {
-                path: "#/multiview",
-                config: "liveMultiViewEnabled"
-            },
-            "statistics": {
-                path: "#/statistics",
-                config: "statisticsInsportsbookTab"
-            },
-            "results": {
-                path: '#/results',
-                config: "showResultsTabInSportsbook"
-            },
-            "sport": {
-                path: Config.main.topMenuCustomUrl && Config.main.topMenuCustomUrl.sport ? Config.main.topMenuCustomUrl.sport : "#/sport",
-                config: "sportEnabled"
-            },
-            "livecalendar": {
-                path: "#/livecalendar",
-                config: "liveCalendarEnabled"
-            },
-            "virtual-sports": {
-                path: "#/virtualsports",
-                config: "virtualSportsEnabled"
-            },
-            "poolbetting": {
-                path: "#/poolbetting",
-                config: "poolBettingEnabled"
-            },
-            "virtual-betting": {
-                path: "#/casino",
-                config: "virtualBettingEnabledInTopMenu"
-            },
-            "belote": {
-                path: Config.belote.redirectOnInstantPlay ? Config.belote.instantPlayLink : "#/belote",
-                config: "beloteEnabled"
-            },
-            "backgammon": {
-                path: Config.backgammon.redirectOnInstantPlay ? Config.backgammon.instantPlayLink : "#/backgammon",
-                config: "backgammonEnabled"
-            },
-            "pokerklas": {
-                path: "#/pokerklas",
-                config: "pokerKlasEnabledInTopMenu"
-            },
-            "ggpoker": {
-                path: "#/ggpoker",
-                config: "ggpokerEnabledInTopMenu"
-            },
-            "casino": {
-                path: "#/casino",
-                config: "casinoEnabled"
-            },
-            "tournaments": {
-                path: "#/tournaments",
-                config: "tournamentsEnabled"
-            },
-            "poker": {
-                path: Config.poker.redirectOnInstantPlay ? Config.poker.instantPlayLink : "#/poker",
-                config: "pokerEnabled"
-            },
-            "chinese-poker": {
-                path: "#/chinesepoker",
-                config: "chinesePokerEnabled"
-            },
-            "livedealer": {
-                path: "#/livedealer",
-                config: "livedealerEnabled"
-            },
-            "keno": {
-                path: "#/keno",
-                config: "kenoEnabled"
-            },
-            "games": {
-                path: "#/games",
-                config: "skillgamesEnabled"
-            },
-            "ogwil": {
-                path: "#/ogwil",
-                config: "ogwilEnabled"
-            },
-            "freebet": {
-                path: "#/freebet",
-                config: "freeBetEnabled"
-            },
-            "fantasy": {
-                path: "#/fantasy",
-                config: "fantasyEnabled"
-            },
-            "jackpot": {
-                path: "#/jackpot",
-                config: "jackpotEnabled"
-            },
-            "financials": {
-                path: "#/financials",
-                config: "financialsEnabled"
-            },
-            "financials1": {
-                path: "#/financials",
-                config: "financialsEnabled"
-            },
-            "financials2": {
-                path: "#/game/TLCTLC/provider/TLC/exid/14000",
-                config: "financialsEnabled"
-            },
-            "exchange": {
-                path: Config.main.exchangeCustomLink || "#/exchange/0/",
-                config: "exchangeEnabled"
-            },
-            "winners": {
-                path: "#/winners",
-                config: "winnersEnabled"
-            },
-            "betonpolitics": {
-                path: "#/betonpolitics",
-                config: "betOnPoliticsEnabled"
-            },
-            "esports": {
-                path: "#/esports",
-                config: "esportsEnabled"
-            }
-        };
+            var params = $location.search();
 
-        var findAndChangeConfig = function (path) {
-            angular.forEach (menuPaths, function (value) {
-                if (value.path === path){
-                    $rootScope.calculatedConfigs[value.config] = true;
-                    $rootScope.validPaths[path] = true;
-                }
-            });
-        };
-        $rootScope.findAndChangeConfig = findAndChangeConfig;
-        var fixPath = function(path) {
-            var fixedPath = path;
-            var questionMarkIndex = fixedPath.indexOf("?");
-            if(questionMarkIndex !== -1) {
-                fixedPath =  fixedPath.substr(0, questionMarkIndex);
-            }
-            var lastCharacter = fixedPath.substr(fixedPath.length - 1);
-            if (lastCharacter === '/') {
-                fixedPath = fixedPath.substr(0, fixedPath.length - 1);
-            }
-            return fixedPath;
-        };
-
-        angular.forEach (Config.main.multiLevelMenu, function(value , key) {
-            var menuDetails = menuPaths[key];
-            if (menuDetails !== undefined) {
-                $rootScope.calculatedConfigs[menuDetails.config] = true;
-                $rootScope.validPaths[menuDetails.path] = true;
-            }
-            if(value !== null){
-                if (value.subMenu !== undefined) {
-                    angular.forEach(value.subMenu, function (subMenuItem) {
-                        if (subMenuItem.href || subMenuItem.link) {
-                            var path = subMenuItem.href || subMenuItem.link;
-                            path = fixPath(path);
-                            $rootScope.validPaths[path] = true;
-                            findAndChangeConfig(path);
-                        }
-                    });
-                } else if (value.href || value.link) {
-                    var path = value.href || value.link;
-                    path = fixPath(path);
-                    $rootScope.validPaths[path] = true;
-                    findAndChangeConfig(path);
+            if (params.btag) {
+                Storage.set('promo_code', params.btag, Config.main.registration.promoCodeLifetime);
+                $cookies.putObject('promo_code', params.btag, Config.main.registration.promoCodeLifetime);
+                if (params.AFFAGG) {
+                    $location.search('AFFAGG', undefined);
                 }
             }
-        });
 
-        if (Config.main.integrationMode || (Config.main.subHeaderItems && Config.main.subHeaderItems.length)) {
-            $rootScope.calculatedConfigs["sportEnabled"] = true;
-        }
+            if (params.loyaltycode) {
+                Storage.set('loyalty_code', params.loyaltycode, Config.main.registration.promoCodeLifetime);
+            }
 
-        if($rootScope.calculatedConfigs.sportEnabled){
-            angular.forEach(Config.main.subHeaderItems, function(item) {
-                var menuDetails = menuPaths[item.alias];
-                var config = true;
-                if (item.enabledConfig != undefined) {
-                    if (item.enabledConfig === "dashboardEnabled") {
-                        config = Config.main.dashboard.enabled;
-                    } else {
-                        config = Config.main[item.enabledConfig];
-                    }
-                }
-                if (menuDetails !== undefined && config) {
-                    $rootScope.calculatedConfigs[menuDetails.config] = true;
-                    if (item.url === undefined) {
-                        $rootScope.validPaths[menuDetails.path] = true;
-                    }
-                }
+            Tracking.init();
+            Tracking.event('NUV');
+            Tracking.event('runtime', null, true);
 
-            });
-        }
+            if (params.btag) {
+                $location.search('btag', undefined);
+            }
 
-        var topMenu = Config.main.theVeryTopMenu ?
-            (Config.main.theVeryTopMenu.length ? Config.main.theVeryTopMenu : Config.main.theVeryTopMenu[$rootScope.env.lang] || Config.main.theVeryTopMenu['default']) : '';
+            if (params.loyaltycode) {
+                $location.search('loyaltycode', undefined);
+            }
 
-        if (topMenu) {
-            angular.forEach(topMenu, function(item){
-                if (item.href) {
-                    var path = fixPath(item.href);
-                    if (!$rootScope.validPaths[path]) {
-                        $rootScope.validPaths[path] = true;
-                        findAndChangeConfig(path);
-                    }
-                }
-            });
-        }
-
+            if(Config.betting.deleteBetsOnReload) {
+                Storage.remove('vs_favorite_market_types');
+                Storage.remove('favouriteMarketsTypes');
+                Storage.remove('betslip');
+            }
+            RecaptchaV3.init();
+            Config.main.sportsLayout === 'euro2016' && (Config.main.sportsLayout = 'classic'); //Todo remove after changing all configs
+        })();
     }]);
+

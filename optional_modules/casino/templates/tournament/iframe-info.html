@@ -1,19 +1,123 @@
-<div ng-controller="casinoTournamentsCtrl" ng-init="loadCasinoIframeInfo(gameInfo, true)">
-    <div ng-if="tournament.iframeInfo.playerList.length" class="iframe-tournament-sidebar">
-        <div class="current-results-sidebar">
-            <div class="ct-stat-block has-counter">
-                <div class="ct-stat-icon"></div>
-                <div class="waved-decor-7-white"></div>
-                <h5 trans>Current Results</h5>
-                <h6 ng-show="tournament.iframeInfo.currentPlayer.Amount"><span trans>Me</span> {{tournament.iframeInfo.currentPlayer.Amount}}</h6>
-                <div class="cst-stat-list">
-                    <div class="cst-stat-list-item" ng-repeat="player in tournament.iframeInfo.playerList track by $index">
+<div ng-if="gameInfo && gameInfo.game"
+     ng-controller="casinoJackpotCtrl" class="iframe-tournament-sidebar" ng-class="{'view-count-2':viewCount > 1}"
+     ng-init="initIframeInfo(gameInfo)">
+    <div class="tab-jackpots">
+        <ul>
+            <li ng-if="confData.version === 2 && env.authorized && gameInfo.game.id && hasTournaments && hasIframeTournamentInfo[gameInfo.game.id]"
+                ng-class="{active: iframeTab[gameInfo.game.id].selected === 'tournaments'}"
+                ng-click="iframeTab[gameInfo.game.id].selected='tournaments' ; loadCasinoIframeInfo(gameInfo, true)">
+                <i class="cms-jcon-trophy"></i>
+            </li>
+            <li ng-if="hasIframeJackpot[gameInfo.game.id]"
+                ng-class="{active: iframeTab[gameInfo.game.id].selected === 'jackpots'}"
+                ng-click="iframeTab[gameInfo.game.id].selected='jackpots'">
+                <i class="cms-jcon-video_slots"></i>
+            </li>
+        </ul>
+    </div>
+    <div class="current-results-sidebar">
+
+        <!-- <div class="ct-stat-block has-counter">
+             <div class="ct-stat-icon"></div>
+             <div class="waved-decor-7-white"></div>
+             <h5 trans>Jackpots</h5>
+             <div class="cst-stat-list" ng-repeat="jackpot in iframeJackpotData track by $index">
+                 <div class="cst-stat-list-item" ng-repeat="pool in jackpot.PoolGroup.PoolList track by $index">
+                     <ul>
+                         <li>
+                             <p><b></b> {{pool.Name}}</p>
+                         </li>
+                         <li>{{pool.CollectedAmount|number:2:2}} {{jackpot.Currency|currency}}</li>
+                     </ul>
+                 </div>
+
+             </div>
+         </div>-->
+        <div ng-show="iframeTab[gameInfo.game.id].selected === 'jackpots'" class="iframe-jackpot-container"
+             ng-repeat="jackpot in iframeJackpotData track by $index"
+             ng-class="{active: $index === jackpotWidgets.widgetIndex}">
+            <p>{{jackpot.Name}}</p>
+            <ul ng-repeat="pool in jackpot.PoolGroup.PoolList track by $index">
+                <li class="iframe-jackpot-coins jackpot-large">
+                    <span style="background-image: url(images/jackpot-coins/jackpot-{{pool.Name.toLowerCase()}}.png);"></span>
+                </li>
+                <li class="iframe-info-jackpots" ng-class="{'win-blink-jackpots': pool.JackPotPoolStat.LastJackPotWin.Winner}">
+                    <p>{{pool.DisplayName|translate}}</p>
+                    <div class="jackpot-iframe-amount">
+                        <jackpot-counter
+                                max-duration-speed="400"
+                                point="jackpot.CurrencyFraction"
+                                comma="true" currency="jackpot.Currency"
+                                amount="pool.CollectedAmount">
+                        </jackpot-counter>
+                    </div>
+                </li>
+                <li class="iframe-total-info-winner">
+                    <div class="iframe-total-info-winner-scroll">
                         <ul>
                             <li>
-                                <p><b>{{player.Place + '. ' || ' '}}</b> {{(player.label | translate) || player.PlayerId}}</p>
+                                <h2 trans>Total Winners</h2>
+                                <span>{{pool.TotalWinCount}}</span>
+                                <span>{{pool.TotalWinAmount|number:jackpot.CurrencyFraction}} <i>{{jackpot.Currency|currency}}</i></span>
                             </li>
-                            <li>{{player.Amount}}</li>
                         </ul>
+                        <ul>
+                            <li>
+                                <h2 trans>Min Qualifying Bet</h2>
+                                <p>{{pool.MinBetAmount|number:jackpot.CurrencyFraction}} <i>{{jackpot.Currency|currency}}</i></p>
+                            </li>
+                        </ul>
+                        <ul ng-if="pool.JackPotPoolStat.BiggestJackpotWin">
+                            <li>
+                                <h2 trans>Largest Winner</h2>
+                                <p>{{pool.JackPotPoolStat.BiggestJackpotWin.Amount|number:jackpot.CurrencyFraction}} <i>{{jackpot.Currency|currency}}</i></p>
+                                <p>{{pool.JackPotPoolStat.BiggestJackpotWin.GameName}}</p>
+                                <b><span>{{pool.JackPotPoolStat.BiggestJackpotWin.PlayerId}}</span> {{pool.JackPotPoolStat.BiggestJackpotWin.CreationDate|formatDate:'tournament'}}</b>
+                            </li>
+                        </ul>
+                        <ul ng-if="pool.JackPotPoolStat.LastJackPotWin">
+                            <li>
+                                <h2 trans>Last Winner</h2>
+                                <p>{{pool.JackPotPoolStat.LastJackPotWin.Amount|number:jackpot.CurrencyFraction}} <i>{{jackpot.Currency|currency}}</i></p>
+                                <p>{{pool.JackPotPoolStat.LastJackPotWin.GameName}}</p>
+                                <b><span>{{pool.JackPotPoolStat.LastJackPotWin.PlayerId}}</span> {{pool.JackPotPoolStat.LastJackPotWin.CreationDate|formatDate:'tournament'}}</b>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+            </ul>
+
+            <div class="jackpots-slider"
+                 ng-show="iframeTab[gameInfo.game.id].selected === 'jackpots' && iframeJackpotData.length > 1">
+                <!--          <small ng-class="{active: $index === jackpotWidgets.widgetIndex}" ng-click="jackpotWidgets.widgetIndex = $index" ng-repeat="jackpot in jackpotData track by $index"></small>-->
+                <span ng-click="changeJackpotSlider(jackpotWidgets.widgetIndex - 1)"></span>
+                <span ng-click="changeJackpotSlider(jackpotWidgets.widgetIndex + 1)"></span>
+            </div>
+        </div>
+
+        <div class="float-width-height" ng-controller="casinoTournamentsCtrl" ng-show="iframeTab[gameInfo.game.id].selected === 'tournaments'"  ng-if="env.authorized && gameInfo.game.id && hasTournaments">
+            <div class="float-width-height"  ng-init="loadCasinoIframeInfo(gameInfo, true)">
+                <div class="float-width-height" ng-if="tournament.iframeInfo.playerList.length">
+                    <div class="current-results-sidebar">
+                        <div class="ct-stat-block has-counter">
+                            <div class="ct-stat-icon"></div>
+                            <div class="waved-decor-7-white"></div>
+                            <h5 trans>Current Results</h5>
+                            <h6 ng-show="tournament.iframeInfo.currentPlayer.Amount"><span trans>Me</span>
+                                {{tournament.iframeInfo.currentPlayer.Amount}}</h6>
+                            <div class="cst-stat-list">
+                                <div class="cst-stat-list-item"
+                                     ng-repeat="player in tournament.iframeInfo.playerList track by $index">
+                                    <ul>
+                                        <li>
+                                            <p><b>{{player.Place + '. ' || ' '}}</b> {{(player.label | translate) ||
+                                                player.PlayerId}}</p>
+                                        </li>
+                                        <li>{{player.Amount}}</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

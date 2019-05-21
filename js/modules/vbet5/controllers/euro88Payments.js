@@ -1,29 +1,46 @@
+/* global VBET5 */
 VBET5.controller('euro88PaymentsCtrl', ['$scope', '$rootScope', '$sce', '$filter', 'Zergling', 'Moment', 'Config', 'Translator', function ($scope, $rootScope, $sce, $filter, Zergling, Moment, Config, Translator) {
     'use strict';
 
     $scope.paymentSum = null;
     var paymentConfig = (Config.payments.length && Config.payments[0]) || {};
-
-    function init() {
-        //values of default sums are different for different currencies
-        switch ($rootScope.profile.currency_name) {
-            case 'KRW':
-                var currency10000Won = Translator.translationExists('10000 won') ? Translator.get('10000 won') : '만원';
-                $scope.sumsList = [
-                    { name: '1' + currency10000Won, value: 10000},
-                    { name: '5' + currency10000Won, value: 50000},
-                    { name: '10' + currency10000Won, value: 100000},
-                    { name: '50' + currency10000Won, value: 500000}
-                ];
-                break;
-            default:
-                $scope.sumsList = [
-                    { name: $filter('number')(10, $rootScope.conf.balanceFractionSize) + ' ' + $rootScope.profile.currency_name, value: 10},
-                    { name: $filter('number')(50, $rootScope.conf.balanceFractionSize) + ' ' + $rootScope.profile.currency_name, value: 50},
-                    { name: $filter('number')(100, $rootScope.conf.balanceFractionSize) + ' ' + $rootScope.profile.currency_name, value: 100},
-                    { name: $filter('number')(500, $rootScope.conf.balanceFractionSize) + ' ' + $rootScope.profile.currency_name, value: 500}
-                ];
+    var additionalPaymentButtons = { // default values, if nothing was overridden in payment config
+        KRW: {
+            deposit: [10000, 50000, 100000, 500000, 1000000, 5000000],
+            withdraw: [10000, 50000, 100000, 500000, 1000000, 5000000]
+        },
+        default: { // jshint ignore:line
+            deposit: [10, 50, 100, 500],
+            withdraw: [10, 50, 100, 500]
         }
+    };
+
+    function init(tab) {
+        // The purpose of createSumsList is to return a function that, based on the current currency, will serve as a callback for map method
+        var createSumsList = function createSumsList(currency) {
+            if (currency === 'KRW') {
+                var currency10000Won = Translator.translationExists('10000 won') ? Translator.get('10000 won') : '만원';
+                return function mapFunc(val) {
+                    return {
+                        name: val/10000 + currency10000Won,
+                        value: val
+                    };
+                };
+            }
+
+            return function mapFunc(val) {
+                return {
+                    name: $filter('number')(val, $rootScope.conf.balanceFractionSize) + ' ' + currency,
+                    value: val
+                };
+            };
+        };
+
+        $scope.sumsList = (
+            paymentConfig.additionalPaymentButtons && paymentConfig.additionalPaymentButtons[$rootScope.profile.currency_name] ||
+            additionalPaymentButtons[$rootScope.profile.currency_name] ||
+            additionalPaymentButtons.default // jshint ignore:line
+        )[tab].map(createSumsList($rootScope.profile.currency_name));
     }
     /**
      * @ngdoc method
@@ -130,7 +147,7 @@ VBET5.controller('euro88PaymentsCtrl', ['$scope', '$rootScope', '$sce', '$filter
         $scope.paymentSum = parseInt($scope.paymentSum) + value;
     };
 
-    init();
+    init($scope.env.sliderContent);
 }]);
 
 

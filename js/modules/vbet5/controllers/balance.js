@@ -10,14 +10,11 @@ VBET5.controller('balanceCtrl', ['$rootScope', '$scope', 'Utils', 'Zergling', 'M
 
     var balanceHistory, ITEMS_PER_PAGE = Config.main.balanceHistoryDefaultItemsCount || 10;
 
-    // don't show these operations in filter
-    var disabledOperationsInFilter = [18, 23, 24, 29, 30, 31, 32, 19, 20, 21, 4];
-
     var balanceTypesFilter = {};
 
     $scope.balanceHistoryLoaded = false;
 
-    $scope.balanceTypes = Config.main.GmsPlatform ? Config.main.betHistoryGmsBalanceTypes : Config.main.betHistoryBalanceTypes;
+    $scope.balanceTypes = Config.main.betBalanceHistoryTypes;
 
     $scope.casinoBalanceTypes = {
         0: Translator.get('Bet'),
@@ -37,20 +34,9 @@ VBET5.controller('balanceCtrl', ['$rootScope', '$scope', 'Utils', 'Zergling', 'M
     };
 
     (function init () {
-        if (!Config.main.GmsPlatform && Config.main.balanceHistoryDisabledOperations) {
-            angular.forEach(Config.main.balanceHistoryDisabledOperations, function (val) {
-                if (disabledOperationsInFilter.indexOf(val) === -1) {
-                    disabledOperationsInFilter.push(val);
-                }
-            });
-        }
-
         angular.forEach($scope.balanceTypes, function (value, key) {
             $scope.balanceTypes[key] = Translator.translationExists('BalanceHistory ' + value) ? Translator.get('BalanceHistory ' + value) : Translator.get(value);
-
-            if (Config.main.GmsPlatform || disabledOperationsInFilter.indexOf(parseInt(key, 10)) === -1) {
-                balanceTypesFilter[key] = $scope.balanceTypes[key];
-            }
+            balanceTypesFilter[key] = $scope.balanceTypes[key];
         });
     })();
 
@@ -85,7 +71,7 @@ VBET5.controller('balanceCtrl', ['$rootScope', '$scope', 'Utils', 'Zergling', 'M
                     toDate: toDate.unix(),
                     str: "· " + (fromDate.format('DD MMM') + " - " + toDate.format('DD MMM')),
                     type: 'week'
-                })
+                });
             }
             if (moreDaysCount > 0) {
                 fromDate = time.clone().add('days', j * 7);
@@ -117,7 +103,7 @@ VBET5.controller('balanceCtrl', ['$rootScope', '$scope', 'Utils', 'Zergling', 'M
 
         if ($scope.balanceHistoryParams.dateRange.fromDate !== -1) {
             where.from_date = $scope.balanceHistoryParams.dateRange.fromDate;
-            where.to_date = $scope.balanceHistoryParams.dateRange.toDate + (Config.main.GmsPlatform ? 0: 1);
+            where.to_date = $scope.balanceHistoryParams.dateRange.toDate;
         }
 
         if (balanceType !== -1) {
@@ -133,20 +119,17 @@ VBET5.controller('balanceCtrl', ['$rootScope', '$scope', 'Utils', 'Zergling', 'M
                 function (response) {
                     if (response.history) {
                         var i, length;
-                        if (!Config.main.GmsPlatform && Config.main.balanceHistoryDisabledOperations && Config.main.balanceHistoryDisabledOperations.length) {
-                            balanceHistory = [];
-                            for (i = 0, length = response.history.length; i < length; i += 1) {
-                                if (Config.main.balanceHistoryDisabledOperations.indexOf(parseInt(response.history[i].operation, 10)) === -1) {
-                                    balanceHistory.push(response.history[i]);
-                                }
-                            }
-                        } else {
-                            balanceHistory = response.history;
-                        }
+
+                        balanceHistory = response.history;
 
                         for (i = 0, length = balanceHistory.length; i < length; i += 1) {
                             balanceHistory[i].amount = parseFloat(balanceHistory[i].amount);
                             balanceHistory[i].bonus = parseFloat(balanceHistory[i].bonus);
+                            balanceHistory[i].name = $scope.balanceTypes[balanceHistory[i].operation] || Translator.get(balanceHistory[i].operation_name);
+
+                            if (balanceHistory[i].payment_system_name) {
+                                balanceHistory[i].name += ' (' + balanceHistory[i].payment_system_name + ')';
+                            }
                         }
 
                         $scope.balanceHistoryGotoPage(1);

@@ -45,8 +45,6 @@
                 <span trans>Remember me</span>
             </label>
 
-            <input ng-if="conf.iovationLoginScripts" ng-init="initIovation()" ng-model="user.ioBlackBox" name="ioBlackBox" id="ioBlackBox" class="ng-hide" />
-
             <div class="sms-verification-container" ng-if="conf.registration.requireSmsValidation && params.needVerification">
                 <label trans>SMS verification code</label>
 
@@ -66,11 +64,6 @@
                         <div ng-click="resendSMS()" ng-disabled="!params.allowSMSResend">Resend</div>
                     </div>
                 </div>
-
-            </div>
-
-            <div class="signin-error-message" ng-show="signInError && forms.signinform.$pristine && !params.needVerification && !params.needVerificationCode && !params.needUserAuthorization && !params.lockedUser">
-                <p trans>Invalid username or password.</p>
             </div>
             <div ng-controller="facebookCtrl">
                 <div class="signin-error-message" ng-show="cannotLoginWIthFbId && fbLoggedIn" ng-click="env.showSlider = true; env.sliderContent = 'register';$event.stopPropagation()">
@@ -80,15 +73,8 @@
                     <p trans>If you want to be able to login with your Odnoklassniki account you need to first Sign up with Odnoklassniki account.</p>
                 </div>
             </div>
-            <div class="signin-error-message" ng-show="signInError && forms.signinform.$pristine && (params.needVerification || params.needVerificationCode) && !params.lockedUser">
-                <p trans>Please verify your account to be able to log in.</p>
-                <p ng-if="params.needVerificationCode" trans>You will receive verification code on your Email</p>
-            </div>
-            <div class="signin-error-message" ng-show="signInError && forms.signinform.$pristine && !params.needVerification && !params.needVerificationCode && params.needUserAuthorization && !params.lockedUser">
-                <p trans>To the specified e-mail address we have sent the letter. Click on the link to continue registration. If you do not receive the email, contact support.</p>
-            </div>
-            <div class="signin-error-message" ng-show="signInError && forms.signinform.$pristine && params.lockedUser">
-                <p trans>User is locked. Please contact Support.</p>
+            <div class="signin-error-message" ng-show="signInError && forms.signinform.$pristine">
+                <p ng-bind="signInError"></p>
             </div>
         </div>
         <div class="button-sign">

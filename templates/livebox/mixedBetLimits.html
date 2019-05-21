@@ -36,6 +36,34 @@
                             </div>
                         </div>
                     </div>
+
+                    <label><span context="Bet limits" trans>Max Weekly bet amount</span></label>
+
+                    <div class="form-text"  ng-class="{'error': forms.betLimitsForm.SportMaxWeeklyBet.$touched && forms.betLimitsForm.SportMaxWeeklyBet.$invalid}">
+                        <div class="tooltip-wrapper-j">
+                            <input name="SportMaxWeeklyBet" ng-model="$parent.betLimitsData.SportMaxWeeklyBet" type="text" placeholder="Enter amount" prevent-input="[^0-9]+" trans>
+
+                            <div class="form-error-icon-j" ng-click="resetFieldError('SportMaxWeeklyBet', 'betLimits')"></div>
+                            <div class="tooltip-j">
+
+                                <div trans ng-show="forms.betLimitsForm.SportMaxWeeklyBet.$error.required">This field is required</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <label><span context="Bet limits" trans>Max Monthly bet amount</span></label>
+
+                    <div class="form-text"  ng-class="{'error': forms.betLimitsForm.SportMaxMonthlyBet.$touched && forms.betLimitsForm.SportMaxMonthlyBet.$invalid}">
+                        <div class="tooltip-wrapper-j">
+                            <input name="SportMaxMonthlyBet" ng-model="$parent.betLimitsData.SportMaxMonthlyBet" type="text" placeholder="Enter amount" prevent-input="[^0-9]+" trans>
+
+                            <div class="form-error-icon-j" ng-click="resetFieldError('SportMaxMonthlyBet', 'betLimits')"></div>
+                            <div class="tooltip-j">
+
+                                <div trans ng-show="forms.betLimitsForm.SportMaxMonthlyBet.$error.required">This field is required</div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <div ng-hide="conf.betLimits.hideCasinoLimits">
                     <span trans>Casino</span>
@@ -76,5 +104,7 @@
                 </div>
             </div>
         </form>
+        <div class="info"><span class="note-highlight" trans>bet_limits_text</span></div>
+
     </div>
 </div>

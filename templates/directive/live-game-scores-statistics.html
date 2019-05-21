@@ -114,7 +114,7 @@
             </div>
         </div>
     </div>
-    <div class="toggle-stats" ng-class="{'hide': $root.env.hideLiveStats}"  ng-click="toggleStatsVisibility()" title="Show / Hide statistics" trans></div>
+    <div class="toggle-stats" ng-class="{'hide': !showStatsBlock}"  ng-click="toggleStatsVisibility()" title="Show / Hide statistics" trans></div>
 </div>
 
 <div class="game-control tennis" ng-if="openGame.stats && openGame.last_event && openGame.sport.alias === 'Tennis'">
@@ -139,7 +139,7 @@
             </li>
         </ul>
     </div>
-    <div class="toggle-stats" ng-class="{'hide': $root.env.hideLiveStats}"  ng-click="toggleStatsVisibility()" title="Show / Hide statistics" trans></div>
+    <div class="toggle-stats" ng-class="{'hide': !showStatsBlock}"  ng-click="toggleStatsVisibility()" title="Show / Hide statistics" trans></div>
 </div>
 
 
@@ -189,7 +189,7 @@
             </li>
         </ul>
     </div>
-    <div class="toggle-stats" ng-class="{'hide': $root.env.hideLiveStats}"  ng-click="toggleStatsVisibility()" title="Show / Hide statistics" trans></div>
+    <div class="toggle-stats" ng-class="{'hide': !showStatsBlock}"  ng-click="toggleStatsVisibility()" title="Show / Hide statistics" trans></div>
 </div>
 
 <!-- Dota game template -->
@@ -253,5 +253,5 @@
             </tr>
         </table>
     </div>
-    <div class="toggle-stats" ng-class="{'hide': $root.env.hideLiveStats}"  ng-click="toggleStatsVisibility()" title="Show / Hide statistics" trans></div>
+    <div class="toggle-stats" ng-class="{'hide': !showStatsBlock}"  ng-click="toggleStatsVisibility()" title="Show / Hide statistics" trans></div>
 </div>

@@ -4,91 +4,275 @@
  * @description
  * Sports live overview controller
  */
-angular.module('vbet5.betting').controller('overviewCtrl', ['$rootScope', '$scope', 'Config', 'ConnectionService', 'Utils', '$filter', 'Translator', 'GameInfo', 'Storage', function ($rootScope, $scope, Config, ConnectionService, Utils, $filter, Translator, GameInfo, Storage) {
+angular.module('vbet5.betting').controller('overviewCtrl', ['$rootScope', '$scope', '$location', 'Config', 'ConnectionService', 'Utils', '$filter', 'Translator', 'GameInfo', '$q', function ($rootScope, $scope, $location,Config, ConnectionService, Utils, $filter, Translator, GameInfo, $q) {
     'use strict';
-
-    var lastData;
-    var connectionService = new ConnectionService($scope);
 
     $rootScope.footerMovable = true;
 
-    $scope.isSportCollapsed = {};
-
-    /**
-     * @ngdoc property
-     * @name states
-     * @description object that stores sports/competitions  expanded/collapsed states
-     */
-    $scope.states = Storage.get('liveOverviewStates') || {sport: {}, competition: {}};
-
-    // watch changes and save in local storage
-    $scope.$watch('states', function (states) { Storage.set("liveOverviewStates", states); }, true);
+    var connectionService = new ConnectionService($scope);
+    var SPORTS_TO_OPEN = 3; // Number of sports to be expanded on init
+    var subids = {};
 
 
-    /**
-     * @ngdoc method
-     * @name updateOverviewData
-     * @methodOf vbet5.controller:overviewCtrl
-     * @description  Receives game data object and creates array structures to be used in template:
-     *              $scope.allSports - sports data tree:  sports->competitions->games
-     *              $scope.favoriteGames - favorite games having same structure as above
-     *              lastData is saved to call this function later and create $scope.favoriteGames array when favorite games are added/removed
-     * @param {Object} data game data object
-     */
-    function updateOverviewData(data) {
-        lastData = data;
-        $scope.favoriteGames = [{name: Translator.get('Favorites'), alias: 'Favorites', competitions: []}];
+    $scope.states = {
+        sportExpanded: {},
+        competitionCollapsed: {}
+    };
+    $scope.loading = {
+        overview: true
+    };
+    $scope.sportData = {};
+    $scope.isEventInBetSlip = GameInfo.isEventInBetSlip;
+    $scope.getCurrentTime = GameInfo.getCurrentTime;
+
+
+    function unsubscribe(sportId) {
+        if (subids[sportId]) {
+            connectionService.unsubscribe(subids[sportId]);
+            subids[sportId] = null;
+        }
+    }
+
+
+    function getOptimalMarketId(displayKey, markets) {
+        var marketId;
+
+        switch (displayKey) {
+            case 'WINNER':
+                if (markets.length > 1) {
+                    // If possible always choose 2 way winner
+                    var p1p2 = markets.filter(function getP1P2(market) { return Object.keys(market.event).length === 2; });
+                    if (p1p2.length) {
+                        marketId = p1p2[0].id;
+                    } else {
+                        marketId = markets[0].id;
+                    }
+                } else {
+                    marketId = markets[0].id;
+                }
+                break;
+            default: // getting most optimal base
+                var min, currMin;
+                var eventTypes = markets[0].display_key === 'HANDICAP' ? ['Home', 'Away'] : ['Over', 'Under'];
+                for (var i = 0, x = markets.length; i < x; i++) {
+                    var events = markets[i].events;
+                    if (min === undefined) {
+                        if (events[eventTypes[0]] && events[eventTypes[0]].price && events[eventTypes[1]] && events[eventTypes[1]].price) {
+                            marketId = markets[i].id;
+                            min = +Math.abs(markets[i].events[eventTypes[0]].price - markets[i].events[eventTypes[1]].price).toFixed(2);
+                        }
+                    } else if (events[eventTypes[0]] && events[eventTypes[0]].price && events[eventTypes[1]] && events[eventTypes[1]].price) {
+                        currMin = +Math.abs(markets[i].events[eventTypes[0]].price - markets[i].events[eventTypes[1]].price).toFixed(2);
+                        if (currMin < min) {
+                            marketId = markets[i].id;
+                            min = currMin;
+                        }
+                    }
+                }
+        }
+
+        return marketId;
+    }
+
+
+    function processMarkets(data) {
+        var groupedMarkets = Utils.groupByItemProperty(data, 'display_sub_key');
+
+        if (groupedMarkets) {
+            angular.forEach(groupedMarkets, function(value, displaySubKey) {
+                groupedMarkets[displaySubKey] = Utils.groupByItemProperty(value, 'display_key');
+            });
+            groupedMarkets = angular.extend({}, groupedMarkets.PERIOD, groupedMarkets.MATCH);
+
+            angular.forEach(groupedMarkets, function(markets, displayKey) {
+                if (displayKey !== 'WINNER' && groupedMarkets[displayKey][0].display_sub_key === 'PERIOD') {
+                    // Grouping markets by point_sequence to select the correct one
+                    groupedMarkets[displayKey] = Utils.groupByItemProperty(groupedMarkets[displayKey], 'point_sequence');
+                    var pointSequence = Math.min.apply(null, Object.keys(groupedMarkets[displayKey]));
+
+                    if (groupedMarkets[displayKey][pointSequence]) {
+                        groupedMarkets[displayKey][pointSequence].forEach(function formatEventData(market) {
+                            // Grouping events by type_1 (type) for future base calculations (in getOptimalMarketId function)
+                            market.events = Utils.createMapFromObjItems(market.event, 'type_1');
+                        });
+                        groupedMarkets[displayKey] = data[getOptimalMarketId(displayKey, groupedMarkets[displayKey][pointSequence])];
+                    } else {
+                        groupedMarkets[displayKey] = null;
+                    }
+
+                } else {
+                    markets.forEach(function formatEventData(market) {
+                        market.events = Utils.createMapFromObjItems(market.event, 'type_1');
+                    });
+                    groupedMarkets[displayKey] = data[getOptimalMarketId(displayKey, markets)];
+                }
+            });
+        }
+
+        return groupedMarkets;
+    }
+
+
+    function processData(data) {
+        var processedData = [];
+
         angular.forEach(data.sport, function (sport) {
-            sport.competitions = [];
-            $scope.isSportCollapsed[sport.id] = true;
+            var processedSport = {
+                id: sport.id,
+                alias: sport.alias,
+                name: sport.name,
+                order: sport.order,
+                competitions: []
+            };
             angular.forEach(sport.region, function (region) {
                 angular.forEach(region.competition, function (competition) {
-                    var competitionFavoriteGames = [];
-                    competition.games = [];
+                    var processedCompetition = {
+                        id: competition.id,
+                        name: competition.name,
+                        region: { alias: region.alias },
+                        games: []
+                    };
                     angular.forEach(competition.game, function (game) {
-                        game.region = {id: region.id};
-                        game.sport = {id: sport.id, alias: sport.alias};
-                        game.competition = {id: competition.id};
-                        game.firstMarket = $filter('firstElement')(game.market);
-                        game.additionalEvents = Config.main.showEventsCountInMoreLink ? game.events_count : game.markets_count;
-                        if (game.firstMarket) {
-                            game.firstMarket.events = Utils.createMapFromObjItems(game.firstMarket.event, 'type');
-                            angular.forEach(game.firstMarket.events, function (event) {
-                                event.name = $filter('improveName')(event.name, game);
+                        var processedGame = {
+                            id: game.id,
+                            region: {id: region.id},
+                            sport: {id: sport.id, alias: sport.alias},
+                            competition: {id: competition.id},
+                            info: game.info,
+                            is_blocked: game.is_blocked,
+                            markets_count: game.markets_count,
+                            team1_name: game.team1_name,
+                            team2_name: game.team2_name,
+                            video_id: game.video_id,
+                            stats: game.stats,
+                            type: game.type,
+                            processedMarkets: processMarkets(game.market)
+                        };
+                        if (processedGame.processedMarkets) {
+                            angular.forEach(processedGame.processedMarkets, function(market) {
+                                if (market) {
+                                    angular.forEach(market.events, function (event) {
+                                        event.name = $filter('improveName')(event.name, game);
+                                    });
+                                }
                             });
-                            if (!Config.main.showEventsCountInMoreLink) {
-                                game.additionalEvents--;
-                            } else {
-                                game.additionalEvents -= $filter('count')(game.firstMarket.events);
-                            }
                         }
-                        game.hasVideo = GameInfo.hasVideo(game);
-                        if ($rootScope.myGames.indexOf(game.id) !== -1) {
-                            competitionFavoriteGames.push(game);
-                        } else {
-                            competition.games.push(game);
-                            $scope.isSportCollapsed[sport.id] = false;
-                        }
+                        processedGame.hasVideo = GameInfo.hasVideo(processedGame);
+                        processedCompetition.games.push(processedGame);
                     });
-                    competition.region = {alias: region.alias};
-                    competition.games.sort(function (a, b) {return a.start_ts - b.start_ts; });
-                    sport.competitions.push(competition);
-                    if (competitionFavoriteGames.length) {
-                        $scope.favoriteGames[0].competitions.push({games: competitionFavoriteGames, region: {alias: region.alias}, name: competition.name, id: competition.id, sport : {alias: sport.alias, name: sport.name, id: sport.id}});
-                    }
+                    processedCompetition.games.sort(function (a, b) {return a.start_ts - b.start_ts; });
+                    processedSport.competitions.push(processedCompetition);
                 });
             });
-
-            sport.competitions.sort(Utils.orderSorting);
-
-            if (!sport.competitions.length) {
-                $scope.isSportCollapsed[sport.id] = true;
-            }
+            processedData.push(processedSport);
         });
 
-        $scope.allSports = Utils.objectToArray(data.sport).sort(Utils.orderSorting);
-        console.log('overviewData:', $scope.allSports, $scope.favoriteGames);
+        return processedData;
     }
+
+
+    function subscribeToSport(id) {
+        $scope.loading[id] = true;
+
+        var request = {
+            'source': 'betting',
+            'what': {
+                'sport': ['id', 'name', 'alias', 'order'],
+                'competition': ['id', 'order', 'name'],
+                'region': ['id', 'name', 'alias'],
+                'game': [['id', 'start_ts', 'team1_name', 'team2_name', 'type', 'info', 'stats', 'events_count', 'markets_count', 'is_blocked', 'tv_type', 'video_id', 'video_id2', 'video_id3', 'video_provider']],
+                'event': ['id', 'price', 'type_1', 'name', 'base'],
+                'market': ['type', 'express_id', 'name', 'home_score', 'away_score', 'display_key', 'display_sub_key', 'base', 'id', 'cashout', 'point_sequence', 'col_count']
+            },
+            'where': {
+                'game': {'type': 1},
+                'sport': { 'id': id },
+                'market': {
+                    'display_key': {'@in': ['WINNER', 'HANDICAP', 'TOTALS']},
+                    'display_sub_key': {'@in': ['MATCH', 'PERIOD']}
+                }
+            }
+        };
+
+        connectionService.subscribe(
+            request,
+            function updateSportData(data) {
+                var sportId = Object.keys(data.sport)[0];
+
+                if (!$scope.states.sportExpanded[sportId]) {
+                    unsubscribe(sportId);
+                    return;
+                }
+
+                $scope.sportData[sportId] = processData(data)[0];
+            },
+            {
+                'thenCallback': function (response) {
+                    subids[id] = response.subid;
+                    $scope.loading[id] = false;
+                },
+                'failureCallback': function () {
+                    $scope.loading[id] = false;
+                }
+            },
+            true
+        );
+    }
+
+
+    function getSports() {
+        var deferred = $q.defer();
+        var request = {
+            'source': 'betting',
+            'what': {
+                'sport': ['id', 'name', 'alias', 'order']
+            },
+            'where': {
+                'game': {'type': 1}
+            }
+        };
+        Utils.setCustomSportAliasesFilter(request);
+        connectionService.subscribe(
+            request,
+            function updateSportsList(data) {
+                $scope.allSports = Utils.objectToArray(data.sport).sort(Utils.orderSorting);
+            },
+            {
+                'thenCallback': function() {
+                    var sportsToExpand = $scope.allSports
+                        .filter(function openSportsByDefault(sport, index) {
+                            return index < SPORTS_TO_OPEN;
+                        })
+                        .map(function mapIds(sport) {
+                            return sport.id;
+                        });
+                    deferred.resolve(sportsToExpand);
+                },
+                'failureCallback': function() {
+                    deferred.reject();
+                }
+            }
+        );
+
+        return deferred.promise;
+    }
+
+
+    $scope.toggleMenuItem = function toggleMenuItem(type, id) {
+        switch (type) {
+            case 'sport':
+                $scope.states.sportExpanded[id] = !$scope.states.sportExpanded[id];
+                if ($scope.states.sportExpanded[id]) {
+                    subscribeToSport(id);
+                } else {
+                    unsubscribe(id);
+                }
+                break;
+            case 'competition':
+                $scope.states.competitionCollapsed[id] = !$scope.states.competitionCollapsed[id];
+        }
+    };
+
 
     /**
      * @ngdoc method
@@ -97,43 +281,15 @@ angular.module('vbet5.betting').controller('overviewCtrl', ['$rootScope', '$scop
      * @description  Subscribes to live game data
      */
     $scope.initOverview = function initOverview() {
-
-        var request = {
-            'source': 'betting',
-            'what': {
-                'sport': ['id', 'name', 'alias', 'order'],
-                'competition': ['id', 'order', 'name'],
-                'region': ['id', 'name', 'alias'],
-                game: [
-                    ['id', 'start_ts', 'team1_name', 'team2_name', 'type', 'info', 'stats', 'events_count', 'markets_count', 'is_blocked', 'tv_type', 'video_id', 'video_id2', 'video_id3', 'video_provider']
-                ],
-                'event': ['id', 'price', 'type', 'name'],
-                'market': ['type', 'express_id', 'name', 'home_score', 'away_score']
-            },
-            'where': {
-                'game': {'type': 1},
-                'market': {'type': {'@in': ['P1XP2', 'P1P2']}}
-            }
-        };
-        Utils.setCustomSportAliasesFilter(request);
-        $scope.overviewLoading = true;
-        connectionService.subscribe(
-            request,
-            updateOverviewData,
-            {
-                'thenCallback': function (result) {
-                    $scope.overviewLoading = false;
-                },
-                'failureCallback': function () {
-                    $scope.overviewLoading = false;
-                }
-            }
-        );
-
+        $scope.loading.overview = true;
+        getSports().then(function subscribeAndCollapse(sportsToExpand) {
+            sportsToExpand.forEach(function subscribeAndExpand(id) {
+                $scope.toggleMenuItem('sport', id);
+            });
+        })['finally'](function stopLoading() {
+            $scope.loading.overview = false;
+        });
     };
-
-    $scope.isEventInBetSlip = GameInfo.isEventInBetSlip;
-    $scope.getCurrentTime = GameInfo.getCurrentTime;
 
 
     /**
@@ -168,7 +324,9 @@ angular.module('vbet5.betting').controller('overviewCtrl', ['$rootScope', '$scop
         } else {
             $scope.$emit('game.removeGameFromMyGames', game);
         }
-
-        updateOverviewData(lastData);
     };
+
+    (function init(){
+        Config.env.live = true;
+    })();
 }]);

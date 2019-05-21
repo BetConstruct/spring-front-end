@@ -25,7 +25,6 @@ VBET5.directive('numpad', ['$compile', 'Config', function ($compile, Config) {
         '      <li ng-click="$event.stopPropagation(); setKeyValue(0)"><p>0</p></li>' +
         '      <li ng-click="$event.stopPropagation(); setKeyValue(-1)"><p>|&#8592;</p></li>' +
         '  </ul>' +
-        '  <div class="calc-ok-b"><button ng-click="$event.stopPropagation();  isShow = false">↲</button></div>' +
         '</div>';
     var keyboardLetters =
         '<div id="numped-wrapper-{{elemId}}" class="numpad-box with-keyboard" hide-on-click except="{{elemId}}" ng-show="isShow" dont-hide="block-slider-container">' +
@@ -115,14 +114,16 @@ VBET5.directive('numpad', ['$compile', 'Config', function ($compile, Config) {
                 ctrl.$render();
             };
             element.on('click', function (event) {
-                angular.element(document.getElementById('numped-wrapper-' + scope.elemId)).removeClass('ng-hide');
+                angular.element(document.getElementById('numped-wrapper-' + scope.elemId)).toggleClass('ng-hide');
                 angular.forEach(numpads, function (num) {
                     if (num !== scope.elemId) {
                         angular.element(document.getElementById('numped-wrapper-' + num)).addClass('ng-hide');
                     }
                 });
                 scope.isShow = true;
-                element.after($compile(!Config.main.terminalNumpadLetter || attrs.numpadLetters === 'disabled' ? keyboardNumbers : keyboardLetters)(scope));
+                if(!document.getElementById('numped-wrapper-' + scope.elemId)) {
+                    element.after($compile(!Config.main.terminalNumpadLetter || attrs.numpadLetters === 'disabled' ? keyboardNumbers : keyboardLetters)(scope));
+                }
                 event.stopPropagation();
             });
 

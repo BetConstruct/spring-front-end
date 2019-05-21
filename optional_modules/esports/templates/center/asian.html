@@ -1,21 +1,8 @@
-<table class="e-game-markets">
+<table class="e-game-markets" ng-click="getGameData({game:game, sport:game.sport, competition:game.competition, region:game.region});">
     <tr>
         <th></th>
         <th>
-            <div ng-if="game.availableSequences.length > 1" class="time-filter-v3" ng-class="{'active': game.seqExpanded}">
-                <p ng-click="game.seqExpanded = !game.seqExpanded">
-                    <span ng-bind="('PERIOD' === game.selectedSequence.subKey) ? (asianMarkets.periodsBySports[game.sport.alias] + ' ' + game.selectedSequence.sequence): (game.selectedSequence.sequence? game.selectedSequence.subKey + ' ' + game.selectedSequence.sequence : game.selectedSequence.subKey)|translate">
-                    </span><i class="arrow-rotate-filter-v3"></i>
-                </p>
-                <div class="sub-nav-filter-time-v3">
-                    <ul>
-                        <li ng-repeat="sequence in game.availableSequences track by $index"
-                            ng-bind="('PERIOD' === sequence.subKey) ? (asianMarkets.periodsBySports[game.sport.alias] + ' ' + sequence.sequence): (sequence.sequence? sequence.subKey + ' ' + sequence.sequence : sequence.subKey)|translate"
-                            ng-class="{active: game.selectedSequence.subKey === sequence.subKey && game.selectedSequence.sequence === sequence.sequence}"
-                            ng-click="game.selectedSequence = sequence; game.seqExpanded = false"></li>
-                    </ul>
-                </div>
-            </div>
+
         </th>
         <th>
             <span class="t-column-v" trans>Winner</span>
@@ -33,7 +20,7 @@
     </tr>
     <tr>
         <td rowspan="2">
-            <div class="icon-e-s {{::game.sport.alias}}"><img src="images/e-icons/{{::game.sport.alias}}.png" alt=""/></div>
+            <div class="icon-e-s {{::game.sport.alias}}" ng-click="$event.stopPropagation();"><img src="images/e-icons/{{::game.sport.alias}}.png" alt=""/></div>
         </td>
         <td>
             <h4 class="game-t-n">
@@ -42,7 +29,7 @@
             </h4>
         </td>
         <td>
-            <p class="e-g-price-v" ng-click="bet(game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence].WINNER[0]['P1'], game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence].WINNER[0], game)"
+            <p class="e-g-price-v" ng-click="bet(game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence].WINNER[0]['P1'], game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence].WINNER[0], game); $event.stopPropagation()"
                ng-class="{'locked': (game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence].WINNER[0]['P1'].price | oddConvert:'decimal') == 1 || game.is_blocked ||
                !(game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence].WINNER[0]['P1'] || game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence].WINNER[0]['W1']),
                up: game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence].WINNER[0]['P1'].price_change == '1',
@@ -53,7 +40,7 @@
         </td>
         <td>
             <p class="e-g-price-v h-v-i"
-               ng-click="bet(game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence].HANDICAP[0].Home, game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence].HANDICAP[0], game)"
+               ng-click="bet(game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence].HANDICAP[0].Home, game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence].HANDICAP[0], game); $event.stopPropagation()"
                ng-class="{'locked': (game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence].HANDICAP[0].Home.price | oddConvert:'decimal') == 1 || game.is_blocked ||
                 !game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence].HANDICAP[0].Home,
                  up: game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence].HANDICAP[0].Home.price_change == '1',
@@ -63,7 +50,8 @@
                 {{game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence].HANDICAP[0].Home.price|oddConvert:env.oddFormat:null:'HANDICAP'}}</p>
         </td>
         <td>
-            <p class="e-g-price-v h-v-i" ng-click="bet(game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence][pointsTypeForMarket][0].Over, game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence][pointsTypeForMarket][0], game)"
+            <p class="e-g-price-v h-v-i"
+               ng-click="bet(game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence][pointsTypeForMarket][0].Over, game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence][pointsTypeForMarket][0], game); $event.stopPropagation()"
                ng-class="{'locked': (game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence][pointsTypeForMarket][0].Over.price | oddConvert:'decimal') == 1 || game.is_blocked ||
                !game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence][pointsTypeForMarket][0].Over,
                up: game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence][pointsTypeForMarket][0].Over.price_change == '1',
@@ -73,7 +61,8 @@
                 {{game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence][pointsTypeForMarket][0].Over.price|oddConvert:env.oddFormat:null:pointsTypeForMarket}}</p>
         </td>
         <td ng-if="conf.asian.showOddEvenMarketsInOverview">
-            <p class="e-g-price-v h-v-i" ng-click="bet(game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence]['ODD/EVEN'][0].Odd, game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence]['ODD/EVEN'][0], game)"
+            <p class="e-g-price-v h-v-i"
+               ng-click="bet(game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence]['ODD/EVEN'][0].Odd, game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence]['ODD/EVEN'][0], game); $event.stopPropagation()"
                ng-class="{'locked': (game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence]['ODD/EVEN'][0].Odd.price | oddConvert:'decimal') == 1 || game.is_blocked ||
                !game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence]['ODD/EVEN'][0].Odd,
                'up':game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence]['ODD/EVEN'][0].Odd.price_change == '1',
@@ -84,9 +73,9 @@
         </td>
         <td rowspan="2">
             <div class="fav-g-info-c">
-                <div class="fav-g-star" ng-class="{'active': sharedData.favoriteGames[game.id]}" ng-click="$root.$broadcast('favoriteGames.toggle', game.id)"></div>
+                <div class="fav-g-star" ng-class="{'active': sharedData.favoriteGames[game.id]}" ng-click="$root.$broadcast('favoriteGames.toggle', game.id); $event.stopPropagation()"></div>
                 <h5>
-                    <span ng-show="game.moreMarketsCount" ng-click="getGameData({game:game, sport:game.sport, competition:game.competition, region:game.region});">+{{game.moreMarketsCount}}</span>
+                    <span ng-show="game.moreMarketsCount">+{{game.moreMarketsCount}}</span>
                 </h5>
             </div>
         </td>
@@ -99,7 +88,8 @@
             </h4>
         </td>
         <td>
-            <p class="e-g-price-v" ng-click="bet(game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence].WINNER[0]['P2'], game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence].WINNER[0], game)"
+            <p class="e-g-price-v"
+               ng-click="bet(game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence].WINNER[0]['P2'], game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence].WINNER[0], game); $event.stopPropagation()"
                ng-class="{'locked': (game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence].WINNER[0]['P2'].price | oddConvert:'decimal') == 1 || game.is_blocked ||
                !(game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence].WINNER[0]['P2'] || game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence].WINNER[0]['W2']),
                up: game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence].WINNER[0]['P2'].price_change == '1',
@@ -110,7 +100,8 @@
             ></p>
         </td>
         <td>
-            <p class="e-g-price-v h-v-i" ng-click="bet(game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence].HANDICAP[0].Away, game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence].HANDICAP[0], game)"
+            <p class="e-g-price-v h-v-i"
+               ng-click="bet(game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence].HANDICAP[0].Away, game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence].HANDICAP[0], game); $event.stopPropagation()"
                ng-class="{'locked': (game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence].HANDICAP[0].Away.price | oddConvert:'decimal') == 1 || game.is_blocked ||
                !game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence].HANDICAP[0].Away,
                up: game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence].HANDICAP[0].Away.price_change == '1',
@@ -121,7 +112,7 @@
         </td>
         <td>
             <p class="e-g-price-v h-v-i"
-               ng-click="bet(game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence][pointsTypeForMarket][0].Under, game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence][pointsTypeForMarket][0], game)"
+               ng-click="bet(game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence][pointsTypeForMarket][0].Under, game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence][pointsTypeForMarket][0], game); $event.stopPropagation()"
                ng-class="{'locked': (game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence][pointsTypeForMarket][0].Under.price | oddConvert:'decimal') == 1 || game.is_blocked ||
                !game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence][pointsTypeForMarket][0].Under, up: game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence][pointsTypeForMarket][0].Under.price_change == '1', down: game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence][pointsTypeForMarket][0].Under.price_change == '-1', 'active': isEventInBetSlip(game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence][pointsTypeForMarket][0].Under)}">
                 <i ng-bind="(('aU'|translate) + ' ' + (game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence][pointsTypeForMarket][0].Under.base|handicapBaseFormat))"></i>
@@ -129,7 +120,7 @@
         </td>
         <td ng-if="conf.asian.showOddEvenMarketsInOverview">
             <p class="e-g-price-v h-v-i"
-               ng-click="bet(game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence]['ODD/EVEN'][0].Even, game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence]['ODD/EVEN'][0], game)"
+               ng-click="bet(game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence]['ODD/EVEN'][0].Even, game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence]['ODD/EVEN'][0], game); $event.stopPropagation()"
                ng-class="{'locked':(game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence]['ODD/EVEN'][0].Even.price | oddConvert:'decimal') == 1 || game.is_blocked ||
                !game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence]['ODD/EVEN'][0].Even,
                'up':game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence]['ODD/EVEN'][0].Even.price_change =='1',

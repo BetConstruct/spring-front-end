@@ -15,10 +15,6 @@ angular.module('vbet5').config(['$routeProvider', '$anchorScrollProvider', 'Skin
             templateUrl: getTemplate('templates/about/main.html'),
             reloadOnSearch: false
         })
-        .when('/sb/', {
-            templateUrl: getTemplate('templates/external/sportsbook.html'),
-            reloadOnSearch: false
-        })
         .when('/sport/', {
             templateUrl: getTemplate('templates/sport/main.html'),
             reloadOnSearch: false
@@ -29,36 +25,19 @@ angular.module('vbet5').config(['$routeProvider', '$anchorScrollProvider', 'Skin
         })
         .when('/overview/', {
             templateUrl: function () {
-
-                if (Config.main.availableSportsbookViews.euro2016) {
-                    return getTemplate('templates/sport/euro2016/overview/main.html');
-                }
-
-                if (Config.main.sportsLayout == 'combo') {
-                    return getTemplate('optional_modules/comboView/templates/main.html');
-                }
-
-                return getTemplate('templates/sport/overview/main.html');
+                return getTemplate('templates/sport/classic/overview/main.html');
             },
             reloadOnSearch: false
         })
         .when('/multiview/', {
             templateUrl: function () {
-                if (Config.main.availableSportsbookViews.euro2016) {
-                    return getTemplate('templates/sport/dashboard/main2016.html');
-                } else {
-                    return getTemplate('templates/sport/multiview/main.html');
-                }
+                return getTemplate('templates/sport/dashboard/main2016.html');
             },
             reloadOnSearch: false
         })
         .when('/dashboard/', {
             templateUrl: function () {
-                if (Config.main.availableSportsbookViews.euro2016) {
-                    return getTemplate('templates/sport/dashboard/main2016.html');
-                } else {
-                    return getTemplate('templates/sport/dashboard/main.html');
-                }
+                return getTemplate('templates/sport/dashboard/main2016.html');
             },
             reloadOnSearch: false
         }).when('/statistics/', {
@@ -71,21 +50,13 @@ angular.module('vbet5').config(['$routeProvider', '$anchorScrollProvider', 'Skin
         })
         .when('/virtualsports/', {
             templateUrl: function () {
-                if (Config.main.availableSportsbookViews.euro2016) {
-                    return getTemplate('templates/sport/euro2016/virtualsportsContainer.html');
-                } else {
-                    return getTemplate('templates/sport/virtualsportsContainer.html');
-                }
+                return getTemplate('templates/sport/classic/virtualsportsContainer.html');
             },
             reloadOnSearch: false
         })
         .when('/insvirtualsports/', {
             templateUrl: function () {
-                if (Config.main.availableSportsbookViews.euro2016) {
-                    return getTemplate('templates/sport/euro2016/virtualsportsContainer.html');
-                } else {
-                    return getTemplate('templates/sport/virtualsportsContainer.html');
-                }
+                return getTemplate('templates/sport/classic/virtualsportsContainer.html');
             },
             reloadOnSearch: false
         })
@@ -248,9 +219,7 @@ angular.module('vbet5').config(['$routeProvider', '$anchorScrollProvider', 'Skin
             reloadOnSearch: false
         })
         .when('/', {
-            templateUrl: function () {
-                return getTemplate('templates/homepage/main.html');
-            },
+            templateUrl: getTemplate('templates/homepage/main.html'),
             reloadOnSearch: false
         })
         .when('/popup/', {
@@ -262,13 +231,7 @@ angular.module('vbet5').config(['$routeProvider', '$anchorScrollProvider', 'Skin
             reloadOnSearch: false
         })
         .when('/livecalendar/', {
-            templateUrl: function () {
-                if (Config.main.availableSportsbookViews.euro2016) {
-                    return getTemplate('templates/livecalendar/euro2016/main.html');
-                } else {
-                    return getTemplate('templates/livecalendar/main.html');
-                }
-            },
+            templateUrl:  getTemplate('templates/livecalendar/classic/main.html'),
             reloadOnSearch: false
         })
         .when('/results/', {
@@ -288,7 +251,7 @@ angular.module('vbet5').config(['$routeProvider', '$anchorScrollProvider', 'Skin
             reloadOnSearch: false
         })
         .when('/europlayoff/:tabId?', {
-            templateUrl: getTemplate('templates/sport/championship/euro2016/main.html'),
+            templateUrl: getTemplate('templates/sport/championship/classic/main.html'),
             reloadOnSearch: false
         })
         .when('/subscriptions/', {
@@ -317,6 +280,14 @@ angular.module('vbet5').config(['$routeProvider', '$anchorScrollProvider', 'Skin
         })
         .when('/esports/', {
             templateUrl: getTemplate('optional_modules/esports/templates/main.html'),
+            reloadOnSearch: false
+        })
+        .when('/go/', {
+            templateUrl: getTemplate('templates/landing/go.html'),
+            reloadOnSearch: false
+        })
+        .when('/pmu/', {
+            templateUrl: getTemplate('templates/sport/pmu/main.html'),
             reloadOnSearch: false
         })
         .otherwise({

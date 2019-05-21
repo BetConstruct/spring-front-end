@@ -1,12 +1,32 @@
-<div ng-controller="casinoCtrl" ng-init=" setTitle('Casino');" watch-resize middle-screen-mode="true" class="casino-mainpage-wrapper-b">
+<div ng-controller="casinoCtrl" ng-init="init(); setTitle('Casino');" watch-resize middle-screen-mode="true" class="casino-mainpage-wrapper-b">
     <!--Casino-new hompage-->
-    <div ng-include="'optional_modules/casino/templates/casino-template.html'|fixPath"></div>
+    <div class="float-width" ng-include="'optional_modules/casino/templates/casino-template' + (confData.version === 2 ? '-v2' : '') + '.html'|fixPath"></div>
 
+    <div  class="new-default-popup-j jackpot-win-animation-on" ng-if="jackpotWinner.animation"> <!--add class jackpot-win-animation-on and remove class jackpot-win-animation-off-->
+        <div class="jackpot-table">
+            <div class="jackpot-trow">
+                <div class="jackpot-tcell">
+                    <div class="jackpot-twrapper">
+                        <img src="images/jackpot-coins/jackpot-win-bg.jpg" alt="">
+                        <div class="jackpot-win-popup">
+                            <div class="jackpot-win-coins-first"></div>
+                            <div class="jackpot-win-coins-second"></div>
+                            <div class="jackpot-win-coins-third"></div>
+                            <p>{{jackpotWinner.data.Name}}</p>
+                            <span>{{jackpotWinner.data.Winner.Amount}} {{::$root.profile.currency|currency}}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <multiview-control ng-if="confData.main.multiViewEnabled" wide-mode="wideMode" middle-mode="middleMode" view-count="viewCount" games-info="gamesInfo"></multiview-control>
     <div ng-include="'optional_modules/casino/templates/big-game.html'|fixPath" ng-if="gamesInfo.length" class="big-games-overflow"></div>
 
 </div>
+
+
 <style ng-controller="cmsPagesCtrl" ng-init="loadPage('casino-backgrounds-' + env.lang, 'lang')">
     .body-wrapper.casino {
     {{mainPage.thumbnail ? 'background-image: url('+mainPage.thumbnail+');' : ''}}

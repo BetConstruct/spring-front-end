@@ -41,65 +41,45 @@
     .markets-group-wrap-v3 {
       background: none;
     }
-    .game-info .game-detailed-stats {
-      > span.icon-stat-details {
-        box-shadow: 0 -3px 0 darken(desaturate(adjust-hue($skin-color, 4deg), 11), 1);
-        background: darken(desaturate(adjust-hue($skin-color, 4deg), 11), 1);
-        &:before {
-          background: set-color($skin-color);
-          box-shadow: 0 4px 0 set-color($skin-color), 0 8px 0 set-color($skin-color);
-        }
-      }
-      .hover-sp {
-        scrollbar-base-color: darken(desaturate(adjust-hue($skin-color, 4deg), 11), 1);
-        scrollbar-track-color: darken(desaturate(adjust-hue($skin-color, 4deg), 11), 1);
-        scrollbar-shadow-color: darken(desaturate(adjust-hue($skin-color, 4deg), 11), 1);
-        scrollbar-base-color: lighten(desaturate($skin-color, 18), 19);
-        scrollbar-arrow-color: lighten(desaturate($skin-color, 18), 19);
-        &::-webkit-scrollbar-track {
-          border-radius: 10px;
-        }
-        &::-webkit-scrollbar {
-          width: $scrollbar-width;
+    .game-info {
+      .game-detailed-stats {
+        > span.icon-stat-details {
+          box-shadow: 0 -3px 0 darken(desaturate(adjust-hue($skin-color, 4deg), 11), 1);
           background: darken(desaturate(adjust-hue($skin-color, 4deg), 11), 1);
-          border-radius: 10px;
+          &:before {
+            background: set-color($skin-color);
+            box-shadow: 0 4px 0 set-color($skin-color), 0 8px 0 set-color($skin-color);
+          }
         }
-        &::-webkit-scrollbar-thumb {
-          border-radius: 10px;
-          background: lighten(desaturate($skin-color, 18), 19);
-          &:hover {
-            background: lighten(desaturate(lighten(desaturate($skin-color, 18), 19), 1), 6);
+        .hover-sp {
+          scrollbar-base-color: darken(desaturate(adjust-hue($skin-color, 4deg), 11), 1);
+          scrollbar-track-color: darken(desaturate(adjust-hue($skin-color, 4deg), 11), 1);
+          scrollbar-shadow-color: darken(desaturate(adjust-hue($skin-color, 4deg), 11), 1);
+          scrollbar-base-color: lighten(desaturate($skin-color, 18), 19);
+          scrollbar-arrow-color: lighten(desaturate($skin-color, 18), 19);
+          &::-webkit-scrollbar-track {
+            border-radius: 10px;
+          }
+          &::-webkit-scrollbar {
+            width: $scrollbar-width;
+            background: darken(desaturate(adjust-hue($skin-color, 4deg), 11), 1);
+            border-radius: 10px;
+          }
+          &::-webkit-scrollbar-thumb {
+            border-radius: 10px;
+            background: lighten(desaturate($skin-color, 18), 19);
+            &:hover {
+              background: lighten(desaturate(lighten(desaturate($skin-color, 18), 19), 1), 6);
+            }
           }
         }
       }
-    }
-  }
-  .gaming-wrapper-asia .md-progress-circular.md-theme {
-    .md-inner .md-gap {
-      border-top-color: lighten(desaturate(adjust-hue($hero-color, 3deg), 16), 4);
-      border-bottom-color: lighten(desaturate(adjust-hue($hero-color, 3deg), 16), 4);
-    }
-    .md-inner .md-left .md-half-circle {
-      border-left-color: lighten(desaturate(adjust-hue($hero-color, 3deg), 16), 4);
-      border-top-color: lighten(desaturate(adjust-hue($hero-color, 3deg), 16), 4);
-    }
-    .md-inner .md-right .md-half-circle {
-      border-right-color: lighten(desaturate(adjust-hue($hero-color, 3deg), 16), 4);
-      border-top-color: lighten(desaturate(adjust-hue($hero-color, 3deg), 16), 4);
-    }
-  }
-  .gaming-wrapper-asia .contein-mini-filtr .md-progress-circular.md-theme {
-    .md-inner .md-gap {
-      border-top-color: $hero-color;
-      border-bottom-color: $hero-color;
-    }
-    .md-inner .md-left .md-half-circle {
-      border-left-color: $hero-color;
-      border-top-color: $hero-color;
-    }
-    .md-inner .md-right .md-half-circle {
-      border-right-color: $hero-color;
-      border-top-color: $hero-color;
+      .game-control .toggle-stats {
+        color: $text-palette-4;
+        &:hover {
+          color: $text-palette-2;
+        }
+      }
     }
   }
   & {
@@ -126,18 +106,12 @@
   .asian-left-contain-menu .list-bet-block {
     background: lighten(desaturate(adjust-hue($skin-color, 3deg), 16), 4);
   }
-  .asian-left-contain-menu .arrow-bs-type-switcher:after {
-    color: $text-palette-1;
-  }
   .asian-left-contain-menu .betting-result-info {
     border-bottom: 1px solid darken(saturate(adjust-hue($skin-color, 4deg), 1), 7);
     background: lighten(desaturate(adjust-hue($skin-color, 3deg), 16), 4);
   }
   .asian-left-contain-menu .bet-notification-warning a {
     color: $text-palette-1;
-  }
-  .asian-left-contain-menu .button-bet .bet-notification-update-text {
-    background: lighten(desaturate(adjust-hue($skin-color, 3deg), 16), 4);
   }
   .asian-left-contain-menu .list-bet-block ul li:first-child span a {
     color: $text-palette-4;
@@ -172,39 +146,24 @@
   .asian-left-contain-menu .list-bet-block ul li span.bet-initial-price {
     color: #c33451;
   }
-  .asian-left-contain-menu .betslip-options label {
-    color: $text-palette-4;
-  }
   .asian-left-contain-menu .button-bet button {
     background: $hero-color;
+  }
+  .asian-left-contain-menu .p-v {
+    color: #CE9F5B;
+    @if $asian-light-skin == true {
+      color: #000;
+    }
   }
   .asian-left-contain-menu .button-bet button:disabled {
     background: darken(desaturate(adjust-hue($skin-color, 4deg), 11), 1);
     color: $button-disable-bg;
-    .md-inner .md-gap {
-      border-top-color: set-color(darken(desaturate(adjust-hue($skin-color, 4deg), 11), 1));
-      border-bottom-color: set-color(darken(desaturate(adjust-hue($skin-color, 4deg), 11), 1));
-    }
-    .md-inner .md-left .md-half-circle {
-      border-left-color: set-color(darken(desaturate(adjust-hue($skin-color, 4deg), 11), 1));
-      border-top-color: set-color(darken(desaturate(adjust-hue($skin-color, 4deg), 11), 1));
-    }
-    .md-inner .md-right .md-half-circle {
-      border-right-color: set-color(darken(desaturate(adjust-hue($skin-color, 4deg), 11), 1));
-      border-top-color: set-color(darken(desaturate(adjust-hue($skin-color, 4deg), 11), 1));
-    }
   }
   .asian-left-contain-menu .betslip-clearall-button i {
     background: $hero-color;
   }
   .asian-left-contain-menu .betslip-clearall-button input {
     color: set-color($hero-color);
-  }
-  .asian-left-contain-menu .quick-bet-button p {
-    color: $text-palette-1;
-  }
-  .asian-left-contain-menu .quick-bet-button .quickbet-switcher-jumper {
-    background: lighten(desaturate(adjust-hue($skin-color, 2deg), 22), 36);
   }
   .asian-left-contain-menu .bet-form form input[type="text"] {
     border: 1px solid darken(saturate(adjust-hue($skin-color, 4deg), 1), 7);
@@ -234,41 +193,11 @@
   .list-bet-block ul li span {
     color: $text-palette-4;
   }
-  .asian-left-contain-menu .bs-type-switcher,
   .asian-left-contain-menu .betslip-system-chenge {
     background: darken(desaturate(adjust-hue($skin-color, 4deg), 15), 1);
   }
-  .asian-left-contain-menu .open-type-switcher ul li a {
-    border-bottom: 1px solid darken(saturate(adjust-hue($skin-color, 4deg), 1), 7);
-    background: lighten(desaturate(adjust-hue($skin-color, 3deg), 16), 4);
-    box-shadow: 1px 0 0 darken(saturate(adjust-hue($skin-color, 4deg), 1), 7), -1px 0 0 darken(saturate(adjust-hue($skin-color, 4deg), 1), 7);
-    color: $text-palette-4;
-  }
-  .asian-left-contain-menu .open-type-switcher ul li:first-child a,
-  .asian-left-contain-menu .open-type-switcher ul:first-child li:first-child a {
-    border-top: 1px solid darken(saturate(adjust-hue($skin-color, 4deg), 1), 7);
-  }
-  .asian-left-contain-menu .open-type-switcher ul li a:hover {
-    color: $text-palette-1;
-    background: lighten(desaturate(adjust-hue($skin-color, 3deg), 16), 4);
-  }
-  .asian-left-contain-menu .open-type-switcher ul li a.active,
-  .asian-left-contain-menu .open-type-switcher ul li a.active:hover {
-    color: set-color($hero-color);
-    background: $hero-color;
-  }
-  .asian-left-contain-menu .bs-type-switcher p,
   .asian-left-contain-menu .betslip-system-chenge p {
     color: $text-palette-1;
-  }
-  .asian-left-contain-menu .bet-button-wrapper .bet-notification-zone {
-    border-top: 1px solid lighten(desaturate(adjust-hue($skin-color, 3deg), 16), 4);
-    border-bottom: 1px solid lighten(desaturate(adjust-hue($skin-color, 3deg), 16), 4);
-    background: lighten(desaturate(adjust-hue($skin-color, 3deg), 16), 4);
-  }
-  .asian-left-contain-menu .button-bet .bet-notification-update-text {
-    color: $text-palette-1;
-    box-shadow: 0 0 5px lighten(desaturate(adjust-hue($skin-color, 2deg), 22), 36);
   }
   .asian-left-contain-menu .bet-settings-container .set-icon:after {
     color: $text-palette-1;
@@ -297,9 +226,6 @@
   .asian-left-contain-menu .list-bet-block .bet-container ul:last-child {
     border-bottom: 1px solid $hero-color;
   }
-  .asian-left-contain-menu .bet-settings-container.active .betslip-options {
-    border-bottom: 1px solid $hero-color;
-  }
   .asian-left-contain-menu .list-bet-block ul.changed-j li {
     background: lighten(desaturate(adjust-hue($skin-color, 3deg), 16), 4);
   }
@@ -311,10 +237,11 @@
   }
   .menu-tabs-b ul li {
     background: lighten(desaturate(adjust-hue($skin-color, 3deg), 16), 4);
-    border-left: 1px solid darken(saturate(adjust-hue($skin-color, 4deg), 1), 7);
     color: $text-palette-1;
+    @include ltr {
+      border-left: 1px solid darken(saturate(adjust-hue($skin-color, 4deg), 1), 7);
+    }
     @include rtl {
-      border-left: none;
       border-right: 1px solid darken(saturate(adjust-hue($skin-color, 4deg), 1), 7);
     }
   }
@@ -370,11 +297,12 @@
     color: $text-palette-1;
   }
   .big-filter-wrapper ul li {
-    border-left: 1px solid darken(saturate(adjust-hue($skin-color, 4deg), 1), 7);
     background: lighten(desaturate(adjust-hue($skin-color, 3deg), 16), 4);
     color: $text-palette-4;
+    @include ltr {
+      border-left: 1px solid darken(saturate(adjust-hue($skin-color, 4deg), 1), 7);
+    }
     @include rtl {
-      border-left: none;
       border-right: 1px solid darken(saturate(adjust-hue($skin-color, 4deg), 1), 7);
     }
     .menu-arrow-asia {
@@ -441,8 +369,8 @@
     background: lighten(desaturate($skin-color, 17), 12);
   }
   .game-list-compitishion table tr td.section-3 .info-bl {
-    background: darken(desaturate(adjust-hue(lighten(desaturate($skin-color, 17), 12), -240deg), 4), 40);
-    color: $text-palette-1;
+    background: lighten(desaturate(adjust-hue($skin-color, 3deg), 16), 4);
+    color: set-color($skin-color);
   }
   .game-list-compitishion table tr td.more-competition {
     background: lighten(desaturate($skin-color, 17), 12);
@@ -462,6 +390,10 @@
   }
   .game-list-compitishion table tr td.border-d {
     border-bottom-color: transparent;
+  }
+  .teams-n-account-asia span.account-asian-1x2 b {
+    background: lighten(desaturate(adjust-hue($skin-color, 3deg), 16), 4);
+    color: set-color($skin-color);
   }
   .teams-n-account-asia span.account-asian-1x2 b:first-child:after {
     color: $text-palette-1;
@@ -642,8 +574,10 @@
   }
   .all-filter-competitions ul li:hover {
     background: lighten(desaturate(adjust-hue($skin-color, 3deg), 16), 4);
-    border-left-color: $hero-color;
-    border-right-color: darken(saturate(adjust-hue($skin-color, 4deg), 1), 7);
+    @include ltr {
+      border-left-color: $hero-color;
+      border-right-color: darken(saturate(adjust-hue($skin-color, 4deg), 1), 7);
+    }
     @include rtl {
       border-left-color: darken(saturate(adjust-hue($skin-color, 4deg), 1), 7);
       border-right-color: $hero-color;
@@ -693,54 +627,6 @@
         box-shadow: none;
       }
     }
-  }
-  .gaming-wrapper-asia .sportsbook-top-tab-t {
-    background: lighten(desaturate(adjust-hue($skin-color, 3deg), 16), 4);
-    border-bottom: 2px solid $hero-color;
-  }
-  .gaming-wrapper-asia .sportsbook-top-tab-t > ul li {
-    color: $text-palette-4;
-  }
-  .gaming-wrapper-asia .layout-switcher > ul li,
-  .gaming-wrapper-asia .sportsbook-top-tab-t > ul li a {
-    color: $text-palette-4;
-  }
-  .gaming-wrapper-asia .layout-switcher > ul li.title-sep {
-    color: $text-palette-4;
-  }
-  .gaming-wrapper-asia .layout-switcher > ul li i {
-    background: lighten(desaturate(adjust-hue($skin-color, 2deg), 22), 36);
-    color: $text-palette-12;
-  }
-  .gaming-wrapper-asia .layout-switcher > ul li.active-format i,
-  .gaming-wrapper-asia .layout-switcher > ul li:hover i {
-    background: $hero-color;
-    color: set-color($hero-color);
-  }
-  .gaming-wrapper-asia .layout-switcher > ul li.active-format,
-  .gaming-wrapper-asia .layout-switcher > ul li:hover,
-  .gaming-wrapper-asia .sportsbook-top-tab-t > ul li a:hover,
-  .gaming-wrapper-asia .sportsbook-top-tab-t > ul li.active a {
-    background: darken(desaturate(adjust-hue($skin-color, 4deg), 11), 1);
-    color: $text-palette-1;
-  }
-  .gaming-wrapper-asia .layout-switcher > ul li.title-sep:hover {
-    background: none;
-    color: $text-palette-4;
-  }
-  .gaming-wrapper-asia .factor-change-wrapper > p {
-    color: $text-palette-4;
-    font: 12px/28px $font-f;
-  }
-  .gaming-wrapper-asia .sportsbook-top-tab-t > ul li .statistics-icon-new {
-    color: $text-palette-4;
-  }
-  .gaming-wrapper-asia .sportsbook-top-tab-t > ul li .calendar-icon-new {
-    color: $text-palette-4;
-  }
-  .gaming-wrapper-asia .sportsbook-top-tab-t > ul li:hover .calendar-icon-new,
-  .gaming-wrapper-asia .sportsbook-top-tab-t > ul li:hover .statistics-icon-new {
-    color: $hero-color;
   }
   .selectSportsbookColor-j {
     background: lighten(desaturate(adjust-hue($skin-color, 6deg), 19), 7);
@@ -810,18 +696,6 @@
           left: 8px;
           padding: 0 !important;
           margin: 0 !important;
-          .md-inner .md-gap {
-            border-top-color: set-color(darken(desaturate(adjust-hue($skin-color, -3deg), 8), 5));
-            border-bottom-color: set-color(darken(desaturate(adjust-hue($skin-color, -3deg), 8), 5));
-          }
-          .md-inner .md-left .md-half-circle {
-            border-left-color: set-color(darken(desaturate(adjust-hue($skin-color, -3deg), 8), 5));
-            border-top-color: set-color(darken(desaturate(adjust-hue($skin-color, -3deg), 8), 5));
-          }
-          .md-inner .md-right .md-half-circle {
-            border-right-color: set-color(darken(desaturate(adjust-hue($skin-color, -3deg), 8), 5));
-            border-top-color: set-color(darken(desaturate(adjust-hue($skin-color, -3deg), 8), 5));
-          }
         }
         i {
           @if $asian-light-skin==true {
@@ -987,6 +861,21 @@
       }
     }
   }
+  .statistic-view-v3 .live-game-container .sport-title,
+  .statistic-view-v3 .game-score-multiset ul.title li {
+    color: set-color(lighten( desaturate( adjust-hue( $skin-color, 3deg ), 16 ), 4 ));
+    background: lighten( desaturate( adjust-hue( $skin-color, 3deg ), 16 ), 4 );
+    border-color: lighten( desaturate( adjust-hue( $skin-color, 3deg ), 16 ), 4 );
+  }
+  .sport-icon-title .mini-icon-1:before,
+  .calendar-nav label span.mini-icon-1:before,
+  .sport-icon-inplay.mini-icon-1:before,
+  .calendar-content h3 .mini-icon-1:before,
+  .live-game-container .sport-title .mini-icon-1:before,
+  .game-score-multiset ul.title .mini-icon-1:before,
+  .game-score-multiset ul li.serve-team .mini-icon-1:before {
+    color: $text-palette-3;
+  }
   .asian-live .mini-icon-1:before {
     color: set-color(lighten(desaturate($skin-color, 18), 19));
   }
@@ -1009,9 +898,10 @@
       color: set-color($hero-color);
     }
     .contain-v-a-fanction-icons-v3 > ul > li {
-      border-left: 1px solid lighten(desaturate(adjust-hue(darken(adjust-hue($skin-color, 4deg), 4), -1deg), 16), 3);
+      @include ltr {
+        border-left: 1px solid lighten(desaturate(adjust-hue(darken(adjust-hue($skin-color, 4deg), 4), -1deg), 16), 3);
+      }
       @include rtl {
-        border-left: none;
         border-right: 1px solid lighten(desaturate(adjust-hue(darken(adjust-hue($skin-color, 4deg), 4), -1deg), 16), 3);
       }
     }
@@ -1032,15 +922,35 @@
     .game-video-container p {
       color: $text-palette-1;
     }
+    .last-event-and-stats-toggle .hover-sp:not(.items-1):hover {
+      background: lighten( desaturate( adjust-hue( $skin-color, 3deg ), 16 ), 4 );
+      .football-gamer-name {
+        color: $text-palette-4;
+        box-shadow: 0 -1px 0 darken( desaturate( adjust-hue( $skin-color, 3deg ), 11 ), 1 ) inset;
+      }
+    }
+  }
+  .game-additional-info-v3 {
+    color: $text-palette-4;
+    background: darken( desaturate( adjust-hue( $skin-color, 6deg ), 3 ), 10 );
+  }
+  .game-additional-icons > i {
+    color: lighten( desaturate( adjust-hue( $text-color, 6deg ), 16 ), 52 );
+    &:hover {
+      color: lighten( desaturate( adjust-hue( $text-color, 18deg ), 21 ), 79 );
+    }
   }
   .asian-left-contain-menu .booking-id-text-v3 {
     border-bottom: 1px solid darken(desaturate(adjust-hue(darken(adjust-hue($skin-color, 4deg), 4), 6deg), 1), 5);
     color: $text-palette-4;
-    span + span {
+    span > span {
       color: $text-palette-2;
     }
     i {
       color: $text-palette-3;
+    }
+    &.booking-no-border {
+      border: 0;
     }
   }
   .icon-favorite.active {
@@ -1069,6 +979,7 @@
   }
   .asian-left-contain-menu {
     .sports-item-v3 {
+      color: $text-palette-3;
       background: darken(desaturate(adjust-hue($skin-color, 4deg), 15), 1);
       > p {
         color: $text-palette-3;
@@ -1081,6 +992,9 @@
       }
       &:hover .arrow-view-v3 {
         color: $text-palette-3;
+      }
+      &:before {
+        color: $text-palette-4;
       }
     }
     .single-game-item-v3 {
@@ -1095,6 +1009,24 @@
         background: lighten(desaturate(adjust-hue($skin-color, 4deg), 15), 10);
         &:before {
           box-shadow: 2px 0 0 lighten(desaturate($skin-color, 18), 19) inset;
+        }
+      }
+      .l-b .single-events-b-v3:not(:hover):not(.active) {
+        color: lighten( desaturate( adjust-hue( $skin-color, 4deg ), 20 ), 43 );
+        background: rgba(darken( saturate( adjust-hue( $skin-color, 4deg ), 2 ), 7 ), 0.7);
+      }
+      .single-events-b-v3 {
+        &:hover {
+          color: $text-palette-3;
+          background: lighten( desaturate( $skin-color, 17 ), 12 );
+        }
+        &.active,
+        &.active:hover {
+          background: $hero-color;
+          color: set-color($hero-color);
+        }
+        &.active > .p-v {
+          color: set-color($hero-color);
         }
       }
     }
@@ -1340,10 +1272,11 @@
   table.hdp-contain-j td {
     $border-color: lighten(desaturate($skin-color, 18), 19);
     &.br-j {
-      border-right: 1px solid $border-color;
+      @include ltr {
+        border-right: 1px solid $border-color;
+      }
       @include rtl {
         border-left: 1px solid $border-color;
-        border-right: none;
       }
     }
     &.bt-j {
@@ -1379,14 +1312,130 @@
   }
   .status-icon-open-bets {
     top: 16px;
-    right: 4px;
+    @include ltr {
+      right: 4px;
+    }
+    @include rtl {
+      left: 6px;
+    }
   }
   .viewSwitcher-j.select-pagination > span {
-    color: $text-palette-7;
+    color: $text-palette-5 !important;
   }
   .balance-int-row {
     background: lighten(desaturate($skin-color, 17), 12);
     color: $text-palette-2;
+  }
+  + .statistic-on-hover {
+    background: $skin-color;
+    .statistics-p {
+      background: darken( saturate( adjust-hue( $skin-color, 4deg ), 2 ), 7 );
+      border: 1px solid lighten( desaturate( $skin-color, 17 ), 12 );
+      table {
+        thead tr {
+          th p {
+            color: $text-palette-4;
+            background: desaturate(adjust-hue($skin-color, 6deg), 14);
+          }
+
+          td {
+            background: lighten(desaturate(adjust-hue($skin-color, -1deg), 19), 14);
+            box-shadow: inset 0 1px 0 lighten(desaturate(adjust-hue($skin-color, -1deg), 18), 8);
+          }
+        }
+
+        p {
+          color: lighten( desaturate( adjust-hue( $text-color, 4deg ), 20 ), 43 );
+          &.active {
+            color: $text-palette-2;
+          }
+          &.green,
+          &.red,
+          &.yellow {
+            &:hover {
+              color: #ffffff;
+            }
+          }
+        }
+      }
+    }
+  }
+  .system-calculator {
+    background: lighten( desaturate( adjust-hue( $skin-color, 3deg ), 16 ), 4 );
+    box-shadow: 0 0 0 5px rgba(lighten( desaturate( $skin-color, 18 ), 19 ),0.6), 0 5px 30px 10px rgba(darken( saturate( adjust-hue( $skin-color, 4deg ), 2 ), 7 ), 0.6);
+  }
+  .system-calculator-title {
+    background: darken( desaturate( adjust-hue( $skin-color, 3deg ), 11 ), 1 );
+    > h3 {
+      color: rgba(set-color(darken( desaturate( adjust-hue( $skin-color, 3deg ), 11 ), 1 )), 0.71);
+    }
+  }
+  .closed-calculator-b {
+    color: rgba(set-color(darken( desaturate( adjust-hue( $skin-color, 3deg ), 11 ), 1 )), 0.18);
+    &:hover {
+      color: set-color(darken( desaturate( adjust-hue( $skin-color, 3deg ), 11 ), 1 ));
+    }
+  }
+  .calculator-select-contain {
+    background: lighten( desaturate( adjust-hue( $skin-color, 3deg ), 16 ), 4 );
+    border-color: darken( desaturate( adjust-hue( $skin-color, -3deg ), 8 ), 5 );
+  }
+  .select-calc-box-b .select-block {
+    background: darken( desaturate( adjust-hue( $skin-color, -3deg ), 8 ), 5 );
+    > select {
+      color: rgba(set-color(darken(desaturate(adjust-hue(darken( desaturate( adjust-hue( $skin-color, -3deg ), 8 ), 5 ), -3deg), 8), 5)), 0.74);
+      > option {
+        background: darken( desaturate( adjust-hue( $skin-color, -3deg ), 8 ), 5 );
+      }
+    }
+    &:after {
+      color: rgba(set-color(darken(desaturate(adjust-hue(darken( desaturate( adjust-hue( $skin-color, -3deg ), 8 ), 5 ), -3deg), 8), 5)), 0.26);
+    }
+  }
+  .total-stake-input-b > input[type="text"] {
+    color: rgba(set-color(darken( desaturate( adjust-hue( $skin-color, -3deg ), 8 ), 5 )), 0.74);
+    background: darken( desaturate( adjust-hue( $skin-color, -3deg ), 8 ), 5 );
+    @include placeholder {
+      color: rgba(set-color(darken( desaturate( adjust-hue( $skin-color, -3deg ), 8 ), 5 )), 0.74);
+    }
+  }
+  .system-events-view-box {
+    background: darken( desaturate( adjust-hue( $skin-color, 3deg ), 11 ), 1 );
+    border-color: darken( desaturate( adjust-hue( $skin-color, -3deg ), 8 ), 5 );
+    box-shadow: 0 1px 0 lighten( desaturate( adjust-hue( $skin-color, 7deg ), 18 ), 8 );
+    > ul > li {
+      color: rgba(set-color(darken( desaturate( adjust-hue( $skin-color, 3deg ), 11 ), 1 )), 0.73);
+    }
+  }
+  .sistem-event-icons-b {
+    color: rgba(set-color(darken( desaturate( adjust-hue( $skin-color, 3deg ), 11 ), 1 )), 0.73);
+  }
+  .scroll-view-contain-calculator .event-view-box-separator {
+    background: rgba(set-color( darken( desaturate( adjust-hue( $skin-color, 3deg ), 11 ), 1 )), 0.06);
+    &:nth-child(even) {
+      background: rgba(set-color( darken( desaturate( adjust-hue( $skin-color, 3deg ), 11 ), 1 )), 0.09);
+    }
+  }
+  .event-view-box-separator > ul > li {
+    color: rgba(set-color(darken( desaturate( adjust-hue( $skin-color, 3deg ), 11 ), 1 )), 0.73);
+    > input[type="text"],
+    > label {
+      background: darken( desaturate( adjust-hue( $skin-color, 3deg ), 11 ), 1 );
+    }
+  }
+  .mini-calc-info-box > ul {
+    border-color: lighten( desaturate( adjust-hue( $skin-color, 7deg ), 18 ), 8 );
+    > li {
+      border-top-color: lighten( desaturate( adjust-hue( $skin-color, 7deg ), 18 ), 8 );
+      border-bottom-color: darken( desaturate( adjust-hue( $skin-color, 6deg ), 3 ), 10 );
+      color: rgba(set-color(lighten( desaturate( adjust-hue( $skin-color, 3deg ), 16 ), 4 )), 0.71);
+      &:first-child {
+        border-top: none;
+        > span {
+          color: rgba(set-color(lighten( desaturate( adjust-hue( $skin-color, 3deg ), 16 ), 4 )), 0.71);
+        }
+      }
+    }
   }
 }
 

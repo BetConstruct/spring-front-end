@@ -11,7 +11,7 @@
                     <div class="guide">
                         <div class="button-group-j" id="backgammon-buttons">
                             <a ng-click="game.openDemo = false;openNestedFrame();" trans>Play now</a>
-                            <a ng-show="!showDownloadLinks && ((userOS === 'Windows' && game.downloads.windows) || (userOS === 'WindowsXP' && game.downloads.windowsXp) || (userOS === 'MacOS' && game.downloads.mac))" ng-click="toggleDownloadLink('backgammon-buttons')" trans>Download</a>
+                            <a class="download-now" ng-show="!showDownloadLinks && ((userOS === 'Windows' && game.downloads.windows) || (userOS === 'WindowsXP' && game.downloads.windowsXp) || (userOS === 'MacOS' && game.downloads.mac))" ng-click="toggleDownloadLink('backgammon-buttons')" trans>Download</a>
                             <a ng-if="game.demo_id" ng-click="game.openDemo = true;openNestedFrame();" trans>Play Now Demo</a>
                         </div>
                     </div>

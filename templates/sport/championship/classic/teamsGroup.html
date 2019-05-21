@@ -1,0 +1,103 @@
+<div class="team-group-view-l">
+    <div class="div-layout-1">
+        <!-- <vbet-loader ng-show="loadingTeamList"></vbet-loader>-->
+        <div class="grout-view-separator team-names-l">
+            <ul>
+                <li><p trans>Teams</p></li>
+                <!--<li><p>Group</p></li>-->
+                <!--<li><p>Odds</p></li>-->
+            </ul>
+            <ul ng-repeat="team in teamList" ng-class="{active:activeTeam.Id === team.Id}" ng-click="changeTeam(team)">
+                <li>
+                    <b class="flag-country-view flag-{{team.Id}}"></b>
+                    <p ng-bind="team.Name"></p>
+                </li>
+                <!--<li><p>A</p></li>-->
+                <!--<li><p><a href="#">55.5</a></p></li>-->
+            </ul>
+        </div>
+    </div>
+    <div class="div-layout-2">
+        <!--<vbet-loader ng-show="loadingTeamMember"></vbet-loader>-->
+        <div class="grout-view-separator team-player-view-l">
+            <ul>
+                <li><p ng-bind="activeTeam.Name"></p></li>
+                <!--<li><p><img src="http://www.promovax.eu/images/DE.png" alt=""></p></li>-->
+                <li><b class="flag-country-view flag-{{activeTeam.Id}}"></b></li>
+            </ul>
+            <ul>
+                <li><p>#</p></li>
+                <li><p trans>Player</p></li>
+                <li><p trans>Position</p></li>
+            </ul>
+
+            <ul ng-repeat="player in teamMembers" ng-click="getPlayer(player.EntityId)" ng-class="{active : player.EntityId === selectedPlayer.Id}">
+                <li><p ng-bind="player.Number"></li>
+                <li><p ng-bind="player.EntityName"></p></li>
+                <li><p ng-bind="player.PositionName"></p></li>
+            </ul>
+        </div>
+    </div>
+    <div class="popup-block" ng-show="selectedPlayer">
+        <div class="popup-layout-registration">
+            <div class="vertical-middle-wrapper">
+                <div class="all-popup-separator">
+                    <div class="register-steps-b">
+                        <div class="register-contain-new">
+                            <div class="closed-popup-form" ng-click="closePlayerPopup()"></div>
+                            <div class="player-info-popup">
+                                <div class="name-player-l">
+                                    <h3 ng-bind="selectedPlayer.Name"></h3>
+                                </div>
+                                <!--<div class="number-player-l">-->
+                                <!--&lt;!&ndash;<div class="left-arrow"></div>&ndash;&gt;-->
+                                <!--&lt;!&ndash;<div class="right-arrow"></div>&ndash;&gt;-->
+                                <!--&lt;!&ndash;<div class="t-shirt">&ndash;&gt;-->
+                                <!--&lt;!&ndash;<span> 21 </span>&ndash;&gt;-->
+                                <!--&lt;!&ndash;</div>&ndash;&gt;-->
+                                <!--<div>Midfielder</div>-->
+                                <!--</div>-->
+                                <div class="player-info-l">
+                                    <ul ng-if="selectedPlayer.PositionName">
+                                        <li trans>Position</li>
+                                        <li ng-bind="selectedPlayer.PositionName">Midfielder</li>
+                                    </ul>
+                                    <ul ng-if=" selectedPlayer.Number">
+                                        <li trans>Number</li>
+                                        <li ng-bind=" selectedPlayer.Number">1</li>
+                                    </ul>
+                                    <ul ng-if=" selectedPlayer.Height">
+                                        <li trans>Height</li>
+                                        <li ng-bind=" selectedPlayer.Height">186</li>
+                                    </ul>
+
+                                    <ul ng-if=" selectedPlayer.Weight">
+                                        <li trans>Weight</li>
+                                        <li ng-bind=" selectedPlayer.Weight">186</li>
+                                    </ul>
+                                    <ul ng-if=" (selectedPlayer.LeftHanded && selectedPlayer.PositionId != 3) ">
+                                        <li trans>Left Handed</li>
+                                        <li class="check-l"></li>
+                                    </ul>
+                                    <ul ng-if=" (!selectedPlayer.LeftHanded && selectedPlayer.PositionId != 3) ">
+                                        <li trans>Right Handed</li>
+                                        <li class="check-l"></li>
+                                    </ul>
+                                    <ul ng-if=" selectedPlayer.BirthDate">
+                                        <li trans>Birth Date</li>
+                                        <li ng-bind=" selectedPlayer.BirthDate| date:'dd/MM/yyyy'"></li>
+                                    </ul>
+                                    <ul ng-if=" selectedPlayer.RegionName">
+                                        <li trans>Nationality</li>
+                                        <li ng-bind=" selectedPlayer.RegionName"></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

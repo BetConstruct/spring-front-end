@@ -333,8 +333,10 @@ $anim-time: 5;
   box-sizing: border-box;
   width: 100%;
   height: 50px;
-  padding: 0 160px 0 20px;
   position: relative;
+  @include ltr {
+    padding: 0 160px 0 20px;
+  }
   @include rtl {
     padding: 0 20px 0 160px;
   }
@@ -353,24 +355,27 @@ $anim-time: 5;
 .mini-slider-b-contain{
   height: 50px;
   position: absolute;
-  right: 20px;
   top: 0;
   box-sizing: border-box;
+  @include ltr {
+    right: 20px;
+  }
   @include rtl {
     left: 20px;
-    right: auto;
   }
 }
 .change-b-slide{
-  float: left;
   box-sizing: border-box;
   width: 12px;
   height: 12px;
   border-radius: 50%;
   background: lighten( desaturate( adjust-hue( $skin-color, 1deg ), 21 ), 11 );
-  margin: 19px 0 0 7px;
   transition: background 200ms;
   cursor: pointer;
+  @include ltr {
+    float: left;
+    margin: 19px 0 0 7px;
+  }
   @include rtl {
     float: right;
     margin: 19px 7px 0 0;
@@ -394,17 +399,19 @@ $anim-time: 5;
   box-sizing: border-box;
 }
 .games-view-slider-contain > ul > li{
-  float: left;
   width: calc((100% - 21px) / 3);
   height: 130px;
   box-sizing: border-box;
   background: lighten( desaturate( $skin-color, 7 ), 4 );
-  margin: 0 0 0 10px;
   position: relative;
-  padding: 0 0 0 100px;
   animation: fadeInUp 0.3s;
   animation-fill-mode: both;
   transform: translate3d(0, 0, 0);
+  @include ltr {
+    float: left;
+    margin: 0 0 0 10px;
+    padding: 0 0 0 100px;
+  }
   @include rtl {
     float: right;
     margin: 0 10px 0 0;
@@ -438,21 +445,24 @@ $anim-time: 5;
   width: 100%;
 }
 .games-view-slider-contain > ul > li:first-child{
-  margin: 0;
+  @include ltr {
+    margin: 0;
+  }
   @include rtl {
     margin: 0;
   }
 }
 .date-championship-logo{
   position: absolute;
-  left: 0;
   top: 0;
   width: 100px;
   height: 130px;
   background: $skin-palette-10;
   box-sizing: border-box;
+  @include ltr {
+    left: 0;
+  }
   @include rtl {
-    left: auto;
     right: 0;
   }
 }
@@ -541,8 +551,10 @@ $anim-time: 5;
   color: rgba(set-color($skin-palette-12), 0.8);
   background-repeat: no-repeat;
   background-size: 20px;
-  background-position: 0 50%;
   display: table-cell;
+  @include ltr {
+    background-position: 0 50%;
+  }
   @include rtl {
     background-position: 100% 50%;
   }
@@ -558,7 +570,9 @@ $anim-time: 5;
   left: 0;
   width: 100%;
   box-sizing: border-box;
-  padding: 0 0 0 35px;
+  @include ltr {
+    padding: 0 0 0 35px;
+  }
   @include rtl {
     padding: 0 35px 0 0;
   }
@@ -592,7 +606,6 @@ $anim-time: 5;
   margin:  10px 0 0;
 }
 .game-link-wrapper-b > a{
-  float: left;
   text-decoration: none;
   color: set-color($brand-color-1);
   font: 12px/14px $font-f;
@@ -606,6 +619,9 @@ $anim-time: 5;
   max-width: 100%;
   box-sizing: border-box;
   transition: background 500ms, border-color 500ms;
+  @include ltr {
+    float: left;
+  }
   @include rtl {
     float: right;
   }
@@ -820,7 +836,6 @@ div.slider-image-wrapper-b {
 }
 .nav-news-sport-cat-j a, .hp-news-more-j > span {
   display: block;
-  float: left;
   padding: 0 9px;
   text-transform: uppercase;
   text-decoration: none;
@@ -830,6 +845,12 @@ div.slider-image-wrapper-b {
   color: $text-palette-4;
   transition: 300ms color, 300ms box-shadow,  300ms background;
   position: relative;
+  @include ltr {
+    float: left;
+  }
+  @include rtl {
+    float: right;
+  }
   &:hover {
     color: $text-palette-1;
   }
@@ -862,13 +883,18 @@ div.slider-image-wrapper-b {
   .hp-news-group-j {
     position: absolute;
     top: 100%;
-    right: 0;
     display: none;
     width: 320px;
     background: $skin-palette-10;
     box-sizing: border-box;
     padding: 20px 20px 6px;
     box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.2), 0 3px 10px -2px rgba(0, 0, 0, 0.2);
+    @include ltr {
+      right: 0;
+    }
+    @include rtl {
+      left: 0;
+    }
     .hp-news-category-search-j {
       float: left;
       width: 100%;
@@ -885,9 +911,14 @@ div.slider-image-wrapper-b {
         box-shadow: 0 0 0 1px $text-palette-6 inset;
         font: 12px/36px $font-f;
         color: $text-palette-4;
-        padding: 0 30px 0 12px;
         box-sizing: border-box;
         transition: box-shadow 240ms;
+        @include ltr {
+          padding: 0 30px 0 12px;
+        }
+        @include rtl {
+          padding: 0 12px 0 30px;
+        }
         @include placeholder {
           font: 12px/36px $font-f;
           color: $text-palette-4;
@@ -903,10 +934,15 @@ div.slider-image-wrapper-b {
         content: "\e6d4";
         color: $text-palette-4;
         display: block;
-        right: 12px;
         top: 0;
         z-index: 5;
         pointer-events: none;
+        @include ltr {
+          right: 12px;
+        }
+        @include rtl {
+          left: 12px;
+        }
       }
     }
     .hp-new-more-cats-j {
@@ -966,17 +1002,27 @@ div.slider-image-wrapper-b {
       height: 26px;
       background: $skin-palette-10;
       margin: 12px 0;
-      padding: 0 24px 0 12px;
       position: relative;
       white-space: nowrap;
       border-radius: 30px;
+      @include ltr {
+        padding: 0 24px 0 12px;
+      }
+      @include rtl {
+        padding: 0 12px 0 24px;
+      }
       &:after {
         content: "\e674";
         font: 20px/26px icomoon;
         display: block;
         position: absolute;
         top: 0;
-        right: 4px;
+        @include ltr {
+          right: 4px;
+        }
+        @include rtl {
+          left: 4px;
+        }
       }
     }
   }

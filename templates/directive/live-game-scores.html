@@ -3,7 +3,7 @@
         <div class="live-game-container no-select-j" ng-show="openGame.type == 1">
             <div class="game-content">
                 <div class="game-info game-{{openGame.sport.alias.toLowerCase()}}" ng-show="!openGameLoading">
-                    <button class="unpin-button" ng-class="{'active': $root.env.isLiveGamePinned && !noClassicScroll}" ng-show="$root.conf.enableLiveSectionPin && (openGame.sport.alias !== 'HorseRacing') && !(enlargedGame && openGame.id === enlargedGame.id) && $root.conf.sportsLayout === 'euro2016'" ng-click="toggleLiveSectionPin()" trans="attr-only" title="Pin/Unpin"></button>
+                    <button class="unpin-button" ng-class="{'active': $root.env.isLiveGamePinned && !noClassicScroll}" ng-show="$root.conf.enableLiveSectionPin && (openGame.sport.alias !== 'HorseRacing') && !(enlargedGame && openGame.id === enlargedGame.id) && $root.conf.sportsLayout === 'classic'" ng-click="toggleLiveSectionPin()" trans="attr-only" title="Pin/Unpin"></button>
                     <div class="sport-title" ng-click="broadcast('liveGame.headerClicked', openGame);$event.stopPropagation();" ng-if="liveGamesSoccerTemplate.indexOf(openGame.sport.alias) !== -1 || $root.conf.esportsGames.indexOf(openGame.sport.alias) !== -1">
                         <b class="mini-icon-1 mini-icon-{{openGame.sport.id}} {{openGame.sport.alias}}" title="{{openGame.sport.alias}}"></b>
                         <span class="ellipsis-text" title="{{openGame.competition.name}}">
@@ -12,7 +12,9 @@
                         <span ng-if="openGame.sport.alias === 'HorseRacing'" title="{{ openGame.team2_name ?  openGame.team2_name: '' }}">{{ openGame.team2_name ?  openGame.team2_name: '' }} {{ openGame.start_ts| formatDate: "LT"}}</span>
                     </div>
                     <div class="live-score-include-holder">
-                        <ng-include src="::'templates/directive/live-game-scores-info.html'" class="float-width"></ng-include>
+                        <ng-include src="::'templates/directive/live-game-scores-info.html'" class="float-width">
+
+                        </ng-include>
                         <div class="last-event-and-stats-toggle">
                             <ul>
                                 <li>
@@ -39,26 +41,34 @@
                             </ul>
                         </div>
                     </div>
-                    <ng-include src="::'templates/directive/live-game-scores-statistics.html'" class="float-width"></ng-include>
                 </div>
             </div>
         </div>
     </div>
     <div class="game-additional-info-v3">
-        <p ng-show="openGame.info.add_info || openGame.text_info || openGame.is_neutral_venue || openGame.tv_info">
+        <p ng-show="openGame.is_neutral_venue || getGameAdditionalInfoV3">
             <span ng-show="openGame.is_neutral_venue" trans >Neutral field</span>
-            <span ng-show="openGame.info.add_info || openGame.text_info">{{openGame.info.add_info || openGame.text_info.split(';').join()}}</span><span ng-show="openGame.tv_info"> {{openGame.tv_info}}</span>
+            <span ng-if="openGame">{{ getGameAdditionalInfoV3 }} </span>
         </p>
         <div class="game-additional-icons">
             <i class="statistics-icon-j"
                ng-show="$root.conf.enableH2HStat && openGame.is_stat_available"
                ng-click="openStatistics(openGame);$event.stopPropagation();"
                statistics-on-hover
-               stats-game ="{'game': openGame, 'competition': openGame.competition.name}"></i>
+               stats-game ="openGame"
+               stats-competition-name="{{openGame.competition.name}}"></i>
             <ul>
                 <li class="column-view-j" ng-click="switchMarketsInOneColumn(false)" ng-class="{'active': !marketsInOneColumn.enabled}"></li>
                 <li class="list-view-j" ng-click="switchMarketsInOneColumn(true)" ng-class="{'active': marketsInOneColumn.enabled}"></li>
             </ul>
         </div>
+    </div>
+</div>
+<div class="float-width" ng-show="openGame.type === 0">
+    <div class="game-additional-info-v3">
+        <p ng-show="openGame.is_neutral_venue || getGameAdditionalInfoV3">
+            <span ng-show="openGame.is_neutral_venue" trans >Neutral field</span>
+            <span ng-if="openGame">{{ getGameAdditionalInfoV3 }} </span>
+        </p>
     </div>
 </div>

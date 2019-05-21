@@ -3,7 +3,7 @@
          ng-style="{'max-width': row.maxWidth}"
          ng-class="{'guide': !row.fullWidth}">
         <div class="row-child">
-            <div ng-repeat="item in row.items track by $index" class="{{item.class}} {{item.templateUrl}}">
+            <div ng-repeat="item in row.items|orderBy:'order' track by $index" class="{{item.class}} {{item.templateUrl}}">
                 <div ng-if="item.templateUrl && item.templateUrl.indexOf('productsSlider') === -1"
                             ng-class="{'kill-height-til-media': item.mediaHeight}" ng-style="{'height': (item.height || item.mediaHeight), 'max-height': item.maxHeight}"
                      ng-include="item.templateUrl|fixPath"></div>
@@ -15,6 +15,10 @@
                      ng-style="{'height': (item.height || item.mediaHeight), 'max-height': item.maxHeight}"
                      banner-slider
                      interval="{{conf.featuredGames.rotationPeriod}}" slug="{{item.sliderSlug}}"></div>
+                <div ng-if="item.dataType" ng-switch="item.dataType">
+                    <div class="casino-games-list-h" ng-switch-when="casinoPromotedGames" casino-promoted-games page-category="home" limit="10"></div>
+                    <jackpot-slider type="casino" ng-style="{'height': (item.height || item.mediaHeight), 'max-height': item.maxHeight}" class="casino-games-list-h" load-jackpot-data="true" ng-switch-when="casinoJackpotSlider"></jackpot-slider>
+                </div>
             </div>
         </div>
     </div>

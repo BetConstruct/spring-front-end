@@ -4,11 +4,9 @@ $brand-color-2:     #c29440;
 
 $skin-color: #1e2639;
 $text-color: $skin-color;
-
 $disable-brand-color-2-sc: true, #ffffff;
 
 $asian-view-custom: true;
-$new-casino: true;
 $custom-very-top-menu: true;
 
 @if ($skin-second==true) {
@@ -17,7 +15,6 @@ $custom-very-top-menu: true;
   $text-color: #1e2639 !global;
   $live-casino-background: default !global;
   $footer-background: white !global;
-  $colorized-social-icons: true !global;
   $popup-form-opacify: 0.1 !global;
   $body-background: #E8E8EB !global;
   $header-nav-line-background: #373e54 !global;

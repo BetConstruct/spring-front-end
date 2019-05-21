@@ -1,6 +1,6 @@
 CASINO.constant('CConfig', {
     //
-    version: 1,
+    version: 2,
     cUrl: '/global/casinoGamesLoad.php',
     iconsUrl: '/global/img/games/gameIcons/gameIcons2/',
     bigIconsUrl: '/global/img/games/gameIcons/gameIcons3/',
@@ -27,19 +27,11 @@ CASINO.constant('CConfig', {
         multiViewEnabled: false,
         fourGameViewEnable: true,
         filterByProviderEnabled: true,
-        depositButtonUnderGame: {
-            enabled: true,
-            disableOptions: {
-                providers: ['VGS'],
-                categories: ['28']
-            }
-        },
-        enableDepositButtonInCasino: true,
         licenseLogo: { // shows license logo on the opposite side of the deposit button
             enabled: false,
             href: ''
         },
-        funModeEnabled: 1,// enable/disable fun mode.  0 - disable for all users, 1 - enable for all users, 2 - enable for logged in users
+        funModeEnabled: 1,// enable/disable fun mode.  0 - disable for all users, 1 - enable for all users, 2 - enable for logged in users, 3 - enable for verified users
         realModeEnabled: true, // enable/disable real playing mode
         providersThatHaveNotFunMode: ['MTG'],
         providersThatWorkWithSwarm: ['KLG', 'VGS'],
@@ -68,6 +60,9 @@ CASINO.constant('CConfig', {
             showBiggestWinners: false
         }
     },
+    bonusBalanceUnderGame: {
+        enabled: false
+    },
     login: {
         enable: true,
         url: '/global/partners/rml.php',
@@ -83,13 +78,13 @@ CASINO.constant('CConfig', {
         filters: [
             {
                 name: 'Status',
-                field: 'State',
+                field: 'Stage',
                 okButton: true,
                 noRefresh: true,
                 filters: [
                     {name: 'All', all: true, active: false},
                     {name: 'Upcoming', value: 3, active: true, stageList: 3},
-                    {name: 'Live', value: 2, active: true, stageList: 2},
+                    {name: 'tournament_live', value: 2, active: true, stageList: 2},
                     {name: 'Finished', value: 1, active: false, stageList: 1},
                     {name: 'Canceled', value: -1, active: false, stageList: -1}
                 ]
@@ -137,7 +132,9 @@ CASINO.constant('CConfig', {
             '110': 1,
             '112': 2,
             '119': 5,
-            '108': 3
+            '108': 3,
+            '125': 6,
+            '126': 3
         },
         liveDealersPhotosUrl: "http://websitelivegames-am.betconstruct.com/Content/Images/DealerPhotos/",
         liveDealersPhotosUrlVersion2: "http://rgs-livedealerwebserver.betconstruct.int/content/dealers/",

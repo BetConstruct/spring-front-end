@@ -53,7 +53,6 @@
         }
         .action-btn {
           display: block;
-          float: left;
           height: 45px;
           padding: 0 40px;
           font-size: 18px;
@@ -61,6 +60,9 @@
           border-radius: 8px;
           text-transform: uppercase;
           text-decoration: none;
+          @include ltr {
+            float: left;
+          }
           @include rtl {
             float: right;
           }
@@ -306,9 +308,11 @@
       > li {
         display: table-cell;
         width: 33.3333%;
-        padding: 26px 20px 26px 100px;
         vertical-align: middle;
         position: relative;
+        @include ltr {
+          padding: 26px 20px 26px 100px;
+        }
         @include rtl {
           padding: 26px 100px 26px 20px;
         }
@@ -323,14 +327,15 @@
           background: #121623;
           border-radius: 100%;
           top: 13px;
-          left: 13px;
           position: absolute;
           box-shadow: 0 0 0 6px #bcbdc1, 0 0 0 12px #e7e7e9;
           color: #fff;
           font: 24px/45px icomoon;
           text-align: center;
+          @include ltr {
+            left: 13px;
+          }
           @include rtl {
-            left: auto;
             right: 13px;
           }
         }

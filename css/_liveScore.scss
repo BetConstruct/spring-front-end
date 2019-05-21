@@ -16,14 +16,18 @@
 }
 
 .statistic-view-v3 .live-game-container .sport-title, .statistic-view-v3 .game-score-multiset ul.title li:first-child {
-    border-radius: 2px 0 0;
+    @include ltr {
+        border-radius: 2px 0 0;
+    }
     @include rtl {
         border-radius: 0 2px 0 0;
     }
 }
 
 .statistic-view-v3 .live-game-container .sport-title, .statistic-view-v3 .game-score-multiset ul.title li:last-child {
-    border-radius: 0 2px 0 0;
+    @include ltr {
+        border-radius: 0 2px 0 0;
+    }
     @include rtl {
         border-radius: 2px 0 0;
     }
@@ -44,9 +48,11 @@
 }
 
 .live-score-include-holder {
-    float: left;
     width: 100%;
     position: relative;
+    @include ltr {
+        float: left;
+    }
     @include rtl {
         float: right;
     }
@@ -62,11 +68,13 @@ live-game-scores {
     float: left;
     width: 100%;
     contain: layout;
+    position: relative;
+    z-index: 250;
 }
 
 .last-event-and-stats-toggle {
     position: absolute;
-    bottom: 12px;
+    top: 74px;
     left: 0;
     width: 100%;
     z-index: 1000;
@@ -92,10 +100,12 @@ live-game-scores {
         top: 0;
         left: 0;
         width: 100%;
-        padding: 0 6px 0 3px;
         box-sizing: border-box;
         transform: translate3d(0, 0, 0);
         z-index: 100;
+        @include ltr {
+            padding: 0 6px 0 3px;
+        }
         @include rtl {
             padding: 0 3px 0 6px;
         }
@@ -115,11 +125,13 @@ live-game-scores {
         width: auto;
         max-width: 100%;
         position: static;
-        float: left;
         margin: -9px 0 0;
         max-height: 40px;
         overflow: hidden;
         white-space: nowrap;
+        @include ltr {
+            float: left;
+        }
         @include rtl {
             float: right;
         }
@@ -151,42 +163,86 @@ live-game-scores {
     background: darken(desaturate(adjust-hue($classic-skinning-color, 3deg), 1), 6);
     margin: 0 0 2px;
     > p {
-        float: left;
-        padding: 0 0 0 24px;
+        @include ltr {
+            float: left;
+            padding: 0 0 0 24px;
+        }
         @include rtl {
             float: right;
             padding: 0 24px 0 0;
         }
         &:before {
+            content: "\e6e4";
             box-sizing: border-box;
             font: 10px/22px icomoon;
-            content: "\e6e4";
             position: absolute;
-            left: 8px;
             top: 0;
             color: $text-palette-5;
+            @include ltr {
+                left: 8px;
+            }
             @include rtl {
-                left: auto;
                 right: 8px;
             }
         }
     }
 }
 
+.pre-match-additional-info {
+    float: left;
+    width: 100%;
+    box-sizing: border-box;
+    position: relative;
+    position: sticky;
+    top: 0;
+    color: $text-palette-4;
+    font: #{5+$size-font}/24px $font-f;
+    background: darken(desaturate(adjust-hue($classic-skinning-color, 3deg), 1), 6);
+    z-index: 10;
+    @include ltr {
+        padding-left: 24px;
+    }
+    @include rtl {
+        padding-right: 24px;
+    }
+    &:before {
+        content: "\e6e4";
+        box-sizing: border-box;
+        font: 10px/24px icomoon;
+        position: absolute;
+        top: 0;
+        color: $text-palette-5;
+        @include ltr {
+            left: 8px;
+        }
+        @include rtl {
+            right: 8px;
+        }
+    }
+    + .markets-group-wrap-v3 {
+        top: 24px;
+    }
+
+}
+
 .game-additional-icons {
-    float: right;
     padding: 0 6px;
     font: 11px/24px icomoon;
+    @include ltr {
+        float: right;
+    }
     @include rtl {
         float: left;
     }
     > i {
         display: block;
-        float: left;
         padding: 0 6px;
         color: $c16-sp-4;
         transition: 250ms color;
         font-style: normal;
+        @include ltr {
+            float: left;
+        }
         @include rtl {
             float: right;
         }
@@ -195,18 +251,17 @@ live-game-scores {
         }
     }
     > ul {
-        float: left;
-        border-left: 1px solid $skin-palette-8;
-        padding: 0 4px 0 10px;
-        margin: 0 0 0 6px;
-        @include rtl {
-            float: right;
+        @include ltr {
+            float: left;
+            margin: 0 0 0 6px;
+            padding: 0 4px 0 10px;
+            border-left: 1px solid $skin-palette-8;
         }
         @include rtl {
-            border-left: none;
-            border-right: 1px solid $skin-palette-8;
-            padding: 0 10px 0 4px;
+            float: right;
             margin: 0 6px 0 0;
+            padding: 0 10px 0 4px;
+            border-right: 1px solid $skin-palette-8;
         }
         > li {
             display: block;
@@ -236,7 +291,7 @@ live-game-scores {
     content: "\e6b8";
 }
 
-.body-wrapper:not(.euro2016) {
+.body-wrapper:not(.classic) {
     .game-additional-icons > ul {
         display: none;
     }

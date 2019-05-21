@@ -1,9 +1,9 @@
-VBET5.controller('eSportsMainController', ['$rootScope', '$scope', 'Config', 'Utils', 'GameInfo', 'AsianMarkets', 'StreamService', function ($rootScope, $scope, Config, Utils, GameInfo, AsianMarkets, StreamService) {
+VBET5.controller('eSportsMainController', ['$rootScope', '$scope', 'Config', 'Utils', 'GameInfo', 'AsianMarkets', 'StreamService', 'content','Storage', function ($rootScope, $scope, Config, Utils, GameInfo, AsianMarkets, StreamService, content,Storage) {
     'use strict';
 
     var streamService = new StreamService($scope);
     $scope.asianMarkets = AsianMarkets;
-    AsianMarkets.marketsBySport = Config.main.GmsPlatform ? AsianMarkets.marketsBySportGms : AsianMarkets.marketsBySportBazalt;
+    $scope.isEventInBetSlip = GameInfo.isEventInBetSlip;
     var showTypes = $scope.asianMarkets.marketsBySport.Default.HDP; //will show ony HDP markets
     var availableTimePeriods = [0].concat(Config.main.upcomingGamesPeriods);
     $scope.pinnedGames = {};
@@ -31,10 +31,7 @@ VBET5.controller('eSportsMainController', ['$rootScope', '$scope', 'Config', 'Ut
         },
         selected: 'asian'
     };
-
-    $scope.isEventInBetSlip = GameInfo.isEventInBetSlip;
-    $scope.displayEventLimit = GameInfo.displayEventLimit;
-    $scope.cancelDisplayEventLimit = GameInfo.cancelDisplayEventLimit;
+    $rootScope.footerMovable = true;
 
     $scope.repayCompetitionsFilter = function repayCompetitionsFilter(startTime, type) {
         var game = {
@@ -45,7 +42,7 @@ VBET5.controller('eSportsMainController', ['$rootScope', '$scope', 'Config', 'Ut
         };
         //prepare game filter
         if (type === 'preMatch') {
-            game.show_type = { '@nin': ['OUTRIGHT'] };
+            game.show_type = {'@nin': ['OUTRIGHT']};
             if (Config.main.enableVisibleInPrematchGames) {
                 game['@or'].push({
                     'visible_in_prematch': 1
@@ -80,6 +77,9 @@ VBET5.controller('eSportsMainController', ['$rootScope', '$scope', 'Config', 'Ut
     };
 
     $scope.handleStreaming = function handleStreaming(game) {
+        if (!game) {
+            return;
+        }
         $scope.openGame = {
             type: game.type,
             id: game.id,
@@ -92,6 +92,22 @@ VBET5.controller('eSportsMainController', ['$rootScope', '$scope', 'Config', 'Ut
 
         streamService.monitoring($scope, 'openGame', 'pinnedGames', 'enlargedGame');
     };
+
+    /**
+     * @ngdoc method
+     * @name toggleLeftMenu
+     * @methodOf vbet5.controller:classicViewLeftController
+     * @description  expands(or collapses if expanded) left menu
+     *
+     * @param {boolean} val - set defined value
+     */
+    $scope.toggleLeftMenu = function toggleLeftMenu(val) {
+        $scope.leftMenuClosed = val !== undefined ? !val : !$scope.leftMenuClosed;
+        Storage.set('esportsLeftMenuToggleState', $scope.leftMenuClosed);
+    };
+
+    $scope.leftMenuClosed = Storage.get('esportsLeftMenuToggleState') || false;
+
 
     /**
      * @ngdoc method
@@ -122,6 +138,9 @@ VBET5.controller('eSportsMainController', ['$rootScope', '$scope', 'Config', 'Ut
         if (type === 'dragable') {
             $scope.pinnedGames[$scope.openGame.id] = $scope.openGame;
         } else {
+            if(type === 'fullScreen'){
+                $scope.leftMenuClosed = true;
+            }
             $scope.enlargedGame = $scope.openGame;
             $scope.pinnedGames = {};
         }
@@ -146,7 +165,7 @@ VBET5.controller('eSportsMainController', ['$rootScope', '$scope', 'Config', 'Ut
         if (game && game.id === $scope.openGame.id) {
             if (!Config.main.defaultStreaming || !Config.main.defaultStreaming.enabled || $scope.openGame.tv_type !== Config.main.defaultStreaming.tvType) {
                 $scope.openGame.video_data = undefined;
-                if(Config.main.video.autoPlay) {
+                if (Config.main.video.autoPlay) {
                     GameInfo.getVideoData($scope.openGame);
                 }
             }
@@ -154,6 +173,32 @@ VBET5.controller('eSportsMainController', ['$rootScope', '$scope', 'Config', 'Ut
             $scope.openGame.activeFieldType = 'video'; //
         }
     };
+
+    var pages = [];
+    $scope.page = {};
+    var selectedSportAlias = '';
+
+    setTimeout(function () {
+        content.getPage('esport-games', true).then(function (response) {
+            if (response && response.data && response.data.page && response.data.page.children && response.data.page.children.length > 0) {
+                pages = response.data.page.children;
+                if (selectedSportAlias) {
+                    getPage(selectedSportAlias);
+                }
+            }
+        });
+    }, 3000);
+
+
+    var getPage = function (alias) {
+        if ($scope.page.slug !== alias && pages.length > 0) {
+            $scope.page = pages.find(function (page) {
+                return page.slug === alias;
+            }) || {};
+        }
+        selectedSportAlias = alias;
+    };
+
 
     /**
      * @ngdoc method
@@ -163,6 +208,7 @@ VBET5.controller('eSportsMainController', ['$rootScope', '$scope', 'Config', 'Ut
      * @param {Object} params - Selected item parameters
      */
     $scope.createSelectedObj = function createSelectedObj(params) {
+        getPage(params.sport.alias);
         var selected = {
             type: params.type,
             sport: {id: params.sport.id, alias: params.sport.alias, name: params.sport.name},
@@ -183,7 +229,9 @@ VBET5.controller('eSportsMainController', ['$rootScope', '$scope', 'Config', 'Ut
         if (params.game && params.game.id) {
             selected.game.id = params.game.id;
         }
-        if (params.type === 'preMatch') { selected.competition.start_ts = $scope.sharedData.filters.time.selected; }
+        if (params.type === 'preMatch') {
+            selected.competition.start_ts = $scope.sharedData.filters.time.selected;
+        }
 
         return selected;
     };

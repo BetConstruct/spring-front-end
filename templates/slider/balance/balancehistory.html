@@ -1,4 +1,4 @@
-<div class="bet-history new" ng-if="calculatedConfigs.sportEnabled || conf.GmsPlatform" ng-controller="balanceCtrl" ng-init="initbalanceHistory()">
+<div class="bet-history new" ng-controller="balanceCtrl" ng-init="initbalanceHistory()">
     <div class="contein-bet-history">
         <!--Блок с датой-->
         <div class="left-block-history new">
@@ -41,7 +41,7 @@
                         <!--<li class="transactions-money empty" ng-show="!balance.bet_id"></li>-->
                         <li class="type-transactions">
                             <p ng-if="balance.product_category === 2">{{ balance.game }}</p>
-                            <p ng-if="balance.product_category !== 2">{{ balanceTypes[balance.operation] || (balance.operation_name|translate) }}</p>
+                            <p ng-if="balance.product_category !== 2">{{ balance.name }}</p>
                         </li>
                         <li ng-if="false" class="bonus-title-b" ng-show="conf.bonusesEnabled">
                             <p trans>Bonus</p>

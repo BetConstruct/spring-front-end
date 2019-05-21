@@ -1,0 +1,18 @@
+<div class="statistic-quality-contain">
+    <p class="statistic-no-available" ng-if="!templateData || !templateData.GeneralStatsInfoResult.length" trans>No Statistics available</p>
+    <div ng-show="templateData.GeneralStatsInfoResult.length">
+        <h4 class="main-title-statistic-quality" ng-bind="::('Last 5 ' + widgetMapping[marketType].title) | translate"></h4>
+        <div class="qualify">
+            <ul class="qualify-statistic-quality">
+                <li  ng-repeat="matchResults in templateData.GeneralStatsInfoResult track by $index">
+                    <p ng-bind="::matchResults.EntityId === openGame.team1_id ? openGame.team1_name : openGame.team2_name"></p>
+                    <span ng-if="matchResults.Position !== null && matchResults.Points !== null" ng-bind="::matchResults.Position + ' | ' + matchResults.Points"></span>
+                    <div class="qualify-info">
+                        <p ng-repeat="matchResult in matchResults.GeneralInfoWDL track by $index" class="{{matchResult}}-bg" ng-bind="::matchResult"></p>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <p ng-click="openStatistics(openGame);$event.stopPropagation();" class="more-statistic-quality" trans>View all statistics</p>
+</div>

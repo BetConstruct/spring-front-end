@@ -1,0 +1,18 @@
+<div class="float-width">
+    <div ng-if="jackpotData" class="jackpot-pools">
+        <a ng-controller="cmsPagesCtrl" ng-init="loadBanners('casino-jackpot-banner', true)" class="jp-banner"
+           ng-href="{{bannerObjects['casino-jackpot-banner-iframe'][0].link}}" target="{{bannerObjects['casino-jackpot-banner-iframe'][0].linktarget}}"
+           style="background-image: url({{bannerObjects['casino-jackpot-banner-iframe'][0].image}})">
+            <span>{{jackpotData[0].Name}}</span>
+            <div class="jackpot-banner-amount">
+                <jackpot-counter
+                        max-duration-speed="400"
+                        point="jackpotData[0].CurrencyFraction"
+                        comma="true"
+                        currency="jackpotData[0].Currency"
+                        amount="jackpotData[0].CollectedAmountTotal">
+                </jackpot-counter>
+            </div>
+        </a>
+    </div>
+</div>

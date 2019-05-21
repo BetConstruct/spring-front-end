@@ -35,11 +35,14 @@
     box-sizing: border-box;
     margin: 10px 0 0;
     transform: translate3d(0,0,0);
+    position: relative;
+    z-index: 100;
     .slider-view-casino-b {
         display: table-cell;
         vertical-align: top;
         width: auto;
         float: none;
+        height: auto;
         .big-slider-casino-directive {
             height: 320px;
         }
@@ -83,8 +86,10 @@
     width: 320px;
     height: 320px;
     box-sizing: border-box;
-    margin: 0 0 0 10px;
     position: relative;
+    @include ltr {
+        margin: 0 0 0 10px;
+    }
     @include rtl {
         margin: 0 10px 0 0;
     }
@@ -184,17 +189,20 @@
 }
 $top-winners-gradient:#1a7051!default;
 .gamers-won-list-b{
-    float: left;
     width: 320px;
     height: 320px;
     box-sizing: border-box;
-    margin: 0 0 0 10px;
     background: darken( desaturate( adjust-hue( $top-winners-gradient, 43deg ), 24 ), 12 );
     background: -moz-linear-gradient(top,  darken( desaturate( adjust-hue( $top-winners-gradient, 43deg ), 24 ), 12 ) 0%, darken( desaturate( adjust-hue( $top-winners-gradient, 33deg ), 32 ), 9 ) 54%, darken( desaturate( adjust-hue( $top-winners-gradient, 18deg ), 38 ), 3 ) 100%);
     background: -webkit-linear-gradient(top,  darken( desaturate( adjust-hue( $top-winners-gradient, 43deg ), 24 ), 12 ) 0%,darken( desaturate( adjust-hue( $top-winners-gradient, 33deg ), 32 ), 9 ) 54%,darken( desaturate( adjust-hue( $top-winners-gradient, 18deg ), 38 ), 3 ) 100%);
     background: linear-gradient(to bottom,  darken( desaturate( adjust-hue( $top-winners-gradient, 43deg ), 24 ), 12 ) 0%,darken( desaturate( adjust-hue( $top-winners-gradient, 33deg ), 32 ), 9 ) 54%,darken( desaturate( adjust-hue( $top-winners-gradient, 18deg ), 38 ), 3 ) 100%);
     padding: 0 25px 20px;
+    @include ltr {
+        float: left;
+        margin: 0 0 0 10px;
+    }
     @include rtl {
+        float: right;
         margin: 0 10px 0 0;
     }
 }
@@ -217,7 +225,6 @@ $top-winners-gradient:#1a7051!default;
     box-sizing: border-box;
 }
 .winners-list-tab-view-b > ul > li{
-    float: left;
     width: 50%;
     box-sizing: border-box;
     padding: 0 10px;
@@ -231,6 +238,9 @@ $top-winners-gradient:#1a7051!default;
     text-overflow: ellipsis;
     overflow: hidden;
     cursor: pointer;
+    @include ltr {
+        float: left;
+    }
     @include rtl {
         float: right;
     }
@@ -305,7 +315,6 @@ $top-winners-gradient:#1a7051!default;
     overflow: hidden;
 }
 .winners-cell-b > p{
-    float: left;
     width: 100%;
     position: relative;
     left: 0;
@@ -319,6 +328,9 @@ $top-winners-gradient:#1a7051!default;
     text-overflow: ellipsis;
     white-space: nowrap;
     overflow: hidden;
+    @include ltr {
+        float: left;
+    }
     @include rtl {
         float: right;
     }
@@ -326,12 +338,14 @@ $top-winners-gradient:#1a7051!default;
 .winner-info-box-b > span{
     display: table-cell;
     text-align: right;
-    padding: 0 0 0 10px;
     font: 14px/36px $font-f;
     font-weight: bold;
     color: $brand-color-2;
     text-transform: uppercase;
     white-space: nowrap;
+    @include ltr {
+        padding: 0 0 0 10px;
+    }
     @include rtl {
         padding: 0 10px 0 0;
     }
@@ -398,12 +412,14 @@ $top-winners-gradient:#1a7051!default;
                 }
                 span {
                     display: inline-block;
-                    margin: 0 0 0 20px;
                     font: 11px/16px $font-f;
-                    padding: 0 20px 0 0;
                     color: darken( desaturate( $brand-color-2, 1 ), 7 );
                     transition: color 250ms;
                     position: relative;
+                    @include ltr {
+                        margin: 0 0 0 20px;
+                        padding: 0 20px 0 0;
+                    }
                     @include rtl {
                         margin: 0 20px 0 0;
                         padding: 0 0 0 20px;
@@ -417,27 +433,32 @@ $top-winners-gradient:#1a7051!default;
                         opacity: 0.5;
                     }
                     &:before{
-                        content: "\e66e";
                         display: block;
                         font: 16px/14px icomoon;
                         position: absolute;
-                        right: 0;
                         top: 0;
+                        @include ltr {
+                            content: "\e66e";
+                            right: 0;
+                        }
                         @include rtl {
                             content: "\e66b";
                             left: 0;
-                            right: auto;
                         }
                     }
                     &:first-child {
-                        padding: 0 0 0 20px;
+                        @include ltr {
+                            padding: 0 0 0 20px;
+                        }
                         @include rtl {
                             padding: 0 20px 0 0;
                         }
                         &:before{
-                            content: "\e66b";
-                            right: auto;
-                            left: 0;
+                            @include ltr {
+                                content: "\e66b";
+                                left: 0;
+                                right: auto;
+                            }
                             @include rtl {
                                 content: "\e66e";
                                 left: auto;
@@ -480,15 +501,21 @@ $top-winners-gradient:#1a7051!default;
     margin: 0;
 }
 .slider-games-box-b > div > ul > .list-games-casino-view-b{
-    float: left;
     width: 25%;
     height: 245px;
     box-sizing: border-box;
     padding: 0 0 0 10px;
     margin: 0;
     animation: popup-enter .3s ease-in-out;
+    @include ltr {
+        float: left;
+    }
     @include rtl {
         float: right;
+    }
+    &.disabled {
+        opacity: 0.5;
+        pointer-events: none;
     }
 }
 //Games slider END
@@ -559,10 +586,12 @@ $top-winners-gradient:#1a7051!default;
     width: 100px;
     font: 12px/34px $font-f;
     color: $text-palette-3;
-    text-align: right;
     text-transform: uppercase;
-    padding: 0 15px 0 0;
     margin: 2px 0;
+    @include ltr {
+        padding: 0 15px 0 0;
+        text-align: right;
+    }
     @include rtl {
         padding: 0 0 0 15px;
         text-align: left;
@@ -571,27 +600,29 @@ $top-winners-gradient:#1a7051!default;
 .more-button-prviter-nav > span{
     display: inline-block;
     position: relative;
-    padding: 0 20px 0 0;
+    @include ltr {
+        padding: 0 20px 0 0;
+    }
     @include rtl {
         padding: 0 0 0 20px;
     }
 }
 .more-button-prviter-nav > span:after{
     position: absolute;
-    right: 0;
     top: 9px;
     font: 16px/16px icomoon;
     content: "\e671";
+    @include ltr {
+        right: 0;
+    }
     @include rtl {
         left: 0;
-        right: auto;
     }
 }
 .providers-nav-casino.closed  .more-button-prviter-nav > span:after{
     content: "\e670";
 }
 .providers-nav-casino > ul{
-    float: left;
     box-sizing: border-box;
     max-width: calc(100% - 100px);
     text-align: center;
@@ -601,6 +632,9 @@ $top-winners-gradient:#1a7051!default;
     overflow: hidden;
     margin: 2px 0;
     padding-top: 2px;
+    @include ltr {
+        float: left;
+    }
     @include rtl {
         float: right;
     }
@@ -674,19 +708,22 @@ $top-winners-gradient:#1a7051!default;
 .search-category-nav-contain{
     position: absolute;
     top: 0;
-    left: 0;
     width: 210px;
     box-sizing: border-box;
     transform: translate3d(0,0,0);
+    @include ltr {
+        left: 0;
+    }
     @include rtl {
-        left: auto;
         right: 0;
     }
 }
 .all-casino-games-list-box, .all-casino-games-list-box > div{
-    float: left;
     width: 100%;
     box-sizing: border-box;
+    @include ltr {
+        float: left;
+    }
     @include rtl {
         float: right;
     }
@@ -736,12 +773,14 @@ $top-winners-gradient:#1a7051!default;
     font: 14px/38px icomoon;
     content: "\e6d4";
     position: absolute;
-    left: auto;
-    right: 0;
     top: 0;
     color: $text-palette-5;
     width: 36px;
     text-align: center;
+    @include ltr {
+        left: auto;
+        right: 0;
+    }
     @include rtl {
         left: 0;
         right: auto;
@@ -751,13 +790,15 @@ $top-winners-gradient:#1a7051!default;
     width: 100%;
     box-sizing: border-box;
     border-radius: inherit;
-    padding: 8px 36px 8px 15px;
     height: 38px;
     border: 1px solid $skin-palette-6;
     transition: border 260ms;
     color: $text-palette-5;
     background: none;
     margin: 0;
+    @include ltr {
+        padding: 8px 36px 8px 15px;
+    }
     @include rtl {
         padding: 8px 15px 8px 36px;
     }
@@ -773,12 +814,14 @@ $top-winners-gradient:#1a7051!default;
 //Search results
 .search-casino-box-b .search-results-container-scroll,
 .search-casino-box-b .search-results-container{
-    right: auto;
     width: auto;
     min-width: 360px;
-    left: calc(100% + 10px);
     top: 0;
     border-radius: inherit;
+    @include ltr {
+        left: calc(100% + 10px);
+        right: auto;
+    }
     @include rtl {
         left: auto;
         right: calc(100% + 10px);
@@ -797,10 +840,12 @@ $top-winners-gradient:#1a7051!default;
 }
 .search-casino-box-b .search-results-inner .arrow-sport{
     top: 13px;
-    right: auto;
-    left: -5px;
     overflow: hidden;
     background: none;
+    @include ltr {
+        left: -5px;
+        right: auto;
+    }
     @include rtl {
         left: auto;
         right: -5px;
@@ -812,10 +857,12 @@ $top-winners-gradient:#1a7051!default;
     width: 0;
     height: 0;
     border-style: solid;
-    border-width: 6px 6px 6px 0;
-    border-color: rgba(0, 0, 0, 0) $skin-palette-3 rgba(0, 0, 0, 0) rgba(0, 0, 0, 0);
     position: relative;
     left: 1px;
+    @include ltr {
+        border-width: 6px 6px 6px 0;
+        border-color: rgba(0, 0, 0, 0) $skin-palette-3 rgba(0, 0, 0, 0) rgba(0, 0, 0, 0);
+    }
     @include rtl {
         border-width: 6px 0 6px 6px;
         border-color: rgba(0, 0, 0, 0) rgba(0, 0, 0, 0) rgba(0, 0, 0, 0) $skin-palette-3;
@@ -842,10 +889,12 @@ $top-winners-gradient:#1a7051!default;
 .search-casino-box-b #casino-result-search dd{
     font: 14px/16px $font-f;
     color: $text-palette-6;
-    padding: 0 0 0 10px;
     display: table-cell;
     float: none;
     vertical-align: top;
+    @include ltr {
+        padding: 0 0 0 10px;
+    }
     @include rtl {
         padding: 0 10px 0 0;
         text-align: right;
@@ -868,8 +917,10 @@ $top-winners-gradient:#1a7051!default;
     left: 0;
     top: 0;
     bottom: 0;
-    margin: 0 6px 0 0;
     white-space: nowrap;
+    @include ltr {
+        margin: 0 6px 0 0;
+    }
     @include rtl {
         margin: 0 0 0 6px;
     }
@@ -940,8 +991,10 @@ $top-winners-gradient:#1a7051!default;
     float: right;
     box-sizing: border-box;
     width: 100%;
-    padding: 0 0 0 210px;
     min-height: 750px;
+    @include ltr {
+        padding: 0 0 0 210px;
+    }
     @include rtl {
         padding: 0 210px 0 0;
     }
@@ -963,8 +1016,10 @@ $top-winners-gradient:#1a7051!default;
     box-sizing: border-box;
 }
 .deposit-alert-contain.casino .games-slider .all-games-casino-list ul{
-    padding: 0 10px 0 0;
     height: 500px;
+    @include ltr {
+        padding: 0 10px 0 0;
+    }
     @include rtl {
         padding: 0 0 0 10px;
     }
@@ -980,18 +1035,24 @@ $top-winners-gradient:#1a7051!default;
 .list-games-casino-view-b,
 .save-games-contain .games-slider ul > .list-games-casino-view-b,
 .deposit-alert-contain.casino .games-slider .all-games-casino-list ul li.list-games-casino-view-b{
-    float: left;
     width: 20%;
     height: auto;
     box-sizing: border-box;
     display: block;
-    padding: 0 0 15px 10px;
     margin: 0;
     animation: popup-enter .3s ease-in-out;
     transform: translate3d(0,0,0);
+    @include ltr {
+        float: left;
+        padding: 0 0 15px 10px;
+    }
     @include rtl {
         float: right;
         padding: 0 10px 15px 0;
+    }
+    &.disabled {
+        opacity: 0.5;
+        pointer-events: none;
     }
 }
 .deposit-alert-contain.casino .games-slider .all-games-casino-list ul li.list-games-casino-view-b{
@@ -1056,7 +1117,6 @@ $top-winners-gradient:#1a7051!default;
     float: left;
     width: 100%;
     box-sizing: border-box;
-    padding: 0 24px 0 8px;
     height: 28px;
     background: $skin-palette-11;
     font: 12px/28px $font-f;
@@ -1069,7 +1129,10 @@ $top-winners-gradient:#1a7051!default;
     position: relative;
     z-index: 22;
     transition: color 250ms;
-    text-align: left;
+    @include ltr {
+        padding: 0 24px 0 8px;
+        text-align: left;
+    }
     @include rtl {
         padding: 0 8px 0 24px;
         text-align: right;
@@ -1078,7 +1141,9 @@ $top-winners-gradient:#1a7051!default;
 .slider-games-box-b > div > ul > .list-games-casino-view-b > a > .game-name-b-favorite{
     font: 16px/44px $font-f;
     height: 44px;
-    padding: 0 24px 0 15px;
+    @include ltr {
+        padding: 0 24px 0 15px;
+    }
     @include rtl {
         padding: 0 15px 0 24px;
     }
@@ -1088,7 +1153,6 @@ $top-winners-gradient:#1a7051!default;
     width: 24px;
     height: 16px;
     position: absolute;
-    right: 0;
     top: 6px;
     font: 14px/16px icomoon;
     color: $text-palette-6;
@@ -1098,17 +1162,20 @@ $top-winners-gradient:#1a7051!default;
     transition: color 250ms;
     display: block;
     text-align: center;
+    @include ltr {
+        right: 0;
+    }
     @include rtl {
         left: 0;
-        right: auto;
     }
 }
 .slider-games-box-b li.list-games-casino-view-b > a > .game-name-b-favorite > .favorite-icon-view{
     top: 13px;
-    right: 4px;
+    @include ltr {
+        right: 4px;
+    }
     @include rtl {
         left: 4px;
-        right: auto;
     }
 }
 .favorite-icon-view:before{content: "\f005";}
@@ -1270,7 +1337,9 @@ $top-winners-gradient:#1a7051!default;
     }
     .providers-nav-casino > ul > li > a{padding: 0 10px;}
     .all-games-casino-list{
-        padding: 0 0 0 230px;
+        @include ltr {
+            padding: 0 0 0 230px;
+        }
         @include rtl {
             padding: 0 230px 0 0;
         }
@@ -1348,20 +1417,24 @@ $top-winners-gradient:#1a7051!default;
             width: 100%;
             padding: 0;
             border: 0;
-            transform: translate3d(250%,0,0);
             transition: 260ms transform;
             background: $casino-play-button-bg;
             color: set-color($casino-play-button-bg);
             font: 12px/30px $font-f;
             text-transform: uppercase;
             cursor: pointer;
+            @include ltr {
+                transform: translate3d(250%,0,0);
+            }
             @include rtl {
                 transform: translate3d(-250%,0,0);
             }
             & + button {
-                transform: translate3d(-250%,0,0);
                 background: rgba(0,0,0,0.4);
                 color: #ffffff;
+                @include ltr {
+                    transform: translate3d(-250%,0,0);
+                }
                 @include rtl {
                     transform: translate3d(250%,0,0);
                 }
@@ -1408,16 +1481,21 @@ $top-winners-gradient:#1a7051!default;
     left: 0;
     padding: 10px;
     width: 100%;
+    box-sizing: border-box;
     small {
         display: block;
-        float: left;
         background: rgba(#121623, 0.95);
         padding: 0 8px;
         color: #C2C5CD;
         font: 11px/20px $font-f;
+        @include ltr {
+            float: left;
+        }
+        @include rtl {
+            float: right;
+        }
     }
     > p {
-        float: left;
         background: #75592C;
         color: #FFFFFF;
         font: 13px/28px $font-f;
@@ -1425,17 +1503,33 @@ $top-winners-gradient:#1a7051!default;
         height: 28px;
         overflow: hidden;
         clear: both;
+        @include ltr {
+            float: left;
+        }
+        @include rtl {
+            float: right;
+        }
         span {
             display: inline-block;
             vertical-align: top;
-            margin: 0 0 0 10px;
+            @include ltr {
+                margin: 0 0 0 10px;
+            }
+            @include rtl {
+                margin: 0 10px 0 0;
+            }
         }
     }
     .slider-games-box-b & {
         > p {
             font-size: 16px;
             span {
-                margin: 0 0 0 16px;
+                @include ltr {
+                    margin: 0 0 0 16px;
+                }
+                @include rtl {
+                    margin: 0 16px 0 0;
+                }
             }
         }
     }

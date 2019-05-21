@@ -1,12 +1,11 @@
 <div class="subtop-header-menu-j">
-    <ul>
-        <li ng-if="(menu.enabledConfig === undefined || calculatedConfigs[menu.enabledConfig]) && (!menu.exceptViews || menu.exceptViews.indexOf(conf.sportsLayout) === -1) && !(menu.disableForEuro2016 && conf.availableSportsbookViews.euro2016) && !menu.hidden"
-            ng-repeat="menu in conf.subHeaderItems track by menu.alias" ng-class="{'active': $location.path() === '/' + menu.alias + '/' || $location.path() === '/' + menu.alias}">
+    <ul ng-class="{'toptab-pre-match': !$root.env.live}">
+        <li ng-if="(menu.enabledConfig === undefined || calculatedConfigs[menu.enabledConfig]) && (!menu.exceptViews ||( menu.exceptViews.indexOf($root.conf.sportsLayout) === -1 &&  ($root.conf.sportsLayout !== 'classic' ||  menu.exceptViews.indexOf('euro2016') === -1) ) ) && !menu.hidden" ng-repeat="menu in $root.conf.subHeaderItems track by menu.alias" ng-class="{'active': $location.path() === '/' + menu.alias + '/' || $location.path() === '/' + menu.alias}">
             <a data-badge="{{::menu.badge | translate}}" ng-if="!menu.url" ng-href="{{$location.path() === '/' + menu.alias + '/' ? $location.absUrl() + '#' : '#/' + menu.alias }}">{{menu.displayName|translate}}</a>
             <a data-badge="{{::menu.badge | translate}}" ng-if="menu.url" ng-href="{{menu.url}}" ng-click="$event.stopPropagation()" target="{{menu.target || '_blank'}}">{{menu.displayName|translate}}</a>
         </li>
     </ul>
 </div>
 <div ng-if="$root.conf.asian.showUserInfoInSubHeader && $root.profile && $root.env.authorized" class="balance-int-row">
-    {{'Account'|translate}} : {{$root.profile.nick_name}} | {{'BBIN balance'|translate}}: {{$root.profile.calculatedBalance|number:conf.balanceFractionSize}}
+    {{'Account'|translate}} : {{$root.profile.nick_name}} | {{'BBIN balance'|translate}}: {{$root.profile.calculatedBalance|number:$root.conf.balanceFractionSize}}
 </div>

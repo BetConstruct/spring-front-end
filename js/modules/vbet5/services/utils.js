@@ -6,7 +6,7 @@
  * Utility functions
  */
 
-VBET5.service('Utils', ['$timeout', '$filter', '$location', '$window', 'Config', 'Storage', function ($timeout, $filter, $location, $window, Config, Storage) {
+VBET5.service('Utils', ['$timeout', '$filter', '$location', '$route', '$window', '$cookies', 'Config', function ($timeout, $filter, $location, $route, $window, $cookies, Config) {
     'use strict';
     var Utils = {};
     var bodyWrapperClasses = {};
@@ -266,6 +266,19 @@ VBET5.service('Utils', ['$timeout', '$filter', '$location', '$window', 'Config',
 
         });
         return Utils.isObjectEmpty(groups) ? null : groups;
+    };
+
+    /**
+     * @ngdoc method
+     * @name isObjectEmpty
+     * @methodOf vbet5.service:Utils
+     * @description checks if item is an object
+     *
+     * @param {Object} obj object to check
+     * @returns {boolean} true if empty, false otherwise
+     */
+    Utils.isObject = function isObject(obj) {
+        return Object.prototype.toString.call(obj) === '[object Object]'
     };
 
     /**
@@ -1091,16 +1104,9 @@ VBET5.service('Utils', ['$timeout', '$filter', '$location', '$window', 'Config',
      * @returns {String} language code
      */
     Utils.getLanguageCode = function getLanguageCode(lng) {
-        if (Config.main.GmsPlatform) {
-            if (Config.swarm.languageMapGms && Config.swarm.languageMapGms[lng]) {
-                return Config.swarm.languageMapGms[lng];
-            }
-        } else {
-            if (Config.swarm.languageMap && Config.swarm.languageMap[lng]) {
-                return Config.swarm.languageMap[lng];
-            }
+        if (Config.swarm.languageMapGms && Config.swarm.languageMapGms[lng]) {
+            return Config.swarm.languageMapGms[lng];
         }
-
         return lng;
     };
 
@@ -1111,7 +1117,7 @@ VBET5.service('Utils', ['$timeout', '$filter', '$location', '$window', 'Config',
      * @description set minutes filter
      *
      * @param {object} game
-     * @param {string} windgetMode
+     * @param {string} widgetMode
      */
     Utils.goToUrl = function goToUrl(game, widgetMode) {
         if (widgetMode !== 'iframe') {
@@ -1167,14 +1173,19 @@ VBET5.service('Utils', ['$timeout', '$filter', '$location', '$window', 'Config',
                 }
             }
         }
-       angular.forEach(availableSportsbookViews, function(value, key) {
-           if(!value) {
-               delete availableSportsbookViews[key];
-           }
+        angular.forEach(availableSportsbookViews, function(value, key) {
 
-       });
+            if (value && key === 'euro2016') {
+                availableSportsbookViews['classic'] = true;
+                delete availableSportsbookViews[key];
+            }
+            if(!value) {
+                delete availableSportsbookViews[key];
+            }
+
+        });
         !config.main.availableSportsbookViews && (config.main.availableSportsbookViews = availableSportsbookViews);
-
+        config.main.sportsLayout === 'euro2016' && (config.main.sportsLayout = 'classic');
         return availableSportsbookViews;
     };
 
@@ -1305,7 +1316,7 @@ VBET5.service('Utils', ['$timeout', '$filter', '$location', '$window', 'Config',
                 return fValue;
             }
 
-         } else{
+        } else{
             return Math.round(fValue);
         }
     };
@@ -1427,7 +1438,10 @@ VBET5.service('Utils', ['$timeout', '$filter', '$location', '$window', 'Config',
      * @description
      *  checks if document is valid in (TR for now)
      */
-    Utils.checkNationalId = function checkNationalId(docNumber) {
+    Utils.checkNationalId = function checkNationalId(docNumber, isRequired) {
+        if(!isRequired && docNumber.length === 0) {
+            return true;
+        }
         if (!docNumber || !docNumber.length || docNumber.length !== 11) {
             return false;
         }
@@ -1459,7 +1473,7 @@ VBET5.service('Utils', ['$timeout', '$filter', '$location', '$window', 'Config',
      *  Fix domain changes
      */
     Utils.fixDomainChanges = function fixDomainChanges(config, product) {
-        if ($window.location.hostname ==="localhost") {return;}
+        if ({"localhost":1, "staging.betconstruct.int":1}[$window.location.hostname]) {return;}
 
         var locationHost = $window.location.hostname.split(/\./);
         var existedDomain, currentDomain = (locationHost.length === 4) ? locationHost.slice(-3).join(".") : locationHost.slice(-2).join(".");
@@ -1608,7 +1622,7 @@ VBET5.service('Utils', ['$timeout', '$filter', '$location', '$window', 'Config',
      * @ngdoc method
      * @name copyObj
      * @methodOf vbet5.service:Utils
-     * @description Copies seriazable object (no methods)
+     * @description Deep copies object (faster then angular.copy)
      */
     Utils.copyObj = function copyObj(o) {
         var newO,
@@ -1637,6 +1651,108 @@ VBET5.service('Utils', ['$timeout', '$filter', '$location', '$window', 'Config',
         }
         return newO;
     };
+
+    /**
+     * @ngdoc method
+     * @name getPrefixLink
+     * @methodOf vbet5.service:Utils
+     * @description prefixes given link with hostname depending on config
+     *
+     * @param {String} link relative link
+     * @returns {String} absolute or relative link depending on match in config
+     */
+    Utils.getPrefixLink = function getPrefixLink(link) {
+        if (Config.main.domainSpecificPrefixes && Config.main.domainSpecificPrefixes[$window.location.hostname] && (Config.main.domainSpecificPrefixes[$window.location.hostname][link] || Config.main.domainSpecificPrefixes[$window.location.hostname][link + '/'])) {
+            return (Config.main.domainSpecificPrefixes[$window.location.hostname][link] || Config.main.domainSpecificPrefixes[$window.location.hostname][link + '/']) + link;
+        }
+        return null;
+    };
+
+    /**
+     * @ngdoc method
+     * @name checkAndSetCookie
+     * @methodOf vbet5.service:Utils
+     * @description  Sets cookie if enabled in config
+     * @param {String} key's of cookie
+     * @param {Object} value's of cookie
+     * @param {Number} expirationDate
+     */
+    Utils.checkAndSetCookie = function checkAndSetCookie(key, value, expirationDate) {
+        if (value && Config.main.useAuthCookies) {
+            var cookieOptions = {
+                domain: $window.location.hostname.split(/\./).slice(-2).join("."),
+                path: "/",
+                expires: new Date((new Date()).getTime() + expirationDate)
+            };
+            var cookieMethod = value instanceof Object ? 'putObject' : 'put';
+            $cookies[cookieMethod](key, value, cookieOptions);
+        }
+    };
+
+    /**
+     * @ngdoc method
+     * @name compare
+     * @methodOf vbet5.service:Utils
+     * @description Comparator function. Used for comparing multiple parameters in one step
+     */
+    Utils.compare = function compare(a, b) {
+        if (a > b) { return 1; }
+        if (a < b) { return -1; }
+        return 0;
+    };
+
+    /**
+     * @ngdoc method
+     * @name getIndexOf
+     * @methodOf vbet5.service:Utils
+     * @description finds index of target value in an array of objects
+     * @param {Array} source - source array
+     * @param {String} prop - property name
+     * @param {Number|String|Boolean} target - target value
+     * @returns {Number} index
+     */
+    Utils.getIndex = function getIndex(source, prop, target) {
+        var i = 0, l = source.length;
+        for (; i < l; i++) {
+            if (source[i][prop] === target) {
+                return i;
+            }
+        }
+        return -1;
+    };
+
+    /**
+     * /**
+     * @ngdoc method
+     * @name guid
+     * @methodOf vbet5.service:Utils
+     * @description The function generates uid. It can be used as `key`-s needed for
+     * @returns {String} uid
+     */
+
+    Utils.guid = function guid() {
+        return Math.random().toString(36).substr(2, 9);
+    };
+
+    /**
+     * @ngdoc method
+     * @name copyToClipboard
+     * @methodOf vbet5.service:Utils
+     * @description Copy to clipboard given text
+     * @param {String} str
+     */
+    Utils.copyToClipboard = function copyToClipboard(str) {
+        var el = document.createElement('textarea');
+        el.value = str;
+        el.setAttribute('readonly', '');
+        el.style = {position: 'absolute', left: '-9999px'};
+        document.body.appendChild(el);
+        el.select();
+        document.execCommand('copy');
+        document.body.removeChild(el);
+    };
+
+
 
     return Utils;
 }]);

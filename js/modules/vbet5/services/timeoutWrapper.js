@@ -49,11 +49,14 @@ VBET5.service('TimeoutWrapper', ['$timeout', function ($timeout) {
          * @returns {boolean}
          */
         timeout.cancel = function (promise) {
-            var index = timeoutPromises.indexOf(promise);
-            if (promise && -1 !== index) {
-                timeoutPromises.splice(index, 1);
-                return $timeout.cancel(promise);
+            if (promise) {
+                var index = timeoutPromises.indexOf(promise);
+                if (-1 !== index) {
+                    timeoutPromises.splice(index, 1);
+                    return $timeout.cancel(promise);
+                }
             }
+
             return false;
         };
 

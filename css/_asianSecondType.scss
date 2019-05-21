@@ -5,6 +5,12 @@ $asian-view-custom: false !default;
     width: 1130px;
     left: auto;
   }
+  .asian-contain {
+    padding: 10px;
+  }
+  .asian-left-menu-scroll-wrapper {
+    height: calc(100vh - 20px - 150px);
+  }
   .asian-left-menu ul li {
     min-height: 34px;
     max-height: 34px;
@@ -41,6 +47,14 @@ $asian-view-custom: false !default;
   }
   .game-list-compitishion table tr td {
     line-height: 11px;
+    &[rowspan="2"] .asian-market-wrap-j {
+      &.up:not(.locked) .asian-market-j .odd-container-j:before {
+        top: -22px;
+      }
+      &.down:not(.locked) .asian-market-j .odd-container-j:before {
+        bottom: -22px;
+      }
+    }
   }
   .asian-status-icons {
     display: inline-block;
@@ -92,7 +106,9 @@ $asian-view-custom: false !default;
         line-height: 43px;
       }
       .contain-v-a-fanction-icons-v3 > ul > li {
-        border-color: rgba(set-color(darken( desaturate( adjust-hue( $skin-color, 4deg ), 11 ), 1 )), 0.5);
+        @include ltr {
+          border-color: rgba(set-color(darken( desaturate( adjust-hue( $skin-color, 4deg ), 11 ), 1 )), 0.5);
+        }
         @include rtl {
           border-color: rgba(set-color(darken( desaturate( adjust-hue( $skin-color, 4deg ), 11 ), 1 )), 0.5);
         }
@@ -102,13 +118,16 @@ $asian-view-custom: false !default;
       }
     }
     .big-filter-wrapper ul li {
-      border-left: 1px solid rgba(set-color(darken( desaturate( adjust-hue( $skin-color, 4deg ), 11 ), 1 )), 0.5);
+      @include ltr {
+        border-left: 1px solid rgba(set-color(darken( desaturate( adjust-hue( $skin-color, 4deg ), 11 ), 1 )), 0.5);
+      }
       @include rtl {
-        border-left: none;
         border-right: 1px solid rgba(set-color(darken( desaturate( adjust-hue( $skin-color, 4deg ), 11 ), 1 )), 0.5);
       }
       &:first-child {
-        border: none;
+        @include ltr {
+          border: none;
+        }
         @include rtl {
           border: none;
         }
@@ -136,7 +155,9 @@ $asian-view-custom: false !default;
       }
     }
     .menu-tabs-b ul li {
-      border-color: rgba($text-palette-1,0.5);
+      @include ltr {
+        border-color: rgba($text-palette-1,0.5);
+      }
       @include rtl {
         border-color: rgba($text-palette-1,0.5);
       }
@@ -166,13 +187,13 @@ $asian-view-custom: false !default;
           content: "";
           position: absolute;
           top: auto;
-          right: 0;
           bottom: 0;
-          border-left: 8px solid transparent;
+          @include ltr {
+            right: 0;
+            border-left: 8px solid transparent;
+          }
           @include rtl {
             left: 0;
-            right: auto;
-            border-left: none;
             border-right: 8px solid transparent;
           }
         }
@@ -331,7 +352,9 @@ $asian-view-custom: false !default;
           }
         }
         &.correct-score .asian-market-cell-j {
-          padding: 0 12px 0 0;
+          @include ltr {
+            padding: 0 12px 0 0;
+          }
           @include rtl {
             padding: 0 0 0 12px;
           }
@@ -350,15 +373,15 @@ $asian-view-custom: false !default;
     // End  FT & HT 1x2 and Correct score
 
     .fullgame-j .asian-market-cell-j {
-      padding: 0 12px 0 0;
+      @include ltr {
+        padding: 0 12px 0 0;
+      }
       @include rtl {
         padding: 0 0 0 12px;
       }
     }
   }
 }
-
-
 
 
 

@@ -109,7 +109,7 @@ VBET5.directive('promotionNews',
 
                     function getPermaLink(news) {
                         var link, origin = $window.location.protocol + "//" + $window.location.hostname + ($window.location.port ? ':' + $window.location.port : '');
-                        link = origin + $window.document.location.pathname + 'google/' +$scope.path + '/' + encodeURIComponent(Utils.generatePermaLink(news));
+                        link = origin + $window.document.location.pathname + $scope.path + '/' + encodeURIComponent(Utils.generatePermaLink(news));
                         return link;
                     }
 

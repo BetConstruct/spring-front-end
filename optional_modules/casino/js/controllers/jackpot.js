@@ -5,7 +5,7 @@
  * jackpot page controller
  */
 
-CASINO.controller('casinoJackpotCtrl', ['$rootScope', '$scope', '$sce', '$location', 'casinoData', 'content', 'CConfig', 'Config', 'casinoCache', function ($rootScope, $scope, $sce, $location, casinoData, content, CConfig, Config, casinoCache) {
+CASINO.controller('casinoJackpotCtrl', ['$rootScope', '$scope', '$sce', '$location', 'casinoData', 'content', 'CConfig', 'Config', 'casinoCache', 'Utils', 'analytics', 'TimeoutWrapper', 'jackpotManager', function ($rootScope, $scope, $sce, $location, casinoData,  content, CConfig, Config, casinoCache, Utils, analytics, TimeoutWrapper, jackpotManager) {
     'use strict';
 
     //@TODO implementet for only old casino version : need to refactor
@@ -14,11 +14,21 @@ CASINO.controller('casinoJackpotCtrl', ['$rootScope', '$scope', '$sce', '$locati
     $scope.offset = 0;
     $scope.jackpotPageLoaded = false;
     $scope.jackpotSlideIndex = 0;
+    TimeoutWrapper = TimeoutWrapper($scope);
+    var gameId;
 
     //new casino design
     $scope.jackpotSliderVisibleGamesCount = 4;
 
-    var jackpotLeaders = [];
+    $scope.jackpotWidgets = {
+        widgetIndex: 0
+    };
+    $scope.changeJackpotSlider = function (index) {
+        $scope.jackpotWidgets.widgetIndex = index < 0 ? $scope.iframeJackpotData.length - 1 : index > $scope.iframeJackpotData.length - 1 ? 0 : index;
+    };
+    $scope.iframeJackpotData = [];
+
+    var jackpotLeaders = [], iframeJackpotData, jackpotDataSubscriptions = [];
     /**
      * @ngdoc method
      * @name loadJackpotPages
@@ -43,18 +53,18 @@ CASINO.controller('casinoJackpotCtrl', ['$rootScope', '$scope', '$sce', '$locati
 
             if (response.data && response.data.page && response.data.page.children) {
                 var rules = response.data.page.children;
-                for(var i = 0, children = rules.length; i < children; i += 1) {
+                for (var i = 0, children = rules.length; i < children; i += 1) {
                     rules[i].title = $sce.trustAsHtml(rules[i].title);
                     rules[i].content = $sce.trustAsHtml(rules[i].content);
                 }
                 $scope.jackpotRules = rules;
             }
             checkIfPageLoaded();
-        }, function(reason) {
+        }, function (reason) {
             $scope.jackpotRules = [];
             checkIfPageLoaded();
         });
-    };
+    }
 
     /**
      * @ngdoc method
@@ -63,7 +73,7 @@ CASINO.controller('casinoJackpotCtrl', ['$rootScope', '$scope', '$sce', '$locati
      * @description   populates $scope's **getJackpotBanners** variable with banner information got from cms
      **/
     $scope.getJackpotBanners = function getJackpotBanners(containerId) {
-        containerId = containerId || 'jackpot-banners-' +  $rootScope.env.lang;
+        containerId = containerId || 'jackpot-banners-' + $rootScope.env.lang;
         content.getWidget(containerId).then(function (response) {
             $scope.jackpotBanners = [];
 
@@ -92,7 +102,7 @@ CASINO.controller('casinoJackpotCtrl', ['$rootScope', '$scope', '$sce', '$locati
         if (link === undefined || link === '') {
             return;
         }
-        analytics.gaSend('send', 'event', 'news',  {'page': $location.path(), 'eventLabel': 'jackpot banner click'});
+        analytics.gaSend('send', 'event', 'news', {'page': $location.path(), 'eventLabel': 'jackpot banner click'});
 
     };
 
@@ -111,12 +121,12 @@ CASINO.controller('casinoJackpotCtrl', ['$rootScope', '$scope', '$sce', '$locati
                     $scope.jackpotSliderGames = $scope.jackpotGames.slice($scope.jackpotSlideIndex, $scope.jackpotSlideIndex + $scope.jackpotSliderVisibleGamesCount);
                 }
                 checkIfPageLoaded();
-            }, function(reason) {
+            }, function (reason) {
                 $scope.jackpotGames = [];
                 checkIfPageLoaded();
             });
         }
-    };
+    }
 
     function getLeadersList() {
         var savedLeaders = casinoCache.get('jachpotLeaders_' + Config.main.site_id);
@@ -149,7 +159,7 @@ CASINO.controller('casinoJackpotCtrl', ['$rootScope', '$scope', '$sce', '$locati
                 checkIfPageLoaded();
             });
         }
-    };
+    }
 
     function getVisibleLeaders(leaders) {
         return leaders.slice($scope.offset, $scope.offset + $scope.LEADERS_TO_SHOW);
@@ -212,12 +222,74 @@ CASINO.controller('casinoJackpotCtrl', ['$rootScope', '$scope', '$sce', '$locati
     }
 
     $scope.slideJackpotGames = function slideJackpotGames(direction) {
-        if(direction == 'prev') {
+        if (direction == 'prev') {
             $scope.jackpotSlideIndex--;
 
         } else {
             $scope.jackpotSlideIndex++;
         }
         $scope.jackpotSliderGames = $scope.jackpotGames.slice($scope.jackpotSlideIndex, $scope.jackpotSlideIndex + $scope.jackpotSliderVisibleGamesCount);
+    };
+
+    function subscribeForJackpotData(gameinfo) {
+        if (CConfig.version === 2 && gameinfo && gameinfo.game && gameinfo.game.extearnal_game_id) {
+            gameId = gameinfo.game.id;
+            jackpotManager.subscribeForJackpotData(gameinfo.game.extearnal_game_id, subscribeForJackpotDataCallback,null,'casino');
+        }
     }
+
+    subscribeForJackpotData($scope.gameInfo);
+
+    var jackpotWinnerTimeout;
+
+    function subscribeForJackpotDataCallback(data) {
+        var sliderIndex = false;
+        data = Utils.objectToArray(data);
+        angular.forEach(data, function (jackpot, index) {
+            if (jackpot && jackpot.Winner && jackpot.Winner.PlayerId) {
+
+                if ($rootScope.profile && jackpot.Winner.PlayerId === $rootScope.profile.id) {
+
+                    TimeoutWrapper.cancel(jackpotWinnerTimeout); // TimeoutWrapper checks the existence of promise by itself
+
+                    $scope.jackpotWinner.animation = true;
+                    $scope.jackpotWinner.data = jackpot;
+
+                    jackpotWinnerTimeout = TimeoutWrapper(function () {
+                        $scope.jackpotWinner.animation = false;
+                        $scope.jackpotWinner.data = {};
+                    }, 5000);
+                }
+            }
+        });
+        $scope.iframeJackpotData = data;
+
+        if (sliderIndex !== false) {
+            $scope.iframeTab[gameId].selected = 'jackpots';
+            $scope.changeJackpotSlider(sliderIndex);
+            sliderIndex = false;
+        }
+    }
+
+    var jackpotDataWatcher = $scope.$watch('iframeJackpotData', function (data) {
+        if (data && data.length > 0) {
+            jackpotDataWatcher();
+            if(gameId && $scope.hasIframeJackpot && $scope.iframeTab){
+                $scope.hasIframeJackpot[gameId] = !!data.length;
+                $scope.hasIframeJackpot.empty = !data.length;
+                $scope.iframeTab[gameId].selected = 'jackpots';
+            }
+            $scope.hasJackpots = true;
+        }
+    });
+
+    $scope.$on('$destroy', function () {
+        if($scope.hasIframeJackpot && gameId){
+            delete  $scope.hasIframeJackpot[gameId];
+            if (Object.keys($scope.hasIframeJackpot).length === 1) {
+                $scope.hasIframeJackpot.empty = true;
+            }
+        }
+        $rootScope.$broadcast('iframe.game.close');
+    });
 }]);

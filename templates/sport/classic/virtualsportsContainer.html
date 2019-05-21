@@ -1,0 +1,40 @@
+<div class="classic-view-wrapper-v3 classic-version-euro2016">
+    <!-- System Calculator-->
+    <div id="system-claculator-container"
+         ng-if="$root.showSystemCalculator"
+         draggable
+         allow-other-mouse-events
+         drag-from="calculator-draggable-header">
+        <include-template template-path="templates/sport/classic/systemCalculator.html"></include-template>
+    </div>
+    <!-- System Calculator-->
+    <div ng-controller="virtualSportsCtrl" ng-init="setTitle('Virtual sports')" class="classic-view-column-v3 {{leftMenuClosed ? 'left-menu-closed-v3' : ''}}">
+        <div class="left-column-v3">
+            <div class="left-column-v3-header">
+                <div class="select-game-v3">
+                    <span>select games</span>
+                    <div class="closed-left-nav-v3" ng-click="toggleLeftMenu();"
+                         title="{{(leftMenuClosed ? 'Expand' : 'Collapse')|translate}}"></div>
+                </div>
+                <div class="full-menu-wrapper-box-v3" >
+                    <div class="games-list-mini-view-v3">
+                        <div class="v-sports-tab {{section.alias.toLowerCase() + '-icon'}}" ng-repeat="section in sections track by $index" ng-click="loadCompetitions(section)" data-content="new" ng-class="{'active': selectedVirtualSport.id == section.id}">
+                            <span data-content="{{section.label|translate}}" class="{{section.alias.toLowerCase() + '-icon'}}">
+                                {{section.name|translate}}
+                                <i ng-if="section.prematch_ts">{{section.prematch_ts| formatDate:'hour':null:env.timeFormat}}</i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--center-column-->
+        <div class="center-column-v3">
+            <include-template class="games-view-wrapper-v3 virtual-games" template-path="templates/sport/virtualsports.html"></include-template>
+        </div>
+        <!--center-column END-->
+        <!--right-column-->
+        <include-template class="virtual-sports-right-b" template-path="templates/sport/classic/right/main.html"></include-template>
+        <!--right-column END-->
+    </div>
+</div>
