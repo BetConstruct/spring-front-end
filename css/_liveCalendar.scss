@@ -583,6 +583,12 @@ $disable-live-calendar-coeff-styling: false !default;
         &.event-column-j {
             padding: 0 10px;
         }
+        .boosted {
+            position: absolute;
+            top: 0;
+            left: 0;
+            margin: 0 1px;
+        }
     }
 }
 .body-wrapper.no-classic-scroll .contain-gameing.no-left-menu-j .centr-market-contain .scroll-contain {

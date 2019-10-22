@@ -3,7 +3,7 @@
     <!--View settings-->
     <div class="view-settings-b-v3">
         <ul>
-            <li>
+            <li ng-show="$location.path() !== '/esports/'">
                 <div class="time-filter-v3"
                      ng-show="calculatedConfigs.sportEnabled && $root.conf.enableSportsbookLayoutSwitcher"
                      ng-class="{'active': showLayoutSubMenu}"

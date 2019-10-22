@@ -200,11 +200,6 @@ $skin-palette-8: $skin-palette-8 !default;
         text-align: right;
     }
 }
-.results-table-j table tr td:last-child > div {
-    @include rtl {
-        unicode-bidi: bidi-override;
-    }
-}
 .results-table-j table tr td > div, .results-table-j table tr th > div {
     overflow: hidden;
     text-overflow: ellipsis;

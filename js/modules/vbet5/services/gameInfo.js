@@ -88,7 +88,28 @@ angular.module('vbet5').service('GameInfo', ['$rootScope', '$http', '$filter', '
     GameInfo.getRegionChildren = function getRegionChildren(id) {
         return GameInfo.groupRegions[id] && GameInfo.groupRegions[id].children ? GameInfo.groupRegions[id].children : null;
     };
-
+/*
+    EUROSTAR_TV: 111111;
+    PERFORM_GROUP: 1;
+    GEORGIA_TV:int 2;
+    UNAS_TV: 3;
+    LIVE_STUDIO: 4;
+    IMG_GAMING: 5;
+    PRIVATE_TV: 6;
+    FUTSAL1_TV: 7;
+    FUTSAL2_TV:8;
+    HOCKEY_TV: 11;
+    FUTSAL3_TV: 12;
+    VIRTUAL_SPORTS: 15;
+    UA_TV: 16;
+    URAKULAS_TV:17;
+    IMG_GAMING_SECURE: 18;
+    CYBER_SPORT: 19;
+    BETRADAR_TV: 25;
+    PRIVATE_VIVARO: 26;
+    ALBA_SOLUTIONS: 28;
+    FRIENDSHIP_STREAMING: 31;
+    GBI_RACING: 999999*/
 
     /**
      * @ngdoc method
@@ -105,9 +126,8 @@ angular.module('vbet5').service('GameInfo', ['$rootScope', '$http', '$filter', '
                 game.video_id = undefined;
                 return false;
             }
-
-            game.tv_type = GameInfo.PROVIDER_AVAILABLE_EVENTS[game.id][0];
-            game.video_id = GameInfo.PROVIDER_AVAILABLE_EVENTS[game.id][1];
+            game.tv_type = GameInfo.PROVIDER_AVAILABLE_EVENTS[game.id][0].provider_id;
+            game.video_id = GameInfo.PROVIDER_AVAILABLE_EVENTS[game.id][0].video_id;
 
             return true;
         }
@@ -140,6 +160,7 @@ angular.module('vbet5').service('GameInfo', ['$rootScope', '$http', '$filter', '
                     return true;
                 }
                 if ([1, 5, 31].indexOf(game.tv_type) !== -1 && game.video_id && (!Config.main.getProviderAvailableEventsAndEnableFiltering || Config.main.getProviderAvailableEventsAndEnableFiltering.indexOf(game.tv_type) === -1 || !GameInfo.PROVIDER_AVAILABLE_EVENTS || !GameInfo.PROVIDER_AVAILABLE_EVENTS[game.tv_type] || GameInfo.PROVIDER_AVAILABLE_EVENTS[game.tv_type].indexOf(game.video_id) !== -1)) {
+                    console.log(game.tv_type);
                     return true;
                 }
                 if (game.video_id3 && [21, 22, 23, 30].indexOf(game.tv_type) !== -1) {
@@ -279,7 +300,7 @@ angular.module('vbet5').service('GameInfo', ['$rootScope', '$http', '$filter', '
      * @param {Boolean} isAnimation get animation data
      */
     GameInfo.getVideoData = function getVideoData(game, evenIfNotLoggedIn, isAnimation) {
-        if (!isAnimation && (!game || game.tv_type === undefined || game.video_id === undefined || (!evenIfNotLoggedIn && (!$rootScope.profile || (!$rootScope.profile.initial_balance && ($rootScope.profile.calculatedBalance + $rootScope.profile.calculatedBonus) === 0))))) {
+        if (!isAnimation && (!game || game.tv_type === undefined || game.video_id === undefined || (!evenIfNotLoggedIn && (!$rootScope.profile || (!Config.main.video.allowedWithNoneBalance[game.tv_type] && ($rootScope.profile.calculatedBalance + $rootScope.profile.calculatedBonus) === 0))))) {
             return;
         }
         var request = isAnimation ? {
@@ -289,7 +310,7 @@ angular.module('vbet5').service('GameInfo', ['$rootScope', '$http', '$filter', '
         } : {
             video_id: game.video_id,
             provider: game.tv_type,
-            use_hls: !!Config.main.videoProvidersThatSupportHls[game.tv_type]
+            use_hls: game.tv_type === 1 ? false :  !!Config.main.video.providersThatSupportHls[game.tv_type]
         };
 
         return Zergling
@@ -325,6 +346,7 @@ angular.module('vbet5').service('GameInfo', ['$rootScope', '$http', '$filter', '
             var onStreamUpdate = function(response) {
                 if (response.stream_configs) {
                     GameInfo.PROVIDER_AVAILABLE_EVENTS = response.stream_configs;
+                    $rootScope.$broadcast('stream.config.updated');
                 }
             };
 
@@ -1185,28 +1207,25 @@ angular.module('vbet5').service('GameInfo', ['$rootScope', '$http', '$filter', '
      * @returns {String} base to display
      */
     GameInfo.displayBase = function displayBase(event, market) {
-        if (event === undefined || (event.base === null  || event.base === undefined) && (event.base1 === null  || event.base1 === undefined)) {
+        if (event === undefined || event.base === null  || event.base === undefined) {
             return '';
         }
         var base, prefix = '';
-        if (event.base1 !== undefined && event.base2 !== undefined && !Config.main.displayEventsMainBase) {
-            base = event.base1 + '-' + event.base2;
-        } else  {
-            base = parseFloat(event.base);
-            if (Config.main.asian.homeAwayBaseRecalculationEnabled && market.home_score !== undefined && market.away_score !== undefined && (event.type === 'Home' || event.type === 'Away')) {
-                var delta = market.home_score - market.away_score;
-                switch (event.type_1) {
-                    case "Home":
-                        base += delta;
-                        break;
-                    case "Away":
-                        base -= delta;
-                        break;
-                }
 
-            } else if (market.type && market.type.substr(-8) === 'Handicap' && event.base > 0) {
-                prefix = '+';
+        base = parseFloat(event.base);
+        if (Config.main.asian.homeAwayBaseRecalculationEnabled && market.home_score !== undefined && market.away_score !== undefined && (event.type_1 === 'Home' || event.type_1 === 'Away')) {
+            var delta = market.home_score - market.away_score;
+            switch (event.type_1) {
+                case "Home":
+                    base += delta;
+                    break;
+                case "Away":
+                    base -= delta;
+                    break;
             }
+
+        } else if (market.type && market.type.substr(-8) === 'Handicap' && event.base > 0) {
+            prefix = '+';
         }
 
         if (Config.main.disableBracketsForLanguages && Config.main.disableBracketsForLanguages.indexOf(Config.env.lang) > -1) {

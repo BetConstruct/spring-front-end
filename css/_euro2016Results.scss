@@ -20,18 +20,33 @@
 .results-view-b .filter-view-v3 {
   height: 100px;
 }
-.results-view-b .left-column-v3-header {
-  &.hide-result-filter {
+.results-view-b  {
+  .classic-view-column-v3.left-menu-closed-v3 {
+    .view-switcher-v3 > ul > li,
     .filter-view-v3 {
       display: none;
+    }
+    .view-switcher-v3 > ul > li:nth-child(3) {
+      display: table-cell;
+    }
+    .left-nav-view-v3 {
+      @include rtl {
+        margin-left: 0;
+      }
+    }
+  }
+  .left-column-v3-header {
+    &.hide-result-filter {
+      .filter-view-v3 {
+        display: none;
+      }
     }
   }
 }
 .results-f-row-view {
   float: left;
   width: 100%;
-  box-sizing: border-box;
-  padding: 3px 0 0;
+  margin-top: 3px;
 }
 .date-r-filter-b .mini-form-box-b .input-group {
   box-shadow: 0 0 0 1px $c16-sp-8;
@@ -87,8 +102,36 @@
 .results-view-b .view-switcher-v3 > ul > li:hover > button {
   background: $brand-color-2;
 }
-.results-view-b .view-switcher-v3 > ul > li {
-  width: 50%;
+.results-view-b .view-switcher-v3 > ul {
+  table-layout: fixed;
+  > li {
+    &:first-child:nth-last-child(3) {
+      width: auto;
+      > button {
+        @include ltr {
+          padding: 0 8px 0 15px;
+        }
+        @include rtl {
+          padding: 0 15px 0 8px;
+        }
+      }
+    }
+    &:last-child {
+      width: 38px;
+      .closed-left-nav-v3 {
+        top: 10px;
+        @include ltr {
+          right: 8px;
+        }
+        @include rtl {
+          left: 8px;
+        }
+      }
+      &:hover > button {
+        background: $c16-sp-9;
+      }
+    }
+  }
 }
 .date-r-filter-b {
   float: left;
@@ -469,7 +512,8 @@
   margin-top: 5px;
 }
 .result-single-game-view-b.r-live-game {
-  height: 30px;
+  min-height: 30px;
+  height: auto;
   background: $c16-sp-9;
   box-shadow: 0 1px 0 rgba($c16-sp-6, 0.15) inset;
 }
@@ -508,7 +552,7 @@
 }
 
 .r-date-view {
-  width: 54px;
+  width: 68px;
 }
 .r-date-view > span {
   float: left;
@@ -569,13 +613,13 @@
   overflow: hidden;
 }
 .left-r > p {
-text-align: right;
+  text-align: right;
 }
 .left-r {
-padding: 0 30px 0 5px;
+  padding: 0 30px 0 5px;
 }
 .right-r {
-padding: 0 5px 0 30px;
+  padding: 0 5px 0 30px;
 }
 .right-r > p {
   @include rtl {
@@ -583,70 +627,82 @@ padding: 0 5px 0 30px;
   }
 }
 .score-view-column-r {
-width: 80px;
-text-align: center;
+  width: 80px;
+  text-align: center;
 }
 .score-view-column-r > span {
-color: $brand-color-2;
-font-weight: bold;
-letter-spacing: 3px;
+  color: $brand-color-2;
+  font-weight: bold;
+  letter-spacing: 3px;
 }
 .r-live-game .score-view-column-r > span {
-color: $c16-tp-3;
+  color: $c16-tp-3;
 }
 .result-single-game-view-b.active .score-view-column-r > span, .result-single-game-view-b.r-live-game.active .score-view-column-r > span {
-color: $brand-color-2;
+  color: $brand-color-2;
 }
 .team-logo-r {
-position: absolute;
-width: 20px;
-height: 20px;
-box-sizing: border-box;
-top: 5px;
-text-align: center;
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  box-sizing: border-box;
+  top: 5px;
+  text-align: center;
 }
 .left-r > .team-logo-r {
-right: 0;
+  right: 0;
 }
 .right-r > .team-logo-r {
-left: 0;
+  left: 0;
 }
 .team-logo-r > img {
-max-width: 100%;
-max-height: 20px;
-display: inline-block;
-vertical-align: top;
+  max-width: 100%;
+  max-height: 20px;
+  display: inline-block;
+  vertical-align: top;
 }
 .arrow-r-game-view {
-width: 24px;
-height: 30px;
-box-sizing: border-box;
-position: absolute;
-top: 0;
-text-align: center;
-font: 14px/30px icomoon;
-color: $c16-tp-7;
-@include ltr {
-right: 0;
-}
-@include rtl {
-left: 0;
-}
+  width: 24px;
+  height: 30px;
+  box-sizing: border-box;
+  position: absolute;
+  top: 0;
+  text-align: center;
+  font: 14px/30px icomoon;
+  color: $c16-tp-7;
+  @include ltr {
+    right: 0;
+  }
+  @include rtl {
+    left: 0;
+  }
 }
 .result-single-game-view-b.active .r-date-view > span, .result-single-game-view-b.active .team-name-b-r > p {
-color: set-color($brand-color-1);
+  color: set-color($brand-color-1);
 }
 .result-single-game-view-b.active .arrow-r-game-view {
-color: $c16-tp-4;
+  color: $c16-tp-4;
 }
 .arrow-r-game-view:before {
-@include ltr {
-content: "\e672";
+  @include ltr {
+    content: "\e672";
   }
   @include rtl {
     content: "\e673";
   }
 }
+.result-score-info {
+  padding-bottom: 6px;
+  color: $c16-tp-3;
+  text-align: center;
+  @include ltr {
+    padding-left: 68px;
+  }
+  @include rtl {
+    padding-right: 68px;
+  }
+}
+
 //results-games-list END
 
 //results-markets-list

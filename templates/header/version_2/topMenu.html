@@ -17,7 +17,8 @@
                 ng-class="{'active': item.classObject.active,
                           '{{::item.dynamicClass}}': true,
                           'new-info-item': item.subDisplayName || item.specialCase === 'gamesSpecialText',
-                          'new-info-item-sup': item.supDisplayName
+                          'new-info-item-sup': item.supDisplayName,
+                          '{{::('nav-' + item.name.split(' ').join('-').toLowerCase())}}': $root.conf.customNavMenu
                           }">
                 <div ng-if="!item.popup && !item.broadcast" class="top-menu-sub-a-t">
                     <a ng-href="{{item.href}}" ng-click="item.click()" data-content="{{(item.subTitle || 'new')|translate}}"

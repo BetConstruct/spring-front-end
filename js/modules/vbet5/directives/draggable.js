@@ -42,8 +42,13 @@ VBET5.directive('draggable', ['Config', '$document', '$rootScope', '$window', 'D
                 backup.left     = element.css('left');
                 x = leftShift;
                 y = DomHelper.getOffset(element[0]).top;
-                if(Config.main.sportsLayout === "combo" && y < 0) {
-                     y = $window.innerHeight/4 // at what height to show the popup on browser window "px"
+                if (y < 0) {
+                    if (Config.main.sportsLayout === "combo") {
+                        y = $window.innerHeight / 4 // at what height to show the popup on browser window "px"
+                    } else if (Config.main.sportsLayout === "modern") {
+                        y = $window.innerHeight / 4;  // at what height to show the popup on browser window "px"
+                        x = leftShift = $window.innerWidth - 960;
+                    }
                 }
                 if (container) {
                     angular.element(container).append(element);

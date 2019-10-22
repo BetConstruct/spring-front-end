@@ -3,7 +3,9 @@
         <colgroup span="{{$root.conf.asian.separateMatchEventsOnHDP * 4 + 2}}"></colgroup>
         <tr>
             <td class="light-bg-j " colspan="2">
-                <p><i class="icon-sport-asia" ng-class="selectedSport.alias"></i> <span ng-bind="selectedSport.name"></span></p>
+                <p ng-if="!isSelectedFavorites && !selectedPopularCompetition"><i class="icon-sport-asia" ng-class="selectedSport.alias"></i> <span ng-bind="selectedSport.name"></span></p>
+                <p ng-if="isSelectedFavorites"><i class="icon-favorite"></i> <span trans>Favorites</span></p>
+                <p ng-if="selectedPopularCompetition"><i class="favoritecompetitions"></i> <span trans>Popular Competition</span></p>
             </td>
             <td ng-repeat-start="sequenceIndex in $root.conf.asian.separateMatchEventsOnHDP track by $index" class="dark-bg-j  xs-s"><p trans>Winner</p></td>
             <td class="dark-bg-j  ms"><p trans>Handicap</p></td>
@@ -15,16 +17,19 @@
 </div>
 <div class="market_list_view" ng-class="{'all_view' : selectedSport.id === -1}">
     <div class="asian-separator-container-b" ng-repeat="competitions in :competitions-change:centerData.competitions track by $index">
-        <div ng-repeat="competition in  competitions|limitTo:$root.conf.asian.competitionsPerPage:(selectedPage*$root.conf.asian.competitionsPerPage) track by $index" class="game-list-compitishion-j" ng-class="{closed: collapedCompetitions[competition.id]}"> <!--competition.collapsed -->
+        <div ng-repeat="competition in ((isSelectedFavorites|| selectedPopularCompetition)? competitions : competitions|limitTo:$root.conf.asian.competitionsPerPage:(selectedPage*$root.conf.asian.competitionsPerPage)) track by $index"
+             class="game-list-compitishion-j"
+             ng-class="{closed: collapedCompetitions[competition.id]}"
+        > <!--competition.collapsed -->
             <div class="name-chempionship-asia" ng-click="toggleCompetition(competition.id)"><!--competition.collapsed = !competition.collapsed   -->
                 <h3 ng-bind="competition.games[0].region.name + ' - ' + competition.name"></h3>
                 <div ng-if="selectedSport.id === -1" class="icon-sport-asia" ng-class="competition.games[0].sport.alias"></div>
             </div>
             <table class="hdp-contain-j" ng-if="!collapedCompetitions[competition.id]">
                 <colgroup span="7"></colgroup>
-                <tbody ng-repeat="game in competition.games|orderBy:'start_ts' track by game.id">
+                <tbody ng-repeat="game in (selectedPopularCompetition? competition.games:(competition.games|orderBy:'start_ts')) track by game.id">
                 <tr>
-                    <th class="dark-bg-j  " colspan="2">
+                    <th class="dark-bg-j" colspan="2">
                         <p>
                             <span ng-show="game.is_neutral_venue" class="game-is-neutral" title="is neutral venue" trans="attr-only"></span>
                             <span ng-show="game.type === 1 && game.hasVideo && $root.conf.videoEnabled" class="has-video" trans="attr-only" title="video"></span>
@@ -51,7 +56,7 @@
                         <small ng-bind="game.info.current_game_state|convertSetName:game.sport.alias|translate" ng-show="game.type ==1"></small>
                         <small ng-bind="::game.start_ts|formatDate:($root.conf.layoutTimeFormat.asian || 'D/MM')" ng-show="game.type !=1"></small>
                         <small ng-bind="getCurrentTime(game.info.current_game_time)" ng-show="game.type ==1"></small>
-                        <small ng-bind="game.start_ts|formatDate:'hour':null:env.timeFormat" ng-show="game.type !=1"></small>
+                        <small ng-bind="game.start_ts|formatDate:'hour':null:$root.env.timeFormat" ng-show="game.type !=1"></small>
                     </td>
                     <td class="light-bg-j br-j bl-j bt-j">
                         <div class="asian-team-name-wrapper-j">

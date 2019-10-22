@@ -12,6 +12,15 @@ VBET5.constant('SkinConfig', {
             enabled: false,
             prefetchAfter: 250
         },
+        hidePointsForCompetitions: {
+            "k4736": true,
+            "k4737": true,
+            "k11424": true,
+            "k11425": true,
+            "k10149": true,
+            "k10150": true,
+            "k11589": true
+        },
         logo: {
             paddingMenu: 60
         },
@@ -938,15 +947,6 @@ VBET5.constant('SkinConfig', {
                     "classes": "",
                     "customAttrs": [],
                     "validation": [{"name": "invalid", "message": 'Promo code is not valid.'}]
-                },
-                {
-                    "title": "",
-                    "name": "g_recaptcha_response",
-                    "type": "recaptcha",
-                    "placeholder": "",
-                    "required": true,
-                    "classes": "",
-                    "validation": [{"name": "required", "message": "This field is required"}, {"name": "notmatching", "message": "This field is required"}]
                 }
             ],
             rightCol: []
@@ -2513,7 +2513,8 @@ CASINO.constant('SkinCConfig', {
         numberOfRecentGames: 30, //initial number of recent games to show.  When newCasinoDesign is enabled change this value to be 3X
         numberOfRecentGamesWide: 30, //initial number of recent games to show in wide screen mode.  When newCasinoDesign is enabled change this value to be 5X
         favourtieGamesCategoryEnabled: true,
-        storedbonusPopUpLifetime: 259200000 // 3days
+        storedbonusPopUpLifetime: 259200000, // 3days
+        closeProvidersByDefault: true
     },
     liveCasino: {
         viewStyle: 'SliderView',

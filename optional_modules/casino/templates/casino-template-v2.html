@@ -1,12 +1,13 @@
 <div ng-show="!gamesInfo.length" class="center-contain-casino" ng-class="{'not-casino-jackpots': !jackpotData , 'casino-second-banner': !($root.conf.jackpot.casino.enabled || hasTournaments)}" id="casinoScrollable">
     <coins-rain ng-if="jackpotWinnerCoinsRain"></coins-rain>
-    <div class="casino-top-slider-container" ng-class="(confData.main.topBanners.showPopularGameBannerDoubleSize && !confData.main.topBanners.showPopularGameBanner) ? 'single-game-contain-wp-double' : '' ">
+    <div ng-if="$root.conf.jackpot.casino.enabled && $root.conf.jackpot.casino.externalJackpots" class="provider-jackpot-banner" ng-controller="providerJackpotCtrl" ng-include="::'optional_modules/casino/templates/casino-jackpot-widget.html'|fixPath"></div>
+    <div ng-if="!$root.conf.jackpot.casino.externalJackpots" class="casino-top-slider-container" ng-class="(confData.main.topBanners.showPopularGameBannerDoubleSize && !confData.main.topBanners.showPopularGameBanner) ? 'single-game-contain-wp-double' : '' ">
         <!--Slider-->
-        <div ng-controller="cmsPagesCtrl" ng-init="getCasinoBanners();"  class="slider-view-casino" ng-if="confData.main.topBanners.showSlider" ng-class="{'full-width-slider-casino-j': (!confData.main.topBanners.showBannerInsteadWinners && !confData.main.topBanners.showBannerInsteadOfBiggestWinners && confData.main.topBanners.showPopularGameBanner)}">
-            <vbet-big-slider class="big-slider-casino-directive" ng-if="casinoTopBanners" images="casinoTopBanners" link-click-handler="openCBannerLink" slider-template="true" additional-data="gamesAdditionalData"></vbet-big-slider>
+        <div ng-controller="cmsPagesCtrl" ng-init="getCasinoBanners(null, true);"  class="slider-view-casino" ng-if="confData.main.topBanners.showSlider" ng-class="{'full-width-slider-casino-j': (!confData.main.topBanners.showBannerInsteadWinners && !confData.main.topBanners.showBannerInsteadOfBiggestWinners && confData.main.topBanners.showPopularGameBanner)}">
+            <vbet-big-slider class="big-slider-casino-directive" ng-if="casinoTopBanners[$root.env.authorized]" images="casinoTopBanners[$root.env.authorized]" link-click-handler="openCBannerLink" slider-template="true" additional-data="gamesAdditionalData"></vbet-big-slider>
         </div>
         <!--Slider END-->
-        <div class="jackpot-blocks">
+        <div ng-if="!$root.conf.jackpot.casino.externalJackpots" class="jackpot-blocks">
             <jackpot-slider type="casino"  load-jackpot-data="false" jackpot-data="jackpotData"></jackpot-slider>
 
                 <div class="casino-games-slider-container" ng-if="!confData.main.hideCasinoJackpotSlider" ng-show="jackpotSliderGames.length"> <!--ng-controller="casinoJackpotCtrl" ng-init="loadJackpotPages();"  -->
@@ -44,7 +45,7 @@
     </div>
     <div class="casino-winners-table">
        <div class="casino-jackpots-board">
-           <div ng-if="$root.conf.jackpot.casino.enabled || hasTournaments" class="float-width" ng-include="::'optional_modules/casino/templates/jackpot/casinoWidget.html'|fixPath"></div>
+           <casino-jackpot-and-tournaments class="float-width"  ng-if="$root.conf.jackpot.casino.enabled || hasTournaments" jackpot-data="jackpotData" load-jackpot-data="false" has-jackpots="hasJackpots" has-tournaments="hasTournaments" tab="tab"></casino-jackpot-and-tournaments>
        </div>
        <div class="casino-gamer-board casino-gamer-winners-container">
            <casino-biggest-winners ng-if="confData.version === 2 && confData.main.topBanners.showBannerInsteadOfBiggestWinners" title="{{confData.main.topBanners.showBiggestWinners ? 'Last Winners' : ''}}" template-url="templates/directive/casino-biggest-winners-v2.html" limit="8"  class="winners-list"></casino-biggest-winners>
@@ -81,7 +82,7 @@
     <div class="games-providers-container" ng-class="{closed: !providersOpened}">
         <ul class="title-slider-games">
             <li class="title-slider-games-line"></li>
-            <li ng-click="providersOpened=!providersOpened" trans>Game Providers</li>
+            <li ng-click="toggleProviders()" trans>Game Providers</li>
             <li>
                 <div>
                     <ul>

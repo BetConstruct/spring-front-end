@@ -8,7 +8,7 @@
                 <li ng-repeat="game in games track by game.id" ng-click="chooseFavorite(game)" ng-class="{'first': $first, 'last': $last}">
                     <div class="game-status" ng-class="{'game-status-live': game.type === 1}">
                         <div class="type-rezult-won" ng-show="game.type === 1" trans>LIVE NOW!</div>
-                        <div class="type-rezult" title="{{ game.start_ts| formatDate:null:null:env.timeFormat}}" ng-class="{'prematch': game.type !== 1}">{{ game.start_ts| formatDate:null:null:env.timeFormat}}</div>
+                        <div class="type-rezult" title="{{ game.start_ts| formatDate:null:null:$root.env.timeFormat}}" ng-class="{'prematch': game.type !== 1}">{{ game.start_ts| formatDate:null:null:$root.env.timeFormat}}</div>
                         <div class="type-game" title="{{ game.sport.name }}">
                             <!--<div class="mini-icon-1"></div>-->
                             {{ game.sport.name }}
@@ -19,11 +19,11 @@
                     <div ng-show="game.type === 1">
                         <div class="teams" ng-class="{'racing': game.sport.alias === 'HorseRacing'}">
                             <div class="team-1">
-                                <div class="score" ng-bind="game.info.set_count === 1 ? game.stats.score_set1.team1_value : game.info.score1"></div>
+                                <div class="score" ng-show="game.sport.alias !== 'Boxing'" ng-bind="game.info.set_count === 1 ? game.stats.score_set1.team1_value : game.info.score1"></div>
                                 <div class="name" title="{{game.team1_name}}"><span>{{ game.team1_name }}</span></div>
                             </div>
                             <div class="team-2">
-                                <div class="score" ng-bind="game.info.set_count === 1 ? game.stats.score_set1.team2_value : game.info.score2"></div>
+                                <div class="score" ng-show="game.sport.alias !== 'Boxing'" ng-bind="game.info.set_count === 1 ? game.stats.score_set1.team2_value : game.info.score2"></div>
                                 <div class="name" title="{{game.team2_name}}"><span>{{ game.team2_name }}</span></div>
                             </div>
                         </div>
@@ -32,7 +32,7 @@
                             <div class="details"> {{(game.info.current_game_state|convertSetName:game.sport.alias|translate)}} <span ng-if="game.sport.alias === 'Soccer'">{{ game.info.current_game_time }}</span></div>
                             <div class="logo-team-2"><div ng-show="game.info.extra.team2icon"><img ng-src="{{ game.info.extra.team2icon}}"></div></div>
                         </div>
-                        <div class="save-games-stats" ng-if="game.sport.alias !== 'Soccer' && game.sport.alias !== 'HorseRacing'">
+                        <div class="save-games-stats" ng-if="game.sport.alias !== 'Soccer' && game.sport.alias !== 'HorseRacing' && game.sport.alias !== 'Boxing'">
                             <table class="cash-game">
                                 <tr>
                                     <th ng-if="game.sport.alias !== 'Basketball'" trans>Set</th>

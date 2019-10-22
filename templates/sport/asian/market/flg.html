@@ -118,7 +118,7 @@
             <td class="section-1">
                 <div class="info-bl">
                     <p ng-bind="fixDisplayTime(game.info.current_game_time)" ng-show="game.type ==1"></p>
-                    <p ng-bind="game.start_ts|formatDate:'hour':null:env.timeFormat" ng-show="game.type !=1"></p>
+                    <p ng-bind="game.start_ts|formatDate:'hour':null:$root.env.timeFormat" ng-show="game.type !=1"></p>
                 </div>
             </td>
             <td class="section-2"><div class="info-bl"><p ng-bind="game.team2_name"></p></div></td>

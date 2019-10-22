@@ -13,7 +13,7 @@
         <tbody ng-if="balanceHistoryFilter !== 'net'" ng-repeat="balance in balanceHistory">
             <tr>
                 <td class="date-id">
-                    <span>{{balance.date_time|formatDate:(conf.layoutTimeFormat[conf.sportsLayout] || 'noLocaleTranslate')}} {{conf.layoutTimeFormat[conf.sportsLayout] ? (balance.date_time|formatDate:'hour':null:env.timeFormat) : ''}}</span>
+                    <span>{{balance.date_time|formatDate:(conf.layoutTimeFormat[conf.sportsLayout] || 'noLocaleTranslate'):null:$root.env.timeFormat}} {{conf.layoutTimeFormat[conf.sportsLayout] ? (balance.date_time|formatDate:'hour':null:$root.env.timeFormat) : ''}}</span>
                     <span ng-show="!conf.transactionIdInBalanceHistory && balance.bet_id"><br/> ID: <a>{{balance.bet_id}}</a></span>
                     <span ng-show="conf.transactionIdInBalanceHistory && balance.transaction_id"><br/> ID: <a>{{balance.transaction_id}}</a></span>
                 </td>
@@ -48,7 +48,7 @@
         <tbody ng-if="balanceHistoryFilter === 'net'" ng-repeat="balance in netDepositHistory">
             <tr>
                 <td class="date-id">
-                    <span>{{::balance.Date|formatDate:(conf.layoutTimeFormat[conf.sportsLayout] || 'noLocaleTranslate')}}</span>
+                    <span>{{::balance.Date|formatDate:(conf.layoutTimeFormat[conf.sportsLayout] || 'noLocaleTranslate'):null:$root.env.timeFormat}}</span>
                     <span ng-show="!conf.transactionIdInBalanceHistory && balance.DocumentId"><br/> ID: <a>{{::balance.DocumentId}}</a></span>
                 </td>
                 <td class="auto-cell">

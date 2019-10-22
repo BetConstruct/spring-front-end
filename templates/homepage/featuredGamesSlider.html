@@ -14,10 +14,10 @@
             <div class="games-view-slider-contain" ng-controller="cmsPagesCtrl" ng-init="loadFeatureGamesBackgrounds('featured-games');">
                 <ul class="column-{{ featuredGamesGroups[multiSlideIndex].games.length }}">
                     <!-- defoult 3 columns ---------- or add class="column-2" 2 columns ---- class="column-1" one column-->
-                    <li ng-repeat="game in featuredGamesGroups[multiSlideIndex].games track by game.id">
+                    <li ng-repeat="game in featuredGamesGroups[multiSlideIndex].games track by game.id" ng-click="goToUrl(game, isIframe ? 'iframe' : '')">
                         <div class="date-championship-logo">
                             <p ng-style="{'background-image': $root.conf.teamDefaultLogo ? 'url(images/team-logo-default.png)' : 'url({{$root.conf.teamLogosPath}}c/b/{{Math.floor(game.import_id / 2000)}}/{{game.import_id}}.png)'}">
-                                {{ game.start_ts|formatDate:'full':null:env.timeFormat }}
+                                {{ game.start_ts|formatDate:'full':null:$root.env.timeFormat }}
                             </p>
                         </div>
                         <div no-animate="disable" class="game-full-information-w game-bg-{{ game.sport.alias }}"
@@ -44,7 +44,7 @@
                                 </ul>
                             </div>
                             <div class="game-link-wrapper-b">
-                                <a ng-click="goToUrl(game, isIframe ? 'iframe' : '')" trans>Bet Now</a>
+                                <a  trans>Bet Now</a>
                             </div>
                         </div>
                     </li>

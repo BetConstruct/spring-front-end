@@ -14,10 +14,12 @@
 .jcb { background-position: 0 54.545455%;}
 .laser { background-position: 0 63.636364%;}
 .maestro { background-position: 0 72.727273%;}
-[class^="51"],
-[class^="52"],
-[class^="53"],
-[class^="54"],
-[class^="55"] { background-position: 0 81.818182%;}
-[class^="4"]{ background-position: 0 90.909091%;}
+.card-icon {
+  &[class*=" 5"]{
+    background-position: 0 81.818182%;
+  }
+  &[class*=" 4"]{
+    background-position: 0 90.909091%;
+  }
+}
 .visda-electro { background-position: 0 100%;}

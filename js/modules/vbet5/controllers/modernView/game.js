@@ -619,6 +619,7 @@ angular.module('vbet5.betting').controller('gameCtrl', ['$rootScope', '$scope', 
     //initial values for ordering of horse_cards
     $scope.raceCardsPredicate = 'cloth';
     $scope.raceCardsReverce = false;
+    $scope.raceCardsPredicateDog = 'order';
 
     /**
      * @ngdoc method
@@ -628,15 +629,19 @@ angular.module('vbet5.betting').controller('gameCtrl', ['$rootScope', '$scope', 
      *
      * @param {String} orderItem orderItem string: value of predicate
      */
-    $scope.raceCardsColumnClick = function raceCardsColumnClick(orderItem, game) {
-        if (orderItem === 'price' && !game.info.race.horseStats[0].event.price) {
+    $scope.raceCardsColumnClick = function raceCardsColumnClick(orderItem) {
+        if (orderItem === 'price'
+           && $scope.openGame
+           && $scope.openGame.info.race
+           && !$scope.openGame.info.race.horseStats[0].event.price) {
             return;
         }
-        if ($scope.raceCardsPredicate === orderItem) {
+        if ($scope.raceCardsPredicate === orderItem || $scope.raceCardsPredicateDog === orderItem) {
             $scope.raceCardsReverce = !$scope.raceCardsReverce;
         } else {
             $scope.raceCardsReverce = false;
             $scope.raceCardsPredicate = orderItem;
+            $scope.raceCardsPredicateDog = orderItem;
         }
     };
 
@@ -648,12 +653,16 @@ angular.module('vbet5.betting').controller('gameCtrl', ['$rootScope', '$scope', 
      *
      * @param {Object} horseStat horseStat object
      */
-    $scope.raceCardsOrder = function raceCardsOrder(horseStat) {
+    $scope.raceCardsOrder = function raceCardsOrder(state) {
         switch ($scope.raceCardsPredicate) {
             case 'cloth':
-                return parseInt(horseStat.cloth);
+                return parseInt(state.cloth, 10);
             case 'price':
-                return horseStat.event.price;
+                return parseFloat(state.event.price);
+            case 'odds':
+                return parseFloat(state.price);
+            case 'order':
+                return parseFloat(state.order);
         }
 
         return -1;

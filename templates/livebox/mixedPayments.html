@@ -31,7 +31,7 @@
             </ul>
             <ul ng-repeat="history in paymentHistory | orderBy: 'date': true" ng-show="paymentHistory.length">
                 <li class="date-id-col-j">
-                    <span>{{history.date|formatDate:'DD.MM.YY'}} / {{history.date|formatDate:'h:mm'}}</span>
+                    <span>{{history.date|formatDate:'fullDate':null:$root.env.timeFormat}}</span>
                     <span><i>ID:</i> <b>{{history.id}}</b></span>
                 </li>
                 <li class="amount-col-j">
@@ -250,12 +250,13 @@
                     <p ng-bind-html="'profile-partial-text'|translate|html"></p>
                     <a class="" ng-click="env.showSlider=true; env.sliderContent='settings';env.mixedSettingsPage='details'" trans>Go Now</a>
                 </h5>
-                <h5 trans
-                    ng-if="!isProfilePartial && (selectedPaymentSystem[env.sliderContent + 'InfoText'][env.lang] || selectedPaymentSystem[env.sliderContent + 'InfoText'].eng || selectedPaymentSystem[env.sliderContent + 'InfoTextKey'])"
-                    ng-bind-html="renderInfoText(selectedPaymentSystem[env.sliderContent + 'InfoText'][env.lang] || selectedPaymentSystem[env.sliderContent + 'InfoText'].eng || selectedPaymentSystem[env.sliderContent + 'InfoTextKey']) ">
-                </h5>
+                <read-more
+                    maximum-number-of-lines="conf.maximumNumberOfLinesInPayments"
+                    content="{{selectedPaymentSystem[env.sliderContent + 'InfoText'][env.lang] || selectedPaymentSystem[env.sliderContent + 'InfoText'].eng || selectedPaymentSystem[env.sliderContent + 'InfoTextKey']}}"
+                    ng-if="!isProfilePartial && (selectedPaymentSystem[env.sliderContent + 'InfoText'][env.lang] || selectedPaymentSystem[env.sliderContent + 'InfoText'].eng || selectedPaymentSystem[env.sliderContent + 'InfoTextKey'])">
+                </read-more>
                 <vbet-loader ng-if="gettingFieldsInProgress"></vbet-loader>
-                <form class="balance-form" ng-if="env.authorized && selectedPaymentSystem && !isProfilePartial && !gettingFieldsInProgress"
+                <form class="balance-form {{selectedPaymentSystem.name}}" ng-if="env.authorized && selectedPaymentSystem && !isProfilePartial && !gettingFieldsInProgress"
                       ng-model="paymentFormData" name="paymentForm" novalidate>
                     <div class="betshops-j" ng-if="selectedPaymentSystem.hasBetShops"
                          ng-init="loadBetShops(env.sliderContent === 'withdraw')">
@@ -283,11 +284,11 @@
                     <div ng-repeat="field in selectedPaymentSystem[env.sliderContent + 'FormFields'] track by field.name" ng-switch
                          on="field.type"
                          ng-class="[field.name, field.class]"
-                         ng-show="!selectedPaymentSystem.hasBetShops && (!field.showIfHigher || paymentAmount[env.sliderContent] >= field.showIfHigher)"
+                         ng-if="!selectedPaymentSystem.hasBetShops && (!field.showIfHigher || paymentAmount[env.sliderContent] >= field.showIfHigher)"
                          title="{{field.tooltip|translate}}"
                     >
                         <label>
-                            <p ng-show="!field.hideLabel">{{field.label|translate}}</p>
+                            <p ng-show="!field.hideLabel && (field.name !== 'save-card' || !paymentFormData.cardId || paymentFormData.cardId === -1)">{{field.label|translate}}</p>
 
                             <div ng-switch-when="text">
                                 <input name="{{field.name}}" ng-attr-id="{{field.id}}"
@@ -348,10 +349,11 @@
                             </div>
                             <div ng-switch-when="checkbox" class="primary-checkbox">
                                 <label ng-if="selectedPaymentSystem.agreeTermsText || field.agreeTermsText">
-                                    <input class="notthis" name="{{field.name}}" ng-attr-id="{{field.id}}" ng-model="selectedPaymentSystem.agreeTerms" ng-init="selectedPaymentSystem.agreeTermsExists = true" type="checkbox" ng-required="field.required">
-                                    <span ng-bind-html="(selectedPaymentSystem.agreeTermsText || field.agreeTermsText)|translate|html"></span>
+                                    <input class="notthis" name="{{field.name}}" ng-attr-id="{{field.id}}" ng-model="selectedPaymentSystem.agreeTerms" ng-init="selectedPaymentSystem.agreeTermsExists = true" type="checkbox" ng-required="field.required" >
+                                    <span  ng-if="selectedPaymentSystem.agreeTermsText" ng-bind-html="selectedPaymentSystem.agreeTermsText"></span>
+                                    <span  ng-if="!selectedPaymentSystem.agreeTermsText && field.agreeTermsText" ng-bind-html="field.agreeTermsText|translate|html"></span>
                                 </label>
-                                <label ng-if="selectedPaymentSystem.isSaveable">
+                                <label ng-if="selectedPaymentSystem.isSavable" ng-show="!paymentFormData.cardId || paymentFormData.cardId === -1">
                                     <input class="notthis" name="{{field.name}}" ng-attr-id="{{field.id}}" ng-model="paymentFormData[field.name]" ng-init="paymentFormData[field.name] = true" type="checkbox" ng-required="field.required" >
                                     <span ng-bind="selectedPaymentSystem.label|translate"></span>
                                 </label>
@@ -366,7 +368,6 @@
                                         ng-init="depositFormData.day = fieldBirthday.day[0] "
                                         ng-model="$parent.$parent.depositFormData.day"
                                         ng-options="item for item in days">
-
                                 </select>
                             </div>
                             <div class="select-block birthdayForm" ng-switch-when="birthMonth">
@@ -444,12 +445,12 @@
                             <div ng-switch-when="select" class="filter-columns-container">
                                 <ul ng-init="setInfo(field, field.options[0].value, env.sliderContent + 'InfoText')">
                                     <li>
-                                        <div class="select-box-period-b" ng-click="periodDropdownOpened=!periodDropdownOpened;" ng-class="{'active': periodDropdownOpened}"> <!--active-->
-                                            <i class="card-icon" ng-class="field.selectedText"></i>
+                                        <div class="select-box-period-b" ng-click="openDropdown(field.name)" ng-class="{'active': dropdownOpened[field.name]}"> <!--active-->
+                                            <!--<i class="card-icon" ng-class="field.selectedText"></i>-->
                                             <p ng-if="paymentFormData[field.name]">{{field.selectedText|translate}}</p>
                                             <ul>
                                                 <li ng-repeat="option in field.options track by $index" ng-click="setInfo(field, option.value, env.sliderContent + 'InfoText'); periodDropdownOpened = false;">
-                                                    <i class="card-icon" ng-class="option.text"></i>
+                                                    <!--<i class="card-icon" ng-class="option.text"></i>-->
                                                     {{option.text|translate}}
                                                 </li>
                                             </ul>
@@ -477,7 +478,7 @@
                     <div class="custom-amount-block">
                         <div class="float-width" ng-if="!conf.customAmountReplace" ng-show="(env.sliderContent === 'deposit' && depositCustomAmounts.length) || (env.sliderContent === 'withdraw' && withdrawCustomAmounts.length)">
                             <div class="custom-amounts-list" ng-if="env.sliderContent === 'deposit' && !isProfilePartial">
-                                <button ng-repeat="customAmount in depositCustomAmounts track by $index"
+                                <button type="button" ng-repeat="customAmount in depositCustomAmounts track by $index"
                                         ng-click="paymentAmount.deposit = (parseNum(paymentAmount.deposit) || 0) + customAmount"
                                         class="btn-sm">
                                     {{customAmount|number}}
@@ -485,7 +486,7 @@
                             </div>
 
                             <div class="custom-amounts-list" ng-if="env.sliderContent === 'withdraw' && !isProfilePartial">
-                                <button ng-repeat="customAmount in withdrawCustomAmounts track by $index"
+                                <button type="button" ng-repeat="customAmount in withdrawCustomAmounts track by $index"
                                         ng-click="paymentAmount.withdraw = (parseNum(paymentAmount.withdraw) || 0) + customAmount"
                                         class="btn-sm">
                                     {{customAmount|number}}
@@ -495,13 +496,13 @@
 
                         <div class="float-width" ng-if="conf.customAmountReplace" ng-show="(env.sliderContent === 'deposit' && depositCustomAmounts.length) || (env.sliderContent === 'withdraw' && withdrawCustomAmounts.length)">
                             <div class="custom-amounts-list" ng-if="env.sliderContent === 'withdraw' && !isProfilePartial">
-                                <button ng-repeat="customAmount in withdrawCustomAmounts track by $index" class="btn-sm"
+                                <button type="button" ng-repeat="customAmount in withdrawCustomAmounts track by $index" class="btn-sm"
                                         ng-click="paymentAmount.withdraw = customAmount">
                                     {{customAmount|number}}
                                 </button>
                             </div>
                             <div class="custom-amounts-list" ng-if="env.sliderContent === 'deposit' && !isProfilePartial">
-                                <button ng-repeat="customAmount in depositCustomAmounts track by $index" class="btn-sm"
+                                <button type="button" ng-repeat="customAmount in depositCustomAmounts track by $index" class="btn-sm"
                                         ng-click="paymentAmount.deposit = customAmount">{{customAmount|number}}
                                 </button>
                             </div>
@@ -596,21 +597,19 @@
                             <span ng-bind="(depositInProgress ? 'Start over' : ((selectedPaymentSystem.depositButtonCaption|translate) || 'Deposit'))|translate"></span>
                             <vbet-loader ng-if="busy" class="small-progress"></vbet-loader>
                         </button>
-                        <button class="button-confirm" ng-if="selectedPaymentSystem.depositCustomButton"
-                                ng-click="customButtonHandler()"
-                                ng-bind="::selectedPaymentSystem.depositCustomButton.label|translate">
-                        </button>
                         <h5 ng-if="selectedPaymentSystem.messageOnLoad && busy" ng-bind="selectedPaymentSystem.messageOnLoad|translate"></h5>
-                        <label class="primary-text">
+                        <label class="primary-text" ng-if="selectedPaymentSystem.companyText">
                             <span ng-bind-html="selectedPaymentSystem.companyText"></span>
                         </label>
                         <div class="button-sign" ng-if="selectedPaymentSystem.userConfirmationButton">
-                            <button class="button-sign"
-                                    ng-click="confirmUser(depositFormData.user_confirmation_password)" trans>
-                                Confirm
-                            </button>
+                            <button class="button-sign" ng-click="confirmUser(depositFormData.user_confirmation_password)" trans>Confirm</button>
                         </div>
                     </div>
+                    <button class="button-confirm" ng-if="selectedPaymentSystem[env.sliderContent + 'CustomButton']"
+                            ng-click="customButtonHandler()"
+                            ng-bind="::selectedPaymentSystem[env.sliderContent + 'CustomButton'].label|translate">
+                    </button>
+
                 </form>
                 <form ng-model="custumPaymentFields" ng-if="externalFormParams && !isProfilePartial"
                       target="{{::selectedPaymentSystem.stayInSameTabOnDeposit}}"

@@ -84,7 +84,7 @@
                 </th>
             </tr>
             <tr ng-repeat-start="game in gamesResult | orderBy: 'date': sortByDate" ng-click="toggleGameDetails(game)">
-                <td><div>{{game.date|formatDate:'full':null:env.timeFormat}}</div></td>
+                <td><div>{{game.date|formatDate:'full':null:$root.env.timeFormat}}</div></td>
                 <td><div>{{game.competition_name}}</div></td>
                 <td><div>{{game.game_name}}</div></td>
                 <td ng-if="game.scores"><div>{{game.scores}}</div></td>

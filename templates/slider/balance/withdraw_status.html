@@ -12,8 +12,8 @@
             <td>
                 <p>{{history.payment_system_name|translate}}</p>
             </td>
-            <td><p>{{history.date|formatDate:'ll'}}</p></td>
-            <td><p>{{history.date|formatDate:'h:mm a'}}</p></td>
+            <td><p>{{history.date|formatDate:'ll':null:$root.env.timeFormat}}</p></td>
+            <td><p>{{history.date|formatDate:'h:mm a':null:$root.env.timeFormat}}</p></td>
             <td><p>{{history.amount}}</p></td>
             <td><p>{{history.id}}</p></td>
 			<td ng-class="'status_' + history.status"><p>{{(withdrawStatus[history.status] || history.name)|translate}}</p>

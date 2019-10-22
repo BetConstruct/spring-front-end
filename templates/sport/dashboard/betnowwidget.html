@@ -35,7 +35,7 @@
                                         {{ (mostPopularLiveGame.info.current_game_time.split(' ').length ===2 ? mostPopularLiveGame.info.current_game_time.split(' ')[1] : mostPopularLiveGame.info.current_game_time.split(' ')[0])|translate}}</span>
                                     </div>
                                     <div>
-                                        <span class="date-time-inform-b" ng-show="mostPopularLiveGame.type == 0" ng-bind="mostPopularLiveGame.start_ts|formatDate:'full':null:env.timeFormat"></span>
+                                        <span class="date-time-inform-b" ng-show="mostPopularLiveGame.type == 0" ng-bind="mostPopularLiveGame.start_ts|formatDate:'full':null:$root.env.timeFormat"></span>
                                     </div>
                                     <div><span class="live-information-b" ng-show="mostPopularLiveGame.type == 1" trans>live</span></div>
                                 </div>

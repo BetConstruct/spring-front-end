@@ -11,7 +11,7 @@
             <p ng-bind-html="'self-exclusion-text'|translate|html:'p'"><p trans>
         </div>
 
-        <form class="registration-form">
+        <form class="registration-form" name="selfExclusionForm" ng-init="initSelfExclusion()">
             <div class="form-text" ng-repeat="option in conf.selfExclusion.options track by $index">
                 <label>
                     <input type="radio" name="period" ng-click="selectPeriod(option.limit)" ng-model="$parent.periodValue" value="{{ $index }}">
@@ -19,8 +19,22 @@
                 </label>
             </div>
             <div class="change-button-container password">
+                <div class="password-button">
+                    <label ng-class="{'error': selfExclusionForm.password.$dirty && selfExclusionForm.password.$error.required}">
+                        <span trans>Password</span> <span class="hint">*</span>
+                    </label>
+                    <div class="active-field">
+                        <div class="form-text" ng-class="{'error': selfExclusionForm.password.$dirty  && selfExclusionForm.password.$error.required}">
+                            <input type="password" name="password"  ng-model="selfExclusionPasswordState.value" placeholder="Current Password" autocomplete="off" required trans  numpad>
+
+                            <div class="tooltip-j" >
+                                <div ng-show="selfExclusionForm.password.$error.required" trans>This field is required</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <div class="cashier-button">
-                    <button ng-show="!working" ng-disabled="!periodValue" trans ng-click="setSelfExclusion(conf.selfExclusion.type, 'selfExclusion')">Save</button>
+                    <button ng-show="!working" ng-disabled="!periodValue || !selfExclusionForm.$valid" trans ng-click="setSelfExclusion(conf.selfExclusion.type, 'selfExclusion', selfExclusionForm.password)">Save</button>
                     <button disabled="disabled" ng-show="working" trans>Wait...</button>
                 </div>
             </div>

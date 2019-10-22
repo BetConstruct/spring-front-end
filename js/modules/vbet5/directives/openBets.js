@@ -120,7 +120,7 @@ VBET5.directive('openBets', ['$rootScope', 'Zergling', 'BetService', 'Utils', 'G
                             'sport': ['id', 'alias', 'type'],
                             'region': ['id'],
                             'competition': ['id'],
-                            'game': [['text_info', 'id', 'type']],
+                            'game': [['text_info', 'id', 'type', 'is_live']],
                             'event': ['id']
                         },
                         'where': {

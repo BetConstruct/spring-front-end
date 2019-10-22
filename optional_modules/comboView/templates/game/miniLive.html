@@ -2,7 +2,7 @@
     <ul>
         <li>
             <div class="date-info-box">
-                <p ng-bind="getGame().start_ts|formatDate:'full':null:env.timeFormat:timezoneSwitcherValue"></p>
+                <p ng-bind="getGame().start_ts|formatDate:'full':null:$root.env.timeFormat:timezoneSwitcherValue"></p>
             </div>
         </li>
         <li>

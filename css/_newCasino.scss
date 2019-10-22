@@ -69,6 +69,38 @@
         margin-top: 245px;
       }
     }
+    .provider-jackpot-banner {
+      width: 100%;
+      + .casino-winners-table {
+        width: 100%;
+        flex-direction: row;
+        -webkit-flex-direction: row;
+        .casino-jackpots-board,
+        .casino-gamer-board {
+          width: 50%;
+        }
+        .casino-jackpots-board {
+          @include ltr {
+            margin: 0 0 0 10px;
+          }
+          @include rtl {
+            margin: 0 10px 0 0;
+          }
+          + .casino-gamer-board .casino-gamer {
+            height: 331px;
+          }
+          .casino-gamer {
+            height: 331px;
+            .amount-animation-container > span {
+              width: 4%;
+              &.with-point, &.with-comma {
+                padding-right: 1.3%
+              }
+            }
+          }
+        }
+      }
+    }
   }
   &.ng-hide {
     display: block !important;
@@ -176,10 +208,22 @@
     position: relative;
   }
 }
-.casino-jackpots-board,
+.casino-jackpots-board {
+  float: left;
+  width: 100%;
+  .jackpots-wrapper {
+    height: 320px;
+  }
+}
 .casino-gamer-board {
   float: left;
   width: 100%;
+  .top-winners-wrapper {
+    height: 521px;
+    @media screen and (max-width: 1260px) {
+      height: 331px;
+    }
+  }
 }
 .winners-list {
   float: left;
@@ -216,7 +260,7 @@
 .casino-gamer {
   float: left;
   width: 100%;
-  height: 320px;
+  height: 330px;
   padding: 0 12px;
   position: relative;
   box-sizing: border-box;
@@ -373,124 +417,158 @@
   width: 100%;
   height: 244px;
   position: relative;
-  .jackpot-coins-content {
-    position: absolute;
-    top: 0;
-    left: 0;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 240ms ease;
-    > p {
-      float: left;
-      width: 100%;
-      height: 34px;
-      color: lighten( desaturate( adjust-hue( $brand-color-1, 28deg ), 46 ), 37 );
-      padding: 0 4px;
-      box-sizing: border-box;
-      text-transform: uppercase;
-      overflow: hidden;
-      white-space: nowrap;
-      text-overflow: ellipsis;
-      font: 14px/38px $font-f;
+}
+.jackpot-coins-content {
+  position: absolute;
+  top: 0;
+  left: 0;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 240ms ease;
+  > p {
+    float: left;
+    width: 100%;
+    height: 34px;
+    color: lighten( desaturate( adjust-hue( $brand-color-1, 28deg ), 46 ), 37 );
+    padding: 0 4px;
+    box-sizing: border-box;
+    text-transform: uppercase;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    font: 14px/38px $font-f;
+  }
+  > ul {
+    position: relative;
+    &:last-of-type {
+      border: none;
     }
-    > ul {
-      position: relative;
-      &:last-of-type {
-        border: none;
+    &:hover .total-info-winner {
+      display: table-cell;
+    }
+    > li.total-info-winner {
+      display: none;
+      position: absolute;
+      top: 63px;
+      left: 0;
+      width: 296px;
+      border-radius: 8px;
+      z-index: 100;
+      box-shadow: 0 0 90px 3px rgba(0,0,0,0.51);
+      background: rgb(56,90,85);
+      background: -moz-linear-gradient(top, lighten( desaturate( adjust-hue( $skin-color, -4deg ), 1 ), 6 ) 0%, darken( saturate( $skin-color, 12 ), 8 ) 100%);
+      background: -webkit-linear-gradient(top, lighten( desaturate( adjust-hue( $skin-color, -4deg ), 1 ), 6 ) 0%, darken( saturate( $skin-color, 12 ), 8 ) 100%);
+      background: linear-gradient(to bottom, lighten( desaturate( adjust-hue( $skin-color, -4deg ), 1 ), 6 ) 0%, darken( saturate( $skin-color, 12 ), 8 ) 100%);
+      @include ltr {
+        text-align: left;
       }
-      &:hover .total-info-winner {
-        display: table-cell;
+      @include rtl {
+        text-align: right;
       }
-      > li.total-info-winner {
-        display: none;
+      &:before {
+        content: "";
         position: absolute;
-        top: 63px;
-        left: 0;
-        width: 296px;
-        border-radius: 8px;
-        z-index: 100;
-        box-shadow: 0 0 90px 3px rgba(0,0,0,0.51);
-        background: rgb(56,90,85);
-        background: -moz-linear-gradient(top, lighten( desaturate( adjust-hue( $skin-color, -4deg ), 1 ), 6 ) 0%, darken( saturate( $skin-color, 12 ), 8 ) 100%);
-        background: -webkit-linear-gradient(top, lighten( desaturate( adjust-hue( $skin-color, -4deg ), 1 ), 6 ) 0%, darken( saturate( $skin-color, 12 ), 8 ) 100%);
-        background: linear-gradient(to bottom, lighten( desaturate( adjust-hue( $skin-color, -4deg ), 1 ), 6 ) 0%, darken( saturate( $skin-color, 12 ), 8 ) 100%);
+        top: -9px;
+        border-style: solid;
+        border-width: 0 10px 10px 10px;
+        border-color: transparent transparent lighten( desaturate( adjust-hue( $skin-color, -4deg ), 1 ), 6 ) transparent;
         @include ltr {
-          text-align: left;
+          left: 70px;
         }
         @include rtl {
-          text-align: right;
+          right: 70px;
         }
-        &:before {
-          content: "";
-          position: absolute;
-          top: -9px;
-          border-style: solid;
-          border-width: 0 10px 10px 10px;
-          border-color: transparent transparent lighten( desaturate( adjust-hue( $skin-color, -4deg ), 1 ), 6 ) transparent;
-          @include ltr {
-            left: 70px;
-          }
-          @include rtl {
-            right: 70px;
-          }
-        }
-        &:after {
-          content: "";
-          position: absolute;
-          top: -10px;
-          left: 0;
-          width: 100%;
-          height: 10px;
-        }
-        > ul {
+      }
+      &:after {
+        content: "";
+        position: absolute;
+        top: -10px;
+        left: 0;
+        width: 100%;
+        height: 10px;
+      }
+      > ul {
+        float: left;
+        width: 100%;
+        padding: 0 20px;
+        box-sizing: border-box;
+        > li {
           float: left;
           width: 100%;
-          padding: 0 20px;
           box-sizing: border-box;
-          > li {
+          padding: 12px 0;
+          border-bottom: 1px solid rgba($skin-palette-6,0.6);
+          > h2 {
             float: left;
             width: 100%;
-            box-sizing: border-box;
-            padding: 12px 0;
-            border-bottom: 1px solid rgba($skin-palette-6,0.6);
-            > h2 {
-              float: left;
-              width: 100%;
-              margin-bottom: 6px;
-              color: lighten( saturate( $brand-color-2, 11 ), 6 );
-              font: 16px/20px $font-f;
+            margin-bottom: 6px;
+            color: lighten( saturate( $brand-color-2, 11 ), 6 );
+            font: 16px/20px $font-f;
+          }
+          > p {
+            float: left;
+            width: 100%;
+            margin-bottom: 2px;
+            color: set-color($skin-color);
+            font: 14px/16px $font-f;
+            @include rtl {
+              direction: ltr;
             }
-            > p {
-              float: left;
-              width: 100%;
-              margin-bottom: 2px;
-              color: set-color($skin-color);
-              font: 14px/16px $font-f;
-              @include rtl {
-                direction: ltr;
-              }
-              > i {
-                font-style: normal;
-              }
+            > i {
+              font-style: normal;
             }
+          }
+          > span {
+            float: left;
+            width: 100%;
+            margin-bottom: 2px;
+            color: set-color($skin-color);
+            font: 14px/16px $font-f;
+            > i {
+              font-style: normal;
+            }
+          }
+          > b {
+            float: left;
+            width: 100%;
+            color: rgba(set-color($skin-color),0.3);
+            font: normal 12px/14px $font-f;
             > span {
-              float: left;
-              width: 100%;
-              margin-bottom: 2px;
-              color: set-color($skin-color);
-              font: 14px/16px $font-f;
-              > i {
-                font-style: normal;
+              display: inline-block;
+              color: rgba(set-color($skin-color),0.4);
+              @include ltr {
+                margin-right: 4px;
+              }
+              @include rtl {
+                margin-left: 4px;
               }
             }
-            > b {
+          }
+        }
+        &:first-child > li {
+          > span {
+            width: auto;
+            @include ltr {
+              float: right;
+            }
+            @include rtl {
               float: left;
-              width: 100%;
-              color: rgba(set-color($skin-color),0.3);
-              font: normal 12px/14px $font-f;
-              > span {
+              direction: ltr;
+            }
+            &:nth-child(2) {
+              @include ltr {
+                float: left;
+              }
+              @include rtl {
+                float: right;
+                direction: rtl;
+              }
+              &:before {
+                content: "\2b";
                 display: inline-block;
-                color: rgba(set-color($skin-color),0.4);
+                text-align: center;
+                vertical-align: middle;
+                font: 14px/14px icomoon;
                 @include ltr {
                   margin-right: 4px;
                 }
@@ -500,50 +578,16 @@
               }
             }
           }
-          &:first-child > li {
-            > span {
-              width: auto;
-              @include ltr {
-                float: right;
-              }
-              @include rtl {
-                float: left;
-                direction: ltr;
-              }
-              &:nth-child(2) {
-                @include ltr {
-                  float: left;
-                }
-                @include rtl {
-                  float: right;
-                  direction: rtl;
-                }
-                &:before {
-                  content: "\2b";
-                  display: inline-block;
-                  text-align: center;
-                  vertical-align: middle;
-                  font: 14px/14px icomoon;
-                  @include ltr {
-                    margin-right: 4px;
-                  }
-                  @include rtl {
-                    margin-left: 4px;
-                  }
-                }
-              }
-            }
-          }
-          &:last-child > li {
-            border: none;
-          }
+        }
+        &:last-child > li {
+          border: none;
         }
       }
     }
-    &.active {
-      opacity: 1;
-      pointer-events: auto;
-    }
+  }
+  &.active {
+    opacity: 1;
+    pointer-events: auto;
   }
 }
 .jackpots-slider {
@@ -706,6 +750,12 @@
                   right: 0;
                 }
               }
+              &:only-child {
+                margin: 0;
+                &:before {
+                  display: none;
+                }
+              }
             }
           }
         }
@@ -757,6 +807,9 @@
   user-select: none;
   -webkit-user-select: none;
   -ms-user-select: none;
+  @if $white-skin==true {
+    color: $hero-color;
+  }
   > span {
     float: left;
     width: 100%;
@@ -769,42 +822,34 @@
     }
   }
 }
-
-.casino-gamer-winners-container {
-  .casino-gamer {
-    height: 521px;
-    overflow: hidden;
-    background: -moz-linear-gradient(top, lighten( saturate( adjust-hue( $skin-color, -4deg ), 3 ), 3 ) 0%, darken( saturate( adjust-hue( $skin-color, -3deg ), 27 ), 7 ) 100%);
-    background: -webkit-linear-gradient(top, lighten( saturate( adjust-hue( $skin-color, -4deg ), 3 ), 3 ) 0%, darken( saturate( adjust-hue( $skin-color, -3deg ), 27 ), 7 ) 100%);
-    background: linear-gradient(to bottom, lighten( saturate( adjust-hue( $skin-color, -4deg ), 3 ), 3 ) 0%, darken( saturate( adjust-hue( $skin-color, -3deg ), 27 ), 7 ) 100%);
-    @media screen and (max-width: 1260px) {
-      height: 331px;
-    }
-    .info-winners {
-      > p {
-        color: set-color($skin-color);
-        font: 12px/14px $font-f;
-        @include ltr {
-          text-align: left;
-        }
-        @include rtl {
-          text-align: right;
-        }
+.top-winners-wrapper {
+  overflow: hidden;
+  background: -moz-linear-gradient(top, lighten( saturate( adjust-hue( $skin-color, -4deg ), 3 ), 3 ) 0%, darken( saturate( adjust-hue( $skin-color, -3deg ), 27 ), 7 ) 100%);
+  background: -webkit-linear-gradient(top, lighten( saturate( adjust-hue( $skin-color, -4deg ), 3 ), 3 ) 0%, darken( saturate( adjust-hue( $skin-color, -3deg ), 27 ), 7 ) 100%);
+  background: linear-gradient(to bottom, lighten( saturate( adjust-hue( $skin-color, -4deg ), 3 ), 3 ) 0%, darken( saturate( adjust-hue( $skin-color, -3deg ), 27 ), 7 ) 100%);
+  .info-winners {
+    > p {
+      color: set-color($skin-color);
+      font: 12px/14px $font-f;
+      @include ltr {
+        text-align: left;
       }
-      > b {
-        color: lighten( desaturate( adjust-hue( $brand-color-1, 28deg ), 46 ), 37 );
-        font: normal 12px/14px $font-f;
-        @include ltr {
-          text-align: left;
-        }
-        @include rtl {
-          text-align: right;
-        }
+      @include rtl {
+        text-align: right;
+      }
+    }
+    > b {
+      color: lighten( desaturate( adjust-hue( $brand-color-1, 28deg ), 46 ), 37 );
+      font: normal 12px/14px $font-f;
+      @include ltr {
+        text-align: left;
+      }
+      @include rtl {
+        text-align: right;
       }
     }
   }
 }
-
 .tab-winners {
   float: left;
   width: calc(100% + 24px);
@@ -1071,6 +1116,9 @@
   width: 100%;
   margin: 10px 0 0;
   background: darken( saturate( adjust-hue( $skin-color, 3deg ), 1 ), 5 );
+  @if $white-skin==true {
+    background: $hero-color;
+  }
   > ul {
     float: left;
     width: 100%;
@@ -1085,12 +1133,15 @@
       text-align: center;
       @include ltr {
         box-shadow: -1px 0 0 rgba($skin-palette-4,0.2);
+        @if $white-skin==true {
+          box-shadow: -1px 0 0 rgba(set-color($hero-color),0.2);
+        }
       }
       @include rtl {
         box-shadow: 1px 0 0 rgba($skin-palette-4,0.2);
-      }
-      @if($white-skin == true) {
-        box-shadow: 1px 0 0 rgba(#000000,0.2);
+        @if $white-skin==true {
+          box-shadow: 1px 0 0 rgba(set-color($hero-color),0.2);
+        }
       }
       > p {
         padding: 0 4px;
@@ -1100,6 +1151,9 @@
         text-transform: uppercase;
         word-break: break-word;
         transition: color 250ms;
+        @if $white-skin==true {
+          color: rgba(set-color($hero-color),0.7);
+        }
       }
       &[ng-repeat]:nth-child(2),
       &[ng-repeat]:nth-child(3) {
@@ -1124,12 +1178,21 @@
       &:hover, &.active {
         > p {
           color: $text-palette-3;
+          @if $white-skin==true {
+            color: set-color($hero-color);
+          }
         }
         .games-type-icon {
           color: $text-palette-3;
+          @if $white-skin==true {
+            color: set-color($hero-color);
+          }
         }
         .block-games-search > i {
           color: $text-palette-3;
+          @if $white-skin==true {
+            color: set-color($hero-color);
+          }
         }
       }
       &.games-type-left-arrow,
@@ -1197,6 +1260,9 @@
   position: relative;
   color: $text-palette-4;
   transition: color 250ms, border-color 250ms;
+  @if $white-skin==true {
+    color: rgba(set-color($hero-color),0.7);
+  }
   &:before {
     content: "\e9a0";
     font: normal 22px/22px icomoon;
@@ -1300,6 +1366,9 @@
       font: 16px/36px icomoon;
       z-index: 30;
       transition: color 250ms;
+      @if $white-skin==true {
+        color: rgba(set-color($hero-color),0.7);
+      }
       @include ltr {
         right: 0;
       }
@@ -1581,30 +1650,6 @@
       opacity: 0.5;
       pointer-events: none;
     }
-    .games-name {
-      position: absolute;
-      top: 10%;
-      left: 0;
-      right: 0;
-      padding: 0 20px;
-      box-sizing: border-box;
-      z-index: 95;
-      color: $text-palette-3;
-      text-align: center;
-      opacity: 0;
-      text-transform: uppercase;
-      transition: opacity 300ms;
-      text-decoration: underline;
-      font: 11px/13px $font-f;
-      @media screen and (max-width: 1260px) {
-        top: 7%;
-        font-size: 10px;
-        line-height: 12px;
-      }
-      @if($white-skin == true) {
-        color: #c1c4cd;
-      }
-    }
     &:before {
       content: "";
       display: block;
@@ -1660,6 +1705,30 @@
   100% {
     opacity: 1;
     transform: scale(1);
+  }
+}
+.games-name {
+  position: absolute;
+  top: 10%;
+  left: 0;
+  right: 0;
+  padding: 0 20px;
+  box-sizing: border-box;
+  z-index: 95;
+  color: $text-palette-3 !important;
+  text-align: center;
+  opacity: 0;
+  text-transform: uppercase;
+  transition: opacity 300ms;
+  text-decoration: underline;
+  font: 11px/13px $font-f;
+  @media screen and (max-width: 1260px) {
+    top: 7%;
+    font-size: 10px;
+    line-height: 12px;
+  }
+  @if($white-skin == true) {
+    color: #c1c4cd;
   }
 }
 .games-buttons {
@@ -1843,6 +1912,10 @@
   content: "\e99c";
 }
 
+.icon-Jackpots:before {
+  content: "\e976";
+}
+
 .icon-OtherGames:before {
   content: "\e99f";
   font-size: 5px;
@@ -1866,6 +1939,12 @@
 .icon-Dice:before {
   content: "\ea15";
   font-size: 30px;
+}
+.icon-DailyJackpots:before {
+  content: "\ea51";
+}
+.icon-Halloween2018:before {
+  content: "\ea56";
 }
 
 .iframe-tournament-sidebar {
@@ -2283,3 +2362,526 @@
     }
   }
 }
+.row-child .jackpot-coins-content > ul {
+  > li.total-info-winner {
+    top: -22px;
+    box-shadow: 0 -8px 18px 0px rgba(0,0,0,0.51);
+    @include rtl {
+      left: auto;
+      right: 0;
+    }
+    &:before {
+      top: 38px;
+      @include ltr {
+        left: auto;
+        right: -10px;
+        border-width: 10px 0 10px 10px;
+        border-color: transparent transparent transparent lighten( desaturate( adjust-hue( $skin-color, -4deg ), 1 ), 6 );
+      }
+      @include rtl {
+        left: -10px;
+        right: auto;
+        border-width: 10px 10px 10px 0;
+        border-color: transparent lighten( desaturate( adjust-hue( $skin-color, -4deg ), 1 ), 6 ) transparent transparent;
+      }
+    }
+  }
+  &:nth-of-type(2) {
+    > li.total-info-winner {
+      top: -76px;
+      &:before {
+        top: 92px;
+      }
+    }
+  }
+  &:nth-of-type(3) {
+    > li.total-info-winner {
+      top: -130px;
+      &:before {
+        top: 146px;
+      }
+    }
+  }
+  &:nth-of-type(4) {
+    > li.total-info-winner {
+      top: -184px;
+      &:before {
+        top: 200px;
+      }
+    }
+  }
+}
+
+
+
+
+
+
+
+// new jackpot start
+.providers-jackpot-page {
+  .new-jackpot-container {
+    max-width: 100%;
+  }
+}
+.provider-jackpot-banner {
+  float: left;
+  width: calc(100% - 330px);
+  height: 562px;
+  margin-top: 10px;
+  ~ .casino-winners-table {
+    display: flex;
+    display: -webkit-flex;
+    flex-direction: column;
+    -webkit-flex-direction: column;
+    .casino-jackpots-board {
+      margin-top: 10px;
+      order: 1;
+      -webkit-box-ordinal-group: 2;
+      -ms-flex-order: 1;
+      .casino-gamer {
+        height: 330px;
+      }
+      + .casino-gamer-board {
+        margin-top: 0;
+        .casino-gamer {
+          height: 223px;
+        }
+      }
+    }
+  }
+  ~ .casino-top-slider-container {
+    display: none;
+  }
+}
+.new-jackpot-container {
+  float: left;
+  width: 100%;
+  height: 100%;
+  max-width: 980px;
+  padding: 0 18px 8px;
+  background: $skin-color;
+  box-sizing: border-box;
+  -moz-user-select: none;
+  -khtml-user-select: none;
+  user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  background: no-repeat 0 0 / 100%;
+  .md-progress-circular {
+    margin: 107px auto;
+  }
+  &.light {
+    .slider-main {
+      > li.slider-arrow {
+        color: #000000;
+        box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.34);
+        background: linear-gradient(to bottom, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.2));
+      }
+      &:after {
+        background: linear-gradient(to right, rgba(0, 0, 0, 0.1), #000000 51%, rgba(0, 0, 0, 0.1));
+      }
+    }
+    .slider-wrapper > div {
+      color: #000000;
+    }
+    .new-jackpot-content > div {
+      > h3 {
+        color: rgba(0, 0, 0, 0.9);
+        text-shadow: 0 0 6px rgba(0, 0, 0, 0.71);
+      }
+      > .amount-animation-container {
+        color: rgba(0, 0, 0, 0.9);
+        text-shadow: 0 0 6px rgba(0, 0, 0, 0.71);
+      }
+    }
+    .new-jackpot-info > li {
+      > h3 {
+        color: rgba(0, 0, 0, 0.56);
+      }
+      .amount-animation-container {
+        color: rgba(0, 0, 0, 0.9);
+      }
+    }
+    .new-jackpot-games-wrapper {
+      box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.34);
+      background: linear-gradient(to bottom, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.2));
+    }
+    .new-jackpot-more > a {
+      color: #000000;
+      border: solid 1px #000000;
+      &:hover {
+        color: set-color($hero-color);
+        background: $hero-color;
+        border-color: $hero-color;
+      }
+    }
+    .new-jackpot-more > i {
+      color: #000000;
+    }
+  }
+}
+.slider-main {
+  float: left;
+  width: 100%;
+  display: table;
+  padding: 22px 10px;
+  position: relative;
+  box-sizing: border-box;
+  direction: ltr;
+  > li {
+    display: table-cell;
+    vertical-align: middle;
+    text-align: center;
+    width: 100%;
+    position: relative;
+    white-space: nowrap;
+    overflow: hidden;
+    &.slider-arrow {
+      width: 1%;
+      border: none;
+      cursor: pointer;
+      color: #ffffff;
+      box-shadow: 0 0 6px 0 rgba(255, 255, 255, 0.34);
+      background: linear-gradient(to bottom, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.2));
+      &:before {
+        width: 40px;
+        height: 40px;
+        display: inline-block;
+        font: 30px/40px icomoon;
+      }
+      &:first-child:before {
+        content: "\e673";
+      }
+      &:last-child:before {
+        content: "\e676";
+      }
+    }
+  }
+  &:after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 1px;
+    opacity: 0.5;
+    background: linear-gradient(to right, rgba(255, 255, 255, 0.1), #ffffff 51%, rgba(255, 255, 255, 0.1));
+  }
+}
+.slider-wrapper {
+  float: left;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  cursor: grab;
+  transition: left 240ms;
+  > div {
+    display: inline-block;
+    width: 20%;
+    height: 40px;
+    color: #ffffff;
+    &:before {
+      display: inline-block;
+      opacity: 0.5;
+      transform: scale(0.7) translate3d(0, 0, 0);
+      transition: opacity 240ms, transform 240ms;
+      font: 76px/40px icomoon;
+    }
+    &.active:before {
+      opacity: 1;
+      transform: scale(1) translate3d(0, 0, 0);
+    }
+  }
+  &.grabbing {
+    cursor: grabbing;
+  }
+}
+.item-EGT:before {
+  content: "\ea4c";
+}
+.item-NET:before {
+  content: "\ea4a";
+}
+.item-RTG:before {
+  content: "\ea48";
+}
+.item-PSN:before {
+  content: "\ea49";
+}
+.item-FGS:before {
+  content: "\ea4b";
+}
+.item-DLV:before {
+  content: "\ea4d";
+}
+.item-APG:before {
+  content: "\ea4e";
+}
+.new-jackpot-content {
+  float: left;
+  width: 100%;
+  text-align: center;
+  padding: 32px 0 22px;
+  text-transform: uppercase;
+  > div {
+    float: left;
+    width: 100%;
+    > h3 {
+      float: left;
+      width: 100%;
+      color: rgba(255, 255, 255, 0.9);
+      text-shadow: 0 0 6px rgba(255, 255, 255, 0.71);
+      font: 300 28px/30px $font-f;
+      letter-spacing: 2.8px;
+    }
+    > .amount-animation-container {
+      float: left;
+      width: 100%;
+      height: 56px;
+      direction: ltr;
+      margin: 20px 0 4px;
+      overflow: hidden;
+      color: rgba(255, 255, 255, 0.9);
+      font: bold 50px/52px $font-f;
+      letter-spacing: 5px;
+      text-shadow: 0 0 6px rgba(255, 255, 255, 0.71);
+      > span {
+        width: 3.5%;
+        &.with-comma, &.with-point {
+          padding-right: 1.3%;
+        }
+      }
+      > sup {
+        margin-top: -8px;
+        display: inline-block;
+        font-size: 20px;
+        letter-spacing: 2px;
+        vertical-align: text-top;
+      }
+    }
+    > h4 {
+      float: left;
+      width: 100%;
+      margin-bottom: 32px;
+      text-shadow: 0 0 6px $brand-color-2;
+      font: normal 30px/32px $font-f;
+      letter-spacing: 3px;
+      color: rgba($brand-color-2,0.9);
+    }
+  }
+}
+.jackpot-RTG {
+  > div > h4 {
+    margin-bottom: 6px;
+  }
+  .red-tiger-timer {
+    margin-top: 6px;
+  }
+  .new-jackpot-block-games {
+    margin-top: 24px;
+  }
+}
+.new-jackpot-info {
+  width: 100%;
+  display: table;
+  table-layout: fixed;
+  > li {
+    display: table-cell;
+    vertical-align: middle;
+    padding: 0 2px;
+    box-sizing: border-box;
+    > h3 {
+      float: left;
+      width: 100%;
+      margin-bottom: 6px;
+      opacity: 0.56;
+      letter-spacing: 1.6px;
+      color: rgba(255, 255, 255, 0.56);
+      text-transform: uppercase;
+      font: normal 16px/18px $font-f;
+    }
+    .amount-animation-container {
+      height: 28px;
+      font: bold 24px/28px $font-f;
+      color: rgba(255, 255, 255, 0.9);
+      direction: ltr;
+      > span {
+        width: 20px;
+        &.with-comma, &.with-point {
+          padding-right: 1%;
+        }
+      }
+      > sup {
+        margin: -1px 0 0 4px;
+        display: inline-block;
+        font-size: 14px;
+        vertical-align: text-top;
+      }
+    }
+  }
+}
+.new-jackpot-block-games {
+  float: left;
+  width: 100%;
+  margin-top: 32px;
+  padding: 0 32px;
+  box-sizing: border-box;
+}
+.new-jackpot-games-wrapper {
+  float: left;
+  width: 100%;
+  display: table;
+  padding: 13px 15px;
+  text-align: center;
+  box-sizing: border-box;
+  box-shadow: 0 0 6px 0 rgba(255, 255, 255, 0.34);
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.2));
+}
+.new-jackpot-games {
+  display: table-cell;
+  vertical-align: middle;
+  position: relative;
+  white-space: nowrap;
+  overflow: hidden;
+}
+.new-jackpot-img-wrapper {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  font-size: 0;
+  line-height: 0;
+  .new-jackpot-img {
+    display: inline-block;
+    height: 128px;
+    + a {
+      @include ltr {
+        margin-left: 14px;
+      }
+      @include rtl {
+        margin-right: 14px;
+      }
+    }
+    > img {
+      width: auto;
+      height: 100%;
+    }
+    &:nth-child(4) {
+      pointer-events: none;
+    }
+  }
+  &.new-jackpot-img-four:after {
+    content: "";
+    position: absolute;
+    top: -4px;
+    width: 40px;
+    height: 100%;
+    @include ltr {
+      right: 0;
+      background-image: linear-gradient(to right, rgba(82, 39, 98, 0), darken( desaturate( adjust-hue( $hero-color, -46deg ), 24 ), 13 ));
+    }
+    @include rtl {
+      left: 0;
+      background-image: linear-gradient(to left, rgba(82, 39, 98, 0), darken( desaturate( adjust-hue( $hero-color, -46deg ), 24 ), 13 ));
+    }
+  }
+}
+.new-jackpot-img {
+  position: relative;
+  overflow: hidden;
+  > img {
+    display: block;
+  }
+  &:before {
+    content: "";
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 90;
+    background: darken( saturate( adjust-hue( $brand-color-1, 13deg ), 21 ), 18 );
+    opacity: 0;
+    transition: opacity 250ms;
+  }
+  .games-name {
+    white-space: normal;
+  }
+  .games-buttons {
+    transform: inherit;
+  }
+  &:hover {
+    border-color: darken( saturate( $brand-color-2, 10 ), 1 );
+    &:before {
+      opacity: 0.85;
+    }
+    .games-buttons > strong button {
+      transform: translateX(0);
+    }
+    .games-name,
+    .games-favorite-icon {
+      opacity: 1;
+    }
+  }
+}
+.new-jackpot-more {
+  display: table-cell;
+  vertical-align: middle;
+  text-align: center;
+  width: 1%;
+  height: 100%;
+  padding: 12px 15px;
+  > i {
+    display: block;
+    width: auto;
+    height: 50px;
+    color: #ffffff;
+    margin: 0 auto 20px;
+    &:before {
+      font: 80px/50px icomoon;
+    }
+  }
+  > a {
+    display: block;
+    width: 117px;
+    height: 36px;
+    font: 14px/36px $font-f;
+    color: #ffffff;
+    opacity: 0.8;
+    border: solid 1px #ffffff;
+    text-transform: uppercase;
+    transition: color 240ms, background 240ms, border-color 240ms;
+    &:hover {
+      color: set-color($hero-color);
+      background: $hero-color;
+      border-color: $hero-color;
+    }
+  }
+}
+.new-jackpot-block-all-games {
+  margin-top: 50px;
+  list-style: none;
+  min-height: 450px;
+  .new-jackpot-img {
+    display: block;
+    margin: 10px;
+    width: calc((100% / 6) - 20px);
+    @include ltr {
+      float: left;
+    }
+    @include rtl {
+      float: right;
+    }
+    > img {
+      width: 100%;
+      height: auto;
+    }
+  }
+}
+
+// new jackpot end

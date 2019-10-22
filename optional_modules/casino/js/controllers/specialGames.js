@@ -10,30 +10,14 @@ angular.module('casino').controller('casinoSpecialGamesCtrl', ['$rootScope', '$s
 
     var tableId;
     var demo_id;
-    $rootScope.footerMovable = true; // make footer movable
 
-  $rootScope.casinoGameOpened = 1;
+    if (!CConfig.disableMenuCollapsingInSpecialGames) {
+        $rootScope.footerMovable = true; // make footer movable
+        $rootScope.casinoGameOpened = 1;
+    }
 
-    function getUrl() {
-        $scope.frameUrl = null;
-
-        if (!$rootScope.env.authorized && !$scope.game.types.viewMode && !$scope.game.types.funMode) {
-            $timeout(function () {
-                if (!$rootScope.loginInProgress) {
-                    $rootScope.$broadcast('openLoginForm');
-                } else {
-                    var loginProccesWatcher = $scope.$watch('loginInProgress', function () {
-                        if (!$rootScope.loginInProgress) {
-                            loginProccesWatcher();
-                            if (!$rootScope.env.authorized) {
-                                $rootScope.$broadcast('openLoginForm');
-                            }
-                        }
-                    });
-                }
-            }, 100);
-            return;
-        }
+    function processToOpenGame() {
+        $scope.loadingUserData = false;
 
         var gameUrl;
 
@@ -68,6 +52,38 @@ angular.module('casino').controller('casinoSpecialGamesCtrl', ['$rootScope', '$s
                 $scope.frameUrl = $sce.trustAsResourceUrl(gameUrl);
             }, 20);
         }
+    }
+
+    function handlingLoginProgressComplete() {
+        if (!$rootScope.env.authorized) {
+            if (!$scope.game.types.viewMode) {
+                $rootScope.$broadcast('openLoginForm');
+            } else {
+                processToOpenGame();
+            }
+        }
+    }
+
+    function getUrl() {
+        $scope.frameUrl = null;
+
+        if (!$rootScope.env.authorized && !$scope.game.types.funMode) {
+            $timeout(function () {
+                if (!$rootScope.loginInProgress) {
+                    handlingLoginProgressComplete();
+                } else {
+                    var loginProccesWatcher = $scope.$watch('loginInProgress', function () {
+                        if (!$rootScope.loginInProgress) {
+                            loginProccesWatcher();
+                            handlingLoginProgressComplete();
+                        }
+                    });
+                }
+            }, 100);
+            return;
+        }
+
+        processToOpenGame();
     }
 
     $scope.$watch('env.authorized', function (newValue, oldValue) {
@@ -197,6 +213,9 @@ angular.module('casino').controller('casinoSpecialGamesCtrl', ['$rootScope', '$s
             case 'ggpoker':
                 exId = CConfig.ggpoker.externalID;
                 break;
+            case 'blast':
+                exId = CConfig.blast.externalID;
+                break;
             case 'game':
                 var pathContent = $location.path().split('/');
                 exId = pathContent[6];
@@ -212,8 +231,6 @@ angular.module('casino').controller('casinoSpecialGamesCtrl', ['$rootScope', '$s
 
                 getUrl();
             }
-        })['finally'](function () {
-            $scope.loadingUserData = false;
         });
     };
 

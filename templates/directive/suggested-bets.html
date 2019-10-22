@@ -3,13 +3,13 @@
     <p class="info-all-bets" ng-show="noSuggestions">
         {{::'Suggestions are not available at the moment. '|translate}}
         <span ng-click="getSuggestedBets('suggestedBets.get', {type: 'live'})" trans>Try again</span>
-        or
+        {{::'or'|translate}}
         <span ng-click="selectBetSlipMode('betting')" trans>Go To BetSlip</span>
     </p>
     <div class="suggest-contain-list" ng-if="!noSuggestions && showSuggestions && suggestedBetsList.length" ng-class="{'suggested-prematch': params.type === 'preMatch'}">
         <div class="suggest-text">
             <h2 ng-bind="(params.type === 'preMatch' ? 'Suggested pre-match' : 'Suggested live') | translate"></h2>
-            <p trans ng-show="params.type === 'preMatch'">We think that these bets may also be interesting to you. Try to win even more.</p>
+            <p trans>We think that these bets may also be interesting to you. Try to win even more.</p>
         </div>
         <div class="suggest-list">
             <div ng-repeat="bet in suggestedBetsList track by bet.eventInfo.id">

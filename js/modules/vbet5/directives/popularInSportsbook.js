@@ -14,7 +14,8 @@ VBET5.directive('popularInSportsbook', ['$rootScope', '$location', 'Config', 'Co
         scope: {
             type: '@',
             title: '@',
-            leftMenu: '='
+            leftMenu: '=?',
+            searchField: '@'
         },
         link: function (scope, elem, attrs) {
             connectionService = new ConnectionService(scope);
@@ -22,7 +23,7 @@ VBET5.directive('popularInSportsbook', ['$rootScope', '$location', 'Config', 'Co
             scope.popular = {
                 icon: attrs.icon || 'favoritecompetitions',
                 color: attrs.color || attrs.icon || 'favoritecompetitions',
-                expanded: true
+                expanded: !Config.main.disableSavingPreMatchMenuState
             };
 
             /**
@@ -44,7 +45,7 @@ VBET5.directive('popularInSportsbook', ['$rootScope', '$location', 'Config', 'Co
 
                 switch (scope.type) {
                     case 'game':
-                        request.what.game = ['id', 'team1_name', 'team2_name', 'type', 'order', 'favorite_order'];
+                        request.what.game = ['id', 'team1_name', 'team2_name', 'type', 'order','start_ts', 'favorite_order', 'is_live'];
                         request.where.game = {
                             'type': {'@in': [0, 2]},
                             'promoted': true
@@ -110,7 +111,7 @@ VBET5.directive('popularInSportsbook', ['$rootScope', '$location', 'Config', 'Co
                 scope.popular.expanded = !scope.popular.expanded;
                 scope.popular.expanded ? loadPopulars() : connectionService.unsubscribe(subId);
 
-                if (scope.leftMenu.closed) {
+                if (scope.leftMenu &&scope.leftMenu.closed) {
                     scope.leftMenu.toggle();
                 }
             };
@@ -119,6 +120,14 @@ VBET5.directive('popularInSportsbook', ['$rootScope', '$location', 'Config', 'Co
                 var name = ($rootScope.env.live ? 'Live' : 'Prematch') + ' ' + type + ' ' + item.id + ' ' + item.name;
                 analytics.gaSend('send', 'event', 'explorer', 'show popular game markets',  {'page': $location.path(), 'eventLabel': name});
                 $rootScope.$broadcast('sportsbook.selectData', {type: 'popular.' + type, data: item});
+            };
+
+            scope.getCompetitionTitle = function getCompetitionTitle(popularItem) {
+                if(popularItem.team1_name || popularItem.team2_name) {
+                    return popularItem.team1_name + ' - ' + popularItem.team2_name;
+                } else {
+                    return popularItem.region.name;
+                }
             };
 
             //initial

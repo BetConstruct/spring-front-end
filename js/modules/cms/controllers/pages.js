@@ -4,7 +4,7 @@
  * @description
  * Static pages controller
  */
-angular.module('CMS').controller('cmsPagesCtrl', ['$location', '$rootScope', '$scope', '$sce', '$routeParams', '$window', '$q', '$filter', '$interval', 'smoothScroll',  'content', 'Utils', 'WPConfig', 'Config', 'Translator', 'Storage', 'analytics', 'liveChat', 'TimeoutWrapper', function ($location, $rootScope, $scope, $sce, $routeParams, $window, $q, $filter, $interval, smoothScroll, content, Utils, WPConfig, Config, Translator, Storage, analytics, liveChat, TimeoutWrapper) {
+angular.module('CMS').controller('cmsPagesCtrl', ['$location', '$rootScope', '$scope', '$sce', '$routeParams', '$window', '$q', '$filter', '$interval', 'smoothScroll', 'content', 'Utils', 'WPConfig', 'Config', 'Translator', 'Storage', 'analytics', 'liveChat', 'TimeoutWrapper', function ($location, $rootScope, $scope, $sce, $routeParams, $window, $q, $filter, $interval, smoothScroll, content, Utils, WPConfig, Config, Translator, Storage, analytics, liveChat, TimeoutWrapper) {
     'use strict';
 
     $scope.bannerObjects = {};
@@ -378,10 +378,10 @@ angular.module('CMS').controller('cmsPagesCtrl', ['$location', '$rootScope', '$s
             return;
         }
         if (Config.main.openHelpAsPopup === 'popup') {
-            $window.open('#/popup/?action=helpPopup&help=' + slug, Config.main.skin + 'help.popup', "scrollbars=1,width=1000,height=500,resizable=yes");
+            $window.open('#/popup/?action=helpPopup' + '&currencies=' + encodeURIComponent(JSON.stringify(Config.main.availableCurrencies))  +'&help=' + slug, Config.main.skin + 'help.popup', "scrollbars=1,width=1000,height=500,resizable=yes");
         } else if (Config.main.openHelpAsPopup === 'all' || (Config.main.openHelpAsPopup === 'OnlyHeaderPopup' && from !== 'footer')) {
             var userId = $rootScope.profile && $rootScope.profile.unique_id ? $rootScope.profile.unique_id : '';
-            $window.open('#/popup/?u=' + userId + '&action=help&page=' + slug, Config.main.skin + 'help.popup', "scrollbars=1,width=1000,height=600,resizable=yes");
+            $window.open('#/popup/?u=' + userId + '&action=help&currencies=' + encodeURIComponent(JSON.stringify(Config.main.availableCurrencies)) + '&page=' + slug, Config.main.skin + 'help.popup', "scrollbars=1,width=1000,height=600,resizable=yes");
         } else {
             $scope.loadHelpPages().then(function () {
                 $rootScope.env.sliderContent = 'help';
@@ -936,12 +936,14 @@ angular.module('CMS').controller('cmsPagesCtrl', ['$location', '$rootScope', '$s
      * Called when getting 'closeNestedFrame' message from child scope.
      *  As a result closes game and enable footer
      */
+
     $scope.$on('closeNestedFrame', function () {
         if ($scope.showNestedFrame) {
             $scope.showNestedFrame = false;
             $rootScope.casinoGameOpened = 0;
         }
     });
+
 
     $scope.scrollToSelectedItem = function scrollToSelectedItem(itemId){
         smoothScroll(itemId);
@@ -1147,4 +1149,12 @@ angular.module('CMS').controller('cmsPagesCtrl', ['$location', '$rootScope', '$s
             $scope.pokerPopup = data.data.page;
         });
     };
+
+    (function init() {
+        var currencies = $location.search().currencies;
+        if (currencies && currencies !== 'undefined') {
+            Config.main.availableCurrencies = JSON.parse(decodeURIComponent(currencies));
+        }
+    })();
+
 }]);

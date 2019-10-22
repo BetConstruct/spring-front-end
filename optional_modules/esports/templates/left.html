@@ -154,6 +154,12 @@
                             </div>
                         </div>
                     </li>
+                    <li ng-if="sportsbookLeftBanners" class="float-width" ng-repeat="widgets in sportsbookLeftBanners">
+                        <a class="sports-item-v3" href="{{widgets.instance.link}}" target="{{widgets.instance.linktarget}}">
+                            <img src="{{widgets.instance.image}}" alt="">
+                            <span ng-bind="widgets.instance.title|translate" ></span>
+                        </a>
+                    </li>
                 </ul>
             </div>
         </div>

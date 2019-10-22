@@ -4,7 +4,7 @@
  * @description main top menu data and methods
  *
  */
-angular.module('vbet5').service('TopMenu', ['$rootScope', '$location', '$timeout' ,'$window', '$route', 'Translator', 'Config', 'Utils', 'Moment', function ($rootScope, $location, $timeout, $window, $route, Translator, Config, Utils, Moment) {
+angular.module('vbet5').service('TopMenu', ['$rootScope', '$location', '$timeout' ,'$window', '$route', 'Translator', 'Config', 'Utils', 'Moment', 'RecaptchaService', function ($rootScope, $location, $timeout, $window, $route, Translator, Config, Utils, Moment, RecaptchaService) {
     'use strict';
     var TopMenu = {};
     var countryCode;
@@ -188,6 +188,15 @@ angular.module('vbet5').service('TopMenu', ['$rootScope', '$location', '$timeout
             showCondition: $rootScope.calculatedConfigs.pokerEnabled,
             target: Config.poker.redirectOnInstantPlay ? "_blank" : "_self"
         },
+        blast: {
+            displayName : Translator.get("BLAST"),
+            href:  "#/blast/",
+            click: function () { $rootScope.topMenuDropDown = false; $scope.closeSlider(); $scope.goToTop(); },
+            classObject: {'active': false},
+            staticClass: "blast ",
+            dynamicClass: correctDynamicClass(Config.main.newMenuItems.blast),
+            showCondition: $rootScope.calculatedConfigs.blastEnabled,
+        },
         'chinese-poker': {
             displayName : Translator.get("Chinese Poker"),
             href: "#/chinesepoker/",
@@ -363,9 +372,6 @@ angular.module('vbet5').service('TopMenu', ['$rootScope', '$location', '$timeout
 
         if (menuItem.classObject.active) {
             $scope.subMenuItems = menuItem.subMenu;
-            if ($scope.subMenuItems && $scope.subMenuItems.length) {
-                $rootScope.currentPage.hasSubHeader = true;
-            }
         }
     }
 
@@ -433,10 +439,16 @@ angular.module('vbet5').service('TopMenu', ['$rootScope', '$location', '$timeout
                     isActive = true;
                 }
             });
+            if (!isActive) {
+                $scope.subMenuItems = null;
+            }
+            var currentPath = $rootScope.currentPage && $rootScope.currentPage.path;
+            $scope.processLocationChange(); // call mainheader's function to handle states
+
+            if (RecaptchaService.version === 3 && $rootScope.currentPage && currentPath !== $rootScope.currentPage.path) {
+                RecaptchaService.execute($rootScope.currentPage.path, { cancelLastExecution: !$rootScope.currentPage.isInSports });
+            }
         }, 0);
-        if (!isActive) {
-            $scope.subMenuItems = null;
-        }
     };
 
     /**

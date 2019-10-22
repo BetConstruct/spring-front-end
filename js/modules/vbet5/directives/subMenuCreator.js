@@ -5,85 +5,89 @@
  * @description Changes item visibility depending on menu wrapper width.
  */
 
-VBET5.directive("subMenuCreator", [function () {
+VBET5.directive("subMenuCreator", [function() {
     'use strict';
     return {
+        link: function(scope, element, attrs) {
 
-        link: function (scope, element, attrs) {
+            var CLASS_NAME = 'sub-menu-item';
 
-            var updateSubMenu = function () {
-                var menuItems = element[0].children;
+            function setItemClass(menuItem) {
+                menuItem.classList.add(CLASS_NAME);
+            }
 
-                var setItemsClasses = function () {
-                    for (var i = 0; i < menuItems.length; i++) {
-                        menuItems[i].className = menuItems[i].className.replace(' sub-menu-item', '');
+            function clearItemsClass(menuItems) {
+                menuItems.forEach(function (item) {
+                    item.classList.remove(CLASS_NAME);
+                });
+            }
+
+            function calculateSubMenuItems(menuItems, firstItemIndex) {
+                var firstItemTop = menuItems[firstItemIndex].offsetTop;
+                for (var i = firstItemIndex + 1; i < menuItems.length; i++) {
+                    if (firstItemTop < menuItems[i].offsetTop) {
+                        return menuItems.slice(i);
                     }
-                };
-
-                switch (attrs.subMenuCreator) {
-                    case 'main':
-                    case 'veryTopMenu':
-                        scope.subMenuItemCount = 0;
-                        setItemsClasses();
-                        break;
-                    case 'casino':
-                        scope.subMenuItemShowBtn = false;
-                        setItemsClasses();
-                        break;
-                    case 'newsWidget':
-                        var invisibleItems = 0;
-                        break;
                 }
+                return [];
+            }
 
-                if (menuItems[1]) {
-                    var index, j;
-                    if (attrs.subMenuCreator === 'veryTopMenu' || attrs.subMenuCreator === 'newsWidget') {
-                        index = 0;
-                        j = 1;
-                    } else {
-                        index = 1;
-                        j = 2;
-                    }
-                    for (j; j < menuItems.length; j++) {
-                        var item = menuItems[j].getBoundingClientRect(),
-                            secondItem = menuItems[index].getBoundingClientRect();
-                        if (secondItem.top < item.top) {
-                            switch (attrs.subMenuCreator) {
-                                case 'main':
-                                case 'veryTopMenu':
-                                    menuItems[j].className += ' sub-menu-item';
-                                    scope.subMenuItemCount += 1;
-                                    break;
-                                case 'casino':
-                                    scope.subMenuItemShowBtn = true;
-                                    break;
-                                case 'newsWidget':
-                                    invisibleItems++;
-                                    break;
+            function updateSubMenu() {
+                var subMenuItems = [];
+
+                var menuItems = Array.prototype.slice.call(element[0].children, 0);
+                clearItemsClass(menuItems);
+
+                if (menuItems.length > 1) {
+                    var firstItemIndex;
+
+                    switch (attrs.subMenuCreator) {
+                        case 'main':
+                            firstItemIndex = 1;
+
+                            subMenuItems = calculateSubMenuItems(menuItems, firstItemIndex);
+                            subMenuItems.forEach(setItemClass);
+
+                            scope.subMenuItemCount = subMenuItems.length;
+                            break;
+                        case 'veryTopMenu':
+                            firstItemIndex = 0;
+
+                            subMenuItems = calculateSubMenuItems(menuItems, firstItemIndex);
+                            subMenuItems.forEach(setItemClass);
+
+                            scope.subMenuItemCount = subMenuItems.length;
+                            if (scope.subMenuItemCount > 0) {
+                                element.parent().parent().addClass('toggled');
+                            } else {
+                                element.parent().parent().removeClass('toggled');
                             }
-                        }
-                    }
-                    if (attrs.subMenuCreator === 'veryTopMenu') {
-                        if (scope.subMenuItemCount > 0) {
-                            element.parent().parent().addClass('toggled');
-                        } else {
-                            element.parent().parent().removeClass('toggled');
-                        }
-                    } else if (attrs.subMenuCreator === 'newsWidget') {
-                        scope.$emit('update.count', menuItems.length - invisibleItems - 2);
+                            break;
+                        case 'casino':
+                            firstItemIndex = 1;
+
+                            scope.subMenuItemShowBtn = false;
+                            scope.subMenuItemShowBtn = !!calculateSubMenuItems(menuItems, firstItemIndex).length; //exist element in sub menu
+                            break;
+                        case 'newsWidget':
+                            firstItemIndex = 0;
+
+                            var invisibleItems = calculateSubMenuItems(menuItems, firstItemIndex).length;
+
+                            scope.$emit('update.count', menuItems.length - invisibleItems - 2);
                     }
                 }
-            };
+            }
 
-            scope.$on('$routeChangeSuccess',function(){
-                updateSubMenu();
-            });
+            scope.$on('$routeChangeSuccess', updateSubMenu);
 
-            scope.$watch(function() {return element[0].clientWidth}, function(newVal, oldVal) {
+            scope.$watch(function () {
+                return element[0].clientWidth + element[0].childNodes.length;
+            }, function (newVal, oldVal) {
                 if (newVal !== oldVal) {
                     updateSubMenu();
                 }
             });
         }
-    }
+    };
 }]);

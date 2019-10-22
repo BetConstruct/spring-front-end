@@ -1,0 +1,187 @@
+<div class="booking-popup booking-new">
+    <div class="booking-logo">
+        <img alt=""
+             ng-src="skins/{{$root.conf.skin}}/images/{{$root.conf.bookingLogoUrl}}" onload="print(); window.close()">
+    </div>
+    <p ng-bind-html="$root.conf.bookingBetPrint.message|translate|html:'p'"
+       ng-show="$root.conf.bookingBetPrint.message"></p>
+    <div class="info-booking-print" ng-if="betData.betType === 1" ng-repeat="bet in betData.bets">
+        <ul class="booking-id-print">
+            <li>
+                <p trans>Bet ID</p>
+                <span ng-bind="betData.bookIds[$index]"></span>
+            </li>
+            <li>
+                <p trans>Date/Time</p>
+                <span ng-bind="betData.date|formatDate:'full':null:$root.env.timeFormat"></span>
+            </li>
+            <li>
+                <p trans>ODD Type</p>
+                <span ng-bind="betData.oddFormat|capitalise|translate"></span>
+            </li>
+        </ul>
+
+
+        <h1 trans>Single</h1>
+
+
+        <div class="booking-block-print">
+            <ul>
+                <li>
+                    <h3 ng-bind="bet.start_ts| formatDate: 'full'"></h3>
+                </li>
+                <li>
+                    <b ng-bind="bet.team1Name + ' - ' + bet.team2Name"></b>
+                </li>
+                <li>
+                    <span ng-bind="bet.price|oddConvert:betData.oddFormat"></span>
+                </li>
+            </ul>
+        </div>
+
+        <ul class="booking-total-print">
+            <li>
+                <h2 trans>Stake</h2>
+                <i>{{bet.singleStake|number:betData.balanceFractionSize}} {{betData.currencyName|currency}}</i>
+            </li>
+            <li>
+                <p trans>Total odd</p>
+                <span>{{bet.price|oddConvert:betData.oddFormat}}</span>
+            </li>
+            <li class="booking-title-print">
+                <h6 trans>Potential Winning</h6>
+                <h4>{{bet.singlePosWin|number:betData.balanceFractionSize}} {{betData.currencyName|currency}}</h4>
+            </li>
+        </ul>
+        <ul class="booking-id-print" ng-show="bet.tax">
+            <!-- tax_type: 1 - tax on profit ; 4 - tax on stack 20 - tax on profit as fictive-->
+            <li>
+                <p trans>Tax</p>
+                <span>{{bet.tax|number:betData.balanceFractionSize}} {{betData.currencyName|currency}}</span>
+            </li>
+            <li ng-if="betData.tax.type===20">
+                <p trans>Winning bonus</p>
+                <span>{{bet.tax|number:betData.balanceFractionSize}} {{betData.currencyName|currency}}</span>
+            </li>
+            <li>
+                <p trans>Final Payout</p>
+                <span>{{(bet.singlePosWin- (betData.tax.type!==20 ?bet.tax : 0))|number:betData.balanceFractionSize}} {{betData.currencyName|currency}}</span>
+            </li>
+        </ul>
+        <div barcode-generator="{{betData.bookIds[$index]}}" class="qr-code-b"></div>
+    </div>
+
+    <div class="info-booking" ng-if="betData.betType !== 1">
+        <ul class="booking-id-print">
+            <li>
+                <p trans>Bet ID</p>
+                <span ng-bind="betData.bookIds[0]"></span>
+            </li>
+            <li>
+                <p trans>Date/Time</p>
+                <span ng-bind="betData.date|formatDate:'full':null:$root.env.timeFormat"></span>
+            </li>
+            <li>
+                <p trans>ODD Type</p>
+                <span ng-bind="betData.oddFormat|capitalise|translate"></span>
+            </li>
+        </ul>
+
+        <h1 ng-if="betData.betType===2" trans>Express</h1>
+        <h1 ng-if="betData.betType===3"><span trans>System</span> {{betData.sysVal}}/{{betData.bets.length}}</h1>
+        <h1 ng-if="betData.betType===4" trans>Chain</h1>
+
+        <div class="booking-block-print">
+            <ul ng-class="{'booking-checkbox-on': betData.betType === 3 && bet.incInSysCalc, 'booking-checkbox-off': betData.betType === 3 && !bet.incInSysCalc}"
+                ng-repeat="bet in betData.bets">
+                <li>
+                    <h3 ng-bind="bet.start_ts| formatDate: 'full'"></h3>
+                </li>
+                <li>
+                    <b ng-bind="bet.team1Name + ' - ' + bet.team2Name"></b>
+                </li>
+                <li>
+                    <span ng-bind="bet.price|oddConvert:betData.oddFormat"></span>
+                </li>
+            </ul>
+        </div>
+
+        <ul class="booking-total-print"
+            ng-if="betData.enableExpressBonus && !(betConf.hideIfOverMaxOdds && betData.odds >= betConf.totalOddsMax) && !betData.hasSpOddTypes && betData.bets.length > betData.expressBonusVisibilityQty && betData.betType === 2 && betData.possibleWin > 0 && betData.expBonus > 0 && betData.expBonusPercentage > 0">
+            <li>
+                <h2 trans>Stake</h2>
+                <i>{{betData.amount|number:betData.balanceFractionSize}} {{betData.currencyName|currency}}</i>
+            </li>
+            <li ng-hide="betData.betType === 3 || betData.betType === 4">
+                <p>Total odd</p>
+                <span>{{betData.odds|oddConvert:betData.oddFormat}}</span>
+            </li>
+            <li>
+                <p trans>Possible Win</p>
+                <span>{{betData.possibleWin|number:betData.balanceFractionSize}} {{betData.currencyName|currency}}</span>
+            </li>
+            <li>
+                <p trans>Bonus</p>
+                <span>{{betData.expBonusPercentage}}</span>
+            </li>
+            <li class="booking-title-print">
+                <h6 trans>Bonus</h6>
+                <h5>{{(betData.expBonus)|number:betData.balanceFractionSize}} {{betData.currencyName|currency}}</h5>
+                <h6 trans>Potential Winning</h6>
+                <h4>{{betData.totalPossibleWin|number:betData.balanceFractionSize}}
+                    {{betData.currencyName|currency}}</h4>
+            </li>
+            <li ng-if="betData.possibleWinBonusTax">
+                <ul>
+                    <li>
+                        <p trans>Tax</p>
+                        <span>{{betData.possibleWinBonusTax |number:betData.balanceFractionSize}} {{betData.currencyName|currency}}</span>
+                    </li>
+                    <li ng-if="betData.tax.type===20">
+                        <p trans>Winning bonus</p>
+                        <span>{{betData.possibleWinBonusTax |number:betData.balanceFractionSize}} {{betData.currencyName|currency}}</span>
+                    </li>
+                    <li>
+                        <p trans>Final Payout</p>
+                        <span>{{betData.finalWinBonusTaxValue | number:betData.balanceFractionSize}} {{betData.currencyName|currency}}</span>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+        <ul class="booking-total-print"
+            ng-if="!betData.enableExpressBonus || (betConf.hideIfOverMaxOdds && betData.odds >= betConf.totalOddsMax) || betData.hasSpOddTypes || betData.bets.length <= betData.expressBonusVisibilityQty || betData.betType !== 2 || betData.possibleWin <= 0 || betData.expBonus <= 0 || betData.expBonusPercentage <= 0">
+            <li>
+                <h2 trans>Stake</h2>
+                <i>{{betData.amount|number:betData.balanceFractionSize}} {{betData.currencyName|currency}}</i>
+            </li>
+            <li ng-hide="betData.betType === 3 || betData.betType === 4">
+                <p>Total odd</p>
+                <span>{{betData.odds|oddConvert:betData.oddFormat}}</span>
+            </li>
+            <li class="booking-title-print">
+                <h6 trans>Potential Winning</h6>
+                <h4>{{betData.possibleWin|number:betData.balanceFractionSize}}
+                    {{betData.currencyName|currency}}</h4>
+            </li>
+            <li ng-if="betData.possibleWinTax && !(betConf.hideIfOverMaxOdds && betData.odds >= betConf.totalOddsMax) && !betData.hasSpOddTypes">
+                <ul>
+                    <li>
+                        <p trans>Tax</p>
+                        <span>{{betData.possibleWinTax|number:betData.balanceFractionSize}} {{betData.currencyName}}</span>
+                    </li>
+                    <li ng-if="betData.tax.type===20">
+                        <p trans>Winning bonus</p>
+                        <span>{{betData.possibleWinTax|number:betData.balanceFractionSize}} {{betData.currencyName}}</span>
+                    </li>
+                    <li>
+                        <p trans>Final Payout</p>
+                        <span>{{betData.finalWinTaxValue|number:betData.balanceFractionSize}} {{betData.currencyName}}</span>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+        <div barcode-generator="{{betData.bookIds[0]}}" class="qr-code-b"></div>
+    </div>
+    <p ng-bind-html="$root.conf.bookingBetPrint.bottomMessage|translate|html:'p'"
+       ng-show="$root.conf.bookingBetPrint.bottomMessage"></p>
+</div>

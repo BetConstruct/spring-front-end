@@ -57,9 +57,9 @@
   .list-news, .big-news-block {
     width: 1306px;
   }
-  .promos-container .list-news, .promos-container .big-news-block {
-    width: 980px;
-  }
+  //.promos-container .list-news, .promos-container .big-news-block {
+  //  width: 980px;
+  //}
   .poker .list-news {
     width: 980px;
   }
@@ -207,8 +207,13 @@
     width: 1060px;
   }
   .remove-all-fav {
-    right: 50px;
     top: 4px;
+    @include ltr {
+      right: 50px;
+    }
+    @include rtl {
+      left: 50px;
+    }
   }
   .centr-jackpot-info {
     width: 1600px;

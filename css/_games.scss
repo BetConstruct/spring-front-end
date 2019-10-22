@@ -42,7 +42,10 @@
     background: $games-background;
   }
 }
-.new-games-page-j .j-resize-950-1280 {padding: 0 15px;max-width: 1164px;}
+.new-games-page-j .j-resize-950-1280 {
+  padding: 0 15px;
+  max-width: 1164px;
+}
 .new-games-page-j .j-resize-950-1280 li {
   display: inline-block;
   width: 281px;
@@ -50,8 +53,20 @@
   box-shadow: 0 3px 0 darken( desaturate( adjust-hue( $skin-color, 7deg ), 1 ), 10 );
   position: relative;
   margin: 0 5px 12px;
+  background-color: #181B2C;
+  background-repeat: no-repeat;
+  background-position: 0 -411px;
+  transition: box-shadow 350ms ease-in-out;
+  box-shadow: inset 0 1px 0 transparent, 0 -1px 0 transparent, inset 0 2px 0 transparent, inset 0 3px 0 transparent, -1px 0 0 transparent, inset 1px 0 0 transparent, 1px 0 0 transparent, inset -1px 0 0 transparent, 0 1px 0 transparent,inset 0 -1px 0 transparent, inset 0 -2px 0 transparent, inset 0 -3px 0 transparent, 0 3px 0 transparent;
   @media screen and (max-height: 768px) {
     height: 360px;
+  }
+  &:before {
+    background-repeat: no-repeat;
+  }
+  &:hover {
+    background-position: 0 0;
+    box-shadow: inset 0 1px 0 #D29A09, 0 -1px 0 #624822, inset 0 2px 0 #5B523C, inset 0 3px 0 #83550D, -1px 0 0 #D08B1D, inset 1px 0 0 #E19319, 1px 0 0 #8A5D16, inset -1px 0 0 #E19319, 0 1px 0 #B78931,inset 0 -1px 0 #7E520D, inset 0 -2px 0 #322B22, inset 0 -3px 0 #FFD360, 0 3px 0 darken( desaturate( adjust-hue( $skin-color, 7deg ), 1 ), 10 );
   }
 }
 .new-games-page-j .j-resize-950-1280 li p {
@@ -100,28 +115,14 @@
 .new-games-page-j .j-resize-950-1280 li.added-to-favorite-j .fav-bar-game-j span:before {
   content: "\f006";
 }
-.new-games-page-j .j-resize-950-1280 li:before {
-  content: "";
-  display: block;
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  opacity: 0;
-  box-shadow: inset 0 1px 0 #D29A09, 0 -1px 0 #624822, inset 0 2px 0 #5B523C, inset 0 3px 0 #83550D, -1px 0 0 #D08B1D, inset 1px 0 0 #E19319, 1px 0 0 #8A5D16, inset -1px 0 0 #E19319, 0 1px 0 #B78931,inset 0 -1px 0 #7E520D, inset 0 -2px 0 #322B22, inset 0 -3px 0 #FFD360, 0 3px 0 darken( desaturate( adjust-hue( $skin-color, 7deg ), 1 ), 10 );
-}
 .new-games-page-j .j-resize-950-1280 li:before, .fav-bar-game-j {
   transition: opacity 350ms ease-in-out;
 }
-.new-games-page-j .j-resize-950-1280 li:hover:before, .new-games-page-j .j-resize-950-1280 li:hover .fav-bar-game-j {
+.new-games-page-j .j-resize-950-1280 li:hover .fav-bar-game-j {
   opacity: 1;
 }
 .new-games-page-j li.VGSPoker {
   background: #181B2C url(../../../images/games-page/poker-1.jpg#{$delete-cache}) no-repeat 0 -411px;
-  &:before {
-    background: url(../../../images/games-page/poker-1.jpg#{$delete-cache}) no-repeat 0 0;
-  }
   .action-button-set-j {
     overflow: visible;
   }
@@ -151,131 +152,107 @@
   }
 }
 .new-games-page-j li.VGSchPoker {
-  background: #181B2C url(../../../images/games-page/chinesse-1.jpg#{$delete-cache}) no-repeat 0 -411px;
-  &:before {
-    background: url(../../../images/games-page/chinesse-1.jpg#{$delete-cache}) no-repeat 0 0;
-  }
+  background-image: url(../../../images/games-page/chinesse-1.jpg#{$delete-cache});
   p:before {
     content: "\e6da";
   }
 }
 .new-games-page-j li.VGSBELOTE {
-  background: #181B2C url(../../../images/games-page/belote-1.jpg#{$delete-cache}) no-repeat 0 -411px;
-  &:before {
-    background: url(../../../images/games-page/belote-1.jpg#{$delete-cache}) no-repeat 0 0;
-  }
+  background-image: url(../../../images/games-page/belote-1.jpg#{$delete-cache});
   p:before {
     content: "\e6d0";
   }
 }
 .new-games-page-j li.VGSDeberc {
-  background: #181B2C url(../../../images/games-page/deberc-1.jpg#{$delete-cache}) no-repeat 0 -411px;
-  &:before {
-    background: url(../../../images/games-page/deberc-1.jpg#{$delete-cache}) no-repeat 0 0;
-  }
+  background-image: url(../../../images/games-page/deberc-1.jpg#{$delete-cache});
   p:before {
     content: "\e910";
   }
 }
 .new-games-page-j li.VGSnardi {
-  background: #181B2C url(../../../images/games-page/nardi-1.jpg#{$delete-cache}) no-repeat 0 -411px;
-  &:before {
-    background: url(../../../images/games-page/nardi-1.jpg#{$delete-cache}) no-repeat 0 0;
-  }
+  background-image: url(../../../images/games-page/nardi-1.jpg#{$delete-cache});
   p:before {
     content: "\e6cf";
   }
 }
 .new-games-page-j li.ASG1000 {
-  background: #181B2C url(../../../images/games-page/ogwil-1.jpg#{$delete-cache}) no-repeat 0 -411px;
-  &:before {
-    background: url(../../../images/games-page/ogwil-1.jpg#{$delete-cache}) no-repeat 0 0;
-  }
+  background-image: url(../../../images/games-page/ogwil-1.jpg#{$delete-cache});
   p:before {
     content: "\e911";
   }
 }
 
 .new-games-page-j li.NETkenobnjp_sw {
-  background: #181B2C url(../../../images/games-page/keno-1.jpg#{$delete-cache}) no-repeat 0 -411px;
-  &:before {
-    background: url(../../../images/games-page/keno-1.jpg#{$delete-cache}) no-repeat 0 0;
-  }
+  background-image: url(../../../images/games-page/keno-1.jpg#{$delete-cache});
   p:before {
     content: "\e6d8";
   }
 }
 
 .new-games-page-j li.VGSshashki {
-  background: #181B2C url(../../../images/games-page/checkers.jpg#{$delete-cache}) no-repeat 0 -411px;
-  &:before {
-    background: url(../../../images/games-page/checkers.jpg#{$delete-cache}) no-repeat 0 0;
-  }
+  background-image: url(../../../images/games-page/checkers.jpg#{$delete-cache});
   p:before {
     content: "\e939";
   }
 }
 .new-games-page-j li.VGSrussianRoulette {
-  background: #181B2C url(../../../images/games-page/russian-roulette.jpg#{$delete-cache}) no-repeat 0 -412px;
-  &:before {
-    background: url(../../../images/games-page/russian-roulette.jpg#{$delete-cache}) no-repeat 0 0;
-  }
+  background-image: url(../../../images/games-page/russian-roulette.jpg#{$delete-cache});
   p:before {
     content: "\e93a";
   }
 }
 .new-games-page-j li.VGSChingaChoong {
-  background: #181B2C url(../../../images/games-page/chingachoong.jpg#{$delete-cache}) no-repeat 0 -412px;
-  &:before {
-    background: url(../../../images/games-page/chingachoong.jpg#{$delete-cache}) no-repeat 0 0;
-  }
+  background-image: url(../../../images/games-page/chingachoong.jpg#{$delete-cache});
   p:before {
     content: "\e96d";
   }
 }
 .new-games-page-j li.VGSVR.Casino {
-  background: #181B2C url(../../../images/games-page/vr-casino.png#{$delete-cache}) no-repeat 0 -412px;
-  &:before {
-    background: url(../../../images/games-page/vr-casino.png#{$delete-cache}) no-repeat 0 0;
-  }
+  background-image:  url(../../../images/games-page/vr-casino.png#{$delete-cache});
   p:before {
     content: "\e97e";
   }
 }
 .new-games-page-j li.VGSFantasySport {
-  background: #181B2C url(../../../images/games-page/fantasy-sport.png#{$delete-cache}) no-repeat 0 -412px;
-  &:before {
-    background: url(../../../images/games-page/fantasy-sport.png#{$delete-cache}) no-repeat 0 0;
-  }
+  background-image: url(../../../images/games-page/fantasy-sport.png#{$delete-cache});
   p:before {
     content: "\e9c1";
   }
 }
 .new-games-page-j li.VGS12121 {
-  background: #181B2C url(../../../images/games-page/keno-vgs.png#{$delete-cache}) no-repeat 0 -412px;
-  &:before {
-    background: url(../../../images/games-page/keno-vgs.png#{$delete-cache}) no-repeat 0 0;
-  }
+  background-image: url(../../../images/games-page/keno-vgs.png#{$delete-cache});
   p:before {
     content: "\e6d8";
   }
 }
 .new-games-page-j li.VGSfarkle {
-  background: #181B2C url(../../../images/games-page/zonk.png#{$delete-cache}) no-repeat 0 -412px;
-  &:before {
-    background: url(../../../images/games-page/zonk.png#{$delete-cache}) no-repeat 0 0;
-  }
+  background-image: url(../../../images/games-page/zonk.png#{$delete-cache});
   p:before {
     content: "\ea40";
   }
 }
 .new-games-page-j li.VGS1181 {
-  background: #181B2C url(../../../images/games-page/talisman.jpg#{$delete-cache}) no-repeat 0 -412px;
-  &:before {
-    background: url(../../../images/games-page/talisman.jpg#{$delete-cache}) no-repeat 0 0;
-  }
+  background-image: url(../../../images/games-page/talisman.jpg#{$delete-cache});
   p:before {
     content: "\ea42";
+  }
+}
+.new-games-page-j li.VGSpushk {
+  background-image: url(../../../images/games-page/blast.png#{$delete-cache});
+  p:before {
+    content: "\ea43";
+  }
+}
+.new-games-page-j li.ASG334 {
+  background-image: url(../../../images/games-page/bighilo.jpg#{$delete-cache});
+  p:before {
+    content: "\ea52";
+  }
+}
+.new-games-page-j li.BTS3 {
+
+  p:before {
+    content: "\ea46";
   }
 }
 .fav-bar-game-j {
@@ -371,7 +348,7 @@
   border: 1px solid white;
   color: white;
   min-width: 110px;
-  background: transparent;
+  background: rgba(0,0,0,0.3);
 }
 .games-pw-buttonset-j button:hover, .games-pw-buttonset-j a:hover {
   border-color: $hero-color;

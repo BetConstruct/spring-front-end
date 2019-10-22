@@ -4,8 +4,8 @@
  * @description
  * Results version 2 controller
  */
-angular.module('vbet5.betting').controller('ResultsV2Controller', ['$rootScope', '$scope', '$q', '$filter', 'Zergling', 'Config', 'Moment', 'Translator', 'Utils', 'GameInfo', 'Storage', 'ConnectionService',
-    function ($rootScope, $scope, $q, $filter, Zergling, Config, Moment, Translator, Utils, GameInfo, Storage, ConnectionService) {
+angular.module('vbet5.betting').controller('ResultsV2Controller', ['$rootScope', '$scope', '$q', '$filter', 'Zergling', 'Config', 'Moment', 'Translator', 'Utils', 'GameInfo', 'Storage', 'ConnectionService', 'DomHelper',
+    function ($rootScope, $scope, $q, $filter, Zergling, Config, Moment, Translator, Utils, GameInfo, Storage, ConnectionService, DomHelper) {
         'use strict';
 
         var timeZone = Config.env.selectedTimeZone || '';
@@ -64,6 +64,8 @@ angular.module('vbet5.betting').controller('ResultsV2Controller', ['$rootScope',
         $scope.competitionClosed = {};
         $scope.competitionInfo = {};
         $scope.games = {};
+        $scope.leftMenuClosed = Storage.get('leftMenuToggleState') || false;
+        var selectedSport = null;
 
         $scope.switchResultsTab = function switchResultsTab(isLive) {
 
@@ -79,6 +81,40 @@ angular.module('vbet5.betting').controller('ResultsV2Controller', ['$rootScope',
             $scope.loadSports();
             $scope.updateLeftMenu(true);
         };
+
+        /**
+         * @ngdoc method
+         * @name toggleLeftMenu
+         * @methodOf vbet5.controller:classicViewLeftController
+         * @description  expands(or collapses if expanded) left menu
+         *
+         * @param {boolean} val - set defined value
+         */
+        $scope.toggleLeftMenu = function toggleLeftMenu(val) {
+            $scope.leftMenuClosed = val !== undefined ? !val : !$scope.leftMenuClosed;
+
+            Storage.set('leftMenuToggleState', $scope.leftMenuClosed);
+            $scope.$emit('leftMenu.closed', $scope.leftMenuClosed);
+        };
+
+      /**
+       * @ngdoc method
+       * @name closeLeftMenuDependingWindowSize
+       * @methodOf vbet5.controller:classicViewLeftController
+       * @description Close left menu depending on window size
+       */
+      function closeLeftMenuDependingWindowSize() {
+        if (DomHelper.getScreenResolution().x <= 1400 && $scope.leftMenuClosed == false) {
+          $scope.toggleLeftMenu(false);
+        } else if (DomHelper.getScreenResolution().x > 1400 && $scope.leftMenuClosed == true) {
+          $scope.toggleLeftMenu(true);
+        }
+      }
+
+      closeLeftMenuDependingWindowSize();
+
+      $scope.$on('onWindowWidthResize', closeLeftMenuDependingWindowSize);
+
 
         /**
          * @ngdoc method
@@ -172,6 +208,7 @@ angular.module('vbet5.betting').controller('ResultsV2Controller', ['$rootScope',
                         angular.forEach(result.games.game, function (game) {
                             if (game.date <= Moment.get().unix()) {
                                 game.scoresShort = renderResultScore(game);
+                                game.scoresSecondPart = getSecondPartOfScores(game.scores, game.scoresShort);
                                 games.push(game);
                             }
                         });
@@ -298,6 +335,7 @@ angular.module('vbet5.betting').controller('ResultsV2Controller', ['$rootScope',
                             angular.forEach(region.Competitions, function (competition) {
                                 if ($scope.selectedCompetitions[$scope.requestData.live ? 1 : 0][competition.Id]) {
                                     sport.expanded = true;
+                                    selectedSport = sport;
                                     region.expanded = true;
                                 }
                                 competition.sport = {Id: sport.Id};
@@ -637,6 +675,17 @@ angular.module('vbet5.betting').controller('ResultsV2Controller', ['$rootScope',
             return scores;
         }
 
+
+        /**
+         * @ngdoc method
+         * @name getSecondPartOfScores
+         * @methodOf vbet5.controller:widgetCtrl
+         * @description get second part of scores except short score part
+         */
+        function getSecondPartOfScores(scores, firstPart) {
+            return scores && scores.substr(scores.indexOf(firstPart) + firstPart.length, scores.length - firstPart.length).trim();
+        }
+
         /**
          * @ngdoc method
          * @name renderLiveScore
@@ -681,6 +730,40 @@ angular.module('vbet5.betting').controller('ResultsV2Controller', ['$rootScope',
             }
             $scope.openGame = false;
         }
+
+        /**
+         * @ngdoc method
+         * @name toggleSport
+         * @methodOf vbet5.controller:widgetCtrl
+         * @description expand all competitions and close previous expanded sport
+         */
+        $scope.toggleSport = function toggleSport(sport){
+            sport.expanded = !sport.expanded;
+            if (selectedSport && selectedSport.Id === sport.Id) {
+                return;
+            }
+            if (sport.expanded) {
+                if (selectedSport && selectedSport.expanded) {
+                   selectedSport.expanded = false;
+                }
+                selectedSport = sport;
+                var selectedCompetitions = $scope.selectedCompetitions[$scope.requestData.live?1:0] = {};
+                var regions = sport.Regions;
+                for(var i = regions.length; i--;) {
+                    var region = regions[i];
+                    if (region.expanded) {
+                        region.expanded = false;
+                    }
+                    var competitions = region.Competitions;
+                    for (var j = competitions.length; j--;) {
+                        selectedCompetitions[competitions[j].Id] = true;
+                    }
+
+                }
+                $scope.updateLeftMenu();
+            }
+
+        };
 
         $scope.$on('$destroy', unsubscribeFromAnimation);
     }]);

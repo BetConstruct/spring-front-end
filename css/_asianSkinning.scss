@@ -81,6 +81,12 @@
         }
       }
     }
+    .viewSwitcher-j.select-pagination > p {
+      background: darken(desaturate(adjust-hue($skin-color, 4deg), 11), 1);
+      > i {
+        background: lighten(desaturate(adjust-hue($skin-color, 3deg), 16), 4);
+      }
+    }
   }
   & {
     background: darken(saturate(adjust-hue($skin-color, 4deg), 1), 7);
@@ -193,6 +199,9 @@
   .list-bet-block ul li span {
     color: $text-palette-4;
   }
+  .list-bet-block ul li > b {
+    color: $brand-color-2;
+  }
   .asian-left-contain-menu .betslip-system-chenge {
     background: darken(desaturate(adjust-hue($skin-color, 4deg), 15), 1);
   }
@@ -296,7 +305,7 @@
     box-shadow: 1px 0 0 lighten(desaturate(adjust-hue($skin-color, 3deg), 16), 4), -1px 0 0 lighten(desaturate(adjust-hue($skin-color, 3deg), 16), 4);
     color: $text-palette-1;
   }
-  .big-filter-wrapper ul li {
+  .big-filter-wrapper > ul > li {
     background: lighten(desaturate(adjust-hue($skin-color, 3deg), 16), 4);
     color: $text-palette-4;
     @include ltr {
@@ -884,9 +893,6 @@
       border-bottom: 1px solid lighten(desaturate(adjust-hue(darken(adjust-hue($skin-color, 4deg), 4), -4deg), 18), 23);
       background: lighten(desaturate(adjust-hue(darken(adjust-hue($skin-color, 4deg), 4), -1deg), 16), 8);
     }
-    .anime-video-switcher-v3 {
-      background: lighten(desaturate(darken(adjust-hue($skin-color, 4deg), 4), 11), 3);
-    }
     .anime-video-switcher-v3 > ul > li:before {
       @if $asian-light-skin==true {
         color: darken(desaturate(adjust-hue($text-palette-11, -4deg), 18), 23);
@@ -982,19 +988,34 @@
       color: $text-palette-3;
       background: darken(desaturate(adjust-hue($skin-color, 4deg), 15), 1);
       > p {
-        color: $text-palette-3;
+        color: $text-palette-1;
       }
       .sport-games-count-v3 {
         color: $text-palette-1;
       }
       &.active > .arrow-view-v3:before {
-        color: $text-palette-3;
+        color: $text-palette-1;
       }
-      &:hover .arrow-view-v3 {
-        color: $text-palette-3;
+      &:hover {
+        .arrow-view-v3 {
+          color: $text-palette-1;
+          &:before {
+            color: $text-palette-1;
+          }
+        }
+        &:before {
+          color: $text-palette-1;
+          transition: color 300ms;
+        }
       }
       &:before {
         color: $text-palette-4;
+      }
+      &:after {
+        content: none;
+      }
+      &:hover, &.active {
+        background: lighten(desaturate(adjust-hue($skin-color, 3deg), 16), 4);
       }
     }
     .single-game-item-v3 {
@@ -1042,6 +1063,12 @@
     .icon-separator-v3.market-count-v3 > span {
       background: darken(adjust-hue($skin-color, 4deg), 4);
       color: $text-palette-3;
+    }
+    .competition-title-v3 {
+      background: darken(desaturate(adjust-hue($skin-color, 4deg), 15), 1);
+      &:hover, &.active {
+        background: lighten(desaturate(adjust-hue($skin-color, 3deg), 16), 4);
+      }
     }
   }
   .asian-separator-container-b {
@@ -1261,7 +1288,7 @@
         border: 1px solid $text-palette-4;
         color: $text-palette-4;
         background: none;
-        &:hover {
+        &:not(:disabled):hover {
           background: $hero-color;
           border-color: $hero-color;
           color: set-color($hero-color);
@@ -1318,9 +1345,6 @@
     @include rtl {
       left: 6px;
     }
-  }
-  .viewSwitcher-j.select-pagination > span {
-    color: $text-palette-5 !important;
   }
   .balance-int-row {
     background: lighten(desaturate($skin-color, 17), 12);

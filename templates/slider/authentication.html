@@ -1,5 +1,5 @@
 <div ng-init="loginFormInit();" ng-escape="onAuthenticationClose()">
-    <div ng-switch="regItem.type">
+    <div>
         <div class="form-register-layout signin">
             <div class="popup-layout-registration">
                 <div class="vertical-middle-wrapper">
@@ -9,22 +9,19 @@
                                 <div class="closed-popup-form" ng-click="onAuthenticationClose()"></div>
                                 <div class="register-information-b">
                                     <h2 trans>Two Factor Authentication</h2>
-                                    <h3 trans>
-                                        A message with a verification code has been
-                                        sent to your device.
-                                    </h3>
+                                    <h3 trans>A message with a verification code has been sent to your device.</h3>
                                     <div class="qr-code-popup" ng-if="!authenticationData.barcode && authenticationData.qrCodeURL">
-                                        <img src="{{authenticationData.qrCodeURL}}" alt="">
+                                        <img ng-if="authenticationData.qrCodeURL" ng-src="{{authenticationData.qrCodeURL}}" alt="">
                                     </div>
                                     <p ng-click="showBarcode()" ng-if="!authenticationData.barcode && authenticationData.qrCodeURL" trans>Can't scan it?</p>
                                 </div>
                                 <div class="barcod-authentication-popup" ng-if="authenticationData.barcode">
                                     <h5 trans>Can’t scan the barcode?</h5>
-                                    <p>1. {{'Tap'|translate}} <b trans>menu</b> then <b trans>Setup Account</b>.</p>
-                                    <p>2. {{'Tap'|translate}} <b trans>Enter manually key</b>.</p>
-                                    <p>3. {{'Enter your account name and this key:'|translate}}</p>
+                                    <p trans>1. Tap <b>menu</b> then <b>Setup Account</b> </p>
+                                    <p trans>2. Tap <b>Enter manually key</b>.</p>
+                                    <p trans>3. Enter your account name and this key</p>
                                     <button ng-click="copyToClipboard()">{{authenticationData.barcode}} <i></i></button>
-                                    <p>4. {{"Make sure that" | translate}} <b trans>Time</b> {{'based is turned on, tap'|translate}} <b trans>Add</b> {{'to finish.' |translate}}</p>
+                                    <p trans>4. Make sure that <b>Time</b> based is turned on, tap <b>Add</b> to finish.</p>
                                 </div>
                                 <form name="authentication_form"  novalidate="novalidate" ng-submit="checkAuthenticationCode($event)">
                                     <div class="form-sign-in">

@@ -5,7 +5,7 @@
                 <div class="team-form"><tshirt shorts="{{game.info.short1_color}}" shirt="{{game.info.shirt1_color}}"></tshirt></div>
                 <span title="{{ game.team1_name }}">{{ game.team1_name }}</span>
             </li>
-            <li>{{ game.stats.passes.team1_value ? game.stats.passes.team1_value : 0}}</li>
+            <li ng-if="!$root.conf.hidePointsForCompetitions['k' + game.competition.id] || $root.conf.hidePointsForCompetitions['k' + game.competition.id] && $root.env.authorized">{{ game.stats.passes.team1_value ? game.stats.passes.team1_value : 0}}</li>
             <li class="set-number">{{ game.info.score1 ? game.info.score1 : 0 }}</li>
         </ul>
         <ul>
@@ -13,7 +13,7 @@
                 <div class="team-form"><tshirt shorts="{{game.info.short2_color}}" shirt="{{game.info.shirt2_color}}"></tshirt></div>
                 <span title="{{ game.team2_name }}">{{ game.team2_name }}</span>
             </li>
-            <li>{{ game.stats.passes.team2_value ? game.stats.passes.team2_value : 0 }}</li>
+            <li ng-if="!$root.conf.hidePointsForCompetitions['k' + game.competition.id] || $root.conf.hidePointsForCompetitions['k' + game.competition.id] && $root.env.authorized">{{ game.stats.passes.team2_value ? game.stats.passes.team2_value : 0 }}</li>
             <li class="set-number">{{ game.info.score2 ? game.info.score2 : 0 }}</li>
         </ul>
     </div>
@@ -68,9 +68,9 @@
         <include-template template-path="templates/sport/open/player.html"></include-template>
         <!-- Animated control -->
         <div class="game-control tennis" ng-show="game.activeFieldType==='field'">
-            <div class="video-player-control">
-                <span class="video-mute" ng-click="toggleAnimationSound()" ng-show="!isVideoDetached && env.sound > 0 "></span>
-                <span class="video-unmute" ng-click="toggleAnimationSound()" ng-show="!isVideoDetached && env.sound === 0"></span>
+            <div class="video-player-control" ng-if="!isVideoDetached">
+                <span class="video-mute" ng-click="toggleAnimationSound()" ng-show="env.sound > 0 "></span>
+                <span class="video-unmute" ng-click="toggleAnimationSound()" ng-show="env.sound === 0"></span>
                 <div class="sound-volume">
                     <div>
                         <rzslider rz-slider-model="env.sound" rz-slider-floor="0" rz-slider-ceil="1" rz-slider-step="0.01" rz-slider-precision="1" rz-slider-always-show-bar="true"></rzslider>
@@ -99,7 +99,7 @@
                             </div>
                             <div trans class="set" title="Ace">Ace</div>
                         </div>
-                        <div ng-if="game.last_event.type === 'Point'">
+                        <div ng-if="game.last_event.type === 'Point' && (!$root.conf.hidePointsForCompetitions['k' + game.competition.id] || $root.conf.hidePointsForCompetitions['k' + game.competition.id] && $root.env.authorized)">
                             <div class="score_1"><span>{{game.stats.passes.team1_value}}</span></div>
                             <div class="score_2"><span>{{game.stats.passes.team2_value}}</span></div>
                             <div trans class="point_text" title="Point">Point</div>

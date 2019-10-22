@@ -288,5 +288,10 @@
            <jackpot-slider type="widget-casino" load-jackpot-data="true"></jackpot-slider>
        </div>
     </div>
-
+    <!--sportsBook jackpot widget-->
+    <div ng-switch-when="sportsbook-jackpot-counter">
+        <div ng-init="isIframe=true">
+            <sportsbook-jackpot ></sportsbook-jackpot>
+        </div>
+    </div>
 </div>

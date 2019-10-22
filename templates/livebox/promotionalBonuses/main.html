@@ -33,11 +33,11 @@
                 </li>
             </ul>
         </div>
-        <div class="group-tabs-wrapper">
+        <div class="group-tabs-wrapper" ng-show="conf.promotionalBonuses.bonusRequestURL || (conf.promotionalBonuses.sportsbook && conf.promotionalBonuses.casino)">
             <div class="first-level-history-tab">
                 <ul>
                     <li ng-if="conf.promotionalBonuses.sportsbook" ng-click="switchBonusTab(backendBonusConstants.BonusSource.SportsBook)" ng-class="{'active': (activeBonusTab === backendBonusConstants.BonusSource.SportsBook)}"><span>{{'sportsbook' | translate }} <i ng-if="bonusesAmount.sportsBook && bonusesAmount.sportsBook > 0">{{bonusesAmount.sportsBook}}</i> </span></li>
-                    <li ng-if="conf.promotionalBonuses.casino" ng-click="switchBonusTab(backendBonusConstants.BonusSource.Casino)" ng-class="{'active': (activeBonusTab === backendBonusConstants.BonusSource.Casino)}"><span>{{'Casino' | translate }} <i ng-if="bonusesAmount.casino && bonusesAmount.casino > 0">{{bonusesAmount.casino}}</i> </span></li>
+                    <li ng-if="conf.promotionalBonuses.casino" ng-click="switchBonusTab(backendBonusConstants.BonusSource.Casino)" ng-class="{'active': (activeBonusTab === backendBonusConstants.BonusSource.Casino)}"><span>{{'Casino Bonus' | translate }} <i ng-if="bonusesAmount.casino && bonusesAmount.casino > 0">{{bonusesAmount.casino}}</i> </span></li>
                     <li ng-if="conf.promotionalBonuses.bonusRequestURL"  ng-click="switchBonusTab('bonus-request')" ng-class="{'active': (activeBonusTab === 'bonus-request')}"><span>{{'Bonus request' | translate }} </span></li>
                 </ul>
             </div>
@@ -112,28 +112,28 @@
                                         <li class="bonus-start-end-b">
                                             <p ng-show="bonus.acceptance_date">
                                                 <span trans>Acceptance date:</span>
-                                                <span>{{bonus.acceptance_date|formatDate:'noLocaleTranslate'}}</span>
+                                                <span>{{bonus.acceptance_date|formatDate:'noLocaleTranslate':null:$root.env.timeFormat}}</span>
                                             </p>
                                             <p ng-show="bonus.expiration_date">
                                                 <span trans>Expiration date:</span>
-                                                <span>{{bonus.expiration_date|formatDate:'noLocaleTranslate'}}</span>
+                                                <span>{{bonus.expiration_date|formatDate:'noLocaleTranslate':null:$root.env.timeFormat}}</span>
                                             </p>
                                             <p ng-show="bonus.client_bonus_expiration_date">
                                                 <span trans>Client bonus expiration date:</span>
-                                                <span>{{bonus.client_bonus_expiration_date|formatDate:'noLocaleTranslate'}}</span>
+                                                <span>{{bonus.client_bonus_expiration_date|formatDate:'noLocaleTranslate':null:$root.env.timeFormat}}</span>
                                             </p>
                                             <p ng-show="bonus.start_date">
                                                 <span trans>Starting date:</span>
-                                                <span>{{bonus.start_date|formatDate:'noLocaleTranslate'}}</span>
+                                                <span>{{bonus.start_date|formatDate:'noLocaleTranslate':null:$root.env.timeFormat}}</span>
                                             </p>
                                             <p ng-show="bonus.end_date && !conf.hideMinMaxColumn">
                                                 <span trans>Ending date:</span>
-                                                <span>{{bonus.end_date|formatDate:'noLocaleTranslate'}}</span>
+                                                <span>{{bonus.end_date|formatDate:'noLocaleTranslate':null:$root.env.timeFormat}}</span>
                                             </p>
                                         </li>
                                         <li class="claim-cancel-bonus">
                                             <div class="bonus-function-b" ng-show="bonus.acceptance_type === backendBonusConstants.BonusAcceptanceType.None && bonus.can_accept">
-                                                <button ng-click="claimBonus(bonus.partner_bonus_id, bonus['deposit_wagering_factor'] !== 0); $event.stopPropagation();" trans>Claim</button>
+                                                <button ng-click="claimBonus(bonus, bonus['deposit_wagering_factor'] !== 0); $event.stopPropagation();" trans>Claim</button>
                                             </div>
                                             <div ng-if="!conf.promotionalBonuses.disableCancelButton" class="bonus-function-b cancel-bonus" ng-show="bonus.bonus_type !== backendBonusConstants.BonusType.FreeBet && (bonus.acceptance_type === backendBonusConstants.BonusAcceptanceType.Accepted || bonus.acceptance_type === backendBonusConstants.BonusAcceptanceType.Activated)">
                                                 <button ng-click="cancelBonus(bonus.partner_bonus_id); $event.stopPropagation();" trans>Cancel</button>

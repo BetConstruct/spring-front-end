@@ -1,5 +1,5 @@
 <div class="classic-view-row-v3 results-view-b" ng-controller="ResultsV2Controller as resV2Ctrl" ng-init="setTitle('Results')">
-    <div class="classic-view-column-v3">
+    <div class="classic-view-column-v3 {{leftMenuClosed ? 'left-menu-closed-v3' : ''}}">
     <ng-include class="left-column-v3" src="::'templates/results/classicLeftMenu.html'|fixPath"></ng-include>
 
         <div class="center-column-v3">
@@ -10,9 +10,9 @@
                         <div ng-show="requestData.gamesCount === 0" class="r-competition-title-view">
                             <p trans>Please select filters</p>
                         </div>
-                        <div class="r-competition-title-view closed-results-all-games" ng-show="requestData.gamesCount">
-                            <span class="closed-all-games-v3" ng-click="clearAllResultGames();"></span>
-                            <p trans>Chosen Games</p>
+                        <div class="r-competition-title-view closed-results-all-games" ng-show="requestData.gamesCount" >
+                            <span class="closed-all-games-v3" ng-click="clearAllResultGames();" ></span>
+                            <p trans ng-click="clearAllResultGames();">Clear All</p>
                         </div>
                         <div class="r-single-competition-view" ng-repeat="(competitionId, gamesGroup) in games track by $index" ng-if="gamesGroup.length">
                             <div class="r-competition-title-view" ng-class="{active: !competitionClosed[competitionId]}" ng-click="competitionClosed[competitionId] = !competitionClosed[competitionId]">
@@ -31,7 +31,7 @@
                                             <div class="result-single-game-view-b r-live-game" ng-class="{active:game.game_id === openGameDetails.game_id}" ng-repeat="game in gameDate.games track by $index" ng-click="getResultDetails(game)">
                                                 <ul>
                                                     <li class="r-date-view">
-                                                        <span>{{game.date|formatDate:'hour'}}</span>
+                                                        <span>{{game.date|formatDate:'hour':null:$root.env.timeFormat}}</span>
                                                     </li>
                                                     <li class="game-info-r-view" ng-class="{'one-team-name-t': !game.team2_name}">
                                                         <div class="r-team-name-score-logo">
@@ -52,6 +52,7 @@
                                                     </li>
                                                 </ul>
                                                 <div class="arrow-r-game-view"></div>
+                                                <div class="result-score-info" ng-if="game.scoresSecondPart" ng-bind="game.scoresSecondPart"></div>
                                             </div>
                                         </div>
                                     </div>

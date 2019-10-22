@@ -144,6 +144,10 @@ angular.module('vbet5').service('RoutesValidity', ['$rootScope', '$location', '$
         "esports": {
             path: "#/esports",
             config: "esportsEnabled"
+        },
+        "blast": {
+            path: "#/blast",
+            config: "blastEnabled"
         }
     };
 

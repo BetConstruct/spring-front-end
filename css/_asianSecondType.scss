@@ -11,20 +11,40 @@ $asian-view-custom: false !default;
   .asian-left-menu-scroll-wrapper {
     height: calc(100vh - 20px - 150px);
   }
-  .asian-left-menu ul li {
-    min-height: 34px;
-    max-height: 34px;
-    line-height: 34px;
-    margin: 1px 0 0;
-    .icon-sport-asia {
-      top: 9px;
+  .asian-left-menu ul li,
+  .asian-left-contain-menu {
+    .sport-icon-v3 {
+      line-height: 34px;
     }
-    .menu-arrow-asia {
-      height: 34px;
-      &:before {
-        line-height: 34px;
+    .sports-item-v3 {
+      min-height: 34px;
+      max-height: 34px;
+      line-height: 34px;
+      margin: 1px 0 0;
+      .icon-sport-asia {
+        top: 9px;
+      }
+      .menu-arrow-asia,
+      .arrow-view-v3 {
+        height: 34px;
+        &:before {
+          line-height: 34px;
+        }
       }
     }
+  }
+  .asian-left-contain-menu .sports-item-v3 > p,
+  .asian-left-contain-menu .sport-games-count-v3,
+  .asian-left-contain-menu .sports-item-v3.favoritecompetitions:before {
+    line-height: 34px;
+  }
+   .sports-item-v3 {
+    @include ltr {
+      padding: 0 24px 0 36px;
+    }
+     @include rtl {
+       padding: 0 36px 0 24px;
+     }
   }
   .asian-live-game {
     width: 32px;
@@ -96,7 +116,8 @@ $asian-view-custom: false !default;
       .prematch-game-title,
       .markets-group-wrap-v3 > ul.has-dropdown > li,
       .asian-left-contain-menu .bet-form form input[type="text"],
-      .button-bet button {
+      .button-bet button,
+      .asian-left-contain-menu .sports-item-v3 {
         border-radius: 0;
       }
       .viewSwitcher-j > ul > li:not(:only-child):not(:last-child):after {
@@ -117,7 +138,30 @@ $asian-view-custom: false !default;
         color: darken( desaturate( adjust-hue( $skin-color, 4deg ), 11 ), 1 );
       }
     }
-    .big-filter-wrapper ul li {
+    .competition-title-v3 {
+      height: 34px;
+    }
+    .asian-left-contain-menu .competition-title-v3 {
+      > label {
+        span {
+          font-size: 11px;
+          color: $text-palette-4;
+          transition: color 300ms;
+          &.favorite-competitions-icon-t {
+            top: 0;
+          }
+        }
+        .flag-view-v3 {
+          top: 9px;
+        }
+      }
+      &:hover, &.active {
+        > label span {
+          color: $text-palette-1;
+        }
+      }
+    }
+    .big-filter-wrapper > ul > li {
       @include ltr {
         border-left: 1px solid rgba(set-color(darken( desaturate( adjust-hue( $skin-color, 4deg ), 11 ), 1 )), 0.5);
       }

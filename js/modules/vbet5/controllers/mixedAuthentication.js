@@ -5,14 +5,26 @@
  * @description
  * settings controller
  */
-VBET5.controller('mixedAuthenticationCtrl', ['$scope', '$rootScope', 'Utils', 'Zergling', function ($scope, $rootScope, Utils, Zergling) {
+VBET5.controller('mixedAuthenticationCtrl', ['$scope', '$rootScope', 'Utils', 'Zergling', 'Storage', function ($scope, $rootScope, Utils, Zergling, Storage) {
     'use strict';
 
     var qrCodeOrigin;
     (function init() {
         $scope.data = {};
         $scope.data.isAuthenticate = !!$rootScope.profile.is_two_factor_authentication_enabled;
+        if ($scope.data.isAuthenticate) {
+            qrCodeOrigin = Storage.get("qrCodeOrigin");
+            if (qrCodeOrigin) {
+                $scope.data.qrCodeUrl = 'https://chart.googleapis.com/chart?chs=134x134&chld=L|0&cht=qr&chl='+ encodeURIComponent(qrCodeOrigin);
+            }
+        }
+
     })();
+
+    function removeFromStorage() {
+        Storage.remove('qrCodeOrigin');
+    }
+
 
     /**
      * @ngdoc method
@@ -30,7 +42,7 @@ VBET5.controller('mixedAuthenticationCtrl', ['$scope', '$rootScope', 'Utils', 'Z
                     $rootScope.profile.is_two_factor_authentication_enabled = true;
                     qrCodeOrigin = data.details.QRCodeOrigin;
                     $scope.data.qrCodeUrl = 'https://chart.googleapis.com/chart?chs=134x134&chld=L|0&cht=qr&chl='+ encodeURIComponent(qrCodeOrigin);
-
+                    Storage.set("qrCodeOrigin", qrCodeOrigin);
                 } else {
                     $scope.data.isAuthenticate = false;
                     $rootScope.$broadcast("globalDialogs.addDialog", {
@@ -68,6 +80,7 @@ VBET5.controller('mixedAuthenticationCtrl', ['$scope', '$rootScope', 'Utils', 'Z
                     if(data.result === 0) {
                         $scope.showPasswordForm = false;
                         $rootScope.profile.is_two_factor_authentication_enabled = false;
+                        removeFromStorage();
 
                     }else if(data.result === '-1005'){
                         $scope.forms.currentPasswordForm.oldpassword.$setValidity("incorrect", false);
@@ -129,6 +142,7 @@ VBET5.controller('mixedAuthenticationCtrl', ['$scope', '$rootScope', 'Utils', 'Z
                 });
                 $scope.data.qrCodeUrl = "";
                 $scope.data.barcode = "";
+                removeFromStorage();
             } else {
                 $rootScope.$broadcast("globalDialogs.addDialog", {
                     type: 'error',

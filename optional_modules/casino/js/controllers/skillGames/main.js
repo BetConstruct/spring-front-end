@@ -30,6 +30,27 @@ CASINO.controller('skillGamesMainCtrl', ['$rootScope', '$scope', '$location', 'C
     casinoMultiviewValues.init($scope);
 
     var countryCode = '';
+
+    function loadSkinGamesImages() {
+        content.getWidget('bannerSlugs.skillGamesBanners').then(function (response) {
+            if (response.data && response.data.widgets && response.data.widgets[0]) {
+                $scope.gameImages = {};
+                angular.forEach(response.data.widgets, function (widget) {
+                    var banner = widget.instance;
+                    var id = banner.custom_fields.id && banner.custom_fields.id[0];
+                    if (id){
+                        $scope.gameImages[id] = {
+                            icon: banner.custom_fields.icon[0],
+                            background: banner.imageurl
+                        };
+                    }
+
+                });
+            }
+        }, function (reason) {
+            console.log(reason);
+        });
+    }
     /**
      * @ngdoc method
      * @name loadGames
@@ -58,10 +79,25 @@ CASINO.controller('skillGamesMainCtrl', ['$rootScope', '$scope', '$location', 'C
         if (searchParams.game !== undefined) {
             var game = casinoManager.getGameById($scope.games, searchParams.game);
             if (game) {
-                TimeoutWrapper(function () {
+                if (!$rootScope.env.authorized && !game.types.funMode) {
+                    TimeoutWrapper(function () {
+                        if (!$rootScope.loginInProgress) {
+                            $scope.openGame(game);
+                        } else {
+                            var loginProccesWatcher = $scope.$watch('loginInProgress', function () {
+                                if (!$rootScope.loginInProgress) {
+                                    loginProccesWatcher();
+                                    $scope.openGame(game);
+                                }
+                            });
+                        }
+                    }, 100);
+                } else {
                     $scope.openGame(game);
-                }, 100);
+                }
             }
+        } else {
+            loadSkinGamesImages();
         }
     }
 
@@ -99,8 +135,8 @@ CASINO.controller('skillGamesMainCtrl', ['$rootScope', '$scope', '$location', 'C
      * @methodOf CASINO.controller:skillGamesMainCtrl
      * @description  close opened game
      */
-    $scope.closeGame = function closeGame(id) {
-        casinoManager.closeGame($scope, id);
+    $scope.closeGame = function confirmCloseGame(id, targetAction) {
+        casinoManager.closeGame($scope, id, targetAction);
     };
 
     $scope.$watch('env.authorized', function (newValue, oldValue) {

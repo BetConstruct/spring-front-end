@@ -47,7 +47,7 @@ VBET5.controller('BasketBallCtrl', ['$rootScope', '$scope', 'basketballAnimation
         // basketballAnimation.startAnimate();
         //
         // var test = function test() {
-        //     console.info('****************',index);
+        //     console.log('****************',index);
         //     var id = Object.values(swarmConstants)[index];
         //     if (id) {
         //         basketballAnimation.animate(id, $scope.openGame.team1_name, null, 1, null, null, null, null);

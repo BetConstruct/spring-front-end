@@ -1,7 +1,7 @@
 /* global VBET5 */
 VBET5.controller('eSportsCenterController', ['$rootScope', '$scope',  '$location', '$filter', '$route', '$q', 'DomHelper', 'Utils', 'Zergling', 'ConnectionService', 'GameInfo', 'asianViewGmsBasaltChanger', 'Storage', 'Config', 'Translator', 'analytics', 'TimeoutWrapper',
     function ($rootScope, $scope, $location, $filter, $route, $q, DomHelper, Utils, Zergling, ConnectionService, GameInfo, asianViewGmsBasaltChanger, Storage, Config, Translator, analytics, TimeoutWrapper) {
-    'use strict';
+        'use strict';
 
         TimeoutWrapper = TimeoutWrapper($scope);
         var connectionService = new ConnectionService($scope);
@@ -11,6 +11,8 @@ VBET5.controller('eSportsCenterController', ['$rootScope', '$scope',  '$location
         $scope.framesCount = Utils.memoize(GameInfo.framesCount);
         $scope.showFrameAlias = Utils.memoize(GameInfo.showFrameAlias);
         $scope.collapsedMarkets = {};
+
+        $scope.pointsTypeForMarket = 'TOTALS';
 
         var MARKET_GROUP_ALL = {
             id: -2,
@@ -84,6 +86,7 @@ VBET5.controller('eSportsCenterController', ['$rootScope', '$scope',  '$location
         }
 
         $scope.getCompetitionData = function getCompetitionData(params, getAllCompetitions) {
+            $scope.attachPinnedVideo($scope.enlargedGame, 'fullScreen');
             if ($scope.loading || (!getAllCompetitions && $scope.games && $scope.games[0] && $scope.games[0].competition.id === params.competition.id) ) {
                 return;
             }
@@ -446,4 +449,4 @@ VBET5.controller('eSportsCenterController', ['$rootScope', '$scope',  '$location
                 hideButtons: true
             });
         };
-}]);
+    }]);

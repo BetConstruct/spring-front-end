@@ -37,7 +37,7 @@
                                             </td>
                                         </tr>
                                         <tr ng-repeat="game in competition|orderBy:'order' track by game.id" ng-class="{'complete': complete[victorinaId]}" ng-show="game.events.p1 || game.events.p2 || game.events.x || game.game_name">
-                                            <td class="date-cell">{{game.game_start_date|formatDate:'full'}}</td>
+                                            <td class="date-cell">{{game.game_start_date|formatDate:'full':null:$root.env.timeFormat}}</td>
                                             <td class="game-comp-cell">{{game.competition_name}}</td>
                                             <td class="game-comp-cell">{{game.game_name}}</td>
                                             <td class="events-cell {{game.events.p1.status}}" title="{{statuses[game.events.p1.status]}}" ng-class="{'selected': game.events.p1 && (victorinaModel[victorinaId][game.id] == game.events.p1.event_id), 'pointer-events-none': !game.events.p1}">

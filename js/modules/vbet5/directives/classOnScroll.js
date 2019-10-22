@@ -10,6 +10,9 @@
 VBET5.directive("classOnScroll", ['$window', function ($window) {
     'use strict';
     return function (scope, element, attrs) {
+        if (attrs.notChange === 'true') {
+            return;
+        }
         var classNames = attrs.classOnScroll.split(',');
         var class1 = classNames[0];
         var class2 = classNames[1];

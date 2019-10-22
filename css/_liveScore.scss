@@ -188,6 +188,13 @@ live-game-scores {
     }
 }
 
+.text-info {
+    @include rtl {
+        direction: ltr;
+        unicode-bidi: isolate;
+        margin-left: 4px;
+    }
+}
 .pre-match-additional-info {
     float: left;
     width: 100%;
@@ -237,7 +244,7 @@ live-game-scores {
     > i {
         display: block;
         padding: 0 6px;
-        color: $c16-sp-4;
+        color: $c16-tp-4;
         transition: 250ms color;
         font-style: normal;
         @include ltr {
@@ -247,7 +254,7 @@ live-game-scores {
             float: right;
         }
         &:hover {
-            color: $c16-sp-2;
+            color: $c16-tp-2;
         }
     }
     > ul {
@@ -255,22 +262,22 @@ live-game-scores {
             float: left;
             margin: 0 0 0 6px;
             padding: 0 4px 0 10px;
-            border-left: 1px solid $skin-palette-8;
+            border-left: 1px solid $c16-sp-10;
         }
         @include rtl {
             float: right;
             margin: 0 6px 0 0;
             padding: 0 10px 0 4px;
-            border-right: 1px solid $skin-palette-8;
+            border-right: 1px solid $c16-sp-10;
         }
         > li {
             display: block;
             float: left;
             padding: 0 3px;
-            color: $text-palette-5;
+            color: $c16-tp-7;
             transition: 250ms color;
             &.active, &:hover {
-                color: $text-palette-4;
+                color: $c16-tp-6;
             }
             &.active {
                 pointer-events: none;

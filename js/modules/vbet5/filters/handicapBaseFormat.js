@@ -21,24 +21,26 @@ VBET5.filter('handicapBaseFormat',['Config', function(Config) {
 
         if (Config.main.fractionalBaseFormat && (filterCondition || filterCondition === undefined)) {
             sign = value < 0 ? '-' : ''; // There might be some error here. Most likely the correct sign calculations are value <= 0 ? '' : (base.indexOf('+') > -1 ? '+' : '');
+
             if ((value / 0.25) % 2 === 0) {
                 return hideSign ? Math.abs(value) : value;
-            } else {
-                if (showOrdered) {
-                    var value1 =  Math.abs(value - 0.25);
-                    var value2 = Math.abs(value + 0.25);
-                    var result;
-                    if (value1 <= value2) {
-                        result = value1 + ' / ' + value2;
-                    } else {
-                        result = value2 + ' / ' + value1;
-                    }
-                    return hideSign ? result : sign + result;
-                }
-                return (value - 0.25) + ' / ' + Math.abs((value + 0.25));
             }
-        } else {
-            return hideSign ? Math.abs(value) : sign + value;
+
+            if (showOrdered) {
+                var value1 =  Math.abs(value - 0.25);
+                var value2 = Math.abs(value + 0.25);
+                var result;
+                if (value1 <= value2) {
+                    result = value1 + ' / ' + value2;
+                } else {
+                    result = value2 + ' / ' + value1;
+                }
+                return hideSign ? result : sign + result;
+            }
+
+            return (value - 0.25) + ' / ' + Math.abs((value + 0.25));
         }
+
+        return hideSign ? Math.abs(value) : sign + value;
     };
 }]);

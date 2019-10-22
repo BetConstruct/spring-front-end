@@ -12,6 +12,11 @@
                         <span trans>Finished</span>
                     </button>
                 </li>
+                <li ng-click="toggleLeftMenu();">
+                    <button>
+                        <div class="closed-left-nav-v3" title="{{(leftMenuClosed ? 'Expand' : 'Collapse')|translate}}"></div>
+                    </button>
+                </li>
             </ul>
         </div>
         <div class="filter-view-v3">
@@ -82,7 +87,8 @@
             <div class="left-nav-view-v3 prematch-view multiselect-view-v3">
                 <ul>
                     <li ng-repeat="sport in sportList track by sport.Id">
-                        <div class="sports-item-v3 {{sport.Alias}}" ng-class="{active: sport.expanded}" ng-click="sport.expanded=!sport.expanded"><!--active-->
+                        <div class="sports-item-v3 {{sport.Alias}}" ng-class="{active: sport.expanded}" ng-click="toggleSport(sport);toggleLeftMenu(true)"><!--active-->
+                            <div class="sport-icon-v3 {{sport.Alias}}"></div>
                             <p>{{sport.Name}}</p>
                             <div class="arrow-view-v3"></div>
                             <div class="sport-games-count-v3">
@@ -94,7 +100,7 @@
                             <div class="region-items-box">
                                 <div class="full-region-info-v3">
                                     <div class="region-item-v3" ng-class="{active: region.expanded}" ng-click="region.expanded=!region.expanded">
-                                        <div ng-show="region.Alias" class="flag-view-v3 flag-icon flag-{{region.Alias | removeUselessSymbolsByRegexp: '[,\' ]+': 'g': 'true'}}"></div>
+                                        <div ng-show="region.Alias" class="flag-view-v3 flag-icon flag-{{region.Alias | removeUselessSymbolsByRegexp: '[,\%,\(,\) ]+': 'g': 'true'}}"></div>
                                         <p>{{region.Name}} <span>({{region.Competitions.length}})</span></p>
                                         <div class="arrow-view-v3"></div>
                                     </div>

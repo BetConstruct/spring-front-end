@@ -8,7 +8,7 @@
         <li><a href="#/news/?news={{ news.id }}#lnews-{{ news.id }}"><img ng-src="{{news.thumbnail_images.thumbnail.url || news.thumbnail}}" alt=""></a></li>
         <li>
             <p><a href="#/news/?news={{ news.id }}#lnews-{{ news.id }}" ng-bind-html="news.title" ng-click="gaSend('send', 'event', 'news', 'betslip news click', {'page': $location.path(), 'eventLabel': news.categoryTitle});gaSend('send', 'event', 'news', 'betslip news by ID', {'page': $location.path(), 'eventLabel': news.id});"></a></p>
-            <span ng-bind="news.date|formatDate:'full'"></span>
+            <span ng-bind="news.date|formatDate:'full':null:$root.env.timeFormat"></span>
         </li>
     </ul>
 </div>

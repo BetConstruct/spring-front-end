@@ -3,8 +3,8 @@
     <audio id="{{openGame.id}}" ng-src="{{animationSoundsMap[openGame.last_event.type] + '.mp3'}}" autoplay="" ng-if="animationSoundOn() && animationSoundsMap[openGame.last_event.type]" ng-init="changeVolume()"></audio>
     <audio id="{{openGame.id}}" ng-src="{{animationSoundsMap[openGame.last_event.type] + '.ogg'}}" autoplay="" ng-if="animationSoundOn() && animationSoundsMap[openGame.last_event.type] && !isMp3Supported" ng-init="changeVolume()"></audio>
 
-    <feedconstruct-animations ng-if="openGame.activeFieldType != 'video' && $root.conf.sportsWithAnimations[openGame.sport.alias] === 'feedconstruct'" open-game="openGame"></feedconstruct-animations>
-    <div ng-if="$root.conf.sportsWithAnimations[openGame.sport.alias] === 'VBET5' && openGame.activeFieldType !== 'video'">
+    <feedconstruct-animations ng-if="openGame.activeFieldType === 'field' && $root.conf.sportsWithAnimations[openGame.sport.alias] === 'feedconstruct'" open-game="openGame"></feedconstruct-animations>
+    <div ng-if="$root.conf.sportsWithAnimations[openGame.sport.alias] === 'VBET5' && openGame.activeFieldType === 'field'">
 
         <!-- Soccer animation control -->
         <div class="game-control soccer" ng-if="openGame.sport.alias === 'Soccer'">
@@ -162,7 +162,7 @@
                             </div>
                             <div trans class="set" title="Ace">Ace</div>
                         </div>
-                        <div ng-if="openGame.last_event.type === 'Point'">
+                        <div ng-if="openGame.last_event.type === 'Point' && (!$root.conf.hidePointsForCompetitions['k' + openGame.competition.id] || $root.conf.hidePointsForCompetitions['k' + openGame.competition.id] && $root.env.authorized)">
                             <div class="score_1"><span>{{openGame.stats.passes.team1_value}}</span></div>
                             <div class="score_2"><span>{{openGame.stats.passes.team2_value}}</span></div>
                             <div trans class="point_text" title="Point">Point</div>

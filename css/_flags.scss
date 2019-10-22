@@ -90,7 +90,7 @@
 .flag-europe { background-position: 0 28.719723%; }
 .flag-fao { background-position: 0 29.065744%; }
 .flag-falkland { background-position: 0 29.411765%; }
-.flag-faroes { background-position: 0 29.757785%; }
+.flag-faroes, .flag-faroeislands { background-position: 0 29.757785%; }
 .flag-fiji { background-position: 0 30.103806%; }
 .flag-finland { background-position: 0 30.449827%; }
 .flag-france { background-position: 0 30.795848%; }
@@ -143,7 +143,7 @@
 .flag-kurdish { background-position: 0 47.058824%; }
 .flag-kuwait { background-position: 0 47.404844%; }
 .flag-kyrgyzstan { background-position: 0 47.750865%; }
-.flag-laos { background-position: 0 48.096886%; }
+.flag-laos, .flag-laopeoplesdemocraticrepublic { background-position: 0 48.096886%; }
 .flag-latvia { background-position: 0 48.442907%; }
 .flag-lebanon { background-position: 0 48.788927%; }
 .flag-lesotho { background-position: 0 49.134948%; }
@@ -152,7 +152,7 @@
 .flag-liechtenshein { background-position: 0 50.17301%; }
 .flag-lithuania { background-position: 0 50.519031%; }
 .flag-luxembourg { background-position: 0 50.865052%; }
-.flag-macao { background-position: 0 51.211073%; }
+.flag-macao, .flag-macau { background-position: 0 51.211073%; }
 .flag-macedonia, .flag-northmacedonia { background-position: 0 51.557093%; }
 .flag-madagascar { background-position: 0 51.903114%; }
 .flag-malawi { background-position: 0 52.249135%; }
@@ -242,7 +242,7 @@
 .flag-southafrica { background-position: 0 81.314879%; }
 .flag-southamerica { background-position: 0 81.6609%; }
 .flag-southgeorgiaandsouthsandwich { background-position: 0 82.00692%; }
-.flag-southkorea { background-position: 0 82.352941%; }
+.flag-southkorea, .flag-koreasouth { background-position: 0 82.352941%; }
 .flag-southsudan { background-position: 0 82.698962%; }
 .flag-spain { background-position: 0 83.044983%; }
 .flag-srilanka { background-position: 0 83.391003%; }
@@ -292,7 +292,7 @@
 .flag-zambia { background-position: 0 98.615917%; }
 .flag-zimbabwe { background-position: 0 98.961938%; }
 .flag-allupcoming { background-position: 0 99.307958%; }
-.flag-america { background-position: 0 99.653979%; }
+.flag-america, .flag-americas { background-position: 0 99.653979%; }
 .flag-withvideo { background-position: 0 100%; }
 @if $header-lang-with-flag == true{
   $languages:(

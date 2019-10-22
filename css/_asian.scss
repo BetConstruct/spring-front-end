@@ -144,13 +144,23 @@
   }
   .video-player-control {
     top: -28px;
-    right: 112px;
+    @include ltr {
+      right: 112px;
+    }
+    @include rtl {
+      left: 112px;
+    }
   }
 }
 
 .gaming-wrapper-asia .video-player-control.volume-control {
   top: -28px;
-  right: 82px;
+  @include ltr {
+    right: 82px;
+  }
+  @include rtl {
+    left: 82px;
+  }
 }
 
 .gaming-wrapper-asia .video-player-control.volume-control > span,
@@ -162,12 +172,17 @@
 .gaming-wrapper-asia .video-player-control > span.video-play:before {
   content: "\e651";
   position: absolute;
-  left: 0;
   text-indent: 0;
   font: 18px/20px icomoon;
   width: 24px;
   text-align: center;
   top: 2px;
+  @include ltr {
+    left: 0;
+  }
+  @include rtl {
+    right: 0;
+  }
 }
 
 .gaming-wrapper-asia .video-player-control > span.video-play:before {
@@ -184,7 +199,12 @@
   z-index: 99;
   top: -31px;
   width: calc(100% + 2px);
-  left: -1px;
+  @include ltr {
+    left: -1px;
+  }
+  @include rtl {
+    right: -1px;
+  }
 }
 
 .gaming-wrapper-asia .game-video-detached .game-video-container.detached-game-container {
@@ -198,10 +218,15 @@
 .gaming-wrapper-asia .game-video-detached .detached-game-container .game-video-container {
   position: absolute;
   z-index: 22;
-  left: 0;
   width: 100%;
   height: 100%;
   top: 0;
+  @include ltr {
+    left: 0;
+  }
+  @include rtl {
+    right: 0;
+  }
 }
 
 .gaming-wrapper-asia .game-video-detached .detached-game-container .animation-control .game-video .video-player-container {
@@ -211,10 +236,15 @@
 .gaming-wrapper-asia .game-video-detached .detached-game-container .video-player-control {
   background: none;
   top: -28px;
-  right: 54px;
   position: absolute;
   height: 24px;
   width: 24px;
+  @include ltr {
+    right: 54px;
+  }
+  @include rtl {
+    left: 54px;
+  }
 }
 
 .gaming-wrapper-asia .game-video-fullscreen .detached-game-container .video-player-control {
@@ -236,10 +266,15 @@
 
 .gaming-wrapper-asia .game-video-detached .detached-game-container .animation-control .game-video {
   position: absolute;
-  left: 0;
   top: 0;
   width: 100%;
   height: 100%;
+  @include ltr {
+    left: 0;
+  }
+  @include rtl {
+    right: 0;
+  }
 }
 
 .gaming-wrapper-asia .game-video-detached .detached-game-container .animation-control {
@@ -487,7 +522,7 @@
 }
 
 .asian-left-contain-menu .bet-form form input[type="text"] {
-  width: 60px;
+  width: 74px;
   height: 20px;
   border-radius: 3px;
   padding: 2px 4px;
@@ -2213,13 +2248,27 @@
     height: 24px;
     box-shadow: none;
     padding-right: 48px;
+    &:hover, &.active {
+      .sport-games-count-v3 {
+        opacity: 1;
+      }
+    }
     &.active {
       border-radius: 4px 4px 0 0;
+      > .arrow-view-v3:before {
+        content: "\e675";
+      }
     }
     > p {
       line-height: 24px;
       font-size: 11px;
       text-transform: uppercase;
+    }
+    &:before {
+      box-shadow: none !important;
+    }
+    &.favoritecompetitions:before {
+      line-height: 24px;
     }
   }
   .sport-icon-v3 {
@@ -2248,7 +2297,13 @@
     }
   }
   .arrow-view-v3 {
-    font: 12px/24px icomoon;
+    width: 24px;
+    color: $text-palette-1;
+    background: none !important;
+    font: 16px/24px icomoon;
+    &:before {
+      content: "\e674"
+    }
   }
   .favorite-nav-icon-v3:before {
     font: 16px/24px icomoon;
@@ -2256,6 +2311,38 @@
   .games-list-mini-view-v3 {
     padding: 0 0 5px;
     border: none;
+  }
+  .competition-view-v-3:first-child > .competition-title-v3 {
+   padding: 0;
+  }
+  .competition-title-v3 {
+    > label {
+      width: 100%;
+      position: relative;
+      @include ltr {
+        padding: 0 24px 0 10px;
+      }
+      @include rtl {
+        padding: 0 10px 0 24px ;
+      }
+      span.favorite-competitions-icon-t {
+        top: 2px;
+      }
+      .flag-view-v3 {
+        top: 4px;
+        @include ltr {
+          left: auto;
+          right: 6px;
+        }
+        @include rtl {
+          left: 6px;
+          right: auto;
+        }
+      }
+    }
+    &:before, &:after {
+      content: none;
+    }
   }
 }
 
@@ -2303,6 +2390,18 @@
   font: 11px/20px icomoon;
   &:before {
     content: "\f005";
+  }
+}
+
+.favorite-icon-clear {
+  color: rgba(set-color(lighten(desaturate(adjust-hue($skin-color, 3deg), 16), 4)),0.7);
+  font: 11px/20px icomoon;
+  transition: color 240ms;
+  &:before {
+    content: "\e6eb";
+  }
+  &:hover {
+    color: set-color(lighten(desaturate(adjust-hue($skin-color, 3deg), 16), 4));
   }
 }
 
@@ -2528,6 +2627,9 @@
   border-radius: 2px;
   &.closed {
     height: 24px;
+  }
+  .favoritecompetitions:before {
+    font: 11px/20px icomoon;
   }
 }
 
@@ -2784,31 +2886,6 @@ table.hdp-contain-j {
     }
   }
 }
-.body-wrapper[class*="betcoapps.com"] {
-  min-width: 1400px;
-  table.hdp-contain-j {
-    td, th {
-      &.xs-s, &.ms, &.xs:not(:last-child):not(:first-child) {
-        width: 7%;
-        min-width: 102px;
-        max-width: 102px;
-      }
-    }
-    tr td:nth-child(6):nth-last-child(6),
-    tr td:nth-child(5):nth-last-child(6) {
-      border-right-color: $hero-color;
-    }
-    &.hdp-titile-j tr td:nth-child(5):nth-last-child(6) {
-      border-right: 1px solid #000000;
-    }
-    &.hdp-titile-j td:not(:first-child) > p {
-      padding: 0 6px;
-    }
-    td table {
-      table-layout: auto;
-    }
-  }
-}
 .asian-pagination {
   float: left;
   width: 100%;
@@ -2974,4 +3051,37 @@ table.hdp-contain-j {
 }
 .additionalButtonsBetslip-j {
   margin-bottom: 2px;
+}
+
+.show-all-options-f{
+  display: table-cell;
+  vertical-align: middle;
+  @include ltr {
+    padding-right: 3px;
+  }
+  @include rtl {
+    padding-left: 3px;
+  }
+  > button{
+    border: none;
+    background: $text-palette-1;
+    color: set-color($text-palette-1);
+    font-size: 10px;
+    line-height: 14px;
+    height: 24px;
+    text-transform: uppercase;
+    cursor: pointer;
+    @include ltr {
+      float: left;
+      margin-right: 1px;
+    }
+    @include rtl {
+      float: right;
+      margin-left: 1px;
+    }
+    &.active, &:hover{
+      background: $hero-color;
+      color: set-color($hero-color);
+    }
+  }
 }

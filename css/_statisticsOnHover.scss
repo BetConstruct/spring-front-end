@@ -28,6 +28,14 @@
     margin: 0;
     vertical-align: middle;
   }
+  > div {
+    text-align: center;
+    position: absolute;
+    top: 50%;
+    width: 100%;
+    color: rgba(set-color($skin-color),0.8);
+    transform: translateY(-50%);
+  }
   table {
     width: 100%;
     border-collapse: collapse;

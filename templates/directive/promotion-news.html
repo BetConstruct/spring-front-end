@@ -1,9 +1,9 @@
 <div ng-class="mainClass" class="promotions-main-p">
     <div class="promotions-menu-p ng-scope" ng-if="promotionCategories.length > 1">
-        <div class="promotions-baner-p">
-            <p trans>Promotions</p>
-            <span ng-repeat="item in promotionCategories track by $index" class="promotions-icons-{{item.key}} cms-jcon-{{item.key}}"></span>
-        </div>
+        <!--<div class="promotions-baner-p">-->
+            <!--<p trans>Promotions</p>-->
+            <!--<span ng-repeat="item in promotionCategories track by $index" class="promotions-icons-{{item.key}} cms-jcon-{{item.key}}"></span>-->
+        <!--</div>-->
         <ul>
             <li ng-repeat="item in promotionCategories track by $index"
                 ng-class="{active: slug === item.key}"
@@ -27,7 +27,7 @@
     </div>
     <div ng-repeat="group in recentNewsList track by $index" ng-show="!newsAreLoading" class="block-sport-news">
 
-        <div class="list-news">
+        <div class="list-news promo">
             <ul ng-repeat="news in group.news track by $index"
                 ng-class="'news-column-' + $index">
                 <li ng-class="{'active-news': (news.id == selectedNews.id)}">

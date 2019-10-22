@@ -37,7 +37,7 @@
                     <div class="list-totalizator" >
                         <ul ng-repeat="game in competition|orderBy:'order'" ng-class="{'complete': complete}">
                             <li><p>{{game.order}}</p></li>
-                            <li class="time-totalizator-game"><p>{{game.start_ts|formatDate:'full':null:env.timeFormat}}</p></li>
+                            <li class="time-totalizator-game"><p>{{game.start_ts|formatDate:'full':null:$root.env.timeFormat}}</p></li>
                             <li class="name-team-totalizator"><p>{{game.team1_name}}</p></li>
                             <li class="name-team-totalizator"><p>{{game.team2_name}}</p></li>
 

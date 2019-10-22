@@ -132,7 +132,7 @@ VBET5.directive('promotionNews',
                      * @param count
                      */
                     function loadNews(count) {
-                        count = parseInt(count, 10) || 999;
+                        count = parseInt(count, 10) || count;
                         if ($scope.slug) {
                             $scope.newsAreLoading = true;
                             content.getPostsByCategorySlug($scope.slug, $scope.categoryJsonType, count, false, WPConfig.wpPromoUrl, $scope.useCustomBaseHost && WPConfig.wpPromoCustomBaseHost).then(function (response) {
@@ -242,21 +242,23 @@ VBET5.directive('promotionNews',
                      *
                      */
                     function loadCategories() {
-                        $scope.promotionCategories = [{title: "All", key: "all"}];
+                        $scope.promotionCategories = [];
                             content.getPromotionCategories().then(function(data) {
+                                var slug = $location.search().slug || $scope.slug;
                                 if(data && data.data && data.data.status === "ok" && data.data.categories.length > 0) {
                                     var categories = data.data.categories;
                                     for (var i = 0, length = categories.length; i < length; ++i) {
-                                        if (categories[i].name !== "promotions") {
-                                            $scope.promotionCategories.push({
-                                                title: categories[i].title,
-                                                key: categories[i].name
-                                            });
-                                        }
-
+                                        $scope.promotionCategories.push({
+                                            title: categories[i].title,
+                                            key: categories[i].name
+                                        });
                                     }
                                 }
-                                $scope.setSlug($location.search().slug || $scope.slug || $scope.promotionCategories[0], true);
+                                if ($scope.promotionCategories.length > 0 && !slug) {
+                                    slug = $scope.promotionCategories[0].key;
+                                }
+
+                                $scope.setSlug(slug, true);
                         });
                     }
 

@@ -55,7 +55,7 @@
                             <span ng-bind="game.info.current_game_state|convertSetName:game.sport.alias|translate"></span><span ng-bind="fixDisplayTime(game.info.current_game_time)"></span>
                         </p>
                         <p class="time-g-asia" ng-show="game.type !=1 && $index === 0">
-                            <span ng-bind="game.start_ts|formatDate:($root.conf.layoutTimeFormat.asian || 'D/MM')"></span> <span ng-bind="game.start_ts|formatDate:'hour':null:env.timeFormat"></span>
+                            <span ng-bind="game.start_ts|formatDate:($root.conf.layoutTimeFormat.asian || 'D/MM')"></span> <span ng-bind="game.start_ts|formatDate:'hour':null:$root.env.timeFormat"></span>
                         </p>
                     </div>
                 </td>

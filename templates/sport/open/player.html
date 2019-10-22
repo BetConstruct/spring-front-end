@@ -10,24 +10,25 @@
     <div class="game-video-container">
         <p ng-if="!env.authorized && !$root.conf.integrationMode" trans ng-click="openLoginForm($event)" class="login-link">You need to be logged in to be able to play video.</p>
         <p ng-if="!env.authorized && $root.conf.integrationMode" trans class="login-link">You need to be logged in to be able to play video.</p>
-        <p ng-if="env.authorized && (profile.calculatedBalance + profile.calculatedBonus) === 0 && !profile.initial_balance" trans ng-click="!$root.conf.disableDepositPage && broadcast('toggleSliderTab', 'deposit');$event.stopPropagation();">You need to have non-zero balance to be able to play video.</p>
-        <i ng-if="env.authorized && !$root.conf.video.autoPlay && game.video_data === undefined && ((profile.calculatedBalance + profile.calculatedBonus) !== 0 || profile.initial_balance)" class="video-play-button" ng-click="broadcast('game.restoreVideo', game.id)"></i>
-        <div ng-if="env.authorized && game.video_data && ((profile.calculatedBalance + profile.calculatedBonus) > 0 || profile.initial_balance > 0)" class="video-player-container" ng-init="soundVolume = env.sound">
+        <p ng-if="env.authorized && (profile.calculatedBalance + profile.calculatedBonus) === 0 && !$root.conf.video.allowedWithNoneBalance[game.tv_type]" trans ng-click="!$root.conf.disableDepositPage && broadcast('toggleSliderTab', 'deposit');$event.stopPropagation();">You need to have non-zero balance to be able to play video.</p>
+        <i ng-if="env.authorized && !$root.conf.video.autoPlay && game.video_data === undefined && ((profile.calculatedBalance + profile.calculatedBonus) !== 0 || $root.conf.video.allowedWithNoneBalance[game.tv_type])" class="video-play-button" ng-click="broadcast('game.restoreVideo', game.id)"></i>
+        <div ng-if="env.authorized && game.video_data && ((profile.calculatedBalance + profile.calculatedBonus) > 0 || $root.conf.video.allowedWithNoneBalance[game.tv_type])" class="video-player-container" ng-init="soundVolume = env.sound">
 
             <div class="video-player-control" ng-show="videoIsLoaded">
                 <span ng-click="togglePause();" ng-show="!paused" class="video-pause"></span>
                 <span ng-click="togglePause();" ng-show="paused" class="video-play"></span>
             </div>
             <div class="video-player-control sounds" ng-show="videoIsLoaded">
-                <span ng-click="soundVolume = 0;" ng-show="soundVolume > 0" class="video-mute"></span>
-                <span ng-click="soundVolume = 0.75;" ng-show="soundVolume === 0" class="video-unmute"></span>
+                <span ng-click="env.sound = 0;" ng-show="env.sound > 0" class="video-mute"></span>
+                <span ng-click="env.sound = 0.75;" ng-show="env.sound === 0" class="video-unmute"></span>
                 <div class="sound-volume">
                     <div>
-                        <rzslider rz-slider-model="soundVolume" rz-slider-floor="0" rz-slider-ceil="1" rz-slider-step="0.01" rz-slider-precision="1" rz-slider-always-show-bar="true"></rzslider>
+                        <rzslider rz-slider-model="env.sound" rz-slider-floor="0" rz-slider-ceil="1" rz-slider-step="0.01" rz-slider-precision="1" rz-slider-always-show-bar="true"></rzslider>
                     </div>
                 </div>
             </div>
-            <flashplayer id="gamevideo{{game.id}}" stream-url="{{game.video_data}}" provider-id="{{game.tv_type}}" initially-muted="{{ soundVolume }}"></flashplayer>
+            <hls-player ng-if="$root.conf.video.providersThatSupportHls[game.tv_type]" provider-id="{{game.tv_type}}" stream-url="{{game.video_data}}"></hls-player>
+            <flashplayer ng-if="!$root.conf.video.providersThatSupportHls[game.tv_type]" id="gamevideo{{game.id}}" stream-url="{{game.video_data}}" provider-id="{{game.tv_type}}" initially-muted="{{ soundVolume }}"></flashplayer>
         </div>
     </div>
     <div class="fav-monitor" ng-show="game.activeFieldType==='video' && game.video_data">

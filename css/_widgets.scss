@@ -4,7 +4,8 @@
 .body-wrapper.widgetnews,
 .body-wrapper.widgetlivegame .contain-gameing,
 .body-wrapper.widgetlivegame .gameing-wrapper,
-.body-wrapper.widgetanimation{
+.body-wrapper.widgetanimation,
+.body-wrapper.widgetsportsbook-jackpot-counter {
   min-width: 0;
 }
 .body-wrapper.widgetlivegame.classic .centr-market-contain{
@@ -301,7 +302,8 @@
     min-height: 0;
   }
 }
-.body-wrapper.widgetanimation {
+.body-wrapper.widgetanimation,
+.body-wrapper.widgetsportsbook-jackpot-counter {
   .conteiner {
     min-width: auto;
   }
@@ -331,6 +333,20 @@
     &.with-point {
       padding-right: 0.5%;
     }
+  }
+}
+.widgetsportsbook-jackpot-counter .s-j-details {
+  min-height: 52px;
+  margin: 0;
+  background: none;
+  > li:not(.s-j-balance) {
+    display: none;
+  }
+  &:before {
+    content: none;
+  }
+  sup {
+    display: none;
   }
 }
 @media screen and (max-width: 1600px) {

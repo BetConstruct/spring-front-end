@@ -28,7 +28,7 @@
                             <p ng-bind="message.subject" title="{{message.subject}}"></p>
                         </div>
                         <div class="message-time">
-                            <p>{{message.date|formatDate:'full'}}</p>
+                            <p>{{message.date|formatDate:'full':null:$root.env.timeFormat}}</p>
                         </div>
                         <div class="message-delete" ng-show="message.isDeletable">
                             <a ng-click="deleteMessage(message)">Delete</a>
@@ -65,7 +65,7 @@
                             <p ng-bind="message.subject"  title="{{message.subject}}"></p>
                         </div>
                         <div class="message-time">
-                            <p>{{message.date|formatDate:'full'}}</p>
+                            <p>{{message.date|formatDate:'full':null:$root.env.timeFormat}}</p>
                         </div>
                         <div class="message-delete" ng-show="message.isDeletable">
                             <a ng-click="deleteMessage(message)">Delete</a>

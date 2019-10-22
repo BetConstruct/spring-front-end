@@ -1,33 +1,27 @@
 <div>
-    <div class="sc-add">
-        <ul class="sc-add-table" ng-class="{'active': value.Currency === currency_name}">
+    <div class="sc-add" ng-if="!loadingProcess">
+        <ul ng-repeat="wallet in wallets track by wallet.Id" class="sc-add-table">
             <li class="sc-add-section">
-                <i class="card-icon"></i>
+                <!--<i class="card-icon"></i>-->
+                <img ng-src="{{wallet.image}}">
             </li>
             <li class="sc-add-info">
-                <p>9332 - XXXX - XXXX - 0866</p>
-                <span trans>Main card</span>
+                <p ng-bind="wallet.WalletId"></p>
+               <!-- <span trans>Main card</span>-->
             </li>
             <li class="sc-deposit">
-                <button trans>Deposit</button>
+                <button ng-click="goToPayment(wallet.paymentID)" trans>Deposit</button>
             </li>
             <li class="sc-remove">
-                <span trans>Remove</span>
+                <span ng-click="removeWallet(wallet.Id)" trans>Remove</span>
             </li>
         </ul>
-        <div class="sc-add-another"  ng-class="{'active': multiCurrency.showCurrencyList}" ng-click="multiCurrency.showCurrencyList = !multiCurrency.showCurrencyList">
-            <div class="sc-add-dropdown" ng-class="{'active': multiCurrency.showCurrencyList}">
-                <i></i>
-                <p trans>Add another currency</p>
-            </div>
-            <div class="sc-add-new-card">
-                <p>Add another card</p>
-            </div>
-        </div>
+        <p ng-if="!wallets || !wallets.length" trans>There is no saved wallets</p>
     </div>
-    <div class="promotions-balance-j" ng-class="{'no-banners-balance': !balanceTopBanners.length}" ng-controller="cmsPagesCtrl" ng-init="gePageBanners('balance','withdraw-banner-' + $root.env.lang);">
+    <vbet-loader ng-if="loadingProcess"></vbet-loader>
+    <!--<div ng-show="!loadingProces" class="promotions-balance-j" ng-class="{'no-banners-balance': !balanceTopBanners.length}" ng-controller="cmsPagesCtrl" ng-init="gePageBanners('balance','withdraw-banner-' + $root.env.lang);">
         <div>
             <vbet-big-slider class="big-slider-casino-directive" ng-if="balanceTopBanners" images="balanceTopBanners" link-click-handler="openCBannerLink" slider-template="true"></vbet-big-slider>
         </div>
-    </div>
+    </div>-->
 </div>

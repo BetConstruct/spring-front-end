@@ -4,6 +4,7 @@ module.exports = function (grunt) {
     var CMS_CONFIG_URL = 'https://cmsbetconstruct.com/getJson/generateConfJson?skin_id=';
     var CMS_SASS_URL = 'https://cmsbetconstruct.com/getjson/getSass?skin_id=';
     var CMS_DEPLOY_URL = 'http://cmsbetconstruct.com/getJson/getServerName?skin_id=';
+    var CMS_LOGGING_URL = 'https://cmsbetconstruct.com/general/writeApiSkinCreateLog';
     // add-sass --content = 'CssText'  This task will add given css text to all skins skin.scss files
     grunt.registerTask('add-sass', function () {
 
@@ -51,6 +52,9 @@ module.exports = function (grunt) {
             files.push({url: url, dest: 'languages_tmp'});
             console.log(url);
         });
+        var noTransUrl = grunt.config.get('translationsJsonUrl') + grunt.config.get('skinConfig') + '/languages/notrans.json';
+        files.push({url: noTransUrl, dest: 'languages_tmp'});
+        console.log(noTransUrl);
         grunt.config.set('downloadfile', {files: files});
     });
 
@@ -91,9 +95,15 @@ module.exports = function (grunt) {
         var path = require('path');
         var url = require('url');
         var request = require('sync-request');
+        var msg;
 
         var defaultConfig = JSON.parse(fs.readFileSync('default_skin_config.json'));
         var site_id = grunt.option('site-id') || 13;
+
+        function logToCMS(msg) {
+            request('POST', CMS_LOGGING_URL, { json:  {"createSkin": {"skin_id": site_id, "log": msg}}});
+        }
+
         var res = request('GET', CMS_CONFIG_URL + site_id);
         var response = JSON.parse(res.getBody().toString());
         if (response && response.status === 'ok' && response.link) {
@@ -103,12 +113,17 @@ module.exports = function (grunt) {
             console.log("\n\nConfig loaded from CMS\n\n");
         } else {
             console.log("\n\nConfig doesn't exist in CMS (yet)\n\n", response);
-            if (!skin) grunt.fail.fatal("skin name not specified and cannot be retrieved from CMS, aborting");
+            if (!skin) {
+                logToCMS("Error: skin not found in CMS");
+                grunt.fail.fatal("skin name not specified and cannot be retrieved from CMS, aborting");
+            }
         }
         var configFilePath = path.join('..', 'js', 'skins',  skin + '.js');
         var skinFolderPath = path.join('..', 'skins', skin);
         if (fs.existsSync(configFilePath)) {
-            grunt.fail.fatal("skin config file already exists: " + configFilePath);
+            msg = "Grunt error:skin config file already exists: " + configFilePath;
+            logToCMS(msg);
+            grunt.fail.fatal(msg);
         }
         if (fs.existsSync(skinFolderPath)) {
             grunt.fail.fatal("skin folder  already exists: " + skinFolderPath);
@@ -117,13 +132,15 @@ module.exports = function (grunt) {
         res = request('GET', CMS_SASS_URL+ site_id);
         response = JSON.parse(res.getBody().toString());
         if (response.status !== "ok") {
-            grunt.fail.fatal("cannot load sass variables from CMS");
+            msg = "Grunt error: cannot load sass variables from CMS";
+            logToCMS(msg);
+            grunt.fail.fatal(msg);
         }
         console.log("sass config loaded from CMS");
         var sassVars = JSON.parse(fs.readFileSync('default_skin_sass.json'));
         for (var k in response) {
             if (response.hasOwnProperty(k) && k !== "status") {
-                sassVars[response[k].key] = response[k].value;
+                sassVars[k] = response[k];
             }
         }
         var sassContent = [];
@@ -132,8 +149,7 @@ module.exports = function (grunt) {
         }
         var configContent = "\nVBET5.constant('SkinConfig', " + JSON.stringify(defaultConfig.SkinConfig, null, 4) + ");" +
                             "\nCMS.constant('SkinWPConfig', " + JSON.stringify(defaultConfig.SkinWPConfig || {}, null, 4)+" );" +
-                            "\nCASINO.constant('SkinCConfig', " + JSON.stringify(defaultConfig.SkinCConfig || {}, null, 4) +");" +
-                            "\nEXCHANGE.constant('SkinExchangeConfig', " + JSON.stringify(defaultConfig.SkinExchangeConfig || {}, null, 4) +");";
+                            "\nCASINO.constant('SkinCConfig', " + JSON.stringify(defaultConfig.SkinCConfig || {}, null, 4) +");";
 
 
         fs.writeFileSync(configFilePath, configContent);
@@ -144,8 +160,7 @@ module.exports = function (grunt) {
         fs.mkdirSync(path.join(skinFolderPath, 'sass'));
         fs.mkdirSync(path.join(skinFolderPath, 'sass', 'functions'));
         console.log("skin folders created");
-        fs.writeFileSync(path.join(skinFolderPath, 'sass', 'skin.scss'), "@import '../../../css/skinConstruction';");
-
+        fs.writeFileSync(path.join(skinFolderPath, 'sass', 'skin.scss'), "@import '../../../css/mixins'; @import 'functions/colors'; @import '../../../css/createSkin';");
         sassContent = sassContent.map(function(str) { // download images and change url in sass to local path
             var match = str.match(/url\((.+)\)/);
             if (match && match[1] && match[1].toLowerCase().indexOf("http") === 0) {
@@ -159,7 +174,9 @@ module.exports = function (grunt) {
             return str;
         });
         fs.writeFileSync(path.join(skinFolderPath, 'sass', 'functions', '_colors.scss'), sassContent.join("\n"));
-        console.log("skin sass generated");
+        msg = "Grunt:skin sass generated";
+        console.log(msg);
+        logToCMS(msg);
         var deployConfig = {"host": "", "key": "ice2014", "path": ""};
         res = request('GET', CMS_DEPLOY_URL + site_id);
         response = JSON.parse(res.getBody().toString());
@@ -167,7 +184,9 @@ module.exports = function (grunt) {
             deployConfig.host = response.data.server_name;
             deployConfig.path = response.data.release_folder_name;
         } else {
-            grunt.fail.fatal("cannot load deployment config from CMS:", response);
+            msg = "Grunt error:cannot load deployment config from CMS:" + JSON.stringify(response);
+            logToCMS(msg);
+            grunt.fail.fatal(msg);
         }
         fs.writeFileSync(path.join(skinFolderPath, 'deploy.json'), JSON.stringify(deployConfig));
         fs.writeFileSync("skin_name.tmp", skin);
@@ -178,20 +197,21 @@ module.exports = function (grunt) {
         grunt.config.set('skinConfig', skin);
         grunt.option('skinConfig', skin);
         grunt.option('skin', skin);
+        logToCMS("Grunt: skin generated, ready to deploy");
 
-        try {
-            var currency = (defaultConfig.SkinConfig.main.registration && defaultConfig.SkinConfig.main.registration.defaultCurrency) || "USD";
-            res = request('GET',"https://casinoapi.betcoapps.com/api.php?action=addManager&partnerId=" + site_id + "&partnerName=" + skin + "&partnerCurr=" + currency);
-            response = JSON.parse(res.getBody().toString());
-            if (response.type !== "success") {
-                // TODO: inform someone that call has failed
-            } else {
-                //TODO: do something with response.apiSecretKey
-            }
-            console.log("casino request response:", response);
-        } catch(e) {
-            console.log("casino request failed", e)
-        }
+        // try {
+        //     var currency = (defaultConfig.SkinConfig.main.registration && defaultConfig.SkinConfig.main.registration.defaultCurrency) || "USD";
+        //     res = request('GET',"https://casinoapi.betcoapps.com/api.php?action=addManager&partnerId=" + site_id + "&partnerName=" + skin + "&partnerCurr=" + currency);
+        //     response = JSON.parse(res.getBody().toString());
+        //     if (response.type !== "success") {
+        //         // TODO: inform someone that call has failed
+        //     } else {
+        //         //TODO: do something with response.apiSecretKey
+        //     }
+        //     console.log("casino request response:", response);
+        // } catch(e) {
+        //     console.log("casino request failed", e)
+        // }
 
         grunt.task.run('import_angular_value');grunt.task.start(); //load skin config
 
@@ -268,7 +288,8 @@ module.exports = function (grunt) {
         var copyConfig = grunt.config.get('copy');
         if (conf && conf.VBET5 && conf.VBET5.SkinConfig && conf.VBET5.SkinConfig.main && conf.VBET5.SkinConfig.main.loadLibsLocally) {
             console.log("libs will be loaded locally (not from CDN)");
-            replaceConfig.noCdnLibs.options.patterns = [{match: /\/\/ajax.googleapis.com\/ajax\/libs/g, replacement: 'libs'}];
+            var replacement = (conf.VBET5.SkinConfig.main.resourcePathPrefix || '') + 'libs';
+            replaceConfig.noCdnLibs.options.patterns = [{match: /\/\/ajax.googleapis.com\/ajax\/libs/g, replacement: replacement}];
             copyConfig.main.files.push({expand: true, cwd: '../lib/min', src: ['**'], dest: 'app/<%=skin%>/libs/'});
         }
         console.log(replaceConfig.noCdnLibs.options);

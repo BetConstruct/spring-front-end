@@ -4,11 +4,17 @@
     <div ng-if="enlargedGame && enlargedGame.video_data" class="game-video game-video-detached game-video-fullscreen">
         <div class="game-video-container detached-game-container" id="detached-game-container-{{enlargedGame.id}}">
 
-            <video-player
+            <video-player ng-if="!$root.conf.video.providersThatSupportHls[openGame.tv_type]"
                     player-id="gamevideo{{enlargedGame.id}}full"
                     stream-url="{{enlargedGame.video_data}}"
                     provider-id="{{enlargedGame.tv_type}}"
-                    initially-muted="{{ env.sound }}"></video-player>
+                    initially-muted="{{ env.sound }}">
+            </video-player>
+            <hls-player
+                    ng-if="$root.conf.video.providersThatSupportHls[openGame.tv_type]"
+                    provider-id="{{enlargedGame.tv_type}}"
+                    stream-url="{{enlargedGame.video_data}}">
+            </hls-player>
             <!--<flashplayer id="gamevideo{{enlargedGame.id}}full" stream-url="{{enlargedGame.video_data}}" provider-id="{{enlargedGame.tv_type}}"  initially-muted="{{ env.sound }}"></flashplayer>-->
             <div class="video-player-control">
                 <div class="detached-info">

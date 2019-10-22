@@ -4,7 +4,11 @@ VBET5.controller('eSportsMainController', ['$rootScope', '$scope', 'Config', 'Ut
     var streamService = new StreamService($scope);
     $scope.asianMarkets = AsianMarkets;
     $scope.isEventInBetSlip = GameInfo.isEventInBetSlip;
-    var showTypes = $scope.asianMarkets.marketsBySport.Default.HDP; //will show ony HDP markets
+    var showTypes = $scope.asianMarkets.marketsBySport.Default.HDP.concat(["OUTRIGHT"]); //will show ony HDP markets
+
+    var ignoreMarketsMainOrder = Utils.copyObj(AsianMarkets.ignoreMainOrderFor);
+    ignoreMarketsMainOrder.OUTRIGHT = true;
+
     var availableTimePeriods = [0].concat(Config.main.upcomingGamesPeriods);
     $scope.pinnedGames = {};
     $scope.sharedData = {
@@ -42,7 +46,6 @@ VBET5.controller('eSportsMainController', ['$rootScope', '$scope', 'Config', 'Ut
         };
         //prepare game filter
         if (type === 'preMatch') {
-            game.show_type = {'@nin': ['OUTRIGHT']};
             if (Config.main.enableVisibleInPrematchGames) {
                 game['@or'].push({
                     'visible_in_prematch': 1
@@ -56,7 +59,7 @@ VBET5.controller('eSportsMainController', ['$rootScope', '$scope', 'Config', 'Ut
         //prepare market filter
         for (var i = showTypes.length; i--;) {
             var obj = {'display_key': showTypes[i]};
-            if (!AsianMarkets.ignoreMainOrderFor[showTypes[i]]) {
+            if (!ignoreMarketsMainOrder[showTypes[i]]) {
                 obj.main_order = 1; //only optimal market
             }
 
@@ -74,6 +77,10 @@ VBET5.controller('eSportsMainController', ['$rootScope', '$scope', 'Config', 'Ut
         oddType = oddType || 'odd';
         var game = JSON.parse(JSON.stringify(openGame));
         $rootScope.$broadcast('bet', {event: event, market: market, game: game, oddType: oddType});
+
+        // This click was added for closing BetSlip mode selector,
+        // because some buttons have stop.propagation and HideOnClick directive don't work
+        document.body.click();
     };
 
     $scope.handleStreaming = function handleStreaming(game) {
@@ -83,6 +90,9 @@ VBET5.controller('eSportsMainController', ['$rootScope', '$scope', 'Config', 'Ut
         $scope.openGame = {
             type: game.type,
             id: game.id,
+            sport: game.sport,
+            team1_name: game.team1_name,
+            team2_name: game.team2_name,
             tv_type: game.tv_type,
             video_id: game.video_id,
             video_id2: game.video_id2,
@@ -234,6 +244,10 @@ VBET5.controller('eSportsMainController', ['$rootScope', '$scope', 'Config', 'Ut
         }
 
         return selected;
+    };
+
+    $scope.openVideoGame = function openVideoGame(data) {
+        $scope.$broadcast('eSports.openGameById', data) ;
     };
 
 }]);

@@ -14,6 +14,5 @@ VBET5.filter('objectToArray', ['Utils', function (Utils) {
 
     return function (obj) {
         return Utils.objectToArray(obj);
-
     };
 }]);

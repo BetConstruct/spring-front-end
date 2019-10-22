@@ -59,11 +59,11 @@
                             ng-class="{'active': (news.id == selectedNews.id)}"
                             ng-mouseover="showHightlightedNews(news)" ng-click="gotoNews(news.id)">
                             <a ng-if='!isWidget' ng-href="#/news/?news={{news.id}}">
-                                <p class="date-news-info">{{ news.date + cmsTimeZone |formatDate: conf.dateFormat.newsDataFormat.newsDate:null:env.timeFormat }}</p>
+                                <p class="date-news-info">{{ news.date + cmsTimeZone |formatDate: conf.dateFormat.newsDataFormat.newsDate:null:$root.env.timeFormat }}</p>
                                 <p class="news-text-inform" title="{{news.titleRaw}}" ng-bind-html="news.title"></p>
                             </a>
                             <a ng-if='isWidget' ng-click="gotoSelectedNews(news)">
-                                <p class="date-news-info">{{ news.date + cmsTimeZone |formatDate: conf.dateFormat.newsDataFormat.newsDate:null:env.timeFormat }}</p>
+                                <p class="date-news-info">{{ news.date + cmsTimeZone |formatDate: conf.dateFormat.newsDataFormat.newsDate:null:$root.env.timeFormat }}</p>
                                 <p class="news-text-inform" title="{{news.titleRaw}}" ng-bind-html="news.title"></p>
                             </a>
                         </li>

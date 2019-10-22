@@ -96,6 +96,7 @@
                     </ul>
                 </div>
                 <div class="mybets-filter-show-b">
+                    <a ng-href="#/results" title="Results" trans ng-if="$root.calculatedConfigs.showResultsTabInSportsbook" ng-click="$root.broadcast('slider.close')"></a>
                     <button prevent-fast-click="1.5" ng-click="loadMixedBetHistory()" trans>SHOW</button>
                 </div>
             </div>
@@ -104,7 +105,7 @@
     <div class="mixed-view-body">
         <div ng-if="betStatusFilter !== 10" class="mixed-view-body-ins always-scroll">
             <vbet-loader ng-if="!betHistoryLoaded"></vbet-loader>
-            <div class="mixed-history-table" ng-show="betHistoryLoaded">
+            <span class="mixed-history-table" ng-show="betHistoryLoaded">
                 <table>
                     <thead>
                         <tr>
@@ -136,7 +137,8 @@
                         <tr class="main"  ng-click=" bet.expand = !bet.expand">
 
                             <td class="date-id" ng-class="{'coins-icon': bet.showBetDrawIcon}" title="{{(bet.showBetDrawIcon? betDrawIconTitle : '')|translate}}">
-                                <span>{{bet.date_time|formatDate:(conf.layoutTimeFormat[conf.sportsLayout] || 'noLocaleTranslate')}} {{conf.layoutTimeFormat[conf.sportsLayout]? (bet.date_time|formatDate:'hour':null:env.timeFormat): ''}}</span>
+                                <span>{{bet.date_time|formatDate:(conf.layoutTimeFormat[conf.sportsLayout] || 'noLocaleTranslate'):null:$root.env.timeFormat}}</span>
+                                <span>{{conf.layoutTimeFormat[conf.sportsLayout]? (bet.date_time|formatDate:'hour':null:$root.env.timeFormat): ''}}</span>
                                 <span ng-hide="conf.betHistoryHideId"><br/> ID: <a>{{bet.id}}</a></span>
                             </td>
                             <td class="status-icon-b hh-cell" ng-class="{'1':'cms-jcon-single', '2':'cms-jcon-multiple', '3':'cms-jcon-system', '4':'cms-jcon-chain', 'Toto': 'toto-bet', '5': 'trixie-bet', '6': 'yankee-bet', '8': 'super-yankee-bet', '9': 'heinz-bet', '10': 'super-heinz-bet', '11': 'goliath-bet', '20': 'block-bet'}[bet.type]"></td>
@@ -169,10 +171,15 @@
                                 <strong ng-hide="betConf.hideMyBetsTotalOdds">{{bet.type == 1 && bet.events[0].k_type ==11 ? 'SP' : (bet.k|oddConvert:bet.oddTypeMapped:null:'BET_HISTORY')}}</strong>
                             </td>
                             <td class="hh-cell">
+                                <div ng-show="bet.outcome == 0 && bet.bonus > 0">
+                                    <span class="second-color" trans>Bonus</span><br>
+                                    <span class="second-color">{{bet.bonus|number:conf.balanceFractionSize}}</span> <span>{{bet.currency|currency}}</span>
+                                </div>
                                 <div ng-show="bet.outcome == 0 && bet.possible_win > 0">
                                     <span class="second-color" trans>Possible win:</span><br>
                                     <span class="second-color">{{bet.possible_win|number:conf.balanceFractionSize}}</span> {{bet.currency|currency}}
                                 </div>
+
                                 <div ng-if="bet.outcome == 0 && bet.possible_win === -1">
                                     <span class="second-color" trans>N/A</span>
                                 </div>
@@ -193,8 +200,7 @@
                                                 class="cms-jcon-edit"
                                                 ng-if="conf.openBetsAndEditBet && !betConf.fullCoverBetTypes.enabled && bet.cash_out && (bet.type == 2 || bet.type == 1) && !$root.editBet.edit"
                                                 ng-click="$event.stopPropagation();addEvents(bet, true);"
-                                                title="{{ (bet.cash_out < minCashoutValue ? 'Editing isn\'t possible as Min bet amount isn\'t reached.' : 'Editing functionality is available for this bet.') | translate }}"
-                                                ng-disabled="bet.cash_out < minCashoutValue"
+                                                title="{{ 'Editing functionality is available for this bet.' | translate }}"
                                         ></button>
                                     </li>
                                     <li>
@@ -213,7 +219,7 @@
                         </tr>
                         <tr class="sub-child" ng-class="{'last-child': $last}" ng-show="bet.expand" ng-if="bet.type !== 'Toto'" ng-repeat="event in bet.events track by $index">
                             <td class="date-id">
-                                {{event.game_start_date|formatDate:(conf.layoutTimeFormat[conf.sportsLayout] || 'noLocaleTranslate')}} {{conf.layoutTimeFormat[conf.sportsLayout] ? (event.game_start_date|formatDate:'hour':null:env.timeFormat) : ''}}
+                                {{event.game_start_date|formatDate:(conf.layoutTimeFormat[conf.sportsLayout] || 'noLocaleTranslate'):null:$root.env.timeFormat}} {{conf.layoutTimeFormat[conf.sportsLayout] ? (event.game_start_date|formatDate:'hour':null:$root.env.timeFormat) : ''}}
                             </td>
                             <td class="status-icon-b hh-cell sport-icon" ng-class="event.sport_index"></td>
                             <td class="auto-cell" colspan="2">
@@ -247,7 +253,7 @@
                             <td class="arrow-cell"></td>
                         </tr>
                         <tr class="sub-child" ng-class="{'last-child': $last}" ng-show="bet.expand" ng-if="bet.type === 'Toto'" ng-repeat="event in bet.events track by $index">
-                            <td class="date-id">{{event.game_start_date|formatDate:'noLocaleTranslate'}}</td>
+                            <td class="date-id">{{event.game_start_date|formatDate:'noLocaleTranslate':null:$root.env.timeFormat}}</td>
                             <td class="status-icon-b hh-cell sport-icon" ng-class="event.sport_index"></td>
                             <td class="auto-cell" colspan="2">
                                 <ul class="cell-inner mixed-bet-history-flex">
@@ -282,9 +288,9 @@
                                             <strong trans>Cash Out Amount</strong>
                                         </li>
                                     </ul>
-                                    <ul ng-repeat="cashedOutBet in childBets[bet.id].bets track by cashedOutBet.id">
+                                    <ul ng-repeat="cashedOutBet in childBets[bet.id] track by cashedOutBet.id">
                                         <li>
-                                            <small>{{::cashedOutBet.date_time|formatDate:(conf.layoutTimeFormat[conf.sportsLayout] || 'noLocaleTranslate')}} {{::conf.layoutTimeFormat[conf.sportsLayout]? (cashedOutBet.date_time|formatDate:'hour':null:env.timeFormat): ''}}</small>
+                                            <small>{{::cashedOutBet.date_time|formatDate:(conf.layoutTimeFormat[conf.sportsLayout] || 'noLocaleTranslate'):null:$root.env.timeFormat}} {{::conf.layoutTimeFormat[conf.sportsLayout]? (cashedOutBet.date_time|formatDate:'hour':null:$root.env.timeFormat): ''}}</small>
                                         </li>
                                         <li>
                                             <small ng-bind="cashedOutBet.totalAmount"></small>
@@ -297,7 +303,7 @@
                                         <li></li>
                                         <li>
                                             <strong>{{'Remaining Stake'|translate}} :
-                                                <span ng-bind="bet.outcome == 0 ? ((+bet.totalAmount - childBets[bet.id].totalStake) | number:conf.balanceFractionSize) : 0"></span>
+                                                <span ng-bind="bet.remaining_stake"></span>
                                             </strong>
                                         </li>
                                         <li>

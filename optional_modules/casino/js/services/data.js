@@ -102,8 +102,17 @@ CASINO.service('casinoData', ['CConfig', 'Config', 'WPConfig', 'content', '$http
         return $http.get(DATA_URL + 'getOptions?partner_id=' + Config.main.site_id + (countryCode && ('&country=' + countryCode) || '') + (categoryId && ('&categories=' + categoryId) || '') + (providerName && ('&providers=' + providerName + '&only_categories=1') || '') + (playerId ? ('&player_id=' + playerId) : '') + (onlyProviders ? '&only_providers=1' : ''));
     };
 
-    casinoData.getJackpotGames = function getJackpotGames () {
-        return $http.get(DATA_URL + 'getJeckpots?partner_id=' + Config.main.site_id)
+    casinoData.getJackpotGames = function getJackpotGames (jackpotId, provider, from, to) {
+        if(jackpotId || provider){
+            var dataUrl = DATA_URL + 'getJackpotGames?partner_id=' + Config.main.site_id + (jackpotId && ('&jackpot_id=' + jackpotId) || '') +  (provider && ('&provider=' + provider) || '');
+            from !== undefined && from !== null && (dataUrl += '&offset=' + from);
+            to !== undefined && to !== null && (dataUrl += '&limit=' + to);
+
+            return $http.get(dataUrl);
+        }else{
+            return $http.get(DATA_URL + 'getJeckpots?partner_id=' + Config.main.site_id);
+        }
+
     };
 
     casinoData.getCasinoGameDetails = function getCasinoGameDetails(game_skin_id) {
@@ -116,6 +125,14 @@ CASINO.service('casinoData', ['CConfig', 'Config', 'WPConfig', 'content', '$http
 
     casinoData.getGameWinners = function getGameWinners() {
         return $http.get(DATA_URL + 'getGameWinners?site_id=' + Config.main.site_id);
+    };
+
+    casinoData.getJackpotBanners = function getJackpotBanners() {
+        return $http.get(WP_URL + '/getJackpotBanners?lang=' + Config.env.lang);
+    };
+
+    casinoData.getTournamentGames = function getTournamentGames(tournamentId, offset, limit, withImages) {
+        return $http.get(DATA_URL + 'getTournamentGames?partner_id=' + Config.main.site_id + (tournamentId && ('&tournament_id=' + tournamentId) || '') + (offset && ('&offset=' + offset) || '') + (limit && ('&limit=' + limit) || '') + (withImages ? '&with=images' : ''));
     };
 
 

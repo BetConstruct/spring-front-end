@@ -87,9 +87,15 @@ div.draws-contain,
       height: 36px;
       @include ltr {
         margin: 0 40px 0 0;
+        @media screen and (max-width: 1260px) {
+          margin: 0 30px 0 0;
+        }
       }
       @include rtl {
         margin: 0 0 0 40px;
+        @media screen and (max-width: 1260px) {
+          margin: 0 0 0 30px;
+        }
       }
       &:last-child {
         margin: 0;
@@ -541,7 +547,12 @@ div.draws-contain,
   li {
     display: inline-block;
     height: 36px;
-    margin: 0 28px 0 0;
+    @include ltr {
+      margin-right: 28px;
+    }
+    @include rtl {
+      margin-left: 28px;
+    }
     a {
       display: block;
       height: 36px;
@@ -836,7 +847,6 @@ div.draws-contain,
 .game-video-container.detached-game-container {
   position: static;
 }
-.video-player-container object,
 .video-player-container flashplayer,
 .video-player-container hls-player,
 .game-video-container video-player,
@@ -863,17 +873,16 @@ video-player{
       left: 86px;
     }
     > div {
+      float: left;
       width: 20px;
       height: 30px;
       text-align: center;
       font: 16px/28px icomoon;
       color:  $text-palette-3;
       @include ltr {
-        float: left;
         margin: 0 0 0 5px;
       }
       @include rtl {
-        float: right;
         margin: 0 5px 0 0;
       }
       &.play-pause-control span{
@@ -891,7 +900,7 @@ video-player{
     display: none;
     position: absolute;
     top: -26px;
-    width: calc(100% - 100px);
+    width: calc(100% - 90px);
     @include ltr {
       left: 10px;
     }
@@ -908,7 +917,12 @@ video-player{
   }
 }
 .game-video-detached video-player .video-control-buttons{
-  right: 30px;
+  @include ltr {
+    right: 30px;
+  }
+  @include rtl {
+    left: 30px;
+  }
 }
 .game-video-detached.game-video-fullscreen video-player {
   margin-top: 26px;
@@ -1271,11 +1285,16 @@ input[type="password"]:focus ~ .capslock-is-on-j {
   position: absolute;
   width: 100%;
   height: 100%;
-  left: 0;
   top: 0;
   box-sizing: border-box;
   display: none;
   z-index: 11;
+  @include ltr {
+    left: 0;
+  }
+  @include rtl {
+    right: 0;
+  }
 }
 .slider-optional-b-casino {
   position: absolute;
@@ -1310,7 +1329,12 @@ input[type="password"]:focus ~ .capslock-is-on-j {
     padding: 0;
     bottom: 26px;
     background: none;
-    left: 0;
+    @include ltr {
+      left: 0;
+    }
+    @include rtl {
+      right: 0;
+    }
     > span {
       width: 30px;
       height: 30px;
@@ -1443,13 +1467,52 @@ input[type="password"]:focus ~ .capslock-is-on-j {
     @include rtl {
       float: left;
     }
+    > p {
+      display: table-cell;
+      vertical-align: middle;
+      background: darken(desaturate(adjust-hue($skin-color, 4deg), 11), 1);
+      > i {
+        display: inline-block;
+        width: 28px;
+        background: lighten(desaturate(adjust-hue($skin-color, 3deg), 16), 4);
+        height: 100%;
+        text-align: center;
+        font: 14px/24px icomoon;
+      }
+      > span {
+        display: inline-block;
+        vertical-align: middle;
+        margin: -8px 4px 0;
+        color: rgba(set-color(darken(desaturate(adjust-hue($skin-color, 4deg), 11), 1)),0.8);
+        font: 12px/14px $font-f;
+      }
+      > b {
+        display: inline-block;
+        vertical-align: middle;
+        background: $hero-color;
+        color: set-color($hero-color);
+        font: 700 11px/14px $font-f;
+        height: 12px;
+        margin-top: -6px;
+        padding: 0 3px;
+        border-radius: 2px;
+        box-shadow: 0 1px 0 rgba(0, 0, 0, 0.3);
+        box-sizing: border-box;
+        @include ltr {
+          margin-right: 4px;
+        }
+        @include rtl {
+          margin-left: 4px;
+        }
+      }
+    }
     > span {
       text-align: right;
       display: table-cell;
       vertical-align: middle;
       margin: 0 0 4px;
       padding: 0 10px;
-      color: $text-palette-7;
+      color: set-color($classic-view-background);
       font: 11px/13px $font-f
     }
     > ul {
@@ -2425,6 +2488,13 @@ input[type="password"]:focus ~ .capslock-is-on-j {
       content: "#0D8E8F";
     }
   }
+  .skin-palette-23 {
+    background: set-color($skin-palette-10);
+    &:before {
+      color: #000000;
+      content: "#FFFFFF";
+    }
+  }
   .skin-palette-12 {
     background: $skin-palette-12;
     &:before {
@@ -2638,30 +2708,19 @@ input[type="password"]:focus ~ .capslock-is-on-j {
     }
   }
 }
-egt-jackpot {
+egt-jackpot,
+rtg-jackpot {
   position: absolute;
-  top: 0;
+  bottom: 62px;
   left: 0;
   width: 100%;
-  height: 100%;
+  padding: 0 20px;
+  box-sizing: border-box;
   pointer-events: none;
 }
-.egt-table {
-  float: left;
-  width: 100%;
-  height: 100%;
-  display: table;
-}
-.egt-tcell {
-  display: table-cell;
+rtg-jackpot {
+  bottom: 50px;
   text-align: center;
-  vertical-align: bottom;
-}
-.egt-container {
-  float: left;
-  width: 100%;
-  padding: 0 20px 62px;
-  box-sizing: border-box;
 }
 .egt-content {
   float: left;
@@ -2671,31 +2730,8 @@ egt-jackpot {
   align-items: center;
   z-index: 50;
   box-sizing: border-box;
-  .amount-animation-container {
-    height: 100%;
-    text-align: right;
-    @include rtl {
-      direction: ltr;
-    }
-    > span {
-      width: 9.9%;
-      text-align: center;
-      vertical-align: middle;
-      box-shadow: -1px 0 0 #111522, -2px 0 0 #2e323e;
-      > i {
-        margin-left: -1px;
-        height: 22px;
-        line-height: 22px;
-        &.with-point {
-          margin-left: -10%;
-          + strong {
-            top: -10px;
-            right: 14%;
-            height: 100%;
-          }
-        }
-      }
-    }
+  @media screen and (max-width: 1260px) {
+    width: 50%;
   }
 }
 .egt-bg {
@@ -2766,11 +2802,123 @@ egt-jackpot {
   }
 }
 
-@media screen and (max-width: 1260px) {
-  .egt-content {
-    width: 50%;
+.red-tiger-content {
+  width: 30%;
+  padding: 5px 10px;
+  display: inline-block;
+  vertical-align: middle;
+  position: relative;
+  align-items: center;
+  z-index: 50;
+  box-sizing: border-box;
+  &:nth-child(2) .red-tiger-block {
+    > img {
+      bottom: 11%;
+    }
+    .red-tiger-bg {
+      border-color: rgb(214,214,224);
+      box-shadow: 0 0 10px 2px rgba(214,214,224, 0.8), inset 0 0 10px 0 rgba(0,0,0,0.5);
+      background: rgb(214,214,224);
+      background: -moz-linear-gradient(left,  rgba(214,214,224,1) 0%, rgba(163,163,173,1) 25%, rgba(154,154,165,1) 50%, rgba(211,214,233,1) 75%, rgba(232,232,246,1) 100%);
+      background: -webkit-linear-gradient(left,  rgba(214,214,224,1) 0%,rgba(163,163,173,1) 25%,rgba(154,154,165,1) 50%,rgba(211,214,233,1) 75%,rgba(232,232,246,1) 100%);
+      background: linear-gradient(to right,  rgba(214,214,224,1) 0%,rgba(163,163,173,1) 25%,rgba(154,154,165,1) 50%,rgba(211,214,233,1) 75%,rgba(232,232,246,1) 100%);
+      filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#d6d6e0', endColorstr='#e8e8f6',GradientType=1 );
+
+    }
   }
 }
+.red-tiger-block {
+  float: left;
+  width: 100%;
+  padding: 90px 20px 10px;
+  display: inline-block;
+  vertical-align: middle;
+  box-sizing: border-box;
+  border-radius: 10px;
+  position: relative;
+  border: 1px solid hsla(255,255,255,.21);
+  box-shadow: inset 0 0 9px 3px rgba(109,140,255,.2);
+  > img {
+    width: 100%;
+    position: absolute;
+    display: block;
+    bottom: 41%;
+    left: 0;
+  }
+}
+.red-tiger-timer {
+  display: inline-block;
+  color: #ffffff;
+  background-color: rgba(0,0,0,.63);
+  border-radius: 20px;
+  padding: 5px 10px;
+  font: 14px/18px $font-f;
+  box-sizing: border-box;
+  > span {
+    color: #f9f2a2;
+  }
+}
+.red-tiger-bg {
+  float: left;
+  width: 100%;
+  margin: 20px 0;
+  padding: 0 4px;
+  position: relative;
+  border-radius: 6px;
+  box-sizing: border-box;
+  border: 2px solid rgb(225,206,142);
+  box-shadow: 0 0 10px 2px rgba(200, 151, 96, 0.8), inset 0 0 10px 0 rgba(0,0,0,0.5);
+  background: rgb(225,206,142);
+  background: -moz-linear-gradient(left,  rgba(225,206,142,1) 0%, rgba(200,151,96,1) 25%, rgba(178,123,69,1) 50%, rgba(255,225,131,1) 75%, rgba(255,233,137,1) 100%);
+  background: -webkit-linear-gradient(left,  rgba(225,206,142,1) 0%,rgba(200,151,96,1) 25%,rgba(178,123,69,1) 50%,rgba(255,225,131,1) 75%,rgba(255,233,137,1) 100%);
+  background: linear-gradient(to right,  rgba(225,206,142,1) 0%,rgba(200,151,96,1) 25%,rgba(178,123,69,1) 50%,rgba(255,225,131,1) 75%,rgba(255,233,137,1) 100%);
+  > ul {
+    float: left;
+    width: 100%;
+    > li {
+      float: right;
+      width: 91%;
+      height: 44px;
+      color: rgba(0,0,0,0.7);
+      text-align: center;
+      font: bold 14px/42px $font-f;
+      box-sizing: border-box;
+      &:first-child {
+        width: 9%;
+        line-height: 46px;
+      }
+    }
+  }
+}
+@media screen and (max-width: 1260px) {
+  rtg-jackpot {
+    bottom: 0;
+  }
+  .red-tiger-content {
+    width: 36%;
+  }
+  .red-tiger-block {
+    padding: 70px 10px 10px;
+    > img {
+      bottom: 47%;
+    }
+    > p {
+      padding: 4px 8px;
+      font: 12px/16px $font-f;
+    }
+  }
+  .red-tiger-bg {
+    margin: 10px 0;
+  > ul > li {
+    height: 32px;
+    line-height: 30px;
+    &:first-child {
+      line-height: 36px;
+    }
+  }
+  }
+}
+
 
 @include liveScoreBackgrounds("custom");
 @include liveScoreBackgrounds("soccer");
@@ -2965,14 +3113,17 @@ egt-jackpot {
         float: right;
       }
     }
-    &.approved {
+    &.verified {
       color: #52a178;
       &:after {
         content: "\e992";
       }
     }
-    &.rejected:after {
-      content: "\e993";
+    &.rejected {
+      color: #9d2c45;
+      &:after {
+        content: "\e993";
+      }
     }
   }
 }

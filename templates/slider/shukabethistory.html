@@ -59,13 +59,13 @@
                                 <b ng-show="bet.type==='1' && bet.event.is_live === '1'">Live </b>
                                 <b ng-if="bet.ew">ew</b>
                                 <b ng-if="bet.super_bet" class="superbet-icon">S</b>
-                            </p>{{bet.date_time|formatDate:'full'}}</li>
+                            </p>{{bet.date_time|formatDate:'full':null:$root.env.timeFormat}}</li>
                         <li class="history-name-team">
                             <div class="mini-express-b">
                                 <span>
                                     <span class="team-n-information">{{bet.event.game_name}}</span>
                                     <div class="history-date-mini">
-                                        <span ng-class="{'lay': bet.type === '0'}">{{bet.type === '0' ? "Lay" : "Back"}}</span>, {{bet.event.game_start_date|formatDate:'full'}}
+                                        <span ng-class="{'lay': bet.type === '0'}">{{bet.type === '0' ? "Lay" : "Back"}}</span>, {{bet.event.game_start_date|formatDate:'full':null:$root.env.timeFormat}}
                                     </div>
                                  </span>
                                 <div class="bet-history-popup">
@@ -79,7 +79,7 @@
                                                 <p>
                                                     <span class="popup-coef" ng-show="bet.event.coeficient || bet.event.k_type == 11">({{bet.event.k_type == 11 ? 'SP' : (bet.event.coeficient|oddConvert:env.oddFormat)}})</span>
                                                     <span class="popup-sport-name">{{bet.event.sport_name}}</span>
-                                                    <span class="popup-date-game"> {{bet.event.game_start_date|formatDate:'full'}}</span>
+                                                    <span class="popup-date-game"> {{bet.event.game_start_date|formatDate:'full':null:$root.env.timeFormat}}</span>
                                                     <span class="popup-live-game" ng-show="bet.event.is_live==1">Live</span>
                                                 </p>
                                                 <span class="event-name">{{bet.event.game_name}}</span>

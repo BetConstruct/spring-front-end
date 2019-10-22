@@ -1,0 +1,3 @@
+<h5 ng-bind-html="content|translate|html" ng-style="showButtons && !showMore && {'height': availableHeight, 'overflow': 'hidden'}" ng-class="{'load-more-text': hideContent}" id="readMoreText"></h5>
+<span class="load-more" ng-click="setShowState(true)" ng-if="showButtons && !showMore" trans>Load More...</span>
+<span class="load-more" ng-click="setShowState(false)" ng-if="showButtons && showMore" trans>Show Less</span>

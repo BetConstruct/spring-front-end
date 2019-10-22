@@ -24,6 +24,8 @@ VBET5.directive('videoPlayer', ['$window', '$timeout', '$rootScope', '$sce', 'Tr
         templateUrl: 'templates/directive/videoPlayer.html',
 
         link: function (scope, element, attrs) {
+            scope.customStreaming = !!attrs.customStreaming;
+
             var initPlayer = function () {
                 var attributes = {};
                 attributes.id = attrs.playerId + 'obj';
@@ -32,9 +34,19 @@ VBET5.directive('videoPlayer', ['$window', '$timeout', '$rootScope', '$sce', 'Tr
                 scope.videoState = {};
                 var streamUrl = attrs.streamUrl.toString();
                 var providerId = attrs.providerId.toString();
-                if ($rootScope.conf.videoProvidersThatWorkWithIframe[+providerId]) { // for dota and windbet stream we must show streams in iframe
+                if (scope.customStreaming || $rootScope.conf.videoProvidersThatWorkWithIframe[+providerId]) { // for dota and windbet stream we must show streams in iframe
                     scope.videoState.frameUrl = $sce.trustAsResourceUrl(streamUrl);
                     scope.videoState.videoIsLoaded = false; // for hiding player controlls
+                    if (scope.customStreaming) {
+                        attrs.$observe('streamUrl', function () {
+                            if (streamUrl === attrs.streamUrl.toString()) {
+                                return; //  don't update if it's same
+                            }
+                            streamUrl = attrs.streamUrl.toString();
+                            scope.videoState.frameUrl = $sce.trustAsResourceUrl(streamUrl);
+                        });
+                    }
+
                 } else { // for another all streams
                     var swfPath = providerId === '5' ? "swf/imgStream.swf" : "swf/LiveVideo.swf?anticache=" + $rootScope.env.appVersion;
                     var callbackGlobalFuncName = 'flashPlayerCallback' + scope.$id;

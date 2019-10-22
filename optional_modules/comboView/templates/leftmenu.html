@@ -75,7 +75,7 @@
                                             <!--fifth level-->
                                             <div class="fifth-level-nav-wrapper">
                                                 <div class="date-time-container">
-                                                    <p ng-bind="game.start_ts|formatDate:'full':null:env.timeFormat:env.selectedTimeZone"></p>
+                                                    <p ng-bind="game.start_ts|formatDate:'full':null:$root.env.timeFormat:env.selectedTimeZone"></p>
                                                 </div>
                                                 <div class="simple-fiealds-b" ng-if="game.main_market" ng-class="{'blocked':((event.price | oddConvert:'decimal') == 1 || game.is_blocked)}">
                                                     <ul ng-class="{'column-3':game.main_market.type === 'P1XP2'}">

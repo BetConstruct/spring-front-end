@@ -28,20 +28,25 @@
                                         <li class="arrow-closed-anime-b-v3" ng-click="toggleVideoAndAnimationBox()" ng-class="{'active': hideVideoAndAnimationBox}"></li>
                                         <li class="pin-icon-video-v3" ng-class="{'disabled': !env.authorized}" ng-show="openGame.video_data && openGame.activeFieldType == 'video' && openGame.tv_type !== $root.conf.defaultStreaming.tvType && !pinnedGames[openGame.id]" ng-click="openGame.activeFieldType='field'; detachVideo('dragable');"></li>
                                         <li class="resize-icon-full-video-v3" ng-show="openGame.video_data && openGame.activeFieldType == 'video'" ng-class="{'active': env.authorized && openGame.activeFieldType == 'video' &&!$root.conf.detachedVideoSizes[openGame.tv_type],'disabled': !(env.authorized && openGame.activeFieldType == 'video' &&!$root.conf.detachedVideoSizes[openGame.tv_type])}" ng-click="openGame.activeFieldType='field'; detachVideo('fullScreen');"></li>
-                                        <li class="sound-icon-v3 " ng-click="env.sound = 0;" ng-show="openGame.activeFieldType==='field' && env.sound > 0" title="Sound" trans="attr-only"></li>
-                                        <li class="sound-icon-v3 active" ng-click="env.sound = 0.75;" ng-show="openGame.activeFieldType==='field' && env.sound === 0" title="Sound" trans="attr-only"></li>
+                                        <li class="sound-icon-v3 " ng-click="env.sound = 0;" ng-show="(openGame.activeFieldType === 'field' || $root.conf.video.providersThatSupportHls[openGame.tv_type]) && env.sound > 0" title="Sound" trans="attr-only"></li>
+                                        <li class="sound-icon-v3 active" ng-click="env.sound = 0.75;" ng-show="(openGame.activeFieldType === 'field' || $root.conf.video.providersThatSupportHls[openGame.tv_type]) && env.sound === 0" title="Sound" trans="attr-only"></li>
                                     </ul>
                                 </div>
                             </div>
                             <div class="video-animation-vox-v3 animation-control">
-                                <video-player ng-if="openGame.activeFieldType === 'video' && !hideVideoAndAnimationBox && $root.conf.videoEnabled && !enlargedGame && !pinnedGames[openGame.id]"
+                                <video-player ng-if="!$root.conf.video.providersThatSupportHls[openGame.tv_type] && openGame.activeFieldType === 'video' && !hideVideoAndAnimationBox && $root.conf.videoEnabled && !enlargedGame && !pinnedGames[openGame.id]"
                                               class="game-video"
                                               ng-class="{'animation-start': !$root.conf.videoProvidersThatWorkWithIframe[openGame.tv_type] && !videoState.videoIsLoaded && openGame.video_data, 'animation-end': videoState.videoIsLoaded}"
                                               player-id="gamevideo{{openGame.id}}"
                                               stream-url="{{openGame.video_data}}"
                                               provider-id="{{openGame.tv_type}}"
-                                              initially-muted="{{ env.sound }}"></video-player>
-
+                                              initially-muted="{{ env.sound }}">
+                                </video-player>
+                                <hls-player
+                                        ng-if="$root.conf.video.providersThatSupportHls[openGame.tv_type] && openGame.video_data && openGame.activeFieldType === 'video' && !hideVideoAndAnimationBox && !enlargedGame && !pinnedGames[openGame.id]"
+                                        provider-id="{{openGame.tv_type}}"
+                                        stream-url="{{openGame.video_data}}">
+                                </hls-player>
                                 <!--<include-template template-path="templates/sport/classic/video.html" ng-if="openGame.activeFieldType === 'video' && !hideVideoAndAnimationBox && $root.conf.videoEnabled && !enlargedGame && !pinnedGames[openGame.id]" class="game-video"></include-template>-->
                                 <include-template template-path="templates/sport/classic/animations.html"></include-template>
                             </div>
@@ -69,11 +74,16 @@
 
                     <!--Menu tabs-->
                     <!--Favorite games-->
-                    <include-template class="left-menu-wrapper-v3" template-path="templates/sport/classic/left/favorites.html"></include-template>
                     <div class="asian-left-nav">
                         <vbet-loader ng-show="leftMenuIsLoading"></vbet-loader>
                         <div ng-if="!leftMenuIsLoading" class="asian-left-menu">
                             <ul>
+                                <div class="p-n-v" ng-if="$root.conf.showFavoriteCompetitions && selectedMenuType.active === LEFT_MENU.FUTURE">
+                                    <popular-in-sportsbook class="float-width" title="Popular competitions" type="competition" search-field="popularCompetition"></popular-in-sportsbook>
+                                </div>
+                                <!--<div class="p-n-v" >
+                                    <popular-in-sportsbook class="float-width" start-date={{dayFilter[0].from}} end-date={{dayFilter[0].to}} title="Popular competitions" type="competition" search-field="popularCompetition"></popular-in-sportsbook>
+                                </div>-->
                                 <div ng-repeat="group in sportsGroup track by group.id" ng-show="group" ng-class="{'asian-menu-group-wrap-j' : group.hasHeader}">
                                     <li ng-click="leftMenuState[selectedMenuType.active][group.id] = !leftMenuState[selectedMenuType.active][group.id]" ng-show="group.hasHeader" ng-class="{'active': leftMenuState[selectedMenuType.active][group.id]}">
                                         <div class="icon-sport-asia sport-group-{{group.alias}}" ng-class="group.alias"></div> <!--this is temp solution, later replace ng-class group.name with group.alias -->
@@ -93,12 +103,12 @@
                                             </div>
                                             <div class="sport-markets-menu" ng-if="selectedMenuType.active != 1 && !selectedSport.closedTab">
                                                 <ul>
-                                                    <li ng-if="sport.alias === 'Soccer'"  ng-show="marketGameCounts[sport.alias][marketType.key] > 0" ng-class="{'active pointer-events-none': marketType.key === selectedMarket.key}"
+                                                    <li ng-if="sport.alias === 'Soccer'"  ng-show="marketGameCounts[sport.alias][marketType.key] > 0" ng-class="{'active pointer-events-none': marketType.key === selectedMarket.key && !isSelectedFavorites && !selectedPopularCompetition}"
                                                         ng-repeat="marketType in asianMarkets.Soccer track by $index"
                                                         ng-click="clearPage();openMarket(marketType, sport)">
                                                         <p class="market-neme-asia">{{marketType.name|translate}}<span class="sport-market-counts" ng-bind="marketGameCounts[sport.alias][marketType.key]"></span></p>
                                                     </li>
-                                                    <li ng-if="sport.alias !== 'Soccer'"  ng-show="marketGameCounts[sport.alias][marketType.key] > 0" ng-class="{'active pointer-events-none': marketType.key === selectedMarket.key}"
+                                                    <li ng-if="sport.alias !== 'Soccer'"  ng-show="marketGameCounts[sport.alias][marketType.key] > 0" ng-class="{'active pointer-events-none': marketType.key === selectedMarket.key && !isSelectedFavorites && !selectedPopularCompetition}"
                                                         ng-repeat="marketType in asianMarkets.OTHER track by $index"
                                                         ng-click="openMarket(marketType, sport)">
                                                         <p class="market-neme-asia">{{marketType.name|translate}}<span class="sport-market-counts" ng-bind="marketGameCounts[sport.alias][marketType.key]"></span></p>
@@ -140,14 +150,14 @@
                         <div class="contein-mini-filtr time" ng-class="{'active': orderedByTime}">
                             <div class="filter-icon" ng-click="changeSortOrder()" ng-class="{asc: sortAscending, desc: !sortAscending}"></div>
                             <p class="name-filter-b" ng-click="orderingMenuOpened = !orderingMenuOpened" ng-show="orderedByTime" trans>Order by Time</p>
-                            <p class="name-filter-b" ng-click="orderingMenuOpened = !orderingMenuOpened" ng-show="!orderedByTime" trans>Order by Competition</p>
+                            <p class="name-filter-b"  ng-click="orderingMenuOpened = !orderingMenuOpened" ng-show="!orderedByTime" trans>Order by Competition</p>
                             <div class="menu-arrow-asia"></div>
                             <div class="sub-menu-filter">
                                 <ul>
                                     <li ng-class="{'active': orderedByTime}" ng-click="orderedByTime = true; orderByTime(); selectPage(0); orderingMenuOpened = false;">
                                         <p trans>Order by Time</p>
                                     </li>
-                                    <li ng-class="{'active': !orderedByTime}" ng-click="orderedByTime = false; orderByTime(); selectPage(0); orderingMenuOpened = false;">
+                                    <li ng-class="{'active': !orderedByTime}" ng-show="!selectedPopularCompetition" ng-click="orderedByTime = false; orderByTime(); selectPage(0); orderingMenuOpened = false;">
                                         <p trans>Order by Competition</p>
                                     </li>
                                 </ul>
@@ -160,7 +170,7 @@
                             <p trans>Back</p>
                         </div>
                     </li>
-                    <li ng-click="dateFilterOpened = !dateFilterOpened" ng-class="{'active': dateFilterOpened}" ng-show="selectedMenuType.active == 0 && activeGameId == null" hide-on-click state-flag-var="dateFilterOpened">
+                    <li ng-click="dateFilterOpened = !dateFilterOpened" ng-class="{'active': dateFilterOpened, 'disabled-opacity': selectedPopularCompetition}" ng-show="selectedMenuType.active == 0 && activeGameId == null" hide-on-click state-flag-var="dateFilterOpened" ng-class="{'disabled-opacity': selectedPopularCompetition}">
                         <div class="contein-mini-filtr date">
                             <div class="filter-icon"></div>
                             <p class="name-filter-b"><span trans>Date Filter</span>: {{ filterName}} ({{filterCount}})</p>
@@ -169,20 +179,21 @@
                                 <ul>
                                     <li ng-show="dateFilterGameCount[$index].game > 0" ng-repeat="day in dayFilter track by $index">
                                         <input name="" ng-model="filters.selectedDays[day.id]" type="checkbox" value="" id="checkbox-lc-day-{{day.id}}" ng-disabled="dateFilterDaysCount <= 1" ng-change="toggleDay()" >
-                                        <label for="checkbox-lc-day-{{day.id}}">{{day.from|formatDate:'ddd D'}} ({{dateFilterGameCount[$index].game}})</label>
+                                        <label for="checkbox-lc-day-{{day.id}}">{{day.from|formatDate:'ddd D':null:$root.env.timeFormat}} ({{dateFilterGameCount[$index].game}})</label>
                                     </li>
                                     <li ng-show="dateFilterGameCount[7].game > 0">
                                         <input name="" ng-model="filters.allDays.selected" type="checkbox" value="" id="checkbox-lc-day-all" ng-disabled="dateFilterDaysCount <= 1" ng-change="toggleAllDays()" >
                                         <label for="checkbox-lc-day-all">{{filters.allDays.name | translate}} ({{dateFilterGameCount[7].game}})</label>
                                     </li>
                                     <li ng-show="dateFilterGameCount.length > 0 || dateFilterGameCount[7].game > 0">
-                                        <button ng-click="dateFilterConfirm()" trans>OK</button>
+                                        <button ng-click="dateFilterConfirm()" ng-disabled="filterCount <= 0" trans>OK
+                                        </button>
                                     </li>
                                 </ul>
                             </div>
                         </div>
                     </li>
-                    <li ng-click="allowFiltering(); showCompetitionsSelector=true" hide-on-click state-flag-var="showCompetitionsSelector" ng-show="!openGame">
+                    <li ng-click="allowFiltering(); showCompetitionsSelector=true" hide-on-click state-flag-var="showCompetitionsSelector" ng-show="!openGame" ng-class="{'disabled-opacity': selectedPopularCompetition}">
                         <div class="contein-mini-filtr competition">
                             <div class="filter-icon"></div>
                             <p class="name-filter-b" trans>Select competition</p>
@@ -192,10 +203,20 @@
             </div>
 
             <!--filter END-->
-
-            <div ng-if="pages.length > 1 && selectedMarket.key !== 'FULLGAME'" ng-show="!marketGamesAreLoading" class="viewSwitcher-j no-select-j ng-scope select-pagination">
-                <span trans>Select page:</span>
-                <ul>
+            <div ng-if="selectedMarket.key !== 'FULLGAME'" ng-show="!marketGamesAreLoading" class="viewSwitcher-j no-select-j ng-scope select-pagination">
+                <div ng-if="isSelectedFavorites" class="show-all-options-f" ng-click="filterByType($event)">
+                    <button data-type="-1" ng-class="{'active': favoriteFilter === -1}" trans>All</button>
+                    <button data-type="1" ng-class="{'active': favoriteFilter === 1}" trans>Live</button>
+                    <button data-type="0" ng-class="{'active': favoriteFilter === 0}" trans>Future</button>
+                </div>
+                <p>
+                    <i class="icon-favorite" ng-class="{'active': myGames.length}"></i>
+                    <span ng-click="showFavouriteGames()" trans>Favorites</span>
+                    <b ng-if="leftMenuFavorites.length">{{myGames.length}}</b>
+                    <i class="favorite-icon-clear" ng-if="isSelectedFavorites && favoriteFilter === -1" ng-click="removeAllFavorites()"></i>
+                </p>
+                <span ng-if="!isSelectedFavorites && !selectedPopularCompetition" trans>Select page:</span>
+                <ul ng-if="!isSelectedFavorites && !selectedPopularCompetition">
                     <li state-flag-var="showPageination" ng-click="showPageination = !showPageination" ng-class="{'active': showPageination}" hide-on-click="">
                         <p>
                             {{selectedPage + 1}}
@@ -206,7 +227,6 @@
                             </li>
                         </ul>
                     </li>
-
                 </ul>
             </div>
             <vbet-loader ng-show="marketGamesAreLoading"></vbet-loader>
@@ -265,7 +285,7 @@
 
             <div ng-show="marketGamesAreLoading !== undefined && !dayFilter && !marketGamesAreLoading && !filterLoading && !leftMenuIsLoading && centerData.competitions.length === 0" trans>Currently no event is available in the selected section</div>
 
-            <div ng-if="pages.length > 1 && selectedMarket.key !== 'FULLGAME'" ng-show="!marketGamesAreLoading" class="viewSwitcher-j no-select-j ng-scope select-pagination">
+            <div ng-if="pages.length > 1 && selectedMarket.key !== 'FULLGAME' && !isSelectedFavorites && !selectedPopularCompetition" ng-show="!marketGamesAreLoading" class="viewSwitcher-j no-select-j ng-scope select-pagination">
                 <span trans>Select page:</span>
                 <ul>
                     <li state-flag-var="showPageination" ng-click="showPageination = !showPageination" ng-class="{'active': showPageination}" hide-on-click="">

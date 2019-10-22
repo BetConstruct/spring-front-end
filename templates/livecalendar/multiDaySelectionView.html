@@ -112,7 +112,7 @@
                                         <li class="video-info-calendar"></li>
                                     </ul>
                                     <ul ng-repeat="game in day|orderBy:'start_ts' track by $index">
-                                        <li class="calendar-date-b" ng-bind="game.start_ts|formatDate:'hour':null:env.timeFormat"></li>
+                                        <li class="calendar-date-b" ng-bind="game.start_ts|formatDate:'hour':null:$root.env.timeFormat"></li>
                                         <li ng-if="!(game.pointerId && marketEvents[game.pointerId].game.events_count-(marketEvents[game.pointerId].events|count) > 0)" class="name-team-calendar" title="{{game.title}}"><span>{{game.title}}</span></li>
                                         <li ng-if="game.pointerId && marketEvents[game.pointerId].game.events_count-(marketEvents[game.pointerId].events|count) > 0" ng-click="openMore(sportGroup.sport.id, marketEvents[game.pointerId].game)" class="name-team-calendar" title="{{game.title}}"><span>{{game.title}}</span></li>
                                         <li class="namber-game-calendar" ng-hide="conf.hideLiveCalendarNumber"><p ng-show="game.game_number">{{game.game_number}}</p></li>

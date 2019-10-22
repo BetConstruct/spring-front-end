@@ -213,7 +213,7 @@
                                                     <span trans>Live Chat</span>
                                                 </li>
 
-                                                <li ng-if="!conf.liveChat.isSfChat && conf.liveChat.siteId && conf.liveChat.codePlan && !conf.liveChat.disableFromHeader">
+                                                <li pass-click-to="{{ conf.liveChat.buttonId ? conf.liveChat.buttonId : 'live-chat-button1' }}"  ng-attr-iframe="{{!conf.liveChat.buttonIsDiv ? 'true' : ''}}" ng-attr-find="{{!conf.liveChat.buttonIsDiv ? 'a' : ''}}" ng-if="!conf.liveChat.isSfChat && conf.liveChat.siteId && conf.liveChat.codePlan && !conf.liveChat.disableFromHeader">
                                                     <i class="icon-faq-new-b"></i>
                                                     <span id="live-chat-button1" title="Live Chat" trans>Live Chat</span>
                                                 </li>
@@ -252,9 +252,10 @@
                             <div class="separator-contain-nav {{conf.header.enableTimeZoneSelect ? 'timezone-v' : 'no-timezone-v'}} {{conf.header.enableTimeZoneSelect && headerVersion2Icons.timezoneIsToggled ? 'active' : ''}}"
                                  hide-on-click state-flag-var="headerVersion2Icons.timezoneIsToggled">
                                 <div class="settings-icon-contain clock-set-b"
-                                     ng-click="headerVersion2Icons.timezoneIsToggled = !headerVersion2Icons.timezoneIsToggled">
-                                    <span>
-                                        <b>{{env.clock|formatDate:'fullHourWithoutAmPm':null:env.timeFormat}}</b>
+                                     ng-click="headerVersion2Icons.timezoneIsToggled = !headerVersion2Icons.timezoneIsToggled"
+                                     ng-class="{'format-12h': $root.env.timeFormat === $root.env.longTimeFormats.HALF}">
+                                    <span class="time-view-w-bc">
+                                        <b class="clock-time-v-bc" ng-bind="$root.env.clock"></b>
                                         <b ng-if="env.loginTime" ng-bind="env.loginTime"></b>
                                     </span>
                                 </div>
@@ -297,7 +298,7 @@
                                                 <div class="drop-items-contain-b">
                                                     <ul>
                                                         <li ng-repeat="lang in sortedAvailableLanguages track by lang.code"
-                                                            ng-click="selectLanguage(lang.code)" ng-class="{'active': lang.code === env.lang}" class="{{lang.code}}"><span>{{ lang.full|translate }}</span></li>
+                                                            ng-click="selectLanguage(lang.code, true)" ng-class="{'active': lang.code === env.lang}" class="{{lang.code}}"><span>{{ lang.full|translate }}</span></li>
                                                     </ul>
                                                 </div>
                                             </div>
@@ -327,7 +328,8 @@
             </li>
         </ul>
         <input type="checkbox" id="header-collapse">
-        <div class="header-small-view-hide">
+        <div class="header-small-view-hide" ng-class="{'vertical-nav-closed': $root.conf.customNavMenu && !$root.leftMenuOpen}" ng-init="$root.conf.customNavMenu && ($root.leftMenuOpen = true)">
+            <i class="vertical-nav-arrow" ng-show="$root.conf.customNavMenu"   ng-click="$root.leftMenuOpen = !$root.leftMenuOpen;"></i>
             <ul class="responsive-header-mainMenu-j">
                 <li class="header-left-small-b-j" ng-controller="cmsPagesCtrl" ng-init="loadBanners(getSlug('bannerSlugs.headerSmallBanner'));" ng-show="bannerObjects[getSlug('bannerSlugs.headerSmallBanner')]"  >
                     <a ng-repeat="banner in bannerObjects[getSlug('bannerSlugs.headerSmallBanner')]" cms-analytics="banner" ng-href="{{banner.link}}" target="{{banner.linktarget}}">
@@ -343,7 +345,7 @@
             <div class="s-l-logo" ng-repeat="logo in conf.header.licenseLogos" ng-switch="logo.type" ng-class="{'s-l-icon': logo.type === 'icon'}">
                 <div class="swedish-license-icon-info" ng-switch-when="icon">
                     <div>
-                        <p ng-bind="::(logo.text[env.lang] || logo.text.default)"></p>
+                        <p ng-bind="::(logo.text[env.lang] || logo.text.default|translate)"></p>
                     </div>
                 </div>
                 <a ng-switch-default
@@ -358,8 +360,11 @@
 </div>
 <!--header END-->
 
-<ng-include class="float-width" ng-show="$root.currentPage.hasSubHeader && $root.currentPage.isInSports && $location.path() !== '/' && $location.path() !== '/virtualsports/'" no-animate src="::'templates/sport/toptab.html'|fixPath"></ng-include>
+<ng-include class="float-width" ng-show="$root.currentPage.hasSubHeader && $root.currentPage.isInSports && $location.path() !== '/' && $location.path() !== '/virtualsports/' && $location.path() !== '/esports/'" no-animate src="::'templates/sport/toptab.html'|fixPath"></ng-include>
 
+<div ng-if="$location.path() === '/esports/' && $root.conf.asian.showUserInfoInSubHeader && $root.profile && $root.env.authorized" class="balance-int-row">
+    {{'Account'|translate}} : {{$root.profile.nick_name}} | {{'BBIN balance'|translate}}: {{$root.profile.calculatedBalance|number:$root.conf.balanceFractionSize}}
+</div>
 <div class="guide header-wrapper" ng-if="subMenuItems && subMenuItems.length > 1">
     <div class="subtop-header-menu-j"  no-animate>
         <ul>

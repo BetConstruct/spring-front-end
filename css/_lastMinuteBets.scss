@@ -255,6 +255,13 @@ $last-minute-bets-widget: $skin-color !default;
   margin: 0;
   text-align: center;
   display: inline-block;
+  &.price1,
+  &.price-1 {
+    &:before {
+      position: absolute;
+      left: -12px;
+    }
+  }
 }
 .lmb-table-j li:hover .market-info-b span {
   color: map-get($coeff-color-map, homepage-last-minute-bets-hover);

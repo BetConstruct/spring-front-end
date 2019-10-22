@@ -17,22 +17,6 @@
     </div>
     <div class="current-results-sidebar">
 
-        <!-- <div class="ct-stat-block has-counter">
-             <div class="ct-stat-icon"></div>
-             <div class="waved-decor-7-white"></div>
-             <h5 trans>Jackpots</h5>
-             <div class="cst-stat-list" ng-repeat="jackpot in iframeJackpotData track by $index">
-                 <div class="cst-stat-list-item" ng-repeat="pool in jackpot.PoolGroup.PoolList track by $index">
-                     <ul>
-                         <li>
-                             <p><b></b> {{pool.Name}}</p>
-                         </li>
-                         <li>{{pool.CollectedAmount|number:2:2}} {{jackpot.Currency|currency}}</li>
-                     </ul>
-                 </div>
-
-             </div>
-         </div>-->
         <div ng-show="iframeTab[gameInfo.game.id].selected === 'jackpots'" class="iframe-jackpot-container"
              ng-repeat="jackpot in iframeJackpotData track by $index"
              ng-class="{active: $index === jackpotWidgets.widgetIndex}">

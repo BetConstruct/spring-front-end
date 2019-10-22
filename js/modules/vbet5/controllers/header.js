@@ -5,7 +5,7 @@
  * @description
  * header controller
  */
-VBET5.controller('headerCtrl', ['$scope', '$rootScope', '$sce', '$window', '$location', '$filter', 'TimeoutWrapper', 'Zergling', 'Utils', '$route', 'Storage', 'Config', 'RecaptchaV3', function ($scope, $rootScope, $sce, $window, $location, $filter, TimeoutWrapper, Zergling, Utils, $route, Storage, Config, RecaptchaV3) {
+VBET5.controller('headerCtrl', ['$scope', '$rootScope', '$sce', '$window', '$location', '$filter', 'TimeoutWrapper', 'Zergling', 'Utils', '$route', 'Storage', 'Config', function ($scope, $rootScope, $sce, $window, $location, $filter, TimeoutWrapper, Zergling, Utils, $route, Storage, Config) {
     'use strict';
 
     TimeoutWrapper = TimeoutWrapper($scope);
@@ -68,6 +68,17 @@ VBET5.controller('headerCtrl', ['$scope', '$rootScope', '$sce', '$window', '$loc
         function updatePartnerConfig(data) {
             if (data && data.partner) {
                 $rootScope.partnerConfig = Utils.objectToArray(data.partner)[0];
+
+                if ($rootScope.partnerConfig && $rootScope.partnerConfig.tax_type && $rootScope.partnerConfig.tax_amount_ranges && $rootScope.partnerConfig.tax_amount_ranges.length) {
+                    $rootScope.partnerConfig.tax_amount_ranges = $rootScope.partnerConfig.tax_amount_ranges.filter(function (item) {
+                        return item.type === $rootScope.partnerConfig.tax_type;
+                    });
+                    $rootScope.partnerConfig.tax_amount_ranges.sort(function (a, b) {
+                        return a.from - b.from;
+                    });
+
+                }
+
                 Config.main.availableCurrencies = $rootScope.partnerConfig.supported_currencies;
 
                 $rootScope.$broadcast('partnerConfig.updated');
@@ -150,12 +161,12 @@ VBET5.controller('headerCtrl', ['$scope', '$rootScope', '$sce', '$window', '$loc
      * @methodOf vbet5.controller:headerCtrl
      * @description handles map data
      */
-    function showGoogleMap(event, data) {
+   /* function showGoogleMap(event, data) {
         $scope.mapData = {
             name: data.name || 'Stadium',
             coords: '[' + data.latitude + ', ' + data.longitude + ']'
         };
-    }
+    }*/
 
     /**
      * @ngdoc method
@@ -170,10 +181,6 @@ VBET5.controller('headerCtrl', ['$scope', '$rootScope', '$sce', '$window', '$loc
             $rootScope.env.preMatchMultiSelection = Storage.get('preMatchMultiSelection') !== undefined ? Storage.get('preMatchMultiSelection') : $rootScope.env.preMatchMultiSelection;
         }
 
-        if ($rootScope.currentPage) {
-            RecaptchaV3.execute($rootScope.currentPage.path, { cancelLastExecution: !$rootScope.currentPage.isInSports });
-        }
-
         console.log("$routeChangeSuccess:", $location.path());
     }
 
@@ -185,14 +192,13 @@ VBET5.controller('headerCtrl', ['$scope', '$rootScope', '$sce', '$window', '$loc
      * starts to listen needed events
      */
     $scope.headerInit = function headerInit(){
-        $scope.$on('login.loggedIn', setCurrencyConfig);
         $scope.$on('loggedIn', setCurrencyConfig);
         $scope.$on('login.loggedOut', setCurrencyConfig);
         $scope.$on('gotoSelectedGame', gotoSelectedGame);
         //this isn't really the best place for this listener
         $scope.$on('$routeChangeSuccess', routeChangeSuccess);
         $scope.$on('youtube.videourl', handleVideoUrl);
-        $scope.$on('google.map', showGoogleMap);
+       /* $scope.$on('google.map', showGoogleMap);*/
 
         TimeoutWrapper(setCurrencyConfig, 1000); //call once in the beginning(with delay to let user login happen if user is logged in)
     };

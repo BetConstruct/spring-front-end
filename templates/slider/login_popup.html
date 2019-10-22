@@ -4,110 +4,172 @@
             <div class="popup-layout-registration"  ng-keypress="keyPress($event)">
                 <div class="vertical-middle-wrapper">
                     <div class="all-popup-separator">
-                        <div class="register-steps-b">
-                            <div class="register-contain-new">
-                                <div class="closed-popup-form" ng-click="broadcast('slider.close')"></div>
-                                <div class="logo-form-b">
-                                    <img ng-src="{{conf.logo.secondImage ? conf.logo.secondImage : 'skins/' + conf.skin + '/images/logo.png'}}"/>
-                                </div>
-                                <div ng-if="!$root.conf.idToken.enabled" class="register-information-b">
-                                    <h2 class="ng-binding" trans>Already have an account?</h2>
-                                    <h3 trans>Cool, just login.</h3>
-                                </div>
+                        <div class="register-container">
+                            <ng-include ng-controller="cmsPagesCtrl"
+                                        ng-init="bannerType='login-banner'"
+                                        src="::'templates/slider/commercial-content.html'|fixPath"></ng-include>
+                            <div class="register-steps-b">
+                                <div class="register-contain-new">
+                                    <div class="closed-popup-form" ng-click="broadcast('slider.close')"></div>
+                                    <div class="logo-form-b">
+                                        <img ng-src="{{conf.logo.secondImage ? conf.logo.secondImage : 'skins/' + conf.skin + '/images/logo.png'}}"/>
+                                    </div>
+                                    <div ng-if="!$root.conf.idToken.enabled" class="register-information-b">
+                                        <h2 class="ng-binding" trans>Already have an account?</h2>
+                                        <h3 trans>Cool, just login.</h3>
+                                    </div>
 
-                                <form name="forms.signinform" ng-submit="params.needVerification? verifySmsCode(): login()" novalidate="novalidate">
+                                    <form name="forms.signinform"
+                                          ng-submit="params.needVerification? verifySmsCode(): login()"
+                                          novalidate="novalidate">
 
-                                    <div class="form-sign-in odno-ki" ng-class="{'error-animation':signInError  && forms.signinform.$pristine}">
-                                        <div class="field-separator" ng-hide="nemIDSrc">
-                                            <label ng-show="!('username-label'|translate:null:true)">{{(conf.registration.usernameLabel||'Username')|translate}}</label>
-                                            <label ng-show="'username-label'|translate:null:true" trans>username-label</label>
-                                            <div class="form-text" ng-class="{'error':signInError  && forms.signinform.$pristine}">
-                                                <input ng-model="user.username" id="signinform-login-input" numpad type="text" placeholder="{{(conf.registration.usernameHintPlaceholder || 'Your login')|translate}}" required="required" trans focus-on="login.formOpened" dont-scroll-on-focus ng-change="params.needVerification=false"  autocomplete="off" ng-maxlength="50">
+                                        <div class="form-sign-in odno-ki"
+                                             ng-class="{'error-animation':signInError  && forms.signinform.$pristine}">
+                                            <div class="field-separator" ng-hide="nemIDSrc">
+                                                <label ng-show="!('username-label'|translate:null:true)">{{(conf.registration.usernameLabel||'Username')|translate}}</label>
+                                                <label ng-show="'username-label'|translate:null:true" trans>username-label</label>
+                                                <div class="form-text"
+                                                     ng-class="{'error':signInError  && forms.signinform.$pristine}">
+                                                    <input ng-model="user.username" id="signinform-login-input" numpad
+                                                           type="text"
+                                                           placeholder="{{(conf.registration.usernameHintPlaceholder || 'Your login')|translate}}"
+                                                           required="required" trans focus-on="login.formOpened"
+                                                           dont-scroll-on-focus
+                                                           ng-change="params.needVerification=false" autocomplete="off"
+                                                           ng-maxlength="50">
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div class="field-separator" ng-if="!conf.nemIDAuthentication.enabled">
-                                            <label trans>Password</label>
-                                            <div class="form-text" ng-class="{'error':signInError && forms.signinform.$pristine}">
-                                                <input ng-model="user.password" id="signinform-password-input" numpad type="password" placeholder="Enter your password" focus-on="login.formOpened.andUsernameIsAvailable" required="required"  autocomplete="off" trans ng-keypress="passwordKeyPress($event)" ng-maxlength="50">
-                                                <div ng-if="conf.showCapsLockHint && capsLockIsOn" class="capslock-is-on-j" trans>Caps Lock is On</div>
-                                            </div>
-                                        </div>
-                                        <iframe id="nemid_iframe" title="NemID" allowfullscreen="true" scrolling="no" frameborder="0" width="300px" height="350px" ng-if="nemIDSrc" ng-src="{{nemIDSrc}}"></iframe>
-                                        <ng-include ng-if="conf.registration.inputBirthDateOnLogin" src="::'templates/slider/login_popup_birth_date.html'|fixPath;"></ng-include>
-
-                                        <div ng-if="params.displayRecaptcha" ng-controller="recaptchaCtrl" class="field-separator">
-                                            <input type="hidden" name="g_recaptcha_response" ng-model="user.g_recaptcha_response" ng-required="false"/>
-                                            <div class="tooltip-wrapper-j" ng-if="recaptcha.key">
-                                                <div class="g-recaptcha" data-callback="recaptchaUpdateCallback" data-sitekey="{{recaptcha.key}}" data-theme="{{recaptcha.theme || 'dark'}}" data-size="{{recaptcha.size || 'normal'}}"></div>
-                                            </div>
-                                        </div>
-                                        <div class="field-separator" ng-if="conf.smsVerification.login">
-                                            <label trans>SMS confirmation code</label>
-                                            <ul class="sms-confirmation-wrap">
-                                                <li>
-                                                    <div class="tooltip-wrapper-j" ng-class="{'error': params.smsErrMsg }">
-                                                        <input ng-model="user.confirmation_code" type="text" placeholder="Enter verification code" required="required" ng-change="params.smsErrMsg = ''" trans>
-                                                        <div class="tooltip-j" ng-hide="forms.signinform.$pristine" ng-bind="params.smsErrMsg"></div>
+                                            <div class="field-separator" ng-if="!conf.nemIDAuthentication.enabled">
+                                                <label trans>Password</label>
+                                                <div class="form-text"
+                                                     ng-class="{'error':signInError && forms.signinform.$pristine}"
+                                                     ng-init="passwordType='password'">
+                                                    <input ng-model="user.password" id="signinform-password-input"
+                                                           numpad type="{{passwordType}}"
+                                                           placeholder="Enter your password"
+                                                           focus-on="login.formOpened.andUsernameIsAvailable"
+                                                           required="required" autocomplete="off" trans
+                                                           ng-keypress="passwordKeyPress($event)" ng-maxlength="50">
+                                                    <i class="view-passward" ng-show="$root.conf.enableShowPassword"
+                                                       ng-mousedown="passwordType='text'"
+                                                       ng-mouseup="passwordType='password'"
+                                                       ng-mouseleave="passwordType='password'"></i>
+                                                    <div ng-if="conf.showCapsLockHint && capsLockIsOn"
+                                                         class="capslock-is-on-j" trans>Caps Lock is On
                                                     </div>
-                                                </li>
-                                                <li>
-                                                    <button ng-click="sendSms()" ng-disabled="!params.allowSMSResend || !user.username">
-                                                        <span ng-bind="'Get code'|translate"></span>
-                                                        <span ng-show="countdown.minutes + ':' + countdown.seconds !== '00:00'" countdown="{{params.smsTimer}}" ng-bind="countdown.minutes + ':' + countdown.seconds"></span>
-                                                    </button>
-                                                </li>
-                                            </ul>
-                                            <label ng-show="params.smsMsg" ng-bind="params.smsMsg" trans></label>
-                                        </div>
-                                        <div class="field-separator" ng-show="conf.rememberMeCheckbox.enabled">
-                                            <label for="signinform-remember-me" class="sign-in-checkbox-j">
-                                                <input ng-model="user.remember" id="signinform-remember-me" type="checkbox">
-                                                <span trans>Remember me</span>
-                                            </label>
-                                        </div>
-                                        <div class="sms-verification-container" ng-if="conf.registration.requireSmsValidation && params.needVerification">
-                                            <label trans>SMS verification code</label>
+                                                </div>
+                                            </div>
+                                            <iframe id="nemid_iframe" title="NemID" allowfullscreen="true"
+                                                    scrolling="no" frameborder="0" width="300px" height="350px"
+                                                    ng-if="nemIDSrc" ng-src="{{nemIDSrc}}"></iframe>
+                                            <ng-include ng-if="conf.registration.inputBirthDateOnLogin"
+                                                        src="::'templates/slider/login_popup_birth_date.html'|fixPath;"></ng-include>
 
-                                            <div class="sms-code-block active">
-                                                <div class="form-text code sms-code" ng-class="{'error':signInError && forms.signinform.$pristine || smsErrMsg}">
-                                                    <input ng-model="user.smsCode" type="text" placeholder="Enter verification code" required="required" trans>
+                                            <div ng-if="params.displayRecaptcha" ng-controller="recaptchaCtrl"
+                                                 class="field-separator">
+                                                <input type="hidden" name="g_recaptcha_response"
+                                                       ng-model="user.g_recaptcha_response" ng-required="false"/>
+                                                <div class="tooltip-wrapper-j" ng-if="recaptcha.key">
+                                                    <div class="g-recaptcha" data-callback="recaptchaUpdateCallback"
+                                                         data-sitekey="{{recaptcha.key}}"
+                                                         data-theme="{{recaptcha.theme || 'dark'}}"
+                                                         data-size="{{recaptcha.size || 'normal'}}"></div>
+                                                </div>
+                                            </div>
+                                            <div class="field-separator" ng-if="conf.smsVerification.login">
+                                                <label trans>SMS confirmation code</label>
+                                                <ul class="sms-confirmation-wrap">
+                                                    <li>
+                                                        <div class="tooltip-wrapper-j"
+                                                             ng-class="{'error': params.smsErrMsg }">
+                                                            <input ng-model="user.confirmation_code" type="text"
+                                                                   placeholder="Enter verification code"
+                                                                   required="required" ng-change="params.smsErrMsg = ''"
+                                                                   trans>
+                                                            <div class="tooltip-j" ng-hide="forms.signinform.$pristine"
+                                                                 ng-bind="params.smsErrMsg"></div>
+                                                        </div>
+                                                    </li>
+                                                    <li>
+                                                        <button ng-click="sendSms()"
+                                                                ng-disabled="!params.allowSMSResend || !user.username">
+                                                            <span ng-bind="'Get code'|translate"></span>
+                                                            <span ng-show="countdown.minutes + ':' + countdown.seconds !== '00:00'"
+                                                                  countdown="{{params.smsTimer}}"
+                                                                  ng-bind="countdown.minutes + ':' + countdown.seconds"></span>
+                                                        </button>
+                                                    </li>
+                                                </ul>
+                                                <label ng-show="params.smsMsg" ng-bind="params.smsMsg"></label>
+                                            </div>
+                                            <div class="field-separator" ng-show="conf.rememberMeCheckbox.enabled">
+                                                <label for="signinform-remember-me" class="sign-in-checkbox-j">
+                                                    <input ng-model="user.remember" id="signinform-remember-me"
+                                                           type="checkbox">
+                                                    <span trans>Remember me</span>
+                                                </label>
+                                            </div>
+                                            <div class="sms-verification-container"
+                                                 ng-if="conf.registration.requireSmsValidation && params.needVerification">
+                                                <label trans>SMS verification code</label>
 
-                                                    <div class="form-verify-info" ng-show="smsErrMsg">
-                                                        <div class="form-error-icon"></div>
-                                                        <div class="form-error-text">
-                                                            <div class="error-icon-f"></div>
-                                                            <p>{{params.smsErrMsg}}</p>
+                                                <div class="sms-code-block active">
+                                                    <div class="form-text code sms-code"
+                                                         ng-class="{'error':signInError && forms.signinform.$pristine || smsErrMsg}">
+                                                        <input ng-model="user.smsCode" type="text"
+                                                               placeholder="Enter verification code" required="required"
+                                                               trans>
+
+                                                        <div class="form-verify-info" ng-show="smsErrMsg">
+                                                            <div class="form-error-icon"></div>
+                                                            <div class="form-error-text">
+                                                                <div class="error-icon-f"></div>
+                                                                <p>{{params.smsErrMsg}}</p>
+                                                            </div>
                                                         </div>
                                                     </div>
-                                                </div>
-                                                <div class="button-sms code">
-                                                    <button ng-click="resendSMS()" ng-disabled="!params.allowSMSResend">Resend</button>
+                                                    <div class="button-sms code">
+                                                        <button ng-click="resendSMS()"
+                                                                ng-disabled="!params.allowSMSResend">Resend
+                                                        </button>
+                                                    </div>
                                                 </div>
                                             </div>
+                                            <div class="signin-error-message"
+                                                 ng-show="forms.signinform.$error.maxlength && !params.needVerification && !params.lockedUser">
+                                                <p trans>Username and password should be less than 50 characters.</p>
+                                            </div>
+                                            <div class="signin-error-message"
+                                                 ng-show="signInError && forms.signinform.$pristine">
+                                                <p ng-bind="signInError"></p>
+                                            </div>
                                         </div>
-                                        <div class="signin-error-message" ng-show="forms.signinform.$error.maxlength && !params.needVerification && !params.lockedUser">
-                                            <p trans>Username and password should be less than 50 characters.</p>
+                                        <div class="button-sign">
+                                            <ul>
+                                                <li class="create-account-icon"
+                                                    ng-hide="!conf.registration.enable || conf.header.disableRegistrationAndLogin || conf.registration.registrationBlocked">
+                                                    <a ng-click="register();$event.stopPropagation()" trans>Create an
+                                                        account</a></li>
+                                                <li class="forgot-password-icon"
+                                                    ng-hide="!conf.enableForgotPassword || conf.header.disableRegistrationAndLogin || conf.nemIDAuthentication.enabled">
+                                                    <a ng-click="openForgotPasswordForm();$event.stopPropagation()"
+                                                       title="Forgot your password?" trans>Forgot your password?</a>
+                                                </li>
+                                            </ul>
                                         </div>
-                                        <div class="signin-error-message" ng-show="signInError && forms.signinform.$pristine">
-                                            <p ng-bind="signInError"></p>
-                                        </div>
-                                    </div>
-                                    <div class="button-sign">
-                                        <ul >
-                                            <li class="create-account-icon" ng-hide="!conf.registration.enable || conf.header.disableRegistrationAndLogin || conf.registration.registrationBlocked"><a ng-click="register();$event.stopPropagation()" trans>Create an account</a></li>
-                                            <li class="forgot-password-icon" ng-hide="!conf.enableForgotPassword || conf.header.disableRegistrationAndLogin || conf.nemIDAuthentication.enabled"><a ng-click="openForgotPasswordForm();$event.stopPropagation()" title="Forgot your password?" trans>Forgot your password?</a></li>
-                                        </ul>
-                                    </div>
-                                    <div class="button-confirm">
+                                        <div class="button-confirm">
                                             <vbet-loader class="small-progress" ng-show="busy"></vbet-loader>
                                             <button name="" type="submit" value="{{({true:'Verify', false:'Sign in'}[params.needVerification])|translate}}" ng-disabled="busy || forms.signinform.$invalid || forms.signinform.$pristine" ng-class="{loading:busy}" trans>Sign in</button>
-                                    </div>
-                                    <div class="button-confirm" ng-if="$root.conf.idToken.enabled">
-                                        <button ng-click="$root.env.sliderContent='idToken'; $event.stopPropagation()" trans>login with fasttoken</button>
-                                    </div>
-                                </form>
-                             </div>
-                            <div ng-include="::'templates/slider/contact_support.html'|fixPath"></div>
+                                        </div>
+                                        <div class="button-confirm" ng-if="$root.conf.idToken.enabled">
+                                            <button ng-click="$root.env.sliderContent='idToken'; $event.stopPropagation()"
+                                                    trans>login with fasttoken
+                                            </button>
+                                        </div>
+                                    </form>
+                                </div>
+                                <div ng-include="::'templates/slider/contact_support.html'|fixPath"></div>
+                            </div>
                         </div>
                     </div>
                 </div>

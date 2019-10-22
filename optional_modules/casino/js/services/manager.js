@@ -12,6 +12,7 @@ CASINO.service('casinoManager', ['$rootScope', '$q', '$window', '$sce', '$locati
 
     var realityCheckIntervalPromise;
     var profileActiveTimePromise;
+    var notSupportedCurrencyWarningMessage = 'This game doesn\'t support Real mode in your account currency.';
 
     /**
      * @ngdoc method
@@ -73,8 +74,13 @@ CASINO.service('casinoManager', ['$rootScope', '$q', '$window', '$sce', '$locati
                     if (authWatcherPromise) {
                         authWatcherPromise();
                     }
-                    gameInfo.gameMode = 'real';
-                    scope.refreshGame(gameInfo.id);
+                    if (gameInfo.game.blocked_currencies && gameInfo.game.blocked_currencies && gameInfo.game.blocked_currencies.indexOf($rootScope.profile.currency) !== -1) {
+                       showWarning(notSupportedCurrencyWarningMessage);
+                    } else {
+                        gameInfo.gameMode = 'real';
+                        scope.refreshGame(gameInfo.id);
+                    }
+
                 }
             });
 
@@ -90,8 +96,13 @@ CASINO.service('casinoManager', ['$rootScope', '$q', '$window', '$sce', '$locati
             });
             return;
         }
-        gameInfo.gameMode = gameInfo.gameMode === 'fun' ? 'real' : 'fun';
-        scope.refreshGame(gameInfo.id);
+        if (gameInfo.gameMode === 'fun' && gameInfo.game.blocked_currencies && gameInfo.game.blocked_currencies.indexOf($rootScope.profile.currency) !== -1) {
+            showWarning(notSupportedCurrencyWarningMessage);
+        } else {
+            gameInfo.gameMode = gameInfo.gameMode === 'fun' ? 'real' : 'fun';
+            scope.refreshGame(gameInfo.id);
+        }
+
     };
 
     /**
@@ -425,6 +436,11 @@ CASINO.service('casinoManager', ['$rootScope', '$q', '$window', '$sce', '$locati
             return;
         }
 
+        if (gameType === 'real' && $rootScope.profile && game.blocked_currencies && game.blocked_currencies.indexOf($rootScope.profile.currency) !== -1){
+            showWarning(notSupportedCurrencyWarningMessage);
+            return;
+        }
+
         var gameInfo = {};
         gameInfo.gameID = game.front_game_id;
         gameInfo.id = Math.random().toString(36).substr(2, 9);
@@ -710,15 +726,7 @@ CASINO.service('casinoManager', ['$rootScope', '$q', '$window', '$sce', '$locati
         }
     };
 
-    /**
-     * @ngdoc method
-     * @name closeGame
-     * @methodOf CASINO.service:casinoManager
-     * @description Close game
-     * @param {Object} scope
-     * @param {int} id of game
-     */
-    casinoManager.closeGame = function closeGame(scope, id) {
+    function toCloseGame(scope, id) {
         if (id === undefined) {
             scope.gamesInfo = [];
             scope.viewCount = 1;
@@ -745,6 +753,38 @@ CASINO.service('casinoManager', ['$rootScope', '$q', '$window', '$sce', '$locati
         checkAndStopRealityInterval(scope.gamesInfo);
 
         clearLocation();
+    }
+
+    /**
+     * @ngdoc method
+     * @name closeGame
+     * @methodOf CASINO.service:casinoManager
+     * @description Close game
+     * @param {Object} scope
+     * @param {int} id of game
+     * @param {string} targetAction the close action target
+     */
+    casinoManager.closeGame = function closeGame(scope, id, targetAction) {
+        if (CConfig.main.enableConfirmationBeforeCloseGame && targetAction === 'closeButton') {
+            $rootScope.$broadcast('globalDialogs.addDialog', {
+                type: "warning",
+                title: "Warning",
+                hideCloseButton: true,
+                content: "Do you want to close the game?",
+                buttons: [
+                    {
+                        title: 'Yes',
+                        callback: function () {
+                            toCloseGame (scope, id);
+                        }
+                    },
+                    {
+                        title: 'No'
+                    }]
+            });
+        } else {
+            toCloseGame (scope, id);
+        }
     };
 
     /**

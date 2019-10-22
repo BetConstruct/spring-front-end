@@ -1,0 +1,84 @@
+<div  class="new-jackpot-container {{backgrounds[selectedProvider].textColor}}" style="background-image: url({{backgrounds[selectedProvider].image}}); background-color: {{backgrounds[selectedProvider].backgroundColor}}">
+    <vbet-loader ng-show="!externalJackpotProviders.length"></vbet-loader>
+    <carousel-slider ng-if="externalJackpotProviders.length" items="externalJackpotProviders" change-callback="providerChangeCallback" selected-item="selectedProvider" items-to-show="providersToShow"></carousel-slider>
+    <div class="new-jackpot-content jackpot-{{selectedProvider}}">
+        <div ng-repeat="jackpot in externalJackpotData track by $index" ng-show="jackpot.Provider === selectedProvider">
+
+            <h3 ng-bind="'Jackpot'|translate"></h3>
+            <jackpot-counter
+                    max-duration-speed="400"
+                    point="jackpot.CurrencyFraction"
+                    comma="true"
+                    currency="jackpot.Currency"
+                    amount="jackpot.PoolGroup.PoolList[0].CollectedAmount">
+            </jackpot-counter>
+            <h4 ng-bind="jackpot.PoolGroup.PoolList[0].DisplayName"></h4>
+            <p class="red-tiger-timer" ng-if="jackpot.PoolGroup.PoolList[0].JackPotType === 'time'">{{'Must pay before'|translate}} <span countdown="{{jackpot.PoolGroup.PoolList[0].TimeStamp}}"  ng-bind="'🕒 ' + countdown.hours + ':' + countdown.minutes + ':' + countdown.seconds"></span></p>
+            <ul class="new-jackpot-info">
+                <li ng-repeat="pool in jackpot.PoolGroup.PoolList track by $index" ng-if="$index !== 0">
+                    <h3 ng-bind="pool.DisplayName"></h3>
+                    <jackpot-counter
+                            max-duration-speed="400"
+                            point="jackpot.CurrencyFraction"
+                            comma="true"
+                            currency="jackpot.Currency"
+                            amount="pool.CollectedAmount">
+                    </jackpot-counter>
+                    <p class="red-tiger-timer" ng-if="pool.JackPotType === 'time'">{{'Must pay before'|translate}} <span countdown="{{pool.TimeStamp}}"  ng-bind="'🕒 ' + countdown.hours + ':' + countdown.minutes + ':' + countdown.seconds"></span></p>
+                </li>
+            </ul>
+            <div ng-if=""></div>
+        </div>
+
+        <div class="new-jackpot-block-games" ng-if="widgetMode">
+            <div class="new-jackpot-games-wrapper">
+                <div class="new-jackpot-games">
+                    <div ng-repeat="(provider, providerGames) in providerJackpotGames track by $index" ng-show="provider === selectedProvider" class="new-jackpot-img-wrapper " ng-class="{'new-jackpot-img-four': providerJackpotGames[selectedProvider].length > 3}">
+                        <a class="new-jackpot-img" ng-repeat="game in providerGames track by $index"  ng-if="$index < 5"><img ng-src="{{game.icon_2}}" alt="">
+                            <span class="games-buttons">
+                               <strong>
+                                   <button ng-click="openGame(game, 'real'); $event.stopPropagation();" ng-if="game.types.realMode"
+                                           trans>Play now</button>
+                                   <button ng-if="game.types.funMode && (confData.main.funModeEnabled === 2 && $root.env.authorized || confData.main.funModeEnabled === 1 || (confData.main.funModeEnabled === 3 && $root.profile.is_verified))"
+                                           ng-click="openGame(game, 'fun'); $event.stopPropagation();" trans>Play For Free</button>
+                                   <button ng-if="game.types.viewMode && !$root.env.authorized"
+                                           ng-click="openGame(game, 'fun'); $event.stopPropagation();" trans>View</button>
+                               </strong>
+                           </span>
+                            <p class="games-name">{{game.name}}</p>
+                            <i class="games-favorite-icon" ng-show="!hideFavoriteButton"
+                               ng-click="toggleSaveToMyCasinoGames(game); $event.stopPropagation();"
+                               ng-class="{'active': $root.myCasinoGamesIds[game.id]}">
+                            </i>
+                        </a>
+                    </div>
+                </div>
+                <div  class="new-jackpot-more">
+                    <i class="item-{{selectedProvider}}"></i>
+                    <a href="#/jackpots/?provider={{selectedProvider}}" trans>see more</a>
+                </div>
+            </div>
+        </div>
+        <div ng-repeat="(provider, providerGames) in providerJackpotGames track by $index" ng-show="provider === selectedProvider" class="new-jackpot-block-all-games" ng-if="!widgetMode">
+                <a class="new-jackpot-img" ng-repeat="game in providerGames track by $index" ng-click="openGame(game, 'fun');" ><img ng-src="{{game.icon_2}}" alt="">
+                    <span class="games-buttons">
+                               <strong>
+                                   <button ng-click="openGame(game, 'real'); $event.stopPropagation();" ng-if="game.types.realMode"
+                                           trans>Play now</button>
+                                   <button ng-if="game.types.funMode && (confData.main.funModeEnabled === 2 && $root.env.authorized || confData.main.funModeEnabled === 1 || (confData.main.funModeEnabled === 3 && $root.profile.is_verified))"
+                                           ng-click="openGame(game, 'fun'); $event.stopPropagation();" trans>Play For Free</button>
+                                   <button ng-if="game.types.viewMode && !$root.env.authorized"
+                                           ng-click="openGame(game, 'fun'); $event.stopPropagation();" trans>View</button>
+                               </strong>
+                           </span>
+                    <p class="games-name">{{game.name}}</p>
+                    <i class="games-favorite-icon" ng-show="!hideFavoriteButton"
+                       ng-click="toggleSaveToMyCasinoGames(game); $event.stopPropagation();"
+                       ng-class="{'active': $root.myCasinoGamesIds[game.id]}">
+                    </i>
+                </a>
+            <div ng-show="limits[selectedProvider].max > providerJackpotGames[selectedProvider].length" class="more-casino-games-load-b"><p load-more ng-click="loadMoreGames()"><span trans>Load more</span></p></div>
+            <vbet-loader ng-show="loadingJackpotesProcess[selectedProvider]"></vbet-loader>
+        </div>
+    </div>
+</div>

@@ -73,7 +73,7 @@
                                                     <li><span title="{{event.sport_name}}">{{event.sport_name}}</span></li>
                                                     <li><span title="{{event.competition_name|removeParts:[event.sport_name]}}">{{event.competition_name|removeParts:[event.sport_name]}}</span></li>
                                                     <li>
-                                                        <span>{{event.game_start_date|formatDate:'full'}}</span>
+                                                        <span>{{event.game_start_date|formatDate:'full':null:$root.env.timeFormat}}</span>
                                                         <button class="ticket-id-view" ng-show="event.scores===undefined" ng-click="getGameInfo(event);$event.stopPropagation();" trans>Score</button>
                                                         <b ng-show="event.scores"><span trans>Result:</span> {{event.scores}}</b>
                                                     </li>

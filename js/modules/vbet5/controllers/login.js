@@ -4,7 +4,7 @@
  * @description
  * login controller
  */
-angular.module('vbet5').controller('loginCtrl', ['$scope', '$rootScope', 'TimeoutWrapper', '$filter', '$q', '$location', '$window', '$sce', 'Script', 'Config', 'ConnectionService', 'Zergling', 'Tracking', 'Storage', 'Translator', 'partner', 'Utils', 'content', 'analytics', 'AuthData', 'LocalIp', function ($scope, $rootScope, TimeoutWrapper, $filter, $q, $location, $window, $sce, Script, Config, ConnectionService, Zergling, Tracking, Storage, Translator, partner, Utils, content, analytics, AuthData, LocalIp) {
+angular.module('vbet5').controller('loginCtrl', ['$scope', '$rootScope', 'TimeoutWrapper', '$filter', '$q', '$location', '$window', '$sce', 'Script', 'Config', 'ConnectionService', 'Zergling', 'RecaptchaService', 'Tracking', 'Storage', 'Translator', 'partner', 'Utils', 'content', 'analytics', 'AuthData', 'LocalIp', function ($scope, $rootScope, TimeoutWrapper, $filter, $q, $location, $window, $sce, Script, Config, ConnectionService, Zergling, RecaptchaService, Tracking, Storage, Translator, partner, Utils, content, analytics, AuthData, LocalIp) {
     'use strict';
     TimeoutWrapper = TimeoutWrapper($scope);
 
@@ -15,6 +15,10 @@ angular.module('vbet5').controller('loginCtrl', ['$scope', '$rootScope', 'Timeou
     var isGettingBalanceInProgress = false;
 
     $scope.busy = false;
+
+    $scope.recaptcha = {
+        version: RecaptchaService.version
+    };
 
     $scope.params = {
         userAge: 0,
@@ -130,7 +134,7 @@ angular.module('vbet5').controller('loginCtrl', ['$scope', '$rootScope', 'Timeou
                     switch (response.result) {
                         case 0:
                             $scope.params.smsTimer = Config.main.smsVerification.timer + new Date().getTime() / 1000;
-                            $scope.params.smsMsg = 'SMS Successfully Sent';
+                            $scope.params.smsMsg = Translator.get('SMS Successfully Sent');
                             break;
                         default:
                             $scope.params.smsErrMsg = Translator.get(response.result_text);
@@ -152,9 +156,9 @@ angular.module('vbet5').controller('loginCtrl', ['$scope', '$rootScope', 'Timeou
      *
      * @param {Object} data profile data
      */
-    var updateProfile = function updateProfile(data) {
+    function updateProfile(data) {
         $rootScope.$broadcast('profile', data);
-    };
+    }
 
     /**
      * @ngdoc method
@@ -244,7 +248,7 @@ angular.module('vbet5').controller('loginCtrl', ['$scope', '$rootScope', 'Timeou
      */
     function pushIncomingMessage(result) {
         console.log('incoming (subscription) message', result);
-        if (result.messages) {
+        if (result.messages && Object.keys(result.messages).length > 0) {
             $rootScope.$broadcast('messages.updateMessages', result.messages);
             $rootScope.profile.unread_count++;
         }
@@ -487,7 +491,7 @@ angular.module('vbet5').controller('loginCtrl', ['$scope', '$rootScope', 'Timeou
             updateProfile,
             {
                 'thenCallback': function (result) {
-                    $rootScope.$broadcast('login.loggedIn',action);
+                    $rootScope.$broadcast('loggedIn',action);
                     keepAlive();
                     action = $scope.loginAction || action || 'logged_in';
                     $scope.loginAction = null;
@@ -542,7 +546,9 @@ angular.module('vbet5').controller('loginCtrl', ['$scope', '$rootScope', 'Timeou
                 $scope.env.showSlider = false;
                 $scope.env.sliderContent = '';
                 $scope.showAuthenticationPopup = false;
-
+                if (Config.main.enableTwoFactorAuthentication) {
+                    Storage.remove('qrCodeOrigin');
+                }
                 if (Config.main.smsVerification.login) {
                     clearSMSParams();
                     $scope.params.allowSMSResend = true;
@@ -559,6 +565,13 @@ angular.module('vbet5').controller('loginCtrl', ['$scope', '$rootScope', 'Timeou
      * @description Handles login failure, if the login promise doesn't resolve
      */
     function handleLoginFailure(data) {
+        // Recaptcha action not verified
+        if (data.code === 29) {
+            return RecaptchaService.execute('login', { debounce: false }).then(function() {
+                $scope.login();
+            });
+        }
+
         data.data = data.data || {};
         $scope.busy = false;
         $scope.signInError = Translator.get((data.data.details && data.data.details.Message) || data.msg || data.data || data.code || true);
@@ -628,7 +641,7 @@ angular.module('vbet5').controller('loginCtrl', ['$scope', '$rootScope', 'Timeou
 
         //Sms verification
         if (Config.main.smsVerification.login) {
-            $scope.signInError = data.data.details.Message || '';
+            $scope.signInError = Translator.get(data.data.details.Message) || '';
             if (data.data.status === 2472 || data.data.status === 2474) {
                 $scope.params.smsErrMsg = $scope.signInError;
             }
@@ -1014,6 +1027,8 @@ angular.module('vbet5').controller('loginCtrl', ['$scope', '$rootScope', 'Timeou
      * @description broadcast corresponding event in case when login form opens
      */
     $scope.loginFormInit = function loginFormInit() {
+        $scope.busy = true;
+
         //initial values
         $scope.user = {username: $location.search().username || Storage.get('lastLoggedInUsername')} || {};
         $scope.user.remember = Config.main.rememberMeCheckbox.checked || false;
@@ -1028,6 +1043,15 @@ angular.module('vbet5').controller('loginCtrl', ['$scope', '$rootScope', 'Timeou
         }, 200);
 
         initIovation();
+
+        try {
+            // Do not attempt to call 'finally' on execute, as grecaptcha.execute returns a 'thenable' rather than a promise
+            RecaptchaService.execute('login', { debounce: false }).then(function() {
+                $scope.busy = false;
+            });
+        } catch (e) {
+            $scope.busy = false;
+        }
     };
 
     $scope.$on('slider.close', function() {
@@ -1040,6 +1064,14 @@ angular.module('vbet5').controller('loginCtrl', ['$scope', '$rootScope', 'Timeou
         if (Config.main.smsVerification.login) {
             clearSMSParams();
             $scope.params.allowSMSResend = true;
+        }
+    });
+
+    $scope.$on('afterCloseSlider', function () {
+        if ($scope.showAuthenticationPopup) {
+            $scope.showAuthenticationPopup = false;
+            closeSignInForm();
+            $rootScope.broadcast("doLogOut");
         }
     });
 

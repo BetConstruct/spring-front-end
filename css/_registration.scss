@@ -67,6 +67,7 @@
     display: table-cell;
     vertical-align: top;
     position: relative;
+    background: $popup-form-palette;
   }
 }
 .register-steps-b {
@@ -175,10 +176,6 @@
   height: 100%;
   padding: 20px 0 41px 30px;
   box-sizing: border-box;
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  background: $popup-form-palette;
 }
 .reg-commercial-content {
   float: left;
@@ -186,7 +183,6 @@
   height: 100%;
   padding: 0 4px 0 0;
   box-sizing: border-box;
-  @include scroll(auto);
   > a {
     float: left;
     display: block;
@@ -277,7 +273,7 @@
     left: auto;
   }
 }
-.red-social {
+.reg-social {
   line-height: 41px;
   @include ltr {
     float: right;
@@ -769,7 +765,7 @@
   }
 }
 .button-confirm > button:disabled{
-  color: invert(rgba(set-color($popup-form-palette),0.47));
+  color: rgba(set-color($popup-form-palette),0.3);
   background: rgba(set-color($popup-form-palette),0.09);
   cursor: default;
 }
@@ -1452,7 +1448,7 @@ label.sign-in-checkbox-j {
     content: '';
     display: block;
     box-sizing: border-box;
-    border: 1px solid opacify(rgba(set-color($popup-form-palette),0.39), $popup-form-opacify);;
+    border: 1px solid opacify(rgba(set-color($popup-form-palette),0.39), $popup-form-opacify);
     width: 16px;
     height: 16px;
     position: absolute;
@@ -2114,6 +2110,7 @@ $disable-middle-name: false !default;
     margin-bottom: 10px;
     box-sizing: border-box;
     > input {
+      float: left;
       width: calc((100% / 6) - 10px);
       height: 48px;
       padding: 0;
@@ -2121,11 +2118,9 @@ $disable-middle-name: false !default;
       border-radius: 2px;
       font-size: 28px;
       @include ltr {
-        float: left;
         text-align: center;
       }
       @include rtl {
-        float: right;
         text-align: center;
       }
       &:focus {
@@ -2133,12 +2128,7 @@ $disable-middle-name: false !default;
         caret-color: transparent;
       }
       + input {
-        @include ltr {
-          margin-left: 12px;
-        }
-        @include rtl {
-          margin-right: 12px;
-        }
+        margin-left: 12px;
       }
     }
   }

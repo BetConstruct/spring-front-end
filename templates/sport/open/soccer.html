@@ -91,9 +91,9 @@
         <include-template template-path="templates/sport/open/player.html"></include-template>
         <!-- Animated control -->
         <div class="game-control">
-            <div class="video-player-control" ng-show="game.activeFieldType==='field'">
-                <span class="video-mute" ng-click="toggleAnimationSound()" ng-show="!isVideoDetached && env.sound > 0" title="Sound" trans="attr-only"></span>
-                <span class="video-unmute" ng-click="toggleAnimationSound()" ng-show="!isVideoDetached && env.sound === 0" title="Sound" trans="attr-only"></span>
+            <div class="video-player-control" ng-show="!isVideoDetached && game.activeFieldType==='field'">
+                <span class="video-mute" ng-click="toggleAnimationSound()" ng-show="env.sound > 0" title="Sound" trans="attr-only"></span>
+                <span class="video-unmute" ng-click="toggleAnimationSound()" ng-show="env.sound === 0" title="Sound" trans="attr-only"></span>
                 <div class="sound-volume">
                     <div>
                         <rzslider rz-slider-model="env.sound" rz-slider-floor="0" rz-slider-ceil="1" rz-slider-step="0.01" rz-slider-precision="1" rz-slider-always-show-bar="true"></rzslider>

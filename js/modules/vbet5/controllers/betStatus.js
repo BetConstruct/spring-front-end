@@ -3,11 +3,11 @@
  * @ngdoc controller
  * @name vbet5.controller:betStatusCtrl
  */
-VBET5.controller('betStatusCtrl', ['$scope', 'Config', 'Zergling', function ($scope, Config, Zergling) {
+VBET5.controller('betStatusCtrl', ['$scope', 'Config', 'Zergling', 'RecaptchaService', function ($scope, Config, Zergling, RecaptchaService) {
     'use strict';
     $scope.betStatus = {
         open: false,
-        displayRecaptcha: !Config.main.recaptchaV3
+        displayRecaptcha: RecaptchaService.version !== 3
     };
 
     $scope.resultMap = {

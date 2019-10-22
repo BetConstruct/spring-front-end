@@ -5,7 +5,7 @@
  * casino page controller
  */
 
-CASINO.controller('casinoCtrl', ['$rootScope', '$scope', '$sce', '$location', 'Geoip', 'Config', 'CConfig', 'Zergling', 'casinoData', 'Utils', 'casinoManager', 'Translator', '$interval', 'TimeoutWrapper', 'analytics', 'content', 'casinoMultiviewValues','jackpotManager', function ($rootScope, $scope, $sce, $location, Geoip, Config, CConfig, Zergling, casinoData, Utils, casinoManager, Translator, $interval, TimeoutWrapper, analytics, content, casinoMultiviewValues, jackpotManager) {
+CASINO.controller('casinoCtrl', ['$rootScope', '$scope', '$sce', '$location', 'Geoip', 'Config', 'CConfig', 'Zergling', 'casinoData', 'Utils', 'casinoManager', 'Translator', '$interval', 'TimeoutWrapper', 'analytics', 'content', 'casinoMultiviewValues','jackpotManager', 'Storage', function ($rootScope, $scope, $sce, $location, Geoip, Config, CConfig, Zergling, casinoData, Utils, casinoManager, Translator, $interval, TimeoutWrapper, analytics, content, casinoMultiviewValues, jackpotManager, Storage) {
     'use strict';
 
     TimeoutWrapper = TimeoutWrapper($scope);
@@ -19,6 +19,7 @@ CASINO.controller('casinoCtrl', ['$rootScope', '$scope', '$sce', '$location', 'G
     $scope.categoryMenuDefaultOffset = 710;
     $scope.jackpotSlideIndex = 0;
     $scope.jackpotGames = [];
+    $scope.hasTournaments = $rootScope.conf.multiLevelMenu.hasOwnProperty('tournaments');
 
 
     if (!CConfig.disableAutoLoadMore) {
@@ -58,7 +59,12 @@ CASINO.controller('casinoCtrl', ['$rootScope', '$scope', '$sce', '$location', 'G
         name: 'favouriteGames',
         title: 'Favourite Games'
     };
-    $scope.providersOpened = true;
+    var isProvidersOpenedPreviously = Storage.get("casinoProvidersOpened");
+    if (isProvidersOpenedPreviously !== undefined) {
+        $scope.providersOpened = isProvidersOpenedPreviously;
+    } else {
+        $scope.providersOpened = !CConfig.main.closeProvidersByDefault;
+    }
 
     var providersString = '';
 
@@ -694,8 +700,8 @@ CASINO.controller('casinoCtrl', ['$rootScope', '$scope', '$sce', '$location', 'G
      * @methodOf CASINO.controller:casinoCtrl
      * @description  close opened game
      */
-    $scope.closeGame = function closeGame(id) {
-        casinoManager.closeGame($scope, id);
+    $scope.closeGame = function confirmCloseGame(id, targetAction) {
+        casinoManager.closeGame($scope, id, targetAction);
     };
 
 
@@ -949,20 +955,20 @@ CASINO.controller('casinoCtrl', ['$rootScope', '$scope', '$sce', '$location', 'G
                                     initProfileWatcher = false;
                                     getOptions(profile.id);
                                     createAuthorizedWatcher();
-                                    console.info('recommended-', 'loginInProgress -true');
+                                    console.log('recommended-', 'loginInProgress -true');
                                 }
                             });
                         } else {
                             getOptions($rootScope.profile && CConfig.main.recommendedGamesCategoryEnabled ? $rootScope.profile.id : null);
                             createAuthorizedWatcher();
-                            console.info('recommended-', 'loginInProgress -false');
+                            console.log('recommended-', 'loginInProgress -false');
                         }
                     }
                 });
             } else {
                 getOptions($rootScope.profile && CConfig.main.recommendedGamesCategoryEnabled ? $rootScope.profile.id : null);
                 createAuthorizedWatcher();
-                console.info('recommended-', 'loginInProgress -false');
+                console.log('recommended-', 'loginInProgress -false');
             }
             getJackPotData();
             subscribeForJackpotData();
@@ -1025,6 +1031,15 @@ CASINO.controller('casinoCtrl', ['$rootScope', '$scope', '$sce', '$location', 'G
         $scope.availableCategories = $scope.categories.slice(startIndex, startIndex + CATEGORIES_LIMIT);
 
     };
-
+    /**
+     * @ngdoc method
+     * @name toggleProviders
+     * @methodOf CASINO.controller:casinoCtrl
+     * @description toggle providers list and store user choice
+     */
+    $scope.toggleProviders = function toggleProviders() {
+        $scope.providersOpened = !$scope.providersOpened;
+        Storage.set("casinoProvidersOpened", $scope.providersOpened);
+    };
 
 }]);

@@ -22,6 +22,45 @@
       max-height: 999px;
       transition: max-height 400ms;
     }
+    &:not(.active) .footer-j .back-block-j button[class-on-scroll=",back-to-top-hide"] {
+      position: fixed;
+      z-index: 100010;
+      bottom: 90px;
+      width: 28px;
+      height: 28px;
+      font-size: 0;
+      border: none;
+      background: none;
+      margin: 0;
+      padding: 0;
+      color: rgba(#ffffff,0.8);
+      border-radius: 50%;
+      box-shadow: 0 -1px 3px 1px rgba(#000000,0.7), inset 0 -1px 3px 1px rgba(#000000,0.7);
+      transition: color 240ms, opacity 240ms, box-shadow 240ms;
+      @include ltr {
+        right: 15px;
+      }
+      @include rtl {
+        left: 15px;
+      }
+      &.back-to-top-hide {
+        opacity: 0;
+        display: block;
+        pointer-events: none;
+      }
+      &:hover {
+        color: $hero-color;
+        background: none;
+        box-shadow: 0 -1px 3px 1px rgba(set-color($hero-color),0.7), inset 0 -1px 3px 1px rgba(set-color($hero-color),0.7);
+      }
+      &:before {
+        content: "\e669";
+        width: 100%;
+        height: 100%;
+        display: block;
+        font: 28px/28px icomoon;
+      }
+    }
   }
   .payment-content-block {
     box-sizing: border-box;
@@ -91,6 +130,9 @@
     width: 100%;
     font-size: 0;
     margin: 12px 0 0;
+    @include rtl {
+      text-align: left;
+    }
     .age-restriction-j {
       display: inline-block;
       vertical-align: middle;
@@ -120,11 +162,14 @@
       @include rtl {
         margin: 0 12px 0 0;
       }
+      &.back-to-top-hide {
+        display: none;
+      }
       &:hover {
         background: lighten($hero-color, 10);
         border-color: lighten($hero-color, 10);
       }
-      + button {
+      &[class-on-scroll=",back-to-top-hide"] {
         background: none;
         border-color: rgba(set-color($footer-background), 0.28);
         color: set-color($footer-background);

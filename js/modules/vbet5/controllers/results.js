@@ -392,6 +392,11 @@ angular.module('vbet5.betting').controller('ResultsController', ['$rootScope', '
                 }
                 request.to_date =  Moment.get().unix();
             }
+
+            var params = $location.search();
+            if(params.sport_type) {
+                request.sport_type = params.sport_type;
+            }
         }
 
         /**

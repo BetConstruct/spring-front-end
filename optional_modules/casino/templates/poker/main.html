@@ -11,7 +11,7 @@
                     <div class="slider-landing-overlay">
                         <div class="guide">
                             <div class="button-group-j">
-                                <a ng-if="game.types.realMode" ng-class="{'play-now-top-item': globalConfig.poker.showTopItem}" ng-click="openNestedFrame();$event.stopPropagation()" data-content="{{globalConfig.poker.showTopItem|translate}}" trans>Play now!</button></a>
+                                <a ng-if="game.types.realMode" ng-class="{'play-now-top-item': globalConfig.poker.showTopItem}" ng-click="openNestedFrame();$event.stopPropagation()" data-content="{{globalConfig.poker.showTopItem|translate}}" trans>Play now!</a>
                                 <a class="download-now" ng-if="userOSVersion === 'WindowsXP' && game.downloads.windowsXp" ng-href="{{ (game.downloads.windowsXp.indexOf('http') === -1 ? $root.cUrlPrefix + '/' : '') + game.downloads.windowsXp }}" ng-click="broadcast('analytics.button', 'poker')" trans>download</a>
                                 <a class="download-now" ng-if="(userOSVersion !== 'WindowsXP' || !game.downloads.windowsXp) && userOS === 'Windows' && game.downloads.windows" ng-href="{{ (game.downloads.windows.indexOf('http') === -1 ? $root.cUrlPrefix + '/' : '') + game.downloads.windows }}" ng-click="broadcast('analytics.button', 'poker')" trans>download</a>
                                 <a class="download-now" ng-if="userOS === 'MacOS' && game.downloads.mac" ng-href="{{ (game.downloads.mac.indexOf('http') === -1 ? $root.cUrlPrefix + '/' : '') + game.downloads.mac}}" ng-click="broadcast('analytics.button', 'poker')" trans>download</a>

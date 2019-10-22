@@ -46,9 +46,13 @@
         </div>
     </div>
     <div class="game-additional-info-v3">
-        <p ng-show="openGame.is_neutral_venue || getGameAdditionalInfoV3">
+        <p   additional-game-info game="openGame" ng-show="openGame.add_info_name || openGame.info.add_info || openGame.tv_info || openGame.openGame.is_neutral_venue || additionalInfo && (!$root.conf.hidePointsForCompetitions['k' + openGame.competition.id] || $root.conf.hidePointsForCompetitions['k' + openGame.competition.id] && $root.env.authorized)">
             <span ng-show="openGame.is_neutral_venue" trans >Neutral field</span>
-            <span ng-if="openGame">{{ getGameAdditionalInfoV3 }} </span>
+            <span class="text-info" ng-if="additionalInfo">{{ additionalInfo }} </span>
+            <span ng-if="openGame.add_info_name" ng-bind="openGame.add_info_name"></span>
+            <span ng-if="openGame.info.add_info" ng-bind="openGame.info.add_info"></span>
+            <span ng-if="openGame.info.tv_info" ng-bind="openGame.info.tv_info"></span>
+
         </p>
         <div class="game-additional-icons">
             <i class="statistics-icon-j"
@@ -64,7 +68,7 @@
         </div>
     </div>
 </div>
-<div class="float-width" ng-show="openGame.type === 0">
+<div class="float-width" ng-show="openGame.type !== 1">
     <div class="game-additional-info-v3">
         <p ng-show="openGame.is_neutral_venue || getGameAdditionalInfoV3">
             <span ng-show="openGame.is_neutral_venue" trans >Neutral field</span>

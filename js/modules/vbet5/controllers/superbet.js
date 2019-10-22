@@ -33,168 +33,6 @@ VBET5.controller('superBetCtrl', ['$rootScope', '$scope', '$interval', 'Storage'
         }
     }
 
-    /**
-     * @ngdoc method
-     * @name stopSuperBetProcessing
-     * @methodOf vbet5.controller:superBetCtrl
-     * @description Stop Process pending superBets.
-     */
-    function stopSuperBetProcessing() {
-        $scope.showCounterOfferPopup = false;
-        $scope.originalSuperBet = undefined;
-        $scope.trackingInProgress = false;
-        $scope.counterOfferCountDown = 0;
-        $scope.superBetId = -1;
-        Storage.remove('superBet');
-        $interval.cancel($scope.superBetTimer);
-        $interval.cancel($scope.counterOfferTimer);
-    }
-
-    /**
-     * @ngdoc method
-     * @name declineCounterOffer
-     * @methodOf vbet5.controller:superBetCtrl
-     * @description Decline pending superBet offer.
-     */
-    $scope.declineCounterOffer = function declineCounterOffer() {
-        Zergling
-            .get({bet_id: $scope.superBetId}, 'decline_super_bet').then(function (data){console.log(data)})['catch'](function (reason) {
-            console.log('Error:', reason);
-        });
-        analytics.gaSend('send', 'event', 'betting', 'SuperBet ' + (Config.main.sportsLayout) + ($rootScope.env.live ? '(LIVE)' : '(PM)'), {'page': $location.path(), 'eventLabel': 'decline counter offer'});
-        stopSuperBetProcessing();
-    };
-
-    /**
-     * @ngdoc method
-     * @name declineCounterOffer
-     * @methodOf vbet5.controller:superBetCtrl
-     * @description Approve pending superBet offer.
-     */
-    $scope.approveCounterOffer = function approveCounterOffer() {
-        Zergling
-            .get({bet_id: $scope.superBetId}, 'approve_super_bet').then(function (data){console.log(data)})['catch'](function (reason) {
-            console.log('Error:', reason);
-        });
-        stopSuperBetProcessing();
-        analytics.gaSend('send', 'event', 'betting', 'SuperBet ' + (Config.main.sportsLayout) + ($rootScope.env.live ? '(LIVE)' : '(PM)'), {'page': $location.path(), 'eventLabel': 'approve counter offer'});
-    };
-
-    /**
-     * @ngdoc method
-     * @name getOriginalBetInfo
-     * @methodOf vbet5.controller:superBetCtrl
-     * @description Get Original SuperBet Info to show when counter offer accrue
-     */
-    function getOriginalBetInfo() {
-        if (Storage.get('superBet') && Storage.get('superBet').id === $scope.superBetId) {
-            $scope.originalSuperBet = Storage.get('superBet');
-        } else {
-            Zergling.get({
-                'where': {
-                }
-            }, 'bet_history')
-                .then(function (response) {
-                    angular.forEach(response.bets, function (bet) {
-                        if (bet.id === $scope.superBetId) {
-                            $scope.originalSuperBet = bet;
-                            Storage.set('superBet', bet);
-                        }
-                    });
-                });
-        }
-    }
-
-     /**
-     * @ngdoc method
-     * @name makeCounterOffer
-     * @methodOf vbet5.controller:superBetCtrl
-     * @description process counter offer
-     */
-    function makeCounterOffer(offer) {
-         if (offer.changed_field !== 0) {
-             if (offer.down_counter < 0) {
-                 $scope.declineCounterOffer();
-                 return;
-             }
-             $scope.counterOffer = offer;
-             $scope.superBetId = offer.bet_id;
-             $scope.showCounterOfferPopup = true;
-             $scope.counterOfferCountDown = offer.down_counter;
-             $scope.counterOfferTimer = $interval(function () {
-                 if ($scope.counterOfferCountDown > 0) {
-                     $scope.counterOfferCountDown--;
-                 } else {
-                     $scope.declineCounterOffer();
-                 }
-
-             }, 1000);
-         }
-    }
-
-
-
-    /**
-     * @ngdoc method
-     * @name startSuperBetProcessing
-     * @methodOf vbet5.controller:superBetCtrl
-     * @description Process pending superBets and show notifications and counter offers.
-     */
-    function startSuperBetProcessing() {
-        $scope.trackingInProgress = true;
-        $scope.originalSuperBetId = $scope.superBetId;
-        getOriginalBetInfo();
-        $scope.superBetTimer = $interval(function () {
-            if(!$rootScope.env.authorized) {
-                stopSuperBetProcessing();
-                return;
-            }
-            Zergling
-                .get({bet_id:  $scope.superBetId}, 'get_super_bet_info').then(function (data) {
-                    console.log(data);
-                    switch (data.bet.bet_status) {
-                    case '-4':
-                        showSuperBetNotification(Translator.get('Your superbet ({1}) request is declined', [$scope.superBetId]));
-                        $rootScope.$broadcast('globalDialogs.removeDialogsByTag', 'onHoldConfirm');
-                        stopSuperBetProcessing();
-                        analytics.gaSend('send', 'event', 'betting', 'SuperBet ' + (Config.main.sportsLayout) + ($rootScope.env.live ? '(LIVE)' : '(PM)'), {'page': $location.path(), 'eventLabel': 'declined'});
-                        break;
-                    case '0':
-                        showSuperBetNotification(Translator.get('Your superbet ({1}) request is accepted', [$scope.superBetId]));
-                        stopSuperBetProcessing();
-                        analytics.gaSend('send', 'event', 'betting', 'SuperBet ' + (Config.main.sportsLayout) + ($rootScope.env.live ? '(LIVE)' : '(PM)'), {'page': $location.path(), 'eventLabel': 'accepted'});
-                        break;
-                    case '-7':
-                        makeCounterOffer(data.bet);
-                        $interval.cancel($scope.superBetTimer);
-                        analytics.gaSend('send', 'event', 'betting', 'SuperBet ' + (Config.main.sportsLayout) + ($rootScope.env.live ? '(LIVE)' : '(PM)'), {'page': $location.path(), 'eventLabel': 'counter offer'});
-                        break;
-                    }
-                })['catch'](function (reason) {
-                console.log('Error:', reason);
-            });
-        }, 2000);
-    }
-
-    /**
-     * @ngdoc method
-     * @name checkSuperBet
-     * @methodOf vbet5.controller:superBetCtrl
-     * @description Receives profile update messages and check if superbet available
-     *
-     * @param {Object} event event
-     * @param {Object} data profile data
-     */
-    function checkSuperBet(event, data) {
-        if ($scope.trackingInProgress || !data || data === -1 || $scope.superBetId === data) {
-            return;
-        }
-        $scope.superBetId = data;
-        startSuperBetProcessing();
-    }
-
-    $scope.$on('checkSuperBet', checkSuperBet);
-
 
     /********************** SUPERBET FOR SPRING ***************************************/
 
@@ -212,9 +50,19 @@ VBET5.controller('superBetCtrl', ['$rootScope', '$scope', '$interval', 'Storage'
                 return value;
             }).sort(function sortDescending(a, b) { return b.super_bet_id - a.super_bet_id; });
             superBet = superBet[0];
+
+            var superBetIndex = $rootScope.superbetIds.superBets.indexOf(superBet.super_bet_id);
+            var counterOfferIndex = $rootScope.superbetIds.counterOffers.indexOf(superBet.super_bet_id);
+
+            if (superBetIndex !== -1) {
+                $rootScope.superbetIds.superBets.splice(superBetIndex, 1);
+            }
+            if (counterOfferIndex !== -1) {
+                $rootScope.superbetIds.counterOffers.splice(counterOfferIndex, 1);
+            }
+
             if (superBet.super_bet_status === -1 || superBet.super_bet_status === '-1') {
                 showSuperBetNotification(Translator.get('Your offer ({1}) request is declined', [superBet.super_bet_id]));
-                $rootScope.offersCount = $rootScope.offersCount >= 1 ? $rootScope.offersCount - 1: 0;
                 $rootScope.$broadcast('globalDialogs.removeDialogsByTag', 'onHoldConfirm');
                 analytics.gaSend('send', 'event', 'betting', 'SuperBet ' + (Config.main.sportsLayout) + ($rootScope.env.live ? '(LIVE)' : '(PM)'), {'page': $location.path(), 'eventLabel': 'declined'});
             } else {
@@ -238,7 +86,6 @@ VBET5.controller('superBetCtrl', ['$rootScope', '$scope', '$interval', 'Storage'
                                 noButton: ['declineCounterOffer', superBet]
                             });
                         } else {
-                            $rootScope.offersCount = $rootScope.offersCount >= 1 ? $rootScope.offersCount - 1: 0;
                             showSuperBetNotification(Translator.get('Your offer ({1}) request is accepted', [message]));
                             analytics.gaSend('send', 'event', 'betting', 'SuperBet ' + (Config.main.sportsLayout) + ($rootScope.env.live ? '(LIVE)' : '(PM)'), {'page': $location.path(), 'eventLabel': 'accepted'});
                         }

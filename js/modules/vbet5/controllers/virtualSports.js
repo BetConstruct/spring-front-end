@@ -30,7 +30,7 @@ angular.module('vbet5.betting').controller('virtualSportsCtrl', ['$scope', '$roo
     };
 
     $scope.nonRaceSports = {
-        ids: [56, 57, 132, 173, 174]
+        ids: [1, 2, 56, 57, 132, 173, 174]
     };
 
     $scope.marketGroupFilter = {
@@ -94,10 +94,9 @@ angular.module('vbet5.betting').controller('virtualSportsCtrl', ['$scope', '$roo
         open: false
     };
     $scope.vPlayerState = {
-        isLoaded: false,
-        fullscreen: false,
-        data: null
+        fullscreen: false
     };
+    $scope.videoData = null;
     $scope.favoriteMarketTypes = Storage.get('vs_favorite_market_types') || {};
     $scope.selectedGroup = {
         id: undefined
@@ -136,7 +135,7 @@ angular.module('vbet5.betting').controller('virtualSportsCtrl', ['$scope', '$roo
     }
 
     closeLeftMenuDependingWindowSize();
-    $scope.$on('onWindowResize', closeLeftMenuDependingWindowSize);
+    $scope.$on('onWindowWidthResize', closeLeftMenuDependingWindowSize);
 
 
     /**
@@ -270,7 +269,7 @@ angular.module('vbet5.betting').controller('virtualSportsCtrl', ['$scope', '$roo
             {
                 'failureCallback': function () {
                     $scope.competitionsLoading = false;
-                    $scope.vPlayerState.data = null;
+                    $scope.videoData = null;
                 }
             }
         );
@@ -538,19 +537,18 @@ angular.module('vbet5.betting').controller('virtualSportsCtrl', ['$scope', '$roo
         $scope.vSMarketsFirstPack = $scope.gameToShow.markets.slice(); // Clone array elements
         $scope.vSMarketsSecondPack = $scope.vSMarketsFirstPack.splice( $scope.gameToShow.markets.length / 2);
 
-        if (GameInfo.hasVideo($scope.gameToShow)) {
-            if ($scope.gameToShow.tv_type !== streamDetails.tvType || $scope.gameToShow.video_id !== streamDetails.videoId) {
-                $scope.vPlayerState.data = null;
-                $scope.providerId = $scope.gameToShow.tv_type;
-                GameInfo.getVideoData($scope.gameToShow, true).then(function () {
-                    if ($scope.gameToShow) {
-                        streamDetails.tvType = $scope.gameToShow.tv_type;
-                        streamDetails.videoId = $scope.gameToShow.video_id;
-                        $scope.vPlayerState.data = $scope.gameToShow.video_data;
-                    }
-                });
-            }
+        if ($scope.gameToShow.tv_type !== streamDetails.tvType || $scope.gameToShow.video_id !== streamDetails.videoId) {
+            $scope.videoData = null;
+            $scope.providerId = $scope.gameToShow.tv_type;
+            GameInfo.getVideoData($scope.gameToShow, true).then(function () {
+                if ($scope.gameToShow) {
+                    streamDetails.tvType = $scope.gameToShow.tv_type;
+                    streamDetails.videoId = $scope.gameToShow.video_id;
+                    $scope.videoData = $scope.gameToShow.video_data;
+                }
+            });
         }
+
         $scope.gameToShow.isVirtual = true;
         $scope.gameToShow.displayTitle = $scope.gameToShow.text_info;
     }

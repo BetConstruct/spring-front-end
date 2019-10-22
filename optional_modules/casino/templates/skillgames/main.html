@@ -1,4 +1,4 @@
-<div ng-controller="skillGamesMainCtrl" watch-resize middle-screen-mode="true" ng-init=" setTitle('Games');">
+<div class="float-width" ng-controller="skillGamesMainCtrl" watch-resize middle-screen-mode="true" ng-init=" setTitle('Games');">
     <div ng-show="!loadingProcess">
         <div class="casino-main" ng-show="!gamesInfo.length">
             <div ng-include="'optional_modules/casino/templates/skillgames/new.html'|fixPath"></div>

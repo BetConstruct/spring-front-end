@@ -33,6 +33,9 @@ VBET5.controller('searchCtrl', ['$rootScope', '$scope', 'TimeoutWrapper', '$rout
                     angular.forEach(sport.region, function (region) {
                         angular.forEach(region.competition, function (competition) {
                             angular.forEach(competition.game, function (game) {
+                                if ($scope.searchResultGameIds.indexOf(game.id) !== -1) {
+                                    return;
+                                }
                                 if ($scope.searchResults[sport.id] === undefined) {
                                     $scope.searchResults[sport.id] = {order: order++, results: []};
                                 }
@@ -186,6 +189,9 @@ VBET5.controller('searchCtrl', ['$rootScope', '$scope', 'TimeoutWrapper', '$rout
      * @param {Object} result object
      */
     $scope.goToResult = function goToResult(result) {
+        if (!$scope.showSearchResults) {
+            return;
+        }
         $scope.showSearchResults = false;
 
         var currentParams = $location.search();

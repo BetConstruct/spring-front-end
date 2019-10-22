@@ -9,7 +9,7 @@
  * A service used to get data from Swarm
  * uses {@link vbet5.service:Websocket Websocket} or {@link /documentation/angular/api/ng.$http ng.$http} for communication, depending on config and browser capabilities
  */
-VBET5.factory('Zergling', ['Config', 'WS', '$http', '$q', '$timeout', '$rootScope', '$cookies', 'AuthData', 'Utils', function (Config, WS, $http, $q, $timeout, $rootScope, $cookies, AuthData, Utils) {
+VBET5.factory('Zergling', ['Config', 'WS', '$http', '$q', '$timeout', '$rootScope', '$cookies', 'AuthData', 'Utils', 'RecaptchaService', 'Storage', function (Config, WS, $http, $q, $timeout, $rootScope, $cookies, AuthData, Utils, RecaptchaService, Storage) {
     'use strict';
 
     var Zergling = {};
@@ -228,6 +228,62 @@ VBET5.factory('Zergling', ['Config', 'WS', '$http', '$q', '$timeout', '$rootScop
 
     /**
      * @ngdoc function
+     * @name resolve session
+     * @methodOf vbet5.service:Zergling
+     * @methodType private
+     * @description
+     * Used for checking recaptcha version and initialization appropriate functionality
+     */
+    function processSessionResponse (response) {
+        var processResult;
+        sessionRequestIsInProgress = false;
+        var res = response.data.data;
+        if (res && res.sid) {
+            if (!res.recaptcha_enabled || (RecaptchaService.version === 3 && res.recaptcha_version === 3)) { // for v3 if the version is defined, then it is already initialized
+                session.resolve(res.sid);
+            } else {
+                RecaptchaService.init(res.site_key, res.recaptcha_version, true).then(function() {
+                    session.resolve(res.sid);
+                });
+            }
+
+            if (isLoggedIn) {
+                isLoggedIn = false;
+                Zergling.login(null)['finally'](resubscribe);
+            } else {
+                resubscribe();
+            }
+
+            checkLoggedInState(true);
+
+            processResult = session.promise;
+        } else {
+            session = null;
+            console.warn('got invalid response to request_session , sid not present', JSON.stringify(response));
+            processResult = $q.reject(response);
+        }
+        return processResult;
+    }
+
+    function processToReceiveSession(result, sessionRequestCmd) {
+        if (useWebSocket) {
+            console.log('requesting new session (WS)');
+            result = WS.sendRequest(sessionRequestCmd).then(processSessionResponse);
+        } else {
+            console.log('requesting new session (LP)');
+            $http.post(getLongPollUrl(), JSON.stringify(sessionRequestCmd))
+                .then(function (response) { // extra 'data' is used to make structure same as when using data returned by $http.post promise resolve
+                    result = processSessionResponse({data: response.data});
+                })
+                .error(function (response) {
+                    session = null;
+                    result = $q.reject(response.data);
+                });
+        }
+    }
+
+    /**
+     * @ngdoc function
      * @name getSession
      * @methodOf vbet5.service:Zergling
      * @description
@@ -257,53 +313,27 @@ VBET5.factory('Zergling', ['Config', 'WS', '$http', '$q', '$timeout', '$rootScop
             }
             sessionRequestIsInProgress = true;
 
-            var processSessionResponse = function (response) {
-                sessionRequestIsInProgress = false;
-                if (response.data.data && response.data.data.sid) {
-                    session.resolve(response.data.data.sid);
-//                    Storage.set('sessionid', response.data.data.sid, Config.swarm.sessionLifetime);
-                    $rootScope.$broadcast('zergling.gotSession');
+            var recaptchaOptions = Storage.get('recaptcha_' + $rootScope.conf.site_id);
 
-                    if (isLoggedIn) {
-                        isLoggedIn = false;
-                        Zergling.login(null)['finally'](resubscribe);
-                    } else {
-                        resubscribe();
+            if (recaptchaOptions) {
+                RecaptchaService.init(recaptchaOptions.key, recaptchaOptions.version).then(function(g_recaptcha_response) {
+                    if (g_recaptcha_response) {
+                        sessionRequestCmd.params.g_recaptcha_response = g_recaptcha_response;
                     }
-
-                    checkLoggedInState(true);
-
-                    result = session.promise;
-                } else {
-                    session = null;
-                    console.warn('got invalid response to request_session , sid not present', JSON.stringify(response));
-                    result = $q.reject(response);
-                }
-                return result;
-            };
-
-            if (useWebSocket) {
-                console.log('requesting new session (WS)');
-                result = WS.sendRequest(sessionRequestCmd).then(processSessionResponse);
+                    processToReceiveSession(result, sessionRequestCmd);
+                });
             } else {
-                console.log('requesting new session (LP)');
-                $http.post(getLongPollUrl(), JSON.stringify(sessionRequestCmd))
-                    .then(function (response) { // extra 'data' is used to make structure same as when using data returned by $http.post promise resolve
-                        result = processSessionResponse({data: response.data});
-                    })['catch'](function (response) {
-                        session = null;
-                        result = $q.reject(response.data);
-                    });
+                processToReceiveSession(result, sessionRequestCmd);
             }
+
             return result;
-
-
         } else {
             result = session.promise;
         }
 
         return result;
     }
+
     /**
      * @ngdoc function
      * @name whatsUp
@@ -716,7 +746,7 @@ VBET5.factory('Zergling', ['Config', 'WS', '$http', '$q', '$timeout', '$rootScop
                 if (!inProgressUnsubs[id]) {
                     inProgressUnsubs[id] = true;
                     data = {'command': 'unsubscribe', 'params': {subid: id.toString()}};
-                    responses.push(sendRequest(data).then(successFn)['catch'](errorFn)['finally'](function() { delete inProgressUnsubs[id] }));
+                    responses.push(sendRequest(data).then(successFn)['catch'](errorFn)['finally'](function() { delete inProgressUnsubs[id]; }));
                 }
 
             });
@@ -725,7 +755,7 @@ VBET5.factory('Zergling', ['Config', 'WS', '$http', '$q', '$timeout', '$rootScop
             if (!inProgressUnsubs[subId]) {
                 data = {'command': 'unsubscribe', 'params': {subid: subId.toString()}};
                 inProgressUnsubs[subId] = true;
-                responses.push(sendRequest(data).then(successFn)['catch'](errorFn)['finally'](function() { delete inProgressUnsubs[subId] }));
+                responses.push(sendRequest(data).then(successFn)['catch'](errorFn)['finally'](function() { delete inProgressUnsubs[subId]; }));
             }
         }
         if (responses.length) {

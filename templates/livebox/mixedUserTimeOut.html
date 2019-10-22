@@ -30,7 +30,7 @@
                                        is-open="dateState.openedTo"
                                        disabled="disabled"
                                        datepicker-options="dateOptions"
-                                       ng-required="true"
+                                       ng-required="selfExclusionData.type === 'custom'"
                                        close-text="Close"
                                 />
                                 <span class="input-group-btn">
@@ -44,13 +44,25 @@
                 </div>
             </div>
             <div class="change-button-container password">
-
                 <div ng-if="conf.userTimeOut.additionalTexts">
                     <p ng-repeat="text in conf.userTimeOut.additionalTexts track by $index">{{text|translate}}</p>
                 </div>
+                <div class="password-button">
+                    <label ng-class="{'error': selfExclusionForm.password.$dirty && selfExclusionForm.password.$error.required}">
+                        <span trans>Password</span> <span class="hint">*</span>
+                    </label>
+                    <div class="active-field">
+                        <div class="form-text" ng-class="{'error': selfExclusionForm.password.$dirty  && selfExclusionForm.password.$error.required}">
+                            <input type="password" name="password"  ng-model="selfExclusionPasswordState.value" placeholder="Current Password" autocomplete="off" required trans  numpad>
 
+                            <div class="tooltip-j" >
+                                <div ng-show="selfExclusionForm.password.$error.required" trans>This field is required</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <div class="cashier-button">
-                    <button ng-disabled="!periodValue || (selfExclusionData.type === 'custom' && customTimeout && !customTimeout.date)" ng-show="!working" trans ng-click="setSelfExclusion(conf.userTimeOut.type, 'userTimeOut')">Save</button>
+                    <button ng-disabled="!periodValue || !selfExclusionForm.$valid" ng-show="!working" trans ng-click="setSelfExclusion(conf.userTimeOut.type, 'userTimeOut', selfExclusionForm.password)">Save</button>
                     <button disabled="disabled" ng-show="working" trans>Wait...</button>
                 </div>
             </div>

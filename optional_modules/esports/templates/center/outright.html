@@ -1,51 +1,28 @@
-<div class="outright-m-w">
-    <div class="outright-e-sport-row">
-        <ul class="outrght-coluns-b">
-            <li><h5>Starcraft 2</h5></li>
-            <li><span>Event</span></li>
-            <li><span>Odds</span></li>
-        </ul>
-    </div>
-    <div class="outright-m-list-w">
-        <div class="o-t-contain">
-            <h4>ASIAN GAMES. OUTRIGHT: WINNER</h4>
-        </div>
-        <div class="s-outright-m-w">
-            <ul class="outrght-coluns-b">
-                <li>
-                    <p>08/17 22:00</p>
-                </li>
-                <li>
-                    <h6>Maru</h6>
-                </li>
-                <li class="s-event-v">
-                    <div class="e-o-event">1.02</div>
-                </li>
-            </ul>
+<table class="e-game-markets outright-e-m" ng-click="getGameData({game:game, sport:game.sport, competition:game.competition, region:game.region});">
+    <tr>
+        <th>
+            <div class="icon-e-s {{::game.sport.alias}}" ng-click="$event.stopPropagation();"><img src="images/e-icons/{{::game.sport.alias}}.png" alt=""/></div>
+        </th>
+       <td>
+           <div ng-repeat="event in game.markets.OUTRIGHT[0].events|limitTo:$root.conf.esportsOutrightEventsLimit track by event.id" >
+               <h4 class="game-t-n" title="{{event.name}}">
+                   {{event.name}}
+               </h4>
+               <p class="e-g-price-v" ng-click="bet(event, game.markets.OUTRIGHT[0], game); $event.stopPropagation()"
+                  ng-class="{'locked': (event.price | oddConvert:'decimal') == 1 || game.is_blocked,
+                   'factor-top': event.price_change == '1',
+                   'factor-bottom': event.price_change == '-1', 'active': isEventInBetSlip(event)}"
+                  ng-bind="event.price|oddConvert:env.oddFormat:null:game.markets.OUTRIGHT[0].display_key"></p>
+           </div>
 
-            <ul class="outrght-coluns-b">
-                <li>
-                    <p></p>
-                </li>
-                <li>
-                    <h6>Maru</h6>
-                </li>
-                <li class="s-event-v active">
-                    <div class="e-o-event">1.02</div>
-                </li>
-            </ul>
-            <ul class="outrght-coluns-b">
-                <li>
-                    <p></p>
-                </li>
-                <li>
-                    <h6>Maru</h6>
-                </li>
-                <li class="s-event-v">
-                    <div class="e-o-event">1.02</div>
-                </li>
-            </ul>
-
-        </div>
-    </div>
-</div>
+       </td>
+        <th>
+            <div class="fav-g-info-c">
+                <div class="fav-g-star" ng-class="{'active': sharedData.favoriteGames[game.id]}" ng-click="$root.$broadcast('favoriteGames.toggle', game.id); $event.stopPropagation()"></div>
+                <h5>
+                    <span ng-show="game.markets_count">+{{game.markets_count}}</span>
+                </h5>
+            </div>
+        </th>
+    </tr>
+</table>

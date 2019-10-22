@@ -14,12 +14,13 @@
             <div class="vertical-middle-wrapper">
                 <div class="all-popup-separator">
                     <div class="register-container">
-                        <ng-include src="::'templates/slider/commercial-content.html'|fixPath"></ng-include>
+                        <ng-include ng-controller="cmsPagesCtrl" ng-init="bannerType='registration-banner'"
+                                    src="::'templates/slider/commercial-content.html'|fixPath"></ng-include>
                         <div class="register-steps-b" ng-class="{'two-column': registration.step === 2 && RegConfig.step2.rightCol.length}">
                             <div class="closed-popup-form" ng-click="broadcast('slider.close')"></div>
                             <div class="reg-s-steps step-1" ng-class="{'show-second': registration.step === 2, 'active' : registration.step === 1}">
                                 <div class="logo-form-b">
-                                    <img ng-src="{{conf.logo.secondImage ? conf.logo.secondImage : 'skins/' + conf.skin + '/images/logo.png'}}"/>
+                                    <img ng-src="{{$root.conf.logo.secondImage ? $root.conf.logo.secondImage : 'skins/' + $root.conf.skin + '/images/logo.png'}}"/>
                                 </div>
                                 <div class="register-information-b">
                                     <h2>{{"New to {1} ?"|translate:[conf.site_name]}}</h2>
@@ -88,10 +89,12 @@
                                          class="{{regItem.name}} field-separator"
                                          ng-include="::'templates/slider/registration-fields.html'|fixPath">
                                     </div>
+                                    <!-- INPUT TYPE CAPTCHA -->
+                                    <div ng-include="::'templates/slider/recaptcha.html'|fixPath" ng-if="$root.conf.recaptcha.step === 1" class="g_recaptcha_response field-separator"></div>
                                 </div>
                                 <div ng-if="conf.registration.type === 'partial'">
                                     <include-template template-path="templates/slider/registration/tcCheckbox.html"></include-template>
-                                    <include-template ng-if="conf.recaptchaV3" template-path="templates/slider/registration/grecaptcha.html"></include-template>
+                                    <include-template ng-if="recaptcha.version===3" template-path="templates/slider/registration/grecaptcha.html"></include-template>
                                 </div>
                                 <div class="button-confirm">
                                     <button trans type="button"
@@ -119,9 +122,11 @@
                                 </div>
                                 <div class="float-width" ng-class="{'reg-s-right-col': RegConfig.step2.rightCol.length}">
                                     <div ng-repeat="regItem in RegConfig.step2.rightCol track by $index" class="field-separator {{regItem.name}}" ng-include="::'templates/slider/registration-fields.html'|fixPath"></div>
+                                    <!-- INPUT TYPE CAPTCHA -->
+                                    <div ng-include="::'templates/slider/recaptcha.html'|fixPath" ng-if="$root.conf.recaptcha.step === 2"></div>
                                 </div>
                                 <include-template template-path="templates/slider/registration/tcCheckbox.html"></include-template>
-                                <include-template ng-if="conf.recaptchaV3" template-path="templates/slider/registration/grecaptcha.html"></include-template>
+                                <include-template ng-if="recaptcha.version===3" template-path="templates/slider/registration/grecaptcha.html"></include-template>
                                 <div class="account-link-b" ng-if="conf.registration.footerTitle && conf.registration.simplified && conf.registration.type !== 'partial'">
                                     <p ng-bind="(conf.registration.footerTitle[env.lang] || conf.registration.footerTitle['eng'])|translate"></p>
                                 </div>

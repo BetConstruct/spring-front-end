@@ -57,6 +57,11 @@
         height: 100%;
       }
     }
+    > iframe {
+      float: left;
+      width: 100%;
+      height: 100%;
+    }
   }
   .md-progress-circular {
     position: absolute;
@@ -227,9 +232,6 @@
         float: right;
         margin: 0 0 0 1px;
         box-shadow: -1px 0 0 $skin-palette-7, 0 -1px 0 $skin-palette-7 inset;
-      }
-      &:only-child {
-        display: none;
       }
       > span {
         display: block;
@@ -548,7 +550,29 @@ div.mini-form-box-b{
   @include rtl {
     float: left;
   }
-  > button{
+  > a {
+    float: left;
+    display: block;
+    height: 30px;
+    color: $brand-color-2;
+    transition: color 240ms;
+    font: 23px/30px icomoon;
+    @include ltr {
+      float: left;
+      margin-right: 4px;
+    }
+    @include rtl {
+      float: right;
+      margin-left: 4px;
+    }
+    &:before {
+      content: "\ea57";
+    }
+    &:hover {
+      color: lighten($brand-color-2,10);
+    }
+  }
+  > button {
     border: none;
     background: $brand-color-1;
     text-align: center;
@@ -1797,6 +1821,28 @@ div.mini-form-box-b{
 .profile-tab-contain-b .form-error-text{
   bottom: 46px;
 }
+.profile-tab-contain-b .change-button-container .password-button {
+  width: 50%;
+  @include ltr {
+    float: left;
+  }
+  @include rtl {
+    float: right;
+  }
+  > label {
+    width: 100%;
+  }
+  .form-text {
+    width: 50%;
+    margin-top: 5px;
+    @include ltr {
+      float: left;
+    }
+    @include rtl {
+      float: right;
+    }
+  }
+}
 .profile-tab-contain-b .change-button-container .cashier-button{
   position: relative;
   right: auto;
@@ -2479,6 +2525,17 @@ div.mini-form-box-b{
         list-style: decimal;
       }
     }
+    .load-more {
+      margin-top: -20px;
+      color: $text-palette-14;
+      font: 12px/14px $font-f;
+      @include ltr {
+        float: right;
+      }
+      @include rtl {
+        float: left;
+      }
+    }
     form, .form-j {
       width: 236px;
       @include ltr {
@@ -2500,62 +2557,105 @@ div.mini-form-box-b{
         .filter-columns-container {
           width: 100%;
           position: relative;
-          z-index: 1;
           > ul {
             width: 100%;
             > li {
               width: 100%;
               .select-box-period-b {
                 height: 36px;
-                .card-icon {
-                  width: 30px;
-                  height: 24px;
-                  position: absolute;
-                  top: 6px;
-                  @include ltr {
-                    left: 6px;
-                  }
-                  @include rtl {
-                    right: 6px;
+                .Add.new.card {
+                  display: none;
+                  + p {
+                    @include ltr {
+                      padding-left: 15px;
+                    }
+                    @include rtl {
+                      padding-right: 15px;
+                    }
                   }
                 }
                 > p {
                   margin: 0;
                   line-height: 36px;
-                  @include ltr {
-                    padding-left: 46px;
-                  }
-                  @include rtl {
-                    padding-right: 46px;
-                  }
                 }
                 > ul {
-                  top: 38px;
+                  top: 37px;
+                  max-height: 200px;
+                  @include scroll(auto);
                   > li {
-                    position: relative;
-                    @include ltr {
-                      padding-left: 46px;
+                    &:not(:last-child) {
+                      height: 30px;
+                      line-height: 30px;
+                      position: relative;
                     }
-                    @include rtl {
-                      padding-right: 46px;
-                    }
-                    .card-icon {
-                      width: 24px;
-                      height: 20px;
-                      position: absolute;
-                      top: 2px;
-                      @include ltr {
-                        left: 8px;
-                      }
-                      @include rtl {
-                        right: 8px;
-                      }
+                    &:last-child > i {
+                      display: none;
                     }
                   }
                 }
                 &:before {
                   top: 10px;
                 }
+                &.active {
+                  z-index: 1;
+                }
+              }
+            }
+          }
+        }
+        &.cardId .select-box-period-b {
+          .card-icon {
+            width: 30px;
+            height: 24px;
+            position: absolute;
+            top: 6px;
+            @include ltr {
+              left: 6px;
+            }
+            @include rtl {
+              right: 6px;
+            }
+          }
+          > p:not(:first-child) {
+            @include ltr {
+              padding-left: 46px;
+            }
+            @include rtl {
+              padding-right: 46px;
+            }
+          }
+          > ul {
+            > li {
+              &:not(:last-child) {
+                @include ltr {
+                  padding-left: 46px;
+                }
+                @include rtl {
+                  padding-right: 46px;
+                }
+                .card-icon {
+                  width: 24px;
+                  height: 20px;
+                  position: absolute;
+                  top: 4px;
+                  @include ltr {
+                    left: 8px;
+                  }
+                  @include rtl {
+                    right: 8px;
+                  }
+                }
+              }
+              &:last-child > i {
+                display: none;
+              }
+            }
+            &:nth-child(2) > li {
+              @include ltr {
+                padding-left: 15px;
+              }
+              @include rtl {
+                padding-right: 15px;
               }
             }
           }
@@ -2752,8 +2852,60 @@ div.mini-form-box-b{
         padding: 0 0 0 25px;
         margin: -10px 0 10px;
       }
-      .primary-checkbox span a {
-        color: $text-palette-2;
+      .save-card {
+        width: auto;
+        order: 1;
+        -ms-flex-order: 1;
+        > label {
+          width: auto;
+          > p {
+            width: auto;
+            @include ltr {
+              float: right;
+              margin-left: 6px;
+            }
+            @include rtl {
+              float: left;
+              margin-right: 6px;
+            }
+          }
+        }
+        + .custom-amount-block ~ div {
+          order: 1;
+          -ms-flex-order: 1;
+        }
+      }
+      .primary-checkbox {
+        float: left;
+        > label {
+          width: auto;
+          margin: 0;
+          position: relative;
+          > input {
+            position: absolute;
+            opacity: 0;
+            pointer-events: none;
+            &:checked + span:before {
+              content: '\e6f3';
+              position: absolute;
+              top: 0;
+              left: 0;
+              height: 100%;
+              width: 100%;
+              display: block;
+              text-align: center;
+            }
+          }
+          > span {
+            float: left;
+            width: 16px;
+            height: 16px;
+            display: block;
+            color: rgba(set-color($skin-palette-8),0.39);
+            border: 1px solid rgba(set-color($skin-palette-8),0.39);
+            font: 6px/14px icomoon;
+          }
+        }
       }
     }
     .custom-amounts-list{
@@ -2984,6 +3136,10 @@ div.mini-form-box-b{
     }
   }
 }
+.load-more-text{
+  height: 72px;
+  opacity: 0;
+}
 .balance-form {
   -webkit-display: flex;
   -moz-display: flex;
@@ -2992,10 +3148,6 @@ div.mini-form-box-b{
   display: flex;
   -ms-flex-direction: column;
   flex-direction: column;
-  .save-card + .custom-amount-block {
-    -ms-flex-order: -1;
-    order: -1;
-  }
 }
 .picker-contain .input-group > input:disabled {
   pointer-events: none;
@@ -4120,11 +4272,11 @@ button.button-confirm .md-progress-circular.small-progress {
     }
   }
   td, th {
-    padding: 0 12px;
+    padding: 4px 12px;
     vertical-align: middle;
     &.hh-cell {
       @media screen and (min-width: 1300px) {
-        padding: 0 24px;
+        padding: 4px 24px;
       }
     }
     &:not(.auto-cell) {
@@ -4146,7 +4298,6 @@ button.button-confirm .md-progress-circular.small-progress {
     border-bottom: 5px solid transparent;
     background: lighten( desaturate( adjust-hue( $skin-color, 6deg ), 19 ), 7 ) padding-box;
     box-shadow: inset 0 -1px 0 rgba(invert(set-color(lighten( desaturate( adjust-hue( $skin-color, 6deg ), 19 ), 7 ))),0.56);
-    padding-bottom: 1px;
     position: relative;
     &.hh-cell {
       background-color: rgba(set-color($skin-palette-8), 0.12);
@@ -4249,9 +4400,10 @@ button.button-confirm .md-progress-circular.small-progress {
   .auto-cell {
     .cell-inner {
       position: absolute;
-      top: 0;
+      top: 50%;
       left: 0;
       width: 100%;
+      margin-top: -22px;
       line-height: 36px;
       padding: inherit;
     }
@@ -4328,7 +4480,7 @@ button.button-confirm .md-progress-circular.small-progress {
         height: 6px;
         border-radius: 100%;
         position: absolute;
-        top: 12px;
+        top: 16px;
         @include ltr {
           left: 12px;
         }
@@ -4507,11 +4659,15 @@ button.button-confirm .md-progress-circular.small-progress {
   }
 }
 .mixed-bet-history-flex {
+  display: -ms-flexbox;
   display: flex;
+  -ms-flex-direction: row;
+  height: 100%;
   white-space: nowrap;
   color: $text-palette-3;
   > li {
     &:first-child {
+      -ms-flex: 1;
       flex: 1;
     }
     &:not(:first-child):not(.mixed-history-name-child-result) {
@@ -4615,6 +4771,7 @@ button.button-confirm .md-progress-circular.small-progress {
   position: absolute;
   bottom: 100%;
   padding: 10px;
+  min-width: 240px;
   color: set-color($brand-color-1);
   background: $brand-color-1;
   font: 11px/1 $font-f;
@@ -4643,10 +4800,16 @@ button.button-confirm .md-progress-circular.small-progress {
   .icons-holder:hover & {
     display: block;
   }
-  p:not(:only-child) {
-    border-bottom: 1px solid rgba(set-color($brand-color-1), 0.2);
-    padding: 0 0 6px;
-    margin: 0 0 5px;
+  p {
+    &:not(:only-child) {
+      border-bottom: 1px solid rgba(set-color($brand-color-1), 0.2);
+      padding: 0 0 6px;
+      margin: 0 0 5px;
+    }
+    &[ng-if="event.match_info"] {
+      line-height: 14px;
+      white-space: normal;
+    }
   }
 }
 .mixed-history-name-child-result {
@@ -5303,6 +5466,17 @@ li.barcod-authentication {
   float: left;
   width: 100%;
   padding: 20px 30px 0 20px;
+  > p {
+    float: left;
+    width: 100%;
+    color: rgba(set-color($skin-palette-8), 0.7);
+    text-align: center;
+    font: 16px/18px $font-f;
+
+  }
+  &:only-child {
+    width: 100%;
+  }
 }
 .sc-add-table {
   float: left;
@@ -5333,6 +5507,10 @@ li.barcod-authentication {
   .card-icon {
     width: 36px;
     height: 30px;
+  }
+  > img {
+    display: block;
+    height: 24px;
   }
 }
 .sc-add-info {
@@ -5392,102 +5570,16 @@ li.barcod-authentication {
     }
   }
 }
-.sc-add-another {
-  float: left;
-  width: 100%;
-  border-top: 1px solid $skin-palette-7;
-  position: sticky;
-  bottom: 0;
-  &.active .sc-add-new-card {
-    display: block;
-  }
-}
-.sc-add-dropdown {
-  float: left;
-  width: 100%;
-  height: 48px;
-  background: $skin-palette-12;
-  transition: background 240ms;
-  @include ltr {
-    padding-right: 10px;
-  }
-  @include rtl {
-    padding-left: 10px;
-  }
-  > i {
-    display: block;
-    width: 62px;
-    height: 100%;
-    text-align: center;
-    position: relative;
-    @include ltr {
-      float: left;
-    }
-    @include rtl {
-      float: right;
-    }
-    &:before {
-      content: "\e98b";
-      width: 36px;
-      height: 30px;
-      display: block;
-      color: set-color($skin-palette-12);
-      background: rgba(set-color($skin-palette-12), 0.2);
-      border-radius: 2px;
-      font: 11px/30px icomoon;
-      transition: color 200ms;
-      @include ltr {
-        margin: 9px 0 0 10px;
-      }
-      @include rtl {
-        margin: 9px 0 0 10px;
-      }
-      @if $white-skin == true {
-        border-color: rgba(#0d1423, 0.4);
-      }
-    }
-  }
-  > p {
-    color: $text-palette-3;
-    font: 16px/48px $font-f;
-    @include ltr {
-      float: left;
-    }
-    @include rtl {
-      float: right;
-    }
-  }
-  &:hover {
-    background: $skin-palette-6;
-  }
-  &.active {
-    background: $skin-palette-7;
-    > i:before {
-      content: "\e62d";
-      font-size: 16px;
-    }
-  }
-}
-.sc-add-new-card {
-  float: left;
-  width: 100%;
-  display: none;
-  padding-top: 4px;
-  background: $skin-palette-12;
-  > p {
-    float: left;
-    width: 100%;
-    height: 42px;
-    padding: 0 10px;
-    color: $text-palette-3;
-    background: $skin-palette-7;
-    font: 16px/42px $font-f;
-    transition: color 240ms, background 240ms;
-    &:hover {
-      color: set-color($brand-color-1);
-      background: $brand-color-1;
-    }
-  }
-}
 
 // save card end
+
+@media screen and (-ms-high-contrast: active), screen and (-ms-high-contrast: none) {
+  .mixed-bet-history-flex {
+    height: auto !important;
+  }
+  .auto-cell {
+    .cell-inner {
+      margin-top: -7px !important;
+    }
+  }
+}

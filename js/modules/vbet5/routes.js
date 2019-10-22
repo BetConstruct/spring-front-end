@@ -60,6 +60,10 @@ angular.module('vbet5').config(['$routeProvider', '$anchorScrollProvider', 'Skin
             },
             reloadOnSearch: false
         })
+        .when('/vsports/', {
+            templateUrl: getTemplate('templates/virtualSportsAPI/main.html'),
+            reloadOnSearch: false
+        })
         .when('/poolbetting/', {
             templateUrl: getTemplate('templates/sport/main.html'),
             reloadOnSearch: false
@@ -76,6 +80,10 @@ angular.module('vbet5').config(['$routeProvider', '$anchorScrollProvider', 'Skin
         })
         .when('/casino/', {
             templateUrl: getTemplate('optional_modules/casino/templates/main.html'),
+            reloadOnSearch: false
+        })
+        .when('/jackpots/', {
+            templateUrl: getTemplate('optional_modules/casino/templates/casino-jackpot-page.html'),
             reloadOnSearch: false
         })
         .when('/tournaments/', {
@@ -132,6 +140,10 @@ angular.module('vbet5').config(['$routeProvider', '$anchorScrollProvider', 'Skin
         })
         .when('/poker/:type?', {
             templateUrl: getTemplate('optional_modules/casino/templates/poker/main.html'),
+            reloadOnSearch: false
+        })
+        .when('/blast/', {
+            templateUrl: getTemplate('optional_modules/casino/templates/blast/main.html'),
             reloadOnSearch: false
         })
         .when('/chinesepoker/', {

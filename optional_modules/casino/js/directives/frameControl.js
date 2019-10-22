@@ -9,7 +9,7 @@
  *
  * @description Makes **target** resizable. Element having the "frame-control" attribute becomes resize handle
  */
-CASINO.directive('frameControl', ['$window', '$timeout', 'UserAgent', function ($window, $timeout, UserAgent) {
+CASINO.directive('frameControl', ['$window', '$timeout', 'UserAgent', 'Config', function ($window, $timeout, UserAgent, Config) {
     'use strict';
     return function (scope, element, attr) {
         var scaleWidth, scaleHeight, scale;
@@ -18,18 +18,24 @@ CASINO.directive('frameControl', ['$window', '$timeout', 'UserAgent', function (
 
         var SIDEBAR_WIDTH = 220;
         var BOTTOM_BAR_HEIGHT = 68;
+        var subtrackingWidth = Config.main.customNavMenu? 174: 0;
 
         var windowResize = function () {
             var wWidth, wHeight, aspectRationNumber;
 
 
 
-            console.info('ratio',attr.allRatio);
+            console.log('ratio',attr.allRatio);
 
             switch (attr.numberOfWindow) {
                 case "1":
-                    wWidth = $window.innerWidth - 60; // 60px - game controls
+                    wWidth = $window.innerWidth - 60 - subtrackingWidth; // 60px - game controls
                     wHeight = $window.innerHeight - 95; // 95px - header
+
+                    if (attr.hasSidebar === "true") {
+                        wWidth -= SIDEBAR_WIDTH;
+                    }
+
                     if (attr.aspectRatio && attr.aspectRatio !== '0' && attr.aspectRatio !== '') {
                         var ratios = attr.aspectRatio.split(':');
                         var originWidth = wHeight * ratios[0] / ratios[1];
@@ -62,7 +68,7 @@ CASINO.directive('frameControl', ['$window', '$timeout', 'UserAgent', function (
                     break;
                 case "2":
                 case "4":
-                    wWidth = $window.innerWidth - 120;
+                    wWidth = $window.innerWidth - 120 - subtrackingWidth;
                     wHeight = $window.innerHeight - (attr.numberOfWindow == "2" ? 0 : 160);
 
                     definitiveWidth = wWidth / 2;
@@ -92,10 +98,15 @@ CASINO.directive('frameControl', ['$window', '$timeout', 'UserAgent', function (
                     break;
             }
 
-            if (attr.hasSidebar === "true") {
+            if (attr.hasSidebar === "true" && attr.numberOfWindow != "1") {
                 aspectRationNumber = definitiveWidth / definitiveHeight;
                 definitiveWidth = definitiveWidth - SIDEBAR_WIDTH;
                 definitiveHeight = definitiveWidth / aspectRationNumber;
+            }
+            if(attr.numberOfWindow == "2"){
+                element.css('transition',false);
+            }else {
+                element.css('transition','');
             }
 
             element.css({width: definitiveWidth + 'px', height: definitiveHeight + 'px'});

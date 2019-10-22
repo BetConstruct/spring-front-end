@@ -1,4 +1,4 @@
-VBET5.controller('eSportsLeftController', ['$rootScope', '$scope',  '$location', '$q', 'Utils', 'ConnectionService', 'GameInfo', 'Storage', '$timeout', function ($rootScope, $scope, $location, $q, Utils, ConnectionService, GameInfo, Storage, $timeout) {
+VBET5.controller('eSportsLeftController', ['$rootScope', '$scope',  '$location', '$q', 'Utils', 'ConnectionService', 'GameInfo', 'Storage', '$timeout', 'content', 'Config', 'DomHelper', function ($rootScope, $scope, $location, $q, Utils, ConnectionService, GameInfo, Storage, $timeout, content, Config, DomHelper) {
     'use strict';
     ////////////////////////////////////////////////////////////////////////////////
     // GLOBAL VARIABLES
@@ -370,6 +370,43 @@ VBET5.controller('eSportsLeftController', ['$rootScope', '$scope',  '$location',
             }
         }
     };
+
+    $scope.$on('eSports.openGameById', function (event, videoGame) {
+        var data = $scope.leftMenu.live.data;
+        angular.forEach(data, function (sport) {
+            angular.forEach(sport.region, function (region) {
+                angular.forEach(region.competition, function (competition) {
+                    angular.forEach(competition.game, function (game) {
+                        if (game.id === videoGame.id) {
+                            $rootScope.$broadcast('eSports.requestData', {game: game, sport: sport, competition: {}, region: {}});
+                            $scope.leftMenuState.selectedType = 'live';
+                            $location.search('type', 'live');
+                        }
+                    });
+                });
+            });
+        });
+    });
+
+    /**
+     * @ngdoc method
+     * @name closeLeftMenuDependingWindowSize
+     * @methodOf vbet5.controller:classicViewLeftController
+     * @description Close left menu depending on window size
+     */
+    function closeLeftMenuDependingWindowSize() {
+        if (DomHelper.getScreenResolution().x <= 1400 && $scope.leftMenuClosed === false) {
+            $scope.toggleLeftMenu(false);
+        } else if (DomHelper.getScreenResolution().x > 1400 && $scope.leftMenuClosed === true) {
+            $scope.toggleLeftMenu(true);
+        }
+    }
+
+    closeLeftMenuDependingWindowSize();
+
+    $scope.$on('onWindowWidthResize', closeLeftMenuDependingWindowSize);
+
+
     ////////////////////////////////////////////////////////////////////////////////
     // $SCOPE METHODS - END
     ////////////////////////////////////////////////////////////////////////////////
@@ -395,5 +432,12 @@ VBET5.controller('eSportsLeftController', ['$rootScope', '$scope',  '$location',
     (function init() {
         $scope.selectMenu(menuTypeMap[$location.search().type] || $scope.leftMenuState.selectedType, true);
         subscribeToAllGameCounts();
+        if (Config.main.esportsLeftMenuBanners) {
+            content.getPage('sportsbook-left-banners').then(function (response) {
+                if (response.data && response.data.widgets) {
+                    $scope.sportsbookLeftBanners = response.data.widgets;
+                }
+            });
+        }
     })();
 }]);

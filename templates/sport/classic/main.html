@@ -138,20 +138,23 @@
                      class="games-view-wrapper-v3"
                      ng-class="{'prematch-view-v3': !$root.env.live, 'favorite-game-open-euro2016': favoriteGameIsSelected && favoriteGameFromLeftMenu}">
                     <div class="prematch-games-list" ng-class="[prematchGameViewData[0].games[0].sport.alias, {'multi-column-view': multiColumn.show && !(favoriteGameIsSelected && favoriteGameFromLeftMenu)}]" ng-if="!env.live">
-                        <div class="prematch-games-list-title-v3">
-                            <div class="prematch-column-title-v3" ng-show="!todaysBetsSelected">
+                        <div class="prematch-games-list-title-v3" ng-show="!prematchGamesLoading">
+                            <div class="prematch-column-title-v3" ng-show="!todaysBets.selected && !boostedBets.selected">
                                 <h2>
-                                    <b ng-show="!env.preMatchMultiSelection && prematchGameViewData" class="prematch-region-icon-v3 flag-icon flag-{{prematchGameViewData[0].games[0].region.alias | removeUselessSymbolsByRegexp: '[,\' ]+': 'g': 'true'}}" title="{{prematchGameViewData[0].games[0].region.name}}"></b>
+                                    <b ng-show="!env.preMatchMultiSelection && prematchGameViewData && !outrightSelected" class="prematch-region-icon-v3 flag-icon flag-{{prematchGameViewData[0].games[0].region.alias | removeUselessSymbolsByRegexp: '[,\' ]+': 'g': 'true'}}" title="{{prematchGameViewData[0].games[0].region.name}}"></b>
+                                    <b ng-show="!env.preMatchMultiSelection && prematchGameViewData && outrightSelected" class="prematch-region-icon-v3 outright" title="{{'Outright'|translate}}"></b>
+
                                     <span ng-show="env.preMatchMultiSelection" ng-click="resetPrematchMultiView()" class="closed-all-games-v3"></span>
                                     <span ng-show="env.preMatchMultiSelection" trans>Chosen Games</span>
-                                    <span ng-show="!env.preMatchMultiSelection && prematchGameViewData">{{prematchGameViewData[0].name}}</span>
+                                    <span ng-show="!env.preMatchMultiSelection && prematchGameViewData && !outrightSelected">{{prematchGameViewData[0].name}}</span>
+                                    <span ng-show="!env.preMatchMultiSelection && prematchGameViewData && outrightSelected" trans>Outright</span>
                                 </h2>
                             </div>
-                            <div class="custom-select-for-todays-bets-j" ng-show="todaysBetsSelected" ng-class="todaysBetsFilterOpened ? 'opened-j' : ''" ng-click="todaysBetsFilterOpened = !todaysBetsFilterOpened" hide-on-click state-flag-var="todaysBetsFilterOpened">
-                                <div><i class="icon-for-sport-j mini-icon-1" ng-class="todaysBetsSelectedSport.alias"></i>{{todaysBetsSelectedSport.name}}</div>
+                            <div class="custom-select-for-todays-bets-j" ng-show="todaysBetsSports.length > 1 && todaysBets.selected && todaysBets.selectedSport" ng-class="todaysBetsFilterOpened ? 'opened-j' : ''" ng-click="todaysBetsFilterOpened = !todaysBetsFilterOpened" hide-on-click state-flag-var="todaysBetsFilterOpened">
+                                <div><i class="icon-for-sport-j mini-icon-1" ng-class="todaysBets.selectedSport.alias"></i>{{todaysBets.selectedSport.name}}</div>
                                 <ul>
-                                    <li ng-repeat="sport in todaysBetsSports track by sport.id" ng-class=" $parent.todaysBetsSelectedSport.id==sport.id?'active-j':'' "
-                                        ng-click="$parent.todaysBetsSelectedSport=sport; expandTodaysBets(sport)">
+                                    <li ng-repeat="sport in todaysBetsSports track by sport.id" ng-class="{'active-j': todaysBets.selectedSport.id === sport.id}"
+                                        ng-click="todaysBets.selectedSport = sport; expandTodaysBets(sport)">
                                         <i class="icon-for-sport-j" ng-class="sport.alias"></i>{{sport.name}}
                                     </li>
                                 </ul>
@@ -179,17 +182,22 @@
                             <vbet-loader ng-show="prematchGamesLoading"></vbet-loader>
                             <include-template ng-if="multiColumn.show" class="display-block float-left width-100" template-path="templates/sport/classic/multiColumnView.html"></include-template>
 
+                            <div ng-if="!prematchGamesLoading && boostedBets.selected && prematchGameViewData.length === 0" class="Info-text-view-market-v3">
+                                <p ng-bind="'There are no events with price boosts at the moment'|translate"></p>
+                            </div>
+
                             <div ng-if="!multiColumn.show" class="prematch-game-view-contain-v3"
                                  ng-show="!prematchGamesLoading"
                                  ng-repeat="competition in prematchGameViewData track by competition.id" ng-class="{'closed': competitionNameGroupe[$parent.$index + '-' + $index]}">
-                                <div class="title-championship-v3" ng-click="competitionNameGroupe[$parent.$index + '-' + $index] = !competitionNameGroupe[$parent.$index + '-' + $index]" ng-show="env.preMatchMultiSelection">
-                                    <div class="closed-game-icon-v3" ng-click="broadcast('prematchMultiView.removeCompetitionFromSelection', {competition: competition}); $event.stopPropagation()"></div>
+                                <div class="title-championship-v3" ng-click="competitionNameGroupe[$parent.$index + '-' + $index] = !competitionNameGroupe[$parent.$index + '-' + $index]" ng-show="env.preMatchMultiSelection || boostedBets.selected">
+
+                                    <div ng-if="!boostedBets.selected" class="closed-game-icon-v3" ng-click="broadcast('prematchMultiView.removeCompetitionFromSelection', {competition: competition}); $event.stopPropagation()"></div>
                                     <p><span>{{competition.games[0].sport.name}}</span>. <span>{{competition.games[0].region.name}}</span> - <span>{{competition.name}}</span></p>
                                     <div class="arrow-view-v3"></div>
                                 </div>
                                 <div class="time-info-game-box-v3" ng-repeat="(groupDate, groupGames) in competition.gamesGroupedByDate" ng-class="{'closed': competitionTimeGroupe[$parent.$index + '-' + $index]}">
                                     <div class="time-title-view-v3" ng-click="competitionTimeGroupe[$parent.$index + '-' + $index] = !competitionTimeGroupe[$parent.$index + '-' + $index]">
-                                        <p><span>{{groupDate|formatDate:'unixDate'}}</span></p>
+                                        <p><span>{{groupDate|formatDate:'unixDate':null:$root.env.timeFormat}}</span></p>
                                         <div class="arrow-view-v3"></div>
                                     </div>
                                     <div class="game-events-view-v3" ng-repeat="prematchGame in groupGames track by prematchGame.id">
@@ -198,7 +206,7 @@
                                             <div class="pematch-single-game-info-v3"
                                                  ng-click="openGameFullDetails(prematchGame, selectedCompetition);selectGame(prematchGame.id);selectCompetition()"
                                                  ng-show="!$root.conf.alternativeClassicGamesLayout"
-                                                 title="{{ $root.conf.edition.enabled ? (('Edition'|translate) + ': ' + (prematchGame.start_ts|formatDate:'edition')) : '' }}">
+                                                 title="{{ $root.conf.edition.enabled ? (('Edition'|translate) + ': ' + (prematchGame.start_ts|formatDate:'edition':null:$root.env.timeFormat)) : '' }}">
                                                 <div class="team-name-view-table-v3">
                                                     <div class="team-names-date-icons-v3">
                                                         <div class="team-name-table">
@@ -239,6 +247,7 @@
                                                  ng-show="prematchGame.firstMarket.events.P1"
                                                  ng-click="bet(prematchGame.firstMarket.events.P1, prematchGame.firstMarket, prematchGame)"
                                                  ng-class="{'active': isEventInBetSlip(prematchGame.firstMarket.events.P1), 'blocked': ((prematchGame.firstMarket.events.P1.price | oddConvert:'decimal') == 1 || prematchGame.is_blocked)}">
+                                                <i ng-if="$root.conf.boostedBets.enabled && $root.boostedBetsEventIds && $root.boostedBetsEventIds.length > 0 && $root.boostedBetsEventIds.indexOf(prematchGame.firstMarket.events.P1.id) !== -1" title="{{'Boosted odd'|translate}}" class="boosted"></i>
                                                 <div class="max-bet-tooltip-v3"   onmouseover="displayEventLimit(event)" onmouseleave="cancelDisplayEventLimit(event)" data-id="{{prematchGame.firstMarket.events.P1.id}}"  ng-class="{'maxbet-enabled': $root.env.authorized && $root.conf.displayEventsMaxBet}" >
                                                 </div>
                                                 <b class="p-v" ng-show="(prematchGame.firstMarket.events.P1.price | oddConvert:'decimal') !== 1 && !prematchGame.is_blocked"
@@ -248,6 +257,7 @@
                                                  ng-show="prematchGame.firstMarket.events.X"
                                                  ng-click="bet(prematchGame.firstMarket.events.X, prematchGame.firstMarket, prematchGame)"
                                                  ng-class="{'active': isEventInBetSlip(prematchGame.firstMarket.events.X), 'blocked': ((prematchGame.firstMarket.events.X.price | oddConvert:'decimal') == 1 || prematchGame.is_blocked)}">
+                                                <i ng-if="$root.conf.boostedBets.enabled && $root.boostedBetsEventIds && $root.boostedBetsEventIds.length > 0 && $root.boostedBetsEventIds.indexOf(prematchGame.firstMarket.events.X.id) !== -1" title="{{'Boosted odd'|translate}}" class="boosted"></i>
                                                 <div class="max-bet-tooltip-v3"   onmouseover="displayEventLimit(event)" onmouseleave="cancelDisplayEventLimit(event)" data-id="{{prematchGame.firstMarket.events.X.id}}"  ng-class="{'maxbet-enabled': $root.env.authorized && $root.conf.displayEventsMaxBet}">
                                                 </div>
                                                 <b class="p-v" ng-show="(prematchGame.firstMarket.events.X.price | oddConvert:'decimal') != 1 && !prematchGame.is_blocked"
@@ -257,18 +267,20 @@
                                                  ng-show="prematchGame.firstMarket.events.P2"
                                                  ng-click="bet(prematchGame.firstMarket.events.P2, prematchGame.firstMarket, prematchGame)"
                                                  ng-class="{'active': isEventInBetSlip(prematchGame.firstMarket.events.P2), 'blocked': ((prematchGame.firstMarket.events.P2.price | oddConvert:'decimal') == 1 || prematchGame.is_blocked)}">
+                                                <i ng-if="$root.conf.boostedBets.enabled && $root.boostedBetsEventIds && $root.boostedBetsEventIds.length > 0 && $root.boostedBetsEventIds.indexOf(prematchGame.firstMarket.events.P2.id) !== -1" title="{{'Boosted odd'|translate}}" class="boosted"></i>
                                                 <div class="max-bet-tooltip-v3" onmouseover="displayEventLimit(event)" onmouseleave="cancelDisplayEventLimit(event)" data-id="{{prematchGame.firstMarket.events.P2.id}}" ng-class="{'maxbet-enabled': $root.env.authorized && $root.conf.displayEventsMaxBet}">
                                                 </div>
                                                 <b class="p-v" ng-show="(prematchGame.firstMarket.events.P2.price | oddConvert:'decimal') != 1 && !prematchGame.is_blocked"
                                                        ng-class="{'factor-top': event.price_change > 0, 'factor-bottom': event.price_change < 0}">{{prematchGame.firstMarket.events.P2.price|oddConvert:env.oddFormat:null:'WINNER'}}</b>
                                             </div>
                                         </div>
-                                        <div ng-if="prematchGame.sport.alias === 'Soccer'" class="l-b column-{{(selectedMarketFilter.type == 'P1XP2' || selectedMarketFilter.type == '1X12X2' || selectedMarketFilter.type == 'CornersResult') && prematchGame.filteredMarkets[selectedMarketFilter.type].realType != 'P1P2' ? 3 : '2'}}">
+                                        <div ng-if="prematchGame.sport.alias === 'Soccer'" class="l-b column-{{prematchGame.filteredMarkets[selectedMarketFilter.type][0].col_count}}">
                                                 <div class="single-events-b-v3" title="{{event.name}}{{displayBase(event, prematchGame.filteredMarkets[selectedMarketFilter.type][0])}}"
                                                      ng-repeat="event in prematchGame.filteredMarkets[selectedMarketFilter.type + selectedMarketFilter.base].events|orderBy:'order'"
                                                      ng-show="event && event.name"
                                                      ng-click="bet(event, prematchGame.filteredMarkets[selectedMarketFilter.type][0], prematchGame);"
                                                      ng-class="{'active': isEventInBetSlip(event), 'blocked': ((event.price | oddConvert:'decimal') == 1 || prematchGame.is_blocked)}">
+                                                    <i ng-if="$root.conf.boostedBets.enabled && $root.boostedBetsEventIds && $root.boostedBetsEventIds.length > 0 && $root.boostedBetsEventIds.indexOf(event.id) !== -1" title="{{'Boosted odd'|translate}}" class="boosted"></i>
                                                     <div class="max-bet-tooltip-v3" onmouseover="displayEventLimit(event)" onmouseleave="cancelDisplayEventLimit(event)" data-id="{{event.id}}"  ng-class="{'maxbet-enabled': $root.env.authorized && $root.conf.displayEventsMaxBet}" >
                                                     </div>
                                                     <b class="p-v" ng-show="(event.price | oddConvert:'decimal') != 1 && !prematchGame.is_blocked" ng-class="{'factor-top': event.price_change > 0, 'factor-bottom': event.price_change < 0}">{{event.price|oddConvert:env.oddFormat:null:prematchGame.filteredMarkets[selectedMarketFilter.type + selectedMarketFilter.base][0].display_key}}</b>
@@ -286,10 +298,10 @@
                     <div class="live-game-view-contain-v3">
 
                         <div class="game-header-view-v3 {{openGame.sport.alias}}" ng-show="!env.live">
-                            <div ng-show="openGame.sport.alias === 'HorseRacing'" class="team-name-market">
+                            <div ng-show="openGame.sport.alias === 'HorseRacing' || openGame.sport.alias === 'SISGreyhound'" class="team-name-market">
                                 <div class="race-title">
                                     <div>
-                                        <span>{{ openGame.start_ts| formatDate:'full':null:env.timeFormat}}</span>
+                                        <span>{{ openGame.start_ts| formatDate:'full':null:$root.env.timeFormat}}</span>
                                     </div>
                                     <div title="{{openGame.competition.name}}">
                                         {{openGame.competition.name}}
@@ -302,7 +314,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="prematch-header-view-v3" ng-show="openGame.sport.alias !== 'HorseRacing' && !openGameLoading">
+                            <div class="prematch-header-view-v3" ng-show="(openGame.sport.alias !== 'HorseRacing' && openGame.sport.alias !== 'SISGreyhound')  && !openGameLoading">
                                 <div class="prematch-header-row-v3">
                                     <ul ng-show="openGame">
                                         <li>
@@ -312,14 +324,14 @@
                                         </li>
                                         <li>
                                             <div class="title-teams-premztch-v3">
-                                                <p ng-show="openGame.team1_name || openGame.team2_name">
+                                                <p ng-show="openGame.team1_name || openGame.team2_name" title="{{(openGame.team1_name || '') + ((openGame.team1_name && openGame.team2_name)? (' vs ' + openGame.team2_name):(openGame.team2_name || ''))}}">
                                                     <span ng-show="openGame.team1_name"><strong ng-if="$root.conf.showGameIds">№{{openGame.game_number}}</strong> {{openGame.team1_name}}</span>
                                                     <b ng-if="openGame.team1_name && openGame.team2_name">vs</b>
                                                     <span ng-show="openGame.team2_name">{{openGame.team2_name}}</span>
                                                 </p>
                                             </div>
                                             <div class="prematch-competition-title-v3">
-                                                <p><b ng-show="prematchGameViewData" class="prematch-region-icon-v3 flag-icon flag-{{openGame.region.alias | removeUselessSymbolsByRegexp: '[,\' ]+': 'g': 'true'}}"></b><span>{{openGame.sport.name}}</span> <span>-</span> <span>{{openGame.competition.name}}</span></p>
+                                                <p><b ng-show="prematchGameViewData" class="prematch-region-icon-v3 flag-icon flag-{{openGame.region.alias | removeUselessSymbolsByRegexp: '[,\' ]+': 'g': 'true'}}"></b><span title="{{openGame.sport.name + ' - ' + openGame.competition.name}}">{{openGame.sport.name}}</span> <span title="{{openGame.sport.name + ' - ' + openGame.competition.name}}">-</span> <span title="{{openGame.sport.name + ' - ' + openGame.competition.name}}">{{openGame.competition.name}}</span></p>
                                             </div>
                                         </li>
                                     </ul>
@@ -329,18 +341,27 @@
 
 
                             </div>
-
                         </div>
 
                         <div class="all-game-info-container-v3">
                             <div  ng-if="$root.conf.videoEnabled && pinnedGameType === 'fullScreen' && !$root.conf.detachedVideoSizes[openGame.tv_type]">
                                 <div ng-if="enlargedGame && enlargedGame.video_data" class="game-video game-video-detached game-video-fullscreen">
                                     <div class="game-video-container detached-game-container" id="detached-game-container-{{enlargedGame.id}}">
-                                        <video-player class="game-video"
-                                                      player-id="gamevideo{{enlargedGame.id}}full"
-                                                      stream-url="{{enlargedGame.video_data}}"
-                                                      provider-id="{{enlargedGame.tv_type}}"
-                                                      initially-muted="{{ env.sound }}"></video-player>
+                                        <video-player
+                                                ng-if="!$root.conf.video.providersThatSupportHls[openGame.tv_type]"
+                                                class="game-video"
+                                                player-id="gamevideo{{enlargedGame.id}}full"
+                                                stream-url="{{enlargedGame.video_data}}"
+                                                provider-id="{{enlargedGame.tv_type}}"
+                                                initially-muted="{{ env.sound }}">
+
+                                        </video-player>
+                                        <hls-player
+                                                ng-if="$root.conf.video.providersThatSupportHls[openGame.tv_type]"
+                                                provider-id="{{openGame.tv_type}}"
+                                                stream-url="{{openGame.video_data}}">
+
+                                        </hls-player>
                                         <!--<flashplayer id="gamevideo{{enlargedGame.id}}full" stream-url="{{enlargedGame.video_data}}" provider-id="{{enlargedGame.tv_type}}"  initially-muted="{{ env.sound }}"></flashplayer>-->
                                         <div class="video-player-control">
 
@@ -447,7 +468,7 @@
                     <div class="right-b-view-wrapper-v3">
                         <!--animation and video-->
                         <div class="animation-video-box-v3" ng-class="{'active': hideVideoAndAnimationBox, 'statscore-iframe-animation' : $root.conf.externalAnimation.livematchpro.enabled}"
-                             ng-if="!$root.conf.animationAndVideoOnLeft && (env.live || !virtualSportsSelected) && (((openGame.video_id || openGame.video_data) && $root.conf.videoEnabled && !pinnedGames[openGame.id] && !enlargedGame) || openGame.has_animation) ">
+                             ng-if="!$root.conf.animationAndVideoOnLeft && (env.live || !virtualSportsSelected) && (((openGame.video_id || openGame.video_data) && $root.conf.videoEnabled && !pinnedGames[openGame.id] && !enlargedGame) || openGame.has_animation || $root.conf.video.customStreamingURL) ">
                             <div class="animation-video-contain-v3" ng-if=" env.live">
 
                                 <div class="animation-video-title-row-v3">
@@ -464,28 +485,60 @@
                                                 ng-class="{'active': openGame.activeFieldType==='field' || playerRemoved || pinnedGames[openGame.id]}"
                                                 ng-click="openGame.activeFieldType='field'">
                                             </li>
+                                            <li class="stream-view-icon-v3"
+                                                ng-show="$root.conf.video.customStreamingURL"
+                                                ng-class="{'active': openGame.activeFieldType === 'customStreaming'}"
+                                                ng-click="openGame.activeFieldType = 'customStreaming'; loadStreamingItems(true)"
+                                            ></li>
                                         </ul>
                                     </div>
-
+                                    <div class="time-filter-v3"
+                                         ng-show="openGame.activeFieldType === 'customStreaming'"
+                                         ng-class="{'active': showStreamingSubMenu}"
+                                         ng-click="showStreamingSubMenu = !showStreamingSubMenu; showStreamingSubMenu && loadStreamingItems();"
+                                         state-flag-var="showStreamingSubMenu" hide-on-click>
+                                        <p><span title="{{selectedStreamingItem? selectedStreamingItem.title: ('Select Streaming'| translate)}}">{{selectedStreamingItem? selectedStreamingItem.title: ('Select Streaming'| translate)}}</span> <i class="arrow-rotate-filter-v3"></i></p>
+                                        <div class="sub-nav-filter-time-v3" ng-show="showStreamingSubMenu">
+                                            <ul ng-show="!isLoadingStreamingDropdown">
+                                                <li ng-repeat="item in streamingItems track by $index" ng-click="selectStreamingItem(item)" ng-class="{'active': item.matchid === selectedStreamingItem.matchid}"><span ng-bind="item.title|capitalise|translate" title="{{item.title|capitalise|translate}}"></span></li>
+                                            </ul>
+                                            <vbet-loader class="small-progress" ng-show="isLoadingStreamingDropdown"/>
+                                        </div>
+                                    </div>
                                     <div class="contain-v-a-fanction-icons-v3">
                                         <ul>
                                             <li class="arrow-closed-anime-b-v3" ng-click="toggleVideoAndAnimationBox()" ng-class="{'active': hideVideoAndAnimationBox}"></li>
                                             <li class="pin-icon-video-v3" ng-class="{'disabled': !env.authorized}" ng-show="env.live && openGame.video_data && openGame.activeFieldType == 'video' && openGame.tv_type !== $root.conf.defaultStreaming.tvType && !pinnedGames[openGame.id]" ng-click="openGame.activeFieldType='field'; detachVideo('dragable');"></li>
                                             <li class="resize-icon-full-video-v3"  ng-show="openGame.activeFieldType == 'video' && openGame.video_data"  ng-class="{'active': env.authorized && openGame.activeFieldType == 'video' && !$root.conf.detachedVideoSizes[openGame.tv_type],'disabled': !env.authorized || openGame.activeFieldType !== 'video' || $root.conf.detachedVideoSizes[openGame.tv_type]}" ng-click="openGame.activeFieldType='field'; detachVideo('fullScreen');"></li>
-                                            <li class="sound-icon-v3 " ng-click="env.sound = 0;" ng-show="openGame.activeFieldType==='field' && env.sound > 0" title="Sound" trans="attr-only"></li>
-                                            <li class="sound-icon-v3 active" ng-click="env.sound = 0.75;" ng-show="openGame.activeFieldType==='field' && env.sound === 0" title="Sound" trans="attr-only"></li>
+                                            <li class="sound-icon-v3 " ng-click="env.sound = 0;" ng-show="(openGame.activeFieldType === 'field' || $root.conf.video.providersThatSupportHls[openGame.tv_type]) && env.sound > 0" title="Sound" trans="attr-only"></li>
+                                            <li class="sound-icon-v3 active" ng-click="env.sound = 0.75;" ng-show="(openGame.activeFieldType === 'field' || $root.conf.video.providersThatSupportHls[openGame.tv_type]) && env.sound === 0" title="Sound" trans="attr-only"></li>
                                         </ul>
                                     </div>
 
                                 </div>
 
                                 <div class="video-animation-vox-v3 animation-control">
-                                    <video-player ng-if="openGame.activeFieldType === 'video' && !hideVideoAndAnimationBox && $root.conf.videoEnabled && !enlargedGame && !pinnedGames[openGame.id] && !openGameLoading"
+                                    <video-player ng-if="!$root.conf.video.providersThatSupportHls[openGame.tv_type] && openGame.activeFieldType === 'video' && !hideVideoAndAnimationBox && $root.conf.videoEnabled && !enlargedGame && !pinnedGames[openGame.id] && !openGameLoading"
                                                   class="game-video"
                                                   player-id="gamevideo{{openGame.id}}"
                                                   stream-url="{{openGame.video_data}}"
                                                   provider-id="{{openGame.tv_type}}"
-                                                  initially-muted="{{ env.sound }}"></video-player>
+                                                  initially-muted="{{ env.sound }}">
+
+                                    </video-player>
+                                    <video-player class="game-video"
+                                                  ng-if="!$root.conf.video.providersThatSupportHls[openGame.tv_type] && openGame.activeFieldType === 'customStreaming' && !isLoadingCustomStreaming && selectedStreamingItem"
+                                                  player-id=""
+                                                  stream-url="{{selectedStreamingItem.FrameLink}}"
+                                                  provider-id=""
+                                                  custom-streaming="true">
+                                    </video-player>
+                                    <hls-player ng-if="$root.conf.video.providersThatSupportHls[openGame.tv_type] && openGame.video_data && openGame.activeFieldType === 'video' && !hideVideoAndAnimationBox && !enlargedGame && !pinnedGames[openGame.id]"
+                                                provider-id="{{openGame.tv_type}}"
+                                                stream-url="{{openGame.video_data}}">
+                                    </hls-player>
+                                    <p ng-if="openGame.activeFieldType === 'customStreaming' && !isLoadingCustomStreaming && !selectedStreamingItem" trans="">There are no streaming available</p>
+                                    <vbet-loader ng-show="isLoadingCustomStreaming"></vbet-loader>
                                     <include-template class="float-width" template-path="templates/sport/classic/animations.html"></include-template>
                                 </div>
                             </div>

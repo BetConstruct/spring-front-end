@@ -12,7 +12,7 @@
                         <span>{{ mostPopularLiveGame.info.current_game_state|convertSetName:mostPopularLiveGame.sport.alias|translate }}
                             {{ (mostPopularLiveGame.info.current_game_time.split(' ').length ===2 ? mostPopularLiveGame.info.current_game_time.split(' ')[1] : mostPopularLiveGame.info.current_game_time.split(' ')[0])|translate}}</span>
                         <span ng-show="mostPopularLiveGame.type == 0"
-                              ng-bind="mostPopularLiveGame.start_ts|formatDate:'full':null:env.timeFormat"></span>,
+                              ng-bind="mostPopularLiveGame.start_ts|formatDate:'full':null:$root.env.timeFormat"></span>,
                         <span ng-bind="mostPopularLiveGame.sport.name"></span>,
                         <u ng-bind="mostPopularLiveGame.competition.name" trans></u>
                     </p>

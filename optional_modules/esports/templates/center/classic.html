@@ -13,7 +13,7 @@
             <div class="fav-g-info-c">
                 <div class="fav-g-star" ng-class="{'active': sharedData.favoriteGames[game.id]}" ng-click="$root.$broadcast('favoriteGames.toggle', game.id); $event.stopPropagation()"></div>
                 <h5>
-                    <span ng-show="game.markets_count>1">+{{game.markets_count-1}}</span>
+                    <span ng-show="game.markets_count">+{{game.markets_count}}</span>
                 </h5>
             </div>
         </td>
@@ -22,7 +22,8 @@
         <td>
             <p class="e-g-price-v" ng-click="bet(game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence].WINNER[0]['P1'], game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence].WINNER[0], game); $event.stopPropagation()"
                ng-class="{'locked': (game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence].WINNER[0]['P1'].price|oddConvert:'decimal')==1 || game.is_blocked || !(game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence].WINNER[0]['P1'] || game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence].WINNER[0]['W1']),
-                up: game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence].WINNER[0]['P1'].price_change == '1', down: game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence].WINNER[0]['P1'].price_change == '-1', 'active': isEventInBetSlip(game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence].WINNER[0]['P1'])}"
+                'factor-top': game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence].WINNER[0]['P1'].price_change == '1',
+                'factor-bottom': game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence].WINNER[0]['P1'].price_change == '-1', 'active': isEventInBetSlip(game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence].WINNER[0]['P1'])}"
                ng-bind="(game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence].WINNER[0]['P1'].price || game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence].WINNER[0]['W1'].price)|oddConvert:env.oddFormat:null:'WINNER'"></p>
         </td>
         <td class="team-info-n a-right">
@@ -34,7 +35,8 @@
         <td>
             <p class="e-g-price-v" ng-click="bet(game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence].WINNER[0]['P2'], game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence].WINNER[0], game); $event.stopPropagation()"
                ng-class="{'locked': (game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence].WINNER[0]['P2'].price | oddConvert:'decimal') == 1 || game.is_blocked || !(game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence].WINNER[0]['P2'] || game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence].WINNER[0]['W2']),
-               up: game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence].WINNER[0]['P2'].price_change == '1', down: game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence].WINNER[0]['P2'].price_change == '-1', 'active': isEventInBetSlip(game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence].WINNER[0]['P2'])}"
+               'factor-top': game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence].WINNER[0]['P2'].price_change == '1',
+               'factor-bottom': game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence].WINNER[0]['P2'].price_change == '-1', 'active': isEventInBetSlip(game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence].WINNER[0]['P2'])}"
                ng-bind="(game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence].WINNER[0]['P2'].price|oddConvert:env.oddFormat:null:'WINNER') ||(game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence].WINNER[0]['W2'].price|oddConvert:env.oddFormat:null:'WINNER')"></p>
         </td>
     </tr>

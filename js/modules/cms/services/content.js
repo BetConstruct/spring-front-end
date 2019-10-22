@@ -101,7 +101,7 @@ CMS.service('content', ['WPConfig', 'Config', '$http', '$rootScope', '$location'
         }
         parseInt(Config.main.site_id) === 1 && (customBaseHost = wpBaseHost); //@TODO it must be revert after wp cleanup
         includeTagInRequest = includeTagInRequest === undefined ? true : includeTagInRequest;
-        var countStr = count === undefined ? '' : '&count=' + parseInt(count, 10);
+        var countStr = count === undefined ? '' : '&count=' + (parseInt(count, 10) || count);
         var requestUrl = customNewsUrl || newsUrl;
         var jsonCategoryType = categoryJsonType || 'get_category_posts';
         return $http.get(requestUrl + '?base_host=' + (customBaseHost || customNewsBaseHost || newsBaseHost) + addHttpsFlag(requestUrl) + '&json=' + jsonCategoryType + '&lang=' + Config.env.lang + '&category_slug=' + categorySlug + countStr  + excludedFields + (includeTagInRequest ? tags : ''));

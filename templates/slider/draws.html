@@ -22,7 +22,7 @@
                                     </a>
                                 </span>
                             </td>
-                            <td>{{draw.end_date|formatDate:'full'}}</td>
+                            <td>{{draw.end_date|formatDate:'full':null:$root.env.timeFormat}}</td>
                             <td>{{draw.state|translate}}</td>
                             <td>{{draw.jackpot|number:conf.balanceFractionSize}}</td>
                             <td>{{(draw.pool_fee + draw.prize_fund)|number:conf.balanceFractionSize}}</td>
@@ -63,7 +63,7 @@
                     <th ng-if="row.type==='competition'">X</th>
                     <th ng-if="row.type==='competition'">2</th>
                     <td ng-if="row.type==='game'">{{row.order}}</td>
-                    <td ng-if="row.type==='game'">{{row.start_ts|formatDate:'D.MM HH:mm'}}</td>
+                    <td ng-if="row.type==='game'">{{row.start_ts|formatDate:'D.MM HH:mm':null:$root.env.timeFormat}}</td>
                     <td ng-if="row.type==='game'"><p title="{{row.team1_name + '-' + row.team2_name}}">{{row.team1_name + '-' + row.team2_name}}</p></td>
                     <td ng-if="row.type==='game'">{{row.score}}</td>
                     <td ng-if="row.type==='game'">{{row.p1}} / {{row.p1_1}}</td>
@@ -173,7 +173,7 @@
                                 </span>
                             </li>
                             <li class="date-col-j">
-                                <span>{{draw.end_date|formatDate:'full'}}</span>
+                                <span>{{draw.end_date|formatDate:'full':null:$root.env.timeFormat}}</span>
                             </li>
                             <li class="state-col-j">
                                 <span>{{draw.state|translate}}</span>
@@ -276,7 +276,7 @@
                                 <li>
                                     <div class="pbetting-list-data-j">
                                         <p class="time-j">
-                                            <span class="ng-binding">{{row.start_ts|formatDate:'D.MM HH:mm'}}</span>
+                                            <span class="ng-binding">{{row.start_ts|formatDate:'D.MM HH:mm':null:$root.env.timeFormat}}</span>
                                         </p>
                                         <p class="pb-compitation-name-j">
                                             <span title="Gimnasia La Plata" class="ng-binding">{{row.team1_name}}</span>

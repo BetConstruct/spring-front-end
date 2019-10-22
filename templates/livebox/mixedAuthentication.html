@@ -15,7 +15,7 @@
                     <label><span trans>Current Password</span></label>
                     <div class="form-text"  ng-class="{'error': (!resetPassword || forms.currentPasswordForm['oldpassword'].$touched) && ((forms.currentPasswordForm.oldpassword.$dirty && forms.currentPasswordForm.oldpassword.$error.required) || (forms.currentPasswordForm.oldpassword.$error.incorrect && !forms.currentPasswordForm.oldpassword.$dirty))}">
                         <div class="tooltip-wrapper-j">
-                            <input name="oldpassword" id="changePasswordOld" numpad ng-model="data.password" ng-change="onPasswordChange()" type="password" placeholder="Current Password" required trans>
+                            <input name="oldpassword" id="changePasswordOld" numpad ng-model="data.password" ng-change="onPasswordChange()" type="password" placeholder="Current Password" required trans autocomplete="off">
                             <div class="form-error-icon-j" ng-click="resetPasswordError()"></div>
                             <div class="tooltip-j">
                                 <div trans ng-show="forms.currentPasswordForm.oldpassword.$error.required">This field is required</div>
@@ -42,23 +42,23 @@
         </div>
         <div class="qr-section">
             <div>
-                <img src="{{data.qrCodeUrl}}" alt="">
+                <img ng-if="data.qrCodeUrl" ng-src="{{data.qrCodeUrl}}" alt="">
             </div>
             <span trans ng-click="showBarcode()">CAN’T SCAN IT?</span>
         </div>
     </li>
     <li class="barcod-authentication" ng-if="!isLoading && data.barcode">
         <h5 trans>Can’t scan the barcode?</h5>
-        <p>1. {{'Tap'|translate}} <b trans>menu</b> then <b trans>Setup Account</b>.</p>
-        <p>2. {{'Tap'|translate}} <b trans>Enter manually key</b>.</p>
-        <p>3. {{'Enter your account name and this key:'|translate}}</p>
+        <p trans>1. Tap <b>menu</b> then <b>Setup Account</b> </p>
+        <p trans>2. Tap <b>Enter manually key</b>.</p>
+        <p trans>3. Enter your account name and this key</p>
         <button ng-click="copyToClipboard()">{{data.barcode}} <i></i></button>
-        <p>4. {{"Make sure that" | translate}} <b trans>Time</b> {{'based is turned on, tap'|translate}} <b trans>Add</b> {{'to finish.' |translate}}</p>
+        <p trans>4. Make sure that <b>Time</b> based is turned on, tap <b>Add</b> to finish.</p>
     </li>
     <li class="verify-authentication" ng-if="!isLoading && data.qrCodeUrl">
         <h5 trans>Set up Authenticator</h5>
         <p trans>Enter the 6-digit code that you see in the App</p>
-        <input type="text" maxlength="6" placeholder="Enter code" ng-model="data.code" prevent-input="[^0-9]+" autocomplete="off">
+        <input type="text" maxlength="6" placeholder="{{'Enter code'|translate}}" ng-model="data.code" prevent-input="[^0-9]+" autocomplete="off">
         <button trans ng-click="verify()" ng-disabled="!data.code || data.code.length !== 6">Verify</button>
     </li>
 </ul>

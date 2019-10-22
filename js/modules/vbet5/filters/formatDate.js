@@ -40,7 +40,7 @@ VBET5.filter('formatDate', ['Moment', 'Config', 'Utils', function (Moment, Confi
                     format = DEFAULT_FORMAT;
                     break;
                 case 'hour':
-                    format = longDateFormat === '12h' ? 'hh:mm A' : 'HH:mm';
+                    format = DATE_FORMAT.hour[longDateFormat]; // === '12h' ? 'hh:mm A' : 'HH:mm';
                     break;
                 case 'fullHour':
                     format = longDateFormat === '12h' ? 'hh:mm:ss A' : 'HH:mm:ss';
@@ -57,10 +57,13 @@ VBET5.filter('formatDate', ['Moment', 'Config', 'Utils', function (Moment, Confi
                     break;
                 case 'noLocaleTranslate':
                     format = DATE_FORMAT.noLocaleTranslate[Config.env.timeFormat];
+                    if (Config.env.lang === 'fas') {
+                        return Moment.get(timestamp).format(format);
+                    }
                     localeIsFixed = true; // TODO see below
                     break;
                 case 'noLocaleTime':
-                    format = Config.env.timeFormat === '12h' ? 'LT' : 'HH:mm';
+                    format = DATE_FORMAT.noLocaleTime[Config.env.timeFormat];
                     localeIsFixed = true;
                     break;
                 case 'unixDate':

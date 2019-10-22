@@ -57,12 +57,18 @@
                     </div>
                 </li>
 
+                <li class="s-j-w-total">
+                    <p trans>Min Qualifying Bet</p>
+                    <div class="s-j-w-info">
+                        <span>{{pool.MinBetAmount|number:jackpotData.CurrencyFraction}} <i>{{jackpotData.Currency|currency}}</i></span>
+                    </div>
+                </li>
                 <li ng-if="pool.JackPotPoolStat.BiggestJackpotWin.Amount" class="s-j-w-largest">
                     <p trans>Largest Winner</p>
                     <div class="s-j-w-info">
                         <span>{{pool.JackPotPoolStat.BiggestJackpotWin.Amount|number:jackpotData.CurrencyFraction}} <i>{{jackpotData.Currency|currency}}</i></span>
                         <h3>{{pool.JackPotPoolStat.BiggestJackpotWin.BetId}}</h3>
-                        <p>{{pool.JackPotPoolStat.BiggestJackpotWin.PlayerId}}<i>{{pool.JackPotPoolStat.BiggestJackpotWin.CreationDate|formatDate:'tournament'}}</i>
+                        <p>{{pool.JackPotPoolStat.BiggestJackpotWin.PlayerId}}<i>{{pool.JackPotPoolStat.BiggestJackpotWin.CreationDate|formatDate:'noLocaleTranslate':null:$root.env.timeFormat}}</i>
                         </p>
                     </div>
                 </li>
@@ -72,7 +78,7 @@
                     <div class="s-j-w-info">
                         <span>{{pool.JackPotPoolStat.LastJackPotWin.Amount|number:jackpotData.CurrencyFraction}} <i>{{jackpotData.Currency|currency}}</i></span>
                         <h3>{{pool.JackPotPoolStat.LastJackPotWin.BetId}}</h3>
-                        <p>{{pool.JackPotPoolStat.LastJackPotWin.PlayerId}}<i>{{pool.JackPotPoolStat.LastJackPotWin.CreationDate|formatDate:'tournament'}}</i>
+                        <p>{{pool.JackPotPoolStat.LastJackPotWin.PlayerId}}<i>{{pool.JackPotPoolStat.LastJackPotWin.CreationDate|formatDate:'noLocaleTranslate':null:$root.env.timeFormat}}</i>
                         </p>
                     </div>
                 </li>

@@ -1,11 +1,11 @@
 $skin-second: false;
 @import '../../../css/mixins'; @import 'functions/colors'; @import '../../../css/createSkin';
 .header-nav-contain > ul > li > .top-menu-sub-a-t > a[href*="#/russia2018"]{
-   background: #05527f;
+  background: #05527f;
   &:hover{
     background: #066298;
   }
- }
+}
 .header-nav-contain > ul > li.active > .top-menu-sub-a-t > a[href*="#/russia2018"]{
   background: #066298;
 }

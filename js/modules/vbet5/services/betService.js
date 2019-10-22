@@ -212,7 +212,7 @@ VBET5.factory('BetService', ['$rootScope', 'Zergling', 'Config', '$q', 'Utils', 
      */
     BetService.repeatBet = function repeatBet(eventsFromBetHistory, editBet, callbackFn) {
         var promise = $q.defer();
-        if ( editBet && (Config.betting.fullCoverBetTypes.enabled || eventsFromBetHistory.cash_out < BetService.cashOut.getMinCashOutValue()) ) {
+        if ( editBet && Config.betting.fullCoverBetTypes.enabled ) {
             promise.reject();
             return promise.promise;
         }
@@ -261,7 +261,7 @@ VBET5.factory('BetService', ['$rootScope', 'Zergling', 'Config', '$q', 'Utils', 
                 'sport': ['id', 'name', 'alias', 'order'],
                 'competition': ['id', 'order', 'name'],
                 'region': ['id', 'name', 'alias'],
-                'game': ['id', 'team1_id', 'team1_name', 'team2_id', 'team2_name', 'type'],
+                'game': ['id', 'team1_id', 'start_ts', 'team1_name', 'team2_id', 'team2_name', 'type'],
                 'market': ['base', 'type', 'name', 'express_id'],
                 'event': []
             },
@@ -324,7 +324,7 @@ VBET5.factory('BetService', ['$rootScope', 'Zergling', 'Config', '$q', 'Utils', 
                 'sport': ['id', 'name', 'alias', 'order'],
                 'competition': ['id', 'order', 'name'],
                 'region': ['id', 'name', 'alias'],
-                'game': ['id', 'team1_id', 'team1_name', 'team2_id', 'team2_name', 'type'],
+                'game': ['id', 'start_ts', 'team1_id', 'team1_name', 'team2_id', 'team2_name', 'type'],
                 'market': ['base', 'type', 'name', 'express_id'],
                 'event': []
             },
@@ -382,6 +382,7 @@ VBET5.factory('BetService', ['$rootScope', 'Zergling', 'Config', '$q', 'Utils', 
         var betDataInfo = Utils.copyObj(betData);
         betDataInfo.userId = ($rootScope.profile && ($rootScope.profile.id || $rootScope.profile.unique_id)) || '';
         betDataInfo.userName = ($rootScope.profile && $rootScope.profile.username) || '';
+        betDataInfo.viewType = $rootScope.conf.bookingBetPrint.viewType;
         var encodedBetData = encodeURIComponent(JSON.stringify(betDataInfo));
         $window.open('#/popup/?action=betprintpreview&data=' + encodedBetData, Config.main.skin + 'betprintpreview.popup', "scrollbars=1,width=1000,height=600,resizable=yes");
     };

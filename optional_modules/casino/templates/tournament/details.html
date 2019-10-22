@@ -75,11 +75,11 @@
             </ul>
             <casino-games-list class="all-casino-games-list-box"
                                show-conditions="true"
-                               games-list="tournament.details.gamesFiltered"
+                               games-list="tournament.details.games"
                                game-show-conditions="true">
             </casino-games-list>
         </div>
-        <div class="tg-show-more" ng-show="tournament.detailsCasinoGamesCount < tournament.details.games.length"><button ng-click="showMoreCasinoGames()"><span trans>show more</span></button></div>
+        <div class="tg-show-more" ng-show="tournament.details.games.length < tournament.details.total_count"><button ng-disabled="loadingProcess" ng-click="showMoreCasinoGames()"><span trans>show more</span></button></div>
         <div ng-if="tournament.details.games" class="casino-tournament-statistics-wrapper" smooth-scroll scroll-if="{{tournament.readMore}}">
             <ul>
                 <!--tournament prizes-->

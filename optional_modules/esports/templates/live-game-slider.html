@@ -1,0 +1,45 @@
+<vbet-loader ng-show="loading"></vbet-loader>
+<h2 ng-if="games.length > 0 && !loading">{{'Live now'|translate}}<b ng-bind="games.length"></b></h2>
+<ul ng-if="games.length > 0 && !loading" ng-mouseover="state.rotationPaused=true" ng-mouseleave="state.rotationPaused=false" class="e-betslip-{{games[state.selectedIndex].sport.alias}}">
+    <li class="e-l-n-arrow" ng-show="games.length > 1" ng-click="previousGame()"></li>
+    <li class="e-l-n-slid" >
+        <div class="e-l-n-container">
+           <div class="e-l-n-content" ng-click="gotoBetGame(games[state.selectedIndex])">
+               <div class="icon-e-s {{games[state.selectedIndex].sport.alias}}">
+                   <img ng-src="images/e-icons/{{games[state.selectedIndex].sport.alias}}.png" alt="">
+               </div>
+               <div class="e-l-n-info">
+                   <h3 title="{{games[state.selectedIndex].sport.name}}" ng-bind="games[state.selectedIndex].sport.name"></h3>
+                   <div class="team-name-1-v3" data-title="{{games[state.selectedIndex].team1_name}}">
+                       <span ng-bind="games[state.selectedIndex].info.score1"></span>
+                   </div>
+                   <div class="team-name-1-v3" data-title="{{games[state.selectedIndex].team2_name}}">
+                       <span ng-bind="games[state.selectedIndex].info.score2"></span>
+                   </div>
+                   <div class="game-info-mini-v3">
+                       <p ng-bind="games[state.selectedIndex].info.current_game_state|convertSetName:games[state.selectedIndex].sport.alias|translate"></p>
+                   </div>
+                   <div class="game-info-mini-v3">
+                       <p title="{{games[state.selectedIndex].info.add_info || games[state.selectedIndex].text_info}}" ng-bind="games[state.selectedIndex].info.add_info || games[state.selectedIndex].text_info"></p>
+                   </div>
+               </div>
+           </div>
+            <div class="e-l-n-odds">
+                <h3 title="{{games[state.selectedIndex].market.name}}" ng-bind="games[state.selectedIndex].market.name"></h3>
+                <div class="l-b column-{{games[state.selectedIndex].market.events.length}}">
+                    <div class="single-events-b-v3" ng-repeat="event in games[state.selectedIndex].market.events track by event.id" title="{{games[state.selectedIndex].market.display_key === 'WINNER'? event.type_1: (event.name + ' ' + displayBase(event, games[state.selectedIndex].market))}}"
+                         ng-class="{'pointer-events-none': event.is_empty, 'active': isEventInBetSlip(event), 'blocked': ((event.price | oddConvert:'decimal') == 1 || games[state.selectedIndex].is_blocked)}"
+                         ng-click="bet(event, games[state.selectedIndex].market, games[state.selectedIndex]); $event.stopPropagation()"
+                    >
+                        <div class="max-bet-tooltip-v3" onmouseover="displayEventLimit(event)" onmouseleave="cancelDisplayEventLimit(event)" data-id="{{event.id}}"  ng-class="{'maxbet-enabled': $root.env.authorized && $root.conf.displayEventsMaxBet}">
+                        </div>
+                        <b ng-show="(event.price | oddConvert:'decimal') != 1 && !games[state.selectedIndex].is_blocked"
+                           class="p-v price" ng-class="{'factor-top': event.price_change > 0, 'factor-bottom': event.price_change < 0}"
+                           ng-bind="event.price|oddConvert:$root.env.oddFormat:null:games[state.selectedIndex].market.display_key"></b>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </li>
+    <li class="e-l-n-arrow" ng-show="games.length > 1" ng-click="nextGame()"></li>
+</ul>

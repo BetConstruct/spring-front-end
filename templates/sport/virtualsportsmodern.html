@@ -59,7 +59,7 @@
             <div>
                 <ul>
                     <li class="upcoming-title" trans>Upcoming games</li>
-                    <li ng-repeat="game in games track by game.id" ng-click="openGame(game)" ng-bind="game.start_ts | formatDate:'hour':null:env.timeFormat" ng-class="{'active': game.id == selectedGame.id}"></li>
+                    <li ng-repeat="game in games track by game.id" ng-click="openGame(game)" ng-bind="game.start_ts | formatDate:'hour':null:$root.env.timeFormat" ng-class="{'active': game.id == selectedGame.id}"></li>
                 </ul>
             </div>
         </div>

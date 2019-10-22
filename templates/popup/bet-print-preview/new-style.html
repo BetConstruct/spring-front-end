@@ -1,0 +1,70 @@
+<div class="header-j">
+    <div class="logo-j">
+        <img ng-src="./skins/{{$root.conf.skin}}/images/logo.png" onload="print()">
+    </div>
+</div>
+<div class="info-booking-print">
+    <h1 ng-if="betData.type===1" trans>Single</h1>
+    <h1 ng-if="betData.type===2" trans>Express</h1>
+    <h1 ng-if="betData.type===3"><span trans>System</span>
+        {{betData.system_min_count}}/{{betData.system_max_count}}</h1>
+    <h1 ng-if="betData.type===4" trans>Chain</h1>
+</div>
+<ul class="booking-id-print">
+    <li>
+        <p trans>Bet ID</p>
+        <span>{{betData.id}}</span>
+    </li>
+    <li>
+        <p trans>Customer ID</p>
+        <span>{{betData.userId}}</span>
+    </li>
+    <li>
+        <p trans>Username</p>
+        <span>{{betData.userName}}</span>
+    </li>
+    <li>
+        <p trans>Date/Time</p>
+        <span>{{betData.date_time|formatDate:'full':null:$root.env.timeFormat}}</span>
+    </li>
+</ul>
+<ul class="booking-total-print">
+    <li class="booking-title-print">
+        <h6 ng-show="betData.outcome == -5" trans>On Hold</h6>
+        <h6 ng-show="betData.outcome == 0" trans>UNSETTLED </h6>
+        <h6 ng-show="betData.outcome == 1" trans>Lost</h6>
+        <h6 ng-show="betData.outcome == 2" trans>Returned</h6>
+        <h6 ng-show="betData.outcome == 3" trans>Won</h6>
+        <h4 ng-if="betData.amount">{{betData.amount}} {{betData.currency|currency}} / {{betData.k|number:2}}</h4>
+    </li>
+</ul>
+<div class="booking-block-print">
+    <ul ng-if="events" ng-repeat="event_group in events">
+        <li ng-repeat="event in event_group">
+            <b>{{event.game_start_date|formatDate:'full':null:$root.env.timeFormat}}</b>
+            <h3>{{event.game_name}} / {{event.market_name ? event.market_name + " - ": ""}} {{event.basis ?
+                event.event_name.replace(event.basis, (event.basis|handicapBaseFormat)) : event.event_name}} /
+                {{event.coeficient|number:2}}</h3>
+            <h3>{{event.sport_name}}</h3>
+            <p>{{event.competition_name}}&nbsp;</p>
+            <p ng-if="event.is_live">(LIVE)</p>
+        </li>
+    </ul>
+</div>
+<ul class="booking-total-print">
+    <li class="booking-title-print" ng-if="betData.bonus > 0 && betData.outcome == 0">
+        <h6 trans>Bonus</h6>
+        <h4>{{betData.bonus}} {{betData.currency|currency}}</h4>
+    </li>
+    <li class="booking-title-print" ng-if="betData.possible_win && betData.outcome == 0">
+        <h6 trans>Potential win</h6>
+        <h4>{{betData.possible_win}} {{betData.currency|currency}}</h4>
+    </li>
+    <li class="booking-title-print" ng-if="(betData.payout || betData.bonus_amount) && betData.outcome == 3">
+        <h6 trans>Won</h6>
+        <h4>{{betData.payout + betData.bonus_amount}} {{betData.currency|currency}}</h4>
+    </li>
+</ul>
+<div class="bar-code-j">
+    <div barcode-generator="{{betData.id}}" class="qr-code-b"></div>
+</div>

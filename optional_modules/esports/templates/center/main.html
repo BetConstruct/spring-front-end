@@ -10,15 +10,15 @@
                     </p>
                     <p class="back-a-v" ng-if="game" ng-click="getCompetitionData({sport:game.sport, competition:game.competition, region:game.region, game:{id:undefined}});"
                        ng-bind="(game.competition.id ? 'Go to competition' : 'Go to sport')|translate"></p>
-                    <ul class="view-switcher">
+                    <ul ng-if="!game" class="view-switcher">
                         <li ng-repeat="(key, value) in ::layout.types track by key" ng-click="layout.selected=key;layout.expanded=!layout.expanded"
-                            ng-class="{'active': layout.selected === key}" ng-bind="key|translate"></li>
+                            ng-class="{'active': layout.selected === key}" ng-bind="value|translate"></li>
                     </ul>
                 </div>
                 <div class="e-live-games-list">
-                    <div class="s-l-game-v" ng-repeat="game in games track by game.id">
+                    <div class="s-l-game-v" ng-repeat="game in games track by game.id" ng-if="game.show_type !== 'OUTRIGHT' || (game.markets.OUTRIGHT && game.markets.OUTRIGHT[0] && game.markets.OUTRIGHT[0].events.length)">
                         <div class="t-row-l-game">
-                            <p>{{::game.start_ts| formatDate:'full':null:env.timeFormat}}<i ng-show="game.type === 2 && $root.conf.asian.showLiveIconForUpcomingGames" class="live-indicator">live</i></p>
+                            <p>{{::game.start_ts| formatDate:'MM/D':null:$root.env.timeFormat}} | {{::game.start_ts| formatDate:'hour':null:$root.env.timeFormat}}<span ng-bind="game.markets.OUTRIGHT[0].name" ng-if="game.show_type === 'OUTRIGHT'"></span><i ng-show="game.type === 2 && $root.conf.asian.showLiveIconForUpcomingGames" class="live-indicator">live</i></p>
                             <p ng-bind="game.competition.id ? '' : game.competition.name"></p>
                             <!--<div class="e-game-arrow"></div>-->
                         </div>
@@ -39,7 +39,8 @@
                         </div>
 
                         <div class="e-p-table">
-                            <ng-include class="float-width" src="'optional_modules/esports/templates/center/'+ layout.selected + '.html'"></ng-include>
+                            <ng-include ng-if="game.show_type !== 'OUTRIGHT'"  class="float-width" src="'optional_modules/esports/templates/center/'+ layout.selected + '.html'"></ng-include>
+                            <ng-include  ng-if="game.show_type === 'OUTRIGHT'" class="float-width" src="'optional_modules/esports/templates/center/outright.html'"></ng-include>
                         </div>
                     </div>
                 </div>
@@ -47,10 +48,10 @@
             </div>
         </div>
     </div>
-    <div class="live-game-view-contain-v3" ng-if="conf.videoEnabled && pinnedGameType === 'fullScreen' && !conf.detachedVideoSizes[openGame.tv_type]" ng-show="!loading">
+    <div class="live-game-view-contain-v3" ng-if="conf.videoEnabled && pinnedGameType === 'fullScreen' && !conf.detachedVideoSizes[openGame.tv_type] && enlargedGame && enlargedGame.video_data" ng-show="!loading">
              <!--enlarged video-->
-        <div >
-            <div ng-if="enlargedGame && enlargedGame.video_data" class="game-video game-video-detached game-video-fullscreen">
+        <div>
+            <div class="game-video game-video-detached game-video-fullscreen">
                 <div class="game-video-container detached-game-container" id="detached-game-container-{{enlargedGame.id}}">
 
                     <video-player
@@ -77,9 +78,7 @@
                             :''}}
                         </div>
                     </div>
-                    <a ng-click="attachPinnedVideo(enlargedGame, 'fullScreen'); $parent.mute = undefined; $parent.paused = undefined;">
-                        <span trans>close</span>
-                    </a>
+                    <a ng-click="attachPinnedVideo(enlargedGame, 'fullScreen'); $parent.mute = undefined; $parent.paused = undefined;"></a>
                 </div>
             </div>
         </div>

@@ -77,6 +77,5 @@ VBET5.controller('betOnPoliticsCtrl', ['$rootScope', '$scope', '$sce', '$locatio
     })();
 
     $scope.$on('loggedIn', login);
-    $scope.$on('login.loggedIn', login);
     $scope.$on('login.loggedOut', logout);
 }]);

@@ -49,13 +49,21 @@ VBET5.directive('vbetBigSlider', ['$rootScope', '$timeout', '$route', '$interval
                     scope.index++;
                 }
             }
-
             stopInterval = $interval(animateBanners, Config.main.featuredGames.rotationPeriod);
 
             scope.$on('$destroy', function () {
                 $interval.cancel(stopInterval);
                 stopInterval = undefined;
             });
+
+            scope.$watch('images', function () {
+                if (scope.images && scope.index > scope.images.length -1) {
+                    scope.index = 0;
+                }
+            });
+
+
+
         }
     };
 }]);

@@ -55,6 +55,16 @@ VBET5.controller('promotionalBonusCtrl', ['$scope', '$location', 'Zergling', 'Ba
                 title: 'Success',
                 content: Translator.get(messageText)
             });
+            return;
+        }
+
+        if (messageType === 'warning') {
+            $rootScope.$broadcast("globalDialogs.addDialog", {
+                type: 'warning',
+                title: 'Warning',
+                content: Translator.get(messageText)
+            });
+            return;
         }
 
         if (messageType === 'error') {
@@ -63,6 +73,7 @@ VBET5.controller('promotionalBonusCtrl', ['$scope', '$location', 'Zergling', 'Ba
                 title: 'Error',
                 content: Translator.get(messageText)
             });
+            return;
         }
 
         if (messageType === 'prompt') {
@@ -126,7 +137,7 @@ VBET5.controller('promotionalBonusCtrl', ['$scope', '$location', 'Zergling', 'Ba
      * @description processing bonus data
      */
     function processBonusData(bonusData) {
-        if (bonusData && bonusData.bonuses) {
+        if (bonusData && bonusData.bonuses && Array.isArray(bonusData.bonuses)) { //bonusData.bonuses can be error message.
             $scope.bonusList = bonusData.bonuses;
             angular.forEach ($scope.bonusList, function (bonusVal){
                 if (bonusVal && bonusVal.money_requirenments && $rootScope.currency_name && bonusVal.money_requirenments[$rootScope.currency_name.toLowerCase()]) {
@@ -241,7 +252,26 @@ VBET5.controller('promotionalBonusCtrl', ['$scope', '$location', 'Zergling', 'Ba
      * @param {boolean} navigateToDeposit is navigate after successful claim into deposit page
      * @description Claim bonus
      */
-    $scope.claimBonus = function claimBonus(bonusId, navigateToDeposit) {
+    $scope.claimBonus = function claimBonus(bonus, navigateToDeposit) {
+
+        if(bonus['is_for_verified_players_only'] && !$rootScope.profile['is_verified']) {
+            $rootScope.$broadcast("globalDialogs.addDialog", {
+                type: 'warning',
+                title: 'Warning',
+                content: Translator.get('This bonus is available for verified users only. Please verify your account to be able to claim it.', 'warning'),
+                hideCloseButton: true,
+                buttons: [
+                    {title: 'Ok', callback: function() {
+                            if($rootScope.conf.enableAccountVerification || $rootScope.conf.accountVerificationMessage) {
+                                $rootScope.env.sliderContent = 'settings';
+                                $rootScope.env.mixedSettingsPage = 'verifyaccount';
+                            }
+                        }}
+                ]
+            });
+            return;
+        }
+        var bonusId = bonus.partner_bonus_id;
         var promise = showConfirmationDialog('Are you sure you want to claim this bonus?', 'prompt');
         var request = {bonus_id: bonusId};
         promise.then(function () {

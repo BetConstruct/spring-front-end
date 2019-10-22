@@ -1,12 +1,13 @@
 @font-face {
   font-family: 'icomoon';
-  src:  url('fonts/icomoon.eot?2moipp');
-  src:  url('fonts/icomoon.eot?2moipp#iefix') format('embedded-opentype'),
-    url('fonts/icomoon.ttf?2moipp') format('truetype'),
-    url('fonts/icomoon.woff?2moipp') format('woff'),
-    url('fonts/icomoon.svg?2moipp#icomoon') format('svg');
+  src:  url('fonts/icomoon.eot?4dlxwq');
+  src:  url('fonts/icomoon.eot?4dlxwq#iefix') format('embedded-opentype'),
+    url('fonts/icomoon.ttf?4dlxwq') format('truetype'),
+    url('fonts/icomoon.woff?4dlxwq') format('woff'),
+    url('fonts/icomoon.svg?4dlxwq#icomoon') format('svg');
   font-weight: normal;
   font-style: normal;
+  font-display: block;
 }
 
 [class^="cms-jcon-"], [class*=" cms-jcon-"] {
@@ -24,6 +25,9 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+.cms-jcon-chat:before {
+  content: "\ea4f";
+}
 .cms-jcon-edit1:before {
   content: "\ea32";
 }
@@ -188,6 +192,66 @@
 }
 .cms-jcon-Buddy-to-Buddy:before {
   content: "\e978";
+}
+.cms-jcon-results:before {
+  content: "\ea57";
+}
+.cms-jcon-halloween:before {
+  content: "\ea56";
+}
+.cms-jcon-FTV-Roulette:before {
+  content: "\ea53";
+}
+.cms-jcon-FTV-BJ:before {
+  content: "\ea54";
+}
+.cms-jcon-FTV-Baccarat:before {
+  content: "\ea55";
+}
+.cms-jcon-bighilo:before {
+  content: "\ea52";
+}
+.cms-jcon-daily-jackpot:before {
+  content: "\ea51";
+}
+.cms-jcon-Red-Dog:before {
+  content: "\ea50";
+}
+.cms-jcon-red-tiger:before {
+  content: "\ea48";
+}
+.cms-jcon-Playson-Gaming:before {
+  content: "\ea49";
+}
+.cms-jcon-netent:before {
+  content: "\ea4a";
+}
+.cms-jcon-fugaso:before {
+  content: "\ea4b";
+}
+.cms-jcon-egt:before {
+  content: "\ea4c";
+}
+.cms-jcon-dlv:before {
+  content: "\ea4d";
+}
+.cms-jcon-apollogames:before {
+  content: "\ea4e";
+}
+.cms-jcon-speedometer:before {
+  content: "\ea47";
+}
+.cms-jcon-zeppelin-icon:before {
+  content: "\ea46";
+}
+.cms-jcon-whatsapp:before {
+  content: "\ea44";
+}
+.cms-jcon-gmail:before {
+  content: "\ea45";
+}
+.cms-jcon-blast:before {
+  content: "\ea43";
 }
 .cms-jcon-talisman:before {
   content: "\ea42";
@@ -735,7 +799,7 @@
 .cms-jcon-twitter1:before {
   content: "\e95e";
 }
-.cms-jcon-whatsapp:before {
+.cms-jcon-whatsapp_icon:before {
   content: "\e95f";
 }
 .cms-jcon-pinterest:before {
@@ -1548,7 +1612,7 @@
 .cms-jcon-thumbsdown:before {
   content: "\e60e";
 }
-.cms-jcon-chat:before {
+.cms-jcon-chat1:before {
   content: "\e60f";
 }
 .cms-jcon-comment:before {

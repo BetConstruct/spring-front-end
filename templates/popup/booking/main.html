@@ -1,0 +1,17 @@
+<style>@page {
+    size: auto;
+    margin: auto;
+}
+
+.body-wrapper {
+    min-width: 100%
+}
+
+.support-messenger {
+    display: none
+}</style>
+<div ng-controller="betPrint" ng-init="printBetEvent()">
+    <ng-include ng-if="betData.viewType === 2" src="::'templates/popup/booking/type-2.html'|fixPath"></ng-include>
+    <ng-include ng-if="betData.viewType === 1" src="::'templates/popup/booking/type-1.html'|fixPath"></ng-include>
+    <ng-include ng-if="betData.viewType === 3" src="::'templates/popup/booking/type-3.html'|fixPath"></ng-include>
+</div>

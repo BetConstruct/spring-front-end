@@ -229,6 +229,11 @@
       content: "\e6d8";
     }
   }
+  &.vgs129 {
+    &:before {
+      content: "\ea50";
+    }
+  }
   &.ezg20, &.ezgbaccarat, &.ezg4, &.evl103, &.vgs103, &.vgs108, &.agcbac, &.lksbaccarat, &.agclink, &.xpglivebaccarat, &.pnh2, &.xpgbaccarat, &.xpgbaccaratnocommission {
     &:before {
       content: "\74";
@@ -264,12 +269,27 @@
       content: "\e92e";
     }
   }
+  &.ftv1722 {
+    &:before {
+      content: "\ea53";
+    }
+  }
+  &.ftv1723 {
+    &:before {
+      content: "\ea54";
+    }
+  }
+  &.ftv1724 {
+    &:before {
+      content: "\ea55";
+    }
+  }
 }
 .live-casino-game-name {
   width: calc(100% - 94px);
   box-sizing: border-box;
   float: left;
-  padding: 0 20px 28px;
+  padding: 0 6px 28px;
   text-transform: uppercase;
   .lc-game-name {
     float: left;
@@ -282,7 +302,7 @@
     position: absolute;
     bottom: 0;
     height: 28px;
-    padding: 0 18px;
+    padding: 0 14px;
     background: none;
     color: set-color($brand-color-1);
     border: 1px solid $brand-color-1;

@@ -1,0 +1,35 @@
+<!-- INPUT TYPE RECAPTCHA VERSION 1-->
+<div ng-if="recaptcha.version === 1" class="captcha {{$root.conf.recaptcha.classes}}"
+     ng-init="resetError[$root.conf.recaptcha.name] = true"
+     ng-class="{'error': (!resetError[$root.conf.recaptcha.name] || registerform[$root.conf.recaptcha.name].blur) && registerform[$root.conf.recaptcha.name].$invalid && showFieldsValidation}"
+     ng-show="$root.conf.recaptcha.imgSrc">
+    <label ng-bind="$root.conf.recaptcha.title | translate" ng-class="{'hintReq' : $root.conf.recaptcha.required}"></label>
+    <div class="tooltip-wrapper-j">
+        <img ng-src="{{$root.conf.recaptcha.imgSrc}}">
+        <button ng-click="loadCaptchaImage($root.conf.recaptcha);$event.preventDefault();" trans>Reload</button>
+        <div vb-html-compiler="<input type='text' name='{{$root.conf.recaptcha.name}}' ng-blur='registerform[$root.conf.recaptcha.name].blur=true' ng-model='registrationData[$root.conf.recaptcha.name]' placeholder='{{$root.conf.recaptcha.placeholder|translate}}'/>" custom-attrs="$root.conf.recaptcha.customAttrs"></div>
+        <div class="tooltip-j" ng-hide="registerform[$root.conf.recaptcha.name].$error.required">
+            <div ng-repeat="val in $root.conf.recaptcha.validation"
+                 ng-show="registerform[$root.conf.recaptcha.name].$error[val.name]">
+                {{val.message|translate}}
+            </div>
+        </div>
+    </div>
+</div>
+<!-- INPUT TYPE RECAPTCHA VERSION 2-->
+<div ng-if="recaptcha.version === 2" class="recaptcha {{$root.conf.recaptcha.classes}}"
+     ng-class="{'error': (!resetError[$root.conf.recaptcha.name] || registerform[$root.conf.recaptcha.name].blur) && registerform[$root.conf.recaptcha.name].$invalid && showFieldsValidation && registration.submitted}"
+     ng-controller="recaptchaCtrl">
+    <label ng-bind="$root.conf.recaptcha.title | translate" ng-class="{'hintReq' : $root.conf.recaptcha.required}"></label>
+    <input type="hidden" name="{{$root.conf.recaptcha.name}}" ng-model="registrationData[$root.conf.recaptcha.name]" ng-required="true"/>
+    <vbet-loader ng-if="recaptcha.loading" class="small-progress"></vbet-loader>
+    <div class="tooltip-wrapper-j" ng-if="recaptcha.key">
+        <div class="g-recaptcha" data-callback="recaptchaUpdateCallback" data-sitekey="{{recaptcha.key}}" data-theme="{{$root.conf.recaptcha.theme || 'dark'}}" data-size="{{$root.conf.recaptcha.size || 'normal'}}"></div>
+        <div class="tooltip-j" ng-hide="registerform[$root.conf.recaptcha.name].$error.required">
+            <div ng-repeat="val in $root.conf.recaptcha.validation"
+                 ng-show="registerform[$root.conf.recaptcha.name].$error[val.name]">
+                {{val.message|translate}}
+            </div>
+        </div>
+    </div>
+</div>

@@ -3,11 +3,14 @@
         <div class="group-container" ng-show="sections.length">
             <div class="virt-video-container" ng-class="{'full-screen-video': vPlayerState.fullscreen}">
                 <div class="video-content">
-                    <div class="player" ng-if="vPlayerState.data" ng-switch="$root.conf.videoProvidersThatSupportHls[providerId]">
-                        <hls-player ng-switch-when="true"></hls-player>
-                        <flashplayer ng-switch-default id="gamevideo{{gameToShow.id}}" stream-url="{{vPlayerState.data}}" provider-id="{{providerId}}" initially-muted="{{ env.sound }}"></flashplayer>
+                    <!-- Two div-s w/ class 'player' are *NOT* left on accident. Please do not optimize and refactor them! -->
+                    <div class="player" ng-if="$root.conf.video.providersThatSupportHls[providerId] && videoData">
+                        <hls-player provider-id="{{providerId}}" stream-url="{{videoData}}"></hls-player>
                     </div>
-                    <div class="video-player-control" ng-if="vPlayerState.isLoaded" ng-init="$root.$broadcast('rzSliderForceRender')">
+                    <div class="player" ng-if="!$root.conf.video.providersThatSupportHls[providerId] && videoData">
+                        <flashplayer id="gamevideo{{gameToShow.id}}" stream-url="{{videoData}}" provider-id="{{providerId}}" initially-muted="{{ env.sound }}"></flashplayer>
+                    </div>
+                    <div class="video-player-control" ng-if="videoIsLoaded" ng-init="$root.$broadcast('rzSliderForceRender')">
                         <span ng-click="vPlayerState.fullscreen = !vPlayerState.fullscreen" ng-class="{'full-screen': vPlayerState.fullscreen}" class="video-size-toggle">test</span>
                         <span ng-click="env.sound = 0; $event.stopPropagation();" ng-show="env.sound > 0" class="video-mute">Mute</span>
                         <span ng-click="env.sound = 0.75; $event.stopPropagation();" ng-show="env.sound === 0" class="video-unmute">UnMute</span>
@@ -72,7 +75,7 @@
             <span class="upcoming-title" trans>Upcoming games</span>
             <div>
                 <ul>
-                    <li ng-repeat="game in games track by game.id" ng-click="openGame(game)" ng-bind="game.start_ts | formatDate:'hour':null:env.timeFormat" ng-class="{'active': game.id === selectedGameId}"></li>
+                    <li ng-repeat="game in games track by game.id" ng-click="openGame(game)" ng-bind="game.start_ts | formatDate:'hour':null:$root.env.timeFormat" ng-class="{'active': game.id === selectedGameId}"></li>
                 </ul>
             </div>
         </div>

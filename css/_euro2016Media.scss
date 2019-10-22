@@ -4,6 +4,12 @@
   }
   .multiselect-view-v3 .competition-title-v3:hover > .sub-menu-multiselect-view-v3 {
     left: 250px;
+    @include ltr {
+      left: 250px;
+    }
+    @include rtl {
+      right: 250px;
+    }
   }
   .right-column-v3 {
     box-sizing: border-box;
@@ -50,7 +56,7 @@
   }
 }
 @media screen and (max-width: 1279px) {
-  .left-column-v3:not(.live){
+  .left-column-v3:not(.live) {
     position: absolute;
     top: 0;
     background: $classic-view-background;
@@ -200,22 +206,27 @@
   .center-column-v3.dashboard .games-view-wrapper-v3 {
     overflow: inherit;
   }
-  .dashboard-view-v3 > .live-events-column-v3 {
-    height: 100%;
-    @include scroll;
-    @include rtl {
-      padding: 0 9px 0 0;
+  .dashboard-view-v3 {
+    > .live-events-column-v3 {
+      height: 100%;
+      @include scroll;
+      @include ltr {
+        padding: 0 6px;
+      }
+      @include rtl {
+        padding: 0 9px 0 0;
+      }
+      &:nth-last-child(2) {
+        @include ltr {
+          padding-left: 0;
+        }
+        @include rtl {
+          padding-right: 0;
+        }
+      }
     }
-    @include ltr {
-      padding: 0 6px;
-    }
-  }
-  .dashboard-view-v3 > .live-events-column-v3:first-child {
-    @include ltr {
-      padding: 0 6px 0 0;
-    }
-    @include rtl {
-      padding: 0 0 0 6px;
+    .dashboard-slider ~ .live-events-column-v3 {
+      height: calc(100% - 308px);
     }
   }
 }

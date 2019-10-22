@@ -1,6 +1,6 @@
 <div ng-controller="casinoCtrl" ng-init="init(); setTitle('Casino');" watch-resize middle-screen-mode="true" class="casino-mainpage-wrapper-b">
     <!--Casino-new hompage-->
-    <div class="float-width" ng-include="'optional_modules/casino/templates/casino-template' + (confData.version === 2 ? '-v2' : '') + '.html'|fixPath"></div>
+    <div class="float-width" ng-include="'optional_modules/casino/templates/casino-template' + (confData.version !== 1 ? '-v' + confData.version : '') + '.html'|fixPath"></div>
 
     <div  class="new-default-popup-j jackpot-win-animation-on" ng-if="jackpotWinner.animation"> <!--add class jackpot-win-animation-on and remove class jackpot-win-animation-off-->
         <div class="jackpot-table">

@@ -4,8 +4,8 @@
  * @description
  * LiveCalendarController controller
  */
-angular.module('vbet5.betting').controller('LiveCalendarController', ['$scope', '$rootScope', '$location', '$window', 'ConnectionService', 'Moment', 'Translator', 'Utils', 'Config', 'GameInfo', 'partner',
-    function ($scope, $rootScope, $location, $window, ConnectionService, Moment, Translator, Utils, Config, GameInfo, partner) {
+angular.module('vbet5.betting').controller('LiveCalendarController', ['$scope', '$rootScope', '$location', '$window', 'ConnectionService', 'Moment', 'Translator', 'Utils', 'Config', 'GameInfo', 'partner', "Zergling",
+    function ($scope, $rootScope, $location, $window, ConnectionService, Moment, Translator, Utils, Config, GameInfo, partner, Zergling) {
         'use strict';
         $rootScope.footerMovable = true;
 
@@ -93,7 +93,8 @@ angular.module('vbet5.betting').controller('LiveCalendarController', ['$scope', 
                                     team2_name: game.team2_name,
                                     events_count: game.events_count,
                                     markets_count: game.markets_count,
-                                    type: game.type
+                                    type: game.type,
+                                    start_ts: game.start_ts
                                 };
                                 if (groupedMarkets.P1XP2 !== undefined && groupedMarkets.P1XP2[0] && groupedMarkets.P1XP2[0].event) {
                                     $scope.marketEvents[game.id] = {
@@ -258,7 +259,7 @@ angular.module('vbet5.betting').controller('LiveCalendarController', ['$scope', 
                     'sport': ['id', 'name', 'alias', 'order'],
                     'region': ['id', 'name', 'alias'],
                     'competition': ['id', 'name'],
-                    'game': [['id', 'type', 'is_blocked', 'game_number', 'team1_name', 'team2_name','team1_reg_name', 'team2_reg_name', 'start_ts', 'markets_count',
+                    'game': [['id', 'start_ts', 'type', 'is_blocked', 'game_number', 'team1_name', 'team2_name','team1_reg_name', 'team2_reg_name', 'start_ts', 'markets_count',
                         'title', 'info', 'text_info', 'events_count', 'exclude_ids', 'is_stat_available', 'team1_external_id', 'team2_external_id', 'is_live',
                         'video_id', 'tv_type', 'video_id2', 'video_id3', 'partner_video_id']]
                 },
@@ -522,6 +523,20 @@ angular.module('vbet5.betting').controller('LiveCalendarController', ['$scope', 
                     name: Moment.get().add(i, 'days').startOf("day").format("dd D")
                 });
             }
+
+            if (Config.main.boostedBets.enabled && !$rootScope.boostedBetsEventIds) {
+                $rootScope.boostedBetsEventIds = [];
+                Zergling.get({}, 'get_boosted_selections').then(function (response) {
+                    if (response && response.details) {
+                        angular.forEach(response.details, function (value) {
+                            angular.forEach(value, function (value) {
+                                $rootScope.boostedBetsEventIds.push(value.Id);
+                            });
+                        });
+                    }
+                });
+            }
+
         }
 
         initLiveCalendar();

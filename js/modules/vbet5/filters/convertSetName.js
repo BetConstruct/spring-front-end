@@ -599,7 +599,8 @@ VBET5.filter('convertSetName', function () {
         "Dartsset2": "Leg 2",
         "Dartsset3": "Leg 3",
         "Dartsset4": "Leg 4",
-        "Dartsset5": "Leg 5"
+        "Dartsset5": "Leg 5",
+        "3x3 Basketballset1": "1st Period"
     };
     return function (rawName, sportAlias) {
         if (replacements[sportAlias + rawName] !== undefined) {

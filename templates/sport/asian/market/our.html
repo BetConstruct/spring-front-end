@@ -18,7 +18,7 @@
             <tr ng-repeat="event in (game.markets['OUTRIGHT'][0].events || (game.markets|firstElement).OUTRIGHT[0].events)" ng-click="bet(event, game.markets['OUTRIGHT'][0], game)">
                 <td class="sport-outright date">
                     <div class="info-bl" ng-show="$index === 0">
-                        <p><span ng-bind="game.start_ts|formatDate:($root.conf.layoutTimeFormat.asian || 'D/MM')"></span> <span ng-bind="game.start_ts|formatDate:'hour':null:env.timeFormat"></span></p>
+                        <p><span ng-bind="game.start_ts|formatDate:($root.conf.layoutTimeFormat.asian || 'D/MM')"></span> <span ng-bind="game.start_ts|formatDate:'hour':null:$root.env.timeFormat"></span></p>
                     </div>
                 </td>
                 <td class="event-title-asia"><div class="info-bl"><p ng-bind="event.name"></p></div></td>

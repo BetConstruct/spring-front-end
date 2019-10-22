@@ -31,6 +31,7 @@ CASINO.constant('CConfig', {
             enabled: false,
             href: ''
         },
+        enableConfirmationBeforeCloseGame: false, // Popup while closing the game(slots, skill games, games, backgammon, belote.... etc )
         funModeEnabled: 1,// enable/disable fun mode.  0 - disable for all users, 1 - enable for all users, 2 - enable for logged in users, 3 - enable for verified users
         realModeEnabled: true, // enable/disable real playing mode
         providersThatHaveNotFunMode: ['MTG'],
@@ -60,6 +61,7 @@ CASINO.constant('CConfig', {
             showBiggestWinners: false
         }
     },
+    disableMenuCollapsingInSpecialGames: false,
     bonusBalanceUnderGame: {
         enabled: false
     },
@@ -134,7 +136,8 @@ CASINO.constant('CConfig', {
             '119': 5,
             '108': 3,
             '125': 6,
-            '126': 3
+            '126': 3,
+            '141': 7
         },
         liveDealersPhotosUrl: "http://websitelivegames-am.betconstruct.com/Content/Images/DealerPhotos/",
         liveDealersPhotosUrlVersion2: "http://rgs-livedealerwebserver.betconstruct.int/content/dealers/",
@@ -285,5 +288,9 @@ CASINO.constant('CConfig', {
     },
     vrlivedealer: {
         id: "8013"
+    },
+    blast: {
+        externalID: "5000000",
+        id: "11870"
     }
 });

@@ -40,7 +40,7 @@
             </tr>
             <tr ng-repeat="game in day|orderBy:'start_ts' track by $index">
                 <td>
-                    <div class="time-b-column"><p ng-bind="game.start_ts|formatDate:'HH:mm'"></p></div>
+                    <div class="time-b-column"><p ng-bind="game.start_ts|formatDate:'HH:mm':null:$root.env.timeFormat"></p></div>
                 </td>
                 <td>
                     <div class="name-b-column"><p>{{game.title}}</p></div>

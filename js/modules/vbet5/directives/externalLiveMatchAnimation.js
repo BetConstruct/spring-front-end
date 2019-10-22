@@ -124,9 +124,9 @@ VBET5.directive('externalLiveMatchAnimation', ['$rootScope', 'Config', 'Language
                     }
                     settings.configs.onTrack = function (a, b) { // todo betradar events trachking
                         if (a === 'data_change' && b && b.matchId) {
-                            console.info('betradar-success ', 'match_id-', b.matchId);
+                            console.log('betradar-success ', 'match_id-', b.matchId);
                         } else {
-                            console.info('betradar-error', a, b);
+                            console.log('betradar-error', a, b);
                         }
                         // $scope.externalAnimation.loading = false;
                     };

@@ -88,6 +88,8 @@ VBET5.controller('euro88PaymentsCtrl', ['$scope', '$rootScope', '$sce', '$filter
                                 $scope[command].msg = $sce.trustAsHtml($scope[command].msg);
                                 if ($scope[command].dateUTC) {
                                     $scope[command].dateLocale = Moment.moment(Moment.moment.utc($scope[command].dateUTC).toDate()).format('YYYY/MM/DD HH:mm:ss');
+                                    // for the feature we should instead use formatDate filter to handle time
+                                    //console.log($filter('formatDate')($scope[command].dateUTC, 'fullDate', null, $rootScope.env.timeFormat));
                                 }
                                 break;
                             case 'ConfirmPaymentMessage':

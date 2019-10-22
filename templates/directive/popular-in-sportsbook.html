@@ -14,10 +14,11 @@
                 <div class="games-list-nav-v3">
                     <div class="games-list-mini-view-v3">
                         <div class="competition-view-v-3">
-                            <div class="competition-title-v3 ng-scope ng-isolate-scope" ng-repeat="item in popular.data track by item.id" ng-class="{active: item.id == $root.$location.search()[type] }">
-                                <label title="{{ ::item.region.name }}" ng-click="selectPopular(type, item)">
+                            <div class="competition-title-v3" ng-repeat="item in popular.data track by item.id" ng-class="{active: item.id == $root.$location.search()[searchField] }">
+                                <label title="{{ ::getCompetitionTitle(item) }}" ng-click="selectPopular(type, item)">
                                     <span class="sport-icon-v3 favorite-competitions-icon-t {{item.sport.alias}}"></span>
                                     <span ng-bind="::(item.name || item.team1_name + ' - ' + item.team2_name)"></span>
+                                    <span class="pg-start-time">{{item.start_ts|formatDate:'HH:mm'}}</span>
                                     <div class="flag-view-v3 flag-icon flag-{{::item.region.alias | removeUselessSymbolsByRegexp: '[,\' ]+': 'g': 'true'}}"></div>
                                 </label>
                             </div>

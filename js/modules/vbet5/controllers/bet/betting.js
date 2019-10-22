@@ -7,7 +7,7 @@
  * @description
  * Explorer controller
  */
-BettingModule.controller('betSlipController', ['$q', '$scope', '$rootScope', '$filter', 'Config', 'Zergling', 'Storage', 'Translator', '$location', '$route', '$window', '$injector', 'analytics', 'DomHelper', 'Utils', 'partner', 'TimeoutWrapper', 'UserAgent', '$timeout', 'BetService', 'BetIntelligent', function ($q, $scope, $rootScope, $filter, Config, Zergling, Storage, Translator, $location, $route, $window, $injector, analytics, DomHelper, Utils, partner, TimeoutWrapper, UserAgent, $timeout, BetService, BetIntelligent) {
+BettingModule.controller('betSlipController', ['$q', '$scope', '$rootScope', '$filter', 'Config', 'Zergling', 'Storage', 'Translator', '$location', '$route', '$window', '$injector', 'analytics', 'DomHelper', 'Utils', 'partner', 'TimeoutWrapper', 'UserAgent', '$timeout', 'BetService', 'BetIntelligent', 'Moment', function ($q, $scope, $rootScope, $filter, Config, Zergling, Storage, Translator, $location, $route, $window, $injector, analytics, DomHelper, Utils, partner, TimeoutWrapper, UserAgent, $timeout, BetService, BetIntelligent, Moment) {
     'use strict';
 
     TimeoutWrapper = TimeoutWrapper($scope);
@@ -31,7 +31,10 @@ BettingModule.controller('betSlipController', ['$q', '$scope', '$rootScope', '$f
         'indo': 5
     };
 
-    $rootScope.offersCount = 0;
+    $rootScope.superbetIds = {
+        counterOffers : [],
+        superBets : []
+    };
 
     $scope.betConf = Config.betting;
     $scope.enableSigninRegisterLinks =  Config.partner.enableSigninRegisterCallbacks;
@@ -53,9 +56,6 @@ BettingModule.controller('betSlipController', ['$q', '$scope', '$rootScope', '$f
         enabled: false
     };
     $scope.counterOffer = {
-        enabled: false
-    };
-    $scope.bonusBet = {
         enabled: false
     };
 
@@ -250,28 +250,10 @@ BettingModule.controller('betSlipController', ['$q', '$scope', '$rootScope', '$f
         }
     }
 
-    $scope.$watch('betSlip', betEventsToRootScope, true);
+    $scope.$watch('betSlip.bets', betEventsToRootScope, true);
     $scope.$watch('shared.acceptPriceChanges', function () {
         Storage.set('autoAcceptSettings', $scope.shared.acceptPriceChanges);
         $scope.thereIsPriceChange();
-    }, true);
-    $scope.$watch('env.authorized', function (newValue, oldValue) {
-        if (oldValue && !newValue) {
-            $scope.clearBetslip();
-            $scope.taxOnStake.enabled = false;
-        } else if (newValue) {
-            if($rootScope.profile) {
-                $scope.taxOnStake.enabled = $rootScope.profile.is_tax_applicable && $rootScope.partnerConfig && $rootScope.partnerConfig.tax_percent && $rootScope.partnerConfig.tax_type === 4;
-            } else {
-                var profileWatcherPromise = $scope.$watch('profile', function (newValue) {
-                    if (newValue) {
-                        profileWatcherPromise();
-                        $scope.taxOnStake.enabled = $rootScope.profile.is_tax_applicable && $rootScope.partnerConfig && $rootScope.partnerConfig.tax_percent && $rootScope.partnerConfig.tax_type === 4;
-                    }
-                });
-            }
-
-        }
     }, true);
 
     if ($rootScope.conf.sportsLayout === 'combo') { /*implemented for obly combo view*/
@@ -405,7 +387,6 @@ BettingModule.controller('betSlipController', ['$q', '$scope', '$rootScope', '$f
      * @param {object} data data from swarm
      */
     function updateEventPrices(data) {
-        console.log('betslip update:', data);
         $scope.betSlip.thereAreDeletedEvents = false;
         $scope.betSlip.thereAreEventBaseChanges = false;
         angular.forEach($scope.betSlip.bets, function (b) {
@@ -428,6 +409,7 @@ BettingModule.controller('betSlipController', ['$q', '$scope', '$rootScope', '$f
                             b.marketName = $filter('improveName')(market.name, game);
                             b.team1Name = game.team1_name;
                             b.team2Name = game.team2_name;
+                            b.gamePointer.isLive = game.is_live;
                             b.marketHomeScore = market.home_score;
                             b.marketAwayScore = market.away_score;
                             b.eventType1 = event.type_1;
@@ -523,9 +505,9 @@ BettingModule.controller('betSlipController', ['$q', '$scope', '$rootScope', '$f
         var request = {
             'source': 'betting',
             'what': {
-                'game': ['id', 'is_blocked', 'team1_name', 'team2_name', 'team1_reg_name', 'team2_reg_name'],
+                'game': ['id', 'is_blocked', 'team1_name', 'team2_name', 'team1_reg_name', 'team2_reg_name', 'is_live'],
                 'market': ['base', 'type', 'name', 'home_score', 'away_score', 'cashout'],
-                'event': ['id', 'price', 'type', 'type_1', 'name', 'base', 'base1', 'base2']
+                'event': ['id', 'price', 'type', 'type_1', 'name', 'base']
             },
             'where': {
                 'game': {
@@ -1010,7 +992,6 @@ BettingModule.controller('betSlipController', ['$q', '$scope', '$rootScope', '$f
                         price: data.event.price,
                         base: data.event.base !== undefined ? data.event.base : data.market.base,
                         baseInitial: data.event.base !== undefined ? data.event.base : data.market.base,
-                        eventBases: (data.event.base1 !== undefined && data.event.base2 !== undefined) ? [data.event.base1, data.event.base2] : null,
                         priceInitial: data.event.price,
                         betterPrice: calcBetterOdd (data.event.price),
                         marketName: $filter('improveName')(data.market.name, data.game),
@@ -1041,6 +1022,7 @@ BettingModule.controller('betSlipController', ['$q', '$scope', '$rootScope', '$f
                         team1Name: data.game.team1_name,
                         team2Name: data.game.team2_name,
                         expMinLen: data.game.express_min_len,
+                        start_ts: data.game.start_ts,
                         singleStake: '',
                         singlePosWin: 0,
                         conflicts: getBetConflicts(data),
@@ -1051,10 +1033,10 @@ BettingModule.controller('betSlipController', ['$q', '$scope', '$rootScope', '$f
                             'competition': data.game.competition.id,
                             'type': (data.game.isVirtual || data.game.type === 2 ? 0 : data.game.type).toString(),
                             'region': data.game.region.id,
-                            'alias': data.game.sport.alias
+                            'alias': data.game.sport.alias,
+                            'isLive': data.game.is_live
                         }
                     };
-
                     if ($location.path() === '/esports/') { eventInfo.gamePointer.path = '/esports'; } // Only used for navigation in eSports view for BBIN
                     if (data.game.sport.alias === 'HorseRacing' || data.game.sport.alias === 'SISGreyhound') {
                         eventInfo.start_ts = data.game.start_ts;
@@ -1495,6 +1477,8 @@ BettingModule.controller('betSlipController', ['$q', '$scope', '$rootScope', '$f
 
 
     function loginActions() {
+        $scope.taxOnStake.enabled = $rootScope.profile.is_tax_applicable && $rootScope.partnerConfig && $rootScope.partnerConfig.tax_percent && $rootScope.partnerConfig.tax_type === 4;
+
         checkFreeBet();
         getFavoriteStakes();
         if (Config.main.enableBetBooking) {
@@ -1503,6 +1487,9 @@ BettingModule.controller('betSlipController', ['$q', '$scope', '$rootScope', '$f
     }
 
     function logoutActions() {
+        $scope.clearBetslip();
+        $scope.taxOnStake.enabled = false;
+
         clearFreeBet('freeBet');
         clearFreeBet('profitBoost');
         getFavoriteStakes();
@@ -1511,13 +1498,8 @@ BettingModule.controller('betSlipController', ['$q', '$scope', '$rootScope', '$f
         }
     }
 
-    $scope.$on('login.loggedIn', loginActions);
-    $scope.$on('loggedIn',function () {// Restore login
-        checkFreeBet();
-        getFavoriteStakes();
-    });
+    $scope.$on('loggedIn', loginActions);
     $scope.$on('login.loggedOut', logoutActions);
-
 
     /**
      * @ngdoc method
@@ -1852,9 +1834,12 @@ BettingModule.controller('betSlipController', ['$q', '$scope', '$rootScope', '$f
                         if (Config.main.enableBetPrint) {
                             $scope.betPrint.id  = result.details.bet_id;
                         }
+
                         if (request.mode == 3) {
-                            $rootScope.offersCount += 1;
+                            $rootScope.superbetIds.counterOffers.push(result.details.bet_id);
                         }
+
+
 
                         if($rootScope.editBet) {
                             cancelEditBet();
@@ -1883,6 +1868,10 @@ BettingModule.controller('betSlipController', ['$q', '$scope', '$rootScope', '$f
 
                         $scope.isBetAccepted = true;
                         $scope.isSuperbet = result.details.is_superbet;
+
+                        if (request.mode == -1 && $scope.isSuperbet) {
+                            $rootScope.superbetIds.superBets.push(result.details.bet_id);
+                        }
 
                         var hasCounterOffer = false;
                         betAcceptedWatcherPromise = TimeoutWrapper(function () { $scope.isBetAccepted = false; }, Config.betting.betAcceptedMessageTime);
@@ -2266,6 +2255,58 @@ BettingModule.controller('betSlipController', ['$q', '$scope', '$rootScope', '$f
 
     /**
      * @ngdoc method
+     * @name calculateTax
+     * @methodOf betting.controller:betSlipController
+     * @description Calculate tax for given possible win and stake
+     * @param {Number} possibleWin
+     * @param {Number} stake
+     */
+    var calculateTax =  Utils.memoize(function calculateTax(possibleWin, stake) {
+        var tax = 0;
+        var taxPercent = $rootScope.partnerConfig.tax_percent;
+        if ($rootScope.partnerConfig.tax_type === 20 && taxPercent) {
+            tax =  possibleWin  * (taxPercent / 100);
+        } else if ({1: 1, 2:1}[$rootScope.partnerConfig.tax_type]) {
+            var ranges = $rootScope.partnerConfig.tax_amount_ranges;
+            var netWin = possibleWin - ($rootScope.partnerConfig.tax_type === 1? stake : 0);
+            var isContains = false;
+            if (ranges && ranges.length) {
+                for (var i = ranges.length; i--;) {
+                    var range = ranges[i];
+                    if (netWin > range.from && netWin <= range.to) {
+                        isContains = true;
+                        break;
+                    }
+                }
+            }
+            if (!isContains) {
+                tax =  netWin * (taxPercent / 100);
+            } else {
+                var length = ranges.length;
+                var remain = netWin;
+                for (var i = 0; i < length; ++i) {
+                    var range = ranges[i];
+                    if (remain > range.to) {
+                        tax += range.to * (range.percent / 100);
+                        remain -= range.to;
+                    } else {
+                        tax += remain * (range.percent / 100);
+                        break;
+                    }
+
+                }
+            }
+        }
+        return tax;
+    });
+
+    function calcBetPrice(price) {
+        price = convertFractionalPrice(price);
+        return  Config.main.decimalFormatRemove3Digit ? (mathCuttingFunction(price * 10 * 10) / 100) : price;
+    }
+
+    /**
+     * @ngdoc method
      * @name posWin
      * @methodOf betting.controller:betSlipController
      * @description calculate possible Win for current bets
@@ -2278,6 +2319,7 @@ BettingModule.controller('betSlipController', ['$q', '$scope', '$rootScope', '$f
         var bankerTotalPrice = 1;
         var tmpBankerBetsCount = 0;
         var sameGameIds = {};
+        var isCalculateTax = $rootScope.partnerConfig && ($rootScope.partnerConfig.tax_percent || ($rootScope.partnerConfig.tax_amount_ranges && $rootScope.partnerConfig.tax_amount_ranges.length)) && {1:1, 2:1, 20:1}[$rootScope.partnerConfig.tax_type];
         $scope.betSlip.maxOddsWarningAmount = false;
         $scope.betSlip.hasConflicts = false;
         $scope.betSlip.eachWayPossible = true;
@@ -2300,10 +2342,6 @@ BettingModule.controller('betSlipController', ['$q', '$scope', '$rootScope', '$f
             $scope.quickBetStakeSelector = $scope.quickBetStakeSelector || Config.betting.quickBet.quickBetStakeCoeffs[$rootScope.currency.name];
         }
 
-        if ($scope.betSlip.sysValArray === undefined || $scope.betSlip.sysValArray.length !== ($scope.betSlip.bets.length - 2)) {
-            $scope.betSlip.sysValArray = [];
-        }
-
         if ($scope.betSlip.type.value === 1 && !$scope.quickBet.enabled) {
             $scope.betSlip.totalStake = 0;
         } else if ($rootScope.editBet && $rootScope.editBet.edit) {
@@ -2315,12 +2353,6 @@ BettingModule.controller('betSlipController', ['$q', '$scope', '$rootScope', '$f
             $scope.betSlip.totalStake = parseFloat($scope.betSlip.stake) || 0;
         }
 
-        function calcBetPrice(price) {
-            price = convertFractionalPrice(price);
-            var betPrice = Config.main.decimalFormatRemove3Digit ? (mathCuttingFunction(price * 10 * 10) / 100) : price;
-            totalOdd *= betPrice;
-            return betPrice;
-        }
         angular.forEach($scope.betSlip.bets, function (bet, i) {
             switch ($scope.betSlip.type.value) {
                 case 1://single
@@ -2349,16 +2381,22 @@ BettingModule.controller('betSlipController', ['$q', '$scope', '$rootScope', '$f
 
                         possibleWin += parseFloat(bet.singlePosWin);
                         $scope.betSlip.hasCounterOfferError = $scope.counterOffer.enabled && ($scope.betSlip.hasCounterOfferError || bet.singleStake < (($rootScope.profile.counter_offer_min_amount).toFixed($rootScope.currency && $rootScope.currency.rounding || 2)) * 1 || !bet.counterOffer || bet.counterOffer <= bet.price || Number(bet.counterOffer) > Number(bet.maxCounterOffer));
+                        if (isCalculateTax) { //Calculate only for tax_type 1 and 20
+                            bet.tax = calculateTax(bet.singlePosWin, bet.singleStake);
+                        }
                     } else {
                         bet.singlePosWin = 0;
                         if (bet.oddType === 'sp') {
                             $scope.betSlip.totalStake += (bet.singleStake || 0) * (bet.eachWay ? 2 : 1);
                         }
                     }
-                    $scope.betConf.fullCoverBetTypes.enabled && calcBetPrice(bet.price);
+                    if ($scope.betConf.fullCoverBetTypes.enabled) {
+                        totalOdd *= calcBetPrice(bet.price);
+                    }
                     break;
                 case 2: //express
                     var betPrice = calcBetPrice(bet.price);
+                    totalOdd *= betPrice;
                     ewOdd *= bet.ewAllowed && bet.ewCoeff ? mathCuttingFunction(((betPrice - 1) / bet.ewCoeff + 1) * 10 * 10) / 100 : betPrice;
                     break;
                 case 3: //system
@@ -2634,13 +2672,13 @@ BettingModule.controller('betSlipController', ['$q', '$scope', '$rootScope', '$f
         }
 
          finalWinValue = parseFloat(setMaxWinLimit(mathCuttingFunction(possibleWin * 10 * 10 || 0) / 100));
-        if ($rootScope.partnerConfig && $rootScope.partnerConfig.tax_percent && {1:1, 20:1}[$rootScope.partnerConfig.tax_type]) {// 1 - tax on profit ; 4 - tax on stake, 20 - tax on profit as fictive
-            if ($scope.betSlip.expBonus) {
-                $scope.possibleWinBonusTax = (finalWinValue + $scope.betSlip.expBonus - ($rootScope.partnerConfig.tax_type === 1 ? $scope.betSlip.stake : 0)) * ($rootScope.partnerConfig.tax_percent / 100);
-                $scope.finalWinBonusTaxValue = $scope.totalPossibleWin - ($rootScope.partnerConfig.tax_type === 1 ? $scope.possibleWinBonusTax : 0);
+        if (isCalculateTax) { // calculate only for tax_type 1,2,20
+            if ($scope.betSlip.expBonus && $scope.betSlip.type.value === 2) { //checking is express bet
+                $scope.possibleWinBonusTax = calculateTax(finalWinValue + $scope.betSlip.expBonus, $scope.betSlip.stake);
+                $scope.finalWinBonusTaxValue = $scope.totalPossibleWin - ({1: 1, 2: 1}[$rootScope.partnerConfig.tax_type] ? $scope.possibleWinBonusTax : 0);
             } else {
-                $scope.possibleWinTax = (finalWinValue - ($rootScope.partnerConfig.tax_type === 1 ? $scope.betSlip.stake : 0)) * ($rootScope.partnerConfig.tax_percent / 100);
-                $scope.finalWinTaxValue = finalWinValue - ($rootScope.partnerConfig.tax_type === 1 ? $scope.possibleWinTax : 0);
+                $scope.possibleWinTax = calculateTax(finalWinValue, $scope.betSlip.stake);
+                $scope.finalWinTaxValue = finalWinValue - ({1: 1, 2: 1}[$rootScope.partnerConfig.tax_type] ? $scope.possibleWinTax : 0);
             }
         }
         return finalWinValue;
@@ -2760,25 +2798,24 @@ BettingModule.controller('betSlipController', ['$q', '$scope', '$rootScope', '$f
      * @param {Object} gamePointer game object
      */
     $scope.gotoBetGame = function gotoBetGame(gamePointer) {
-        $location.search({
-            'type': gamePointer.type,
+        var search = {
+            'type': gamePointer.isLive,
             'sport': gamePointer.sport.id !== undefined ? gamePointer.sport.id : gamePointer.sport,
             'region': gamePointer.region,
             'competition': gamePointer.competition,
             'game': gamePointer.game,
             'vsport': gamePointer.vsport
-        });
+        };
 
+        $location.search(search);
         if (gamePointer.alias && Config.main.sportsLayout === 'Combo' && gamePointer.sport !== - 3) {
             $location.search('alias', gamePointer.alias);
         }
-
         var getVirtualPath = function () {
             var virtualsPath = '/virtualsports';
             angular.forEach(Config.main.virtualSportIds, function (value, key) {
                 value.indexOf(gamePointer.vsport) !== -1 && (virtualsPath = key);
             });
-
             return virtualsPath;
         };
 
@@ -2826,7 +2863,7 @@ BettingModule.controller('betSlipController', ['$q', '$scope', '$rootScope', '$f
         var baseFieldName = initial ? 'baseInitial' : 'base';
         var prefix = (bet.marketType && bet.marketType.substr(-8) === 'Handicap' && bet[baseFieldName] > 0 ? '+' : '');
 
-        return prefix + (bet.eventBases && !Config.main.displayEventsMainBase ? bet.eventBases.join("-") : bet[baseFieldName]);
+        return prefix + bet[baseFieldName];
     };
 
     $scope.goToTop = DomHelper.goToTop;
@@ -2854,7 +2891,8 @@ BettingModule.controller('betSlipController', ['$q', '$scope', '$rootScope', '$f
             'finalWinTaxValue': $scope.finalWinTaxValue,
             'totalPossibleWin': $scope.totalPossibleWin,
             'possibleWinBonusTax': $scope.possibleWinBonusTax,
-            'finalWinBonusTaxValue': $scope.finalWinBonusTaxValue
+            'finalWinBonusTaxValue': $scope.finalWinBonusTaxValue,
+            'date': Moment.get().unix()
         };
         if ($scope.expressBonus.enabled) {
             betData['enableExpressBonus'] = true;
@@ -2936,7 +2974,6 @@ BettingModule.controller('betSlipController', ['$q', '$scope', '$rootScope', '$f
             $scope.setBetSlipType(1, true);
         } else {
             $scope.betSlip.hasCounterOfferError = false;
-            $scope.shared.acceptPriceChanges = '0';
         }
     };
 
@@ -2947,7 +2984,6 @@ BettingModule.controller('betSlipController', ['$q', '$scope', '$rootScope', '$f
      */
     $scope.togglesSuperbetSelector = function togglesSuperbetSelector () {
         if (!$rootScope.profile.is_super_bet_available || !$scope.betSlip.superbet.possible) return;
-
         $scope.betSlip.superbet.selector = !$scope.betSlip.superbet.selector;
         if ($scope.betSlip.superbet.selector) {
             $scope.betSlip.mode = 'betting'; // switching to the betting mot
@@ -3251,7 +3287,7 @@ BettingModule.controller('betSlipController', ['$q', '$scope', '$rootScope', '$f
         var min_bet = parseFloat($rootScope.partnerConfig && $rootScope.partnerConfig.min_bet_stakes && $rootScope.partnerConfig.min_bet_stakes[currency]) || 0.1;
 
         $scope.favoriteStake = {
-            values: [10, 50, 100],
+            values: [],
             editMode: false
         };
 
@@ -3260,8 +3296,8 @@ BettingModule.controller('betSlipController', ['$q', '$scope', '$rootScope', '$f
         if (storage_stakes) {
             $scope.favoriteStake.values = storage_stakes;
         } else {
-            for (var i = 0; i < 3; i++) {
-                $scope.favoriteStake.values[i] = ($scope.favoriteStake.values[i] * min_bet);
+            for (var i = 0; i < $scope.betConf.favoriteStakesMultipliers.length; i++) {
+                $scope.favoriteStake.values[i] = ($scope.betConf.favoriteStakesMultipliers[i] * min_bet);
             }
         }
     }

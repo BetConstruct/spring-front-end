@@ -64,7 +64,7 @@
                 <h3 trans>All Bets</h3>
                 <div class="history-list">
                     <ul ng-repeat="bet in betHistory">
-                        <li class="list-date">{{bet.bet_date|formatDate:'full'}}</li>
+                        <li class="list-date">{{bet.bet_date|formatDate:'full':null:$root.env.timeFormat}}</li>
                         <li class="chempionship-history"><span>{{ bet.game_name }}</span></li>
                         <li class="history-name-team">
                             <div class="mini-express-b">
@@ -87,7 +87,7 @@
                             <span class="unsettled-rezult" ng-show="bet.status == 2" trans>returned</span>
                             <div ng-show="bet.status == 1 && bet.win_amount > 0"><span class="won-rezult" trans>Won</span> <p>{{bet.currency|currency}} {{bet.win_amount}}</p></div>
                         </li>
-                        <li class="list-date">{{bet.win_date|formatDate:'full'}}</li>
+                        <li class="list-date">{{bet.win_date|formatDate:'full':null:$root.env.timeFormat}}</li>
                     </ul>
 
                 </div>

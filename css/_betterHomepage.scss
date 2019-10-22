@@ -200,7 +200,8 @@ body .better-homepage {
     overflow: hidden;
     z-index: 30;
     &.last-minutes-widget-b {
-      height: calc(100% - 5px);
+     // height: calc(100% - 5px);
+      height: 100%;
     }
   }
 }

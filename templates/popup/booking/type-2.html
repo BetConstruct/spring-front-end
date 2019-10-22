@@ -1,0 +1,44 @@
+<div class="print-info-b">
+    <table class="booking-bet-print-table">
+        <tr>
+            <td>
+                <div class="logo-mini-print"><img ng-src="./skins/{{$root.conf.skin}}/images/logo.png" onload="print()">
+                </div>
+            </td>
+            <td>
+                <div class="all-bet-inform">
+                    <ul>
+                        <li ng-if="betData.betType===1" trans>Single</li>
+                        <li ng-if="betData.betType===2" trans>Express</li>
+                        <li ng-if="betData.betType===3"><span trans>System</span>
+                            {{betData.sysVal}}/{{betData.bets.length}}
+                        </li>
+                        <li ng-if="betData.betType===4" trans>Chain</li>
+                        <li>Bet ID: {{betData.bookId}}</li>
+                    </ul>
+                </div>
+            </td>
+            <td>
+                <div barcode-generator="{{betData.bookIds[0]}}" class="qr-code-b"
+                     ng-if="betData.bookIds.length === 1"></div>
+            </td>
+        </tr>
+        <!--        <tr>
+                    <td colspan="3" ng-if="betData.amount">
+                        <h1>{{betData.amount}}</h1>
+                    </td>
+                </tr>-->
+
+        <tr ng-repeat="betEvent in betData.bets">
+            <td colspan="3">
+                <div class="info-separator-b">
+                    <ul>
+                        <li>{{betEvent.title}}</li>
+                        <li><span trans>Pick: </span> {{betEvent.marketName}} / {{betEvent.pick}} <span
+                                ng-if="betEvent.isLive">(LIVE)</span></li>
+                    </ul>
+                </div>
+            </td>
+        </tr>
+    </table>
+</div>

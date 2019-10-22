@@ -30,7 +30,7 @@
                     </ul>
                     <ul ng-repeat="balance in balanceHistory">
                         <li class="transactions-list-date">
-                            <span>{{balance.date_time|formatDate:'full'}} </span>
+                            <span>{{balance.date_time|formatDate:'full':null:$root.env.timeFormat}} </span>
                             <p ng-show="balance.bet_id"><span trans>id:&nbsp;</span> <span>{{balance.bet_id}}</span></p>
                         </li>
 

@@ -14,7 +14,7 @@ var VBET5 = angular.module('vbet5', ['vbet5.betting', 'ngRoute', 'ngAnimate', 'n
  *
  * Betting module
  */
-var BettingModule = angular.module('vbet5.betting', ['ngMap']);
+var BettingModule = angular.module('vbet5.betting', []); // in case if we should use google maps, then need to add ['ngMap'] and
 
 /**
  * @name vbet5
@@ -23,19 +23,29 @@ var BettingModule = angular.module('vbet5.betting', ['ngMap']);
  * makes Config.main and Config.env available at root scope
  *
  */
-angular.module('vbet5').run(['$rootScope', '$location', '$routeParams', '$route', '$timeout', '$window', '$cookies', 'Utils', 'Config', 'SkinConfig', 'Storage', 'analytics', 'UserAgent', 'DomHelper', 'liveChat', 'partner', 'RegConfig', 'RuntimeConfig', 'Zergling', 'Tracking', 'Moment', 'Translator','facebookPixel', 'everCookie', 'Geoip', 'RoutesValidity', 'RecaptchaV3',
-    function ($rootScope, $location, $routeParams, $route, $timeout, $window, $cookies, Utils, Config, SkinConfig, Storage, analytics, UserAgent, DomHelper, liveChat, partner, RegConfig, RuntimeConfig, Zergling, Tracking, Moment, Translator,facebookPixel, everCookie, Geoip, RoutesValidity, RecaptchaV3) {
+angular.module('vbet5').run(['$rootScope', '$location', '$routeParams', '$route', '$timeout', '$window', '$cookies', 'Utils', 'Config', 'SkinConfig', 'Storage', 'analytics', 'UserAgent', 'DomHelper', 'liveChat', 'partner', 'RegConfig', 'RuntimeConfig', 'Zergling', 'Tracking', 'Moment', 'Translator','facebookPixel', 'everCookie', 'Geoip', 'RoutesValidity',
+    function ($rootScope, $location, $routeParams, $route, $timeout, $window, $cookies, Utils, Config, SkinConfig, Storage, analytics, UserAgent, DomHelper, liveChat, partner, RegConfig, RuntimeConfig, Zergling, Tracking, Moment, Translator,facebookPixel, everCookie, Geoip, RoutesValidity) {
         'use strict';
 
         $rootScope.availableModules = availableModules;
         (function manageConfigs() {
-            if (SkinConfig.regConfig) {
-                Utils.MergeRecursive(RegConfig, SkinConfig.regConfig);
-            }
+
+
             if (RuntimeConfig && !Utils.isObjectEmpty(RuntimeConfig)) {
                 Utils.MergeRecursive(Config, RuntimeConfig.SkinConfig);
             } else {
                 Utils.MergeRecursive(Config, SkinConfig);
+            }
+
+            if (SkinConfig.regConfig ) {
+                if (Config.main.registration.simplified) {
+                    for (var member in RegConfig){
+                        if (RegConfig.hasOwnProperty(member)) {
+                            delete RegConfig[member];
+                        }
+                    }
+                }
+                Utils.MergeRecursive(RegConfig, SkinConfig.regConfig);
             }
         })();
 
@@ -57,6 +67,10 @@ angular.module('vbet5').run(['$rootScope', '$location', '$routeParams', '$route'
         Zergling.init();
 
         var lang = $location.search().lang || $cookies.get('lang') || Storage.get('lang') || (Config.main.getBrowserLanguage && Utils.getBrowserLanguage());
+
+        if(lang === 'fra'){ // todo SDC-44551
+            lang = 'fre';
+        }
 
         if (!lang && Config.main.transLangByDomain && Config.main.transLangByDomain[$location.host()]) {
             lang = Config.main.transLangByDomain[$location.host()];
@@ -104,6 +118,11 @@ angular.module('vbet5').run(['$rootScope', '$location', '$routeParams', '$route'
                 }
             }
         }
+
+        if (Config.main.logo.imageByLang && Config.main.logo.imageByLang[Config.env.lang]) {
+            Config.main.logo.image = Config.main.logo.imageByLang[Config.env.lang]
+        }
+
         $rootScope.domainClass = $window.location.hostname.replace(/[\.\-]/g, '');
 
         if (Config.main.liveChat) {
@@ -257,7 +276,6 @@ angular.module('vbet5').run(['$rootScope', '$location', '$routeParams', '$route'
                 Storage.remove('favouriteMarketsTypes');
                 Storage.remove('betslip');
             }
-            RecaptchaV3.init();
             Config.main.sportsLayout === 'euro2016' && (Config.main.sportsLayout = 'classic'); //Todo remove after changing all configs
         })();
     }]);

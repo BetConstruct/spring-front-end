@@ -18,6 +18,17 @@
                 <div ng-if="item.dataType" ng-switch="item.dataType">
                     <div class="casino-games-list-h" ng-switch-when="casinoPromotedGames" casino-promoted-games page-category="home" limit="10"></div>
                     <jackpot-slider type="casino" ng-style="{'height': (item.height || item.mediaHeight), 'max-height': item.maxHeight}" class="casino-games-list-h" load-jackpot-data="true" ng-switch-when="casinoJackpotSlider"></jackpot-slider>
+                    <div ng-switch-when="casinoJackpotAndTournaments">
+                        <casino-jackpot-and-tournaments load-jackpot-data="true" ></casino-jackpot-and-tournaments>
+                    </div>
+                    <div ng-switch-when="casinoBiggestWinners">
+                        <casino-biggest-winners  title="Last Winners" template-url="templates/directive/casino-biggest-winners-v2.html" limit="item.limit"  class="winners-list" ></casino-biggest-winners>
+
+                    </div>
+
+                </div>
+                <div ng-if="item.iframeUrl">
+                    <iframe ng-src="{{(item.iframeUrl + '?language=' + $root.env.lang)|url}}" width="100%" height="100%" frameborder="0" scrolling="no" allowfullscreen></iframe>
                 </div>
             </div>
         </div>

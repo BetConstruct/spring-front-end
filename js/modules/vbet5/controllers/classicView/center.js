@@ -71,12 +71,9 @@ angular.module('vbet5.betting').controller('classicViewCenterController', ['$roo
                             $scope.expandedMarkets[$scope.openGame.id][marketsPack[key][0].name] = false;
                         }
                     }
-
                     index++;
-
                 }
             }
-
     };
 
     /**
@@ -188,8 +185,6 @@ angular.module('vbet5.betting').controller('classicViewCenterController', ['$roo
                         }
 
                         streamService.monitoring($scope, 'openGame', 'pinnedGames', 'enlargedGame');
-
-                        GameInfo.updateOpenGameTextInfo($scope.openGame);
 
                         angular.forEach(game.market, function (market) {
                             if (!market.group_id && !market.second_group_id) {
@@ -535,6 +530,7 @@ angular.module('vbet5.betting').controller('classicViewCenterController', ['$roo
     //initial values for ordering of horse_cards
     $scope.raceCardsPredicate = 'cloth';
     $scope.raceCardsReverce = false;
+    $scope.raceCardsPredicateDog = 'order';
 
     /**
      * @ngdoc method
@@ -545,14 +541,17 @@ angular.module('vbet5.betting').controller('classicViewCenterController', ['$roo
      * @param {String} orderItem orderItem string: value of predicate
      */
     $scope.raceCardsColumnClick = function raceCardsColumnClick(orderItem) {
-        if (orderItem === 'price' && !$scope.openGame.info.race.horseStats[0].event.price) {
+        if (orderItem === 'price'
+           && $scope.openGame.info.race
+           && !$scope.openGame.info.race.horseStats[0].event.price) {
             return;
         }
-        if ($scope.raceCardsPredicate === orderItem) {
+        if ($scope.raceCardsPredicate === orderItem || $scope.raceCardsPredicateDog === orderItem) {
             $scope.raceCardsReverce = !$scope.raceCardsReverce;
         } else {
             $scope.raceCardsReverce = false;
             $scope.raceCardsPredicate = orderItem;
+            $scope.raceCardsPredicateDog = orderItem;
         }
     };
 
@@ -562,14 +561,18 @@ angular.module('vbet5.betting').controller('classicViewCenterController', ['$roo
      * @methodOf vbet5.controller:classicViewCenterController
      * @description to be used by the comparator to determine the order of  raceCards elements
      *
-     * @param {Object} horseStat horseStat object
+     * @param {Object} state object
      */
-    $scope.raceCardsOrder = function raceCardsOrder(horseStat) {
+    $scope.raceCardsOrder = function raceCardsOrder(state) {
         switch ($scope.raceCardsPredicate) {
-        case 'cloth':
-            return parseInt(horseStat.cloth, 10);
-        case 'price':
-            return parseFloat(horseStat.event.price);
+            case 'cloth':
+                return parseInt(state.cloth, 10);
+            case 'price':
+                return parseFloat(state.event.price);
+            case 'odds':
+                return parseFloat(state.price);
+            case 'order':
+                return parseFloat(state.order);
         }
 
         return -1;
@@ -729,17 +732,10 @@ angular.module('vbet5.betting').controller('classicViewCenterController', ['$roo
         markets.sort(function (a, b) {
             return a[0].order - b[0].order;
         });
-        var marketsLength = markets.length;
-        for(var i = 0; i < marketsLength; ++i){
-            var marketGroup = markets[i];
-            marketGroup.sort(Utils.orderSorting);
-            var marketGroupLength = marketGroup.length;
-            for(var j = 0; j < marketGroupLength; ++j) {
-                var market = marketGroup[j];
-                var sortField = market.display_key == 'OUTRIGHT' ? 'price' : 'order';
-                market.events.sort(function sortEvents(event1, event2) {
-                    return event1[sortField] - event2[sortField];
-                })
+        for (var i = markets.length; i--;) {
+            markets[i].sort(Utils.orderSorting);
+            for (var j = markets[i].length; j--;) {
+                markets[i][j].events.sort(Utils.orderSorting);
             }
         }
     }

@@ -9,10 +9,9 @@
             <span ng-class="{'EW-bh-indicator': bet.each_way}" ng-bind="betTypes[bet.type]|translate"></span>
             <span ng-if="bet.type === 3"> {{::bet.system_min_count}}/{{::bet.events.length}}</span>
             <i class="edit-bets-icon"
-               ng-class="{'disabled': bet.cash_out < minCashoutValue}"
                ng-show="!betConf.fullCoverBetTypes.enabled && bet.cash_out && (bet.type == 2 || bet.type == 1)  && !$root.editBet.edit"
                ng-click="$event.stopPropagation(); editBet(bet);"
-               title="{{ (bet.cash_out < minCashoutValue ? 'Editing isn\'t possible as Min bet amount isn\'t reached.' : 'Editing functionality is available for this bet.') | translate }}">
+               title="{{ ('Editing functionality is available for this bet.') | translate }}">
             </i>
         </p>
         <div class="open-bets-time-id">
@@ -64,11 +63,12 @@
         <div class="open-bets-possible-wrapper">
             <p class="total-poswin" ng-show="!taxOnStake.enabled">
                 <span trans>Stake:</span>
-                <span>{{::bet.amount | number:$root.conf.balanceFractionSize}} {{$root.profile.currency_name|currency}}</span>
+                <span>{{::bet.remaining_stake | number:$root.conf.balanceFractionSize}} {{$root.profile.currency_name|currency}}</span>
             </p>
             <p class="total-poswin" ng-show="!taxOnStake.enabled">
                 <span trans>Possible win:</span>
-                <span>{{::bet.possible_win | number:$root.conf.balanceFractionSize}} {{$root.profile.currency_name|currency}}</span>
+                <span ng-if="bet.possible_win !== -1">{{::bet.possible_win | number:$root.conf.balanceFractionSize}} {{$root.profile.currency_name|currency}}</span>
+                <span ng-if="bet.possible_win === -1" trans>N/A</span>
             </p>
         </div>
     </div>

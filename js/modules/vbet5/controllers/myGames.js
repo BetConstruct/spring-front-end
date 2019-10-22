@@ -8,7 +8,7 @@
  *  Games ids' list is kept in $rootScope.myGames
  *  and is syncronized with local storage on every update(adding or removing a game)
  */
-VBET5.controller('myGamesCtrl', ['$scope', '$rootScope', '$location', '$route', 'Utils', 'Storage', 'ConnectionService', 'Zergling', 'Config', 'GameInfo', '$cookies', '$window', 'analytics',  function ($scope, $rootScope, $location, $route, Utils, Storage, ConnectionService, Zergling, Config, GameInfo, $cookies, $window, analytics) {
+VBET5.controller('myGamesCtrl', ['$scope', '$rootScope', '$location', '$route', 'Utils', 'Storage', 'ConnectionService', 'Zergling', 'Config', 'GameInfo', '$cookies', '$window', 'analytics', function ($scope, $rootScope, $location, $route, Utils, Storage, ConnectionService, Zergling, Config, GameInfo, $cookies, $window, analytics) {
     'use strict';
 
     $scope.myGamesloaded = false;
@@ -53,7 +53,6 @@ VBET5.controller('myGamesCtrl', ['$scope', '$rootScope', '$location', '$route', 
      * @param {Object} data games data object
      */
     function updateMyGames(data) {
-        console.log('favorite games from swarm', data);
         var games = [];
         angular.forEach(data.sport, function (sport) {
             angular.forEach(sport.region, function (region) {
@@ -182,7 +181,7 @@ VBET5.controller('myGamesCtrl', ['$scope', '$rootScope', '$location', '$route', 
             },
             'where': {
                 'game': {
-                    'id': {'@in': $rootScope.myGames }
+                    'id': {'@in': $rootScope.myGames}
                 }
             }
         };
@@ -251,14 +250,13 @@ VBET5.controller('myGamesCtrl', ['$scope', '$rootScope', '$location', '$route', 
 
         Storage.set('myGames', $rootScope.myGames);
         analytics.gaSend('send', 'event', 'explorer', 'addToMyGames' + (Config.main.sportsLayout),  {'page': $location.path(), 'eventLabel': "addToMyGames"});
-        console.info('gaSend-','addToMyGames');
+        console.log('gaSend-', 'addToMyGames');
         Utils.checkAndSetCookie('myGames', $rootScope.myGames, Config.main.authSessionLifetime);
     });
 
     $rootScope.$on('game.removeGameFromMyGames', function (event, game) {
         $scope.removeGameFromSaved(game);
     });
-
 
 
     /**
@@ -286,6 +284,7 @@ VBET5.controller('myGamesCtrl', ['$scope', '$rootScope', '$location', '$route', 
         if (!$scope.myGamesloaded) {
             return;
         }
+
         /**
          * remove from $rootScope and local storage
          * @param game
@@ -321,10 +320,8 @@ VBET5.controller('myGamesCtrl', ['$scope', '$rootScope', '$location', '$route', 
         }
 
         analytics.gaSend('send', 'event', 'explorer', 'removeFromMyGames' + (Config.main.sportsLayout),  {'page': $location.path(), 'eventLabel': "removeFromMyGames"});
-        console.info('gaSend-','removeFromMyGames');
+        console.log('gaSend-','removeFromMyGames');
     };
-
-
 
 
     /**
@@ -339,7 +336,7 @@ VBET5.controller('myGamesCtrl', ['$scope', '$rootScope', '$location', '$route', 
         $rootScope.env.showSlider = false;
         var neededPath = Utils.getPathAccordintToAlias(game.sport.alias);
         var locationParams = {
-            'game' : game.id,
+            'game': game.id,
             'sport': Config.main.showFavoriteGamesInSportList && Config.main.sportsLayout === "modern" ? -1 : game.sport.id,
             'competition': game.competition.id,
             'type': game.type === 2 ? 0 : game.type,

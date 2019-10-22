@@ -29,6 +29,8 @@ angular.module('casino').controller('casinoTournamentsCtrl', ['$rootScope', '$sc
         casinoMultiviewValues.init($scope);
     };
 
+    $scope.loadingProcess = false;
+
     var gameId;
 
     $scope.hasTournaments = true;
@@ -379,18 +381,16 @@ angular.module('casino').controller('casinoTournamentsCtrl', ['$rootScope', '$sc
                     data.result.DetailsBannerImagesFiltered = filterImagesByLang(data.result.DetailsBannerImages);
                     data.result.canParticipate = canParticipateCheck(data.result);
                     $scope.tournament.details = data.result;
+                    $scope.tournament.details.games = [];
+                    $scope.tournament.details.total_count = 0;
+                    $scope.tournament.detailsCasinoGamesCount = 0;
 
                     processTopPlayerList($scope.tournament.details, $scope.tournament.details.TopPlayerList, $scope.tournament.details.CurrentPlayerStats);
 
                     console.log('GET GAMES', $scope.tournament.details.GameIdList);
+                    loadTournamentDetailsCasinoGames(tournamentId, 0, 10, true);
 
-                    casinoData.getGames(null, null, null, null, null, null, null, null, $scope.tournament.details.GameIdList).then(function (response) {
-                        if (response && response.data && response.data.games && response.data.games.length) {
-                            $scope.tournament.details.games = response.data.games;
-                            $scope.tournament.detailsCasinoGamesCount = 0;
-                            $scope.showMoreCasinoGames();
-                        }
-                    });
+
                     if (firstTime) {
                         findAndOpenGame($location.search());
                     }
@@ -400,10 +400,37 @@ angular.module('casino').controller('casinoTournamentsCtrl', ['$rootScope', '$sc
 
         updateTournamentStatus();
     };
+    /**
+     * @ngdoc method
+     * @name loadTournamentDetailsCasinoGames
+     * @methodOf CASINO.controller:casinoTournamentsCtrl
+     * @description Get Tournament games
+     */
 
+    var loadTournamentDetailsCasinoGames = function loadTournamentDetailsCasinoGames(tournamentId, offset, limit, withImages) {
+     $scope.loadingProcess = true;
+        casinoData.getTournamentGames(tournamentId, offset, limit, withImages).then(function (response) {
+            $scope.loadingProcess = false;
+            if (response && response.data && response.data.items && response.data.items.length) {
+                $scope.tournament.details.games = $scope.tournament.details.games.concat(response.data.items);
+                $scope.tournament.details.total_count = response.data.total_count;
+            }
+        });
+
+
+    };
+
+    /**
+     * @ngdoc method
+     * @name showMoreCasinoGames
+     * @methodOf CASINO.controller:casinoTournamentsCtrl
+     * @description Get more Tournament games
+     */
     $scope.showMoreCasinoGames = function showMoreCasinoGames() {
-        $scope.tournament.detailsCasinoGamesCount += 10;
-        $scope.tournament.details.gamesFiltered = $scope.tournament.details.games.slice(0, $scope.tournament.detailsCasinoGamesCount);
+        if ($scope.loadingProcess) {
+            return;
+        }
+        loadTournamentDetailsCasinoGames($scope.tournament.details.Id, $scope.tournament.details.games.length, 10, true);
     };
 
     /**
@@ -545,10 +572,11 @@ angular.module('casino').controller('casinoTournamentsCtrl', ['$rootScope', '$sc
     function loadTournamentCasinoGames(tournament) {
         if (tournament && tournament.GameIdList && $scope.tournament.tournamentGamesCount[tournament.Id] !== tournament.GameIdList.length) {
             $scope.tournament.tournamentGamesCount[tournament.Id] = tournament.GameIdList.length;
-            casinoData.getGames(null, null, null, null, null, null, null, null, tournament.GameIdList || []).then(function (response) {
-                if (response && response.data && response.data.games && response.data.games.length) {
-                    $scope.tournament.casinoGames[tournament.Id] = response.data.games.slice(0, response.data.games.length > 5 ? 4 : 5);
-                    $scope.tournament.casinoGamesCount[tournament.Id] = response.data.games.length;
+
+            casinoData.getTournamentGames(tournament.Id , 0, 5, true).then(function (response) {
+                if (response && response.data && response.data.items && response.data.items.length) {
+                    $scope.tournament.casinoGames[tournament.Id] = response.data.items.slice(0, response.data.total_count > 5 ? 4 : 5);
+                    $scope.tournament.casinoGamesCount[tournament.Id] = response.data.total_count;
                 } else {
                     $scope.tournament.casinoGames[tournament.Id] = [];
                     $scope.tournament.casinoGamesCount[tournament.Id] = 0;
@@ -637,8 +665,8 @@ angular.module('casino').controller('casinoTournamentsCtrl', ['$rootScope', '$sc
         casinoManager.openCasinoGame($scope, game, gameType, studio, urlSuffix, multiViewWindowIndex);
     };
 
-    $scope.closeGame = function closeGame(id) {
-        casinoManager.closeGame($scope, id);
+    $scope.closeGame = function confirmCloseGame(id, targetAction) {
+        casinoManager.closeGame($scope, id, targetAction);
     };
 
     $scope.openGameInNewWindow = function openGameInNewWindow(id) {
@@ -690,7 +718,6 @@ angular.module('casino').controller('casinoTournamentsCtrl', ['$rootScope', '$sc
         });
     })();
 
-    $scope.$on('login.loggedIn', refreshTournamentData);
     $scope.$on('login.loggedOut', refreshTournamentData);
     $scope.$on('loggedOut', refreshTournamentData);
     $scope.$on('loggedIn', refreshTournamentData);

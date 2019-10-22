@@ -1,0 +1,5 @@
+<style>.support-messenger{display: none}</style>
+<div class="print-a4-j" ng-class="{'new-print': betData.viewType !== 3}" ng-controller="betPrint" ng-init="printBetEvent()">
+    <ng-include ng-if="betData.viewType !== 3" src="::'templates/popup/bet-print-preview/new-style.html'|fixPath"></ng-include>
+    <ng-include ng-if="betData.viewType === 3" src="::'templates/popup/bet-print-preview/old-style.html'|fixPath"></ng-include>
+</div>

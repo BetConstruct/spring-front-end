@@ -280,7 +280,8 @@ VBET5.directive('gameWidget', ['Utils', 'Config', 'ConnectionService', 'GameInfo
                             'sport': game.sport.id,
                             'region': game.region.id,
                             'competition': game.competition.id,
-                            'game': game.id
+                            'game': game.id,
+                            'start_ts': game.start_ts
                         }
                     }, '*');
                 }
@@ -293,7 +294,8 @@ VBET5.directive('gameWidget', ['Utils', 'Config', 'ConnectionService', 'GameInfo
                             'sport': game.sport.id,
                             'region': game.region.id,
                             'competition': game.competition.id,
-                            'game': game.id
+                            'game': game.id,
+                            'start_ts': game.start_ts
                         });
 
                         var neededPath = Utils.getPathAccordintToAlias(game.sport.alias);

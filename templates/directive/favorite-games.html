@@ -10,7 +10,7 @@
     <div class="game-info-mini-v3">
         <p ng-show="game.info.score1!=undefined || game.info.score2 !=undefined || game.info.current_game_state || game.info.current_game_time">
             <span ng-show="game.type === 1" ng-bind="game.info.current_game_state|convertSetName:game.requestInfo.sport.alias|translate"></span>
-            <span ng-show="game.type !== 1" ng-bind="game.start_ts|formatDate:'full':null:env.timeFormat"></span>
+            <span ng-show="game.type !== 1" ng-bind="game.start_ts|formatDate:'full':null:$root.env.timeFormat"></span>
             <span trans="attr-only" title="Game time"  ng-show="game.type === 1" ng-bind="game.info.current_game_time"></span>
             <i class="blocked-icon-v3" ng-show="(!(game.events_count || game.markets_count) || game.is_blocked)"></i>
         </p>

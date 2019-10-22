@@ -3,12 +3,13 @@
     {{conf.disableHeader ? 'no-header' : ''}}
     {{conf.header.license ? 'header-license' : ''}}
     {{conf.integrationMode || $location.path().indexOf('/widget/') !== -1 ? 'no-header-navigation' : ''}}
-    headerVersion_{{conf.header.version}}"
+    headerVersion_{{conf.header.version}}
+    {{isLeftMenuClosed? 'vertical-nav-closed': ''}}"
     ng-controller="mainHeaderCtrl"
     ng-init="mainHeaderInit()"
 >
     <!--Header авторизованный-->
-    <div class-on-scroll="show-fix,show-normal" class="conteiner new0" ng-class="{'show-game': casinoGameOpened}" id="main-header-container">
+    <div class-on-scroll="show-fix,show-normal" not-change="{{$root.conf.customNavMenu}}" class="conteiner new0" ng-class="{'show-game': casinoGameOpened}" id="main-header-container">
         <ng-include class="float-width" src="::'templates/header/version_' + conf.header.version + '/main.html'|fixPath"></ng-include>
     </div>
 

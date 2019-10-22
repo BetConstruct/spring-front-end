@@ -12,7 +12,7 @@ angular.module('vbet5.betting').controller('featuredgameCtrl', ['$rootScope', '$
 
     $scope.isEventInBetSlip = GameInfo.isEventInBetSlip;
     $scope.backgroundsCompetitionsMaps = Config.main.featuredGames.backgroundsCompetitionsMaps;
-
+    var slideItemsCount = $location.path() === '/dashboard/'?  2: 3;
     $scope.goToUrl = Utils.goToUrl;
     /**
      * @ngdoc method
@@ -322,7 +322,8 @@ angular.module('vbet5.betting').controller('featuredgameCtrl', ['$rootScope', '$
     };
 
     function prepareMultiSlideFeaturedGames() {
-        $scope.featuredGamesGroups = Utils.groupToGroups($scope.featuredGames, 3, 'games');
+
+        $scope.featuredGamesGroups = Utils.groupToGroups($scope.featuredGames, slideItemsCount, 'games');
         if ($scope.multiSlideIndex === undefined) {
             $scope.multiSlideIndex = 0;
             $scope.multiSlideRotationPaused = false;

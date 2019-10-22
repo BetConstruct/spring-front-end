@@ -1,0 +1,28 @@
+<div ng-controller="cmsPagesCtrl" class="poker-background new-poker" watch-resize>
+    <div ng-init="loadPages('blast'); loadPage('blast.mainPageSlugs', true); setTitle('Blast');" get-casino-game="11870">
+        <div ng-show="!showNestedFrame">
+            <div ng-if="blastPages && pages" class="skillgame-landing-j">
+                <div class="intro-section-j" ng-init="initProductBanners('blast')">
+                    <div class="winner-block-j" ng-init="winnersList = getPageBySlug(blastPages, 'blast-winners').content" ng-show="winnersList">
+                        <div class="guide" id="winner-list" ng-bind-html="winnersList"></div>
+                    </div>
+                    <casino-game-slider product-slides="productSlides" page-name="Blast"></casino-game-slider>
+                    <div class="slider-landing-overlay" ng-init="blastButtonPage = getPageBySlug(blastPages, 'blast-button')">
+                        <div class="guide">
+                            <div class="button-group-j">
+                                <a ng-if="game.types.realMode"  ng-click="openNestedFrame();$event.stopPropagation()" trans>Play now!</a>
+                             </div>
+                            <div class="intro-info-j" ng-if="blastButtonPage">
+                                <a  href="{{blastButtonPage.url}}" class="how-to-lplay-j" target="{{blastButtonPage.linktarget}}"  ng-bind="blastButtonPage.title"></a>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <promotion-news template="slider" slug="blast" hide-dates="true" main-class="block-meny-news promo" use-custom-base-host="true" share-path="blast"></promotion-news>
+            </div>
+            <vbet-loader class="centered-j" ng-show="!blastPagesLoaded"></vbet-loader>
+        </div>
+        <div ng-if="showNestedFrame && game" class="big-games-overflow" ng-controller="casinoSpecialGamesCtrl" ng-init="loadGame('blast')" ng-include="'optional_modules/casino/templates/specialgames/skillgame.html'|fixPath"></div>
+    </div>
+</div>

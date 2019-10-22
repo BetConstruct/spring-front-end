@@ -60,19 +60,6 @@
 // homepage jackpot end
 
 /*jackpot animation styles*/
-.s-j-balance {
-  .sportsbook-jackpot-amount .amount-animation-container > span > i.amount-animation {
-    animation-name: sportsbook-amount-animation;
-  }
-}
-@keyframes sportsbook-amount-animation {
-  0% {
-    transform: translateY(0em);
-  }
-  100% {
-    transform: translateY(-9.17em);
-  }
-}
 
 .sportsbook-jackpot-amount {
   width: 100%;
@@ -83,6 +70,7 @@
   font-size: 18 + $size-font;
   @include rtl{
     direction: ltr;
+    text-align: right;
   }
   .amount-animation-container {
     > span {
@@ -92,10 +80,7 @@
       }
       &.with-comma,
       &.with-point {
-        padding-right: 1%;
-        @media screen and (max-width: 1260px) {
-          padding-right: 2%;
-        }
+        padding-right: 2px;
       }
     }
     > sup {
@@ -111,6 +96,9 @@
   color: $brand-color-2;
   display: inline-block;
   vertical-align: middle;
+  @include rtl {
+    text-align: right;
+  }
   .amount-animation-container {
     height: 22px;
     font-size: 18px;
@@ -125,14 +113,11 @@
       }
       &.with-comma,
       &.with-point {
-        padding-right: 2.3%;
+        padding-right: 7px;
       }
       > strong {
         @include ltr {
           right: 1px;
-        }
-        @include rtl {
-          left: 1px;
         }
       }
     }
@@ -253,36 +238,69 @@
 }
 
 // egt jackpot animation
-.egt-content {
-  .amount-animation-container {
-    text-align: right;
-    @include rtl {
-      direction: ltr;
+.egt-content .amount-animation-container {
+  height: 100%;
+  text-align: right;
+  @include rtl {
+    direction: ltr;
+  }
+  > span {
+    width: 9.9%;
+    height: 22px;
+    overflow: hidden;
+    text-align: center;
+    vertical-align: middle;
+    box-shadow: -1px 0 0 #111522, -2px 0 0 #2e323e;
+    &.with-point,
+    &.with-comma {
+      padding-right: 1%;
     }
-    > span {
-      width: 9.9%;
-      overflow: hidden;
-      text-align: center;
-      vertical-align: middle;
-      box-shadow: -1px 0 0 #111522, -2px 0 0 #2e323e;
-      &.with-point,
-      &.with-comma {
-        padding-right: 1.5%;
-      }
-      > i {
-        margin-left: -1px;
-        height: 22px;
-        line-height: 22px;
-      }
-      > strong {
-        top: -10px;
-        right: 14%;
-        height: 100%;
-      }
+    > i {
+      margin-left: -1px;
+      line-height: 22px;
+    }
+    > strong {
+      top: -10px;
+      right: 14%;
+      height: 100%;
     }
   }
 }
 // egt jackpot animation end
+
+// red tiger jackpot animation
+
+.red-tiger-content .amount-animation-container {
+  height: 100%;
+  text-align: right;
+  @include rtl {
+    direction: ltr;
+  }
+  > span {
+    width: 9.9%;
+    height: 22px;
+    overflow: hidden;
+    text-align: center;
+    vertical-align: middle;
+    > i {
+      margin-left: -1px;
+      line-height: 22px;
+      &.with-point {
+        margin-left: -10%;
+        + strong {
+          top: -10px;
+          right: 14%;
+          height: 100%;
+        }
+      }
+    }
+    > strong {
+      top: -6px;
+    }
+  }
+}
+
+// red tiger jackpot animation end
 
 .win-blink-jackpots > b {
   animation: blink-jackpot 1500ms 300ms infinite;
@@ -298,9 +316,9 @@
 
 @keyframes amount-animation {
   0% {
-    transform: translateY(0em);
+    transform: translateY(0);
   }
   100% {
-    transform: translateY(-10.17em);
+    transform: translateY(-90.90909090909091%);
   }
 }

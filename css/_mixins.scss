@@ -99,6 +99,15 @@ $delete-cache: '?v=' + random(777);
         box-shadow: -3px 0 0 $sports-color inset;
       }
     }
+    + .region-item-row-v3 .region-item-v3 {
+      &:hover {
+        color: set-color($sports-color);
+        background: $sports-color;
+        .arrow-view-v3:before {
+          color: set-color($sports-color);
+        }
+      }
+    }
   }
   .game-header-view-v3.#{$sports-name} {
     box-shadow: 0 -1px 0 $sports-color inset, inset 0 -2px 0 darken( adjust-hue( $c16-sp-11, -18deg ), 2 );
@@ -125,17 +134,29 @@ $delete-cache: '?v=' + random(777);
       background: -moz-linear-gradient(left, rgba($sports-color, 1) 0%, rgba($skin-color, 1) 100%);
       background: -webkit-linear-gradient(left, rgba($sports-color, 1) 0%, rgba($skin-color, 1) 100%);
       background: linear-gradient(to right, rgba($sports-color, 1) 0%, rgba($skin-color, 1) 100%);
-      + .e-live-games-list > .s-l-game-v > .e-p-table{
-        background: rgba($sports-color, 0.2);
-        background: -moz-linear-gradient(left, rgba($sports-color, 0.2) 0%, rgba($skin-color, 0.06) 60%);
-        background: -webkit-linear-gradient(left, rgba($sports-color, 0.2) 0%, rgba($skin-color, 0.06) 60%);
-        background: linear-gradient(to right, rgba($sports-color, 0.2) 0%, rgba($skin-color, 0.06) 60%);
-        transition: background 240ms;
-        &:hover {
-          background: rgba($sports-color, 0.4);
-          background: -moz-linear-gradient(left, rgba($sports-color, 0.4) 0%, rgba($skin-color, 0.09) 60%);
-          background: -webkit-linear-gradient(left, rgba($sports-color, 0.4) 0%, rgba($skin-color, 0.09) 60%);
-          background: linear-gradient(to right, rgba($sports-color, 0.4) 0%, rgba($skin-color, 0.09) 60%);
+      + .e-live-games-list {
+        .e-p-table {
+          background: rgba($sports-color, 0.2);
+          background: -moz-linear-gradient(left, rgba($sports-color, 0.2) 0%, rgba($skin-color, 0.06) 60%);
+          background: -webkit-linear-gradient(left, rgba($sports-color, 0.2) 0%, rgba($skin-color, 0.06) 60%);
+          background: linear-gradient(to right, rgba($sports-color, 0.2) 0%, rgba($skin-color, 0.06) 60%);
+          transition: background 240ms;
+          &:hover {
+            background: rgba($sports-color, 0.4);
+            background: -moz-linear-gradient(left, rgba($sports-color, 0.4) 0%, rgba($skin-color, 0.09) 60%);
+            background: -webkit-linear-gradient(left, rgba($sports-color, 0.4) 0%, rgba($skin-color, 0.09) 60%);
+            background: linear-gradient(to right, rgba($sports-color, 0.4) 0%, rgba($skin-color, 0.09) 60%);
+          }
+        }
+        .e-g-price-v {
+          &:hover, &.active {
+            color: set-color($sports-color);
+            background: $sports-color;
+            font-size: 16px;
+          }
+          &:hover {
+            box-shadow: 0 0 20px lighten($sports-color,15);
+          }
         }
       }
     }
@@ -170,6 +191,28 @@ $delete-cache: '?v=' + random(777);
       background: -moz-linear-gradient(right, rgba($sports-color,0.5) 0%, rgba($c16-sp-9,1) 60%,  rgba($c16-sp-9,1) 100%);
       background: -webkit-linear-gradient(right, rgba($sports-color,0.5) 0%, rgba($c16-sp-9,1) 60%,  rgba($c16-sp-9,1) 100%);
       background: linear-gradient(to left, rgba($sports-color,0.5) 0%, rgba($c16-sp-9,1) 60%,  rgba($c16-sp-9,1) 100%);
+    }
+  }
+  .esports-nav-b.prematch-view .sports-item-v3.#{$sports-name} ~ .region-item-row-v3 .competition-title-v3,
+  .esports-nav-b .sports-item-v3.#{$sports-name} ~ .region-item-row-v3 .single-events-b-v3,
+  .e-live-now-betslip > ul.e-betslip-#{$sports-name} .single-events-b-v3,
+  .e-live-now-betslip > ul.e-betslip-#{$sports-name} > li.e-l-n-arrow {
+    &:hover, &.active {
+      color: set-color($sports-color);
+      background: $sports-color;
+    }
+    &:hover {
+      box-shadow: 0 0 20px lighten($sports-color,15);
+    }
+  }
+  .esports .all-l-e-title.#{$sports-name} + .e-live-games-list + ng-include .single-events-b-v3 {
+    &:hover, &.active {
+      color: set-color($sports-color);
+      background: $sports-color;
+      font-size: 16px;
+    }
+    &:hover {
+      box-shadow: 0 0 20px lighten($sports-color,15);
     }
   }
 }

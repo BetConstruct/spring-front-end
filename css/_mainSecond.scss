@@ -1105,6 +1105,9 @@ body {
       &.virtualhorseracing-icon:before {
         content: "\e668";
       }
+      &.virtualfootballleague-icon:before {
+        content: "\e926";
+      }
       &.virtualdogs-icon:before,
       &.virtualgreyhoundracing-icon:before {
         content: "\e624";
@@ -1519,7 +1522,6 @@ body {
   float: left;
   width: 100%;
   display: inline-block;
-  height: calc(100% - 160px);
   padding: 8px 0 0;
   box-sizing: border-box;
   .md-progress-circular {
@@ -2386,7 +2388,7 @@ body {
   text-overflow: ellipsis;
   white-space: nowrap;
   text-align: center;
-  color: #eee;
+  color: rgba(set-color($c16-sp-9),0.9);
 }
 .team-name-market ul li{
   color: #eee;
@@ -2500,9 +2502,8 @@ body {
     float: left;
     width: calc(100% - 22px);
     padding: 10px 11px;
-    color: #dedede;
+    background: $c16-sp-9;
     border: 1px solid #4d4c4c;
-    background: #343333;
     > div {
       float: left;
       &.rule-four {
@@ -2629,6 +2630,9 @@ body {
 }
 .market-contain-b .race-market ul li img {
   height: 30px;
+  &.disabled {
+    opacity: 0.5;
+  }
 }
 .market-contain-b .race-market ul li.no-odd {
   background: #4e4e4e;
@@ -2765,7 +2769,7 @@ body {
   width: 0;
   height: 0;
   border-style: solid;
-  border-width: 0 5px 6px 5px;
+  border-width: 0 5px 6px;
   border-color: transparent transparent $skin-palette-1 transparent;
 }
 
@@ -3100,7 +3104,13 @@ body {
   li {
     font: 13px/16px $font-f;
     color: $modern-view-game-market-name-colors;
-    border-bottom: 1px solid $modern-view-game-bottom-borders;
+    box-shadow: inset 0 -1px 0 0 $modern-view-game-bottom-borders;
+    &:nth-child(2) {
+      width: 15px;
+    }
+    &.active {
+      box-shadow: inset 0 -3px 0 0 $modern-view-game-bottom-borders;
+    }
   }
   .game-is-neutral {
     margin: 0 0 0 2px;
@@ -3161,7 +3171,8 @@ div.star {
 }
 
 .conteiner-live-block .game-live-row .account {
-  font: 15px/18px $font-f;
+  width: 76px;
+  font: 12px/18px $font-f;
   font-weight: $bold-text;
   color: $modern-view-game-market-row-count-colors;
   opacity: 0.5;
@@ -3172,6 +3183,14 @@ div.star {
     span {
       &:after {
         content: " : ";
+      }
+      &:empty {
+        + br + span {
+          margin-top: -18px;
+        }
+        &:after {
+          content: none;
+        }
       }
     }
   }
@@ -3221,6 +3240,7 @@ div.star {
 }
 
 .game-live-row .factor-game {
+  width: 52px;
   opacity: 0.4;
   a {
     font-weight: $bold-text;
@@ -3281,7 +3301,7 @@ div.star {
             color: set-color($hero-color);
           }
         }
-        p, a, span {
+        .game-row-item:after, i, p, a, span {
           color: set-color($hero-color);
         }
       }
@@ -3362,7 +3382,6 @@ div.star {
   .picture-news-block {
     width: 285px;
     height: 174px;
-    border-radius: 5px;
   }
 }
 
@@ -3409,6 +3428,7 @@ div.star {
 .live-game-generic {
   .add-info {
     color: #FFFFFF;
+    text-shadow: 1px 1px 1px #5C5C5C;
     font: 12px/15px $font-f;
   }
   span {
@@ -3764,39 +3784,6 @@ div.game-video-detached {
   }
 }
 
-.game-info-text {
-  &:before {
-    font: 12px/16px icomoon;
-    color: #ffffff;
-    text-align: center;
-    content: "\e6e4";
-  }
-  p {
-    background: $skin-palette-1;
-    box-shadow: 0 0 10px $text-palette-7;
-    font: 12px/16px $font-f;
-    color: #000000;
-    .arrow-sport {
-      top: -6px;
-      right: 1px;
-      @include rtl {
-        left: 1px;
-        right: auto;
-      }
-    }
-  }
-  span {
-    font: 10px/12px $font-f;
-    color: $text-palette-1;
-    text-transform: uppercase;
-    font-weight: $bold-text;
-    text-shadow: 0 -1px 0 $text-palette-7;
-  }
-  b {
-    font-weight: normal;
-  }
-}
-
 .date-block li {
   background: $hero-color;
   text-transform: uppercase;
@@ -3813,6 +3800,7 @@ div.game-video-detached {
   font: 12px/16px $font-f;
   font-weight: $bold-text;
   color: #FFFFFF;
+  text-shadow: 1px 1px 1px #5C5C5C;
 }
 
 .chempionship-name span:before {
@@ -3930,30 +3918,19 @@ div.game-video-detached {
   font-weight: $style-text;
 }
 
-.icon-v:after {
-  content: '\e707';
-  font: 28px/28px icomoon;
-  color: rgba(set-color($modern-view-game-background), 0.6);
-  text-shadow: 0 1px 0 rgba(set-color($modern-view-game-background), 0.6);
-  position: absolute;
-  height: 28px;
-  left: -6px;
-  top: 0;
-  text-indent: 0;
-  @include rtl {
-    left: auto;
-    right: -24px;
+.list-result ul li {
+  box-shadow: inset 0 -1px 0 0 $modern-view-game-bottom-borders;
+  &:hover, &.active {
+    padding-bottom: 8px;
+    box-shadow: inset 0 -3px 0 0 $modern-view-game-bottom-borders;
   }
 }
-
-.list-result ul li {
-  border-bottom: 1px solid $modern-view-game-bottom-borders;
+.live-table ul li.active {
+  box-shadow: inset 0 -3px 0 0  $skin-palette-1;
 }
-
-.list-result ul li:hover {
-  border-bottom: 3px solid $modern-view-game-bottom-borders;
+.closed-game .live-table ul li.active {
+  box-shadow: inset 0 -3px 0 0  $modern-view-game-bottom-borders;
 }
-
 .list-result ul .no-active-rezult:hover {
   background: none;
 }
@@ -3972,6 +3949,11 @@ div.game-video-detached {
   color: $modern-view-coeff-color;
   font: 14px/16px $font-f;
   font-weight: $bold-text;
+}
+
+.list-result ul li .game-row-item .boosted {
+  display: table-cell;
+  line-height: 16px;
 }
 
 .top-arrow,
@@ -4035,16 +4017,16 @@ div.game-video-detached {
   background: rgba(255, 255, 255, 0.5);
 }
 
-.conteiner-live-block:hover .game-live-row li, .conteiner-live-block .open-game .game-live-row li {
-  border-color: transparent;
+.conteiner-live-block:hover .game-live-row li:not(.active), .conteiner-live-block .open-game .game-live-row li:not(.active) {
+  box-shadow: none;
 }
 
 .conteiner-live-block:hover .game-live-row li.team:hover, .conteiner-live-block:hover .game-live-row li.factor:hover {
-  border-bottom: 3px solid $hero-color;
+  box-shadow: inset 0 -3px 0 0 $modern-view-game-bottom-borders;
 }
 
 .conteiner-live-block:hover .open-game .game-live-row li.team:hover, .conteiner-live-block:hover .open-game .game-live-row li.factor:hover {
-  border-bottom: 3px solid $skin-palette-1;
+  box-shadow: inset 0 -3px 0 0 $skin-palette-1;
 }
 
 .conteiner-live-block:hover .closed-game .game-live-row .factor-game, .conteiner-live-block:hover .closed-game .game-live-row li:first-child, .conteiner-live-block:hover .closed-game .game-live-row .time-date, .conteiner-live-block:hover .closed-game .game-live-row .statistic, .conteiner-live-block:hover .closed-game .game-live-row .account, .conteiner-live-block .open-game .game-live-row .account {
@@ -4157,6 +4139,9 @@ div.game-video-detached {
 .modern .list-bet-block ul li {
   background: darken($modern-view-betslip-palette, 3);
   color: $modern-view-betslip-text-palette;
+  > b {
+    color: $hero-color;
+  }
 }
 
 .modern .list-bet-block .button-info-text-view-v3 {
@@ -4396,8 +4381,13 @@ div.game-video-detached {
   font: 16px/24px icomoon;
   color: #c4963f;
   position: absolute;
-  left: 0;
   top: 0;
+  @include ltr {
+    left: 0;
+  }
+  @include rtl {
+    right: 0;
+  }
 }
 
 .text-payment-contain p, .text-deposit-contain p {
@@ -4911,11 +4901,13 @@ form.ng-pristine .form-text.error input {
 .list-news ul li h3 {
   overflow: hidden;
   text-overflow: ellipsis;
+  min-height: 40px;
 }
 
 .list-news ul li h3 a {
   color: $text-palette-1;
-  font: 16px/20px $font-f;
+  font: 15px/20px $font-f;
+  float: left;
 }
 
 .list-news ul li p {
@@ -4931,22 +4923,18 @@ form.ng-pristine .form-text.error input {
   color: set-color($hero-color);
 }
 
-.list-news ul li:hover .picture-news-block a {
-  box-shadow: 0 0 15px lighten(desaturate(adjust-hue($skin-palette-11, -3deg), 21), 15);
-}
-
 .open_blok_news .picture-news-block, .list-news ul li.active-news .picture-news-block {
   box-shadow: none;
 }
 
-.picture-news-block img {
-  display: block;
-}
-
 .picture-news-block a {
   display: inline-block;
-  transition: box-shadow 300ms;
-  overflow: hidden;
+}
+
+.picture-news-block img {
+  display: block;
+  //border-radius: 5px;
+  transition: box-shadow 300ms, filter 300ms;
 }
 
 .open_blok_news {
@@ -5275,15 +5263,11 @@ form.ng-pristine .form-text.error input {
 .type-rezult-won,
 .type-rezult-lost {
   font: $bold-text 12px /21px $font-f;
-  color: $text-palette-1;
+  color: #121623;
+  background: #FFE000;
   text-transform: uppercase;
   text-overflow: ellipsis;
   overflow: hidden;
-}
-
-.type-rezult {
-  background: #FFE000;
-  color: #121623;
 }
 
 .cash-out-button button {
@@ -6139,11 +6123,11 @@ form.ng-pristine .form-text.error input {
 
 .market-contain-b {
   .each-way {
-    background: $skin-palette-7;
+    background: $c16-sp-9;
     border: none;
     border-radius: 4px;
     span {
-      color: $text-palette-4;
+      color: rgba(set-color($c16-sp-9),0.8);
     }
   }
   .race-market {
@@ -6154,7 +6138,7 @@ form.ng-pristine .form-text.error input {
           font-size: 13px;
           background: none;
           box-shadow: none;
-          color: $text-palette-4;
+          color: rgba(set-color($c16-sp-9),0.8);
           border-color: transparent;
           &:last-child {
             border: none;
@@ -6164,7 +6148,7 @@ form.ng-pristine .form-text.error input {
       li {
         box-shadow: none;
         background: lighten(desaturate($classic-skinning-color, 11), 3);
-        color: $text-palette-1;
+        color: $c16-tp-12;
         &:first-child {
           border: 0 none;
           border-radius: 3px 0 0 3px;
@@ -6213,7 +6197,23 @@ form.ng-pristine .form-text.error input {
     }
   }
 }
-
+.greyhound-toggle {
+  float: left;
+  width: 100%;
+  height: 36px;
+  position: relative;
+  .prematch-markets-filter-v3 .multi-column-mode-toggle {
+    border: none;
+    p {
+      &:before {
+        background: #1F6F52;
+      }
+      &:after {
+        background: #ffffff;
+      }
+    }
+  }
+}
 .virtual-games {
   .market-contain-b {
     .markets-group-wrap-v3 {
@@ -7138,7 +7138,7 @@ rzslider span.rz-pointer.rz-active:after {
 }
 .game-score-multiset ul li span {
   display: block;
-  padding: 0 8px;
+  padding: 0 6px;
 }
 .game-score-multiset ul:nth-child(2) li {
   padding-top: 7px;
@@ -7661,6 +7661,9 @@ rzslider span.rz-pointer.rz-active:after {
     transform: translate3d(0,0,0);
     z-index: 300;
   }
+  &.game-boxing .game-score-multiset ul li.sets-score span {
+    background: none;
+  }
 }
 .live-game-container .game-info ul.title li {
   color: $text-palette-1;
@@ -8003,8 +8006,6 @@ li.active-format:before {
       background: lighten(#737887, 10);
     }
   }
-}
-.modern {
   .open-bets-possible-wrapper {
     background: none;
   }
@@ -8088,13 +8089,15 @@ li.active-format:before {
     }
     > select {
       height: 18px;
-      padding: 0 15px 0 6px;
       font-size: 10px;
       color: #293043;
       background: #e6e6e6;
       box-shadow: 0 0 0 1px #cccccc inset;
+      @include ltr {
+        padding: 0 15px 0 6px;
+      }
       @include rtl {
-        padding: 0 6px 015px;
+        padding: 0 6px 0 15px;
       }
     }
   }
@@ -8106,5 +8109,17 @@ li.active-format:before {
         color: #686767;
       }
     }
+  }
+  .closed-calculator-b {
+    color: rgba(0, 0, 0, 0.5);
+    &:hover {
+      color: #000000;
+    }
+  }
+  .select-calc-box-b .select-block:after {
+    color: #000000;
+  }
+  .greyhound-toggle .multi-column-mode-toggle {
+    color: #000000;
   }
 }

@@ -69,7 +69,7 @@
                     <ul ng-repeat="news in group.news track by news.id" ng-class="'news-column-' + $index">
                         <li ng-class="{'active-news': (news.id == selectedNews.id)}">
                             <h3 title="{{news.titleRaw}}"><a ng-click="showNews(news, group.id);$event.stopPropagation();" ng-bind-html="news.title"></a></h3>
-                            <p>{{ news.start_date + cmsTimeZone |formatDate: 'full':null:env.timeFormat }}</p>
+                            <p>{{ news.start_date + cmsTimeZone |formatDate: 'full':null:$root.env.timeFormat }}</p>
                             <div class="picture-news-block">
                                 <div class="sport-news-name">{{ news.categoryTitle }}</div>
                                 <a ng-click="showNews(news, group.id);$event.stopPropagation();" att="" id="news{{news.id}}"><img ng-src="{{news.thumbnail}}" alt=""></a>
@@ -101,7 +101,7 @@
                                 </div>
                             </div>
                             <h3 ng-bind-html="selectedNews.title"></h3>
-                            <span class="news-date-b">{{ selectedNews.start_date + cmsTimeZone |formatDate:'full':null:env.timeFormat }}</span>
+                            <span class="news-date-b">{{ selectedNews.start_date + cmsTimeZone |formatDate:'full':null:$root.env.timeFormat }}</span>
                             <p ng-bind-html="selectedNews.content" class="all-text-news-b"></p>
                         </div>
                     </div>

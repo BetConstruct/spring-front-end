@@ -8,7 +8,6 @@
   left: 0;
   height: 100%;
 }
-
 .all-game-info-container-v3 {
   box-sizing: border-box;
   float: left;
@@ -20,14 +19,12 @@
     padding: 0 0 0 6px;
   }
 }
-
 //Statistic
 .statistic-view-v3 {
   float: left;
   width: 100%;
   border-bottom: 1px solid $skin-palette-7;
 }
-
 //Statistic END
 //Live game view
 .live-game-view-contain-v3 {
@@ -38,7 +35,6 @@
   position: relative;
   z-index: 55;
 }
-
 .live-events-view-v3 {
   box-sizing: border-box;
   float: left;
@@ -56,7 +52,6 @@
   width: 100%;
   margin: 20px 0;
 }
-
 .Info-text-view-market-v3 > p {
   box-sizing: border-box;
   float: left;
@@ -67,7 +62,6 @@
   color: $c16-tp-6;
   padding: 5px 10px;
 }
-
 .game-finished-v3 {
   box-sizing: border-box;
   float: left;
@@ -79,7 +73,6 @@
   color: $c16-tp-5;
   padding: 30px 10px;
 }
-
 .right-left-events-wrapper {
   float: left;
   width: 100%;
@@ -95,11 +88,9 @@
   width: 50%;
   @include ltr {
     float: left;
-    //padding: 0 0 0 3px;
   }
   @include rtl {
     float: right;
-  //padding: 0 3px 0 0;
   }
   &:first-child {
     @include ltr {
@@ -136,21 +127,12 @@
     }
   }
 }
-
 .market-ciew-v3 {
   box-sizing: border-box;
   float: left;
   width: 100%;
   margin: 0 0 5px;
-  //overflow: hidden;
-  //border-radius: 2px;
-  //transform: translate3d(0, 0, 0);
-  //transform-box: view-box;
-  ///@include rtl {
-  //  margin-left: 4px;
-  //}
 }
-
 .market-title-v3 {
   box-sizing: border-box;
   float: left;
@@ -164,7 +146,6 @@
   background: darken(desaturate(adjust-hue($c16-sp-8, 6deg), 2), 5);
   box-shadow: 0 1px 0 darken(saturate(adjust-hue($c16-sp-8, 1deg), 2), 4) inset;
   padding: 0;
-  //position: relative;
   &.closed {
     border-radius: 2px;
   }
@@ -197,11 +178,6 @@
   box-sizing: border-box;
   content: "\e671";
 }
-
-//.market-title-v3.closed > .arrow-view-v3:before{
-//  box-sizing: border-box;
-//  content: "\e670";
-//}
 .name-market-row-v3 {
   box-sizing: border-box;
   float: left;
@@ -209,7 +185,6 @@
   position: relative;
   height: 28px;
 }
-
 .market-name-icon-row-v3 {
   float: left;
   box-sizing: border-box;
@@ -218,10 +193,6 @@
   display: flex;
   flex-flow: wrap;
   flex-direction: row;
-  //position: absolute;
-  //display: table;
-  //top: 0;
-  //left: 0;
 }
 .market-title-v3 > h3 {
   box-sizing: border-box;
@@ -232,8 +203,6 @@
   line-height: 28px;
   font-weight: normal;
   color: $c16-tp-3;
-  //position: relative;
-  //width: 100%;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -254,8 +223,6 @@
   line-height: 28px;
   font-weight: normal;
   color: $c16-tp-3;
-  //position: relative;
-  //width: 100%;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -266,17 +233,6 @@
     padding: 0 10px 0 0;
   }
 }
-
-//.market-name-icon-row-v3 > h3 > i{
-//box-sizing: border-box;
-////position: absolute;
-////left: 0;
-////top: 0;
-//display: inline-block;
-//vertical-align: top;
-//padding: 0 0 0 10px;
-//font-style: normal;
-//}
 .market-icons-view-v3 {
   box-sizing: border-box;
   //position: relative;
@@ -294,11 +250,9 @@
     }
   }
 }
-
 .market-title-v3.closed .market-icons-view-v3 > .arrow-view-v3:before {
   content: "\e670";
 }
-
 .market-icons-view-v3 > ul {
   box-sizing: border-box;
   padding: 4px 0 3px;
@@ -320,7 +274,7 @@
     min-width: 30px;
     display: inline-block;
     vertical-align: top;
-    font-size: 8 + $size-font;
+    font-size: 6 + $size-font;
     line-height: 20px;
     padding: 0 5px;
     text-align: center;
@@ -340,42 +294,15 @@
     }
     .ew-total-view-v3 {
       color: $c16-sp-1;
-      margin-top: 3px;
+      margin: 3px 4px 0;
     }
   }
 }
-
-//.market-icons-view-v3 > ul > li {
-//  box-sizing: border-box;
-//  height: 20px;
-//  min-width: 30px;
-//  display: inline-block;
-//  vertical-align: top;
-//  float: left;
-//  border-right: 1px solid rgba($c16-tp-12, 0.25);
-//  font-size: 8 + $size-font;
-//  line-height: 20px;
-//  padding: 0 5px;
-//  text-align: center;
-//  white-space: nowrap;
-//  color: $c16-tp-3;
-//  @include rtl {
-//    float: right;
-//    border-left: 1px solid rgba($c16-tp-12, 0.25);
-//    border-right: none;
-//  }
-//}
-//
-//.market-icons-view-v3 > ul > li:before {
-//  box-sizing: border-box;
-//  font: 14px/20px icomoon;
-//}
 .favorite-icon-market-v3:before {
   box-sizing: border-box;
   content: "\f005";
   color: darken(saturate(adjust-hue($c16-sp, -2deg), 5), 3);
   cursor: pointer;
-  //transition: color 240ms;
 }
 .favorite-icon-market-v3.active:before,
 .favorite-icon-market-v3:hover:before,
@@ -390,7 +317,6 @@
   font-style: normal;
   font-family: icomoon;
 }
-
 .link-icon-market-v3{
   &:empty{
     display: none;
@@ -471,7 +397,6 @@
     grid-template-columns: repeat( auto-fit, minmax(19%, 1fr));
   }
 }
-
 @media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {
   .virtual-games .market-contain-b .race-market ul li .single-events-b-v3{
     width: 100%;
@@ -516,7 +441,6 @@
     }
   }
 }
-
 .s-box {
   box-sizing: border-box;
   display: inline-block;
@@ -525,7 +449,6 @@
   padding-left: 1px;
   cursor: default;
 }
-
 @keyframes open-market-animate-b {
   0% {
     -webkit-transform: translate3d(0, 0, 0) scale3d(1, 0.4, 1);
@@ -603,11 +526,20 @@
     cursor: default;
   }
 }
-
+.boosted {
+  display: block;
+  width: 16px;
+  height: 100%;
+  margin: 0 4px;
+  position: relative;
+  font: 14px/28px icomoon;
+  &:before {
+    content: "\ea47";
+  }
+}
 .race-market .single-events-b-v3:before {
   display: none;
 }
-
 .single-events-b-v3.blocked:after {
   box-sizing: border-box;
   position: relative;
@@ -618,17 +550,14 @@
   content: "\e68f";
   color: $c16-tp-6;
 }
-
 .single-events-b-v3.blocked > .p-v {
   display: none;
 }
-
 .single-events-b-v3.blocked .mini-box-market-info-v3 > p > i {
   box-sizing: border-box;
   padding-right: 28px;
   font-style: normal;
 }
-
 .max-bet-tooltip-v3 {
   box-sizing: border-box;
   right: 0;
@@ -639,7 +568,6 @@
   z-index: 44;
   text-align: center;
   display: none;
-  //pointer-events: none;
   &:before {
     box-sizing: border-box;
     content: "";
@@ -671,7 +599,6 @@
     color: set-color($brand-color-1);
     white-space: nowrap;
     bottom: 13px;
-    //margin-bottom: 21px;
     opacity: 0;
     transition: opacity 0ms;
     transform: translate3d(0,70%,0);
@@ -703,13 +630,8 @@
   box-sizing: border-box;
   font-style: normal;
 }
-//.modern-max-bet-t .max-bet-tooltip-v3:before {
-  //bottom: -6px;
-//}
 .asian-in-classic-table-wrapper .multicolumn-table .max-bet-tooltip-v3 {
-  //bottom: 35px;
   &:before {
-    //bottom: -6px;
     left: auto;
     right: 20px;
   }
@@ -726,14 +648,12 @@
     margin: 0 auto;
   }
 }
-
 .factor-top:before,
 .factor-bottom:before {
   box-sizing: border-box;
   font: 12px/28px icomoon;
   content: "\e66d";
   display: inline-block;
-  //animation: arrow-blick-v3 240ms ease;
   transform: translate3d(0, 0, 0);
   @include rtl {
     transform: none;
@@ -784,7 +704,6 @@
   width: 100%;
   padding: 0 6px 0 3px;
 }
-
 //Pre-match view
 .prematch-view-v3 {
   box-sizing: border-box;
@@ -878,7 +797,8 @@
   float: left;
   width: 100%;
   font-size: 6 + $size-font;
-  line-height: 14px;
+  line-height: 15px;
+  white-space: nowrap;
   color: $c16-tp-3;
   position: absolute;
 }
@@ -888,6 +808,7 @@
   text-overflow: ellipsis;
   overflow: hidden;
   white-space: nowrap;
+  vertical-align: top;
   display: inline-block;
   &:first-child:nth-last-child(2) {
     max-width: calc(100% - 1px);
@@ -913,7 +834,6 @@
   line-height: 14px;
   color: $c16-tp-6;
 }
-
 .prematch-competition-title-v3 > p > .prematch-region-icon-v3 {
   box-sizing: border-box;
   @include ltr {
@@ -976,6 +896,9 @@
       }
     }
   }
+  &:before {
+    content: none;
+  }
 }
 .favorite-game-open-euro2016 > .prematch-games-list {
   box-sizing: border-box;
@@ -990,7 +913,6 @@
   box-sizing: border-box;
   padding-left: 0;
 }
-
 .prematch-games-list-title-v3 {
   box-sizing: border-box;
   float: left;
@@ -999,7 +921,6 @@
   background: $c16-sp-9;
   border-radius: 2px 2px 0 0;
 }
-
 .prematch-column-title-v3 {
   box-sizing: border-box;
   float: left;
@@ -1007,7 +928,6 @@
   position: relative;
   padding: 0 8px;
 }
-
 .prematch-column-title-v3 > h2 {
   box-sizing: border-box;
   float: left;
@@ -1017,7 +937,6 @@
   line-height: 36px;
   font-weight: normal;
 }
-
 .prematch-region-icon-v3 {
   box-sizing: border-box;
   display: inline-block;
@@ -1031,7 +950,6 @@
     margin: 10px 0 0 8px;
   }
 }
-
 .prematch-markets-filter-v3 {
   box-sizing: border-box;
   position: absolute;
@@ -1046,13 +964,11 @@
     left: 0;
   }
 }
-
 .prematch-markets-filter-v3 .time-filter-v3 {
   box-sizing: border-box;
   min-width: 150px;
   max-width: 160px;
 }
-
 .prematch-markets-filter-v3 .time-filter-v3 > p {
   box-sizing: border-box;
   text-transform: none;
@@ -1065,7 +981,6 @@
     text-align: left;
   }
 }
-
 .prematch-column-title-v3 > h2 > span {
   box-sizing: border-box;
   display: inline-block;
@@ -1080,7 +995,6 @@
     float: right;
   }
 }
-
 .closed-all-games-v3 {
   box-sizing: border-box;
   font: 8px/36px icomoon;
@@ -1094,12 +1008,10 @@
     padding: 0 2px 0 8px;
   }
 }
-
 .closed-all-games-v3:before {
   box-sizing: border-box;
   content: "\e6f2";
 }
-
 .prematch-list-view-v3 {
   box-sizing: border-box;
   position: absolute;
@@ -1143,17 +1055,14 @@
 .close-multiv-j:empty {
   display: none;
 }
-
 .multi-view-game-info-v3 > .close-multiv-j {
   display: block;
 }
-
 @media screen and (min-width: 1280px) {
   .prematch-view-v3 .prematch-games-list.multi-column-view ~ .live-game-view-contain-v3 {
     width: 40%;
   }
 }
-
 .prematch-view-v3 .all-game-info-container-v3 {
   box-sizing: border-box;
   float: none;
@@ -1203,29 +1112,26 @@
     width: 100%;
   }
 }
-
+.prematch-games-list-title-v3 .prematch-region-icon-v3.outright:before{
+  font: 20px/22px sport-icon;
+  display: inline-block;
+  vertical-align: top;
+}
 //prematch game list
 .prematch-game-view-contain-v3 {
   box-sizing: border-box;
   float: left;
   width: 100%;
-  //max-height: 30000px;
-  //animation: region-open-animate-b 500ms ease-in-out;
-  //overflow: hidden;
   @include rtl {
     margin: 0 0 0 4px;
   }
 }
-
 .prematch-game-view-contain-v3.closed {
   box-sizing: border-box;
-  //max-height: 29px;
-  //animation: region-closed-animate-b 240ms ease;
   > .title-championship-v3 ~ .time-info-game-box-v3{
     display: none;
   }
 }
-
 @keyframes region-open-animate-b {
   0% {
     max-height: 29px;
@@ -1234,7 +1140,6 @@
     max-height: 999px;
   }
 }
-
 @keyframes region-closed-animate-b {
   0% {
     display: block;
@@ -1245,21 +1150,17 @@
     max-height: 29px;
   }
 }
-
 .prematch-game-view-contain-v3.closed > .title-championship-v3 {
   border-radius: 2px;
 }
-
 .time-info-game-box-v3 > .time-title-view-v3 > .arrow-view-v3:before {
   box-sizing: border-box;
   content: "\e671";
 }
-
 .prematch-game-view-contain-v3.closed > .title-championship-v3 > .arrow-view-v3:before,
 .time-info-game-box-v3.closed > .time-title-view-v3 > .arrow-view-v3:before {
   content: "\e670";
 }
-
 .title-championship-v3 {
   box-sizing: border-box;
   float: left;
@@ -1271,12 +1172,10 @@
   margin: 0 0 5px;
   border-radius: 2px 2px 0 0;
 }
-
 .prematch-list-view-v3.prematch .title-championship-v3 {
   box-sizing: border-box;
   padding-left: 10px;
 }
-
 .title-championship-v3 > .arrow-view-v3,
 .time-title-view-v3 > .arrow-view-v3 {
   box-sizing: border-box;
@@ -1284,7 +1183,6 @@
   line-height: 24px;
   color: $c16-tp-6;
 }
-
 .title-championship-v3 > p {
   box-sizing: border-box;
   color: $c16-tp-3;
@@ -1297,7 +1195,6 @@
   text-overflow: ellipsis;
   overflow: hidden;
 }
-
 .closed-game-icon-v3 {
   box-sizing: border-box;
   position: absolute;
@@ -1316,12 +1213,10 @@
     right: 0;
   }
 }
-
 .closed-game-icon-v3:before {
   box-sizing: border-box;
   content: "\e6f2";
 }
-
 .time-title-view-v3 {
   box-sizing: border-box;
   float: left;
@@ -1339,17 +1234,14 @@
     padding: 0 10px 0 30px;
   }
 }
-
 .time-info-game-box-v3.closed > .time-title-view-v3 {
   box-sizing: border-box;
   background: $c16-sp-10;
 }
-
 .time-title-view-v3:hover,
 .time-info-game-box-v3.closed > .time-title-view-v3:hover {
   background: $c16-sp-9;
 }
-
 .time-title-view-v3 > p {
   box-sizing: border-box;
   color: $c16-tp-6;
@@ -1368,11 +1260,9 @@
     float: right;
   }
 }
-
 .time-title-view-v3:hover > p {
   color: $c16-tp-6;
 }
-
 .time-info-game-box-v3 {
   box-sizing: border-box;
   float: left;
@@ -1382,21 +1272,13 @@
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
-  //overflow: hidden;
-  //max-height: 30000px;
-  //animation: prematch-open-animate-b 500ms ease-in-out;
 }
-
 .time-info-game-box-v3.closed {
-  //max-height: 26px;
-  //animation: prematch-closed-animate-b 240ms ease;
   > .time-title-view-v3 ~ .game-events-view-v3{display: none;}
 }
-
 .time-info-game-box-v3.closed > .time-title-view-v3 {
   border-radius: 2px;
 }
-
 @keyframes prematch-open-animate-b {
   0% {
     max-height: 26px;
@@ -1405,7 +1287,6 @@
     max-height: 999px;
   }
 }
-
 @keyframes prematch-closed-animate-b {
   0% {
     display: block;
@@ -1416,7 +1297,6 @@
     max-height: 26px;
   }
 }
-
 .game-events-view-v3 {
   box-sizing: border-box;
   float: left;
@@ -1425,7 +1305,6 @@
   overflow: hidden;
   border-radius: 0 0 2px 2px;
 }
-
 .mini-title-box-gameview-v3 {
   box-sizing: border-box;
   float: left;
@@ -1435,7 +1314,6 @@
   height: 30px;
   background: lighten(desaturate(adjust-hue($c16-sp, 2deg), 19), 11);
   box-shadow: 0 1px 0 rgba(255, 255, 255, 0.06) inset;
-  //transition: background 240ms;
   @include ltr {
     padding: 0 50px 0 30px;
   }
@@ -1443,7 +1321,6 @@
     padding: 0 30px 0 50px;
   }
 }
-
 .mini-title-box-gameview-v3.active,
 .mini-title-box-gameview-v3:hover {
   background: $classic-prematch-group-title-active-bg;
@@ -1464,15 +1341,6 @@
     color: $brand-color-2;
   }
 }
-
-//.events-list-view-v3 {
-//  float: left;
-//  width: 100%;
-//  @include rtl {
-//    transform: translate3d(0, 0, 0);
-//  }
-//}
-
 .prematch-list-view-v3.prematch .mini-title-box-gameview-v3 {
   box-sizing: border-box;
   @include ltr {
@@ -1482,7 +1350,6 @@
     padding: 0 10px 0 50px;
   }
 }
-
 .markets-count-view-v3 {
   box-sizing: border-box;
   position: absolute;
@@ -1499,7 +1366,6 @@
     padding: 0 0 0 15px;
   }
 }
-
 .markets-count-view-v3 > span {
   box-sizing: border-box;
   float: left;
@@ -1507,7 +1373,6 @@
   font-size: 5 + $size-font;
   line-height: 30px;
   color: $c16-tp-6;
-  //transition: color 240ms;
   @include ltr {
     padding: 0 0 0 5px;
   }
@@ -1515,14 +1380,12 @@
     padding: 0 5px 0 0;
   }
 }
-
 .markets-count-view-v3:hover > span,
 .mini-title-box-gameview-v3:hover .markets-count-view-v3 > span,
 .mini-title-box-gameview-v3.active .markets-count-view-v3 > span {
   box-sizing: border-box;
   color: $c16-tp-1;
 }
-
 .arrow-icon-b-v3 {
   box-sizing: border-box;
   position: absolute;
@@ -1531,7 +1394,6 @@
   top: 0;
   font: 16px/30px icomoon;
   color: $c16-tp-7;
-  //transition: color 240ms;
   text-indent: -4px;
   @include ltr {
     right: 0;
@@ -1540,7 +1402,6 @@
     left: 0;
   }
 }
-
 .arrow-icon-b-v3:before {
   box-sizing: border-box;
   @include ltr {
@@ -1550,7 +1411,6 @@
     content: "\e66f";
   }
 }
-
 .team-name-view-table-v3 {
   box-sizing: border-box;
   float: left;
@@ -1558,14 +1418,12 @@
   height: 30px;
   display: table;
 }
-
 .mini-title-box-gameview-v3 > .closed-game-icon-v3 {
   box-sizing: border-box;
   height: 100%;
   line-height: 30px;
   margin-top: -15px;
 }
-
 .team-names-date-icons-v3 {
   box-sizing: border-box;
   width: 100%;
@@ -1636,7 +1494,6 @@
   white-space: nowrap;
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
-  //transition: color 240ms, background 240ms;
 }
 @keyframes rotate-soon {
   0% {
@@ -1649,13 +1506,11 @@
     transform: rotateX(0deg);
   }
 }
-
 .pematch-single-game-info-v3 {
   box-sizing: border-box;
   float: left;
   width: 100%;
 }
-
 .team-names-date-icons-v3 .team-name-table .team-name-tc > p {
   box-sizing: border-box;
   position: relative;
@@ -1663,13 +1518,11 @@
   float: left;
   height: 30px;
 }
-
 .team-names-date-icons-v3 .team-name-table .team-name-tc .game-is-neutral {
   margin: 0 2px 0 0;
   line-height: 30px;
   vertical-align: top;
 }
-
 .team-names-date-icons-v3 .team-name-table .team-name-tc > p > span {
   box-sizing: border-box;
   width: 100%;
@@ -1680,7 +1533,6 @@
   position: absolute;
   height: 30px;
 }
-
 .team-names-date-icons-v3 .team-name-table .team-name-tc > p > span > i {
   box-sizing: border-box;
   font-style: normal;
@@ -1695,7 +1547,6 @@
     max-width: calc(100% - 10px);
   }
 }
-
 .team-names-date-icons-v3 .team-name-table .team-name-tc > p > span > b {
   box-sizing: border-box;
   font-weight: normal;
@@ -1706,20 +1557,17 @@
   vertical-align: top;
   transition: color 240ms;
 }
-
 .game-icons-view-list-v3 {
   box-sizing: border-box;
   display: table-cell;
   padding: 5px 0 5px 5px;
   vertical-align: top;
 }
-
 .game-icons-view-list-v3 > ul {
   box-sizing: border-box;
   float: right;
   display: table;
 }
-
 .game-icons-view-list-v3 > ul > li {
   box-sizing: border-box;
   display: table-cell;
@@ -1735,18 +1583,15 @@
     border-left: 1px solid rgba($c16-tp-12, 0.25);
   }
 }
-
 .game-icons-view-list-v3 > ul > li.game-id-v3 {
   font-size: 5 + $size-font;
   color: $c16-tp-4;
   padding: 0 8px;
 }
-
 .game-icons-view-list-v3 > ul > li:before {
   box-sizing: border-box;
   font: 16px/20px icomoon;
 }
-
 .game-icons-view-list-v3 > ul > li.statistic-icon-market-v3:before {
   box-sizing: border-box;
   content: "\e6b8";
@@ -1755,43 +1600,29 @@
   position: relative;
   top: -1px;
 }
-
 .tv-icon-market-v3:before {
   box-sizing: border-box;
   content: "\e683";
   color: $c16-tp-4;
 }
-
-//prematch game list END{box-sizing: border-box;"id":5068492,"addedInMultiView":true}
-//Pre-match view END
-//.classic-view-wrapper-v3 .left-column-v3.ng-hide ~ .center-column-v3,
-//.virtualsports .classic-view-wrapper-v3 .center-column-v3 {
-//  box-sizing: border-box;
-//  width: calc(100% - 296px);
-//}
-
 //Live calendar
 .classic-view-wrapper-v3 .live-calendar-16-j .md-progress-circular {
   margin: 100px auto auto;
 }
-
 .livecalendar .classic-view-wrapper-v3 .center-column-v3 .live-calendar-16-j {
   box-sizing: border-box;
   padding: 0;
 }
-
 .livecalendar .classic-view-wrapper-v3 .center-column-v3 .live-calendar-16-scroll-fix-j {
   box-sizing: border-box;
   left: 0;
   top: 38px;
   right: 0;
 }
-
 .livecalendar .animation-video-box-v3,
 .overview .animation-video-box-v3 {
   display: none;
 }
-
 //Live calendar END
 .single-events-b-v3.blocked {
   pointer-events: none;
@@ -1799,7 +1630,6 @@
     display: none;
   }
 }
-
 .markets-group-wrap-v3 {
   float: left;
   width: 100%;
@@ -2142,7 +1972,6 @@
     }
   }
 }
-
 .multi-column-mode-toggle {
   float: left;
   display: block;

@@ -482,7 +482,7 @@ VBET5.controller('settingsCtrl', ['$scope', '$rootScope', '$location', '$documen
             }
             if (allIsOk) {
                 if (responses.length > 1) {
-                    $scope.betLimitsData = Object.assign ({}, responses[0].details, responses[1].details);
+                    $scope.betLimitsData = Utils.MergeRecursive(Utils.copyObj(responses[0].details), responses[1].details);
                 } else {
                     $scope.betLimitsData = responses[0].details;
                 }
@@ -634,23 +634,23 @@ VBET5.controller('settingsCtrl', ['$scope', '$rootScope', '$location', '$documen
      * @methodOf vbet5.controller:settingsCtrl
      * @description sets self-exclusion periods
      */
-    $scope.setSelfExclusion = function setSelfExclusion (type, configName) {
+    $scope.setSelfExclusion = function setSelfExclusion (type, configName, passwordCtrl) {
         if (configName && Config.main[configName].enabled && Config.main[configName].type === type && Config.main[configName].confirmationText) {
             $rootScope.$broadcast("globalDialogs.addDialog", {
                 type: 'info',
-                title: 'Info',
+                title: 'Confirmation',
                 content: Config.main[configName].confirmationText,
                 buttons: [{
                     title: 'Yes',
                     callback: function () {
-                        setSelfExclusionConfirmed(type);
+                        setSelfExclusionConfirmed(type, passwordCtrl);
                     }
                 }, {
                     title: 'No'
                 }]
             });
         } else {
-            setSelfExclusionConfirmed(type);
+            setSelfExclusionConfirmed(type, passwordCtrl);
         }
     };
 
@@ -660,11 +660,15 @@ VBET5.controller('settingsCtrl', ['$scope', '$rootScope', '$location', '$documen
      * @methodOf vbet5.controller:settingsCtrl
      * @description sets self-exclusion periods
      */
-    function setSelfExclusionConfirmed (type) {
+    function setSelfExclusionConfirmed (type, passwordCtrl) {
         $scope.working = true;
         var request = {
             exc_type: type
         };
+        if (passwordCtrl) {
+            request.password = $scope.selfExclusionPasswordState.value;
+        }
+
         if($scope.selfExclusionData.type === 'custom') {
             request.days = Moment.moment($scope.customTimeout.date).diff($scope.today, 'days') + 1;
         } else {
@@ -672,9 +676,16 @@ VBET5.controller('settingsCtrl', ['$scope', '$rootScope', '$location', '$documen
         }
         Zergling.get(request, "set_client_self_exclusion").then(function (response) {
             $scope.working = false;
+            if (passwordCtrl) {
+                $scope.selfExclusionPasswordState.value = "";
+                passwordCtrl.$setPristine(true);
+                passwordCtrl.$setTouched(false);
+            }
+
             var exTipe = "Time-Out";
             if (response.result === 0 || response.result === 'OK') {
                 if (type === Config.main.selfExclusion.type) {
+                    $rootScope.$broadcast("self_exclusion_success");
                     $scope.logOut();
                     console.log('Logout After Exclusion');
                     exTipe = "Self-Exclusion";
@@ -930,6 +941,7 @@ VBET5.controller('settingsCtrl', ['$scope', '$rootScope', '$location', '$documen
      * @description checks if userTimeOut options contains item with custom date
      */
     $scope.initUserTimout = function initUserTimout() {
+        $scope.initSelfExclusion();
         var results = Config.main.userTimeOut.options.filter(function filterTimeoutOption(option) {
             return option.limit.type === 'custom';
         });
@@ -945,6 +957,18 @@ VBET5.controller('settingsCtrl', ['$scope', '$rootScope', '$location', '$documen
             };
             $scope.timeoutContainsDatepicker = true;
         }
+    };
+
+    /**
+     * @ngdoc method
+     * @name initSelfExclusion
+     * @methodOf vbet5.controller:settingsCtrl
+     * @description initialize password state
+     */
+    $scope.initSelfExclusion = function initSelfExclusion() {
+        $scope.selfExclusionPasswordState = {
+            value: ""
+        };
     };
 
     /**

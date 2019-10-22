@@ -37,7 +37,7 @@ VBET5.controller('IceHockeyCtrl', ['$rootScope', '$scope', 'iceHockeyAnimation',
     // iceHockeyAnimation.startAnimate();
     //
     // var test = function test() {
-    //     console.info('****************',index);
+    //     console.log('****************',index);
     //     var id = Object.values(swarmConstants)[index];
     //     if (id) {
     //         var new_event = $scope.openGame.last_event;

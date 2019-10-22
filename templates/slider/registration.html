@@ -24,6 +24,8 @@
                             <div ng-repeat="regItem in RegConfig.rightCol track by $index" class="reg-list-item-wrapper-j {{regItem.name}} {{regItem.type}}">
                                 <ng-include src="::'templates/slider/registration-fields.html'"></ng-include>
                             </div>
+                            <!-- INPUT TYPE CAPTCHA -->
+                            <div ng-include="::'templates/slider/recaptcha.html'|fixPath" class="g_recaptcha_response field-separator"></div>
                         </li>
                     </ul>
                 </div>

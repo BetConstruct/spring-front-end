@@ -1,16 +1,8 @@
-<div class="egt-table" ng-show="egtJackpot && jackpotAmounts">
-    <div class="egt-tcell">
-        <div class="egt-container">
-            <div class="egt-content" ng-repeat="(jackpotKey, jackpotValue) in jackpotAmounts track by $index">
-                <div class="egt-bg {{jackpotKey}}">
-                    <ul>
-                        <li>{{egtJackpot.currency[0]}}<br>{{egtJackpot.currency[1]}}<br>{{egtJackpot.currency[2]}}</li>
-                        <li><jackpot-counter point="point" comma="true" max-duration-speed="400" amount="jackpotValue"></jackpot-counter></li>
-                    </ul>
-                </div>
-            </div>
-        </div>
+<div class="egt-content" ng-show="egtJackpot && jackpotAmounts" ng-repeat="(jackpotKey, jackpotValue) in jackpotAmounts track by $index">
+    <div class="egt-bg {{jackpotKey}}">
+        <ul>
+            <li>{{egtJackpot.currency[0]}}<br>{{egtJackpot.currency[1]}}<br>{{egtJackpot.currency[2]}}</li>
+            <li><jackpot-counter point="point" comma="true" max-duration-speed="400" amount="jackpotValue"></jackpot-counter></li>
+        </ul>
     </div>
-
 </div>
-

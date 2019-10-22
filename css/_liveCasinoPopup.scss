@@ -145,10 +145,10 @@
     background: none;
     box-shadow: none;
     @include ltr {
-        padding: 20px 40px 20px 0;
+        padding: 0 40px 20px 0;
     }
     @include rtl {
-        padding: 20px 0 20px 40px;
+        padding: 0 0 20px 40px;
     }
 }
 .jackpot-win-animation-off {

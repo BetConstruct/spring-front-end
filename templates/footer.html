@@ -9,7 +9,7 @@
                 <div class="back-block-j">
                     <div class="age-restriction-j" ng-show="conf.footer.ageRestriction">{{ ::conf.footer.ageRestriction[$location.host()] || conf.footer.ageRestriction['default'] || conf.footer.ageRestriction }}+</div>
                     <button ng-click="broadcast('feedback.toggle')" ng-if="(env.authorized && conf.footer.feedbackButton.enabledLogin) || (!env.authorized && conf.footer.feedbackButton.enabledLogOut)" trans>Feedback</button>
-                    <button ng-click="scrollToTop(true)" ng-show="conf.footer.enableToTopButton" trans>back to top</button>
+                    <button ng-if="conf.footer.enableToTopButton" class="back-to-top-hide" ng-click="scrollToTop(true)" class-on-scroll=",back-to-top-hide" trans>back to top</button>
                 </div>
             </div>
         </div>
@@ -21,7 +21,7 @@
                             <iframe ng-switch-when="iframe" ng-src="{{logo.iframe | html : 'url'}}" style="{{logo.css}}" width="{{logo.width}}" height="{{logo.height}}" frameborder="0" scrolling="no"></iframe>
                             <div ng-switch-when="ceg" id="ceg-seal-container" data-ceg-seal-id="{{logo.id}}" data-ceg-image-size="{{logo.size}}" data-ceg-image-type="basic-small"></div>
                             <div ng-switch-when="apg" id="apg-seal-container" data-apg-seal-id="{{logo.id}}" data-apg-image-size="{{logo.size}}" data-apg-image-type="basic-small"></div>
-                            <a ng-switch-default ng-href="{{logo.href}}" target="{{(logo.target || logo.href[0] === '#') ? (logo.target || '') : '_blank'}}" style="{{logo.css}}" route-reload reload="{{logo.href[0] === '#' ? 'true' : 'false'}}"><img ng-src="{{logo.img}}" width="{{logo.width}}" height="{{logo.height}}"> </a>
+                            <a ng-switch-default ng-href="{{logo.href}}" target="{{(logo.target || logo.href[0] === '#') ? (logo.target || '') : '_blank'}}" style="{{logo.css}}" route-reload reload="{{logo.href[0] === '#' ? 'true' : 'false'}}"><img ng-src="{{logo.img}}" width="{{logo.width}}" height="{{logo.height}}"> <p ng-if="logo.description" ng-bind="logo.description|translate"></p> </a>
                         </span>
                     </div>
                 </div>
@@ -35,7 +35,7 @@
                                 <iframe ng-switch-when="iframe" ng-src="{{logo.iframe | url }}" style="{{logo.css}}" width="{{logo.width}}" height="{{logo.height}}" frameborder="0" scrolling="no"></iframe>
                                 <div ng-switch-when="ceg" id="ceg-seal-container" data-ceg-seal-id="{{logo.id}}" data-ceg-image-size="{{logo.size}}" data-ceg-image-type="basic-small"></div>
                                 <div ng-switch-when="apg" id="apg-seal-container" data-apg-seal-id="{{logo.id}}" data-apg-image-size="{{logo.size}}" data-apg-image-type="basic-small"></div>
-                                <a ng-switch-default ng-href="{{logo.href}}" target="{{(logo.target || logo.href[0] === '#') ? (logo.target || '') : '_blank'}}" style="{{logo.css}}" route-reload reload="{{logo.href[0] === '#' ? 'true' : 'false'}}"><img ng-src="{{logo.img}}" width="{{logo.width}}" height="{{logo.height}}"> </a>
+                                <a ng-switch-default ng-href="{{logo.href}}" target="{{(logo.target || logo.href[0] === '#') ? (logo.target || '') : '_blank'}}" style="{{logo.css}}" route-reload reload="{{logo.href[0] === '#' ? 'true' : 'false'}}"><img ng-src="{{logo.img}}" width="{{logo.width}}" height="{{logo.height}}"><p ng-if="logo.description" ng-bind="logo.description|translate"></p> </a>
                             </span>
                         </li>
                     </ul>

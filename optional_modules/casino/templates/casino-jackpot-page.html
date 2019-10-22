@@ -1,0 +1,15 @@
+<div ng-if="$root.conf.jackpot.casino.enabled && $root.conf.jackpot.casino.externalJackpots" watch-resize ng-controller="providerJackpotCtrl" class="center-contain-casino providers-jackpot-page">
+    <div ng-include="::'optional_modules/casino/templates/casino-jackpot-widget.html'|fixPath"></div>
+    <multiview-control  ng-if="confData.main.multiViewEnabled" wide-mode="wideMode" middle-mode="middleMode" view-count="viewCount" games-info="gamesInfo"></multiview-control>
+    <div ng-include="'optional_modules/casino/templates/big-game.html'|fixPath" ng-if="gamesInfo.length" class="big-games-overflow"></div>
+</div>
+<style ng-controller="cmsPagesCtrl" ng-init="loadPage('casino-backgrounds-' + env.lang, 'lang')">
+    .body-wrapper.jackpots {
+    {{mainPage.thumbnail ? 'background-image: url('+mainPage.thumbnail+');' : ''}}
+    {{mainPage.custom_fields.size ? "background-size: " + mainPage.custom_fields.size[0] + ";" : mainPage.thumbnail ? "background-size: 100%;" : ""}}
+    {{mainPage.custom_fields.position ? 'background-position: ' + mainPage.custom_fields.position[0] : mainPage.thumbnail ? "background-position: 50% 0" : ""}};
+    {{mainPage.custom_fields.attachment ? "background-attachment:" + mainPage.custom_fields.attachment[0] + ";" : ""}}
+    {{mainPage.custom_fields.color ? "background-color: " + mainPage.custom_fields.color[0] + ";" : ""}}
+    {{mainPage.custom_fields.repeat ? "background-repeat: " + mainPage.custom_fields.repeat[0] : mainPage.thumbnail ? "background-repeat: no-repeat" : ""}};
+    }
+</style>

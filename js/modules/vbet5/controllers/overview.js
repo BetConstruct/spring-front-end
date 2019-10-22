@@ -146,6 +146,7 @@ angular.module('vbet5.betting').controller('overviewCtrl', ['$rootScope', '$scop
                             video_id: game.video_id,
                             stats: game.stats,
                             type: game.type,
+                            start_ts: game.start_ts,
                             processedMarkets: processMarkets(game.market)
                         };
                         if (processedGame.processedMarkets) {

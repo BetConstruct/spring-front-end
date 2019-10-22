@@ -19,7 +19,7 @@
             <tbody ng-repeat="bet in agentBetHistory | orderBy:'date_time':true">
             <tr class="main">
                 <td class="date-id">
-                    <span ng-if="bet.Date !== 0">{{bet.Date|formatDate:(conf.layoutTimeFormat[conf.sportsLayout] || 'noLocaleTranslate')}} {{conf.layoutTimeFormat[conf.sportsLayout]? (bet.Date|formatDate:'hour':null:env.timeFormat): ''}}</span>
+                    <span ng-if="bet.Date !== 0">{{bet.Date|formatDate:(conf.layoutTimeFormat[conf.sportsLayout] || 'noLocaleTranslate'):null:$root.env.timeFormat}} {{conf.layoutTimeFormat[conf.sportsLayout]? (bet.Date|formatDate:'hour':null:$root.env.timeFormat): ''}}</span>
                     <span ng-if="bet.Date === 0" trans>Total</span>
                 </td>
                 <td class="hh-cell odd-color center-text">

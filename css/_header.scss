@@ -421,31 +421,31 @@ body > {
   transform: translate3d(0,0,0);
 }
 .settings-icon-contain.clock-set-b > span{
-  width: 52px;
   display: inline-block;
   vertical-align: top;
   > b{
     font-weight: bold;
     display: inline-block;
     vertical-align: top;
-    position: absolute;
-    left: 2px;
-    top: -5px;
     transform: translate3d(0,0,0);
     @include rtl {
       left: auto;
       right: 2px;
     }
     + b {
+      position: absolute;
       top: 8px;
+      left: -5px;
+      display: inline-block;
+      vertical-align: top;
       color: rgba(set-color($header-first-line-background),0.4);
-      padding-left: 8px;
+      padding-left: 14px;
       font-weight: normal;
       &:before {
         content: "\e6e4";
         position: absolute;
         top: 0;
-        left: -6px;
+        left: 0;
         color: rgba(set-color($header-first-line-background),0.6);
         font: 9px/22px icomoon;
       }
@@ -454,6 +454,46 @@ body > {
       top: 0;
     }
   }
+}
+.clock-time-v-bc {
+  position: absolute;
+  width: 100%;
+  text-align: center;
+  top: 0;
+  @include ltr {
+    left: 0;
+  }
+  @include rtl {
+    right: 0;
+  }
+  &:first-child:nth-last-child(2){
+    top: -8px;
+  }
+}
+.time-view-w-bc{
+  position: relative;
+  min-height: 20px;
+  @include ltr {
+    width: 50px;
+  }
+  @include rtl {
+    width: 52px;
+  }
+}
+.format-12h{
+ > .time-view-w-bc{
+    @include ltr {
+      width: 72px;
+    }
+    @include rtl {
+      width: 100px;
+    }
+   > .clock-time-v-bc{
+     + b{
+       left: 5px;
+     }
+   }
+ }
 }
 .separator-contain-nav.active .settings-b{
   transform: rotate(90deg) translate3d(0,0,0);
@@ -1003,6 +1043,7 @@ body > {
 .icon-faq-new-b:before{content: "\51";}
 .icon-livechat-new-b:before{content: "\e6be";}
 .cashier-icon-b:before{content: "\e921";}
+.icon-chat-header-b:before{content: "\ea4f"}
 .signin-reg-buttons-b{
   float: left;
   box-sizing: border-box;
@@ -1084,11 +1125,15 @@ body > {
     direction: rtl;
   }
   &:first-child {
+    padding: 0 38px;
     z-index: 10;
+    animation: hide-nav 3ms linear;
   }
 }
-.header-nav-contain > ul:first-child {
-  padding: 0 38px;
+@keyframes hide-nav {
+  0%, 100% {
+    overflow: hidden;
+  }
 }
 .header-nav-contain > ul > li{
   box-sizing: border-box;
@@ -1501,7 +1546,6 @@ body > {
         margin: 0 12px 0 0;
       }
       @include rtl {
-        float: right;
         margin: 0 0 0 12px;
       }
     }
@@ -1666,7 +1710,7 @@ body > {
         }
         &:first-child {
           @include rtl {
-            margin-left: 6px;
+            margin-right: 6px;
           }
         }
       }

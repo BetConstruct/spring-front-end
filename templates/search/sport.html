@@ -13,7 +13,7 @@
                             <button ng-click="goToResult(result)">
                                 {{ result.game.team1_name }} - {{ result.game.team2_name }}
                                 <br>
-                                <div>{{ result.competition.name }} {{result.game.start_ts|formatDate}}</div>
+                                <div>{{ result.competition.name }} {{result.game.start_ts|formatDate:'full'}}</div>
                             </button>
                         </dd>
                     </dl>

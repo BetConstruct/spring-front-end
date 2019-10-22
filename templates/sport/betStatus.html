@@ -13,7 +13,7 @@
                     <input type="text" ng-model="betStatus.ticketNumber" prevent-input="[^0-9]">
                 </div>
                 <div ng-click="getBetStatus()">
-                    <button ng-disabled="!betStatus.ticketNumber || !$root.conf.recaptchaV3 && !betStatus.g_recaptcha_response" trans></button>
+                    <button ng-disabled="!betStatus.ticketNumber || betStatus.displayRecaptcha && !betStatus.g_recaptcha_response" trans></button>
                 </div>
             </div>
             <div class="bet-status-recaptcha" ng-if="betStatus.displayRecaptcha" ng-controller="recaptchaCtrl">

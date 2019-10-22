@@ -92,6 +92,12 @@ CMS.constant('WPConfig', {
         },
         'casino-winners': {
             'default': 'casino-biggest-wins'
+        },
+        countdownBanner: {
+            'default': 'countdown-banner'
+        },
+        skillGamesBanners: {
+            'default': 'skill_games_banners'
         }
     },
     belote: {
@@ -141,6 +147,11 @@ CMS.constant('WPConfig', {
         },
         newsPageSlug: {             // "News" page slug where news(posts) will be shown
             'eng': 'news'
+        }
+    },
+    'blast': {
+        mainPageSlugs: {
+            'default': 'blast'
         }
     },
     'new-poker': {

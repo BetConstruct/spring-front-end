@@ -31,6 +31,22 @@
                                 </li>
                             </ul>
                         </div>
+                        <div class="cash-out-ask"
+                             ng-if="cashoutDialog.type !== 'autoCashout' && cashoutDialog.type !== 'confirm'">
+                            <h4 trans>In case of Cashout amount change</h4>
+                            <div
+                                 ng-class="{'active': cashoutPopupOpened}"
+                                 ng-click="cashoutPopupOpened = !cashoutPopupOpened"
+                                 hide-on-click
+                                 state-flag-var="cashoutPopupOpened">
+                                <p class="settings-icon-betslip-v3">{{modes[cashoutPopup.selectedMode]}}</p>
+                                <ul>
+                                    <li ng-class="{'active': cashoutPopup.selectedMode === 0}" ng-click="changeCashOutMode(0)"><p ng-bind="::modes[0]"></p></li>
+                                    <li ng-class="{'active': cashoutPopup.selectedMode === 1}" ng-click="changeCashOutMode(1)"><p ng-bind="::modes[1]"></p></li>
+                                    <li ng-class="{'active': cashoutPopup.selectedMode === 2}" ng-click="changeCashOutMode(2)"><p ng-bind="::modes[2]"></p></li>
+                                </ul>
+                            </div>
+                        </div>
                         <div class="pu-contain-j" ng-show="cashoutDialog.type == 'confirm' && !cashoutSuccess && cashoutRule.manualError">
                             <p ng-show="unknownError" trans>Error occurred.</p>
                             <p trans>Cash-out for selected bet is not available.</p>
@@ -91,14 +107,14 @@
                                                    numpad numpad-letters="disabled" maxlength="10"
                                                    ng-model="cashoutPopup.inputValue" ng-change="changeBackCashoutValue(triggerAutoCashOut.amount)"
                                                    ng-focus="changeBackCashoutValue(triggerAutoCashOut.amount)"
-                                                   ng-disabled="autoCashOutAmount.disabled || (cashoutBet.cash_out <= $root.partnerConfig.min_bet_stakes[$root.profile.currency_name] && cashoutDialog.type != 'autoCashout') || (cashoutBet.auto_cash_out_amount != null)"
+                                                   ng-disabled="(autoCashOutAmount.disabled && cashoutDialog.type != 'autoCashout') || (cashoutBet.auto_cash_out_amount != null)"
                                                    auto-focus="{{cashoutTypes.auto === 'partial'}}" >
                                             <div class="cashout-range-box" ng-show="!triggerAutoCashOut.error && triggerAutoCashOut.amount > 0">
                                                 <ul>
-                                                    <li ng-show="$root.partnerConfig.min_bet_stakes[$root.profile.currency_name] < cashoutBet.cash_out || cashoutDialog.type == 'autoCashout'">0 {{cashoutBet.currency|currency}}</li>
-                                                    <li ng-show="$root.partnerConfig.min_bet_stakes[$root.profile.currency_name] < cashoutBet.cash_out || cashoutDialog.type == 'autoCashout'">{{triggerAutoCashOut.amount|number:conf.balanceFractionSize}} {{cashoutBet.currency|currency}}</li>
+                                                    <li ng-show="cashoutDialog.type == 'autoCashout'">0 {{cashoutBet.currency|currency}}</li>
+                                                    <li ng-show="cashoutDialog.type == 'autoCashout'">{{triggerAutoCashOut.amount|number:conf.balanceFractionSize}} {{cashoutBet.currency|currency}}</li>
                                                 </ul>
-                                                <div class="cashout-range-input-wrapper" ng-if="cashoutBet.cash_out > $root.partnerConfig.min_bet_stakes[$root.profile.currency_name] || cashoutDialog.type == 'autoCashout'">
+                                                <div class="cashout-range-input-wrapper" ng-if="cashoutDialog.type == 'autoCashout'">
                                                     <small style="width: {{cashoutPopup.sliderValue}}%"></small>
                                                     <input type="range" min="0" max="100" value="100" step="0.01"  ng-model="cashoutPopup.sliderValue" ng-change="changeCashoutValue(cashoutPopup.sliderValue, triggerAutoCashOut.amount)" ng-disabled="cashoutBet.auto_cash_out_amount != null">
                                                 </div>
@@ -123,7 +139,7 @@
                                         </label>
                                     </div>
                                 </li>
-                                <li ng-class="{'disabled' : cashoutTypes.manual != 'partial'}" ng-show="!conf.disableCashOut.partial && $root.partnerConfig.min_bet_stakes[$root.profile.currency_name] < cashoutBet.cash_out">
+                                <li ng-class="{'disabled' : cashoutTypes.manual != 'partial'}" ng-show="!conf.disableCashOut.partial">
                                     <div class="cashout-option">
                                         <label ng-click="newCashoutData.partial_price = cashoutPopup.inputValue">
                                             <input type="radio" name="cashoutType" ng-model="cashoutTypes.manual" value="partial">
@@ -138,16 +154,15 @@
                                                prevent-input="{{inputRegEx}}"
                                                numpad numpad-letters="disabled" maxlength="10"
                                                ng-focus="changeBackCashoutValue(cashoutBet.cash_out)"
-                                               ng-model="cashoutPopup.inputValue" ng-change="changeBackCashoutValue(cashoutBet.cash_out)"
-                                               ng-disabled="cashoutBet.cash_out <= $root.partnerConfig.min_bet_stakes[$root.profile.currency_name]" auto-focus="{{cashoutTypes.manual === 'partial'}}">
+                                               ng-model="cashoutPopup.inputValue" ng-change="changeBackCashoutValue(cashoutBet.cash_out)" auto-focus="{{cashoutTypes.manual === 'partial'}}">
                                         <div class="cashout-range-box">
                                             <ul>
-                                                <li ng-show="$root.partnerConfig.min_bet_stakes[$root.profile.currency_name] < cashoutBet.cash_out">0 {{cashoutBet.currency|currency}}</li>
-                                                <li ng-show="$root.partnerConfig.min_bet_stakes[$root.profile.currency_name] < cashoutBet.cash_out">{{cashoutBet.cash_out|number:conf.balanceFractionSize}} {{cashoutBet.currency|currency}}</li>
+                                                <li>0 {{cashoutBet.currency|currency}}</li>
+                                                <li>{{cashoutBet.cash_out|number:conf.balanceFractionSize}} {{cashoutBet.currency|currency}}</li>
                                             </ul>
-                                            <div class="cashout-range-input-wrapper" ng-show="cashoutBet.cash_out > $root.partnerConfig.min_bet_stakes[$root.profile.currency_name]">
+                                            <div class="cashout-range-input-wrapper">
                                                 <small style="width: {{cashoutPopup.sliderValue}}%"></small>
-                                                <input type="range" min="0" max="100" value="100" step="0.01"  ng-model="cashoutPopup.sliderValue" ng-change="changeCashoutValue(cashoutPopup.sliderValue, cashoutBet.cash_out)">
+                                                <input type="range" min="0" max="100" value="100" step="0.01" ng-model="cashoutPopup.sliderValue" ng-change="changeCashoutValue(cashoutPopup.sliderValue, cashoutBet.cash_out)">
                                             </div>
                                         </div>
                                     </div>
@@ -160,7 +175,7 @@
                                 <br/>
                                 <span trans>Pick:</span> <span>{{cashoutBet.events[0].event_name}}</span>
                             </div>
-                            <p class="warning-j" ng-show="newCashoutData.priceChanged" trans>Price has changed</p>
+                            <p class="warning-j" ng-show="newCashoutData.priceChanged" trans>Cash-out amount has changed</p>
                             <p class="warning-j" ng-show="!cashoutPopup.originalPrice && !newCashoutData.new_price" trans>The event has already finished, calculations will complete soon.</p>
                             <p class="warning-j" ng-show="!canCashOut.enabled && (cashoutPopup.inputValue && cashoutPopup.inputValue >= 0)" trans>Please enter a valid Cash-out amount.</p>
                             <p class="warning-j" ng-show="cashoutDialog.type == 'autoCashout' && autoCashOutAmount.disabled" trans>Auto Cash-out rule can't be created at the moment.</p>
@@ -169,7 +184,7 @@
 
                         <div class="pu-button-wrap-j">
 
-                            <button class="brand-color-1" ng-click="doCashout(cashoutBet, newCashoutData);$event.stopPropagation();" ng-show="cashoutDialog.type == 'cashout'" ng-disabled="!canCashOut.enabled" trans>Cash-out</button>
+                            <button class="brand-color-1" ng-click="doCashout(cashoutBet, newCashoutData)" ng-show="cashoutDialog.type == 'cashout'" ng-disabled="!canCashOut.enabled" trans>Cash-out</button>
                             <button class="brand-color-1" ng-click="createAutoCashOutRule(cashoutBet.id);$event.stopPropagation();" ng-show="cashoutDialog.type == 'autoCashout' && cashoutBet.auto_cash_out_amount == null" ng-disabled="!canCashOut.enabled || triggerAutoCashOut.error || autoCashOutAmount.disabled" trans>Create rule</button>
                             <button class="brand-color-1" ng-click="cancelAutoCashOutRule(cashoutBet.id);$event.stopPropagation();" ng-show="cashoutDialog.type == 'autoCashout' && cashoutBet.auto_cash_out_amount != null" ng-disabled="!canCashOut.enabled" trans>Cancel rule</button>
                             <button class="brand-color-1" ng-click="cashoutPopup.active = false; $event.stopPropagation(); " trans ng-show="cashoutDialog.type == 'confirm'">Ok</button>

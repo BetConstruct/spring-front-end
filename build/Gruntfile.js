@@ -9,19 +9,24 @@ module.exports = function (grunt) {
             default_options: {
                 options: {
                     path: '../js/skins/<%=skinConfig%>.js',
-                    modules: ['VBET5', 'CMS', 'CASINO', 'EXCHANGE']
+                    modules: ['VBET5', 'CMS', 'CASINO']
                 }
             }
         },
         sass: {
             options: {
                 sourceMap: false,
-                includePaths: ['../skins/<%=skinConfig%>/sass']
+                outputStyle: 'compressed',
+                includePaths: ['../skins/<%=skin%>/sass']
             },
             dist: {
-                files: {
-                    '../skins/<%=skinConfig%>/css/skin.css': '../skins/<%=skinConfig%>/sass/skin.scss'
-                }
+                files: [{
+                    expand: true,
+                    cwd: '../skins/<%=skin%>/sass/',
+                    src: ['**/!(_)*.scss'],
+                    dest: '../skins/<%=skin%>/css/',
+                    ext: '.css'
+                }]
             }
         },
         //------------------ put all templates content into JS file (templateCache) ------------------------------------
@@ -77,7 +82,11 @@ module.exports = function (grunt) {
                         {match: /<!--skin\sjs\sfiles-->/g, replacement: '<%=sourceFiles%>'},
                         {match: /<!--optional\sjs\sfiles-->/g, replacement: '<%=optionalSourceFiles%>'},
                         {match: /<!--metas-->/g, replacement: '<%=angularValue.VBET5.SkinConfig.main.htmlMetaTags%>'},
-                        {match: /<!--about-->/g, replacement: '<%=angularValue.VBET5.SkinConfig.main.htmlAboutText%>'}
+                        {match: /<!--header-scripts-->/g, replacement: '<%=angularValue.VBET5.SkinConfig.main.htmlHeaderScripts%>'},
+                        {match: /<!--about-->/g, replacement: '<%=angularValue.VBET5.SkinConfig.main.htmlAboutText%>'},
+                        {match: /<!--scripts-->/g, replacement: '<%=angularValue.VBET5.SkinConfig.main.htmlScripts%>'},
+                        {match: /data\-id=""/g, replacement: 'data-id="<%=angularValue.VBET5.SkinConfig.main.site_id%>"'},
+                        {match: /data\-config\-is\-externall=""/g, replacement: 'data-config-is-externall="<%=angularValue.VBET5.SkinConfig.loadConfigFromCMS || false%>"'}
                     ]
                 },
                 files: [{src: ['../index.html'], dest: '../<%=skinConfig%>.html'}]
@@ -103,7 +112,9 @@ module.exports = function (grunt) {
                     patterns: [
                         {match: /<script\sid="bodyscript"><\/script>/g, replacement: '<%=angularValue.VBET5.SkinConfig.main.bodyScript%>'},
                         {match: /<!--metas-->/g, replacement: '<%=angularValue.VBET5.SkinConfig.main.htmlMetaTags%>'},
-                        {match: /<!--about-->/g, replacement: '<%=angularValue.VBET5.SkinConfig.main.htmlAboutText%>'}
+                        {match: /<!--header-scripts-->/g, replacement: '<%=angularValue.VBET5.SkinConfig.main.htmlHeaderScripts%>'},
+                        {match: /<!--about-->/g, replacement: '<%=angularValue.VBET5.SkinConfig.main.htmlAboutText%>'},
+                        {match: /<!--scripts-->/g, replacement: '<%=angularValue.VBET5.SkinConfig.main.htmlScripts%>'}
                     ]
                 },
                 files: [{src: ['index.html'], dest: 'index.html'}]
@@ -125,16 +136,16 @@ module.exports = function (grunt) {
                     '../lib/amplify.store.min.js',
                     '../lib/moment-with-locales.min.js',
                     '../lib/ng-map.js',
-		            '../lib/hopscotch.min.js',
+                    '../lib/hls.js',
+//		            '../lib/hopscotch.min.js',
                     '../lib/readable-range.js',
                     '../lib/xml2json.js',
 //                    '../lib/intro.min.js',
                     '../lib/script.js',
                     '../lib/autofill-event.js',//for fixing bug with auto-fill(https://github.com/angular/angular.js/issues/1460)
-                   '../lib/swfobject.js',
-                    '../lib/analytics.js',
-                    '../lib/evercookie.js',
-                    '../lib/fingerprint2.min.js',
+                    '../lib/swfobject.js',
+                    '../lib/evercookie.js',   // anti-fraud project
+                    '../lib/fingerprint2.min.js',   // anti-fraud project
                     '../lib/modules/**/*.js',
                     '../js/modules/vbet5/main.js',
                     '../js/modules/vbet5/config.js',
@@ -162,7 +173,7 @@ module.exports = function (grunt) {
                     'templates.js' //  created by ngtemplates task
                 ],
                 jsOutputFile: 'app.min.js',
-                maxBuffer: 500,
+                maxBuffer: 1500,
                 options: {
 //                    compilation_level: 'ADVANCED_OPTIMIZATIONS',
                     language_in: 'ECMASCRIPT5_STRICT'
@@ -172,7 +183,6 @@ module.exports = function (grunt) {
                 closurePath: '..', // compiler.jar has to be in 'build' directory
                 js: ['../js/partnerinit.js'],
                 jsOutputFile: 'app/<%=skin%>/js/partnerinit.js',
-                maxBuffer: 500,
                 options: {compilation_level: 'ADVANCED_OPTIMIZATIONS',language_in: 'ECMASCRIPT5_STRICT'}
             }
         },
@@ -191,14 +201,16 @@ module.exports = function (grunt) {
             options: {
                 data: {
                     version: '<%= pkg.version %>',
-                    buildDate: '<%= grunt.template.today("yyyymmdd.hhMMss") %>',
-                    favicon: '<%= angularValue.VBET5.SkinConfig.main.logo && angularValue.VBET5.SkinConfig.main.logo.favicon || "favicon.ico" %>',
-		            gitinfo: '<%= gitinfo.local.branch.current.SHA %>',
+                    resourcePathPrefix: '<%= angularValue.VBET5.SkinConfig.main.resourcePathPrefix || "" %>',
+                    buildDate: '<%= grunt.template.today("yyyymmddhhMMss") %>',
+                    favicon: '<%= angularValue.VBET5.SkinConfig.main.integrationMode ? "" : (angularValue.VBET5.SkinConfig.main.resourcePathPrefix || "") + (angularValue.VBET5.SkinConfig.main.logo && angularValue.VBET5.SkinConfig.main.logo.favicon || "favicon.ico") + "?=" + grunt.template.today("yyyymmddhhMMss")  %>',
+                    gitinfo: '<%= gitinfo.local.branch.current.SHA %>',
                     skin: '<%= skin %>',
                     rtl: '<%= rtl %>',
-                    title: '<%= metaTags.title.eng %>',
-                    keywords: '<%= metaTags.keywords.eng %>',
-                    description: '<%= metaTags.description.eng %>'
+                    title: '<%= metaTags.title && metaTags.title.eng || "" %>',
+                    keywords: '<%= metaTags.keywords && metaTags.keywords.eng || "" %>',
+                    description: '<%= metaTags.description && metaTags.description.eng || "" %>',
+                    customCss: '<%= angularValue.VBET5.SkinConfig.disableCustomCss ? "" : (angularValue.VBET5.SkinConfig.main.resourcePathPrefix || "") + "custom.css" %>'
                 }
             },
             dist: {
@@ -217,7 +229,7 @@ module.exports = function (grunt) {
                     {expand: true, src: ['skin.min.css'], dest: 'app/<%=skin%>/skins/<%=skin%>/css'},
                     {expand: true, src: ['../skins/<%=skin%>/**'], dest: 'app/<%=skin%>/skins/'},
                     //{expand: true, src: ['../js/partnerinit.js'], dest: 'app/<%=skin%>/partnerinit.js'},
-                    {expand: true, flatten: true, src: ['../languages/*.json'], dest: 'app/<%=skin%>/languages'},
+                    {expand: true, flatten: true, src: ['languages_tmp/*.json'], dest: 'app/<%=skin%>/languages'},
                     {expand: true, src: ['../images/**'], dest: 'app/<%=skin%>/images'},
 
                     {expand: true, src: ['../swf/**'], dest: 'app/<%=skin%>/swf'},
@@ -272,6 +284,30 @@ module.exports = function (grunt) {
         },
         //---------------------- Extraction of translateable strings and PO files generation ---------------------------
         shell: {
+            extractTranslations: {
+                options: { stdout: true, failOnError: true },
+                command: 'php translations/extract.php ' + (grunt.option('lang') || '')
+            },
+            generateTranslation:  {
+                options: { stdout: true, failOnError: true },
+                command: 'php translations/generate.php && mv translations/translations.js ../js/modules/vbet5/'
+            },
+            generateTranslationSeparate:  {
+                options: { stdout: true, failOnError: true },
+                command: 'php translations/generate.php separate && mv translations/*.json languages_tmp/'
+            },
+            generateSkinTranslation:  {
+                options: { stdout: true, failOnError: true },
+                command: 'php translations/generate.php --skin=<%=skinConfig%> && mv translations/translations.js <%=skin%>_translations.js'
+            },
+            generateSkinTranslationSeparate:  {
+                options: { stdout: true, failOnError: true },
+                command: 'php translations/generate.php --skin=<%=skinConfig%> separate && mv translations/*.json languages_tmp/'
+            },
+            showUntranslated: {
+                options: { stdout: true, failOnError: true },
+                command: 'php translations/generate.php showNotTranslated ' + (grunt.option('lang') || '')
+            },
             makeGzipFiles: {  // nginx will serve available gz files instead of doing gzip compression on every request
                 options: { stdout: true, failOnError: false },
                 command: 'gzip -c app/<%=skin%>/app.min.js > app/<%=skin%>/app.min.js.gz; gzip -c app/<%=skin%>/css/main.min.css > app/<%=skin%>/css/main.min.css.gz;'
@@ -483,21 +519,33 @@ module.exports = function (grunt) {
 
     //************************************************************* Tasks **********************************************
     grunt.registerTask('test',                         ['gitinfo',  'processhtml', 'no-cdn-libs', 'replace:noCdnLibs', 'copy']);
-    grunt.registerTask('dev',                          ['gitinfo', 'load-additional-modules', 'create-conf', 'load-css-filelist', 'ngtemplates',  'replace:removeContextAttr', 'replace:changeAppVersion', 'closure-compiler', 'cssmin', 'processhtml', 'replace:xDomainFrameUrl', 'replace:htmlPlaceholders',  'no-cdn-libs', 'replace:noCdnLibs', 'copy', 'clean:build-temp']);
-
-    grunt.registerTask('debug',                        ['gitinfo', 'load-additional-modules', 'create-conf', 'load-css-filelist', 'ngtemplates',  'closure-compiler', 'cssmin', 'processhtml', 'replace:xDomainFrameUrl', 'replace:htmlPlaceholders', 'no-cdn-libs', 'replace:noCdnLibs', 'copy:main']);
+    grunt.registerTask('dev',                          ['gitinfo', 'load-additional-modules', 'create-conf', 'load-css-filelist', 'ngtemplates', 'load-translations', 'replace:removeContextAttr', 'replace:changeAppVersion', 'closure-compiler', 'cssmin', 'processhtml', 'replace:xDomainFrameUrl', 'replace:htmlPlaceholders',  'no-cdn-libs', 'replace:noCdnLibs', 'copy', 'clean:build-temp']);
+    //grunt.registerTask('load-translations',            ['shell:generateSkinTranslationSeparate']); //old way, from .po
+    grunt.registerTask('load-translations',            ['clean:languages-temp', 'load-language-filelist', 'downloadfile']);  // new way, from translation tool
+    grunt.registerTask('debug',                        ['gitinfo', 'load-additional-modules', 'create-conf', 'load-css-filelist', 'ngtemplates', 'load-translations', 'closure-compiler', 'cssmin', 'processhtml', 'replace:xDomainFrameUrl', 'replace:htmlPlaceholders', 'no-cdn-libs', 'replace:noCdnLibs', 'copy:main']);
 //    grunt.registerTask('default-inline-templates',     ['closure-compiler', 'processhtml', 'strip', 'inline_angular_templates', 'copy', 'clean:build-temp']);
     grunt.registerTask('create-css',                   ['gitinfo', 'load-additional-modules', 'load-css-filelist', 'cssmin', 'processhtml', 'replace:xDomainFrameUrl', 'replace:htmlPlaceholders', 'no-cdn-libs', 'replace:noCdnLibs', 'copy:main', 'clean:build-temp']);
-    grunt.registerTask('default',                      ['gitinfo', 'load-additional-modules', 'create-conf', 'load-css-filelist', 'ngtemplates',  'replace:removeContextAttr', 'replace:changeAppVersion', 'closure-compiler', 'sass', 'cssmin', 'strip', 'processhtml', 'replace:xDomainFrameUrl', 'replace:htmlPlaceholders', 'no-cdn-libs', 'replace:noCdnLibs', 'copy:main', 'clean:build-temp']);
+    grunt.registerTask('default',                      ['gitinfo', 'load-additional-modules', 'create-conf', 'load-css-filelist', 'ngtemplates', 'load-translations', 'replace:removeContextAttr', 'replace:changeAppVersion', 'closure-compiler', 'sass', 'cssmin', 'strip', 'processhtml', 'replace:xDomainFrameUrl', 'replace:htmlPlaceholders', 'no-cdn-libs', 'replace:noCdnLibs', 'copy:main', 'clean:build-temp']);
+    grunt.registerTask('build-with-logs',              ['gitinfo', 'load-additional-modules', 'create-conf', 'load-css-filelist', 'ngtemplates', 'load-translations', 'replace:removeContextAttr', 'replace:changeAppVersion', 'closure-compiler', 'sass', 'cssmin', 'processhtml', 'replace:xDomainFrameUrl', 'replace:htmlPlaceholders', 'no-cdn-libs', 'replace:noCdnLibs', 'copy:main', 'clean:build-temp']);
     grunt.registerTask('create-skin',                  ['create-new-skin', 'sass', 'create-skin-launcher']);
-    grunt.registerTask('create-skin-and-deploy',       ['create-new-skin', 'sass', 'create-skin-launcher', 'build-and-deploy-all']);
+    grunt.registerTask('create-skin-and-build',        ['create-new-skin', 'sass', 'create-skin-launcher', 'default']);
+    grunt.registerTask('create-skin-and-deploy',       ['create-new-skin', 'sass', 'create-skin-launcher', 'build-with-logs', 'sass', 'shell:makeGzipFiles', 'deploy-all']);
+
+    // ----------------------------------------   DEPRECATED:  we're using translations tool for translations
+    //----------- Translations generation. Requires PHP 5.4 or higher.    to generate PO file for new language run "grunt extractTrans --lang=<language>".
+    grunt.registerTask('extractTrans',                 ['shell:extractTranslations']);  // will generate PO files from JS/HTML sources. Usage:  grunt extractTrans --lang=<language>
+    grunt.registerTask('generateTrans',                ['shell:generateTranslationSeparate', 'copy:devtranslations']);  // will generate translation JS file from all PO files and copy it to 'languages' folder
+    grunt.registerTask('generateTransSeparate',        ['shell:generateTranslationSeparate']);  // will generate translations in separate json files
+    grunt.registerTask('showUnTranslated',             ['shell:showUntranslated']);  // will show not translated strings in specified language. Usage grunt showUnTranslated --lang=<language> if lang is not specified, for all languages
+
+    grunt.registerTask('update-dev-translations',       ['load-translations', 'copy:devtranslations']);
 
     // deployment tasks.  this needs .ftppass file with auth data in current directory, see https://github.com/thrashr888/grunt-sftp-deploy#authentication-parameters for details
     grunt.registerTask('deploy',                        ['sftp-deploy:js-css', 'sftp-deploy:index']);   // will deploy only html/js/css
     grunt.registerTask('deploy-css',                    ['sftp-deploy:css', 'sftp-deploy:index']);   // will deploy only css
     grunt.registerTask('deploy-css-images',             ['sftp-deploy:css-images', 'sftp-deploy:index']);   // will deploy css and images
     grunt.registerTask('deploy-css-fonts',              ['sftp-deploy:css-fonts', 'sftp-deploy:index']);   // will deploy css and fonts
-    grunt.registerTask('deploy-translations',           ['copy', 'sftp-deploy:translations']);
+    grunt.registerTask('deploy-translations',           ['load-translations', 'copy', 'sftp-deploy:translations']);
     grunt.registerTask('deploy-all',                    ['sftp-deploy:all', 'sftp-deploy:index']);      // will deploy everything, including images, fonts, swf
     grunt.registerTask('deploy-files',                  ['sftp-deploy:files']);      // will deploy files from skin's "files" directory
     grunt.registerTask('rollback',                      ['sftp-deploy:rollback']);

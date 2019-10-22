@@ -56,6 +56,7 @@
                 <button ng-if="banner.custom_fields.button[0] && banner.custom_fields.id[0]" trans ng-click="$event.stopPropagation();$root.broadcast('casinoGamesList.openGame', {gameId: banner.custom_fields.id[0]});" ng-bind="::banner.custom_fields.button[0]"></button>
             </div>
             <egt-jackpot ng-if="banner.custom_fields.provider[0] === 'EGT'"></egt-jackpot>
+            <rtg-jackpot ng-if="banner.custom_fields.provider[0] === 'RTG'"></rtg-jackpot>
         </div>
     </div>
 </div>

@@ -1226,17 +1226,21 @@ VBET5.service('Utils', ['$timeout', '$filter', '$location', '$route', '$window',
      * @name getPathAccordintToAlias
      * @methodOf vbet5.service:Utils
      * @description Get path accordint to alias
-     * @param {String} Alias
+     * @param {String} alias
+     * @param {Number} type
      */
-    Utils.getPathAccordintToAlias = function getPathAccordintToAlias (alias) {
+    Utils.getPathAccordintToAlias = function getPathAccordintToAlias (alias, type) {
         var result = "/sport";
-        if (Config.main.customSportIds) {
+        if ($location.path() === "/esports/" && type === 0) {
+            result = "/esports";
+        } else if (Config.main.customSportIds) {
             angular.forEach(Config.main.customSportIds, function (aliases, key) {
                 if (aliases.indexOf(alias) !== -1) {
                     result =  "/customsport/" + key;
                 }
             });
         }
+
         return result;
     };
 

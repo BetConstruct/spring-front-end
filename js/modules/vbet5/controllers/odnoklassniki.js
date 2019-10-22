@@ -114,11 +114,11 @@ VBET5.controller('OdnoklassnikiCtrl', ['$scope', '$window', '$rootScope', 'Confi
         Zergling
             .subscribe({'source': 'user', 'what': {'profile': []}, 'subscribe': true}, updateProfile)
             .then(function (result) {
-                $rootScope.$broadcast('login.loggedIn');
                 $rootScope.odnoModel.loggedIn = true;
                 Storage.set('loginFlow', $scope.regFlow.ODNO);
                 updateProfile(result.data);
                 keepAlive();
+                $rootScope.$broadcast('loggedIn');
             });
         Storage.set('lastLoggedInUsername', $scope.user.username);
     }

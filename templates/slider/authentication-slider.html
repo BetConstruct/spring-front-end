@@ -1,0 +1,59 @@
+<h2 trans>Two Factor Authentication</h2>
+<h3 trans>A message with a verification code has been sent to your device.</h3>
+<div class="qr-code-popup" ng-if="!authenticationData.barcode && authenticationData.qrCodeURL">
+    <img ng-if="authenticationData.qrCodeURL" ng-src="{{authenticationData.qrCodeURL}}" alt="">
+</div>
+<p ng-click="showBarcode()" ng-if="!authenticationData.barcode && authenticationData.qrCodeURL" trans>Can't scan it?</p>
+<div class="barcod-authentication-popup" ng-if="authenticationData.barcode">
+    <h5 trans>Can’t scan the barcode?</h5>
+    <p trans>1. Tap <b>menu</b> then <b>Setup Account</b> </p>
+    <p trans>2. Tap <b>Enter manually key</b>.</p>
+    <p trans>3. Enter your account name and this key</p>
+    <button ng-click="copyToClipboard()">{{authenticationData.barcode}} <i></i></button>
+    <p trans>4. Make sure that <b>Time</b> based is turned on, tap <b>Add</b> to finish.</p>
+</div>
+<form class="float-width" name="authentication_form"  novalidate="novalidate" ng-submit="checkAuthenticationCode($event)">
+    <div class="form-sign-in">
+        <div class="field-separator">
+            <label trans>Time period</label>
+            <div class="tooltip-wrapper-j">
+                <!-- ngIf: regItem.customValidation -->
+                <div class="select-j">
+                    <select name="period" ng-model="authenticationData.period">
+                        <option  value="30" trans>30 Days</option>
+                        <option  value="7" trans>7 Days</option>
+                        <option  value="1" trans>1 Days</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="field-separator">
+            <label for="signinform-trust-me" class="sign-in-checkbox-j">
+                <input id="signinform-trust-me" ng-model="authenticationData.isDeviceTrusted" type="checkbox">
+                <span trans>Trust this device?</span>
+            </label>
+        </div>
+        <div class="field-separator field-verification">
+            <p trans>Enter verification code</p>
+            <div class="verification-input">
+                <input ng-repeat="(key,value) in authenticationData.code track by key"
+                       name="{{key}}"
+                       maxlength="1"
+                       required
+                       type="text"
+                       ng-model="authenticationData.code[key]"
+                       placeholder=""
+                       prevent-input="[^0-9]+"
+                       ng-keyup="autofocusHandler($event, authenticationData.code[key])"
+                       ng-focus="focusHandler($event)"
+                       focus-on
+                       is-focus="{{$index === 0}}"
+                       autocomplete="off">
+            </div>
+        </div>
+    </div>
+    <div class="button-confirm">
+        <vbet-loader class="small-progress" ng-show="isLoading"></vbet-loader>
+        <button name="" type="submit" trans ng-disabled="!authentication_form.$valid || isLoading">Confirm</button>
+    </div>
+</form>

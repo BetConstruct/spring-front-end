@@ -262,6 +262,7 @@ VBET5.controller('classicDashboardCenterController', ['$rootScope', '$scope', 'O
                         game.competition = {id: competition.id, order: competition.order, name: competition.name};
                         game.firstMarket = $filter('firstElement')(game.market);
                         game.additionalEvents = Config.main.showEventsCountInMoreLink ? game.events_count : game.markets_count;
+                        game['text_info'] = game['text_info'] ? game['text_info'].replace(/;/g, ',') : '';
 
                         GameInfo.hasVideo(game);
                         GameInfo.checkITFAvailability(game);
@@ -364,7 +365,7 @@ VBET5.controller('classicDashboardCenterController', ['$rootScope', '$scope', 'O
                     'id', 'start_ts', 'team1_name', 'team2_name', 'game_number', 'game_external_id',
                     'team1_external_id', 'team2_external_id', 'type', 'info', 'is_stat_available',
                     'events_count', 'markets_count', 'extra', 'is_blocked', 'is_itf', 'exclude_ids',
-                    'is_live', 'tv_type', 'video_id', 'video_id2', 'video_id3', 'video_provider'
+                    'is_live', 'tv_type', 'video_id', 'video_id2', 'video_id3', 'video_provider', 'stats'
                 ],
                 'event': ['id', 'price', 'type', 'name', 'order', 'base'],
                 'market': ['type', 'express_id', 'name', 'base', 'order', 'home_score', 'away_score']
@@ -896,7 +897,7 @@ VBET5.controller('classicDashboardCenterController', ['$rootScope', '$scope', 'O
         $scope.$emit('comboView.leftMenu.' + eventForView[parentMainScope.selectedCentralView], data);
     });
 
-    $scope.$on('login.loggedIn', function () {
+    $scope.$on('loggedIn', function () {
         if ($scope.openGame) {
             if ($rootScope.profile) {
                 GameInfo.getVideoData($scope.openGame);
@@ -918,11 +919,11 @@ VBET5.controller('classicDashboardCenterController', ['$rootScope', '$scope', 'O
 
     //synchronize video with user balance
     $scope.$watch('profile.balance', function (newValue, oldValue) {
-        if ($scope.openGame) {
+        if (!$scope.openGame) {
             return;
         }
 
-        if (newValue === 0 && $rootScope.profile.initial_balance === 0) {
+        if (newValue === 0 && !Config.main.video.allowedWithNoneBalance[$scope.openGame.tv_type]) {
             $scope.openGame.video_data = null;
         } else if (oldValue === 0 && newValue > 0 && !$scope.openGame.video_data) {
             GameInfo.getVideoData($scope.openGame);

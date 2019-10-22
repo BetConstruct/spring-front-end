@@ -18,7 +18,7 @@ var availableModules = ['vbet5', 'CMS', 'casino'].reduce(function (acc, curr) {
 console.log("available modules:", availableModules);
 angular.module('app', availableModules);
 
-angular.module('app').config(['$compileProvider', '$locationProvider', '$qProvider', function ($compileProvider, $locationProvider, $qProvider) {
+angular.module('app').config(['$compileProvider', '$locationProvider', '$qProvider', '$httpProvider', function ($compileProvider, $locationProvider, $qProvider, $httpProvider) {
     'use strict';
     $compileProvider.aHrefSanitizationWhitelist(/^\s*(https?|ftp|mailto|file|javascript|tel|viber|skype|data):/);
     $compileProvider.debugInfoEnabled(window.location.hostname === "localhost"); //@TODO need to disable for some skins
@@ -28,6 +28,9 @@ angular.module('app').config(['$compileProvider', '$locationProvider', '$qProvid
     $locationProvider.hashPrefix('');
 
     $qProvider.errorOnUnhandledRejections(false);
+    $httpProvider.defaults.useXDomain = true;
+
+    delete $httpProvider.defaults.headers.common['X-Requested-With'];
 }]);
 
 (function () {
@@ -79,7 +82,7 @@ angular.module('app').config(['$compileProvider', '$locationProvider', '$qProvid
         }
 
         // allow config change only from these hosts (must be lowercase!)
-        var ALLOWED_CONFIG_HOSTS = ["config.betconstruct.me","configs.betconstruct.me", "172.16.79.148", "cms.betconstruct.com", "cmsbetconstruct.com"];
+        var ALLOWED_CONFIG_HOSTS = ["config.betconstruct.me","configs.betconstruct.me", "172.16.79.148", "cms.betconstruct.com", "cmsbetconstruct.com", "cmsbetconstruct.com:443"];
 
         if (ALLOWED_CONFIG_HOSTS.indexOf(getLocation(configUrlPrefix).host.toLowerCase()) === -1) {
             configUrlPrefix = '';
@@ -131,6 +134,11 @@ angular.module('app').config(['$compileProvider', '$locationProvider', '$qProvid
         }
 
         var lang = getLocationParam("lang") || getCookie('lang') || amplify.store('lang') || defaultLanguage || 'eng';
+
+        if(lang === 'fra'){ // todo SDC-44551
+            lang = 'fre';
+        }
+
         // fix language in case it`s not present in the language list
         if (availableLanguages && !availableLanguages[lang]) {
             lang = defaultLanguage || 'eng';

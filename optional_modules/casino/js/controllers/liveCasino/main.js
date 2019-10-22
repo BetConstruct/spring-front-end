@@ -133,8 +133,8 @@ CASINO.controller('liveCasinoMainCtrl', ['$rootScope', '$scope', '$sce', '$locat
      * @methodOf CASINO.controller:liveCasinoMainCtrl
      * @description  close opened game
      */
-    $scope.closeGame = function closeGame(id) {
-        casinoManager.closeGame($scope, id);
+    $scope.closeGame = function confirmCloseGame(id, targetAction) {
+        casinoManager.closeGame($scope, id, targetAction);
     };
 
 

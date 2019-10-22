@@ -5,7 +5,7 @@
  * @description stream service
  *
  */
-VBET5.service('StreamService', ['$rootScope', 'GameInfo', 'Config', function ($rootScope, GameInfo, Config) {
+VBET5.service('StreamService', ['$rootScope', '$http',  'GameInfo', 'Config', function ($rootScope, $http, GameInfo, Config) {
     'use strict';
 
     /**
@@ -21,8 +21,7 @@ VBET5.service('StreamService', ['$rootScope', 'GameInfo', 'Config', function ($r
 
 
         //make video available as soon as user logs in
-        $scope.$on('loggedIn', checkVideoAvailability);     // restoring login case
-        $scope.$on('login.loggedIn', checkVideoAvailability); //normal login case
+        $scope.$on('loggedIn', checkVideoAvailability);     //login case
 
         /**
          * @ngdoc method
@@ -68,7 +67,7 @@ VBET5.service('StreamService', ['$rootScope', 'GameInfo', 'Config', function ($r
         //synchronize video with user balance
         $scope.$watch('profile.balance', function (newValue, oldValue) {
             if (self.game) {
-                if (self.game.video_data && newValue === 0 && $rootScope.profile.initial_balance === 0) {
+                if (self.game.video_data && newValue === 0 && !Config.main.video.allowedWithNoneBalance[self.game.tv_type]) {
                     self.game.video_data = undefined;
                 } else if (Config.main.video.autoPlay && oldValue === 0 && newValue > 0 && !self.game.video_data) {
                     checkVideoAvailability();
@@ -88,6 +87,65 @@ VBET5.service('StreamService', ['$rootScope', 'GameInfo', 'Config', function ($r
             self.game.video_data = null;
             GameInfo.getVideoData(self.game);
         });
+
+        if (Config.main.video.customStreamingURL) {
+            /**
+             * @ngdoc method
+             * @name selectStreamingItem
+             * @description Select streaming item
+             * @methodOf vbet5.service:stream
+             * @param {Object} item
+             */
+            $scope.selectStreamingItem = function selectStreamingItem(item) {
+                $scope.selectedStreamingItem = item;
+            };
+
+            /**
+             * @ngdoc method
+             * @name loadStreamingItems
+             * @description Load streaming items
+             * @methodOf vbet5.service:stream
+             * @param {Boolean} init
+             */
+            $scope.loadStreamingItems = function loadStreamingItems(init) {
+
+                if (init) {
+                    $scope.selectedStreamingItem = null;
+                    $scope.isLoadingCustomStreaming = true;
+                } else {
+                    $scope.isLoadingStreamingDropdown = true;
+                }
+                $http.get(Config.main.video.customStreamingURL).then(function (response) {
+                    var responseMatchList = response.data.MatchList;
+                    if (responseMatchList.length === 1 && !responseMatchList[0].FrameLink) {
+                        responseMatchList = [];
+                    }
+                    $scope.streamingItems = responseMatchList;
+                    if (init) {
+                        $scope.selectedStreamingItem = $scope.streamingItems[0] || null;
+                    } else {
+                        var contains = false;
+                        for (var j = $scope.streamingItems.length; j--;) {
+                            if ($scope.selectedStreamingItem.matchid === $scope.streamingItems[j].matchid) {
+                                contains = true;
+                                break;
+                            }
+                        }
+                        if (!contains) {
+                            $scope.selectedStreamingItem = $scope.streamingItems[0] || null;
+                        }
+                    }
+                    $scope.isLoadingCustomStreaming = false;
+                    $scope.isLoadingStreamingDropdown = false;
+                }, function () {
+                    $scope.isLoadingCustomStreaming = false;
+                    $scope.isLoadingStreamingDropdown = false;
+
+
+                });
+
+            };
+        }
     }
 
     /**
@@ -101,6 +159,15 @@ VBET5.service('StreamService', ['$rootScope', 'GameInfo', 'Config', function ($r
      */
     StreamService.prototype.monitoring = function monitoring(scope, gameKey, pinnedGamesKey, enlargedGameKey) {
         var hasVideo = GameInfo.hasVideo(scope[gameKey]);
+
+        if (Config.main.sportsLayout === "modern") {
+            if (scope[gameKey].has_animation && scope[gameKey].activeFieldType !== "video") {
+                scope[gameKey].activeFieldType = "field";
+            } else if (scope[gameKey].has_animation && scope[gameKey].activeFieldType !== "field") {
+                scope[gameKey].activeFieldType = "video";
+            }
+        }
+
         if (hasVideo) {
             if (scope[gameKey].video_data === undefined) {
                 if (!scope[pinnedGamesKey] || !scope[pinnedGamesKey][scope[gameKey].id]) {
@@ -128,13 +195,19 @@ VBET5.service('StreamService', ['$rootScope', 'GameInfo', 'Config', function ($r
         }
 
         if (scope[gameKey].activeFieldType === undefined) {
-            scope[gameKey].activeFieldType = hasVideo && !scope[enlargedGameKey] && (Config.main.alwaysOpenVideo || Config.env.authorized || $rootScope.loginInProgress || !scope[gameKey].has_animation) ? 'video' : 'field';
+            if (this.game && this.game.activeFieldType === 'customStreaming') {
+                scope[gameKey].activeFieldType = 'customStreaming';
+            } else {
+                scope[gameKey].activeFieldType = hasVideo && !scope[enlargedGameKey] && (Config.main.alwaysOpenVideo || Config.env.authorized || $rootScope.loginInProgress || !scope[gameKey].has_animation) ? 'video' : 'field';
+            }
         }
 
         this.game = scope[gameKey];
         this.pinnedGames = scope[pinnedGamesKey];
         this.enlargedGame = scope[enlargedGameKey];
     };
+
+
 
     return StreamService;
 }]);

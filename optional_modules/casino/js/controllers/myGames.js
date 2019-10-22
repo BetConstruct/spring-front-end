@@ -109,7 +109,7 @@ CASINO.controller('casinoMyGamesCtrl', ['$scope', '$rootScope', 'Storage', '$loc
 
         Storage.set('myCasinoGames', games);
         analytics.gaSend('send', 'event', 'explorer', "removeFromMyCasinoGames" + (Config.main.sportsLayout),  {'page': $location.path(), 'eventLabel': "removeFromMyCasinoGames"});
-        console.info('gaSend-',"removeFromMyCasinoGames");
+        console.log('gaSend-',"removeFromMyCasinoGames");
         Utils.checkAndSetCookie("myCasinoGames", games, Config.main.authSessionLifetime);
 
         if (games.length === 0) {
@@ -145,7 +145,7 @@ CASINO.controller('casinoMyGamesCtrl', ['$scope', '$rootScope', 'Storage', '$loc
 
         Storage.set('myCasinoGames', $rootScope.myCasinoGames);
         analytics.gaSend('send', 'event', 'explorer', "addToMyCasinoGames" + (Config.main.sportsLayout),  {'page': $location.path(), 'eventLabel': "addToMyCasinoGames"});
-        console.info('gaSend-',"addToMyCasinoGames");
+        console.log('gaSend-',"addToMyCasinoGames");
         Utils.checkAndSetCookie('myCasinoGames', $rootScope.myCasinoGames, Config.main.authSessionLifetime);
 
         $scope.myCasinoSavedGames = getVisibleGames($rootScope.myCasinoGames);

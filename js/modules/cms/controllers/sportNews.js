@@ -524,7 +524,7 @@ CMS.controller('cmsSportNewsCtrl', ['$rootScope', '$scope', '$sce', '$location',
      *
      * @param {string} [containerId] optional. id of container to get banner for
      */
-    $scope.getBanners = function getBanners(containerId) {
+    function getBanners(containerId) {
         var promises = {};
         $scope.banners = [];
         if (containerId) {
@@ -570,13 +570,15 @@ CMS.controller('cmsSportNewsCtrl', ['$rootScope', '$scope', '$sce', '$location',
             } else {
                 $scope.banners.map(function (banner) {banner.active = true; });
             }
-
-            if ($location.search().adpage && $scope.banners.length) {
-                $scope.banners.map(function (banner) {banner.link = $location.search().adpage; });
+            var adPageLink = $location.search().adpage;
+            if (adPageLink && $scope.banners.length) {
+                $scope.banners.map(function (banner) {
+                    banner.link = adPageLink;
+                });
                 $location.search('adpage', undefined);
             }
         });
-    };
+    }
 
     $scope.$on('betslip.isEmpty', function () {$scope.showRightBanners = true; $scope.showSportNewsSidebar = true;});
     $scope.$on('betslip.hasEvents', function () {$scope.showRightBanners = false; $scope.showSportNewsSidebar = false;});
@@ -590,7 +592,7 @@ CMS.controller('cmsSportNewsCtrl', ['$rootScope', '$scope', '$sce', '$location',
             '/customsport/cyber/': 'under-betslip-banners-customsport-cyber-'
         };
 
-        $scope.getBanners((pathSlugMap[$location.path()] || pathSlugMap['/sport/']) + $scope.env.lang);
+        getBanners((pathSlugMap[$location.path()] || pathSlugMap['/sport/']) + $scope.env.lang);
     };
 
     /**

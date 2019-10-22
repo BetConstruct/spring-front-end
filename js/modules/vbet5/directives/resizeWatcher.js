@@ -16,7 +16,8 @@ VBET5.directive('watchResize', ['Config', 'DomHelper', function (Config, DomHelp
             if (windowWidth >= 1833 && wideScreen !== 'on') {
                 wideScreen = 'on';
                 scope.$parent.$broadcast('widescreen.on');
-            } else {
+            }
+            if (windowWidth < 1833 && wideScreen !== 'off') {
                 wideScreen = 'off';
                 scope.$parent.$broadcast('widescreen.off');
             }
@@ -24,14 +25,15 @@ VBET5.directive('watchResize', ['Config', 'DomHelper', function (Config, DomHelp
                 if (windowWidth >= 1340 && middleScreen !== 'on') {
                     middleScreen = 'on';
                     scope.$parent.$broadcast('middlescreen.on');
-                } else {
+                }
+                if(windowWidth < 1340 && middleScreen !== 'off') {
                     middleScreen = 'off';
                     scope.$parent.$broadcast('middlescreen.off');
                 }
             }
         }
 
-        scope.$on('onWindowResize', broadcastWindowSize);
+        scope.$on('onWindowWidthResize', broadcastWindowSize);
         broadcastWindowSize();
     };
 }]);

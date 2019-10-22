@@ -23,7 +23,7 @@ VBET5.controller('recaptchaCtrl', ['$rootScope', '$scope', 'Zergling', 'Language
     function loadScript () {
         recaptchaProps.script = document.createElement('script');
         recaptchaProps.script.type = 'text/javascript';
-        recaptchaProps.script.src = '//www.google.com/recaptcha/api.js?hl=' + (LanguageCodes[$rootScope.env.lang] || 'en');
+        recaptchaProps.script.src = 'https://www.recaptcha.net/recaptcha/api.js?hl=' + (LanguageCodes[$rootScope.env.lang] || 'en');
         recaptchaProps.recaptchaDomScript = document.body.appendChild(recaptchaProps.script);
 
     }
@@ -92,6 +92,5 @@ VBET5.controller('recaptchaCtrl', ['$rootScope', '$scope', 'Zergling', 'Language
         }
         delete window.recaptchaUpdateCallback;
     });
-
     init();
 }]);

@@ -301,6 +301,7 @@ VBET5.controller('widgetCtrl', ['$rootScope', '$scope', 'TimeoutWrapper', '$wind
                     angular.forEach(sport.game, function (game) {
                         game.sport = sport;
                         $scope.openGame = game;
+                        $scope.openGame.activeFieldType = 'field';
                         GameInfo.extendLiveGame($scope.openGame);
                     });
                 });

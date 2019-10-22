@@ -1,31 +1,32 @@
 <!doctype html>
-<html xmlns:ng="http://angularjs.org" dir="{{::(conf.availableLanguages[env.lang].rtl ? 'rtl' : 'ltr')}}"
-      ng-class="{'integration-auto-height': confPartner.notifyOnResize}" lang="{{::(conf.availableLanguages[env.lang].short.toLowerCase())}}">
+<html dir="{{::(conf.availableLanguages[env.lang].rtl ? 'rtl' : 'ltr')}}"
+      ng-class="{'integration-auto-height': confPartner.notifyOnResize}"
+      lang="{{::(conf.availableLanguages[env.lang].short.toLowerCase())}}">
 <head>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no">
     <meta charset="utf-8">
     <script src="https://my.hellobar.com/09df6853a04aabdc0c0ed5e7b9b116fde686359b.js" type="text/javascript" charset="utf-8" async="async"></script>
-
+    
     <!-- build:template
     <title ng-bind="siteTitle"><%=title%></title>
     <meta name="description" content="<%=description%>">
     <meta name="keywords" content="<%=keywords%>">
-        <link rel="icon" href="<%=favicon%>?<%=buildDate%><%=version%>" />
-        <link rel="stylesheet" href="skins/<%=skin%>/css/skin.min.css?<%=buildDate%><%=version%>"/>
+        <link rel="icon" href="<%=favicon%>" />
+        <link rel="stylesheet" href="<%=resourcePathPrefix%>skins/<%=skin%>/css/skin.min.css?<%=buildDate%>"/>
         <!--[if lt IE 10]>
         <script src="//cdn.rawgit.com/jpillora/xdomain/0.7.3/dist/xdomain.min.js"></script>
         <script>xdomain.slaves();</script>
         <![endif]-->
     <!-- /build -->
-
+    
     <link ng-if="conf.customLanguageCss.indexOf(env.lang) !== -1" rel="stylesheet" ng-href="css/fonts/{{env.lang}}.css"/>
 
     <link ng-if="conf.customLanguageCss.indexOf(env.lang) !== -1" rel="stylesheet" ng-href="skins/{{conf.skin}}/css/fonts/{{env.lang}}.css"/>
     <!-- /build -->
 
     <!-- build:template
-        <link rel="stylesheet" href="custom.css"/>
+        <link rel="stylesheet" href="<%=customCss%>"/>
     <!-- /build -->
     <!-- build:remove -->
     <title ng-bind="siteTitle"></title>
@@ -52,22 +53,22 @@
         {{env.bodyWrapperClass||''}}
     " no-animate>
 
-            <!-- build:[src] //ajax.googleapis.com/ajax/libs/angularjs/1.7.7/angular.min.js -->
+        <!-- build:[src] //ajax.googleapis.com/ajax/libs/angularjs/1.7.7/angular.min.js?v=1.7.7 -->
         <script src="lib/angular/1.7.7/angular.min.js"></script>
         <!-- /build -->
-        <!-- build:[src] //ajax.googleapis.com/ajax/libs/angularjs/1.7.7/angular-route.min.js -->
+        <!-- build:[src] //ajax.googleapis.com/ajax/libs/angularjs/1.7.7/angular-route.min.js?v=1.7.7 -->
         <script src="lib/angular/1.7.7/angular-route.min.js"></script>
         <!-- /build -->
-        <!-- build:[src] //ajax.googleapis.com/ajax/libs/angularjs/1.7.7/angular-animate.min.js -->
+        <!-- build:[src] //ajax.googleapis.com/ajax/libs/angularjs/1.7.7/angular-animate.min.js?v=1.7.7 -->
         <script src="lib/angular/1.7.7/angular-animate.min.js"></script>
         <!-- /build -->
-        <!-- build:[src] //ajax.googleapis.com/ajax/libs/angularjs/1.7.7/angular-cookies.min.js -->
+        <!-- build:[src] //ajax.googleapis.com/ajax/libs/angularjs/1.7.7/angular-cookies.min.js?v=1.7.7 -->
         <script src="lib/angular/1.7.7/angular-cookies.min.js"></script>
-            <!-- /build -->
+        <!-- /build -->
 
         <script id="app-config" data-config-url-path="" data-id="4" data-config-is-externall="true"></script>
         <!-- build:template
-        <script src="app.min.js?<%=buildDate%>-<%=gitinfo%>" id="bc-main-js"></script>
+        <script src="<%=resourcePathPrefix%>app.min.js?<%=buildDate%>-<%=gitinfo%>" id="bc-main-js"></script>
         /build -->
 
         <!-- build:remove -->
@@ -88,12 +89,11 @@
     <!--     <script src="lib/es5-shim.js"></script> -->
         <script src="lib/autofill-event.js"></script>
         <script src="lib/xml2json.js"></script>
-        <script src="lib/analytics.js"></script>
+
         <script src="lib/script.js"></script>
 
     <!--     <script src="lib/modules/ui.calendar/ui-bootstrap-custom-0.12.1.js"></script> -->
         <script src="lib/modules/ui.calendar/ui-bootstrap-custom-tpls-0.12.1.js"></script>
-        <script src="lib/ng-map.js"></script>
         <script src="lib/hls.js"></script>
 
         <script src="js/modules/vbet5/main.js"></script>
@@ -142,7 +142,7 @@
         <script src="js/modules/vbet5/services/everCookie.js"></script>
         <script src="js/modules/vbet5/services/betService.js"></script>
         <script src="js/modules/vbet5/services/betIntelligent.js"></script>
-        <script src="js/modules/vbet5/services/recaptchaV3.js"></script>
+        <script src="js/modules/vbet5/services/recaptchaService.js"></script>
 
         <script src="js/modules/cms/main.js"></script>
         <script src="js/modules/cms/config.js"></script>
@@ -229,12 +229,16 @@
         <script src="js/modules/vbet5/directives/openBets.js"></script>
         <script src="js/modules/vbet5/directives/matchesList.js"></script>
         <script src="js/modules/vbet5/directives/egtJackpot.js"></script>
+        <script src="js/modules/vbet5/directives/rtgJackpot.js"></script>
         <script src="js/modules/vbet5/directives/retrieveEvents.js"></script>
         <script src="js/modules/vbet5/directives/autofocus.js"></script>
         <script src="js/modules/vbet5/directives/visibleSets.js"></script>
-        <script src="js/modules/vbet5/directives/sportsbookJackpot.js"></script>
+        <script src="js/modules/vbet5/directives/gameAdditionalInfo.js"> </script>
+
 
         <script src="js/modules/vbet5/directives/togglePlaceholder.js"></script>
+        <script src="js/modules/vbet5/directives/readMore.js"></script>
+        <script src="js/modules/vbet5/directives/trackClickCount.js"></script>
         <script src="js/modules/vbet5/filters/firstElement.js"></script>
         <script src="js/modules/vbet5/filters/translate.js"></script>
         <script src="js/modules/vbet5/filters/oddConvert.js"></script>
@@ -273,6 +277,7 @@
         <script src="js/modules/vbet5/controllers/overview.js"></script>
         <script src="js/modules/vbet5/controllers/multiView.js"></script>
         <script src="js/modules/vbet5/controllers/virtualSports.js"></script>
+        <script src="js/modules/vbet5/controllers/virtualsportsAPI.js"></script>
         <script src="js/modules/vbet5/controllers/modernView/games.js"></script>
         <script src="js/modules/vbet5/controllers/modernView/game.js"></script>
         <script src="js/modules/vbet5/controllers/notification.js"></script>
@@ -294,6 +299,7 @@
         <script src="js/modules/vbet5/controllers/payments.js"></script>
         <script src="js/modules/vbet5/controllers/euro88Payments.js"></script>
         <script src="js/modules/vbet5/controllers/cashier.js"></script>
+        <script src="js/modules/vbet5/controllers/myWallets.js"></script>
         <script src="js/modules/vbet5/controllers/settings.js"></script>
         <script src="js/modules/vbet5/controllers/mixedAuthentication.js"></script>
         <script src="js/modules/vbet5/controllers/settingsV2.js"></script>
@@ -340,9 +346,9 @@
         <script src="js/modules/vbet5/controllers/betOnPolitics.js"></script>
         <script src="js/modules/vbet5/controllers/betStatus.js"></script>
         <script src="js/modules/vbet5/controllers/affiliate.js"></script>
+        <script src="js/modules/vbet5/controllers/homepageCountdown.js"></script>
         <script src="js/modules/vbet5/controllers/loginHistory.js"></script>
         <script src="js/modules/vbet5/controllers/pmu.js"></script>
-
             <!--<script src="js/modules/vbet5/translations.js"></script>-->
         <script src='js/modules/vbet5/services/jackpotSocket.js'></script>
         <script src='js/modules/vbet5/services/jackpotManager.js'></script>
@@ -351,53 +357,35 @@
         <script src='js/modules/vbet5/directives/jackpotSlider.js'></script>
         <script src='js/modules/vbet5/directives/sportsbookJackpot.js'></script>
 
-
+        
 <!-- casino module start -->
 <script src='optional_modules/casino/js/main.js'></script>
-<script src='optional_modules/casino/js/controllers/tournaments.js'></script>
-<script src='optional_modules/casino/js/services/manager.js'></script>
-<script src='optional_modules/casino/js/directives/biggestWinners.js'></script>
+<script src='optional_modules/casino/js/directives/casinoJackpotAndTournaments.js'></script>
+<script src='optional_modules/casino/js/services/multiviewInitialValues.js'></script>
+<script src='optional_modules/casino/js/directives/casinoPromotedGames.js'></script>
 <script src='optional_modules/casino/js/config.js'></script>
-<script src='optional_modules/casino/js/directives/casinoGamesList.js'></script>
-<script src='optional_modules/casino/js/directives/casinoJackpotCounter.js'></script>
-<script src='optional_modules/casino/js/directives/casinoJackpotSlider.js'></script>
+<script src='optional_modules/casino/js/directives/coinsRain.js'></script>
 <script src='optional_modules/casino/js/controllers/liveCasino/main.js'></script>
 <script src='optional_modules/casino/js/directives/frameControl.js'></script>
-<script src='optional_modules/casino/js/controllers/miniGames.js'></script>
+<script src='optional_modules/casino/js/controllers/myGames.js'></script>
 <script src='optional_modules/casino/js/directives/getCasinoGame.js'></script>
-<script src='optional_modules/casino/js/controllers/search.js'></script>
-<script src='optional_modules/casino/js/controllers/specialGames.js'></script>
+<script src='optional_modules/casino/js/controllers/skillGames/main.js'></script>
+<script src='optional_modules/casino/js/directives/jackpotWidget.js'></script>
+<script src='optional_modules/casino/js/controllers/tournaments.js'></script>
+<script src='optional_modules/casino/js/directives/multiviewControl.js'></script>
+<script src='optional_modules/casino/js/directives/casinoGamesList.js'></script>
+<script src='optional_modules/casino/js/controllers/miniGames.js'></script>
+<script src='optional_modules/casino/js/services/manager.js'></script>
 <script src='optional_modules/casino/js/services/data.js'></script>
-
-<script src='optional_modules/casino/js/services/multiviewInitialValues.js'></script>
 <script src='optional_modules/casino/js/services/cache.js'></script>
 <script src='optional_modules/casino/js/controllers/jackpot.js'></script>
-<script src='optional_modules/casino/js/directives/multiviewControl.js'></script>
-<script src='optional_modules/casino/js/directives/casinoPromotedGames.js'></script>
-<script src='optional_modules/casino/js/directives/coinsRain.js'></script>
-<script src='optional_modules/casino/js/directives/jackpotWidget.js'></script>
+<script src='optional_modules/casino/js/controllers/search.js'></script>
 <script src='optional_modules/casino/js/controllers/casino.js'></script>
-<script src='optional_modules/casino/js/controllers/skillGames/main.js'></script>
-<script src='optional_modules/casino/js/controllers/myGames.js'></script>
+<script src='optional_modules/casino/js/directives/biggestWinners.js'></script>
+<script src='optional_modules/casino/js/controllers/specialGames.js'></script>
+<script src='optional_modules/casino/js/controllers/providerJackpot.js'></script>
+<script src='optional_modules/casino/js/directives/carousel.js'></script>
 <!-- casino module end -->
-
-        <!-- animations module start -->
-
-        <script src='optional_modules/animations/js/directives/animations.js'></script>
-
-        <script src='optional_modules/animations/js/constants/animConstants.js'></script>
-        <script src='optional_modules/animations/js/constants/numConstants.js'></script>
-
-        <script src='optional_modules/animations/js/controllers/BasketballCtrl.js'></script>
-        <script src='optional_modules/animations/js/controllers/IceHockeyCtrl.js'></script>
-        <script src='optional_modules/animations/js/controllers/SoccerCtrl.js'></script>
-
-        <script src='optional_modules/animations/js/services/soccerAnimation.js'></script>
-        <script src='optional_modules/animations/js/services/iceHockeyAnimation.js'></script>
-        <script src='optional_modules/animations/js/services/basketballAnimation.js'></script>
-
-
-        <!-- animations module end -->
 
 
 <!-- comboView module start -->
@@ -410,26 +398,27 @@
 
         <script src="js/main.js"></script>
         <script src="js/skins/vbet.com.js"></script>
-        <script src="skins/vbet.com/js/draw.js"></script>
 
+        <script src='skins/vbet.com/js/customScript.js'></script>
+<script src='skins/vbet.com/js/draw.js'></script>
 
         <!-- /build -->
-        <div class="contain-header tpl-container block-size-visible-b" ng-include="::'templates/header.html'|fixPath" ng-class="{'subheader-enabled': $root.currentPage.hasSubHeader }"></div>
+        <div class="contain-header tpl-container block-size-visible-b" ng-include="::'templates/header.html'|fixPath" ng-class="{'subheader-enabled': $root.currentPage.hasSubHeader, 'vertical-nav-null': $root.leftMenuOpen === false }"></div>
         <div ng-view ng-class="$location.path().split('/').join('')" class="view-container"></div>
         <div class="footer-group">
             <div class="footer-cell">
                 <div class="contain-footer-block"
                      id="footerContainer"
-                     ng-hide="casinoGameOpened > 0"
+                     ng-hide="!footerMovable && casinoGameOpened > 0"
                      ng-class="{'active': footerOpen && !env.sliderContent, 'footer-fixed': footerMovable}"
                      ng-include="::'templates/footer.html'|fixPath"
                      ng-if="$location.path() !='/popup/'"
                 ></div>
-                <div class="footer-button theme-{{theme.id}}" ng-click="footerOpen=!footerOpen" ng-class="{'footer-button-open': footerOpen}" ng-hide="casinoGameOpened > 0 || conf.footer.disable || !footerMovable || env.sliderContent"></div>
+                <div class="footer-button theme-{{theme.id}}" ng-click="footerOpen=!footerOpen" ng-class="{'footer-button-open': footerOpen}" ng-hide="conf.footer.disable || !footerMovable || env.sliderContent"></div>
             </div>
         </div>
 </div>
-
-
+    
+    
 </body>
 </html>

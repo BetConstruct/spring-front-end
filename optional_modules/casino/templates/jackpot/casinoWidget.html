@@ -43,7 +43,7 @@
                                 <h2 trans>Largest Winner</h2>
                                 <p>{{pool.JackPotPoolStat.BiggestJackpotWin.Amount|number:jackpot.CurrencyFraction}} <i>{{jackpot.Currency|currency}}</i></p>
                                 <p>{{pool.JackPotPoolStat.BiggestJackpotWin.GameName}}</p>
-                                <b><span>{{pool.JackPotPoolStat.BiggestJackpotWin.PlayerId}}</span> {{pool.JackPotPoolStat.BiggestJackpotWin.CreationDate|formatDate:'tournament'}}</b>
+                                <b><span>{{pool.JackPotPoolStat.BiggestJackpotWin.PlayerId}}</span> {{pool.JackPotPoolStat.BiggestJackpotWin.CreationDate|formatDate:'noLocaleTranslate':null:$root.env.timeFormat}}</b>
                             </li>
                         </ul>
                         <ul ng-if="pool.JackPotPoolStat.LastJackPotWin">
@@ -51,7 +51,7 @@
                                 <h2 trans>Last Winner</h2>
                                 <p>{{pool.JackPotPoolStat.LastJackPotWin.Amount|number:jackpot.CurrencyFraction}} <i>{{jackpot.Currency|currency}}</i></p>
                                 <p>{{pool.JackPotPoolStat.LastJackPotWin.GameName}}</p>
-                                <b><span>{{pool.JackPotPoolStat.LastJackPotWin.PlayerId}}</span> {{pool.JackPotPoolStat.LastJackPotWin.CreationDate|formatDate:'tournament'}}</b>
+                                <b><span>{{pool.JackPotPoolStat.LastJackPotWin.PlayerId}}</span> {{pool.JackPotPoolStat.LastJackPotWin.CreationDate|formatDate:'noLocaleTranslate':null:$root.env.timeFormat}}</b>
                             </li>
                         </ul>
                     </li>

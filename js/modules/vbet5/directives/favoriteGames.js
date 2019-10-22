@@ -134,7 +134,13 @@ VBET5.directive('favoriteGames', ['$rootScope', '$filter', 'ConnectionService', 
             };
 
 
-            $scope.$on('favoriteGames.toggle', function(event, data) { $scope.toggleFavoriteGame(data); });
+            $scope.$on('favoriteGames.toggle', function(event, data) {
+                $scope.toggleFavoriteGame(data);
+
+                // This click was added for closing BetSlip mode selector,
+                // because some buttons have stop.propagation and HideOnClick directive don't work
+                document.body.click();
+            });
             $scope.$on('favoriteGames.remove', function(event, data) { $scope.removeFromFavorites(data); });
 
             (function init() {

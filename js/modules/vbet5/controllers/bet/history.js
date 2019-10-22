@@ -210,7 +210,7 @@ VBET5.controller('myBetsCtrl', ['$scope', 'Utils', 'ConnectionService', 'Zerglin
         var request = {
             'source': 'betting',
             'what': {
-                'sport': ['id', 'alias'],
+                'sport': ['id', 'alias', 'type'],
                 'region': ['id'],
                 'competition': ['id'],
                 'game': ['id', 'type']
@@ -718,11 +718,9 @@ VBET5.controller('myBetsCtrl', ['$scope', 'Utils', 'ConnectionService', 'Zerglin
 
         while (i--) {
             if (bets[i].parent_bet_id) {
-                childBets[bets[i].parent_bet_id] = childBets[bets[i].parent_bet_id] || {bets: [], totalStake: 0};
+                childBets[bets[i].parent_bet_id] = childBets[bets[i].parent_bet_id] || [];
                 bets[i].totalAmount = bets[i].bonus_bet_amount ? bets[i].bonus_bet_amount : bets[i].amount || 0;
-                childBets[bets[i].parent_bet_id].bets.push(bets[i]);
-
-                childBets[bets[i].parent_bet_id].totalStake += bets[i].totalAmount;
+                childBets[bets[i].parent_bet_id].push(bets[i]);
             }
         }
 
@@ -796,7 +794,7 @@ VBET5.controller('myBetsCtrl', ['$scope', 'Utils', 'ConnectionService', 'Zerglin
                 'game': game.game
             });
 
-            var neededPath = Utils.getPathAccordintToAlias(game.sport.alias);
+            var neededPath = Utils.getPathAccordintToAlias(game.sport.alias, game.sport.type);
             $location.path(neededPath);
 
             $scope.env.showSlider = false;

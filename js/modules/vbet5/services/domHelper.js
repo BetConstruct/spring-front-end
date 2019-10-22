@@ -299,6 +299,24 @@ VBET5.service('DomHelper', ['$window', '$timeout', 'Config', function ($window, 
 
     /**
      * @ngdoc method
+     * @name onWindowWidthResize
+     * @methodOf vbet5.service:DomHelper
+     * @description
+     * @param {Function} callback function to call on windows height resize
+     * @returns {boolean} is screen small for scrolling or not
+     */
+    DomHelper.onWindowWidthResize = function onWindowWidthResize(callback) {
+        var windowWidth = 0;
+        angular.element($window).on("resize", function (e) {
+                if (windowWidth !== $window.innerWidth)
+                    callback(e);
+                windowWidth = $window.innerWidth;
+            }
+        );
+    };
+
+    /**
+     * @ngdoc method
      * @name onWindowScroll
      * @methodOf vbet5.service:DomHelper
      * @description
