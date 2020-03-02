@@ -67,15 +67,44 @@ angular.module('app').config(['$compileProvider', '$locationProvider', '$qProvid
     }
 
     /**
+     * Load custom css
+     * @returns {Promise}
+     */
+    function loadCustomCSS() {
+        var promiseHandler = initInjector.get('$q').defer();
+        var mainConfig = runtimeConfig && runtimeConfig.SkinConfig &&  runtimeConfig.SkinConfig.main;
+        if (mainConfig && mainConfig.hasCustomCSS) {
+            var currentTIme = new Date().getTime();
+            var customCSSUrl = (mainConfig.resourcePathPrefix || '') + "custom.css?v=" + currentTIme;
+            if (window.location.hostname === 'localhost') {
+                customCSSUrl = "//cmsbetconstruct.com/general/getCustomCss?skin_id=" + mainConfig.site_id + '&v=' + currentTIme;
+            }
+            var head  = document.getElementsByTagName('head')[0];
+            var link  = document.createElement('link');
+            link.rel  = 'stylesheet';
+            link.href = customCSSUrl;
+            link.onload = link.onerror = function () {
+                promiseHandler.resolve();
+            };
+            head.appendChild(link);
+        } else {
+            promiseHandler.resolve();
+        }
+        return promiseHandler.promise;
+    }
+
+    /**
      * @description Load conf.json
      */
     function loadRuntimeConfig() {
         var configUrlPrefix = "";
+        var disablePermissionCheck = false;
         if (getURLParameter('conf')) {
             configUrlPrefix = getURLParameter('conf');
         } else if (document.getElementById("app-config")) {
             if (document.getElementById("app-config").getAttribute('data-config-url-path')) {
                 configUrlPrefix = document.getElementById("app-config").getAttribute('data-config-url-path');
+                disablePermissionCheck = true;
             } else if (window.location.hostname === 'localhost' && document.getElementById("app-config").getAttribute('data-config-is-externall') === 'true') {
                 configUrlPrefix = 'https://cmsbetconstruct.com/general/getConfJson?skin_id=' + document.getElementById("app-config").getAttribute('data-id') + '?';
             }
@@ -84,7 +113,7 @@ angular.module('app').config(['$compileProvider', '$locationProvider', '$qProvid
         // allow config change only from these hosts (must be lowercase!)
         var ALLOWED_CONFIG_HOSTS = ["config.betconstruct.me","configs.betconstruct.me", "172.16.79.148", "cms.betconstruct.com", "cmsbetconstruct.com", "cmsbetconstruct.com:443"];
 
-        if (ALLOWED_CONFIG_HOSTS.indexOf(getLocation(configUrlPrefix).host.toLowerCase()) === -1) {
+        if (!disablePermissionCheck && ALLOWED_CONFIG_HOSTS.indexOf(getLocation(configUrlPrefix).host.toLowerCase()) === -1) {
             configUrlPrefix = '';
         }
 
@@ -182,7 +211,9 @@ angular.module('app').config(['$compileProvider', '$locationProvider', '$qProvid
      * @description Bootstrap anugular once config and trasnlations are loaded
      */
     loadRuntimeConfig()['finally'](function () {
-        loadTranslations()['finally'](bootstrapApplication);
+        loadCustomCSS()['finally'](function () {
+            loadTranslations()['finally'](bootstrapApplication);
+        });
     });
 
 }());

@@ -260,10 +260,10 @@
                         </td>
                         <td class="hh-cell"></td>
                         <td>
-                            <span class="second-color">{{{'-5': 'On Hold', '-4': 'Declined', '0': 'UNSETTLED', '1': 'Lost', '2': 'Returned', '3': 'Won', '5': 'Cashed out'}[event.outcome]|translate}}</span>
+                            <span class="second-color">{{{'-5': 'On Hold', '-4': 'Declined', '0': 'UNSETTLED', '1': 'Lost', '2': 'Returned', '3': 'Won', '5': 'Cashed out', '7': 'Placed'}[event.outcome]|translate}}</span>
                         </td>
                         <td class="status-icon-b status-cell"
-                            ng-class="{'-5': 'cms-jcon-pendding', '-4': 'cms-jcon-close_mark', '0': 'cms-jcon-pendding', '1': 'cms-jcon-close_mark', '2': 'cms-jcon-returned', '3': 'cms-jcon-checkmark2', '5': 'cms-jcon-checkmark2'}[event.outcome]"></td>
+                            ng-class="{'-5': 'cms-jcon-pendding', '-4': 'cms-jcon-close_mark', '0': 'cms-jcon-pendding', '1': 'cms-jcon-close_mark', '2': 'cms-jcon-returned', '3': 'cms-jcon-checkmark2', '5': 'cms-jcon-checkmark2', '7': 'cms-jcon-checkmark2-orange'}[event.outcome]"></td>
                         <td class="arrow-cell"></td>
                     </tr>
                     <tr class="sub-child" ng-class="{'last-child': $last}" ng-show="bet.expand"
@@ -283,10 +283,10 @@
                         </td>
                         <td class="hh-cell"></td>
                         <td>
-                            <span class="second-color">{{{'-5': 'On Hold', '-4': 'Declined', '0': 'UNSETTLED', '1': 'Lost', '2': 'Returned', '3': 'Won', '5': 'Cashed out'}[event.outcome]|translate}}</span>
+                            <span class="second-color">{{{'-5': 'On Hold', '-4': 'Declined', '0': 'UNSETTLED', '1': 'Lost', '2': 'Returned', '3': 'Won', '5': 'Cashed out', '7': 'Placed'}[event.outcome]|translate}}</span>
                         </td>
                         <td class="status-icon-b status-cell"
-                            ng-class="{'-5': 'cms-jcon-pendding', '-4': 'cms-jcon-close_mark', '0': 'cms-jcon-pendding', '1': 'cms-jcon-close_mark', '2': 'cms-jcon-returned', '3': 'cms-jcon-checkmark2', '5': 'cms-jcon-checkmark2'}[event.outcome]"></td>
+                            ng-class="{'-5': 'cms-jcon-pendding', '-4': 'cms-jcon-close_mark', '0': 'cms-jcon-pendding', '1': 'cms-jcon-close_mark', '2': 'cms-jcon-returned', '3': 'cms-jcon-checkmark2', '5': 'cms-jcon-checkmark2', '7': 'cms-jcon-checkmark2-orange'}[event.outcome]"></td>
                         <td class="arrow-cell"></td>
                     </tr>
                     <tr class="sub-child last-child cash-out-history-row" ng-show="bet.expand && childBets[bet.id]">

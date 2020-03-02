@@ -356,13 +356,6 @@ VBET5.controller('settingsCtrl', ['$scope', '$rootScope', '$location', '$documen
                 $scope.personalDetails.readOnlyFields.push($scope.personalDetails.editableFields.splice(index, 1)[0]);
             }
         }
-
-        if ($scope.details.account_holder) {
-            index = $scope.personalDetails.editableFields.indexOf('account_holder');
-            if (index > -1) {
-                $scope.personalDetails.readOnlyFields.push($scope.personalDetails.editableFields.splice(index, 1)[0]);
-            }
-        }
     }
 
 
@@ -834,67 +827,63 @@ VBET5.controller('settingsCtrl', ['$scope', '$rootScope', '$location', '$documen
      * Check settings deep link if given page is not available not open it
      */
     function checkSettingsDeeplink() {
-        var page = $rootScope.env.mixedSettingsPage || $location.search().settingspage;
+        $rootScope.env.mixedSettingsPage = $location.search().settingspage || $rootScope.env.mixedSettingsPage || Config.main.settingsDefaultPage;
         var isAllowed = false;
-        if (page) {
-            switch(page) {
-                case 'details':
-                    isAllowed = true;
-                    break;
-                case 'changepassword':
-                    isAllowed = !$scope.conf.disableChangePassword;
-                    break;
-                case 'verifyaccount':
-                    isAllowed = $scope.conf.enableAccountVerification || $scope.conf.accountVerificationMessage;
-                    break;
-                case 'usertimeout':
-                    isAllowed = $scope.conf.userTimeOut.enabled;
-                    break;
-                case 'promoCode':
-                    isAllowed = $scope.conf.profilePromoCodeUrl;
-                    break;
-                case 'selfexclusion':
-                    isAllowed = $scope.conf.selfExclusion.enabled;
-                    break;
-                case 'gamstop':
-                    isAllowed = $scope.conf.gamstop && $scope.conf.gamstop.enabled;
-                    break;
-                case 'realitycheck':
-                    isAllowed = $scope.conf.realityCheck.enabled;
-                    break;
-                case 'loginLimit':
-                    isAllowed = $scope.conf.loginLimit.enabled;
-                    break;
-                case 'depositlimits':
-                    isAllowed = $scope.conf.enableDepositLimits;
-                    break;
-                case 'betlimits':
-                    isAllowed = $scope.conf.betLimits && $scope.conf.betLimits.enabled && !($scope.conf.betLimits.hideSportsbookLimits && $scope.conf.betLimits.hideCasinoLimits);
-                    break;
-                case 'campaign':
-                    isAllowed = $scope.conf.enableCampaign;
-                    break;
-                case 'loginHistory':
-                    isAllowed = $scope.conf.enableLoginHistory;
-                    break;
-                case 'friendReferral':
-                    isAllowed = $scope.conf.friendReferral && $scope.conf.friendReferral.enabled;
-                    break;
-                case '12MonthsProfit':
-                    isAllowed = $scope.conf.enable12MonthsProfit;
-                case 'twoFactorAuthentication':
-                    isAllowed = $scope.conf.enableTwoFactorAuthentication;
-                    break;
-            }
-            $location.search('settingspage', undefined);
-            if(!isAllowed) {
-                $scope.env.sliderContent = "";
-                $scope.env.showSlider = false;
-            }else  {
-                $scope.env.mixedSettingsPage = page;
-            }
-        } else {
-            $scope.env.mixedSettingsPage = Config.main.settingsDefaultPage; //deep linking
+        switch($rootScope.env.mixedSettingsPage) {
+            case 'details':
+                isAllowed = true;
+                break;
+            case 'changepassword':
+                isAllowed = !$scope.conf.disableChangePassword;
+                break;
+            case 'verifyaccount':
+                isAllowed = $scope.conf.enableAccountVerification || $scope.conf.accountVerificationMessage;
+                break;
+            case 'usertimeout':
+                isAllowed = $scope.conf.userTimeOut.enabled;
+                break;
+            case 'promoCode':
+                isAllowed = $scope.conf.profilePromoCodeUrl;
+                break;
+            case 'selfexclusion':
+                isAllowed = $scope.conf.selfExclusion.enabled;
+                break;
+            case 'gamstop':
+                isAllowed = $scope.conf.gamstop && $scope.conf.gamstop.enabled;
+                break;
+            case 'realitycheck':
+                isAllowed = $scope.conf.realityCheck.enabled;
+                break;
+            case 'loginLimit':
+                isAllowed = $scope.conf.loginLimit.enabled;
+                break;
+            case 'depositlimits':
+                isAllowed = $scope.conf.enableDepositLimits;
+                break;
+            case 'betlimits':
+                isAllowed = $scope.conf.betLimits && $scope.conf.betLimits.enabled && !($scope.conf.betLimits.hideSportsbookLimits && $scope.conf.betLimits.hideCasinoLimits);
+                break;
+            case 'campaign':
+                isAllowed = $scope.conf.enableCampaign;
+                break;
+            case 'loginHistory':
+                isAllowed = $scope.conf.enableLoginHistory;
+                break;
+            case 'friendReferral':
+                isAllowed = $scope.conf.friendReferral && $scope.conf.friendReferral.enabled;
+                break;
+            case '12MonthsProfit':
+                isAllowed = $scope.conf.enable12MonthsProfit;
+                break;
+            case 'twoFactorAuthentication':
+                isAllowed = $scope.conf.enableTwoFactorAuthentication;
+                break;
+        }
+        $location.search('settingspage', undefined);
+
+        if(!isAllowed) {
+            $scope.env.sliderContent = "";
+            $scope.env.showSlider = false;
         }
     }
 

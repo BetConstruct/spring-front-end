@@ -118,7 +118,9 @@ VBET5.controller('mainHeaderVersion2Controller', ['$rootScope', '$scope', '$loca
             $rootScope.profile.skype_request = true;
             checkSkypeRequestStatus();
         }
-        Config.activeStepsConfig && processProfileActiveStep();
+        if (Config.activeStepsConfig) {
+            processProfileActiveStep();
+        }
     });
 
     $scope.$on('openPayment.deposit', function(e, args) {
@@ -228,48 +230,6 @@ VBET5.controller('mainHeaderVersion2Controller', ['$rootScope', '$scope', '$loca
             });
         };
     }
-
-    /**
-     * @ngdoc method
-     * @name processUserAuthorization
-     * @methodOf vbet5.controller:mainHeaderVersion2Controller
-     * @description Process user authorization (Not used in all skins)
-     */
-    function processUserAuthorization(event, data) {
-        if ($rootScope.profile && $rootScope.profile.paymentSystems && $rootScope.profile.paymentSystems.status) {
-            $rootScope.env.showSlider = true;
-            $rootScope.env.sliderContent = 'customContent';
-            $rootScope.env.sliderCustomContent = {
-                content: 'Authorization error.'
-            };
-
-            //$rootScope.profile.paymentSystems.status = 'UnknownCustomer';
-            //$rootScope.profile.paymentSystems.redirect = '223322';
-
-            switch ($rootScope.profile.paymentSystems.status) {
-                case 'OutdatedCustomer':
-                case 'UnidentifiedCustomer':
-                    $rootScope.env.sliderCustomContent = {
-                        content: 'Your account is not authorized yet'
-                    };
-                    break;
-                case 'UnknownCustomer':
-                    $rootScope.env.sliderCustomContent = {
-                        content: 'In order to make a deposit you have to be authorized'
-                    };
-                    break;
-            }
-
-            $rootScope.env.sliderCustomContent.contentType = 'userAuthorization';
-            $rootScope.env.sliderCustomContent.userConfirmationFaqUrl = Config.main.userConfirmationFaqUrl;
-
-            if ($rootScope.profile.paymentSystems.redirect) {
-                $rootScope.env.sliderCustomContent.buttonText = 'Goto autorization url';
-                $rootScope.env.sliderCustomContent.buttonUrl = $rootScope.profile.paymentSystems.redirect;
-            }
-        }
-    }
-
 
     $scope.$on('profilemenu.closed', function () {
         $scope.headerVersion2Icons.profileToggled = false;

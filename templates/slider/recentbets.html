@@ -60,7 +60,7 @@
                                             <p>
                                                 <b class="resent-sport-icon-b" ng-class="event.sport_index"></b><!-- add alias-->
                                                 <span><b title="{{event.game_name}}">{{event.game_name}}</b></span>
-                                                <b class="game-status-simple-game" ng-class="{'3': 'win', '1': 'lost', '0': 'wait', '2': 'returned'}[event.outcome]"></b><!-- win   lost   returned  wait-->
+                                                <b class="game-status-simple-game" ng-class="{'3': 'win', '1': 'lost', '0': 'wait', '2': 'returned', '7': 'placed'}[event.outcome]"></b><!-- win   lost   returned  wait-->
                                                 <i ng-show="bet.type > 1" class="arrow-icon-resent-b"></i>
                                             </p>
                                             <div class="full-info-resent-game" ng-class="{'no-click': !gamePointers[event.game_id]}" ng-click="gotoBetGame(event)">
@@ -79,9 +79,7 @@
                                                     </li>
                                                 </ul>
                                             </div>
-
                                         </li>
-
                                     </ul>
                                 </div>
 

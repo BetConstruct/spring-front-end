@@ -21,6 +21,7 @@ VBET5.controller('paymentsCtrl', ['$scope', '$rootScope', '$sce', '$q', '$window
     $scope.countryCodes = Utils.getAvailableCountries(CountryCodes);
     var currencyRates = {};
     var currentOpenDropdown = null;
+   $scope.withdrawLimit = 0;
 
 
     $scope.withdrawStatus = {
@@ -85,7 +86,6 @@ VBET5.controller('paymentsCtrl', ['$scope', '$rootScope', '$sce', '$q', '$window
 
     };
 
-
     /**
      * @ngdoc method
      * @name fieldBirthdayYears
@@ -109,7 +109,7 @@ VBET5.controller('paymentsCtrl', ['$scope', '$rootScope', '$sce', '$q', '$window
      */
     $scope.cartExpiryYears = function cartExpiryYears() {
         var i, start = new Date().getFullYear();
-        var length = start + (Config.main.withdrawCartExpiryYears || 10);
+        var length = start + 10;
 
         for (i = start; i <= length; i += 1) {
             $scope.cartExpiry.year.push(i.toString());
@@ -602,12 +602,17 @@ VBET5.controller('paymentsCtrl', ['$scope', '$rootScope', '$sce', '$q', '$window
      * @returns {String} location
      */
     function currentLocationWithParam(paramName, paramValue) {
-        var location = $location.absUrl();
-        if (!paramName) {
-            return location;
+        var searchParams = $location.search();
+        var locationUrl = $location.absUrl();
+        if(!angular.equals(searchParams, {})){
+            locationUrl = Utils.getAllUrlParams(locationUrl).host + '#/';
         }
-        var prefix =  location.substr(location.length - 1) === '/' ? '?' : '&';
-        return location + prefix + paramName + '=' + encodeURIComponent(paramValue);
+
+        if (!paramName) {
+            return locationUrl;
+        }
+        var prefix =  locationUrl.substr(locationUrl.length - 1) === '/' ? '?' : '&';
+        return locationUrl + prefix + paramName + '=' + encodeURIComponent(paramValue);
     }
 
     /**
@@ -616,10 +621,10 @@ VBET5.controller('paymentsCtrl', ['$scope', '$rootScope', '$sce', '$q', '$window
      * @methodOf vbet5.controller:paymentsCtrl
      * @description Displays deposit or withdraw amount transfer confirmatiuon dialog
      */
-    function depositConfirmationAsDialog() {
+    function depositConfirmationAsDialog(action) {
         var content = Translator.get('Please confirm money transfer');
-        if ($scope.paymentAmount.withdraw || $scope.paymentAmount.deposit) {
-            content += ': ' + ($scope.paymentAmount.withdraw || $scope.paymentAmount.deposit) + ' ' + ($scope.selectedPaymentSystem.customCurrency || $rootScope.profile.currency_name);
+        if ($scope.paymentAmount || $scope.paymentAmount[action]) {
+            content += ': ' + ($scope.paymentAmount[action]) + ' ' + ($scope.selectedPaymentSystem.customCurrency || $rootScope.profile.currency_name);
         }
         $rootScope.$broadcast("globalDialogs.addDialog", {
             type: 'info',
@@ -718,9 +723,7 @@ VBET5.controller('paymentsCtrl', ['$scope', '$rootScope', '$sce', '$q', '$window
     function doDepositRequest(request, message) {
          Zergling.get(request, 'deposit').then(
             function (data) {
-                console.log('buyVC request:', request, 'response:', data);
-
-                if (data && data.result === 0 && (!data.details || !data.details.error || data.details.error == 0)) {
+                if (data && data.result === 0 && (!data.details || !data.details.error || data.details.error === 0)) {
                     //on success
                     if (data.details.method && (data.details.method.toLowerCase() === 'post' || data.details.method.toLowerCase() === 'get')) {
                         $scope.externalFormParams = data.details;
@@ -728,7 +731,7 @@ VBET5.controller('paymentsCtrl', ['$scope', '$rootScope', '$sce', '$q', '$window
                             if($scope.selectedPaymentSystem.disableConfirmPopUp){
                                 submitCustomPaymentFieldsForm();
                             }else{
-                                depositConfirmationAsDialog();
+                                depositConfirmationAsDialog('deposit');
                             }
                         } else {
                             $scope.showConfirmation = true;
@@ -761,7 +764,7 @@ VBET5.controller('paymentsCtrl', ['$scope', '$rootScope', '$sce', '$q', '$window
                         analytics.gaSend('send', 'event', 'slider', 'deposit',  {'page': $location.path(), 'eventLabel': 'Success -' + request.service, 'tr': request.amount + ' ' + $rootScope.profile.currency_name});
                         Tracking.event('deposit_completed', {'currency': $rootScope.profile.currency_name, 'amount': request.amount, 'translation_id': $scope.profile.unique_id}, true);
 
-                        if($scope.messageType !== 'error'){
+                        if($scope.messageType !== 'error') {
                             $rootScope.$broadcast('payment.success','deposit',{'payment_system': $scope.selectedPaymentSystem.name,'payment_amount': request.amount , 'payment_currency': $rootScope.profile.currency_name}); //todo  SDC-37579
                         }
 
@@ -812,7 +815,7 @@ VBET5.controller('paymentsCtrl', ['$scope', '$rootScope', '$sce', '$q', '$window
                     title: 'Error',
                     content: message
                 });
-                //$scope.popupInfo = message;
+
                 analytics.gaSend('send', 'event', 'slider', 'deposit',  {'page': $location.path(), 'eventLabel': 'Error -' + request.service + ' ' + message});
             }
         )['finally'](function () {
@@ -850,12 +853,6 @@ VBET5.controller('paymentsCtrl', ['$scope', '$rootScope', '$sce', '$q', '$window
             customAmount && (request.payee.custom_amount = customAmount);
         }
 
-        if (!checkLimits($scope.selectedPaymentSystem.name, 'Withdraw', request.amount)) {
-            console.log('Withdraw limits not permitted');
-            analytics.gaSend('send', 'event', 'slider', 'withdraw',  {'page': $location.path(), 'eventLabel': 'Error -' + request.service + ' ' + 'Withdraw limits not permitted'});
-            return false;
-        }
-
         $scope.busy = true;
 
         if ($scope.selectedPaymentSystem.hasBetShops || $scope.selectedPaymentSystem.isTransferToLinkedService || ($scope.withdrawFormData && $scope.withdrawFormData.hasOwnProperty('confirmed')) || ($scope.selectedPaymentSystem.withdrawFormFields && $scope.selectedPaymentSystem.withdrawFormFields.length)) {
@@ -879,12 +876,11 @@ VBET5.controller('paymentsCtrl', ['$scope', '$rootScope', '$sce', '$q', '$window
                     $scope.externalFormParams = data.details;
                     $scope.messageType = undefined;
 
-                    $scope.externalFormParams = data.details;
                     if (Config.main.enableMixedView) {
-                        if($scope.selectedPaymentSystem.disableConfirmPopUp){
+                        if($scope.selectedPaymentSystem.disableConfirmPopUp) {
                             submitCustomPaymentFieldsForm();
                         }else{
-                            depositConfirmationAsDialog();
+                            depositConfirmationAsDialog('withdraw');
                         }
                     } else {
                         $scope.showConfirmation = true;
@@ -957,9 +953,10 @@ VBET5.controller('paymentsCtrl', ['$scope', '$rootScope', '$sce', '$q', '$window
      *
      * @param {Object} paymentSystem payment system
      * @param {String} customTemplate payment's custom template
+     * @param {boolean} forceSelect force select payment
      */
-    $scope.selectPaymentSystem = function selectPaymentSystem(paymentSystem, customTemplate) {
-        if ($scope.gettingFieldsInProgress) {
+    $scope.selectPaymentSystem = function selectPaymentSystem(paymentSystem, customTemplate, forceSelect) {
+        if ($scope.gettingFieldsInProgress && !forceSelect) {
             return;
         }
 
@@ -993,9 +990,9 @@ VBET5.controller('paymentsCtrl', ['$scope', '$rootScope', '$sce', '$q', '$window
         }
 
         if ($rootScope.profile && $rootScope.profile.currency_name) {
-            var buttonsDefaultValues = Config.buttonsDefaultValues && Config.buttonsDefaultValues[$rootScope.profile.currency_name];
-            $scope.withdrawCustomAmounts = (paymentSystem.info && paymentSystem.info[$rootScope.profile.currency_name] && paymentSystem.info[$rootScope.profile.currency_name].default && paymentSystem.info[$rootScope.profile.currency_name].default.withdraw) || paymentSystem.withdrawCustomAmounts || (buttonsDefaultValues && buttonsDefaultValues.withdraw)|| null;
-            $scope.depositCustomAmounts = (paymentSystem.info && paymentSystem.info[$rootScope.profile.currency_name] && paymentSystem.info[$rootScope.profile.currency_name].default && paymentSystem.info[$rootScope.profile.currency_name].default.deposit) || paymentSystem.depositCustomAmounts || (buttonsDefaultValues && buttonsDefaultValues.deposit) || null;
+            var buttonsDefaultValues = Config.buttonsDefaultValues && Config.buttonsDefaultValues[$rootScope.profile.currency_name] || {};
+            $scope.withdrawCustomAmounts = (paymentSystem.info && paymentSystem.info[$rootScope.profile.currency_name] && paymentSystem.info[$rootScope.profile.currency_name].default && paymentSystem.info[$rootScope.profile.currency_name].default.withdraw) || paymentSystem.withdrawCustomAmounts || buttonsDefaultValues.withdraw || null;
+            $scope.depositCustomAmounts = (paymentSystem.info && paymentSystem.info[$rootScope.profile.currency_name] && paymentSystem.info[$rootScope.profile.currency_name].default && paymentSystem.info[$rootScope.profile.currency_name].default.deposit) || paymentSystem.depositCustomAmounts || buttonsDefaultValues.deposit || null;
         }
 
         $scope.selectedPaymentSystem = paymentSystem;
@@ -1043,8 +1040,11 @@ VBET5.controller('paymentsCtrl', ['$scope', '$rootScope', '$sce', '$q', '$window
                 getWallets: 1,
                 forProduct: $rootScope.currentPage.isInSports ? "sport" : "casino"
             };
-
+            var paymentsType = $scope.paymentsType;
             Zergling.get(request, $scope.paymentsType).then(function(response) {
+                if (paymentsType !== $scope.paymentsType) {
+                    return;
+                }
                 if (response.details && response.details.method && response.details.method.toLowerCase() === 'formdraw') {
                     drawPaymentFormResponse(response.details, $scope.paymentsType, true);
                 }
@@ -1141,14 +1141,10 @@ VBET5.controller('paymentsCtrl', ['$scope', '$rootScope', '$sce', '$q', '$window
         }
 
         //external scripts part
-        if ($scope.env.sliderContent === 'deposit' && paymentSystem.depositPageScripts && paymentSystem.depositPageScripts.length) {
+        var scriptKey = $scope.env.sliderContent + 'PageScripts';
+        if (paymentSystem[scriptKey] && paymentSystem[scriptKey].length) {
             TimeoutWrapper(function() {
-                angular.forEach(paymentSystem.depositPageScripts, function (url) { Script(url + '?' + Date.now());});
-            });
-        }
-        if ($scope.env.sliderContent === 'withdraw' && paymentSystem.withdrawPageScripts && paymentSystem.withdrawPageScripts.length) {
-            TimeoutWrapper(function() {
-                angular.forEach(paymentSystem.withdrawPageScripts, function (url) { Script(url + '?' + Date.now());});
+                angular.forEach(paymentSystem[scriptKey], function (url) { Script(url + '?' + Date.now());});
             });
         }
 
@@ -1156,15 +1152,7 @@ VBET5.controller('paymentsCtrl', ['$scope', '$rootScope', '$sce', '$q', '$window
         $scope.showGetStatusForm = false;
         $scope.depositInProgress = false;
         $scope.paymentIsDone = false;
-
-
     };
-
-
-    $scope.getBcString = function getBcString() {
-        // TODO: implement
-    };
-
 
     /**
      * @ngdoc method
@@ -1226,11 +1214,6 @@ VBET5.controller('paymentsCtrl', ['$scope', '$rootScope', '$sce', '$q', '$window
                 }
             };
 
-            if (!checkLimits($scope.selectedPaymentSystem.name, 'Deposit', request.amount)) {
-                console.log('Deposit limits not permitted');
-                return false;
-            }
-
             $scope.busy = true;
 
             if (($scope.selectedPaymentSystem.depositFormFields && $scope.selectedPaymentSystem.depositFormFields.length) || ($scope.depositFormData && $scope.depositFormData.hasOwnProperty('confirmed'))) {
@@ -1254,8 +1237,6 @@ VBET5.controller('paymentsCtrl', ['$scope', '$rootScope', '$sce', '$q', '$window
             }
 
             delete $scope.depositFormData.confirmed;
-            //console.log('test test test test test test test test test test test');
-            //console.log(request);
 
             doDepositRequest(request, message);
         });
@@ -1277,7 +1258,7 @@ VBET5.controller('paymentsCtrl', ['$scope', '$rootScope', '$sce', '$q', '$window
                         $rootScope.$broadcast("globalDialogs.addDialog", {
                             type: "info",
                             title: "Info",
-                            content: Translator.get('Are you sure to continue without deposit bonus?'),
+                            content: 'Are you sure to continue without deposit bonus?',
                             buttons: [
                                 {
                                     title: 'Yes', callback: function () {
@@ -1450,8 +1431,6 @@ VBET5.controller('paymentsCtrl', ['$scope', '$rootScope', '$sce', '$q', '$window
                         return history.payment_info;
                     });
                 }
-            } else {
-
             }
 		}, function (failResponse) {
             console.log('Error', failResponse);
@@ -1633,59 +1612,7 @@ VBET5.controller('paymentsCtrl', ['$scope', '$rootScope', '$sce', '$q', '$window
 
     /**
      * @ngdoc method
-     * @name checkLimits
-     * @methodOf vbet5.controller:paymentsCtrl
-     * @description  Validate payment limits
-     * @param {String} paymentName the payment's name
-     * @param {String} paymentType type Deposit or Withdraw
-     * @param {float} amount to check
-     */
-    function checkLimits(paymentName, paymentType, amount) {
-        var notPassed = false,
-            message = '',
-            paymentLimits = ($rootScope.profile && $rootScope.profile.paymentSystems && $rootScope.profile.paymentSystems.limits) || {};
-
-        if (paymentType !== 'Deposit' && paymentType !== 'Withdraw') {
-            console.error('Wrong payment type selected.');
-            return false;
-        }
-
-        console.log('Check limits for amount(' + amount + '): ' + paymentName);
-
-        if (paymentLimits[paymentName]) {
-            var limits = paymentLimits[paymentName];
-            console.log('Payment found', limits);
-
-            if (limits['min' + paymentType] && amount < limits['min' + paymentType]) {
-                notPassed = true;
-                message = Translator.get('Amount is less than minimum allowed');
-                message += '<br>' + Translator.get('Minimum') + ' ' + limits['min' + paymentType] + ' ' + $filter('currency')($rootScope.profile.currency_name);
-            }
-
-            if (limits['max' + paymentType] && amount > limits['max' + paymentType]) {
-                notPassed = true;
-                message = Translator.get('Amount is greater than maximum allowed');
-                message += '<br>' + Translator.get('Maximum') + ' ' + limits['max' + paymentType] + ' ' + $filter('currency')($rootScope.profile.currency_name);
-            }
-        }
-
-        if (notPassed) {
-            $rootScope.$broadcast("globalDialogs.addDialog", {
-                type: 'error',
-                title: paymentType,
-                content: message
-            });
-            console.log('Limit not passed');
-            return false;
-        }
-
-        console.log('Limits OK');
-        return true;
-    }
-
-    /**
-     * @ngdoc method
-     * @name checkLimits
+     * @name adjustPaymentDate
      * @methodOf vbet5.controller:paymentsCtrl
      * @description  Datepicker model fix and match to the mask
      * @param {String} fieldId id
@@ -1703,7 +1630,7 @@ VBET5.controller('paymentsCtrl', ['$scope', '$rootScope', '$sce', '$q', '$window
      * @methodOf vbet5.controller:paymentsCtrl
      * @description  open pop up with terms and conditions link when clicking on deposit
      */
-    $scope.openDepositAttentionPopUp = function openDepositAttentionPopUp () {
+    function openDepositAttentionPopUp () {
         if (Config.main.popUpBeforeDeposit && Config.main.popUpBeforeDeposit.enable && $rootScope.env.sliderContent === 'deposit') {
             var termsAndCond = "#/?help=general-terms-and-conditions&lang=" + Config.env.lang;
             $rootScope.$broadcast("globalDialogs.addDialog", {
@@ -1715,7 +1642,7 @@ VBET5.controller('paymentsCtrl', ['$scope', '$rootScope', '$sce', '$q', '$window
                 contentPlaceholders: ['<a href="' + termsAndCond + '"' + ' target="_blank">' + Translator.get("Terms &amp; Conditions") + '</a>']
             });
         }
-    };
+    }
 
     $scope.customButtonHandler = function customButtonHandler() {
         var payment = $scope.selectedPaymentSystem, opener;
@@ -1768,7 +1695,7 @@ VBET5.controller('paymentsCtrl', ['$scope', '$rootScope', '$sce', '$q', '$window
         });
     };
 
-    $scope.openDepositAttentionPopUp();
+    openDepositAttentionPopUp();
 
     /**
      * @ngdoc method
@@ -1796,7 +1723,6 @@ VBET5.controller('paymentsCtrl', ['$scope', '$rootScope', '$sce', '$q', '$window
             }
 
             if ($rootScope.profile.paymentSystems.status) {
-                $rootScope.$broadcast('slider.processUserAuthorization');
                 return;
             }
 
@@ -1812,7 +1738,7 @@ VBET5.controller('paymentsCtrl', ['$scope', '$rootScope', '$sce', '$q', '$window
 
             var payemntFromUrl = getPaymentSystemFromUrl();
             if (payemntFromUrl) {
-                $scope.selectPaymentSystem(payemntFromUrl, '');
+                $scope.selectPaymentSystem(payemntFromUrl, '', true);
             } else {
                 var i;
                 var defaultPaymentIndex = NaN;
@@ -1820,19 +1746,19 @@ VBET5.controller('paymentsCtrl', ['$scope', '$rootScope', '$sce', '$q', '$window
                 for (i = 0; i < $scope.paymentConfig.length; i++) {
                     if ($scope.paymentConfig[i]['can' + ($scope.env.sliderContent === 'withdraw' ? 'Withdraw' : 'Deposit')]) {
                         if ($scope.env.selectedPayment ===  $scope.paymentConfig[i].name) {
-                            $scope.selectPaymentSystem($scope.paymentConfig[i], '');
+                            $scope.selectPaymentSystem($scope.paymentConfig[i], '', true);
                             defaultPaymentIndex = NaN;
                             $location.search('system', undefined);
                             break;
                         }
-                        if (isNaN(defaultPaymentIndex) && (($scope.env.sliderContent === 'withdraw' && (!Config.enableDefaultPaymentSelection || Config.enableDefaultPaymentSelection.withdraw) && (!$rootScope.currentPage.isInCasino || $scope.paymentConfig[i].canWithdrawFromCasino === undefined || $scope.paymentConfig[i].canWithdrawFromCasino)) || ($scope.env.sliderContent === 'deposit' && (!Config.enableDefaultPaymentSelection || Config.enableDefaultPaymentSelection.withdraw)))) {
+                        if (isNaN(defaultPaymentIndex) && (($scope.env.sliderContent !== 'withdraw' || (!$rootScope.currentPage.isInCasino || $scope.paymentConfig[i].canWithdrawFromCasino === undefined || $scope.paymentConfig[i].canWithdrawFromCasino)))) {
                             defaultPaymentIndex = i;
                         }
                     }
                 }
 
                 if (!isNaN(defaultPaymentIndex)) {
-                    $scope.selectPaymentSystem($scope.paymentConfig[defaultPaymentIndex], ''); //by default select the first one
+                    $scope.selectPaymentSystem($scope.paymentConfig[defaultPaymentIndex], '', true); //by default select the first one
                 }
             }
 
@@ -1841,13 +1767,13 @@ VBET5.controller('paymentsCtrl', ['$scope', '$rootScope', '$sce', '$q', '$window
 
         $scope.paymentsType = type;
         $scope.selectedPaymentSystem = undefined;
-        if(Config.main.registration && (Config.main.registration.type === 'partial' || (Config.main.personalDetails.requiredFieldsForPayments && (!Config.main.personalDetails.requiredFieldsFor || (Config.main.personalDetails.requiredFieldsFor.deposit && $rootScope.env.sliderContent === 'deposit') || (Config.main.personalDetails.requiredFieldsFor.withdraw && $rootScope.env.sliderContent === 'withdraw'))))) {
+
+        if (Config.main.registration && (Config.main.registration.type === 'partial' || (Config.main.personalDetails.requiredFieldsForPayments && (!Config.main.personalDetails.requiredFieldsFor || (Config.main.personalDetails.requiredFieldsFor.deposit && $rootScope.env.sliderContent === 'deposit') || (Config.main.personalDetails.requiredFieldsFor.withdraw && $rootScope.env.sliderContent === 'withdraw'))))) {
             $scope.isProfilePartial = isProfilePartial();
-            doInit();
         } else {
             $scope.isProfilePartial = false;
-            doInit();
         }
+        doInit();
     };
 
     $scope.$on('$destroy', function () {
@@ -1875,5 +1801,20 @@ VBET5.controller('paymentsCtrl', ['$scope', '$rootScope', '$sce', '$q', '$window
         $scope.dropdownOpened[name] = !$scope.dropdownOpened[name];
         currentOpenDropdown = name;
     };
+
+    function getWithdrawabelBonus() {
+        Zergling.get({}, "get_client_withdrawable_balance").then(function (response) {
+            if (response.details) {
+                $scope.withdrawLimit = response.details.Limit;
+            }
+        });
+    }
+
+    $scope.$watch('env.sliderContent', function (newValue) {
+        if (newValue === 'withdraw') {
+            getWithdrawabelBonus();
+
+        }
+    })
 
 }]);

@@ -5,7 +5,7 @@
  * @description
  *  New bet history controller.
  */
-VBET5.controller('mixedMyBetsCtrl', ['$rootScope', '$scope', '$controller', '$location', 'Config', 'GameInfo', 'Moment', 'Utils', 'BetService', function($rootScope, $scope, $controller, $location, Config, GameInfo, Moment, Utils, BetService) {
+VBET5.controller('mixedMyBetsCtrl', ['$rootScope', '$scope', '$controller', '$location', 'Config', 'GameInfo', 'Moment', 'Utils', 'BetService', 'Zergling', function($rootScope, $scope, $controller, $location, Config, GameInfo, Moment, Utils, BetService, Zergling) {
     'use strict';
 
 
@@ -19,6 +19,8 @@ VBET5.controller('mixedMyBetsCtrl', ['$rootScope', '$scope', '$controller', '$lo
     Moment.updateWeekDaysLocale();
     $scope.betConf = Config.betting;
     var timeZone = Config.env.selectedTimeZone || '';
+
+    $scope.recalculatedBetsDataMap = {};
 
     /**
      * @ngdoc method
@@ -87,17 +89,13 @@ VBET5.controller('mixedMyBetsCtrl', ['$rootScope', '$scope', '$controller', '$lo
             }
         }
 
-        var betHistoryLoadingCallback = function betHistoryLoadingCallback(){
-            if(Config.main.expandAllInBetHistory){
+        var betHistoryLoadingCallback = function betHistoryLoadingCallback() {
+            if($scope.expandState){
                 $scope.expandCollapseAll($scope.expandState);
             }
         };
 
-        if ($scope.productMode === 'Casino') {
-            $scope.loadBetHistory('Casino', betHistoryLoadingCallback);
-        } else {
-            $scope.loadBetHistory(undefined, betHistoryLoadingCallback);
-        }
+        $scope.loadBetHistory(product === 'Casino' ? 'Casino' : undefined, betHistoryLoadingCallback);
 
     };
 
@@ -131,14 +129,44 @@ VBET5.controller('mixedMyBetsCtrl', ['$rootScope', '$scope', '$controller', '$lo
 
     /**
      * @ngdoc method
+     * @name getBetRecalculationInfo
+     * @methodOf vbet5.controller:mixedMyBetsCtrl
+     *
+     * @param {Array} betIds the ids of bets
+     */
+    function getBetRecalculationInfo(betIds) {
+        if (betIds.length && Config.main.betHistory.enableRecalculationNoteColumn) {
+            Zergling.get({bet_ids: betIds}, 'get_bet_recalculation_reason').then(function (response) {
+                if (response.result === 0 && response.details) {
+                    angular.forEach(response.details, function (detail, key) {
+                        $scope.recalculatedBetsDataMap[key] = {};
+                        for (var i = detail.length; i--;) {
+                            $scope.recalculatedBetsDataMap[key][detail[i].SelectionId] = detail[i].ExternalReason;
+                        }
+                    });
+                }
+            });
+        }
+    }
+
+    /**
+     * @ngdoc method
      * @name expandCollapseAll
      * @methodOf vbet5.controller:mixedMyBetsCtrl
      * @description expand/collapse all bets
      */
     $scope.expandCollapseAll = function expandCollapseAll(state) {
+        var recalculatedIds = [];
+
         angular.forEach($scope.betHistory, function(b) {
             b.expand = state;
+
+            if (state && b.has_recalculation_reason && !$scope.recalculatedBetsDataMap[b.id]) {
+                recalculatedIds.push(b.id);
+            }
         });
+
+        getBetRecalculationInfo(recalculatedIds);
 
         $scope.expandState = state;
     };
@@ -150,6 +178,13 @@ VBET5.controller('mixedMyBetsCtrl', ['$rootScope', '$scope', '$controller', '$lo
      * @description calculate bet Event Statuses
      */
     var betEventsCalculator = function betEventsCalculator() {
+        if ($scope.betStatusFilter === - 1) {
+            for (var i = $scope.betHistory.length; i--; ) {
+                $scope.betHistory[i].totalAmount = $scope.betHistory[i].amount.toString();
+            }
+
+            return;
+        }
         initBetEventCounts();
 
         angular.forEach($scope.betHistory, function(b) {
@@ -180,8 +215,7 @@ VBET5.controller('mixedMyBetsCtrl', ['$rootScope', '$scope', '$controller', '$lo
 
     $scope.$watch('betHistory', function () {
             betEventsCalculator();
-        }
-        , true);
+        }, true);
 
     /**
      * @ngdoc method
@@ -302,6 +336,22 @@ VBET5.controller('mixedMyBetsCtrl', ['$rootScope', '$scope', '$controller', '$lo
         $scope.openBetTypeFilter = false;
         $scope.openedTo = !$scope.openedTo;
         $scope.periodDropdownOpened = false;
+    };
+
+    /**
+     * @ngdoc method
+     * @name toggleBetDetails
+     * @methodOf vbet5.controller:mixedMyBetsCtrl
+     * @description toggles bet details and in the expanded case, if there is a recalculated note, gets it
+     *
+     * @param {Object} bet the bet object
+    */
+    $scope.toggleBetDetails = function toggleBetDetails(bet) {
+        bet.expand = !bet.expand;
+
+        if (bet.expand && bet.has_recalculation_reason && !$scope.recalculatedBetsDataMap[bet.id]) {
+            getBetRecalculationInfo([bet.id]);
+        }
     };
 
     initScope();

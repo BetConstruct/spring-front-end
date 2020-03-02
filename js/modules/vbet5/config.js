@@ -108,7 +108,6 @@ angular.module('vbet5').constant('Config', {
             placeholder: "",
             required: true,
             classes: "",
-            step: 2,
             validation: [{"name": "required", "message": "This field is required"}, {"name": "notmatching", "message": "This field is required"}]
         },
         asianShowTeamNames: true,
@@ -137,6 +136,7 @@ angular.module('vbet5').constant('Config', {
         defaultTransLang: 'eng',  //default translation language: // translator will translate strings to default language if translation is not available for selected language
         site_id: '13', //13 is test id
         source: 42,
+        PMUId: 181,
         maximumNumberOfLinesInPayments: 3,  // 0 to not show read more in payments
         calendarPrematchSelection: false,
         esportsOutrightEventsLimit: 8,
@@ -182,7 +182,8 @@ angular.module('vbet5').constant('Config', {
             sportsbook: true,
             casino: true,
             showApplyButton: false,
-            showClaimableInfoBeforeDeposit: false
+            showClaimableInfoBeforeDeposit: false,
+            disableColumns: {}
             /*bonusRequestURL: "iframe/URL" append iframe in profile>bonus section*/
         },
         enableBonusSectionInWallet: true,
@@ -215,6 +216,7 @@ angular.module('vbet5').constant('Config', {
         drawDataUrl: 'https://cptca.betconstruct.com/niva/json.php',
         drawStreamUrl: 'rtmp://stream-eu2hz.betconstruct.com:1935/livedealer1/shanttv',
         gamesEnabled: true,
+        betBuilderSports: {},
         hidePointsForCompetitions: {},
         virtualBettingEnabled: true,
         visibleItemsInTopMenu: 7, // visible items quantity in Top Menu in small view
@@ -232,6 +234,9 @@ angular.module('vbet5').constant('Config', {
         hideLiveCalendarNumber: false,
         betslipInputFieldCustomValue: 'Stake...',  //custom value for betslip input placeholder
         enableSystemCalculator: false,
+        betHistory: { // the entire bet-history configuration should be moved here
+            enableRecalculationNoteColumn: false
+        },
         betHistoryEnabled: true,  //enable bet history in top menu
         enableCasinoBalanceHistory: false, //enable casino balance history in top menu
         enableCasinoBetHistory: false, //enable casino balance history in top menu
@@ -250,6 +255,7 @@ angular.module('vbet5').constant('Config', {
         sportsAlwaysOnTop: false,
         competitionsOrderByTimeInAsianView: false, //for order competitions by time in Asian view, default value false
         customSelectedSequenceInAsianSportsbook: false,
+        ukLicense: false, // Config for UK skins
         asian: {
             competitionsPerPage: 10,
             separateMatchEventsOnHDP: [
@@ -441,6 +447,10 @@ angular.module('vbet5').constant('Config', {
             enabled: false,
             order: null
         },
+        recommendedGames: {
+            enabled: false,
+            order: null
+        },
         showOutright: false,    // false to hide,  any number to show (number is used as 'order' field to define it's position among sports)
         showMapSection: false,   // false to hide,  any true to show Map Section in About Page
         showFavoriteCompetitions: false,
@@ -479,7 +489,7 @@ angular.module('vbet5').constant('Config', {
         hideGmsMarketBase: false, //hides market base when new backend is on
         GmsPlatform: false,
         virtualSportIds: {
-            virtualsports: [54, 55, 56, 57, 118, 150, 173, 174],
+            virtualsports: [54, 55, 56, 57, 118, 150, 173, 174, 188],
             insvirtualsports: [132, 133, 134, 135, 136, 137, 138]
         },
         enableBetPrint: false,
@@ -553,6 +563,9 @@ angular.module('vbet5').constant('Config', {
             subUrl: '/external/page/'
         },
         enableH2HStat: false,
+        matchLineupStatistics: {
+            prefixUrl: 'https://krosstats.betcoapps.com/api/{lang}/900/93f428d0-6591-48da-859d-b6c326db2448/Match/GetMatchByIdMobile?matchId='
+        },
         enableTeamLogosOnHomepage: true,
         enableVisibleInPrematchGames: false,
         poolBettingResultsUrlPrefix: 'http://www.vbet.com/results/',
@@ -803,7 +816,7 @@ angular.module('vbet5').constant('Config', {
         videoEnabled: true, //enable game videos
         video: {
             allowedWithNoneBalance: {},
-            enableOptimization: false,
+            enableOptimization: true,
             autoPlay: true, //disable autoplaying implemented only for classic view
             providersThatSupportHls: {
                 15: true,
@@ -903,13 +916,43 @@ angular.module('vbet5').constant('Config', {
             }
         },
         marketStats: {
-            'HalfTimeFullTime': "https://krosstats.betcoapps.com/api/en/900/93f428d0-6591-48da-859d-b6c326db2448/Entity/GetHalfTimeFullTimePerformance?matchId=",
-            'HalfTimeResult':  "https://krosstats.betcoapps.com/api/en/900/93f428d0-6591-48da-859d-b6c326db2448/Entity/GetStatsForMatch?matchId=",
-            'MatchResult': "https://krosstats.betcoapps.com/api/en/900/93f428d0-6591-48da-859d-b6c326db2448/Entity/GetStatsForMatch?matchId=",
-            'CorrectScore': "https://krosstats.betcoapps.com/api/en/900/93f428d0-6591-48da-859d-b6c326db2448/Entity/GetStatsForMatch?matchId=",
-            'Qualify': "https://krosstats.betcoapps.com/api/en/900/93f428d0-6591-48da-859d-b6c326db2448/Entity/GetGeneralStatsInfo?matchId=",
-            'ToQualify': "https://krosstats.betcoapps.com/api/en/900/93f428d0-6591-48da-859d-b6c326db2448/Entity/GetGeneralStatsInfo?matchId="
-        },
+            'HalfTimeFullTime': "GetHalfTimeFullTimePerformance?matchId=",
+            'HalfTimeResult':  "GetStatsForMatch?matchId=",
+            'P1XP2': "GetStatsForMatch?matchId=",
+            'CorrectScore': "GetStatsForMatch?matchId=",
+            'To Qualify': "GetGeneralStatsInfo?matchId=",
+            'ToQualify': "GetGeneralStatsInfo?matchId=",
+            '1stHalfBothTeamsToScore': 'GetScoredGoalsStatistics?type=3&matchId=',
+            '2ndHalfBothTeamsToScore': 'GetScoredGoalsStatistics?type=3&matchId=',
+            '1stHalf-2ndHalfBothToScore': 'GetScoredGoalsStatistics?type=3&matchId=',
+            'BothTeamsToScore': 'GetScoredGoalsStatistics?type=1&matchId=',
+            'Team1ScoreYes/no': 'GetScoredGoalsStatistics?type=2&matchId=',
+            'Team2ScoreYes/No': 'GetScoredGoalsStatistics?type=2&matchId=',
+            'Team1TotalGoalsExact': 'GetScoredGoalsStatistics?type=3&matchId=',
+            'Team2TotalGoalsExact': 'GetScoredGoalsStatistics?type=3&matchId=',
+            'Team1TotalGoals': 'GetScoredGoalsStatistics?type=3&matchId=',
+            'Team2TotalGoals': 'GetScoredGoalsStatistics?type=3&matchId=',
+            'HomeTeamGoals': 'GetScoredGoalsStatistics?type=3&matchId=',
+            'AwayTeamGoals': 'GetScoredGoalsStatistics?type=3&matchId=',
+            'Team1OverUnder': 'GetScoredGoalsStatistics?type=1&matchId=',
+            'Team2OverUnder': 'GetScoredGoalsStatistics?type=1&matchId=',
+            'Team1TotalOverUnderAsian': 'GetScoredGoalsStatistics?type=1&matchId=',
+            'Team2TotalOverUnderAsian': 'GetScoredGoalsStatistics?type=1&matchId=',
+            'SecondHalfHomeTeamTotalGoalsOverUnder': 'GetScoredGoalsStatistics?type=1&matchId=',
+            'SecondHalfAwayTeamTotalGoalsOverUnder': 'GetScoredGoalsStatistics?type=1&matchId=',
+            'OverUnder': 'GetScoredGoalsStatistics?type=2&matchId=',
+            'TotalGoals': 'GetScoredGoalsStatistics?type=2&matchId=',
+            'EvenOddTotal': 'GetScoredGoalsStatistics?type=2&matchId=',
+            '2ndHalfTotalOver/Under': 'GetScoredGoalsStatistics?type=2&matchId=',
+            'HalfTimeOverUnder': 'GetScoredGoalsStatistics?type=2&matchId=',
+            'HalfTimeOverUnderAsian': 'GetScoredGoalsStatistics?type=2&matchId=',
+            'SecondHalfAwayTeamTotalGoalsInterval': 'GetScoredGoalsStatistics?type=2&matchId=',
+            'SecondHalfTotalGoalsExact': 'GetScoredGoalsStatistics?type=2&matchId=',
+            'SecondHalfHomeTeamTotalGoalsExact': 'GetScoredGoalsStatistics?type=2&matchId=',
+            'SecondHalfAwayTeamTotalGoalsExact': 'GetScoredGoalsStatistics?type=2&matchId=',
+            'SecondHalfEvenOddTotal': 'GetScoredGoalsStatistics?type=2&matchId='
+
+    },
         facebookIntegration: {
             enable: false
         },
@@ -1064,6 +1107,7 @@ angular.module('vbet5').constant('Config', {
 
     hideGameSoonLabel: false
     },
+    enableSnowEffect:false,
     pmu: {
       url: "http://newstaging.betconstruct.com/"
     },
@@ -1115,8 +1159,7 @@ angular.module('vbet5').constant('Config', {
         betAcceptedMessageTime: 5000,
         autoSuperBetLimit: {}, // {'GEL': 400, 'AMD': 50000, 'USD': 1000} //if not false then set limit for each currency if stake is greater then Limit superbet is enabling automaticaly
         resetAmountAfterBet: false,
-        totalOddsMax : 1000,
-        enableLimitExceededNotifications: false,
+        enableLimitExceededNotifications: true,
         allowSuperBetOnLive: false,
         enableBetterOddSelectingFunctyionality: false,
         clearOnLogout: false,
@@ -1184,12 +1227,8 @@ angular.module('vbet5').constant('Config', {
     },
     serverToServerTracking: false,
     xDomainSlaves: '{"https://www.vbet.com:8080" : "/xdomain-proxy.html"}', //has to be JSON string
-    enableDefaultPaymentSelection: {
-        deposit : true, // enable first payment type in deposit
-        withdraw: true  // enable first payment type in withdraw
-    },
     "everCookie": {
-        "enabled": false,
+        "enabled": true,
         "afecUrl": "https://afec.betconstruct.com/topics/client-activity-v2",
         "options": {
             history: false,

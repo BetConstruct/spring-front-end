@@ -90,11 +90,12 @@
                                          ng-include="::'templates/slider/registration-fields.html'|fixPath">
                                     </div>
                                     <!-- INPUT TYPE CAPTCHA -->
-                                    <div ng-include="::'templates/slider/recaptcha.html'|fixPath" ng-if="$root.conf.recaptcha.step === 1" class="g_recaptcha_response field-separator"></div>
+                                    <div ng-include="::'templates/slider/recaptcha.html'|fixPath" ng-if="$root.conf.registration.type === 'partial'" class="g_recaptcha_response field-separator"></div>
                                 </div>
                                 <div ng-if="conf.registration.type === 'partial'">
                                     <include-template template-path="templates/slider/registration/tcCheckbox.html"></include-template>
-                                    <include-template ng-if="recaptcha.version===3" template-path="templates/slider/registration/grecaptcha.html"></include-template>
+                                    <include-template class="float-width" ng-if="recaptcha.version===3"
+                                                      template-path="templates/slider/registration/grecaptcha.html"></include-template>
                                 </div>
                                 <div class="button-confirm">
                                     <button trans type="button"
@@ -123,10 +124,11 @@
                                 <div class="float-width" ng-class="{'reg-s-right-col': RegConfig.step2.rightCol.length}">
                                     <div ng-repeat="regItem in RegConfig.step2.rightCol track by $index" class="field-separator {{regItem.name}}" ng-include="::'templates/slider/registration-fields.html'|fixPath"></div>
                                     <!-- INPUT TYPE CAPTCHA -->
-                                    <div ng-include="::'templates/slider/recaptcha.html'|fixPath" ng-if="$root.conf.recaptcha.step === 2"></div>
+                                    <div ng-include="::'templates/slider/recaptcha.html'|fixPath" ng-if="$root.conf.registration.type !== 'partial'"></div>
                                 </div>
                                 <include-template template-path="templates/slider/registration/tcCheckbox.html"></include-template>
-                                <include-template ng-if="recaptcha.version===3" template-path="templates/slider/registration/grecaptcha.html"></include-template>
+                                <include-template class="float-width" ng-if="recaptcha.version===3"
+                                                  template-path="templates/slider/registration/grecaptcha.html"></include-template>
                                 <div class="account-link-b" ng-if="conf.registration.footerTitle && conf.registration.simplified && conf.registration.type !== 'partial'">
                                     <p ng-bind="(conf.registration.footerTitle[env.lang] || conf.registration.footerTitle['eng'])|translate"></p>
                                 </div>
@@ -161,6 +163,9 @@
                                 <div title="Live Agent" trans="attr-only" class="help-b"
                                      ng-show="!!conf.liveChat.zopimInHeader" ng-click="" onclick="showZopimChat();">
                                     <span ng-show="conf.registration.supportText">{{conf.registration.supportText|translate}}</span>
+                                    <a trans>Contact Support</a>
+                                </div>
+                                <div title="Live Agent" trans="attr-only" class="help-b" ng-show="!!conf.liveChat.liveChatLicense" ng-click="" onclick="LC_API.open_chat_window();">
                                     <a trans>Contact Support</a>
                                 </div>
                             </div>

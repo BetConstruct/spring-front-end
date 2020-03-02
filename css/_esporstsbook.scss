@@ -461,7 +461,7 @@
     position: relative;
     background: rgba($c16-sp-8,0.7);
     text-indent: -9999px;
-    &:before{
+    &:after{
       display: block;
       position: absolute;
       left: 0;
@@ -481,6 +481,12 @@
     > i{
       display: none;
     }
+    &.up-0:before,
+    &.up-1:before,
+    &.down0:before,
+    &.down-1:before {
+      content: none;
+    }
   }
   &.h-v-i{
     text-align: right;
@@ -495,6 +501,31 @@
     margin: 0 10px 0 0;
     color: $c16-tp-3;
   }
+  &.up-0:before,
+  &.up-1:before,
+  &.down0:before,
+  &.down-1:before {
+    box-sizing: border-box;
+    font: 12px/28px icomoon;
+    content: "\e66d";
+    display: inline-block;
+    transform: translate3d(0, 0, 0);
+    color: #04e914;
+    animation-duration: 7000ms;
+    animation-fill-mode: forwards;
+    @include rtl {
+      transform: none;
+    }
+  }
+  &.down0:before,
+  &.down-1:before {
+    content: "\e66c";
+    color: #e9044a;
+  }
+  &.up-0:before { animation-name: odds-arrow-up-0; }
+  &.up-1:before { animation-name: odds-arrow-up-1; }
+  &.down0:before { animation-name: odds-arrow-down0; }
+  &.down-1:before { animation-name: odds-arrow-down-1; }
 }
 .e-game-markets:not(.classic-e-m):not(.outright-e-m) {
   tr {
@@ -1106,7 +1137,13 @@
     font: #{4px + $size-font}/12px $font-f;
   }
   .l-b {
-    padding: 6px 2px;
+    padding: 6px 0;
     background: $c16-sp-9;
+    &.column-4, &.column-5 {
+      grid-template-columns: repeat(auto-fit, minmax(49%, 1fr));
+    }
+    &.column-5 > .single-events-b-v3:last-child:not(:nth-child(even)):nth-last-child(odd):not(:first-child) {
+      width: 200.5%;
+    }
   }
 }

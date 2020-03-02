@@ -18,13 +18,13 @@ VBET5.service('analytics', ['$rootScope', '$window', '$location', '$timeout', 'C
      */
     function initGtag(googleTagManagerId,googleTagManagerDomain) {
         if (googleTagManagerId) {
-            var s = document.body.getElementsByTagName('script')[0];
             var newScript = document.createElement('script');
             var src = googleTagManagerDomain || 'https://www.googletagmanager.com/gtag/js?id=';
-
             newScript.setAttribute('src', src + googleTagManagerId);
             newScript.setAttribute("async", "");
-            s.parentNode.insertBefore(newScript, s);
+
+            document.head.appendChild(newScript);
+
             $window.dataLayer = $window.dataLayer || [];
             $window.gtag = function () {
                 dataLayer.push(arguments);

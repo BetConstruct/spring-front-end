@@ -93,6 +93,7 @@ VBET5.directive('numpad', ['$compile', 'Config', function ($compile, Config) {
 
             numpads.push(attrs.id);
             scope.elemId = attrs.id;
+            var addedElementIds = {};
             scope.isShow = false;
             scope.isUpperCase = false;
             scope.setKeyValue = function setKeyValue(keyValue) {
@@ -100,7 +101,7 @@ VBET5.directive('numpad', ['$compile', 'Config', function ($compile, Config) {
                     if (ctrl.$viewValue.length > 0 && ctrl.$viewValue !== undefined) {
                         ctrl.$setViewValue(ctrl.$viewValue.slice(0, -1));
                         if (ctrl.$viewValue.length === 0 && !Config.main.terminalNumpadLetter) {
-                            ctrl.$setViewValue(0);
+                            ctrl.$setViewValue("0");
                         }
                     }
                 } else {
@@ -121,7 +122,8 @@ VBET5.directive('numpad', ['$compile', 'Config', function ($compile, Config) {
                     }
                 });
                 scope.isShow = true;
-                if(!document.getElementById('numped-wrapper-' + scope.elemId)) {
+                if(!addedElementIds[scope.elemId]) {
+                    addedElementIds[scope.elemId] = true;
                     element.after($compile(!Config.main.terminalNumpadLetter || attrs.numpadLetters === 'disabled' ? keyboardNumbers : keyboardLetters)(scope));
                 }
                 event.stopPropagation();

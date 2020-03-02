@@ -6,7 +6,7 @@
  * Utility functions
  */
 
-CASINO.service('casinoManager', ['$rootScope', '$q', '$window', '$sce', '$location', '$timeout', 'analytics', 'casinoData', 'Storage', 'DomHelper', 'Zergling', 'Config', 'CConfig', 'Translator', 'LanguageCodes', 'AuthData', 'Utils', 'jackpotManager', function ($rootScope, $q, $window, $sce, $location, $timeout, analytics, casinoData, Storage, DomHelper, Zergling, Config, CConfig, Translator, LanguageCodes, AuthData, Utils, jackpotManager) {
+CASINO.service('casinoManager', ['$rootScope', '$q', '$window', '$sce', '$location', '$timeout', 'casinoData', 'Storage', 'DomHelper', 'Zergling', 'Config', 'CConfig', 'Translator', 'LanguageCodes', 'AuthData', 'Utils', 'jackpotManager', function ($rootScope, $q, $window, $sce, $location, $timeout, casinoData, Storage, DomHelper, Zergling, Config, CConfig, Translator, LanguageCodes, AuthData, Utils, jackpotManager) {
     'use strict';
     var casinoManager = {};
 
@@ -74,7 +74,7 @@ CASINO.service('casinoManager', ['$rootScope', '$q', '$window', '$sce', '$locati
                     if (authWatcherPromise) {
                         authWatcherPromise();
                     }
-                    if (gameInfo.game.blocked_currencies && gameInfo.game.blocked_currencies && gameInfo.game.blocked_currencies.indexOf($rootScope.profile.currency) !== -1) {
+                    if (gameInfo.game.blocked_currencies && gameInfo.game.blocked_currencies.indexOf($rootScope.profile.currency) !== -1) {
                        showWarning(notSupportedCurrencyWarningMessage);
                     } else {
                         gameInfo.gameMode = 'real';
@@ -140,14 +140,20 @@ CASINO.service('casinoManager', ['$rootScope', '$q', '$window', '$sce', '$locati
     casinoManager.refreshOpenedGames = function refreshOpenedGames(scope) {
         for (var i = 0, count = scope.gamesInfo.length; i < count; i += 1) {
             if (scope.gamesInfo[i].game && scope.gamesInfo[i].gameUrl !== '' && ($rootScope.env.authorized || scope.gamesInfo[i].game.id !== CConfig.backgammon.id)) {
+                var infoId = scope.gamesInfo[i].id;
+                var currentGame = scope.gamesInfo[i].game;
+                var studio = scope.gamesInfo[i].studio;
+                var urlSuffix = scope.gamesInfo[i].urlSuffix;
+                var gameMode = $rootScope.env.authorized ? 'real' : 'fun';
+
                 if (scope.gamesInfo[i].gameMode === 'real') {
-                    casinoManager.closeGame(scope, scope.gamesInfo[i].id);
+                    if(!$rootScope.env.authorized && scope.gamesInfo[i].game && scope.gamesInfo[i].game.types && (scope.gamesInfo[i].game.types.funMode || scope.gamesInfo[i].game.types.viewMode)){
+                        scope.gamesInfo[i] = {gameUrl: '', id: infoId, toAdd: true};
+                        scope.openGame(currentGame, gameMode, studio, urlSuffix);
+                    }else{
+                        casinoManager.closeGame(scope, scope.gamesInfo[i].id);
+                    }
                 } else if ($rootScope.env.authorized && scope.gamesInfo[i].game.types.realMode && !scope.gamesInfo[i].game.types.funMode) {
-                    var infoId = scope.gamesInfo[i].id;
-                    var currentGame = scope.gamesInfo[i].game;
-                    var studio = scope.gamesInfo[i].studio;
-                    var urlSuffix = scope.gamesInfo[i].urlSuffix;
-                    var gameMode = $rootScope.env.authorized ? 'real' : 'fun';
                     scope.gamesInfo[i] = {gameUrl: '', id: infoId, toAdd: true};
                     scope.openGame(currentGame, gameMode, studio, urlSuffix);
                 }
@@ -676,11 +682,6 @@ CASINO.service('casinoManager', ['$rootScope', '$q', '$window', '$sce', '$locati
             }
         }
         $rootScope.casinoGameOpened = scope.gamesInfo.length;
-
-        analytics.gaSend('send', 'event', 'multiview', {
-            'page': $location.path(),
-            'eventLabel': 'multiview changed to ' + view
-        });
     };
 
     /**

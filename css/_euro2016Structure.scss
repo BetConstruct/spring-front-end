@@ -55,10 +55,10 @@
   }
   > include-template:last-child{
     > .right-column-v3{
-      displaY: inline-block;
-			vertical-align: top;
-			height: 100%;
-			position: relative;
+      display: inline-block;
+      vertical-align: top;
+      height: 100%;
+      position: relative;
       contain: style;
     }
   }
@@ -285,7 +285,8 @@
 .classic-version-euro2016 .game-video.game-video-detached.game-video-fullscreen .detached-game-container {
   box-sizing: border-box;
   height: 96%;
-  video-player {
+  video-player,
+  .e-s-video-player {
     margin-top: 18px;
   }
   .detached-info {
@@ -296,6 +297,9 @@
     @include rtl {
       left: 75px;
     }
+  }
+  > video {
+    margin-top: 18px;
   }
 }
 

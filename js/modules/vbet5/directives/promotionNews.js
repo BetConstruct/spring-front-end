@@ -5,8 +5,8 @@
  * @description Renders promotion news by given slug from wordpress
  */
 VBET5.directive('promotionNews',
-    ['$routeParams', '$window', '$sce', '$location', '$timeout', 'Config', 'WPConfig', 'content', 'Utils', 'analytics', 'DomHelper',
-        function ($routeParams, $window, $sce, $location, $timeout, Config, WPConfig, content, Utils, analytics, DomHelper) {
+    ['$routeParams', '$window', '$sce', '$location', '$timeout', 'Config', 'WPConfig', 'content', 'Utils', 'analytics', 'DomHelper', 'Zergling', '$rootScope',
+        function ($routeParams, $window, $sce, $location, $timeout, Config, WPConfig, content, Utils, analytics, DomHelper, Zergling, $rootScope) {
             'use strict';
             var templates = {
                 slider: 'templates/directive/promotion-news-slider.html',
@@ -262,6 +262,81 @@ VBET5.directive('promotionNews',
                         });
                     }
 
+                    /**
+                     * @ngdoc method
+                     * @name optInOut
+                     * @description  opt In Out
+                     *
+                     */
+                    $scope.optInOut = function optInOut(id, inOut) {
+                        if ($scope.optInOutProcessing) {
+                            return;
+                        }
+                        var result = -1;
+                        $scope.optInOutProcessing = true;
+                        Zergling.get({'code': id}, inOut ? 'client_opt_in' : 'client_opt_out')
+                            .then(function (response) {
+                                    result = response.result;
+                                }
+                            )['finally'](function () {
+                            if (result === 0) {
+                                getPlayerOptIns(function () {
+                                    $scope.optInOutProcessing = false;
+                                });
+                            } else {
+                                $scope.optInOutProcessing = false;
+                            }
+                        });
+                    };
+
+                    /**
+                     * @ngdoc method
+                     * @name initPromotionsOptIn
+                     * @description  init Promotions OptIn
+                     *
+                     */
+                    var logoutWatcher, loginWatcher;
+                    function initPromotionsOptIn() {
+                        $scope.playerOptIns = null;
+
+                        if ($rootScope.profile) {
+                            getPlayerOptIns();
+                        }
+
+                        loginWatcher = $scope.$on('loggedIn', function () {
+                            getPlayerOptIns();
+                        });
+
+                       logoutWatcher = $scope.$on('login.loggedOut', function () {
+                            $scope.playerOptIns = null;
+                        });
+                    }
+
+
+                    /**
+                     * @ngdoc method
+                     * @name getPlayerOptIns
+                     * @description  get Player OptIn s
+                     *
+                     */
+                    function getPlayerOptIns(callback) {
+                        Zergling.get({}, 'get_player_opt_ins')
+                            .then(
+                                function (response) {
+                                    if (response && response.result === 0 && response.details)
+                                        $scope.playerOptIns = {};
+                                        angular.forEach(response.details,function (optIns) {
+                                            $scope.playerOptIns[optIns.Code] = true;
+                                        });
+                                }
+                            )['finally'](function () {
+                                if(typeof callback === 'function'){
+                                    callback();
+                                }
+                        });
+                    }
+
+
                     // Initialize directive
                     (function init() {
                         if ($scope.categoriesList) {
@@ -269,7 +344,22 @@ VBET5.directive('promotionNews',
                         } else {
                             loadNews($scope.count);
                         }
+
+                        if(Config.main.promotionsOptIn){
+                            initPromotionsOptIn();
+                        }
                     }());
+
+                    $scope.$on('$destroy',function() {
+                        $scope.playerOptIns = null;
+                        if (logoutWatcher){
+                            logoutWatcher();
+                        }
+
+                        if (loginWatcher) {
+                            loginWatcher();
+                        }
+                    });
                 }
             };
         }

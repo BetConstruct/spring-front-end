@@ -6,7 +6,7 @@
  * @description game widget for last minute bets and game blocks in dashboard
  *
  */
-VBET5.directive('gameWidget', ['Utils', 'Config', 'ConnectionService', 'GameInfo', 'Translator', '$rootScope', '$location', '$route', '$window', '$filter', function (Utils, Config, ConnectionService, GameInfo, Translator, $rootScope, $location, $route, $window, $filter) {
+VBET5.directive('gameWidget', ['Utils', 'Config', 'ConnectionService', 'GameInfo', 'Translator', '$rootScope', '$location', '$route', '$window', '$filter','analytics', function (Utils, Config, ConnectionService, GameInfo, Translator, $rootScope, $location, $route, $window, $filter, analytics) {
     'use strict';
     return {
         restrict: 'E',
@@ -126,9 +126,7 @@ VBET5.directive('gameWidget', ['Utils', 'Config', 'ConnectionService', 'GameInfo
                             });
                         });
 
-                        sportList[k1].game.sort(function (a, b) {
-                            return a.start_ts - b.start_ts;
-                        });
+                        sportList[k1].game.sort(Utils.orderByStartTs);
                         if (sportList[k1].game.length > 0) {
                             if ('popularGamesWidget' === scope.gameWidgetType && sportList[k1].game.length > Config.main.showPromotedGamesOnWidget.quantity) {
                                 sportList[k1].game = sportList[k1].game.slice(0, Config.main.showPromotedGamesOnWidget.quantity);
@@ -175,7 +173,7 @@ VBET5.directive('gameWidget', ['Utils', 'Config', 'ConnectionService', 'GameInfo
                         'game': ['id', 'start_ts', 'team1_name', 'team2_name', 'type', 'info', 'markets_count', 'is_blocked',
                             'video_id', 'video_id2', 'video_id3', 'video_provider', 'last_event', 'is_stat_available', 'team1_external_id', 'team2_external_id', 'game_external_id', 'is_live'],
                         'event': ['id', 'price', 'type', 'name'],
-                        'market': ['type', 'express_id', 'name', 'home_score', 'away_score']
+                        'market': ['type', 'express_id', 'name', 'home_score', 'away_score', 'id']
                     },
                     'where': {
                         'game': {'@limit': Config.main.showPromotedGamesOnWidget.gameLimit},
@@ -257,6 +255,7 @@ VBET5.directive('gameWidget', ['Utils', 'Config', 'ConnectionService', 'GameInfo
             scope.goToUrl = Utils.goToUrl;
 
             scope.openStatistics = function openStatistics(game) {
+                analytics.gaSend('send', 'event', 'explorer', 'H2H-on-click', {'page': $location.path(), 'eventLabel': ($rootScope.env.live ? 'Live' : 'Prematch')});
                 $window.open(GameInfo.getStatsLink(game), game.id, "width=940,height=600,resizable=yes,scrollbars=yes");
             };
 

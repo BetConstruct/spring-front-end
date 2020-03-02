@@ -52,7 +52,7 @@
                     <div class="info-bl">
                         <span ng-show="(game.type === 1 || (game.type === 2 && $root.conf.asian.showLiveIconForUpcomingGames)) && $index === 0" class="asian-live-game" trans>live</span>
                         <p class="time-g-asia" ng-show="game.type ==1 && $index === 0">
-                            <span ng-bind="game.info.current_game_state|convertSetName:game.sport.alias|translate"></span><span ng-bind="fixDisplayTime(game.info.current_game_time)"></span>
+                            <span ng-if="game.info.current_leg === undefined" ng-bind="game.info.current_game_state|convertSetName:game.sport.alias|translate"></span><span ng-if="game.info.current_leg !== undefined" ng-bind="game.info.current_game_state|convertSetNameWithLeg:game.info|translate"></span><span ng-bind="fixDisplayTime(game.info.current_game_time)"></span>
                         </p>
                         <p class="time-g-asia" ng-show="game.type !=1 && $index === 0">
                             <span ng-bind="game.start_ts|formatDate:($root.conf.layoutTimeFormat.asian || 'D/MM')"></span> <span ng-bind="game.start_ts|formatDate:'hour':null:$root.env.timeFormat"></span>
@@ -60,10 +60,11 @@
                     </div>
                 </td>
                 <td class="factor-w asian-market-overflow-j">
-                    <div class="asian-market-wrap-j"
+                    <div class="asian-market-wrap-j {{lineEvents.firstWin.price_change == null? '' : ({true: 'up-', false: 'down'}[lineEvents.firstWin.price_change > 0] + (lineEvents.firstWin.price_change % 2)) }}"
                          ng-show="lineEvents.firstWin.name"
                          ng-click="bet(lineEvents.firstWin, game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence]['CORRECT SCORE'][0], game)"
-                         ng-class="{'locked': (lineEvents.firstWin.price | oddConvert:'decimal') == 1 || game.is_blocked, up: lineEvents.firstWin.price_change == '1', down: lineEvents.firstWin == '-1', 'active': isEventInBetSlip(lineEvents.firstWin)}">
+                         ng-class="{'locked': (lineEvents.firstWin.price | oddConvert:'decimal') == 1 || game.is_blocked, 'active': isEventInBetSlip(lineEvents.firstWin)}">
+                        <i ng-if="$root.conf.boostedBets.enabled && $root.boostedBetsEventIds && $root.boostedBetsEventIds[lineEvents.firstWin.id]" title="{{'Boosted odd'|translate}}" class="boosted"></i>
                         <div class="asian-market-j">
                             <div class="asian-market-cell-j">
                                 <div class="asian-market-rub-j" ng-bind="lineEvents.firstWin.name"></div>
@@ -74,10 +75,11 @@
                 </td>
                 <td class="factor-w asian-market-overflow-j">
 
-                    <div class="asian-market-wrap-j"
+                    <div class="asian-market-wrap-j {{lineEvents.handicap.price_change == null? '' : ({true: 'up-', false: 'down'}[lineEvents.handicap.price_change > 0] + (lineEvents.handicap.price_change % 2)) }}"
                          ng-show="lineEvents.handicap.name"
                          ng-click="bet(lineEvents.handicap, game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence]['CORRECT SCORE'][0], game)"
-                         ng-class="{'locked': (lineEvents.handicap.price | oddConvert:'decimal') == 1 || game.is_blocked, up: lineEvents.handicap.price_change == '1', down: lineEvents.handicap == '-1', 'active': isEventInBetSlip(lineEvents.handicap)}">
+                         ng-class="{'locked': (lineEvents.handicap.price | oddConvert:'decimal') == 1 || game.is_blocked, 'active': isEventInBetSlip(lineEvents.handicap)}">
+                        <i ng-if="$root.conf.boostedBets.enabled && $root.boostedBetsEventIds && $root.boostedBetsEventIds[lineEvents.handicap.id]" title="{{'Boosted odd'|translate}}" class="boosted"></i>
                         <div class="asian-market-j">
                             <div class="asian-market-cell-j">
                                 <div class="asian-market-rub-j" ng-bind="lineEvents.handicap.name"></div>
@@ -87,10 +89,11 @@
                     </div>
                 </td>
                 <td class="factor-w asian-market-overflow-j">
-                    <div class="asian-market-wrap-j"
+                    <div class="asian-market-wrap-j {{lineEvents.secondWin.price_change == null? '' : ({true: 'up-', false: 'down'}[lineEvents.secondWin.price_change > 0] + (lineEvents.secondWin.price_change % 2)) }}"
                          ng-show="lineEvents.secondWin.name"
                          ng-click="bet(lineEvents.secondWin, game.markets[game.selectedSequence.subKey][game.selectedSequence.sequence]['CORRECT SCORE'][0], game)"
-                         ng-class="{'locked': (lineEvents.handicap.price | oddConvert:'decimal') == 1 || game.is_blocked, up: lineEvents.secondWin.price_change == '1', down: lineEvents.secondWin == '-1', 'active': isEventInBetSlip(lineEvents.secondWin)}">
+                         ng-class="{'locked': (lineEvents.handicap.price | oddConvert:'decimal') == 1 || game.is_blocked, 'active': isEventInBetSlip(lineEvents.secondWin)}">
+                        <i ng-if="$root.conf.boostedBets.enabled && $root.boostedBetsEventIds && $root.boostedBetsEventIds[lineEvents.secondWin.id]" title="{{'Boosted odd'|translate}}" class="boosted"></i>
                         <div class="asian-market-j">
                             <div class="asian-market-cell-j">
                                 <div class="asian-market-rub-j" ng-bind="lineEvents.secondWin.name"></div>
@@ -104,6 +107,7 @@
                         <div class="icon-favorite" ng-click="toggleGameFavorite(game)"  ng-class="{'active': myGames.indexOf(game.id) !== -1}" title="{{'Favorite'|translate}}"></div>
                         <div ng-show="$root.conf.enableH2HStat && game.is_stat_available" ng-click="openStatistics(game);$event.stopPropagation();"
                              statistics-on-hover stats-game="game" stats-competition-name="{{competition.name}}" class="h2h-stats" title="{{'statistic'|translate}}"></div>
+                        <div class="cms-jcon-Bet-Builder" ng-if="$root.conf.betBuilderSports[game.sport.alias] && game.type !== 1" ng-click="openBetBuilder(game);$event.stopPropagation();"></div>
                     </div>
 
                     <div class="info-bl" ng-if="$first" ng-click="loadAllEvents(game.id)">

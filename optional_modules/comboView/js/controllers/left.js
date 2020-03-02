@@ -232,7 +232,7 @@ VBET5.controller('comboViewLeftController', ['$scope', 'Config', 'GameInfo', 'Ut
                     ['id', 'start_ts', 'team1_name', 'team2_name', 'team1_external_id', 'team2_external_id', 'type', 'info', 'markets_count', 'is_blocked', 'sport_id', 'order', 'is_live']
                 ],
                 'event': ['id', 'price', 'type', 'name', 'order', 'base'],
-                'market': ['type', 'express_id', 'name', 'base', 'display_key', 'show_type', '@count']
+                'market': ['type', 'express_id', 'name', 'base', 'display_key', 'show_type', 'id', '@count']
             },
             'where': {
                 'competition': {'id': +competition_id},

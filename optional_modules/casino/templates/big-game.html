@@ -11,7 +11,9 @@
                         <div class="icon-delete"><a title="{{ 'close'|translate }}"
                                                     ng-click="closeGame(gameInfo.id, 'closeButton')">Close</a>
                         </div>
-                        <div class="icon-delete popup"><a title="{{ 'Open In Pop-Up Window'|translate }}" ng-click="openGameInNewWindow(gameInfo.id)">popUp</a></div>
+                        <div class="icon-delete popup" ng-if="!$root.conf.ukLicense"><a
+                                title="{{ 'Open In Pop-Up Window'|translate }}"
+                                ng-click="openGameInNewWindow(gameInfo.id)">popUp</a></div>
                         <div class="icon-delete refresh"><a title="{{ 'Refresh'|translate }}" ng-click="refreshGame(gameInfo.id)">refresh</a></div>
                         <!--  <div class="icon-delete change"><a title="{{ 'change'|translate }}" ng-click="enableToAddGame(gameInfo.id)">change</a></div> -->
                         <div class="icon-delete favourite">

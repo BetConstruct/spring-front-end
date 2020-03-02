@@ -19,7 +19,7 @@
                         </p>
                     </li>
                     <li ng-class="{'active': (env.sliderContent === 'recentBets'|| env.sliderContent === 'casinoBetHistory')}"
-                        ng-click="env.sliderContent = 'recentBets'"  ng-if="env.authorized && conf.betHistoryEnabled">
+                        ng-click="env.sliderContent = 'recentBets'"  ng-if="env.authorized && conf.betHistoryEnabled && $root.calculatedConfigs.sportEnabled">
                         <i class="my-bets-icon-tab-b"></i>
                         <h4 trans>My bets</h4>
                     </li>

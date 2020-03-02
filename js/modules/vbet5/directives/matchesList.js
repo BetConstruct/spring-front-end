@@ -6,7 +6,7 @@
  * @description displays matches list
  *
  */
-VBET5.directive('matchesList', ['$timeout', '$q', 'ConnectionService', '$filter', '$rootScope', 'Utils', 'GameInfo', '$location', '$route', '$window', 'Moment', 'Zergling', 'Config', 'LanguageCodes', function ($timeout, $q, ConnectionService, $filter, $rootScope, Utils, GameInfo, $location, $route, $window, Moment, Zergling, Config, LanguageCodes) {
+VBET5.directive('matchesList', ['$timeout', '$q', 'ConnectionService', '$filter', '$rootScope', 'Utils', 'GameInfo', '$location', '$route', '$window', 'Moment', 'Zergling', 'Config', 'LanguageCodes','analytics', function ($timeout, $q, ConnectionService, $filter, $rootScope, Utils, GameInfo, $location, $route, $window, Moment, Zergling, Config, LanguageCodes, analytics) {
     'use strict';
     return {
         restrict: 'E',replace: false,
@@ -42,10 +42,6 @@ VBET5.directive('matchesList', ['$timeout', '$q', 'ConnectionService', '$filter'
                 return Moment.moment.utc(Moment.moment.unix(timestamp)).locale(LanguageCodes[Config.env.lang] || 'en').format('MMMM');
             }
 
-            function byStartTime(a, b) {
-                return a.start_ts - b.start_ts;
-            }
-
             function fillDatesList(dates, list, name) {
                 for (var i = 0, length = list.length; i < length; ++i) {
                     var matchKey = Date.parse((moment(list[i].start_ts*1000).utcOffset(Config.env.selectedTimeZone || 0).lang("en").format("YYYY-MM-DD")))/1000;
@@ -70,11 +66,11 @@ VBET5.directive('matchesList', ['$timeout', '$q', 'ConnectionService', '$filter'
                 fillDatesList(dates, results, 'results');
 
                 scope.dates = Utils.objectToArray(dates, 'start_ts');
-                scope.dates.sort(byStartTime);
+                scope.dates.sort(Utils.orderByStartTs);
 
                 for (var i = 0, length = scope.dates.length; i < length; ++i) {
-                    scope.dates[i].results && scope.dates[i].results.sort(byStartTime);
-                    scope.dates[i].matches && scope.dates[i].matches.sort(byStartTime);
+                    scope.dates[i].results && scope.dates[i].results.sort(Utils.orderByStartTs);
+                    scope.dates[i].matches && scope.dates[i].matches.sort(Utils.orderByStartTs);
                 }
 
                 scope.loadingProcess = false;
@@ -207,7 +203,7 @@ VBET5.directive('matchesList', ['$timeout', '$q', 'ConnectionService', '$filter'
                         'competition': ['id', 'name'],
                         'game': [['id', 'start_ts', 'team1_name', 'team2_name', 'team1_id', 'team2_id', 'type', 'events_count', 'markets_count', 'is_blocked', 'is_stat_available']],
                         'market': ['type', 'express_id', 'name', 'base', 'display_key', 'display_sub_key', 'main_order'],
-                        'event': []
+                        'event': ["order", "id", "type_1", "type", "type_id", "original_order", "name", "price", "nonrunner", "ew_allowed", "sp_enabled", "extra_info", "base", "home_value", "away_value", "display_column"]
                     },
                     'where': {
                         'market': {'type': 'P1XP2'}
@@ -288,6 +284,7 @@ VBET5.directive('matchesList', ['$timeout', '$q', 'ConnectionService', '$filter'
 
 
             scope.openStatistics = function openStatistics(game) {
+                analytics.gaSend('send', 'event', 'explorer', 'H2H-on-click', {'page': $location.path(), 'eventLabel': ($rootScope.env.live ? 'Live' : 'Prematch')});
                 $window.open(GameInfo.getStatsLink(game), game.id, "width=940,height=600,resizable=yes,scrollbars=yes");
             };
 

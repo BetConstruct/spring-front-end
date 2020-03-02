@@ -64,7 +64,7 @@ VBET5.factory('Zergling', ['Config', 'WS', '$http', '$q', '$timeout', '$rootScop
      * properties having null values in diff are removed from  object, others' values are replaced.
      *
      * Also checks the 'price' field for changes and adds new field 'price_change' as sibling
-     * which indicates the change direction (1 - up, -1 down, null - unchanged)
+     * which indicates the change direction (1,2,3,.... - up, -1,-2,... down, null - unchanged)
      *
      * @param {Object} current current object
      * @param {Object} diff    received diff
@@ -106,7 +106,21 @@ VBET5.factory('Zergling', ['Config', 'WS', '$http', '$q', '$timeout', '$rootScop
 //                                 }
 //                             }, 300);
 //                         } else {
-                            current[key].price_change = (val.price === oldPrice) ? null : (oldPrice < val.price) * 2 - 1;
+                            if (!val.price) {
+                                current[key].price_change = null;
+                            }else if (!current[key].price_change) {
+                                current[key].price_change = (val.price === oldPrice) ? null : (oldPrice < val.price) * 2 - 1;
+                            } else {
+                                if (val.price === oldPrice) {
+                                    current[key].price_change = null;
+                                } else if (current[key].price_change < 0 && val.price > oldPrice) {
+                                    current[key].price_change = 1;
+                                } else if(current[key].price_change > 0 && val.price < oldPrice) {
+                                    current[key].price_change = -1;
+                                } else {
+                                    current[key].price_change += (oldPrice < val.price) * 2 - 1;
+                                }
+                            }
 //                         }
                     }
                 }
@@ -247,6 +261,8 @@ VBET5.factory('Zergling', ['Config', 'WS', '$http', '$q', '$timeout', '$rootScop
                 });
             }
 
+            $rootScope.$broadcast('zergling.sessionOpened', res.sid);
+
             if (isLoggedIn) {
                 isLoggedIn = false;
                 Zergling.login(null)['finally'](resubscribe);
@@ -296,13 +312,13 @@ VBET5.factory('Zergling', ['Config', 'WS', '$http', '$q', '$timeout', '$rootScop
             session = $q.defer();
             result = session.promise;
             var sessionRequestCmd = { 'command': "request_session", 'params': { 'language': Utils.getLanguageCode(Config.env.lang), 'site_id': Config.main.site_id} };
-            if (Config.everCookie.enabled) {
+            if (Config.main.enableTwoFactorAuthentication) {
+                sessionRequestCmd.params.afec = Fingerprint2.getAuthenticationCode();
+            }else if (Config.everCookie.enabled && !Config.main.integrationMode) {
                 var clId = $cookies.get("afec");
                 if (clId && clId.length > 0) {
                     sessionRequestCmd.params.afec = clId;
                 }
-            } else if (Config.main.enableTwoFactorAuthentication) {
-                sessionRequestCmd.params.afec = Fingerprint2.getAuthenticationCode();
             }
 
             if (Config.swarm.sendSourceInRequestSession && Config.main.source !== undefined) {

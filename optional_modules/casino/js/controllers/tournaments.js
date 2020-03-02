@@ -5,7 +5,7 @@
  * tournaments page controller
  */
 
-angular.module('casino').controller('casinoTournamentsCtrl', ['$rootScope', '$scope', '$location', '$timeout', 'CConfig', 'Config', 'Translator', 'Zergling', 'AuthData', 'casinoManager', 'casinoData', 'LanguageCodes', 'Moment', 'Geoip', 'casinoMultiviewValues', function ($rootScope, $scope, $location, $timeout, CConfig, Config, Translator, Zergling, AuthData, casinoManager, casinoData, LanguageCodes, Moment, Geoip, casinoMultiviewValues) {
+angular.module('casino').controller('casinoTournamentsCtrl', ['$rootScope', '$scope', '$location', '$timeout', 'CConfig', 'Config', 'Translator', 'Zergling', 'AuthData', 'casinoManager', 'casinoData', 'LanguageCodes', 'Moment', 'Geoip', 'casinoMultiviewValues', 'analytics', function ($rootScope, $scope, $location, $timeout, CConfig, Config, Translator, Zergling, AuthData, casinoManager, casinoData, LanguageCodes, Moment, Geoip, casinoMultiviewValues, analytics) {
     'use strict';
 
     $scope.confData = CConfig;
@@ -388,7 +388,7 @@ angular.module('casino').controller('casinoTournamentsCtrl', ['$rootScope', '$sc
                     processTopPlayerList($scope.tournament.details, $scope.tournament.details.TopPlayerList, $scope.tournament.details.CurrentPlayerStats);
 
                     console.log('GET GAMES', $scope.tournament.details.GameIdList);
-                    loadTournamentDetailsCasinoGames(tournamentId, 0, 10, true);
+                    loadTournamentDetailsCasinoGames(tournamentId, 0, 12, true);
 
 
                     if (firstTime) {
@@ -430,7 +430,7 @@ angular.module('casino').controller('casinoTournamentsCtrl', ['$rootScope', '$sc
         if ($scope.loadingProcess) {
             return;
         }
-        loadTournamentDetailsCasinoGames($scope.tournament.details.Id, $scope.tournament.details.games.length, 10, true);
+        loadTournamentDetailsCasinoGames($scope.tournament.details.Id, $scope.tournament.details.games.length, 12, true);
     };
 
     /**
@@ -662,6 +662,11 @@ angular.module('casino').controller('casinoTournamentsCtrl', ['$rootScope', '$sc
     });
 
     $scope.openGame = function openGame(game, gameType, studio, urlSuffix, multiViewWindowIndex) {
+        var type = gameType ? gameType : 'real';
+
+        if((!!$rootScope.profile && type === 'real') || type === 'fun'){
+            analytics.gaSend('send', 'event', 'games','Open game ' + game.name,  {'page': $location.path(), 'eventLabel': 'Game type '+ type});
+        }
         casinoManager.openCasinoGame($scope, game, gameType, studio, urlSuffix, multiViewWindowIndex);
     };
 
@@ -700,6 +705,7 @@ angular.module('casino').controller('casinoTournamentsCtrl', ['$rootScope', '$sc
     $scope.$on('middlescreen.off', function () { $scope.middleMode = false; });
 
     $scope.$on('casinoMultiview.viewChange', function (event, view) {
+        analytics.gaSend('send', 'event', 'multiview', {'page': $location.path(),'eventLabel': 'multiview changed to ' + view});
         casinoManager.changeView($scope, view);
     });
 

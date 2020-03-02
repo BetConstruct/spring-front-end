@@ -2,7 +2,7 @@
 VBET5.service('asianViewGmsBasaltChanger', ['Config', 'Utils', '$filter', 'GameInfo', 'AsianMarkets', function (Config, Utils, $filter, GameInfo, AsianMarkets) {
     'use strict';
 
-    var FIRST_HALF = ['HalfTimeResult', 'HalfTimeAsianHandicap', 'HalfTimeOverUnder', 'HalfTimeCorrectScore', '1stInningOver/Under', 'FirstHalfEvenOddTotal', 'HalfTimeCornersOverUnder', 'HalfTimeOverUnderAsian', 'HalfTimeAsianHandicapAsian'];
+    var FIRST_HALF = ['HalfTimeResult', 'HalfTimeAsianHandicap', 'HalfTimeOverUnder', 'HalfTimeCorrectScore', '1stInningOver/Under', 'FirstHalfEvenOddTotal', 'HalfTimeCornersOverUnder', 'HalfTimeOverUnderAsian', 'HalfTimeAsianHandicapAsian', 'HalfTimeEvenOddTotal'];
     var SECOND_HALF = ['SecondHalfResult', '2ndHalfAsianHandicap', '2ndHalfTotalOver/Under', '2ndHalfCorrectScore', 'SecondHalfEvenOddTotal', 'SecondHalfTotalGoals'];
     var ACTIVE_SEQUENCES_GMS = ['MATCH', 'PERIOD', 'HALF', 'SET'];
 
@@ -59,12 +59,12 @@ VBET5.service('asianViewGmsBasaltChanger', ['Config', 'Utils', '$filter', 'GameI
     }
 
     function setGmsMarketSequence(market) {
-        if(FIRST_HALF.indexOf(market.market_type) > -1) {
+        if(FIRST_HALF.indexOf(market.type) > -1) {
             market.sequence = 1;
-        } else if(SECOND_HALF.indexOf(market.market_type) > -1) {
+        } else if(SECOND_HALF.indexOf(market.type) > -1) {
             market.sequence = 2;
         } else {
-            market.sequence = parseInt(market.name, 10) || parseInt(market.market_type.replace(/[^\d.-]/g, ''), 10);
+            market.sequence = parseInt(market.name, 10) || parseInt(market.type.replace(/[^\d.-]/g, ''), 10);
         }
     }
 

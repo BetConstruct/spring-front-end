@@ -848,6 +848,55 @@
     height: 36px;
     line-height: 36px;
   }
+  &.boostedbets {
+    background: $hero-color;
+    &:before {
+      color: set-color($hero-color);
+      @include ltr {
+        box-shadow: none;
+      }
+      @include rtl {
+        box-shadow: none;
+      }
+    }
+    &:hover, &.active {
+      background: lighten($hero-color,10);
+      &:after {
+        content: "";
+        display: block;
+        width: 0;
+        height: 86%;
+        position: absolute;
+        top: 7%;
+        left: 0;
+        opacity: 0;
+        box-shadow: 0 0 35px 10px rgba(set-color($hero-color),.7);
+        transform: skewX(-45deg);
+        animation: boosted-shine 1000ms linear infinite;
+      }
+      span.arrow-view-v3:before {
+        color: set-color($hero-color);
+      }
+    }
+    > p,
+    span.arrow-view-v3:before {
+      color: set-color($hero-color);
+    }
+  }
+}
+@keyframes boosted-shine {
+  from {
+    opacity: 0;
+    left: 0;
+  }
+
+  50% {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+    left: 100%;
+  }
 }
 @supports (-ms-scroll-limit: unset) {
   .sports-item-v3 {
@@ -933,6 +982,7 @@
   text-indent: 0;
   top: 8px;
 }
+
 .todaybets:before {
   font: 18px/30px icomoon;
   content: "\e6dd";
@@ -963,8 +1013,7 @@
   }
 }
 .sports-item-v3.todaybets > .sport-icon-v3.todaybets,
-.sports-item-v3.outright > .sport-icon-v3.outright,
-.sports-item-v3.boostedbets > .sport-icon-v3.boostedbets {
+.sports-item-v3.outright > .sport-icon-v3.outright {
   @include ltr {
     box-shadow: 3px 0 0 $hero-color inset;
   }
@@ -973,8 +1022,7 @@
   }
 }
 .sports-item-v3.todaybets.active > .arrow-view-v3,
-.sports-item-v3.outright.active > .arrow-view-v3,
-.sports-item-v3.boostedbets.active > .arrow-view-v3 {
+.sports-item-v3.outright.active > .arrow-view-v3 {
   background: $hero-color;
   &:before {
     color: set-color($hero-color);
@@ -1714,6 +1762,9 @@ popular-in-sportsbook[type="game"] {
     text-align: right;
   }
 }
+.game-info-mini-v3 .over-cricet{
+  margin: 0 10px;
+}
 .game-info-mini-v3 > p > span {
   box-sizing: border-box;
   display: inline-block;
@@ -1740,6 +1791,38 @@ popular-in-sportsbook[type="game"] {
   z-index: 121;
   @include rtl {
     text-align: right;
+  }
+}
+.game-is-start{
+  position: absolute;
+  top: 0;
+  z-index: 22;
+  text-align: right;
+  > span {
+    color: $c16-tp-5;
+    font-size: 11px;
+    font-weight: bold;
+  }
+  @include  ltr{
+    right: 0;
+  }
+  @include  rtl{
+    left: 0;
+  }
+}
+.add-info-row-bc{
+  width: 100%;
+  min-height: 16px;
+  display: inline-block;
+  vertical-align: top;
+  position: relative;
+  text-align: left;
+  box-sizing: border-box;
+  @include  ltr{
+    padding-right: 48px;
+  }
+  @include  rtl{
+    padding-left: 48px;
   }
 }
 .blocked-icon-v3 {
@@ -2041,7 +2124,8 @@ popular-in-sportsbook[type="game"] {
 @include coloring-by-sports(Biathlon, #bedbed);
 @include coloring-by-sports(BallHockey, #168763);
 @include coloring-by-sports(Bandy, #5da167);
-@include coloring-by-sports(Boxing, #0e7acc);
+@include coloring-by-sports(Boxing, #d32939);
+@include coloring-by-sports(V-Box, #d32939);
 @include coloring-by-sports(Canoe, #0d72bf);
 @include coloring-by-sports(Chess, #edbd6f);
 @include coloring-by-sports(Cricket, #1bab7d);

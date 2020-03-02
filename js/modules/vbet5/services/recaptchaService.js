@@ -41,13 +41,13 @@ VBET5.factory('RecaptchaService', ['$rootScope', '$q', '$timeout', 'WS', 'Storag
             }
 
             if (opts.debounce === false) {
-                return callbackFn(arg);
+                return callbackFn(arg, opts.check);
             }
 
             var deferred = $q.defer();
 
             debounced = $timeout(function() {
-                callbackFn(arg).then(deferred.resolve);
+                callbackFn(arg, opts.check).then(deferred.resolve);
             }, opts.delay || defaultDelay);
 
             return deferred.promise;
@@ -60,12 +60,16 @@ VBET5.factory('RecaptchaService', ['$rootScope', '$q', '$timeout', 'WS', 'Storag
     }
 
 
-    function execute(actionName) {
+    function execute(actionName, check) {
         // We call resolve instead of reject because grecaptcha.execute is not a promise, but a 'thenable'
         if (!_initialized) { return $q.resolve(); }
 
         return grecaptcha.execute(Recaptcha.key, {action: actionName}).then(function executeSuccess(token) {
-            return validateWithSwarm(token, actionName);
+            if (check) {
+                return token;
+            } else {
+                return validateWithSwarm(token, actionName);
+            }
         });
     }
 
@@ -86,6 +90,10 @@ VBET5.factory('RecaptchaService', ['$rootScope', '$q', '$timeout', 'WS', 'Storag
         Recaptcha.version = version;
         Recaptcha.key = key;
 
+        $rootScope.$broadcast("recaptcha_version", {
+            version: version,
+            key: key
+        });
         Storage.set('recaptcha_' + $rootScope.conf.site_id, {key: key, version: version});
 
         if (version !== 3) {

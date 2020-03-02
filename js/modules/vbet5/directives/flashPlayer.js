@@ -177,14 +177,16 @@ VBET5.directive('flashplayer', ['$window', '$timeout', '$rootScope', 'Translator
             };
             attrs.$observe('streamUrl', updateStreamUrl);
 
-            scope.$on('$destroy', function () {
+            function flashPlayerDestroy() {
                 if ($window[callbackGlobalFuncName]) {
                     delete $window[callbackGlobalFuncName];
                 }
                 swfobject.removeSWF(attrs.id);
 
                 frame && frame.remove();
-            });
+            }
+
+            scope.$on('$destroy', flashPlayerDestroy);
         }
     };
 }]);

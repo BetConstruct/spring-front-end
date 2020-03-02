@@ -977,13 +977,17 @@
     color: $text-palette-3;
   }
   .has-video,
-  .game-is-neutral {
+  .game-is-neutral,
+  .asian-icon-Bet-Builder {
     color: $text-palette-1;
   }
   .prematch-game-title {
     background: lighten(desaturate(adjust-hue($skin-color, 3deg), 16), 4);
   }
   .asian-left-contain-menu {
+    popular-in-sportsbook .sports-item-v3:before {
+      color: #1DA1F2;
+    }
     .sports-item-v3 {
       color: $text-palette-3;
       background: darken(desaturate(adjust-hue($skin-color, 4deg), 15), 1);
@@ -1132,7 +1136,7 @@
     }
   }
   .asian-market-wrap-j {
-    &:not(.locked):not(.active):not(.up):not(.down):hover .asian-market-j {
+    &:not(.locked):not(.active):not(.up-0):not(.up-1):not(.down0):not(.down-1):hover .asian-market-j {
       color: darken(#CE9F5B, 10);
       @if $asian-light-skin == true {
         color: #000;
@@ -1144,26 +1148,6 @@
     &:not(.locked):not(.active):hover .asian-market-j {
       background: lighten(desaturate($skin-color, 17), 12);
       box-shadow: 0 0 0 200px lighten(desaturate($skin-color, 17), 12);
-    }
-    &.up:not(.active):not(.locked) {
-      .asian-market-j {
-        @if ($asian-switch-odds-state-colors == true) {
-          color: map-get($coeff-color-map, asian-down);
-        }
-        @if ($asian-switch-odds-state-colors == false) {
-          color: map-get($coeff-color-map, asian-up);
-        }
-      }
-    }
-    &.down:not(.active):not(.locked) {
-      .asian-market-j {
-        @if ($asian-switch-odds-state-colors == true) {
-          color: map-get($coeff-color-map, asian-up);
-        }
-        @if ($asian-switch-odds-state-colors == false) {
-          color: map-get($coeff-color-map, asian-down);
-        }
-      }
     }
     &.active:not(.locked) .asian-market-j {
       background: $hero-color;
@@ -1460,6 +1444,41 @@
         }
       }
     }
+  }
+  .statistic-quality-contain {
+    background: darken(desaturate(adjust-hue($skin-color, 4deg), 11), 1);
+  }
+  .main-title-statistic-quality,
+  .title-statistic-quality,
+  .sub-title-statistic-quality,
+  .overview-statistic-quality > li > p,
+  .detail-statistic-qualit > li,
+  .qualify-statistic-quality > li.average-goals > b,
+  .statistic-no-available,
+  .qualify-statistic-quality > li > p,
+  .qualify-statistic-quality > li > span {
+    color: $text-palette-1;
+  }
+  .tab-statistic-quality > li {
+    color: $text-palette-3;
+    background: lighten(desaturate($skin-color, 17), 12);
+    &:hover, &.active {
+      color: $text-palette-1;
+    }
+  }
+  .detail-statistic-qualit > li > span {
+    background: lighten(desaturate($skin-color, 17), 12);
+  }
+  .qualify-statistic-quality > li {
+    &.average-goals > p {
+      color: $text-palette-3;
+    }
+    > span {
+      color: $text-palette-4;
+    }
+  }
+  .more-statistic-quality {
+    color: $text-palette-4;
   }
 }
 

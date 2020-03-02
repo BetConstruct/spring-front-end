@@ -52,6 +52,7 @@
         <div ng-include="::'templates/slider/bethistory.html'|fixPath"></div>
         <div ng-include="::'templates/slider/casinobethistory.html'|fixPath"></div>
         <div ng-include="::'templates/slider/shukabethistory.html'|fixPath"></div>
+
         <!--Bet hestory END-->
 
         <div ng-include="::'templates/slider/help.html'|fixPath"></div>
@@ -93,7 +94,6 @@
         <div class=" block-sign-in-form" ng-include="::'templates/slider/invite.html'|fixPath"></div>
         <div class=" block-sign-in-form" ng-include="::'templates/slider/warning.html'|fixPath"></div>
         <div class=" block-sign-in-form" ng-include="::'templates/slider/id_token.html'" ng-if="$root.env.sliderContent === 'idToken' && $root.conf.idToken.enabled && !$root.env.authorized"></div>
-
         <div class="tab-contain-bets saved-games-container"
              ng-if="(calculatedConfigs.casinoEnabled || calculatedConfigs.livedealerEnabled || calculatedConfigs.skillgamesEnabled) && conf.sportSavedGamesEnabled && conf.casinoSavedGamesEnabled && (env.sliderContent === 'savedGames' || env.sliderContent === 'casinoSavedGames')">
             <div class="centr-tabs-block">
@@ -113,10 +113,10 @@
              ng-include="'optional_modules/casino/templates/slider/casinosavedgames.html'|fixPath"></div>
         <div class="block-sign-in-form" ng-include="::'templates/slider/settings.html'|fixPath"></div>
         <div class="block-sign-in-form" ng-include="::'templates/slider/messages.html'|fixPath"></div>
+
        <!-- <div class="block-sign-in-form" ng-include="::'templates/slider/draws.html'|fixPath"></div>-->
 
         <!--Slider END-->
-
         <div class="closed-arrow-b"><a ng-click="broadcast('slider.close')" trans>close</a></div>
     </div>
     <div ng-include="::'templates/livebox/mixedView.html'|fixPath"
@@ -125,13 +125,14 @@
                 'settings', 'deposit', 'withdraw', 'balanceHistory', 'casinoBalanceHistory', 'cashier', 'myWallets', 'loyaltyPoints', 'tickets', 'buddytransfer','profits'].indexOf(env.sliderContent) !== -1)
                 || env.sliderContent === 'promotionalBonuses') ">
     </div>
+    <div ng-if="giftState && giftState.showPopup" ng-include="::'templates/popup/giftBet.html'|fixPath"></div>
 
     <div ng-if="isCssLoading" class="css-loading-t"></div>
 
 
     <cash-out-dialog ng-if="$root.profile && $root.partnerConfig"></cash-out-dialog>
 
-    <div ng-if="inactiveMode" class="tooltip-system-info tooltip-system-info-show">
+    <div ng-if="inactiveMode" class="tooltip-system-info">
         <h3 trans>Hope you'll be back soon</h3>
         <p trans>As you have been inactive for some time your session is disconnected but it'll be reconnected again right after you show a sign of activity.</p>
     </div>

@@ -120,7 +120,7 @@ CASINO.service('casinoData', ['CConfig', 'Config', 'WPConfig', 'content', '$http
     };
 
     casinoData.getDraw = function getDraw() {
-      return $http.get(Config.main.drawDataUrl);
+        return $http.get(Config.main.drawDataUrl);
     };
 
     casinoData.getGameWinners = function getGameWinners() {

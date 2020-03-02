@@ -1,0 +1,33 @@
+<i class="lineup"
+   title="{{'Match Lineup'|translate}}"
+   ng-class="{'opened':lineUpPopup.opened}"
+   ng-click="openLineUp();$event.stopPropagation();"
+   trans>Lineup</i>
+
+<div id="lineUpPopupContainer-{{gameId}}" class="lineUpPopupContainer" ng-class="{'empty':!matchLineupsData.GroupByHomeAway && !lineupLoading}" hide-on-click except="lineUpPopupContainer-{{gameId}}" state-flag-var="lineUpPopup.opened"
+     ng-show="lineUpPopup.opened">
+    <vbet-loader ng-show="lineupLoading"></vbet-loader>
+    <p ng-if="!matchLineupsData.GroupByHomeAway && !lineupLoading" ng-bind="'Match lineup is not currently available'|translate"></p>
+    <div ng-if="matchLineupsData.GroupByHomeAway && !lineupLoading" class="lineup-team-name">
+                    <span title="{{team.EntityName}}" ng-repeat="team in matchLineupsData.Match.MatchMembers | orderBy: IsHome"
+                          ng-click="lineUpPopup.selectedTeamHome = team.IsHome"
+                          ng-class="{'active' : lineUpPopup.selectedTeamHome === team.IsHome}">
+                        {{team.EntityName}}
+                    </span>
+    </div>
+    <div class="float-width" ng-if="matchLineupsData.GroupByHomeAway && !lineupLoading" ng-repeat="team in matchLineupsData.GroupByHomeAway " ng-show="lineUpPopup.selectedTeamHome === team.IsHome">
+        <div class="single-game-i" ng-repeat="group in team.GroupBySubstition | orderBy: !IsSubstitute">
+            <div class="active-players" ><span ng-bind="(!group.IsSubstitute ? 'Active players' : 'Substitute players')|translate"></span></div>
+            <div  class="single-player-name" title="{{entity.Lineup.Number ? entity.Lineup.Number + ' - ' + entity.Lineup.EntityName : entity.Lineup.EntityName}}" ng-repeat="entity in group.Lineups | orderBy: '(Lineup.PositionId && Lineup.PositionId === 3)' "> <!--"PositionId": 3 coach-->
+                <span class="position-{{entity.Lineup.PostitionAbbr | lowercase}}">{{entity.Lineup.Number}}</span>
+                <span>{{entity.Lineup.EntityName}}</span>
+                <span ng-repeat="event in entity.Events">
+                                   <i ng-if="event.TypeAbbreviation === 'YC' || event.TypeAbbreviation === 'RC'" title="{{event.TypeName|translate}} : {{event.Time? (event.Time.split(':')[0] * 60 + event.Time.split(':')[1] * 1) + '`' : ''}}" class="icon-event-{{event.TypeAbbreviation}}"></i>
+                                   <i ng-if="event.TypeAbbreviation === 'G'" title="{{event.TypeName|translate}}: {{event.EntityName2 ? ('Assist'|translate) + ' ->'+ event.EntityName2 : '' }} {{event.DescriptionName|translate}} {{event.Time? (event.Time.split(':')[0] * 60 + event.Time.split(':')[1] * 1) + '`' : ''}}" class="icon-event-{{event.TypeAbbreviation}}" ng-class="{'icon-own-goal' :event.DescriptionName === 'Own','icon-penalty-goal' :event.DescriptionName === 'Goal by penalty'}"></i>
+                                   <i ng-if="event.TypeAbbreviation === 'SUB'" title="{{event.TypeName|translate}}: {{(!group.IsSubstitute ) ? (event.EntityName2 ? ' ->' + event.EntityName2 : '' ): (event.EntityName1 ? ' ->' + event.EntityName1 : '' ) }} {{event.Time? (event.Time.split(':')[0] * 60 + event.Time.split(':')[1] * 1) + '`' : ''}}" class="icon-event-{{event.TypeAbbreviation}}"></i>
+                            </span>
+                <span title="{{('Position'|translate) + ' : ' + entity.Lineup.PositionName|translate}}">{{entity.Lineup.PostitionAbbr}}</span>
+            </div>
+        </div>
+    </div>
+</div>

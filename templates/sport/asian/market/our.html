@@ -23,9 +23,10 @@
                 </td>
                 <td class="event-title-asia"><div class="info-bl"><p ng-bind="event.name"></p></div></td>
                 <td class="outiright-odds-asia asian-market-overflow-j">
-                    <div class="asian-market-wrap-j"
-                         ng-class="{'locked': (event.price | oddConvert:'decimal') == 1 || game.is_blocked, up: event.price_change == '1', down: event.price_change == '-1', 'active': isEventInBetSlip(event)}">
-                        <div class="asian-market-j"> 
+                    <div class="asian-market-wrap-j {{event.price_change == null? '' : ({true: 'up-', false: 'down'}[event.price_change > 0] + (event.price_change % 2)) }}"
+                         ng-class="{'locked': (event.price | oddConvert:'decimal') == 1 || game.is_blocked, 'active': isEventInBetSlip(event)}">
+                        <i ng-if="$root.conf.boostedBets.enabled && $root.boostedBetsEventIds && $root.boostedBetsEventIds[event.id]" title="{{'Boosted odd'|translate}}" class="boosted"></i>
+                        <div class="asian-market-j">
                             <div class="asian-market-cell-j odd-container-j" ng-bind="event.price|oddConvert:env.oddFormat:null:'OUTRIGHT'"></div>
                         </div>
                     </div>

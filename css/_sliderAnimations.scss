@@ -22,7 +22,7 @@
     opacity: 1;
   }
 }
-@KEYFRAMES left-to-right-2 {
+@keyframes left-to-right-2 {
   0% {
     left: 0;
   }
@@ -30,7 +30,7 @@
     left: 100%;
   }
 }
-@KEYFRAMES right-to-left-3 {
+@keyframes right-to-left-3 {
   0% {
     left: 0;
   }
@@ -38,7 +38,7 @@
     left: -100%;
   }
 }
-@KEYFRAMES right-to-left {
+@keyframes right-to-left {
   0% {
     left: 100%;
   }
@@ -46,7 +46,7 @@
     left: 0;
   }
 }
-@KEYFRAMES left-to-right {
+@keyframes left-to-right {
   0% {
     left: -100%;
   }

@@ -1,0 +1,20 @@
+<div class="bet-builder-teams-odd HANDICAP3WAY">
+    <h5 ng-bind="selectedKeys.marketName"></h5>
+    <ul class="bet-builder-teams-info">
+        <li ng-bind="::betBuilderGame.team1_name" ng-class="{'active': marketState.selectedTeam === 'p1'}" ng-click="(marketState.selectedTeam !== 'p1') && (marketState.selectedTeam = 'p1') && (marketState.selectedIndex = 0)"></li>
+        <li ng-bind="::betBuilderGame.team2_name" ng-class="{'active': marketState.selectedTeam === 'p2'}" ng-click="(marketState.selectedTeam !== 'p2') && (marketState.selectedTeam = 'p2') && (marketState.selectedIndex = 0)"></li>
+    </ul>
+    <ul class="bet-builder-teams-info">
+        <li  ng-class="{'active': marketState.wonType === 'win'}" ng-click="(marketState.wonType !== 'win') && (marketState.wonType = 'win') && (marketState.selectedIndex = 0)" trans>Will win by more than</li>
+        <li  ng-class="{'active': marketState.wonType === 'lose'}" ng-click="(marketState.wonType !== 'lose') && (marketState.wonType = 'lose') && (marketState.selectedIndex = 0)" trans>Will not lose by more than</li>
+        <li  ng-class="{'active': marketState.wonType === 'exactly'}" ng-click="(marketState.wonType !== 'exactly') && (marketState.wonType = 'exactly') && (marketState.selectedIndex = 0)" trans>Will win by exactly</li>
+    </ul>
+    <div class="b-b-goal" ng-show="marketsData[selectedKeys.market].group[selectedKeys.period][marketState.selectedTeam][marketState.wonType].length > 0">
+        <i class="b-b-down-goal"  ng-class="{'disabled-opacity':marketState.selectedIndex === 0}" ng-click="marketState.selectedIndex= marketState.selectedIndex -  1"></i>
+        <p ng-bind="marketsData[selectedKeys.market].group[selectedKeys.period][marketState.selectedTeam][marketState.wonType][marketState.selectedIndex].goalCount +  ' ' + ('goal'|translate)"></p>
+        <i class="b-b-up-goal" ng-click="marketState.selectedIndex = marketState.selectedIndex + 1" ng-class="{'disabled-opacity': marketState.selectedIndex === (marketsData[selectedKeys.market].group[selectedKeys.period][marketState.selectedTeam][marketState.wonType].length - 1)}"></i>
+    </div>
+    <div ng-show="marketsData[selectedKeys.market].group[selectedKeys.period][marketState.selectedTeam][marketState.wonType].length > 0" class="bet-builder-odd" ng-class="{'active': eventsDataMap[marketsData[selectedKeys.market].group[selectedKeys.period][marketState.selectedTeam][marketState.wonType][marketState.selectedIndex].typeId].id === marketsData[selectedKeys.market].group[selectedKeys.period][marketState.selectedTeam][marketState.wonType][marketState.selectedIndex].id}" ng-click="toggleEvent(marketsData[selectedKeys.market].group[selectedKeys.period][marketState.selectedTeam][marketState.wonType][marketState.selectedIndex]);clearBetslipErrors();"> {{marketsData[selectedKeys.market].group[selectedKeys.period][marketState.selectedTeam][marketState.wonType][marketState.selectedIndex].price|oddConvert:env.oddFormat}}</div>
+    <span class="b-b-info-text" ng-show="marketsData[selectedKeys.market].group[selectedKeys.period][marketState.selectedTeam][marketState.wonType].length ===  0" trans>No event matching your current selections is available.</span>
+</div>
+

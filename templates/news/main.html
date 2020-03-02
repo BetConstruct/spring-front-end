@@ -71,7 +71,6 @@
                             <h3 title="{{news.titleRaw}}"><a ng-click="showNews(news, group.id);$event.stopPropagation();" ng-bind-html="news.title"></a></h3>
                             <p>{{ news.start_date + cmsTimeZone |formatDate: 'full':null:$root.env.timeFormat }}</p>
                             <div class="picture-news-block">
-                                <div class="sport-news-name">{{ news.categoryTitle }}</div>
                                 <a ng-click="showNews(news, group.id);$event.stopPropagation();" att="" id="news{{news.id}}"><img ng-src="{{news.thumbnail}}" alt=""></a>
                             </div>
                         </li>

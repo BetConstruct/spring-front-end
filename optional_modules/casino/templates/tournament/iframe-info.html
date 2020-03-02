@@ -4,20 +4,21 @@
     <div class="tab-jackpots">
         <ul>
             <li ng-if="confData.version === 2 && env.authorized && gameInfo.game.id && hasTournaments && hasIframeTournamentInfo[gameInfo.game.id]"
-                ng-class="{active: iframeTab[gameInfo.game.id].selected === 'tournaments'}"
-                ng-click="iframeTab[gameInfo.game.id].selected='tournaments' ; loadCasinoIframeInfo(gameInfo, true)">
+                ng-class="{active: (iframeTab[gameInfo.game.id].selected === 'tournaments') || (!hasIframeTournamentInfo[gameInfo.game.id] || !hasIframeJackpot[gameInfo.game.id]) || ((hasIframeTournamentInfo[gameInfo.game.id] && hasIframeJackpot[gameInfo.game.id]) && confData.main.gameIframeInitialTab === 'tournaments' && !iframeTab[gameInfo.game.id].selected) }"
+                ng-click="iframeTab[gameInfo.game.id].selected ='tournaments' ; loadCasinoIframeInfo(gameInfo, true);">
                 <i class="cms-jcon-trophy"></i>
             </li>
             <li ng-if="hasIframeJackpot[gameInfo.game.id]"
-                ng-class="{active: iframeTab[gameInfo.game.id].selected === 'jackpots'}"
-                ng-click="iframeTab[gameInfo.game.id].selected='jackpots'">
+                ng-class="{active: (iframeTab[gameInfo.game.id].selected === 'jackpots') || (!hasIframeTournamentInfo[gameInfo.game.id] || !hasIframeJackpot[gameInfo.game.id]) || ((hasIframeTournamentInfo[gameInfo.game.id] && hasIframeJackpot[gameInfo.game.id]) && confData.main.gameIframeInitialTab === 'jackpots' && !iframeTab[gameInfo.game.id].selected) }"
+                ng-click="iframeTab[gameInfo.game.id].selected ='jackpots';">
                 <i class="cms-jcon-video_slots"></i>
             </li>
         </ul>
     </div>
     <div class="current-results-sidebar">
 
-        <div ng-show="iframeTab[gameInfo.game.id].selected === 'jackpots'" class="iframe-jackpot-container"
+        <div ng-show="(iframeTab[gameInfo.game.id].selected === 'jackpots') || (!hasIframeTournamentInfo[gameInfo.game.id] || !hasIframeJackpot[gameInfo.game.id]) || ((hasIframeTournamentInfo[gameInfo.game.id] && hasIframeJackpot[gameInfo.game.id]) && confData.main.gameIframeInitialTab === 'jackpots' && !iframeTab[gameInfo.game.id].selected)"
+             class="iframe-jackpot-container"
              ng-repeat="jackpot in iframeJackpotData track by $index"
              ng-class="{active: $index === jackpotWidgets.widgetIndex}">
             <p>{{jackpot.Name}}</p>
@@ -29,6 +30,7 @@
                     <p>{{pool.DisplayName|translate}}</p>
                     <div class="jackpot-iframe-amount">
                         <jackpot-counter
+                                max-length="10"
                                 max-duration-speed="400"
                                 point="jackpot.CurrencyFraction"
                                 comma="true" currency="jackpot.Currency"
@@ -79,7 +81,10 @@
             </div>
         </div>
 
-        <div class="float-width-height" ng-controller="casinoTournamentsCtrl" ng-show="iframeTab[gameInfo.game.id].selected === 'tournaments'"  ng-if="env.authorized && gameInfo.game.id && hasTournaments">
+        <div class="float-width-height"
+             ng-controller="casinoTournamentsCtrl"
+             ng-show="(iframeTab[gameInfo.game.id].selected === 'tournaments') || (!hasIframeTournamentInfo[gameInfo.game.id] || !hasIframeJackpot[gameInfo.game.id]) || ((hasIframeTournamentInfo[gameInfo.game.id] && hasIframeJackpot[gameInfo.game.id]) && confData.main.gameIframeInitialTab === 'tournaments' && !iframeTab[gameInfo.game.id].selected)"
+             ng-if="env.authorized && gameInfo.game.id && hasTournaments">
             <div class="float-width-height"  ng-init="loadCasinoIframeInfo(gameInfo, true)">
                 <div class="float-width-height" ng-if="tournament.iframeInfo.playerList.length">
                     <div class="current-results-sidebar">

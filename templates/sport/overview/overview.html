@@ -40,7 +40,7 @@
                                         <b ng-bind="game.info.set_count === 1 ? game.stats.score_set1.team2_value : game.info.score2"></b>
                                     </span>
                                     <span class="overview-game-team-inform">
-                                        {{game.info.current_game_state|convertSetName:game.sport.alias|translate}}
+                                        {{(game.info.current_leg === undefined?(game.info.current_game_state|convertSetName:game.sport.alias):(game.info.current_game_state|convertSetNameWithLeg:game.info))|translate}}
                                         <i ng-if="sport.alias === 'Soccer' || sport.alias === 'CyberFootball'">
                                             {{game.stats.score_set1.team1_value ? '(' + game.stats.score_set1.team1_value + ' :' : '(0 :'}}
                                             {{game.stats.score_set1.team2_value ?  game.stats.score_set1.team2_value + ')' : ' 0)'}}
@@ -80,9 +80,8 @@
                                              ng-click="bet(game.processedMarkets.WINNER.events.W1, game.processedMarkets.WINNER, game)"
                                              title="{{game.processedMarkets.WINNER.events.W1.name}}"
                                              ng-class="{'active': isEventInBetSlip(game.processedMarkets.WINNER.events.W1), 'blocked': ((game.processedMarkets.WINNER.events.W1.price | oddConvert:'decimal') == 1 || game.is_blocked)}">
-                                            <b class="p-v"
+                                            <b class="p-v {{game.processedMarkets.WINNER.events.W1.price_change == null? '' : ({true: 'up-', false: 'down'}[game.processedMarkets.WINNER.events.W1.price_change > 0] + (game.processedMarkets.WINNER.events.W1.price_change % 2)) }}"
                                                ng-show="(game.processedMarkets.WINNER.events.W1.price | oddConvert:'decimal') != 1 && !game.is_blocked"
-                                               ng-class="{'factor-top': game.processedMarkets.WINNER.events.W1.price_change > 0, 'factor-bottom': game.processedMarkets.WINNER.events.W1.price_change < 0}"
                                                ng-bind="game.processedMarkets.WINNER.events.W1.price | oddConvert:env.oddFormat:null:'WINNER'">
                                             </b>
                                         </div>
@@ -91,9 +90,8 @@
                                              ng-click="bet(game.processedMarkets.WINNER.events.X, game.processedMarkets.WINNER, game)"
                                              title="{{game.processedMarkets.WINNER.events.X.name}}"
                                              ng-class="{'active': isEventInBetSlip(game.processedMarkets.WINNER.events.X), 'blocked': ((game.processedMarkets.WINNER.events.X.price | oddConvert:'decimal') == 1 || game.is_blocked)}">
-                                            <b class="p-v"
+                                            <b class="p-v {{game.processedMarkets.WINNER.events.X.price_change == null? '' : ({true: 'up-', false: 'down'}[game.processedMarkets.WINNER.events.X.price_change > 0] + (game.processedMarkets.WINNER.events.X.price_change % 2)) }}"
                                                ng-show="(game.processedMarkets.WINNER.events.X.price | oddConvert:'decimal') != 1 && !game.is_blocked"
-                                               ng-class="{'factor-top': game.processedMarkets.WINNER.events.X.price_change > 0, 'factor-bottom': game.processedMarkets.WINNER.events.X.price_change < 0}"
                                                ng-bind="game.processedMarkets.WINNER.events.X.price | oddConvert:env.oddFormat:null:'WINNER'">
                                             </b>
                                         </div>
@@ -102,9 +100,8 @@
                                              ng-click="bet(game.processedMarkets.WINNER.events.W2, game.processedMarkets.WINNER, game)"
                                              title="{{game.processedMarkets.WINNER.events.W2.name}}"
                                              ng-class="{'active': isEventInBetSlip(game.processedMarkets.WINNER.events.W2), 'blocked': ((game.processedMarkets.WINNER.events.W2.price | oddConvert:'decimal') == 1 || game.is_blocked)}">
-                                            <b class="p-v"
+                                            <b class="p-v {{game.processedMarkets.WINNER.events.W2.price_change == null? '' : ({true: 'up-', false: 'down'}[game.processedMarkets.WINNER.events.W2.price_change > 0] + (game.processedMarkets.WINNER.events.W2.price_change % 2)) }}"
                                                ng-show="(game.processedMarkets.WINNER.events.W2.price | oddConvert:'decimal') != 1 && !game.is_blocked"
-                                               ng-class="{'factor-top': game.processedMarkets.WINNER.events.W2.price_change > 0, 'factor-bottom': game.processedMarkets.WINNER.events.W2.price_change < 0}"
                                                ng-bind="game.processedMarkets.WINNER.events.W2.price | oddConvert:env.oddFormat:null:'WINNER'">
                                             </b>
                                         </div>
@@ -135,9 +132,8 @@
                                              ng-click="bet(game.processedMarkets.HANDICAP.events.Home, game.processedMarkets.HANDICAP, game)"
                                              title="{{game.processedMarkets.HANDICAP.events.Home.name}}"
                                              ng-class="{'active': isEventInBetSlip(game.processedMarkets.HANDICAP.events.Home), 'blocked': ((game.processedMarkets.HANDICAP.events.Home.price | oddConvert:'decimal') == 1 || game.is_blocked)}">
-                                            <b class="p-v"
+                                            <b class="p-v {{game.processedMarkets.HANDICAP.events.Home.price_change == null? '' : ({true: 'up-', false: 'down'}[game.processedMarkets.HANDICAP.events.Home.price_change > 0] + (game.processedMarkets.HANDICAP.events.Home.price_change % 2)) }}"
                                                ng-show="(game.processedMarkets.HANDICAP.events.Home.price | oddConvert:'decimal') != 1 && !game.is_blocked"
-                                               ng-class="{'factor-top': game.processedMarkets.HANDICAP.events.Home.price_change > 0, 'factor-bottom': game.processedMarkets.HANDICAP.events.Home.price_change < 0}"
                                                ng-bind="game.processedMarkets.HANDICAP.events.Home.price | oddConvert:env.oddFormat:null:'HANDICAP'">
                                             </b>
                                         </div>
@@ -145,9 +141,8 @@
                                              ng-click="bet(game.processedMarkets.HANDICAP.events.Away, game.processedMarkets.HANDICAP, game)"
                                              title="{{game.processedMarkets.HANDICAP.events.Away.name}}"
                                              ng-class="{'active': isEventInBetSlip(game.processedMarkets.HANDICAP.events.Away), 'blocked': ((game.processedMarkets.HANDICAP.events.Away.price | oddConvert:'decimal') == 1 || game.is_blocked)}">
-                                            <b class="p-v"
+                                            <b class="p-v {{game.processedMarkets.HANDICAP.events.Away.price_change == null? '' : ({true: 'up-', false: 'down'}[game.processedMarkets.HANDICAP.events.Away.price_change > 0] + (game.processedMarkets.HANDICAP.events.Away.price_change % 2)) }}"
                                                ng-show="(game.processedMarkets.HANDICAP.events.Away.price | oddConvert:'decimal') != 1 && !game.is_blocked"
-                                               ng-class="{'factor-top': game.processedMarkets.HANDICAP.events.Away.price_change > 0, 'factor-bottom': game.processedMarkets.HANDICAP.events.Away.price_change < 0}"
                                                ng-bind="game.processedMarkets.HANDICAP.events.Away.price | oddConvert:env.oddFormat:null:'HANDICAP'">
                                             </b>
                                         </div>
@@ -176,9 +171,8 @@
                                              ng-click="bet(game.processedMarkets.TOTALS.events.Over, game.processedMarkets.TOTALS, game)"
                                              title="{{game.processedMarkets.TOTALS.events.Over.name}}"
                                              ng-class="{'active': isEventInBetSlip(game.processedMarkets.TOTALS.events.Over), 'blocked': ((game.processedMarkets.TOTALS.events.Over.price | oddConvert:'decimal') == 1 || game.is_blocked)}">
-                                            <b class="p-v"
+                                            <b class="p-v {{game.processedMarkets.TOTALS.events.Over.price_change == null? '' : ({true: 'up-', false: 'down'}[game.processedMarkets.TOTALS.events.Over.price_change > 0] + (game.processedMarkets.TOTALS.events.Over.price_change % 2)) }}"
                                                ng-show="(game.processedMarkets.TOTALS.events.Over.price | oddConvert:'decimal') != 1 && !game.is_blocked"
-                                               ng-class="{'factor-top': game.processedMarkets.TOTALS.events.Over.price_change > 0, 'factor-bottom': game.processedMarkets.TOTALS.events.Over.price_change < 0}"
                                                ng-bind="game.processedMarkets.TOTALS.events.Over.price | oddConvert:env.oddFormat:null:'TOTALS'">
                                             </b>
                                         </div>
@@ -186,9 +180,8 @@
                                              ng-click="bet(game.processedMarkets.TOTALS.events.Under, game.processedMarkets.TOTALS, game)"
                                              title="{{game.processedMarkets.TOTALS.events.Under.name}}"
                                              ng-class="{'active': isEventInBetSlip(game.processedMarkets.TOTALS.events.Under), 'blocked': ((game.processedMarkets.TOTALS.events.Under.price | oddConvert:'decimal') == 1 || game.is_blocked)}">
-                                            <b class="p-v"
+                                            <b class="p-v {{game.processedMarkets.TOTALS.events.Under.price_change == null? '' : ({true: 'up-', false: 'down'}[game.processedMarkets.TOTALS.events.Under.price_change > 0] + (game.processedMarkets.TOTALS.events.Under.price_change % 2)) }}"
                                                ng-show="(game.processedMarkets.TOTALS.events.Under.price | oddConvert:'decimal') != 1 && !game.is_blocked"
-                                               ng-class="{'factor-top': game.processedMarkets.TOTALS.events.Under.price_change > 0, 'factor-bottom': game.processedMarkets.TOTALS.events.Under.price_change < 0}"
                                                ng-bind="game.processedMarkets.TOTALS.events.Under.price | oddConvert:env.oddFormat:null:'TOTALS'">
                                             </b>
                                         </div>

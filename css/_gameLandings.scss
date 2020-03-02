@@ -583,7 +583,7 @@
       width: 100%;
       float: left;
       display: table;
-      li {
+      > div > li {
         display: inline-block;
         width: 280px;
         margin: 0 15px;

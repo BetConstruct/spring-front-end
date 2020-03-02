@@ -1,0 +1,26 @@
+<div class="b-b-range-wrapper">
+    <div class="b-b-range">
+        <p ng-bind="::betBuilderGame.team1_name"></p>
+        <div class="b-b-range-input-wrapper">
+            <small style="width: {{marketsData[selectedKeys.market].group[selectedKeys.period].homeValues.indexOf(marketState.homeValue) * (100 / (marketsData[selectedKeys.market].group[selectedKeys.period].homeValues.length - 1))}}%"></small>
+            <input type="range" ng-model="marketState.homeValue" min="{{marketsData[selectedKeys.market].group[selectedKeys.period].homeValues[0]}}" step="1" max="{{marketsData[selectedKeys.market].group[selectedKeys.period].homeValues[marketsData[selectedKeys.market].group[selectedKeys.period].homeValues.length - 1]}}">
+        </div>
+        <ul>
+            <li ng-repeat="num in marketsData[selectedKeys.market].group[selectedKeys.period].homeValues track by num"  ng-class="{'active': num <= marketState.homeValue, 'selected': num === marketState.homeValue}" ng-bind="num"></li>
+        </ul>
+    </div>
+    <div class="b-b-range">
+        <p ng-bind="::betBuilderGame.team2_name"></p>
+        <div class="b-b-range-input-wrapper">
+            <small style="width: {{marketsData[selectedKeys.market].group[selectedKeys.period].awayValues.indexOf(marketState.awayValue) * (100 / (marketsData[selectedKeys.market].group[selectedKeys.period].awayValues.length - 1))}}%"></small>
+            <input type="range" ng-model="marketState.awayValue" min="{{marketsData[selectedKeys.market].group[selectedKeys.period].awayValues[0]}}" step="1" max="{{marketsData[selectedKeys.market].group[selectedKeys.period].awayValues[marketsData[selectedKeys.market].group[selectedKeys.period].awayValues.length - 1]}}">
+        </div>
+        <ul>
+            <li ng-repeat="num in marketsData[selectedKeys.market].group[selectedKeys.period].awayValues track by num"  ng-class="{'active': num <= marketState.awayValue, 'selected': num === marketState.awayValue}" ng-bind="num"></li>
+        </ul>
+    </div>
+    <div class="bet-builder-buttons">
+        <button type="button" ng-disabled="!marketsData[selectedKeys.market].group[selectedKeys.period].resultMap[marketState.homeValue + '-' + marketState.awayValue]" trans ng-class="{'active':  eventsDataMap[marketsData[selectedKeys.market].group[selectedKeys.period].resultMap[marketState.homeValue + '-' + marketState.awayValue].typeId].id === marketsData[selectedKeys.market].group[selectedKeys.period].resultMap[marketState.homeValue + '-' + marketState.awayValue].id}" ng-click="toggleEvent(marketsData[selectedKeys.market].group[selectedKeys.period].resultMap[marketState.homeValue + '-' + marketState.awayValue]);clearBetslipErrors();">Select</button>
+        <p class="bet-notification-warning" ng-show="!marketsData[selectedKeys.market].group[selectedKeys.period].resultMap[marketState.homeValue + '-' + marketState.awayValue]" trans>No event matching your current selections is available.</p>
+    </div>
+</div>

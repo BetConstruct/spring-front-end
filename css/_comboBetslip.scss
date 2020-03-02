@@ -118,10 +118,10 @@
   border-bottom: 1px solid #3f4553;
 }
 
-.right-column-view-contain > .list-bet-block .bet-container {
-  overflow: inherit;
-  max-height: inherit;
-}
+//.right-column-view-contain > .list-bet-block .bet-container {
+//  overflow: inherit;
+//  max-height: inherit;
+//}
 
 .right-column-view-contain > .list-bet-block .betslip-system-chenge {
   height: 11px;
@@ -557,5 +557,42 @@
         padding: 0 6px 015px;
       }
     }
+  }
+}
+
+//add lineup  combo view
+
+.combo {
+  .lineUpPopupContainer {
+    background: #e8edf1;
+  }
+  .single-player-name > span {
+    color: #3f4552;
+    font-weight: normal;
+    &:first-child {
+      background: #cfd6dc;
+    }
+  }
+  .active-players {
+    background: #cfd6dc;
+
+    > span {
+      color: #3f4552;
+    }
+  }
+  .lineup-team-name {
+    background: #ffffff;
+    > span {
+      color: #000000;
+      &.active{
+        color: set-color($hero-color);
+      }
+    }
+  }
+  .lineup.opened:after {
+    border-color: transparent transparent #ffffff transparent;
+  }
+  .single-player-name {
+    border-bottom: 1px solid #cfd6dc;
   }
 }

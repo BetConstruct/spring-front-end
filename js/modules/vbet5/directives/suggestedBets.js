@@ -167,8 +167,8 @@ VBET5.directive('suggestedBets', ['$rootScope', '$http', '$filter', 'Zergling', 
                         'competition': ['id', 'order', 'name'],
                         'region': ['id', 'name', 'alias'],
                         'game': ['id', 'start_ts', 'team1_id', 'team1_name', 'team2_id', 'team2_name', 'type', 'stats'],
-                        'market': ['base', 'type', 'name', 'express_id'],
-                        'event': []
+                        'market': ['base', 'type', 'name', 'express_id', 'id'],
+                        'event': ["order", "id", "type_1", "type", "type_id", "original_order", "name", "price", "nonrunner", "ew_allowed", "sp_enabled", "extra_info", "base", "home_value", "away_value", "display_column" ]
                     },
                     'where': {
                         'event': {

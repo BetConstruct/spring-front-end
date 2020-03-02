@@ -1,10 +1,10 @@
 <div ng-controller="cmsPagesCtrl" ng-init="loadBanners('homepage-small-banners-'+env.lang,false);" class="product-list-contain no-select-j">
     <vbet-loader ng-show="!bannerObjects['homepage-small-banners-'+env.lang]"></vbet-loader>
-    <ul class="column-{{ bannerObjects['homepage-small-banners-'+env.lang].length }}" ng-show="bannerObjects['homepage-small-banners-'+env.lang]">
-        <li ng-repeat="banner in bannerObjects['homepage-small-banners-'+env.lang] track by $index">
+    <ul ng-if="bannerObjects['homepage-small-banners-'+env.lang] && bannerObjects['homepage-small-banners-'+env.lang][$root.env.authorized].length" class="column-{{ bannerObjects['homepage-small-banners-'+env.lang][$root.env.authorized].length }}" >
+        <li ng-repeat="banner in bannerObjects['homepage-small-banners-'+env.lang][$root.env.authorized] track by $index">
             <div class="homepage-small-banners-j">
                 <a ng-href="{{banner.link}}" target="{{banner.linktarget}}">
-                    <img src="{{banner.image}}" ng-show="banner.image">
+                    <img ng-src="{{banner.image}}" ng-show="banner.image">
                     <h2 ng-bind-html="banner.title|html:'p'"></h2>
                     <p ng-bind-html="banner.content|html:'p'"></p>
                     <button ng-show="banner.link">{{(banner.custom_fields.button_label[0]||'Join Now')|translate}}</button>

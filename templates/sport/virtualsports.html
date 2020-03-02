@@ -6,6 +6,7 @@
                     <!-- Two div-s w/ class 'player' are *NOT* left on accident. Please do not optimize and refactor them! -->
                     <div class="player" ng-if="$root.conf.video.providersThatSupportHls[providerId] && videoData">
                         <hls-player provider-id="{{providerId}}" stream-url="{{videoData}}"></hls-player>
+                        <p ng-if="!videoIsLoaded && videoStreaming.stopped" trans>Streaming has stopped</p>
                     </div>
                     <div class="player" ng-if="!$root.conf.video.providersThatSupportHls[providerId] && videoData">
                         <flashplayer id="gamevideo{{gameToShow.id}}" stream-url="{{videoData}}" provider-id="{{providerId}}" initially-muted="{{ env.sound }}"></flashplayer>
@@ -41,9 +42,13 @@
                         <li>
                             <div class="competitopn-switch">
                                 <ul>
-                                    <li ng-repeat="competition in competitions track by competition.id" ng-click="competitions.length > 1 ? loadGames(competition): void();" ng-class="{'active': competition.id == selectedVirtualCompetition.id}">{{competition.name}}</li>
+                                    <li ng-repeat="competition in competitions track by competition.id" ng-click="competitions.length > 1 ? loadGames(competition): void();" ng-class="{'active': competition.id == selectedVirtualCompetition.id && competitions.length > 1}">{{competition.name}}</li>
                                 </ul>
                             </div>
+                        </li>
+                        <li ng-if="$root.conf.video.providersThatSupportHls[providerId]">
+                            <button prevent-fast-click="2" ng-click="videoStreaming.stopVideo()" ng-if="videoIsLoaded" trans>Stop</button>
+                            <button prevent-fast-click="2" ng-click="videoStreaming.playVideo()" ng-if="!videoIsLoaded" trans>Play</button>
                         </li>
                         <li>
                             <button ng-click="toggleResultsPopUp(true)" trans>Results</button>
@@ -94,7 +99,7 @@
                     <li class="list-view-j"  ng-class="{active: marketIsOneColumn}"></li>
                 </ul>
             </div>
-            <div class="markets-group-wrap-v3">
+            <div class="markets-group-wrap-v3" ng-if="gameToShow.availableMarketGroups">
                 <ul ng-class="{'show-dropdown': marketGroupFilterExpanded, 'has-dropdown': gameToShow.availableMarketGroups.length > 6 }">
                     <li class="more-j" ng-click="marketGroupFilterExpanded = !marketGroupFilterExpanded"  hide-on-click="" state-flag-var="marketGroupFilterExpanded"><span>+ {{ gameToShow.availableMarketGroups.length - 6 }}</span></li>
                     <li ng-repeat="group in gameToShow.availableMarketGroups track by group.id" ng-click="selectedGroup.id = group.id"
@@ -132,7 +137,7 @@
                         <div class="single-events-b-v3"
                              ng-click="bet(market.named_events[participant.AnimalName][0], market, gameToShow)"
                              ng-class="{'active': isEventInBetSlip(market.named_events[participant.AnimalName][0]), 'blocked': market.named_events[participant.AnimalName][0].price === 1}">
-                                <b ng-class="{'factor-top': market.named_events[participant.AnimalName][0].price_change > 0, 'factor-bottom': market.named_events[participant.AnimalName][0].price_change < 0}" class="p-v price{{arrowHide}}">{{market.named_events[participant.AnimalName][0].price|oddConvert:env.oddFormat:null:market.display_key}}</b>
+                            <b  class="p-v price {{market.named_events[participant.AnimalName][0].price_change == null? '' : ({true: 'up-', false: 'down'}[market.named_events[participant.AnimalName][0].price_change > 0] + (market.named_events[participant.AnimalName][0].price_change % 2)) }}">{{market.named_events[participant.AnimalName][0].price|oddConvert:env.oddFormat:null:market.display_key}}</b>
                         </div>
                     </li>
                 </ul>
@@ -141,7 +146,7 @@
         </div>
     </div>
 
-        <!-- Results page start in virtual sports  -->
+    <!-- Results page start in virtual sports  -->
     <div class="new-default-popup-j results-popup" ng-if="results.open">
         <div class="pp-table-j">
             <div class="table-row-j">

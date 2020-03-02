@@ -94,8 +94,7 @@ VBET5.service('Moment', ['Config', '$locale', 'LanguageCodes', function (Config,
         var zone = null;
         if (Config.main.timeZonePerLanguage && Config.main.timeZonePerLanguage[Config.env.lang]) {
             zone = Config.main.timeZonePerLanguage[Config.env.lang];
-        }
-        if (Config.env.selectedTimeZone) {
+        }else if (Config.env.selectedTimeZone) {
             zone = Config.env.selectedTimeZone;
         }
         return zone ? Moment.moment(a, b, c, d).utcOffset(zone) : Moment.moment(a, b, c, d);

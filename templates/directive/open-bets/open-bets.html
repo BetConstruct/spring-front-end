@@ -9,10 +9,13 @@
             <span ng-class="{'EW-bh-indicator': bet.each_way}" ng-bind="betTypes[bet.type]|translate"></span>
             <span ng-if="bet.type === 3"> {{::bet.system_min_count}}/{{::bet.events.length}}</span>
             <i class="edit-bets-icon"
-               ng-show="!betConf.fullCoverBetTypes.enabled && bet.cash_out && (bet.type == 2 || bet.type == 1)  && !$root.editBet.edit"
+               ng-show="!betConf.fullCoverBetTypes.enabled && !bet.is_gift && bet.cash_out && (bet.type == 2 || bet.type == 1)  && !$root.editBet.edit"
                ng-click="$event.stopPropagation(); editBet(bet);"
                title="{{ ('Editing functionality is available for this bet.') | translate }}">
             </i>
+            <span class="gift-bet" ng-if="bet.is_gift === null && $root.conf.enableGiftBet" ng-click="$event.stopPropagation()" title="{{(bet.is_gift? 'Gifted': 'Gift')|translate}}">
+                   <i ng-click="$root.broadcast('showGiftPopup', bet)" ng-class="{'disabled': bet.is_gift === true }"></i>
+             </span>
         </p>
         <div class="open-bets-time-id">
             <p ng-bind="bet.date_time|formatDate:'noLocaleTranslate':null:$root.env.timeFormat"></p>
@@ -28,6 +31,7 @@
                             <b class="open-bets-games-score" ng-bind="matchInfo[event.game_id].text_info"></b>
                         </div>
                         <div class="status-icon-open-bets" title="{{event.outcome == 3 ? 'Won' : 'Unsettled'}}"></div>
+
                     </div>
                     <div class="open-bets-games-info" ng-show="event.is_live">
                         <b>Live</b>
@@ -46,7 +50,7 @@
                         </ul>
                     </div>
                 </li>
-                <li class="bet-accept-changes-b-v3" ng-show="bet.outcome == 0 && bet.cash_out !== undefined || bet.auto_cash_out_amount !== null">
+                <li class="bet-accept-changes-b-v3" ng-show="bet.outcome == 0 && !bet.is_gift && bet.cash_out !== undefined || bet.auto_cash_out_amount !== null">
                     <div class="button-view-contain-v3">
                         <div class="bs-cash-out-btn" ng-mouseover="autoCashoutRule.showInfo = true; getAutoCashOutDetails(bet.id, bet.auto_cash_out_amount)" ng-mouseleave="autoCashoutRule.showInfo = false">
                             <button class="open-bets-cashout-button" ng-class="{'rule-active': bet.auto_cash_out_amount != null}"

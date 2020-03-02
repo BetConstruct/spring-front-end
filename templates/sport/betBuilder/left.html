@@ -1,0 +1,26 @@
+<div class="bet-builder-content">
+    <ul ng-if="selectedKeys.market" ng-click="selectKey('market', {key: '', displayName: '' })" class="bet-builder-add">
+        <li>Add Another Selection</li>
+    </ul>
+    <div class="float-width" ng-switch="selectedKeys.market">
+        <div ng-switch-when="WINNER|TOTALS|BOTHTEAMTOSCORE" ng-switch-when-separator="|">
+            <ng-include class="float-width" src="::'templates/sport/betBuilder/markets/generic.html'|fixPath"></ng-include>
+        </div>
+        <div class="float-width" ng-switch-when="CORRECT SCORE">
+            <ng-include class="bet-builder-score"  src="::'templates/sport/betBuilder/markets/correctScore.html'|fixPath"></ng-include>
+        </div>
+        <div class="float-width" ng-switch-when="HANDICAP3WAY">
+            <ng-include class="float-width"  src="::'templates/sport/betBuilder/markets/handicap3Way.html'|fixPath"></ng-include>
+        </div>
+
+        <div ng-switch-default class="float-width">
+            <ul class="bet-builder-add">
+                <li ng-repeat="market in markets track by market.key" ng-click="selectKey('market', market)">{{market.displayName|translate}}</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="float-width" ng-if="selectedKeys.market">
+        <ng-include class="float-width" src="::'templates/sport/betBuilder/periods.html'|fixPath" ></ng-include>
+    </div>
+</div>

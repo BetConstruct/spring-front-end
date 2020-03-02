@@ -4,8 +4,8 @@
  * @description
  * LiveCalendarController controller
  */
-angular.module('vbet5.betting').controller('LiveCalendarController', ['$scope', '$rootScope', '$location', '$window', 'ConnectionService', 'Moment', 'Translator', 'Utils', 'Config', 'GameInfo', 'partner', "Zergling",
-    function ($scope, $rootScope, $location, $window, ConnectionService, Moment, Translator, Utils, Config, GameInfo, partner, Zergling) {
+angular.module('vbet5.betting').controller('LiveCalendarController', ['$scope', '$rootScope', '$location', '$window', 'ConnectionService', 'Moment', 'Translator', 'Utils', 'Config', 'GameInfo', 'partner', "Zergling", "analytics",
+    function ($scope, $rootScope, $location, $window, ConnectionService, Moment, Translator, Utils, Config, GameInfo, partner, Zergling, analytics) {
         'use strict';
         $rootScope.footerMovable = true;
 
@@ -467,6 +467,7 @@ angular.module('vbet5.betting').controller('LiveCalendarController', ['$scope', 
          * @param {Object} game game object
          */
         $scope.openStatistics = function openStatistics(game) {
+            analytics.gaSend('send', 'event', 'explorer', 'H2H-on-click', {'page': $location.path(), 'eventLabel': ($scope.env.live ? 'Live' : 'Prematch')});
             $window.open(GameInfo.getStatsLink(game), game.id, "width=940,height=600,resizable=yes,scrollbars=yes");
         };
 
@@ -525,12 +526,13 @@ angular.module('vbet5.betting').controller('LiveCalendarController', ['$scope', 
             }
 
             if (Config.main.boostedBets.enabled && !$rootScope.boostedBetsEventIds) {
-                $rootScope.boostedBetsEventIds = [];
+                $rootScope.boostedBetsEventIds = {};
+
                 Zergling.get({}, 'get_boosted_selections').then(function (response) {
                     if (response && response.details) {
                         angular.forEach(response.details, function (value) {
                             angular.forEach(value, function (value) {
-                                $rootScope.boostedBetsEventIds.push(value.Id);
+                                $rootScope.boostedBetsEventIds[value.Id] = true;
                             });
                         });
                     }

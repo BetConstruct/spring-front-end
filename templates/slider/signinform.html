@@ -60,7 +60,7 @@
 
     <!--- POPUP forgot password -->
     <ng-include src="::'templates/slider/forgot_password.html'|fixPath"
-                ng-if="env.sliderContent === 'forgotPasswordForm' && conf.registration.simplified"></ng-include>
+                ng-if="$root.env.sliderContent === 'forgotPasswordForm' && $root.conf.registration.simplified"></ng-include>
     <!--- END of POPUP forgot password -->
 
     <div class=" block-sign-in-form" ng-if="env.sliderContent === 'reset_password'" ng-include="::'templates/slider/resetpasswordform.html'|fixPath"></div>

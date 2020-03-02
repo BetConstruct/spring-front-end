@@ -483,4 +483,12 @@
   .scroll-view-contain-calculator::-webkit-scrollbar {
     background: #B0BCC5;
   }
+  .calculator-buttons-contain>ul>li>button {
+    color: #000000;
+    border-color: #BDBCBC;
+      &:hover {
+        color: #ffffff;
+        border-color: #1a7051;
+    }
+  }
 }

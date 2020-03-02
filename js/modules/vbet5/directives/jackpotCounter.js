@@ -16,9 +16,6 @@ VBET5.directive('jackpotCounter', ['$rootScope', '$filter', function ($rootScope
         },
         link: function (scope, element) {
             element = element[0];
-
-            var maxLength = scope.maxLength;
-
             var amountDiff;
             var updateInterval = scope.updateInterval ? scope.updateInterval * 1.2 /*correction*/ : 11000;
             var amountStr = '';
@@ -63,7 +60,7 @@ VBET5.directive('jackpotCounter', ['$rootScope', '$filter', function ($rootScope
                     }
                 });
                 if (multipliersFactor) {
-                    element.innerHTML += "<span>" + multipliersString + "</span>";
+                    element.innerHTML += "<span class='jp-multipliers'>" + multipliersString + "</span>";
                 }
                 if (result.currency) {
                     element.innerHTML += "<sup>" + $filter('currency')(result.currency) + "</sup>";
@@ -91,8 +88,7 @@ VBET5.directive('jackpotCounter', ['$rootScope', '$filter', function ($rootScope
                 firstTime = false;
 
                 function steItemParams(item) {
-                    if (item.changesCount !== 0) {
-
+                  if (item.changesCount > 0) {
                         item.animated = true;
                         item.speed = timeDiff / item.changesCount * 10;
                         item.speed = Math.abs(item.speed);
@@ -123,8 +119,11 @@ VBET5.directive('jackpotCounter', ['$rootScope', '$filter', function ($rootScope
                     var nextItemChangesCount = 0;
                     var amountLength = amountStr.length;
 
-                    if (maxLength && amountLength > 0 && maxLength < (amountLength - scope.point)) {
-                        if (amountLength - scope.point - maxLength > 3) {
+                    multipliersString = "";
+                    multipliersFactor = 0;
+
+                    if (scope.maxLength && amountLength > 0 && scope.maxLength < (amountLength - scope.point)) {
+                        if (amountLength - scope.point - scope.maxLength > 3) {
                             multipliersString = "M";
                             multipliersFactor = 6;
                         } else {

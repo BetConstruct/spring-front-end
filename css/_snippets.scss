@@ -850,7 +850,9 @@ div.draws-contain,
 .video-player-container flashplayer,
 .video-player-container hls-player,
 .game-video-container video-player,
-.game-video-container video-player .video-player-container{
+.game-video-container video-player .video-player-container,
+.game-video-container .e-s-video-player,
+.game-video-container .e-s-video-player .video-player-container {
   float: left;
   display: block;
   width: 100%;
@@ -859,10 +861,12 @@ div.draws-contain,
 .video-player-container object,
 .video-player-container flashplayer,
 .video-player-container hls-player,
-.game-video-container video-player .video-player-container{
+.game-video-container video-player .video-player-container,
+.game-video-container .e-s-video-player .video-player-container {
   animation: video-player-autoplay 4000ms ease-in-out;
 }
-video-player{
+video-player,
+.e-s-video-player {
   .video-control-buttons{
     position: absolute;
     top: -30px;
@@ -916,7 +920,8 @@ video-player{
     }
   }
 }
-.game-video-detached video-player .video-control-buttons{
+.game-video-detached video-player .video-control-buttons,
+.game-video-detached .e-s-video-player .video-control-buttons {
   @include ltr {
     right: 30px;
   }
@@ -924,7 +929,8 @@ video-player{
     left: 30px;
   }
 }
-.game-video-detached.game-video-fullscreen video-player {
+.game-video-detached.game-video-fullscreen video-player,
+.game-video-detached.game-video-fullscreen .e-s-video-player {
   margin-top: 26px;
   .video-control-buttons{
     top: -28px;
@@ -948,11 +954,13 @@ video-player{
     width: calc(100% - 300px);
   }
 }
-.detached-game-container video-player .video-detached-game-name{
+.detached-game-container video-player .video-detached-game-name,
+.detached-game-container .e-s-video-player .video-detached-game-name {
   display: block;
 }
 
-.asian-separator-container-b .game-video-container video-player {
+.asian-separator-container-b .game-video-container video-player,
+.asian-separator-container-b .game-video-container .e-s-video-player {
   position: relative;
   /* .video-player-container .video-player-control {
       display: none;
@@ -1417,6 +1425,7 @@ input[type="password"]:focus ~ .capslock-is-on-j {
   text-decoration: none;
   background-repeat: no-repeat;
   background-size: auto 100%;
+  background-position: 50%;
 }
 .slide-casino-new-img-b > button{
   position: absolute;
@@ -1491,7 +1500,7 @@ input[type="password"]:focus ~ .capslock-is-on-j {
         vertical-align: middle;
         background: $hero-color;
         color: set-color($hero-color);
-        font: 700 11px/14px $font-f;
+        font: 700 11px/12px $font-f;
         height: 12px;
         margin-top: -6px;
         padding: 0 3px;
@@ -2886,6 +2895,7 @@ rtg-jackpot {
       &:first-child {
         width: 9%;
         line-height: 46px;
+        font-size: 18px;
       }
     }
   }

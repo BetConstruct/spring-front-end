@@ -22,5 +22,6 @@
         </li>
         <li class="winner-cost"><p>{{winner.win_amount|number:$root.conf.balanceFractionSize}} {{winner.currency_id|currency}}</p></li>
     </ul>
-    <vbet-loader ng-if="!winners && winnersLoading"></vbet-loader>
+    <span ng-if="!winnersLoading && (!winners || !winners.length)" trans>There are no winners</span>
+    <vbet-loader ng-if="winnersLoading"></vbet-loader>
 </div>

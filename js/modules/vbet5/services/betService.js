@@ -20,6 +20,7 @@ VBET5.factory('BetService', ['$rootScope', 'Zergling', 'Config', '$q', 'Utils', 
             customCorrectScoreLogic: ['Soccer', 'Tennis', 'IceHockey', 'Baseball', 'TableTennis', 'Snooker'],
             marketsPreDividedByColumns:  [
                 'MatchWinningMargin',
+                'GameWinningMargin',
                 'SetWinningMargin',
                 'WinningMargin',
                 'CorrectScore',
@@ -80,6 +81,8 @@ VBET5.factory('BetService', ['$rootScope', 'Zergling', 'Config', '$q', 'Utils', 
                 14: 'Lucky 15',
                 15: 'Lucky 31',
                 16: 'Lucky 63',
+                50: 'Bet Builder',
+                51: 'Bet On Lineups',
                 'Toto': 'Pool Betting'
             }
         }
@@ -180,7 +183,7 @@ VBET5.factory('BetService', ['$rootScope', 'Zergling', 'Config', '$q', 'Utils', 
         }
 
         delete _cashOut.callbacks[internalSubId];
-        if (Utils.isObjectEmpty(_cashOut.callbacks)) {
+        if (Utils.isObjectEmpty(_cashOut.callbacks) && _cashOut.subId) {
             Zergling.unsubscribe(_cashOut.subId);
             _cashOut.subId = null;
         }
@@ -248,10 +251,15 @@ VBET5.factory('BetService', ['$rootScope', 'Zergling', 'Config', '$q', 'Utils', 
             });
         }
 
+        var sportIds = [];
+        var gameIds = [];
         var eventIds = [];
+
         angular.forEach(eventsFromBetHistory.events, function(event) {
             if(event.outcome === null || event.outcome === 0) {
                 eventIds.push(event.selection_id);
+                gameIds.push(event.game_id);
+                sportIds.push(event.sport_id);
             }
         });
 
@@ -262,14 +270,21 @@ VBET5.factory('BetService', ['$rootScope', 'Zergling', 'Config', '$q', 'Utils', 
                 'competition': ['id', 'order', 'name'],
                 'region': ['id', 'name', 'alias'],
                 'game': ['id', 'team1_id', 'start_ts', 'team1_name', 'team2_id', 'team2_name', 'type'],
-                'market': ['base', 'type', 'name', 'express_id'],
-                'event': []
+                'market': ['base', 'type', 'name', 'express_id', 'id'],
+                'event': ["order", "id", "type_1", "type", "type_id", "original_order", "name", "price", "nonrunner", "ew_allowed", "sp_enabled", "extra_info", "display_column" ]
             },
             'where': {
                 'event': {
                     'id': {'@in': eventIds}
+                },
+                'game': {
+                    'id': {'@in': Utils.uniqueNum(gameIds)}
+                },
+                'sport': {
+                    'id': {'@in': Utils.uniqueNum(sportIds)}
                 }
-            }}).then(
+            }
+        }).then(
                 function success(response) {
                     if(response.data) {
                         if (editBet) {
@@ -325,8 +340,8 @@ VBET5.factory('BetService', ['$rootScope', 'Zergling', 'Config', '$q', 'Utils', 
                 'competition': ['id', 'order', 'name'],
                 'region': ['id', 'name', 'alias'],
                 'game': ['id', 'start_ts', 'team1_id', 'team1_name', 'team2_id', 'team2_name', 'type'],
-                'market': ['base', 'type', 'name', 'express_id'],
-                'event': []
+                'market': ['base', 'type', 'name', 'express_id', 'id'],
+                'event': ["order", "id", "type_1", "type", "type_id", "original_order", "name", "price", "nonrunner", "ew_allowed", "sp_enabled", "extra_info", "base", "display_column" ]
             },
             'where': {
                 'event': {
@@ -421,6 +436,7 @@ VBET5.factory('BetService', ['$rootScope', 'Zergling', 'Config', '$q', 'Utils', 
                             enabled: true,
                             minOdds: rules[i].MinOdds,
                             ignoreLowOdds: rules[i].IgnoreLowOddSelection,
+                            basis: rules[i].Basis,
                             map: {
                                 minTotalCoefficient: rules[i].MinBetOdds
                             }
@@ -475,6 +491,7 @@ VBET5.factory('BetService', ['$rootScope', 'Zergling', 'Config', '$q', 'Utils', 
         }
         return '';
     };
+
     ////////////////////////////////////////////////////////////////////////////////
     // PUBLIC METHODS - END
     ////////////////////////////////////////////////////////////////////////////////

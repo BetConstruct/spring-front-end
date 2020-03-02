@@ -128,7 +128,7 @@ VBET5.controller('balanceCtrl', ['$rootScope', '$scope', 'Utils', 'Zergling', 'M
                             balanceHistory[i].name = $scope.balanceTypes[balanceHistory[i].operation] || Translator.get(balanceHistory[i].operation_name);
 
                             if (balanceHistory[i].payment_system_name) {
-                                balanceHistory[i].name += ' (' + balanceHistory[i].payment_system_name + ')';
+                                balanceHistory[i].name += ' (' + Translator.get(balanceHistory[i].payment_system_name) + ')';
                             }
                         }
 

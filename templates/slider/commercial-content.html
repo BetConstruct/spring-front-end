@@ -2,32 +2,32 @@
         class="reg-commercial-banner"
         ng-controller="cmsPagesCtrl"
         ng-init="loadBanners(bannerType, true);"
-        ng-show="bannerObjects[bannerType].length"
+        ng-show="bannerObjects[bannerType][$root.env.authorized].length"
 >
     <div class="reg-commercial-scroll">
         <div
                 class="reg-commercial-content"
-                ng-if="bannerObjects[bannerType].length"
-                ng-init="sliderRotate(5, bannerObjects[bannerType])"
+                ng-if="bannerObjects[bannerType][$root.env.authorized].length"
+                ng-init="sliderRotate(5, bannerObjects[bannerType][$root.env.authorized])"
                 ng-mouseover="slider.over=true"
                 ng-mouseleave="slider.over=false"
         >
-            <a ng-href="{{bannerObjects[bannerType][slider.index].link}}"
-               target="{{bannerObjects[bannerType][slider.index].linktarget}}">
-                <img src="{{bannerObjects[bannerType][slider.index].image}}">
+            <a ng-href="{{bannerObjects[bannerType][$root.env.authorized][slider.index].link}}"
+               target="{{bannerObjects[bannerType][$root.env.authorized][slider.index].linktarget}}">
+                <img ng-src="{{bannerObjects[bannerType][$root.env.authorized][slider.index].image}}">
             </a>
-            <h3 class="commercial-title" ng-show="bannerObjects[bannerType][slider.index].title"
-                ng-bind="bannerObjects[bannerType][slider.index].title"></h3>
-            <div ng-show="bannerObjects[bannerType][slider.index].content"
-                 ng-bind-html="bannerObjects[bannerType][slider.index].content|html"></div>
+            <h3 class="commercial-title" ng-show="bannerObjects[bannerType][$root.env.authorized][slider.index].title"
+                ng-bind="bannerObjects[bannerType][$root.env.authorized][slider.index].title"></h3>
+            <div ng-show="bannerObjects[bannerType][$root.env.authorized][slider.index].content"
+                 ng-bind-html="bannerObjects[bannerType][$root.env.authorized][slider.index].content|html"></div>
         </div>
     </div>
-    <div class="reg-steps-footer" ng-if="bannerObjects[bannerType].length">
+    <div class="reg-steps-footer" ng-if="bannerObjects[bannerType][$root.env.authorized].length">
 
-        <div class="hp-slider-pagination" ng-show="bannerObjects[bannerType].length > 1">
+        <div class="hp-slider-pagination" ng-show="bannerObjects[bannerType][$root.env.authorized].length > 1">
             <div class="reg-pagination" ng-show="!$root.conf.sliderArrows">
                 <small ng-class="{active: slider.index === $index}" ng-click="slider.index = $index"
-                       ng-repeat="sliderDots in bannerObjects[bannerType] track by sliderDots.id"></small>
+                       ng-repeat="sliderDots in bannerObjects[bannerType][$root.env.authorized] track by sliderDots.id"></small>
             </div>
             <div class="reg-pagination" ng-show="$root.conf.sliderArrows">
                 <button ng-click="slider.index = slider.index - 1;slider.index = slider.index < 0 ? bannerObjects[bannerType].length - 1 : slider.index"></button>

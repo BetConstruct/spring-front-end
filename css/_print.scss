@@ -131,7 +131,7 @@
       float: left;
       img {
         max-width: 100%;
-        max-height: 100px;
+        max-height: 120px;
         display: block;
       }
     }
@@ -195,7 +195,7 @@ $enable-print-8cm: false !default;
     @include print8cm;
 }
 .booking-logo img {
-    max-height: 80px;
+    max-height: 120px;
     max-width: 80%;
 }
 .info-booking-print {

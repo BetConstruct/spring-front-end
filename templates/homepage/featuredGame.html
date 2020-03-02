@@ -9,7 +9,9 @@
                     <h1 ng-show="mostPopularLiveGame.type == 1" trans>Live now</h1>
                     <p>
                         <small ng-show="mostPopularLiveGame.type == 1" trans>live</small>
-                        <span>{{ mostPopularLiveGame.info.current_game_state|convertSetName:mostPopularLiveGame.sport.alias|translate }}
+                        <span ng-if="mostPopularLiveGame.info.current_leg === undefined">{{ mostPopularLiveGame.info.current_game_state|convertSetName:mostPopularLiveGame.sport.alias|translate }}
+                            {{ (mostPopularLiveGame.info.current_game_time.split(' ').length ===2 ? mostPopularLiveGame.info.current_game_time.split(' ')[1] : mostPopularLiveGame.info.current_game_time.split(' ')[0])|translate}}</span>
+                        <span ng-if="mostPopularLiveGame.info.current_leg !== undefined">{{ mostPopularLiveGame.info.current_game_state|convertSetNameWithLeg:mostPopularLiveGame.info|translate }}
                             {{ (mostPopularLiveGame.info.current_game_time.split(' ').length ===2 ? mostPopularLiveGame.info.current_game_time.split(' ')[1] : mostPopularLiveGame.info.current_game_time.split(' ')[0])|translate}}</span>
                         <span ng-show="mostPopularLiveGame.type == 0"
                               ng-bind="mostPopularLiveGame.start_ts|formatDate:'full':null:$root.env.timeFormat"></span>,

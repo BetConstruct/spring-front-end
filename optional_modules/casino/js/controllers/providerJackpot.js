@@ -19,7 +19,6 @@ CASINO.controller('providerJackpotCtrl', ['$rootScope', '$scope', 'Config', 'CCo
         $scope.slideIndex = 0;
         $scope.gamesInfo = [];
         $scope.viewCount = 1;
-        $scope.hasTournaments = $rootScope.conf.multiLevelMenu.hasOwnProperty('tournaments');
         $scope.$on('widescreen.on', function () { $scope.wideMode = true; });
         $scope.$on('widescreen.off', function () { $scope.wideMode = false; });
         $scope.$on('middlescreen.on', function () { $scope.middleMode = true; });
@@ -205,7 +204,7 @@ CASINO.controller('providerJackpotCtrl', ['$rootScope', '$scope', 'Config', 'CCo
     };
 
     function subscribeForJackpotData() {
-        if (CConfig.version === 2 && ($rootScope.casinoGameOpened === 0 || $rootScope.casinoGameOpened === undefined)) {
+        if (CConfig.version === 2) {
             jackpotManager.subscribeForExternalJackpotData(subscribeForExternalJackpotDataCallback);
         }
     }
@@ -219,11 +218,10 @@ CASINO.controller('providerJackpotCtrl', ['$rootScope', '$scope', 'Config', 'CCo
             return t
         }); // filtering empties
 
-
         if (jackpotsCount !== $scope.externalJackpotData.length) {
-            $scope.externalJackpotProviders = $scope.externalJackpotData.map(function (jackpot) {
+            $scope.externalJackpotProviders = Object.keys(data).map(function (key) {
                 return {
-                    name: jackpot.Provider
+                    name: key
                 }
             });
         }
@@ -337,7 +335,10 @@ CASINO.controller('providerJackpotCtrl', ['$rootScope', '$scope', 'Config', 'CCo
         var searchParams = $location.search();
         getProvidersBanners();
         subscribeForJackpotData();
-        findAndOpenGame(searchParams);
+        if(!$scope.widgetMode){
+            findAndOpenGame(searchParams);
+        }
+
         $scope.selectedProvider = !$scope.widgetMode && searchParams.provider ? searchParams.provider : Config.main.jackpot.casino.externalJackpotsDefaultProvider;
 
         Geoip.getGeoData(false).then(function (data) {
@@ -349,7 +350,7 @@ CASINO.controller('providerJackpotCtrl', ['$rootScope', '$scope', 'Config', 'CCo
     })();
 
     $scope.$on('$destroy', function () {
-        jackpotManager.unsubscribeFromAllExternalJackpotData();
+        jackpotManager.unsubscribeFromAllExternalJackpotData(subscribeForExternalJackpotDataCallback);
     });
 
 }]);

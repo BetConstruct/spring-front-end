@@ -1,0 +1,35 @@
+<div>
+    <vbet-loader ng-show="!gameToShow" style="position: relative; top: 15px"> </vbet-loader>
+    <div class="market-contain-b" ng-show="gameToShow">
+        <div class="game-title">
+            <div class="ew" ng-if="(gameToShow.market|firstElement).ew_coeff && (gameToShow.market|firstElement).ew_coeff > 1">
+                <span>EW:</span>
+                {{'1/'+ (gameToShow.market|firstElement).ew_coeff}}&nbsp;
+                {{eachWayPlace((gameToShow.market|firstElement).ew_place)}}
+            </div>
+            <div ng-bind="gameToShow.additionalGameInfo"></div>
+            <ul class="column-view-switcher-vs" ng-click="switchMarketsColumnView()">
+                <li class="column-view-j" ng-class="{active: !marketIsOneColumn}"></li>
+                <li class="list-view-j"  ng-class="{active: marketIsOneColumn}"></li>
+            </ul>
+        </div>
+
+        <p class="no-more-bets" ng-show="!gameToShow.availableMarketGroups.length" trans>There are no  markets available now.</p>
+        <div class="markets-group-wrap-v3" ng-show="gameToShow.availableMarketGroups.length">
+            <ul ng-class="{'show-dropdown': marketGroupFilterExpanded, 'has-dropdown': gameToShow.availableMarketGroups.length > 6 }">
+                <li class="more-j" ng-click="marketGroupFilterExpanded = !marketGroupFilterExpanded"  hide-on-click="" state-flag-var="marketGroupFilterExpanded"><span>+ {{ gameToShow.availableMarketGroups.length - 6 }}</span></li>
+                <li ng-repeat="group in gameToShow.availableMarketGroups track by group.id" ng-click="selectedGroup.id = group.id"
+                    ng-class="{active: selectedGroup.id === group.id, 'favorte-markets-group-j': $first, 'animate-star-odd' : $first && gameToShow.availableMarketGroups[0].count % 2 == 1, 'animate-star-even': $first && gameToShow.availableMarketGroups[0].count % 2 == 0, 'to-dropdown': $index > 5}"
+                    data-count="{{gameToShow.availableMarketGroups[0].count}}">
+                        <span>
+                            <i>
+                                <b>{{::group.name|translate}}</b>
+                            </i>
+                        </span>
+                </li>
+            </ul>
+        </div>
+        <div  ng-include="'templates/sport/virtualsportsmarkets.html'|fixPath"></div>
+
+    </div>
+</div>

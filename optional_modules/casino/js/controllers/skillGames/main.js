@@ -25,32 +25,10 @@ CASINO.controller('skillGamesMainCtrl', ['$rootScope', '$scope', '$location', 'C
     $scope.$on('middlescreen.off', function () {
         $scope.middleMode = false;
     });
-    $scope.hasTournaments = $rootScope.conf.multiLevelMenu.hasOwnProperty('tournaments');
-
     casinoMultiviewValues.init($scope);
 
     var countryCode = '';
 
-    function loadSkinGamesImages() {
-        content.getWidget('bannerSlugs.skillGamesBanners').then(function (response) {
-            if (response.data && response.data.widgets && response.data.widgets[0]) {
-                $scope.gameImages = {};
-                angular.forEach(response.data.widgets, function (widget) {
-                    var banner = widget.instance;
-                    var id = banner.custom_fields.id && banner.custom_fields.id[0];
-                    if (id){
-                        $scope.gameImages[id] = {
-                            icon: banner.custom_fields.icon[0],
-                            background: banner.imageurl
-                        };
-                    }
-
-                });
-            }
-        }, function (reason) {
-            console.log(reason);
-        });
-    }
     /**
      * @ngdoc method
      * @name loadGames
@@ -97,7 +75,13 @@ CASINO.controller('skillGamesMainCtrl', ['$rootScope', '$scope', '$location', 'C
                 }
             }
         } else {
-            loadSkinGamesImages();
+            content.getPage('games-backgrounds-' + Config.env.lang).then(function (data) {
+                if (data && data.data && data.data.page) {
+                    $scope.pageBackgrounds = data.data.page;
+                }
+            }, function (e) {
+                console.log('Failed to load page backgrounds');
+            });
         }
     }
 
@@ -124,8 +108,11 @@ CASINO.controller('skillGamesMainCtrl', ['$rootScope', '$scope', '$location', 'C
      *
      */
     $scope.openGame = function openGame(game, gameType, studio, urlSuffix, multiViewWindowIndex) {
-        analytics.gaSend('send', 'event', 'games', game.gameCategory || game.gameCat, {'page': $location.path(), 'eventLabel': ('Open ' + game.gameName + ' ' + gameType)});
+        var type = gameType ? gameType : 'real';
 
+        if((!!$rootScope.profile && type === 'real') || type === 'fun'){
+            analytics.gaSend('send', 'event', 'games','Open game ' + game.name,  {'page': $location.path(), 'eventLabel': 'Game type '+ type});
+        }
         casinoManager.openCasinoGame($scope, game, gameType, studio, urlSuffix, multiViewWindowIndex);
     };
 
@@ -225,6 +212,7 @@ CASINO.controller('skillGamesMainCtrl', ['$rootScope', '$scope', '$location', 'C
      */
 
     $scope.$on('casinoMultiview.viewChange', function (event, view) {
+        analytics.gaSend('send', 'event', 'multiview', {'page': $location.path(),'eventLabel': 'multiview changed to ' + view});
         casinoManager.changeView($scope, view);
     });
 

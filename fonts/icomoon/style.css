@@ -1,10 +1,10 @@
 @font-face {
   font-family: 'icomoon';
-  src:  url('fonts/icomoon.eot?4dlxwq');
-  src:  url('fonts/icomoon.eot?4dlxwq#iefix') format('embedded-opentype'),
-    url('fonts/icomoon.ttf?4dlxwq') format('truetype'),
-    url('fonts/icomoon.woff?4dlxwq') format('woff'),
-    url('fonts/icomoon.svg?4dlxwq#icomoon') format('svg');
+  src:  url('fonts/icomoon.eot?55z7y1');
+  src:  url('fonts/icomoon.eot?55z7y1#iefix') format('embedded-opentype'),
+    url('fonts/icomoon.ttf?55z7y1') format('truetype'),
+    url('fonts/icomoon.woff?55z7y1') format('woff'),
+    url('fonts/icomoon.svg?55z7y1#icomoon') format('svg');
   font-weight: normal;
   font-style: normal;
   font-display: block;
@@ -25,6 +25,30 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+.cms-jcon-soccer_coach_icon:before {
+  content: "\ea62";
+}
+.cms-jcon-coach_icon:before {
+  content: "\ea61";
+}
+.cms-jcon-watsapp:before {
+  content: "\ea5e";
+}
+.cms-jcon-Own_goal_icon:before {
+  content: "\ea5c";
+}
+.cms-jcon-Penalty_icon:before {
+  content: "\ea5d";
+}
+.cms-jcon-red_card:before {
+  content: "\ea58";
+}
+.cms-jcon-sabstitution:before {
+  content: "\ea59";
+}
+.cms-jcon-yellow_card:before {
+  content: "\ea5a";
+}
 .cms-jcon-chat:before {
   content: "\ea4f";
 }
@@ -192,6 +216,24 @@
 }
 .cms-jcon-Buddy-to-Buddy:before {
   content: "\e978";
+}
+.cms-jcon-double-tick:before {
+  content: "\ea65";
+}
+.cms-jcon-TRY:before {
+  content: "\ea64";
+}
+.cms-jcon-gift-bet:before {
+  content: "\ea63";
+}
+.cms-jcon-drops--wins:before {
+  content: "\ea60";
+}
+.cms-jcon-Bet-Builder:before {
+  content: "\ea5f";
+}
+.cms-jcon-info-returned:before {
+  content: "\ea5b";
 }
 .cms-jcon-results:before {
   content: "\ea57";

@@ -13,6 +13,7 @@ CASINO.directive('casinoPromotedGames', ['$rootScope', '$filter', 'CConfig', 'ca
             scope.confData = CConfig;
             scope.limit = scope.limit || 10;
             scope.pageCategory = scope.pageCategory || 'home';
+            scope.useBigIcons = true;
 
             var countryCode;
 

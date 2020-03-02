@@ -155,7 +155,7 @@
       background: $hero-color;
       color: set-color($hero-color);
       text-transform: uppercase;
-      transition: 300ms background, 300ms border;
+      transition: 300ms color, 300ms background, 300ms border;
       @include ltr {
         margin: 0 0 0 12px;
       }
@@ -267,6 +267,9 @@
             font: $bold-text 14px/16px $font-f;
             color: set-color($footer-background);
             pointer-events: none;
+          }
+          &:only-child a {
+            pointer-events: auto;
           }
         }
       }

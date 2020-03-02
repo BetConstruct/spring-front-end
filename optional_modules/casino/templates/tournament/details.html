@@ -76,7 +76,9 @@
             <casino-games-list class="all-casino-games-list-box"
                                show-conditions="true"
                                games-list="tournament.details.games"
-                               game-show-conditions="true">
+                               game-show-conditions="true"
+                               use-big-icons="true"
+            >
             </casino-games-list>
         </div>
         <div class="tg-show-more" ng-show="tournament.details.games.length < tournament.details.total_count"><button ng-disabled="loadingProcess" ng-click="showMoreCasinoGames()"><span trans>show more</span></button></div>

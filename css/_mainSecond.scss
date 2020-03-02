@@ -291,6 +291,12 @@ body {
         height: 100%;
         width: 100%;
         position: absolute;
+        > p {
+          width: 100%;
+          padding: 26.9% 0;
+          color: rgba(set-color($skin-palette-13),0.8);
+          text-align: center;
+        }
       }
       .overlay-bg {
         position: absolute;
@@ -458,13 +464,16 @@ body {
         text-align: center;
         vertical-align: middle;
         font-size: 12px;
-        border: 1px solid #4A4A4A;
         border-top-left-radius: 3px;
         border-bottom-left-radius: 3px;
-        color: #aaa;
+        color: $text-palette-4;
+        border: 1px solid lighten(desaturate(adjust-hue($classic-skinning-color, -1deg), 16), 8);
         &.active {
           color: $text-palette-1;
-          background: #4A4A4A;
+          background: lighten(desaturate(adjust-hue($classic-skinning-color, -1deg), 16), 8);
+        }
+        &:not(.active) {
+          cursor: auto;
         }
       }
     }
@@ -1120,13 +1129,16 @@ body {
         content: "\e66f";
       }
       &.virtualcarracing-icon:before {
-        content: "\e905";
+        content: "\e92b";
       }
       &.virtualbicycle-icon:before {
         content: "\e616";
       }
       &.thepenaltykicks-icon:before {
         content: "\e918";
+      }
+      &.virtualfootballleague-icon:before{
+        content: "\e926";
       }
 
       > span {
@@ -1239,9 +1251,9 @@ body {
     color: $text-palette-4;
     border: 1px solid $text-palette-4;
     &.active {
-      color: set-color(lighten( desaturate( $header-brand-color-1, 24), 11));
-      border-color: lighten( desaturate( $header-brand-color-1, 24), 11);
-      background: $header-brand-color-1;
+      color: set-color($brand-color-1);
+      background: $brand-color-1;
+      border-color: lighten( desaturate($brand-color-1, 24), 11);
     }
   }
   .v-sports-add-info {
@@ -1629,55 +1641,6 @@ body {
     width: auto;
   }
 }
-@media screen and (max-width: 1599px) {
-  .game-video-detached .animation-control .game-video {
-    width: 100%;
-    height: 100%;
-  }
-  .animation-control .game-video {
-    width: 272px;
-    height: 154px;
-  }
-  .animation-control .game-video .video-player-container {
-    height: 162px;
-  }
-  .animation-control .game-control .game-team-names {
-    height: 28px;
-  }
-  .animation-control .game-control .game-team-names li {
-    height: 28px;
-    line-height: 28px;
-    font-size: 12px;
-  }
-  .animation-control .game-control .game-team-names li.teams-score {
-    font: 16px/28px $font-f;
-  }
-  .animation-control .game-control .game-team-names li.teams-score span {
-    height: 28px;
-  }
-  .animation-control .text-event {
-    font-size: 1em;
-  }
-  .game-score ul li:first-child {
-    width: 170px;
-  }
-  .game-score.soccer-template ul li:first-child {
-    width: calc(100% - 70px);
-  }
-  .bet-currency-value.unit-stake-mode .express-stake-label {
-    position: absolute;
-    top: -30px;
-    z-index: 99;
-  }
-}
-@media screen and (min-width: 1600px) {
-  .game-score ul li:first-child {
-    width: 300px;
-  }
-  .game-score.soccer-template ul li:first-child {
-    width: calc(100% - 70px);
-  }
-}
 .video-animation-toggle {
   width: 24px;
   height: 21px;
@@ -1694,96 +1657,12 @@ body {
 .video-and-animation .video-animation-toggle:before {
   content: "\e660";
 }
-.custom-select-for-todays-bets-j {
-  position: relative;
-  height: 26px;
-  background-color: $skin-palette-8;
-  width: 150px;
-  border-radius: 3px;
-  z-index: 412;
-  margin-top: 5px;
-}
-.custom-select-for-todays-bets-j:after {
-  content: "\e670";
-  font: 16px/26px icomoon;
-  position: absolute;
-  right: 8px;
-  top: 0;
-  color: $text-palette-3;
-}
-.custom-select-for-todays-bets-j .icon-for-sport-j {
-  display: inline-block;
-  font: normal 12px/16px 'sport-icon';
-  height: 18px;
-  width: 12px;
-  margin-right: 7px;
-  vertical-align: middle;
-  float: none;
-}
 .custom-select-for-todays-bets-j > div >  .icon-for-sport-j:before{
   line-height: 26px;
 }
-.custom-select-for-todays-bets-j > div {
-  position: relative;
-  height: 100%;
-  color: $text-palette-3;
-  line-height: 26px;
-  padding: 0 28px 0 8px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-.custom-select-for-todays-bets-j ul {
-  padding: 0;
-  position: absolute;
-  top: calc(100% + 1px);
-  background: $skin-palette-8;
-  border-radius: 3px;
-  display: none;
-  max-height: 320px;
-  z-index: 109;
-  width: auto;
-  white-space: nowrap;
-  cursor: default;
-  @include scroll($scroll: auto);
-}
-.custom-select-for-todays-bets-j.opened-j:after {
-  content: "\e671";
-}
-.custom-select-for-todays-bets-j.opened-j ul {
-  display: inline-block;
-}
-.custom-select-for-todays-bets-j ul li,
-.custom-select-for-todays-bets-j ul li:first-child {
-  display: block;
-  margin: 0;
-  height: 26px;
-  font-weight: normal;
-  font: 12px/26px $font-f;
-  color: $text-palette-4;
-  border-bottom: 1px solid $skin-palette-7;
-  padding: 0 8px;
-  width: auto;
-  float: none;
-  transition: color 250ms;
-  &:hover {
-    color: $text-palette-3;
-  }
-}
-.custom-select-for-todays-bets-j ul li.active-j,
-.custom-select-for-todays-bets-j ul li.active-j:first-child {
-  color: $text-palette-2;
-}
-@media screen and (max-width: 1279px) {
-  .custom-select-for-todays-bets-j ul {
-    max-height: 170px;
-  }
-}
-
 .rezult-draw-info {
   @include scroll($background: light, $scroll: auto);
 }
-
 .no-games-multiview {
   padding: 36px;
 }
@@ -2056,7 +1935,7 @@ body {
   }
 }
 .game-control .statistics-toggle {
-  background: rgba(#000000, 0.5);
+  background: rgba(#2F3613, 0.5);
 }
 .game-info .game-control .statistics-toggle li .stat-r {
   @include ltr {
@@ -2685,34 +2564,41 @@ body {
   top: 8px;
 }
 .race-market span.price,
-.race-market span.price1,
-.race-market span.price-1 {
+.race-market span.up-0,
+.race-market span.up-1,
+.race-market span.down0,
+.race-market span.down-1 {
   padding: 0 0 0 4px;
   font-size: 12px;
   line-height: 14px;
   color: map-get($coeff-color-map, classic);
   font-weight: bold;
 }
-.race-market span.price1:before {
+.race-market span.up-0:before,
+.race-market span.up-1:before,
+.race-market span.down0:before,
+.race-market span.down-1:before {
   position: absolute;
   display: block;
   left: 0;
   top: 12px;
   content: "\e66d";
-  font: 15px 'icomoon';
   color: #390;
-  text-shadow: none;
-}
-.race-market span.price-1:before {
-  position: absolute;
-  display: block;
-  left: 0;
-  top: 12px;
-  content: "\e66c ";
   font: 15px 'icomoon';
-  color: #f00;
   text-shadow: none;
+  animation-duration: 7000ms;
+  animation-fill-mode: forwards;
 }
+.race-market span.down0:before,
+.race-market span.down-1:before {
+  content: "\e66c ";
+  color: #f00;
+}
+
+.race-market span.up-0:before { animation-name: odds-arrow-up-0; }
+.race-market span.up-1:before { animation-name: odds-arrow-up-1; }
+.race-market span.down0:before { animation-name: odds-arrow-down0; }
+.race-market span.down-1:before { animation-name: odds-arrow-down-1; }
 
 .team-name-market {
   &, &.info, &.prematch {
@@ -3217,7 +3103,7 @@ div.star {
   .statistic {
     a {
       position: relative;
-      font: 25px/18px icomoon;
+      font: 20px/14px icomoon;
       &:before {
         text-indent: 0;
         position: absolute;
@@ -3242,6 +3128,7 @@ div.star {
 .game-live-row .factor-game {
   width: 52px;
   opacity: 0.4;
+  position: relative;
   a {
     font-weight: $bold-text;
     color: $modern-view-game-market-name-colors;
@@ -3271,6 +3158,7 @@ div.star {
 }
 
 .open-game {
+  position: relative;
   .factor-game {
     a {
       span {
@@ -3317,8 +3205,26 @@ div.star {
       color: set-color($hero-color);
     }
   }
+  .modern-icon-bet-builder {
+    top: 2px;
+    color: #ffffff;
+    @include ltr {
+      left: 4px;
+    }
+    @include rtl {
+      right: 4px;
+    }
+  }
 }
-
+.modern-icon-bet-builder  {
+  display: inline-block;
+  width: 14px;
+  font: 16px/16px icomoon;
+  cursor: pointer;
+  &:before {
+    content: "\ea5f"
+  }
+}
 .live-game-team {
   ul {
     li {
@@ -3562,6 +3468,9 @@ div.star {
 
 .game-video {
   background: $skin-palette-11;
+  &.e-s-video-player {
+    display: inline;
+  }
 }
 
 div.game-video-detached {
@@ -3908,6 +3817,10 @@ div.game-video-detached {
   text-overflow: ellipsis;
 }
 
+.statistics-icon-market {
+  font: 14px/16px icomoon;
+}
+
 .market-tab-switch,
 .market-tab-switch-closed {
   color: $modern-view-game-league-colors;
@@ -3952,49 +3865,89 @@ div.game-video-detached {
 }
 
 .list-result ul li .game-row-item .boosted {
+  float: none;
   display: table-cell;
   line-height: 16px;
 }
 
-.top-arrow,
-.bot-arrow {
-  position: relative;
+.list-result ul li {
+  .up-0,
+  .up-1,
+  .down0,
+  .down-1 {
+    position: relative;
+  }
+  .up-0:before { animation-name: odds-arrow-up-0; }
+  .up-1:before { animation-name: odds-arrow-up-1; }
+  .down0:before { animation-name: odds-arrow-down0; }
+  .down-1:before { animation-name: odds-arrow-down-1; }
 }
 
-.list-result ul li .top-arrow:before,
-.closed-game .game-live-row .team span.top-arrow span:before,
-.open-game .game-live-row .team span.top-arrow span:before {
+.game-live-row .team span {
+  &.up-0,
+  &.up-1,
+  &.down0,
+  &.down-1 {
+    position: relative;
+  }
+  &.up-0 span:before { animation-name: odds-arrow-up-0; }
+  &.up-1 span:before { animation-name: odds-arrow-up-1; }
+  &.down0 span:before { animation-name: odds-arrow-down0; }
+  &.down-1 span:before { animation-name: odds-arrow-down-1; }
+}
+
+.list-result ul li .up-0:before,
+.list-result ul li .up-1:before,
+.closed-game .game-live-row .team span.up-0 span:before,
+.closed-game .game-live-row .team span.up-1 span:before,
+.open-game .game-live-row .team span.up-0 span:before,
+.open-game .game-live-row .team span.up-1 span:before {
   position: absolute;
   display: block;
-  left: -4px;
   content: "\e66d";
   font: 16px 'icomoon';
   color: #390;
   text-shadow: none;
+  animation-duration: 7000ms;
+  animation-fill-mode: forwards;
+  @include ltr {
+    left: -4px;
+  }
   @include rtl {
-    left: auto;
     right: -4px;
   }
 }
 
-.list-result ul li .bot-arrow:before,
-.closed-game .game-live-row .team span.bot-arrow span:before,
-.open-game .game-live-row .team span.bot-arrow span:before {
+.list-result ul li .down0:before,
+.list-result ul li .down-1:before,
+.closed-game .game-live-row .team span.down0 span:before,
+.closed-game .game-live-row .team span.down-1 span:before,
+.open-game .game-live-row .team span.down0 span:before,
+.open-game .game-live-row .team span.down-1 span:before {
   position: absolute;
   display: block;
-  left: -4px;
   content: "\e66c";
   font: 16px 'icomoon';
   color: #f00;
+  animation-duration: 7000ms;
+  animation-fill-mode: forwards;
+  @include ltr {
+    left: -4px;
+  }
   @include rtl {
-    left: auto;
     right: -4px;
   }
 }
 
-.open-game .game-live-row .team span.top-arrow span:before,
-.open-game .game-live-row .team span.bot-arrow span:before {
-  color: set-color($hero-color);
+.open-game .game-live-row .team span {
+  &.up-0,
+  &.up-1,
+  &.down0,
+  &.down-1 {
+    span:before {
+      color: set-color($hero-color);
+    }
+  }
 }
 
 .list-result ul .no-active-rezult {
@@ -4005,9 +3958,17 @@ div.game-video-detached {
   color: #aaaaaa;
 }
 
-.closed-game .game-live-row .team span.top-arrow span, .closed-game .game-live-row .team span.bot-arrow span {
-  color: #000000;
+.closed-game .game-live-row .team span {
+  .up-0,
+  .up-1,
+  .down0,
+  .down-1 {
+    span {
+      color: #000000;
+    }
+  }
 }
+
 
 .closed-game {
   background: $modern-view-game-background;
@@ -4236,6 +4197,9 @@ div.game-video-detached {
     border: none;
     text-align: right;
     font: bold 12px/16px $font-f;
+  }
+  &.total-poswin span:last-child {
+    white-space: normal;
   }
 }
 
@@ -4510,8 +4474,8 @@ div.game-video-detached {
   background: $classic-skinning-color;
   box-shadow: 0 0 10px $skin-palette-13;
   p {
+    color: #c1c4cd;
     font: $bold-text 18px/22px $font-f;
-    color: $text-palette-13;
     button {
       font: $bold-text 14px $font-f;
       color: $text-palette-1;
@@ -4716,11 +4680,21 @@ form.ng-pristine .form-text.error input {
 }
 
 .arrow-left-s a:before {
-  content: "\e66f";
+  @include ltr {
+    content: "\e66f";
+  }
+  @include rtl {
+    content: "\e672";
+  }
 }
 
 .arrow-right-s a:before {
-  content: "\e672";
+  @include ltr {
+    content: "\e672";
+  }
+  @include rtl {
+    content: "\e66f";
+  }
 }
 
 .body-wrapper.homepage .spor-news-nav-contein,
@@ -4899,6 +4873,8 @@ form.ng-pristine .form-text.error input {
 }
 
 .list-news ul li h3 {
+  float: left;
+  width: 100%;
   overflow: hidden;
   text-overflow: ellipsis;
   min-height: 40px;
@@ -4908,14 +4884,65 @@ form.ng-pristine .form-text.error input {
   color: $text-palette-1;
   font: 15px/20px $font-f;
   float: left;
+  text-decoration: none;
 }
 
 .list-news ul li p {
+  float: left;
+  margin: 0 0 10px 0;
+  width: 100%;
   color: $text-palette-5;
   font: 12px/16px $font-f;
   font-weight: $bold-text;
 }
-
+.picture-news-block {
+  position: relative;
+}
+.promo-opt-button {
+  min-width: 100px;
+  height: 30px;
+  padding: 0 10px;
+  position: absolute;
+  bottom: 10px;
+  @include ltr {
+    right: 10px;
+  }
+  @include rtl {
+    left: 10px;
+  }
+  .small-progress {
+    display: none;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-top: -10px;
+    margin-left: -10px;
+  }
+  > button {
+    width: 100%;
+    height: 100%;
+    padding: 0 10px;
+    color: #ffffff;
+    background: rgba(0,0,0,0.5);
+    box-sizing: border-box;
+    border: none;
+    text-transform: uppercase;
+    font: 14px/30px $font-f;
+    transition: background 240ms;
+    &:hover {
+      background: rgba(0,0,0,0.5);
+    }
+  }
+  &.disabled {
+    cursor: auto;
+    .small-progress {
+      display: block;
+    }
+    > button {
+      font-size: 0;
+    }
+  }
+}
 .sport-news-name {
   background: $hero-color;
   font: 11px/13px $font-f;
@@ -4934,7 +4961,7 @@ form.ng-pristine .form-text.error input {
 .picture-news-block img {
   display: block;
   //border-radius: 5px;
-  transition: box-shadow 300ms, filter 300ms;
+  transition: margin 300ms, box-shadow 300ms, filter 300ms;
 }
 
 .open_blok_news {
@@ -6166,7 +6193,7 @@ form.ng-pristine .form-text.error input {
         }
         &.no-odd, &.no-odd-both {
           box-shadow: none;
-          border-radius: 0 3px 3px 0;
+          border-radius: 0;
           background: lighten(desaturate($classic-skinning-color, 11), 3);
         }
         &.odds {
@@ -6287,19 +6314,6 @@ form.ng-pristine .form-text.error input {
       }
     }
 
-  }
-  .competitopn-switch {
-    ul {
-      li {
-        border: 1px solid lighten(desaturate(adjust-hue($classic-skinning-color, -1deg), 16), 8);
-        color: $text-palette-4;
-
-        &.active {
-          color: $text-palette-1;
-          background: lighten(desaturate(adjust-hue($classic-skinning-color, -1deg), 16), 8);
-        }
-      }
-    }
   }
   .upcoming-events {
     background: lighten(desaturate($classic-skinning-color, 11), 3);
@@ -6577,31 +6591,14 @@ rzslider span.rz-pointer.rz-active:after {
   background: $skin-palette-1;
 }
 
-.animation-control .game-video, .animation-control {
-  background: $skin-palette-8;
-}
-
 .animation-control .element-monitor{
   background: #7C7C7C;
   border-top: 1px solid $hero-color;
 }
-.animation-control .element-monitor ul li.selected{
-  background: #4d4d4d;
-  color: #dddddd;
-}
-.animation-control .element-monitor ul li{
-  color: #bbbbbb;
-  background: #656565;
-}
+
 .animation-control .element-monitor ul li:hover{
   background: #4d4d4d;
 }
-.animation-control .sound-volume > div{
-  background: #7C7C7C;
-}
-.animation-control .game-video{background: rgba(62, 61, 62, 0.7);}
-.animation-control{	background: rgba(62, 61, 62, 0.7);}
-
 .check.terms .form-error-text {
   left: 20px;
 }
@@ -6755,7 +6752,31 @@ rzslider span.rz-pointer.rz-active:after {
     color: $modern-view-game-league-colors;
   }
 }
-
+.list-result ul li.odds.preview {
+  position: relative;
+  font-weight: bold;
+  &:after{
+    content: '';
+    display: block;
+    background: red;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    position: absolute;
+    background: rgba($skin-palette-1, 0.7);
+  }
+}
+.market-contain-b .race-market ul li.odds.prev-h{
+  width: 50px;
+  white-space: normal;
+  font-size: 11px;
+  text-align: left;
+  background: rgba($skin-palette-2, 0.7);
+}
+.market-contain-b .race-market ul li.odds .bets.preview{
+  opacity: 0.8;
+}
 .horse-racing-details .list-result ul.list-header,
 .horse-racing-details .list-result ul.list-header span {
   color: $modern-view-game-league-count-colors;
@@ -8089,6 +8110,7 @@ li.active-format:before {
     }
     > select {
       height: 18px;
+      padding: 0 15px 0 6px;
       font-size: 10px;
       color: #293043;
       background: #e6e6e6;
@@ -8097,7 +8119,7 @@ li.active-format:before {
         padding: 0 15px 0 6px;
       }
       @include rtl {
-        padding: 0 6px 0 15px;
+        padding: 0 6px 015px;
       }
     }
   }
@@ -8122,4 +8144,407 @@ li.active-format:before {
   .greyhound-toggle .multi-column-mode-toggle {
     color: #000000;
   }
+  .boosted {
+    color:  $modern-view-game-market-name-colors;
+  }
+  .icon-link:before {
+    margin-top: 0;
+  }
+  .statistic-quality-contain {
+    background: #ebebeb;
+  }
+  .main-title-statistic-quality,
+  .title-statistic-quality,
+  .sub-title-statistic-quality,
+  .overview-statistic-quality > li > p,
+  .detail-statistic-qualit > li,
+  .qualify-statistic-quality > li.average-goals > b,
+  .statistic-no-available,
+  .qualify-statistic-quality > li > p,
+  .qualify-statistic-quality > li > span {
+    color: $modern-view-market-item-color;
+  }
+  .tab-statistic-quality > li {
+    background: #cccccc;
+    color: #616161;
+    &:hover, &.active {
+      color: $modern-view-market-item-color;
+    }
+  }
+  .detail-statistic-qualit > li > span {
+    background: #cccccc;
+  }
+  .qualify-statistic-quality > li {
+    &.average-goals > p {
+      color: #616161;
+    }
+    > span {
+      color: #7b8191;
+    }
+  }
+  .more-statistic-quality {
+    color: #7b8191;
+  }
+}
+
+// add new styles for virtual sport v2
+
+.virtual-v-2 {
+   .virt-video-container{
+    margin-top: 0;
+    border-radius: 0;
+  }
+}
+.last-result-v2{
+  float: left;
+  width: 100%;
+  margin-left: 5px;
+  background: $skin-palette-11;
+  > h3{
+    float: left;
+    width: 100%;
+    height: 30px;
+    background: $skin-palette-9;
+    border-bottom: 1px solid $brand-color-1;
+    color: $text-palette-3;
+    text-transform: uppercase;
+    box-sizing: border-box;
+    padding: 0 10px;
+    font-size: 12px;
+    line-height: 30px;
+    border-radius: 3px 3px 0 0;
+    font-weight: normal;
+  }
+}
+.video-and-result-c{
+  display: table;
+  vertical-align: top;
+  width: 100%;
+}
+.video-side-p{
+  display: table-cell;
+  vertical-align: middle;
+}
+.last-result-side-p{
+  display: table-cell;
+  vertical-align: top;
+  width: 412px;
+  background: $skin-palette-11;
+  margin-left: 5px;
+  &.live-socre-table{
+     width: 550px;
+  }
+}
+
+// for second view
+
+.game-info-row-v{
+  float: left;
+  width: 100%;
+  margin: 1px  0 0 0;
+  border-radius: 3px;
+  border-bottom: 1px solid $skin-palette-12;
+  height: 32px;
+  padding: 0 10px;
+  box-sizing: border-box;
+  background: $skin-palette-10;
+  > span{
+    display: inline-block;
+    color: $text-palette-3;
+    font-size: 12px;
+    line-height: 32px;
+    &:first-child{
+      width: 70px;
+    }
+  }
+  > i{
+    color: $brand-color-2;
+    font-size: 14px;
+    line-height: 32px;
+    font-style: normal;
+    float: right;
+  }
+}
+ .virtual-games .virtual-v-2 .virt-video-container {
+   max-width: inherit;
+   margin: inherit;
+   .video-content .player{
+     height: inherit;
+   }
+ }
+.live-scores-t{
+  float: left;
+  width: 100%;
+  margin-left: 5px;
+  background: $skin-palette-11;
+  > h3{
+    float: left;
+    width: 100%;
+    height: 28px;
+    background: $skin-palette-9;
+    color: $text-palette-3;
+    text-transform: uppercase;
+    box-sizing: border-box;
+    padding: 0 10px;
+    font-size: 12px;
+    line-height: 28px;
+    border-radius: 3px 3px 0 0;
+    font-weight: normal;
+    margin-bottom: 1px;
+  }
+}
+.no-data-p{
+  float: left;
+  width: 100%;
+  text-align: center;
+  color: $text-palette-3;
+  font-size: 14px;
+  line-height: 16px;
+  padding: 5px 0;
+}
+.live-scores-info{
+  display: table;
+  width: 100%;
+  height: 48px;
+  border-radius: 3px;
+  margin-top: 1px;
+  border-bottom: 1px solid $skin-palette-12;
+  background: $skin-palette-10;
+  //table-layout: fixed;
+  padding: 0 10px;
+  box-sizing: border-box;
+  > div{
+    display: table-cell;
+    vertical-align: middle;
+    &:first-child{
+      width: 70px;
+      > span{
+        color: $skin-palette-4;
+        font-size: 9px;
+        line-height: 12px;
+        float: left;
+        width: 100%;
+      }
+    }
+    &:last-child{
+      width: 46px;
+      > span{
+        border-radius: 3px;
+        border: 1px solid $skin-palette-6;
+        height: 26px;
+        box-sizing: border-box;
+        padding: 0 10px;
+        > i{
+          font-size: 12px;
+          line-height: 14px;
+          font-style: normal;
+          &:first-child{
+            padding: 0 10px 0 0;
+            font-weight: bold;
+            color: $text-palette-2;
+          }
+          &:last-child{
+            color: $text-palette-4;
+          }
+        }
+      }
+    }
+    > p{
+      color: $text-palette-3;
+      font-size: 12px;
+      line-height: 14px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: calc(100% - 116px);
+    }
+  }
+  &:hover{
+    background: $skin-palette-7;
+  }
+  &.active{
+    background: $skin-palette-7;
+  }
+}
+.live-table-all-i{
+  float: left;
+  width: 100%;
+  margin-left: 5px;
+  > h3{
+    float: left;
+    width: 100%;
+    height: 28px;
+    background: $skin-palette-9;
+    color: $text-palette-3;
+    text-transform: uppercase;
+    box-sizing: border-box;
+    padding: 0 10px;
+    font-size: 12px;
+    line-height: 28px;
+    border-radius: 3px 3px 0 0;
+    font-weight: normal;
+  }
+  > ul{
+    float: left;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 0 10px;
+    height: 28px;
+    margin-bottom: 1px;
+    background: $skin-palette-10;
+    display: table;
+    > li{
+      width: 40px;
+      text-align: left;
+      display: table-cell;
+      vertical-align: middle;
+      position: relative;
+      &:last-child{
+        width: 20px;
+      }
+      &:nth-last-child(2){
+        width: 36px;
+        width: 36px;
+      }
+    &:nth-child(2){
+      width: auto;
+    }
+      > span{
+        font-size: 12px;
+        line-height: 28px;
+        color: $text-palette-3;
+      }
+      > i{
+        position: absolute;
+        right: 8px;
+        top: 1px;
+      }
+    }
+  }
+}
+.select-matchday{
+  float: left;
+  width: 100%;
+  padding: 12px 10px;
+  box-sizing: border-box;
+  background: $skin-palette-10;
+  text-align: right;
+  white-space: nowrap;
+  > h3{
+    float: left;
+    font-size: 12px;
+    line-height: 40px;
+    color: $text-palette-3;
+  }
+  > span{
+    display: inline-block;
+    vertical-align: top;
+    padding: 3px 6px;
+    background: $skin-palette-6;
+    color: $text-palette-2;
+    font-size: 14px;
+    line-height: 16px;
+    margin: 8px 0 0 4px;
+    &.active{
+      background: $brand-color-1;
+    }
+  }
+}
+@media screen and (max-width: 1600px)  {
+  .video-and-result-c {
+    display: block;
+  }
+  .video-side-p {
+    display: block;
+  }
+  .last-result-side-p.live-socre-table {
+    width: 100%;
+  }
+  .live-scores-t,
+  .live-table-all-i {
+    margin: 4px 0 0;
+  }
+  .select-matchday {
+    text-align: center;
+    white-space: normal;
+    > h3 {
+      width: 100%;
+      line-height: 24px;
+    }
+  }
+}
+.special-game-iframe-info {
+  display: none;
+  + .big-game-control {
+    display: none;
+  }
+}
+.side-bar-available {
+  position: relative;
+  .special-game-iframe {
+    width: calc(100% - 40px);
+    @include rtl {
+      float: right;
+    }
+  }
+  .big-game-control {
+    display: block;
+    .icon-delete a:before {
+      color: $text-palette-1;
+    }
+  }
+}
+.hasSidebar {
+  .special-game-iframe {
+    width: calc(100% - 260px);
+  }
+  .special-game-iframe-info {
+    display: block;
+    width: 220px;
+    height: 100%;
+    position: relative;
+    @include ltr {
+      float: right;
+    }
+    @include rtl {
+      float: left;
+    }
+    .iframe-tournament-sidebar {
+    }
+  }
+}
+.modern .conteiner-content {
+  padding: 10px 0 40px 0;
+}
+.modern .lineUpPopupContainer{
+  background: darken($modern-view-betslip-palette, 4);
+  height: 250px;
+}
+.modern .single-player-name > span{
+  color: set-color($modern-view-betslip-palette);
+  font-weight: normal;
+  &:first-child{
+    background:  darken($modern-view-betslip-palette, 15);
+  }
+  &.position-c{
+    background: none;
+    &:before{
+      color: #434650;
+    }
+  }
+}
+.modern .active-players{
+  background:  darken($modern-view-betslip-palette, 15);
+
+ > span{
+   color: $modern-view-betslip-text-palette;
+ }
+}
+.modern .lineup-team-name {
+  background: $modern-view-betslip-palette;
+  > span{
+    color: $modern-view-betslip-text-palette;
+  }
+}
+.modern  .lineup.opened:after {
+   border-color: transparent transparent $modern-view-betslip-palette transparent;
 }

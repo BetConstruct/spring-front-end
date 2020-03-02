@@ -1,6 +1,6 @@
 <div class="live-game-template-wrapper live-score-background-custom live-score-background-{{openGame.sport.alias.toLowerCase()}}{{openGame.sport.alias==='Tennis' && openGame.info.field === 2 ? 'grass' : ''}}">
     <!-- soccer live game template-->
-    <div class="game-score soccer-template" ng-if="openGame.show_type != 'OUTRIGHT' && (liveGamesSoccerTemplate.indexOf(openGame.sport.alias) !== -1 || $root.conf.esportsGames.indexOf(openGame.sport.alias) !== -1)">
+    <div class="game-score soccer-template" ng-if="(liveGamesSoccerTemplate.indexOf(openGame.sport.alias) !== -1 || $root.conf.esportsGames.indexOf(openGame.sport.alias) !== -1)">
         <div>
             <ul>
                 <li ng-style="{'border-left-color': '#'+ openGame.info.shirt1_color}" ng-class="{active: openGame.info.pass_team === 'team1'}">
@@ -31,7 +31,7 @@
         </div>
     </div>
     <!-- generic multiset games template -->
-    <div class="game-score-multiset" ng-if="openGame.show_type != 'OUTRIGHT' && (openGame.sport.alias !== 'HorseRacing' && liveGamesSoccerTemplate.indexOf(openGame.sport.alias) === -1 && $root.conf.esportsGames.indexOf(openGame.sport.alias) == -1)" visible-sets>
+    <div class="game-score-multiset" ng-if="(openGame.sport.alias !== 'HorseRacing' && liveGamesSoccerTemplate.indexOf(openGame.sport.alias) === -1 && $root.conf.esportsGames.indexOf(openGame.sport.alias) == -1)" visible-sets>
         <ul class="title" title="{{ $root.conf.edition.enabled ? (('Edition'|translate) + ': ' + (openGame.start_ts|formatDate:'edition')) : '' }}" ng-click="broadcast('liveGame.headerClicked', openGame);$event.stopPropagation();">
             <li>
                 <dl>
@@ -67,6 +67,7 @@
                         <p title="{{ openGame.team1_name ?  openGame.team1_name: '' }}">
                             <stats-logo ng-if="['MortalKombatXL', 'StreetFighterV', 'Dota', 'Dota2', 'CounterStrike', 'LeagueOfLegends'].indexOf(openGame.sport.alias) > -1" team-id="openGame.team1_id"></stats-logo>
                             {{ openGame.team1_name ?  openGame.team1_name: '' }}
+                            <!--<span ng-if="openGame.sport.alias === 'Cricket' && openGame.info.over_number" class="current-delivery">{{'Current over'|translate}}<i ng-bind="openGame.info.over_number"></i></span>--> <!--todo SDC-46567  -->
                         </p>
                     </dt>
                 </dl>
@@ -90,6 +91,7 @@
                         <p title="{{ openGame.team2_name ?  openGame.team2_name: '' }}">
                             <stats-logo ng-if="['MortalKombatXL', 'StreetFighterV', 'Dota', 'Dota2', 'CounterStrike', 'LeagueOfLegends'].indexOf(openGame.sport.alias) > -1" team-id="openGame.team2_id"></stats-logo>
                             {{ openGame.team2_name ?  openGame.team2_name: '' }}
+                            <!--<span ng-if="openGame.sport.alias === 'Cricket' && openGame.info.deliver_number" class="current-delivery">{{'Current delivery'|translate}}<i ng-bind="openGame.info.deliver_number"></i></span>--> <!--todo SDC-46567  -->
                         </p>
                     </dt>
                 </dl>
@@ -147,15 +149,9 @@
         </div>
     </div>
 
-    <div class="outright-template" ng-if="openGame.show_type == 'OUTRIGHT'">
+    <div class="current-game-info-line" ng-show="(liveGamesSoccerTemplate.indexOf(openGame.sport.alias) !== -1 || $root.conf.esportsGames.indexOf(openGame.sport.alias) !== -1)">
         <p>
-            {{ openGame.team1_name ?  openGame.team1_name: '' }}
-        </p>
-    </div>
-
-    <div class="current-game-info-line" ng-show="openGame.show_type != 'OUTRIGHT' && (liveGamesSoccerTemplate.indexOf(openGame.sport.alias) !== -1 || $root.conf.esportsGames.indexOf(openGame.sport.alias) !== -1)">
-        <p>
-            <span>{{ openGame.info.current_game_state|convertSetName:openGame.sport.alias|translate }} </span> <span ng-if="openGame.info.current_game_state !== 'notstarted' && openGame.info.current_game_state !== 'timeout'">{{ (openGame.info.current_game_time)[0] === '-'? ('will start in'|translate)+' '+ (openGame.info.current_game_time).substring(1): openGame.info.current_game_time }}</span>
+            <span ng-if="openGame.info.current_leg === undefined">{{ openGame.info.current_game_state|convertSetName:openGame.sport.alias|translate }} </span><span ng-if="openGame.info.current_leg !== undefined">{{ openGame.info.current_game_state|convertSetNameWithLeg:openGame.info|translate }} </span> <span ng-if="openGame.info.current_game_state !== 'notstarted' && openGame.info.current_game_state !== 'timeout'">{{ (openGame.info.current_game_time)[0] === '-'? ('will start in'|translate)+' '+ (openGame.info.current_game_time).substring(1): openGame.info.current_game_time }}</span>
         </p>
     </div>
     <ng-include src="::'templates/directive/live-game-scores-statistics.html'" class="float-width"></ng-include>

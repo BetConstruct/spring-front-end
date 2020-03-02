@@ -27,7 +27,7 @@ $skin-palette-2: lighten( desaturate( adjust-hue( $skin-color, 18deg ), 22 ), 79
 $skin-palette-3: lighten( desaturate( adjust-hue( $skin-color, 2deg ), 21 ), 61 ) !default;  //#c2c5cd;
 $skin-palette-4: lighten( desaturate( adjust-hue( $skin-color, 2deg ), 22 ), 36 ) !default;  //#7b8191;
 $skin-palette-5: lighten( desaturate( $skin-color, 18 ), 19 ) !default;                      //#505767;
-$skin-palette-6: lighten( desaturate( $skin-color, 17 ), 12 ) !default;                      //#3f4553;
+$skin-palette-6: lighten( desaturate( $skin-color, 17 ), 12 ) !default;                      //#404654;
 $skin-palette-7: lighten( desaturate( adjust-hue( $skin-color, 3deg ), 16 ), 4 ) !default;   //#2e323e;
 $skin-palette-8: darken( desaturate( adjust-hue( $skin-color, 4deg ), 11 ), 1 ) !default;    //#212532;
 $skin-palette-9: lighten( $skin-color, 4 ) !default;                                         //#242e45;
@@ -42,7 +42,7 @@ $text-palette-2: lighten( desaturate( adjust-hue( $text-color, 18deg ), 22 ), 79
 $text-palette-3: lighten( desaturate( adjust-hue( $text-color, 2deg ), 21 ), 61 ) !default;  //#c2c5cd;
 $text-palette-4: lighten( desaturate( adjust-hue( $text-color, 2deg ), 22 ), 36 ) !default;  //#7b8191;
 $text-palette-5: lighten( desaturate( $text-color, 18 ), 19 ) !default;                      //#505767;
-$text-palette-6: lighten( desaturate( $text-color, 17 ), 12 ) !default;                      //#3f4553;
+$text-palette-6: lighten( desaturate( $text-color, 17 ), 12 ) !default;                      //#404654;
 $text-palette-7: lighten( desaturate( adjust-hue( $text-color, 3deg ), 16 ), 4 ) !default;   //#2e323e;
 $text-palette-8: darken( desaturate( adjust-hue( $text-color, 4deg ), 11 ), 1 ) !default;    //#212532;
 $text-palette-9: lighten( $text-color, 4 ) !default;                                         //#242e45;
@@ -271,7 +271,7 @@ $custom-very-top-menu: false !default;
 $header-first-line-height: 52px !default;
 $header-nav-line-height: 42px !default;
 $subheader-height: 36px !default;
-$pages-with-full-width-header: (".pmu", ".russia2018", ".betonpolitics", ".betonpolitics", "[class*='game']:not(.games):not(.wwwgoodgames12com):not(.wwwgamebetcom):not(.gamebcartcom)", ".sport", ".winninglimits", ".vsports", ".insvirtualsports", ".virtualsports", ".multiview", ".full-screen", ".livecalendar", ".statistics", ".financials", ".results",  ".news", ".dashboard", ".csbpoolbetting", ".overview") !default;
+$pages-with-full-width-header: (".esports", ".pmu", ".russia2018", ".betonpolitics", ".betonpolitics", "[class*='game']:not(.games):not(.wwwgoodgames12com):not(.wwwgamebetcom):not(.gamebcartcom):not(.gamebcbid)", ".sport", ".winninglimits", ".vsports", ".insvirtualsports", ".virtualsports", ".multiview", ".full-screen", ".livecalendar", ".statistics", ".financials", ".results",  ".news", ".dashboard", ".csbpoolbetting", ".overview", ".bet-on-lineup") !default;
 $pages-with-full-width-header-background: (".blast", ".draw", ".about", ".vrcasino", ".livedealer", ".vip-promos", ".external", ".ogwil",  ".games", ".backgammon", ".belote", ".gameslanding", ".pokerklas ", ".poolbetting", ".fantasy", ".freebet", ".gameCSB1providerCSBexid152000", ".csbpoolbetting", ".first_deposit_bonus", ".first_deposit_bonus_and_20_free_spins", ".poker") !default;
 $header-hero-color: $hero-color !default;
 $header-brand-color-1: $brand-color-1 !default;

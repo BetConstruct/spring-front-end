@@ -11,6 +11,7 @@ VBET5.controller('promotionalBonusCtrl', ['$scope', '$location', 'Zergling', 'Ba
 
     $scope.backendBonusConstants = BackendConstants.PromotionalBonus;
     $scope.bonusList = [];
+
     if ($location.search().bonustab) {
         var isAllowed = false;
         var bonusTab = $location.search().bonustab;
@@ -21,6 +22,8 @@ VBET5.controller('promotionalBonusCtrl', ['$scope', '$location', 'Zergling', 'Ba
             case "2":
                 isAllowed = $scope.conf.promotionalBonuses.casino && $scope.casinoEnabled;
                 break;
+            case "3":
+                isAllowed = $scope.conf.promotionalBonuses.bonusRequestURL;
         }
         $location.search("bonustab", undefined);
         if (!isAllowed) {
@@ -33,6 +36,7 @@ VBET5.controller('promotionalBonusCtrl', ['$scope', '$location', 'Zergling', 'Ba
     } else {
         $scope.activeBonusTab = Config.main.promotionalBonuses.casino && $rootScope.currentPage.isInCasino ? $scope.backendBonusConstants.BonusSource.Casino : $scope.backendBonusConstants.BonusSource.SportsBook;
     }
+
     $scope.loadingBonus = false;
 
     $scope.bonusesAmount = {
@@ -346,6 +350,23 @@ VBET5.controller('promotionalBonusCtrl', ['$scope', '$location', 'Zergling', 'Ba
 
                 $rootScope.$broadcast("globalDialogs.addDialog", dialogOpts);
             })['finally'](function() { $scope.applyingBonus = false; });
+    };
+
+    $scope.formatBonusRequestURL = function formatBonusRequestURL() {
+        var iframeUrl = Config.main.promotionalBonuses.bonusRequestURL;
+        var regex = /{(.*?)}/gm;
+        var placeholders = iframeUrl.match(regex);
+
+        if (placeholders) {
+            placeholders.forEach(function (placeholder) {
+                var fieldName = placeholder.replace('{', '').replace('}', '');
+                if (fieldName && $rootScope.profile && $rootScope.profile[fieldName]) {
+                    iframeUrl = iframeUrl.replace(placeholder, $rootScope.profile[fieldName]);
+                }
+            });
+        }
+
+        $scope.bonusRequestURL = iframeUrl;
     };
 
     getCasinoBonusesAmount();

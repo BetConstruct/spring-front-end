@@ -1,0 +1,4 @@
+<h5 trans>Period</h5>
+<ul class="bet-builder-teams-match">
+    <li ng-repeat="period in periods track by period.key" ng-class="{'active': period.key === selectedKeys.period}" ng-click="selectKey('period', period.key)">{{period.name}}</li>
+</ul>

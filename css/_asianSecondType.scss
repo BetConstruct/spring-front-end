@@ -40,10 +40,10 @@ $asian-view-custom: false !default;
   }
    .sports-item-v3 {
     @include ltr {
-      padding: 0 24px 0 36px;
+      padding: 0 30px 0 36px;
     }
      @include rtl {
-       padding: 0 36px 0 24px;
+       padding: 0 36px 0 30px;
      }
   }
   .asian-live-game {
@@ -68,10 +68,12 @@ $asian-view-custom: false !default;
   .game-list-compitishion table tr td {
     line-height: 11px;
     &[rowspan="2"] .asian-market-wrap-j {
-      &.up:not(.locked) .asian-market-j .odd-container-j:before {
+      &.up-0:not(.locked) .asian-market-j .odd-container-j:before,
+      &.up-1:not(.locked) .asian-market-j .odd-container-j:before {
         top: -22px;
       }
-      &.down:not(.locked) .asian-market-j .odd-container-j:before {
+      &.down0:not(.locked) .asian-market-j .odd-container-j:before,
+      &.down-1:not(.locked) .asian-market-j .odd-container-j:before {
         bottom: -22px;
       }
     }
@@ -223,7 +225,7 @@ $asian-view-custom: false !default;
           color: set-color($hero-color);
         }
       }
-      &:not(.locked):not(.active):not(.up):not(.down):hover .asian-market-j {
+      &:not(.locked):not(.active):not(.up-0):not(.up-1):not(.down0):not(.down-1):hover .asian-market-j {
         color: set-color($hero-color);
       }
       &:not(.locked) .odd-container-j {
@@ -245,28 +247,38 @@ $asian-view-custom: false !default;
           display: none;
         }
       }
-      &.up:not(.locked) .asian-market-j {
-        .odd-container-j:before {
-          top: 0;
-          bottom: auto;
-          border-top: 8px solid map-get($coeff-color-map, asian-up);
+      &.up-1, &.up-0 {
+        &:not(.locked) .asian-market-j {
+          .odd-container-j:before {
+            top: 0;
+            bottom: auto;
+            border-top: 8px solid map-get($coeff-color-map, asian-up);
+          }
         }
       }
-      &.down:not(.locked) .asian-market-j {
-        .odd-container-j:before {
-          content: "";
-          border-bottom: 8px solid map-get($coeff-color-map, asian-down);
+      &.down0,
+      &.down-1 {
+        &:not(.locked) .asian-market-j {
+          .odd-container-j:before {
+            content: "";
+            border-bottom: 8px solid map-get($coeff-color-map, asian-down);
+          }
         }
       }
       &:hover, &.active {
-        &.up:not(.locked) .asian-market-j {
-          .odd-container-j:before {
-            border-top-color: set-color($hero-color);
+        &.up-0, &.up-1  {
+          &:not(.locked) .asian-market-j {
+            .odd-container-j:before {
+              border-top-color: set-color($hero-color);
+            }
           }
         }
-        &.down:not(.locked) .asian-market-j {
-          .odd-container-j:before {
-            border-bottom-color: set-color($hero-color);
+        &.down0,
+        &.down-1 {
+          &:not(.locked) .asian-market-j {
+            .odd-container-j:before {
+              border-bottom-color: set-color($hero-color);
+            }
           }
         }
       }
@@ -353,7 +365,7 @@ $asian-view-custom: false !default;
             }
           }
           &:not(.locked) {
-            &:not(.active):not(.up):not(.down):hover .asian-market-j {
+            &:not(.active):not(.up-0):not(.up-1):not(.down0):not(.down-1):hover .asian-market-j {
               color: set-color($hero-color);
             }
             &:not(.active):hover .asian-market-j,
@@ -370,9 +382,12 @@ $asian-view-custom: false !default;
               bottom: 1px;
             }
           }
-          &.up:not(.locked) .asian-market-j {
-            .odd-container-j:before {
-              top: 1px;
+          &.up-0,
+          &.up-1 {
+            &:not(.locked) .asian-market-j {
+              .odd-container-j:before {
+                top: 1px;
+              }
             }
           }
         }
@@ -390,8 +405,10 @@ $asian-view-custom: false !default;
           border-color:  darken( desaturate( adjust-hue( $skin-color, 4deg), 15), 1);
         }
         .asian-market-wrap-j {
-          &:hover.up:not(.active):not(.locked) .asian-market-j,
-          &:hover.down:not(.active):not(.locked) .asian-market-j {
+          &:hover.up-0:not(.active):not(.locked) .asian-market-j,
+          &:hover.up-1:not(.active):not(.locked) .asian-market-j,
+          &:hover.down0:not(.active):not(.locked) .asian-market-j,
+          &:hover.down-1:not(.active):not(.locked) .asian-market-j {
             color: set-color($hero-color);
           }
         }

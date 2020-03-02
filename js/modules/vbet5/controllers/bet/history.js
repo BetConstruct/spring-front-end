@@ -32,6 +32,11 @@ VBET5.controller('myBetsCtrl', ['$scope', 'Utils', 'ConnectionService', 'Zerglin
     var betHistory, BETS_PER_HISTORY_PAGE = 6;
     var sliderContentWatcherPromise;
 
+    var EVENT_BET_OUTCOME_MAP = {
+      5: 10,
+      6: 11
+    };
+
     $scope.betHistoryParams = {
         dateRanges: [],
         dateRange: null,
@@ -94,6 +99,27 @@ VBET5.controller('myBetsCtrl', ['$scope', 'Utils', 'ConnectionService', 'Zerglin
                 });
             }
         });
+    }
+
+    /**
+     * @ngdoc method
+     * @name fixBetsOutcome
+     * @methodOf vbet5.controller:myBetsCtrl
+     * @description  for single bets when the outcome of the event is:
+     *               5: “won return”, then sets the result of the bet to 10
+     *               6: “lost return”, then sets the outcome of the bet to 11
+     *               for processing in the template.
+     *               IMPORTANT: backend should send us correct outcomes for  avoiding of this
+     * @param {Array} bets the bets array
+     */
+    function fixBetsOutcome(bets) {
+        for (var i = bets.length; i--;) {
+            if (bets[i].type === 1) {
+                if (EVENT_BET_OUTCOME_MAP[bets[i].events[0].outcome]) {
+                    bets[i].outcome = EVENT_BET_OUTCOME_MAP[bets[i].events[0].outcome];
+                }
+            }
+        }
     }
 
     /**
@@ -264,8 +290,9 @@ VBET5.controller('myBetsCtrl', ['$scope', 'Utils', 'ConnectionService', 'Zerglin
         if (cashOutSubId || $rootScope.env.sliderContent !== 'recentBets' && $rootScope.env.sliderContent !== 'betHistory') {
             return;
         }
-        var bets = Config.main.enableMixedView ? betHistory : allBets;
         cashOutSubId = BetService.cashOut.subscribe(function updateCashOutAmount(data) {
+            var bets = Config.main.enableMixedView ? betHistory : allBets;
+
             bets.forEach(function(bet) {
                 if (data[bet.id]) {
                     bet.cash_out = data[bet.id].amount;
@@ -468,6 +495,8 @@ VBET5.controller('myBetsCtrl', ['$scope', 'Utils', 'ConnectionService', 'Zerglin
         });
     }
 
+
+
     /**
      * @ngdoc method
      * @name loadBetHistory
@@ -486,10 +515,14 @@ VBET5.controller('myBetsCtrl', ['$scope', 'Utils', 'ConnectionService', 'Zerglin
         if ($scope.betHistoryParams.dateRange && $scope.betHistoryParams.dateRange.fromDate !== -1) {
             if ($scope.selectedUpcomingPeriod) {
                 where.from_date = Moment.get().unix() - $scope.selectedUpcomingPeriod * 3600;
-                where.to_date = Moment.get().unix();
+                if ($scope.betStatusFilter !== -1) {
+                    where.to_date = Moment.get().unix();
+                }
             } else {
                 where.from_date = $scope.betHistoryParams.dateRange.fromDate;
-                where.to_date = $scope.betHistoryParams.dateRange.toDate;
+                if ($scope.betStatusFilter !== -1) {
+                    where.to_date = $scope.betHistoryParams.dateRange.toDate;
+                }
             }
         }
 
@@ -497,35 +530,41 @@ VBET5.controller('myBetsCtrl', ['$scope', 'Utils', 'ConnectionService', 'Zerglin
             getAgentBetHistory(where);
             return;
         }
-
-        var isVivaroShuka = (product === 'shukaBetHistory'),
-            betType = parseInt($scope.betHistoryParams.betType, 10),
-            type = parseInt($scope.betHistoryParams.type, 10),
-            outcome = parseInt($scope.betHistoryParams.outcome, 10);
-
-        if ($scope.betHistoryParams.betIdFilter && !isNaN(parseInt($scope.betHistoryParams.betIdFilter))) {
-            where.bet_id = parseInt($scope.betHistoryParams.betIdFilter);
-        }
-
-        if (outcome !== -1) {
-            where.outcome = outcome;
-        }
-        if (betType !== -1) {
-            where.bet_type = betType;
-        }
-        if (type !== -1) {
-            where.type = type.toString();
-        }
-        if ($rootScope.calculatedConfigs.poolBettingEnabled && !isVivaroShuka && !$scope.betHistoryParams.betIdFilter) {
-            where.with_pool_bets = true;
-        }
-        var request = {'where': where};
+        var request;
         var command = 'bet_history';
-        if (isVivaroShuka) {
-            command = 'fair_bets_history';
+        var responseFieldName = 'bets';
+
+        if ($scope.betStatusFilter !== -1) {
+            var betType = parseInt($scope.betHistoryParams.betType, 10),
+                type = parseInt($scope.betHistoryParams.type, 10),
+                outcome = parseInt($scope.betHistoryParams.outcome, 10);
+
+            if ($scope.betHistoryParams.betIdFilter && !isNaN(parseInt($scope.betHistoryParams.betIdFilter))) {
+                where.bet_id = parseInt($scope.betHistoryParams.betIdFilter);
+            }
+
+            if (outcome !== -1) {
+                where.outcome = outcome;
+            }
+            if (betType !== -1) {
+                where.bet_type = betType;
+            }
+            if (type !== -1) {
+                where.type = type.toString();
+            }
+            if ($rootScope.calculatedConfigs.poolBettingEnabled && !$scope.betHistoryParams.betIdFilter) {
+                where.with_pool_bets = true;
+            }
+            request = {'where': where};
+        } else {
+            command = 'get_gifted_bets';
             request = where;
+            responseFieldName = 'details';
         }
-        if (product && !isVivaroShuka) {
+
+
+
+        if (product) {
             request.product = product;
         }
 
@@ -534,26 +573,37 @@ VBET5.controller('myBetsCtrl', ['$scope', 'Utils', 'ConnectionService', 'Zerglin
         Zergling.get(request, command)
             .then(
                 function (response) {
-                    if (response.result === -1 || !response.bets) {
+                    if (command === 'bet_history' && $scope.betStatusFilter === -1) {
+                        return;
+                    } else if (command === 'get_gifted_bets' && $scope.betStatusFilter !== -1) {
+                        return;
+                    }
+                    if (response.result === -1 || !response[responseFieldName]) {
                         $scope.errorLoadingHistory = true;
                         return;
                     }
+                    var data = response[responseFieldName];
 
-                    if (!(response.bets instanceof  Array)) {
-                        var tempData = response.bets;
-                        response.bets = [];
-                        response.bets[0] = tempData;
+                    if ($scope.betStatusFilter === -1) {
+                        Utils.convertPascalArrayToSnakeCase(data);
                     }
-                    fixBetItemNames(response.bets);
-                    calculateLiability(response.bets);
-                    calculateSystemCombinations(response.bets);
-                    betHistory = response.bets;
-                    fillBetsPointerInfo(betHistory);
-                    convertStringFiledsToNumbers(response.bets);
-                    allBets = Utils.objectToArray(response.bets);
-                    var sortParam = response.bets[0] && response.bets[0]['bet_date'] !== undefined ? 'bet_date' : 'date_time';
-                    response.bets = Utils.twoParamsSorting(response.bets, [sortParam]);
-                    response.bets.reverse();
+
+                    if (!(data instanceof  Array)) {
+                        var tempData = data;
+                        data = [];
+                        data[0] = tempData;
+                    }
+                    fixBetItemNames(data);
+                    fixBetsOutcome(data);
+                    calculateLiability(data);
+                    calculateSystemCombinations(data);
+                    betHistory = data;
+                    fillBetsPointerInfo(data);
+                    convertStringFiledsToNumbers(data);
+                    allBets = Utils.objectToArray(data);
+                    var sortParam = data[0] && data[0]['bet_date'] !== undefined ? 'bet_date' : 'date_time';
+                    data = Utils.twoParamsSorting(data, [sortParam]);
+                    data.reverse();
                     subToCashOut();
                     if (!Config.main.enableMixedView) {
                         $scope.betHistoryGotoPage(1);
@@ -739,9 +789,9 @@ VBET5.controller('myBetsCtrl', ['$scope', 'Utils', 'ConnectionService', 'Zerglin
         $timeout(function() {
             Zergling.get(request, 'bet_history')
                 .then(function(response) {
-                    if (response && response.bets) {
+                    if (response && response[responseFieldName]) {
                         var currentBets = Config.main.enableMixedView ? betHistory : allBets;
-                        var cashedOutBet = response.bets[0];
+                        var cashedOutBet = response[responseFieldName][0];
                         for (var i = 0, length = currentBets.length; i < length; i++) {
                             if (currentBets[i].id === cashedOutBet.id) {
                                 cashedOutBet.oddTypeMapped = $scope.ODD_TYPE_MAP[+cashedOutBet.odd_type];
@@ -774,8 +824,13 @@ VBET5.controller('myBetsCtrl', ['$scope', 'Utils', 'ConnectionService', 'Zerglin
      */
     $scope.filterBetHistory = function filterBetHistory(newStatus) {
         if (newStatus !== $scope.betStatusFilter) {
+            var previous = $scope.betStatusFilter;
             $scope.betStatusFilter = newStatus;
-
+            if (previous !== -1 && newStatus === -1) {
+                $scope.loadBetHistory();
+            } else if (previous === -1 && newStatus !== -1) {
+                $scope.loadBetHistory();
+            }
             if ($scope.betStatusFilter === 10) {
                 $scope.loadBetHistory();
             }

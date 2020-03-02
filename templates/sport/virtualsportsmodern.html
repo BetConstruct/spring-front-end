@@ -94,7 +94,7 @@
                         <div class="game-row-item">
                             <div class="icon-v" ng-show="isEventInBetSlip(event)"></div>
                             <p>{{event.name}}</p>
-                            <span ng-class="getArrow(event.price_change)">{{event.price|oddConvert:env.oddFormat:null:market.display_key}}</span>
+                            <span class="{{event.price_change == null? '' : ({true: 'up-', false: 'down'}[event.price_change > 0] + (event.price_change % 2)) }}">{{event.price|oddConvert:env.oddFormat:null:market.display_key}}</span>
                         </div>
                     </li>
                 </ul>
@@ -136,7 +136,7 @@
                     </li>
 
                     <li class="odds" ng-class="{'empty-odd': market.named_events[participant.AnimalName][0].price}" ng-repeat="market in selectedGame.markets track by $index">
-                        <div class="bets" ng-click="bet(market.named_events[participant.AnimalName][0], market, selectedGame)" ng-class="getArrow(market.named_events[participant.AnimalName][0].price_change)">
+                        <div class="bets {{market.named_events[participant.AnimalName][0].price_change == null? '' : ({true: 'up-', false: 'down'}[market.named_events[participant.AnimalName][0].price_change > 0] + (market.named_events[participant.AnimalName][0].price_change % 2)) }}" ng-click="bet(market.named_events[participant.AnimalName][0], market, selectedGame)">
                             <div class="icon-v" ng-show="isEventInBetSlip(market.named_events[participant.AnimalName][0])"></div>
                             {{market.named_events[participant.AnimalName][0].price|oddConvert:env.oddFormat:null:market.display_key}}
                         </div>

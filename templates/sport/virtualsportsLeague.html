@@ -1,0 +1,172 @@
+<div>
+    <div class="scroll-contain">
+        <div class="group-container virtual-v-2" ng-show="sections.length">
+            <div class="video-and-result-c">
+                <div class="video-side-p">
+                    <div class="virt-video-container" ng-class="{'full-screen-video': vPlayerState.fullscreen}">
+                        <div class="video-content">
+                            <!-- Two div-s w/ class 'player' are *NOT* left on accident. Please do not optimize and refactor them! -->
+                            <div class="player" ng-if="$root.conf.video.providersThatSupportHls[providerId] && videoData">
+                                <hls-player provider-id="{{providerId}}" stream-url="{{videoData}}"></hls-player>
+                            </div>
+                            <div class="player" ng-if="!$root.conf.video.providersThatSupportHls[providerId] && videoData">
+                                <flashplayer id="gamevideo{{gameToShow.id}}" stream-url="{{videoData}}" provider-id="{{providerId}}" initially-muted="{{ env.sound }}"></flashplayer>
+                            </div>
+                            <div class="video-player-control" ng-if="videoIsLoaded" ng-init="$root.$broadcast('rzSliderForceRender')">
+                                <span ng-click="vPlayerState.fullscreen = !vPlayerState.fullscreen" ng-class="{'full-screen': vPlayerState.fullscreen}" class="video-size-toggle">test</span>
+                                <span ng-click="env.sound = 0; $event.stopPropagation();" ng-show="env.sound > 0" class="video-mute">Mute</span>
+                                <span ng-click="env.sound = 0.75; $event.stopPropagation();" ng-show="env.sound === 0" class="video-unmute">UnMute</span>
+                                <div class="sound-volume">
+                                    <div>
+                                        <rzslider rz-slider-model="env.sound"
+                                                  rz-slider-floor="0"
+                                                  rz-slider-ceil="1"
+                                                  rz-slider-step="0.01"
+                                                  rz-slider-precision="1" rz-slider-always-show-bar="true">
+                                        </rzslider>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="overlay-bg" ng-show="remainingSeconds > 0">
+                                <div class="details-overlay">
+                                    <div trans>Next Event</div>
+                                    <p>
+                                        <span ng-bind="countdown.minutes()|padWithZeros:2"></span>
+                                        <span>:</span>
+                                        <span ng-bind="countdown.seconds()|padWithZeros:2"></span>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="virtuals-switch-results-wrapper" ng-show="competitions">
+                            <ul>
+                                <li>
+                                    <div class="competitopn-switch">
+                                        <ul>
+                                            <li ng-repeat="competition in competitions track by competition.id" ng-click="competitions.length > 1 ? loadGames(competition): void();" ng-class="{'active': competition.id == selectedVirtualCompetition.id && competitions.length > 1}">{{competition.name}}</li>
+                                        </ul>
+                                    </div>
+                                </li>
+                                <li ng-if="$root.conf.video.providersThatSupportHls[providerId]">
+                                    <button prevent-fast-click="2" ng-click="videoStreaming.stopVideo()" ng-if="videoIsLoaded" trans>Stop</button>
+                                    <button prevent-fast-click="2" ng-click="videoStreaming.playVideo()" ng-if="!videoIsLoaded" trans>Play</button>
+                                </li>
+                                <li>
+                                    <button ng-click="toggleResultsPopUp(true)" trans>Results</button>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="virtual-sport-history" ng-if="virtualResults">
+                        <h2 trans>Result list</h2>
+                        <ul>
+                            <li ng-repeat="gameResult in virtualResults track by $index">
+                                <h3 class="ellipsis-text" ng-click="gameResult.collapsed = !gameResult.collapsed" ng-class="{'collapsed': gameResult.collapsed}">{{gameResult.game_name}}<span ng-show="!gameResult.game_name" trans>Match</span> <span ng-show="!gameResult.game_name">{{(1+$index)}}</span></h3>
+                                <div>
+                                    <p class="ellipsis-text" ng-repeat="event in gameResult.line.events.event" ng-bind="gameResult.line.events.event.length ? event.event_name : event"></p>
+
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="last-result-side-p live-socre-table">
+
+                    <!--second keys-->
+                    <div class="live-scores-t">
+                        <h3 trans>Live scores</h3>
+                        <!--start repeat row-->
+                        <div class="live-scores-info" ng-repeat="game in rounds[0] track by game.id" ng-if="rounds && rounds[0]" ng-click="loadVideo(game)" ng-class="{'active': leagueVideoState.selected === game.video_id}">
+                            <div><span>{{ game.start_ts|formatDate:'full':null:$root.env.timeFormat }}</span></div>
+                            <div><p ng-bind="game.team1_name + ' - ' + game.team2_name"></p></div>
+                            <div><span><i ng-bind="game.info.scores[0]"></i><i ng-bind="game.info.scores[1]"></i></span></div>
+                        </div>
+                        <div ng-if="!rounds || !rounds[0]">
+                            <p class="no-data-p" trans>There is no data</p>
+                        </div>
+                        <!--end repeat row-->
+                    </div>
+                    <div class="live-table-all-i" >
+                        <h3 trans>Live table</h3>
+                        <div ng-if="!competitions || !competitions.length || !competitions[0].info.length">
+                            <p class="no-data-p" trans>There is no data</p>
+                        </div>
+                        <ul ng-if="competitions && competitions.length > 0 && competitions[0].info.length > 0">
+                            <li><span trans>Po</span></li>
+                            <li><span trans>Te.</span></li>
+                            <li><span trans>P</span></li>
+                            <li><span trans>W</span></li>
+                            <li><span trans>D</span></li>
+                            <li><span trans>L</span></li>
+                            <li><span trans>GF</span></li>
+                            <li><span trans>GA</span></li>
+                            <li><span trans>GD</span></li>
+                            <li><span trans>Pts</span></li>
+                        </ul>
+                        <!--start repeat row-->
+                        <ul ng-if="competitions && competitions.length > 0 && competitions[0].info.length > 0" ng-repeat="info in competitions[0].info track by info.TeamName">
+                            <li><i ng-class="{'factor-top': info.UpDown > 0, 'factor-bottom': info.UpDown < 0}" ></i><span ng-bind="$index < 10? ('0' + ($index + 1)):($index + 1)"></span></li>
+                            <li><span ng-bind="info.TeamName|translate"></span></li>
+                            <li><span ng-bind="info.Played"></span></li>
+                            <li><span ng-bind="info.Win"></span></li>
+                            <li><span ng-bind="info.Draw"></span></li>
+                            <li><span ng-bind="info.Lose" ></span></li>
+                            <li><span ng-bind="info.GF"></span></li>
+                            <li><span ng-bind="info.GA"></span></li>
+                            <li><span ng-bind="info.GD"></span></li>
+                            <li><span ng-bind="info.Points"></span></li>
+                        </ul>
+                        <!--end repeat row-->
+                    </div>
+
+                </div>
+            </div>
+
+
+        </div>
+
+        <div ng-if="false" class="v-sports-add-info">        <!--todo SDC-39123-->
+            <!--<span>{{gameToShow.info}}</span>-->
+            <span>Additional bookmaker info if there is some info</span>
+        </div>
+
+        <div class="select-matchday">
+            <h3 trans>Select Matchday</h3>
+            <span ng-repeat="round in rounds track by $index"  ng-bind="round[0].round" ng-click="roundsState.selectedRound = $index" ng-class="{'active': roundsState.selectedRound === $index}"></span>
+        </div>
+
+
+        <div class="time-info-game-box-v3" ng-if="roundsState.selectedRound !== null" ng-repeat="game in rounds[roundsState.selectedRound] track by game.id" ng-class="{'closed': !expandedGames[game.id]}">
+            <div class="time-title-view-v3" ng-click="expandedGames[game.id] = !expandedGames[game.id]">
+                <p><span ng-bind="(game.start_ts | formatDate:'hour':null:env.timeFormat) + '  ' + game.team1_name + ' - ' + game.team2_name"></span></p>
+                <div class="arrow-view-v3"></div>
+            </div>
+            <div>
+                <virtual-sport-game ng-if="expandedGames[game.id]"  game-id="game.id" sport-id="selectedRanges.selectedSportId" constants="constants" non-race-sports="nonRaceSports"/>
+
+            </div>
+        </div>
+    </div>
+
+
+
+    <!-- Results page start in virtual sports  -->
+    <div class="new-default-popup-j results-popup" ng-if="results.open">
+        <div class="pp-table-j">
+            <div class="table-row-j">
+                <div class="table-cell-j">
+                    <div class="popup-wrapper-j">
+                        <div class="pu-head-j">
+                            <span trans="">Results</span>
+                            <a class="close-j" ng-click="toggleResultsPopUp(false)"></a>
+                        </div>
+                        <sports-results sport-list="sections" competitions-list="competitions" selected-sport="selectedVirtualSport" selected-competition="selectedVirtualCompetition"></sports-results>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--Results page end in virtual sports-->
+
+</div>

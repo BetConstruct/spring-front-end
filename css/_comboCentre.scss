@@ -531,7 +531,7 @@
 
 .single-game-mini-view > ul > li {
   display: table-cell;
-  vertical-align: middle;
+  vertical-align: top;
   box-sizing: border-box;
   @include ltr {
     padding: 0 10px;
@@ -706,22 +706,37 @@
   color: #3f4553;
 }
 
-.game-events-contain-b > ul > li .up:before, .game-events-contain-b > ul > li .down:before {
+.game-events-contain-b > ul > li .up-0:before,
+.game-events-contain-b > ul > li .up-1:before,
+.game-events-contain-b > ul > li .down0:before,
+.game-events-contain-b > ul > li .down-1:before {
   font: 14px/14px icomoon;
   color: #ff0000;
   content: "\e66c";
   position: relative;
   top: 1px;
+  display: inline-block;
+  animation-duration: 7000ms;
+  animation-fill-mode: forwards;
 }
 
-.game-events-contain-b > ul > li .up:before {
+.game-events-contain-b > ul > li .up-0:before,
+.game-events-contain-b > ul > li .up-1:before {
   content: "\e66d";
   color: #017901;
 }
 
-.game-events-contain-b > ul > li.active .up:before,
-.game-events-contain-b > ul > li.active .down:before {
+.game-events-contain-b > ul > li.active .up-0:before,
+.game-events-contain-b > ul > li.active .up-1:before,
+.game-events-contain-b > ul > li.active .down0:before,
+.game-events-contain-b > ul > li.active .down-1:before {
   color: #ffffff;
+}
+.game-events-contain-b > ul > li {
+  .up-0:before { animation-name: odds-arrow-up-0; }
+  .up-1:before { animation-name: odds-arrow-up-1; }
+  .down0:before { animation-name: odds-arrow-down0; }
+  .down-1:before { animation-name: odds-arrow-down-1; }
 }
 
 .game-events-contain-b > ul > li:hover {

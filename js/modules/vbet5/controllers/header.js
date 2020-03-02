@@ -70,13 +70,15 @@ VBET5.controller('headerCtrl', ['$scope', '$rootScope', '$sce', '$window', '$loc
                 $rootScope.partnerConfig = Utils.objectToArray(data.partner)[0];
 
                 if ($rootScope.partnerConfig && $rootScope.partnerConfig.tax_type && $rootScope.partnerConfig.tax_amount_ranges && $rootScope.partnerConfig.tax_amount_ranges.length) {
-                    $rootScope.partnerConfig.tax_amount_ranges = $rootScope.partnerConfig.tax_amount_ranges.filter(function (item) {
-                        return item.type === $rootScope.partnerConfig.tax_type;
-                    });
+                    if ($rootScope.partnerConfig.tax_type !== 4) {
+                        $rootScope.partnerConfig.tax_amount_ranges = $rootScope.partnerConfig.tax_amount_ranges.filter(function (item) {
+                            return item.type === $rootScope.partnerConfig.tax_type;
+                        });
+                    }
+
                     $rootScope.partnerConfig.tax_amount_ranges.sort(function (a, b) {
                         return a.from - b.from;
                     });
-
                 }
 
                 Config.main.availableCurrencies = $rootScope.partnerConfig.supported_currencies;

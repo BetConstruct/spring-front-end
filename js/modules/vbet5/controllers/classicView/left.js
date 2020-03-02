@@ -1,3 +1,4 @@
+/* global JSON, decodeURIComponent */
 /**
  * @ngdoc controller
  * @name vbet5.controller:classicViewLeftController
@@ -12,7 +13,6 @@ angular.module('vbet5.betting').controller('classicViewLeftController', ['$rootS
     var liveGamesData;
     var showPrematchInDashboardByDefault = $location.path() === '/dashboard/' && Config.main.dashboard.leftMenuPrematch;
     var firstTimeLoaded = true;
-    var hoveredLiveGameSubscriptionSubids = {};
     var currentGameIsFinished = false;
     var pathToRemember = {live: {}, prematch: {}};
     var leftMenuPrematchSports = [];
@@ -34,7 +34,7 @@ angular.module('vbet5.betting').controller('classicViewLeftController', ['$rootS
     $scope.liveFilters = Config.main.forgetFiltersSettings ? {
         withVideo: false,
         disableRegions: true
-        } : {
+    } : {
         withVideo: !!Storage.get('liveFiltersWithVideo') || !!$location.search().withvideo,
         disableRegions: Config.main.selectRegionsByDefault ? false : !!Storage.get('liveFiltersDisableRegions')
     };
@@ -45,11 +45,9 @@ angular.module('vbet5.betting').controller('classicViewLeftController', ['$rootS
 
     $scope.leftMenuClosed = Storage.get('leftMenuToggleState') || false;
     $scope.$emit('leftMenu.closed', $scope.leftMenuClosed); //update other views
-    $scope.$watch("virtualSportsSelected", function (value) {
-        $scope.$emit('leftmenu.virtualSportsSelected', value)
-    });
+
     $scope.$watch("outrightSelected", function (value) {
-        $scope.$emit('leftmenu.outrightSelected', value)
+        $scope.$emit('leftmenu.outrightSelected', value);
     });
     $scope.activeGameId = null;
     $scope.gameCounts = {0: 0, 1: 0};
@@ -103,7 +101,7 @@ angular.module('vbet5.betting').controller('classicViewLeftController', ['$rootS
                     ($scope.leftMenuState.prematch.sport[sport.id] && $scope.leftMenuState.prematch.sport[sport.id].expanded && !expandedPrematchSports[sport.id])
                 ) {
                     if (!$scope.selectedSport || $scope.selectedSport.id !== sport.id || !expandedPrematchSports[sport.id]) {
-                        if ((!sport.isTodayBets && !sport.isVirtualSport && !sport.isOutright) || Number(params.sport) === sport.id) {
+                        if ((!sport.isTodayBets && !sport.isOutright) || Number(params.sport) === sport.id) {
                             $scope.expandLeftMenuPrematchSport(sport, true);
                         }
                         if (Number(params.sport) === sport.id) {
@@ -144,7 +142,7 @@ angular.module('vbet5.betting').controller('classicViewLeftController', ['$rootS
 
             if (defaultPrematchToOpen && !expandedPrematchCompetition && $location.path() !== '/dashboard/') { // bad solution but by default must open first competition of first expanded region
                 TimeoutWrapper(function () {
-                    if (defaultPrematchToOpen && !expandedPrematchCompetition && !$scope.todaysBets.selected && !$scope.boostedBets.selected && !Config.env.live) {
+                    if (defaultPrematchToOpen && !expandedPrematchCompetition && !$scope.recommendedGames.selected && !$scope.todaysBets.selected && !$scope.boostedBets.selected && !Config.env.live) {
                         $scope.expandCompetition(defaultPrematchToOpen.competition, defaultPrematchToOpen.sport);
                     }
                 }, 3000);
@@ -169,7 +167,7 @@ angular.module('vbet5.betting').controller('classicViewLeftController', ['$rootS
         if (!Config.env.live && leftMenuPrematchSports.length && !$scope.todaysBets.selected) {
             if (!$scope.selectedSport || Utils.isObjectEmpty($scope.leftMenuState.prematch.sport) || !$scope.leftMenuState.prematch.sport[$scope.selectedSport.id] || !$scope.leftMenuState.prematch.sport[$scope.selectedSport.id].expanded) {
                 $scope.firstSport = $scope.firstSport || leftMenuPrematchSports[0];
-                if (!expandedPrematchSports[$scope.firstSport.id] && Config.main.expandFirstSportByDefault && $scope.firstSport.id !== additionalLeftMenuItems.VIRTUAL_SPORT_VIRTUALS.id) {
+                if (!expandedPrematchSports[$scope.firstSport.id] && Config.main.expandFirstSportByDefault) {
                     $scope.expandLeftMenuPrematchSport($scope.firstSport, true, true, true);
                 }
                 if (paramsSport === $scope.firstSport.id) {
@@ -347,6 +345,8 @@ angular.module('vbet5.betting').controller('classicViewLeftController', ['$rootS
                 $location.search('region', undefined);
                 $location.search('competition', undefined);
                 $location.search('sport', undefined);
+            } else {
+                $scope.selectCompetition(expandedPrematchCompetition);
             }
         }
         openInitialDefaultGameIfNeeded();
@@ -389,7 +389,10 @@ angular.module('vbet5.betting').controller('classicViewLeftController', ['$rootS
         var request = {
             'source': 'betting',
             'what': {'game': '@count'},
-            'where': {'game': {'type': realType}}
+            'where': {
+                'game': {'type': realType},
+                'sport': {'type': {'@ne': 1}}
+            }
         };
 
         if (!type) {
@@ -399,7 +402,6 @@ angular.module('vbet5.betting').controller('classicViewLeftController', ['$rootS
                 request.where.game.start_ts = Config.env.gameTimeFilter;
             }
         }
-        request.where.sport = Config.main.showVirtualsInSportList ? {'id': {'@nin': Config.main.virtualSportIds.insvirtualsports}} : {'type': {'@ne': 1}};
 
         Utils.setCustomSportAliasesFilter(request);
 
@@ -462,7 +464,6 @@ angular.module('vbet5.betting').controller('classicViewLeftController', ['$rootS
                                         game.marketInfo.markets.push(game.marketInfo.event[events]);
                                     }
                                     game.marketInfo.markets.sort(Utils.orderSorting);
-                                    game.competition = {id: competition.id};
                                 } else {
                                     game.marketInfo = {};
                                 }
@@ -470,6 +471,7 @@ angular.module('vbet5.betting').controller('classicViewLeftController', ['$rootS
 
                             game.additionalEvents = Config.main.showEventsCountInMoreLink ? game.events_count : game.markets_count;
                             game.region = {id: region.id};
+                            game.competition = {id: competition.id};
                             game.sport = {id: sport.id, alias: sport.alias};
 
                             if (Config.main.showPlayerRegion) {
@@ -494,9 +496,7 @@ angular.module('vbet5.betting').controller('classicViewLeftController', ['$rootS
                             }
                         }
                     });
-                    competition.games.sort(function (a, b) {
-                        return a.start_ts - b.start_ts;
-                    });
+                    competition.games.sort(Utils.orderByStartTs);
                     if (competition.games.length !== 0) {
                         region.competitions.push(competition);
                         alphabeticalCompetitions.push(competition);
@@ -533,6 +533,23 @@ angular.module('vbet5.betting').controller('classicViewLeftController', ['$rootS
 
     /**
      * @ngdoc method
+     * @name updateLeftMenuAfterDragDrope
+     * @methodOf vbet5.controller:classicViewLeftController
+     * @description  Update left menu data after drag and drop
+     */
+    $scope.updateLeftMenuAfterDragDrop = function updateLeftMenuAfterDragDrop() {
+        updateMenuLiveGames({sport: liveGamesData});
+    };
+
+    function updateLiveMarketsCount(data) {
+        $scope.gameMarketsCountMap = {};
+        angular.forEach(data.game, function (game) {
+            $scope.gameMarketsCountMap[game.id] = game.market;
+        });
+    }
+
+    /**
+     * @ngdoc method
      * @name loadLeftMenuLive
      * @methodOf vbet5.controller:classicViewLeftController
      * @description  loads left menu live part
@@ -550,11 +567,14 @@ angular.module('vbet5.betting').controller('classicViewLeftController', ['$rootS
                 'region': ['id', 'name', 'alias', 'order'],
                 'game': [['id', 'start_ts', 'team1_name', 'team2_name', 'team1_reg_name', 'team2_reg_name', 'type', 'info', 'events_count', 'markets_count', 'is_blocked', 'stats', 'tv_type', 'video_id', 'video_id2', 'video_id3', 'video_provider', 'is_stat_available', 'show_type', 'game_external_id', 'team1_external_id', 'team2_external_id', 'is_itf']]
             },
-            'where': {'game': {'type': 1}}
+            'where': {
+                'game': {'type': 1},
+                'sport': {'type': {'@ne': 1}}
+            }
         };
 
         if (!Config.main.hideMarketFromLeftMenu) {
-            request.what.market = ['base', 'type', 'name', 'express_id'];
+            request.what.market = ['base', 'type', 'name', 'express_id', 'id'];
             request.what.event = [];
             request.where.market = {
                 display_key: 'WINNER',
@@ -566,11 +586,8 @@ angular.module('vbet5.betting').controller('classicViewLeftController', ['$rootS
             request.where.competition = {"cloud_available": true};
         }
 
-        request.where.sport = Config.main.showVirtualsInSportList ? {'id': {'@nin': Config.main.virtualSportIds.insvirtualsports}} : {'type': {'@ne': 1}};
-
         Utils.setCustomSportAliasesFilter(request);
 
-        $scope.leftMenuLiveLoading = true;
         connectionService.subscribe(
             request,
             updateMenuLiveGames,
@@ -585,6 +602,18 @@ angular.module('vbet5.betting').controller('classicViewLeftController', ['$rootS
                 }
             }
         );
+
+        var marketCountRequest = {
+            'source': 'betting',
+            'what': {
+                'game': ['id'],
+                'market': '@count'
+            },
+            'where': {
+                'game': {'type': 1},
+            }
+        };
+        connectionService.subscribe(marketCountRequest, updateLiveMarketsCount);
     }
 
     /**
@@ -622,6 +651,7 @@ angular.module('vbet5.betting').controller('classicViewLeftController', ['$rootS
      */
     $scope.removeAllFavorites = function removeAllFavorites() {
         $rootScope.$broadcast('game.removeAllFavorites');
+        updateMenuLiveGames({sport: liveGamesData});
     };
 
 
@@ -707,10 +737,6 @@ angular.module('vbet5.betting').controller('classicViewLeftController', ['$rootS
             return false;
         }
 
-        // unsubscribing from active game, before "click"-ing to new one
-        connectionService.unsubscribe(hoveredLiveGameSubscriptionSubids[$scope.activeGameId]);
-        delete hoveredLiveGameSubscriptionSubids[$scope.activeGameId];
-
         $scope.activeGameId = game.id;
         $location.search('game', Number(game.id));
         $location.search('region', game.region.id);
@@ -748,97 +774,6 @@ angular.module('vbet5.betting').controller('classicViewLeftController', ['$rootS
         $scope.leftMenuState.live.region[region.id].expanded = true;
         $scope.selectSport(sport);
         $scope.selectRegion(region);
-    };
-
-    $scope.leftMenuHoveredGamesSubscriptionQueue = [];
-
-    /**
-     * @ngdoc method
-     * @name addGameHoveredInLeftMenuToSubscribtionQueue
-     * @methodOf vbet5.controller:classicViewLeftController
-     * @description Add game hovered in left menu to subscribtion queue
-     * @param {Object} game object
-     */
-    $scope.addGameHoveredInLeftMenuToSubscribtionQueue = function addGameHoveredInLeftMenuToSubscribtionQueue(game) {
-        if (!Config.main.prefetchLeftMenuHoveredLivesGames.enabled
-            || game.id === $scope.activeGameId
-            || $location.path() === '/dashboard/'
-            || $location.path() === '/multiview/'
-        ) {
-            return;
-        }
-
-        $scope.leftMenuHoveredGamesSubscriptionQueue.push(TimeoutWrapper(function () {
-
-            connectionService.subscribe(
-                {
-                    'source': 'betting',
-                    'what': {
-                        'sport': ['id', 'name', 'alias'],
-                        'competition': ['id', 'name'],
-                        'region': ['id'],
-                        'game': [],
-                        'market': [],
-                        'event': []
-                    },
-                    'where': {'game': {'id': game.id}}
-                },
-                function (result) {
-                    if (!result) {
-                        return;
-                    }
-
-                    if (game.id === $scope.activeGameId) {
-                        $scope.updateOpenGame(result);
-                    }
-                },
-                {
-                    'thenCallback': function (result) {
-                        if (result.data) {
-                            $rootScope.$broadcast(
-                                "leftMenu.hoveredLiveGameFullDataArrived",
-                                {
-                                    'gameData': result.data,
-                                    'gameId': game.id
-                                }
-                            );
-                        }
-
-                        hoveredLiveGameSubscriptionSubids[game.id] = result.subid;
-                    }
-                },
-                true
-            );
-        }, Config.main.prefetchLeftMenuHoveredLivesGames.prefetchAfter));
-    };
-
-    /**
-     * @ngdoc method
-     * @name emptyLeftMenuHoveredGameSubscriptionQueue
-     * @methodOf vbet5.controller:classicViewLeftController
-     * @description Empty left menu hovered game subscription queue
-     * @param {Object} game object
-     */
-    $scope.emptyLeftMenuHoveredGameSubscriptionQueue = function emptyLeftMenuHoveredGameSubscriptionQueue(game) {
-        if (!Config.main.prefetchLeftMenuHoveredLivesGames.enabled || $location.path() === '/dashboard/') {
-            return;
-        }
-
-        var i;
-        var numberOfQueueItemsToCancel = $scope.leftMenuHoveredGamesSubscriptionQueue.length;
-        numberOfQueueItemsToCancel = numberOfQueueItemsToCancel >= 1 ? numberOfQueueItemsToCancel - 1 : 0;
-
-        for (i = 0; i < numberOfQueueItemsToCancel; i++) {
-            TimeoutWrapper.cancel($scope.leftMenuHoveredGamesSubscriptionQueue[i]);
-            delete $scope.leftMenuHoveredGamesSubscriptionQueue[i];
-        }
-
-        if (game.id !== $scope.activeGameId) {
-            connectionService.unsubscribe(hoveredLiveGameSubscriptionSubids[game.id]);
-            delete hoveredLiveGameSubscriptionSubids[game.id];
-        }
-
-        $rootScope.$broadcast('leftMenu.hoveredLiveGameFullDataArrived', null);
     };
 
     $scope.$on('game.selected', function (event, id) {
@@ -884,14 +819,6 @@ angular.module('vbet5.betting').controller('classicViewLeftController', ['$rootS
             game: 2,
             link: '#/financials'
         },
-        VIRTUAL_SPORT_VIRTUALS: {
-            id: -3,
-            alias: 'virtualsports',
-            name: Translator.get('Virtual sports'),
-            order: Config.main.showVirtualsInSportList,
-            game: 30,
-            isVirtualSport: true
-        },
         SHOW_ALL_SPORTS: {
             id: -10,
             game: 0,
@@ -913,6 +840,14 @@ angular.module('vbet5.betting').controller('classicViewLeftController', ['$rootS
                 return acc;
             }, { '-11': true })
         },
+        OUTRIGHT: {
+            id: -13,
+            order: Config.main.showOutright,
+            innumerable: true,
+            name: Translator.get('Outright'),
+            alias: 'outright',
+            isOutright: true
+        },
         BOOSTED_BETS: {
             id: -14,
             order: Config.main.boostedBets.order,
@@ -921,13 +856,11 @@ angular.module('vbet5.betting').controller('classicViewLeftController', ['$rootS
             alias: 'boostedbets',
             link: '#/sport/?type=0&sport=-14'
         },
-        OUTRIGHT: {
-            id: -13,
-            order: Config.main.showOutright,
-            innumerable: true,
-            name: Translator.get('Outright'),
-            alias: 'outright',
-            isOutright: true
+        RECOMMENDED_GAMES: {
+            id: -15,
+            order: Config.main.recommendedGames.order,
+            alias: 'recommendedgames',
+            name: Translator.get('Recommended Games')
         }
     };
 
@@ -958,14 +891,84 @@ angular.module('vbet5.betting').controller('classicViewLeftController', ['$rootS
      * @description  updates sports list
      *
      * @param {Object} data sports data object
+     * @param {boolean} firstTime the loaded state
      */
     function updateLeftMenuPrematchSports(data, firstTime) {
-        $scope.sportListIsLoading = false;
         $scope.leftMenuIsLoading = false;
         $scope.prematchSportCount = $scope.prematchSportCount || Config.main.showPrematchLimit;
         var limit = Config.main.showPrematchLimit;
+        leftMenuPrematchSports = [];
 
-        leftMenuPrematchSports = Utils.objectToArray(data.sport);
+        angular.forEach(data.sport, function (sport) {
+            var singleSport = {
+                alias: sport.alias,
+                id: sport.id,
+                name: sport.name,
+                order: sport.order,
+                game: 0
+            };
+
+            var regions = [];
+
+            angular.forEach(sport.region, function (region) {
+                var singleRegion = {
+                    alias: region.alias,
+                    id: region.id,
+                    name: region.name,
+                    order: region.order,
+                    sportId: sport.id,
+                    game: 0
+                };
+
+                var competitions = [];
+
+                angular.forEach(region.competition, function(competition) {
+                    var singleCompetition = {
+                        id: competition.id,
+                        name: competition.name,
+                        order: competition.order,
+                        region: {
+                            alias: region.alias,
+                            name: region.name,
+                            id: region.id
+                        }
+                    };
+
+                    if (Config.env.preMatchMultiSelection) {
+                        var games = [];
+                        angular.forEach(competition.game, function (game) {
+                            var singleGame = {
+                                game_number: game.game_number,
+                                id: game.id,
+                                start_ts: game.start_ts,
+                                team1_name: game.team1_name,
+                                team2_name: game.team2_name
+                            };
+
+                            games.push(singleGame);
+                        });
+
+                        singleCompetition.games = games.sort(Utils.orderByStartTs);
+                        singleRegion.game += games.length;
+                    } else {
+                        singleRegion.game += competition.game;
+                    }
+
+                    competitions.push(singleCompetition);
+                });
+                singleSport.game += singleRegion.game;
+                singleRegion.competitions = competitions.sort(Utils.orderSorting);
+
+                regions.push(singleRegion);
+            });
+
+
+            singleSport.regions = regions.sort(Utils[Config.main.sportsLeftMenuSortingFunctionName]);
+
+            leftMenuPrematchSports.push(singleSport);
+        });
+
+
 
         if (Config.main.todayBets.enabled) {
             leftMenuPrematchSports.unshift(additionalLeftMenuItems.TODAY_BETS);
@@ -984,9 +987,6 @@ angular.module('vbet5.betting').controller('classicViewLeftController', ['$rootS
             if (Config.main.showFinancialsInSportList) {
                 leftMenuPrematchSports.push(additionalLeftMenuItems.VIRTUAL_SPORT_FINANCIALS);
             }
-            if (Config.main.showVirtualsInSportList) {
-                leftMenuPrematchSports.push(additionalLeftMenuItems.VIRTUAL_SPORT_VIRTUALS);
-            }
 
             if (Config.main.boostedBets.enabled) {
                 leftMenuPrematchSports.unshift(additionalLeftMenuItems.BOOSTED_BETS);
@@ -994,10 +994,13 @@ angular.module('vbet5.betting').controller('classicViewLeftController', ['$rootS
             if (Config.main.showOutright) {
                 leftMenuPrematchSports.push(additionalLeftMenuItems.OUTRIGHT);
             }
+            if (Config.main.recommendedGames.enabled) {
+                leftMenuPrematchSports.push(additionalLeftMenuItems.RECOMMENDED_GAMES);
+            }
 
             leftMenuPrematchSports.sort(Utils.orderSorting);
 
-            for(var i = 0; i < leftMenuPrematchSports.length; i++) {
+            for (var i = 0; i < leftMenuPrematchSports.length; i++) {
                 if(leftMenuPrematchSports[i].order !== null) {
                     $scope.firstSport = leftMenuPrematchSports[i];
                     break;
@@ -1076,19 +1079,27 @@ angular.module('vbet5.betting').controller('classicViewLeftController', ['$rootS
      * @description
      */
     function subscribeForPrematchSports(callback) {
-        if (Config.main.customSportsBook.classic && (Config.main.customSportsBook.classic.showPrematch === false || Config.main.customSportsBook.classic.showPrematch === 0)) {
+        if (Config.main.customSportsBook.classic.showPrematch === false || Config.main.customSportsBook.classic.showPrematch === 0) {
             return;
         }
+
+        $scope.leftMenuPrematchLoading = true;
+
         var request = {
             'source': 'betting',
-            'what': {'sport': ['id', 'name', 'alias', 'order'], 'game': '@count'},
+            'what': {
+                'sport': ['id', 'name', 'alias', 'order'],
+                'region': ['name', 'alias', 'id', 'order'],
+                'competition': ['id', 'name', 'order'],
+                'game': '@count'},
             'where': {
                 'game': (Config.main.enableVisibleInPrematchGames ? {
                     '@or': [{'type': {'@in': [0, 2]}}, {
                         'visible_in_prematch': 1,
                         'type': 1
                     }]
-                } : {'type': {'@in': [0, 2]}})
+                } : {'type': {'@in': [0, 2]}}),
+                'sport': {'type': {'@ne': 1}}
             }
         };
 
@@ -1096,7 +1107,9 @@ angular.module('vbet5.betting').controller('classicViewLeftController', ['$rootS
             request.where.competition = {"cloud_available": true};
         }
 
-        request.where.sport = Config.main.showVirtualsInSportList ? {'id': {'@nin': Config.main.virtualSportIds.insvirtualsports}} : {'type': {'@ne': 1}};
+        if (Config.env.preMatchMultiSelection) {
+            request.what.game = ['id', 'team1_name', 'team2_name', 'start_ts', 'game_number', '@count'];
+        }
 
         if ($scope.selectedUpcomingPeriod && !Config.env.live) {
             request.where.game.start_ts = {'@now': {'@gte': 0, '@lt': $scope.selectedUpcomingPeriod * 3600}};
@@ -1114,6 +1127,7 @@ angular.module('vbet5.betting').controller('classicViewLeftController', ['$rootS
             },
             {
                 'thenCallback': function () {
+                    $scope.leftMenuPrematchLoading = false;
                     openInitialDefaultGameIfNeeded();
                 }
             }
@@ -1200,7 +1214,6 @@ angular.module('vbet5.betting').controller('classicViewLeftController', ['$rootS
                                     $location.search('sport', undefined);
                                     $location.search('region', undefined);
                                     $location.search('competition', undefined);
-                                    unsubscribeFromPrematchSportRegions(leftMenuPrematchSports[i]);
                                     break;
                                 }
                             }
@@ -1210,30 +1223,6 @@ angular.module('vbet5.betting').controller('classicViewLeftController', ['$rootS
             }
         }
     };
-
-    /**
-     * @ngdoc method
-     * @name updateLeftMenuSportRegions
-     * @methodOf vbet5.controller:classicViewLeftController
-     * @description  updates sports data object by adding regions list to it
-     *
-     * @param {Object} sport sports data object to update with its regions
-     * @param {Object} data regions data object
-     */
-    function updateLeftMenuSportRegions(sport, data) {
-        console.log('updateLeftMenuSportRegions got', sport, data);
-        sport.regions = Utils.objectToArray(data.region);
-        sport.regions = GameInfo.groupRegionsIfNeeded(sport.regions, sport.id);
-        sport.regions.sort(Utils[Config.main.sportsLeftMenuSortingFunctionName]);
-
-        angular.forEach(sport.regions, function (region) {
-            region.sportId = sport.id;
-        });
-
-        $scope.leftMenuIsLoading = false;
-        handleDeepLinking();
-        openInitialDefaultGameIfNeeded();
-    }
 
     /**
      * @ngdoc method
@@ -1248,6 +1237,58 @@ angular.module('vbet5.betting').controller('classicViewLeftController', ['$rootS
             $scope.$emit('prematch.expandCompetition', {type: 0, sport: additionalLeftMenuItems.TODAY_BETS.id});
         }
     };
+
+
+
+    function initRecommendedGames() {
+        var recommendedQueryParams = $location.search().recommended;
+
+        if (recommendedQueryParams) {
+            try {
+                var recommendations = JSON.parse(decodeURIComponent(recommendedQueryParams));
+
+                if (angular.isArray(recommendations.games) && recommendations.games.length > 0) {
+                    var request = { games: recommendations.games };
+
+                    if (angular.isArray(recommendations.sports) && recommendations.sports.length > 0) {
+                        request.sports = recommendations.sports;
+                    }
+
+                    if (angular.isArray(recommendations.competitions) && recommendations.competitions.length > 0) {
+                        request.competitions = recommendations.competitions;
+                        request.sortByCompetitions = true;
+                    }
+
+                    if (angular.isArray(recommendations.regions) && recommendations.regions.length > 0) {
+                        request.regions = recommendations.regions;
+                    }
+
+                    $scope.outrightSelected = false;
+                    $scope.todaysBets.selected = 0;
+                    $scope.boostedBets.selected = false;
+
+                    $scope.recommendedGames.selected = true;
+
+                    // Couldn't find a better solution. If sport is removed from location synchronously then it will again be set from handleDeepLinking function.
+                    TimeoutWrapper(function() {
+                        $location.search('recommended', undefined);
+                        $location.search('sport', undefined);
+                    }, 0);
+
+
+                    if ($scope.env.preMatchMultiSelection) {
+                        $scope.toggleMultiView();
+                    } else if ($scope.env.live) {
+                        $scope.toggleLive();
+                    }
+
+                    clearSelectedCompetitionRegion();
+
+                    $scope.$emit('subscribeToRecommendedGames', request);
+                }
+            } catch(e) {}
+        }
+    }
 
     /**
      * @ngdoc method
@@ -1274,21 +1315,26 @@ angular.module('vbet5.betting').controller('classicViewLeftController', ['$rootS
             $scope.outrightSelected = true;
             $scope.boostedBets.selected = false;
             $scope.todaysBets.selected = 0;
+            $scope.recommendedGames.selected = false;
             return;
         }
         if (additionalLeftMenuItems.TODAY_BETS.ids[sport.id]) {
-            $scope.virtualSportsSelected = false;
             $scope.outrightSelected = false;
             $scope.boostedBets.selected = false;
+            $scope.recommendedGames.selected = false;
             $scope.initTodaysBets(sport);
             return;
         }
         if (sport.id === additionalLeftMenuItems.BOOSTED_BETS.id) {
-            $scope.virtualSportsSelected = false;
             $scope.outrightSelected = false;
             $scope.todaysBets.selected = 0;
+            $scope.recommendedGames.selected = false;
             $scope.initBoostedBets();
             $scope.boostedBets.selected = true;
+            return;
+        }
+        if (sport.id === additionalLeftMenuItems.RECOMMENDED_GAMES.id) {
+            initRecommendedGames();
             return;
         }
 
@@ -1316,89 +1362,14 @@ angular.module('vbet5.betting').controller('classicViewLeftController', ['$rootS
             return;
         }
 
-        if (sport.id === additionalLeftMenuItems.VIRTUAL_SPORT_VIRTUALS.id) {
-            $location.path('/virtualsports');
-            return;
-        } else if ($scope.leftMenuState.prematch.sport[additionalLeftMenuItems.VIRTUAL_SPORT_VIRTUALS.id]) {
-            $scope.virtualSportsSelected = false;
-            $scope.leftMenuState.prematch.sport[additionalLeftMenuItems.VIRTUAL_SPORT_VIRTUALS.id].expanded = false;
-            $location.search('vsport', undefined);
-        }
-
-        unsubscribeFromPrematchSportRegions(sport);
-
         if ($scope.leftMenuState.prematch.sport[sport.id].expanded) {
-            sport.loading = true;
-
-            var request = {
-                'source': 'betting',
-                'what': {'region': ['name', 'alias', 'id', 'order'], 'game': '@count'},
-                'where': {
-                    'sport': {'id': sport.id},
-                    'game': (Config.main.enableVisibleInPrematchGames ? {
-                        '@or': ([{'type': {'@in': [0, 2]}}, {
-                            'visible_in_prematch': 1,
-                            'type': 1
-                        }])
-                    } : {'type': {'@in': [0, 2]}})
-                }
-            };
-            if ($scope.bigBetFilter["0"]) {
-                request.where.competition = {"cloud_available": true};
+            if (Config.main.expandOnlyOneSport && !$location.search().region) {
+                $scope.expandLeftMenuPrematchRegion(sport.regions[0], sport, true);
             }
-            if ($scope.selectedUpcomingPeriod) {
-                request.where.game.start_ts = {'@now': {'@gte': 0, '@lt': $scope.selectedUpcomingPeriod * 3600}};
-            } else if (Config.env.gameTimeFilter) {
-                request.where.game.start_ts = Config.env.gameTimeFilter;
-            }
-            sport.regions = [];
-            connectionService.subscribe(
-                request,
-                function (data) {
-                    updateLeftMenuSportRegions(sport, data);
-                },
-                {
-                    'thenCallback': function (response) {
-                        if (response.subid) {
-                            sport.regionsSubId = response.subid;
-                            sport.loading = false;
-                            Config.main.expandOnlyOneSport && !$location.search().region && $scope.expandLeftMenuPrematchRegion(sport.regions[0], sport, true);
-                        }
-                    },
-                    'failureCallback': function () {
-                        sport.loading = false;
-                    }
-                },
-                true
-            );
+            handleDeepLinking();
+            openInitialDefaultGameIfNeeded();
         }
     };
-
-    /**
-     * @description gets sport and unsubscribes from it's regions and games
-     * @param {Object} sport object
-     */
-    function unsubscribeFromPrematchSportRegions(sport) {
-        if (sport.regionsSubId) {
-            connectionService.unsubscribe(sport.regionsSubId);
-            delete sport.regionsSubId;
-
-            // unsubscribe from nested regions
-            if (sport.regions) {
-                sport.regions.forEach(function (region) {
-                    if ($scope.leftMenuState.prematch.region[region.id] && $scope.leftMenuState.prematch.region[region.id].expanded && region.gamesSubId) {
-                        expandedprematchRegions[region.id] = undefined;
-                        connectionService.unsubscribe(region.gamesSubId);
-                        delete region.gamesSubId;
-                    }
-                });
-            }
-            // remove regions which are not needed
-            if (!$scope.liveFilters.disableRegions) {
-                sport.regions = null;
-            }
-        }
-    }
 
     $scope.$on('openTodayBets', function () {
         $scope.openTodaysBets(additionalLeftMenuItems.TODAY_BETS);
@@ -1465,47 +1436,6 @@ angular.module('vbet5.betting').controller('classicViewLeftController', ['$rootS
                 }
             }
         });
-        if (!isLive && $scope.selectedRegion && $scope.selectedRegion.gamesSubId) {
-            connectionService.unsubscribe($scope.selectedRegion.gamesSubId);
-            delete $scope.selectedRegion.gamesSubId;
-        }
-    }
-
-    /**
-     * @ngdoc method
-     * @name updateLeftMenuRegionGames
-     * @methodOf vbet5.controller:classicViewLeftController
-     * @description  updates regions data object by adding sports list to it
-     *
-     * @param {Object} region region data object to update with its sports
-     * @param {Object} data competitions/games data object
-     */
-    function updateLeftMenuRegionGames(region, data, sport) {
-        region.competitions = [];
-        angular.forEach(data.region, function (regionData) {
-            angular.forEach(regionData.competition, function (competition) {
-                competition.region = {'alias': regionData.alias, name: regionData.name, id: regionData.id};
-                GameInfo.replaceRegionFieldsIfNeeded(competition.region);
-                if (competition.game) {
-                    competition.games = Utils.objectToArray(competition.game).sort(function (a, b) {
-                        return a.start_ts - b.start_ts;
-                    });
-
-                    //if (Config.env.live) {
-                    //    var i, length;
-                    //    for (i = 0, length = competition.games.length; i < length; i += 1) {
-                    //        GameInfo.hasVideo(competition.games[i]);
-                    //    }
-                    //}
-                }
-                region.competitions.push(competition);
-            });
-        });
-
-
-        region.competitions.sort(Utils.orderSorting);
-        $scope.leftMenuIsLoading = false;
-        //handleDeepLinking();
     }
 
     /**
@@ -1523,10 +1453,6 @@ angular.module('vbet5.betting').controller('classicViewLeftController', ['$rootS
             return;
         }
 
-        if (Config.env.preMatchMultiSelection || Config.main.expandOnlyOneSport) {
-            closeOtherRegions(region);
-        }
-
         $scope.leftMenuState.prematch.region[region.id] = $scope.leftMenuState.prematch.region[region.id] || {};
         var skipSubscription = $scope.leftMenuState.prematch.region[region.id].expanded && expandedprematchRegions[region.id];
         $scope.leftMenuState.prematch.region[region.id].expanded = keepItOpen || !$scope.leftMenuState.prematch.region[region.id].expanded;
@@ -1535,98 +1461,45 @@ angular.module('vbet5.betting').controller('classicViewLeftController', ['$rootS
         !expandedprematchRegions[region.id] ? $location.search('region', undefined) : (Config.main.expandOnlyOneSport && $location.search('sport', sport.id));
 
 
-        if (region.gamesSubId) {
-            connectionService.unsubscribe(region.gamesSubId);
-            delete region.gamesSubId;
-        }
+        if ($scope.leftMenuState.prematch.region[region.id].expanded) {
+            $location.search('region', region.id);
 
-        if ($scope.leftMenuState.prematch.region[region.id].expanded && !skipSubscription) {
-            region.loading = true;
-
-            var request = {
-                'source': 'betting',
-                'what': {
-                    'competition': ['id', 'name', 'order'],
-                    'region': ['name', 'alias', 'id']
-                },
-                'where': {
-                    'game': (Config.main.enableVisibleInPrematchGames ? {
-                        '@or': ([{'type': {'@in': [0, 2]}}, {
-                            'visible_in_prematch': 1,
-                            'type': 1
-                        }])
-                    } : {'type': {'@in': [0, 2]}})
-                }
-            };
-            if ($scope.bigBetFilter["0"]) {
-                request.where.competition = {"cloud_available": true};
-            }
-            if (region.id !== -1) {
-                if (Config.main.regionMapping && Config.main.regionMapping.enabled && GameInfo.getRegionChildren(region.id)) {
-                    request.where.region = {'id': {'@in': GameInfo.getRegionChildren(region.id)}};
-                } else {
-                    request.where.region = {'id': region.id};
-                }
-
-            }
-            if ($scope.selectedUpcomingPeriod) {
-                request.where.game.start_ts = {'@now': {'@gte': 0, '@lt': $scope.selectedUpcomingPeriod * 3600}};
-            } else if (Config.env.gameTimeFilter) {
-                request.where.game.start_ts = Config.env.gameTimeFilter;
+            if (Config.env.preMatchMultiSelection || Config.main.expandOnlyOneSport) {
+                closeOtherRegions(region);
             }
 
-            if (Config.env.preMatchMultiSelection) {
-                request.what.game = ['id', 'team1_name', 'team2_name', 'start_ts', 'game_number'];
-            }
-            connectionService.subscribe(
-                request,
-                function (data) {
-                    updateLeftMenuRegionGames(region, data, sport);
-                },
-                {
-                    'thenCallback': function (result) {
-                        if (result.subid) {
-                            region.gamesSubId = result.subid;
-                        }
-
-                        if ($location.path() === '/dashboard/') {
-                            if (Storage.get('liveFiltersWithVideo')) {
-                                $scope.toggleVideoFilter();
-                            }
-                            return;
-                        }
-
-                        var firstCompetition = region.competitions[0];
-                        var competitionToExpand = Utils.getArrayObjectElementHavingFieldValue(region.competitions, 'id', Number($location.search().competition));
-                        // if (!$location.search().competition && firstCompetition &&  !expandedPrematchCompetition && ($location.search().sport === undefined || Number($location.search().sport) === sport.id)) {
-                        if ((Config.main.expandOnlyOneSport || (!$location.search().competition && !expandedPrematchCompetition)) && firstCompetition && ($location.search().sport === undefined || Number($location.search().sport) === sport.id)) {
-                            if (Config.env.preMatchMultiSelection && !Config.env.live) {
-                                if ($location.search().game && (!$scope.openGame || $scope.openGame.id !== Number($location.search().game))) {
-                                    $scope.prematchMultiViewGames[$location.search().game] = true;
-                                    $scope.openGameFullDetails({id: Number($location.search().game)});
-                                }
-                            } else {
-                                $scope.expandCompetition(competitionToExpand || firstCompetition, sport, !competitionToExpand);
-                            }
-                        }
-
-                        handleDeepLinking();
-
-                        // if user have competition id in URL we opening it
-                        if (!$scope.todaysBets.selected && (!$scope.selectedCompetition || !$scope.selectedCompetition.name)) {
-                            if (competitionToExpand) {
-                                $scope.expandCompetition(competitionToExpand);
-                            }
-                        }
-
-                        region.loading = false;
-                    },
-                    'failureCallback': function () {
-                        region.loading = false;
+            if (!skipSubscription) {
+                if ($location.path() === '/dashboard/') {
+                    if (Storage.get('liveFiltersWithVideo')) {
+                        $scope.toggleVideoFilter();
                     }
-                },
-                true
-            );
+                    return;
+                }
+                if (region.competitions) {
+                    var firstCompetition = region.competitions[0];
+                    var competitionToExpand = Utils.getArrayObjectElementHavingFieldValue(region.competitions, 'id', Number($location.search().competition));
+                    // if (!$location.search().competition && firstCompetition &&  !expandedPrematchCompetition && ($location.search().sport === undefined || Number($location.search().sport) === sport.id)) {
+                    if ((Config.main.expandOnlyOneSport || (!$location.search().competition && !expandedPrematchCompetition)) && firstCompetition && ($location.search().sport === undefined || Number($location.search().sport) === sport.id)) {
+                        if (Config.env.preMatchMultiSelection && !Config.env.live) {
+                            if ($location.search().game && (!$scope.openGame || $scope.openGame.id !== Number($location.search().game))) {
+                                $scope.prematchMultiViewGames[$location.search().game] = true;
+                                $scope.openGameFullDetails({id: Number($location.search().game)});
+                            }
+                        } else {
+                            $scope.expandCompetition(competitionToExpand || firstCompetition, sport, !competitionToExpand);
+                        }
+                    }
+
+                    handleDeepLinking();
+
+                    // if user have competition id in URL we opening it
+                    if (!$scope.todaysBets.selected && (!$scope.selectedCompetition || !$scope.selectedCompetition.name)) {
+                        if (competitionToExpand) {
+                            $scope.expandCompetition(competitionToExpand);
+                        }
+                    }
+                }
+            }
         }
     };
 
@@ -1721,12 +1594,13 @@ angular.module('vbet5.betting').controller('classicViewLeftController', ['$rootS
      */
     $scope.competitionToMultiview = function competitionToMultiview(competition) {
         $scope.todaysBets.selected = 0;
-        $scope.virtualSportsSelected = false;
         $scope.outrightSelected = false;
         $scope.boostedBets.selected = false;
-        angular.forEach(competition.game, function (game) {
-            $scope.prematchMultiViewGames[game.id] = $scope.prematchMultiViewCompetitions[competition.id];
-        });
+        $scope.recommendedGames.selected = false;
+
+        for (var i = competition.games.length; i--;) {
+            $scope.prematchMultiViewGames[competition.games[i].id] = $scope.prematchMultiViewCompetitions[competition.id];
+        }
 
         $scope.$emit('prematchMultiView.changeIsPopularGames', false);
     };
@@ -1853,13 +1727,14 @@ angular.module('vbet5.betting').controller('classicViewLeftController', ['$rootS
 
         $scope.todaysBets.selected = 0;
         $scope.boostedBets.selected = false;
+        $scope.recommendedGames.selected = false;
 
         $scope.selectCompetition(competition);
         if (sport) {
             $scope.selectSport(sport);
         }
-        if (competition && competition.region) {
-            $scope.selectRegion(competition.region);
+        if (competition.region && (!$scope.leftMenuState.prematch.region[competition.region.id] || !$scope.leftMenuState.prematch.region[competition.region.id].expanded)) {
+            $scope.expandLeftMenuPrematchRegion(competition.region, sport, false);
         }
         $rootScope.broadcast('prematch.expandCompetition', {competition: competition, sport: sport, openFirstGame: openFirstGame && Config.main.expandFirstPreMatchGame});
     };
@@ -1887,10 +1762,21 @@ angular.module('vbet5.betting').controller('classicViewLeftController', ['$rootS
             case 'popular.competition':
                 if ($location.path() === '/dashboard/') {
                     $location.path('/sport');
-                } else {
-                    data.data.region && $location.search('region', data.data.region.id);
-                    $scope.expandCompetition(data.data, data.data.sport, true);
                 }
+                data.data.region && $location.search('region', data.data.region.id);
+                var competitionToSelect = {
+                    id: data.data.id,
+                    name: data.data.name,
+                    region:data.data.region
+                };
+
+                var sportToSelect = {
+                    id: data.data.sport.id,
+                    name: data.data.sport.name,
+                    alias: data.data.sport.alias
+                };
+
+                $scope.expandCompetition(competitionToSelect, sportToSelect, true);
                 break;
         }
     });
@@ -1904,7 +1790,7 @@ angular.module('vbet5.betting').controller('classicViewLeftController', ['$rootS
      * @param {Boolean} fully is responsible for covering the entire central part of the
      */
     $scope.selectFavoriteGame = function selectFavoriteGame(game) {
-        if (game.id === $scope.activeGameId && $location.path() !== '/dashboard/' && $rootScope.multiViewLiveOpenedGamesIds.length !== 0) {
+        if (game.id === $scope.activeGameId && $location.path() !== '/dashboard/' && $rootScope.multiViewLiveOpenedGamesIds && $rootScope.multiViewLiveOpenedGamesIds.length !== 0) {
             return;
         }
         if ($location.path() === '/multiview/' && game.is_live === 0) {
@@ -1925,7 +1811,10 @@ angular.module('vbet5.betting').controller('classicViewLeftController', ['$rootS
         if(game.is_live !== $location.search().type){
             $scope.toggleLive();
         }
-        $scope.gameClicked(game, game.competition, true, true);
+        if (!game.is_live){
+            $scope.expandCompetition(game.competition, game.sport, false);
+        }
+        $scope.gameClicked(game, game.competition, true, false);
     };
 
     $scope.bet = function bet(event, market, liveGame, oddType) {
@@ -1963,6 +1852,7 @@ angular.module('vbet5.betting').controller('classicViewLeftController', ['$rootS
         if (Config.main.customSportsBook.classic) {
             GameInfo.getSportGroups().then(function () {
                 if (Config.main.customSportsBook.classic.showLive) {
+                    $scope.leftMenuLiveLoading = true;
                     GameInfo.getProviderAvailableEvents().then(function () {
                         subscribeToAllGameCounts(1);
                         loadLeftMenuLive();
@@ -1975,6 +1865,5 @@ angular.module('vbet5.betting').controller('classicViewLeftController', ['$rootS
                 }
             });
         }
-
     })();
 }]);

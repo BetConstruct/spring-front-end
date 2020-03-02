@@ -8,20 +8,38 @@
  *  and is syncronized with local storage on every update(adding or removing a casino game)
  */
 
-CASINO.controller('casinoMyGamesCtrl', ['$scope', '$rootScope', 'Storage', '$location', 'CConfig', 'Config', '$window', '$cookies', 'analytics', 'casinoManager', 'Utils', function($scope, $rootScope, Storage, $location, CConfig, Config, $window, $cookies, analytics, casinoManager, Utils) {
+CASINO.controller('casinoMyGamesCtrl', ['$scope', '$rootScope', 'Storage', '$location', 'CConfig', 'Config', '$window', '$cookies', 'analytics', 'casinoManager', 'Utils', 'casinoData', function($scope, $rootScope, Storage, $location, CConfig, Config, $window, $cookies, analytics, casinoManager, Utils, casinoData) {
     'use strict';
 
-    $scope.casinoGamesLoaded = false;
-    $rootScope.myCasinoGames = $cookies.getObject("myCasinoGames") || Storage.get("myCasinoGames") || [];
-    if ($rootScope.myCasinoGames.length) { // This needs to be done for properly adding 'active' class for fav games
-        $rootScope.myCasinoGamesIds = $rootScope.myCasinoGames.reduce(function makeObject(acc, curr) {
-            acc[curr.id] = true;
-            return acc;
-        }, {});
-    } else {
-        $rootScope.myCasinoGamesIds = {};
-    }
-    $scope.confData = CConfig;
+    (function init(){
+        var gameIds = $cookies.getObject("myCasinoGames") || Storage.get("myCasinoGames") || [];
+        $scope.confData = CConfig;
+        $scope.casinoGamesLoaded = false;
+        if (gameIds.length) {
+            casinoData.getGames(undefined,undefined,undefined,undefined,undefined,undefined,undefined, gameIds ).then(function (response) {
+                if (response && response.data && response.data.status !== -1) {
+                    $rootScope.myCasinoGames = response.data.games;
+                    $rootScope.myCasinoGames.sort(function (game1, game2) {
+                        return gameIds.indexOf(game1.id) - gameIds.indexOf(game2.id);
+                    });
+                    if ($rootScope.myCasinoGames.length) { // This needs to be done for properly adding 'active' class for fav games
+                        $rootScope.myCasinoGamesIds = $rootScope.myCasinoGames.reduce(function makeObject(acc, curr) {
+                            acc[curr.id] = true;
+                            return acc;
+                        }, {});
+                    } else {
+                        $rootScope.myCasinoGamesIds = {};
+                    }
+                    showVisibleGames();
+                }
+            });
+
+        } else {
+            $rootScope.myCasinoGames = [];
+            $rootScope.myCasinoGamesIds = {};
+        }
+    })();
+
 
     /**
      * @ngdoc method
@@ -43,6 +61,9 @@ CASINO.controller('casinoMyGamesCtrl', ['$scope', '$rootScope', 'Storage', '$loc
      * @description get array of visible games and show their
      */
     function showVisibleGames() {
+        if (!$rootScope.myCasinoGames) {
+            return;
+        }
         $scope.offset = 0;
         $scope.casinoGamesLoaded = false;
         $scope.myCasinoSavedGames = getVisibleGames($rootScope.myCasinoGames);
@@ -50,12 +71,12 @@ CASINO.controller('casinoMyGamesCtrl', ['$scope', '$rootScope', 'Storage', '$loc
     }
 
     $scope.$on('widescreen.on', function () {
-        $scope.GAMES_TO_SHOW = 6;
+        $scope.GAMES_TO_SHOW = CConfig.main.myGamesToShow.wideScreenOn;
         showVisibleGames();
     });
 
     $scope.$on('widescreen.off', function () {
-        $scope.GAMES_TO_SHOW = 6;
+        $scope.GAMES_TO_SHOW = CConfig.main.myGamesToShow.wideScreenOff;
         showVisibleGames();
     });
 
@@ -80,6 +101,12 @@ CASINO.controller('casinoMyGamesCtrl', ['$scope', '$rootScope', 'Storage', '$loc
 
         $scope.myCasinoSavedGames = getVisibleGames($rootScope.myCasinoGames);
     };
+
+    function mapMyGames(games) {
+        return games.map(function (game) {
+            return game.id;
+        });
+    }
 
     /**
      * @ngdoc method
@@ -106,22 +133,17 @@ CASINO.controller('casinoMyGamesCtrl', ['$scope', '$rootScope', 'Storage', '$loc
         }
 
         $scope.myCasinoSavedGames = getVisibleGames(games);
+        var gameIds =  mapMyGames(games);
 
-        Storage.set('myCasinoGames', games);
+        Storage.set('myCasinoGames', gameIds);
         analytics.gaSend('send', 'event', 'explorer', "removeFromMyCasinoGames" + (Config.main.sportsLayout),  {'page': $location.path(), 'eventLabel': "removeFromMyCasinoGames"});
         console.log('gaSend-',"removeFromMyCasinoGames");
-        Utils.checkAndSetCookie("myCasinoGames", games, Config.main.authSessionLifetime);
+        Utils.checkAndSetCookie("myCasinoGames", gameIds, Config.main.authSessionLifetime);
 
-        if (games.length === 0) {
-            if ($rootScope.myGames.length) {
-                $rootScope.env.sliderContent = 'savedGames';
-            } else {
-                $rootScope.env.showSlider = false;
-                $rootScope.env.sliderContent = '';
-            }
+        if (games.length === 0 && $rootScope.myGames.length) {
+            $rootScope.env.sliderContent = 'savedGames';
         }
     };
-
     /**
      * @ngdoc method
      * @name openGame
@@ -142,11 +164,12 @@ CASINO.controller('casinoMyGamesCtrl', ['$scope', '$rootScope', 'Storage', '$loc
         }
         $rootScope.myCasinoGames.push(game);
         $rootScope.myCasinoGamesIds[game.id] = true;
+        var gamesIds = mapMyGames($rootScope.myCasinoGames);
 
-        Storage.set('myCasinoGames', $rootScope.myCasinoGames);
+        Storage.set('myCasinoGames', gamesIds);
         analytics.gaSend('send', 'event', 'explorer', "addToMyCasinoGames" + (Config.main.sportsLayout),  {'page': $location.path(), 'eventLabel': "addToMyCasinoGames"});
         console.log('gaSend-',"addToMyCasinoGames");
-        Utils.checkAndSetCookie('myCasinoGames', $rootScope.myCasinoGames, Config.main.authSessionLifetime);
+        Utils.checkAndSetCookie('myCasinoGames', gamesIds, Config.main.authSessionLifetime);
 
         $scope.myCasinoSavedGames = getVisibleGames($rootScope.myCasinoGames);
     });
@@ -154,6 +177,12 @@ CASINO.controller('casinoMyGamesCtrl', ['$scope', '$rootScope', 'Storage', '$loc
     $scope.$on('game.removeGameFromMyCasinoGames', function (event, game) {
         $scope.removeGameFromSaved(game.id);
     });
+
+    $scope.removeAllGamesFromSaved = function removeAllGamesFromSaved() {
+        $rootScope.myCasinoGames.slice().forEach(function (game) {
+            $scope.removeGameFromSaved(game.id);
+        });
+    };
 
     $scope.$on('casinoGamesList.toggleSaveToMyCasinoGames', function (event, game) { // casino game list v2  favorite remove
         $scope.removeGameFromSaved(game.id);

@@ -871,6 +871,18 @@ VBET5.service('Utils', ['$timeout', '$filter', '$location', '$route', '$window',
     };
 
     /**
+     * @ngdoc method
+     * @name orderByStartTs
+     * @methodOf vbet5.service:Utils
+     * @description  compares 2 items based on their "start_ts" field
+     * @param {Object} a first item
+     * @param {Object} b second item
+     */
+    Utils.orderByStartTs = function orderByStartTs(a, b) {
+        return a.start_ts - b.start_ts;
+    };
+
+    /**
      *@ngdoc method
      * @name alphabeticalSorting
      * @methodOf vbet5.service:Utils
@@ -1294,6 +1306,16 @@ VBET5.service('Utils', ['$timeout', '$filter', '$location', '$route', '$window',
             request.where = request.where || {};
             request.where.sport = request.where.sport || {};
             request.where.sport.id = {'@in': customIds};
+        }
+        var pmuIdArray = [Config.main.PMUId];
+        if (request.where.sport) {
+            if (request.where.sport.id && request.where.sport.id['@nin']) {
+                request.where.sport.id['@nin'].push(Config.main.PMUId);
+            } else if(!request.where.sport.id) {
+                request.where.sport.id =  {'@nin': pmuIdArray};
+            }
+        } else {
+            request.where.sport =  {'id': {'@nin': [Config.main.PMUId]}};
         }
     };
 
@@ -1757,6 +1779,122 @@ VBET5.service('Utils', ['$timeout', '$filter', '$location', '$route', '$window',
     };
 
 
+    /**
+     * @ngdoc method
+     * @name getAllUrlParams
+     * @methodOf vbet5.service:Utils
+     * @description parsing url string
+     * @param {String} href
+     */
+    Utils.getAllUrlParams = function getAllUrlParams(href) {
+        var params = {};
+        var path = '';
+        var host = '';
+        var url = '';
+        if(href && typeof href === 'string'){
+            var a = href.split('#');
+
+            if (a[0] && typeof a[0] === 'string') {
+                host = a[0];
+            }
+
+            if(a[1] && typeof a[1] === 'string'){
+                url = a[1];
+                var b = a[1].split('?');
+
+                if (b[0] && typeof b[0] === 'string') {
+                    path = b[0];
+                }
+
+                if (b[1] && typeof b[1] === 'string') {
+                    var c = b[1].split('&');
+                    angular.forEach(c, function (d) {
+                        if(d && typeof d === 'string'){
+                            d = d.split('=');
+                            params[d[0]] = d[1];
+                        }
+                    });
+                }
+            }
+        }
+
+        return {params: params, path: path, host: host, url: url};
+    };
+
+
+    /**
+     * @ngdoc method
+     * @name sortMarketGroupsWithNestedEvents
+     * @methodOf vbet5.service:Utils
+     * @description Sort lists deeply with all levels
+     * @param {Array} markets
+     */
+    Utils.sortMarketGroupsWithNestedEvents = function sortMarketGroupsWithNestedEvents(markets) {
+        markets.sort(function (a, b) {
+            return a[0].order - b[0].order;
+        });
+        for (var i = markets.length; i--;) {
+            markets[i].sort(Utils.orderSorting);
+            for (var j = markets[i].length; j--;) {
+                markets[i][j].events.sort(Utils.orderSorting);
+            }
+        }
+    };
+
+    /**
+     * @ngdoc method
+     * @name convertPascalStrToSnake
+     * @methodOf vbet5.service:Utils
+     * @description Convert string from pascal case to snake case
+     * @param {String} str
+     */
+    Utils.convertPascalStrToSnake = function convertPascalStrToSnake(str) {
+        return str.split(/(?=[A-Z])/).join('_').toLowerCase();
+    };
+
+    /**
+     * @ngdoc method
+     * @name convertPascalArrayToSnakeCase
+     * @methodOf vbet5.service:Utils
+     * @description Convert in array objects keys from pascal case to snake case.
+     * @param {array} array
+     */
+    Utils.convertPascalArrayToSnakeCase = function convertPascalArrayToSnakeCase(array) {
+        array.forEach(function(v) {
+            if (v) {
+                if (v.constructor === Object) {
+                    Utils.convertPascalObjectToSnakeCase(v);
+                } else if (v.constructor === Array) {
+                    Utils.convertPascalArrayToSnakeCase(v);
+                }
+            }
+        });
+    };
+
+    /**
+     * @ngdoc method
+     * @name convertPascalObjectToSnakeCase
+     * @methodOf vbet5.service:Utils
+     * @description Convert object keys from pascal case to snake case
+     * @param {object} obj
+     */
+    Utils.convertPascalObjectToSnakeCase = function convertPascalObjectToSnakeCase(obj) {
+        Object.keys(obj).forEach(function(k){
+            if (obj[k]) {
+                if (obj[k].constructor === Object) {
+                    Utils.convertPascalObjectToSnakeCase(obj[k]);
+                } else if (obj[k].constructor === Array) {
+                    Utils.convertPascalArrayToSnakeCase(obj[k]);
+                }
+            }
+
+            var sck = Utils.convertPascalStrToSnake(k);
+            if (sck !== k) {
+                obj[sck] = obj[k];
+                delete obj[k];
+            }
+        });
+    };
 
     return Utils;
 }]);

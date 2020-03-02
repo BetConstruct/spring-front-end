@@ -161,7 +161,7 @@ angular.module('vbet5.betting').controller('overviewCtrl', ['$rootScope', '$scop
                         processedGame.hasVideo = GameInfo.hasVideo(processedGame);
                         processedCompetition.games.push(processedGame);
                     });
-                    processedCompetition.games.sort(function (a, b) {return a.start_ts - b.start_ts; });
+                    processedCompetition.games.sort(Utils.orderByStartTs);
                     processedSport.competitions.push(processedCompetition);
                 });
             });
@@ -183,7 +183,7 @@ angular.module('vbet5.betting').controller('overviewCtrl', ['$rootScope', '$scop
                 'region': ['id', 'name', 'alias'],
                 'game': [['id', 'start_ts', 'team1_name', 'team2_name', 'type', 'info', 'stats', 'events_count', 'markets_count', 'is_blocked', 'tv_type', 'video_id', 'video_id2', 'video_id3', 'video_provider']],
                 'event': ['id', 'price', 'type_1', 'name', 'base'],
-                'market': ['type', 'express_id', 'name', 'home_score', 'away_score', 'display_key', 'display_sub_key', 'base', 'id', 'cashout', 'point_sequence', 'col_count']
+                'market': ['id', 'type', 'express_id', 'name', 'home_score', 'away_score', 'display_key', 'display_sub_key', 'base', 'id', 'cashout', 'point_sequence', 'col_count']
             },
             'where': {
                 'game': {'type': 1},

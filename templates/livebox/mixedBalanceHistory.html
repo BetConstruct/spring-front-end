@@ -14,8 +14,8 @@
             <tr>
                 <td class="date-id">
                     <span>{{balance.date_time|formatDate:(conf.layoutTimeFormat[conf.sportsLayout] || 'noLocaleTranslate'):null:$root.env.timeFormat}} {{conf.layoutTimeFormat[conf.sportsLayout] ? (balance.date_time|formatDate:'hour':null:$root.env.timeFormat) : ''}}</span>
-                    <span ng-show="!conf.transactionIdInBalanceHistory && balance.bet_id"><br/> ID: <a>{{balance.bet_id}}</a></span>
-                    <span ng-show="conf.transactionIdInBalanceHistory && balance.transaction_id"><br/> ID: <a>{{balance.transaction_id}}</a></span>
+                    <span ng-show="balance.bet_id"><br/> ID: <a>{{balance.bet_id}}</a></span>
+                    <span ng-show="balance.transaction_id"><br/> ID: <a>{{balance.transaction_id}}</a></span>
                 </td>
                 <td class="auto-cell">
                     <ul class="cell-inner mixed-bet-history-flex">
@@ -49,7 +49,7 @@
             <tr>
                 <td class="date-id">
                     <span>{{::balance.Date|formatDate:(conf.layoutTimeFormat[conf.sportsLayout] || 'noLocaleTranslate'):null:$root.env.timeFormat}}</span>
-                    <span ng-show="!conf.transactionIdInBalanceHistory && balance.DocumentId"><br/> ID: <a>{{::balance.DocumentId}}</a></span>
+                    <span ng-show="balance.DocumentId"><br/> ID: <a>{{::balance.DocumentId}}</a></span>
                 </td>
                 <td class="auto-cell">
                     <ul class="cell-inner mixed-bet-history-flex">

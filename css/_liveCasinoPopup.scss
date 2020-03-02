@@ -38,7 +38,8 @@
 .casino-game-contain .icon-delete.popup,
 .casino-game-contain .icon-delete.refresh,
 .casino-game-contain .icon-delete.favourite,
-.casino-game-contain .icon-delete.closed-iframe-info {
+.casino-game-contain .icon-delete.closed-iframe-info,
+.side-bar-available .icon-delete {
     top: 0;
     right: 0;
     width: 40px;
@@ -47,14 +48,15 @@
     display: block;
     margin-bottom: 2px;
 }
-.casino-game-contain .icon-delete a {
+.casino-game-contain .icon-delete a,
+.side-bar-available .icon-delete a {
     background: $skin-palette-12;
     width: 40px;
     height: 40px;
     top: 0;
     position: static;
 }
-.casino-game-contain .icon-delete a:before{
+.casino-game-contain .icon-delete a:before {
     content: "\e62c";
     font: 18px/40px icomoon;
     color: $text-palette-1;
@@ -100,7 +102,8 @@
     top: -1px;
     text-indent: 0;
 }
-.casino-game-contain .icon-delete.closed-iframe-info a:before{
+.casino-game-contain .icon-delete.closed-iframe-info a:before,
+.side-bar-available .icon-delete.closed-iframe-info a:before{
     content: "\10ff14";
     font: 18px/40px "icomoon";
     position: absolute;

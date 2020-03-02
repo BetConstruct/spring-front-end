@@ -114,7 +114,7 @@
   &:before {
     content: "\e92c";
   }
-  &.vgs102, &.ezgroulette, &.ezg7, &.lksroulette, &.lksexternalroulette, &.ezg6, &.evl104, &.netlcroulette_sw, &.netlcrouletteauto_sw, &.vgs110, &.agcrou, &.agc6, &.xpgliveroulette, &.ntlroulette, &.ntlautomatic_roulette, &.pnh4, &.xpgroulette, &.xpgmore20games {
+  &.vgs102, &.ezgroulette, &.ezg7, &.lksroulette, &.lksexternalroulette, &.ezg6, &.evl104, &.netlcroulette_sw, &.netlcrouletteauto_sw, &.vgs110, &.agcrou, &.agc6, &.xpgliveroulette, &.ntlroulette, &.ntlautomatic_roulette, &.pnh4, &.xpgroulette, &.xpgmore20games, &.ptslrol, &.ptslrol, &.vivroulette, &.tpg201, &.fazroulette {
     &:before {
       content: "\71";
     }
@@ -144,7 +144,7 @@
       content: "\e6f8";
     }
   }
-  &.vgs101, &.vgs112, &.ezgblackjack, &.evl105, &.lksblackjack, &.netlcblackjack_sw, &.netlcblackjackcdlr_sw, &.xpgliveblackjack, &.ntlblackjack_standard, &.ntlblackjack_common_draw, &.pnh1, &.pnh0, &.xpgblackjack {
+  &.vgs101, &.vgs112, &.ezgblackjack, &.evl105, &.lksblackjack, &.netlcblackjack_sw, &.netlcblackjackcdlr_sw, &.xpgliveblackjack, &.ntlblackjack_standard, &.ntlblackjack_common_draw, &.pnh1, &.pnh0, &.xpgblackjack, &.ptslbjl, &.vivblackjack, &.tpg301, &.tpg302, &.tpg303, &.tpg304, &.tpg305 {
     &:before {
       content: "\72";
     }
@@ -159,7 +159,7 @@
       content: "\69";
     }
   }
-  &.vgs125 {
+  &.vgs125, &.evldragontiger00001, &.ptsldtl {
     &:before {
       content: "\ea11";
     }
@@ -214,7 +214,7 @@
       content: "\e96b";
     }
   }
-  &.xpgcaribbeanpoker {
+  &.xpgcaribbeanpoker, &.ptslchel {
     &:before {
       content: "\e953";
     }
@@ -234,7 +234,7 @@
       content: "\ea50";
     }
   }
-  &.ezg20, &.ezgbaccarat, &.ezg4, &.evl103, &.vgs103, &.vgs108, &.agcbac, &.lksbaccarat, &.agclink, &.xpglivebaccarat, &.pnh2, &.xpgbaccarat, &.xpgbaccaratnocommission {
+  &.ezg20, &.ezgbaccarat, &.ezg4, &.evl103, &.vgs103, &.vgs108, &.agcbac, &.lksbaccarat, &.agclink, &.xpglivebaccarat, &.pnh2, &.xpgbaccarat, &.xpgbaccaratnocommission, &.ptslbal, &.vivbaccarat {
     &:before {
       content: "\74";
     }
@@ -282,6 +282,11 @@
   &.ftv1724 {
     &:before {
       content: "\ea55";
+    }
+  }
+  &.ptslhilol {
+    &:before {
+      content: "\ea52";
     }
   }
 }

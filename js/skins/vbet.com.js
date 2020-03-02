@@ -250,7 +250,7 @@ VBET5.constant('SkinConfig', {
         sportNewsLink: 'http://www.vbetnews.com/',
         GmsPlatform:true,
         expandOnlyOneSport: true,
-        enableSuggestedBets: true,
+        enableSuggestedBets: false,
         enableSportsbookLayoutSwitcher: true,
         enableBonuses: false,
         promoCodeFieldName: 'loyalty_code',

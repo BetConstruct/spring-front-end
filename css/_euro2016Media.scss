@@ -68,27 +68,6 @@
       right: 0;
     }
   }
-  .prematch-games-list-title-v3{
-    height: 46px;
-    padding: 10px 0 0;
-  }
-  .prematch-markets-filter-v3{
-    top: 8px;
-  }
-  .prematch-column-title-v3 > h2{
-    position: absolute;
-    top: -16px;
-    font-size: 10px;
-    @include ltr {
-      left: 7px;
-    }
-    @include rtl {
-      right: 7px;
-    }
-    > span{
-      max-width: 88%;
-    }
-  }
   .prematch-competition-title-v3 > p > span {
     &:nth-child(2) {
       max-width: 20.5%;

@@ -31,7 +31,7 @@ VBET5.service('ActiveStep', ['$rootScope', 'Config', function ($rootScope, Confi
                 angular.forEach(Config.activeStepsConfig, function (stepConfig) {
                     if (type === stepConfig.type) {
                         angular.forEach(stepConfig.steps, function (step) {
-                            if (step.step && activeStep === step.step && (!step.state || activeState == step.state)) {
+                            if (step.step && activeStep === step.step && (!step.state || activeState === step.state)) {
                                 result = stepConfig;
                             }
                         });

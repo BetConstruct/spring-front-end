@@ -61,13 +61,16 @@
     <!--Счет игры live game-->
     <table class="cash-game" ng-class="{'no-video-flash': !($root.conf.videoEnabled && game.video_id || game.has_animation) || (isVideoDetached && !game.has_animation), 'no-video-ie8': !game.video_id  || isVideoDetached}">
         <tr>
-            <th>&nbsp;</th>
+            <th>
+                <soccer-line-up  ng-if="$root.conf.matchLineupStatistics.soccer && game.sport.alias === 'Soccer'" game-id="game.id"></soccer-line-up>
+            </th>
             <th class="active-set"><div class="h-time" title="First time score" trans>HT</div></th>
             <th><div class="yellow-icon" title="yellow cards" trans></div></th>
             <th><div class="red-icon" title="red cards" trans></div></th>
             <th><div class="angular-icon" title="corners" trans></div></th>
             <th><div class="penalty-icon" title="penalties" trans></div></th>
         </tr>
+
         <tr>
             <td class="team-1" ng-style="{'border-color': '#'+ game.info.shirt1_color}"><div><tshirt shorts="{{game.info.short1_color}}" shirt="{{game.info.shirt1_color}}"></tshirt></div> <span>{{ game.team1_name }}</span></td>
             <td>{{ game.stats.score_set1.team1_value ? game.stats.score_set1.team1_value : 0}}</td>

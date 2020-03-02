@@ -8,7 +8,7 @@
  * @param {Number} [interval] optional. Rotation interval in milliseconds (default is 10000)
  *
  */
-VBET5.directive('bannerSlider', ['$location', '$interval', 'analytics', 'WPConfig', 'content', function ($location, $interval, analytics, WPConfig, content) {
+VBET5.directive('bannerSlider', ['$rootScope','$location', '$interval', 'analytics', 'WPConfig', 'content', function ($rootScope, $location, $interval, analytics, WPConfig, content) {
     'use strict';
     return {
         restrict: 'EA',
@@ -21,14 +21,17 @@ VBET5.directive('bannerSlider', ['$location', '$interval', 'analytics', 'WPConfi
         link: function (scope, element, attrs) {
             scope.slide = 0;
             scope.over = false;
-            scope.banners = [];
+            scope.banners = {
+                true: [],
+                false: []
+            };
             var intervalPromise;
 
             function animateBanners() {
                 if (scope.over) {
                     return;
                 }
-                if (scope.slide === scope.banners.length -1) {
+                if (scope.slide === scope.banners[$rootScope.env.authorized].length -1) {
                     scope.slide = 0;
                 } else {
                     scope.slide++;
@@ -48,7 +51,10 @@ VBET5.directive('bannerSlider', ['$location', '$interval', 'analytics', 'WPConfi
                 containerId = container || content.getSlug('bannerSlugs.' + slug);
                 content.getWidget(containerId).then(function (response) {
                     if (response.data && response.data.widgets && response.data.widgets[0]) {
-                        scope.banners = [];
+                        scope.banners = {
+                            true: [],
+                            false: []
+                        };
                         angular.forEach(response.data.widgets, function (widget) {
                             widget.instance.linkType = 'url';
                             if (widget.instance.text) {
@@ -62,8 +68,12 @@ VBET5.directive('bannerSlider', ['$location', '$interval', 'analytics', 'WPConfi
                                     break;
                                 }
                             }
-
-                            scope.banners.push(widget.instance);
+                            if (widget.instance.show_for === '1' || widget.instance.show_for === '0' || !widget.instance.show_for) {
+                                scope.banners.true.push(widget.instance);
+                            }
+                            if (widget.instance.show_for === '2' || widget.instance.show_for === '0' || !widget.instance.show_for) {
+                                scope.banners.false.push(widget.instance);
+                            }
                         });
 
                         intervalPromise = $interval(animateBanners, attrs.interval || 10000);
@@ -119,10 +129,24 @@ VBET5.directive('bannerSlider', ['$location', '$interval', 'analytics', 'WPConfi
                 }
             }
 
+
+
+            var authorizedWatch = $rootScope.$watch('env.authorized', function (newValue, oldValue) {
+                if (newValue === oldValue) {
+                    return;
+                }
+                if (scope.slide > (scope.banners[newValue].length - 1)) {
+                    scope.slide = 0;
+                }
+            });
+
             scope.$on('$destroy', function () {
                 $interval.cancel(intervalPromise);
                 intervalPromise = undefined;
+                authorizedWatch();
             });
+
+
         }
     };
 }]);

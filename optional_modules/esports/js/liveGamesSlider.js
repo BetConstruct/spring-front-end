@@ -1,4 +1,4 @@
-VBET5.directive('liveGamesSlider', ['$rootScope', '$filter', '$interval', '$location', '$route', 'Config', 'ConnectionService', 'Utils', 'GameInfo', function($rootScope, $filter, $interval, $location, $route, Config, ConnectionService, Utils, GameInfo){
+VBET5.directive('liveGamesSlider', ['$rootScope', '$filter', '$interval', '$location', '$route', 'Config', 'ConnectionService', 'Utils', 'GameInfo', 'Storage', function($rootScope, $filter, $interval, $location, $route, Config, ConnectionService, Utils, GameInfo, Storage){
     return {
         restrict:'E',
         replace: true,
@@ -28,8 +28,8 @@ VBET5.directive('liveGamesSlider', ['$rootScope', '$filter', '$interval', '$loca
                     region: ['name', 'alias', 'id', 'order'],
                     competition: ['id', 'name', 'order'],
                     game: [['id', 'start_ts', 'team1_name', 'team2_name','team1_reg_name', 'team2_reg_name', 'type', 'info', 'text_info', 'events_count', 'markets_count', 'is_blocked', 'stats', 'is_stat_available', 'show_type', 'game_external_id', 'team1_external_id', 'team2_external_id']],
-                    market: [],
-                    event: []
+                    market: ["id", "col_count", "type", "sequence", "express_id", "cashout", "display_key", "display_sub_key", "group_id", "name", "group_name", "order" ],
+                    event: ["order", "id", "type_1", "type", "type_id", "original_order", "name", "price", "base", "home_value", "away_value", "display_column"]
                 },
                 where: {
                     sport: { type: 0 },
@@ -85,7 +85,16 @@ VBET5.directive('liveGamesSlider', ['$rootScope', '$filter', '$interval', '$loca
             }
 
             var updateGames = function updateGames(data) {
-                var currentGameId = $scope.state.selectedIndex !== undefined ? $scope.games[$scope.state.selectedIndex].id: null;
+                var gameIdInStorage = Storage.get("liveGameSliderGameId");
+                var currentGameId = ($scope.state.selectedIndex !== undefined && $scope.games[$scope.state.selectedIndex])
+                    ? $scope.games[$scope.state.selectedIndex].id
+                    : (gameIdInStorage || null);
+
+                if (gameIdInStorage) {
+                    Storage.remove("liveGameSliderGameId");
+                }
+
+
                 var index = -1;
                 var newIndex = 0;
                 $scope.games = [];
@@ -162,8 +171,10 @@ VBET5.directive('liveGamesSlider', ['$rootScope', '$filter', '$interval', '$loca
                     sport: gamePointer.sport.id,
                     competition: gamePointer.competition.id,
                     region: gamePointer.region.id,
-                    game: gamePointer.id
+                    game: gamePointer.id,
+                    layout: $location.search().layout
                 });
+                Storage.set("liveGameSliderGameId", $scope.games[$scope.state.selectedIndex].id);
                 $route.reload();
             };
 

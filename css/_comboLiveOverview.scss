@@ -76,26 +76,37 @@
     color: set-color($hero-color);
   }
 }
-.mini-b-events-overview > ul > li > span.price1:before,
-.mini-b-events-overview > ul > li > span.price-1:before {
+.mini-b-events-overview > ul > li > span.up-0:before,
+.mini-b-events-overview > ul > li > span.up-1:before,
+.mini-b-events-overview > ul > li > span.down0:before,
+.mini-b-events-overview > ul > li > span.down-1:before {
   content: "\e66d";
   font: 12px 'icomoon';
   color: #04e914;
   text-shadow: none;
-  animation: arrow-blick 300ms ease;
   position: absolute;
-  left: 0;
   top: 1px;
+  animation-duration: 7000ms;
+  animation-fill-mode: forwards;
+  @include ltr {
+    left: 0;
+  }
   @include rtl {
-    left: auto;
     right: 0;
   }
 }
 
-.mini-b-events-overview > ul > li > span.price-1:before {
+.mini-b-events-overview > ul > li > span.down0:before,
+.mini-b-events-overview > ul > li > span.down-1:before {
   content: "\e66c ";
   color: #a61f67;
 }
+
+.mini-b-events-overview > ul > li > span.up-0:before { animation-name: odds-arrow-up-0; }
+.mini-b-events-overview > ul > li > span.up-1:before { animation-name: odds-arrow-up-1; }
+.mini-b-events-overview > ul > li > span.down0:before { animation-name: odds-arrow-down0; }
+.mini-b-events-overview > ul > li > span.down-1:before { animation-name: odds-arrow-down-1; }
+
 .live-overview-contanier-b .mini-b-events-overview > ul > li > p {
   color: #3f4553;
 }

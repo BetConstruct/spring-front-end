@@ -255,8 +255,10 @@ $last-minute-bets-widget: $skin-color !default;
   margin: 0;
   text-align: center;
   display: inline-block;
-  &.price1,
-  &.price-1 {
+  &.up-0,
+  &.up-1,
+  &.down0,
+  &.down-1 {
     &:before {
       position: absolute;
       left: -12px;

@@ -49,7 +49,7 @@
                                                     </div>
                                                     <ng-include src="::'templates/directive/live-game-scores-info.html'|fixPath"></ng-include>
                                                     <div class="add-info" ng-if="!!openGame.info.current_game_state">
-                                                        {{ openGame.info.current_game_state|convertSetName:openGame.sport.alias|translate }} {{ (openGame.info.current_game_time)[0] === '-'? ('will start in'|translate)+' '+ (openGame.info.current_game_time).substring(1): openGame.info.current_game_time }}
+                                                        {{ (openGame.info.current_leg === undefined?(openGame.info.current_game_state|convertSetName:openGame.sport.alias): (openGame.info.current_game_state|convertSetNameWithLeg:openGame.info))|translate }} {{ (openGame.info.current_game_time)[0] === '-'? ('will start in'|translate)+' '+ (openGame.info.current_game_time).substring(1): openGame.info.current_game_time }}
                                                     </div>
                                                     <ng-include src="::'templates/directive/live-game-scores-statistics.html'|fixPath"></ng-include>
                                                 </div>
@@ -77,6 +77,10 @@
                                                                 <li><p trans>Horse</p><span class="text-small" trans>Trainer/Jockey</span></li>
                                                                 <li><span class="text-small" trans>Age</span><span class="text-small" trans>Weight</span></li>
                                                                 <li trans>Form</li>
+                                                                <li trans>
+                                                                    Previous
+                                                                    odds
+                                                                </li>
                                                                 <li ng-click="raceCardsColumnClick('price');$event.stopPropagation();"
                                                                     class="odds arr-up" ng-if="conf.enableNewHorseRacingTemplate"
                                                                     ng-class="{'arr-down': raceCardsPredicate === 'price' && raceCardsReverce}">Odds
@@ -102,9 +106,10 @@
                                                                 </li>
                                                                 <li><div class="text-small">{{horseStat.age}}<span class="text-small">{{horseStat.weight.value}}</span></div></li>
                                                                 <li>{{horseStat.form_figures}}</li>
+                                                                <li class="odds  preview" ng-bind="horseStat.event.previousPrice?(horseStat.event.previousPrice|oddConvert:env.oddFormat):''"></li>
                                                                 <li class="odds" ng-class="{'no-odd': !horseStat.event.price && horseStat.event.sp_enabled, 'no-odd-both':!horseStat.event.price && !horseStat.event.sp_enabled}" ng-if="conf.enableNewHorseRacingTemplate">
                                                                     <div class="bets" ng-click="bet(horseStat.event, (openGame.market | firstElement), openGame) ; $event.stopPropagation();" ng-if="horseStat.event.price" ng-class="{'active': isEventInBetSlip(horseStat.event)}">
-                                                                        <span class="price{{arrowHide}}{{horseStat.event.price_change}}">{{horseStat.event.price|oddConvert:env.oddFormat:null:openGame.market.display_key}}</span>
+                                                                        <span class="{{horseStat.event.price_change == null? '' : ({true: 'up-', false: 'down'}[horseStat.event.price_change > 0] + (horseStat.event.price_change % 2)) }}">{{horseStat.event.price|oddConvert:env.oddFormat:null:openGame.market.display_key}}</span>
                                                                     </div>
                                                                 </li>
                                                                 <li class="odds" ng-class="{'no-odd': !horseStat.event.sp_enabled}" ng-if="conf.enableNewHorseRacingTemplate">
@@ -196,7 +201,7 @@
                                                                 </li>
                                                                 <li ng-repeat="event in market.events|orderBy:'order' track by event.id" ng-class="{'pointer-events-none': event.is_empty, 'active': isEventInBetSlip(event), 'blocked': ((event.price | oddConvert:'decimal') == 1 || openGame.is_blocked)}" ng-click="bet(event, market, openGame) ; $event.stopPropagation();" onmouseover="displayEventLimit(event)" onmouseleave="cancelDisplayEventLimit(event)" title="{{event.name}} {{ displayBase(event, market)}}">
                                                                     <div ng-show="event.maxBet !== undefined" class="event-max-bet"><span trans>Max:</span> <b ng-bind="event.maxBet|number:conf.balanceFractionSize"></b> {{profile.currency_name|currency }}</div>
-                                                                    <div class="market-info-b"><p><i>{{event.name}} {{ displayBase(event, market)}}</i></p> <span  ng-show="(event.price | oddConvert:'decimal') != 1 && !openGame.is_blocked" class="price{{arrowHide}}{{event.price_change}}"><span ng-show="event.price !== 1 && !openGame.is_blocked">{{event.price|oddConvert:env.oddFormat:null:market.display_key}}</span></span></div>
+                                                                    <div class="market-info-b"><p><i>{{event.name}} {{ displayBase(event, market)}}</i></p> <span  ng-show="(event.price | oddConvert:'decimal') != 1 && !openGame.is_blocked" class="{{event.price_change == null? '' : ({true: 'up-', false: 'down'}[event.price_change > 0] + (event.price_change % 2)) }}"><span ng-show="event.price !== 1 && !openGame.is_blocked">{{event.price|oddConvert:env.oddFormat:null:market.display_key}}</span></span></div>
                                                                 </li>
                                                             </ul>
                                                         </div>

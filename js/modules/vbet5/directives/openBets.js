@@ -302,6 +302,7 @@ VBET5.directive('openBets', ['$rootScope', 'Zergling', 'BetService', 'Utils', 'G
                 unsubscribeFromOpenBets();
                 unsubscribeFromCashOut();
             });
+
         }
     };
 }]);

@@ -1,5 +1,5 @@
 <div ng-if="$root.conf.betStatus.enabled" ng-controller="betStatusCtrl" class="bet-status-container {{resultMap[betStatus.details.StateName] || betStatus.details.StateName.toLowerCase()}}" ng-class="{closed: !betStatus.open}">
-    <p class="bet-status-select" ng-click="betStatus.open = !betStatus.open" trans>Get Bet Status</p>
+    <p class="bet-status-select" ng-click="toggleBetStatus()" trans>Get Bet Status</p>
     <div class="bet-status-content" ng-if="betStatus.open && !$root.env.sliderContent && !$root.env.showSlider">
         <p ng-show="betStatus.details.StateName">
             {{betStatus.details.StateName|translate}}

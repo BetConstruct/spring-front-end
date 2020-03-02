@@ -78,8 +78,8 @@ CASINO.directive('casinoBiggestWinners', ['$rootScope', '$location', '$interval'
                 if ($rootScope.inactiveMode) {
                     return;
                 }
-                scope.winnersLoading = true;
                 var activeTab = scope.activeTab;
+                scope.winnersLoading = (scope.activeTab === activeTab) && !scope.winners;
                 var command = (scope.activeTab === 'top') ? 'get_partner_last_big_wins' : 'get_partner_last_wins';
                 var request = {
                     count: scope.limit || 5

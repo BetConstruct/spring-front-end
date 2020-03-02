@@ -120,6 +120,7 @@ CASINO.directive('carouselSlider', ['TimeoutWrapper', '$window', function (Timeo
                     scope.changeCallback(scope.selectedItem);
                 }
 
+                return processedItems;
             }
 
 
@@ -162,7 +163,7 @@ CASINO.directive('carouselSlider', ['TimeoutWrapper', '$window', function (Timeo
                 }
 
                 function mouseUp(e) {
-                    container.className = container.className.replace(' grabbing', '');
+                    container.className = container.className = 'slider-wrapper';
 
                     e.target.style.border = null;
                     var itemWidth = itemNodes[0].offsetWidth;
@@ -193,17 +194,12 @@ CASINO.directive('carouselSlider', ['TimeoutWrapper', '$window', function (Timeo
                     body.addEventListener('mouseup', mouseUp);
                 }
 
-
                 container.removeEventListener('mousedown', mouseDown);
                 container.addEventListener('mousedown', mouseDown);
             }
 
-            scope.$watch('items',function () {
-                processItemsList();
-                drawItems(processedItems);
-                addSlideEvents();
-            });
-
+            drawItems(processItemsList());
+            addSlideEvents();
         }
     };
 }]);

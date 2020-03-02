@@ -4,7 +4,7 @@
  * @description main top menu data and methods
  *
  */
-angular.module('vbet5').service('TopMenu', ['$rootScope', '$location', '$timeout' ,'$window', '$route', 'Translator', 'Config', 'Utils', 'Moment', 'RecaptchaService', function ($rootScope, $location, $timeout, $window, $route, Translator, Config, Utils, Moment, RecaptchaService) {
+angular.module('vbet5').service('TopMenu', ['$rootScope', '$location', '$timeout' ,'$window', 'Translator', 'Config', 'Utils', 'Moment', 'RecaptchaService', function ($rootScope, $location, $timeout, $window, Translator, Config, Utils, Moment, RecaptchaService) {
     'use strict';
     var TopMenu = {};
     var countryCode;

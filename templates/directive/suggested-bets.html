@@ -21,7 +21,8 @@
                                 <div class="suggest-info-sport-time">
                                     <b class="suggest-sport-icon {{bet.gameInfo.sport.alias}}"></b>
                                     <p>
-                                        <span ng-bind="bet.gameInfo.info.current_game_state|convertSetName:bet.gameInfo.sport.alias|translate"></span>
+                                        <span ng-if="bet.gameInfo.info.current_leg === undefined" ng-bind="bet.gameInfo.info.current_game_state|convertSetName:bet.gameInfo.sport.alias|translate"></span>
+                                        <span ng-if="bet.gameInfo.info.current_leg !== undefined" ng-bind="bet.gameInfo.info.current_game_state|convertSetNameWithLeg:bet.gameInfo.info|translate"></span>
                                         <span trans="attr-only" title="Game time"  ng-hide="bet.gameInfo.info.current_game_state == 'notstarted' && bet.gameInfo.current_game_time == 0" ng-bind="bet.gameInfo.info.current_game_time"></span>
                                     </p>
                                 </div>
@@ -38,7 +39,8 @@
                                    (bet.eventInfo.base !== undefined ? (bet.eventInfo.name + bet.eventInfo.base) : bet.eventInfo.name)}}"
                                  ng-class="{'active': isEventInBetSlip(bet.eventInfo)}"
                                  ng-click="params.type === 'live' ? addSingleEvent(bet, $event) : ''">
-                                <b class="p-v" ng-class="{'factor-top': bet.eventInfo.price_change > 0, 'factor-bottom': bet.eventInfo.price_change < 0}">{{bet.eventInfo.price|oddConvert:$root.env.oddFormat}}</b>
+                                <i ng-if="$root.conf.boostedBets.enabled && $root.boostedBetsEventIds && $root.boostedBetsEventIds[bet.eventInfo.id]" title="{{'Boosted odd'|translate}}" class="boosted"></i>
+                                <b class="p-v {{bet.eventInfo.price_change == null? '' : ({true: 'up-', false: 'down'}[bet.eventInfo.price_change > 0] + (bet.eventInfo.price_change % 2)) }}">{{bet.eventInfo.price|oddConvert:$root.env.oddFormat}}</b>
                             </div>
                         </div>
                     </div>

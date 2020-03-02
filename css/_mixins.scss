@@ -38,7 +38,7 @@ $delete-cache: '?v=' + random(777);
   &::-moz-placeholder          {@content; opacity: 1;}
   &:-ms-input-placeholder      {@content; opacity: 1;}
 }
-@mixin scroll($scroll: scroll, $width: $scrollbar-width, $background: $scroll-main-color, $scroll-main-thumb-color: $scroll-main-thumb-color, $border-radius: 10px, $scroll-main-thumb-color: $scroll-main-thumb-color) {
+@mixin scroll($scroll: scroll, $width: $scrollbar-width, $background: $scroll-main-color, $scroll-main-thumb-color: $scroll-main-thumb-color, $border-radius: 10px) {
   overflow-y: $scroll;
   overflow-x: hidden;
   scrollbar-track-color: $background;
@@ -128,6 +128,16 @@ $delete-cache: '?v=' + random(777);
       color: set-color($sports-color);
     }
   }
+  .esports .asian-banner {
+    &.#{$sports-name} {
+      a {
+        box-shadow: 0 0 0 2px $sports-color;
+      }
+      .asian-banner-swicher {
+        box-shadow: inset 0 0 0 1px $sports-color;
+      }
+    }
+  } /* for BBIN */
   .all-l-e-title{
     &.#{$sports-name} {
       background: rgba($sports-color, 1);
@@ -152,7 +162,10 @@ $delete-cache: '?v=' + random(777);
           &:hover, &.active {
             color: set-color($sports-color);
             background: $sports-color;
-            font-size: 16px;
+            font-size: 14px;
+            &:before {
+              color: set-color($sports-color);
+            }
           }
           &:hover {
             box-shadow: 0 0 20px lighten($sports-color,15);
@@ -200,6 +213,11 @@ $delete-cache: '?v=' + random(777);
     &:hover, &.active {
       color: set-color($sports-color);
       background: $sports-color;
+      > b {
+        &, &:before {
+          color: set-color($sports-color);
+        }
+      }
     }
     &:hover {
       box-shadow: 0 0 20px lighten($sports-color,15);
@@ -210,6 +228,11 @@ $delete-cache: '?v=' + random(777);
       color: set-color($sports-color);
       background: $sports-color;
       font-size: 16px;
+      > b {
+        &, &:before {
+          color: set-color($sports-color);
+        }
+      }
     }
     &:hover {
       box-shadow: 0 0 20px lighten($sports-color,15);

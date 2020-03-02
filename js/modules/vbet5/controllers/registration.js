@@ -12,6 +12,7 @@ angular.module('vbet5').controller('RegistrationController', ['$scope', '$rootSc
         var REG_FORM_BIRTH_YEAR_LOWEST = new Date().getFullYear() - 110;
         var step1Fields = [];
         var registrationDefaultCurrency = Storage.get('defaultRegistrationCurrency') || $location.search().currency || Config.main.registration.defaultCurrency;
+        var giftCode = null;
 
         $scope.minimumAllowedAge = Config.main.registration.minimumAllowedAge;
         $scope.RegConfig = RegConfig;
@@ -387,7 +388,7 @@ angular.module('vbet5').controller('RegistrationController', ['$scope', '$rootSc
                 phone = '';
 
             if (Config.main.registration.enablePhoneNumberAsUsername) {
-                phone = (Config.main.smsVerification.registration.enabled ? '' : '00') + $scope.registrationData.username;
+                phone = ((Config.main.smsVerification.registration.enabled || ($scope.registrationData.username.indexOf('+') === 0)) ? '' : '00') + $scope.registrationData.username;
             } else if (code && number) {
                 if (Config.main.smsVerification.registration.enabled) {
                     switch (Config.main.smsVerification.registration.provider) {
@@ -419,7 +420,10 @@ angular.module('vbet5').controller('RegistrationController', ['$scope', '$rootSc
                         regInfo.birth_date = $scope.registrationData.birth_year + '-' + $scope.registrationData.birth_month + '-' + $scope.registrationData.birth_day;
                     },
                     phone_number: function () {
-                        regInfo.phone = getPhoneNumber();
+                        var phone = getPhoneNumber();
+                        if (phone) {
+                            regInfo.phone = phone;
+                        }
                     },
                     promo_code: function () {
                         var promoCode = setPromoCode();
@@ -530,6 +534,9 @@ angular.module('vbet5').controller('RegistrationController', ['$scope', '$rootSc
             if (Config.main.registration.zimpler) {
                 regInfo.external_auth_token = $scope.registrationData.external_auth_token;
             }
+            if (giftCode) {
+                regInfo.bet_gift_code = giftCode;
+            }
 
             return regInfo;
         }
@@ -616,9 +623,9 @@ angular.module('vbet5').controller('RegistrationController', ['$scope', '$rootSc
                             }
 
                             if (Config.main.registration.loginRightAfterRegistration) {
-                                var phonePrefix = Config.main.smsVerification.registration.enabled? '': '00';
+                                var prefix = $scope.registrationData.phone_code? ((Config.main.smsVerification.registration.enabled? '': '00') + $scope.registrationData.phone_code): '';
                                 $scope.$emit('login.withUserPass', {
-                                    user: $scope.registrationData.username || $scope.registrationData.email || (phonePrefix + $scope.registrationData.phone_code + $scope.registrationData.phone_number),
+                                    user: $scope.registrationData.username || $scope.registrationData.email || (prefix + $scope.registrationData.phone_number),
                                     password: $scope.registrationData.password,
                                     action: 'registration_completed'
                                 });
@@ -997,10 +1004,10 @@ angular.module('vbet5').controller('RegistrationController', ['$scope', '$rootSc
          * @methodOf vbet5.controller:RegistrationController
          * @description check national id
          */
-        $scope.checkNationalId = function checkNationalId() {
+        $scope.checkNationalId = function checkNationalId(isSkipValidation) {
             var isRequired = $scope.registerform.doc_number.$$attr.required;
             var docNumber = $scope.registrationData.doc_number;
-            $scope.registerform.doc_number.$setValidity('docinvalid', Utils.checkNationalId(docNumber, isRequired));
+            $scope.registerform.doc_number.$setValidity('docinvalid', isSkipValidation || Utils.checkNationalId(docNumber, isRequired));
         };
 
 
@@ -1115,8 +1122,8 @@ angular.module('vbet5').controller('RegistrationController', ['$scope', '$rootSc
                     } else {
                         $rootScope.$broadcast('globalDialogs.addDialog', {
                             type: 'error',
-                            title: 'SMS not sent',
-                            content: response.details || 'Invalid request'
+                            title: 'Error',
+                            content:  'SMS not sent' // response.details || result_tex
                         });
                     }
                 },
@@ -1222,6 +1229,13 @@ angular.module('vbet5').controller('RegistrationController', ['$scope', '$rootSc
             }
 
             $scope.phoneCodes.sort();
+            if ($location.search().giftcode) {
+                giftCode = $location.search().giftcode;
+                $location.search("giftcode", undefined);
+                $location.search("userexist", undefined);
+            } else {
+                giftCode = null;
+            }
 
             initIovation();
 

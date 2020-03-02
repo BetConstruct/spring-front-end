@@ -174,15 +174,6 @@ VBET5.constant('SkinConfig', {
                 'rus' : 'livebettingru'
             }
         },
-        regionMapping: {
-            enabled: true,
-            79937770: { //horse racing
-                "England"   : {id: -100, alias: 'UK', name: "UK and Ireland"},
-                "Ireland"   : {id: -100, alias: 'UK', name: "UK and Ireland"},
-                "Scotland"  : {id: -100, alias: 'UK', name: "UK and Ireland"},
-                "Wales"     : {id: -100, alias: 'UK', name: "UK and Ireland"}
-            }
-        },
         remindToRenewBalance: {
             enabled: true,
             page: 'deposit',

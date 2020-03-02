@@ -1,0 +1,28 @@
+<div class="statistic-quality-contain" >
+    <p class="statistic-no-available" ng-if="!templateData" trans>No Statistics available</p>
+    <div ng-show="templateData" ng-init="templateData && (tab=(templateData['h2h']? 'h2h': 'individual'))">
+        <h4 class="main-title-statistic-quality" ng-bind="::('Was there a goal in the ' + widgetMapping[marketType].title + '?') | translate"></h4>
+        <ul class="tab-statistic-quality">
+            <li ng-class="{'active': tab === 'h2h'}" ng-click="tab = 'h2h'"  ng-show="templateData['h2h']" trans >H2H</li>
+            <li ng-class="{'active': tab === 'individual'}" ng-click="tab = 'individual'" ng-show="templateData['individual']" trans>Individual</li>
+        </ul>
+        <h5 class="info-title-quality" trans>Previous Matches</h5>
+    </div>
+    <div class="qualify" ng-repeat="currentTab in ['h2h', 'individual'] track by $index" ng-if="tab === currentTab && templateData">
+        <ul class="qualify-statistic-quality">
+            <li class="both-team-to-score-qualify">
+                <div class="qualify-info">
+                    <p ng-repeat="type in templateData[currentTab].team1[widgetMapping[marketType][currentTab]] track by $index" class="{{type}}-bg" ng-bind="type"></p>
+                </div>
+                <p ng-bind="::openGame.team1_name"></p>
+            </li>
+            <li>
+                <div class="qualify-info">
+                    <p ng-repeat="type in templateData[currentTab].team2[widgetMapping[marketType][currentTab]] track by $index" class="{{type}}-bg" ng-bind="type"></p>
+                </div>
+                <p ng-bind="::openGame.team2_name"></p>
+            </li>
+        </ul>
+    </div>
+    <p ng-click="openStatistics(openGame);$event.stopPropagation();" class="more-statistic-quality" trans>View all statistics</p>
+</div>

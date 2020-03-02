@@ -56,7 +56,7 @@
                                     </td>
 
                                     <td>{{event.coeficient}}</td>
-                                    <td>{{{'-5': 'On Hold', '-4': 'Declined', '0': 'UNSETTLED', '1': 'Lost', '2': 'Returned', '3': 'Won', '5': 'Cashed out'}[event.outcome]|translate}}</td>
+                                    <td>{{{'-5': 'On Hold', '-4': 'Declined', '0': 'UNSETTLED', '1': 'Lost', '2': 'Returned', '3': 'Won', '5': 'Cashed out', '7': 'Placed'}[event.outcome]|translate}}</td>
                                 </tr>
                             </table>
                             <div ng-bind="couponDetails.warningMessage | translate"></div>

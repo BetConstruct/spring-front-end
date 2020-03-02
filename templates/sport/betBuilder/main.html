@@ -1,0 +1,30 @@
+<div ng-controller="betBuilderCtrl">
+    <div class="form-contain">
+        <div>
+            <div class="form-register-layout signin">
+                <div class="popup-layout-registration">
+                    <div class="vertical-middle-wrapper">
+                        <div class="all-popup-separator">
+                            <div class="bet-builder">
+                                <div class="closed-popup-form" ng-click="closeBetBuilder();"></div>
+                                <div class="bet-builder-teams">
+                                    <h2 trans>Bet Builder</h2>
+                                    <h3 ng-bind="::(betBuilderGame.team1_name + ' vs ' + betBuilderGame.team2_name)"></h3>
+                                    <div ng-if="!loadingInProgress && marketsData" class="bet-builder-container">
+
+                                        <!--show only when there is selections-->
+                                        <ng-include class="bet-builder-left-block" src="::'templates/sport/betBuilder/left.html'|fixPath" ></ng-include>
+                                        <ng-include class="bet-builder-right-block" src="::'templates/sport/betBuilder/right.html'|fixPath" ></ng-include>
+
+                                    </div>
+                                    <p ng-if="!loadingInProgress && !markets" trans>There is no data available</p>
+                                    <vbet-loader ng-if="loadingInProgress"></vbet-loader>
+                                </div>
+                        </div>
+                    </div>
+                    <div class="close"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

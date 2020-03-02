@@ -22,7 +22,7 @@
             <h1><span trans>Possible win:</span> {{betData.possibleWin|number:betData.balanceFractionSize}}
                 {{betData.currencyName|currency}}</h1>
             <!-- tax type: 1 - tax on profit ; 4 - tax on stack-->
-            <div ng-if="betData.possibleWinBonusTax && !(betData.enableExpressBonus && !(betConf.hideIfOverMaxOdds && betData.odds >= betConf.totalOddsMax) && !betData.hasSpOddTypes && betData.bets.length > betData.expressBonusVisibilityQty && betData.betType === 2 && betData.possibleWin > 0 && betData.expBonus > 0 && betData.expBonusPercentage > 0)">
+            <div ng-if="betData.possibleWinBonusTax && !(betData.enableExpressBonus && !(betConf.hideIfOverMaxOdds && betData.maxOdd && betData.odds > betData.maxOdd) && !betData.hasSpOddTypes && betData.bets.length > betData.expressBonusVisibilityQty && betData.betType === 2 && betData.possibleWin > 0 && betData.expBonus > 0 && betData.expBonusPercentage > 0)">
                 <h1><span trans>Tax</span> : <span><b>{{betData.possibleWinTax|number:betData.balanceFractionSize}} {{betData.currencyName}}</b></span>
                 </h1>
                 <h1 ng-if="betData.tax.type===20"><span trans>Winning bonus</span> : <span><b>{{betData.possibleWinTax|number:betData.balanceFractionSize}} {{betData.currencyName}}</b></span>
@@ -53,7 +53,7 @@
             <h1 ng-bind="betData.bookIds[$index]"></h1>
         </div>
 
-        <div ng-if="betData.enableExpressBonus && !(betConf.hideIfOverMaxOdds && betData.odds >= betConf.totalOddsMax)"
+        <div ng-if="betData.enableExpressBonus && !(betConf.hideIfOverMaxOdds && betData.maxOdd && betData.odds > betData.maxOdd)"
              ng-show="!betData.hasSpOddTypes && betData.bets.length > betData.expressBonusVisibilityQty && betData.betType === 2 && betData.possibleWin > 0 && betData.expBonus > 0 && betData.expBonusPercentage > 0">
             <h1><span trans>Bonus percentage : </span><span><b>{{betData.expBonusPercentage}}</b></span></h1>
             <h1><span trans>Accumulator Bonus : </span><span><b>{{(betData.expBonus)|number:betData.balanceFractionSize}} {{betData.currencyName|currency}}</b></span>

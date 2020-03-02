@@ -116,6 +116,8 @@ VBET5.controller('searchCtrl', ['$rootScope', '$scope', 'TimeoutWrapper', '$rout
 
             if (eSports) {
                 request.where.sport = { type: 0 };
+            } else {
+                request.where.sport = {type: {"@ne": 1}};
             }
 
            Utils.setCustomSportAliasesFilter(request);
@@ -143,6 +145,8 @@ VBET5.controller('searchCtrl', ['$rootScope', '$scope', 'TimeoutWrapper', '$rout
 
             if (eSports) {
                 compRequest.where.sport = { type: 0 };
+            } else {
+                compRequest.where.sport = {type: {"@ne": 1}};
             }
 
             Utils.setCustomSportAliasesFilter(compRequest);

@@ -5,7 +5,7 @@
  * @description Live game score directive
  *
  */
-VBET5.directive('liveGameScores', ['$window', 'Config', 'Storage', 'GameInfo', 'Utils','$rootScope', function ($window, Config, Storage, GameInfo, Utils,$rootScope) {
+VBET5.directive('liveGameScores', ['$window', 'Config', 'Storage', 'GameInfo', 'Utils','$rootScope','analytics', function ($window, Config, Storage, GameInfo, Utils,$rootScope,analytics) {
     'use strict';
     return {
         restrict: 'AE',
@@ -17,6 +17,7 @@ VBET5.directive('liveGameScores', ['$window', 'Config', 'Storage', 'GameInfo', '
         },
         templateUrl: 'templates/directive/live-game-scores.html',
         link: function (scope,element,attr) {
+            var LIVE_GAME_SCORES_FLIP_MODE = "liveGameScoresFlipMode";
             scope.Math = Math;
             scope.liveGamesSoccerTemplate = GameInfo.liveGamesSoccerTemplate;
             scope.dotaGamesList = GameInfo.dotaGamesList;
@@ -26,6 +27,8 @@ VBET5.directive('liveGameScores', ['$window', 'Config', 'Storage', 'GameInfo', '
             scope.getCurrentTime = Utils.memoize(GameInfo.getCurrentTime);
             scope.visibleSetsNumber = 5;
             scope.openGameLoading = false;
+            var storageFlipMode = Storage.get(LIVE_GAME_SCORES_FLIP_MODE);
+            scope.flipMode = storageFlipMode !== undefined? storageFlipMode: 1;
 
             /**
              * @ngdoc method
@@ -64,6 +67,7 @@ VBET5.directive('liveGameScores', ['$window', 'Config', 'Storage', 'GameInfo', '
              */
             scope.changeStatsMode = function changeStatsMode(mode) {
                 scope.flipMode = mode;
+                Storage.set(LIVE_GAME_SCORES_FLIP_MODE, scope.flipMode);
             };
 
             $rootScope.env.isLiveGamePinned = !!Storage.get('LiveGamePin');
@@ -89,6 +93,7 @@ VBET5.directive('liveGameScores', ['$window', 'Config', 'Storage', 'GameInfo', '
              * @param {Object} game game object
              */
             scope.openStatistics = function openStatistics(game) {
+                analytics.gaSend('send', 'event', 'explorer', 'H2H-on-click', {'page': scope.locationPath, 'eventLabel': ($rootScope.env.live ? 'Live' : 'Prematch')});
                 $window.open(GameInfo.getStatsLink(game), game.id, "width=940,height=600,resizable=yes,scrollbars=yes");
             };
 

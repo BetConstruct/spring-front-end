@@ -10,12 +10,16 @@
         <div class="gamesp-container-j">
             <ul class="j-resize-950-1280">
 
-                <li class="{{game.front_game_id}}" ng-repeat="game in games track by game.id" ng-class="{'added-to-favorite-j': $root.myCasinoGamesIds[game.id]}" ng-style="gameImages[game.id] && gameImages[game.id].background && {'background-image': 'url(' + gameImages[game.id].background +')'}">
-                    <div ng-click="toggleSaveToMyCasinoGames(game)" class="fav-bar-game-j" ng-show="game.types.realMode === 1">
-                        <span></span>
+                <li class="{{game.front_game_id}}" ng-repeat="game in games track by game.id">
+                    <div class="wrapper-game-link" ng-class="{'added-to-favorite-j': $root.myCasinoGamesIds[game.id]}">
+                        <div ng-click="toggleSaveToMyCasinoGames(game)" class="fav-bar-game-j" ng-show="game.types.realMode === 1">
+                            <span></span>
+                        </div>
+                        <p>{{ game.name|translate }}</p>
+                        <a  class="game-link-tj" data-new="{{'new'|translate}}" ng-click="selectPage({id: game.id, name: game.name}); $event.stopPropagation();">
+                            <img ng-src="{{game.icon_3 ? game.icon_3 : game.icon_2}}" alt="">
+                        </a>
                     </div>
-                    <p class="{{(gameImages[game.id] && gameImages[game.id].icon)?gameImages[game.id].icon: ''}}">{{ game.name|translate }}</p>
-                    <a  class="game-link-tj" ng-click="selectPage({id: game.id, name: game.name}); $event.stopPropagation();"></a>
                     <div class="games-pw-buttonset-j"  ng-class="{'games-play-now-top-item ': confPoker.showTopItem}">
                         <button ng-if="game.types.realMode === 1 && confData.main.realModeEnabled" ng-click="openGame(game, 'real'); $event.stopPropagation();" class="skin-j" data-content="{{ confPoker.showTopItem|translate}}" trans>play now</button>
                         <div class="action-button-set-j">
@@ -60,3 +64,13 @@
 <div ng-if="selectedPage.id === confData.ogwil.id" ng-include="'optional_modules/casino/templates/specialgames/ogwil.html'|fixPath"></div>
 <div ng-if="selectedPage.id === confData.vrcasino.id" ng-include="'optional_modules/casino/templates/vrcasino/main.html'|fixPath"></div>
 <div ng-if="selectedPage.id === confData.vrlivedealer.id" ng-include="'optional_modules/casino/templates/vrlivedealer/main.html'|fixPath"></div>
+<style>
+    .body-wrapper.games {
+    {{pageBackgrounds.thumbnail_images.full.url ? 'background-image: url('+pageBackgrounds.thumbnail_images.full.url+');' : ''}}
+    {{pageBackgrounds.custom_fields.size ? "background-size: " + pageBackgrounds.custom_fields.size[0] + ";" : pageBackgrounds.thumbnail_images.full.url ? "background-size: 100%;" : ""}}
+    {{pageBackgrounds.custom_fields.position ? 'background-position: ' + pageBackgrounds.custom_fields.position[0] : pageBackgrounds.thumbnail_images.full.url ? "background-position: 50% 0" : ""}};
+    {{pageBackgrounds.custom_fields.attachment ? "background-attachment:" + pageBackgrounds.custom_fields.attachment[0] + ";" : ""}}
+    {{pageBackgrounds.custom_fields.color ? "background-color: " + pageBackgrounds.custom_fields.color[0] + ";" : ""}}
+    {{pageBackgrounds.custom_fields.repeat ? "background-repeat: " + pageBackgrounds.custom_fields.repeat[0] : pageBackgrounds.thumbnail_images.full.url ? "background-repeat: no-repeat" : ""}};
+    }
+</style>

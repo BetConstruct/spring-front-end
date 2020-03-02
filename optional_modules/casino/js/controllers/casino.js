@@ -19,7 +19,6 @@ CASINO.controller('casinoCtrl', ['$rootScope', '$scope', '$sce', '$location', 'G
     $scope.categoryMenuDefaultOffset = 710;
     $scope.jackpotSlideIndex = 0;
     $scope.jackpotGames = [];
-    $scope.hasTournaments = $rootScope.conf.multiLevelMenu.hasOwnProperty('tournaments');
 
 
     if (!CConfig.disableAutoLoadMore) {
@@ -92,10 +91,10 @@ CASINO.controller('casinoCtrl', ['$rootScope', '$scope', '$sce', '$location', 'G
 
     var favouriteGamesWatcherPromise, updateInterval, countryCode = '', allProviders, allCategories;
 
-    var lastCategoriesStartIndex, CATEGORIES_LIMIT = 10;
+    var lastCategoriesStartIndex, CATEGORIES_LIMIT = CConfig.main.categoriesLimit;
 
 
-    function getOptions(profileId) {
+    function getOptions(profileId , forRecommendedGames) {
         $scope.loadingProcess = true;
         //get categories and providers lists
         casinoData.getOptions(countryCode, null, null, profileId).then(function (response) {
@@ -117,7 +116,7 @@ CASINO.controller('casinoCtrl', ['$rootScope', '$scope', '$sce', '$location', 'G
 
                 $scope.loadingProcess = false;
 
-                handlefirstSelection();
+                handlefirstSelection(!forRecommendedGames);
                 if (CConfig.version === 2) {
                     $scope.moveCategories(undefined, true);
                     $scope.selectCategory($scope.categories[0]);
@@ -158,7 +157,7 @@ CASINO.controller('casinoCtrl', ['$rootScope', '$scope', '$sce', '$location', 'G
         }
     }
 
-    function handlefirstSelection() {
+    function handlefirstSelection(openGame) {
         var searchParams = $location.search();
 
         if (searchParams.category !== undefined) {
@@ -182,12 +181,18 @@ CASINO.controller('casinoCtrl', ['$rootScope', '$scope', '$sce', '$location', 'G
 
         getSelectedProvidersArray(providersString);
         $location.search('provider', providersString);
-        updateProvidersByCategoryId($scope.selections.category.id);
+        if(CConfig.main.filterByProviderEnabled){
+            updateProvidersByCategoryId($scope.selections.category.id);
+        }
+
 
         resetGamesOptions();
         $scope.getGames();
 
-        findAndOpenGame(searchParams);
+        if(openGame){
+            findAndOpenGame(searchParams);
+        }
+
     }
 
     $scope.getGames = function getGames() {
@@ -261,9 +266,9 @@ CASINO.controller('casinoCtrl', ['$rootScope', '$scope', '$sce', '$location', 'G
 
         $scope.selections.category = category;
         $location.search('category', category.id);
-
-        updateProvidersByCategoryId(category.id);
-
+        if(CConfig.main.filterByProviderEnabled) {
+            updateProvidersByCategoryId(category.id);
+        }
         resetGamesOptions();
         $scope.getGames();
         analytics.gaSend('send', 'event', 'explorer', 'Select Casino Games Category', {'page': $location.path(), 'eventLabel': category.name});
@@ -691,6 +696,12 @@ CASINO.controller('casinoCtrl', ['$rootScope', '$scope', '$sce', '$location', 'G
             return;
         }
 
+        var type = gameType ? gameType : 'real';
+
+        if((!!$rootScope.profile && type === 'real') || type === 'fun'){
+            analytics.gaSend('send', 'event', 'games','Open game ' + game.name,  {'page': $location.path(), 'eventLabel': 'Game type '+ type});
+        }
+
         casinoManager.openCasinoGame($scope, game, gameType, studio, urlSuffix, multiViewWindowIndex);
     };
 
@@ -847,7 +858,7 @@ CASINO.controller('casinoCtrl', ['$rootScope', '$scope', '$sce', '$location', 'G
                         }
 
                         if (CConfig.main.recommendedGamesCategoryEnabled) {
-                            getOptions( $rootScope.profile.id);
+                            getOptions( $rootScope.profile.id, true);
                         }
                     }
                 });
@@ -873,6 +884,7 @@ CASINO.controller('casinoCtrl', ['$rootScope', '$scope', '$sce', '$location', 'G
      */
 
     $scope.$on('casinoMultiview.viewChange', function (event, view) {
+        analytics.gaSend('send', 'event', 'multiview', {'page': $location.path(),'eventLabel': 'multiview changed to ' + view});
         casinoManager.changeView($scope, view);
     });
 

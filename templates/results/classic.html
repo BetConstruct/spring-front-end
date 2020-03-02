@@ -14,7 +14,7 @@
                             <span class="closed-all-games-v3" ng-click="clearAllResultGames();" ></span>
                             <p trans ng-click="clearAllResultGames();">Clear All</p>
                         </div>
-                        <div class="r-single-competition-view" ng-repeat="(competitionId, gamesGroup) in games track by $index" ng-if="gamesGroup.length">
+                        <div class="r-single-competition-view" ng-repeat="(competitionId, gamesGroup) in games track by competitionId" ng-if="gamesGroup.length">
                             <div class="r-competition-title-view" ng-class="{active: !competitionClosed[competitionId]}" ng-click="competitionClosed[competitionId] = !competitionClosed[competitionId]">
                                 <div class="remove-c-r-icon" ng-click="closeCompetition(competitionId)"></div>
                                 <div class="competition-logo-r"><stats-logo competition-id="competitionId" size="32"></stats-logo></div>
@@ -28,7 +28,7 @@
                                             <p>{{gameDate.date}}</p>
                                         </div>
                                         <div class="r-c-games-view-list-box" ng-show="!gameDate.closed">
-                                            <div class="result-single-game-view-b r-live-game" ng-class="{active:game.game_id === openGameDetails.game_id}" ng-repeat="game in gameDate.games track by $index" ng-click="getResultDetails(game)">
+                                            <div class="result-single-game-view-b r-live-game" ng-class="{active:game.game_id === openGameDetails.game_id}" ng-repeat="game in gameDate.games track by game.game_id" ng-click="getResultDetails(game)">
                                                 <ul>
                                                     <li class="r-date-view">
                                                         <span>{{game.date|formatDate:'hour':null:$root.env.timeFormat}}</span>

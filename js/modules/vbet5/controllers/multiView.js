@@ -4,7 +4,7 @@
  * @description
  * Sports live multiView controller
  */
-angular.module('vbet5.betting').controller('multiViewCtrl', ['$rootScope', '$scope', '$location', 'Config', 'Zergling', 'Utils', 'Storage', 'GameInfo', 'Translator', '$window', function ($rootScope, $scope, $location, Config, Zergling, Utils, Storage, GameInfo, Translator, $window) {
+angular.module('vbet5.betting').controller('multiViewCtrl', ['$rootScope', '$scope', '$location', 'Config', 'Zergling', 'Utils', 'Storage', 'GameInfo', 'Translator', '$window', 'analytics', function ($rootScope, $scope, $location, Config, Zergling, Utils, Storage, GameInfo, Translator, $window, analytics) {
     'use strict';
     $rootScope.footerMovable = true;
     $rootScope.multiViewLiveOpenedGames = [];
@@ -35,6 +35,7 @@ angular.module('vbet5.betting').controller('multiViewCtrl', ['$rootScope', '$sco
     }
 
     $scope.openStatistics = function openStatistics(game) {
+        analytics.gaSend('send', 'event', 'explorer', 'H2H-on-click', {'page': $location.path(), 'eventLabel': ($scope.env.live ? 'Live' : 'Prematch')});
         $window.open(GameInfo.getStatsLink(game), game.id, "width=940,height=600,resizable=yes,scrollbars=yes");
     };
 
@@ -93,7 +94,13 @@ angular.module('vbet5.betting').controller('multiViewCtrl', ['$rootScope', '$sco
         if ($rootScope.multiViewLiveOpenedGamesIds.indexOf(game.id) === -1) {
             $rootScope.multiViewLiveOpenedGamesIds.unshift(game.id);
             if (!dontAddGame) {
-                $rootScope.multiViewLiveOpenedGames.unshift({id: game.id, addedInMultiView: true});
+                $rootScope.multiViewLiveOpenedGames.unshift({
+                    id: game.id,
+                    addedInMultiView: true,
+                    sport: {id: game.sport.id},
+                    region: {id: game.region.id},
+                    competition: {id: game.competition.id}
+                });
             }
             return true;
         }

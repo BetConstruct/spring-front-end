@@ -15,14 +15,14 @@
                                   <span trans>Hello, we'd love to hear your thoughts.</span><br /><br />
                                   <span trans>Now, if you have any questions, comments or suggestions, please enter your feedback in the box below and then press Send.</span>
                                 </p> 
-                                <label ng-class="{'error': feedbackForm.email.$dirty && feedbackForm.email.$invalid}">
+                                <label ng-class="{'error': (feedbackForm.email.$touched && feedbackForm.email.$invalid)}">
                                     <p trans>Email Address</p>
                                   <div class="tooltip-wrapper-j">
                                     <input name="email" type="email" placeholder="Enter your email address" required
                                            ng-model="email"
                                            ng-pattern="/^[\w!.%+\-]+@[\w\-]+(?:\.[\w\-]+)+$/" trans>
-                                    <div class="form-error-text-j" ng-show="feedbackForm.email.$error.pattern">
-                                        <div class="error-icon-f-j"></div>
+                                    <div class="form-error-text-j" ng-show="feedbackForm.email.$touched && feedbackForm.email.$error.pattern">
+                                        <div class="error-icon-f-j" ng-click="feedbackForm.email.$setUntouched();"></div>
                                         <span trans ng-show="feedbackForm.email.$error.pattern">Please enter a valid email address</span>
                                     </div>
                                   </div>                                    

@@ -55,7 +55,7 @@ angular.module('vbet5.betting').controller('gameCtrl', ['$rootScope', '$scope', 
         if (market.display_key === 'CORRECT SCORE' && BetService.constants.customCorrectScoreLogic.indexOf(sportAlias) > -1) {
             GameInfo.reorderMarketEvents(market, 'correctScore');
             eventsArr = market.events.slice();
-        } else if (BetService.constants.marketsPreDividedByColumns.indexOf(market.market_type) > -1) {
+        } else if (BetService.constants.marketsPreDividedByColumns.indexOf(market.type) > -1) {
             GameInfo.reorderMarketEvents(market, 'preDivided');
             eventsArr = market.events.slice();
         } else {
@@ -295,6 +295,9 @@ angular.module('vbet5.betting').controller('gameCtrl', ['$rootScope', '$scope', 
         if (!$scope.game.open) {
             analytics.gaSend('send', 'event', 'explorer', 'show game markets',  {'page': $location.path(), 'eventLabel': ($scope.env.live ? 'Live' : 'Prematch')});
             $scope.game.loading = true;
+            if ($scope.game.sport.alias === 'HorseRacing') {
+                $scope.raceCardsPredicate = 'price';
+            }
             $scope.$parent.subscribeToGame($scope.game, $scope.checkForSavedOpenGame);
             $location.search('game', $scope.game.id);
             $location.search('competition', $scope.$parent.competition.id);
@@ -404,16 +407,27 @@ angular.module('vbet5.betting').controller('gameCtrl', ['$rootScope', '$scope', 
 
         // process data that is visible only inside open game
         if ($scope.game.open) {
-            if ($scope.game.type === 0 || $scope.game.type === 2) {
-                //we have market groups for pre-match games only
-                $scope.marketGroups = Utils.groupByItemProperty($scope.game.market, 'group_id', 'none');
-            } else {
-                //for live we have no groups
-                // but template expects markets in groups so we create a "fake group" by putting markets  into array
-                $scope.marketGroups = [Utils.objectToArray($scope.game.market)];
-            }
+
+            $scope.marketGroups = Utils.groupByItemProperty($scope.game.market, 'group_id', 'none');
 
             //group by name and sort
+
+            var isContainsGroupId = false;
+            var states = $scope.getStates();
+            var groupId = states[$scope.game.id] && states[$scope.game.id].marketsGroup;
+
+            if (groupId) {
+                angular.forEach($scope.marketGroups, function (group) {
+                    if (group[0].group_id === groupId) {
+                        isContainsGroupId = true;
+                    }
+                });
+            }
+            if ($scope.game.open && !Utils.isObjectEmpty($scope.game.market) && (groupId === undefined || groupId === null || !isContainsGroupId)) {
+                var firstElement = $filter('firstElement')($scope.marketGroups)[0];
+                $scope.setActiveTab("marketGroup", $scope.game, firstElement, firstElement.group_id, true);
+            }
+
             angular.forEach($scope.marketGroups, function (marketGroup, id) {
                 if (!$scope.marketGroups[id] || !$scope.marketGroups[id].length) {
                     return;
@@ -427,10 +441,7 @@ angular.module('vbet5.betting').controller('gameCtrl', ['$rootScope', '$scope', 
 
                 angular.forEach($scope.marketGroups[id], function (markets) {
                     // sort markets by base
-                    markets.sort(function (market1, market2) {
-                        return market1.base - market2.base;
-                    });
-
+                    markets.sort(Utils.orderSorting);
                     //and make replacements in market and event names
                     markets.map(function (m) {
                         m.name = improveNameForThisGame(m.name, $scope.game);
@@ -439,6 +450,7 @@ angular.module('vbet5.betting').controller('gameCtrl', ['$rootScope', '$scope', 
                             e.name = $filter('removeParts')(e.name, [m.name]);
                             e.name = improveNameForThisGame(e.name, $scope.game);
                         });
+                        m.showStatsIcon = Config.main.enableH2HStat && $scope.game.is_stat_available && Config.main.marketStats[m.type];
                     });
 
                 });
@@ -461,6 +473,9 @@ angular.module('vbet5.betting').controller('gameCtrl', ['$rootScope', '$scope', 
         }
 
         if ($scope.game.open && $scope.game.sport.alias === "HorseRacing") {
+            if ($scope.raceCardsPredicate === 'none') {
+                $scope.raceCardsPredicate = 'price';
+            }
             GameInfo.getHorseRaceInfo($scope.game.info, $scope.game.market, "Winner");
         }
 
@@ -555,6 +570,7 @@ angular.module('vbet5.betting').controller('gameCtrl', ['$rootScope', '$scope', 
      * @param {Object} game game object
      */
     $scope.openStatistics = function openStatistics(game) {
+        analytics.gaSend('send', 'event', 'explorer', 'H2H-on-click', {'page': $location.path(), 'eventLabel': ($scope.env.live ? 'Live' : 'Prematch')});
         $window.open(GameInfo.getStatsLink(game), game.id, "width=940,height=600,resizable=yes,scrollbars=yes");
     };
 
@@ -617,8 +633,8 @@ angular.module('vbet5.betting').controller('gameCtrl', ['$rootScope', '$scope', 
     };
 
     //initial values for ordering of horse_cards
-    $scope.raceCardsPredicate = 'cloth';
     $scope.raceCardsReverce = false;
+    $scope.raceCardsPredicate = 'cloth';
     $scope.raceCardsPredicateDog = 'order';
 
     /**
@@ -631,12 +647,12 @@ angular.module('vbet5.betting').controller('gameCtrl', ['$rootScope', '$scope', 
      */
     $scope.raceCardsColumnClick = function raceCardsColumnClick(orderItem) {
         if (orderItem === 'price'
-           && $scope.openGame
-           && $scope.openGame.info.race
-           && !$scope.openGame.info.race.horseStats[0].event.price) {
+           && $scope.game
+           && $scope.game.info.race
+           && !$scope.game.info.race.horseStats[0].event.price) {
             return;
         }
-        if ($scope.raceCardsPredicate === orderItem || $scope.raceCardsPredicateDog === orderItem) {
+        if ($scope.raceCardsPredicate === orderItem || ($scope.game.sport.alias === 'SISGreyhound' && $scope.raceCardsPredicateDog === orderItem)) {
             $scope.raceCardsReverce = !$scope.raceCardsReverce;
         } else {
             $scope.raceCardsReverce = false;
@@ -647,13 +663,16 @@ angular.module('vbet5.betting').controller('gameCtrl', ['$rootScope', '$scope', 
 
     /**
      * @ngdoc method
-     * @name raceCardsOrder
+     * @name fraceCardsOrder
      * @methodOf vbet5.controller:gameCtrl
      * @description to be used by the comparator to determine the order of  raceCards elements
      *
      * @param {Object} horseStat horseStat object
      */
     $scope.raceCardsOrder = function raceCardsOrder(state) {
+        if ($scope.raceCardsPredicate === 'price' && $scope.game.sport.alias === 'HorseRacing'  && !state.event.price) {
+            $scope.raceCardsPredicate = 'none';
+        }
         switch ($scope.raceCardsPredicate) {
             case 'cloth':
                 return parseInt(state.cloth, 10);
@@ -663,6 +682,8 @@ angular.module('vbet5.betting').controller('gameCtrl', ['$rootScope', '$scope', 
                 return parseFloat(state.price);
             case 'order':
                 return parseFloat(state.order);
+            case 'none':
+                return 0;
         }
 
         return -1;

@@ -1,8 +1,8 @@
-<div class="egt-content" ng-show="egtJackpot && jackpotAmounts" ng-repeat="(jackpotKey, jackpotValue) in jackpotAmounts track by $index">
-    <div class="egt-bg {{jackpotKey}}">
+<div class="egt-content" ng-show="jackpotData" ng-repeat="jackpot in jackpotData.PoolGroup.PoolList track by $index">
+    <div class="egt-bg {{jackpotNames[jackpot.Name]}}">
         <ul>
-            <li>{{egtJackpot.currency[0]}}<br>{{egtJackpot.currency[1]}}<br>{{egtJackpot.currency[2]}}</li>
-            <li><jackpot-counter point="point" comma="true" max-duration-speed="400" amount="jackpotValue"></jackpot-counter></li>
+            <li>{{jackpotData.Currency[0]}}<br>{{jackpotData.Currency[1]}}<br>{{jackpotData.Currency[2]}}</li>
+            <li><jackpot-counter point="jackpotData.CurrencyFraction" comma="true" max-duration-speed="400" amount="jackpot.CollectedAmount"></jackpot-counter></li>
         </ul>
     </div>
 </div>

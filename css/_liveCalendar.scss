@@ -414,6 +414,28 @@ $disable-live-calendar-coeff-styling: false !default;
                     color: map-get($coeff-color-map, classic-active);
                 }
             }
+            &.up-0 > div:before,
+            &.up-1 > div:before,
+            &.down0 > div:before,
+            &.down-1 > div:before {
+                font: 14px/14px icomoon;
+                content: "\e66d";
+                color: #017901;
+                position: relative;
+                display: inline-block;
+                top: 1px;
+                animation-duration: 7000ms;
+                animation-fill-mode: forwards;
+            }
+            &.down0 > div:before,
+            &.down-1 > div:before {
+                color: #ff0000;
+                content: "\e66c";
+            }
+            &.up-0 > div:before { animation-name: odds-arrow-up-0; }
+            &.up-1 > div:before { animation-name: odds-arrow-up-1; }
+            &.down0 > div:before { animation-name: odds-arrow-down0; }
+            &.down-1 > div:before { animation-name: odds-arrow-down-1; }
         }
         &.more-column-j {
             width: 91px;

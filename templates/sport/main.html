@@ -1,19 +1,19 @@
 <div ng-init="setTitle('Sport')" class="content-wrapper-t">
-    <div ng-if="!env.isOffline" class="size-h-container">
+    <div ng-controller="sportsbookCtrl" ng-if="!env.isOffline && calculatedConfigs.sportEnabled" class="size-h-container">
         <div ng-include="::'templates/sport/asian/main.html'|fixPath"
-             ng-if="calculatedConfigs.sportEnabled && $root.conf.sportsLayout === 'asian' && $location.path() !== '/poolbetting/'"></div>
+             ng-if="$root.conf.sportsLayout === 'asian' && $location.path() !== '/poolbetting/'"></div>
         <div ng-include="'optional_modules/comboView/templates/main.html'|fixPath"
-             ng-if="calculatedConfigs.sportEnabled && $root.conf.sportsLayout === 'combo' && $location.path() !== '/poolbetting/'"
+             ng-if="$root.conf.sportsLayout === 'combo' && $location.path() !== '/poolbetting/'"
              class="alternative-sportsbook-wrapper"
         ></div>
 
         <div class="classic-version-euro2016" ng-include="::'templates/sport/classic/main.html'|fixPath"
-             ng-if="calculatedConfigs.sportEnabled && $root.conf.sportsLayout === 'classic' && $location.path() !== '/poolbetting/'"></div>
+             ng-if="$root.conf.sportsLayout === 'classic' && $location.path() !== '/poolbetting/'"></div>
 
         <div ng-include="::'templates/poolbetting/new.html'|fixPath"
              ng-if="$location.path() === '/poolbetting/' && $root.conf.newPoolBettingPage"></div>
 
-        <div ng-if="(calculatedConfigs.sportEnabled && $root.conf.sportsLayout === 'modern') || $location.path() === '/poolbetting/'" class="float-width"
+        <div ng-if="$root.conf.sportsLayout === 'modern' || $location.path() === '/poolbetting/'" class="float-width"
              ng-class="{'sports-on-top': $root.conf.sportsAlwaysOnTop}">
             <div class="tpl-container explorer-container" ng-include="::'templates/sport/explorer.html'|fixPath"
                  ng-if="$location.path() === '/sport/' || $location.path().indexOf('customsport') !== -1" class-on-scroll="block-fixed,block-no-fixed"></div>
@@ -56,13 +56,12 @@
 
                             <div class="sport-news" ng-include="::'templates/sport/sportnews.html'|fixPath"
                                  id="sport-news-sidebar" ng-if="$root.conf.enableNews && $root.conf.enableNewsInModernView"></div>
-
                         </div>
-
                     </div>
                 </div>
             </div>
         </div>
+        <div class="block-slider popup" ng-if="betBuilderGame" ng-include="::'templates/sport/betBuilder/main.html'|fixPath"></div>
     </div>
     <div ng-if="env.isOffline" ng-include="::'templates/offline.html'|fixPath"></div>
 </div>

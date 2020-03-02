@@ -265,7 +265,6 @@ CASINO.controller('casinoJackpotCtrl', ['$rootScope', '$scope', '$sce', '$locati
         $scope.iframeJackpotData = data;
 
         if (sliderIndex !== false) {
-            $scope.iframeTab[gameId].selected = 'jackpots';
             $scope.changeJackpotSlider(sliderIndex);
             sliderIndex = false;
         }
@@ -277,7 +276,6 @@ CASINO.controller('casinoJackpotCtrl', ['$rootScope', '$scope', '$sce', '$locati
             if(gameId && $scope.hasIframeJackpot && $scope.iframeTab){
                 $scope.hasIframeJackpot[gameId] = !!data.length;
                 $scope.hasIframeJackpot.empty = !data.length;
-                $scope.iframeTab[gameId].selected = 'jackpots';
             }
             $scope.hasJackpots = true;
         }

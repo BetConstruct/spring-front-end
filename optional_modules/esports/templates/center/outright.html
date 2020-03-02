@@ -8,10 +8,9 @@
                <h4 class="game-t-n" title="{{event.name}}">
                    {{event.name}}
                </h4>
-               <p class="e-g-price-v" ng-click="bet(event, game.markets.OUTRIGHT[0], game); $event.stopPropagation()"
+               <p class="e-g-price-v {{event.price_change == null? '' : ({true: 'up-', false: 'down'}[event.price_change > 0] + (event.price_change % 2)) }}" ng-click="bet(event, game.markets.OUTRIGHT[0], game); $event.stopPropagation()"
                   ng-class="{'locked': (event.price | oddConvert:'decimal') == 1 || game.is_blocked,
-                   'factor-top': event.price_change == '1',
-                   'factor-bottom': event.price_change == '-1', 'active': isEventInBetSlip(event)}"
+                             'active': isEventInBetSlip(event)}"
                   ng-bind="event.price|oddConvert:env.oddFormat:null:game.markets.OUTRIGHT[0].display_key"></p>
            </div>
 

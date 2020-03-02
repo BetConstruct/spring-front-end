@@ -14,7 +14,6 @@ CASINO.controller('liveCasinoMainCtrl', ['$rootScope', '$scope', '$sce', '$locat
     $scope.errorStatus = 0;
     $scope.confData = CConfig;
     $scope.selectedGameId = '';
-    $scope.hasTournaments = $rootScope.conf.multiLevelMenu.hasOwnProperty('tournaments');
 
     $scope.$on('widescreen.on', function () { $scope.wideMode = true; });
     $scope.$on('widescreen.off', function () { $scope.wideMode = false; });
@@ -122,6 +121,11 @@ CASINO.controller('liveCasinoMainCtrl', ['$rootScope', '$scope', '$sce', '$locat
             if (studio) {
                 $location.search('studio', studio);
             }
+        }
+        var type = gameType ? gameType : 'real';
+
+        if((!!$rootScope.profile && type === 'real') || type === 'fun'){
+            analytics.gaSend('send', 'event', 'games','Open game ' + game.name,  {'page': $location.path(), 'eventLabel': 'Game type '+ type});
         }
 
         casinoManager.openCasinoGame($scope, game, gameType, studio, urlSuffix, multiViewWindowIndex);
@@ -248,6 +252,7 @@ CASINO.controller('liveCasinoMainCtrl', ['$rootScope', '$scope', '$sce', '$locat
      */
 
     $scope.$on('casinoMultiview.viewChange', function (event, view) {
+        analytics.gaSend('send', 'event', 'multiview', {'page': $location.path(),'eventLabel': 'multiview changed to ' + view});
         casinoManager.changeView($scope, view);
     });
 

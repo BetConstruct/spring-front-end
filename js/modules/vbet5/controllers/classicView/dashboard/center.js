@@ -368,7 +368,7 @@ VBET5.controller('classicDashboardCenterController', ['$rootScope', '$scope', 'O
                     'is_live', 'tv_type', 'video_id', 'video_id2', 'video_id3', 'video_provider', 'stats'
                 ],
                 'event': ['id', 'price', 'type', 'name', 'order', 'base'],
-                'market': ['type', 'express_id', 'name', 'base', 'order', 'home_score', 'away_score']
+                'market': ['type', 'express_id', 'name', 'base', 'order', 'home_score', 'away_score', 'id']
             },
             'where': {
                 'game': {}
@@ -527,8 +527,8 @@ VBET5.controller('classicDashboardCenterController', ['$rootScope', '$scope', 'O
             'source': 'betting',
             'what': {
                 'game': [],
-                'market': [],
-                'event': []
+                'market': ["id", "col_count", "type", "sequence", "express_id", "cashout", "display_key", "display_sub_key", "group_id", "name", "group_name", "order" ],
+                'event': ["order", "id", "type_1", "type", "type_id", "original_order", "name", "price", "base", "home_value", "away_value", "display_column"]
             },
             'where': {'game': {'id': game.id}}
         };

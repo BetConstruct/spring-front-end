@@ -19,7 +19,7 @@
                 <div class="full-menu-wrapper-box-v3" >
                     <div class="games-list-mini-view-v3">
                         <div class="v-sports-tab {{section.alias.toLowerCase() + '-icon'}}" ng-repeat="section in sections track by $index" ng-click="loadCompetitions(section)" data-content="new" ng-class="{'active': selectedVirtualSport.id == section.id}">
-                            <span data-content="{{section.label|translate}}" class="{{section.alias.toLowerCase() + '-icon'}}">
+                            <span data-content="{{section.label|translate}}">
                                 {{section.name|translate}}
                                 <i ng-if="section.prematch_ts"  countdown="{{section.prematch_ts}}" ng-bind="countdown.minutes + ':' + countdown.seconds"></i>
                             </span>
@@ -30,7 +30,8 @@
         </div>
         <!--center-column-->
         <div class="center-column-v3">
-            <include-template class="games-view-wrapper-v3 virtual-games" template-path="templates/sport/virtualsports.html"></include-template>
+            <include-template class="games-view-wrapper-v3 virtual-games" template-path="templates/sport/virtualsports.html" ng-if="selectedRanges.selectedSportId !== 188 && selectedRanges.selectedSportId !== 7"></include-template>
+            <include-template class="games-view-wrapper-v3 virtual-games" template-path="templates/sport/virtualsportsLeague.html" ng-if="selectedRanges.selectedSportId === 188 || selectedRanges.selectedSportId === 7"></include-template>
         </div>
         <!--center-column END-->
         <!--right-column-->

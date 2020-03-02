@@ -18,8 +18,8 @@
             </li>
         </ul>
         <a ng-controller="cmsPagesCtrl" ng-init="loadBanners('casino-jackpot-banner', true)" class="jp-banner"
-           ng-href="{{bannerObjects['casino-jackpot-banner'][0].link}}" target="{{bannerObjects['casino-jackpot-banner'][0].linktarget}}"
-           style="background-image: url({{bannerObjects['casino-jackpot-banner'][0].image}})">
+           ng-href="{{bannerObjects['casino-jackpot-banner'][$root.env.authorized][0].link}}" target="{{bannerObjects['casino-jackpot-banner'][$root.env.authorized][0].linktarget}}"
+           style="background-image: url({{bannerObjects['casino-jackpot-banner'][$root.env.authorized][0].image}})">
             <span>{{jackpotData[jackpotWidgets.amountIndex % jackpotData.length].Name}}</span>
             <div class="jackpot-banner-amount">
                 <jackpot-counter

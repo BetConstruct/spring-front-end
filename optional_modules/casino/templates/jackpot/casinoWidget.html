@@ -9,7 +9,7 @@
             </li>
         </ul>
     </div>
-    <ng-include ng-if="tab.selected === 'tournaments' && hasTournaments" src="::'optional_modules/casino/templates/tournament/casino-widget.html'|fixPath"></ng-include>
+    <ng-include class="float-width" ng-if="tab.selected === 'tournaments' && hasTournaments" src="::'optional_modules/casino/templates/tournament/casino-widget.html'|fixPath"></ng-include>
     <div class="jackpots-content">
         <div class="jackpot-coins-container" ng-if="tab.selected === 'jackpots'">
             <div class="jackpot-coins-content" ng-class="{active: $index === jackpotWidgets.widgetIndex }" ng-repeat="jackpot in jackpotData track by $index">

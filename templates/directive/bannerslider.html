@@ -1,6 +1,6 @@
 <div>
     <div class="hp-slider-17" ng-show="!loadingProcess" ng-mouseover="over=true" ng-mouseleave="over=false">
-        <div class="hp-slide-17" no-animate ng-repeat="banner in banners track by $index" cms-analytics="banner" ng-class="{'active': $parent.slide==$index}">
+        <div class="hp-slide-17" no-animate ng-repeat="banner in banners[$root.env.authorized] track by $index" cms-analytics="banner" ng-class="{'active': $parent.slide==$index}">
             <a ng-if="banner.linkType=='url' && !banner.videoLink"
                route-reload
                ng-href="{{banner.link}}"
@@ -21,13 +21,13 @@
             <div ng-if="banner.linkType=='html'" ng-bind-html="banner.text|html:'p'"></div>
             <span class="hp-slider-action-button-17" ng-if="banner.custom_fields.button[0] && banner.custom_fields.button[0]!== 'hide'" ng-bind="banner.custom_fields.button[0]" trans></span>
         </div>
-        <div class="hp-slider-pagination" ng-show="banners.length > 1">
+        <div class="hp-slider-pagination" ng-show="banners[$root.env.authorized].length > 1">
             <div class="display-float" ng-show="!$root.conf.sliderArrows">
-                <small ng-repeat="banner in banners track by $index" ng-class="{'active':$parent.slide==$index}" ng-click="$parent.slide=$index"></small>
+                <small ng-repeat="banner in banners[$root.env.authorized] track by $index" ng-class="{'active':$parent.slide==$index}" ng-click="$parent.slide=$index"></small>
             </div>
             <div class="display-float" ng-show="$root.conf.sliderArrows">
-                <button ng-click="slide = slide - 1;slide = slide < 0 ? banners.length - 1 : slide"></button>
-                <button ng-click="slide = slide + 1;slide = slide > banners.length - 1 ? 0 : slide"></button>
+                <button ng-click="slide = slide - 1;slide = slide < 0 ? banners[$root.env.authorized].length - 1 : slide"></button>
+                <button ng-click="slide = slide + 1;slide = slide > banners[$root.env.authorized].length - 1 ? 0 : slide"></button>
             </div>
         </div>
     </div>

@@ -173,7 +173,12 @@ VBET5.factory('WS', ['$q', '$rootScope', '$timeout', '$window', 'Config', 'Utils
             };
 
             try {
-                selectedSwarmInstance = Utils.getWeightedRandom(Config.swarm.websocket);
+                if (Config.swarm[$window.location.hostname]) {
+                    selectedSwarmInstance = Utils.getWeightedRandom(Config.swarm[$window.location.hostname]);
+                } else {
+                    selectedSwarmInstance = Utils.getWeightedRandom(Config.swarm.websocket);
+                }
+
                 console.log('websocketUrl selected:', selectedSwarmInstance);
                 socket = new WebSocket(selectedSwarmInstance.url);
 

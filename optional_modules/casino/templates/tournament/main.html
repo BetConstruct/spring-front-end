@@ -3,7 +3,7 @@
     <ng-include ng-show="!gamesInfo.length" ng-if="!$location.search().tournament_id" src="'optional_modules/casino/templates/tournament/tournaments.html'|fixPath"></ng-include>
     <ng-include ng-show="!gamesInfo.length" ng-if="$location.search().tournament_id" src="'optional_modules/casino/templates/tournament/details.html'|fixPath"></ng-include>
 
-    <multiview-control wide-mode="wideMode" middle-mode="middleMode" view-count="viewCount" games-info="gamesInfo"></multiview-control>
+    <multiview-control ng-if="confData.main.multiViewEnabled" wide-mode="wideMode" middle-mode="middleMode" view-count="viewCount" games-info="gamesInfo"></multiview-control>
     <div ng-include="'optional_modules/casino/templates/big-game.html'|fixPath" ng-if="gamesInfo.length" class="big-games-overflow"></div>
 </div>
 <style ng-controller="cmsPagesCtrl" ng-init="loadPage('casino-backgrounds-' + env.lang, 'lang')">

@@ -26,7 +26,9 @@ VBET5.filter('improveName', ['Config', function (Config) {
                 'Team1': 'team1_name',
                 'Team2': 'team2_name',
                 'Home': 'team1_name',
-                'Away': 'team2_name'
+                'Away': 'team2_name',
+                'team1': 'team1_name',
+                'team2': 'team2_name'
             },
             'rus': {
                 'Ком. 1': 'team1_name',

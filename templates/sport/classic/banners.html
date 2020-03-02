@@ -1,7 +1,7 @@
 <div class="buner-b" ng-init="getBetslipBanners()" ng-show="showRightBanners" id="sport-news-sidebar-container">
 
     <a ng-repeat="banner in banners"
-       ng-if="banner.active"
+       ng-if="banner.active && ($root.env.authorized?({'0': true, '1': true}[banner.show_for]): ({'0': true, '2': true}[banner.show_for]))"
        ng-href="{{ banner.link }}" target="{{ banner.linktarget }}"
        ng-click="underBetSlipBannerClick(banner);">
         <div ng-show="banner.imageurl">
@@ -14,9 +14,9 @@
             </p>
         </div>
         <div ng-if="banner.videoLink">
-           <vbet-video-player  url="{{banner.videoLink}}"
-                               set-duration="setBannerVideoDuration"
-                               play="startPlayVideoBanner"></vbet-video-player>
+            <vbet-video-player  url="{{banner.videoLink}}"
+                                set-duration="setBannerVideoDuration"
+                                play="startPlayVideoBanner"></vbet-video-player>
         </div>
         <div ng-if="banner.content" ng-bind-html="banner.content|html"></div>
     </a>

@@ -463,8 +463,8 @@ angular.module('CMS').controller('cmsPagesCtrl', ['$location', '$rootScope', '$s
         var type = $routeParams.type ? $routeParams.type + "-" : "";
         containerId = containerId || (type + content.getSlug('bannerSlugs.' + product));
         content.getWidget(containerId).then(function (response) {
+            $scope[product + 'TopBanners'] = [];
             if (response.data && response.data.widgets && response.data.widgets[0]) {
-                $scope[product + 'TopBanners'] = [];
                 angular.forEach(response.data.widgets, function (widget) {
                     $scope[product + 'TopBanners'].push(widget.instance);
                 });
@@ -483,9 +483,18 @@ angular.module('CMS').controller('cmsPagesCtrl', ['$location', '$rootScope', '$s
     $scope.loadBanners = function loadBanners(containerId, addLang) {
         content.getWidget(containerId + (addLang ? '-' + Config.env.lang : '')).then(function (response) {
             if (response.data && response.data.widgets && response.data.widgets[0]) {
-                $scope.bannerObjects[containerId] = [];
+                $scope.bannerObjects[containerId] = {
+                    true: [],
+                    false: []
+                };
+                var bannersContainer = $scope.bannerObjects[containerId];
                 angular.forEach(response.data.widgets, function (widget) {
-                    $scope.bannerObjects[containerId].push(widget.instance);
+                    if (widget.instance.show_for === '1' || widget.instance.show_for === '0' || !widget.instance.show_for) {
+                        bannersContainer.true.push(widget.instance);
+                    }
+                    if (widget.instance.show_for === '2' || widget.instance.show_for === '0' || !widget.instance.show_for) {
+                        bannersContainer.false.push(widget.instance);
+                    }
                 });
             }
         });
@@ -928,6 +937,7 @@ angular.module('CMS').controller('cmsPagesCtrl', ['$location', '$rootScope', '$s
      * @description As a result opens game in nested frame
      */
     $scope.openNestedFrame = function openNestedFrame() {
+        $location.search('showNestedFrame','true');
         $scope.showNestedFrame = true;
         $rootScope.casinoGameOpened = 1;
     };
@@ -939,6 +949,7 @@ angular.module('CMS').controller('cmsPagesCtrl', ['$location', '$rootScope', '$s
 
     $scope.$on('closeNestedFrame', function () {
         if ($scope.showNestedFrame) {
+            $location.search('showNestedFrame',undefined);
             $scope.showNestedFrame = false;
             $rootScope.casinoGameOpened = 0;
         }
@@ -1114,7 +1125,11 @@ angular.module('CMS').controller('cmsPagesCtrl', ['$location', '$rootScope', '$s
     $scope.openPopUp = function openPopUp(slug) {
         switch (slug) {
             case "support":
-                $window.startLiveAgent();
+                if (Config.main.liveChat && Config.main.liveChat.isLiveAgent) {
+                    $window.startLiveAgent();
+                } else if (Config.main.liveChat && Config.main.liveChat.liveChatLicense) {
+                    $rootScope.broadcast("licenseChat.start");
+                }
                 break;
             case "office-mail":
                 $scope.broadcast('feedback.toggle');
@@ -1155,6 +1170,12 @@ angular.module('CMS').controller('cmsPagesCtrl', ['$location', '$rootScope', '$s
         if (currencies && currencies !== 'undefined') {
             Config.main.availableCurrencies = JSON.parse(decodeURIComponent(currencies));
         }
+
+       if($location.search().showNestedFrame === 'true'){
+           $scope.showNestedFrame = true;
+           $rootScope.casinoGameOpened = 1;
+       }
+
     })();
 
 }]);

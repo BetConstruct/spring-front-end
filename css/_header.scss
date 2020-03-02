@@ -277,6 +277,7 @@ body > {
     content: "\f005";
   }
 }
+
 .separator-contain-nav.user-nav-view-b .drop-items-contain-b > ul > li{
   padding-right: 36px;
   > b{
@@ -1381,7 +1382,7 @@ body > {
   .block-slider{
     padding-top: $header-first-line-height + $header-nav-line-height + 21px;
     .close-slider-button-j{
-      top: $header-first-line-height + $header-nav-line-height + 21px;
+      top: $header-first-line-height + $header-nav-line-height + 74px;
     }
   }
   .conteiner.show-game ~ .block-slider, .block-slider.slider-scroll{

@@ -15,7 +15,10 @@ VBET5.directive('popularInSportsbook', ['$rootScope', '$location', 'Config', 'Co
             type: '@',
             title: '@',
             leftMenu: '=?',
-            searchField: '@'
+            searchField: '@',
+            startDate: '@',
+            endDate: '@',
+            gameType: '@'
         },
         link: function (scope, elem, attrs) {
             connectionService = new ConnectionService(scope);
@@ -58,6 +61,26 @@ VBET5.directive('popularInSportsbook', ['$rootScope', '$location', 'Config', 'Co
                     default:
                         return;
                 }
+
+                if (scope.startDate || scope.endDate) {
+                    request.where.game = request.where.game || {};
+                    var start_ts = {};
+                    if (scope.startDate) {
+                        start_ts['@gte'] = Number(scope.startDate);
+                    }
+                    if (scope.endDate) {
+                        start_ts['@lt'] = Number(scope.endDate);
+                    }
+
+                    request.where.game = {
+                        'start_ts': start_ts,
+                        'type': {'@in': [0, 2]}
+                    };
+                }else if (scope.gameType) {
+                    request.where.game = {
+                        type: +scope.gameType
+                    };
+                }
                 Utils.setCustomSportAliasesFilter(request);
 
                 connectionService
@@ -69,7 +92,7 @@ VBET5.directive('popularInSportsbook', ['$rootScope', '$location', 'Config', 'Co
             }
 
             function updatePopulars(result) {
-                scope.popular.data = [];
+                var data = [];
                 if (result.sport) {
                     angular.forEach(result.sport, function (sport) {
                         angular.forEach(sport.region, function (region) {
@@ -80,24 +103,26 @@ VBET5.directive('popularInSportsbook', ['$rootScope', '$location', 'Config', 'Co
                                             game.region = region;
                                             game.competition = competition;
                                             game.sport = sport;
-                                            scope.popular.data.push(game);
+                                            data.push(game);
                                         });
                                         break;
                                     case 'competition':
                                         competition.sport = sport;
                                         competition.region = region;
-                                        scope.popular.data.push(competition);
+                                        data.push(competition);
                                         break;
                                 }
                             });
                         });
                     });
-                    if (scope.popular.data && scope.popular.data.length) {
-                        var sortKey = scope.popular.data[0].favorite_order === null ? 'order' : 'favorite_order';
-                        scope.popular.data.sort(function (a, b) {
+                    if (data && data.length) {
+                        var sortKey = data[0].favorite_order === null ? 'order' : 'favorite_order';
+                        data.sort(function (a, b) {
                             return a[sortKey] - b[sortKey];
                         });
                     }
+
+                    scope.popular.data = data;
                 }
             }
 
@@ -123,8 +148,8 @@ VBET5.directive('popularInSportsbook', ['$rootScope', '$location', 'Config', 'Co
             };
 
             scope.getCompetitionTitle = function getCompetitionTitle(popularItem) {
-                if(popularItem.team1_name || popularItem.team2_name) {
-                    return popularItem.team1_name + ' - ' + popularItem.team2_name;
+                if(popularItem.team1_name) {
+                    return popularItem.team1_name + (popularItem.team2_name? ( ' - ' + popularItem.team2_name): '');
                 } else {
                     return popularItem.region.name;
                 }

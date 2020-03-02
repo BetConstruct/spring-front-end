@@ -26,6 +26,8 @@
                             </div>
                             <!-- INPUT TYPE CAPTCHA -->
                             <div ng-include="::'templates/slider/recaptcha.html'|fixPath" class="g_recaptcha_response field-separator"></div>
+                            <include-template class="float-width" ng-if="recaptcha.version===3"
+                                              template-path="templates/slider/registration/grecaptcha.html"></include-template>
                         </li>
                     </ul>
                 </div>
@@ -83,9 +85,9 @@
                         </li>
                     </ul>
                 </div>
+
             </form>
         </div>
-
         <div class="popup-layout-registration registration-ok" ng-show="registration.complete">
             <script-runner script-data="scriptContent" ng-if="scriptContent"></script-runner>
             <div class="vertical-middle-wrapper">

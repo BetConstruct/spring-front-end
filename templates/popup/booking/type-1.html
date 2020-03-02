@@ -107,7 +107,7 @@
         </div>
 
         <ul class="booking-total-print"
-            ng-if="betData.enableExpressBonus && !(betConf.hideIfOverMaxOdds && betData.odds >= betConf.totalOddsMax) && !betData.hasSpOddTypes && betData.bets.length > betData.expressBonusVisibilityQty && betData.betType === 2 && betData.possibleWin > 0 && betData.expBonus > 0 && betData.expBonusPercentage > 0">
+            ng-if="betData.enableExpressBonus && !(betConf.hideIfOverMaxOdds && betData.maxOdd && betData.odds > betData.maxOdd) && !betData.hasSpOddTypes && betData.bets.length > betData.expressBonusVisibilityQty && betData.betType === 2 && betData.possibleWin > 0 && betData.expBonus > 0 && betData.expBonusPercentage > 0">
             <li>
                 <h2 trans>Stake</h2>
                 <i>{{betData.amount|number:betData.balanceFractionSize}} {{betData.currencyName|currency}}</i>
@@ -163,7 +163,7 @@
                 <h4>{{betData.possibleWin|number:betData.balanceFractionSize}}
                     {{betData.currencyName|currency}}</h4>
             </li>
-            <li ng-if="betData.possibleWinTax && !(betConf.hideIfOverMaxOdds && betData.odds >= betConf.totalOddsMax) && !betData.hasSpOddTypes">
+            <li ng-if="betData.possibleWinTax && !(betConf.hideIfOverMaxOdds && betData.maxOdd && betData.odds > betData.maxOdd) && !betData.hasSpOddTypes">
                 <ul>
                     <li>
                         <p trans>Tax</p>

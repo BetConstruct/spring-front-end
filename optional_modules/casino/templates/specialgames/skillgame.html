@@ -5,11 +5,29 @@
             <div class="casino-game-contain">
                 <div class="flash-game-contain">
                     <div class="big-game-control" ng-show="frameUrl && !loadingUserData">
-                        <div class="icon-delete"><a title="{{ 'close'|translate }}" ng-click="broadcast('closeNestedFrame');$event.stopPropagation();">Close</a></div>
-                        <div class="icon-delete popup"><a title="{{ 'Open In Pop-Up Window'|translate }}" ng-click="frameControll('popup'); broadcast('closeNestedFrame');">popUp</a></div>
+                        <div class="icon-delete"><a title="{{ 'close'|translate }}" ng-click="closeGame('closeButton');$event.stopPropagation();">Close</a></div>
+                        <div class="icon-delete popup" ng-if="!$root.conf.ukLicense"><a
+                                title="{{ 'Open In Pop-Up Window'|translate }}"
+                                ng-click="frameControll('popup'); closeGame('popupButton');">popUp</a></div>
+                        <div ng-if="(!!hasIframeJackpot[gameInfo.game.id] || env.authorized && gameInfo.game.id && hasTournaments && hasIframeTournamentInfo[gameInfo.game.id])" class="icon-delete closed-iframe-info">
+                            <a trans ng-click="iframeTab[gameInfo.game.id].show = !iframeTab[gameInfo.game.id].show"></a>
+                        </div>
                         <div class="icon-delete refresh"><a title="{{ 'Refresh'|translate }}" ng-click="frameControll('refresh');">refresh</a></div>
                     </div>
-                    <iframe ng-if="frameUrl && !loadingUserData" frame-control allowfullscreen="true" number-of-window="1"initial-width="{{game.width}}" initial-height="{{game.height}}"  aspect-ratio="{{game.ratio}}" ng-src="{{frameUrl}}"></iframe>
+                    <ng-include ng-show="iframeTab[gameInfo.game.id].show && (!!hasIframeJackpot[gameInfo.game.id] || env.authorized && gameInfo.game.id && hasTournaments && hasIframeTournamentInfo[gameInfo.game.id])" src="'optional_modules/casino/templates/tournament/iframe-info.html'|fixPath"></ng-include>
+
+                    <iframe
+                            ng-class="{'iframe-tournament-sidebar-padding':(iframeTab[gameInfo.game.id].show) && iframeTab[gameInfo.game.id].show && (!!hasIframeJackpot[gameInfo.game.id] || env.authorized && gameInfo.game.id && hasTournaments && hasIframeTournamentInfo[gameInfo.game.id])}"
+                            has-sidebar="{{(iframeTab[gameInfo.game.id].show) &&  !!(env.authorized && gameInfo.game.id && hasTournaments && hasIframeTournamentInfo[gameInfo.game.id])}}"
+                            ng-if="frameUrl && !loadingUserData"
+                            frame-control
+                            allowfullscreen="true"
+                            number-of-window="1"
+                            initial-width="{{game.width}}"
+                            initial-height="{{game.height}}"
+                            aspect-ratio="{{game.ratio}}"
+                            ng-src="{{frameUrl}}"></iframe>
+
                     <vbet-loader ng-show="loadingUserData"></vbet-loader>
                 </div>
             </div>

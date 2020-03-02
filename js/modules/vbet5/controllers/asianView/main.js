@@ -5,8 +5,8 @@
  * @description
  *  asian view controller
  */
-VBET5.controller('asianViewMainController', ['$rootScope', '$scope', '$filter', '$location', '$route', '$interval', 'Utils', 'Zergling', 'ConnectionService', 'StreamService', 'Moment', '$q', 'Translator', 'GameInfo', 'AsianMarkets', 'Storage', 'Config', 'TimeoutWrapper', 'asianViewGmsBasaltChanger', '$window', 'DomHelper', 'partner', 'BetService',
-    function ($rootScope, $scope, $filter, $location, $route, $interval, Utils, Zergling, ConnectionService, StreamService, Moment, $q, Translator, GameInfo, AsianMarkets, Storage, Config, TimeoutWrapper, asianViewGmsBasaltChanger, $window, DomHelper, partner, BetService) {
+VBET5.controller('asianViewMainController', ['$rootScope', '$scope', '$filter', '$location', '$route', '$interval', 'Utils', 'Zergling', 'ConnectionService', 'StreamService', 'Moment', '$q', 'Translator', 'GameInfo', 'AsianMarkets', 'Storage', 'Config', 'TimeoutWrapper', 'asianViewGmsBasaltChanger', '$window', 'DomHelper', 'partner', 'BetService','analytics',
+    function ($rootScope, $scope, $filter, $location, $route, $interval, Utils, Zergling, ConnectionService, StreamService, Moment, $q, Translator, GameInfo, AsianMarkets, Storage, Config, TimeoutWrapper, asianViewGmsBasaltChanger, $window, DomHelper, partner, BetService, analytics) {
         'use strict';
 
         $rootScope.footerMovable = true; // make footer movable for this controller
@@ -44,6 +44,18 @@ VBET5.controller('asianViewMainController', ['$rootScope', '$scope', '$filter', 
         };
         $scope.isSelectedFavorites = false;
         $scope.favoriteFilter = -1; // All games
+        if (Config.main.showInSportsbookBanners) {
+            $scope.bannersState = {
+                show: Storage.get("showSportsbookBanners") !== undefined ?Storage.get("showSportsbookBanners"): true
+            };
+            $scope.toggleBanners = function toggleBanners() {
+                $scope.bannersState.show = !$scope.bannersState.show;
+                Storage.set("showSportsbookBanners", $scope.bannersState.show);
+            };
+        }
+
+        var boostedBetsGameIds = [];
+        var boostedBetsEventIdsArray = [];
 
         var unsubscribeToMyGames = null;
 
@@ -84,6 +96,7 @@ VBET5.controller('asianViewMainController', ['$rootScope', '$scope', '$filter', 
         };
 
         $scope.openStatistics = function openStatistics(game) {
+            analytics.gaSend('send', 'event', 'explorer', 'H2H-on-click', {'page': $location.path(), 'eventLabel': ($scope.env.live ? 'Live' : 'Prematch')});
             $window.open(GameInfo.getStatsLink(game), game.id, "width=940,height=600,resizable=yes,scrollbars=yes");
         };
 
@@ -100,6 +113,12 @@ VBET5.controller('asianViewMainController', ['$rootScope', '$scope', '$filter', 
             LIVE: 1,
             TODAY: 2
         };
+
+        if(Config.main.boostedBets.enabled){
+            LEFT_MENU.BOOSTED_BETS = 3;
+        }
+
+
         var ALL_COMPETITIONS = {
             id: -1,
             name: Translator.get('All'),
@@ -186,7 +205,7 @@ VBET5.controller('asianViewMainController', ['$rootScope', '$scope', '$filter', 
 
         $scope.setMenuType = function setMenuType(value) {
             var previousIsLive = !!Config.env.live;
-            Config.env.live = value === LEFT_MENU.TODAY ? false : value;
+            Config.env.live = (value === LEFT_MENU.TODAY || value === LEFT_MENU.BOOSTED_BETS) ? false : value;
             var newIsLive = !!Config.env.live;
             if (newIsLive !== previousIsLive) {
                 partner.call('liveActive', newIsLive);
@@ -208,31 +227,34 @@ VBET5.controller('asianViewMainController', ['$rootScope', '$scope', '$filter', 
             loadLeftMenu();
         });
 
+        function addVisibleInPrematchFilterToGame(filter) {
+            if (Config.main.enableVisibleInPrematchGames) {
+                return {
+                    '@or': [
+                        {'visible_in_prematch': 1 },
+                        filter
+                    ]
+                };
+            }
+
+            return filter;
+        }
+
         /**
          * @ngdoc method
-         * @name setTimeFilter
+         * @name setGameTimeFilter
          * @methodOf vbet5.controller:asianViewMainController
          * @description adds time conditions to request according to type selected in left menu (future, live, today)
          *
          * @param {Object} request request object
          */
-        function setTimeFilter(request) {
-            request.where.game = request.where.game || {};
-
-            var visibleInPrematch = function () {
-                if (Config.main.enableVisibleInPrematchGames) {
-                    request.where.game['@or'].push({
-                        'visible_in_prematch': 1
-                    });
-                }
-            };
+        function setGameTimeFilter(request) {
             switch ($scope.selectedMenuType.active) {
                 case LEFT_MENU.FUTURE:
-                    request.where.game['@or'] = [{'type': {'@in': [0, 2]}}];
-                    visibleInPrematch();
+                    request.where.game = addVisibleInPrematchFilterToGame({'type': {'@in': [0, 2]}});
                     break;
                 case LEFT_MENU.LIVE:
-                    request.where.game.type = 1;
+                    request.where.game = {'type' : 1};
                     break;
                 case LEFT_MENU.TODAY:
                     var todayFilter = {
@@ -241,13 +263,11 @@ VBET5.controller('asianViewMainController', ['$rootScope', '$scope', '$filter', 
                             '@lt': $scope.dayFilter[0].to
                         }
                     };
-
-                    request.where.game['@or'] = [todayFilter];
-
                     if (asianConf.removeLiveGamesFromTodaySection) {
                         todayFilter.type = {'@in': [0, 2]};
-                        visibleInPrematch();
                     }
+
+                    request.where.game = addVisibleInPrematchFilterToGame(todayFilter);
                     break;
             }
         }
@@ -293,7 +313,7 @@ VBET5.controller('asianViewMainController', ['$rootScope', '$scope', '$filter', 
                     } else {
                         $scope.resetCountDown();
                     }
-                }, 1000)
+                }, 1000);
             };
 
             !destroy && (waitingPromise = TimeoutWrapper(resetInterval, 500));
@@ -434,7 +454,7 @@ VBET5.controller('asianViewMainController', ['$rootScope', '$scope', '$filter', 
 
         $scope.selectPage = function (page, dontSetStorage) {
             page === undefined && (page = parseInt(Storage.get('asianCurrentPage'), 10) || 0);
-            (page > $scope.pages.length - 1) && (page = 0);
+            ($scope.pages && (page > $scope.pages.length - 1)) && (page = 0);
             if (Storage.get("menuType") !== undefined && parseInt(Storage.get("menuType")) !== $scope.selectedMenuType.active) {
                 page = 0;
                 dontSetStorage = false;
@@ -530,6 +550,7 @@ VBET5.controller('asianViewMainController', ['$rootScope', '$scope', '$filter', 
                                 } else {
                                     market.events = Utils.objectToArray(market.event);
                                 }
+                                market.showStatsIcon = Config.main.enableH2HStat && $scope.openGame.is_stat_available && Config.main.marketStats[market.type];
                             });
 
                             game.availableMarketGroups = Utils.objectToArray(game.availableMarketGroups);
@@ -678,6 +699,7 @@ VBET5.controller('asianViewMainController', ['$rootScope', '$scope', '$filter', 
                 connectionService.unsubscribe(gamesSubId);
                 gamesSubId = null;
             }
+            closeOpenGame();
             if (Object.keys(expandedHdpGamesSubIds).length !== 0) {
                 connectionService.unsubscribe(expandedHdpGamesSubIds);
             }
@@ -691,6 +713,12 @@ VBET5.controller('asianViewMainController', ['$rootScope', '$scope', '$filter', 
             }
             $scope.selectedMarket = {key: 'FULLGAME'};
             $scope.$broadcast('$$rebind::selectedMarket-change');
+            var gameRequest= [["id", "show_type", "markets_count", "start_ts", "is_live", "is_blocked", "is_neutral_venue","team1_id", "team2_id", "game_number", "text_info", "is_stat_available", "type",  "info", "stats", "team1_name", "team2_name", "tv_info"  ]];
+
+            if ($scope.selectedMenuType.active === LEFT_MENU.LIVE) {
+                Array.prototype.push.apply(gameRequest[0], ["match_length", "scout_provider", "video_id","video_id2", "video_id3", "tv_type", "last_event", "live_events"]);
+            }
+
 
             var request = {
                 'source': 'betting',
@@ -698,9 +726,9 @@ VBET5.controller('asianViewMainController', ['$rootScope', '$scope', '$filter', 
                     sport: ['id', 'name', 'alias'],
                     competition: ['name', 'order', 'id'],
                     region: ['name', 'alias', 'id'],
-                    game: [],
-                    market: [],
-                    event: []
+                    game: gameRequest,
+                    market: ["id", "col_count", "type", "sequence", "express_id", "cashout", "display_key", "display_sub_key", "group_id", "name", "group_name", "order", "home_score", "away_score"],
+                    event: ["order", "id", "type_1", "type", "type_id", "original_order", "name", "price", "nonrunner", "ew_allowed", "sp_enabled", "extra_info", "base", "home_value", "away_value", "display_column" ]
                 },
                 'where': {
                     'game': {'id': +gameId}
@@ -734,6 +762,9 @@ VBET5.controller('asianViewMainController', ['$rootScope', '$scope', '$filter', 
             $scope.resetCountDown(true);
 
             $scope.centerData = {};
+            if (gamesSubId) {
+                connectionService.unsubscribe(gamesSubId);
+            }
             var showTypes = asianConf.markets && asianConf.markets[$scope.selectedSport.alias] && asianConf.markets[$scope.selectedSport.alias][$scope.selectedMarket.key] && asianConf.markets[$scope.selectedSport.alias][$scope.selectedMarket.key][$scope.selectedMenuType.active === 1 ? 'live' : 'prematch']
                 || ($scope.asianMarkets.marketsBySport[$scope.selectedSport.alias] || $scope.asianMarkets.marketsBySport.Default)[$scope.selectedMarket.key];
             var request = {
@@ -742,17 +773,24 @@ VBET5.controller('asianViewMainController', ['$rootScope', '$scope', '$filter', 
                     sport: ['id', 'name', 'alias', 'order'],
                     competition: ['name', 'order', 'id'],
                     region: ['name', 'alias', 'id'],
-                    game: ['id', 'team1_name', 'team2_name','team1_reg_name', 'team2_reg_name', 'info', 'start_ts', 'type', 'text_info', 'events_count', 'is_blocked', 'markets_count', 'stats', 'strong_team', 'is_neutral_venue', 'is_stat_available', 'tv_type', 'video_id', 'video_id2', 'video_id3', 'video_provider', 'is_itf'],
-                    market: ['base', 'id', 'name', 'order', 'sequence', 'show_type', 'display_key', 'display_sub_key', 'market_type', 'home_score', 'away_score', 'main_order'],
+                    game: ['id', 'team1_name', 'team2_name','team1_reg_name', 'team2_reg_name', 'start_ts', 'type', 'events_count', 'is_blocked', 'markets_count', 'strong_team', 'is_neutral_venue', 'is_stat_available', 'is_itf'],
+                    market: ['base', 'id', 'name', 'order', 'sequence', 'show_type', 'display_key', 'display_sub_key', 'type', 'home_score', 'away_score', 'main_order'],
                     event: ['name', 'id', 'base', 'type', 'type_1', 'price', 'show_type', 'home_value', 'away_value']
                 },
                 'where': {
                     'market': {}
                 }
             };
+            if ($scope.selectedMenuType.active === LEFT_MENU.LIVE) {
+                Array.prototype.push.apply(request.what.game, ['info', 'text_info', 'stats',  'tv_type', 'video_id', 'video_id2', 'video_id3', 'video_provider', "last_event"]);
+            } else if (Config.main.enableVisibleInPrematchGames) {
+                request.what.game.push('info');
+            }
+
+
             Utils.setCustomSportAliasesFilter(request);
 
-            setTimeFilter(request);
+            setGameTimeFilter(request);
 
             if (!$scope.isSelectedFavorites && !$scope.selectedPopularCompetition) {
                 // Request markets
@@ -764,12 +802,14 @@ VBET5.controller('asianViewMainController', ['$rootScope', '$scope', '$filter', 
 
                 // Request games
                 if (($scope.selectedMenuType.active === LEFT_MENU.FUTURE) && $scope.filters.selectedDaysTimeIntervals && $scope.filters.selectedDaysTimeIntervals.length > 0) {
-                    if (request.where.game['@or']) {
+                    if (request.where.game['@or'] && $scope.filters.selectedDaysTimeIntervals.length > 1) {
                         var firstOr = request.where.game['@or'];
                         request.where.game['@and'] = [{'@or': firstOr}, {'@or': $scope.filters.selectedDaysTimeIntervals}];
                         delete request.where.game['@or'];
-                    } else {
+                    } else  if ($scope.filters.selectedDaysTimeIntervals.length > 1) {
                         request.where.game['@or'] = $scope.filters.selectedDaysTimeIntervals;
+                    } else { // only one day is selected and there is no need to add a filter as the 'or' operator
+                        request.where.game.start_ts = $scope.filters.selectedDaysTimeIntervals[0].start_ts;
                     }
                 }
 
@@ -781,6 +821,16 @@ VBET5.controller('asianViewMainController', ['$rootScope', '$scope', '$filter', 
                 // Request competitions
                 request.where.competition = request.where.competition || {};
                 request.where.competition.id = {'@in': ($scope.competitionsList && $scope.competitionsList.length) ? $scope.competitionsList : ['-1']};
+
+                if($scope.selectedMenuType.active === LEFT_MENU.BOOSTED_BETS){
+                    request.where.game = {
+                        'id': {'@in': boostedBetsGameIds}
+                    };
+                    subscribeToGamesData(request);
+                    return;
+                }
+
+
             } else if ($scope.isSelectedFavorites) {
                 // Request: Get all favorite games
                 request.where = {
@@ -805,14 +855,34 @@ VBET5.controller('asianViewMainController', ['$rootScope', '$scope', '$filter', 
 
             } else {
                 request.where = {
-                    game: {type: {'@in': [0, 2]}},
+                    game: {
+                        'type': {'@in': $scope.selectedMenuType.active === LEFT_MENU.LIVE? [1]: [0, 2]}
+                    },
                     market: {
                         "@or": $scope.gatherHdpMarkets(showTypes)
                     },
                     competition: {id: $scope.selectedPopularCompetition}
                 };
+
+                if ($scope.selectedMenuType.active === LEFT_MENU.FUTURE) {
+                    request.where.game['start_ts'] = {'@gte': $scope.dayFilter[1].from};
+                } else if ($scope.selectedMenuType.active === LEFT_MENU.TODAY) {
+                    request.where.game['start_ts'] = {'@gte': $scope.dayFilter[0].from, '@lt': $scope.dayFilter[0].to};
+                }
             }
 
+            subscribeToGamesData(request);
+
+        };
+
+
+        /**
+         * @ngdoc method
+         * @name subscribeToGamesData
+         * @methodOf vbet5.controller:asianViewMainController
+         * @description
+         */
+        function subscribeToGamesData(request) {
             connectionService.subscribe(
                 request,
                 updateGames,
@@ -826,7 +896,7 @@ VBET5.controller('asianViewMainController', ['$rootScope', '$scope', '$filter', 
                     }
                 }
             );
-        };
+        }
 
         function subscribeToMyGames() {
             unsubscribeToMyGames = $rootScope.$on('game.removeGameFromMyGames', function () {
@@ -841,6 +911,7 @@ VBET5.controller('asianViewMainController', ['$rootScope', '$scope', '$filter', 
             });
         }
 
+        var orderedByTimeLastState = $scope.orderedByTime;
 
         function selectPopularCompetition(id) {
             unsubscribeMyGames();
@@ -849,7 +920,16 @@ VBET5.controller('asianViewMainController', ['$rootScope', '$scope', '$filter', 
                 key: "HDP",
                 name: "HDP & OU"
             };
+            if ($scope.selectedSport && !$scope.selectedSport.closedTab) {
+                $scope.selectedSport.closedTab = true;
+            }
+
             $scope.$broadcast('$$rebind::selectedMarket-change');
+
+            if(!$scope.selectedPopularCompetition){
+                orderedByTimeLastState = $scope.orderedByTime;
+            }
+
             $scope.selectedPopularCompetition = id;
             $scope.orderedByTime = true;
 
@@ -861,6 +941,7 @@ VBET5.controller('asianViewMainController', ['$rootScope', '$scope', '$filter', 
         function deselectPopularCompetition() {
             if ($scope.selectedPopularCompetition) {
                 $location.search('popularCompetition', undefined);
+                $scope.orderedByTime = orderedByTimeLastState;
             }
 
             $scope.selectedPopularCompetition = undefined;
@@ -880,7 +961,9 @@ VBET5.controller('asianViewMainController', ['$rootScope', '$scope', '$filter', 
                 key: "HDP",
                 name: "HDP & OU"
             };
+
             deselectPopularCompetition();
+            $scope.selectedSport.closedTab = !$scope.selectedSport.closedTab;
             $scope.$broadcast('$$rebind::selectedMarket-change');
             $scope.isSelectedFavorites = true;
             $location.search('favorite', 1);
@@ -965,7 +1048,7 @@ VBET5.controller('asianViewMainController', ['$rootScope', '$scope', '$filter', 
                 'source': 'betting',
                 'what': {
                     game: ['id', 'team1_name', 'team2_name', 'info', 'start_ts', 'type', 'text_info', 'events_count', 'is_blocked', 'markets_count', 'strong_team'],
-                    market: ['base', 'id', 'name', 'order', 'sequence', 'show_type', 'display_key', 'display_sub_key', 'optimal', 'home_score', 'away_score', 'market_type'],
+                    market: ['base', 'id', 'name', 'order', 'sequence', 'show_type', 'display_key', 'display_sub_key', 'optimal', 'home_score', 'away_score', 'type'],
                     event: ['name', 'id', 'base', 'type', 'price', 'show_type', 'type_1', 'home_value', 'away_value']
                 },
                 'where': {
@@ -976,10 +1059,6 @@ VBET5.controller('asianViewMainController', ['$rootScope', '$scope', '$filter', 
             };
 
             request.where.market.display_key = {'@in': [ "HANDICAP", "TOTALS"]};
-            setTimeFilter(request);
-            if (($scope.selectedMenuType.active === LEFT_MENU.FUTURE) && $scope.filters.selectedDaysTimeIntervals && $scope.filters.selectedDaysTimeIntervals.length > 0) {
-                request.where.game['@or'] = $scope.filters.selectedDaysTimeIntervals;
-            }
 
             function updateExpandedHdpGame(data) {
                 var gameDetails = data.game;
@@ -1144,14 +1223,13 @@ VBET5.controller('asianViewMainController', ['$rootScope', '$scope', '$filter', 
             $location.search('favorite', undefined);
           }
           var  popularCompetition = +$location.search().popularCompetition;
-          if (popularCompetition && $scope.selectedMenuType.active === LEFT_MENU.FUTURE) {
+          if (popularCompetition && ($scope.selectedMenuType.active === LEFT_MENU.FUTURE || $scope.selectedMenuType.active === LEFT_MENU.TODAY)) {
             selectPopularCompetition(popularCompetition);
             return;
           } else {
             $location.search('popularCompetition', undefined);
           }
           $scope.loadGames();
-
         }
 
         /**
@@ -1187,7 +1265,7 @@ VBET5.controller('asianViewMainController', ['$rootScope', '$scope', '$filter', 
             }
             Utils.setCustomSportAliasesFilter(request);
             request.where.market.display_key = {'@in': showTypes};
-            setTimeFilter(request);
+            setGameTimeFilter(request);
 
             connectionService.subscribe(
                 request,
@@ -1236,7 +1314,12 @@ VBET5.controller('asianViewMainController', ['$rootScope', '$scope', '$filter', 
                 }
             };
             request.where.market.display_key = {'@in': showTypes};
-            setTimeFilter(request);
+
+            if($scope.selectedMenuType.active === LEFT_MENU.BOOSTED_BETS){
+                request.where.event = {id : {'@in': boostedBetsEventIdsArray}};
+            }
+
+            setGameTimeFilter(request);
 
             connectionService.subscribe(
                 request,
@@ -1334,9 +1417,9 @@ VBET5.controller('asianViewMainController', ['$rootScope', '$scope', '$filter', 
 
             if ($scope.selectedSport && $scope.selectedSport.id === sport.id && !initial) {
                 $scope.selectedSport.closedTab = !$scope.selectedSport.closedTab;
-                if (market && $scope.previouslyOpenedMarketKey) {
-                    $scope.openMarket(market);
+                if (market && ($scope.previouslyOpenedMarketKey || $scope.selectedPopularCompetition || $scope.isSelectedFavorites)) {
                     $scope.previouslyOpenedMarketKey = null;
+                    $scope.openMarket(market);
                 }
                 return;
             } else {
@@ -1388,7 +1471,7 @@ VBET5.controller('asianViewMainController', ['$rootScope', '$scope', '$filter', 
             resetCompetitionData();
 
             if (sport && sport.id === $scope.selectedSport.id && $scope.selectedMenuType &&
-                LEFT_MENU.LIVE !== $scope.selectedMenuType.active && $scope.selectedMarket && $scope.selectedMarket.key === market.key && !$scope.isSelectedFavorites) {
+                LEFT_MENU.LIVE !== $scope.selectedMenuType.active && $scope.selectedMarket && $scope.selectedMarket.key === market.key && !$scope.isSelectedFavorites && !$scope.selectedPopularCompetition) {
                 return;
             }
             if(!gameIsOpenned) {
@@ -1404,7 +1487,7 @@ VBET5.controller('asianViewMainController', ['$rootScope', '$scope', '$filter', 
                 $scope.pointsTypeForMarket = 'TOTALS';
             }
             var storageFilteredData = Storage.get('storageFilterData') || {};
-            if ($scope.selectedMenuType.active === LEFT_MENU.FUTURE && storageFilteredData && storageFilteredData[$scope.selectedSport.id]) {
+            if (($scope.selectedMenuType.active === LEFT_MENU.FUTURE || $scope.selectedMenuType.active === LEFT_MENU.BOOSTED_BETS) && storageFilteredData && storageFilteredData[$scope.selectedSport.id]) {
                 $scope.competitionsList = [];
                 competitionFilterData = storageFilteredData;
                 $scope.selectedCompetitionsModel = competitionFilterData[$scope.selectedSport.id];
@@ -1440,6 +1523,14 @@ VBET5.controller('asianViewMainController', ['$rootScope', '$scope', '$filter', 
             }
         }
 
+        var boostedSelectionsPromise = GameInfo.getBoostedSelections();
+
+        boostedSelectionsPromise().then(function(response) {
+            boostedBetsEventIdsArray = response.eventIdsArray;
+            $rootScope.boostedBetsEventIds = response.eventIds;
+        });
+
+
         function loadLeftMenu() {
             unsubscribe(leftMenuSubId);
             $scope.leftMenuIsLoading = true;
@@ -1457,36 +1548,57 @@ VBET5.controller('asianViewMainController', ['$rootScope', '$scope', '$filter', 
                 };
                 request.where.market.display_key = {'@gt': ""};
 
-                setTimeFilter(request);
-
-                Utils.setCustomSportAliasesFilter(request);
-
-                connectionService.subscribe(
-                    request,
-                    updateLeftMenu,
-                    {
-                        'thenCallback': function (result) {
-                            if (result.subid) {
-                                leftMenuSubId = result.subid;
+                setGameTimeFilter(request);
+                if ($scope.selectedMenuType.active === LEFT_MENU.BOOSTED_BETS) {
+                    boostedSelectionsPromise().then(function (response) {
+                        boostedBetsGameIds = response.gamesIds;
+                        request.where = {
+                            'game': {
+                                'id': {'@in': boostedBetsGameIds}
                             }
-                            $scope.leftMenuIsLoading = false;
+                        };
+                        subscribeToLeftMenuData(request);
+                    });
+                }else {
+                    subscribeToLeftMenuData(request);
+                }
+            });
+        }
 
-                            if (result.data) {
-                                if (!Config.main.asian.marginEnabled || !$rootScope.loginInProgress) {
-                                    getInitialSportAndOpenIt();
-                                } else {
-                                    var unregisterPromise = $scope.$watch('loginInProgress', function(newValue) {
-                                        if (!newValue) {
-                                            unregisterPromise();
-                                            getInitialSportAndOpenIt();
-                                        }
-                                    });
-                                }
+
+        /**
+         * @ngdoc method
+         * @name subscribeToLeftMenuData
+         * @methodOf vbet5.controller:asianViewMainController
+         * @description subscribe to left menu data
+         */
+        function subscribeToLeftMenuData(request) {
+            Utils.setCustomSportAliasesFilter(request);
+            connectionService.subscribe(
+                request,
+                updateLeftMenu,
+                {
+                    'thenCallback': function (result) {
+                        if (result.subid) {
+                            leftMenuSubId = result.subid;
+                        }
+                        $scope.leftMenuIsLoading = false;
+
+                        if (result.data) {
+                            if (!Config.main.asian.marginEnabled || !$rootScope.loginInProgress) {
+                                getInitialSportAndOpenIt();
+                            } else {
+                                var unregisterPromise = $scope.$watch('loginInProgress', function(newValue) {
+                                    if (!newValue) {
+                                        unregisterPromise();
+                                        getInitialSportAndOpenIt();
+                                    }
+                                });
                             }
                         }
                     }
-                );
-            });
+                }
+            );
         }
 
 
@@ -1597,6 +1709,30 @@ VBET5.controller('asianViewMainController', ['$rootScope', '$scope', '$filter', 
             }
         }
 
+
+        $scope.handleBannersLinks = function handleBannersLinks(link) {
+            if (link.hostname === $location.host()) {
+                var linkProps = Utils.getAllUrlParams(link.href);
+                if (linkProps.path === $location.path()) {
+                    if (linkProps.params.menuType !== undefined ) {
+                            $location.search('menuType', linkProps.params.menuType);
+                            $location.search('sport', linkProps.params.sport);
+                            $location.search('competition', linkProps.params.competition);
+                            $location.search('region', linkProps.params.region);
+                            $location.search('game', linkProps.params.game);
+                            $location.search('type', linkProps.params.type);
+
+                        if(linkProps.params.menuType != $scope.selectedMenuType.active){
+                            $scope.selectedMenuType.active = parseInt(linkProps.params.menuType, 10);
+                            loadLeftMenu();
+                        }else {
+                            getInitialSportAndOpenIt();
+                        }
+                    }
+                }
+            }
+        };
+
         /**
          * Initialize controller
          */
@@ -1610,6 +1746,7 @@ VBET5.controller('asianViewMainController', ['$rootScope', '$scope', '$filter', 
             } else {
                 $scope.selectedMenuType.active = Config.env.live ? LEFT_MENU.LIVE : LEFT_MENU.FUTURE;
             }
+            $location.search('menuType',$scope.selectedMenuType.active);
             Config.env.live = $scope.selectedMenuType.active === LEFT_MENU.TODAY ? false : $scope.selectedMenuType.active;
             createDayNames();
             subscribeToLiveGameCounts();
@@ -1980,6 +2117,7 @@ VBET5.controller('asianViewMainController', ['$rootScope', '$scope', '$filter', 
                 $route.reload(); // it must be implement withoud rote.reload. neet to handle deepLinking
             }, 100);
         });
+
 
         $scope.$on("asianView.selectFavorite", function(event, game) {
             $scope.selectFavoriteGame(game);

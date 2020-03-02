@@ -234,7 +234,6 @@ live-game-scores {
 
 .game-additional-icons {
     padding: 0 6px;
-    font: 11px/24px icomoon;
     @include ltr {
         float: right;
     }
@@ -245,6 +244,7 @@ live-game-scores {
         display: block;
         padding: 0 6px;
         color: $c16-tp-4;
+        font: 11px/24px icomoon;
         transition: 250ms color;
         font-style: normal;
         @include ltr {
@@ -263,6 +263,7 @@ live-game-scores {
             margin: 0 0 0 6px;
             padding: 0 4px 0 10px;
             border-left: 1px solid $c16-sp-10;
+            font: 11px/24px icomoon;
         }
         @include rtl {
             float: right;
@@ -301,5 +302,225 @@ live-game-scores {
 .body-wrapper:not(.classic) {
     .game-additional-icons > ul {
         display: none;
+    }
+}
+
+// add linep styles
+.lineUpPopupContainer{
+    position: absolute;
+    width: 320px;
+    background: $skin-palette-6;
+    top: 34px;
+    max-height: 430px;
+    height: 415px;
+    z-index: 999;
+    @include scroll;
+    box-shadow: 0 0 5px -1px $skin-palette-12;
+    @include ltr {
+        right: 0;
+    }
+    @include rtl {
+        left: 0;
+    }
+    &.empty{
+        height: 60px;
+        > p{
+            text-align: center;
+            padding: 15px 0;
+        }
+    }
+}
+.multiview-contain .lineUpPopupContainer{
+    max-height: 210px;
+}
+.cash-game {
+    position: relative;
+    .lineUpPopupContainer{
+        font-weight: normal;
+        left: 0;
+    }
+}
+.lineup{
+    font-style: normal;
+    font-size: 11px;
+    line-height: 24px;
+    position: relative;
+      &.opened{
+            &:after{
+                display: block;
+                content: '';
+                position: absolute;
+                bottom: -16px;
+                left: 40%;
+                width: 0;
+                height: 0;
+                border-style: solid;
+                border-width: 0 8px 8px 8px;
+                border-color: transparent transparent $skin-palette-6 transparent;
+                position: absolute;
+
+            }
+        }
+}
+.lineup-team-name{
+    float: left;
+    width: 100%;
+    height: 30px;
+    background: $skin-palette-6;
+    box-sizing: border-box;
+    display: table;
+    table-layout: fixed;
+    vertical-align: top;
+    box-shadow: 0 -1px 0 $hero-color inset;
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    > span{
+        font-size: 12px;
+        line-height: 30px;
+        display: table-cell;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        color: $text-palette-3;
+        text-align: center;
+        padding: 0 8px;
+        box-sizing: border-box;
+        &.active{
+            position: relative;
+            background: $hero-color;
+            color: set-color($hero-color);
+        }
+    }
+}
+.active-players{
+    float: left;
+    width: 100%;
+    background: $skin-palette-7;
+    height: 26px;
+    padding: 0 10px;
+    position: relative;
+    left: -10px;
+    > span{
+        float: left;
+        width: 100%;
+        font-size: 11px;
+        line-height: 26px;
+        color: $skin-palette-3;
+    }
+}
+.single-game-i{
+    float: left;
+    width: 100%;
+    padding: 0 10px;
+    box-sizing: border-box;
+}
+.single-player-name{
+    float: left;
+    width: 100%;
+    height: 39px;
+    border-bottom: 1px solid $skin-palette-5;
+    box-sizing: border-box;
+    > span{
+        font-size: 12px;
+        line-height: 40px;
+        color: $text-palette-3;
+        display: inline-block;
+        vertical-align: top;
+        > i{
+            display: inline-block;
+            font: 15px/40px icomoon;
+            vertical-align: top;
+            @include ltr {
+                margin-left: 5px;
+            }
+            @include rtl {
+                margin-right: 5px;
+            }
+           &:before{
+                display: block;
+                //position: absolute;
+                //left: 10px;
+                //top: -15px;
+                content: '';
+            }
+            &.icon-event-SUB:before{
+                content: '\ea59';
+            }
+            &.icon-event-YC:before{
+                content: '\66';
+                color: #e2bc3d;
+            }
+            &.icon-event-RC:before{
+                content: '\66';
+                color: #bf3d3d;
+            }
+            &.icon-event-G:before{
+                content: '\6c';
+                font-size: 16px;
+            }
+            &.icon-own-goal:before{
+                content: '\ea5c';
+                font-size: 22px;
+            }
+            &.icon-penalty-goal:before{
+                content: '\ea5d';
+            }
+        }
+        &:first-child{
+            width: 20px;
+            position: relative;
+            display: inline-block;
+            text-align: center;
+            background: red;
+            border-radius: 50%;
+            line-height: 20px;
+            background: $skin-palette-2;
+            vertical-align: top;
+            margin-top: 10px;
+            height: 20px;
+            color: $text-palette-7;
+            font-size: 11px;
+            font-weight: bold;
+            @include ltr {
+                margin-right: 8px;
+            }
+            @include rtl {
+                margin-left: 8px;
+            }
+        }
+        &:last-child{
+            color: $text-palette-4;
+            @include ltr {
+                float: right;
+            }
+            @include rtl {
+                float: left;
+            }
+        }
+        &.position-c{
+            background: none;
+            color: $text-palette-3;
+            &:before{
+                content: '\ea62';
+                font: 18px/20px icomoon;
+            }
+        }
+    }
+    &:last-child{
+        border-bottom: none;
+    }
+}
+.game-score-multiset .current-delivery{
+    @include  ltr{
+        float: right;
+    }
+    @include rtl{
+        float: left;
+    }
+    padding: 0 0 0 10px;
+    > i{
+        font-style: normal;
+        margin: 0 0 0 5px;
     }
 }

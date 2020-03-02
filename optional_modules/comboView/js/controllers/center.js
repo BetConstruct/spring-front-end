@@ -276,7 +276,7 @@ VBET5.controller('comboViewCenterController', ['$rootScope', '$scope', 'OddServi
                     'exclude_ids', 'is_stat_available', 'game_number', 'game_external_id', 'is_live', 'show_type'
                 ],
                 'event': ['id', 'price', 'type', 'name', 'order', 'base'],
-                'market': ['type', 'express_id', 'name', 'base', 'order']
+                'market': ['type', 'express_id', 'name', 'base', 'order', 'id']
             },
             'where': {
                 'game': {}
@@ -397,6 +397,10 @@ VBET5.controller('comboViewCenterController', ['$rootScope', '$scope', 'OddServi
     $scope.openGameView = function openGameView (game) {
         parentMainScope.selectedCentralView = 'gameView';
         $scope.liveGameLoading = true;
+        var gameRequest = [["id", "show_type", "markets_count", "start_ts", "is_live", "is_blocked", "is_neutral_venue","team1_id", "team2_id", "game_number", "text_info", "is_stat_available", "type",  "info", "stats", "team1_name", "team2_name", "tv_info"]];
+        if (game.type === 1) {
+            Array.prototype.push.apply(gameRequest[0], ["match_length", "scout_provider", "video_id","video_id2", "video_id3", "tv_type", "last_event", "live_events"]);
+        }
 
         // -1) init
         game.opened = true;
@@ -406,9 +410,9 @@ VBET5.controller('comboViewCenterController', ['$rootScope', '$scope', 'OddServi
         var request = {
             'source': 'betting',
             'what': {
-                'game': [],
-                'market': [],
-                'event': []
+                'game':gameRequest,
+                'market': ["id", "col_count", "type", "sequence", "express_id", "cashout", "display_key", "display_sub_key", "group_id", "name", "group_name", "order" ],
+                'event': ["order", "id", "type_1", "type", "type_id", "original_order", "name", "price", "base", "home_value", "away_value", "display_column"]
             },
             'where': {'game': {'id': game.id}}
         };

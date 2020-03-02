@@ -82,7 +82,11 @@ VBET5.directive("subMenuCreator", [function() {
             scope.$on('$routeChangeSuccess', updateSubMenu);
 
             scope.$watch(function () {
-                return element[0].clientWidth + element[0].childNodes.length;
+                var value = element[0].clientWidth + element[0].childNodes.length; // menu width  + menu items count
+                if (element[0].children[1]) {
+                    value += element[0].children[1].offsetWidth; //fonts late load case
+                }
+                return value;
             }, function (newVal, oldVal) {
                 if (newVal !== oldVal) {
                     updateSubMenu();

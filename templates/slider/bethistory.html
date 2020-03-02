@@ -85,7 +85,7 @@
                                         <div ng-show="bet.type=='Toto'"><span trans>Draw</span> <span>N{{bet.draw_number}}</span></div>
                                         <ul>
                                             <li ng-repeat="event in bet.events" ng-click="gotoBetGame(event)">
-                                                <div class="result-bet-icon" ng-class="{'win': event.outcome=='3', 'lost': event.outcome=='1', 'watch': event.outcome=='0', 'return': event.outcome=='2'}"></div>
+                                                <div class="result-bet-icon" ng-class="{'win': event.outcome=='3', 'lost': event.outcome=='1', 'watch': event.outcome=='0', 'return': event.outcome=='2', 'placed': event.outcome=='7'}"></div>
                                                 <p>
                                                     <span class="popup-coef" ng-show="event.coeficient || event.k_type == 11">({{event.k_type == 11 ? 'SP' : (event.coeficient|oddConvert:env.oddFormat)}})</span>
                                                     <span class="popup-sport-name">{{event.sport_name}}</span>

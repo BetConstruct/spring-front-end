@@ -2911,9 +2911,11 @@
   width: 100%;
   position: relative;
   min-height: 20px;
-  padding: 0 0 0 21px;
+  @include ltr {
+    padding: 1px 0 1px 21px;
+  }
   @include rtl {
-    padding: 0 21px 0 0;
+    padding: 1px 21px 1px 0;
   }
 }
 .button-info-text-view-v3 > ul > li > p, .button-info-text-view-v3 > p {
@@ -3820,7 +3822,7 @@
   border-bottom: 1px solid $c16-sp-9;
   > div {
     display: table-cell;
-    vertical-align: middle;
+    vertical-align: text-bottom;
     border: 0;
     color: $c16-tp-6;
     background: $classic-view-background;
@@ -3897,11 +3899,11 @@
       &:after {
         content: attr(data-count);
         display: inline-block;
-        vertical-align: middle;
+        vertical-align: text-top;
         background: $hero-color;
         color: set-color($hero-color);
-        font: 700 #{5+$size-font}/14px $font-f;
-        height: 12px;
+        font: 700 #{5+$size-font}/15px $font-f;
+        height: 16px;
         padding: 0 3px;
         border-radius: 2px;
         box-shadow: 0 1px 0 rgba(black, 0.3);
@@ -3986,13 +3988,15 @@
     background: $c16-sp-8;
     font: #{6+$size-font}/30px $font-f;
     position: relative;
-    padding: 0 52px 0 8px;
     box-sizing: border-box;
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
+    @include ltr {
+      padding: 0 26px 0 8px;
+    }
     @include rtl {
-      padding: 0 8px 0 52px;
+      padding: 0 8px 0 26px;
     }
     &:after {
       content: "\e670";
@@ -4006,6 +4010,15 @@
         right: auto;
       }
     }
+    > .gift-bet {
+      margin-top: 2px;
+      @include ltr {
+        float: right;
+      }
+      @include rtl {
+        float: left;
+      }
+    }
   }
   > div {
     display: none;
@@ -4017,16 +4030,6 @@
     }
     > div {
       display: block;
-    }
-  }
-  .edit-bets-icon {
-    top: 2px;
-    margin: 0;
-    @include ltr {
-      right: 26px;
-    }
-    @include rtl {
-      left: 26px;
     }
   }
 }

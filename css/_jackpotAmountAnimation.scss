@@ -231,7 +231,11 @@
         padding-right: 9%;
       }
     }
+    .jp-multipliers + sup {
+      margin-left: 4px;
+    }
     > sup {
+      color: $brand-color-2;
       font: normal 12px/14px $font-f
     }
   }
@@ -296,6 +300,9 @@
     }
     > strong {
       top: -6px;
+    }
+    &.jp-multipliers {
+      line-height: 26px;
     }
   }
 }

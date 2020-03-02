@@ -1177,25 +1177,19 @@ a {
   @include rtl {
     direction: rtl;
   }
-  @media screen and (max-height: 768px) {
-    position: absolute;
-  }
   .close-slider-button-j {
-    width: 32px;
-    height: 32px;
-    font: 28px/32px icomoon;
+    font: 20px/22px icomoon;
     text-align: center;
     color: $text-palette-4;
     transition: 300ms color;
     position: absolute;
     top: #{$header-first-line-height + $header-nav-line-height};
     z-index: 200;
-    margin: 16px;
     @include ltr {
-      right: 0;
+      right: 4px;
     }
     @include rtl {
-      left: 0;
+      left: 4px;
     }
     &:hover {
       color: $text-palette-2;
@@ -1227,7 +1221,22 @@ a {
     transform: translate3d(0, 0, 0);
   }
 }
-
+.clear-favorite-games {
+  position: absolute;
+  top: 5px;
+  color: $text-palette-4;
+  transition: color 240ms;
+  font: 16px/18px $font-f;
+  @include ltr {
+    right: 13px;
+  }
+  @include rtl {
+    left: 13px;
+  }
+  &:hover {
+    color: $text-palette-2;
+  }
+}
 .closed-arrow-b {
   text-indent: -9999em;
   height: 40px;
@@ -1451,6 +1460,10 @@ a {
 
 .Boxing:before {
   content: "\e60f";
+}
+
+.V-Box:before {
+  content: "\e92c";
 }
 
 .Bridge:before {
@@ -1833,8 +1846,9 @@ a {
 .FutureHorseRacing:before{
   content: '\e924';
 }
+
 .Kabaddi:before {
-  content: "\e921";
+  content: "\e92a";
 }
 
 .RainbowSix:before {
@@ -2872,7 +2886,15 @@ p.flag {
   text-align: center;
   padding: 50px 0 20px;
 }
-
+.competition-container{
+  position: relative;
+}
+@for $i from 1 through 60 {
+  .competition-container:nth-child(#{$i}),
+  .conteiner-live-block:nth-child(#{$i}){
+    z-index: 151 - $i;
+  }
+}
 .container-competition {
   width: 100%;
   display: inline-block;
@@ -2885,7 +2907,8 @@ p.flag {
   width: 100%;
   margin: 0 0 -3px;
   padding: 0;
-  display: block;
+  display: inline-block;
+  vertical-align: top;
 }
 
 .conteiner-live-block .conteiner-live-block {
@@ -3291,17 +3314,15 @@ div.star {
 }
 
 .game-live-row .statistic {
-  text-indent: -9999em;
-  min-width: 16px;
-  width: 18px;
+  width: 32px;
+  text-align: center;
 
 }
 
 .game-live-row .statistic a {
-  display: block;
-  width: 16px;
-  height: 18px;
-  margin: 0 auto;
+  display: inline-block;
+  width: 14px;
+  height: 14px;
 }
 
 /*.game-live-row .factor {display: none;}*/
@@ -3926,6 +3947,7 @@ div.star {
 .cash-game.no-video-flash tr td:first-child span,
 .cash-game.cash-game-tabletennis.no-video-flash tr td:first-child span {
   width: 350px;
+  line-height: 31px;
 }
 
 .cash-game.cash-game-snooker.no-video-flash tr td:first-child span {
@@ -3933,27 +3955,16 @@ div.star {
   margin-top: 8px;
 }
 
-.cash-game.no-video-flash tr .team-1 > div,
-.cash-game.no-video-flash tr .team-2 > div,
-.cash-game.cash-game-tabletennis.no-video-flash tr .team-1 > div,
-.cash-game.cash-game-tabletennis.no-video-flash tr .team-2 > div {
-  margin-top: 8px;
-  @include ltr {
-    left: auto;
-    right: 10px;
-  }
-  @include rtl {
-    left: 10px;
-    right: auto;
-  }
-}
-
 .live-game-generic .add-info {
   float: left;
   position: relative;
   width: 100%;
   text-align: center;
-  margin-top: -2px;
+  margin-top: -3px;
+  > i{
+    font-style: normal;
+    margin-left: 10px;
+  }
 }
 
 .live-game-generic .add-info span {
@@ -4265,6 +4276,7 @@ div.star {
   padding: 0 3px;
   text-align: center;
   min-width: 10px;
+  position: relative;
 }
 
 .cash-game tr th {
@@ -4349,13 +4361,6 @@ div.star {
   padding-top: 6px;
 }
 
-.cash-game.cash-game-tabletennis tr .team-1 > div,
-.cash-game.cash-game-tabletennis tr .team-2 > div {
-  left: auto;
-  right: 10px;
-  margin-top: 8px;
-}
-
 .save-games-stats .cash-game tr td:first-child {
   width: auto;
 }
@@ -4430,7 +4435,6 @@ div.game-video {
   z-index: 22;
   padding: 2px 0;
 }
-
 div.game-video-detached {
   height: auto;
   width: auto;
@@ -4784,11 +4788,12 @@ div.game-video-detached #gamevideoobj {
 .cash-game tr .team-1 > div,
 .cash-game tr .team-2 > div {
   position: absolute;
+  top: 8px;
   @include ltr {
-    left: 186px;
+    right: 10px;
   }
   @include rtl {
-    right: 186px;
+    left: 10px;
   }
 }
 
@@ -5019,7 +5024,6 @@ ul.game-additional-info li {
   }
   @include rtl {
     float: right;
-    margin: 0 16px 0 0;
   }
 }
 
@@ -5094,9 +5098,14 @@ ul.game-additional-info li {
 }
 
 .time-game.main-tabs ul li {
-  float: left;
   width: 120px;
   padding: 0 10px;
+  @include ltr {
+    float: left;
+  }
+  @include rtl {
+    float: right;
+  }
 }
 
 .time-game.main-tabs ul li:first-child {
@@ -5205,14 +5214,21 @@ ul.game-additional-info li {
   position: relative;
 }
 
-.rg-amount-event span.top-arrow:before {
-  content: "▲";
-  color: #693;
-}
-
-.rg-amount-event span.bot-arrow:before {
-  content: "▼";
-  color: #f00;
+.rg-amount-event span {
+  &.up-0,
+  &.up-1 {
+    &:before {
+      content: "▲";
+      color: #693;
+    }
+  }
+  &.down0,
+  &.down-1 {
+    &:before {
+      content: "▼";
+      color: #f00;
+    }
+  }
 }
 
 .rg-amount-event:hover {
@@ -5559,6 +5575,7 @@ div.expanded-tabs .list-result {
 .closed-game-width {
   width: 702px;
   float: left;
+  position: relative;
 }
 .conteiner-live-block:hover .game-live-row li.team:hover, .conteiner-live-block:hover .game-live-row li.factor:hover {
   padding: 5px 5px 4px;
@@ -6324,7 +6341,7 @@ div.mini-market-b h3 {
 }
 .icon-link:before {
   content: "\e613";
-  margin-top: 5px;
+  margin-top: 1px;
   display: block;
 }
 .icon-link.cashout:before {
@@ -6454,21 +6471,28 @@ div.mini-market-b h3 {
 .market-info-b span > span {
   padding: 0;
 }
-.market-info-b span.price1:before,
-.mini-b-events-overview > ul > li > span.price1:before,
-.market-info-b span.price-1:before,
-.mini-b-events-overview > ul > li > span.price-1:before {
+.market-info-b span.up-0:before,
+.market-info-b span.up-1:before,
+.market-info-b span.down0:before,
+.market-info-b span.down-1:before,
+.mini-b-events-overview > ul > li > span.up-0:before,
+.mini-b-events-overview > ul > li > span.up-1:before,
+.mini-b-events-overview > ul > li > span.down0:before,
+.mini-b-events-overview > ul > li > span.down-1:before {
   content: "\e66d";
   font: 12px 'icomoon';
   color: #04e914;
   text-shadow: none;
-  animation: arrow-blick 300ms ease;
   position: absolute;
   top: 1px;
-  left: 0;
+  left: -12px;
+  animation-duration: 7000ms;
+  animation-fill-mode: forwards;
 }
-.market-info-b span.price-1:before,
-.mini-b-events-overview > ul > li > span.price-1:before {
+.market-info-b span.down0:before,
+.market-info-b span.down-1:before,
+.mini-b-events-overview > ul > li > span.down0:before,
+.mini-b-events-overview > ul > li > span.down-1:before {
   content: "\e66c ";
   color: #a61f67;
 }
@@ -6476,21 +6500,23 @@ div.mini-market-b h3 {
 .pricehide-1:before {
   display: none;
 }
-.lmb-table-j .market-info-b span.price1:before,
-.lmb-table-j .market-info-b span.price-1:before {
-  position: relative;
+
+.mini-market-b ul li.active .market-info-b span.up-0:before,
+.mini-market-b ul li.active .market-info-b span.up-1:before,
+.mini-market-b ul li.active .market-info-b span.down0:before,
+.mini-market-b ul li.active .market-info-b span.down-1:before {
+  color: $text-palette-1;
 }
-@keyframes arrow-blick {
-  0% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0;
-  }
-  100% {
-    opacity: 1;
-  }
-}
+
+.market-info-b span.up-0:before { animation-name: odds-arrow-up-0; }
+.market-info-b span.up-1:before { animation-name: odds-arrow-up-1; }
+.market-info-b span.down0:before { animation-name: odds-arrow-down0; }
+.market-info-b span.down-1:before { animation-name: odds-arrow-down-1; }
+.mini-b-events-overview > ul > li > span.up-0:before { animation-name: odds-arrow-up-0; }
+.mini-b-events-overview > ul > li > span.up-1:before { animation-name: odds-arrow-up-1; }
+.mini-b-events-overview > ul > li > span.down0:before { animation-name: odds-arrow-down0; }
+.mini-b-events-overview > ul > li > span.down-1:before { animation-name: odds-arrow-down-1; }
+
 .market-each-way {
   width: calc(100% - 2px);
   div {
@@ -6558,13 +6584,6 @@ div.mini-market-b h3 {
 }
 .gameing-wrapper.prematch .scroll-contain.prematch .market-contain-b .mini-market-b {
   margin: 0;
-}
-
-/*!*Prematch END*!*/
-
-.mini-market-b ul li.active .market-info-b span.price-1:before,
-.mini-market-b ul li.active .market-info-b span.price1:before {
-  color: $text-palette-1;
 }
 
 /*!*centr-contain*!*/
@@ -10592,7 +10611,7 @@ form.ng-pristine .form-error-icon, form.registration-form.ng-dirty .form-error-i
 }
 
 .button-sign ul {
-  margin: 10px 0 0;
+  margin: 10px 0 6px;
   @include ltr {
     float: left;
   }
@@ -11456,7 +11475,7 @@ div[class*="pagemobile"] .page-main .page-content p {
   //min-height: 304px;
   overflow: hidden;
   max-width: 1310px;
-  margin: 0 auto;
+  margin: 0 auto 20px;
 }
 
 .list-news.promo {
@@ -11490,11 +11509,9 @@ div[class*="pagemobile"] .page-main .page-content p {
   li {
     width: 100%;
    // max-width: 420px;
-    &:hover .picture-news-block {
+    &:hover .picture-news-block > a img {
       margin-top: 10px;
-      > a img {
-        box-shadow: 0 0 20px 2px lighten(desaturate(adjust-hue($skin-palette-11, -3deg), 21), 15);
-      }
+      box-shadow: 0 0 20px 2px lighten(desaturate(adjust-hue($skin-palette-11, -3deg), 21), 15);
     }
   }
 }
@@ -11538,20 +11555,6 @@ div[class*="pagemobile"] .page-main .page-content p {
       }
     }
   }
-}
-.list-news ul li h3 {
-  float: left;
-  width: 100%;
-}
-
-.list-news ul li h3 a {
-  text-decoration: none;
-}
-
-.list-news ul li p {
-  float: left;
-  margin: 0 0 10px 0;
-  width: 100%;
 }
 
 .sport-news-name {
@@ -11669,7 +11672,9 @@ div[class*="pagemobile"] .page-main .page-content p {
   width: 100%;
   margin: 20px 0 0;
 }
-
+.big-news-block .mini-social-icons{
+  margin: 30px 0 0;
+}
 .button_bet a {
   display: block;
   float: left;
@@ -12416,7 +12421,7 @@ div[class*="pagemobile"] .page-main .page-content p {
   height: 360px;
   position: relative;
   background: $contact-us;
-  h3 {
+  > h3 {
     float: left;
     width: calc(100% - 10px);
     height: 47px;
@@ -12618,7 +12623,7 @@ div[class*="pagemobile"] .page-main .page-content p {
 .games-save-slider {
   float: left;
   width: 974px;
-  margin: 30px 0 0;
+  position: relative;
   .football-gamer-name {
     float: none;
     width: auto;
@@ -12635,7 +12640,7 @@ div[class*="pagemobile"] .page-main .page-content p {
 
 .games-save-slider ul {
   width: 5000px;
-  margin: 0 0 30px;
+  padding: 40px 0 20px;
   @include ltr {
     float: left;
   }
@@ -12797,7 +12802,8 @@ div[class*="pagemobile"] .page-main .page-content p {
   position: relative;
 }
 
-.casino-game-contain .icon-delete a {
+.casino-game-contain .icon-delete a,
+.side-bar-available .icon-delete a {
   position: absolute;
   width: 16px;
   height: 16px;
@@ -12843,15 +12849,29 @@ div[class*="pagemobile"] .page-main .page-content p {
 }
 
 .games-save-slider .arrow-left-s, .games-save-slider .arrow-right-s, .games-save-slider .arrow-left-s a, .games-save-slider .arrow-right-s a {
-  height: 190px;
+  height: 100%;
 }
 
 .games-save-slider .arrow-left-s {
-  left: -25px;
+  @include ltr {
+    left: -25px;
+    right: auto;
+  }
+  @include rtl {
+    left: auto;
+    right: -25px;
+  }
 }
 
 .games-save-slider .arrow-right-s {
-  right: -25px;
+  @include ltr {
+    left: auto;
+    right: -25px;
+  }
+  @include rtl {
+    left: -25px;
+    right: auto;
+  }
 }
 
 .games-save-slider ul li .amount-maney {
@@ -13348,6 +13368,9 @@ li.transactions-money.empty {
 .contein-slider {
   width: 980px;
   margin: 0 auto;
+  .all-games-container > a {
+    height: 112px;
+  }
 }
 
 .games-slider {
@@ -13359,10 +13382,10 @@ li.transactions-money.empty {
   height: 270px;
   z-index: 2;
   @include ltr {
-    padding: 0 3px 20px 0;
+    padding: 40px 3px 20px 0;
   }
   @include rtl {
-    padding: 0 0 20px 3px;
+    padding: 40px 0 20px 3px;
   }
 }
 
@@ -13936,7 +13959,6 @@ iframe.game-has-bonus {
   border: 0;
   height: auto;
   width: 974px;
-  padding: 0;
   margin: 0;
 }
 
@@ -23525,7 +23547,7 @@ html.integration-auto-height .sport.asian {
       display: block;
       top: 0;
       @include ltr {
-        left: 0;
+        left: -1px;
       }
       @include rtl {
         left: 1px;
@@ -25038,13 +25060,12 @@ html.integration-auto-height .sport.asian {
   float: left;
   width: 390px;
   position: fixed;
-  bottom: -100%;
+  bottom: 36px;
   padding: 20px;
   box-sizing: border-box;
   background: $skin-color;
   border-radius: 6px;
   box-shadow: 0 0 9px 2px rgba(#000000,0.25);
-  transition: bottom 1000ms ease-in-out;
   z-index: 10000;
   @include ltr {
     left: 30px;
@@ -25065,7 +25086,8 @@ html.integration-auto-height .sport.asian {
     color: rgba(set-color($skin-color),0.7);
     font: 14px/20px $font-f;
   }
-  &.tooltip-system-info-show {
-    bottom: 36px;
-  }
+}
+
+.bet-form form p.total-poswin span:nth-child(2):not(:last-child){
+  padding: 0 0 0 5px;
 }

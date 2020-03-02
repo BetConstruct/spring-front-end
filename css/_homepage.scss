@@ -452,7 +452,7 @@ $anim-time: 5;
     margin: 0;
   }
 }
-.date-championship-logo{
+.date-championship-logo {
   position: absolute;
   top: 0;
   width: 100px;
@@ -517,8 +517,18 @@ $anim-time: 5;
   padding: 15px 20px 0;
   background: $skin-palette-12 no-repeat 50% 50% / cover;
 }
-.game-full-information-w:before{
-  display: none;
+.game-full-information-w:before {
+  position: absolute;
+  bottom: 18px;
+  color: rgba(set-color($skin-palette-12),0.7);
+  display: block;
+  font: 18px/18px sport-icon;
+  @include ltr {
+    right: 20px;
+  }
+  @include rtl {
+    left: 20px;
+  }
 }
 .game-full-information-w > img{
   position: absolute;
@@ -586,16 +596,60 @@ $anim-time: 5;
   box-sizing: border-box;
   display: table-cell;
   text-align: right;
-  padding: 0 0 0 10px;
   font: 700 16px/22px $font-f;
   height: 100%;
   color: map-get($coeff-color-map, featured-games);
   position: relative;
+  @include ltr {
+    padding-left: 10px;
+  }
+  @include rtl {
+    padding-right: 10px;
+  }
   &:before{
     position: absolute;
-    left: -2px;
     top: -2px;
+    @include ltr {
+      left: -2px;
+    }
+    @include rtl {
+      right: -2px;
+    }
   }
+  &.up-0:before,
+  &.up-1:before,
+  &.down0:before,
+  &.down-1:before {
+    box-sizing: border-box;
+    font: 12px/28px icomoon;
+    content: "\e66d";
+    display: inline-block;
+    transform: translate3d(0, 0, 0);
+    animation-duration: 7000ms;
+    animation-fill-mode: forwards;
+    @include rtl {
+      transform: none;
+    }
+    @if ($classic-switch-odds-state-colors == true) {
+      color: #e9044a;
+    } @else {
+      color: #04e914;
+    }
+  }
+  &.down0:before,
+  &.down-1:before {
+    content: "\e66c";
+    box-sizing: border-box;
+    @if ($classic-switch-odds-state-colors == true) {
+      color: #04e914;
+    } @else {
+      color: #e9044a;
+    }
+  }
+  &.up-0:before { animation-name: odds-arrow-up-0; }
+  &.up-1:before { animation-name: odds-arrow-up-1; }
+  &.down0:before { animation-name: odds-arrow-down0; }
+  &.down-1:before { animation-name: odds-arrow-down-1; }
 }
 .team-names-wrapper-b > ul > li > span > i {
   box-sizing: border-box;
@@ -611,6 +665,7 @@ $anim-time: 5;
   margin:  10px 0 0;
 }
 .game-link-wrapper-b > a{
+  max-width: 100%;
   text-decoration: none;
   color: set-color($brand-color-1);
   font: 12px/14px $font-f;
@@ -621,7 +676,6 @@ $anim-time: 5;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  max-width: 100%;
   box-sizing: border-box;
   transition: background 500ms, border-color 500ms;
   @include ltr {
@@ -629,6 +683,9 @@ $anim-time: 5;
   }
   @include rtl {
     float: right;
+  }
+  @media screen and (max-width: 1260px) {
+    max-width: 148px;
   }
 }
 .games-view-slider-contain > ul > li:hover .game-link-wrapper-b > a{
@@ -731,15 +788,21 @@ $anim-time: 5;
   }
 }
 @keyframes pulse-j {
-  0%, 20%, 60%, 100%{
-    top: 0;
+  0%, 40%, 100% {
+    transform: translateY(0);
   }
-  5%, 35% {
-    top: -2px;
+  20% {
+    transform: translateY(-28px);
   }
+  60% {
+    transform: translateY(-8px);
+  }
+  70% {
+    transform: translateY(-6px);
+    }
 }
 .product-list-contain > ul > li:hover .icon-container-product {
-  animation: pulse-j 1000ms ease-in-out;
+  animation: pulse-j 800ms ease-out;
 }
 @keyframes product-jackpot-anim-j {
   0% {

@@ -12,19 +12,20 @@ VBET5.service('TimezoneService', ['Config', 'Storage', 'Moment', function (Confi
 
     /**
      * @description Set initial values for the switcher
+     * the timeZonePerLanguage has highest priority to select current timezone.
+     * the second priority has storage .
      */
     TimezoneService.getTimezoneSwitcherInitialValue = function getTimezoneSwitcherInitialValue () {
+        // try to get through lang if it enabled
+        if (Config.main.timeZonePerLanguage[Config.env.lang]) {
+            return Config.main.timeZonePerLanguage[Config.env.lang];
+        }
         if (Storage.get('selectedTimeZone')) {
             return Storage.get('selectedTimeZone');
         }
 
-        // try to get through lang if it enabled
-        if (Config.main.timeZonePerLanguage[Config.env.lang]) {
-            return Config.main.timeZonePerLanguage[Config.env.lang];
-        } else {
-            // return default time zone from navigator
-            return Config.env.selectedTimeZone || Moment.get().lang('en').format('Z');
-        }
+        // return default time zone from navigator
+        return Config.env.selectedTimeZone || Moment.get().lang('en').format('Z');
     };
 
     /**
@@ -75,5 +76,5 @@ VBET5.service('TimezoneService', ['Config', 'Storage', 'Moment', function (Confi
         {"value": "+14:00", "name": "GMT +14:00"}
     ];
 
-    return TimezoneService;    
+    return TimezoneService;
 }]);

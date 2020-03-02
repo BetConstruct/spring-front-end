@@ -16,9 +16,21 @@ angular.module('vbet5').controller('loginCtrl', ['$scope', '$rootScope', 'Timeou
 
     $scope.busy = false;
 
-    $scope.recaptcha = {
-        version: RecaptchaService.version
-    };
+
+    function init() {
+        if (RecaptchaService.version) {
+            $scope.recaptcha = {
+                version: RecaptchaService.version
+            };
+        } else {
+            var recaptchaHandlingPromise = $scope.$on('recaptcha_version', function (event, data) {
+                $scope.recaptcha = {
+                    version: data.version
+                };
+                recaptchaHandlingPromise();
+            });
+        }
+    }
 
     $scope.params = {
         userAge: 0,
@@ -470,6 +482,16 @@ angular.module('vbet5').controller('loginCtrl', ['$scope', '$rootScope', 'Timeou
                                 }
                             });
                         }
+                    } else if (data.data.status === 301 && data.data.details.message) {
+                        var dialog = {
+                            type: "warning",
+                            title: "Warning",
+                            content: data.data.details.message,
+                        };
+                        if (data.data.details.link) {
+                            dialog.link = data.data.details.link;
+                        }
+                        $rootScope.$broadcast("globalDialogs.addDialog", dialog);
                     }
                 }
             );
@@ -1117,5 +1139,7 @@ angular.module('vbet5').controller('loginCtrl', ['$scope', '$rootScope', 'Timeou
                 );
         };
     }
+
+    init();
 }]);
 

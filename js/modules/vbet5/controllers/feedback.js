@@ -15,7 +15,12 @@ angular.module('vbet5').controller('FeedbackController', ['$scope', '$rootScope'
      */
     $scope.toggleView = function () {
         $scope.showFeedBackPopup = !$scope.showFeedBackPopup;
+        if ($scope.showFeedBackPopup && $scope.feedbackForm) {
+            $scope.feedbackForm.$setUntouched();
+        }
+
         $scope.messageBody = '';
+        $scope.email = '';
     };
 
     $scope.$on('feedback.toggle', $scope.toggleView);

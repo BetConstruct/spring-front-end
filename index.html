@@ -25,13 +25,9 @@
     <link ng-if="conf.customLanguageCss.indexOf(env.lang) !== -1" rel="stylesheet" ng-href="skins/{{conf.skin}}/css/fonts/{{env.lang}}.css"/>
     <!-- /build -->
 
-    <!-- build:template
-        <link rel="stylesheet" href="<%=customCss%>"/>
-    <!-- /build -->
     <!-- build:remove -->
     <title ng-bind="siteTitle"></title>
     <link rel="stylesheet" ng-href="skins/{{conf.skin}}/css/skin.css"/>
-    <link rel="stylesheet" ng-href="//cmsbetconstruct.com/general/getCustomCss?skin_id={{conf.site_id}}"/>
     <!-- /build -->
 </head>
 <body class="{{::conf.site_name.split('.').join('')}}">
@@ -143,6 +139,9 @@
         <script src="js/modules/vbet5/services/betService.js"></script>
         <script src="js/modules/vbet5/services/betIntelligent.js"></script>
         <script src="js/modules/vbet5/services/recaptchaService.js"></script>
+        <script src="js/modules/vbet5/services/ladderLoader.js"></script>
+        <script src="js/modules/vbet5/services/giftService.js"></script>
+
 
         <script src="js/modules/cms/main.js"></script>
         <script src="js/modules/cms/config.js"></script>
@@ -234,11 +233,13 @@
         <script src="js/modules/vbet5/directives/autofocus.js"></script>
         <script src="js/modules/vbet5/directives/visibleSets.js"></script>
         <script src="js/modules/vbet5/directives/gameAdditionalInfo.js"> </script>
+        <script src="js/modules/vbet5/directives/soccerLineUp.js"></script>
 
         <script src="js/modules/vbet5/directives/togglePlaceholder.js"></script>
         <script src="js/modules/vbet5/directives/readMore.js"></script>
         <script src="js/modules/vbet5/directives/trackClickCount.js"></script>
         <script src="js/modules/vbet5/directives/favoriteGames.js"></script>
+        <script src="js/modules/vbet5/directives/virtualSportGame.js"></script>
         <script src="js/modules/vbet5/filters/firstElement.js"></script>
         <script src="js/modules/vbet5/filters/translate.js"></script>
         <script src="js/modules/vbet5/filters/oddConvert.js"></script>
@@ -250,6 +251,7 @@
         <script src="js/modules/vbet5/filters/isUpcoming.js"></script>
         <script src="js/modules/vbet5/filters/improveName.js"></script>
         <script src="js/modules/vbet5/filters/convertSetName.js"></script>
+        <script src="js/modules/vbet5/filters/convertSetNameWithLeg.js"></script>
         <script src="js/modules/vbet5/filters/formatDate.js"></script>
         <script src="js/modules/vbet5/filters/capitalise.js"></script>
         <script src="js/modules/vbet5/filters/formatNumberWithLeadingZeroes.js"></script>
@@ -349,6 +351,8 @@
         <script src="js/modules/vbet5/controllers/homepageCountdown.js"></script>
         <script src="js/modules/vbet5/controllers/loginHistory.js"></script>
         <script src="js/modules/vbet5/controllers/pmu.js"></script>
+        <script src="js/modules/vbet5/controllers/betBuilder.js"></script>
+        <script src="js/modules/vbet5/controllers/sportsbook.js"></script>
             <!--<script src="js/modules/vbet5/translations.js"></script>-->
         <script src='js/modules/vbet5/services/jackpotSocket.js'></script>
         <script src='js/modules/vbet5/services/jackpotManager.js'></script>

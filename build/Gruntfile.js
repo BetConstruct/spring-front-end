@@ -111,6 +111,7 @@ module.exports = function (grunt) {
                 options: {
                     patterns: [
                         {match: /<script\sid="bodyscript"><\/script>/g, replacement: '<%=angularValue.VBET5.SkinConfig.main.bodyScript%>'},
+                        {match: /data\-config\-url\-path=""/g, replacement: 'data-config-url-path="<%=angularValue.VBET5.SkinConfig.main.resourcePathPrefix || ""%>"'},
                         {match: /<!--metas-->/g, replacement: '<%=angularValue.VBET5.SkinConfig.main.htmlMetaTags%>'},
                         {match: /<!--header-scripts-->/g, replacement: '<%=angularValue.VBET5.SkinConfig.main.htmlHeaderScripts%>'},
                         {match: /<!--about-->/g, replacement: '<%=angularValue.VBET5.SkinConfig.main.htmlAboutText%>'},
@@ -209,8 +210,7 @@ module.exports = function (grunt) {
                     rtl: '<%= rtl %>',
                     title: '<%= metaTags.title && metaTags.title.eng || "" %>',
                     keywords: '<%= metaTags.keywords && metaTags.keywords.eng || "" %>',
-                    description: '<%= metaTags.description && metaTags.description.eng || "" %>',
-                    customCss: '<%= angularValue.VBET5.SkinConfig.disableCustomCss ? "" : (angularValue.VBET5.SkinConfig.main.resourcePathPrefix || "") + "custom.css" %>'
+                    description: '<%= metaTags.description && metaTags.description.eng || "" %>'
                 }
             },
             dist: {
@@ -486,11 +486,10 @@ module.exports = function (grunt) {
             grunt.fail.fatal("cannot read config of [" + grunt.config.get('skinConfig') + "] skin , check if skin name is correct and skin config file exists");
         }
         //check if another skin name is specified in config (i.e. names for skin config and skin css folder are different)
-        if (grunt.config.get('angularValue').VBET5.SkinConfig.main.skin != "") {
+        if (grunt.config.get('angularValue').VBET5.SkinConfig.main.skin !== "") {
             grunt.config.set('skin', grunt.config.get('angularValue').VBET5.SkinConfig.main.skin);
         }
     }
-
     console.log("\n***********************************\n        GRUNT           \n");
     console.log("task:", grunt.cli.tasks, "skinConfig:", grunt.config.get('skinConfig'), "skin:", grunt.config.get('skin'));
     console.log("\n***********************************\n");

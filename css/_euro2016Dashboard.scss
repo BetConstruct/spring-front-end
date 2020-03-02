@@ -208,8 +208,17 @@
     box-sizing: border-box;
     background: lighten(desaturate(adjust-hue($c16-sp, -1deg), 14), 6);
   }
+  .single-events-b-v3:before{
+    white-space: nowrap;
+  }
+  .game-info-mini-v3 > p{
+    white-space: nowrap;
+  }
 }
-
+//hide for 3x3
+#sport-3x3  .game-info-mini-v3 p:first-child{
+  display: none;
+}
 .dashboard-single-l-game-v3:last-child {
   margin-bottom: 0;
 }

@@ -65,7 +65,8 @@
                                                 </div>
                                                 <div class="game-info-mini-v3">
                                                 <p>
-                                                    <span>{{game.info.current_game_state|convertSetName:sport.alias|translate}}</span>
+                                                    <span ng-if="game.info.current_leg === undefined">{{game.info.current_game_state|convertSetName:sport.alias|translate}}</span>
+                                                    <span ng-if="game.info.current_leg !== undefined">{{game.info.current_game_state|convertSetNameWithLeg:game.info|translate}}</span>
                                                     <span trans="attr-only" title="Game time">&nbsp;{{game.info.current_game_time}}</span>
                                                     <i class="{{game.is_blocked ? 'blocked-icon-v3' : ''}}" ></i>
                                                 </p>
@@ -92,10 +93,10 @@
                                                          ng-repeat="event in game.filteredMarket.events track by event.id" title="{{event.name}}"
                                                          ng-show="event && event.name"
                                                          ng-click="bet(event, game.filteredMarket[0], game); $event.stopPropagation();">
-                                                        <i ng-if="$root.conf.boostedBets.enabled && $root.boostedBetsEventIds && $root.boostedBetsEventIds.length > 0 && $root.boostedBetsEventIds.indexOf(event.id) !== -1" title="{{'Boosted odd'|translate}}" class="boosted"></i>
+                                                        <i ng-if="$root.conf.boostedBets.enabled && $root.boostedBetsEventIds && $root.boostedBetsEventIds[event.id]" title="{{'Boosted odd'|translate}}" class="boosted"></i>
                                                         <div class="max-bet-tooltip-v3" onmouseover="displayEventLimit(event)" onmouseleave="cancelDisplayEventLimit(event)" data-id="{{event.id}}" ng-class="{'maxbet-enabled': $root.env.authorized && $root.conf.displayEventsMaxBet}">
                                                         </div>
-                                                        <b class="p-v" ng-show="(event.price | oddConvert:'decimal') != 1 && !openGame.is_blocked" ng-class="{'factor-top': event.price_change > 0, 'factor-bottom': event.price_change < 0}">
+                                                        <b class="p-v {{event.price_change == null? '' : ({true: 'up-', false: 'down'}[event.price_change > 0] + (event.price_change % 2)) }}" ng-show="(event.price | oddConvert:'decimal') != 1 && !openGame.is_blocked">
                                                             {{event.price|oddConvert:env.oddFormat:null:game.filteredMarket[0].display_key}}
                                                         </b>
                                                     </div>

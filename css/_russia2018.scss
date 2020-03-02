@@ -1015,7 +1015,10 @@ matches-list {
         right: 3px;
       }
     }
-    &.up, &.down {
+    &.up-0,
+    &.up-1,
+    &.down0,
+    &.down-1 {
       @include ltr {
         padding: 0 6px 0 10px;
       }
@@ -1023,7 +1026,8 @@ matches-list {
         padding: 0 10px 0 6px;
       }
     }
-    &.up {
+    &.up-0,
+    &.up-1 {
       &:before {
         content: "\e66d";
         @if ($classic-switch-odds-state-colors == true){
@@ -1033,7 +1037,8 @@ matches-list {
         }
       }
     }
-    &.down {
+    &.down0,
+    &.down-1 {
       &:before {
         content: "\e66c";
         @if ($classic-switch-odds-state-colors == true){
@@ -1451,7 +1456,8 @@ matches-list {
       margin: 0 0 0 3px;
     }
   }
-  &.up {
+  &.up-0,
+  &.up-1 {
     &:before {
       content: "\e66d";
       @if ($classic-switch-odds-state-colors == true){
@@ -1461,7 +1467,8 @@ matches-list {
       }
     }
   }
-  &.down {
+  &.down0,
+  &.down-1 {
     &:before {
       content: "\e66c";
       @if ($classic-switch-odds-state-colors == true){

@@ -52,6 +52,12 @@
   width: 100%;
   margin: 20px 0;
 }
+.games-view-wrapper-v3  .Info-text-view-market-v4{
+  position: absolute;
+  top: 20px;
+  width: 100%;
+  text-align: center;
+}
 .Info-text-view-market-v3 > p {
   box-sizing: border-box;
   float: left;
@@ -473,12 +479,12 @@
 }
 .single-events-b-v3 {
   box-sizing: border-box;
-  display: flex;
-  flex-flow: wrap;
-  flex-direction: row;
+  display: grid;
+  //flex-flow: wrap;
+  //flex-direction: row;
   font-size: 6 + $size-font;
-  line-height: 28px;
-  height: 28px;
+  line-height: 16px;
+  min-height: 28px;
   padding: 0 10px;
   background: $c16-sp-10;
   color: $c16-tp-5;
@@ -487,19 +493,21 @@
   margin: 1px 0 0;
   contain: layout;
   width: 100%;
+  align-items: center;
+  grid-template-columns: 1fr auto auto;
   &:before {
     content: "" attr(title) "";
     box-sizing: border-box;
-    -webkit-box-flex: 1;
-    -ms-flex: 1;
-    flex: 1;
+    //-webkit-box-flex: 1;
+    //-ms-flex: 1;
+    //flex: 1;
     font-size: 6 + $size-font;
     font-style: normal;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    //white-space: nowrap;
+    //overflow: hidden;
+    //text-overflow: ellipsis;
     @include ltr {
-      padding: 0 5px 0 0;
+      padding: 2px 5px 2px 0;
     }
     @include rtl {
       text-align: right;
@@ -526,11 +534,27 @@
     cursor: default;
   }
 }
+@media screen and (-ms-high-contrast: active), screen and (-ms-high-contrast: none) {
+  .single-events-b-v3{
+    display: flex;
+    flex-flow: wrap;
+    flex-direction: row;
+    height: 28px;
+    line-height: 28px;
+    &:before {
+      -ms-flex: 1;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  }
+}
 .boosted {
+  float: left;
   display: block;
   width: 16px;
-  height: 100%;
-  margin: 0 4px;
+  margin: 0 2px;
+  color: $brand-color-2;
   position: relative;
   font: 14px/28px icomoon;
   &:before {
@@ -625,7 +649,7 @@
   display: inline-block;
   vertical-align: top;
   background: $brand-color-1;
- }
+}
 .max-bet-tooltip-v3 > p > i {
   box-sizing: border-box;
   font-style: normal;
@@ -643,11 +667,52 @@
   color: map-get($coeff-color-map, classic);
   vertical-align: top;
   text-align: right;
+  white-space: nowrap;
   &:only-child {
     text-align: center;
     margin: 0 auto;
   }
+  &.up-0:before,
+  &.up-1:before,
+  &.down0:before,
+  &.down-1:before {
+    box-sizing: border-box;
+    font: 12px/28px icomoon;
+    content: "\e66d";
+    display: inline-block;
+    transform: translate3d(0, 0, 0);
+    animation-duration: 7000ms;
+    animation-fill-mode: forwards;
+    @include rtl {
+      transform: none;
+    }
+    @if ($classic-switch-odds-state-colors == true) {
+      color: #e9044a;
+    } @else {
+      color: #04e914;
+    }
+  }
+  &.down0:before,
+  &.down-1:before {
+    content: "\e66c";
+    box-sizing: border-box;
+    @if ($classic-switch-odds-state-colors == true) {
+      color: #04e914;
+    } @else {
+      color: #e9044a;
+    }
+  }
+  &.up-0:before { animation-name: odds-arrow-up-0; }
+  &.up-1:before { animation-name: odds-arrow-up-1; }
+  &.down0:before { animation-name: odds-arrow-down0; }
+  &.down-1:before { animation-name: odds-arrow-down-1; }
 }
+
+@keyframes odds-arrow-up-0 { 0% {opacity: 0;} 5% {opacity: 1;} 10% {opacity: 0;} 15% {opacity: 1;} 20% {opacity: 0;} 25% {opacity: 1;} 99% {opacity: 1; width: auto;} 100% {opacity: 0; width: 0;} }
+@keyframes odds-arrow-up-1 { 0% {opacity: 0;} 5% {opacity: 1;} 10% {opacity: 0;} 15% {opacity: 1;} 20% {opacity: 0;} 25% {opacity: 1;} 99% {opacity: 1; width: auto;} 100% {opacity: 0; width: 0;} }
+@keyframes odds-arrow-down0 { 0% {opacity: 0;} 5% {opacity: 1;} 10% {opacity: 0;} 15% {opacity: 1;} 20% {opacity: 0;} 25% {opacity: 1;} 99% {opacity: 1; width: auto;} 100% {opacity: 0; width: 0;} }
+@keyframes odds-arrow-down-1 { 0% {opacity: 0;} 5% {opacity: 1;} 10% {opacity: 0;} 15% {opacity: 1;} 20% {opacity: 0;} 25% {opacity: 1;} 99% {opacity: 1; width: auto;} 100% {opacity: 0; width: 0;} }
+
 .factor-top:before,
 .factor-bottom:before {
   box-sizing: border-box;
@@ -659,37 +724,31 @@
     transform: none;
   }
   @if ($classic-switch-odds-state-colors == true) {
-    color: #e9044a;
+    color: #E9044A;
   } @else {
-    color: #04e914;
+    color: #04E914;
   }
 }
 .factor-bottom:before {
   box-sizing: border-box;
   @if ($classic-switch-odds-state-colors == true) {
-    color: #04e914;
+    color: #04E914;
   } @else {
-    color: #e9044a;
+    color: #E9044A;
   }
   content: "\e66c";
 }
-@keyframes arrow-blick-v3 {
-  0% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0;
-  }
-  100% {
-    opacity: 1;
-  }
-}
-.single-events-b-v3:hover > .p-v {
+
+.single-events-b-v3:hover > .p-v,
+.single-events-b-v3:hover > .boosted {
   color: map-get($coeff-color-map, classic-hover);
 }
-.single-events-b-v3.active .factor-top:before,
-.single-events-b-v3.active .factor-bottom:before,
-.single-events-b-v3.active > .p-v {
+.single-events-b-v3.active .up-0:before,
+.single-events-b-v3.active .up--1:before,
+.single-events-b-v3.active .down0:before,
+.single-events-b-v3.active .down-1:before,
+.single-events-b-v3.active > .p-v,
+.single-events-b-v3.active > .boosted {
   color: set-color($hero-color);
 }
 .single-events-b-v3.active > .mini-box-market-info-v3 > .p-v,
@@ -985,7 +1044,7 @@
   box-sizing: border-box;
   display: inline-block;
   white-space: nowrap;
-  max-width: calc(100% - 150px);
+  max-width: calc(100% - 244px);
   text-overflow: ellipsis;
   overflow: hidden;
   @include ltr {
@@ -1597,6 +1656,14 @@
   content: "\e6b8";
   color: $c16-tp-4;
   font-size: 6 + $size-font;
+  position: relative;
+  top: -1px;
+}
+.game-icons-view-list-v3 > ul > li.bet-builder-icon-market-v3:before {
+  box-sizing: border-box;
+  content: "\ea5f";
+  color: $c16-tp-4;
+  font-size: 8 + $size-font;
   position: relative;
   top: -1px;
 }

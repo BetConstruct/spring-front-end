@@ -41,6 +41,7 @@ angular.module('vbet5.betting').controller('classicMultiColumnCtrl', ['$scope', 
             }
         });
 
+
         if (output && output.Home && output.Home.name === 'W1') {
             output.P1 = output.Home;
         }
@@ -126,7 +127,7 @@ angular.module('vbet5.betting').controller('classicMultiColumnCtrl', ['$scope', 
             liveGamesSubId = null;
         }
 
-        if (!$scope.multiColumn.show || !$scope.selectedCompetition || !$scope.selectedCompetition.id) return;
+        if (!$scope.multiColumn.show || !$scope.selectedCompetition || !$scope.selectedCompetition.id || !$scope.selectedCompetition.sport) return;
 
         var requestMarketTypes = [];
         angular.forEach($scope.multiColumnMarketFilterTypes, function (filter, fType) {

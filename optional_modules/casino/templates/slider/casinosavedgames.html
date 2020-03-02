@@ -11,9 +11,14 @@
                         game-show-conditions="true"
                         show-delete-btn="true"
                         hide-favorite-button="true"
+                        use-big-icons="true"
                 >
                 </casino-games-list>
-                <div class="dont-games-block" ng-show="myCasinoSavedGames.length === 0"><p trans>You don't have favourite games. To add some, click the star icon near the game name.</p></div>
+                <div class="clear-favorite-games" ng-if="myCasinoSavedGames.length > 0"
+                     ng-click="removeAllGamesFromSaved(); $event.stopPropagation();">Clear all
+                </div>
+                <div class="dont-games-block" ng-if="myCasinoSavedGames.length === 0"><p trans>You don't have favourite
+                    games. To add some, click the star icon near the game name.</p></div>
             </div>
 
             <vbet-loader class="page-center" ng-show="!casinoGamesLoaded"></vbet-loader>

@@ -26,7 +26,6 @@
         <p trans>No promos for the selected category</p>
     </div>
     <div ng-repeat="group in recentNewsList track by $index" ng-show="!newsAreLoading" class="block-sport-news">
-
         <div class="list-news promo">
             <ul ng-repeat="news in group.news track by $index"
                 ng-class="'news-column-' + $index">
@@ -41,6 +40,11 @@
                     <div class="picture-news-block">
                         <a ng-click="showNews(news, group.id);$event.stopPropagation();" id="news{{news.id}}"><img
                                 ng-src="{{news.thumbnail || news.thumbnail_images.full.url}}" alt=""></a>
+                        <div class="promo-opt-button" ng-if="$root.conf.promotionsOptIn && $root.env.authorized && news.is_optinable && playerOptIns" ng-class="{'disabled': optInOutProcessing}">
+                            <vbet-loader class="small-progress"></vbet-loader>
+                            <button ng-if="!playerOptIns[news.opt_in]"  ng-click="optInOut(news.opt_in,true)" title="{{'Opt In'|translate}}" trans>Opt In</button>
+                            <button ng-if="playerOptIns[news.opt_in]"  ng-click="optInOut(news.opt_in,false)" title="{{'Opt Out'|translate}}" trans>Opt Out</button>
+                        </div>
                     </div>
                 </li>
 
@@ -75,9 +79,6 @@
                                     <a ng-href="https://twitter.com/share?text={{selectedNews.titleRaw|uri}}&url={{selectedNews.permalink}}&via={{$root.conf.twitterAccount[env.lang] || $root.conf.twitterAccount.default || $root.conf.twitterAccount}}&hashtags={{$root.conf.twitterHashTag}},{{selectedNews.categories[0].title}}"
                                        target="_blank"></a>
                                 </li>
-                                <li class="mini-google"><a
-                                        ng-href="https://plus.google.com/share?url={{selectedNews.permalink}}"
-                                        target="_blank"></a></li>
                             </ul>
                         </div>
                     </div>

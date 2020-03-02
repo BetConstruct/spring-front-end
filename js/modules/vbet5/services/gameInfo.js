@@ -5,7 +5,7 @@
  * @description
  *
  */
-angular.module('vbet5').service('GameInfo', ['$rootScope', '$http', '$filter', '$window', '$q', '$timeout', 'Translator', 'X2js', 'Zergling', 'Config', 'Moment', 'Utils', 'Storage', function ($rootScope, $http, $filter, $window, $q, $timeout, Translator, X2js, Zergling, Config, Moment, Utils, Storage) {
+angular.module('vbet5').service('GameInfo', ['$rootScope', '$http', '$filter', '$window', '$q', '$timeout', 'Translator', 'X2js', 'Zergling', 'Config', 'Moment', 'Utils', 'Storage', 'RecaptchaService', function ($rootScope, $http, $filter, $window, $q, $timeout, Translator, X2js, Zergling, Config, Moment, Utils, Storage, RecaptchaService) {
     'use strict';
     var GameInfo = {};
 
@@ -57,37 +57,6 @@ angular.module('vbet5').service('GameInfo', ['$rootScope', '$http', '$filter', '
         return result;
     };
 
-    /**
-     * @ngdoc method
-     * @name replaceRegionFieldsIfNeeded
-     * @methodOf vbet5.service:GameInfo
-     * @description replaces region alias and name with values from Config.main.regionMapping config object if needed
-     * @param {Object} region region object
-     */
-    GameInfo.replaceRegionFieldsIfNeeded = function replaceRegionFieldsIfNeeded(region) {
-        if (Config.main.regionMapping && Config.main.regionMapping.enabled) {
-            angular.forEach(Config.main.regionMapping, function (regions) {
-                angular.forEach(regions, function (replacement, regionAlias) {
-                    if (region.alias == regionAlias) {
-                        region.alias = replacement.alias;
-                        region.name = replacement.name;
-                    }
-                });
-            });
-        }
-    };
-
-    /**
-     * @ngdoc method
-     * @name getRegionChildren
-     * @methodOf vbet5.service:GameInfo
-     * @description returns ids of regions merged into region specified by id
-     * @param {Number} id id of "parent' region
-     * @returns {Array} array of children(regions merged into specified region) ids
-     */
-    GameInfo.getRegionChildren = function getRegionChildren(id) {
-        return GameInfo.groupRegions[id] && GameInfo.groupRegions[id].children ? GameInfo.groupRegions[id].children : null;
-    };
 /*
     EUROSTAR_TV: 111111;
     PERFORM_GROUP: 1;
@@ -647,6 +616,11 @@ angular.module('vbet5').service('GameInfo', ['$rootScope', '$http', '$filter', '
                 if (market) {
                     //get market price for this particular horse, will remove from this code
                     horseStatistics.event = getHorseMarket(market, marketName, horseStatistics.name, horseStatistics.id);
+                    if(horseStatistics.event && horseStatistics.event.extra_info && horseStatistics.event.extra_info.PriceHistory.length > 1) {
+                        horseStatistics.event.previousPrice = horseStatistics.event.extra_info.PriceHistory.sort(function (a, b) {
+                            return b.TS - a.TS;
+                        })[1].Price;
+                    }
                 }
                 else {// maybe no need of this block, need to check when no markets available
                     horseStatistics.event = {};
@@ -934,7 +908,7 @@ angular.module('vbet5').service('GameInfo', ['$rootScope', '$http', '$filter', '
         if(game.last_event) {
             game.last_event.type = GAME_EVENTS_MAP[game.last_event.type_id] || '';
             //for basketball points
-            if(game.last_event.type_id == '327') {
+            if(game.last_event.type_id === '327') {
                 game.last_event.type = GAME_EVENTS_MAP[parseInt(game.last_event.type_id) + game.last_event.event_value -1];
             }
             game.last_event.match_length = game.last_event.match_length || game.match_length || 0;
@@ -1368,6 +1342,9 @@ angular.module('vbet5').service('GameInfo', ['$rootScope', '$http', '$filter', '
         }
         event.maxBet = undefined;
         GameInfo.maxBetRequests[event.id] = $timeout(function () {
+
+            RecaptchaService.execute('get_max_bet_web', { debounce: false });
+
             Zergling.get({events: [event.id]}, 'get_max_bet').then(function(response) {
                 if (GameInfo.maxBetRequests[event.id]) {
                     if (!response.result_text) {
@@ -1623,6 +1600,51 @@ angular.module('vbet5').service('GameInfo', ['$rootScope', '$http', '$filter', '
         }
     };
 
+    GameInfo.getBoostedSelections = function getBoostedSelections () {
+        var gamesIds = [];
+        var eventIds = {};
+        var eventIdsArray = [];
+        var promise;
+
+        return function getSelections() {
+            if (promise) {
+                return promise;
+            }
+
+            var defer = $q.defer();
+            promise = defer.promise;
+
+            if (gamesIds.length || !Config.main.boostedBets.enabled) {
+                defer.resolve({
+                    gamesIds:gamesIds,
+                    eventIds: eventIds,
+                    eventIdsArray: eventIdsArray
+                });
+                promise = null;
+            } else {
+                Zergling.get({}, 'get_boosted_selections').then(function (response) {
+                    if (response && response.details) {
+                        angular.forEach(response.details, function (value, key) {
+                            gamesIds.push(parseInt(key));
+                            angular.forEach(value, function (value) {
+                                eventIdsArray.push(value.Id);
+                                eventIds[value.Id] = true;
+                            });
+                        });
+                    }
+                })['finally'](function () {
+                    defer.resolve({
+                        gamesIds:gamesIds,
+                        eventIds: eventIds,
+                        eventIdsArray: eventIdsArray
+                    });
+                    promise = null;
+                });
+            }
+
+            return defer.promise;
+        };
+    };
 
     return GameInfo;
 }]);

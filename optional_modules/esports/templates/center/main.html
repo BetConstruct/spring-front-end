@@ -1,8 +1,14 @@
 <div class="games-view-wrapper-v3" ng-controller="eSportsCenterController" ng-class="{'video-maximize-sportsbook':pinnedGameType === 'fullScreen' && enlargedGame && enlargedGame.video_data}">
+    <div class="asian-banner {{games[0].sport.alias || game.sport.alias}}" ng-if="$root.conf.showInSportsbookBanners">
+        <div class="asian-banner-blocks" ng-show="bannersState.show" ng-include="'optional_modules/esports/templates/esport-banner.html'"></div>
+        <div class="asian-banner-swicher">
+            <button data-content="{{(bannersState.show? 'OFF': 'ON')|translate}}" ng-click="toggleBanners()"></button>
+        </div>
+    </div>
     <div class="live-game-view-contain-v3">
         <div class="all-game-info-container-v3">
             <vbet-loader ng-show="loading"></vbet-loader>
-            <div class="all-l-e-games" ng-show="!loading">
+            <div class="all-l-e-games" ng-show="!loading && (games.length || game)">
                 <div class="all-l-e-title {{games[0].sport.alias || game.sport.alias}}">
                     <p ng-if="games">
                         <span ng-bind="games[0].competition.id ? games[0].competition.name : games[0].sport.name"></span>
@@ -11,7 +17,7 @@
                     <p class="back-a-v" ng-if="game" ng-click="getCompetitionData({sport:game.sport, competition:game.competition, region:game.region, game:{id:undefined}});"
                        ng-bind="(game.competition.id ? 'Go to competition' : 'Go to sport')|translate"></p>
                     <ul ng-if="!game" class="view-switcher">
-                        <li ng-repeat="(key, value) in ::layout.types track by key" ng-click="layout.selected=key;layout.expanded=!layout.expanded"
+                        <li ng-repeat="(key, value) in ::layout.types track by key" ng-click="changeLayout(key)"
                             ng-class="{'active': layout.selected === key}" ng-bind="value|translate"></li>
                     </ul>
                 </div>
@@ -48,18 +54,52 @@
             </div>
         </div>
     </div>
-    <div class="live-game-view-contain-v3" ng-if="conf.videoEnabled && pinnedGameType === 'fullScreen' && !conf.detachedVideoSizes[openGame.tv_type] && enlargedGame && enlargedGame.video_data" ng-show="!loading">
-             <!--enlarged video-->
+    <div class="live-game-view-contain-v3" ng-if="conf.videoEnabled && pinnedGameType === 'fullScreen' && !conf.detachedVideoSizes[enlargedGame.tv_type] && enlargedGame && enlargedGame.video_data" ng-show="!loading">
+        <!--enlarged video-->
         <div>
             <div class="game-video game-video-detached game-video-fullscreen">
                 <div class="game-video-container detached-game-container" id="detached-game-container-{{enlargedGame.id}}">
 
-                    <video-player
-                            player-id="gamevideo{{enlargedGame.id}}full"
-                            stream-url="{{enlargedGame.video_data}}"
-                            provider-id="{{enlargedGame.tv_type}}"
-                            initially-muted="{{ env.sound }}"></video-player>
-                    <!--<flashplayer id="gamevideo{{enlargedGame.id}}full" stream-url="{{enlargedGame.video_data}}" provider-id="{{enlargedGame.tv_type}}"  initially-muted="{{ env.sound }}"></flashplayer>-->
+                    <section class="e-s-video-player">
+                        <div class="game-video-container">
+                            <div class="flash-loader-overlay" ng-hide="!$root.env.authorized || videoState.frameUrl || videoState.videoIsLoaded">
+                                <div class="box">
+                                    <div class="container cylinder">
+                                        <div class="hand"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="video-player-container">
+                                <div class="video-control-buttons" ng-show="!$root.conf.video.providersThatSupportHls[providerId]">
+                                    <div class="play-pause-control" ng-show="videoIsLoaded">
+                                        <span ng-click="togglePause();" ng-show="!paused" class="video-pause"></span>
+                                        <span ng-click="togglePause();" ng-show="paused" class="video-play"></span>
+                                    </div>
+                                    <div class="sound-volume-control" ng-show="videoIsLoaded">
+                                        <span ng-click="toggleMute(1)" ng-show="!mute" class="video-mute"></span>
+                                        <span ng-click="toggleMute(0)" ng-show="mute" class="video-unmute"></span>
+                                    </div>
+                                </div>
+
+                                <hls-player ng-if="$root.conf.video.providersThatSupportHls[providerId]"
+                                            provider-id="{{enlargedGame.tv_type}}"
+                                            stream-url="{{enlargedGame.video_data}}">
+
+                                </hls-player>
+
+                                <flashplayer ng-if="!$root.conf.video.providersThatSupportHls[providerId]"
+                                             id="gamevideo{{enlargedGame.id}}"
+                                             stream-url="{{enlargedGame.video_data}}"
+                                             provider-id="{{enlargedGame.tv_type}}"
+                                             initially-muted="{{ env.sound }}"></flashplayer>
+
+                                <div class="video-detached-game-name">
+                                    <div>{{enlargedGame.sport.name}} : {{enlargedGame.team1_name}}
+                                        {{enlargedGame.team2_name ? '&mdash; ' + enlargedGame.team2_name : ''}}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
                     <div class="video-player-control">
                         <div class="detached-info">
                             {{enlargedGame.info.current_game_state|convertSetName:enlargedGame.sport.alias|translate}}
@@ -84,4 +124,5 @@
         </div>
         <!--enlarged video END-->
     </div>
+    <div ng-if="!isInitial && !loading && !games.length && !game" class="Info-text-view-market-v4"><p class="game-finished-v3" trans>There are no games</p></div>
 </div>

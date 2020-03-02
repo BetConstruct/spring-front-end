@@ -77,8 +77,7 @@ VBET5.controller('eSportsLeftController', ['$rootScope', '$scope',  '$location',
         game.region = { id: region.id };
         game.competition = { id: competition.id };
 
-        // If the video filter is on we've requested only games that have video, thus no need to run GameInfo.hasVideo function
-        game.hasVideo = $scope.leftMenuState.filters.video || GameInfo.hasVideo(game);
+        game.hasVideo = GameInfo.hasVideo(game);
 
         return game;
     }
@@ -125,7 +124,13 @@ VBET5.controller('eSportsLeftController', ['$rootScope', '$scope',  '$location',
                 }
             });
         });
-        $scope.leftMenu[type].data = data;
+
+        if(!$scope.leftMenu[type].count.total && data.length) {
+            $scope.leftMenu[type].data = data;
+            expandAndSelect();
+        } else {
+            $scope.leftMenu[type].data = data;
+        }
     }
 
     function getMenuItems(type, videoFilter) {
@@ -161,15 +166,9 @@ VBET5.controller('eSportsLeftController', ['$rootScope', '$scope',  '$location',
                 break;
             case 'live':
                 request.what.game = [['id', 'start_ts', 'team1_name', 'team2_name','team1_reg_name', 'team2_reg_name', 'type', 'info', 'events_count', 'markets_count', 'is_blocked', 'stats', 'tv_type', 'video_id', 'video_id2', 'video_id3', 'video_provider', 'is_stat_available', 'show_type', 'game_external_id', 'team1_external_id', 'team2_external_id']];
-                request.what.market = ['base', 'type', 'name', 'express_id'];
+                request.what.market = ['base', 'type', 'name', 'express_id', 'id'];
                 request.what.event = [];
                 request.where.game = { 'type': 1 };
-                request.where.market = {
-                    '@or': [
-                        {type: { '@in': ['P1XP2', 'P1P2'] }},
-                        {'display_key': 'WINNER'}
-                    ]
-                };
 
                 if (videoFilter) {
                     var sKey = $rootScope.conf.video.enableOptimization ? 'id' : '@or';
@@ -265,6 +264,8 @@ VBET5.controller('eSportsLeftController', ['$rootScope', '$scope',  '$location',
             expandObj.game = game; // No need to worry if the game.id is undefined - centre.js will take care of it
             expandObj.type = menuType;
             $scope.requestData(expandObj);
+        } else {
+            $rootScope.$broadcast('eSports.noGames');
         }
     }
 
@@ -274,16 +275,20 @@ VBET5.controller('eSportsLeftController', ['$rootScope', '$scope',  '$location',
             what: {game: '@count'},
             where: {
                 sport: {type: 0},
-                game: { type: {'@in': [0, 2]} }
+                game: {}
             }
         };
+        var filters = $scope.repayCompetitionsFilter($scope.leftMenuState.filters.time.selected, 'preMatch');
+        var prematchRequest = angular.copy(request);
+        prematchRequest.where.game = filters.game;
+        prematchRequest.where.market = filters.market;
 
         function updateCount(type, data) {
             $scope.leftMenu[type].count.total = data.game;
         }
 
         connectionService.subscribe(
-            request,
+            prematchRequest,
             function updatePreMatchCount(data) { updateCount('preMatch', data); },
             {
                 thenCallback: function subscribeToLiveCount() {
@@ -430,7 +435,6 @@ VBET5.controller('eSportsLeftController', ['$rootScope', '$scope',  '$location',
     ////////////////////////////////////////////////////////////////////////////////
 
     (function init() {
-        $scope.selectMenu(menuTypeMap[$location.search().type] || $scope.leftMenuState.selectedType, true);
         subscribeToAllGameCounts();
         if (Config.main.esportsLeftMenuBanners) {
             content.getPage('sportsbook-left-banners').then(function (response) {
@@ -439,5 +443,8 @@ VBET5.controller('eSportsLeftController', ['$rootScope', '$scope',  '$location',
                 }
             });
         }
+        GameInfo.getProviderAvailableEvents().then(function () {
+            $scope.selectMenu(menuTypeMap[$location.search().type] || $scope.leftMenuState.selectedType, true);
+        });
     })();
 }]);

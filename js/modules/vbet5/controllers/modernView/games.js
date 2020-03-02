@@ -262,6 +262,10 @@ BettingModule.controller('gamesCtrl', ['$rootScope', '$scope', '$location', '$fi
         return console.log('update game', game);
     }
 
+    $scope.getStates = function getStates() { // returned states for game.js
+        return states;
+    };
+
     /**
      * @ngdoc function
      * @name subscribeToGame
@@ -272,14 +276,17 @@ BettingModule.controller('gamesCtrl', ['$rootScope', '$scope', '$location', '$fi
      */
     $scope.subscribeToGame = function subscribeToGame(game, callback) {
         if (subscriptionInProgress === game.id) { return; }
-
+        var gameRequest = [["id", "show_type", "markets_count", "start_ts", "is_live", "is_blocked", "is_neutral_venue","team1_id", "team2_id", "game_number", "text_info", "is_stat_available", "type",  "info", "stats", "team1_name", "team2_name", "tv_info"]];
+        if ($scope.env.live) {
+            Array.prototype.push.apply(gameRequest[0], ["match_length", "scout_provider", "video_id","video_id2", "video_id3", "tv_type", "last_event", "live_events"]);
+        }
         subscriptionInProgress = game.id;
         var request = {
             'source': 'betting',
             'what': {
-                'game': [],
-                'event': [],
-                'market': [],
+                'game': gameRequest,
+                'event': ["order", "id", "type_1", "type", "type_id", "original_order", "name", "price", "nonrunner", "ew_allowed", "sp_enabled", "extra_info", "base","home_value", "away_value", "display_column" ],
+                'market': ["id", "col_count", "type", "sequence", "express_id", "cashout", "display_key", "display_sub_key", "group_id", "name", "group_name", "order" ],
                 'sport': ['id', 'alias', 'name'],
                 'competition': ['id'],
                 'region': ['id']
@@ -370,26 +377,4 @@ BettingModule.controller('gamesCtrl', ['$rootScope', '$scope', '$location', '$fi
     });
 
     $scope.displayBase = GameInfo.displayBase;
-
-    /**
-     * @ngdoc method
-     * @name getArrow
-     * @methodOf vbet5.controller:gamesCtrl
-     * @description Get arrow state based on +-
-     */
-    $scope.getArrow = function getArrow(input) {
-
-        if ($scope.arrowHide === 'hide') {
-            return 'hide-arrow';
-        }
-
-        switch (input) {
-        case 1:
-            return 'top-arrow';
-        case -1:
-            return 'bot-arrow';
-        default:
-            return '';
-        }
-    };
 }]);

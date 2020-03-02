@@ -1,5 +1,5 @@
 
-VBET5.directive('statisticsOnHover', ['$document', '$http', '$compile', '$q', '$timeout', 'DomHelper','Zergling', 'Config', 'Translator', 'LanguageCodes', 'Utils', function($document, $http, $compile, $q, $timeout, DomHelper, Zergling, Config, Translator, LanguageCodes, Utils) {
+VBET5.directive('statisticsOnHover', ['$document', '$http', '$compile', '$q', '$timeout', 'DomHelper','Zergling', 'Config', 'Translator', 'LanguageCodes', 'Utils', 'analytics', '$rootScope', '$location', function($document, $http, $compile, $q, $timeout, DomHelper, Zergling, Config, Translator, LanguageCodes, Utils, analytics, $rootScope, $location) {
     'use strict';
     return {
         restrict: 'A',
@@ -21,7 +21,7 @@ VBET5.directive('statisticsOnHover', ['$document', '$http', '$compile', '$q', '$
                 performance: ['all', 'Home', 'Away']
             };
 
-            scope.statsTableTexts= {
+            scope.statsTableTexts = {
                 AGPM1: {
                     abbr: 'IT',
                     title: 'Average individual total goals'
@@ -494,6 +494,7 @@ VBET5.directive('statisticsOnHover', ['$document', '$http', '$compile', '$q', '$
              * @description load statistics data
              */
             function loadStatistics() {
+                analytics.gaSend('send', 'event', 'explorer', 'H2H-on-hover', {'page': $location.path(), 'eventLabel': ($rootScope.env.live ? 'Live' : 'Prematch')});
                 if (isStatisticsOpened) return;
                 var canceler = $q.defer();
                 scope.isLoading = true;

@@ -15,7 +15,7 @@
                                 <div class="play-game-button-search-wrap-j">
                                     <div class="play-game-button-search" trans ng-show="game.types.realMode" ng-click="openCasinoGame(game, 'real');$event.stopPropagation();">play now</div>
                                     <div class="play-game-button-search1" trans ng-show="!game.types.viewMode && game.types.funMode && (confData.main.funModeEnabled === 2 && $root.env.authorized || confData.main.funModeEnabled === 1 || (confData.main.funModeEnabled === 3 && $root.profile.is_verified))" ng-click="openCasinoGame(game, 'fun');$event.stopPropagation();">Play For Free</div>
-                                    <div class="play-game-button-search1" trans ng-show="game.types.viewMode && !game.types.funMode" ng-click="openCasinoGame(game, 'fun');$event.stopPropagation();">View</div>
+                                    <div class="play-game-button-search1" trans ng-show="game.types.viewMode && !game.types.funMode && !$root.env.authorized" ng-click="openCasinoGame(game, 'fun');$event.stopPropagation();">View</div>
                                 </div>
 
                             </dd>

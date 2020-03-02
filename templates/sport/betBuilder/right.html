@@ -1,0 +1,50 @@
+<div class="bet-builder-content bet-builder-right-content">
+    <div class="bet-builder-match-result-wrapper" ng-if="activeEventsMap.length">
+        <div ng-repeat="id in activeEventsMap track by id" class="bet-builder-match-result active">
+            <i ng-click="toggleEvent(eventsDataMap[id]);clearBetslipErrors();"></i>
+            <p ng-bind="eventsDataMap[id].name"></p>
+            <span ng-bind="eventsDataMap[id].marketName"></span>
+        </div>
+    </div>
+
+    <span class="b-b-info-text" ng-if="activeEventsMap.length === 0 || activeEventsMap.length === 1" trans>Add two or more events for BetBuilder</span>
+    <span class="b-b-info-text error" ng-if="oddsCalculationState.failed" trans>We were not able to price this combination of events</span>
+    <div class="button-confirm">
+        <vbet-loader class="small-progress" ng-if="oddsCalculationState.loading"></vbet-loader>
+        <div class="bet-builder-odd"><span trans>Odd:</span> {{oddsCalculationState.odd|oddConvert:env.oddFormat}}</div>
+    </div>
+    <input id="express-bet-input" comma comma-enable={{$root.conf.enableCommaSeparateNumber}} ng-change="clearBetslipErrors()"
+           comma-decimal="enable" comma-dot="{{$root.conf.enableDotInsteadComma}}"
+           prevent-input="{{$root.conf.stakeAmountPreventInput}}"
+           name="" numpad numpad-letters="disabled" ng-model="betState.stake" type="text"
+           placeholder="{{$root.conf.betslipInputFieldCustomValue | translate}}" maxlength="11"
+    >
+    <div ng-if="betState.stake && oddsCalculationState.odd &&  betState.stake >= $root.partnerConfig.min_bet_stakes[$root.profile.currency_name] && betState.stake <= $root.profile.calculatedBalance + $root.profile.calculatedBonus" class="bet-win-view-v3 acc-bonus-v3">
+        <p>
+            <i><span trans>Possible win:</span></i>
+        </p>
+        <span>
+            <b>{{(betState.stake * oddsCalculationState.odd)|number:$root.conf.balanceFractionSize}} {{currency_name|currency}}</b>
+        </span>
+    </div>
+    <div class="bet-builder-buttons">
+        <p ng-show="oddsCalculationState.odd && betState.stake > $root.profile.calculatedBalance + $root.profile.calculatedBonus">
+            <span trans>Insufficient balance</span>
+            <a class="underline" ng-if="!$root.conf.integrationMode && !$root.conf.disableDepositPage" ng-click="broadcast('toggleSliderTab','deposit');$event.stopPropagation();" trans>Deposit</a>
+            <a class="underline" ng-if="$root.conf.integrationMode && !$root.conf.customDepositUrl  && !$root.conf.disableDepositPage" ng-click="openPartnerDeposit()" trans>Deposit</a>
+            <a class="underline" ng-if="$root.conf.integrationMode && $root.conf.customDepositUrl" ng-href="{{$root.conf.customDepositUrl + $root.conf.availableLanguages[env.lang].short.toLowerCase()}}" target="{{$root.conf.customDepositUrl?'_top':''}}" trans>Deposit</a>
+        </p>
+        <p ng-show="oddsCalculationState.odd && betState.stake < $root.partnerConfig.min_bet_stakes[$root.profile.currency_name]">{{'Bet amount is less than min allowed amount'|translate}} ({{partnerConfig.min_bet_stakes[profile.currency_name]}} {{currency_name|currency}}).</p>
+        <p ng-if="betState.errorMessage" ng-bind="betState.errorMessage"></p>
+        <p ng-if="oddsCalculationState.previousOdd !== oddsCalculationState.odd" trans>There is a price change</p>
+        <p ng-if="betState.successMessage"  ng-bind="betState.successMessage" class="success-message"></p>
+        <button type="submit" ng-class="{'pointer-events-none' : betState.isBetsInProgress}"
+                ng-click="placeBet()"
+                ng-disabled="betState.isBetsInProgress || !oddsCalculationState.odd || !betState.stake || betState.stake > $root.profile.calculatedBalance + $root.profile.calculatedBonus || betState.stake < $root.partnerConfig.min_bet_stakes[$root.profile.currency_name]">
+            <span ng-show="!betState.isBetsInProgress" trans>Place bets!</span>
+        </button>
+        <button ng-click="clearAllSelections();">Clear selections</button>
+        <p ng-if="!betState.stake" class="bet-notification-warning" trans>Please enter stake amount</p>
+        <vbet-loader class="small-progress" ng-if="betState.isBetsInProgress"></vbet-loader>
+    </div>
+</div>

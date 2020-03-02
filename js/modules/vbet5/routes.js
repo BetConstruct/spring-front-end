@@ -302,6 +302,10 @@ angular.module('vbet5').config(['$routeProvider', '$anchorScrollProvider', 'Skin
             templateUrl: getTemplate('templates/sport/pmu/main.html'),
             reloadOnSearch: false
         })
+        .when('/bet-on-lineup/', {
+            templateUrl: getTemplate('templates/sport/betOnLineup/main.html'),
+            reloadOnSearch: false
+        })
         .otherwise({
             redirectTo: '/sport/'
         });

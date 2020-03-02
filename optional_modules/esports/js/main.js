@@ -1,7 +1,6 @@
-VBET5.controller('eSportsMainController', ['$rootScope', '$scope', 'Config', 'Utils', 'GameInfo', 'AsianMarkets', 'StreamService', 'content','Storage', function ($rootScope, $scope, Config, Utils, GameInfo, AsianMarkets, StreamService, content,Storage) {
+VBET5.controller('eSportsMainController', ['$rootScope', '$scope', 'Config', 'Utils', 'GameInfo', 'AsianMarkets', 'StreamService', 'content','Storage', '$location', function ($rootScope, $scope, Config, Utils, GameInfo, AsianMarkets, StreamService, content, Storage, $location) {
     'use strict';
 
-    var streamService = new StreamService($scope);
     $scope.asianMarkets = AsianMarkets;
     $scope.isEventInBetSlip = GameInfo.isEventInBetSlip;
     var showTypes = $scope.asianMarkets.marketsBySport.Default.HDP.concat(["OUTRIGHT"]); //will show ony HDP markets
@@ -36,6 +35,24 @@ VBET5.controller('eSportsMainController', ['$rootScope', '$scope', 'Config', 'Ut
         selected: 'asian'
     };
     $rootScope.footerMovable = true;
+
+    /**
+     * @ngdoc method
+     * @name changeLayout
+     * @methodOf vbet5.controller:eSportsMainController
+     * @description Change view layout /asian, classic/
+     * @param {string} key - selected layout key
+     */
+    $scope.changeLayout = function changeLayout(key) {
+        $scope.layout.selected = key;
+        $scope.layout.expanded = !$scope.layout.expanded;
+
+        $location.search('layout', key);
+    };
+
+    if($location.search().layout) {
+        $scope.changeLayout($location.search().layout)
+    }
 
     $scope.repayCompetitionsFilter = function repayCompetitionsFilter(startTime, type) {
         var game = {
@@ -97,10 +114,24 @@ VBET5.controller('eSportsMainController', ['$rootScope', '$scope', 'Config', 'Ut
             video_id: game.video_id,
             video_id2: game.video_id2,
             video_id3: game.video_id3,
-            video_provider: game.video_provider
+            video_provider: game.video_provider,
+            video_data: undefined
         };
 
-        streamService.monitoring($scope, 'openGame', 'pinnedGames', 'enlargedGame');
+        if (GameInfo.hasVideo($scope.openGame)) {
+            if (Storage.get('isEsportsVideoDetached')) {
+                $scope.openGame.activeFieldType = 'field';
+                $scope.detachVideo('fullScreen', true);
+            } else {
+                $scope.openGame.activeFieldType = 'video';
+                GameInfo.getVideoData($scope.openGame, true);
+                if ($scope.enlargedGame) {
+                    $scope.enlargedGame = $scope.openGame;
+                }
+            }
+        } else {
+            $scope.enlargedGame = null;
+        }
     };
 
     /**
@@ -136,23 +167,26 @@ VBET5.controller('eSportsMainController', ['$rootScope', '$scope', 'Config', 'Ut
      * @description called when video is detached. Sends game object to parent scope to show game video there
      *
      */
-    $scope.detachVideo = function detachVideo(type) {
+    $scope.detachVideo = function detachVideo(type, dontCloseLeftMenu) {
         $scope.pinnedGameType = type;
         $scope.isVideoDetached = true;
 
         if (!Config.main.defaultStreaming || !Config.main.defaultStreaming.enabled || $scope.openGame.tv_type !== Config.main.defaultStreaming.tvType) {
             $scope.openGame.video_data = null;
-            GameInfo.getVideoData($scope.openGame);
+            GameInfo.getVideoData($scope.openGame, true);
         }
 
         if (type === 'dragable') {
             $scope.pinnedGames[$scope.openGame.id] = $scope.openGame;
         } else {
-            if(type === 'fullScreen'){
+            if(type === 'fullScreen' && !dontCloseLeftMenu){
                 $scope.leftMenuClosed = true;
             }
             $scope.enlargedGame = $scope.openGame;
             $scope.pinnedGames = {};
+        }
+        if (type === 'fullScreen') {
+            Storage.set("isEsportsVideoDetached", true);
         }
     };
 
@@ -165,7 +199,7 @@ VBET5.controller('eSportsMainController', ['$rootScope', '$scope', 'Config', 'Ut
      * it is for current game
      *
      */
-    $scope.attachPinnedVideo = function attachPinnedVideo(game, type) {
+    $scope.attachPinnedVideo = function attachPinnedVideo(game, type, dontSaveState) {
         if (type === 'dragable') {
             delete $scope.pinnedGames[game.id];
         } else {
@@ -176,11 +210,14 @@ VBET5.controller('eSportsMainController', ['$rootScope', '$scope', 'Config', 'Ut
             if (!Config.main.defaultStreaming || !Config.main.defaultStreaming.enabled || $scope.openGame.tv_type !== Config.main.defaultStreaming.tvType) {
                 $scope.openGame.video_data = undefined;
                 if (Config.main.video.autoPlay) {
-                    GameInfo.getVideoData($scope.openGame);
+                    GameInfo.getVideoData($scope.openGame, true);
                 }
             }
             $scope.isVideoDetached = false;
             $scope.openGame.activeFieldType = 'video'; //
+        }
+        if (!dontSaveState) {
+            Storage.set("isEsportsVideoDetached", false);
         }
     };
 
@@ -202,9 +239,13 @@ VBET5.controller('eSportsMainController', ['$rootScope', '$scope', 'Config', 'Ut
 
     var getPage = function (alias) {
         if ($scope.page.slug !== alias && pages.length > 0) {
-            $scope.page = pages.find(function (page) {
-                return page.slug === alias;
-            }) || {};
+            for(var i = pages.length; i--;) {
+                if (pages[i].slug === alias) {
+                    $scope.page = pages[i];
+                    break;
+                }
+            }
+            $scope.page = $scope.page || {};
         }
         selectedSportAlias = alias;
     };

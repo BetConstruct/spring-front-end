@@ -6,8 +6,11 @@ VBET5.controller('euro88PaymentsCtrl', ['$scope', '$rootScope', '$sce', '$filter
     var paymentConfig = (Config.payments.length && Config.payments[0]) || {};
     var additionalPaymentButtons = { // default values, if nothing was overridden in payment config
         KRW: {
-            deposit: [10000, 50000, 100000, 500000, 1000000, 5000000],
-            withdraw: [10000, 50000, 100000, 500000, 1000000, 5000000]
+            default: {
+                deposit: [10000, 50000, 100000, 500000, 1000000, 5000000],
+                withdraw: [10000, 50000, 100000, 500000, 1000000, 5000000]
+            }
+
         },
         default: { // jshint ignore:line
             deposit: [10, 50, 100, 500],
@@ -37,11 +40,52 @@ VBET5.controller('euro88PaymentsCtrl', ['$scope', '$rootScope', '$sce', '$filter
         };
 
         $scope.sumsList = (
-            paymentConfig.additionalPaymentButtons && paymentConfig.additionalPaymentButtons[$rootScope.profile.currency_name] ||
-            additionalPaymentButtons[$rootScope.profile.currency_name] ||
-            additionalPaymentButtons.default // jshint ignore:line
-        )[tab].map(createSumsList($rootScope.profile.currency_name));
+            paymentConfig.info && paymentConfig.info[$rootScope.profile.currency_name] && paymentConfig.info[$rootScope.profile.currency_name].default && paymentConfig.info[$rootScope.profile.currency_name].default[tab]  ||
+            paymentConfig[tab + 'CustomAmounts'] ||
+            additionalPaymentButtons[$rootScope.profile.currency_name].default[tab] ||
+            additionalPaymentButtons.default[tab] // jshint ignore:line
+        ).map(createSumsList($rootScope.profile.currency_name));
     }
+
+
+    /**
+     * @ngdoc method
+     * @name deposit
+     * @description  sends deposit request to swarm, gets result, displays "external" form
+     * @param {String} command: CreatePaymentMessage or ConfirmPaymentMessage or GetActivePaymentMessage
+     * @param {String} paymentType: 0 or 1: 0 = deposit, 1 = withdraw
+     * @param {String} mID: id of current message
+     */
+    $scope.deposit = function deposit(command, paymentType,  mID) {
+        if (Config.main.promotionalBonuses.enable && Config.main.promotionalBonuses.showClaimableInfoBeforeDeposit) {
+            $scope.requestInProcess = true;
+            Zergling.get({}, "get_client_claimable_deposit_bonuses")
+                .then(function(response) {
+                    $scope.requestInProcess = false;
+                    if(response.details && response.details.length) {
+                        $rootScope.$broadcast("globalDialogs.addDialog", {
+                            type: "info",
+                            title: "Info",
+                            content: 'Are you sure to continue without deposit bonus?',
+                            buttons: [
+                                {
+                                    title: 'Yes', callback: function () {
+                                        $scope.getData(command, paymentType,  mID);
+                                    }
+                                },
+                                {title: 'Claim bonus', callback: function () {
+                                        $rootScope.env.sliderContent = 'promotionalBonuses';
+                                    }}
+                            ]
+                        });
+                    } else {
+                        $scope.getData(command, paymentType,  mID);
+                    }
+                });
+        } else {
+            $scope.getData(command, paymentType,  mID);
+        }
+    };
     /**
      * @ngdoc method
      * @name withdraw

@@ -1,0 +1,12 @@
+<div ng-controller="cmsPagesCtrl" ng-init="loadBanners('esport-event-view-banner-'+env.lang,false);" class="product-list-contain no-select-j">
+    <vbet-loader ng-show="!bannerObjects['esport-event-view-banner-'+env.lang][$root.env.authorized]"></vbet-loader>
+    <ul class="column-{{ bannerObjects['esport-event-view-banner-'+env.lang][$root.env.authorized].length }}" ng-show="bannerObjects['esport-event-view-banner-'+env.lang][$root.env.authorized]">
+        <li ng-repeat="banner in bannerObjects['esport-event-view-banner-'+env.lang][$root.env.authorized] track by $index">
+            <div class="sportsbook-banners-j">
+                <a ng-href="{{banner.link}}" target="{{banner.linktarget}}" ng-click="banner.linktarget !=='_blank' && handleBannersLinks($event.currentTarget)">
+                    <img ng-src="{{banner.image}}" ng-show="banner.image">
+                </a>
+            </div>
+        </li>
+    </ul>
+</div>

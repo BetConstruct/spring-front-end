@@ -12,7 +12,7 @@
   height: 100%;
   font: 10px/12px $font-f !important;
   .md-progress-circular.md-theme:not(.not-main) {
-    margin-top: 40px;
+    margin-top: 260px;
     //padding: 20px 0 40px !important;
     @include ltr {
       left: 50%;
@@ -431,7 +431,69 @@
   margin: 1px 0 0 4px;
   opacity: 1;
 }
-
+.betslip-max-min-icon {
+  display: block;
+  width: 14px;
+  height: 14px;
+  margin-top: 8px;
+  @include ltr {
+    float: right;
+    margin-right: 4px;
+  }
+  @include rtl {
+    float: left;
+    margin-left: 4px;
+  }
+  &:before {
+    content: "\e6e4";
+    color: $text-palette-4;
+    font: 14px/14px icomoon;
+  }
+  &.active + .betslip-max-min {
+    display: block;
+  }
+}
+.betslip-max-min {
+  display: none;
+  position: absolute;
+  bottom: 100%;
+  padding: 0 6px;
+  box-sizing: border-box;
+  z-index: 100;
+  background: $brand-color-1;
+  @include ltr {
+    right: 0;
+  }
+  @include rtl {
+    left: 0;
+  }
+  > span {
+    display: block;
+    height: 24px;
+    color: set-color($brand-color-1);
+    font: 12px/24px $font-f;
+    > b {
+      font-weight: normal;
+    }
+    + span {
+      border-top: 1px solid rgba(set-color($brand-color-1),0.6);
+    }
+  }
+  &:before {
+    content: "";
+    bottom: -7px;
+    position: absolute;
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+    border-top: 8px solid $brand-color-1;
+    @include ltr {
+      right: 2px;
+    }
+    @include rtl {
+      left: 2px;
+    }
+  }
+}
 .asian-left-contain-menu .bet-currency-value .single-bet-betmax {
   border-radius: 2px;
   border: none;
@@ -874,29 +936,46 @@
   margin: 0 0 10px;
   overflow: hidden;
   border-radius: 4px;
-    .ew-total-view-v3{
+  .ew-total-view-v3{
     color: $c16-sp-1;
     margin-top: 5px;
-      @include ltr {
-        margin-left: 5px;
-      }
-      @include rtl {
-        margin-right: 5px;
-        float: right;
-      }
+    @include ltr {
+      margin-left: 5px;
+    }
+    @include rtl {
+      margin-right: 5px;
+      float: right;
+    }
   }
 }
 
 /*filter*/
 
 .big-filter-wrapper {
-  float: left;
   width: 100%;
   margin: 0 0 10px;
   position: relative;
   z-index: 700;
-}
+  @include ltr {
+    float: left;
+  }
+  @include rtl {
+    float: right;
+  }
+  &.big-filter-only {
+    width: auto;
+    .contein-mini-filtr.time .name-filter-b {
+      box-sizing: border-box;
+      @include ltr {
+        padding-right: 34px;
+      }
+      @include rtl {
+        padding-left: 34px;
+      }
+    }
 
+  }
+}
 .big-filter-wrapper ul {
   width: 100%;
   display: table;
@@ -939,6 +1018,17 @@
   width: 100%;
   position: relative;
   height: 24px;
+  > p {
+    box-sizing: border-box;
+    @include ltr {
+      float: left;
+      padding-right: 20px;
+    }
+    @include rtl {
+      float: right;
+      padding-left: 20px;
+    }
+  }
 }
 
 .contein-mini-filtr.date {
@@ -1188,18 +1278,26 @@
       float: right;
     }
   }
-  .cashout-icon-market-v3 {
-    margin: 0 6px;
+  > i {
     @include ltr {
       float: left;
+      margin-left: 6px;
     }
     @include rtl {
-      float: left;
+      float: right;
+      margin-right: 6px;
     }
-    &:before {
-      box-sizing: border-box;
-      font-size: 14px;
-      line-height: 24px;
+    &.cashout-icon-market-v3 {
+      &:before {
+        box-sizing: border-box;
+        font-size: 14px;
+        line-height: 24px;
+      }
+    }
+    &.statistics-icon-market {
+      &:before {
+        font: 14px/24px icomoon;
+      }
     }
   }
 }
@@ -1890,6 +1988,9 @@
 .many-columns-b {
   float: left;
   width: 100%;
+  .asian-market-wrap-j .boosted {
+    right: 44px;
+  }
 }
 
 .many-columns-b ul {
@@ -2228,7 +2329,9 @@
     }
   }
 }
-
+.refresh-asian-view {
+  float: right;
+}
 .asian-left-contain-menu {
   .bsTypeSwitchers-j {
     position: static;
@@ -2313,12 +2416,15 @@
     border: none;
   }
   .competition-view-v-3:first-child > .competition-title-v3 {
-   padding: 0;
+    padding: 0;
   }
   .competition-title-v3 {
     > label {
       width: 100%;
       position: relative;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
       @include ltr {
         padding: 0 24px 0 10px;
       }
@@ -2356,7 +2462,8 @@
   }
 }
 
-.game-is-neutral {
+.game-is-neutral,
+.asian-icon-Bet-Builder {
   display: inline-block;
   vertical-align: middle;
   font: 11px/20px icomoon;
@@ -2366,8 +2473,15 @@
   @include rtl {
     margin: 0 0 0 5px;
   }
+}
+
+.game-is-neutral:before {
+  content: '\e959';
+}
+.asian-icon-Bet-Builder {
+  font-size: 14px;
   &:before {
-    content: '\e959';
+    content: "\ea5f"
   }
 }
 
@@ -2556,6 +2670,8 @@
         display: inline-block;
         vertical-align: middle;
         opacity: 0;
+        animation-duration: 7000ms;
+        animation-fill-mode: forwards;
       }
     }
     .asian-market-cell-j {
@@ -2591,15 +2707,26 @@
       }
     }
   }
-  &.up:not(.locked) .asian-market-j {
+  &.up-0:not(.locked) .asian-market-j {
     .odd-container-j:before {
-      opacity: 1;
+      animation-name: odds-arrow-up-0;
     }
   }
-  &.down:not(.locked) .asian-market-j {
+  &.up-1:not(.locked) .asian-market-j {
+    .odd-container-j:before {
+      animation-name: odds-arrow-up-1;
+    }
+  }
+  &.down0:not(.locked) .asian-market-j {
     .odd-container-j:before {
       content: "\e66c";
-      opacity: 1;
+      animation-name: odds-arrow-down0;
+    }
+  }
+  &.down-1:not(.locked) .asian-market-j {
+    .odd-container-j:before {
+      content: "\e66c";
+      animation-name: odds-arrow-down-1;
     }
   }
   &.locked {
@@ -2617,8 +2744,30 @@
       }
     }
   }
+  .boosted {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 10;
+    @include ltr {
+      right: 2px;
+    }
+    @include rtl {
+      left: 2px;
+    }
+  }
+  &:hover, &.active {
+    .boosted {
+      color: set-color($hero-color);
+    }
+  }
 }
-
+.match-odd1X2:not(.correct-score) .factor-w .boosted {
+    right: 0;
+}
+.correct-score .factor-w .boosted {
+    right: 54px;
+}
 .game-list-compitishion-j {
   float: left;
   width: 100%;
@@ -2672,7 +2821,10 @@ table.hdp-contain-j {
       display: block;
       float: left;
       width: 100%;
-      margin: 6px 0px;
+      margin: 6px 0;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
       font: 10px/14px $font-f;
     }
     &.no-markets-j {
@@ -3057,10 +3209,10 @@ table.hdp-contain-j {
   display: table-cell;
   vertical-align: middle;
   @include ltr {
-    padding-right: 3px;
+    padding-left: 3px;
   }
   @include rtl {
-    padding-left: 3px;
+    padding-right: 3px;
   }
   > button{
     border: none;
@@ -3072,12 +3224,12 @@ table.hdp-contain-j {
     text-transform: uppercase;
     cursor: pointer;
     @include ltr {
-      float: left;
-      margin-right: 1px;
-    }
-    @include rtl {
       float: right;
       margin-left: 1px;
+    }
+    @include rtl {
+      float: left;
+      margin-right: 1px;
     }
     &.active, &:hover{
       background: $hero-color;

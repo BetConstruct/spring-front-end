@@ -18,28 +18,39 @@ VBET5.directive('additionalGameInfo', ['$rootScope', 'GameInfo', 'Config', 'Tran
                 var result = [];
 
                 var scoresArray = GameInfo.framesCount(game.stats);
-                if (game.info && game.info.score1 && game.info.score2 ) {
+                if (game.info && game.info.score1 && game.info.score2 && (game.info.current_leg === undefined || game.info.set_count !== 1) ) {
                     result.push(game.info['score' + firstIndex] + whitSpace + ":" + whitSpace + game.info['score' + secondIndex]);
                 }
                 var scoresLength = scoresArray.length;
                 var stats = game.stats;
+                var prefix = '';
+                var suffix = '';
+                if (game.info.set_count !== 1 || game.info.current_leg === undefined) {
+                    prefix = '(';
+                    suffix = ')';
+                }
                 for (var i = 0; i < scoresLength; ++i) {
                     if (result.length > 0) {
                         result.push(comma, whitSpace);
                     }
                     var key = 'score_set' + scoresArray[i];
                     var score = stats[key]['team$1_value'.replace('$1', firstIndex)] + ':' + stats[key][['team$1_value'.replace('$1', secondIndex)]];
-                    result.push('(' + score + ')');
+                    result.push(prefix+ score + suffix);
                 }
                 if (game.info.current_game_state === 'notstarted' && game.info.current_game_time == 0) {
-                    var notStarted = Translator.get('Not Started');
-                    result = [isRtl? notStarted.split("").reverse().join(""):notStarted];
+                    result = [Translator.get('notstarted')];
                 } else if (game.info.current_game_time) {
                     result.push(whitSpace);
-                    result.push(game.info.current_game_time);
-                    if (game.info.current_game_time.indexOf(':') === -1) {
-                        result.push('`');
+                    var endTime = "";
+                    if (game.info.add_minutes && game.info.add_minutes !== '0') {
+                        endTime = '+' + game.info.add_minutes;
                     }
+                    if (game.info.current_game_time.indexOf(':') === -1) {
+                       endTime += '`';
+                    }
+                    result.push(game.info.current_game_time + endTime);
+
+
                 }
                 if (game.sport.alias === 'Tennis' || game.sport.alias === 'ETennis') {
                     result.push(whitSpace);
@@ -47,12 +58,12 @@ VBET5.directive('additionalGameInfo', ['$rootScope', 'GameInfo', 'Config', 'Tran
                    var passTeamIndex = game.info.pass_team === 'team1'? 1: 2;
                    result.push(passes.team1_value);
                    if (passTeamIndex === 1) {
-                       result.push(star)
+                       result.push(star);
                    }
                    result.push(":");
                    result.push(passes.team2_value);
                    if (passTeamIndex === 2) {
-                        result.push(star)
+                        result.push(star);
                     }
                 }
 

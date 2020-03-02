@@ -2,40 +2,45 @@
 <div class="right-left-events-wrapper" ng-class="{'one-column-view': marketIsOneColumn}">
     <div class="live-events-column-v3">
         <div class="market-ciew-v3"
-             ng-repeat="market in vSMarketsFirstPack track by market.id"
-             ng-show="selectedGroup.id === -2 || (selectedGroup.id !== -3 && market.group_id === selectedGroup.id) || (selectedGroup.id === -3 && market.isFavorite)"
+             ng-repeat="markets in vSMarketsFirstPack track by $index"
+             ng-show="selectedGroup.id === -2 || (selectedGroup.id !== -3 && markets[0].group_id === selectedGroup.id) || (selectedGroup.id === -3 && markets[0].isFavorite)"
              ng-if="nonRaceSports.ids.indexOf(selectedVirtualSport.id) !== -1">
-            <div class="market-title-v3" ng-click="toggleMarket(market.market_type)" ng-class="{'closed': collapsedMarkets[selectedVirtualSport.id][market.market_type]}" data-title="{{market.name}}">
+            <div class="market-title-v3" ng-click="toggleMarket(markets[0].type)" ng-class="{'closed': collapsedMarkets[selectedVirtualSport.id][markets[0].type]}" data-title="{{markets[0].name}}">
                 <ul class="market-icons-t-r" ng-click="$event.stopPropagation()">
-                    <li class="link-icon-market-v3" ng-show="market.express_id && !$root.conf.hideExpressIds" title="Events from different groups can be combined in combined bets" trans="attr-only">
-                        <span ng-hide="$root.conf.hideExpressIds" title="Events from different groups can be combined in combined bets" trans="attr-only">{{market.express_id}}</span>
+                    <li class="link-icon-market-v3" ng-show="markets[0].express_id && !$root.conf.hideExpressIds" title="Events from different groups can be combined in combined bets" trans="attr-only">
+                        <span ng-hide="$root.conf.hideExpressIds" title="Events from different groups can be combined in combined bets" trans="attr-only">{{markets[0].express_id}}</span>
                     </li>
-                    <li class="favorite-icon-market-v3" ng-class="{'active': market.isFavorite}" ng-click="addToFavouriteMarkets(market)"></li>
+                    <li class="favorite-icon-market-v3" ng-class="{'active': markets[0].isFavorite}" ng-click="addToFavouriteMarkets(markets[0])"></li>
                 </ul>
             </div>
-            <div class="l-b column-{{market.col_count}}" ng-class="{'default': market.col_count > 5}">
-                <div class="single-events-b-v3" ng-repeat="event in market.events track by $index" title="{{event.name}} {{event.base}}" ng-class="{'pointer-events-none': event.is_empty, 'active': isEventInBetSlip(event), 'blocked': ((event.price | oddConvert:'decimal') == 1 || openGame.is_blocked)}" ng-click="bet(event, market, gameToShow)">
-                    <b ng-show="(event.price | oddConvert:'decimal') != 1 && !openGame.is_blocked" class="p-v price{{arrowHide}}" ng-class="{'factor-top': event.price_change > 0, 'factor-bottom': event.price_change < 0}">{{event.price|oddConvert:env.oddFormat:null:market.display_key}}</b>
+            <div ng-repeat="market in markets track by market.id" >
+                <div class="l-b column-{{markets[0].col_count}}" ng-class="{'default': markets[0].col_count > 5}">
+                    <div class="single-events-b-v3" ng-repeat="event in market.events track by event.id" title="{{event.name}} {{event.base}}" ng-class="{'pointer-events-none': event.is_empty, 'active': isEventInBetSlip(event), 'blocked': ((event.price | oddConvert:'decimal') == 1 || openGame.is_blocked)}" ng-click="bet(event, market, gameToShow)">
+                        <b ng-show="(event.price | oddConvert:'decimal') != 1 && !openGame.is_blocked" class="p-v price {{event.price_change == null? '' : ({true: 'up-', false: 'down'}[event.price_change > 0] + (event.price_change % 2)) }}">{{event.price|oddConvert:$root.env.oddFormat:null:market.display_key}}</b>
+                    </div>
                 </div>
+
             </div>
         </div>
     </div>
     <div class="live-events-column-v3">
         <div class="market-ciew-v3"
-             ng-repeat="market in vSMarketsSecondPack track by market.id"
-             ng-show="selectedGroup.id === -2 || (selectedGroup.id !== -3 && market.group_id === selectedGroup.id) || (selectedGroup.id === -3 && market.isFavorite)"
+             ng-repeat="markets in vSMarketsSecondPack track by $index"
+             ng-show="selectedGroup.id === -2 || (selectedGroup.id !== -3 && markets[0].group_id === selectedGroup.id) || (selectedGroup.id === -3 && markets[0].isFavorite)"
              ng-if="nonRaceSports.ids.indexOf(selectedVirtualSport.id) !== -1">
-            <div class="market-title-v3" ng-click="toggleMarket(market.market_type)" ng-class="{'closed': collapsedMarkets[selectedVirtualSport.id][market.market_type]}" data-title="{{market.name}}">
+            <div class="market-title-v3" ng-click="toggleMarket(markets[0].type)" ng-class="{'closed': collapsedMarkets[selectedVirtualSport.id][markets[0].type]}" data-title="{{markets[0].name}}">
                 <ul class="market-icons-t-r" ng-click="$event.stopPropagation()">
-                    <li class="link-icon-market-v3" ng-show="market.express_id && !$root.conf.hideExpressIds" title="Events from different groups can be combined in combined bets" trans="attr-only">
-                        <span ng-hide="$root.conf.hideExpressIds" title="Events from different groups can be combined in combined bets" trans="attr-only">{{market.express_id}}</span>
+                    <li class="link-icon-market-v3" ng-show="markets[0].express_id && !$root.conf.hideExpressIds" title="Events from different groups can be combined in combined bets" trans="attr-only">
+                        <span ng-hide="$root.conf.hideExpressIds" title="Events from different groups can be combined in combined bets" trans="attr-only">{{markets[0].express_id}}</span>
                     </li>
-                    <li class="favorite-icon-market-v3" ng-class="{'active': market.isFavorite}" ng-click="addToFavouriteMarkets(market)"></li>
+                    <li class="favorite-icon-market-v3" ng-class="{'active': markets[0].isFavorite}" ng-click="addToFavouriteMarkets(markets[0])"></li>
                 </ul>
             </div>
-            <div class="l-b column-{{market.col_count}}" ng-class="{'default': market.col_count > 5}">
-                <div class="single-events-b-v3" ng-repeat="event in market.events track by $index" title="{{event.name}} {{event.base}}" ng-class="{'pointer-events-none': event.is_empty, 'active': isEventInBetSlip(event), 'blocked': ((event.price | oddConvert:'decimal') == 1 || openGame.is_blocked)}" ng-click="bet(event, market, gameToShow)">
-                    <b ng-show="(event.price | oddConvert:'decimal') != 1 && !openGame.is_blocked" class="p-v price{{arrowHide}}" ng-class="{'factor-top': event.price_change > 0, 'factor-bottom': event.price_change < 0}">{{event.price|oddConvert:env.oddFormat:null:market.display_key}}</b>
+            <div ng-repeat="market in markets track by market.id">
+                <div class="l-b column-{{markets[0].col_count}}" ng-class="{'default': market.col_count > 5}">
+                    <div class="single-events-b-v3" ng-repeat="event in market.events track by $index" title="{{event.name}} {{event.base}}" ng-class="{'pointer-events-none': event.is_empty, 'active': isEventInBetSlip(event), 'blocked': ((event.price | oddConvert:'decimal') == 1 || openGame.is_blocked)}" ng-click="bet(event, market, gameToShow)">
+                        <b ng-show="(event.price | oddConvert:'decimal') != 1 && !openGame.is_blocked" class="p-v price {{event.price_change == null? '' : ({true: 'up-', false: 'down'}[event.price_change > 0] + (event.price_change % 2)) }}">{{event.price|oddConvert:$root.env.oddFormat:null:market.display_key}}</b>
+                    </div>
                 </div>
             </div>
         </div>

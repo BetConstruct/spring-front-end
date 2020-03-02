@@ -123,7 +123,7 @@
   width: calc(100% - 330px);
   margin: 10px 0 0;
   position: relative;
-  z-index: 100;
+  z-index: 99;
   @include ltr {
     float: left;
   }
@@ -267,6 +267,15 @@
   background: -moz-linear-gradient(top, lighten( saturate( adjust-hue( $skin-color, -5deg ), 9 ), 1 ) 0%, darken( saturate( adjust-hue( $skin-color, -3deg ), 18 ), 8 ) 80%, darken( saturate( adjust-hue( $skin-color, -3deg ), 18 ), 8 ) 100%);
   background: -webkit-linear-gradient(top, lighten( saturate( adjust-hue( $skin-color, -5deg ), 9 ), 1 ) 0%, darken( saturate( adjust-hue( $skin-color, -3deg ), 18 ), 8 ) 80%, darken( saturate( adjust-hue( $skin-color, -3deg ), 18 ), 8 ) 100%);
   background: linear-gradient(to bottom, lighten( saturate( adjust-hue( $skin-color, -5deg ), 9 ), 1 ) 0%, darken( saturate( adjust-hue( $skin-color, -3deg ), 18 ), 8 ) 80%, darken( saturate( adjust-hue( $skin-color, -3deg ), 18 ), 8 ) 100%);
+  > span {
+    float: left;
+    display: block;
+    width: 100%;
+    margin-top: 40px;
+    text-align: center;
+    color: rgba(set-color($skin-color),0.7);
+    font: 14px/16px $font-f;
+  }
 }
 .casino-gamer,
 .tournaments-content {
@@ -999,10 +1008,13 @@
   width: 100%;
   height: 225px;
   position: relative;
-  background-size: 100%;
-  background-repeat: no-repeat;
+  background: $skin-palette-9;
   @media screen and (max-width: 1260px) {
     height: 142px;
+  }
+  > img {
+    display: block;
+    width: 100%;
   }
   &:before {
     content: "";
@@ -1155,8 +1167,8 @@
           color: rgba(set-color($hero-color),0.7);
         }
       }
-      &[ng-repeat]:nth-child(2),
-      &[ng-repeat]:nth-child(3) {
+      &:nth-child(2),
+      &:nth-child(2)[class="ng-hide"] + li {
         @include ltr {
           box-shadow: none;
         }
@@ -1166,7 +1178,8 @@
       }
       &.games-search {
         .games-type-icon {
-          width: 36px;
+          float: right;
+          width: 100%;
           &:before {
             content: "";
           }
@@ -1228,7 +1241,8 @@
         width: 30px;
         height: 100%;
         color: rgba(#ffffff, 0.7);
-        background: rgba(#000000, 0.2);
+        //background: rgba(#000000, 0.2);
+        background: transparent;
         font: 16px icomoon;
         text-align: center;
         border: 0;
@@ -1236,14 +1250,16 @@
         transition: 300ms background, 300ms color;
         &:hover {
           color: rgba(#ffffff, 1);
-          background: rgba(#000000, 0.6);
+         // background: rgba(#000000, 0.6);
+          background: transparent;
         }
         &:disabled {
           opacity: 0.3;
           cursor: auto;
           &:hover {
             color: rgba(white, 0.7);
-            background: rgba(black, 0.2);
+           // background: rgba(black, 0.2);
+            background: transparent;
           }
         }
       }
@@ -1296,7 +1312,7 @@
   .block-games-search {
     min-width: 36px;
     max-width: 210px;
-    height: 44px;
+    height: 73px;
     margin: 0;
     padding: 0;
     position: relative;
@@ -1306,17 +1322,10 @@
     background: none;
     text-align: left;
     z-index: 999;
-    @include ltr {
-      float: right;
-    }
-    @include rtl {
-      float: left;
-    }
     input[type="text"] {
-      float: right;
-      width: 0;
+      width: 111px;
       margin: 0;
-      height: 44px;
+      height: 100%;
       cursor: pointer;
       color: $text-palette-3;
       box-sizing: border-box;
@@ -1327,15 +1336,14 @@
       border: none;
       border-radius: 0;
       opacity: 0;
-      transition: width 600ms, background 600ms, border 600ms, padding 600ms, opacity 600ms;
-      @include placeholder {
-        color: $text-palette-3;
-      }
       @include ltr {
-        padding: 8px 30px 8px 5px;
+        float: right;
       }
       @include rtl {
-        padding: 8px 5px 8px 30px;
+        float: left;
+      }
+      @include placeholder {
+        color: $text-palette-3;
       }
       &:focus {
         width: 210px;
@@ -1343,6 +1351,8 @@
         opacity: 1;
         border: 1px solid $skin-palette-11;
         cursor: auto;
+        height: 36px;
+        transition: width 600ms, background 600ms, border 600ms, padding 600ms, opacity 600ms;
         @include ltr {
           padding: 8px 30px 8px 14px;
         }
@@ -1351,7 +1361,13 @@
         }
         + i {
           color: $text-palette-3;
-          font-size: 12px;
+          transition: color 250ms, right 250ms, left 250ms;
+          @include ltr {
+            right: 20px;
+          }
+          @include rtl {
+            left: 20px;
+          }
         }
       }
     }
@@ -1359,21 +1375,22 @@
       position: absolute;
       width: 36px;
       height: 36px;
-      top: 4px;
+      top: 0;
       color: $text-palette-4;
       pointer-events: none;
       text-align: center;
       font: 16px/36px icomoon;
       z-index: 30;
-      transition: color 250ms;
       @if $white-skin==true {
         color: rgba(set-color($hero-color),0.7);
       }
       @include ltr {
-        right: 0;
+        right: 50%;
+        margin-right: -18px;
       }
       @include rtl {
-        left: 0;
+        left: 50%;
+        margin-left: -18px;
       }
       &:before {
         content: "\e6d4";
@@ -1383,9 +1400,9 @@
 }
 .casino-games-results {
   position: absolute;
-  top: 45px;
+  top: 38px;
   background: $skin-palette-6;
-  z-index: 200;
+  z-index: 9999;
   box-shadow: 0 0 50px 4px rgba(0, 0, 0, 0.2);
   @include ltr {
     right: 1px;
@@ -1629,22 +1646,32 @@
   > a {
     display: block;
     width: 16.6666667%;
-    padding: 5.8% 0;
-    box-sizing: border-box;
+    height: 152px;
     transition: border 240ms;
     border: 1px solid $skin-palette-4;
+    box-sizing: border-box;
     overflow: hidden;
     position: relative;
-    background-size: 100%;
-    background-repeat: no-repeat;
-    background-position: 50% 50%;
     animation: games-slider 250ms ease-in-out;
+    background: $skin-palette-9;
+    @media screen and (max-width: 1260px) {
+      height: 114px;
+    }
+    @if $white-skin == true {
+      background: #505767;
+    }
     @include ltr {
       float: left;
     }
     @include rtl {
       float: right;
       transform: translate3d(0,0,0)
+    }
+    > img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
     }
     &.disabled {
       opacity: 0.5;
@@ -1684,9 +1711,9 @@
     }
   }
 }
-.all-casino-games-list-box .all-games-container > a {
+.ctournament-containing-games .all-games-container > a {
   width: 20%;
-  padding: 7% 0;
+  max-height: 140px;
 }
 .all-casino-games-list-content {
   float: left;
@@ -1715,7 +1742,7 @@
   padding: 0 20px;
   box-sizing: border-box;
   z-index: 95;
-  color: $text-palette-3 !important;
+  color: set-color($brand-color-1);
   text-align: center;
   opacity: 0;
   text-transform: uppercase;
@@ -1726,9 +1753,6 @@
     top: 7%;
     font-size: 10px;
     line-height: 12px;
-  }
-  @if($white-skin == true) {
-    color: #c1c4cd;
   }
 }
 .games-buttons {
@@ -1747,6 +1771,7 @@
     display: inline-block;
     button {
       height: 28px;
+      min-width: 82px;
       display: block;
       width: 100%;
       border: 0;
@@ -1788,6 +1813,7 @@
   transition: color 300ms, opacity 300ms;
   display: block;
   opacity: 0;
+  text-shadow: 0 0 2px rgba(0,0,0,0.8);
   @include ltr {
     right: 6px;
   }
@@ -1805,7 +1831,7 @@
     content: "\f005";
   }
   &:hover, &.active {
-    color: #8a6e3a;
+    color: #ffffff;
   }
   &.active {
     opacity: 1;
@@ -1929,6 +1955,10 @@
 [class*="icon-Valentine's"]:before{
   content: "\ea17";
   color: #bd3b32;
+}
+[class*="icon-Drops&Wins"]:before {
+  content: "\ea60";
+  font-size: 26px;
 }
 .icon-TOP20:before {
   content: "\e975";
@@ -2883,5 +2913,21 @@
     }
   }
 }
+// add menu hover effect
 
+
+.games-type > ul > li:not(.games-search) {
+  .games-type-icon{
+    transform-origin: center bottom;
+    transition: transform 240ms, text-shadow 240ms, color 240ms;
+  }
+  &:hover {
+    .games-type-icon{
+      transform: scale(1.4);
+      color: $skin-palette-1;
+      text-shadow: 0 0 10px $hero-color;
+    }
+  }
+}
 // new jackpot end
+

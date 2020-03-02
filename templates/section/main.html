@@ -25,8 +25,8 @@
             <div class="top-slots-block">
                 <!--<h3>{{selectedSectionPage.title}}</h3>-->
                 <div ng-if="sectionConfig.bannersOnPages[selectedSectionPage.slug][env.lang]" ng-init="loadBanners(sectionConfig.bannersOnPages[selectedSectionPage.slug][env.lang])">
-                    <vbet-big-slider ng-if="bannerObjects[sectionConfig.bannersOnPages[selectedSectionPage.slug][env.lang]]"
-                                     images="bannerObjects[sectionConfig.bannersOnPages[selectedSectionPage.slug][env.lang]]"
+                    <vbet-big-slider ng-if="bannerObjects[sectionConfig.bannersOnPages[selectedSectionPage.slug][env.lang]] && bannerObjects[sectionConfig.bannersOnPages[selectedSectionPage.slug][env.lang]][$root.env.authorized]"
+                                     images="bannerObjects[sectionConfig.bannersOnPages[selectedSectionPage.slug][env.lang]][$root.env.authorized]"
                                      link-click-handler="openBannerLink()">
                     </vbet-big-slider>
                 </div>

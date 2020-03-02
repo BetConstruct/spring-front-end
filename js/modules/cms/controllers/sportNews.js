@@ -411,7 +411,7 @@ CMS.controller('cmsSportNewsCtrl', ['$rootScope', '$scope', '$sce', '$location',
         var result = competitionGames.promise;
         var request = {
             'source': 'betting',
-            'what': { game: ['team1_name', 'team2_name', 'id', 'type'], 'event': [], market: ['id'], sport: ['id'], competition: ['id', 'name'], region: ['id']},
+            'what': { game: ['team1_name', 'team2_name', 'id', 'type'], 'event': ["order", "id", "type_1", "type", "type_id", "original_order", "name", "price", "base", "home_value", "away_value", "display_column"], market: ['id'], sport: ['id'], competition: ['id', 'name'], region: ['id']},
             'where': {event: {type: {'@in': ['P1', 'X', 'P2']}}}
         };
         request.where.game = {};
@@ -473,12 +473,63 @@ CMS.controller('cmsSportNewsCtrl', ['$rootScope', '$scope', '$sce', '$location',
      *
      * @param {Array} banners banners array
      * @param {Number} period rotation period in milliseconds
+     * @param {Boolean} notCallTimeout is run timeout
      */
-    function rotateBanners(banners, period) {
+    function rotateBanners(banners, period, notCallTimeout) {
         if (!banners) {
             return;
         }
-        banners.map(function (banner, index) {banner.active = (activeBannerIndex === index); });
+        var firstAvailableBannerIndex = null;
+        var nextAvailableBannerIndex = null;
+        var changeNext = null;
+        var firstNext = null;
+        var currentIndexIsAvailable = false;
+        var calculateIndexes = function (i) {
+            if (activeBannerIndex === i) {
+                currentIndexIsAvailable = true;
+            }
+            if (firstAvailableBannerIndex === null) {
+                firstAvailableBannerIndex = i;
+                if (activeBannerIndex === 0) {
+                    activeBannerIndex = firstAvailableBannerIndex;
+                }
+            }else {
+                if (firstNext === null) {
+                    firstNext = i;
+                }
+                if (i > activeBannerIndex && nextAvailableBannerIndex === null) {
+                    nextAvailableBannerIndex = i;
+                }else if(changeNext === null && nextAvailableBannerIndex !== null && i > nextAvailableBannerIndex){
+                    changeNext = i;
+                }
+            }
+        };
+        for(var i = 0; i < banners.length; ++i) {
+            var banner = banners[i];
+            if ($rootScope.env.authorized) {
+                if ({'0': true, '1': true}[banner.show_for]) {
+                    calculateIndexes(i);
+                }
+            } else {
+                if ({'0': true, '2': true}[banner.show_for]) {
+                    calculateIndexes(i);
+                }
+            }
+            banner.active = false;
+        }
+
+        if (!currentIndexIsAvailable){
+            if (nextAvailableBannerIndex !== null) {
+                activeBannerIndex = nextAvailableBannerIndex;
+            } else {
+                changeNext = firstNext;
+                activeBannerIndex = firstAvailableBannerIndex || 0;
+            }
+        } else {
+            changeNext = nextAvailableBannerIndex;
+        }
+        banners[activeBannerIndex].active = true;
+
         // if banner is video
         if (banners[activeBannerIndex] && banners[activeBannerIndex].videoLink) {
             $scope.startPlayVideoBanner = true;
@@ -487,9 +538,15 @@ CMS.controller('cmsSportNewsCtrl', ['$rootScope', '$scope', '$sce', '$location',
             $scope.startPlayVideoBanner = false;
             period = Config.main.underBetslipBannersRotationPeriod;
         }
-        activeBannerIndex++;
-        activeBannerIndex = activeBannerIndex >= banners.length ? 0 : activeBannerIndex;
-        TimeoutWrapper(function () { rotateBanners(banners, period); }, period);
+        if (changeNext !== null) {
+            activeBannerIndex = changeNext;
+        } else {
+            activeBannerIndex = firstAvailableBannerIndex || 0;
+        }
+        if (!notCallTimeout) {
+            TimeoutWrapper(function () { rotateBanners(banners, period); }, period);
+
+        }
     }
 
     /**
@@ -620,11 +677,19 @@ CMS.controller('cmsSportNewsCtrl', ['$rootScope', '$scope', '$sce', '$location',
         containerId = containerId || content.getSlug('bannerSlugs.homepageBanners');
         content.getWidget(containerId).then(function (response) {
             if (response.data && response.data.widgets && response.data.widgets[0]) {
-                $scope.homepageBanners = [];
+                $scope.homepageBanners = {
+                    true: [],
+                    false: []
+                };
                 angular.forEach(response.data.widgets, function (widget) {
                     widget.instance.custom_fields.label && (widget.instance.custom_fields.label[0] = $sce.trustAsHtml(Translator.get(widget.instance.custom_fields.label[0])));
                     widget.instance.title = $sce.trustAsHtml(widget.instance.title);
-                    $scope.homepageBanners.push(widget.instance);
+                    if (widget.instance.show_for === '1' || widget.instance.show_for === '0' || !widget.instance.show_for) {
+                        $scope.homepageBanners.true.push(widget.instance);
+                    }
+                    if (widget.instance.show_for === '2' || widget.instance.show_for === '0' || !widget.instance.show_for) {
+                        $scope.homepageBanners.false.push(widget.instance);
+                    }
                 });
             }
         })['finally'](function () {
@@ -731,4 +796,12 @@ CMS.controller('cmsSportNewsCtrl', ['$rootScope', '$scope', '$sce', '$location',
         $scope.maxVisibleSports = count;
         createSportsMoreDropdown();
     });
+
+    if (Config.main.underBetslipBannersRotationPeriod) {
+        $scope.$watch('env.authorised', function (newValue, oldValue) {
+            if ($scope.banners && $scope.banners.length && newValue !== oldValue) {
+                rotateBanners($scope.banners, Config.main.underBetslipBannersRotationPeriod, true);
+            }
+        });
+    }
 }]);

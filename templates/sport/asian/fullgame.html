@@ -18,7 +18,7 @@
             <!--<flashplayer id="gamevideo{{enlargedGame.id}}full" stream-url="{{enlargedGame.video_data}}" provider-id="{{enlargedGame.tv_type}}"  initially-muted="{{ env.sound }}"></flashplayer>-->
             <div class="video-player-control">
                 <div class="detached-info">
-                    {{enlargedGame.info.current_game_state|convertSetName:enlargedGame.sport.alias|translate}}
+                    {{(enlargedGame.info.current_leg === undefined ?(enlargedGame.info.current_game_state|convertSetName:enlargedGame.sport.alias):(enlargedGame.info.current_game_state|convertSetNameWithLeg:enlargedGame.info))|translate}}
                     {{ enlargedGame.info.current_game_state? ' ' + ('Score:'|translate) + ' '
                     :''}}{{enlargedGame.info.score1}} {{enlargedGame.info.score2 ? '&ndash; ' +
                     enlargedGame.info.score2 : ''}}
@@ -34,9 +34,7 @@
                     :''}}
                 </div>
             </div>
-            <a ng-click="attachPinnedVideo(enlargedGame, 'fullScreen'); $parent.mute = undefined; $parent.paused = undefined;">
-                <span trans>close</span>
-            </a>
+            <a ng-click="attachPinnedVideo(enlargedGame, 'fullScreen'); $parent.mute = undefined; $parent.paused = undefined;"></a>
         </div>
     </div>
 </div>
@@ -50,6 +48,7 @@
         <span ng-bind="(openGame.team2_name ? '-' + openGame.team2_name : '')"></span>
     </p>
     <div ng-show="openGame.is_neutral_venue" class="game-is-neutral"></div>
+    <div class="asian-icon-Bet-Builder" ng-if="$root.conf.betBuilderSports[openGame.sport.alias] && openGame.type !== 1" ng-click="openBetBuilder(openGame);$event.stopPropagation();"></div>
 </div>
 <div class="markets-group-wrap-v3" ng-show="openGame.availableMarketGroups.length > 2">
     <ul ng-class="{'show-dropdown': marketGroupFilterExpanded, 'has-dropdown': openGame.availableMarketGroups.length > 5 }">
@@ -63,17 +62,22 @@
 </div>
 
 
-<div ng-repeat="group in selectedMarketsGroup track by $index" class="game-list-compitishion">
-    <div class="name-chempionship-asia more-c" ng-click="group[0].collapsed = !group[0].collapsed">
+<div ng-repeat="group in selectedMarketsGroup track by $index" ng-class="{'closed' : group[0].collapsed}" class="game-list-compitishion">
+    <div class="name-chempionship-asia more-c"  ng-click="group[0].collapsed = !group[0].collapsed">
         <h3 ng-bind="group[0].name"></h3>
         <i class="cashout-icon-market-v3" title="Cash-out available" trans ng-if="group[0].cashout"></i>
         <span class="ew-total-view-v3" ng-if="group[0].eachWayTerms" title="{{group[0].eachWayTerms}}">ew</span>
+        <i class="statistics-icon-market" ng-class="{'active': group[0].showStats}" ng-click="group[0].showStats = !group[0].showStats; $event.stopPropagation()"  ng-if="group[0].showStatsIcon"></i>
+
     </div>
+    <market-stats class="market-stats" market-type="group[0].type" open-game="openGame"
+                  open-statistics="openStatistics" ng-if="group[0].showStats"></market-stats>
     <div ng-repeat="market in group|orderBy: 'order' track by market.id" class="many-columns-b cols-{{market.col_count}}" ng-class="{'default': market.col_count > 5}" ng-show="!group[0].collapsed">
-        <div class="asian-market-wrap-j asian-market-overflow-j"
+        <div class="asian-market-wrap-j asian-market-overflow-j {{event.price_change == null? '' : ({true: 'up-', false: 'down'}[event.price_change > 0] + (event.price_change % 2)) }}"
              ng-repeat="event in market.events|orderBy:'order' track by event.id"
-             ng-class="{'empty': event.is_empty, 'locked': (event.price | oddConvert:'decimal') == 1 || openGame.is_blocked, up: event.price_change == '1', down: event.price_change == '-1', 'active': isEventInBetSlip(event)}"
+             ng-class="{'empty': event.is_empty, 'locked': (event.price | oddConvert:'decimal') == 1 || openGame.is_blocked,'active': isEventInBetSlip(event)}"
              ng-click="bet(event, market, openGame);">
+            <i ng-if="$root.conf.boostedBets.enabled && $root.boostedBetsEventIds && $root.boostedBetsEventIds[event.id]" title="{{'Boosted odd'|translate}}" class="boosted"></i>
             <div class="asian-market-j">
                 <div class="asian-market-cell-j">
                     <div class="asian-market-rub-j" ng-bind="event.name + ' ' + (event.base|handicapBaseFormat: true:false:($root.conf.asian.hideHandicapSignsInOverview && market.display_key === 'HANDICAP'):market.home_score:market.away_score:event.type_1)"></div>
@@ -82,6 +86,7 @@
             </div>
         </div>
     </div>
+
 </div>
 
 <p class="game-finished-v3" ng-show="openGameFinished" trans>This Game is already finished or unavailable</p>

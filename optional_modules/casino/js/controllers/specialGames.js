@@ -5,7 +5,7 @@
  * special games pages controller
  */
 
-angular.module('casino').controller('casinoSpecialGamesCtrl', ['$rootScope', '$scope', '$sce', '$location', '$window', 'CConfig', 'Config', 'DomHelper', 'Translator', 'Zergling', 'AuthData', 'casinoManager', 'casinoData', '$timeout', 'LanguageCodes', 'Utils', function ($rootScope, $scope, $sce, $location, $window, CConfig, Config, DomHelper, Translator, Zergling, AuthData, casinoManager, casinoData, $timeout, LanguageCodes, Utils) {
+angular.module('casino').controller('casinoSpecialGamesCtrl', ['$rootScope', '$scope', '$sce', '$location', '$window', 'CConfig', 'Config', 'DomHelper', 'Translator', 'Zergling', 'AuthData', 'casinoManager', 'casinoData', '$timeout', 'LanguageCodes', 'Utils', 'casinoMultiviewValues','jackpotManager', function ($rootScope, $scope, $sce, $location, $window, CConfig, Config, DomHelper, Translator, Zergling, AuthData, casinoManager, casinoData, $timeout, LanguageCodes, Utils, casinoMultiviewValues,jackpotManager) {
     'use strict';
 
     var tableId;
@@ -15,9 +15,20 @@ angular.module('casino').controller('casinoSpecialGamesCtrl', ['$rootScope', '$s
         $rootScope.footerMovable = true; // make footer movable
         $rootScope.casinoGameOpened = 1;
     }
+    $scope.confData = CConfig;
+    $scope.viewCount = 1;
+    $scope.$on('widescreen.on', function () { $scope.wideMode = true; });
+    $scope.$on('widescreen.off', function () { $scope.wideMode = false; });
+    $scope.$on('middlescreen.on', function () { $scope.middleMode = true; });
+    $scope.$on('middlescreen.off', function () { $scope.middleMode = false; });
+    casinoMultiviewValues.init($scope);
+
+
 
     function processToOpenGame() {
         $scope.loadingUserData = false;
+        $scope.showLoginWarningPopup = false;
+
 
         var gameUrl;
 
@@ -57,7 +68,9 @@ angular.module('casino').controller('casinoSpecialGamesCtrl', ['$rootScope', '$s
     function handlingLoginProgressComplete() {
         if (!$rootScope.env.authorized) {
             if (!$scope.game.types.viewMode) {
-                $rootScope.$broadcast('openLoginForm');
+                $rootScope.$broadcast('openLoginForm', {
+                    broadcastOnClose: "showSpecialGameWarningPopup"
+                });
             } else {
                 processToOpenGame();
             }
@@ -226,16 +239,55 @@ angular.module('casino').controller('casinoSpecialGamesCtrl', ['$rootScope', '$s
         casinoData.getGames(null, null, null, null, null, null, null, null, [exId]).then(function (response) {
             if (response && response.data && response.data.games[0]) {
                 $scope.game = response.data.games[0];
-
+                $scope.gameInfo = {game : $scope.game};
+                jackpotManager.casinoGameOpenedData = [$scope.gameInfo];
                 $rootScope.setTitle($scope.game.name);
-
                 getUrl();
             }
         });
     };
 
+    /**
+     * @ngdoc method
+     * @name closeGame
+     * @methodOf CASINO.controller:casinoSpecialGamesCtrl
+     * @description close nested opened game after confirmation from user (if enabled from configuration)
+     *
+     * @param {String} target the target of close action
+     */
+    $scope.closeGame = function closeGame(target) {
+        if(target === 'closeButton' && CConfig.main.enableConfirmationBeforeCloseGame) {
+            $rootScope.$broadcast('globalDialogs.addDialog', {
+                type: "warning",
+                title: "Warning",
+                hideCloseButton: true,
+                content: "Do you want to close the game?",
+                buttons: [
+                    {
+                        title: 'Yes',
+                        callback: function () {
+                           $scope.$emit('closeNestedFrame');
+                        }
+                    },
+                    {
+                        title: 'No'
+                    }]
+            });
+        } else {
+            $scope.$emit('closeNestedFrame');
+        }
+    };
+    $scope.$on("showSpecialGameWarningPopup", function () {
+        $scope.loadingUserData = false;
+        $scope.showLoginWarningPopup = true;
+    });
+
     $scope.$on("$destroy", function () {
         $scope.frameUrl = null;
+        $scope.gameInfo = {};
+        jackpotManager.casinoGameOpenedData = [];
         $rootScope.footerMovable = false;
     });
+
+
 }]);

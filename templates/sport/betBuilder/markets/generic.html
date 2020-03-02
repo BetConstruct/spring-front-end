@@ -1,0 +1,6 @@
+<div class="bet-builder-teams-odd">
+    <h5 ng-bind="selectedKeys.marketName"></h5>
+    <ul class="bet-builder-teams-info {{selectedKeys.market}}">
+        <li ng-class="{'active': eventsDataMap[event.typeId].id === event.id}" ng-click="toggleEvent(event);clearBetslipErrors();" ng-repeat="event in marketsData[selectedKeys.market][selectedKeys.period] track by event.id">{{event.name}}</li>
+    </ul>
+</div>

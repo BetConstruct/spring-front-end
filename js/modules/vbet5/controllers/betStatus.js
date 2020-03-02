@@ -3,10 +3,10 @@
  * @ngdoc controller
  * @name vbet5.controller:betStatusCtrl
  */
-VBET5.controller('betStatusCtrl', ['$scope', 'Config', 'Zergling', 'RecaptchaService', function ($scope, Config, Zergling, RecaptchaService) {
+VBET5.controller('betStatusCtrl', ['$scope', 'Config', 'Storage', 'Zergling', 'RecaptchaService', function ($scope, Config, Storage, Zergling, RecaptchaService) {
     'use strict';
     $scope.betStatus = {
-        open: false,
+        open: Storage.get('isOpenedGetBetStatus') === undefined || Storage.get('isOpenedGetBetStatus'),
         displayRecaptcha: RecaptchaService.version !== 3
     };
 
@@ -52,6 +52,11 @@ VBET5.controller('betStatusCtrl', ['$scope', 'Config', 'Zergling', 'RecaptchaSer
     $scope.clearBetStatus = function clearBetStatus () {
         $scope.betStatus.details = false;
         $scope.betStatus.ticketNumber = '';
+    };
+
+    $scope.toggleBetStatus = function toggleBetStatus() {
+        $scope.betStatus.open = !$scope.betStatus.open;
+        Storage.set('isOpenedGetBetStatus', $scope.betStatus.open);
     };
 
     if ($scope.betStatus.displayRecaptcha) {

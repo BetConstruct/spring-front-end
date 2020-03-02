@@ -115,9 +115,8 @@ VBET5.controller('myGamesCtrl', ['$scope', '$rootScope', '$location', '$route', 
                 });
             });
         });
-        games.sort(function (a, b) {return a.start_ts - b.start_ts; }); //sort by date
         // remove games that don't exist anymore by taking game ids from update (except those, which are already deleted from $rootScope.myGames)
-        $rootScope.leftMenuFavorites = games;
+        $rootScope.leftMenuFavorites = games.sort(Utils.orderByStartTs); //sort by date
         $rootScope.myGames = games.map(function (game) {return game.id; }).reduce(function (acc, curr) {if ($rootScope.myGames.indexOf(curr) !== -1) {acc.push(curr); }  return acc; }, []);
 
         Storage.set('myGames', $rootScope.myGames);
@@ -174,7 +173,7 @@ VBET5.controller('myGamesCtrl', ['$scope', '$rootScope', '$location', '$route', 
         var request = {
             'source': 'betting',
             'what': {
-                'game': [],
+                'game': ["id", "markets_count", "start_ts", "is_live", "is_blocked", "is_neutral_venue","team1_id", "team2_id", "game_number", "text_info", "is_stat_available", "type",  "info", "stats", "team1_name", "team2_name", "tv_info"  ],
                 'sport': ['id', 'alias', 'name'],
                 'competition': ['id', 'name'],
                 'region': ['id']
@@ -188,7 +187,7 @@ VBET5.controller('myGamesCtrl', ['$scope', '$rootScope', '$location', '$route', 
 
         if (!Config.main.hideMarketFromLeftMenu) {
             request.what.game = [request.what.game]; // outer join for games that don't have P1XP2 or P1P2
-            request.what.market = ['base', 'type', 'name', 'express_id'];
+            request.what.market = ['base', 'type', 'name', 'express_id', 'id'];
             request.what.event = [];
             request.where.market = {
                 display_key: 'WINNER',
@@ -303,16 +302,13 @@ VBET5.controller('myGamesCtrl', ['$scope', '$rootScope', '$location', '$route', 
             if ($rootScope.myGames.length === 0 && $rootScope.env.sliderContent === 'savedGames') {
                 if ($rootScope.myCasinoGames && $rootScope.myCasinoGames.length) {
                     $rootScope.env.sliderContent = 'casinoSavedGames';
-                } else {
-                    $rootScope.env.showSlider = false;
-                    $rootScope.env.sliderContent = '';
                 }
             }
         }
 
         if (angular.isArray(data)) {
-            var i;
-            for (i = 0; i < data.length; i++) {
+            var i, j;
+            for (i = 0, j = data.length; i < j; i++) {
                 removeGame(data[i]);
             }
         } else {
@@ -323,6 +319,9 @@ VBET5.controller('myGamesCtrl', ['$scope', '$rootScope', '$location', '$route', 
         console.log('gaSend-','removeFromMyGames');
     };
 
+    $scope.removeAllGamesFromSaved = function removeAllGamesFromSaved() {
+        $scope.removeGameFromSaved($rootScope.leftMenuFavorites);
+    };
 
     /**
      * @ngdoc method

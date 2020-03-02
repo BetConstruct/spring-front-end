@@ -829,6 +829,7 @@
   float: left;
   display: inline-block;
   width: calc((100% - 2px) / 2);
+  padding: 0 4px;
   box-sizing: border-box;
   margin: 0 0 0 2px;
   border: 1px solid #ffffff;
@@ -842,6 +843,26 @@
   cursor: pointer;
   //transition: background 250ms, color 250ms;
   position: relative;
+  @media screen and (max-width: 1359px) {
+    padding: 0 1px;
+    font-size: 11px;
+  }
+  > span {
+    @include ltr {
+      float: left;
+    }
+    @include rtl {
+      float: right;
+    }
+  }
+  > b {
+    @include ltr {
+      float: right;
+    }
+    @include rtl {
+      float: left;
+    }
+  }
 }
 .simple-fiealds-b > ul > li:first-child {
   margin: 0;

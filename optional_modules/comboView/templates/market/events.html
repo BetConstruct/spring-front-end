@@ -11,8 +11,8 @@
             </div>
             <div class="small-title-event-b"></div>
             <p>
-                <span ng-class="{'up': event.price_change == 1, 'down': event.price_change == -1}">
-                    {{event.price|oddConvert:$root.env.oddFormat}}
+                <span class="{{event.price_change == null? '' : ({true: 'up-', false: 'down'}[event.price_change > 0] + (event.price_change % 2)) }}"
+                      ng-bind="event.price|oddConvert:$root.env.oddFormat">
                 </span>
                 <span>
                     {{event.name}}
@@ -32,8 +32,8 @@
             </div>
             <div class="small-title-event-b"></div>
             <p>
-                <span ng-class="{'up': event.price_change == 1, 'down': event.price_change == -1}">
-                    {{event.price|oddConvert:$root.env.oddFormat}}
+                <span class="{{event.price_change == null? '' : ({true: 'up-', false: 'down'}[event.price_change > 0] + (event.price_change % 2)) }}"
+                      ng-bind="event.price|oddConvert:$root.env.oddFormat">
                 </span>
                 <span ng-if="event.base">
                     {{event.name}}
@@ -74,8 +74,8 @@
             </div>
             <div class="small-title-event-b">{{event.name}}</div>
             <p>
-                <span ng-if="event.name" ng-class="{'up': event.price_change == 1, 'down': event.price_change == -1}">
-                    {{event.price|oddConvert:$root.env.oddFormat}}
+                <span ng-if="event.name" class="{{event.price_change == null? '' : ({true: 'up-', false: 'down'}[event.price_change > 0] + (event.price_change % 2)) }}"
+                      ng-bind="event.price|oddConvert:$root.env.oddFormat">
                 </span>
                 <span ng-if="!event.name">
                     {{displayBase(event, market)}}
@@ -94,8 +94,8 @@
             </div>
             <p>
                 <span>{{event.name}}</span>
-                <span ng-if="event.price" ng-class="{'up': event.price_change == 1, 'down': event.price_change == -1}">
-                    {{event.price|oddConvert:$root.env.oddFormat}}
+                <span ng-if="event.price" class="{{event.price_change == null? '' : ({true: 'up-', false: 'down'}[event.price_change > 0] + (event.price_change % 2)) }}"
+                      ng-bind="event.price|oddConvert:$root.env.oddFormat">
                 </span>
                 <span>
                     {{displayBase(event, market)}}

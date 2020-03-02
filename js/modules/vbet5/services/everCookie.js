@@ -26,10 +26,6 @@ VBET5.service('everCookie', ['$rootScope', '$http', 'Config', 'AuthData', functi
     }
 
     evercookie.init = function () {
-
-        if (!Config.everCookie.enabled) {
-            return;
-        }
         var ec = new Evercookie(Config.everCookie.options);
 
         evercookie.fingerPrint = Fingerprint2.getAuthenticationCode();

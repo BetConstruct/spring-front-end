@@ -2,6 +2,7 @@
     <ul>
         <li class="p-n-v" ng-if="$root.conf.customLeftMenuWidget">
             <iframe ng-if="$root.conf.customLeftMenuWidget.external"
+                    id="custom-left-menu-iframe"
                     ng-src="{{$root.conf.customLeftMenuWidget.src | url}}"
                     ng-style="{height: $root.conf.customLeftMenuWidget.height}">
             </iframe>
@@ -27,8 +28,8 @@
                     ng-show="!group.hasHeader || leftMenuState.prematch.groups[group.id]"
                     class="float-width">
                     <div class="sports-item-v3 {{sport.alias}}"
-                         ng-class="{'active': leftMenuState.prematch.sport[sport.id].expanded || (virtualSportsSelected && sport.isVirtualSport) ||(todaysBets.selected && sport.isTodayBets ||(outrightSelected && sport.isOutright))}"
-                         ng-click="expandLeftMenuPrematchSport(sport, null, null, true); selectSport(sport, !leftMenuState.prematch.sport[sport.id].expanded);  closeOtherSportsIfNeed(leftMenuState.prematch.sport[sport.id].expanded);"
+                         ng-class="{'active': leftMenuState.prematch.sport[sport.id].expanded || (todaysBets.selected && sport.isTodayBets ||(outrightSelected && sport.isOutright))}"
+                         ng-click="selectSport(sport, leftMenuState.prematch.sport[sport.id].expanded); expandLeftMenuPrematchSport(sport, null, null, true);  closeOtherSportsIfNeed(leftMenuState.prematch.sport[sport.id].expanded);"
                          ng-show="!sport.link">
                         {{sport.name}}
                         <div class="arrow-view-v3"></div>
@@ -46,24 +47,24 @@
                     <a class="sports-item-v3 {{sport.alias}}" ng-class="{'active': boostedBets.selected}" ng-if="$root.conf.boostedBets.enabled && sport.alias === 'boostedbets'"
                        ng-click="($location.path() === '/dashboard/' ? $location.path('/sport') : void()); env.preMatchMultiSelection ? '' : !boostedBets.selected && expandLeftMenuPrematchSport(sport); "
                     >
-                        <span class="sport-icon-v3 {{sport.alias}}"></span>
+                        <span class="sport-icon-v3"></span>
                         <p trans>Boosted bets</p>
                         <span class="arrow-view-v3"></span>
                     </a>
 
-                    <div class="region-item-row-v3">
+                    <div class="region-item-row-v3" ng-if="leftMenuState.prematch.sport[sport.id].expanded || (todaysBets.selected && sport.isTodayBets ||(outrightSelected && sport.isOutright))">
                         <div class="region-items-box">
                             <div class="full-region-info-v3"
                                  ng-repeat="region in sport.regions track by region.id"
                                  >
                                 <div class="region-item-v3" ng-class="{'active': leftMenuState.prematch.region[region.id].expanded}"
 
-                                     ng-click="expandLeftMenuPrematchRegion(region, sport); selectRegion(region)">
+                                     ng-click="expandLeftMenuPrematchRegion(region, sport);">
                                     <div class="flag-view-v3 flag-icon flag-{{::region.alias | removeUselessSymbolsByRegexp: '[,\' ]+': 'g': 'true'}}"></div>
                                     {{::region.name}} ({{region.game}})
                                     <div class="arrow-view-v3"></div>
                                 </div>
-                                <div class="games-list-nav-v3" ng-show="region.competitions">
+                                <div class="games-list-nav-v3" ng-if="leftMenuState.prematch.region[region.id].expanded">
                                     <div class="games-list-mini-view-v3">
                                         <div class="competition-view-v-3">
                                             <div class="competition-title-v3"
@@ -75,7 +76,7 @@
                                                  default-offset="26">
                                                 <label title="{{competition.name}}" ng-click="($location.path() === '/dashboard/' ? $location.path('/sport') : void()); env.preMatchMultiSelection ? '' : expandCompetition(competition, sport, true);">
                                                     <input type="checkbox"
-                                                           ng-show="env.preMatchMultiSelection"
+                                                           ng-if="env.preMatchMultiSelection"
                                                            ng-model="prematchMultiViewCompetitions[competition.id]"
                                                            id="checkbox-competition{{competition.id}}"
                                                            ng-change="competitionToMultiview(competition)">

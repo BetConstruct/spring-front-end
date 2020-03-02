@@ -1,7 +1,7 @@
 <div id="pinned-games-container">
 
-    <div ng-repeat="openGame in pinnedGames"
-         class="game-video game-video-detached" draggable ng-show="openGame" ng-if="openGame.video_data">
+    <div ng-repeat="openGame in pinnedGames track by openGame.id"
+         class="game-video game-video-detached" draggable ng-if="openGame.video_data">
         <div class="game-video-container detached-game-container"  id="detached-game-container-{{openGame.id}}">
 
             <div class="animation-video-title-row-v3">
@@ -12,20 +12,55 @@
                 </div>
             </div>
             <div class="animation-control">
-                <video-player
-                        ng-if="!$root.conf.video.providersThatSupportHls[openGame.tv_type]"
-                        class="game-video"
-                        player-id="gamevideo{{openGame.id}}"
-                        stream-url="{{openGame.video_data}}"
-                        provider-id="{{openGame.tv_type}}"
-                        initially-muted="{{ env.sound }}">
-                </video-player>
-                <hls-player
-                        ng-if="$root.conf.video.providersThatSupportHls[openGame.tv_type]"
-                        provider-id="{{openGame.tv_type}}"
-                        stream-url="{{openGame.video_data}}">
 
-                </hls-player>
+                <section class="e-s-video-player game-video">
+                    <div class="game-video-container">
+
+                        <div class="flash-loader-overlay" ng-hide="!$root.env.authorized || videoState.frameUrl || videoState.videoIsLoaded">
+                            <div class="box">
+                                <div class="container cylinder">
+                                    <div class="hand"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="video-player-container">
+                            <div class="video-control-buttons" ng-show="!$root.conf.video.providersThatSupportHls[providerId]">
+                                <div class="play-pause-control" ng-show="videoIsLoaded">
+                                    <span ng-click="togglePause();" ng-show="!paused" class="video-pause"></span>
+                                    <span ng-click="togglePause();" ng-show="paused" class="video-play"></span>
+                                </div>
+                                <div class="sound-ve-s-video-playerolume-control" ng-show="videoIsLoaded">
+                                    <span ng-click="toggleMute(1)" ng-show="!mute" class="video-mute"></span>
+                                    <span ng-click="toggleMute(0)" ng-show="mute" class="video-unmute"></span>
+                                </div>
+                            </div>
+
+
+                            <hls-player
+                                    ng-if="$root.conf.video.providersThatSupportHls[openGame.tv_type]"
+                                    provider-id="{{openGame.tv_type}}"
+                                    stream-url="{{openGame.video_data}}">
+
+                            </hls-player>
+
+                            <flashplayer ng-if="!$root.conf.video.providersThatSupportHls[openGame.tv_type]"
+                                         class="game-video"
+                                         id="gamevideo{{openGame.id}}"
+                                         stream-url="{{openGame.video_data}}"
+                                         provider-id="{{openGame.tv_type}}"
+                                         initially-muted="{{ env.sound }}">
+                            </flashplayer>
+
+                            <div class="video-detached-game-name" ng-if="!customStreaming">
+                                <div>{{openGame.sport.name}} : {{openGame.team1_name}}
+                                    {{openGame.team2_name ? '&mdash; ' + openGame.team2_name : ''}}</div>
+                            </div>
+                        </div>
+
+                    </div>
+                </section>
+
+
             </div>
             <div resizer preserve-aspect-ratio target="detached-game-container-{{openGame.id}}" initial-height="197" initial-width="347" min-height="100" min-width="100" class="resizer"
                  max-width="{{ $root.conf.detachedVideoSizes[openGame.tv_type].maxWidth }}" max-height="{{ $root.conf.detachedVideoSizes[openGame.tv_type].maxHeight }}"></div>

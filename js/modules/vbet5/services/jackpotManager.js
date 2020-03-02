@@ -32,11 +32,13 @@ VBET5.service('jackpotManager', ['$rootScope', 'Config', 'jackpotSocket', functi
                     "JackPotId": jackpotId,
                     "Currency": currency
                 }, function (response) {
-                    jackpotPoolMetaData = response;
+                    if(response && response.length > 0){
+                        jackpotPoolMetaData = response;
+                    }
                 });
 
 
-                if (!jackpotDataSubscriptions[jackpotId]) {
+                if (!jackpotDataSubscriptions[jackpotId] || jackpotDataSubscriptions[jackpotId].currency !== currency) {
                     var sid = jackpotSocket.subscribe({
                         Currency: currency,
                         JackPotId: jackpotId,
@@ -68,7 +70,13 @@ VBET5.service('jackpotManager', ['$rootScope', 'Config', 'jackpotSocket', functi
                             }
                         }
                     });
-                    jackpotDataSubscriptions[jackpotId] = {sid: sid, gameIds: []};
+                    if (jackpotDataSubscriptions[jackpotId]) {
+                        jackpotDataSubscriptions[jackpotId].sid = sid;
+                        jackpotDataSubscriptions[jackpotId].currency = currency;
+                    } else {
+                        jackpotDataSubscriptions[jackpotId] = {sid: sid, gameIds: [], currency: currency};
+                    }
+
                 }
                 if (jackpotDataSubscriptions[jackpotId].gameIds.indexOf(lastGameId) === -1) {
                     jackpotDataSubscriptions[jackpotId].gameIds.push(lastGameId);
@@ -144,8 +152,6 @@ VBET5.service('jackpotManager', ['$rootScope', 'Config', 'jackpotSocket', functi
         angular.forEach(jackpotDataSubscriptions, function (value, jackpotId) {
             jackpotSocket.unsubscribe(value.sid, {JackPotId: jackpotId});
         });
-
-        jackpotDataSubscriptions = {};
     };
     jackpotManager.unsubscribeFromJackpotData = function unsubscribeFromJackpotData(all) {
         openedGameIds = [];
@@ -191,10 +197,11 @@ VBET5.service('jackpotManager', ['$rootScope', 'Config', 'jackpotSocket', functi
 
     var externalJackpotsProfileWatcher;
     var externalJackpotData = {};
-    var externalJackpotCallback = null;
+    var externalJackpotCallbacks = [];
     var externalJackpotDataSubscriptions = {};
+    var jackpotProviderKinds = [];
 
-    jackpotManager.subscribeForExternalJackpotData = function subscribeForExternalJackpotData(callback) {
+    jackpotManager.subscribeForExternalJackpotData = function subscribeForExternalJackpotData(callback, jackpotProviderKind) {
         var config = Config.main.jackpot.casino;
         if (!(config && config.enabled)) {
             return;
@@ -211,9 +218,22 @@ VBET5.service('jackpotManager', ['$rootScope', 'Config', 'jackpotSocket', functi
 
         jackpotSocket.get(command, params, function (jackpotIds) {
             if (jackpotIds) {
-                externalJackpotCallback = callback;
+                externalJackpotCallbacks.push(callback);
             }
-            success(jackpotIds, externalJackpotCallback, intensity);
+
+            if (jackpotProviderKind) {
+                if(jackpotProviderKinds.indexOf(jackpotProviderKind) === -1){
+                    jackpotProviderKinds.push(jackpotProviderKind);
+                }else {
+                    return;
+                }
+
+                jackpotIds = jackpotIds.filter(function (a) {
+                    return jackpotProviderKinds.indexOf(a.Kind) !== -1;
+                });
+            }
+
+            success(jackpotIds, externalJackpotCallbacks, intensity);
 
             if (externalJackpotsProfileWatcher) {
                 externalJackpotsProfileWatcher();
@@ -222,8 +242,8 @@ VBET5.service('jackpotManager', ['$rootScope', 'Config', 'jackpotSocket', functi
             externalJackpotsProfileWatcher = $rootScope.$watch('profile', function (newState, oldState) {
                 if ((newState && !oldState) || (!newState && oldState)) {
                     if ((newState && newState.currency_name !== Config.main.registration.defaultCurrency) || (oldState && oldState.currency_name !== Config.main.registration.defaultCurrency)) {
-                        jackpotManager.unsubscribeFromAllExternalJackpotData();
-                        success(jackpotIds, externalJackpotCallback, intensity);
+                        jackpotManager.unsubscribeFromAllExternalJackpotData(externalJackpotCallbacks);
+                        success(jackpotIds, externalJackpotCallbacks, intensity);
                     }
                 }
             });
@@ -231,13 +251,15 @@ VBET5.service('jackpotManager', ['$rootScope', 'Config', 'jackpotSocket', functi
         });
 
 
-        function success(jackpotIds, externalJackpotCallback, intensity) {
+        function success(jackpotIds, externalJackpotCallbacks, intensity) {
             jackpotManager.unsubscribeFromJackpotData();
             var currency = ($rootScope.profile && $rootScope.profile.currency_name) || Config.main.registration.defaultCurrency;
             if (jackpotIds && jackpotIds.length > 0) {
                 for (var j = 0; j < jackpotIds.length; j++) {
                     var jackpotId = jackpotIds[j].JackPotId;
-                    externalJackpotData[jackpotId] = null;
+
+                        externalJackpotData[jackpotIds[j].Kind] = null;
+
                     if (!externalJackpotDataSubscriptions[jackpotId]) {
                         var sid = jackpotSocket.msg('subscribetoexternaljackpot', {
                             Currency: currency,
@@ -249,8 +271,6 @@ VBET5.service('jackpotManager', ['$rootScope', 'Config', 'jackpotSocket', functi
                                 angular.forEach(jackpot.PoolGroup.PoolList, function (pool) {
                                     jackpot.CollectedAmountTotal += pool.CollectedAmount;
                                 });
-
-
                                 var provider = jackpotIds.filter(function (j) {
                                     return j.JackPotId === jackpot.UuuId;
                                 });
@@ -259,9 +279,12 @@ VBET5.service('jackpotManager', ['$rootScope', 'Config', 'jackpotSocket', functi
                                     jackpot.Provider = provider[0].Kind;
                                 }
 
-                                externalJackpotData[jackpot.UuuId] = jackpot;
+                                externalJackpotData[jackpot.Provider] = jackpot;
 
-                                externalJackpotCallback(externalJackpotData);
+                                externalJackpotCallbacks.forEach(function (externalJackpotCallback) {
+                                    externalJackpotCallback(externalJackpotData);
+                                });
+
                             }
                         });
                         externalJackpotDataSubscriptions[jackpotId] = {sid: sid};
@@ -272,10 +295,17 @@ VBET5.service('jackpotManager', ['$rootScope', 'Config', 'jackpotSocket', functi
 
         }
     };
-    jackpotManager.unsubscribeFromAllExternalJackpotData = function unsubscribeFromAllExternalJackpotData() {
+    jackpotManager.unsubscribeFromAllExternalJackpotData = function unsubscribeFromAllExternalJackpotData(callback) {
+        jackpotProviderKinds = [];
         angular.forEach(externalJackpotDataSubscriptions, function (value, jackpotId) {
             jackpotSocket.unsubscribe(value.sid, {JackPotId: jackpotId});
         });
+
+       var callbackIndex = externalJackpotCallbacks.indexOf(callback);
+
+       if(callbackIndex !== -1){
+           externalJackpotCallbacks.splice(callbackIndex,1);
+       }
         externalJackpotData = {};
         externalJackpotDataSubscriptions = {};
     };

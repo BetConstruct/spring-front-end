@@ -15,6 +15,7 @@ CASINO.constant('CConfig', {
     platformType: 0,
     main: {
         enableGameInfoButton: false,
+        categoriesLimit: 10, //number of categories visible in casino page
         moreColumnNumber: 6, //number of columns in categories  "more" dropdown block
         numberOfRecentGames: 20, //initial number of recent games to show.  When newCasinoDesign is enabled change this value to be 3X
         numberOfRecentGamesWide: 28, //initial number of recent games to show in wide screen mode.  When newCasinoDesign is enabled change this value to be 5X
@@ -31,6 +32,7 @@ CASINO.constant('CConfig', {
             enabled: false,
             href: ''
         },
+        gameIframeInitialTab: 'jackpots',
         enableConfirmationBeforeCloseGame: false, // Popup while closing the game(slots, skill games, games, backgammon, belote.... etc )
         funModeEnabled: 1,// enable/disable fun mode.  0 - disable for all users, 1 - enable for all users, 2 - enable for logged in users, 3 - enable for verified users
         realModeEnabled: true, // enable/disable real playing mode
@@ -42,6 +44,10 @@ CASINO.constant('CConfig', {
                 message: '(NET) Please be informed that some IP addresses are blocked.',
                 timeDelay: 604800000
             }
+        },
+        myGamesToShow: {
+            wideScreenOn: 6,
+            wideScreenOff: 6
         },
         categoriesThatHaveNotFunMode: ['Progressive'],
         downloadEnabled: true,// enable/disable client download option
@@ -133,10 +139,12 @@ CASINO.constant('CConfig', {
             '107': 1,
             '110': 1,
             '112': 2,
+            '118': 5,
             '119': 5,
             '108': 3,
             '125': 6,
             '126': 3,
+            '131': 8,
             '141': 7
         },
         liveDealersPhotosUrl: "http://websitelivegames-am.betconstruct.com/Content/Images/DealerPhotos/",

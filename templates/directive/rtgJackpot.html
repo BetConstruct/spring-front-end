@@ -1,21 +1,21 @@
-<div class="red-tiger-content" ng-show="rtgJackpot" ng-repeat="pot in rtgJackpot.pots track by $index">
-    <div ng-if="pot.type === 'time'" class="red-tiger-block">
+<div class="red-tiger-content" ng-show="jackpotData" ng-repeat="pot in jackpotData.PoolGroup.PoolList track by $index">
+    <div ng-if="pot.JackPotType === 'time'" class="red-tiger-block">
         <img src="images/red-tiger/daily-drop.png" alt="">
         <div class="red-tiger-bg">
             <ul>
-                <li ng-bind="pot.currencySymbol"></li>
-                <li><jackpot-counter point="point" max-length="8" comma="true" max-duration-speed="400" amount="pot.amount"></jackpot-counter></li>
+                <li class="cms-jcon-{{jackpotData.Currency}}"></li>
+                <li><jackpot-counter point="jackpotData.CurrencyFraction" max-length="8" comma="true" max-duration-speed="400" amount="pot.CollectedAmount"></jackpot-counter></li>
             </ul>
         </div>
-        <p class="red-tiger-timer">{{'Must pay before'|translate}} <span countdown="{{pot.time.target}}"  ng-bind="'🕒 ' + countdown.hours + ':' + countdown.minutes + ':' + countdown.seconds"></span></p>
+        <p class="red-tiger-timer">{{'Must pay before'|translate}} <span countdown="{{pot.TimeStamp}}"  ng-bind="'🕒 ' + countdown.hours + ':' + countdown.minutes + ':' + countdown.seconds"></span></p>
     </div>
 
-    <div ng-if="pot.type === 'progressive'" class="red-tiger-block">
+    <div ng-if="pot.JackPotType === 'progressive'" class="red-tiger-block">
         <img src="images/red-tiger/mega-drop.png" alt="">
         <div class="red-tiger-bg">
             <ul>
-                <li ng-bind="pot.currencySymbol"></li>
-                <li><jackpot-counter point="point" max-length="8" comma="true" max-duration-speed="400" amount="pot.amount"></jackpot-counter></li>
+                <li class="cms-jcon-{{jackpotData.Currency}}"></li>
+                <li><jackpot-counter point="jackpotData.CurrencyFraction" max-length="8" comma="true" max-duration-speed="400" amount="pot.CollectedAmount"></jackpot-counter></li>
             </ul>
         </div>
     </div>

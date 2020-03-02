@@ -62,8 +62,9 @@ angular.module('vbet5').run(['$rootScope', '$location', '$routeParams', '$route'
         if (typeof Config.main.registration.minimumAllowedAge === 'object') { //bad solution and need to refactor
             Config.main.registration.minimumAllowedAge = Config.main.registration.minimumAllowedAge[$location.host()] || Config.main.registration.minimumAllowedAge['default'];
         }
-
-        everCookie.init();
+        if (Config.everCookie.enabled && !Config.main.enableTwoFactorAuthentication && !Config.main.integrationMode) {
+            everCookie.init();
+        }
         Zergling.init();
 
         var lang = $location.search().lang || $cookies.get('lang') || Storage.get('lang') || (Config.main.getBrowserLanguage && Utils.getBrowserLanguage());

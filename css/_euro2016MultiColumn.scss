@@ -39,6 +39,30 @@
         }
       }
     }
+    &:not(.ng-hide) ~ .float-width .outright-broken {
+      > table > tbody > tr > td:last-child {
+        @include ltr {
+          padding-right: 12px;
+        }
+        @include rtl {
+          padding-left: 12px;
+        }
+      }
+      .favorite {
+        top: 50%;
+        bottom: auto;
+        margin-top: -6px;
+        @include ltr {
+          right: -4px;
+        }
+        @include rtl {
+          left: -4px;
+        }
+      }
+      ~ td {
+        display: none;
+      }
+    }
   }
   .aic-head {
     background: $brand-color-1;
@@ -71,13 +95,12 @@
             top: 0;
           }
           .aic-team-names-wrapper .icon-separator-v3.favorite {
+            bottom: 0;
             @include ltr {
               right: -14px;
-              bottom: 0;
             }
             @include rtl {
               left: -14px;
-              bottom: 0;
             }
           }
         }
@@ -249,7 +272,6 @@
     background: $c16-sp-8;
   }
   &.alt {
-    float: right;
     border: 1px solid $c16-sp-10;
     box-shadow: none;
     border-radius: 2px;
@@ -258,14 +280,15 @@
     line-height: 28px;
     width: 44px;
     transition: 240ms color, 240ms border-color;
+    @include ltr {
+      float: right;
+    }
+    @include rtl {
+      float: left;
+    }
   }
   > span {
     display: block;
-    float: left;
-    width: 100%;
-    @include rtl {
-      direction: ltr;
-    }
     &:before {
       display: inline-block;
       vertical-align: top;
@@ -332,7 +355,7 @@
     float: left;
     width: 100%;
     > tbody > tr > td {
-      vertical-align: top;
+      vertical-align: middle;
       width: 100%;
       .aic-team-names {
         width: calc(100% - 34px);
@@ -373,6 +396,12 @@
   }
   .game-info-icons-v3 {
     position: static;
+    @include ltr {
+      padding-right: 16px;
+    }
+    @include rtl {
+      padding-left: 16px;
+    }
   }
   .icon-separator-v3 {
     color: $c16-tp-4;
@@ -383,7 +412,6 @@
     }
     @include rtl {
       float: none;
-      margin: 0 2px 0 0;
     }
     &.favorite {
       position: absolute;
@@ -399,11 +427,18 @@
       }
     }
     &.statistic {
-      @include ltr {
-        margin: 0 14px 0 0;
-      }
-      @include rtl {
-        margin: 0 0 0 14px;
+      margin: 0;
+    }
+    &.cms-jcon-Bet-Builder {
+      color: $c16-tp-4;
+      margin: 1px 0 0;
+      + .statistic {
+        @include ltr {
+          margin-left: 2px;
+        }
+        @include rtl {
+          margin-right: 2px;
+        }
       }
     }
   }
@@ -445,6 +480,19 @@
   .classic-view-column-v3:not(.left-menu-closed-v3) {
     .aic-handicup-cell, .aic-over-under-cell {
       display: none !important;
+    }
+  }
+}
+.multi-column-view {
+  &.GrecoRomanWrestling {
+    .asian-in-classic-table-wrapper .aic-head.ng-hide ~ div .multicolumn-table .aic-team-names-wrapper .icon-separator-v3.favorite {
+      bottom: -15px;
+      @include ltr {
+        right: 0;
+      }
+      @include rtl {
+        left: 0;
+      }
     }
   }
 }

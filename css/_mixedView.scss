@@ -1460,7 +1460,7 @@ div.mini-form-box-b{
   padding: 5px;
   font: 12px/14px $font-f;
   color: $text-palette-14;
-  width: 25%;
+  width: 20%;
 }
 .bonus-table-information-b > ul:first-child > li{
   font: 11px/12px $font-f;
@@ -2503,6 +2503,33 @@ div.mini-form-box-b{
         bottom: 30px;
         color: $text-palette-14;
         font: 12px/16px $font-f;
+      }
+    }
+    .unplayed-balance {
+      display: -webkit-box;
+      display: -ms-flexbox;
+      display: flex;
+      border-bottom: 1px solid rgba($skin-palette-12,0.3);
+      > li {
+        color: $skin-palette-3;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        font: 12px/34px $font-f;
+        &:first-child {
+          -webkit-box-flex: 1;
+          -ms-flex: 1;
+          flex: 1;
+        }
+        &.withdraw-limit {
+          color: $brand-color-2;
+        }
+        &.withdraw-balance {
+          color: lighten($brand-color-1,5);
+        }
+      }
+      &:last-of-type {
+        margin-bottom: 30px;
       }
     }
     h5 {
@@ -3727,9 +3754,9 @@ div.mini-form-box-b{
               border: 1px solid $hero-color;
               color: $hero-color;
               display: inline-block;
-              height: 20px;
-              padding: 0 8px;
-              line-height: 20px;
+              padding: 3px 4px;
+              box-sizing: border-box;
+              line-height: 12px;
               border-radius: 2px;
               background: rgba(black, 0.1);
             }
@@ -4208,19 +4235,20 @@ button.button-confirm .md-progress-circular.small-progress {
   right: 4px;
 }
 .edit-bets-icon {
-  float: left;
+  width: 24px;
+  height: 24px;
+  margin-top: 2px;
   text-align: center;
   display: inline-block;
   border: 1px solid lighten($brand-color-2, 10);
   color: lighten($brand-color-2, 20);
-  width: 24px;
-  height: 24px;
-  font: 13px/22px icomoon;
-  position: absolute;
-  top: 6px;
+  font: 13px/24px icomoon;
   transition: 300ms border-color;
   @include ltr {
-    right: 6px;
+    float: right;
+  }
+  @include rtl {
+    float: left;
   }
   &.disabled {
     cursor: auto;
@@ -4233,6 +4261,33 @@ button.button-confirm .md-progress-circular.small-progress {
   }
   &:before {
     content: "\e6f9";
+  }
+  + .gift-bet {
+    @include ltr {
+      margin-right: 6px;
+    }
+    @include rtl {
+      margin-left: 6px;
+    }
+  }
+}
+.gift-bet {
+  > i {
+    text-align: center;
+    display: inline-block;
+    color: lighten($hero-color,15);
+    font: 20px/24px icomoon;
+    transition: color 300ms;
+    &:before {
+      content: "\ea63";
+    }
+    &:hover {
+      color: lighten($hero-color,20);
+    }
+    &.disabled {
+      opacity: 0.4;
+      pointer-events: none;
+    }
   }
 }
 .mixed-history-table {
@@ -4295,8 +4350,8 @@ button.button-confirm .md-progress-circular.small-progress {
   }
   td {
     height: 42px;
-    border-bottom: 5px solid transparent;
-    background: lighten( desaturate( adjust-hue( $skin-color, 6deg ), 19 ), 7 ) padding-box;
+    border-bottom: 5px solid $skin-palette-8;
+    background: lighten( desaturate( adjust-hue( $skin-color, 6deg ), 19 ), 7 );
     box-shadow: inset 0 -1px 0 rgba(invert(set-color(lighten( desaturate( adjust-hue( $skin-color, 6deg ), 19 ), 7 ))),0.56);
     position: relative;
     &.hh-cell {
@@ -4434,6 +4489,12 @@ button.button-confirm .md-progress-circular.small-progress {
   .cms-jcon-success-pu, .cms-jcon-checkmark2{
     &:before {
       color: #1a7051;
+    }
+  }
+ .cms-jcon-checkmark2-orange{
+    &:before{
+      color: #C29440 !important;
+      content: '\e6ec';
     }
   }
   $bg: $skin-palette-12;
@@ -4581,6 +4642,10 @@ button.button-confirm .md-progress-circular.small-progress {
       &.date-id {
         color: $text-palette-4;
       }
+      &.cms-jcon-info-returned {
+        text-align: center;
+        font-size: 16px;
+      }
     }
     &:nth-child(even) td {
       &:not(:last-child):not(.sport-icon){
@@ -4616,6 +4681,42 @@ button.button-confirm .md-progress-circular.small-progress {
         td {
           padding: 0;
         }
+      }
+    }
+    &.info-returned {
+      td {
+        border-bottom: 50px solid $bg;
+        &[data-title]:after {
+          content: attr(data-title);
+          position: absolute;
+          bottom: -43px;
+          left: 0;
+          font: 11px/13px $font-f;
+          z-index: 1;
+          min-width: 950px - 74px - 24px;
+          max-width: 1340px - 74px - 24px;
+          width: calc(100vw - 99px);
+          padding: 8px 12px;
+          box-sizing: border-box;
+          background: $skin-palette-8;
+          white-space: normal;
+          @include ltr {
+            left: 0;
+          }
+          @include rtl {
+            right: 0;
+            text-align: right;
+          }
+        }
+      }
+      &:nth-child(odd) td {
+        border-bottom-color: $bg;
+        &:after {
+          background: darken( desaturate( adjust-hue( $skin-palette-9, 4deg ), 13 ), 2 );
+        }
+      }
+      &.last-child:not(:last-child) td {
+        border-bottom-width: 56px;
       }
     }
   }
@@ -4852,6 +4953,14 @@ button.button-confirm .md-progress-circular.small-progress {
     &:not(:disabled):hover {
       color: lighten($brand-color-2, 30);
       border-color: lighten($brand-color-2, 20);
+    }
+  }
+  .gift-bet {
+    @include ltr {
+      margin-right: 6px;
+    }
+    @include rtl {
+      margin-left: 6px;
     }
   }
 }

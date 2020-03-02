@@ -268,14 +268,21 @@ module.exports = function (grunt) {
         var conf = grunt.config.get('angularValue');
         var tplConfig = grunt.config.get('ngtemplates');
         var jsConfig = grunt.config.get('closure-compiler');
-        if (conf && conf.VBET5 && conf.VBET5.SkinConfig && conf.VBET5.SkinConfig.additionalModules) {
-            conf.VBET5.SkinConfig.additionalModules.map(function (module) {
-                console.log("building with additional module:" + module + "\n");
-                tplConfig.app.src.push('optional_modules/' + module + '/templates/**/*.html');
-                jsConfig.frontend.js.unshift('../optional_modules/' + module + '/lib/**/*.js');
-                jsConfig.frontend.js.splice(jsConfig.frontend.js.length - 4, 0, '../optional_modules/' + module + '/js/main.js');
-                jsConfig.frontend.js.splice(jsConfig.frontend.js.length - 4, 0, '../optional_modules/' + module + '/js/**/*.js');
-            });
+        if (conf && conf.VBET5 && conf.VBET5.SkinConfig) {
+            if (conf.VBET5.SkinConfig.additionalModules) {
+                conf.VBET5.SkinConfig.additionalModules.map(function (module) {
+                    console.log("building with additional module:" + module + "\n");
+                    tplConfig.app.src.push('optional_modules/' + module + '/templates/**/*.html');
+                    jsConfig.frontend.js.unshift('../optional_modules/' + module + '/lib/**/*.js');
+                    jsConfig.frontend.js.splice(jsConfig.frontend.js.length - 4, 0, '../optional_modules/' + module + '/js/main.js');
+                    jsConfig.frontend.js.splice(jsConfig.frontend.js.length - 4, 0, '../optional_modules/' + module + '/js/**/*.js');
+                });
+            }
+
+            if (conf.VBET5.SkinConfig.enableSnowEffect) {
+                jsConfig.frontend.js.splice(jsConfig.frontend.js.length - 4, 0, '../lib/snowflakes.js');
+            }
+
             grunt.config.set('ngtemplates', tplConfig);
             grunt.config.set('closure-compiler', jsConfig);
         }

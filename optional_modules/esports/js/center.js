@@ -13,6 +13,7 @@ VBET5.controller('eSportsCenterController', ['$rootScope', '$scope',  '$location
         $scope.collapsedMarkets = {};
 
         $scope.pointsTypeForMarket = 'TOTALS';
+        $scope.isInitial = true;
 
         var MARKET_GROUP_ALL = {
             id: -2,
@@ -32,6 +33,16 @@ VBET5.controller('eSportsCenterController', ['$rootScope', '$scope',  '$location
             game: null,
             games: null
         };
+
+        if (Config.main.showInSportsbookBanners) {
+            $scope.bannersState = {
+                show: Storage.get("showEsportBanners") !== undefined ?Storage.get("showEsportBanners"): true
+            };
+            $scope.toggleBanners = function toggleBanners() {
+                $scope.bannersState.show = !$scope.bannersState.show;
+                Storage.set("showEsportBanners", $scope.bannersState.show);
+            };
+        }
 
         function unsubscribeFromPreviousData(type) {
             if (subIds[type]) {
@@ -77,7 +88,7 @@ VBET5.controller('eSportsCenterController', ['$rootScope', '$scope',  '$location
                 });
             }
 
-            $scope.games = games.sort(function (a, b) {return a.start_ts - b.start_ts;});
+            $scope.games = games.sort(Utils.orderByStartTs);
         }
 
         function getSportData(params) {
@@ -86,7 +97,8 @@ VBET5.controller('eSportsCenterController', ['$rootScope', '$scope',  '$location
         }
 
         $scope.getCompetitionData = function getCompetitionData(params, getAllCompetitions) {
-            $scope.attachPinnedVideo($scope.enlargedGame, 'fullScreen');
+            $scope.isInitial = false;
+            $scope.attachPinnedVideo($scope.enlargedGame, 'fullScreen', true);
             if ($scope.loading || (!getAllCompetitions && $scope.games && $scope.games[0] && $scope.games[0].competition.id === params.competition.id) ) {
                 return;
             }
@@ -101,7 +113,7 @@ VBET5.controller('eSportsCenterController', ['$rootScope', '$scope',  '$location
                 source: 'betting',
                 what: {
                     game: [['id', 'team1_name', 'team2_name', 'team1_id', 'team2_id', 'team1_reg_name', 'team2_reg_name', 'info', 'start_ts', 'type', 'text_info', 'events_count', 'is_blocked', 'markets_count', 'stats', 'strong_team', 'is_neutral_venue', 'is_stat_available', 'tv_type', 'video_id', 'video_id2', 'video_id3', 'video_provider', 'show_type']],
-                    market: ['base', 'id', 'name', 'order', 'sequence', 'show_type', 'display_key', 'display_sub_key', 'market_type', 'home_score', 'away_score', 'main_order'],
+                    market: ['base', 'id', 'name', 'order', 'sequence', 'show_type', 'display_key', 'display_sub_key', 'type', 'home_score', 'away_score', 'main_order'],
                     event: ['name', 'id', 'base', 'type', 'type_1', 'price', 'show_type', 'home_value', 'away_value']
                 },
                 where: {
@@ -294,19 +306,24 @@ VBET5.controller('eSportsCenterController', ['$rootScope', '$scope',  '$location
         }
 
         $scope.getGameData = function getGameData(data) {
-            if ($scope.loading || ($scope.game && $scope.game.id === data.game.id) ) {
+            $scope.isInitial = false;
+            if ($scope.game && $scope.game.id === data.game.id) {
                 return;
             }
             unsubscribeFromPreviousData('games');
             unsubscribeFromPreviousData('sport');
             updateLocation(data);
             $scope.loading = true;
+            var requestGame = [["id", "show_type", "markets_count", "start_ts", "is_live", "is_blocked", "is_neutral_venue","team1_id", "team2_id", "game_number", "text_info", "type",  "info", "team1_name", "team2_name", "tv_info"  ]];
+            if (data.game.type === 1) {
+                Array.prototype.push.apply(requestGame[0], ["match_length", "scout_provider", "video_id","video_id2", "video_id3", "tv_type", "last_event", "live_events"]);
+            }
             var request = {
                 'source': 'betting',
                 'what': {
-                    game: [],
-                    market: [],
-                    event: []
+                    game: requestGame,
+                    market: ["id", "col_count", "type", "sequence", "express_id", "cashout", "display_key", "display_sub_key", "group_id", "name", "group_name", "order" ],
+                    event: ["order", "id", "type_1", "type", "type_id", "original_order", "name", "price", "base", "home_value", "away_value", "display_column"]
                 },
                 'where': {
                     game: {id: data.game.id},
@@ -431,9 +448,22 @@ VBET5.controller('eSportsCenterController', ['$rootScope', '$scope',  '$location
         };
 
         $scope.$on('eSports.requestData', function requestData(event, data) {
-            data.game.id ? $scope.getGameData(data) : ( data.competition.id ? $scope.getCompetitionData(data) : getSportData(data) );
+            if(data.game.id) {
+                $scope.getGameData(data);
+            } else if(data.competition.id) {
+                $scope.getCompetitionData(data);
+            } else {
+                getSportData(data);
+            }
         });
 
+        $scope.$on('eSports.noGames', function () {
+            $scope.games = [];
+            $scope.game = null;
+
+            unsubscribeFromPreviousData('games');
+            unsubscribeFromPreviousData('sport');
+        });
         /**
          * @ngdoc method
          * @name openGameRulesPopup
@@ -448,5 +478,22 @@ VBET5.controller('eSportsCenterController', ['$rootScope', '$scope',  '$location
                 content: data,
                 hideButtons: true
             });
+        };
+
+
+        $scope.handleBannersLinks = function handleBannersLinks(link) {
+            if (link.hostname === $location.host()) {
+                var linkProps = Utils.getAllUrlParams(link.href);
+                if (linkProps.path === $location.path()) {
+                    if (linkProps.params.type !== undefined) {
+                        $location.search('sport', linkProps.params.sport);
+                        $location.search('competition', linkProps.params.competition);
+                        $location.search('region', linkProps.params.region);
+                        $location.search('game', linkProps.params.game);
+                        $location.search('type', linkProps.params.type);
+                        $route.reload();
+                    }
+                }
+            }
         };
     }]);
