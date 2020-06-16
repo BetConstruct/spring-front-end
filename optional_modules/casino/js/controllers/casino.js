@@ -38,7 +38,7 @@ CASINO.controller('casinoCtrl', ['$rootScope', '$scope', '$sce', '$location', 'G
 
     var jackpotWinnerTimeout;
     //new casino design
-    $scope.jackpotSliderVisibleGamesCount = CConfig.version === 2 ? 3 : 4;
+    $scope.jackpotSliderVisibleGamesCount = CConfig.version === 2 ? CConfig.main.jackpotSliderVisibleGamesCount : 4;
     $scope.selectedProvider = {
         name: ''
     };
@@ -189,7 +189,7 @@ CASINO.controller('casinoCtrl', ['$rootScope', '$scope', '$sce', '$location', 'G
         resetGamesOptions();
         $scope.getGames();
 
-        if(openGame){
+        if (openGame && !$scope.gamesInfo.length) {
             findAndOpenGame(searchParams);
         }
 
@@ -564,7 +564,7 @@ CASINO.controller('casinoCtrl', ['$rootScope', '$scope', '$sce', '$location', 'G
                 return;
             }
 
-            var bufferSize = 10;
+            var bufferSize = $scope.jackpotSliderVisibleGamesCount * 3;
             var from = $scope.jackpotGames.length;
             var to = jackpotTotalGames ? ($scope.jackpotGames.length + bufferSize > jackpotTotalGames ? jackpotTotalGames :  $scope.jackpotGames.length + bufferSize) : bufferSize;
 
@@ -729,9 +729,11 @@ CASINO.controller('casinoCtrl', ['$rootScope', '$scope', '$sce', '$location', 'G
 
     function openCasinoGame(event, game, gameType) {
         if ($scope.viewCount === 1) {
-            if ($scope.gamesInfo.length === 1) {
+            var needToClose = $scope.gamesInfo.length === 1 && $scope.gamesInfo[0].game && $scope.gamesInfo[0].game.id !== game.id;
+            if (needToClose) {
                 $scope.closeGame();
             }
+
             $scope.openGame(game, gameType);
         } else {
             //games that are not resizable

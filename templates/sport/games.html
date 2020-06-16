@@ -71,7 +71,7 @@
                     ng-class="{'expanded': getVisibility(competition.name)}">
                     <li title="{{ competition.name }}">
                         <p ng-class="'flag-'+competition.region.alias | removeUselessSymbolsByRegexp: '[,\' ]+': 'g': 'true'" class="flag flag-icon"></p>
-                        {{ competition.region.name }} - {{ competition.name }} <span>({{ (competition.gamesArray.length) }})</span>
+                        {{ competition.region.name }} - <i class="cyber-competition" ng-if="$root.env.live && competition.info && competition.info.Cyber"></i>{{ competition.name }} <span>({{ (competition.gamesArray.length) }})</span>
                     </li>
                     <li ng-class="{true: 'show-block-open', false: 'show-block'}[getVisibility(competition.name) ]">
                         <a></a>
@@ -86,7 +86,7 @@
                         <div ng-init="todaysGames.push(game.id);" no-animate>
                             <!------------------------------------------------- single game start ---------------------------------------------------------->
 
-                            <div class="conteiner-live-block closed-game-container-{{selectedSportAlias}}"
+                            <div class="conteiner-live-block closed-game-container-{{selectedSportAlias}} sport-{{game.sport.alias}}"
                                  ng-controller="gameCtrl" ng-init="init();" ng-class="{'single-team' : !game.team2_name}" ng-if="competition.game[game.id]">
                                 <div class="disabled_game" ng-class="game.is_blocked !== 0 && 'active'"></div>
                                 <a id="game{{game.id}}" class="game-anchor"></a>
@@ -98,7 +98,7 @@
                                                 <li ng-show="game.indexInMyGames === -1" ng-click="toggleSaveToMyGames(game)" trans="attr-only" title="Add to My Games"><div class="star" ></div></li>
                                                 <li class="account" ng-show="game.type==1 && game.sport.alias != 'HorseRacing'" ng-click="toggleGame()">
                                                     <div ng-if="game.info.current_game_state">
-                                                        <span class="score-1" ng-show="game.sport.alias !== 'Boxing'">{{(game.info.set_count === 1 || game.sport.alias === 'Cricket') ? game.stats.score_set1.team1_value : game.info.score1 }}</span> {{ game.sport.alias !== 'Boxing' ? ((game.info.set_count === 1 || game.sport.alias === 'Cricket') ? game.stats.score_set1.team2_value : game.info.score2): ''}}<br>
+                                                        <span class="score-1" ng-show="game.sport.alias !== 'Boxing'">{{(game.sport.alias === 'Cricket') ? (game.stats['score_'+game.info.current_game_state].team1_value ?  game.stats['score_'+game.info.current_game_state].team1_value : '') : ((game.info.set_count === 1) ? game.stats.score_set1.team1_value : game.info.score1)  }}</span>{{(game.sport.alias === 'Cricket') ? (game.stats['score_'+game.info.current_game_state].team2_value ?  game.stats['score_'+game.info.current_game_state].team2_value : '') : ((game.info.set_count === 1) ? game.stats.score_set1.team2_value : game.info.score2)  }}<br>
                                                         <span class="game-state" ng-if="game.info.current_leg === undefined" title="{{game.info.current_game_state|convertSetName:game.sport.alias|translate}}">{{game.info.current_game_state|convertSetName:game.sport.alias|translate}}</span>
                                                         <span class="game-state" ng-if="game.info.current_leg !== undefined" title="{{game.info.current_game_state|convertSetNameWithLeg:game.info|translate}}">{{game.info.current_game_state|convertSetNameWithLeg:game.info|translate}}</span>
 
@@ -135,7 +135,9 @@
                                                     </div>
                                                     <div class="game-row-item">
                                                         <i ng-if="$root.conf.boostedBets.enabled && $root.boostedBetsEventIds && $root.boostedBetsEventIds[events.P2.id]" title="{{'Boosted odd'|translate}}" class="boosted"></i>
-                                                        <p title="{{ game.team2_name }}">{{ game.team2_name }}</p> <span class="{{events.P2.price_change == null? '' : ({true: 'up-', false: 'down'}[events.P2.price_change > 0] + (events.P2.price_change % 2)) }}"><span>{{ events.P2.price|oddConvert:env.oddFormat:null:'WINNER' }}</span></span></div></li>
+                                                        <p title="{{ game.team2_name }}">{{ game.team2_name }}</p> <span class="{{events.P2.price_change == null? '' : ({true: 'up-', false: 'down'}[events.P2.price_change > 0] + (events.P2.price_change % 2)) }}"><span>{{ events.P2.price|oddConvert:env.oddFormat:null:'WINNER' }}</span></span></div>
+                                                </li>
+                                                <li class="match-key" ng-if="game.game_info.Type === 1" pre-match-key hash="game.game_info.Hash"></li>
                                                 <li class="statistic" ng-click="game.is_stat_available ? openStatistics(game) : toggleGame()">
                                                     <a ng-show="$root.conf.enableH2HStat && game.is_stat_available" statistics-on-hover stats-game="game" stats-competition-name="{{competition.name}}" title="Statistics" trans></a>
                                                     <i class="modern-icon-bet-builder" ng-if="$root.conf.betBuilderSports[game.sport.alias] && game.type !== 1 && game.show_type !== 'OUTRIGHT'" ng-click="openBetBuilder(game);$event.stopPropagation();"></i>
@@ -161,7 +163,7 @@
                                             </li>
                                             <!--<li ng-click="toggleGame()" class="live-game" ng-show="game.type==1"><span trans>live</span></li>-->
                                             <li ng-click="toggleGame()" class="account" ng-show="game.type==1 && game.sport.alias != 'HorseRacing'">
-                                                <span class="score-1" ng-show="game.sport.alias !== 'Boxing'">{{(game.info.set_count === 1 || game.sport.alias === 'Cricket')? game.stats.score_set1.team1_value : game.info.score1 }}</span> {{ game.sport.alias !== 'Boxing'? ((game.info.set_count === 1 || game.sport.alias === 'Cricket') ? game.stats.score_set1.team2_value : game.info.score2) : ''}}<br>
+                                                <span class="score-1" ng-show="game.sport.alias !== 'Boxing'">{{(game.sport.alias === 'Cricket') ? (game.stats['score_'+game.info.current_game_state].team1_value ?  game.stats['score_'+game.info.current_game_state].team1_value : '') : ((game.info.set_count === 1) ? game.stats.score_set1.team1_value : game.info.score1)  }}</span>{{(game.sport.alias === 'Cricket') ? (game.stats['score_'+game.info.current_game_state].team2_value ?  game.stats['score_'+game.info.current_game_state].team2_value : '') : ((game.info.set_count === 1) ? game.stats.score_set1.team2_value : game.info.score2)  }}<br>
                                                 <b class="game-id" title="{{game.game_number}}" ng-bind="'№'+game.game_number" ng-show="$root.conf.showGameIds"></b>
                                             </li>
                                             <li ng-click="toggleGame()" class="time-date" ng-if="(game.type === 0 || game.type === 2) && game.start_ts">

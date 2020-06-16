@@ -92,6 +92,8 @@
         <script src="lib/modules/ui.calendar/ui-bootstrap-custom-tpls-0.12.1.js"></script>
         <script src="lib/hls.js"></script>
 
+        <script src="lib/socket.io.js"></script>
+
         <script src="js/modules/vbet5/main.js"></script>
         <script src="js/modules/vbet5/config.js"></script>
 
@@ -141,6 +143,7 @@
         <script src="js/modules/vbet5/services/recaptchaService.js"></script>
         <script src="js/modules/vbet5/services/ladderLoader.js"></script>
         <script src="js/modules/vbet5/services/giftService.js"></script>
+        <script src="js/modules/vbet5/services/covid19Socket.js"></script>
 
 
         <script src="js/modules/cms/main.js"></script>
@@ -195,6 +198,7 @@
         <script src="js/modules/vbet5/directives/capitaliseInput.js"></script>
         <script src="js/modules/vbet5/directives/casinoGameSlider.js"></script>
         <script src="js/modules/vbet5/directives/comma.js"></script>
+        <script src="js/modules/vbet5/directives/range-validation.js"></script>
         <script src="js/modules/vbet5/directives/noAnimate.js"></script>
         <script src="js/modules/vbet5/directives/bannerSlider.js"></script>
         <script src="js/modules/vbet5/directives/gameWidget.js"></script>
@@ -234,6 +238,8 @@
         <script src="js/modules/vbet5/directives/visibleSets.js"></script>
         <script src="js/modules/vbet5/directives/gameAdditionalInfo.js"> </script>
         <script src="js/modules/vbet5/directives/soccerLineUp.js"></script>
+        <script src="js/modules/vbet5/directives/liveGamesSlider.js"></script>
+        <script src="js/modules/vbet5/directives/preMatchKey.js"></script>
 
         <script src="js/modules/vbet5/directives/togglePlaceholder.js"></script>
         <script src="js/modules/vbet5/directives/readMore.js"></script>
@@ -264,11 +270,14 @@
         <script src="js/modules/vbet5/filters/uri.js"></script>
         <script src="js/modules/vbet5/filters/nl2br.js"></script>
         <script src="js/modules/vbet5/filters/currency.js"></script>
+        <script src="js/modules/vbet5/filters/bankersRoundingAndNumberCommas.js"></script>
+        <script src="js/modules/vbet5/filters/roundPossibleWin.js"></script>
         <script src="js/modules/vbet5/filters/removeUselessSymbolsByRegexp.js"></script>
         <script src="js/modules/vbet5/filters/shortNumberFormat.js"></script>
         <script src="js/modules/vbet5/filters/handicapBaseFormat.js"></script>
         <script src="js/modules/vbet5/filters/fixPath.js"></script>
         <script src="js/modules/vbet5/filters/rtlConvert.js"></script>
+        <script src="js/modules/vbet5/filters/notShowZeroAndFormat.js"></script>
         <script src="js/modules/vbet5/controllers/modernView/main.js"></script>
         <script src="js/modules/vbet5/controllers/classicView/main.js"></script>
         <script src="js/modules/vbet5/controllers/classicView/center.js"></script>
@@ -318,7 +327,8 @@
         <script src="js/modules/vbet5/controllers/bet/print.js"></script>
         <script src="js/modules/vbet5/controllers/bet/mixedHistory.js"></script>
         <script src="js/modules/vbet5/controllers/bet/profitLoss.js"></script>
-        <script src="js/modules/vbet5/controllers/bet/systemCalculator.js"></script>
+         <script src="js/modules/vbet5/controllers/bet/systemCalculator.js"></script>
+        <script src="js/modules/vbet5/controllers/bet/bettingCalculator.js"></script>
         <script src="js/modules/vbet5/controllers/registration.js"></script>
         <script src="js/modules/vbet5/controllers/blitzSurvey.js"></script>
         <script src="js/modules/vbet5/controllers/tournaments.js"></script>
@@ -351,9 +361,15 @@
         <script src="js/modules/vbet5/controllers/homepageCountdown.js"></script>
         <script src="js/modules/vbet5/controllers/loginHistory.js"></script>
         <script src="js/modules/vbet5/controllers/pmu.js"></script>
+        <script src="js/modules/vbet5/controllers/covid19/main.js"></script>
         <script src="js/modules/vbet5/controllers/betBuilder.js"></script>
         <script src="js/modules/vbet5/controllers/sportsbook.js"></script>
-            <!--<script src="js/modules/vbet5/translations.js"></script>-->
+        <script src="js/modules/vbet5/controllers/esports/main.js"></script>
+        <script src="js/modules/vbet5/controllers/esports/left.js"></script>
+        <script src="js/modules/vbet5/controllers/esports/center.js"></script>
+        <script src="js/modules/vbet5/controllers/cashBackCashOut.js"></script>
+
+        <!--<script src="js/modules/vbet5/translations.js"></script>-->
         <script src='js/modules/vbet5/services/jackpotSocket.js'></script>
         <script src='js/modules/vbet5/services/jackpotManager.js'></script>
 
@@ -364,38 +380,38 @@
         
 <!-- casino module start -->
 <script src='optional_modules/casino/js/main.js'></script>
-<script src='optional_modules/casino/js/directives/casinoGamesList.js'></script>
-<script src='optional_modules/casino/js/services/multiviewInitialValues.js'></script>
-<script src='optional_modules/casino/js/directives/casinoJackpotAndTournaments.js'></script>
 <script src='optional_modules/casino/js/config.js'></script>
-<script src='optional_modules/casino/js/directives/casinoPromotedGames.js'></script>
-<script src='optional_modules/casino/js/controllers/liveCasino/main.js'></script>
-<script src='optional_modules/casino/js/directives/coinsRain.js'></script>
-<script src='optional_modules/casino/js/controllers/myGames.js'></script>
-<script src='optional_modules/casino/js/directives/frameControl.js'></script>
-<script src='optional_modules/casino/js/controllers/search.js'></script>
-<script src='optional_modules/casino/js/directives/getCasinoGame.js'></script>
-<script src='optional_modules/casino/js/controllers/specialGames.js'></script>
-<script src='optional_modules/casino/js/directives/jackpotWidget.js'></script>
-<script src='optional_modules/casino/js/directives/biggestWinners.js'></script>
-<script src='optional_modules/casino/js/directives/multiviewControl.js'></script>
 <script src='optional_modules/casino/js/controllers/casino.js'></script>
-<script src='optional_modules/casino/js/controllers/providerJackpot.js'></script>
-<script src='optional_modules/casino/js/services/manager.js'></script>
-<script src='optional_modules/casino/js/services/data.js'></script>
-<script src='optional_modules/casino/js/services/cache.js'></script>
 <script src='optional_modules/casino/js/controllers/jackpot.js'></script>
-<script src='optional_modules/casino/js/controllers/skillGames/main.js'></script>
+<script src='optional_modules/casino/js/controllers/liveCasino/main.js'></script>
 <script src='optional_modules/casino/js/controllers/miniGames.js'></script>
-<script src='optional_modules/casino/js/directives/carousel.js'></script>
+<script src='optional_modules/casino/js/controllers/myGames.js'></script>
+<script src='optional_modules/casino/js/controllers/providerJackpot.js'></script>
+<script src='optional_modules/casino/js/controllers/search.js'></script>
+<script src='optional_modules/casino/js/controllers/skillGames/main.js'></script>
+<script src='optional_modules/casino/js/controllers/specialGames.js'></script>
 <script src='optional_modules/casino/js/controllers/tournaments.js'></script>
+<script src='optional_modules/casino/js/directives/biggestWinners.js'></script>
+<script src='optional_modules/casino/js/directives/carousel.js'></script>
+<script src='optional_modules/casino/js/directives/casinoGamesList.js'></script>
+<script src='optional_modules/casino/js/directives/casinoJackpotAndTournaments.js'></script>
+<script src='optional_modules/casino/js/directives/casinoPromotedGames.js'></script>
+<script src='optional_modules/casino/js/directives/coinsRain.js'></script>
+<script src='optional_modules/casino/js/directives/frameControl.js'></script>
+<script src='optional_modules/casino/js/directives/getCasinoGame.js'></script>
+<script src='optional_modules/casino/js/directives/jackpotWidget.js'></script>
+<script src='optional_modules/casino/js/directives/multiviewControl.js'></script>
+<script src='optional_modules/casino/js/services/cache.js'></script>
+<script src='optional_modules/casino/js/services/data.js'></script>
+<script src='optional_modules/casino/js/services/manager.js'></script>
+<script src='optional_modules/casino/js/services/multiviewInitialValues.js'></script>
 <!-- casino module end -->
 
 
 <!-- comboView module start -->
-<script src='optional_modules/comboView/js/controllers/main.js'></script>
-<script src='optional_modules/comboView/js/controllers/left.js'></script>
 <script src='optional_modules/comboView/js/controllers/center.js'></script>
+<script src='optional_modules/comboView/js/controllers/left.js'></script>
+<script src='optional_modules/comboView/js/controllers/main.js'></script>
 <!-- comboView module end -->
 
 

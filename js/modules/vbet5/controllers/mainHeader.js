@@ -19,7 +19,7 @@ VBET5.controller('mainHeaderCtrl', ['$rootScope', '$scope', '$interval', '$filte
 
         var pathTypes = {
             'casino': ['/casino', '/games', '/poker', '/game', '/livedealer', '/keno', '/fantasy', '/ogwil', '/jackpot', '/financials', '/backgammon', '/belote', '/pokerklas', '/poker', '/ggpoker', '/gameslanding', '/vrcasino', '/csbpoolbetting', '/tournaments', '/go', '/blast', '/jackpots'],
-            'sport': ['/sport', '/freebet', '/poolbetting', '/pmu', '/livecalendar', '/results', '/virtualsports', '/overview', '/multiview', '/dashboard', '/exchange', '/statistics', '/customsport', '/esports']
+            'sport': ['/sport', '/freebet', '/poolbetting', '/pmu', '/livecalendar', '/results', '/virtualsports', '/overview', '/multiview', '/dashboard', '/exchange', '/statistics', '/customsport', '/esports', '/covid-19']
         };
         pathTypes[Config.main.homepagePageType].push('/');
 
@@ -943,7 +943,7 @@ VBET5.controller('mainHeaderCtrl', ['$rootScope', '$scope', '$interval', '$filte
         $scope.$on('profile', function (event, data) {
             updateProfile(event, data);
             if ($rootScope.profile) {
-                if (Config.main.liveChat && (Config.main.liveChat.isSfChat || Config.main.liveChat.isDeskChat || (Config.main.liveChat.siteId && Config.main.liveChat.getUserId))) {
+                if (Config.main.liveChat && (Config.main.liveChat.isSfChat || (Config.main.liveChat.siteId && Config.main.liveChat.getUserId))) {
                     if ($rootScope.env.authorized && $scope.lastUserId !== $rootScope.profile.unique_id) {
                         $scope.lastUserId = $scope.profile.unique_id;
                         Zergling.get({}, 'get_user').then(Config.main.liveChat.isSfChat ? liveChat.setSFChatData : liveChat.setChatData);
@@ -1401,6 +1401,7 @@ VBET5.controller('mainHeaderCtrl', ['$rootScope', '$scope', '$interval', '$filte
             check4DeepLinkedAction('payments', true);
             check4DeepLinkedAction('forgotPassword', true);
             check4DeepLinkedAction('promotionalBonuses', true);
+            check4DeepLinkedAction('messages', true);
 
         }
 
@@ -1411,7 +1412,7 @@ VBET5.controller('mainHeaderCtrl', ['$rootScope', '$scope', '$interval', '$filte
          * @description Returns true if section requires a login first
          */
         function needLogin2Continue() {
-            return check4DeepLinkedAction('cashier') || check4DeepLinkedAction('myWallets') || check4DeepLinkedAction('betHistory') || check4DeepLinkedAction('deposit') || check4DeepLinkedAction('withdraw') || check4DeepLinkedAction('settings') || check4DeepLinkedAction('balanceHistory') || check4DeepLinkedAction('casinoBalanceHistory') ||check4DeepLinkedAction('recentBets') || check4DeepLinkedAction('promotionalBonuses') ;
+            return check4DeepLinkedAction('cashier') || check4DeepLinkedAction('myWallets') || check4DeepLinkedAction('betHistory') || check4DeepLinkedAction('deposit') || check4DeepLinkedAction('withdraw') || check4DeepLinkedAction('settings') || check4DeepLinkedAction('balanceHistory') || check4DeepLinkedAction('casinoBalanceHistory') ||check4DeepLinkedAction('recentBets') || check4DeepLinkedAction('promotionalBonuses') || check4DeepLinkedAction('messages') ;
         }
 
         /**
@@ -1652,7 +1653,6 @@ VBET5.controller('mainHeaderCtrl', ['$rootScope', '$scope', '$interval', '$filte
         $scope.$on('setGamesType', function (event, type) {$scope.setGamesType(type); });
 
         $scope.startSFChat = liveChat.startSFChat;
-        $scope.startDeskChat = liveChat.startDeskChat;
         $window.startSFChat = $scope.startSFChat; //to use it on wordpress pages
 
         if (Config.main.liveChat && Config.main.liveChat.isLiveAgent) {
@@ -1719,9 +1719,14 @@ VBET5.controller('mainHeaderCtrl', ['$rootScope', '$scope', '$interval', '$filte
          * @param {String} url page url
          * @param {String} title page title
          * @param {String} params page additional parameters
-         */
-        $scope.openPopup = function openPopup(url, title, params) {
-            $window.open(url, title, params);
+         * @param {String} target page target
+         **/
+        $scope.openPopup = function openPopup(url, title, params, target) {
+            if (target === "_self") {
+                $scope.openUrl(url);
+            } else {
+                $window.open(url, title, params);
+            }
         };
 
         /**

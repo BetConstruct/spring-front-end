@@ -41,6 +41,12 @@
                         <i class="cms-jcon-ticket"></i>
                         <h4 trans>Tickets</h4>
                     </li>
+                    <li ng-class="{'active': env.sliderContent === 'casinoCashBackCashOut'}"
+                        ng-click="env.sliderContent = 'casinoCashBackCashOut'"
+                        ng-if="conf.enableCasinoCashBackCashOut && env.authorized">
+                        <i class="balance-cashback-out"></i>
+                        <h4 trans>CashBackCashOut</h4>
+                    </li>
                     <li ng-class="{'active': (env.sliderContent === 'profits')}"
                         ng-click="env.sliderContent = 'profits'"
                         ng-if="env.authorized && conf.showProfitLossTab">
@@ -56,6 +62,7 @@
             <ng-include class="float-width mixed-view-holder" src="::'templates/livebox/promotionalBonuses/main.html'|fixPath" ng-if="env.sliderContent === 'promotionalBonuses'"></ng-include>
             <ng-include class="float-width mixed-view-holder" src="::'templates/livebox/loyaltyPoints.html'|fixPath" ng-if="env.sliderContent === 'loyaltyPoints'"></ng-include>
             <ng-include class="float-width mixed-view-holder" src="::'templates/livebox/mixedTickets.html'|fixPath" ng-if="env.sliderContent === 'tickets'"></ng-include>
+            <ng-include class="float-width mixed-view-holder" src="::'templates/livebox/cashBackCashOut.html'|fixPath" ng-if="env.sliderContent === 'casinoCashBackCashOut'"></ng-include>
             <ng-include class="float-width mixed-view-holder" src="::'templates/livebox/profitLoss.html'|fixPath" ng-if="env.sliderContent === 'profits'"></ng-include>
         </div>
     </div>

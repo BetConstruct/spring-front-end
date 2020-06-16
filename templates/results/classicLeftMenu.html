@@ -100,7 +100,7 @@
                             <div class="region-items-box">
                                 <div class="full-region-info-v3">
                                     <div class="region-item-v3" ng-class="{active: region.expanded}" ng-click="region.expanded=!region.expanded">
-                                        <div ng-show="region.Alias" class="flag-view-v3 flag-icon flag-{{region.Alias | removeUselessSymbolsByRegexp: '[,\%,\(,\) ]+': 'g': 'true'}}"></div>
+                                        <div ng-show="region.Alias" class="flag-view-v3 flag-icon flag-{{region.Alias | removeUselessSymbolsByRegexp: '[,\' ]+': 'g': 'true'}}"></div>
                                         <p>{{region.Name}} <span>({{region.Competitions.length}})</span></p>
                                         <div class="arrow-view-v3"></div>
                                     </div>

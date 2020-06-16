@@ -1,0 +1,4 @@
+<div ng-if="$root.conf.jackpot.casino.enabled && $root.conf.jackpot.casino.externalJackpots"
+     class="provider-jackpot-banner" ng-controller="providerJackpotCtrl">
+    <div class="float-width-height" ng-include="::'optional_modules/casino/templates/casino-jackpot-widget.html'|fixPath"></div>
+</div>

@@ -73,9 +73,7 @@ CMS.controller('cmsSportNewsCtrl', ['$rootScope', '$scope', '$sce', '$location',
      * @param {Object} news object
      */
     function getPermaLink(news) {
-        var link, origin = $window.location.protocol + "//" + $window.location.hostname + ($window.location.port ? ':' + $window.location.port : '');
-        link = origin + $window.document.location.pathname + 'news/' + encodeURIComponent(Utils.generatePermaLink(news));
-        return link;
+        return window.location.origin + encodeURIComponent(news.share_src);
     }
 
     /**
@@ -646,7 +644,8 @@ CMS.controller('cmsSportNewsCtrl', ['$rootScope', '$scope', '$sce', '$location',
             '/sport/': 'under-betslip-banners-classic-',
             '/virtualsports/': 'under-betslip-banners-virtualsports-',
             '/insvirtualsports/': 'under-betslip-banners-virtualsports-',
-            '/customsport/cyber/': 'under-betslip-banners-customsport-cyber-'
+            '/customsport/cyber/': 'under-betslip-banners-customsport-cyber-',
+            '/esports/': 'under-betslip-banners-esports-'
         };
 
         getBanners((pathSlugMap[$location.path()] || pathSlugMap['/sport/']) + $scope.env.lang);

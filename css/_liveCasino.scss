@@ -70,8 +70,58 @@
       box-sizing: border-box;
       padding: 22px;
       width: 25%;
+      position: relative;
       .float-width {
         height: 100%;
+      }
+
+      i {
+        display: block;
+        position: absolute;
+        top: 28px;
+        right: 30px;
+        font: 22px/24px icomoon;
+        color: $text-palette-2;
+        z-index: 77;
+        opacity: 0;
+        @include rtl{
+          right: inherit;
+          left: 22px;
+        }
+        &:after{
+          display: block;
+          content: '\f006';
+        }
+        &.active{
+          color: $brand-color-2;
+          &:after{
+            content: '\f005';
+          }
+          opacity: 1;
+        }
+        &:hover{
+          color: $brand-color-2;
+        }
+      }
+      &:hover{
+        i{
+          opacity: 1;
+        }
+          .live-casino-icon {
+            background: $hero-color;
+            color: set-color($hero-color);
+          }
+          .live-casino-game-name {
+            .lc-game-name {
+              color: $text-palette-1;
+            }
+            button {
+              transform: translate3d(0,0,0);
+              opacity: 1;
+              visibility: visible;
+            }
+          }
+
       }
     }
   }
@@ -80,22 +130,22 @@
   float: left;
   width: 100%;
   position: relative;
-  &:hover {
-    .live-casino-icon {
-      background: $hero-color;
-      color: set-color($hero-color);
-    }
-    .live-casino-game-name {
-      .lc-game-name {
-        color: $text-palette-1;
-      }
-      button {
-        transform: translate3d(0,0,0);
-        opacity: 1;
-        visibility: visible;
-      }
-    }
-  }
+  //&:hover {
+  //  .live-casino-icon {
+  //    background: $hero-color;
+  //    color: set-color($hero-color);
+  //  }
+  //  .live-casino-game-name {
+  //    .lc-game-name {
+  //      color: $text-palette-1;
+  //    }
+  //    button {
+  //      transform: translate3d(0,0,0);
+  //      opacity: 1;
+  //      visibility: visible;
+  //    }
+  //  }
+  //}
 }
 .live-casino-icon {
   background: rgba($skin-palette-5, 0.5);
@@ -114,7 +164,7 @@
   &:before {
     content: "\e92c";
   }
-  &.vgs102, &.ezgroulette, &.ezg7, &.lksroulette, &.lksexternalroulette, &.ezg6, &.evl104, &.netlcroulette_sw, &.netlcrouletteauto_sw, &.vgs110, &.agcrou, &.agc6, &.xpgliveroulette, &.ntlroulette, &.ntlautomatic_roulette, &.pnh4, &.xpgroulette, &.xpgmore20games, &.ptslrol, &.ptslrol, &.vivroulette, &.tpg201, &.fazroulette {
+  &.vgs102, &.ezgroulette, &.ezg7, &.lksroulette, &.lksexternalroulette, &.ezg6, &.evl104, &.netlcroulette_sw, &.netlcrouletteauto_sw, &.vgs110, &.agcrou, &.agc6, &.xpgliveroulette, &.ntlroulette, &.ntlautomatic_roulette, &.pnh4, &.xpgroulette, &.xpgmore20games, &.ptslrol, &.ptslrol, &.vivroulette, &.tpg201, &.fazroulette, &.evl217033, &.ptslqrol, &.tpg203, &.fazliveeuropeanroulette, &.bgbroulette, &.bgbroulette-eng, &.ntllcroulette_not_mobile_phy_sw, &.ntllcrouletteauto_not_mobilehr_nbc_sw, &.ntllcrouletteauto_not_mobilelr_nbc_sw, &.ntllcrouletteauto_not_mobile_nbc_sw, &[class*="vlc110&lobbytagindex"] {
     &:before {
       content: "\71";
     }
@@ -144,7 +194,7 @@
       content: "\e6f8";
     }
   }
-  &.vgs101, &.vgs112, &.ezgblackjack, &.evl105, &.lksblackjack, &.netlcblackjack_sw, &.netlcblackjackcdlr_sw, &.xpgliveblackjack, &.ntlblackjack_standard, &.ntlblackjack_common_draw, &.pnh1, &.pnh0, &.xpgblackjack, &.ptslbjl, &.vivblackjack, &.tpg301, &.tpg302, &.tpg303, &.tpg304, &.tpg305 {
+  &.vgs101, &.vgs112, &.ezgblackjack, &.evl105, &.lksblackjack, &.netlcblackjack_sw, &.netlcblackjackcdlr_sw, &.xpgliveblackjack, &.ntlblackjack_standard, &.ntlblackjack_common_draw, &.pnh1, &.pnh0, &.xpgblackjack, &.ptslbjl, &.vivblackjack, &.tpg301, &.tpg302, &.tpg303, &.tpg304, &.tpg305, &.evlfreebet000000001, &.ptslqabjl, &.ntllcblackjackcd_not_mobilelr_phy_sw, &.ntllcblackjack_not_mobile_phy_sw, &.ntllcblackjack_not_mobile_phy2_sw, &.ntllcblackjack_not_mobilehr_phy_sw, &.ntllcblackjack_not_mobilelr_phy_sw, &.ntlcommondraw, &[class*="vlc112&lobbytagindex"] {
     &:before {
       content: "\72";
     }
@@ -159,7 +209,7 @@
       content: "\69";
     }
   }
-  &.vgs125, &.evldragontiger00001, &.ptsldtl {
+  &.vgs125, &.evldragontiger00001, &.ptsldtl, &.ezgbaccarat_dragon_tiger {
     &:before {
       content: "\ea11";
     }
@@ -184,7 +234,7 @@
       content: "\e93b";
     }
   }
-  &.evleth, &.evluth {
+  &.vgs131, &.evleth, &.evluth, &.evldhptable00000001 {
     &:before {
       content: "\e982";
     }
@@ -234,7 +284,7 @@
       content: "\ea50";
     }
   }
-  &.ezg20, &.ezgbaccarat, &.ezg4, &.evl103, &.vgs103, &.vgs108, &.agcbac, &.lksbaccarat, &.agclink, &.xpglivebaccarat, &.pnh2, &.xpgbaccarat, &.xpgbaccaratnocommission, &.ptslbal, &.vivbaccarat {
+  &.ezg20, &.ezgbaccarat, &.ezg4, &.evl103, &.vgs103, &.vgs108, &.agcbac, &.lksbaccarat, &.agclink, &.xpglivebaccarat, &.pnh2, &.xpgbaccarat, &.xpgbaccaratnocommission, &.ptslbal, &.vivbaccarat, &.evllightningbac0001 {
     &:before {
       content: "\74";
     }
@@ -289,13 +339,61 @@
       content: "\ea52";
     }
   }
+  &.evlmonopoly00000001 {
+    &:before {
+      content: "\ea71";
+    }
+  }
+  &.evldealnodeal000001 {
+    &:before {
+      content: "\ea70";
+    }
+  }
+  &.evltopcard000000001 {
+    &:before {
+      content: "\ea6f";
+    }
+  }
+  &.evllightningdice001 {
+    &:before {
+      content: "\ea69";
+    }
+  }
+  &.evlsbctable00000001 {
+    &:before {
+      content: "\ea6e";
+    }
+  }
+  &.evlsupersicbo000001 {
+    &:before {
+      content: "\ea6d";
+    }
+  }
+  &.ptslswl {
+    &:before {
+      content: "\ea6c";
+    }
+  }
+  &.ptslbfbl {
+    &:before {
+      content: "\ea6b";
+    }
+  }
+  &.ptslsbl {
+    &:before {
+      content: "\ea6a";
+    }
+  }
 }
 .live-casino-game-name {
   width: calc(100% - 94px);
   box-sizing: border-box;
   float: left;
-  padding: 0 6px 28px;
-  text-transform: uppercase;
+  padding: 0 26px 28px 6px;
+  @include rtl{
+    padding: 0 6px 28px 26px;
+    text-align: right;
+  }
   .lc-game-name {
     float: left;
     width: 100%;
@@ -423,5 +521,11 @@
       opacity: 1;
       transform: translate(-50%, -50%);
     }
+  }
+}
+
+@media  screen and (max-width: 1260px) {
+  .Featured-casino-games .live-casino-content-import .guide{
+    width: calc(100% - 20px);
   }
 }

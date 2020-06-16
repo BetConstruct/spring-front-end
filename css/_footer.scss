@@ -35,7 +35,7 @@
       padding: 0;
       color: rgba(#ffffff,0.8);
       border-radius: 50%;
-      box-shadow: 0 -1px 3px 1px rgba(#000000,0.7), inset 0 -1px 3px 1px rgba(#000000,0.7);
+      box-shadow: 0 -1px 3px 1px rgba(#000000,0.7), inset 0 -1px 7px 7px rgba(#000000,0.7);
       transition: color 240ms, opacity 240ms, box-shadow 240ms;
       @include ltr {
         right: 15px;
@@ -450,4 +450,28 @@
     margin: 50px auto;
     max-width: 100%;
   }
+}
+
+.footer-bottom-link{
+  float: left;
+  width: 100%;
+  text-align: center;
+  > a{
+    > p{
+      text-decoration: none;
+      font-size: 12px;
+      line-height: 16px;
+      color: $text-palette-4;
+    }
+  }
+}
+
+.age-restriction-message{
+  float: right;
+  width: 100%;
+  white-space: normal;
+  padding: 20px 0 0 0;
+  color: $text-palette-3;
+  font-size: 12px;
+  line-height: 14px;
 }

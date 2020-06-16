@@ -1,0 +1,8 @@
+<div class="casino-jackpots-board">
+    <casino-jackpot-and-tournaments class="float-width"
+                                    ng-if="$root.conf.jackpot.casino.enabled || hasTournaments"
+                                    jackpot-data="jackpotData" load-jackpot-data="false"
+                                    has-jackpots="hasJackpots" has-tournaments="hasTournaments"
+                                    tab="tab"></casino-jackpot-and-tournaments>
+</div>
+

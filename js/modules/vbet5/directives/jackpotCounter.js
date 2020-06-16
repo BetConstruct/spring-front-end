@@ -6,25 +6,23 @@ VBET5.directive('jackpotCounter', ['$rootScope', '$filter', function ($rootScope
         replace: true,
         template: '<b class="amount-animation-container"></b>',
         scope: {
-            amount: '=',
             comma: '=',
             point: '=?',
-            currency: '=',
+            showCurrency: '=',
             maxDurationSpeed: '=',
             maxLength: '=',
             updateInterval: '=?bind'
         },
-        link: function (scope, element) {
+        link: function (scope, element,attrs) {
             element = element[0];
             var amountDiff;
-            var updateInterval = scope.updateInterval ? scope.updateInterval * 1.2 /*correction*/ : 11000;
             var amountStr = '';
-            //var start = new Date().getTime();
-            var oldVal = scope.amount;
-            var currency = scope.currency;
+            var start = new Date().getTime();
+            var timeDiff = 0;
+            var oldVal = attrs.amount;
+            var currency = attrs.currency;
             var multipliersString = false;
             var multipliersFactor = 0;
-            var interval = 0;
             var count = 0;
             var firstTime = true;
 
@@ -67,14 +65,14 @@ VBET5.directive('jackpotCounter', ['$rootScope', '$filter', function ($rootScope
                 }
             }
 
-            function process(timeDiff) {
-                if (!firstTime && scope.amount === undefined) {
+            function process() {
+                if (!firstTime && attrs.amount === undefined) {
                     return;
                 }
 
-                if (currency !== scope.currency) {
-                    currency = scope.currency;
-                    oldVal = scope.amount;
+                if (currency !== attrs.currency) {
+                    currency = attrs.currency;
+                    oldVal = attrs.amount;
                 }
                 var pointK = 1;
                 if (scope.point !== undefined) {
@@ -83,7 +81,7 @@ VBET5.directive('jackpotCounter', ['$rootScope', '$filter', function ($rootScope
                     scope.point = 0;
                 }
 
-                //   timeDiff = new Date().getTime() - start; todo
+                timeDiff = new Date().getTime() - start;
 
                 firstTime = false;
 
@@ -110,11 +108,11 @@ VBET5.directive('jackpotCounter', ['$rootScope', '$filter', function ($rootScope
                     return item;
                 }
 
-                if (scope.amount) {
+                if (attrs.amount) {
 
-                    amountDiff = (scope.amount - oldVal ) * pointK;
-                    amountStr = ((oldVal || scope.amount) * pointK).toFixed(0);
-                    var result = {items: [], currency: scope.currency};
+                    amountDiff = (attrs.amount - oldVal ) * pointK;
+                    amountStr = ((oldVal || attrs.amount) * pointK).toFixed(0);
+                    var result = {items: [], currency: scope.showCurrency ? attrs.currency : false};
                     count = 0;
                     var nextItemChangesCount = 0;
                     var amountLength = amountStr.length;
@@ -161,31 +159,14 @@ VBET5.directive('jackpotCounter', ['$rootScope', '$filter', function ($rootScope
                             }));
                         }
                     }
-//                    start = new Date().getTime();
+                    start = new Date().getTime();
                     drawDom(result);
-
                 }
-                oldVal = scope.amount;
+                oldVal = attrs.amount;
             }
 
-            var amountWatcher = scope.$watch('amount', function (newVal, oldVal) {
-                if (newVal) {
-                    if (firstTime) {
-                        process(1);
-                    }
-                    if (oldVal && newVal !== oldVal) {
-                        process(updateInterval);
-                        interval = setInterval(function () {
-                            process(updateInterval);
-                        }, updateInterval);
-                        amountWatcher();
-                    }
-                }
-            });
-
-            scope.$on('$destroy', function onDestroy() {
-                clearInterval(interval);
-                interval = undefined;
+            attrs.$observe('amount', function (value) {
+                process();
             });
         }
     };

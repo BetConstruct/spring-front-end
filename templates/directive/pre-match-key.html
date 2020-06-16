@@ -1,0 +1,10 @@
+<ul class="pre-match-key-class" ng-class="{'match-key-copied' : copied}" ng-click="copyMatchKey($event)" ng-mouseleave="handleMouseOut()">
+    <li class="match-key-id" title="{{matchHashInfo}}">{{matchHashInfo}}</li>
+    <li class="match-key-icon">
+        <span trans>Copied</span>
+        <i></i>
+    </li>
+    <li class="key-external-link">
+        <a target="_blank" ng-href="{{$root.conf.matchKey.descriptionHref}}"></a>
+    </li>
+</ul>

@@ -1,4 +1,4 @@
-<div class="content-wrapper-t" ng-controller="eSportsMainController">
+<div class="content-wrapper-t" ng-controller="eSportsMainController" ng-init="setTitle('esport')">
     <div id="system-claculator-container"
          ng-if="$root.showSystemCalculator"
          draggable
@@ -9,8 +9,8 @@
     <div class="classic-version-euro2016" style="background-image:url({{page.thumbnail_images.full.url}})">
         <div class="classic-view-wrapper-v3">
             <div class="classic-view-column-v3 {{leftMenuClosed ? 'left-menu-closed-v3' : ''}}">
-                <div class="left-column-v3" ng-include="'optional_modules/esports/templates/left.html'"></div>
-                <div class="center-column-v3" ng-include="'optional_modules/esports/templates/center/main.html'"></div>
+                <div class="left-column-v3" ng-include="'templates/sport/esports/left.html'"></div>
+                <div class="center-column-v3" ng-class="{'game-pinned': env.isLiveGamePinned}" ng-include="'templates/sport/esports/center/main.html'"></div>
                 <div class="right-column-v3">
                     <div class="scroll-c-b">
                     <!--video and animation-->

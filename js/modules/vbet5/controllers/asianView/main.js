@@ -393,7 +393,7 @@ VBET5.controller('asianViewMainController', ['$rootScope', '$scope', '$filter', 
                             angular.forEach(competition.games, function (game) {
                                 game.sport = {'alias': sportData.alias, name: sportData.name, id: sportData.id};
                                 game.region = {'alias': region.alias, name: region.name, id: region.id};
-                                game.competition = {name: competition.name, id: competition.id};
+                                game.competition = {name: competition.name, id: competition.id, info: competition.info};
                                 game.hasVideo = GameInfo.hasVideo(game);
 
                                 GameInfo.checkITFAvailability(game);
@@ -543,7 +543,7 @@ VBET5.controller('asianViewMainController', ['$rootScope', '$scope', '$filter', 
 
 
 
-                                if (market.display_key === 'CORRECT SCORE' && BetService.constants.customCorrectScoreLogic.indexOf($scope.openGame.sport.alias ) > -1) {
+                                if ((market.display_key === 'CORRECT SCORE' || market.type === 'CorrectScore') && BetService.constants.customCorrectScoreLogic.indexOf($scope.openGame.sport.alias ) > -1) {
                                     GameInfo.reorderMarketEvents(market, 'correctScore');
                                 } else if (BetService.constants.marketsPreDividedByColumns.indexOf(market.market_type) > -1) {
                                     GameInfo.reorderMarketEvents(market, 'preDivided');
@@ -713,7 +713,7 @@ VBET5.controller('asianViewMainController', ['$rootScope', '$scope', '$filter', 
             }
             $scope.selectedMarket = {key: 'FULLGAME'};
             $scope.$broadcast('$$rebind::selectedMarket-change');
-            var gameRequest= [["id", "show_type", "markets_count", "start_ts", "is_live", "is_blocked", "is_neutral_venue","team1_id", "team2_id", "game_number", "text_info", "is_stat_available", "type",  "info", "stats", "team1_name", "team2_name", "tv_info"  ]];
+            var gameRequest= [["id", "show_type", "markets_count", "start_ts", "is_live", "is_blocked", "is_neutral_venue","team1_id", "team2_id", "game_number", "text_info", "is_stat_available", "type",  "info", "stats", "team1_name", "team2_name", "tv_info", "add_info_name"]];
 
             if ($scope.selectedMenuType.active === LEFT_MENU.LIVE) {
                 Array.prototype.push.apply(gameRequest[0], ["match_length", "scout_provider", "video_id","video_id2", "video_id3", "tv_type", "last_event", "live_events"]);
@@ -771,9 +771,9 @@ VBET5.controller('asianViewMainController', ['$rootScope', '$scope', '$filter', 
                 'source': 'betting',
                 'what': {
                     sport: ['id', 'name', 'alias', 'order'],
-                    competition: ['name', 'order', 'id'],
+                    competition: ['name', 'order', 'id', 'info'],
                     region: ['name', 'alias', 'id'],
-                    game: ['id', 'team1_name', 'team2_name','team1_reg_name', 'team2_reg_name', 'start_ts', 'type', 'events_count', 'is_blocked', 'markets_count', 'strong_team', 'is_neutral_venue', 'is_stat_available', 'is_itf'],
+                    game: ['id', 'team1_name', 'team2_name','team1_reg_name', 'team2_reg_name', 'start_ts', 'type', 'is_blocked', 'markets_count', 'strong_team', 'is_neutral_venue', 'is_stat_available', 'is_itf', 'game_info'],
                     market: ['base', 'id', 'name', 'order', 'sequence', 'show_type', 'display_key', 'display_sub_key', 'type', 'home_score', 'away_score', 'main_order'],
                     event: ['name', 'id', 'base', 'type', 'type_1', 'price', 'show_type', 'home_value', 'away_value']
                 },
@@ -1047,7 +1047,7 @@ VBET5.controller('asianViewMainController', ['$rootScope', '$scope', '$filter', 
             var request = {
                 'source': 'betting',
                 'what': {
-                    game: ['id', 'team1_name', 'team2_name', 'info', 'start_ts', 'type', 'text_info', 'events_count', 'is_blocked', 'markets_count', 'strong_team'],
+                    game: ['id', 'team1_name', 'team2_name', 'info', 'start_ts', 'type', 'text_info', 'is_blocked', 'markets_count', 'strong_team'],
                     market: ['base', 'id', 'name', 'order', 'sequence', 'show_type', 'display_key', 'display_sub_key', 'optimal', 'home_score', 'away_score', 'type'],
                     event: ['name', 'id', 'base', 'type', 'price', 'show_type', 'type_1', 'home_value', 'away_value']
                 },
@@ -1741,7 +1741,7 @@ VBET5.controller('asianViewMainController', ['$rootScope', '$scope', '$filter', 
                 $scope.selectedMenuType.active = parseInt($location.search().menuType, 10);
             } else if ($location.search().type !== undefined) {
                 $scope.selectedMenuType.active = parseInt($location.search().type, 10);
-            } else if (asianConf.asianLeftMenuDefaultType) {
+            } else if (asianConf.asianLeftMenuDefaultType !== undefined) {
                 $scope.selectedMenuType.active = asianConf.asianLeftMenuDefaultType; //LEFT_MENU.TODAY value
             } else {
                 $scope.selectedMenuType.active = Config.env.live ? LEFT_MENU.LIVE : LEFT_MENU.FUTURE;
@@ -1906,6 +1906,7 @@ VBET5.controller('asianViewMainController', ['$rootScope', '$scope', '$filter', 
                         orderedCompetitions.push({
                             name: orderedGames[i].competition.name,
                             id: orderedGames[i].competition.id,
+                            info: orderedGames[i].competition.info,
                             games: []
                         });
                     }

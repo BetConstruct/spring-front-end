@@ -1,0 +1,19 @@
+<div class="gift-bet-popup" ng-if="recaptcha.key">
+    <div class="gift-bet-t">
+        <div class="gift-bet-t-c new-recaptcha-v">
+            <div class="gift-bet-wrapper">
+                <form name="recaptchaForm" novalidate>
+                    <div class="bet-status-recaptcha" >
+                        <input type="hidden" name="g_recaptcha_response" ng-model="recaptcha.g_recaptcha_response" ng-required="true"/>
+                        <div class="tooltip-wrapper-j">
+                            <div class="g-recaptcha" data-callback="recaptchaUpdateCallback" data-sitekey="{{recaptcha.key}}" data-theme="{{recaptcha.theme || 'dark'}}" data-size="{{recaptcha.size || 'normal'}}"></div>
+                        </div>
+                    </div>
+                    <div class="button-confirm">
+                        <button ng-disabled="!recaptchaForm.$valid" ng-click="submitRecaptcha()" trans>OK</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

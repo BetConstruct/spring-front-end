@@ -5,7 +5,7 @@ VBET5.directive('liveGamesSlider', ['$rootScope', '$filter', '$interval', '$loca
         scope: {
             interval: '='
         },
-        template: '<div class="e-live-now-betslip" ng-include="::\'optional_modules/esports/templates/live-game-slider.html\'|fixPath"></div>',
+        template: '<div class="e-live-now-betslip" ng-include="::\'templates/directive/live-game-slider.html\'|fixPath"></div>',
         link: function ($scope) {
             $scope.interval = $scope.interval || 10000;
             $scope.displayBase = GameInfo.displayBase;
@@ -27,7 +27,7 @@ VBET5.directive('liveGamesSlider', ['$rootScope', '$filter', '$interval', '$loca
                     sport: ['id', 'name', 'alias', 'order'],
                     region: ['name', 'alias', 'id', 'order'],
                     competition: ['id', 'name', 'order'],
-                    game: [['id', 'start_ts', 'team1_name', 'team2_name','team1_reg_name', 'team2_reg_name', 'type', 'info', 'text_info', 'events_count', 'markets_count', 'is_blocked', 'stats', 'is_stat_available', 'show_type', 'game_external_id', 'team1_external_id', 'team2_external_id']],
+                    game: [['id', 'start_ts', 'team1_name', 'team2_name','team1_reg_name', 'team2_reg_name', 'type', 'info', 'text_info', 'markets_count', 'is_blocked', 'stats', 'is_stat_available', 'show_type', 'game_external_id', 'team1_external_id', 'team2_external_id']],
                     market: ["id", "col_count", "type", "sequence", "express_id", "cashout", "display_key", "display_sub_key", "group_id", "name", "group_name", "order" ],
                     event: ["order", "id", "type_1", "type", "type_id", "original_order", "name", "price", "base", "home_value", "away_value", "display_column"]
                 },

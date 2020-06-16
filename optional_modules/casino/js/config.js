@@ -14,6 +14,7 @@ CASINO.constant('CConfig', {
     deviceTypeId: 1,
     platformType: 0,
     main: {
+        jackpotSliderVisibleGamesCount: 3, // min 1 - max 10
         enableGameInfoButton: false,
         categoriesLimit: 10, //number of categories visible in casino page
         moreColumnNumber: 6, //number of columns in categories  "more" dropdown block
@@ -82,6 +83,107 @@ CASINO.constant('CConfig', {
         url: '/global/cashier/cashier.php',
         timeout: 10000 // in milliseconds
     },
+    homepage: [
+
+        {  // row
+            order: 0,
+            // class: "",
+            // height: "",
+            items: [
+                {  // row item
+                    order: 1,
+                    // height: "",
+                    class: "size-9",
+                    // sliderSlug: "",
+                    widgetName: "casinoMainSlider"
+                },
+                {
+                    order: 1,
+                    // height: "",
+                    class: "size-3",
+                    // sliderSlug: "",
+                    widgetName: "jackpotTournamentWidget"
+                }
+            ]
+        },
+        {  // row
+            order: 1,
+            // class: "",
+            // height: "",
+            items: [
+                {  // row item
+                    order: 0,
+                    class: "size-9",
+                    subRows: [
+                        {  // item sub row
+                            order: 1,
+                            // height: "",
+                            // class: "",
+                            // sliderSlug: "",
+                            widgetName: "casinoJackpotSlider"
+                        }, {
+                            order: 2,
+                            // height: "",
+                            // class: "",
+                            // sliderSlug: "",
+                            widgetName: "casinoJackpotGamesSlider"
+                        }]
+                },
+                {
+                    order: 1,
+                    // height: "",
+                    class: "size-3",
+                    // sliderSlug: "",
+                    widgetName: "winnersWidget"
+                }
+            ]
+        },
+        {  // row
+            order: 2,
+            // class: "",
+            // height: "",
+            items: [
+                {  // row item
+                    order: 0,
+                    // height: "",
+                    class: "size-12",
+                    // sliderSlug: "",
+                    widgetName: "categoriesWidget"
+                }
+
+            ]
+        },
+        {  // row
+            order: 3,
+            // class: "",
+            // height: "",
+            items: [
+                {  // row item
+                    order: 0,
+                    // height: "",
+                    class: "size-12",
+                    // sliderSlug: "",
+                    widgetName: "providersWidget"
+                }
+
+            ]
+        },
+        {  // row
+            order: 4,
+            // class: "",
+            // height: "",
+            items: [
+                {  // row item
+                    order: 0,
+                    // height: "",
+                    class: "size-12",
+                    // sliderSlug: "",
+                    widgetName: "gamesWidget"
+                }
+
+            ]
+        }
+    ],
     tournaments: {
         filters: [
             {
@@ -172,7 +274,8 @@ CASINO.constant('CConfig', {
     },
     skillGames: {
         categoryId: "36",
-        categoryName: "SkillGames"
+        categoryName: "SkillGames",
+        hideTopSlider: true
     },
     popularGames: {
         categoryId: '179',

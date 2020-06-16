@@ -22,7 +22,9 @@
              ng-class="{closed: collapedCompetitions[competition.id]}"
         > <!--competition.collapsed -->
             <div class="name-chempionship-asia" ng-click="toggleCompetition(competition.id)"><!--competition.collapsed = !competition.collapsed   -->
-                <h3 ng-bind="competition.games[0].region.name + ' - ' + competition.name"></h3>
+                <h3>
+                    {{competition.games[0].region.name + ' - '}}<i class="cyber-competition" ng-if="(selectedMenuType.active === LEFT_MENU.LIVE) && competition.info && competition.info.Cyber"></i>{{competition.name}}
+                </h3>
                 <div ng-if="selectedSport.id === -1" class="icon-sport-asia" ng-class="competition.games[0].sport.alias"></div>
             </div>
             <table class="hdp-contain-j" ng-if="!collapedCompetitions[competition.id]">
@@ -132,6 +134,7 @@
                     </td>
                     <td class="dark-bg-j  xs">
                         <div class="asian-status-icons">
+                            <div class="match-key" ng-if="game.game_info.Type === 1" pre-match-key hash="game.game_info.Hash"></div>
                             <div class="icon-favorite" ng-click="toggleGameFavorite(game)" ng-class="{'active': myGames.indexOf(game.id) !== -1}" title="{{'Favorite'|translate}}"></div>
                             <div ng-show="$root.conf.enableH2HStat && game.is_stat_available" ng-click="openStatistics(game);$event.stopPropagation();"
                                  statistics-on-hover stats-game="game" stats-competition-name="{{competition.name}}" class="h2h-stats" title="{{'statistic'|translate}}"></div>

@@ -238,12 +238,11 @@
   }
   > i {
     position: absolute;
-    top: 10px;
-    width: 10px;
-    height: 10px;
+    top: 50%;
     text-align: center;
     color: rgba(set-color($skin-palette-6),0.7);
-    font: 8px/8px icomoon;
+    font: 18px/20px icomoon;
+    transform: translateY(-50%);
     @include ltr {
       right: 10px;
     }
@@ -251,7 +250,7 @@
       left: 10px;
     }
     &:before {
-      content: "\e6ee";
+      content: "\ea68";
     }
   }
   > p {
@@ -265,10 +264,10 @@
     box-sizing: border-box;
     font: 12px/14px $font-f;
     @include ltr {
-      padding-right: 14px;
+      padding-right: 20px;
     }
     @include rtl {
-      padding-left: 14px;
+      padding-left: 20px;
     }
   }
   > span {
@@ -288,9 +287,16 @@
       background: lighten(rgba($skin-palette-6,0.3),10);
     }
   }
-  &:hover,
-  &.active {
+  &:hover {
     background: $skin-palette-6;
+  }
+  &.active {
+    background: $hero-color;
+    > p,
+    > span,
+    > i {
+      color: set-color($hero-color);
+    }
   }
 }
 .bet-builder-teams-odd {

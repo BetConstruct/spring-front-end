@@ -31,7 +31,7 @@ angular.module('casino').controller('casinoTournamentsCtrl', ['$rootScope', '$sc
 
     $scope.loadingProcess = false;
 
-    var gameId;
+    var gameInfoId;
 
     $scope.hasTournaments = true;
 
@@ -522,18 +522,18 @@ angular.module('casino').controller('casinoTournamentsCtrl', ['$rootScope', '$sc
      * @methodOf CASINO.controller:casinoTournamentsCtrl
      * @description Participate button
      */
-    $scope.loadCasinoIframeInfo = function loadCasinoIframeInfo(game, initialCall) {
+    $scope.loadCasinoIframeInfo = function loadCasinoIframeInfo(gameInfo) {
         cancelRequests();
-        console.log('GAME INFO:', game);
+        console.log('GAME INFO:', gameInfo);
 
-        if (!game || !game.game || !game.game.extearnal_game_id) {
+        if (!gameInfo || !gameInfo.game || !gameInfo.game.extearnal_game_id) {
             return;
         }
 
-        gameId = game.game.id;
+        gameInfoId = gameInfo.id;
 
         var request = {
-            'game_id': parseInt(game.game.extearnal_game_id, 10)
+            'game_id': parseInt(gameInfo.game.extearnal_game_id, 10)
         };
 
         Zergling.get(request, 'get_top_player_list').then(
@@ -543,21 +543,21 @@ angular.module('casino').controller('casinoTournamentsCtrl', ['$rootScope', '$sc
                         $scope.tournament.iframeInfo = {};
                         processTopPlayerList($scope.tournament.iframeInfo, data.result);
                         if ($scope.hasIframeTournamentInfo) {
-                            $scope.hasIframeTournamentInfo[game.game.id] = $scope.tournament.iframeInfo && $scope.tournament.iframeInfo.playerList && !!$scope.tournament.iframeInfo.playerList.length;
-                            $scope.hasIframeTournamentInfo.empty = !$scope.hasIframeTournamentInfo[game.game.id];
+                            $scope.hasIframeTournamentInfo[gameInfo.id] = $scope.tournament.iframeInfo && $scope.tournament.iframeInfo.playerList && !!$scope.tournament.iframeInfo.playerList.length;
+                            $scope.hasIframeTournamentInfo.empty = !$scope.hasIframeTournamentInfo[gameInfo.id];
                         }
                     }
                     timeoutPromise = $timeout(function () {
-                        $scope.loadCasinoIframeInfo(game);
+                        $scope.loadCasinoIframeInfo(gameInfo);
                     }, 15000);
                 }
             },
             function () {
                 timeoutPromise = $timeout(function () {
                     if ($scope.hasIframeTournamentInfo) {
-                        $scope.hasIframeTournamentInfo[game.game.id] = false;
+                        $scope.hasIframeTournamentInfo[gameInfo.id] = false;
                     }
-                    $scope.loadCasinoIframeInfo(game);
+                    $scope.loadCasinoIframeInfo(gameInfo);
                 }, 60000);
             }
         );
@@ -737,8 +737,8 @@ angular.module('casino').controller('casinoTournamentsCtrl', ['$rootScope', '$sc
 
     $scope.$on('$destroy', function () {
         cancelRequests();
-        if ($scope.hasIframeTournamentInfo && gameId) {
-            delete  $scope.hasIframeTournamentInfo[gameId];
+        if ($scope.hasIframeTournamentInfo && gameInfoId) {
+            delete  $scope.hasIframeTournamentInfo[gameInfoId];
             if (Object.keys($scope.hasIframeTournamentInfo).length === 1) {
                 $scope.hasIframeTournamentInfo.empty = true;
             }

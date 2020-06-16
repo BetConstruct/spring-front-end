@@ -1287,6 +1287,7 @@ input[type="password"]:focus ~ .capslock-is-on-j {
   float: left;
   width: 100%;
   height: 100%;
+  position: relative;
   box-sizing: border-box;
 }
 .slide-container-repeat-b{
@@ -1389,7 +1390,6 @@ input[type="password"]:focus ~ .capslock-is-on-j {
 .slide-casino-new-img-b{
   float: left;
   width: 100%;
-  height: 320px;
   box-sizing: border-box;
   display: block;
   .promotions-in-mixed-balance > h1 {
@@ -1400,7 +1400,6 @@ input[type="password"]:focus ~ .capslock-is-on-j {
   display: block !important;
   z-index: 22;
   animation: image-slider-b 1000ms ease-in-out;
-  transform: translate3d(0,0,0);
 }
 .slide-container-repeat-b.active-remove-active{
   display: block !important;
@@ -1410,6 +1409,7 @@ input[type="password"]:focus ~ .capslock-is-on-j {
 .slide-container-repeat-b.active{
   display: block;
   z-index: 33;
+  position: static;
 }
 .slide-container-repeat-b.ng-hide-remove-active > .slide-casino-new-img-b,
 .slide-container-repeat-b.active-remove-active > .slide-casino-new-img-b,
@@ -2945,6 +2945,7 @@ rtg-jackpot {
 @include liveScoreBackgrounds("icehockey");
 @include liveScoreBackgrounds("e-icehockey", "icehockey");
 @include liveScoreBackgrounds("basketball");
+@include liveScoreBackgrounds("basketballshots");
 @include liveScoreBackgrounds("tennis");
 @include liveScoreBackgrounds("etennis", "tennis");
 @include liveScoreBackgrounds("tennisgrass");

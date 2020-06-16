@@ -2,7 +2,7 @@
     <div class="egt-bg {{jackpotNames[jackpot.Name]}}">
         <ul>
             <li>{{jackpotData.Currency[0]}}<br>{{jackpotData.Currency[1]}}<br>{{jackpotData.Currency[2]}}</li>
-            <li><jackpot-counter point="jackpotData.CurrencyFraction" comma="true" max-duration-speed="400" amount="jackpot.CollectedAmount"></jackpot-counter></li>
+            <li><jackpot-counter point="jackpotData.CurrencyFraction" show-currency="false" currency="{{jackpotData.Currency}}" comma="true" max-duration-speed="400" amount="{{jackpot.CollectedAmount}}"></jackpot-counter></li>
         </ul>
     </div>
 </div>

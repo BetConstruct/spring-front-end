@@ -1,8 +1,9 @@
-<div class="mixed-history-table no-padding" ng-init="balanceHistoryParams.balanceCategory =(($root.currentPage.isInCasino && conf.enableCasinoBalanceHistory) ? '1' : '0');initMixedBalanceHistory();">
+<div class="mixed-history-table no-padding" ng-init="initMixedBalanceHistory($root.conf.enableCasinoBalanceHistory);">
     <table>
         <thead>
             <tr>
                 <th class="date-id" trans>Date and ID</th>
+                <th ng-if="balanceHistoryParams.loadedProductType === 'Casino'" trans>Category</th>
                 <th class="auto-cell">
                     <div class="cell-inner" trans>Type</div>
                 </th>
@@ -17,6 +18,7 @@
                     <span ng-show="balance.bet_id"><br/> ID: <a>{{balance.bet_id}}</a></span>
                     <span ng-show="balance.transaction_id"><br/> ID: <a>{{balance.transaction_id}}</a></span>
                 </td>
+                <td class="casino-hist" ng-if="balanceHistoryParams.loadedProductType === 'Casino'" ng-bind="(balance.product || '')|translate"></td>
                 <td class="auto-cell">
                     <ul class="cell-inner mixed-bet-history-flex">
                         <li class="ellipsis-text">

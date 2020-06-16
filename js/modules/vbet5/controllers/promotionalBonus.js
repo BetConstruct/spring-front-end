@@ -34,7 +34,7 @@ VBET5.controller('promotionalBonusCtrl', ['$scope', '$location', 'Zergling', 'Ba
         }
 
     } else {
-        $scope.activeBonusTab = Config.main.promotionalBonuses.casino && $rootScope.currentPage.isInCasino ? $scope.backendBonusConstants.BonusSource.Casino : $scope.backendBonusConstants.BonusSource.SportsBook;
+        $scope.activeBonusTab = Config.main.promotionalBonuses.casino && ($rootScope.currentPage.isInCasino || !Config.main.promotionalBonuses.sportsbook) ? $scope.backendBonusConstants.BonusSource.Casino : $scope.backendBonusConstants.BonusSource.SportsBook;
     }
 
     $scope.loadingBonus = false;

@@ -91,7 +91,6 @@ angular.module('vbet5.betting').controller('LiveCalendarController', ['$scope', 
                                     id: game.id,
                                     team1_name: game.team1_name,
                                     team2_name: game.team2_name,
-                                    events_count: game.events_count,
                                     markets_count: game.markets_count,
                                     type: game.type,
                                     start_ts: game.start_ts
@@ -133,7 +132,7 @@ angular.module('vbet5.betting').controller('LiveCalendarController', ['$scope', 
                     'sport': ['id', 'name', 'alias', 'order'],
                     'competition': ['id'],
                     'region': ['id', 'name', 'alias'],
-                    'game': ['id', 'team1_name', 'team2_name', 'type', 'events_count', 'is_stat_available', 'team1_external_id', 'team2_external_id', 'is_live'],
+                    'game': ['id', 'team1_name', 'team2_name', 'type', 'is_stat_available', 'team1_external_id', 'team2_external_id', 'is_live'],
                     'market': ['type', 'name', 'id', 'base', 'express_id'],
                     'event': ['type', 'id', 'price', 'name', 'base']
                 },
@@ -260,7 +259,7 @@ angular.module('vbet5.betting').controller('LiveCalendarController', ['$scope', 
                     'region': ['id', 'name', 'alias'],
                     'competition': ['id', 'name'],
                     'game': [['id', 'start_ts', 'type', 'is_blocked', 'game_number', 'team1_name', 'team2_name','team1_reg_name', 'team2_reg_name', 'start_ts', 'markets_count',
-                        'title', 'info', 'text_info', 'events_count', 'exclude_ids', 'is_stat_available', 'team1_external_id', 'team2_external_id', 'is_live',
+                        'title', 'info', 'text_info', 'exclude_ids', 'is_stat_available', 'team1_external_id', 'team2_external_id', 'is_live',
                         'video_id', 'tv_type', 'video_id2', 'video_id3', 'partner_video_id']]
                 },
                 'where': {
@@ -296,9 +295,7 @@ angular.module('vbet5.betting').controller('LiveCalendarController', ['$scope', 
                 }
             );
 
-            if (Config.main.liveCalendarView === 'oneDaySelectionView') {
-                updateSportsLabel();
-            }
+            updateSportsLabel();
         }
 
         /**

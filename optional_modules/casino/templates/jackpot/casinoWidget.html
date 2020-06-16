@@ -13,7 +13,7 @@
     <div class="jackpots-content">
         <div class="jackpot-coins-container" ng-if="tab.selected === 'jackpots'">
             <div class="jackpot-coins-content" ng-class="{active: $index === jackpotWidgets.widgetIndex }" ng-repeat="jackpot in jackpotData track by $index">
-                <p>{{jackpot.Name}}</p>
+                <p>{{jackpot.Name|translate}}</p>
                 <ul ng-repeat="pool in jackpot.PoolGroup.PoolList track by $index">
                     <li class="jackpot-coins jackpot-{{pool.Name.toLowerCase()}}">
                         <span style="background-image: url(images/jackpot-coins/jackpot-{{pool.Name.toLowerCase()}}.png);"></span>
@@ -25,8 +25,9 @@
                                    max-duration-speed="400"
                                    point="jackpot.CurrencyFraction"
                                    comma="true"
-                                   currency="jackpot.Currency"
-                                   amount="pool.CollectedAmount">
+                                   show-currency="true"
+                                   currency="{{jackpot.Currency}}"
+                                   amount="{{pool.CollectedAmount}}">
                            </jackpot-counter>
                        </div>
                     </li>

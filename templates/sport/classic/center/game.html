@@ -6,9 +6,10 @@
             ng-class="{active: openGame.selectedMarketGroupId === group.id,
             'favorte-markets-group-j': $first, 'animate-star-odd' : $first && openGame.sport.favouriteMarkets.length % 2 == 1,
             'animate-star-even': $first && openGame.sport.favouriteMarkets.length % 2 == 0,
+            'has-market': $first && openGame.sport.favouriteMarkets.length > 0,
             'to-dropdown': $index > ($root.env.live ? 5 : 3), 'column-3':  ($root.env.live ? 5 : 3) == 3}"
             ng-click="selectMarketGroup(group.id)" data-count="{{ group.count }}">
-            <span title="Favorite Markets" trans="attr-only"><i>{{ group.name|translate }}</i> <i ng-show="group.count !== undefined">({{ group.count }})</i></span></li>
+            <span trans="attr-only"><i>{{ group.name|translate }}</i> <i ng-show="group.count !== undefined">({{ group.count }})</i></span></li>
     </ul>
 </div>
 
@@ -228,7 +229,7 @@
             <ul ng-repeat="tripWinner in marketsSecondPack[0][0]['events'] | objectToArray | orderBy: raceCardsPredicateDog : raceCardsReverce track by tripWinner.original_order"
                 ng-class="{'pointer-events-none': event.is_empty, 'active': isEventInBetSlip(event), 'blocked': ((event.price | oddConvert:'decimal') == 1 || openGame.is_blocked)}">
                 <li>
-                    <img src="./images/greyhounds-racing/{{tripWinner.original_order}}.png">
+                    <img ng-src="./images/greyhounds-racing/{{tripWinner.original_order}}.png">
                 </li>
                 <li title="{{tripWinner.name}}">{{tripWinner.name}}</li>
                 <li class="odds"
@@ -317,7 +318,7 @@
                 ng-class="{'pointer-events-none': event.is_empty, 'active': isEventInBetSlip(event), 'blocked': ((event.price | oddConvert:'decimal') == 1 || openGame.is_blocked)}"
                 ng-if="houndStat.original_order <= 6 && !houndStat.extra_info.Favourite">
                 <li>
-                    <img src="./images/greyhounds-racing/{{houndStat.original_order}}.png">
+                    <img ng-src="./images/greyhounds-racing/{{houndStat.original_order}}.png">
                 </li>
                 <li title="{{houndStat.name}}">{{houndStat.name}}</li>
                 <li class="odds"

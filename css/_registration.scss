@@ -137,14 +137,17 @@
     @include rtl {
       float: right;
     }
-    &.birth_day {
+    &.birth_day,
+    &.doc_issue_day {
       width: 70px;
     }
-    &.birth_month {
+    &.birth_month,
+    &.doc_issue_month {
       width: calc(100% - 70px - 91px - 14px);
       margin: 0 7px;
     }
-    &.birth_year {
+    &.birth_year,
+    &.doc_issue_year {
       width: 91px;
     }
     &.g_recaptcha_response {
@@ -619,6 +622,12 @@
   }
   > span {
     white-space: normal;
+  }
+
+}
+.currency_name label{
+  &:empty{
+    margin: 0;
   }
 }
 .register-steps-b label.wrap{
@@ -1878,6 +1887,25 @@ $disable-middle-name: false !default;
     }
   }
 }
+.verification-code-area{
+  float: left;
+  width: 100%;
+
+  > label{
+    margin-top: 10px  !important;
+    &:last-child{
+      margin-top: 0  !important;
+      margin-bottom: 0 !important;
+      border-radius: 0;
+      width: 100%;
+      padding: 0;
+      box-sizing: border-box;
+      font-size: 12px;
+      line-height: 14px;
+      cursor: pointer;
+    }
+  }
+}
 .reg-list-item-wrapper-j input {
   background: $form-elements-bg;
   border: 1px solid $form-elements-bg;
@@ -2161,5 +2189,16 @@ $disable-middle-name: false !default;
         margin-left: 12px;
       }
     }
+  }
+}
+
+
+.settings-info-contain .error .form-error-icon-j + .view-passward {
+
+  @include ltr{
+    right: 30px;
+  }
+  @include rtl{
+    left: 30px;
   }
 }

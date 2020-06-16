@@ -82,7 +82,7 @@
                 <div class="russia2018-upcoming-markets">
                     <div class="l-b column-3">
                         <div class="single-events-b-v3" ng-repeat="event in match.market.events track by event.id"
-                             title="{{event.type_1}}" ng-class="{'pointer-events-none': event.is_empty, 'active': isEventInBetSlip(event), 'blocked': (event.price | oddConvert:'decimal') == 1 || match.is_blocked}"
+                             title="{{event.name}}" ng-class="{'pointer-events-none': event.is_empty, 'active': isEventInBetSlip(event), 'blocked': (event.price | oddConvert:'decimal') == 1 || match.is_blocked}"
                              ng-click="bet(event, match.market, match)">
                             <b class="p-v price {{event.price_change == null? '' : ({true: 'up-', false: 'down'}[event.price_change > 0] + (event.price_change % 2)) }}"
                                ng-bind="event.price|oddConvert:$root.env.oddFormat:null:match.market.display_key"></b>

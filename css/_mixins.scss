@@ -144,6 +144,11 @@ $delete-cache: '?v=' + random(777);
       background: -moz-linear-gradient(left, rgba($sports-color, 1) 0%, rgba($skin-color, 1) 100%);
       background: -webkit-linear-gradient(left, rgba($sports-color, 1) 0%, rgba($skin-color, 1) 100%);
       background: linear-gradient(to right, rgba($sports-color, 1) 0%, rgba($skin-color, 1) 100%);
+      @include rtl{
+        background: -moz-linear-gradient(left, rgba($skin-color, 1) 0%, rgba($sports-color, 1) 100%);
+        background: -webkit-linear-gradient(left, rgba($skin-color, 1) 0%, rgba($sports-color, 1) 100%);
+        background: linear-gradient(to right, rgba($skin-color, 1) 0%, rgba($sports-color, 1) 100%);
+      }
       + .e-live-games-list {
         .e-p-table {
           background: rgba($sports-color, 0.2);
@@ -151,11 +156,21 @@ $delete-cache: '?v=' + random(777);
           background: -webkit-linear-gradient(left, rgba($sports-color, 0.2) 0%, rgba($skin-color, 0.06) 60%);
           background: linear-gradient(to right, rgba($sports-color, 0.2) 0%, rgba($skin-color, 0.06) 60%);
           transition: background 240ms;
+          @include rtl{
+            background: -moz-linear-gradient(left, rgba($skin-color, 0.06) 0%, rgba($sports-color, 0.2) 60%);
+            background: -webkit-linear-gradient(left, rgba($skin-color, 0.06) 0%, rgba($sports-color, 0.2) 60%);
+            background: linear-gradient(to right, rgba($skin-color, 0.06) 0%, rgba($sports-color, 0.2) 60%);
+          }
           &:hover {
             background: rgba($sports-color, 0.4);
             background: -moz-linear-gradient(left, rgba($sports-color, 0.4) 0%, rgba($skin-color, 0.09) 60%);
             background: -webkit-linear-gradient(left, rgba($sports-color, 0.4) 0%, rgba($skin-color, 0.09) 60%);
             background: linear-gradient(to right, rgba($sports-color, 0.4) 0%, rgba($skin-color, 0.09) 60%);
+            @include rtl{
+              background: -moz-linear-gradient(left, rgba($skin-color, 0.09) 0%, rgba($sports-color, 0.4) 60%);
+              background: -webkit-linear-gradient(left, rgba($skin-color, 0.09) 0%, rgba($sports-color, 0.4) 60%);
+              background: linear-gradient(to right, rgba($skin-color, 0.09) 0%, rgba($sports-color, 0.4) 60%);
+            }
           }
         }
         .e-g-price-v {

@@ -19,7 +19,7 @@
                 </label>
             </div>
             <div class="change-button-container password">
-                <div class="password-button">
+                <div ng-if="$root.partnerConfig.require_password_for_self_exclusion" class="password-button">
                     <label ng-class="{'error': selfExclusionForm.password.$dirty && selfExclusionForm.password.$error.required}">
                         <span trans>Password</span> <span class="hint">*</span>
                     </label>

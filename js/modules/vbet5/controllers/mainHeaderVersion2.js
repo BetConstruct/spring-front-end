@@ -266,6 +266,21 @@ VBET5.controller('mainHeaderVersion2Controller', ['$rootScope', '$scope', '$loca
         Storage.set(name, !!state);
     };
 
+    function calculateBonusesCount(data, product) {
+        if (data && data.bonuses) {
+            var i = 0, length = data.bonuses.length, count = 0, allCount = 0;
+            for (; i < length; i += 1) {
+                if (data.bonuses[i].bonus_type === BackendConstants.PromotionalBonus.BonusType.FreeBet || (data.bonuses[i].acceptance_type === BackendConstants.PromotionalBonus.BonusAcceptanceType.None && data.bonuses[i].can_accept)) {
+                    count += 1;
+                }
+                allCount += 1; //todo condition  SDC-37886
+            }
+
+            $scope.bonusesCount[product] = count;
+            $rootScope.allBonusesCount[product] = allCount;
+        }
+    }
+
     /**
      * @ngdoc method
      * @name getBonusesCount
@@ -273,7 +288,9 @@ VBET5.controller('mainHeaderVersion2Controller', ['$rootScope', '$scope', '$loca
      * @description Checks the availability of product bonuses and gets the number of active bonuses
      */
     $scope.getBonusesCount = function getBonusesCount() {
-        if (Config.main.promotionalBonuses.disableCountOnIcon) return;
+        if (Config.main.promotionalBonuses.disableCountOnIcon) {
+            return;
+        }
         $scope.bonusesCount = {
             'sportsbook': 0,
             'casino': 0
@@ -294,20 +311,19 @@ VBET5.controller('mainHeaderVersion2Controller', ['$rootScope', '$scope', '$loca
         if (Config.main.promotionalBonuses.casino) getProductBonuses('casino');
     };
 
-
-    function calculateBonusesCount(data, product) {
-        if (data && data.bonuses) {
-            var i = 0, length = data.bonuses.length, count = 0, allCount = 0;
-            for (; i < length; i += 1) {
-                data.bonuses[i].acceptance_type === BackendConstants.PromotionalBonus.BonusAcceptanceType.None && data.bonuses[i].can_accept && (count += 1);
-                allCount += 1; //todo condition  SDC-37886
-            }
-
-            $scope.bonusesCount[product] = count;
-            $rootScope.allBonusesCount[product] = allCount;
-        }
+    /**
+     * @ngdoc method
+     * @name closeAboveHeader
+     * @methodOf vbet5.controller:mainHeaderVersion2Controller
+     * @description Close above header section
+     */
+    if (Config.main.header && Config.main.header.aboveHeader && Config.main.header.aboveHeader.enabled && Storage.get('aboveHeaderOpened') !== false) {
+        $scope.aboveHeaderOpened = true;
+        $scope.closeAboveHeader = function closeAboveHeader() {
+            $scope.aboveHeaderOpened = false;
+            Storage.set('aboveHeaderOpened', false);
+        };
     }
-
 
     /**
      * @ngdoc method

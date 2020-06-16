@@ -1534,3 +1534,60 @@ $top-winners-gradient:#1a7051!default;
         }
     }
 }
+// make styles for 2-10 count
+.slider-games-box.visible-games-count-2{
+    .slider-games a{
+        width: calc((100% / 2) - 6px);
+    }
+}
+.slider-games-box.visible-games-count-4{
+    .slider-games a{
+        width: calc((100% / 4) - 8px);
+    }
+}
+.slider-games-box.visible-games-count-5{
+    .slider-games a{
+        width: calc((100% / 5) - 8px);
+    }
+}
+.slider-games-box.visible-games-count-6{
+    .slider-games a{
+        width: calc((100% / 6) - 9px);
+    }
+}
+.slider-games-box.visible-games-count-7{
+    .slider-games a{
+        width: calc((100% / 7) - 9px);
+    }
+    .games-buttons{
+        top: 40%;
+        transform: translate(0, -40%);
+    }
+}
+.slider-games-box.visible-games-count-8{
+    .slider-games a{
+        width: calc((100% / 8) - 9px);
+    }
+    .games-buttons{
+        top: 40%;
+        transform: translate(0, -40%);
+    }
+}
+.slider-games-box.visible-games-count-9{
+    .slider-games a{
+        width: calc((100% / 9) - 9px);
+    }
+}
+.slider-games-box.visible-games-count-10{
+    .slider-games a{
+        width: calc((100% / 10) - 9px);
+    }
+    .slider-games-bg{
+        height: auto;
+    }
+    .games-buttons{
+        top: 37%;
+        transform: translate(0, -37%);
+    }
+}
+

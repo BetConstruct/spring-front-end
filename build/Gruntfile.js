@@ -147,6 +147,7 @@ module.exports = function (grunt) {
                     '../lib/swfobject.js',
                     '../lib/evercookie.js',   // anti-fraud project
                     '../lib/fingerprint2.min.js',   // anti-fraud project
+                    '../lib/socket.io.js',
                     '../lib/modules/**/*.js',
                     '../js/modules/vbet5/main.js',
                     '../js/modules/vbet5/config.js',

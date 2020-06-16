@@ -16,7 +16,7 @@
                     <button ng-disabled="!betStatus.ticketNumber || betStatus.displayRecaptcha && !betStatus.g_recaptcha_response" trans></button>
                 </div>
             </div>
-            <div class="bet-status-recaptcha" ng-if="betStatus.displayRecaptcha" ng-controller="recaptchaCtrl">
+            <div class="bet-status-recaptcha" ng-if="betStatus.displayRecaptcha" ng-controller="recaptchaCtrl" ng-init="init()">
                 <input type="hidden" name="g_recaptcha_response" ng-model="betStatus.g_recaptcha_response" ng-required="false"/>
                 <div class="tooltip-wrapper-j" ng-if="recaptcha.key">
                     <div class="g-recaptcha" data-callback="recaptchaUpdateCallback" data-sitekey="{{recaptcha.key}}" data-theme="{{recaptcha.theme || 'dark'}}" data-size="{{recaptcha.size || 'normal'}}"></div>

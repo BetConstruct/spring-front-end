@@ -24,7 +24,7 @@
             </ul>
         </li>
         <li class="systemCalculator"
-            ng-if="$root.conf.enableSystemCalculator"
+            ng-if="$root.conf.enableSystemCalculator || $root.conf.bettingCalculator.enabled"
             ng-click="$root.showSystemCalculator = !$root.showSystemCalculator"
             ng-class="{'active': $root.showSystemCalculator}"
             ></li>

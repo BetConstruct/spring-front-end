@@ -6,7 +6,7 @@
  *
  * @description Makes gets and updates list of biggest winners of casino
  */
-CASINO.directive('multiviewControl', ['$interval', '$timeout', 'CConfig', 'casinoData', 'casinoManager', 'Geoip', 'content', function ($interval, $timeout, CConfig, casinoData, casinoManager, Geoip, content) {
+CASINO.directive('multiviewControl', ['$interval', '$timeout', 'CConfig', 'casinoData', 'casinoManager', 'Geoip', 'content', '$rootScope', function ($interval, $timeout, CConfig, casinoData, casinoManager, Geoip, content, $rootScope) {
     'use strict';
     return {
         restrict: 'E',
@@ -99,8 +99,14 @@ CASINO.directive('multiviewControl', ['$interval', '$timeout', 'CConfig', 'casin
 
             function getGames() {
                 scope.loadingProcess = true;
-                var openedGameIds = getOpenedGamesIds();
-                casinoData.getGames(scope.selectedCategory, null, countryCode, scope.gamesLimit - 36, scope.gamesLimit, scope.searchCommand, openedGameIds).then(function (response) {
+                var startIndex = scope.gamesLimit - 36;
+                var offsetIndex = scope.gamesLimit;
+
+                if(scope.selectedCategory === scope.confData.liveCasino.categoryId){
+                    startIndex = offsetIndex = null;
+                }
+
+                casinoData.getGames(scope.selectedCategory, null, countryCode, startIndex, offsetIndex, scope.searchCommand).then(function (response) {
                     if (response && response.data && response.data.status !== -1) {
                         if (scope.selectedCategory === scope.confData.liveCasino.categoryId) {
                             scope.liveGamesData = scope.liveGamesData || casinoManager.initProvidersData(response.data.games);
@@ -113,6 +119,14 @@ CASINO.directive('multiviewControl', ['$interval', '$timeout', 'CConfig', 'casin
                     scope.loadingProcess = false;
                 })
             }
+
+            scope.toggleSaveToMyCasinoGames = function toggleSaveToMyCasinoGames(game) {
+                casinoManager.toggleSaveToMyCasinoGames($rootScope, game);
+            };
+
+            scope.$on('casinoGamesList.toggleSaveToMyCasinoGames', function (e, game) {
+                scope.toggleSaveToMyCasinoGames(game);
+            });
 
             scope.openGame = function openGame (game, gameType, studio) {
                 scope.$emit('casinoGamesList.openGame', {game: game, playMode: gameType, studio: studio});

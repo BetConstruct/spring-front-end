@@ -4,7 +4,7 @@
         <div class="red-tiger-bg">
             <ul>
                 <li class="cms-jcon-{{jackpotData.Currency}}"></li>
-                <li><jackpot-counter point="jackpotData.CurrencyFraction" max-length="8" comma="true" max-duration-speed="400" amount="pot.CollectedAmount"></jackpot-counter></li>
+                <li><jackpot-counter point="jackpotData.CurrencyFraction" show-currency="false" currency="{{jackpotData.Currency}}" max-length="8" comma="true" max-duration-speed="400" amount="{{pot.CollectedAmount}}"></jackpot-counter></li>
             </ul>
         </div>
         <p class="red-tiger-timer">{{'Must pay before'|translate}} <span countdown="{{pot.TimeStamp}}"  ng-bind="'🕒 ' + countdown.hours + ':' + countdown.minutes + ':' + countdown.seconds"></span></p>
@@ -15,7 +15,7 @@
         <div class="red-tiger-bg">
             <ul>
                 <li class="cms-jcon-{{jackpotData.Currency}}"></li>
-                <li><jackpot-counter point="jackpotData.CurrencyFraction" max-length="8" comma="true" max-duration-speed="400" amount="pot.CollectedAmount"></jackpot-counter></li>
+                <li><jackpot-counter point="jackpotData.CurrencyFraction" max-length="8" show-currency="false" currency="{{jackpotData.Currency}}" comma="true" max-duration-speed="400" amount="{{pot.CollectedAmount}}"></jackpot-counter></li>
             </ul>
         </div>
     </div>

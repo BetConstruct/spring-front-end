@@ -11,12 +11,12 @@
     <div class="qualify" ng-repeat="currentTab in ['h2h', 'individual'] track by $index" ng-if="tab === currentTab && templateData">
         <ul class="qualify-statistic-quality">
             <li class="average-goals">
-                <b>{{templateData[currentTab].team1[widgetMapping[marketType][currentTab]]|number:$root.conf.balanceFractionSize}}</b>
+                <b>{{templateData[currentTab].team1[widgetMapping[marketType][currentTab]]|bankersRoundAndNumberCommas:$root.conf.balanceFractionSize}}</b>
                 <p ng-bind="::openGame.team1_name"></p>
                 <span trans>Conceded per match</span>
             </li>
             <li class="average-goals">
-                <b>{{templateData[currentTab].team2[widgetMapping[marketType][currentTab]]|number:$root.conf.balanceFractionSize}}</b>
+                <b>{{templateData[currentTab].team2[widgetMapping[marketType][currentTab]]|bankersRoundAndNumberCommas:$root.conf.balanceFractionSize}}</b>
                 <p ng-bind="::openGame.team2_name"></p>
                 <span trans>Conceded per match</span>
             </li>

@@ -1015,7 +1015,6 @@ $popup-overlay-background: black !default;
     p {
       color: $text-palette-4;
       font: normal 12px $font-f;
-      word-break: break-all;
       -moz-user-select: auto;
       -khtml-user-select: auto;
       user-select: auto;
@@ -1239,6 +1238,15 @@ $popup-overlay-background: black !default;
     margin: 10px 0 10px 0;
     text-align: justify;
     @include scroll($scroll: auto, $background: $skin-palette-10);
+  }
+}
+.reality-check-popup .popup-wrapper-j{
+  max-width: 40%;
+}
+@media  screen and (max-width: 1200px){
+  .reality-check-popup .popup-wrapper-j{
+    max-width: 55%;
+    min-width: 400px;
   }
 }
 .auto-cashout-rule {
@@ -1788,4 +1796,43 @@ input::-webkit-inner-spin-button {
     color: opacify(rgba(set-color($popup-form-palette),0.32), $popup-form-opacify);
     font: 14px/20px $font-f;
   }
+}
+.gift-bet-t-c.new-recaptcha-v{
+  .button-confirm > button{
+    float: none;
+  }
+  .bet-status-recaptcha .tooltip-wrapper-j {
+    transform-origin: right;
+    margin-left: -20px;
+  }
+}
+
+.reality-info{
+  float: left;
+  width: 100%;
+  > h4{
+      font-size: 16px;
+    line-height: 18px;
+    font-weight: bold;
+    color: $text-palette-3;
+    float: left;
+    width: 100%;
+    text-align: center;
+    padding: 0 0 10px 0;
+  }
+  > span{
+    padding: 0 0 10px 0;
+    color: $text-palette-4;
+    font-size: 14px;
+    line-height: 16px;
+    float: left;
+    width: 50%;
+  }
+}
+.reality-value{
+  font-weight: bold;
+  text-align: right;
+}
+.reality-title{
+  text-align: left;
 }

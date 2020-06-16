@@ -2,9 +2,9 @@
 <div class="header-bottom-row">
     <div class="header-nav-contain" ng-show="!conf.rfid.loginWIthRFID || conf.rfid.loginWIthRFID && env.authorized">
         <ul ng-class="{'menu-dropdown': $root.topMenuDropDown, 'menu-dropdown-show': subMenuItemCount > 0}" sub-menu-creator="main">
-            <div class="top-menu-more" ng-show="subMenuItemCount > 0" title="More"
+            <div class="top-menu-more" title="More"
                  ng-click="$root.topMenuDropDown=!$root.topMenuDropDown;" hide-on-click
-                 state-flag-var="$root.topMenuDropDown" trans="attr-only">{{subMenuItemCount}}
+                 state-flag-var="$root.topMenuDropDown" trans="attr-only">{{'More'|translate}}
             </div>
             <li ng-if="conf.enableCouponCheck">
                 <form class="coupon-form-check">

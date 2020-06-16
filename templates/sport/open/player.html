@@ -8,11 +8,11 @@
     <!--<div ng-show="(!game.video_data || !videoIsLoaded) && env.authorized" class="video-notloaded-yet" trans>Video not available yet</div>-->
 
     <div class="game-video-container">
-        <p ng-if="!env.authorized && !$root.conf.integrationMode" trans ng-click="openLoginForm($event)" class="login-link">You need to be logged in to be able to play video.</p>
-        <p ng-if="!env.authorized && $root.conf.integrationMode" trans class="login-link">You need to be logged in to be able to play video.</p>
-        <p ng-if="env.authorized && (profile.calculatedBalance + profile.calculatedBonus) === 0 && !$root.conf.video.allowedWithNoneBalance[game.tv_type]" trans ng-click="!$root.conf.disableDepositPage && broadcast('toggleSliderTab', 'deposit');$event.stopPropagation();">You need to have non-zero balance to be able to play video.</p>
-        <i ng-if="env.authorized && !$root.conf.video.autoPlay && game.video_data === undefined && ((profile.calculatedBalance + profile.calculatedBonus) !== 0 || $root.conf.video.allowedWithNoneBalance[game.tv_type])" class="video-play-button" ng-click="broadcast('game.restoreVideo', game.id)"></i>
-        <div ng-if="env.authorized && game.video_data && ((profile.calculatedBalance + profile.calculatedBonus) > 0 || $root.conf.video.allowedWithNoneBalance[game.tv_type])" class="video-player-container" ng-init="soundVolume = env.sound">
+        <p ng-if="!env.authorized && !$root.conf.integrationMode && !game.is_guest" trans ng-click="openLoginForm($event)" class="login-link">You need to be logged in to be able to play video.</p>
+        <p ng-if="!env.authorized && $root.conf.integrationMode && !game.is_guest" trans class="login-link">You need to be logged in to be able to play video.</p>
+        <p ng-if="!game.is_guest && env.authorized && (profile.calculatedBalance + profile.calculatedBonus) === 0 && !$root.conf.video.allowedWithNoneBalance[game.tv_type]" trans ng-click="!$root.conf.disableDepositPage && broadcast('toggleSliderTab', 'deposit');$event.stopPropagation();">You need to have non-zero balance to be able to play video.</p>
+        <i ng-if="!$root.conf.video.autoPlay && game.video_data === undefined && (game.is_guest || env.authorized && (profile.calculatedBalance + profile.calculatedBonus) !== 0 || $root.conf.video.allowedWithNoneBalance[game.tv_type])" class="video-play-button" ng-click="broadcast('game.restoreVideo', game.id)"></i>
+        <div ng-if="game.video_data &&  (game.is_guest || env.authorized && (profile.calculatedBalance + profile.calculatedBonus) > 0 || $root.conf.video.allowedWithNoneBalance[game.tv_type])" class="video-player-container" ng-init="soundVolume = env.sound">
 
             <div class="video-player-control" ng-show="videoIsLoaded">
                 <span ng-click="togglePause();" ng-show="!paused" class="video-pause"></span>

@@ -120,29 +120,29 @@
             </li>
 
             <li ng-if="!conf.hideLiveCalendarMarkets" ng-class="{'active': isEventInBetSlip(marketEvents[game.pointerId].events.P1[0]) && !game.is_blocked, 'empty': !marketEvents[game.pointerId].events.P1[0]}" class="coeff-column-j {{marketEvents[game.pointerId].events.P1[0].price_change == null? '' : ({true: 'up-', false: 'down'}[marketEvents[game.pointerId].events.P1[0].price_change > 0] + (marketEvents[game.pointerId].events.P1[0].price_change % 2)) }}">
-                <div ng-show="!game.is_blocked" ng-hide="(marketEvents[game.pointerId].events.P1[0].price | oddConvert:'decimal') == 1" ng-click="bet(marketEvents[game.pointerId].events.P1[0], marketEvents[game.pointerId].market, marketEvents[game.pointerId].game)">
+                <div ng-if="!game.is_blocked" ng-hide="(marketEvents[game.pointerId].events.P1[0].price | oddConvert:'decimal') == 1" ng-click="bet(marketEvents[game.pointerId].events.P1[0], marketEvents[game.pointerId].market, marketEvents[game.pointerId].game)">
                     {{marketEvents[game.pointerId].events.P1[0].price|oddConvert:env.oddFormat:null:'WINNER'}}
                 </div>
-                <div ng-show="game.is_blocked || (marketEvents[game.pointerId].events.P1[0].price | oddConvert:'decimal') == 1">
+                <div ng-if="game.is_blocked || (marketEvents[game.pointerId].events.P1[0].price | oddConvert:'decimal') == 1">
                     <span class="single-bet-locked" title="Event Locked" trans></span>
                 </div>
                 <i ng-if="$root.conf.boostedBets.enabled && $root.boostedBetsEventIds && $root.boostedBetsEventIds[marketEvents[game.pointerId].events.P1[0].id]" title="{{'Boosted odd'|translate}}" class="boosted"></i>
             </li>
 
             <li ng-if="!conf.hideLiveCalendarMarkets" ng-class="{'active': isEventInBetSlip(marketEvents[game.pointerId].events.X[0]) && !game.is_blocked, 'empty': !marketEvents[game.pointerId].events.X[0]}" class="coeff-column-j {{marketEvents[game.pointerId].events.X[0].price_change == null? '' : ({true: 'up-', false: 'down'}[marketEvents[game.pointerId].events.X[0].price_change > 0] + (marketEvents[game.pointerId].events.X[0].price_change % 2)) }}">
-                <div ng-show="!game.is_blocked" ng-hide="(marketEvents[game.pointerId].events.X[0].price | oddConvert:'decimal') == 1" ng-click="bet(marketEvents[game.pointerId].events.X[0], marketEvents[game.pointerId].market, marketEvents[game.pointerId].game)">
+                <div  ng-if="!game.is_blocked" ng-hide="(marketEvents[game.pointerId].events.X[0].price | oddConvert:'decimal') == 1" ng-click="bet(marketEvents[game.pointerId].events.X[0], marketEvents[game.pointerId].market, marketEvents[game.pointerId].game)">
                     {{marketEvents[game.pointerId].events.X[0].price|oddConvert:env.oddFormat:null:'WINNER'}}
                 </div>
-                <div ng-show="(game.is_blocked || (marketEvents[game.pointerId].events.X[0].price | oddConvert:'decimal') == 1)">
+                <div ng-show="((game.is_blocked && marketEvents[game.pointerId].events.X) || (marketEvents[game.pointerId].events.X[0].price | oddConvert:'decimal') == 1)">
                     <span class="single-bet-locked" title="Event Locked" trans></span>
                 </div>
                 <i ng-if="$root.conf.boostedBets.enabled && $root.boostedBetsEventIds && $root.boostedBetsEventIds[marketEvents[game.pointerId].events.X[0].id]" title="{{'Boosted odd'|translate}}" class="boosted"></i>
             </li>
             <li ng-if="!conf.hideLiveCalendarMarkets" ng-class="{'active': isEventInBetSlip(marketEvents[game.pointerId].events.P2[0]) && !game.is_blocked, 'empty': !marketEvents[game.pointerId].events.P2[0]}" class="coeff-column-j {{marketEvents[game.pointerId].events.P2[0].price_change == null? '' : ({true: 'up-', false: 'down'}[marketEvents[game.pointerId].events.P2[0].price_change > 0] + (marketEvents[game.pointerId].events.P2[0].price_change % 2)) }}">
-                <div ng-show="!game.is_blocked" ng-hide="(marketEvents[game.pointerId].events.P2[0].price | oddConvert:'decimal') == 1" ng-click="bet(marketEvents[game.pointerId].events.P2[0], marketEvents[game.pointerId].market, marketEvents[game.pointerId].game)">
+                <div ng-if="!game.is_blocked" ng-hide="(marketEvents[game.pointerId].events.P2[0].price | oddConvert:'decimal') == 1" ng-click="bet(marketEvents[game.pointerId].events.P2[0], marketEvents[game.pointerId].market, marketEvents[game.pointerId].game)">
                     {{marketEvents[game.pointerId].events.P2[0].price|oddConvert:env.oddFormat:null:'WINNER'}}
                 </div>
-                <div ng-show="(game.is_blocked  || (marketEvents[game.pointerId].events.P2[0].price | oddConvert:'decimal') == 1)">
+                <div ng-if="(game.is_blocked  || (marketEvents[game.pointerId].events.P2[0].price | oddConvert:'decimal') == 1)">
                     <span class="single-bet-locked" title="Event Locked" trans></span>
                 </div>
                 <i ng-if="$root.conf.boostedBets.enabled && $root.boostedBetsEventIds && $root.boostedBetsEventIds[marketEvents[game.pointerId].events.P2[0].id]" title="{{'Boosted odd'|translate}}" class="boosted"></i>

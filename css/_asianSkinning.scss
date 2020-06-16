@@ -1400,11 +1400,14 @@
       color: rgba(set-color(darken(desaturate(adjust-hue(darken( desaturate( adjust-hue( $skin-color, -3deg ), 8 ), 5 ), -3deg), 8), 5)), 0.26);
     }
   }
-  .total-stake-input-b > input[type="text"] {
-    color: rgba(set-color(darken( desaturate( adjust-hue( $skin-color, -3deg ), 8 ), 5 )), 0.74);
-    background: darken( desaturate( adjust-hue( $skin-color, -3deg ), 8 ), 5 );
-    @include placeholder {
+  .total-stake-input-b > {
+    input[type="text"],
+    input[type="number"] {
       color: rgba(set-color(darken( desaturate( adjust-hue( $skin-color, -3deg ), 8 ), 5 )), 0.74);
+      background: darken( desaturate( adjust-hue( $skin-color, -3deg ), 8 ), 5 );
+      @include placeholder {
+        color: rgba(set-color(darken( desaturate( adjust-hue( $skin-color, -3deg ), 8 ), 5 )), 0.74);
+      }
     }
   }
   .system-events-view-box {

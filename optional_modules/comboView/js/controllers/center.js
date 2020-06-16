@@ -185,7 +185,7 @@ VBET5.controller('comboViewCenterController', ['$rootScope', '$scope', 'OddServi
                         game.region = {id: region.id, name: region.name};
                         game.competition = {id: competition.id, order: competition.order, name: competition.name};
                         game.firstMarket = $filter('firstElement')(game.market);
-                        game.additionalEvents = Config.main.showEventsCountInMoreLink ? game.events_count : game.markets_count;
+                        game.additionalEvents = game.markets_count;
 
                         game.filteredMarkets = Utils.groupByItemProperty(game.market, 'type');
                         angular.forEach(game.filteredMarkets, function (marketGroup, id) {
@@ -272,7 +272,7 @@ VBET5.controller('comboViewCenterController', ['$rootScope', '$scope', 'OddServi
                 'game': [
                     'id', 'start_ts', 'team1_name', 'team2_name',
                     'team1_external_id', 'team2_external_id', 'type', 'info',
-                    'events_count', 'markets_count', 'extra', 'is_blocked',
+                    'markets_count', 'extra', 'is_blocked',
                     'exclude_ids', 'is_stat_available', 'game_number', 'game_external_id', 'is_live', 'show_type'
                 ],
                 'event': ['id', 'price', 'type', 'name', 'order', 'base'],

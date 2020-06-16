@@ -12,6 +12,7 @@
             <li ng-repeat="game in liveGamesData.devidedGames[liveGamesData.selectedProvider].games track by $index"
                 ng-show="confData.liveCasino.hiddenGamesIds.indexOf(game.id) === -1 && (!game.markets || game.markets.available.indexOf(liveGamesData.devidedGames[liveGamesData.selectedProvider].defaultStudio) !== -1)"
                 ng-style="{'width' : 100 / pageOptions.g_columns + '%', 'padding' : halfPadding}">
+                <i  ng-click="toggleSaveToMyCasinoGames(game); $event.stopPropagation();" ng-class="{'active': $root.myCasinoGamesIds[game.id]}"></i>
                 <div class="float-width" ng-click="openGame(game, null, liveGamesData.devidedGames[liveGamesData.selectedProvider].defaultStudio); $event.stopPropagation();">
                     <div class="live-casino-game-default" ng-if="!(pageOptions.image_type === 'images' && (!!game.icon_3 || !!game.icon_2))">
                         <div class="live-casino-icon" ng-class="(game.gameID || game.front_game_id) | removeUselessSymbolsByRegexp: '[,\%,\(,\) ]+': 'g': 'true'"></div>

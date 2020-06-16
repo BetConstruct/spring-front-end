@@ -82,10 +82,10 @@ VBET5.factory('Zergling', ['Config', 'WS', '$http', '$q', '$timeout', '$rootScop
         angular.forEach(diff, function (val, key) {
             if (val === null) {
                 delete current[key];
-            } else if (typeof val !== 'object') {
+            } else if (!Utils.isObject(val)) {
                 current[key] = val;
             } else { // diff[key] is Object
-                if (typeof current[key] !== 'object' || current[key] === null) {
+                if (!Utils.isObject(current[key]) || current[key] === null) {
                     current[key] = val;
                 } else {
                     var hasPrice = (current[key].price !== undefined);
@@ -253,13 +253,11 @@ VBET5.factory('Zergling', ['Config', 'WS', '$http', '$q', '$timeout', '$rootScop
         sessionRequestIsInProgress = false;
         var res = response.data.data;
         if (res && res.sid) {
-            if (!res.recaptcha_enabled || (RecaptchaService.version === 3 && res.recaptcha_version === 3)) { // for v3 if the version is defined, then it is already initialized
-                session.resolve(res.sid);
-            } else {
-                RecaptchaService.init(res.site_key, res.recaptcha_version, true).then(function() {
-                    session.resolve(res.sid);
-                });
+            if (res.recaptcha_enabled) {
+                RecaptchaService.init(res.site_key, res.recaptcha_version);
             }
+
+            session.resolve(res.sid);
 
             $rootScope.$broadcast('zergling.sessionOpened', res.sid);
 
@@ -279,23 +277,6 @@ VBET5.factory('Zergling', ['Config', 'WS', '$http', '$q', '$timeout', '$rootScop
             processResult = $q.reject(response);
         }
         return processResult;
-    }
-
-    function processToReceiveSession(result, sessionRequestCmd) {
-        if (useWebSocket) {
-            console.log('requesting new session (WS)');
-            result = WS.sendRequest(sessionRequestCmd).then(processSessionResponse);
-        } else {
-            console.log('requesting new session (LP)');
-            $http.post(getLongPollUrl(), JSON.stringify(sessionRequestCmd))
-                .then(function (response) { // extra 'data' is used to make structure same as when using data returned by $http.post promise resolve
-                    result = processSessionResponse({data: response.data});
-                })
-                .error(function (response) {
-                    session = null;
-                    result = $q.reject(response.data);
-                });
-        }
     }
 
     /**
@@ -329,17 +310,19 @@ VBET5.factory('Zergling', ['Config', 'WS', '$http', '$q', '$timeout', '$rootScop
             }
             sessionRequestIsInProgress = true;
 
-            var recaptchaOptions = Storage.get('recaptcha_' + $rootScope.conf.site_id);
-
-            if (recaptchaOptions) {
-                RecaptchaService.init(recaptchaOptions.key, recaptchaOptions.version).then(function(g_recaptcha_response) {
-                    if (g_recaptcha_response) {
-                        sessionRequestCmd.params.g_recaptcha_response = g_recaptcha_response;
-                    }
-                    processToReceiveSession(result, sessionRequestCmd);
-                });
+            if (useWebSocket) {
+                console.log('requesting new session (WS)');
+                result = WS.sendRequest(sessionRequestCmd).then(processSessionResponse);
             } else {
-                processToReceiveSession(result, sessionRequestCmd);
+                console.log('requesting new session (LP)');
+                $http.post(getLongPollUrl(), JSON.stringify(sessionRequestCmd))
+                    .then(function (response) { // extra 'data' is used to make structure same as when using data returned by $http.post promise resolve
+                        result = processSessionResponse({data: response.data});
+                    })
+                    .error(function (response) {
+                        session = null;
+                        result = $q.reject(response.data);
+                    });
             }
 
             return result;

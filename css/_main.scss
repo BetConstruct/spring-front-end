@@ -1178,7 +1178,7 @@ a {
     direction: rtl;
   }
   .close-slider-button-j {
-    font: 20px/22px icomoon;
+    font: 24px/26px icomoon;
     text-align: center;
     color: $text-palette-4;
     transition: 300ms color;
@@ -1186,10 +1186,10 @@ a {
     top: #{$header-first-line-height + $header-nav-line-height};
     z-index: 200;
     @include ltr {
-      right: 4px;
+      right: 12px;
     }
     @include rtl {
-      left: 4px;
+      left: 12px;
     }
     &:hover {
       color: $text-palette-2;
@@ -1223,8 +1223,9 @@ a {
 }
 .clear-favorite-games {
   position: absolute;
-  top: 5px;
+  top: 8px;
   color: $text-palette-4;
+  text-transform: uppercase;
   transition: color 240ms;
   font: 16px/18px $font-f;
   @include ltr {
@@ -1414,10 +1415,12 @@ a {
   content: "\e608";
 }
 
-.Basketball:before {
+.Basketball:before{
   content: "\e609";
 }
-
+.BasketballShots:before{
+  content: '\e930';
+}
 .BeachHandball:before {
   content: "\e60a";
 }
@@ -1530,7 +1533,7 @@ a {
   content: "\e61e";
 }
 
-.Formula1:before {
+.Formula1:before, .VirtualFormula1:before {
   content: "\e61f";
 }
 
@@ -1556,6 +1559,9 @@ a {
 
 .GrassHockey:before {
   content: "\e623";
+}
+.AirHockey:before {
+  content: "\e931";
 }
 
 .Greyhounds:before {
@@ -2053,6 +2059,9 @@ a {
 
 .Fortnite:before{
   content: '\e927';
+}
+.Valorant:before{
+  content: "\e92e";
 }
 
 .sport-group-.E-sports:before {
@@ -2966,7 +2975,41 @@ p.flag {
   display: table-row;
   width: 100%;
 }
+.legue-sp{
+  .cyber-competition{
+    position: relative;
+    @include rtl{
+      display: inline-block;
+      vertical-align: top;
+      width: 30px;
+      &:before{
+        left: 0;
+        right: auto;
+      }
+    }
+    @include ltr{
+      padding: 0 25px 0 2px;
+    }
 
+    &:before{
+      content: '\e92f';
+      font: 18px/18px sport-icon;
+      position: absolute;
+      top: 0;
+      @include ltr{
+        left: 0;
+      }
+      @include rtl{
+        right: 0;
+      }
+    }
+  }
+}
+.sport-icon-m-j + .legue-sp li:first-child + i.cyber-competition{
+  @include rtl{
+   // padding-right: 100px;
+  }
+}
 .legue-sp li {
   display: table-cell;
   border-bottom: 3px solid #000;
@@ -3038,11 +3081,21 @@ p.flag {
     text-align: left;
   }
   @include rtl {
-    padding: 0 25px 0 50px;
+    padding: 0 25px 0 25px;
     text-align: right;
   }
 }
-
+//.country-leage i.sport-icon-m-j + .legue-sp li:first-child{
+//  @include rtl {
+//    padding: 0 70px 0 25px;
+//    text-align: right;
+//  }
+//  .cyber-competition{
+//    @include rtl{
+//      right: 48px;
+//    }
+//  }
+//}
 .legue-sp li:first-child span {
   padding: 0;
   position: absolute;
@@ -3145,7 +3198,7 @@ p.flag {
     }
   }
 }
-.game-live-row li {
+.game-live-row > li {
   display: table-cell;
   padding: 5px;
   margin: 0 0 0 5px;
@@ -3296,6 +3349,7 @@ div.star {
   max-width: 80px;
   text-align: right;
   .boosted {
+    float: none;
     display: table-cell;
     padding: 0 2px;
   }
@@ -3314,15 +3368,34 @@ div.star {
 }
 
 .game-live-row .statistic {
-  width: 32px;
   text-align: center;
-
 }
 
 .game-live-row .statistic a {
   display: inline-block;
   width: 14px;
   height: 14px;
+}
+
+.game-live-row .match-key {
+  font-size: 14px;
+  &:hover {
+    color: $hero-color !important;
+    > ul {
+      top: -26px;
+      color: set-color($hero-color);
+      background: $hero-color;
+      @include ltr {
+        right: -6px;
+      }
+      @include rtl {
+        left: -6px;
+      }
+      &:after {
+        border-color: $hero-color transparent transparent;
+      }
+    }
+  }
 }
 
 /*.game-live-row .factor {display: none;}*/
@@ -4261,11 +4334,26 @@ div.star {
 .cash-game {
   width: 100%;
   margin: 20px 0 0 0;
+  border-collapse: inherit;
   @include ltr {
     float: left;
   }
   @include rtl {
     float: right;
+  }
+}
+
+.cash-game tr th {
+  vertical-align: middle;
+  padding: 0 3px 4px;
+  &:first-child {
+    width: 130px;
+    @include ltr {
+      text-align: left;
+    }
+    @include rtl {
+      text-align: right;
+    }
   }
 }
 
@@ -4275,44 +4363,24 @@ div.star {
   vertical-align: middle;
   padding: 0 3px;
   text-align: center;
-  min-width: 10px;
+  width: 10px;
   position: relative;
-}
-
-.cash-game tr th {
-  vertical-align: middle;
-  padding: 0 3px 4px;
-}
-
-.cash-game tr th:first-child {
-  @include ltr {
-    text-align: left;
-  }
-  @include rtl {
-    text-align: right;
-  }
-}
-
-.cash-game tr td:first-child {
-  width: 130px;
-  word-break: break-all;
-  @include ltr {
-    padding: 0 60px 0 8px;
-    text-align: left;
-  }
-  @include rtl {
-    padding: 0 8px 0 60px;
-    text-align: right;
+  &:first-child {
+    width: auto;
+    word-break: break-all;
+    @include ltr {
+      padding: 0 60px 0 8px;
+      text-align: left;
+    }
+    @include rtl {
+      padding: 0 8px 0 60px;
+      text-align: right;
+    }
   }
 }
 
 .cash-game tr th .h-time {
   cursor: default;
-}
-
-.cash-game tr td:first-child span {
-  display: block;
-  width: 130px;
 }
 
 .cash-game tr .team-1 {
@@ -4345,10 +4413,8 @@ div.star {
 .cash-game.cash-game-snooker tr td:first-child,
 .cash-game.cash-game-tabletennis tr td:first-child {
   padding: 0 2px 0 8px;
-  position: relative;
   display: block;
   border-right: none;
-  width: auto;
 }
 
 .cash-game.cash-game-snooker tr td:first-child span {
@@ -4357,7 +4423,8 @@ div.star {
 }
 
 .cash-game.cash-game-tabletennis tr td:first-child span {
-  width: 110px;
+  display: block;
+  width: 100%;
   padding-top: 6px;
 }
 
@@ -4788,26 +4855,29 @@ div.game-video-detached #gamevideoobj {
 .cash-game tr .team-1 > div,
 .cash-game tr .team-2 > div {
   position: absolute;
-  top: 8px;
+  top: 50%;
+  transform: translateY(-50%);
   @include ltr {
     right: 10px;
   }
   @include rtl {
     left: 10px;
   }
-}
-
-.active-game:before {
-  content: "";
-  display: block;
-  width: 14px;
-  height: 14px;
-  position: absolute;
-  @include ltr {
-    margin: 2px 0 0 -22px;
+  &:before {
+    position: absolute;
+    top: -7px;
+    display: none;
+    color: $hero-color;
+    font: 12px/31px sport-icon;
+    @include ltr {
+      left: -22px;
+    }
+    @include rtl {
+      right: -22px;
+    }
   }
-  @include rtl {
-    margin: 2px -22px 0 0;
+  &.active-game:before {
+    display: block;
   }
 }
 
@@ -11461,7 +11531,7 @@ div[class*="pagemobile"] .page-main .page-content p {
 .block-meny-news {
   float: left;
   width: 100%;
-  min-width: 980px;
+  min-width: 960px;
   padding: 0 0 40px;
   min-height: 420px;
 }
@@ -11481,7 +11551,7 @@ div[class*="pagemobile"] .page-main .page-content p {
 .list-news.promo {
   margin: 10px auto 0;
   grid-template-columns: repeat(3, 4fr);
-  grid-gap: 0;
+  grid-gap: 42px;
   display: grid;
   display: -ms-grid;
   -ms-grid-auto-flow: column;
@@ -11489,22 +11559,42 @@ div[class*="pagemobile"] .page-main .page-content p {
   -ms-grid-template-rows: 100%;
   -ms-grid-columns: 4fr 4fr 4fr;
   -ms-grid-rows: 100%;
+
+  //> ul{
+  //  &:first-child{
+  //    -ms-grid-column: 1;
+  //    padding-right: 28px;
+  //  }
+  //  &:nth-child(2){
+  //    -ms-grid-column: 2;
+  //    padding: 0 14px;
+  //  }
+  //  &:nth-child(3){
+  //    -ms-grid-column: 3;
+  //    padding: 0 0 0 28px;
+  //  }
+  //}
   > ul{
-    &:first-child{
-      -ms-grid-column: 1;
-      padding-right: 28px;
-    }
-    &:nth-child(2){
-      -ms-grid-column: 2;
-      padding: 0 14px;
-    }
-    &:nth-child(3){
-      -ms-grid-column: 3;
-      padding: 0 0 0 28px;
-    }
+    padding: 0 !important;
   }
 }
+.block-sport-news.count-3{
+  .list-news.promo{
+    grid-template-columns: repeat(3, 4fr);
 
+  }
+}
+.block-sport-news.count-4{
+  .list-news.promo{
+    grid-template-columns: repeat(4, 5fr);
+  }
+}
+.block-sport-news.count-5{
+  .list-news.promo{
+    grid-template-columns: repeat(5, 6fr);
+    grid-gap: 30px;
+  }
+}
 .list-news ul{
   li {
     width: 100%;
@@ -11600,7 +11690,7 @@ div[class*="pagemobile"] .page-main .page-content p {
   float: left;
   width: 100%;
   height: auto;
-  min-width: 980px;
+  min-width: 960px;
   position: relative;
   padding: 0 0 30px;
   display: block;
@@ -11613,7 +11703,7 @@ div[class*="pagemobile"] .page-main .page-content p {
 }
 
 .big-news-block {
-  width: 980px;
+  width: 960px;
   margin: 0 auto;
 }
 
@@ -11633,6 +11723,7 @@ div[class*="pagemobile"] .page-main .page-content p {
 .right-block-news {
   width: 960px;
   margin: 43px 0 0;
+  box-sizing: border-box;
   padding: 0 10px 50px 10px;
   @include ltr {
     float: right;
@@ -13960,6 +14051,10 @@ iframe.game-has-bonus {
   height: auto;
   width: 974px;
   margin: 0;
+  .all-games-container > a {
+    height: auto;
+    max-height: 152px;
+  }
 }
 
 .block-slider .games-slider ul {
@@ -15925,10 +16020,6 @@ body.fliph .noflip {
   transform: scaleX(-1);
   -ms-filter: fliph; /*IE*/
   filter: fliph; /*IE*/
-}
-
-.list-news ul.news-column-3 {
-  display: none;
 }
 
 .sport-news ul {
@@ -22217,7 +22308,7 @@ li .game-icon-by-id-j-VGS106 + .float-left-of-icon-lss-j p {
     padding: 0 50px;
   }
   @include rtl {
-    padding: 0 50px;
+    padding: 0 50px 0 50px;
   }
 }
 
@@ -23063,7 +23154,7 @@ div.slider-image-wrapper-b {
   }
 }
 .tooltip-j {
-  width: 280px;
+  width: 286px;
   padding: 10px;
   border-radius: 2px;
   background: #c1c4cd;
@@ -23076,6 +23167,7 @@ div.slider-image-wrapper-b {
   display: none;
   bottom: calc(100% + 5px);
   max-width: 100%;
+  word-break: break-word;
   @include ltr {
     right: 0;
     text-align: left;
@@ -24119,11 +24211,11 @@ html.integration-auto-height .sport.asian {
 
   }
   + .load-more-news.multiview {
-    margin-top: 70px;
+    margin-top: 38px;
     a {
       padding-bottom: 0;
       &:before {
-        top: -50px;
+        top: -34px;
       }
     }
   }
@@ -24187,7 +24279,7 @@ html.integration-auto-height .sport.asian {
       vertical-align: middle;
       padding: 10px;
       box-sizing: border-box;
-      text-transform: uppercase;
+     // text-transform: uppercase;
       font: normal 12px/16px $font-f;
       transition: color 250ms, background 250ms;
       color: rgba(set-color($header-nav-line-background), 0.73);

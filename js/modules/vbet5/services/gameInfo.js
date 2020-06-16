@@ -14,8 +14,6 @@ angular.module('vbet5').service('GameInfo', ['$rootScope', '$http', '$filter', '
     GameInfo.PROVIDER_AVAILABLE_EVENTS = null;
     GameInfo.SPORT_GROUPS = null;
 
-    var gameIdsHavingStreaming;
-
     /**
      * @ngdoc method
      * @name groupRegionsIfNeeded
@@ -95,8 +93,13 @@ angular.module('vbet5').service('GameInfo', ['$rootScope', '$http', '$filter', '
                 game.video_id = undefined;
                 return false;
             }
-            game.tv_type = GameInfo.PROVIDER_AVAILABLE_EVENTS[game.id][0].provider_id;
-            game.video_id = GameInfo.PROVIDER_AVAILABLE_EVENTS[game.id][0].video_id;
+            var options = GameInfo.PROVIDER_AVAILABLE_EVENTS[game.id][0];
+            game.tv_type = options.provider_id;
+            game.video_id = options.video_id;
+
+            if (options.is_guest) {
+                game.is_guest = options.is_guest;
+            }
 
             return true;
         }
@@ -183,6 +186,7 @@ angular.module('vbet5').service('GameInfo', ['$rootScope', '$http', '$filter', '
         return outputIds;
     };
 
+
     /**
      * @ngdoc method
      * @name getVideoFilter
@@ -193,7 +197,7 @@ angular.module('vbet5').service('GameInfo', ['$rootScope', '$http', '$filter', '
      */
     GameInfo.getVideoFilter = function getVideoFilter() {
         if (Config.main.video.enableOptimization) {
-            gameIdsHavingStreaming = Object.keys(GameInfo.PROVIDER_AVAILABLE_EVENTS).map(
+            var gameIdsHavingStreaming = Object.keys(GameInfo.PROVIDER_AVAILABLE_EVENTS || {}).map(
                 function(id) {
                     return parseInt(id, 10);
                 });
@@ -269,7 +273,7 @@ angular.module('vbet5').service('GameInfo', ['$rootScope', '$http', '$filter', '
      * @param {Boolean} isAnimation get animation data
      */
     GameInfo.getVideoData = function getVideoData(game, evenIfNotLoggedIn, isAnimation) {
-        if (!isAnimation && (!game || game.tv_type === undefined || game.video_id === undefined || (!evenIfNotLoggedIn && (!$rootScope.profile || (!Config.main.video.allowedWithNoneBalance[game.tv_type] && ($rootScope.profile.calculatedBalance + $rootScope.profile.calculatedBonus) === 0))))) {
+        if (!isAnimation && (!game || game.tv_type === undefined || game.video_id === undefined || (!game.is_guest && !evenIfNotLoggedIn && (!$rootScope.profile || (!Config.main.video.allowedWithNoneBalance[game.tv_type] && ($rootScope.profile.calculatedBalance + $rootScope.profile.calculatedBonus) === 0))))) {
             return;
         }
         var request = isAnimation ? {
@@ -616,7 +620,7 @@ angular.module('vbet5').service('GameInfo', ['$rootScope', '$http', '$filter', '
                 if (market) {
                     //get market price for this particular horse, will remove from this code
                     horseStatistics.event = getHorseMarket(market, marketName, horseStatistics.name, horseStatistics.id);
-                    if(horseStatistics.event && horseStatistics.event.extra_info && horseStatistics.event.extra_info.PriceHistory.length > 1) {
+                    if(horseStatistics.event && horseStatistics.event.extra_info && horseStatistics.event.extra_info.PriceHistory && horseStatistics.event.extra_info.PriceHistory.length > 1) {
                         horseStatistics.event.previousPrice = horseStatistics.event.extra_info.PriceHistory.sort(function (a, b) {
                             return b.TS - a.TS;
                         })[1].Price;
@@ -927,7 +931,7 @@ angular.module('vbet5').service('GameInfo', ['$rootScope', '$http', '$filter', '
         if(game.info) {
             game.info.field = game.info.field !== undefined ? game.info.field : (game.field !== undefined ? game.field : '');
         }
-        if(game.live_events && game.live_events.length > 0  ) {
+        if (game.live_events && game.live_events.length > 0 ) {
             var i, length = game.live_events.length;
             for (i = 0; i < length; i++) {
                 game.live_events[i].event_type = (GAME_EVENTS_MAP[game.live_events[i].type_id] || '').split(/(?=[A-Z])/).join(' ');
@@ -935,20 +939,25 @@ angular.module('vbet5').service('GameInfo', ['$rootScope', '$http', '$filter', '
                 game.live_events[i].team = game.live_events[i].side === 0 ? '' : 'team' + game.live_events[i].side;
                 game.live_events[i].add_info = game.live_events[i].current_minute || 0;
             }
+            game.live_events.sort(function(a,b) {
+                return a.time - b.time;
+            })
         }
         GameInfo.checkITFAvailability(game);
     };
 
     /* checks if extra time of the game is played
      * need this function for generating timeline events */
-    function checkExtraTime(gameInfo) {
+    function checkExtraTime(game) {
+        var gameInfo = game.info;
         return (
             gameInfo && (
                 gameInfo.current_game_state === 'additional_time1' ||
                 gameInfo.current_game_state === 'additional_time2' ||
                 gameInfo.current_game_state === 'set3' ||
                 gameInfo.current_game_state === 'set4' ||
-                (gameInfo.current_game_state === 'timeout' && gameInfo.currMinute > 100)
+                (gameInfo.current_game_state === 'timeout' && gameInfo.current_game_time > 90) ||
+                (gameInfo.current_game_state === 'set5' && game.last_event.match_length > 90)
             )
         );
     }
@@ -957,22 +966,23 @@ angular.module('vbet5').service('GameInfo', ['$rootScope', '$http', '$filter', '
     function getTLCurrentMinutePosition(game) {
         var curentMinute;
         var currentMinutePosition = '';
+
         if (!game.info || !game.info.current_game_time) {
             return;
         }
+        var matchLength = parseInt((game.last_event && game.last_event.match_length) || game.match_length || 0, 10);
+        var extraTime = 30;
+        var mainTime = matchLength > 100 ? matchLength - extraTime : matchLength;
 
         curentMinute = parseInt(game.info.current_game_time, 10);
 
         if(curentMinute < 0 ){
             return '0%';
         }
-        if (checkExtraTime(game.info)) {
-            currentMinutePosition = (curentMinute - 90) <= 30 ? ((curentMinute - 90) * 10 / 3) + '%' : '100%';
-        } else if (game.last_event &&  parseInt(game.last_event.match_length, 10) < 90) {
-            var matchLength = parseInt(game.last_event.match_length, 10);
-            currentMinutePosition = curentMinute <= matchLength ? (curentMinute * 10 / (matchLength/ 10)) + '%' : '100%';
+        if (game.info.isExtraTime) {
+            currentMinutePosition = ((curentMinute - mainTime) / extraTime * 100) + '%' ;
         } else {
-            currentMinutePosition = curentMinute <= 90 ? (curentMinute * 10 / 9) + '%' : '100%';
+            currentMinutePosition = (curentMinute / mainTime * 100) + '%';
         }
 
         return currentMinutePosition;
@@ -982,25 +992,14 @@ angular.module('vbet5').service('GameInfo', ['$rootScope', '$http', '$filter', '
     /*returns position of timeline event */
     function getTimelinePosition (timelineEvent) {
         var theMinute = parseInt(timelineEvent.minute, 10);
-        var multiplier = 9;
+        var iconSize = 8; //can be changed
 
-        if (timelineEvent.extraTime) {
-            return;
-        }
+        var matchLength = parseInt(timelineEvent.matchLength, 10);
+        var extraTime = 30;
+        var mainTime = matchLength > 100 ? matchLength - extraTime : matchLength;
+        var leftPercent = (timelineEvent.extraTime ? (theMinute - mainTime) / extraTime : theMinute / mainTime) * 100;
 
-        if (parseInt(timelineEvent.matchLength, 10) < 90) {
-            multiplier = parseInt(timelineEvent.matchLength, 10)/ 10;
-        }
-
-        if (theMinute > (multiplier-5) && theMinute < multiplier*10) {
-            return {  position: 'absolute', right: (102 - theMinute * 10 / multiplier) + '%'};
-        }
-
-        if (theMinute >= multiplier*10) {
-            return { position: 'absolute', right: 0 +'%'};
-        }
-
-        return { position: 'absolute', left:  theMinute * 10 / multiplier + '%'};
+        return {position: 'absolute',left: 'calc(' + leftPercent + '% + ' + timelineEvent.positionCorrected * iconSize + 'px)'};
     }
 
 
@@ -1010,7 +1009,8 @@ angular.module('vbet5').service('GameInfo', ['$rootScope', '$http', '$filter', '
             return;
         }
         var currentEvent = {};
-        currentEvent.minute = parseInt(tlEvent.add_info, 10);
+        currentEvent.minute = parseInt(tlEvent.current_minute, 10);
+        currentEvent.positionCorrected = 0;
         currentEvent.type = 'tl-' + tlEvent.event_type.split(' ').join('_').toLowerCase();
         currentEvent.shirtColor = tlEvent.team === 'team1' ? game.info.shirt1_color : game.info.shirt2_color;
         currentEvent.team = tlEvent.team;
@@ -1019,17 +1019,36 @@ angular.module('vbet5').service('GameInfo', ['$rootScope', '$http', '$filter', '
         currentEvent.details = {};
         currentEvent.details.type = tlEvent.event_type.split('_').join(' ');
         currentEvent.details.add_info = tlEvent.add_info + " " + game[tlEvent.team + '_name'];
-        var timelinePosition = getTimelinePosition(currentEvent);
-        currentEvent.timeline_position = timelinePosition;
+
         currentEvent.extraTime = false;
-        if (checkExtraTime(game.info)) {
-            currentEvent.extraTime = true;
-            //if extra time push only tl events after 90th minute
-            if (currentEvent.minute > 90) {
-                game.tlEvents.push(currentEvent);
+        currentEvent.matchExtraTime = false;
+
+        if (game.info.isExtraTime) {
+            if(currentEvent.matchLength > 100){
+                currentEvent.extraTime = currentEvent.minute > currentEvent.matchLength - 30;
             }
+        }
+        game.tlEvents.push(currentEvent);
+
+        var previousEvent = game.tlEvents[game.tlEvents.indexOf(currentEvent) - 1];
+        setCorrection(currentEvent, previousEvent);
+
+        currentEvent.timeline_position = getTimelinePosition(currentEvent);
+    }
+
+    function sortEvents(events) {
+        events.sort(function (a,b) {
+            if(a.current_minute !== b.current_minute){
+                return  a.side - b.side || parseInt(a.current_minute) - parseInt(b.current_minute);
+            }
+        });
+    }
+
+    function setCorrection(currentEvent, previousEvent) {
+        if (previousEvent && currentEvent.team === previousEvent.team && currentEvent.minute === previousEvent.minute) {
+            currentEvent.positionCorrected = (previousEvent.positionCorrected || 0) + 1;
         } else {
-            game.tlEvents.push(currentEvent);
+            currentEvent.positionCorrected = 0;
         }
     }
 
@@ -1041,25 +1060,22 @@ angular.module('vbet5').service('GameInfo', ['$rootScope', '$http', '$filter', '
      * @description generates timeline events for soccer animation control
      */
     GameInfo.generateTimeLineEvents = function generateTimeLineEvents(game) {
-        if(game.tlEvents) {
-            // add only last element from live_events if it fits condition
-            if (!game.live_events || game.live_events.length === game.live_events_length) {
-                return; // no new event added
-            }
-            game.live_events_length = game.live_events.length;
-            if( game.live_events_length) {
-                populateTimelineEventData(game.live_events[game.live_events_length - 1], game);
-            }
-        } else if (game.live_events && game.live_events.length) {
-            game.tlEvents = [];
-            angular.forEach(game.live_events, function (tlEvent) {
-                populateTimelineEventData(tlEvent, game);
-            });
+        if (game && game.info) {
+            game.info.isExtraTime = GameInfo.isExtraTime(game);
         }
 
         var currentMinuteStyle = getTLCurrentMinutePosition(game);
         game.tlCurrentMinute = {width: currentMinuteStyle };
         game.tlCurrentPosition = { left: currentMinuteStyle };
+
+        if (game.live_events && game.live_events.length &&  game.live_events_length !== game.live_events.length) {
+            game.tlEvents = [];
+            game.live_events_length = game.live_events.length;
+            sortEvents(game.live_events);
+            angular.forEach(game.live_events, function (tlEvent) {
+                populateTimelineEventData(tlEvent, game);
+            });
+        }
     };
 
 
@@ -1091,10 +1107,10 @@ angular.module('vbet5').service('GameInfo', ['$rootScope', '$http', '$filter', '
      * @methodOf vbet5.service:GameInfo
      * @description
      * detects whether the game extra time has begun
-     * @param {Object} gameInfo game.info object which contains information about game state
+     * @param {Object} game game object which contains information about game state
      */
-    GameInfo.isExtraTime = function isExtraTime(gameInfo) {
-        return checkExtraTime(gameInfo);
+    GameInfo.isExtraTime = function isExtraTime(game) {
+        return checkExtraTime(game);
     };
 
 

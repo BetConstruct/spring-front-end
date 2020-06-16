@@ -23,7 +23,7 @@
                         </span>
                         </h4>
                     </div>
-                    <div class="overview-game-info" ng-class="{'blocked': (!(game.events_count || game.markets_count) || game.is_blocked)}" ng-repeat="game in competition.games track by game.id">
+                    <div class="overview-game-info" ng-class="{'blocked': (!game.markets_count || game.is_blocked)}" ng-repeat="game in competition.games track by game.id">
                         <div class="overview-name-column">
                             <a ng-href="#/sport/?game={{game.id}}&sport={{sport.id || competition.sport.id}}&competition={{competition.id}}&type=1&region={{game.region.id}}">
                                 <div class="name-team-overview">

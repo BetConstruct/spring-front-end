@@ -50,6 +50,13 @@
                         <li ng-if="history.status === 0 && !conf.disableCancelWithdraw && env.sliderContent === 'withdraw'">
                             <button ng-click="cancelWithdrawRequest(history.id)" ng-disabled="cancelButton.disabled" trans>Cancel</button>
                         </li>
+                        <li ng-if="$root.conf.showAdditionalInfoOnPaymentStatuses && (history.status === 0 || history.status === 2 || history.status === -2)" ng-mouseover="getWithdrawRejectedReason(history.id, history.status);" class="info-t" title="{{
+                        {
+                        '0': 'Thank you we received your request',
+                        '2': 'Waiting for Payment system approval',
+                        '-2': (rejectedInfo[history.id] ? rejectedInfo[history.id] : 'Loading...')}[history.status]|translate}}">
+
+                        </li>
                         <li ng-class="{'pending': history.status === 0 || history.status === 2, 'confirmed': history.status === 3, 'rejected': history.status === -2}"></li>
                     </ul>
                 </li>
@@ -539,13 +546,17 @@
                                                comma  comma-enable={{conf.enableCommaSeparateNumber}}
                                                comma-decimal="enable" comma-dot="{{conf.enableDotInsteadComma}}"
                                                prevent-input="[^0-9\.\,]"
+                                               range-validation
+                                               range-min="{{selectedPaymentSystem.info[currencyHolder.selectedCurrency].minWithdraw}}"
+                                               range-max="{{Math.min(selectedPaymentSystem.info[currencyHolder.selectedCurrency].maxWithdraw, paymentAmount.availableWithdrawAmount)}}"
                                                placeholder="{{(('withdraw enter amount here'|translate:null:true) ? 'withdraw enter amount here' : 'enter amount here')|translate}}"
                                                ng-disabled="!(paymentAmount.availableWithdrawAmount>0)" required>
                                     </div>
-                                    <span>{{previewCurrencyConversion(paymentAmount.withdraw)}}</span>
-                                    <span ng-show="paymentAmount.amountMinLimitExists && paymentForm.withdrawAmount.$error.min"
-                                          trans>Amount is less than minimum allowed</span>
+                                    <span ng-show="!(paymentForm.withdrawAmount.$viewValue > paymentAmount.availableWithdrawAmount) && selectedPaymentSystem.info[currencyHolder.selectedCurrency].minWithdraw && paymentForm.withdrawAmount.$error['rangeValidation']">
+                                        {{'The entered amount is out of the allowable ({1}/{2}) ranges'|translate:[selectedPaymentSystem.info[currencyHolder.selectedCurrency].minWithdraw ,Math.min(selectedPaymentSystem.info[currencyHolder.selectedCurrency].maxWithdraw, paymentAmount.availableWithdrawAmount )]}}
+                                    </span>
 
+                                    <span ng-show="paymentForm.withdrawAmount.$viewValue > paymentAmount.availableWithdrawAmount" trans>The balance on your account is not sufficient.</span>
 
 
 
@@ -594,9 +605,13 @@
                                     <input name="amount"  comma  comma-enable={{conf.enableCommaSeparateNumber}}
                                            comma-decimal="enable" comma-dot="{{conf.enableDotInsteadComma}}" id="numpad-forced" type="text" numpad numpad-force
                                            ng-model="paymentAmount.deposit" prevent-input="[^0-9\.\,]"
+                                           range-validation
+                                           range-min="{{selectedPaymentSystem.info[currencyHolder.selectedCurrency].minDeposit}}"
+                                           range-max="{{selectedPaymentSystem.info[currencyHolder.selectedCurrency].maxDeposit}}"
                                            placeholder="{{(('deposit enter amount here'|translate:null:true) ? 'deposit enter amount here' : 'enter amount here')|translate}}"
                                            required/>
                                 </div>
+                                <p ng-show="selectedPaymentSystem.info[currencyHolder.selectedCurrency].minDeposit && selectedPaymentSystem.info[currencyHolder.selectedCurrency].maxDeposit && paymentForm.amount.$error['rangeValidation']" ng-bind="'The entered amount is out of the allowable ({1}/{2}) ranges'|translate:[selectedPaymentSystem.info[currencyHolder.selectedCurrency].minDeposit,selectedPaymentSystem.info[currencyHolder.selectedCurrency].maxDeposit]"></p>
                                 <span>{{previewCurrencyConversion(paymentAmount.deposit)}}</span>
                             </label>
                         </div>

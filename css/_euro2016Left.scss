@@ -816,6 +816,124 @@
     }
   }
 }
+.left-menu-suggested-games {
+  float: left;
+  width: 100%;
+  padding: 0 1px 3px;
+  box-sizing: border-box;
+}
+.left-menu-suggested-games-padding {
+  float: left;
+  width: 100%;
+  @include ltr {
+    background: radial-gradient(circle at 100% 0,  rgba($hero-color,0.4), rgba($skin-color,0.5));
+  }
+  @include rtl {
+    background: radial-gradient(circle at 100% 0, rgba($skin-color,0.5), rgba($hero-color,0.4));
+  }
+}
+.left-menu-suggested-games-title {
+  float: left;
+  width: 100%;
+  height: 34px;
+  box-sizing: border-box;
+  font: #{6+$size-font}/34px $font-f;
+  color: rgba(set-color($skin-color),0.9);
+  @include ltr {
+    text-align: left;
+    padding: 0 36px 0 40px;
+  }
+  @include rtl {
+    text-align: right;
+    padding: 0 40px 0 36px;
+  }
+  &:before {
+    content: "\e92c";
+    position: absolute;
+    top: 0;
+    color: set-color($skin-color);
+    font: #{12+$size-font}/34px icomoon;
+    @include ltr {
+      left: 10px;
+    }
+    @include rtl {
+      right: 10px;
+    }
+  }
+  &:after {
+    content: "\e670";
+    position: absolute;
+    top: 0;
+    color: rgba(set-color($skin-color),0.8);
+    font: #{10+$size-font}/34px icomoon;
+    @include ltr {
+      right: 11px;
+    }
+    @include rtl {
+      left: 11px;
+    }
+  }
+  &.active:after {
+    content: "\e671";
+  }
+}
+.left-menu-suggested-games-list {
+  float: left;
+  width: 100%;
+  padding: 10px;
+  box-sizing: border-box;
+  border-top: 1px solid rgba($c16-sp-1,0.3);
+  > a {
+    float: left;
+    width: 100%;
+    height: 30px;
+    color: set-color($skin-color);
+    background: rgba($c16-sp-1,0.2);
+    border-radius: 4px;
+    box-sizing: border-box;
+    position: relative;
+    transition: background 240ms;
+    font: #{6+$size-font}/32px $font-f;
+    @include ltr {
+      text-align: left;
+      padding: 0 34px 0 38px;
+    }
+    @include rtl {
+      text-align: right;
+      padding: 0 38px 0 34px;
+    }
+    &:hover {
+      background: rgba($c16-sp-1,0.07);
+    }
+    &:before {
+      position: absolute;
+      top: 0;
+      font: #{12+$size-font}/30px icomoon;
+      @include ltr {
+        left: 10px;
+      }
+      @include rtl {
+        right: 10px;
+      }
+    }
+    &:after {
+      position: absolute;
+      top: 0;
+      font: #{10+$size-font}/30px icomoon;
+      @include ltr {
+        right: 8px;
+        content: "\e672";
+      }
+      @include rtl {
+        left: 8px;
+        content: "\e66f";
+      }
+    }
+    + a {
+      margin-top: 5px;
+    }
+  }
+}
 .sports-item-v3 {
   box-sizing: border-box;
   float: left;
@@ -849,9 +967,9 @@
     line-height: 36px;
   }
   &.boostedbets {
-    background: $hero-color;
+    background-image: linear-gradient(to right, #751f9f, #ffc353 119%);
     &:before {
-      color: set-color($hero-color);
+      color: #c3c6ce;
       @include ltr {
         box-shadow: none;
       }
@@ -859,8 +977,11 @@
         box-shadow: none;
       }
     }
+    p{
+      color: #c3c6ce !important;
+    }
     &:hover, &.active {
-      background: lighten($hero-color,10);
+      background-image: linear-gradient(to right, #751f9f, #ffc353 119%);
       &:after {
         content: "";
         display: block;
@@ -988,8 +1109,8 @@
   content: "\e6dd";
 }
 .boostedbets:before {
-  font: 18px/30px icomoon;
-  content: "\ea47";
+  font: 18px/30px icomoon !important;
+  content: "\ea7d";
 }
 .sports-item-v3.todaybets > .arrow-view-v3:before, .sports-item-v3.todaybets.active > .arrow-view-v3:before,
 .sports-item-v3.outright > .arrow-view-v3:before, .sports-item-v3.outright.active > .arrow-view-v3:before,
@@ -1036,6 +1157,11 @@
     box-shadow: -2px 0 0 #5caaa7 inset;
   }
 }
+.sports-item-v3.my-favorite:before{
+  content: '\e6df';
+  font-family: icomoon;
+
+}
 .sports-item-v3.showallsports {
   box-sizing: border-box;
   box-shadow: 0 1px 0 rgba(lighten(desaturate(adjust-hue($c16-sp, -4deg), 18), 13), 0.3) inset, inset 0 -30px 0 rgba(110, 151, 91, 0.35)
@@ -1073,8 +1199,20 @@
   white-space: nowrap;
   text-overflow: ellipsis;
   overflow: hidden;
+  position: relative;
   @include rtl {
     text-align: right;
+  }
+  > i{
+    position: absolute;
+    right: 0;
+    top: 0;
+
+    &:after{
+      content: '\e967';
+      font: 14px/30px icomoon;
+      display: block;
+    }
   }
 }
 .arrow-view-v3 {
@@ -1455,6 +1593,37 @@ popular-in-sportsbook[type="game"] {
     color: $c16-tp-3;
   }
 }
+.competition-title-v3.cyber-competition{
+  position: relative;
+  @include ltr{
+    padding: 0 0 0 30px;
+  }
+  @include rtl{
+    padding: 0 30px 0 0;
+  }
+  .cyber-icon:before{
+    content: '\e92f';
+    font: 16px/24px sport-icon;
+    position: absolute;
+    top: 0;
+    display: block;
+    color: $c16-tp-3;
+    @include ltr{
+      left: 8px;
+    }
+    @include rtl{
+      right: 8px;
+    }
+  }
+  &:before{
+    //content: '\e663';
+    //font: 44px/24px sport-icon;
+    //position: absolute;
+    //left: 10px;
+    //top: 0;
+  }
+
+}
 .prematch-view .competition-title-v3:before{
   display: none;
 }
@@ -1662,6 +1831,15 @@ popular-in-sportsbook[type="game"] {
         .max-bet-tooltip-v3 {
           direction: rtl;
         }
+      }
+    }
+  }
+}
+.esports{
+  .single-game-item-v3 .l-b{
+    .single-events-b-v3{
+      &:not(:hover):not(.active) {
+        background: $c16-sp-8;
       }
     }
   }
@@ -2011,14 +2189,19 @@ popular-in-sportsbook[type="game"] {
   border-radius: 0 0 2px 2px;
 }
 //  left menu closed
-.left-menu-closed-v3 > .left-column-v3 {
-  max-width: 36px;
-  overflow: hidden;
-  .games-list-nav-v3 {
-    display: none;
-  }
-  .prematch-view .region-items-box {
-    display: none;
+.left-menu-closed-v3 {
+  > .left-column-v3 {
+    max-width: 36px;
+    overflow: hidden;
+    .games-list-nav-v3 {
+      display: none;
+    }
+    .prematch-view .region-items-box {
+      display: none;
+    }
+    .left-menu-suggested-games {
+    display: none
+    }
   }
 }
 .left-menu-closed-v3 .full-menu-wrapper-box-v3 > .md-progress-circular,
@@ -2029,7 +2212,7 @@ popular-in-sportsbook[type="game"] {
 }
 .left-menu-closed-v3 .left-nav-view-v3 {
   @include rtl {
-    margin-left: 8px;
+    //margin-left: 8px;
   }
 }
 .left-menu-closed-v3 .search-box-v3 {
@@ -2081,7 +2264,7 @@ popular-in-sportsbook[type="game"] {
   }
   .sports-item-v3:before {
     @include rtl {
-      left: 0;
+      left: 8px;
       right: auto;
     }
   }
@@ -2094,6 +2277,181 @@ popular-in-sportsbook[type="game"] {
   }
 }
 //  left menu closed END
+
+//my favorite team
+.sports-item-v3.favorite-nav-icon-v3.active ~ .full-region-info-v3 .search-fav-team{
+  display: block;
+}
+.search-fav-team{
+  float: left;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 10px;
+  background: $c16-sp-10;
+  display: block;
+  .search-box-v3{
+    z-index: 99;
+  }
+  .confirm-team{
+    margin: 10px 0;
+    float: left;
+    width: 100%;
+    height: 26px;
+    background: $brand-color-1;
+    font-size: 12px;
+    line-height: 14px;
+    text-transform: uppercase;
+    text-align: center;
+    color: set-color($header-brand-color-1);
+    border-color: $brand-color-1;
+    position: relative;
+    &:hover{
+      background: lighten( saturate( $header-brand-color-1, 1 ), 7 );
+      border-color: lighten( saturate( $header-brand-color-1, 1 ), 7 );
+    }
+    &:disabled{
+      pointer-events: none;
+      border: 1px solid rgba(255,255,255,.16);
+      color: rgba(255,255,255,.2);
+      background: transparent;
+    }
+    .md-progress-circular.small{
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 0;
+    }
+  }
+  > p{
+    font-size: 11px;
+    line-height: 13px;
+    color: $c16-tp-6;
+  }
+  p.no-result{
+    padding: 5px 0 0 0;
+    color:  $c16-tp-6;
+    font-size: 11px;
+    line-height: 13px;
+  }
+  ul{
+    padding-top: 10px;
+  }
+}
+.md-progress-circular.small{
+  width: 28px;
+  height: 28px;
+}
+.left-menu-closed-v3{
+  .my-fav-team-list, .edit-result-search, .search-fav-team{
+    display: none;
+  }
+}
+.my-fav-team-list{
+  float: left;
+  width: 100%;
+  background: $c16-sp-9;
+  box-shadow: 3px 0 0 transparent inset;
+  //padding:  5px 0;
+  position: relative;
+  height: 30px;
+  .region-item-v3{
+    background: transparent;
+  }
+  span{
+    width: 30px;
+    height: 20px;
+    display: block;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: 50% 50%;
+    position: absolute;
+    top: 4px;
+    left: 2px;
+  }
+  i{
+    font-style: normal;
+    font-size: 12px;
+    line-height: 30px;
+    color: set-color($c16-sp-9);
+    float: left;
+    box-sizing: border-box;
+    padding: 0 0 0 32px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+  }
+  &.empty{
+    height: 0;
+  }
+}
+.sports-item-v3.sports-group-item-v3.my-favorite{
+  height: 30px;
+  line-height: 30px;
+
+  .arrow-view-v3{
+    color: $c16-tp-3;
+  }
+}
+.edit-result-search{
+  float: left;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 5px 10px;
+  background: $c16-sp-10;
+  > button{
+    margin: 0;
+    float: left;
+    width: 100%;
+    height: 26px;
+    background: $brand-color-1;
+    font-size: 12px;
+    line-height: 14px;
+    text-transform: uppercase;
+    text-align: center;
+    color: set-color($header-brand-color-1);
+    border-color: $brand-color-1;
+    &:hover{
+      background: lighten( saturate( $header-brand-color-1, 1 ), 7 );
+      border-color: lighten( saturate( $header-brand-color-1, 1 ), 7 );
+    }
+  }
+}
+.search-item{
+ height: 24px;
+  position: relative;
+  > span{
+    display: block;
+    width: 30px;
+    height: 20px;
+    background-position: 50% 50%;
+    background-repeat: no-repeat;
+    background-size: contain;
+    position: absolute;
+    left: 0;
+    top: 2px;
+  }
+  i{
+    color:  set-color($c16-sp-9);
+    font-style: normal;
+    font-size: 12px;
+    line-height: 24px;
+    vertical-align: middle;
+    display: inline-block;
+    float: left;
+    width: 100%;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    box-sizing: border-box;
+    padding: 0 0 0 30px;
+    white-space: nowrap;
+  }
+ &.selected{
+   background: $c16-sp-8;
+ }
+  &:hover{
+    background: $c16-sp-8;
+  }
+}
 .classic-view-column-v3 {
   .sports-item-v3 {
     & ~ .region-item-row-v3 .single-game-item-v3.active:after {
@@ -2117,6 +2475,7 @@ popular-in-sportsbook[type="game"] {
 @include coloring-by-sports(Badminton, #70c2a7);
 @include coloring-by-sports(Baseball, #5caaa7);
 @include coloring-by-sports(Basketball, #fca601);
+@include coloring-by-sports(BasketballShots, #fca601);
 @include coloring-by-sports(BeachHandball, #ccbb87);
 @include coloring-by-sports(BeachSoccer, #bfaf7e);
 @include coloring-by-sports(BeachFootball, #bfaf7e);
@@ -2157,6 +2516,7 @@ popular-in-sportsbook[type="game"] {
 @include coloring-by-sports(SISGreyhound, #6d5e4d);
 @include coloring-by-sports(Hurling, #189946);
 @include coloring-by-sports(IceHockey, #50a2c6);
+@include coloring-by-sports(AirHockey, #50a2c6);
 @include coloring-by-sports(Judo, #0b5b99);
 @include coloring-by-sports(LeagueOfLegends , #01586c);
 @include coloring-by-sports(Lacross, #168763 );
@@ -2210,6 +2570,7 @@ popular-in-sportsbook[type="game"] {
 @include coloring-by-sports(VirtualCarRacing, #8555a1);
 @include coloring-by-sports(VirtualGreyhoundRacing, #8555a1);
 @include coloring-by-sports(VirtualFootballPro, #8555a1);
+@include coloring-by-sports(VirtualFormula1, #8555a1);
 @include coloring-by-sports(Volleyball, #e5e795);
 @include coloring-by-sports(WaterPolo, #338fd6);
 @include coloring-by-sports(Wrestling, #b80f20);
@@ -2223,6 +2584,7 @@ popular-in-sportsbook[type="game"] {
 @include coloring-by-sports(Hearthstone, #9d7337);
 @include coloring-by-sports(StarCraft, #326d5d);
 @include coloring-by-sports(StarCraft2, #005895);
+@include coloring-by-sports(Valorant, #c82833);
 @include coloring-by-sports(WorldOfWarcraft, #d09214);
 @include coloring-by-sports(CallOfDuty, #564a37);
 @include coloring-by-sports(AllianceofValiantArms, #847120);

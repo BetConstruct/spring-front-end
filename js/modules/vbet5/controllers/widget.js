@@ -288,7 +288,7 @@ VBET5.controller('widgetCtrl', ['$rootScope', '$scope', 'TimeoutWrapper', '$wind
             'source': 'betting',
             'what': {
                 'sport': ['alias'],
-                'game': ['id', 'start_ts', 'team1_name', 'team2_name', 'info', 'events_count', 'markets_count', 'type', 'team1_id', 'team2_id', 'team1_external_id', 'team2_external_id', 'is_live', 'last_event', 'stats']
+                'game': ['id', 'start_ts', 'team1_name', 'team2_name', 'info', 'markets_count', 'type', 'team1_id', 'team2_id', 'team1_external_id', 'team2_external_id', 'is_live', 'last_event', 'stats']
             },
             'where': {
                 'game': {'id': gameId}

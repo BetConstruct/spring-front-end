@@ -11,24 +11,63 @@ VBET5.directive('soccertimeline', function () {
     return {
         restrict: 'E',
         replace: 'true',
-        template: '<div class="timeline-control" >' +
-            '<span class="tl-15"></span>' +
-            '<span class="tl-18"></span>' +
-            '<span class="tl-30"></span>' +
-            '<span class="tl-35"></span>' +
-            '<span class="tl-45"></span>' +
-            '<span class="tl-52"></span>' +
-            '<span class="tl-60"></span>' +
-            '<span class="tl-70"></span>' +
-            '<span class="tl-75"></span>' +
-            '<span class="tl-90"></span>' +
+        template: '<div class="timeline-control"></div>',
+        scope: {
+            matchLength: '=',
+            isExtra: '='
+        },
+        link: function (scope, element) {
+            element = element[0];
+            var matchLength = (scope.matchLength > 90 ? scope.matchLength - 30 : scope.matchLength * 1) ;
+            if (scope.isExtra) {
+                matchLength = 30;
+            }
 
-            '<span class="tl-20"></span>' +
-            '<span class="tl-40"></span>' +
-            '<span class="tl-6-0"></span>' +
-            '<span class="tl-80"></span>' +
 
-            '<span class="ht-ft"></span>' +
-            '</div>'
+            var halfTime = matchLength / 2;
+            var step;
+
+            if(halfTime % 15 === 0){
+                step = 15
+            }else if(halfTime % 10 === 0){
+                step = 10
+            }else{
+                step = halfTime / 2;
+            }
+
+
+            for (var i = 0; i <= matchLength; i += step / 2) {
+
+                var span = document.createElement('SPAN');
+                var isSpecial = false;
+                var time = i > 10 ? (i / 10).toFixed(1).replace('.', '  ') : ' ' + i;
+                span.dataset.content = '';
+
+                if (i === 0) { // start
+                    span.className = 'start-separator';
+                    isSpecial = true;
+                } else if (i === halfTime) { // half
+                    span.className = 'ht-separator';
+                    span.dataset.content = 'HT';
+                    isSpecial = true;
+                } else if (i === matchLength) { // full
+                    span.className = 'ft-separator';
+                    span.dataset.content = 'FT';
+                    isSpecial = true;
+                }
+
+                if (i % step === 0 || isSpecial) {
+                    span.dataset.content += '\n' + time;
+                    span.className += ' big-separator';
+                } else {
+                    span.className += ' small-separator';
+                }
+
+                span.style.left = 'calc(' + (i / matchLength * 100) + '%' + ' - 10px)';
+                span.style.width = '10px';
+                element.appendChild(span);
+            }
+
+        }
     };
 });

@@ -77,7 +77,7 @@
                     <i trans>Stake:</i>
                 </p>
                 <span>
-                <b>{{::bet.remaining_stake | number:$root.conf.balanceFractionSize}} {{$root.profile.currency_name|currency}}</b>
+                <b>{{::bet.remaining_stake | bankersRoundAndNumberCommas:$root.conf.balanceFractionSize}} {{$root.profile.currency_name|currency}}</b>
                 </span>
             </div>
             <div class="bet-win-view-v3 total-possible-row"  >
@@ -85,7 +85,7 @@
                     <i trans>Possible win:</i>
                 </p>
                 <span>
-                <b ng-if="bet.possible_win !== -1">{{::bet.possible_win | number:$root.conf.balanceFractionSize}} {{$root.profile.currency_name|currency}}</b>
+                <b ng-if="bet.possible_win !== -1">{{::bet.possible_win | bankersRoundAndNumberCommas:$root.conf.balanceFractionSize}} {{$root.profile.currency_name|currency}}</b>
                 <b ng-if="bet.possible_win === -1" trans>N/A</b>
             </span>
             </div>

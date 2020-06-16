@@ -33,8 +33,8 @@ VBET5.controller('myBetsCtrl', ['$scope', 'Utils', 'ConnectionService', 'Zerglin
     var sliderContentWatcherPromise;
 
     var EVENT_BET_OUTCOME_MAP = {
-      5: 10,
-      6: 11
+      5: 11,
+      6: 12
     };
 
     $scope.betHistoryParams = {
@@ -412,15 +412,6 @@ VBET5.controller('myBetsCtrl', ['$scope', 'Utils', 'ConnectionService', 'Zerglin
         }
     };
 
-    function calculateTaxAndBonus(bets) {
-        for (var i = bets.length; i--;) {
-            var score = (bets[i].outcome === 0 && bets[i].possible_win) || (bets[i].outcome !== 0 && bets[i].payout);
-            if (score) {
-                bets[i].tax = bets[i].winningBonus = score * $rootScope.partnerConfig.tax_percent / 100 ;
-            }
-        }
-    }
-
     /**
      * @ngdoc method
      * @name initBetHistory
@@ -615,9 +606,7 @@ VBET5.controller('myBetsCtrl', ['$scope', 'Utils', 'ConnectionService', 'Zerglin
                     if ($scope.profit.checkAfterLoad) {
                         $scope.calculateProfit();
                     }
-                    if ($rootScope.partnerConfig && $rootScope.partnerConfig.tax_percent && $rootScope.partnerConfig.tax_type === 20) {
-                        calculateTaxAndBonus($scope.betHistory);
-                    }
+
                     $scope.betHistoryLoaded = true;
                     console.log('bet history:', betHistory, where);
                     if(callbackFunction){
@@ -789,9 +778,9 @@ VBET5.controller('myBetsCtrl', ['$scope', 'Utils', 'ConnectionService', 'Zerglin
         $timeout(function() {
             Zergling.get(request, 'bet_history')
                 .then(function(response) {
-                    if (response && response[responseFieldName]) {
+                    if (response && response.bets) {
                         var currentBets = Config.main.enableMixedView ? betHistory : allBets;
-                        var cashedOutBet = response[responseFieldName][0];
+                        var cashedOutBet = response.bets[0];
                         for (var i = 0, length = currentBets.length; i < length; i++) {
                             if (currentBets[i].id === cashedOutBet.id) {
                                 cashedOutBet.oddTypeMapped = $scope.ODD_TYPE_MAP[+cashedOutBet.odd_type];

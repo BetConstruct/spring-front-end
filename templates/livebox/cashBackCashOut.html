@@ -1,0 +1,30 @@
+<div class="mixed-view-content" ng-controller="cashBackCashOutCtrl">
+    <div class="mixed-view-body">
+        <div class="mixed-view-body-ins">
+            <div class="balance-lightbox-j">
+                <div class="mixed-tickets-content-j">
+                    <vbet-loader ng-show="isLoading"></vbet-loader>
+                    <div class="cashback-out">
+                        <div class="cashback-amount-block" ng-repeat="bonus in availableBonuses track by bonus.BonusDefinitionId">
+                            <span class="bonus-category">{{bonus.CategoryName}}</span>
+                            <button ng-disabled="bonus.cashBackCashOut" ng-click="calculateCashOutAmount(bonus.BonusDefinitionId)" trans>Get Cashback Amount</button>
+                            <div class="amount-line">
+                                <p ng-if="bonus.cashBackCashOut">
+                                    <span trans>Available For Cashout </span>
+                                    <span class="amount-value" ng-bind="bonus.cashBackCashOut.Amount"></span>
+                                </p>
+                            </div>
+                            <button ng-disabled="!bonus.cashBackCashOut || !bonus.cashBackCashOut.Amount" ng-click="processCashOutAmount(bonus.BonusDefinitionId, bonus.cashBackCashOut.Amount)" trans>CASHBACK CASHOUT</button>
+                        </div>
+                        <p class="non-bonus" ng-if="!isLoading && !availableBonuses.length" trans>You do not have available bonuses</p>
+                    </div>
+                </div>
+             <div class="promotions-balance-j">
+                 <div ng-controller="cmsPagesCtrl" ng-init="gePageBanners('casino','casino-cash-back-out-' + $root.env.lang);" >
+                     <vbet-big-slider class="big-slider-casino-directive" ng-if="casinoTopBanners.length" images="casinoTopBanners" link-click-handler="openCBannerLink" slider-template="true"></vbet-big-slider>
+                 </div>
+             </div>
+            </div>
+        </div>
+    </div>
+</div>

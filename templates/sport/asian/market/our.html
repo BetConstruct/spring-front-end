@@ -11,7 +11,9 @@
 <div class="asian-separator-container-b" ng-repeat="competitions in centerData.competitions track by $index">
     <div ng-repeat="competition in competitions|limitTo:$root.conf.asian.competitionsPerPage:(selectedPage*$root.conf.asian.competitionsPerPage) track by $index" class="game-list-compitishion" ng-class="{closed: collapedCompetitions[competition.id]}">
         <div class="name-chempionship-asia" ng-click="toggleCompetition(competition.id)">
-            <h3 ng-bind="(competition.name)+': '+(competition.games[0].markets['OUTRIGHT'][0].name ? competition.games[0].markets['OUTRIGHT'][0].name : '')"></h3>
+            <h3>
+                <i class="cyber-competition" ng-if="(selectedMenuType.active === LEFT_MENU.LIVE) && competition.info && competition.info.Cyber"></i>{{competition.name}}
+            </h3>
         </div>
         <table class="outright-tamplate" ng-repeat="game in competition.games" ng-if="!collapedCompetitions[competition.id]">
             <colgroup span="3"></colgroup>

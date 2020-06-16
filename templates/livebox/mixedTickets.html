@@ -5,6 +5,9 @@
                 <div class="mixed-tickets-search-j">
                     <input type="text" placeholder="{{'Ticket ID' | translate}}" ng-model="searchTicketId" />
                 </div>
+                <div class="total-count" ng-show="!isLoading">
+                    <span trans>Total tickets:</span>{{tickets.length}}
+                </div>
             </div>
         </div>
     </div>

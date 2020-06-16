@@ -8,6 +8,7 @@
 BettingModule.controller('gamesCtrl', ['$rootScope', '$scope', '$location', '$filter', 'TimeoutWrapper', 'Zergling', 'ConnectionService', 'Utils', 'analytics', 'smoothScroll', 'GameInfo', 'DomHelper', 'partner', function ($rootScope, $scope, $location, $filter, TimeoutWrapper, Zergling, ConnectionService, Utils, analytics, smoothScroll, GameInfo, DomHelper, partner) {
     'use strict';
 
+    $scope.framesCount = GameInfo.framesCount;
     TimeoutWrapper = TimeoutWrapper($scope);
     var connectionService = new ConnectionService($scope);
     var subscriptionInProgress;
@@ -257,6 +258,8 @@ BettingModule.controller('gamesCtrl', ['$rootScope', '$scope', '$location', '$fi
         game.sport = {alias: sport.alias, id: sport.id, name: sport.name};
         game.region = {id: region.id};
         game.competition = {id: competition.id};
+
+        game.info.setNumbers = $scope.framesCount(game.stats);
         $scope.openGames[game.type][game.id] = game;
 
         return console.log('update game', game);
@@ -276,7 +279,7 @@ BettingModule.controller('gamesCtrl', ['$rootScope', '$scope', '$location', '$fi
      */
     $scope.subscribeToGame = function subscribeToGame(game, callback) {
         if (subscriptionInProgress === game.id) { return; }
-        var gameRequest = [["id", "show_type", "markets_count", "start_ts", "is_live", "is_blocked", "is_neutral_venue","team1_id", "team2_id", "game_number", "text_info", "is_stat_available", "type",  "info", "stats", "team1_name", "team2_name", "tv_info"]];
+        var gameRequest = [["id", "show_type", "markets_count", "start_ts", "is_live", "is_blocked", "is_neutral_venue","team1_id", "team2_id", "game_number", "text_info", "is_stat_available", "type",  "info", "stats", "team1_name", "team2_name", "tv_info", "add_info_name"]];
         if ($scope.env.live) {
             Array.prototype.push.apply(gameRequest[0], ["match_length", "scout_provider", "video_id","video_id2", "video_id3", "tv_type", "last_event", "live_events"]);
         }
@@ -288,7 +291,7 @@ BettingModule.controller('gamesCtrl', ['$rootScope', '$scope', '$location', '$fi
                 'event': ["order", "id", "type_1", "type", "type_id", "original_order", "name", "price", "nonrunner", "ew_allowed", "sp_enabled", "extra_info", "base","home_value", "away_value", "display_column" ],
                 'market': ["id", "col_count", "type", "sequence", "express_id", "cashout", "display_key", "display_sub_key", "group_id", "name", "group_name", "order" ],
                 'sport': ['id', 'alias', 'name'],
-                'competition': ['id'],
+                'competition': ['id', 'info'],
                 'region': ['id']
             },
             'where': {

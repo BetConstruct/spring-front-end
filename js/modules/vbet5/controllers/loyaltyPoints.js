@@ -4,7 +4,7 @@
  * @description
  * points exchange controller
  */
-VBET5.controller('loyaltyPointsCtrl', ['$scope', '$rootScope', 'Translator', 'Zergling', 'Config', 'TimeoutWrapper', function ($scope, $rootScope, Translator, Zergling, Config, TimeoutWrapper) {
+VBET5.controller('loyaltyPointsCtrl', ['$scope', '$rootScope', 'Translator', 'Zergling', 'Config', 'TimeoutWrapper', 'Utils', function ($scope, $rootScope, Translator, Zergling, Config, TimeoutWrapper, Utils) {
     'use strict';
     TimeoutWrapper = TimeoutWrapper($scope);
 
@@ -19,14 +19,22 @@ VBET5.controller('loyaltyPointsCtrl', ['$scope', '$rootScope', 'Translator', 'Ze
      * @description prepare and show data on init
      */
     function reloadLoyaltyInfo() {
-
+        $scope.pointsExchangeData.amount = undefined;
         Zergling.get({}, 'get_loyalty_levels').then(function (response) {
             if (response.result === 0) {
-                $scope.programs =  response.details || [];
+                var programs =  response.details || [];
 
-                $scope.programs.sort(function (a, b) {
-                    return a.Id - b.Id;
+                programs.sort(function (a, b) {
+                    return a.MinPoint - b.MinPoint;
                 });
+
+                for (var i = 0; i < programs.length; i++) {
+                    programs[i].className = programs[i].Name.split(" ").map(function (name) {
+                        return name.charAt(0).toUpperCase() + name.slice(1).toLowerCase()
+                    }).join("-");
+                }
+
+                $scope.programs = programs;
 
                 getUserStatuses();
             }
@@ -129,7 +137,11 @@ VBET5.controller('loyaltyPointsCtrl', ['$scope', '$rootScope', 'Translator', 'Ze
                     $scope.$emit('profile.refresh');
                 } else if(response.code === 2417) {
                     console.log('2417', response);
-                    dialog.content = Translator.get('Entered amount is out of allowable range.');
+                    var values = [
+                        Utils.numberWithCommas($rootScope.profile.loyalty_min_exchange_point),
+                        Utils.numberWithCommas($rootScope.profile.loyalty_max_exchange_point)
+                    ];
+                    dialog.content = Translator.get('Entered amount is out of allowable range.') + ' ' +Translator.get('The allowed range is {1} - {2}', values);
                 } else if(response.code === 2084) {
                     console.log('2084', response);
                     dialog.content = Translator.get('Transaction amount error.');

@@ -261,7 +261,7 @@ VBET5.controller('classicDashboardCenterController', ['$rootScope', '$scope', 'O
                         game.region = {id: region.id, name: region.name};
                         game.competition = {id: competition.id, order: competition.order, name: competition.name};
                         game.firstMarket = $filter('firstElement')(game.market);
-                        game.additionalEvents = Config.main.showEventsCountInMoreLink ? game.events_count : game.markets_count;
+                        game.additionalEvents = game.markets_count;
                         game['text_info'] = game['text_info'] ? game['text_info'].replace(/;/g, ',') : '';
 
                         GameInfo.hasVideo(game);
@@ -364,7 +364,7 @@ VBET5.controller('classicDashboardCenterController', ['$rootScope', '$scope', 'O
                 'game': [
                     'id', 'start_ts', 'team1_name', 'team2_name', 'game_number', 'game_external_id',
                     'team1_external_id', 'team2_external_id', 'type', 'info', 'is_stat_available',
-                    'events_count', 'markets_count', 'extra', 'is_blocked', 'is_itf', 'exclude_ids',
+                    'markets_count', 'extra', 'is_blocked', 'is_itf', 'exclude_ids',
                     'is_live', 'tv_type', 'video_id', 'video_id2', 'video_id3', 'video_provider', 'stats'
                 ],
                 'event': ['id', 'price', 'type', 'name', 'order', 'base'],

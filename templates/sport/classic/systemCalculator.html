@@ -1,5 +1,5 @@
-<div class="system-calculator" ng-controller="systemCalculatorController" ng-init="init()">
-    <div class="system-calculator-title" id="calculator-draggable-header">
+<div class="system-calculator" ng-if="::($root.conf.enableSystemCalculator === true || ($root.conf.bettingCalculator.enabled && $root.conf.bettingCalculator.type === 'system'))" ng-controller="systemCalculatorController" ng-init="init()">
+    <div ng-if="!isIframe" class="system-calculator-title" id="calculator-draggable-header">
         <h3 trans>System Calculator</h3>
         <div class="closed-calculator-b" ng-click="resetCalculator(); $root.showSystemCalculator = false"></div>
     </div>
@@ -78,3 +78,4 @@
         </div>
     </div>
 </div>
+<ng-include ng-if="::($root.conf.enableSystemCalculator === false && ($root.conf.bettingCalculator.enabled && (!$root.conf.bettingCalculator.type || $root.conf.bettingCalculator.type === 'betting')))" src="::'templates/sport/classic/bettingCalculator.html'|fixPath"></ng-include>

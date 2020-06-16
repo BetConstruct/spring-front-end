@@ -101,6 +101,22 @@ angular.module('vbet5').constant('Config', {
                 ]
             }
         ],
+        suggestionsInLiveSection: {
+            enabled: false,
+            title: "Live Casino Games",
+            suggestions: [
+                {
+                    title: "Live Bet on Poker",
+                    iconClass: "vgs113",
+                    url: "#/livedealer/?page=home&game=598",
+                },
+                {
+                    title: "Bet on Teen Patti",
+                    iconClass: "vgs2001",
+                    url: "#/livedealer/?page=home&game=12868",
+                }
+            ]
+        },
         recaptcha: {
             title: "",
             name: "g_recaptcha_response",
@@ -111,7 +127,12 @@ angular.module('vbet5').constant('Config', {
             validation: [{"name": "required", "message": "This field is required"}, {"name": "notmatching", "message": "This field is required"}]
         },
         asianShowTeamNames: true,
-
+        covid19: {
+            url: ''
+        },
+        matchKey: {
+            descriptionHref: "https://www.sportify.direct/real-sport"
+        },
         asianLoadDays: 1, //   asianview# loads first loadDays for default, for the first time , when localstorage is not set yet
         skin: 'vbet.com',
         logo: {
@@ -140,6 +161,7 @@ angular.module('vbet5').constant('Config', {
         maximumNumberOfLinesInPayments: 3,  // 0 to not show read more in payments
         calendarPrematchSelection: false,
         esportsOutrightEventsLimit: 8,
+        enableShowPassword: false,  // enable/disable show password icon
         geoIPLangSwitch: {
             enabled: false
         },
@@ -234,8 +256,16 @@ angular.module('vbet5').constant('Config', {
         hideLiveCalendarNumber: false,
         betslipInputFieldCustomValue: 'Stake...',  //custom value for betslip input placeholder
         enableSystemCalculator: false,
+        bettingCalculator: {
+            enabled: false,
+            type: 'system', //if no config betting
+            deadHeat: false,
+            rule4: false
+        },
         betHistory: { // the entire bet-history configuration should be moved here
-            enableRecalculationNoteColumn: false
+            enableRecalculationNoteColumn: false,
+            showPayoutInsteadOutcome: false,
+            enableReturnedFilter: true
         },
         betHistoryEnabled: true,  //enable bet history in top menu
         enableCasinoBalanceHistory: false, //enable casino balance history in top menu
@@ -513,7 +543,6 @@ angular.module('vbet5').constant('Config', {
         enableAccountVerification: false,
         accountVerificationMessage: false,
         enableDepositLimits: false,
-        roundDecimalCoefficients: 3,  // rounding of coefficient, number of significant digits
         newMenuItems: {},
         displayEventsMaxBet: false, //  display event max bet on hover
         classicMarkets2ColSorting: false,  //sort markets of game by order in 2 columns ( 1-2, 3-4, 5-6  instead of  1-4, 2-5, 3-6)
@@ -534,6 +563,7 @@ angular.module('vbet5').constant('Config', {
             allowAccessWithoutRfid: false
         },
         enableSubHeader: false,  // show 2nd level menu
+        hideSubHeaderByPath : {'/': true, '/virtualsports/': true, '/esports/': false, '/pmu/': true},
         showResultsTabInSportsbook: false, //show results tab in sportsbook top tab
         showResultsMaxDays: 2, // current max is 2 days. This config doesn't function now, as "get_active_competitions" request can't show results for more than two days. May change in the future
         allowHidingUsernameAndBalance: true,
@@ -681,12 +711,14 @@ angular.module('vbet5').constant('Config', {
                 email: "^([a-zA-Z0-9]+([_+\.-]?[a-zA-Z0-9]+)*)@([a-zA-Z0-9]+)([a-zA-Z0-9\\-\.]+)([\.])([a-z]+)([^~@!#$%^&*()_+|{}:<>?,/;'-=\\[\\]\\`\"\.\\\\])$",
                 userName: "^[^0-9\\[\\]\\\\`~!@#$%^&*()_+={};:<>|./?,\"'-\\s]+$",
                 docNumber: "^[A-Za-z\\u0400-\\u04FF0-9]*[0-9]+[A-Za-z\\u0400-\\u04FF0-9]*$",
+                personalId: "^[A-Za-z0-9\u0400-\u04FF]+$",
                 address: "^[^~!@$%^&*()_+={};:<>|?\\[\\]\\'\\\"]*$"
             },
             validation: {
                 email: "Invalid email",
                 userName: "Please enter a valid last name: only letters - no space, no digits and/or symbols.",
-                docNumber: "This field can contain only digits and English or Russian letters"
+                docNumber: "This field can contain only digits and English or Russian letters",
+                personalId: "Please enter only Latin or Cyrillic letters and numbers"
             },
             limits: {
                 city: {
@@ -1044,7 +1076,6 @@ angular.module('vbet5').constant('Config', {
         },
         liveCalendarEnabled: false,
         liveOverviewEnabled: false,
-        liveCalendarView: 'multiDaySelectionView', // multiDaySelectionView or oneDaySelectionView
         liveMultiViewEnabled: false,
         prematchMultiColumnEnabled: false,
         liveMultiViewItemsAmount: 6,
@@ -1109,7 +1140,7 @@ angular.module('vbet5').constant('Config', {
     },
     enableSnowEffect:false,
     pmu: {
-      url: "http://newstaging.betconstruct.com/"
+      url: "https://newstaging.betconstruct.com/"
     },
     betIntelligentAPIUrl: 'https://cms-api-stag.bcapps.org/betting/pushbet',
     partner: {

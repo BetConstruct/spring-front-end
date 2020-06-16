@@ -1,0 +1,35 @@
+<div class="casino-games-slider-container"
+     ng-show="jackpotSliderGames.length">
+    <div class="title-slider-games" no-animate>
+        <ul class="title-slider-games no-select-j">
+            <li class="title-slider-games-line"></li>
+            <li ng-bind="(confData.main.jackpotSubstituteCategory ? confData.main.jackpotSubstituteCategory.name :'Jackpot Games')|translate"></li>
+            <li>
+                <div>
+                    <ul>
+                        <li class="title-slider-games-line"></li>
+                        <li ng-if="jackpotGames.length > jackpotSliderVisibleGamesCount">
+                                        <span ng-click="slideJackpotGames('prev')"
+                                              ng-class="{'disabled': jackpotSlideIndex <= 0 }" trans>prev</span>
+                            <span ng-click="slideJackpotGames('next')"
+                                  ng-class="{'disabled': jackpotSlideIndex +jackpotSliderVisibleGamesCount >= jackpotGames.length }"
+                                  trans>next</span>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+        </ul>
+        <div class="slider-games-box-new">
+            <casino-games-list class="slider-games-box visible-games-count-{{jackpotSliderVisibleGamesCount}}"
+                               jackpot-games="true"
+                               show-conditions="true"
+                               use-big-icons="true"
+                               games-list="jackpotSliderGames"
+                               additional-data="gamesAdditionalData"
+                               game-show-conditions="true"
+                               selected-category="selectedCategory">
+            </casino-games-list>
+            <vbet-loader ng-show="!jackpotSliderGames"></vbet-loader>
+        </div>
+    </div>
+</div>

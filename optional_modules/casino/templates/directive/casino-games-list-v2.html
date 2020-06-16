@@ -1,8 +1,8 @@
 <div>
-    <div class="all-games-container" ng-show="showConditions" ng-if="!jackpotGames">
+    <div class="all-games-container" ng-if="!jackpotGames && showConditions">
         <a ng-repeat="game in gamesList track by game.id"
            ng-class="{'disabled' : confData.main.disableAgeRestrictedGames && game.has_age_restriction && !$root.env.authorized}">
-            <img src="{{useBigIcons && game.icon_3 ? game.icon_3 : game.icon_2}}" alt="">
+            <img ng-src="{{useBigIcons && game.icon_3 ? game.icon_3 : game.icon_2}}" alt="">
            <span class="games-buttons">
                <strong>
                    <button ng-click="openGame(game, 'real'); $event.stopPropagation();" ng-if="game.types.realMode"
@@ -22,11 +22,11 @@
         </a>
     </div>
 
-    <div class="slider-games" ng-if="jackpotGames" ng-show="showConditions">
+    <div class="slider-games" ng-if="jackpotGames && showConditions">
         <a ng-repeat="game in gamesList track by game.id"
            ng-class="{'disabled' : confData.main.disableAgeRestrictedGames && game.has_age_restriction && !$root.env.authorized}">
             <div class="slider-games-bg">
-                <img src="{{useBigIcons && game.icon_3 ? game.icon_3 : game.icon_2}}" alt="">
+                <img ng-src="{{useBigIcons && game.icon_3 ? game.icon_3 : game.icon_2}}" alt="">
                 <div class="jackpot-status"  ng-if="additionalData[game.extearnal_game_id]">
                     <small trans>Jackpot up to</small>
                     <p>

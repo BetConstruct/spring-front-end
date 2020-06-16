@@ -2,30 +2,7 @@
 
 
 <div ng-if="game.type === 1" class="e-sport-l-score">
-    <div class="bg-e-sport-l-t live-score-background-{{(game.sport.alias).toLowerCase()}}">
-        <h2>{{game.sport.name}} - {{game.competition.name}}</h2>
-    </div>
-    <div class="score-row-e-g">
-        <ul class="score-t-v">
-            <li><p class="additional-g-info" ng-bind="game.info.add_info || game.text_info"></p></li>
-            <li ng-repeat="frame_num in framesCount(game.stats)" ng-class="{'active-cash':game.info.current_game_state === 'set'+frame_num}" ng-bind="showFrameAlias(frame_num, game.sport.alias)"></li>
-            <li>{{ "set"|convertSetName:game.sport.alias|translate }}</li>
-        </ul>
-        <ul class="score-t-v">
-            <li><h6 class="e-team-name-r"><i class="team-logo-b" ng-style="{'background-image': $root.conf.teamDefaultLogo ? 'url(images/team-logo-default.png)' : 'url({{$root.conf.teamLogosPath}}e/s/{{Math.floor(game.team1_id / 2000)}}/{{game.team1_id}}.png)'}"></i> {{game.team1_name}}</h6></li>
-            <li ng-repeat="frame_num in framesCount(game.stats)" ng-class="{'active-cash':game.info.current_game_state === 'set'+frame_num,'winner':isSetWinner(game.stats['score_set'+frame_num],1)}">
-                {{game.stats['score_set' + frame_num].team1_value ? game.stats['score_set' + frame_num].team1_value : 0}}
-            </li>
-            <li class="sets-score"><span>{{ game.info.score1 ?  game.info.score1 : '' | translate}}</span></li>
-        </ul>
-        <ul class="score-t-v">
-            <li><h6 class="e-team-name-r"><i class="team-logo-b" ng-style="{'background-image': $root.conf.teamDefaultLogo ? 'url(images/team-logo-default.png)' : 'url({{$root.conf.teamLogosPath}}e/s/{{Math.floor(game.team2_id / 2000)}}/{{game.team2_id}}.png)'}"></i> {{game.team2_name}}</h6></li>
-            <li ng-repeat="frame_num in framesCount(game.stats)" ng-class="{'active-cash':game.info.current_game_state === 'set'+frame_num,'winner':isSetWinner(game.stats['score_set'+frame_num],2)}">
-                {{game.stats['score_set' + frame_num].team2_value ? game.stats['score_set' + frame_num].team2_value : 0}}
-            </li>
-            <li class="sets-score"><span>{{ game.info.score2 ?  game.info.score2 : '' | translate}}</span></li>
-        </ul>
-    </div>
+    <live-game-scores class="float-width" show-stats-block="showStatsBlock"  open-game="game" enlarged-game="enlargedGame"></live-game-scores>
 </div>
 <div class="all-markets-e-s">
     <div class="game-mini-t-row" ng-if="game.type !== 1">
@@ -56,6 +33,7 @@
                 <li ng-repeat="group in game.availableMarketGroups track by group.id"
                     ng-class="{active: game.selectedMarketGroupId === group.id,
                 'favorte-markets-group-j': $first, 'animate-star-odd' : $first && game.sport.favouriteMarkets.length % 2 == 1,
+                'has-market': $first && game.sport.favouriteMarkets.length > 0,
                 'animate-star-even': $first && game.sport.favouriteMarkets.length % 2 == 0,
                 'to-dropdown': $index > ($root.env.live ? 5 : 3), 'column-3':  ($root.env.live ? 5 : 3) == 3}"
                     ng-click="selectMarketsGroup(group.id)" data-count="{{ group.count }}">

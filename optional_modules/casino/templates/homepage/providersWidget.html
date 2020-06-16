@@ -1,0 +1,25 @@
+<div ng-if="confData.main.filterByProviderEnabled" class="games-providers-container"
+     ng-class="{closed: !providersOpened}">
+    <ul class="title-slider-games">
+        <li class="title-slider-games-line"></li>
+        <li ng-click="toggleProviders()" trans>Game Providers</li>
+        <li>
+            <div>
+                <ul>
+                    <li class="title-slider-games-line"></li>
+                    <li ng-show="providers[0].name==='all'">
+                        <span ng-click="setProviders([])" trans>Reset</span>
+                    </li>
+                </ul>
+            </div>
+        </li>
+    </ul>
+    <div class="games-providers">
+        <a ng-repeat="provider in providers track by $index"
+           ng-click="toggleProvider(provider.name)"
+           ng-class="{'active': selections.providers.indexOf(provider.name) !== -1}"
+        >
+            {{ provider.title|translate }}
+        </a>
+    </div>
+</div>

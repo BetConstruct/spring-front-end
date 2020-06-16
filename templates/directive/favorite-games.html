@@ -1,5 +1,5 @@
 <div class="single-game-item-v3" ng-repeat="game in favoriteGames track by game.id"
-     ng-class="{'active': $root.currentPage.params.game === game.id, 'no-events': !(game.events_count || game.markets_count) || game.is_blocked }"
+     ng-class="{'active': $root.currentPage.params.game === game.id, 'no-events': !(game.markets_count) || game.is_blocked }"
      ng-click="selectFavoriteGame(game.requestInfo)"><!-- active-->
     <div class="team-name-1-v3" data-title="{{game.team1_name}}">
         <span ng-show="game.type === 1" ng-bind="game.info.score1"></span>
@@ -13,7 +13,7 @@
             <span ng-show="game.type === 1" ng-if="game.info.current_leg !== undefined" ng-bind="game.info.current_game_state|convertSetNameWithLeg:game.info|translate"></span>
             <span ng-show="game.type !== 1" ng-bind="game.start_ts|formatDate:'full':null:$root.env.timeFormat"></span>
             <span trans="attr-only" title="Game time"  ng-show="game.type === 1" ng-bind="game.info.current_game_time"></span>
-            <i class="blocked-icon-v3" ng-show="(!(game.events_count || game.markets_count) || game.is_blocked)"></i>
+            <i class="blocked-icon-v3" ng-show="(!(game.markets_count) || game.is_blocked)"></i>
         </p>
         <div class="game-info-icons-v3">
             <div class="icon-separator-v3 favorite active"

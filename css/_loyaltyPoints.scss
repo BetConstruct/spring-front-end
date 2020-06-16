@@ -732,6 +732,19 @@
                         }
                     }
                 }
+                @if ($lp-pack-name == "Platinium") {
+                    p {
+                        color: #f2ebeb;
+                    }
+                    &:hover, &.active {
+                        h2 {
+                            color: white;
+                        }
+                        p {
+                            color: #f2ebeb;
+                        }
+                    }
+                }
                 @if ($lp-pack-name == "Diamond") {
                     p {
                         color: #6ac7db;
@@ -802,6 +815,7 @@
 @include loaylty-points-coloring-by-pack(#79684C, #FAB83B, "Gold", #B99552);
 @include loaylty-points-coloring-by-pack(#9E9DA1, #e6e5e5, "Platin", #D3D0CF);
 @include loaylty-points-coloring-by-pack(#9E9DA1, #e6e5e5, "Platinum", #D3D0CF);
+@include loaylty-points-coloring-by-pack(#9E9DA1, #e6e5e5, "Platinium", #D3D0CF);
 @include loaylty-points-coloring-by-pack(#0D788F, #0DCCFF, "Diamond", #11A1C2);
 .balance-lightbox-j.loyalty-points-lightbox-j {
     padding: 0;

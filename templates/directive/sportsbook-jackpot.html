@@ -9,8 +9,9 @@
                <jackpot-counter ng-if="jackpotData.CollectedAmountTotal" max-duration-speed="400"
                                        point="jackpotData.CurrencyFraction"
                                        comma="true"
-                                       currency="jackpotData.Currency"
-                                       amount="jackpotData.CollectedAmountTotal">
+                                       show-currency="true"
+                                       currency="{{jackpotData.Currency}}"
+                                       amount="{{jackpotData.CollectedAmountTotal}}">
                </jackpot-counter>
            </div>
         </li>
@@ -37,8 +38,10 @@
                                 ng-if="pool.CollectedAmount"
                                 max-duration-speed="400"
                                 point="jackpotData.CurrencyFraction"
-                                comma="true" currency="jackpotData.Currency"
-                                amount="pool.CollectedAmount"
+                                comma="true"
+                                show-currency="true"
+                                currency="{{jackpotData.Currency}}"
+                                amount="{{pool.CollectedAmount}}"
                                 max-length="false"
                         >
                         </jackpot-counter>

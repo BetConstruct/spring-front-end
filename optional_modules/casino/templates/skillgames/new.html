@@ -1,3 +1,8 @@
+<div class="float-width" ng-init="loadSlidingViewTopBanners()" ng-if="!confData.skillGames.hideTopSlider  && selectedPage.id === '-1' && !casinoGameOpened">
+    <div>
+        <casino-game-slider product-slides="skillGamesSlides" class="liveDealer" ng-if="skillGamesSlides.length" ></casino-game-slider>
+    </div>
+</div>
 <div class="subtop-game-menu-j" ng-hide="casinoGameOpened > 0" ng-class="{'stretch-items': gamePages.length > 6}" no-animate>
     <ul class="j-resize-950-1280">
         <li ng-repeat="page in gamePages track by page.id" ng-click="selectPage(page);" ng-class="{'active' : selectedPage.id === page.id}">
@@ -22,6 +27,7 @@
                     </div>
                     <div class="games-pw-buttonset-j"  ng-class="{'games-play-now-top-item ': confPoker.showTopItem}">
                         <button ng-if="game.types.realMode === 1 && confData.main.realModeEnabled" ng-click="openGame(game, 'real'); $event.stopPropagation();" class="skin-j" data-content="{{ confPoker.showTopItem|translate}}" trans>play now</button>
+                        <button ng-if="game.types.funMode && (confData.main.funModeEnabled === 2 && $root.env.authorized || confData.main.funModeEnabled === 1 || (confData.main.funModeEnabled === 3 && $root.profile.is_verified))" ng-click="openGame(game, 'fun'); $event.stopPropagation();" class="skin-j" data-content="{{ confPoker.showTopItem|translate}}" trans>play for free</button>
                         <div class="action-button-set-j">
                             <div ng-if="!env.authorized && game.types.viewMode === 1" class="view-j">
                                 <a ng-click="openGame(game, 'demo'); $event.stopPropagation();"></a>

@@ -94,13 +94,39 @@
           .time-info-game-box-v3 {
             top: 0;
           }
-          .aic-team-names-wrapper .icon-separator-v3.favorite {
-            bottom: 0;
-            @include ltr {
-              right: -14px;
+          .aic-team-names-wrapper .icon-separator-v3 {
+            &.favorite {
+              bottom: 0;
+              @include ltr {
+                right: -14px;
+              }
+              @include rtl {
+                left: -14px;
+              }
             }
-            @include rtl {
-              left: -14px;
+            &.match-key {
+             > ul {
+               @media screen and (max-width: 1260px) {
+                 @include ltr {
+                   left: auto;
+                   right: -13px;
+                 }
+                 @include rtl {
+                   left: auto;
+                   right: -13px;
+                 }
+               }
+               &:after {
+                 @include ltr {
+                   left: auto;
+                   right: 10px;
+                 }
+                 @include rtl {
+                   left: auto;
+                   right: 10px;
+                 }
+               }
+             }
             }
           }
         }
@@ -210,6 +236,22 @@
         padding: 5px 28px 5px 8px;
       }
     }
+    &:nth-child(2) {
+      .match-key > ul {
+        top: auto;
+        bottom: -38px;
+        &:before {
+          top: -8px;
+          bottom: auto;
+        }
+        &:after {
+          top: auto;
+          bottom: 100%;
+          border-width: 0 7px 7px;
+          border-color: transparent transparent $brand-color-2;
+        }
+      }
+    }
   }
 }
 .aic-odd-container {
@@ -264,7 +306,8 @@
   &.active {
     background: $hero-color;
     color: set-color($hero-color);
-    > span:before {
+    > span:before,
+    .boosted {
       color: inherit;
     }
   }
@@ -340,7 +383,6 @@
   }
 }
 .aic-team-names-wrapper {
-  z-index: 50;
   font-size: 5 + $size-font;
   line-height: 17px;
   color: $c16-tp-3;
@@ -430,14 +472,73 @@
       margin: 0;
     }
     &.cms-jcon-Bet-Builder {
-      color: $c16-tp-4;
       margin: 1px 0 0;
+      color: $c16-tp-4;
       + .statistic {
         @include ltr {
           margin-left: 2px;
         }
         @include rtl {
           margin-right: 2px;
+        }
+      }
+    }
+    &.match-key {
+      margin: 0;
+      color: $c16-tp-4;
+      > ul {
+        @include ltr {
+          left: -13px;
+          right: auto;
+        }
+        @include rtl {
+          left: auto;
+          right: -13px;
+        }
+        &:after {
+          @include ltr {
+            left: 10px;
+            right: auto;
+          }
+          @include rtl {
+            left: auto;
+            right: 10px;
+          }
+        }
+        > li {
+          &.key-external-link {
+            order: -2;
+            @include ltr {
+              padding-left: 0;
+              padding-right: 10px;
+            }
+            @include rtl {
+              padding-left: 10px;
+              padding-right: 0;
+            }
+          }
+          + li {
+            order: -1;
+            @include ltr {
+              padding-left: 0;
+              padding-right: 20px;
+            }
+            @include rtl {
+              padding-left: 20px;
+              padding-right: 0;
+            }
+          }
+        }
+      }
+      + {
+        .cms-jcon-Bet-Builder,
+        .statistic {
+          @include ltr {
+            margin-left: 2px;
+          }
+          @include rtl {
+            margin-right: 2px;
+          }
         }
       }
     }

@@ -31,7 +31,7 @@ CASINO.controller('liveCasinoMainCtrl', ['$rootScope', '$scope', '$sce', '$locat
      * and assigns to scope's 'games' variable
      */
     function loadGames() {
-        casinoData.getGames(CConfig.liveCasino.categoryId, null, countryCode).then(function (response) {
+        casinoData.getGames(CConfig.liveCasino.categoryId, null, countryCode, 0, 999).then(function (response) {
             if (response && response.data && response.data.status !== -1) {
                 prepareGames(response.data.games);
                 showProviderMessage('onOpen');

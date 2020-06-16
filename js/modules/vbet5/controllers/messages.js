@@ -6,7 +6,7 @@
  * @description
  *  messages controller
  */
-VBET5.controller('messagesCtrl', ['$scope', '$rootScope', 'Utils', 'Zergling', 'Translator', 'Config', 'TimeoutWrapper', function ($scope, $rootScope, Utils, Zergling, Translator, Config, TimeoutWrapper) {
+VBET5.controller('messagesCtrl', ['$scope', '$rootScope', '$location', 'Utils', 'Zergling', 'Translator', 'Config', 'TimeoutWrapper', function ($scope, $rootScope, $location,  Utils, Zergling, Translator, Config, TimeoutWrapper) {
     'use strict';
     TimeoutWrapper = TimeoutWrapper($scope);
     var TYPE_INCOMING = 0, TYPE_OUTGOING = 1,
@@ -37,7 +37,6 @@ VBET5.controller('messagesCtrl', ['$scope', '$rootScope', 'Utils', 'Zergling', '
     }
 
     $scope.messagesProps = {
-        page: Config.main.messagesPageMenu[0],
         names: {
             'inbox': 'Inbox',
             'sent': 'Sent messages',
@@ -46,6 +45,14 @@ VBET5.controller('messagesCtrl', ['$scope', '$rootScope', 'Utils', 'Zergling', '
         inboxLoading: false,
         outboxLoading: false
     };
+
+    if ($location.search().messagesPage) {
+        $scope.messagesProps.page = $location.search().messagesPage;
+        $location.search('messagesPage', undefined);
+    } else {
+        $scope.messagesProps.page = Config.main.messagesPageMenu[0];
+    }
+
     if (Config.main.newMessageSubjectValues) {
         Config.main.newMessageSubjectValues = Config.main.newMessageSubjectValues.map(function (subject) {
             return Translator.get(subject);

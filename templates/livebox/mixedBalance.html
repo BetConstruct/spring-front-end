@@ -47,7 +47,7 @@
                                     <p>{{balanceHistoryParams.availableProducts[balanceHistoryParams.balanceCategory]|translate:null:'balance_history_' + balanceHistoryParams.availableProducts[balanceHistoryParams.balanceCategory]}}</p>
                                     <ul>
                                         <li ng-repeat="(key, value) in balanceHistoryParams.availableProducts track by $index"
-                                            ng-click="balanceHistoryParams.balanceCategory=key;transactionDropdownOpened = false;">
+                                            ng-click="changeBalanceCategory(key); transactionDropdownOpened = false;">
                                             {{value|translate:null:'balance_history_' + value}}
                                         </li>
                                     </ul>

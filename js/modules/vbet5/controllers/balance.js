@@ -132,6 +132,8 @@ VBET5.controller('balanceCtrl', ['$rootScope', '$scope', 'Utils', 'Zergling', 'M
                             }
                         }
 
+                        $scope.balanceHistoryParams.loadedProductType = product === "Casino" || !$rootScope.calculatedConfigs.sportEnabled ?  "Casino" : "Main";
+
                         $scope.balanceHistoryGotoPage(1);
                         console.log('balance history:', balanceHistory, "response", response, "where", where);
                     } else {

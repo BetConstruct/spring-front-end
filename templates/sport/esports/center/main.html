@@ -1,6 +1,6 @@
 <div class="games-view-wrapper-v3" ng-controller="eSportsCenterController" ng-class="{'video-maximize-sportsbook':pinnedGameType === 'fullScreen' && enlargedGame && enlargedGame.video_data}">
     <div class="asian-banner {{games[0].sport.alias || game.sport.alias}}" ng-if="$root.conf.showInSportsbookBanners">
-        <div class="asian-banner-blocks" ng-show="bannersState.show" ng-include="'optional_modules/esports/templates/esport-banner.html'"></div>
+        <div class="asian-banner-blocks" ng-show="bannersState.show" ng-include="'templates/sport/esports/esport-banner.html'"></div>
         <div class="asian-banner-swicher">
             <button data-content="{{(bannersState.show? 'OFF': 'ON')|translate}}" ng-click="toggleBanners()"></button>
         </div>
@@ -45,12 +45,12 @@
                         </div>
 
                         <div class="e-p-table">
-                            <ng-include ng-if="game.show_type !== 'OUTRIGHT'"  class="float-width" src="'optional_modules/esports/templates/center/'+ layout.selected + '.html'"></ng-include>
-                            <ng-include  ng-if="game.show_type === 'OUTRIGHT'" class="float-width" src="'optional_modules/esports/templates/center/outright.html'"></ng-include>
+                            <ng-include ng-if="game.show_type !== 'OUTRIGHT'"  class="float-width" src="'templates/sport/esports/center/'+ layout.selected + '.html'"></ng-include>
+                            <ng-include  ng-if="game.show_type === 'OUTRIGHT'" class="float-width" src="'templates/sport/esports/center/outright.html'"></ng-include>
                         </div>
                     </div>
                 </div>
-                <ng-include class="float-width" ng-if="game" src="::'optional_modules/esports/templates/center/game.html'|fixPath"></ng-include>
+                <ng-include class="float-width" ng-if="game" src="::'templates/sport/esports/center/game.html'|fixPath"></ng-include>
             </div>
         </div>
     </div>

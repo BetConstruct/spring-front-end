@@ -9,8 +9,9 @@
                     max-duration-speed="400"
                     point="jackpot.CurrencyFraction"
                     comma="true"
-                    currency="jackpot.Currency"
-                    amount="jackpot.PoolGroup.PoolList[0].CollectedAmount">
+                    show-currency="true"
+                    currency="{{jackpot.Currency}}"
+                    amount="{{jackpot.PoolGroup.PoolList[0].CollectedAmount}}">
             </jackpot-counter>
             <h4 ng-bind="jackpot.PoolGroup.PoolList[0].DisplayName"></h4>
             <p class="red-tiger-timer" ng-if="jackpot.PoolGroup.PoolList[0].JackPotType === 'time'">{{'Must pay before'|translate}} <span countdown="{{jackpot.PoolGroup.PoolList[0].TimeStamp}}"  ng-bind="'🕒 ' + countdown.hours + ':' + countdown.minutes + ':' + countdown.seconds"></span></p>
@@ -21,8 +22,9 @@
                             max-duration-speed="400"
                             point="jackpot.CurrencyFraction"
                             comma="true"
-                            currency="jackpot.Currency"
-                            amount="pool.CollectedAmount">
+                            show-currency="true"
+                            currency="{{jackpot.Currency}}"
+                            amount="{{pool.CollectedAmount}}">
                     </jackpot-counter>
                     <p class="red-tiger-timer" ng-if="pool.JackPotType === 'time'">{{'Must pay before'|translate}} <span countdown="{{pool.TimeStamp}}"  ng-bind="'🕒 ' + countdown.hours + ':' + countdown.minutes + ':' + countdown.seconds"></span></p>
                 </li>

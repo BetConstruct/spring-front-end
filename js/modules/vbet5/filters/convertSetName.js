@@ -614,7 +614,8 @@ VBET5.filter('convertSetName', function () {
         "Kabaddiset0": "Period 0",
         "Kabaddiset1": "Period 1",
         "Kabaddiset2": "Period 2",
-        "Kabaddiset3": "Period 3"
+        "Kabaddiset3": "Period 3",
+        "BasketballShotsset1" : ''
 
 
     };

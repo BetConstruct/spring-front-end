@@ -11,8 +11,9 @@ VBET5.factory('RecaptchaService', ['$rootScope', '$q', '$timeout', 'WS', 'Storag
     ////////////////////////////////////////////////////////////////////////////////
     // PRIVATE VARIABLES
     ////////////////////////////////////////////////////////////////////////////////
-    var _initialized = false;
-    var _scriptAttached = false;
+    var initialized = false;
+    var scriptId = "recaptcha-v3-script-id";
+    var queue = [];
     ////////////////////////////////////////////////////////////////////////////////
     // PRIVATE VARIABLES - END
     ////////////////////////////////////////////////////////////////////////////////
@@ -20,6 +21,18 @@ VBET5.factory('RecaptchaService', ['$rootScope', '$q', '$timeout', 'WS', 'Storag
     ////////////////////////////////////////////////////////////////////////////////
     // PRIVATE METHODS
     ////////////////////////////////////////////////////////////////////////////////
+
+    function enqueue(func) {
+        queue.push(func);
+    }
+
+    function dequeueAll() {
+        queue.forEach(function(callBack) {
+            callBack();
+        });
+        queue = [];
+    }
+
     function debounce(callbackFn) {
         // callbackFn must return either a promise or a 'thenable'
         var debounced, defaultDelay = 3000;
@@ -59,23 +72,40 @@ VBET5.factory('RecaptchaService', ['$rootScope', '$q', '$timeout', 'WS', 'Storag
         return WS.sendRequest({command: "validate_recaptcha", params:{ g_recaptcha_response: recaptchaToken, action: actionName }});
     }
 
-
     function execute(actionName, check) {
         // We call resolve instead of reject because grecaptcha.execute is not a promise, but a 'thenable'
-        if (!_initialized) { return $q.resolve(); }
-
-        return grecaptcha.execute(Recaptcha.key, {action: actionName}).then(function executeSuccess(token) {
-            if (check) {
-                return token;
+        if (Recaptcha.key && Recaptcha.version === 3) {
+            if (initialized) {
+                return grecaptcha.execute(Recaptcha.key, {action: actionName}).then(function executeSuccess(token) {
+                    if (check) {
+                        return token;
+                    } else {
+                        return validateWithSwarm(token, actionName);
+                    }
+                });
             } else {
-                return validateWithSwarm(token, actionName);
+                var key = Recaptcha.key;
+                return $q(function(resolve, reject) {
+                    enqueue(function() {
+                        grecaptcha.execute(key, {action: actionName}).then(function executeSuccess(token) {
+                            if (check) {
+                                resolve(token);
+                            } else {
+                                validateWithSwarm(token, actionName).then(function (response) {
+                                    resolve(response);
+                                }, function (error) {
+                                    reject(error);
+                                });
+                            }
+                        });
+                    });
+                });
             }
-        });
+        } else {
+            return $q.resolve();
+        }
     }
 
-    function onInitExecution(withValidation) {
-        return withValidation ? execute('session_opened') : grecaptcha.execute(Recaptcha.key, {action: 'session_opened'});
-    }
     ////////////////////////////////////////////////////////////////////////////////
     // PRIVATE METHODS - END
     ////////////////////////////////////////////////////////////////////////////////
@@ -84,9 +114,19 @@ VBET5.factory('RecaptchaService', ['$rootScope', '$q', '$timeout', 'WS', 'Storag
     ////////////////////////////////////////////////////////////////////////////////
     // PUBLIC METHODS
     ////////////////////////////////////////////////////////////////////////////////
-    Recaptcha.init = function init(key, version, withValidation) {
-        var deferred = $q.defer();
 
+    Recaptcha.init = function init(key, version) {
+        if (Recaptcha.key) {
+            if (Recaptcha.key !== key) {
+                initialized = false;
+                var attachedScript = document.getElementById(scriptId);
+                if (attachedScript) {
+                    attachedScript.remove();
+                }
+            } else {
+                return;
+            }
+        }
         Recaptcha.version = version;
         Recaptcha.key = key;
 
@@ -94,32 +134,23 @@ VBET5.factory('RecaptchaService', ['$rootScope', '$q', '$timeout', 'WS', 'Storag
             version: version,
             key: key
         });
-        Storage.set('recaptcha_' + $rootScope.conf.site_id, {key: key, version: version});
 
-        if (version !== 3) {
-            deferred.resolve();
-        } else if (_scriptAttached) {
-            onInitExecution(withValidation).then(deferred.resolve);
-        } else {
+        if (version === 3) {
             var script = document.createElement('script');
+            script.id = scriptId;
             script.src = 'https://www.recaptcha.net/recaptcha/api.js?render=' + Recaptcha.key;
 
             script.onload = function onloadCallback() {
                 grecaptcha.ready(function() {
-                    _initialized = true;
-                    onInitExecution(withValidation).then(deferred.resolve);
+                    initialized = true;
+
+                    dequeueAll();
                 });
             };
 
-                script.onerror = deferred.resolve;
-
             var firstScript = document.getElementsByTagName('script')[0];
             firstScript.parentNode.insertBefore(script, firstScript);
-
-            _scriptAttached = true;
         }
-
-        return deferred.promise;
     };
 
     // Returns a 'thenable' when called

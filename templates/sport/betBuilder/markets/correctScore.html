@@ -20,7 +20,7 @@
         </ul>
     </div>
     <div class="bet-builder-buttons">
-        <button type="button" ng-disabled="!marketsData[selectedKeys.market].group[selectedKeys.period].resultMap[marketState.homeValue + '-' + marketState.awayValue]" trans ng-class="{'active':  eventsDataMap[marketsData[selectedKeys.market].group[selectedKeys.period].resultMap[marketState.homeValue + '-' + marketState.awayValue].typeId].id === marketsData[selectedKeys.market].group[selectedKeys.period].resultMap[marketState.homeValue + '-' + marketState.awayValue].id}" ng-click="toggleEvent(marketsData[selectedKeys.market].group[selectedKeys.period].resultMap[marketState.homeValue + '-' + marketState.awayValue]);clearBetslipErrors();">Select</button>
+        <button type="button" ng-disabled="!marketsData[selectedKeys.market].group[selectedKeys.period].resultMap[marketState.homeValue + '-' + marketState.awayValue]" trans ng-class="{'active':  selectedBet.period === selectedKeys.period && selectedBet.state.homeValue === marketState.homeValue && selectedBet.state.awayValue === marketState.awayValue }" ng-click="attachEvent(marketsData[selectedKeys.market].group[selectedKeys.period].resultMap[marketState.homeValue + '-' + marketState.awayValue]);clearBetslipErrors();">Select</button>
         <p class="bet-notification-warning" ng-show="!marketsData[selectedKeys.market].group[selectedKeys.period].resultMap[marketState.homeValue + '-' + marketState.awayValue]" trans>No event matching your current selections is available.</p>
     </div>
 </div>

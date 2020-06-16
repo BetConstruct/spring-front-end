@@ -1,7 +1,7 @@
 <div ng-if="!showAuthenticationPopup" ng-init="loginFormInit();">
     <h3 trans>Sign in</h3>
     <div ng-click="$event.stopPropagation();"  class="help-b" ng-if="!conf.liveChat.isSfChat && conf.liveChat.siteId && conf.liveChat.codePlan">
-        <a pass-click-to="{{ conf.liveChat.buttonId ? conf.liveChat.buttonId : 'live-chat-button1' }}"  ng-attr-iframe="{{!conf.liveChat.buttonIsDiv ? 'true' : ''}}" ng-attr-find="{{!conf.liveChat.buttonIsDiv ? 'a' : ''}}"><span trans>Contact Support</span></a>
+        <a pass-click-to="{{ conf.liveChat.buttonId ? conf.liveChat.buttonId : (conf.liveChat.comm100ButtonId || 'live-chat-button1') }}"  ng-attr-iframe="{{!conf.liveChat.buttonIsDiv ? 'true' : ''}}" ng-attr-find="{{!conf.liveChat.buttonIsDiv ? 'a' : ''}}"><span trans>Contact Support</span></a>
     </div>
     <div ng-if="conf.liveChat.isSfChat" ng-click="startSFChat()" title="Live Chat" trans="attr-only" class="help-b"><a><span trans>Contact Support</span></a></div>
     <div title="Live Agent" trans="attr-only" class="help-b" ng-show="!!isLiveAgent" ng-click="startLiveAgent()">
@@ -32,9 +32,9 @@
                 <input ng-model="user.username" id="signinform-login-input" numpad type="text" placeholder="Your login" required="required" trans focus-on="login.formOpened" dont-scroll-on-focus ng-change="params.needVerification=false"  autocomplete="off">
             </div>
             <label trans>Password</label>
-            <div class="form-text" ng-class="{'error':signInError && forms.signinform.$pristine}" ng-init="passwordType = 'password'">
-                <input ng-model="user.password" id="signinform-password-input" numpad type="{{passwordType}}" placeholder="Enter your password" focus-on="login.formOpened.andUsernameIsAvailable" required="required"  autocomplete="off" trans ng-keypress="passwordKeyPress($event)">
-                <i class="view-passward" ng-show="$root.conf.enableShowPassword" ng-mousedown="passwordType='text'" ng-mouseup="passwordType='password'" ng-mouseleave="passwordType='password'"></i>
+            <div class="form-text" ng-class="{'error':signInError && forms.signinform.$pristine}" ng-init="showPass={'passwordType':'password'}">
+                <input ng-model="user.password" id="signinform-password-input" numpad type="{{showPass.passwordType}}" placeholder="Enter your password" focus-on="login.formOpened.andUsernameIsAvailable" required="required"  autocomplete="off" trans ng-keypress="passwordKeyPress($event)">
+                <i class="view-passward" ng-if="$root.conf.enableShowPassword" ng-mousedown="showPass.passwordType='text'" ng-mouseup="showPass.passwordType='password'" ng-mouseleave="showPass.passwordType='password'"></i>
                 <div ng-if="conf.showCapsLockHint && capsLockIsOn"  class="capslock-is-on-j" trans>Caps Lock is On</div>
             </div>
             <label ng-if="params.needVerificationCode" trans>Enter verification code</label>

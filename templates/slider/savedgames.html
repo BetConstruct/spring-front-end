@@ -5,7 +5,7 @@
             <div class="arrow-left-s" ng-show="offset > 0"><a ng-click="slide('left')"></a></div>
             <div class="arrow-right-s" ng-show="offset < allGamesCount - gamesToShow"><a ng-click="slide('right')"></a></div>
             <ul ng-show="games.length > 0">
-                <li ng-repeat="game in games track by game.id" ng-click="chooseFavorite(game)" ng-class="{'first': $first, 'last': $last}">
+                <li ng-repeat="game in games track by game.id" ng-click="chooseFavorite(game)" ng-class="{'first': $first, 'last': $last}" class="sport-{{game.sport.alias}}">
                     <div class="game-status" ng-class="{'game-status-live': game.type === 1}">
                         <div class="type-rezult-won" ng-show="game.type === 1" trans>LIVE NOW!</div>
                         <div class="type-rezult" title="{{ game.start_ts| formatDate:null:null:$root.env.timeFormat}}" ng-class="{'prematch': game.type !== 1}">{{ game.start_ts| formatDate:null:null:$root.env.timeFormat}}</div>
@@ -33,7 +33,7 @@
                             <div class="details" ng-if="game.info.current_leg !== undefined"> {{(game.info.current_game_state|convertSetNameWithLeg:game.info|translate)}}</div>
                             <div class="logo-team-2"><div ng-show="game.info.extra.team2icon"><img ng-src="{{ game.info.extra.team2icon}}"></div></div>
                         </div>
-                        <div class="save-games-stats" ng-if="game.sport.alias !== 'Soccer' && game.sport.alias !== 'HorseRacing' && game.sport.alias !== 'Boxing'">
+                        <div class="save-games-stats" ng-if="game.sport.alias !== 'Soccer' && game.sport.alias !== 'HorseRacing' && game.sport.alias !== 'Boxing' && game.sport.alias !== 'BasketballShots'">
                             <table class="cash-game">
                                 <tr>
                                     <th ng-if="game.sport.alias !== 'Basketball'" trans>Set</th>
@@ -56,7 +56,7 @@
                         </div>
                         <div ng-if="game.sport.alias === 'Soccer'" class="save-soccer-stats">
                             <div class="tl-container">
-                                <soccertimeline ng-class="{'tl-80': game.last_event.match_length === '80', 'extra': isExtraTime(game.info)}"></soccertimeline>
+                                <soccertimeline match-length="game.match_length" is-extra="isExtraTime(game)"></soccertimeline>
                                 <div class="tl-new">
                                     <div class="current-time" ng-style="game.tlCurrentMinute"></div>
                                     <div ng-repeat="tlEvent in game.tlEvents" ng-style="tlEvent.timeline_position" class="{{tlEvent.team + '-' + tlEvent.type}}">

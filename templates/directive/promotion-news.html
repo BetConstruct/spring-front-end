@@ -25,7 +25,7 @@
     <div ng-if="!recentNewsList.length && !newsAreLoading" class="new-casino-no-games-text">
         <p trans>No promos for the selected category</p>
     </div>
-    <div ng-repeat="group in recentNewsList track by $index" ng-show="!newsAreLoading" class="block-sport-news">
+    <div ng-repeat="group in recentNewsList track by $index" ng-show="!newsAreLoading" class="block-sport-news count-{{recentNewsList[0].news.length}}">
         <div class="list-news promo">
             <ul ng-repeat="news in group.news track by $index"
                 ng-class="'news-column-' + $index">

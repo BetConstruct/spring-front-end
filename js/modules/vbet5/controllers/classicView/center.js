@@ -8,7 +8,7 @@
  *          when adding dependencies to this controller, you must add them also in classicViewLeftController(classicExplorerCtrl)
  *          and pass it to this controller when extending it
  */
-angular.module('vbet5.betting').controller('classicViewCenterController', ['$rootScope', '$scope', '$filter', 'Config', 'ConnectionService', 'StreamService', 'Utils', 'Storage', 'GameInfo', 'partner', 'TimeoutWrapper', '$location', 'analytics', 'BetService', function ($rootScope, $scope, $filter, Config, ConnectionService, StreamService, Utils, Storage, GameInfo, partner, TimeoutWrapper, $location, analytics, BetService) {
+angular.module('vbet5.betting').controller('classicViewCenterController', ['$rootScope', '$scope', '$filter', 'Config', 'ConnectionService', 'StreamService', 'Utils', 'Storage', 'GameInfo', 'partner', 'TimeoutWrapper', '$location', 'analytics', 'BetService', '$timeout', function ($rootScope, $scope, $filter, Config, ConnectionService, StreamService, Utils, Storage, GameInfo, partner, TimeoutWrapper, $location, analytics, BetService, $timeout) {
     'use strict';
     $rootScope.footerMovable = true;
     TimeoutWrapper = TimeoutWrapper($scope);
@@ -221,7 +221,7 @@ angular.module('vbet5.betting').controller('classicViewCenterController', ['$roo
                                     event.name = $filter('improveName')(event.name, game);
                                 }
                             });
-                            if (market.display_key === 'CORRECT SCORE' && BetService.constants.customCorrectScoreLogic.indexOf($scope.openGame.sport.alias ) > -1) {
+                            if ((market.display_key === 'CORRECT SCORE' || market.type === 'CorrectScore') && BetService.constants.customCorrectScoreLogic.indexOf($scope.openGame.sport.alias ) > -1) {
                                 GameInfo.reorderMarketEvents(market, 'correctScore');
                             } else if (BetService.constants.marketsPreDividedByColumns.indexOf(market.type) > -1) {
                                 GameInfo.reorderMarketEvents(market, 'preDivided');
@@ -459,6 +459,19 @@ angular.module('vbet5.betting').controller('classicViewCenterController', ['$roo
         }
     };
 
+    /**
+     * @ngdoc method
+     * @name initOpenedGame
+     * @methodOf vbet5.controller:classicViewCenterController
+     * @description Initialize multiView game every time, when the game was moved
+     * @param {Object} game
+     */
+    $scope.initOpenedGame = function initOpenedGame(game) {
+        $timeout(function () {
+            $scope.openGameFullDetails(game);
+        }, 0);
+    };
+
     $scope.$on("leftMenu.hoveredLiveGameFullDataArrived", function (event, data) {
         if (data === undefined) {
             return;
@@ -490,7 +503,7 @@ angular.module('vbet5.betting').controller('classicViewCenterController', ['$roo
         if (lastAnimationType === theEvent.type && lastAnimationSide === theEvent.side) {
             return;
         }
-        var currentMinute = game.info.currMinute || 0;
+        var currentMinute = game.info.current_game_time || 0;
         var eventMinute = null;
         //event minute exists only for goal, corner, yellow and red card, for the rest events the timeout part will be working
         if (game.live_events.length && (game.live_events[game.live_events.length - 1].event_type === theEvent.type.toLowerCase())) {

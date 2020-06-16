@@ -41,12 +41,14 @@
                     <h3 trans>Change Password</h3>
 
                     <div class="settings-info-contain">
-                        <form name="forms.changepasswordForm" class="registration-form">
+                        <form name="forms.changepasswordForm" class="registration-form"
+                              ng-init="showPass={'changePasswordType':'password', 'newPasswordType':'password', 'newPasswordType2':'password'}">
                             <label><span trans>Current Password</span></label>
                             <div class="form-text"  ng-class="{'error': (!passwordResetError['oldpassword'] || forms.changepasswordForm['oldpassword'].$touched) && ((forms.changepasswordForm.oldpassword.$dirty && forms.changepasswordForm.oldpassword.$error.required) || (forms.changepasswordForm.oldpassword.$error.incorrect && !forms.changepasswordForm.oldpassword.$dirty))}">
                                 <div class="tooltip-wrapper-j">
-                                    <input name="oldpassword" id="changePasswordOld" numpad ng-model="changepasswordData.oldpassword" type="password" placeholder="Current Password" required trans>
+                                    <input name="oldpassword" id="changePasswordOld" numpad ng-model="changepasswordData.oldpassword" type="{{showPass.changePasswordType}}" placeholder="Current Password" required trans>
                                     <div class="form-error-icon-j" ng-click="resetFieldError('oldpassword', 'changePassword')"></div>
+                                    <i class="view-passward" ng-if="$root.conf.enableShowPassword" ng-mousedown="showPass.changePasswordType='text'" ng-mouseup="showPass.changePasswordType='password'" ng-mouseleave="showPass.changePasswordType='password'"></i>
                                     <div class="tooltip-j">
                                         <div trans ng-show="forms.changepasswordForm.oldpassword.$error.required">This field is required</div>
                                         <div trans ng-show="forms.changepasswordForm.oldpassword.$pristine && forms.changepasswordForm.oldpassword.$error.incorrect">Password incorrect</div>
@@ -56,9 +58,9 @@
                             <label><span trans>New Password</span></label>
                             <div class="form-text"  ng-class="{'error': (!passwordResetError['password'] || forms.changepasswordForm['password'].$touched) && forms.changepasswordForm.password.$dirty && forms.changepasswordForm.password.$invalid}">
                                 <div class="tooltip-wrapper-j">
-                                    <input name="password" id="changePasswordNew" numpad ng-model="changepasswordData.password" type="password" placeholder="{{passwordRules.placeholder|translate}}" required ng-pattern="passwordRules['ng-pattern'] || ''" ng-minlength="passwordRules['ng-minlength'] || ''" ng-maxlength="passwordRules['ng-maxlength'] || ''">
-
+                                    <input name="password" id="changePasswordNew" numpad ng-model="changepasswordData.password" type="{{showPass.newPasswordType}}" placeholder="{{passwordRules.placeholder|translate}}" required ng-pattern="passwordRules['ng-pattern'] || ''" ng-minlength="passwordRules['ng-minlength'] || ''" ng-maxlength="passwordRules['ng-maxlength'] || ''">
                                     <div class="form-error-icon-j" ng-click="resetFieldError('password', 'changePassword')"></div>
+                                    <i class="view-passward" ng-if="$root.conf.enableShowPassword" ng-mousedown="showPass.newPasswordType='text'" ng-mouseup="showPass.newPasswordType='password'" ng-mouseleave="showPass.newPasswordType='password'"></i>
                                     <div class="tooltip-j">
                                         <div ng-repeat="val in passwordRules.validationMessages"
                                              ng-show="forms.changepasswordForm.password.$error[val.name]">
@@ -70,9 +72,10 @@
                             <label><span trans>Confirm New Password</span></label>
                             <div class="form-text" ng-class="{'error': (!passwordResetError['password2'] || forms.changepasswordForm['password2'].$touched) && forms.changepasswordForm.password2.$dirty && (forms.changepasswordForm.password2.$modelValue !== forms.changepasswordForm.password.$modelValue)}">
                                 <div class="tooltip-wrapper-j">
-                                    <input name="password2" id="changePasswordNew2" numpad ng-model="changepasswordData.password2" type="password" placeholder="Confirm password" required trans ng-disabled="forms.changepasswordForm.password.$invalid" >
+                                    <input name="password2" id="changePasswordNew2" numpad ng-model="changepasswordData.password2" type="{{showPass.newPasswordType2}}" placeholder="Confirm password" required trans ng-disabled="forms.changepasswordForm.password.$invalid" >
 
                                     <div class="form-error-icon-j" ng-click="resetFieldError('password2', 'changePassword')"></div>
+                                    <i class="view-passward" ng-if="$root.conf.enableShowPassword" ng-mousedown="showPass.newPasswordType2='text'" ng-mouseup="showPass.newPasswordType2='password'" ng-mouseleave="showPass.newPasswordType2='password'"></i>
                                     <div class="tooltip-j">
 
                                         <div trans ng-show="changepasswordData.password2 !== changepasswordData.password">Passwords don't match</div>
@@ -88,7 +91,7 @@
                                             <button ng-show="!working"
                                                     type="button"
                                                     trans
-                                                    ng-click="sendVerificationCodeSMS()">Recieve Verification Code</button>
+                                                    ng-click="sendVerificationCodeSMS()">Receive Verification Code</button>
                                             <button type="button" disabled="disabled" ng-show="working" trans>Wait...</button>
                                         </div>
                                     </div>
@@ -364,7 +367,7 @@
                                     <li ng-class="{'read-only': personalDetails.readOnlyFields.indexOf('doc_number') !== -1, 'editable': personalDetails.editableFields.indexOf('doc_number') !== -1}">
                                         <label><span trans>Passport Number</span>: <span class="hint" ng-show="personalDetails.requiredEditableFields.indexOf('doc_number') !== -1">*</span></label>
                                         <div class="disabled-field">
-                                            <p>{{details.doc_number || details.personal_id}}</p>
+                                            <p>{{details.doc_number}}</p>
                                         </div>
 
                                         <div class="active-field">
@@ -378,6 +381,28 @@
                                                         <div trans ng-show="forms.detailsForm.doc_number.$error.minlength">This field is too short</div>
                                                         <div trans ng-show="forms.detailsForm.doc_number.$error.maxlength">This field is too long</div>
                                                         <div trans ng-show="forms.detailsForm.doc_number.$error.pattern" ng-bind="personalDetails.validation.docNumber|translate"></div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li ng-class="{'read-only': personalDetails.readOnlyFields.indexOf('personal_id') !== -1, 'editable': personalDetails.editableFields.indexOf('personal_id') !== -1}">
+                                        <label><span trans>Personal ID</span>: <span class="hint" ng-show="personalDetails.requiredEditableFields.indexOf('personal_id') !== -1">*</span></label>
+                                        <div class="disabled-field">
+                                            <p>{{details.personal_id}}</p>
+                                        </div>
+
+                                        <div class="active-field">
+                                            <div class="form-text" ng-class="{'error':(!resetError['personal_id'] || forms.detailsForm['personal_id'].$touched)  &&  forms.detailsForm.personal_id.$invalid}">
+                                                <div class="tooltip-wrapper-j">
+                                                    <input name="personal_id" placeholder="Enter your personal ID" trans ng-pattern="personalDetails.editableFields.indexOf('personal_id') !== -1 && patterns.personalId" type="text" ng-minlength="personalDetails.limits.personal_id !== undefined?personalDetails.limits.personal_id.minlength:''" ng-maxlength="personalDetails.limits.personal_id !== undefined?personalDetails.limits.personal_id.maxlength:''" ng-model="details.personal_id" title="{{personalDetails.disabledFields.indexOf('personal_id') !== -1 ? ('This field cannot be edited.'|translate) : ''}}" ng-required="personalDetails.requiredEditableFields.indexOf('personal_id') !== -1" ng-disabled="personalDetails.disabledFields.indexOf('personal_id') !== -1">
+                                                    <div class="form-error-icon-j" ng-click="resetFieldError('personal_id')" ng-show="personalDetails.disabledFields.indexOf('personal_id') === -1"></div>
+                                                    <div class="tooltip-j" ng-show="personalDetails.disabledFields.indexOf('personal_id') === -1">
+
+                                                        <div trans ng-show="forms.detailsForm.personal_id.$error.required">This field is required</div>
+                                                        <div trans ng-show="forms.detailsForm.personal_id.$error.minlength">This field is too short</div>
+                                                        <div trans ng-show="forms.detailsForm.personal_id.$error.maxlength">This field is too long</div>
+                                                        <div trans ng-show="forms.detailsForm.personal_id.$error.pattern" ng-bind="personalDetails.validation.personalId|translate"></div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -611,6 +636,18 @@
                                                     </div>
                                                 </div>
                                             </div>
+                                        </div>
+                                    </li>
+                                    <li ng-class="{'read-only': personalDetails.readOnlyFields.indexOf('doc_issued_by') !== -1}">
+                                        <label><span trans>Document</span>:</label>
+                                        <div class="disabled-field">
+                                            <p>{{details.doc_issued_by}}</p>
+                                        </div>
+                                    </li>
+                                    <li ng-class="{'read-only': personalDetails.readOnlyFields.indexOf('doc_issue_date') !== -1}">
+                                        <label><span trans>Document Issue date</span>:</label>
+                                        <div class="disabled-field">
+                                            <p>{{details.doc_issue_date}}</p>
                                         </div>
                                     </li>
                                     <li class="visible-item">

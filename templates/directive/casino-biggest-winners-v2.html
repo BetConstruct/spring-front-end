@@ -10,18 +10,20 @@
 
         </ul>
     </div>
-    <ul ng-repeat="winner in winners track by $index" ng-show="!winnersLoading || winners">
-        <!--<li class="winners-avatar" ng-click="openGameByExternalId(winner.game_id)"><span style="background-image: url({{externalImages[winner.game_id]}});"></span>--><!--todo comment SDC-40634-->
+    <div class="casino-scroll-block">
+        <ul class="casino-games-row" ng-repeat="winner in winners track by $index" ng-show="!winnersLoading || winners">
+            <!--<li class="winners-avatar" ng-click="openGameByExternalId(winner.game_id)"><span style="background-image: url({{externalImages[winner.game_id]}});"></span>--><!--todo comment SDC-40634-->
 
-        <li class="winners-avatar"><span style="background-image: url({{externalImages[winner.game_id]}});"></span>
-        </li>
-        <li class="info-winners">
-            <p ng-bind="winner.player_user_name"></p>
-            <!--<b ng-click="openGameByExternalId(winner.game_id)" ng-bind="winner.game_name"></b>--><!--todo comment SDC-40634-->
-            <b ng-bind="winner.game_name"></b>
-        </li>
-        <li class="winner-cost"><p>{{winner.win_amount|number:$root.conf.balanceFractionSize}} {{winner.currency_id|currency}}</p></li>
-    </ul>
+            <li class="winners-avatar"><span style="background-image: url({{externalImages[winner.game_id]}});"></span>
+            </li>
+            <li class="info-winners">
+                <p ng-bind="winner.player_user_name"></p>
+                <!--<b ng-click="openGameByExternalId(winner.game_id)" ng-bind="winner.game_name"></b>--><!--todo comment SDC-40634-->
+                <b ng-bind="winner.game_name"></b>
+            </li>
+            <li class="winner-cost"><p>{{winner.win_amount|number:$root.conf.balanceFractionSize}} {{winner.currency_id|currency}}</p></li>
+        </ul>
+    </div>
     <span ng-if="!winnersLoading && (!winners || !winners.length)" trans>There are no winners</span>
     <vbet-loader ng-if="winnersLoading"></vbet-loader>
 </div>

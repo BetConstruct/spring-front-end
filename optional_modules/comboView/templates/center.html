@@ -124,7 +124,7 @@
         <div ng-switch-when="gameView" class="game-view-contain-b">
            <!-- GAME VIEW-->
             <vbet-loader ng-if="liveGameLoading"  class="central-view-loader"></vbet-loader>
-            <live-game-scores show-stats-block="showStatsBlock" ng-if="!openGameLoading && openGame"  open-game="openGame" enlarged-game="enlargedGame"></live-game-scores>
+            <live-game-scores show-stats-block="showStatsBlock" ng-if="!openGameLoading && openGame && openGame.id"  open-game="openGame" enlarged-game="enlargedGame"></live-game-scores>
             <div ng-repeat="marketGroup in openGame.markets track by $index" class="live-game-all-markets-b" ng-show="!liveGameLoading">
                 <div class="region-games-list-view">
                     <!--Championship Region title-->

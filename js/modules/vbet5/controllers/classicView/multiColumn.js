@@ -19,27 +19,39 @@ angular.module('vbet5.betting').controller('classicMultiColumnCtrl', ['$scope', 
      */
     function getMultiColumnEvents(markets, marketType, displayKey, displaySubKey, eventTypes, optimalMarkets) {
         var output = false, outputCache, price, currentPrice;
+        function processMarket(market) {
+            outputCache = {
+                market: market
+            };
+            angular.forEach(market.event, function (event) {
+                outputCache[event.type] = event;
+            });
+            if (eventTypes && outputCache[eventTypes[0]] && outputCache[eventTypes[1]]) {
+                price = Math.abs(outputCache[eventTypes[0]].price - outputCache[eventTypes[1]].price);
+                if (currentPrice === undefined || price < currentPrice) {
+                    currentPrice = price;
+                    output = outputCache;
+                }
+            } else {
+                output = outputCache;
+            }
+        }
+        var minimalMarket = null;
+        var minOptimalMarkets = optimalMarkets && optimalMarkets.length && Math.min(optimalMarkets);
         angular.forEach(markets, function (market) {
+            var mainOrder = market.main_order;
             if (!output && (!marketType || market.type === marketType) &&(!displayKey || market.display_key === displayKey) && (!displaySubKey || market.display_sub_key === displaySubKey)) {
-                if (!optimalMarkets || !eventTypes || (optimalMarkets && market.main_order && optimalMarkets.indexOf(market.main_order) !== -1)) {
-                    outputCache = {
-                        market: market
-                    };
-                    angular.forEach(market.event, function (event) {
-                        outputCache[event.type] = event;
-                    });
-                    if (eventTypes && outputCache[eventTypes[0]] && outputCache[eventTypes[1]]) {
-                        price = Math.abs(outputCache[eventTypes[0]].price - outputCache[eventTypes[1]].price);
-                        if (currentPrice === undefined || price < currentPrice) {
-                            currentPrice = price;
-                            output = outputCache;
-                        }
-                    } else {
-                        output = outputCache;
-                    }
+                if (!optimalMarkets || !eventTypes) {
+                   processMarket(market);
+                } else if(optimalMarkets && mainOrder && (!minimalMarket || (mainOrder < minimalMarket.main_order && mainOrder >= minOptimalMarkets) )) {
+                    minimalMarket = market;
                 }
             }
         });
+
+        if (minimalMarket) {
+            processMarket(minimalMarket);
+        }
 
 
         if (output && output.Home && output.Home.name === 'W1') {
@@ -64,52 +76,64 @@ angular.module('vbet5.betting').controller('classicMultiColumnCtrl', ['$scope', 
         $scope.multiColumn.prematchGamesEvents = false;
         $scope.multiColumn.selectedSport = '';
 
-        if ($scope.multiColumn.liveGames && $scope.multiColumn.liveGames.length > 0) {
+        if ($scope.multiColumn.liveSports && $scope.multiColumn.liveSports.length > 0) {
 
-            var liveData = {
-                games: $scope.multiColumn.liveGames,
-                label: 'LIVE',
-                live: true
-            };
-
-            $scope.multiColumn.viewData.push({
-                gameData: [liveData]
-            });
+            Array.prototype.push.apply($scope.multiColumn.viewData, $scope.multiColumn.liveSports);
         }
 
         if ($scope.prematchGameViewData) {
-            angular.forEach($scope.prematchGameViewData, function (competition) {
-                var prematchGames = [];
+            angular.forEach($scope.prematchGameViewData, function (sport) {
+                var competitions = [];
+                angular.forEach(sport.competitions, function (competition) {
+                    var prematchGames = [];
 
-                angular.forEach(competition.gamesGroupedByDate, function (gamesGroupedByDate, date) {
-                    angular.forEach(gamesGroupedByDate, function (game) {
-                        $scope.multiColumn.selectedSport = $scope.multiColumn.selectedSport || game.sport.alias;
-                        game.filteredEvents = {};
-                        angular.forEach($scope.multiColumnMarketFilterTypes, function (filter, filterType) {
-                            if (filter.useMarketTypeForSports && filter.useMarketTypeForSports[$scope.selectedSport.alias]) {
-                                filter = {
-                                    marketType: 'P1XP2'
-                                };
-                            }
-                            var events = getMultiColumnEvents(game.market, filter.marketType, filter.key, filter.subKey, filter.eventTypes, filter.optimalMarkets, filter.remapTypes);
-                            if (events) {
-                                $scope.multiColumn.prematchGamesEvents = $scope.multiColumn.prematchGamesEvents || {};
-                                $scope.multiColumn.prematchGamesEvents[filter.type || filterType] = true;
-                                game.filteredEvents[filter.type || filterType] = events;
-                            }
+                    angular.forEach(competition.gamesGroupedByDate, function (gamesGroupedByDate, date) {
+                        angular.forEach(gamesGroupedByDate, function (game) {
+                            $scope.multiColumn.selectedSport = $scope.multiColumn.selectedSport || game.sport.alias;
+                            game.filteredEvents = {};
+                            angular.forEach($scope.multiColumnMarketFilterTypes, function (filter, filterType) {
+                                if ($scope.selectedSport && filter.useMarketTypeForSports && filter.useMarketTypeForSports[$scope.selectedSport.alias]) {
+                                    filter = {
+                                        marketType: 'P1XP2'
+                                    };
+                                }
+                                var events = getMultiColumnEvents(game.market, filter.marketType, filter.key, filter.subKey, filter.eventTypes, filter.optimalMarkets, filter.remapTypes);
+                                if (events) {
+                                    $scope.multiColumn.prematchGamesEvents = $scope.multiColumn.prematchGamesEvents || {};
+                                    $scope.multiColumn.prematchGamesEvents[filter.type || filterType] = true;
+                                    game.filteredEvents[filter.type || filterType] = events;
+                                }
+                            });
+                        });
+                        prematchGames.push({
+                            games: gamesGroupedByDate,
+                            date: date
                         });
                     });
-                    prematchGames.push({
-                        games: gamesGroupedByDate,
-                        date: date
+                    competitions.push({
+                        competition: competition,
+                        label: competition.name,
+                        gameData: prematchGames
                     });
                 });
 
-                $scope.multiColumn.viewData.push({
-                    competition: competition,
-                    label: competition.name,
-                    gameData: prematchGames
-                });
+                var viewDataItem = null;
+                for(var i = $scope.multiColumn.viewData.length; i--;) {
+                    var item = $scope.multiColumn.viewData[i];
+                    if (item.sport.alias === sport.alias) {
+                        viewDataItem = item;
+                        break;
+                    }
+                }
+                if (viewDataItem) {
+                    Array.prototype.push.apply(viewDataItem.competitions, competitions);
+                } else {
+                    $scope.multiColumn.viewData.push({
+                        sport: sport,
+                        competitions: competitions
+                    });
+                }
+
 
             });
         }
@@ -142,7 +166,7 @@ angular.module('vbet5.betting').controller('classicMultiColumnCtrl', ['$scope', 
                 sport: ['id', 'name', 'alias'],
                 competition: ['id', 'order', 'name'],
                 region: ['id', 'name', 'alias'],
-                game: ['id', 'start_ts', 'team1_name', 'team2_name', 'team1_external_id', 'team2_external_id', 'team1_id', 'team2_id', 'type', 'show_type', 'info', 'events_count', 'markets_count', 'extra', 'is_blocked', 'exclude_ids', 'is_stat_available', 'game_number', 'game_external_id', 'is_live'],
+                game: ['id', 'start_ts', 'team1_name', 'team2_name', 'team1_external_id', 'team2_external_id', 'team1_id', 'team2_id', 'type', 'show_type', 'info', 'markets_count', 'extra', 'is_blocked', 'exclude_ids', 'is_stat_available', 'game_number', 'game_external_id', 'is_live'],
                 event: ['id', 'price', 'type', 'name', 'order', 'base', 'price_change'],
                 market: ['type', 'express_id', 'name', 'base', 'display_key', 'display_sub_key', 'main_order', 'home_score', 'away_score']
             },
@@ -183,15 +207,17 @@ angular.module('vbet5.betting').controller('classicMultiColumnCtrl', ['$scope', 
      * @description prepares additional data for multicolumn view
      */
     function updateLiveGames(response) {
-        $scope.multiColumn.liveGames = false;
+        $scope.multiColumn.liveSports = false;
         $scope.multiColumn.liveGamesEvents = false;
         var selectedSport = $scope.selectedCompetition.sport.alias;
         if (response && response.sport) {
-            $scope.multiColumn.liveGames = [];
+            $scope.multiColumn.liveSports = [];
 
             angular.forEach(response.sport, function (sport) {
+                var competitions = [];
                 angular.forEach(sport.region, function (region) {
                     angular.forEach(region.competition, function (competition) {
+                        var games = [];
                         angular.forEach(competition.game, function (game) {
 
                             game.sport = {id: sport.id, alias: sport.alias, name: sport.name};
@@ -213,9 +239,22 @@ angular.module('vbet5.betting').controller('classicMultiColumnCtrl', ['$scope', 
                                 }
                             });
 
-                            $scope.multiColumn.liveGames.push(game);
+                           games.push(game);
+                        });
+
+                        var liveData = {
+                            games: games,
+                            label: 'LIVE',
+                            live: true
+                        };
+                        competitions.push({
+                            gameData: [liveData]
                         });
                     });
+                });
+                $scope.multiColumn.liveSports.push({
+                    competitions: competitions,
+                    sport: sport
                 });
             });
 

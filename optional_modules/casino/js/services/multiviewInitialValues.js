@@ -9,13 +9,29 @@
 CASINO.service('casinoMultiviewValues', function () {
     'use strict';
     var casinoMultiviewValues = {};
+
+    function hasTournamentsInMenu(menu) {
+        if (menu.hasOwnProperty('tournaments')) {
+            return true;
+        }
+        if (menu.hasOwnProperty('casino') && menu.casino.hasOwnProperty('subMenu')) {
+            for (var i = menu.casino.subMenu.length; i--;) {
+                if (menu.casino.subMenu[i].href.indexOf("#/tournaments") > -1) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
     casinoMultiviewValues.init = function (scope) {
         var iframeGames = [];
         scope.hasIframeJackpot = {empty: true};
         scope.hasIframeTournamentInfo = {empty: true};
         scope.iframeTab = {};
         scope.jackpotWinner = {};
-        scope.hasTournaments = scope.conf.multiLevelMenu.hasOwnProperty('tournaments');
+
+        scope.hasTournaments = scope.hasTournaments || hasTournamentsInMenu(scope.conf.multiLevelMenu);
 
         /**
          * @ngdoc method
@@ -24,9 +40,9 @@ CASINO.service('casinoMultiviewValues', function () {
          * @description
          */
         scope.initIframeInfo = function (gameInfo) {
-            if (gameInfo && gameInfo.game && gameInfo.game.id && iframeGames.indexOf(gameInfo.game.id) === -1) {
-                scope.iframeTab[gameInfo.game.id] = {selected: null, show: true};
-                iframeGames.push(gameInfo.game.id);
+            if (gameInfo && gameInfo.game && gameInfo.game.id && iframeGames.indexOf(gameInfo.id) === -1) {
+                scope.iframeTab[gameInfo.id] = {selected: null, show: true};
+                iframeGames.push(gameInfo.id);
             }
         };
 

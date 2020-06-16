@@ -4,7 +4,6 @@
         <ng-include src="::'templates/sport/classic/systemCalculator.html'|fixPath"></ng-include>
     </div>
     <!-- System Calculator-->    
-    <!--<ng-include ng-if="conf.liveCalendarView==='multiDaySelectionView'" src="::'templates/livecalendar/multiDaySelectionView.html'|fixPath"></ng-include>-->
     <ng-include src="::'templates/livecalendar/oneDaySelectionView.html'|fixPath"></ng-include>
     <div class="right-container-p">
         <div class="old-classic-scroll-contain"  ng-class="{'right-betslip-contain-modern right-block-list modern' : conf.showModernBetslipInClassic, 'right-betslip-contain' : !conf.showModernBetslipInClassic }">

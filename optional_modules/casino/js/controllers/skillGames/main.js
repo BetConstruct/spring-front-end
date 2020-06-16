@@ -85,6 +85,12 @@ CASINO.controller('skillGamesMainCtrl', ['$rootScope', '$scope', '$location', 'C
         }
     }
 
+    $scope.loadSlidingViewTopBanners = function loadSlidingViewTopBanners () {
+        content.getPage('skill-games.mainPageSlugs', true).then(function (data) {
+            $scope.skillGamesSlides = (data.data.page && data.data.page.children[0] && data.data.page.children[0].children) || [];
+        });
+    };
+
     /**
      * @ngdoc method
      * @name openGameInNewWindow

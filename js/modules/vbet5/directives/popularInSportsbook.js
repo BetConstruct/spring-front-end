@@ -56,6 +56,7 @@ VBET5.directive('popularInSportsbook', ['$rootScope', '$location', 'Config', 'Co
                         break;
                     case 'competition':
                         request.what.competition.push('favorite_order');
+                        request.what.game = '@count';
                         request.where.competition = { 'favorite': true };
                         break;
                     default:
@@ -107,9 +108,11 @@ VBET5.directive('popularInSportsbook', ['$rootScope', '$location', 'Config', 'Co
                                         });
                                         break;
                                     case 'competition':
-                                        competition.sport = sport;
-                                        competition.region = region;
-                                        data.push(competition);
+                                        if (competition.game) {
+                                            competition.sport = sport;
+                                            competition.region = region;
+                                            data.push(competition);
+                                        }
                                         break;
                                 }
                             });

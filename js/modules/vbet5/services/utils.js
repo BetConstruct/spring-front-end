@@ -1319,34 +1319,6 @@ VBET5.service('Utils', ['$timeout', '$filter', '$location', '$route', '$window',
         }
     };
 
-
-    /**
-     * @description rounds the odd value depending on config
-     * @param fValue odd decimal value*100
-     * @returns {*}
-     */
-    Utils.mathCuttingFunction = function mathCuttingFunction(fValue) {
-        if(Config.main.decimalFormatRemove3Digit) {
-            var dValue  = fValue.toString().split('.')[0];
-            var remValue = fValue.toString().split('.')[1];
-            if(remValue){
-                //avoids javascript bug: 8.2 * 100 = 819.9999999999999
-                if(remValue.length > 1) {
-                    return parseInt(remValue.substr(0,2)) === 99 ? parseInt(dValue) + 1 : parseInt(dValue);
-
-                } else {
-                    return Math.floor(fValue);
-                }
-
-            } else {
-                return fValue;
-            }
-
-        } else{
-            return Math.round(fValue);
-        }
-    };
-
     /**
      * Calculates string hash
      * @param {String} str
@@ -1513,7 +1485,7 @@ VBET5.service('Utils', ['$timeout', '$filter', '$location', '$route', '$window',
                         config.main.redirectOnTablets = config.main.redirectOnTablets.replace(existedDomain, currentDomain);
                         config.main.footer.mobileVersionLink && (config.main.footer.mobileVersionLink = config.main.footer.mobileVersionLink.replace(existedDomain, currentDomain));
                         config.main.header.statisticsLink && (config.main.header.statisticsLink = config.main.header.statisticsLink.replace(existedDomain, currentDomain));
-                        config.main.statsHostname && config.main.statsHostname.prefixUrl && (config.main.statsHostname.prefixUrl.replace(existedDomain, currentDomain));
+                        config.main.statsHostname && config.main.statsHostname.prefixUrl && (config.main.statsHostname.prefixUrl = config.main.statsHostname.prefixUrl.replace(existedDomain, currentDomain));
                         config.main.htmlMetaTags && (config.main.htmlMetaTags = config.main.htmlMetaTags.replace(existedDomain, currentDomain));
 
                         var i, length;
@@ -1634,15 +1606,6 @@ VBET5.service('Utils', ['$timeout', '$filter', '$location', '$route', '$window',
             return acc;
         }, []);
     };
-    /**
-     * @ngdoc method
-     * @name generatePermaLink
-     * @methodOf vbet5.service:Utils
-     * @description Generate permalink file name for facebook twitter e.t.c.
-     */
-    Utils.generatePermaLink = function generatePermaLink (news) {
-        return (news.slug || news.title || '').replace(/ /g,"-") + '-id-' + news.id + '.html';
-    };
 
     /**
      * @ngdoc method
@@ -1708,7 +1671,8 @@ VBET5.service('Utils', ['$timeout', '$filter', '$location', '$route', '$window',
             var cookieOptions = {
                 domain: $window.location.hostname.split(/\./).slice(-2).join("."),
                 path: "/",
-                expires: new Date((new Date()).getTime() + expirationDate)
+                expires: new Date((new Date()).getTime() + expirationDate),
+                samesite: 'None'
             };
             var cookieMethod = value instanceof Object ? 'putObject' : 'put';
             $cookies[cookieMethod](key, value, cookieOptions);
@@ -1894,6 +1858,98 @@ VBET5.service('Utils', ['$timeout', '$filter', '$location', '$route', '$window',
                 delete obj[k];
             }
         });
+    };
+
+    /**
+     * @ngdoc method
+     * @name cutDecimalNumberAfterPlace
+     * @methodOf vbet5.service:Utils
+     * @description Cut number to after point place
+     * @param {number} num
+     * @param {number} place
+     */
+    Utils.cutDecimalNumberAfterPlace = function cutDecimalNumberAfterPlace(num, place) {
+        var re = new RegExp('^-?\\d+(?:\.\\d{0,' + (place || -1) + '})?');
+        return num.toString().match(re)[0];
+    };
+    /**
+     * @ngdoc method
+     * @name cutDecimalNumberAfterPlace
+     * @methodOf vbet5.service:Utils
+     * @description Format decimal number with given mode
+     * @param {number} num
+     * @param {number} mode 0 or 1
+     * @param {number} decimalPrice
+
+     */
+    Utils.formatDecimal = function formatDecimal(num, mode, decimalPrice) {
+        num = Utils.fixFloatError(num);
+        if (mode === 0) {
+            return Utils.cuttingDecimals(num, decimalPrice);
+        } else  {
+            var multiplier = Math.pow(10, decimalPrice);
+            return Math.round(num * multiplier) / multiplier;
+        }
+
+    };
+
+    /**
+     * @ngdoc method
+     * @name bankersRounding
+     * @methodOf vbet5.service:Utils
+     * @description Bankers round with decimal places
+     * @param {number} num
+     * @param {number} decimalPlaces
+
+     */
+    Utils.bankersRounding = function bankersRounding(num, decimalPlaces) {
+        num = Utils.fixFloatError(num);
+        var m = Math.pow(10, decimalPlaces);
+        var n = +(decimalPlaces ? num * m : num).toFixed(8); // Avoid rounding errors
+        var i = Math.floor(n),
+            f = n - i;
+        var e = 1e-8; // Allow for rounding errors in f
+        var r = f > 0.5 - e && f < 0.5 + e ? (i % 2 === 0 ? i : i + 1) : Math.round(n);
+        return decimalPlaces ? r / m : r;
+    };
+
+    /**
+     * @ngdoc method
+     * @name bankersRounding
+     * @methodOf vbet5.service:Utils
+     * @description Bankers round with decimal places
+     * @param {number} num
+     * @param {number} decimalPlaces
+     */
+    Utils.fixFloatError = function fixFloatError(num) {
+        return parseFloat(num.toPrecision(12));
+    };
+
+
+    /**
+     * @ngdoc method
+     * @name cuttingDecimals
+     * @methodOf vbet5.service:Utils
+     * @description cutting decimals without rounding
+     * @param {number} num
+     * @param {number} decimalPlaces
+     */
+   Utils.cuttingDecimals = function cuttingDecimals(num, decimalPlaces) {
+        var m = Math.pow(10, decimalPlaces);
+        var n = +(decimalPlaces ? num * m : num).toFixed(8); // Avoid rounding errors
+        var r = Math.floor(n);
+        return decimalPlaces ? r / m : r;
+    };
+
+    /**
+     * @ngdoc method
+     * @name numberWithCommas
+     * @methodOf vbet5.service:Utils
+     * @description showing number 3 characters separated with commas
+     * @param {number} num
+     */
+    Utils.numberWithCommas = function numberWithCommas(num) {
+        return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     };
 
     return Utils;

@@ -36,7 +36,7 @@
     </div>
     <!-- new timeline -->
     <div class="tl-container" ng-class="{'no-video-flash': !($root.conf.videoEnabled && game.video_id || game.has_animation) || (isVideoDetached && !game.has_animation), 'no-video-ie8': !game.video_id || isVideoDetached, 'extra-time': game.info.isExtraTime}">
-        <soccertimeline ng-class="{'tl-80': game.last_event.match_length === '80', 'extra': game.info.isExtraTime}"></soccertimeline>
+        <soccertimeline match-length="game.last_event.match_length" is-extra="isExtraTime(game)"></soccertimeline>
         <div class="tl-new">
             <div class="current-time" ng-style="game.tlCurrentMinute"></div>
             <div ng-repeat="tlEvent in game.tlEvents track by $index" ng-style="tlEvent.timeline_position" class="{{tlEvent.team + '-' + tlEvent.type}}">
@@ -45,7 +45,7 @@
                 <div class="tl-details">{{tlEvent.details.type|capitalise|translate}} {{tlEvent.details.add_info}}</div>
             </div>
             <div class="tl-info" ng-style="game.tlCurrentPosition">
-                <div class="hover-sp" ng-class="{'to-right': game.info.currMinute>40}">
+                <div class="hover-sp" ng-class="{'to-right': game.info.current_game_time>40}">
                     <div class="football-gamer-name" ng-repeat="gameEvent in game.live_events|orderBy:'add_info_order':true track by $index">
                         <div ng-class="gameEvent.event_type+'-icon'" class="{{gameEvent.event_icon}}"></div>
                         <span ng-class="gameEvent.team">

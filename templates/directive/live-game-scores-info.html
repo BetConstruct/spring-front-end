@@ -31,7 +31,7 @@
         </div>
     </div>
     <!-- generic multiset games template -->
-    <div class="game-score-multiset" ng-if="(openGame.sport.alias !== 'HorseRacing' && liveGamesSoccerTemplate.indexOf(openGame.sport.alias) === -1 && $root.conf.esportsGames.indexOf(openGame.sport.alias) == -1)" visible-sets>
+    <div class="game-score-multiset" ng-if="(openGame.sport.alias !== 'BasketballShots' && openGame.sport.alias !== 'HorseRacing' && liveGamesSoccerTemplate.indexOf(openGame.sport.alias) === -1 && $root.conf.esportsGames.indexOf(openGame.sport.alias) == -1)" visible-sets>
         <ul class="title" title="{{ $root.conf.edition.enabled ? (('Edition'|translate) + ': ' + (openGame.start_ts|formatDate:'edition')) : '' }}" ng-click="broadcast('liveGame.headerClicked', openGame);$event.stopPropagation();">
             <li>
                 <dl>
@@ -65,9 +65,9 @@
                     <dt>
                         <div class="team-form"><tshirt shorts="{{openGame.info.short1_color}}" shirt="{{openGame.info.shirt1_color}}"></tshirt></div>
                         <p title="{{ openGame.team1_name ?  openGame.team1_name: '' }}">
-                            <stats-logo ng-if="['MortalKombatXL', 'StreetFighterV', 'Dota', 'Dota2', 'CounterStrike', 'LeagueOfLegends'].indexOf(openGame.sport.alias) > -1" team-id="openGame.team1_id"></stats-logo>
+                            <stats-logo ng-if="sportWithIcons.indexOf(openGame.sport.alias) > -1" team-id="openGame.team1_id"></stats-logo>
                             {{ openGame.team1_name ?  openGame.team1_name: '' }}
-                            <!--<span ng-if="openGame.sport.alias === 'Cricket' && openGame.info.over_number" class="current-delivery">{{'Current over'|translate}}<i ng-bind="openGame.info.over_number"></i></span>--> <!--todo SDC-46567  -->
+                            <span ng-if="openGame.info.pass_team === 'team1' && openGame.sport.alias === 'Cricket' && openGame.info.over_number && openGame.info.deliver_number" class="current-delivery"><i ng-bind="'Current over/delivery {1}/{2}'|translate:[openGame.info.over_number,openGame.info.deliver_number]"></i></span>
                         </p>
                     </dt>
                 </dl>
@@ -89,9 +89,9 @@
                     <dt>
                         <div class="team-form"><tshirt shorts="{{openGame.info.short2_color}}" shirt="{{openGame.info.shirt2_color}}"></tshirt></div>
                         <p title="{{ openGame.team2_name ?  openGame.team2_name: '' }}">
-                            <stats-logo ng-if="['MortalKombatXL', 'StreetFighterV', 'Dota', 'Dota2', 'CounterStrike', 'LeagueOfLegends'].indexOf(openGame.sport.alias) > -1" team-id="openGame.team2_id"></stats-logo>
+                            <stats-logo ng-if="sportWithIcons.indexOf(openGame.sport.alias) > -1" team-id="openGame.team2_id"></stats-logo>
                             {{ openGame.team2_name ?  openGame.team2_name: '' }}
-                            <!--<span ng-if="openGame.sport.alias === 'Cricket' && openGame.info.deliver_number" class="current-delivery">{{'Current delivery'|translate}}<i ng-bind="openGame.info.deliver_number"></i></span>--> <!--todo SDC-46567  -->
+                            <span ng-if="openGame.info.pass_team === 'team2' && openGame.sport.alias === 'Cricket' && openGame.info.over_number && openGame.info.deliver_number" class="current-delivery"><i ng-bind="'Current over/delivery {1}/{2}'|translate:[openGame.info.over_number,openGame.info.deliver_number]"></i></span>
                         </p>
                     </dt>
                 </dl>
@@ -109,6 +109,26 @@
             <li class="total-score"  ng-if="(openGame.sport.alias==='Tennis' || openGame.sport.alias === 'ETennis') && (!$root.conf.hidePointsForCompetitions['k' + openGame.competition.id] || $root.conf.hidePointsForCompetitions['k' + openGame.competition.id] && $root.env.authorized)"><span>{{ openGame.stats.passes.team2_value || 0 }}</span></li>
             <li class="serve-team" ng-class="{active: openGame.info.pass_team === 'team2'}"><b class="mini-icon-1 mini-icon-{{openGame.sport.id}} {{openGame.sport.alias}}"></b></li>
         </ul>
+    </div>
+    <!-- BasketballShots live game template-->
+    <div class="game-score-basketball-shots"   ng-if="openGame.sport.alias === 'BasketballShots'">
+
+        <div class="short-info-box">
+            <h6>{{openGame.team1_name}}</h6>
+            <div class="show-points"><span ng-bind="'{1} Points'|translate:[openGame.info.score1 || 0]"></span></div>
+            <p>{{openGame.competition.name}} | <span ng-bind="'Hit Stats {1}%'|translate:[Math.round(openGame.info.shot_attempts / (openGame.info.shot_attempts + openGame.info.missed_attempts) *100)|| 0]"></span></p>
+            <div ng-if="openGame.info.total_attempts" class="shot-result-b">
+                <div class="short-points">
+                    <span ng-class="{'inactive':shotsSlider.scrollIndex >= openGame.info.total_attempts - shotsSlider.visibleCount}" ng-click="shotsSlider.next()" class="next-shot"></span>
+                    <span ng-class="{'inactive':shotsSlider.scrollIndex <= 0}"  ng-click="shotsSlider.previous()" class="prev-shot"></span>
+                    <div class="status-short-l">
+                        <div ng-show="$index < shotsSlider.scrollIndex + shotsSlider.visibleCount && $index >= shotsSlider.scrollIndex " class="each-point" ng-class="{'missed': openGame.live_events[$index].type_id === '4' ,'approved': openGame.live_events[$index].type_id === '5'}"  ng-repeat="x in [].constructor(openGame.info.total_attempts) track by $index">
+                            <p><i>{{$index + 1}}</i></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
     <!-- Horse racing live game template -->
     <div class="game-horse-racing" ng-if="openGame.sport.alias === 'HorseRacing'">

@@ -14,6 +14,10 @@
         <li class="p-n-v"><popular-in-sportsbook class="float-width" ng-if="$root.conf.popularMatches.enabled" ng-hide="bigBetFilter['0']"  title="{{$root.conf.popularMatches.title || 'Popular Games'}}" type="game" left-menu="{'closed': leftMenuClosed, 'toggle': toggleLeftMenu}" search-field="game"></popular-in-sportsbook></li>
         <li class="p-n-v"><popular-in-sportsbook class="float-width" ng-if="$root.conf.showFavoriteCompetitions && !env.preMatchMultiSelection"  ng-hide="bigBetFilter['0']" title="Popular competitions" type="competition" left-menu="{'closed': leftMenuClosed, 'toggle': toggleLeftMenu}" search-field="competition"></popular-in-sportsbook></li>
 
+
+        <ng-include ng-if="$root.conf.favoriteTeam.enabled && $root.env.authorized"  src="::'templates/sport/classic/left/favoriteTeam.html'|fixPath"> </ng-include>
+
+
         <li ng-repeat="group in prematchSportGroups track by group.id" ng-show="group && (showPanel.expanded || $index < prematchSportCount + 1)">
             <ul class="float-width">
                 <li class="sports-item-v3 sports-group-item-v3 {{group.name}}" ng-show="group.hasHeader"
@@ -22,11 +26,13 @@
                     <p>{{group.name}}</p>
                     <div class="arrow-view-v3"></div>
                     <div class="sport-games-count-v3">{{group.count}}</div>
-                </li>
+
+
+
                 <li ng-repeat="sport in group.sports track by sport.id"
                     id="sport-{{sport.alias}}"
                     ng-show="!group.hasHeader || leftMenuState.prematch.groups[group.id]"
-                    class="float-width">
+                    class="float-width" title="{{sport.name}}">
                     <div class="sports-item-v3 {{sport.alias}}"
                          ng-class="{'active': leftMenuState.prematch.sport[sport.id].expanded || (todaysBets.selected && sport.isTodayBets ||(outrightSelected && sport.isOutright))}"
                          ng-click="selectSport(sport, leftMenuState.prematch.sport[sport.id].expanded); expandLeftMenuPrematchSport(sport, null, null, true);  closeOtherSportsIfNeed(leftMenuState.prematch.sport[sport.id].expanded);"
@@ -44,7 +50,7 @@
                         <span class="arrow-view-v3"></span>
                     </a>
 
-                    <a class="sports-item-v3 {{sport.alias}}" ng-class="{'active': boostedBets.selected}" ng-if="$root.conf.boostedBets.enabled && sport.alias === 'boostedbets'"
+                    <a class="sports-item-v3 {{sport.alias}}" title="Boosted bets" ng-class="{'active': boostedBets.selected}" ng-if="$root.conf.boostedBets.enabled && sport.alias === 'boostedbets'"
                        ng-click="($location.path() === '/dashboard/' ? $location.path('/sport') : void()); env.preMatchMultiSelection ? '' : !boostedBets.selected && expandLeftMenuPrematchSport(sport); "
                     >
                         <span class="sport-icon-v3"></span>

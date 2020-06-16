@@ -1114,9 +1114,13 @@ angular.module('vbet5').controller('loginCtrl', ['$scope', '$rootScope', 'Timeou
             }
 
             $scope.sendingForgotPasswordViaSms = true;
+            var request = {"key": $scope.resetPasswordData.phone };
+            if ($scope.resetPasswordData.g_recaptcha_response) {
+                request.g_recaptcha_response = $scope.resetPasswordData.g_recaptcha_response;
+            }
 
             Zergling
-                .get({"key": $scope.resetPasswordData.phone, "g_recaptcha_response": $scope.resetPasswordData.g_recaptcha_response}, 'reset_password_via_sms')
+                .get(request, 'reset_password_via_sms')
                 .then(
                     function (successResponse) {
                         console.log("forgot_password response", successResponse);

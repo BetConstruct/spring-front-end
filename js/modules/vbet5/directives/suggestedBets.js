@@ -6,7 +6,7 @@
  * @description displays suggested bets
  *
  */
-VBET5.directive('suggestedBets', ['$rootScope', '$http', '$filter', 'Zergling', 'GameInfo', 'Storage', '$timeout', 'Config', function ($rootScope, $http, $filter, Zergling, GameInfo, Storage, $timeout, Config) {
+VBET5.directive('suggestedBets', ['$rootScope', '$http', '$filter', '$q', 'Zergling', 'GameInfo', 'Storage', '$timeout', 'Config', function ($rootScope, $http, $filter, $q, Zergling, GameInfo, Storage, $timeout, Config) {
     'use strict';
     return {
         restrict: 'E',
@@ -23,7 +23,7 @@ VBET5.directive('suggestedBets', ['$rootScope', '$http', '$filter', 'Zergling', 
             $scope.suggestedBetsList = [];
             $scope.isEventInBetSlip = GameInfo.isEventInBetSlip;
 
-            var eventSubId, currentTags, inThrottle;
+            var eventSubIdsMap, currentTags, inThrottle;
 
 
             /**
@@ -32,22 +32,42 @@ VBET5.directive('suggestedBets', ['$rootScope', '$http', '$filter', 'Zergling', 
              * @description Handles Suggested Bets API successful response
              */
             function handleResponse(response) {
-                if (response && response.data.data) {
-                    var suggestedBetCombinations = response.data.data,
-                        x = suggestedBetCombinations.length,
-                        i;
-
-                    if (x === 0) {
-                        $scope.noSuggestions = true;
-                    } else {
-                        for (i = 0; i < x; i++) {
-                            if (suggestedBetCombinations[i].selections.length) {
-                                currentTags = suggestedBetCombinations[i].tag;
-                                getEventsData(suggestedBetCombinations[i].selections);
-                                break;
-                            }
-                        }
-                    }
+                if (response && response.data.data && response.data.data.length) {
+                    var promises = [];
+                   var data = response.data.data[0];
+                   currentTags = data.tag;
+                   var length = data.selections.length;
+                   for (var i =0; i < length; i++) {
+                       var requestData = {
+                           sport: data.sports[i],
+                           region: data.regions[i],
+                           competition: data.competitions[i],
+                           game: data.games[i],
+                           market: data.markets[i],
+                           event: data.selections[i]
+                       };
+                       promises.push(getEventsData(requestData));
+                   }
+                   $scope.eventIds = data.selections;
+                   $q.all(promises).then(function (responses) {
+                       if ($scope.params.type === 'preMatch' || $scope.params.initialLoad) {
+                           $scope.selectBetSlipMode('suggested');
+                       }
+                       eventSubIdsMap = {};
+                      for(var i = 0; i < length; ++i) {
+                          var response = responses[i];
+                          var eventId = data.selections[i];
+                          if (response.subid) {
+                              eventSubIdsMap[eventId] = response.subid;
+                          }
+                          createUpdateEvent(eventId)(response.data);
+                      }
+                      if (Object.keys($scope.suggestedBetMap).length === 0 ){
+                          $scope.noSuggestions = true;
+                      }
+                   });
+                } else {
+                    $scope.noSuggestions = true;
                 }
             }
 
@@ -71,7 +91,7 @@ VBET5.directive('suggestedBets', ['$rootScope', '$http', '$filter', 'Zergling', 
                     switch ($scope.params.type) {
                         case 'preMatch':
                             if ($scope.showSuggestions !== 'hide') {
-                                apiUrl = 'https://varys.betconstruct.com/api/v3/recommendations/client/';
+                                apiUrl = 'https://recommender.dp.bcua.io/api/v3/recommendations/client/';
                                 $http.get(apiUrl + $rootScope.profile.id).then(handleResponse, handleResponseError);
                             }
                             break;
@@ -91,10 +111,19 @@ VBET5.directive('suggestedBets', ['$rootScope', '$http', '$filter', 'Zergling', 
                 }
             }
 
-            function unsubscribe() {
-                if (eventSubId) {
-                    Zergling.unsubscribe(eventSubId);
-                    eventSubId = undefined;
+            function unsubscribe(eventId) {
+                if (!eventSubIdsMap) {
+                    return;
+                }
+                if (eventId) {
+                    Zergling.unsubscribe(eventSubIdsMap[eventId]);
+                    delete eventSubIdsMap[eventId];
+                } else {
+                    angular.forEach(eventSubIdsMap, function (value) {
+                        Zergling.unsubscribe(value);
+                    });
+                    eventSubIdsMap = {};
+
                 }
             }
 
@@ -103,21 +132,18 @@ VBET5.directive('suggestedBets', ['$rootScope', '$http', '$filter', 'Zergling', 
              * @name handleUpdates
              * @description Handles SWARM Updates
              */
-            function handleUpdates(data) {
+            function handleUpdates(eventId, data) {
                 if ($scope.betSlip.mode !== 'suggested') {
                     $scope.noSuggestions = true;
                     unsubscribe();
                     return;
                 }
                 // Grouping data to be displayed in the template and be transferred to betslip
-                var bet,
-                    suggestedBets = [],
-                    isNotDuplicate;
+                var bet;
                 angular.forEach(data.sport, function(sport) {
                     angular.forEach(sport.region, function(region) {
                         angular.forEach(region.competition, function(competition) {
                             angular.forEach(competition.game, function(game) {
-                                isNotDuplicate = true;
                                 bet = {};
                                 bet.gameInfo = game;
                                 bet.gameInfo.competition = competition;
@@ -126,40 +152,39 @@ VBET5.directive('suggestedBets', ['$rootScope', '$http', '$filter', 'Zergling', 
                                 bet.gameInfo.title = game.team1_name + (game.team2_name ? ' - ' + game.team2_name : '');
 
                                 angular.forEach(game.market, function(market) {
-                                    // No need to add several markets of one game, as they will not be added to the betslip
-                                    if (isNotDuplicate) {
-                                        bet.marketInfo = market;
-                                        bet.marketInfo.name = $filter('improveName')(market.name, game);
+                                    bet.marketInfo = market;
+                                    bet.marketInfo.name = $filter('improveName')(market.name, game);
 
-                                        angular.forEach(market.event, function(event) {
-                                            if (isNotDuplicate) {
-                                                bet.eventInfo = event;
-                                                suggestedBets.push(bet);
-                                                isNotDuplicate = false;
-                                            }
-                                        });
-                                    }
+                                    angular.forEach(market.event, function(event) {
+                                            bet.eventInfo = event;
+                                    });
                                 });
 
                             });
                         });
                     });
                 });
-
-                $scope.suggestedBetsList = suggestedBets;
-                if (!suggestedBets.length) {
-                    unsubscribe();
-                    $scope.noSuggestions = true;
+                if (bet) {
+                    $scope.suggestedBetMap[eventId] = bet;
+                } else {
+                    delete $scope.suggestedBetMap[eventId];
+                    unsubscribe(eventId);
                 }
+            }
+
+            function createUpdateEvent(eventId) {
+                return function (data) {
+                    handleUpdates(eventId, data);
+                };
             }
 
             /**
              * @ngdoc method
              * @name getEventsData
              * @description Gets data of suggested events, subscribes to price changes, and groups data for the view.
-             * @param {Array} eventIds that were sent by the API in getCombos function
+             * @param {object} data selection filters
              */
-            function getEventsData(eventIds) {
+            function getEventsData(data) {
                 var request = {
                     'source': 'betting',
                     'what': {
@@ -171,8 +196,23 @@ VBET5.directive('suggestedBets', ['$rootScope', '$http', '$filter', 'Zergling', 
                         'event': ["order", "id", "type_1", "type", "type_id", "original_order", "name", "price", "nonrunner", "ew_allowed", "sp_enabled", "extra_info", "base", "home_value", "away_value", "display_column" ]
                     },
                     'where': {
+                        'sport': {
+                            'id': data.sport
+                        },
+                        'region': {
+                            'id': data.region
+                        },
+                        'competition': {
+                            'id': data.competition
+                        },
+                        'game': {
+                            'id': data.game
+                        },
+                        'market': {
+                            'id': data.market
+                        },
                         'event': {
-                            'id': {'@in': eventIds}
+                            'id': data.event
                         }
                     }
                 };
@@ -181,18 +221,9 @@ VBET5.directive('suggestedBets', ['$rootScope', '$http', '$filter', 'Zergling', 
                     request.what.game.push('info');
                 }
 
-                Zergling.subscribe(request, handleUpdates)
-                    .then(
-                        function success(response) {
-                            if (response.subid) {
-                                eventSubId = response.subid;
-                            }
-                            if ($scope.params.type === 'preMatch' || $scope.params.initialLoad) {
-                                $scope.selectBetSlipMode('suggested');
-                            }
-                            handleUpdates(response.data);
-                        }
-                    );
+
+
+                return Zergling.subscribe(request, createUpdateEvent(data.event));
             }
 
             function closeEditBetMode() {
@@ -223,7 +254,8 @@ VBET5.directive('suggestedBets', ['$rootScope', '$http', '$filter', 'Zergling', 
                 $scope.params = params;
                 $scope.noSuggestions = false;
                 $scope.showSuggestions = $scope.params.type === 'live' ? true : Storage.get('suggestedBets') || true;
-                $scope.suggestedBetsList = [];
+                $scope.eventIds = [];
+                $scope.suggestedBetMap = {};
                 $rootScope.suggestedBets = {
                     eventIds: [],
                     tags: ''
@@ -240,21 +272,20 @@ VBET5.directive('suggestedBets', ['$rootScope', '$http', '$filter', 'Zergling', 
                 var oddType = 'odd',
                     i,
                     eventIds = [],
-                    cleared = false,
-                    suggestedBetsLength = $scope.suggestedBetsList.length;
+                    suggestedBetsLength = $scope.eventIds.length;
 
                 closeEditBetMode();
                 if ($scope.showRetainsButtons) {
                     $scope.showRetainsButtons = false;
-                    $scope.clearBetslip();
-                    cleared = true;
                 }
+                $scope.clearBetslip();
 
                 for (i = 0; i < suggestedBetsLength; i++) {
                     // If the event is already in the betslip, no need to add it again (which will remove it)
-                    if (cleared || !$scope.isEventInBetSlip($scope.suggestedBetsList[i].eventInfo)) {
-                        $rootScope.$broadcast('bet', {event: $scope.suggestedBetsList[i].eventInfo, market: $scope.suggestedBetsList[i].marketInfo, game: $scope.suggestedBetsList[i].gameInfo, oddType: oddType});
-                        eventIds.push($scope.suggestedBetsList[i].eventInfo.id);
+                    var event = $scope.suggestedBetMap[$scope.eventIds[i]];
+                    if (event) {
+                        $rootScope.$broadcast('bet', {event: event.eventInfo, market: event.marketInfo, game: event.gameInfo, oddType: oddType});
+                        eventIds.push(event.eventInfo.id);
                     }
                 }
 
@@ -263,7 +294,8 @@ VBET5.directive('suggestedBets', ['$rootScope', '$http', '$filter', 'Zergling', 
                 $rootScope.suggestedBets.tags = currentTags;
 
                 // We empty the array, because we need it to be ready for the next request and we hide the 'Suggested Bets' section by setting showSuggestions to 'false'
-                $scope.suggestedBetsList = [];
+                $scope.suggestedBetMap = {};
+                $scope.eventIds = [];
                 $scope.showSuggestions = false;
 
                 $scope.selectBetSlipMode('betting');
@@ -299,7 +331,8 @@ VBET5.directive('suggestedBets', ['$rootScope', '$http', '$filter', 'Zergling', 
              */
             $scope.hide = function hide(permanent) {
                 $scope.showSuggestions = false;
-                $scope.suggestedBetsList = [];
+                $scope.suggestedBetMap = {};
+                $scope.eventIds = [];
 
                 if (permanent) {
                     Storage.set("suggestedBets", "hide");
@@ -319,7 +352,8 @@ VBET5.directive('suggestedBets', ['$rootScope', '$http', '$filter', 'Zergling', 
             });
             $scope.$watch('betSlip.mode', function betSlipModeWatcher(newVal, oldVal) {
                 if (oldVal === 'suggested' && newVal !== 'suggested') {
-                    $scope.suggestedBetsList = [];
+                    $scope.suggestedBetMap = {};
+                    $scope.eventIds = [];
                     unsubscribe();
                 }
             });

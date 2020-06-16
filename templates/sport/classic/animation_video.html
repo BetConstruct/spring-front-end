@@ -7,9 +7,6 @@
         </ul>
         <div class="video-animation-toggle" ng-click="toggleVideoAndAnimationBox()"></div>
         <div class="animation-sound-switch" ng-show="openGame.activeFieldType==='field'" ng-if="openGame.activeFieldType!=='video'">
-            <!--<span class="video-mute icon-ic_volume_up_24px" ng-click="toggleAnimationSound(openGame.isAnimationMute)" ng-show="!openGame.isAnimationMute &&  env.sound === 'on'" title="Sound Effect"></span>
-            <span class="video-unmute icon-ic_volume_off_24px" ng-click="toggleAnimationSound(openGame.isAnimationMute)" ng-show="openGame.isAnimationMute && env.sound === 'on'" title="Sound Effect"></span>
-            <span class="video-soundoff icon-ic_volume_off_24px" ng-show="env.sound === 'off'" trans title="Turn on sound from settings"></span>-->
             <span class="video-mute icon-ic_volume_up_24px" ng-click="env.sound = 0;" ng-show="env.sound > 0" title="Sound" trans="attr-only"></span>
             <span class="video-unmute icon-ic_volume_off_24px" ng-click="env.sound = 0.75;" ng-show="env.sound === 0" title="Sound" trans="attr-only"></span>
             <div class="sound-volume">
@@ -25,19 +22,17 @@
 
     </div>
     <div ng-if="openGame.activeFieldType === 'video' && !hideVideoAndAnimationBox && $root.conf.videoEnabled && !enlargedGame"
-
          class="game-video">
-
         <div class="game-video-container">
-            <p ng-if="!env.authorized && !$root.conf.integrationMode" trans
+            <p ng-if="!env.authorized && !$root.conf.integrationMode && !openGame.is_guest" trans
                ng-click="broadcast('openLoginForm');$event.stopPropagation();" class="login-link">You need to be logged in to be able to play video.</p>
-            <p ng-if="!env.authorized && $root.conf.integrationMode" trans class="login-link">You need to be logged in to be able to play video.</p>
+            <p ng-if="!env.authorized && $root.conf.integrationMode && !openGame.is_guest" trans class="login-link">You need to be logged in to be able to play video.</p>
 
-            <p ng-if="env.authorized && (profile.calculatedBalance + profile.calculatedBonus) === 0 && !$root.conf.video.allowedWithNoneBalance[openGame.tv_type]" trans ng-click="!$root.conf.disableDepositPage && broadcast('toggleSliderTab', 'deposit');$event.stopPropagation();">You need to have non-zero balance to be able to play video.</p>
+            <p ng-if="!openGame.is_guest && env.authorized && (profile.calculatedBalance + profile.calculatedBonus) === 0 && !$root.conf.video.allowedWithNoneBalance[openGame.tv_type]" trans ng-click="!$root.conf.disableDepositPage && broadcast('toggleSliderTab', 'deposit');$event.stopPropagation();">You need to have non-zero balance to be able to play video.</p>
 
-            <i ng-if="env.authorized && !$root.conf.video.autoPlay && openGame.video_data === undefined && ((profile.calculatedBalance + profile.calculatedBonus) !== 0 || $root.conf.video.allowedWithNoneBalance[openGame.tv_type])" ng-click="broadcast('game.restoreVideo', openGame.id)" class="video-play-button"></i>
+            <i ng-if="!$root.conf.video.autoPlay && openGame.video_data === undefined && (openGame.is_guest || env.authorized && (profile.calculatedBalance + profile.calculatedBonus) !== 0 || $root.conf.video.allowedWithNoneBalance[openGame.tv_type])" ng-click="broadcast('game.restoreVideo', openGame.id)" class="video-play-button"></i>
 
-            <div ng-if="env.authorized && !playerRemoved && openGame.video_data && ((profile.calculatedBalance + profile.calculatedBonus) > 0 || $root.conf.video.allowedWithNoneBalance[openGame.tv_type])"  class="video-player-container">
+            <div ng-if="!playerRemoved && openGame.video_data && (openGame.is_guest || env.authorized && (profile.calculatedBalance + profile.calculatedBonus) > 0 || $root.conf.video.allowedWithNoneBalance[openGame.tv_type])"  class="video-player-container">
                 <div class="video-player-control" ng-show="videoIsLoaded">
                     <span ng-click="togglePause();" ng-show="!paused" class="video-pause">Pause</span>
                     <span ng-click="togglePause();" ng-show="paused" class="video-play">Play</span>

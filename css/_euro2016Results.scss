@@ -194,6 +194,10 @@
 .date-r-filter-b > ul > li .input-group ul {
   right: auto !important;
   left: 0 !important;
+  @include rtl{
+    right: 0 !important;
+    left: auto !important;
+  }
 }
 .date-r-filter-b > ul > li .input-group ul:before {
   right: 94px;
@@ -484,7 +488,6 @@
   height: auto;
   box-sizing: border-box;
   max-height: 0;
-  overflow: hidden;
   transition: max-height 400ms;
 }
 .date-r-group-title.active + .r-c-games-view-list-box {
@@ -506,6 +509,27 @@
   }
   @include rtl {
     padding: 0 0 0 54px;
+  }
+  .match-key {
+    position: absolute;
+    top: 0;
+    font: 12px/30px icomoon;
+    color: $c16-sp-6;
+    @include ltr {
+      right: 32px;
+    }
+    @include rtl {
+      left: 32px;
+    }
+    > ul {
+      top: -32px;
+      @include ltr {
+        right: -13px;
+      }
+      @include rtl {
+        left: -13px;
+      }
+    }
   }
 }
 .r-c-games-view-list-box:first-child {
@@ -536,7 +560,7 @@
     .r-team-name-score-logo > ul > li {
       &.score-view-column-r,
       &.right-r {
-        display: block;
+        //display: block;
       }
     }
     .left-r {

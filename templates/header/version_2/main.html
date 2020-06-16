@@ -16,9 +16,11 @@
             <a ng-click="notificationPopup.show = false" class="custom-close-l"> &#215; </a>
         </div>
     </div>
-    <div class="header-license-img" ng-if="conf.header.license && $location.path() === '/'">
-        <a ng-href="{{conf.header.license.url}}" target="_blank">
-            <img ng-src="{{conf.header.license.image}}">
+    <div class="header-license-img" ng-if="aboveHeaderOpened && $location.path() === '/'">
+        <button ng-click="closeAboveHeader()" title="{{'Close'|translate}}">X</button>
+        <a ng-repeat="headerItem in $root.conf.header.aboveHeader.items" ng-href="{{::headerItem.url}}" target="{{::headerItem.target || '_self'}}">
+            <img ng-if="headerItem.img" ng-src="{{::headerItem.img}}" width="{{headerItem.width}}"/>
+            <span ng-if="headerItem.text">{{::headerItem.text|translate}}</span>
         </a>
     </div>
     <div class="accept-cookies-t" ng-if="conf.header.acceptCookies && !cookiesNotification.cookiesAccepted">
@@ -64,7 +66,7 @@
                                 button.storageEnv && (setStorageState(button.storageEnv, env[button.toggleEnv]));
                                 button.help && (openHelpPage(button.help, button.helpFrom));
                                 button.slider && (conf.enableMixedView ? (selectBalanceMenuItem($event,button.slider)) : broadcast( 'toggleSliderTab',button.slider, button.authorized));
-                                button.href && (openPopup(button.href, button.popupTitle, button.popupParams));
+                                button.href && (openPopup(button.href, button.popupTitle, button.popupParams, button.target));
                                 $event.stopPropagation();
                             "
                                 >
@@ -209,12 +211,7 @@
                                                     <span trans>Live Chat</span>
                                                 </li>
 
-                                                <li ng-if="conf.liveChat.olarkId" onclick="olark('api.box.expand')" title="Live Chat" trans="attr-only" class="help-b">
-                                                    <i class="icon-faq-new-b"></i>
-                                                    <span trans>Live Chat</span>
-                                                </li>
-
-                                                <li pass-click-to="{{ conf.liveChat.buttonId ? conf.liveChat.buttonId : 'live-chat-button1' }}"  ng-attr-iframe="{{!conf.liveChat.buttonIsDiv ? 'true' : ''}}" ng-attr-find="{{!conf.liveChat.buttonIsDiv ? 'a' : ''}}" ng-if="!conf.liveChat.isSfChat && conf.liveChat.siteId && conf.liveChat.codePlan && !conf.liveChat.disableFromHeader">
+                                                <li pass-click-to="{{ conf.liveChat.buttonId ? conf.liveChat.buttonId : (conf.liveChat.comm100ButtonId || 'live-chat-button1') }}"  ng-attr-iframe="{{!conf.liveChat.buttonIsDiv ? 'true' : ''}}" ng-attr-find="{{!conf.liveChat.buttonIsDiv ? 'a' : ''}}" ng-if="!conf.liveChat.isSfChat && conf.liveChat.siteId && conf.liveChat.codePlan && !conf.liveChat.disableFromHeader">
                                                     <i class="icon-faq-new-b"></i>
                                                     <span id="live-chat-button1" title="Live Chat" trans>Live Chat</span>
                                                 </li>
@@ -360,8 +357,7 @@
     </div>
 </div>
 <!--header END-->
-
-<ng-include class="float-width" ng-show="$root.currentPage.hasSubHeader && $root.currentPage.isInSports && !{'/': 1, '/virtualsports/': 1, '/esports/': 1, '/pmu/': 1}[$location.path()]" no-animate src="::'templates/sport/toptab.html'|fixPath"></ng-include>
+<ng-include class="float-width" ng-show="$root.currentPage.hasSubHeader && $root.currentPage.isInSports && !$root.conf.hideSubHeaderByPath[$location.path()]" no-animate src="::'templates/sport/toptab.html'|fixPath"></ng-include>
 
 <div ng-if="{'/esports/': true, '/virtualsports/': true}[$location.path()] && $root.conf.asian.showUserInfoInSubHeader && $root.profile && $root.env.authorized" class="balance-int-row">
     {{'Account'|translate}} : {{$root.profile.nick_name}} | {{'BBIN balance'|translate}}: {{$root.profile.calculatedBalance|number:$root.conf.balanceFractionSize}}
@@ -369,8 +365,8 @@
 <div class="guide header-wrapper" ng-if="subMenuItems && subMenuItems.length > 1">
     <div class="subtop-header-menu-j"  no-animate>
         <ul>
-            <li ng-repeat="subMenuItem in subMenuItems track by $index" ng-class="{'active': subMenuItem.classObject.active}" ng-if="subMenuItem.showCondition">
-                <a ng-href="{{subMenuItem.href}}">
+            <li ng-repeat="subMenuItem in subMenuItems track by $index" class="{{subMenuItem.class || ''}}"  ng-class="{'active': subMenuItem.classObject.active}" ng-if="subMenuItem.showCondition">
+                <a ng-href="{{subMenuItem.href}}" data-content="{{'new'|translate}}">
                     {{subMenuItem.displayName | translate}}
                     <!--<img src="images/virtual-sport/{{::subMenuItem.displayName.split(' ').join('_').toLowerCase()}}.png"> todo -->
                 </a>

@@ -239,7 +239,8 @@ angular.module('casino').controller('casinoSpecialGamesCtrl', ['$rootScope', '$s
         casinoData.getGames(null, null, null, null, null, null, null, null, [exId]).then(function (response) {
             if (response && response.data && response.data.games[0]) {
                 $scope.game = response.data.games[0];
-                $scope.gameInfo = {game : $scope.game};
+                var uniqueId = Math.random().toString(36).substr(2, 9);
+                $scope.gameInfo = {gameUrl: '', id: uniqueId, toAdd: false, game : $scope.game };
                 jackpotManager.casinoGameOpenedData = [$scope.gameInfo];
                 $rootScope.setTitle($scope.game.name);
                 getUrl();

@@ -1,118 +1,18 @@
-<div ng-show="!gamesInfo.length" class="center-contain-casino" ng-class="{'not-casino-jackpots': !jackpotData , 'casino-second-banner': !($root.conf.jackpot.casino.enabled || hasTournaments)}" id="casinoScrollable">
+<div  ng-show="!gamesInfo.length" class="center-contain-casino" id="casinoScrollable">
     <coins-rain ng-if="jackpotWinnerCoinsRain"></coins-rain>
-    <div ng-if="$root.conf.jackpot.casino.enabled && $root.conf.jackpot.casino.externalJackpots" class="provider-jackpot-banner" ng-controller="providerJackpotCtrl" ng-include="::'optional_modules/casino/templates/casino-jackpot-widget.html'|fixPath"></div>
-    <div ng-if="!$root.conf.jackpot.casino.externalJackpots" class="casino-top-slider-container" ng-class="(confData.main.topBanners.showPopularGameBannerDoubleSize && !confData.main.topBanners.showPopularGameBanner) ? 'single-game-contain-wp-double' : '' ">
-        <!--Slider-->
-        <div ng-controller="cmsPagesCtrl" ng-init="getCasinoBanners(null, true);"  class="slider-view-casino" ng-if="confData.main.topBanners.showSlider" ng-class="{'full-width-slider-casino-j': (!confData.main.topBanners.showBannerInsteadWinners && !confData.main.topBanners.showBannerInsteadOfBiggestWinners && confData.main.topBanners.showPopularGameBanner)}">
-            <vbet-big-slider class="big-slider-casino-directive" ng-if="casinoTopBanners[$root.env.authorized]" images="casinoTopBanners[$root.env.authorized]" link-click-handler="openCBannerLink" slider-template="true" additional-data="gamesAdditionalData"></vbet-big-slider>
-        </div>
-        <!--Slider END-->
-        <div ng-if="!$root.conf.jackpot.casino.externalJackpots" class="jackpot-blocks">
-            <jackpot-slider type="casino"  load-jackpot-data="false" jackpot-data="jackpotData"></jackpot-slider>
-
-                <div class="casino-games-slider-container" ng-if="!confData.main.hideCasinoJackpotSlider" ng-show="jackpotSliderGames.length"> <!--ng-controller="casinoJackpotCtrl" ng-init="loadJackpotPages();"  -->
-                    <div class="title-slider-games" no-animate>
-                        <ul class="title-slider-games no-select-j">
-                            <li class="title-slider-games-line"></li>
-                            <li ng-bind="(confData.main.jackpotSubstituteCategory ? confData.main.jackpotSubstituteCategory.name :'Jackpot Games')|translate"></li>
-                            <li>
-                                <div>
-                                    <ul>
-                                        <li class="title-slider-games-line"></li>
-                                        <li ng-if="jackpotGames.length > jackpotSliderVisibleGamesCount">
-                                            <span ng-click="slideJackpotGames('prev')" ng-class="{'disabled': jackpotSlideIndex <= 0 }" trans>prev</span>
-                                            <span ng-click="slideJackpotGames('next')"  ng-class="{'disabled': jackpotSlideIndex +jackpotSliderVisibleGamesCount >= jackpotGames.length }" trans>next</span>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </li>
-                        </ul>
-                        <div class="slider-games-box-new">
-                            <casino-games-list class="slider-games-box"
-                                               jackpot-games="true"
-                                               show-conditions="true"
-                                               use-big-icons="true"
-                                               games-list="jackpotSliderGames"
-                                               additional-data="gamesAdditionalData"
-                                               game-show-conditions="true"
-                                               selected-category="selectedCategory">
-                            </casino-games-list>
-                            <vbet-loader ng-show="!jackpotSliderGames"></vbet-loader>
-                        </div>
-                    </div>
+    <div ng-repeat="row in confData.homepage|orderBy:'order' track by $index" class="row"
+         ng-style="{'max-width': row.maxWidth,'height': row.height}"
+         ng-class="{'guide': !row.fullWidth}">
+        <div class="row-child">
+            <div ng-repeat="item in row.items|orderBy:'order' track by $index"
+                 class="{{item.class}}"
+                 ng-style="{'max-width': row.maxWidth,'height': row.height}"
+            >
+                <div ng-if="item.subRows" ng-repeat="subRowItem in item.subRows|orderBy:'order' track by $index" class="{{subRowItem.class}}">
+                    <ng-include  src="::('optional_modules/casino/templates/homepage/'+subRowItem.widgetName+'.html')|fixPath"></ng-include>
                 </div>
+                <ng-include ng-if="!item.subRows" src="::('optional_modules/casino/templates/homepage/'+item.widgetName+'.html')|fixPath"></ng-include>
             </div>
-    </div>
-    <div class="casino-winners-table">
-       <div class="casino-jackpots-board">
-           <casino-jackpot-and-tournaments class="float-width"  ng-if="$root.conf.jackpot.casino.enabled || hasTournaments" jackpot-data="jackpotData" load-jackpot-data="false" has-jackpots="hasJackpots" has-tournaments="hasTournaments" tab="tab"></casino-jackpot-and-tournaments>
-       </div>
-       <div class="casino-gamer-board casino-gamer-winners-container">
-           <casino-biggest-winners ng-if="confData.version === 2 && confData.main.topBanners.showBannerInsteadOfBiggestWinners" title="{{confData.main.topBanners.showBiggestWinners ? 'Last Winners' : ''}}" template-url="templates/directive/casino-biggest-winners-v2.html" limit="8"  class="winners-list"></casino-biggest-winners>
-       </div>
-    </div>
-
-    <div class="games-type">
-        <ul>
-           <li class="games-type-left-arrow" ng-if="categoriesGroupCount > 1">
-                <button ng-disabled="categoriesIndex === 0" ng-click="moveCategories(false)"></button>
-            </li>
-            <li
-                    ng-show="confData.main.favourtieGamesCategoryEnabled && myCasinoGames.length !== 0"
-                    ng-click="selectCategory(favouriteCategory)"
-                    ng-class="{'active': selections.category.id === favouriteCategory.id}"
-            >
-                <div class="games-type-icon icon-{{favouriteCategory.name}}"></div>
-                <p>{{ favouriteCategory.title | translate : null : 'Casino ' + favouriteCategory.title }}</p>
-            </li>
-            <li
-                    ng-repeat="category in availableCategories track by category.id"
-                    ng-click="selectCategory(category)"
-                    ng-class="{'active': selections.category.id === category.id}"
-            >
-                <div class="games-type-icon icon-{{category.name}}"></div>
-                <p>{{ category.title | translate : null : 'Casino ' + category.title }}</p>
-            </li>
-            <li class="games-search" ng-include="::'optional_modules/casino/templates/search-v2.html'|fixPath"></li>
-            <li class="games-type-right-arrow" ng-if="categoriesGroupCount > 1">
-                <button ng-disabled="categoriesIndex === categoriesGroupCount - 1" ng-click="moveCategories(true)"></button>
-            </li>
-        </ul>
-    </div>
-    <div ng-if="confData.main.filterByProviderEnabled" class="games-providers-container" ng-class="{closed: !providersOpened}">
-        <ul class="title-slider-games">
-            <li class="title-slider-games-line"></li>
-            <li ng-click="toggleProviders()" trans>Game Providers</li>
-            <li>
-                <div>
-                    <ul>
-                        <li class="title-slider-games-line"></li>
-                        <li ng-show="providers[0].name==='all'">
-                            <span ng-click="setProviders([])" trans>Reset</span>
-                        </li>
-                    </ul>
-                </div>
-            </li>
-        </ul>
-        <div class="games-providers">
-            <a ng-repeat="provider in providers track by $index"
-               ng-click="toggleProvider(provider.name)"
-               ng-class="{'active': selections.providers.indexOf(provider.name) !== -1}"
-            >
-                {{ provider.title|translate }}
-            </a>
         </div>
-    </div>
-    <div class="all-games-wrapper">
-        <casino-games-list class="all-casino-games-list-content"
-                           show-conditions="true"
-                           games-list="games"
-                           additional-data="gamesAdditionalData"
-                           game-show-conditions="true"
-                           use-big-icons="true"
-        >
-        </casino-games-list>
-        <div ng-show="limits.max > games.length" class="more-casino-games-load-b"><p load-more ng-click="loadMoreGames(); setTargetElementFixed('casinoCategories')"><span trans>Load more</span></p></div>
-        <vbet-loader ng-show="loadingProcess"></vbet-loader>
     </div>
 </div>

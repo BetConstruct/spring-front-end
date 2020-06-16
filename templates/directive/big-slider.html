@@ -39,7 +39,12 @@
 
              class="slide-container-repeat-b" no-animate="disable">
             <div class="slide-casino-new-img-b">
-                <a ng-href="{{!banner.isYouTubeVideo ? banner.link : ''}}" target="{{banner.linktarget}}" ng-click="linkClick(banner)" style="background-image: url({{banner.imageurl}});"></a>
+                <div class="banner-set-img">
+                    <a ng-href="{{!banner.isYouTubeVideo ? banner.link : ''}}" target="{{banner.linktarget}}" ng-click="linkClick(banner)">
+                        <img ng-src="{{ banner.imageurl }}" alt="">
+
+                    </a>
+                </div>
                 <div ng-if="banner.custom_fields.provider[0] === 'MGS' && additionalData[banner.custom_fields.id[1]]" class="slider-jackpot-badge">
                     <div class="slider-jackpot-badge-title" trans>Progressive Jackpot</div>
                     <div class="slider-jackpot-badge-number">

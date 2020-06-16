@@ -170,8 +170,8 @@
                                 <span ng-hide="selectedPaymentSystem.customCurrency">({{currency_name|currency}})</span>
                                 <span ng-show="selectedPaymentSystem.customCurrency">{{selectedPaymentSystem.customCurrency|translate}}</span>
                                 <span trans>available:</span> {{ paymentAmount.availableWithdrawAmount |number:conf.balanceFractionSize}}</label>
-                            <input name="" id="numpad-forced" type="number" numpad numpad-letters="disabled" numpad-force ng-model="paymentAmount.withdraw" step="{{paymentAmount.amountMinLimit}}" min = {{paymentAmount.amountMinLimit}}
-                                   max="{{paymentAmount.availableWithdrawAmount}}" placeholder="enter amount here" ng-disabled="!(paymentAmount.availableWithdrawAmount>0)" required trans>
+                            <input name="" id="numpad-forced" type="number" numpad numpad-letters="disabled" numpad-force ng-model="paymentAmount.withdraw"  min="{{selectedPaymentSystem.info[currency_name].minWithdraw}}"
+                                   max="{{Math.min(paymentAmount.availableWithdrawAmount,selectedPaymentSystem.info[currency_name].maxWithdraw)}}" placeholder="enter amount here" ng-disabled="!(paymentAmount.availableWithdrawAmount>0)" required trans>
 
                             <button ng-repeat="customAmount in withdrawCustomAmounts track by $index" ng-click="paymentAmount.withdraw=customAmount">{{customAmount|number}}</button>
                             <label class="no-select-j">

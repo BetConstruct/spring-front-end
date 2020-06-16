@@ -176,6 +176,7 @@ VBET5.directive('comboViewMarketEvents', ['$filter', 'Utils', 'GameInfo', functi
             if (['Total', 'AsianTotal', 'TotalAsian', 'FirstHalfTotal', 'SecondHalfTotal', 'SetTotal', 'OverUnder'].indexOf(scope.market.type) >= 0) {
                 var middleEvent = angular.copy(scope.events[0]);
                 middleEvent.name = '';
+                middleEvent.id = '';
                 scope.events.splice(1, 0, middleEvent);
             }
 

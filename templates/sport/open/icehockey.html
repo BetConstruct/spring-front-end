@@ -36,11 +36,11 @@
 
     <table class="cash-game"
         ng-class="{'no-video-flash': !($root.conf.videoEnabled && game.video_id || game.has_animation) || (isVideoDetached && !game.has_animation), 'no-video-ie8': !game.video_id || isVideoDetached}"
-        ng-init="setNames = ['set1', 'set2', 'set3']"
+
     >
         <tr>
             <th trans>Period</th>
-            <th ng-repeat="setName in ::setNames track by $index" ng-class="{'active-set': game.info.current_game_state == setName}">{{$index + 1}}</th>
+            <th ng-repeat="setNumber in game.info.setNumbers track by $index" ng-class="{'active-set': game.info.current_game_state === ('set' + setNumber)}">{{$index + 1}}</th>
             <th ng-if="game.info.current_game_state == 'set4'" ng-class="{'active-set': game.info.current_game_state == 'set4'}">4</th>
         </tr>
         <tr>
@@ -48,10 +48,10 @@
                 <div><tshirt shorts="{{game.info.short1_color}}" shirt="{{game.info.shirt1_color}}"></tshirt></div>
                 <span>{{ game.team1_name }}</span>
             </td>
-            <td ng-repeat="setName in ::setNames track by $index"
-                ng-class="{'active-cash':game.info.current_game_state == setName, 'winner': game.stats['score_' + setName].isTeam1SetWinner}"
+            <td ng-repeat="setNumber in game.info.setNumbers track by $index"
+                ng-class="{'active-cash':game.info.current_game_state === ('set' + setNumber), 'winner': game.stats['score_set' + setNumber].isTeam1SetWinner}"
             >
-                {{ game.stats['score_' + setName].team1_value}}
+                {{ game.stats['score_set' + setNumber].team1_value}}
             </td>
             <td ng-if="game.info.current_game_state == 'set4'" ng-class="{'active-cash':game.info.current_game_state == 'set4','winner':game.stats['score_set4'].isTeam1SetWinner}">
                 {{ game.stats.score_set4.team1_value}}
@@ -62,10 +62,10 @@
                 <div><tshirt shorts="{{game.info.short2_color}}" shirt="{{game.info.shirt2_color}}"></tshirt></div>
                 <span>{{ game.team2_name }}</span>
             </td>
-            <td ng-repeat="setName in ::setNames track by $index"
-                ng-class="{'active-cash':game.info.current_game_state == setName, 'winner': game.stats['score_' + setName].isTeam2SetWinner}"
+            <td ng-repeat="setNumber in game.info.setNumbers track by $index"
+                ng-class="{'active-cash':game.info.current_game_state === ('set' + setNumber), 'winner': game.stats['score_set' + setNumber].isTeam2SetWinner}"
             >
-                {{ game.stats['score_' + setName].team2_value}}
+                {{ game.stats['score_set' + setNumber].team2_value}}
             </td>
             <td ng-if="game.info.current_game_state == 'set4'" ng-class="{'active-cash':game.info.current_game_state == 'set4','winner':game.stats['score_set4'].isTeam2SetWinner}">
                 {{ game.stats.score_set4.team2_value}}

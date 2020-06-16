@@ -13,7 +13,7 @@ angular.module('vbet5.betting').controller('gameCtrl', ['$rootScope', '$scope', 
      * @propertyOf vbet5.controller:gameCtrl
      * @description mapping of sport aliases to available templates (in templates/game/open/<name>.html)
      */
-    var availableSportTemplates = ['soccer', 'tennis', 'basketball', 'volleyball', 'snooker', 'icehockey', 'netball', 'tabletennis', 'badminton', 'horseracing', 'handball', 'baseball', 'beachvolleyball', 'australianfootball']; //,'cricket','darts'
+    var availableSportTemplates = ['soccer', 'tennis', 'basketball', 'volleyball', 'snooker', 'icehockey', 'netball', 'tabletennis', 'badminton', 'horseracing', 'handball', 'baseball', 'beachvolleyball', 'australianfootball', 'cricket', 'basketballshots']; //,'cricket','darts'
 
     var streamService = new StreamService($scope);
 
@@ -52,7 +52,7 @@ angular.module('vbet5.betting').controller('gameCtrl', ['$rootScope', '$scope', 
         });
 
         var results = [], eventsArr = [];
-        if (market.display_key === 'CORRECT SCORE' && BetService.constants.customCorrectScoreLogic.indexOf(sportAlias) > -1) {
+        if ((market.display_key === 'CORRECT SCORE' || market.type === 'CorrectScore') && BetService.constants.customCorrectScoreLogic.indexOf(sportAlias) > -1) {
             GameInfo.reorderMarketEvents(market, 'correctScore');
             eventsArr = market.events.slice();
         } else if (BetService.constants.marketsPreDividedByColumns.indexOf(market.type) > -1) {
@@ -349,7 +349,6 @@ angular.module('vbet5.betting').controller('gameCtrl', ['$rootScope', '$scope', 
     $scope.eachWayPlace = GameInfo.eachWayPlace;
     $scope.isExtraTime = GameInfo.isExtraTime;
     $scope.getCurrentTime = GameInfo.getCurrentTime;
-    $scope.framesCount = GameInfo.framesCount;
     $scope.showFrameAlias = GameInfo.showFrameAlias;
 
     // curried  'improveName'filter
@@ -385,7 +384,7 @@ angular.module('vbet5.betting').controller('gameCtrl', ['$rootScope', '$scope', 
         }
 
         if ($scope.game.sport.alias === "Soccer" && $scope.game.info) {
-            $scope.game.info.isExtraTime = $scope.isExtraTime($scope.game.info);
+            $scope.game.info.isExtraTime = $scope.isExtraTime($scope.game);
         }
 
 //         var markets = Utils.getItemBySubItemProperty($scope.game.market, 'type', ['P1XP2', 'P1P2']);
@@ -491,7 +490,7 @@ angular.module('vbet5.betting').controller('gameCtrl', ['$rootScope', '$scope', 
             }
         }
 
-        streamService.monitoring($scope, 'game', 'null', 'null');
+        streamService.monitoring($scope, 'game', 'pinnedGames', 'null');
 
         // is used only in init() to avid duplicate calls of this function during initialization.
         $scope.processGameDataIsCalled = true;

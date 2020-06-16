@@ -1,5 +1,5 @@
 <div class="bet-status-container retrieve" ng-class="{closed: !retrieveEvents.open}">
-    <p class="bet-status-select" ng-click="retrieveEvents.open = !retrieveEvents.open" trans>Retrieve booked events</p>
+    <p class="bet-status-select" ng-click="toggleOrSetRetrieveEventsOpen()" trans>Retrieve booked events</p>
     <div class="bet-status-content" ng-if="retrieveEvents.open && !$root.env.sliderContent && !$root.env.showSlider">
         <p ng-show="retrieveEvents.notFound">
             <span ng-bind="'Ticket number not found.'|translate"></span>

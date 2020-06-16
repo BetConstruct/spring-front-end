@@ -39,8 +39,7 @@ VBET5.controller('paymentsCtrl', ['$scope', '$rootScope', '$sce', '$q', '$window
     $scope.paymentAmount = {
         deposit: '',
         withdraw: '',
-        availableWithdrawAmount: 0,
-        amountMinLimit: 1
+        availableWithdrawAmount: 0
     };
 
     $scope.cartExpiry = {
@@ -1019,13 +1018,6 @@ VBET5.controller('paymentsCtrl', ['$scope', '$rootScope', '$sce', '$q', '$window
 
         $scope.preparePaymentForm(paymentSystem);
         getCurrencyRate($scope.selectedPaymentSystem.customCurrency);
-        if ($scope.selectedPaymentSystem[$scope.paymentsType + 'AmountMinLimit']) {
-            $scope.paymentAmount.amountMinLimitExists = true;
-            $scope.paymentAmount.amountMinLimit = $scope.selectedPaymentSystem[$scope.paymentsType + 'AmountMinLimit'];
-        } else {
-            $scope.paymentAmount.amountMinLimitExists = false;
-            $scope.paymentAmount.amountMinLimit = 1 / Math.pow(10, $rootScope.conf.balanceFractionSize);
-        }
         $scope.dropdownOpened = {};
         if (paymentSystem.isSavable) {
             $scope.gettingFieldsInProgress = true;
@@ -1202,7 +1194,7 @@ VBET5.controller('paymentsCtrl', ['$scope', '$rootScope', '$sce', '$q', '$window
 
             var forProduct = $rootScope.currentPage.isInSports ? "sport" : "casino";
             var request = {
-                amount: parseFloat($scope.selectedPaymentSystem.depositPrefilledAmount || $scope.paymentAmount.deposit),
+                amount: parseFloat($scope.depositFormData.amount ||  $scope.selectedPaymentSystem.depositPrefilledAmount || $scope.paymentAmount.deposit),
                 service: $scope.selectedPaymentSystem.paymentID || $scope.selectedPaymentSystem.name,
                 payer: {
                     status_urls: {
@@ -1438,6 +1430,22 @@ VBET5.controller('paymentsCtrl', ['$scope', '$rootScope', '$sce', '$q', '$window
             $scope.withdrawListLoaded = true;
             $scope.cancelButton.disabled = false;
         });
+    };
+
+	$scope.getWithdrawRejectedReason = function getWithdrawRejectedReason(id, status) {
+	    if (status !== -2) { // get data only for rejected withdraws
+	        return;
+        }
+
+        $scope.rejectedInfo = $scope.rejectedInfo || {};
+
+        if (!$scope.rejectedInfo[id]) {
+            Zergling.get({request_id: id}, "get_request_reject_reason").then(function (response) {
+                if (response.result === 0) {
+                    $scope.rejectedInfo[id] = response.details.RejectReason;
+                }
+            });
+        }
     };
 
 	/**

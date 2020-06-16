@@ -3,87 +3,88 @@
      ng-init="initIframeInfo(gameInfo)">
     <div class="tab-jackpots">
         <ul>
-            <li ng-if="confData.version === 2 && env.authorized && gameInfo.game.id && hasTournaments && hasIframeTournamentInfo[gameInfo.game.id]"
-                ng-class="{active: (iframeTab[gameInfo.game.id].selected === 'tournaments') || (!hasIframeTournamentInfo[gameInfo.game.id] || !hasIframeJackpot[gameInfo.game.id]) || ((hasIframeTournamentInfo[gameInfo.game.id] && hasIframeJackpot[gameInfo.game.id]) && confData.main.gameIframeInitialTab === 'tournaments' && !iframeTab[gameInfo.game.id].selected) }"
-                ng-click="iframeTab[gameInfo.game.id].selected ='tournaments' ; loadCasinoIframeInfo(gameInfo, true);">
+            <li ng-if="confData.version === 2 && env.authorized && gameInfo.game.id && hasTournaments && hasIframeTournamentInfo[gameInfo.id]"
+                ng-class="{active: (iframeTab[gameInfo.id].selected === 'tournaments') || (!hasIframeTournamentInfo[gameInfo.id] || !hasIframeJackpot[gameInfo.id]) || ((hasIframeTournamentInfo[gameInfo.id] && hasIframeJackpot[gameInfo.id]) && confData.main.gameIframeInitialTab === 'tournaments' && !iframeTab[gameInfo.id].selected) }"
+                ng-click="iframeTab[gameInfo.id].selected ='tournaments' ; loadCasinoIframeInfo(gameInfo, true);">
                 <i class="cms-jcon-trophy"></i>
             </li>
-            <li ng-if="hasIframeJackpot[gameInfo.game.id]"
-                ng-class="{active: (iframeTab[gameInfo.game.id].selected === 'jackpots') || (!hasIframeTournamentInfo[gameInfo.game.id] || !hasIframeJackpot[gameInfo.game.id]) || ((hasIframeTournamentInfo[gameInfo.game.id] && hasIframeJackpot[gameInfo.game.id]) && confData.main.gameIframeInitialTab === 'jackpots' && !iframeTab[gameInfo.game.id].selected) }"
-                ng-click="iframeTab[gameInfo.game.id].selected ='jackpots';">
+            <li ng-if="hasIframeJackpot[gameInfo.id]"
+                ng-class="{active: (iframeTab[gameInfo.id].selected === 'jackpots') || (!hasIframeTournamentInfo[gameInfo.id] || !hasIframeJackpot[gameInfo.id]) || ((hasIframeTournamentInfo[gameInfo.id] && hasIframeJackpot[gameInfo.id]) && confData.main.gameIframeInitialTab === 'jackpots' && !iframeTab[gameInfo.id].selected) }"
+                ng-click="iframeTab[gameInfo.id].selected ='jackpots';">
                 <i class="cms-jcon-video_slots"></i>
             </li>
         </ul>
     </div>
     <div class="current-results-sidebar">
 
-        <div ng-show="(iframeTab[gameInfo.game.id].selected === 'jackpots') || (!hasIframeTournamentInfo[gameInfo.game.id] || !hasIframeJackpot[gameInfo.game.id]) || ((hasIframeTournamentInfo[gameInfo.game.id] && hasIframeJackpot[gameInfo.game.id]) && confData.main.gameIframeInitialTab === 'jackpots' && !iframeTab[gameInfo.game.id].selected)"
+        <div ng-show="(iframeTab[gameInfo.id].selected === 'jackpots') || (!hasIframeTournamentInfo[gameInfo.id] || !hasIframeJackpot[gameInfo.id]) || ((hasIframeTournamentInfo[gameInfo.id] && hasIframeJackpot[gameInfo.id]) && confData.main.gameIframeInitialTab === 'jackpots' && !iframeTab[gameInfo.id].selected)"
              class="iframe-jackpot-container"
-             ng-repeat="jackpot in iframeJackpotData track by $index"
-             ng-class="{active: $index === jackpotWidgets.widgetIndex}">
-            <p>{{jackpot.Name}}</p>
-            <ul ng-repeat="pool in jackpot.PoolGroup.PoolList track by $index">
-                <li class="iframe-jackpot-coins jackpot-large">
-                    <span style="background-image: url(images/jackpot-coins/jackpot-{{pool.Name.toLowerCase()}}.png);"></span>
-                </li>
-                <li class="iframe-info-jackpots" ng-class="{'win-blink-jackpots': pool.JackPotPoolStat.LastJackPotWin.Winner}">
-                    <p>{{pool.DisplayName|translate}}</p>
-                    <div class="jackpot-iframe-amount">
-                        <jackpot-counter
-                                max-length="10"
-                                max-duration-speed="400"
-                                point="jackpot.CurrencyFraction"
-                                comma="true" currency="jackpot.Currency"
-                                amount="pool.CollectedAmount">
-                        </jackpot-counter>
-                    </div>
-                </li>
-                <li class="iframe-total-info-winner">
-                    <div class="iframe-total-info-winner-scroll">
-                        <ul>
-                            <li>
-                                <h2 trans>Total Winners</h2>
-                                <span>{{pool.TotalWinCount}}</span>
-                                <span>{{pool.TotalWinAmount|number:jackpot.CurrencyFraction}} <i>{{jackpot.Currency|currency}}</i></span>
-                            </li>
-                        </ul>
-                        <ul>
-                            <li>
-                                <h2 trans>Min Qualifying Bet</h2>
-                                <p>{{pool.MinBetAmount|number:jackpot.CurrencyFraction}} <i>{{jackpot.Currency|currency}}</i></p>
-                            </li>
-                        </ul>
-                        <ul ng-if="pool.JackPotPoolStat.BiggestJackpotWin">
-                            <li>
-                                <h2 trans>Largest Winner</h2>
-                                <p>{{pool.JackPotPoolStat.BiggestJackpotWin.Amount|number:jackpot.CurrencyFraction}} <i>{{jackpot.Currency|currency}}</i></p>
-                                <p>{{pool.JackPotPoolStat.BiggestJackpotWin.GameName}}</p>
-                                <b><span>{{pool.JackPotPoolStat.BiggestJackpotWin.PlayerId}}</span> {{pool.JackPotPoolStat.BiggestJackpotWin.CreationDate|formatDate:'tournament'}}</b>
-                            </li>
-                        </ul>
-                        <ul ng-if="pool.JackPotPoolStat.LastJackPotWin">
-                            <li>
-                                <h2 trans>Last Winner</h2>
-                                <p>{{pool.JackPotPoolStat.LastJackPotWin.Amount|number:jackpot.CurrencyFraction}} <i>{{jackpot.Currency|currency}}</i></p>
-                                <p>{{pool.JackPotPoolStat.LastJackPotWin.GameName}}</p>
-                                <b><span>{{pool.JackPotPoolStat.LastJackPotWin.PlayerId}}</span> {{pool.JackPotPoolStat.LastJackPotWin.CreationDate|formatDate:'tournament'}}</b>
-                            </li>
-                        </ul>
-                    </div>
-                </li>
-            </ul>
-
-            <div class="jackpots-slider"
-                 ng-show="iframeTab[gameInfo.game.id].selected === 'jackpots' && iframeJackpotData.length > 1">
-                <!--          <small ng-class="{active: $index === jackpotWidgets.widgetIndex}" ng-click="jackpotWidgets.widgetIndex = $index" ng-repeat="jackpot in jackpotData track by $index"></small>-->
-                <span ng-click="changeJackpotSlider(jackpotWidgets.widgetIndex - 1)"></span>
-                <span ng-click="changeJackpotSlider(jackpotWidgets.widgetIndex + 1)"></span>
+             ng-repeat="jackpot in iframeJackpotData track by $index" >
+            <!--todo for ng-class ng-class="{active: $index === jackpotWidgets.widgetIndex }" SDC-47730-->
+            <p ng-class="{'active': ((expanded[jackpot.Id] === undefined && $index === 0) || expanded[jackpot.Id])}"
+               ng-click="(expanded[jackpot.Id] === undefined && $index === 0) || expanded[jackpot.Id] ?  expanded[jackpot.Id] = false :expanded[jackpot.Id] = true; expanded.poolId = '-1'"
+               title="{{jackpot.Name|translate}}">{{jackpot.Name|translate}}</p>
+            <div class="iframe-jackpot-wrapper" ng-repeat="pool in jackpot.PoolGroup.PoolList track by $index">
+                <ul ng-class="{'active': expanded.poolId === pool.Id}" ng-click="expanded.poolId !== pool.Id ? expanded.poolId = pool.Id : expanded.poolId = '-1'">
+                    <li class="iframe-jackpot-coins jackpot-large">
+                        <span style="background-image: url(images/jackpot-coins/jackpot-{{pool.Name.toLowerCase()}}.png);"></span>
+                    </li>
+                    <li class="iframe-info-jackpots" ng-class="{'win-blink-jackpots': pool.JackPotPoolStat.LastJackPotWin.Winner}">
+                        <p title="{{pool.DisplayName|translate}}">{{pool.DisplayName|translate}}</p>
+                        <div class="jackpot-iframe-amount">
+                            <jackpot-counter
+                                    max-length="10"
+                                    max-duration-speed="400"
+                                    point="jackpot.CurrencyFraction"
+                                    show-currency="true"
+                                    currency="{{jackpot.Currency}}"
+                                    amount="{{pool.CollectedAmount}}">
+                            </jackpot-counter>
+                        </div>
+                    </li>
+                </ul>
+                <div class="iframe-total-info-winner">
+                    <ul>
+                        <li>
+                            <h2 trans>Total Winners</h2>
+                            <span>{{pool.TotalWinCount}}</span>
+                            <span>{{pool.TotalWinAmount|number:jackpot.CurrencyFraction}} <i>{{jackpot.Currency|currency}}</i></span>
+                        </li>
+                    </ul>
+                    <ul>
+                        <li>
+                            <h2 trans>Min Qualifying Bet</h2>
+                            <p>{{pool.MinBetAmount|number:jackpot.CurrencyFraction}} <i>{{jackpot.Currency|currency}}</i></p>
+                        </li>
+                    </ul>
+                    <ul ng-if="pool.JackPotPoolStat.BiggestJackpotWin">
+                        <li>
+                            <h2 trans>Largest Winner</h2>
+                            <p>{{pool.JackPotPoolStat.BiggestJackpotWin.Amount|number:jackpot.CurrencyFraction}} <i>{{jackpot.Currency|currency}}</i></p>
+                            <p>{{pool.JackPotPoolStat.BiggestJackpotWin.GameName}}</p>
+                            <b><span>{{pool.JackPotPoolStat.BiggestJackpotWin.PlayerId}}</span> {{pool.JackPotPoolStat.BiggestJackpotWin.CreationDate|formatDate:'tournament'}}</b>
+                        </li>
+                    </ul>
+                    <ul ng-if="pool.JackPotPoolStat.LastJackPotWin">
+                        <li>
+                            <h2 trans>Last Winner</h2>
+                            <p>{{pool.JackPotPoolStat.LastJackPotWin.Amount|number:jackpot.CurrencyFraction}} <i>{{jackpot.Currency|currency}}</i></p>
+                            <p>{{pool.JackPotPoolStat.LastJackPotWin.GameName}}</p>
+                            <b><span>{{pool.JackPotPoolStat.LastJackPotWin.PlayerId}}</span> {{pool.JackPotPoolStat.LastJackPotWin.CreationDate|formatDate:'tournament'}}</b>
+                        </li>
+                    </ul>
+                </div>
             </div>
+
+            <!--<div class="jackpots-slider"  ng-show="iframeJackpotData.length > 1">--> <!--todo SDC-47730-->
+                <!--<span ng-click="changeJackpotSlider(jackpotWidgets.widgetIndex - 1)"></span>-->
+                <!--<span ng-click="changeJackpotSlider(jackpotWidgets.widgetIndex + 1)"></span>-->
+            <!--</div>-->
         </div>
 
         <div class="float-width-height"
              ng-controller="casinoTournamentsCtrl"
-             ng-show="(iframeTab[gameInfo.game.id].selected === 'tournaments') || (!hasIframeTournamentInfo[gameInfo.game.id] || !hasIframeJackpot[gameInfo.game.id]) || ((hasIframeTournamentInfo[gameInfo.game.id] && hasIframeJackpot[gameInfo.game.id]) && confData.main.gameIframeInitialTab === 'tournaments' && !iframeTab[gameInfo.game.id].selected)"
+             ng-show="(iframeTab[gameInfo.id].selected === 'tournaments') || (!hasIframeTournamentInfo[gameInfo.id] || !hasIframeJackpot[gameInfo.id]) || ((hasIframeTournamentInfo[gameInfo.id] && hasIframeJackpot[gameInfo.id]) && confData.main.gameIframeInitialTab === 'tournaments' && !iframeTab[gameInfo.id].selected)"
              ng-if="env.authorized && gameInfo.game.id && hasTournaments">
             <div class="float-width-height"  ng-init="loadCasinoIframeInfo(gameInfo, true)">
                 <div class="float-width-height" ng-if="tournament.iframeInfo.playerList.length">

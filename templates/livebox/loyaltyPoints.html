@@ -4,13 +4,13 @@
             <div class="balance-lightbox-j loyalty-points-lightbox-j" ng-show="programs">
                 <section>
                     <div>
-                        <div class="promotions-balance-j" ng-class="{'no-banners-balance': !balanceTopBanners.length}" ng-controller="cmsPagesCtrl" ng-init="gePageBanners('balance','withdraw-banner-' + $root.env.lang);">
+                        <div class="promotions-balance-j" ng-class="{'no-banners-balance': !balanceTopBanners.length}" ng-controller="cmsPagesCtrl" ng-init="gePageBanners('balance','loyalty-banner-' + $root.env.lang);">
                             <div>
                                 <vbet-big-slider class="big-slider-casino-directive" ng-if="balanceTopBanners" images="balanceTopBanners" link-click-handler="openCBannerLink" slider-template="true"></vbet-big-slider>
                             </div>
                         </div>
                         <div class="loyalty-points-j">
-                            <div class="lp-header-j Bronze {{pointsExchangeData.userCurrentStatus.Name}}">
+                            <div class="lp-header-j {{pointsExchangeData.userCurrentStatus.className}}">
                                 <div class="lp-status-panel-wrap-j">
                                     <ul>
                                         <li>
@@ -24,7 +24,7 @@
                                                         <h2>{{ pointsExchangeData.userCurrentStatus.MinPoint }} + / <span trans>Month</span></h2>
                                                         <p trans>Next status update</p>
                                                         <h4>
-                                                            <span class="{{pointsExchangeData.userNextStatus.Name}}" ng-bind="pointsExchangeData.userNextStatus.Name|translate"></span>
+                                                            <span class="{{pointsExchangeData.userNextStatus.className}}" ng-bind="pointsExchangeData.userNextStatus.Name|translate"></span>
                                                             <icon class="cms-jcon-infou">
                                                                 <div class="tooltip-j" trans>Status updates take place at the end of each month</div>
                                                             </icon>
@@ -93,7 +93,7 @@
                             <div class="lp-packs-group-wrap-j">
                                 <ul class="lp-packs-wrap-j">
                                     <li ng-repeat="program in programs track by program.Id">
-                                        <div class="lp-pack-wrap-j {{ program.Name }}" ng-class="{'active': selectedProgram.Id === program.Id}"> <!--ng-click="selecteProgram(program);"-->
+                                        <div class="lp-pack-wrap-j {{ program.className }}" ng-class="{'active': selectedProgram.Id === program.Id}"> <!--ng-click="selecteProgram(program);"-->
                                             <div class="lp-pack-icon-j"></div>
                                             <h2 ng-bind="program.Name|translate"></h2>
                                             <p>{{ program.MinPoint }} + / <span trans>Month</span></p>

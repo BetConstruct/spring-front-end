@@ -1,0 +1,28 @@
+<div class="games-type">
+    <ul>
+        <li class="games-type-left-arrow" ng-if="categoriesGroupCount > 1">
+            <button ng-disabled="categoriesIndex === 0" ng-click="moveCategories(false)"></button>
+        </li>
+        <li
+                ng-show="confData.main.favourtieGamesCategoryEnabled && myCasinoGames.length !== 0"
+                ng-click="selectCategory(favouriteCategory)"
+                ng-class="{'active': selections.category.id === favouriteCategory.id}"
+        >
+            <div class="games-type-icon icon-{{favouriteCategory.name}}"></div>
+            <p>{{ favouriteCategory.title | translate : null : 'Casino ' + favouriteCategory.title }}</p>
+        </li>
+        <li
+                ng-repeat="category in availableCategories track by category.id"
+                ng-click="selectCategory(category)"
+                ng-class="{'active': selections.category.id === category.id}"
+        >
+            <div class="games-type-icon icon-{{category.name}}"></div>
+            <p>{{ category.title | translate : null : 'Casino ' + category.title }}</p>
+        </li>
+        <li class="games-search" ng-include="::'optional_modules/casino/templates/search-v2.html'|fixPath"></li>
+        <li class="games-type-right-arrow" ng-if="categoriesGroupCount > 1">
+            <button ng-disabled="categoriesIndex === categoriesGroupCount - 1"
+                    ng-click="moveCategories(true)"></button>
+        </li>
+    </ul>
+</div>

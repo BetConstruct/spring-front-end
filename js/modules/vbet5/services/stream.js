@@ -36,37 +36,32 @@ VBET5.service('StreamService', ['$rootScope', '$http',  'GameInfo', 'Config', fu
                         self.game.tv_type = Config.main.defaultStreaming.tvType;
                         self.game.video_data = Config.main.defaultStreaming.streamUrl;
                     }
-                } else {
-                    if ($rootScope.profile) {
-                        GameInfo.getVideoData(self.game);
-                    } else {
-                        var profilePromise = $rootScope.$watch('profile', function () {
-                            if ($rootScope.profile) {
-                                profilePromise();
-                                GameInfo.getVideoData(self.game);
-                            }
-                        });
-                    }
+                } else if (!self.game.is_guest) {
+                    GameInfo.getVideoData(self.game);
                 }
             }
         }
 
         //and unavailable when he logs out
         $scope.$on('login.loggedOut', function () {
-            if (self.game && self.game.video_data !== undefined) {
+            if (self.game && !self.game.is_guest && self.game.video_data !== undefined) {
                 self.game.video_data = undefined;
             }
             if (self.pinnedGames) {
-                self.pinnedGames = {};
+                Object.keys(self.pinnedGames).forEach(function (gameId) {
+                    if (!self.pinnedGames[gameId].is_guest) {
+                        delete self.pinnedGames[gameId];
+                    }
+                });
             }
-            if (self.enlargedGame) {
+            if (self.enlargedGame && !self.enlargedGame.is_guest) {
                 self.enlargedGame = null;
             }
         });
 
         //synchronize video with user balance
         $scope.$watch('profile.balance', function (newValue, oldValue) {
-            if (self.game) {
+            if (self.game && !self.game.is_guest) {
                 if (self.game.video_data && newValue === 0 && !Config.main.video.allowedWithNoneBalance[self.game.tv_type]) {
                     self.game.video_data = undefined;
                 } else if (Config.main.video.autoPlay && oldValue === 0 && newValue > 0 && !self.game.video_data) {
@@ -82,10 +77,10 @@ VBET5.service('StreamService', ['$rootScope', '$http',  'GameInfo', 'Config', fu
          * @description Restore video
          */
         $scope.$on('game.restoreVideo', function (event, gameId) {
-            if (!gameId || !self.game || gameId !== self.game.id) return;
-
-            self.game.video_data = null;
-            GameInfo.getVideoData(self.game);
+            if (self.game && gameId === self.game.id)  {
+                self.game.video_data = null;
+                GameInfo.getVideoData(self.game);
+            }
         });
 
         if (Config.main.video.customStreamingURL) {
@@ -198,7 +193,7 @@ VBET5.service('StreamService', ['$rootScope', '$http',  'GameInfo', 'Config', fu
             if (this.game && this.game.activeFieldType === 'customStreaming') {
                 scope[gameKey].activeFieldType = 'customStreaming';
             } else {
-                scope[gameKey].activeFieldType = hasVideo && !scope[enlargedGameKey] && (Config.main.alwaysOpenVideo || Config.env.authorized || $rootScope.loginInProgress || !scope[gameKey].has_animation) ? 'video' : 'field';
+                scope[gameKey].activeFieldType = hasVideo && !scope[enlargedGameKey] && (Config.main.alwaysOpenVideo || Config.env.authorized || scope[gameKey].is_guest ||  $rootScope.loginInProgress || !scope[gameKey].has_animation) ? 'video' : 'field';
             }
         }
 

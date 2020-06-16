@@ -7,7 +7,7 @@
  * Results are cached, so every calculation is done only once
  *
  */
-VBET5.filter('oddConvert', [ 'Config', 'Utils', 'LadderLoader', function (Config, Utils, LadderLoader) {
+VBET5.filter('oddConvert', ['$rootScope', 'Config', 'Utils', 'LadderLoader', function ($rootScope, Config, Utils, LadderLoader) {
     'use strict';
 
     // ladder = ['100/1', '22/1', '11/1', '13/2', '4/1', '16/5', '12/5', '15/8', '11/8', '10/11', '10/17', '5/11', '5/16', '1/5', '1/10', '1/25', '80/1', '20/1', '10/1', '6/1', '19/5', '3/1', '23/10', '9/5', '13/10', '5/6', '4/7', '4/9', '3/10', '2/11', '1/11', '1/28', '66/1', '18/1', '19/2', '11/2', '15/4', '29/10', '9/4', '7/4', '5/4', '4/5', '5/9', '5/12', '5/17', '1/6', '1/12', '1/33', '50/1', '100/6', '9/1', '21/4', '18/5', '14/5', '11/5', '17/10', '6/5', '8/11', '8/15', '2/5', '2/7', '2/13', '1/14', '1/40', '40/1', '16/1', '17/2', '5/1', '7/2', '11/4', '85/40', '13/8', '11/10', '5/7', '10/19', '5/13', '5/18', '1/7', '1/16', '1/50', '33/1', '100/7', '8/1', '19/4', '17/5', '27/10', '21/10', '8/5', '21/20', '4/6', '1/2', '4/11', '5/19', '2/15', '1/18', '1/66', '28/1', '14/1', '15/2', '9/2', '10/3', '13/5', '2/1', '6/4', '1/1', '5/8', '10/21', '5/14', '1/4', '1/8', '1/20', '1/80', '25/1', '12/1', '7/1', '17/4', '13/4', '5/2', '19/10', '7/5', '20/21', '8/13', '40/85', '1/3', '2/9', '1/9', '1/22', '1/100', '100/1', '125/1', '150/1', '175/1', '200/1', '250/1', '300/1', '400/1', '500/1', '750/1', '999/1'];
@@ -116,22 +116,18 @@ VBET5.filter('oddConvert', [ 'Config', 'Utils', 'LadderLoader', function (Config
      * @param {string} format destination format
      * @returns {string} converted odd
      */
-    function convert(value, format) {
+    function convert(value, format, isMultiple) {
         var fValue = parseFloat(value);
         var iValue = parseInt(value, 10);
         var rValue = (value !== undefined && value !== '') ? Math.round(parseFloat(value) * 1000 || 0) / 1000 : value;
-
+        var priceDecimals = isMultiple?($rootScope.partnerConfig.multiple_price_decimals || 3): $rootScope.partnerConfig.price_decimals;
         switch (format) {
             case 'decimal':{
                 var returnValue;
                 if (value === undefined || value === '') {
                     return value;
                 }
-                if (Config.main.decimalFormatRemove3Digit) {
-                    returnValue = (Utils.mathCuttingFunction(fValue * 10 * 10) / 100).toFixed(2); // 10 * 10 because javascript have bug 8.2 * 100 = 819.9999999999999
-                } else{
-                    returnValue = (iValue !== fValue && value.toString().split('.')[1] && value.toString().split('.')[1].length > 2) ? (Math.round(value * Math.pow(10, Config.main.roundDecimalCoefficients)) / Math.pow(10, Config.main.roundDecimalCoefficients)) : fValue.toFixed(2);
-                }
+                returnValue = (iValue !== fValue && value.toString().split('.')[1] && value.toString().split('.')[1].length > 2) ? (Utils.formatDecimal(fValue, $rootScope.partnerConfig.price_round_method, priceDecimals)) : fValue.toFixed(2);
                 return (Config.main.notLockedOddMinValue ? (returnValue < Config.main.notLockedOddMinValue ? 1 : returnValue) : returnValue);
             }
             case 'fractional':
@@ -139,35 +135,42 @@ VBET5.filter('oddConvert', [ 'Config', 'Utils', 'LadderLoader', function (Config
             case 'american':
                 return value ? rValue > 2 ? '+' + Math.round(100 * (rValue - 1)) : rValue !== 1 ? Math.round(-100 / (rValue - 1)) : '-' : rValue;
             case 'hongkong':
-                var hValue = (value !== undefined && value !== '') ? (iValue !== fValue && value.toString().split('.')[1].length > 2) ? (Math.round((value - 1) * Math.pow(10, Config.main.roundDecimalCoefficients)) / Math.pow(10, Config.main.roundDecimalCoefficients)) : (fValue - 1.0).toFixed(2) : value;
-                if (Config.main.decimalFormatRemove3Digit) {
-                    hValue = (Utils.mathCuttingFunction(hValue * 10 * 10) / 100).toFixed(2);
+                var hValue = (value !== undefined && value !== '') ? (iValue !== fValue && value.toString().split('.')[1].length > 2) ? (Math.round((value - 1) * Math.pow(10, priceDecimals)) / Math.pow(10, priceDecimals)) : (fValue - 1.0).toFixed(2) : value;
+                if ($rootScope.partnerConfig.price_round_method === 0) {
+                    hValue = Utils.formatDecimal(+hValue, 0, priceDecimals).toFixed(2);
                 }
                 return hValue;
             case 'malay':
                 if (fValue === 2) {
                     return '1.00';
                 } else if (fValue > 2) {
-                    return (Math.round(((1 / (1 - fValue)).toFixed(Config.main.roundDecimalCoefficients + 3)) * Math.pow(10, Config.main.roundDecimalCoefficients + 3)) / Math.pow(10, Config.main.roundDecimalCoefficients + 3)).toFixed(Config.main.roundDecimalCoefficients);
+                    return (Math.round(((1 / (1 - fValue)).toFixed(priceDecimals + 3)) * Math.pow(10, priceDecimals + 3)) / Math.pow(10, priceDecimals + 3)).toFixed(priceDecimals);
                 }
-                return (fValue - 1).toFixed(Config.main.roundDecimalCoefficients);
+                return (fValue - 1).toFixed(priceDecimals);
             case 'indo':
                 if (fValue === 2) {
                     return '1.00';
                 } else if (fValue > 2) {
-                    return (fValue - 1).toFixed(Config.main.roundDecimalCoefficients);
+                    return (fValue - 1).toFixed(priceDecimals);
                 }
-                return (Math.round(((1 / (1 - fValue)).toFixed(Config.main.roundDecimalCoefficients + 3)) * Math.pow(10, Config.main.roundDecimalCoefficients + 3)) / Math.pow(10, Config.main.roundDecimalCoefficients + 3)).toFixed(Config.main.roundDecimalCoefficients);
+                return (Math.round(((1 / (1 - fValue)).toFixed(priceDecimals + 3)) * Math.pow(10, priceDecimals + 3)) / Math.pow(10, priceDecimals + 3)).toFixed(priceDecimals);
             default:
                 return rValue;
         }
     }
+    function calculateFractionFormat(value) {
+        return Math.round(parseFloat(value - 1) * 100 || 0) / 100 + '/1';
+    }
 
-    return function (value, format, type, displayKey, showCustomFractionalFormat) {
+
+    return function (value, format, type, displayKey, showCustomFractionalFormat, isMultiple) {
         if (value === null || value === undefined || isNaN(value)) {
             return value;
         }
         if (value === 1) {
+            return null;
+        }
+        if (!$rootScope.partnerConfig) {
             return null;
         }
 
@@ -178,6 +181,13 @@ VBET5.filter('oddConvert', [ 'Config', 'Utils', 'LadderLoader', function (Config
             format = Config.main.specialOddFormat[format].displayKey[displayKey] || Config.main.specialOddFormat[format].default;
         }
         var cacheKey = (format || Config.env.oddFormat).concat(value);
+        if (isMultiple) { //total express odd case
+            if (format === 'fractional' && type === 'fictional' && Config.main.useLadderForFractionalFormat && value !== undefined) {
+                return calculateFractionFormat(value);
+            } else {
+                return convert(value, format, isMultiple);
+            }
+        }
         if (cache[cacheKey] === undefined) {
             format = format || Config.env.oddFormat;
 
@@ -185,9 +195,9 @@ VBET5.filter('oddConvert', [ 'Config', 'Utils', 'LadderLoader', function (Config
                 format = possibleFormats[0];
             }
             if (format === 'fractional' && type === 'fictional' && Config.main.useLadderForFractionalFormat && value !== undefined) { // use it to calculate express odds as you see on bet365 :)
-                cache[cacheKey] = Math.round(parseFloat(value - 1) * 100 || 0) / 100 + '/1';
+                cache[cacheKey] = calculateFractionFormat(value);
             } else {
-                cache[cacheKey] = convert(value, format);
+                cache[cacheKey] = convert(value, format, isMultiple);
             }
         }
         if (showCustomFractionalFormat && customLadder[cache[cacheKey]]){

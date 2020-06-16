@@ -291,7 +291,7 @@ angular.module('vbet5').config(['$routeProvider', '$anchorScrollProvider', 'Skin
             reloadOnSearch: false
         })
         .when('/esports/', {
-            templateUrl: getTemplate('optional_modules/esports/templates/main.html'),
+            templateUrl: getTemplate('templates/sport/esports/main.html'),
             reloadOnSearch: false
         })
         .when('/go/', {
@@ -300,6 +300,9 @@ angular.module('vbet5').config(['$routeProvider', '$anchorScrollProvider', 'Skin
         })
         .when('/pmu/', {
             templateUrl: getTemplate('templates/sport/pmu/main.html'),
+            reloadOnSearch: false
+        }).when('/covid-19/', {
+            templateUrl: getTemplate('templates/sport/classic/covid19/main.html'),
             reloadOnSearch: false
         })
         .when('/bet-on-lineup/', {

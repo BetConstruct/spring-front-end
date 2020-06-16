@@ -37,20 +37,21 @@
                                                         <div class="r-team-name-score-logo">
                                                             <ul>
                                                                 <li class="team-name-b-r left-r">
-                                                                    <p>{{game.team1_name}}</p>
+                                                                    <p title="{{game.team1_name}}">{{game.team1_name}}</p>
                                                                     <div class="team-logo-r"><stats-logo team-id="game.team1_id"></stats-logo></div>
                                                                 </li>
-                                                                <li class="score-view-column-r">
+                                                                <li class="score-view-column-r" ng-show="game.scoresShort">
                                                                     <span>{{game.scoresShort}}</span>
                                                                 </li>
-                                                                <li class="team-name-b-r right-r">
-                                                                    <p>{{game.team2_name}}</p>
-                                                                    <div ng-show="game.team2_name" class="team-logo-r"><stats-logo team-id="game.team2_id"></stats-logo></div>
+                                                                <li class="team-name-b-r right-r" ng-show="game.team2_name">
+                                                                    <p title="{{game.team2_name}}">{{game.team2_name}}</p>
+                                                                    <div class="team-logo-r"><stats-logo team-id="game.team2_id"></stats-logo></div>
                                                                 </li>
                                                             </ul>
                                                         </div>
                                                     </li>
                                                 </ul>
+                                                <div class="match-key" ng-if="game.game_info.Type === 1" pre-match-key hash="game.game_info.Hash" key="game.game_info.HashKey"></div>
                                                 <div class="arrow-r-game-view"></div>
                                                 <div class="result-score-info" ng-if="game.scoresSecondPart" ng-bind="game.scoresSecondPart"></div>
                                             </div>

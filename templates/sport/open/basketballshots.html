@@ -1,0 +1,26 @@
+<div class="live-game-basketball-shots" ng-class="{'no-video-flash': !($root.conf.videoEnabled && game.video_id || game.has_animation) || (isVideoDetached && !game.has_animation), 'no-video-ie8': !game.video_id || isVideoDetached}">
+    <div class="short-info-box">
+        {{((($root.conf.videoEnabled && game.video_id && !isVideoDetached) || game.has_animation) ? visibleCount=8 : visibleCount=10);scrollIndex=(game.live_events.length >= visibleCount ? game.live_events.length- visibleCount/2 : 0);""}}
+        <h6>{{game.team1_name}}</h6>
+        <div class="show-points"><span ng-bind="'{1} Points'|translate:[game.info.score1 || 0]"></span></div>
+        <p>{{competition.name}} | <span ng-bind="'Hit Stats {1}%'|translate:[Math.round(game.info.shot_attempts / (game.info.shot_attempts + game.info.missed_attempts) *100)|| 0]"></span></p>
+        <div class="shot-result-b">
+            <div ng-if="game.info.total_attempts" class="short-points">
+                <span ng-class="{'inactive':scrollIndex >= game.info.total_attempts - visibleCount}" ng-click="(scrollIndex < game.info.total_attempts - visibleCount) && (scrollIndex=scrollIndex+1)" class="next-shot"></span>
+                <span ng-class="{'inactive':scrollIndex <= 0}"  ng-click="(scrollIndex > 0) && (scrollIndex=scrollIndex-1)" class="prev-shot"></span>
+                <div class="status-short-l">
+                    <div ng-show="$index < scrollIndex + visibleCount && $index >= scrollIndex" class="each-point" ng-class="{'missed': game.live_events[$index].type_id === '4' ,'approved': game.live_events[$index].type_id === '5'}" ng-repeat="x in [].constructor(game.info.total_attempts) track by $index">
+                        <p><i>{{$index + 1}}</i></p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+<div ng-show="($root.conf.videoEnabled && game.video_id && !isVideoDetached) || game.has_animation" >
+    <div class="right-block-flash" id="game-monitor-{{ game.id }}">
+        <include-template template-path="templates/sport/open/player.html"></include-template>
+    </div>
+</div>

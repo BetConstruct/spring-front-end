@@ -1,0 +1,334 @@
+.prematch-games-list.covid-full{
+  width: 100%;
+}
+.covid-banner{
+  float: left;
+  width: 100%;
+  background: $c16-sp-10;
+  min-height: 140px;
+  box-sizing: border-box;
+  padding: 20px 60px;
+  margin: 0 0 3px 0;
+}
+.covid-title-glob{
+  float: left;
+  width: 100%;
+  display: table;
+  vertical-align: middle;
+  padding: 0 0 20px 0;
+  box-shadow: 0 -1px 0 $c16-sp-8 inset;
+}
+.covid-icon{
+  display: table-cell;
+  width: 25%;
+  vertical-align: middle;
+
+  > span{
+    font-size: 18px;
+    line-height: 20px;
+    text-transform: uppercase;
+    float: left;
+    width: 100%;
+    box-sizing: border-box;
+    color: $c16-tp-5;
+    @include ltr{
+      padding: 0 10px 0 0;
+      text-align: right;
+    }
+    @include rtl{
+      text-align: left;
+      padding: 0 0 0 10px;
+    }
+  }
+}
+.covid-text{
+  display: table-cell;
+  vertical-align: middle;
+  > p{
+    float: left;
+    width: 100%;
+    color: $c16-tp-6;
+    font-size: 12px;
+    line-height: 14px;
+  }
+}
+.all-numbers-c{
+  float: left;
+  width: 100%;
+  display: table;
+  table-layout: fixed;
+  vertical-align: middle;
+  padding: 10px 0 0 0;
+}
+.total-cases{
+  display: table-cell;
+  vertical-align: middle;
+  width: calc(100% / 3);
+  @include ltr{
+    text-align: left;
+  }
+  @include rtl{
+    text-align: right;
+  }
+  > span{
+    color: $c16-tp-3;
+    font-size: 22px;
+    line-height: 24px;
+    font-weight: bold;
+    display: inline-grid;
+    > i{
+      font-weight: normal;
+      font-style: normal;
+      text-transform: uppercase;
+      font-size: 10px;
+      float: left;
+      width: 100%;
+      text-align: center;
+    }
+  }
+
+}
+.recoverd{
+  display: table-cell;
+  vertical-align: middle;
+  width: calc(100% / 3);
+  text-align: center;
+  > span{
+    color: $brand-color-1;
+    font-size: 22px;
+    line-height: 24px;
+    font-weight: bold;
+    display: inline-grid;
+    > i{
+      font-weight: normal;
+      font-style: normal;
+      text-transform: uppercase;
+      font-size: 10px;
+      float: left;
+      width: 100%;
+      text-align: center;
+    }
+  }
+}
+.active-cases{
+  display: table-cell;
+  vertical-align: middle;
+  width: calc(100% / 3);
+  @include ltr{
+    text-align: right;
+  }
+  @include rtl{
+    text-align: left;
+  }
+  > span{
+    color: $brand-color-2;
+    font-size: 22px;
+    line-height: 24px;
+    font-weight: bold;
+    display: inline-grid;
+    > i{
+      font-weight: normal;
+      font-style: normal;
+      text-transform: uppercase;
+      font-size: 10px;
+      float: left;
+      width: 100%;
+      text-align: center;
+    }
+  }
+}
+
+.covid-data-list{
+  float: left;
+  width: 100%;
+  box-sizing: border-box;
+
+}
+.list-table-row{
+  float: left;
+  width: 100%;
+  display: table;
+  height: 25px;
+  background: $c16-sp-8;
+  table-layout: fixed;
+  position: relative;
+  border-bottom: 1px solid;
+  border-color: rgba($c16-sp-7, 0.8);
+  > div{
+    display: table-cell;
+    width: calc(100%/4 - 30px);
+    border-right: 1px solid;
+    border-color: rgba($c16-sp-7, 0.8);
+    padding: 0 5px;
+    table-layout: fixed;
+    vertical-align: middle;
+
+
+    &:last-child{
+      width: 30px;
+      border-right: none;
+    }
+    > p{
+      color: $c16-tp-3;
+      font-size: 11px;
+      line-height: 13px;
+    }
+    &:first-child{
+      p{
+        @include ltr{
+          padding-left: 25px;
+        }
+        @include rtl{
+          padding-right: 25px;
+        }
+      }
+    }
+  }
+  &:first-child{
+    height: 30px;
+    background: $c16-sp-9;
+    > div  p:first-child{
+      padding-left: 0 !important;
+    }
+    div{
+      position: relative;
+     > p{
+       @include ltr{
+         padding-right: 20px;
+       }
+       @include  rtl{
+         padding-left: 20px;
+       }
+     }
+      &:after{
+
+        font: 16px/30px icomoon;
+        display: block;
+        position: absolute;
+        top: 0;
+        color: $c16-tp-3;
+        @include ltr{
+          right: 10px;
+        }
+        @include  rtl{
+          left: 10px;
+        }
+      }
+      &.arr-dwn{
+        &:after{
+          content: "\e670";
+        }
+      }
+      &.arr-up{
+        &:after{
+          content: "\e671";
+        }
+      }
+    }
+  }
+  .arrow-view{
+    float: left;
+    width: 100%;
+    text-align: center;
+    color: $c16-tp-3;
+    &:before{
+      content: "\e670";
+      font: 16px/25px icomoon;
+      display: block;
+    }
+  }
+  &.active{
+    background: $c16-sp-7;
+    border-bottom: none;
+    .arrow-view{
+      &:before{
+        content: "\e671";
+      }
+    }
+    > div{
+      border-right: none;
+      &:not(:first-child) p{
+        opacity: 0;
+      }
+    }
+  }
+  .flag-view-v3{
+    left: 6px;
+    top: 5px;
+  }
+}
+.list-table-row.active + .additional-info-covid{
+  display: block;
+}
+.additional-info-covid{
+  float: left;
+  width: 100%;
+  box-sizing: border-box;
+  display: none;
+  background: $c16-sp-7;
+
+}
+.covid-add-more{
+  float: left;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0 30px 10px 10px;
+  display: table;
+  table-layout: fixed;
+
+}
+.covid-add-more-col{
+  display: table-cell;
+  vertical-align: top;
+  border-top: 1px solid;
+  border-color:  rgba($c16-sp-9, 0.6);
+  padding: 10px 0 0 0;
+  > p{
+    float: left;
+    width: 100%;
+    color: $c16-tp-3;
+    font-size: 11px;
+    line-height: 13px;
+    > i{
+      font-style: normal;
+      padding-left: 5px;
+    }
+  }
+}
+
+.pagination{
+  float: left;
+  width: 100%;
+  overflow: hidden;
+  height: 30px;
+  > ul{
+    float: left;
+    width: 100%;
+    text-align: center;
+    > li{
+      float: none;
+      background: rgba($c16-sp-9, 0.8);
+      color: set-color($c16-sp-9);
+      display: inline-block;
+      &.active{
+        background: $hero-color;
+        color: set-color($hero-color);
+
+      }
+      &:hover{
+        background: $hero-color;
+        color: set-color($hero-color);
+      }
+      &:last-child{
+        margin-right: 0;
+      }
+    }
+  }
+  margin-bottom: 30px;
+}
+@media (max-width: 1500px) {
+
+  .covid-banner {
+    padding: 20px 40px;
+  }
+}

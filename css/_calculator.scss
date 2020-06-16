@@ -2,8 +2,6 @@
 #system-claculator-container {
   transform: translate3d(0, 0, 0);
   cursor: default !important;
-  width: 296px;
-  height: 400px;
   > include-template {
     float: left;
     width: 100%;
@@ -14,7 +12,6 @@
   float: left;
   width: 296px;
   background: $skin-palette-7;
-  min-height: 400px;
   box-shadow: 0 0 0 5px rgba($skin-palette-5, 0.6), 0 5px 30px 10px rgba($skin-palette-12, 0.6);
   overflow-x: hidden;
   @include rtl {
@@ -152,23 +149,26 @@
   height: 26px;
 }
 
-.total-stake-input-b > input[type="text"] {
-  background: darken(desaturate(adjust-hue($skin-palette-10, -3deg), 8), 5);
-  border: none;
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  color: rgba(set-color(darken(desaturate(adjust-hue($skin-palette-10, -3deg), 8), 5)), 0.74);
-  font: 12px $font-f;
-  padding: 0 10px;
-  margin: 0;
-  box-sizing: border-box;
-  @include placeholder {
+.total-stake-input-b > {
+  input[type="text"],
+  input[type="number"] {
+    background: darken(desaturate(adjust-hue($skin-palette-10, -3deg), 8), 5);
+    border: none;
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
     color: rgba(set-color(darken(desaturate(adjust-hue($skin-palette-10, -3deg), 8), 5)), 0.74);
-    font-size: 12px;
-    font-family: $font-f;
+    font: 12px $font-f;
+    padding: 0 10px;
+    margin: 0;
+    box-sizing: border-box;
+    @include placeholder {
+      color: rgba(set-color(darken(desaturate(adjust-hue($skin-palette-10, -3deg), 8), 5)), 0.74);
+      font-size: 12px;
+      font-family: $font-f;
+    }
   }
 }
 
@@ -209,6 +209,10 @@
 
 .sistem-event-icons-b.system-return:before {
   content: "\e705";
+}
+
+.sistem-event-icons-b.system-placed:before {
+  content: "\ea65";
 }
 
 .scroll-view-contain-calculator {
@@ -260,18 +264,21 @@
   width: 50px;
 }
 
-.event-view-box-separator > ul > li > input[type="text"] {
-  float: left;
-  margin: 5px 0 0;
-  box-sizing: border-box;
-  width: 70px;
-  height: 20px;
-  padding: 0 5px;
-  font: 12px/20px $font-f;
-  color: $brand-color-2;
-  font-weight: bold;
-  border: none;
-  background: $skin-palette-8;
+.event-view-box-separator > ul > li > {
+  input[type="text"],
+  input[type="number"] {
+    float: left;
+    margin: 5px 0 0;
+    box-sizing: border-box;
+    width: 70px;
+    height: 20px;
+    padding: 0 5px;
+    font: 12px/20px $font-f;
+    color: $brand-color-2;
+    font-weight: bold;
+    border: none;
+    background: $skin-palette-8;
+  }
 }
 
 .event-view-box-separator > ul > li > input[type="radio"] {
@@ -376,6 +383,7 @@
   color: $brand-color-2;
   font-weight: bold;
   box-sizing: border-box;
+  white-space: nowrap;
 }
 
 .mini-calc-info-box > ul > li:first-child > span {
@@ -426,7 +434,8 @@
 }
 
 .body-wrapper:not(.classic):not(.asian):not(.euro2016) {
-  .system-calculator {
+  .system-calculator,
+  .bet-calculator {
     background: #ffffff;
     box-shadow: 0 0 0 5px #505768, 0 0 15px 7px #3b3b3b;
   }
@@ -452,6 +461,7 @@
   }
   .select-calc-box-b .select-block,
   .total-stake-input-b > input[type="text"],
+  .total-stake-input-b > input[type="number"],
   .select-calc-box-b .select-block > select > option {
     background: #CFD6DC;
     color: #000000;
@@ -469,11 +479,13 @@
   .mini-calc-info-box > ul > li:first-child > span {
     color: #404654;
   }
-  .sistem-event-icons-b {
+  .sistem-event-icons-b,
+  .bet-calculator-system-combinations > h2 {
     color: #000000;
   }
   .event-view-box-separator > ul > li > label,
-  .event-view-box-separator > ul > li > input[type="text"] {
+  .event-view-box-separator > ul > li > input[type="text"],
+  .event-view-box-separator > ul > li > input[type="number"] {
     background: #B0BCC5;
     color: #000000;
   }
@@ -486,9 +498,258 @@
   .calculator-buttons-contain>ul>li>button {
     color: #000000;
     border-color: #BDBCBC;
-      &:hover {
-        color: #ffffff;
-        border-color: #1a7051;
+    &:hover {
+      color: #ffffff;
+      border-color: #1a7051;
+    }
+  }
+  .bet-calculator-conditions > li > label {
+    background: #CFD6DC;
+    > span {
+      color: #000000;
+    }
+    > i {
+      color: #000000;
+      background: #ffffff;
+    }
+  }
+  .bet-calculator-system-combinations > span {
+    color: #000000;
+    background: #B0BCC5;
+    border-color: #CFD6DC;
+  }
+}
+.bet-calculator {
+  float: left;
+  width: 400px;
+  background: $skin-palette-7;
+  box-shadow: 0 0 0 5px rgba($skin-palette-5, 0.6), 0 5px 30px 10px rgba($skin-palette-12, 0.6);
+  overflow-x: hidden;
+  @include rtl {
+    direction: rtl;
+  }
+  .event-view-box-separator {
+    > ul {
+      table-layout: fixed;
+      > li {
+        &.bet-calculator-selections-number {
+          width: 26px;
+        }
+        &.bet-calculator-selections-odds,
+        &.bet-calculator-selections-rf,
+        &.bet-calculator-selections-dh {
+          width: 60px;
+          @include ltr {
+            text-align: left;
+          }
+          @include rtl {
+            text-align: right;
+          }
+        }
+        &.bet-calculator-selections-ew {
+          width: 34px;
+          @include ltr {
+            text-align: left;
+          }
+          @include rtl {
+            text-align: right;
+          }
+        }
+        &.bet-calculator-selections-odds {
+          > span {
+            float: left;
+            margin: 0 4px;
+          }
+        }
+        &.bet-calculator-selections-wp {
+          width: 26px;
+          &.system-win {
+            > label:before {
+              background: $brand-color-1;
+            }
+          }
+          &.system-lost {
+            > label:before {
+              background: #e9044a;
+            }
+          }
+          &.system-placed {
+            > label:before {
+              background: #e95e16;
+            }
+          }
+        }
+        .select-calc-box-b {
+          margin: 5px 0 0;
+          .select-block {
+            height: 20px;
+            > select {
+              height: 100%;
+            }
+            &:after {
+              top: 3px;
+            }
+          }
+        }
+        > input[type="number"] {
+          width: 100%;
+          &.widget-calculator-selections-odds-fractional {
+            width: 41%;
+          }
+        }
+      }
+    }
+  }
+  .sistem-event-icons-b {
+    text-indent: 0;
+  }
+}
+.bet-calculator-selections-number > i {
+  display: block;
+  position: relative;
+  width: 10px;
+  height: 100%;
+  color: rgba(set-color($skin-palette-8), 0.18);
+  transition: color 240ms;
+  @include ltr {
+    float: left;
+  }
+  @include rtl {
+    float: right;
+  }
+  &:before {
+    content: "\e6ee";
+    position: absolute;
+    top: 0;
+    left: 0;
+    font: 10px/30px icomoon;
+  }
+  &:hover {
+    color: set-color($skin-palette-8);
+  }
+}
+.bet-calculator-conditions {
+  float: left;
+  display: table;
+  width: 100%;
+  margin: 10px 0;
+  table-layout: fixed;
+  -moz-user-select: none;
+  -khtml-user-select: none;
+  user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  > li {
+    display: table-cell;
+    vertical-align: middle;
+    text-align: center;
+    height: 26px;
+    > label {
+      float: left;
+      width: 100%;
+      height: 100%;
+      text-align: center;
+      position: relative;
+      background: darken(desaturate(adjust-hue($skin-palette-10, -3deg), 8), 5);
+      > input {
+        display: none;
+        &:checked ~ i:before {
+          color: rgba(set-color($skin-palette-7),0.8);
+        }
+      }
+      > span {
+        display: inline-block;
+        vertical-align: middle;
+        color: rgba(set-color(darken(desaturate(adjust-hue($skin-palette-10, -3deg), 8), 5)), 0.74);
+        font: 12px/26px $font-f;
+      }
+      > i {
+        display: inline-block;
+        vertical-align: middle;
+        width: 14px;
+        height: 14px;
+        border-radius: 2px;
+        color: rgba(set-color($skin-palette-7),0);
+        background: $skin-palette-7;
+        position: relative;
+        margin: 0 8px;
+        &:before {
+          content: "\e6f3";
+          position: absolute;
+          top: 0;
+          left: 2px;
+          display: block;
+          transition: color 240ms;
+          font: 7px/14px icomoon;
+        }
+      }
+    }
+    + li {
+      @include ltr {
+        padding-left: 1px;
+      }
+      @include rtl {
+        padding-right: 1px;
+      }
+    }
+  }
+}
+.bet-calculator-add {
+  float: left;
+  width: 100%;
+  margin-top: 10px;
+  text-align: center;
+  > button {
+    display: inline-block;
+    padding: 0 16px 0 10px;
+    color: set-color($brand-color-1);
+    background: $brand-color-1;
+    border: 1px solid $brand-color-1;
+    text-transform: uppercase;
+    text-align: center;
+    font: 12px/28px $font-f;
+    transition: color 240ms, background 240ms, border-color 240ms;
+    &:hover {
+      border-color: lighten($brand-color-1, 10);
+      background: lighten($brand-color-1, 10);
+    }
+    &:before {
+      content: "\e957";
+      display: inline-block;
+      margin: 0 6px;
+      font: 13px/28px icomoon;
+    }
+  }
+}
+.bet-calculator-system-combinations {
+  float: left;
+  width: 100%;
+  padding: 10px 0;
+  text-align: center;
+  border-top: 2px solid $hero-color;
+  border-bottom: 2px solid $hero-color;
+  > h2 {
+    float: left;
+    width: 100%;
+    color: rgba(set-color($skin-palette-7), 0.73);
+  }
+  > span {
+    display: inline-block;
+    height: 20px;
+    margin-top: 10px;
+    padding: 0 14px;
+    box-sizing: border-box;
+    color: rgba(set-color($skin-palette-8), 0.8);
+    background: $skin-palette-8;
+    box-shadow: 0 0 0 1px rgba(set-color($skin-palette-7), 0.73);
+    font: 10px/20px $font-f;
+    + span {
+      @include ltr {
+        margin-left: 6px;
+      }
+      @include rtl {
+        margin-right: 6px;
+      }
     }
   }
 }

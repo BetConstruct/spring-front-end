@@ -17,6 +17,10 @@ angular.module('vbet5.betting').controller('ResultsV2Controller', ['$rootScope',
 
         var connectionService = new ConnectionService($scope);
         var liveGamesAnimationSubId;
+        var leftMenuLiveGamesSubId;
+        var liveGamesSubId;
+        var firstTime = true;
+
 
         $rootScope.footerMovable = true; // make footer movable
         $scope.today = Moment.get().format("YYYY-MM-DD");
@@ -76,6 +80,10 @@ angular.module('vbet5.betting').controller('ResultsV2Controller', ['$rootScope',
             $scope.openGameDetails = null;
 
             unsubscribeFromAnimation();
+            if (!isLive) {
+                unsubscribeFromLiveGames();
+                unsubscribeFromLeftMenuLiveGames();
+            }
 
             $scope.requestData.live = isLive ? 1 : 0;
             $scope.loadSports();
@@ -97,23 +105,23 @@ angular.module('vbet5.betting').controller('ResultsV2Controller', ['$rootScope',
             $scope.$emit('leftMenu.closed', $scope.leftMenuClosed);
         };
 
-      /**
-       * @ngdoc method
-       * @name closeLeftMenuDependingWindowSize
-       * @methodOf vbet5.controller:classicViewLeftController
-       * @description Close left menu depending on window size
-       */
-      function closeLeftMenuDependingWindowSize() {
-        if (DomHelper.getScreenResolution().x <= 1400 && $scope.leftMenuClosed == false) {
-          $scope.toggleLeftMenu(false);
-        } else if (DomHelper.getScreenResolution().x > 1400 && $scope.leftMenuClosed == true) {
-          $scope.toggleLeftMenu(true);
+        /**
+         * @ngdoc method
+         * @name closeLeftMenuDependingWindowSize
+         * @methodOf vbet5.controller:classicViewLeftController
+         * @description Close left menu depending on window size
+         */
+        function closeLeftMenuDependingWindowSize() {
+            if (DomHelper.getScreenResolution().x <= 1400 && $scope.leftMenuClosed == false) {
+                $scope.toggleLeftMenu(false);
+            } else if (DomHelper.getScreenResolution().x > 1400 && $scope.leftMenuClosed == true) {
+                $scope.toggleLeftMenu(true);
+            }
         }
-      }
 
-      closeLeftMenuDependingWindowSize();
+        closeLeftMenuDependingWindowSize();
 
-      $scope.$on('onWindowWidthResize', closeLeftMenuDependingWindowSize);
+        $scope.$on('onWindowWidthResize', closeLeftMenuDependingWindowSize);
 
 
         /**
@@ -121,7 +129,7 @@ angular.module('vbet5.betting').controller('ResultsV2Controller', ['$rootScope',
          * @name updateLeftMenu
          * @description Load left menu and update it based on filters
          * @methodOf vbet5.controller:ResultsV2Controller
-         * @param {Boolean} Clear games from scope if true
+         * @param {Boolean} clearGames Clear games from scope if true
          */
         $scope.updateLeftMenu = function updateLeftMenu(clearGames) {
             console.log('---------------------');
@@ -129,9 +137,9 @@ angular.module('vbet5.betting').controller('ResultsV2Controller', ['$rootScope',
 
             if (clearGames) {
                 $scope.games = {};
-
                 unsubscribeFromAnimation();
-
+                unsubscribeFromLiveGames();
+                return;
             }
 
             Storage.set('resultsV2selectedCompetitions', $scope.selectedCompetitions);
@@ -144,13 +152,52 @@ angular.module('vbet5.betting').controller('ResultsV2Controller', ['$rootScope',
                 }
             });
 
+            var competitionIds = [];
+            var competitionIdsFiltered = [];
+
+
             angular.forEach($scope.selectedCompetitions[$scope.requestData.live ? 1 : 0], function (competitionState, competitionId) {
-                if (competitionState && !$scope.games[competitionId]) {
-                    $scope.loadGames(competitionId);
+                if (competitionState) {
+                    competitionIds.push(parseInt(competitionId));
                 }
             });
-            $scope.requestData.gamesCount = countGames();
 
+            if (competitionIds.length) {
+                angular.forEach($scope.sportList, function (sport) {
+                    angular.forEach(sport.Regions, function (region) {
+                        angular.forEach(region.Competitions, function (competition) {
+                            if (competitionIds.indexOf(competition.Id) !== -1) {
+                                competitionIdsFiltered.push(competition.Id);
+                            }
+                        });
+                    });
+                });
+            }
+
+
+            if (competitionIdsFiltered.length) {
+                if ($scope.requestData.live) {
+                    $scope.loadGames(competitionIdsFiltered);
+                } else {
+                    angular.forEach(competitionIdsFiltered, function (competitionId) {
+                        if (!$scope.games[competitionId]) {
+                            $scope.loadGames(competitionId);
+                        }
+                    });
+                }
+            } else if (firstTime && $scope.requestData && $scope.requestData.sport && $scope.requestData.sport.Regions && $scope.requestData.sport.Regions[0] && $scope.requestData.sport.Regions[0].Competitions && $scope.requestData.sport.Regions[0].Competitions[0]) {
+                if ($scope.requestData.live) {
+                    $scope.loadGames([$scope.requestData.sport.Regions[0].Competitions[0].Id]);
+                } else {
+                    $scope.loadGames($scope.requestData.sport.Regions[0].Competitions[0].Id);
+                }
+
+                $scope.selectedCompetitions[$scope.requestData.live ? 1 : 0][$scope.requestData.sport.Regions[0].Competitions[0].Id] = true;
+                $scope.requestData.sport.expanded = true;
+                $scope.requestData.sport.Regions[0].expanded = true;
+            }
+            firstTime = false;
+            $scope.requestData.gamesCount = countGames();
         };
 
         /**
@@ -172,6 +219,7 @@ angular.module('vbet5.betting').controller('ResultsV2Controller', ['$rootScope',
             }
         }
 
+
         /**
          * @ngdoc method
          * @name loadGames
@@ -184,6 +232,8 @@ angular.module('vbet5.betting').controller('ResultsV2Controller', ['$rootScope',
             console.log($scope.games);
             console.log(competitionId);
             console.log($scope.competitionInfo);
+
+            unsubscribeFromLiveGames();
 
             $scope.loading = true;
             var request = {};
@@ -199,7 +249,73 @@ angular.module('vbet5.betting').controller('ResultsV2Controller', ['$rootScope',
             console.log('----------------------------------');
             console.log(request);
 
-            Zergling.get(request, 'get_result_games').then(function (result) {
+            if ($scope.requestData.live) {
+                $scope.games = {};
+                request = {
+                    "source": "betting",
+                    "what": {
+                        'sport': ['id', 'name'],
+                        'competition': ['id', 'name'],
+                        'region': ['id', 'name'],
+                        "game": []
+                    },
+                    "where": {
+                        "competition": {
+                            "id": {'@in': competitionId}
+                        },
+                        game: {type: 1}
+                    }
+                };
+
+
+                connectionService.subscribe(request, function (result) {
+                        angular.forEach(result.sport, function (sport) {
+                            angular.forEach(sport.region, function (region) {
+                                angular.forEach(region.competition, function (competition) {
+                                    var games = [];
+                                    angular.forEach(competition.game, function (game) {
+                                        games.push({
+                                            game_id: game.id,
+                                            game_name: game.name,
+                                            team1_id: game.team1_id,
+                                            team1_name: game.team1_name,
+                                            team2_id: game.team2_id,
+                                            team2_name: game.team2_name,
+                                            date: game.start_ts,
+                                            scores: renderLiveScore(game),
+                                            sport_id: sport.id,
+                                            sport_name: sport.name,
+                                            region_id: region.id,
+                                            region_name: region.name,
+                                            competition_id: competition.id,
+                                            competition_name: competition.name,
+                                            info: game.info,
+                                            stats: game.stats
+                                        });
+                                    });
+                                    processData({games: {game: games}}, competition.id);
+                                });
+                            });
+                        });
+                    },
+                    {
+                        'thenCallback': function (result) {
+                            $scope.loading = false;
+                            if (result.subid) {
+                                liveGamesSubId = result.subid;
+                            }
+                        }
+                    });
+            } else {
+                Zergling.get(request, 'get_result_games').then(function (result) {
+                    processData(result, competitionId);
+                })['catch'](function (reason) {
+                    console.log('Error:', reason);
+                    $scope.loading = false;
+                });
+            }
+
+            function processData(result, competitionId) {
                 $scope.loading = false;
                 $scope.games[competitionId] = [];
                 if (result.games && result.games.game) {
@@ -220,10 +336,10 @@ angular.module('vbet5.betting').controller('ResultsV2Controller', ['$rootScope',
                         var gameDate = $filter('formatDate')(game.date, 'MMMM DD, YYYY'),
                             gameDateIndex = parseInt($filter('formatDate')(game.date, 'YYYYMMDD'), 10);
                         gamesGrouped[gameDateIndex] = gamesGrouped[gameDateIndex] || {
-                                date: gameDate,
-                                dateIndex: gameDateIndex,
-                                games: []
-                            };
+                            date: gameDate,
+                            dateIndex: gameDateIndex,
+                            games: []
+                        };
 
                         gamesGrouped[gameDateIndex].games.push(game);
 
@@ -234,11 +350,13 @@ angular.module('vbet5.betting').controller('ResultsV2Controller', ['$rootScope',
                     });
                     $scope.games[competitionId] = gamesGrouped;
                     $scope.requestData.gamesCount = countGames();
+
+                    if (!$scope.openGameDetails && gamesGrouped && gamesGrouped[0] && gamesGrouped[0].games && gamesGrouped[0].games[0]) {
+                        $scope.getResultDetails(gamesGrouped[0].games[0]);
+                    }
+
                 }
-            })['catch'](function (reason) {
-                console.log('Error:', reason);
-                $scope.loading = false;
-            });
+            }
 
         };
 
@@ -295,6 +413,9 @@ angular.module('vbet5.betting').controller('ResultsV2Controller', ['$rootScope',
             sportListPromise = deferred.promise;
             var requestSportList = {};
 
+
+            unsubscribeFromLeftMenuLiveGames();
+
             $scope.sportsAreLoading = true;
 
             if ($scope.requestData.live) {
@@ -319,12 +440,29 @@ angular.module('vbet5.betting').controller('ResultsV2Controller', ['$rootScope',
             }
 
             $scope.sportList = false;
+            if ($scope.requestData.live) {
+                connectionService.subscribe(
+                    requestSportList,
+                    processData,
+                    {
+                        'thenCallback': function (result) {
+                            if (result.subid) {
+                                leftMenuLiveGamesSubId = result.subid;
+                            }
+                        }
+                    });
+            } else {
+                Zergling.get(requestSportList, $scope.requestData.live ? null : 'get_active_competitions').then(processData)['catch'](function (reason) {
+                    deferred.resolve([]);
+                    $scope.sportsAreLoading = false;
+                    console.log('Error:', reason);
+                });
+            }
 
-
-            Zergling.get(requestSportList, $scope.requestData.live ? null : 'get_active_competitions').then(function (result) {
-
+            function processData(result) {
                 result = convertSportsBookFormatToResults(result);
                 $scope.sportsAreLoading = false;
+                var sportListEmpty = !$scope.sportList;
 
                 if (result.details) {
                     $scope.sportList = result.details;
@@ -344,16 +482,13 @@ angular.module('vbet5.betting').controller('ResultsV2Controller', ['$rootScope',
                         });
                     });
                     $scope.requestData.sport = ($scope.sportList.length && $scope.sportList[0]) || null;
-                    $scope.updateLeftMenu();
+                    if (sportListEmpty) {
+                        $scope.updateLeftMenu();
+                    }
                 }
+            }
 
-
-            })['catch'](function (reason) {
-                deferred.resolve([]);
-                $scope.sportsAreLoading = false;
-                console.log('Error:', reason);
-            });
-        }
+        };
 
         $scope.loadSports();
 
@@ -366,10 +501,10 @@ angular.module('vbet5.betting').controller('ResultsV2Controller', ['$rootScope',
         function convertSportsBookFormatToResults(data) {
             var result = {};
 
-            if (data.data && data.data.sport) {
+            if (data && data.sport) {
                 result.details = [];
 
-                angular.forEach(data.data.sport, function (sport) {
+                angular.forEach(data.sport, function (sport) {
                     var sportConverted, regionConverted, competitionConverted;
 
                     sportConverted = {
@@ -401,16 +536,12 @@ angular.module('vbet5.betting').controller('ResultsV2Controller', ['$rootScope',
 
                         });
                     });
-
                     result.details.push(sportConverted);
-
-
                 });
 
             } else {
                 return data;
             }
-
             return result;
         }
 
@@ -580,7 +711,7 @@ angular.module('vbet5.betting').controller('ResultsV2Controller', ['$rootScope',
          * @description Load game animation
          * @param {String} game id as string or number
          */
-        $scope.openGameAnimation = function openGame (gameId) {
+        $scope.openGameAnimation = function openGame(gameId) {
 
             unsubscribeFromAnimation();
 
@@ -593,35 +724,44 @@ angular.module('vbet5.betting').controller('ResultsV2Controller', ['$rootScope',
                 'source': 'betting',
                 'what': {
                     'sport': ['alias'],
-                    'game': ['id', 'start_ts', 'team1_name', 'team2_name', 'info', 'events_count', 'markets_count', 'type', 'team1_id', 'team2_id', 'team1_external_id', 'team2_external_id', 'is_live', 'last_event', 'stats']
+                    'game': ['id', 'start_ts', 'team1_name', 'team2_name', 'info', 'markets_count', 'type', 'team1_id', 'team2_id', 'team1_external_id', 'team2_external_id', 'is_live', 'last_event', 'stats']
                 },
                 'where': {
                     'game': {'id': gameId}
                 }
             };
 
-            function updateWidgetGame (response) {
+            function updateWidgetGame(response) {
                 if (response && response.sport) {
-                    angular.forEach(response.sport, function (sport) {
-                        angular.forEach(sport.game, function (game) {
-
-                            console.log('game info', game);
-
-                            game.sport = sport;
-                            $scope.openGame = game;
-                            GameInfo.extendLiveGame($scope.openGame);
-                            $scope.openGame.scores = renderLiveScore($scope.openGame);
+                    if (Utils.isObjectEmpty(response.sport)) {
+                        $scope.openGame = null;
+                        $scope.openGameDetails = false;
+                        unsubscribeFromAnimation();
+                    } else {
+                        angular.forEach(response.sport, function (sport) {
+                            if (sport && sport.game) {
+                                angular.forEach(sport.game, function (game) {
+                                    console.log('game info', game);
+                                    game.sport = sport;
+                                    $scope.openGame = game;
+                                    $scope.openGame.activeFieldType = 'field';
+                                    GameInfo.extendLiveGame($scope.openGame);
+                                    $scope.openGame.scores = renderLiveScore($scope.openGame);
+                                });
+                            }
                         });
-                    });
+                    }
+
                 }
             }
+
 
             connectionService.subscribe(
                 request,
                 updateWidgetGame,
                 {
                     'thenCallback': function (result) {
-                        if(result.subid) {
+                        if (result.subid) {
                             liveGamesAnimationSubId = result.subid;
                         }
                     }
@@ -634,7 +774,7 @@ angular.module('vbet5.betting').controller('ResultsV2Controller', ['$rootScope',
          * @name clearAllResultGames
          * @methodOf vbet5.controller:widgetCtrl
          */
-        $scope.clearAllResultGames = function clearAllResultGames () {
+        $scope.clearAllResultGames = function clearAllResultGames() {
             $scope.games = {};
             $scope.requestData.gamesCount = 0;
             $scope.openGameDetails = false;
@@ -646,6 +786,7 @@ angular.module('vbet5.betting').controller('ResultsV2Controller', ['$rootScope',
             Storage.set('resultsV2selectedCompetitions', $scope.selectedCompetitions);
 
             unsubscribeFromAnimation();
+            unsubscribeFromLiveGames();
         };
 
         /**
@@ -653,12 +794,14 @@ angular.module('vbet5.betting').controller('ResultsV2Controller', ['$rootScope',
          * @name renderResultScore
          * @methodOf vbet5.controller:widgetCtrl
          */
-        function renderResultScore (game) {
+        function renderResultScore(game) {
             var scores = ((game && game.scores) || '').trim(), index;
 
             index = scores.indexOf('(');
             if (index > -1) {
-                scores =  scores.substr(0, index).trim();
+                scores = scores.substr(0, index).trim();
+            } else if (scores.indexOf(")") > 0){
+                scores = "";
             } else {
                 index = scores.indexOf(' ');
                 if (index > -1) {
@@ -683,7 +826,11 @@ angular.module('vbet5.betting').controller('ResultsV2Controller', ['$rootScope',
          * @description get second part of scores except short score part
          */
         function getSecondPartOfScores(scores, firstPart) {
-            return scores && scores.substr(scores.indexOf(firstPart) + firstPart.length, scores.length - firstPart.length).trim();
+            if (firstPart ) {
+                return scores && scores.substr(scores.indexOf(firstPart) + firstPart.length, scores.length - firstPart.length).trim();
+            } else {
+                return scores && scores.trim();
+            }
         }
 
         /**
@@ -691,7 +838,7 @@ angular.module('vbet5.betting').controller('ResultsV2Controller', ['$rootScope',
          * @name renderLiveScore
          * @methodOf vbet5.controller:widgetCtrl
          */
-        function renderLiveScore (game) {
+        function renderLiveScore(game) {
             var output = '';
 
             if (game && game.info && game.info.score1 !== undefined && game.info.score1 !== undefined) {
@@ -723,8 +870,8 @@ angular.module('vbet5.betting').controller('ResultsV2Controller', ['$rootScope',
          * @name unsubscribeFromAnimation
          * @methodOf vbet5.controller:widgetCtrl
          */
-        function unsubscribeFromAnimation () {
-            if(liveGamesAnimationSubId) {
+        function unsubscribeFromAnimation() {
+            if (liveGamesAnimationSubId) {
                 Zergling.unsubscribe(liveGamesAnimationSubId);
                 liveGamesAnimationSubId = false;
             }
@@ -733,23 +880,47 @@ angular.module('vbet5.betting').controller('ResultsV2Controller', ['$rootScope',
 
         /**
          * @ngdoc method
+         * @name unsubscribeFromLeftMenuLiveGames
+         * @methodOf vbet5.controller:widgetCtrl
+         */
+        function unsubscribeFromLeftMenuLiveGames() {
+            if (leftMenuLiveGamesSubId) {
+                Zergling.unsubscribe(leftMenuLiveGamesSubId);
+                leftMenuLiveGamesSubId = null;
+            }
+        }
+
+        /**
+         * @ngdoc method
+         * @name unsubscribeFromLiveGames
+         * @methodOf vbet5.controller:widgetCtrl
+         */
+        function unsubscribeFromLiveGames() {
+            if (liveGamesSubId) {
+                Zergling.unsubscribe(liveGamesSubId);
+                liveGamesSubId = null;
+            }
+        }
+
+        /**
+         * @ngdoc method
          * @name toggleSport
          * @methodOf vbet5.controller:widgetCtrl
          * @description expand all competitions and close previous expanded sport
          */
-        $scope.toggleSport = function toggleSport(sport){
+        $scope.toggleSport = function toggleSport(sport) {
             sport.expanded = !sport.expanded;
             if (selectedSport && selectedSport.Id === sport.Id) {
                 return;
             }
             if (sport.expanded) {
                 if (selectedSport && selectedSport.expanded) {
-                   selectedSport.expanded = false;
+                    selectedSport.expanded = false;
                 }
                 selectedSport = sport;
-                var selectedCompetitions = $scope.selectedCompetitions[$scope.requestData.live?1:0] = {};
+                var selectedCompetitions = $scope.selectedCompetitions[$scope.requestData.live ? 1 : 0] = {};
                 var regions = sport.Regions;
-                for(var i = regions.length; i--;) {
+                for (var i = regions.length; i--;) {
                     var region = regions[i];
                     if (region.expanded) {
                         region.expanded = false;
@@ -765,5 +936,10 @@ angular.module('vbet5.betting').controller('ResultsV2Controller', ['$rootScope',
 
         };
 
-        $scope.$on('$destroy', unsubscribeFromAnimation);
+        $scope.$on('$destroy', function () {
+            unsubscribeFromLiveGames();
+            unsubscribeFromLeftMenuLiveGames();
+
+            unsubscribeFromAnimation();
+        });
     }]);

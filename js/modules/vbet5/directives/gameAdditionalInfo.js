@@ -15,6 +15,10 @@ VBET5.directive('additionalGameInfo', ['$rootScope', 'GameInfo', 'Config', 'Tran
             var star = "*";
 
             function createAdditionalTextInfo(game) {
+                if (!game.info || game && game.sport && game.sport.alias === 'BasketballShots') {
+                    return game.text_info || '';
+                }
+
                 var result = [];
 
                 var scoresArray = GameInfo.framesCount(game.stats);

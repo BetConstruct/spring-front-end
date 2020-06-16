@@ -9,16 +9,16 @@
                         <div class="icon-delete popup" ng-if="!$root.conf.ukLicense"><a
                                 title="{{ 'Open In Pop-Up Window'|translate }}"
                                 ng-click="frameControll('popup'); closeGame('popupButton');">popUp</a></div>
-                        <div ng-if="(!!hasIframeJackpot[gameInfo.game.id] || env.authorized && gameInfo.game.id && hasTournaments && hasIframeTournamentInfo[gameInfo.game.id])" class="icon-delete closed-iframe-info">
-                            <a trans ng-click="iframeTab[gameInfo.game.id].show = !iframeTab[gameInfo.game.id].show"></a>
+                        <div ng-if="(!!hasIframeJackpot[gameInfo.id] || env.authorized && gameInfo.game.id && hasTournaments && hasIframeTournamentInfo[gameInfo.id])" class="icon-delete closed-iframe-info">
+                            <a trans ng-click="iframeTab[gameInfo.id].show = !iframeTab[gameInfo.id].show"></a>
                         </div>
                         <div class="icon-delete refresh"><a title="{{ 'Refresh'|translate }}" ng-click="frameControll('refresh');">refresh</a></div>
                     </div>
-                    <ng-include ng-show="iframeTab[gameInfo.game.id].show && (!!hasIframeJackpot[gameInfo.game.id] || env.authorized && gameInfo.game.id && hasTournaments && hasIframeTournamentInfo[gameInfo.game.id])" src="'optional_modules/casino/templates/tournament/iframe-info.html'|fixPath"></ng-include>
+                    <ng-include ng-show="iframeTab[gameInfo.id].show && (!!hasIframeJackpot[gameInfo.id] || env.authorized && gameInfo.game.id && hasTournaments && hasIframeTournamentInfo[gameInfo.id])" src="'optional_modules/casino/templates/tournament/iframe-info.html'|fixPath"></ng-include>
 
                     <iframe
-                            ng-class="{'iframe-tournament-sidebar-padding':(iframeTab[gameInfo.game.id].show) && iframeTab[gameInfo.game.id].show && (!!hasIframeJackpot[gameInfo.game.id] || env.authorized && gameInfo.game.id && hasTournaments && hasIframeTournamentInfo[gameInfo.game.id])}"
-                            has-sidebar="{{(iframeTab[gameInfo.game.id].show) &&  !!(env.authorized && gameInfo.game.id && hasTournaments && hasIframeTournamentInfo[gameInfo.game.id])}}"
+                            ng-class="{'iframe-tournament-sidebar-padding':(iframeTab[gameInfo.id].show) && iframeTab[gameInfo.id].show && (!!hasIframeJackpot[gameInfo.id] || env.authorized && gameInfo.game.id && hasTournaments && hasIframeTournamentInfo[gameInfo.id])}"
+                            has-sidebar="{{(iframeTab[gameInfo.id].show) &&  !!(env.authorized && gameInfo.game.id && hasTournaments && hasIframeTournamentInfo[gameInfo.id])}}"
                             ng-if="frameUrl && !loadingUserData"
                             frame-control
                             allowfullscreen="true"

@@ -15,7 +15,11 @@ CASINO.controller('casinoJackpotCtrl', ['$rootScope', '$scope', '$sce', '$locati
     $scope.jackpotPageLoaded = false;
     $scope.jackpotSlideIndex = 0;
     TimeoutWrapper = TimeoutWrapper($scope);
-    var gameId;
+    var gameInfoId;
+
+    $scope.expanded = {
+        pollId : '-1'
+    };
 
     //new casino design
     $scope.jackpotSliderVisibleGamesCount = 4;
@@ -116,7 +120,6 @@ CASINO.controller('casinoJackpotCtrl', ['$rootScope', '$scope', '$sce', '$locati
             casinoData.getAction('jackpot', Config.main.site_id).then(function (response) {
                 $scope.jackpotGames = [];
                 if (response.data) {
-                    //$scope.jackpotGames = casinoUtils.setGamesFunMode(response.data);
                     casinoCache.put('jachpotGames_' + Config.main.site_id, $scope.jackpotGames);
                     $scope.jackpotSliderGames = $scope.jackpotGames.slice($scope.jackpotSlideIndex, $scope.jackpotSlideIndex + $scope.jackpotSliderVisibleGamesCount);
                 }
@@ -233,7 +236,7 @@ CASINO.controller('casinoJackpotCtrl', ['$rootScope', '$scope', '$sce', '$locati
 
     function subscribeForJackpotData(gameinfo) {
         if (CConfig.version === 2 && gameinfo && gameinfo.game && gameinfo.game.extearnal_game_id) {
-            gameId = gameinfo.game.id;
+            gameInfoId = gameinfo.id;
             jackpotManager.subscribeForJackpotData(gameinfo.game.extearnal_game_id, subscribeForJackpotDataCallback,null,'casino');
         }
     }
@@ -273,8 +276,8 @@ CASINO.controller('casinoJackpotCtrl', ['$rootScope', '$scope', '$sce', '$locati
     var jackpotDataWatcher = $scope.$watch('iframeJackpotData', function (data) {
         if (data && data.length > 0) {
             jackpotDataWatcher();
-            if(gameId && $scope.hasIframeJackpot && $scope.iframeTab){
-                $scope.hasIframeJackpot[gameId] = !!data.length;
+            if(gameInfoId && $scope.hasIframeJackpot && $scope.iframeTab){
+                $scope.hasIframeJackpot[gameInfoId] = !!data.length;
                 $scope.hasIframeJackpot.empty = !data.length;
             }
             $scope.hasJackpots = true;
@@ -282,8 +285,8 @@ CASINO.controller('casinoJackpotCtrl', ['$rootScope', '$scope', '$sce', '$locati
     });
 
     $scope.$on('$destroy', function () {
-        if($scope.hasIframeJackpot && gameId){
-            delete  $scope.hasIframeJackpot[gameId];
+        if($scope.hasIframeJackpot && gameInfoId){
+            delete  $scope.hasIframeJackpot[gameInfoId];
             if (Object.keys($scope.hasIframeJackpot).length === 1) {
                 $scope.hasIframeJackpot.empty = true;
             }

@@ -356,7 +356,7 @@ angular.module('vbet5.betting').controller('classicViewMainCtrl', ['$rootScope',
                         'competition': ['id', 'name'],
                         'region': ['id', 'name', 'alias'],
                         game:
-                            ['id', 'start_ts', 'team1_name', 'team2_name', 'team1_external_id', 'team2_external_id', 'type', 'info', 'events_count', 'markets_count', 'extra', 'is_blocked', 'exclude_ids', 'is_stat_available', 'game_number', 'game_external_id', 'is_live', 'is_neutral_venue'
+                            ['id', 'start_ts', 'team1_name', 'team2_name', 'team1_external_id', 'team2_external_id', 'type', 'info', 'markets_count', 'extra', 'is_blocked', 'exclude_ids', 'is_stat_available', 'game_number', 'game_external_id', 'is_live', 'is_neutral_venue', 'game_info'
                             ],
                         'event': ['id', 'price', 'type', 'name', 'order', 'base', 'price_change'],
                         'market': ['type', 'express_id', 'name', 'base', 'display_key', 'display_sub_key', 'main_order', 'col_count', 'id']
@@ -424,6 +424,7 @@ angular.module('vbet5.betting').controller('classicViewMainCtrl', ['$rootScope',
     function updatePrematchGames(data) {
         $scope.prematchGameViewData = [];
         angular.forEach(data.sport, function (sport) {
+            sport.competitions = [];
             angular.forEach(sport.region, function (region) {
                 angular.forEach(region.competition, function (competition) {
                     angular.forEach(competition.game, function (game) {
@@ -431,10 +432,7 @@ angular.module('vbet5.betting').controller('classicViewMainCtrl', ['$rootScope',
                         game.region = {id: region.id, name: region.name, alias: region.alias};
                         game.competition = {id: competition.id, order: competition.order};
                         game.firstMarket = Utils.getFirstMarket(game.market);
-                        if (Config.main.showEventsCountInMoreLink) {
-                            game.additionalEvents = game.events_count;
-
-                        }
+                        game.additionalEvents = game.markets_count;
                         game.groupDate = Date.parse((moment(game.start_ts*1000).utcOffset(Config.env.selectedTimeZone || 0).lang("en").format("YYYY-MM-DD")))/1000;
                         if(Config.main.showPlayerRegion) {
                             game.team1_name = game.team1_reg_name && game.team1_name.indexOf(game.team1_reg_name) === -1 ? game.team1_name + ' (' + game.team1_reg_name + ')' : game.team1_name;
@@ -463,6 +461,7 @@ angular.module('vbet5.betting').controller('classicViewMainCtrl', ['$rootScope',
                                         angular.forEach(game.filteredMarkets[key], function (market) {
                                             if (market.base === Utils.getDefaultSelectedMarketBase(game.filteredMarkets[key])) {
                                                 game.filteredMarkets[key].events = Utils.objectToArray(market.event);
+                                                game.filteredMarkets[key].market = market;
                                             }
                                         });
 
@@ -500,9 +499,11 @@ angular.module('vbet5.betting').controller('classicViewMainCtrl', ['$rootScope',
                     if(Config.main.sportsLayout === 'classic') {
                         competition.gamesGroupedByDate = Utils.groupByItemProperty(competition.games, 'groupDate');
                     }
-                    $scope.prematchGameViewData.push(competition);
+
+                    sport.competitions.push(competition);
                 });
             });
+            $scope.prematchGameViewData.push(sport);
         });
 
         $scope.prematchGamesLoading = false;
@@ -588,8 +589,8 @@ angular.module('vbet5.betting').controller('classicViewMainCtrl', ['$rootScope',
                 'competition': ['id', 'order', 'name'],
                 'region': ['id', 'name', 'alias'],
                 game: [
-                    ['id', 'start_ts', 'team1_name', 'team2_name', 'team1_reg_name', 'team2_reg_name', 'team1_external_id', 'team2_external_id', 'type',
-                        'info', 'events_count', 'markets_count', 'extra', 'is_blocked', 'exclude_ids', 'is_stat_available', 'game_number', 'game_external_id', 'is_live', 'is_neutral_venue']
+                    ['id', 'start_ts', 'team1_name', 'team2_name', 'team1_reg_name', 'team2_reg_name', 'team1_external_id', 'team2_external_id', 'type', "game_info",
+                        'info', 'markets_count', 'extra', 'is_blocked', 'exclude_ids', 'is_stat_available', 'game_number', 'game_external_id', 'is_live', 'is_neutral_venue']
                 ],
                 'event': ['id', 'price', 'type', 'name', 'order', 'price_change'],
                 'market': ['type', 'express_id', 'name', 'display_key', 'display_sub_key', 'main_order', 'col_count', 'id']
@@ -684,7 +685,7 @@ angular.module('vbet5.betting').controller('classicViewMainCtrl', ['$rootScope',
                 'competition': ['id', 'order', 'name'],
                 'region': ['id', 'name', 'alias'],
                 game: [
-                    ['id', 'start_ts', 'team1_name', 'team2_name', 'team1_external_id', 'team2_external_id', 'type', 'info', 'events_count', 'markets_count', 'extra', 'is_blocked', 'exclude_ids', 'is_stat_available', 'game_number', 'game_external_id', 'is_live', 'is_neutral_venue']
+                    ['id', 'start_ts', 'team1_name', 'team2_name', 'team1_external_id', 'team2_external_id', 'type', 'info', 'markets_count', 'extra', 'is_blocked', 'exclude_ids', 'is_stat_available', 'game_number', 'game_external_id', 'is_live', 'is_neutral_venue', 'game_info']
                 ],
                 'event': ['id', 'price', 'type', 'name', 'order', 'base', 'price_change'],
                 'market': ['type', 'express_id', 'name', 'base', 'display_key', 'display_sub_key', 'main_order', 'col_count', 'id']
@@ -734,11 +735,21 @@ angular.module('vbet5.betting').controller('classicViewMainCtrl', ['$rootScope',
         $scope.expandCompetition(data.competition, data.sport, data.openFirstGame);
     });
 
+    function checkAndGetFirstGame() {
+        return ($scope.prematchGameViewData
+            && $scope.prematchGameViewData[0]
+            && $scope.prematchGameViewData[0].competitions[0]
+            && $scope.prematchGameViewData[0].competitions[0].games
+            && $scope.prematchGameViewData[0].competitions[0].games[0]
+        );
+    }
+
     $scope.$on('sportsbook.gameFinished', function() {
         $scope.currentGameIsFinished = true;
         TimeoutWrapper(function() {
-            if($scope.prematchGameViewData && $scope.prematchGameViewData[0] && $scope.prematchGameViewData[0].games && $scope.currentGameIsFinished) {
-                $scope.openGameFullDetails($scope.prematchGameViewData[0].games[0]);
+            var game = checkAndGetFirstGame();
+            if(game && $scope.currentGameIsFinished) {
+                $scope.openGameFullDetails(game);
                 $scope.currentGameIsFinished = false;
             }
         }, 5000);
@@ -807,11 +818,13 @@ angular.module('vbet5.betting').controller('classicViewMainCtrl', ['$rootScope',
                 requestMarketTypes.push('Handicap');
             }
             var requestGameFilter = [
-                ['id', 'start_ts', 'team1_name', 'team2_name', 'team1_external_id', 'team2_external_id','team1_id', 'team2_id', 'type', 'show_type', 'events_count', 'markets_count', 'is_blocked', 'exclude_ids', 'is_stat_available', 'game_number', 'game_external_id', 'is_live', 'is_neutral_venue']
+                ['id', 'start_ts', 'team1_name', 'team2_name', 'team1_external_id', 'team2_external_id','team1_id', 'team2_id', 'type', 'show_type',  'markets_count', 'is_blocked', 'exclude_ids', 'is_stat_available', 'game_number', 'game_external_id', 'is_live', 'is_neutral_venue']
             ];
 
             if (Config.env.live) {
                 requestGameFilter[0].push('info');
+            } else {
+                requestGameFilter[0].push("game_info");
             }
 
             var request = {
@@ -871,7 +884,7 @@ angular.module('vbet5.betting').controller('classicViewMainCtrl', ['$rootScope',
                             competition.gamesSubId = result.subid;
                             subIds.competitions = result.subid;
                             if (openFirstGame || !$location.search().game) {
-                                var firstGameOfCompetition = $filter('firstElement')($scope.prematchGameViewData[0].gamesGroupedByDate)[0];
+                                var firstGameOfCompetition = $filter('firstElement')($scope.prematchGameViewData[0].competitions[0].gamesGroupedByDate)[0];
                                 $scope.openGameFullDetails({id: firstGameOfCompetition.id});
                             }
                         }
@@ -941,7 +954,7 @@ angular.module('vbet5.betting').controller('classicViewMainCtrl', ['$rootScope',
                 'competition': ['id', 'name'],
                 'region': ['id', 'name', 'alias'],
                 game: [
-                    ['id', 'start_ts', 'team1_name', 'team2_name', 'team1_external_id', 'team2_external_id', 'type', 'info', 'events_count', 'markets_count', 'extra', 'is_blocked', 'exclude_ids', 'is_stat_available', 'game_number', 'game_external_id', 'is_live', 'is_neutral_venue']
+                    ['id', 'start_ts', 'team1_name', 'team2_name', 'team1_external_id', 'team2_external_id', 'type', 'info', 'markets_count', 'extra', 'is_blocked', 'exclude_ids', 'is_stat_available', 'game_number', 'game_external_id', 'is_live', 'is_neutral_venue', 'game_info']
                 ],
                 'event': ['id', 'price', 'type', 'name', 'order', 'base', 'price_change'],
                 'market': ['type', 'express_id', 'name', 'base', 'display_key', 'display_sub_key', 'main_order', 'col_count', 'id']
@@ -995,7 +1008,7 @@ angular.module('vbet5.betting').controller('classicViewMainCtrl', ['$rootScope',
         var prematchGameViewData = [];
         var first = true;
 
-        angular.forEach($scope.prematchGameViewData, function (competition) {
+        angular.forEach($scope.prematchGameViewData[0].competitions, function (competition) {
             if (first) {
                 first = false;
                 prematchGameViewData.push(competition);
@@ -1010,7 +1023,7 @@ angular.module('vbet5.betting').controller('classicViewMainCtrl', ['$rootScope',
             prematchGameViewData[0].gamesGroupedByDate = Utils.groupByItemProperty(prematchGameViewData[0].games, 'groupDate');
         }
 
-        $scope.prematchGameViewData = prematchGameViewData;
+        $scope.prematchGameViewData[0].competitions = prematchGameViewData;
 
         if ($scope.multiColumn.show) {
             $scope.$broadcast('multiColumn.games', 'update');
@@ -1052,7 +1065,7 @@ angular.module('vbet5.betting').controller('classicViewMainCtrl', ['$rootScope',
                 'region': ['id', 'name'],
                 'competition': ['id'],
                 game: [
-                    ['id', 'start_ts', 'team1_name', 'team2_name', 'team1_external_id', 'team2_external_id', 'type', 'info', 'events_count', 'markets_count', 'extra', 'is_blocked', 'exclude_ids', 'is_stat_available', 'game_number', 'is_live','is_neutral_venue']
+                    ['id', 'start_ts', 'team1_name', 'team2_name', 'team1_external_id', 'team2_external_id', 'type', 'info', 'markets_count', 'extra', 'is_blocked', 'exclude_ids', 'is_stat_available', 'game_number', 'is_live','is_neutral_venue', 'game_info']
                 ],
                 'market': ['type', 'express_id', 'name', 'home_score', 'away_score', 'id'],
                 'event': ['id', 'price', 'type', 'name', 'order']
@@ -1274,7 +1287,8 @@ angular.module('vbet5.betting').controller('classicViewMainCtrl', ['$rootScope',
             }
             prematchGameViewData.push(competition);
         });
-        $scope.prematchGameViewData = prematchGameViewData;
+        $scope.prematchGameViewData = [{}];
+        $scope.prematchGameViewData[0].competitions = prematchGameViewData;
         $scope.prematchGamesLoading = false;
     }
 
@@ -1325,7 +1339,6 @@ angular.module('vbet5.betting').controller('classicViewMainCtrl', ['$rootScope',
                         "team2_id",
                         "type",
                         "info",
-                        "events_count",
                         "markets_count",
                         "extra",
                         "is_blocked",
@@ -1333,7 +1346,8 @@ angular.module('vbet5.betting').controller('classicViewMainCtrl', ['$rootScope',
                         "is_stat_available",
                         "game_number",
                         "is_live",
-                        "is_neutral_venue"
+                        "is_neutral_venue",
+                        "game_info"
                     ]
                 ],
                 market: ["type", "express_id", "name", "home_score", "away_score", 'id'],
@@ -1369,13 +1383,16 @@ angular.module('vbet5.betting').controller('classicViewMainCtrl', ['$rootScope',
             function updateRecommendedGames(data) {
                 updatePrematchGames(data);
 
+                var sourceCompetitions = $scope.prematchGameViewData.reduce(function (acc, sport) {
+                    return acc.concat(sport.competitions);
+                }, []);
                 if (recommendations.sortByCompetitions) {
-                    var competitions = $scope.prematchGameViewData.reduce(function (acc, competition) {
+                    var competitions = sourceCompetitions.reduce(function (acc, competition) {
                         acc[competition.id] = competition;
                         return acc;
                     }, {});
-
-                    $scope.prematchGameViewData = recommendations.competitions
+                    $scope.prematchGameViewData = [{}];
+                    $scope.prematchGameViewData[0].competitions = recommendations.competitions
                         .filter(function (competitionId) {
                             return competitionId in competitions;
                         })

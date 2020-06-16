@@ -1738,6 +1738,13 @@
   width: 100%;
   margin: 10px 0 0;
 }
+.accumulator-system-c{
+  text-align: right;
+  margin-right: 5px;
+  font-size: 14px;
+  line-height: 30px;
+  color: $text-palette-3;
+}
 .stake-form-contain-v3 > ul {
   box-sizing: border-box;
   float: left;
@@ -3194,8 +3201,9 @@
     .stake-max-bet-v3 {
       width: 44px;
       &.ng-hide {
-        display: table !important;
-        opacity: 0;
+        //display: table !important;
+        //opacity: 0;
+        display: none;
         pointer-events: none;
       }
     }

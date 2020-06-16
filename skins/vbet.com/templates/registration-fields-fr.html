@@ -163,6 +163,7 @@
            class="recaptcha {{regItem.classes}}"
            ng-class="{'error': (!resetError[regItem.name] || registerform[regItem.name].blur) && registerform[regItem.name].$invalid && showFieldsValidation && registration.submitted}"
            ng-controller="recaptchaCtrl"
+           ng-init="init()"
     >
 
         <label ng-bind="regItem.title | translate" ng-class="{'hintReq' : regItem.required}"></label>

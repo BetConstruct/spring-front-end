@@ -1,0 +1,175 @@
+<div class="bet-calculator" ng-controller="bettingCalculatorController" ng-init="init()">
+    <div ng-if="!isIframe" class="system-calculator-title" id="calculator-draggable-header">
+        <h3 trans>Betting Calculator</h3>
+        <div class="closed-calculator-b" ng-click="resetCalculator(); $root.showSystemCalculator = false"></div>
+    </div>
+    <div class="calculator-select-contain">
+        <!--<div class="select-calc-box-b" ng-show="calculator.globalBetTypes.length > 1">-->
+            <!--<div class="select-block">-->
+                <!--<select ng-model="calculator.selectedGlobalBetType"-->
+                        <!--ng-change="calculator.OnGlobalBetTypeUpdate(true)"-->
+                        <!--ng-options="gtype as gtype.name|translate for gtype in calculator.globalBetTypes|filter:false">{{type|translate}}-->
+                <!--</select>-->
+            <!--</div>-->
+        <!--</div>-->
+        <div class="select-calc-box-b" ng-show="calculator.filteredBetTypes.length > 0 ">
+            <div class="select-block">
+                <select
+                        ng-model="calculator.selectedBetType"
+                        ng-change="calculator.CreateBetList()"
+                        ng-options="type as type.name|translate for type in calculator.filteredBetTypes" ></select>
+            </div>
+        </div>
+        <div class="select-calc-box-b">
+            <div class="select-block">
+                <select ng-model="calculator.selectedOddType">
+                    <option value="{{oddType.value}}" ng-repeat="oddType in calculator.oddTypes">{{oddType.name|translate}}</option>
+                </select>
+            </div>
+        </div>
+        <div class="select-calc-box-b">
+            <div class="select-block">
+                <select ng-model="calculator.selectedStackType" ng-change="calculator.Calc()">
+                    <option value="{{stackType.value}}" ng-repeat="stackType in calculator.stackTypes">{{stackType.name|translate}}</option>
+                </select>
+            </div>
+        </div>
+        <div class="total-stake-input-b">
+            <input type="number" trans="attr-only" placeholder="Stake..."  ng-model="calculator.stake" ng-change="calculator.Calc()" min="0" max="100000000"/>
+        </div>
+        <ul class="bet-calculator-conditions">
+            <li>
+                <label>
+                    <input type="checkbox" ng-model="calculator.ewChecked" ng-change="calculator.ToggleEachWay()"/>
+                    <span trans>Each Way</span>
+                    <i></i>
+                </label>
+            </li>
+            <li ng-if="$root.conf.bettingCalculator.rule4">
+                <label>
+                    <input type="checkbox" ng-model="calculator.rfChecked" ng-change="calculator.ToggleRule4()"/>
+                    <span trans>Rule4</span>
+                    <i></i>
+                </label>
+            </li>
+            <li ng-if="$root.conf.bettingCalculator.deadHeat">
+                <label>
+                    <input type="checkbox" ng-model="calculator.dhChecked" ng-change="calculator.ToggleDeadHeat()"/>
+                    <span trans>Dead Heat</span>
+                    <i></i>
+                </label>
+            </li>
+        </ul>
+    </div>
+    <div class="system-events-view-box">
+        <div class="event-view-box-separator">
+            <ul>
+                <li class="bet-calculator-selections-number"></li>
+                <li class="bet-calculator-selections-odds" trans>Odds</li>
+                <li class="bet-calculator-selections-ew" ng-show="calculator.ewChecked" trans>EW</li>
+                <li class="bet-calculator-selections-rf" ng-show="calculator.rfChecked" trans>R4</li>
+                <li class="bet-calculator-selections-dh" ng-show="calculator.dhChecked" trans>DH</li>
+                <li class="bet-calculator-selections-wp" ng-click="calculator.setOptionForAll('wp_option',wp_option.value)" ng-repeat="wp_option in calculator.wpOptions" ng-if="wp_option.value !== 'placed' || (wp_option.value === 'placed' && calculator.ewChecked)">
+                    <div title="{{wp_option.name|translate}}" class="sistem-event-icons-b system-{{wp_option.value}}"></div>
+                </li>
+            </ul>
+        </div>
+        <div class="scroll-view-contain-calculator">
+            <div  class="event-view-box-separator" ng-repeat="row in calculator.BetSlipRows" data-row="{{$index + 1}}">
+                <ul>
+                    <li class="bet-calculator-selections-number">
+                        <i ng-click="calculator.removeRow($index)" ng-if="calculator.selectedBetType.removerow"></i>
+                        <span>{{$index + 1}}</span>
+                    </li>
+                    <li class="bet-calculator-selections-odds">
+                        <input ng-model="row.odd_decimal" class="widget-calculator-selections-odds-decimal" step="any"  min="1" max="10000" type="number"
+                               ng-change="calculator.decimToFract(row)"
+                               ng-show="calculator.selectedOddType === 'decimal'" />
+                        <input ng-model="row.odd_fractional_priceup"
+                               ng-change="calculator.fractToDecim(row)"
+                               class="widget-calculator-selections-odds-fractional"
+                               ng-show="calculator.selectedOddType === 'fractional'"  min="1" max="10000" step="1" type="number"  name="priceup"
+                        />
+                        <span ng-show="calculator.selectedOddType === 'fractional'">/</span>
+                        <input ng-model="row.odd_fractional_pricedown"
+                               class="widget-calculator-selections-odds-fractional"
+                               ng-change="calculator.fractToDecimDown(row)"
+                               ng-show="calculator.selectedOddType === 'fractional'"  min="1" max="10000" step="1" type="number" name="pricedown"
+                        />
+                    </li>
+                    <li class="bet-calculator-selections-ew" ng-show="calculator.ewChecked">
+                        <div class="select-calc-box-b">
+                            <div class="select-block">
+                                <select ng-change="calculator.Calc()" ng-model="row.ew_option">
+                                    <option value="{{ew_option.value}}" ng-repeat="ew_option in calculator.ewOptions">
+                                        {{ew_option.name|translate}}
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="bet-calculator-selections-rf" ng-show="calculator.rfChecked">
+                        <input type="number" ng-model="row.rule_4"  min="0" step="1" ng-change="calculator.Calc()" name="rule4" />
+                    </li>
+                    <li class="bet-calculator-selections-dh" ng-show="calculator.dhChecked">
+                        <div class="select-calc-box-b">
+                            <div class="select-block">
+                                <select ng-change="calculator.Calc()" ng-model="row.dh_option">
+                                    <option value="{{dh_option.value}}" ng-repeat="dh_option in calculator.dhOptions">{{dh_option.name|translate}}</option>
+                                </select>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="bet-calculator-selections-wp system-{{wp_option.value}}" ng-repeat="wp_option in calculator.wpOptions" ng-if="wp_option.value !== 'placed' || (wp_option.value === 'placed' && calculator.ewChecked)" >
+                        <input type="radio"  ng-change="calculator.Calc()" ng-model="row.wp_option"  value="{{wp_option.value}}"/>
+                        <label></label>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="bet-calculator-add">
+        <button ng-click="calculator.addRow()" ng-show="calculator.selectedBetType.addrow" trans>Add row</button>
+    </div>
+    <div ng-if="calculator.selectedBetType.isAccumulator" class="bet-calculator-system-combinations">
+        <h2 trans>System Combinations</h2>
+        <span class="system-combination" ng-repeat="(key, value) in calculator.systemCombinations">{{value}} x {{key|translate}}</span>
+    </div>
+    <div class="full-calculation-information-b">
+        <div class="mini-calc-info-box">
+            <ul>
+                <li>
+                    <p>
+                        <span trans>Stake</span>
+                    </p>
+
+                    <span>{{calculator.betsCount || '-'}} x {{calculator.perBetStack || '-'}}</span>
+                </li>
+                <li>
+                    <p>
+                        <span trans>Total Stake</span>
+                    </p>
+                    <span>{{calculator.totalStake|| '-'}}</span>
+                </li>
+                <li  ng-hide="calculator.selectedBetType.sysValue === 1">
+                    <p>
+                        <span trans>Total Odd</span>
+                    </p>
+                    <span>{{(calculator.totalOdd)|| '-'}}</span>
+                </li>
+                <li>
+                    <p>
+                        <span trans>Returns</span>
+                    </p>
+                    <span>{{calculator.totalWin || '-'}}</span>
+                </li>
+                <li>
+                    <p>
+                        <span trans>Profit</span>
+                    </p>
+                    <span>{{calculator.totalProfit || '-'}}</span>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>

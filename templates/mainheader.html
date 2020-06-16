@@ -1,7 +1,7 @@
 <div class="block-size-visible-b
     {{conf.site_name}}
     {{conf.disableHeader ? 'no-header' : ''}}
-    {{conf.header.license ? 'header-license' : ''}}
+    {{conf.header.aboveHeader ? 'header-license' : ''}}
     {{conf.integrationMode || $location.path().indexOf('/widget/') !== -1 ? 'no-header-navigation' : ''}}
     headerVersion_{{conf.header.version}}
     {{isLeftMenuClosed? 'vertical-nav-closed': ''}}"
@@ -20,7 +20,7 @@
          hide-on-click="{{env.sliderContent!=='register' && env.sliderContent!=='login' && env.sliderContent!=='forgotPasswordForm' && env.sliderContent !== 'deposit'}}" state-flag-var="env.showSlider" broadcast-on-close="slider.close" except="header"
          ng-show="env.showSlider &&
             (!conf.enableMixedView || ['recentBetsCashout', 'recentBets', 'betHistory', 'casinoBetHistory','shukaBetHistory',
-                    'settings','deposit', 'withdraw', 'balanceHistory', 'casinoBalanceHistory', 'cashier', 'myWallets', 'loyaltyPoints', 'tickets', 'buddytransfer','profits'].indexOf(env.sliderContent) === -1)
+                    'settings','deposit', 'withdraw', 'balanceHistory', 'casinoBalanceHistory', 'cashier', 'myWallets', 'loyaltyPoints', 'tickets', 'casinoCashBackCashOut', 'buddytransfer','profits'].indexOf(env.sliderContent) === -1)
             && (!conf.enableBonuses || env.sliderContent !== 'bonuses') && env.sliderContent !== 'promotionalBonuses' ">
 
         <div ng-click="closeSlider()" class="close-slider-button-j"></div>
@@ -122,10 +122,12 @@
     <div ng-include="::'templates/livebox/mixedView.html'|fixPath"
         ng-if="env.showSlider &&
             ((conf.enableMixedView && ['recentBetsCashout', 'recentBets', 'betHistory', 'casinoBetHistory', 'shukaBetHistory',
-                'settings', 'deposit', 'withdraw', 'balanceHistory', 'casinoBalanceHistory', 'cashier', 'myWallets', 'loyaltyPoints', 'tickets', 'buddytransfer','profits'].indexOf(env.sliderContent) !== -1)
+                'settings', 'deposit', 'withdraw', 'balanceHistory', 'casinoBalanceHistory', 'cashier', 'myWallets', 'loyaltyPoints', 'tickets', 'casinoCashBackCashOut', 'buddytransfer','profits'].indexOf(env.sliderContent) !== -1)
                 || env.sliderContent === 'promotionalBonuses') ">
     </div>
     <div ng-if="giftState && giftState.showPopup" ng-include="::'templates/popup/giftBet.html'|fixPath"></div>
+    <div ng-show="recaptcha.key"  ng-controller="recaptchaCtrl" ng-include="::'templates/popup/recaptcha.html'|fixPath"></div>
+
 
     <div ng-if="isCssLoading" class="css-loading-t"></div>
 

@@ -57,11 +57,11 @@
         <label><span ng-bind="regItem.title | translate" ng-class="{'hintReq' : regItem.required}"></span></label>
 
         <div class="tooltip-wrapper-j">
-            <div vb-html-compiler="<input autocomplete='new-password' ng-init='toolTip=false' ng-focus='toolTip=true' ng-blur='toolTip=false; registerform[regItem.name].blur=true' type='password' name='{{regItem.name}}' ng-model='registrationData[regItem.name]' placeholder='{{regItem.placeholder| translate}}'/>"
+            <div vb-html-compiler="<input autocomplete='new-password' id='{{regItem.name}}' ng-init='toolTip=false' ng-focus='toolTip=true' ng-blur='toolTip=false; registerform[regItem.name].blur=true' type='password' name='{{regItem.name}}' ng-model='registrationData[regItem.name]' placeholder='{{regItem.placeholder| translate}}'/>"
                  custom-attrs="regItem.customAttrs"
                  insert-after="<div ng-if='conf.showCapsLockHint && capsLockStateHolder[regItem.name]' class='capslock-is-on-j' trans>Caps Lock is On</div>">
             </div>
-            <i class="view-passward" ng-if="regItem.enableShowPassword" ng-mousedown="regItem.inputType='text'" ng-mouseup="regItem.inputType='password'" ng-mouseleave="regItem.inputType='password'"></i>
+            <i class="view-passward" ng-if="$root.conf.enableShowPassword" title="Press and hold to see password" trans="attr-only" ng-mousedown="changeInputType(regItem.name, 'text')" ng-mouseup="changeInputType(regItem.name, 'password')" ng-mouseleave="changeInputType(regItem.name, 'password')"></i>
             <div class="form-error-icon-j" ng-click="resetFieldError(regItem.name)"></div>
             <div class="tooltip-j" ng-hide="registerform[regItem.name].$error.required">
                 <div ng-repeat="val in regItem.validation"
@@ -114,7 +114,8 @@
             </div>
         </div>
     </div>
-    <div ng-switch-when="div">
+    <div ng-switch-when="staticText" class="{{regItem.classes}}">
+        <label ng-bind="regItem.title | translate" ng-class="{'hintReq' : regItem.required}"></label>
         <label class="wrap" ng-bind-html="regItem.content|translate|html"></label>
     </div>
 </div>

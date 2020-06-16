@@ -3,7 +3,7 @@
  * @name vbet5.controller:systemCalculatorController
  * @description stand alone system calculator
  */
-angular.module('vbet5').controller('systemCalculatorController', ['$scope', 'Utils', 'analytics', '$location','Translator', function ($scope, Utils, analytics, $location, Translator) {
+angular.module('vbet5').controller('systemCalculatorController', ['$scope', '$rootScope', 'Utils', 'analytics', '$location','Translator', function ($scope, $rootScope, Utils, analytics, $location, Translator) {
     'use strict';
 
     /**
@@ -35,7 +35,22 @@ angular.module('vbet5').controller('systemCalculatorController', ['$scope', 'Uti
         };
 
         $scope.resetCalculator();
+
+
     };
+
+    function formatDecimal(value) {
+        return Utils.formatDecimal(value, $rootScope.partnerConfig.price_round_method, $rootScope.partnerConfig.price_decimals);
+    }
+
+    function formatMultipleOdd(value) {
+        return Utils.formatDecimal(value, $rootScope.partnerConfig.price_round_method, ($rootScope.partnerConfig.multiple_price_decimals || 3));
+    }
+
+    function roundPossibleWin(value) {
+        return ($rootScope.partnerConfig.multiple_possiblewin_round_method === 0)? Utils.cuttingDecimals(value, $rootScope.conf.balanceFractionSize).toFixed($rootScope.conf.balanceFractionSize) : Utils.bankersRounding(value, $rootScope.conf.balanceFractionSize);
+
+    }
 
     /**
      * @ngdoc method
@@ -80,7 +95,7 @@ angular.module('vbet5').controller('systemCalculatorController', ['$scope', 'Uti
                 }
 
                 //tempPosWin += tempOdd;
-                tempPosWin = (tempPosWin * 10 * 10 + Utils.mathCuttingFunction(tempOdd * 10 * 10)) / 100;
+                tempPosWin = tempPosWin  + formatMultipleOdd(tempOdd );
 
                 indexArray[tempIterator]++;
             } else {
@@ -101,9 +116,9 @@ angular.module('vbet5').controller('systemCalculatorController', ['$scope', 'Uti
         sysPerBetStake = $scope.params.stake / numOfSysOptions;
 
         //$scope.params.stakePerBet = sysPerBetStake.toFixed(2);
-        $scope.params.stakePerBet = (Utils.mathCuttingFunction(sysPerBetStake*10*10)/100).toFixed(2);
+        $scope.params.stakePerBet = formatDecimal(sysPerBetStake).toFixed(2);
 
-        return {win: (Utils.mathCuttingFunction(tempPosWin * sysPerBetStake*10*10)/100).toFixed(2), options: numOfSysOptions};
+        return {win: roundPossibleWin(tempPosWin * sysPerBetStake), options: numOfSysOptions};
     }
 
     /**

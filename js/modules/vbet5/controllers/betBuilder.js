@@ -28,6 +28,14 @@ VBET5.controller('betBuilderCtrl', ['$rootScope', '$scope', '$filter', '$q', '$t
         }
     ];
 
+    var eventNamesTemplatesMap = {
+        "WINNER": "{1} {2}{3}",
+        "TOTALS": "{1} goals in {2}",
+        "BOTHTEAMTOSCORE": "Both Teams to score ({1}) in {2}",
+        "CORRECT SCORE": "{1} in {2}",
+        "HANDICAP3WAY": "{1} {2} {3} goals"
+    };
+
     var marketTypesIdsMap = {
         5498: "match",
         5503: "match",
@@ -85,9 +93,8 @@ VBET5.controller('betBuilderCtrl', ['$rootScope', '$scope', '$filter', '$q', '$t
     $scope.betState = {
         isBetsInProgress: false
     };
-
-    $scope.eventsDataMap = {};
-    $scope.activeEventsMap = [];
+    $scope.selectedBet = null;
+    $scope.selectedEvents = [];
 
     var correctScoreMap = {
         "firstHalf": {
@@ -106,7 +113,7 @@ VBET5.controller('betBuilderCtrl', ['$rootScope', '$scope', '$filter', '$q', '$t
             "awayValues": [],
             "resultMap": {}
         }
-    }
+    };
 
     var handicap3WayMap = {
         "firstHalf": {
@@ -147,6 +154,75 @@ VBET5.controller('betBuilderCtrl', ['$rootScope', '$scope', '$filter', '$q', '$t
         }
 
     };
+
+    var totalsMap = {
+        "firstHalf": {},
+        "secondHalf": {},
+        "match": {}
+    };
+
+    var matchResultNameMap = {
+       "firstHalf": {
+           "none": ["____", Translator.get("to win")," " + Translator.get("in") + " " + availablePeriods.firstHalf],
+           "0": [$scope.betBuilderGame.team1_name, Translator.get("to win"), " " + Translator.get("in") + " " + availablePeriods.firstHalf],
+           "2": [$scope.betBuilderGame.team2_name, Translator.get("to win"), " " + Translator.get("in") + " " + availablePeriods.firstHalf],
+           "1": [Translator.get("Match"), Translator.get("to be drawn"),  " " + Translator.get("in") + " " + availablePeriods.firstHalf]
+       },
+        "secondHalf": {
+            "none": ["____", Translator.get("to win"),  " " +Translator.get("in") + " " + availablePeriods.secondHalf],
+            "0": [$scope.betBuilderGame.team1_name, Translator.get("to win"),  " " + Translator.get("in") + " " + availablePeriods.secondHalf],
+            "2": [$scope.betBuilderGame.team2_name, Translator.get("to win"), " " + Translator.get("in") + " " + availablePeriods.secondHalf],
+            "1": [Translator.get("Match"), Translator.get("to be drawn"),  " " +Translator.get("in") + " " + availablePeriods.secondHalf]
+        },
+        "match": {
+           "none": ["____", Translator.get("to win"), ""],
+            "0": [$scope.betBuilderGame.team1_name, Translator.get("to win"), ""],
+            "2": [$scope.betBuilderGame.team2_name, Translator.get("to win"), ""],
+            "1": [Translator.get("Match"), Translator.get("to be drawn"), ""]
+
+        }
+    };
+
+    var bothTeamToScoreMap = {
+        'none': '__',
+        '0': Translator.get('Yes'),
+        '1': Translator.get('No')
+    };
+
+    function setBetName(bet) {
+        if (!bet) {
+            return;
+        }
+        var placeholders;
+        switch(bet.market) {
+            case 'WINNER':
+                placeholders = matchResultNameMap[bet.period][bet.state.selectedIndex === undefined?'none': bet.state.selectedIndex.toString()];
+                break;
+            case 'BOTHTEAMTOSCORE':
+                placeholders = [bothTeamToScoreMap[bet.state.selectedIndex === undefined?'none': bet.state.selectedIndex.toString()], availablePeriods[bet.period]];
+                break;
+            case 'TOTALS':
+            case 'CORRECT SCORE':
+                placeholders = [(bet.bet? bet.bet.name: '____'), availablePeriods[bet.period]];
+                break;
+            case 'HANDICAP3WAY':
+                var teamMap = {
+                    "p1": $scope.betBuilderGame.team1_name,
+                    "p2": $scope.betBuilderGame.team2_name
+                };
+                var wonTypeMap = {
+                    "win": Translator.get("Will win by more than"),
+                    "lose": Translator.get("Will not lose by more than"),
+                    "exactly": Translator.get("Will win by exactly")
+                };
+                var player = bet.state.selectedTeam? teamMap[bet.state.selectedTeam]: "____";
+                var wonType = bet.state.wonType?wonTypeMap[bet.state.wonType]: "____";
+                var goalCount = bet.bet? bet.bet.goalCount: "_";
+                placeholders = [player, wonType, goalCount];
+                break;
+        }
+        bet.name = Translator.get(eventNamesTemplatesMap[bet.market], placeholders);
+    }
 
     function addPeriodFromMarket(list, periodKey, market) {
         if (market[periodKey].length) {
@@ -217,17 +293,29 @@ VBET5.controller('betBuilderCtrl', ['$rootScope', '$scope', '$filter', '$q', '$t
     function getOdds() {
         var defer = $q.defer();
 
-        var ids = $scope.activeEventsMap.map(function(typeId) {
-            return $scope.eventsDataMap[typeId].id;
-        });
+        var ids = [];
+        var eventsLength = $scope.selectedEvents.length;
+        var notContainsError = true;
+        for (var i = 0; i < eventsLength; ++i) {
+            if (!$scope.selectedEvents[i].bet) {
+                defer.reject({eventsLength:$scope.selectedEvents.length, notValid: true});
+                notContainsError = false;
+                break;
 
-        Zergling.get({"selection_ids": ids}, "bet_builder_calculate").then(function (response) {
-            if (response.result === 0 && response.details) {
-                defer.resolve({odd:response.details.Odds, eventsLength:ids.length});
             } else {
-                defer.reject({eventsLength:ids.length});
+                ids.push($scope.selectedEvents[i].bet.id);
             }
-        });
+        }
+        if (notContainsError) {
+            Zergling.get({"selection_ids": ids}, "bet_builder_calculate").then(function (response) {
+                if (response.result === 0 && response.details) {
+                    defer.resolve({odd:response.details.Odds, eventsLength:ids.length});
+                } else {
+                    defer.reject({eventsLength:ids.length});
+                }
+            });
+        }
+
 
         return defer.promise;
     }
@@ -238,19 +326,21 @@ VBET5.controller('betBuilderCtrl', ['$rootScope', '$scope', '$filter', '$q', '$t
         }
         $scope.oddsCalculationState.failed = false;
 
-        if ($scope.activeEventsMap.length === 1) {
+        if ($scope.selectedEvents.length <= 1) {
             resetOptions();
         } else {
             $scope.oddsCalculationState.loading = true;
             oddsRecalculationPromise = $timeout(function() {
                 getOdds().then(function (resolve) {
-                    if ($scope.activeEventsMap.length === resolve.eventsLength) {
+                    if ($scope.selectedEvents.length === resolve.eventsLength) {
                         $scope.oddsCalculationState.odd = $scope.oddsCalculationState.previousOdd = resolve.odd;
                         $scope.oddsCalculationState.failed = false;
                     }
                 })['catch'](function(reject) {
-                    if ($scope.activeEventsMap.length === reject.eventsLength) {
-                        $scope.oddsCalculationState.failed = true;
+                    if ($scope.selectedEvents.length === reject.eventsLength) {
+                        if (!reject.notValid) {
+                            $scope.oddsCalculationState.failed = true;
+                        }
                         $scope.oddsCalculationState.odd = $scope.oddsCalculationState.previousOdd = 0;
                     }
                 })['finally'](function () {
@@ -260,60 +350,147 @@ VBET5.controller('betBuilderCtrl', ['$rootScope', '$scope', '$filter', '$q', '$t
         }
     }
 
-    function initMarketState() {
-        switch ($scope.selectedKeys.market) {
-            case 'HANDICAP3WAY':
-                $scope.marketState = {
-                    selectedTeam: 'p1',
-                    wonType: 'win',
-                    selectedIndex: 0
-                };
+    function initMarketState(bet) {
+        if (bet) {
+            $scope.marketState = angular.copy(bet.state);
+        } else {
+            switch ($scope.selectedKeys.market) {
+                case 'HANDICAP3WAY':
+                    $scope.marketState = {
+                        selectedTeam: 'p1',
+                        wonType: 'win',
+                        selectedIndex: 0
+                    };
+                    break;
+                case 'CORRECT SCORE':
+                    $scope.marketState = {
+                        homeValue: $scope.marketsData[$scope.selectedKeys.market].group[$scope.selectedKeys.period].homeValues[0],
+                        awayValue: $scope.marketsData[$scope.selectedKeys.market].group[$scope.selectedKeys.period].awayValues[0]
+                    };
+                    break;
+            }
+        }
+
+    }
+
+    function selectByState(period) {
+        var event = null;
+        switch ($scope.selectedBet.market) {
+            case 'WINNER':
+            case 'BOTHTEAMTOSCORE':
+                event = $scope.marketsData[$scope.selectedBet.market][period][$scope.selectedBet.state.selectedIndex];
+                break;
+            case 'TOTALS':
+                event = totalsMap[period][$scope.selectedBet.state.handicap + '-' + $scope.selectedBet.state.order];
                 break;
             case 'CORRECT SCORE':
-                $scope.marketState = {
-                    homeValue: $scope.marketsData[$scope.selectedKeys.market].group[$scope.selectedKeys.period].homeValues[0],
-                    awayValue: $scope.marketsData[$scope.selectedKeys.market].group[$scope.selectedKeys.period].awayValues[0]
-                };
+                event = $scope.marketsData[$scope.selectedKeys.market].group[period].resultMap[$scope.selectedBet.state.homeValue + '-' + $scope.selectedBet.state.awayValue];
                 break;
+            case 'HANDICAP3WAY':
+                event = $scope.marketsData[$scope.selectedKeys.market].group[period][$scope.selectedBet.state.selectedTeam][$scope.selectedBet.state.wonType][$scope.selectedBet.state.selectedIndex];
+                break;
+        }
+        if (checkIsContainsEvent(event)) {
+            showDuplicateAlert();
+            return false;
+        } else {
+            $scope.selectedBet.bet = event;
+            return true;
         }
     }
 
-    $scope.selectKey = function selectPeriod(type, value) {
+    function clearNotSelectedEventBet() {
+        if ($scope.selectedBet && !$scope.selectedBet.bet) {
+            $scope.selectedEvents = $scope.selectedEvents.filter(function (item) {
+                return item !== $scope.selectedBet;
+            });
+            calculateOdd();
+        }
+    }
+
+    $scope.selectKey = function selectPeriod(type, value, bet) {
         if (type === 'market') {
             $scope.selectedKeys.market = value.key;
             $scope.selectedKeys.marketName = value.displayName;
-
+            clearNotSelectedEventBet();
             if (value.key) {
                 preparePeriodsListBySelectedMarket($scope.marketsData[value.key]);
+                if (bet) {
+                    $scope.selectedBet = bet;
+                    $scope.selectedKeys.period = bet.period;
+                } else {
+                    $scope.selectedBet = {
+                        market: $scope.selectedKeys.market,
+                        marketObj: value,
+                        period: $scope.selectedKeys.period,
+                        bet: null,
+                        state: {}
+                    };
+                    $scope.selectedEvents.push($scope.selectedBet);
+                    calculateOdd();
+                }
+                initMarketState(bet);
+            } else {
+                $scope.selectedBet = null;
             }
+
+
         } else {
             $scope.selectedKeys[type] = value;
+            if (selectByState($scope.selectedKeys.period)) {
+                calculateOdd();
+                $scope.selectedBet.period = $scope.selectedKeys.period;
+            }
         }
-        initMarketState();
+        setBetName($scope.selectedBet);
     };
 
-    $scope.toggleEvent = function toggleEvent(event) {
-        if (!$scope.eventsDataMap[event.typeId]) {
-            $scope.eventsDataMap[event.typeId] = event;
-            $scope.activeEventsMap.push(event.typeId);
-        } else if ($scope.eventsDataMap[event.typeId].id !== event.id) {
-            $scope.eventsDataMap[event.typeId] = event;
-        } else {
-            delete $scope.eventsDataMap[event.typeId];
-            $scope.activeEventsMap.splice( $scope.activeEventsMap.indexOf(event.typeId), 1 );
-        }
+    function checkIsContainsEvent(selectedEvent) {
+       return $scope.selectedEvents.filter(function (item) {
+            return item.bet === selectedEvent;
+       }).length > 0;
+    }
+    function showDuplicateAlert() {
+        $rootScope.$broadcast("globalDialogs.addDialog", {
+            type: "error",
+            title: "Error",
+            content: "You cannot add a duplicate event."
+        });
+    }
 
-        if ($scope.activeEventsMap.length) {
-            calculateOdd();
-        } else {
-            handleEmptyCase();
+    $scope.attachEvent = function attachEvent(event) {
+        if ($scope.selectedBet.bet === event) {
+            return;
         }
+        if (checkIsContainsEvent(event)) {
+            showDuplicateAlert();
+            return;
+        }
+        $scope.selectedBet.period = $scope.selectedKeys.period;
+        $scope.selectedBet.bet = event;
+        switch($scope.selectedBet.market) {
+            case 'WINNER':
+            case 'BOTHTEAMTOSCORE':
+                $scope.selectedBet.state.selectedIndex = event.order - 1;
+                break;
+            case 'TOTALS':
+                $scope.selectedBet.state.handicap = event.handicap;
+                $scope.selectedBet.state.order = event.order;
+                break;
+            case 'CORRECT SCORE':
+            case 'HANDICAP3WAY':
+                $scope.selectedBet.state = angular.copy($scope.marketState);
+                break;
+        }
+        setBetName($scope.selectedBet);
+        calculateOdd();
+
     };
 
     $scope.clearAllSelections = function clearAllSelections() {
-        $scope.eventsDataMap = {};
-        $scope.activeEventsMap.length = 0;
+        $scope.selectedEvents.length = 0;
         $scope.betState.errorMessage = "";
+        $scope.betState.stake = "";
         handleEmptyCase();
     };
 
@@ -328,8 +505,8 @@ VBET5.controller('betBuilderCtrl', ['$rootScope', '$scope', '$filter', '$q', '$t
         };
         var eventMap = {};
 
-        request.bets = $scope.activeEventsMap.map(function(typeId) {
-            var event = $scope.eventsDataMap[typeId];
+        request.bets = $scope.selectedEvents.map(function(item) {
+            var event = item.bet;
             eventMap[event.id] = event;
             return {"event_id": event.id, "price": parseFloat(event.price)};
         });
@@ -418,8 +595,29 @@ VBET5.controller('betBuilderCtrl', ['$rootScope', '$scope', '$filter', '$q', '$t
         $scope.betState.errorMessage = "";
     };
 
+    $scope.removeEvent = function removeEvent(bet) {
+        $scope.selectedEvents =  $scope.selectedEvents.filter(function (item) {
+            return item !== bet;
+        });
+        $scope.selectedBet = null;
+        calculateOdd();
+        if ($scope.selectedEvents.length === 0) {
+            handleEmptyCase();
+        } else {
+            $scope.selectKey('market', {key: '', displayName: '' });
+        }
+
+    };
+
     function checkHandicapIsNotWhole(item) {
         return Math.round(item.handicap) !== item.handicap;
+    }
+
+    function groupTotal(period) {
+        var map = totalsMap[period];
+        return function (event) {
+            map[event.handicap + '-' + event.order] = event;
+        };
     }
 
     (function init() {
@@ -491,6 +689,14 @@ VBET5.controller('betBuilderCtrl', ['$rootScope', '$scope', '$filter', '$q', '$t
                            value.firstHalf = value.firstHalf.filter(checkHandicapIsNotWhole);
                            value.secondHalf = value.secondHalf.filter(checkHandicapIsNotWhole);
                            value.match = value.match.filter(checkHandicapIsNotWhole);
+
+                           var firstHalfGroupTotal = groupTotal("firstHalf");
+                           var secondHalfGroupTotal = groupTotal("secondHalf");
+                           var mathGroupTotal = groupTotal("match");
+
+                           value.firstHalf.forEach(firstHalfGroupTotal);
+                           value.secondHalf.forEach(secondHalfGroupTotal);
+                           value.match.forEach(mathGroupTotal);
 
                            value.firstHalf.sort(totalsSorting);
                            value.secondHalf.sort(totalsSorting);

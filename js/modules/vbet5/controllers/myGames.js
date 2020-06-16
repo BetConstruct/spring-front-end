@@ -173,7 +173,7 @@ VBET5.controller('myGamesCtrl', ['$scope', '$rootScope', '$location', '$route', 
         var request = {
             'source': 'betting',
             'what': {
-                'game': ["id", "markets_count", "start_ts", "is_live", "is_blocked", "is_neutral_venue","team1_id", "team2_id", "game_number", "text_info", "is_stat_available", "type",  "info", "stats", "team1_name", "team2_name", "tv_info"  ],
+                'game': ["id", "markets_count", "start_ts", "is_live", "is_blocked", "is_neutral_venue","team1_id", "team2_id", "game_number", "text_info", "is_stat_available", "type",  "info", "stats", "team1_name", "team2_name", "tv_info","match_length","last_event","live_events"  ],
                 'sport': ['id', 'alias', 'name'],
                 'competition': ['id', 'name'],
                 'region': ['id']

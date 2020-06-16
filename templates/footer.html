@@ -11,6 +11,7 @@
                     <button ng-click="broadcast('feedback.toggle')" ng-if="(env.authorized && conf.footer.feedbackButton.enabledLogin) || (!env.authorized && conf.footer.feedbackButton.enabledLogOut)" trans>Feedback</button>
                     <button ng-if="conf.footer.enableToTopButton" class="back-to-top-hide" ng-click="scrollToTop(true)" class-on-scroll=",back-to-top-hide" trans>back to top</button>
                 </div>
+                <div class="age-restriction-message" ng-if="$root.conf.footer.ageRestrictionMessage" ng-bind="$root.conf.footer.ageRestrictionMessage|translate"></div>
             </div>
         </div>
         <div class="extended-license-footer" ng-if="conf.cegSealId || conf.apgSealId || conf.footer.license_logos || conf.footer.about_company_text[env.lang] || conf.footer.about_company_text['eng']">
@@ -49,6 +50,7 @@
             </ul>
         </div>
     </div>
+    <ng-include ng-if="$root.conf.footer.operatedBy && $root.conf.footer.operatedBy.link" src="::'templates/footer/operatedby.html'|fixPath"></ng-include>
     <ng-include src="::'templates/footer/paymentmethods.html'|fixPath"></ng-include>
     <ng-include src="::'templates/footer/chatwidget.html'|fixPath"></ng-include>
 </div>

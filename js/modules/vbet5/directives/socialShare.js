@@ -19,7 +19,8 @@ VBET5.directive('socialShare',  ['$rootScope', '$window', '$http', 'Config', fun
             var sharer = {
                 facebook: 'https://www.facebook.com/sharer/sharer.php?u=',
                 google: 'https://plus.google.com/share?url=',
-                odnoklassniki: 'https://www.odnoklassniki.ru/dk?st.cmd=addShare&st.s=1&st._surl='
+                twitter: "https://twitter.com/intent/tweet?url=",
+                telegram: "https://telegram.me/share/url?url="
             };
             element.bind("click", function (event) {
                 event.stopPropagation();

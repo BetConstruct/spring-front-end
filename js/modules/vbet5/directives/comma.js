@@ -81,7 +81,17 @@ VBET5.directive('comma', ['$filter', function ($filter) {
                         if (decPart === undefined) {
                             decPart = "";
                         } else {
-                            decPart = "." + decPart;
+                            if (attrs.preventRounding) {
+                                var currencyRounding = +attrs.preventRounding;
+                                if(currencyRounding === 0) {
+                                  decPart = "";
+                                } else {
+                                  decPart = decPart.substr(0, currencyRounding);
+                                  decPart = "." + decPart;
+                                }
+                            } else{
+                                decPart = "." + decPart;
+                            }
                         }
                         var res = intPart + decPart;
 

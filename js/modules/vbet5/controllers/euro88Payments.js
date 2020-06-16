@@ -111,11 +111,16 @@ VBET5.controller('euro88PaymentsCtrl', ['$scope', '$rootScope', '$sce', '$filter
         }
         var request = {
             amount: 100, // maybe its bad idea but it need to working
-            service: paymentConfig.paymentID || paymentConfig.name || "europayment",
-            payer: payer
+            service: paymentConfig.paymentID || paymentConfig.name || "europayment"
         };
 
-        Zergling.get(request, 'deposit').then(
+        if (paymentType === "0") {
+            request.payer = payer;
+        } else {
+            request.payee = payer;
+        }
+
+        Zergling.get(request, paymentType === '0' ? 'deposit' : "withdraw").then(
             function (data) {
                 $scope.requestInProcess = false;
                 if (data && data.result !== undefined && data.result === 0 && data.details && data.details.fields) {

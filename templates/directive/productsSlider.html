@@ -17,14 +17,9 @@
                     <h4>{{ banner.trustedTitle|translate }}</h4>
                     <h4 ng-show="banner.custom_fields.second_name">{{ banner.custom_fields.second_name[0] | translate }}</h4>
                 </div>
-                <button ng-class="{'product-jackpot-anim-j': conf.poolBettingJackpotOnHomepage && (banner.title == 'Free Quiz' || banner.title == 'Pool Betting' || banner.title === conf.poolBettingJackpotOnHomepage) && $root.poolBettingJackpot}">
+                <button>
                     <span>
                         <div ng-bind-html="banner.custom_fields.label[0]"></div>
-                        <div ng-if="conf.poolBettingJackpotOnHomepage && (banner.title == 'Free Quiz' || banner.title == 'Pool Betting' || banner.title === conf.poolBettingJackpotOnHomepage) && $root.poolBettingJackpot">
-                            <span trans>Jackpot</span>:
-                            <span>{{$root.poolBettingJackpot * (currency.toto_rate || 1)|number:conf.balanceFractionSize}}</span>
-                            <span>{{conf.poolBettingCurrencyName|currency}}</span>
-                        </div>
                     </span>
                 </button>
             </a>

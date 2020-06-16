@@ -148,6 +148,10 @@ angular.module('vbet5').service('RoutesValidity', ['$rootScope', '$location', '$
         "blast": {
             path: "#/blast",
             config: "blastEnabled"
+        },
+        "covid-19": {
+            path: "#/covid-19",
+            config: "covid19Enabled"
         }
     };
 

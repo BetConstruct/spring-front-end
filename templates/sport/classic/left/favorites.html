@@ -3,7 +3,7 @@
         <li>
             <div class="sports-item-v3 favorite-nav-icon-v3 {{sport.alias}} {{leftMenuState.favorites.expanded ? 'active' : ''}}"
                  ng-if="myGames.length > 0" ng-init="leftMenuState.favorites.expanded = true"
-                 ng-click="leftMenuState.favorites.expanded = !leftMenuState.favorites.expanded; leftMenuClosed ? toggleLeftMenu() : void()">
+                 ng-click="leftMenuState.favorites.expanded = !leftMenuState.favorites.expanded; leftMenuClosed ? toggleLeftMenu() : void()" title="Favorite games">
                 {{'Favorite games'|translate}}
                 <div class="sport-games-count-v3" ng-show="myGames.length">{{myGames.length}}</div>
                 <div class="arrow-view-v3"></div>
@@ -18,7 +18,7 @@
                                     <div class="favorite-clear" ng-click="removeAllFavorites()" ng-bind="'Clear all'|translate"></div>
                                     <div class="single-game-item-v3  {{game.id == activeGameId && $location.path() !== '/dashboard/' && $root.multiViewLiveOpenedGamesIds.length ? 'active' : ''}}"
                                          ng-repeat="game in leftMenuFavorites track by game.id"
-                                         ng-class="{'no-events': (!(game.events_count || game.markets_count) || game.is_blocked)}"
+                                         ng-class="{'no-events': (!(game.markets_count) || game.is_blocked)}"
                                          ng-click="selectFavoriteGame(game)"
                                          ng-show="myGames.indexOf(game.id) !== -1 && (!$root.multiViewLiveOpenedGames || $root.multiViewLiveOpenedGames.indexOf(game.id) === -1)"
                                     >
@@ -34,8 +34,8 @@
                                                 <span ng-show="game.type === 1" ng-if="game.info.current_leg !== undefined">{{game.info.current_game_state|convertSetNameWithLeg:game.info|translate}}</span>
 
                                                 <span ng-show="game.type !==1">{{game.start_ts|formatDate:'full':null:$root.env.timeFormat}}</span>
-                                                <i class="blocked-icon-v3" ng-show="(!(game.events_count || game.markets_count) || game.is_blocked)"></i>
-                                                <!--<span ng-if="game.info.over_number" class="over-cricet" ng-bind="'Over {1}'|translate:[game.info.over_number]"></span> <!--todo SDC-46567  -->
+                                                <i class="blocked-icon-v3" ng-show="(!(game.markets_count) || game.is_blocked)"></i>
+                                                <span ng-if="game.info.over_number" class="over-cricet" ng-bind="'Over {1}'|translate:[game.info.over_number]"></span>
                                             </p>
                                             <div class="game-info-icons-v3">
                                                 <div class="icon-separator-v3 favorite {{myGames.indexOf(game.id) !== -1 ? 'active' : ''}}"
@@ -52,7 +52,7 @@
                                                 </div>
                                             </div>
                                             <div class="l-b column-{{game.marketInfo.markets.length}}" ng-hide="$root.conf.hideMarketFromLeftMenu || !game.marketInfo.markets.length">
-                                                <div class="single-events-b-v3" ng-repeat="market in game.marketInfo.markets track by market.id" title="{{::market.type_1}}"
+                                                <div class="single-events-b-v3" ng-repeat="market in game.marketInfo.markets track by market.id" title="{{::market.name}}"
                                                      ng-class="{'pointer-events-none': market.is_empty, 'active': isEventInBetSlip(market), 'blocked': ((market.price | oddConvert:'decimal') == 1 || game.is_blocked)}"
                                                      ng-click="bet(market, game.marketInfo, game); $event.stopPropagation()">
                                                     <i ng-if="$root.conf.boostedBets.enabled && $root.boostedBetsEventIds && $root.boostedBetsEventIds[market.id]" title="{{'Boosted odd'|translate}}" class="boosted"></i>

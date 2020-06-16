@@ -6,7 +6,7 @@
  * Utility functions
  */
 
-CASINO.service('casinoManager', ['$rootScope', '$q', '$window', '$sce', '$location', '$timeout', 'casinoData', 'Storage', 'DomHelper', 'Zergling', 'Config', 'CConfig', 'Translator', 'LanguageCodes', 'AuthData', 'Utils', 'jackpotManager', function ($rootScope, $q, $window, $sce, $location, $timeout, casinoData, Storage, DomHelper, Zergling, Config, CConfig, Translator, LanguageCodes, AuthData, Utils, jackpotManager) {
+CASINO.service('casinoManager', ['$rootScope', '$q', '$window', '$sce', '$location', '$timeout', '$filter', 'casinoData', 'Storage', 'DomHelper', 'Zergling', 'Config', 'CConfig', 'Translator', 'LanguageCodes', 'AuthData', 'Utils', 'jackpotManager', function ($rootScope, $q, $window, $sce, $location, $timeout, $filter, casinoData, Storage, DomHelper, Zergling, Config, CConfig, Translator, LanguageCodes, AuthData, Utils, jackpotManager) {
     'use strict';
     var casinoManager = {};
 
@@ -75,7 +75,7 @@ CASINO.service('casinoManager', ['$rootScope', '$q', '$window', '$sce', '$locati
                         authWatcherPromise();
                     }
                     if (gameInfo.game.blocked_currencies && gameInfo.game.blocked_currencies.indexOf($rootScope.profile.currency) !== -1) {
-                       showWarning(notSupportedCurrencyWarningMessage);
+                        showWarning(notSupportedCurrencyWarningMessage);
                     } else {
                         gameInfo.gameMode = 'real';
                         scope.refreshGame(gameInfo.id);
@@ -434,6 +434,15 @@ CASINO.service('casinoManager', ['$rootScope', '$q', '$window', '$sce', '$locati
             gameType = 'fun';
         }
 
+        var gameAlreadyOpen = $rootScope.env.authorized && (scope.gamesInfo || []).some(function (gameInfo) {
+            return gameInfo.game && (game.categories && game.categories.indexOf(CConfig.liveCasino.categoryId) === -1) && gameInfo.game.id === game.id && (gameType === 'real' && gameInfo.gameMode === gameType);
+        });
+
+        if (gameAlreadyOpen) {
+            showWarning('The game is already open.');
+            return;
+        }
+
         if ((!$rootScope.env.authorized && (gameType === 'real' || (gameType === 'fun' && !game.types.viewMode && !game.types.funMode)))) {
             $rootScope.$broadcast("openLoginForm", {
                 key: 'casinoGamesList.openGame',
@@ -466,10 +475,6 @@ CASINO.service('casinoManager', ['$rootScope', '$q', '$window', '$sce', '$locati
             for (var i = 0, length = scope.gamesInfo.length; i < length; i += 1) {
                 var usedGame = scope.gamesInfo[i].game;
                 if (usedGame) {
-                    if (gameType === 'real' && game.id === usedGame.id && game.categories.indexOf(CConfig.liveCasino.categoryId) !== -1) { //@TODO actually can't open live casino same table
-                        showWarning('This game Is Already Opened In Multi Game View. Please Choose Another game.');
-                        return;
-                    }
                     usedGames.push(usedGame);
                     if ((usedGame.provider === 'MGS' || usedGame.provider === 'BSG' || usedGame.provider === 'GMG' || usedGame.provider === 'NET') && usedProviders.indexOf(usedGame.provider) === -1) {
                         usedProviders.push(usedGame.provider);
@@ -524,6 +529,29 @@ CASINO.service('casinoManager', ['$rootScope', '$q', '$window', '$sce', '$locati
         }
     };
 
+    function formatWithCurrency(num)  {
+        return  $filter("number")(num, $rootScope.conf.balanceFractionSize) + " " + $filter("currency")($rootScope.profile.currency);
+    }
+
+    /**
+     * @ngdoc method
+     * @name constructRealityCheckContent
+     * @methodOf CASINO.service:casinoManager
+     * @description Construct reality check content
+     */
+    function constructRealityCheckContent(data) {
+        var details = data.details;
+        var content = "<div class=\"reality-info\">";
+        content += "<h4>" + Translator.get("Your Casino Activity") + "</h4>";
+        content += "<span class=\"reality-title\">" + Translator.get("Your have played for") + ": </span><span class=\"reality-value\">" + details.SessionDuration + " " + Translator.get("minutes") + "</span>";
+        content += "<span class=\"reality-title\">" + Translator.get("You have bet") + ": </span><span class=\"reality-value\">" + formatWithCurrency(details.CasinoBetTotal) + "</span>";
+        content += "<span class=\"reality-title\">" + Translator.get("You have won") + ": </span><span class=\"reality-value under-line\">" + formatWithCurrency(details.CasinoWinTotal) + "</span>";
+        content += "<span class=\"reality-title\">" + Translator.get("Profit") + ": </span><span class=\"reality-value\">" + formatWithCurrency(details.Profitness) + "</span>";
+        content += "</div>";
+        return content;
+
+    }
+
     /**
      * @ngdoc method
      * @name checkAndStartRealityInterval
@@ -552,15 +580,18 @@ CASINO.service('casinoManager', ['$rootScope', '$q', '$window', '$sce', '$locati
                         }
                     };
 
-                    $rootScope.$broadcast("globalDialogs.addDialog", {
-                        type: 'confirm',
-                        title: 'Alert',
-                        content: Translator.get('You have been playing for {1} minutes. Please select if you want to continue or stop playing.', [$rootScope.profile.active_time_in_casino / 60]),
-                        hideCloseButton: true,
-                        buttons: [
-                            {title: 'Continue', callback: continueCallback},
-                            {title: 'End and Open Bet History', callback: endCallback}
-                        ]
+                    Zergling.get({}, "get_client_current_session_slot_pl").then(function (data) {
+                        $rootScope.$broadcast("globalDialogs.addDialog", {
+                            type: 'confirm',
+                            title: 'Alert',
+                            tag: 'reality-check-popup',
+                            content: constructRealityCheckContent(data),
+                            hideCloseButton: true,
+                            buttons: [
+                                {title: 'Continue', callback: continueCallback},
+                                {title: 'End and Open Bet History', callback: endCallback}
+                            ]
+                        });
                     });
                 };
 

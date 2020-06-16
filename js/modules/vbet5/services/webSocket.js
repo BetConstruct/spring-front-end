@@ -108,6 +108,31 @@ VBET5.factory('WS', ['$q', '$rootScope', '$timeout', '$window', 'Config', 'Utils
         return data;
     }
 
+    function resolveAndReturn(data) {
+        $timeout(function () {
+            $rootScope.$apply(callbacks[data.rid].cb.resolve({data: data}));  // extra 'data' is used to make structure same as returned by $http.post
+            delete callbacks[data.rid];
+        });
+    }
+
+    function validateRecaptchaV2(data) {
+        var promiseContainer = $q.defer();
+        $rootScope.broadcast("recaptcha.showPopup", {
+            'recaptchaKey': data.code === 27? data.data: data.data.v2_validation_required,
+            'promise': promiseContainer
+        });
+        promiseContainer.promise.then(function (gRecaptchaResponse) {
+            WS.sendRequest({command: "validate_recaptcha", params:{version: 'v2', g_recaptcha_response: gRecaptchaResponse}}).then(function (validateResponse) {
+                if (validateResponse.data && validateResponse.data.data && validateResponse.data.data.result) {
+                    resolveAndReturn(data);
+                }
+            }, function () {
+                resolveAndReturn(data);
+            });
+
+        });
+    }
+
     /**
      * @ngdoc method
      * @name open
@@ -129,9 +154,12 @@ VBET5.factory('WS', ['$q', '$rootScope', '$timeout', '$window', 'Config', 'Utils
                 }
             }
 
-            $rootScope.$apply(callbacks[data.rid].cb.resolve({data: data}));  // extra 'data' is used to make structure same as returned by $http.post
-//            console.log('response time:', (new Date() - callbacks[data.rid].time) / 1000, 'sec');
-            delete callbacks[data.rid];
+            if (data.code === 27 || (data.code === 0 && data.data && data.data.v2_validation_required)) {
+                validateRecaptchaV2(data);
+            } else {
+                $rootScope.$apply(callbacks[data.rid].cb.resolve({data: data}));  // extra 'data' is used to make structure same as returned by $http.post
+                delete callbacks[data.rid];
+            }
         } else if (data.data && parseInt(data.rid, 10) === 0) { //subscription update
             if (Config.swarm.debugging) {
                 Object.keys(data.data).forEach(function (subId) {

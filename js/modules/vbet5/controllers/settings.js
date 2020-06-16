@@ -321,6 +321,13 @@ VBET5.controller('settingsCtrl', ['$scope', '$rootScope', '$location', '$documen
             }
         }
 
+        if ($scope.details.personal_id) {
+            index = $scope.personalDetails.editableFields.indexOf('personal_id');
+            if (index > -1) {
+                $scope.personalDetails.readOnlyFields.push($scope.personalDetails.editableFields.splice(index, 1)[0]);
+            }
+        }
+
         if ($scope.details.zip_code) {
             index = $scope.personalDetails.editableFields.indexOf('zip_code');
             if (index > -1) {

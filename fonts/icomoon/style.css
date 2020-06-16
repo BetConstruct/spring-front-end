@@ -1,10 +1,10 @@
 @font-face {
   font-family: 'icomoon';
-  src:  url('fonts/icomoon.eot?55z7y1');
-  src:  url('fonts/icomoon.eot?55z7y1#iefix') format('embedded-opentype'),
-    url('fonts/icomoon.ttf?55z7y1') format('truetype'),
-    url('fonts/icomoon.woff?55z7y1') format('woff'),
-    url('fonts/icomoon.svg?55z7y1#icomoon') format('svg');
+  src:  url('fonts/icomoon.eot?g1vq2a');
+  src:  url('fonts/icomoon.eot?g1vq2a#iefix') format('embedded-opentype'),
+    url('fonts/icomoon.ttf?g1vq2a') format('truetype'),
+    url('fonts/icomoon.woff?g1vq2a') format('woff'),
+    url('fonts/icomoon.svg?g1vq2a#icomoon') format('svg');
   font-weight: normal;
   font-style: normal;
   font-display: block;
@@ -13,7 +13,7 @@
 [class^="cms-jcon-"], [class*=" cms-jcon-"] {
   /* use !important to prevent issues with browser extensions that change fonts */
   font-family: 'icomoon' !important;
-  speak: none;
+  speak: never;
   font-style: normal;
   font-weight: normal;
   font-variant: normal;
@@ -25,6 +25,60 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+.cms-jcon-hot_kwatcha_games:before {
+  content: "\ea83";
+}
+.cms-jcon-zambia_games:before {
+  content: "\ea84";
+}
+.cms-jcon-ic_ai_bascket:before {
+  content: "\ea82";
+}
+.cms-jcon-External-Link-1:before {
+  content: "\ea81";
+}
+.cms-jcon-Cashback-Cashout-2:before {
+  content: "\ea80";
+}
+.cms-jcon-group-4:before {
+  content: "\ea7d";
+}
+.cms-jcon-Branded-Games:before {
+  content: "\ea76";
+}
+.cms-jcon-Instant-Game:before {
+  content: "\ea77";
+}
+.cms-jcon-Vbet-Exclusive:before {
+  content: "\ea78";
+}
+.cms-jcon-Buy-Bonus:before {
+  content: "\ea79";
+}
+.cms-jcon-Megaways:before {
+  content: "\ea7a";
+}
+.cms-jcon-carts:before {
+  content: "\ea7b";
+}
+.cms-jcon-Livedeler:before {
+  content: "\ea7c";
+}
+.cms-jcon-tvicon:before {
+  content: "\ea75";
+}
+.cms-jcon-fishing:before {
+  content: "\ea72";
+}
+.cms-jcon-Shamrock:before {
+  content: "\ea73";
+}
+.cms-jcon-march:before {
+  content: "\ea74";
+}
+.cms-jcon-icon_boosted-odds:before {
+  content: "\ea66";
+}
 .cms-jcon-soccer_coach_icon:before {
   content: "\ea62";
 }
@@ -216,6 +270,45 @@
 }
 .cms-jcon-Buddy-to-Buddy:before {
   content: "\e978";
+}
+.cms-jcon-key:before {
+  content: "\ea7e";
+}
+.cms-jcon-copyicon:before {
+  content: "\ea7f";
+}
+.cms-jcon-lightning-dice:before {
+  content: "\ea69";
+}
+.cms-jcon-sic-bo:before {
+  content: "\ea6a";
+}
+.cms-jcon-buffalo-blitz-live-slots:before {
+  content: "\ea6b";
+}
+.cms-jcon-Spin-a-win:before {
+  content: "\ea6c";
+}
+.cms-jcon-super-sic-bo:before {
+  content: "\ea6d";
+}
+.cms-jcon-side-bet-city:before {
+  content: "\ea6e";
+}
+.cms-jcon-football-studio:before {
+  content: "\ea6f";
+}
+.cms-jcon-deal-or-no-deal:before {
+  content: "\ea70";
+}
+.cms-jcon-monopoly-live:before {
+  content: "\ea71";
+}
+.cms-jcon-bin:before {
+  content: "\ea68";
+}
+.cms-jcon-seven-seven-seven:before {
+  content: "\ea67";
 }
 .cms-jcon-double-tick:before {
   content: "\ea65";

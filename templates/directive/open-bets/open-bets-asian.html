@@ -63,11 +63,11 @@
         <div class="open-bets-possible-wrapper">
             <p class="total-poswin" ng-show="!taxOnStake.enabled">
                 <span trans>Stake:</span>
-                <span>{{::bet.remaining_stake | number:$root.conf.balanceFractionSize}} {{$root.profile.currency_name|currency}}</span>
+                <span>{{::bet.remaining_stake | bankersRoundAndNumberCommas:$root.conf.balanceFractionSize}} {{$root.profile.currency_name|currency}}</span>
             </p>
             <p class="total-poswin" ng-show="!taxOnStake.enabled">
                 <span trans>Possible win:</span>
-                <span ng-if="bet.possible_win !== -1">{{::bet.possible_win | number:$root.conf.balanceFractionSize}} {{$root.profile.currency_name|currency}}</span>
+                <span ng-if="bet.possible_win !== -1">{{::bet.possible_win | bankersRoundAndNumberCommas:$root.conf.balanceFractionSize}} {{$root.profile.currency_name|currency}}</span>
                 <span ng-if="bet.possible_win === -1" trans>N/A</span>
             </p>
         </div>

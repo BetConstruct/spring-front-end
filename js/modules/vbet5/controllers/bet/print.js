@@ -3,7 +3,7 @@
  * @name vbet5.controller:betPrint
  * @description Bet Print
 */
-angular.module('vbet5').controller('betPrint', ['$scope', '$location', 'TimeoutWrapper', 'Storage', 'UserAgent', 'Config', function ($scope, $location, TimeoutWrapper, Storage, UserAgent, Config) {
+angular.module('vbet5').controller('betPrint', ['$scope', '$rootScope', '$location', 'TimeoutWrapper', 'Storage', 'UserAgent', 'Config', function ($scope, $rootScope, $location, TimeoutWrapper, Storage, UserAgent, Config) {
     'use strict';
 
     TimeoutWrapper = TimeoutWrapper($scope);
@@ -40,6 +40,7 @@ angular.module('vbet5').controller('betPrint', ['$scope', '$location', 'TimeoutW
         }
 
         $scope.betData = JSON.parse(decodeURIComponent(data));
+        $rootScope.partnerConfig = $scope.betData.partnerConfig;
         console.log($scope.betData);
         regroupEvents();
 
@@ -61,15 +62,4 @@ angular.module('vbet5').controller('betPrint', ['$scope', '$location', 'TimeoutW
         TimeoutWrapper(print);
     };
 
-
-    /**
-     * @ngdoc method
-     * @name specialRounding
-     * @methodOf betting.controller:betSlipController
-     * @param {Number} num value
-     * @description special rounding based on odd even values
-     */
-    $scope.specialRounding = function specialRounding(num) {
-        return num % 1 === 0.5 ? (Math.floor(num) % 2 === 0 ? Math.floor(num) : Math.ceil(num)) : Math.round(num);
-    };
 }]);

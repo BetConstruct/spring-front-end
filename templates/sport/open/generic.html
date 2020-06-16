@@ -30,10 +30,6 @@
         {{ game.info.current_game_state|convertSetName:game.sport.alias|translate }}
         <span>{{getCurrentTime(game.info.current_game_time)}}</span>
     </div>
-    <!--<div class="add-info" ng-if="game.sport.alias === 'Cricket' && (game.info.over_number || game.info.deliver_number)">--> <!--todo SDC-46567  -->
-        <!--{{'Current over/delivery'|translate}}-->
-        <!--<i  ng-bind="game.info.over_number + '/' + game.info.deliver_number"></i>-->
-    <!--</div>-->
 </div>
 <div ng-show="($root.conf.videoEnabled && game.video_id && !isVideoDetached) || game.has_animation">
     <div class="right-block-flash" id="game-monitor-{{ game.id }}">

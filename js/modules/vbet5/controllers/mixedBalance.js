@@ -90,7 +90,15 @@ VBET5.controller('mixedBalanceCtrl', ['$scope', '$controller', 'Config', '$sce',
         type: 'month'
     };
 
-    $scope.initMixedBalanceHistory = function initMixedBalanceHistory () {
+    $scope.changeBalanceCategory = function changeBalanceCategory(key) {
+        $scope.balanceHistoryParams.balanceCategory = key;
+    };
+
+    $scope.initMixedBalanceHistory = function initMixedBalanceHistory (isEnabledCasinoBalanceHistory) {
+        if (!$scope.balanceHistoryParams.balanceCategory) {
+            $scope.balanceHistoryParams.balanceCategory = ($rootScope.currentPage.isInCasino && isEnabledCasinoBalanceHistory) ? '1' : '0';
+        }
+
         var balanceHistoryDataRangeChanged = $scope.$watch("balanceHistoryParams.dateRange", function() {
             if("balanceHistory" === $scope.env.sliderContent) {
                 $scope.requestData.dateFrom = moment.unix($scope.balanceHistoryParams.dateRange.fromDate).lang("en").format('YYYY-MM-DD');

@@ -237,7 +237,6 @@ VBET5.constant('SkinConfig', {
         enableMenuSearch: true,
         enableBannerUnderBetslip: true,
         enableLandingPage: false,
-        liveCalendarView: 'oneDaySelectionView',
         enableSystemCalculator: true,
         // enableSportsbookJackpotOnBetSlip: true,
 
@@ -851,7 +850,6 @@ VBET5.constant('SkinConfig', {
                 "type": "password",
                 "required": true,
                 "classes": "",
-                "enableShowPassword": true,
                 "customAttrs": [{"type": "{{regItem.inputType}}"},{"ng-minlength": "6"},  {"required": "required"}, {"ng-maxlength": "14"}, {"ng-keypress": "passwordKeyPress($event, 'password')"}],
                 "validation": [{"name": "required", "message": "This field is required"}, {
                     "name": "minlength",

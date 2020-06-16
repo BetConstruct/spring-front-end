@@ -934,7 +934,6 @@
   float: left;
   width: 100%;
   margin: 0 0 10px;
-  overflow: hidden;
   border-radius: 4px;
   .ew-total-view-v3{
     color: $c16-sp-1;
@@ -1258,7 +1257,6 @@
   float: left;
   width: 100%;
   height: 24px;
-  overflow: hidden;
   position: relative;
   h3 {
     display: block;
@@ -1301,7 +1299,17 @@
     }
   }
 }
-
+.name-chempionship-asia{
+  h3{
+    .cyber-competition{
+      padding: 0 6px 0 2px;
+      &:before{
+        content: '\e92f';
+        font: 12px/24px sport-icon;
+      }
+    }
+  }
+}
 .all_view .name-chempionship-asia h3 {
   padding-left: 24px;
 }
@@ -1581,11 +1589,6 @@
   100% {
     opacity: 1;
   }
-}
-
-.game-list-compitishion table tr td.factor-w:hover,
-.game-list-compitishion table tr td.outiright-odds-asia:hover {
-
 }
 
 .game-list-compitishion table tr td.more-competition {
@@ -2832,12 +2835,21 @@ table.hdp-contain-j {
     }
     .asian-status-icons > div {
       line-height: 26px;
+      &.match-key > ul {
+        top: -34px;
+        @include ltr {
+          right: -12px;
+        }
+        @include rtl {
+          left: -12px;
+        }
+      }
     }
     &.asian-more-markets-count-j {
       vertical-align: middle;
     }
     &.more-arrow-j-asia {
-      vertical-align: middle;
+    vertical-align: middle;
       font: 11px/11px $font-f;
       text-transform: uppercase;
       &:after {

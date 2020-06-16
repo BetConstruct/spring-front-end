@@ -56,6 +56,7 @@ angular.module('vbet5').controller('RegistrationController', ['$scope', '$rootSc
         $scope.registrationData = {
             first_name: '',
             years: [],
+            docIssueYears: [],
             gender: '',
             currency_name: registrationDefaultCurrency,
             language: Config.env.lang,
@@ -419,6 +420,9 @@ angular.module('vbet5').controller('RegistrationController', ['$scope', '$rootSc
                     birth_day: function () {
                         regInfo.birth_date = $scope.registrationData.birth_year + '-' + $scope.registrationData.birth_month + '-' + $scope.registrationData.birth_day;
                     },
+                    doc_issue_day: function() {
+                        regInfo.doc_issue_date = $scope.registrationData.doc_issue_year + '-' + $scope.registrationData.doc_issue_month + '-' + $scope.registrationData.doc_issue_day;
+                    },
                     phone_number: function () {
                         var phone = getPhoneNumber();
                         if (phone) {
@@ -536,6 +540,15 @@ angular.module('vbet5').controller('RegistrationController', ['$scope', '$rootSc
             }
             if (giftCode) {
                 regInfo.bet_gift_code = giftCode;
+            }
+            if (regInfo.doc_issue_date) {
+                delete regInfo.doc_issue_month;
+                delete regInfo.doc_issue_year;
+                delete regInfo.doc_issue_day;
+            }
+
+            if (!regInfo.country_code && Config.main.registration.defaultCountryCode) {
+                regInfo.country_code = Config.main.registration.defaultCountryCode;
             }
 
             return regInfo;
@@ -719,8 +732,12 @@ angular.module('vbet5').controller('RegistrationController', ['$scope', '$rootSc
                                     }
                                     break;
                                 case 1122:
-                                    $scope.registerform.personal_id_6.$dirty = $scope.registerform.personal_id_6.$invalid = $scope.registerform.personal_id_6.$error.duplicate = true;
-                                    resetFormFieldErrorOnChange('personal_id_6', 'duplicate');
+                                    var field = 'personal_id_6';
+                                    if ($scope.registerform.personal_id) {
+                                        field = 'personal_id';
+                                    }
+                                    $scope.registerform[field].$dirty = $scope.registerform[field].$invalid = $scope.registerform[field].$error.duplicate = true;
+                                    resetFormFieldErrorOnChange(field, 'duplicate');
                                     break;
                                 case 2074:
                                     $scope.registerform.password.$dirty = $scope.registerform.password.$invalid = $scope.registerform.password.$error.sameAsLogin = true;
@@ -1152,6 +1169,10 @@ angular.module('vbet5').controller('RegistrationController', ['$scope', '$rootSc
             for (i = length; i >= REG_FORM_BIRTH_YEAR_LOWEST; i -= 1) {
                 $scope.registrationData.years.push(i.toString());
             }
+            var j, length1 = new Date().getFullYear() - 1;
+            for (j = length1; j >= 1901; j -= 1) {
+                $scope.registrationData.docIssueYears.push(j.toString());
+            }
 
             //$scope.registrationData.birth_day = '01';
             //$scope.registrationData.birth_month = $scope.monthNames[0].val;
@@ -1268,6 +1289,15 @@ angular.module('vbet5').controller('RegistrationController', ['$scope', '$rootSc
             }
         };
 
+        /**
+         * @ngdoc method
+         * @name changeInputType
+         * @methodOf vbet5.controller:RegistrationController
+         * @description change input type when show password functionality is enabled
+         */
+        $scope.changeInputType = function changeInputType(elem, value) {
+            document.getElementById(elem).setAttribute('type', value);
+        };
 
         /**
          * @ngdoc method

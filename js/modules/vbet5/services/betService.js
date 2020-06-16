@@ -5,7 +5,7 @@
  * @ngdoc service
  * @name vbet5.service:BetService
  */
-VBET5.factory('BetService', ['$rootScope', 'Zergling', 'Config', '$q', 'Utils', '$location', 'GameInfo', '$window', 'Translator', function betService($rootScope, Zergling, Config, $q, Utils, $location, GameInfo, $window, Translator) {
+VBET5.factory('BetService', ['$rootScope', 'Zergling', 'Config', '$q', 'Utils', '$location', 'GameInfo', '$window', 'Translator', 'Storage', function betService($rootScope, Zergling, Config, $q, Utils, $location, GameInfo, $window, Translator, Storage) {
     'use strict';
 
     var BetService = {
@@ -17,7 +17,7 @@ VBET5.factory('BetService', ['$rootScope', 'Zergling', 'Config', '$q', 'Utils', 
             }
         },
         constants: {
-            customCorrectScoreLogic: ['Soccer', 'Tennis', 'IceHockey', 'Baseball', 'TableTennis', 'Snooker'],
+            customCorrectScoreLogic: ['Soccer', 'Tennis', 'IceHockey', 'Baseball', 'TableTennis', 'Snooker', 'CyberFootball'],
             marketsPreDividedByColumns:  [
                 'MatchWinningMargin',
                 'GameWinningMargin',
@@ -84,6 +84,70 @@ VBET5.factory('BetService', ['$rootScope', 'Zergling', 'Config', '$q', 'Utils', 
                 50: 'Bet Builder',
                 51: 'Bet On Lineups',
                 'Toto': 'Pool Betting'
+            },
+            fullCoverTypesMap : {
+                1: "Singles",
+                2: "Doubles",
+                3: "Trebles",
+                'default': "Folds"
+            },
+            fullCoverAdditionalTypesMap : {
+                3: [
+                    {
+                        name: "Trixie",
+                        type: 5
+                    },
+                    {
+                        name: "Patent",
+                        type: 12,
+                        includeSingles: true
+                    }
+                ],
+                4: [
+                    {
+                        name: "Yankee",
+                        type: 6
+                    },
+                    {
+                        name: "Lucky 15",
+                        type: 14,
+                        includeSingles: true
+                    }
+                ],
+                5: [
+                    {
+                        name: "Super Yankee",
+                        type: 8
+                    },
+                    {
+                        name: "Lucky 31",
+                        type: 15,
+                        includeSingles: true
+                    }
+                ],
+                6: [
+                    {
+                        name: "Heinz",
+                        type: 9
+                    },
+                    {
+                        name: "Lucky 63",
+                        type: 16,
+                        includeSingles: true
+                    }
+                ],
+                7: [
+                    {
+                        name: "Super Heinz",
+                        type: 10
+                    }
+                ],
+                8: [
+                    {
+                        name: "Goliath",
+                        type: 11
+                    }
+                ]
             }
         }
     };
@@ -249,59 +313,138 @@ VBET5.factory('BetService', ['$rootScope', 'Zergling', 'Config', '$q', 'Utils', 
                     $rootScope.editBet.stakeAmount = data[$rootScope.editBet.oldBetId].amount;
                 }
             });
+
         }
 
-        var sportIds = [];
-        var gameIds = [];
-        var eventIds = [];
+            var sportIds = [];
+            var gameIds = [];
+            var eventIds = [];
 
-        angular.forEach(eventsFromBetHistory.events, function(event) {
-            if(event.outcome === null || event.outcome === 0) {
-                eventIds.push(event.selection_id);
-                gameIds.push(event.game_id);
-                sportIds.push(event.sport_id);
-            }
-        });
-
-        Zergling.get({
-            'source': 'betting',
-            'what': {
-                'sport': ['id', 'name', 'alias', 'order'],
-                'competition': ['id', 'order', 'name'],
-                'region': ['id', 'name', 'alias'],
-                'game': ['id', 'team1_id', 'start_ts', 'team1_name', 'team2_id', 'team2_name', 'type'],
-                'market': ['base', 'type', 'name', 'express_id', 'id'],
-                'event': ["order", "id", "type_1", "type", "type_id", "original_order", "name", "price", "nonrunner", "ew_allowed", "sp_enabled", "extra_info", "display_column" ]
-            },
-            'where': {
-                'event': {
-                    'id': {'@in': eventIds}
-                },
-                'game': {
-                    'id': {'@in': Utils.uniqueNum(gameIds)}
-                },
-                'sport': {
-                    'id': {'@in': Utils.uniqueNum(sportIds)}
+            angular.forEach(eventsFromBetHistory.events, function (event) {
+                if (event.outcome === null || event.outcome === 0) {
+                    eventIds.push(event.selection_id);
+                    gameIds.push(event.game_id);
+                    sportIds.push(event.sport_id);
                 }
-            }
-        }).then(
+            });
+
+            Zergling.get({
+                'source': 'betting',
+                'what': {
+                    'sport': ['id', 'name', 'alias', 'order'],
+                    'competition': ['id', 'order', 'name'],
+                    'region': ['id', 'name', 'alias'],
+                    'game': ['id', 'team1_id', 'start_ts', 'team1_name', 'team2_id', 'team2_name', 'type'],
+                    'market': ['base', 'type', 'name', 'express_id', 'id'],
+                    'event': ["order", "id", "type_1", "type", "type_id", "original_order", "name", "price", "nonrunner", "ew_allowed", "sp_enabled", "extra_info", "display_column"]
+                },
+                'where': {
+                    'event': {
+                        'id': {'@in': eventIds}
+                    },
+                    'game': {
+                        'id': {'@in': Utils.uniqueNum(gameIds)}
+                    },
+                    'sport': {
+                        'id': {'@in': Utils.uniqueNum(sportIds)}
+                    }
+                }
+            }).then(
                 function success(response) {
-                    if(response.data) {
+                    if (response.data) {
                         if (editBet) {
                             $rootScope.editBet.loading = false;
                         }
                         betsToPlace = Utils.formatEventData(response.data);
-                        for (var i = 0; i < betsToPlace.length; i++) {
-                            if (!GameInfo.isEventInBetSlip(betsToPlace[i].eventInfo)) {
-                                $rootScope.$broadcast('bet', {event: betsToPlace[i].eventInfo, market: betsToPlace[i].marketInfo, game: betsToPlace[i].gameInfo, oddType: oddType});
+
+                        if(!betsToPlace.length){
+                            $rootScope.$broadcast('globalDialogs.addDialog', {
+                                type: 'warning',
+                                title: 'Warning',
+                                hideCloseButton: true,
+                                content: 'No available event to add',
+                                buttons: [
+                                    {
+                                        title: 'Ok'
+                                    }
+                                ]
+                            });
+                            return;
+                        }
+
+                       var process = function process() {
+                            var eventIds = [];
+                            var addEventsInBetSlipByURL = $location.path() !== '/sport/' && $location.path() !== '/dashboard/' && $location.path() !== '/multiview/' && $location.path() !== '/livecalendar/';
+
+                            if (!addEventsInBetSlipByURL) {
+                                $rootScope.$broadcast('betSlipType', eventsFromBetHistory.type);
                             }
+
+                            for (var i = 0; i < betsToPlace.length; i++) {
+                                if (addEventsInBetSlipByURL) {
+                                    eventIds.push(betsToPlace[i].eventInfo.id);
+                                } else {
+                                    $rootScope.$broadcast('bet', {
+                                        event: betsToPlace[i].eventInfo,
+                                        market: betsToPlace[i].marketInfo,
+                                        game: betsToPlace[i].gameInfo,
+                                        oddType: oddType
+                                    });
+                                }
+                            }
+
+                            if (addEventsInBetSlipByURL) {
+                                $location.url('/sport/');
+
+                                var params = {
+                                    'event': eventIds.join(','),
+                                    'betSlipType': eventsFromBetHistory.type,
+                                    'type': 1
+                                };
+
+                                $location.search(params);
+                            }
+
+                            $rootScope.env.showSlider = false;
+                            $rootScope.env.sliderContent = '';
+                            if (typeof callbackFn === 'function') {
+                                callbackFn();
+                            }
+                            promise.resolve();
+                        };
+
+                        if(!editBet) {
+                            var betSlip = Storage.get('betslip');
+                            if (betSlip && betSlip.bets && betSlip.bets.length) {
+                                $rootScope.$broadcast('globalDialogs.addDialog', {
+                                    type: "warning",
+                                    title: "Warning",
+                                    hideCloseButton: true,
+                                    content: "You already have events in the betslip. If you select a repeat bet the events will be deleted. Do you want to continue?",
+                                    buttons: [
+                                        {
+                                            title: 'Yes',
+                                            callback: function () {
+                                                $rootScope.$broadcast('clear.bets', true, true);
+                                                process();
+                                            }
+                                        },
+                                        {
+                                            title: 'No',
+                                            callback: function () {
+                                                if (typeof callbackFn === 'function') {
+                                                    callbackFn();
+                                                }
+                                                promise.reject();
+                                            }
+                                        }]
+                                });
+                            } else {
+                                process();
+                            }
+                        }else {
+                            process();
                         }
-                        $rootScope.env.showSlider = false;
-                        $rootScope.env.sliderContent = '';
-                        if (typeof callbackFn === 'function') {
-                            callbackFn();
-                        }
-                        promise.resolve();
                     }
                 },
                 function error() {
@@ -312,11 +455,6 @@ VBET5.factory('BetService', ['$rootScope', 'Zergling', 'Config', '$q', 'Utils', 
                             $rootScope.$broadcast('disable.add.bet');
                         }
                     });
-
-        if ($location.path() !== '/sport/' && $location.path() !== '/dashboard/' &&
-            $location.path() !== '/multiview/' && $location.path() !== '/livecalendar/') {
-            $location.url('/sport/?type=1');
-        }
 
         return promise.promise;
     };
@@ -398,6 +536,11 @@ VBET5.factory('BetService', ['$rootScope', 'Zergling', 'Config', '$q', 'Utils', 
         betDataInfo.userId = ($rootScope.profile && ($rootScope.profile.id || $rootScope.profile.unique_id)) || '';
         betDataInfo.userName = ($rootScope.profile && $rootScope.profile.username) || '';
         betDataInfo.viewType = $rootScope.conf.bookingBetPrint.viewType;
+        betDataInfo.partnerConfig = {};
+        betDataInfo.partnerConfig.multiple_price_decimals = $rootScope.partnerConfig.multiple_price_decimals;
+        betDataInfo.partnerConfig.price_decimals = $rootScope.partnerConfig.price_decimals;
+        betDataInfo.partnerConfig.price_round_method = $rootScope.partnerConfig.price_round_method;
+
         var encodedBetData = encodeURIComponent(JSON.stringify(betDataInfo));
         $window.open('#/popup/?action=betprintpreview&data=' + encodedBetData, Config.main.skin + 'betprintpreview.popup', "scrollbars=1,width=1000,height=600,resizable=yes");
     };

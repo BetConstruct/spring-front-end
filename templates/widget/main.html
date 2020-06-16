@@ -30,7 +30,7 @@
                                                     </button>
                                                     <div class="game-detailed-stats" ng-if="openGame.sport.alias === 'Soccer' && openGame.live_events">
                                                         <span class="icon-stat-details"></span>
-                                                        <div class="hover-sp" ng-class="{'to-right': openGame.info.currMinute>60, 'to-center': (openGame.info.currMinute >30 && openGame.info.currMinute <= 60)}">
+                                                        <div class="hover-sp" ng-class="{'to-right': openGame.info.current_game_time>60, 'to-center': (openGame.info.current_game_time >30 && openGame.info.current_game_time <= 60)}">
                                                             <div class="football-gamer-name" ng-repeat="gameEvent in openGame.live_events|orderBy:'add_info_order':true">
                                                                 <div ng-class="gameEvent.event_type+'-icon'" class="{{gameEvent.event_icon}}"></div>
                                                                 <span ng-class="gameEvent.team">
@@ -187,7 +187,7 @@
                                                     <div class="mini-market-left single-market-showed" ng-if="!(openGame.sport.alias === 'HorseRacing' && conf.enableNewHorseRacingTemplate) && onlyFirstMarket">
                                                         <div class="mini-market-b"
                                                              ng-class="{'closed': isMarketClosed(onlyFirstMarket[0].name)}"
-                                                             ng-hide="openGame && openGame.events_count === 0 && !openGameLoading">
+                                                             ng-hide="openGame && openGame.markets_count === 0 && !openGameLoading">
                                                             <h3 ng-click="toggleGroupedMarket(onlyFirstMarket[0].name)">
                                                                  <span class="icons-bet-view">
                                                                     <i  ng-hide="conf.hideExpressIds" class="icon-link" ng-show="onlyFirstMarket[0].express_id" title="Events from different groups can be combined in combined bets" trans="attr-only"></i>
@@ -212,7 +212,7 @@
                                                 <div ng-show="env.live && !openGameLoading" class="live-indicator-text hide-on-mv-j">
                                                     <p trans>The time display shown within live betting serves as an indicator. The company takes no responsibility for the correctness and currentness of the displayed information like score or time.</p>
                                                 </div>
-                                                <div ng-show="openGame && openGame.events_count === 0 && !openGameLoading" class="no-games-information">
+                                                <div ng-show="openGame && openGame.markets_count === 0 && !openGameLoading" class="no-games-information">
                                                     <p trans>We are not accepting bets on this event at the moment.</p>
                                                 </div>
                                             </div>
@@ -297,6 +297,12 @@
     <div ng-switch-when="sportsbook-jackpot-counter">
         <div ng-init="isIframe=true">
             <sportsbook-jackpot ></sportsbook-jackpot>
+        </div>
+    </div>
+    <!--betting calculator widget-->
+    <div ng-switch-when="betting-calculator">
+        <div ng-init="isIframe=true">
+           <ng-include src="::'templates/sport/classic/systemCalculator.html'|fixPath"></ng-include>
         </div>
     </div>
 </div>

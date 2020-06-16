@@ -1126,9 +1126,14 @@ body > {
     direction: rtl;
   }
   &:first-child {
-    padding: 0 38px;
     z-index: 10;
     animation: hide-nav 3ms linear;
+    @include ltr {
+      padding-left: 38px;
+    }
+    @include rtl {
+      padding-right: 38px;
+    }
   }
 }
 @keyframes hide-nav {
@@ -1149,7 +1154,7 @@ body > {
   position: relative;
   transform: translate3d(0,0,0);
 }
-.header-nav-contain > ul > li a:before {
+.header-nav-contain > ul > li a:before, .subtop-header-menu-j > ul > li a:before {
   display: inline-block;
   color: set-color($header-hero-color);
   background: $header-hero-color;
@@ -1167,7 +1172,11 @@ body > {
     right: auto;
   }
 }
-.header-nav-contain > ul > li.new-top-nav a:before {
+.subtop-header-menu-j > ul > li a:before{
+  right: -10px;
+  top: 3px;
+}
+.header-nav-contain > ul > li.new-top-nav a:before, .subtop-header-menu-j > ul > li.new-top-nav a:before {
   content: attr(data-content);
 }
 .header-nav-contain > ul > li.demo-top-nav a:before {
@@ -1184,9 +1193,7 @@ body > {
 }
 .header-nav-contain > ul > li.sub-menu-item {
   clear: both;
-  float: right;
   position: relative;
-  left: 38px;
   box-shadow: 0 3px 3px transparent;
   overflow: hidden;
   transform: translate3d(0,0,0);
@@ -1194,10 +1201,13 @@ body > {
   transition-delay: 250ms;
   max-height: 0;
   opacity: 0;
+  @include ltr {
+    float: right;
+    left: 0;
+  }
   @include rtl {
-    float: left;
-    left: auto;
-    right: 38px;
+    right: 0;
+    display: block;
   }
   > .top-menu-sub-a-t {
     > a {
@@ -1217,23 +1227,25 @@ body > {
   box-sizing: border-box;
 }
 .body-wrapper .headerVersion_2 .top-menu-more{
-  position: absolute;
-  right: -1px;
-  top: 0;
   display: block;
-  width: 38px;
   height: 40px;
+  padding: 0 6px;
   font: 14px/40px $font-f;
   background: $header-hero-color;
   color: set-color($header-hero-color);
   border-radius: inherit;
-  &:before {
-    content: "+"
+  @include ltr {
+    float: right;
   }
   @include rtl {
-    right: auto;
-    left: -1px;
+    float: left;
   }
+}
+.header-nav-contain .menu-dropdown-show .top-menu-more{
+  visibility: visible;
+}
+.header-nav-contain .top-menu-more{
+  visibility: hidden;
 }
 .header-nav-contain > ul > li > .top-menu-sub-a-t > a{
   float: left;
@@ -1382,7 +1394,7 @@ body > {
   .block-slider{
     padding-top: $header-first-line-height + $header-nav-line-height + 21px;
     .close-slider-button-j{
-      top: $header-first-line-height + $header-nav-line-height + 74px;
+      top: $header-first-line-height + $header-nav-line-height + 38px;
     }
   }
   .conteiner.show-game ~ .block-slider, .block-slider.slider-scroll{

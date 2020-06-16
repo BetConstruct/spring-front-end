@@ -1,4 +1,5 @@
 <div class="left-nav-view-v3">
+    <div ng-if="$root.conf.suggestionsInLiveSection.enabled" ng-include="'templates/sport/classic/left/suggestions.html'|fixPath"></div>
     <ul ng-repeat="group in liveSportGroups track by group.id">
         <li class="sports-item-v3 sports-group-item-v3 {{group.name}}" ng-show="group.hasHeader"
             ng-class="{'active': leftMenuState.live.groups[group.id]}"
@@ -16,7 +17,7 @@
                     sports-item-v3 {{sport.alias}}
                     {{leftMenuState.live.sport[sport.id].expanded ||(todaysBets.selected && sport.isTodayBets) ? 'active' : ''}}"
                          ng-click="expandLeftMenuLiveSport();  leftMenuState.live.sport[sport.id].expanded = !leftMenuState.live.sport[sport.id].expanded; leftMenuClosed ? toggleLeftMenu() : void(); selectSport(sport, !leftMenuState.live.sport[sport.id].expanded);closeOtherSportsIfNeed(leftMenuState.live.sport[sport.id].expanded);"
-                         title="{{sport.name + (sport.game ? '(' + sport.game  + ')' : '') }}">
+                         title="{{sport.name }}">
                         {{sport.name}}
                         <div class="arrow-view-v3"></div>
                         <div class="sport-games-count-v3" ng-show="sport.game">{{sport.game}}
@@ -47,12 +48,14 @@
                                              dnd-list="competition.games"
                                              dnd-allowed-types="[sport.alias + region.alias + competition.id]">
                                             <div class="competition-title-v3"
+                                                 ng-class="{'cyber-competition': competition.info && competition.info.Cyber}"
                                                  title="{{competition.name}}"
                                                  ng-click="leftMenuState.live.competition[competition.id].collapsed = !leftMenuState.live.competition[competition.id].collapsed; selectSport(sport); selectRegion(region)">
+                                                <span ng-class="{'cyber-icon': competition.info && competition.info.Cyber}"></span>
                                             </div>
                                             <div class="single-game-item-v3 {{game.id === activeGameId && '/multiview/' !== $location.path() ? 'active' : ''}}"
                                                  ng-repeat="game in competition.games track by game.id"
-                                                 ng-class="{'no-events': (!(game.events_count || game.markets_count) || game.is_blocked)}"
+                                                 ng-class="{'no-events': (!(game.markets_count) || game.is_blocked)}"
                                                  ng-show="'/multiview/' !== $location.path() || !$root.multiViewLiveOpenedGamesIds || $root.multiViewLiveOpenedGamesIds.indexOf(game.id) === -1"
                                                  ng-click="'/multiview/' === $location.path() ? gameClicked(game, competition, true) : selectGame(sport, region, competition, game)"
                                                  dnd-effect-allowed="move"
@@ -72,8 +75,8 @@
                                                         <span ng-if="game.info.current_leg === undefined && game.info.current_game_state !== 'notstarted'">{{game.info.current_game_state|convertSetName:game.sport.alias|translate}}</span>
                                                         <span ng-if="game.info.current_leg !== undefined">{{game.info.current_game_state|convertSetNameWithLeg:game.info|translate}}</span>
                                                         <i class="blocked-icon-v3"
-                                                           ng-show="(!(game.events_count || game.markets_count) || game.is_blocked)"></i>
-                                                        <!--<span ng-if="game.info.over_number" class="over-cricet" ng-bind="'Over {1}'|translate:[game.info.over_number]"></span> --> <!--todo SDC-46567  -->
+                                                           ng-show="(!(game.markets_count) || game.is_blocked)"></i>
+                                                        <span ng-if="game.info.over_number" class="over-cricet" ng-bind="'Over {1}'|translate:[game.info.over_number]"></span>
                                                     </p>
                                                     <div class="game-info-icons-v3">
                                                         <div class="icon-separator-v3 favorite {{myGames.indexOf(game.id) !== -1 ? 'active' : ''}}"
@@ -99,7 +102,7 @@
                                                     </div>
                                                 </div>
                                                 <div class="l-b column-{{game.marketInfo.markets.length}}" ng-hide="$root.conf.hideMarketFromLeftMenu || !game.marketInfo.markets.length">
-                                                    <div class="single-events-b-v3" ng-repeat="market in game.marketInfo.markets track by market.id" title="{{::market.type_1}}"
+                                                    <div class="single-events-b-v3" ng-repeat="market in game.marketInfo.markets track by market.id" title="{{::market.name}}"
                                                         ng-class="{'pointer-events-none': market.is_empty, 'active': isEventInBetSlip(market), 'blocked': ((market.price | oddConvert:'decimal') == 1 || game.is_blocked)}"
                                                         ng-click="bet(market, game.marketInfo, game); $event.stopPropagation()">
                                                         <i ng-if="$root.conf.boostedBets.enabled && $root.boostedBetsEventIds && $root.boostedBetsEventIds[market.id]" title="{{'Boosted odd'|translate}}" class="boosted"></i>

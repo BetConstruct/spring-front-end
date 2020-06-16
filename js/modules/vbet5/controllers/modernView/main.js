@@ -572,7 +572,7 @@ angular.module('vbet5.betting').controller('modernViewManCtrl', ['$rootScope', '
                     'region': ['id', 'name', 'alias'],
                     'competition': [],
                     'game': [
-                        ['id', 'start_ts', 'team1_name', 'team2_name', 'team1_external_id', 'team2_external_id', 'type', 'info', 'events_count', 'markets_count', 'extra', 'is_blocked', 'game_number', 'exclude_ids', 'is_stat_available', 'is_live', 'is_neutral_venue', 'is_itf']
+                        ['id', 'start_ts', 'team1_name', 'team2_name', 'team1_external_id', 'team2_external_id', 'type', 'info', 'markets_count', 'extra', 'is_blocked', 'game_number', 'exclude_ids', 'is_stat_available', 'is_live', 'is_neutral_venue', 'is_itf', 'game_info']
                     ],
                     'event': ['id', 'price', 'type', 'name'],
                     'market': ['type', 'express_id', 'name', 'home_score', 'away_score', 'id']
@@ -814,7 +814,7 @@ angular.module('vbet5.betting').controller('modernViewManCtrl', ['$rootScope', '
                     'region': ['id', 'name', 'alias'],
                     'competition': [],
                     'game': [
-                        ['id', 'start_ts', 'show_type', 'team1_name', 'team2_name', 'team1_external_id', 'team2_external_id', 'type', 'info', 'events_count', 'markets_count', 'extra', 'is_blocked', 'game_number', 'exclude_ids', 'is_stat_available', 'is_live', 'is_neutral_venue', 'is_itf', 'stats']
+                        ['id', 'start_ts', 'show_type', 'team1_name', 'team2_name', 'team1_external_id', 'team2_external_id', 'type', 'info', 'markets_count', 'extra', 'is_blocked', 'game_number', 'exclude_ids', 'is_stat_available', 'is_live', 'is_neutral_venue', 'is_itf', 'stats', "game_info"]
                     ],
                     'event': ['id', 'price', 'type', 'name'],
                     'market': ['type', 'express_id', 'name', 'home_score', 'away_score', 'id']
@@ -853,7 +853,7 @@ angular.module('vbet5.betting').controller('modernViewManCtrl', ['$rootScope', '
             }
 
             if($scope.selectedSportId === VIRTUAL_BOOSTED_BETS.id){
-                request.what.game = [ 'id', 'start_ts', 'team1_name', 'team2_name', 'team1_external_id', 'team2_external_id', 'type', 'info', 'events_count', 'markets_count', 'extra', 'is_blocked', 'game_number', 'exclude_ids', 'is_stat_available', 'is_live', 'is_neutral_venue', 'is_itf'];
+                request.what.game = [ 'id', 'start_ts', 'team1_name', 'team2_name', 'team1_external_id', 'team2_external_id', 'type', 'info', 'markets_count', 'extra', 'is_blocked', 'game_number', 'exclude_ids', 'is_stat_available', 'is_live', 'is_neutral_venue', 'is_itf'];
                 request.where =  {
                     'game': {
                         'id': {'@in': $scope.boostedBetsGameIds}

@@ -7,7 +7,7 @@
  * recapcha controller
  *
  */
-VBET5.controller('recaptchaCtrl', ['$rootScope', '$scope', 'Zergling', 'LanguageCodes', function ($rootScope, $scope, Zergling, LanguageCodes) {
+VBET5.controller('recaptchaCtrl', ['$rootScope', '$scope', '$timeout', 'Zergling', 'LanguageCodes', function ($rootScope, $scope, $timeout, Zergling, LanguageCodes) {
     'use strict';
     $scope.recaptcha = {};
 
@@ -34,28 +34,34 @@ VBET5.controller('recaptchaCtrl', ['$rootScope', '$scope', 'Zergling', 'Language
      * @methodOf vbet5.controller:recaptchaCtrl
      * @description initialization
      */
-    function init() {
+    $scope.init = function init() {
         window.recaptchaUpdateCallback = function recaptchaUpdateCallback(response) {
             $rootScope.$broadcast('recaptcha.response', response);
+            $scope.recaptcha.g_recaptcha_response = response;
         };
 
-        recaptchaProps.key = '';
-        $scope.recaptcha.loading = true;
-        Zergling.get({}, 'recaptcha_sitekey').then(function (data) {
-            console.log('recaptcha key', data);
-            $scope.recaptcha.key = data.result;
-            if (!$scope.recaptcha.key) {
-                showRecaptchaError();
-                return;
-            }
+        if ($scope.recaptcha.key) {
             loadScript();
-        }, function (failResponse) {
-            console.log('recaptcha error', failResponse);
-            showRecaptchaError();
-        })['finally'](function () {
-            $scope.recaptcha.loading = false;
-        });
-    }
+        } else {
+            recaptchaProps.key = '';
+            $scope.recaptcha.loading = true;
+            Zergling.get({}, 'recaptcha_sitekey').then(function (data) {
+                console.log('recaptcha key', data);
+                $scope.recaptcha.key = data.result;
+                if (!$scope.recaptcha.key) {
+                    showRecaptchaError();
+                    return;
+                }
+                loadScript();
+            }, function (failResponse) {
+                console.log('recaptcha error', failResponse);
+                showRecaptchaError();
+            })['finally'](function () {
+                $scope.recaptcha.loading = false;
+            });
+        }
+
+    };
 
     /**
      * @ngdoc method
@@ -82,15 +88,34 @@ VBET5.controller('recaptchaCtrl', ['$rootScope', '$scope', 'Zergling', 'Language
     }
 
     $scope.$on('recaptcha.reload',function() {
-        window.Recaptcha && window.Recaptcha.reload && window.Recaptcha.reload();
-        window.grecaptcha && window.grecaptcha.reset && window.grecaptcha.reset();
+        if ($scope.recaptcha.key) {
+            window.Recaptcha && window.Recaptcha.reload && window.Recaptcha.reload();
+            window.grecaptcha && window.grecaptcha.reset && window.grecaptcha.reset();
+        }
     });
 
-    $scope.$on('$destroy',function() {
+    function removeRecaptcha() {
         if (recaptchaProps.recaptchaDomScript) {
             document.body.removeChild(recaptchaProps.recaptchaDomScript);
         }
         delete window.recaptchaUpdateCallback;
+        $scope.recaptcha = {};
+    }
+
+    $scope.$on("recaptcha.showPopup", function (event, data) {
+        $scope.recaptcha.key = data.recaptchaKey;
+        $timeout($scope.init);
+        $scope.submitRecaptcha = function submitRecaptcha() {
+            if ($scope.recaptcha.g_recaptcha_response) {
+                data.promise.resolve($scope.recaptcha.g_recaptcha_response);
+                removeRecaptcha();
+            }
+        };
+
     });
-    init();
+
+
+
+
+    $scope.$on('$destroy', removeRecaptcha);
 }]);

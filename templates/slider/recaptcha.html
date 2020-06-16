@@ -19,7 +19,9 @@
 <!-- INPUT TYPE RECAPTCHA VERSION 2-->
 <div ng-if="recaptcha.version === 2" class="recaptcha {{$root.conf.recaptcha.classes}}"
      ng-class="{'error': (!resetError[$root.conf.recaptcha.name] || registerform[$root.conf.recaptcha.name].blur) && registerform[$root.conf.recaptcha.name].$invalid && showFieldsValidation && registration.submitted}"
-     ng-controller="recaptchaCtrl">
+     ng-controller="recaptchaCtrl"
+     ng-init="init()"
+>
     <label ng-bind="$root.conf.recaptcha.title | translate" ng-class="{'hintReq' : $root.conf.recaptcha.required}"></label>
     <input type="hidden" name="{{$root.conf.recaptcha.name}}" ng-model="registrationData[$root.conf.recaptcha.name]" ng-required="true"/>
     <vbet-loader ng-if="recaptcha.loading" class="small-progress"></vbet-loader>

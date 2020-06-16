@@ -20,6 +20,9 @@
   position: relative;
   @media screen and (max-width: 1260px) {
     width: 50%;
+    .game-link-tj {
+      min-height: 330px;
+    }
   }
   &:hover {
     .wrapper-game-link > p {
@@ -58,6 +61,7 @@
     display: block;
     float: left;
     width: 100%;
+    min-height: 266px;
     position: relative;
     overflow: hidden;
     background: $skin-palette-9;
@@ -68,6 +72,7 @@
     > img {
       display: block;
       width: 100%;
+      object-fit: cover;
     }
     &:before {
       content: "";
@@ -216,6 +221,12 @@
       color: white;
       min-width: 110px;
       background: rgba(0,0,0,0.3);
+      &:nth-child(2){
+        margin-left: 15px;
+        @include rtl{
+          margin-right: 15px;
+        }
+      }
     }
     @at-root {
       &, .games-pw-buttonset-j a {

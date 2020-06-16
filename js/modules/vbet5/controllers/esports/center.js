@@ -8,8 +8,6 @@ VBET5.controller('eSportsCenterController', ['$rootScope', '$scope',  '$location
         var asianConf = Config.main.asian;
 
         $scope.displayBase = GameInfo.displayBase;
-        $scope.framesCount = Utils.memoize(GameInfo.framesCount);
-        $scope.showFrameAlias = Utils.memoize(GameInfo.showFrameAlias);
         $scope.collapsedMarkets = {};
 
         $scope.pointsTypeForMarket = 'TOTALS';
@@ -99,7 +97,7 @@ VBET5.controller('eSportsCenterController', ['$rootScope', '$scope',  '$location
         $scope.getCompetitionData = function getCompetitionData(params, getAllCompetitions) {
             $scope.isInitial = false;
             $scope.attachPinnedVideo($scope.enlargedGame, 'fullScreen', true);
-            if ($scope.loading || (!getAllCompetitions && $scope.games && $scope.games[0] && $scope.games[0].competition.id === params.competition.id) ) {
+            if (!getAllCompetitions && $scope.games && $scope.games[0] && $scope.games[0].competition.id === params.competition.id) {
                 return;
             }
             unsubscribeFromPreviousData('game');
@@ -112,7 +110,7 @@ VBET5.controller('eSportsCenterController', ['$rootScope', '$scope',  '$location
             var request = {
                 source: 'betting',
                 what: {
-                    game: [['id', 'team1_name', 'team2_name', 'team1_id', 'team2_id', 'team1_reg_name', 'team2_reg_name', 'info', 'start_ts', 'type', 'text_info', 'events_count', 'is_blocked', 'markets_count', 'stats', 'strong_team', 'is_neutral_venue', 'is_stat_available', 'tv_type', 'video_id', 'video_id2', 'video_id3', 'video_provider', 'show_type']],
+                    game: [['id', 'team1_name', 'team2_name', 'team1_id', 'team2_id', 'team1_reg_name', 'team2_reg_name', 'info', 'start_ts', 'type', 'text_info', 'is_blocked', 'markets_count', 'stats', 'strong_team', 'is_neutral_venue', 'is_stat_available', 'tv_type', 'video_id', 'video_id2', 'video_id3', 'video_provider', 'show_type']],
                     market: ['base', 'id', 'name', 'order', 'sequence', 'show_type', 'display_key', 'display_sub_key', 'type', 'home_score', 'away_score', 'main_order'],
                     event: ['name', 'id', 'base', 'type', 'type_1', 'price', 'show_type', 'home_value', 'away_value']
                 },
@@ -147,6 +145,8 @@ VBET5.controller('eSportsCenterController', ['$rootScope', '$scope',  '$location
                         if ( !angular.equals($scope.sharedData.selected[selected.type], selected) ) {
                             $scope.sharedData.selected[selected.type] = selected;
                         }
+
+                        $scope.game = null;
                         $scope.loading = false;
                     },
                     failureCallback: function failureCallback() {
@@ -255,7 +255,7 @@ VBET5.controller('eSportsCenterController', ['$rootScope', '$scope',  '$location
                     });
 
                     /*CORRECT SCORE*/
-                    if(market.display_key === 'CORRECT SCORE') {
+                    if(market.display_key === 'CORRECT SCORE' || market.type === 'CorrectScore') {
                         GameInfo.reorderMarketEvents(market, 'correctScore');
                     } else{
                         market.events = Utils.objectToArray(market.event);
@@ -312,11 +312,12 @@ VBET5.controller('eSportsCenterController', ['$rootScope', '$scope',  '$location
             }
             unsubscribeFromPreviousData('games');
             unsubscribeFromPreviousData('sport');
+            unsubscribeFromPreviousData('game');
             updateLocation(data);
             $scope.loading = true;
             var requestGame = [["id", "show_type", "markets_count", "start_ts", "is_live", "is_blocked", "is_neutral_venue","team1_id", "team2_id", "game_number", "text_info", "type",  "info", "team1_name", "team2_name", "tv_info"  ]];
-            if (data.game.type === 1) {
-                Array.prototype.push.apply(requestGame[0], ["match_length", "scout_provider", "video_id","video_id2", "video_id3", "tv_type", "last_event", "live_events"]);
+            if (data.type  === 'live' || data.game.type === 1) {
+                Array.prototype.push.apply(requestGame[0], ["match_length", "scout_provider", "video_id","video_id2", "video_id3", "tv_type", "last_event", "live_events", "stats"]);
             }
             var request = {
                 'source': 'betting',
@@ -358,6 +359,7 @@ VBET5.controller('eSportsCenterController', ['$rootScope', '$scope',  '$location
 
                         $scope.handleStreaming($filter("firstElement")(result.data.game));
 
+                        $scope.games = null;
                         $scope.loading = false;
                     },
                     failureCallback: function failureCallback() {
@@ -457,13 +459,6 @@ VBET5.controller('eSportsCenterController', ['$rootScope', '$scope',  '$location
             }
         });
 
-        $scope.$on('eSports.noGames', function () {
-            $scope.games = [];
-            $scope.game = null;
-
-            unsubscribeFromPreviousData('games');
-            unsubscribeFromPreviousData('sport');
-        });
         /**
          * @ngdoc method
          * @name openGameRulesPopup

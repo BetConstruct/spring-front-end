@@ -1,0 +1,6 @@
+<div ng-init="subRowItem && (item = subRowItem)"
+     ng-if="item.sliderSlug || subRowItem.sliderSlug"
+     ng-class="{'kill-height-til-media': item.mediaHeight}"
+     ng-style="{'height': (item.height || item.mediaHeight), 'max-height': item.maxHeight}"
+     banner-slider
+     interval="{{conf.featuredGames.rotationPeriod}}" slug="{{item.sliderSlug}}"></div>

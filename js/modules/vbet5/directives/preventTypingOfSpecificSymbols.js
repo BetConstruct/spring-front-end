@@ -7,7 +7,7 @@
  *
  * @param {String} prevent-input regular expression
  */
-angular.module("vbet5").directive('preventInput', function () {
+angular.module("vbet5").directive('preventInput', [ 'Utils', function (Utils) {
     'use strict';
     return {
         require: '?ngModel',
@@ -21,10 +21,26 @@ angular.module("vbet5").directive('preventInput', function () {
                     val = '';
                 }
                 var clean = val.replace(new RegExp(attrs.preventInput, "g"), '');
+                if (attrs.preventRounding && attrs.commaEnable !== 'true') {
+                    var currencyRounding = +attrs.preventRounding;
+                    var length = clean.length;
+                    if (length ) {
+                        if (clean[length - 1] !== '.') {
+                            clean = Utils.cutDecimalNumberAfterPlace(clean,  currencyRounding);
+                        } else {
+                            if (currencyRounding === 0 || clean.indexOf('.') !== length - 1) {
+                                clean = clean.substr(0, length - 1);
+                            }
+                        }
+                    }
+
+                }
                 if (attrs.commaEnable !== 'true' && val !== clean) {
                     ngModelCtrl.$setViewValue(clean);
                     ngModelCtrl.$render();
                 }
+
+
 
                 return clean;
             });
@@ -42,4 +58,4 @@ angular.module("vbet5").directive('preventInput', function () {
             }
         }
     };
-});
+}]);

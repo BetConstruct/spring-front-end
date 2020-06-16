@@ -201,7 +201,7 @@ VBET5.directive('matchesList', ['$timeout', '$q', 'ConnectionService', '$filter'
                         'sport': ['id', 'name', 'alias'],
                         'region': ['id', 'name', 'alias'],
                         'competition': ['id', 'name'],
-                        'game': [['id', 'start_ts', 'team1_name', 'team2_name', 'team1_id', 'team2_id', 'type', 'events_count', 'markets_count', 'is_blocked', 'is_stat_available']],
+                        'game': [['id', 'start_ts', 'team1_name', 'team2_name', 'team1_id', 'team2_id', 'type', 'markets_count', 'is_blocked', 'is_stat_available']],
                         'market': ['type', 'express_id', 'name', 'base', 'display_key', 'display_sub_key', 'main_order'],
                         'event': ["order", "id", "type_1", "type", "type_id", "original_order", "name", "price", "nonrunner", "ew_allowed", "sp_enabled", "extra_info", "base", "home_value", "away_value", "display_column"]
                     },

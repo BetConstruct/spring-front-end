@@ -72,6 +72,9 @@ CMS.constant('WPConfig', {
         homepageAdditionalBanner1: {
             'default': 'homepage-additional-banner'
         },
+        homepageAdditionalBanner2: {
+            'default': 'homepage-additional-banner-2'
+        },
         dashboardBanners: {
             'default': 'dashboard-banners'
         },
@@ -111,6 +114,11 @@ CMS.constant('WPConfig', {
     deberc: {
         mainPageSlugs: {        //Page category slug in wordpress
             'default': 'deberc'
+        }
+    },
+    'skill-games': {
+        mainPageSlugs: {        //Page category slug in wordpress
+            'default': 'games-page'
         }
     },
     'live-casino': {

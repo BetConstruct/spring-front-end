@@ -23,6 +23,7 @@
     }
     .filter-view-v3 {
       height: 50px;
+
     }
     .es-left-v,
     .filter-row-v3,
@@ -44,13 +45,16 @@
   }
   .markets-group-wrap-v3 {
     background: $classic-view-background;
-    top: 90px;
+
     > ul > li {
       background: rgba($c16-sp-10,0.7);
       &:hover, &.active {
         background: rgba($c16-sp-8,0.7);
       }
     }
+  }
+  .game-pinned .markets-group-wrap-v3{
+    top: 90px;
   }
   .market-title-v3 {
     background: rgba(darken(desaturate(adjust-hue($c16-sp-8, 6deg), 2), 5),0.8);
@@ -62,6 +66,7 @@
   .animation-video-box-v3 {
     position: relative;
     z-index: 1;
+    overflow: hidden;
   }
   @media screen and (max-width: 1279px) {
     .left-column-v3 {
@@ -91,7 +96,34 @@
         border-right-width: 64px;
       }
     }
-    .e-game-markets tr td:first-child, .e-game-markets tr td:last-child, .e-game-markets tr th:first-child, .e-game-markets tr th:last-child,
+    .e-game-markets {
+      tr {
+        th, td {
+          &:first-child,
+          &:last-child {
+            width: 48px;
+          }
+        }
+      }
+      &.classic-e-m tr td.team-info-n {
+        &.a-right .e-team-name-r {
+          @include ltr {
+            padding-left: 34px;
+          }
+          @include rtl {
+            padding-right: 34px;
+          }
+        }
+        &.a-left .e-team-name-r {
+          @include ltr {
+            padding-right: 34px;
+          }
+          @include rtl {
+            padding-left: 34px;
+          }
+        }
+      }
+    }
     .fav-g-info-c {
       width: 48px;
     }
@@ -136,6 +168,9 @@
   background: -moz-linear-gradient(left, $hero-color 0%, $skin-color 100%);
   background: -webkit-linear-gradient(left, $hero-color 0%, $skin-color 100%);
   background: linear-gradient(to right, $hero-color 0%, $skin-color 100%);
+  @include rtl{
+    padding: 0 25px 0 10px;
+  }
   &:before{
     display: none !important;
   }
@@ -154,9 +189,16 @@
     &.back-a-v {
       &:before {
         font: 12px icomoon;
-        content: "\e677";;
+        content: "\e677";
         margin-right: 10px;
         color: $text-palette-3;
+        @include rtl
+        {
+          content: "\e67a";
+          position: absolute;
+          right: 0;
+          top: 14px;
+        }
       }
     }
     > i {
@@ -191,6 +233,10 @@
   position: absolute;
   right: 5px;
   top: 8px;
+  @include rtl{
+    left: 5px;
+    right: inherit;
+  }
   > li{
     float: left;
     height: 25px;
@@ -202,6 +248,9 @@
     margin: 0 0 0 1px;
     background: $c16-sp-6;
     color: set-color($c16-sp-6);
+    @include rtl{
+      float: right;
+    }
     &:first-child{
       border-bottom-left-radius: 3px;
       border-top-left-radius: 3px;
@@ -282,6 +331,10 @@
       position: absolute;
       left: 10px;
       top: 0;
+      @include rtl{
+        right: 10px;
+        left: inherit;
+      }
     }
     > span {
       font-size: 11px;
@@ -402,19 +455,33 @@
   }
   tr td{
     &.team-info-n{
-      text-align: left;
-      padding: 0 0 0 25px;
-      > .e-team-name-r{
-        padding-left: 46%;
-      }
-      &.a-right{
-        text-align: right;
-        padding: 0 25px 0 0;
-        > .e-team-name-r{
-          padding-left: 0;
-          padding-right: 46%;
-        }
-      }
+      //text-align: left;
+      //padding: 0 0 0 25px;
+      //> .e-team-name-r{
+      //  padding-right: 30%;
+      //  @include rtl{
+      //    padding-left: 0;
+      //    padding-right: 46%;
+      //  }
+      //}
+      //&.a-right {
+      //  text-align: right;
+      //  padding: 0 25px 0 0;
+      //  @include rtl {
+      //    padding: 0 0 0 25px;
+      //    //text-align: left;
+      //  }
+      //}
+      //&.a-left {
+      //  > .e-team-name-r {
+      //    padding-left: 46%;
+      //    padding-right: 0;
+      //  }
+      //}
+      //> .e-team-name-r {
+      //  padding-left: 0;
+      //  padding-right: 46%;
+      //}
     }
   }
 }
@@ -455,6 +522,10 @@
   cursor: pointer;
   box-shadow: 0 0 0 1px rgba($skin-palette-13, 0.05);
   transition: color 240ms, background 240ms, box-shadow 100ms;
+  white-space: nowrap;
+  @include rtl{
+    direction: ltr;
+  }
   &.locked{
     color: transparent;
     pointer-events: none;
@@ -590,6 +661,9 @@
   background: rgba($c16-sp-8, 0.5);
   border-radius: 5px;
   position: relative;
+  @include rtl{
+    float: right;
+  }
   > h5{
     position: absolute;
     bottom: 8px;
@@ -620,6 +694,9 @@
   overflow: hidden;
   padding: 0 10px;
   box-sizing: border-box;
+  @include rtl{
+    text-align: right;
+  }
 }
 .icon-e-s{
   float: left;
@@ -756,7 +833,7 @@
   float: left;
   width: 100%;
   height: 60px;
-  padding: 0 0 0 40px;
+  //padding: 0 0 0 40px;
   box-sizing: border-box;
   position: relative;
   font-weight: normal;
@@ -765,25 +842,54 @@
   white-space: nowrap;
   text-overflow: ellipsis;
   overflow: hidden;
+  @include rtl{
+    // padding: 0 40px 0 0 ;
+  }
   > .team-logo-b{
     width: 28px;
     height: 28px;
     position: absolute;
     top: 16px;
-    left: 0;
+    right: 0;
     display: block;
     background-size: contain;
     background-repeat: no-repeat;
     background-position: 50% 50%;
+    @include rtl{
+      right: inherit;
+      left: 0;
+    }
+
   }
 }
+
+//.game-mini-t-row .e-team-name-r{
+//  @include rtl{
+//    padding: 0 40px 0 40px;
+//  }
+//
+//  .team-logo-b{
+//    @include rtl{
+//      right: 0;
+//      left: inherit;
+//    }
+//  }
+//}
+
 .a-right{
   text-align: right;
+  @include rtl{
+    text-align: left;
+  }
   > .e-team-name-r{
     padding: 0 40px 0 0;
     > .team-logo-b{
-      left: auto;
-      right: 0;
+      left: 0;
+      right: auto;
+      @include rtl{
+        right: 0 !important;
+        left: inherit !important;
+      }
     }
   }
 }
@@ -792,6 +898,75 @@
     > .team-logo-b {
       top: 50%;
       margin-top: -14px;
+    }
+  }
+}
+.e-game-markets tr td.team-info-n > .e-team-name-r{
+  @include rtl{
+    padding-left: inherit;
+    padding-right: 30px;
+  }
+  .team-logo-b{
+    @include rtl{
+      right: 20px;
+      left: inherit;
+    }
+  }
+}
+.game-mini-t-row
+.a-right > .e-team-name-r > .team-logo-b{
+  @include rtl{
+    left: 0;
+    right: auto;
+  }
+}
+.e-game-markets tr td.team-info-n.a-right > .e-team-name-r > .team-logo-b{
+  @include rtl{
+    left: 0;
+    right: inherit;
+  }
+}
+.game-mini-t-row{
+  .e-team-name-r{
+    @include ltr{
+      padding: 0 0 0 40px;
+    }
+    @include rtl{
+      padding: 0 40px 0 0;
+    }
+    .team-logo-b{
+
+      @include ltr{
+        left: 0;
+      }
+      @include rtl{
+        right: 0;
+      }
+    }
+  }
+  .a-right{
+    > .e-team-name-r{
+      @include ltr{
+        padding: 0 40px 0 0;
+      }
+      @include rtl{
+        padding: 0 0 0 40px;
+      }
+      > .team-logo-b{
+        left: auto !important;
+        right: 0 !important;
+        @include rtl{
+          left: 0 !important;
+          right: inherit !important;
+        }
+      }
+    }
+    .team-n-l-v .e-team-name-r{
+      padding: 0 0 0 40px;
+      > i {
+        left: 0;
+        right: auto;
+      }
     }
   }
 }
@@ -822,6 +997,10 @@
         line-height: 50px;
         padding-left: 60px;
         text-transform: uppercase;
+        @include rtl{
+          padding-right: 60px;
+          padding-left: inherit;
+        }
         > img{
           display: block;
           width: 40px;
@@ -830,6 +1009,10 @@
           left: 10px;
           top: 5px;
           z-index: 33;
+          @include rtl{
+            right: 10px;
+            left: inherit;
+          }
         }
         &.favorite-nav-icon-v3{
           + favorite-games{
@@ -949,20 +1132,22 @@
   padding: 0 0 20px;
   margin: 0 0 20px;
   border-bottom: 1px solid $c16-tp-6;
+  background: $c16-sp-9;
+}
+.game-pinned  .e-sport-l-score{
   position: sticky;
   top: 35px;
   z-index: 210;
-  background: $c16-sp-9;
   + .all-markets-e-s .markets-group-wrap-v3 {
     top: 322px;
-    z-index: 220;
+    z-index: 196;
 
   }
 }
 .bg-e-sport-l-t{
   float: left;
   width: 100%;
-  height: 134px;
+  height: 120px;
   border-radius: 5px 5px 0 0;
   position: relative;
   margin: 5px 0;
@@ -987,8 +1172,8 @@
 .score-row-e-g{
   float: left;
   width: 100%;
-  background: $c16-sp-9;
-  padding: 0 10px 5px;
+  //background: $c16-sp-9;
+ // padding: 0 10px 5px;
   box-sizing: border-box;
   color: $c16-tp-4;
   font-size: 12px;
@@ -1022,6 +1207,9 @@
     &:first-child{
       width: auto;
       text-align: left;
+      @include rtl{
+        text-align: right;
+      }
     }
     > .e-team-name-r{
       text-transform: none;
@@ -1083,9 +1271,15 @@
         }
         &:first-child:before {
           content: "\e677";
+          @include rtl{
+            content: "\e67a";
+          }
         }
         &:last-child:before {
           content: "\e67a";
+          @include rtl{
+            content: "\e677";
+          }
         }
       }
     }
@@ -1145,5 +1339,180 @@
     &.column-5 > .single-events-b-v3:last-child:not(:nth-child(even)):nth-last-child(odd):not(:first-child) {
       width: 200.5%;
     }
+  }
+}
+.left-nav-view-v3.esports-nav-b > ul > li > .sports-item-v3:before{
+  display: none;
+}
+.classic-view-column-v3.left-menu-closed-v3 .arrow-view-v3{
+  display: none;
+}
+
+
+//esport fix
+
+.e-game-markets.classic-e-m{
+  .team-info-n.a-right{
+    .e-team-name-r{
+      //padding: 0 70px 0 0;
+      padding: 0 0 0 70px;
+      text-align: left;
+      @include rtl{
+        text-align: right;
+      }
+    }
+  }
+
+  .team-info-n.a-left{
+    //padding: 0 0 0 70px;
+    //padding: 0 70px 0 0 ;
+    padding: 0;
+    @include rtl{
+      text-align: left;
+      padding-left: 0;
+    }
+    @include rtl{
+      text-align: right;
+    }
+  }
+   tr td.team-info-n{
+    &.a-left{
+      @include ltr {
+        padding-left: 4px;
+        padding-right: 24px;
+        text-align: right;
+      }
+      @include rtl{
+        padding-left: 24px;
+        padding-right: 4px;
+      }
+      .e-team-name-r{
+        padding-right: 70px;
+        @include rtl{
+          padding-right: 0;
+          padding-left: 70px;
+          text-align: left;
+        }
+        .team-logo-b{
+          @include rtl{
+            left: 0;
+            right: inherit;
+          }
+        }
+      }
+    }
+    &.a-right{
+      padding-right: 10px;
+      padding-left: 24px;
+      @include rtl{
+        padding-right: 24px;
+        padding-left: 0;
+      }
+      .e-team-name-r{
+        padding-left: 70px;
+        @include rtl{
+          padding-right: 70px;
+          padding-left: 0;
+        }
+      }
+    }
+  }
+}
+
+.esports{
+  .score-row-e-g{
+    //background: rgba(47,54,19,.5);
+    position: absolute;
+    top: -26px;
+    left: 0;
+    right: 0;
+  }
+  .e-sport-l-score{
+    padding: 0;
+    margin: 0;
+  }
+  .game-pinned .e-sport-l-score + .all-markets-e-s .markets-group-wrap-v3 {
+    top: 164px;
+  }
+  .bg-e-sport-l-t{
+    h2{
+      display: none;
+    }
+  }
+  .score-t-v:first-child{
+    background: $c16-sp-9;
+    height: 30px;
+    color: set-color($c16-sp-9);
+  }
+  .score-t-v {
+    background: rgba(47, 54, 19, 0.5);
+    padding: 0 20px;
+    box-sizing: border-box;
+    &:not(:first-child) {
+      > li {
+        box-shadow: 0 1px 0 rgba(255, 255, 255, .16), 0 -1px 0 rgba(60, 59, 59, .28) inset;
+        font-size: 24px;
+        line-height: 30px;
+      }
+      > li.active-cash {
+        color: yellow;
+      }
+    }
+  }
+}
+
+.esports .sports-item-v3.favorite-nav-icon-v3{
+  &:after{
+    content: "\f005";
+    color: $brand-color-2;
+    font: 34px/46px icomoon;
+    display: block;
+    position: absolute;
+    top: 2px;
+    left: 15px;
+  }
+}
+.e-game-markets{
+  &.classic-e-m{
+    tr td{
+      .e-g-price-v{
+        width: 74%;
+        text-align: center;
+      }
+      &:nth-child(2){
+        &:nth-last-child(3){
+          text-align: left;
+          @include rtl{
+            text-align: right;
+          }
+          + td{
+            text-align: right;
+            @include rtl{
+              text-align: left;
+            }
+          }
+        }
+        &:nth-last-child(4){
+          text-align: right;
+          @include rtl{
+            text-align: left;
+          }
+          + td{
+            + td{
+              text-align: left;
+              @include rtl{
+                text-align: right;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 1279px){
+  .esports .classic-e-m .e-g-price-v {
+    max-width: 74%;
   }
 }

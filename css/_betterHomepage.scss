@@ -138,18 +138,22 @@
       box-sizing: border-box;
       height: 100%;
       overflow: hidden;
-      > div, products-slider {
-        display: block;
-        float: left;
-        width: 100%;
-        height: 100%;
-        > div {
+      > {
+        div, products-slider, ng-include {
+          display: block;
           float: left;
           width: 100%;
           height: 100%;
-          padding: 5px;
-          box-sizing: border-box;
-          transform: translate3d(0,0,0);
+          > {
+            div, ng-include {
+              float: left;
+              width: 100%;
+              height: 100%;
+              padding: 5px;
+              box-sizing: border-box;
+              transform: translate3d(0,0,0);
+            }
+          }
         }
       }
     }
@@ -177,31 +181,34 @@
     clear: both;
   }
 }
-body .better-homepage {
-  float: left;
-  width: 100%;
-  margin: 0 0 48px;
+body {
   .row {
     background: rgba($skin-palette-11,0.55);
     &:first-of-type {
       box-shadow: 0 -160px 0 rgba($skin-palette-11,0.55);
     }
   }
-  .absolute-widget {
-    position: absolute;
-    top: 0;
-    left: 0;
-    bottom: 0;
-    right: 0;
-    box-sizing: border-box;
+  .better-homepage {
+    float: left;
     width: 100%;
-    height: 100%;
-    padding: 5px;
-    overflow: hidden;
-    z-index: 30;
-    &.last-minutes-widget-b {
-     // height: calc(100% - 5px);
+    margin: 0 0 48px;
+    .absolute-widget {
+      position: absolute;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      right: 0;
+      box-sizing: border-box;
+      width: 100%;
       height: 100%;
+      padding: 5px;
+      overflow: hidden;
+      z-index: 30;
+
+      &.last-minutes-widget-b {
+        // height: calc(100% - 5px);
+        height: 100%;
+      }
     }
   }
 }

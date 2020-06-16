@@ -289,10 +289,12 @@ live-game-scores {
 
 .column-view-j:before {
     content: "\e98e";
+    font-family: icomoon;
 }
 
 .list-view-j:before {
     content: "\e98d";
+    font-family: icomoon;
 }
 
 .statistics-icon-j:before {
@@ -522,5 +524,35 @@ live-game-scores {
     > i{
         font-style: normal;
         margin: 0 0 0 5px;
+    }
+}
+@media screen and (min-width: 1400px) and  (max-width: 1500px){
+    .prematch-games-list.multi-column-view ~ .live-game-view-contain-v3{
+        .shot-result-b{
+            bottom: -12px;
+        }
+    }
+}
+.modern {
+    .no-video-flash{
+        &.no-video-ie8{
+            .shot-result-b, .short-info-box h6 ~ p{
+                max-width: 100%;
+            }
+        }
+
+    }
+    .shot-result-b {
+        max-width: calc(100% - 356px);
+        @include rtl{
+            right: 0;
+            left: auto;
+        }
+    }
+    .short-info-box h6 ~ p{
+        max-width: calc(100% - 346px);
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
     }
 }

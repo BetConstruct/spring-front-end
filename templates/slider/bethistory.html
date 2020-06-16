@@ -110,9 +110,9 @@
                         </li>
                         <li class="maney-rate">
                             <p>{{bet.type == 1 && bet.events[0].k_type ==11 ? 'SP' : (bet.k|oddConvert:env.oddFormat)}} </p>
-                            <span ng-show="!bet.bonus_bet_amount && bet.amount">{{bet.amount|number:conf.balanceFractionSize}}</span>
+                            <span ng-show="!bet.bonus_bet_amount && bet.amount">{{bet.amount|bankersRoundAndNumberCommas:$root.conf.balanceFractionSize}}</span>
                             <span ng-show="bet.bonus_bet_amount && !bet.amount" title="Bet placed from bonus." class="bonus" trans="attr-only">{{bet.bonus_bet_amount}}</span>
-                            <span ng-show="bet.bonus_bet_amount && bet.amount" title="{{('Part of bet placed from bonus.'|translate) + ' (' + bet.amount + ' + ' + bet.bonus_bet_amount + ')'}}" class="bonus-combined">{{(bet.bonus_bet_amount + bet.amount)|number:conf.balanceFractionSize}}</span>
+                            <span ng-show="bet.bonus_bet_amount && bet.amount" title="{{('Part of bet placed from bonus.'|translate) + ' (' + bet.amount + ' + ' + bet.bonus_bet_amount + ')'}}" class="bonus-combined">{{(bet.bonus_bet_amount + bet.amount)|bankersRoundAndNumberCommas:$root.conf.balanceFractionSize}}</span>
                             {{bet.currency|currency}}
                             <span class="cms-jcon-bonus2" title="Made with Bonus money" trans="attr-only" ng-if="bet.is_bonus_money" ></span>
                         </li>
@@ -128,14 +128,14 @@
                                 <p>
                                     <i ng-bind="bet.bonus_amount" ng-show="bet.bonus_amount" class="bonus" title="Bonus" trans="attr-only"></i>
                                     <b ng-show="bet.bonus_amount && bet.payout" class="bonus-combined">+</b>
-                                    <b ng-show="bet.payout">{{bet.payout|number:conf.balanceFractionSize}}</b>
+                                    <b ng-show="bet.payout">{{bet.payout|bankersRoundAndNumberCommas:$root.conf.balanceFractionSize}}</b>
                                     {{bet.currency|currency}}
                                 </p>
                             </div>
                             <div ng-show="bet.outcome == 5">
                                 <span class="won-rezult"  trans>Cashed out</span>
                                 <p ng-show="bet.payout">
-                                    <b >{{bet.payout|number:conf.balanceFractionSize}}</b>
+                                    <b >{{bet.payout|bankersRoundAndNumberCommas:$root.conf.balanceFractionSize}}</b>
                                     {{bet.currency|currency}}
                                 </p>
                             </div>

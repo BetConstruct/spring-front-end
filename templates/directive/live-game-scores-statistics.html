@@ -100,15 +100,27 @@
                     <td ng-show="openGame.stats.foul">{{ openGame.stats.foul.team2_value}}</td>
                 </tr>
             </table>
-            <div class="timeline-container" ng-class="{'hide-stats': $root.env.hideLiveStats}">
-                <soccertimeline ng-class="{'tl-80': openGame.last_event.match_length === '80','tl-70': openGame.last_event.match_length === '70', 'tl-60': openGame.last_event.match_length === '60', 'extra': isExtraTime(openGame.info)}"></soccertimeline>
+             <div class="timeline-container" ng-class="{'hide-stats': $root.env.hideLiveStats, 'timeline-extra-80': openGame.info.isExtraTime && openGame.last_event.match_length === '110', 'timeline-extra': openGame.info.isExtraTime && openGame.last_event.match_length === '120'}">
+                <soccertimeline match-length="openGame.last_event.match_length" is-extra="false"></soccertimeline>
                 <div class="tl-data">
-                    <div class="current-minute" ng-style="openGame.tlCurrentMinute"></div>
-                    <div ng-repeat="tlEvent in openGame.tlEvents" ng-style="tlEvent.timeline_position" class="{{tlEvent.team + '-' + tlEvent.type}}">
+                    <div class="current-minute" ng-style="!openGame.info.isExtraTime ? openGame.tlCurrentMinute : {'width' : '100%'}"></div>
+                    <div ng-repeat="tlEvent in openGame.tlEvents" ng-if="!tlEvent.extraTime" ng-style="tlEvent.timeline_position" class="{{tlEvent.team + '-' + tlEvent.type}}">
                         <div class="{{tlEvent.type}}"></div>
                         <div class="tl-details" ng-class="{'to-right': tlEvent.minute>50}">{{tlEvent.details.type|capitalise|translate}} {{tlEvent.details.add_info}}</div>
                     </div>
-                    <div class="tl-info" ng-style="openGame.tlCurrentPosition">
+                    <div class="tl-info" ng-if="!openGame.info.isExtraTime" ng-style="openGame.tlCurrentPosition" title="{{openGame.info.current_game_time}}'">
+                    </div>
+                </div>
+            </div>
+            <div class="timeline-container" ng-if="openGame.info.isExtraTime" ng-class="{'hide-stats': $root.env.hideLiveStats}">
+                <soccertimeline is-extra="true"></soccertimeline>
+                <div class="tl-data">
+                    <div class="current-minute" ng-style="openGame.tlCurrentMinute"></div>
+                    <div ng-repeat="tlEvent in openGame.tlEvents" ng-if="tlEvent.extraTime" ng-style="tlEvent.timeline_position" class="{{tlEvent.team + '-' + tlEvent.type}}">
+                        <div class="{{tlEvent.type}}"></div>
+                        <div class="tl-details" ng-class="{'to-right': tlEvent.minute>50}">{{tlEvent.details.type|capitalise|translate}} {{tlEvent.details.add_info}}</div>
+                    </div>
+                    <div class="tl-info" ng-style="openGame.tlCurrentPosition" title="{{openGame.info.current_game_time}}'">
                     </div>
                 </div>
             </div>

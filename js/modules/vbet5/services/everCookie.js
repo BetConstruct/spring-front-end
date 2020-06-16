@@ -22,7 +22,7 @@ VBET5.service('everCookie', ['$rootScope', '$http', 'Config', 'AuthData', functi
         return btoa(JSON.stringify({
             "id": randHex(16),
             "ts": +new Date()
-        }))
+        }));
     }
 
     evercookie.init = function () {
@@ -37,17 +37,17 @@ VBET5.service('everCookie', ['$rootScope', '$http', 'Config', 'AuthData', functi
                 evercookie.value = generateCookie();
                 ec.set("afec", evercookie.value);
             }
-            $rootScope.$on('$routeChangeSuccess', function(ev, currentRoute, prevRoute) {
+           /* $rootScope.$on('$routeChangeSuccess', function(ev, currentRoute, prevRoute) {
                 var ref = prevRoute && prevRoute.$$route && prevRoute.$$route.originalPath;
                 evercookie.log({ref: ref});
             });
-            evercookie.log();
+            evercookie.log();*/
         });
 
     };
 
 
-    evercookie.log = function(data) {
+   /* evercookie.log = function(data) {
         data = data || {};
         try {
             var cookieObj = JSON.parse(atob(evercookie.value));
@@ -69,9 +69,9 @@ VBET5.service('everCookie', ['$rootScope', '$http', 'Config', 'AuthData', functi
         } catch (err) {
             console.error(err);
         }
-    };
+    };*/
 
-    evercookie.postToKafka = function(msg) {
+    /*evercookie.postToKafka = function(msg) {
         var req = {
             method: 'POST',
             url: Config.everCookie.afecUrl,
@@ -84,15 +84,15 @@ VBET5.service('everCookie', ['$rootScope', '$http', 'Config', 'AuthData', functi
 
         $http(req).then(
             function(response){
-                console.log("ok", response)
+                console.log("ok", response);
             },
             function(response){
-                console.log("not ok", response)
+                console.log("not ok", response);
             }
         );
-    };
+    };*/
 
-    evercookie.getMessageJson = function(data) {
+    /*evercookie.getMessageJson = function(data) {
         return {
             "key_schema": JSON.stringify({
                 "name": "cookieId",
@@ -170,7 +170,7 @@ VBET5.service('everCookie', ['$rootScope', '$http', 'Config', 'AuthData', functi
                 }
             }]
         };
-    };
+    };*/
 
     return evercookie;
 
@@ -181,8 +181,8 @@ VBET5.service('everCookie', ['$rootScope', '$http', 'Config', 'AuthData', functi
 (function () {
 
     var object =
-        typeof exports != 'undefined' ? exports :
-            typeof self != 'undefined' ? self : // #8: web workers
+        typeof exports !== 'undefined' ? exports :
+            typeof self !== 'undefined' ? self : // #8: web workers
                 $.global; // #31: ExtendScript
 
     var chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=';

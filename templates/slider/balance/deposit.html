@@ -192,7 +192,7 @@
                             <span ng-hide="selectedPaymentSystem.customCurrency">({{currency_name|currency}})</span>
                             <span ng-show="selectedPaymentSystem.customCurrency">{{selectedPaymentSystem.customCurrency|translate}}</span>
                         </label>
-                        <input name="amount" id="numpad-forced" type="number" numpad numpad-force ng-model="paymentAmount.deposit" placeholder="enter amount here" min="{{paymentAmount.amountMinLimit}}" step="{{paymentAmount.amountMinLimit}}" required trans>
+                        <input name="amount" id="numpad-forced" type="number" numpad numpad-force ng-model="paymentAmount.deposit" placeholder="enter amount here" min="{{selectedPaymentSystem.info[currency_name].minDeposit || 0}}" max="{{selectedPaymentSystem.info[currency_name].maxDeposit}}" required trans>
 
                         <button ng-repeat="customAmount in depositCustomAmounts track by $index" ng-click="paymentAmount.deposit=customAmount">{{customAmount|number}}</button>
                         <label class="no-select-j">

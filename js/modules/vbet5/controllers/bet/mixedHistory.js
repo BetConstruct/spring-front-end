@@ -117,7 +117,9 @@ VBET5.controller('mixedMyBetsCtrl', ['$rootScope', '$scope', '$controller', '$lo
         'lost': 0,
         'returned': 0,
         'won': 0,
-        'cashout': 0
+        'cashout': 0,
+        'wonReturn': 0,
+        'lostReturn': 0
     });
     initBetEventCounts();
 
@@ -204,6 +206,12 @@ VBET5.controller('mixedMyBetsCtrl', ['$rootScope', '$scope', '$controller', '$lo
                         break;
                     case 5:
                         $scope.betEventCounts.cashout++;
+                        break;
+                    case 11:
+                        $scope.betEventCounts.wonReturn++;
+                        break;
+                    case 12:
+                        $scope.betEventCounts.lostReturn++;
                         break;
                 }
 
@@ -355,4 +363,24 @@ VBET5.controller('mixedMyBetsCtrl', ['$rootScope', '$scope', '$controller', '$lo
     };
 
     initScope();
+
+    (function hasTax() {
+        var taxEnabled = false;
+
+        if ($rootScope.partnerConfig && ($rootScope.partnerConfig.tax_integration_type === 0 || $rootScope.partnerConfig.tax_integration_type === 1)) {
+            if ($rootScope.partnerConfig.tax_type === 1 || $rootScope.partnerConfig.tax_type === 2) {
+                taxEnabled = true;
+            } else if ($rootScope.partnerConfig.tax_amount_ranges && $rootScope.partnerConfig.tax_amount_ranges.length) {
+                for (var i = $rootScope.partnerConfig.tax_amount_ranges.length; i--;) {
+                    var currentType = $rootScope.partnerConfig.tax_amount_ranges[i].type;
+                    if (currentType === 1 || currentType === 2) {
+                        taxEnabled = true;
+                        break;
+                    }
+                }
+            }
+        }
+
+        $scope.taxEnabled = taxEnabled;
+    })();
 }]);

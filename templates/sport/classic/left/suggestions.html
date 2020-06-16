@@ -1,0 +1,12 @@
+<div class="left-menu-suggested-games">
+    <div class="left-menu-suggested-games-padding">
+        <div ng-click="leftMenuState.suggestions=!leftMenuState.suggestions" class="left-menu-suggested-games-title ellipsis-text" ng-class="{'active': leftMenuState.suggestions}">
+            {{$root.conf.suggestionsInLiveSection.title|translate}}
+        </div>
+        <div class="left-menu-suggested-games-list" ng-show="leftMenuState.suggestions">
+            <a class="live-casino-icon {{suggestion.iconClass}} ellipsis-text" ng-href="{{suggestion.url}}" ng-repeat="suggestion in $root.conf.suggestionsInLiveSection.suggestions track by $index">
+                {{suggestion.title|translate}}
+            </a>
+        </div>
+    </div>
+</div>

@@ -33,7 +33,7 @@
                                      ng-click="printLastBet()"
                                 ></div>
                             </li>
-                            <li ng-if="$root.conf.enableSystemCalculator">
+                            <li ng-if="$root.conf.enableSystemCalculator || $root.conf.bettingCalculator.enabled">
                                 <div class="icon-wrapper-b-v3 calculator-icon-betslip-v3" ng-click="$root.showSystemCalculator = !$root.showSystemCalculator"></div>
                             </li>
                             <li ng-show="betSlip.mode === 'betting' && !betSlip.superbet.selector && !counterOffer.enabled && $root.conf.priceChangesSettingMode[$root.env.oddFormat] === undefined">
@@ -380,6 +380,7 @@
                                            comma-enable={{$root.conf.enableCommaSeparateNumber}}
                                            comma-decimal="enable" comma-dot="{{$root.conf.enableDotInsteadComma}}"
                                            prevent-input="{{$root.conf.stakeAmountPreventInput}}"
+                                           prevent-rounding="{{$root.conf.balanceFractionSize}}"
                                            ng-focus="(betSlip.stake == 0) && (betSlip.stake = '')"
                                            ng-model="bet.singleStake" numpad type="text"
                                            placeholder="{{$root.conf.betslipInputFieldCustomValue | translate}}"
@@ -412,7 +413,7 @@
                                     <i trans>Min Offer Amount:</i>
                                 </p>
                                 <span>
-                                    <b>{{ profile.counter_offer_min_amount.toFixed(currency.rounding)|number:$root.conf.balanceFractionSize }} {{currency_name|currency}}</b>
+                                    <b>{{ profile.counter_offer_min_amount.toFixed(currency.rounding)|bankersRoundAndNumberCommas:$root.conf.balanceFractionSize }} {{currency_name|currency}}</b>
                                 </span>
                             </div>
                         </div>
@@ -423,7 +424,7 @@
                                         <i trans>Possible win:</i>
                                     </p>
                                     <span>
-                                        <b>{{bet.singlePosWin|number:$root.conf.balanceFractionSize}} {{currency_name|currency}}</b>
+                                        <b>{{bet.singlePosWin|bankersRoundAndNumberCommas:$root.conf.balanceFractionSize}} {{currency_name|currency}}</b>
                                     </span>
                                 </div>
                             </div>
@@ -431,17 +432,17 @@
                                 <div class="bet-win-view-v3">
                                     <div>
                                         <p><i trans>Tax:</i></p>
-                                        <span><b>{{bet.tax|number:$root.conf.balanceFractionSize}} {{currency_name|currency}}</b> <b ng-if="$root.partnerConfig && $root.partnerConfig.tax_percent">{{"({1}%)"|translate:[$root.partnerConfig.tax_percent]}}</b></span>
+                                        <span><b>{{bet.tax|bankersRoundAndNumberCommas:$root.conf.balanceFractionSize}} {{currency_name|currency}}</b> <b ng-if="$root.partnerConfig && $root.partnerConfig.tax_percent">{{"({1}%)"|translate:[$root.partnerConfig.tax_percent]}}</b></span>
                                     </div>
                                     <div ng-if="$root.partnerConfig.tax_type===20">
                                         <p><i trans>Winning bonus:</i></p>
-                                        <span><b>{{bet.tax|number:$root.conf.balanceFractionSize}} {{currency_name|currency}}</b></span>
+                                        <span><b>{{bet.tax|bankersRoundAndNumberCommas:$root.conf.balanceFractionSize}} {{currency_name|currency}}</b></span>
                                     </div>
                                 </div>
                                 <div class="bet-win-view-v3">
                                     <div>
                                         <p><i trans>Final Payout:</i></p>
-                                        <span><b>{{(bet.singlePosWin - ({1:1, 2:1}[$root.partnerConfig.tax_type] ? bet.tax : 0))|number:$root.conf.balanceFractionSize}} {{currency_name|currency}}</b></span>
+                                        <span><b>{{(bet.singlePosWin - ({1:1, 2:1}[$root.partnerConfig.tax_type] ? bet.tax : 0))|bankersRoundAndNumberCommas:$root.conf.balanceFractionSize}} {{currency_name|currency}}</b></span>
                                     </div>
                                 </div>
                             </div>
@@ -449,31 +450,31 @@
                                 <div class="bet-win-view-v3">
                                     <div>
                                         <p><i>{{$root.partnerConfig.tax_percent}}% tax on stake:</i></p>
-                                        <span><b>{{bet.stakeTax|number:$root.conf.balanceFractionSize}} {{currency_name|currency}}</b></span>
+                                        <span><b>{{bet.stakeTax|bankersRoundAndNumberCommas:$root.conf.balanceFractionSize}} {{currency_name|currency}}</b></span>
                                     </div>
                                 </div>
                                 <div class="bet-win-view-v3">
                                     <div>
                                         <p><i trans>Stake after tax:</i></p>
-                                        <span><b>{{bet.remainingStake | number:$root.conf.balanceFractionSize}} {{currency_name|currency}}</b></span>
+                                        <span><b>{{bet.remainingStake | bankersRoundAndNumberCommas:$root.conf.balanceFractionSize}} {{currency_name|currency}}</b></span>
                                     </div>
                                 </div>
                                 <div class="bet-win-view-v3">
                                     <div>
                                         <p><i ng-bind="bet.secondTax > 0 ? 'Possible win:' : 'Final Payout:'|translate"></i></p>
-                                        <span><b>{{bet.singlePosWin | number:$root.conf.balanceFractionSize}} {{currency_name|currency}}</b></span>
+                                        <span><b>{{bet.singlePosWin | bankersRoundAndNumberCommas:$root.conf.balanceFractionSize}} {{currency_name|currency}}</b></span>
                                     </div>
                                 </div>
                                 <div class="bet-win-view-v3" ng-if="bet.secondTax > 0">
                                     <div>
                                         <p><i trans>Tax:</i></p>
-                                        <span><b>{{bet.secondTax | number:$root.conf.balanceFractionSize}} {{currency_name|currency}}</b></span>
+                                        <span><b>{{bet.secondTax | bankersRoundAndNumberCommas:$root.conf.balanceFractionSize}} {{currency_name|currency}}</b></span>
                                     </div>
                                 </div>
                                 <div class="bet-win-view-v3" ng-if="bet.secondTax > 0">
                                     <div>
                                         <p><i trans>Final Payout:</i></p>
-                                        <span><b>{{bet.singlePosWin - bet.secondTax | number:$root.conf.balanceFractionSize}} {{currency_name|currency}}</b></span>
+                                        <span><b>{{bet.singlePosWin - bet.secondTax | bankersRoundAndNumberCommas:$root.conf.balanceFractionSize}} {{currency_name|currency}}</b></span>
                                     </div>
                                 </div>
                             </div>
@@ -580,7 +581,7 @@
                                                 <i trans>Possible win:</i>
                                             </p>
                                             <span>
-                                        <b>{{bet.singlePosWin|number:$root.conf.balanceFractionSize}} {{currency_name|currency}}</b>
+                                        <b>{{bet.singlePosWin|bankersRoundAndNumberCommas:$root.conf.balanceFractionSize}} {{currency_name|currency}}</b>
                                     </span>
                                         </div>
                                     </div>
@@ -588,17 +589,17 @@
                                         <div class="bet-win-view-v3">
                                             <div>
                                                 <p><i trans>Tax:</i></p>
-                                                <span><b>{{bet.tax|number:$root.conf.balanceFractionSize}} {{currency_name|currency}}</b></span>
+                                                <span><b>{{bet.tax|bankersRoundAndNumberCommas:$root.conf.balanceFractionSize}} {{currency_name|currency}}</b></span>
                                             </div>
                                             <div ng-if="$root.partnerConfig.tax_type===20">
                                                 <p><i trans>Winning bonus:</i></p>
-                                                <span><b>{{bet.tax|number:$root.conf.balanceFractionSize}} {{currency_name|currency}}</b></span>
+                                                <span><b>{{bet.tax|bankersRoundAndNumberCommas:$root.conf.balanceFractionSize}} {{currency_name|currency}}</b></span>
                                             </div>
                                         </div>
                                         <div class="bet-win-view-v3">
                                             <div>
                                                 <p><i trans>Final Payout:</i></p>
-                                                <span><b>{{(bet.singlePosWin - ($root.partnerConfig.tax_type===1 ? bet.tax: 0))|number:$root.conf.balanceFractionSize}} {{currency_name|currency}}</b></span>
+                                                <span><b>{{(bet.singlePosWin - ($root.partnerConfig.tax_type===1 ? bet.tax: 0))|bankersRoundAndNumberCommas:$root.conf.balanceFractionSize}} {{currency_name|currency}}</b></span>
                                             </div>
                                         </div>
                                     </div>
@@ -645,6 +646,7 @@
                                                 <li>
                                                     <input comma comma-enable={{$root.conf.enableCommaSeparateNumber}}
                                                            comma-decimal="enable"
+                                                           prevent-rounding="{{$root.conf.balanceFractionSize}}"
                                                            comma-dot="{{$root.conf.enableDotInsteadComma}}"
                                                            prevent-input="{{$root.conf.stakeAmountPreventInput}}"
                                                            ng-disabled="freeBet.enabled"
@@ -654,9 +656,9 @@
                                                            maxlength="8">
                                                 </li>
                                                 <li>
-                                                    <!--<div ng-show="key !== 'Singles' && env.authorized" class="stake-max-bet-v3">-->
-                                                        <!--<span class="single-bet-maxbet-view-v3" ng-click="getMaxBet(betSlip.bets, type)" trans>Max</span>-->
-                                                    <!--</div>-->
+                                                    <div ng-show="env.authorized" class="stake-max-bet-v3">
+                                                        <span class="single-bet-maxbet-view-v3" ng-click="getMaxBet(betSlip.bets, type)" trans>Max</span>
+                                                    </div>
                                                 </li>
                                             </ul>
                                         </div>
@@ -700,7 +702,7 @@
                         </label>
                         <p ng-show="!betSlip.eachWayMode && !betSlip.hasSpOddTypes && betSlip.bets.length > 1 && betSlip.type.value == 2 && !quickBet.enabled">
                             <b trans>Odds:</b>
-                            <span>{{betSlip.expOdds|oddConvert:((env.oddFormat === 'hongkong' && $root.conf.specialOddFormat)? $root.conf.specialOddFormat.hongkong.default : env.oddFormat):'fictional'}}</span>
+                            <span>{{betSlip.expOdds|oddConvert:((env.oddFormat === 'hongkong' && $root.conf.specialOddFormat)? $root.conf.specialOddFormat.hongkong.default : env.oddFormat):'fictional':undefined:undefined:true}}</span>
                         </p>
                         <div class="editing-stake-wrapper" ng-show="$root.editBet.edit">
                             <div class="editing-stake-wrapper-p" ng-bind="($root.editBet.stakeAmount ? 'Editing uses the cash out value of this bet' : 'Editing functionality is not available at the moment') | translate"></div>
@@ -715,6 +717,7 @@
                                                 <input comma comma-enable={{$root.conf.enableCommaSeparateNumber}}
                                                        comma-decimal="enable" comma-dot="{{$root.conf.enableDotInsteadComma}}"
                                                        prevent-input="{{$root.conf.stakeAmountPreventInput}}"
+                                                       prevent-rounding="{{$root.conf.balanceFractionSize}}"
                                                        name="" numpad numpad-letters="disabled" ng-model="$root.editBet.increaseStake.amount"
                                                        ng-model-options="{ debounce: 100 }" type="text"
                                                        ng-keyup="$event.keyCode === 13 ? toggleStakeTooltip(true) : null"
@@ -723,7 +726,7 @@
                                             <div class="increase-stake-footer">
                                                 <div class="editing-stake-wrapper-p">
                                                     <span trans>New Return</span>
-                                                    <strong ng-bind="taxOnStake.enabled ? (taxOnStake.posWin - taxOnStake.secondTax) : (possibleWinTax ? finalWinTaxValue : possibleWinValue) | number:$root.conf.balanceFractionSize"></strong>
+                                                    <strong ng-bind="taxOnStake.enabled ? (taxOnStake.posWin - taxOnStake.secondTax) : (possibleWinTax ? finalWinTaxValue : possibleWinValue) | bankersRoundAndNumberCommas:$root.conf.balanceFractionSize"></strong>
                                                 </div>
                                                 <div class="editing-stake-wrapper-p" ng-show="betSlip.totalStake - $root.editBet.stakeAmount > profile.calculatedBalance + profile.calculatedBonus">
                                                     <span trans>Insufficient balance</span>
@@ -744,8 +747,12 @@
                     <div class="stake-form-contain-v3" ng-class="{'two-fields-v3': betSlip.bets.length > 2 && betSlip.type.value === 3} " ng-show="!freeBet.selected && !$root.editBet.edit">
                         <ul>
                             <li ng-if="betSlip.bets.length > 2 && betSlip.type.value === 3">
+                                <div class="accumulator-system-c">{{betSlip.divisionCoefficient * (betSlip.eachWayMode ? 2 : 1)}} x</div>
+                            </li>
+                            <li ng-if="betSlip.bets.length > 2 && betSlip.type.value === 3">
                                 <input id="express-unitbet-input" numpad
                                        prevent-input="{{$root.conf.stakeAmountPreventInput}}"
+                                       prevent-rounding="{{$root.conf.balanceFractionSize}}"
                                        ng-model="betSlip.unitStake" type="text" placeholder="Unit Stake" trans
                                        maxlength="8"
                                        ng-if="betSlip.type.value !== 1 || quickBet.enabled || betSlip.bets.length === 1"
@@ -755,15 +762,15 @@
                             </li>
                             <li>
                                 <input id="express-bet-input" comma comma-enable={{$root.conf.enableCommaSeparateNumber}}
-                                       comma-decimal="enable" comma-dot="{{$root.conf.enableDotInsteadComma}}"
+                                       comma-decimal="enable" prevent-rounding="{{$root.conf.balanceFractionSize}}" comma-dot="{{$root.conf.enableDotInsteadComma}}"
                                        prevent-input="{{$root.conf.stakeAmountPreventInput}}"
                                        name="" numpad numpad-letters="disabled" ng-model="betSlip.stake" type="text"
                                        placeholder="{{$root.conf.betslipInputFieldCustomValue | translate}}" maxlength="11"
-                                       ng-if="betSlip.type.value !== 1 || quickBet.enabled || betSlip.bets.length === 1"
+                                       ng-if="betSlip.type.value !== 3 && (betSlip.type.value !== 1  || quickBet.enabled || betSlip.bets.length === 1)"
                                        ng-disabled="(shared.isBetsInProgress || (betConf.disableStakeInSystemType && betSlip.type.value === 3))"
                                        focus-on="bet" auto-focus="{{betSlip.mode}}" ng-keypress="!showRetainsButtons && betFromKeyboard($event)">
                             </li>
-                            <li ng-show="(betSlip.mode === 'betting') && env.authorized && (betSlip.type.value === 2 || (betSlip.type.value === 1 && betSlip.bets.length === 1 && !counterOffer.enabled)) && !betConf.disableMaxBet && !quickBet.enabled">
+                            <li ng-show="(betSlip.mode === 'betting') && env.authorized && (betSlip.type.value === 2 || (betSlip.type.value === 3 && betSlip.bets.length > 2) || (betSlip.type.value === 1 && betSlip.bets.length === 1 && !counterOffer.enabled)) && !betConf.disableMaxBet && !quickBet.enabled">
                                 <div class="stake-max-bet-v3" ng-class="{'disabled-opacity': getMaxBetInProgress || (betConf.disableMaxButtonInBetProgress && shared.isBetsInProgress)}" ng-click="bet.singleStake = getMaxBet(betSlip.bets)">
                                     <span class="single-bet-maxbet-view-v3" trans>Max</span>
                                 </div>
@@ -776,7 +783,7 @@
                                 <i trans>Min Offer Amount:</i>
                             </p>
                             <span>
-                                <b>{{ (profile.counter_offer_min_amount).toFixed(currency.rounding)|number:$root.conf.balanceFractionSize }} {{currency_name|currency}}</b>
+                                <b>{{ (profile.counter_offer_min_amount).toFixed(currency.rounding)|bankersRoundAndNumberCommas:$root.conf.balanceFractionSize }} {{currency_name|currency}}</b>
                             </span>
                         </div>
                     </div>
@@ -787,12 +794,12 @@
                     </div>
                     <div class="possible-win-view-v3"
                          ng-show="(possibleWinValue > 0 || betSlip.hasSpOddTypes) && !betSlip.thereAreDeletedEvents && !betSlip.hasLockedEvents">
-                        <div class="bet-win-view-v3" ng-show="betConf.fullCoverBetTypes.enabled || betSlip.eachWayPossible">
+                        <div class="bet-win-view-v3" ng-show="betConf.fullCoverBetTypes.enabled || betSlip.eachWayPossible || betSlip.type.value === 3">
                             <p>
                                 <i trans>Total Stake:</i>
                             </p>
                             <span>
-                                <b>{{betSlip.totalStake|number:$root.conf.balanceFractionSize}} {{currency_name|currency}}</b>
+                                <b>{{betSlip.totalStake|bankersRoundAndNumberCommas:$root.conf.balanceFractionSize}} {{currency_name|currency}}</b>
                             </span>
                         </div>
 
@@ -802,7 +809,7 @@
                                     <i trans>Boosted amount</i>
                                 </p>
                                 <span>
-                                    <b>{{profitBoost.selected.posBoost | number:$root.conf.balanceFractionSize}} {{currency_name|currency}}</b>
+                                    <b>{{profitBoost.selected.posBoost | bankersRoundAndNumberCommas:$root.conf.balanceFractionSize}} {{currency_name|currency}}</b>
                                 </span>
                             </div>
                             <div ng-if="profitBoost.selected" class="bet-win-view-v3">
@@ -822,7 +829,7 @@
                                     <i trans>Possible win:</i>
                                 </p>
                                 <span>
-                                    <b>{{possibleWinValue | number:$root.conf.balanceFractionSize}} {{currency_name|currency}}</b>
+                                    <b>{{possibleWinValue | roundPossibleWin:$root.conf.balanceFractionSize:betSlip.type.value}} {{currency_name|currency}}</b>
                                 </span>
                             </div>
                             <!-- tax_type: 1 - tax on profit ; 4 - tax on stack 20 - tax on profit as fictive-->
@@ -830,16 +837,16 @@
                                 <div class="bet-win-view-v3 possible-win-row">
                                     <div>
                                         <p><i trans>Tax:</i></p>
-                                        <span><b>{{possibleWinTax | number:$root.conf.balanceFractionSize}} {{currency_name|currency}}</b> <b ng-if="$root.partnerConfig && $root.partnerConfig.tax_percent">{{"({1}%)"|translate:[$root.partnerConfig.tax_percent]}}</b></span>
+                                        <span><b>{{possibleWinTax | bankersRoundAndNumberCommas:$root.conf.balanceFractionSize}} {{currency_name|currency}}</b> <b ng-if="$root.partnerConfig && $root.partnerConfig.tax_percent">{{"({1}%)"|translate:[$root.partnerConfig.tax_percent]}}</b></span>
                                     </div>
                                     <div ng-if="$root.partnerConfig.tax_type===20">
                                         <p><i trans>Winning bonus:</i></p>
-                                        <span><b>{{possibleWinTax | number:$root.conf.balanceFractionSize}} {{currency_name|currency}}</b></span>
+                                        <span><b>{{possibleWinTax | bankersRoundAndNumberCommas:$root.conf.balanceFractionSize}} {{currency_name|currency}}</b></span>
                                     </div>
                                 </div>
                                 <div class="total-possible-win-j">
                                     <p><i trans>Final Payout:</i></p>
-                                    <span><b>{{finalWinTaxValue | number:$root.conf.balanceFractionSize}} {{currency_name|currency}}</b></span>
+                                    <span><b>{{finalWinTaxValue | bankersRoundAndNumberCommas:$root.conf.balanceFractionSize}} {{currency_name|currency}}</b></span>
                                 </div>
                             </div>
                             <div class="display-float" ng-if="taxOnStake.enabled">
@@ -847,13 +854,13 @@
                                     <div>
                                         <p><i>{{'{1}% tax on stake:'|translate:[$root.partnerConfig.tax_percent]}}</i>
                                         </p>
-                                        <span><b>{{taxOnStake.tax | number:$root.conf.balanceFractionSize}} {{currency_name|currency}}</b></span>
+                                        <span><b>{{taxOnStake.tax | bankersRoundAndNumberCommas:$root.conf.balanceFractionSize}} {{currency_name|currency}}</b></span>
                                     </div>
                                 </div>
                                 <div class="bet-win-view-v3 possible-win-row">
                                     <div>
                                         <p><i trans>Stake after tax:</i></p>
-                                        <span><b>{{taxOnStake.total| number:$root.conf.balanceFractionSize}} {{currency_name|currency}}</b></span>
+                                        <span><b>{{taxOnStake.total| bankersRoundAndNumberCommas:$root.conf.balanceFractionSize}} {{currency_name|currency}}</b></span>
                                     </div>
                                 </div>
                                 <div class="bet-win-view-v3 possible-win-row"
@@ -862,19 +869,19 @@
                                         <p>
                                             <i ng-bind="taxOnStake.secondTax > 0 ? 'Possible win:' : 'Final Payout:'|translate"></i>
                                         </p>
-                                        <span><b>{{taxOnStake.posWin| number:$root.conf.balanceFractionSize}} {{currency_name|currency}}</b></span>
+                                        <span><b>{{taxOnStake.posWin| bankersRoundAndNumberCommas:$root.conf.balanceFractionSize}} {{currency_name|currency}}</b></span>
                                     </div>
                                 </div>
                                 <div class="bet-win-view-v3 possible-win-row" ng-if="taxOnStake.secondTax > 0">
                                     <div>
                                         <p><i trans>Tax:</i></p>
-                                        <span><b>{{taxOnStake.secondTax| number:$root.conf.balanceFractionSize}} {{currency_name|currency}}</b></span>
+                                        <span><b>{{taxOnStake.secondTax| bankersRoundAndNumberCommas:$root.conf.balanceFractionSize}} {{currency_name|currency}}</b></span>
                                     </div>
                                 </div>
                                 <div class="total-possible-win-j"
                                      ng-if="!(expressBonus.enabled && totalPossibleWin) && taxOnStake.secondTax > 0">
                                     <p><i trans>Final Payout:</i></p>
-                                    <span><b>{{taxOnStake.posWin - taxOnStake.secondTax | number:$root.conf.balanceFractionSize}} {{currency_name|currency}}</b></span>
+                                    <span><b>{{taxOnStake.posWin - taxOnStake.secondTax | bankersRoundAndNumberCommas:$root.conf.balanceFractionSize}} {{currency_name|currency}}</b></span>
                                 </div>
                             </div>
                         </div>
@@ -892,7 +899,7 @@
                                     <i><span trans>Accumulator Bonus</span>:</i>
                                 </p>
                                 <span>
-                                    <b>{{betSlip.expBonus|number:$root.conf.balanceFractionSize}} {{currency_name|currency}}</b>
+                                    <b>{{betSlip.expBonus|bankersRoundAndNumberCommas:$root.conf.balanceFractionSize}} {{currency_name|currency}}</b>
                                 </span>
                             </div>
                             <div class="bet-win-view-v3 total-v3" ng-class="!possibleWinBonusTax ? 'total-possible-win-j' : ''"> <!-- tax_type: 1 - tax on profit ; 4 - tax on stack 20 - tax on profit as fictive-->
@@ -900,23 +907,23 @@
                                     <i trans>Total win:</i>
                                 </p>
                                 <span>
-                                <b>{{totalPossibleWin|number:$root.conf.balanceFractionSize}} {{currency_name|currency}}</b>
+                                <b>{{totalPossibleWin|roundPossibleWin:$root.conf.balanceFractionSize:betSlip.type.value}} {{currency_name|currency}}</b>
                             </span>
                             </div>
                             <div class="display-float" ng-if="possibleWinBonusTax"> <!-- tax_type: 1 - tax on profit ; 4 - tax on stack 20 - tax on profit as fictive-->
                                 <div class="bet-win-view-v3 possible-win-row">
                                     <div>
                                         <p><i trans>Tax:</i></p>
-                                        <span><b>{{possibleWinBonusTax | number:$root.conf.balanceFractionSize}} {{currency_name|currency}}</b></span>
+                                        <span><b>{{possibleWinBonusTax | bankersRoundAndNumberCommas:$root.conf.balanceFractionSize}} {{currency_name|currency}}</b></span>
                                     </div>
                                     <div ng-if="$root.partnerConfig.tax_type===20">
                                         <p><i trans>Winning bonus:</i></p>
-                                        <span><b>{{possibleWinBonusTax | number:$root.conf.balanceFractionSize}} {{currency_name|currency}}</b></span>
+                                        <span><b>{{possibleWinBonusTax | bankersRoundAndNumberCommas:$root.conf.balanceFractionSize}} {{currency_name|currency}}</b></span>
                                     </div>
                                 </div>
                                 <div class="total-possible-win-j">
                                     <p><i trans>Final Payout:</i></p>
-                                    <span><b>{{finalWinBonusTaxValue | number:$root.conf.balanceFractionSize}} {{currency_name|currency}}</b></span>
+                                    <span><b>{{finalWinBonusTaxValue | bankersRoundAndNumberCommas:$root.conf.balanceFractionSize}} {{currency_name|currency}}</b></span>
                                 </div>
                             </div>
                         </div>
@@ -932,6 +939,7 @@
                            type="text"
                            maxlength="11"
                            comma
+                           prevent-rounding="{{$root.conf.balanceFractionSize}}"
                            comma-enable="{{$root.conf.enableCommaSeparateNumber}}"
                            comma-decimal="enable"
                            comma-dot="{{$root.conf.enableDotInsteadComma}}"

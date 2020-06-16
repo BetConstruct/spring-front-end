@@ -68,7 +68,7 @@ VBET5.controller('comboViewLeftController', ['$scope', 'Config', 'GameInfo', 'Ut
         var sport_id = sport.id;
         var request = {
             'source': 'betting',
-            'what': {'region': ['name', 'alias', 'id', 'order', 'sport_id'],
+            'what': {sport:['id'],'region': ['name', 'alias', 'id', 'order'],
                     'market': '@count'},
             'where': {
                 'sport': {'id': sport_id},
@@ -83,7 +83,9 @@ VBET5.controller('comboViewLeftController', ['$scope', 'Config', 'GameInfo', 'Ut
         }
 
         var updateLeftMenuRegionsForSport = function updateLeftMenuRegionsForSport (data, subid) {
-            var region_array = Utils.objectToArray(data.region);
+            sport_id = data && data.sport ?  Object.keys(data.sport)[0] * 1 : sport_id;
+            var region_array = Utils.objectToArray(data.sport[sport_id].region);
+
             var sport = Utils.getArrayObjectElementHavingFieldValue($scope.leftMenuSports, 'id', sport_id);
             sport.region = region_array;
             sport.region.sort(Utils.orderSorting);
@@ -163,14 +165,20 @@ VBET5.controller('comboViewLeftController', ['$scope', 'Config', 'GameInfo', 'Ut
             request.where.game.start_ts = Config.env.gameTimeFilter;
         }
 
-        var updateLeftMenuCompetitionsForTheRegion = function updateLeftMenuCompetitionsForTheRegion (data, subid) {
+        var updateLeftMenuCompetitionsForTheRegion = function updateLeftMenuCompetitionsForTheRegion(data, subid) {
             var sport_data = Utils.objectToArray(data.sport);
+
+            region_id = sport_data && sport_data[0] && sport_data[0].region ? Object.keys(sport_data[0].region)[0] * 1 : region_id;
+
             var competition_array = Utils.objectToArray(sport_data[0].region[region_id].competition);
             var sport = Utils.getArrayObjectElementHavingFieldValue($scope.leftMenuSports, 'id', sport_data[0].id);
             var region = Utils.getArrayObjectElementHavingFieldValue(sport.region, 'id', region_id);
-            region.competition = competition_array;
-            region.competition.sort(Utils.orderSorting);
-            region.competitionsSubId = subid || region.competitionsSubId;
+            if (region) {
+                region.competition = competition_array;
+                region.competition.sort(Utils.orderSorting);
+                region.competitionsSubId = subid || region.competitionsSubId;
+            }
+
 
             if (callback) {
                 callback();
@@ -225,7 +233,7 @@ VBET5.controller('comboViewLeftController', ['$scope', 'Config', 'GameInfo', 'Ut
         var request = {
             'source': 'betting',
             'what': {
-                //'competition': ['id', 'name', 'sport_id'],
+                'competition': ['id'],
                 'sport': ['id'],
                 'region': ['id', 'sport_id'],
                 game: [
@@ -252,7 +260,9 @@ VBET5.controller('comboViewLeftController', ['$scope', 'Config', 'GameInfo', 'Ut
         var updateLeftMenuGamesForTheCompetition = function updateLeftMenuGamesForTheCompetition (data, subid) {
             var sport_data = Utils.objectToArray(data.sport);
             var region_array = sport_data && Utils.objectToArray(sport_data[0].region) || [];
-            var games_array = region_array[0] && Utils.objectToArray(region_array[0].game);
+            competition_id = region_array && region_array[0] && region_array[0].competition ? Object.keys(region_array[0].competition)[0] * 1 : competition_id;
+
+            var games_array = region_array[0] && Utils.objectToArray(region_array[0].competition[competition_id].game);
             var sport = Utils.getArrayObjectElementHavingFieldValue($scope.leftMenuSports, 'id', sport_data[0].id);
             var region = Utils.getArrayObjectElementHavingFieldValue(sport.region, 'id', region_array[0].id);
             var competition = Utils.getArrayObjectElementHavingFieldValue(region.competition, 'id', competition_id);

@@ -67,7 +67,7 @@ VBET5.controller('headerCtrl', ['$scope', '$rootScope', '$sce', '$window', '$loc
         $rootScope.partnerConfig = {};
         function updatePartnerConfig(data) {
             if (data && data.partner) {
-                $rootScope.partnerConfig = Utils.objectToArray(data.partner)[0];
+                $rootScope.partnerConfig = Utils.objectToArray(data.partner)[0] || {};
 
                 if ($rootScope.partnerConfig && $rootScope.partnerConfig.tax_type && $rootScope.partnerConfig.tax_amount_ranges && $rootScope.partnerConfig.tax_amount_ranges.length) {
                     if ($rootScope.partnerConfig.tax_type !== 4) {
@@ -82,6 +82,12 @@ VBET5.controller('headerCtrl', ['$scope', '$rootScope', '$sce', '$window', '$loc
                 }
 
                 Config.main.availableCurrencies = $rootScope.partnerConfig.supported_currencies;
+
+                if ($rootScope.partnerConfig.supported_currencies.indexOf($rootScope.partnerConfig.currency) > -1 ) {
+                    Config.main.registration.defaultCurrency = $rootScope.partnerConfig.currency;
+                } else {
+                    Config.main.registration.defaultCurrency =$rootScope.partnerConfig.supported_currencies[0];
+                }
 
                 $rootScope.$broadcast('partnerConfig.updated');
             }

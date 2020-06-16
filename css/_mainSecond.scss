@@ -1902,11 +1902,21 @@ body {
   }
 }
 .game-info .game-control .timeline-container {
-  margin: 12px 0 8px 3.7%;
   float: none;
+  @include ltr {
+    margin: 12px 0 8px 3.7%;
+  }
   @include rtl {
     direction: ltr;
     margin: 12px 3.7% 8px 0;
+  }
+  &[class*="timeline-extra"] + .timeline-container {
+    @include ltr {
+      margin: 12px 3.7% 8px 0;
+    }
+    @include rtl {
+      margin: 12px 0 8px 3.7%;
+    }
   }
 }
 .game-info .game-control .timeline-container .timeline-control {
@@ -2987,7 +2997,7 @@ body {
 }
 
 .game-live-row {
-  li {
+  > li {
     font: 13px/16px $font-f;
     color: $modern-view-game-market-name-colors;
     box-shadow: inset 0 -1px 0 0 $modern-view-game-bottom-borders;
@@ -3117,6 +3127,7 @@ div.star {
 
 .closed-game {
   .game-live-row {
+    .match-key,
     .statistic,
     .time-date,
     li:first-child {
@@ -3282,12 +3293,11 @@ div.star {
 }
 
 .body-wrapper.promos .promos-container {
-  margin: 41px 0 0 0;
-  float: left;
-  width: 100%;
+  margin-top: 41px;
   .picture-news-block {
     width: 285px;
     height: 174px;
+    position: relative;
   }
 }
 
@@ -3665,27 +3675,6 @@ div.game-video-detached {
   }
 }
 
-.active-game:before {
-  background: $hero-color;
-  border-radius: 100%;
-}
-
-.game-team-volleyball .active-game:before, .game-team-beachvolleyball .active-game:before {
-  background-position: -3px -128px;
-}
-
-.cash-game-tabletennis .active-game:before {
-  background: url(../../../images/timeline/t-racket.png#{$delete-cache}) no-repeat 0 0;
-}
-
-.cash-game-badminton .active-game:before {
-  background-position: -3px -97px;
-}
-
-.cash-game-baseball .active-game:before {
-  background-position: -3px -1208px;
-}
-
 .cotegory-game {
   background: $modern-view-game-background;
   @if $modern-view-game-background == #fff {
@@ -3990,7 +3979,13 @@ div.game-video-detached {
   box-shadow: inset 0 -3px 0 0 $skin-palette-1;
 }
 
-.conteiner-live-block:hover .closed-game .game-live-row .factor-game, .conteiner-live-block:hover .closed-game .game-live-row li:first-child, .conteiner-live-block:hover .closed-game .game-live-row .time-date, .conteiner-live-block:hover .closed-game .game-live-row .statistic, .conteiner-live-block:hover .closed-game .game-live-row .account, .conteiner-live-block .open-game .game-live-row .account {
+.conteiner-live-block:hover .closed-game .game-live-row .factor-game,
+.conteiner-live-block:hover .closed-game .game-live-row li:first-child,
+.conteiner-live-block:hover .closed-game .game-live-row .time-date,
+.conteiner-live-block:hover .closed-game .game-live-row .statistic,
+.conteiner-live-block:hover .closed-game .game-live-row .match-key,
+.conteiner-live-block:hover .closed-game .game-live-row .account,
+.conteiner-live-block .open-game .game-live-row .account {
   opacity: 1;
 }
 
@@ -4943,6 +4938,16 @@ form.ng-pristine .form-text.error input {
     }
   }
 }
+.picture-news-block .promo-opt-button{
+  position: absolute;
+  bottom: 10px;
+  @include ltr{
+    right: 20px;
+  }
+  @include rtl{
+    left: 20px;
+  }
+}
 .sport-news-name {
   background: $hero-color;
   font: 11px/13px $font-f;
@@ -5152,7 +5157,7 @@ form.ng-pristine .form-text.error input {
       width: 50px;
       height: 50px;
       margin-left: -25px;
-      font: 50px/50px "icomoon";
+      font: 34px/50px "icomoon";
     }
     span {
       display: none;
@@ -8132,7 +8137,8 @@ li.active-format:before {
       }
     }
   }
-  .closed-calculator-b {
+  .closed-calculator-b,
+  .bet-calculator-selections-number > i {
     color: rgba(0, 0, 0, 0.5);
     &:hover {
       color: #000000;
@@ -8547,4 +8553,27 @@ li.active-format:before {
 }
 .modern  .lineup.opened:after {
    border-color: transparent transparent $modern-view-betslip-palette transparent;
+}
+// add new styles for msg selected
+
+.All-Bets-history .settings-info-contain {
+  .tooltip-wrapper-j {
+    select {
+      width: 100%;
+      padding: 0 14px;
+      box-sizing: border-box;
+      position: relative;
+    }
+    &:after {
+      content: "\e674";
+      font: 18px icomoon;
+      pointer-events: none;
+      position: absolute;
+      top: calc((100% - 18px) / 2);
+      right: 8px;
+      height: 12px;
+      z-index: 40;
+      color: opacify(rgba(set-color($registration-fields-background),0.39), $popup-form-opacify);
+    }
+  }
 }

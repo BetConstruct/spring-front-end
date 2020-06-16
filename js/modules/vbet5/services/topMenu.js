@@ -530,9 +530,12 @@ angular.module('vbet5').service('TopMenu', ['$rootScope', '$location', '$timeout
                                 displayName: subMenuItem.displayName ? Translator.get(subMenuItem.displayName) : topMenuItems[subMenuItem.name].displayName,
                                 name: subMenuItem.name || '',
                                 activeLink: subMenuItem.activeLink,
-                                excludeParam: subMenuItem.excludeParam
+                                excludeParam: subMenuItem.excludeParam,
+                                order: subMenuItem.order
                             });
                         });
+                        Utils.sortItemsArray(menuItem.subMenu);
+
                     }
                     menuItem.href = menuData[menuName].href || menuData[menuName].link || menuItem.href;
                     menuItem.authorized = menuData[menuName].authorized || false;

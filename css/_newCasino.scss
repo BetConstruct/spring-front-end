@@ -1,114 +1,6 @@
 .center-contain-casino {
-  width: calc(100% - 20px);
-  max-width: 1310px;
-  box-sizing: content-box;
-  margin: 0 auto;
-  padding: 0 10px 20px;
-  background: rgba($skin-palette-11,0.9);
-  box-shadow: 0 -160px 0 rgba($skin-palette-11,0.9);
-  &.not-casino-jackpots {
-    .casino-jackpots-board + .casino-gamer-winners-container .casino-gamer {
-      height: 300px;
-      > ul {
-        height: 59px;
-      }
-    }
-  }
-  &.casino-second-banner {
-    .slide-container-repeat-b {
-      width: calc(100% + 330px);
-    }
-    .casino-winners-table {
-      margin-top: 330px;
-    }
-  }
-  @media screen and (max-width: 1260px) {
-    width: 960px;
-    &.not-casino-jackpots {
-      .tab-jackpots > ul > li {
-        height: 38px;
-        > i {
-          line-height: 38px;
-        }
-      }
-      .tab-winners > ul {
-        margin-bottom: 10px;
-        li {
-          height: 38px;
-          line-height: 38px;
-        }
-      }
-      .casino-gamer {
-        height: 281px;
-        > ul {
-          height: 48px;
-        }
-      }
-      .casino-gamer .jackpot-coins-content > ul, .tournaments-content > ul {
-        height: 50px;
-      }
-      .casino-jackpots-board + .casino-gamer-board.casino-gamer-winners-container .casino-gamer {
-        height: 149px;
-        > ul {
-          height: 50px;
-        }
-      }
-      .tournaments-content > a {
-        bottom: 10px;
-      }
-    }
-    &.casino-second-banner {
-      .slider-view-casino,
-      .slide-casino-new-img-b {
-        height: 235px;
-      }
-      .casino-gamer-winners-container .casino-gamer {
-        height: 217px !important;
-      }
-      .casino-winners-table {
-        margin-top: 245px;
-      }
-    }
-    .provider-jackpot-banner {
-      width: 100%;
-      + .casino-winners-table {
-        width: 100%;
-        flex-direction: row;
-        -webkit-flex-direction: row;
-        .casino-jackpots-board,
-        .casino-gamer-board {
-          width: 50%;
-        }
-        .casino-jackpots-board {
-          @include ltr {
-            margin: 0 0 0 10px;
-          }
-          @include rtl {
-            margin: 0 10px 0 0;
-          }
-          + .casino-gamer-board .casino-gamer {
-            height: 331px;
-          }
-          .casino-gamer {
-            height: 331px;
-            .amount-animation-container > span {
-              width: 4%;
-              &.with-point, &.with-comma {
-                padding-right: 1.3%
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-  &.ng-hide {
-    display: block !important;
-    opacity: 0;
-    pointer-events: none;
-    overflow: hidden;
-    height: 70vh;
-  }
+  width: 100%;
+  padding-bottom: 20px;
   &:after{
     content: "";
     display: block;
@@ -117,6 +9,15 @@
   @if($white-skin == true) {
     background: rgba(255, 255, 255, 0.86);
     box-shadow: 0 -160px 0 rgba(255, 255, 255, 0.86);
+  }
+  .row {
+    overflow: visible;
+    .row-child > div {
+      overflow: visible;
+      > div {
+        height: auto;
+      }
+    }
   }
 }
 .casino-top-slider-container{
@@ -136,14 +37,6 @@
   width: 100%;
   height: 320px;
   position: relative;
-  @media screen and (max-width: 1260px) {
-    height: 213px;
-  }
-}
-@media screen and (max-width: 1260px) {
-  .slide-casino-new-img-b {
-    height: 213px;
-  }
 }
 .coin-wrapper {
   float: left;
@@ -208,9 +101,14 @@
     position: relative;
   }
 }
+.jackpot-tur-block {
+  position: relative;
+  z-index: 100;
+}
 .casino-jackpots-board {
-  float: left;
-  width: 100%;
+  position: relative;
+  z-index: 10;
+  min-width: 320px;
   .jackpots-wrapper {
     height: 320px;
   }
@@ -218,37 +116,17 @@
 .casino-gamer-board {
   float: left;
   width: 100%;
+  min-width: 320px;
   .top-winners-wrapper {
-    height: 521px;
-    @media screen and (max-width: 1260px) {
-      height: 331px;
-    }
+    height: 100%;
   }
 }
 .winners-list {
   float: left;
   width: 100%;
+  height: 100%;
 }
-.casino-jackpots-board + .casino-gamer-board {
-  margin-top: 12px;
-}
-.casino-winners-table {
-  width: 320px;
-  @include ltr {
-    float: right;
-    margin: 10px 0 0 10px;
-  }
-  @include rtl {
-    float: left;
-    margin: 10px 10px 0 0;
-  }
-  > div:only-child .casino-gamer {
-    height: 632px;
-    @media screen and (max-width: 1260px) {
-      height: 441px;
-    }
-  }
-}
+
 .slider-games-box-new {
   float: left;
   width: 100%;
@@ -260,7 +138,6 @@
 .casino-gamer {
   float: left;
   width: 100%;
-  height: 330px;
   padding: 0 12px;
   position: relative;
   box-sizing: border-box;
@@ -281,6 +158,7 @@
 .tournaments-content {
   float: left;
   width: 100%;
+  height: 100%;
   > p {
     float: left;
     width: 100%;
@@ -294,7 +172,7 @@
     text-overflow: ellipsis;
     font: 14px/38px $font-f;
   }
-  > ul, .jackpot-coins-content > ul {
+  .casino-games-row, .jackpot-coins-content > ul {
     float: left;
     display: table;
     width: 100%;
@@ -416,7 +294,16 @@
     }
   }
 }
-
+.casino-scroll-block {
+  position: absolute;
+  top: 62px;
+  left: 0;
+  width: 100%;
+  padding: 0 10px;
+  box-sizing: border-box;
+  height: calc(100% - 62px);
+  @include scroll(auto);
+}
 .jackpots-content {
   float: left;
   width: 100%;
@@ -1006,12 +893,9 @@
 .slider-games-bg {
   float: left;
   width: 100%;
-  height: 225px;
+  height: auto;
   position: relative;
   background: $skin-palette-9;
-  @media screen and (max-width: 1260px) {
-    height: 142px;
-  }
   > img {
     display: block;
     width: 100%;
@@ -1124,9 +1008,9 @@
 }
 
 .games-type {
-  float: left;
-  width: 100%;
   margin: 10px 0 0;
+  position: relative;
+  z-index: 10;
   background: darken( saturate( adjust-hue( $skin-color, 3deg ), 1 ), 5 );
   @if $white-skin==true {
     background: $hero-color;
@@ -1701,6 +1585,9 @@
       .games-name,
       .games-favorite-icon {
         opacity: 1;
+        &:hover:before{
+          color: $brand-color-2;
+        }
       }
     }
     .games-buttons {
@@ -1835,6 +1722,7 @@
   }
   &.active {
     opacity: 1;
+    color: $brand-color-2;
   }
 }
 .games-close-fav {
@@ -1952,6 +1840,20 @@
 .icon-SaintPatrick:before{
   content: '\ea25';
 }
+[class*="icon-Fishing"]{
+  &:before{
+    content: '\ea72';
+  }
+}
+.icon-WomensDay:before{
+  content: '\ea74';
+}
+.icon-IrishLuck:before{
+  content: '\ea73';
+}
+.icon-TvGames:before{
+  content: '\ea75';
+}
 [class*="icon-Valentine's"]:before{
   content: "\ea17";
   color: #bd3b32;
@@ -1976,7 +1878,34 @@
 .icon-Halloween2018:before {
   content: "\ea56";
 }
+.icon-BuyBonus:before{
+  content: '\ea79';
+}
+.icon-Megaways:before{
+  content: '\ea7a';
+}
+.icon-InstantGame:before{
+  content: '\ea77';
+}
+.icon-Exclusive:before{
+  content: '\ea78';
+}
+.icon-LiveDealer:before{
+  content: '\ea7c';
+}
+.icon-Cards:before{
+  content: '\ea7b';
+}
 
+.icon-BrandedGames:before{
+  content: '\ea76';
+}
+.icon-ZambiaGames:before{
+  content: '\ea84';
+}
+.icon-HotKwachaGames:before{
+  content: '\ea83';
+}
 .iframe-tournament-sidebar {
   height: calc(100% - 110px);
   .tab-jackpots {
@@ -1994,28 +1923,55 @@
 }
 
 .iframe-jackpot-container {
+  float: left;
   width: 100%;
-  height: calc(100% - 40px);
-  position: absolute;
-  top: 0;
-  left: 0;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 240ms ease;
   > p {
     float: left;
     width: 100%;
     height: 30px;
     color: set-color($skin-palette-10);
-    padding: 0 20px;
-    text-align: left;
     text-transform: uppercase;
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
     font: 14px/32px $font-f;
     box-shadow: 0 1px 0 rgba($skin-palette-6,0.6);
+    position: relative;
+    @include ltr {
+      text-align: left;
+      padding: 0 30px 0 10px;
+    }
+    @include rtl {
+      padding: 0 10px 0 30px;
+      text-align: right;
+    }
+    &:after {
+      content: "\e670";
+      position: absolute;
+      top: 0;
+      font: 14px/32px icomoon;
+      @include ltr {
+        right: 10px;
+      }
+      @include rtl {
+        left: 10px;
+      }
+    }
+    &.active {
+      &:after {
+        content: "\e671";
+      }
+      ~ .iframe-jackpot-wrapper {
+        display: block;
+      }
+    }
   }
+}
+.iframe-jackpot-wrapper {
+  float: left;
+  width: 100%;
+  display: none;
+  box-shadow: 0 1px 0 rgba($skin-palette-4,0.7);
   > ul {
     float: left;
     width: 100%;
@@ -2029,65 +1985,18 @@
       @include rtl {
         direction: ltr;
       }
-      &.iframe-total-info-winner {
-        display: none;
-        position: absolute;
-        top: 83px;
-        left: 0;
-        width: 100%;
-        border-radius: 8px;
-        z-index: 1000;
-        box-shadow: 0 8px 30px 5px rgba(0, 0, 0, 0.25);
-        background: $skin-palette-12;
-        &:before {
-          content: "";
-          position: absolute;
-          top: -12px;
-          border-style: solid;
-          border-width: 0 12px 12px 12px;
-          border-color: transparent transparent $skin-palette-12 transparent;
-          @include ltr {
-            left: 50px;
-          }
-          @include rtl {
-            right: 50px;
-          }
-        }
-        &:after {
-          content: "";
-          position: absolute;
-          top: -13px;
-          left: 0;
-          width: 100%;
-          height: 13px;
-        }
+    }
+    &.active {
+      + .iframe-total-info-winner {
+        display: block;
       }
     }
-    &:hover .iframe-total-info-winner {
-      display: block;
-    }
-    &:nth-of-type(1) .iframe-total-info-winner-scroll {
-      max-height: calc(100vh - 374px);
-    }
-    &:nth-of-type(2) .iframe-total-info-winner-scroll {
-      max-height: calc(100vh - 444px);
-    }
-    &:nth-of-type(3) .iframe-total-info-winner-scroll {
-      max-height: calc(100vh - 514px);
-    }
-    &:nth-of-type(4) .iframe-total-info-winner-scroll {
-      max-height: calc(100vh - 584px);
-    }
-  }
-  &.active {
-    opacity: 1;
-    pointer-events: auto;
   }
 }
-.iframe-total-info-winner-scroll {
+.iframe-total-info-winner {
   float: left;
   width: 100%;
-  @include scroll($scroll: auto);
+  display: none;
   @include rtl {
     direction: rtl;
   }
@@ -2241,59 +2150,41 @@
   }
 }
 .view-count-2 {
-  &.iframe-tournament-sidebar {
-    height: calc(100% - 83px);
-    .iframe-jackpot-container > ul:nth-of-type(1) .iframe-total-info-winner-scroll {
-      max-height: calc(100vh - 683px);
-    }
-    .iframe-jackpot-container > ul:nth-of-type(2) .iframe-total-info-winner-scroll {
-      max-height: calc(100vh - 729px);
-    }
-    .iframe-jackpot-container > ul:nth-of-type(3) .iframe-total-info-winner-scroll {
-      max-height: calc(100vh - 775px);
-    }
-    .iframe-jackpot-container > ul:nth-of-type(4) .iframe-total-info-winner-scroll {
-      max-height: calc(100vh - 821px);
-    }
-  }
   .iframe-jackpot-container {
     > p {
       height: 28px;
       font: bold 14px/30px $font-f;
     }
-    > ul {
+    .iframe-jackpot-wrapper > ul {
       height: 46px;
-      > li {
-        &.iframe-total-info-winner {
-          top: 59px;
-          > ul {
-            padding: 6px 12px 6px 16px;
-            > li {
-              > h2 {
-                margin-bottom: 4px;
-                font: 14px/16px $font-f;
-              }
-              > p {
-                margin-bottom: 0;
-                font: 11px/13px $font-f;
-              }
-              > span {
-                font: 12px/14px $font-f;
-              }
-              > b {
-                font: 12px/14px $font-f;
-              }
-            }
-            &:first-child {
-              margin-bottom: 0;
-              padding-top: 8px;
-            }
+    }
+    .iframe-total-info-winner {
+      > ul {
+        padding: 6px 12px 6px 16px;
+        > li {
+          > h2 {
+            margin-bottom: 4px;
+            font: 14px/16px $font-f;
           }
-          &:before {
-            top: -10px;
-            border-width: 0 10px 10px 10px;
+          > p {
+            margin-bottom: 0;
+            font: 11px/13px $font-f;
+          }
+          > span {
+            font: 12px/14px $font-f;
+          }
+          > b {
+            font: 12px/14px $font-f;
           }
         }
+        &:first-child {
+          margin-bottom: 0;
+          padding-top: 8px;
+        }
+      }
+      &:before {
+        top: -10px;
+        border-width: 0 10px 10px 10px;
       }
     }
   }
@@ -2310,9 +2201,6 @@
   }
 }
 .flash-game-contain {
-  &:first-child .view-count-2.iframe-tournament-sidebar {
-    height: calc(100% - 110px);
-  }
   .tab-jackpots > ul > li {
     height: 42px;
     > i {
@@ -2346,6 +2234,7 @@
 }
 .current-results-sidebar {
   position: relative;
+  @include scroll($scroll: auto);
   .jackpots-slider {
     margin: 0;
     box-sizing: border-box;
@@ -2392,16 +2281,19 @@
     }
   }
 }
-.row-child .jackpot-coins-content > ul {
+.homepage .jackpot-coins-content > ul {
   > li.total-info-winner {
-    top: -22px;
+    top: -36px;
     box-shadow: 0 -8px 18px 0px rgba(0,0,0,0.51);
+    @include ltr {
+      left: -10px;
+    }
     @include rtl {
       left: auto;
-      right: 0;
+      right: -10px;
     }
     &:before {
-      top: 38px;
+      top: 50px;
       @include ltr {
         left: auto;
         right: -10px;
@@ -2443,43 +2335,8 @@
 }
 
 
-
-
-
-
-
 // new jackpot start
-.providers-jackpot-page {
-  .new-jackpot-container {
-    max-width: 100%;
-  }
-}
 .provider-jackpot-banner {
-  float: left;
-  width: calc(100% - 330px);
-  height: 562px;
-  margin-top: 10px;
-  ~ .casino-winners-table {
-    display: flex;
-    display: -webkit-flex;
-    flex-direction: column;
-    -webkit-flex-direction: column;
-    .casino-jackpots-board {
-      margin-top: 10px;
-      order: 1;
-      -webkit-box-ordinal-group: 2;
-      -ms-flex-order: 1;
-      .casino-gamer {
-        height: 330px;
-      }
-      + .casino-gamer-board {
-        margin-top: 0;
-        .casino-gamer {
-          height: 223px;
-        }
-      }
-    }
-  }
   ~ .casino-top-slider-container {
     display: none;
   }
@@ -2488,7 +2345,6 @@
   float: left;
   width: 100%;
   height: 100%;
-  max-width: 980px;
   padding: 0 18px 8px;
   background: $skin-color;
   box-sizing: border-box;
@@ -2497,7 +2353,7 @@
   user-select: none;
   -webkit-user-select: none;
   -ms-user-select: none;
-  background: no-repeat 0 0 / 100%;
+  background: fixed no-repeat 0 0 / 100%;
   .md-progress-circular {
     margin: 107px auto;
   }
@@ -2685,7 +2541,7 @@
         }
       }
       > sup {
-        margin-top: -8px;
+        margin-top: -4px;
         display: inline-block;
         font-size: 20px;
         letter-spacing: 2px;
@@ -2700,6 +2556,9 @@
       font: normal 30px/32px $font-f;
       letter-spacing: 3px;
       color: rgba($brand-color-2,0.9);
+    }
+    &:not(.new-jackpot-block-games) {
+      min-height: 226px;
     }
   }
 }
@@ -2745,7 +2604,7 @@
         }
       }
       > sup {
-        margin: -1px 0 0 4px;
+        margin-left: 4px;
         display: inline-block;
         font-size: 14px;
         vertical-align: text-top;
