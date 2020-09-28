@@ -50,18 +50,14 @@ angular.module('vbet5.betting').controller('featuredgameCtrl', ['$rootScope', '$
         });
         $scope.featuredGamesLoading = false;
 
-        $scope.featuredGames = Utils.objectToArray(featuredGamesObj);
+        var featuredGames = Utils.objectToArray(featuredGamesObj);
+        $scope.featuredGames = featuredGames[0].favorite_order !== null ? Utils.orderByField(featuredGames, 'favorite_order') : featuredGames;
 
         if (!$scope.multiSlideMode) {
             if (!$scope.selectedFeaturedGameId && $scope.featuredGames && $scope.featuredGames.length) {
                 $scope.selectedFeaturedGameId = $scope.featuredGames[0].id;
             }
         } else if ($scope.featuredGames.length > 0) {
-            if ($scope.featuredGames[0].favorite_order !== null) {
-                $scope.featuredGames.sort(function sortByFavOrder(a, b) {
-                    return a.favorite_order - b.favorite_order;
-                });
-            }
             prepareMultiSlideFeaturedGames();
         }
     }
@@ -177,6 +173,7 @@ angular.module('vbet5.betting').controller('featuredgameCtrl', ['$rootScope', '$
      *
      * @param {Number} [minEventsCount] optional. minimal amount of events that game should have
      * @param {Boolean} [minEventsCount] optional. minimal events count that game may have
+     * @param {number} showGameId
      */
     $scope.getOneLiveGame = function getOneLiveGame(minEventsCount, showGameId) {
         var getPreMatch = (minEventsCount === 0);
@@ -269,7 +266,10 @@ angular.module('vbet5.betting').controller('featuredgameCtrl', ['$rootScope', '$
                 market: ['type'],
                 event: ['price', 'type']
             },
-            'where': {market: {type: {'@in': ['P1XP2', 'P1P2']}}}
+            'where': {
+                market: {type: {'@in': ['P1XP2', 'P1P2']}},
+                sport: {type: 2} // only classic sports ie excludes virtual and electronic sports
+            }
         };
         if (gameOrCompetition === 'game') {
             request.what.game.push('favorite_order');
@@ -307,7 +307,7 @@ angular.module('vbet5.betting').controller('featuredgameCtrl', ['$rootScope', '$
      * @name multiSlideFeaturedGames
      * @methodOf vbet5.controller:featuredgameCtrl
      * @description selects next or current featured games depending on index
-     * @param {Int} index
+     * @param {number} index
      */
     $scope.multiSlideFeaturedGames = function multiSlideFeaturedGames(index) {
         if (index !== undefined) {
@@ -350,7 +350,7 @@ angular.module('vbet5.betting').controller('featuredgameCtrl', ['$rootScope', '$
 
     $scope.bet = function bet(event, game) {
         var oddType = 'odd';
-        if (!game || !event || Config.main.phoneOnlyMarkets && Config.main.phoneOnlyMarkets.enable && game.type == 1) {
+        if (!game || !event || Config.main.phoneOnlyMarkets && Config.main.phoneOnlyMarkets.enable && game.type === 1) {
             return;
         }
 

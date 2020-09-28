@@ -1,6 +1,6 @@
 <div class="{{pageOptions.b_container}}">
     <div class="live-casino-providers" ng-show="liveGamesData.providerOptions.length > 1">
-        <button ng-repeat="provider in liveGamesData.providerOptions track by $index" ng-click="liveGamesData.selectedProvider = provider" ng-class="{'active': liveGamesData.selectedProvider === provider}">{{ provider|translate }}</button>
+        <button ng-repeat="provider in liveGamesData.providerOptions track by $index" ng-click="selectLiveDealerProvider(provider)" ng-class="{'active': liveGamesData.selectedProvider === provider}">{{ provider|translate }}</button>
     </div>
     <div class="live-casino-providers-submenu" ng-show="liveGamesData.devidedGames[liveGamesData.selectedProvider].defaultStudio && liveGamesData.devidedGames[liveGamesData.selectedProvider].studios.length > 1">
         <a ng-repeat="studio in liveGamesData.devidedGames[liveGamesData.selectedProvider].studios track by $index" ng-class="{'active': studio === liveGamesData.devidedGames[liveGamesData.selectedProvider].defaultStudio}" ng-click="liveGamesData.devidedGames[liveGamesData.selectedProvider].defaultStudio = studio">{{ (liveGamesData.selectedProvider + '_STUDIO_' + studio)|translate }}</a>

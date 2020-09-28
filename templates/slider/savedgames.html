@@ -56,26 +56,8 @@
                         </div>
                         <div ng-if="game.sport.alias === 'Soccer'" class="save-soccer-stats">
                             <div class="tl-container">
-                                <soccertimeline match-length="game.match_length" is-extra="isExtraTime(game)"></soccertimeline>
-                                <div class="tl-new">
-                                    <div class="current-time" ng-style="game.tlCurrentMinute"></div>
-                                    <div ng-repeat="tlEvent in game.tlEvents" ng-style="tlEvent.timeline_position" class="{{tlEvent.team + '-' + tlEvent.type}}">
-                                        <div class="{{tlEvent.type}}"></div>
-                                        <div class="tl-details" ng-style="">{{tlEvent.details.type|capitalise|translate}} {{tlEvent.details.add_info}}</div>
-                                    </div>
+                                <soccertimeline show-only-one="true" show-events-on-tl-hover="true" open-game="game"></soccertimeline>
 
-                                    <div class="tl-info" ng-style="game.tlCurrentPosition">
-                                        <div class="hover-sp">
-                                            <div class="football-gamer-name" ng-repeat="gameEvent in game.live_events|orderBy:'add_info_order':true">
-                                                <div ng-class="gameEvent.event_type+'-icon'" class="{{gameEvent.event_icon}}"></div>
-                                                <span ng-class="gameEvent.team">
-                                                    <tshirt shirt="{{ game.info['shirt'+ gameEvent.team.slice(-1) + '_color'] }}" shorts="{{ game.info['short'+ gameEvent.team.slice(-1) + '_color'] }}"></tshirt>
-                                                </span>
-                                                <p>{{gameEvent.event_type.replace('_', ' ')|capitalise|translate}} {{ gameEvent.add_info }} {{game[gameEvent.team + '_name']}}</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
                             </div>
                         </div>
                         <div class="save-horseracing-stats" ng-if="game.sport.alias === 'HorseRacing'">

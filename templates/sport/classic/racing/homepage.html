@@ -1,0 +1,56 @@
+<div  ng-controller="classicViewRacingHomepageCtrl">
+    <div class="horse-slider-area">
+        <div  class="product-list-contain no-select-j">
+            <vbet-loader ng-show="bannersLoading"></vbet-loader>
+            <ul class="column-{{ banners.length }}" ng-if="banners.length">
+                <li ng-repeat="banner in banners track by $index">
+                    <div class="sportsbook-banners-j">
+                        <a ng-href="{{banner.link}}" target="{{banner.linktarget}}">
+                            <img ng-src="{{banner.image}}" ng-show="banner.image">
+                        </a>
+                    </div>
+                </li>
+            </ul>
+        </div>
+
+    </div>
+    <div class="races-info-h">
+        <upcoming-races sport-id="data.sportId" navigation="navigation"></upcoming-races>
+        <div class="single-game-info-h">
+            <vbet-loader ng-show="regionsLoading"></vbet-loader>
+
+            <div class="region-info-h"
+                 ng-repeat-start="region in regions track by region.id"
+                 ng-if="region.game > 0"
+                 ng-class="{'active': regionMap[region.id].expanded}"
+                 ng-click="toggleRegion(region.id)"
+            >
+                <div class="flag-view-v3 flag-icon flag-{{::region.alias | removeUselessSymbolsByRegexp: '[,\' ]+': 'g': 'true'}}"></div>
+                {{region.name}}({{region.game}})
+                <div class="arrow-view-h3"></div>
+            </div>
+            <div ng-repeat-end ng-if="regionMap[region.id].expanded && region.game > 0" class="open-full-info-h">
+                <ul ng-show="!regionMap[region.id].loading && regionMap[region.id].dates.length">
+                    <li ng-repeat="dateFilter in regionMap[region.id].dates track by dateFilter.weekName" ng-bind="dateFilter.weekName" ng-class="{'active':dateFilter.weekName === regionMap[region.id].currentDate.weekName}" ng-click="loadCompetitionAndGames(dateFilter, region.id, true)"></li>
+                </ul>
+                <vbet-loader ng-show="regionMap[region.id].loading || regionMap[region.id].loadingContent"></vbet-loader>
+                <div class="race-start-houres" ng-if="!regionMap[region.id].loadingContent" ng-repeat="competition in regionMap[region.id].competitions track by competition.id">
+                    <div class="st-h-holder">
+                        <div class="horse-name-inf" ng-click="navigation.goTo('game',null, regionMap[region.id].currentDate.start, regionMap[region.id].currentDate.end, competition.id)">
+                            <p ng-bind="competition.name"> </p>
+                            <span>({{competition.games.length}} {{'races'|translate}})</span>
+                        </div>
+                    </div>
+                    <div class="start-now-time">
+                        <div class="start-now"
+                             ng-repeat="game in competition.games track by game.id"
+                             ng-bind="game.start_ts|formatDate:'hour':null:$root.env.timeFormat"
+                             ng-click="navigation.goTo('game', game.id, regionMap[region.id].currentDate.start, regionMap[region.id].currentDate.end)"
+                        ></div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

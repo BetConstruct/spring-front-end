@@ -1,4 +1,4 @@
-<div class="category-nav" ng-show="!conf.rfid.loginWIthRFID || conf.rfid.loginWIthRFID && env.authorized">
+<div class="category-nav" ng-show="!conf.rfid.loginWIthRFID || env.authorized">
     <ul ng-class="{'menu-dropdown': $root.topMenuDropDown, 'menu-dropdown-show': topMenuLength > conf.visibleItemsInTopMenu}">
 
         <li ng-repeat="item in ::topMenu track by item.name"

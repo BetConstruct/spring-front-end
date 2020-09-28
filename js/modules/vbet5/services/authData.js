@@ -36,7 +36,18 @@ VBET5.service('AuthData', ['$window', '$cookies', 'Config', 'Storage', 'Utils', 
      * @returns {Object} data auth data object
      */
     AuthData.get = function get() {
-        return AuthData.integrationMode ? AuthData.partnerAuthData : (Config.main.useAuthCookies ?  $cookies.getObject('auth_data') : Storage.get('auth_data'));
+        if ( AuthData.integrationMode) {
+            return AuthData.partnerAuthData;
+        }
+        if (Config.main.useAuthCookies) {
+            var authData = $cookies.getObject('auth_data');
+
+            if (authData) {
+                return authData;
+            }
+        }
+
+        return Storage.get('auth_data');
     };
 
     /**

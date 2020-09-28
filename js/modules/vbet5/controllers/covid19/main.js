@@ -512,7 +512,7 @@ VBET5.controller('covid19Ctrl', ['$rootScope', '$scope', '$sce', '$timeout', '$l
                                         event.name = $filter('improveName')(event.name, game);
                                     }
                                 });
-                                if (BetService.constants.marketsPreDividedByColumns.indexOf(market.type) > -1) {
+                                if (BetService.constants.marketsPreDividedByColumns[market.type]) {
                                     GameInfo.reorderMarketEvents(market, 'preDivided');
                                 } else {
                                     market.events = Utils.objectToArray(market.event);

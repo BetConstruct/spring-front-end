@@ -71,8 +71,8 @@
 
                     <li ng-show="sharedData.favoriteGames.count > 0">
                         <div class="sports-item-v3 favorite-nav-icon-v3" ng-class="{'active': !leftMenuState.collapsed.favorites}"
-                             ng-click="toggleCollapse('favorites'); $event.stopPropagation()" title="Favotites"><!--active-->
-                            <span trans>Favorites</span>
+                             ng-click="toggleCollapse('favorites'); $event.stopPropagation()" title="{{'Favorites'|translate}}"><!--active-->
+                            <span>{{'Favorites'|translate}}</span>
                             <div class="arrow-view-v3"></div>
                             <div class="sport-games-count-v3" ng-bind="sharedData.favoriteGames.count"></div>
                         </div>
@@ -127,7 +127,7 @@
                                                             <div class="icon-separator-v3 market-count-v3">
                                                                 <span ng-bind="'+' + game.markets_count" title="Number of markets"></span>
                                                             </div>
-                                                            <div class="icon-separator-v3 video" ng-show="game.hasVideo && conf.videoEnabled"></div>
+                                                            <div class="icon-separator-v3 video" ng-show="game.hasVideo"></div>
                                                             <div class="icon-separator-v3 statistic" ng-show="conf.enableH2HStat && game.is_stat_available"></div>
                                                         </div>
                                                     </div>

@@ -19,11 +19,12 @@ VBET5.controller('superBetCtrl', ['$rootScope', '$scope', '$interval', 'Storage'
      * @param {String} Notification message
      */
 
-    function showSuperBetNotification (message) {
+    function showSuperBetNotification (message, isAccepted) {
         if (Config.betting.showSuperBetNotificationsViaPopup) {
+            var type = isAccepted ? 'info accpeted-superbet' : 'info';
 
             $rootScope.$broadcast("globalDialogs.addDialog", {
-                type: 'info',
+                type: type,
                 title: 'Offer',
                 content: message
             });
@@ -86,7 +87,7 @@ VBET5.controller('superBetCtrl', ['$rootScope', '$scope', '$interval', 'Storage'
                                 noButton: ['declineCounterOffer', superBet]
                             });
                         } else {
-                            showSuperBetNotification(Translator.get('Your offer ({1}) request is accepted', [message]));
+                            showSuperBetNotification(Translator.get('Your offer ({1}) request is accepted', [message]), true);
                             analytics.gaSend('send', 'event', 'betting', 'SuperBet ' + (Config.main.sportsLayout) + ($rootScope.env.live ? '(LIVE)' : '(PM)'), {'page': $location.path(), 'eventLabel': 'accepted'});
                         }
                     });

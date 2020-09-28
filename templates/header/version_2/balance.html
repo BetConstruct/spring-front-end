@@ -1,7 +1,7 @@
 <!--balance-->
 <div class="separator-contain-nav {{headerVersion2Icons.balanceIsToggled ? 'active' : ''}}">
     <div class="settings-icon-contain balance-box" no-animate
-        ng-class="{'bonus': profile.bonus_balance !== undefined && profile.calculatedBonus !== 0}"
+        ng-class="{'bonus': profile.calculatedBonus !== 0}"
         ng-click="headerVersion2Icons.balanceIsToggled = !headerVersion2Icons.balanceIsToggled; $event.stopPropagation()"
 		id="wallet"
          hide-on-click state-flag-var="headerVersion2Icons.balanceIsToggled">

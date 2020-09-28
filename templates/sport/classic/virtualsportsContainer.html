@@ -19,7 +19,7 @@
                 <div class="full-menu-wrapper-box-v3" >
                     <div class="games-list-mini-view-v3">
                         <div class="v-sports-tab {{section.alias.toLowerCase() + '-icon'}}" ng-repeat="section in sections track by $index" ng-click="loadCompetitions(section)" data-content="new" ng-class="{'active': selectedVirtualSport.id == section.id}">
-                            <span data-content="{{section.label|translate}}">
+                            <span data-content="{{section.label|translate}}" title="{{section.name|translate}}">
                                 {{section.name|translate}}
                                 <i ng-if="section.prematch_ts"  countdown="{{section.prematch_ts}}" ng-bind="countdown.minutes + ':' + countdown.seconds"></i>
                             </span>

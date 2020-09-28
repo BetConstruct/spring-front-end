@@ -73,7 +73,7 @@ angular.module('app').config(['$compileProvider', '$locationProvider', '$qProvid
     function loadCustomCSS() {
         var promiseHandler = initInjector.get('$q').defer();
         var mainConfig = runtimeConfig && runtimeConfig.SkinConfig &&  runtimeConfig.SkinConfig.main;
-        if (mainConfig && mainConfig.hasCustomCSS) {
+        if (mainConfig && mainConfig.hasCustomCSS && document.location.hash.indexOf("disableCustomCss") === -1) {
             var currentTIme = new Date().getTime();
             var customCSSUrl = (mainConfig.resourcePathPrefix || '') + "custom.css?v=" + currentTIme;
             if (window.location.hostname === 'localhost') {
@@ -147,13 +147,27 @@ angular.module('app').config(['$compileProvider', '$locationProvider', '$qProvid
         return match ? match[1] : null;
     }
 
+    function getBrowserLanguage(availableLanguages) {
+        var browserLang = navigator && (navigator.language || navigator.userLanguage);
+        var keys =  Object.keys(availableLanguages);
+        for (var index = keys.length; index--;) {
+            if (browserLang.indexOf(availableLanguages[keys[index]]) !== -1) {
+                return keys[index];
+            }
+        }
+    }
+
     /**
      * @description Load translations json
      */
     function loadTranslations() {
-        var defaultLanguage, availableLanguages;
+        var defaultLanguage, availableLanguages = {}, getLangFromBrowser;
         if (runtimeConfig && runtimeConfig.SkinConfig) {
-            availableLanguages = runtimeConfig.SkinConfig.main && runtimeConfig.SkinConfig.main.availableLanguages;
+            if (runtimeConfig.SkinConfig.main) {
+                availableLanguages = runtimeConfig.SkinConfig.main.availableLanguages;
+                getLangFromBrowser = runtimeConfig.SkinConfig.main.getBrowserLanguage;
+            }
+
             //  some skins have dependency by domain
             if (runtimeConfig.SkinConfig.main && runtimeConfig.SkinConfig.main.transLangByDomain && runtimeConfig.SkinConfig.main.transLangByDomain[document.location.host]) {
                 defaultLanguage = runtimeConfig.SkinConfig.main.transLangByDomain[document.location.host];
@@ -162,9 +176,15 @@ angular.module('app').config(['$compileProvider', '$locationProvider', '$qProvid
             }
         }
 
-        var lang = getLocationParam("lang") || getCookie('lang') || amplify.store('lang') || defaultLanguage || 'eng';
+        var getLang = function(lang) {
+            if (availableLanguages[lang]) {
+                return lang;
+            }
+        };
 
-        if(lang === 'fra'){ // todo SDC-44551
+        var lang = getLang(getLocationParam("lang")) || getLang(getCookie('lang')) || getLang(amplify.store('lang')) || (getLangFromBrowser && getBrowserLanguage(availableLanguages)) || defaultLanguage || 'eng';
+
+        if (lang === 'fra'){ // todo SDC-44551
             lang = 'fre';
         }
 
@@ -183,9 +203,7 @@ angular.module('app').config(['$compileProvider', '$locationProvider', '$qProvid
             var appLocation = getLocation(document.getElementById("bc-main-js").src);
             urlPrefix = (appLocation.protocol + "//" + appLocation.host + appLocation.pathname).replace("app.min.js", "");
         }
-        var antiCacheDate = new Date(), antiCacheDateFormatted = antiCacheDate.getFullYear() + '-' + (antiCacheDate.getMonth() + 1) + '-' + antiCacheDate.getDate();
-        var langUrl = urlPrefix + (urlPrefix.substr(-1) === '/' || !urlPrefix.length ? "" : "/") + "languages/" + (getLocationParam('notrans') === 'id' ? 'notrans' : lang) + ".json?antiCache=" + antiCacheDateFormatted;
-        console.log('loading language:', lang, langUrl);
+        var langUrl = urlPrefix + (urlPrefix.substr(-1) === '/' || !urlPrefix.length ? "" : "/") + "languages/" + (getLocationParam('notrans') === 'id' ? 'notrans' : lang) + ".json?antiCache=" + (new Date().getTime());
         amplify.store('lang', lang);
         return $http.get(langUrl).then(
             function (response) {

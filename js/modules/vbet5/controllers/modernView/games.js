@@ -25,6 +25,9 @@ BettingModule.controller('gamesCtrl', ['$rootScope', '$scope', '$location', '$fi
     $scope.pinnedGames = {};
 
     $scope.isInArray = Utils.isInArray;
+    $scope.notShowFavourites = {
+        'HorseRacing': 1
+    };
     /**
      * @ngdoc method
      * @name gamesInit
@@ -59,12 +62,12 @@ BettingModule.controller('gamesCtrl', ['$rootScope', '$scope', '$location', '$fi
 
     /**
      * @ngdoc object
-     * @name states
+     * @name $scope.states
      * @propertyOf vbet5.controller:gamesCtrl
-     * @description holds states of selected tabs in games and states of different open/closed sections
+     * @description holds $scope.states of selected tabs in games and $scope.states of different open/closed sections
      * @type {Object}
      */
-    var states = {toggles: {}};
+    $scope.states = {toggles: {}};
 
     /**
      * @ngdoc function
@@ -78,10 +81,10 @@ BettingModule.controller('gamesCtrl', ['$rootScope', '$scope', '$location', '$fi
         for (i = 1; i < arguments.length; i++) {
             key = key + arguments[i];
         }
-        if (states[key] === undefined || !states[key].setByUser) {
-            states[key] = {state: initialState, setByUser: false};
+        if ($scope.states[key] === undefined || !$scope.states[key].setByUser) {
+            $scope.states[key] = {state: initialState, setByUser: false};
         }
-        return states[key].state;
+        return $scope.states[key].state;
     };
 
 
@@ -112,33 +115,11 @@ BettingModule.controller('gamesCtrl', ['$rootScope', '$scope', '$location', '$fi
         for (i = 0; i < arguments.length; i++) {
             key = key + arguments[i];
         }
-        if (states[key] === undefined) {
-            states[key] = {state: true, setByUser: true};
+        if ($scope.states[key] === undefined) {
+            $scope.states[key] = {state: true, setByUser: true};
         }
-        states[key].state = !states[key].state;
-        return states[key].state;
-    };
-
-
-
-    /**
-     * @ngdoc function
-     * @name getVisibility
-     * @methodOf vbet5.controller:gamesCtrl
-     * @description Returns visibility state for item specified by arguments (can accept any number of string arguments)
-     *
-     * @returns {Boolean} visibility state
-     */
-    $scope.getVisibility = function getVisibility() {
-
-        var key = '', i;
-        for (i = 0; i < arguments.length; i++) {
-            key = key + arguments[i];
-        }
-        if (states[key] === undefined) {
-            states[key] = {state: false, setByUser: false};
-        }
-        return states[key].state;
+        $scope.states[key].state = !$scope.states[key].state;
+        return $scope.states[key].state;
     };
 
     $scope.getDefaultSelectedMarketBase = Utils.getDefaultSelectedMarketBase;
@@ -156,11 +137,11 @@ BettingModule.controller('gamesCtrl', ['$rootScope', '$scope', '$location', '$fi
     $scope.marketSelectedBaseExists = function marketSelectedBaseExists(game, markets) {
         var exists = false;
 
-        if (!states[game.id].markets[markets[0].type]) {
+        if (!$scope.states[game.id].markets[markets[0].type]) {
             return exists;
         }
 
-        var activeBase = [states[game.id].markets[markets[0].type].activeBase];
+        var activeBase = [$scope.states[game.id].markets[markets[0].type].activeBase];
         angular.forEach(game.market, function (m) {
             if (Utils.getItemBySubItemProperty(m.event, 'base', activeBase) !== null) {
                 exists = true;
@@ -179,23 +160,23 @@ BettingModule.controller('gamesCtrl', ['$rootScope', '$scope', '$location', '$fi
     $scope.setActiveTab = function setActiveTab(type, game, market, activeId, dontOverwrite) {
         dontOverwrite = dontOverwrite || false;
 
-        if (states[game.id] === undefined) {
-            states[game.id] = {markets: {}, marketsGroup: null };
+        if ($scope.states[game.id] === undefined) {
+            $scope.states[game.id] = {markets: {}, marketsGroup: null };
         }
         if (type === 'marketBase') {
 
-            if (states[game.id].markets[market.type] === undefined) {
-                states[game.id].markets[market.type] = {activeBase: null};
+            if ($scope.states[game.id].markets[market.type] === undefined) {
+                $scope.states[game.id].markets[market.type] = {activeBase: null};
             }
-            if (!dontOverwrite || states[game.id].markets[market.type].activeBase === null) {
-                states[game.id].markets[market.type].activeBase = activeId;
+            if (!dontOverwrite || $scope.states[game.id].markets[market.type].activeBase === null) {
+                $scope.states[game.id].markets[market.type].activeBase = activeId;
             }
         } else if (type === 'marketGroup') {
             if (!game.id) {
                 return;
             }
-            states[game.id].marketsGroup = activeId;
-            return states[game.id].marketsGroup;
+            $scope.states[game.id].marketsGroup = activeId;
+            return $scope.states[game.id].marketsGroup;
         }
     };
 
@@ -211,14 +192,14 @@ BettingModule.controller('gamesCtrl', ['$rootScope', '$scope', '$location', '$fi
      * @returns {String} selected tab id
      */
     $scope.getActiveTab = function getActiveTab(type, game, market) {
-        if (!states[game.id]) {
+        if (!$scope.states[game.id]) {
             return null;
         }
         if (type === 'marketBase') {
-            return states[game.id].markets[market.type].activeBase;
+            return $scope.states[game.id].markets[market.type].activeBase;
         }
         if (type === 'marketGroup') {
-            return states[game.id].marketsGroup;
+            return $scope.states[game.id].marketsGroup;
         }
     };
 
@@ -265,9 +246,7 @@ BettingModule.controller('gamesCtrl', ['$rootScope', '$scope', '$location', '$fi
         return console.log('update game', game);
     }
 
-    $scope.getStates = function getStates() { // returned states for game.js
-        return states;
-    };
+
 
     /**
      * @ngdoc function
@@ -277,13 +256,14 @@ BettingModule.controller('gamesCtrl', ['$rootScope', '$scope', '$location', '$fi
      * @param {object} game game object (only id field is used to subscribe)
      * @param {function} callback function that will be called upon successful subscription and further updates
      */
-    $scope.subscribeToGame = function subscribeToGame(game, callback) {
+    $scope.subscribeToGame = function subscribeToGame(game, callback, notByUser) {
         if (subscriptionInProgress === game.id) { return; }
-        var gameRequest = [["id", "show_type", "markets_count", "start_ts", "is_live", "is_blocked", "is_neutral_venue","team1_id", "team2_id", "game_number", "text_info", "is_stat_available", "type",  "info", "stats", "team1_name", "team2_name", "tv_info", "add_info_name"]];
+        var gameRequest = [["id", "show_type", "markets_count", "start_ts", "is_live", "is_blocked", "is_neutral_venue","team1_id", "team2_id", "game_number", "text_info", "is_stat_available", "type",  "info", "stats", "team1_name", "team2_name", "tv_info", "add_info_name", "game_info"]];
         if ($scope.env.live) {
             Array.prototype.push.apply(gameRequest[0], ["match_length", "scout_provider", "video_id","video_id2", "video_id3", "tv_type", "last_event", "live_events"]);
         }
         subscriptionInProgress = game.id;
+        var firstTime = !notByUser;
         var request = {
             'source': 'betting',
             'what': {
@@ -292,7 +272,7 @@ BettingModule.controller('gamesCtrl', ['$rootScope', '$scope', '$location', '$fi
                 'market': ["id", "col_count", "type", "sequence", "express_id", "cashout", "display_key", "display_sub_key", "group_id", "name", "group_name", "order" ],
                 'sport': ['id', 'alias', 'name'],
                 'competition': ['id', 'info'],
-                'region': ['id']
+                'region': ['id', 'alias']
             },
             'where': {
                 'game': {
@@ -305,7 +285,8 @@ BettingModule.controller('gamesCtrl', ['$rootScope', '$scope', '$location', '$fi
             request,
             function gameUpdateCallback(data) {
                 updateGame(data);
-                callback();
+                callback(firstTime);
+                firstTime = false;
             },
             {
                 'thenCallback': function (result) {

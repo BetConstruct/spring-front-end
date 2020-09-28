@@ -45,7 +45,7 @@
                 <td>
                     <div class="asian-status-icons">
                         <div ng-show="game.is_neutral_venue" class="game-is-neutral" title="is neutral venue" trans="attr-only"></div>
-                        <div ng-show="game.type === 1 && game.hasVideo && $root.conf.videoEnabled" class="has-video" trans="attr-only" title="video"></div>
+                        <div ng-show="game.type === 1 && game.hasVideo" class="has-video" trans="attr-only" title="video"></div>
                     </div>
                 </td>
             </tr>
@@ -113,7 +113,7 @@
                         <div class="cms-jcon-Bet-Builder" ng-if="$root.conf.betBuilderSports[game.sport.alias] && game.type !== 1" ng-click="openBetBuilder(game);$event.stopPropagation();"></div>
                     </div>
 
-                    <div class="info-bl" ng-if="$first" ng-click="loadAllEvents(game.id)">
+                    <div class="info-bl" ng-if="$first" ng-click="loadAllEvents(game.id, game.competition.id, game.region.id, game.sport.id)">
                         <p>+{{::game.moreMarketsCount || ''}}</p>
                     </div>
                 </td>

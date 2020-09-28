@@ -37,7 +37,7 @@
                     <li>
                         <div class="ctournament-image-wrapper hp-slider-17">
                             <figure style="background-image: url({{item.LobbyBannerImagesFiltered[tournament.sliderIndex[item.Id]].ImageUrl}})"></figure>
-                            <div class="ct-game-prize-amount">{{item.PrizeFund|number}} {{item.CurrencyId}}</div>
+                            <div class="ct-game-prize-amount">{{item.PrizeFund|number}} {{item.CurrencyId|currency}}</div>
                             <counter start="{{item.Stage === 3 ? item.StartDate : item.EndDate}}" finish-text="{{item.Stage === 3 ? 'Started' : item.Stage === -1 ? 'Canceled' : ''}}" class="status-color"></counter>
                             <div class="hp-slider-pagination" ng-show="item.LobbyBannerImagesFiltered.length > 1">
                                 <button ng-click="tournament.sliderIndex[item.Id] = tournament.sliderIndex[item.Id] - 1;tournament.sliderIndex[item.Id] = tournament.sliderIndex[item.Id] < 0 ? item.LobbyBannerImagesFiltered.length - 1 : tournament.sliderIndex[item.Id];$event.stopPropagation();"></button>
@@ -98,7 +98,7 @@
                                 </li>
                                 <li>
                                     <p><span trans>Buy in + Fee</span></p>
-                                    <p><strong>{{item.RegistrationAmount}} {{item.CurrencyId}}</strong></p>
+                                    <p><strong>{{item.RegistrationAmount}} {{item.CurrencyId|currency}}</strong></p>
                                 </li>
                             </ul>
                             <div class="ctournament-containing-games">

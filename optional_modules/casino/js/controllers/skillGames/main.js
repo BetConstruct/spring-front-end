@@ -164,6 +164,10 @@ CASINO.controller('skillGamesMainCtrl', ['$rootScope', '$scope', '$location', 'C
         casinoManager.toggleSaveToMyCasinoGames($rootScope, game);
     };
 
+    $scope.$on('casinoGamesList.toggleSaveToMyCasinoGames', function (e, game) {
+        $scope.toggleSaveToMyCasinoGames(game);
+    });
+
     $scope.togglePlayForReal = function togglePlayForReal (gameInfo) {
         casinoManager.togglePlayMode($scope, gameInfo);
     };

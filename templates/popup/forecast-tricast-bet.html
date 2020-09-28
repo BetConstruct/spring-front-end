@@ -1,0 +1,51 @@
+<div class="hourse-popup" ng-controller="forecastAndTricastBetslipCtrl">
+    <h2 trans>Betslip</h2>
+    <div class="betslip-info-content" ng-show="!done">
+        <h6 trans>Your Selections</h6>
+        <div class="box-betslip-p">
+            <p ng-repeat="name in events track by name" ng-bind="name"></p>
+            <div class="combination-t">
+                <p>{{combinationMessage}} {{combinationCount > 1? combinationCount: ""}}</p>
+                <p class="lingf">{{state.start_ts|formatDate:'hour':null:$root.env.timeFormat}} {{state.name}}</p>
+            </div>
+            <input type="text"
+                   id="express-bet-input"
+                   comma comma-enable={{$root.conf.enableCommaSeparateNumber}}
+                   comma-decimal="enable" comma-dot="{{$root.conf.enableDotInsteadComma}}"
+                   prevent-input="{{$root.conf.stakeAmountPreventInput}}"
+                   prevent-rounding="{{$root.conf.balanceFractionSize}}"
+                   name=""
+                   numpad
+                   numpad-letters="disabled"
+                   ng-model="stake"
+                   placeholder="{{$root.conf.betslipInputFieldCustomValue | translate}}"
+                   maxlength="11"/>
+            <span>{{'Pot. Returns:'|translate }}<i trans>N/A</i></span>
+        </div>
+        <div class="total-stake-b">
+            <p ng-show="stake > 0">{{'Total stake'|translate }}<i>{{(stake * combinationCount)|bankersRoundAndNumberCommas:$root.conf.balanceFractionSize}} {{currency_name|currency}}</i></p>
+            <p class="return">{{'Total Potential return' |translate }}<i trans>N/A</i></p>
+            <p ng-show="(stake*combinationCount) > $root.profile.totalBalance">
+                <span trans>Insufficient balance</span>
+                <a class="underline" ng-if="!$root.conf.integrationMode && !$root.conf.disableDepositPage" ng-click="broadcast('toggleSliderTab','deposit');$event.stopPropagation();" trans>Deposit</a>
+                <a class="underline" ng-if="$root.conf.integrationMode && !$root.conf.customDepositUrl  && !$root.conf.disableDepositPage" ng-click="openPartnerDeposit()" trans>Deposit</a>
+                <a class="underline" ng-if="$root.conf.integrationMode && $root.conf.customDepositUrl" ng-href="{{$root.conf.customDepositUrl + $root.conf.availableLanguages[env.lang].short.toLowerCase()}}" target="{{$root.conf.customDepositUrl?'_top':''}}" trans>Deposit</a>
+            </p>
+            <p class="error-msg" ng-show="stake > 0 && (stake * combinationCount) < $root.partnerConfig.min_bet_stakes[$root.profile.currency_name]">{{'Bet amount is less than min allowed amount'|translate}} ({{$root.partnerConfig.min_bet_stakes[$root.profile.currency_name]}} {{currency_name|currency}}).</p>
+
+            <p ng-if="errorMessage" ng-bind="errorMessage" class="error-msg"></p>
+            <div class="button-confirm">
+                <vbet-loader class="md-progress-circular small-progress" ng-show="loading"></vbet-loader>
+                <button ng-disabled="loading || !stake || (stake*combinationCount) < $root.partnerConfig.min_bet_stakes[$root.profile.currency_name] || (stake*combinationCount)  > $root.profile.totalBalance" ng-click="loginAndPlaceBet()">{{(!$root.env.authorized? 'Login and place bet': 'Place Bet')|translate}}</button>
+            </div>
+            <p ng-if="!stake" class="bet-notification-warning" trans>Please enter stake amount</p>
+        </div>
+    </div>
+    <div class="gift-bet-success" ng-if="done">
+        <i class="gift-bet-success"></i>
+        <p trans>You have successfully placed your bet</p>
+        <div class="button-confirm">
+            <button ng-click="close()" trans>OK</button>
+        </div>
+    </div>
+</div>

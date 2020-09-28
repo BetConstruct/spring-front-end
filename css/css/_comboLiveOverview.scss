@@ -1,0 +1,143 @@
+
+.live-overview-contanier-b .all-inplay-wrapper {
+  background: none;
+  padding: 0;
+}
+
+.body-wrapper .live-overview-contanier-b .inplay-game-wrapper {
+  background: #3f4553;
+  border-radius: inherit;
+  border-color: #3f4553;
+  .title-sport-inplay > p {
+    color: set-color(#3f4553);
+  }
+}
+
+.body-wrapper .live-overview-contanier-b .inplay-game-wrapper.Favorites {
+  background: $hero-color;
+  border-color: $hero-color;
+  margin-bottom: 10px;
+  .sport-icon-inplay:before, .title-sport-inplay > p, .arrow-toggle-inplay {
+    color: set-color($hero-color);
+  }
+}
+
+.live-overview-contanier-b .overview-championship-info {
+  background: #cfd6dc;
+}
+
+.live-overview-contanier-b .mini-wrapper-info-inplay {
+  background: #ffffff;
+}
+
+.live-overview-contanier-b .name-team-overview > p {
+  font-weight: bold;
+  color: #666666;
+}
+
+.live-overview-contanier-b .mini-wrapper-info-inplay,
+.live-overview-contanier-b .overview-game-info,
+.live-overview-contanier-b .overview-name-column,
+.live-overview-contanier-b .overview-markets-column,
+.live-overview-contanier-b .name-market-overview {
+  border-color: #cfd6dc;
+}
+
+.live-overview-contanier-b .score-contain-overview-b {
+  background: #3f4553;
+}
+
+.live-overview-contanier-b .overview-championship-info > h4,
+.live-overview-contanier-b .overview-championship-info .arrow-toggle-inplay {
+  color: #3f4553;
+}
+
+.live-overview-contanier-b .arrow-toggle-inplay {
+  color: #ffffff;
+}
+
+.live-overview-contanier-b .flag-overview {
+  top: 0;
+}
+
+.live-overview-contanier-b .mini-b-events-overview > ul > li {
+  border-color: #cfd6dc;
+  background: #e8edf1;
+}
+
+.live-overview-contanier-b .mini-b-events-overview > ul > li:hover {
+  background: #DBE1E6;
+}
+
+.live-overview-contanier-b .mini-b-events-overview > ul > li.active {
+  background: $hero-color;
+  border-color: darken($hero-color, 10);
+  > p, > span, > span:before, > span:after {
+    color: set-color($hero-color);
+  }
+}
+.mini-b-events-overview > ul > li > span.up-0:before,
+.mini-b-events-overview > ul > li > span.up-1:before,
+.mini-b-events-overview > ul > li > span.down0:before,
+.mini-b-events-overview > ul > li > span.down-1:before {
+  content: "\e66d";
+  font: 12px 'icomoon';
+  color: #04e914;
+  text-shadow: none;
+  position: absolute;
+  top: 1px;
+  animation-duration: 7000ms;
+  animation-fill-mode: forwards;
+  @include ltr {
+    left: 0;
+  }
+  @include rtl {
+    right: 0;
+  }
+}
+
+.mini-b-events-overview > ul > li > span.down0:before,
+.mini-b-events-overview > ul > li > span.down-1:before {
+  content: "\e66c ";
+  color: #a61f67;
+}
+
+.mini-b-events-overview > ul > li > span.up-0:before { animation-name: odds-arrow-up-0; }
+.mini-b-events-overview > ul > li > span.up-1:before { animation-name: odds-arrow-up-1; }
+.mini-b-events-overview > ul > li > span.down0:before { animation-name: odds-arrow-down0; }
+.mini-b-events-overview > ul > li > span.down-1:before { animation-name: odds-arrow-down-1; }
+
+.live-overview-contanier-b .mini-b-events-overview > ul > li > p {
+  color: #3f4553;
+}
+
+.live-overview-contanier-b .mini-b-events-overview > ul > li > span {
+  font-weight: bold;
+  color: #3f4553;
+}
+
+.body-wrapper .live-overview-contanier-b .sport-icon-inplay:before {
+  color: #ffffff;
+}
+
+.body-wrapper .live-overview-contanier-b .inplay-game-wrapper.Favorites .overview-championship-info .sport-icon-inplay:before {
+  color: $hero-color;
+}
+
+.live-overview-contanier-b .overview-championship-info > h4 > .fav-name-overview-b-sport {
+  color: $hero-color;
+}
+
+.live-overview-contanier-b .favorite-overview-icon,
+.live-overview-contanier-b .favorite-overview-icon.active, .live-overview-contanier-b .favorite-overview-icon:hover {
+  color: $hero-color;
+}
+
+.live-overview-contanier-b .any-events-b > a {
+  font-weight: bold;
+  color: #000000;
+}
+
+.live-overview-contanier-b .any-events-b > a:hover {
+  color: $hero-color;
+}

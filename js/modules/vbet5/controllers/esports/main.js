@@ -110,11 +110,6 @@ VBET5.controller('eSportsMainController', ['$rootScope', '$scope', 'Config', 'Ut
             sport: game.sport,
             team1_name: game.team1_name,
             team2_name: game.team2_name,
-            tv_type: game.tv_type,
-            video_id: game.video_id,
-            video_id2: game.video_id2,
-            video_id3: game.video_id3,
-            video_provider: game.video_provider,
             video_data: undefined
         };
 

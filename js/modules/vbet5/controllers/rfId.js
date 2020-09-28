@@ -115,6 +115,21 @@ VBET5.controller('rfidCtrl', ['$scope', '$rootScope', '$window', 'Config', 'Zerg
         }
     }
 
+    function showWarningPopup() {
+        if(!Config.main.rfid.doNotShowWarningPopup) {
+            $rootScope.$broadcast('globalDialogs.removeDialogsByTag', 'rfid');
+            $rootScope.$broadcast("globalDialogs.addDialog", {
+                type: 'info',
+                tag: 'rfid',
+                title: 'Warning',
+                hideCloseButton: true,
+                hideButtons: true,
+                class: Config.main.rfid.allowAccessWithoutRfid ? "allow-header-access" : null,
+                content: 'Please put your RFID card on card reader'
+            });
+        }
+    }
+
     /**
      * @ngdoc method
      * @name SignOutRF
@@ -126,16 +141,7 @@ VBET5.controller('rfidCtrl', ['$scope', '$rootScope', '$window', 'Config', 'Zerg
         var doLogoutStuff = function () {
             if (!logoutDone) {
                 logoutDone = true;
-                if(!Config.main.rfid.doNotShowWarningPopup) {
-                    $rootScope.$broadcast("globalDialogs.addDialog", {
-                        type: 'info',
-                        tag: 'rfid',
-                        title: 'Warning',
-                        hideCloseButton: true,
-                        hideButtons: true,
-                        content: 'Please put your RFID card on card reader'
-                    });
-                }
+                showWarningPopup();
                 $scope.env.hideLogOut = false;
                 $rootScope.currency_name = null;
                 $rootScope.fbLoggedIn = false;
@@ -173,16 +179,8 @@ VBET5.controller('rfidCtrl', ['$scope', '$rootScope', '$window', 'Config', 'Zerg
         $window.SignInByRFID = SignInByRFID;
         $window.SignOutRF = SignOutRF;
         $window.IsRfSignIn = IsRfSignIn;
-        if(!Config.main.rfid.doNotShowWarningPopup && !$scope.env.authorized) {
-            $rootScope.$broadcast('globalDialogs.removeDialogsByTag', 'rfid');
-            $rootScope.$broadcast("globalDialogs.addDialog", {
-                type: 'info',
-                tag: 'rfid',
-                title: 'Warning',
-                hideCloseButton: true,
-                hideButtons: true,
-                content: 'Please put your RFID card on card reader'
-            });
+        if(!$scope.env.authorized) {
+            showWarningPopup();
         }
         $scope.env.hideLogOut = false;
     } else {

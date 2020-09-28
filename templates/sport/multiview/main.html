@@ -23,7 +23,7 @@
         <div class="old-classic-scroll-contain">
             <div class="right-betslip-contain"
                  ng-show="$root.conf.customSportsBook.classic.showBetSlip"
-                 ng-class="{'video-and-animation': hideVideoAndAnimationBox && (openGame.has_animation || (openGame.video_id && $root.conf.videoEnabled)), 'video-and-animation-opened': !hideVideoAndAnimationBox && (openGame.has_animation || openGame.video_id) && !isVideoDetached}">
+                 ng-class="{'video-and-animation': hideVideoAndAnimationBox && (openGame.has_animation || openGame.video_id), 'video-and-animation-opened': !hideVideoAndAnimationBox && (openGame.has_animation || openGame.video_id) && !isVideoDetached}">
                 <ng-include class="include-viewSwitcher-j" src="::'templates/sport/viewswitcher.html'|fixPath"></ng-include>
                 <!-- Animation control start -->
                 <div class="block-size-visible-b" ng-if="!$root.conf.animationAndVideoOnLeft && env.live && (((openGame.video_id || openGame.video_data) && $root.conf.videoEnabled && !pinnedGames[openGame.id] && !enlargedGame) || openGame.has_animation)">

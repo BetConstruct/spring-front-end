@@ -55,9 +55,6 @@ angular.module('vbet5.betting').controller('classicViewMainCtrl', ['$rootScope',
     $scope.isPopularGames = false;
     $scope.popularGamesLastState = false;
     $scope.showNewsBlock = !Config.betting.enableShowBetSettings;
-    $scope.marketsInOneColumn = { // Need to store value in an object to be able to change it from the directive
-        enabled: Storage.get('markets_in_one_column') !== undefined ? !!Storage.get('markets_in_one_column') : !!Config.main.marketsInOneColumn
-    };
     $scope.marketFilterTypes = Config.main.marketFilterTypes;
     $scope.selectedMarketFilter = $scope.marketFilterTypes[0];
     $scope.competitionTimeGroupe = {};
@@ -267,6 +264,7 @@ angular.module('vbet5.betting').controller('classicViewMainCtrl', ['$rootScope',
 
         $scope.todaysBets.selected = sport.id;
         $scope.boostedBets.selected = false;
+        $scope.selectedCompetition = null;
 
         var dayShift, startTime, endTime;
         if ($location.search().dayshift) {
@@ -325,6 +323,7 @@ angular.module('vbet5.betting').controller('classicViewMainCtrl', ['$rootScope',
 
     boostedSelectionsPromise().then(function(response) {
         $rootScope.boostedBetsEventIds = response.eventIds;
+        $rootScope.broadcast('addBoostedBets');
     });
 
     /**
@@ -339,11 +338,13 @@ angular.module('vbet5.betting').controller('classicViewMainCtrl', ['$rootScope',
         $scope.boostedBets.selected = true;
         $scope.todaysBets.selected = 0;
         $scope.favoriteGameIsSelected = false;
+        $scope.selectedSport = null;
 
         unsubscribeOldSubscriptions('boostedBets');
 
         $scope.prematchGameViewData = [];
         $scope.showMarketsFilter = false;
+        $scope.selectedCompetition = null;
 
         boostedSelectionsPromise().then(function(response) {
             var boostedBetsGameIdsArray = response.gamesIds;
@@ -355,9 +356,7 @@ angular.module('vbet5.betting').controller('classicViewMainCtrl', ['$rootScope',
                         'sport': ['id', 'name', 'alias'],
                         'competition': ['id', 'name'],
                         'region': ['id', 'name', 'alias'],
-                        game:
-                            ['id', 'start_ts', 'team1_name', 'team2_name', 'team1_external_id', 'team2_external_id', 'type', 'info', 'markets_count', 'extra', 'is_blocked', 'exclude_ids', 'is_stat_available', 'game_number', 'game_external_id', 'is_live', 'is_neutral_venue', 'game_info'
-                            ],
+                        game:[['id', 'start_ts','show_type', 'team1_name', 'team2_name', 'team1_external_id', 'team2_external_id', 'type', 'info', 'markets_count', 'extra', 'is_blocked', 'exclude_ids', 'is_stat_available', 'game_number', 'game_external_id', 'is_live', 'is_neutral_venue', 'game_info']],
                         'event': ['id', 'price', 'type', 'name', 'order', 'base', 'price_change'],
                         'market': ['type', 'express_id', 'name', 'base', 'display_key', 'display_sub_key', 'main_order', 'col_count', 'id']
                     },
@@ -369,6 +368,8 @@ angular.module('vbet5.betting').controller('classicViewMainCtrl', ['$rootScope',
                 };
 
                 Utils.setCustomSportAliasesFilter(request);
+                var requestMarketTypes = ["P1P2", "P1XP2", "Handicap"];
+                addMarketTypesInRequest(request, requestMarketTypes, true);
                 $scope.prematchGamesLoading = true;
                 connectionService.subscribe(
                     request, updatePrematchGamesAndMultiColumnView,
@@ -430,9 +431,11 @@ angular.module('vbet5.betting').controller('classicViewMainCtrl', ['$rootScope',
                     angular.forEach(competition.game, function (game) {
                         game.sport = {id: sport.id, alias: sport.alias, name: sport.name};
                         game.region = {id: region.id, name: region.name, alias: region.alias};
+                        if ($scope.boostedBets.selected || $scope.todaysBets.selected || $scope.outrightSelected) {
+                            game.additionalEvents = game.markets_count;
+                        }
                         game.competition = {id: competition.id, order: competition.order};
                         game.firstMarket = Utils.getFirstMarket(game.market);
-                        game.additionalEvents = game.markets_count;
                         game.groupDate = Date.parse((moment(game.start_ts*1000).utcOffset(Config.env.selectedTimeZone || 0).lang("en").format("YYYY-MM-DD")))/1000;
                         if(Config.main.showPlayerRegion) {
                             game.team1_name = game.team1_reg_name && game.team1_name.indexOf(game.team1_reg_name) === -1 ? game.team1_name + ' (' + game.team1_reg_name + ')' : game.team1_name;
@@ -440,11 +443,11 @@ angular.module('vbet5.betting').controller('classicViewMainCtrl', ['$rootScope',
                         }
                         $scope.showMarketsFilter = false;
 
-                        if (game.sport.alias !== 'Soccer' && Config.main.enableMarketFiltering) {
+                        if ((game.sport.alias !== 'Soccer' || $scope.boostedBets.selected) && Config.main.enableMarketFiltering) {
                             $scope.selectedMarketFilter = $scope.marketFilterTypes[0];
                         }
 
-                        if (Config.main.enableMarketFiltering && game.sport.alias === 'Soccer') {
+                        if (Config.main.enableMarketFiltering && game.sport.alias === 'Soccer' && !$scope.boostedBets.selected) {
                             $scope.showMarketsFilter = true;
                             game.filteredMarkets = Utils.groupByItemProperty(game.market, 'type');
                             angular.forEach($scope.marketFilterTypes, function (filter) {
@@ -519,7 +522,8 @@ angular.module('vbet5.betting').controller('classicViewMainCtrl', ['$rootScope',
         updatePrematchGames(data);
 
         if ($scope.multiColumn.show) {
-            $scope.$broadcast('multiColumn.games', 'update');
+            $scope.$broadcast('multiColumn.games', 'updateBoth');
+
         }
     }
 
@@ -580,6 +584,8 @@ angular.module('vbet5.betting').controller('classicViewMainCtrl', ['$rootScope',
 
         $scope.favoriteGameIsSelected = false;
         $scope.outrightSelected = false;
+        $scope.selectedCompetition = null;
+
         $scope.favoriteTeamExpanded = false;
 
         var request = {
@@ -589,7 +595,7 @@ angular.module('vbet5.betting').controller('classicViewMainCtrl', ['$rootScope',
                 'competition': ['id', 'order', 'name'],
                 'region': ['id', 'name', 'alias'],
                 game: [
-                    ['id', 'start_ts', 'team1_name', 'team2_name', 'team1_reg_name', 'team2_reg_name', 'team1_external_id', 'team2_external_id', 'type', "game_info",
+                    ['id', 'start_ts','show_type', 'team1_name', 'team2_name', 'team1_reg_name', 'team2_reg_name', 'team1_external_id', 'team2_external_id', 'type', "game_info",
                         'info', 'markets_count', 'extra', 'is_blocked', 'exclude_ids', 'is_stat_available', 'game_number', 'game_external_id', 'is_live', 'is_neutral_venue']
                 ],
                 'event': ['id', 'price', 'type', 'name', 'order', 'price_change'],
@@ -685,7 +691,7 @@ angular.module('vbet5.betting').controller('classicViewMainCtrl', ['$rootScope',
                 'competition': ['id', 'order', 'name'],
                 'region': ['id', 'name', 'alias'],
                 game: [
-                    ['id', 'start_ts', 'team1_name', 'team2_name', 'team1_external_id', 'team2_external_id', 'type', 'info', 'markets_count', 'extra', 'is_blocked', 'exclude_ids', 'is_stat_available', 'game_number', 'game_external_id', 'is_live', 'is_neutral_venue', 'game_info']
+                    ['id', 'start_ts','show_type', 'team1_name', 'team2_name', 'team1_external_id', 'team2_external_id', 'type', 'info', 'markets_count', 'extra', 'is_blocked', 'exclude_ids', 'is_stat_available', 'game_number', 'game_external_id', 'is_live', 'is_neutral_venue', 'game_info']
                 ],
                 'event': ['id', 'price', 'type', 'name', 'order', 'base', 'price_change'],
                 'market': ['type', 'express_id', 'name', 'base', 'display_key', 'display_sub_key', 'main_order', 'col_count', 'id']
@@ -729,6 +735,17 @@ angular.module('vbet5.betting').controller('classicViewMainCtrl', ['$rootScope',
 
     $scope.$on('prematch.expandCompetition', function (event, data) {
         if (Config.env.live) {
+            return;
+        }
+        if ($scope.customTemplateForSport[data.sport.id]) {
+            if (data.fromLeft) {
+                $location.search('game', undefined);
+            }
+            $scope.selectedSport = data.sport;
+            $scope.selectedRegion = data.competition.region || $scope.selectedRegion;
+            $scope.selectedCompetition = data.competition;
+            unsubscribeOldSubscriptions();
+            $scope.unsubscribeFromOpenGame();
             return;
         }
         console.log('classicView: expandCompetition', event, data.competition, data.sport);
@@ -787,9 +804,10 @@ angular.module('vbet5.betting').controller('classicViewMainCtrl', ['$rootScope',
 
         $scope.selectedCompetition = competition;
         $scope.selectedCompetition.sport = $scope.selectedCompetition.sport || sport;
-        $scope.multiColumn.show && $scope.$broadcast('multiColumn.games', 'loadLive');
         $scope.selectedSport = sport || $scope.selectedSport;
         $scope.selectedRegion = competition.region || $scope.selectedRegion;
+        $scope.multiColumn.show && $scope.$broadcast('multiColumn.games', 'cleanState');
+
 
         if (Config.env.live) {
             competition.expanded = !competition.expanded;
@@ -941,6 +959,8 @@ angular.module('vbet5.betting').controller('classicViewMainCtrl', ['$rootScope',
 
         $scope.favoriteTeamExpanded = true;
         $scope.prematchGamesLoading = true;
+        $scope.selectedCompetition = null;
+
 
         var requestMarketTypes = ['P1P2'];
         angular.forEach($scope.marketFilterTypes, function (fType) {
@@ -954,7 +974,7 @@ angular.module('vbet5.betting').controller('classicViewMainCtrl', ['$rootScope',
                 'competition': ['id', 'name'],
                 'region': ['id', 'name', 'alias'],
                 game: [
-                    ['id', 'start_ts', 'team1_name', 'team2_name', 'team1_external_id', 'team2_external_id', 'type', 'info', 'markets_count', 'extra', 'is_blocked', 'exclude_ids', 'is_stat_available', 'game_number', 'game_external_id', 'is_live', 'is_neutral_venue', 'game_info']
+                    ['id', 'show_type', 'start_ts', 'team1_name', 'team2_name', 'team1_external_id', 'team2_external_id', 'type', 'info', 'markets_count', 'extra', 'is_blocked', 'exclude_ids', 'is_stat_available', 'game_number', 'game_external_id', 'is_live', 'is_neutral_venue', 'game_info']
                 ],
                 'event': ['id', 'price', 'type', 'name', 'order', 'base', 'price_change'],
                 'market': ['type', 'express_id', 'name', 'base', 'display_key', 'display_sub_key', 'main_order', 'col_count', 'id']
@@ -1045,6 +1065,7 @@ angular.module('vbet5.betting').controller('classicViewMainCtrl', ['$rootScope',
         $scope.prematchGamesLoading = true;
         $scope.favoriteTeamExpanded = false;
         $scope.favoriteGameIsSelected = false;
+        $scope.selectedCompetition = null;
 
         var dayShift;
         if ($location.search().dayshift) {
@@ -1065,7 +1086,7 @@ angular.module('vbet5.betting').controller('classicViewMainCtrl', ['$rootScope',
                 'region': ['id', 'name'],
                 'competition': ['id'],
                 game: [
-                    ['id', 'start_ts', 'team1_name', 'team2_name', 'team1_external_id', 'team2_external_id', 'type', 'info', 'markets_count', 'extra', 'is_blocked', 'exclude_ids', 'is_stat_available', 'game_number', 'is_live','is_neutral_venue', 'game_info']
+                    ['id', 'start_ts', 'show_type', 'team1_name', 'team2_name', 'team1_external_id', 'team2_external_id', 'type', 'info', 'markets_count', 'extra', 'is_blocked', 'exclude_ids', 'is_stat_available', 'game_number', 'is_live','is_neutral_venue', 'game_info']
                 ],
                 'market': ['type', 'express_id', 'name', 'home_score', 'away_score', 'id'],
                 'event': ['id', 'price', 'type', 'name', 'order']
@@ -1235,6 +1256,7 @@ angular.module('vbet5.betting').controller('classicViewMainCtrl', ['$rootScope',
         $scope.favoriteGameIsSelected = false;
         $scope.isPopularGames = false;
         $scope.favoriteTeamExpanded = false;
+        $scope.selectedCompetition = null;
 
         var request = {
             'source': 'betting',
@@ -1336,6 +1358,7 @@ angular.module('vbet5.betting').controller('classicViewMainCtrl', ['$rootScope',
                         "team1_name",
                         "team2_name",
                         "team1_id",
+                        "show_type",
                         "team2_id",
                         "type",
                         "info",

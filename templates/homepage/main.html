@@ -16,8 +16,10 @@
                      banner-slider
                      interval="{{conf.featuredGames.rotationPeriod}}" slug="{{item.sliderSlug}}"></div>
                 <div ng-if="item.dataType" ng-switch="item.dataType">
-                    <div class="casino-games-list-h" ng-switch-when="casinoPromotedGames" casino-promoted-games page-category="home" limit="item.limit || 10"></div>
-                    <jackpot-slider type="casino" ng-style="{'height': (item.height || item.mediaHeight), 'max-height': item.maxHeight}" class="casino-games-list-h" load-jackpot-data="true" ng-switch-when="casinoJackpotSlider"></jackpot-slider>
+                    <div class="casino-games-list-h" ng-switch-when="casinoPromotedGames" casino-promoted-games page-category="home" limit="item.limit || 10" games-category="item.category" games-provider="item.provider"></div>
+                    <jackpot-slider ng-switch-when="casinoJackpotSlider" type="casino" ng-style="{'height': (item.height || item.mediaHeight), 'max-height': item.maxHeight}" class="casino-games-list-h" load-jackpot-data="true" ></jackpot-slider>
+                    <jackpot-slider ng-switch-when="globalJackpotSlider" type="global" ng-style="{'height': (item.height || item.mediaHeight), 'max-height': item.maxHeight}" class="casino-games-list-h" load-jackpot-data="true" ></jackpot-slider>
+                    <jackpot-slider ng-switch-when="sportsbookJackpotSlider" type="sportsbook" ng-style="{'height': (item.height || item.mediaHeight), 'max-height': item.maxHeight}" class="casino-games-list-h" load-jackpot-data="true" ></jackpot-slider>
                     <div ng-switch-when="casinoJackpotAndTournaments">
                         <casino-jackpot-and-tournaments load-jackpot-data="true" ></casino-jackpot-and-tournaments>
                     </div>

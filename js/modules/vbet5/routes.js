@@ -54,10 +54,18 @@ angular.module('vbet5').config(['$routeProvider', '$anchorScrollProvider', 'Skin
             },
             reloadOnSearch: false
         })
+        .when('/pinnacle/', {
+            templateUrl: getTemplate('templates/sport/pinnacle.html'),
+            reloadOnSearch: false
+        })
         .when('/insvirtualsports/', {
             templateUrl: function () {
                 return getTemplate('templates/sport/classic/virtualsportsContainer.html');
             },
+            reloadOnSearch: false
+        })
+        .when('/wonderwheel/', {
+            templateUrl: getTemplate('optional_modules/casino/templates/wonderWheel.html'),
             reloadOnSearch: false
         })
         .when('/vsports/', {

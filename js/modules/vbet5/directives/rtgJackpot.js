@@ -13,7 +13,7 @@ VBET5.directive('rtgJackpot', ['content', '$rootScope', 'jackpotManager', functi
         },
         templateUrl: 'templates/directive/rtgJackpot.html',
         link: function (scope) {
-            jackpotManager.subscribeForExternalJackpotData(subscribeForExternalJackpotDataCallback,'RTG');
+            jackpotManager.subscribeForExternalJackpotData(subscribeForExternalJackpotDataCallback,['RTG']);
 
             function subscribeForExternalJackpotDataCallback(data) {
                 if(data && data['RTG']){

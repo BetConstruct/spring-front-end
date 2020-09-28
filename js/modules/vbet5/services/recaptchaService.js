@@ -73,6 +73,8 @@ VBET5.factory('RecaptchaService', ['$rootScope', '$q', '$timeout', 'WS', 'Storag
     }
 
     function execute(actionName, check) {
+        actionName = actionName.replace(/[^A-Za-z/_]/g, ""); // may only include "A-Za-z/_"
+
         // We call resolve instead of reject because grecaptcha.execute is not a promise, but a 'thenable'
         if (Recaptcha.key && Recaptcha.version === 3) {
             if (initialized) {

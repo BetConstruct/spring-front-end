@@ -1,0 +1,40 @@
+<div class="animation-video-box-v3"
+     ng-class="{'active': hideVideoAndAnimationBox}"
+>
+    <div class="animation-video-contain-v3">
+        <div class="animation-video-title-row-v3">
+            <div class="anime-video-switcher-v3">
+                <ul>
+                    <li class="video-view-icon-v3" class="active">
+                    </li>
+                </ul>
+            </div>
+            <div class="contain-v-a-fanction-icons-v3">
+                <ul>
+                    <li class="arrow-closed-anime-b-v3" ng-click="hideVideoAndAnimationBox = !hideVideoAndAnimationBox" ng-class="{'active': hideVideoAndAnimationBox}"></li>
+                    <li class="sound-icon-v3 " ng-click="$root.env.sound = 0;" ng-show="env.sound > 0" title="Sound" trans="attr-only"></li>
+                    <li class="sound-icon-v3 active" ng-click="$root.env.sound = 0.75;" ng-show="env.sound === 0" title="Sound" trans="attr-only"></li>
+                </ul>
+            </div>
+            <div class="chanel-grayhound-s" ng-show="!hideVideoAndAnimationBox && data.video_data" >
+                <select  name="selectedChannel" ng-model="selectedChannel" ng-change="getChannelVideo()" ng-options="item as (item.channel + ' ' + ('Channel'|translate)) for item in prematchChannels track by item.channel">
+                </select>
+            </div>
+        </div>
+
+        <div class="video-animation-vox-v3 animation-control">
+            <hls-player ng-if="!hideVideoAndAnimationBox && data.video_data && !loading"
+                        provider-id="{{data.tv_type}}"
+                        stream-url="{{data.video_data}}">
+            </hls-player>
+            <vbet-loader ng-show="loading"></vbet-loader>
+            <div class="game-video-container" ng-if="!$root.env.authorized">
+                <p ng-if="!$root.conf.integrationMode" trans ng-click="$root.broadcast('openLoginForm');$event.stopPropagation();" class="login-link">You need to be logged in to be able to play video.</p>
+                <p ng-if="$root.conf.integrationMode" trans class="login-link">You need to be logged in to be able to play video.</p>
+            </div>
+            <div class="game-video-container" ng-if="$root.env.authorized && profile.totalBalance === 0">
+                <p ng-class="{'pointer-events-none': $root.conf.integrationMode}" class="login-link" ng-click="!conf.disableDepositPage && broadcast('toggleSliderTab', 'deposit');$event.stopPropagation();"> You need to have non-zero balance to be able to play video.</p>
+            </div>
+        </div>
+    </div>
+</div>

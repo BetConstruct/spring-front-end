@@ -13,6 +13,7 @@
                ng-click="$event.stopPropagation(); editBet(bet);"
                title="{{ ('Editing functionality is available for this bet.') | translate }}">
             </i>
+            <i class="refresh-icon cms-jcon-refresh" ng-show="$root.conf.enableBetFromBetHistory && (bet.type == 1 || bet.type == 2 || bet.type == 3 || bet.type == 4)" ng-click="$event.stopPropagation();addEvents(bet);" title="Repeat Bet"></i>
             <span class="gift-bet" ng-if="bet.is_gift === null && $root.conf.enableGiftBet" ng-click="$event.stopPropagation()" title="{{(bet.is_gift? 'Gifted': 'Gift')|translate}}">
                    <i ng-click="$root.broadcast('showGiftPopup', bet)" ng-class="{'disabled': bet.is_gift === true }"></i>
              </span>
@@ -30,7 +31,7 @@
                             <span ng-click="gotoBetGame(matchInfo[event.game_id].gamePointer)">{{::event.game_name}}</span>
                             <b class="open-bets-games-score" ng-bind="matchInfo[event.game_id].text_info"></b>
                         </div>
-                        <div class="status-icon-open-bets" title="{{event.outcome == 3 ? 'Won' : 'Unsettled'}}"></div>
+                        <div class="status-icon-open-bets" title="{{(event.outcome == 3 ? 'Won' : 'Unsettled')|translate}}"></div>
 
                     </div>
                     <div class="open-bets-games-info" ng-show="event.is_live">
@@ -44,7 +45,8 @@
                             <li>
                                 <p>{{::event.eventName ? event.eventName : event.event_name}}</p>
                                 <div class="bet-price-view-b-v3">
-                                    <span class="bet-price-v3" ng-bind="event.k_type === 11 ? 'SP' : event.coeficient|oddConvert:$root.env.oddFormat"></span>
+                                    <span class="bet-price-v3" ng-bind="event.k_type === 11 ? 'SP' : (event.coeficient|oddConvert:event.oddTypeMapped.full:null:'BET_HISTORY':undefined:(!{1:1, 4:1}[bet.type]))"></span>
+                                    <span ng-bind="::event.oddTypeMapped.short|translate" title="{{::event.oddTypeMapped.full|translate}}"></span>
                                 </div>
                             </li>
                         </ul>

@@ -53,28 +53,28 @@
 <div class="markets-group-wrap-v3" ng-show="openGame.availableMarketGroups.length > 2">
     <ul ng-class="{'show-dropdown': marketGroupFilterExpanded, 'has-dropdown': openGame.availableMarketGroups.length > 5 }">
         <li class="more-j" ng-click="marketGroupFilterExpanded = !marketGroupFilterExpanded" hide-on-click state-flag-var="marketGroupFilterExpanded"><span>+ {{ openGame.availableMarketGroups.length - 5 }}</span></li>
-        <li class="favorte-markets-group-j ng-hide"></li>
         <li ng-repeat="group in openGame.availableMarketGroups track by group.id"
-            ng-class="{active: openGame.selectedMarketGroupId === group.id, 'to-dropdown': $index > 4}"
+            data-count="{{ group.count }}"
+            ng-class="{active: openGame.selectedMarketGroupId === group.id, 'to-dropdown': $index > 5,  'favorte-markets-group-j': $first, 'animate-star-odd' : $first && group.count % 2 == 1, 'animate-star-even': $first && group.count % 2 == 0, 'has-market': $first && group.count > 0}"
             ng-click="selectMarketsGroup(group.id)">
             <span><i><b>{{ group.name|translate }}</b></i><i ng-show="group.count !== undefined">({{ group.count }})</i></span></li>
     </ul>
 </div>
 
 
-<div ng-repeat="group in selectedMarketsGroup track by $index" ng-class="{'closed' : group[0].collapsed}" class="game-list-compitishion">
-    <div class="name-chempionship-asia more-c"  ng-click="group[0].collapsed = !group[0].collapsed">
-        <h3 ng-bind="group[0].name"></h3>
-        <i class="cashout-icon-market-v3" title="Cash-out available" trans ng-if="group[0].cashout"></i>
-        <span class="ew-total-view-v3" ng-if="group[0].eachWayTerms" title="{{group[0].eachWayTerms}}">ew</span>
-        <i class="statistics-icon-market" ng-class="{'active': group[0].showStats}" ng-click="group[0].showStats = !group[0].showStats; $event.stopPropagation()"  ng-if="group[0].showStatsIcon"></i>
-
+<div ng-repeat="market in selectedMarketsGroup track by market.id" ng-class="{'closed' : market.collapsed}" class="game-list-compitishion">
+    <div class="name-chempionship-asia more-c"  ng-click="market.collapsed = !market.collapsed">
+        <h3 ng-bind="market.name"></h3>
+        <i class="cashout-icon-market-v3" title="Cash-out available" trans ng-if="market.cashout"></i>
+        <span class="ew-total-view-v3" ng-if="market.eachWayTerms" title="{{market.eachWayTerms}}">ew</span>
+        <i class="statistics-icon-market" ng-class="{'active': market.showStats}" ng-click="market.showStats = !market.showStats; $event.stopPropagation()"  ng-if="market.showStatsIcon"></i>
+        <i class="favorite-icon-market-v3" ng-class="{'remove': openGame.sport.favouriteMarketsTypes[market.fullType] === 1 }" ng-click="$event.stopPropagation();addToFavouriteMarkets(market)"></i>
     </div>
-    <market-stats class="market-stats" market-type="group[0].type" open-game="openGame"
-                  open-statistics="openStatistics" ng-if="group[0].showStats"></market-stats>
-    <div ng-repeat="market in group|orderBy: 'order' track by market.id" class="many-columns-b cols-{{market.col_count}}" ng-class="{'default': market.col_count > 5}" ng-show="!group[0].collapsed">
+    <market-stats class="market-stats" market-type="market.type" open-game="openGame"
+                  open-statistics="openStatistics" ng-if="market.showStats"></market-stats>
+    <div class="many-columns-b cols-{{market.col_count}}" ng-class="{'default': market.col_count > 5}" ng-show="!market.collapsed">
         <div class="asian-market-wrap-j asian-market-overflow-j {{event.price_change == null? '' : ({true: 'up-', false: 'down'}[event.price_change > 0] + (event.price_change % 2)) }}"
-             ng-repeat="event in market.events|orderBy:'order' track by event.id"
+             ng-repeat="event in market.events track by event.id"
              ng-class="{'empty': event.is_empty, 'locked': (event.price | oddConvert:'decimal') == 1 || openGame.is_blocked,'active': isEventInBetSlip(event)}"
              ng-click="bet(event, market, openGame);">
             <i ng-if="$root.conf.boostedBets.enabled && $root.boostedBetsEventIds && $root.boostedBetsEventIds[event.id]" title="{{'Boosted odd'|translate}}" class="boosted"></i>

@@ -12,7 +12,7 @@
                     <li ng-if="$root.conf.betHistory.enableReturnedFilter" ng-click="filterBetHistory(11)" ng-class="{'active': (betStatusFilter == 11)}"><span trans>Won Return</span> <i ng-show="betEventCounts.wonReturn">{{betEventCounts.wonReturn}}</i></li>
                     <li ng-if="$root.conf.betHistory.enableReturnedFilter" ng-click="filterBetHistory(12)" ng-class="{'active': (betStatusFilter == 12)}"><span trans>Lost Return</span> <i ng-show="betEventCounts.lostReturn">{{betEventCounts.lostReturn}}</i></li>
                     <li ng-if="$root.profile.is_agent" ng-click="filterBetHistory(10)" ng-class="{'active': (betStatusFilter === 10)}"><span trans>Agent Info</span></li>
-                    <li ng-if="$root.conf.enableGiftBet" ng-click="filterBetHistory(-1)" ng-class="{'active': (betStatusFilter == -1)}"><span trans>Gifted</span></li>
+                    <li ng-if="$root.conf.enableGiftBet" ng-click="filterBetHistory(-1)" ng-class="{'active': (betStatusFilter == -1)}"><span trans>Received gifts</span></li>
                 </ul>
             </div>
             <div class="all-history-filter-container">
@@ -140,7 +140,7 @@
                                 <span>{{conf.layoutTimeFormat[conf.sportsLayout]? (bet.date_time|formatDate:'hour':null:$root.env.timeFormat): ''}}</span>
                                 <span ng-hide="conf.betHistoryHideId"><br/> ID: <a>{{bet.id}}</a></span>
                             </td>
-                            <td class="status-icon-b hh-cell" ng-class="{'1':'cms-jcon-single', '2':'cms-jcon-multiple', '3':'cms-jcon-system', '4':'cms-jcon-chain', 'Toto': 'toto-bet', '5': 'trixie-bet', '6': 'yankee-bet', '8': 'super-yankee-bet', '9': 'heinz-bet', '10': 'super-heinz-bet', '11': 'goliath-bet', '20': 'block-bet', '50': 'cms-jcon-Bet-Builder', '51': 'cms-jcon-bet-on-lineups'}[bet.type]"></td>
+                            <td class="status-icon-b hh-cell" ng-class="{'1':'cms-jcon-single', '2':'cms-jcon-multiple', '3':'cms-jcon-system', '4':'cms-jcon-chain', 'Toto': 'toto-bet', '5': 'trixie-bet', '6': 'yankee-bet', '8': 'super-yankee-bet', '9': 'heinz-bet', '10': 'super-heinz-bet', '11': 'goliath-bet', '20': 'block-bet', '40': 'cms-jcon-forecast-tricast', '41': 'cms-jcon-forecast-tricast', '42': 'cms-jcon-forecast-tricast', '43': 'cms-jcon-forecast-tricast', '44': 'cms-jcon-forecast-tricast', '50': 'cms-jcon-Bet-Builder', '51': 'cms-jcon-bet-on-lineups'}[bet.type]"></td>
                             <td class="auto-cell">
                                 <ul class="cell-inner mixed-bet-history-flex">
                                     <li class="ellipsis-text">
@@ -152,7 +152,6 @@
                                     </li>
                                     <li class="buttons-holder">
                                         <button class="cms-jcon-Print" ng-if="conf.enableBetPrint" ng-click="openPrintPreview(bet); $event.stopPropagation()"></button>
-                                        <button class="cms-jcon-refresh" ng-show="conf.enableBetFromBetHistory && (bet.outcome == 0 || bet.outcome == 5) && (bet.type == 2 || bet.type == 3 || bet.type == 4)" ng-click="$event.stopPropagation();addEvents(bet);" title="Repeat Bet"></button>
                                         <div class="share-bet-history" ng-click="$event.stopPropagation();">
                                             <social-share ng-repeat="item in conf.recentbetsSharing track by $index"
                                                           ng-if="item.availableTypes.indexOf(bet.type)!==-1"
@@ -211,18 +210,22 @@
                             <td class="status-icon-b status-cell" ng-class="{'cms-jcon-info-returned': bet.has_recalculation_reason}" ng-if="$root.conf.betHistory.enableRecalculationNoteColumn"></td>
                             <td>
                                 <ul class="edit-bet-or-cashout">
-                                    <li ng-if="$root.conf.enableGiftBet && bet.outcome === 0 &&betStatusFilter !== -1" ng-click="$event.stopPropagation()">
+                                    <li ng-if="$root.conf.enableGiftBet && betStatusFilter !== -1" ng-click="$event.stopPropagation()">
+                                        <div ng-if="(bet.outcome === 1 || bet.outcome === 3) && bet.is_gift" class="gift-bet" title="{{'Gifted'|translate}}">
+                                            <i class="disabled"></i>
+                                        </div>
 
-                                        <div class="gift-bet" title="{{(bet.is_gift? 'Gifted': 'Gift')|translate}}">
+                                        <div ng-if="bet.outcome === 0" class="gift-bet" title="{{(bet.is_gift ? 'Gifted': 'Gift')|translate}}">
                                             <i ng-click="showGiftPopup(bet)" ng-class="{'disabled': bet.is_gift === true }"></i>
                                         </div>
                                     </li>
                                     <li>
+                                        <button class="cms-jcon-refresh" ng-show="  conf.enableBetFromBetHistory && (bet.outcome == 0 || bet.outcome == 5) && (bet.type == 1 || bet.type == 2 || bet.type == 3 || bet.type == 4)" ng-click="$event.stopPropagation();addEvents(bet);" title="Repeat Bet"></button>
                                         <button
                                                 class="cms-jcon-edit"
                                                 ng-if="conf.openBetsAndEditBet && !bet.is_gift && !betConf.fullCoverBetTypes.enabled && bet.cash_out && (bet.type == 2 || bet.type == 1) && !$root.editBet.edit"
                                                 ng-click="$event.stopPropagation();addEvents(bet, true);"
-                                                title="{{ 'Editing functionality is available for this bet.' | translate }}"
+                                                title="{{ 'Editing functionality is avaeilable for this bet.' | translate }}"
                                         ></button>
                                     </li>
                                     <li>

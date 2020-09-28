@@ -8,7 +8,6 @@ angular.module('vbet5.betting').controller('LiveCalendarController', ['$scope', 
     function ($scope, $rootScope, $location, $window, ConnectionService, Moment, Translator, Utils, Config, GameInfo, partner, Zergling, analytics) {
         'use strict';
         $rootScope.footerMovable = true;
-
         var linkedGameSubId, i, excludeIdsKey;
         var excludeIds, liveCalendarSelectedDaysSavedState, initialLoadDone = false;
         var connectionService = new ConnectionService($scope);
@@ -534,6 +533,9 @@ angular.module('vbet5.betting').controller('LiveCalendarController', ['$scope', 
                         });
                     }
                 });
+            }
+            if (!GameInfo.PROVIDER_AVAILABLE_EVENTS) { //subscribe for prematch channels
+                GameInfo.getProviderAvailableEvents();
             }
 
         }

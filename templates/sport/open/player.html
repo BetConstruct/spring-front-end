@@ -1,6 +1,6 @@
 <div class="element-monitor">
     <ul class="field-switcher">
-        <li ng-show="!isVideoDetached && $root.conf.videoEnabled && game.video_id" ng-class="{'selected': game.activeFieldType==='video' && !playerRemoved}"><a ng-click="game.activeFieldType='video'; playerRemoved = false;" class="monitor-link">monitor</a></li>
+        <li ng-show="!isVideoDetached && game.video_id" ng-class="{'selected': game.activeFieldType==='video' && !playerRemoved}"><a ng-click="game.activeFieldType='video'; playerRemoved = false;" class="monitor-link">monitor</a></li>
         <li ng-show="game.has_animation" ng-class ="{'selected': game.activeFieldType==='field' || playerRemoved }"><a class="playing-field" ng-click="game.activeFieldType='field'">playing field</a></li>
     </ul>
 </div>
@@ -10,9 +10,9 @@
     <div class="game-video-container">
         <p ng-if="!env.authorized && !$root.conf.integrationMode && !game.is_guest" trans ng-click="openLoginForm($event)" class="login-link">You need to be logged in to be able to play video.</p>
         <p ng-if="!env.authorized && $root.conf.integrationMode && !game.is_guest" trans class="login-link">You need to be logged in to be able to play video.</p>
-        <p ng-if="!game.is_guest && env.authorized && (profile.calculatedBalance + profile.calculatedBonus) === 0 && !$root.conf.video.allowedWithNoneBalance[game.tv_type]" trans ng-click="!$root.conf.disableDepositPage && broadcast('toggleSliderTab', 'deposit');$event.stopPropagation();">You need to have non-zero balance to be able to play video.</p>
-        <i ng-if="!$root.conf.video.autoPlay && game.video_data === undefined && (game.is_guest || env.authorized && (profile.calculatedBalance + profile.calculatedBonus) !== 0 || $root.conf.video.allowedWithNoneBalance[game.tv_type])" class="video-play-button" ng-click="broadcast('game.restoreVideo', game.id)"></i>
-        <div ng-if="game.video_data &&  (game.is_guest || env.authorized && (profile.calculatedBalance + profile.calculatedBonus) > 0 || $root.conf.video.allowedWithNoneBalance[game.tv_type])" class="video-player-container" ng-init="soundVolume = env.sound">
+        <p ng-if="!game.is_guest && env.authorized && $root.profile.totalBalance === 0 && !game.allow_zero_balance" trans ng-click="!$root.conf.disableDepositPage && broadcast('toggleSliderTab', 'deposit');$event.stopPropagation();">You need to have non-zero balance to be able to play video.</p>
+        <i ng-if="!$root.conf.video.autoPlay && game.video_data === undefined && (game.is_guest || (env.authorized && $root.profile.totalBalance !== 0 || game.allow_zero_balance))" class="video-play-button" ng-click="broadcast('game.restoreVideo', game.id)"></i>
+        <div ng-if="game.video_data && (game.is_guest || (env.authorized && $root.profile.totalBalance > 0 || game.allow_zero_balance))" class="video-player-container" ng-init="soundVolume = env.sound">
 
             <div class="video-player-control" ng-show="videoIsLoaded">
                 <span ng-click="togglePause();" ng-show="!paused" class="video-pause"></span>

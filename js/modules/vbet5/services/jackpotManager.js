@@ -6,13 +6,13 @@
  * Utility functions
  */
 
-VBET5.service('jackpotManager', ['$rootScope', 'Config', 'jackpotSocket', function ($rootScope, Config, jackpotSocket) {
+VBET5.service('jackpotManager', ['$rootScope', '$q', 'Config', 'jackpotSocket', function ($rootScope, $q, Config, jackpotSocket) {
     'use strict';
 
     var jackpotManager = {
         casinoGameOpenedData: false
     }, jackpotData = {
-        games: {}
+        all: {}
     }, jackpotDataSubscriptions = {};
     var openedGameIds = [];
     var callbacks = {};
@@ -20,10 +20,53 @@ VBET5.service('jackpotManager', ['$rootScope', 'Config', 'jackpotSocket', functi
 
 
     var profileWatcher;
+    var defaultCurrencyWatcherPromise;
+    var deferreds = [];
 
-    function success(jackpotIds, callbacks, intensity) {
+    function getCurrency() {
+        var deffer = $q.defer();
+        var result = deffer.promise;
+
+        var currency = ($rootScope.profile && $rootScope.profile.currency_name) || $rootScope.conf.registration.defaultCurrency;
+
+        if (currency) {
+            deffer.resolve(currency);
+        } else {
+            deferreds.push(deffer);
+            if (!defaultCurrencyWatcherPromise) {
+                defaultCurrencyWatcherPromise = $rootScope.$watch('conf.registration.defaultCurrency', function (newState) {
+                    if (newState) {
+                        defaultCurrencyWatcherPromise();
+                        defaultCurrencyWatcherPromise = null;
+                        currency = ($rootScope.profile && $rootScope.profile.currency_name) || $rootScope.conf.registration.defaultCurrency;
+
+                        deferreds.forEach(function (deffer) {
+                            deffer.resolve(currency);
+                        });
+
+                        deferreds = [];
+                    }
+                });
+            }
+        }
+
+        return result;
+    }
+    /**
+     * @ngdoc method
+     * @name jackpotDataSuccess
+     * @methodOf vbet5.service:jackpotManager
+     * @description process jackpot data
+     *
+     * @param {Array} jackpotIds jackpot ids
+     * @param {Object} callbacks
+     * @param {number} intensity
+     * @param {number} sourceId
+     * @param {string} currency
+     */
+    function jackpotDataSuccess(jackpotIds, callbacks, intensity, sourceId, currency) {
         var jackpotPoolMetaData = [];
-        var currency = ($rootScope.profile && $rootScope.profile.currency_name) || Config.main.registration.defaultCurrency;
+
         if (jackpotIds && jackpotIds.length > 0) {
             for (var j = 0; j < jackpotIds.length; j++) {
                 var jackpotId = jackpotIds[j];
@@ -32,7 +75,7 @@ VBET5.service('jackpotManager', ['$rootScope', 'Config', 'jackpotSocket', functi
                     "JackPotId": jackpotId,
                     "Currency": currency
                 }, function (response) {
-                    if(response && response.length > 0){
+                    if (response && response.length > 0) {
                         jackpotPoolMetaData = response;
                     }
                 });
@@ -54,17 +97,20 @@ VBET5.service('jackpotManager', ['$rootScope', 'Config', 'jackpotSocket', functi
                                     }
                                 });
                             });
-                            jackpotData[jackpot.Id] = jackpot;
+                            jackpotData.all[jackpot.Id] = jackpot;
+
+                            var jackpotDataForSource = jackpotData[sourceId];
+
                             for (var i = 0; i < openedGameIds.length; i++) {
                                 var gameId = openedGameIds[i];
-                                if (!jackpotData.games[gameId]) {
-                                    jackpotData.games[gameId] = {};
+                                if (!jackpotDataForSource.games || !jackpotDataForSource.games[gameId]) {
+                                    jackpotDataForSource.games[gameId] = {};
                                 }
                                 if (jackpotDataSubscriptions[jackpot.Id] && jackpotDataSubscriptions[jackpot.Id].gameIds && jackpotDataSubscriptions[jackpot.Id].gameIds.indexOf(gameId) !== -1) {
-                                    jackpotData.games[gameId][jackpot.Id] = jackpotData[jackpot.Id];
+                                    jackpotDataForSource.games[gameId][jackpot.Id] = jackpotData.all[jackpot.Id];
 
                                     callbacks[gameId].forEach(function (callback) {
-                                        callback(jackpotData.games[gameId]);
+                                        callback(jackpotDataForSource.games[gameId]);
                                     });
                                 }
                             }
@@ -88,13 +134,13 @@ VBET5.service('jackpotManager', ['$rootScope', 'Config', 'jackpotSocket', functi
     }
 
 
-
     // JACKPOT SOCKET DATA PART
     jackpotManager.subscribeForJackpotData = function subscribeForJackpotData(game_id, callback, command, source) {
         var config = Config.main.jackpot[source];
-        if(!(config && config.enabled)){
+        if (!(config && config.enabled)) {
             return;
         }
+
         lastGameId = game_id;
 
         var source_id = config.sourceId || 0;
@@ -103,6 +149,15 @@ VBET5.service('jackpotManager', ['$rootScope', 'Config', 'jackpotSocket', functi
             PartnerId: Config.main.site_id,
             SourceId: source_id
         };
+
+        if (!callbacks[source_id]) {
+            callbacks[source_id] = {};
+        }
+        if (!jackpotData[source_id]) {
+            jackpotData[source_id] = {games: {}}
+        }
+
+
         if (game_id && game_id !== -1) {
             params.GameId = game_id;
         }
@@ -111,27 +166,34 @@ VBET5.service('jackpotManager', ['$rootScope', 'Config', 'jackpotSocket', functi
         command = command || (params.GameId ? 'jackpotbygame' : 'getjackpots');
 
         jackpotSocket.get(command, params, function (jackpotIds) {
-            if(jackpotIds){
-                if(!callbacks[game_id]){
-                    callbacks[game_id] = [];
+            var callbacksBySourceId = callbacks[source_id];
+
+            if (jackpotIds) {
+                if (!callbacksBySourceId[game_id]) {
+                    callbacksBySourceId[game_id] = [];
                 }
-                callbacks[game_id].push(callback);
+                callbacksBySourceId[game_id].push(callback);
             }
-            success(jackpotIds, callbacks, intensity);
+            getCurrency().then(function (currency) {
+                jackpotDataSuccess(jackpotIds, callbacksBySourceId, intensity, source_id, currency);
 
-            if (profileWatcher) {
-                profileWatcher();
-            }
+                if (profileWatcher) {
+                    profileWatcher();
+                }
 
-            profileWatcher = $rootScope.$watch('profile', function (newState, oldState) {
-                if ((newState && !oldState) || (!newState && oldState)) {
-                    if ((newState && newState.currency_name !== Config.main.registration.defaultCurrency) || (oldState && oldState.currency_name !== Config.main.registration.defaultCurrency)) {
-                        jackpotManager.unsubscribeFromAllJackpotData();
-                        success(jackpotIds, callbacks,  intensity);
+                profileWatcher = $rootScope.$watch('profile.currency_name', function (newValue, oldValue) {
+                    var newCurrency;
+                    if (newValue && newValue !== $rootScope.conf.registration.defaultCurrency) {
+                        newCurrency = newValue;
+                    } else if (oldValue && oldValue !== $rootScope.conf.registration.defaultCurrency) {
+                        newCurrency = $rootScope.conf.registration.defaultCurrency;
                     }
-                }
-            });
-
+                    if (newCurrency) {
+                        jackpotManager.unsubscribeFromAllJackpotData();
+                        jackpotDataSuccess(jackpotIds, callbacksBySourceId, intensity, source_id, newCurrency);
+                    }
+                });
+            })
         });
     };
 
@@ -156,7 +218,7 @@ VBET5.service('jackpotManager', ['$rootScope', 'Config', 'jackpotSocket', functi
     jackpotManager.unsubscribeFromJackpotData = function unsubscribeFromJackpotData(all) {
         openedGameIds = [];
         if (all) {
-            jackpotData = {games: {}};
+            jackpotData = {all: {}};
             callbacks = {};
         } else {
             openedGameIds = getGamesIds();
@@ -181,9 +243,9 @@ VBET5.service('jackpotManager', ['$rootScope', 'Config', 'jackpotSocket', functi
             if (count === 0) {
                 jackpotSocket.unsubscribe(subscription.sid, {JackPotId: jackpotId});
                 console.log('unsubscribe', jackpotId, 'sid', subscription.sid);
-               angular.forEach(subscription.gameIds,function (id) {
-                   delete callbacks[id];
-               });
+                angular.forEach(subscription.gameIds, function (id) {
+                    delete callbacks[id];
+                });
 
                 delete jackpotDataSubscriptions[jackpotId];
             }
@@ -199,116 +261,204 @@ VBET5.service('jackpotManager', ['$rootScope', 'Config', 'jackpotSocket', functi
     var externalJackpotData = {};
     var externalJackpotCallbacks = [];
     var externalJackpotDataSubscriptions = {};
-    var jackpotProviderKinds = [];
 
-    jackpotManager.subscribeForExternalJackpotData = function subscribeForExternalJackpotData(callback, jackpotProviderKind) {
+
+    /**
+     * @ngdoc method
+     * @name externalJackpotSuccess
+     * @methodOf vbet5.service:jackpotManager
+     * @description process jackpot data
+     *
+     * @param {Array} jackpotIds jackpot ids
+     * @param {Object} externalJackpotCallbacks
+     * @param {number} intensity
+     * @param {string} currency
+     */
+    function externalJackpotSuccess(jackpotIds, externalJackpotCallbacks, intensity, currency) {
+        jackpotManager.unsubscribeFromJackpotData();
+        if (jackpotIds && jackpotIds.length > 0) {
+            for (var j = 0; j < jackpotIds.length; j++) {
+                var jackpotId = jackpotIds[j].JackPotId;
+
+                externalJackpotData[jackpotIds[j].Kind] = null;
+
+                if (!externalJackpotDataSubscriptions[jackpotId]) {
+                    var sid = jackpotSocket.msg('subscribetoexternaljackpot', {
+                        Currency: currency,
+                        JackPotId: [jackpotId],
+                        Intensity: intensity || 0
+                    }, function (jackpot) {
+                        if (jackpot && jackpot.UuuId) {
+                            jackpot.CollectedAmountTotal = 0;
+                            angular.forEach(jackpot.PoolGroup.PoolList, function (pool) {
+                                jackpot.CollectedAmountTotal += pool.CollectedAmount;
+                            });
+                            var provider = jackpotIds.filter(function (j) {
+                                return j.JackPotId === jackpot.UuuId;
+                            });
+
+                            if (provider.length > 0) {
+                                jackpot.Provider = provider[0].Kind;
+                            }
+
+                            externalJackpotData[jackpot.Provider] = jackpot;
+
+                            externalJackpotCallbacks.forEach(function (externalJackpotCallback) {
+                                externalJackpotCallback(externalJackpotData);
+                            });
+
+                        }
+                    });
+                    externalJackpotDataSubscriptions[jackpotId] = {sid: sid};
+                }
+            }
+        }
+    }
+
+    jackpotManager.subscribeForExternalJackpotData = function subscribeForExternalJackpotData(callback, jackpotProviderKinds) {
         var config = Config.main.jackpot.casino;
         if (!(config && config.enabled)) {
             return;
         }
         var intensity = config.intensity || 0;
-        var params = {
-            PartnerId: Config.main.site_id,
-            Currency: ($rootScope.profile && $rootScope.profile.currency_name) || Config.main.registration.defaultCurrency
-        };
+
+        getCurrency().then(function (currency) {
+            var params = {
+                PartnerId: Config.main.site_id,
+                Currency: ($rootScope.profile && $rootScope.profile.currency_name) || Config.main.registration.defaultCurrency
+            };
 
 
+            var command = 'externaljackpotlist';
 
-        var command = 'externaljackpotlist';
-
-        jackpotSocket.get(command, params, function (jackpotIds) {
-            if (jackpotIds) {
-                externalJackpotCallbacks.push(callback);
-            }
-
-            if (jackpotProviderKind) {
-                if(jackpotProviderKinds.indexOf(jackpotProviderKind) === -1){
-                    jackpotProviderKinds.push(jackpotProviderKind);
-                }else {
-                    return;
+            jackpotSocket.get(command, params, function (jackpotIds) {
+                if (jackpotIds) {
+                    externalJackpotCallbacks.push(callback);
                 }
 
-                jackpotIds = jackpotIds.filter(function (a) {
-                    return jackpotProviderKinds.indexOf(a.Kind) !== -1;
-                });
-            }
+                if (jackpotProviderKinds) {
+                    jackpotIds = jackpotIds.filter(function (a) {
+                        return jackpotProviderKinds.indexOf(a.Kind) !== -1;
+                    });
+                }
 
-            success(jackpotIds, externalJackpotCallbacks, intensity);
+                externalJackpotSuccess(jackpotIds, externalJackpotCallbacks, intensity, currency);
 
-            if (externalJackpotsProfileWatcher) {
-                externalJackpotsProfileWatcher();
-            }
+                if (externalJackpotsProfileWatcher) {
+                    externalJackpotsProfileWatcher();
+                }
 
-            externalJackpotsProfileWatcher = $rootScope.$watch('profile', function (newState, oldState) {
-                if ((newState && !oldState) || (!newState && oldState)) {
-                    if ((newState && newState.currency_name !== Config.main.registration.defaultCurrency) || (oldState && oldState.currency_name !== Config.main.registration.defaultCurrency)) {
+                externalJackpotsProfileWatcher = $rootScope.$watch('profile.currency_name', function (newValue, oldValue) {
+                    var newCurrency;
+                    if (newValue && newValue !== $rootScope.conf.registration.defaultCurrency) {
+                        newCurrency = newValue;
+                    } else if (oldValue && oldValue !== $rootScope.conf.registration.defaultCurrency) {
+                        newCurrency = $rootScope.conf.registration.defaultCurrency;
+                    }
+                    if (newCurrency) {
                         jackpotManager.unsubscribeFromAllExternalJackpotData(externalJackpotCallbacks);
-                        success(jackpotIds, externalJackpotCallbacks, intensity);
+                        externalJackpotSuccess(jackpotIds, externalJackpotCallbacks, intensity, newCurrency);
                     }
-                }
-            });
-
+                });
+            })
         });
-
-
-        function success(jackpotIds, externalJackpotCallbacks, intensity) {
-            jackpotManager.unsubscribeFromJackpotData();
-            var currency = ($rootScope.profile && $rootScope.profile.currency_name) || Config.main.registration.defaultCurrency;
-            if (jackpotIds && jackpotIds.length > 0) {
-                for (var j = 0; j < jackpotIds.length; j++) {
-                    var jackpotId = jackpotIds[j].JackPotId;
-
-                        externalJackpotData[jackpotIds[j].Kind] = null;
-
-                    if (!externalJackpotDataSubscriptions[jackpotId]) {
-                        var sid = jackpotSocket.msg('subscribetoexternaljackpot', {
-                            Currency: currency,
-                            JackPotId: [jackpotId],
-                            Intensity: intensity || 0
-                        }, function (jackpot) {
-                            if (jackpot && jackpot.UuuId) {
-                                jackpot.CollectedAmountTotal = 0;
-                                angular.forEach(jackpot.PoolGroup.PoolList, function (pool) {
-                                    jackpot.CollectedAmountTotal += pool.CollectedAmount;
-                                });
-                                var provider = jackpotIds.filter(function (j) {
-                                    return j.JackPotId === jackpot.UuuId;
-                                });
-
-                                if (provider.length > 0) {
-                                    jackpot.Provider = provider[0].Kind;
-                                }
-
-                                externalJackpotData[jackpot.Provider] = jackpot;
-
-                                externalJackpotCallbacks.forEach(function (externalJackpotCallback) {
-                                    externalJackpotCallback(externalJackpotData);
-                                });
-
-                            }
-                        });
-                        externalJackpotDataSubscriptions[jackpotId] = {sid: sid};
-                    }
-
-                }
-            }
-
-        }
     };
     jackpotManager.unsubscribeFromAllExternalJackpotData = function unsubscribeFromAllExternalJackpotData(callback) {
-        jackpotProviderKinds = [];
+
         angular.forEach(externalJackpotDataSubscriptions, function (value, jackpotId) {
             jackpotSocket.unsubscribe(value.sid, {JackPotId: jackpotId});
         });
 
-       var callbackIndex = externalJackpotCallbacks.indexOf(callback);
+        var callbackIndex = externalJackpotCallbacks.indexOf(callback);
 
-       if(callbackIndex !== -1){
-           externalJackpotCallbacks.splice(callbackIndex,1);
-       }
+        if (callbackIndex !== -1) {
+            externalJackpotCallbacks.splice(callbackIndex, 1);
+        }
         externalJackpotData = {};
         externalJackpotDataSubscriptions = {};
     };
 
+
+    // global jackpot
+
+    var globalJackpotsProfileWatcher;
+    var globalJackpotData = {};
+    var globalJackpotCallbacks = [];
+    var globalJackpotDataSubscriptionId = null;
+
+    /**
+     * @ngdoc method
+     * @name globalJackpotDataSuccess
+     * @methodOf vbet5.service:jackpotManager
+     * @description process jackpot data
+     *
+     * @param {Object} globalJackpotCallbacks
+     * @param {string} currency
+     */
+    function globalJackpotDataSuccess(globalJackpotCallbacks, currency) {
+        var sId;
+        globalJackpotData.currency = currency;
+        if (!globalJackpotDataSubscriptionId) {
+            sId = jackpotSocket.msg('subscribetopartnerjackpots', {
+                Currency: currency
+            }, function (jackpot) {
+                if (jackpot) {
+                    globalJackpotData = jackpot;
+                    globalJackpotData.Currency = currency;
+                    globalJackpotData.Name = 'Global Jackpot';
+                    globalJackpotCallbacks.forEach(function (globalJackpotCallback) {
+                        globalJackpotCallback(globalJackpotData);
+                    });
+
+                }
+            });
+            globalJackpotDataSubscriptionId = sId;
+        }
+    }
+
+
+    jackpotManager.subscribeForGlobalJackpotData = function subscribeForGlobalJackpotData(callback) {
+        globalJackpotCallbacks.push(callback);
+        var config = Config.main.jackpot.casino;
+        if (!(config && config.enabled)) {
+            return;
+        }
+
+        getCurrency().then(function (currency) {
+            globalJackpotDataSuccess(globalJackpotCallbacks, currency);
+
+            if (globalJackpotsProfileWatcher) {
+                globalJackpotsProfileWatcher();
+            }
+
+            globalJackpotsProfileWatcher = $rootScope.$watch('profile.currency_name', function (newValue, oldValue) {
+                var newCurrency;
+                if (newValue && newValue !== $rootScope.conf.registration.defaultCurrency) {
+                    newCurrency = newValue;
+                } else if (oldValue && oldValue !== $rootScope.conf.registration.defaultCurrency) {
+                    newCurrency = $rootScope.conf.registration.defaultCurrency;
+                }
+                if (newCurrency) {
+                    jackpotManager.unsubscribeFromGlobalJackpotData(globalJackpotCallbacks);
+                    globalJackpotDataSuccess(globalJackpotCallbacks, newCurrency);
+                }
+            });
+        });
+    };
+
+    jackpotManager.unsubscribeFromGlobalJackpotData = function unsubscribeFromGlobalJackpotData(callback) {
+        jackpotSocket.unsubscribe(globalJackpotDataSubscriptionId);
+
+        var callbackIndex = globalJackpotCallbacks.indexOf(callback);
+
+        if (callbackIndex !== -1) {
+            globalJackpotCallbacks.splice(callbackIndex, 1);
+        }
+        globalJackpotData = {};
+        globalJackpotDataSubscriptionId = null;
+    };
+
+
+    // JACKPOT SOCKET DATA PART
     return jackpotManager;
 }]);

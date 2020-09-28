@@ -2,7 +2,7 @@
     prevent-fast-click="1.5"
     ng-class="{'active-s': (env.sliderContent === 'cashier' || env.sliderContent === 'deposit' || env.sliderContent === 'renew' || env.sliderContent === 'withdraw' || env.sliderContent === 'balanceHistory' || env.sliderContent === 'casinoBalanceHistory')}"
     ng-click="balanceSlider.toggle()">
-    <a ng-class="{'bonus': profile.bonus_balance !== undefined && profile.calculatedBonus !== 0}">
+    <a ng-class="{'bonus': profile.calculatedBonus !== 0}">
         <p ng-show="!env.hideBalance">{{ profile.calculatedBalance|number:conf.balanceFractionSize }}&nbsp;{{profile.currency_name|currency }}</p>
         <p class="bonus-balance" ng-show="!env.hideBalance">{{profile.calculatedBonus}} {{profile.currency_name|currency}}</p>
     </a>

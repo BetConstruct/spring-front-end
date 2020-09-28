@@ -2,7 +2,11 @@
     <li ng-if="!isLoading && !showPasswordForm">
         <div class="activate-switcher">
             <img src="images/two-facor-authentication/activate.png" alt="">
-            <span trans>Activate two-factor authentication</span>
+            <span>{{'Activate two-factor authentication'|translate}}
+                    <i ng-show="data.isAuthenticate" class="two-fa-description" trans>two-factor-authentication-switched-on</i>
+                    <i ng-show="!data.isAuthenticate" class="two-fa-description" trans>two-factor-authentication-switched-off</i>
+            </span>
+
         </div>
         <div class="switcher-authentication" ng-class="{'active': data.isAuthenticate}" ng-click="toggleAuthenticator()">
             <div class="switcher-button"></div>

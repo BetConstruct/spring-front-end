@@ -183,7 +183,7 @@ angular.module('vbet5').service('RoutesValidity', ['$rootScope', '$location', '$
                 $rootScope.calculatedConfigs[menuDetails.config] = true;
                 $rootScope.validPaths[menuDetails.path] = true;
             }
-            if(value !== null){
+            if (value !== null) {
                 if (value.subMenu !== undefined) {
                     angular.forEach(value.subMenu, function (subMenuItem) {
                         if (subMenuItem.href || subMenuItem.link) {
@@ -221,26 +221,30 @@ angular.module('vbet5').service('RoutesValidity', ['$rootScope', '$location', '$
                     $rootScope.calculatedConfigs[menuDetails.config] = true;
                     if (item.url === undefined) {
                         $rootScope.validPaths[menuDetails.path] = true;
+                    } else {
+                        $rootScope.validPaths[fixPath(item.url)] = true;
                     }
                 }
 
             });
         }
 
-        var topMenu = Config.main.theVeryTopMenu ?
-            (Config.main.theVeryTopMenu.length ? Config.main.theVeryTopMenu : Config.main.theVeryTopMenu[$rootScope.env.lang] || Config.main.theVeryTopMenu['default']) : '';
-
-        if (topMenu) {
-            angular.forEach(topMenu, function(item){
-                if (item.href) {
-                    var path = fixPath(item.href);
-                    if (!$rootScope.validPaths[path]) {
-                        $rootScope.validPaths[path] = true;
-                        RoutesValidity.makeValid(path);
+        var manageMenu = function (menu) {
+            if (menu) {
+                for (var i = menu.length; i--;) {
+                    if (menu[i].href) {
+                        var path = fixPath(menu[i].href);
+                        if (!$rootScope.validPaths[path]) {
+                            $rootScope.validPaths[path] = true;
+                            RoutesValidity.makeValid(path);
+                        }
                     }
                 }
-            });
-        }
+            }
+        };
+
+        manageMenu(Config.main.headerNavigation.aboveLogo);
+        manageMenu(Config.main.headerNavigation.nearLogo);
     };
 
     return RoutesValidity;

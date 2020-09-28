@@ -143,6 +143,10 @@ CASINO.controller('providerJackpotCtrl', ['$rootScope', '$scope', 'Config', 'CCo
         $scope.toggleSaveToMyCasinoGames = function toggleSaveToMyCasinoGames(game) {
             casinoManager.toggleSaveToMyCasinoGames($rootScope, game);
         };
+
+        $scope.$on('casinoGamesList.toggleSaveToMyCasinoGames', function (e, game) {
+            $scope.toggleSaveToMyCasinoGames(game);
+        });
     }
 
 

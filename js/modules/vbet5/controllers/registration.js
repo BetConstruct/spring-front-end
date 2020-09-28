@@ -36,7 +36,6 @@ angular.module('vbet5').controller('RegistrationController', ['$scope', '$rootSc
         $scope.bankNamesList = [];
 
         var getBankNamesListFromBackend = false;
-        var allRegItems = {};
 
         /**
          * @ngdoc object
@@ -386,19 +385,12 @@ angular.module('vbet5').controller('RegistrationController', ['$scope', '$rootSc
         function getPhoneNumber() {
             var code = $scope.registrationData.phone_code,
                 number = $scope.registrationData.phone_number,
-                phone = '';
+                phone;
 
             if (Config.main.registration.enablePhoneNumberAsUsername) {
-                phone = ((Config.main.smsVerification.registration.enabled || ($scope.registrationData.username.indexOf('+') === 0)) ? '' : '00') + $scope.registrationData.username;
+                phone = (($scope.registrationData.username.indexOf('+') === 0) ? '' : '00') + $scope.registrationData.username;
             } else if (code && number) {
-                if (Config.main.smsVerification.registration.enabled) {
-                    switch (Config.main.smsVerification.registration.provider) {
-                        default:
-                            phone = code + number;
-                    }
-                } else {
-                    phone = '00' + code + number;
-                }
+                phone = '00' + code + number;
             } else {
                 phone = number || '';
             }
@@ -479,6 +471,7 @@ angular.module('vbet5').controller('RegistrationController', ['$scope', '$rootSc
                 regInfo.phone = getPhoneNumber();
             }
 
+            addIovation(regInfo);
 
             var emailRequired = true;
 
@@ -488,15 +481,20 @@ angular.module('vbet5').controller('RegistrationController', ['$scope', '$rootSc
                 if (fieldName === 'email') {
                     emailRequired = regItem.required;
                 }
-                if (fieldName in customDataType) {
-                    regInfo[fieldName] = customDataType[fieldName].call();
-                } else if ($scope.registrationData[fieldName] || $scope.registrationData[fieldName] === 0) {
-                    if (fieldName !== 'state' && fieldName !== 'province') {
-                        regInfo[fieldName] = $scope.registrationData[fieldName];
-                    } else if ($scope.registerform[fieldName]) {
-                        regInfo['province'] = $scope.registrationData[fieldName];
+
+                if($scope.registerform[fieldName]) {
+                    if (fieldName in customDataType) {
+                        regInfo[fieldName] = customDataType[fieldName].call();
+                    } else if ($scope.registrationData[fieldName] || $scope.registrationData[fieldName] === 0) {
+                        if (fieldName !== 'state' && fieldName !== 'province') {
+                            regInfo[fieldName] = $scope.registrationData[fieldName];
+                        } else if ($scope.registerform[fieldName]) {
+                            regInfo['province'] = $scope.registrationData[fieldName];
+                        }
                     }
+
                 }
+
             }
 
             angular.forEach($scope.RegConfig, function (item) {
@@ -616,16 +614,11 @@ angular.module('vbet5').controller('RegistrationController', ['$scope', '$rootSc
                 $scope.registration.busy = false;
                 return;
             }
-
             Zergling
                 .get({user_info: getRegistrationInfo()}, 'register_user')
                 .then(
                     function (data) {
-                        console.log('registration response:', data);
                         if (data.result === 'OK') {
-                            $rootScope.$emit('registration_complete', {  //$rootScope.$emit provides good performance if the observer at rootcope.
-                                uid: data.details.uid
-                            });
                             $scope.registration.complete = true;
                             if (Config.main.registration.loadExternalScriptAfterRegistration) {
                                 Script(Config.main.registration.loadExternalScriptAfterRegistration);
@@ -634,15 +627,17 @@ angular.module('vbet5').controller('RegistrationController', ['$scope', '$rootSc
                             if (Config.main.remindToRenewBalance.enabled) {  //not to open low balance warning right after registration
                                 Storage.set('renewReminded', 0, Config.main.remindToRenewBalance.interval);
                             }
-
                             if (Config.main.registration.loginRightAfterRegistration) {
-                                var prefix = $scope.registrationData.phone_code? ((Config.main.smsVerification.registration.enabled? '': '00') + $scope.registrationData.phone_code): '';
+                                var prefix = $scope.registrationData.phone_code? ((Config.main.smsVerification.registration? '': '00') + $scope.registrationData.phone_code): '';
                                 $scope.$emit('login.withUserPass', {
                                     user: $scope.registrationData.username || $scope.registrationData.email || (prefix + $scope.registrationData.phone_number),
                                     password: $scope.registrationData.password,
                                     action: 'registration_completed'
                                 });
                             }
+                            $rootScope.$emit('registration_complete', {  //$rootScope.$emit provides good performance if the observer at rootcope.
+                                uid: data.details.uid
+                            });
                             if (Config.main.registration.closeSliderAfterRegistration) {
                                 $rootScope.$broadcast('slider.close');
                                 setTimeout(function () {
@@ -958,11 +953,7 @@ angular.module('vbet5').controller('RegistrationController', ['$scope', '$rootSc
         $scope.passwordKeyPress = function passwordKeyPress(event, fieldName) {
             if (Config.main.showCapsLockHint) {
                 var character = String.fromCharCode(event.which);
-                if (character.toUpperCase() === character && character.toLowerCase() !== character && !event.shiftKey) {
-                    $scope.capsLockStateHolder[fieldName] = true;
-                } else {
-                    $scope.capsLockStateHolder[fieldName] = false;
-                }
+                $scope.capsLockStateHolder[fieldName] = character.toUpperCase() === character && character.toLowerCase() !== character && !event.shiftKey;
             }
         };
 
@@ -981,14 +972,14 @@ angular.module('vbet5').controller('RegistrationController', ['$scope', '$rootSc
 
         /**
          * @ngdoc method
-         * @name initIovation
+         * @name addIovation
          * @methodOf vbet5.controller:RegistrationController
          * @description starts iovation call
          */
-        function initIovation() {
-            if (Config.main.iovationLoginScripts && window.IGLOO) {
+        function addIovation(params) {
+            if (Config.iovation.enabled && window.IGLOO && Config.iovation.actions.registration) {
                 var ioData = window.IGLOO.getBlackbox();
-                $scope.registrationData.io_black_box = ioData.blackbox;
+                params[Config.iovation.apiKey] = ioData.blackbox;
             }
         }
 
@@ -1117,7 +1108,7 @@ angular.module('vbet5').controller('RegistrationController', ['$scope', '$rootSc
             }
 
             $scope.buttonLoading = true;
-            var phoneNumber = Config.main.registration.enablePhoneNumberAsUsername ? $scope.registrationData.username : $scope.registrationData.phone_code + $scope.registrationData.phone_number;
+            var phoneNumber ='00' + ( Config.main.registration.enablePhoneNumberAsUsername ? $scope.registrationData.username : $scope.registrationData.phone_code + $scope.registrationData.phone_number);
 
             Zergling.get(
                 {
@@ -1194,13 +1185,40 @@ angular.module('vbet5').controller('RegistrationController', ['$scope', '$rootSc
                 });
             }
 
-            function processRegItem(regItem) {
+            function addSmsVerificationInRegConfig(phoneNumberConfig, configIndex, containedArray) {
+                phoneNumberConfig.button = {
+                    'text': 'Send SMS',
+                    'broadcast': 'sendSMSCode'
+                };
+                phoneNumberConfig.validation.push({"name": "failedsms", "message": "Failed to send sms"});
+
+                containedArray.splice(configIndex + 1, 0, {
+                    "title": "SMS confirmation code",
+                    "name": "confirmation_code",
+                    "type": "text",
+                    "required": true,
+                    "classes": "",
+                    "customAttrs": [{"required": "required"}, {"prevent-input": "[^0-9]+"}],
+                    "validation": [
+                        {"name": "invalid", "message": "Invalid verification code"},
+                        {"name": "used", "message": "Code already used or expired"},
+                        {"name": "required", "message": "This field is required"}
+                    ]
+                });
+            }
+
+            function processRegItem(regItem, index, array) {
                 if (!regItem) return;
                 //console.log(regItem.name, regItem.type);
                 if (regItem.type === 'captcha') {
                     Config.main.registration.hasCaptcha = true;
                     $scope.loadCaptchaImage(regItem);
                 }
+
+                if (Config.main.smsVerification.registration && regItem.name === "phone_number" && (!array[index + 1] || array[index + 1].name !== "confirmation_code")) {
+                    addSmsVerificationInRegConfig(regItem, index, array);
+                }
+
                 if (regItem.button) {
                     switch (regItem.button.broadcast) {
                         case 'getSwedishInfo':
@@ -1214,8 +1232,6 @@ angular.module('vbet5').controller('RegistrationController', ['$scope', '$rootSc
                 if (regItem.defaultValue !== undefined) {
                     $scope.registrationData[regItem.name] = regItem.defaultValue;
                 }
-
-                allRegItems[regItem.name] = regItem;
 
                 if (regItem.hideLabel) {
                     if (!regItem.labelHidden && regItem.type !== 'select' && regItem.type !== 'captcha' && regItem.type !== 'recaptcha') {
@@ -1233,10 +1249,14 @@ angular.module('vbet5').controller('RegistrationController', ['$scope', '$rootSc
 
             angular.forEach($scope.RegConfig, function (item) {
                 if (item instanceof Array) {
-                    angular.forEach(item, processRegItem);
+                    angular.forEach(item, function (regItem, index) {
+                        processRegItem(regItem, index, item);
+                    });
                 } else if (!Utils.isObjectEmpty(item)) {
                     angular.forEach(item, function (sub) {
-                        angular.forEach(sub, processRegItem);
+                        angular.forEach(sub, function (regItem, index) {
+                            processRegItem(regItem, index, sub);
+                        });
                     });
                 }
             });
@@ -1257,8 +1277,6 @@ angular.module('vbet5').controller('RegistrationController', ['$scope', '$rootSc
             } else {
                 giftCode = null;
             }
-
-            initIovation();
 
             RecaptchaService.execute('register', { debounce: false });
         };
@@ -1316,18 +1334,12 @@ angular.module('vbet5').controller('RegistrationController', ['$scope', '$rootSc
                 $scope.bankNamesList = [];
                 Zergling.get({"country_code": $scope.registrationData.country_id.key}, "get_partner_banks").then(function (response) {
                     if (response && response.details && response.details.length > 0) {
-                        $scope.bankNamesList = response.details;
-
-                        $scope.bankNamesList.sort(function(a,b) {
-                            return a.Order - b.Order;
-                        });
-
+                        $scope.bankNamesList = Utils.orderByField(response.details, "Order");
                         $scope.registrationData.swift_code = $scope.bankNamesList[0] && $scope.bankNamesList[0].Id ? $scope.bankNamesList[0].Id : null;
                     }
-                })['finally'](function (c) {
+                })['finally'](function () {
                     countryCode.loading = swiftCode.loading = false;
                 });
             }
         };
-
     }]);

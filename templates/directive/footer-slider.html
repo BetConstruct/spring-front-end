@@ -1,0 +1,8 @@
+<div class="carouselWrapper" no-animate="disable">
+    <i ng-if="items.length > itemsPerPage" class="footer-slider-prev" ng-click="playSlide('left')"></i>
+    <div class="animate-slide-left-on-swap"
+         ng-animate-swap="currentSlide" ng-class="addClass && sliderDirection">
+        <ng-include class="footer-slider" src="htmlToInclude"></ng-include>
+    </div>
+    <i ng-if="items.length > itemsPerPage" class="footer-slider-next" ng-click="playSlide('right')"></i>
+</div>

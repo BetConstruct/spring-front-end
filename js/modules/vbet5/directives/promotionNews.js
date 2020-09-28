@@ -38,6 +38,7 @@ VBET5.directive('promotionNews',
                             wideOff: 3
                         };
                     $scope.promotionsFilter = {};
+                    $scope.optInOutProcessing = {};
                     $scope.count = $scope.count || WPConfig.news.numberOfRecentNews;
                     $scope.showDates = !$scope.hideDates;
 
@@ -266,12 +267,13 @@ VBET5.directive('promotionNews',
                      * @description  opt In Out
                      *
                      */
-                    $scope.optInOut = function optInOut(id, inOut) {
-                        if ($scope.optInOutProcessing) {
+                    $scope.optInOut = function optInOut(id, inOut, newsId) {
+                        if ($scope.optInOutProcessing[newsId]) {
                             return;
                         }
+
                         var result = -1;
-                        $scope.optInOutProcessing = true;
+                        $scope.optInOutProcessing[newsId] = true;
                         Zergling.get({'code': id}, inOut ? 'client_opt_in' : 'client_opt_out')
                             .then(function (response) {
                                     result = response.result;
@@ -279,14 +281,13 @@ VBET5.directive('promotionNews',
                             )['finally'](function () {
                             if (result === 0) {
                                 getPlayerOptIns(function () {
-                                    $scope.optInOutProcessing = false;
+                                    $scope.optInOutProcessing[newsId] = false;
                                 });
                             } else {
-                                $scope.optInOutProcessing = false;
+                                $scope.optInOutProcessing[newsId] = false;
                             }
                         });
                     };
-
                     /**
                      * @ngdoc method
                      * @name initPromotionsOptIn

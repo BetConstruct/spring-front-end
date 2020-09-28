@@ -36,7 +36,7 @@
                                         <div class="picture-news-block"><a><img ng-src="{{selectedNews.thumbnail || selectedNews.thumbnail_images.full.url}}" alt=""></a>
 
                                         </div>
-                                        <div class="mini-social-icons">
+                                        <div class="mini-social-icons" ng-if="$root.conf.recentbetsSharing">
                                             <p trans>Share</p>
                                             <ul>
                                                 <li class="mini-facebook"><a

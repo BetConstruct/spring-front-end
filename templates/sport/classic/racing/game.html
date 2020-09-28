@@ -1,0 +1,98 @@
+<div class="all-races" ng-controller="classicViewRacingGameCtrl">
+   <!--start all rase filter -->
+    <div class="all-races-content" ng-if="competitionFilter.length">
+        <div class="go-tomenu">
+            <a  ng-click="navigation.goTo('home')" trans>Home</a>
+            <a ng-bind="selectedCompetition.name"></a>
+        </div>
+        <div class="all-races-filter-b">
+            <div class="set-filter-h" ng-click="toggleFilter(true)" ng-class="{'active': showFilter}">
+                <span ng-bind="selectedCompetition.name"></span>
+            </div>
+            <div  class="open-full-info-h" ng-show="showFilter">
+                <div class="race-start-houres" ng-repeat="competition in competitionFilter track by competition.id">
+                    <div class="st-h-holder">
+                        <div class="horse-name-inf">
+                            <p ng-bind="competition.name"> </p>
+                        </div>
+                    </div>
+                    <div class="start-now-time">
+                        <div class="start-now"
+                             ng-class="{'active':data.state.competitionId === competition.id}"
+                             ng-click="toggleFilter(data.state.competitionId !== competition.id);navigation.goTo('game', null, data.state.fromDate, data.state.toDate, competition.id);"
+                             trans>All Races</div>
+                        <div class="start-now"
+                             ng-repeat="game in competitionGamesMap[competition.id]"
+                             ng-bind="game.start_ts|formatDate:'hour':null:$root.env.timeFormat"
+                             ng-class="{'active': game.id === data.state.gameId}"
+                             ng-click="toggleFilter(game.id !== data.state.gameId);navigation.goTo('game', game.id, data.state.fromDate, data.state.toDate);"
+                        ></div>
+
+                    </div>
+                </div>
+            </div>
+            <div  class="open-full-info-h" ng-show="!showFilter">
+                <div class="race-start-houres">
+                   <div class="st-h-holder">
+                        <div class="horse-name-inf" style="display: none">
+                            <p>Chepstow </p>
+                        </div>
+                    </div>
+                    <div class="start-now-time">
+                        <div class="start-now"
+                             ng-class="{'active':data.state.competitionId === selectedCompetition.id}"
+                             ng-click="navigation.goTo('game', null, data.state.fromDate, data.state.toDate, selectedCompetition.id)"
+                             trans>All Races
+                        </div>
+
+                        <div class="start-now"
+                             ng-repeat="game in competitionGamesMap[selectedCompetition.id] track by game.id"
+                             ng-bind="game.start_ts|formatDate:'hour':null:$root.env.timeFormat"
+                             ng-class="{'active': game.id === data.state.gameId}"
+                             ng-click="navigation.goTo('game', game.id, data.state.fromDate, data.state.toDate)"
+                        ></div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <vbet-loader ng-show="loading"></vbet-loader>
+
+    <!--end all rase filters-->
+
+    <div class="horse-list-title" ng-if="!loading && !competitionGamesMap[selectedCompetition.id].length" trans>There are no games</div>
+
+    <div class="horse-list-title"
+         ng-show="!loading"
+         ng-repeat-start="game in competitionGamesMap[selectedCompetition.id] track by game.id"
+         ng-click="expandGame(game)"
+         ng-class="{'active': expandedGames[game.id]}"
+    >
+        <h2>
+            <b class="flag-icon flag-{{::selectedRegion.alias | removeUselessSymbolsByRegexp: '[,\' ]+': 'g': 'true'}}"></b>
+            <span class="reg" ng-bind="selectedRegion.name"></span>
+            <span ng-bind="game.name"></span>
+            <p>
+                <i ng-bind="game.start_ts|formatDate:'full':null:$root.env.timeFormat"></i>
+                <i class="arrow-open-h"></i>
+            </p>
+        </h2>
+    </div>
+    <div class="handicap-full-i" ng-repeat-end="" ng-if="!loading && expandedGames[game.id]">
+
+        <horse-racing-game
+                           ng-if="data.sportId === 31"
+                           sport-id="data.sportId"
+                           region-id="selectedRegion.id"
+                           competition-id="selectedCompetition.id"
+                           game-id="game.id"
+        ></horse-racing-game>
+
+
+    </div>
+
+
+
+</div>

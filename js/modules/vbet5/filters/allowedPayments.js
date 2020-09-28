@@ -25,7 +25,7 @@ VBET5.filter('allowedPayments', ['$rootScope', function ($rootScope) {
             if (!payments[type] || !payments[type].indexOf) {
                 return;
             }
-            if (payments[type].indexOf(element.name) > -1) {
+            if (payments[type].indexOf(element.name) > -1 || payments[type].indexOf(element.displayName) > -1) {
                 return element;
             }
         }

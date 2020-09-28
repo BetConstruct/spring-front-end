@@ -1,0 +1,1081 @@
+.casino-tournaments-include {
+  .guide {
+    background: rgba($skin-palette-11, 0.9);
+    box-shadow: 0 -300px 0 rgba($skin-palette-11, 0.9);
+    * {
+      box-sizing: border-box;
+    }
+  }
+  .md-progress-circular {
+    margin: 60px auto !important;
+  }
+  .tg-show-more {
+    float: left;
+    width: 100%;
+    margin: 0 0 50px;
+    text-align: center;
+    > button {
+      height: 30px;
+      border: 1px solid $header-brand-color-1;
+      background: $header-brand-color-1;
+      box-sizing: border-box;
+      padding: 0 15px;
+      font: 12px/16px $font-f;
+      color: set-color($header-brand-color-1);
+      text-transform: uppercase;
+      cursor: pointer;
+      min-width: 100px;
+      transition: color 180ms, background 180ms, border 180ms;
+      &:hover {
+        background: lighten( saturate( $header-brand-color-1, 1 ), 7 );
+        border-color: lighten( saturate( $header-brand-color-1, 1 ), 7 );
+      }
+    }
+  }
+}
+.casino-tournaments-filters-wrapper {
+  float: left;
+  width: 100%;
+  margin: 10px 0 26px;
+  background: $skin-palette-7;
+  position: relative;
+  z-index: 1100;
+}
+.casino-tournament-filter {
+  width: 100%;
+  position: relative;
+  @include ltr {
+    float: left;
+  }
+  @include rtl {
+    float: right;
+  }
+  .casino-tournaments-filters-wrapper & {
+    width: 267px;
+    @include ltr {
+      border-right: 1px solid darken( desaturate( adjust-hue( $skin-color, 1deg ), 6 ), 3 );
+    }
+    @include rtl {
+      border-left: 1px solid darken( desaturate( adjust-hue( $skin-color, 1deg ), 6 ), 3 );
+    }
+  }
+  > p {
+    float: left;
+    width: 100%;
+    height: 54px;
+    color: $c16-tp-5;
+    position: relative;
+    padding: 7px 20px;
+    > span {
+      display: block;
+      float: left;
+      width: 100%;
+      font: 15px/20px $font-f;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      &:nth-child(2) {
+        color: $text-palette-1;
+        font-size: 14px;
+        > span {
+          + span {
+            &:before {
+              content: ", ";
+            }
+          }
+        }
+      }
+    }
+    &:before {
+      content: "\e670";
+      display: block;
+      position: absolute;
+      top: 9px;
+      font: 19px icomoon;
+      color: $text-palette-4;
+      @include ltr {
+        right: 12px;
+      }
+      @include rtl {
+        left: 12px;
+      }
+    }
+  }
+  > div {
+    max-height: 0;
+    overflow: hidden;
+    transition: 300ms max-height;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    > ul {
+      border-top: 2px solid darken( desaturate( adjust-hue( $skin-color, 1deg ), 6 ), 3 );
+      padding: 0 10px;
+      background: $skin-palette-7;
+      float: left;
+      width: 100%;
+      > li {
+        float: left;
+        width: 100%;
+        box-sizing: content-box;
+        display: block;
+        &:not(:last-child) {
+          border-bottom: 1px solid $skin-palette-12;
+        }
+        > label {
+          display: block;
+          float: left;
+          width: 100%;
+          font: 12px/36px $font-f;
+          position: relative;
+          cursor: pointer;
+          input {
+            position: absolute;
+            top: 0;
+            left: 0;
+            opacity: 0;
+            pointer-events: none;
+            &:checked {
+              ~ span {
+                color: $text-palette-1;
+                &:after {
+                  transform: scale(1);
+                }
+              }
+            }
+          }
+          > span {
+            display: block;
+            float: left;
+            width: 100%;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            position: relative;
+            transition: 300ms color;
+            color: $text-palette-4;
+            @include ltr {
+              padding: 0 0 0 26px;
+            }
+            @include rtl {
+              padding: 0 26px 0 0;
+            }
+            &:hover {
+              color: lighten($text-palette-4, 10);
+            }
+            &:before, &:after {
+              content: "";
+              width: 16px;
+              height: 16px;
+              display: block;
+              position: absolute;
+              top: 50%;
+              margin: -8px 0 0;
+              background: rgba($skin-palette-12, 0.5);
+              border-radius: 3px;
+              font: 7px/16px icomoon;
+              color: $text-palette-4;
+              text-align: center;
+              @include ltr {
+                left: 0;
+              }
+              @include rtl {
+                right: 0;
+              }
+            }
+            &:after {
+              content: "\e6f3";
+              transition: 300ms transform;
+              transform: scale(0);
+            }
+          }
+        }
+      }
+    }
+  }
+  &.active {
+    > p {
+      &:before {
+        content: "\e671";
+      }
+    }
+    > div {
+      max-height: 240px
+    }
+  }
+  &:first-child div > ul > li:last-child {
+    text-align: center;
+    padding: 10px 0;
+    button {
+      height: 30px;
+      width: 100%;
+      border: 1px solid $header-brand-color-1;
+      background: $header-brand-color-1;
+      box-sizing: border-box;
+      padding: 0 15px;
+      font: 12px/16px $font-f;
+      color: set-color($header-brand-color-1);
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: color 180ms, background 180ms, border 180ms;
+      &:hover {
+        background: lighten( saturate( $header-brand-color-1, 1 ), 7 );
+        border-color: lighten( saturate( $header-brand-color-1, 1 ), 7 );
+      }
+    }
+  }
+}
+.casino-tournaments-filters-reset {
+  float: right;
+  display: block;
+  width: 54px;
+  height: 54px;
+  font: 20px/54px icomoon;
+  text-align: center;
+  color: $c16-tp-5;
+  transition: 300ms color;
+  border: 0;
+  background: none;
+  padding: 0;
+  &:hover {
+    color: lighten($c16-tp-5, 10);
+  }
+  &:before {
+    content: "\e6f4";
+  }
+}
+.casino-tournament-game {
+  float: left;
+  width: 100%;
+  margin: 0 0 50px;
+  &:not(:last-child) {
+    padding: 0 0 50px;
+    border-bottom: 1px solid rgba($skin-palette-3, 0.6);
+  }
+  > ul {
+    float: left;
+    width: 100%;
+    > li {
+      display: block;
+      &:first-child {
+        width: 310px;
+        @include ltr {
+          float: left;
+        }
+        @include rtl {
+          float: right;
+        }
+      }
+      &:last-child {
+        width: calc(100% - 20px - 310px);
+        @include ltr {
+          float: right;
+        }
+        @include rtl {
+          float: left;
+        }
+      }
+    }
+  }
+}
+.ctournament-image-wrapper {
+  float: left;
+  width: 100%;
+  background: $skin-palette-7;
+  text-align: center;
+  figure {
+    float: left;
+    width: 100%;
+    height: 220px;
+    border: 1px solid $skin-palette-7;
+    background: no-repeat 50% 50% / cover;
+    margin: 0;
+  }
+  > div:not(.hp-slider-pagination) {
+    float: left;
+    width: 100%;
+    height: 54px;
+  }
+  counter {
+    border-top: 1px solid $skin-palette-8;
+  }
+  &.hp-slider-17 .hp-slider-pagination {
+    bottom: 112px;
+    padding: 10px;
+  }
+}
+.ct-game-prize-amount {
+  font: 700 25px/56px $font-f;
+  color: $text-palette-1;
+}
+.ct-game-countdown {
+  float: left;
+  width: 100%;
+  text-transform: uppercase;
+  > ul {
+    float: left;
+    width: 100%;
+    font: 0/0 $font-f;
+    text-align: center;
+    margin: 10px 0;
+    &.counter-status-msg {
+      padding: 9px 0 2px;
+      &.finished {
+        margin: 0;
+        padding: 16px 0;
+        > li > strong {
+          margin: 0;
+        }
+      }
+    }
+    > li {
+      display: inline-block;
+      vertical-align: top;
+      position: relative;
+      margin: 0 8px;
+      > strong {
+        display: block;
+        font: 700 20px/16px $font-f;
+        margin: 0 0 9px;
+      }
+      > span {
+        display: block;
+        font: 700 15px/11px $font-f;
+        color: $c16-tp-5;
+      }
+      &.has-dot:before {
+        content: " : ";
+        display: block;
+        position: absolute;
+        top: 0;
+        right: -10px;
+        font: 700 20px/16px $font-f;
+      }
+    }
+  }
+}
+.ctournament-detailed-info {
+  float: left;
+  width: 100%;
+  > p {
+    float: left;
+    color: $text-palette-1;
+    font: 12px/20px $font-f;
+    a {
+      color: $brand-color-2;
+      transition: 300ms color;
+      &:hover {
+        color: lighten($brand-color-2, 10);
+      }
+    }
+  }
+}
+.ctournament-title-table {
+  display: table;
+  float: left;
+  width: 100%;
+  margin: 0 0 11px;
+  text-transform: uppercase;
+  > li {
+    display: table-cell;
+    vertical-align: middle;
+    position: relative;
+    font: 700 24px $font-f;
+    color: $brand-color-2;
+    &:last-child {
+      white-space: nowrap;
+      width: 1%;
+    }
+  }
+  button {
+    border: 0;
+    height: 36px;
+    background: $hero-color;
+    color: set-color($hero-color);
+    padding: 0 20px;
+    font: 14px $font-f;
+    text-transform: uppercase;
+    transition: 300ms background, 300ms color;
+    &:hover {
+      background: lighten($hero-color, 10);
+    }
+    &:disabled {
+      background: #2E323E;
+      color: white;
+      pointer-events: none;
+    }
+  }
+}
+.ctournament-status-boxes {
+  display: table;
+  table-layout: fixed;
+  border-collapse: collapse;
+  float: left;
+  width: 100%;
+  margin: 22px 0 20px;
+  text-align: center;
+  color: $text-palette-2;
+  font: 11px $font-f;
+  text-transform: uppercase;
+  > li {
+    display: table-cell;
+    vertical-align: middle;
+    border: 1px solid rgba($skin-palette-3, 0.6);
+    padding: 10px 0;
+    position: relative;
+    > p {
+      float: left;
+      width: 100%;
+      > span {
+        color: $c16-tp-5;
+      }
+      > strong {
+        display: block;
+        float: left;
+        width: 100%;
+        font: 700 14px $font-f;
+        > span {
+          color: $text-palette-5;
+        }
+      }
+    }
+  }
+  &.ct-page-type-details {
+    margin: 1px 0 0;
+    border-bottom: 2px solid $brand-color-1;
+    background: $skin-palette-12;
+    > li {
+      border: 0;
+      padding: 16px 0 14px;
+      strong {
+        padding: 2px 0 0;
+      }
+      + li {
+        &:before {
+          content: "";
+          display: block;
+          position: absolute;
+          width: 1px;
+          top: 10px;
+          bottom: 10px;
+          left: 0;
+          background: rgba($skin-palette-13, 0.5);
+        }
+      }
+    }
+  }
+}
+.ctournament-containing-games {
+  overflow: hidden;
+  float: left;
+  width: 100%;
+  position: relative;
+  .all-casino-games-list-box {
+    width: calc(100% - 10px);
+    > div > ul > li {
+      width: 20%;
+      &:first-child {
+        @include ltr {
+          padding: 0 0 15px 0;
+        }
+        @include rtl {
+          padding: 0 0 15px 0;
+        }
+      }
+    }
+  }
+  > ul {
+    float: right;
+    width: 20%;
+    height: 168px;
+    position: absolute;
+    top: 0;
+    @include ltr {
+      margin: 0 0 0 10px;
+      right: 0;
+    }
+    @include rtl {
+      margin: 0 10px 0 0;
+      left: 0;
+    }
+    > li {
+      position: relative;
+      display: block;
+      float: left;
+      width: 100%;
+      height: 100%;
+      border: 1px solid $skin-palette-6;
+      background: no-repeat 50% 50% / cover;
+      overflow: hidden;
+      &:not(.ctournament-view-more):before {
+        content: "";
+        display: block;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: -moz-linear-gradient(top, rgba(93,122,146,0) 0%, rgba(85,111,134,0) 10%, rgba(23,33,49,0.8) 82%, rgba(8,13,28,0.8) 100%);
+        background: -webkit-linear-gradient(top, rgba(93,122,146,0) 0%,rgba(85,111,134,0) 10%,rgba(23,33,49,0.8) 82%,rgba(8,13,28,0.8) 100%);
+        background: linear-gradient(to bottom, rgba(93,122,146,0) 0%,rgba(85,111,134,0) 10%,rgba(23,33,49,0.8) 82%,rgba(8,13,28,0.8) 100%);
+        transition: 500ms opacity;
+        opacity: 0;
+      }
+      > p {
+        position: absolute;
+        left: 0;
+        bottom: -100%;
+        width: 100%;
+        padding: 6px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        font: 700 12px $font-f;
+        color: $text-palette-1;
+        transition: 450ms bottom;
+        z-index: 20;
+      }
+      &:hover {
+        &:before {
+          opacity: 1;
+        }
+        > p {
+          bottom: 0;
+        }
+      }
+    }
+  }
+}
+.ctournament-view-more {
+  > div {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    width: 100%;
+    font: 700 12px $font-f;
+    text-transform: uppercase;
+    color: $text-palette-4;
+    text-align: center;
+    margin: -21px 0 0;
+    transition: 300ms color;
+    > p {
+      float: left;
+      width: 100%;
+      font: 700 25px $font-f;
+      color: $text-palette-2;
+      transition: 300ms color;
+    }
+    > span {
+      display: block;
+      float: left;
+      width: 100%;
+    }
+  }
+  &:hover {
+    > div {
+      color: lighten($text-palette-4, 10);
+      > p {
+        color: lighten($text-palette-2, 10);
+      }
+    }
+  }
+}
+.status-color {
+  .upcoming & {
+    color: #d3b173;
+  }
+  .finished & {
+    color: #C13653;
+  }
+  .live & {
+    color: #278B66;
+  }
+  .canceled & {
+    color: $text-palette-3;
+  }
+}
+.casino-tournament-page-intro {
+  float: left;
+  width: 100%;
+  height: 450px;
+  background: $skin-palette-12 no-repeat 50% 0 / cover;
+  position: relative;
+  margin: 10px 0 0;
+  &:before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: -moz-linear-gradient(top, rgba(0,0,0,0) 0%, rgba(#121623,0.85) 60%, rgba(#121623,1) 100%);
+    background: -webkit-linear-gradient(top, rgba(0,0,0,0) 0%,rgba(#121623,0.85) 60%,rgba(#121623,1) 100%);
+    background: linear-gradient(to bottom, rgba(0,0,0,0) 0%,rgba(#121623,0.85) 60%,rgba(#121623,1) 100%);
+  }
+}
+.ct-page-intro-info-holder {
+  position: absolute;
+  z-index: 20;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  text-align: center;
+  > h1 {
+    float: left;
+    width: 100%;
+    color: #C39547;
+    font: 700 36px $font-f;
+    margin: 0 0 24px;
+    text-shadow: 0 -4px 6px rgba(#000000, 0.65);
+  }
+  > h2 {
+    float: left;
+    width: 100%;
+    text-transform: uppercase;
+    color: #FFFFFF;
+    font: 700 24px $font-f;
+    margin: 0 0 8px;
+    text-shadow: 0 -4px 6px rgba(#000000, 0.65);
+  }
+  > h3 {
+    float: left;
+    width: 100%;
+    text-transform: uppercase;
+    color: #8D92A2;
+    font: 11px $font-f;
+  }
+}
+.ct-page-countdown-holder {
+  float: left;
+  width: 100%;
+  margin: 0 0 40px;
+  font: 0/0 $font-f;
+  > ul {
+    display: inline-table;
+    table-layout: fixed;
+    > li {
+      display: table-cell;
+      vertical-align: top;
+      width: 50%;
+    }
+  }
+  counter {
+    background: #D0D1D3;
+    color: #3F4552;
+    @include ltr {
+      padding: 0 25px 0 36px;
+      border-radius: 60px 0 0 60px;
+    }
+    @include rtl {
+      padding: 0 36px 0 25px;
+      border-radius: 0 60px 60px 0;
+    }
+    .ct-game-countdown {
+      > ul {
+        margin: 11px 0 7px;
+        > li {
+          margin: 0 6px;
+          > strong {
+            font-size: 18px;
+            margin: 0 0 3px;
+          }
+          > span {
+            color: #2E323E;
+            font-size: 11px;
+          }
+        }
+      }
+    }
+  }
+  button {
+    display: block;
+    float: left;
+    width: 100%;
+    height: 48px;
+    background: $brand-color-1;
+    color: set-color($brand-color-1);
+    text-transform: uppercase;
+    border: 0;
+    font: 700 18px $font-f;
+    transition: 300ms background, 300ms color;
+    @include ltr {
+      border-radius: 0 60px 60px 0;
+    }
+    @include rtl {
+      border-radius: 60px 0 0 60px;
+    }
+    &:hover {
+      background: lighten($brand-color-1, 10);
+    }
+    &:disabled {
+      background: #2E323E;
+      color: white;
+      pointer-events: none;
+    }
+  }
+}
+.ct-page-games-group {
+  float: left;
+  width: 100%;
+  background: -moz-linear-gradient(top, rgba($skin-palette-12,1) 0%, rgba($skin-palette-12,0) 100%);
+  background: -webkit-linear-gradient(top, rgba($skin-palette-12,1) 0%,rgba($skin-palette-12,0) 100%);
+  background: linear-gradient(to bottom, rgba($skin-palette-12,1) 0%,rgba($skin-palette-12,0) 100%);
+  .list-games-casino-view-b {
+    padding: 5px;
+  }
+  .all-casino-games-list-box {
+    padding: 0 36px 36px;
+  }
+}
+.casino-tournament-statistics-wrapper {
+  float: left;
+  width: 100%;
+  > ul {
+    float: left;
+    display: table;
+    table-layout: fixed;
+    width: calc(100% + 20px);
+    margin: 0 0 0 -10px;
+    border-spacing: 10px 0;
+    > li {
+      display: table-cell;
+      vertical-align: top;
+      position: relative;
+      background: -moz-linear-gradient(top, rgba(lighten( saturate( $brand-color-1, 1 ), 7 ),0.3) 0%, rgba(lighten( saturate( $brand-color-1, 1 ), 7 ),0) 100%);
+      background: -webkit-linear-gradient(top, rgba(lighten( saturate( $brand-color-1, 1 ), 7 ),0.3) 0%,rgba(lighten( saturate( $brand-color-1, 1 ), 7 ),0) 100%);
+      background: linear-gradient(to bottom, rgba(lighten( saturate( $brand-color-1, 1 ), 7 ),0.3) 0%,rgba(lighten( saturate( $brand-color-1, 1 ), 7 ),0) 100%);
+      &:nth-child(2):nth-last-child(3), &:nth-child(3):nth-last-child(2), &:nth-child(2):nth-last-child(2) {
+        top: -10px;
+        background: -moz-linear-gradient(top, rgba(lighten( saturate( $brand-color-1, 1 ), 7 ),0.6) 0%, rgba(lighten( saturate( $brand-color-1, 1 ), 7 ),0) 100%);
+        background: -webkit-linear-gradient(top, rgba(lighten( saturate( $brand-color-1, 1 ), 7 ),0.6) 0%,rgba(lighten( saturate( $brand-color-1, 1 ), 7 ),0) 100%);
+        background: linear-gradient(to bottom, rgba(lighten( saturate( $brand-color-1, 1 ), 7 ),0.6) 0%,rgba(lighten( saturate( $brand-color-1, 1 ), 7 ),0) 100%);
+      }
+    }
+  }
+}
+.ct-stat-block {
+  float: left;
+  width: 100%;
+  text-align: center;
+  padding: 0 12px 64px 24px;
+  .ct-stat-icon {
+    float: left;
+    width: 100%;
+    height: 126px;
+    background: no-repeat 50% 0 / auto 100%;
+    margin: -8px 0 0;
+  }
+  .waved-decor-7-white {
+    width: 70%;
+    clear: both;
+    margin: 0 auto 15px
+  }
+  > h5 {
+    float: left;
+    width: 100%;
+    font: 18px $font-f;
+    color: $text-palette-1;
+  }
+  > h6 {
+    float: left;
+    width: 100%;
+    font: 14px $font-f;
+    min-height: 14px;
+    color: rgb(216, 177, 118);
+    margin: 6px 0 24px;
+    &.ng-hide {
+      display: block !important;
+      opacity: 0;
+    }
+  }
+  &.has-counter {
+    counter-reset: section;
+    .cst-stat-list-item {
+      p {
+        > b{
+          display: inline-block;
+          vertical-align: top;
+          color: rgba($text-palette-1,0.7);
+          font-weight: 700;
+          text-align: center;
+          width: 20px;
+          @include ltr {
+            margin: 0 10px 0 0;
+          }
+          @include rtl {
+            margin: 0 0 0 10px;
+          }
+        }
+      }
+    }
+  }
+  &.brand-color {
+    .cst-stat-list-item {
+      > ul {
+        > li {
+          &:last-child {
+            color: lighten( desaturate( $brand-color-1, 6 ), 22 );
+            @if $white-skin == true {
+              color: darken( desaturate( $brand-color-1, 6 ), 22 );
+            }
+          }
+        }
+      }
+    }
+  }
+}
+.cst-stat-list {
+  float: left;
+  width: 100%;
+  position: relative;
+  &:before {
+    @extend .waved-decor-3-black;
+    content: "";
+    position: absolute;
+    top: -1px;
+    left: 0;
+    display: block;
+    width: calc(100% - 12px);
+  }
+}
+.cst-stat-list-item {
+  float: left;
+  width: 100%;
+  position: relative;
+  text-align: left;
+  font: 12px/33px $font-f;
+  color: rgba($text-palette-1, 0.7);
+  &:before {
+    @extend .waved-decor-3-black;
+    content: "";
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    display: block;
+    width: 100%;
+  }
+  > ul {
+    display: table;
+    float: left;
+    width: 100%;
+    border-spacing: 0;
+    > li {
+      display: table-cell;
+      vertical-align: top;
+      width: 100%;
+      position: relative;
+      &:last-child {
+        width: 1%;
+        color: #C19347;
+        white-space: nowrap;
+      }
+      > p {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        @include rtl {
+          text-align: right;
+        }
+      }
+    }
+  }
+  small {
+    display: inline-block;
+    vertical-align: top;
+    margin: 0 3px 0 0;
+    color: rgba($text-palette-1, 0.5);
+  }
+}
+.iframe-tournament-sidebar {
+  display: block;
+  position: absolute;
+  top: 0;
+  height: calc(100% - 68px);
+  z-index: 100;
+  width: 220px;
+  @include ltr {
+    right: 40px;
+  }
+  @include rtl {
+    left: 40px;
+  }
+  .cst-stat-list {
+    @include scroll($scroll: auto);
+    height: calc(100% - 210px);
+    width: calc(100% + 12px);
+    @include ltr {
+      padding: 0 12px 0 0;
+    }
+    @include rtl {
+      padding: 0 0 0 12px;
+    }
+  }
+}
+.iframe-tournament-sidebar-padding {
+  @include ltr {
+    padding: 0 220px 0 0;
+  }
+  @include rtl {
+    padding: 0 0 0 220px;
+  }
+}
+.waved-decor-7-white {
+  background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAOCAMAAAB5Au6AAAAAM1BMVEX////////////////////////////////////////////////////////////////////lEOhHAAAAEXRSTlMAAQMHDRQdJzI8PUVMUlZYWSlzVBoAAABmSURBVHjadVFHDsAwCMsezfL/X9tKOTiNwBckLIwN5oQt+FCsUeAqMCdQncz7BowYB9C8xIcO9MB6Y09S6ebTBB53eEl/Pq/tnmlWJsuGMKBJJsalKdG0Fot95TBU5i759EZ+DtO94LYGgkPphBwAAAAASUVORK5CYII=) repeat-x 50% 50% / auto 7px;
+  min-height: 7px;
+}
+.waved-decor-3-black {
+  background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAGCAMAAAD9ou7VAAAANlBMVEUAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAC3dmhyAAAAEnRSTlMAAgMFCwwNEh0oMDI9QERKTE1qMiL0AAAAQUlEQVR42i3LRw7AQAwCQLYk2wv//2yI5TkhBPjFTukR7lnkOeR6YaryzHmqrT6/LQChXbtpvgtM2bqBHAkuDfIDlOYC7sAATw4AAAAASUVORK5CYII=) repeat-x 50% 50% / auto 3px;
+  min-height: 3px;
+}
+.ct-page-games-group-title {
+  float: left;
+  width: 100%;
+  font: 0/0 $font-f;
+  margin: 20px 0 12px;
+  text-align: center;
+  color: #C19347;
+  white-space: nowrap;
+  > li {
+    display: inline-block;
+    vertical-align: middle;
+    width: 21.6%;
+    height: 38px;
+    &:nth-child(2) {
+      width: auto;
+    }
+  }
+  h2 {
+    color: #C19347;
+    font: 32px $font-f;
+    padding: 0 30px;
+  }
+}
+.ct-stat-rules {
+  float: left;
+  width: 100%;
+  color: rgba($text-palette-1, 0.7);
+  font: 12px/20px $font-f;
+  text-align: left;
+  position: relative;
+  padding: 17px 0 0;
+  &:before {
+    @extend .waved-decor-3-black;
+    content: "";
+    position: absolute;
+    display: block;
+    top: -2px;
+    width: 100%;
+  }
+  a {
+    color: #C19347;
+    transition: 300ms color;
+    &:hover {
+      color: lighten(#C19347, 10);
+    }
+  }
+  > p {
+    float: left;
+    width: 100%;
+    margin: 0 0 16px;
+  }
+}
+.ct-stat-icon {
+  .current-results & {
+    background-image: url("../../../images/casino-tournaments/current-results.png#{$delete-cache}");
+    background-size: 138px;
+  }
+  .prizes & {
+    background-image: url("../../../images/casino-tournaments/prizes.png#{$delete-cache}");
+    background-size: 76px;
+  }
+  .tournament-results & {
+    background-image: url("../../../images/casino-tournaments/tournament-results.png#{$delete-cache}");
+    background-size: 70px;
+  }
+  .tournament-rules & {
+    background-image: url("../../../images/casino-tournaments/tournament-rules.png#{$delete-cache}");
+    background-size: 90px;
+  }
+  .current-results-sidebar & {
+    background-image: url("../../../images/casino-tournaments/current-results-sidebar.png#{$delete-cache}");
+  }
+}
+.current-results-sidebar {
+  float: left;
+  width: 100%;
+  height: 100%;
+  * {
+    box-sizing: border-box;
+  }
+  .ct-stat-block {
+    padding: 0 25px 12px;
+    height: 100%;
+    > h5 {
+      color: $text-palette-1;
+    }
+    .ct-stat-icon {
+      margin: 40px 0 14px;
+      height: 66px;
+    }
+    .waved-decor-7-white {
+      width: 95%;
+    }
+    &.has-counter {
+      .cst-stat-list-item {
+        color: $text-palette-2;
+        p {
+          &:before {
+            text-align: left;
+            margin: 0 2px 0 0;
+          }
+          > b {
+            color: $text-palette-3;
+          }
+        }
+        > ul {
+          > li {
+            &:last-child {
+              color: $text-palette-4;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+@media screen and (max-width: 1260px) {
+  .ctournament-containing-games {
+    .game-img-box-b {
+      height: 90px;
+    }
+    > ul {
+      height: 120px;
+    }
+    .casino-resize-buttons > div button {
+      font-size: 10px;
+    }
+  }
+  .list-games-casino-view-b {
+    width: 20%;
+  }
+}
+.casino-tournament-scroll {
+  float: left;
+  width: 100%;
+  max-height: 500px;
+  padding: 2px 12px;
+  @include scroll($scroll: auto);
+}
+.ct-games-no-results {
+  float: left;
+  width: 100%;
+  color: $text-palette-3;
+  font: 20px $font-f;
+  text-align: center;
+  margin: 84px 0 110px;
+}

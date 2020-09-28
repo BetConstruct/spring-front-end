@@ -442,7 +442,7 @@ VBET5.constant('SkinConfig', {
         },
         showVirtualsInSportList: false,
         virtualSportIds: {
-            virtualsports: [54, 55, 56, 57, 118, 150, 174],
+            virtualsports: [54, 55, 56, 57, 118, 150, 174, 209],
             insvirtualsports: [132, 133, 134, 135, 136, 137, 138]
         },
         showOutright: false,//200,
@@ -932,7 +932,7 @@ VBET5.constant('SkinConfig', {
                     "validation": [{"name": "maxlength", "message": 'Too long'},{"name": "invalid", "message": "Invalid phone number"}, {
                         "name": "duplicate",
                         "message": "Duplicate phone number"
-                    }, {"name": "failedsms", "message": "Failed to send sms"}, {
+                    },  {
                         "name": "required",
                         "message": "This field is required"
                     }, {"name": "pattern", "message": "Please, enter valid phone number: only digits are allowed - no spaces, letters and/or symbols"}]
@@ -985,7 +985,7 @@ VBET5.constant('SkinConfig', {
     },
     'swarm': {
         url: [{ url: "https://eu-swarm-lp.betconstruct.com/"}],
-        websocket: [{ url: "wss://eu-swarm-ws.betconstruct.com/"}]
+        websocket: [{ url: "wss://eu-swarm-ws-re.betconstruct.com/"}]
         // url: [{ url: "http://192.168.100.42:8085"}],
         // websocket: [{ url: "ws://192.168.100.42:8085"}]
     },

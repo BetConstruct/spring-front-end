@@ -1,0 +1,35 @@
+<div  style="height: 100%" >
+    <div ng-if="jackpotData" class="jackpot-pools" ng-controller="cmsPagesCtrl" ng-init="loadBanners('casino-jackpot-banner', true)">
+        <ul class="title-slider-games no-select-j">
+            <li class="title-slider-games-line"></li>
+            <li trans>Jackpot Pools</li>
+            <li>
+                <div>
+                    <ul>
+                        <li class="title-slider-games-line"></li>
+                        <li ng-if="jackpotData.length > 1">
+                            <span ng-click="jackpotWidgets.amountIndex = jackpotWidgets.amountIndex - 1 "
+                                  ng-class="{'disabled': jackpotWidgets.amountIndex <= 0 }" trans>prev</span>
+                            <span ng-click="jackpotWidgets.amountIndex = jackpotWidgets.amountIndex + 1"
+                                  ng-class="{'disabled': jackpotWidgets.amountIndex >= jackpotData.length - 1 }" trans>next</span>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+        </ul>
+            <a ng-repeat="jackpot in jackpotData track by $index" ng-show="$index === jackpotWidgets.amountIndex" class="jp-banner" ng-href="{{bannerObjects['casino-jackpot-banner'][$root.env.authorized][0].link}}" target="{{bannerObjects['casino-jackpot-banner'][$root.env.authorized][0].linktarget}}" style="background-image: url({{bannerObjects['casino-jackpot-banner'][$root.env.authorized][0].image}})">
+                <span>{{jackpot.Name|translate}}</span>
+                <div class="jackpot-banner-amount">
+                    <jackpot-counter
+                            max-duration-speed="400"
+                            point="jackpot.CurrencyFraction"
+                            comma="true"
+                            show-currency="true"
+                            currency="{{jackpot.Currency}}"
+                            amount="{{jackpot.CollectedAmountTotal}}">
+                    </jackpot-counter>
+                </div>
+
+            </a>
+    </div>
+</div>

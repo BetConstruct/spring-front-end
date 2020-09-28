@@ -101,6 +101,12 @@ CMS.constant('WPConfig', {
         },
         skillGamesBanners: {
             'default': 'skill_games_banners'
+        },
+        horseRacingBanners: {
+            'default': 'homepage-horse-racing'
+        },
+        greyhoundRacingBanners: {
+            'default': 'greyhound-racing-banners'
         }
     },
     belote: {

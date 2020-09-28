@@ -1,0 +1,16 @@
+<div state-flag-var="showSearchResults" hide-on-click>
+    <div class="search-by-team-name" ng-class="{'loading': loading}">
+        <label>
+            <h5 trans>Team name</h5>
+        </label>
+        <input  class="team-name-i" type="text" ng-model="searchTerm" placeholder="E.G. Barcelona" />
+    </div>
+    <div class="search-by-team-name-results" ng-show="showSearchResults && data.length > 0" >
+        <ul>
+            <li ng-repeat="game in data track by game.team_id" ng-click="selectTeam(game);">
+                <i class="sport-icon-v3 {{game.alias}}"> </i>
+                <span ng-bind="game.team_name"></span>
+            </li>
+        </ul>
+    </div>
+</div>

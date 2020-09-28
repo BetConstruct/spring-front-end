@@ -21,10 +21,10 @@
                                     <div class="game-detailed-stats" ng-if="(liveGamesSoccerTemplate.indexOf(openGame.sport.alias) !== -1 || $root.conf.esportsGames.indexOf(openGame.sport.alias) !== -1) && openGame.live_events">
                                         <div class="hover-sp items-{{openGame.live_events.length}}">
                                             <div class="football-gamer-name" ng-repeat="gameEvent in openGame.live_events|orderBy:'add_info_order':true">
-                                                <div ng-class="gameEvent.event_type+'-icon'" class="{{gameEvent.event_icon}}"></div>
                                                 <span ng-class="gameEvent.team">
-                                                <tshirt shirt="{{ openGame.info['shirt'+ gameEvent.team.slice(-1) + '_color'] }}" shorts="{{ openGame.info['short'+ gameEvent.team.slice(-1) + '_color'] }}"></tshirt>
-                                            </span>
+                                                    <tshirt shirt="{{ openGame.info['shirt'+ gameEvent.team.slice(-1) + '_color'] }}" shorts="{{ openGame.info['short'+ gameEvent.team.slice(-1) + '_color'] }}"></tshirt>
+                                                </span>
+                                                <div class="football-game-status {{gameEvent.event_icon}}" ng-class="gameEvent.event_type+'-icon'"></div>
                                                 <p>{{gameEvent.event_type.replace('_', ' ')|capitalise|translate}} {{ gameEvent.add_info }} {{openGame[gameEvent.team + '_name']}}</p>
                                             </div>
                                         </div>
@@ -47,11 +47,11 @@
     </div>
     <div class="game-additional-info-v3">
         <p additional-game-info game="openGame" ng-show="openGame.add_info_name || openGame.info.add_info || openGame.tv_info || openGame.openGame.is_neutral_venue || additionalInfo && (!$root.conf.hidePointsForCompetitions['k' + openGame.competition.id] || $root.conf.hidePointsForCompetitions['k' + openGame.competition.id] && $root.env.authorized)">
-            <span ng-show="openGame.is_neutral_venue" trans >Neutral field</span>
-            <span class="text-info" ng-if="additionalInfo">{{ additionalInfo }} </span>
-            <span class="text-info" ng-if="openGame.add_info_name" ng-bind="openGame.add_info_name"></span>
-            <span ng-if="openGame.info.add_info" ng-bind="openGame.info.add_info"></span>
-            <span ng-if="openGame.info.tv_info" ng-bind="openGame.info.tv_info"></span>
+            <span ng-show="openGame.is_neutral_venue" title="Neutral field" trans >Neutral field</span>
+            <span class="text-info" title="{{ additionalInfo }}" ng-if="additionalInfo">{{ additionalInfo }} </span>
+            <span class="text-info" ng-if="openGame.add_info_name" title="{{openGame.add_info_name}}" ng-bind="openGame.add_info_name"></span>
+            <span ng-if="openGame.info.add_info" title="{{openGame.info.add_info}}" ng-bind="openGame.info.add_info"></span>
+            <span ng-if="openGame.info.tv_info" title="{{openGame.info.tv_info}}" ng-bind="openGame.info.tv_info"></span>
 
         </p>
         <div class="game-additional-icons">
@@ -62,10 +62,6 @@
                stats-game ="openGame"
                stats-competition-name="{{openGame.competition.name}}"></i>
             <soccer-line-up ng-if="$root.conf.matchLineupStatistics.soccer && openGame.sport.alias === 'Soccer' && openGame.type === 1" game-id="openGame.id"></soccer-line-up>
-            <ul ng-if="$root.currentPage.path !== '/multiview'">
-                <li class="column-view-j" ng-click="switchMarketsInOneColumn(false)" ng-class="{'active': !marketsInOneColumn.enabled}"></li>
-                <li class="list-view-j" ng-click="switchMarketsInOneColumn(true)" ng-class="{'active': marketsInOneColumn.enabled}"></li>
-            </ul>
         </div>
     </div>
 </div>

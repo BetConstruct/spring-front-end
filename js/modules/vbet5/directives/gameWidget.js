@@ -141,9 +141,7 @@ VBET5.directive('gameWidget', ['Utils', 'Config', 'ConnectionService', 'GameInfo
                 }
                 if (scope.liveGameViewData.length > 0) {
                     angular.forEach(scope.liveGameViewData, function (game) {
-                        game.game.sort(function (a, b) {
-                            return a.id - b.id;
-                        });
+                        Utils.orderByField(game.game, 'id');
                     });
 
                     GameInfo.updateSelectedSportByLiveGameViewData(scope);

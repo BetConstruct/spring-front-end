@@ -165,9 +165,7 @@ VBET5.directive('jackpotCounter', ['$rootScope', '$filter', function ($rootScope
                 oldVal = attrs.amount;
             }
 
-            attrs.$observe('amount', function (value) {
-                process();
-            });
+            attrs.$observe('amount', process);
         }
     };
 }]);

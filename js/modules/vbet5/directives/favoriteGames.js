@@ -66,7 +66,7 @@ VBET5.directive('favoriteGames', ['$rootScope', '$filter', 'ConnectionService', 
                     angular.forEach(sport.region, function(region) {
                         angular.forEach(region.competition, function(competition) {
                             angular.forEach(competition.game, function(game) {
-                                game.hasVideo = Config.main.videoEnabled && GameInfo.hasVideo(game);
+                                game.hasVideo = GameInfo.hasVideo(game);
                                 game.enableH2HStat = Config.main.enableH2HStat && game.is_stat_available;
                                 // Grouping data so that we can properly broadcast to centre.js
                                 game.requestInfo = {

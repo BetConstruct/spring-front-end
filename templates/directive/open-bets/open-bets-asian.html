@@ -13,6 +13,7 @@
                ng-click="$event.stopPropagation(); editBet(bet);"
                title="{{ ('Editing functionality is available for this bet.') | translate }}">
             </i>
+            <i class="refresh-icon cms-jcon-refresh" ng-show="$root.conf.enableBetFromBetHistory && (bet.type === 1 || bet.type == 2 || bet.type == 3 || bet.type == 4)" ng-click="$event.stopPropagation();addEvents(bet);" title="Repeat Bet"></i>
         </p>
         <div class="open-bets-time-id">
             <p ng-bind="bet.date_time|formatDate:'noLocaleTranslate':null:$root.env.timeFormat"></p>
@@ -24,7 +25,7 @@
                     <p ng-bind="event.game_start_date|formatDate:'noLocaleTranslate':null:$root.env.timeFormat"></p>
                     <a class="bet-event-title" ng-click="gotoBetGame(matchInfo[event.game_id].gamePointer)">{{::event.game_name }}</a>
                     <b class="open-bets-games-score" ng-bind="matchInfo[event.game_id].text_info"></b>
-                    <div class="status-icon-open-bets" title="{{event.outcome == 3 ? 'Won' : 'Unsettled'}}"></div>
+                    <div class="status-icon-open-bets" title="{{(event.outcome == 3 ? 'Won' : 'Unsettled')|translate}}"></div>
                 </li>
                 <li class="open-bets-games-info" ng-show="event.is_live" ng-class="{'won': event.outcome == 3 , 'lost':event.outcome == 1 }">
                     <b>Live</b>
@@ -34,7 +35,8 @@
                         <span>{{::event.market_name ? event.market_name : ''}}</span>
                         <span>{{::event.eventName ? event.eventName : event.event_name}}</span>
                     </p>
-                    <span class="betprice" ng-bind="event.k_type === 11 ? 'SP' : event.coeficient|oddConvert:$root.env.oddFormat"></span>
+                    <span class="betprice" ng-bind="event.k_type === 11 ? 'SP' : (event.coeficient|oddConvert:event.oddTypeMapped.full:null:'BET_HISTORY':undefined:(!{1:1, 4:1}[bet.type]))"></span>
+                    <span class="betprice" ng-bind="::event.oddTypeMapped.short|translate" title="{{::event.oddTypeMapped.full|translate}}"></span>
                 </li>
 
             </ul>

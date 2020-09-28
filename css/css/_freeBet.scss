@@ -1,0 +1,431 @@
+.free-bet-container {
+  float: left;
+  width: 100%;
+  margin: 15px 0 116px;
+  background: $skin-palette-12;
+  border-radius: 6px;
+  position: relative;
+  min-height: 432px;
+  > ul {
+    float: left;
+    width: 100%;
+    padding: 5px;
+    box-sizing: border-box;
+    overflow: hidden;
+    &:before {
+      content: "";
+      display: block;
+      background: url(../../../images/backgrounds/free-bet-bg.png#{$delete-cache}) no-repeat 100% 0;
+      mix-blend-mode: luminosity;
+      width: 100%;
+      height: 432px;
+      position: absolute;
+      border-radius: 6px;
+      top: 0;
+      left: 0;
+    }
+    > li {
+      display: block;
+      padding: 5px;
+      box-sizing: border-box;
+      position: relative;
+      z-index: 10;
+      @include ltr {
+        float: left;
+      }
+      @include rtl {
+        float: right;
+        text-align: right;
+      }
+      &:first-child {
+        width: 66.666667%;
+      }
+      &:last-child {
+        width: 33.333333%;
+        padding: 95px 0 0;
+      }
+      > h4 {
+        margin: 80px 0;
+        text-align: center;
+        font: 14px $font-f;
+        color: $text-palette-3;
+      }
+    }
+  }
+}
+.free-bet-rules {
+  float: left;
+  width: 100%;
+  > h6 {
+    background: $skin-palette-8;
+    padding: 0 16px;
+    color: $text-palette-3;
+    font: 700 14px/45px $font-f;
+    text-transform: uppercase;
+    @include ltr {
+      float: left;
+    }
+    @include rtl {
+      float: right;
+    }
+  }
+  > p {
+    float: left;
+    width: 100%;
+    background: $skin-palette-8;
+    padding: 22px 16px;
+    color: $text-palette-4;
+    font: 14px/18px $font-f;
+    box-sizing: border-box;
+  }
+}
+.free-bet-calendar-switcher {
+  position: absolute;
+  top: 18px;
+  width: 137px;
+  @include ltr {
+    right: 20px;
+  }
+  @include rtl {
+    left: 20px;
+  }
+  select {
+    border: 1px solid $text-palette-4;
+    background: none;
+    display: block;
+    box-sizing: border-box;
+    width: 100%;
+    height: 24px;
+    font: 12px $font-f;
+    color: $text-palette-3;
+    @include ltr {
+      padding: 0 20px 0 8px;
+    }
+    @include rtl {
+      direction: rtl;
+      padding: 0 8px 0 20px;
+    }
+  }
+  &:after {
+    content: "\e674";
+    font: 18px/20px icomoon;
+    pointer-events: none;
+    position: absolute;
+    top: 50%;
+    margin: -10px 0 0;
+    color: $text-palette-4;
+    @include ltr {
+      right: 8px;
+    }
+    @include rtl {
+      left: 8px;
+    }
+  }
+}
+.free-bet-header {
+  float: left;
+  width: 100%;
+  margin: 14px 0 11px;
+  h1 {
+    color: $text-palette-3;
+    font: 700 18px $font-f;
+    text-transform: uppercase;
+    float: left;
+    width: 100%;
+  }
+  h2 {
+    float: left;
+    width: 100%;
+    font: 32px $font-f;
+    color: $hero-color;
+  }
+}
+.free-bet-game {
+  float: left;
+  width: 100%;
+}
+.free-bet-game-heading {
+  background: rgba($skin-palette-8, 0.8);
+  float: left;
+  width: 100%;
+  height: 45px;
+  box-sizing: border-box;
+  @include ltr {
+    padding: 10px 7px 0 10px;
+  }
+  @include rtl {
+    padding: 10px 10px 0 7px;
+  }
+  h3 {
+    font: 700 14px/24px $font-f;
+    color: $text-palette-4;
+    @include ltr {
+      float: left;
+    }
+    @include rtl {
+      float: right;
+      direction: rtl;
+    }
+  }
+  ul {
+    @include ltr {
+      float: right;
+    }
+    @include rtl {
+      float: left;
+    }
+    li {
+      display: block;
+      margin: 0 3px;
+      @include ltr {
+        float: left;
+      }
+      @include rtl {
+        float: right;
+      }
+    }
+  }
+  button {
+    display: block;
+    float: left;
+    border: 1px solid $text-palette-4;
+    background: none;
+    height: 24px;
+    position: relative;
+    color: $text-palette-3;
+    font: 11px/22px $font-f;
+    text-transform: uppercase;
+    transition: 300ms color, 300ms background, 300ms border;
+    @include ltr {
+      padding: 0 8px 0 26px;
+    }
+    @include rtl {
+      padding: 0 26px 0 8px;
+    }
+    &:before {
+      display: block;
+      position: absolute;
+      top: 0;
+      font: 12px/22px icomoon;
+      @include ltr {
+        left: 7px;
+      }
+      @include rtl {
+        right: 7px;
+      }
+    }
+    &.random-choice {
+      &:before {
+        content: "\7b";
+        @include rtl {
+          direction: ltr;
+        }
+      }
+    }
+    &.favourite-choice {
+      &:before {
+        content: "\e6df";
+      }
+      &:not(:hover) {
+        &:before {
+          color: $hero-color;
+        }
+      }
+    }
+    &:hover {
+      background: $brand-color-1;
+      border-color: $brand-color-1;
+      color: set-color($brand-color-1);
+    }
+  }
+}
+.free-bet-game-footer {
+  float: left;
+  width: 100%;
+  background: $skin-palette-8;
+  padding: 10px;
+  box-sizing: border-box;
+  button {
+    display: block;
+    border: 1px solid $text-palette-4;
+    height: 30px;
+    padding: 0 24px;
+    text-transform: uppercase;
+    color: $text-palette-3;
+    font: 12px $font-f;
+    background: none;
+    transition: 300ms color, 300ms background, 300ms border;
+    @include ltr {
+      float: right;
+    }
+    @include rtl {
+      float: left;
+    }
+    &:hover {
+      background: $hero-color;
+      border-color: $hero-color;
+      color: set-color($hero-color);
+    }
+    &:disabled {
+      pointer-events: none;
+      opacity: 0.4;
+    }
+  }
+}
+.free-bet-table {
+  float: left;
+  width: 100%;
+  table {
+    float: left;
+    width: 100%;
+    border-spacing: 0 1px;
+    border-collapse: separate;
+    margin: -1px 0 0;
+    @include rtl {
+      direction: rtl;
+    }
+    td, th {
+      background: $skin-palette-7;
+      box-sizing: border-box;
+      position: relative;
+      vertical-align: middle;
+      &:not(:only-child) {
+        padding: 0 10px;
+        border-top: 1px solid $skin-palette-8;
+      }
+    }
+    th {
+      height: 36px;
+      font: 12px $font-f;
+      color: $text-palette-3;
+      &:not(:first-child) {
+        text-align: center;
+      }
+    }
+    td {
+      &:not(:only-child) {
+        height: 46px;
+      }
+      &.date-cell {
+        color: $text-palette-4;
+        font: 10px $font-f;
+        width: 74px;
+        text-align: center;
+      }
+      &.game-comp-cell {
+        font: 12px $font-f;
+        color: $text-palette-3;
+        vertical-align: top;
+        padding: 9px 4px;
+      }
+      &.events-cell {
+        width: 12.8%;
+        transition: 300ms background, 300ms color;
+        color: #c29440;
+        padding: 0;
+        cursor: pointer;
+        @include ltr {
+          text-align: right;
+          border-left: 1px solid $skin-palette-12;
+        }
+        @include rtl {
+          text-align: left;
+          border-right: 1px solid $skin-palette-12;
+        }
+        &:hover {
+          background: $skin-palette-6;
+        }
+        &.selected {
+          pointer-events: none;
+          background: $brand-color-1;
+          color: set-color($brand-color-1);
+        }
+      }
+    }
+  }
+  hr {
+    float: left;
+    width: 100%;
+    margin: 0 0 1px;
+    border: 0;
+    height: 2px;
+    background: $hero-color;
+  }
+  label {
+    display: block;
+    height: 46px;
+    font: 700 12px/46px $font-f;
+    position: relative;
+    @include ltr {
+      padding: 0 16px 0 38px;
+    }
+    @include rtl {
+      padding: 0 38px 0 16px;
+    }
+    input {
+      display: none;
+      &:checked ~ span:after {
+        transform: scale(1);
+      }
+    }
+    span {
+      &:before, &:after {
+        content: "";
+        display: block;
+        position: absolute;
+        top: 15px;
+        border-radius: 100%;
+        @include ltr {
+          left: 16px;
+        }
+        @include rtl {
+          right: 16px;
+        }
+      }
+      &:before {
+        width: 16px;
+        height: 16px;
+        background: rgba(#000000, 0.3);
+      }
+      &:after {
+        width: 6px;
+        height: 6px;
+        margin: 5px;
+        background: set-color(#000000);
+        transition: 300ms transform;
+        transform: scale(0);
+      }
+    }
+  }
+  .status-icon {
+    display: none;
+    font: 16px/20px icomoon;
+    width: 20px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin: -10px;
+    color: $text-palette-4;
+    text-align: center;
+  }
+  .Waiting, .Win, .Lose {
+    pointer-events: none;
+    label {
+      display: none;
+    }
+    .status-icon {
+      display: block;
+    }
+  }
+  .Waiting .status-icon:before {
+    content: "\e933";
+  }
+  .Win .status-icon:before {
+    content: "\e6ec";
+    color: #1a7051;
+  }
+  .Lose .status-icon:before {
+    content: "\e6eb";
+    color: #a82d46;
+  }
+}

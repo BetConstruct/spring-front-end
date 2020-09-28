@@ -1,29 +1,20 @@
-<div class="simple-nav-j" ng-show="$root.conf.theVeryTopMenu.length > 0">
+<div class="simple-nav-j" ng-if="$root.conf.headerNavigation.nearLogo.length > 0">
    <p></p>
    <ul sub-menu-creator="veryTopMenu">
-      <li ng-repeat="item in $root.conf.theVeryTopMenu track by $index"
-          ng-click="$root.gaSend('send', 'event', 'top menu', item.label, {'label': item.label, 'navigate': item.href || item.help || item.sliderAuthorized})"
+      <li ng-repeat="item in $root.conf.headerNavigation.nearLogo track by $index"
+          ng-click="$root.gaSend('send', 'event', 'top menu', item.label, {'label': item.label, 'navigate': item.href || item.help || item.sliderAuthorized});goToTop();$event.stopPropagation();"
           ng-if="!item.showCondition || item.showCondition.authorized === env.authorized">
          <a ng-if="item.href || (item.broadcast && !env.authorized)" target="{{item.target || '_self'}}"
             ng-href="{{item.href}}"
-            ng-click="$root.topMenuDropDown=false;closeSlider();$parent.verytopMenuExpanded = false;broadcast(item.broadcast)"
+            ng-click="$root.topMenuDropDown=false;closeSlider();broadcast(item.broadcast)"
             ng-bind="item.label|translate" ng-class="item.staticClass"></a>
          <a ng-if="item.help"
-            ng-click="closeSlider();openHelpPage(item.help, item.helpFrom);goToTop();$parent.verytopMenuExpanded=false;$event.stopPropagation();"
+            ng-click="closeSlider();openHelpPage(item.help, item.helpFrom);"
             ng-bind="item.label|translate" ng-class="item.staticClass"></a>
-         <a ng-if="item.sliderAuthorized && env.authorized"
-            ng-click="conf.enableMixedView ? selectBalanceMenuItem($event,item.sliderAuthorized) : broadcast( 'toggleSliderTab', item.sliderAuthorized); goToTop();$parent.verytopMenuExpanded=false;$event.stopPropagation();"
+         <a ng-if="item.sliderAuthorized"
+            ng-click="env.authorized ? (conf.enableMixedView ? selectBalanceMenuItem($event,item.sliderAuthorized) : broadcast( 'toggleSliderTab', item.sliderAuthorized)) :
+             broadcast('openLoginForm', {key: 'toggleSliderTab', data: item.sliderAuthorized});"
             ng-bind="item.label|translate" ng-class="item.staticClass"></a>
-         <a ng-if="item.sliderAuthorized && !env.authorized"
-            ng-click="broadcast('openLoginForm', {key: 'toggleSliderTab', data: item.sliderAuthorized});goToTop();$parent.verytopMenuExpanded=false;$event.stopPropagation();"
-            ng-bind="item.label|translate" ng-class="item.staticClass"></a>
-         <a ng-if="item.chromeExtension && showChromeExtensionButton"
-            ng-click=""
-            onclick="chrome.webstore.install();"
-            ng-bind="item.label|translate" ng-class="item.staticClass"></a>
-      </li>
-      <li ng-show="conf.veryTopMenuAffiliateProgram">
-         <a ng-click="goToTop(); openCustomDialog('affiliateProgram'); $event.stopPropagation();" trans>Affiliate Program</a>
       </li>
    </ul>
 </div>

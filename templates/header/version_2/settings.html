@@ -33,9 +33,9 @@
                 </div>
             </li>
             <li ng-if="$root.profile && conf.enableSuggestedBets" class="suggested-bets-setting">
-                <div class="switcher-t-view-b" ng-click="setSuggestedExpress()">
+                <div class="switcher-t-view-b" ng-click="$root.$broadcast('toggleSuggestedExpress', !suggestedBets)">
                     <p trans>Suggested Express</p>
-                    <div class="switcher-box-b {{suggestedBets != 'hide' ? 'on' : ''}}">
+                    <div class="switcher-box-b" ng-class="{'on': suggestedBets}">
                         <div class="sw-circle-b"></div>
                     </div>
                 </div>

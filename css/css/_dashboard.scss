@@ -1,0 +1,856 @@
+.dashboard-wrapper{
+  float: left;
+  width: 100%;
+  height: 100%;
+}
+.dashboard-left-column{
+  float: left;
+  width: calc(50% - 100px);
+  box-sizing: border-box;
+}
+.dashboard-right-column{
+  float: right;
+  width: calc(50% + 95px);
+  min-height: 600px;
+  margin: 0;
+  box-sizing: border-box;
+}
+.bet-now-widget-contain{
+  float: left;
+  width: 100%;
+  max-height: 5000px;
+  transition: 500ms max-height;
+}
+.dashboard-slider-contain{
+  float: left;
+  width: 100%;
+  max-height: 320px;
+  text-align: center;
+  overflow: hidden;
+  border-radius: 5px;
+  box-sizing: border-box;
+}
+.dashboard-slider-contain .contein-cash .block-black-hover{
+  opacity: 1;
+}
+.dashboard-slider-contain .cash-comand{
+  text-decoration: none;
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: $skin-palette-10;
+  text-align: left;
+}
+.dashboard-slider-contain .contein-cash{
+  max-height: 320px;
+}
+.dashboard-slider-contain .contein-cash .block-black-hover{
+  position: relative;
+}
+.dashboard-slider-contain .contein-cash:hover .block-black-hover{
+  z-index: 1;
+}
+.dashboard-slider-contain .cash-comand img{
+  width: 100%;
+  float: left;
+}
+.dashboard-slider-contain .featured-game-selector{
+  top: auto;
+  left: 50%;
+  right: auto;
+  bottom: 20px;
+  width: auto;
+  z-index: 99;
+  transform: translateX(-50%);
+  -webkit-transform: translateX(-50%);
+}
+.dashboard-slider-contain .featured-game-selector span{
+  float: left;
+  width: 12px;
+  height: 12px;
+  background: lighten( desaturate( adjust-hue( $skin-color, 2deg ), 20 ), 17 );
+}
+.dashboard-slider-contain .featured-game-selector span.active{
+  background: $hero-color;
+}
+.dashboard-slider-contain > a{
+  text-decoration: none;
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: $skin-palette-10;
+  text-align: left;
+}
+.dashboard-slider-contain > a > img{
+  float: left;
+  width: 100%;
+}
+.slider-selector-b{
+  display: inline-block;
+  position: relative;
+  text-indent: -9999em;
+  top: -22px;
+  left: 0;
+  z-index: 55;
+}
+.slider-selector-b > span{
+  display: block;
+  float: left;
+  width: 12px;
+  height: 12px;
+  background: lighten( desaturate( adjust-hue( $skin-color, 2deg ), 20 ), 17 );
+  margin: 0 0 0 6px;
+  border-radius: 50%;
+  cursor: pointer;
+}
+.slider-selector-b > span.active{
+  background: $hero-color;
+}
+.bet-now-widget-contain.closed{
+  max-height: 31px;
+  border-radius: 5px 5px 0 0;
+  overflow: hidden;
+}
+.title-b-widget{
+  float: left;
+  width: 100%;
+  border-radius: 5px 5px 0 0;
+  border-bottom: 1px solid $hero-color;
+  height: 31px;
+  background: $skin-palette-7;
+  padding: 0 30px 0 10px;
+  position: relative;
+  box-sizing: border-box;
+}
+.title-b-widget > h3{
+  float: left;
+  width: 100%;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  font: 12px/30px $font-f;
+  font-weight: bold;
+  color: $text-palette-3;
+  text-transform: uppercase;
+}
+.closed-open-arrow{
+  width: 20px;
+  height: 30px;
+  position: absolute;
+  right: 8px;
+  top: 0;
+  text-align: center;
+  font: 16px/30px icomoon;
+  color: $text-palette-4;
+  cursor: pointer;
+}
+.closed-open-arrow:before{
+  content: "\e670";
+}
+.bet-now-widget-contain.closed .closed-open-arrow:before{
+  content: "\e672";
+}
+.full-widget-game-info{
+  float: left;
+  width: 100%;
+  height: 264px;
+  margin: 1px 0 0;
+  position: relative;
+  overflow: hidden;
+}
+.wrapper-widget-info-b{
+  float: left;
+  width: 100%;
+}
+.full-widget-game-info > img{
+  position: absolute;
+  width: 100%;
+  height: auto;
+  top: 0;
+  right: 0;
+}
+
+.time-game-information{
+  float: left;
+  width: 100%;
+  color: #c2c5cd;
+  font: 12px/14px $font-f;
+}
+.time-game-information div:first-child {
+  margin: 6px 0;
+  display: block;
+}
+.time-game-information div:last-child {
+  position: absolute;
+  bottom: 94px;
+  left: 0;
+  width: 100%;
+  color: #7b8191;
+}
+.championship-logo-contain{
+  float: left;
+  width: 100%;
+  box-sizing: border-box;
+  text-align: center;
+  position: relative;
+  z-index: 33;
+  box-sizing: border-box;
+  padding: 15px 0;
+}
+.dashboard-championship-icon{
+  max-width: 30px;
+  max-height: 40px;
+  width: 30px;
+  height: 40px;
+  display: inline-block;
+  text-align: center;
+  background-color: rgba($skin-palette-13, 0.2);
+}
+.dashboard-championship-icon > img{
+  max-width: 30px;
+  max-height: 40px;
+}
+.championship-logo-contain:before{
+  content: "";
+  position: absolute;
+  left: 35px;
+  right: 35px;
+  bottom: -3px;
+  height: 1px;
+  background: #0d0f17;
+  border-bottom: 1px solid rgba(#737888, 0.2);
+}
+.contain-name-seria{
+  width: 100%;
+  box-sizing: border-box;
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  z-index: 10;
+}
+.contain-name-seria > p{
+  color: $text-palette-3;
+  display: inline-block;
+  white-space: nowrap;
+  font: 11px/14px $font-f;
+  font-weight: bold;
+  text-transform: uppercase;
+  position: relative;
+  z-index: 33;
+}
+.game-full-information-b{
+  float: left;
+  width: 100%;
+  box-sizing: border-box;
+  z-index: 33;
+  padding: 15px 20px;
+}
+.game-full-information-b > ul{
+  float: left;
+  width: 100%;
+  display: table;
+  table-layout: fixed;
+  min-height: 102px;
+}
+.game-full-information-b > ul > li{
+  display: table-cell;
+  vertical-align: bottom;
+  box-sizing: border-box;
+  height: 127px;
+}
+.game-full-information-b > ul > li.icon-b-wrapper{
+  width: 140px;
+  max-width: 140px;
+  min-width: 140px;
+  text-align: center;
+  vertical-align: top;
+  font-size: 0;
+  padding-top: 27px;
+}
+.game-full-information-b > ul > li.icon-b-wrapper > span {
+  display: inline-block;
+  width: calc(50% - 21px);
+  color: $brand-color-2;
+  position: relative;
+  top: 5px;
+  font: 36px/38px $font-f;
+  font-weight: bold;
+  text-align: left;
+}
+.game-full-information-b > ul > li.icon-b-wrapper > span:first-child {
+  text-align: right;
+}
+.game-full-information-b > ul > li > p{
+  font: 16px/20px $font-f;
+  color: white;
+  float: left;
+  width: 100%;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  display: inline-block;
+  margin: 10px 0 0;
+  text-align: center;
+}
+.logo-team-new{
+  float: left;
+  width: 100%;
+  height: 60px;
+  background-size: 38px;
+  background-repeat: no-repeat;
+  text-align: center;
+  position: relative;
+  top: -15px;
+}
+.logo-team-new > img{
+  max-height: 60px;
+}
+.game-full-information-b > ul > li.first-team-n-contain > .logo-team-new{
+  background-position: calc(100% - 20px) 100%;
+}
+.game-full-information-b > ul > li.second-team-n-contain > .logo-team-new{
+  background-position: 20px 100%;
+}
+.game-full-information-b > ul > li.icon-b-wrapper > small {
+  width: 14px;
+  margin: 0 14px;
+  height: 3px;
+  display: inline-block;
+  position: relative;
+  top: 22px;
+  font-weight: normal;
+  color: #7c8292;
+  background: $brand-color-2;
+  text-align: center;
+  vertical-align: top;
+}
+.game-full-information-b > ul > li.icon-b-wrapper > span:first-child:empty + small {
+  display: none;
+}
+.factoes-b-game-new{
+  width: 100%;
+  box-sizing: border-box;
+  padding: 10px 35px;
+  position: absolute;
+  z-index: 33;
+  bottom: 22px;
+  left: 0;
+}
+.factoes-b-game-new > ul{
+  float: left;
+  width: 100%;
+  box-sizing: border-box;
+}
+.factoes-b-game-new > ul > li{
+  float: left;
+  width: calc((100% - 21px) / 3);
+  margin: 0 0 0 10px;
+  background: lighten( desaturate( adjust-hue( $skin-color, 3deg ), 14 ), 2 );
+  border-top: 1px solid lighten( desaturate( $skin-color, 19 ), 11 );
+  border-left: 1px solid lighten( desaturate( $skin-color, 19 ), 11 );
+  position: relative;
+  height: 30px;
+  border-radius: 5px;
+  box-sizing: border-box;
+  padding: 0 70px 0 0;
+  cursor: pointer;
+  transition: background 150ms, border-color 150ms;
+}
+.factoes-b-game-new > ul > li.active, .factoes-b-game-new > ul > li:hover{
+  background: $skin-palette-6;
+  border-top: 1px solid lighten( desaturate( $skin-color, 23 ), 22 );
+  border-left: 1px solid lighten( desaturate( $skin-color, 23 ), 22 );
+}
+.factoes-b-game-new > ul > li:first-child:nth-last-child(2),
+.factoes-b-game-new > ul > li:first-child:nth-last-child(2) ~ li {
+  width: calc((100% - 10px) / 2);
+}
+.factoes-b-game-new > ul > li:first-child{
+  margin: 0;
+}
+.factoes-b-game-new > ul > li span{
+  position: absolute;
+  right: 0;
+  border-top: 1px solid lighten( desaturate( $brand-color-2, 12 ), 1 );
+  border-right: 1px solid lighten( desaturate( $brand-color-2, 12 ), 1 );
+  display: block;
+  box-sizing: border-box;
+  padding: 0 11px;
+  border-left: 1px solid darken( desaturate( adjust-hue( $skin-color, -12deg ), 7 ), 7 );
+  color: set-color(darken( desaturate( $brand-color-2, 1 ), 7 ));
+  font: 12px/30px $font-f;
+  font-weight: bold;
+  background: darken( desaturate( $brand-color-2, 1 ), 7 );
+  border-radius: 0 5px 5px 0;
+  height: 30px;
+  top: -1px;
+  max-width: 70px;
+  transition: background 150ms, border-color 150ms;
+}
+.factoes-b-game-new > ul > li.active span,
+.factoes-b-game-new > ul > li:hover span{
+  background: $hero-color;
+  color: set-color($hero-color);
+  border-top: 1px solid $hero-color;
+  border-right: 1px solid $hero-color;
+}
+.factoes-b-game-new > ul > li > p{
+  float: left;
+  width: 100%;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  display: inline-block;
+  color: $text-palette-1;
+  font: 12px/30px $font-f;
+  font-weight: bold;
+  box-sizing: border-box;
+  padding: 0 0 0 10px;
+}
+.highlits-contain{
+  float: left;
+  width: 100%;
+  margin: 1px 0 0;
+}
+.highlits-contain .lmb-table-wrap-j{
+  height: auto;
+  background-color: $skin-palette-8;
+}
+.highlits-contain .last-minute-bets-j{
+  margin: 0;
+  width: 100%;
+  height: auto;
+}
+.highlits-contain .lmb-table-j ul:nth-of-type(even){
+  background: lighten( desaturate( adjust-hue( $skin-color, 3deg ), 14 ), 2 );
+}
+.highlits-contain .lmb-table-j{background: $skin-palette-8;}
+.highlits-contain .lmb-table-j ul{
+  transition: background 150ms;
+}
+.highlits-contain .lmb-table-j ul:hover{
+  background: lighten( desaturate( adjust-hue( $skin-color, 6deg ), 19 ), 8 );
+}
+.highlits-contain .lmb-sport-select-j{
+  margin: 0;
+  background-color: $skin-palette-8;
+}
+.highlits-contain .lmb-time-selector{
+  display: none;
+}
+.highlits-contain .lmb-table-j li{
+  box-shadow: none;
+  font-size: 11px;
+}
+.highlits-contain .lmb-table-j li.blocked > .market-info-b > span{
+  display: none;
+}
+.highlits-contain .lmb-table-j li.blocked > .market-info-b{
+  text-align: center;
+}
+.highlits-contain .lmb-table-j li.blocked > .market-info-b:before{
+  font: 10px/24px icomoon;
+  content: "\e68f";
+}
+.lmb-table-j li.statistic-view-icon,
+.lmb-table-j li.video-animation-view-icon{
+  display: none;
+}
+.highlits-contain .lmb-table-j li.statistic-view-icon,
+.highlits-contain .lmb-table-j li.video-animation-view-icon {
+  width: 24px;
+  display: table-cell;
+}
+.video-animation-icon{
+  float: left;
+  width: 30px;
+  height: 30px;
+  font: 16px/30px icomoon;
+  color: $text-palette-5;
+  text-align: center;
+}
+.statistic-b-new{
+  float: left;
+  width: 30px;
+  height: 30px;
+  font: 14px/30px icomoon;
+  color: $text-palette-5;
+  text-align: center;
+}
+.video-animation-icon:before{
+  content: "\6b";
+}
+.video-animation-icon.animation:before{
+  font: 16px/30px icomoon;
+  content: "\6a";
+}
+.statistic-b-new:before{
+  content: "\e6de";
+}
+.sport-game-icon-dashboard{display: none;}
+.highlits-contain .lmb-table-j li:first-child{
+  width: 40px;
+}
+.highlits-contain.live-now .lmb-table-j li:first-child {
+  width: 76px;
+}
+.highlits-contain.live-now .lmb-table-j.active-allSport li:first-child{
+  width: 90px;
+}
+.highlits-contain.live-now .favorite-icon-dashboard{
+  float: left;
+  width: 30px;
+  height: 30px;
+  display: block;
+  text-align: center;
+}
+.highlits-contain.live-now .sport-game-icon-dashboard{
+  float: left;
+  width: 30px;
+  height: 30px;
+  display: none;
+}
+.highlits-contain.live-now .lmb-table-j.active-allSport li:first-child .sport-game-icon-dashboard{
+  display: block;
+}
+.highlits-contain.live-now .lmb-table-j li:first-child .market-info-b{
+  width: 40px;
+  height: 30px;
+  padding: 9px 0;
+}
+.favorite-icon-dashboard.icon{
+  font: 16px/30px icomoon;
+  color: $text-palette-12;
+  transition: color 200ms;
+  cursor: pointer;
+}
+.favorite-icon-dashboard.icon:before{
+  content: "\f005";
+}
+.favorite-icon-dashboard.icon.active, .favorite-icon-dashboard.icon:hover{
+  color: saturate( adjust-hue( $brand-color-2, 1deg ), 1 );
+}
+.sport-game-icon-dashboard.icon {
+  color: $text-palette-4;
+  font: 16px/30px 'sport-icon';
+  text-align: center;
+}
+.highlits-contain.live-now .lmb-table-j li:nth-child(3){
+  width: 60px;
+}
+.highlits-contain.live-now .lmb-table-j li:nth-child(3) .market-info-b{
+  display: none;
+}
+  .score-live-game-b{
+  width: 100%;
+  height: 30px;
+  font: 11px/30px $font-f;
+  font-weight: bold;
+  display: none;
+  text-align: center;
+}
+.score-live-game-b > span{
+  float: left;
+  display: block;
+  height: 30px;
+  width: 50%;
+  box-sizing: border-box;
+  padding: 0 0 0 5px;
+  text-align: left;
+  position: relative;
+}
+.score-live-game-b > span:first-child{
+  padding: 0 5px 0 0;
+  text-align: right;
+}
+.score-live-game-b > span:nth-child(2):before{
+  content: " : ";
+  position: absolute;
+  left: -2px;
+  top: -1px;
+}
+.highlits-contain.live-now .lmb-table-j li:nth-child(3) .score-live-game-b{
+  display: block;
+  color: darken( desaturate( $brand-color-2, 1 ), 7 );
+}
+.highlits-contain.live-now .lmb-table-j li:last-child {
+  width: 75px;
+  .market-info-b {
+    width: calc(100% - 30px);
+    padding: 8px 0;
+  }
+}
+.highlits-contain .lmb-table-j li:nth-child(5),
+.highlits-contain .lmb-table-j li:nth-child(6),
+.highlits-contain .lmb-table-j li:nth-child(7){
+  transition: background 150ms;
+  background: lighten( desaturate( adjust-hue( $skin-color, 6deg ), 19 ), 7 );
+  box-shadow: 0 1px 0 lighten( desaturate( adjust-hue( $skin-color, 4deg ), 18 ), 8 ) inset,
+              0 -1px 0 lighten( desaturate( adjust-hue( $skin-color, 4deg ), 18 ), 8 ) inset,
+              1px 0 0 lighten( desaturate( adjust-hue( $skin-color, 4deg ), 18 ), 8 ) inset;
+}
+.highlits-contain .lmb-table-j .lmb-title-j li,
+.highlits-contain .lmb-table-j .lmb-title-j li:hover{
+  background: darken( desaturate( adjust-hue( $skin-color, -3deg ), 8 ), 5 );
+  box-shadow: none;
+}
+.highlits-contain .lmb-table-j ul:nth-of-type(even) li:nth-child(5),
+.highlits-contain .lmb-table-j ul:nth-of-type(even) li:nth-child(6),
+.highlits-contain .lmb-table-j ul:nth-of-type(even) li:nth-child(7){
+  background: $skin-palette-7;
+}
+
+.highlits-contain .lmb-table-j li:nth-child(5):hover,
+.highlits-contain .lmb-table-j li:nth-child(6):hover,
+.highlits-contain .lmb-table-j li:nth-child(7):hover,
+.highlits-contain .lmb-table-j ul:nth-of-type(even) li:nth-child(5):hover,
+.highlits-contain .lmb-table-j ul:nth-of-type(even) li:nth-child(6):hover,
+.highlits-contain .lmb-table-j ul:nth-of-type(even) li:nth-child(7):hover{
+  background: lighten( desaturate( adjust-hue( $skin-color, 2deg ), 17 ), 9 );
+}
+.highlits-contain .lmb-table-j li:nth-child(5).active,
+.highlits-contain .lmb-table-j li:nth-child(6).active,
+.highlits-contain .lmb-table-j li:nth-child(7).active,
+.highlits-contain .lmb-table-j li:nth-child(5).active:hover,
+.highlits-contain .lmb-table-j li:nth-child(6).active:hover,
+.highlits-contain .lmb-table-j li:nth-child(7).active:hover,
+.highlits-contain .lmb-table-j ul:nth-of-type(even) li:nth-child(5).active,
+.highlits-contain .lmb-table-j ul:nth-of-type(even) li:nth-child(6).active,
+.highlits-contain .lmb-table-j ul:nth-of-type(even) li:nth-child(7).active,
+.highlits-contain .lmb-table-j ul:nth-of-type(even) li:nth-child(5).active:hover,
+.highlits-contain .lmb-table-j ul:nth-of-type(even) li:nth-child(6).active:hover,
+.highlits-contain .lmb-table-j ul:nth-of-type(even) li:nth-child(7).active:hover{
+  background: $hero-color;
+  box-shadow: inset 0 -1px 0 lighten( desaturate( $hero-color, 5 ), 3 );
+}
+.highlits-contain .lmb-table-j li:nth-child(5).active .market-info-b span,
+.highlits-contain .lmb-table-j li:nth-child(6).active .market-info-b span,
+.highlits-contain .lmb-table-j li:nth-child(7).active .market-info-b span{
+  color: set-color($hero-color);
+}
+.highlits-contain.live-now .lmb-sport-select-j ul li.all-sports-section{
+  max-width: inherit;
+  padding-left: 15px;
+}
+.highlits-contain.live-now .lmb-sport-select-j ul li.all-sports-section span{
+  color: $text-palette-2;
+}
+.highlits-contain.live-now .lmb-sport-select-j ul li.all-sports-section.active-j span {
+  color: set-color($brand-color-1);
+}
+.highlits-contain.live-now .lmb-sport-select-j ul li.all-sports-section > i.sport-icon-j.allSport{
+  display: none;
+}
+.dashboard-wrapper .contein-cash {
+  margin: 0 0 10px 0;
+}
+.highlits-contain .lmb-table-j li.active {
+  .market-info-b span.price-1:before, .mini-b-events-overview > ul > li > span.price-1:before {
+    color: set-color($hero-color);
+  }
+}
+@media screen and (max-width: 1850px){
+  .dashboard-left-column,
+  .dashboard-right-column{
+    width: 100%;
+  }
+}
+@media screen and (max-width: 1100px) {
+  .full-widget-game-info > img{
+    width: auto;
+    height: 100%;
+  }
+  .highlits-contain .lmb-table-j li.statistic-view-icon, .highlits-contain .lmb-table-j li.video-animation-view-icon {
+    display: none;
+  }
+  .highlits-contain .last-minute-bets-j .market-info-b span {
+    font-size: 11px;
+  }
+  .highlits-contain .last-minute-bets-j {
+    .lmb-table-j li:nth-child(5), .lmb-table-j li:nth-child(6), .lmb-table-j li:nth-child(7) {
+      width: 62px;
+    }
+  }
+  .highlits-contain.live-now .lmb-table-j li:nth-child(3) {
+    width: 58px;
+  }
+}
+@media screen and (max-width: 1850px) {
+  .dashboard-wrapper {
+    .bet-now-widget-contain {
+      margin: 0 0 10px 0;
+    }
+    .bet-now-widget-contain {
+      margin: 0 0 10px 0;
+    }
+    .bet-now-widget-contain.slider {
+      margin: 0;
+    }
+    .dashboard-right-column .bet-now-widget-contain:last-of-type, .contein-cash {
+      margin: 0;
+    }
+  }
+}
+.dashboarde-extended-j {
+  .time-game-information {
+    position: absolute;
+    top: 9px;
+    left: 0;
+    z-index: 40;
+  }
+  .time-game-information div:last-child {
+    position: static;
+    margin-top: 9px;
+  }
+  .logo-team-new {
+    display: none;
+  }
+  .dashboard-left-column, .dashboard-right-column {
+    width: 100%;
+    float: left;
+  }
+  .bet-now-widget-contain {
+    margin-bottom: 5px;
+  }
+  .dashboard-right-column > div:last-child {
+    margin-bottom: 0;
+  }
+  .contein-cash {
+    margin-bottom: 5px;
+  }
+  .left-row-t .bet-now-widget-contain {
+    margin: 0;
+  }
+  .left-row-t .full-widget-game-info {
+    margin: 0;
+    height: 365px;
+    border-radius: 5px;
+  }
+  .left-row-t {
+    width: 100%;
+    float: left;
+  }
+  .left-row-t:nth-last-child(2):first-child {
+    margin-bottom: 5px;
+  }
+  .left-row-t:nth-last-child(2):first-child, .left-row-t:nth-last-child(2):first-child + div {
+    .full-widget-game-info {
+      height: 180px;
+    }
+  }
+  .bet-now-multiple-widget-j {
+    table {
+      table-layout: fixed;
+    }
+    tr td {
+      width: 50%;
+      vertical-align: top;
+      .left-row-t {
+        width: calc(100% - 2px);
+      }
+      &:only-child {
+        width: 100%;
+      }
+      &:last-child .left-row-t {
+        float: right;
+      }
+    }
+    .game-full-information-b > ul > li.icon-b-wrapper, .game-full-information-b > ul > li {
+      vertical-align: top;
+    }
+  }
+}
+.dashboard-full-width-slider-j {
+  width: 100%;
+  float: left;
+  border-bottom: 1px solid $skin-palette-5;
+  background: $skin-palette-12;
+  margin-bottom: 5px;
+  .big-cash {
+    display: block;
+    width: calc(50% - 2px);
+    float: left;
+    background: none;
+    border: 0;
+    &:last-child {
+      float: right;
+    }
+    .contein-cash {
+      margin: 0;
+      .block-black-hover {
+        position: relative;
+        float: left;
+        transition: none;
+        opacity: 1;
+        background: none;
+        height: calc(100% - 37px);
+        overflow: hidden;
+        .cash-comand {
+          height: 100%;
+          img {
+            width: 100%;
+            display: block;
+          }
+        }
+      }
+    }
+    .featured-game-selector {
+      top: auto;
+      bottom: 12px;
+      left: 0;
+      right: 0;
+      text-align: center;
+      font-size: 0;
+      width: auto;
+      z-index: 999;
+      span {
+        display: inline-block;
+        float: none;
+        width: 12px;
+        height: 12px;
+        background: lighten( desaturate( adjust-hue( $skin-color, 1deg ), 21 ), 11 );
+        transition: 300ms background;
+        margin: 0 0 0 6px;
+        &:lasy-child {
+          margin: 0;
+        }
+        &.active {
+          background: $hero-color;
+        }
+      }
+    }
+  }
+}
+@media screen and (max-width: 1500px) {
+  .dashboard-full-width-slider-j .big-cash {
+    width: 100%;
+  }
+}
+@media screen and (max-width: 1850px) {
+  .dashboarde-extended-j .bet-now-multiple-widget-j table {
+    display: block;
+    float: left;
+    width: 100%;
+    tr {
+      display: block;
+      float: left;
+      width: 100%;
+      td {
+        display: block;
+        float: left;
+        width: 100%;
+      }
+    }
+  }
+  .dashboarde-extended-j .bet-now-multiple-widget-j table tr td:first-child {
+    margin-bottom: 5px;
+  }
+  .dashboarde-extended-j .left-row-t .full-widget-game-info {
+    height: 180px;
+  }
+  .dashboarde-extended-j .bet-now-multiple-widget-j tr td:last-child .left-row-t {
+    float: left;
+    width: 100%;
+  }
+}

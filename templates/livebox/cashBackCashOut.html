@@ -7,14 +7,19 @@
                     <div class="cashback-out">
                         <div class="cashback-amount-block" ng-repeat="bonus in availableBonuses track by bonus.BonusDefinitionId">
                             <span class="bonus-category">{{bonus.CategoryName}}</span>
-                            <button ng-disabled="bonus.cashBackCashOut" ng-click="calculateCashOutAmount(bonus.BonusDefinitionId)" trans>Get Cashback Amount</button>
                             <div class="amount-line">
-                                <p ng-if="bonus.cashBackCashOut">
-                                    <span trans>Available For Cashout </span>
-                                    <span class="amount-value" ng-bind="bonus.cashBackCashOut.Amount"></span>
-                                </p>
+                                <div>
+                                    <p>
+                                        <span class="amount-title" trans>Available For Cashout</span>
+                                        <span class="amount-value" ng-if="!bonus.cashBackCashOut">*** ***</span>
+                                        <span class="amount-value" ng-if="bonus.cashBackCashOut">{{bonus.cashBackCashOut.Amount}} <i>AMD</i></span>
+                                    </p>
+                                </div>
+                                <div>
+                                    <button ng-if="!bonus.cashBackCashOut.Amount" ng-disabled="bonus.cashBackCashOut && !bonus.cashBackCashOut.Amount" ng-click="calculateCashOutAmount(bonus.BonusDefinitionId)" ng-class="{'default': !bonus.cashBackCashOut}" trans>Get Cashback Amount</button>
+                                    <button ng-if="bonus.cashBackCashOut.Amount" ng-click="processCashOutAmount(bonus.BonusDefinitionId, bonus.cashBackCashOut.Amount)" trans>CASHBACK CASHOUT</button>
+                                </div>
                             </div>
-                            <button ng-disabled="!bonus.cashBackCashOut || !bonus.cashBackCashOut.Amount" ng-click="processCashOutAmount(bonus.BonusDefinitionId, bonus.cashBackCashOut.Amount)" trans>CASHBACK CASHOUT</button>
                         </div>
                         <p class="non-bonus" ng-if="!isLoading && !availableBonuses.length" trans>You do not have available bonuses</p>
                     </div>

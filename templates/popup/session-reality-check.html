@@ -1,0 +1,10 @@
+<h3>{{'Your session has now exceeded'|translate}} {{activeDialog.state.date}}</h3>
+<div class="button-confirm">
+    <button ng-repeat="button in activeDialog.buttons track by $index" ng-click="closeDialog(activeDialog, '', button);$event.stopPropagation();" ng-bind="button.title|translate" ng-disabled="activeDialog.buttonsDisabled || button.disabled"></button>
+</div>
+<div class="session-reality-check-content" ng-bind="'session-reality-check-content'|translate|html"></div>
+<div class="session-reality-footer">
+    <a  ng-click="activeDialog.linkListener('action', 'balanceHistory')" trans>Review Your Account history</a>
+    <a  ng-click="activeDialog.linkListener('help','responsible-gaming')" trans>Responsible Gaming</a>
+    <a  ng-click="activeDialog.linkListener('help', 'contact-us')" trans>Contact Us</a>
+</div>

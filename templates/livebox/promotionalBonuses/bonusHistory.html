@@ -1,0 +1,84 @@
+<div ng-controller="bonusHistoryCtrl">
+    <div class="float-width">
+        <div class="all-history-filter-container bonus">
+            <div class="filter-columns-container" ng-init="boxStates={categoryDropdownOpened: false, openedFrom: false, openedTo: false}">
+                <ul>
+                    <li>
+                        <p trans>Category</p>
+                        <div class="select-box-period-b" ng-click="boxStates.categoryDropdownOpened=!boxStates.categoryDropdownOpened;boxStates.openedTo = false; boxStates.openedFrom = false;"
+                             ng-class="{'active': boxStates.categoryDropdownOpened}" > <!--active-->
+                            <p>{{bonusHistoryParams.bonusCategory|translate:null}}</p>
+                            <ul>
+                                <li ng-repeat="value in bonusHistoryParams.availableProducts track by $index"
+                                    ng-click="bonusHistoryParams.bonusCategory = value;">
+                                    {{value|translate:null}}
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                </ul>
+                <ul ng-include="::'templates/livebox/historyFilter.html'|fixPath"></ul>
+            </div>
+            <div class="mybets-filter-show-b">
+                <button trans="" ng-click="loadBonusHistory()" ng-disabled="loadingBonusHistory">SHOW</button>
+            </div>
+        </div>
+    </div>
+    <vbet-loader ng-show="loadingBonusHistory"></vbet-loader>
+    <div class="mixed-history-table no-padding">
+        <table ng-if="!loadingBonusHistory">
+            <thead>
+            <tr>
+                <th class="date-id" trans>Date and ID</th>
+                <th trans>Category</th>
+                <th class="auto-cell">
+                    <div class="cell-inner" trans>Type</div>
+                </th>
+                <th class="hh-cell" trans>Amount</th>
+                <th class="hh-cell" trans >Final Balance</th>
+            </tr>
+            </thead>
+            <tbody ng-if="bonusHistory.data.length" ng-repeat="bonus in bonusHistory.data">
+            <tr>
+                <td class="date-id">
+                    <span>{{bonus.Created|formatDate:(conf.layoutTimeFormat[conf.sportsLayout] || 'noLocaleTranslate'):null:$root.env.timeFormat}} {{conf.layoutTimeFormat[conf.sportsLayout] ? (bonus.Created|formatDate:'hour':null:$root.env.timeFormat) : ''}}</span>
+                    <span ng-show="bonus.DocumentId"><br/> ID: <a>{{bonus.DocumentId}}</a></span>
+                    <span ng-show="bonus.TransactionId"><br/> ID: <a>{{bonus.TransactionId}}</a></span>
+                </td>
+                <td class="casino-hist" ng-bind="(bonus.Product || '')|translate"></td>
+                <td class="auto-cell">
+                    <ul class="cell-inner mixed-bet-history-flex">
+                        <li class="ellipsis-text">
+                            <span ng-if="bonus.ProductCategoryId === 2">{{ bonus.Game }}</span>
+                            <span>{{ bonus.DocumentTypeName }}</span>
+                            <span ng-show="bonus.BuddyId || bonus.BuddyLogin">: ({{bonus.BuddyId}} : {{bonus.BuddyLogin}})</span>
+                        </li>
+                    </ul>
+                </td>
+                <td class="hh-cell">
+                    <div ng-show="bonus.Amount && !bonus.Balance">
+                        <span class="second-color" ng-show="bonus.Amount > 0">+</span>
+                        <span class="second-color">{{bonus.Amount|number:conf.balanceFractionSize}}</span> {{currency_name|currency}}
+                    </div>
+                    <div ng-show="bonus.Balance && !bonus.Amount"  title="Balance placed from bonus." trans="attr-only">
+                        <span class="second-color" ng-show="bonus.Balance > 0">+</span>
+                        <span class="second-color">{{bonus.Balance|number:conf.balanceFractionSize}}</span> {{currency_name|currency}}
+                    </div>
+                    <div ng-show="bonus.Balance && bonus.Amount">
+                        <span class="second-color" ng-show="bonus.Balance + bonus.Amount > 0">+</span>
+                        <span class="second-color">{{(bonus.Balance + bonus.Amount)|number:conf.balanceFractionSize}}</span> {{currency_name|currency}}
+                    </div>
+                </td>
+                <td class="hh-cell">
+                    <span class="second-color">{{bonus.Balance|number:conf.balanceFractionSize}}</span> {{currency_name|currency}}
+                </td>
+            </tr>
+            </tbody>
+            <tbody ng-if="!bonusHistory.data.length">
+            <tr>
+                <td colspan="9" class="second-color center-text" trans>There are no data for the selected time period.</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

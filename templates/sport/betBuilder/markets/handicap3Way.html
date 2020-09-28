@@ -14,7 +14,16 @@
         <p ng-bind="marketsData[selectedKeys.market].group[selectedKeys.period][marketState.selectedTeam][marketState.wonType][marketState.selectedIndex].goalCount +  ' ' + ('goal'|translate)"></p>
         <i class="b-b-up-goal" ng-click="marketState.selectedIndex = marketState.selectedIndex + 1" ng-class="{'disabled-opacity': marketState.selectedIndex === (marketsData[selectedKeys.market].group[selectedKeys.period][marketState.selectedTeam][marketState.wonType].length - 1)}"></i>
     </div>
-    <div ng-show="marketsData[selectedKeys.market].group[selectedKeys.period][marketState.selectedTeam][marketState.wonType].length > 0" class="bet-builder-odd" ng-class="{'active': selectedBet.period === selectedKeys.period && marketState.selectedTeam === selectedBet.state.selectedTeam && marketState.wonType === selectedBet.state.wonType && marketState.selectedIndex === selectedBet.state.selectedIndex}" ng-click="attachEvent(marketsData[selectedKeys.market].group[selectedKeys.period][marketState.selectedTeam][marketState.wonType][marketState.selectedIndex]);clearBetslipErrors();"> {{marketsData[selectedKeys.market].group[selectedKeys.period][marketState.selectedTeam][marketState.wonType][marketState.selectedIndex].price|oddConvert:env.oddFormat}}</div>
-    <span class="b-b-info-text" ng-show="marketsData[selectedKeys.market].group[selectedKeys.period][marketState.selectedTeam][marketState.wonType].length ===  0" trans>No event matching your current selections is available.</span>
+
+    <div class="bet-builder-buttons winning">
+        <button
+                type="button"
+                ng-disabled="!marketsData[selectedKeys.market].group[selectedKeys.period][marketState.selectedTeam][marketState.wonType].length"
+                ng-class="{'active': selectedBet.period === selectedKeys.period && marketState.selectedTeam === selectedBet.state.selectedTeam && marketState.wonType === selectedBet.state.wonType && marketState.selectedIndex === selectedBet.state.selectedIndex}"
+                ng-click="attachEvent(marketsData[selectedKeys.market].group[selectedKeys.period][marketState.selectedTeam][marketState.wonType][marketState.selectedIndex]);clearBetslipErrors();"
+                trans
+        >Select</button>
+        <p class="bet-notification-warning" ng-show="marketsData[selectedKeys.market].group[selectedKeys.period][marketState.selectedTeam][marketState.wonType].length ===  0" trans>No event matching your current selections is available.</p>
+    </div>
 </div>
 

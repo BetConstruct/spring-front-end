@@ -1,0 +1,65 @@
+<!-- Range from -->
+<li class="range-filter-box">
+    <p trans>Range</p>
+    <div class="mini-form-box-b">
+        <div class="date-picker-b">
+        <div class="picker-contain">
+            <div class="input-group"
+                 ng-click="openedFrom = !openedFrom;openedTo = false; openBetTypeFilter = false; transactionDropdownOpened = false;categoryDropdownOpened = false;">
+                <input type="text"
+                       class="form-control"
+                       placeholder="{{'From'|translate}}"
+                       datepicker-popup="{{datePickerFormat}}"
+                       min-date="datePickerLimits.minFromDate"
+                       max-date="datePickerLimits.maxFromDate || today"
+                       ng-model="requestData.dateFrom"
+                       is-open="openedFrom"
+                       disabled="disabled"
+                       datepicker-options="dateOptions"
+                       ng-change="adjustDate('from')"
+                       ng-required="true"
+                       close-text="Close"
+                />
+                <span class="input-group-btn">
+                <button type="button" class="btn btn-default date-view"
+                        ng-click="openedFrom = !openedFrom;openedTo = false; openBetTypeFilter = false; transactionDropdownOpened = false;categoryDropdownOpened = false;$event.stopPropagation();">
+                    <i class="date-p"></i>
+                </button>
+            </span>
+            </div>
+        </div>
+    </div>
+    </div>
+</li>
+
+<!--Range to -->
+<li>
+    <p></p>
+    <div class="mini-form-box-b">
+        <div class="date-picker-b">
+            <div class="picker-contain">
+                <div class="input-group"
+                     ng-click="openedTo = !openedTo;openedFrom = false; openBetTypeFilter = false; transactionDropdownOpened = false;categoryDropdownOpened = false;">
+                    <input type="text" class="form-control"
+                           placeholder="{{'To'|translate}}"
+                           datepicker-popup="{{datePickerFormat}}"
+                           min-date="datePickerLimits.minToDate"
+                           max-date="datePickerLimits.maxToDate || today"
+                           ng-model="requestData.dateTo"
+                           is-open="openedTo"
+                           disabled="disabled"
+                           datepicker-options="dateOptions"
+                           ng-change="adjustDate('to')"
+                           ng-required="true"
+                           close-text="Close"/>
+                    <span class="input-group-btn">
+                    <button type="button" class="btn btn-default date-view"
+                            ng-click="openedTo = !openedTo;openedFrom = false; openBetTypeFilter = false; transactionDropdownOpened = false;categoryDropdownOpened = false;$event.stopPropagation();">
+                        <i class="date-p"></i>
+                    </button>
+                </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</li>

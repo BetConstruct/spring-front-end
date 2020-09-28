@@ -61,8 +61,8 @@ VBET5.service('StreamService', ['$rootScope', '$http',  'GameInfo', 'Config', fu
 
         //synchronize video with user balance
         $scope.$watch('profile.balance', function (newValue, oldValue) {
-            if (self.game && !self.game.is_guest) {
-                if (self.game.video_data && newValue === 0 && !Config.main.video.allowedWithNoneBalance[self.game.tv_type]) {
+            if (self.game && !self.game.is_guest && !self.game.allow_zero_balance) {
+                if (self.game.video_data && newValue === 0) {
                     self.game.video_data = undefined;
                 } else if (Config.main.video.autoPlay && oldValue === 0 && newValue > 0 && !self.game.video_data) {
                     checkVideoAvailability();
@@ -178,15 +178,24 @@ VBET5.service('StreamService', ['$rootScope', '$http',  'GameInfo', 'Config', fu
                 }
 
             }
-        } else if (scope[gameKey].type === 1 && Config.main.defaultStreaming && Config.main.defaultStreaming.enabled) {
-            scope[gameKey].tv_type = Config.main.defaultStreaming.tvType;
-            scope[gameKey].video_data = Config.main.defaultStreaming.streamUrl;
-            if (scope[enlargedGameKey]) {
-                scope[enlargedGameKey] = scope[gameKey];
+        } else {
+            //reset streaming data
+            if (scope[gameKey].video_data) {
+                scope[gameKey].video_data = undefined;
+                if (scope[gameKey].activeFieldType === "video") {
+                    scope[gameKey].activeFieldType = undefined;
+                }
             }
-            hasVideo = true;
-        } else if(scope[enlargedGameKey]) {
-            scope[enlargedGameKey] = null;
+            if (scope[gameKey].type === 1 && Config.main.defaultStreaming && Config.main.defaultStreaming.enabled) {
+                scope[gameKey].tv_type = Config.main.defaultStreaming.tvType;
+                scope[gameKey].video_data = Config.main.defaultStreaming.streamUrl;
+                if (scope[enlargedGameKey]) {
+                    scope[enlargedGameKey] = scope[gameKey];
+                }
+                hasVideo = true;
+            } else if(scope[enlargedGameKey]) {
+                scope[enlargedGameKey] = null;
+            }
         }
 
         if (scope[gameKey].activeFieldType === undefined) {

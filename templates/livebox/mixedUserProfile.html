@@ -82,12 +82,11 @@
                                     </div>
                                 </div>
                             </div>
-                            <div ng-if="conf.smsVerification.registration.enabled" class="ver-code-container">
+                            <div ng-if="conf.smsVerification.changePassword" class="ver-code-container">
                                 <div class="ver-code-content">
-                                    <label ng-if="conf.smsVerification.registration"><span
-                                            trans>Verification Code</span></label>
+                                    <label><span trans>Verification Code</span></label>
                                     <div class="tooltip-wrapper-j">
-                                        <div ng-if="conf.smsVerification.registration" class="ver-cod-button">
+                                        <div class="ver-cod-button">
                                             <button ng-show="!working"
                                                     type="button"
                                                     trans
@@ -98,7 +97,7 @@
                                 </div>
 
                             <div class="form-text"
-                                 ng-if="conf.smsVerification.registration.enabled"
+                                 ng-if="conf.smsVerification.changePassword"
                                  ng-class="{'error': (!passwordResetError['confirmation_code'] || forms.changepasswordForm['confirmation_code'].$touched)
                                                                 &&
                                                                 ((forms.changepasswordForm.confirmation_code.$dirty && forms.changepasswordForm.confirmation_code.$error.required)
@@ -129,6 +128,7 @@
                     <!--Change Password END-->
                 </div>
                 <div ng-show="$root.env.mixedSettingsPage==='details'">
+                <!--<div ng-show="$root.env.mixedSettingsPage==='details'" ng-init="getClientRestriction()">-->  <!--todo SDC-50625-->
                     <!--Change Password-->
                     <h3 trans>Personal Details</h3>
                     <vbet-loader class="page-center" ng-if="loadingInfo"></vbet-loader>
@@ -450,7 +450,7 @@
                                         </div>
                                     </li>
                                     <li ng-class="{'read-only': personalDetails.readOnlyFields.indexOf('iban') !== -1, 'editable': personalDetails.editableFields.indexOf('iban') !== -1}">
-                                        <label><span trans>iban</span>: <span class="hint" ng-show="personalDetails.requiredEditableFields.indexOf('iban') !== -1">*</span></label>
+                                        <label><span ng-bind="'iban'|translate:null:'iban-papara'"></span>: <span class="hint" ng-show="personalDetails.requiredEditableFields.indexOf('iban') !== -1">*</span></label>
                                         <div class="disabled-field">
                                             <p>{{details.iban}}</p>
                                         </div>
@@ -458,12 +458,21 @@
                                         <div class="active-field">
                                             <div class="form-text" ng-class="{'error':(!resetError['iban'] || forms.detailsForm['iban'].$touched) &&  forms.detailsForm.iban.$invalid}">
                                                 <div class="tooltip-wrapper-j">
-                                                    <input name="iban" type="text" ng-model="details.iban" title="{{personalDetails.disabledFields.indexOf('iban') !== -1 ? ('This field cannot be edited.'|translate) : ''}}" ng-required="personalDetails.requiredEditableFields.indexOf('iban') !== -1" ng-disabled="personalDetails.disabledFields.indexOf('iban') !== -1">
+                                                    <input
+                                                            name="iban"
+                                                            type="text"
+                                                            ng-model="details.iban"
+                                                            title="{{personalDetails.disabledFields.indexOf('iban') !== -1 ? ('This field cannot be edited.'|translate) : ''}}"
+                                                            ng-required="personalDetails.requiredEditableFields.indexOf('iban') !== -1"
+                                                            ng-disabled="personalDetails.disabledFields.indexOf('iban') !== -1"
+                                                            ng-pattern="personalDetails.editableFields.indexOf('iban') !== -1 && patterns.iban"
+                                                    >
 
                                                     <div class="form-error-icon-j" ng-click="resetFieldError('iban')" ng-show="personalDetails.disabledFields.indexOf('iban') === -1"></div>
                                                     <div class="tooltip-j" ng-show="personalDetails.disabledFields.indexOf('iban') === -1">
 
                                                         <div trans ng-show="forms.detailsForm.iban.$error.required">This field is required</div>
+                                                        <div trans ng-show="forms.detailsForm.iban.$error.pattern" ng-bind="personalDetails.validation.iban|translate"></div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -506,7 +515,17 @@
                                         <div class="active-field">
                                             <div class="form-text" ng-class="{'error': (!resetError['city'] || forms.detailsForm['city'].$touched) && forms.detailsForm.city.$invalid}">
                                                 <div class="tooltip-wrapper-j">
-                                                    <input name="city" placeholder="Enter the city where you live" trans="attr-only" type="text" ng-model="details.city" title="{{personalDetails.disabledFields.indexOf('city') !== -1 ? ('This field cannot be edited.'|translate) : ''}}" ng-required="personalDetails.requiredEditableFields.indexOf('city') !== -1" ng-disabled="personalDetails.disabledFields.indexOf('city') !== -1" ng-minlength="personalDetails.limits.city !== undefined?personalDetails.limits.city.minlength:''" ng-maxlength="personalDetails.limits.city !== undefined?personalDetails.limits.city.maxlength:''">
+                                                    <input name="city"
+                                                           placeholder="Enter the city where you live"
+                                                           trans="attr-only"
+                                                           type="text"
+                                                           ng-model="details.city"
+                                                           title="{{personalDetails.disabledFields.indexOf('city') !== -1 ? ('This field cannot be edited.'|translate) : ''}}"
+                                                           ng-pattern="personalDetails.editableFields.indexOf('city') !== -1 && patterns.city"
+                                                           ng-required="personalDetails.requiredEditableFields.indexOf('city') !== -1"
+                                                           ng-disabled="personalDetails.disabledFields.indexOf('city') !== -1"
+                                                           ng-minlength="personalDetails.limits.city !== undefined?personalDetails.limits.city.minlength:''"
+                                                           ng-maxlength="personalDetails.limits.city !== undefined?personalDetails.limits.city.maxlength:''">
 
                                                     <div class="form-error-icon-j"   ng-click="resetFieldError('city')" ng-show="personalDetails.disabledFields.indexOf('city') === -1"></div>
                                                     <div class="tooltip-j" ng-show="personalDetails.disabledFields.indexOf('city') === -1">
@@ -514,6 +533,7 @@
                                                         <div trans ng-show="forms.detailsForm.city.$error.required">This field is required</div>
                                                         <div trans ng-show="forms.detailsForm.city.$error.minlength">This field is too short</div>
                                                         <div trans ng-show="forms.detailsForm.city.$error.maxlength">This field is too long</div>
+                                                        <div trans ng-show="forms.detailsForm.city.$error.pattern">Please enter a valid city: only letters-no space, no digits and/or symbols.</div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -563,7 +583,7 @@
                                         <div class="active-field">
                                             <div class="form-text" ng-class="{'error': (!resetError['phone_number'] || forms.detailsForm['phone_number'].$touched) && forms.detailsForm['phone_number'].$invalid}">
                                                 <div class="tooltip-wrapper-j">
-                                                    <input name="phone_number" placeholder="Enter your phone number" trans prevent-input="[^\d]" ng-model="details.phone_number" ng-minlength="personalDetails.limits.phone_number !== undefined?personalDetails.limits.phone_number.minlength:''" ng-maxlength="personalDetails.limits.phone_number !== undefined?personalDetails.limits.phone_number.maxlength:''" title="{{personalDetails.disabledFields.indexOf('phone_number') !== -1 ? ('This field cannot be edited.'|translate) : ''}}" type="text" ng-required="personalDetails.requiredEditableFields.indexOf('phone_number') !== -1" ng-disabled="personalDetails.disabledFields.indexOf('phone_number') !== -1">
+                                                    <input name="phone_number" placeholder="Enter your phone number" trans prevent-input="[^\d]" ng-model="details.phone_number" ng-minlength="personalDetails.limits.phone_number !== undefined?personalDetails.limits.phone_number.minlength:''" ng-maxlength="personalDetails.limits.phone_number !== undefined?personalDetails.limits.phone_number.maxlength:''" title="{{personalDetails.disabledFields.indexOf('phone_number') !== -1 ? ('This field cannot be edited.'|translate) : ''}}" type="text" ng-required="personalDetails.requiredEditableFields.indexOf('phone_number') !== -1" ng-disabled="personalDetails.disabledFields.indexOf('phone_number') !== -1" ng-pattern="/^00[0-9]+$/">
 
                                                     <div class="form-error-icon-j"  ng-click="resetFieldError('phone_number')" ng-show="personalDetails.disabledFields.indexOf('phone_number') === -1"></div>
                                                     <div class="tooltip-j"  ng-click="resetFieldError('phone_number')" ng-show="personalDetails.disabledFields.indexOf('phone_number') === -1">
@@ -571,6 +591,8 @@
                                                         <div trans ng-show="forms.detailsForm['phone_number'].$error.required" class="">This field is required</div>
                                                         <div trans ng-show="forms.detailsForm['phone_number'].$error.minlength">This field is too short</div>
                                                         <div trans ng-show="forms.detailsForm['phone_number'].$error.maxlength">This field is too long</div>
+                                                        <div trans ng-show="forms.detailsForm['phone_number'].$error.pattern">Phone number should start with '00' followed by the country code and the phone number.</div>
+
                                                     </div>
                                                 </div>
                                             </div>
@@ -665,28 +687,49 @@
                                     </div>
                                 </li>
                             </ul>
-                            <ul ng-if="!$root.conf.gdpr.profile">
-                                <li class="editable chekcbox-j" ng-show="personalDetails.editableFields.indexOf('subscribed_to_news') !== -1">
-                                    <label><input name="" ng-model="details.subscribed_to_news" type="checkbox" /><span trans>Notify me about news and offers</span></label>
-                                </li>
-                                <li class="editable chekcbox-j" ng-show="personalDetails.editableFields.indexOf('notify_via_email') !== -1">
-                                    <label><input name="" ng-model="details.notify_via_email" type="checkbox" /><span trans>Subscribe for emails</span></label>
-                                </li>
-                                <li class="editable chekcbox-j" ng-show="personalDetails.editableFields.indexOf('notify_via_sms') !== -1">
-                                    <label><input name="" ng-model="details.notify_via_sms" type="checkbox" /><span trans>Subscribe for SMS</span></label>
-                                </li>
 
-                                <li class="editable chekcbox-j" ng-show="personalDetails.editableFields.indexOf('subscribe_to_email') !== -1">
-                                    <label><input name="" ng-model="details.subscribe_to_email" type="checkbox" /><span trans>Subscribe for emails</span></label>
-                                </li>
-                                <li class="editable chekcbox-j" ng-show="personalDetails.editableFields.indexOf('subscribe_to_sms') !== -1">
-                                    <label><input name="" ng-model="details.subscribe_to_sms" type="checkbox" /><span trans>Subscribe for SMS</span></label>
-                                </li>
-                                <li class="editable chekcbox-j" ng-show="personalDetails.editableFields.indexOf('subscribe_to_bonus') !== -1">
-                                    <label><input name="" ng-model="details.subscribe_to_bonus" type="checkbox" /><span trans>Notify about Bonuses</span></label>
-                                </li>
-                            </ul>
-                            <ng-include ng-if="$root.conf.gdpr.profile" src="::'templates/slider/registration/gdpr.html'|fixPath"></ng-include>
+                                <div class="profile-preference-p"
+                                     ng-if="$root.conf.gdpr.profile ||
+            personalDetails.editableFields.indexOf('subscribed_to_news') !== -1 ||
+            personalDetails.editableFields.indexOf('notify_via_email') !== -1 ||
+            personalDetails.editableFields.indexOf('notify_via_sms') !== -1 ||
+            personalDetails.editableFields.indexOf('subscribe_to_email') !== -1 ||
+            personalDetails.editableFields.indexOf('subscribe_to_sms') !== -1 ||
+            personalDetails.editableFields.indexOf('subscribe_to_bonus') !== -1">
+                                    <p trans ng-click="showBlocks.preferences=!showBlocks.preferences; showBlocks.permissions = false;" ng-class="{'collapsed':showBlocks.preferences }">Preferences</p>
+                                    <ng-include ng-if="$root.conf.gdpr.profile" ng-show="showBlocks.preferences" src="::'templates/slider/registration/gdpr.html'|fixPath"></ng-include>
+                                    <ul ng-if="!$root.conf.gdpr.profile" ng-show="showBlocks.preferences">
+                                        <li class="editable chekcbox-j" ng-show="personalDetails.editableFields.indexOf('subscribed_to_news') !== -1">
+                                            <label><input name="" ng-model="details.subscribed_to_news" type="checkbox" /><span trans>Notify me about news and offers</span></label>
+                                        </li>
+                                        <li class="editable chekcbox-j" ng-show="personalDetails.editableFields.indexOf('notify_via_email') !== -1">
+                                            <label><input name="" ng-model="details.notify_via_email" type="checkbox" /><span trans>Subscribe for emails</span></label>
+                                        </li>
+                                        <li class="editable chekcbox-j" ng-show="personalDetails.editableFields.indexOf('notify_via_sms') !== -1">
+                                            <label><input name="" ng-model="details.notify_via_sms" type="checkbox" /><span trans>Subscribe for SMS</span></label>
+                                        </li>
+
+                                        <li class="editable chekcbox-j" ng-show="personalDetails.editableFields.indexOf('subscribe_to_email') !== -1">
+                                            <label><input name="" ng-model="details.subscribe_to_email" type="checkbox" /><span trans>Subscribe for emails</span></label>
+                                        </li>
+                                        <li class="editable chekcbox-j" ng-show="personalDetails.editableFields.indexOf('subscribe_to_sms') !== -1">
+                                            <label><input name="" ng-model="details.subscribe_to_sms" type="checkbox" /><span trans>Subscribe for SMS</span></label>
+                                        </li>
+                                        <li class="editable chekcbox-j" ng-show="personalDetails.editableFields.indexOf('subscribe_to_bonus') !== -1">
+                                            <label><input name="" ng-model="details.subscribe_to_bonus" type="checkbox" /><span trans>Notify about Bonuses</span></label>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <!--<div class="profile-permissions-p" ng-if="permissions">-->  <!--todo SDC-50625-->
+                                    <!--<p trans ng-click="showBlocks.permissions=!showBlocks.permissions; showBlocks.preferences = false;"-->
+                                       <!--ng-class="{'collapsed':showBlocks.permissions}">Permissions</p>-->
+
+                                    <!--<ul ng-if="showBlocks.permissions">-->
+                                        <!--<li ng-repeat="permission in permissions track by $index">-->
+                                            <!--<span>{{permission.displayName|translate}}</span>:<span>{{permission.value ? 'Allowed' : 'Restricted'|translate}}</span>-->
+                                        <!--</li>-->
+                                    <!--</ul>-->
+                                <!--</div>-->
                             </div>
                         <div class="change-button-container password">
                             <div class="cashier-button">

@@ -60,5 +60,6 @@ VBET5.controller('pmuCtrl', ['$rootScope', '$scope', '$sce', '$timeout', '$locat
 
     $scope.$on("$destroy", function () {
         $scope.pmuUrl = null;
+        $window.removeEventListener('message', onLoadHandler);
     });
 }]);

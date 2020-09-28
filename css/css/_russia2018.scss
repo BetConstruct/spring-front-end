@@ -1,0 +1,1755 @@
+#russia-scroll-container {
+  > .games-view-wrapper-v3{
+    height: auto;
+  }
+}
+matches-list {
+  display: block;
+  float: left;
+  width: 100%;
+  .no-data {
+    float: left;
+    width: 100%;
+    font-size: 20px;
+    text-transform: uppercase;
+    text-align: center;
+    margin: 30px 0;
+    color: rgba($text-palette-1, 0.74);
+  }
+}
+.russia2018-header {
+  float: left;
+  width: 100%;
+  background: #a2140d url(../../../images/russia2018/russia2018-tree-background.png#{$delete-cache}) repeat 0 10%;
+  margin: 0 0 10px;
+  position: sticky;
+  position: -webkit-sticky;
+  top: -202px;
+  z-index: 505;
+}
+.russia2018-header-logo {
+  margin: 36px auto 60px;
+  clear: both;
+  height: 106px;
+  width: 650px;
+  background: url(../../../images/russia2018/russia2018-header-logo.png#{$delete-cache}) no-repeat 50% 50% / 100%;
+}
+.russia2018-nav {
+  float: left;
+  width: 100%;
+  background: rgba(black, 0.2);
+  display: flex;
+  justify-content: center;
+  a {
+    display: block;
+    font: 700 18px/60px $font-f;
+    text-transform: uppercase;
+    color: white;
+    padding: 0 20px;
+    box-shadow: inset 0 0 0 white;
+    transition: 300ms box-shadow;
+    @media screen and (max-width: 1379px) {
+      line-height: 48px;
+      font-size: 16px;
+    }
+    &.active, &:hover {
+      box-shadow: inset 0 -4px 0 white;
+      @media screen and (max-width: 1379px) {
+        box-shadow: inset 0 -2px 0 white;
+      }
+    }
+    &.active {
+      pointer-events: none;
+    }
+  }
+}
+.russia2018-home {
+  float: left;
+  width: 100%;
+  display: flex;
+  > li {
+    display: block;
+    width: 50%;
+    box-sizing: border-box;
+    order: 0;
+    transform: translate3d(0,0,0);
+  }
+  &:not(.match-groups-type) > li {
+    width: 25%;
+    @media screen and (max-width: 1260px) {
+      width: 38%;
+    }
+    &:first-child {
+      width: 50%;
+      padding: 0 10px;
+      order: 1;
+      @media screen and (max-width: 1260px) {
+        width: 62%;
+        @include ltr {
+          padding-right: 0;
+        }
+        @include rtl {
+          padding-right: 10px;
+          padding-left: 0;
+        }
+      }
+    }
+    &:last-child {
+      order: 2;
+      @media screen and (max-width: 1260px) {
+        display: none;
+      }
+    }
+    .russia2018-group-table table td {
+      &:nth-last-child(2), &:nth-last-child(3), &:nth-last-child(4) {
+        display: none !important;
+      }
+    }
+  }
+  &.match-groups-type {
+    > li{
+      @include ltr {
+        padding: 0 5px 0 0;
+      }
+      @include rtl {
+        padding: 0 0 0 5px;
+      }
+      &:first-child {
+        order: 1;
+        @include ltr {
+          padding: 0 0 0 5px;
+        }
+        @include rtl {
+          padding: 0 5px 0 0;
+        }
+      }
+      &:last-child {
+        display: none;
+      }
+    }
+    @media screen and (min-width: 1380px) {
+      .russia2018-group-table {
+        box-shadow: inset 0 45px 0 $skin-palette-5;
+        @include ltr {
+          padding: 0 20px 1px 14px;
+        }
+        @include rtl {
+          padding: 0 14px 1px 20px;
+        }
+        table {
+          font: 18px/46px $font-f;
+          tr:not(:first-child) td {
+            line-height: 45px;
+          }
+          td:not(.name) {
+            width: 48px;
+          }
+        }
+        .name-abs {
+          strong {
+            &:nth-child(3) {
+              font-weight: 700;
+              width: calc(100% - 63px);
+            }
+            &.index {
+              width: 28px;
+            }
+          }
+        }
+        .russia2018-flag-small {
+          height: 45px;
+          width: 23px;
+          @include ltr {
+            margin: 0 12px 0 0;
+          }
+          @include rtl {
+            margin: 0 0 0 12px;
+          }
+        }
+      }
+    }
+  }
+}
+.russia2018-component-header {
+  float: left;
+  width: 100%;
+  background: $skin-palette-7;
+  color: set-color($skin-palette-7);
+  border-radius: 3px 3px 0 0;
+  @include ltr {
+    padding: 0 12px 0 16px;
+  }
+  @include rtl {
+    padding: 0 16px 0 12px;
+  }
+  box-sizing: border-box;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-flow: wrap;
+  flex-flow: wrap;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  text-transform: uppercase;
+  margin: 0 0 2px;
+  height: 52px;
+  &.second-color {
+    background: rgba($skin-palette-7, 0.5);
+  }
+  &.blue-color {
+    background: #05527f;
+    color: white;
+    a {
+      color: rgba(white, 0.5);
+      &:hover {
+        color: white;
+      }
+    }
+  }
+  h3 {
+    font: 700 18px/26px $font-f;
+    -webkit-box-flex: 1;
+    -ms-flex: 1;
+    flex: 1;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+  a {
+    display: inline-block;
+    vertical-align: middle;
+    color: rgba(set-color($skin-palette-7), 0.5);
+    transition: 300ms color;
+    font: 14px/1 $font-f;
+    &:hover {
+      color: set-color($skin-palette-7);
+    }
+  }
+  + .russia2018-upcoming {
+    margin-top: 1px;
+  }
+}
+.russia2018-group-heading {
+  float: left;
+  width: 100%;
+  background: #05527f;
+  color: white;
+  position: relative;
+  @include ltr {
+    padding: 0 32px 0 16px;
+  }
+  @include rtl {
+    padding: 0 16px 0 32px;
+  }
+  box-sizing: border-box;
+  margin: 1px 0;
+  transition: 300ms background;
+  &:hover {
+    background: lighten(#05527f, 5);
+  }
+  h2 {
+    float: left;
+    width: 100%;
+    font: 700 20px/55px $font-f;
+    text-transform: uppercase;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  &:after {
+    content: "\e670";
+    display: block;
+    position: absolute;
+    top: 18px;
+    font: 14px/20px icomoon;
+    @include ltr {
+      right: 12px;
+    }
+    @include rtl {
+      left: 12px;
+    }
+  }
+  .active > &:after {
+    @include ltr {
+      content: "\e672";
+    }
+    @include rtl {
+      content: "\e66f";
+    }
+  }
+  + .russia2018-team-member {
+    margin-top: 1px;
+  }
+}
+.russia2018-group-table-wrapper {
+  float: left;
+  width: 100%;
+  cursor: default;
+}
+.russia2018-group-table {
+  float: left;
+  width: 100%;
+  background: $skin-palette-7;
+  box-sizing: border-box;
+  padding: 0 10px 3px;
+  box-shadow: inset 0 30px 0 $skin-palette-5;
+  margin: 1px 0 0;
+  table {
+    float: left;
+    width: 100%;
+    font: 12px/30px $font-f;
+    color: $text-palette-4;
+    tr:not(:first-child):not(:last-child) td{
+      border-bottom: 1px solid $skin-palette-4;
+    }
+    td {
+      position: relative;
+      vertical-align: top;
+      width: 34px;
+      text-align: center;
+      @media screen and (max-width: 1260px) {
+        width: 26px;
+      }
+      &.name {
+        width: auto;
+        @include ltr {
+          text-align: left;
+        }
+        @include rtl {
+          text-align: right;
+        }
+      }
+      &:last-child {
+        @include ltr {
+          text-align: right;
+        }
+        @include rtl {
+          text-align: left;
+        }
+      }
+      &[ng-click]:hover {
+        strong {
+          color: $text-palette-3;
+        }
+      }
+    }
+    strong {
+      display: inline-block;
+      vertical-align: top;
+      font-weight: normal;
+      color: $text-palette-2;
+      box-sizing: border-box;
+      transition: 300ms color;
+    }
+  }
+  .name-abs {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    strong {
+      @include ltr {
+        float: left;
+      }
+      @include rtl {
+        float: right;
+      }
+      &.index {
+        width: 18px;
+        padding: 0 2px;
+      }
+      &:not(.index) {
+        width: calc(100% - 43px);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+    }
+  }
+  .russia2018-flag-small {
+    width: 15px;
+    height: 30px;
+    background: no-repeat 50% 50% / 120%;
+    @include ltr {
+      float: left;
+      margin: 0 8px 0 0;
+    }
+    @include rtl {
+      float: right;
+      margin: 0 0 0 8px;
+    }
+  }
+}
+.russia2018-group-holder {
+  float: left;
+  width: 100%;
+}
+.russia2018-upcoming {
+  float: left;
+  width: 100%;
+  background: $skin-palette-7;
+  box-shadow: inset 0 1px 0 rgba(white, 0.06);
+  padding: 12px 16px 15px;
+  margin: 2px 0;
+  box-sizing: border-box;
+  position: relative;
+  transition: 300ms opacity;
+  &:before {
+    content: "";
+    background: $skin-palette-6;
+    @if $white-skin == true {
+      background-image: -moz-linear-gradient( -90deg, rgba(set-color($skin-palette-6),0) 0%, rgba(set-color($skin-palette-6),0.1) 100%);
+      background-image: -webkit-linear-gradient( -90deg, rgba(set-color($skin-palette-6),0) 0%, rgba(set-color($skin-palette-6),0.1) 100%);
+      background-image: -ms-linear-gradient( -90deg, rgba(set-color($skin-palette-6),0) 0%, rgba(set-color($skin-palette-6),0.1) 100%);
+    } @else {
+      background-image: -moz-linear-gradient( 90deg, rgba(set-color($skin-palette-6),0) 0%, rgba(set-color($skin-palette-6),0.1) 100%);
+      background-image: -webkit-linear-gradient( 90deg, rgba(set-color($skin-palette-6),0) 0%, rgba(set-color($skin-palette-6),0.1) 100%);
+      background-image: -ms-linear-gradient( 90deg, rgba(set-color($skin-palette-6),0) 0%, rgba(set-color($skin-palette-6),0.1) 100%);
+    }
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    transition: 300ms opacity;
+    opacity: 0;
+  }
+  &:hover, &.active {
+    &:before {
+      opacity: 1;
+    }
+  }
+  &.result:not(:hover) {
+    opacity: 0.65;
+  }
+  > ul {
+    float: left;
+    width: 100%;
+    position: relative;
+    z-index: 10;
+    > li {
+      display: block;
+      width: calc(50% - 52px);
+      min-height: 16px;
+      @include ltr {
+        float: left;
+      }
+      @include rtl {
+        float: right;
+      }
+      &:nth-child(2) {
+        width: 104px;
+        text-align: center;
+      }
+    }
+  }
+}
+.russia2018-upcoming-markets {
+  text-align: center;
+  float: left;
+  width: 100%;
+  position: relative;
+  z-index: 10;
+  .l-b.column-3 {
+    grid-template-columns: 100px 74px 100px;
+    display: inline-grid;
+    vertical-align: top;
+    width: auto;
+    text-align: left;
+    float: none;
+  }
+  .single-events-b-v3 {
+    &:first-child {
+      @include ltr {
+        border-radius: 2px 0 0 2px;
+      }
+      @include rtl {
+        border-radius: 0 2px 2px 0;
+      }
+    }
+    &:last-child {
+      @include ltr {
+        border-radius: 0 2px 2px 0;
+      }
+      @include rtl {
+        border-radius: 2px 0 0 2px;
+      }
+    }
+    &:not(.active) {
+      background: rgba(black, 0.3);
+      @if $white-skin == true {
+        background: rgba(black, 0.1);
+      }
+      color: set-color($skin-palette-7);
+      &:hover {
+        background: rgba(black, 0.4);
+        @if $white-skin == true {
+          background: white;
+        }
+      }
+    }
+  }
+}
+.russia2018-upcoming-head {
+  color: rgba(set-color($skin-palette-7), 0.4);
+  text-align: left;
+  a {
+    display: block;
+    @include ltr {
+      float: right;
+    }
+    @include rtl {
+      float: left;
+    }
+  }
+  .favorite-icon-market-v3 {
+    margin: 0 12px;
+    font: 14px/14px icomoon;
+  }
+  .more-markets {
+    line-height: 14px;
+    color: $text-palette-3;
+    transition: 300ms color;
+    &:hover {
+      color: lighten($text-palette-3, 10);
+    }
+    &:after {
+      color: $c16-tp-4;
+      display: block;
+      font: 14px/14px icomoon;
+      @include ltr {
+        content: "\e672";
+        float: right;
+        margin: 0 -5px 0 0;
+      }
+      @include rtl {
+        content: "\e66f";
+        float: left;
+        margin: 0 0 0 -5px;
+      }
+    }
+  }
+  .h2h-stats {
+    font: 12px/14px icomoon;
+    color: $c16-tp-4;
+    transition: 300ms color;
+    &:hover {
+      color: lighten($c16-tp-4, 10);
+    }
+  }
+  .info-stadium-icon {
+    display: block;
+    color: rgba(set-color($skin-palette-7), 0.7);
+    font: 16px/1 icomoon;
+    transition: 300ms color;
+    @include ltr {
+      float: left;
+      margin: 0 4px 0 0;
+    }
+    @include rtl {
+      float: right;
+      margin: 0 0 0 4px;
+    }
+    &:before {
+      content: "\e60a";
+    }
+    &:hover {
+      color: set-color($skin-palette-7);
+    }
+  }
+}
+.russia2018-upcoming-game {
+  margin: 15px 0;
+  &:last-child {
+    margin: 29px 0 30px;
+  }
+}
+.russia2018-upcoming-game-score {
+  float: left;
+  width: 100%;
+  color: $text-palette-2;
+  text-align: center;
+  h6 {
+    float: left;
+    width: 100%;
+    font: 12px/9px $font-f;
+  }
+  h5 {
+    float: left;
+    width: 100%;
+    font: 18px/20px $font-f;
+    margin: 4px 0 0;
+    &.score-rtl {
+      @include rtl {
+        unicode-bidi: bidi-override;
+      }
+    }
+    &.live-game-v{
+      float: none;
+      margin: 5px 0 0;
+      background: $brand-color-1;
+      padding: 1px 0;
+      display: inline-block;
+      vertical-align: top;
+      width: 50px;
+      height: 20px;
+      font-size: 14px;
+      line-height: 20px;
+      border-radius: 3px;
+      text-transform: uppercase;
+      color: set-color($brand-color-1);
+    }
+  }
+}
+.russia2018-upcoming-game-team {
+  float: left;
+  width: 100%;
+  color: $text-palette-1;
+  p {
+    box-sizing: border-box;
+    width: calc(100% - 38px);
+    font: 18px/24px $font-f;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    @include ltr {
+      float: left;
+      padding: 0 16px 0 0;
+      text-align: right;
+    }
+    @include rtl {
+      float: right;
+      padding: 0 0 0 16px;
+      text-align: left;
+    }
+    @media screen and (max-width: 1379px) {
+      font-size: 15px;
+      width: calc(100% - 26px);
+      @include ltr {
+        padding: 0 12px 0 0;
+      }
+      @include rtl {
+        padding: 0 0 0 12px;
+      }
+    }
+    &:last-child {
+      @include ltr {
+        padding: 0 0 0 16px;
+        text-align: left;
+      }
+      @include rtl {
+        padding: 0 16px 0 0;
+        text-align: right;
+      }
+      @media screen and (max-width: 1379px) {
+        @include ltr {
+          padding: 0 0 0 12px;
+        }
+        @include rtl {
+          padding: 0 12px 0 0;
+        }
+      }
+    }
+  }
+  .russia2018-upcoming-game-flag {
+    width: 38px;
+    height: 26px;
+    border-radius: 4px;
+    background: no-repeat 50% 50% / 120%;
+    @include ltr {
+      float: left;
+    }
+    @include rtl {
+      float: right;
+    }
+    @media screen and (max-width: 1379px) {
+      width: 26px;
+      height: 18px;
+      border-radius: 3px;
+      margin: 3px 0;
+    }
+  }
+}
+.russia2018-specialbet {
+  float: left;
+  width: 100%;
+  background: $skin-palette-7;
+  box-sizing: border-box;
+  padding: 0 15px;
+  margin: 0 0 5px;
+}
+.russia2018-specialbet-title {
+  float: left;
+  width: 100%;
+  border-bottom: 1px solid $text-palette-5;
+  padding: 15px 0 10px;
+  color: rgba(set-color($skin-palette-7), 0.8);
+  font: 14px $font-f;
+}
+.russia2018-specialbet-chosen {
+  float: left;
+  width: 100%;
+  border-bottom: 1px solid $text-palette-5;
+  strong {
+    float: left;
+    width: 100%;
+    margin: 0 0 14px;
+    color: #b6862e;
+    font: 32px/1 $font-f;
+  }
+}
+.russia2018-specialbet-minor {
+  float: left;
+  width: 100%;
+  padding: 15px 0;
+  b {
+    display: block;
+    @include ltr {
+      float: left;
+    }
+    @include rtl {
+      float: right;
+    }
+    font: 700 14px/1 $font-f;
+    color: #00a8df;
+    transition: 300ms color;
+    margin: 0 0 4px;
+    &:hover {
+      color: lighten(#00a8df, 10);
+    }
+  }
+  a {
+    display: block;
+    @include ltr {
+      float: left;
+    }
+    @include rtl {
+      float: right;
+    }
+    color: rgba(set-color($skin-palette-7), 0.5);
+    transition: 300ms color;
+    &:hover {
+      color: set-color($skin-palette-7);
+    }
+  }
+}
+.russia2018-gtst-markets {
+  float: left;
+  width: 100%;
+  margin: 3px 0 10px;
+  .market-title-v3 {
+    margin: 0 0 1px;
+    box-shadow: none;
+    background: $skin-palette-11;
+    > h3 {
+      color: #00a8df;
+    }
+  }
+}
+.russia2018-tree {
+  clear: both;
+  max-width: 869px;
+  margin: 0 auto;
+  color: white;
+  box-sizing: border-box;
+  padding: 0 12px;
+  &:after {
+    content: "";
+    display: block;
+    clear: both;
+  }
+  > ul {
+    display: table;
+    float: left;
+    width: 100%;
+    > li {
+      display: table-cell;
+      vertical-align: middle;
+      position: relative;
+      width: 177px;
+      &:last-child, &:nth-last-child(3) {
+        max-width: 177px;
+        width: 20%;
+        min-width: 134px;
+      }
+      &.russia-tree-branch-wrapper {
+        width: auto;
+      }
+    }
+    &.russia2018-tree-head {
+      > li {
+        height: 52px;
+      }
+    }
+    &.russia2018-tree-main {
+      margin: 14px 0 34px;
+    }
+  }
+}
+.russia2018-tree-name {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  text-transform: uppercase;
+  font: 14px/52px $font-f;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.russia-tree-branch {
+  position: absolute;
+  left: 5px;
+  right: 5px;
+  overflow: hidden;
+  &:before {
+    content: "";
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 50%;
+    width: 1px;
+    background: rgba(white, 0.7);
+    height: 100%;
+  }
+  span {
+    display: block;
+    width: 50%;
+    position: absolute;
+    height: 1px;
+    background: rgba(white, 0.7);
+    &:first-child {
+      top: 0;
+      @include ltr {
+        right: 50%;
+      }
+      @include rtl {
+        left: 50%;
+      }
+    }
+    &:nth-child(2) {
+      bottom: 0;
+      @include ltr {
+        right: 50%;
+      }
+      @include rtl {
+        left: 50%;
+      }
+    }
+    &:last-child {
+      top: 50%;
+      @include ltr {
+        left: 50%;
+      }
+      @include rtl {
+        right: 50%;
+      }
+    }
+  }
+  .first-segment > & {
+    height: 79px;
+    &:first-child {
+      top: 41px;
+    }
+    &:nth-child(2) {
+      top: 196px;
+    }
+    &:nth-child(3) {
+      top: 351px;
+    }
+    &:nth-child(4) {
+      top: 506px;
+    }
+  }
+  .second-segment > & {
+    height: 156px;
+    &:first-child {
+      top: 81px;
+    }
+    &:nth-child(2) {
+      top: 391px;
+    }
+  }
+  .third-segment > & {
+    height: 311px;
+    top: 159px;
+  }
+}
+.r18-tree-market-holder {
+  float: left;
+  width: 100%;
+  &:not(:last-child) {
+    margin: 0 0 10px;
+  }
+  .second-segment &:not(:last-child) {
+    margin: 0 0 87px;
+  }
+  .third-segment &:not(:last-child) {
+    margin: 0 0 242px;
+  }
+  .r28-tree-last-market & {
+    margin: 3px 0 0;
+  }
+  .r18-tree-market-title {
+    float: left;
+    width: 100%;
+    font: 11px/16px $font-f;
+    display: flex;
+    flex-flow: wrap;
+    flex-direction: row;
+    .r18-tree-market-date {
+      -webkit-box-flex: 1;
+      -ms-flex: 1;
+      flex: 1;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      &.live-now {
+        &:after {
+          content: "";
+          display: inline-block;
+          vertical-align: top;
+          width: 6px;
+          height: 6px;
+          border-radius: 100%;
+          background: #1d7d34;
+          margin: 5px;
+        }
+      }
+    }
+    .more-markets {
+      display: block;
+      font: 10px/16px $font-f;
+      color: #c2c5cd;
+      transition: 300ms color;
+      &:after {
+        font: 10px/16px icomoon;
+        display: block;
+        float: right;
+        @include ltr {
+          content: "\e672";
+          margin: 0 -3px 0 0;
+        }
+        @include rtl {
+          content: "\e66f";
+          margin: 0 0 0 -3px;
+        }
+      }
+      &:hover {
+        color: #fff;
+      }
+    }
+  }
+  > ul {
+    float: left;
+    width: 100%;
+    > li {
+      float: left;
+      width: 100%;
+      background: #ffffff;
+      border-radius: 2px;
+      margin: 0 0 2px;
+      height: 24px;
+      display: flex;
+      flex-flow: wrap;
+      flex-direction: row;
+      color: #2e323e;
+      font: 12px/22px $font-f;
+      &.disabled {
+        background: rgba(#ffffff, 0.7);
+        color: rgba(#2e323e, 0.8);
+      }
+    }
+  }
+  .r18-tree-flag {
+    width: 15px;
+    height: 10px;
+    margin: 7px 6px 7px;
+    background: #818181 no-repeat 50% 50% / 110%;
+    border-radius: 1px;
+  }
+  .r18-tree-country-name {
+    -webkit-box-flex: 1;
+    -ms-flex: 1;
+    flex: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .r18-tree-country-info {
+    @include ltr {
+      margin: 0 5px 0 3px;
+    }
+    @include rtl {
+      margin: 0 3px 0 5px;
+    }
+  }
+  .r18-tree-market-btn {
+    line-height: 20px;
+    margin: 2px;
+    border-radius: 2px;
+    min-width: 36px;
+    background: #a5aabc;
+    color: white;
+    padding: 0 6px;
+    box-sizing: border-box;
+    text-align: right;
+    position: relative;
+    &:before {
+      display: block;
+      position: absolute;
+      top: 0;
+      animation: arrow-blick-v3 300ms ease;
+      transform: translate3d(0, 0, 0);
+      font: 8px/22px icomoon;
+      @include ltr {
+        left: 3px;
+      }
+      @include rtl {
+        right: 3px;
+      }
+    }
+    &.up-0,
+    &.up-1,
+    &.down0,
+    &.down-1 {
+      @include ltr {
+        padding: 0 6px 0 10px;
+      }
+      @include rtl {
+        padding: 0 10px 0 6px;
+      }
+    }
+    &.up-0,
+    &.up-1 {
+      &:before {
+        content: "\e66d";
+        @if ($classic-switch-odds-state-colors == true){
+          color: #e9044a;
+        } @else{
+          color: #04e914;
+        }
+      }
+    }
+    &.down0,
+    &.down-1 {
+      &:before {
+        content: "\e66c";
+        @if ($classic-switch-odds-state-colors == true){
+          color: #04e914;
+        } @else{
+          color: #e9044a;
+        }
+      }
+    }
+    &.active {
+      color: set-color($hero-color);
+      background: $hero-color;
+      &:before {
+        color: set-color($hero-color);
+      }
+    }
+  }
+}
+.r28-tree-last-market {
+  float: left;
+  width: 100%;
+  position: relative;
+  .abs {
+    position: absolute;
+    top: 100%;
+    left: 0;
+  }
+  h3 {
+    float: left;
+    width: 100%;
+    text-transform: uppercase;
+    font: 14px/1 $font-f;
+    margin: 22px 0 6px;
+    white-space: nowrap;
+  }
+}
+.russia2018-tree-background-head {
+  float: left;
+  width: 100%;
+  background: #05527f;
+  height: 52px;
+  border-radius: 4px 4px 0 0;
+  margin: 0 0 3px;
+}
+.russia2018-tree-background {
+  float: left;
+  width: 100%;
+  overflow: hidden;
+  background: #044266 url(../../../images/russia2018/russia2018-tree-background.png#{$delete-cache}) repeat 50% 50%;
+}
+.russia2018-calendar-wrapper {
+  float: left;
+  width: 100%;
+  position: sticky;
+  position: -webkit-sticky;
+  top: 60px;
+  z-index: 500;
+  background: $classic-view-background;
+  @media screen and (max-width: 1379px) {
+    top: 48px;
+  }
+  .russia2018-calendar-scroll {
+    float: left;
+    width: 100%;
+    box-sizing: border-box;
+    @include scroll(hidden);
+    overflow-x: auto;
+    padding: 0 0 1px;
+    > ul {
+      float: left;
+      min-width: 100%;
+      white-space: nowrap;
+      font: 0/0 $font-f;
+      display: table;
+      table-layout: fixed;
+      border-collapse: separate;
+      border-spacing: 1px 0;
+      > li {
+        display: table-cell;
+        vertical-align: top;
+        min-width: 39px;
+      }
+    }
+  }
+}
+.russia2018-cal-day {
+  float: left;
+  width: 100%;
+  min-height: 54px;
+  background: $skin-palette-6;
+  text-align: center;
+  transition: 300ms background;
+  h6 {
+    float: left;
+    width: 100%;
+    color: $text-palette-4;
+    font: 10px/1 $font-f;
+    margin: 7px 0 5px;
+    transition: 300ms color;
+  }
+  h3 {
+    float: left;
+    width: 100%;
+    color: set-color($skin-palette-6);
+    font: 12px/1 $font-f;
+    transition: 300ms color;
+  }
+  small {
+    display: inline-block;
+    vertical-align: top;
+    width: 5px;
+    height: 5px;
+    background: $text-palette-3;
+    margin: 10px 1px 5px;
+    transition: 300ms background;
+  }
+  &:hover {
+    background: $c16-sp-4;
+    h6, h3 {
+      color: $text-palette-6;
+    }
+    small {
+      background: $text-palette-6;
+    }
+  }
+  &.active {
+    background: $text-palette-4;
+    h6, h3 {
+      color: set-color($text-palette-4);
+    }
+    small {
+      background: set-color($text-palette-4);
+    }
+  }
+  &.selected {
+    background: #05527f;
+    h6, h3 {
+      color: #ffffff;
+    }
+    small {
+      background: #c2c5cd;
+    }
+  }
+  &.disabled {
+    pointer-events: none;
+    background: $skin-palette-8;
+    h6, h3 {
+      color: $text-palette-5;
+    }
+    small {
+      background: $text-palette-5;
+    }
+  }
+}
+.russia2018-calendar-upcoming {
+  float: left;
+  width: 100%;
+  .russia2018-calendar-wrapper ~ matches-list & {
+    margin: 10px 0 0;
+    .russia2018-upcoming {
+      &:only-child {
+        margin: 0;
+      }
+      &:first-child {
+        margin-top: 0;
+      }
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+  }
+  > ul {
+    float: left;
+    width: 100%;
+    display: table;
+    $comp-height: 128px;
+    $margin: 0 !default;
+    min-height: $comp-height;
+    transition: 300ms min-height;
+    > li {
+      display: table-cell;
+      vertical-align: middle;
+      position: relative;
+      &:first-child{
+        text-align: center
+      }
+      &:nth-last-child(2) {
+        background: #05527f url(../../../images/russia2018/russia2018-tree-background.png#{$delete-cache}) repeat 50% 0;
+        width: 24.885496183206107%;
+        max-width: 326px;
+      }
+      &:nth-child(2) {
+        @include ltr {
+          padding: 0 0 0 4px;
+        }
+        @include rtl {
+          padding: 0 4px 0 0;
+        }
+      }
+      .md-progress-circular.md-theme {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        margin: -50px !important;
+      }
+    }
+    &.contained-games-2 {
+      min-height: 260px;
+    }
+    &.contained-games-3 {
+      min-height: 377px;
+    }
+    &.contained-games-4 {
+      min-height: 524px;
+    }
+    &.contained-games-5 {
+      min-height: 656px;
+    }
+  }
+}
+.russia2018-calendar-upcoming-event {
+  display: inline-block;
+  vertical-align: top;
+  width: 106px;
+  height: 120px;
+  border-radius: 6px;
+  text-align: center;
+  box-sizing: border-box;
+  border: 1px solid transparent;
+  margin: auto;
+  color: white;
+  &.with-border {
+    border-color: rgba(white, 0.3);
+  }
+  h3 {
+    float: left;
+    width: 100%;
+    font: 700 60px/1 $font-f;
+    margin: 16px 0 0;
+  }
+  p {
+    float: left;
+    width: 100%;
+    font: 700 24px/1 $font-f;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+  }
+}
+.russia2018-specialbet-chosen-select {
+  float: left;
+  width: 100%;
+  position: relative;
+  &:before {
+    content: "\e66c";
+    display: block;
+    position: absolute;
+    top: 0;
+    font: 13px/46px icomoon;
+    color: set-color($skin-palette-7);
+    pointer-events: none;
+    transition: 300ms color;
+    @include ltr {
+      right: 6px;
+    }
+    @include rtl {
+      left: 6px;
+    }
+  }
+  .russia2018-specialbet-chosen-flag {
+    width: 24px;
+    height: 16px;
+    background: no-repeat 50% 50% / 110%;
+    @include ltr {
+      float: left;
+      margin: 13px 10px 13px 0;
+    }
+    @include rtl {
+      float: right;
+      margin: 13px 0 13px 10px;
+    }
+    + select {
+      width: calc(100% - 34px);
+    }
+  }
+  select {
+    display: block;
+    width: 100%;
+    height: 42px;
+    background: none;
+    color: set-color($skin-palette-7);
+    font: 18px $font-f;
+    border: 0;
+    transition: 300ms color;
+    cursor: pointer;
+    @include ltr {
+      float: left;
+      padding: 0 20px 0 0;
+    }
+    @include rtl {
+      float: right;
+      padding: 0 0 0 20px;
+    }
+    option {
+      background: $skin-palette-7;
+      color: set-color($skin-palette-7);
+    }
+  }
+  &:hover {
+    select, &:before {
+      color: $text-palette-3;
+    }
+  }
+}
+.russia2018-teams-item {
+  float: left;
+  width: 100%;
+  > ul {
+    float: left;
+    width: calc(100% + 2px);
+    margin: 0 0 6px -1px;
+    > li {
+      display: block;
+      float: left;
+      width: calc(20% - 2px);
+      background: $skin-palette-7;
+      color: set-color($skin-palette-7);
+      min-height: 130px;
+      position: relative;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
+      margin: 0 1px 2px;
+      &:before {
+        content: "";
+        display: block;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: $skin-palette-6;
+        @if $white-skin == true {
+          background-image: -moz-linear-gradient( -90deg, rgba(set-color($skin-palette-6),0) 0%, rgba(set-color($skin-palette-6),0.1) 100%);
+          background-image: -webkit-linear-gradient( -90deg, rgba(set-color($skin-palette-6),0) 0%, rgba(set-color($skin-palette-6),0.1) 100%);
+          background-image: -ms-linear-gradient( -90deg, rgba(set-color($skin-palette-6),0) 0%, rgba(set-color($skin-palette-6),0.1) 100%);
+        } @else {
+          background-image: -moz-linear-gradient( 90deg, rgba(set-color($skin-palette-6),0) 0%, rgba(set-color($skin-palette-6),0.1) 100%);
+          background-image: -webkit-linear-gradient( 90deg, rgba(set-color($skin-palette-6),0) 0%, rgba(set-color($skin-palette-6),0.1) 100%);
+          background-image: -ms-linear-gradient( 90deg, rgba(set-color($skin-palette-6),0) 0%, rgba(set-color($skin-palette-6),0.1) 100%);
+        }
+        transition: 400ms opacity;
+        opacity: 0;
+      }
+      &:hover, &.active {
+        &:before {
+          opacity: 1;
+        }
+      }
+    }
+  }
+}
+.russia2018-teams-item-c {
+  text-align: center;
+  position: relative;
+  z-index: 10;
+  padding: 19px 0 15px;
+  .russia2018-teams-item-flag {
+    margin: 0 auto;
+    width: 38px;
+    height: 26px;
+    border-radius: 4px;
+    background: no-repeat 50% 50% / 120%;
+  }
+  h3 {
+    float: left;
+    width: 100%;
+    font: 20px/1 $font-f;
+    margin: 15px 0 10px;
+    @media screen and (max-width: 1379px) {
+      font-size: 16px;
+    }
+  }
+}
+.russia2018-teams-item-market {
+  display: inline-block;
+  vertical-align: top;
+  min-width: 64px;
+  box-sizing: border-box;
+  text-align: center;
+  padding: 0 10px;
+  background: rgba(black, 0.3);
+  font: 700 14px/25px $font-f;
+  color: #aa8136;
+  border-radius: 2px;
+  transition: 300ms color, 300ms background;
+  position: relative;
+  @if $white-skin == true {
+    background: rgba(black, 0.1);
+  }
+  &:hover {
+    background: rgba(black, 0.5);
+    @if $white-skin == true {
+      background: white;
+    }
+  }
+  &:before {
+    display: inline-block;
+    vertical-align: top;
+    animation: arrow-blick-v3 300ms ease;
+    transform: translate3d(0, 0, 0);
+    font: 12px/25px icomoon;
+    transition: 300ms color;
+    @include ltr {
+      margin: 0 3px 0 0;
+    }
+    @include rtl {
+      margin: 0 0 0 3px;
+    }
+  }
+  &.up-0,
+  &.up-1 {
+    &:before {
+      content: "\e66d";
+      @if ($classic-switch-odds-state-colors == true){
+        color: #e9044a;
+      } @else{
+        color: #04e914;
+      }
+    }
+  }
+  &.down0,
+  &.down-1 {
+    &:before {
+      content: "\e66c";
+      @if ($classic-switch-odds-state-colors == true){
+        color: #04e914;
+      } @else{
+        color: #e9044a;
+      }
+    }
+  }
+  &.active {
+    color: set-color($hero-color);
+    background: $hero-color;
+    &:before {
+      color: set-color($hero-color);
+    }
+  }
+}
+.russia2018-teams-popup {
+  display: inline-block;
+  vertical-align: top;
+  width: 1310px;
+  margin: 20px 0;
+  box-shadow: 0 0 0 6px rgba(black, 0.15);
+  background: $skin-palette-8 url(../../../images/russia2018/teams-popup-head.png) repeat-x 50% 0;
+  position: relative;
+  @include ltr {
+    text-align: left;
+  }
+  @include rtl {
+    text-align: right;
+  }
+  @media screen and (max-width: 1340px) {
+    width: 960px;
+  }
+  .md-progress-circular.md-theme {
+    margin: 50px auto !important;
+  }
+  .close {
+    position: absolute;
+    color: rgba(white, 0.5);
+    transition: 300ms color;
+    top: 20px;
+    font: 15px/1 icomoon;
+    @include ltr {
+      right: 20px;
+    }
+    @include rtl {
+      left: 20px;
+    }
+    &:before {
+      content: "\e6ee";
+    }
+    &:hover {
+      color: white;
+    }
+  }
+  .russia2018-component-header.second-color {
+    background: rgba(invert(set-color($skin-palette-8)), 0.3);
+  }
+  .active > .russia2018-group-heading:after {
+    @include ltr {
+      content: "\e671";
+    }
+    @include rtl {
+      content: "\e671";
+    }
+  }
+}
+.russia2018-teamsp-country {
+  float: left;
+  width: 100%;
+  padding: 24px 36px;
+  box-sizing: border-box;
+  .russia2018-teamsp-flag {
+    width: 64px;
+    height: 44px;
+    border-radius: 6px;
+    background: no-repeat 50% 50% / 120%;
+    @include ltr {
+      float: left;
+      margin: 3px 20px 0 0;
+    }
+    @include rtl {
+      float: right;
+      margin: 3px 0 0 20px;
+    }
+  }
+  h4 {
+    font: 28px/1 $font-f;
+    color: white;
+    width: 50%;
+    margin: 0 0 4px;
+    @include ltr {
+      float: left;
+    }
+    @include rtl {
+      float: right;
+    }
+  }
+  h5 {
+    width: 50%;
+    font: 18px/1 $font-f;
+    color: rgba(white, 0.5);
+    @include ltr {
+      float: left;
+    }
+    @include rtl {
+      float: right;
+    }
+  }
+}
+.russia2018-teams-popup-layout {
+  float: left;
+  width: 100%;
+  > ul {
+    float: left;
+    width: 100%;
+    padding: 0 6px 6px;
+    > li {
+      display: block;
+      float: left;
+      width: 50%;
+      padding: 0 5px;
+      box-sizing: border-box;
+      height: calc(100vh - 146px);
+      @include scroll(auto);
+      @include rtl {
+        direction: ltr;
+        matches-list {
+          direction: rtl;
+        }
+      }
+    }
+  }
+}
+.russia2018-team-members {
+  float: left;
+  width: 100%;
+}
+.russia2018-team-member {
+  float: left;
+  width: 100%;
+  margin: 0 0 4px;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  background: $skin-palette-7;
+  box-sizing: border-box;
+  @include ltr {
+    padding: 25px 0 25px 25px;
+  }
+  @include rtl {
+    padding: 25px 25px 25px 0;
+    direction: rtl;
+  }
+  color: set-color($skin-palette-7);
+  @media screen and (max-width: 1340px) {
+    @include ltr {
+      padding: 18px 0 18px 18px;
+    }
+    @include rtl {
+      padding: 18px 18px 18px 0;
+    }
+  }
+  > ul {
+    display: table;
+    float: left;
+    width: 100%;
+    @include rtl {
+      direction: rtl;
+    }
+    > li {
+      display: table-cell;
+      vertical-align: middle;
+      box-sizing: border-box;
+      &:not(.auto-width) {
+        width: 50px;
+        padding: 0 10px;
+        text-align: center;
+        @media screen and (max-width: 1340px) {
+          width: 40px;
+        }
+      }
+      + li {
+        @include ltr {
+          border-left: 1px solid rgba(black, 0.2);
+        }
+        @include rtl {
+          border: 0;
+          border-right: 1px solid rgba(black, 0.2);
+        }
+      }
+    }
+  }
+}
+.russia2018-teamm-stats {
+  float: left;
+  width: 100%;
+  h3 {
+    float: left;
+    width: 100%;
+    opacity: 0.6;
+    font: 700 24px/1 $font-f;
+    margin: 0 0 12px;
+  }
+  p {
+    float: left;
+    width: 100%;
+    font: 12px/14px $font-f;
+    height: 14px;
+    color: rgba(set-color($skin-palette-7), 0.5);
+  }
+  .card-icon-r18 {
+    display: inline-block;
+    vertical-align: top;
+    height: 10px;
+    width: 8px;
+    background: #e9044a;
+    margin: 2px 0;
+    &.yellow {
+      background: #f4da16;
+    }
+  }
+}
+.russia2018-team-member-prof {
+  float: left;
+  width: 100%;
+  > ul {
+    @include ltr {
+      float: left;
+      margin: 0 20px 0 0;
+    }
+    @include rtl {
+      float: right;
+      margin: 0 0 0 20px;
+    }
+    > li {
+      display: block;
+      width: 60px;
+      height: 60px;
+      background: #aa8136 no-repeat 50% 50% / cover;
+      text-align: center;
+      color: white;
+      font: 700 34px/60px $font-f;
+      @include ltr {
+        float: left;
+      }
+      @include rtl {
+        float: right;
+      }
+      @media screen and (max-width: 1340px) {
+        width: 50px;
+        height: 50px;
+        font-size: 24px;
+        line-height: 50px;
+      }
+    }
+  }
+  h5 {
+    width: calc(100% - 140px);
+    font: 700 18px $font-f;
+    margin: 0 0 2px;
+    @include ltr {
+      float: left;
+    }
+    @include rtl {
+      float: right;
+    }
+    @media screen and (max-width: 1340px) {
+      font-size: 14px;
+    }
+  }
+  p {
+    width: calc(100% - 140px);
+    opacity: 0.5;
+    @include ltr {
+      float: left;
+    }
+    @include rtl {
+      float: right;
+    }
+    @media screen and (max-width: 1340px) {
+      font-size: 10px;
+    }
+  }
+}

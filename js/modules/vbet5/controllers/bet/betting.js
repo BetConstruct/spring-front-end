@@ -15,6 +15,7 @@ BettingModule.controller('betSlipController', ['$q', '$scope', '$rootScope', '$f
     var addBetInProgress = false;
     var subscribePromise, freebetPromise, promiseTimer = 300;
     var finalWinValue;
+    var lastMaxBetResult;
 
     var addGameToFavorites = function (game) {
         if (!$rootScope.conf.addToFavouritesOnBet) return;
@@ -124,12 +125,6 @@ BettingModule.controller('betSlipController', ['$q', '$scope', '$rootScope', '$f
     function bankersRounding(value) {
         return Utils.bankersRounding(value, $rootScope.conf.balanceFractionSize);
     }
-
-    function roundPossibleWin(value) {
-        return ($rootScope.partnerConfig.multiple_possiblewin_round_method === 0)? Utils.cuttingDecimals(value, $rootScope.conf.balanceFractionSize).toFixed($rootScope.conf.balanceFractionSize) : Utils.bankersRounding(value, $rootScope.conf.balanceFractionSize);
-
-    }
-
 
     /**
      * @ngdoc object
@@ -592,7 +587,7 @@ BettingModule.controller('betSlipController', ['$q', '$scope', '$rootScope', '$f
             switch (mode) {
                 case 'suggested':
                     if (event) {
-                        $rootScope.$broadcast('suggestedBets.get', {type: 'preMatch'});
+                        $rootScope.$broadcast('suggestedBets.get', {type: 'live'});
                         analytics.gaSend('send', 'event', 'betting', 'suggestedBetsTabClick' + (Config.main.sportsLayout),  {'page': $location.path(), 'eventLabel': 'suggestedBetsTabClick'});
                     }
                     $scope.quickBet.enabled = false;
@@ -628,6 +623,7 @@ BettingModule.controller('betSlipController', ['$q', '$scope', '$rootScope', '$f
             $scope.disableAddBets.newSelections = true;
             $scope.showInSelections = false;
             $scope.emptyNewSelections = true;
+            $scope.disableAddBets.addBet = true;
         }
     } else {
         $scope.showInSelections = false;   // if true => we should add events in new selections part of betSlip; if false => we'll add events as usual
@@ -743,13 +739,16 @@ BettingModule.controller('betSlipController', ['$q', '$scope', '$rootScope', '$f
                 'events': []
             };
             request.type = $scope.betSlip.type.value;
+
             var isArray = angular.isArray(betEvents);
             if (isArray) {
                 angular.forEach(betEvents, function (betEvent) {
                     request.events.push(betEvent.eventId);
                 });
+                request.each_way = $scope.betSlip.eachWayMode;
             } else {
                 request.events.push(betEvents.eventId);
+                request.each_way = betEvents.eachWay;
             }
 
             var isMinMaxBetOpened;
@@ -758,29 +757,31 @@ BettingModule.controller('betSlipController', ['$q', '$scope', '$rootScope', '$f
             }
 
             var processMaxBetResults = function (result) {
-                var value =  result.details.amount;
+                var maxResult =  result.details.amount;
+                var unitStake =  result.details.unit_stake;
 
                 if(fullCoverType){
-                    value = result.details.amount / fullCoverType.count;
+                    maxResult = maxResult / fullCoverType.count;
                 }
 
-                var maxResult = Config.main.onlyDecimalStakeAmount ? Math.floor(value) : Utils.cuttingDecimals(value, $rootScope.conf.balanceFractionSize);
+                maxResult = Config.main.onlyDecimalStakeAmount ? Math.floor(maxResult) : Utils.cuttingDecimals(maxResult, $rootScope.conf.balanceFractionSize);
+                if(unitStake){
+                    unitStake = Config.main.onlyDecimalStakeAmount ? Math.floor(unitStake) : Utils.cuttingDecimals(unitStake, $rootScope.conf.balanceFractionSize);
+                }
                 if(isMinMaxBetOpened) {
-                    $scope.minMaxBet.maxBetAmount = maxResult;
+                    $scope.minMaxBet.maxBetAmount = unitStake || maxResult;
                 } else if (fullCoverType) {
-                    fullCoverType.amount = maxResult;
+                    fullCoverType.amount = unitStake || maxResult;
                     $scope.fullCoverTypeAmountChange(fullCoverType.name, fullCoverType.amount);
                 } else if (isArray) {
                     if($scope.betSlip.type.value === 3){ //system
-                        value = value / $scope.betSlip.divisionCoefficient;
-                        maxResult = Config.main.onlyDecimalStakeAmount ? Math.floor(value) : Utils.cuttingDecimals(value, $rootScope.conf.balanceFractionSize);
-                        $scope.betSlip.unitStake = maxResult;
-                        $scope.betSlip.stake = maxResult *  $scope.betSlip.divisionCoefficient;
+                        $scope.betSlip.unitStake = unitStake;
+                        $scope.betSlip.stake = maxResult;
                     }else {
-                        $scope.lustMaxBetResult = $scope.betSlip.stake = maxResult / ($scope.betSlip.eachWayMode ? 2 : 1);
+                        lastMaxBetResult = $scope.betSlip.stake = unitStake || maxResult;
                     }
                 } else {
-                    betEvents.singleStake = maxResult / (betEvents.eachWay ? 2 : 1);
+                    betEvents.singleStake = unitStake || maxResult;
                 }
                 $scope.getMaxBetInProgress = false;
 
@@ -790,7 +791,8 @@ BettingModule.controller('betSlipController', ['$q', '$scope', '$rootScope', '$f
             if (fullCoverType) {
                 fullCoverType.sysCount && (request.sys_min_count = fullCoverType.sysCount);
                 request.type = fullCoverType.type;
-            }else {
+                request.each_way = fullCoverType.ewMode;
+            }else if($scope.betSlip.type.value === 3){ // system
                 request.sys_min_count = $scope.sysBetSelectedValue;
             }
 
@@ -823,7 +825,7 @@ BettingModule.controller('betSlipController', ['$q', '$scope', '$rootScope', '$f
     };
 
     function checkSelectedBetsCount(betType, include) {
-        var limit = betType === 3? $scope.maximumSelectionForSystem : $rootScope.partnerConfig.max_selections_in_multiple_bet;
+        var limit = betType === 3 ? $scope.maximumSelectionForSystem : $rootScope.partnerConfig.max_selections_in_multiple_bet;
         return limit!== 0 &&
             $rootScope.betSlipBetsCount + (include?0:1) > limit;
     }
@@ -883,7 +885,7 @@ BettingModule.controller('betSlipController', ['$q', '$scope', '$rootScope', '$f
         angular.forEach($scope.betTypes, function(betType) {
             if (betType.value === 1) {
                 if ($scope.betSlip.bets.length === 1 && $scope.betSlip.type.value === 2 || ($scope.betSlip.bets.length === 0)) {
-                    $scope.setBetSlipType(1, false);
+                    setBetSlipTypeNotDebounced(1, false);
                     $scope.betSlip.eachWayMode = false;
                     $scope.betSlip.superbet.selector = false;
                 }
@@ -905,7 +907,7 @@ BettingModule.controller('betSlipController', ['$q', '$scope', '$rootScope', '$f
 
             $scope.isMaxCountExceeded = checkSelectedBetsCount($scope.betSlip.type.value);
             $scope.betSlip.bets.length === 0 && ($scope.betSlip.stake = undefined);
-            $scope.lustMaxBetResult = undefined;
+            lastMaxBetResult = undefined;
         }
 
         if (Config.betting.enableRetainSelectionAfterPlacment && $scope.betSlip.bets.length === 0) {
@@ -953,7 +955,7 @@ BettingModule.controller('betSlipController', ['$q', '$scope', '$rootScope', '$f
         $scope.isBetAccepted = false;
         $scope.isMaxCountExceeded = false;
         // switch to single if it available
-        $scope.setBetSlipType(1, false);
+       setBetSlipTypeNotDebounced(1, false);
 
         $scope.quickBet.enabled = false;
 
@@ -981,9 +983,9 @@ BettingModule.controller('betSlipController', ['$q', '$scope', '$rootScope', '$f
      * @description adds bet to betslip and stores betslip in local storage
      */
     function addBet(event, data) {
-        if ($scope.disableAddBets && $scope.disableAddBets.addBet && !$rootScope.openSelectionsPart) return;
+        if (!data.ignoreCheck && $scope.disableAddBets && $scope.disableAddBets.addBet && !$rootScope.openSelectionsPart) return;
 
-        if ($rootScope.editBet && $rootScope.editBet.edit && !$rootScope.editBet.openSelectionsPart) {
+        if (!data.ignoreCheck && $rootScope.editBet && $rootScope.editBet.edit && !$rootScope.editBet.openSelectionsPart) {
             $timeout.cancel($rootScope.editBet.unsubPromise); // Handling edge case, don't delete!
             $scope.disableAddBets.saveChanges = true;
         }
@@ -1003,9 +1005,10 @@ BettingModule.controller('betSlipController', ['$q', '$scope', '$rootScope', '$f
                     console.warn('betslip got invalid data:', data);
                     return;
                 }
-                //check duplicate and delete it
+                // check duplicate and delete it
                 var isDuplicate = false;
                 var isReplaced = false;
+                var isConflicted = false;
                 angular.forEach($scope.betSlip.bets, function (value) {
 
                     if (value.eventId === data.event.id) {
@@ -1018,15 +1021,19 @@ BettingModule.controller('betSlipController', ['$q', '$scope', '$rootScope', '$f
                     } else {
                         //Check and replace the excluded event with a new one
                         if (value.gameId === data.game.id && value.expressId === data.market.express_id || value.gameId === data.game.exclude_ids || value.excludeIds === data.game.id) {
-                            $scope.removeBet(value, true);
-                            $scope.eventReplace.visibilityProcess = true;
-                            isReplaced = true;
+                            if (!Config.betting.disableConflictEventReplacement) {
+                                $scope.removeBet(value, true);
+                                $scope.eventReplace.visibilityProcess = true;
+                                isReplaced = true;
 
-                            TimeoutWrapper.cancel(eventReplaceMessageVisibilatyPromise); //TimeoutWrapper checks the existence of promise by itself
+                                TimeoutWrapper.cancel(eventReplaceMessageVisibilatyPromise); //TimeoutWrapper checks the existence of promise by itself
 
-                            eventReplaceMessageVisibilatyPromise = TimeoutWrapper(function() {
-                                $scope.eventReplace.visibilityProcess = false;
-                            }, $scope.eventReplace.visibilityTime);
+                                eventReplaceMessageVisibilatyPromise = TimeoutWrapper(function() {
+                                    $scope.eventReplace.visibilityProcess = false;
+                                }, $scope.eventReplace.visibilityTime);
+                            } else {
+                                isConflicted = true;
+                            }
                         }
                     }
                 });
@@ -1037,11 +1044,11 @@ BettingModule.controller('betSlipController', ['$q', '$scope', '$rootScope', '$f
                     }
                     $scope.sysBetSelectedValue = 2;
 
-                    if ($scope.betSlip.bets.length === 1 && $scope.betSlip.type.value === 1) {
+                    if ($scope.betSlip.bets.length === 1 && $scope.betSlip.type.value === 1 && !isConflicted) {
                         $scope.betSlip.betterOddSelectionMode = false;
 
                         if (!$scope.counterOffer.enabled && !$scope.fullCoverBet.enabled) {
-                            $scope.setBetSlipType(2, false);
+                            setBetSlipTypeNotDebounced(2, false);
                         }
                     }
 
@@ -1063,7 +1070,7 @@ BettingModule.controller('betSlipController', ['$q', '$scope', '$rootScope', '$f
                         baseInitial: data.event.base !== undefined ? data.event.base : data.market.base,
                         priceInitial: data.event.price,
                         betterPrice: calcBetterOdd (data.event.price),
-                        marketId: data.market.id,
+                        marketId: data.event.marketId || data.market.id,
                         marketName: $filter('improveName')(data.market.name, data.game),
                         marketType: data.market.type,
                         marketBase: data.market.base,
@@ -1141,10 +1148,10 @@ BettingModule.controller('betSlipController', ['$q', '$scope', '$rootScope', '$f
 
                     updateBetslipSubscription();
 
-                    if ($scope.lustMaxBetResult == $scope.betSlip.stake) {
+                    if (lastMaxBetResult == $scope.betSlip.stake) {
                         $scope.betSlip.stake = undefined;
                     }
-                    $scope.lustMaxBetResult = undefined;
+                    lastMaxBetResult = undefined;
                     checkFreeBet();
                     checkSuperBetAndCounterOffer();
                 }
@@ -1208,6 +1215,12 @@ BettingModule.controller('betSlipController', ['$q', '$scope', '$rootScope', '$f
             $scope.betSlip.lastErrorCode = Math.abs(parseInt(result.code || result.result || result.status || 99, 10)).toString();
         }
 
+        var code = 'message_' + $scope.betSlip.lastErrorCode;
+
+        if (result.result === 2200 && result.details && result.details.min_bet && result.details.max_bet) {
+            return Translator.get("The stake amount is out of the allowed range. The allowed range is {1} {3} to {2} {3}.", [result.details.min_bet, result.details.max_bet, $filter('currency')($rootScope.profile.currency_name)]);
+        }
+
         if (result.result_text && Translator.translationExists(result.result_text)) {
             return Translator.get(result.result_text);
         }
@@ -1215,9 +1228,6 @@ BettingModule.controller('betSlipController', ['$q', '$scope', '$rootScope', '$f
         if (result.details && result.details.api_code) {
             return Translator.get('api_' + result.details.api_code, undefined, 'eng');
         }
-
-
-        var code = 'message_' + $scope.betSlip.lastErrorCode;
 
         if (Translator.translationExists('custom_' + code)) {
             return Translator.get('custom_' + code, undefined, lang);
@@ -1416,10 +1426,10 @@ BettingModule.controller('betSlipController', ['$q', '$scope', '$rootScope', '$f
 
     $scope.placeQuickBet = function placeQuickBet(data) {
         console.log('quick bet data', data);
-        if ($scope.betSlip.totalStake > $scope.profile.calculatedBalance + $scope.profile.calculatedBonus && Config.main.sportsLayout === 'classic') {
+        if ($scope.betSlip.totalStake > $rootScope.profile.totalBalance && Config.main.sportsLayout === 'classic') {
             $scope.quickBet.status = 'error';
             $scope.quickBet.massage = Translator.get('Insufficient balance');
-        } else if ($scope.quickBet.enabled && !$scope.betSlip.hasEmptyStakes && $scope.env.authorized && !$scope.shared.isBetsInProgress && $scope.betSlip.totalStake <= $scope.profile.calculatedBalance + ($scope.profile.calculatedBonus || 0)) {
+        } else if ($scope.quickBet.enabled && !$scope.betSlip.hasEmptyStakes && $scope.env.authorized && !$scope.shared.isBetsInProgress && $scope.betSlip.totalStake <= $rootScope.profile.totalBalance) {
             $scope.quickBet.status = 'idle';
             $scope.quickBet.massage = '';
 
@@ -1538,7 +1548,7 @@ BettingModule.controller('betSlipController', ['$q', '$scope', '$rootScope', '$f
      * @ngdoc method
      * @name checkFreeBet
      * @methodOf betting.controller:betSlipController
-     * @description check if free bet is avaliable
+     * @description check if free bet is available
      */
     function checkFreeBet() {
         TimeoutWrapper.cancel(freebetPromise);
@@ -1738,7 +1748,7 @@ BettingModule.controller('betSlipController', ['$q', '$scope', '$rootScope', '$f
      */
     function prepareBetsData (singleBetEvent, forFreeBet) {
         var requests = [], data;
-        var currentBets, anySuggestedEvents;
+        var currentBets;
         switch ($scope.betSlip.type.value) {
             case 1:
                 var bets = singleBetEvent ? [singleBetEvent] : $scope.betSlip.bets;
@@ -1755,9 +1765,6 @@ BettingModule.controller('betSlipController', ['$q', '$scope', '$rootScope', '$f
                                 {'event_id': bet.eventId, 'price': bet.oddType === 'sp' ? -1 : $scope.betSlip.betterOddSelectionMode ? bet.betterPrice : (isCounterOffer ? parseFloat(bet.counterOffer) : bet.price)}
                             ]
                         };
-                        if (bet.isSuggested && $rootScope.suggestedBets && $rootScope.suggestedBets.tags) {
-                            data.tags = $rootScope.suggestedBets.tags;
-                        }
                         if (!forFreeBet) {
                             data.amount = parseFloat(bet.customSingleStake || bet.singleStake) * (bet.eachWay && !$scope.freeBet.enabled ? 2 : 1); // If each way mode is on the stake is doubled
                         } else {
@@ -1793,7 +1800,6 @@ BettingModule.controller('betSlipController', ['$q', '$scope', '$rootScope', '$f
                 angular.forEach($scope.betSlip.bets, function (bet) {
                     currentBets.push({'event_id': bet.eventId, 'price': bet.oddType === 'sp' ? -1 : bet.price});
                     bet.processing = !forFreeBet;
-                    anySuggestedEvents = anySuggestedEvents || bet.isSuggested;
                 });
                 data = {
                     'type': $scope.betSlip.type.value,
@@ -1802,9 +1808,6 @@ BettingModule.controller('betSlipController', ['$q', '$scope', '$rootScope', '$f
                     'each_way': $scope.betSlip.eachWayMode,
                     'bets': currentBets
                 };
-                if (anySuggestedEvents) {
-                    data.tags = $rootScope.suggestedBets.tags;
-                }
                 if (!forFreeBet) {
                     data.amount = $scope.betSlip.stake * ($scope.betSlip.eachWayMode ? 2 : 1);
                 } else {
@@ -1823,7 +1826,6 @@ BettingModule.controller('betSlipController', ['$q', '$scope', '$rootScope', '$f
                 angular.forEach($scope.betSlip.bets, function (bet) {
                     currentBets.push({'event_id': bet.eventId, 'price': bet.oddType === 'sp' ? -1 : bet.price, 'banker': bet.banker ? 1 : 0});
                     bet.processing = !forFreeBet;
-                    anySuggestedEvents = anySuggestedEvents || bet.isSuggested;
                 });
                 data = {
                     'type': $scope.betSlip.type.value,
@@ -1833,9 +1835,6 @@ BettingModule.controller('betSlipController', ['$q', '$scope', '$rootScope', '$f
                     'bets': currentBets,
                     'sys_bet': parseInt($scope.sysBetSelectedValue, 10) + ($scope.betSlip.bankerBetsCount ? $scope.betSlip.bankerBetsCount : 0)
                 };
-                if (anySuggestedEvents) {
-                    data.tags = $rootScope.suggestedBets.tags;
-                }
                 if (!forFreeBet) {
                     data.amount = $scope.betSlip.stake * ($scope.betSlip.eachWayMode ? 2 : 1);
                 } else {
@@ -1849,7 +1848,6 @@ BettingModule.controller('betSlipController', ['$q', '$scope', '$rootScope', '$f
                 angular.forEach($scope.betSlip.bets, function (bet) {
                     currentBets.push({'event_id': bet.eventId, 'price': bet.oddType === 'sp' ? -1 : bet.price});
                     bet.processing = !forFreeBet;
-                    anySuggestedEvents = anySuggestedEvents || bet.isSuggested;
                 });
                 data = {
                     'type': $scope.betSlip.type.value,
@@ -1858,9 +1856,6 @@ BettingModule.controller('betSlipController', ['$q', '$scope', '$rootScope', '$f
                     'each_way': $scope.betSlip.eachWayMode,
                     'bets': currentBets
                 };
-                if (anySuggestedEvents) {
-                    data.tags = $rootScope.suggestedBets.tags;
-                }
                 if (!forFreeBet) {
                     data.amount = parseFloat($scope.betSlip.stake);
                 } else {
@@ -2042,7 +2037,7 @@ BettingModule.controller('betSlipController', ['$q', '$scope', '$rootScope', '$f
                         request.is_bonus_money = true;
                     }
 
-                    if (Config.main.enableSuggestedBets && !request.tags) {
+                    if (Config.main.enableSuggestedBets) {
                         request.tags = 0;
 
                         if ($rootScope.suggestedBets && $rootScope.suggestedBets.eventIds.length) {
@@ -2107,6 +2102,10 @@ BettingModule.controller('betSlipController', ['$q', '$scope', '$rootScope', '$f
         }
     }
 
+    function calcEachWayOdds(price, eachWayCoefficient) {
+        return (price - 1) / eachWayCoefficient + 1;
+    }
+
     /**
      * @ngdoc method
      * @name calculateSystemPossibleWin
@@ -2151,7 +2150,7 @@ BettingModule.controller('betSlipController', ['$q', '$scope', '$rootScope', '$f
                 for (m = 0; m < k; m++) {
                     if ($scope.betSlip.bets[indexArray[m]].incInSysCalc && !$scope.betSlip.bets[indexArray[m]].banker) {
                         tempOdd *= convertFractionalPrice($scope.betSlip.bets[indexArray[m]].price);
-                        tempEwOdd *= $scope.betSlip.bets[indexArray[m]].ewAllowed && $scope.betSlip.bets[indexArray[m]].ewCoeff ? Math.round(((convertFractionalPrice($scope.betSlip.bets[indexArray[m]].price) - 1) / $scope.betSlip.bets[indexArray[m]].ewCoeff + 1) * 100) / 100 : convertFractionalPrice($scope.betSlip.bets[indexArray[m]].price);
+                        tempEwOdd *= $scope.betSlip.bets[indexArray[m]].ewAllowed && $scope.betSlip.bets[indexArray[m]].ewCoeff ? calcEachWayOdds($scope.betSlip.bets[indexArray[m]].price, $scope.betSlip.bets[indexArray[m]].ewCoeff) : convertFractionalPrice($scope.betSlip.bets[indexArray[m]].price);
                     } else {
                         tempOdd = 0;
                         tempEwOdd = 0;
@@ -2176,7 +2175,7 @@ BettingModule.controller('betSlipController', ['$q', '$scope', '$rootScope', '$f
 
         sysPerBetStake = stake / numOfSysOptions;
 
-        return {win: roundPossibleWin(tempPosWin * sysPerBetStake), ewWin: roundPossibleWin(tempPosEwWin * sysPerBetStake), options: numOfSysOptions};
+        return {win: tempPosWin * sysPerBetStake, ewWin: tempPosEwWin * sysPerBetStake, options: numOfSysOptions};
     }
 
     /**
@@ -2446,7 +2445,11 @@ BettingModule.controller('betSlipController', ['$q', '$scope', '$rootScope', '$f
                     var stake = (bet.singleStake || 0) * (bet.eachWay && bet.ewAllowed && bet.ewCoeff ? 2 : 1);
 
                     if (betSingleStake > 0 && !bet.deleted && bet.oddType !== 'sp' && !bet.blocked) {
-                        var realPrice = $scope.betSlip.betterOddSelectionMode ? bet.betterPrice : ($scope.counterOffer.enabled && bet.counterOffer > bet.price ? bet.counterOffer : (Config.main.decimalFormatRemove3Digit ? parseFloat($filter('oddConvert')(bet.price, 'decimal')): bet.price));
+                        var realPrice = $scope.betSlip.betterOddSelectionMode ?
+                            bet.betterPrice :
+                            ($scope.counterOffer.enabled && bet.counterOffer > bet.price ?
+                                parseFloat($filter('oddConvert')(bet.counterOffer, 'decimal')) :
+                                (Config.main.decimalFormatRemove3Digit ? parseFloat($filter('oddConvert')(bet.price, 'decimal')) : bet.price));
 
                         if ($scope.betConf.customAmountCalc && $scope.betConf.customAmountCalc[$rootScope.env.oddFormat] && (!Config.main.specialOddFormat || !Config.main.specialOddFormat[$rootScope.env.oddFormat] || Config.main.specialOddFormat[$rootScope.env.oddFormat].displayKey[bet.displayKey])) {
                             var customPriceData = $scope.betConf.customAmountCalc[$rootScope.env.oddFormat];
@@ -2490,14 +2493,14 @@ BettingModule.controller('betSlipController', ['$q', '$scope', '$rootScope', '$f
                             $scope.betSlip.totalStake += stake
                         }
                     }
-                    if ($scope.betConf.fullCoverBetTypes.enabled) {
+                    if ($scope.betConf.fullCoverBetTypes.enabled && bet.oddType !== 'sp') {
                         totalOdd *= calcBetPrice(bet.price);
                     }
                     break;
                 case 2: //express
                     var betPrice = bet.price;
                     totalOdd *= betPrice;
-                    ewOdd *= bet.ewAllowed && bet.ewCoeff ? ((betPrice - 1) / bet.ewCoeff + 1)  : betPrice;
+                    ewOdd *= bet.ewAllowed && bet.ewCoeff ? calcEachWayOdds(betPrice, bet.ewCoeff)  : betPrice;
                     break;
                 case 3: //system
                     if ($scope.betSlip.sysValArray.length < ($scope.betSlip.bets.length - 2 - $scope.betSlip.bankerBetsCount) && i > 1) {
@@ -2807,9 +2810,8 @@ BettingModule.controller('betSlipController', ['$q', '$scope', '$rootScope', '$f
         return !(
             ($scope.betSlip.type.value !== 1 && ($scope.betSlip.bets.length < 2 || $scope.betSlip.hasSingleOnlyEvents)) ||
             ($scope.betSlip.type.value !== 1 && (isNaN($scope.betSlip.stake) || !$scope.betSlip.stake)) ||
-            ($scope.betSlip.type.value === 1 && $scope.betSlip.hasEventsFromSameGame && Config.betting.blockSingleGameBets) ||
             ($scope.betSlip.type.value === 3 && $scope.betSlip.bets.length < 3) ||
-            ($scope.betSlip.type.value === 3 && $scope.betSlip.bets.length > 16) || // System bet restriction (max 16 events)
+            ($scope.betSlip.type.value === 3 && $scope.betSlip.bets.length > $scope.maximumSelectionForSystem) || // System bet restriction
             (Config.betting.enableBankerBet && $scope.betSlip.bets.length - $scope.betSlip.bankerBetsCount < 2) ||
             ($scope.betSlip.hasEmptyStakes && !$scope.betSlip.hasFilledStake) ||
             $scope.betSlip.hasLockedEvents  ||
@@ -2819,16 +2821,7 @@ BettingModule.controller('betSlipController', ['$q', '$scope', '$rootScope', '$f
 
     $scope.$on('bet', addBet);
 
-    /**
-     * @ngdoc method
-     * @name setBetSlipType
-     * @methodOf betting.controller:betSlipController
-     * @description sets betslip type
-
-     * @param {object} type betslip type, one of the following: single, express, system, chain
-     * @param {boolean} notCheckForFreeBet
-     */
-    $scope.setBetSlipType = function setBetSlipType(value, notCheckForFreeBet) {
+    function setBetSlipTypeNotDebounced(value, notCheckForFreeBet) {
         var canSet = false;
 
         if (value === 3 && checkSelectedBetsCount(3, true)) {
@@ -2868,7 +2861,18 @@ BettingModule.controller('betSlipController', ['$q', '$scope', '$rootScope', '$f
         if ($scope.betSlip.type.value !== 1) {
             $scope.counterOffer.enabled = false;
         }
-    };
+    }
+
+    /**
+     * @ngdoc method
+     * @name setBetSlipType
+     * @methodOf betting.controller:betSlipController
+     * @description sets betslip type
+
+     * @param {object} type betslip type, one of the following: single, express, system, chain
+     * @param {boolean} notCheckForFreeBet
+     */
+    $scope.setBetSlipType = Utils.debounce(setBetSlipTypeNotDebounced, 50);
 
     /**
      * @ngdoc method
@@ -2927,6 +2931,10 @@ BettingModule.controller('betSlipController', ['$q', '$scope', '$rootScope', '$f
      * @param {Object} gamePointer game object
      */
     $scope.gotoBetGame = function gotoBetGame(gamePointer) {
+        if(gamePointer.game === $location.search().game) {
+            return;
+        }
+
         var search = {
             'type': gamePointer.isLive,
             'sport': gamePointer.sport.id !== undefined ? gamePointer.sport.id : gamePointer.sport,
@@ -3201,6 +3209,17 @@ BettingModule.controller('betSlipController', ['$q', '$scope', '$rootScope', '$f
         }
     };
 
+    function hasConflicts(bets) {
+        for (var i = bets.length; i--;) {
+            for (var j = i; j--;) {
+                if (bets[i].gameId === bets[j].gameId && bets[i].expressId === bets[j].expressId || bets[i].gameId === bets[j].excludeIds || bets[i].excludeIds === bets[j].gameId) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
     /**
      *@description recalculates all possible types if full cover bet types enabled from config
      */
@@ -3208,59 +3227,71 @@ BettingModule.controller('betSlipController', ['$q', '$scope', '$rootScope', '$f
         if (!newLength || newLength < 2) {
             $scope.fullCoverBet.types = {};
         } else {
-            var i = 1, key, lastCount = 0, newTypes = {};
-            for (; i <= newLength;  ++i) {
-                key  = fullCoverTypesMap[i] || i + fullCoverTypesMap['default'];
-                newTypes[key] = $scope.fullCoverBet.types[key] || {
-                    order: i,
-                    amount: '',
-                    name: fullCoverTypesMap[i] && Translator.get(fullCoverTypesMap[i]) || (i + ' ' + Translator.get(fullCoverTypesMap["default"]))
+            if (Config.betting.disableConflictEventReplacement && hasConflicts($scope.betSlip.bets)) {
+                $scope.fullCoverBet.types = {};
+                $scope.fullCoverBet.types[fullCoverTypesMap[1]] = {
+                    order: 1,
+                    amount: "",
+                    name: Translator.get(fullCoverTypesMap[1]),
+                    count: newLength
                 };
-                newTypes[key].ewMode = false;
-                if (i > 1) {
-                    newTypes[key].count = $scope.calcSystemOptionsCount(i);
-                    lastCount += newTypes[key].count;
+                $scope.fullCoverBet.expanded = true;
+            } else {
+                var i = 1, key, lastCount = 0, newTypes = {};
+                for (; i <= newLength;  ++i) {
+                    key  = fullCoverTypesMap[i] || i + fullCoverTypesMap['default'];
+                    newTypes[key] = $scope.fullCoverBet.types[key] || {
+                        order: i,
+                        amount: '',
+                        name: fullCoverTypesMap[i] && Translator.get(fullCoverTypesMap[i]) || (i + ' ' + Translator.get(fullCoverTypesMap["default"]))
+                    };
+                    newTypes[key].ewMode = false;
+                    if (i > 1) {
+                        newTypes[key].count = $scope.calcSystemOptionsCount(i);
+                        lastCount += newTypes[key].count;
 
-                    if (newTypes[key].count === 1) {
-                        newTypes[key].totalCoef = 1; // will be calculated inside posWin
-                        newTypes[key].type = 2; // actually this is system bet
-                        newTypes[key].sysCount && (delete newTypes[key].sysCount);
+                        if (newTypes[key].count === 1) {
+                            newTypes[key].totalCoef = 1; // will be calculated inside posWin
+                            newTypes[key].type = 2; // actually this is system bet
+                            newTypes[key].sysCount && (delete newTypes[key].sysCount);
+
+                        } else {
+                            newTypes[key].sysCount = i;
+                            newTypes[key].type = 3; // actually this is system bet
+                            newTypes[key].totalCoef && (delete newTypes[key].totalCoef);
+                        }
 
                     } else {
-                        newTypes[key].sysCount = i;
-                        newTypes[key].type = 3; // actually this is system bet
-                        newTypes[key].totalCoef && (delete newTypes[key].totalCoef);
+                        newTypes[key].count = newLength;
                     }
-
-                } else {
-                    newTypes[key].count = newLength;
                 }
+
+                if (newLength > 2 && newLength <= 8) {
+                    var systemTuples = [];
+                    angular.forEach(newTypes, function(type) {
+                        if (type.sysCount) {
+                            systemTuples.push([type.sysCount, type.count]);
+                        }
+                    });
+                    var fullCoverLastItems = fullCoverAdditionalTypesMap[newLength];
+                    fullCoverLastItems.forEach(function(fullCoveredType) {
+                        var key = fullCoveredType.name;
+                        newTypes[key] = $scope.fullCoverBet.types[key] || {
+                            order: i++,
+                            amount: '',
+                            name: Translator.get(fullCoveredType.name),
+                            type: fullCoveredType.type,
+                            count: fullCoveredType.includeSingles ? lastCount + newLength : lastCount,
+                            includeSingles: fullCoveredType.includeSingles,
+                            systemTuples: systemTuples,
+                            ewMode: false
+                        };
+                    });
+                }
+
+                $scope.fullCoverBet.types = newTypes;
             }
 
-            if (newLength > 2 && newLength <= 8) {
-                var systemTuples = [];
-                angular.forEach(newTypes, function(type) {
-                    if (type.sysCount) {
-                        systemTuples.push([type.sysCount, type.count]);
-                    }
-                });
-                var fullCoverLastItems = fullCoverAdditionalTypesMap[newLength];
-                fullCoverLastItems.forEach(function(fullCoveredType) {
-                    var key = fullCoveredType.name;
-                    newTypes[key] = $scope.fullCoverBet.types[key] || {
-                        order: i++,
-                        amount: '',
-                        name: Translator.get(fullCoveredType.name),
-                        type: fullCoveredType.type,
-                        count: fullCoveredType.includeSingles ? lastCount + newLength : lastCount,
-                        includeSingles: fullCoveredType.includeSingles,
-                        systemTuples: systemTuples,
-                        ewMode: false
-                    };
-                });
-            }
-
-            $scope.fullCoverBet.types = newTypes;
 
             // need to check and fill single type amount
             $scope.singleBetTypeAmountChange();
@@ -3319,7 +3350,7 @@ BettingModule.controller('betSlipController', ['$q', '$scope', '$rootScope', '$f
      * @param {Boolean} saveChanges - if true, saves increased stake amount
      */
     $scope.toggleStakeTooltip = function toggleIncStakeTooltip(saveChanges) {
-        if (saveChanges && $scope.betSlip.totalStake - $rootScope.editBet.stakeAmount > $scope.profile.calculatedBalance + $scope.profile.calculatedBonus) { return; }
+        if (saveChanges && $scope.betSlip.totalStake - $rootScope.editBet.stakeAmount > $rootScope.profile.totalBalance) { return; }
 
         $rootScope.editBet.increaseStake.tooltip = !$rootScope.editBet.increaseStake.tooltip;
         if (saveChanges) {
@@ -3354,7 +3385,17 @@ BettingModule.controller('betSlipController', ['$q', '$scope', '$rootScope', '$f
     if ($scope.betConf.fullCoverBetTypes.enabled) {
         $scope.$watch('betSlip.bets.length', calculateFullCoverTypes);
 
-        $scope.betSlip.type.value !== 1 && $scope.setBetSlipType(1, false);
+        $scope.betSlip.type.value !== 1 && setBetSlipTypeNotDebounced(1, false);
+    }
+
+    function extractIds(value) {
+        var ids;
+        if (value.indexOf(',') > 0) {
+            ids = Utils.uniqueNum(value.split(','))
+        } else if (!isNaN(Number(value))) { // Checking if the url format is correct (e.g. event=,41545315 is wrong)
+            ids = [Number(value)];
+        }
+        return ids;
     }
 
 
@@ -3367,31 +3408,43 @@ BettingModule.controller('betSlipController', ['$q', '$scope', '$rootScope', '$f
     function lookForEventsInURL() {
         var params = $location.search();
         if (params.event && typeof params.event === 'string') {
-            var eventIds;
-            if (params.event.indexOf(',') > 0) {
-                eventIds = Utils.uniqueNum(params.event.split(','))
-            } else if (!isNaN(Number(params.event))) { // Checking if the url format is correct (e.g. event=,41545315 is wrong)
-                eventIds = [Number(params.event)];
-            }
-            if (eventIds) {
+            var eventIds,gameIds,marketIds;
+            eventIds = extractIds(params.event);
+            gameIds = extractIds(params.gameIds);
+            marketIds = extractIds(params.market);
+
+            if (eventIds && gameIds && marketIds) {
                 $location.search('event', undefined);
-                BetService.getEventData(eventIds).then(function success(response) {
-                    if (response.data) {
-                        var betsToPlace = Utils.formatEventData(response.data),
-                            oddType = 'odd';
-                        $scope.clearBetslip();
-                        for (var i = 0; i < betsToPlace.length; i++) {
-                            $rootScope.$broadcast('bet', {event: betsToPlace[i].eventInfo, market: betsToPlace[i].marketInfo, game: betsToPlace[i].gameInfo, oddType: oddType});
-                        }
-                        if (params.betSlipType && typeof params.betSlipType === 'number') {
-                            $scope.setBetSlipType(params.betSlipType, false);
-                            $location.search('betSlipType', undefined);
-                        }
-                        if (params.stake && typeof params.stake === 'string' && !isNaN(Number(params.stake))) {
-                            $scope.betSlip.stake = Number(params.stake);
-                            $location.search('stake', undefined);
-                        }
-                    }
+                $location.search('gameIds', undefined);
+                $location.search('market', undefined);
+
+                var eventsCount = eventIds.length;
+                var promises = [];
+                for (var i = 0; i < eventsCount; ++i) {
+                    promises.push(BetService.getEventData(eventIds[i], gameIds[i], marketIds[i]));
+                }
+               $q.all(promises).then(function success(responses) {
+                   if (responses.length) {
+                       $scope.clearBetslip();
+                       responses.forEach(function (response){
+                           if (response.data) {
+                               var betsToPlace = Utils.formatEventData(response.data),
+                                   oddType = 'odd';
+                               if (betsToPlace[0]) {
+                                   $rootScope.$broadcast('bet', {event: betsToPlace[0].eventInfo, market: betsToPlace[0].marketInfo, game: betsToPlace[0].gameInfo, oddType: oddType, ignoreCheck: true});
+                               }
+                           }
+                       });
+                       if (params.betSlipType && typeof params.betSlipType === 'number') {
+                           setBetSlipTypeNotDebounced(params.betSlipType, false);
+                           $location.search('betSlipType', undefined);
+                       }
+                       if (params.stake && typeof params.stake === 'string' && !isNaN(Number(params.stake))) {
+                           $scope.betSlip.stake = Number(params.stake);
+                           $location.search('stake', undefined);
+                       }
+                   }
+
                 });
             }
         }
@@ -3475,7 +3528,7 @@ BettingModule.controller('betSlipController', ['$q', '$scope', '$rootScope', '$f
         getFavoriteStakes();
         lookForEventsInURL();
         $scope.$on('betSlipType', function (event, data) {
-            $scope.setBetSlipType(data, false);
+            setBetSlipTypeNotDebounced(data, false);
         });
 
         BetService.getExpressBonusRules().then(function (response) {
@@ -3499,6 +3552,9 @@ BettingModule.controller('betSlipController', ['$q', '$scope', '$rootScope', '$f
     });
     $scope.$on('clear.bets',function(event, editBet,cancleEditBet) {if($scope.showRetainsButtons || editBet) { $scope.clearBetslip(cancleEditBet) }});
     $scope.$on('disable.add.bet', function() {$scope.disableAddBets.addBet = true});
+    $scope.$on('cancel.edit.bet', function () {
+        cancelEditBet();
+    })
     $scope.$on('$destroy', function() {
         if (subId) {
             Zergling.unsubscribe(subId);

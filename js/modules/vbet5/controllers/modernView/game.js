@@ -4,7 +4,7 @@
  * @description
  * Open Games controller
  */
-angular.module('vbet5.betting').controller('gameCtrl', ['$rootScope', '$scope', '$location', '$filter', '$window', 'Config', 'Utils', 'GameInfo', 'StreamService', 'analytics', 'BetService',  function ($rootScope, $scope, $location, $filter, $window, Config, Utils, GameInfo, StreamService, analytics, BetService) {
+angular.module('vbet5.betting').controller('gameCtrl', ['$rootScope', '$scope', '$location', '$filter', '$window', 'Config', 'Utils', 'GameInfo', 'StreamService', 'analytics', 'BetService', 'forecastTricast',  function ($rootScope, $scope, $location, $filter, $window, Config, Utils, GameInfo, StreamService, analytics, BetService, forecastTricast) {
     'use strict';
 
     /**
@@ -29,6 +29,9 @@ angular.module('vbet5.betting').controller('gameCtrl', ['$rootScope', '$scope', 
     $scope.animationSoundsMap = GameInfo.animationSoundsMap;
     var firstMarketName = "P1XP2";
 
+    var RACING_DIALOG_TAG = "forecast-tricast-bet-popup";
+
+
     /**
      * @ngdoc method
      * @name getDividedToRows
@@ -39,7 +42,7 @@ angular.module('vbet5.betting').controller('gameCtrl', ['$rootScope', '$scope', 
      * @param {String} sportAlias - selected sport alias
      * @returns {Array} array of rows, cols columns in each
      */
-    $scope.getDividedToRows = function getDividedToRows(market, sportAlias) {
+    function getDividedToRows(market, sportAlias) {
         var cols = market.col_count;
         if (!cols) {
             cols = 2;
@@ -52,10 +55,10 @@ angular.module('vbet5.betting').controller('gameCtrl', ['$rootScope', '$scope', 
         });
 
         var results = [], eventsArr = [];
-        if ((market.display_key === 'CORRECT SCORE' || market.type === 'CorrectScore') && BetService.constants.customCorrectScoreLogic.indexOf(sportAlias) > -1) {
+        if ((market.display_key === 'CORRECT SCORE' || market.type === 'CorrectScore') && BetService.constants.customCorrectScoreLogic[sportAlias]) {
             GameInfo.reorderMarketEvents(market, 'correctScore');
             eventsArr = market.events.slice();
-        } else if (BetService.constants.marketsPreDividedByColumns.indexOf(market.type) > -1) {
+        } else if (BetService.constants.marketsPreDividedByColumns[market.type]) {
             GameInfo.reorderMarketEvents(market, 'preDivided');
             eventsArr = market.events.slice();
         } else {
@@ -67,7 +70,7 @@ angular.module('vbet5.betting').controller('gameCtrl', ['$rootScope', '$scope', 
         }
 
         return results;
-    };
+    }
 
     /**
      * @description Update price of curent range pair
@@ -190,6 +193,91 @@ angular.module('vbet5.betting').controller('gameCtrl', ['$rootScope', '$scope', 
         if (team === 2) { return parseInt(currentSetScore.team1_value, 10) < parseInt(currentSetScore.team2_value, 10); }
     };
 
+    function initHorseRacing() {
+        forecastTricast.init($scope);
+        $scope.selectedTab = "winner";
+        $scope.racingData = {};
+
+        function resetRacingData() {
+            $scope.racingData.selectionStatusMap = {};
+            $scope.racingData.selectedItems = [];
+            $scope.racingData.selectedAnyCount = 0;
+        }
+        $scope.selectTab = function selectTab(tab) {
+            if ($scope.selectedTab !== tab) {
+                $scope.racingData = {};
+
+                $scope.selectedTab = tab;
+                switch (tab) {
+                    case 'forecast':
+                        $scope.racingData.columns = ['1st', '2nd', 'ANY'];
+                        resetRacingData();
+                        break;
+                    case 'tricast':
+                        $scope.racingData.columns = ['1st', '2nd', '3rd', 'ANY'];
+                        resetRacingData();
+                        break;
+                }
+
+            }
+        };
+
+        $scope.getEventRowIndex = function getEventRowIndex(event) {
+            for (var i= $scope.game.info.racesWithEvents.length; i--;) {
+                if ($scope.game.info.racesWithEvents[i].event.id === event.id) {
+                    return i;
+                }
+            }
+        };
+
+        $scope.getEvent = function getEvent(rowIndex) {
+            return $scope.game.info.race.racesWithEvents[rowIndex].event;
+        };
+
+        $scope.getItemsCount = function getItems() {
+            return $scope.game.info.race.racesWithEvents.length;
+        };
+        $scope.$on("$destroy", function () {
+            $rootScope.$broadcast("globalDialogs.removeDialogsByTag", RACING_DIALOG_TAG);
+        });
+        $scope.$on("forecastTricastFinished", function(event, gameId) {
+            if (gameId === $scope.game.id) {
+                resetRacingData();
+            }
+        });
+
+        $scope.openBetPopup = function openBetPopup() {
+            $scope.racingData.selectedItems.sort(function (item1, item2) {
+                return item1.col - item2.col;
+            });
+            $rootScope.broadcast('globalDialogs.addDialog', {
+                template: 'templates/popup/forecast-tricast-bet.html',
+                type: 'template',
+                tag: RACING_DIALOG_TAG,
+                state: {
+                    sportId: $scope.game.sport.id,
+                    selectedItems: $scope.racingData.selectedItems,
+                    selectedAnyCount: $scope.racingData.selectedAnyCount,
+                    type: $scope.selectedTab,
+                    gameId: $scope.game.id,
+                    start_ts: $scope.game.start_ts,
+                    name: $scope.game.team1_name
+                },
+                hideButtons: true
+            });
+
+        };
+
+
+        $scope.handleGameData = function handleGameData() {
+            var count = $scope.getItemsCount();
+            if (count === 0) {
+                $scope.selectedTab = "winner";
+            }
+            forecastTricast.restoreSelectedRaces();
+        };
+    }
+
     /**
      * @ngdoc method
      * @name init
@@ -201,7 +289,7 @@ angular.module('vbet5.betting').controller('gameCtrl', ['$rootScope', '$scope', 
         var searchParams = $location.search();
 
         if (parseInt(searchParams.game, 10) === $scope.game.id || $scope.$parent.openGames[$scope.game.type][$scope.game.id] !== undefined) {
-            $scope.toggleGame();
+            $scope.toggleGame(undefined, true);
         } else {
             $scope.checkForSavedOpenGame();
         }
@@ -288,8 +376,9 @@ angular.module('vbet5.betting').controller('gameCtrl', ['$rootScope', '$scope', 
      * as this controller's scope is destroyed on game list updates
      * because it's inside ng-repeat
      * @param {Boolean} dontClose if true, will not close game if it's open
+    * @param {Boolean} notByUser if user not expanded
      */
-    $scope.toggleGame = function toggleGame(dontClose) {
+    $scope.toggleGame = function toggleGame(dontClose, notByUser) {
         console.log('toggle game', $scope.game.open, dontClose);
 
         if (!$scope.game.open) {
@@ -297,8 +386,10 @@ angular.module('vbet5.betting').controller('gameCtrl', ['$rootScope', '$scope', 
             $scope.game.loading = true;
             if ($scope.game.sport.alias === 'HorseRacing') {
                 $scope.raceCardsPredicate = 'price';
+                initHorseRacing();
+
             }
-            $scope.$parent.subscribeToGame($scope.game, $scope.checkForSavedOpenGame);
+            $scope.$parent.subscribeToGame($scope.game, $scope.checkForSavedOpenGame, notByUser);
             $location.search('game', $scope.game.id);
             $location.search('competition', $scope.$parent.competition.id);
         } else if (!dontClose) {
@@ -327,7 +418,7 @@ angular.module('vbet5.betting').controller('gameCtrl', ['$rootScope', '$scope', 
 
     $scope.$on('openGame', function (event, id) {
         if (id === $scope.game.id) {
-            $scope.toggleGame(true);
+            $scope.toggleGame(true, true);
         }
     });
 
@@ -365,6 +456,7 @@ angular.module('vbet5.betting').controller('gameCtrl', ['$rootScope', '$scope', 
         return $filter('improveName')(name, game);
     };
 
+
     /**
      * @ngdoc method
      * @name processGameData
@@ -372,7 +464,7 @@ angular.module('vbet5.betting').controller('gameCtrl', ['$rootScope', '$scope', 
      * @description
      * Game data needs to be transformed a little bit for using in templates, we do that transformation on every change
      */
-    var processGameData = function processGameData() {
+    var processGameData = function processGameData(initActiveTab) {
         if (!$scope.game) {
             return;
         }
@@ -412,7 +504,7 @@ angular.module('vbet5.betting').controller('gameCtrl', ['$rootScope', '$scope', 
             //group by name and sort
 
             var isContainsGroupId = false;
-            var states = $scope.getStates();
+            var states = $scope.states;
             var groupId = states[$scope.game.id] && states[$scope.game.id].marketsGroup;
 
             if (groupId) {
@@ -422,7 +514,7 @@ angular.module('vbet5.betting').controller('gameCtrl', ['$rootScope', '$scope', 
                     }
                 });
             }
-            if ($scope.game.open && !Utils.isObjectEmpty($scope.game.market) && (groupId === undefined || groupId === null || !isContainsGroupId)) {
+            if (!Utils.isObjectEmpty($scope.game.market) && (initActiveTab || ($scope.game.open && (groupId === undefined || groupId === null || !isContainsGroupId)))) {
                 var firstElement = $filter('firstElement')($scope.marketGroups)[0];
                 $scope.setActiveTab("marketGroup", $scope.game, firstElement, firstElement.group_id, true);
             }
@@ -450,6 +542,7 @@ angular.module('vbet5.betting').controller('gameCtrl', ['$rootScope', '$scope', 
                             e.name = improveNameForThisGame(e.name, $scope.game);
                         });
                         m.showStatsIcon = Config.main.enableH2HStat && $scope.game.is_stat_available && Config.main.marketStats[m.type];
+                        m.rows =  getDividedToRows(m, $scope.game.sport.alias);
                     });
 
                 });
@@ -475,7 +568,7 @@ angular.module('vbet5.betting').controller('gameCtrl', ['$rootScope', '$scope', 
             if ($scope.raceCardsPredicate === 'none') {
                 $scope.raceCardsPredicate = 'price';
             }
-            GameInfo.getHorseRaceInfo($scope.game.info, $scope.game.market, "Winner");
+            GameInfo.getRacingInfo($scope.game.id, $scope.game.info, $scope.game.market, "Winner", $scope.handleGameData);
         }
 
         if ($scope.game.live_events) { //need this for sorting
@@ -529,13 +622,13 @@ angular.module('vbet5.betting').controller('gameCtrl', ['$rootScope', '$scope', 
      * this function is needed to retrieve game from there and assign to current scope
      *
      */
-    $scope.checkForSavedOpenGame = function checkForSavedOpenGame() {
+    $scope.checkForSavedOpenGame = function checkForSavedOpenGame(initActiveTab) {
         if ($scope.$parent.openGames[$scope.game.type][$scope.game.id] === undefined) {
             return;
         }
 
         $scope.game = $scope.$parent.openGames[$scope.game.type][$scope.game.id];
-        processGameData();
+        processGameData(initActiveTab);
     };
 
     /**
@@ -648,7 +741,7 @@ angular.module('vbet5.betting').controller('gameCtrl', ['$rootScope', '$scope', 
         if (orderItem === 'price'
            && $scope.game
            && $scope.game.info.race
-           && !$scope.game.info.race.horseStats[0].event.price) {
+           && !$scope.game.info.race.raceStats[0].event.price) {
             return;
         }
         if ($scope.raceCardsPredicate === orderItem || ($scope.game.sport.alias === 'SISGreyhound' && $scope.raceCardsPredicateDog === orderItem)) {
@@ -674,7 +767,7 @@ angular.module('vbet5.betting').controller('gameCtrl', ['$rootScope', '$scope', 
         }
         switch ($scope.raceCardsPredicate) {
             case 'cloth':
-                return parseInt(state.cloth, 10);
+                return state.runnerNum;
             case 'price':
                 return parseFloat(state.event.price);
             case 'odds':

@@ -4,37 +4,50 @@ VBET5.directive('jackpotSlider', ['$rootScope', 'jackpotManager', 'Utils','$filt
     return {
         restrict: 'E',
         replace: true,
-      //  templateUrl: 'templates/directive/casino-jackpot-slider.html',
         scope: {
             jackpotData: '=?',
             loadJackpotData: '=?',
-            type: '=?'
+            jackpotIndex :'=?',
         },
         templateUrl: function templateUrl(el, attrs) {
             var templateUrl = '';
-            switch  (attrs.type){
-                case 'widget-casino' : {
-                    templateUrl = 'templates/directive/casino-jackpot-widget.html';
+            switch  (attrs.templateType){
+                case 'widget' : {
+                    templateUrl = 'templates/directive/jackpot-slider-widget.html';
                     break;
                 }
                 default: {
-                    templateUrl = 'templates/directive/casino-jackpot-slider.html';
+                    templateUrl = 'templates/directive/jackpot-slider.html';
                     break;
                 }
             }
-            return  $filter('fixPath')(templateUrl || 'templates/directive/casino-jackpot-slider.html');
+            return  $filter('fixPath')(templateUrl);
         },
-        link: function (scope) {
+        link: function (scope,el,attrs) {
             scope.jackpotWidgets = {
                 amountIndex: 0
             };
+            function subscribeForGlobalJackpotDataCallback(data) {
+                scope.jackpotData = [{
+                    CurrencyFraction: data.CurrencyFraction,
+                    Currency: data.Currency,
+                    CollectedAmountTotal: data.Amount,
+                    Name:data.Name
+                }];
+            }
+
+            function subscribeForJackpotDataCallback(data) {
+                data = Utils.objectToArray(data);
+                scope.jackpotData = data;
+            }
 
             function subscribeForJackpotData() {
-                jackpotManager.unsubscribeFromJackpotData();
-                jackpotManager.subscribeForJackpotData(-1, function subscribeForJackpotDataCallback(data) {
-                    data = Utils.objectToArray(data);
-                    scope.jackpotData = data;
-                },null,scope.type || 'casino');  // -1 all games ,  casino
+                if (attrs.type !== 'global') {
+                    jackpotManager.unsubscribeFromJackpotData();
+                    jackpotManager.subscribeForJackpotData(-1, subscribeForJackpotDataCallback, null, attrs.type || 'casino');  // -1 all games ,  casino
+                } else {
+                    jackpotManager.subscribeForGlobalJackpotData(subscribeForGlobalJackpotDataCallback);
+                }
             }
 
             if (scope.loadJackpotData) {
@@ -43,7 +56,11 @@ VBET5.directive('jackpotSlider', ['$rootScope', 'jackpotManager', 'Utils','$filt
             }
             scope.$on('$destroy', function() {
                 if (scope.loadJackpotData) {
-                    jackpotManager.unsubscribeFromJackpotData(true);
+                    if(attrs.type !== 'global'){
+                        jackpotManager.unsubscribeFromJackpotData(true);
+                    }else{
+                        jackpotManager.unsubscribeFromGlobalJackpotData(subscribeForGlobalJackpotDataCallback);
+                    }
                 }
             });
         }

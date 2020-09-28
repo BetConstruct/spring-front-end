@@ -114,10 +114,8 @@ VBET5.controller('myBetsCtrl', ['$scope', 'Utils', 'ConnectionService', 'Zerglin
      */
     function fixBetsOutcome(bets) {
         for (var i = bets.length; i--;) {
-            if (bets[i].type === 1) {
-                if (EVENT_BET_OUTCOME_MAP[bets[i].events[0].outcome]) {
-                    bets[i].outcome = EVENT_BET_OUTCOME_MAP[bets[i].events[0].outcome];
-                }
+            if (bets[i].type === 1 && bets[i].events && bets[i].events[0] && EVENT_BET_OUTCOME_MAP[bets[i].events[0].outcome]) {
+                bets[i].outcome = EVENT_BET_OUTCOME_MAP[bets[i].events[0].outcome];
             }
         }
     }

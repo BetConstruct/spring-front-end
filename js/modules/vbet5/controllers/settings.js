@@ -59,7 +59,7 @@ VBET5.controller('settingsCtrl', ['$scope', '$rootScope', '$location', '$documen
 
         };
 
-        if($scope.conf.smsVerification.registration.enabled){
+        if($scope.conf.smsVerification.changePassword){
             request.confirmation_code = $scope.changepasswordData.confirmation_code;
         }
 
@@ -276,63 +276,54 @@ VBET5.controller('settingsCtrl', ['$scope', '$rootScope', '$location', '$documen
     function prepareOnceEditableFields () {
         var index;
 
-        if (!$scope.details.gender) {
-            $scope.details.gender = 'M';
-        } else {
-            index = $scope.personalDetails.editableFields.indexOf('gender');
+        function pushToReadOnly(field) {
+            index = $scope.personalDetails.editableFields.indexOf(field);
             if (index > -1) {
                 $scope.personalDetails.readOnlyFields.push($scope.personalDetails.editableFields.splice(index, 1)[0]);
             }
+        }
+
+        if (!$scope.details.gender) {
+            $scope.details.gender = 'M';
+        } else {
+            pushToReadOnly('gender');
         }
         $scope.details.viewGender = Translator.get({'M': 'Male', 'F': 'Female'}[$scope.details.gender]);
 
         if ($scope.details.first_name) {
-            index = $scope.personalDetails.editableFields.indexOf('first_name');
-            if (index > -1) {
-                $scope.personalDetails.readOnlyFields.push($scope.personalDetails.editableFields.splice(index, 1)[0]);
-            }
+            pushToReadOnly('first_name');
         }
 
         if ($scope.details.middle_name) {
-            index = $scope.personalDetails.editableFields.indexOf('middle_name');
-            if (index > -1) {
-                $scope.personalDetails.readOnlyFields.push($scope.personalDetails.editableFields.splice(index, 1)[0]);
-            }
+            pushToReadOnly('middle_name');
         }
 
         if ($scope.details.sur_name || $scope.details.last_name) {
-            index = $scope.personalDetails.editableFields.indexOf('sur_name');
-            if (index > -1) {
-                $scope.personalDetails.readOnlyFields.push($scope.personalDetails.editableFields.splice(index, 1)[0]);
-            }
+            pushToReadOnly('sur_name');
         }
 
         if ($scope.details.email) {
-            index = $scope.personalDetails.editableFields.indexOf('email');
-            if (index > -1) {
-                $scope.personalDetails.readOnlyFields.push($scope.personalDetails.editableFields.splice(index, 1)[0]);
-            }
+            pushToReadOnly('email');
         }
 
         if ($scope.details.doc_number) {
-            index = $scope.personalDetails.editableFields.indexOf('doc_number');
-            if (index > -1) {
-                $scope.personalDetails.readOnlyFields.push($scope.personalDetails.editableFields.splice(index, 1)[0]);
-            }
+            pushToReadOnly('doc_number');
         }
 
         if ($scope.details.personal_id) {
-            index = $scope.personalDetails.editableFields.indexOf('personal_id');
-            if (index > -1) {
-                $scope.personalDetails.readOnlyFields.push($scope.personalDetails.editableFields.splice(index, 1)[0]);
-            }
+            pushToReadOnly('personal_id');
         }
 
         if ($scope.details.zip_code) {
-            index = $scope.personalDetails.editableFields.indexOf('zip_code');
-            if (index > -1) {
-                $scope.personalDetails.readOnlyFields.push($scope.personalDetails.editableFields.splice(index, 1)[0]);
-            }
+            pushToReadOnly('zip_code');
+        }
+
+        if ($scope.details.city) {
+            pushToReadOnly('city');
+        }
+
+        if ($scope.details.address) {
+            pushToReadOnly('address');
         }
 
         if($scope.details.birth_date) {  // can edit if birthdate is empty and functionality of edit  enabled from config
@@ -358,10 +349,7 @@ VBET5.controller('settingsCtrl', ['$scope', '$rootScope', '$location', '$documen
         }
 
         if ($scope.details.bank_info) {
-            index = $scope.personalDetails.editableFields.indexOf('bank_info');
-            if (index > -1) {
-                $scope.personalDetails.readOnlyFields.push($scope.personalDetails.editableFields.splice(index, 1)[0]);
-            }
+            pushToReadOnly('bank_info');
         }
     }
 
@@ -904,27 +892,13 @@ VBET5.controller('settingsCtrl', ['$scope', '$rootScope', '$location', '$documen
         if ($scope.working || $scope.env.sliderContent !== 'settings') return;
 
         $scope.working = true;
-        var phoneNumber =  $rootScope.profile.phone;
-
-        if(!phoneNumber){
-            $rootScope.$broadcast("globalDialogs.addDialog", {
-                type: 'error',
-                title: 'Error',
-                content: Translator.get("Phone number is empty")
-            });
-            $scope.working = false;
-            return;
-        }
-
-        if(phoneNumber.indexOf("00") === 0){
-            phoneNumber =  phoneNumber.replace(/^00/,'');
-        }
+        var username =  $rootScope.profile.username;
 
         var request = {
             action_type: 3,
-            phone_number: phoneNumber
+            login: username
         };
-        Zergling.get(request, 'send_sms_to_phone_number')
+        Zergling.get(request, 'send_sms_with_username')
             ['finally'](function() {
                 $scope.working = false;
             });
@@ -1000,4 +974,29 @@ VBET5.controller('settingsCtrl', ['$scope', '$rootScope', '$location', '$documen
         };
         $scope.get12MonthsProfit();
     };
+    $scope.showBlocks = {
+        // permissions : false, // todo SDC-50625
+        preferences :true
+    };
+
+    // $scope.getClientRestriction = function getClientRestriction() {  // todo SDC-50625
+    //     var restrictionsLabels = {
+    //         "CanBet": "Can Bet",
+    //         "CanDeposit": "Can Deposit",
+    //         "CanWithdraw": "Can Withdraw",
+    //         "CanIncreaseLimit": "Can Increase a Limit"
+    //     };
+    //
+    //     Zergling.get({}, "get_client_restrictions").then(function (data) {
+    //         if (data.result === 0 && data.details) {
+    //             $scope.permissions = [];
+    //             angular.forEach(data.details, function (value, key) {
+    //                 if (restrictionsLabels[key]) {
+    //                     $scope.permissions.push({name: key, displayName: restrictionsLabels[key], value: value});
+    //                 }
+    //             });
+    //         }
+    //     });
+    // };
+
 }]);

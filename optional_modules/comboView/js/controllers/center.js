@@ -470,7 +470,7 @@ VBET5.controller('comboViewCenterController', ['$rootScope', '$scope', 'OddServi
                 }
 
                 if ($scope.openGame.sport.alias === "HorseRacing") {
-                    GameInfo.getHorseRaceInfo($scope.openGame.info, $scope.openGame.market, "Winner");
+                    GameInfo.getRacingInfo($scope.openGame.info, $scope.openGame.market, "Winner");
                 }
                 streamService.monitoring($scope, 'openGame', 'null', 'enlargedGame');
 

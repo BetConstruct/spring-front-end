@@ -21,7 +21,7 @@ VBET5.directive('egtJackpot', ['content', '$rootScope', 'jackpotManager', functi
                 'LeveIV': 'spade'
             };
 
-            jackpotManager.subscribeForExternalJackpotData(subscribeForExternalJackpotDataCallback,'EGT');
+            jackpotManager.subscribeForExternalJackpotData(subscribeForExternalJackpotDataCallback,['EGT']);
 
             function subscribeForExternalJackpotDataCallback(data) {
                 if(data && data['EGT']){

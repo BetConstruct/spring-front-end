@@ -4,8 +4,8 @@
  * @description
  * Results version 2 controller
  */
-angular.module('vbet5.betting').controller('ResultsV2Controller', ['$rootScope', '$scope', '$q', '$filter', 'Zergling', 'Config', 'Moment', 'Translator', 'Utils', 'GameInfo', 'Storage', 'ConnectionService', 'DomHelper',
-    function ($rootScope, $scope, $q, $filter, Zergling, Config, Moment, Translator, Utils, GameInfo, Storage, ConnectionService, DomHelper) {
+angular.module('vbet5.betting').controller('ResultsV2Controller', ['$rootScope', '$scope', '$q', '$filter', 'Zergling', 'Config', 'Moment', 'Translator', 'Utils', 'GameInfo', 'Storage', 'ConnectionService', 'DomHelper', 'analytics',
+    function ($rootScope, $scope, $q, $filter, Zergling, Config, Moment, Translator, Utils, GameInfo, Storage, ConnectionService, DomHelper, analytics) {
         'use strict';
 
         var timeZone = Config.env.selectedTimeZone || '';
@@ -85,6 +85,7 @@ angular.module('vbet5.betting').controller('ResultsV2Controller', ['$rootScope',
                 unsubscribeFromLeftMenuLiveGames();
             }
 
+            analytics.gaSend('send', 'event', 'result', 'Results tab click', {'eventLabel': (isLive ? 'Live' : 'Finished')});
             $scope.requestData.live = isLive ? 1 : 0;
             $scope.loadSports();
             $scope.updateLeftMenu(true);

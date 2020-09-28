@@ -882,6 +882,21 @@ VBET5.service('Utils', ['$timeout', '$filter', '$location', '$route', '$window',
         return a.start_ts - b.start_ts;
     };
 
+
+    /**
+     * @ngdoc method
+     * @name orderByField
+     * @methodOf vbet5.service:Utils
+     * @description  compares 2 elements based on any "field"
+     * @param {Array} arrayToOrder array
+     * @param {string} field  string
+     */
+    Utils.orderByField = function orderByField (arrayToOrder, field) {
+        return arrayToOrder.sort(function (a, b) {
+            return a[field] - b[field];
+        });
+    };
+
     /**
      *@ngdoc method
      * @name alphabeticalSorting
@@ -1201,19 +1216,6 @@ VBET5.service('Utils', ['$timeout', '$filter', '$location', '$route', '$window',
         return availableSportsbookViews;
     };
 
-    Utils.getBrowserLanguage = function getBrowserLanguage () {
-        var browserLang = navigator && (navigator.language || navigator.userLanguage);
-        var siteLang = false;
-        if(browserLang) {
-            angular.forEach(Config.main.availableLanguages, function(value, key) {
-                if(browserLang.indexOf(value.short.toLowerCase()) !== -1) {
-                    siteLang = key;
-                }
-            });
-        }
-        return siteLang;
-    };
-
     /**
      * @ngdoc method
      * @name getCustomSportAliasFilter
@@ -1482,19 +1484,25 @@ VBET5.service('Utils', ['$timeout', '$filter', '$location', '$route', '$window',
                 if (oldDomain) {
                     existedDomain = (oldDomain.length === 4) ? (oldDomain.slice(-3).join(".")).replace(/\/$/, '') : (oldDomain.slice(-2).join(".")).replace(/\/$/, '');
                     if (existedDomain !== currentDomain) {
+                        var fixMenu = function (menu) {
+                            if (menu) {
+                                for (var i = menu.length; i--;) {
+                                    if (menu[i].href) {
+                                        menu[i].href = menu[i].href.replace(existedDomain, currentDomain);
+                                    }
+                                }
+                            }
+                        };
                         config.main.redirectOnTablets = config.main.redirectOnTablets.replace(existedDomain, currentDomain);
                         config.main.footer.mobileVersionLink && (config.main.footer.mobileVersionLink = config.main.footer.mobileVersionLink.replace(existedDomain, currentDomain));
                         config.main.header.statisticsLink && (config.main.header.statisticsLink = config.main.header.statisticsLink.replace(existedDomain, currentDomain));
                         config.main.statsHostname && config.main.statsHostname.prefixUrl && (config.main.statsHostname.prefixUrl = config.main.statsHostname.prefixUrl.replace(existedDomain, currentDomain));
                         config.main.htmlMetaTags && (config.main.htmlMetaTags = config.main.htmlMetaTags.replace(existedDomain, currentDomain));
 
-                        var i, length;
-                        if (config.main.theVeryTopMenu) {
-                            for (i = 0, length = config.main.theVeryTopMenu.length; i < length; i+= 1) {
-                                config.main.theVeryTopMenu[i].href && (config.main.theVeryTopMenu[i].href = config.main.theVeryTopMenu[i].href.replace(existedDomain, currentDomain));
-                            }
-                        }
-                        //add case for multilevelmenu if it contain domain specific urls
+                        fixMenu(config.main.headerNavigation.aboveLogo);
+                        fixMenu(config.main.headerNavigation.nearLogo);
+
+                        //add case for multiLevelMenu if it contain domain specific urls
                     }
                     return;
                 }
@@ -1672,7 +1680,8 @@ VBET5.service('Utils', ['$timeout', '$filter', '$location', '$route', '$window',
                 domain: $window.location.hostname.split(/\./).slice(-2).join("."),
                 path: "/",
                 expires: new Date((new Date()).getTime() + expirationDate),
-                samesite: 'None'
+                samesite: 'None',
+                secure: true,
             };
             var cookieMethod = value instanceof Object ? 'putObject' : 'put';
             $cookies[cookieMethod](key, value, cookieOptions);
@@ -1935,7 +1944,8 @@ VBET5.service('Utils', ['$timeout', '$filter', '$location', '$route', '$window',
      * @param {number} decimalPlaces
      */
    Utils.cuttingDecimals = function cuttingDecimals(num, decimalPlaces) {
-        var m = Math.pow(10, decimalPlaces);
+       num = Utils.fixFloatError(num);
+       var m = Math.pow(10, decimalPlaces);
         var n = +(decimalPlaces ? num * m : num).toFixed(8); // Avoid rounding errors
         var r = Math.floor(n);
         return decimalPlaces ? r / m : r;
@@ -1950,6 +1960,63 @@ VBET5.service('Utils', ['$timeout', '$filter', '$location', '$route', '$window',
      */
     Utils.numberWithCommas = function numberWithCommas(num) {
         return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    };
+
+
+    /**
+     * @ngdoc method
+     * @name replaceTextPlaceholdersByObjectValues
+     * @methodOf vbet5.service:Utils
+     * @description replaceing text placeholders to object value
+     * @param {String} text
+     * @param {Object} object
+     */
+    Utils.replaceTextPlaceholdersByObjectValues = function replaceTextPlaceholdersByObjectValues(text, object) {
+
+        var result = text;
+
+        if (result && typeof result === 'string') {
+            var regex = /{(.*?)}/gm;
+            var placeholders = result.match(regex);
+
+            if (placeholders) {
+                placeholders.forEach(function (placeholder) {
+                    var fieldName = placeholder.replace('{', '').replace('}', '');
+                    if (fieldName && object && object[fieldName]) {
+                        result = result.replace(placeholder, object[fieldName]);
+                    }
+                });
+            }
+        }
+
+        return result;
+    };
+
+    Utils.debounce = function debounce(func, wait, immediate) {
+        var timeout;
+        return function() {
+            var context = this, args = arguments;
+            var later = function() {
+                timeout = null;
+                if (!immediate) func.apply(context, args);
+            };
+            var callNow = immediate && !timeout;
+            clearTimeout(timeout);
+            timeout = setTimeout(later, wait);
+            if (callNow) func.apply(context, args);
+        };
+    };
+
+    /**
+     * @ngdoc method
+     * @name calculatePermutationCount
+     * @methodOf vbet5.service:Utils
+     * @description calculate permutation count
+     * @param {number} n
+     * @param {number} k
+     */
+    Utils.calculatePermutationCount = function calculatePermutationCount(n, k) {
+        return Utils.factorial(n) / Utils.factorial(n - k);
     };
 
     return Utils;

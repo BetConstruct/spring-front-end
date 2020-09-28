@@ -13,7 +13,7 @@ angular.module('vbet5').service('GameInfo', ['$rootScope', '$http', '$filter', '
     GameInfo.dotaGamesList = [];/*'Dota', 'Dota2','CounterStrike', 'LeagueofLegends', 'StarCraft', 'StarCraft2'  --temporary removed dota game statistics*/
     GameInfo.PROVIDER_AVAILABLE_EVENTS = null;
     GameInfo.SPORT_GROUPS = null;
-
+    var RACING_URL_PREFIX = "https://horseracing.betcoapps.com/rc/";
     /**
      * @ngdoc method
      * @name groupRegionsIfNeeded
@@ -88,9 +88,15 @@ angular.module('vbet5').service('GameInfo', ['$rootScope', '$http', '$filter', '
      * @returns {Boolean} if game has video or not
      */
     GameInfo.hasVideo = function hasVideo(game, enablePrematchCheck) {
+        if(!Config.main.videoEnabled) {
+            game.video_id = undefined;
+            game.tv_type = undefined;
+            return false;
+        }
         if (Config.main.video.enableOptimization) {
             if (!GameInfo.PROVIDER_AVAILABLE_EVENTS || !GameInfo.PROVIDER_AVAILABLE_EVENTS[game.id]) {
                 game.video_id = undefined;
+                game.tv_type = undefined;
                 return false;
             }
             var options = GameInfo.PROVIDER_AVAILABLE_EVENTS[game.id][0];
@@ -99,6 +105,9 @@ angular.module('vbet5').service('GameInfo', ['$rootScope', '$http', '$filter', '
 
             if (options.is_guest) {
                 game.is_guest = options.is_guest;
+            }
+            if (options.allow_zero_balance) {
+                game.allow_zero_balance = options.allow_zero_balance;
             }
 
             return true;
@@ -273,7 +282,7 @@ angular.module('vbet5').service('GameInfo', ['$rootScope', '$http', '$filter', '
      * @param {Boolean} isAnimation get animation data
      */
     GameInfo.getVideoData = function getVideoData(game, evenIfNotLoggedIn, isAnimation) {
-        if (!isAnimation && (!game || game.tv_type === undefined || game.video_id === undefined || (!game.is_guest && !evenIfNotLoggedIn && (!$rootScope.profile || (!Config.main.video.allowedWithNoneBalance[game.tv_type] && ($rootScope.profile.calculatedBalance + $rootScope.profile.calculatedBonus) === 0))))) {
+        if (!isAnimation && (!game || game.tv_type === undefined || game.video_id === undefined || (!game.is_guest && !evenIfNotLoggedIn && (!$rootScope.profile || (!game.allow_zero_balance && $rootScope.profile.totalBalance === 0))))) {
             return;
         }
         var request = isAnimation ? {
@@ -319,6 +328,7 @@ angular.module('vbet5').service('GameInfo', ['$rootScope', '$http', '$filter', '
             var onStreamUpdate = function(response) {
                 if (response.stream_configs) {
                     GameInfo.PROVIDER_AVAILABLE_EVENTS = response.stream_configs;
+                    GameInfo.CHANNELS = response.channels;
                     $rootScope.$broadcast('stream.config.updated');
                 }
             };
@@ -383,76 +393,88 @@ angular.module('vbet5').service('GameInfo', ['$rootScope', '$http', '$filter', '
         }
     };
 
+    function getRacePrize(prizes) {
+        for (var i = prizes.length; i--;) {
+            if (prizes[i].position === 1) {
+                return prizes[i].amount;
+            }
+        }
+        return null;
+    }
+
     /**
      * @ngdoc method
      * @name getHorseRaceInfo
      * @methodOf vbet5.service:GameInfo
      * @description access to xml which contains race extra data and add this data to $scope.info.race
+     * @param {number} id
      * @param {Object} game info object
      */
-    GameInfo.getHorseRaceInfo = function getHorseRaceInfo(gameInfo, market, marketName) {
+    GameInfo.getRacingInfo = function getRacingInfo(id, gameInfo, market, marketName, callback) {
         if (!gameInfo) {
             return;
         }
         gameInfo.race = gameInfo.race || {};
-        gameInfo.race.horseStats = gameInfo.race.horseStats || [];
+        gameInfo.race.raceStats = gameInfo.race.raceStats || [];
         gameInfo.race.nonRunners = gameInfo.race.nonRunners || [];
         gameInfo.race.favourite = gameInfo.race.favourite || [];
         gameInfo.race.second_favourite = gameInfo.race.second_favourite || [];
 
-        var raceXml, raceId;
-        if (gameInfo.horse_xml) {
-            raceId = gameInfo.horse_xml.RacingId;
-            raceXml = gameInfo.horse_xml.HorceCXml && gameInfo.horse_xml.HorceCXml.split('/')[1];
-        }
 
-        var path = Config.main.horceRacingXmlUrl + raceXml;
         var raceData = {};
         //Does not work for localhost
-        $http.get(path).then(function (response) {
-            raceData = X2js.xml_str2json(response.data);
+        $http.get(RACING_URL_PREFIX + id + ".json").then(function (response) {
+            raceData = response.data;
             if (raceData) {
-                var raceDate = 's' + raceData.HorseRacingCard.Meeting._date.substring(6, 8) + raceData.HorseRacingCard.Meeting._date.substring(4, 6) + raceData.HorseRacingCard.Meeting._date.substring(2, 4);
-                var currentRace = getCurrentRace(raceData.HorseRacingCard.Meeting.Race, raceId);
-                if (currentRace) {
-                    gameInfo.race = getRaceInfo(currentRace);
 
-                    gameInfo.race.courceIcon = 'http://horseracing.vivaro.am/stadium/' + raceData.HorseRacingCard.Meeting._course.toLowerCase().split(' ').join('') + '.png';
-                    gameInfo.race.courceName = raceData.HorseRacingCard.Meeting._course;
-
-                    //   gameInfo.race.currentRace = currentRace;
-
-                    if(!currentRace.Horse.length){
-                        loadHorseDataFromMarket(market, gameInfo.race);
-                    }else{
-                        var horseList = getHorseList(currentRace, market, marketName, raceDate); //this contains horseList.Horses, horseList.NonRunners
-                        gameInfo.race.horseStats = horseList.horses;
-                        gameInfo.race.nonRunners = horseList.nonRunners;
-                        gameInfo.race.rule4 = horseList.rule4;
-                        if (market) {
-                            gameInfo.race.favourite = getHorseMarket(market, marketName, 'Favourite');
-                            gameInfo.race.second_favourite = getHorseMarket(market, marketName, '2nd Favourite');
-                        }
+                if(!raceData.selections.length){
+                    loadRaceDataFromMarket(market, gameInfo.race);
+                }else{
+                    var race = gameInfo.race;
+                    race.id = raceData.id;
+                    race.title = raceData.title;
+                    race.backgroundUrl = raceData.BackgroundUrl;
+                    race.courseType = raceData.courseType;
+                    race.distanceText = raceData.distanceText;
+                    race.surfaceType = raceData.surfaceType;
+                    if (raceData.prizes){
+                        race.prize = getRacePrize(raceData.prizes);
+                    }
+                    var horseList = getRaceList(raceData, market, marketName); //this contains horseList.Horses, horseList.NonRunners
+                    race.raceStats = horseList.races;
+                    race.racesWithEvents = race.raceStats.filter(function (item) {
+                        return item.event && !!item.event.id;
+                    });
+                    race.nonRunners = horseList.nonRunners;
+                    race.rule4 = horseList.rule4;
+                    if (market) {
+                        race.favourite = getRaceMarket(market, marketName, 'Favourite');
+                        race.second_favourite = getRaceMarket(market, marketName, '2nd Favourite');
                     }
                 }
+                callback && callback();
             }
-            else{ loadHorseDataFromMarket(market, gameInfo.race);}
-        })
-            .catch(function(){
-                loadHorseDataFromMarket(market, gameInfo.race);
-            });
+            else{
+                loadRaceDataFromMarket(market, gameInfo.race);
+                callback && callback();
+            }
+        }).catch(function(){
+            loadRaceDataFromMarket(market, gameInfo.race);
+            callback && callback();
+
+         });
     };
 
     /**
      * @ngdoc method
-     * @name loadHorseDataFromMarket
+     * @name loadRaceDataFromMarket
      * @methodOf vbet5.service:GameInfo
      * @description we load horse data from market when there are no horse details available
      * @param {Object} market with data
      * @param {Object} raceData where to add horse data
      **/
-    var loadHorseDataFromMarket = function loadHorseDataFromMarket(market, raceData){
-        raceData.horseStats = [];
+    var loadRaceDataFromMarket = function loadRaceDataFromMarket(market, raceData){
+        raceData.raceStats = [];
         raceData.nonRunners = [];
         for(var key in market) {
             if (market.hasOwnProperty(key)) {
@@ -477,7 +499,7 @@ angular.module('vbet5').service('GameInfo', ['$rootScope', '$http', '$filter', '
                             raceData.second_favourite = raceEvents[raceEvent];
                         }
                         else {
-                            raceData.horseStats.push(raceStats);
+                            raceData.raceStats.push(raceStats);
                         }
                     }
                 }
@@ -487,20 +509,20 @@ angular.module('vbet5').service('GameInfo', ['$rootScope', '$http', '$filter', '
     };
     /**
      * @ngdoc method
-     * @name getHorseMarket
+     * @name getRaceMarket
      * @methodOf vbet5.service:GameInfo
      * @description
      * helper function, returns
      * @param {Object} existing markets, the name of market to select, the horse name which market needed
      * @returns {Object} market event related to the horse
      */
-    var getHorseMarket = function getHorseMarket(markets, marketName, horseName, horseId) {
+    var getRaceMarket = function getRaceMarket(markets, marketName, racerName, racerId) {
         var raceMarket = {};
         var keepGoing = true;
         angular.forEach(markets, function (market) {
             if (market.type === marketName && keepGoing) {
                 angular.forEach(market.event, function (event) {
-                    if ((event.type.toLowerCase().trim() === horseName.toLowerCase().trim() || event.type === horseId) && keepGoing) {
+                    if ((event.type.toLowerCase().trim() === racerName.toLowerCase().trim() || event.type === racerId) && keepGoing) {
                         raceMarket = event;
 
                         keepGoing = false;
@@ -511,138 +533,66 @@ angular.module('vbet5').service('GameInfo', ['$rootScope', '$http', '$filter', '
         return raceMarket;
     };
 
-
-    /**
-     * @description helper function
-     * @param {Object} allRaces  all race data
-     * @param {Number} raceId current race id
-     * @returns {Object} current race data
-     */
-    var getCurrentRace = function getCurrentRace(allRaces, raceId) {
-        if (allRaces.length > 1) {
-            for (var i = 0; i < allRaces.length; i++) {
-                if (allRaces[i]._id == raceId) {
-                    return allRaces[i];
-                }
-            }
-        }
-        else {
-            return allRaces;
-        }
-    };
-
-    /**
-     * @description helper function
-     * @param {Object} currentRace current race full data
-     * @returns {Object} race related info
-     */
-    var getRaceInfo = function getRaceInfo(currentRace) {
-        var race = {};
-
-        race.prize = 0;
-        race.track_type = currentRace._trackType;
-        if (currentRace.Prizes && currentRace.Prizes.Prize){
-            for (var j = 0; j < currentRace.Prizes.Prize.length; j++) {
-                if (currentRace.Prizes.Prize[j]._position === '1') {
-                    race.prize = currentRace.Prizes.Prize[j]._amount;
-                    break;
-                }
-            }
-        }
-        race.currency = currentRace.Prizes? currentRace.Prizes._currency:'';
-        var distance = currentRace.Distance? currentRace.Distance._value: '';
-        if (currentRace.Distance && currentRace.Distance._units === 'yards') {
-            var miles = Math.floor(distance / 1760);
-            var furlongs = Math.floor((distance - 1760 * miles) / 220);
-            var yards = (distance - 1760 * miles) - 220 * furlongs;
-            race.distance = (miles > 0 ? miles + 'm ' : '') + (furlongs > 0 ? furlongs + 'f ' : '') + (yards > 0 ? yards + 'y ' : '');
-        } else {
-            race.distance = distance + ' ' + (currentRace.Distance?currentRace.Distance._units:'');
-        }
-        race.race_type = currentRace._raceType;
-        race.title = currentRace.Title;
-        return race;
-    };
-
     /**
      * @description helper function
      * @param {Object} raceData current race full data
      * @param {Object} market race market
      * @param {String} marketName market name
-     * @param {String} raceDate race date
-     * @returns {Object} merges horse info with market event and returns horses list
+     * @returns {Object} merges race info with market event and returns horses list
      */
-    var getHorseList = function getHorseList(raceData, market, marketName, raceDate) {
+    var getRaceList = function getRaceList(raceData, market, marketName) {
 
         var statisticsArray = [];
         var nonRunnersArray = [];
         var rule4 = false;
-        if (raceData.Horse){
-            for (var k = 0; k < raceData.Horse.length; k++) {
-                var horseStatistics = {};
-                horseStatistics.id = raceData.Horse[k] ? raceData.Horse[k]._id : '';
-                horseStatistics.name = raceData.Horse[k] ? raceData.Horse[k]._name : '';
-                horseStatistics.age = raceData.Horse[k].Age ? raceData.Horse[k].Age._years : '';
-                if( raceData.Horse[k].Jockey){
-                    horseStatistics.jockey =  raceData.Horse[k].Jockey._name;
-                    horseStatistics.jockey_allowance = raceData.Horse[k].Jockey.Allowance ? '(' + raceData.Horse[k].Jockey.Allowance._value + ')' : '';
-                }else{
-                    horseStatistics.jockey = '';
-                    horseStatistics.jockey_allowance = '';
-                }
+        if (raceData.selections){
+            var length = raceData.selections.length;
+            for (var k = 0; k < length; k++) {
+                var race = raceData.selections[k];
+                var raceStatistics = {
+                    age: race.age,
+                    name: race.name,
+                    weight: race.weightStones + "-" + race.weightPounds,
+                    id: race.runnerId,
+                    lastRunDays: race.lastRunDays,
+                    historyStatistics: getRaceStatistics(race.raceHistoryStat),
+                    runnerNum: race.runnerNum,
+                    drawn: race.drawn,
+                    trainerName: race.trainerInfo.name,
+                    jockeyInfo: (race.jockeyInfo?{
+                        name: race.jockeyInfo.name,
+                        colourFileUrl: race.jockeyInfo.coloursFilename
+                    }: {}),
+                    formFigures: race.formFigures
 
-                if (raceData.Horse[k].LastRunDays) {
-                    if (raceData.Horse[k].LastRunDays.length) {
-                        for (var m = 0; m < raceData.Horse[k].LastRunDays.length; m++) {
-                            if (raceData.Horse[k].LastRunDays[m]._type === raceData._raceType) {
-                                horseStatistics.last_run_days = raceData.Horse[k].LastRunDays[m]._days;
-                            }
-                        }
-                    } else {
-                        horseStatistics.last_run_days = raceData.Horse[k].LastRunDays._days;
-                    }
-                }
-                if (raceData.Horse[k].RaceHistoryStat) {
-                    horseStatistics.historyStats = getCdWon(raceData.Horse[k].RaceHistoryStat);
-
-                }
-                horseStatistics.jockey_colors = Config.main.horceRacingXmlUrl + raceDate + '/' + raceData.Horse[k].JockeyColours._filename;
-                horseStatistics.trainer = raceData.Horse[k].Trainer ? raceData.Horse[k].Trainer._name : '';
-                var stones = raceData.Horse[k].Weight._value ? Math.floor(raceData.Horse[k].Weight._value / 14) : '';
-                var pounds = (raceData.Horse[k].Weight._value - stones * 14) > 0 ? ('-' + (raceData.Horse[k].Weight._value - stones * 14)) : '';
-                horseStatistics.weight = {
-                    units: raceData.Horse[k].Weight ? raceData.Horse[k].Weight._units : '',
-                    value: stones + pounds
                 };
-                horseStatistics.cloth = raceData.Horse[k].Cloth ? raceData.Horse[k].Cloth._number : '';
-                horseStatistics.drawn = raceData.Horse[k].Drawn && raceData.Horse[k].Drawn._stall ? raceData.Horse[k].Drawn._stall : '-';
-                horseStatistics.form_figures = raceData.Horse[k].FormFigures ? raceData.Horse[k].FormFigures._figures : '';
+
                 if (market) {
                     //get market price for this particular horse, will remove from this code
-                    horseStatistics.event = getHorseMarket(market, marketName, horseStatistics.name, horseStatistics.id);
-                    if(horseStatistics.event && horseStatistics.event.extra_info && horseStatistics.event.extra_info.PriceHistory && horseStatistics.event.extra_info.PriceHistory.length > 1) {
-                        horseStatistics.event.previousPrice = horseStatistics.event.extra_info.PriceHistory.sort(function (a, b) {
+                    raceStatistics.event = getRaceMarket(market, marketName, raceStatistics.name, raceStatistics.id);
+                    if(raceStatistics.event && raceStatistics.event.extra_info && raceStatistics.event.extra_info.PriceHistory && raceStatistics.event.extra_info.PriceHistory.length > 1) {
+                        raceStatistics.event.previousPrice = raceStatistics.event.extra_info.PriceHistory.sort(function (a, b) {
                             return b.TS - a.TS;
                         })[1].Price;
                     }
                 }
                 else {// maybe no need of this block, need to check when no markets available
-                    horseStatistics.event = {};
+                    raceStatistics.event = {};
                 }
                 //This is non runner check
                 //if (horseStatistics.jockey === 'Non Runner') {
-                if(horseStatistics.event.nonrunner ){
-                    nonRunnersArray.push(horseStatistics);
-                    if(horseStatistics.event.nonrunner === 2){
+                if(raceStatistics.event.nonrunner ){
+                    nonRunnersArray.push(raceStatistics);
+                    if(raceStatistics.event.nonrunner === 2){
                         rule4 = true;
                     }
                 } else {
-                    statisticsArray.push(horseStatistics);
+                    statisticsArray.push(raceStatistics);
                 }
             }
         }
 
-        return {'horses': statisticsArray, 'nonRunners': nonRunnersArray, 'rule4': rule4};
+        return {'races': statisticsArray, 'nonRunners': nonRunnersArray, 'rule4': rule4};
     };
 
 
@@ -652,28 +602,11 @@ angular.module('vbet5').service('GameInfo', ['$rootScope', '$http', '$filter', '
      * @param {Object} historyStat horse statistics history
      * @returns {Object} formatted statistics history
      */
-    var getCdWon = function getCdWon(historyStat){
+    var getRaceStatistics = function getRaceStatistics(historyStat){
         var horseHistoryStat = {};
-        if (historyStat.length) {
-            for (var i = 0; i < historyStat.length; i++) {
-                switch (historyStat[i]._type) {
-                    case 'Distance':
-                        horseHistoryStat.d = 'D';
-                        break;
-                    case 'Course':
-                        horseHistoryStat.c = 'C';
-                        break;
-                    case 'CourseDistance':
-                        horseHistoryStat.cd = 'CD';
-                        break;
-                    case 'BeatenFavourite':
-                        horseHistoryStat.bf = 'BF';
-                        break;
-                }
-            }
-        }
-        else {
-            switch (historyStat._type) {
+         var length = historyStat.length;
+        for (var i = 0; i < length; i++) {
+            switch (historyStat[i].type) {
                 case 'Distance':
                     horseHistoryStat.d = 'D';
                     break;
@@ -688,7 +621,6 @@ angular.module('vbet5').service('GameInfo', ['$rootScope', '$http', '$filter', '
                     break;
             }
         }
-
         return horseHistoryStat;
     };
 
@@ -919,7 +851,9 @@ angular.module('vbet5').service('GameInfo', ['$rootScope', '$http', '$filter', '
             if(game.sport.alias === 'Tennis') {
                 GameInfo.setTennisCourtSide(game.last_event, game);
             }
-            game.has_animation = !!(Config.main.sportsWithAnimations[game.sport.alias]);
+            if(Config.main.sportsWithAnimations[game.sport.alias]) {
+                game.has_animation = (Config.main.sportsWithAnimations[game.sport.alias] !== 'external') ? true : !!Config.main.externalAnimation;
+            }
         }
         if (game.video_provider && game.video_provider[2]) {
             if (Config.main.enableCustomAnimations) {
@@ -949,40 +883,38 @@ angular.module('vbet5').service('GameInfo', ['$rootScope', '$http', '$filter', '
     /* checks if extra time of the game is played
      * need this function for generating timeline events */
     function checkExtraTime(game) {
-        var gameInfo = game.info;
-        return (
-            gameInfo && (
-                gameInfo.current_game_state === 'additional_time1' ||
-                gameInfo.current_game_state === 'additional_time2' ||
-                gameInfo.current_game_state === 'set3' ||
-                gameInfo.current_game_state === 'set4' ||
-                (gameInfo.current_game_state === 'timeout' && gameInfo.current_game_time > 90) ||
-                (gameInfo.current_game_state === 'set5' && game.last_event.match_length > 90)
-            )
-        );
+        return game.last_event && game.last_event.period_sequence > 4
     }
 
     /* returns current time position on timeline */
     function getTLCurrentMinutePosition(game) {
-        var curentMinute;
+        var currentMinute;
         var currentMinutePosition = '';
-
         if (!game.info || !game.info.current_game_time) {
-            return;
+            if(game.last_event && game.last_event.period_sequence){
+                if(game.last_event.period_sequence === 2 || game.last_event.period_sequence === 6){ // full time timeout
+                    currentMinutePosition = '50%';
+                }else if(game.last_event.period_sequence === 4 || game.last_event.period_sequence === 7){ // half time timeout
+                    currentMinutePosition = '100%';
+                }
+                return currentMinutePosition;
+            }else {
+                return;
+            }
         }
         var matchLength = parseInt((game.last_event && game.last_event.match_length) || game.match_length || 0, 10);
         var extraTime = 30;
-        var mainTime = matchLength > 100 ? matchLength - extraTime : matchLength;
+        var mainTime = matchLength > 90 ? matchLength - extraTime : matchLength;
 
-        curentMinute = parseInt(game.info.current_game_time, 10);
-
-        if(curentMinute < 0 ){
+        currentMinute = parseInt(game.info.current_game_time, 10);
+        if(currentMinute < 0 ){
             return '0%';
         }
-        if (game.info.isExtraTime) {
-            currentMinutePosition = ((curentMinute - mainTime) / extraTime * 100) + '%' ;
+
+        if (currentMinute && game.info.isExtraTime) {
+            currentMinutePosition = ((currentMinute - mainTime) / extraTime * 100) + '%' ;
         } else {
-            currentMinutePosition = (curentMinute / mainTime * 100) + '%';
+            currentMinutePosition = (currentMinute / mainTime * 100) + '%';
         }
 
         return currentMinutePosition;
@@ -1060,6 +992,8 @@ angular.module('vbet5').service('GameInfo', ['$rootScope', '$http', '$filter', '
      * @description generates timeline events for soccer animation control
      */
     GameInfo.generateTimeLineEvents = function generateTimeLineEvents(game) {
+
+
         if (game && game.info) {
             game.info.isExtraTime = GameInfo.isExtraTime(game);
         }
@@ -1075,8 +1009,45 @@ angular.module('vbet5').service('GameInfo', ['$rootScope', '$http', '$filter', '
             angular.forEach(game.live_events, function (tlEvent) {
                 populateTimelineEventData(tlEvent, game);
             });
+
+            if(game.info.current_game_state ==='set5' || game.last_event.period_sequence === 8){ // penalties
+                generatePostMatchTableEvents(game);
+            }
+
         }
     };
+
+    /**
+     * @ngdoc method
+     * @name generatePostMatchTableEvents
+     * @methodOf vbet5.service:GameInfo
+     * @param {object} game object contains game events
+     * @description generates post match events for soccer
+     */
+    function generatePostMatchTableEvents(game) {
+        var postMatchPenaltiesEvents = {home: [], away: []};
+
+        var sideName = 'home';
+        angular.forEach(game.live_events, function (event) {
+            if (event && event.period_sequence === 8 && (event.type_id === "31" || event.type_id === "1")) {
+
+                if (event.side === '1') {
+                    sideName = 'home';
+                } else {
+                    sideName = 'away';
+                }
+                postMatchPenaltiesEvents[sideName].push(event);
+            }
+        });
+
+        game.postMatchPenaltiesEvents = {home: new Array(5),away: new Array(5)};
+
+        angular.forEach(postMatchPenaltiesEvents, function (events,side) {
+            angular.forEach(events, function (event,index) {
+                game.postMatchPenaltiesEvents[side][index] = event ;
+            });
+        });
+    }
 
 
     /*********************   SPRING PLATFORM SUPPORT FUNCTIONS END     **********************************/
@@ -1157,7 +1128,6 @@ angular.module('vbet5').service('GameInfo', ['$rootScope', '$http', '$filter', '
         return  liveGameSetsAliases[sportAlias + currentFrame] || currentFrame;
     };
 
-
     /**
      * @ngdoc method
      * @name getCurrentTime
@@ -1171,19 +1141,12 @@ angular.module('vbet5').service('GameInfo', ['$rootScope', '$http', '$filter', '
             if (timeObj.indexOf('set') >= 0) {
                 if (timeObj.indexOf(':') > 0) {
                     return timeObj.substr((timeObj.indexOf(':') - 2), 5);
-                } else {
-                    return '';
                 }
-            } else {
-                return timeObj;
+                return '';
             }
+            return timeObj;
         }
-
-
-        //return timeObj && (timeObj.indexOf(':') > 0) ? timeObj.substr((timeObj.indexOf(':') - 2), 5) + "'" : timeObj;
     };
-
-
 
     /**
      * @ngdoc function

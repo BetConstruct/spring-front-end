@@ -18,25 +18,6 @@ VBET5.controller('homepageTournaments', ['$scope', 'Zergling', 'Translator', 'Ut
     //1 backgammon
     //2 chines epoker
 
-    /**
-     * @ngdoc method
-     * @name loadTournament
-     * @methodOf vbet5.controller:homepageTournaments
-     * @description Initialization
-     */
-    function loadTournament() {
-        Zergling.get({product_type: $scope.tournamentModel.selectedTournament.value}, 'get_tournaments').then(function (response) {
-            if (response) {
-                $scope.tournamentsLoadComplete = true;
-                $scope.name = response.name;
-                $scope.time = response.start_time.split(' ')[1];
-                $scope.prize = response.prize;
-                $scope.entranceFee = response.entrance_fee;
-            }
-        });
-    }
-
-    $scope.loadTournament = loadTournament;
 
     /**
      * @ngdoc method

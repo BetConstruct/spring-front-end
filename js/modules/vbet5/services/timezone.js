@@ -20,7 +20,7 @@ VBET5.service('TimezoneService', ['Config', 'Storage', 'Moment', function (Confi
         if (Config.main.timeZonePerLanguage[Config.env.lang]) {
             return Config.main.timeZonePerLanguage[Config.env.lang];
         }
-        if (Storage.get('selectedTimeZone')) {
+        if (Config.main.header.enableTimeZoneSelect && Storage.get('selectedTimeZone')) {
             return Storage.get('selectedTimeZone');
         }
 
@@ -43,7 +43,9 @@ VBET5.service('TimezoneService', ['Config', 'Storage', 'Moment', function (Confi
             Config.env.selectedTimeZone = value;
         }
 
-        Storage.set('selectedTimeZone', Config.env.selectedTimeZone, storageExpireTime);
+        if (Config.main.header.enableTimeZoneSelect) {
+            Storage.set('selectedTimeZone', Config.env.selectedTimeZone, storageExpireTime);
+        }
     };
 
     TimezoneService.data = [

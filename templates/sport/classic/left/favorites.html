@@ -3,7 +3,7 @@
         <li>
             <div class="sports-item-v3 favorite-nav-icon-v3 {{sport.alias}} {{leftMenuState.favorites.expanded ? 'active' : ''}}"
                  ng-if="myGames.length > 0" ng-init="leftMenuState.favorites.expanded = true"
-                 ng-click="leftMenuState.favorites.expanded = !leftMenuState.favorites.expanded; leftMenuClosed ? toggleLeftMenu() : void()" title="Favorite games">
+                 ng-click="leftMenuState.favorites.expanded = !leftMenuState.favorites.expanded; leftMenuClosed ? toggleLeftMenu() : void()" title="{{'Favorite games'|translate}}">
                 {{'Favorite games'|translate}}
                 <div class="sport-games-count-v3" ng-show="myGames.length">{{myGames.length}}</div>
                 <div class="arrow-view-v3"></div>
@@ -41,7 +41,7 @@
                                                 <div class="icon-separator-v3 favorite {{myGames.indexOf(game.id) !== -1 ? 'active' : ''}}"
                                                      ng-click="toggleGameFavorite(game); $event.stopPropagation()"
                                                 ></div>
-                                                <div class="icon-separator-v3 video" ng-show="game.video_id && $root.conf.videoEnabled"></div>
+                                                <div class="icon-separator-v3 video" ng-show="game.video_id"></div>
                                                 <!--<div class="icon-separator-v3 tv"></div>-->
                                                 <div class="icon-separator-v3 statistic" ng-click="openStatistics(game);$event.stopPropagation();" ng-show="$root.conf.enableH2HStat && game.is_stat_available" title="{{'statistic'|translate}}"></div>
                                             </div>

@@ -1,6 +1,15 @@
 <div id="external-animation">
-<vbet-loader ng-show="externalAnimation.loading"></vbet-loader>
-    <div id="statscore-tracker-container" ng-show="externalAnimation.show" ng-if="$root.conf.externalAnimation.livematchpro.enabled"></div>
+    <vbet-loader ng-show="externalAnimation.loading"></vbet-loader>
+    <div ng-if="$root.conf.externalAnimation.livematchpro.enabled || $root.conf.externalAnimation.prematchpro.enabled">
+        <div id="statscore-tracker-container" ng-show="externalAnimation.show"></div>
+        <div ng-if="(animationType === 'livematchpro') && !vbet5AvailableAnimations[openGame.sport.alias] && !externalAnimation.loading && !externalAnimation.show">
+            <p ng-show="openGame.tv_type">
+                <span trans class="no-animation-msg">There is no animation available for the moment.</span>
+                <span  class="no-animation-msg" ng-click="openGame.activeFieldType='video'; playerRemoved = false;" trans>You can switch to watch the video of the game</span>
+            </p>
+            <p ng-show="!openGame.tv_type" trans class="no-animation-msg">There is no animation available for the moment.</p>
+        </div>
+    </div>
     <div id="betradar-container" ng-if="$root.conf.externalAnimation.betradar.enabled"></div>
 </div>
 

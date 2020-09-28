@@ -22,7 +22,7 @@ angular.module('vbet5.betting').controller('exchangeShopCtrl', ['$scope', '$root
      * @name showItemDetails
      * @methodOf vbet5.controller:exchangeShopCtrl
      * @description Open item details
-     * @param {Object} Item data
+     * @param {Object} item data
      */
     $scope.showItemDetails = function showItemDetails(item) {
         $scope.shop.details = item;
@@ -54,12 +54,12 @@ angular.module('vbet5.betting').controller('exchangeShopCtrl', ['$scope', '$root
 
         Zergling.get(request, 'create_shop_order').then(function (response) {
             if (response && parseInt(response.result, 10) === 0) {
-                exchangeReponse(true);
+                exchangeResponse(true);
             } else {
-                exchangeReponse(false);
+                exchangeResponse(false);
             }
-        }, function (failResponse) {
-            exchangeReponse(false);
+        }, function () {
+            exchangeResponse(false);
         })['finally'](function() {
             $scope.shop.order.translactionInProgress = false;
         });
@@ -78,12 +78,12 @@ angular.module('vbet5.betting').controller('exchangeShopCtrl', ['$scope', '$root
 
     /**
      * @ngdoc method
-     * @name exchangeReponse
+     * @name exchangeResponse
      * @methodOf vbet5.controller:exchangeShopCtrl
-     * @description Show reponse dialog
-     * @param {Boolean} true if success
+     * @description Show response dialog
+     * @param {Boolean} success , true if success
      */
-    function exchangeReponse (success) {
+    function exchangeResponse (success) {
         if (success) {
             $rootScope.$broadcast("globalDialogs.addDialog", {
                 type: 'info',
@@ -122,11 +122,7 @@ angular.module('vbet5.betting').controller('exchangeShopCtrl', ['$scope', '$root
                         });
                     }
                 });
-
-                $scope.shop.products = response.data.products;
-
-                console.log('Shop products', $scope.shop.products);
-
+                $scope.shop.products = Utils.orderByField(response.data.products, "price");
             } else {
                 $location.path('#/');
             }

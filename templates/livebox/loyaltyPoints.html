@@ -87,7 +87,8 @@
                             <div class="lp-progress-bar-j">
                                 <div class="lp-progress-j"><span ng-style="{width: (progressValue || 0) + '%'}" style="width: {{ progressValue || 0 }};" data-progress="{{ profile.loyalty_last_earned_points }}"></span></div>
                                 <ul class="lp-packs-wrap-j">
-                                    <li ng-repeat="program in programs track by program.Id">{{ program.MinPoint }}</li>
+                                    <li>{{ programs[0].MinPoint }}</li>
+                                    <li>{{ programs[programs.length-1].MinPoint }}</li>
                                 </ul>
                             </div>
                             <div class="lp-packs-group-wrap-j">

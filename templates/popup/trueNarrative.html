@@ -1,0 +1,60 @@
+<div ng-controller="trueNarrativeCtrl">
+    <form method="POST" name="trueNarrativeForm" enctype='multipart/form-data' ng-hide="data.loading || data.status === 'success'" ng-submit="submitForm($event);" novalidate>
+        <ul class="select-doc-a">
+            <li>
+                <h2 trans>true-narrative-info</h2>
+            </li>
+            <li>
+                <label>
+                    <p trans>Please select your type of ID</p>
+                    <div class="select-holder">
+                        <select required ng-model="data.imageType" name="imageType">
+                            <option value="" trans>Not selected</option>
+                            <option ng-repeat="type in imageTypes track by $index" value="{{type.id}}">{{type.name|translate}}</option>
+                        </select>
+                    </div>
+                </label>
+            </li>
+            <li>
+                <div class="upload-verify">
+                    <p trans>File location</p>
+                    <ul >
+                        <li>
+                            <label>
+                                <p trans>Please select your country</p>
+                                <div class="select-holder">
+                                    <select required ng-model="data.countryCode" name="countryCode">
+                                        <option ng-repeat="country in countryCodes track by country.key" value="{{country.key}}">{{country.name|translate}}</option>
+                                    </select>
+                                </div>
+                            </label>
+                        </li>
+                        <li>
+                            <input type="file" name="passportImage" id="passportImage" accept="image/*" class="passportUpload"  ng-model="data.image" file-upload="" >
+                            <input name="imageFile" id="uploadFilePassport" trans="attr-only" placeholder="Choose File" disabled="disabled" ng-model="data.image.Name" required/>
+                        </li>
+                        <li>
+                            <button type="button" ng-disabled="!data.image">
+                                <label>
+                                    {{'Browse'|translate}}
+                                </label>
+                            </button>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+            <li ng-if="data.status === 'fail'" trans class="error-msg">There was an error when verifying your account</li>
+            <li class="button-confirm">
+                <button ng-disabled="!data.image.ImageData || !data.imageType" type="submit" title="{{'Please upload an image,select country and select the type of your ID'|translate}}" trans>Verify</button>
+            </li>
+        </ul>
+    </form>
+    <vbet-loader ng-show="data.loading"></vbet-loader>
+    <div class="gift-bet-success" ng-if="!data.loading && (data.status === 'success')">
+        <i class="gift-bet-success"></i>
+        <p trans>You have successfully uploaded your document</p>
+        <div class="button-confirm">
+            <button ng-click="close()" trans>OK</button>
+        </div>
+    </div>
+</div>

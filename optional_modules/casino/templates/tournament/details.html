@@ -4,7 +4,7 @@
         <div class="casino-tournament-page-intro" ng-style="{'background-image': 'url({{tournament.details.DetailsBannerImagesFiltered[0].ImageUrl}})'}">
             <div class="ct-page-intro-info-holder">
                 <h3 trans>Prize fund</h3>
-                <h2>{{tournament.details.PrizeFund|number}} {{tournament.details.CurrencyId}}</h2>
+                <h2>{{tournament.details.PrizeFund|number}} {{tournament.details.CurrencyId|currency}}</h2>
                 <h1>{{tournament.details.Name}}</h1>
                 <div class="ct-page-countdown-holder">
                     <ul>
@@ -54,7 +54,7 @@
             </li>
             <li>
                 <p><span trans>Buy in + Fee</span></p>
-                <p><strong>{{tournament.details.RegistrationAmount + ' ' + tournament.details.CurrencyId}}</strong></p>
+                <p><strong>{{tournament.details.RegistrationAmount + ' ' + tournament.details.CurrencyId|currency}}</strong></p>
             </li>
             <li title="Min. N. of Spins/Min. N. of Spins" trans="attr-only">
                 <p><span trans>Min - Max Spins</span></p>
@@ -62,7 +62,7 @@
             </li>
             <li>
                 <p><span trans>Min Bet - Max Bet</span></p>
-                <p><strong>{{tournament.details.MinBet + ' - ' + (tournament.details.MaxBet !== null ? tournament.details.MaxBet : '&infin;')}} {{tournament.details.CurrencyId}}</strong></p>
+                <p><strong>{{tournament.details.MinBet + ' - ' + (tournament.details.MaxBet !== null ? tournament.details.MaxBet : '&infin;')}} {{tournament.details.CurrencyId|currency}}</strong></p>
             </li>
         </ul>
         <div class="ct-page-games-group">

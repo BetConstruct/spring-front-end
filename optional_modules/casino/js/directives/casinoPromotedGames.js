@@ -1,4 +1,4 @@
-CASINO.directive('casinoPromotedGames', ['$rootScope', '$filter', 'CConfig', 'casinoData', 'casinoManager', 'Geoip', function($rootScope, $filter, CConfig, casinoData, casinoManager, Geoip) {
+CASINO.directive('casinoPromotedGames', ['$rootScope', '$filter', 'CConfig', 'casinoData', 'casinoManager', 'Geoip', function ($rootScope, $filter, CConfig, casinoData, casinoManager, Geoip) {
     'use strict';
 
     return {
@@ -7,9 +7,11 @@ CASINO.directive('casinoPromotedGames', ['$rootScope', '$filter', 'CConfig', 'ca
         templateUrl: $filter('fixPath')('optional_modules/casino/templates/directive/casino-games-list.html'),
         scope: {
             limit: '=',
-            pageCategory: '@'
+            pageCategory: '@',
+            gamesCategory: '=',
+            gamesProvider: '='
         },
-        link: function(scope) {
+        link: function (scope) {
             scope.confData = CConfig;
             scope.limit = scope.limit || 10;
             scope.pageCategory = scope.pageCategory || 'home';
@@ -17,8 +19,8 @@ CASINO.directive('casinoPromotedGames', ['$rootScope', '$filter', 'CConfig', 'ca
 
             var countryCode;
 
-            function getGames () {
-                casinoData.getGames(null, null, countryCode, 0, scope.limit, null, null, null, null, '&show_for=' + scope.pageCategory).then(function(response) {
+            function getGames() {
+                casinoData.getGames(scope.gamesCategory || null, scope.gamesProvider || null, countryCode, 0, scope.limit, null, null, null, null, (scope.gamesCategory || scope.gamesProvider) ? null : '&show_for=' + scope.pageCategory).then(function (response) {
                     if (response && response.data && response.data.status !== -1) {
                         scope.gamesList = response.data.games;
                     }

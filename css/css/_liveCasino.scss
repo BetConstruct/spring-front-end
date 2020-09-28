@@ -1,0 +1,531 @@
+.live-casino-page {
+  float: left;
+  width: 100%;
+}
+.live-casino-providers {
+  float: left;
+  width: 100%;
+  background: $skin-palette-10;
+  text-align: center;
+  font: 0/0 $font-f;
+  padding: 12px 0;
+  button {
+    display: inline-block;
+    vertical-align: top;
+    height: 34px;
+    box-sizing: border-box;
+    border: 1px solid transparent;
+    color: $text-palette-2;
+    background: none;
+    text-transform: uppercase;
+    font: 14px $font-f;
+    padding: 0 16px;
+    margin: 0 6px;
+    &.active {
+      pointer-events: none;
+      border-color: $hero-color;
+      color: $text-palette-1;
+    }
+  }
+}
+.live-casino-providers-submenu {
+  float: left;
+  width: 100%;
+  background: $skin-palette-10;
+  margin: 2px 0 0;
+  text-align: center;
+  font: 0/0 $font-f;
+  a {
+    display: inline-block;
+    vertical-align: top;
+    font: 12px/36px $font-f;
+    color: $text-palette-3;
+    margin: 0 12px;
+    box-shadow: inset 0 0 0 $hero-color;
+    transition: 300ms box-shadow, 300ms color;
+    &.active {
+      pointer-events: none;
+      box-shadow: inset 0 -2px 0 $hero-color;
+      color: $text-palette-1;
+    }
+  }
+}
+.live-casino-games {
+  float: left;
+  width: 100%;
+  box-sizing: border-box;
+  overflow: hidden;
+  margin: 0 0 44px;
+  ul {
+    box-sizing: border-box;
+    float: left;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    width: calc(100% + 44px);
+    padding: 22px 0;
+    margin: 0 0 0 -22px;
+    li {
+      display: block;
+      box-sizing: border-box;
+      padding: 22px;
+      width: 25%;
+      position: relative;
+      .float-width {
+        height: 100%;
+      }
+
+      i {
+        display: block;
+        position: absolute;
+        top: 28px;
+        right: 30px;
+        font: 22px/24px icomoon;
+        color: $text-palette-2;
+        z-index: 77;
+        opacity: 0;
+        @include rtl{
+          right: inherit;
+          left: 22px;
+        }
+        &:after{
+          display: block;
+          content: '\f006';
+        }
+        &.active{
+          color: $brand-color-2;
+          &:after{
+            content: '\f005';
+          }
+          opacity: 1;
+        }
+        &:hover{
+          color: $brand-color-2;
+        }
+      }
+      &:hover{
+        i{
+          opacity: 1;
+        }
+          .live-casino-icon {
+            background: $hero-color;
+            color: set-color($hero-color);
+          }
+          .live-casino-game-name {
+            .lc-game-name {
+              color: $text-palette-1;
+            }
+            button {
+              transform: translate3d(0,0,0);
+              opacity: 1;
+              visibility: visible;
+            }
+          }
+
+      }
+    }
+  }
+}
+.live-casino-game-default {
+  float: left;
+  width: 100%;
+  position: relative;
+  //&:hover {
+  //  .live-casino-icon {
+  //    background: $hero-color;
+  //    color: set-color($hero-color);
+  //  }
+  //  .live-casino-game-name {
+  //    .lc-game-name {
+  //      color: $text-palette-1;
+  //    }
+  //    button {
+  //      transform: translate3d(0,0,0);
+  //      opacity: 1;
+  //      visibility: visible;
+  //    }
+  //  }
+  //}
+}
+.live-casino-icon {
+  background: rgba($skin-palette-5, 0.5);
+  color: set-color($skin-palette-5);
+  transition: 300ms color, 300ms background;
+  border-radius: 10px 2px;
+  width: 94px;
+  text-align: center;
+  font: 42px/94px icomoon;
+  @include ltr {
+    float: left;
+  }
+  @include rtl {
+    float: right;
+  }
+  &:before {
+    content: "\e92c";
+  }
+  &.vgs102, &.ezgroulette, &.ezg7, &.lksroulette, &.lksexternalroulette, &.ezg6, &.evl104, &.netlcroulette_sw, &.netlcrouletteauto_sw, &.vgs110, &.agcrou, &.agc6, &.xpgliveroulette, &.ntlroulette, &.ntlautomatic_roulette, &.pnh4, &.xpgroulette, &.xpgmore20games, &.ptslrol, &.ptslrol, &.vivroulette, &.tpg201, &.fazroulette, &.evl217033, &.ptslqrol, &.tpg203, &.fazliveeuropeanroulette, &.bgbroulette, &.bgbroulette-eng, &.ntllcroulette_not_mobile_phy_sw, &.ntllcrouletteauto_not_mobilehr_nbc_sw, &.ntllcrouletteauto_not_mobilelr_nbc_sw, &.ntllcrouletteauto_not_mobile_nbc_sw, &[class*="vlc110&lobbytagindex"] {
+    &:before {
+      content: "\71";
+    }
+  }
+  &.vgs110 {
+    &:before {
+      content: "\e999";
+    }
+  }
+  &.vgs119 {
+    &:before {
+      content: "\e97a";
+    }
+  }
+  &.evl108, &.ezgcasino_holdem, &.pnh6 {
+    &:before {
+      content: "\78";
+    }
+  }
+  &.vgs105, &.btg6, &.agc4 {
+    &:before {
+      content: "\75";
+    }
+  }
+  &.btg7, &.vgs111, &.xpgwheeloffortune, &.vgs107 {
+    &:before {
+      content: "\e6f8";
+    }
+  }
+  &.vgs101, &.vgs112, &.ezgblackjack, &.evl105, &.lksblackjack, &.netlcblackjack_sw, &.netlcblackjackcdlr_sw, &.xpgliveblackjack, &.ntlblackjack_standard, &.ntlblackjack_common_draw, &.pnh1, &.pnh0, &.xpgblackjack, &.ptslbjl, &.vivblackjack, &.tpg301, &.tpg302, &.tpg303, &.tpg304, &.tpg305, &.evlfreebet000000001, &.ptslqabjl, &.ntllcblackjackcd_not_mobilelr_phy_sw, &.ntllcblackjack_not_mobile_phy_sw, &.ntllcblackjack_not_mobile_phy2_sw, &.ntllcblackjack_not_mobilehr_phy_sw, &.ntllcblackjack_not_mobilelr_phy_sw, &.ntlcommondraw, &[class*="vlc112&lobbytagindex"] {
+    &:before {
+      content: "\72";
+    }
+  }
+  &.vgs106, &.vgs114 {
+    &:before {
+      content: "\e903";
+    }
+  }
+  &.vgs115 {
+    &:before {
+      content: "\69";
+    }
+  }
+  &.vgs125, &.evldragontiger00001, &.ptsldtl, &.ezgbaccarat_dragon_tiger {
+    &:before {
+      content: "\ea11";
+    }
+  }
+  &.vgs126 {
+    &:before {
+      content: "\ea18";
+    }
+  }
+  &.vgs104, &.evl109, &.btg5, &.vgs113 {
+    &:before {
+      content: "\73";
+    }
+  }
+  &.evltrp, &.evltcp {
+    &:before {
+      content: "\e981";
+    }
+  }
+  &.evlmoneywheel {
+    &:before {
+      content: "\e93b";
+    }
+  }
+  &.vgs131, &.evleth, &.evluth, &.evldhptable00000001 {
+    &:before {
+      content: "\e982";
+    }
+  }
+  &.ezgsedie {
+    &:before {
+      content: "\e949"
+    }
+  }
+  &.evlcsp {
+    &:before {
+      content: "\e983";
+    }
+  }
+  &.ezglottery {
+    &:before {
+      content: "\77";
+    }
+  }
+  &.ezg2 {
+    &:before {
+      content: "\e979";
+    }
+  }
+  &.xpgmulltigames {
+    &:before {
+      content: "\e96b";
+    }
+  }
+  &.xpgcaribbeanpoker, &.ptslchel {
+    &:before {
+      content: "\e953";
+    }
+  }
+  &.ezgwheelofdice {
+    &:before {
+      content: "\e94a"
+    }
+  }
+  &.ezgkeno, &.vgs118 {
+    &:before {
+      content: "\e6d8";
+    }
+  }
+  &.vgs129 {
+    &:before {
+      content: "\ea50";
+    }
+  }
+  &.ezg20, &.ezgbaccarat, &.ezg4, &.evl103, &.vgs103, &.vgs108, &.agcbac, &.lksbaccarat, &.agclink, &.xpglivebaccarat, &.pnh2, &.xpgbaccarat, &.xpgbaccaratnocommission, &.ptslbal, &.vivbaccarat, &.evllightningbac0001 {
+    &:before {
+      content: "\74";
+    }
+  }
+  &.ezg24, &.xpglivedragontiger {
+    &:before {
+      content: "\e93c";
+    }
+  }
+  &.ezg15, &.xpgloivetexasholdembonus {
+    &:before {
+      content: "\e968";
+    }
+  }
+  &.agccbac {
+    &:before {
+      content: "\e930";
+    }
+  }
+  &.agclbac {
+    &:before {
+      content: "\e92f";
+    }
+  }
+  &.agcdt {
+    &:before {
+      content: "\e92d";
+    }
+  }
+  &.agcshb, &.xpglivesicbo {
+    &:before {
+      content: "\e92e";
+    }
+  }
+  &.ftv1722 {
+    &:before {
+      content: "\ea53";
+    }
+  }
+  &.ftv1723 {
+    &:before {
+      content: "\ea54";
+    }
+  }
+  &.ftv1724 {
+    &:before {
+      content: "\ea55";
+    }
+  }
+  &.ptslhilol {
+    &:before {
+      content: "\ea52";
+    }
+  }
+  &.evlmonopoly00000001 {
+    &:before {
+      content: "\ea71";
+    }
+  }
+  &.evldealnodeal000001 {
+    &:before {
+      content: "\ea70";
+    }
+  }
+  &.evltopcard000000001 {
+    &:before {
+      content: "\ea6f";
+    }
+  }
+  &.evllightningdice001 {
+    &:before {
+      content: "\ea69";
+    }
+  }
+  &.evlsbctable00000001 {
+    &:before {
+      content: "\ea6e";
+    }
+  }
+  &.evlsupersicbo000001 {
+    &:before {
+      content: "\ea6d";
+    }
+  }
+  &.ptslswl {
+    &:before {
+      content: "\ea6c";
+    }
+  }
+  &.ptslbfbl {
+    &:before {
+      content: "\ea6b";
+    }
+  }
+  &.ptslsbl {
+    &:before {
+      content: "\ea6a";
+    }
+  }
+}
+.live-casino-game-name {
+  width: calc(100% - 94px);
+  box-sizing: border-box;
+  float: left;
+  padding: 0 26px 28px 6px;
+  @include rtl{
+    padding: 0 6px 28px 26px;
+    text-align: right;
+  }
+  .lc-game-name {
+    float: left;
+    width: 100%;
+    font: 700 18px/22px $font-f;
+    color: $text-palette-2;
+    transition: 300ms color;
+  }
+  button {
+    position: absolute;
+    bottom: 0;
+    height: 28px;
+    padding: 0 14px;
+    background: none;
+    color: set-color($brand-color-1);
+    border: 1px solid $brand-color-1;
+    background: $brand-color-1;
+    font: 12px $font-f;
+    text-transform: uppercase;
+    transition: 300ms background, 300ms border-color, 200ms transform, 200ms opacity, 200ms visibility;
+    opacity: 0;
+    transform: translate3d(0,100%,0);
+    cursor: pointer;
+    visibility: hidden;
+    @include ltr {
+      left: 114px;
+    }
+    @include rtl {
+      right: 114px;
+    }
+    &:hover {
+      background: lighten($brand-color-1, 10);
+      border-color: lighten($brand-color-1, 10);
+    }
+  }
+}
+.live-casino-game-as-image {
+  float: left;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  transform: translate3d(0,0,0);
+  position: relative;
+  &:before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    box-shadow: inset 0 0 0 1px rgba(white,0.1);
+    display: block;
+    z-index: 40;
+    pointer-events: none;
+  }
+  img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    float: left;
+    object-fit: cover;
+    object-position: 50% 50%;
+    transition: 600ms transform;
+  }
+  &:hover {
+    img {
+      transform: scale(1.05);
+    }
+  }
+}
+.live-casino-content-import {
+  @include scroll(auto);
+  float: left;
+  width: calc(100% + 10px);
+  margin: 86px 0 0 -5px;
+  display: block;
+  text-align: left;
+  height: 538px;
+  > div {
+    &:first-child {
+      padding: 0;
+      width: 100%;
+    }
+  }
+  .live-casino-providers {
+    background: rgba(0, 0, 0, 0.3);
+  }
+  .live-casino-games {
+    margin: 10px 0;
+    ul {
+      li {
+        width: calc((100% - 1px) / 3) !important;
+      }
+    }
+  }
+}
+.live-casino-image-splash-play {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 30;
+  transition: 300ms background;
+  button {
+    display: block;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    padding: 0 24px;
+    font: 12px $font-f;
+    height: 36px;
+    text-transform: uppercase;
+    white-space: nowrap;
+    border: 0;
+    background: $brand-color-1;
+    color: set-color($brand-color-1);
+    transform: translate(-50%, 0);
+    cursor: pointer;
+    opacity: 0;
+    transition: 300ms transform, 300ms opacity;
+  }
+  &:hover {
+    background: rgba(darken( saturate( adjust-hue( $brand-color-1, 13deg ), 21 ), 18 ), 0.85);
+    button {
+      opacity: 1;
+      transform: translate(-50%, -50%);
+    }
+  }
+}
+
+@media  screen and (max-width: 1260px) {
+  .Featured-casino-games .live-casino-content-import .guide{
+    width: calc(100% - 20px);
+  }
+}

@@ -177,13 +177,21 @@ angular.module('vbet5').constant('Config', {
         sportsWithAnimations: {
             'Soccer':'VBET5',
             'Tennis':'VBET5',
-            'Basketball':'VBET5'
-            // 'Soccer':'feedconstruct',
-            // 'Tennis':'VBET5',
-            // 'Basketball':'feedconstruct',
-            // 'IceHockey':'feedconstruct'
-            // 'TableTennis' : 'external', // external animation example
-            // 'Futsal' : 'external'
+            'Basketball':'VBET5',
+            'AmericanFootball': 'external',
+            'Badminton': 'external',
+            'Baseball': 'external',
+            'BeachVolleyball': 'external',
+            'Bowls': 'external',
+            'Formula 1': 'external',
+            'Futsal': 'external',
+            'Handball': 'external',
+            'IceHockey': 'external',
+            'SkiJumping': 'external',
+            'Snooker': 'external',
+            'Speedway': 'external',
+            'TableTennis': 'external',
+            'Volleyball' : 'external'
         },
         collapseMenuInLive: false,
         defaultTimeFormat: null,
@@ -270,7 +278,7 @@ angular.module('vbet5').constant('Config', {
         betHistoryEnabled: true,  //enable bet history in top menu
         enableCasinoBalanceHistory: false, //enable casino balance history in top menu
         enableCasinoBetHistory: false, //enable casino balance history in top menu
-        enableMixedView: false,
+        enableMixedView: true,
         enableMixedViewBalance: true,
         enableCommaSeparateNumber: false, // enable comma in input field
         bonusesEnabled: false, //enable bonuses (will show bonus amounts in bet/balance histories)
@@ -519,7 +527,7 @@ angular.module('vbet5').constant('Config', {
         hideGmsMarketBase: false, //hides market base when new backend is on
         GmsPlatform: false,
         virtualSportIds: {
-            virtualsports: [54, 55, 56, 57, 118, 150, 173, 174, 188],
+            virtualsports: [54, 55, 56, 57, 118, 150, 173, 174, 188, 209],
             insvirtualsports: [132, 133, 134, 135, 136, 137, 138]
         },
         enableBetPrint: false,
@@ -554,6 +562,7 @@ angular.module('vbet5').constant('Config', {
         liveModule: {
             enabled: false  //external (Gaspar's) sportsbook
         },
+        headerNavigation: {},
         multiLevelMenu: {},
         defaultAvailablePaths: ['/news', '/promos', '/cas-promos', '/about','/first_deposit_bonus', '/first_deposit_bonus_and_20_free_spins', '/404', '/draw', '/exchange-shop', '/registration', '/vrlivedealer', '/help', '/ogwil'],
         disableLiveChatPaths: ['/popup', '/widget'],
@@ -610,13 +619,11 @@ angular.module('vbet5').constant('Config', {
         deleteSentMessages: false,
         maxMessageLength: 4000,
         offlineMessage: false,
-        iovationLoginScripts: false,
         smsVerification: {
+            registration: false,
             login: false,
-            registration: {
-                enabled: false,
-                provider: ''
-            },
+            changePassword: false,
+            updateProfile: false,
             timer: 120, // seconds
             allowResend: 5 // seconds
         },
@@ -847,14 +854,14 @@ angular.module('vbet5').constant('Config', {
         },
         videoEnabled: true, //enable game videos
         video: {
-            allowedWithNoneBalance: {},
             enableOptimization: true,
             autoPlay: true, //disable autoplaying implemented only for classic view
             providersThatSupportHls: {
                 15: true,
                 1: true,
                 5: true,
-                25: true
+                25: true,
+                35: true
             }
         },
         availableVideoProviderCountryFilters: { 1: ['AM'], 3: ['AM'], 5: ['AM'], 7: ['AM'], 8: ['AM'], 11: ['AM'], 12: ['AM'], 15: ['AM'], 16: ['AM']},
@@ -887,7 +894,8 @@ angular.module('vbet5').constant('Config', {
                 '538': 'competitions-bg-premier-league.png',
                 '545': 'FA-Community-shield-England.png',
                 '543': 'competitions-bg-seria.png',
-                '1840': 'competitions-bg-fa-cup-england.png'
+                '1840': 'competitions-bg-fa-cup-england.png',
+                '3013': 'competitions-bg-super-league.png'
             }
         },
         beloteSlidesRotationPeriod: 6000,  // each belote banner will be shown for this amount of time (in milliseconds)
@@ -1138,6 +1146,9 @@ angular.module('vbet5').constant('Config', {
 
     hideGameSoonLabel: false
     },
+    iovation: {
+        enabled: false,
+    },
     enableSnowEffect:false,
     pmu: {
       url: "https://newstaging.betconstruct.com/"
@@ -1215,7 +1226,8 @@ angular.module('vbet5').constant('Config', {
             enabled: false,
             expanded: false
         },
-        favoriteStakesMultipliers: [10, 50, 100]
+        favoriteStakesMultipliers: [10, 50, 100],
+        disableConflictEventReplacement: false
     },
     poker: {
         disableChinesePoker: true,
@@ -1241,7 +1253,7 @@ angular.module('vbet5').constant('Config', {
     },
     'swarm': {
         debugging: false, //enable websocket debugging
-        languageMapGms: { 'pt-br' : 'por_2', fre: 'fra', chi: 'zho', mac: 'mkd', fas: 'far', dut: 'nld'},
+        languageMapGms: { 'pt-br' : 'por_2', fre: 'fra', chi: 'zho', mac: 'mkd', fas: 'far', dut: 'nld', vnm: 'vie'},
         sendSourceInRequestSession: false,
         sendTerminalIdlInRequestSession: false,
         webSocketTimeout: 5000,

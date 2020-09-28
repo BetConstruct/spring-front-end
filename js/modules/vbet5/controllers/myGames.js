@@ -68,6 +68,7 @@ VBET5.controller('myGamesCtrl', ['$scope', '$rootScope', '$location', '$route', 
                         if (game.type === 1 && (game.sport.alias === "Soccer" || game.sport.alias === "CyberFootball")) {
                             GameInfo.extendLiveGame(game);
                             GameInfo.generateTimeLineEvents(game, $scope);
+
                             if (game.live_events) { //need this for sorting
                                 game.live_events.map(function (event) {
                                     event.add_info_order = parseInt(event.add_info, 10);
@@ -75,7 +76,7 @@ VBET5.controller('myGamesCtrl', ['$scope', '$rootScope', '$location', '$route', 
                             }
                         }
                         if (game.type === 1 && game.sport.alias === "HorseRacing") {
-                            GameInfo.getHorseRaceInfo(game.info);
+                            GameInfo.getRacingInfo(game.id, game.info);
                         }
 
                         GameInfo.hasVideo(game); // check availability of video
@@ -124,7 +125,7 @@ VBET5.controller('myGamesCtrl', ['$scope', '$rootScope', '$location', '$route', 
         allGames = games;
         $scope.allGamesCount = allGames.length;
         if ($scope.offset > 0 && $scope.offset + $scope.gamesToShow > $scope.allGamesCount) {
-            $scope.offset--;
+            $scope.offset = Math.max($scope.allGamesCount - $scope.gamesToShow, 0);
         }
         $scope.games = getVisibleGames(allGames);
         $scope.myGamesloaded = true;

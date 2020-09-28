@@ -7,7 +7,7 @@
         <button ng-disabled="applyingBonus || loadingBonus" ng-hide="applyingBonus" ng-click="applyBonus()" trans>Apply</button>
         <button disabled="disabled" ng-show="applyingBonus" trans>Wait...</button>
     </div>
-    <div class="mixed-view-head" ng-show="conf.promotionalBonuses.casino || (conf.promotionalBonuses.sportsbook && conf.promotionalBonuses.casino && casinoEnabled)">
+    <div class="mixed-view-head" ng-show="conf.promotionalBonuses.casino || conf.promotionalBonuses.sportsbook">
         <div class="balance-view-progress-b" ng-show="conf.promotionalBonuses.casino">
             <ul ng-class="{'progress-bar-disabled' : activeBonusTab !== backendBonusConstants.BonusSource.Casino}">
                 <li>
@@ -28,23 +28,24 @@
                 <li>
                     <div class="total-balance-view-b">
                         <h4 trans>Total Balance</h4>
-                        <p>{{(profile.calculatedBalance + profile.calculatedBonus)|number:conf.balanceFractionSize}} {{currency_name|currency}}</p>
+                        <p>{{profile.totalBalance|number:conf.balanceFractionSize}} {{currency_name|currency}}</p>
                     </div>
                 </li>
             </ul>
         </div>
-        <div class="group-tabs-wrapper" ng-show="conf.promotionalBonuses.bonusRequestURL || (conf.promotionalBonuses.sportsbook && conf.promotionalBonuses.casino)">
+        <div class="group-tabs-wrapper">
             <div class="first-level-history-tab">
                 <ul>
                     <li ng-if="conf.promotionalBonuses.sportsbook" ng-click="switchBonusTab(backendBonusConstants.BonusSource.SportsBook)" ng-class="{'active': (activeBonusTab === backendBonusConstants.BonusSource.SportsBook)}"><span>{{'sportsbook' | translate }} <i ng-if="bonusesAmount.sportsBook && bonusesAmount.sportsBook > 0">{{bonusesAmount.sportsBook}}</i> </span></li>
                     <li ng-if="conf.promotionalBonuses.casino" ng-click="switchBonusTab(backendBonusConstants.BonusSource.Casino)" ng-class="{'active': (activeBonusTab === backendBonusConstants.BonusSource.Casino)}"><span>{{'Casino Bonus' | translate }} <i ng-if="bonusesAmount.casino && bonusesAmount.casino > 0">{{bonusesAmount.casino}}</i> </span></li>
                     <li ng-if="conf.promotionalBonuses.bonusRequestURL" ng-init="formatBonusRequestURL()" ng-click="switchBonusTab(backendBonusConstants.BonusSource.BonusRequest)" ng-class="{'active': (activeBonusTab === backendBonusConstants.BonusSource.BonusRequest)}"><span>{{'Bonus request' | translate }} </span></li>
+                    <li ng-click="switchBonusTab(backendBonusConstants.BonusSource.BonusHistory)" ng-class="{'active': (activeBonusTab === backendBonusConstants.BonusSource.BonusHistory)}"><span>{{'Bonus History' | translate }} </span></li>
                 </ul>
             </div>
         </div>
     </div>
     <div class="mixed-view-body">
-        <div class="mixed-view-body-ins" ng-if="activeBonusTab !== backendBonusConstants.BonusSource.BonusRequest">
+        <div class="mixed-view-body-ins" ng-if="(activeBonusTab === backendBonusConstants.BonusSource.SportsBook) || (activeBonusTab === backendBonusConstants.BonusSource.Casino)">
             <vbet-loader ng-if="loadingBonus"></vbet-loader>
             <div class="bet-view-information-box" ng-if="!loadingBonus">
 
@@ -162,6 +163,9 @@
         </div>
         <div class="mixed-view-body-ins" ng-if="activeBonusTab === backendBonusConstants.BonusSource.BonusRequest">
             <iframe ng-src="{{bonusRequestURL|url}}"></iframe>
+        </div>
+        <div class="mixed-view-body-ins" ng-if="activeBonusTab === backendBonusConstants.BonusSource.BonusHistory"
+             ng-include="::'templates/livebox/promotionalBonuses/bonusHistory.html'">
         </div>
     </div>
 </div>

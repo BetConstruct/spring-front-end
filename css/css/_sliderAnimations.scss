@@ -1,0 +1,57 @@
+// slider animation right to left
+.new-slider-animation {
+  .hp-slide-17 {
+    transition: 1080ms opacity;
+    transform: translate3d(0, 0, 0);
+  }
+  .hp-slide-17.right.active {
+    animation: 360ms right-to-left ease-in-out;
+    transition: none;
+    opacity: 1;
+  }
+  .hp-slide-17.right {
+    animation: 360ms right-to-left-3 ease-in-out;
+  }
+  .hp-slide-17.active + .hp-slide-17 {
+    animation: 360ms left-to-right-2 ease-in-out;
+    //opacity: 1;
+  }
+  .hp-slide-17.active {
+    animation: 360ms left-to-right ease-in-out;
+    transition: none;
+    opacity: 1;
+  }
+}
+@keyframes left-to-right-2 {
+  0% {
+    left: 0;
+  }
+  100% {
+    left: 100%;
+  }
+}
+@keyframes right-to-left-3 {
+  0% {
+    left: 0;
+  }
+  100% {
+    left: -100%;
+  }
+}
+@keyframes right-to-left {
+  0% {
+    left: 100%;
+  }
+  100% {
+    left: 0;
+  }
+}
+@keyframes left-to-right {
+  0% {
+    left: -100%;
+  }
+  100% {
+    left: 0;
+  }
+}
+// slider animation right to left END

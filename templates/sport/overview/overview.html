@@ -31,7 +31,7 @@
                                         <span ng-bind="game.team1_name"></span>
                                         <span ng-bind="game.team2_name"></span>
                                     </p>
-                                <div class="video-icon-overview" ng-show="game.hasVideo && $root.conf.videoEnabled"></div>
+                                <div class="video-icon-overview" ng-show="game.hasVideo"></div>
                             </div>
                             <div class="detail-info-overview">
                                 <p>
@@ -45,7 +45,7 @@
                                             {{game.stats.score_set1.team1_value ? '(' + game.stats.score_set1.team1_value + ' :' : '(0 :'}}
                                             {{game.stats.score_set1.team2_value ?  game.stats.score_set1.team2_value + ')' : ' 0)'}}
                                         </i>
-                                        <i ng-if="sport.alias !== 'Soccer' && sport.alias !== 'CyberFootball'">
+                                        <i ng-if="!{'Soccer':1, 'CyberFootball': 1, 'BasketballShots': 1}[sport.alias]">
                                             {{game.stats['score_'+game.info.current_game_state].team1_value ? '(' + game.stats['score_'+game.info.current_game_state].team1_value + ' :' : '(0 :'}}
                                             {{game.stats['score_'+game.info.current_game_state].team2_value ?  game.stats['score_'+game.info.current_game_state].team2_value + ')' : ' 0)'}}
                                         </i>

@@ -133,58 +133,6 @@ VBET5.controller('globalDialogCtrl', ['$rootScope', '$scope', '$location', '$win
 
         /**
          * @ngdoc method
-         * @name loadDialogsFromConfig
-         * @methodOf vbet5.controller:globalDialogCtrl
-         * @description Shows custom dialogs from config file
-         */
-        function loadDialogsFromConfig() {
-            if (!Config.customDialogs || !Config.customDialogs instanceof Object || Utils.isObjectEmpty(Config.customDialogs)) {
-                return false;
-            }
-            var item, key, getParams = $location.search();
-            var storageCustomPopupsInfo = Storage.get('storageCustomPopupsInfo') || {};
-
-            function checkPath(item) {
-                var key;
-                if (item.pages && item.pages.indexOf($location.path()) === -1) {
-                    return false;
-                } else if (item.routParams) {
-                    for (key in item.routParams) {
-                        if (item.routParams[key] !== getParams[key]) {
-                            return false;
-                        }
-                    }
-                }
-                return true;
-            }
-
-            function checkDataAndAddDialog(item) {
-                if (!storageCustomPopupsInfo[key] || (storageCustomPopupsInfo[key].showedTimes < item.countOfPopups &&
-                    storageCustomPopupsInfo[key].lastShowedTime + item.frequency <= Date.now())) {
-                    if (checkPath(item) && (!item.onlyAuthorizedUser || item.onlyAuthorizedUser === $rootScope.env.authorized)) {
-                        $rootScope.$broadcast("globalDialogs.addDialog", item.dialog);
-                        storageCustomPopupsInfo[key] = storageCustomPopupsInfo[key] || {};
-                        storageCustomPopupsInfo[key].lastShowedTime = Date.now();
-                        storageCustomPopupsInfo[key].showedTimes = (storageCustomPopupsInfo[key].showedTimes || 0) + 1;
-                        Storage.set('storageCustomPopupsInfo', storageCustomPopupsInfo);
-                    }
-                }
-            }
-
-            for (key in Config.customDialogs) {
-                if (Config.customDialogs.hasOwnProperty(key)) {
-                    item = Config.customDialogs[key];
-                    if (!item.country) {
-                        checkDataAndAddDialog(item);
-                    } else if ($rootScope.geoCountryInfo && item.country === $rootScope.geoCountryInfo.countryCode.toLowerCase()) {
-                        checkDataAndAddDialog(item);
-                    }
-                }
-            }
-        }
-
-        /**
-         * @ngdoc method
          * @name buttonClick
          * @methodOf vbet5.controller:globalDialogCtrl
          * @description Button clicked
@@ -382,7 +330,9 @@ VBET5.controller('globalDialogCtrl', ['$rootScope', '$scope', '$location', '$win
                 }
             });
 
-            dependPopups.length && showOnAnotherPage(dependPopups);
+            if (dependPopups.length) {
+                showOnAnotherPage(dependPopups);
+            }
         }
 
         /**
@@ -493,14 +443,9 @@ VBET5.controller('globalDialogCtrl', ['$rootScope', '$scope', '$location', '$win
 
                 $scope.$on('loggedIn', function() {
                     callRuntimePopUp();
-                    loadDialogsFromConfig();
                     if (Config.main.gdpr.enabled && Config.main.gdpr.popup) {
                         showPrefConfirmation();
                     }
-                });
-
-                $scope.$on('$locationChangeSuccess', function () {
-                    loadDialogsFromConfig();
                 });
 
                 /**

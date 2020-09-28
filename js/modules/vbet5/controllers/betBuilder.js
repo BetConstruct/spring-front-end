@@ -2,7 +2,7 @@
  * @ngdoc controller
  * @name vbet5.controller:betBuilderCtrl
  */
-VBET5.controller('betBuilderCtrl', ['$rootScope', '$scope', '$filter', '$q', '$timeout', 'Zergling', 'Translator', 'Utils', function($rootScope, $scope, $filter, $q, $timeout, Zergling, Translator, Utils) {
+VBET5.controller('betBuilderCtrl', ['$rootScope', '$scope', '$filter', '$q', '$timeout', 'Zergling', 'Translator', 'Utils', 'partner', function($rootScope, $scope, $filter, $q, $timeout, Zergling, Translator, Utils, partner) {
     'use strict';
 
     var orderedMarkets = [
@@ -739,6 +739,16 @@ VBET5.controller('betBuilderCtrl', ['$rootScope', '$scope', '$filter', '$q', '$t
             $scope.loadingInProgress = false;
         });
    })();
+
+    /**
+     * @ngdoc method
+     * @name deposit
+     * @methodOf betting.controller:betSlipController
+     * @description calls partner callback function to open deposit page(integration mode)
+     */
+    $scope.openPartnerDeposit = function openPartnerDeposit() {
+        partner.call('deposit', 'betslip');
+    };
 
     $scope.$on("$destroy", function() {
         if (oddsRecalculationPromise) {

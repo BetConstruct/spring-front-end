@@ -1,0 +1,55 @@
+@keyframes footer-fixed{
+  0%   {
+    transform: translate3d(0, 0, 0);
+    -webkit-transform: translate3d(0, 0, 0);
+  }
+  100% {
+    transform: translate3d(0, 102%, 0);
+    -webkit-transform: translate3d(0, 102%, 0);
+  }
+}
+@keyframes footer-fixed-active{
+  0%   {
+    transform: translate3d(0, 102%, 0);
+    -webkit-transform: translate3d(0, 102%, 0);
+  }
+  100% {transform: translate3d(0, 0, 0);
+    -webkit-transform: translate3d(0, 0, 0);
+  }
+}
+@keyframes rotate-loader {
+  0%{-webkit-transform: rotate(0deg); transform: rotate(0deg);}
+  50%{-webkit-transform: rotate(180deg); transform: rotate(180deg); }
+  100%{-webkit-transform: rotate(360deg); transform: rotate(360deg);}
+}
+@keyframes show-hide-skillgames-faq{
+  0% {max-height: 0;}
+  100% {max-height: 999px;}
+}
+@keyframes bounceInDown {
+  from,
+  60%,
+  75%,
+  90%,
+  to {
+    -webkit-animation-timing-function: cubic-bezier(0.215, 0.610, 0.355, 1.000);
+    animation-timing-function: cubic-bezier(0.215, 0.610, 0.355, 1.000);
+  }
+  0% {
+    opacity: 0;
+    margin-top: -3000px;
+  }
+  60% {
+    opacity: 1;
+    margin-top: 25px;
+  }
+  75% {
+    margin-top: -10px;
+  }
+  90% {
+    margin-top: 5px;
+  }
+  to {
+    margin-top: 0;
+  }
+}

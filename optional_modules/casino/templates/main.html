@@ -7,13 +7,14 @@
             <div class="jackpot-trow">
                 <div class="jackpot-tcell">
                     <div class="jackpot-twrapper">
-                        <img src="images/jackpot-coins/jackpot-win-bg.jpg" alt="">
+                        <img src="images/jackpot-pools/jackpot-win-bg.jpg" alt="">
                         <div class="jackpot-win-popup">
                             <div class="jackpot-win-coins-first"></div>
                             <div class="jackpot-win-coins-second"></div>
                             <div class="jackpot-win-coins-third"></div>
-                            <p>{{jackpotWinner.data.Name}}</p>
-                            <span>{{jackpotWinner.data.Winner.Amount}} {{::$root.profile.currency|currency}}</span>
+                            <p>{{jackpotWinner.data.Name|translate}}</p>
+                            <span>{{jackpotWinner.data.Winner.Amount|number:jackpotWinner.data.CurrencyFraction}} {{jackpotWinner.data.Currency|currency}}</span>
+                            <div ng-click="jackpotWinner.cancelJackpotWinnerAnimation()" trans class="got-it">Got It</div>
                         </div>
                     </div>
                 </div>

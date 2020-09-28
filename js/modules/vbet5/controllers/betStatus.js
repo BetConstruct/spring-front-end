@@ -5,9 +5,10 @@
  */
 VBET5.controller('betStatusCtrl', ['$scope', 'Config', 'Storage', 'Zergling', 'RecaptchaService', function ($scope, Config, Storage, Zergling, RecaptchaService) {
     'use strict';
+
     $scope.betStatus = {
         open: Storage.get('isOpenedGetBetStatus') === undefined || Storage.get('isOpenedGetBetStatus'),
-        displayRecaptcha: RecaptchaService.version !== 3
+        displayRecaptcha: false
     };
 
     $scope.resultMap = {
@@ -20,7 +21,9 @@ VBET5.controller('betStatusCtrl', ['$scope', 'Config', 'Storage', 'Zergling', 'R
     };
 
     $scope.getBetStatus = function getBetStatus() {
-        if (!$scope.betStatus.ticketNumber) { return; }
+        if (!$scope.betStatus.ticketNumber) {
+            return;
+        }
 
         var request = {};
 
@@ -49,7 +52,7 @@ VBET5.controller('betStatusCtrl', ['$scope', 'Config', 'Storage', 'Zergling', 'R
         });
     };
 
-    $scope.clearBetStatus = function clearBetStatus () {
+    $scope.clearBetStatus = function clearBetStatus() {
         $scope.betStatus.details = false;
         $scope.betStatus.ticketNumber = '';
     };
@@ -59,9 +62,20 @@ VBET5.controller('betStatusCtrl', ['$scope', 'Config', 'Storage', 'Zergling', 'R
         Storage.set('isOpenedGetBetStatus', $scope.betStatus.open);
     };
 
-    if ($scope.betStatus.displayRecaptcha) {
-        $scope.$on('recaptcha.response', function (event, response) {
-            $scope.betStatus.g_recaptcha_response = response;
-        });
-    }
+    (function init() {
+        if (RecaptchaService.version) {
+            $scope.betStatus.displayRecaptcha = RecaptchaService.version !== 3;
+
+            if ($scope.betStatus.displayRecaptcha) {
+                $scope.$on('recaptcha.response', function (event, response) {
+                    $scope.betStatus.g_recaptcha_response = response;
+                });
+            }
+        } else {
+            var recaptchaHandlingPromise = $scope.$on('recaptcha_version', function () {
+                recaptchaHandlingPromise();
+                init();
+            });
+        }
+    })();
 }]);

@@ -21,6 +21,7 @@ VBET5.controller('paymentsCtrl', ['$scope', '$rootScope', '$sce', '$q', '$window
     $scope.countryCodes = Utils.getAvailableCountries(CountryCodes);
     var currencyRates = {};
     var currentOpenDropdown = null;
+    var TIMEOUT_EXCLUDE_TYPE = 6;
    $scope.withdrawLimit = 0;
 
 
@@ -116,26 +117,25 @@ VBET5.controller('paymentsCtrl', ['$scope', '$rootScope', '$sce', '$q', '$window
     };
     /**
      * @ngdoc method
-     * @name filterPaymentsByCountryAndLanguage
+     * @name filterPaymentsByCountryLanguageProduct
      * @methodOf vbet5.controller:paymentsCtrl
      * @description Returns payments filtered by user country if needed
      * @param {Array} input all payment methods
      * @param {String} type the payment type: deposit or withdraw
      * @returns {Array} filtered payment methods
      */
-    function filterPaymentsByCountryAndLanguage(input, type) {
-        var countryCode = $rootScope.profile.country_code || $scope.userDetails.country_code || '';
-        if (!countryCode) {
-            return input;
-        }
-        return input.reduce(function (availablePayments, current) {
-            if ((current.countryAllow && current.countryAllow.indexOf(countryCode) === -1) || (current.countryRestrict && current.countryRestrict.indexOf(countryCode) !== -1)) {
-                console.log(countryCode, "restricted for", current.name);
-            } else if (!current[type + 'DisableByLanguage'] || current[type + 'DisableByLanguage'].indexOf(Config.env.lang) === -1) {
-                availablePayments.push(current);
-            }
-            return availablePayments;
-        }, []);
+    function filterPaymentsByCountryLanguageProduct(input, type) {
+        var countryCode = $rootScope.profile.country_code || $scope.userDetails.country_code || "";
+        var product = $rootScope.currentPage.isInSports ? "sport" : "casino";
+
+        return input.filter(function (current) {
+            return (
+                (!current.countryAllow || current.countryAllow.indexOf(countryCode) !== -1) &&
+                (!current.countryRestrict || current.countryRestrict.indexOf(countryCode) === -1) &&
+                (!current[type + "DisableByLanguage"] || current[type + "DisableByLanguage"].indexOf(Config.env.lang) === -1) &&
+                (!current[type + "Products"] || current[type + "Products"].indexOf(product) !== -1)
+            );
+        });
     }
 
     /**
@@ -228,7 +228,7 @@ VBET5.controller('paymentsCtrl', ['$scope', '$rootScope', '$sce', '$q', '$window
             $scope.paymentConfig = filteredPayments;
         }
 
-        $scope.paymentConfig = filterPaymentsByCountryAndLanguage($scope.paymentConfig, type);
+        $scope.paymentConfig = filterPaymentsByCountryLanguageProduct($scope.paymentConfig, type);
         //payment description text may contain html, mark it as safe to show
         angular.forEach($scope.paymentConfig, function (pSystem) {
             if (pSystem.depositIframe && pSystem.depositIframe.length) {
@@ -556,6 +556,7 @@ VBET5.controller('paymentsCtrl', ['$scope', '$rootScope', '$sce', '$q', '$window
         '22': Translator.get('Day limit reached. Please try later.'),
         '-2403': Translator.get('Withdraw request is already in progress'),
         '-1131': Translator.get("You have an Active Bonus therefore it's not possible to make a Withdrawal"),
+        '-2538': Translator.get("WithdrawalNotAllowedUnplayedAmount"),
         '-2043': Translator.get("Withdraw amount is less than minimum allowed")
     };
 
@@ -1241,6 +1242,14 @@ VBET5.controller('paymentsCtrl', ['$scope', '$rootScope', '$sce', '$q', '$window
      * @description  sends deposit request to swarm, gets result, displays "external" form
      */
     $scope.deposit = function deposit(paymentFormData, depositAmount) {
+        if ($rootScope.profile.exclude_type === TIMEOUT_EXCLUDE_TYPE) {
+            $rootScope.$broadcast('globalDialogs.addDialog', {
+                type: 'warning',
+                title: 'Warning',
+                content: "You can't make a deposit as the timeout option is enabled."
+            });
+            return;
+        }
         if (Config.main.promotionalBonuses.enable && Config.main.promotionalBonuses.showClaimableInfoBeforeDeposit) {
             $scope.busy = true;
             Zergling.get({}, "get_client_claimable_deposit_bonuses")
@@ -1823,6 +1832,20 @@ VBET5.controller('paymentsCtrl', ['$scope', '$rootScope', '$sce', '$q', '$window
             getWithdrawabelBonus();
 
         }
-    })
+    });
 
+    //TODO This part is only implemented for the vivarobet skin and should be removed after 1-2 months (10/10/2020) when the bet shop reopens
+
+    if (Config.main.site_id === 1) {
+        $scope.$watch('paymentFormData.office_id', function (newValue) {
+            //Marshal Baghramyan Avenue 1
+            if (newValue === '16') {
+                $rootScope.$broadcast("globalDialogs.addDialog", {
+                    type: "info",
+                    title: "Info",
+                    content: "baghramyan_shop_info"
+                });
+            }
+        });
+    }
 }]);

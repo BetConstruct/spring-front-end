@@ -4,10 +4,11 @@ $brand-color-2:     #c29440;
 
 $skin-color: #1e2639;
 $text-color: $skin-color;
+
 $disable-brand-color-2-sc: true, #ffffff;
 
 $asian-view-custom: true;
-$custom-very-top-menu: true;
+
 
 @if ($skin-second==true) {
   $white-skin: true !global;

@@ -3,11 +3,11 @@
         <div class="settings-nav-contain">
             <h3 title="Messages" trans>Messages</h3>
             <ul>
-                <li ng-repeat="messagesName in conf.messagesPageMenu" ng-class="{'active': messagesProps.page===messagesName}">
-                    <a ng-click="messagesProps.page=messagesName">
-                        <span>{{messagesProps.names[messagesName]|translate}}</span>
-                        <span ng-if="messagesName==='inbox'" class="count" ng-show="!messagesProps.inboxLoading" ng-bind="(conf.showInboxMessagesCount ? inboxMessages.length : profile.unread_count) || 0"></span>
-                        <span ng-if="messagesName==='sent'" class="count" ng-show="!messagesProps.outboxLoading" ng-bind="sentMessages.length || 0"></span>
+                <li ng-repeat="messages in messagesPageMenu" ng-class="{'active': messagesProps.selected.page===messages.page}">
+                    <a ng-click="messagesProps.selected = messages">
+                        <span>{{messages.displayName|translate}}</span>
+                        <span ng-if="messages.page==='inbox'" class="count" ng-show="!messagesProps.inboxLoading" ng-bind="(conf.showInboxMessagesCount ? inboxMessages.length : profile.unread_count) || 0"></span>
+                        <span ng-if="messages.page==='sent'" class="count" ng-show="!messagesProps.outboxLoading" ng-bind="sentMessages.length || 0"></span>
                     </a>
                 </li>
             </ul>
@@ -15,7 +15,7 @@
     </div>
 
 
-    <div class="right-block-history message" ng-show="messagesProps.page==='inbox'">
+    <div class="right-block-history message" ng-show="messagesProps.selected.page==='inbox'">
         <div class="All-Bets-history">
             <h3 trans class="inbox">Inbox</h3>
             <div class="message-contain">
@@ -46,7 +46,7 @@
     </div>
 
 
-    <div class="right-block-history message" ng-show="messagesProps.page==='sent'">
+    <div class="right-block-history message" ng-show="messagesProps.selected.page==='sent'">
         <div class="All-Bets-history">
             <h3 trans class="sent">Sent messages</h3>
             <div class="message-contain">
@@ -83,7 +83,7 @@
     </div>
 
 
-    <div class="right-block-history message compose send-message-j" ng-show="messagesProps.page==='new'">
+    <div class="right-block-history message compose send-message-j" ng-show="messagesProps.selected.page==='new'">
         <div class="All-Bets-history">
             <h3 trans class="compose">New message</h3>
           
@@ -122,6 +122,12 @@
             </div>
         </form>
     </div>
+        </div>
+    </div>
+
+    <div class="right-block-history message" ng-show="messagesProps.selected.type==='iframe'">
+        <div class="All-Bets-history">
+            <iframe  ng-src="{{messagesProps.selected.iframeUrl|url}}"></iframe>
         </div>
     </div>
 

@@ -122,5 +122,9 @@ VBET5.service('Moment', ['Config', '$locale', 'LanguageCodes', function (Config,
         $locale.DATETIME_FORMATS.SHORTDAY = moment.weekdaysShort();
     };
 
+    Moment.convertUnixToMoment =  function convertUnixToMoment(timestamp) {
+        return Moment.get(Moment.moment.unix(timestamp));
+    };
+
     return Moment;
 }]);

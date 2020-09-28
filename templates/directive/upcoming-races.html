@@ -1,0 +1,15 @@
+<div class="upcoming-races" ng-show="games.length">
+    <h2 trans>Upcoming races </h2>
+    <div class="race-info">
+        <div class="one-race-info" ng-repeat="game in games track by game.id" ng-click="navigation.goTo('game', game.id, game.from, game.to)">
+            <p>
+                <i ng-bind="game.start_ts|formatDate:'hour':null:$root.env.timeFormat">10:10</i>
+                <span ng-bind="game.name"></span>
+            </p>
+            <div class="add-info-h">
+                <b class="flag-icon flag-{{::game.regionAlias | removeUselessSymbolsByRegexp: '[,\' ]+': 'g': 'true'}}"></b>
+                <span class="reg" ng-bind="game.regionName"></span>
+            </div>
+        </div>
+    </div>
+</div>

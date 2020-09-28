@@ -384,20 +384,6 @@ CASINO.controller('casinoCtrl', ['$rootScope', '$scope', '$sce', '$location', 'G
         });
     }
 
-    function groupPopularsToGroups(popularGames, popularsPerGroup) {
-        var i, g, j, groups = [];
-        for (i = 0, g = 0, j = popularGames.length; i < j; i += 1) {
-            if (groups[g] === undefined) {
-                groups[g] = [];
-            }
-            groups[g].push(popularGames[i]);
-            if (groups[g].length === popularsPerGroup) {
-                g++;
-            }
-        }
-        return groups;
-    }
-
     $scope.$on('widescreen.on', function () {
         $scope.wideMode = true;
     });

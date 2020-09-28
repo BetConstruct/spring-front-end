@@ -17,55 +17,70 @@ VBET5.factory('BetService', ['$rootScope', 'Zergling', 'Config', '$q', 'Utils', 
             }
         },
         constants: {
-            customCorrectScoreLogic: ['Soccer', 'Tennis', 'IceHockey', 'Baseball', 'TableTennis', 'Snooker', 'CyberFootball'],
-            marketsPreDividedByColumns:  [
-                'MatchWinningMargin',
-                'GameWinningMargin',
-                'SetWinningMargin',
-                'WinningMargin',
-                'CorrectScore',
-                'Firstset/match',
-                'SetsEffectiveness',
-                'SeriesCorrectScore',
-                'SeriesCorrectScoreAfterGame3',
-                'SeriesCorrectScoreAfterGame4',
-                'CurrectScoreGroup',
-                'MatchBettingAndTeamsToScore',
-                'HalfTimeFullTime',
-                'HalfTimeFullTimeDoubleChance',
-                'ExtraTimeHomeTeamCorrectTotal',
-                'ExtraTimeAwayTeamCorrectTotal',
-                'OutcomeandBothTeamToScore',
-                'DoubleChanceAndBothTeamToScore',
-                'DoubleChanceAndBothTeamToScore',
-                'TotalAndBothTeamsToScore',
-                'FirstHalfOutcomeAndBothTeamToScore',
-                'SecondHalfOutcomeAndBothTeamToScore',
-                '1stHalf-2ndHalfBothToScore',
-                'GameCorrectScore',
-                'MatchTieBreakCorrectScore',
-                'SetTieBreakCorrectScore',
-                '1stSet-Match',
-                '1stGame/2ndGameWinner',
-                '2ndGame/3thGameWinner',
-                '3thGame/4thGameWinner',
-                '4thGame/5thGameWinner',
-                '5thGame/6thGameWinner',
-                '6thGame/7thGameWinner',
-                '7thGame/8thGameWinner',
-                '8thGame/9thGameWinner',
-                '9thGame/10thGameWinner',
-                '10thGame/11thGameWinner',
-                '11thGame/12thGameWinner',
-                'SetScore',
-                'SetCorrectScore',
-                '5thSetCorrectScore',
-                'MatchTieBreakCorrectScore',
-                'OutcomeAndTotal15',
-                'OutcomeAndTotal25',
-                'OutcomeAndTotal35',
-                'OutcomeAndTotal45'
-            ], // Market types which are pre-divided by back-end into columns
+            customCorrectScoreLogic: {
+                'Soccer': 1,
+                'Tennis': 1,
+                'IceHockey': 1,
+                'AirHockey': 1,
+                'Baseball': 1,
+                'TableTennis': 1,
+                'Snooker': 1,
+                'CyberFootball': 1,
+                "CounterStrike": 1,
+                "Dota2": 1,
+                "LeagueOfLegends": 1
+            },
+            customCorrectScoreMarkets: {
+                "YellowCardCorrectScore": 1,
+                "CornerCorrectScore": 1,
+                "CorrectScore": 1
+            },
+            marketsPreDividedByColumns: {
+                'MatchWinningMargin': 1,
+                'GameWinningMargin': 1,
+                'SetWinningMargin': 1,
+                'WinningMargin': 1,
+                'CorrectScore': 1,
+                'Firstset/match': 1,
+                'SetsEffectiveness': 1,
+                'SeriesCorrectScore': 1,
+                'SeriesCorrectScoreAfterGame3': 1,
+                'SeriesCorrectScoreAfterGame4': 1,
+                'CurrectScoreGroup': 1,
+                'MatchBettingAndTeamsToScore': 1,
+                'HalfTimeFullTime': 1,
+                'HalfTimeFullTimeDoubleChance': 1,
+                'ExtraTimeHomeTeamCorrectTotal': 1,
+                'ExtraTimeAwayTeamCorrectTotal': 1,
+                'OutcomeandBothTeamToScore': 1,
+                'DoubleChanceAndBothTeamToScore': 1,
+                'TotalAndBothTeamsToScore': 1,
+                'FirstHalfOutcomeAndBothTeamToScore': 1,
+                'SecondHalfOutcomeAndBothTeamToScore': 1,
+                '1stHalf-2ndHalfBothToScore': 1,
+                'GameCorrectScore': 1,
+                'MatchTieBreakCorrectScore': 1,
+                'SetTieBreakCorrectScore': 1,
+                '1stSet-Match': 1,
+                '1stGame/2ndGameWinner': 1,
+                '2ndGame/3thGameWinner': 1,
+                '3thGame/4thGameWinner': 1,
+                '4thGame/5thGameWinner': 1,
+                '5thGame/6thGameWinner': 1,
+                '6thGame/7thGameWinner': 1,
+                '7thGame/8thGameWinner': 1,
+                '8thGame/9thGameWinner': 1,
+                '9thGame/10thGameWinner': 1,
+                '10thGame/11thGameWinner': 1,
+                '11thGame/12thGameWinner': 1,
+                'SetScore': 1,
+                'SetCorrectScore': 1,
+                '5thSetCorrectScore': 1,
+                'OutcomeAndTotal15': 1,
+                'OutcomeAndTotal25': 1,
+                'OutcomeAndTotal35': 1,
+                'OutcomeAndTotal45': 1
+            }, // Market types which are pre-divided by back-end into columns
             betTypes: {
                 1: 'Single',
                 2: 'Express',
@@ -81,6 +96,11 @@ VBET5.factory('BetService', ['$rootScope', 'Zergling', 'Config', '$q', 'Utils', 
                 14: 'Lucky 15',
                 15: 'Lucky 31',
                 16: 'Lucky 63',
+                40: 'Straight Forecast',
+                41: 'Reverse Forecast',
+                42: 'Combination Forecast',
+                43: 'Straight Tricast',
+                44: 'Combination Tricast',
                 50: 'Bet Builder',
                 51: 'Bet On Lineups',
                 'Toto': 'Pool Betting'
@@ -374,6 +394,8 @@ VBET5.factory('BetService', ['$rootScope', 'Zergling', 'Config', '$q', 'Utils', 
 
                        var process = function process() {
                             var eventIds = [];
+                            var gameIds = [];
+                            var markedIds = [];
                             var addEventsInBetSlipByURL = $location.path() !== '/sport/' && $location.path() !== '/dashboard/' && $location.path() !== '/multiview/' && $location.path() !== '/livecalendar/';
 
                             if (!addEventsInBetSlipByURL) {
@@ -383,6 +405,9 @@ VBET5.factory('BetService', ['$rootScope', 'Zergling', 'Config', '$q', 'Utils', 
                             for (var i = 0; i < betsToPlace.length; i++) {
                                 if (addEventsInBetSlipByURL) {
                                     eventIds.push(betsToPlace[i].eventInfo.id);
+                                    gameIds.push(betsToPlace[i].gameInfo.id);
+                                    markedIds.push(betsToPlace[i].marketInfo.id);
+
                                 } else {
                                     $rootScope.$broadcast('bet', {
                                         event: betsToPlace[i].eventInfo,
@@ -398,6 +423,8 @@ VBET5.factory('BetService', ['$rootScope', 'Zergling', 'Config', '$q', 'Utils', 
 
                                 var params = {
                                     'event': eventIds.join(','),
+                                    'gameIds': gameIds.join(','),
+                                    'market': markedIds.join(','),
                                     'betSlipType': eventsFromBetHistory.type,
                                     'type': 1
                                 };
@@ -440,6 +467,7 @@ VBET5.factory('BetService', ['$rootScope', 'Zergling', 'Config', '$q', 'Utils', 
                                         }]
                                 });
                             } else {
+                                $rootScope.broadcast('cancel.edit.bet');
                                 process();
                             }
                         }else {
@@ -465,10 +493,13 @@ VBET5.factory('BetService', ['$rootScope', 'Zergling', 'Config', '$q', 'Utils', 
      * @name getEventData
      * @methodOf vbet5.service:BetService
      * @description gets event data from SWARM
-     * @param {array} eventIds
+     * @param {number} eventId
+     * @param {number} gamId
+     * @param {number} marketId
+
      * @returns {Promise}
      */
-    BetService.getEventData = function getEventData(eventIds) {
+    BetService.getEventData = function getEventData(eventId, gamId, marketId) {
         var promise = $q.defer();
 
         Zergling.get({
@@ -483,7 +514,13 @@ VBET5.factory('BetService', ['$rootScope', 'Zergling', 'Config', '$q', 'Utils', 
             },
             'where': {
                 'event': {
-                    'id': {'@in': eventIds}
+                    'id': eventId
+                },
+                'game': {
+                    'id': gamId
+                },
+                'market': {
+                    'id': marketId
                 }
             }})
             .then(function resolve(response) { promise.resolve(response); }, function reject(response) { promise.reject(response); });

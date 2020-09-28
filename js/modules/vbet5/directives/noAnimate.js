@@ -8,17 +8,36 @@ angular.module('vbet5').directive('noAnimate', ['$animate', function ($animate) 
     return {
         restrict: 'A',
         link: function (scope, element, attrs) {
-            if (attrs.noAnimate === 'disable') {
+
+            function enableAnimation() {
                 $animate.enabled(element, true);
                 scope.$watch(function () {
                     $animate.enabled(element, true);
                 });
-            } else {
+            }
+
+            function disableAnimation() {
                 $animate.enabled(element, false);
                 scope.$watch(function () {
                     $animate.enabled(element, false);
                 });
             }
+            if (attrs.noAnimate === 'disable') {
+                enableAnimation();
+            } else {
+                disableAnimation();
+
+            }
+
+            scope.$on("toggleAnimation", function (event, data) {
+                if (data) {
+                    enableAnimation();
+                } else {
+                    disableAnimation();
+                }
+
+
+            });
         }
     };
 }]);

@@ -5,7 +5,9 @@
                 <i class="cms-jcon-trophy"></i>
             </li>
             <li ng-if="hasJackpots" ng-class="{active: tab.selected === 'jackpots'}" ng-click="tab.selected='jackpots'">
-                <i class="cms-jcon-video_slots"></i>
+                <i ng-if="!jackpotData[jackpotWidgets.widgetIndex].Provider" class="cms-jcon-video_slots"></i>
+                <!--todo remove inline css-->     <span ng-if="jackpotData[jackpotWidgets.widgetIndex].Provider"  class="item item-{{jackpotData[jackpotWidgets.widgetIndex].Provider}}"></span>
+
             </li>
         </ul>
     </div>
@@ -13,10 +15,11 @@
     <div class="jackpots-content">
         <div class="jackpot-coins-container" ng-if="tab.selected === 'jackpots'">
             <div class="jackpot-coins-content" ng-class="{active: $index === jackpotWidgets.widgetIndex }" ng-repeat="jackpot in jackpotData track by $index">
-                <p>{{jackpot.Name|translate}}</p>
+                <p ng-if="jackpot.Name">{{jackpot.Name|translate}}</p>
                 <ul ng-repeat="pool in jackpot.PoolGroup.PoolList track by $index">
-                    <li class="jackpot-coins jackpot-{{pool.Name.toLowerCase()}}">
-                        <span style="background-image: url(images/jackpot-coins/jackpot-{{pool.Name.toLowerCase()}}.png);"></span>
+                    <li class="jackpot-coins jackpot-{{(pool.Name || (jackpot.Provider + '-pool-' +$index)).toLowerCase()}}">
+
+                        <span style="background-image: url(images/jackpot-pools/jackpot-{{(pool.Name || (jackpot.Provider + '-pool-' +$index)).toLowerCase()}}.png);"></span>
                     </li>
                     <li class="info-jackpots" ng-class="{'win-blink-jackpots': pool.JackPotPoolStat.LastJackPotWin.Winner}">
                         <p>{{pool.DisplayName|translate}}</p>
@@ -30,8 +33,9 @@
                                    amount="{{pool.CollectedAmount}}">
                            </jackpot-counter>
                        </div>
+                        <p class="red-tiger-timer" ng-if="pool.JackPotType === 'time'">{{'Must pay before'|translate}} <span countdown="{{pool.TimeStamp}}"  ng-bind="'🕒 ' + countdown.hours + ':' + countdown.minutes + ':' + countdown.seconds"></span></p>
                     </li>
-                    <li class="total-info-winner">
+                    <li ng-if="!hideInfo" class="total-info-winner">
                         <ul>
                             <li>
                                 <h2 trans>Total Winners</h2>

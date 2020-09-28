@@ -42,7 +42,7 @@ angular.module('vbet5.betting').controller('classicMultiColumnCtrl', ['$scope', 
             var mainOrder = market.main_order;
             if (!output && (!marketType || market.type === marketType) &&(!displayKey || market.display_key === displayKey) && (!displaySubKey || market.display_sub_key === displaySubKey)) {
                 if (!optimalMarkets || !eventTypes) {
-                   processMarket(market);
+                    processMarket(market);
                 } else if(optimalMarkets && mainOrder && (!minimalMarket || (mainOrder < minimalMarket.main_order && mainOrder >= minOptimalMarkets) )) {
                     minimalMarket = market;
                 }
@@ -141,24 +141,28 @@ angular.module('vbet5.betting').controller('classicMultiColumnCtrl', ['$scope', 
 
     /**
      * @ngdoc method
-     * @name loadLiveGames
+     * @name loadLiveGamesAndUpdateGames
      * @methodOf vbet5.controller:classicMultiColumnCtrl
      * @description  updates open game data object
      */
-    function loadLiveGames() {
+    function loadLiveGamesAndUpdateGames() {
         if (liveGamesSubId) {
             connectionService.unsubscribe(liveGamesSubId);
             liveGamesSubId = null;
         }
 
-        if (!$scope.multiColumn.show || !$scope.selectedCompetition || !$scope.selectedCompetition.id || !$scope.selectedCompetition.sport) return;
+        if (!$scope.multiColumn.show || !$scope.selectedCompetition || !$scope.selectedCompetition.id || !$scope.selectedCompetition.sport) {
+            $scope.multiColumn.liveSports = [];
+            updateGames();
+            return;
+        }
 
         var requestMarketTypes = [];
         angular.forEach($scope.multiColumnMarketFilterTypes, function (filter, fType) {
             requestMarketTypes.push(fType);
         });
-
         $scope.multiColumn.liveGames = false;
+
 
         var request = {
             'source': 'betting',
@@ -209,6 +213,9 @@ angular.module('vbet5.betting').controller('classicMultiColumnCtrl', ['$scope', 
     function updateLiveGames(response) {
         $scope.multiColumn.liveSports = false;
         $scope.multiColumn.liveGamesEvents = false;
+        if (!$scope.selectedCompetition) {
+            return;
+        }
         var selectedSport = $scope.selectedCompetition.sport.alias;
         if (response && response.sport) {
             $scope.multiColumn.liveSports = [];
@@ -239,7 +246,7 @@ angular.module('vbet5.betting').controller('classicMultiColumnCtrl', ['$scope', 
                                 }
                             });
 
-                           games.push(game);
+                            games.push(game);
                         });
 
                         var liveData = {
@@ -264,12 +271,15 @@ angular.module('vbet5.betting').controller('classicMultiColumnCtrl', ['$scope', 
 
     $scope.$on('multiColumn.games', function (event, action) {
         switch (action) {
-            case 'loadLive':
-                loadLiveGames();
-                break;
             case 'update':
+                $scope.multiColumn.liveSports = [];
                 updateGames();
                 break;
+            case 'updateBoth':
+                loadLiveGamesAndUpdateGames();
+                break;
+            case 'cleanState':
+                $scope.multiColumn.viewData = [];
         }
 
     });
@@ -281,7 +291,6 @@ angular.module('vbet5.betting').controller('classicMultiColumnCtrl', ['$scope', 
      * @description initialization
      */
     (function initMultiColumn() {
-        loadLiveGames();
-        updateGames();
+        loadLiveGamesAndUpdateGames();
     })();
 }]);

@@ -1,6 +1,6 @@
 <!--Menu-->
 <div class="header-bottom-row">
-    <div class="header-nav-contain" ng-show="!conf.rfid.loginWIthRFID || conf.rfid.loginWIthRFID && env.authorized">
+    <div class="header-nav-contain" ng-show="!$root.conf.rfid.loginWIthRFID || env.authorized || $root.conf.rfid.allowAccessWithoutRfid">
         <ul ng-class="{'menu-dropdown': $root.topMenuDropDown, 'menu-dropdown-show': subMenuItemCount > 0}" sub-menu-creator="main">
             <div class="top-menu-more" title="More"
                  ng-click="$root.topMenuDropDown=!$root.topMenuDropDown;" hide-on-click

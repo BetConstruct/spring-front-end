@@ -49,6 +49,15 @@
                 </li>
             </ul>
         </div>
+        <carousel
+                class="float-width"
+                ng-if="$root.conf.footer.slider"
+                html-to-include="'templates/directive/footer-slider-images.html'"
+                items-per-page="5"
+                items="$root.conf.footer.slider">
+        </carousel>
+
+
     </div>
     <ng-include ng-if="$root.conf.footer.operatedBy && $root.conf.footer.operatedBy.link" src="::'templates/footer/operatedby.html'|fixPath"></ng-include>
     <ng-include src="::'templates/footer/paymentmethods.html'|fixPath"></ng-include>

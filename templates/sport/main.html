@@ -37,6 +37,7 @@
                         <div ng-if="!$root.conf.disableBetSlip" class="right-block-list betslip-sticky" ng-class="{'betslip-open':betslipOpen}">
 
                             <ng-include class="include-viewSwitcher-j" src="::'templates/sport/viewswitcher.html'|fixPath"></ng-include>
+                            <pre-match-stream-channels ng-if="prematchChannels && prematchChannels.length && !$root.env.live"></pre-match-stream-channels>
 
                             <div class="betslip-toggle" ng-click="betslipOpen=!betslipOpen"
                                  ng-class="{'betslip-button-open':betslipOpen }"><p>BetSlip</p><span

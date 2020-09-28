@@ -9,7 +9,7 @@
  * A service used to get data from Swarm
  * uses {@link vbet5.service:Websocket Websocket} or {@link /documentation/angular/api/ng.$http ng.$http} for communication, depending on config and browser capabilities
  */
-VBET5.factory('Zergling', ['Config', 'WS', '$http', '$q', '$timeout', '$rootScope', '$cookies', 'AuthData', 'Utils', 'RecaptchaService', 'Storage', function (Config, WS, $http, $q, $timeout, $rootScope, $cookies, AuthData, Utils, RecaptchaService, Storage) {
+VBET5.factory('Zergling', ['Config', 'WS', '$http', '$q', '$timeout', '$rootScope', '$cookies', 'AuthData', 'Utils', 'RecaptchaService', 'Storage', 'BuildConfig', function (Config, WS, $http, $q, $timeout, $rootScope, $cookies, AuthData, Utils, RecaptchaService, Storage, BuildConfig) {
     'use strict';
 
     var Zergling = {};
@@ -301,6 +301,9 @@ VBET5.factory('Zergling', ['Config', 'WS', '$http', '$q', '$timeout', '$rootScop
                     sessionRequestCmd.params.afec = clId;
                 }
             }
+            if (BuildConfig.releaseDate) {
+                sessionRequestCmd.params.release_date = BuildConfig.releaseDate;
+            }
 
             if (Config.swarm.sendSourceInRequestSession && Config.main.source !== undefined) {
                 sessionRequestCmd.params.source = Config.main.source;
@@ -493,6 +496,10 @@ VBET5.factory('Zergling', ['Config', 'WS', '$http', '$q', '$timeout', '$rootScop
                 console.warn("cannot login, no saved credentials");
                 return $q.reject(null);
             }
+            if (loginAuthData.needToVerify) {
+                AuthData.clear();
+                return $q.reject(null);
+            }
             if (loginAuthData.jwe_token) {
                 data = {'command': 'login_encrypted', 'params':  {'jwe_token': loginAuthData.jwe_token, 'auth_token': loginAuthData.auth_token} };
             } else {
@@ -538,7 +545,9 @@ VBET5.factory('Zergling', ['Config', 'WS', '$http', '$q', '$timeout', '$rootScop
 
                     if (user || data.command === 'login_encrypted') { //when restoring a login, if the login_encrypted command is used, then we get a new authData and should update the storage
                         var authData = {auth_token: response.data.data.auth_token, user_id: response.data.data.user_id, never_expires: remember || undefined, jwe_token: response.data.data.jwe_token || (loginAuthData && loginAuthData.jwe_token)};
-
+                        if (response.data.data.qr_code_origin || response.data.data.authentication_status === 4) {
+                            authData.needToVerify = true;
+                        }
                         if (user) {
                             if (user.nemIDAuthentication) {
                                 authData.nemIDToken = response.data.data.nem_id_token;
@@ -581,8 +590,11 @@ VBET5.factory('Zergling', ['Config', 'WS', '$http', '$q', '$timeout', '$rootScop
      *
      * @returns {promise} promise
      */
-    Zergling.logout = function logout() {
+    Zergling.logout = function logout(source) {
         var data = {'command': 'logout', 'params': {}};
+        if (source) {
+            data.params.source = source;
+        }
         return sendRequest(data)
             .then(function (response) {
                 AuthData.clear();

@@ -1,0 +1,558 @@
+.extended-reg-j,
+.extended-reg-j *,
+.extended-reg-j *:before,
+.extended-reg-j *:after {
+  box-sizing: border-box;
+  outline: 0;
+}
+.extended-reg-j {
+  overflow: hidden;
+  max-width: 1310px;
+  width: 100%;
+  margin: 0 auto 60px;
+  @media screen and (max-width: 1310px) {
+    max-width: 980px;
+  }
+  h1 {
+    color: $text-palette-3;
+    font: 400 18px $font-f;
+    text-transform: uppercase;
+    width: 100%;
+    float: left;
+    padding: 34px 0;
+  }
+  h2 {
+    width: 100%;
+    float: left;
+    background-color: $skin-palette-10;
+    height: 61px;
+    border-bottom: 1px solid lighten( desaturate( adjust-hue( $skin-color, -1deg ), 8 ), 9 );
+    border-radius: 5px 5px 0 0;
+    padding: 0 10px 0 25px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    color: $text-palette-3;
+    font: 400 18px/60px $font-f;
+  }
+  table {
+    float: left;
+    width: calc(100% + 20px);
+    margin-left: -10px;
+    table-layout: fixed;
+    border-spacing: 10px 0;
+    border-collapse: separate;
+    td {
+      background-color: $skin-palette-9;
+      border-radius: 5px;
+      vertical-align: top;
+    }
+  }
+  article {
+    width: 100%;
+    float: left;
+    color: $text-palette-4;
+    font: 400 12px/14px $font-f;
+    padding: 25px 12px 24px;
+    .reg-w-50 {
+      width: 50%;
+      float: left;
+      display: block;
+      padding: 0 5px 20px;
+    }
+    .reg-w-100 {
+      width: 100%;
+      float: left;
+      display: block;
+      padding: 0 5px 20px;
+    }
+    ul {
+      width: 100%;
+      float: left;
+    }
+  }
+  hr {
+    width: 100%;
+    float: left;
+    height: 2px;
+    margin: 10px 0;
+    border: 0;
+    background-color: darken( saturate( $skin-color, 1 ), 3 );
+    border-bottom: 1px solid lighten( desaturate( adjust-hue( $skin-color, -1deg ), 8 ), 9 );
+  }
+  label {
+    width: 100%;
+    float: left;
+    position: relative;
+    &.no-marginb-j {
+      margin-bottom: 0;
+    }
+  }
+  p {
+    margin-bottom: 8px;
+    width: 100%;
+    float: left;
+  }
+  input[type="text"],
+  input[type="number"],
+  input[type="email"],
+  input[type="password"] {
+    background-color: $skin-palette-10;
+    border: 1px solid $skin-palette-10;
+    height: 36px;
+    width: 100%;
+    float: left;
+    border-radius: 5px;
+    padding: 0 10px 0 14px;
+    color: $text-palette-3;
+    font: 400 12px $font-f;
+    transition-duration: 300ms;
+    &::-webkit-input-placeholder {
+      color: $text-palette-4;
+      font: 400 12px $font-f;
+    }
+    &:-moz-placeholder {
+      color: $text-palette-4;
+      font: 400 12px $font-f;
+    }
+    &::-moz-placeholder {
+      color: $text-palette-4;
+      font: 400 12px $font-f;
+    }
+    &:-ms-input-placeholder {
+      color: $text-palette-4;
+      font: 400 12px $font-f;
+    }
+    &:focus {
+      border: 1px solid lighten( desaturate( adjust-hue( $skin-color, 1deg ), 9 ), 9 );
+    }
+    &.ng-error {
+      border-color: #a82d46;
+    }
+  }
+  .birth-date-j label {
+    margin-left: 10px;
+    width: calc(100% - 125px);
+    p {
+      white-space: nowrap;
+    }
+    &:first-of-type {
+      width: 45px;
+      margin: 0;
+    }
+    &:last-of-type {
+      width: 60px;
+    }
+  }
+  .regselect-j {
+    background-color: $skin-palette-10;
+    height: 36px;
+    width: 100%;
+    border-radius: 5px;
+    border: 1px solid $skin-palette-10;
+    overflow: hidden;
+    position: relative;
+    transition-duration: 300ms;
+    select {
+      background: transparent;
+      display: block;
+      height: 100%;
+      width: calc(100% + 24px);
+      padding: 0 30px 0 14px;
+      color: $text-palette-4;
+      font: 400 12px $font-f;
+      border: 0;
+      position: relative;
+      z-index: 40;
+      option {
+        color: $text-palette-3;
+        font: 400 12px $font-f;
+        background-color: $skin-palette-10;
+      }
+    }
+    &:after {
+      content: "\e670";
+      font: 16px icomoon;
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      height: 12px;
+      color: $text-palette-3;
+      margin-top: -8px;
+    }
+    &.ng-error {
+      border-color: #a82d46;
+    }
+  }
+  .gender-block-j label {
+    width: auto;
+    display: inline-block;
+    cursor: pointer;
+    margin-top: 6px;
+    input[type="radio"] {
+      position: absolute;
+      top: 0;
+      left: 0;
+      margin: 0;
+      opacity: 0;
+      &:checked + span:after {
+        content: '';
+        display: block;
+        height: 6px;
+        width: 6px;
+        border-radius: 100%;
+        background: $text-palette-3;
+        position: absolute;
+        top: 5px;
+        left: 5px;
+        z-index: 20;
+      }
+    }
+    span {
+      display: block;
+      width: 100%;
+      float: left;
+      line-height: 16px;
+      height: 16px;
+      position: relative;
+      padding-left: 28px;
+      margin-right: 20px;
+      &:before {
+        content: "";
+        display: block;
+        height: 16px;
+        width: 16px;
+        border-radius: 100%;
+        background: $skin-palette-10;
+        position: absolute;
+        top: 0;
+        left: 0;
+      }
+    }
+    &:last-of-type span {
+      margin: 0;
+    }
+  }
+  .iban-block-j {
+    label {
+      &:first-of-type {
+        margin: 8px 0 11px;
+      }
+      &:last-of-type {
+        margin-bottom: 10px;
+      }
+    }
+    a {
+      width: 100%;
+      float: left;
+      display: block;
+      transition: 250ms color;
+      color: $text-palette-5;
+      position: relative;
+      padding-left: 15px;
+      &:before {
+        content: "\e672";
+        font: 14px icomoon;
+        position: absolute;
+        top: -1px;
+        left: -3px;
+      }
+      &:hover {
+        color: $text-palette-4;
+      }
+    }
+  }
+  .promo-agree-block-j {
+    p {
+      line-height: 15px;
+      margin-bottom: 16px;
+    }
+    li {
+      width: auto;
+      float: left;
+      display: block;
+      &:first-of-type {
+        margin-right: 20px;
+      }
+    }
+    label {
+      margin-bottom: 0;
+      cursor: pointer;
+      p {
+        margin-bottom: -4px;
+        line-height: 16px;
+        height: 16px;
+        position: relative;
+        padding-left: 28px;
+        &:before {
+          content: "";
+          display: block;
+          height: 16px;
+          width: 16px;
+          border-radius: 3px;
+          background: $skin-palette-10;
+          position: absolute;
+          top: 0;
+          left: 0;
+        }
+      }
+    }
+    input[type="checkbox"] {
+      position: absolute;
+      top: 0;
+      left: 0;
+      margin: 0;
+      opacity: 0;
+      &:checked + p:after {
+        content: '\e6f3';
+        font: 6px/16px "icomoon";
+        position: absolute;
+        left: 4px;
+        top: 0;
+        color: $text-palette-4;
+      }
+    }
+  }
+  .age-agree-j {
+    margin-bottom: 3px;
+    cursor: pointer;
+    span {
+      float: left;
+      position: relative;
+      display: block;
+    }
+    a {
+      float: left;
+      display: block;
+      color: $text-palette-3;
+      padding: 0 5px;
+    }
+    input[type="checkbox"] {
+      position: absolute;
+      top: 0;
+      left: 0;
+      margin: 0;
+      opacity: 0;
+      + span {
+        padding-left: 28px;
+      }
+      + span:before {
+        content: "";
+        display: block;
+        height: 16px;
+        width: 16px;
+        border-radius: 3px;
+        background: $skin-palette-10;
+        position: absolute;
+        top: 0;
+        left: 0;
+      }
+      &:checked + span:after {
+        content: '\e6f3';
+        font: 6px/16px "icomoon";
+        position: absolute;
+        left: 4px;
+        top: 0;
+        color: $text-palette-4;
+      }
+    }
+  }
+  .capt-j-ext {
+    margin-bottom: 3px;
+    &.error-wrap-j .caption-j {
+      top: 22px;
+    }
+    label {
+      margin: 0;
+      width: auto;
+      position: static;
+      button {
+        width: 36px;
+        height: 36px;
+        background: none;
+        border: 1px solid $skin-palette-10;
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        font-size: 0;
+        color: $text-palette-4;
+        cursor: pointer;
+        border-radius: 5px;
+        &:before {
+          content: "\e6f4";
+          font: 12px icomoon;
+          display: block;
+        }
+      }
+    }
+    img {
+      height: 36px;
+      display: block;
+      float: left;
+      width: 150px;
+      border-radius: 5px;
+      border: 1px solid $skin-palette-10;
+      margin-right: 10px;
+    }
+    input[type="text"] {
+      width: calc(100% - 206px);
+    }
+  }
+  .submit-but-j {
+    height: 36px;
+    background: $brand-color-1;
+    border: 2px solid $brand-color-1;
+    border-radius: 5px;
+    padding: 0 25px;
+    float: right;
+    display: block;
+    text-transform: uppercase;
+    font: 14px $font-f;
+    color: white;
+    transition-duration: 300ms;
+    cursor: pointer;
+    &:disabled,
+    &:disabled:hover {
+      border-color: $text-palette-6;
+      color: $text-palette-6;
+      cursor: default;
+      background: none;
+    }
+    &:hover {
+      background: $hero-color;
+      border-color: $hero-color;
+    }
+  }
+  .pass-strong-bar-j {
+    height: 4px;
+    border-radius: 10px;
+    background: $skin-palette-8;
+    width: 100%;
+    position: absolute;
+    bottom: -9px;
+    left: 0;
+    span {
+      height: 4px;
+      display: block;
+      background: $brand-color-1;
+      border-radius: 10px;
+      width: 100%;
+      transition-duration: 500ms;
+      &.bad-j {
+        background: #a82d46;
+        width: 25%;
+      }
+      &.middle {
+        background: #c4963f;
+        width: 55%;
+      }
+    }
+  }
+  .error-wrap-j {
+    width: 100%;
+    float: left;
+    position: relative;
+    &.error {
+      input[type="text"],
+      input[type="email"],
+      input[type="password"],
+      .regselect-j,
+      input[type="radio"] + span:before,
+      input[type="checkbox"] + p:before,
+      input[type="checkbox"] + span:before {
+        border: 1px solid #a82d46;
+        &:focus {
+          border: 1px solid lighten( desaturate( adjust-hue( $skin-color, 1deg ), 9 ), 9 );
+        }
+      }
+      i,
+      .caption-j {
+        display: block;
+      }
+    }
+    i {
+      display: none;
+      height: 16px;
+      position: absolute;
+      top: 10px;
+      right: 14px;
+      &:before {
+        font: normal 16px/16px icomoon;
+        content: "\e6eb";
+        color: #9d2c45;
+      }
+    }
+    .caption-j {
+      display: none;
+      left: calc(100% + 10px);
+      width: 150px;
+      min-height: 25px;
+      border-radius: 5px;
+      top: 0;
+      background: $skin-palette-3;
+      z-index: 99;
+      position: absolute;
+      color: $text-palette-6;
+      font: 12px/16px Arial, Helvetica, sans-serif;
+      padding: 10px 10px 8px;
+      &:before {
+        display: block;
+        content: "";
+        border-style: solid;
+        border-width: 6px 6px 6px 0;
+        border-color: rgba(0, 0, 0, 0) $skin-palette-3 rgba(0, 0, 0, 0) rgba(0, 0, 0, 0);
+        position: absolute;
+        z-index: 99;
+        width: 10px;
+        height: 6px;
+        top: 11px;
+        left: -9px;
+      }
+    }
+  }
+  table tr td:last-child .caption-j {
+    right: calc(100% + 10px);
+    left: auto;
+    &:before {
+      right: -9px;
+      left: auto;
+      border-width: 6px 0 6px 6px;
+      border-color: rgba(0, 0, 0, 0) rgba(0, 0, 0, 0) rgba(0, 0, 0, 0) $skin-palette-3;
+    }
+  }
+}
+@media screen and (max-width: 1310px) {
+  .extended-reg-j article li.gender-block-j,
+  .extended-reg-j article li.birth-date-j {
+    padding: 0;
+    width: 100%;
+  }
+  .extended-reg-j .capt-j-ext img {
+    width: 110px;
+  }
+  .extended-reg-j .capt-j-ext input[type="text"] {
+    width: calc(100% - 166px);
+  }
+}
+.extended-reg-j .error-wrap-j .caption-j.ng-binding {
+  z-index: 110;
+}
+.pass-strong-bar-j {
+  display: none;
+}
+.extended-reg-j article .reg-w-50.contact-number-j {
+  width: 60px;
+  white-space: nowrap;
+}
+.extended-reg-j article .reg-w-50.phone-number-j {
+  width: calc(50% - 60px);
+  .hint  {
+    opacity: 0;
+  }
+}
+.extended-reg-j article .reg-w-50.birth {
+  width: calc((100% - 1px) / 3);
+}
+.hide-hint .hint  {
+  opacity: 0;
+}

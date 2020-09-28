@@ -9,7 +9,7 @@
     <vbet-loader ng-show="lineupLoading"></vbet-loader>
     <p ng-if="!matchLineupsData.GroupByHomeAway && !lineupLoading" ng-bind="'Match lineup is not currently available'|translate"></p>
     <div ng-if="matchLineupsData.GroupByHomeAway && !lineupLoading" class="lineup-team-name">
-                    <span title="{{team.EntityName}}" ng-repeat="team in matchLineupsData.Match.MatchMembers | orderBy: IsHome"
+                    <span title="{{team.EntityName}}" ng-repeat="team in matchLineupsData.Match.MatchMembers | orderBy: 'IsHome':true"
                           ng-click="lineUpPopup.selectedTeamHome = team.IsHome"
                           ng-class="{'active' : lineUpPopup.selectedTeamHome === team.IsHome}">
                         {{team.EntityName}}

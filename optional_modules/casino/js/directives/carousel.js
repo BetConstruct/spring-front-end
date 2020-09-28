@@ -75,7 +75,7 @@ CASINO.directive('carouselSlider', ['TimeoutWrapper', '$window', function (Timeo
                     currentIndex = index;
                     value = position = index * -20 + 40;
                 }
-                container.style.left = value + "%";
+                container.style.transform = "translate3d(" + value + "%,0,0)";
 
             }
 

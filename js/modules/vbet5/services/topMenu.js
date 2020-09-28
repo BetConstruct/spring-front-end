@@ -489,6 +489,43 @@ angular.module('vbet5').service('TopMenu', ['$rootScope', '$location', '$timeout
         $timeout(TopMenu.updateMenuItemsState); //initial
     };
 
+    function setMenuItemProperties(menuItem, config) {
+        if (config.disableLink) {
+            menuItem.href = "";
+            menuItem.click = function() {};
+        }
+
+        if (config.supDisplayName !== undefined) {
+            menuItem.supDisplayName = config.supDisplayName;
+        }
+
+        if (config.subMenu) {
+            menuItem.subMenu = [];
+            angular.forEach(config.subMenu, function (subMenuItem) {
+                menuItem.subMenu.push({
+                    href: subMenuItem.href || topMenuItems[subMenuItem.name].href,
+                    displayName: subMenuItem.displayName ? Translator.get(subMenuItem.displayName) : topMenuItems[subMenuItem.name].displayName,
+                    name: subMenuItem.name || '',
+                    activeLink: subMenuItem.activeLink,
+                    excludeParam: subMenuItem.excludeParam,
+                    order: subMenuItem.order
+                });
+            });
+            Utils.sortItemsArray(menuItem.subMenu);
+        } else {
+            config.subMenu = [];
+        }
+        menuItem.href = config.href || config.link || menuItem.href;
+        menuItem.authorized = config.authorized || false;
+        menuItem.authorizedOnly = config.authorizedOnly || false;
+        menuItem.positiveBalanceOnly = config.positiveBalanceOnly || false;
+        menuItem.displayName = (config.label && Translator.get(config.label)) || menuItem.displayName;
+        menuItem.reload = config.reload ? 'true' : 'false';
+        menuItem.dynamicClass = config.dynamicClass || menuItem.dynamicClass;
+        menuItem.subTitle = config.subTitle || menuItem.subTitle || "";
+        menuItem.hidden = config.hidden || false;
+    }
+
     TopMenu.update = function update () {
         $scope.topMenu = [];
 
@@ -509,102 +546,61 @@ angular.module('vbet5').service('TopMenu', ['$rootScope', '$location', '$timeout
             });
         }
 
-        angular.forEach(topMenuItems, function (menuItem, menuName) {
-            // only items from config will remain
-            if (((menuData.indexOf && menuData.indexOf(menuName) !== -1) || menuData[menuName]) && menuItem.showCondition) {
-                if (menuData[menuName]) {
-                    if (menuData[menuName].disableLink) {
-                        menuItem.href = "";
-                        menuItem.click = function() {};
+        angular.forEach(Config.main.multiLevelMenu, function (value, menuName) {
+            var menuObj = null;
+            if (topMenuItems[menuName]) {
+                if (topMenuItems[menuName].showCondition) {
+                    menuObj = topMenuItems[menuName];
+                    setMenuItemProperties(menuObj, value);
+                    menuObj.name = menuName;
+                    if (isVisible(menuObj, countryCode)) {
+                        $scope.topMenu.push(menuObj);
                     }
-
-                    if (menuData[menuName].supDisplayName !== undefined) {
-                        menuItem.supDisplayName = menuData[menuName].supDisplayName;
-                    }
-
-                    if (menuData[menuName].subMenu) {
-                        menuItem.subMenu = [];
-                        angular.forEach(menuData[menuName].subMenu, function (subMenuItem) {
-                            menuItem.subMenu.push({
-                                href: subMenuItem.href || topMenuItems[subMenuItem.name].href,
-                                displayName: subMenuItem.displayName ? Translator.get(subMenuItem.displayName) : topMenuItems[subMenuItem.name].displayName,
-                                name: subMenuItem.name || '',
-                                activeLink: subMenuItem.activeLink,
-                                excludeParam: subMenuItem.excludeParam,
-                                order: subMenuItem.order
-                            });
-                        });
-                        Utils.sortItemsArray(menuItem.subMenu);
-
-                    }
-                    menuItem.href = menuData[menuName].href || menuData[menuName].link || menuItem.href;
-                    menuItem.authorized = menuData[menuName].authorized || false;
-                    menuItem.authorizedOnly = menuData[menuName].authorizedOnly || false;
-                    menuItem.positiveBalanceOnly = menuData[menuName].positiveBalanceOnly || false;
-                    menuItem.displayName = (menuData[menuName].label && Translator.get(menuData[menuName].label)) || menuItem.displayName;
-                    menuItem.reload = menuData[menuName].reload ? 'true' : 'false';
-                    menuItem.dynamicClass = menuData[menuName].dynamicClass || menuItem.dynamicClass;
-                    menuItem.subTitle = menuData[menuName].subTitle || menuItem.subTitle || "";
                 }
+                return;
 
-                menuItem.name = menuName;
-                if (isVisible(menuItem, countryCode)) {
-                    $scope.topMenu.push(menuItem);
-                }
             }
-        });
-
-        angular.forEach(Config.main.multiLevelMenu, function (value) {
             value = value[Config.env.lang] || value.eng || value;
             if (value.name || value.title || value.displayName) {
-                var menuObj = {
+                menuObj = {
                     name: value.name || value.title,
                     displayName: Translator.get(value.displayName || value.name || value.title || ''),
-                    href: value.href || value.link,
                     click: function () {
                         $rootScope.topMenuDropDown = false;
                         $scope.closeSlider();
                         $scope.goToTop();
 
                         if (value.authorizedOnly && !$rootScope.env.authorized) {
-                            $rootScope.broadcast( 'openLoginForm')
+                            $rootScope.broadcast( 'openLoginForm');
                         } else if (value.broadcast) {
                             $rootScope.broadcast(value.broadcast, value.broadcastData);
                         }
                     },
                     classObject: {'active': false},
-                    subTitle: value.subTitle,
-                    supDisplayName: value.supDisplayName || null,
-                    dynamicClass: value.dynamicClass || null,
-                    subMenu: value.subMenu || [],
                     target: value.target || '',
                     staticClass: value.cssclass || value.name + " " + (Config.main.newMenuItems.freebet ? 'new-top-nav' : ""),
                     showCondition: true,
                     activeLink: value.activeLink,
-                    visibleForLayout: value.visibleForLayout,
-                    authorizedOnly: value.authorizedOnly || false,
-                    authorized: value.authorized,
-                    positiveBalanceOnly: value.positiveBalanceOnly,
-                    reload: value.reload ? 'true' : 'false'
+                    visibleForLayout: value.visibleForLayout
                 };
                 if(value.broadcastData){
                     menuObj.id = value.broadcastData.id;
                 }
-
+                setMenuItemProperties(menuObj, value);
                 if (isVisible(menuObj, countryCode)) {
                     $scope.topMenu.push(menuObj);
                     menuData[value.name || value.title] = {order: value.order || $scope.topMenu.length + 1000};
-
                 }
+
             }
+
+
+
         });
 
         TopMenu.refresh();
-        if (menuData.indexOf) {
-            Utils.sortByIndex($scope.topMenu, menuData);
-        } else {
-            Utils.sortByField($scope.topMenu, menuData);
-        }
+
+        Utils.sortByField($scope.topMenu, menuData);
     };
 
     function productAvailibilityForAge(item, age) {

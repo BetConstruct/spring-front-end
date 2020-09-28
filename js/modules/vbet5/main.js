@@ -57,6 +57,8 @@ angular.module('vbet5').run(['$rootScope', '$location', '$routeParams', '$route'
 
         if (Config.main.integrationMode) {
             Config.main.multiLevelMenu = {};
+            Config.main.enableMixedViewBalance = false;
+            Config.main.promotionalBonuses.enable = false;
         }
 
         if (typeof Config.main.registration.minimumAllowedAge === 'object') { //bad solution and need to refactor
@@ -67,11 +69,7 @@ angular.module('vbet5').run(['$rootScope', '$location', '$routeParams', '$route'
         }
         Zergling.init();
 
-        var lang = $location.search().lang || $cookies.get('lang') || Storage.get('lang') || (Config.main.getBrowserLanguage && Utils.getBrowserLanguage());
-
-        if(lang === 'fra'){ // todo SDC-44551
-            lang = 'fre';
-        }
+        var lang = $cookies.get('lang') || Storage.get('lang');
 
         if (!lang && Config.main.transLangByDomain && Config.main.transLangByDomain[$location.host()]) {
             lang = Config.main.transLangByDomain[$location.host()];
@@ -149,10 +147,14 @@ angular.module('vbet5').run(['$rootScope', '$location', '$routeParams', '$route'
         analytics.init();
         facebookPixel.init();
 
+        //TODO After releasing all the skins, we should remove this part.
+        // I think we can remove this block in 08/01/2020
+        if (!Config.main.headerNavigation.nearLogo) {
+            Config.main.headerNavigation.nearLogo = Config.main.theVeryTopMenu;
+        }
 
-        Config.main.theVeryTopMenu  = Config.main.theVeryTopMenu && (Config.main.theVeryTopMenu[Config.env.lang] || Config.main.theVeryTopMenu.default || Config.main.theVeryTopMenu) || [];
-        //need to sort them before adding a reference to the conf property of rootScope
-        Utils.sortItemsArray(Config.main.theVeryTopMenu);
+        Utils.sortItemsArray(Config.main.headerNavigation.nearLogo);
+        Utils.sortItemsArray(Config.main.headerNavigation.aboveLogo);
 
         // do filter and remove unavailable components for current host
         Config.main.homepage = Config.main.homepage.filter(function(item) {

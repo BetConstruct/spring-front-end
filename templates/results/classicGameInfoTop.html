@@ -2,7 +2,7 @@
     <div class="popular-game-t-row-v3">
         <div class="market-title-v3" data-title="{{openGameDetails.competition_name + ' - ' + openGameDetails.game_name}}">
             <ul class="market-icons-t-r">
-                <li class="tv-icon-market-v3" ng-show="openGameDetails.video_id && $root.conf.videoEnabled"></li>
+                <li class="tv-icon-market-v3" ng-show="openGameDetails.video_id"></li>
                 <li class="statistic-icon-market-v3"
                     ng-if="$root.conf.enableH2HStat &&  openGameDetails.is_stat_available"
                     ng-click="openStatistics(openGameDetails); $event.stopPropagation();"></li>

@@ -140,7 +140,10 @@ angular.module('vbet5').controller('loginCtrl', ['$scope', '$rootScope', 'Timeou
         $scope.params.allowSMSResend = false;
         clearSMSParams();
 
-        Zergling.get({ 'login': $scope.user.username }, 'send_sms_with_username')
+        Zergling.get({
+            'login': $scope.user.username,
+            'action_type':2
+        }, 'send_sms_with_username')
             .then(
                 function success(response) {
                     switch (response.result) {
@@ -217,8 +220,7 @@ angular.module('vbet5').controller('loginCtrl', ['$scope', '$rootScope', 'Timeou
         isGettingBalanceInProgress = true;
 
         Zergling.get({}, 'get_balance').then(function (response) {
-            var profile = response.data || {profile: {rfid: response}}; // this must be fixed from basalt side.
-            updateProfile(profile);
+            updateProfile(response.data);
             if (response.data) {
                 partner.call('balance', $filter('firstElement')(response.data.profile));
             }
@@ -342,6 +344,9 @@ angular.module('vbet5').controller('loginCtrl', ['$scope', '$rootScope', 'Timeou
             $scope.isLoading = true;
             Zergling.get(request, "apply_two_factor_authentication_code").then(function (data) {
                 if (data.result === 0){
+                    var authData = AuthData.get();
+                    authData.needToVerify = false;
+                    AuthData.set(authData);
                     callback();
 
                 } else {
@@ -399,14 +404,21 @@ angular.module('vbet5').controller('loginCtrl', ['$scope', '$rootScope', 'Timeou
      * @returns {promise} promise that will be resolved with swarm response data object
      */
     function loginWithUsernamePassword(user, password, action, remember) {
-        console.log('loginWithUsernamePassword', user, password, action, remember);
         var login = $q.defer();
         var promise = login.promise;
         var loginObj = {username: user, password: password};
         var additionalParams = {};
 
-        if (Config.main.iovationLoginScripts && $scope.user && $scope.user.ioBlackBox) {
-            additionalParams.io_black_box = $scope.user.ioBlackBox;
+        if ($scope.user) {
+            addIovation(additionalParams);
+
+            if ($scope.user.g_recaptcha_response) {
+                additionalParams.g_recaptcha_response = $scope.user.g_recaptcha_response;
+            }
+
+            if ($scope.user.birth_date) {
+                additionalParams.birth_date = $scope.user.birth_date;
+            }
         }
 
         if ($scope.params.needVerificationCode) {
@@ -414,26 +426,17 @@ angular.module('vbet5').controller('loginCtrl', ['$scope', '$rootScope', 'Timeou
             $scope.params.needVerificationCode = false;
         }
 
-        if (Config.main.smsVerification.login) {
+        if (Config.main.smsVerification.login && !Config.main.registration.loginRightAfterRegistration) {
             additionalParams.confirmation_code = $scope.user.confirmation_code;
-        }
-
-        if ($scope.user && $scope.user.birth_date) {
-            additionalParams.birth_date = $scope.user.birth_date;
         }
 
         if (LocalIp.ip) {
             additionalParams.local_ip = LocalIp.ip;
         }
 
-        if ($scope.user && $scope.user.g_recaptcha_response) {
-            additionalParams.g_recaptcha_response = $scope.user.g_recaptcha_response;
-        }
-
         if (Config.swarm.sendTerminalIdlInRequestSession && user.toString() === '1' && typeof jsobject !== 'undefined') {
             jsobject.loginAdmin('1', password);
         }
-
 
         $rootScope.loginInProgress = true;
         Zergling
@@ -512,7 +515,7 @@ angular.module('vbet5').controller('loginCtrl', ['$scope', '$rootScope', 'Timeou
             {'source': 'user', 'what': {'profile': []}, 'subscribe': true},
             updateProfile,
             {
-                'thenCallback': function (result) {
+                'thenCallback': function () {
                     $rootScope.$broadcast('loggedIn',action);
                     keepAlive();
                     action = $scope.loginAction || action || 'logged_in';
@@ -524,8 +527,7 @@ angular.module('vbet5').controller('loginCtrl', ['$scope', '$rootScope', 'Timeou
     }
 
     $scope.$on('login.withUsernamePassword', function (event, data) {
-        console.log('got event login.withUsernamePassword', event, data);
-        loginWithUsernamePassword(data.user, data.password, data.action);
+        loginWithUsernamePassword(data.user, data.password, data.action, false);
     });
 
     /**
@@ -540,7 +542,6 @@ angular.module('vbet5').controller('loginCtrl', ['$scope', '$rootScope', 'Timeou
         $scope.params.needUserAuthorization = false;
         $scope.params.lockedUser = false;
         Storage.set("rememberMe", !!$scope.user.remember);
-        console.log("login()", $scope.forms.signinform, $scope.user);
         if ($scope.forms.signinform.$valid) {
             if (Config.main.nemIDAuthentication && Config.main.nemIDAuthentication.enabled) {
                 loginWithNemID($scope.user.username)
@@ -596,7 +597,11 @@ angular.module('vbet5').controller('loginCtrl', ['$scope', '$rootScope', 'Timeou
 
         data.data = data.data || {};
         $scope.busy = false;
-        $scope.signInError = Translator.get((data.data.details && data.data.details.Message) || data.msg || data.data || data.code || true);
+        var placeholders = [];
+        if (data.data.details.ErrorData) {
+            placeholders.push(data.data.details.ErrorData.TimeToWait);
+        }
+        $scope.signInError = Translator.get((data.data.details && data.data.details.Message) || data.msg || data.data || data.code || true, placeholders);
         if (data.code !== ERROR_SERVICE_UNAVAILABLE) {
             if ($scope.forms.signinform && $scope.forms.signinform.$setPristine) {
                 $scope.forms.signinform.$setPristine();
@@ -1001,14 +1006,14 @@ angular.module('vbet5').controller('loginCtrl', ['$scope', '$rootScope', 'Timeou
 
     /**
      * @ngdoc method
-     * @name initIovation
+     * @name addIovation
      * @methodOf vbet5.controller:loginCtrl
      * @description starts iovation call
      */
-    function initIovation() {
-        if (Config.main.iovationLoginScripts && window.IGLOO) {
+    function addIovation(params) {
+        if (Config.iovation.enabled && window.IGLOO && Config.iovation.actions.login) {
             var ioData = window.IGLOO.getBlackbox();
-            $scope.user.ioBlackBox = ioData.blackbox;
+            params[Config.iovation.apiKey] = ioData.blackbox;
         }
     }
 
@@ -1063,8 +1068,6 @@ angular.module('vbet5').controller('loginCtrl', ['$scope', '$rootScope', 'Timeou
                 $scope.$broadcast('login.formOpened.andUsernameIsAvailable');
             }
         }, 200);
-
-        initIovation();
 
         try {
             // Do not attempt to call 'finally' on execute, as grecaptcha.execute returns a 'thenable' rather than a promise

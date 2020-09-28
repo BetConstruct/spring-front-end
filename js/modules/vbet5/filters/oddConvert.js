@@ -167,7 +167,7 @@ VBET5.filter('oddConvert', ['$rootScope', 'Config', 'Utils', 'LadderLoader', fun
         if (value === null || value === undefined || isNaN(value)) {
             return value;
         }
-        if (value === 1) {
+        if (value <= 1) {
             return null;
         }
         if (!$rootScope.partnerConfig) {

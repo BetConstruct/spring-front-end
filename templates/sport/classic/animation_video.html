@@ -28,11 +28,11 @@
                ng-click="broadcast('openLoginForm');$event.stopPropagation();" class="login-link">You need to be logged in to be able to play video.</p>
             <p ng-if="!env.authorized && $root.conf.integrationMode && !openGame.is_guest" trans class="login-link">You need to be logged in to be able to play video.</p>
 
-            <p ng-if="!openGame.is_guest && env.authorized && (profile.calculatedBalance + profile.calculatedBonus) === 0 && !$root.conf.video.allowedWithNoneBalance[openGame.tv_type]" trans ng-click="!$root.conf.disableDepositPage && broadcast('toggleSliderTab', 'deposit');$event.stopPropagation();">You need to have non-zero balance to be able to play video.</p>
+            <p ng-if="!openGame.is_guest && env.authorized && $root.profile.totalBalance === 0 && !openGame.allow_zero_balance]" trans ng-click="!$root.conf.disableDepositPage && broadcast('toggleSliderTab', 'deposit');$event.stopPropagation();">You need to have non-zero balance to be able to play video.</p>
 
-            <i ng-if="!$root.conf.video.autoPlay && openGame.video_data === undefined && (openGame.is_guest || env.authorized && (profile.calculatedBalance + profile.calculatedBonus) !== 0 || $root.conf.video.allowedWithNoneBalance[openGame.tv_type])" ng-click="broadcast('game.restoreVideo', openGame.id)" class="video-play-button"></i>
+            <i ng-if="!$root.conf.video.autoPlay && openGame.video_data === undefined && (openGame.is_guest || (env.authorized && $root.profile.totalBalance !== 0 || openGame.allow_zero_balance]))" ng-click="broadcast('game.restoreVideo', openGame.id)" class="video-play-button"></i>
 
-            <div ng-if="!playerRemoved && openGame.video_data && (openGame.is_guest || env.authorized && (profile.calculatedBalance + profile.calculatedBonus) > 0 || $root.conf.video.allowedWithNoneBalance[openGame.tv_type])"  class="video-player-container">
+            <div ng-if="!playerRemoved && openGame.video_data && (openGame.is_guest || (env.authorized && $root.profile.totalBalance > 0 || openGame.allow_zero_balance]))"  class="video-player-container">
                 <div class="video-player-control" ng-show="videoIsLoaded">
                     <span ng-click="togglePause();" ng-show="!paused" class="video-pause">Pause</span>
                     <span ng-click="togglePause();" ng-show="paused" class="video-play">Play</span>

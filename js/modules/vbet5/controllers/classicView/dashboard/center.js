@@ -578,10 +578,6 @@ VBET5.controller('classicDashboardCenterController', ['$rootScope', '$scope', 'O
                 }
             }
 
-            if ($scope.openGame.sport.alias === "HorseRacing") {
-                GameInfo.getHorseRaceInfo($scope.openGame.info, $scope.openGame.market, "Winner");
-            }
-
             var hasVideo = GameInfo.hasVideo($scope.openGame);
             if (hasVideo) {
                 if ($scope.openGame.video_data === undefined) {
@@ -919,11 +915,11 @@ VBET5.controller('classicDashboardCenterController', ['$rootScope', '$scope', 'O
 
     //synchronize video with user balance
     $scope.$watch('profile.balance', function (newValue, oldValue) {
-        if (!$scope.openGame) {
+        if (!$scope.openGame || $scope.openGame.allow_zero_balance) {
             return;
         }
 
-        if (newValue === 0 && !Config.main.video.allowedWithNoneBalance[$scope.openGame.tv_type]) {
+        if (newValue === 0) {
             $scope.openGame.video_data = null;
         } else if (oldValue === 0 && newValue > 0 && !$scope.openGame.video_data) {
             GameInfo.getVideoData($scope.openGame);

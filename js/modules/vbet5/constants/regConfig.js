@@ -168,7 +168,7 @@ angular.module('vbet5').constant('RegConfig', {
         "validation": [{"name": "invalid", "message": "Invalid phone number"}, {
             "name": "duplicate",
             "message": "Duplicate phone number"
-        }, {"name": "failedsms", "message": "Failed to send sms"}, {
+        },  {
             "name": "required",
             "message": "This field is required"
         }, {"name": "pattern", "message": "Please, enter valid phone number: only digits are allowed - no spaces, letters and/or symbols"},

@@ -52,6 +52,7 @@ angular.module('vbet5.betting').controller('modernViewManCtrl', ['$rootScope', '
     var isWideScreen;
 
     var customSportAliasFilter = Utils.getCustomSportAliasFilter();
+    var sportData;
 
     GameInfo.checkIfTimeFilterIsNeeded();
 
@@ -226,6 +227,7 @@ angular.module('vbet5.betting').controller('modernViewManCtrl', ['$rootScope', '
      * @param {Object} data the response data
      */
     function updateSportsList(data) {
+        sportData = data;
         //ordering is done in controller, not in template because:
         // 1. it's faster (not called every $digest in ng-repeat, only on update)
         // 2. there's a controller function makeSelectedVisible, it needs already sorted list
@@ -255,7 +257,7 @@ angular.module('vbet5.betting').controller('modernViewManCtrl', ['$rootScope', '
             if(Config.main.popularMatches && Config.main.popularMatches.enabled && !$scope.env.live) {
                 $scope.sports_list.unshift(VIRTUAL_MOST_POPULAR);
             }
-            if(Config.main.boostedBets && Config.main.boostedBets.enabled && !$scope.env.live) {
+            if(Config.main.boostedBets && Config.main.boostedBets.enabled && !$scope.env.live && $rootScope.boostedBetsEventIds && Object.keys($rootScope.boostedBetsEventIds).length > 0) {
                 $scope.sports_list.unshift(VIRTUAL_BOOSTED_BETS);
             }
         }
@@ -355,7 +357,7 @@ angular.module('vbet5.betting').controller('modernViewManCtrl', ['$rootScope', '
         });
         var i, length = $rootScope.selectedCompetitions.length;
         for (i = 0; i < length; i++) {
-              $rootScope.selectedCompetitions[i].name = $filter('removeParts')($rootScope.selectedCompetitions[i].name, [$rootScope.selectedSportName, $rootScope.selectedRegionName]);
+            $rootScope.selectedCompetitions[i].name = $filter('removeParts')($rootScope.selectedCompetitions[i].name, [$rootScope.selectedSportName, $rootScope.selectedRegionName]);
         }
         $rootScope.selectedCompetitions.sort(Utils.orderSorting);
         // now always dividing to 2 columns, maybe later number of columns can be set according to screen width if needed
@@ -489,7 +491,7 @@ angular.module('vbet5.betting').controller('modernViewManCtrl', ['$rootScope', '
                     mostPopularsListSubId = result.subid;
                 }
                 setPopularGamesCount(result.data);
-        })
+            })
     };
 
     function setPopularGamesCount (data) {
@@ -522,6 +524,9 @@ angular.module('vbet5.betting').controller('modernViewManCtrl', ['$rootScope', '
                         $rootScope.boostedBetsEventIds[value.Id] = true;
                     });
                 });
+                if (sportData) {
+                    updateSportsList(sportData);
+                }
             }
             if ($scope.boostedBetsGameIds.length) {
                 var request = {
@@ -862,7 +867,7 @@ angular.module('vbet5.betting').controller('modernViewManCtrl', ['$rootScope', '
                 };
 
                 if($scope.selectedRegionId && $scope.selectedRegionId !== -1){
-                  request.where.region = {
+                    request.where.region = {
                         'id':  $scope.selectedRegionId
                     };
                 }

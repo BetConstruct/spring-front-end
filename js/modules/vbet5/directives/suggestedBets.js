@@ -20,11 +20,18 @@ VBET5.directive('suggestedBets', ['$rootScope', '$http', '$filter', '$q', 'Zergl
         },
         link: function ($scope) {
             $scope.showSuggestions = Storage.get('suggestedBets');
-            $scope.suggestedBetsList = [];
             $scope.isEventInBetSlip = GameInfo.isEventInBetSlip;
 
             var eventSubIdsMap, currentTags, inThrottle;
 
+            /**
+             * @ngdoc function
+             * @name handleResponseError
+             * @description Handles Suggested Bets API response error
+             */
+            function handleResponseError() {
+                $scope.loadProcess = false;
+            }
 
             /**
              * @ngdoc function
@@ -33,51 +40,43 @@ VBET5.directive('suggestedBets', ['$rootScope', '$http', '$filter', '$q', 'Zergl
              */
             function handleResponse(response) {
                 if (response && response.data.data && response.data.data.length) {
-                    var promises = [];
-                   var data = response.data.data[0];
-                   currentTags = data.tag;
-                   var length = data.selections.length;
-                   for (var i =0; i < length; i++) {
-                       var requestData = {
-                           sport: data.sports[i],
-                           region: data.regions[i],
-                           competition: data.competitions[i],
-                           game: data.games[i],
-                           market: data.markets[i],
-                           event: data.selections[i]
-                       };
-                       promises.push(getEventsData(requestData));
-                   }
-                   $scope.eventIds = data.selections;
-                   $q.all(promises).then(function (responses) {
-                       if ($scope.params.type === 'preMatch' || $scope.params.initialLoad) {
+                    var promises = [],
+                        data = response.data.data[0],
+                        length = data.selections.length;
+                    currentTags = data.tag;
+                    $scope.eventIds = data.selections;
+
+                    for (var i =0; i < length; i++) {
+                        var requestData = {
+                            sport: data.sports[i],
+                            region: data.regions[i],
+                            competition: data.competitions[i],
+                            game: data.games[i],
+                            market: data.markets[i],
+                            event: data.selections[i]
+                        };
+                        promises.push(getEventsData(requestData));
+                    }
+
+                    $q.all(promises).then(function (responses) {
+                        if ($scope.eventIds.length && ($scope.params.type === 'preMatch' || $scope.params.initialLoad)) {
                            $scope.selectBetSlipMode('suggested');
-                       }
-                       eventSubIdsMap = {};
-                      for(var i = 0; i < length; ++i) {
-                          var response = responses[i];
-                          var eventId = data.selections[i];
-                          if (response.subid) {
-                              eventSubIdsMap[eventId] = response.subid;
-                          }
-                          createUpdateEvent(eventId)(response.data);
-                      }
-                      if (Object.keys($scope.suggestedBetMap).length === 0 ){
-                          $scope.noSuggestions = true;
-                      }
+                        }
+
+                        eventSubIdsMap = {};
+                        for(var i = 0; i < length; ++i) {
+                            var response = responses[i];
+                            var eventId = data.selections[i];
+                            if (response.subid) {
+                                eventSubIdsMap[eventId] = response.subid;
+                            }
+                            createUpdateEvent(eventId)(response.data);
+                        }
+                        handleResponseError();
                    });
                 } else {
-                    $scope.noSuggestions = true;
+                    handleResponseError();
                 }
-            }
-
-            /**
-             * @ngdoc function
-             * @name handleResponseError
-             * @description Handles Suggested Bets API response error
-             */
-            function handleResponseError() {
-                $scope.noSuggestions = true;
             }
 
             /**
@@ -90,24 +89,16 @@ VBET5.directive('suggestedBets', ['$rootScope', '$http', '$filter', '$q', 'Zergl
                     var apiUrl;
                     switch ($scope.params.type) {
                         case 'preMatch':
-                            if ($scope.showSuggestions !== 'hide') {
-                                apiUrl = 'https://recommender.dp.bcua.io/api/v3/recommendations/client/';
-                                $http.get(apiUrl + $rootScope.profile.id).then(handleResponse, handleResponseError);
-                            }
+                            apiUrl = 'https://recommender.dp.bcua.io/api/v3/recommendations/client/';
+                            $http.get(apiUrl + $rootScope.profile.id).then(handleResponse, handleResponseError);
                             break;
                         case 'live':
-                            apiUrl = 'https://khalessi.betconstruct.com/api/v1/recommendations';
-                            var data = { 'partner_id': $rootScope.partnerConfig.partner_id, 'client_id': $rootScope.profile.id };
-                            $http({
-                                method: 'POST',
-                                url: apiUrl,
-                                data: JSON.stringify(data),
-                                headers: { 'Content-Type': 'application/json' }
-                            }).then(handleResponse, handleResponseError);
+                            apiUrl = 'https://recommender.dp.bcua.io/api/v3/recommendations/live/client/';
+                            $http.get(apiUrl + $rootScope.profile.id).then(handleResponse, handleResponseError);
                             break;
                     }
                 } else {
-                    $scope.noSuggestions = true;
+                    $scope.loadProcess = false;
                 }
             }
 
@@ -134,7 +125,7 @@ VBET5.directive('suggestedBets', ['$rootScope', '$http', '$filter', '$q', 'Zergl
              */
             function handleUpdates(eventId, data) {
                 if ($scope.betSlip.mode !== 'suggested') {
-                    $scope.noSuggestions = true;
+                    $scope.loadProcess = false;
                     unsubscribe();
                     return;
                 }
@@ -156,7 +147,7 @@ VBET5.directive('suggestedBets', ['$rootScope', '$http', '$filter', '$q', 'Zergl
                                     bet.marketInfo.name = $filter('improveName')(market.name, game);
 
                                     angular.forEach(market.event, function(event) {
-                                            bet.eventInfo = event;
+                                        bet.eventInfo = event;
                                     });
                                 });
 
@@ -191,7 +182,7 @@ VBET5.directive('suggestedBets', ['$rootScope', '$http', '$filter', '$q', 'Zergl
                         'sport': ['id', 'name', 'alias', 'order'],
                         'competition': ['id', 'order', 'name'],
                         'region': ['id', 'name', 'alias'],
-                        'game': ['id', 'start_ts', 'team1_id', 'team1_name', 'team2_id', 'team2_name', 'type', 'stats'],
+                        'game': ['id', 'start_ts', 'team1_id', 'team1_name', 'team2_id', 'team2_name', 'type', 'stats', 'info'],
                         'market': ['base', 'type', 'name', 'express_id', 'id'],
                         'event': ["order", "id", "type_1", "type", "type_id", "original_order", "name", "price", "nonrunner", "ew_allowed", "sp_enabled", "extra_info", "base", "home_value", "away_value", "display_column" ]
                     },
@@ -242,18 +233,16 @@ VBET5.directive('suggestedBets', ['$rootScope', '$http', '$filter', '$q', 'Zergl
              * @ngdoc method
              * @name getSuggestedBets
              * @description Starts the process of getting suggested bets
-             * @param {Event} event - angular event
              * @param {Object} params
              * @param {String} params.type - 'live'/'preMatch' - type of suggested bets
              * @param {Boolean} params.initialLoad - true if done during the initial load of bet slip
              */
-            $scope.getSuggestedBets = function getSuggestedBets(event, params) {
+            $scope.getSuggestedBets = function getSuggestedBets(params) {
                 if (inThrottle) { return; }
                 setThrottle();
                 unsubscribe();
                 $scope.params = params;
-                $scope.noSuggestions = false;
-                $scope.showSuggestions = $scope.params.type === 'live' ? true : Storage.get('suggestedBets') || true;
+                $scope.loadProcess = true;
                 $scope.eventIds = [];
                 $scope.suggestedBetMap = {};
                 $rootScope.suggestedBets = {
@@ -271,7 +260,6 @@ VBET5.directive('suggestedBets', ['$rootScope', '$http', '$filter', '$q', 'Zergl
             $scope.addToBetslip = function addToBetslip() {
                 var oddType = 'odd',
                     i,
-                    eventIds = [],
                     suggestedBetsLength = $scope.eventIds.length;
 
                 closeEditBetMode();
@@ -285,18 +273,16 @@ VBET5.directive('suggestedBets', ['$rootScope', '$http', '$filter', '$q', 'Zergl
                     var event = $scope.suggestedBetMap[$scope.eventIds[i]];
                     if (event) {
                         $rootScope.$broadcast('bet', {event: event.eventInfo, market: event.marketInfo, game: event.gameInfo, oddType: oddType});
-                        eventIds.push(event.eventInfo.id);
                     }
                 }
 
                 // Passing the ids of suggested bets to betSlipController
-                $rootScope.suggestedBets.eventIds = eventIds;
+                $rootScope.suggestedBets.eventIds = $scope.eventIds;
                 $rootScope.suggestedBets.tags = currentTags;
 
                 // We empty the array, because we need it to be ready for the next request and we hide the 'Suggested Bets' section by setting showSuggestions to 'false'
                 $scope.suggestedBetMap = {};
                 $scope.eventIds = [];
-                $scope.showSuggestions = false;
 
                 $scope.selectBetSlipMode('betting');
             };
@@ -330,20 +316,23 @@ VBET5.directive('suggestedBets', ['$rootScope', '$http', '$filter', '$q', 'Zergl
              * @param {Boolean} permanent - if the section should be permanently hidden
              */
             $scope.hide = function hide(permanent) {
-                $scope.showSuggestions = false;
                 $scope.suggestedBetMap = {};
                 $scope.eventIds = [];
 
                 if (permanent) {
-                    Storage.set("suggestedBets", "hide");
-                    $rootScope.$broadcast("turnOffSuggestedExpress");
+                    $rootScope.$broadcast("toggleSuggestedExpress", false);
                 }
                 unsubscribe();
                 $scope.selectBetSlipMode('betting');
             };
 
+            $scope.$on('suggestedBets.get', function (event, params) {
+                $scope.showSuggestions = Storage.get('suggestedBets') !== false;
 
-            $scope.$on('suggestedBets.get', $scope.getSuggestedBets);
+                if ($scope.showSuggestions) {
+                    $scope.getSuggestedBets(params);
+                }
+            });
             $scope.$on('$destroy', function onDestroy() {
                 if ($scope.betSlip.mode !== 'betting' && $scope.betSlip.mode !== 'booking') {
                     $scope.selectBetSlipMode(Config.main.enableBetBooking && !$rootScope.env.authorized ? 'booking' : 'betting');

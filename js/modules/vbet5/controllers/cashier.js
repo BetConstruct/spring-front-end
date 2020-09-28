@@ -48,15 +48,10 @@ VBET5.controller('cashierCtrl', ['$scope', '$rootScope', '$location', '$filter',
                     content: Translator.get('Your transfer is successfully completed')
                 });
             } else {
-                if (Translator.get('message_' + Math.abs(code)) !== ('message_' + code)) {
-                    $scope.message = Translator.get('message_' + code);
-                } else {
-                    $scope.message = Translator.get("Your transfer can't be done now. Please try later.") + ' (' + code + ')';
-                }
                 $rootScope.$broadcast("globalDialogs.addDialog", {
                     type: "error",
                     title: "Error",
-                    content: $scope.message
+                    content: response.result_text
                 });
             }
 

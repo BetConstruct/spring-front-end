@@ -144,18 +144,17 @@ CASINO.service('casinoManager', ['$rootScope', '$q', '$window', '$sce', '$locati
                 var currentGame = scope.gamesInfo[i].game;
                 var studio = scope.gamesInfo[i].studio;
                 var urlSuffix = scope.gamesInfo[i].urlSuffix;
-                var gameMode = $rootScope.env.authorized ? 'real' : 'fun';
 
-                if (scope.gamesInfo[i].gameMode === 'real') {
-                    if(!$rootScope.env.authorized && scope.gamesInfo[i].game && scope.gamesInfo[i].game.types && (scope.gamesInfo[i].game.types.funMode || scope.gamesInfo[i].game.types.viewMode)){
-                        scope.gamesInfo[i] = {gameUrl: '', id: infoId, toAdd: true};
-                        scope.openGame(currentGame, gameMode, studio, urlSuffix);
-                    }else{
+                if ($rootScope.env.authorized) {
+                    if (scope.gamesInfo[i].game.types && !scope.gamesInfo[i].game.types.funMode && !scope.gamesInfo[i].game.types.viewMode && !scope.gamesInfo[i].game.types.realMode) {
                         casinoManager.closeGame(scope, scope.gamesInfo[i].id);
+                    } else {
+                        scope.gamesInfo[i] = {gameUrl: '', id: infoId, toAdd: true};
+                        scope.openGame(currentGame, 'real', studio, urlSuffix);
                     }
-                } else if ($rootScope.env.authorized && scope.gamesInfo[i].game.types.realMode && !scope.gamesInfo[i].game.types.funMode) {
+                } else if (scope.gamesInfo[i].game.types.realMode && !scope.gamesInfo[i].game.types.funMode) {
                     scope.gamesInfo[i] = {gameUrl: '', id: infoId, toAdd: true};
-                    scope.openGame(currentGame, gameMode, studio, urlSuffix);
+                    scope.openGame(currentGame, 'fun', studio, urlSuffix);
                 }
             }
         }
@@ -895,6 +894,9 @@ CASINO.service('casinoManager', ['$rootScope', '$q', '$window', '$sce', '$locati
                     break;
                 case '/games/':
                     page = 'games';
+                    break;
+                case '/tournaments/':
+                    page = 'tournaments';
             }
             $rootScope.$broadcast(page + '.openGame', game, gameType);
         } else {
@@ -905,7 +907,6 @@ CASINO.service('casinoManager', ['$rootScope', '$q', '$window', '$sce', '$locati
             } else {
                 page = 'casino';
             }
-
             pagePath = '/' + page + '/';
             if ($location.$$path === pagePath) {
                 $rootScope.$broadcast(page + '.openGame', game, gameType);

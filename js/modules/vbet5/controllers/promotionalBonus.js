@@ -6,7 +6,7 @@
  * @description  promotional bonuses controller.
  */
 
-VBET5.controller('promotionalBonusCtrl', ['$scope', '$location', 'Zergling', 'BackendConstants', '$rootScope', 'Translator', '$q', '$filter', 'Config', function($scope, $location, Zergling, BackendConstants, $rootScope, Translator, $q, $filter, Config) {
+VBET5.controller('promotionalBonusCtrl', ['$scope', '$location', 'Zergling', 'BackendConstants', '$rootScope', 'Translator', '$q', '$filter', 'Config', 'Utils', function($scope, $location, Zergling, BackendConstants, $rootScope, Translator, $q, $filter, Config, Utils) {
     'use strict';
 
     $scope.backendBonusConstants = BackendConstants.PromotionalBonus;
@@ -48,8 +48,8 @@ VBET5.controller('promotionalBonusCtrl', ['$scope', '$location', 'Zergling', 'Ba
      * @ngdoc method
      * @name showConfirmationDialog
      * @methodOf vbet5.controller:promotionalBonusCtrl
-     * @param {String) Dialog message text
-     * @param {String) Dialog message Type // prompt, error, success
+     * @param {String} [messageText] Dialog message text
+     * @param {String} [messageType] Dialog message Type // prompt, error, success
      * @description show confirmation dialog in case of claim / cancel bonus operations
      */
     function showConfirmationDialog(messageText, messageType) {
@@ -108,7 +108,7 @@ VBET5.controller('promotionalBonusCtrl', ['$scope', '$location', 'Zergling', 'Ba
      * @ngdoc method
      * @name processActiveBonusData
      * @methodOf vbet5.controller:promotionalBonusCtrl
-     * @param {Object) Active bonus data
+     * @param {Object} [activeBonusData] Active bonus data
      * @description processing Active bonus data
      */
     function processActiveBonusData(activeBonusData) {
@@ -137,7 +137,7 @@ VBET5.controller('promotionalBonusCtrl', ['$scope', '$location', 'Zergling', 'Ba
      * @ngdoc method
      * @name processBonusData
      * @methodOf vbet5.controller:promotionalBonusCtrl
-     * @param {Object) Bonus data
+     * @param {Object} [bonusData] Bonus data
      * @description processing bonus data
      */
     function processBonusData(bonusData) {
@@ -207,7 +207,7 @@ VBET5.controller('promotionalBonusCtrl', ['$scope', '$location', 'Zergling', 'Ba
      * @ngdoc method
      * @name cancelBonus
      * @methodOf vbet5.controller:promotionalBonusCtrl
-     * @param {Number} Bonus id
+     * @param {Number} [bonusId] Bonus id
      * @description Cancel active bonus
      */
     $scope.cancelBonus = function cancelBonus(bonusId) {
@@ -216,14 +216,13 @@ VBET5.controller('promotionalBonusCtrl', ['$scope', '$location', 'Zergling', 'Ba
             currency: 'USD'
         };
         getPromotionalBonus();
-        $scope.cancelBonusResponse(bonusId, response);
     };
 
     /**
      * @ngdoc method
      * @name cancelBonus
      * @methodOf vbet5.controller:promotionalBonusCtrl
-     * @param {Number} Bonus id
+     * @param {Number} [bonusId] Bonus id
      * @description Cancel active bonus
      */
     $scope.cancelBonus = function cancelBonus(bonusId) {
@@ -252,7 +251,7 @@ VBET5.controller('promotionalBonusCtrl', ['$scope', '$location', 'Zergling', 'Ba
      * @ngdoc method
      * @name claimBonus
      * @methodOf vbet5.controller:promotionalBonusCtrl
-     * @param {Number} Bonus id
+     * @param {Number} [bonusId] Bonus id
      * @param {boolean} navigateToDeposit is navigate after successful claim into deposit page
      * @description Claim bonus
      */
@@ -289,15 +288,15 @@ VBET5.controller('promotionalBonusCtrl', ['$scope', '$location', 'Zergling', 'Ba
                 }
             });
         }, function (reason) {
-            console.log(reason)
-        })
+            console.log(reason);
+        });
     };
 
     /**
      * @ngdoc method
      * @name switchBonusTab
      * @methodOf vbet5.controller:promotionalBonusCtrl
-     * @param {Number} Bonus Product type
+     * @param {Number} [target] Bonus Product type
      * @description Switch between bonus types
      */
     $scope.switchBonusTab = function switchBonusTab(target) {
@@ -310,8 +309,6 @@ VBET5.controller('promotionalBonusCtrl', ['$scope', '$location', 'Zergling', 'Ba
             }
         }
     };
-
-
 
     $scope.applyBonus = function applyBonus() {
         if ($scope.applyingBonus || $scope.loadingBonus || !$scope.promoCode) { return; }
@@ -333,6 +330,7 @@ VBET5.controller('promotionalBonusCtrl', ['$scope', '$location', 'Zergling', 'Ba
                         break;
                     case '-99':
                         dialogOpts.content = Translator.get('Promo code has been already applied');
+                        break;
                     default:
                         dialogOpts.type = 'error';
                         dialogOpts.title = 'Error';
@@ -354,19 +352,9 @@ VBET5.controller('promotionalBonusCtrl', ['$scope', '$location', 'Zergling', 'Ba
 
     $scope.formatBonusRequestURL = function formatBonusRequestURL() {
         var iframeUrl = Config.main.promotionalBonuses.bonusRequestURL;
-        var regex = /{(.*?)}/gm;
-        var placeholders = iframeUrl.match(regex);
 
-        if (placeholders) {
-            placeholders.forEach(function (placeholder) {
-                var fieldName = placeholder.replace('{', '').replace('}', '');
-                if (fieldName && $rootScope.profile && $rootScope.profile[fieldName]) {
-                    iframeUrl = iframeUrl.replace(placeholder, $rootScope.profile[fieldName]);
-                }
-            });
-        }
+        $scope.bonusRequestURL = Utils.replaceTextPlaceholdersByObjectValues(iframeUrl, $rootScope.profile);
 
-        $scope.bonusRequestURL = iframeUrl;
     };
 
     getCasinoBonusesAmount();

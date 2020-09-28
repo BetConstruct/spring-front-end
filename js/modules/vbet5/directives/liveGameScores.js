@@ -12,8 +12,7 @@ VBET5.directive('liveGameScores', ['$window', 'Config', 'Storage', 'GameInfo', '
         scope: {
             openGame: '=',
             enlargedGame: '=',
-            showStatsBlock: '=',
-            marketsInOneColumn: '='
+            showStatsBlock: '='
         },
         templateUrl: 'templates/directive/live-game-scores.html',
         link: function (scope,element,attr) {
@@ -46,20 +45,6 @@ VBET5.directive('liveGameScores', ['$window', 'Config', 'Storage', 'GameInfo', '
                     scope.setStatsBlockState(!Config.env.hideLiveStats);
                 }
                 Storage.set('LiveGamePin', $rootScope.env.isLiveGamePinned);
-            };
-
-            /**
-             * @ngdoc method
-             * @name switchMarketsInOneColumn
-             * @methodOf vbet5.controller:classicViewMainCtrl
-             * @description  switch markets to one or two columns
-             * @param {boolean} enabled
-             */
-            scope.switchMarketsInOneColumn = function switchMarketsInOneColumn(enabled) {
-                if (scope.marketsInOneColumn.enabled !== enabled) {
-                    scope.marketsInOneColumn.enabled = enabled;
-                    Storage.set('markets_in_one_column', enabled);
-                }
             };
 
             /**

@@ -1,0 +1,65 @@
+<div>
+    <div class="timeline-container" ng-if="(!showOnlyOne || (showOnlyOne && !openGame.info.isExtraTime)) && openGame.info.current_game_state !=='set5'" ng-class="{'hide-stats': $root.env.hideLiveStats, 'timeline-extra-80': openGame.info.isExtraTime && openGame.last_event.match_length === '110', 'timeline-extra': openGame.info.isExtraTime && openGame.last_event.match_length === '120'}">
+        <div class="timeline-control main-time"  ng-init="drawTimeLine()"></div>
+        <div ng-class="{'tl-new':showEventsOnTlHover,'tl-data':!showEventsOnTlHover}">
+        <div class="current-minute" ng-style="!openGame.info.isExtraTime ? openGame.tlCurrentMinute : {'width' : '100%'}"></div>
+        <div ng-repeat="tlEvent in openGame.tlEvents" ng-if="!tlEvent.extraTime" ng-style="tlEvent.timeline_position" class="{{tlEvent.team + '-' + tlEvent.type}}">
+            <div class="{{tlEvent.type}}"></div>
+            <div class="tl-details" ng-class="{'to-right': tlEvent.minute>50}">{{tlEvent.details.type|capitalise|translate}} {{tlEvent.details.add_info}}</div>
+        </div>
+        <div class="tl-info" ng-if="!openGame.info.isExtraTime" ng-style="openGame.tlCurrentPosition" title="{{!showEventsOnTlHover && openGame.info.current_game_time ? openGame.info.current_game_time + '\'' : ''}}">
+            <div ng-if="showEventsOnTlHover" class="hover-sp">
+                <div class="football-gamer-name" ng-repeat="gameEvent in openGame.live_events|orderBy:'add_info_order':true">
+                    <span ng-class="gameEvent.team">
+                                <tshirt shirt="{{ openGame.info['shirt'+ gameEvent.team.slice(-1) + '_color'] }}" shorts="{{ openGame.info['short'+ gameEvent.team.slice(-1) + '_color'] }}"></tshirt>
+                            </span>
+                    <div class="football-game-status {{gameEvent.event_icon}}" ng-class="gameEvent.event_type+'-icon'"></div>
+                    <p>{{gameEvent.event_type.replace('_', ' ')|capitalise|translate}} {{ gameEvent.add_info }} {{openGame[gameEvent.team + '_name']}}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+    <div class="timeline-container" ng-if="openGame.info.current_game_state !=='set5' && openGame.info.isExtraTime" ng-class="{'hide-stats': $root.env.hideLiveStats}">
+        <div class="timeline-control extra-time" ng-init="drawTimeLine(true)"></div>
+        <div ng-class="{'tl-new':showEventsOnTlHover,'tl-data':!showEventsOnTlHover}">
+            <div class="current-minute" ng-style="openGame.tlCurrentMinute"></div>
+            <div ng-repeat="tlEvent in openGame.tlEvents" ng-if="tlEvent.extraTime" ng-style="tlEvent.timeline_position" class="{{tlEvent.team + '-' + tlEvent.type}}">
+                <div class="{{tlEvent.type}}"></div>
+                <div class="tl-details" ng-class="{'to-right': tlEvent.minute>50}">{{tlEvent.details.type|capitalise|translate}} {{tlEvent.details.add_info}}</div>
+            </div>
+            <div class="tl-info" ng-style="openGame.tlCurrentPosition" title="{{!showEventsOnTlHover && openGame.info.current_game_time ? openGame.info.current_game_time + '\'' : ''}}">
+                <div ng-if="showEventsOnTlHover" class="hover-sp">
+                    <div class="football-gamer-name" ng-repeat="gameEvent in openGame.live_events|orderBy:'add_info_order':true">
+                        <div ng-class="gameEvent.event_type+'-icon'" class="{{gameEvent.event_icon}}"></div>
+                            <span ng-class="gameEvent.team">
+                                <tshirt shirt="{{ openGame.info['shirt'+ gameEvent.team.slice(-1) + '_color'] }}" shorts="{{ openGame.info['short'+ gameEvent.team.slice(-1) + '_color'] }}"></tshirt>
+                            </span>
+                        <p>{{gameEvent.event_type.replace('_', ' ')|capitalise|translate}} {{ gameEvent.add_info }} {{game[gameEvent.team + '_name']}}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--post match penalty template-->
+    <div class="post-penalty-template"  ng-if="openGame.info.current_game_state ==='set5'">
+        <div class="post-penalty-table">
+            <div class="post-penalty-tcell-left">
+                <div class="post-penalty-info">
+                    <span ng-repeat="event in openGame.postMatchPenaltiesEvents['home'] || [0,1,2,3,4] track by $index"  ng-class="{'fail':event.type_id ==='31','success':event.type_id ==='1'}" ></span>
+                </div>
+            </div>
+            <div class="post-penalty-tcell-center">
+                <div class="post-penalty-score">
+                    <b ng-bind="openGame.stats.score_set5.team1_value"></b>
+                    <b ng-bind="openGame.stats.score_set5.team2_value"></b>
+                </div>
+            </div>
+            <div class="post-penalty-tcell-right">
+                <div class="post-penalty-info">
+                    <span ng-repeat="event in openGame.postMatchPenaltiesEvents['away'] || [0,1,2,3,4] track by $index"  ng-class="{'fail':event.type_id ==='31','success':event.type_id ==='1'}" ></span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -615,7 +615,16 @@ VBET5.filter('convertSetName', function () {
         "Kabaddiset1": "Period 1",
         "Kabaddiset2": "Period 2",
         "Kabaddiset3": "Period 3",
-        "BasketballShotsset1" : ''
+        "BasketballShotsset1": "1st Shot",
+        "BasketballShotsset2": "2nd Shot",
+        "BasketballShotsset3": "3rd Shot",
+        "BasketballShotsset4": "4th Shot",
+        "BasketballShotsset5": "5th Shot",
+        "BasketballShotsset6": "6th Shot",
+        "BasketballShotsset7": "7th Shot",
+        "BasketballShotsset8": "8th Shot",
+        "BasketballShotsset9": "9th Shot",
+        "BasketballShotsset10": "10th Shot"
 
 
     };

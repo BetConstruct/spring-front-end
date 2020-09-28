@@ -1,0 +1,60 @@
+.body-wrapper {
+  &.homepage,
+  &.poker,
+  &.livedealer,
+  &.games,
+  &.promos,
+  &.news {
+    .snowflakes {
+      display: block;
+    }
+  }
+}
+.snowflakes {
+  will-change: transform;
+  display: none;
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  z-index: 100;
+  pointer-events: none;
+  > li {
+    position: absolute;
+    top: 0;
+    left: 0;
+    color: #ffffff;
+    &:after {
+      content: "❄";
+    }
+    @for $i from 1 through 50 {
+      $transformX: random(100) * 1vw;
+      $size: random(18) * 1px;
+      $duration: random(6) + 4s;
+      $delay: random(20) - 1s;
+      &:nth-child(#{$i}) {
+        font-size: $size;
+        transform: translate($transformX, -2vh);
+        animation: snowflakes-#{$i} $duration $delay linear infinite;
+      }
+      @keyframes snowflakes-#{$i} {
+        0% {
+          transform: translate($transformX, -2vh);
+        }
+        25% {
+          transform: translate($transformX + 1, 25vh);
+        }
+        50% {
+          transform: translate($transformX, 50vh);
+        }
+        75% {
+          opacity: 1;
+          transform: translate($transformX + 2, 75vh);
+        }
+        100% {
+          opacity: 0;
+          transform: translate($transformX, 100vh);
+        }
+      }
+    }
+  }
+}

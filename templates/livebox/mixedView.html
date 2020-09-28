@@ -10,7 +10,7 @@
                             <span class="id-view-tab">ID: {{profile.unique_id}}</span>
                         </p>
                     </li>
-                    <li ng-class="{'active': ['deposit', 'withdraw', 'balanceHistory', 'casinoBalanceHistory', 'cashier', 'myWallets', 'buddytransfer'].indexOf(env.sliderContent) !== -1}" ng-if="conf.enableMixedView && conf.enableMixedViewBalance"
+                    <li ng-class="{'active': ['deposit', 'withdraw', 'balanceHistory', 'casinoBalanceHistory', 'cashier', 'myWallets', 'buddytransfer','depositRequest'].indexOf(env.sliderContent) !== -1}" ng-if="conf.enableMixedView && conf.enableMixedViewBalance"
                         ng-click="env.sliderContent !== 'withdraw' && env.sliderContent !== 'deposit' && env.sliderContent !== 'balanceHistory' ? env.sliderContent = conf.balanceDefaultPage:''">
                         <i class="balance-icon-tab-b"></i>
                         <p>
@@ -57,7 +57,7 @@
                 <div ng-show="!isPopup" ng-click="env.sliderContent=''; env.showSlider=false;" class="my-bets-closed-icon-b"></div>
             </div>
             <ng-include class="float-width mixed-view-holder" src="::'templates/livebox/mixedBetHistory.html'|fixPath" ng-if="env.sliderContent === 'recentBets' || env.sliderContent === 'casinoBetHistory'"></ng-include>
-            <ng-include class="float-width mixed-view-holder" src="::'templates/livebox/mixedBalance.html'|fixPath" ng-if="['deposit', 'withdraw', 'balanceHistory', 'casinoBalanceHistory', 'cashier', 'myWallets', 'buddytransfer'].indexOf(env.sliderContent) !== -1"></ng-include>
+            <ng-include class="float-width mixed-view-holder" src="::'templates/livebox/mixedBalance.html'|fixPath" ng-if="['deposit', 'withdraw', 'balanceHistory', 'casinoBalanceHistory', 'cashier', 'myWallets', 'buddytransfer','depositRequest'].indexOf(env.sliderContent) !== -1"></ng-include>
             <ng-include class="float-width mixed-view-holder" src="::'templates/livebox/mixedUserProfile.html'|fixPath" ng-if="env.sliderContent === 'settings'"></ng-include>
             <ng-include class="float-width mixed-view-holder" src="::'templates/livebox/promotionalBonuses/main.html'|fixPath" ng-if="env.sliderContent === 'promotionalBonuses'"></ng-include>
             <ng-include class="float-width mixed-view-holder" src="::'templates/livebox/loyaltyPoints.html'|fixPath" ng-if="env.sliderContent === 'loyaltyPoints'"></ng-include>

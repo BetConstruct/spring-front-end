@@ -1,0 +1,378 @@
+/*how to play*/
+.how-to-play-wrapper{
+    float: left;
+    width: 100%;
+    box-sizing: border-box;
+    min-height: 600px;
+}
+.top-row-wrapper-b{
+    float: left;
+    width: 100%;
+    box-sizing: border-box;
+    height: 828px;
+    background: url("../../../images/backgrounds/how-to-play-bg.jpg#{$delete-cache}") no-repeat 50% 0;
+    text-align: center;
+    padding: 250px 0 0 0;
+}
+.info-page-how-to-play{
+    max-width: 750px;
+    display: inline-block;
+    box-sizing: border-box;
+}
+.info-page-how-to-play > h1{
+    font: 80px/82px $font-f;
+    color: #ffffff;
+    float: left;
+    width: 100%;
+    padding: 20px 0;
+    text-transform: uppercase;
+}
+.description-how-to-play{
+    float: left;
+    width: 100%;
+    box-sizing: border-box;
+    margin: 20px 0;
+}
+.description-how-to-play > p{
+    float: left;
+    width: 100%;
+    box-sizing: border-box;
+    font: 18px/24px $font-f;
+    color: #ffffff;
+}
+.icons-how-to-play-b{
+    float: left;
+    width: 100%;
+    height: 40px;
+    box-sizing: border-box;
+    text-align: center;
+}
+.icons-how-to-play-b > ul{
+    display: inline-block;
+    box-sizing: border-box;
+}
+.icons-how-to-play-b > ul > li{
+    display: inline-block;
+    box-sizing: border-box;
+    padding: 0 15px;
+    text-align: center;
+    @include ltr {
+        float: left;
+    }
+    @include rtl {
+        float: right;
+    }
+}
+.icons-how-to-play-b > ul > li > i{
+    display: inline-block;
+    font-style: normal;
+    color: #ffffff;
+    font: 32px/34px icomoon;
+}
+.time-24-7-icon:before{content: "\e913";}
+.hd-b-icon:before{content: "\e914";}
+.live-b-icon:before{content: "\5e";}
+.multiplayer-b-icon:before{content: "\e915";}
+.buttons-how-to-play-contain{
+    float: left;
+    width: 100%;
+    box-sizing: border-box;
+    text-align: center;
+    margin: 20px 0;
+}
+.buttons-how-to-play-contain > ul{
+    display: inline-block;
+    box-sizing: border-box;
+}
+.buttons-how-to-play-contain > ul > li{
+    display: inline-block;
+    box-sizing: border-box;
+    margin: 0 10px;
+    @include ltr {
+        float: left;
+    }
+    @include rtl {
+        float: right;
+    }
+}
+.buttons-how-to-play-contain > ul > li > button{
+    float: left;
+    padding: 0 20px;
+    min-width: 300px;
+    text-align: center;
+    height: 60px;
+    box-sizing: border-box;
+    font: 20px/58px $font-f;
+    color: #ffffff;
+    text-transform: uppercase;
+    border: 2px solid #a9abb1;
+    background: none;
+    border-radius: 10px;
+    cursor: pointer;
+}
+.buttons-how-to-play-contain > ul > li:first-child > button{
+    border-color: $hero-color;
+    background: $hero-color;
+    color: set-color($hero-color);
+}
+.buttons-how-to-play-contain > ul > li:first-child > button > span{
+    display: inline-block;
+}
+.buttons-how-to-play-contain > ul > li > button > i{
+    display: inline-block;
+    font-style: normal;
+    width: 32px;
+    height: 32px;
+    font: 32px/32px icomoon;
+    color: set-color($hero-color);
+    text-align: center;
+    position: relative;
+    top: 6px;
+    @include ltr {
+        margin: 0 10px 0 0;
+    }
+    @include rtl {
+        margin: 0 0 0 10px;
+    }
+}
+.buttons-how-to-play-contain > ul > li:first-child > button > i:before{
+    content: "\e683";
+}
+.how-to-play-rules-b{
+    float: left;
+    width: 100%;
+    box-sizing: border-box;
+    text-align: center;
+    height: 485px;
+    background: url("../../../images/backgrounds/how-to-play-mini-bg.jpg#{$delete-cache}") no-repeat 50% 0;
+    padding: 75px 0 0;
+}
+.rules-info-b-contain{
+    max-width: 750px;
+    display: inline-block;
+    box-sizing: border-box;
+}
+.rules-icon-box-wrapper{
+    float: left;
+    width: 100%;
+    box-sizing: border-box;
+    text-align: center;
+    height: 124px;
+    margin: 0 0 20px;
+    padding: 30px 0 0;
+}
+.rules-info-icon-box{
+    box-sizing: border-box;
+    display: inline-block;
+    width: 74px;
+    height: 74px;
+    background: #171d2c;
+    color: #ffffff;
+    border: 12px solid #575c66;
+    box-shadow: 0 0 0 13px #454a55,  0 0 0 28px #2f3442;
+    border-radius: 50%;
+    font: 48px/48px icomoon;
+}
+.rules-info-icon-box:before{
+    content: "\e6e4";
+    position: relative;
+    left: 0;
+}
+.rules-info-b-contain > h2{
+    float: left;
+    width: 100%;
+    box-sizing: border-box;
+    text-align: center;
+    font: 56px/60px $font-f;
+    color: #ffffff;
+    text-transform: uppercase;
+    padding: 30px 0 0;
+}
+.full-rules-info-box{
+    float: left;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 30px 0 0;
+}
+.full-rules-info-box > p{
+    float: left;
+    width: 100%;
+    box-sizing: border-box;
+    color: #ffffff;
+    font: 18px/24px $font-f;
+}
+.product-rules-contain-b{
+    float: left;
+    width: 100%;
+    box-sizing: border-box;
+    min-height: 444px;
+    background: #ffffff;
+    text-align: center;
+}
+.prod-rulles-slider-container{
+    max-width: 1330px;
+    min-width: 950px;
+    padding: 0 10px;
+    box-sizing: border-box;
+    display: block;
+    margin: 0 auto;
+    vertical-align: top;
+    min-height: 440px;
+}
+.rules-slider-box-b{
+    float: left;
+    width: 100%;
+    box-sizing: border-box;
+    margin: 0 0 80px;
+    position: relative;
+}
+.rules-slider-box-b > ul{
+    float: left;
+    width: 100%;
+    box-sizing: border-box;
+}
+.rules-slider-box-b > ul > li{
+    box-sizing: border-box;
+    width: 25%;
+    height: 380px;
+    padding: 65px 10px 35px;
+    position: relative;
+    text-align: center;
+    @include ltr {
+        float: left;
+    }
+    @include rtl {
+        float: right;
+    }
+    &:nth-last-child(3):first-child, &:nth-last-child(3):first-child ~ li {
+        width: 33.3334%;
+    }
+    &:nth-last-child(2):first-child, &:nth-last-child(2):first-child ~ li {
+        width: 50%;
+    }
+    &:only-child {
+        width: 100%;
+    }
+}
+.icon-prod-wrapper-box{
+    float: left;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 10px 0 15px;
+    text-align: center;
+}
+.icon-prod-wrapper-box > i{
+    display: inline-block;
+    width: 84px;
+    height: 84px;
+    border-radius: 50%;
+    background: #121623;
+    border: 10px solid #b4b6bd;
+    box-shadow: 0 0 0 10px #dcdee3;
+    font: 32px/64px icomoon;
+    text-align: center;
+    color: #ffffff;
+    font-style: normal;
+    box-sizing: border-box;
+}
+.icon-prod-wrapper-box.roulette-b > i:before{content: "\71";}
+.icon-prod-wrapper-box.blackjack-b > i:before{content: "\72";}
+.icon-prod-wrapper-box.baccarat-b > i:before{content: "\74";}
+.icon-prod-wrapper-box.live-bet-on-poker > i:before, .icon-prod-wrapper-box.betonpoker-b > i:before {content: "\73";}
+.icon-prod-wrapper-box.betonbaccarat-b > i:before{content: "\75";}
+.icon-prod-wrapper-box.russianpoker-b > i:before{content: "\e903";}
+.rules-slider-box-b > ul > li > h3{
+    float: left;
+    width: 100%;
+    font: 23px/26px $font-f;
+    text-transform: uppercase;
+    color: #171c2c;
+    box-sizing: border-box;
+    padding: 0;
+    height: 76px;
+    display: table;
+}
+.rules-slider-box-b > ul > li > h3 > span{
+    display: table-cell;
+    vertical-align: middle;
+}
+.rules-slider-box-b > ul > li > p{
+    float: left;
+    width: 100%;
+    font: 13px/18px $font-f;
+    color: #171c2c;
+    box-sizing: border-box;
+    padding: 0;
+}
+.read-more-button-box{
+    position: absolute;
+    width: 100%;
+    left: 0;
+    bottom: 0;
+    height: 30px;
+    box-sizing: border-box;
+    text-align: center;
+}
+.read-more-button-box > button{
+    border: none;
+    background: $hero-color;
+    box-sizing: border-box;
+    display: inline-block;
+    color: #ffffff;
+    height: 30px;
+    padding: 0 20px;
+    font: 12px/30px $font-f;
+    min-width: 100px;
+    text-transform: uppercase;
+    border-radius: 6px;
+    cursor: pointer;
+}
+.arrow-slider-rules{
+    width: 50px;
+    height: 50px;
+    position: absolute;
+    font: 44px/50px icomoon;
+    color: $hero-color;
+    text-align: center;
+    z-index: 33;
+    top: 90px;
+    left: -10px;
+    cursor: pointer;
+}
+.arrow-slider-rules.right{
+    left: auto;
+    right: -10px;
+}
+.arrow-slider-rules.left:before{
+    content: "\e677";
+}
+.arrow-slider-rules.right:before{
+    content: "\e67a";
+}
+.popup-bg-contain.gamerules .fedback-wrapper{
+    width: 980px;
+    height: 634px;
+    top: calc((100% - 634px) / 2);
+}
+.popup-bg-contain.gamerules .fedback-info{
+    width: 960px;
+    padding: 0;
+    height: 100%;
+    ul {
+        height: 100%;
+        iframe {
+            width: 100%;
+            height: 100%;
+        }
+    }
+}
+.popup-bg-contain.gamerules .fedback-wrapper.dialog .fedback-info ul li{
+    width: 100%;
+}
+.popup-bg-contain.gamerules .fedback-info h3{
+    display: none;
+}
+.popup-bg-contain.gamerules .fedback-wrapper.dialog .fedback-info ul li iframe{
+    width: 100%;
+    height: 600px;
+}

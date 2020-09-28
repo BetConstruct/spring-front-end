@@ -13,11 +13,19 @@ VBET5.filter('counterOfferRounding', ['$rootScope', function ($rootScope) {
 
     return function rounding(num, rounding) {
         var re = new RegExp('^-?\\d+(?:\.\\d{0,' + (rounding || $rootScope.partnerConfig.price_decimals || -1) + '})?');
-        var price = num.toString().match(re)[0];
-        var lastElem = price.length - 1;
-        if(price % 1 != 0 && price.charAt(lastElem) == 0) {
-            return price.substring(0, lastElem);
+        var match = num.toString().match(re);
+
+        if (match) {
+            var price = match[0];
+            var lastElem = price.length - 1;
+
+            if (price % 1 != 0 && price.charAt(lastElem) == 0) {
+                return price.substring(0, lastElem);
+            }
+
+            return price;
         }
-        return price;
+
+        return "";
     };
 }]);

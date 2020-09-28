@@ -1,12 +1,12 @@
-<div class="float-width" ng-if="betSlip.mode === 'suggested'">
-    <vbet-loader ng-show="!eventIds.length && !noSuggestions"></vbet-loader>
-    <p class="info-all-bets" ng-show="noSuggestions || (suggestedBetMap|count) === 0">
+<div class="float-width" ng-if="betSlip.mode === 'suggested' && showSuggestions">
+    <vbet-loader ng-show="loadProcess"></vbet-loader>
+    <p class="info-all-bets" ng-show="!loadProcess && (suggestedBetMap|count) === 0">
         {{::'Suggestions are not available at the moment. '|translate}}
-        <span ng-click="getSuggestedBets('suggestedBets.get', {type: 'live'})" trans>Try again</span>
+        <span ng-click="getSuggestedBets({type: 'live'})" trans>Try again</span>
         {{::'or'|translate}}
         <span ng-click="selectBetSlipMode('betting')" trans>Go To BetSlip</span>
     </p>
-    <div class="suggest-contain-list" ng-if="!noSuggestions && showSuggestions && eventIds.length && (suggestedBetMap|count)" ng-class="{'suggested-prematch': params.type === 'preMatch'}">
+    <div class="suggest-contain-list" ng-if="!loadProcess && (suggestedBetMap|count)" ng-class="{'suggested-prematch': params.type === 'preMatch'}">
         <div class="suggest-text">
             <h2 ng-bind="(params.type === 'preMatch' ? 'Suggested pre-match' : 'Suggested live') | translate"></h2>
             <p trans>We think that these bets may also be interesting to you. Try to win even more.</p>
@@ -38,7 +38,7 @@
                             <div class="single-events-b-v3" title="{{::(suggestedBetMap[eventId].eventInfo.type === 'P1' && suggestedBetMap[eventId].gameInfo.team1_name) || (suggestedBetMap[eventId].eventInfo.type === 'P2' && suggestedBetMap[eventId].gameInfo.team2_name) ||
                                    (suggestedBetMap[eventId].eventInfo.base !== undefined ? (suggestedBetMap[eventId].eventInfo.name + suggestedBetMap[eventId].eventInfo.base) : suggestedBetMap[eventId].eventInfo.name)}}"
                                  ng-class="{'active': isEventInBetSlip(suggestedBetMap[eventId].eventInfo)}"
-                                 ng-click="params.type === 'live' ? addSingleEvent(bet, $event) : ''">
+                                 ng-click="params.type === 'live' ? addSingleEvent(suggestedBetMap[eventId], $event) : ''">
                                 <i ng-if="$root.conf.boostedBets.enabled && $root.boostedBetsEventIds && $root.boostedBetsEventIds[suggestedBetMap[eventId].eventInfo.id]" title="{{'Boosted odd'|translate}}" class="boosted"></i>
                                 <b class="p-v {{suggestedBetMap[eventId].eventInfo.price_change == null? '' : ({true: 'up-', false: 'down'}[suggestedBetMap[eventId].eventInfo.price_change > 0] + (suggestedBetMap[eventId].eventInfo.price_change % 2)) }}">{{suggestedBetMap[eventId].eventInfo.price|oddConvert:$root.env.oddFormat}}</b>
                             </div>
@@ -54,4 +54,7 @@
             <p ng-click="hide(true)" trans>Don`t show again</p>
         </div>
     </div>
+</div>
+<div class="info-all-bets" ng-if="betSlip.mode === 'suggested' && !showSuggestions">
+    {{::'You have refused getting suggestions. To enable them please click'|translate}}<span ng-click="$root.$broadcast('toggleSuggestedExpress', true)" trans>here</span>
 </div>

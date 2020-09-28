@@ -116,16 +116,14 @@
                             <span class="accepted-bet-confirmation" ng-if="bet.result && bet.isAccepted && !bet.deleted && !bet.blocked && !bet.conflicts.length && betSlip.type.value === 1" title="{{bet.result|translate}}"></span>
                         </p>
 
-                        <div ng-class="bet-conflict" ng-show="(bet.conflicts.length && betSlip.type.value !== 1) && !bet.deleted" class="conflict-info-b">
-                            <div class="bet-conflict-warning" tooltip-element="conflict-{{bet.eventId}}" tooltip-delay="100">
-                                <div class="conflict-content" id="conflict-{{bet.eventId}}">
-                                    <ul>
-                                        <li trans>This pick cannot be combined with:</li>
-                                        <li ng-repeat="conflict in bet.conflicts">
-                                            {{conflict.title}} - {{conflict.pick}}
-                                        </li>
-                                    </ul>
-                                </div>
+                        <div ng-class="bet-conflict" ng-if="(betSlip.type.value !== 1 || betConf.fullCoverBetTypes.enabled) && bet.conflicts.length && !bet.deleted" class="conflict-info-b">
+                            <div class="bet-conflict-warning">
+                                <ul class="conflict-content-v3" id="conflict-{{bet.eventId}}">
+                                    <li trans>This pick cannot be combined with:</li>
+                                    <li ng-repeat="conflict in bet.conflicts">
+                                        {{conflict.title}} - {{conflict.pick}}
+                                    </li>
+                                </ul>
                             </div>
                         </div>
 
@@ -262,15 +260,13 @@
                                 </p>
 
                                 <div ng-class="bet-conflict" ng-show="(bet.conflicts.length && betSlip.type.value !== 1) && !bet.deleted" class="conflict-info-b">
-                                    <div class="bet-conflict-warning" tooltip-element="conflict-{{bet.eventId}}" tooltip-delay="100">
-                                        <div class="conflict-content" id="conflict-{{bet.eventId}}">
-                                            <ul>
-                                                <li trans>This pick cannot be combined with:</li>
-                                                <li ng-repeat="conflict in bet.conflicts">
-                                                    {{conflict.title}} - {{conflict.pick}}
-                                                </li>
-                                            </ul>
-                                        </div>
+                                    <div class="bet-conflict-warning">
+                                        <ul class="conflict-content-v3" id="conflict-{{bet.eventId}}">
+                                            <li trans>This pick cannot be combined with:</li>
+                                            <li ng-repeat="conflict in bet.conflicts">
+                                                {{conflict.title}} - {{conflict.pick}}
+                                            </li>
+                                        </ul>
                                     </div>
                                 </div>
 
@@ -355,7 +351,7 @@
                             <label for="superbet_checkbox" trans>Superbet</label>
                         </div>
                     </div>
-                    <div class="superbet-info-block active" ng-if="betSlip.superbet.selector">
+                    <div class="superbet-info-block active" ng-if="betSlip.superbet.selector && (betSlip.type.value === 1 || betSlip.type.value === 2)">
                         <div class="text-info-superbet">
                             <h6 trans>Superbet is turned ON</h6>
                             <p trans>SuperBet is a new offer that allows requesting a Max Bet Limit Increase for selected sporting events.</p>
@@ -450,12 +446,12 @@
                                                 <span trans>New Return</span>
                                                 <strong ng-bind="taxOnStake.enabled ? (taxOnStake.posWin - taxOnStake.secondTax) : (possibleWinTax ? finalWinTaxValue : possibleWinValue) | bankersRoundAndNumberCommas:$root.conf.balanceFractionSize"></strong>
                                             </div>
-                                            <div class="editing-stake-wrapper-p" ng-show="betSlip.totalStake - $root.editBet.stakeAmount > profile.calculatedBalance + profile.calculatedBonus">
+                                            <div class="editing-stake-wrapper-p" ng-show="betSlip.totalStake - $root.editBet.stakeAmount > $root.profile.totalBalance">
                                                 <span trans>Insufficient balance</span>
                                             </div>
                                             <div class="button-view-contain-v3">
                                                 <button ng-click="toggleStakeTooltip(true)">
-                                                    <span ng-class="{'disabled': betSlip.totalStake - $root.editBet.stakeAmount > profile.calculatedBalance + profile.calculatedBonus}" trans>Ok</span>
+                                                    <span ng-class="{'disabled': betSlip.totalStake - $root.editBet.stakeAmount > $root.profile.totalBalance}" trans>Ok</span>
                                                 </button>
                                             </div>
                                         </div>
@@ -623,7 +619,7 @@
                 <!--quickbet new END-->
             </form>
         </div>
-        <div class="quick-bet-notifications-j" ng-show="betSlip.showSystemBetsCountWarning || (betConf.possibleWinMessage && (possibleWinValue > 0 || betSlip.type.value == 3)  || quickBet.enabled && (!env.authorized || !betSlip.isBettingAllowed || (env.authorized && betSlip.totalStake > profile.calculatedBalance + profile.calculatedBonus)))">
+        <div class="quick-bet-notifications-j" ng-show="betSlip.showSystemBetsCountWarning || (betConf.possibleWinMessage && (possibleWinValue > 0 || betSlip.type.value == 3)  || quickBet.enabled && (!env.authorized || !betSlip.isBettingAllowed || (env.authorized && betSlip.totalStake > $root.profile.totalBalance)))">
             <div class="warning-j" ng-show="!env.authorized && (!$root.conf.integrationMode || enableSigninRegisterLinks)">
                 <span trans>To place your bet, please</span>
                 <b ng-show="!$root.conf.header.disableRegistrationAndLogin" ng-click="openLoginForm($event);" trans>sign in</b>
@@ -636,9 +632,8 @@
             <div class="warning-j" ng-if="betConf.possibleWinMessage && possibleWinValue > 0"><span ng-bind="::betConf.possibleWinMessage|translate"></span></div>
             <div class="warning-j" ng-show="betSlip.hasConflicts && betSlip.type.value !== 1" trans>Incompatible events</div>
             <div class="warning-j" ng-show="!quickBet.enabled && (betSlip.type.value !== 1 && betSlip.bets.length < 2) || (betSlip.type.value === 3 && betSlip.bets.length < 3)" trans>Add more events to be able to place bet</div>
-            <div class="warning-j" ng-show="betSlip.hasEventsFromSameGame && betSlip.type.value === 1 && betConf.blockSingleGameBets" trans>Not possible to combine events from the same game in a Single bet.</div>
             <div class="warning-j" ng-show="betSlip.hasEmptyStakes" trans>Please enter stake amount</div>
-            <div class="warning-j" ng-show="(env.authorized && betSlip.totalStake > profile.calculatedBalance + profile.calculatedBonus)" trans>Insufficient balance</div>
+            <div class="warning-j" ng-show="(env.authorized && betSlip.totalStake > $root.profile.totalBalance)" trans>Insufficient balance</div>
             <div class="warning-j" ng-show="(env.authorized && betSlip.totalStake < partnerConfig.min_bet_stakes[profile.currency_name])"><span trans>Bet amount is less than min allowed amount</span> ({{partnerConfig.min_bet_stakes[profile.currency_name]}} {{currency_name|currency}}).</div>
         </div>
         <div class="quick-bet-notifications-j">
@@ -682,8 +677,8 @@
         </div>
         <div class="bet-button-wrapper no-select-j" ng-if="betSlip.mode !== 'openBets' && betSlip.mode !== 'suggested'">
             <button type="submit" ng-show="betSlip.mode === 'booking'"  ng-click="placeBookingBet()" ng-disabled="shared.betInProgress || (betSlip.hasConflicts && betSlip.type.value !== 1) ||  shared.isBetsInProgress || betSlip.thereAreDeletedEvents"><span ng-show="!shared.isBetsInProgress" trans>Get bet ID</span></button>
-            <button type="submit" ng-show="betSlip.mode === 'betting' && (isTherePriceChange || betSlip.thereAreEventBaseChanges)" ng-class="{'pointer-events-none' : shared.isBetsInProgress}" ng-click="acceptChangesAndPlaceBets()" ng-disabled="shared.betInProgress || (betSlip.hasConflicts && betSlip.type.value !== 1) || !betSlip.isBettingAllowed || !env.authorized || shared.isBetsInProgress || betSlip.thereAreDeletedEvents || (env.authorized && !freeBet.enabled && betSlip.totalStake > (profile.calculatedBalance + profile.calculatedBonus) || (betSlip.totalStake < partnerConfig.min_bet_stakes[profile.currency_name])) || betslipRemoveBetsProcess || isAcceptAndPlaceBetStarted"><vbet-loader ng-show="shared.isBetsInProgress || isAcceptAndPlaceBetStarted" title="{{quickBet.massage}}" class="small-progress"></vbet-loader><span ng-show="!shared.isBetsInProgress && !isAcceptAndPlaceBetStarted"  trans>Accept changes and place bets!</span></button>
-            <button type="submit" ng-show="betSlip.mode === 'betting' && !isTherePriceChange && !betSlip.thereAreEventBaseChanges" ng-class="{'pointer-events-none' : shared.isBetsInProgress}" ng-click="acceptChangesAndPlaceBets()" ng-disabled="shared.betInProgress || (betSlip.hasConflicts && betSlip.type.value !== 1) || !betSlip.isBettingAllowed || !env.authorized || shared.isBetsInProgress || betSlip.thereAreDeletedEvents || (env.authorized && !freeBet.enabled && betSlip.totalStake > (profile.calculatedBalance + profile.calculatedBonus) || (betSlip.totalStake < partnerConfig.min_bet_stakes[profile.currency_name])) || betslipRemoveBetsProcess"><vbet-loader ng-show="shared.isBetsInProgress" title="{{quickBet.massage}}" class="small-progress"></vbet-loader><span ng-show="!shared.isBetsInProgress" trans >Place bets!</span></button>
+            <button type="submit" ng-show="betSlip.mode === 'betting' && (isTherePriceChange || betSlip.thereAreEventBaseChanges)" ng-class="{'pointer-events-none' : shared.isBetsInProgress}" ng-click="acceptChangesAndPlaceBets()" ng-disabled="shared.betInProgress || (betSlip.hasConflicts && betSlip.type.value !== 1) || !betSlip.isBettingAllowed || !env.authorized || shared.isBetsInProgress || betSlip.thereAreDeletedEvents || (env.authorized && !freeBet.enabled && betSlip.totalStake > $root.profile.totalBalance || (betSlip.totalStake < partnerConfig.min_bet_stakes[profile.currency_name])) || betslipRemoveBetsProcess || isAcceptAndPlaceBetStarted"><vbet-loader ng-show="shared.isBetsInProgress || isAcceptAndPlaceBetStarted" title="{{quickBet.massage}}" class="small-progress"></vbet-loader><span ng-show="!shared.isBetsInProgress && !isAcceptAndPlaceBetStarted"  trans>Accept changes and place bets!</span></button>
+            <button type="submit" ng-show="betSlip.mode === 'betting' && !isTherePriceChange && !betSlip.thereAreEventBaseChanges" ng-class="{'pointer-events-none' : shared.isBetsInProgress}" ng-click="acceptChangesAndPlaceBets()" ng-disabled="shared.betInProgress || (betSlip.hasConflicts && betSlip.type.value !== 1) || !betSlip.isBettingAllowed || !env.authorized || shared.isBetsInProgress || betSlip.thereAreDeletedEvents || (env.authorized && !freeBet.enabled && betSlip.totalStake > $root.profile.totalBalance || (betSlip.totalStake < partnerConfig.min_bet_stakes[profile.currency_name])) || betslipRemoveBetsProcess"><vbet-loader ng-show="shared.isBetsInProgress" title="{{quickBet.massage}}" class="small-progress"></vbet-loader><span ng-show="!shared.isBetsInProgress" trans >Place bets!</span></button>
             <div class="button-info-text-view-v3 display-block-important" ng-show="eventReplace.visibilityProcess">
                 <ul>
                     <li><p class="bet-notification-warning" trans>Attention, substitution</p></li>
@@ -694,7 +689,7 @@
                     <li><p>{{"Max number of events that can be added to Betslip is {1}"|translate:[$root.conf.limitForBetslipEvents]}}</p></li>
                 </ul>
             </div>
-            <div class="bet-notification-zone-j" ng-show="!$root.conf.disableAsianBetSlipTooltip && ((betSlip.hasConflicts && betSlip.type.value !== 1) || betSlip.thereAreDeletedEvents || !env.authorized && (betSlip.mode === 'betting') || !betSlip.isBettingAllowed && (betSlip.mode === 'betting') || (env.authorized && !freeBet.enabled && (betSlip.totalStake > profile.calculatedBalance + profile.calculatedBonus) || (betSlip.totalStake < partnerConfig.min_bet_stakes[profile.currency_name])) && (betSlip.mode === 'betting'))">
+            <div class="bet-notification-zone-j" ng-show="!$root.conf.disableAsianBetSlipTooltip && ((betSlip.hasConflicts && betSlip.type.value !== 1) || betSlip.thereAreDeletedEvents || !env.authorized && (betSlip.mode === 'betting') || !betSlip.isBettingAllowed && (betSlip.mode === 'betting') || (env.authorized && !freeBet.enabled && (betSlip.totalStake > $root.profile.totalBalance) || (betSlip.totalStake < partnerConfig.min_bet_stakes[profile.currency_name])) && (betSlip.mode === 'betting'))">
                 <div class="warning-j" ng-show="!env.authorized && (!$root.conf.integrationMode || enableSigninRegisterLinks) && (betSlip.mode === 'betting')">
                     <span trans>To place your bet, please</span>
                     <b ng-show="!$root.conf.header.disableRegistrationAndLogin" ng-click="openLoginForm($event);" trans>sign in</b>
@@ -709,7 +704,7 @@
                 <div class="warning-j error-j" ng-show="betSlip.thereAreDeletedEvents" trans>There are deleted events</div>
                 <div class="warning-j" ng-show="betSlip.type.value === 3 && betSlip.bets.length > 16" trans>System bet can include max 16 events</div>
                 <div class="warning-j" ng-show="(!betSlip.hasEmptyStakes && env.authorized && betSlip.totalStake < partnerConfig.min_bet_stakes[profile.currency_name])"><span trans>Bet amount is less than min allowed amount</span> ({{partnerConfig.min_bet_stakes[profile.currency_name]}} {{currency_name|currency}}).</div>
-                <div class="warning-j" ng-show="!freeBet.enabled && (env.authorized && betSlip.totalStake > profile.calculatedBalance + profile.calculatedBonus) && (betSlip.mode === 'betting')">
+                <div class="warning-j" ng-show="!freeBet.enabled && (env.authorized && betSlip.totalStake > $root.profile.totalBalance) && (betSlip.mode === 'betting')">
                     <p trans>Insufficient balance</p>
                     <b ng-if="!$root.conf.disableDepositPage && !$root.conf.integrationMode" ng-click="broadcast('toggleSliderTab','deposit');$event.stopPropagation();" trans>Deposit</b>
                     <b ng-if="$root.conf.integrationMode && !$root.conf.customDepositUrl && !$root.conf.hideDepositLinkInBetslip" ng-click="openPartnerDeposit()" trans>Deposit</b>

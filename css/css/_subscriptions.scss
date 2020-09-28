@@ -1,0 +1,132 @@
+.container-sub {
+  margin: 0 auto;
+  width: 100%;
+  height: 100%;
+  max-width: 1056px;
+  padding: 0 10px;
+  box-sizing: border-box;
+  .wrapper-sub {
+    float: left;
+    width: 100%;
+    min-height: 100vh;
+    max-width: 1056px;
+    min-width: 960px;
+    box-sizing: border-box;
+    background: rgba($skin-palette-12, 0.5);
+    .header-sub {
+      float: left;
+      width: 100%;
+      height: 244px;
+      padding: 66px 0;
+      background: $hero-color;
+      text-align: center;
+      box-sizing: border-box;
+      a {
+        display: inline-block;
+      }
+    }
+    .content-sub {
+      float: left;
+      width: 100%;
+      text-align: center;
+      padding: 64px 30px 30px;
+      box-sizing: border-box;
+
+      p {
+        float: left;
+        width: 100%;
+        color: rgba(set-color($skin-palette-12), 1);
+        &.title {
+          text-transform: uppercase;
+          font: 42px/44px $font-f;
+        }
+        &.info {
+          margin: 110px 0 40px;
+          box-sizing: border-box;
+          font: 40px/42px $font-f;
+        }
+        &.email, &.sms {
+          box-sizing: border-box;
+          font: 40px/42px $font-f;
+          label {
+            cursor: pointer;
+            input {
+              display: none;
+              &:checked ~ span:after {
+                content: "\54";
+              }
+            }
+            span {
+              position: relative;
+              box-sizing: border-box;
+              @include ltr {
+                padding: 0 0 0 45px;
+              }
+              @include rtl {
+                padding: 0 45px 0 0;
+              }
+              &:before {
+                content: "";
+                position: absolute;
+                top: 12px;
+                width: 29px;
+                height: 29px;
+                border: 1px solid rgba(set-color($skin-palette-12),0.5);
+                border-radius: 3px;
+                @include ltr {
+                  left: 0;
+                }
+                @include rtl {
+                  right: 0;
+                }
+              }
+              &:after {
+                content: "";
+                position: absolute;
+                top: 0;
+                color: #b6862e;
+                text-align: center;
+                font: 18px/54px icomoon;
+                @include ltr {
+                  left: 6px;
+                }
+                @include rtl {
+                  right: 6px;
+                }
+              }
+            }
+          }
+          &.sms {
+            margin: 30px 0 0;
+          }
+        }
+      }
+      button {
+        height: 60px;
+        min-width: 300px;
+        margin: 40px 0 50px;
+        padding: 0 20px;
+        color: set-color($hero-color);
+        outline: none;
+        cursor: pointer;
+        background: $hero-color;
+        box-sizing: border-box;
+        border: 1px solid $hero-color;
+        transition: background 250ms, border 250ms;
+        font: 42px/58px $font-f;
+        &:hover {
+          background: lighten($hero-color, 10%);
+          border: 1px solid lighten($hero-color, 10%);
+        }
+      }
+      footer {
+        float: left;
+        width: 100%;
+        color: rgba(set-color($skin-palette-12), 1);
+        padding: 0 100px;
+        box-sizing: border-box;
+        font: 32px/34px $font-f;
+      }
+    }
+  }
+}

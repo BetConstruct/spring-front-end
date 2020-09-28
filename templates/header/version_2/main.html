@@ -17,11 +17,11 @@
         </div>
     </div>
     <div class="header-license-img" ng-if="aboveHeaderOpened && $location.path() === '/'">
-        <button ng-click="closeAboveHeader()" title="{{'Close'|translate}}">X</button>
         <a ng-repeat="headerItem in $root.conf.header.aboveHeader.items" ng-href="{{::headerItem.url}}" target="{{::headerItem.target || '_self'}}">
             <img ng-if="headerItem.img" ng-src="{{::headerItem.img}}" width="{{headerItem.width}}"/>
             <span ng-if="headerItem.text">{{::headerItem.text|translate}}</span>
         </a>
+        <i ng-click="closeAboveHeader()" title="{{'Close'|translate}}"></i>
     </div>
     <div class="accept-cookies-t" ng-if="conf.header.acceptCookies && !cookiesNotification.cookiesAccepted">
         <p ng-bind-html="::cookiesNotification.cookiesText|nl2br|html"></p>
@@ -99,8 +99,7 @@
                     ng-show="!env.authorized">
                     <div class="signin-reg-buttons-b" id="signin-reg-buttons">
                         <ul ng-hide="conf.header.disableRegistrationAndLogin">
-                            <li ng-if="conf.registration.enableSignIn"
-                                ng-if="!conf.rfid.loginWIthRFID || conf.rfid.loginWIthRFID && conf.rfid.allowAccessWithoutRfid">
+                            <li ng-if="conf.registration.enableSignIn && (!conf.rfid.loginWIthRFID || conf.rfid.loginWIthRFID && conf.rfid.allowAccessWithoutRfid)">
                                 <button ng-class="{'active-s': env.sliderContent === 'login'}" ng-click="signin()" trans>Sign in</button>
                             </li>
                             <li ng-if="conf.registration.enable">
@@ -146,7 +145,7 @@
                     </div>
                 </li>
                 <li class="responsive-header-item-j"
-                    ng-show="!conf.rfid.loginWIthRFID || conf.rfid.loginWIthRFID && env.authorized" ng-if="(calculatedConfigs.sportEnabled || casinoEnabled) && conf.header.showFavoriteIcon" >
+                    ng-show="!conf.rfid.loginWIthRFID || env.authorized" ng-if="(calculatedConfigs.sportEnabled || casinoEnabled) && conf.header.showFavoriteIcon" >
                     <div class="separator-contain-nav"
                          prevent-fast-click ng-click="myGamesToggle()">
                         <div class="settings-icon-contain favorite-icon-b" title="Favorite Games" trans="attr-only">
@@ -339,28 +338,13 @@
                 </li>
             </ul>
         </div>
-        <div class="swedish-license" ng-if="conf.header.licenseLogos">
-            <div class="s-l-logo" ng-repeat="logo in conf.header.licenseLogos" ng-switch="logo.type" ng-class="{'s-l-icon': logo.type === 'icon'}">
-                <div class="swedish-license-icon-info" ng-switch-when="icon">
-                    <div>
-                        <p ng-bind="::(logo.text[env.lang] || logo.text.default|translate)"></p>
-                    </div>
-                </div>
-                <a ng-switch-default
-                   ng-href="{{::logo.href}}"
-                   target="{{::logo.target || '_blank'}}"
-                   ng-click="logo.broadcast ? (env.authorized ? $root.broadcast(logo.broadcast.key, logo.broadcast.data) : $root.broadcast('openLoginForm', logo.broadcast)) : void()">
-                    <img ng-src="{{::logo.imgSrc}}">
-                </a>
-            </div>
-        </div>
     </div>
 </div>
 <!--header END-->
 <ng-include class="float-width" ng-show="$root.currentPage.hasSubHeader && $root.currentPage.isInSports && !$root.conf.hideSubHeaderByPath[$location.path()]" no-animate src="::'templates/sport/toptab.html'|fixPath"></ng-include>
 
 <div ng-if="{'/esports/': true, '/virtualsports/': true}[$location.path()] && $root.conf.asian.showUserInfoInSubHeader && $root.profile && $root.env.authorized" class="balance-int-row">
-    {{'Account'|translate}} : {{$root.profile.nick_name}} | {{'BBIN balance'|translate}}: {{$root.profile.calculatedBalance|number:$root.conf.balanceFractionSize}}
+    {{'Account'|translate}} : {{$root.profile.nick_name}} | {{'BBIN balance'|translate}}: {{$root.profile.calculatedBalance|number:$root.conf.balanceFractionSize}} {{$root.profile.currency|currency}}
 </div>
 <div class="guide header-wrapper" ng-if="subMenuItems && subMenuItems.length > 1">
     <div class="subtop-header-menu-j"  no-animate>

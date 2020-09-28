@@ -16,6 +16,8 @@ VBET5.controller('widgetCtrl', ['$rootScope', '$scope', 'TimeoutWrapper', '$wind
     var slideIndex = 0;
     var connectionService = new ConnectionService($scope);
 
+    $scope.vbet5AvailableAnimations  = {'Soccer': true, 'Tennis': true, 'Basketball': true};
+
     $scope.liveGames = [];
     $scope.newSlideAvailable = false;
     $scope.activeSlideGame = {};

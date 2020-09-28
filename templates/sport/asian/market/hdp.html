@@ -34,7 +34,7 @@
                     <th class="dark-bg-j" colspan="2">
                         <p>
                             <span ng-show="game.is_neutral_venue" class="game-is-neutral" title="is neutral venue" trans="attr-only"></span>
-                            <span ng-show="game.type === 1 && game.hasVideo && $root.conf.videoEnabled" class="has-video" trans="attr-only" title="video"></span>
+                            <span ng-show="game.type === 1 && game.hasVideo" class="has-video" trans="attr-only" title="video"></span>
                             <span ng-show="game.type === 1 || (game.type === 2 && $root.conf.asian.showLiveIconForUpcomingGames)" class="asian-live-game">live</span>
                             <span ng-show="$root.conf.asianShowTeamNames" ng-bind="::game.team1_name"></span>
                             <span ng-show="$root.conf.asianShowTeamNames" ng-bind="::game.team2_name"></span>
@@ -214,7 +214,7 @@
                         </div>
                     </td>
                     <td class="dark-bg-j  xs asian-more-markets-count-j">
-                        <p ng-click="loadAllEvents(game.id)" title="{{'More Markets'|translate}}">+{{::game.moreMarketsCount > 0 ? game.moreMarketsCount : ''}}</p>
+                        <p ng-click="loadAllEvents(game.id, game.competition.id, game.region.id, game.sport.id)" title="{{'More Markets'|translate}}">+{{::game.moreMarketsCount > 0 ? game.moreMarketsCount : ''}}</p>
                     </td>
                 </tr>
                 <tr>

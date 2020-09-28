@@ -1,6 +1,6 @@
-<div class="live-game-basketball-shots" ng-class="{'no-video-flash': !($root.conf.videoEnabled && game.video_id || game.has_animation) || (isVideoDetached && !game.has_animation), 'no-video-ie8': !game.video_id || isVideoDetached}">
+<div class="live-game-basketball-shots" ng-class="{'no-video-flash': !(game.video_id || game.has_animation) || (isVideoDetached && !game.has_animation), 'no-video-ie8': !game.video_id || isVideoDetached}">
     <div class="short-info-box">
-        {{((($root.conf.videoEnabled && game.video_id && !isVideoDetached) || game.has_animation) ? visibleCount=8 : visibleCount=10);scrollIndex=(game.live_events.length >= visibleCount ? game.live_events.length- visibleCount/2 : 0);""}}
+        {{(((game.video_id && !isVideoDetached) || game.has_animation) ? visibleCount=8 : visibleCount=10);scrollIndex=(game.live_events.length >= visibleCount ? game.live_events.length- visibleCount/2 : 0);""}}
         <h6>{{game.team1_name}}</h6>
         <div class="show-points"><span ng-bind="'{1} Points'|translate:[game.info.score1 || 0]"></span></div>
         <p>{{competition.name}} | <span ng-bind="'Hit Stats {1}%'|translate:[Math.round(game.info.shot_attempts / (game.info.shot_attempts + game.info.missed_attempts) *100)|| 0]"></span></p>
@@ -19,7 +19,7 @@
     </div>
 
 </div>
-<div ng-show="($root.conf.videoEnabled && game.video_id && !isVideoDetached) || game.has_animation" >
+<div ng-show="(game.video_id && !isVideoDetached) || game.has_animation" >
     <div class="right-block-flash" id="game-monitor-{{ game.id }}">
         <include-template template-path="templates/sport/open/player.html"></include-template>
     </div>

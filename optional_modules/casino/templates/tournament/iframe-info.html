@@ -27,7 +27,7 @@
             <div class="iframe-jackpot-wrapper" ng-repeat="pool in jackpot.PoolGroup.PoolList track by $index">
                 <ul ng-class="{'active': expanded.poolId === pool.Id}" ng-click="expanded.poolId !== pool.Id ? expanded.poolId = pool.Id : expanded.poolId = '-1'">
                     <li class="iframe-jackpot-coins jackpot-large">
-                        <span style="background-image: url(images/jackpot-coins/jackpot-{{pool.Name.toLowerCase()}}.png);"></span>
+                        <span style="background-image: url(images/jackpot-pools/jackpot-{{pool.Name.toLowerCase()}}.png);"></span>
                     </li>
                     <li class="iframe-info-jackpots" ng-class="{'win-blink-jackpots': pool.JackPotPoolStat.LastJackPotWin.Winner}">
                         <p title="{{pool.DisplayName|translate}}">{{pool.DisplayName|translate}}</p>

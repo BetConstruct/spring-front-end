@@ -11,8 +11,8 @@
                  ng-style="{height: $root.conf.customLeftMenuWidget.height}">
             </div>
         </li>
-        <li class="p-n-v"><popular-in-sportsbook class="float-width" ng-if="$root.conf.popularMatches.enabled" ng-hide="bigBetFilter['0']"  title="{{$root.conf.popularMatches.title || 'Popular Games'}}" type="game" left-menu="{'closed': leftMenuClosed, 'toggle': toggleLeftMenu}" search-field="game"></popular-in-sportsbook></li>
-        <li class="p-n-v"><popular-in-sportsbook class="float-width" ng-if="$root.conf.showFavoriteCompetitions && !env.preMatchMultiSelection"  ng-hide="bigBetFilter['0']" title="Popular competitions" type="competition" left-menu="{'closed': leftMenuClosed, 'toggle': toggleLeftMenu}" search-field="competition"></popular-in-sportsbook></li>
+        <li class="p-n-v"><popular-in-sportsbook class="float-width" ng-if="$root.conf.popularMatches.enabled" ng-hide="bigBetFilter['0']"  title="{{($root.conf.popularMatches.title || 'Popular Games')|translate}}" type="game" left-menu="{'closed': leftMenuClosed, 'toggle': toggleLeftMenu}" search-field="game"></popular-in-sportsbook></li>
+        <li class="p-n-v"><popular-in-sportsbook class="float-width" ng-if="$root.conf.showFavoriteCompetitions && !env.preMatchMultiSelection"  ng-hide="bigBetFilter['0']" title="{{'Popular competitions'|translate}}" type="competition" left-menu="{'closed': leftMenuClosed, 'toggle': toggleLeftMenu}" search-field="competition"></popular-in-sportsbook></li>
 
 
         <ng-include ng-if="$root.conf.favoriteTeam.enabled && $root.env.authorized"  src="::'templates/sport/classic/left/favoriteTeam.html'|fixPath"> </ng-include>
@@ -46,15 +46,15 @@
                        ng-click="openTodaysBets(sport)"
                        ng-if="sport.alias === 'todaybets'">
                         <span class="sport-icon-v3 {{sport.alias}}"><b>{{toDay|formatDate:'D':null:$root.env.timeFormat}}</b></span>
-                        <p ng-bind="sport.name|translate" trans></p>
+                        <p ng-bind="sport.name" trans></p>
                         <span class="arrow-view-v3"></span>
                     </a>
 
-                    <a class="sports-item-v3 {{sport.alias}}" title="Boosted bets" ng-class="{'active': boostedBets.selected}" ng-if="$root.conf.boostedBets.enabled && sport.alias === 'boostedbets'"
+                    <a class="sports-item-v3 {{sport.alias}}" title="{{'Boosted bets'|translate}}" ng-class="{'active': boostedBets.selected}" ng-if="$root.conf.boostedBets.enabled && sport.alias === 'boostedbets'"
                        ng-click="($location.path() === '/dashboard/' ? $location.path('/sport') : void()); env.preMatchMultiSelection ? '' : !boostedBets.selected && expandLeftMenuPrematchSport(sport); "
                     >
                         <span class="sport-icon-v3"></span>
-                        <p trans>Boosted bets</p>
+                        <p>{{'Boosted bets'|translate}}</p>
                         <span class="arrow-view-v3"></span>
                     </a>
 
@@ -80,12 +80,12 @@
                                                  element-to-add-class="sum-menu-multi-items"
                                                  container-class="left-menu-wrapper-v3"
                                                  default-offset="26">
-                                                <label title="{{competition.name}}" ng-click="($location.path() === '/dashboard/' ? $location.path('/sport') : void()); env.preMatchMultiSelection ? '' : expandCompetition(competition, sport, true);">
+                                                <label title="{{competition.name}}" ng-click="($location.path() === '/dashboard/' ? $location.path('/sport') : void()); env.preMatchMultiSelection ? '' : expandCompetition(competition, sport, true, true);">
                                                     <input type="checkbox"
                                                            ng-if="env.preMatchMultiSelection"
                                                            ng-model="prematchMultiViewCompetitions[competition.id]"
                                                            id="checkbox-competition{{competition.id}}"
-                                                           ng-change="competitionToMultiview(competition)">
+                                                           ng-change="competitionToMultiview(competition, sport)">
                                                     <span>{{competition.name}}</span>
                                                 </label>
 
@@ -127,13 +127,13 @@
                                                  container-class="left-menu-wrapper-v3"
                                                  default-offset="26">
                                                 <label title="{{competition.region.name}}"
-                                                       ng-click="($location.path() === '/dashboard/' ? $location.path('/sport') : void()); env.preMatchMultiSelection ? '' : expandCompetition(competition, sport, true);"
+                                                       ng-click="($location.path() === '/dashboard/' ? $location.path('/sport') : void()); env.preMatchMultiSelection ? '' : expandCompetition(competition, sport, true, true);"
                                                 >
                                                     <input type="checkbox"
                                                            ng-show="env.preMatchMultiSelection"
                                                            ng-model="prematchMultiViewCompetitions[competition.id]"
                                                            id="checkbox-competition{{competition.id}}"
-                                                           ng-change="competitionToMultiview(competition)">
+                                                           ng-change="competitionToMultiview(competition, sport)">
                                                     <span ng-if="!env.preMatchMultiSelection" class="sport-icon-v3 favorite-competitions-icon-t {{competition.sport_alias}}"></span>
                                                     <span>{{$root.conf.showFavoriteCompetitionsRegion ? competition.region.name + ' ' : ''}}{{competition.name}} </span>
                                                 </label>

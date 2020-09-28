@@ -141,6 +141,10 @@ angular.module('casino').controller('casinoTournamentsCtrl', ['$rootScope', '$sc
                         tournament.canParticipate = canParticipateCheck(tournament);
                         tournament.registrationStatus = registrationStatusCheck(tournament);
                         tournament.buyInStatus = buyInCheck(tournament);
+
+                        if(tournament.PrizeType === 2) { // freeSpins
+                            tournament.CurrencyId = 'FS';
+                        }
                     });
 
                     $scope.tournament.fullList = data.result;
@@ -385,6 +389,10 @@ angular.module('casino').controller('casinoTournamentsCtrl', ['$rootScope', '$sc
                     $scope.tournament.details.total_count = 0;
                     $scope.tournament.detailsCasinoGamesCount = 0;
 
+                    if($scope.tournament.details.PrizeType === 2) { // freeSpins
+                        $scope.tournament.details.CurrencyId = 'FS';
+                    }
+
                     processTopPlayerList($scope.tournament.details, $scope.tournament.details.TopPlayerList, $scope.tournament.details.CurrentPlayerStats);
 
                     console.log('GET GAMES', $scope.tournament.details.GameIdList);
@@ -598,10 +606,7 @@ angular.module('casino').controller('casinoTournamentsCtrl', ['$rootScope', '$sc
         timeoutStatsPromise = null;
     }
 
-    $scope.$on('counterFinished.tournamentList', $scope.getTournamentList);
-    $scope.$on('counterFinished.tournamentListDetails', function () {
-        $scope.openTournamentDetails($location.search().tournament_id, true);
-    });
+
 
     /**
      * @ngdoc method
@@ -648,18 +653,52 @@ angular.module('casino').controller('casinoTournamentsCtrl', ['$rootScope', '$sc
         }
     }
 
+   $scope.initWatchers = function initWatchers() {
+        $scope.$on('counterFinished.tournamentList', $scope.getTournamentList);
+        $scope.$on('counterFinished.tournamentListDetails', function () {
+            $scope.openTournamentDetails($location.search().tournament_id, true);
+        });
+
+        $scope.$on('login.loggedOut', refreshTournamentData);
+        $scope.$on('loggedIn', refreshTournamentData);
+
+        $scope.$on("tournaments.openGame", openTournamentGame);
+        $scope.$on('goToHomepage', function () {
+            $location.search('tournament_id', undefined);
+        });
+        $scope.$on('casinoGamesList.toggleSaveToMyCasinoGames', function (e, game) {
+            $scope.toggleSaveToMyCasinoGames(game);
+        });
+        $scope.$on('casinoGamesList.openGame', function (e, data) {
+            if (!data.game && data.gameId) {
+                casinoData.getGames(null, null, countryCode, null, null, null, null, [data.gameId]).then(function (response) {
+                    if (response && response.data) {
+                        $scope.openGame(response.data.games[0]);
+                    }
+                });
+            } else {
+                $scope.openGame(data.game, data.playMode, data.studio);
+            }
+        });
+        $scope.$on('widescreen.on', function () {
+            $scope.wideMode = true;
+        });
+
+        $scope.$on('widescreen.off', function () {
+            $scope.wideMode = false;
+        });
+
+        $scope.$on('middlescreen.on', function () { $scope.middleMode = true; });
+        $scope.$on('middlescreen.off', function () { $scope.middleMode = false; });
+
+        $scope.$on('casinoMultiview.viewChange', function (event, view) {
+            analytics.gaSend('send', 'event', 'multiview', {'page': $location.path(),'eventLabel': 'multiview changed to ' + view});
+            casinoManager.changeView($scope, view);
+        });
+    }
+
     // ******************** 'BIG-GAME' RELATED ********************
-    $scope.$on('casinoGamesList.openGame', function (e, data) {
-        if (!data.game && data.gameId) {
-            casinoData.getGames(null, null, countryCode, null, null, null, null, [data.gameId]).then(function (response) {
-                if (response && response.data) {
-                    $scope.openGame(response.data.games[0]);
-                }
-            });
-        } else {
-            $scope.openGame(data.game, data.playMode, data.studio);
-        }
-    });
+
 
     $scope.openGame = function openGame(game, gameType, studio, urlSuffix, multiViewWindowIndex) {
         var type = gameType ? gameType : 'real';
@@ -669,6 +708,43 @@ angular.module('casino').controller('casinoTournamentsCtrl', ['$rootScope', '$sc
         }
         casinoManager.openCasinoGame($scope, game, gameType, studio, urlSuffix, multiViewWindowIndex);
     };
+
+    function openTournamentGame(event, game, gameType) {
+        if ($scope.viewCount === 1) {
+            var needToClose = $scope.gamesInfo.length === 1 && $scope.gamesInfo[0].game && $scope.gamesInfo[0].game.id !== game.id;
+            if (needToClose) {
+                $scope.closeGame();
+            }
+
+            $scope.openGame(game, gameType);
+        } else {
+            //games that are not resizable
+            if (game.ratio == "0") {
+                $rootScope.$broadcast("globalDialogs.addDialog", {
+                    type: 'warning',
+                    title: 'Warning',
+                    content: Translator.get('Sorry, this game cannot be opened in multi-view mode')
+                });
+            } else {
+                var i, count = $scope.gamesInfo.length;
+                for (i = 0; i < count; i += 1) {
+                    if ($scope.gamesInfo[i].gameUrl === '') {
+                        $scope.gamesInfo[i].toAdd = true;
+                        $scope.openGame(game, gameType);
+                        break;
+                    }
+                }
+                if (i === count) {
+                    $rootScope.$broadcast("globalDialogs.addDialog", {
+                        type: 'warning',
+                        title: 'Warning',
+                        content: Translator.get('Please close one of the games for adding new one')
+                    });
+                }
+            }
+        }
+    }
+
 
     $scope.closeGame = function confirmCloseGame(id, targetAction) {
         casinoManager.closeGame($scope, id, targetAction);
@@ -693,22 +769,6 @@ angular.module('casino').controller('casinoTournamentsCtrl', ['$rootScope', '$sc
 
 
     // ******************** MULTIVIEW RELATED ********************
-    $scope.$on('widescreen.on', function () {
-        $scope.wideMode = true;
-    });
-
-    $scope.$on('widescreen.off', function () {
-        $scope.wideMode = false;
-    });
-
-    $scope.$on('middlescreen.on', function () { $scope.middleMode = true; });
-    $scope.$on('middlescreen.off', function () { $scope.middleMode = false; });
-
-    $scope.$on('casinoMultiview.viewChange', function (event, view) {
-        analytics.gaSend('send', 'event', 'multiview', {'page': $location.path(),'eventLabel': 'multiview changed to ' + view});
-        casinoManager.changeView($scope, view);
-    });
-
     $scope.enableToAddGame = function enableToAddGame(id) {
         for (var i = 0; i < $scope.gamesInfo.length; i += 1) {
             $scope.gamesInfo[i].toAdd = id === $scope.gamesInfo[i].id;
@@ -724,16 +784,7 @@ angular.module('casino').controller('casinoTournamentsCtrl', ['$rootScope', '$sc
         });
     })();
 
-    $scope.$on('login.loggedOut', refreshTournamentData);
-    $scope.$on('loggedOut', refreshTournamentData);
-    $scope.$on('loggedIn', refreshTournamentData);
 
-    $scope.$on('goToHomepage', function () {
-        $location.search('tournament_id', undefined);
-    });
-    $scope.$on('casinoGamesList.toggleSaveToMyCasinoGames', function (e, game) {
-        $scope.toggleSaveToMyCasinoGames(game);
-    });
 
     $scope.$on('$destroy', function () {
         cancelRequests();

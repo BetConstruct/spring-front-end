@@ -93,8 +93,6 @@ VBET5.service('ConnectionService', ['$q', 'Zergling', 'Utils', function ($q, Zer
                 }
             });
 
-            delete this.allSubscriptionPromises[requestHash];
-
             return;
         }
 

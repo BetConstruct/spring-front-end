@@ -1,0 +1,38 @@
+$spinner-2017-enabled: false !default;
+@mixin spinner-2017{
+  //spinner
+  .md-spinner-wrapper {
+    display: none;
+  }
+  .md-progress-circular:before {
+    width: 100px;
+    height: 100px;
+    display: block;
+    font: 74px/90px icomoon;
+    color: $hero-color;
+    text-align: center;
+    content: "\e97b";
+    animation: 1500ms spinner-w linear infinite;
+    border: none;
+  }
+  .full-menu-wrapper-box-v3 .md-progress-circular:before {
+    width: 60px;
+    height: 60px;
+    font: 46px/54px icomoon;
+  }
+  .small-progress.md-progress-circular:before {
+    width: 20px;
+    height: 20px;
+    font: 20px/18px icomoon;
+  }
+  @keyframes spinner-w {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+  //spinner END
+}
+@if $spinner-2017-enabled == true {@include spinner-2017;}

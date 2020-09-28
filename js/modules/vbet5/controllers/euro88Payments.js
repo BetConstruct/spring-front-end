@@ -42,7 +42,7 @@ VBET5.controller('euro88PaymentsCtrl', ['$scope', '$rootScope', '$sce', '$filter
         $scope.sumsList = (
             paymentConfig.info && paymentConfig.info[$rootScope.profile.currency_name] && paymentConfig.info[$rootScope.profile.currency_name].default && paymentConfig.info[$rootScope.profile.currency_name].default[tab]  ||
             paymentConfig[tab + 'CustomAmounts'] ||
-            additionalPaymentButtons[$rootScope.profile.currency_name].default[tab] ||
+            (additionalPaymentButtons[$rootScope.profile.currency_name] && additionalPaymentButtons[$rootScope.profile.currency_name].default[tab]) ||
             additionalPaymentButtons.default[tab] // jshint ignore:line
         ).map(createSumsList($rootScope.profile.currency_name));
     }

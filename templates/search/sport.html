@@ -1,5 +1,5 @@
 <form ng-show="$root.currentPage.isInSports" ng-controller="searchCtrl">
-    <div class="block-search" ng-show="!conf.rfid.loginWIthRFID || conf.rfid.loginWIthRFID && env.authorized">
+    <div class="block-search" ng-show="!conf.rfid.loginWIthRFID || env.authorized">
         <input name="" type="text" placeholder="competition or a team..." title="Search a competition or a team..." ng-model="searchTerm" ng-keypress="searchEnter($event)" trans>
         <!-- result search-->
         <div class="search-results-container" ng-show="showSearchResults" hide-on-click state-flag-var="showSearchResults" broadcast-on-close="search.ResultsClosed" class-on-scroll="search-results-container-scroll,search-results-container" >

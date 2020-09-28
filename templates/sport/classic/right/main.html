@@ -40,6 +40,8 @@
     </div>
     <!--View settings END-->
     <div class="right-b-view-wrapper-v3">
+        <pre-match-stream-channels ng-if="currentPage.path === '/livecalendar' && prematchChannels && prematchChannels.length"></pre-match-stream-channels>
+
         <!--Betslip-->
         <include-template class="betslip-include-v3" template-path="templates/sport/classic/right/betslip.html"></include-template>
         <!--Betslip END-->

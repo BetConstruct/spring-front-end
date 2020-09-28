@@ -1,6 +1,6 @@
 /**
  * @ngdoc controller
- * @name vbet5.controller:classicPopularMatchesCtrl
+ * @name vbet5.directive:popularInSportsbook
  * @description
  * Popular matches controller
  */
@@ -26,7 +26,7 @@ VBET5.directive('popularInSportsbook', ['$rootScope', '$location', 'Config', 'Co
             scope.popular = {
                 icon: attrs.icon || 'favoritecompetitions',
                 color: attrs.color || attrs.icon || 'favoritecompetitions',
-                expanded: !Config.main.disableSavingPreMatchMenuState
+                expanded: !Config.main.collapsePopularCompetitions
             };
 
             /**
@@ -43,16 +43,16 @@ VBET5.directive('popularInSportsbook', ['$rootScope', '$location', 'Config', 'Co
                         'competition': ['id', 'order', 'name'],
                         'region': ['id', 'name', 'alias', 'order']
                     },
-                    'where': {}
+                    'where': {
+                        'game': { 'type': {'@in': [0, 2]}},
+                        'sport': { 'type': 2 } // only classic sports ie excludes virtual and electronic sports
+                    }
                 };
 
                 switch (scope.type) {
                     case 'game':
                         request.what.game = ['id', 'team1_name', 'team2_name', 'type', 'order','start_ts', 'favorite_order', 'is_live'];
-                        request.where.game = {
-                            'type': {'@in': [0, 2]},
-                            'promoted': true
-                        };
+                        request.where.game.promoted = true;
                         break;
                     case 'competition':
                         request.what.competition.push('favorite_order');

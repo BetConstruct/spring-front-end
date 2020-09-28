@@ -1,5 +1,5 @@
 <div class="left-block-score">
-    <div class="live-game-horseracing" ng-class="{'no-video-flash': !($root.conf.videoEnabled && game.video_id || game.has_animation) || (isVideoDetached && !game.has_animation), 'no-video-ie8': !game.video_id || isVideoDetached}">
+    <div class="live-game-horseracing" ng-class="{'no-video-flash': !(game.video_id || game.has_animation) || (isVideoDetached && !game.has_animation), 'no-video-ie8': !game.video_id || isVideoDetached}">
         <ul>
             <li title="{{game.info.race.title}}">
                 {{ game.info.race.title ?  game.info.race.title : '' }}
@@ -11,24 +11,24 @@
         <ul class="race-stats">
             <li>
                 <p title="Race Type" trans>Surface</p>
-                <span title="{{game.info.race.track_type|translate}}">{{game.info.race.track_type|translate}}</span>
+                <span title="{{game.info.race.surfaceType|translate}}">{{game.info.race.surfaceType|translate}}</span>
             </li>
             <li>
                 <p title="Prize" trans>Prize</p>
-                <span><span ng-if="game.info.race.currency ==='EUR'"> &#128;</span><span ng-if="game.info.race.currency ==='GBP'"> &#163;</span> {{game.info.race.prize}}</span>
+                <span>{{game.info.race.prize}}</span>
             </li>
         </ul>
     </div>
-    <div class="race-stadium" ng-class="{'no-video-flash': !($root.conf.videoEnabled && game.video_id || game.has_animation) || (isVideoDetached && !game.has_animation), 'no-video-ie8': !game.video_id || isVideoDetached}" ng-style="{'background-image': 'url(' + game.info.race.courceIcon + ')'}">
-        <img ng-src="{{game.info.race.courceIcon}}" />
+    <div class="race-stadium" ng-class="{'no-video-flash': !(game.video_id || game.has_animation) || (isVideoDetached && !game.has_animation), 'no-video-ie8': !game.video_id || isVideoDetached}" ng-style="{'background-image': 'url(' + game.info.race.backgroundUrl + ')'}">
+        <img ng-src="{{game.info.race.backgroundUrl}}" />
     </div>
 </div>
-<div ng-show="($root.conf.videoEnabled && game.video_id && !isVideoDetached) || game.has_animation" ng-class="{'hide-animation-ie8': !game.video_id || isVideoDetached}">
+<div ng-show="(game.video_id && !isVideoDetached) || game.has_animation" ng-class="{'hide-animation-ie8': !game.video_id || isVideoDetached}">
     <div class="right-block-flash" id="game-monitor-{{ game.id }}">
         <include-template template-path="templates/sport/open/player.html"></include-template>
     </div>
 </div>
-<div class="horse-stats" ng-if="game.info.race.horseStats">
+<div class="horse-stats" ng-if="game.info.race.raceStats">
     <div></div>
 </div>
 

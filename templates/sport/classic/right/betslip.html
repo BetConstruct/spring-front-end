@@ -300,15 +300,13 @@
                                 </label>
                                 <div class="betslip-event-icon-view blocked-icon-b-v3" ng-if="(bet.blocked || (bet.price | oddConvert:'decimal') == 1) && !bet.conflicts.length && !bet.deleted" title="Event Locked" trans></div>
                                 <div class="betslip-event-icon-view blocked-icon-b-v3 deleted-bet-error-v3" ng-if="bet.deleted" title="This event is not available now" trans></div>
-                                <div class="betslip-event-icon-view blocked-icon-b-v3 error-icon-b-v3" ng-show="(bet.conflicts.length && betSlip.type.value !== 1) && !bet.deleted" tooltip-element="conflict-{{bet.eventId}}" tooltip-delay="100">
-                                    <div class="conflict-content-v3" id="conflict-{{bet.eventId}}">
-                                        <ul>
-                                            <li trans>This pick cannot be combined with:</li>
-                                            <li ng-repeat="conflict in bet.conflicts">
-                                                {{conflict.title}} - {{conflict.pick}}
-                                            </li>
-                                        </ul>
-                                    </div>
+                                <div class="betslip-event-icon-view blocked-icon-b-v3 error-icon-b-v3" ng-if="(betSlip.type.value !== 1 || betConf.fullCoverBetTypes.enabled) && bet.conflicts.length && !bet.deleted">
+                                    <ul class="conflict-content-v3" id="conflict-{{bet.eventId}}">
+                                        <li trans>This pick cannot be combined with:</li>
+                                        <li ng-repeat="conflict in bet.conflicts">
+                                            {{conflict.title}} - {{conflict.pick}}
+                                        </li>
+                                    </ul>
                                 </div>
                                 <span ng-click="gotoBetGame(bet.gamePointer)">{{ bet.title }}</span>
                                 <b ng-bind="bet.start_ts| formatDate:'hour':null:$root.env.timeFormat"></b>
@@ -509,15 +507,13 @@
                                         </label>
                                         <div class="betslip-event-icon-view blocked-icon-b-v3" ng-if="(bet.blocked || (bet.price | oddConvert:'decimal') == 1) && !bet.conflicts.length && !bet.deleted" title="Event Locked" trans></div>
                                         <div class="betslip-event-icon-view blocked-icon-b-v3 deleted-bet-error-v3" ng-if="bet.deleted" title="This event is not available now" trans></div>
-                                        <div class="betslip-event-icon-view blocked-icon-b-v3 error-icon-b-v3" ng-show="(bet.conflicts.length && betSlip.type.value !== 1) && !bet.deleted" tooltip-element="conflict-{{bet.eventId}}" tooltip-delay="100">
-                                            <div class="conflict-content-v3" id="conflict-{{bet.eventId}}">
-                                                <ul>
-                                                    <li trans>This pick cannot be combined with:</li>
-                                                    <li ng-repeat="conflict in bet.conflicts">
-                                                        {{conflict.title}} - {{conflict.pick}}
-                                                    </li>
-                                                </ul>
-                                            </div>
+                                        <div class="betslip-event-icon-view blocked-icon-b-v3 error-icon-b-v3" ng-show="(bet.conflicts.length) && !bet.deleted">
+                                            <ul class="conflict-content-v3" id="conflict-{{bet.eventId}}">
+                                                <li trans>This pick cannot be combined with:</li>
+                                                <li ng-repeat="conflict in bet.conflicts">
+                                                    {{conflict.title}} - {{conflict.pick}}
+                                                </li>
+                                            </ul>
                                         </div>
                                         <span ng-click="gotoBetGame(bet.gamePointer)">{{ bet.title }}</span>
                                         <b ng-bind="bet.start_ts| formatDate:'hour':null:env.timeFormat"></b>
@@ -728,12 +724,12 @@
                                                     <span trans>New Return</span>
                                                     <strong ng-bind="taxOnStake.enabled ? (taxOnStake.posWin - taxOnStake.secondTax) : (possibleWinTax ? finalWinTaxValue : possibleWinValue) | bankersRoundAndNumberCommas:$root.conf.balanceFractionSize"></strong>
                                                 </div>
-                                                <div class="editing-stake-wrapper-p" ng-show="betSlip.totalStake - $root.editBet.stakeAmount > profile.calculatedBalance + profile.calculatedBonus">
+                                                <div class="editing-stake-wrapper-p" ng-show="betSlip.totalStake - $root.editBet.stakeAmount > $root.profile.totalBalance">
                                                     <span trans>Insufficient balance</span>
                                                 </div>
                                                 <div class="button-view-contain-v3">
                                                     <button ng-click="toggleStakeTooltip(true)">
-                                                        <span ng-class="{'disabled': betSlip.totalStake - $root.editBet.stakeAmount > profile.calculatedBalance + profile.calculatedBonus}" trans>Ok</span>
+                                                        <span ng-class="{'disabled': betSlip.totalStake - $root.editBet.stakeAmount > $root.profile.totalBalance}" trans>Ok</span>
                                                     </button>
                                                 </div>
                                             </div>
@@ -1007,7 +1003,7 @@
         </div>
         <div class="bet-accept-changes-b-v3" ng-show="betSlip.bets.length && !quickBet.enabled && ($root.conf.enableBetSlipButton === undefined || $root.conf.enableBetSlipButton) && betSlip.mode !== 'openBets' && betSlip.mode !== 'suggested'">
             <div class="expanded-notifications-j"
-                 ng-show="!$root.editBet.edit && (eventReplace.visibilityProcess || (!showRetainsButtons && (betSlip.hasCounterOfferError || (betSlip.hasConflicts && betSlip.type.value !== 1) || betSlip.thereAreDeletedEvents && (betSlip.mode === 'betting') || !env.authorized && (betSlip.mode === 'betting') || !betSlip.isBettingAllowed && (betSlip.mode === 'betting') || (env.authorized && (!freeBet.enabled && betSlip.totalStake > profile.calculatedBalance + profile.calculatedBonus) || (bonusBet.enabled && profile.bonus_money < betSlip.totalStake) || (betSlip.totalStake < partnerConfig.min_bet_stakes[profile.currency_name])) && (betSlip.mode === 'betting') || (betSlip.bookingNotAllowed && betSlip.mode === 'booking'))))">
+                 ng-show="!$root.editBet.edit && (eventReplace.visibilityProcess || (!showRetainsButtons && (betSlip.hasCounterOfferError || (betSlip.hasConflicts && betSlip.type.value !== 1) || betSlip.thereAreDeletedEvents && (betSlip.mode === 'betting') || !env.authorized && (betSlip.mode === 'betting') || !betSlip.isBettingAllowed && (betSlip.mode === 'betting') || (env.authorized && (!freeBet.enabled && betSlip.totalStake > $root.profile.totalBalance) || (bonusBet.enabled && profile.bonus_money < betSlip.totalStake) || (betSlip.totalStake < partnerConfig.min_bet_stakes[profile.currency_name])) && (betSlip.mode === 'betting') || (betSlip.bookingNotAllowed && betSlip.mode === 'booking'))))">
                 <ul>
                     <li ng-show="!env.authorized && (betSlip.mode === 'betting')" class="guest-box"
                         ng-class="{'no-underlines': $root.conf.integrationMode && !enableSigninRegisterLinks}">
@@ -1034,7 +1030,7 @@
                     <li class="bet-notification-error" ng-show="betSlip.thereAreDeletedEvents">
                         <p trans>There are deleted events</p>
                     </li>
-                    <li class="bet-notification-error" ng-show="!freeBet.enabled && (env.authorized && !bonusBet.enabled && betSlip.totalStake > profile.calculatedBalance + profile.calculatedBonus) && (betSlip.mode === 'betting')">
+                    <li class="bet-notification-error" ng-show="!freeBet.enabled && (env.authorized && !bonusBet.enabled && betSlip.totalStake > $root.profile.totalBalance) && (betSlip.mode === 'betting')">
                         <p>
                             <span trans>Insufficient balance</span>
                             <a class="underline" ng-if="!$root.conf.integrationMode && !$root.conf.disableDepositPage" ng-click="broadcast('toggleSliderTab','deposit');$event.stopPropagation();" trans>Deposit</a>
@@ -1050,9 +1046,6 @@
                     </li>
                     <li class="bet-notification-warning" ng-show="betSlip.type.value !== 1 && betSlip.hasSingleOnlyEvents">
                         <p trans>Single Only Events</p>
-                    </li>
-                    <li class="bet-notification-warning" ng-show="betSlip.hasEventsFromSameGame && betSlip.type.value === 1 && betConf.blockSingleGameBets">
-                        <p trans>Not possible to combine events from the same game in a Single bet.</p>
                     </li>
                     <li class="bet-notification-warning" ng-show="betSlip.hasCounterOfferError">
                         <p trans>One or more of your Offers contain errors. Please review and try again.</p>
@@ -1076,7 +1069,7 @@
                     <li>
                         <p trans>Click Add Selections to start adding new selections to your existing bet.</p>
                     </li>
-                    <li ng-show="betSlip.totalStake - $root.editBet.stakeAmount > profile.calculatedBalance + profile.calculatedBonus">
+                    <li ng-show="betSlip.totalStake - $root.editBet.stakeAmount > $root.profile.totalBalance">
                         <p trans>Insufficient balance.</p>
                     </li>
                 </ul>
@@ -1093,13 +1086,13 @@
                                 ng-class="{'pointer-events-none' : shared.isBetsInProgress}"
                                 ng-show="betSlip.mode === 'betting' && (isTherePriceChange || betSlip.thereAreEventBaseChanges)"
                                 ng-click="acceptChangesAndPlaceBets()"
-                                ng-disabled="shared.betInProgress || (betSlip.hasConflicts && betSlip.type.value !== 1)  || !betSlip.isBettingAllowed || !env.authorized || shared.isBetsInProgress || betSlip.thereAreDeletedEvents || (env.authorized && (!freeBet.enabled && betSlip.totalStake > profile.calculatedBalance + profile.calculatedBonus) || (bonusBet.enabled && profile.bonus_money < betSlip.totalStake) || (betSlip.totalStake < partnerConfig.min_bet_stakes[profile.currency_name])) || betSlip.hasCounterOfferError || betslipRemoveBetsProcess || isAcceptAndPlaceBetStarted">
+                                ng-disabled="shared.betInProgress || (betSlip.hasConflicts && betSlip.type.value !== 1)  || !betSlip.isBettingAllowed || !env.authorized || shared.isBetsInProgress || betSlip.thereAreDeletedEvents || (env.authorized && (!freeBet.enabled && betSlip.totalStake > $root.profile.totalBalance) || (bonusBet.enabled && profile.bonus_money < betSlip.totalStake) || (betSlip.totalStake < partnerConfig.min_bet_stakes[profile.currency_name])) || betSlip.hasCounterOfferError || betslipRemoveBetsProcess || isAcceptAndPlaceBetStarted">
                             <span ng-show="!shared.isBetsInProgress && !isAcceptAndPlaceBetStarted" trans>Accept changes and place bets!</span>
                         </button>
                         <button type="submit" ng-class="{'pointer-events-none' : shared.isBetsInProgress}"
                                 ng-show="betSlip.mode === 'betting' && !isTherePriceChange && !betSlip.thereAreEventBaseChanges"
                                 ng-click="acceptChangesAndPlaceBets()"
-                                ng-disabled="!betSlip.bets.length || !env.authorized || shared.betInProgress || (betSlip.hasConflicts && betSlip.type.value !== 1)  || !betSlip.isBettingAllowed || shared.isBetsInProgress || betSlip.thereAreDeletedEvents || (!freeBet.enabled && betSlip.totalStake > profile.calculatedBalance + profile.calculatedBonus) || (bonusBet.enabled && profile.bonus_money < betSlip.totalStake) || (betSlip.totalStake < partnerConfig.min_bet_stakes[profile.currency_name]) || betSlip.hasCounterOfferError || betslipRemoveBetsProcess">
+                                ng-disabled="!betSlip.bets.length || !env.authorized || shared.betInProgress || (betSlip.hasConflicts && betSlip.type.value !== 1)  || !betSlip.isBettingAllowed || shared.isBetsInProgress || betSlip.thereAreDeletedEvents || (!freeBet.enabled && betSlip.totalStake > $root.profile.totalBalance) || (bonusBet.enabled && profile.bonus_money < betSlip.totalStake) || (betSlip.totalStake < partnerConfig.min_bet_stakes[profile.currency_name]) || betSlip.hasCounterOfferError || betslipRemoveBetsProcess">
                             <span ng-show="!shared.isBetsInProgress" trans>Place bets!</span></button>
                         <button type="submit" ng-show="betSlip.mode === 'booking'" ng-click="placeBookingBet()"
                                 ng-disabled="shared.betInProgress || (betSlip.hasConflicts && betSlip.type.value !== 1) ||  shared.isBetsInProgress || betSlip.thereAreDeletedEvents || betSlip.bookingNotAllowed">

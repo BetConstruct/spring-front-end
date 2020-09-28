@@ -35,7 +35,8 @@ angular.module('vbet5').constant('BackendConstants', (function () {
             BonusSource: {
                 SportsBook: 1,
                 Casino: 2,
-                BonusRequest: 3
+                BonusRequest: 3,
+                BonusHistory: 4
             }
         },
         ErrorCodes: {

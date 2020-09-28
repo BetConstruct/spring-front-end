@@ -318,7 +318,7 @@
                                        ng-model="paymentFormData[field.name]" type="text" size="{{field.size}}"
                                        maxlength="{{field.maxlength}}" ng-required="field.required"
                                        prevent-input="{{field.restrict}}" allow-spaces="{{field.allowSpaces}}"
-                                       ng-disabled="field.disabled" ui-mask="{{field.mask}}"
+                                       ng-disabled="field.disabled" ui-mask="{{field.mask}}" model-view-value="{{field.maskModelViewValue}}"
                                        ng-readonly="field.readonly"
                                        placeholder="{{field.placeholder|translate}}"
                                 >

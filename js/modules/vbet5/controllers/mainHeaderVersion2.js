@@ -117,6 +117,9 @@ VBET5.controller('mainHeaderVersion2Controller', ['$rootScope', '$scope', '$loca
         if ($rootScope.profile) {
             $rootScope.profile.skype_request = true;
             checkSkypeRequestStatus();
+            if ($rootScope.profile.exclude_type === 2) { //auto logout on backoffice self exclusion
+                $rootScope.broadcast('doLogOut');
+            }
         }
         if (Config.activeStepsConfig) {
             processProfileActiveStep();

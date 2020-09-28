@@ -19,7 +19,7 @@
            name="" numpad numpad-letters="disabled" ng-model="betState.stake" type="text"
            placeholder="{{$root.conf.betslipInputFieldCustomValue | translate}}" maxlength="11"
     >
-    <div ng-if="betState.stake && oddsCalculationState.odd &&  betState.stake >= $root.partnerConfig.min_bet_stakes[$root.profile.currency_name] && betState.stake <= $root.profile.calculatedBalance + $root.profile.calculatedBonus" class="bet-win-view-v3 acc-bonus-v3">
+    <div ng-if="betState.stake && oddsCalculationState.odd &&  betState.stake >= $root.partnerConfig.min_bet_stakes[$root.profile.currency_name] && betState.stake <= $root.profile.totalBalance" class="bet-win-view-v3 acc-bonus-v3">
         <p>
             <i><span trans>Possible win:</span></i>
         </p>
@@ -28,7 +28,7 @@
         </span>
     </div>
     <div class="bet-builder-buttons">
-        <p ng-show="oddsCalculationState.odd && betState.stake > $root.profile.calculatedBalance + $root.profile.calculatedBonus">
+        <p ng-show="oddsCalculationState.odd && betState.stake > $root.profile.totalBalance">
             <span trans>Insufficient balance</span>
             <a class="underline" ng-if="!$root.conf.integrationMode && !$root.conf.disableDepositPage" ng-click="broadcast('toggleSliderTab','deposit');$event.stopPropagation();" trans>Deposit</a>
             <a class="underline" ng-if="$root.conf.integrationMode && !$root.conf.customDepositUrl  && !$root.conf.disableDepositPage" ng-click="openPartnerDeposit()" trans>Deposit</a>
@@ -40,7 +40,7 @@
         <p ng-if="betState.successMessage"  ng-bind="betState.successMessage" class="success-message"></p>
         <button type="submit" ng-class="{'pointer-events-none' : betState.isBetsInProgress}"
                 ng-click="placeBet()"
-                ng-disabled="betState.isBetsInProgress || !oddsCalculationState.odd || !betState.stake || betState.stake > $root.profile.calculatedBalance + $root.profile.calculatedBonus || betState.stake < $root.partnerConfig.min_bet_stakes[$root.profile.currency_name]">
+                ng-disabled="betState.isBetsInProgress || !oddsCalculationState.odd || !betState.stake || betState.stake > $root.profile.totalBalance || betState.stake < $root.partnerConfig.min_bet_stakes[$root.profile.currency_name]">
             <span ng-show="!betState.isBetsInProgress" trans>Place bets!</span>
         </button>
         <button ng-click="clearAllSelections();" trans>Clear selections</button>

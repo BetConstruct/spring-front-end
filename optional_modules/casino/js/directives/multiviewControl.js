@@ -124,12 +124,19 @@ CASINO.directive('multiviewControl', ['$interval', '$timeout', 'CConfig', 'casin
                 casinoManager.toggleSaveToMyCasinoGames($rootScope, game);
             };
 
-            scope.$on('casinoGamesList.toggleSaveToMyCasinoGames', function (e, game) {
-                scope.toggleSaveToMyCasinoGames(game);
-            });
 
             scope.openGame = function openGame (game, gameType, studio) {
                 scope.$emit('casinoGamesList.openGame', {game: game, playMode: gameType, studio: studio});
+            };
+
+            /**
+             * @ngdoc method
+             * @name selectLiveDealerProvider
+             * @description Select provider
+             * @param {string} provider: Name of the provider
+             */
+            scope.selectLiveDealerProvider = function selectLiveDealerProvider(provider) {
+                scope.liveGamesData.selectedProvider = provider;
             };
 
             (function() {

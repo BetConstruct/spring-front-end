@@ -95,19 +95,16 @@ angular.module('vbet5.betting').controller('ResultsController', ['$rootScope', '
                     });
 
                     if (!Config.main.resultMenuOrdering) {
-                        todayGameList.sort(function(a, b) {
-                            return a.id - b.id;
-                        });
+                        $scope.sportList = Utils.orderByField(todayGameList, 'id');
                     } else {
                         var index;
                         angular.forEach(todayGameList, function (sport) {
                             index = Config.main.resultMenuOrdering.indexOf(parseFloat(sport.id));
                             sport.order = index !== -1 ? index : sport.id;
                         });
-                        todayGameList.sort(Utils.orderSorting);
+                        $scope.sportList = todayGameList.sort(Utils.orderSorting);
                     }
 
-                    $scope.sportList = todayGameList;
                     if (initialLoad) {
                         $scope.todayGameList = todayGameList;
                         $scope.requestData.sport = $scope.sportList[0];
@@ -236,6 +233,10 @@ angular.module('vbet5.betting').controller('ResultsController', ['$rootScope', '
                 formatRequestDate(request, true);
             }
 
+            if ($scope.requestData.team_id) {
+                request.team_id = $scope.requestData.team_id;
+            }
+
             Zergling.get(request, "get_result_games").then(function (result) {
                 $scope.gameListLoaded = false;
                 $scope.sortByDate = true;
@@ -321,7 +322,7 @@ angular.module('vbet5.betting').controller('ResultsController', ['$rootScope', '
          * @name composeResultDetailItem
          * @methodOf vbet5.controller:ResultsController
          * @description Prepare game details for the template
-         * @param {Object} game data
+         * @param {Object} item
          */
         function composeResultDetailItem(item) {
             var detail = {};
@@ -406,7 +407,7 @@ angular.module('vbet5.betting').controller('ResultsController', ['$rootScope', '
          * @param {Object} game
          */
         $scope.toggleGameDetails = function toggleGameDetails(game) {
-            if($scope.expandedGames.indexOf(game.game_id) != -1) {
+            if($scope.expandedGames.indexOf(game.game_id) !== -1) {
                 Utils.removeElementFromArray($scope.expandedGames, game.game_id);
             } else {
                 $scope.expandedGames.push(game.game_id);

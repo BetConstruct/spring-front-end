@@ -33,7 +33,7 @@ angular.module('vbet5.betting').controller('virtualSportsCtrl', ['$scope', '$roo
     var currentGameSubId = null;
 
     $scope.nonRaceSports = {
-        ids: [1, 2, 7, 56, 57, 132, 173, 174, 188]
+        ids: [1, 2, 7, 56, 57, 132, 173, 174, 188, 209]
     };
 
     $scope.marketGroupFilter = {
@@ -207,6 +207,7 @@ angular.module('vbet5.betting').controller('virtualSportsCtrl', ['$scope', '$roo
      */
     function loadVirtualSports() {
         var virtualSportIdsKey = $location.path().split('/').join('');
+
         var request = {
             'source': 'betting',
             'what': {'sport': ['id', 'name', 'alias', 'order'], 'game': ['@count','start_ts', 'text_info']},
@@ -648,7 +649,7 @@ angular.module('vbet5.betting').controller('virtualSportsCtrl', ['$scope', '$roo
                     if ($scope.games[i].id === $scope.selectedGameId && $scope.games[i+1]) {
                         loadGameToShow($scope.games[i+1]);
                         if ($scope.selectedGameId !== $scope.gameToShow.id) {
-                            $scope.selectedGameId($scope.games[i+1].id);
+                            $scope.selectedGameId = $scope.games[i+1].id;
                         }
                         $scope.alreadyRunningTextEnable = true;
                         return;

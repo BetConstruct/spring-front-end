@@ -43,14 +43,25 @@ VBET5.controller('messagesCtrl', ['$scope', '$rootScope', '$location', 'Utils', 
             'new': 'New Message'
         },
         inboxLoading: false,
-        outboxLoading: false
+        outboxLoading: false,
+        selected : {}
     };
+    $scope.messagesPageMenu = Config.main.messagesPageMenu.map(function (menu) {
+        if (typeof menu === 'string') {
+            return {
+                page: menu,
+                displayName: $scope.messagesProps.names[menu]
+            };
+        } else {
+            return menu
+        }
+    });
 
     if ($location.search().messagesPage) {
-        $scope.messagesProps.page = $location.search().messagesPage;
+        $scope.messagesProps.selected = $scope.messagesPageMenu.filter(function (menu) { return  menu.page === $location.search().messagesPage; })[0] || $scope.messagesPageMenu[0];
         $location.search('messagesPage', undefined);
     } else {
-        $scope.messagesProps.page = Config.main.messagesPageMenu[0];
+        $scope.messagesProps.selected = $scope.messagesPageMenu[0];
     }
 
     if (Config.main.newMessageSubjectValues) {

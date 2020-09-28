@@ -6,6 +6,7 @@
             <div class="asian-left-menu-scroll-wrapper"  fixonscroll auto-positon="true" scrollable-area-id="asianView" header-id="main-header-container">
                 <div class="asian-left-contain-menu" ng-class="'type-' + selectedMenuType.active">
                     <ng-include class="include-viewSwitcher-j" src="::'templates/sport/viewswitcher.html'|fixPath"></ng-include>
+                    <pre-match-stream-channels ng-if="prematchChannels && prematchChannels.length && !$root.env.live"></pre-match-stream-channels>
 
                     <!--video and animation-->
                     <div class="animation-video-box-v3" ng-class="{'active': hideVideoAndAnimationBox}"
@@ -63,7 +64,7 @@
                     <div class="menu-tabs-b">
                         <ul>
                             <li ng-click="setMenuType(value)"
-                                ng-class="{'active': selectedMenuType.active === value}"
+                                ng-class="{'active': selectedMenuType.active === value, 'boosted-bets': value === 3}"
                                 ng-repeat="(key, value) in LEFT_MENU">
                                 <p>{{key|translate}} {{value === 1 && liveGamesCount ? ' (' + liveGamesCount + ')' : ''}}</p>
                             </li>
@@ -79,13 +80,13 @@
                         <div ng-if="!leftMenuIsLoading" class="asian-left-menu">
                             <ul>
                                 <div class="p-n-v" ng-if="$root.conf.showFavoriteCompetitions && selectedMenuType.active === LEFT_MENU.FUTURE">
-                                    <popular-in-sportsbook class="float-width" start-date={{dayFilter[1].from}} title="Popular competitions" type="competition" search-field="popularCompetition"></popular-in-sportsbook>
+                                    <popular-in-sportsbook class="float-width" start-date={{dayFilter[1].from}} title="{{'Popular competitions'|translate}}" type="competition" search-field="popularCompetition"></popular-in-sportsbook>
                                 </div>
                                 <div class="p-n-v" ng-if="$root.conf.showFavoriteCompetitions && selectedMenuType.active === LEFT_MENU.TODAY">
-                                    <popular-in-sportsbook class="float-width" start-date={{dayFilter[0].from}} end-date={{dayFilter[0].to}} title="Popular competitions" type="competition" search-field="popularCompetition"></popular-in-sportsbook>
+                                    <popular-in-sportsbook class="float-width" start-date={{dayFilter[0].from}} end-date={{dayFilter[0].to}} title="{{'Popular competitions'|translate}}" type="competition" search-field="popularCompetition"></popular-in-sportsbook>
                                 </div>
                                 <div class="p-n-v" ng-if="$root.conf.showFavoriteCompetitions && selectedMenuType.active === LEFT_MENU.LIVE">
-                                    <popular-in-sportsbook class="float-width" game-type="1" title="Popular competitions" type="competition" search-field="popularCompetition"></popular-in-sportsbook>
+                                    <popular-in-sportsbook class="float-width" game-type="1" title="{{'Popular competitions'|translate}}" type="competition" search-field="popularCompetition"></popular-in-sportsbook>
                                 </div>
                                 <div ng-repeat="group in sportsGroup track by group.id" ng-show="group" ng-class="{'asian-menu-group-wrap-j' : group.hasHeader}">
                                     <li ng-click="leftMenuState[selectedMenuType.active][group.id] = !leftMenuState[selectedMenuType.active][group.id]" ng-show="group.hasHeader" ng-class="{'active': leftMenuState[selectedMenuType.active][group.id]}">
@@ -96,7 +97,7 @@
                                         <div class="menu-arrow-asia"></div>
                                     </li>
                                     <div>
-                                        <li ng-repeat="sport in group.sports track by sport.id" ng-class="{'active': sport.id === selectedSport.id && !selectedSport.closedTab}">
+                                        <li ng-repeat="sport in group.sports track by sport.id" ng-class="{'active': sport.id === selectedSport.id && !selectedSport.closedTab}"  class="{{$root.conf.classForSport[sport.id] || ''}}">
                                             <div ng-click="clearPage();openSport(sport, {key: 'HDP'})">
                                                 <div class="icon-sport-asia" ng-class="sport.alias"></div>
                                                 <p class="sport-name-asia">{{sport.name}}
@@ -352,7 +353,7 @@
         <ng-include ng-if="$root.conf.videoEnabled && pinnedGameType === 'dragable'" src="::'templates/sport/classic/av-pinned.html'|fixPath" style="position: fixed; z-index: 999999999;"></ng-include>
         <div ng-if="$root.conf.asian.countdown.enabled" class="asian-fix-buttons">
             <button class="asian-button-refresh-view loading-proccess" ng-class="{'loading-proccess' : countDown.remaining === 0}" ng-click="resetCountDown()" ng-bind="countDown.remaining || ''"></button>
-            <button class="asian-button-to-top" ng-click="$root.broadcast('scrollTo', 'header'); $event.stopPropagation();">Back to top</button>
+            <button class="asian-button-to-top" ng-click="$root.broadcast('scrollTo', 'header'); $event.stopPropagation();" ng-bind="'back to top'|translate"></button>
         </div>
         <!--Game-wrapper END-->
     </div>

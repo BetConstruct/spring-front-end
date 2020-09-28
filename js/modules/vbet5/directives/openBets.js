@@ -21,10 +21,33 @@ VBET5.directive('openBets', ['$rootScope', 'Zergling', 'BetService', 'Utils', 'G
         },
         link: function ($scope) {
             var openBetsSubId, cashOutSubId;
+            $scope.ODD_TYPE_MAP = [
+                {
+                    short:'dcm',
+                    full:'decimal'
+                }, {
+                    short:'frc',
+                    full:'fractional'
+                }, {
+                    short:'amr',
+                    full:'american'
+                }, {
+                    short:'hkg',
+                    full:'hongkong'
+                }, {
+                    short:'mly',
+                    full:'malay'
+                }, {
+                    short:'ind',
+                    full:'indo'
+                }
+            ];
 
             $scope.betConf = Config.betting;
             $scope.matchInfo = {};
             $scope.betTypes = BetService.constants.betTypes;
+            $scope.addEvents = BetService.repeatBet;
+
             $scope.autoCashoutRule = {
                 theValueReaches: undefined,
                 partialAmount: undefined,
@@ -152,23 +175,26 @@ VBET5.directive('openBets', ['$rootScope', 'Zergling', 'BetService', 'Utils', 'G
                 Zergling.get(request, 'bet_history')
                     .then(function (response) {
                         if (response.bets) {
-                            if ($scope.betSlip.mode === 'openBets' && !response.bets.count) {
-                                $scope.openBets.data = response.bets;
-                                $scope.openBets.count =  response.bets.length;
-                                angular.forEach($scope.openBets.data, function improveName(bet) {
-                                    angular.forEach(bet.events, function(event) {
-                                        event.id = event.game_id;
-                                        event.team1_name = event.team1;
-                                        event.team2_name = event.team2;
-                                        // Parameters assigned above are necessary for 'improveName' filter to work properly
-                                        event.eventName = $filter('improveName')(event.event_name, event);
+                            if ($scope.betSlip.mode === 'openBets') {
+                                if (response.bets.count === undefined) {
+                                    $scope.openBets.data = response.bets;
+                                    $scope.openBets.count =  response.bets.length;
+                                    angular.forEach($scope.openBets.data, function improveName(bet) {
+                                        angular.forEach(bet.events, function(event) {
+                                            event.id = event.game_id;
+                                            event.team1_name = event.team1;
+                                            event.team2_name = event.team2;
+                                            event.oddTypeMapped = $scope.ODD_TYPE_MAP[+bet.odd_type];
+                                            // Parameters assigned above are necessary for 'improveName' filter to work properly
+                                            event.eventName = $filter('improveName')(event.event_name, event);
+                                        });
                                     });
-                                });
-                                unsubscribeFromOpenBets();
-                                subscribeToOpenBets();
-                                subscribeToCashOut();
+                                    unsubscribeFromOpenBets();
+                                    subscribeToOpenBets();
+                                    subscribeToCashOut();
+                                }
                             } else {
-                                $scope.openBets.count = response.bets.count;
+                                $scope.openBets.count = response.bets.count !== undefined ? response.bets.count : response.bets.length; //fast click fix
                             }
                         }
                     })['finally'](closeLoader);
@@ -187,6 +213,7 @@ VBET5.directive('openBets', ['$rootScope', 'Zergling', 'BetService', 'Utils', 'G
                                     event.id = event.game_id;
                                     event.team1_name = event.team1;
                                     event.team2_name = event.team2;
+                                    event.oddTypeMapped = $scope.ODD_TYPE_MAP[+bet.odd_type];
                                     // Parameters assigned above are necessary for 'improveName' filter to work properly
                                     event.eventName = $filter('improveName')(event.event_name, event);
                                 });

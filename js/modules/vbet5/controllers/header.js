@@ -69,16 +69,14 @@ VBET5.controller('headerCtrl', ['$scope', '$rootScope', '$sce', '$window', '$loc
             if (data && data.partner) {
                 $rootScope.partnerConfig = Utils.objectToArray(data.partner)[0] || {};
 
-                if ($rootScope.partnerConfig && $rootScope.partnerConfig.tax_type && $rootScope.partnerConfig.tax_amount_ranges && $rootScope.partnerConfig.tax_amount_ranges.length) {
-                    if ($rootScope.partnerConfig.tax_type !== 4) {
+                if ($rootScope.partnerConfig.tax_amount_ranges && $rootScope.partnerConfig.tax_amount_ranges.length) {
+                    $rootScope.partnerConfig.tax_amount_ranges = Utils.orderByField($rootScope.partnerConfig.tax_amount_ranges, 'from');
+
+                    if ($rootScope.partnerConfig.tax_type && $rootScope.partnerConfig.tax_type !== 4) {
                         $rootScope.partnerConfig.tax_amount_ranges = $rootScope.partnerConfig.tax_amount_ranges.filter(function (item) {
                             return item.type === $rootScope.partnerConfig.tax_type;
                         });
                     }
-
-                    $rootScope.partnerConfig.tax_amount_ranges.sort(function (a, b) {
-                        return a.from - b.from;
-                    });
                 }
 
                 Config.main.availableCurrencies = $rootScope.partnerConfig.supported_currencies;
@@ -86,7 +84,13 @@ VBET5.controller('headerCtrl', ['$scope', '$rootScope', '$sce', '$window', '$loc
                 if ($rootScope.partnerConfig.supported_currencies.indexOf($rootScope.partnerConfig.currency) > -1 ) {
                     Config.main.registration.defaultCurrency = $rootScope.partnerConfig.currency;
                 } else {
-                    Config.main.registration.defaultCurrency =$rootScope.partnerConfig.supported_currencies[0];
+                    Config.main.registration.defaultCurrency = $rootScope.partnerConfig.supported_currencies[0];
+                }
+                if($rootScope.partnerConfig.sms_restrictions && $rootScope.partnerConfig.sms_restrictions.length){
+                    Config.main.smsVerification.registration = $rootScope.partnerConfig.sms_restrictions.indexOf(1) !== - 1;
+                    Config.main.smsVerification.login = $rootScope.partnerConfig.sms_restrictions.indexOf(2) !== - 1;
+                    Config.main.smsVerification.changePassword = $rootScope.partnerConfig.sms_restrictions.indexOf(3) !== - 1;
+                    Config.main.smsVerification.updateProfile = $rootScope.partnerConfig.sms_restrictions.indexOf(4) !== - 1;
                 }
 
                 $rootScope.$broadcast('partnerConfig.updated');

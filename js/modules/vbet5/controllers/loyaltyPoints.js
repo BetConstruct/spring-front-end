@@ -4,9 +4,8 @@
  * @description
  * points exchange controller
  */
-VBET5.controller('loyaltyPointsCtrl', ['$scope', '$rootScope', 'Translator', 'Zergling', 'Config', 'TimeoutWrapper', 'Utils', function ($scope, $rootScope, Translator, Zergling, Config, TimeoutWrapper, Utils) {
+VBET5.controller('loyaltyPointsCtrl', ['$scope', '$rootScope', 'Translator', 'Zergling', 'Config', 'Utils', function ($scope, $rootScope, Translator, Zergling, Config, Utils) {
     'use strict';
-    TimeoutWrapper = TimeoutWrapper($scope);
 
     $scope.pointsExchangeData = {};
     $scope.programs = [];
@@ -22,15 +21,11 @@ VBET5.controller('loyaltyPointsCtrl', ['$scope', '$rootScope', 'Translator', 'Ze
         $scope.pointsExchangeData.amount = undefined;
         Zergling.get({}, 'get_loyalty_levels').then(function (response) {
             if (response.result === 0) {
-                var programs =  response.details || [];
-
-                programs.sort(function (a, b) {
-                    return a.MinPoint - b.MinPoint;
-                });
+                var programs =  Utils.orderByField(response.details || [], "MinPoint");
 
                 for (var i = 0; i < programs.length; i++) {
                     programs[i].className = programs[i].Name.split(" ").map(function (name) {
-                        return name.charAt(0).toUpperCase() + name.slice(1).toLowerCase()
+                        return name.charAt(0).toUpperCase() + name.slice(1).toLowerCase();
                     }).join("-");
                 }
 
@@ -48,7 +43,7 @@ VBET5.controller('loyaltyPointsCtrl', ['$scope', '$rootScope', 'Translator', 'Ze
                 if($scope.currencyRate.length) {
                     var currencyLength = $scope.currencyRate.length;
                     for (var i = 0; i < currencyLength; i++) {
-                        if ($scope.currencyRate[i].CurrencyId == $scope.profile.currency_id) {
+                        if ($scope.currencyRate[i].CurrencyId === $scope.profile.currency_id) {
                             $scope.pointsExchangeData.currencyRate = $scope.currencyRate[i];
                             break;
                         }
@@ -70,34 +65,39 @@ VBET5.controller('loyaltyPointsCtrl', ['$scope', '$rootScope', 'Translator', 'Ze
      *
      */
     function getUserStatuses() {
-        if($scope.profile.loyalty_level_id && $scope.programs && $scope.programs.length) {
-            for (var i = 0, len = $scope.programs.length; i < len; ++i) {
-                if ($scope.profile.loyalty_level_id == $scope.programs[i].Id) {
-                    $scope.pointsExchangeData.userCurrentStatus = $scope.programs[i];
+        if($scope.programs && $scope.programs.length) {
+            if (!$scope.profile.loyalty_level_id) {
+                $scope.pointsExchangeData.userCurrentStatus = $scope.programs[0];
+                $scope.pointsExchangeData.userNextStatus = $scope.programs[1] || $scope.programs[0];
+            } else {
+                for (var i = 0, len = $scope.programs.length; i < len; ++i) {
+                    if ($scope.profile.loyalty_level_id === $scope.programs[i].Id) {
+                        $scope.pointsExchangeData.userCurrentStatus = $scope.programs[i];
 
-                    $scope.progressValue = (100 * $rootScope.profile.loyalty_last_earned_points) / ($scope.programs[$scope.programs.length - 1].MinPoint);
+                        $scope.progressValue = (100 * $rootScope.profile.loyalty_last_earned_points) / ($scope.programs[$scope.programs.length - 1].MinPoint);
 
-                    var nextIndex = i;
+                        var nextIndex = i;
 
-                    if (Config.main.loyaltyPointsShowAlwaysNextLevel ) {
-                        nextIndex = i === len - 1 ? i : i + 1;
-                        $scope.pointsExchangeData.nextLevelDifference = $scope.programs[nextIndex].MinPoint - $scope.profile.loyalty_last_earned_points;
-                    } else {
-                        if ($rootScope.profile.loyalty_last_earned_points < $scope.programs[i].MinPoint) {
-                            nextIndex = i === 0 ? 0 : i - 1;
-                        } else if ($rootScope.profile.loyalty_last_earned_points > $scope.pointsExchangeData.userCurrentStatus.MaxPoint) {
+                        if (Config.main.loyaltyPointsShowAlwaysNextLevel ) {
                             nextIndex = i === len - 1 ? i : i + 1;
+                            $scope.pointsExchangeData.nextLevelDifference = $scope.programs[nextIndex].MinPoint - $scope.profile.loyalty_last_earned_points;
+                        } else {
+                            if ($rootScope.profile.loyalty_last_earned_points < $scope.programs[i].MinPoint) {
+                                nextIndex = i === 0 ? 0 : i - 1;
+                            } else if ($rootScope.profile.loyalty_last_earned_points > $scope.pointsExchangeData.userCurrentStatus.MaxPoint) {
+                                nextIndex = i === len - 1 ? i : i + 1;
+                            }
                         }
+
+
+                        $scope.pointsExchangeData.userNextStatus = $scope.programs[nextIndex];
+
+                        if ($rootScope.profile.loyalty_point_usage_period !== undefined && $rootScope.profile.loyalty_point_usage_period !== null) {
+                            $scope.pointsExchangeData.remainingDays = Translator.get('In {1} days', [$rootScope.profile.loyalty_point_usage_period]);
+                        }
+
+                        break;
                     }
-
-
-                    $scope.pointsExchangeData.userNextStatus = $scope.programs[nextIndex];
-
-                    if ($rootScope.profile.loyalty_point_usage_period !== undefined && $rootScope.profile.loyalty_point_usage_period !== null) {
-                        $scope.pointsExchangeData.remainingDays = Translator.get('In {1} days', [$rootScope.profile.loyalty_point_usage_period]);
-                    }
-
-                    break;
                 }
             }
         }

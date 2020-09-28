@@ -3,7 +3,7 @@
  * @name vbet5.controller:bettingCalculatorController
  * @description stand alone system calculator
  */
-angular.module('vbet5').controller('bettingCalculatorController', ['$scope', 'Utils', 'analytics', '$location', 'Config', 'BetService', function ($scope, Utils, analytics, $location, Config, BetService) {
+angular.module('vbet5').controller('bettingCalculatorController', ['$scope', '$rootScope','Utils', 'analytics', '$location', 'Config', 'BetService', function ($scope, $rootScope ,Utils, analytics, $location, Config, BetService) {
     'use strict';
 
     /**
@@ -38,8 +38,8 @@ angular.module('vbet5').controller('bettingCalculatorController', ['$scope', 'Ut
         this.stake = 10;
         this.perBetStack = 0;
         this.totalStake = 0;
-        this.totalWin = 0;
-        this.totalWinEW = 0;
+        this.totalOdd = 0;
+        this.totalOddEW = 0;
         this.betsCount = 1;
         this.totalProfit = 0;
         this.totalOdd = 0;
@@ -247,13 +247,20 @@ angular.module('vbet5').controller('bettingCalculatorController', ['$scope', 'Ut
             return value;
         };
 
-        this.toFixed = function (fValue, decimalPoint) {
-            if (fValue && !isNaN(parseFloat(fValue))) {
-                return fValue.toFixed(decimalPoint || 6) * 1;
-            } else {
-                return fValue
-            }
-        };
+        function formatDecimal(value) {
+            return Utils.formatDecimal(value, $rootScope.partnerConfig.price_round_method, $rootScope.partnerConfig.price_decimals);
+        }
+
+        function formatMultipleOdd(value) {
+            return Utils.formatDecimal(value, $rootScope.partnerConfig.price_round_method, ($rootScope.partnerConfig.multiple_price_decimals || 3));
+        }
+
+        function roundPossibleWin(value) {
+            return ($rootScope.partnerConfig.multiple_possiblewin_round_method === 0)? Utils.cuttingDecimals(value, $rootScope.conf.balanceFractionSize).toFixed($rootScope.conf.balanceFractionSize) : Utils.bankersRounding(value, $rootScope.conf.balanceFractionSize);
+
+        }
+
+        // Utils.formatDecimal
 
         this.getSpecialKeys = function () {
             var n = ["Backspace", "ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown", "Tab"];
@@ -282,7 +289,7 @@ angular.module('vbet5').controller('bettingCalculatorController', ['$scope', 'Ut
             this.Calc();
         };
         this.decimToFract = function (row) {
-            row.odd_decimal = this.toFixed(row.odd_decimal, 3);
+            row.odd_decimal = formatMultipleOdd(row.odd_decimal);
             var t = row.odd_decimal - 1;
 
             var r = Math.round(t) + "/1";
@@ -353,34 +360,34 @@ angular.module('vbet5').controller('bettingCalculatorController', ['$scope', 'Ut
         this.Calc = function () {
             var ewChecked = this.ewChecked;
             this.baseStake = 1;
-            this.totalWin = 0;
-            this.totalWinEW = 0;
+            this.totalOdd = 0;
+            this.totalOddEW = 0;
             this.perBetStack = 0;
             this.totalStake = 0;
             this.betsCount = 0;
             this.systemCombinations = {};
-            this.CalcWinReturn(0, this.baseStake, this.baseStake);
+            this.CalcOddReturn(0, this.baseStake, this.baseStake);
             if (ewChecked) {
-                this.totalWin += this.totalWinEW;
+                this.totalOdd += this.totalOddEW;
                 this.totalStake = 2 * this.totalStake;
                 this.betsCount = 2 * this.betsCount;
             }
 
-            this.perBetStack = Utils.cuttingDecimals(this.selectedStackType === 'total' ? this.stake / this.betsCount: this.stake, 4);
+            this.perBetStack = formatDecimal(this.selectedStackType === 'total' ? this.stake / this.betsCount: this.stake).toFixed(2);
             var stackK =  this.perBetStack / this.baseStake;
 
-            this.totalStake = this.toFixed(this.totalStake * stackK, 2);
-            this.totalWin = this.toFixed(this.totalWin * stackK, 2);
-            this.totalProfit = this.toFixed(this.totalWin - this.totalStake, 2);
-            this.totalOdd = this.toFixed(this.totalWin / this.totalStake, 2);
+            this.totalStake = formatDecimal(this.totalStake * stackK);
+            this.totalOdd = this.totalOdd / this.betsCount;
+            this.totalWin = roundPossibleWin(this.totalOdd * stackK * this.betsCount);
+            this.totalProfit = roundPossibleWin(this.totalWin - this.totalStake);
         };
-        this.CalcWinReturn = function (index, totalStake, stake, system) {
+        this.CalcOddReturn = function (index, totalOdd, odd, system) {
             system = system || 1;
             var betCount = this.selectedBetType.betCount;
             var rowIndex;
             var betInfo;
-            var returnAmounts;
-            var returnEWAmounts;
+            var returnOdd;
+            var returnEWOdd;
             if (this.accumulatorCount > this.selectedBetType.betCount) {
                 betCount = this.accumulatorCount;
             }
@@ -388,40 +395,40 @@ angular.module('vbet5').controller('bettingCalculatorController', ['$scope', 'Ut
             for (rowIndex = index; rowIndex < betCount; rowIndex++) {
                 betInfo = this.GetBetInfo(rowIndex);
                 if (!(isNaN(betInfo.PriceDecimal) && this.selectedBetType.name === "Accumulator")) {
-                    returnAmounts = this.calcReturnAmounts(totalStake, false, betInfo);
-                    returnEWAmounts = this.calcReturnAmounts(stake, true, betInfo);
+                    returnOdd = this.calcReturnOdds(totalOdd, false, betInfo);
+                    returnEWOdd = this.calcReturnOdds(odd, true, betInfo);
 
                     if (this.selectedBetType.isAccumulator) {
                         if ((index !== 0) || this.selectedBetType.isSingle) {
                             if (this.selectedBetType.sysValue) {
                                 if (this.selectedBetType.sysValue === system) {
-                                    this.totalWin += returnAmounts;
-                                    this.totalWinEW += returnEWAmounts;
+                                    this.totalOdd += formatMultipleOdd(returnOdd);
+                                    this.totalOddEW += formatMultipleOdd(returnEWOdd);
                                     this.totalStake += this.baseStake;
                                     this.betsCount++;
                                     this.addSystemCompination(system);
                                 }
                             } else {
-                                this.totalWin += returnAmounts;
-                                this.totalWinEW += returnEWAmounts;
+                                this.totalOdd += formatMultipleOdd(returnOdd);
+                                this.totalOddEW += formatMultipleOdd(returnEWOdd);
                                 this.totalStake += this.baseStake;
                                 this.betsCount++;
                                 this.addSystemCompination(system);
                             }
                         }
-                        this.CalcWinReturn(rowIndex + 1, returnAmounts, returnEWAmounts, 1 + (system || 1));
+                        this.CalcOddReturn(rowIndex + 1, returnOdd, returnEWOdd, 1 + (system || 1));
                     } else {
-                        this.totalWin = returnAmounts;
-                        totalStake = returnAmounts;
-                        this.totalWinEW = returnEWAmounts;
-                        stake = returnEWAmounts;
+                        this.totalOdd = returnOdd;
+                        totalOdd = returnOdd;
+                        this.totalOddEW = returnEWOdd;
+                        odd = returnEWOdd;
                         this.totalStake = this.baseStake;
                         this.betsCount = 1;
                     }
                 }
             }
         };
-        this.calcReturnAmounts = function (stake, ew, betInfo) {
+        this.calcReturnOdds = function (odd, ew, betInfo) {
 
             if (betInfo.Result === 'return') {
                 betInfo.PriceDecimal = 0;
@@ -434,10 +441,10 @@ angular.module('vbet5').controller('bettingCalculatorController', ['$scope', 'Ut
                 result = 0;
             } else {
                 if (!ew && betInfo.Result === "win") {
-                    result = (stake + betInfo.PriceDecimal * stake - betInfo.PriceDecimal * stake * betInfo.Rule4) / betInfo.DeadHeat
+                    result = (odd + betInfo.PriceDecimal * odd - betInfo.PriceDecimal * odd * betInfo.Rule4) / betInfo.DeadHeat
                 } else {
                     if (ew && (betInfo.Result === "win" || betInfo.Result === "placed")) {
-                        result = stake + betInfo.PriceDecimal * betInfo.EwDecimal * stake - betInfo.PriceDecimal * betInfo.EwDecimal * stake * betInfo.Rule4
+                        result = odd + betInfo.PriceDecimal * betInfo.EwDecimal * odd - betInfo.PriceDecimal * betInfo.EwDecimal * odd * betInfo.Rule4
                     } else {
                         result = 0;
                     }

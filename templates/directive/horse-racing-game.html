@@ -1,0 +1,154 @@
+<div class="horse-game-info" ng-if="openGame.info.race">
+    <div class="each-way" ng-if="$root.conf.showEachWay">
+        <div ng-show="(openGame.market|firstElement).extra_info.EachWayPlace > 1">
+            <span>EW:</span>
+            {{'1/'+ (openGame.market|firstElement).extra_info.EachWayK}} {{::'Odds'|translate}}&nbsp;
+            {{(openGame.market|firstElement).extra_info.EachWayPlace}} {{::'Places'|translate}}
+        </div>
+        <div ng-show="(openGame.market|firstElement).extra_info.EachWayPlace <= 1" trans>Win Only</div>
+        <div class="rule-four" ng-show="(openGame.market|firstElement).extra_info.Rule4" trans>There may be a Rule 4 on this Race</div>
+    </div>
+    <p>{{openGame.info.race.distanceText}}</p>
+    <span title="Race Type" trans="attr-only">{{openGame.info.race.courseType|translate}} </span>
+</div>
+<div class="menu-swithcer">
+    <a trans ng-click="selectTab('winner')" ng-class="{'active': selectedTab === 'winner'}">WIN OR E/W</a>
+    <a trans ng-click="selectTab('forecast')" ng-class="{'active': selectedTab === 'forecast'}" ng-if="openGame.game_info.IsForecastAvailable && openGame.info.race.racesWithEvents.length">FORECAST</a>
+    <a trans ng-click="selectTab('tricast')" ng-class="{'active': selectedTab === 'tricast'}" ng-if="openGame.game_info.IsTricastAvailable && openGame.info.race.racesWithEvents.length">TRICAST</a>
+</div>
+
+<div class="horse-market-contain" ng-if="selectedTab !== 'winner' && !loading">
+    <ul ng-repeat="raceStat in openGame.info.race.racesWithEvents track by raceStat.id" ng-init="rowIndex = $index">
+        <li class="num">{{raceStat.runnerNum}}</li>
+        <li class="name">{{raceStat.name}}</li>
+        <li class="win-b"  ng-repeat="column in racingData.columns track by column" ng-class="{'active': racingData.selectionStatusMap[rowIndex + '-' + $index] === 1, 'disabled-opacity':racingData.selectionStatusMap[rowIndex + '-' + $index] === 0}" ng-click="selectRacingItem(rowIndex, $index)">
+            {{column|translate}}
+        </li>
+    </ul>
+    <div class="add-to-bs">
+        <button ng-disabled="!racingData.selectedItems || racingData.selectedItems.length < ({'forecast':2, 'tricast': 3}[selectedTab])" ng-click="openBetPopup()" trans>Place bets!</button>
+    </div>
+</div>
+<div class="win-or-ew-contain" ng-show="loading">
+    <vbet-loader></vbet-loader>
+</div>
+<!--add page win or e/w-->
+<div class="win-or-ew-contain" ng-if="selectedTab === 'winner' && !loading">
+    <ul>
+        <li class="num {{raceCardsPredicate === 'cloth'?(raceCardsReverce? 'arr-up': 'arr-down'):''}}"
+            ng-click="raceCardsColumnClick('cloth');$event.stopPropagation();"
+        >No.</li>
+        <li class="check"></li>
+        <li class="horse" trans>Horse</li>
+        <li class="jockey" trans>Trainer/Jockey</li>
+        <li class="weight" trans >Weight/Age </li>
+        <li class="win-b" trans>Previous Odds</li>
+        <li class="win-b {{raceCardsPredicate === 'price'?(raceCardsReverce? 'arr-up': 'arr-down'):''}}"
+            ng-click="raceCardsColumnClick('price');$event.stopPropagation();"
+           >Odds</li>
+        <li class="win-b sp-header">SP</li>
+    </ul>
+    <ul ng-repeat="raceStat in openGame.info.race.raceStats | orderBy:raceCardsOrder:raceCardsReverce track by raceStat.id">
+        <li class="num">
+            <p>{{raceStat.runnerNum}}</p>
+            <p>{{raceStat.drawn}}</p>
+        </li>
+        <li class="check"><img ng-src="{{raceStat.jockeyInfo.colourFileUrl}}"  onerror="this.onerror = null; this.src='images/horseracing-tmp.png'" /></li>
+        <li class="horse">
+            <p>{{raceStat.name}} <i title="Days since last run">{{raceStat.lastRunDays}}</i>
+                <b ng-if="!raceStat.historyStatistics.cd && raceStat.historyStatistics.c" title="Course">{{raceStat.historyStatistics.c}}</b>
+                <b ng-if="!raceStat.historyStatistics.cd && raceStat.historyStatistics.d" title="Distance">{{raceStat.historyStatistics.d}}</b>
+                <b ng-if="raceStat.historyStatistics.cd" title="Course and Distance">{{raceStat.historyStatistics.cd}}</b>
+                <b ng-if="raceStat.historyStatistics.bf" title="Beaten Favourite">{{raceStat.historyStatistics.bf}}</b>
+            </p>
+            <p>Form: {{raceStat.formFigures}}</p>
+        </li>
+        <li class="jockey">
+            <p>T: {{raceStat.trainerName}} </p>
+            <p ng-show="raceStat.jockeyInfo.name">J: {{raceStat.jockeyInfo.name}}</p>
+        </li>
+        <li class="weight">
+            <p>W: {{raceStat.weight}}</p>
+            <p>A: {{raceStat.age}}</p>
+        </li>
+        <li class="win-b">
+            <div class="bets preview"  ng-bind="raceStat.event.previousPrice?(raceStat.event.previousPrice|oddConvert:env.oddFormat):''"></div>
+        </li>
+        <li class="win-b" ng-class="{'no-odd': !raceStat.event.price && raceStat.event.sp_enabled, 'no-odd-both':!raceStat.event.price && !raceStat.event.sp_enabled}">
+            <div class="bets" ng-click="bet(raceStat.event, (openGame.market | firstElement), openGame)" ng-if="raceStat.event.price" ng-class="{'active': isEventInBetSlip(raceStat.event)}">
+                <span class="{{raceStat.event.price_change == null? '' : ({true: 'up-', false: 'down'}[raceStat.event.price_change > 0] + (raceStat.event.price_change % 2)) }}">{{raceStat.event.price|oddConvert:env.oddFormat}}</span>
+            </div>
+        </li>
+        <li class="win-b" ng-class="{'no-odd': !raceStat.event.sp_enabled}">
+            <div class="bets" ng-click="bet(raceStat.event, (openGame.market | firstElement), openGame, 'sp')" ng-if="raceStat.event.sp_enabled" ng-class="{'active': isEventInBetSlip(raceStat.event,'sp')}">
+                {{raceStat.event.sp_enabled?'SP':''}}
+            </div>
+        </li>
+    </ul>
+    <ul ng-if="openGame.info.race.favourite">
+        <li class="num"></li>
+        <li class="check"></li>
+        <li class="horse"></li>
+        <li class="jockey">
+            <p>Favourite </p>
+        </li>
+        <li class="weight"></li>
+        <li class="win-b">
+        </li>
+        <li class="win-b disabled-cell" ng-class="{'no-odd-both': !openGame.info.race.favourite.sp_enabled}"></li>
+        <li class="fixed-small win-b" ng-class="{'no-odd': !openGame.info.race.favourite.sp_enabled}">
+            <div class="bets" ng-click="bet(openGame.info.race.favourite, (openGame.market | firstElement), openGame, 'sp')" ng-if="openGame.info.race.favourite.sp_enabled" ng-class="{'active': isEventInBetSlip(openGame.info.race.favourite,'sp')}">
+                {{openGame.info.race.favourite.sp_enabled?'SP':''}}
+            </div>
+        </li>
+    </ul>
+    <ul ng-if="openGame.info.race.second_favourite">
+        <li class="num"></li>
+        <li class="check"></li>
+        <li class="horse"></li>
+        <li class="jockey">
+            <p>2nd Favourite </p>
+        </li>
+        <li class="weight"></li>
+        <li class="win-b">
+        </li>
+        <li class="win-b disabled-cell" ng-class="{'no-odd-both': !openGame.info.race.second_favourite.sp_enabled}"></li>
+        <li class="fixed-small win-b" ng-class="{'no-odd': !openGame.info.race.second_favourite.sp_enabled}">
+            <div class="bets" ng-click="bet(openGame.info.race.second_favourite, (openGame.market | firstElement), openGame, 'sp')" ng-if="openGame.info.race.second_favourite.sp_enabled" ng-class="{'active': isEventInBetSlip(openGame.info.race.second_favourite,'sp')}">
+                {{openGame.info.race.second_favourite.sp_enabled?'SP':''}}
+            </div>
+        </li>
+    </ul>
+
+    <ul ng-repeat="raceStat in openGame.info.race.nonRunners track by raceStat.id">
+        <li class="num">
+            <p>{{raceStat.runnerNum}}</p>
+            <p>{{raceStat.drawn}}</p>
+        </li>
+        <li class="check"><img ng-src="{{raceStat.jockeyInfo.colourFileUrl}}"  onerror="this.onerror = null; this.src='images/horseracing-tmp.png'" /></li>
+        <li class="horse">
+            <p>{{raceStat.name}} <i title="Days since last run">{{raceStat.lastRunDays}}</i>
+                <b ng-if="!raceStat.historyStatistics.cd && raceStat.historyStatistics.c" title="Course">{{raceStat.historyStatistics.c}}</b>
+                <b ng-if="!raceStat.historyStatistics.cd && raceStat.historyStatistics.d" title="Distance">{{raceStat.historyStatistics.d}}</b>
+                <b ng-if="raceStat.historyStatistics.cd" title="Course and Distance">{{raceStat.historyStatistics.cd}}</b>
+                <b ng-if="raceStat.historyStatistics.bf" title="Beaten Favourite">{{raceStat.historyStatistics.bf}}</b>
+            </p>
+            <p>Form: {{raceStat.formFigures}}</p>
+        </li>
+        <li class="jockey">
+            <p>T: {{raceStat.trainerName}} </p>
+            <p ng-show="raceStat.jockeyInfo.name">J: {{raceStat.jockeyInfo.name}}</p>
+        </li>
+        <li class="weight">
+            <p>W: {{raceStat.weight}}</p>
+            <p>A: {{raceStat.age}}</p>
+        </li>
+        <li class="win-b"></li>
+        <li class="win-b"></li>
+        <li>
+            <div class="horse-non-runner" title="Non Runner">Non Runner</div>
+        </li>
+    </ul>
+</div>
+<!--end of win or e/w page-->
+</div>

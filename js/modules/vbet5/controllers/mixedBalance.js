@@ -4,7 +4,7 @@
  * @description
  *  New bet history controller.
  */
-VBET5.controller('mixedBalanceCtrl', ['$scope', '$controller', 'Config', '$sce', 'Moment', '$filter', '$rootScope', 'Zergling', 'content', 'analytics','$location', function($scope, $controller, Config, $sce, Moment, $filter, $rootScope, Zergling, content, analytics, $location) {
+VBET5.controller('mixedBalanceCtrl', ['$scope', '$controller', 'Config', '$sce', 'Moment', '$filter', '$rootScope', 'Zergling', 'content', 'analytics','$location', 'Utils', function($scope, $controller, Config, $sce, Moment, $filter, $rootScope, Zergling, content, analytics, $location, Utils) {
     'use strict';
     angular.extend(this, $controller('paymentsCtrl', {
         $scope: $scope
@@ -14,17 +14,12 @@ VBET5.controller('mixedBalanceCtrl', ['$scope', '$controller', 'Config', '$sce',
         $scope: $scope
     }));
 
-    Moment.setLang(Config.env.lang);
-    Moment.updateMonthLocale();
-    Moment.updateWeekDaysLocale();
+    angular.extend(this, $controller('historyBaseCtrl', {
+        $scope: $scope
+    }));
 
     $scope.balanceHistoryFilter = 'all';
-    $scope.requestData = {
-        dateFrom: $scope.today,
-        dateTo: $scope.today,
-        live: false
-    };
-    $scope.datePickerFormat = Config.main.layoutTimeFormat[Config.main.sportsLayout] === 'MM/DD' ? Config.main.dateFormat.historyBalanceFormatDate : Config.main.dateFormat.datepicker;
+    $scope.requestData.live = false;
 
     $scope.balanceHistoryParams.availableProducts = {};
 
@@ -37,15 +32,7 @@ VBET5.controller('mixedBalanceCtrl', ['$scope', '$controller', 'Config', '$sce',
     }
 
     $scope.currencyHolder = {};
-    $scope.dateOptions = { showWeeks: 'false' };
     $scope.$sce = $sce;
-
-    $scope.today = Moment.get().lang("en").format("YYYY-MM-DD");
-    $scope.datePickerLimits = {
-        maxToDate: $scope.today,
-        maxFromDate: $scope.today
-    };
-
 
     if (Config.payments && Config.payments.length) {
         $scope.paymentSystems = Config.payments.reduce(function (accumulator, current) {
@@ -83,13 +70,6 @@ VBET5.controller('mixedBalanceCtrl', ['$scope', '$controller', 'Config', '$sce',
         });
     };
 
-    var initialRange = {
-        fromDate: Moment.get().subtract('week', 1).startOf('day').unix(),
-        toDate: Moment.get().subtract('today').endOf('day').unix(),
-        str: Moment.get().subtract('week', 1).format('MMMM YYYY'),
-        type: 'month'
-    };
-
     $scope.changeBalanceCategory = function changeBalanceCategory(key) {
         $scope.balanceHistoryParams.balanceCategory = key;
     };
@@ -108,7 +88,7 @@ VBET5.controller('mixedBalanceCtrl', ['$scope', '$controller', 'Config', '$sce',
         }, true);
 
         if (!$scope.balanceHistoryParams.dateRange) {
-            $scope.loadBalanceHistory($scope.balanceHistoryParams.balanceCategory === '1' ? 'Casino' : false, initialRange);
+            $scope.loadBalanceHistory($scope.balanceHistoryParams.balanceCategory === '1' ? 'Casino' : false, $scope.initialRange);
         }
 
 
@@ -116,30 +96,10 @@ VBET5.controller('mixedBalanceCtrl', ['$scope', '$controller', 'Config', '$sce',
 
     $scope.adjustDate = function adjustDate(type) {
         var monthCount = $scope.balanceHistoryFilter === 'all' ? (Config.main.balanceHistoryMonthCount || 1) : 3;
-        switch (type) {
-            case 'from':
-                if (Moment.get($scope.requestData.dateFrom).unix() > Moment.get($scope.requestData.dateTo).unix()) {
-                    $scope.requestData.dateTo = Moment.moment($scope.requestData.dateFrom).lang("en").format("YYYY-MM-DD");
-                }
+        var date = $scope.calcDate(type, monthCount);
 
-                if (Moment.get($scope.requestData.dateFrom).add(monthCount, "M").isAfter($scope.today)) {
-                    $scope.datePickerLimits.maxToDate = $scope.today;
-                } else {
-                    $scope.requestData.dateTo = Moment.get($scope.requestData.dateFrom).add(monthCount, "M").lang("en").format("YYYY-MM-DD");
-                    $scope.datePickerLimits.maxToDate = Moment.moment($scope.requestData.dateFrom).add(monthCount, "M").lang("en").format("YYYY-MM-DD");
-                }
-
-                break;
-            case 'to':
-                if (Moment.get($scope.requestData.dateFrom).unix() > Moment.get($scope.requestData.dateTo).unix()) {
-                    $scope.requestData.dateFrom = Moment.moment($scope.requestData.dateTo).lang("en").format("YYYY-MM-DD");
-                    $scope.datePickerLimits.maxToDate = Moment.moment($scope.requestData.dateFrom).add(monthCount, "M").lang("en").format("YYYY-MM-DD");
-                }
-                break;
-        }
-
-        $scope.balanceHistoryParams.dateRange.fromDate = Moment.get(Moment.moment($scope.requestData.dateFrom).format().split('T')[0] + 'T00:00:00').unix();
-        $scope.balanceHistoryParams.dateRange.toDate = Moment.get(Moment.moment($scope.requestData.dateTo).format().split('T')[0] + 'T23:59:59').unix();
+        $scope.balanceHistoryParams.dateRange.fromDate = date.fromDate;
+        $scope.balanceHistoryParams.dateRange.toDate = date.toDate;
     };
 
 
@@ -196,6 +156,17 @@ VBET5.controller('mixedBalanceCtrl', ['$scope', '$controller', 'Config', '$sce',
                 }
             }
         )['finally'](function stopLoader() { $scope.balanceHistoryLoaded = true; });
+    };
+
+    /**
+     * @ngdoc function
+     * @name formatDepositRequestURL
+     * @methodOf vbet5.controller:mixedBalanceCtrl
+     */
+    $scope.formatDepositRequestURL = function formatDepositRequestURL() {
+        var iframeUrl = Config.main.depositRequestURL;
+        $scope.depositRequestURL = Utils.replaceTextPlaceholdersByObjectValues(iframeUrl, $rootScope.profile);
+
     };
 
     /**

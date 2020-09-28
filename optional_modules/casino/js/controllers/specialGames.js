@@ -237,13 +237,20 @@ angular.module('casino').controller('casinoSpecialGamesCtrl', ['$rootScope', '$s
         }
         $scope.loadingUserData = true;
         casinoData.getGames(null, null, null, null, null, null, null, null, [exId]).then(function (response) {
-            if (response && response.data && response.data.games[0]) {
+            if (response.data && response.data.games && response.data.games[0]) {
                 $scope.game = response.data.games[0];
                 var uniqueId = Math.random().toString(36).substr(2, 9);
                 $scope.gameInfo = {gameUrl: '', id: uniqueId, toAdd: false, game : $scope.game };
                 jackpotManager.casinoGameOpenedData = [$scope.gameInfo];
                 $rootScope.setTitle($scope.game.name);
                 getUrl();
+            } else {
+                $scope.loadingUserData = false;
+                $rootScope.$broadcast("globalDialogs.addDialog", {
+                    type: "warning",
+                    title: "Warning",
+                    content: 'The game is not available'
+                });
             }
         });
     };

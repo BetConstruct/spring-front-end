@@ -1,0 +1,645 @@
+/* timeline control */
+
+.game-info .timeline-container {
+    width: 94%;
+    height: 36px;
+    margin: 8px 0 5px 3%;
+    &[class*="timeline-extra"] {
+        width: 70%;
+        @include ltr {
+            left: 0;
+        }
+        @include rtl {
+            right: 0;
+        }
+        + .timeline-container {
+            width: 22%;
+            @include ltr {
+                right: 0;
+                left: auto;
+            }
+            @include rtl {
+                left: 0;
+                right: auto;
+            }
+            .timeline-control {
+                &:before {
+                    content: "\00a0 90";
+                }
+                &.tl-110:before {
+                    content: "\00a0 80";
+                }
+            }
+        }
+    }
+    &.timeline-extra-80 {
+        width: 68%;
+        + .timeline-container {
+            width: 24%;
+        }
+    }
+}
+
+.timeline-container {
+    position: relative;
+    float: left;
+    width: 100%;
+    height: 36px;
+}
+.game-info .timeline-container .timeline-control:before {
+    box-shadow: none;
+}
+.timeline-control {
+    position: absolute;
+    width: 97%;
+    height: 32px;
+    color: #fff;
+    text-align: left;
+    font: 12px/12px arial;
+    box-shadow: 1px 0 0 #fff inset, -1px 0 0 #fff inset;
+    &:before {
+        content: "\00a0 0";
+        position: absolute;
+        left: 0;
+        width: 100%;
+        top: 4px;
+        top: calc(50% - 12px);
+        border-bottom: 1px solid #fff;
+        box-shadow: 0 -6px 6px rgba(0, 0, 0, 0.3) inset, 0 6px 6px rgba(0, 0, 0, 0.3);
+    }
+    &:after {
+        content: "9 0";
+        position: absolute;
+        left: 97.5%;
+        left: calc(100% - 9px);
+        top: 4px;
+        top: calc(50% - 12px);
+        white-space: nowrap;
+    }
+    //span.tl-20,
+    //span.tl-40,
+    //span.tl-6-0,
+    //span.tl-80 {
+    //    display: none;
+    //}
+    span {
+        position: absolute;
+        top: 0;
+        width: 11.11111%;
+        width: calc(100% / 9);
+        height: 100%;
+        box-shadow: -1px 0 0 #fff inset;
+        text-shadow: 1px 1px 0 #000;
+        &:before {
+            position: absolute;
+            left: 75%;
+            left: calc(100% - 9px);
+            top: 4px;
+            top: calc(50% - 12px);
+            white-space: nowrap;
+        }
+        &:after {
+            content: "";
+            position: absolute;
+            top: 25%;
+            width: 50%;
+            height: 50%;
+            box-shadow: 1px 0 0 #fff inset, -1px 0 0 #fff inset;
+        }
+
+        &.ht-ft {
+            &:before {
+                content: "H T";
+                left: -9px;
+                top: -10px;
+                box-shadow: none;
+            }
+            &:after {
+                content: "F T";
+                left: 96.5%;
+                left: calc(100% - 9px);
+                top: -10px;
+                box-shadow: none;
+                max-width: 30px;
+                overflow: hidden;
+            }
+        }
+    }
+
+    &.extra {
+        &:after {
+            content: "1 20";
+        }
+        span {
+            &.tl-15:before {
+                content: "9 5";
+            }
+            &.tl-30:before {
+                content: "1 00";
+            }
+            &.tl-45:before {
+                content: "1 05";
+            }
+            &.tl-60:before {
+                content: "1 10";
+            }
+            &.tl-75:before {
+                content: "1 15";
+            }
+        }
+        &.tl-110 {
+            &:after {
+                content: "1 10";
+            }
+            span {
+                &.tl-15:before {
+                    content: "8 5";
+                }
+                &.tl-30:before {
+                    content: "9 0";
+                }
+                &.tl-45:before {
+                    content: "9 5";
+                }
+                &.tl-60:before {
+                    content: "1 00";
+                }
+                &.tl-75:before {
+                    content: "1 05";
+                }
+            }
+        }
+    }
+}
+.tl-data {
+    position: relative;
+    height: 100%;
+    width: 97%;
+    /* the width of actual 90 minutes of game */
+    .current-minute {
+        position: absolute;
+        top: 10%;
+        height: 80%;
+        background: rgba(255, 181, 73, 0.2);
+    }
+    .tl-info {
+        position: absolute;
+        top: 4px;
+        width: 17px;
+        height: 37px;
+        margin-left: -9px;
+        background: url("../../../images/timeline/stats_tl.png#{$delete-cache}") no-repeat;
+        .hover-sp {
+            display: none;
+        }
+        &:hover {
+            .hover-sp {
+                left: -10px;
+                max-height: 200px;
+                overflow: hidden;
+                overflow-y: auto;
+                background: #494949;
+                box-shadow: 0 2px 5px #111;
+                display: block;
+                &.to-center {
+                    left: -150px;
+                }
+                &.to-right {
+                    left: auto;
+                    right: -4px;
+                }
+            }
+        }
+    }
+    .team1-tl-corner,
+    .team1-tl-goal,
+    .team1-tl-yellow_card,
+    .team1-tl-red_card,
+    .team1-tl-exchange {
+        position: absolute;
+        bottom: 100%;
+    }
+    .team1-tl-goal {
+        top: -2px;
+    }
+    .team2-tl-corner,
+    .team2-tl-goal,
+    .team2-tl-yellow_card,
+    .team2-tl-red_card,
+    .team2-tl-exchange {
+        position: absolute;
+        top: 100%;
+        margin-top: -15px;
+    }
+    .tl-goal {
+        position: absolute;
+        opacity: 1;
+        width: 12px;
+        height: 12px;
+        background-color: #fff;
+        background-image: url("../../../images/timeline/soccer-ball-bg.png");
+        background-size: 80%;
+        background-position: 108% 35%;
+        border-radius: 50%;
+        box-shadow: 2px 5px 1px rgba(0, 0, 0, 0.3), inset 1px -2px 2px rgba(0, 0, 0, 0.57);
+    }
+    .tl-corner {
+        position: absolute;
+        overflow: hidden;
+        height: 15px;
+        width: 15px;
+        border-bottom: 2px solid #fff;
+        border-left: 2px solid #fff;
+        -webkit-transform: scale(0.65);
+        transform: scale(0.65);
+        box-shadow: -1px 1px 0 #000;
+        z-index: 5;
+        &:after {
+            content: "";
+            top: 5px;
+            left: -6px;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            position: absolute;
+            border: 2px solid #fff;
+            box-shadow: inset 0px 1px 0 #000;
+        }
+    }
+    .tl-card {
+        position: absolute;
+        width: 10px;
+        height: 12px;
+        border-radius: 20%;
+        box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.5);
+    }
+    .tl-yellow_card,
+    .tl-red_card {
+        @extend .tl-card;
+        width: 11px;
+        height: 14px;
+        box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.5);
+    }
+    .tl-yellow_card {
+        background: #fc0;
+    }
+    .tl-red_card {
+        background: #f00;
+    }
+    .tl-exchange {
+        position: absolute;
+        width: 18px;
+        height: 12px;
+        background-image: url("../../../images/timeline/tl-exchange.png");
+    }
+    .tl-details {
+        position: absolute;
+        display: none;
+        left: 4px;
+        top: -40px;
+        padding: 6px;
+        margin-left: -20px;
+        box-shadow: 0 1px 2px #111;
+        background: #fff;
+        color: #000;
+        font-size: 13px;
+        white-space: nowrap;
+        vertical-align: bottom;
+        text-transform: capitalize;
+        z-index: 100;
+        &:before,
+        &:after {
+            content: '';
+            position: absolute;
+            left: 15px;
+            width: 0;
+            height: 0;
+            border-width: 0.5em;
+            border-style: solid;
+            border-color: #fff transparent transparent transparent;
+        }
+        &:before {
+            border-color: rgba(0, 0, 0, 0.5) transparent transparent transparent;
+            bottom: calc(100% + 1px);
+        }
+        &.to-right {
+            left: auto;
+            right: -8px;
+            margin: 0 -20px 0 0;
+            &:before,
+            &:after {
+                left: auto;
+                right: 15px;
+            }
+        }
+    }
+    .hover-sp .football-gamer-name{
+        background: #494949;
+        color: #ccc;
+    }
+    > div:hover .tl-details {
+        display: block;
+    }
+}
+.statistics-toggle .tl-data .tl-info:hover {
+    background: url("../../../images/animation/stats_tl.png#{$delete-cache}") no-repeat;
+}
+
+
+
+.timeline-control span.small-separator{
+    height:50%;
+    top: 25%;
+}
+.timeline-control span:before {
+    content: "" attr(data-content) "" !important;
+    left: 0;
+    width: 30px;
+    top: -10px;
+    white-space: pre-line;
+}
+.timeline-control span:after {
+    content: none;
+}
+
+.timeline-control:before {
+    top: 50%;
+    content: "" !important;
+}
+
+
+.timeline-control:after {
+    content: "" !important;
+}
+
+
+
+
+//----------------------------------------------------
+
+/* timeline control END */
+
+
+//add new  backetball shots
+.game-score-basketball-shots{
+    float: left;
+    width: 100%;
+    height: 136px;
+    background: url(../../../images/live-score/basketballshots.jpg#{$delete-cache}) no-repeat 50% 50%/covser;
+    box-sizing: border-box !important;
+    padding: 15px 20px;
+    position: relative;
+    border-radius: 2px;
+
+}
+.short-info-box{
+    float: left;
+    min-width: 100%;
+    text-align: left;
+    position: relative;
+    height: 100%;
+    box-sizing: border-box;
+    > h6{
+        float: left;
+        width: 100%;
+        font-size: 18px;
+        line-height: 20px;
+        color: #ffffff;
+        font-weight: bold;
+        text-transform: uppercase;
+        box-sizing: border-box !important;
+        @include ltr{
+            padding: 0 135px 0 0;
+        }
+        @include rtl{
+            text-align: right;
+            padding: 0 0 0 135px;
+        }
+    }
+    p{
+        color: rgba(255, 255, 255, 0.6);
+        font-size: 14px;
+        line-height: 16px;
+        padding: 10px 0 0 0;
+        float: left;
+        width: 100%;
+        @include rtl{
+            text-align: right;
+        }
+        > span{
+            color: rgba(255, 255, 255, 0.9);
+            display: inline-block;
+            padding-left: 5px;
+        }
+    }
+    @include rtl{
+        direction: rtl;
+    }
+}
+.shot-result-b{
+    box-sizing: border-box !important;
+    overflow: hidden;
+    float: left;
+    width: 100%;
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    height: 44px;
+    padding: 0 32px;
+}
+.show-points{
+    position: absolute;
+    background: #ffffff;
+    height: 38px;
+    padding: 5px 20px 5px 10px;
+    top: 12px;
+    box-sizing: border-box !important;
+    @include ltr{
+        text-align: left;
+        right: -20px;
+    }
+    @include rtl{
+        text-align: right;
+        left: -20px;
+    }
+    > span{
+        font-size: 24px;
+        line-height: 26px;
+        color: #b6862e;
+    }
+}
+.short-points{
+
+    float: left;
+    width: 100%;
+    box-sizing: border-box !important;
+    .prev-shot{
+        height: 100%;
+        width: 20px;
+        border-right: 1px solid #ffffff;
+        position: absolute;
+        left: 0;
+        top: 0;
+        &:before{
+            content: '\e673';
+            font: 22px/40px icomoon;
+            display: block;
+            color: #ffffff;
+            left: -5px;
+            position: absolute;
+            top: 0;
+        }
+        &.inactive{
+            opacity: 0.7;
+        }
+    }
+    .next-shot{
+        height: 100%;
+        width: 20px;
+        border-left: 1px solid #ffffff;
+        position: absolute;
+        right: 0;
+        top: 0;
+        &:before{
+            content: '\e676';
+            font: 22px/40px icomoon;
+            display: block;
+            color: #ffffff;
+            right: -5px;
+            position: absolute;
+            top: 0;
+        }
+        &.inactive{
+            opacity: 0.7;
+        }
+    }
+
+}
+.status-short-l{
+
+    box-sizing: border-box !important;
+    float: left;
+    width: 100%;
+    overflow-x: scroll !important;
+    overflow-y: hidden !important;
+    white-space: nowrap;
+    @include scroll($scroll: auto);
+    &::-webkit-scrollbar{
+        border-radius: 0;
+        height: 6px;
+    }
+    @include ltr{
+        float: left;
+    }
+    @include rtl{
+        float: right;
+        text-align: right;
+    }
+
+}
+.each-point{
+
+    display: inline-block;
+    vertical-align: top;
+    > p{
+
+        height: 44px;
+        width: 22px;
+        background: #ffffff;
+        border-radius: 10px;
+        padding: 0;
+        position: relative;
+        @include ltr{
+            margin: 0 15px 0 0;
+        }
+        @include rtl{
+            margin: 0 0 0 15px;
+        }
+        > i{
+            width: 100%;
+            position: absolute;
+            text-align: center;
+            top: 5px;
+            left: 0;
+            font-size: 12px;
+            line-height: 14px;
+            color: #121623;
+            font-style: normal;
+        }
+        &:after{
+            content: '';
+            display: block;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #c2c5cd;
+            position: absolute;
+            bottom: 1px;
+            left: 1px;
+
+        }
+    }
+    &.approved{
+        p{
+            background: rgba(#ffffff, 0.8);
+            &:after{
+                background: #008d47;
+            }
+            &:before{
+                content: '\e6f3';
+                font: 8px/10px icomoon;
+                display: block;
+                color: #ffffff;
+                bottom: 5px;
+                z-index: 9999;
+                left: 6px;
+                position: absolute;
+            }
+        }
+    }
+    &.missed{
+        p{
+            background: rgba(#ffffff, 0.8);
+            &:after{
+                background: #e9044a;
+            }
+            &:before{
+                content: '\e6f2';
+                font: 8px/10px icomoon;
+                display: block;
+                color: #ffffff;
+                bottom: 5px;
+                z-index: 9999;
+                left: 7px;
+                position: absolute;
+            }
+        }
+    }
+}
+.modern{
+    .short-info-box{
+        padding: 0 15px;
+    }
+    .shot-result-b{
+        //position: relative;
+        bottom: -46px;
+    }
+    .show-points{
+        top: -50px;
+        @include rtl{
+            left: 0;
+        }
+    }
+    .conteiner-live-block:hover .open-game .game-live-row li.team.inactive:hover,
+    .conteiner-live-block:hover .game-live-row li.team.inactive:hover,
+    .conteiner-live-block:hover .open-game .game-live-row li.factor.inactive:hover
+    {
+        box-shadow: none;
+    }
+}
+.games-save-slider ul li.sport-BasketballShots .teams:after {
+    content: "";
+}
+.closed-game-container-BasketballShots  .game-live-row .account span:after {
+    content: '';
+}

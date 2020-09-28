@@ -245,6 +245,12 @@ CASINO.controller('casinoJackpotCtrl', ['$rootScope', '$scope', '$sce', '$locati
 
     var jackpotWinnerTimeout;
 
+    $scope.jackpotWinner.cancelJackpotWinnerAnimation = function () {
+        TimeoutWrapper.cancel(jackpotWinnerTimeout);
+        $scope.jackpotWinner.animation = false;
+        $scope.jackpotWinner.data = {};
+    };
+
     function subscribeForJackpotDataCallback(data) {
         var sliderIndex = false;
         data = Utils.objectToArray(data);
@@ -252,7 +258,6 @@ CASINO.controller('casinoJackpotCtrl', ['$rootScope', '$scope', '$sce', '$locati
             if (jackpot && jackpot.Winner && jackpot.Winner.PlayerId) {
 
                 if ($rootScope.profile && jackpot.Winner.PlayerId === $rootScope.profile.id) {
-
                     TimeoutWrapper.cancel(jackpotWinnerTimeout); // TimeoutWrapper checks the existence of promise by itself
 
                     $scope.jackpotWinner.animation = true;
@@ -261,7 +266,7 @@ CASINO.controller('casinoJackpotCtrl', ['$rootScope', '$scope', '$sce', '$locati
                     jackpotWinnerTimeout = TimeoutWrapper(function () {
                         $scope.jackpotWinner.animation = false;
                         $scope.jackpotWinner.data = {};
-                    }, 5000);
+                    }, 20000);
                 }
             }
         });

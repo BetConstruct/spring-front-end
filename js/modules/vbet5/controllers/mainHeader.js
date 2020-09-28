@@ -5,8 +5,8 @@
  * @description
  * Main header controller
  */
-VBET5.controller('mainHeaderCtrl', ['$rootScope', '$scope', '$interval', '$filter', '$route', '$q', '$window', '$location', '$document', '$http', '$cookies', 'Geoip', 'CountryCodes', 'Config', 'ConnectionService', 'Zergling', 'Storage', 'DomHelper', 'Utils', 'smoothScroll', 'Translator', 'analytics', 'AuthData', 'Script', 'liveChat', 'GameInfo', 'partner', 'TopMenu', 'TimezoneService', 'Moment', 'content', 'UserAgent', '$timeout', 'RegConfig', 'RoutesValidity','LadderLoader', 'giftService',
-    function ($rootScope, $scope, $interval, $filter, $route, $q, $window, $location, $document, $http, $cookies, Geoip, CountryCodes, Config, ConnectionService, Zergling, Storage, DomHelper, Utils, smoothScroll, Translator, analytics, AuthData, Script, liveChat, GameInfo, partner, TopMenu, TimezoneService, Moment, content, UserAgent, $timeout, RegConfig, RoutesValidity, LadderLoader, giftService) {
+VBET5.controller('mainHeaderCtrl', ['$rootScope', '$scope', '$interval', '$filter', '$route', '$q', '$window', '$location', '$document', '$http', '$cookies', 'Geoip', 'CountryCodes', 'Config', 'ConnectionService', 'Zergling', 'Storage', 'DomHelper', 'Utils', 'smoothScroll', 'Translator', 'analytics', 'AuthData', 'Script', 'liveChat', 'GameInfo', 'partner', 'TopMenu', 'TimezoneService', 'Moment', 'content', 'UserAgent', '$timeout', 'RegConfig', 'RoutesValidity','LadderLoader', 'giftService', 'sessionDurationListener',
+    function ($rootScope, $scope, $interval, $filter, $route, $q, $window, $location, $document, $http, $cookies, Geoip, CountryCodes, Config, ConnectionService, Zergling, Storage, DomHelper, Utils, smoothScroll, Translator, analytics, AuthData, Script, liveChat, GameInfo, partner, TopMenu, TimezoneService, Moment, content, UserAgent, $timeout, RegConfig, RoutesValidity, LadderLoader, giftService, sessionDurationListener) {
         'use strict';
         var connectionService = new ConnectionService($scope);
         var appHasBeenUpdated = false;
@@ -18,8 +18,8 @@ VBET5.controller('mainHeaderCtrl', ['$rootScope', '$scope', '$interval', '$filte
         $rootScope.env.appVersion = Config.releaseDate;
 
         var pathTypes = {
-            'casino': ['/casino', '/games', '/poker', '/game', '/livedealer', '/keno', '/fantasy', '/ogwil', '/jackpot', '/financials', '/backgammon', '/belote', '/pokerklas', '/poker', '/ggpoker', '/gameslanding', '/vrcasino', '/csbpoolbetting', '/tournaments', '/go', '/blast', '/jackpots'],
-            'sport': ['/sport', '/freebet', '/poolbetting', '/pmu', '/livecalendar', '/results', '/virtualsports', '/overview', '/multiview', '/dashboard', '/exchange', '/statistics', '/customsport', '/esports', '/covid-19']
+            'casino': ['/casino', '/games', '/poker', '/game', '/livedealer', '/keno', '/fantasy', '/ogwil', '/jackpot', '/financials', '/backgammon', '/belote', '/pokerklas', '/poker', '/ggpoker', '/gameslanding', '/vrcasino', '/csbpoolbetting', '/tournaments', '/go', '/blast', '/jackpots', '/wonderwheel'],
+            'sport': ['/sport', '/freebet', '/poolbetting', '/pmu', '/livecalendar', '/results', '/virtualsports', '/overview', '/multiview', '/dashboard', '/exchange', '/statistics', '/customsport', '/esports', '/covid-19', '/pinnacle']
         };
         pathTypes[Config.main.homepagePageType].push('/');
 
@@ -72,7 +72,7 @@ VBET5.controller('mainHeaderCtrl', ['$rootScope', '$scope', '$interval', '$filte
             $rootScope.currentPage.params = $location.search();
             $rootScope.currentPage.isInCasino = !$rootScope.calculatedConfigs.sportEnabled || pathTypes.casino.indexOf($rootScope.currentPage.path) !== -1;
             $rootScope.currentPage.isInSports = pathTypes.sport.indexOf($rootScope.currentPage.path) !== -1;
-            $rootScope.currentPage.hasSubHeader = ($scope.subMenuItems && $scope.subMenuItems.length > 0) || (Config.main.enableSubHeader && Config.main.subHeaderItems.length && $rootScope.currentPage.isInSports && !{'/':1, '/poolbetting':1, '/virtualsports':1, '/pmu': 1}[$rootScope.currentPage.path]);
+            $rootScope.currentPage.hasSubHeader = ($scope.subMenuItems && $scope.subMenuItems.length > 0) || (Config.main.enableSubHeader && Config.main.subHeaderItems.length && $rootScope.currentPage.isInSports && !{'/':1, '/poolbetting':1, '/virtualsports':1, '/pmu': 1, '/pinnacle': 1}[$rootScope.currentPage.path]);
 
         }
         setCurrentPath();
@@ -666,6 +666,11 @@ VBET5.controller('mainHeaderCtrl', ['$rootScope', '$scope', '$interval', '$filte
                 $scope.env.sliderContent = '';
                 return;
             }
+            if (Config.main.customForgotPasswordLink) {
+                window.location.href = Config.main.customForgotPasswordLink;
+                $scope.closeSlider();
+                return;
+            }
             $scope.toggleSliderTab('forgotPasswordForm');
         };
 
@@ -763,8 +768,9 @@ VBET5.controller('mainHeaderCtrl', ['$rootScope', '$scope', '$interval', '$filte
          * @methodOf vbet5.controller:mainHeaderCtrl
          * @description Logs user out
          * @param {Boolean} dontClearAllData don't clear local storage data
+         * @param {number} source
          */
-        function logOutUser(dontClearAllData) {
+        function logOutUser(dontClearAllData, source) {
             if($rootScope.editBet && $rootScope.editBet.edit) {
                 $rootScope.editBet.edit = false;
                 $rootScope.editBet.oldBetId = 0;
@@ -804,10 +810,12 @@ VBET5.controller('mainHeaderCtrl', ['$rootScope', '$scope', '$interval', '$filte
                     liveChat.initSFChat();
                 }
             };
-            Zergling.logout()['finally'](doLogoutStuff);
+            Zergling.logout(source)['finally'](doLogoutStuff);
             $timeout(doLogoutStuff, Config.main.logoutTimeout); //in case logout fails for some reason (no network, etc.)
         }
-        $scope.$on('doLogOut', logOutUser);
+        $scope.$on('doLogOut', function (event, data) {
+            logOutUser(true, data && data.source);
+        });
 
         /**
          * @ngdoc method
@@ -852,20 +860,6 @@ VBET5.controller('mainHeaderCtrl', ['$rootScope', '$scope', '$interval', '$filte
 
         /**
          * @ngdoc method
-         * @name updateProfileBalance
-         * @methodOf vbet5.controller:mainHeaderCtrl
-         * @description Update profile balance
-         *
-         */
-        function updateProfileBalance () {
-            if ($rootScope.profile) {
-                $rootScope.profile.calculatedBalance = !$rootScope.profile.frozen_balance ? $rootScope.profile.balance : Math.max($rootScope.profile.balance - $rootScope.profile.frozen_balance, 0);
-                $rootScope.profile.calculatedBonus = $rootScope.profile.bonus_balance || 0; // in some cases profile.bonus_balance is undefined
-            }
-        }
-
-        /**
-         * @ngdoc method
          * @name updateProfile
          * @methodOf vbet5.controller:mainHeaderCtrl
          * @description Receives profile update messages broadcasted by other controllers and updates profile in $scope
@@ -897,11 +891,9 @@ VBET5.controller('mainHeaderCtrl', ['$rootScope', '$scope', '$interval', '$filte
                 } else {
                     $rootScope.profile.full_name = "";
                 }
-                if (Config.main.balanceUpdateDelay && $rootScope.profile.calculatedBalance && $rootScope.casinoGameOpened) {
-                    $timeout(updateProfileBalance, Config.main.balanceUpdateDelay);
-                } else {
-                    updateProfileBalance();
-                }
+
+                $rootScope.profile.calculatedBalance = !$rootScope.profile.frozen_balance ? $rootScope.profile.balance : Math.max($rootScope.profile.balance - $rootScope.profile.frozen_balance, 0);
+                $rootScope.profile.calculatedBonus = $rootScope.profile.bonus_balance || 0; // in some cases profile.bonus_balance is undefined
 
                 if ($rootScope.profile.bonus_win_balance !== undefined) {
                     $rootScope.profile.calculatedBonus += $rootScope.profile.bonus_win_balance;
@@ -909,29 +901,32 @@ VBET5.controller('mainHeaderCtrl', ['$rootScope', '$scope', '$interval', '$filte
                 if ($rootScope.profile.frozen_balance !== undefined) {
                     $rootScope.profile.calculatedBonus += $rootScope.profile.frozen_balance;
                 }
-            }
-            $rootScope.currency_name = $scope.profile.currency_name;
-            console.log('profile', $scope.profile);
-            if (($rootScope.calculatedConfigs.sportEnabled || Config.main.remindToRenewBalance.casino) && Config.main.remindToRenewBalance.enabled && $rootScope.profile && $rootScope.profile.balance !== undefined) {
-                if (Storage.get('renewReminded') === undefined && $rootScope.profile.calculatedBalance + $rootScope.profile.calculatedBonus < Config.main.remindToRenewBalance.threshold  && $scope.env.sliderContent !== 'cashier') {
 
-                    if (Config.main.remindToRenewBalance.dialog) {
-                        $rootScope.$broadcast("globalDialogs.addDialog", Config.main.remindToRenewBalance.dialog);
-                    } else {
-                        $scope.env.showSlider = true;
-                        $scope.env.sliderContent = 'warning';
-                    }
+                $rootScope.profile.totalBalance = $rootScope.profile.calculatedBalance + $rootScope.profile.calculatedBonus;
 
-                    Storage.set('renewReminded', $rootScope.profile.balance, Config.main.remindToRenewBalance.interval);
-                } else { // on balance increase clear the reminder state to remind again when balance is low again
-                    if ($rootScope.profile.calculatedBalance > Storage.get('renewReminded')) {
-                        Storage.remove('renewReminded');
+                $rootScope.currency_name = $scope.profile.currency_name;
+
+                if (($rootScope.calculatedConfigs.sportEnabled || Config.main.remindToRenewBalance.casino) && Config.main.remindToRenewBalance.enabled && $rootScope.profile.balance !== undefined) {
+                    if (Storage.get('renewReminded') === undefined && $rootScope.profile.totalBalance < Config.main.remindToRenewBalance.threshold  && $scope.env.sliderContent !== 'cashier') {
+
+                        if (Config.main.remindToRenewBalance.dialog) {
+                            $rootScope.$broadcast("globalDialogs.addDialog", Config.main.remindToRenewBalance.dialog);
+                        } else {
+                            $scope.env.showSlider = true;
+                            $scope.env.sliderContent = 'warning';
+                        }
+
+                        Storage.set('renewReminded', $rootScope.profile.balance, Config.main.remindToRenewBalance.interval);
+                    } else { // on balance increase clear the reminder state to remind again when balance is low again
+                        if ($rootScope.profile.calculatedBalance > Storage.get('renewReminded')) {
+                            Storage.remove('renewReminded');
+                        }
                     }
                 }
-            }
 
-            if (!$rootScope.env.unreadCountOld) {
-                $rootScope.env.unreadCountOld = $rootScope.profile.unread_count;
+                if (!$rootScope.env.unreadCountOld) {
+                    $rootScope.env.unreadCountOld = $rootScope.profile.unread_count;
+                }
             }
 
             $rootScope.env.isNewMessage = $rootScope.profile.unread_count !== $rootScope.profile.unreadCountOld;
@@ -1005,9 +1000,13 @@ VBET5.controller('mainHeaderCtrl', ['$rootScope', '$scope', '$interval', '$filte
                             return deferred.reject("Token is invalid need to authorise");
                         }
 
-                        if (authZeroUser && Config.main.iovationLoginScripts && window.IGLOO) {
-                            var ioData = window.IGLOO.getBlackbox();
-                            Zergling.get({io_black_box: ioData.blackbox, player:  response.data.is_new_client ? 'new': 'old'}, 'send_iovation_payload').then(
+                        if (authZeroUser && Config.iovation.enabled && window.IGLOO && Config.iovation.actions.login) {
+                            var request = {
+                                player:  response.data.is_new_client ? 'new': 'old'
+                            };
+                            request[Config.iovation.apiKey] = window.IGLOO.getBlackbox();
+
+                            Zergling.get(request, 'send_iovation_payload').then(
                                 function(ioResponse) {
                                     console.log(ioResponse);
                                 });
@@ -1032,6 +1031,8 @@ VBET5.controller('mainHeaderCtrl', ['$rootScope', '$scope', '$interval', '$filte
                     },
                     function (response) {
                         console.log('login with stored auth token failed');
+                        partner.call('guest');
+
                         return deferred.reject(response);
                     }
                 );
@@ -1180,6 +1181,19 @@ VBET5.controller('mainHeaderCtrl', ['$rootScope', '$scope', '$interval', '$filte
         $scope.dontShowLayoutSwitcherHintAgain = false;
 
         /**
+         * @ngdoc function
+         * @name setSuggestedExpress
+         * @methodOf vbet5.controller:mainHeaderCtrl
+         * @description  changes the value of suggested bets (pre match type) in Storage
+         */
+        function setSuggestedExpress(event, suggestStatus) {
+            $scope.suggestedBets = suggestStatus;
+            Storage.set("suggestedBets", suggestStatus);
+
+            $rootScope.$broadcast('suggestedBets.get', {type: 'preMatch'});
+        }
+
+        /**
          * @ngdoc method
          * @name settingsInit
          * @methodOf vbet5.controller:mainHeaderCtrl
@@ -1202,6 +1216,12 @@ VBET5.controller('mainHeaderCtrl', ['$rootScope', '$scope', '$interval', '$filte
             }
             if (Storage.get('timeFormat') !== undefined) {
                 $scope.setTimeFormat(Storage.get('timeFormat'));
+            }
+
+            if (Config.main.enableSuggestedBets) {
+                $scope.suggestedBets = Storage.get('suggestedBets') !== false;
+
+                $scope.$on("toggleSuggestedExpress", setSuggestedExpress);
             }
         }
 
@@ -1292,31 +1312,6 @@ VBET5.controller('mainHeaderCtrl', ['$rootScope', '$scope', '$interval', '$filte
 
         });
 
-
-        /**
-         * @ngdoc method
-         * @name setSuggestedExpress
-         * @methodOf vbet5.controller:mainHeaderCtrl
-         * @description  changes the value of suggested bets (pre match type) in Storage
-         */
-        $scope.setSuggestedExpress = function setSuggestedExpress() {
-            if ($scope.suggestedBets !== 'hide') {
-                $scope.suggestedBets = 'hide';
-                Storage.set("suggestedBets", "hide");
-            } else {
-                $scope.suggestedBets = true;
-                Storage.set("suggestedBets", true);
-            }
-        };
-
-        if (Config.main.enableSuggestedBets) {
-            $scope.suggestedBets = Storage.get('suggestedBets') || true;
-
-            $scope.$on("turnOffSuggestedExpress", function() {
-                $scope.setSuggestedExpress();
-            });
-        }
-
         /**
          * @ngdoc method
          * @name check4DeepLinkedAction
@@ -1393,6 +1388,7 @@ VBET5.controller('mainHeaderCtrl', ['$rootScope', '$scope', '$interval', '$filte
             check4DeepLinkedAction('myWallets', true);
             check4DeepLinkedAction('deposit', true);
             check4DeepLinkedAction('withdraw', true);
+            check4DeepLinkedAction('depositRequest', true);
             check4DeepLinkedAction('settings', true);
             check4DeepLinkedAction('betHistory', true);
             check4DeepLinkedAction('balanceHistory', true);
@@ -1412,7 +1408,7 @@ VBET5.controller('mainHeaderCtrl', ['$rootScope', '$scope', '$interval', '$filte
          * @description Returns true if section requires a login first
          */
         function needLogin2Continue() {
-            return check4DeepLinkedAction('cashier') || check4DeepLinkedAction('myWallets') || check4DeepLinkedAction('betHistory') || check4DeepLinkedAction('deposit') || check4DeepLinkedAction('withdraw') || check4DeepLinkedAction('settings') || check4DeepLinkedAction('balanceHistory') || check4DeepLinkedAction('casinoBalanceHistory') ||check4DeepLinkedAction('recentBets') || check4DeepLinkedAction('promotionalBonuses') || check4DeepLinkedAction('messages') ;
+            return check4DeepLinkedAction('cashier') || check4DeepLinkedAction('myWallets') || check4DeepLinkedAction('betHistory') || check4DeepLinkedAction('deposit') || check4DeepLinkedAction('withdraw') || check4DeepLinkedAction('settings') || check4DeepLinkedAction('balanceHistory') || check4DeepLinkedAction('casinoBalanceHistory') ||check4DeepLinkedAction('recentBets') || check4DeepLinkedAction('promotionalBonuses') || check4DeepLinkedAction('messages') || check4DeepLinkedAction('depositRequest') ;
         }
 
         /**
@@ -2086,11 +2082,6 @@ VBET5.controller('mainHeaderCtrl', ['$rootScope', '$scope', '$interval', '$filte
             }
         }
 
-        //Chrome extension check
-        if (window.chrome && window.chrome.app && !window.chrome.app.isInstalled) {
-            $scope.showChromeExtensionButton = true;
-        }
-
         partner.call('applicationReady');
 
         window.displayEventLimit = function displatEventLimit(event) {
@@ -2102,7 +2093,7 @@ VBET5.controller('mainHeaderCtrl', ['$rootScope', '$scope', '$interval', '$filte
             };
             //   event.target.dataset.title = $filter('currency')($rootScope.profile.currency_name);
             callback = function () {
-                event.target.dataset.title = gameEvent.maxBet + " " + $filter('currency')($rootScope.profile.currency_name);
+                event.target.dataset.title =Translator.get('Max: {1} {2}',[gameEvent.maxBet,$filter('currency')($rootScope.profile.currency_name)]);
             };
 
             GameInfo.displayEventLimit(gameEvent, callback);
@@ -2231,9 +2222,24 @@ VBET5.controller('mainHeaderCtrl', ['$rootScope', '$scope', '$interval', '$filte
             $rootScope.$broadcast('globalDialogs.removeDialogsByTag', 'rfid');
 
             Config.main.domainSpecificPrefixes &&  domainSpecificCheck('#' + $location.path());
+
+            // true nerrative case
+            if ($rootScope.profile.active_step === 27 && $rootScope.profile.active_step_state === 5) {
+                $rootScope.broadcast('globalDialogs.addDialog', {
+                    template: 'templates/popup/trueNarrative.html',
+                    type: 'template',
+                    tag: 'gift-bet-popup',
+                    hideButtons: true
+                });
+            }
+            if (!Config.main.loginLimit.enabled &&  $rootScope.profile.session_duration !== null) {
+                sessionDurationListener.listen($rootScope.profile.session_duration, true);
+            }
+
         }
 
         function doLogoutAction() {
+            partner.call('loggedOut');
             TopMenu.refresh();
             liveChat.liveAgentProfileClear && liveChat.liveAgentProfileClear();
             disableLoginLimitChecking();
@@ -2244,12 +2250,7 @@ VBET5.controller('mainHeaderCtrl', ['$rootScope', '$scope', '$interval', '$filte
         // login
         $scope.$on('loggedIn', doLoginActions);
 
-        $scope.$on('login.loggedOut', doLogoutAction);
-        $scope.$on('loggedOut', function () {
-            partner.call('loggedOut');
-            doLogoutAction();
-
-        });     // logged out
+        $scope.$on('login.loggedOut', doLogoutAction);// logged out
 
     }]);
 

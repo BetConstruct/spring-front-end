@@ -175,7 +175,7 @@ module.exports = function (grunt) {
                     'templates.js' //  created by ngtemplates task
                 ],
                 jsOutputFile: 'app.min.js',
-                maxBuffer: 1500,
+                maxBuffer: 2500,
                 options: {
 //                    compilation_level: 'ADVANCED_OPTIMIZATIONS',
                     language_in: 'ECMASCRIPT5_STRICT'
@@ -517,7 +517,17 @@ module.exports = function (grunt) {
     grunt.config.set('metaTags', grunt.file.readJSON('./metainfo.json')[grunt.config.get('skinConfig')] || {title: {eng: ""}, description: {eng: ""}, keywords: {eng: ""}});
     grunt.config.set('defaultCssFileList', ['soccer-control.css', 'tennis-control.css', 'games-animations-classic.css', 'main.css', 'media.css', 'flags.css', 'transitions.css', 'lib/introjs.min.css', 'lib/rg-slider.min.css', 'lib/rzslider.min.css', 'lib/hopscotch.min.css', 'lib/barcode.css'])
 
+
     //************************************************************* Tasks **********************************************
+    grunt.registerTask("crateBuildConfig", function () {
+       var path = "../js/modules/vbet5/constants/buildConfig.js";
+       var constant = {
+           releaseDate: grunt.template.today("dd/mm/yyyy-HH:MM")
+       };
+       var content = "angular.module('vbet5').constant('BuildConfig', " + JSON.stringify(constant) + ")";
+       grunt.file.write(path, content);
+    });
+
     grunt.registerTask('test',                         ['gitinfo',  'processhtml', 'no-cdn-libs', 'replace:noCdnLibs', 'copy']);
     grunt.registerTask('dev',                          ['gitinfo', 'load-additional-modules', 'create-conf', 'load-css-filelist', 'ngtemplates', 'load-translations', 'replace:removeContextAttr', 'replace:changeAppVersion', 'closure-compiler', 'cssmin', 'processhtml', 'replace:xDomainFrameUrl', 'replace:htmlPlaceholders',  'no-cdn-libs', 'replace:noCdnLibs', 'copy', 'clean:build-temp']);
     //grunt.registerTask('load-translations',            ['shell:generateSkinTranslationSeparate']); //old way, from .po
@@ -525,7 +535,7 @@ module.exports = function (grunt) {
     grunt.registerTask('debug',                        ['gitinfo', 'load-additional-modules', 'create-conf', 'load-css-filelist', 'ngtemplates', 'load-translations', 'closure-compiler', 'cssmin', 'processhtml', 'replace:xDomainFrameUrl', 'replace:htmlPlaceholders', 'no-cdn-libs', 'replace:noCdnLibs', 'copy:main']);
 //    grunt.registerTask('default-inline-templates',     ['closure-compiler', 'processhtml', 'strip', 'inline_angular_templates', 'copy', 'clean:build-temp']);
     grunt.registerTask('create-css',                   ['gitinfo', 'load-additional-modules', 'load-css-filelist', 'cssmin', 'processhtml', 'replace:xDomainFrameUrl', 'replace:htmlPlaceholders', 'no-cdn-libs', 'replace:noCdnLibs', 'copy:main', 'clean:build-temp']);
-    grunt.registerTask('default',                      ['gitinfo', 'load-additional-modules', 'create-conf', 'load-css-filelist', 'ngtemplates', 'load-translations', 'replace:removeContextAttr', 'replace:changeAppVersion', 'closure-compiler', 'sass', 'cssmin', 'strip', 'processhtml', 'replace:xDomainFrameUrl', 'replace:htmlPlaceholders', 'no-cdn-libs', 'replace:noCdnLibs', 'copy:main', 'clean:build-temp']);
+    grunt.registerTask('default',                      ['gitinfo', 'load-additional-modules', 'create-conf', 'load-css-filelist', 'ngtemplates', 'load-translations', 'replace:removeContextAttr', 'replace:changeAppVersion', 'crateBuildConfig', 'closure-compiler', 'sass', 'cssmin', 'strip', 'processhtml', 'replace:xDomainFrameUrl', 'replace:htmlPlaceholders', 'no-cdn-libs', 'replace:noCdnLibs', 'copy:main', 'clean:build-temp']);
     grunt.registerTask('build-with-logs',              ['gitinfo', 'load-additional-modules', 'create-conf', 'load-css-filelist', 'ngtemplates', 'load-translations', 'replace:removeContextAttr', 'replace:changeAppVersion', 'closure-compiler', 'sass', 'cssmin', 'processhtml', 'replace:xDomainFrameUrl', 'replace:htmlPlaceholders', 'no-cdn-libs', 'replace:noCdnLibs', 'copy:main', 'clean:build-temp']);
     grunt.registerTask('create-skin',                  ['create-new-skin', 'sass', 'create-skin-launcher']);
     grunt.registerTask('create-skin-and-build',        ['create-new-skin', 'sass', 'create-skin-launcher', 'default']);

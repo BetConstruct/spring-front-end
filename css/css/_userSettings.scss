@@ -1,0 +1,216 @@
+//overriding previous styles
+.friend-referral{
+  .md-progress-circular {
+    left: 50%;
+    margin-left: -50px;
+  }
+  .settings-info-contain p {
+    padding-bottom: 25px;
+    box-shadow: 0px -1px 0 $skin-palette-11 inset, 0px 1px 0  $skin-palette-6;
+  }
+  .settings-info-contain label{
+    padding: 15px 0 5px;
+  }
+  .settings-info-contain .select-block{
+    width: 100%;
+    height: 34px;
+    margin: 0;
+    select{
+      width: 100%;
+    }
+  }
+  label.results-live-j{
+    float: right;
+    padding: 0 25px 0 0;
+    font-size: 12px;
+    input, input + i{
+      left: auto;
+      right: 0;
+    }
+    span{
+      position: relative;
+      top: -3px;
+      color: $text-palette-2;
+    }
+  }
+}
+.referral-info{
+  float: left;
+  width: 100%;
+  margin: 15px 0 30px;
+  > div{
+    float:right;
+    width: calc(50% - 20px);
+  }
+  > div:first-of-type{
+    float: left;
+    div{
+      float: left;
+      width: 100%;
+      height: 34px;
+      box-sizing: border-box;
+      border: 1px solid $skin-palette-5;
+      border-radius: 4px;
+      text-align: center;
+      font: 16px/34px $font-f;
+      color: $brand-color-2;//$style
+
+      -moz-user-select: all;
+      -webkit-user-select: all;
+      -ms-user-select: all;
+    }
+  }
+}
+.referral-table{
+  float: left;
+  width: 100%;
+  max-height: 216px;
+  border-radius: 5px;
+  overflow-x: hidden;
+  @include scroll;
+  overflow-y: auto;
+}
+.settings-info-contain > div > table{
+  float: left;
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0 1px;
+  &.ref-total {
+    margin-top: 10px;
+    position: relative;
+    top: 40px;
+    tr:nth-child(2) td {
+      background: $brand-color-1;
+    }
+  }
+  tr{
+    &:nth-child(2n) td{
+      background: $skin-palette-7;
+    }
+    &:nth-child(2n+1) td{
+      background: $skin-palette-10;
+    }
+    th{
+      width: 50%;
+      text-align: left;
+      padding: 0 0 10px 20px;
+      font-weight: normal;
+      color: $text-palette-4;
+    }
+    td{
+      width: 50%;
+      height: 36px;
+      padding-left: 20px;
+      vertical-align: middle;
+      color: $text-palette-2;
+    }
+  }
+}
+.settings-info-contain .chekcbox-j label {
+  position: relative;
+  display: inline-block;
+  width: auto;
+  height: 14px;
+  vertical-align: top;
+  cursor: pointer;
+  margin-top: 33px;
+  @include ltr {
+    float: none;
+    padding: 0 0 0 25px;
+  }
+  @include rtl {
+    float: none;
+    padding: 0 25px 0 0;
+  }
+  input {
+    position: absolute;
+    top: 0;
+    opacity: 0;
+    cursor: pointer;
+    @include ltr {
+      left: 0;
+    }
+    @include rtl {
+      right: 0;
+    }
+    + span:before {
+      content: "";
+      width: 16px;
+      height: 16px;
+      display: block;
+      background-color: $skin-palette-7;
+      border-radius: 2px;
+      position: absolute;
+      top: -2px;
+      @include ltr {
+        left: 0;
+      }
+      @include rtl {
+        right: 0;
+      }
+    }
+    &:checked + span:after {
+      content: '\e6f3';
+      font: 6px/16px "icomoon";
+      position: absolute;
+      top: -2px;
+      color: $text-palette-4;
+      @include ltr {
+        left: 4px;
+      }
+      @include rtl {
+        right: 4px;
+      }
+    }
+  }
+} 
+.right-block-history.message.compose.send-message-j .settings-info-contain {
+  input[type="text"] {
+    color: rgba(set-color($contact-us),0.7);
+    background: $contact-us;
+    border-color: rgba(set-color($contact-us),0.7);
+    -webkit-text-fill-color: rgba(set-color($contact-us),0.7);
+    @include placeholder {
+      color: rgba(set-color($contact-us),0.7);
+    }
+  }
+  .form-text {
+    width: 100%;
+  }
+  label {
+    margin: 8px 0;
+  }
+  textarea {
+    background: $contact-us;
+    box-sizing: border-box;
+    width: 100%;
+    font: 12px $font-f;
+    border: 1px solid rgba(set-color($contact-us),0.7);
+    color: rgba(set-color($contact-us),0.7);
+    transition: border-color 200ms;
+    box-shadow: none;
+    height: 150px;
+    padding: 14px;
+    margin: 0;
+    -webkit-text-fill-color: rgba(set-color($contact-us),0.7);
+    @include placeholder {
+      color: $text-palette-4;
+      font-style: normal;
+    }
+    &:focus{
+      border: 1px solid rgba(set-color($contact-us),0.7);
+      transition: border-color 300ms;
+    }
+  }
+  input, textarea {
+    caret-color: rgba(set-color($contact-us),0.7);
+    &:-webkit-autofill, &:-webkit-autofill:focus{
+      box-shadow: 0 0 0 100px $contact-us inset;
+      -webkit-text-fill-color: $contact-us;
+    }
+  }
+  button:disabled{
+    background: rgba(set-color($contact-us),0.2);
+    color: rgba(set-color(rgba(set-color($contact-us),0.7)),0.4);
+  }
+}

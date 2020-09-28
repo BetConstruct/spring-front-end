@@ -17,7 +17,7 @@
                 <div class="multi-game-view-game-v3
                     game-pinned"
                      ng-class="{'prematch-view-v3': !$root.env.live, 'favorite-game-open-euro2016': favoriteGameIsSelected && favoriteGameFromLeftMenu}">
-                    <live-game-scores show-stats-block="showStatsBlock" class="multi-view-statistic-v3" ng-if="openGame" open-game="openGame" enlarged-game="enlargedGame"></live-game-scores>
+                    <live-game-scores show-stats-block="showStatsBlock" class="multi-view-statistic-v3" ng-if="openGame && openGame.id" open-game="openGame" enlarged-game="enlargedGame"></live-game-scores>
                     <div class="multi-view-game-info-v3" ng-init="initOpenedGame(game)" ng-include="::'templates/sport/classic/center/game.html'|fixPath"></div>
                 </div>
             </div>

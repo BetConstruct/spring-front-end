@@ -11,7 +11,7 @@ VBET5.directive('marketStats', ['$http', 'Config', 'Utils', function ($http, Con
             openGame: '=',
             openStatistics: '='
         },
-        template: '<vbet-loader ng-if="loading"></vbet-loader><ng-include ng-if="!loading" src="::templateUrl"></ng-include>',
+        template: '<div class="md-progress-circular" ng-if="loading"></div><ng-include ng-if="!loading" src="::templateUrl"></ng-include>',
         link: function ($scope) {
             var prefix = "https://krosstats.betcoapps.com/api/en/900/93f428d0-6591-48da-859d-b6c326db2448/Entity/";
             function groupData(data) {

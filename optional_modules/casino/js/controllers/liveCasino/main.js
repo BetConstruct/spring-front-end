@@ -78,12 +78,30 @@ CASINO.controller('liveCasinoMainCtrl', ['$rootScope', '$scope', '$sce', '$locat
             $scope.confData.liveCasino.view3DEnabled = true;
         }
 
-        findAndOpenGame();
+        var searchParams = $location.search();
+        $scope.selectLiveDealerProvider(searchParams.provider ? searchParams.provider : $scope.liveGamesData.providerOptions[0]);
+
+        findAndOpenGame(searchParams);
     }
 
+    /**
+     * @ngdoc method
+     * @name selectLiveDealerProvider
+     * @methodOf CASINO.controller:liveCasinoMainCtrl
+     * @description Select provider
+     * @param {string} provider: Name of the provider
+     */
+    $scope.selectLiveDealerProvider = function selectLiveDealerProvider(provider) {
+        $scope.liveGamesData.selectedProvider = provider;
+        $location.search('provider', provider);
+    };
 
-    function findAndOpenGame() {
-        var searchParams = $location.search();
+    /**
+     * @ngdoc function
+     * @name findAndOpenGame
+     * @description Find and open game. This part of the logic implemented as on casino.js
+     */
+    function findAndOpenGame(searchParams) {
         if (searchParams.game !== undefined) {
             var game = casinoManager.getGameById($scope.games, searchParams.game);
             var studio = searchParams.studio;
@@ -152,6 +170,11 @@ CASINO.controller('liveCasinoMainCtrl', ['$rootScope', '$scope', '$sce', '$locat
     $scope.toggleSaveToMyCasinoGames = function toggleSaveToMyCasinoGames(game) {
         casinoManager.toggleSaveToMyCasinoGames($rootScope, game);
     };
+
+    $scope.$on('casinoGamesList.toggleSaveToMyCasinoGames', function (e, game) {
+        $scope.toggleSaveToMyCasinoGames(game);
+    });
+
 
     $scope.togglePlayForReal = function togglePlayForReal (gameInfo) {
         casinoManager.togglePlayMode($scope, gameInfo);

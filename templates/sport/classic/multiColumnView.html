@@ -1,4 +1,4 @@
-<div ng-controller="classicMultiColumnCtrl" class="asian-in-classic-table-wrapper no-select-j" ng-show="!prematchGamesLoading">
+<div ng-controller="classicMultiColumnCtrl" class="asian-in-classic-table-wrapper no-select-j multi-column-{{selectedSport ? selectedSport.alias : ''}}" ng-show="!prematchGamesLoading">
     <div class="multicolumn-table aic-head" ng-class="{'hide-handicaps-mc': !multiColumn.prematchGamesEvents.Handicap && !multiColumn.liveGamesEvents.Handicap}" ng-show="multiColumn.prematchGamesEvents || multiColumn.liveGamesEvents" >
         <table class="aic-table-head-first">
             <colgroup span="5"></colgroup>
@@ -79,7 +79,7 @@
                              ng-click="broadcast('prematchMultiView.removeGameFromSelection', {id: game.id, competition: prematchGames.competition}); $event.stopPropagation()"></caption>
                     <colgroup span="11"></colgroup>
                     <tr>
-                        <td class="aic-team-names-wrapper" ng-class="{'outright-broken': !game.team2_name}">
+                        <td class="aic-team-names-wrapper" ng-class="{'outright-broken': game.show_type === 'OUTRIGHT'}">
                             <table>
                                 <colgroup span="2"></colgroup>
                                 <tr>
@@ -221,7 +221,7 @@
                             </div>
                         </td>
                         <td class="aic-more-count" ng-class="{'aic-more-count-outright': !game.team2_name}">
-                            <p ng-if="gameMarketsCountMap[game.id]">+{{gameMarketsCountMap[game.id]}}</p>
+                            <p ng-if="game.additionalEvents || gameMarketsCountMap[game.id]">+{{game.additionalEvents || gameMarketsCountMap[game.id]}}</p>
                         </td>
                     </tr>
                 </table>
