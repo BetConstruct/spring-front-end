@@ -24,6 +24,12 @@ VBET5.controller('promotionalBonusCtrl', ['$scope', '$location', 'Zergling', 'Ba
                 break;
             case "3":
                 isAllowed = $scope.conf.promotionalBonuses.bonusRequestURL;
+                break;
+            case "4":
+                isAllowed = true;
+                break;
+            case "5":
+                isAllowed = $scope.conf.promotionalBonuses.enableReferToFriend;
         }
         $location.search("bonustab", undefined);
         if (!isAllowed) {
@@ -207,44 +213,32 @@ VBET5.controller('promotionalBonusCtrl', ['$scope', '$location', 'Zergling', 'Ba
      * @ngdoc method
      * @name cancelBonus
      * @methodOf vbet5.controller:promotionalBonusCtrl
-     * @param {Number} [bonusId] Bonus id
+     * @param {object} [bonus] Bonus
+
      * @description Cancel active bonus
      */
-    $scope.cancelBonus = function cancelBonus(bonusId) {
-        var response = {
-            amount: 50,
-            currency: 'USD'
-        };
-        getPromotionalBonus();
-    };
+    $scope.cancelBonus = function cancelBonus(bonus) {
+        Zergling.get({client_bonus_id: bonus.id}, 'get_bonus_real_money').then(function (response){
+            var msg = Translator.get('Are you sure want to cancel this bonus?');
+            msg = msg + '<br />' + Translator.get('After the Cancellation {1} will be returned to you`r main balance.', [$filter('number')(response.details.Balance) + ' ' + $rootScope.profile.currency_name]);
 
-    /**
-     * @ngdoc method
-     * @name cancelBonus
-     * @methodOf vbet5.controller:promotionalBonusCtrl
-     * @param {Number} [bonusId] Bonus id
-     * @description Cancel active bonus
-     */
-    $scope.cancelBonus = function cancelBonus(bonusId) {
-        var msg = Translator.get('Are you sure want to cancel this bonus?');
-        if ($rootScope.profile && $rootScope.profile.frozen_balance) {
-            msg = msg + '<br />' + Translator.get('After the Cancellation {1} will be returned to you`r main balance.', [$filter('number')($rootScope.profile.frozen_balance, $rootScope.conf.balanceFractionSize) + ' ' + $rootScope.profile.currency_name]);
-        }
 
-        var promise = showConfirmationDialog(msg, 'prompt');
-        var request = {bonus_id: bonusId};
-        promise.then(function () {
-            Zergling.get(request,'cancel_bonus').then(function (response) {
-                if (response.result === 0){
-                    showConfirmationDialog('Bonus canceled', 'success');
-                    getPromotionalBonus();
-                } else {
-                    showConfirmationDialog(BackendConstants.ErrorCodesByValue[response.result], 'error');
-                }
+            var promise = showConfirmationDialog(msg, 'prompt');
+            var request = {bonus_id: bonus.partner_bonus_id};
+            promise.then(function () {
+                Zergling.get(request,'cancel_bonus').then(function (response) {
+                    if (response.result === 0){
+                        showConfirmationDialog('Bonus canceled', 'success');
+                        getPromotionalBonus();
+                    } else {
+                        showConfirmationDialog(BackendConstants.ErrorCodesByValue[response.result], 'error');
+                    }
+                });
+            }, function (reason) {
+                console.log(reason);
             });
-        }, function (reason) {
-            console.log(reason);
         });
+
     };
 
     /**

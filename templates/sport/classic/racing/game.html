@@ -75,6 +75,7 @@
             <span class="reg" ng-bind="selectedRegion.name"></span>
             <span ng-bind="game.name"></span>
             <p>
+                <b class="cms-jcon-stream" ng-if="streamConfig && streamConfig[game.id]"  ng-click="$root.broadcast('setPrematchStream', streamConfig[game.id]);$event.stopPropagation();"></b>
                 <i ng-bind="game.start_ts|formatDate:'full':null:$root.env.timeFormat"></i>
                 <i class="arrow-open-h"></i>
             </p>

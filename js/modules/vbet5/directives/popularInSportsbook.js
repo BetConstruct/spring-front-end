@@ -44,8 +44,7 @@ VBET5.directive('popularInSportsbook', ['$rootScope', '$location', 'Config', 'Co
                         'region': ['id', 'name', 'alias', 'order']
                     },
                     'where': {
-                        'game': { 'type': {'@in': [0, 2]}},
-                        'sport': { 'type': 2 } // only classic sports ie excludes virtual and electronic sports
+                        'game': { 'type': {'@in': [0, 2]}}
                     }
                 };
 
@@ -118,14 +117,8 @@ VBET5.directive('popularInSportsbook', ['$rootScope', '$location', 'Config', 'Co
                             });
                         });
                     });
-                    if (data && data.length) {
-                        var sortKey = data[0].favorite_order === null ? 'order' : 'favorite_order';
-                        data.sort(function (a, b) {
-                            return a[sortKey] - b[sortKey];
-                        });
-                    }
 
-                    scope.popular.data = data;
+                    scope.popular.data = Utils.twoParamsSorting(data, ["favorite_order", "order"]);
                 }
             }
 

@@ -143,6 +143,11 @@ VBET5.directive('hlsPlayer', ['$http', 'X2js', '$rootScope', 'Translator', funct
                         video.removeEventListener('loadedmetadata', onLoadedMetaData);
                     });
                 }
+
+                if ($attrs.controls !== undefined) {
+                    video.controls = true;
+
+                }
             }
 
             function getPerformStreamUrl() {

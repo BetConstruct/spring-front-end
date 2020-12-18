@@ -21,6 +21,10 @@ angular.module('vbet5.betting').controller('classicViewMainCtrl', ['$rootScope',
 
     $rootScope.footerMovable = true;
     $scope.boostedBets = {selected : false};
+    $scope.expressOfDay = {selected : false};
+
+
+    $scope.couponGames = {selected: false};
 
     angular.extend(this, $controller('classicViewCenterController', {
         $rootScope: $rootScope,
@@ -42,13 +46,14 @@ angular.module('vbet5.betting').controller('classicViewMainCtrl', ['$rootScope',
         competitions: null,
         popularGames: null,
         outRightGames: null,
-        teamGames: null
+        multiselect: null,
+        teamGames: null,
+        couponGames: null
     };
 
     Config.env.liveStatsFlipMode = parseInt(Storage.get('liveStatsFlipMode') || Config.env.liveStatsFlipMode);
     $scope.flipMode = Config.env.liveStatsFlipMode;
     Config.env.preMatchMultiSelection = Storage.get('preMatchMultiSelection') === undefined ? Config.env.preMatchMultiSelection : Storage.get('preMatchMultiSelection');
-    Config.env.hideLiveStats = Storage.get('hideLiveStats') || false;
     $scope.showStatsBlock = !Config.env.hideLiveStats;
     GameInfo.checkIfTimeFilterIsNeeded();
     $scope.hideVideoAndAnimationBox = false;
@@ -79,6 +84,12 @@ angular.module('vbet5.betting').controller('classicViewMainCtrl', ['$rootScope',
     };
     $scope.recommendedGames = { selected: false };
 
+
+
+    function updateStreamConfig() {
+        $scope.streamConfig = GameInfo.PROVIDER_AVAILABLE_EVENTS;
+    }
+    updateStreamConfig();
     /**
      * @ngdoc method
      * @name resizeRightInfoBlock
@@ -109,6 +120,13 @@ angular.module('vbet5.betting').controller('classicViewMainCtrl', ['$rootScope',
     $scope.toggleVideoAndAnimationBox = function toggleVideoAndAnimationBox() {
         $scope.hideVideoAndAnimationBox = !$scope.hideVideoAndAnimationBox;
     };
+
+    function clearCoupons() {
+        $scope.couponGames.selected = false;
+        $scope.couponGames.coupon = null;
+        $location.search("coupon", undefined);
+
+    }
 
 
     /**
@@ -233,6 +251,7 @@ angular.module('vbet5.betting').controller('classicViewMainCtrl', ['$rootScope',
         }
         if (data.fully) {
             $scope.boostedBets.selected = false;
+            $scope.expressOfDay.selected = false;
             $scope.todaysBets.selected = 0;
             $scope.recommendedGames.selected = false;
         }
@@ -264,7 +283,9 @@ angular.module('vbet5.betting').controller('classicViewMainCtrl', ['$rootScope',
 
         $scope.todaysBets.selected = sport.id;
         $scope.boostedBets.selected = false;
+        $scope.expressOfDay.selected = false;
         $scope.selectedCompetition = null;
+        clearCoupons();
 
         var dayShift, startTime, endTime;
         if ($location.search().dayshift) {
@@ -338,6 +359,7 @@ angular.module('vbet5.betting').controller('classicViewMainCtrl', ['$rootScope',
         $scope.boostedBets.selected = true;
         $scope.todaysBets.selected = 0;
         $scope.favoriteGameIsSelected = false;
+        clearCoupons();
         $scope.selectedSport = null;
 
         unsubscribeOldSubscriptions('boostedBets');
@@ -431,7 +453,7 @@ angular.module('vbet5.betting').controller('classicViewMainCtrl', ['$rootScope',
                     angular.forEach(competition.game, function (game) {
                         game.sport = {id: sport.id, alias: sport.alias, name: sport.name};
                         game.region = {id: region.id, name: region.name, alias: region.alias};
-                        if ($scope.boostedBets.selected || $scope.todaysBets.selected || $scope.outrightSelected) {
+                        if ($scope.boostedBets.selected || $scope.couponGames.selected || $scope.todaysBets.selected || $scope.outrightSelected) {
                             game.additionalEvents = game.markets_count;
                         }
                         game.competition = {id: competition.id, order: competition.order};
@@ -442,12 +464,11 @@ angular.module('vbet5.betting').controller('classicViewMainCtrl', ['$rootScope',
                             game.team2_name = game.team2_reg_name && game.team2_name.indexOf(game.team2_reg_name) === -1 ? game.team2_name + ' (' + game.team2_reg_name + ')' : game.team2_name;
                         }
                         $scope.showMarketsFilter = false;
-
-                        if ((game.sport.alias !== 'Soccer' || $scope.boostedBets.selected) && Config.main.enableMarketFiltering) {
+                        if ((game.sport.alias !== 'Soccer' || $scope.boostedBets.selected || $scope.couponGames.selected) && Config.main.enableMarketFiltering) {
                             $scope.selectedMarketFilter = $scope.marketFilterTypes[0];
                         }
 
-                        if (Config.main.enableMarketFiltering && game.sport.alias === 'Soccer' && !$scope.boostedBets.selected) {
+                        if (Config.main.enableMarketFiltering && game.sport.alias === 'Soccer' && !$scope.boostedBets.selected && !$scope.couponGames.selected) {
                             $scope.showMarketsFilter = true;
                             game.filteredMarkets = Utils.groupByItemProperty(game.market, 'type');
                             angular.forEach($scope.marketFilterTypes, function (filter) {
@@ -518,12 +539,10 @@ angular.module('vbet5.betting').controller('classicViewMainCtrl', ['$rootScope',
         }
     }
 
-    function updatePrematchGamesAndMultiColumnView(data) {
+    function updatePrematchGamesAndMultiColumnView(data, subId) {
         updatePrematchGames(data);
-
         if ($scope.multiColumn.show) {
-            $scope.$broadcast('multiColumn.games', 'updateBoth');
-
+            $scope.$broadcast('multiColumn.games', subId ? 'updateBoth' : 'update');
         }
     }
 
@@ -587,6 +606,7 @@ angular.module('vbet5.betting').controller('classicViewMainCtrl', ['$rootScope',
         $scope.selectedCompetition = null;
 
         $scope.favoriteTeamExpanded = false;
+        clearCoupons();
 
         var request = {
             'source': 'betting',
@@ -662,6 +682,14 @@ angular.module('vbet5.betting').controller('classicViewMainCtrl', ['$rootScope',
                 prematchMultiViewGameIds.push(parseInt(id, 10));
             }
         });
+        if (prematchMultiViewGameIds.length === 0) {
+            unsubscribeOldSubscriptions();
+            $scope.prematchGameViewData = [];
+            if ($scope.multiColumn.show) {
+                $scope.$broadcast('multiColumn.games', 'updateBoth');
+            }
+            return;
+        }
         $scope.loadPrematchMultiView();
     });
 
@@ -713,6 +741,9 @@ angular.module('vbet5.betting').controller('classicViewMainCtrl', ['$rootScope',
             {
                 'failureCallback': function () {
                     $scope.prematchGamesLoading = false;
+                },
+                'thenCallback': function (res) {
+                    subIds.multiselect = res.subid;
                 }
             }
         );
@@ -792,8 +823,9 @@ angular.module('vbet5.betting').controller('classicViewMainCtrl', ['$rootScope',
     $scope.expandCompetition = function expandCompetition(competition, sport, openFirstGame) {
         $scope.todaysBets.selected = 0;
         $scope.boostedBets.selected = false;
+        $scope.expressOfDay.selected = false;
         $scope.recommendedGames.selected = false;
-
+        clearCoupons();
         $scope.favoriteTeamExpanded = false;
         $scope.isPopularGames = false;
         $scope.prevCompetition = [competition, sport];
@@ -804,6 +836,9 @@ angular.module('vbet5.betting').controller('classicViewMainCtrl', ['$rootScope',
 
         $scope.selectedCompetition = competition;
         $scope.selectedCompetition.sport = $scope.selectedCompetition.sport || sport;
+        if ($scope.selectedPrematchStreamSport !== undefined && sport.id !== $scope.selectedPrematchStreamSport &&  $scope.selectedSport.id === $scope.selectedPrematchStreamSport) {
+            $rootScope.broadcast("removePrematchStream");
+        }
         $scope.selectedSport = sport || $scope.selectedSport;
         $scope.selectedRegion = competition.region || $scope.selectedRegion;
         $scope.multiColumn.show && $scope.$broadcast('multiColumn.games', 'cleanState');
@@ -1065,6 +1100,7 @@ angular.module('vbet5.betting').controller('classicViewMainCtrl', ['$rootScope',
         $scope.prematchGamesLoading = true;
         $scope.favoriteTeamExpanded = false;
         $scope.favoriteGameIsSelected = false;
+        clearCoupons();
         $scope.selectedCompetition = null;
 
         var dayShift;
@@ -1238,6 +1274,11 @@ angular.module('vbet5.betting').controller('classicViewMainCtrl', ['$rootScope',
         TimeoutWrapper(populateOutright);
     });
 
+    $scope.selectPrematchStreaming = function selectPrematchStreaming(streamInfo, game) {
+        $scope.selectedPrematchStreamSport = game.sport.id;
+        $rootScope.broadcast("setPrematchStream", streamInfo);
+    };
+
     $scope.$on('leftMenu.fullGmeSelected', function(event) {
         event.stopPropagation();
         unsubscribeOldSubscriptions();
@@ -1253,9 +1294,12 @@ angular.module('vbet5.betting').controller('classicViewMainCtrl', ['$rootScope',
         unsubscribeOldSubscriptions('outRightGames');
         $scope.todaysBets.selected = 0;
         $scope.boostedBets.selected = false;
+        $scope.expressOfDay.selected = false;
         $scope.favoriteGameIsSelected = false;
         $scope.isPopularGames = false;
         $scope.favoriteTeamExpanded = false;
+        clearCoupons();
+
         $scope.selectedCompetition = null;
 
         var request = {
@@ -1442,6 +1486,15 @@ angular.module('vbet5.betting').controller('classicViewMainCtrl', ['$rootScope',
 
     $scope.$on('subscribeToRecommendedGames', subscribeToRecommendedGames);
 
+    $scope.$on("selectExpressOfDay", function(event, data) {
+        $scope.selectedSport = data;
+        $scope.selectedRegion = null;
+        $scope.selectedCompetition = null;
+        clearCoupons();
+        unsubscribeOldSubscriptions();
+        $scope.unsubscribeFromOpenGame();
+    });
+
     /**
      * @ngdoc method
      * @name bet
@@ -1459,5 +1512,70 @@ angular.module('vbet5.betting').controller('classicViewMainCtrl', ['$rootScope',
             return;
         }
         $rootScope.$broadcast('bet', {event: event, market: market, game: game, oddType: oddType});
+    };
+
+
+    $scope.$on('stream.config.updated', function() {
+        updateStreamConfig();
+    });
+
+    $scope.expandCoupon = function expandCoupon(coupon) {
+        $rootScope.broadcast("clearSelectedCompetitionAndRegion");
+        $scope.boostedBets.selected = false;
+        $scope.expressOfDay.selected = false;
+        $scope.todaysBets.selected = 0;
+        $scope.favoriteGameIsSelected = false;
+        $scope.couponGames.selected  = true;
+        $scope.couponGames.coupon  = coupon;
+        $scope.selectedCompetition = null;
+        $scope.selectedSport = null;
+        $location.search({
+            type: 0,
+            coupon: coupon.Name
+        });
+
+        unsubscribeOldSubscriptions("couponGames");
+
+        $scope.prematchGameViewData = [];
+        $scope.showMarketsFilter = false;
+        var request = {
+            'source': 'betting',
+            'what': {
+                'sport': ['id', 'name', 'alias'],
+                'competition': ['id', 'name'],
+                'region': ['id', 'name', 'alias'],
+                'game': [['id', 'show_type', 'start_ts', 'team1_name', 'team2_name', 'team1_external_id', 'team2_external_id','team1_id', 'team2_id', 'type', 'show_type',  'markets_count', 'is_blocked', 'exclude_ids', 'is_stat_available', 'game_number', 'game_external_id', 'is_live', 'is_neutral_venue']],
+                'event': ['id', 'price', 'type', 'name', 'order', 'base', 'price_change'],
+                'market': ['type', 'express_id', 'name', 'base', 'display_key', 'display_sub_key', 'main_order', 'col_count', 'id']
+            },
+            'where': {
+                'game' :{
+                    'id': {'@in': coupon.Matches}
+                }
+            }
+        };
+        var requestMarketTypes = ["P1P2", "P1XP2", "Handicap"];
+        addMarketTypesInRequest(request, requestMarketTypes, true);
+        $scope.prematchGamesLoading = true;
+
+        connectionService.subscribe(request, updatePrematchGamesAndMultiColumnView,
+            {
+                'thenCallback': function (result) {
+                    $scope.prematchGamesLoading = false;
+                    if (result.subid) {
+                        subIds.couponGames = result.subid;
+                    }
+                    if (result.data) {
+                        if ($location.search().game && (!$scope.openGame || $scope.openGame.id !== Number($location.search().game))) { //open if deeplinked and different from now open
+                            $scope.openGameFullDetails({id: Number($location.search().game)});
+                        } else if (!$scope.openGame && $scope.prematchGameViewData && $scope.prematchGameViewData[0] && $scope.prematchGameViewData[0].games) {
+                            $scope.openGameFullDetails($scope.prematchGameViewData[0].games[0]);
+                        }
+                    }
+                },
+                'failureCallback': function () {
+                    $scope.prematchGamesLoading = false;
+                }
+            });
     };
 }]);

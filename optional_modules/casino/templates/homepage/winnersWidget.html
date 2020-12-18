@@ -1,7 +1,7 @@
 <div class="casino-gamer-board casino-gamer-winners-container">
     <casino-biggest-winners
             title="{{confData.main.topBanners.showBiggestWinners ? 'Last Winners' : ''}}"
-            template-url="templates/directive/casino-biggest-winners-v2.html" limit="8"
+            template-url="templates/directive/casino-biggest-winners-v2.html" limit="item.limit || 8"
             class="winners-list"></casino-biggest-winners>
 </div>
 

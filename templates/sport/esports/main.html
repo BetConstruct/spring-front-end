@@ -6,7 +6,7 @@
          drag-from="calculator-draggable-header">
         <include-template template-path="templates/sport/classic/systemCalculator.html"></include-template>
     </div>
-    <div class="classic-version-euro2016" style="background-image:url({{page.thumbnail_images.full.url}})">
+    <div class="classic-version-euro2016" ng-style="{'background-image': 'url(' + page.thumbnail_images.full.url + ')'}">
         <div class="classic-view-wrapper-v3">
             <div class="classic-view-column-v3 {{leftMenuClosed ? 'left-menu-closed-v3' : ''}}">
                 <div class="left-column-v3" ng-include="'templates/sport/esports/left.html'"></div>

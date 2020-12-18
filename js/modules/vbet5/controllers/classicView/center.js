@@ -32,8 +32,10 @@ angular.module('vbet5.betting').controller('classicViewCenterController', ['$roo
         enabled: MarketService.marketDivided
     };
     $scope.customTemplateForSport = {
-        31: 'templates/sport/classic/racing/main.html'
+        '31': 'templates/sport/classic/racing/main.html',
+        '-17': 'templates/sport/expressOfDay/main.html'
     };
+    var initial = !!$location.search().game;
 
     /**
      * @ngdoc method
@@ -186,7 +188,7 @@ angular.module('vbet5.betting').controller('classicViewCenterController', ['$roo
                             GameInfo.updateGameStatistics($scope.openGame);
                             GameInfo.extendLiveGame($scope.openGame);
 
-                            if($scope.openGame.sport.alias === "Soccer" || $scope.openGame.sport.alias === "CyberFootball") {
+                            if($scope.openGame.sport.alias === "Soccer") {
                                 GameInfo.generateTimeLineEvents($scope.openGame, $scope);
                                 GameInfo.addOrderingDataToSoccerGameEvents($scope.openGame);
                             }
@@ -280,7 +282,7 @@ angular.module('vbet5.betting').controller('classicViewCenterController', ['$roo
                     'sport': ['id', 'name', 'alias'],
                     'competition': ['id', 'name'],
                     'region': ['id', 'alias', 'name'],
-                    'game': Config.env.live ?
+                    'game': (Config.env.live || initial)?
                         prematchGameRequest.concat([
                             "match_length",
                             "scout_provider",
@@ -294,6 +296,9 @@ angular.module('vbet5.betting').controller('classicViewCenterController', ['$roo
                 },
                 'where': {'game': {'id': game.id}}
             };
+            if (initial) {
+                initial = false;
+            }
 
             if (game.sport && game.sport.id) {
                 request.where.sport = {'id': game.sport.id};
@@ -465,8 +470,8 @@ angular.module('vbet5.betting').controller('classicViewCenterController', ['$roo
      */
     $scope.raceCardsColumnClick = function raceCardsColumnClick(orderItem) {
         if (orderItem === 'price'
-           && $scope.openGame.info.race
-           && !$scope.openGame.info.race.raceStats[0].event.price) {
+            && $scope.openGame.info.race
+            && !$scope.openGame.info.race.raceStats[0].event.price) {
             return;
         }
         if ($scope.raceCardsPredicate === orderItem || ($scope.openGame.sport.alias === 'SISGreyhound' && $scope.raceCardsPredicateDog === orderItem)) {

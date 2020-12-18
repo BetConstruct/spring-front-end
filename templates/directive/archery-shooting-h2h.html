@@ -1,0 +1,57 @@
+<!-- Archery H2H live game template-->
+<div class="game-score-archery-shots archery-h2h" ng-if="openGame.id">
+    <ul class="game-score-archery-total">
+        <li>
+            <b>{{openGame.info.score1}}</b>
+            <b>:</b>
+            <b>{{openGame.info.score2}}</b>
+        </li>
+        <li>
+            <b>{{openGame.info.home_total}}</b>
+            <b>:</b>
+            <b>{{openGame.info.away_total}}</b>
+        </li>
+    </ul>
+    <h3 class="game-score-archery-title">
+        <span class="ellipsis-text">{{openGame.team1_name}}</span>
+        <b>vs</b>
+        <span class="ellipsis-text">{{openGame.team2_name}}</span>
+    </h3>
+    <p class="game-score-archery-paragraph">{{openGame.info.current_game_state|convertSetName:openGame.sport.alias|translate}}</p>
+    <ul class="game-score-archery-set" ng-init="init()">
+
+        <li ng-repeat="setNumber in [6,1,2,3,4,5]"
+            class="game-score-archery archery-set-{{setNumber}}"
+            ng-show="currentSetNumber >= setNumber"
+            ng-class="{'archery-set-expand' : (currentSetNumber === setNumber && openGame.info.current_game_state !== 'timeout' ), 'archery-set-info' : (currentSetNumber > setNumber || openGame.info.current_game_state === 'timeout') }"
+        >
+
+            <span>{{'set'+setNumber|convertSetName:openGame.sport.alias|translate}}</span>
+            <ul class="archery-point">
+                <li class="archery-gamer ellipsis-text">{{openGame.team1_name}}</li>
+                <li>
+                    <i
+                            ng-repeat="index in [0,1,2]"
+                            ng-if="setNumber !== 6 || (setNumber === 6 && openGame.info.period_points_away.length >= index)"
+                            class="archery-point-{{openGame.info.period_points_home[index] !== 0 ? (openGame.info.period_points_home[index] || 'unplayed') : 'miss'}}"
+                            ng-class="{'active': openGame.info.period_points_home.length === index && openGame.info.pass_team === 'team1'}">{{openGame.info.period_points_home[index]}}
+                    </i>
+                </li>
+                <li class="archery-point-total"><i>{{openGame.stats['score_set'+ setNumber].team1_value}}</i></li>
+            </ul>
+            <ul class="archery-point">
+                <li class="archery-gamer ellipsis-text">{{openGame.team2_name}}</li>
+                <li>
+                    <i
+                            ng-repeat="index in [0,1,2]"
+                            ng-if="setNumber !== 6 || (setNumber === 6 && openGame.info.period_points_away.length >= index)"
+                            class="archery-point-{{openGame.info.period_points_away[index] !== 0 ? (openGame.info.period_points_away[index] || 'unplayed') : 'miss'}}"
+                            ng-class="{'active': openGame.info.period_points_away.length === index && openGame.info.pass_team === 'team2'}">{{openGame.info.period_points_away[index]}}
+                    </i>
+                </li>
+                <li class="archery-point-total"><i>{{openGame.stats['score_set'+ setNumber].team2_value}}</i></li>
+            </ul>
+        </li>
+
+    </ul>
+</div>

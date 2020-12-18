@@ -8,7 +8,7 @@
 VBET5.controller('settingsCtrl', ['$scope', '$rootScope', '$location', '$document', '$q', 'Zergling', 'Translator', 'AuthData', 'Config', 'Utils', 'Moment', 'CountryCodes', function ($scope, $rootScope, $location, $document, $q, Zergling, Translator, AuthData, Config, Utils, Moment, CountryCodes) {
     'use strict';
 
-    var REG_FORM_BIRTH_YEAR_LOWEST = 1900;
+    var REG_FORM_BIRTH_YEAR_LOWEST = new Date().getFullYear() - 110;
     var referralStartDate = Config.main.friendReferral;
     $scope.countryCodes = Utils.objectToArray(Utils.getAvailableCountries(CountryCodes), 'key');
 
@@ -41,28 +41,8 @@ VBET5.controller('settingsCtrl', ['$scope', '$rootScope', '$location', '$documen
         phone_number: 'phone'
     };
 
-    /**
-     * @ngdoc method
-     * @name changePassword
-     * @methodOf vbet5.controller:settingsCtrl
-     * @description changes user password using data from corresponding form
-     */
-    $scope.changePassword = function changePassword() {
-        if ($scope.working || $scope.env.sliderContent !== 'settings') return;
-
+    function doChangePasswordRequest(request) {
         $scope.working = true;
-        $scope.forms.changepasswordForm.oldpassword.$invalid = $scope.forms.changepasswordForm.oldpassword.$error.incorrect = false;
-        $scope.forms.changepasswordForm.$setPristine();
-        var request = {
-            password: $scope.changepasswordData.oldpassword,
-            new_password: $scope.changepasswordData.password
-
-        };
-
-        if($scope.conf.smsVerification.changePassword){
-            request.confirmation_code = $scope.changepasswordData.confirmation_code;
-        }
-
         Zergling.get(request, 'update_user_password').then(function (response) {
             if (response.auth_token) {
                 var authData = AuthData.get();
@@ -88,16 +68,17 @@ VBET5.controller('settingsCtrl', ['$scope', '$rootScope', '$location', '$documen
             } else if (response.result) {
                 var error_message = 'message_' + response.result;
                 if ([2474, 2476, 2481, 2483, 2482].indexOf(response.result) !== -1) {
-                    error_message = Translator.get(response.result_text);
-                    $scope.forms.changepasswordForm.confirmation_code.$setValidity('incorrect', true);
-                    $scope.forms.changepasswordForm.confirmation_code.$setValidity('invalid', true);
+                   Utils.getSMSCode(3, $rootScope.profile.username, request.confirmation_code, error_message).then(function(code) {
+                       request.confirmation_code = code;
+                       doChangePasswordRequest(request);
+                   });
+                }else{
+                    $rootScope.$broadcast("globalDialogs.addDialog", {
+                        type: 'error',
+                        title: 'Error',
+                        content: error_message
+                    });
                 }
-
-                $rootScope.$broadcast("globalDialogs.addDialog", {
-                    type: 'error',
-                    title: 'Error',
-                    content: error_message
-                });
             } else {
                 throw response;
             }
@@ -116,7 +97,96 @@ VBET5.controller('settingsCtrl', ['$scope', '$rootScope', '$location', '$documen
         })['finally'](function() {
             $scope.working = false;
         });
+    }
+
+    /**
+     * @ngdoc method
+     * @name changePassword
+     * @methodOf vbet5.controller:settingsCtrl
+     * @description changes user password using data from corresponding form
+     */
+    $scope.changePassword = function changePassword() {
+        if ($scope.working || $scope.env.sliderContent !== 'settings') return;
+
+        var request = {
+            password: $scope.changepasswordData.oldpassword,
+            new_password: $scope.changepasswordData.password
+
+        };
+
+        if ($rootScope.partnerConfig.smsVerification && $rootScope.partnerConfig.smsVerification.changePassword) {
+            Utils.getSMSCode(3, $rootScope.profile.username).then(function(code) {
+                request.confirmation_code = code;
+                doChangePasswordRequest(request);
+            });
+        } else {
+            doChangePasswordRequest(request)
+        }
     };
+
+    function doUpdateProfileRequest(request) {
+        $scope.working = true;
+
+        Zergling.get(request, 'update_user').then(function (response) {
+            if (response.result === 0) {
+                $rootScope.$broadcast("globalDialogs.addDialog", {
+                    type: 'success',
+                    title: 'Success',
+                    content: 'Personal information updated.',
+                    buttons: [
+                        {title: 'Ok', callback: function() {
+                                /*$rootScope.$broadcast('toggleSliderTab', 'deposit');*/
+                            }}
+                    ]
+                });
+
+                $scope.env.showSlider = false;
+                $scope.env.sliderContent = '';
+
+            } else if (['-2474', '-2476', '-2481', '-2483', '-2482'].indexOf(response.result) !== -1) {
+                Utils.getSMSCode(4, $rootScope.profile.username, request.user_info.confirmation_code, response.result_text).then(function(code) {
+                    request.user_info.confirmation_code = code;
+                    doUpdateProfileRequest(request);
+                })
+            } else if (response.result === '-1002' || response.result === '-1003' || response.result === '-1005') {
+                $rootScope.$broadcast("globalDialogs.addDialog", {
+                    type: 'error',
+                    title: 'Error',
+                    content: 'Wrong Password' // No need to translate since its translated on the dialog side already
+                });
+            } else if (response.result === '-1119') {
+                $scope.forms.detailsForm.email.$invalid = $scope.forms.detailsForm.email.$error.dublicate = true;
+            } else if (response.result === '-1123') {
+                $rootScope.$broadcast("globalDialogs.addDialog", {
+                    type: 'error',
+                    title: 'Error',
+                    content: 'Passport Number is already registered for another account' // No need to translate since its translated on the dialog side already
+                });
+            } else if (response.result === '-2480') {
+                $rootScope.$broadcast("globalDialogs.addDialog", {
+                    type: 'error',
+                    title: 'Error',
+                    content: 'Invalid Bank Name' // No need to translate since its translated on the dialog side already
+                });
+            } else  {
+                $rootScope.$broadcast("globalDialogs.addDialog", {
+                    type: 'error',
+                    title: 'Error',
+                    content: response.result_text
+                });
+            }
+            console.log(response);
+        })['catch'](function (response) {
+            $rootScope.$broadcast("globalDialogs.addDialog", {
+                type: 'error',
+                title: 'Error',
+                content: Translator.get('Error occured') + ' : ' + response.data
+            });
+            console.log(response);
+        })['finally'](function() {
+            $scope.working = false;
+        });
+    }
 
     /**
      * @ngdoc method
@@ -127,7 +197,6 @@ VBET5.controller('settingsCtrl', ['$scope', '$rootScope', '$location', '$documen
     $scope.changeDetails = function changeDetails() {
         // Prevent user from updating profile till the previous changes have been resolved
         if (!$scope.working && $scope.env.sliderContent === 'settings') {
-            $scope.working = true;
             $document[0].activeElement.blur(); // Need to 'unfocus' password field in order for it not to be $touched after update
             $scope.details.country_code = $scope.details.selectCountryCode && $scope.details.selectCountryCode.key;
             var request = {user_info:{}};
@@ -149,65 +218,16 @@ VBET5.controller('settingsCtrl', ['$scope', '$rootScope', '$location', '$documen
                     request.user_info[key] = $scope.registrationData[key] === 'true';
                 });
             }
-
-            console.log("changeDetails", $scope.personalDetails.editableFields, request, $scope.details);
-            Zergling.get(request, 'update_user').then(function (response) {
-                if (response.result === 0) {
-                    $rootScope.$broadcast("globalDialogs.addDialog", {
-                        type: 'success',
-                        title: 'Success',
-                        content: 'Personal information updated.',
-                        buttons: [
-                            {title: 'Ok', callback: function() {
-                                    /*$rootScope.$broadcast('toggleSliderTab', 'deposit');*/
-                                }}
-                        ]
-                    });
-
-                    $scope.env.showSlider = false;
-                    $scope.env.sliderContent = '';
-
-                } else if (response.result === '-1002' || response.result === '-1003' || response.result === '-1005') {
-                    $rootScope.$broadcast("globalDialogs.addDialog", {
-                        type: 'error',
-                        title: 'Error',
-                        content: 'Wrong Password' // No need to translate since its translated on the dialog side already
-                    });
-                } else if (response.result === '-1119') {
-                    $scope.forms.detailsForm.email.$invalid = $scope.forms.detailsForm.email.$error.dublicate = true;
-                } else if (response.result === '-1123') {
-                    $rootScope.$broadcast("globalDialogs.addDialog", {
-                        type: 'error',
-                        title: 'Error',
-                        content: 'Passport Number is already registered for another account' // No need to translate since its translated on the dialog side already
-                    });
-                } else if (response.result === '-2480') {
-                    $rootScope.$broadcast("globalDialogs.addDialog", {
-                        type: 'error',
-                        title: 'Error',
-                        content: 'Invalid Bank Name' // No need to translate since its translated on the dialog side already
-                    });
-                } else  {
-                    $rootScope.$broadcast("globalDialogs.addDialog", {
-                        type: 'error',
-                        title: 'Error',
-                        content: response.result_text
-                    });
-                }
-                console.log(response);
-            })['catch'](function (response) {
-                $rootScope.$broadcast("globalDialogs.addDialog", {
-                    type: 'error',
-                    title: 'Error',
-                    content: Translator.get('Error occured') + ' : ' + response.data
+            if ($rootScope.partnerConfig.smsVerification && $rootScope.partnerConfig.smsVerification.updateProfile) {
+                Utils.getSMSCode(4, $rootScope.profile.username).then(function(code) {
+                    request.user_info.confirmation_code = code;
+                    doUpdateProfileRequest(request);
                 });
-                console.log(response);
-            })['finally'](function() {
-                $scope.working = false;
-            });
+            }else {
+                doUpdateProfileRequest(request);
+            }
         }
     };
-
 
     /**
      * @ngdoc method
@@ -344,7 +364,7 @@ VBET5.controller('settingsCtrl', ['$scope', '$rootScope', '$location', '$documen
             $scope.birthDate.years = [];
             var i, max = new Date().getFullYear() - Config.main.registration.minimumAllowedAge;
             for (i = max; i >= REG_FORM_BIRTH_YEAR_LOWEST; i -= 1) {
-                $scope.birthDate.years[i] = i.toString();
+                $scope.birthDate.years.push(i.toString());
             }
         }
 
@@ -371,20 +391,20 @@ VBET5.controller('settingsCtrl', ['$scope', '$rootScope', '$location', '$documen
      */
     $scope.getLimits = function getLimits() {
         Zergling.get({type : 'deposit'}, 'user_limits').then(function (response) {
-            $scope.working = false;
             if (response.result === 0) {
                 console.log(response.details);
                 $scope.depositLimitsData = response.details;
             }
 
         })['catch'](function (response) {
-            $scope.working = false;
             $rootScope.$broadcast("globalDialogs.addDialog", {
                 type: 'error',
                 title: 'Error',
                 content: Translator.get('Error occured') + ' : ' + response.data
             });
             console.log(response);
+        })['finally'](function () {
+            $scope.working = false;
         });
     };
 
@@ -882,27 +902,6 @@ VBET5.controller('settingsCtrl', ['$scope', '$rootScope', '$location', '$documen
         }
     }
 
-    /**
-     * @ngdoc method
-     * @name sendVerificationCodeSMS
-     * @methodOf vbet5.controller:settingsCtrl
-     * @description changes user password using data from corresponding form
-     */
-    $scope.sendVerificationCodeSMS = function sendVerificationCodeSMS() {
-        if ($scope.working || $scope.env.sliderContent !== 'settings') return;
-
-        $scope.working = true;
-        var username =  $rootScope.profile.username;
-
-        var request = {
-            action_type: 3,
-            login: username
-        };
-        Zergling.get(request, 'send_sms_with_username')
-            ['finally'](function() {
-                $scope.working = false;
-            });
-    };
 
     /**
      * @ngdoc method

@@ -48,6 +48,23 @@ VBET5.directive('cashOutDialog', ['$rootScope', '$timeout', 'Moment', 'Zergling'
                 };
             }
 
+            /**
+             * @ngdoc method
+             * @name updateBetAfterCashout
+             * @methodOf vbet5.directive:cashOutDialog
+             * @description sends bet for updating
+             *
+             * @param {Number} betId the bet id
+             * @param {boolean} [autoCashout]
+             */
+            function updateBetAfterCashout(betId, autoCashout) {
+                setTimeout(function() {
+                    BetService.getBetHistory(betId)
+                        .then(function(bet) {
+                            $rootScope.$broadcast('updateAfterCashout', {bet: bet, autoCashout: autoCashout});
+                        });
+                }, 950);
+            }
 
             function openDialog(event, data) {
                 initParams();
@@ -102,7 +119,7 @@ VBET5.directive('cashOutDialog', ['$rootScope', '$timeout', 'Moment', 'Zergling'
                             $scope.cashoutRule.canceled = false;
                             $scope.cashoutRule.error = false;
                             $scope.cashoutSuccess = true;
-                            $rootScope.$broadcast('updateAfterCashout', {betId: betId, autoCashout: true});
+                            updateBetAfterCashout(betId, true);
                         } else {
                             $scope.cashoutRule.error = true;
                             $scope.cashoutRule.created = false;
@@ -156,7 +173,7 @@ VBET5.directive('cashOutDialog', ['$rootScope', '$timeout', 'Moment', 'Zergling'
                                             $rootScope.$broadcast('loadMixedBetHistory');
                                         }, 950);
                                     } else {
-                                        $rootScope.$broadcast('updateAfterCashout', {betId: bet.id});
+                                        updateBetAfterCashout(bet.id);
                                     }
                                 }
                                 $scope.cashoutDialog.type = 'confirm';
@@ -382,7 +399,7 @@ VBET5.directive('cashOutDialog', ['$rootScope', '$timeout', 'Moment', 'Zergling'
                             $scope.cashoutRule.error = false;
                             $scope.cashoutRule.created = false;
                             $scope.cashoutSuccess = true;
-                            $rootScope.$broadcast('updateAfterCashout', {betId: betId, autoCashout: true});
+                            updateBetAfterCashout(betId, true);
                         } else {
                             $scope.cashoutRule.error = true;
                             $scope.cashoutRule.created = false;

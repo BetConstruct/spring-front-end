@@ -57,6 +57,20 @@
                         <p>{{'Boosted bets'|translate}}</p>
                         <span class="arrow-view-v3"></span>
                     </a>
+                <a class="sports-item-v3 {{sport.alias}}" title="{{'Express of the day'|translate}}" ng-class="{'active': expressOfDay.selected}" ng-if="$root.conf.expressOfDay.enabled && sport.alias === 'expressofday'"
+                   ng-click="($location.path() === '/dashboard/' ? $location.path('/sport') : void()); env.preMatchMultiSelection ? '' : !expressOfDay.selected && expandLeftMenuPrematchSport(sport); "
+                >
+                    <span class="sport-icon-v3"></span>
+                    <p>{{'Express of the day'|translate}}</p>
+                    <span class="arrow-view-v3"></span>
+                </a>
+                    <a class="sports-item-v3 {{sport.alias}}" title="Coupons" ng-class="{'active': leftMenuState.prematch.sport[sport.id].expanded}" ng-if="$root.conf.couponGames.enabled && sport.alias === 'coupongames'"
+                       ng-click="($location.path() === '/dashboard/' ? $location.path('/sport') : void()); env.preMatchMultiSelection ? '' : expandLeftMenuPrematchSport(sport, null, null, true); "
+                    >
+                        <span class="sport-icon-v3"></span>
+                        <p trans>Coupons</p>
+                        <span class="arrow-view-v3"></span>
+                    </a>
 
                     <div class="region-item-row-v3" ng-if="leftMenuState.prematch.sport[sport.id].expanded || (todaysBets.selected && sport.isTodayBets ||(outrightSelected && sport.isOutright))">
                         <div class="region-items-box">
@@ -113,6 +127,20 @@
                                         </div>
                                     </div>
                                 </div>
+                            </div>
+                            <div class="full-region-info-v3" ng-if="$root.conf.couponGames.enabled && sport.alias === 'coupongames'">
+                                <div class="region-items-box">
+                                    <div class="full-region-info-v3"
+                                         ng-repeat="coupon in sport.coupons track by coupon.Name"
+                                    >
+                                        <div class="region-item-v3" ng-class="{'active': couponGames.coupon === coupon}"
+
+                                             ng-click="couponGames.coupon !== coupon && expandCoupon(coupon);">
+                                            {{::coupon.Name}}
+                                        </div>
+                                    </div>
+                                </div>
+
                             </div>
                             <!-- popular competitions add class to open competitions-->
                             <div class="full-region-info-v3 active" ng-if="sport.isFavoriteCompetition">

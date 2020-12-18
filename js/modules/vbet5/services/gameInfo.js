@@ -9,7 +9,7 @@ angular.module('vbet5').service('GameInfo', ['$rootScope', '$http', '$filter', '
     'use strict';
     var GameInfo = {};
 
-    GameInfo.liveGamesSoccerTemplate = ['Soccer', 'CyberFootball'];
+    GameInfo.liveGamesSoccerTemplate = {'Soccer': 1, 'CyberFootball': 1};
     GameInfo.dotaGamesList = [];/*'Dota', 'Dota2','CounterStrike', 'LeagueofLegends', 'StarCraft', 'StarCraft2'  --temporary removed dota game statistics*/
     GameInfo.PROVIDER_AVAILABLE_EVENTS = null;
     GameInfo.SPORT_GROUPS = null;
@@ -294,6 +294,10 @@ angular.module('vbet5').service('GameInfo', ['$rootScope', '$http', '$filter', '
             provider: game.tv_type,
             use_hls: game.tv_type === 1 ? false :  !!Config.main.video.providersThatSupportHls[game.tv_type]
         };
+
+        if (game.tv_type === 26 || game.tv_type === 6) { // should be added for all providers that work with iframe
+            request.stream_type = "embed";
+        }
 
         return Zergling
             .get(request, 'video_url')
@@ -667,6 +671,7 @@ angular.module('vbet5').service('GameInfo', ['$rootScope', '$http', '$filter', '
         28: 'Offside',
         29: 'GoalkeeperSave',
         30: 'ShotBlocked',
+        31: 'PenaltyMissed',
         100: 'NotStarted',
         101: 'FirstHalf',
         102: 'HalfTime',
@@ -922,18 +927,14 @@ angular.module('vbet5').service('GameInfo', ['$rootScope', '$http', '$filter', '
 
 
     /*returns position of timeline event */
-    function getTimelinePosition (timelineEvent) {
+    function getTimelinePosition(timelineEvent, extraTime, mainTime) {
         var theMinute = parseInt(timelineEvent.minute, 10);
         var iconSize = 8; //can be changed
 
-        var matchLength = parseInt(timelineEvent.matchLength, 10);
-        var extraTime = 30;
-        var mainTime = matchLength > 100 ? matchLength - extraTime : matchLength;
         var leftPercent = (timelineEvent.extraTime ? (theMinute - mainTime) / extraTime : theMinute / mainTime) * 100;
 
-        return {position: 'absolute',left: 'calc(' + leftPercent + '% + ' + timelineEvent.positionCorrected * iconSize + 'px)'};
+        return {position: 'absolute',left: leftPercent + '%' };
     }
-
 
     //calculates one timeline event data and adds it to events list
     function populateTimelineEventData(tlEvent, game) {
@@ -942,46 +943,63 @@ angular.module('vbet5').service('GameInfo', ['$rootScope', '$http', '$filter', '
         }
         var currentEvent = {};
         currentEvent.minute = parseInt(tlEvent.current_minute, 10);
-        currentEvent.positionCorrected = 0;
         currentEvent.type = 'tl-' + tlEvent.event_type.split(' ').join('_').toLowerCase();
         currentEvent.shirtColor = tlEvent.team === 'team1' ? game.info.shirt1_color : game.info.shirt2_color;
         currentEvent.team = tlEvent.team;
         currentEvent.matchLength = game.last_event ? game.last_event.match_length : "90";
+        currentEvent.period_sequence = tlEvent.period_sequence;
 
         currentEvent.details = {};
         currentEvent.details.type = tlEvent.event_type.split('_').join(' ');
         currentEvent.details.add_info = tlEvent.add_info + " " + game[tlEvent.team + '_name'];
 
         currentEvent.extraTime = false;
-        currentEvent.matchExtraTime = false;
 
         if (game.info.isExtraTime) {
             if(currentEvent.matchLength > 100){
                 currentEvent.extraTime = currentEvent.minute > currentEvent.matchLength - 30;
             }
         }
-        game.tlEvents.push(currentEvent);
+        var matchLength = parseInt(currentEvent.matchLength, 10);
+        var extraTime = 30;
+        var mainTime = matchLength > 100 ? matchLength - extraTime : matchLength;
 
-        var previousEvent = game.tlEvents[game.tlEvents.indexOf(currentEvent) - 1];
-        setCorrection(currentEvent, previousEvent);
-
-        currentEvent.timeline_position = getTimelinePosition(currentEvent);
+        groupEvents(game.groupedTlEvents, currentEvent, mainTime, extraTime);
     }
 
-    function sortEvents(events) {
-        events.sort(function (a,b) {
-            if(a.current_minute !== b.current_minute){
-                return  a.side - b.side || parseInt(a.current_minute) - parseInt(b.current_minute);
-            }
-        });
-    }
 
-    function setCorrection(currentEvent, previousEvent) {
-        if (previousEvent && currentEvent.team === previousEvent.team && currentEvent.minute === previousEvent.minute) {
-            currentEvent.positionCorrected = (previousEvent.positionCorrected || 0) + 1;
-        } else {
-            currentEvent.positionCorrected = 0;
+    function groupEvents(groupedTlEvents, currentEvent, mainTime, extraTime) {
+        var minuteCorrected = 0;
+        switch(currentEvent.period_sequence){
+            case 1:
+                minuteCorrected = currentEvent.minute > (mainTime / 2) ? parseInt(mainTime / 2) : 0;
+                break;
+            case 3:
+                minuteCorrected = currentEvent.minute > mainTime ? mainTime : 0;
+                break;
+            case 5:
+                minuteCorrected = currentEvent.minute >  (mainTime + extraTime / 2) ? parseInt(mainTime + extraTime / 2) : 0;
+                break;
+            case 7:
+                minuteCorrected = currentEvent.minute >  mainTime + extraTime ? mainTime + extraTime : 0;
+                break;
         }
+        if(minuteCorrected){
+            currentEvent.minute = minuteCorrected;
+        }
+
+        if(!groupedTlEvents[currentEvent.minute]){
+            groupedTlEvents[currentEvent.minute] = {
+                timeline_position : getTimelinePosition(currentEvent, extraTime, mainTime),
+                period_sequence : currentEvent.period_sequence,
+                extraTime: currentEvent.period_sequence >= 4,
+                teams: {}
+            };
+        }
+        if(!groupedTlEvents[currentEvent.minute].teams[currentEvent.team]){
+            groupedTlEvents[currentEvent.minute].teams[currentEvent.team] = [];
+        }
+        groupedTlEvents[currentEvent.minute].teams[currentEvent.team].push(currentEvent);
     }
 
     /**
@@ -992,8 +1010,6 @@ angular.module('vbet5').service('GameInfo', ['$rootScope', '$http', '$filter', '
      * @description generates timeline events for soccer animation control
      */
     GameInfo.generateTimeLineEvents = function generateTimeLineEvents(game) {
-
-
         if (game && game.info) {
             game.info.isExtraTime = GameInfo.isExtraTime(game);
         }
@@ -1002,18 +1018,19 @@ angular.module('vbet5').service('GameInfo', ['$rootScope', '$http', '$filter', '
         game.tlCurrentMinute = {width: currentMinuteStyle };
         game.tlCurrentPosition = { left: currentMinuteStyle };
 
-        if (game.live_events && game.live_events.length &&  game.live_events_length !== game.live_events.length) {
-            game.tlEvents = [];
-            game.live_events_length = game.live_events.length;
-            sortEvents(game.live_events);
-            angular.forEach(game.live_events, function (tlEvent) {
-                populateTimelineEventData(tlEvent, game);
-            });
 
-            if(game.info.current_game_state ==='set5' || game.last_event.period_sequence === 8){ // penalties
+        if (game.live_events && game.live_events.length) {
+            game.groupedTlEvents = {};
+            angular.forEach(game.live_events, function (tlEvent) {
+                if(tlEvent.period_sequence !== 8){ // penalties
+                    populateTimelineEventData(tlEvent, game);
+                }
+            });
+            if (game.info.current_game_state === 'set5') { // penalties
                 generatePostMatchTableEvents(game);
             }
-
+        }else if(!game.live_events && game.groupedTlEvents && !Utils.isEmptyObject(game.groupedTlEvents)){
+            game.groupedTlEvents = {};
         }
     };
 
@@ -1039,8 +1056,17 @@ angular.module('vbet5').service('GameInfo', ['$rootScope', '$http', '$filter', '
                 postMatchPenaltiesEvents[sideName].push(event);
             }
         });
+        var homeEventsCount = postMatchPenaltiesEvents.home.length;
+        var awayEventsCount = postMatchPenaltiesEvents.away.length;
 
-        game.postMatchPenaltiesEvents = {home: new Array(5),away: new Array(5)};
+        var minLength = Math.min(homeEventsCount, awayEventsCount);
+        if(minLength >= 5){
+            minLength = minLength + 1
+        }else {
+            minLength = 5;
+        }
+
+        game.postMatchPenaltiesEvents = {home: new Array(minLength),away: new Array(minLength)};
 
         angular.forEach(postMatchPenaltiesEvents, function (events,side) {
             angular.forEach(events, function (event,index) {

@@ -13,7 +13,7 @@
                ng-click="$event.stopPropagation(); editBet(bet);"
                title="{{ ('Editing functionality is available for this bet.') | translate }}">
             </i>
-            <i class="refresh-icon cms-jcon-refresh" ng-show="$root.conf.enableBetFromBetHistory && (bet.type === 1 || bet.type == 2 || bet.type == 3 || bet.type == 4)" ng-click="$event.stopPropagation();addEvents(bet);" title="Repeat Bet"></i>
+            <i class="refresh-icon cms-jcon-refresh" ng-show="$root.conf.enableBetFromBetHistory && (bet.type === 1 || bet.type == 2 || bet.type == 3 || bet.type == 4)" ng-click="$event.stopPropagation();addEvents(bet);" title="{{'Repeat Bet'|translate}}"></i>
         </p>
         <div class="open-bets-time-id">
             <p ng-bind="bet.date_time|formatDate:'noLocaleTranslate':null:$root.env.timeFormat"></p>
@@ -28,7 +28,7 @@
                     <div class="status-icon-open-bets" title="{{(event.outcome == 3 ? 'Won' : 'Unsettled')|translate}}"></div>
                 </li>
                 <li class="open-bets-games-info" ng-show="event.is_live" ng-class="{'won': event.outcome == 3 , 'lost':event.outcome == 1 }">
-                    <b>Live</b>
+                    <b trans>Live</b>
                 </li>
                 <li ng-class="{'won': event.outcome == 3 , 'lost':event.outcome == 1 }">
                     <p>
@@ -47,7 +47,7 @@
                                 ng-class="{'rule-active': bet.auto_cash_out_amount != null}"
                                 ng-click="$root.broadcast('open.cashoutDialog', {bet: bet});$event.stopPropagation();"
                                 ng-disabled="bet.id === $root.editBet.oldBetId || !(bet.outcome == 0 && bet.cash_out !== undefined)">
-                            <span>Cash-out</span>
+                            <span ng-bind="'Cash-out'|translate"></span>
                             <b>{{bet.cash_out}} <span ng-show="bet.cash_out">{{::$root.profile.currency_name|currency}}</span></b>
                         </button>
                     </div>

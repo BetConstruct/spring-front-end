@@ -122,7 +122,7 @@ angular.module('vbet5').constant('AsianMarkets', {
         'set': "Set",
         'RugbySevens': "Half",
         'RugbyLeague': "Half",
-        'RugbyUnion': "Half"
-
+        'RugbyUnion': "Half",
+        'KingOfGlory': "Game"
     }
 });

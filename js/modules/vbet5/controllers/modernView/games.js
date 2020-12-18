@@ -28,6 +28,13 @@ BettingModule.controller('gamesCtrl', ['$rootScope', '$scope', '$location', '$fi
     $scope.notShowFavourites = {
         'HorseRacing': 1
     };
+
+
+    function updateStreamConfig() {
+        $scope.streamConfig = GameInfo.PROVIDER_AVAILABLE_EVENTS;
+    }
+
+    updateStreamConfig();
     /**
      * @ngdoc method
      * @name gamesInit
@@ -255,6 +262,7 @@ BettingModule.controller('gamesCtrl', ['$rootScope', '$scope', '$location', '$fi
      * @description subscribes to game updates and saves subscription id
      * @param {object} game game object (only id field is used to subscribe)
      * @param {function} callback function that will be called upon successful subscription and further updates
+     * @param {bool} notByUser function
      */
     $scope.subscribeToGame = function subscribeToGame(game, callback, notByUser) {
         if (subscriptionInProgress === game.id) { return; }
@@ -341,6 +349,7 @@ BettingModule.controller('gamesCtrl', ['$rootScope', '$scope', '$location', '$fi
         delete $scope.pinnedGames[game.id];
     };
 
+
     /**
      * @ngdoc function
      * @name showDetachedVideo
@@ -358,6 +367,11 @@ BettingModule.controller('gamesCtrl', ['$rootScope', '$scope', '$location', '$fi
     $scope.$on('flashplayer.playerRemoved', function () {
         $scope.$broadcast('game.attachVideo', $scope.pinnedGame);
 //        $scope.pinnedGame = null;
+    });
+
+
+    $scope.$on('stream.config.updated', function() {
+        updateStreamConfig();
     });
 
     $scope.displayBase = GameInfo.displayBase;

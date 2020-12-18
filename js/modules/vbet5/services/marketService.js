@@ -214,6 +214,8 @@ VBET5.service('MarketService', ["$rootScope", "$filter",  "$location", "Utils", 
         return [firstPack, secondPack];
     }
 
+    MarketService.getEventName = getEventName;
+
     /**
      * @ngdoc function
      * @name getMarketsAndGroups
@@ -330,7 +332,7 @@ VBET5.service('MarketService', ["$rootScope", "$filter",  "$location", "Utils", 
 
         return {
             marketGroups: (groupedMarkets.length > 1 ? [MarketService.MARKET_GROUP_FAVOURITE, MarketService.MARKET_GROUP_ALL].concat(Utils.orderByField(groupedMarkets, "order")) : [MarketService.MARKET_GROUP_FAVOURITE, MarketService.MARKET_GROUP_ALL]),
-            markets:  Utils.orderByField(markets, "order")
+            markets: (sportAlias === "SISGreyhound") ? Utils.orderByField(markets, "type") : Utils.twoParamsSorting(markets, ["order", "point_sequence"])
         };
     };
 

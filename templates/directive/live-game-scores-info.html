@@ -1,11 +1,11 @@
 <div class="live-game-template-wrapper live-score-background-custom live-score-background-{{openGame.sport.alias.toLowerCase()}}{{openGame.sport.alias==='Tennis' && openGame.info.field === 2 ? 'grass' : ''}}">
     <!-- soccer live game template-->
-    <div class="game-score soccer-template" ng-if="(liveGamesSoccerTemplate.indexOf(openGame.sport.alias) !== -1 || $root.conf.esportsGames.indexOf(openGame.sport.alias) !== -1)">
+    <div class="game-score soccer-template" ng-if="(liveGamesSoccerTemplate[openGame.sport.alias] || $root.conf.esportsGames[openGame.sport.alias])">
         <div>
             <ul>
                 <li ng-style="{'border-left-color': '#'+ openGame.info.shirt1_color}" ng-class="{active: openGame.info.pass_team === 'team1'}"  title="{{ openGame.team1_name ?  openGame.team1_name: '' }}">
-                    <img ng-if="$root.conf.esportsGames.indexOf(openGame.sport.alias) !== -1" ng-src="{{$root.conf.teamLogosPath}}e/m/{{Math.floor(openGame.team1_id / 2000)}}/{{openGame.team1_id}}.png" />
-                    <div class="team-form" ng-if="$root.conf.esportsGames.indexOf(openGame.sport.alias) === -1"><tshirt shorts="{{openGame.info.short1_color}}" shirt="{{openGame.info.shirt1_color}}"></tshirt></div>
+                    <img ng-if="$root.conf.esportsGames[openGame.sport.alias]" ng-src="{{$root.conf.teamLogosPath}}e/m/{{Math.floor(openGame.team1_id / 2000)}}/{{openGame.team1_id}}.png" />
+                    <div class="team-form" ng-if="!$root.conf.esportsGames[openGame.sport.alias]"><tshirt shorts="{{openGame.info.short1_color}}" shirt="{{openGame.info.shirt1_color}}"></tshirt></div>
                     <p><span>{{ openGame.team1_name ?  openGame.team1_name: '' }}</span></p>
                 </li>
                 <li class="score-total" ng-show="openGame.info.score1 !== undefined"><span><i ng-bind="openGame.info.score1"></i></span></li>
@@ -17,8 +17,8 @@
             </ul>
             <ul>
                 <li ng-style="{'border-left-color': '#'+ openGame.info.shirt2_color}" ng-class="{active: openGame.info.pass_team === 'team2'}"  title="{{ openGame.team2_name ?  openGame.team2_name: '' }}">
-                    <img ng-if="$root.conf.esportsGames.indexOf(openGame.sport.alias) !== -1" ng-src="{{$root.conf.teamLogosPath}}e/m/{{Math.floor(openGame.team2_id / 2000)}}/{{openGame.team2_id}}.png" />
-                    <div class="team-form" ng-if="$root.conf.esportsGames.indexOf(openGame.sport.alias) === -1"><tshirt shorts="{{openGame.info.short2_color}}" shirt="{{openGame.info.shirt2_color}}"></tshirt></div>
+                    <img ng-if="$root.conf.esportsGames[openGame.sport.alias]" ng-src="{{$root.conf.teamLogosPath}}e/m/{{Math.floor(openGame.team2_id / 2000)}}/{{openGame.team2_id}}.png" />
+                    <div class="team-form" ng-if="!$root.conf.esportsGames[openGame.sport.alias]"><tshirt shorts="{{openGame.info.short2_color}}" shirt="{{openGame.info.shirt2_color}}"></tshirt></div>
                     <p><span>{{ openGame.team2_name ?  openGame.team2_name: '' }}</span></p>
                 </li>
                 <li class="score-total" ng-show="openGame.info.score2 !== undefined"><span><i ng-bind="openGame.info.score2"></i></span></li>
@@ -36,7 +36,7 @@
 
 
     <!-- generic multiset games template -->
-    <div class="game-score-multiset" ng-if="(openGame.sport.alias !== 'BasketballShots' && openGame.sport.alias !== 'HorseRacing' && liveGamesSoccerTemplate.indexOf(openGame.sport.alias) === -1 && $root.conf.esportsGames.indexOf(openGame.sport.alias) == -1)" visible-sets>
+    <div class="game-score-multiset" ng-if="(openGame.sport.alias !== 'Archery' && openGame.sport.alias !== 'ArcheryH2H' && openGame.sport.alias !== 'BasketballShots' && openGame.sport.alias !== 'HorseRacing' && !liveGamesSoccerTemplate[openGame.sport.alias] && !$root.conf.esportsGames[openGame.sport.alias])" visible-sets>
         <ul class="title" title="{{ $root.conf.edition.enabled ? (('Edition'|translate) + ': ' + (openGame.start_ts|formatDate:'edition')) : '' }}" ng-click="broadcast('liveGame.headerClicked', openGame);$event.stopPropagation();">
             <li>
                 <dl>
@@ -69,10 +69,10 @@
                 <dl>
                     <dt>
                         <div class="team-form"><tshirt shorts="{{openGame.info.short1_color}}" shirt="{{openGame.info.shirt1_color}}"></tshirt></div>
-                        <p title="{{ openGame.team1_name ?  openGame.team1_name: '' }}">
-                            <stats-logo ng-if="sportWithIcons.indexOf(openGame.sport.alias) > -1" team-id="openGame.team1_id"></stats-logo>
-                            {{ openGame.team1_name ?  openGame.team1_name: '' }}
-                            <span ng-if="openGame.info.pass_team === 'team1' && openGame.sport.alias === 'Cricket' && openGame.info.over_number && openGame.info.deliver_number" class="current-delivery"><i ng-bind="'Current over/delivery {1}/{2}'|translate:[openGame.info.over_number,openGame.info.deliver_number]"></i></span>
+                        <p>
+                            <stats-logo ng-if="$root.conf.showIconsForCompetitions[openGame.competition.id] || sportWithIcons.indexOf(openGame.sport.alias) > -1" team-id="openGame.team1_id"></stats-logo>
+                            <b class="team-form-player ellipsis-text" title="{{ openGame.team1_name ?  openGame.team1_name: '' }}">{{ openGame.team1_name ?  openGame.team1_name: '' }}</b>
+                            <span title="{{'Current over/delivery {1}/{2}'|translate:[openGame.info.over_number,openGame.info.deliver_number]}}" ng-if="openGame.info.pass_team === 'team1' && openGame.sport.alias === 'Cricket' && openGame.info.over_number && openGame.info.deliver_number" class="current-delivery ellipsis-text"><i ng-bind="'Current over/delivery {1}/{2}'|translate:[openGame.info.over_number,openGame.info.deliver_number]"></i></span>
                         </p>
                     </dt>
                 </dl>
@@ -93,9 +93,9 @@
                 <dl>
                     <dt>
                         <div class="team-form"><tshirt shorts="{{openGame.info.short2_color}}" shirt="{{openGame.info.shirt2_color}}"></tshirt></div>
-                        <p title="{{ openGame.team2_name ?  openGame.team2_name: '' }}">
-                            <stats-logo ng-if="sportWithIcons.indexOf(openGame.sport.alias) > -1" team-id="openGame.team2_id"></stats-logo>
-                            {{ openGame.team2_name ?  openGame.team2_name: '' }}
+                        <p>
+                            <stats-logo ng-if="$root.conf.showIconsForCompetitions[openGame.competition.id] || sportWithIcons.indexOf(openGame.sport.alias) > -1" team-id="openGame.team2_id"></stats-logo>
+                            <b class="team-form-player ellipsis-text" title="{{ openGame.team2_name ?  openGame.team2_name: '' }}">{{ openGame.team2_name ?  openGame.team2_name: '' }}</b>
                             <span ng-if="openGame.info.pass_team === 'team2' && openGame.sport.alias === 'Cricket' && openGame.info.over_number && openGame.info.deliver_number" class="current-delivery"><i ng-bind="'Current over/delivery {1}/{2}'|translate:[openGame.info.over_number,openGame.info.deliver_number]"></i></span>
                         </p>
                     </dt>
@@ -115,26 +115,10 @@
             <li class="serve-team" ng-class="{active: openGame.info.pass_team === 'team2'}"><b class="mini-icon-1 mini-icon-{{openGame.sport.id}} {{openGame.sport.alias}}"></b></li>
         </ul>
     </div>
-    <!-- BasketballShots live game template-->
-    <div class="game-score-basketball-shots"   ng-if="openGame.sport.alias === 'BasketballShots'">
+    <basketball-shoots-live class="game-score-basketball-shots" ng-if="openGame.sport.alias === 'BasketballShots'" open-game="openGame"></basketball-shoots-live>
+    <archery-shooting class="float-width" ng-if="openGame.sport.alias === 'Archery'" open-game="openGame" game-type="single"></archery-shooting>
+    <archery-shooting class="float-width" ng-if="openGame.sport.alias === 'ArcheryH2H'" open-game="openGame" game-type="h2h"></archery-shooting>
 
-        <div class="short-info-box">
-            <h6>{{openGame.team1_name}}</h6>
-            <div class="show-points"><span ng-bind="'{1} Points'|translate:[openGame.info.score1 || 0]"></span></div>
-            <p>{{openGame.competition.name}} | <span ng-bind="'Hit Stats {1}%'|translate:[Math.round(openGame.info.shot_attempts / (openGame.info.shot_attempts + openGame.info.missed_attempts) *100)|| 0]"></span></p>
-            <div ng-if="openGame.info.total_attempts" class="shot-result-b">
-                <div class="short-points">
-                    <span ng-class="{'inactive':shotsSlider.scrollIndex >= openGame.info.total_attempts - shotsSlider.visibleCount}" ng-click="shotsSlider.next()" class="next-shot"></span>
-                    <span ng-class="{'inactive':shotsSlider.scrollIndex <= 0}"  ng-click="shotsSlider.previous()" class="prev-shot"></span>
-                    <div class="status-short-l">
-                        <div ng-show="$index < shotsSlider.scrollIndex + shotsSlider.visibleCount && $index >= shotsSlider.scrollIndex " class="each-point" ng-class="{'missed': openGame.live_events[$index].type_id === '4' ,'approved': openGame.live_events[$index].type_id === '5'}"  ng-repeat="x in [].constructor(openGame.info.total_attempts) track by $index">
-                            <p><i>{{$index + 1}}</i></p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
     <!-- Horse racing live game template -->
     <div class="game-horse-racing" ng-if="openGame.sport.alias === 'HorseRacing'">
         <ul class="race-title" ng-click="broadcast('liveGame.headerClicked', openGame);$event.stopPropagation();">
@@ -173,7 +157,7 @@
         </div>
     </div>
 
-    <div class="current-game-info-line" ng-show="(liveGamesSoccerTemplate.indexOf(openGame.sport.alias) !== -1 || $root.conf.esportsGames.indexOf(openGame.sport.alias) !== -1)">
+    <div class="current-game-info-line" ng-show="liveGamesSoccerTemplate[openGame.sport.alias] || $root.conf.esportsGames[openGame.sport.alias]">
         <p>
             <span ng-if="openGame.info.current_leg === undefined">{{ openGame.info.current_game_state|convertSetName:openGame.sport.alias|translate }} </span>
             <span ng-if="openGame.info.current_leg !== undefined">{{ openGame.info.current_game_state|convertSetNameWithLeg:openGame.info|translate }} </span>

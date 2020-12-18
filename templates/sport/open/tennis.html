@@ -66,8 +66,25 @@
 <div ng-show="(game.video_id && !isVideoDetached) || game.has_animation" class="block-size-visible-b">
     <div class="right-block-flash" id="game-monitor-{{ game.id }}">
         <include-template template-path="templates/sport/open/player.html"></include-template>
+
+        <div class="game-control tennis" ng-if="game.activeFieldType === 'field' && $root.conf.sportsWithAnimations[game.sport.alias] === 'sportsbook-animations'">
+            <sportsbook-animations
+                    language="$root.env.lang"
+                    sport-alias="game.sport.alias"
+                    field="game.info.field"
+                    type-id="game.last_event.type_id"
+                    side="game.last_event.side"
+                    team1-name="game.team1_name"
+                    team2-name="game.team2_name"
+                    team1-score="game.info.score1"
+                    team2-score="game.info.score2"
+                    team1-points="game.stats.passes.team1_value"
+                    team2-points="game.stats.passes.team2_value"
+            ></sportsbook-animations>
+        </div>
+
         <!-- Animated control -->
-        <div class="game-control tennis" ng-show="game.activeFieldType==='field'">
+        <div class="game-control tennis" ng-show="game.activeFieldType === 'field' && $root.conf.sportsWithAnimations[game.sport.alias] === 'VBET5'">
             <div class="video-player-control" ng-if="!isVideoDetached">
                 <span class="video-mute" ng-click="toggleAnimationSound()" ng-show="env.sound > 0 "></span>
                 <span class="video-unmute" ng-click="toggleAnimationSound()" ng-show="env.sound === 0"></span>

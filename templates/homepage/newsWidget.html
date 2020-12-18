@@ -5,8 +5,8 @@
             <div>
                 <div class="float-left" sub-menu-creator="newsWidget" ng-class="{'fake-width': newsAreLoading}">
                     <a ng-class="{'sport-news-link-t': conf.sportNewsLink, 'pointer-events-none': !conf.sportNewsLink}" ng-href="{{conf.sportNewsLink}}" target="_blank" trans>sport news</a>
-                    <a ng-click="selectNewsSport({id:undefined})" ng-class="{'active': !selectedNewsSport.id}" trans>all</a>
-                    <a ng-click="selectNewsSport(sport);closeNews();" ng-repeat="sport in sports" ng-class="{'active':sport.id === selectedNewsSport.id}" ng-if="$index < (maxVisibleSports + 3)">{{ sport.title|translate }}</a>
+                    <a ng-click="selectNewsSport({name:undefined})" ng-class="{'active': !selectedNewsSport.name}" trans>all</a>
+                    <a ng-click="selectNewsSport(sport);closeNews();" ng-repeat="sport in sports" ng-class="{'active':sport.name === selectedNewsSport.name}" ng-if="$index < (maxVisibleSports + 3)">{{ sport.title|translate }}</a>
                 </div>
             </div>
         </div>

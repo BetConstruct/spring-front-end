@@ -1,6 +1,6 @@
 /* global VBET5, grecaptcha */
 /* jshint -W024 */
-VBET5.factory('RecaptchaService', ['$rootScope', '$q', '$timeout', 'WS', 'Storage', function($rootScope, $q, $timeout, WS, Storage) {
+VBET5.factory('RecaptchaService', ['$rootScope', '$q', '$timeout', 'WS', function($rootScope, $q, $timeout, WS) {
     'use strict';
 
     var Recaptcha = {

@@ -29,7 +29,7 @@
 	--------------------------------------------------------------------------------------------------*/
 
 .game-control {
-	margin: 21px 6px 0;
+	margin: 21px 0 0;
 	font-size: 14px;
 	/* Team names and score info header part 
 		----------------------------------------------------------------------------*/
@@ -117,7 +117,7 @@
 	}
 	.game-statistics {
 		overflow: hidden;
-		margin: 0 0.3em;
+		margin: 0 0.6em;
 		&.hidden {
 			display: none;
 		}
@@ -312,27 +312,9 @@
 
 /* Timeline icons */
 
-.tl-corner {
-	position: absolute;
-	/*top: 12px;*/
-	overflow: hidden;
-	width: 10px;
-	height: 10px;
-	border-bottom: 1px solid #fff;
-	border-left: 1px solid #fff;
-	transform: scale(0.65);
-	box-shadow: -1px 1px 0 #000;
-	z-index: 5;
-	&:after {
-		content: "";
-		top: 4px;
-		left: -6px;
-		width: 10px;
-		height: 10px;
-		border-radius: 50%;
+.grouped-tl-events {
+	> div {
 		position: absolute;
-		border: 1px solid #fff;
-		box-shadow: inset 0px 1px 0 #000;
 	}
 }
 .tl-yellow_card {
@@ -377,9 +359,13 @@
 }
 .tl-container {
 	position: relative;
-	float: left;
 	width: 100%;
+	min-height: 36px;
+	@include ltr {
+		float: left;
+	}
 	@include rtl {
+		float: right;
 		direction: ltr;
 	}
 	&.no-video-flash {
@@ -396,28 +382,23 @@
 		width: auto;
 		height: auto;
 	}
-	.team2-tl-corner {
-		top: 36px;
-	}
-	.team2-tl-yellow_card,
-	.team2-tl-red_card {
-		top: 36px;
-	}
-	.team2-tl-goal {
-		top: 30px;
-	}
-	.team2-tl-exchange {
-		top: 32px;
-	}
-	.team1-tl-corner {
-		top: 12px;
-	}
+	.team1-tl-corner,
 	.team1-tl-yellow_card,
-	.team1-tl-red_card {
-		top: 9px;
+	.team1-tl-red_card,
+	.team1-tl-goal,
+	.team1-tl-exchange,
+	.team1-tl-substitution,
+	.team1-group {
+		top: 10px;
 	}
-	.team1-tl-goal {
-		top: 8px;
+	.team2-tl-corner,
+	.team2-tl-yellow_card,
+	.team2-tl-red_card,
+	.team2-tl-goal,
+	.team2-tl-exchange,
+	.team2-tl-substitution,
+	.team2-group {
+		top: 33px;
 	}
 	.tl-corner {
 		transform: scale(0.8);
@@ -508,14 +489,6 @@
 	}
 }
 //the timeline event tooltip appears on hover
-.tl-data>div,
-.tl-new>div {
-	&:hover {
-		.tl-details {
-			display: block;
-		}
-	}
-}
 .no-video-flash .tl-new .tl-info:hover .hover-sp.to-right {
 	right: -10px;
 	left: auto;

@@ -1,0 +1,8 @@
+<div class="live-game-archery-shots" ng-class="{'no-video-flash': !(game.video_id || game.has_animation) || (isVideoDetached && !game.has_animation), 'no-video-ie8': !game.video_id || isVideoDetached}">
+ <archery-shooting class="float-width" ng-if="game && game.id" open-game="game" game-type="single"></archery-shooting>
+</div>
+<div ng-show="(game.video_id && !isVideoDetached) || game.has_animation" >
+    <div class="right-block-flash" id="game-monitor-{{ game.id }}">
+        <include-template template-path="templates/sport/open/player.html"></include-template>
+    </div>
+</div>

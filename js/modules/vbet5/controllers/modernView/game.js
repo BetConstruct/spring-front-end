@@ -13,7 +13,7 @@ angular.module('vbet5.betting').controller('gameCtrl', ['$rootScope', '$scope', 
      * @propertyOf vbet5.controller:gameCtrl
      * @description mapping of sport aliases to available templates (in templates/game/open/<name>.html)
      */
-    var availableSportTemplates = ['soccer', 'tennis', 'basketball', 'volleyball', 'snooker', 'icehockey', 'netball', 'tabletennis', 'badminton', 'horseracing', 'handball', 'baseball', 'beachvolleyball', 'australianfootball', 'cricket', 'basketballshots']; //,'cricket','darts'
+    var availableSportTemplates = ['soccer', 'tennis', 'basketball', 'volleyball', 'snooker', 'icehockey', 'netball', 'tabletennis', 'badminton', 'horseracing', 'handball', 'baseball', 'beachvolleyball', 'australianfootball', 'cricket', 'basketballshots', 'archery', 'archeryh2h']; //,'cricket','darts'
 
     var streamService = new StreamService($scope);
 
@@ -526,15 +526,16 @@ angular.module('vbet5.betting').controller('gameCtrl', ['$rootScope', '$scope', 
 
                 $scope.marketGroups[id] = Utils.objectToArray(Utils.groupByItemProperties($scope.marketGroups[id], ['type', 'name']));
 
+                var sortByField = ($scope.game.sport.alias === "SISGreyhound") ? "type" : "order";
                 $scope.marketGroups[id].sort(function (a, b) {
-                    return a[0].order - b[0].order;
+                    return a[0][sortByField] - b[0][sortByField];
                 });
 
                 angular.forEach($scope.marketGroups[id], function (markets) {
                     // sort markets by base
                     markets.sort(Utils.orderSorting);
                     //and make replacements in market and event names
-                    markets.map(function (m) {
+                    angular.forEach(markets, function (m) {
                         m.name = improveNameForThisGame(m.name, $scope.game);
                         m.eachWayTerms = BetService.getEachWayTerms(m);
                         angular.forEach(m.event, function (e) {

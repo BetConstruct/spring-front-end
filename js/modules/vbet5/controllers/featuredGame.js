@@ -51,13 +51,9 @@ angular.module('vbet5.betting').controller('featuredgameCtrl', ['$rootScope', '$
         $scope.featuredGamesLoading = false;
 
         var featuredGames = Utils.objectToArray(featuredGamesObj);
-        $scope.featuredGames = featuredGames[0].favorite_order !== null ? Utils.orderByField(featuredGames, 'favorite_order') : featuredGames;
+        $scope.featuredGames = featuredGames[0] && featuredGames[0].favorite_order !== null ? Utils.orderByField(featuredGames, 'favorite_order') : featuredGames;
 
-        if (!$scope.multiSlideMode) {
-            if (!$scope.selectedFeaturedGameId && $scope.featuredGames && $scope.featuredGames.length) {
-                $scope.selectedFeaturedGameId = $scope.featuredGames[0].id;
-            }
-        } else if ($scope.featuredGames.length > 0) {
+       if ($scope.featuredGames.length > 0) {
             prepareMultiSlideFeaturedGames();
         }
     }
@@ -247,15 +243,12 @@ angular.module('vbet5.betting').controller('featuredgameCtrl', ['$rootScope', '$
      * @ngdoc method
      * @name loadFeaturedGames
      * @methodOf vbet5.controller:featuredgameCtrl
-     * @param {String} gameOrCompetition
-     * @param {Boolean} multiSlideMode
      *
      *  @description loads all promoted games
      *
      */
-    function loadFeaturedGames(gameOrCompetition, multiSlideMode) {
+    $scope.loadFeaturedGames = function loadFeaturedGames() {
         $scope.featuredGamesLoading = true;
-        $scope.multiSlideMode = multiSlideMode;
         var request = {
             'source': 'betting',
             'what': {
@@ -271,11 +264,8 @@ angular.module('vbet5.betting').controller('featuredgameCtrl', ['$rootScope', '$
                 sport: {type: 2} // only classic sports ie excludes virtual and electronic sports
             }
         };
-        if (gameOrCompetition === 'game') {
-            request.what.game.push('favorite_order');
-        }
-        request.where.game = {};
-        request.where[gameOrCompetition] = {'promoted': true};
+        request.what.game.push('favorite_order');
+        request.where.game = {'promoted': true};
         request.where.game['@limit'] = Config.main.featuredGames.limitation;
 
         Zergling.subscribe(request, updateFeaturedGames).then(function (response) {
@@ -284,23 +274,9 @@ angular.module('vbet5.betting').controller('featuredgameCtrl', ['$rootScope', '$
         })['catch'](function (reason) {
             console.log('loadFeaturedGames failed', reason);
         });
-    }
-
-    /**
-     * @ngdoc method
-     * @name slideFeaturedGameTo
-     * @methodOf vbet5.controller:featuredgameCtrl
-     * @description selects next or previous featured game depending on direction parameter
-     * @param {String} direction left or right
-     */
-    $scope.slideFeaturedGameTo = function slideFeaturedGameTo(direction) {
-        var selectedGame = Utils.getArrayObjectElementHavingFieldValue($scope.featuredGames, 'id', $scope.selectedFeaturedGameId);
-        if (direction === 'left') {
-            $scope.selectedFeaturedGameId = $scope.featuredGames[$scope.featuredGames.indexOf(selectedGame) === 0 ?  $scope.featuredGames.length - 1 : $scope.featuredGames.indexOf(selectedGame) - 1].id;
-        } else {
-            $scope.selectedFeaturedGameId = $scope.featuredGames[$scope.featuredGames.indexOf(selectedGame) === $scope.featuredGames.length - 1 ?  0 : $scope.featuredGames.indexOf(selectedGame) + 1].id;
-        }
     };
+
+
 
     /**
      * @ngdoc method
@@ -334,19 +310,6 @@ angular.module('vbet5.betting').controller('featuredgameCtrl', ['$rootScope', '$
             }, Config.main.featuredGames.rotationPeriod || 5000);
         }
     }
-
-    /**
-     * @ngdoc method
-     * @name loadAllFeaturedGames
-     * @methodOf vbet5.controller:featuredgameCtrl
-     * @description loads all promoted games from competition and game at once
-     *
-     * @param {Boolean} multiSlide the boolean
-     */
-    $scope.loadAllFeaturedGames = function loadAllFeaturedGames(multiSlide) {
-        loadFeaturedGames('competition', multiSlide);
-        loadFeaturedGames('game', multiSlide);
-    };
 
     $scope.bet = function bet(event, game) {
         var oddType = 'odd';

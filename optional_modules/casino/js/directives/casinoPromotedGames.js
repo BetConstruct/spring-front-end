@@ -4,7 +4,7 @@ CASINO.directive('casinoPromotedGames', ['$rootScope', '$filter', 'CConfig', 'ca
     return {
         restrict: 'A',
         replace: true,
-        templateUrl: $filter('fixPath')('optional_modules/casino/templates/directive/casino-games-list.html'),
+        templateUrl: $filter('fixPath')('optional_modules/casino/templates/directive/casino-games-list-v2.html'),
         scope: {
             limit: '=',
             pageCategory: '@',
@@ -16,6 +16,7 @@ CASINO.directive('casinoPromotedGames', ['$rootScope', '$filter', 'CConfig', 'ca
             scope.limit = scope.limit || 10;
             scope.pageCategory = scope.pageCategory || 'home';
             scope.useBigIcons = true;
+            scope.jackpotGames = true;
 
             var countryCode;
 

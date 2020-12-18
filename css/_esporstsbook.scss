@@ -31,9 +31,6 @@
       display: none;
     }
   }
-  .left-column-v3{
-    position: relative;
-  }
   .classic-view-column-v3 > .left-column-v3,
   .right-column-v3 {
     background: rgba($classic-view-background,0.7);
@@ -62,6 +59,9 @@
   .single-events-b-v3 {
     background: rgba($c16-sp-10,0.7);
     transition: color 240ms, background 240ms, box-shadow 100ms;
+    &.active{
+      background: $hero-color;
+    }
   }
   .animation-video-box-v3 {
     position: relative;
@@ -69,12 +69,6 @@
     overflow: hidden;
   }
   @media screen and (max-width: 1279px) {
-    .left-column-v3 {
-      position: absolute;
-      top: 0;
-      background: $classic-view-background;
-      box-shadow: 0 0 10px -1px $classic-view-background;
-    }
     .game-mini-t-row > ul > li {
       &:first-child{
         width: 110px;
@@ -86,14 +80,6 @@
         font-size: 14px;
         line-height: 16px;
         margin-top: 2px;
-      }
-    }
-    .center-column-v3 {
-      @include ltr {
-        border-left-width: 64px;
-      }
-      @include rtl {
-        border-right-width: 64px;
       }
     }
     .e-game-markets {
@@ -145,6 +131,27 @@
   }
   .mini-filters-box-v3 > ul > li .time-filter-v3 {
     min-width: 100px;
+  }
+  .time-filter-v3 {
+    z-index: auto;
+  }
+  .sub-nav-filter-time-v3 {
+    z-index: 20;
+  }
+  @media screen and (max-width: 1279px){
+    .classic-e-m .e-g-price-v {
+      max-width: 74%;
+    }
+  }
+  @media screen and (max-width: 1400px){
+    .center-column-v3 {
+      @include ltr {
+        border-left-width: 65px;
+      }
+      @include rtl {
+        border-right-width: 65px;
+      }
+    }
   }
 }
 .all-l-e-games{
@@ -532,23 +539,6 @@
     position: relative;
     background: rgba($c16-sp-8,0.7);
     text-indent: -9999px;
-    &:after{
-      display: block;
-      position: absolute;
-      left: 0;
-      top: 0;
-      right: 0;
-      bottom: 0;
-      width: 20px;
-      height: 20px;
-      text-align: center;
-      text-indent: 0;
-      margin: auto;
-      font: 14px/20px icomoon;
-      content: "\e68f";
-      color: $text-palette-4;
-      z-index: 33;
-    }
     > i{
       display: none;
     }
@@ -1344,10 +1334,6 @@
 .left-nav-view-v3.esports-nav-b > ul > li > .sports-item-v3:before{
   display: none;
 }
-.classic-view-column-v3.left-menu-closed-v3 .arrow-view-v3{
-  display: none;
-}
-
 
 //esport fix
 
@@ -1508,11 +1494,5 @@
         }
       }
     }
-  }
-}
-
-@media screen and (max-width: 1279px){
-  .esports .classic-e-m .e-g-price-v {
-    max-width: 74%;
   }
 }

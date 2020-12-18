@@ -1,7 +1,7 @@
 <div class="horse-game-info" ng-if="openGame.info.race">
     <div class="each-way" ng-if="$root.conf.showEachWay">
         <div ng-show="(openGame.market|firstElement).extra_info.EachWayPlace > 1">
-            <span>EW:</span>
+            <span trans>EW:</span>
             {{'1/'+ (openGame.market|firstElement).extra_info.EachWayK}} {{::'Odds'|translate}}&nbsp;
             {{(openGame.market|firstElement).extra_info.EachWayPlace}} {{::'Places'|translate}}
         </div>
@@ -35,7 +35,7 @@
 <!--add page win or e/w-->
 <div class="win-or-ew-contain" ng-if="selectedTab === 'winner' && !loading">
     <ul>
-        <li class="num {{raceCardsPredicate === 'cloth'?(raceCardsReverce? 'arr-up': 'arr-down'):''}}"
+        <li trans class="num {{raceCardsPredicate === 'cloth'?(raceCardsReverce? 'arr-up': 'arr-down'):''}}"
             ng-click="raceCardsColumnClick('cloth');$event.stopPropagation();"
         >No.</li>
         <li class="check"></li>
@@ -43,10 +43,10 @@
         <li class="jockey" trans>Trainer/Jockey</li>
         <li class="weight" trans >Weight/Age </li>
         <li class="win-b" trans>Previous Odds</li>
-        <li class="win-b {{raceCardsPredicate === 'price'?(raceCardsReverce? 'arr-up': 'arr-down'):''}}"
+        <li class="win-b  {{raceCardsPredicate === 'price'?(raceCardsReverce? 'arr-up': 'arr-down'):''}}" trans
             ng-click="raceCardsColumnClick('price');$event.stopPropagation();"
            >Odds</li>
-        <li class="win-b sp-header">SP</li>
+        <li class="win-b sp-header" trans>SP</li>
     </ul>
     <ul ng-repeat="raceStat in openGame.info.race.raceStats | orderBy:raceCardsOrder:raceCardsReverce track by raceStat.id">
         <li class="num">
@@ -61,15 +61,15 @@
                 <b ng-if="raceStat.historyStatistics.cd" title="Course and Distance">{{raceStat.historyStatistics.cd}}</b>
                 <b ng-if="raceStat.historyStatistics.bf" title="Beaten Favourite">{{raceStat.historyStatistics.bf}}</b>
             </p>
-            <p>Form: {{raceStat.formFigures}}</p>
+            <p>{{'Form:'|translate}} {{raceStat.formFigures}}</p>
         </li>
         <li class="jockey">
-            <p>T: {{raceStat.trainerName}} </p>
+            <p>{{'T:'|translate}} {{raceStat.trainerName}}</p>
             <p ng-show="raceStat.jockeyInfo.name">J: {{raceStat.jockeyInfo.name}}</p>
         </li>
         <li class="weight">
-            <p>W: {{raceStat.weight}}</p>
-            <p>A: {{raceStat.age}}</p>
+            <p>{{'W:'|translate}} {{raceStat.weight}}</p>
+            <p>{{'A:'|translate}} {{raceStat.age}}</p>
         </li>
         <li class="win-b">
             <div class="bets preview"  ng-bind="raceStat.event.previousPrice?(raceStat.event.previousPrice|oddConvert:env.oddFormat):''"></div>
@@ -81,7 +81,7 @@
         </li>
         <li class="win-b" ng-class="{'no-odd': !raceStat.event.sp_enabled}">
             <div class="bets" ng-click="bet(raceStat.event, (openGame.market | firstElement), openGame, 'sp')" ng-if="raceStat.event.sp_enabled" ng-class="{'active': isEventInBetSlip(raceStat.event,'sp')}">
-                {{raceStat.event.sp_enabled?'SP':''}}
+                {{(raceStat.event.sp_enabled?'SP':'')|translate}}
             </div>
         </li>
     </ul>
@@ -90,7 +90,7 @@
         <li class="check"></li>
         <li class="horse"></li>
         <li class="jockey">
-            <p>Favourite </p>
+            <p trans>Favourite</p>
         </li>
         <li class="weight"></li>
         <li class="win-b">
@@ -98,7 +98,7 @@
         <li class="win-b disabled-cell" ng-class="{'no-odd-both': !openGame.info.race.favourite.sp_enabled}"></li>
         <li class="fixed-small win-b" ng-class="{'no-odd': !openGame.info.race.favourite.sp_enabled}">
             <div class="bets" ng-click="bet(openGame.info.race.favourite, (openGame.market | firstElement), openGame, 'sp')" ng-if="openGame.info.race.favourite.sp_enabled" ng-class="{'active': isEventInBetSlip(openGame.info.race.favourite,'sp')}">
-                {{openGame.info.race.favourite.sp_enabled?'SP':''}}
+                {{(openGame.info.race.favourite.sp_enabled?'SP':'')|translate}}
             </div>
         </li>
     </ul>
@@ -107,7 +107,7 @@
         <li class="check"></li>
         <li class="horse"></li>
         <li class="jockey">
-            <p>2nd Favourite </p>
+            <p trans>2nd Favourite</p>
         </li>
         <li class="weight"></li>
         <li class="win-b">
@@ -115,7 +115,7 @@
         <li class="win-b disabled-cell" ng-class="{'no-odd-both': !openGame.info.race.second_favourite.sp_enabled}"></li>
         <li class="fixed-small win-b" ng-class="{'no-odd': !openGame.info.race.second_favourite.sp_enabled}">
             <div class="bets" ng-click="bet(openGame.info.race.second_favourite, (openGame.market | firstElement), openGame, 'sp')" ng-if="openGame.info.race.second_favourite.sp_enabled" ng-class="{'active': isEventInBetSlip(openGame.info.race.second_favourite,'sp')}">
-                {{openGame.info.race.second_favourite.sp_enabled?'SP':''}}
+                {{(openGame.info.race.second_favourite.sp_enabled?'SP':'')|translate}}
             </div>
         </li>
     </ul>
@@ -133,20 +133,20 @@
                 <b ng-if="raceStat.historyStatistics.cd" title="Course and Distance">{{raceStat.historyStatistics.cd}}</b>
                 <b ng-if="raceStat.historyStatistics.bf" title="Beaten Favourite">{{raceStat.historyStatistics.bf}}</b>
             </p>
-            <p>Form: {{raceStat.formFigures}}</p>
+            <p>{{'Form:'|translate}} {{raceStat.formFigures}}</p>
         </li>
         <li class="jockey">
-            <p>T: {{raceStat.trainerName}} </p>
+            <p>{{'T:'|translate}} {{raceStat.trainerName}} </p>
             <p ng-show="raceStat.jockeyInfo.name">J: {{raceStat.jockeyInfo.name}}</p>
         </li>
         <li class="weight">
-            <p>W: {{raceStat.weight}}</p>
-            <p>A: {{raceStat.age}}</p>
+            <p>{{'W:'|translate}} {{raceStat.weight}}</p>
+            <p>{{'A:'|translate}} {{raceStat.age}}</p>
         </li>
         <li class="win-b"></li>
         <li class="win-b"></li>
         <li>
-            <div class="horse-non-runner" title="Non Runner">Non Runner</div>
+            <div class="horse-non-runner" title="Non Runner" trans>Non Runner</div>
         </li>
     </ul>
 </div>

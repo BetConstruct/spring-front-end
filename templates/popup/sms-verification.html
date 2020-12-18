@@ -1,0 +1,31 @@
+<div class="sms-verification-popup" ng-controller="smsVerificationCtrl">
+    <h3 class="sms-v-p" trans>SMS Confirmation</h3>
+    <div class="settings-info-contain deposit-limit">
+        <p ng-if="state.type === 1" class="sms-v-t">{{"The code will be sent to {1} number."|translate:[state.userIdentifier]}}</p>
+        <p ng-if="state.type !== 1" class="sms-v-t">{{"The code will be sent to {1} user."|translate:[state.userIdentifier]}}</p>
+        <form name="forms.smsVerification" class="sms-v-f registration-form">
+            <div class="form-text" ng-class="{'error': forms.smsVerification.confirmation_code.$touched && forms.smsVerification.confirmation_code.$invalid}">
+                <div class="tooltip-wrapper-j">
+                     <input name="confirmation_code" ng-model="state.confirmationCode" ng-blur="forms.smsVerification.confirmation_code.$touched=true" type="text" placeholder="{{'Enter Code'|translate}}" prevent-input="[^0-9]+" required />
+                    <div class="form-error-icon-j" ng-click="state.confirmationCode='';forms.smsVerification.$setUntouched()"></div>
+                    <div class="tooltip-j" ng-init="formInit()">
+                        <div ng-show="forms.smsVerification.confirmation_code.$error.required" trans>This field is required</div>
+                        <div ng-show="forms.smsVerification.confirmation_code.$error.invalid">{{state.error|translate}}</div>
+                    </div>
+                </div>
+                <div class="cashier-button">
+                    <button ng-if="!sendingInProgress && !countdownTime" ng-click="getCode(); $event.stopPropagation()" trans>Get Code</button>
+                    <button ng-if="sendingInProgress" disabled="disabled" trans>Wait...</button>
+                    <button class="sms-time-btn" ng-if="countdownTime" disabled="disabled" countdown="{{countdownTime}}" completed-callback="countdownCompleteCallBack" ng-bind="'🕒 ' + ':' + countdown.minutes + ':' + countdown.seconds"></button>
+                </div>
+            </div>
+            <div class="change-button-container password">
+                <div class="cashier-button">
+                    <button ng-click="handleSubmit(state.confirmationCode);$event.stopPropagation();" ng-disabled="sendingInProgress || !forms.smsVerification.$dirty || forms.smsVerification.$invalid" trans>Confirm</button>
+                    <button ng-click="handleSubmit('');$event.stopPropagation();" trans>Cancel</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+

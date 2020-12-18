@@ -1,10 +1,10 @@
 @font-face {
   font-family: 'icomoon';
-  src:  url('fonts/icomoon.eot?qum9eg');
-  src:  url('fonts/icomoon.eot?qum9eg#iefix') format('embedded-opentype'),
-    url('fonts/icomoon.ttf?qum9eg') format('truetype'),
-    url('fonts/icomoon.woff?qum9eg') format('woff'),
-    url('fonts/icomoon.svg?qum9eg#icomoon') format('svg');
+  src:  url('fonts/icomoon.eot?s6gaaj');
+  src:  url('fonts/icomoon.eot?s6gaaj#iefix') format('embedded-opentype'),
+    url('fonts/icomoon.ttf?s6gaaj') format('truetype'),
+    url('fonts/icomoon.woff?s6gaaj') format('woff'),
+    url('fonts/icomoon.svg?s6gaaj#icomoon') format('svg');
   font-weight: normal;
   font-style: normal;
   font-display: block;
@@ -25,6 +25,9 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+.cms-jcon-MobileLegends:before {
+  content: "\e932";
+}
 .cms-jcon-coupon:before {
   content: "\e93c";
 }
@@ -37,49 +40,8 @@
 .cms-jcon-Basketball-shot_icon:before {
   content: "\e930";
 }
-.cms-jcon-air-hockey .path1:before {
+.cms-jcon-air-hockey:before {
   content: "\e931";
-  color: rgb(255, 255, 255);
-}
-.cms-jcon-air-hockey .path2:before {
-  content: "\e932";
-  margin-left: -0.9814453125em;
-  color: rgb(29, 29, 27);
-}
-.cms-jcon-air-hockey .path3:before {
-  content: "\e933";
-  margin-left: -0.9814453125em;
-  color: rgb(255, 255, 255);
-}
-.cms-jcon-air-hockey .path4:before {
-  content: "\e934";
-  margin-left: -0.9814453125em;
-  color: rgb(29, 29, 27);
-}
-.cms-jcon-air-hockey .path5:before {
-  content: "\e935";
-  margin-left: -0.9814453125em;
-  color: rgb(29, 29, 27);
-}
-.cms-jcon-air-hockey .path6:before {
-  content: "\e936";
-  margin-left: -0.9814453125em;
-  color: rgb(255, 255, 255);
-}
-.cms-jcon-air-hockey .path7:before {
-  content: "\e937";
-  margin-left: -0.9814453125em;
-  color: rgb(29, 29, 27);
-}
-.cms-jcon-air-hockey .path8:before {
-  content: "\e938";
-  margin-left: -0.9814453125em;
-  color: rgb(29, 29, 27);
-}
-.cms-jcon-air-hockey .path9:before {
-  content: "\e939";
-  margin-left: -0.9814453125em;
-  color: rgb(255, 255, 255);
 }
 .cms-jcon-cyber_bascket:before {
   content: "\e92f";

@@ -90,7 +90,7 @@
                                                     <span class="popup-coef" ng-show="event.coeficient || event.k_type == 11">({{event.k_type == 11 ? 'SP' : (event.coeficient|oddConvert:env.oddFormat)}})</span>
                                                     <span class="popup-sport-name">{{event.sport_name}}</span>
                                                     <span class="popup-date-game"> {{event.game_start_date|formatDate:'full':null:$root.env.timeFormat}}</span>
-                                                    <span class="popup-live-game" ng-show="event.is_live==1">Live</span>
+                                                    <span class="popup-live-game" ng-show="event.is_live==1" trans>Live</span>
                                                 </p>
                                                 <span class="event-name">{{event.game_name}}</span>
                                                 <span class="event-pick">

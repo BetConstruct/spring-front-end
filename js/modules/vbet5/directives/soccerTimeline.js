@@ -17,8 +17,8 @@ VBET5.directive('soccertimeline', function () {
             showOnlyOne: '=',
             showEventsOnTlHover: '='
         },
-        link: function (scope, element) {
-            element = element[0];
+        link: function (scope, elem) {
+           var element = elem[0];
 
             scope.drawTimeLine = function drawTimeLine(isExtra) {
                 var containerClass = 'main-time';

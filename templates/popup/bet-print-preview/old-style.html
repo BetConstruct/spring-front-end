@@ -41,7 +41,7 @@
                     event.event_name.replace(event.basis, (event.basis|handicapBaseFormat)) : event.event_name}} /
                     {{event.coeficient|number:2}}</p>
                 <p>{{event.sport_name}}</p>
-                <p>{{event.competition_name}} <span ng-if="event.is_live">(LIVE)</span></p>
+                <p>{{event.competition_name}} <span ng-if="event.is_live">({{'LIVE'|translate}})</span></p>
                 <p>{{event.game_start_date|formatDate:'full':null:$root.env.timeFormat}}</p>
             </li>
         </ul>

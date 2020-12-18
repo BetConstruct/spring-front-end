@@ -167,7 +167,7 @@ VBET5.controller('euro88PaymentsCtrl', ['$scope', '$rootScope', '$sce', '$filter
                     $rootScope.$broadcast("globalDialogs.addDialog", {
                         type: "error",
                         title: 'Error',
-                        content: data.details.error
+                        content: Translator.translationExists(data.details.error_code) ? data.details.error_code : data.details.error
                     });
                 }
             },

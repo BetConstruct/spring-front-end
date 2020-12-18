@@ -1,0 +1,23 @@
+<div class="right-left-events-wrapper" ng-class="{'one-column-view': marketsInOneColumn.enabled}">
+    <div class="live-events-column-v3" ng-repeat="marketPack in selectedMarketsGroups track by $index">
+        <div class="market-ciew-v3"
+             ng-repeat="market in marketPack track by market.id">
+            <div class="market-title-v3" ng-click="collapsedMarkets[game.id][market.name] = !collapsedMarkets[game.id][market.name]" ng-class="{'closed': collapsedMarkets[game.id][market.name] }" data-title="{{market.name}}">
+                <ul class="market-icons-t-r" ng-click="$event.stopPropagation()">
+                    <li class="link-icon-market-v3" ng-show="!$root.conf.hideExpressIds && (market.express_id || market.express_id == 0)" title="Events from different groups can be combined in combined bets" trans="attr-only">
+                        <span ng-hide="$root.conf.hideExpressIds" title="Events from different groups can be combined in combined bets" trans="attr-only">{{market.express_id}}</span>
+                    </li>
+                    <li class="cashout-icon-market-v3" title="Cash-out available" trans ng-show="market.cashout && ((!$root.env.live && !!$root.partnerConfig.is_cashout_prematch) || ($root.env.live && !!$root.partnerConfig.is_cashout_live))"></li>
+                    <li class="favorite-icon-market-v3" ng-class="{'remove': game.sport.favouriteMarketsTypes[market.fullType] === 1 }" ng-click="addToFavouriteMarkets(market)"></li>
+                </ul>
+            </div>
+            <div class="l-b column-{{market.col_count || 1}}" ng-class="{'default': market.col_count > 5}">
+                <div class="single-events-b-v3"  ng-repeat="event in market.events track by event.id" ng-click="bet(event, market, game);" title="{{event.name}} {{ displayBase(event, market)}}" ng-class="{'pointer-events-none': event.is_empty, 'active': isEventInBetSlip(event), 'blocked': ((event.price | oddConvert:'decimal') == 1 || game.is_blocked)}">
+                    <div class="max-bet-tooltip-v3" onmouseover="displayEventLimit(event)" onmouseleave="cancelDisplayEventLimit(event)" data-id="{{event.id}}" ng-class="{'maxbet-enabled': $root.env.authorized && $root.conf.displayEventsMaxBet}">
+                    </div>
+                    <b class="p-v {{event.price_change == null? '' : ({true: 'up-', false: 'down'}[event.price_change > 0] + (event.price_change % 2)) }}" ng-show="(event.price | oddConvert:'decimal') != 1 && !game.is_blocked">{{event.price|oddConvert:$root.env.oddFormat:null:market.display_key}}</b>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

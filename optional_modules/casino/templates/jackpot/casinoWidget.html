@@ -43,6 +43,12 @@
                                 <span>{{pool.TotalWinAmount|number:jackpot.CurrencyFraction}} <i>{{jackpot.Currency|currency}}</i></span>
                             </li>
                         </ul>
+                        <ul>
+                            <li>
+                                <h2 trans>Min Qualifying Bet</h2>
+                                <p>{{pool.MinBetAmount|number:jackpot.CurrencyFraction}} <i>{{jackpot.Currency|currency}}</i></p>
+                            </li>
+                        </ul>
                         <ul ng-if="pool.JackPotPoolStat.BiggestJackpotWin">
                             <li>
                                 <h2 trans>Largest Winner</h2>

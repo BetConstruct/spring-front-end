@@ -15,12 +15,12 @@
         <div ng-controller="classicViewLeftController" class="left-column-v3" ng-class="{'live': $root.env.live}">
             <div class="left-column-v3-header">
                 <div class="l-t-box">
-                    <div class="view-switcher-v3">
+                    <div class="view-switcher-v3" ng-class="{'no-dashboard': !($root.conf.dashboard.showLeftDashboard && $root.calculatedConfigs.dashboardEnabled)}">
                         <ul>
                             <li ng-class="{'active': $location.path() === '/dashboard/'}"
                                 ng-show="$root.conf.dashboard.showLeftDashboard && $root.calculatedConfigs.dashboardEnabled"
                                 title="Dashboard" trans="attr-only">
-                                <button ng-click="$location.path('/dashboard/')">
+                                <button ng-click="$location.search({});$location.path('/dashboard/')">
                                     <i class="dashboard-icon-b"></i>
                                 </button>
                             </li>
@@ -119,6 +119,10 @@
                     <div class="full-menu-wrapper-v3"
                          ng-show="(!leftMenuLiveLoading && env.live) || (!env.live && !leftMenuPrematchLoading)">
 
+                        <!--Vbet homework status directive-->
+                        <vbet-homework-status ng-if="$root.conf.homework.enabled"></vbet-homework-status>
+                        <!--Vbet homework status directive END-->
+
                         <!--Favorites-->
                         <include-template class="left-menu-wrapper-v3"
                                           template-path="templates/sport/classic/left/favorites.html"
@@ -146,9 +150,9 @@
         <!--left-column END-->
 
         <!--center-column-->
-        <div ng-if="!customTemplateForSport[selectedSport.id]" class="center-column-v3"
+        <div ng-if="!customTemplateForSport[selectedSport.id] || $root.env.live" class="center-column-v3"
              ng-switch="currentPath"
-             ng-class="{'game-pinned': env.isLiveGamePinned && !noClassicScroll && !(enlargedGame && enlargedGame.video_data) && openGame.type == 1, 'live': env.live, 'prematch': !env.live && $location.path() !== '/dashboard/', 'dashboard': $location.path() === '/dashboard/'}">
+             ng-class="{'game-pinned': env.isLiveGamePinned && !noClassicScroll && !(enlargedGame && enlargedGame.video_data) && openGame.type == 1, 'live': env.live, 'prematch': !env.live && $location.path() !== '/dashboard/', 'dashboard': $location.path() === '/dashboard/', 'prematch-nba': $root.conf.showIconsForCompetitions[selectedCompetition.id]}">
 
             <div ng-switch-default
                  class="games-view-wrapper-v3"
@@ -165,19 +169,21 @@
                         </div>
                         <div class="prematch-column-title-v3" ng-show="!todaysBets.selected && !boostedBets.selected">
                             <h2>
-                                <b ng-show="!env.preMatchMultiSelection && prematchGameViewData && !outrightSelected"
+                                <b ng-show="!env.preMatchMultiSelection && prematchGameViewData && !couponGames.selected && !outrightSelected"
                                    class="prematch-region-icon-v3 flag-icon flag-{{prematchGameViewData[0].competitions[0].games[0].region.alias | removeUselessSymbolsByRegexp: '[,\' ]+': 'g': 'true'}}"
                                    title="{{prematchGameViewData[0].competitions[0].games[0].region.name}}"></b>
                                 <b ng-show="!env.preMatchMultiSelection && prematchGameViewData && outrightSelected"
                                    class="prematch-region-icon-v3 outright" title="{{'Outright'|translate}}"></b>
+                                <b ng-show="!env.preMatchMultiSelection && prematchGameViewData && couponGames.selected" class="prematch-region-icon-v3" title="{{couponGames.coupon.Name|translate}}"> </b>
 
                                 <span ng-show="env.preMatchMultiSelection" ng-click="resetPrematchMultiView()"
                                       class="closed-all-games-v3"></span>
                                 <span ng-show="env.preMatchMultiSelection" title="{{'Chosen Games'|translate}}" trans>Chosen Games</span>
-                                <span ng-show="!env.preMatchMultiSelection && !recommendedGames.selected && prematchGameViewData && !outrightSelected"
+                                <span ng-show="!env.preMatchMultiSelection && !recommendedGames.selected && prematchGameViewData && !couponGames.selected && !outrightSelected"
                                       title="{{prematchGameViewData[0].competitions[0].name}}">{{prematchGameViewData[0].competitions[0].name}}</span>
                                 <span ng-show="!env.preMatchMultiSelection && !recommendedGames.selected && prematchGameViewData && outrightSelected"
                                       title="{{'Outright'|translate}}" trans>Outright</span>
+                                <span ng-show="!env.preMatchMultiSelection && !recommendedGames.selected && prematchGameViewData && couponGames.selected" title="{{couponGames.coupon.Name|translate}}">{{couponGames.coupon.Name|translate}}</span>
                             </h2>
                         </div>
                         <div class="custom-select-for-todays-bets-j"
@@ -232,7 +238,7 @@
                         <div ng-if="!multiColumn.show" class="prematch-game-view-contain-v3"
                              ng-show="!prematchGamesLoading"
                              ng-repeat="sport in prematchGameViewData track by sport.id">
-                            <div ng-if="boostedBets.selected" class="boosted-bets-show">
+                            <div ng-if="boostedBets.selected || couponGames.selected" class="boosted-bets-show">
                                 <span class="sport-icon-v3 {{sport.alias}}"></span>
                                 <span ng-bind="sport.name"></span>
                             </div>
@@ -304,9 +310,12 @@
                                                             <li class="bet-builder-icon-market-v3"
                                                                 ng-if="$root.conf.betBuilderSports[prematchGame.sport.alias] && prematchGame.show_type !== 'OUTRIGHT'"
                                                                 ng-click="openBetBuilder(prematchGame);$event.stopPropagation();"></li>
+                                                            <li class="stream-icon-market-v3"
+                                                                ng-if="streamConfig && streamConfig[prematchGame.id] && !env.live && streamConfig[prematchGame.id][0].available_in_prematch"
+                                                                ng-click="selectPrematchStreaming(streamConfig[prematchGame.id], prematchGame);$event.stopPropagation();"></li>
                                                             <li class="statistic-icon-market-v3" statistics-on-hover
                                                                 stats-game="prematchGame"
-                                                                stats-competition-name="{{prematchGameViewData[0].name}}"
+                                                                stats-competition-name="{{prematchGameViewData[0].competitions[0].name}}"
                                                                 popup-height="" popup-width=""
                                                                 ng-show="$root.conf.enableH2HStat && prematchGame.is_stat_available"
                                                                 ng-click="openStatistics(prematchGame);$event.stopPropagation();"
@@ -329,7 +338,7 @@
                                                 <div class="arrow-icon-b-v3"></div>
                                             </div>
                                         </div>
-                                        <div ng-if="(prematchGame.sport.alias !== 'Soccer' || boostedBets.selected) && selectedMarketFilter === marketFilterTypes[0]"
+                                        <div ng-if="(prematchGame.sport.alias !== 'Soccer' || boostedBets.selected || couponGames.selected) && selectedMarketFilter === marketFilterTypes[0]"
                                              class="l-b column-{{ prematchGame.firstMarket.col_count || (prematchGame.firstMarket.type == 'P1XP2' ? 3 : '2 two-odds') }}"
                                              ng-class="{'two-odds': prematchGame.firstMarket.col_count == 2}">
                                             <div class="single-events-b-v3"
@@ -384,7 +393,7 @@
                                                 </b>
                                             </div>
                                         </div>
-                                        <div ng-if="prematchGame.sport.alias === 'Soccer'&& !boostedBets.selected"
+                                        <div ng-if="prematchGame.sport.alias === 'Soccer'&& !boostedBets.selected && !couponGames.selected"
                                              class="l-b column-{{prematchGame.filteredMarkets[selectedMarketFilter.type][0].col_count}}">
                                             <div class="single-events-b-v3"
                                                  title="{{event.name}}{{displayBase(event, prematchGame.filteredMarkets[selectedMarketFilter.type + selectedMarketFilter.base].market || prematchGame.filteredMarkets[selectedMarketFilter.type + selectedMarketFilter.base][0])}}"
@@ -414,7 +423,7 @@
                 <!--Prematch view END-->
 
                 <!--Live/Prematch game view-->
-                <div class="live-game-view-contain-v3">
+                <div class="live-game-view-contain-v3" ng-class="{'mixed-matches-games':openGame.info.virtual}">
 
                     <div class="game-header-view-v3 {{openGame.sport.alias}}" ng-show="!env.live">
                         <div ng-show="openGame.sport.alias === 'SISGreyhound'" class="team-name-market">
@@ -445,12 +454,16 @@
                                     </li>
                                     <li>
                                         <div class="title-teams-premztch-v3">
-                                            <p ng-show="openGame.team1_name || openGame.team2_name"
-                                               title="{{(openGame.team1_name || '') + ((openGame.team1_name && openGame.team2_name)? (' vs ' + openGame.team2_name):(openGame.team2_name || ''))}}">
-                                                <span ng-show="openGame.team1_name"><strong
-                                                        ng-if="$root.conf.showGameIds">№{{openGame.game_number}}</strong> {{openGame.team1_name}}</span>
+                                            <p ng-show="openGame.team1_name || openGame.team2_name" title="{{(openGame.team1_name || '') + ((openGame.team1_name && openGame.team2_name)? (' vs ' + openGame.team2_name):(openGame.team2_name || ''))}}">
+                                                <span ng-show="openGame.team1_name">
+                                                    <stats-logo ng-if="$root.conf.showIconsForCompetitions[openGame.competition.id]" team-id="openGame.team1_id"></stats-logo>
+                                                    <strong ng-if="$root.conf.showGameIds">№{{openGame.game_number}}</strong> {{openGame.team1_name}}
+                                                </span>
                                                 <b ng-if="openGame.team1_name && openGame.team2_name">vs</b>
-                                                <span ng-show="openGame.team2_name">{{openGame.team2_name}}</span>
+                                                <span ng-show="openGame.team2_name">
+                                                    <stats-logo ng-if="$root.conf.showIconsForCompetitions[openGame.competition.id]" team-id="openGame.team2_id"></stats-logo>
+                                                    {{openGame.team2_name}}
+                                                </span>
                                             </p>
                                         </div>
                                         <div class="prematch-competition-title-v3">
@@ -553,9 +566,9 @@
 
         </div>
         <!--center-column END-->
-
-        <ng-include class="center-column-v3 prematch" ng-if="customTemplateForSport[selectedSport.id]"
-                    src="customTemplateForSport[selectedSport.id]"></ng-include>
+        <div class="center-column-v3" ng-if="customTemplateForSport[selectedSport.id] && !$root.env.live">
+            <ng-include class="games-view-wrapper-v3" src="customTemplateForSport[selectedSport.id]"></ng-include>
+        </div>
 
         <!--right-column-->
         <div class="right-column-v3">
@@ -688,7 +701,7 @@
                             </div>
                         </div>
                     </div>
-                    <pre-match-stream-channels ng-if="prematchChannels && prematchChannels.length && !$root.env.live"></pre-match-stream-channels>
+                    <pre-match-stream-channels channels="prematchChannels" availability="$root.profile.balance > 0" ng-if="!$root.env.live" env="$root.env"></pre-match-stream-channels>
                     <!--animation and video END-->
                     <!--Betslip-->
                     <include-template class="betslip-include-v3" template-path="templates/sport/classic/right/betslip.html"></include-template>

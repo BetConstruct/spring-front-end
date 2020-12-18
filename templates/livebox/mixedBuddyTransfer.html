@@ -1,31 +1,70 @@
-<div ng-controller="buddyCtrl" class="info-scroll-contain-b-new buddy-transfer-mixed-view-t">
-    <h5 ng-bind-html="b2bInfoText"></h5>
-    <!-- Version 1 -->
-    <div ng-if="conf.buddyTransfer.version === 1">
-        <h5 trans>Buddy transfer</h5>
-        <div class="form-j">
-            <label>
-                <p trans>Friend's username</p>
-                <input type="text" ng-model="transferData.friendName"/>
-            </label>
-            <label>
-                <p trans>Amount</p>
-                <div class="small-currency-wrapper-j">
-                    <small ng-show="!selectedPaymentSystem.customCurrency">
-                        {{profile.currency_name|currency}}
-                    </small>
-                    <input type="number" ng-model="transferData.transferAmount" comma
-                           comma-enable={{conf.enableCommaSeparateNumber}} comma-decimal="enable"
-                           comma-dot="{{conf.enableDotInsteadComma}}"/>
+<div ng-controller="buddyCtrl" class="profile-tab-contain-b buddy-transfer-mixed-view-t">
+    <h3 ng-bind-html="b2bInfoText"></h3>
+    <div class="settings-info-contain deposit-limit" ng-show="optionsCount > 1">
+        <p trans>Please select the option you want to make the transfer with:</p>
+        <form class="registration-form" action="">
+            <div class="form-text" ng-show="$root.conf.buddyTransfer.options.username">
+                <div class="limit-section">
+                    <label>
+                        <input type="radio" name="buddyType" ng-model="selectedOption" ng-value="usernameOption" ng-change="optionChanged()">
+                        <span ng-bind="'Username'|translate"></span>
+                    </label>
                 </div>
-            </label>
-            <button ng-disabled="!(transferData.friendName.trim() && transferData.transferAmount) || transactionInProgress"
-                    ng-click="makeTransfer()" trans>Transfer
-            </button>
+            </div>
+            <div class="form-text" ng-show="$root.conf.buddyTransfer.options.friendName">
+                <div class="limit-section">
+                    <label>
+                        <input type="radio" name="buddyType" ng-model="selectedOption" ng-value="friendNameOption" ng-change="optionChanged()">
+                        <span ng-bind="'Friend name'|translate"></span>
+                    </label>
+                </div>
+            </div>
+            <div class="form-text" ng-show="$root.conf.buddyTransfer.options.userId">
+                <div class="limit-section">
+                    <label>
+                        <input type="radio" name="buddyType" ng-model="selectedOption" ng-value="userIdOption" ng-change="optionChanged()">
+                        <span ng-bind="'User ID'|translate"></span>
+                    </label>
+                </div>
+            </div>
+        </form>
+    </div>
+    <!-- friend name option -->
+    <div ng-if="selectedOption===friendNameOption">
+        <h3 trans>Buddy transfer</h3>
+        <div class="settings-info-contain">
+            <form class="registration-form" action="">
+                <label>
+                    <span trans>Friend's username</span>
+                </label>
+                <div class="from-text">
+                    <div class="tooltip-wrapper-j">
+                        <input type="text" ng-model="transferData.friendName"/>
+                    </div>
+                </div>
+                <label>
+                    <span trans>Amount</span>
+                    <span ng-show="!selectedPaymentSystem.customCurrency">{{profile.currency_name|currency}}</span>
+                </label>
+                <div class="from-text">
+                    <div class="tooltip-wrapper-j">
+                        <input type="number" ng-model="transferData.transferAmount" comma
+                               comma-enable={{conf.enableCommaSeparateNumber}} comma-decimal="enable"
+                               comma-dot="{{conf.enableDotInsteadComma}}"/>
+                    </div>
+                </div>
+                <div class="change-button-container">
+                    <div class="cashier-button">
+                        <button ng-disabled="!(transferData.friendName.trim() && transferData.transferAmount) || transactionInProgress"
+                                ng-click="makeTransfer()" trans>Transfer
+                        </button>
+                    </div>
+                </div>
+            </form>
         </div>
     </div>
-    <!-- Version 2 -->
-    <div ng-if="conf.buddyTransfer.version === 2">
+    <!-- username option -->
+    <div ng-if="selectedOption===usernameOption">
         <div class="buddy-transfer-j">
             <div class="wrap-standart-j">
                 <div class="topprim-text-j">
@@ -124,6 +163,42 @@
                     </div>
                 </div>
             </div>
+        </div>
+    </div>
+
+    <div ng-if="selectedOption===userIdOption">
+        <h3 trans>Buddy transfer</h3>
+        <div class="settings-info-contain">
+            <form class="registration-form" action="">
+            <label>
+                <span trans>Friend's user ID</span>
+            </label>
+                <div class="from-text">
+                    <div class="tooltip-wrapper-j">
+                        <input type="text" ng-model="transferData.userId"/>
+                    </div>
+                </div>
+            <label>
+                <span trans>Amount</span>
+                <span ng-show="!selectedPaymentSystem.customCurrency">
+                            {{profile.currency_name|currency}}
+                        </span>
+            </label>
+            <div class="from-text">
+                <div class="tooltip-wrapper-j">
+                    <input type="number" ng-model="transferData.transferAmount" comma
+                           comma-enable={{conf.enableCommaSeparateNumber}} comma-decimal="enable"
+                           comma-dot="{{conf.enableDotInsteadComma}}"/>
+                </div>
+            </div>
+                <div class="change-button-container">
+                    <div class="cashier-button">
+                        <button ng-disabled="!(transferData.userId.trim() && transferData.transferAmount) || transactionInProgress"
+                                ng-click="makeTransfer()" trans>Transfer
+                        </button>
+                    </div>
+                </div>
+            </form>
         </div>
     </div>
 </div>

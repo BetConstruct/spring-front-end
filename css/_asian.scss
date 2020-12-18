@@ -13,14 +13,13 @@
   font: 10px/12px $font-f !important;
   .md-progress-circular.md-theme:not(.not-main) {
     margin-top: 260px;
-    //padding: 20px 0 40px !important;
     @include ltr {
       left: 50%;
       margin-left: -50px;
     }
     @include rtl {
-      right: 50%;
-      margin-right: -50px;
+      left: 50%;
+      margin-left: -50px;
     }
   }
   .contein-mini-filtr .md-progress-circular.md-theme {
@@ -388,7 +387,42 @@
 .asian-left-contain-menu .list-bet-block ul li {
   font-size: 10px;
 }
-
+.offer-stake-form {
+  float: left;
+  width: 100%;
+  height: 30px;
+  display: table;
+  > div {
+    display: table-cell;
+    vertical-align: middle;
+    height: 100%;
+  }
+  .offer-input {
+    @include ltr {
+      padding-right: 6px;
+    }
+    @include rtl {
+      padding-left: 6px;
+    }
+    input {
+      width: 100%;
+      height: 100%;
+      padding: 0 5px;
+      box-sizing: border-box;
+      font-size: 12px;
+    }
+  }
+  .offer-max-button {
+    padding: 0 5px;
+    color: set-color($brand-color-2);
+    background: $brand-color-2;
+    font: 11px/13px $font-f;
+    b {
+      display: block;
+      text-align: center;
+    }
+  }
+}
 .asian-left-contain-menu .empty-betslip,
 .asian-left-contain-menu .quickbet-mode-betslip,
 .asian-left-contain-menu .detached-info {
@@ -427,9 +461,62 @@
 .asian-left-contain-menu .single-bet-container .single-bet-betmax {
   border: none;
   border-radius: 2px;
-  padding: 1px 1px 2px 3px;
-  margin: 1px 0 0 4px;
+  padding-top: 1px;
+  padding-bottom: 2px;
+  margin-top: 1px;
   opacity: 1;
+  @include ltr {
+    margin-left: 4px;
+    padding-left: 3px;
+  }
+  @include rtl {
+    margin-right: 4px;
+    padding-right: 1px;
+  }
+}
+
+.list-bet-block .max-bet-tooltip-wrapper {
+  position: relative;
+  @include ltr {
+    float: right;
+    right: -4px;
+  }
+  @include rtl {
+    float: left;
+    left: -10px;
+  }
+  .betslip-max-min-icon {
+    float: left;
+    @include ltr {
+      margin-right: 0;
+    }
+    @include rtl {
+      margin-left: 0;
+    }
+  }
+  .betslip-max-min {
+    bottom: 24px;
+    @include ltr {
+      right: -3px;
+    }
+    @include rtl {
+      left: -3px;
+    }
+    > span {
+      color: set-color($brand-color-1) !important;
+      font-size: 12px;
+    }
+  }
+  + .single-bet-win {
+    width: 100%;
+    @include ltr {
+      right: -4px;
+    }
+    @include rtl {
+      right: 8px;
+      text-align: left;
+    }
+  }
 }
 .betslip-max-min-icon {
   display: block;
@@ -459,7 +546,8 @@
   bottom: 100%;
   padding: 0 6px;
   box-sizing: border-box;
-  z-index: 100;
+  z-index: 112;
+  white-space: nowrap;
   background: $brand-color-1;
   @include ltr {
     right: 0;
@@ -504,7 +592,8 @@
   margin: 7px 6px 0 0;
 }
 
-.asian-left-contain-menu .superbet-checkbox input[type="checkbox"] {
+.asian-left-contain-menu .superbet-checkbox input[type="checkbox"],
+.asian-left-contain-menu .counter-offer-checkbox input[type="checkbox"] {
   position: absolute;
 }
 
@@ -522,7 +611,7 @@
 }
 
 .asian-left-contain-menu .list-bet-block ul li span {
-  font-size: 10px;
+  font-size: 11px;
 }
 
 .asian-left-contain-menu .button-bet .bet-button-wrapper {
@@ -573,7 +662,8 @@
   float: left;
 }
 
-.asian-left-contain-menu .superbet-checkbox label {
+.asian-left-contain-menu .superbet-checkbox label,
+.asian-left-contain-menu .counter-offer-checkbox label {
   line-height: 18px;
   min-width: 85px;
   max-width: 85px;
@@ -587,7 +677,7 @@
   width: 74px;
   height: 20px;
   border-radius: 3px;
-  padding: 2px 4px;
+  padding: 2px 3px;
   font-size: 12px;
   line-height: 20px;
   margin-right: 4px;
@@ -621,19 +711,6 @@
 .asian-left-contain-menu .betslip-system-chenge p {
   font-size: 11px;
   line-height: 11px;
-}
-
-.asian-left-contain-menu .list-bet-block .bet-container .bet-conflict-warning .conflict-content ul {
-  padding: 0;
-}
-
-.asian-left-contain-menu .list-bet-block .bet-container .bet-conflict-warning .conflict-content ul li {
-  box-shadow: none;
-  background: none;
-}
-
-.asian-left-contain-menu .bet-conflict-warning .list-bet-block .bet-container .conflict-content ul:last-child {
-  border-bottom: none;
 }
 
 .asian-left-contain-menu .name-b-list {
@@ -718,12 +795,11 @@
     display: table;
     li {
       display: table-cell;
-      width: 30%;
       text-align: center;
       vertical-align: middle;
       font-size: 11px;
       text-transform: uppercase;
-      padding: 10px 5px;
+      padding: 10px 3px;
       &:first-child {
         border: none;
         @include ltr {
@@ -979,6 +1055,9 @@
   width: 100%;
   display: table;
   float: left;
+  &:nth-child(2):last-child {
+    width: calc(100% - 50px);
+  }
   &:nth-child(3) {
     width: calc(100% - 74px);
   }
@@ -1249,10 +1328,6 @@
   width: 100%;
 }
 
-.game-list-compitishion.closed {
-  height: 24px;
-}
-
 .name-chempionship-asia {
   float: left;
   width: 100%;
@@ -1295,6 +1370,14 @@
     &.statistics-icon-market {
       &:before {
         font: 14px/24px icomoon;
+      }
+    }
+    &.favorite-icon-market-v3 {
+      &:before {
+        font: 14px/24px icomoon;
+      }
+      &:not(.remove):not(:hover):before {
+        color: lighten(desaturate($c16-tp, 19), 51);
       }
     }
   }
@@ -1992,7 +2075,12 @@
   float: left;
   width: 100%;
   .asian-market-wrap-j .boosted {
-    right: 44px;
+    @include ltr {
+      right: 44px;
+    }
+    @include rtl {
+      left: 44px;
+    }
   }
 }
 
@@ -2003,10 +2091,6 @@
 
 .many-columns-b .name-market-view p {
   width: 100%;
-}
-
-.many-columns-b ul li:hover {
-
 }
 
 .many-columns-b .name-market-view span {
@@ -2598,7 +2682,6 @@
     }
   }
   &.cols-3 {
-    width: calc(100% + 2px);
     > div {
       margin: 1px 0 0 0;
       width: calc((100% - 1px) / 3);
@@ -3247,5 +3330,254 @@ table.hdp-contain-j {
       background: $hero-color;
       color: set-color($hero-color);
     }
+  }
+}
+
+//outright styles
+.a-game-list-compition{
+  float: left;
+  width: 100%;
+}
+.asian-outright-template{
+  float: left;
+  box-sizing: border-box;
+  background: darken(desaturate(adjust-hue($skin-color, 4deg), 15), 1);
+  width: 100%;
+  margin-bottom: 10px;
+  padding: 0 8px;
+  &.active{
+    .outright-game-t{
+      > h3:before{
+        content: "\e671";
+      }
+    }
+  }
+}
+.outright-game-t{
+  float: left;
+  width: 100%;
+  height: 38px;
+  line-height: 38px;
+  box-sizing: border-box;
+  padding: 0;
+  background: darken(desaturate(adjust-hue($skin-color, 4deg), 15), 1);
+  > h3{
+    font-size: 12px;
+    font-weight: normal;
+    position: relative;
+    color: $text-palette-3;
+    text-transform: uppercase;
+    display: inline-block;
+    cursor: pointer;
+    @include ltr{
+      padding: 0 10px 0 60px;
+    }
+    @include rtl{
+      padding: 0 60px 0 10px;
+    }
+    &:before{
+      content: "\e670";
+      display: block;
+      font: 16px/38px icomoon;
+      position: absolute;
+      top: 0;
+      @include ltr{
+        left: 8px;
+      }
+      @include rtl{
+        right: 8px;
+      }
+    }
+    &:after{
+      content: '';
+      display: block;
+      width: 1px;
+      background: $text-palette-3;
+      height: 12px;
+      position: absolute;
+      top: 12px;
+      @include ltr{
+        right: 0;
+      }
+      @include rtl{
+        left: 0;
+      }
+    }
+    > span.flag-icon{
+      top: 10px;
+      @include ltr{
+        left: 36px;
+      }
+      @include rtl{
+        right: 36px;
+      }
+    }
+  }
+  > span{
+    display: inline-block;
+    font-size: 12px;
+    color: $text-palette-3;
+    text-transform: uppercase;
+    @include ltr{
+      padding-left: 10px;
+    }
+    @include rtl{
+      padding-right: 10px;
+    }
+  }
+}
+.asian-outright-template.active .game-events-block{
+  display: block;
+}
+.game-events-block{
+ // display: none;
+  float: left;
+  width: 100%;
+  box-sizing: border-box;
+  background: lighten(desaturate(adjust-hue($skin-color, 3deg), 16), 4);
+  height: 36px;
+  margin-bottom: 6px;
+  line-height: 36px;
+  padding: 0 10px 0 0;
+  > h6{
+      display: inline-block;
+      position: relative;
+    font-size: 12px;
+    font-weight: normal;
+    color: $text-palette-3;
+    cursor: pointer;
+    @include ltr{
+      padding: 0 10px 0 36px;
+    }
+    @include rtl{
+      padding: 0 36px 0 10px;
+    }
+    &:before{
+      content: "\e670";
+      display: block;
+      font: 16px/38px icomoon;
+      position: absolute;
+      top: 0;
+      @include ltr{
+        left: 8px;
+      }
+      @include rtl{
+        right: 0;
+      }
+    }
+    &:after{
+      content: '';
+      display: block;
+      width: 1px;
+      background: $text-palette-10;
+      height: 12px;
+      position: absolute;
+      top: 12px;
+      @include ltr{
+        right: 0;
+      }
+      @include rtl{
+        left: 0;
+      }
+    }
+  }
+  > span{
+    font-size: 12px;
+    text-transform: uppercase;
+    color: $text-palette-3;
+    @include ltr{
+      padding-left: 10px;
+    }
+    @include rtl{
+      padding-right: 10px;
+    }
+  }
+  > i{
+    width: 30px;
+    color: $text-palette-3;
+    text-align: center;
+    cursor: pointer;
+    @include ltr{
+      float: right;
+    }
+    @include rtl{
+      float: left;
+    }
+    &:before{
+      content: '\f005';
+      font: 18px/36px icomoon;
+      display: block;
+    }
+    &.active{
+      &:before{
+        color: $brand-color-2;
+      }
+    }
+  }
+  &.active{
+    margin-bottom: 0;
+    > h6{
+      &:before{
+        content: "\e671";
+      }
+    }
+  }
+}
+.outright-results-a{
+  float: left;
+  width: 100%;
+  box-sizing: border-box;
+  background: lighten( desaturate( $skin-color, 17 ), 12 );
+  margin-bottom: 8px;
+}
+.game-outright-t{
+  float: left;
+  width: 100%;
+  box-sizing: border-box;
+  table-layout: fixed;
+  height: 36px;
+  line-height: 36px;
+  font-size: 12px;
+  text-transform: uppercase;
+  > p{
+      padding: 0 16px;
+  }
+}
+.market-out{
+  box-sizing: border-box;
+  display: grid;
+  font-size: 12px;
+  line-height: 36px;
+  min-height: 36px;
+  position: relative;
+  cursor: pointer;
+  margin: 1px 0 0;
+  contain: layout;
+  align-items: center;
+  width: 100%;
+  grid-template-columns: repeat(auto-fit, minmax(49%, 1fr));
+  grid-gap: 1px;
+}
+.price-holder {
+  display: inline-block;
+  vertical-align: top;
+  height: 100%;
+}
+.market-price-out {
+  display: flex;
+  flex-wrap: wrap;
+  padding: 0 16px;
+  color: $text-palette-3;
+  background: lighten( desaturate( $skin-color, 18), 19);
+  box-shadow: 0 0 1px $skin-palette-9;
+
+  p.ev-name-t {
+    flex: 1;
+  }
+  &.active{
+    background: $hero-color;
+  }
+  &:hover{
+    background: $hero-color;
   }
 }

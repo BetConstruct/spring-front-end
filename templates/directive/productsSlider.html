@@ -1,39 +1,22 @@
 <div class="product-list-contain">
     <vbet-loader ng-if="loading"></vbet-loader>
-    <ul ng-if="!loading && banners.length" class="column-{{ banners.length }}" data-slug="{{slugProcessed}}">
-        <li ng-repeat="banner in banners track by $index" ng-if="!banner.custom_fields.authorized[0] || ($root.env.authorized && banner.custom_fields.authorized[0])">
-            <a ng-if="!(banner.title == 'Sportsbook' || banner.custom_fields.sportsbook[0])"
-               ng-href="{{banner.custom_fields.openSlider ? '' : banner.link}}"
-               ng-click="(banner.custom_fields.openSlider ? $root.broadcast('openHelpPage',{slug: banner.custom_fields.openSlider[0]}) : '');
-                banner.custom_fields.action && ($root.$broadcast(banner.custom_fields.action[0], banner.custom_fields.action_data[0]));
-                $root.ignorePathValidation = true; $event.stopPropagation();"
-               target="{{banner.linktarget}}"
-               class="{{ banner.custom_fields.css[0] || banner.title }}">
-                <img class="product-slider-image {{(!banner.custom_fields.label[0] ? 'show hide-button' : '')}} {{ banner.custom_fields.css[0] || banner.title }}" ng-src="{{banner.imageurl}}"/>
-                <p class="icon-container-product">
-                    <b class="{{ banner.custom_fields.css[0] || banner.title }}"></b>
-                </p>
-                <div class="product-title-animation-wrapper" ng-class="{'has-animation' : banner.custom_fields.second_name}">
-                    <h4>{{ banner.trustedTitle|translate }}</h4>
-                    <h4 ng-show="banner.custom_fields.second_name">{{ banner.custom_fields.second_name[0] | translate }}</h4>
-                </div>
-                <button>
-                    <span>
-                        <div ng-bind-html="banner.custom_fields.label[0]"></div>
-                    </span>
-                </button>
-            </a>
-
-            <a ng-if="(banner.title == 'Sportsbook' || banner.custom_fields.sportsbook[0])" class="sportsBook-l" ng-init="sportsBookType=1" href="#/sport/?type={{sportsBookType}}" ng-click="$root.broadcast('setGamesType', sportsBookType == 1)">
-                <p class="icon-container-product">
-                    <b class="{{ banner.custom_fields.css[0] || banner.title }}"></b>
-                </p>
-                <div class="product-title-animation-wrapper">
-                    <h4>{{ banner.trustedTitle|translate }}</h4>
-                </div>
-                <button><span trans>Live</span></button>
-                <button ng-mouseleave="sportsBookType=1" ng-mouseover="sportsBookType=0"><span trans>pre-match</span></button>
-            </a>
-        </li>
-    </ul>
+    <div class="product-list-wrapper" ng-if="!loading && banners.length" data-slug="{{slugProcessed}}">
+        <a ng-if="!banner.custom_fields.authorized[0] || ($root.env.authorized && banner.custom_fields.authorized[0])" ng-repeat="banner in banners track by $index"
+           ng-href="{{banner.custom_fields.openSlider ? '' : banner.link}}"
+           ng-click="(banner.custom_fields.openSlider ? $root.broadcast('openHelpPage',{slug: banner.custom_fields.openSlider[0]}) : '');
+            banner.custom_fields.action && ($root.$broadcast(banner.custom_fields.action[0], banner.custom_fields.action_data[0]));
+            $root.ignorePathValidation = true; $event.stopPropagation();"
+           target="{{banner.linktarget}}"
+           class="{{ banner.custom_fields.css[0] || banner.title }}">
+            <img class="product-slider-image {{(!banner.custom_fields.label[0] ? 'show hide-button' : '')}} {{ banner.custom_fields.css[0] || banner.title }}" ng-src="{{banner.imageurl}}"/>
+            <p class="icon-container-product {{ banner.custom_fields.css[0] || banner.title }}"></p>
+            <div class="product-title-animation-wrapper" ng-class="{'has-animation' : banner.custom_fields.second_name}">
+                <h4>{{ banner.trustedTitle|translate }}</h4>
+                <h4 ng-show="banner.custom_fields.second_name">{{ banner.custom_fields.second_name[0] | translate }}</h4>
+            </div>
+            <button>
+                <span ng-bind-html="banner.custom_fields.label[0]"></span>
+            </button>
+        </a>
+    </div>
 </div>

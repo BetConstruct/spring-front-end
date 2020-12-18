@@ -162,6 +162,7 @@
       > p, > h4 {
         float: left;
         width: 100%;
+        white-space: nowrap;
         font: 12px/14px $font-f;
         font-weight: bold;
         color: $text-palette-14;
@@ -172,12 +173,28 @@
         > i {
           font-style: normal;
           display: list-item;
+          &.profile-id-copy {
+            display: inline-block;
+            vertical-align: top;
+            margin-top: -1px;
+            font-size: 11px;
+            @include ltr {
+              margin-left: 3px;
+            }
+            @include rtl {
+              margin-right: 3px;
+            }
+          }
         }
         > span {
-          float: left;
-          width: 100%;
           font: 11px/12px $font-f;
           text-transform: uppercase;
+          @include ltr {
+            float: left;
+          }
+          @include rtl {
+            float: right;
+          }
         }
       }
       > h4 {
@@ -187,9 +204,9 @@
         background: lighten( desaturate( adjust-hue( $skin-color, 4deg ), 12 ), 1 );
       }
       &.active{
+        cursor: auto;
         background: $skin-palette-7;
         border-bottom-color: $skin-palette-7;
-        pointer-events: none;
         > i {
           color: $text-palette-4;
         }
@@ -379,6 +396,11 @@
   float: left;
   width: 100%;
   padding: 0 10px 10px;
+  z-index: 55;
+  position: relative;
+}
+.all-history-filter-container.bonus{
+  padding-top: 10px;
 }
 .filter-columns-container{
   @include ltr {
@@ -390,6 +412,9 @@
   > ul {
     float: left;
     box-sizing: border-box;
+    @include rtl{
+      float: right;
+    }
     > li {
       display: inline-block;
       box-sizing: border-box;
@@ -603,6 +628,7 @@ div.mini-form-box-b{
     color: set-color($brand-color-1);
     padding: 0 14px;
     transition: 300ms background;
+    min-width: 170px;
     &:hover {
       background: lighten($brand-color-1, 10);
     }
@@ -1695,6 +1721,27 @@ div.mini-form-box-b{
   box-sizing: border-box;
   padding: 10px 0;
   margin: 10px 0 0;
+  .change-password-section-j {
+    display: block;
+    width: 600px;
+    margin: 0 auto;
+    .change-button-container {
+      .cashier-button {
+        width: 100%;
+        > button {
+          width: auto;
+          min-width: 200px;
+          margin: 0 auto;
+          @include ltr {
+            float: none;
+          }
+          @include rtl {
+            float: none;
+          }
+        }
+      }
+    }
+  }
 }
 .profile-tab-contain-b h3{
   float: left;
@@ -1781,9 +1828,6 @@ div.mini-form-box-b{
 .profile-tab-contain-b .settings-info-contain .form-text{
   width: 100%;
   box-sizing: border-box;
-  > label {
-    width: 100%;
-  }
 }
 .profile-tab-contain-b .settings-info-contain .tooltip-wrapper-j {
   margin: 5px 0;
@@ -2417,6 +2461,9 @@ div.mini-form-box-b{
            width: 100%;
          }
        }
+       + .promotions-balance-j {
+         height: calc(100% - 35px);
+      }
     }
   }
   aside {
@@ -2773,8 +2820,8 @@ div.mini-form-box-b{
           float: left;
           display: block;
           height: 36px;
-          border: 1px solid lighten( desaturate( adjust-hue( $skin-color, 2deg ), 16 ), 9 );
-          background: lighten( desaturate( adjust-hue( $skin-color, 3deg ), 14 ), 1 );
+          border: 1px solid desaturate( adjust-hue( $skin-color, 2deg ), 16 );
+          background: lighten( desaturate( adjust-hue( $skin-color, 3deg ), 14 ), 10 );
           padding: 0 14px;
           color: $text-palette-14;
           font: 400 12px/34px $font-f;
@@ -2987,6 +3034,7 @@ div.mini-form-box-b{
             width: 16px;
             height: 16px;
             display: block;
+            margin: 0;
             color: rgba(set-color($skin-palette-8),0.39);
             border: 1px solid rgba(set-color($skin-palette-8),0.39);
             font: 6px/14px icomoon;
@@ -3099,8 +3147,8 @@ div.mini-form-box-b{
   }
   .promotions-balance-j {
     background-color: $skin-palette-12;
-    height: calc(100% - 35px);
     width: calc(100% - 607px - 156px);
+    height: 100%;
     color: $text-palette-4;
     font: 14px/20px $font-f;
     position: relative;
@@ -3109,6 +3157,11 @@ div.mini-form-box-b{
     }
     @include rtl {
       float: left;
+    }
+    > div {
+      float: left;
+      width: 100%;
+      height: 100%;
     }
     h1 {
       font: 18px/20px $font-f;
@@ -3137,8 +3190,9 @@ div.mini-form-box-b{
       }
     }
     .slide-container-repeat-b {
-      height: calc(100% - 66px);
-      padding: 30px 36px;
+      height: 100%;
+      //padding: 30px 36px;
+      padding: 10px;
       .slide-casino-new-img-b {
         height: 100%;
         overflow: hidden;
@@ -3151,7 +3205,7 @@ div.mini-form-box-b{
           float: left;
           width: 100%;
           margin: 35px 0 0 0;
-          height: calc(100% - 194px);
+          height: calc(100% - 250px);
           @include scroll($scroll: auto);
           @include ltr {
             padding: 0 15px 0 0;
@@ -3160,6 +3214,12 @@ div.mini-form-box-b{
             padding: 0 0 0 15px;
           }
         }
+        .banner-set-img a > img {
+          width: 100%;
+        }
+      }
+      &.active {
+        position: absolute;
       }
     }
     &.no-banners-balance {
@@ -3733,7 +3793,10 @@ div.mini-form-box-b{
   margin-top: -60px;
   height: calc(100% + 60px);
 }
-
+.balance-lightbox-j .depositRequest iframe{
+  width: 100%;
+  height: 100%;
+}
 .withdraw-status-j {
   float: left;
   width: 100%;
@@ -3887,6 +3950,10 @@ div.mini-form-box-b{
         &.rejected:before {
           content: "\e6eb";
           color: #903147;
+        }
+        &.cancelled:before {
+          content: "\ea9e";
+          color: #8f3247;
         }
       }
       button {
@@ -4339,40 +4406,41 @@ div.mini-form-box-b{
 button.button-confirm .md-progress-circular.small-progress {
   right: 4px;
 }
-.edit-bets-icon {
-  width: 24px;
-  height: 24px;
-  margin-top: 2px;
-  text-align: center;
-  display: inline-block;
-  border: 1px solid lighten($brand-color-2, 10);
+.edit-bets-icon,
+.refresh-icon {
   color: lighten($brand-color-2, 20);
-  font: 13px/24px icomoon;
-  transition: 300ms border-color;
+  font: 13px/30px icomoon;
+  transition: color 240ms;
   @include ltr {
     float: right;
   }
   @include rtl {
     float: left;
   }
+  &:hover {
+    color: lighten($brand-color-2, 30);
+  }
+}
+.edit-bets-icon {
   &.disabled {
     cursor: auto;
     color: rgba(lighten($brand-color-2, 20),0.3);
-    border-color: rgba(lighten($brand-color-2, 10),0.3);
-  }
-  &:not(.disabled):hover {
-    color: lighten($brand-color-2, 30);
-    border-color: lighten($brand-color-2, 20);
+    &:hover {
+      color: rgba(lighten($brand-color-2, 20),0.3);
+    }
   }
   &:before {
     content: "\e6f9";
   }
-  + .gift-bet {
-    @include ltr {
-      margin-right: 6px;
-    }
-    @include rtl {
-      margin-left: 6px;
+  + {
+    .gift-bet,
+    .refresh-icon {
+      @include ltr {
+        margin-right: 11px;
+      }
+      @include rtl {
+        margin-left: 11px;
+      }
     }
   }
 }
@@ -4973,13 +5041,6 @@ button.button-confirm .md-progress-circular.small-progress {
       &:hover {
         background: lighten($brand-color-1, 10);
       }
-      &.cms-jcon-refresh {
-        background: $brand-color-2;
-        color: set-color($brand-color-2);
-        &:hover {
-          background: lighten($brand-color-2, 10);
-        }
-      }
     }
   }
 }
@@ -5084,21 +5145,19 @@ button.button-confirm .md-progress-circular.small-progress {
   -webkit-box-align: center;
   -ms-flex-align: center;
   align-items: center;
+  .cms-jcon-refresh,
   .cms-jcon-edit {
-    width: 26px;
-    height: 26px;
-    background: none;
-    color: lighten($brand-color-2, 20);
-    transition: 300ms border, 300ms color;
     padding: 0;
-    border: 1px solid lighten($brand-color-2, 10);
-    text-align: center;
+    color: lighten($brand-color-2, 20);
+    background: none;
+    border: none;
     font-size: 14px;
+    transition: 240ms color;
     @include ltr {
-      margin: 0 6px 0 0;
+      margin-right: 6px;
     }
     @include rtl {
-      margin: 0 0 0 6px;
+      margin-left: 6px;
     }
     &:disabled {
       cursor: auto;
@@ -5117,6 +5176,10 @@ button.button-confirm .md-progress-circular.small-progress {
     @include rtl {
       margin-left: 6px;
     }
+  }
+  li:last-child .second-color {
+    display: block;
+    text-align: center;
   }
 }
 .buddy-transfer-mixed-view-t {
@@ -5571,6 +5634,13 @@ button.button-confirm .md-progress-circular.small-progress {
     color: lighten( desaturate( adjust-hue( $text-color, 5deg ), 16 ), 52 );
     font: 14px/16px $font-f;
   }
+  .two-fa-description{
+    float: left;
+    width: 100%;
+    font-style: normal;
+    font: 14px/16px $font-f;
+    padding: 2px 0 0 0;
+  }
 }
 .switcher-authentication {
   position: relative;
@@ -5741,6 +5811,25 @@ li.barcod-authentication {
   &:only-child {
     width: 100%;
   }
+  .sc-add-section {
+    width: 120px;
+    max-width: 120px;
+    @include ltr {
+      padding: 0 16px 0 10px;
+    }
+    @include rtl {
+      padding: 0 10px 0 16px;
+    }
+    .card-icon {
+      width: 36px;
+      height: 30px;
+    }
+    > img {
+      display: block;
+      max-width: 100%;
+      min-height: auto !important;
+    }
+  }
 }
 .sc-add-table {
   float: left;
@@ -5758,23 +5847,6 @@ li.barcod-authentication {
   }
   & + ul {
     border-top: 1px solid $skin-palette-7;
-  }
-}
-.sc-add-section {
-  width: 48px;
-  @include ltr {
-    padding: 0 16px 0 10px;
-  }
-  @include rtl {
-    padding: 0 10px 0 16px;
-  }
-  .card-icon {
-    width: 36px;
-    height: 30px;
-  }
-  > img {
-    display: block;
-    height: 24px;
   }
 }
 .sc-add-info {
@@ -5861,54 +5933,93 @@ li.barcod-authentication {
 .cashback-amount-block{
   float: left;
   width: 100%;
-  // background: lighten( desaturate( adjust-hue( $skin-palette-7, 3deg ), 3 ), 3 );
   background: $skin-palette-7;
   box-sizing: border-box;
-  padding: 40px;
+  padding: 30px;
+  margin: 0 0 15px 0;
 
   > .bonus-category {
     display: block;
-    padding-bottom: 20px;
     color: $text-palette-3;
     font-weight: bold;
-    font-size: 18px;
+    font-size: 28px;
+    line-height: 34px;
     text-transform: uppercase;
-  }
-
-  > button {
-    height: 46px;
-    width: 100%;
-    text-align: center;
-    font-size: 15px;
-    line-height: 17px;
-    text-transform: uppercase;
-    background: $brand-color-1;
-    color: set-color($brand-color-1);
-    border: 1px solid $brand-color-1;
-
-    &[disabled="disabled"] {
-      background: transparent;
-      border: 1px solid $text-palette-3;
-      color: $text-palette-3;
-    }
   }
 
   > .amount-line {
-    margin: 30px 0;
-    border-bottom: 1px solid $skin-palette-12;
-    color: $text-palette-3;
-
-    p {
-      padding-bottom: 10px;
+    float: left;
+    width: 100%;
+    display: table;
+    vertical-align: top;
+    padding: 20px 0 0 0;
+    > div{
+      display: table-cell;
+      vertical-align: bottom;
+      width: 50%;
+    }
+    button {
+      height: 46px;
+      width: 280px;
+      text-align: center;
       font-size: 15px;
-      line-height: 14px;
-
-      .amount-title {
+      line-height: 17px;
+      text-transform: uppercase;
+      background: $brand-color-1;
+      color: set-color($brand-color-1);
+      border: 1px solid $brand-color-1;
+      @include ltr{
+        float: right;
+      }
+      @include rtl{
         float: left;
       }
 
-      .amount-value {
+      &[disabled="disabled"] {
+        background: transparent;
+        border: 1px solid $text-palette-3;
+        color: $text-palette-3;
+        pointer-events: none;
+        opacity: 0.5;
+      }
+      &.default {
+        background: transparent;
+        border: 1px solid $text-palette-3;
+        color: $text-palette-3;
+        &:hover{
+          background: $brand-color-1;
+          color: set-color($brand-color-1);
+          border: 1px solid $brand-color-1;
+        }
+      }
+    }
+    p {
+      width: 80%;
+      border-bottom: 1px solid $skin-palette-10;
+      font-size: 15px;
+      line-height: 46px;
+      height: 46px;
+      @include ltr{
+        float: left;
+      }
+      @include rtl{
+        float: right;
+      }
+      .amount-title {
+        display: inline-block;
+        vertical-align: bottom;
+        color: $text-palette-3;
+        @include ltr{
+          float: left;
+        }
+        @include rtl{
+          float: right;
+        }
+      }
 
+      .amount-value {
+        display: inline-block;
+        vertical-align: bottom;
         color: $brand-color-2;
         @include ltr{
           float: right;
@@ -5916,7 +6027,271 @@ li.barcod-authentication {
         @include rtl{
           float: left;
         }
+        > i{
+          font-style: normal;
+        }
       }
     }
   }
 }
+.profile-permissions-p, .profile-preference-p{
+  float: left;
+  width: 100%;
+  margin-top: 20px;
+  > p{
+    padding-bottom: 10px;
+    position: relative;
+    font-weight: bold;
+    @include ltr{
+      padding-right: 30px;
+    }
+    @include rtl{
+      padding-left: 30px;
+    }
+    &:after{
+      content: "\e670";
+      font: 18px/20px icomoon;
+      display: inline-block;
+      position: absolute;
+      top: 0;
+      @include ltr{
+        right: 0;
+      }
+      @include rtl{
+        left: 0;
+      }
+    }
+    &.collapsed{
+      &:after{
+        content: "\e671";
+      }
+    }
+  }
+}
+.profile-permissions-p{
+  margin-top: 8px;
+}
+.settings-info-contain .profile-permissions-p ul li{
+  display: block;
+  margin: 4px 0 10px;
+  > span{
+    color: rgba(255, 255, 255, 0.39);
+    font-size: 12px;
+    line-height: 14px;
+    &:last-child{
+      @include ltr{
+        float: right;
+      }
+      @include rtl{
+        float: left;
+      }
+    }
+  }
+}
+
+// prefer to friend Start
+
+.prefer-to-friend {
+  float: left;
+  width: 100%;
+  text-align: center;
+}
+.prefer-to-friend-container {
+  display: inline-block;
+  width: 692px;
+  margin-top: 30px;
+  padding: 30px 40px;
+  box-sizing: border-box;
+  background: $skin-palette-7;
+  > h3 {
+    float: left;
+    width: 100%;
+    color: $text-palette-2;
+    letter-spacing: 0.38px;
+    text-transform: uppercase;
+    font: normal 16px/18px $font-f;
+  }
+  > p {
+    float: left;
+    width: 100%;
+    height: 40px;
+    margin: 24px 0 16px;
+    color: $text-palette-4;
+    padding: 0 20px;
+    box-sizing: border-box;
+    font: 14px/40px $font-f;
+    letter-spacing: 0.22px;
+    text-align: left;
+    border: solid 1px $text-palette-4;
+  }
+}
+.prefer-to-friend-button {
+  float: left;
+  width: 100%;
+  height: 40px;
+  button {
+    height: 100%;
+    border: none;
+    box-sizing: border-box;
+    text-transform: uppercase;
+    font: 500 16px/40px $font-f;
+    letter-spacing: 0.26px;
+    @include ltr {
+      float: left;
+    }
+    @include rtl {
+      float: right;
+    }
+    &:disabled {
+      color: $text-palette-8;
+      background: $skin-palette-6;
+      cursor: default;
+    }
+  }
+  > button {
+    width: 128px;
+    padding: 0 10px;
+    color: $text-palette-2;
+    background: $skin-palette-4;
+    transition: background 240ms;
+    @include ltr {
+      margin-left: 10px;
+    }
+    @include rtl {
+      margin-right: 10px;
+    }
+    &:hover {
+      background: lighten($skin-palette-4,10);
+    }
+  }
+}
+.prefer-to-friend-generate {
+  width: 335px;
+  height: 100%;
+  position: relative;
+  @include ltr {
+    float: left;
+  }
+  @include rtl {
+    float: right;
+  }
+  > button {
+    width: 100%;
+    padding: 0 28px;
+    color: set-color($brand-color-1);
+    background: $brand-color-1;
+  }
+  .small-progress.md-progress-circular {
+    top: 10px;
+    margin: 0;
+    @include ltr {
+      left: auto;
+      right: 4px;
+    }
+    @include rtl {
+      left: 4px;
+    }
+  }
+}
+
+.prefer-to-friend-block {
+  float: left;
+  width: 100%;
+  padding: 40px 0;
+  box-sizing: border-box;
+  + .prefer-to-friend-block {
+    border-top: 1px solid $skin-palette-12;
+  }
+}
+.prefer-to-friend-info {
+  width: 300px;
+  @include ltr {
+    text-align: left;
+  }
+  @include rtl {
+    text-align: right;
+  }
+  &:first-child {
+    @include ltr {
+      float: left;
+    }
+    @include rtl {
+      float: right;
+    }
+  }
+  &:nth-child(2) {
+    @include ltr {
+      float: right;
+    }
+    @include rtl {
+      float: left;
+    }
+  }
+}
+.prefer-to-friend-line-info {
+  float: left;
+  width: 100%;
+  letter-spacing: 0.24px;
+  font: 15px/17px $font-f;
+  > span,
+  > b {
+    @include ltr {
+      float: left;
+    }
+    @include rtl {
+      float: right;
+    }
+  }
+  > span {
+    color: $text-palette-4;
+    @include ltr {
+      margin-right: 12px;
+    }
+    @include rtl {
+      margin-left: 12px;
+    }
+    &.ellipsis-text {
+      width: calc(100% - 30px);
+    }
+  }
+  > b {
+    color: $brand-color-1;
+    font-weight: normal;
+    > i {
+      color: $text-palette-4;
+      font-style: normal;
+    }
+    &.prefer-to-friend-id {
+      color: $brand-color-2;
+    }
+    &.prefer-to-friend-name {
+      color: $text-palette-3;
+    }
+  }
+  > i {
+    font: normal 16px/16px icomoon;
+    @include ltr {
+      float: right;
+    }
+    @include rtl {
+      float: left;
+    }
+    &.checked {
+      color: #008d47;
+      &:before {
+        content: "\ea1f";
+      }
+    }
+    &.unchecked {
+      color: #e9044a;
+      &:before {
+        content: "\ea22";
+      }
+    }
+  }
+  + .prefer-to-friend-line-info {
+    margin-top: 10px;
+  }
+}
+
+// prefer to friend END

@@ -1,0 +1,29 @@
+<!-- Archery live game template-->
+<div class="game-score-archery-shots" ng-if="openGame.id">
+    <div class="game-score-archery-total">
+        <b ng-bind="openGame.info.score1 || 0"></b>
+        <span>{{'Total'|translate}}</span>
+    </div>
+    <h3 class="game-score-archery-title ellipsis-text">{{openGame.team1_name}}</h3>
+    <p class="game-score-archery-paragraph">
+        {{openGame.info.current_game_state|convertSetName:openGame.sport.alias|translate}}</p>
+    <ul class="game-score-archery-set" ng-init="init()">
+        <li
+                ng-repeat="setNumber in [1,2,3,4,5,6]"
+                ng-show="currentSetNumber >= setNumber"
+                data-set-num="{{setNumber}}"
+                class="game-score-archery archery-set-{{setNumber}}"
+                ng-class="{'archery-set-expand' : selectedSet.value === setNumber}"
+        >
+            <span>{{'SET {1}'|translate:[setNumber]}}</span>
+            <ul class="archery-point">
+                <li><i ng-repeat="index in [0,1,2,3,4,5]"
+                       class="archery-point-{{openGame.info.periods_values[setNumber][index] !== 0 ? openGame.info.periods_values[setNumber][index] : 'miss'}}">{{openGame.info.periods_values[setNumber][index]}}</i>
+                </li>
+                <li class="archery-point-total"><i>{{openGame.stats['score_set'+ setNumber].team1_value}}</i></li>
+            </ul>
+        </li>
+    </ul>
+</div>
+
+

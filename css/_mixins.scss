@@ -84,6 +84,35 @@ $delete-cache: '?v=' + random(777);
       color: set-color($c16-sp-9);
     }
   }
+    .body-wrapper.asian{
+    .icon-sport-asia.#{$sports-name}{
+      color: $sports-color !important;
+      &.Soccer {
+        color: set-color($c16-sp-9);
+      }
+    }
+  }
+
+  .body-wrapper.asian {
+    .asian-left-contain-menu{
+      .competition-title-v3{
+      > label{
+        span.#{$sports-name}{
+          &:before{
+            color: $sports-color !important;
+          }
+          &.Soccer {
+            &:before{
+              color: set-color($c16-sp-9) !important;
+            }
+
+          }
+        }
+       }
+      }
+    }
+  }
+
   .sports-item-v3.#{$sports-name} {
     &.active > .arrow-view-v3 {
       background: $sports-color;
@@ -130,7 +159,7 @@ $delete-cache: '?v=' + random(777);
   }
   .esports .asian-banner {
     &.#{$sports-name} {
-      a {
+      img {
         box-shadow: 0 0 0 2px $sports-color;
       }
       .asian-banner-swicher {

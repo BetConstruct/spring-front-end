@@ -1,6 +1,6 @@
 <div class="betSettingsContainer-j" 
      ng-class="{'active': shared.showBetSettings}"
-     ng-show="betSlip.mode === 'betting' && !betSlip.superbet.selector">
+     ng-show="betSlip.mode === 'betting' && !betSlip.superbet.selector && !counterOffer.enabled">
     <i ng-click="shared.showBetSettings=!shared.showBetSettings;"></i>
     <div class="betslipOptions-j">
         <div>

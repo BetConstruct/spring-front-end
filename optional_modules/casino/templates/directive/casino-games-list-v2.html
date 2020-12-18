@@ -13,7 +13,7 @@
                            ng-click="openGame(game, 'fun'); $event.stopPropagation();" trans>View</button>
                </strong>
            </span>
-            <p class="games-name">{{game.name}}</p>
+            <p class="games-name ellipsis-text" title="{{game.name}}">{{game.name}}</p>
             <i class="games-favorite-icon" ng-show="!hideFavoriteButton"
                ng-click="toggleSaveToMyCasinoGames(game); $event.stopPropagation();"
                ng-class="{'active': $root.myCasinoGamesIds[game.id]}">

@@ -46,7 +46,7 @@ module.exports = function (grunt) {
                         removeStyleLinkTypeAttributes:  false
                     }
                 },
-                src: ["templates/**/*.html", "skins/<%=skin%>/templates/**/*.html"],
+                src: ["templates/**/*.html", "skins/<%=skin%>/templates/**/*.html", "skins/<%=skinConfig%>/templates/**/*.html"],
                 dest: "templates.js"
             }
         },
@@ -175,7 +175,7 @@ module.exports = function (grunt) {
                     'templates.js' //  created by ngtemplates task
                 ],
                 jsOutputFile: 'app.min.js',
-                maxBuffer: 2500,
+                maxBuffer: 3500,
                 options: {
 //                    compilation_level: 'ADVANCED_OPTIMIZATIONS',
                     language_in: 'ECMASCRIPT5_STRICT'
@@ -205,7 +205,7 @@ module.exports = function (grunt) {
                     version: '<%= pkg.version %>',
                     resourcePathPrefix: '<%= angularValue.VBET5.SkinConfig.main.resourcePathPrefix || "" %>',
                     buildDate: '<%= grunt.template.today("yyyymmddhhMMss") %>',
-                    favicon: '<%= angularValue.VBET5.SkinConfig.main.integrationMode ? "" : (angularValue.VBET5.SkinConfig.main.resourcePathPrefix || "") + (angularValue.VBET5.SkinConfig.main.logo && angularValue.VBET5.SkinConfig.main.logo.favicon || "favicon.ico") + "?=" + grunt.template.today("yyyymmddhhMMss")  %>',
+                    favicon: '<%= (angularValue.VBET5.SkinConfig.main.integrationMode || angularValue.VBET5.SkinConfig.main.disableFavicon) ? "" : (angularValue.VBET5.SkinConfig.main.resourcePathPrefix || "") + (angularValue.VBET5.SkinConfig.main.logo && angularValue.VBET5.SkinConfig.main.logo.favicon || "favicon.ico") + "?=" + grunt.template.today("yyyymmddhhMMss")  %>',
                     gitinfo: '<%= gitinfo.local.branch.current.SHA %>',
                     skin: '<%= skin %>',
                     rtl: '<%= rtl %>',

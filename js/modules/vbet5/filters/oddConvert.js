@@ -163,14 +163,14 @@ VBET5.filter('oddConvert', ['$rootScope', 'Config', 'Utils', 'LadderLoader', fun
     }
 
 
-    return function (value, format, type, displayKey, showCustomFractionalFormat, isMultiple) {
+    var filter = function (value, format, type, displayKey, showCustomFractionalFormat, isMultiple) {
         if (value === null || value === undefined || isNaN(value)) {
             return value;
         }
         if (value <= 1) {
             return null;
         }
-        if (!$rootScope.partnerConfig) {
+        if (!$rootScope.partnerConfig || $rootScope.partnerConfig._not_loaded) {
             return null;
         }
 
@@ -205,6 +205,9 @@ VBET5.filter('oddConvert', ['$rootScope', 'Config', 'Utils', 'LadderLoader', fun
         }
         return cache[cacheKey];
     };
+
+    filter.$stateful = true;
+    return filter;
 
 
 }]);

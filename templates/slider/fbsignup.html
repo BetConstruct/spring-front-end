@@ -54,14 +54,13 @@
                                 <div class="tooltip-j" trans ng-show="fbsignupform.doc_number.$error.exists && registrationData.doc_number">Passport Number is already registered for another account</div>
                             </div>
                         </div>
-                        <div class="reg-list-item-wrapper-j" ng-if="conf.registration.requirePhoneNumber" ng-class="{'error': ((fbsignupform.phone_number.$dirty && fbsignupform.phone_number.$invalid && showFieldsValidation) || (conf.registration.requireSmsValidation && !fbsignupform.phone_number.$error.pattern))}">
+                        <div class="reg-list-item-wrapper-j" ng-if="conf.registration.requirePhoneNumber" ng-class="{'error': ((fbsignupform.phone_number.$dirty && fbsignupform.phone_number.$invalid && showFieldsValidation) )}">
                             <label class="hintReq" trans>Contact number</label>
                             <div class="tooltip-wrapper-j">
                                 <input name="phone_number" ng-model="registrationData.phone_number" type="text" required placeholder="Number" ng-pattern="conf.registration.phoneNumberPattern" maxlength="{{conf.registration.phoneNumberLength}}" trans>
                                 <div class="form-error-icon-j"></div>
                                 <div class="tooltip-j" trans ng-show="fbsignupform.phone_number.$error.invalid || fbsignupform.phone_number.$error.pattern">Invalid phone number</div>
                                 <div class="tooltip-j" trans ng-show="fbsignupform.phone_number.$error.duplicate">Duplicate phone number</div>
-                                <div class="tooltip-j" ng-if="conf.registration.requireSmsValidation && !fbsignupform.phone_number.$error.pattern" trans>Verify phone number by sms</div>
                             </div>
                         </div>
                     </li>
@@ -166,7 +165,7 @@
                         </div>
                         <div class="finish-register-buttons">
                             <div class="button-confirm">
-                                <button class="registration-done-btn" ng-click="closeRegistrationResult()" trans>OK</button>
+                                <button class="registration-done-btn" ng-click="closeRegistrationResult()" ng-bind="'OK'|translate:null:'ok_reg_success'"></button>
                             </div>
                         </div>
                     </div>
@@ -196,7 +195,7 @@
                         </div>
                         <div class="finish-register-buttons">
                             <div class="button-confirm">
-                                <button class="registration-done-btn" ng-click="closeRegistrationResult()" trans>OK</button>
+                                <button class="registration-done-btn" ng-click="closeRegistrationResult()" ng-bind="'OK'|translate:null:'ok_reg_failed'"></button>
                             </div>
                         </div>
                     </div>

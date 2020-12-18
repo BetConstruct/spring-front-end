@@ -4,13 +4,13 @@
  *
  * @description Carousel Slider
  */
-CASINO.directive('carouselSlider', ['TimeoutWrapper', '$window', function (TimeoutWrapper, $window) {
+CASINO.directive('carouselSlider', ['$window', function ($window) {
     'use strict';
 
     return {
         restrict: 'E',
         replace: true,
-        template: '<ul  class="slider-main"><li class="slider-arrow" ></li><li><div class="slider-wrapper" ></div></li><li class="slider-arrow" ></li></ul>',
+        template: '<ul  class="slider-main"><li class="slider-arrow" ng-click="changeActiveSlide(-1)" ></li><li><div class="slider-wrapper" ></div></li><li class="slider-arrow" ng-click="changeActiveSlide(+1)"></li></ul>',
         scope: {
             items: '=',
             selectedItem: '=',
@@ -20,14 +20,14 @@ CASINO.directive('carouselSlider', ['TimeoutWrapper', '$window', function (Timeo
         link: function (scope, element, attr) {
             var body = $window.document.body;
             var container = element[0].getElementsByClassName('slider-wrapper')[0];
-            var arrows = element[0].getElementsByClassName('slider-arrow');
             var itemNodes = [];
             var transitionEnabled = true;
             var position = 0;
             var currentIndex = 0;
+            var timeout;
 
-            function changeActiveSlide(arrow, index) {
-
+            scope.changeActiveSlide = function changeActiveSlide(arrow, index) {
+                clearTimeout(timeout);
                 var length = processedItems.length;
 
                 if (index) {
@@ -35,19 +35,18 @@ CASINO.directive('carouselSlider', ['TimeoutWrapper', '$window', function (Timeo
                 }
 
                 processedItems[currentIndex].selected = false;
-                itemNodes[currentIndex].className = itemNodes[currentIndex].className.replace(' active','');
+                itemNodes[currentIndex].className = itemNodes[currentIndex].className.replace(' active', '');
 
                 if (arrow < 0 && currentIndex <= scope.items.length) {
                     currentIndex = length - scope.items.length;
                     setTransition(false);
                     setPosition(currentIndex);
-                    setTimeout(move, 0);
+                    timeout = setTimeout(move, 0);
                 } else if (arrow > 0 && currentIndex >= length - scope.items.length - 1) {
                     currentIndex = scope.items.length - 1;
                     setTransition(false);
                     setPosition(currentIndex);
-                    setTimeout(move, 0);
-
+                    timeout = setTimeout(move, 0);
                 } else {
                     move();
                 }
@@ -62,13 +61,12 @@ CASINO.directive('carouselSlider', ['TimeoutWrapper', '$window', function (Timeo
 
                     if (scope.changeCallback && typeof scope.changeCallback === 'function') {
                         scope.changeCallback(scope.selectedItem);
-                        scope.$apply();
                     }
 
                     processedItems[currentIndex].selected = true;
                     setPosition(currentIndex);
                 }
-            }
+            };
 
             function setPosition(index, value) {
                 if (index) {
@@ -96,7 +94,7 @@ CASINO.directive('carouselSlider', ['TimeoutWrapper', '$window', function (Timeo
                 processedItems = [];
                 var index = 0;
 
-               var K = Math.ceil(scope.itemsToShow * 4 / length);
+                var K = Math.ceil(scope.itemsToShow * 4 / length);
 
                 for (var i = 0; i < length * K; i++) {
                     var item = {
@@ -123,24 +121,15 @@ CASINO.directive('carouselSlider', ['TimeoutWrapper', '$window', function (Timeo
                 return processedItems;
             }
 
-
-            arrows[0].addEventListener('click', function () {
-                changeActiveSlide(-1);
-            });
-            arrows[1].addEventListener('click', function () {
-                changeActiveSlide(+1);
-            });
-
-
             function drawItems(items) {
                 itemNodes = [];
                 if (container) {
                     container.innerHTML = "";
                     items.forEach(function (item, $index) {
                         var div = document.createElement('DIV');
-                        div.className = 'item item-'+item.name;
-                        if(item.selected){
-                            div.className +=' active';
+                        div.className = 'item item-' + item.name;
+                        if (item.selected) {
+                            div.className += ' active';
                         }
 
                         div.dataset.index = $index;
@@ -151,15 +140,16 @@ CASINO.directive('carouselSlider', ['TimeoutWrapper', '$window', function (Timeo
                 }
             }
 
-            function addSlideEvents() {
+            function init() {
                 var startX = 0;
                 var xDiff = 0;
 
-                function mounseMove(e) {
+                function mouseMove(e) {
                     var positionK = -100 / container.offsetWidth;
                     xDiff = startX - e.clientX;
 
                     setPosition(null, position + parseInt((xDiff) * positionK));
+                    console.log("**********", "mouseMove");
                 }
 
                 function mouseUp(e) {
@@ -167,7 +157,7 @@ CASINO.directive('carouselSlider', ['TimeoutWrapper', '$window', function (Timeo
 
                     e.target.style.border = null;
                     var itemWidth = itemNodes[0].offsetWidth;
-                    body.removeEventListener('mousemove', mounseMove);
+                    body.removeEventListener('mousemove', mouseMove);
                     body.removeEventListener('mouseup', mouseUp);
                     setTransition(true);
 
@@ -176,13 +166,14 @@ CASINO.directive('carouselSlider', ['TimeoutWrapper', '$window', function (Timeo
                         if (Math.abs(step) === 0) {
                             step = xDiff > 0 ? 1 : -1;
                         }
-                        changeActiveSlide(step);
+                        scope.changeActiveSlide(step);
                     } else {
-                        changeActiveSlide(null, e.target.dataset.index);
+                        scope.changeActiveSlide(null, e.target.dataset.index);
                     }
 
-                     startX = 0;
-                     xDiff = 0;
+                    startX = 0;
+                    xDiff = 0;
+                    console.log("**********", "mouseUp");
                 }
 
                 function mouseDown(e) {
@@ -190,16 +181,33 @@ CASINO.directive('carouselSlider', ['TimeoutWrapper', '$window', function (Timeo
                     setTransition(false);
 
                     startX = e.clientX;
-                    body.addEventListener('mousemove', mounseMove);
+                    body.addEventListener('mousemove', mouseMove);
                     body.addEventListener('mouseup', mouseUp);
+                    console.log("**********", "mouseDown");
+                }
+                drawItems(processItemsList());
+
+                function removeAllEvents() {
+                    console.log("**********", "removeAllEvents");
+                    container.removeEventListener('mousedown', mouseDown);
+                    body.removeEventListener('mousemove', mouseMove);
+                    body.removeEventListener('mouseup', mouseUp);
                 }
 
-                container.removeEventListener('mousedown', mouseDown);
+                removeAllEvents();
+
                 container.addEventListener('mousedown', mouseDown);
+                scope.$on('$destroy', function () {
+                    removeAllEvents();
+                    if (timeout) {
+                        clearTimeout(timeout);
+                        timeout = undefined;
+                    }
+                });
             }
 
-            drawItems(processItemsList());
-            addSlideEvents();
+            init();
+
         }
     };
 }]);

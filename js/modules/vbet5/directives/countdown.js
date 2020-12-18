@@ -41,6 +41,10 @@ VBET5.directive('countdown', ['$timeout', 'Moment', 'Translator', function ($tim
                         minutes: '00',
                         seconds: '00'
                     };
+
+                    if (attrs.completedCallback) {
+                        $scope[attrs.completedCallback]();
+                    }
                 }
             }
 

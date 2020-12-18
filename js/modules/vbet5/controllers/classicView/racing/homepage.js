@@ -4,8 +4,8 @@
  * @description
  * Classic view racing homepage controller
  */
-angular.module('vbet5.betting').controller('classicViewRacingHomepageCtrl', ['$rootScope', '$scope', 'ConnectionService', 'Utils', 'Moment', 'content',
-    function ($rootScope, $scope, ConnectionService, Utils, Moment, content) {
+angular.module('vbet5.betting').controller('classicViewRacingHomepageCtrl', ['$rootScope', '$scope', 'ConnectionService', 'Utils', 'Moment', 'content', 'Translator',
+    function ($rootScope, $scope, ConnectionService, Utils, Moment, content, Translator) {
         'use strict';
 
         var connectionService = new ConnectionService($scope);
@@ -15,7 +15,7 @@ angular.module('vbet5.betting').controller('classicViewRacingHomepageCtrl', ['$r
             var request = {
                 source: 'betting',
                 what: {
-                    region: ['id', 'name', 'alias'],
+                    region: ['id', 'name', 'alias', 'order'],
                     game: '@count'
                 },
                 where: {
@@ -25,6 +25,7 @@ angular.module('vbet5.betting').controller('classicViewRacingHomepageCtrl', ['$r
 
             function handleRegionUpdate(data) {
                 $scope.regions = Utils.objectToArray(data.region);
+                $scope.regions.sort(Utils.orderSorting);
             }
 
             function handerLoadingState () {
@@ -155,7 +156,7 @@ angular.module('vbet5.betting').controller('classicViewRacingHomepageCtrl', ['$r
                 var filterThatHaveSelectedCompetition;
                 var mappedDates = games.map(function(game) {
                     var gameWeekName = Moment.convertUnixToMoment(game.start_ts).format('dddd');
-                    var weekName = todayWeekName === gameWeekName? 'Today': gameWeekName;
+                    var weekName = todayWeekName === gameWeekName? Translator.get('Today'): gameWeekName;
                     var filter = {
                         start: Moment.convertUnixToMoment(game.start_ts).startOf('day').unix(),
                         end:  Moment.convertUnixToMoment(game.start_ts).endOf('day').unix(),

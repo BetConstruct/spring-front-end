@@ -81,7 +81,7 @@
                     <li class="float-width" ng-repeat="sport in leftMenu[leftMenuState.selectedType].data track by sport.id" >
                         <div class="sports-item-v3 {{sport.alias}}" ng-class="{'active': !leftMenuState.collapsed[leftMenuState.selectedType].sport[sport.id]}"
                              ng-click="selectSport(sport, $event)" title="{{sport.name}}"><!--active-->
-                            <img src="images/e-icons/{{sport.alias}}.png" alt="">
+                            <img ng-src="images/e-icons/{{sport.alias}}.png" alt="">
                             <span ng-bind="sport.name"></span>
                             <div class="arrow-view-v3" ng-click="selectSport(sport, $event)" data-arrow-click="true"></div>
                             <div class="sport-games-count-v3" ng-bind="leftMenu[leftMenuState.selectedType].count[sport.id]"></div>
@@ -120,7 +120,7 @@
                                                             <span ng-bind="game.info.current_game_state|convertSetName:sport.alias|translate"></span>
                                                             <span trans="attr-only" title="Game time"  ng-hide="game.info.current_game_state == 'notstarted' && game.info.current_game_time == 0"
                                                             ng-bind="game.info.current_game_time"></span>
-                                                            <i class="blocked-icon-v3" ng-show="(!(game.markets_count) || game.is_blocked)"></i>
+                                                            <i class="blocked-icon-v3" title="{{'Blocked'|translate}}" ng-show="(!(game.markets_count) || game.is_blocked)"></i>
                                                         </p>
                                                         <div class="game-info-icons-v3">
                                                             <div class="icon-separator-v3 favorite" ng-class="{'active': sharedData.favoriteGames[game.id]}" ng-click="$event.stopPropagation(); $root.$broadcast('favoriteGames.toggle', game.id)"></div>
@@ -145,7 +145,7 @@
                                                                 </div>
                                                                 <b ng-show="(event.price | oddConvert:'decimal') != 1 && !game.is_blocked"
                                                                    class="p-v price {{event.price_change == null? '' : ({true: 'up-', false: 'down'}[event.price_change > 0] + (event.price_change % 2)) }}"
-                                                                   ng-bind="event.price|oddConvert:$root.env.oddFormat"></b>
+                                                                   ng-bind="event.price|oddConvert:$root.env.oddFormat:null:game.market.display_key"></b>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -159,7 +159,7 @@
                     </li>
                     <li ng-if="sportsbookLeftBanners" class="float-width" ng-repeat="widgets in sportsbookLeftBanners">
                         <a class="sports-item-v3" href="{{widgets.instance.link}}" target="{{widgets.instance.linktarget}}">
-                            <img src="{{widgets.instance.image}}" alt="">
+                            <img ng-src="{{widgets.instance.image}}" alt="">
                             <span ng-bind="widgets.instance.title|translate" ></span>
                         </a>
                     </li>

@@ -36,7 +36,7 @@
                                     <p >{{balanceHistoryParams.balanceTypes[balanceHistoryParams.balanceType]}}</p>
                                     <ul>
                                         <li ng-repeat="(key, value) in balanceHistoryParams.balanceTypes track by $index" ng-if="value !== null"
-                                            ng-click="balanceHistoryParams.balanceType=key;boxStates.transactionDropdownOpened = false;">
+                                            ng-click="balanceHistoryParams.balanceType=key;boxStates.transactionDropdownOpened = false; $event.stopPropagation();">
                                             {{value}}
                                         </li>
                                     </ul>

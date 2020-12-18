@@ -1,4 +1,4 @@
-<div class="game-control soccer" ng-if="openGame.stats && openGame.last_event && (openGame.sport.alias === 'Soccer' || openGame.sport.alias === 'CyberFootball')">
+<div class="game-control soccer" ng-if="openGame.stats && openGame.last_event && (openGame.sport.alias === 'Soccer')">
     <div class="statistics-toggle flip-contain" ng-class="{'hide-stats': $root.env.hideLiveStats, 'hide-stats-multiview' : !showStatsBlock }">
         <!-- soccer stats -->
         <div class="flip-card flipped-{{$root.env.liveStatsFlipMode || flipMode || 0}}" ng-class="{'flipped-multivew-0': !flipMode, 'flipped-multivew-1': flipMode === 1, 'flipped-multivew-2': flipMode === 2}">
@@ -182,7 +182,7 @@
 </div>
 
 <!-- Dota game template -->
-<div class="game-control dota" ng-if="openGame.stats && dotaGamesList.indexOf(openGame.sport.alias) !== -1">
+<div class="game-control dota" ng-if="openGame.stats && dotaGamesList.length && dotaGamesList.indexOf(openGame.sport.alias) !== -1">
     <div class="statistics-toggle " ng-class="{'hide-stats': $root.env.hideLiveStats, 'hide-stats-multiview' : !showStatsBlock }">
         <ul class="game-statistics" ng-hide="true"><!-- change this staff-->
             <li>

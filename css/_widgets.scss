@@ -34,6 +34,9 @@
   width: 100%;
   height: 100%;
   position: relative;
+  .game-contain-j .scroll-j-tr .md-progress-circular {
+    top: 50px;
+  }
 }
 .body-wrapper.widgetlivegame .no-widget-games{
   float: left;
@@ -77,16 +80,10 @@
     content: "\e67a";
   }
 }
-/*.body-wrapper.widgetlivegame .live-slide-widget > ng-include{
-  cursor: default;
-}*/
 .body-wrapper.widgetlivegame.classic .scroll-contain{
   position: fixed;
-  /*overflow: hidden;*/
-  @media screen and (max-width: 990px){
-    overflow-x: hidden;
-    overflow-y: auto;
-  }
+  overflow-x: hidden;
+  overflow-y: auto;
 }
 .body-wrapper.widgetlivegame .game-info .game-control {
   .statistics-toggle.hide-stats-multiview{
@@ -99,8 +96,6 @@
   }
 }
 .body-wrapper.widgetlivegame .scroll-contain .scroll-j-scroll {
-  /*overflow-x: hidden;
-  overflow-y: auto;*/
   overflow: inherit;
 }
 .body-wrapper.widgetlivegame .live-game-container .game-info .unpin-button{

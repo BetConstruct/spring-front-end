@@ -77,8 +77,7 @@ VBET5.controller('globalDialogCtrl', ['$rootScope', '$scope', '$location', '$win
          * @description adds dialog and updates its arrays
          */
         function addDialog(dialog) {
-
-            if (!(dialog && dialog.type && (('image' === dialog.type && dialog.src) || ('image' !== dialog.type && dialog.content) || dialog.template))) {
+            if (!dialog.src && !dialog.content && !dialog.template && !dialog.iframe) {
                 return;
             }
 
@@ -192,20 +191,16 @@ VBET5.controller('globalDialogCtrl', ['$rootScope', '$scope', '$location', '$win
          * @description handles dialog on runtime.
          */
         function showRuntimeMessage() {
-            var message = $location.search().message;
+            var params = $location.search();
+            var message = params.message;
             if (message) {
-                var messageType = $location.search().messagetype || 'info',
-                    messageValue = $location.search().messagevalue,
-                    amountData = ((messageValue || '') + ' ').split(' '),
-                    isPopup = $location.path() === '/popup/',
-                    messageAmount = amountData[0],
-                    messageCurrency = $filter('currency')(amountData[1]);
-                if (messageValue !== undefined) {
-                    message = Translator.get(message, [messageValue, messageAmount, messageCurrency]);
-                }
+                var isPopup = $location.path() === '/popup/',
+                    messageAmount = params.amount,
+                    messageCurrency = params.currency;
+
                 addDialog({
-                    type: messageType.toLowerCase(),
-                    title: messageType,
+                    type: 'info',
+                    title: 'info',
                     content: message,
                     index: $scope.globalDialogs.length,
                     standardPopup: true,
@@ -213,8 +208,8 @@ VBET5.controller('globalDialogCtrl', ['$rootScope', '$scope', '$location', '$win
                     hideCloseButton: isPopup
                 });
                 $location.search('message', undefined); //remove it after displaying
-                $location.search('messagetype', undefined); //remove it after displaying
-                $location.search('messagevalue', undefined); //remove it after displaying
+                $location.search('amount', undefined); //remove it after displaying
+                $location.search('currency', undefined); //remove it after displaying
                 analytics.gaSend('send', 'event', 'dialog', 'message', {
                     'page': $location.path(),
                     'eventLabel': message
@@ -222,6 +217,15 @@ VBET5.controller('globalDialogCtrl', ['$rootScope', '$scope', '$location', '$win
 
                 if (Config.main.trackingOnMessage && Config.main.trackingOnMessage[message]) {
                     Tracking.event(Config.main.trackingOnMessage[message], {}, true);
+                }
+                if (messageAmount && messageCurrency) {
+                    $rootScope.broadcast("payment.success",
+                        {
+                            'type':  'deposit',
+                            'payment_amount': +messageAmount ,
+                            'payment_currency': messageCurrency
+                        });
+
                 }
 
             }

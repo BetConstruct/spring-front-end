@@ -77,6 +77,8 @@ VBET5.filter('improveName', [function () {
         "선수 2": "team2_name",
         "Jugador 1": "team1_name",
         "Jugador 2": "team2_name",
+        "jugador 1": "team1_name",
+        "jugador 2": "team2_name",
         "Spieler 1": "team1_name",
         "Spieler 2": "team2_name",
         S1: "team1_name",

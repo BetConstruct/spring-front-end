@@ -34,8 +34,8 @@
                             </div>
                             <div class="pu-button-wrap-j">
                                 <button class="cancel-j feedback-cancel-t" ng-click="toggleView()" trans>Cancel</button>
-                                <button ng-show="!sendingFeedBackInProgress" trans ng-click="sendMessage()" ng-disabled="feedbackForm.$invalid">Send</button>
-                                <vbet-loader ng-show="sendingFeedBackInProgress"></vbet-loader>
+                                <button trans ng-click="sendMessage()" ng-disabled="feedbackForm.$invalid || sendingFeedBackInProgress">Send</button>
+                                <vbet-loader class="small-progress" ng-show="sendingFeedBackInProgress"></vbet-loader>
                             </div>
                         </form>
                     </div>

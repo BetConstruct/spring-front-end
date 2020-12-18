@@ -65,7 +65,7 @@ VBET5.controller('myGamesCtrl', ['$scope', '$rootScope', '$location', '$route', 
                             game.info.shirt1_color = "ccc";
                             game.info.shirt2_color = "f00";
                         }
-                        if (game.type === 1 && (game.sport.alias === "Soccer" || game.sport.alias === "CyberFootball")) {
+                        if (game.type === 1 && game.sport.alias === "Soccer") {
                             GameInfo.extendLiveGame(game);
                             GameInfo.generateTimeLineEvents(game, $scope);
 

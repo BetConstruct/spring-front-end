@@ -8,8 +8,9 @@
 VBET5.factory('Translator', ['Config', 'Translations', '$location', function (Config, TranslationsConst, $location) {
     'use strict';
     console.log('translator initialized');
+    var notrans = $location.search().notrans;
     var Translator = {},
-        Translations = $location.search().notrans && $location.search().notrans !== 'id' ? {} : TranslationsConst;
+        Translations = notrans && notrans !== 'id'? {} : TranslationsConst;
 
     var regExp = /\{(\d+)\}/g;
 
@@ -20,10 +21,11 @@ VBET5.factory('Translator', ['Config', 'Translations', '$location', function (Co
      * @description Translates string or returns it if no translation is available
      * @param {String} str string to translate
      * @param {Array} [placeholders] optional. values to put into placeholders ( {1}, {2}, etc..) in text
-     * @param {String} [lang] optional. language to translate to. if not specified, taken from Config.env.lang
+     * @param {String} lang optional. language to translate to. if not specified, taken from Config.env.lang
+     * @param {String} alternativeStr optional
      * @returns {String} translated string
      */
-    Translator.get = function get(str, placeholders, lang) {
+    Translator.get = function get(str, placeholders, lang, alternativeStr) {
         var ret;
 
         var d = (lang && Translations[lang]) || Translations[Config.env.lang];
@@ -40,8 +42,15 @@ VBET5.factory('Translator', ['Config', 'Translations', '$location', function (Co
         }
 
         if (Config.main.defaultTransLang && ret === str && lang !== Config.main.defaultTransLang) {
-            return Translator.get(str, placeholders, Config.main.defaultTransLang);
+            return Translator.get(str, placeholders, Config.main.defaultTransLang, alternativeStr);
         }
+
+        if (alternativeStr) { //todo for payment error codes SDC-51469
+            if (Translator.translationExists(alternativeStr, lang) || notrans === 'id') {
+                return Translator.get(alternativeStr, placeholders, lang);
+            }
+        }
+
         return ret;
     };
 

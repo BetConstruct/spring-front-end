@@ -4,7 +4,7 @@
  * @description
  * login controller
  */
-angular.module('vbet5').controller('loginCtrl', ['$scope', '$rootScope', 'TimeoutWrapper', '$filter', '$q', '$location', '$window', '$sce', 'Script', 'Config', 'ConnectionService', 'Zergling', 'RecaptchaService', 'Tracking', 'Storage', 'Translator', 'partner', 'Utils', 'content', 'analytics', 'AuthData', 'LocalIp', function ($scope, $rootScope, TimeoutWrapper, $filter, $q, $location, $window, $sce, Script, Config, ConnectionService, Zergling, RecaptchaService, Tracking, Storage, Translator, partner, Utils, content, analytics, AuthData, LocalIp) {
+angular.module('vbet5').controller('loginCtrl', ['$scope', '$rootScope', 'TimeoutWrapper', '$filter', '$q', '$location', '$window', '$sce', '$timeout', 'Script', 'Config', 'ConnectionService', 'Zergling', 'RecaptchaService', 'Tracking', 'Storage', 'Translator', 'partner', 'Utils', 'content', 'analytics', 'AuthData', 'LocalIp', function ($scope, $rootScope, TimeoutWrapper, $filter, $q, $location, $window, $sce, $timeout, Script, Config, ConnectionService, Zergling, RecaptchaService, Tracking, Storage, Translator, partner, Utils, content, analytics, AuthData, LocalIp) {
     'use strict';
     TimeoutWrapper = TimeoutWrapper($scope);
 
@@ -37,11 +37,7 @@ angular.module('vbet5').controller('loginCtrl', ['$scope', '$rootScope', 'Timeou
         countryIsRestricted: false,
         needVerification: false,
         needVerificationCode: false,
-        needUserAuthorization: false,
-        allowSMSResend: true,
-        smsErrMsg: '',
-        smsMsg: '',
-        smsTimer: 0
+        needUserAuthorization: false
     };
 
     // mail confirmation and mail password reset
@@ -73,98 +69,6 @@ angular.module('vbet5').controller('loginCtrl', ['$scope', '$rootScope', 'Timeou
         }
     }
 
-    /**
-     * @ngdoc method
-     * @name verifySmsCode
-     * @methodOf vbet5.controller:loginCtrl
-     * @description verify registration sms code
-     */
-    $scope.verifySmsCode = function verifySmsCode() {
-        $scope.params.smsErrMsg = "";
-        Zergling
-            .get({
-                'username': $scope.user.username,
-                'code': $scope.user.smsCode
-            }, 'verify_user_phone')
-            .then(function (response) {
-                if (response.result === 0) {
-                    $scope.login();
-                } else {
-                    $scope.forms.signinform.$setPristine();
-                    if (Math.abs(response.result) === 1012) {
-                        $scope.params.smsErrMsg = Translator.get('Wrong phone number');
-                    } else {
-                        $scope.params.smsErrMsg = Translator.get('Invalid verification code');
-                    }
-                }
-            })['catch'](function (response) {
-            console.log(response);
-            $scope.params.smsErrMsg = Translator.get('Invalid verification code');
-        });
-    };
-
-
-    /**
-     * @ngdoc method
-     * @name resendSMS
-     * @methodOf vbet5.controller:loginCtrl
-     * @description resend verification sms
-     */
-    $scope.resendSMS = function resendSMS() {
-        Utils.setJustForMoment($scope, 'allowSMSResend', false, 5000);
-        Zergling
-            .get({
-                'username': $scope.user.username
-            }, 'reverify_user_phone')
-            .then(function () {
-                $scope.smsErrMsg = Translator.get('Code has been sent, please check your mobile phone');
-                $rootScope.$broadcast("globalDialogs.addDialog", {
-                    type: "info",
-                    title: "Info",
-                    content: 'Code has been sent, please check your mobile phone'
-                });
-
-            })['catch'](function (response) {
-            console.log(response);
-        });
-    };
-
-
-    /**
-     * @ngdoc method
-     * @name sendSms
-     * @methodOf vbet5.controller:loginCtrl
-     * @description Sends sms verification code to user's mobile phone
-     */
-    $scope.sendSms = function sendSms() {
-        $scope.params.allowSMSResend = false;
-        clearSMSParams();
-
-        Zergling.get({
-            'login': $scope.user.username,
-            'action_type':2
-        }, 'send_sms_with_username')
-            .then(
-                function success(response) {
-                    switch (response.result) {
-                        case 0:
-                            $scope.params.smsTimer = Config.main.smsVerification.timer + new Date().getTime() / 1000;
-                            $scope.params.smsMsg = Translator.get('SMS Successfully Sent');
-                            break;
-                        default:
-                            $scope.params.smsErrMsg = Translator.get(response.result_text);
-                    }
-                }, function error() {
-                    $scope.params.smsErrMsg = Translator.get('Service unavailable');
-                })['finally'](function enableButton() { $scope.params.allowSMSResend = true; });
-    };
-
-
-    function clearSMSParams() {
-        $scope.params.smsMsg = '';
-        $scope.params.smsErrMsg = '';
-        $scope.params.smsTimer = 0;
-    }
 
     /**
      * Broadcasts 'profile' message with profile data on rootScope
@@ -392,58 +296,27 @@ angular.module('vbet5').controller('loginCtrl', ['$scope', '$rootScope', 'Timeou
 
 
     /**
-     * @ngdoc method
-     * @name loginWithUsernamePassword
+     * @ngdoc function
+     * @name doLoginRequest
      * @methodOf vbet5.controller:loginCtrl
-     * @description logs user in, subscribes to profile
+     * @description do login request
      *
-     * @param {String} user username
-     * @param {String} password password
-     * @param {String} action action
-     * @param {Boolean} remember whether to remember auth data for a long time(default is off)
-     * @returns {promise} promise that will be resolved with swarm response data object
+     * @param {Object} loginObj
+     * @param {Boolean} remember
+     * @param {Object} additionalParams
+     * @param {String | null} action
      */
-    function loginWithUsernamePassword(user, password, action, remember) {
+
+    function doLoginRequest(loginObj, remember, additionalParams, action) {
+        $rootScope.loginInProgress = true;
+        $scope.busy = true;
         var login = $q.defer();
         var promise = login.promise;
-        var loginObj = {username: user, password: password};
-        var additionalParams = {};
 
-        if ($scope.user) {
-            addIovation(additionalParams);
-
-            if ($scope.user.g_recaptcha_response) {
-                additionalParams.g_recaptcha_response = $scope.user.g_recaptcha_response;
-            }
-
-            if ($scope.user.birth_date) {
-                additionalParams.birth_date = $scope.user.birth_date;
-            }
-        }
-
-        if ($scope.params.needVerificationCode) {
-            additionalParams.login_code = $scope.user.login_code;
-            $scope.params.needVerificationCode = false;
-        }
-
-        if (Config.main.smsVerification.login && !Config.main.registration.loginRightAfterRegistration) {
-            additionalParams.confirmation_code = $scope.user.confirmation_code;
-        }
-
-        if (LocalIp.ip) {
-            additionalParams.local_ip = LocalIp.ip;
-        }
-
-        if (Config.swarm.sendTerminalIdlInRequestSession && user.toString() === '1' && typeof jsobject !== 'undefined') {
-            jsobject.loginAdmin('1', password);
-        }
-
-        $rootScope.loginInProgress = true;
         Zergling
             .login(loginObj, remember, additionalParams)
             .then(
-                function (data) {
-                    console.log('login ok', data);
+                function (data) {  // success
                     function onSuccesfulLogin() {
                         $rootScope.loginInProgress = false;
 
@@ -471,7 +344,7 @@ angular.module('vbet5').controller('loginCtrl', ['$scope', '$rootScope', 'Timeou
                     console.log('login failed', data);
                     $rootScope.loginInProgress = false;
                     analytics.gaSend('send', 'event', 'slider', 'login',  {'page': $location.path(), 'eventLabel': 'Failed (' + data.data.status + ')'});
-                    login.reject(data);
+                    login.reject(data, {loginObj: loginObj, remember: remember, additionalParams: additionalParams, action: action});
 
                     if (data.data.status === 2457) {
                         if ($scope.params.displayRecaptcha) {
@@ -501,6 +374,55 @@ angular.module('vbet5').controller('loginCtrl', ['$scope', '$rootScope', 'Timeou
         return promise;
     }
 
+    /**
+     * @ngdoc method
+     * @name loginWithUsernamePassword
+     * @methodOf vbet5.controller:loginCtrl
+     * @description logs user in, subscribes to profile
+     *
+     * @param {String} user username
+     * @param {String} password password
+     * @param {String} action action
+     * @param {Boolean} remember whether to remember auth data for a long time(default is off)
+     */
+    function loginWithUsernamePassword(user, password, action, remember) {
+        var loginObj = {username: user, password: password};
+        var additionalParams = {};
+
+        if ($scope.user) {
+            addIovation(additionalParams);
+
+            if ($scope.user.g_recaptcha_response) {
+                additionalParams.g_recaptcha_response = $scope.user.g_recaptcha_response;
+            }
+
+            if ($scope.user.birth_date) {
+                additionalParams.birth_date = $scope.user.birth_date;
+            }
+        }
+
+        if ($scope.params.needVerificationCode) {
+            additionalParams.login_code = $scope.user.login_code;
+            $scope.params.needVerificationCode = false;
+        }
+
+        if (LocalIp.ip) {
+            additionalParams.local_ip = LocalIp.ip;
+        }
+
+        if (Config.swarm.sendTerminalIdlInRequestSession && user.toString() === '1' && typeof jsobject !== 'undefined') {
+            jsobject.loginAdmin('1', password);
+        }
+
+        if ($rootScope.partnerConfig.smsVerification && $rootScope.partnerConfig.smsVerification.login) {
+            return Utils.getSMSCode(2, user).then(function(code) {
+                additionalParams.confirmation_code = code;
+                return doLoginRequest(loginObj, remember, additionalParams, action);
+            })
+        } else {
+            return doLoginRequest(loginObj, remember, additionalParams, action);
+        }
+    }
 
     /**
      * @ngdoc function
@@ -527,7 +449,11 @@ angular.module('vbet5').controller('loginCtrl', ['$scope', '$rootScope', 'Timeou
     }
 
     $scope.$on('login.withUsernamePassword', function (event, data) {
-        loginWithUsernamePassword(data.user, data.password, data.action, false);
+        ///skip autoLogin after registration if sms verification enabled for login
+        if (!$rootScope.partnerConfig.smsVerification || !$rootScope.partnerConfig.smsVerification.login) {
+            loginWithUsernamePassword(data.user, data.password, data.action, false);
+        }
+
     });
 
     /**
@@ -537,13 +463,13 @@ angular.module('vbet5').controller('loginCtrl', ['$scope', '$rootScope', 'Timeou
      * @description handles the sing-in form, logs user in  and hides the login form
      */
     $scope.login = function login() {
-        $scope.busy = true;
         $scope.params.needVerification = false;
         $scope.params.needUserAuthorization = false;
         $scope.params.lockedUser = false;
         Storage.set("rememberMe", !!$scope.user.remember);
         if ($scope.forms.signinform.$valid) {
             if (Config.main.nemIDAuthentication && Config.main.nemIDAuthentication.enabled) {
+                $scope.busy = true;
                 loginWithNemID($scope.user.username)
                     .then(handleLoginSuccess, handleLoginFailure)['finally'](closeSignInForm);
             } else {
@@ -572,10 +498,6 @@ angular.module('vbet5').controller('loginCtrl', ['$scope', '$rootScope', 'Timeou
                 if (Config.main.enableTwoFactorAuthentication) {
                     Storage.remove('qrCodeOrigin');
                 }
-                if (Config.main.smsVerification.login) {
-                    clearSMSParams();
-                    $scope.params.allowSMSResend = true;
-                }
             }
         }, 500);
     }
@@ -587,7 +509,7 @@ angular.module('vbet5').controller('loginCtrl', ['$scope', '$rootScope', 'Timeou
      * @methodOf vbet5.controller:pushIncomingMessage
      * @description Handles login failure, if the login promise doesn't resolve
      */
-    function handleLoginFailure(data) {
+    function handleLoginFailure(data, loginParams) {
         // Recaptcha action not verified
         if (data.code === 29) {
             return RecaptchaService.execute('login', { debounce: false }).then(function() {
@@ -601,7 +523,7 @@ angular.module('vbet5').controller('loginCtrl', ['$scope', '$rootScope', 'Timeou
         if (data.data.details.ErrorData) {
             placeholders.push(data.data.details.ErrorData.TimeToWait);
         }
-        $scope.signInError = Translator.get((data.data.details && data.data.details.Message) || data.msg || data.data || data.code || true, placeholders);
+        $scope.signInError = Translator.get((data.data.details && (Translator.translationExists(data.data.details.Key) ? data.data.details.Key : data.data.details.Message)) || data.msg || data.data || data.code || true, placeholders);
         if (data.code !== ERROR_SERVICE_UNAVAILABLE) {
             if ($scope.forms.signinform && $scope.forms.signinform.$setPristine) {
                 $scope.forms.signinform.$setPristine();
@@ -619,10 +541,6 @@ angular.module('vbet5').controller('loginCtrl', ['$scope', '$rootScope', 'Timeou
             });
         }
 
-        // Verify SMS
-        if (data.data === "login error (1008)" || data.data.status === "1008") {
-            $scope.params.needVerification = true;
-        }
 
         // Verify E-mail
         if (data.data === "login error (1023)" || data.data.status === "1023") {
@@ -666,15 +584,13 @@ angular.module('vbet5').controller('loginCtrl', ['$scope', '$rootScope', 'Timeou
             $scope.env.showSlider = false;
         }
 
-        //Sms verification
-        if (Config.main.smsVerification.login) {
-            $scope.signInError = Translator.get(data.data.details.Message) || '';
-            if (data.data.status === 2472 || data.data.status === 2474) {
-                $scope.params.smsErrMsg = $scope.signInError;
-            }
+        if (data.data.status === 2472 || data.data.status === 2474 || data.data.status === 2476 || data.data.status === 2481) {
+            Utils.getSMSCode(2, loginParams.loginObj.username, loginParams.additionalParams.confirmation_code, data.data.details.Message).then(function(code) {
+                loginParams.additionalParams.confirmation_code = code;
+                doLoginRequest(loginParams.loginObj, loginParams.remember, loginParams.additionalParams, loginParams.action);
+            })
         }
     }
-
 
     /**
      * @ngdoc function
@@ -948,9 +864,6 @@ angular.module('vbet5').controller('loginCtrl', ['$scope', '$rootScope', 'Timeou
      * @description sends the new password command to swarm
      */
     $scope.sendNewPassword = function sendNewPassword() {
-
-
-
         if ($scope.sendingNewPassword) {
             return;
         }
@@ -1027,7 +940,7 @@ angular.module('vbet5').controller('loginCtrl', ['$scope', '$rootScope', 'Timeou
     $scope.keyPress = function keyPress(event) {
         if (event.which == 13 || event.keyCode == 13) {
             if(!($scope.busy || $scope.forms.signinform.$invalid || $scope.forms.signinform.$pristine)){
-                $scope.params.needVerification? $scope.verifySmsCode(): $scope.login();
+                $scope.login();
             }
             event.preventDefault();
         }
@@ -1061,6 +974,18 @@ angular.module('vbet5').controller('loginCtrl', ['$scope', '$rootScope', 'Timeou
         $scope.user.remember = Config.main.rememberMeCheckbox.checked || false;
         $scope.forms = {};
         $scope.signInError = false;
+        var timeoutId = $timeout(function () {
+            $scope.busy = false;
+        }, 6000);
+
+        var handleRecaptchaResponse = function handleRecaptchaResponse () {
+            $scope.busy = false;
+            if (timeoutId) {
+                $timeout.cancel(timeoutId);
+                timeoutId = null;
+            }
+        };
+
 
         TimeoutWrapper(function () {
             $scope.$broadcast('login.formOpened');
@@ -1071,11 +996,9 @@ angular.module('vbet5').controller('loginCtrl', ['$scope', '$rootScope', 'Timeou
 
         try {
             // Do not attempt to call 'finally' on execute, as grecaptcha.execute returns a 'thenable' rather than a promise
-            RecaptchaService.execute('login', { debounce: false }).then(function() {
-                $scope.busy = false;
-            });
+            RecaptchaService.execute('login', { debounce: false }).then(handleRecaptchaResponse);
         } catch (e) {
-            $scope.busy = false;
+           handleRecaptchaResponse();
         }
     };
 
@@ -1085,10 +1008,6 @@ angular.module('vbet5').controller('loginCtrl', ['$scope', '$rootScope', 'Timeou
             nemIDMsgListener = null;
             $scope.nemIDSrc = '';
             $scope.busy = false;
-        }
-        if (Config.main.smsVerification.login) {
-            clearSMSParams();
-            $scope.params.allowSMSResend = true;
         }
     });
 
@@ -1100,51 +1019,63 @@ angular.module('vbet5').controller('loginCtrl', ['$scope', '$rootScope', 'Timeou
         }
     });
 
-    if (Config.main.smsVerification.resetPassword) {
-        $scope.$on('recaptcha.response', function (event, response) {
-            $scope.resetPasswordData.g_recaptcha_response = response;
-        });
-        /**
-         * @ngdoc method
-         * @name resetPasswordViaSms
-         * @methodOf vbet5.controller:loginCtrl
-         * @description reset password via sms
-         * @param {Object} resetPasswordViaSmsForm form
-         */
-        $scope.resetPasswordViaSms = function resetPasswordViaSms(resetPasswordViaSmsForm) {
-            if ($scope.sendingForgotPasswordViaSms) {
-                return;
-            }
+    function handleResetPasswordViaSMS () {
+        if ($rootScope.partnerConfig.smsVerification.resetPassword)  {
+            $scope.$on('recaptcha.response', function (event, response) {
+                $scope.resetPasswordData.g_recaptcha_response = response;
+            });
 
-            $scope.sendingForgotPasswordViaSms = true;
-            var request = {"key": $scope.resetPasswordData.phone };
-            if ($scope.resetPasswordData.g_recaptcha_response) {
-                request.g_recaptcha_response = $scope.resetPasswordData.g_recaptcha_response;
-            }
+            /**
+             * @ngdoc method
+             * @name resetPasswordViaSms
+             * @methodOf vbet5.controller:loginCtrl
+             * @description reset password via sms
+             * @param {Object} resetPasswordViaSmsForm form
+             */
+            $scope.resetPasswordViaSms = function resetPasswordViaSms(resetPasswordViaSmsForm) {
+                if ($scope.sendingForgotPasswordViaSms) {
+                    return;
+                }
 
-            Zergling
-                .get(request, 'reset_password_via_sms')
-                .then(
-                    function (successResponse) {
-                        console.log("forgot_password response", successResponse);
-                        if (successResponse.result === 0) {
-                            $scope.passwordResetCompleteViaSms = true;
-                        } else if (successResponse.result == '-1001') {
-                            resetPasswordViaSmsForm.phone.$setValidity('wrong', false);
-                            $scope.resetPasswordData.phone = "";
-                            $scope.$broadcast('recaptcha.reload');
-                            $scope.resetPasswordData.g_recaptcha_response = "";
-                        } else {
+                $scope.sendingForgotPasswordViaSms = true;
+                var request = {"key": $scope.resetPasswordData.phone };
+                if ($scope.resetPasswordData.g_recaptcha_response) {
+                    request.g_recaptcha_response = $scope.resetPasswordData.g_recaptcha_response;
+                }
+
+                Zergling
+                    .get(request, 'reset_password_via_sms')
+                    .then(
+                        function (successResponse) {
+                            console.log("forgot_password response", successResponse);
+                            if (successResponse.result === 0) {
+                                $scope.passwordResetCompleteViaSms = true;
+                            } else if (successResponse.result == '-1001') {
+                                resetPasswordViaSmsForm.phone.$setValidity('wrong', false);
+                                $scope.resetPasswordData.phone = "";
+                                $scope.$broadcast('recaptcha.reload');
+                                $scope.resetPasswordData.g_recaptcha_response = "";
+                            } else {
+                                $scope.passwordResetFailed = 'Password reset failed.';
+                            }
+                            $scope.sendingForgotPasswordViaSms = false;
+                        },
+                        function (failResponse) {
                             $scope.passwordResetFailed = 'Password reset failed.';
+                            $scope.sendingForgotPasswordViaSms = false;
                         }
-                        $scope.sendingForgotPasswordViaSms = false;
-                    },
-                    function (failResponse) {
-                        $scope.passwordResetFailed = 'Password reset failed.';
-                        $scope.sendingForgotPasswordViaSms = false;
-                    }
-                );
-        };
+                    );
+            };
+        }
+    }
+
+    if($rootScope.partnerConfig._not_loaded) {
+        var partnerConfigUpdatedWatcher = $scope.$on('partnerConfig.updated',function () {
+            handleResetPasswordViaSMS();
+            partnerConfigUpdatedWatcher();
+        });
+    } else {
+        handleResetPasswordViaSMS();
     }
 
     init();

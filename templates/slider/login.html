@@ -10,7 +10,7 @@
     <div title="Live Agent" trans="attr-only" class="help-b" ng-show="!!conf.liveChat.zopimInHeader" ng-click="" onclick="showZopimChat();">
         <a trans>Contact Support</a>
     </div>
-    <form name="forms.signinform" ng-submit="params.needVerification? verifySmsCode(): login()">
+    <form name="forms.signinform" ng-submit="login()">
         <div class="social-sign-in">
             <button ng-show="conf.facebookIntegration.enable && !fbLoggedIn && !cannotLoginWIthFbId || (conf.odnoklassnikiIntegration.enable && !odnoModel.cannotLoginWIthOdno)"
                     class="facebook-sign-in"
@@ -31,7 +31,7 @@
             <div class="form-text" ng-class="{'error':signInError  && forms.signinform.$pristine}">
                 <input ng-model="user.username" id="signinform-login-input" numpad type="text" placeholder="Your login" required="required" trans focus-on="login.formOpened" dont-scroll-on-focus ng-change="params.needVerification=false"  autocomplete="off">
             </div>
-            <label trans>Password</label>
+            <label>{{'Password'|translate:null:'Password_login'}}</label>
             <div class="form-text" ng-class="{'error':signInError && forms.signinform.$pristine}" ng-init="showPass={'passwordType':'password'}">
                 <input ng-model="user.password" id="signinform-password-input" numpad type="{{showPass.passwordType}}" placeholder="Enter your password" focus-on="login.formOpened.andUsernameIsAvailable" required="required"  autocomplete="off" trans ng-keypress="passwordKeyPress($event)">
                 <i class="view-passward" ng-if="$root.conf.enableShowPassword" ng-mousedown="showPass.passwordType='text'" ng-mouseup="showPass.passwordType='password'" ng-mouseleave="showPass.passwordType='password'"></i>
@@ -46,26 +46,6 @@
                 <span trans>Remember me</span>
             </label>
 
-            <div class="sms-verification-container" ng-if="conf.registration.requireSmsValidation && params.needVerification">
-                <label trans>SMS verification code</label>
-
-                <div class="sms-code-block active">
-                    <div class="form-text code sms-code" ng-class="{'error':signInError && forms.signinform.$pristine || smsErrMsg}">
-                        <input ng-model="user.smsCode" type="text" placeholder="Enter verification code" required="required" trans>
-
-                        <div class="form-verify-info" ng-show="params.smsErrMsg">
-                            <div class="form-error-icon"></div>
-                            <div class="form-error-text">
-                                <div class="error-icon-f"></div>
-                                <p>{{params.smsErrMsg}}</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="button-sms code">
-                        <div ng-click="resendSMS()" ng-disabled="!params.allowSMSResend">Resend</div>
-                    </div>
-                </div>
-            </div>
             <div ng-controller="facebookCtrl">
                 <div class="signin-error-message" ng-show="cannotLoginWIthFbId && fbLoggedIn" ng-click="env.showSlider = true; env.sliderContent = 'register';$event.stopPropagation()">
                     <p trans>If you want to be able to login with your Facebook account you need to first Sign up with Facebook account.</p>

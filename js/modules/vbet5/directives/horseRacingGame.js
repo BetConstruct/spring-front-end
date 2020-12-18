@@ -140,15 +140,7 @@ VBET5.directive('horseRacingGame', ['$rootScope', 'ConnectionService', 'GameInfo
 
             };
 
-            function getFirstKeyValue(obj, callback) {
-                if (!obj) {
-                    return;
-                }
-                var keys = Object.keys(obj);
-                if (keys.length > 0) {
-                    callback(obj[keys[0]]);
-                }
-            }
+
 
             function handleGameData() {
                 var count = $scope.getItemsCount();
@@ -159,10 +151,10 @@ VBET5.directive('horseRacingGame', ['$rootScope', 'ConnectionService', 'GameInfo
             }
 
             function updateOpenGameData(data) {
-                getFirstKeyValue(data.sport, function (sport) {
-                    getFirstKeyValue(sport.region, function (region) {
-                        getFirstKeyValue(region.competition, function (competition) {
-                            getFirstKeyValue(competition.game, function (game) {
+                Utils.getFirstKeyValue(data.sport, function (sport) {
+                    Utils.getFirstKeyValue(sport.region, function (region) {
+                        Utils.getFirstKeyValue(region.competition, function (competition) {
+                            Utils.getFirstKeyValue(competition.game, function (game) {
                                 var game =  {
                                     sport: {id: sport.id, alias: sport.alias},
                                     region: {id: region.id},

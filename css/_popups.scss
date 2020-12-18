@@ -19,11 +19,17 @@ $popup-overlay-background: black !default;
   * {
     box-sizing: border-box;
   }
-  img {
+  &:not(.low-balance) img {
     max-width: calc(100vw - 100px);
     max-height: calc(100vh - 230px);
     width: auto;
     height: auto;
+    min-height: 100% !important;
+  }
+  &.allow-header-access {
+    height: calc(100% - 94px);
+    top: 94px;
+    z-index: 9999;
   }
   &.ng-hide {
     animation: popup-bg-closed .3s ease-in-out;
@@ -141,7 +147,8 @@ $popup-overlay-background: black !default;
           font: normal 12px/36px $font-f;
         }
         &:-webkit-autofill {
-          -webkit-text-fill-color: $text-palette-2;
+          -webkit-text-fill-color: rgba(set-color($skin-palette-8),0.5);
+          box-shadow: inset 0 0 0 100px $skin-palette-8;
           &:focus {
             border-color: $form-elements-focus;
             box-shadow: 0 0 0 100px $skin-palette-8 inset;
@@ -288,7 +295,7 @@ $popup-overlay-background: black !default;
         display: block;
         float: left;
         width: 100%;
-        padding: 20px 24px;
+        padding: 20px 30px;
         background: rgba(white, 0.02);
         &:nth-child(2) {
           border: 1px solid #101219;
@@ -503,6 +510,11 @@ $popup-overlay-background: black !default;
       }
     }
   }
+  .paymentImageWrapper {
+    img{
+      min-height: inherit !important;
+    }
+  }
 }
 .cashout-range-input-wrapper {
   float: left;
@@ -669,132 +681,6 @@ $popup-overlay-background: black !default;
     }
   }
 }
-
-.regional-cup-register-j {
-  .register-regionalcup-j {
-    float: left;
-    width: 100%;
-    padding: 22px 30px 30px;
-    label.reg-cup-register-j {
-      width: 50%;
-      height: 60px;
-      margin: 0 0 18px 0;
-      float: left;
-      p {
-        float: left;
-        width: 100%;
-        height: 24px;
-        font: 12px/22px $font-f;
-        color: $text-palette-4;
-      }
-      input {
-        width: 100%;
-        height: 36px;
-        background: $skin-palette-10;
-        border: 1px solid $skin-palette-10;
-        transition: 200ms border-color;
-        padding: 0 14px;
-        color: $text-palette-4;
-        font: 12px $font-f;
-        @include placeholder {
-          color: $text-palette-4;
-          font: 12px $font-f;
-        }
-        &:focus {
-          border-color: $form-elements-focus;
-        }
-        &.ng-dirty {
-          border-color: #8e263a;
-        }
-      }
-      &:nth-of-type(even) {
-        padding-left: 34px;
-      }
-    }
-  }
-  .rc-buttons-wrap-j {
-    float: left;
-    width: 100%;
-    li {
-      display: inline-block;
-      float: left;
-      height: 36px;
-      &.terms-j label {
-        float: left;
-        height: 16px;
-        position: relative;
-        cursor: pointer;
-        font: 12px/16px $font-f;
-        color: $text-palette-4;
-        input[type="checkbox"] {
-          opacity: 0;
-          position: absolute;
-          top: 0;
-          left: 0;
-          cursor: pointer;
-          + i {
-            display: inline-block;
-            height: 16px;
-            width: 16px;
-            background: $skin-palette-10;
-            position: relative;
-            border-radius: 3px;
-            text-align: center;
-            vertical-align: sub;
-            margin: 0 6px 0 0;
-            transition: 200ms box-shadow;
-          }
-          &:checked + i:before {
-            content: "\54";
-            font: 8px/17px icomoon;
-            color: $text-palette-4;
-            display: inline-block;
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-          }
-          &.ng-dirty + i {
-            box-shadow: inset 0 0 0 1px #8e263a;
-          }
-        }
-      }
-      &.button-wrap-br-regcup-j {
-        float: right;
-        overflow: hidden;
-        button {
-          float: left;
-          transition: 200ms color, 200ms background;
-          cursor: pointer;
-          display: block;
-          height: 36px;
-          border: 0;
-          padding: 0 45px;
-          background: $brand-color-1;
-          text-transform: uppercase;
-          color: white;
-          font: 14px/36px $font-f;
-          &.back-j {
-            background: $skin-palette-4;
-            color: $text-palette-8;
-          }
-          &:hover, &.back-j:hover {
-            color: set-color($hero-color);
-            background: $hero-color;
-          }
-        }
-      }
-    }
-  }
-  .rcup-register-text-j {
-    float: left;
-    width: 100%;
-    color: $text-palette-3;
-    font: 12px/16px $font-f;
-    margin: 3px 0 70px 0;
-  }
-}
-
 .winners-pu-group-j {
   float: left;
   width: 100%;
@@ -897,36 +783,22 @@ $popup-overlay-background: black !default;
   display: inline-block;
   margin: 20px 0;
   animation: popup-enter .3s ease-in-out;
-  box-shadow: 0 0 0 6px rgba($skin-palette-13, 0.2);
   background: $skin-palette-8;
   position: relative;
   .pu-head-j {
-    font: normal 18px/61px $font-f;
+    font: normal 18px/20px $font-f;
     position: relative;
     z-index: 120;
-    background: rgba(invert(set-color($skin-palette-9)), 0.2);
-    box-shadow: inset 0 -1px 0 rgba(invert(set-color($skin-palette-9)), 0.38);
-    color: $text-palette-3;
-    @include ltr {
-      padding: 0 40px 0 25px;
-      text-align: left;
-    }
-    @include rtl {
-      padding: 0 25px 0 40px;
-      text-align: right;
-    }
+    padding: 20px 60px 0;
+    color: $text-palette-1;
+    text-transform: uppercase;
+    letter-spacing: 1px;
     > span, > p {
       display: block;
       max-width: 100%;
       overflow: hidden;
       white-space: nowrap;
       text-overflow: ellipsis;
-      @include ltr {
-        float: left;
-      }
-      @include rtl {
-        float: right;
-      }
     }
     &:after {
       content: "";
@@ -937,7 +809,7 @@ $popup-overlay-background: black !default;
   .popup-info-tooltip {
     color: $text-palette-5;
     transition: 300ms color;
-    font: 12px/62px icomoon;
+    font: 12px/18px icomoon;
     display: inline-block;
     vertical-align: top;
     width: 18px;
@@ -948,7 +820,7 @@ $popup-overlay-background: black !default;
     }
     .popup-info-tooltip-content {
       position: absolute;
-      top: 100%;
+      top: 128%;
       left: 0;
       width: 100%;
       display: none;
@@ -972,27 +844,27 @@ $popup-overlay-background: black !default;
         border-color: transparent transparent #C2C5CD transparent;
         display: block;
         position: absolute;
-        bottom: 0;
+        bottom: -11px;
       }
     }
   }
   .close-j {
     text-decoration: none;
-    font: 10px icomoon;
-    line-height: inherit;
     cursor: pointer;
     display: block;
     position: absolute;
-    top: 0;
+    top: 19px;
     transition: color 200ms;
-    width: 58px;
+    width: 20px;
+    height: 20px;
     text-align: center;
     color: $text-palette-5;
+    font: 14px/20px icomoon;
     @include ltr {
-      right: 0;
+      right: 20px;
     }
     @include rtl {
-      left: 0;
+      left: 20px;
     }
     &:hover {
       color: $text-palette-2;
@@ -1026,9 +898,10 @@ $popup-overlay-background: black !default;
     }
   }
   .pu-button-wrap-j {
-    padding: 0 30px 30px;
-    display: inline-block;
     width: 100%;
+    display: inline-block;
+    padding: 0 30px 30px;
+    position: relative;
     button {
       width: calc(50% - 5px);
       font: normal 14px $font-f;
@@ -1043,18 +916,16 @@ $popup-overlay-background: black !default;
       outline: 0;
       @include ltr {
         float: left;
-        margin: 0 0 0 9px;
       }
       @include rtl {
         float: right;
-        margin: 0 9px 0 0;
       }
-      &:first-child {
+      + button {
         @include ltr {
-          margin: 0;
+          margin-left: 10px;
         }
         @include rtl {
-          margin: 0;
+          margin-right: 10px;
         }
       }
       &:only-of-type {
@@ -1088,6 +959,18 @@ $popup-overlay-background: black !default;
           background: lighten($brand-color-1, 10);
           border-color: lighten($brand-color-1, 10);
         }
+      }
+    }
+    .md-progress-circular.small-progress {
+      top: 8px;
+      margin: 0;
+      @include ltr {
+        left: auto;
+        right: 34px;
+      }
+      @include rtl {
+        left: 34px;
+        right: auto;
       }
     }
   }
@@ -1153,7 +1036,7 @@ $popup-overlay-background: black !default;
   }
   .extended-scroll & {
     width: 80%;
-    height: calc(100vh - 130px);;
+    height: calc(100vh - 130px);
   }
   .feedback & {
     width: 430px;
@@ -1165,7 +1048,15 @@ $popup-overlay-background: black !default;
     width: 330px;
     .pu-button-wrap-j button {
       width: 100%;
-      + button {
+      ~ button {
+        @include ltr {
+          margin-left: 0;
+        }
+        @include rtl {
+          margin-right: 0;
+        }
+      }
+      &:not(.ng-hide) ~ button {
         margin: 14px 0 0;
       }
     }
@@ -1393,6 +1284,7 @@ input::-webkit-inner-spin-button {
   }
 }
 .pu-cont-tabs {
+  padding-top: 20px;
   border-bottom: 1px solid $skin-palette-12;
   &:after {
     content: "";
@@ -1735,6 +1627,174 @@ input::-webkit-inner-spin-button {
     margin: 28px auto;
   }
 }
+.homework-popup {
+  .gift-bet-wrapper,
+  .vbet-popup-wr-holder {
+    width: 900px;
+    height: 664px;
+    padding: 0;
+    background: none;
+  }
+}
+.select-doc-a{
+  max-width: 500px;
+  width: 500px;
+  li{
+    float: left;
+    width: 100%;
+    text-align: left;
+    @include rtl{
+      text-align: right;
+    }
+    > h2{
+      font-size: 14px;
+      line-height: 16px;
+      color: $text-palette-3;
+      @include rtl{
+        text-align: right;
+      }
+    }
+    > label{
+      p {
+        font-size: 12px;
+        line-height: 14px;
+        color: $text-palette-4;
+        margin: 20px 0 8px 0;
+      }
+    }
+    &.error-msg{
+      color: #EB1729;
+      font-size: 12px;
+      line-height: 14px;
+      margin-top: 10px;
+    }
+  }
+  .upload-verify{
+    float: left;
+    width: 100%;
+    > p {
+      font-size: 12px;
+      line-height: 14px;
+      color: $text-palette-4;
+      margin: 20px 0 8px 0;
+      &.error-msg{
+        color: #EB1729;
+        font-size: 12px;
+        line-height: 14px;
+        margin-top: 10px;
+      }
+    }
+    > ul{
+      width: 100%;
+      display: table;
+      li{
+        display: table-cell;
+        vertical-align: bottom;
+        float: none;
+        position: relative;
+        > input{
+          background: $registration-fields-background;
+          box-sizing: border-box;
+          margin: 0;
+          padding: 0 14px 0 14px;
+          font: 12px $font-f;
+          height: 36px;
+          border-radius: 0;
+          width: 100%;
+          border: 1px solid $registration-fields-background-border;
+          color: $text-palette-4;
+          transition: border-color 200ms;
+          box-shadow: none;
+          -webkit-text-fill-color: opacify(rgba(set-color($registration-fields-background),0.39), $popup-form-opacify);
+          caret-color: $text-palette-4;
+          @include rtl {
+            text-align: right;
+          }
+          @include placeholder {
+            color: $text-palette-4;
+            font: 12px $font-f;
+          }
+        }
+        &:first-child{
+          width: 40%;
+          @include ltr{
+            padding: 0 12px 0 0;
+          }
+          @include rtl{
+            padding: 0 0 0 12px;
+          }
+        }
+        &:last-child{
+          //width: calc(30% - 10px);
+        }
+        > button{
+          box-sizing: border-box;
+          height: 36px;
+          background: rgba($skin-palette-1, 0.2);
+          text-align: center;
+          border: 1px solid $skin-palette-5;
+          color: $text-palette-2;
+          font-size: 14px;
+          line-height: 36px;
+          width: 100%;
+          text-transform: uppercase;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          cursor: pointer;
+          padding: 0 24px;
+          //&:hover{
+          //  background: lighten(saturate($brand-color-1, 1), 7);
+          //}
+          &:disabled{
+            background: rgba(255,255,255,.2);
+            color: #f4f4f6;
+            text-align: center;
+            border: 1px solid #505768;
+            pointer-events: none;
+          }
+        }
+        #passportImage{
+          top: 42px;
+          width: calc(100% + 112px);
+          @include rtl{
+            right: 0;
+          }
+        }
+      }
+    }
+
+  }
+  .button-confirm{
+    > button {
+      width: 100%;
+      margin-top: 20px;
+      &:disabled{
+        position: relative;
+        pointer-events: inherit;
+        &:hover{
+          &:before{
+            content: attr(title);
+            display: inline-block;
+            position: absolute;
+            top: -25px;
+            left: 0;
+            text-transform: none;
+            font-size: 10px;
+            line-height: 12px;
+            text-align: left;
+          }
+        }
+      }
+    }
+  }
+  .error-msg + .button-confirm{
+    > button{
+      margin-top: 0;
+    }
+  }
+}
+
 .gift-bet-form {
   float: left;
   width: 100%;
@@ -1783,6 +1843,7 @@ input::-webkit-inner-spin-button {
 .gift-bet-success {
   float: left;
   width: 100%;
+  padding-top: 20px;
   .gift-bet-success {
     margin-bottom: 20px;
     color: #1a7051;
@@ -1811,7 +1872,7 @@ input::-webkit-inner-spin-button {
   float: left;
   width: 100%;
   > h4{
-      font-size: 16px;
+    font-size: 16px;
     line-height: 18px;
     font-weight: bold;
     color: $text-palette-3;
@@ -1826,7 +1887,6 @@ input::-webkit-inner-spin-button {
     font-size: 14px;
     line-height: 16px;
     float: left;
-    width: 50%;
   }
 }
 .reality-value{
@@ -1835,4 +1895,176 @@ input::-webkit-inner-spin-button {
 }
 .reality-title{
   text-align: left;
+}
+.new-default-popup-j.gift-bet-popup{
+  .popup-wrapper-j{
+    min-width: 560px;
+    min-height: 382px;
+    .md-progress-circular {
+      //bottom: 50%;
+      //right: 50%;
+      //transform: translate(50%, 50%);
+      bottom: -160px;
+      right: 220px;
+    }
+  }
+}
+.new-default-popup-j.info.accepted .pu-contain-j{
+  &:before{
+    background: #008d47;
+  }
+  &:after{
+    content: "\e6f3";
+    color: #ffffff;
+  }
+}
+.new-default-popup-j.info.declined .pu-contain-j{
+  &:before{
+    background: #e9044a;
+  }
+  &:after{
+    content: "\e6f2";
+    color: #ffffff;
+  }
+}
+.session-reality-check {
+  .popup-wrapper-j {
+    max-width: 500px;
+  }
+  .pu-head-j {
+    @include ltr {
+      padding: 0 20px;
+      text-align: center;
+    }
+    @include rtl {
+      padding: 0 20px;
+      text-align: center;
+    }
+    > span {
+      @include ltr {
+        float: none;
+      }
+      @include rtl {
+        float: none;
+      }
+    }
+  }
+  .button-confirm {
+    > button {
+      margin-bottom: 10px;
+    }
+  }
+}
+.session-reality-check-content {
+  float: left;
+  width: 100%;
+  color: $text-palette-4;
+  font: 14px/18px $font-f;
+}
+.session-reality-footer {
+  float: left;
+  width: 100%;
+  margin-top: 20px;
+  > a {
+    color: $text-palette-3;
+    font: 14px/16px $font-f;
+    transition: color 240ms;
+    @include ltr {
+      float: left;
+    }
+    @include rtl {
+      float: right;
+    }
+    &:first-child {
+      width: 100%;
+      margin-bottom: 20px;
+    }
+    &:last-child {
+      @include ltr {
+        float: right;
+      }
+      @include rtl {
+        float: left;
+      }
+    }
+    &:hover {
+      color: $text-palette-1;
+    }
+  }
+}
+.SMS_VERIFICATION_POPUP {
+  .pu-head-j,
+  .pu-contain-j > p {
+    display: none;
+  }
+}
+.sms-verification-popup {
+  float: left;
+  width: 100%;
+  max-width: 400px;
+  .settings-info-contain {
+    width: 100%;
+  }
+  .sms-v-f {
+    float: left;
+    width: 100%;
+  }
+  .tooltip-wrapper-j {
+    width: calc(100% - 110px);
+    @include rtl {
+      float: right;
+    }
+    + .cashier-button {
+      width: 110px;
+    }
+  }
+  .settings-info-contain input[type=text] {
+    width: 100%;
+    margin: 0;
+    color: $text-palette-4;
+    background: $skin-palette-7;
+    border-color: $skin-palette-5;
+    border-radius: 0;
+  }
+  .cashier-button {
+    margin: 0;
+    position: static;
+    .sms-time-btn:disabled {
+      color: set-color($skin-palette-6);
+    }
+  }
+  .change-button-container .cashier-button {
+    width: 100%;
+    button {
+      width: calc(50% - 4px);
+      @include ltr {
+        float: left;
+      }
+      @include rtl {
+        float: right;
+      }
+      + button {
+        background: $skin-palette-4;
+        border-color: $skin-palette-4;
+        color: $text-palette-8;
+        @include ltr {
+          margin-left: 8px;
+        }
+        @include rtl {
+          margin-right: 8px;
+        }
+        &:hover {
+          background: lighten($skin-palette-4, 10);
+        }
+        @if $white-skin == true {
+          background: #7b8191;
+          border-color: #7b8191;
+          color: #f3f3f5;
+          &:hover {
+            background: lighten(#7b8191, 10);
+          }
+        }
+      }
+    }
+  }
 }

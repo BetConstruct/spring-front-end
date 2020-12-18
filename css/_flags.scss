@@ -185,7 +185,7 @@
   background-position: 0 15.17241%;
 }
 
-.flag-cambodja {
+.flag-cambodja, .flag-cambodia {
   background-position: 0 15.51724%;
 }
 
@@ -973,7 +973,7 @@
   background-position: 0 83.10345%;
 }
 
-.flag-stkittsandnevis {
+.flag-saintkittsandnevis {
   background-position: 0 83.44828%;
 }
 
@@ -1169,103 +1169,95 @@
   background-position: 0 100%;
 }
 
-
-
-
-
-
-
-.flag-withvideo { background-position: 0 100%; }
-@if $header-lang-with-flag == true{
-  $languages:(
-    eng: flag-greatbritain,
-    arm: flag-armenia,
-    rus: flag-russia,
-    alb: flag-albania,
-    bgr: flag-bulgaria,
-    bos: flag-bosniaherzegovina,
-    chi: flag-china,
-    zhh: flag-china,
-    cze: flag-czechrepublic,
-    dut: flag-netherlands,
-    fas: flag-iran,
-    fre: flag-france,
-    fin: flag-finland,
-    geo: flag-georgia,
-    ger: flag-germany,
-    gre: flag-greece,
-    hrv: flag-croatia,
-    heb: flag-israel,
-    ita: flag-italy,
-    jpn: flag-japan,
-    kor: flag-southkorea,
-    lat: flag-latvia,
-    lav: flag-latvia,
-    lit: flag-lithuania,
-    mac: flag-macedonia,
-    nor: flag-norway,
-    pol: flag-poland,
-    por: flag-portugal,
-    pt-br: flag-brazil,
-    slv: flag-slovenia,
-    spa: flag-spain,
-    srp: flag-serbia,
-    swe: flag-sweden,
-    tur: flag-turkey,
-    ukr: flag-ukraine,
-    vnm: flag-vietnam,
-    kur: flag-kurdish,
-    est: flag-estonia,
-    hun: flag-hungary,
-    arb: flag-arableague,
-    slk: flag-slovakia,
-    rum: flag-romania,
-    aze: flag-azerbaijan,
-    dan: flag-denmark,
-    tha: flag-thailand,
-
-  );
-  @each $className, $extendSelector in $languages {
-    .separator-contain-nav .settings-icon-contain.leng-b {
-      &.selected-#{$className}:before,
-      ~ div .drop-items-contain-b > ul > li.#{$className}:before {
-        background-color: transparent;
-        background-image: url(../../../images/flags.png#{$delete-cache});
-        background-size: 100%;
-        @extend #{"." + $extendSelector};
-      }
+$languages:(
+        eng: flag-greatbritain,
+        arm: flag-armenia,
+        rus: flag-russia,
+        alb: flag-albania,
+        bgr: flag-bulgaria,
+        bos: flag-bosniaherzegovina,
+        chi: flag-china,
+        zhh: flag-china,
+        cze: flag-czechrepublic,
+        dut: flag-netherlands,
+        fas: flag-iran,
+        fre: flag-france,
+        fin: flag-finland,
+        geo: flag-georgia,
+        ger: flag-germany,
+        gre: flag-greece,
+        hrv: flag-croatia,
+        heb: flag-israel,
+        ita: flag-italy,
+        jpn: flag-japan,
+        kor: flag-southkorea,
+        lat: flag-latvia,
+        lav: flag-latvia,
+        lit: flag-lithuania,
+        mac: flag-macedonia,
+        nor: flag-norway,
+        pol: flag-poland,
+        por: flag-portugal,
+        pt-br: flag-brazil,
+        slv: flag-slovenia,
+        spa: flag-spain,
+        srp: flag-serbia,
+        swa: flag-tanzania,
+        swe: flag-sweden,
+        tur: flag-turkey,
+        ukr: flag-ukraine,
+        vnm: flag-vietnam,
+        kur: flag-kurdish,
+        est: flag-estonia,
+        hun: flag-hungary,
+        arb: flag-arableague,
+        slk: flag-slovakia,
+        rum: flag-romania,
+        aze: flag-azerbaijan,
+        dan: flag-denmark,
+        tha: flag-thailand,
+        mlg: flag-madagascar,
+);
+@each $className, $extendSelector in $languages {
+  .separator-contain-nav .settings-icon-contain.leng-b {
+    &.selected-#{$className}:before,
+    ~ div .drop-items-contain-b > ul > li.#{$className}:before {
+      background-color: transparent;
+      background-image: url(../../../images/flags.png#{$delete-cache});
+      background-size: 100%;
+      @extend #{"." + $extendSelector};
     }
   }
-  .separator-contain-nav .settings-icon-contain.leng-b {
+}
+.separator-contain-nav .settings-icon-contain.leng-b {
+  @include ltr {
+    padding: 0 18px 0 30px;
+  }
+  @include rtl {
+    padding: 0 30px 0 18px;
+  }
+  &:before, ~ div .drop-items-contain-b > ul > li:before {
+    border-radius:0
+  }
+  ~ div .drop-items-contain-b > ul > li {
+    &.active:after,
+    &:hover:after,
+    &.active:hover:after{
+      display:none;
+    }
+  }
+  &:before {
+    content: "";
+    display: block;
+    width: 16px;
+    height: 16px;
+    position: absolute;
+    top: 2px;
     @include ltr {
-      padding: 0 18px 0 30px;
+      left: 5px;
     }
     @include rtl {
-      padding: 0 30px 0 18px;
-    }
-    &:before, ~ div .drop-items-contain-b > ul > li:before {
-      border-radius:0
-    }
-    ~ div .drop-items-contain-b > ul > li {
-      &.active:after,
-      &:hover:after,
-      &.active:hover:after{
-        display:none;
-      }
-    }
-    &:before {
-      content: "";
-      display: block;
-      width: 16px;
-      height: 16px;
-      position: absolute;
-      top: 2px;
-      @include ltr {
-        left: 5px;
-      }
-      @include rtl {
-        right: 5px;
-      }
+      right: 5px;
     }
   }
 }

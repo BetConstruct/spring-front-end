@@ -20,7 +20,7 @@
                                     </div>
 
                                     <form name="forms.signinform"
-                                          ng-submit="params.needVerification? verifySmsCode(): login()"
+                                          ng-submit="login()"
                                           novalidate="novalidate">
 
                                         <div class="form-sign-in odno-ki"
@@ -40,7 +40,7 @@
                                                 </div>
                                             </div>
                                             <div class="field-separator" ng-if="!conf.nemIDAuthentication.enabled">
-                                                <label trans>Password</label>
+                                                <label >{{'Password'|translate:null:'Password_login'}}</label>
                                                 <div class="form-text"
                                                      ng-class="{'error':signInError && forms.signinform.$pristine}"
                                                      ng-init="regItem.passwordType='password'">
@@ -77,32 +77,6 @@
                                                          data-size="{{recaptcha.size || 'normal'}}"></div>
                                                 </div>
                                             </div>
-                                            <div class="field-separator" ng-if="conf.smsVerification.login">
-                                                <label trans>SMS confirmation code</label>
-                                                <ul class="sms-confirmation-wrap">
-                                                    <li>
-                                                        <div class="tooltip-wrapper-j"
-                                                             ng-class="{'error': params.smsErrMsg }">
-                                                            <input ng-model="user.confirmation_code" type="text"
-                                                                   placeholder="Enter verification code"
-                                                                   required="required" ng-change="params.smsErrMsg = ''"
-                                                                   trans>
-                                                            <div class="tooltip-j" ng-hide="forms.signinform.$pristine"
-                                                                 ng-bind="params.smsErrMsg"></div>
-                                                        </div>
-                                                    </li>
-                                                    <li>
-                                                        <button ng-click="sendSms()"
-                                                                ng-disabled="!params.allowSMSResend || !user.username">
-                                                            <span ng-bind="'Get code'|translate"></span>
-                                                            <span ng-show="countdown.minutes + ':' + countdown.seconds !== '00:00'"
-                                                                  countdown="{{params.smsTimer}}"
-                                                                  ng-bind="countdown.minutes + ':' + countdown.seconds"></span>
-                                                        </button>
-                                                    </li>
-                                                </ul>
-                                                <label ng-show="params.smsMsg" ng-bind="params.smsMsg"></label>
-                                            </div>
                                             <div class="field-separator" ng-show="conf.rememberMeCheckbox.enabled">
                                                 <label for="signinform-remember-me" class="sign-in-checkbox-j">
                                                     <input ng-model="user.remember" id="signinform-remember-me"
@@ -110,34 +84,8 @@
                                                     <span trans>Remember me</span>
                                                 </label>
                                             </div>
-                                            <div class="sms-verification-container"
-                                                 ng-if="conf.registration.requireSmsValidation && params.needVerification">
-                                                <label trans>SMS verification code</label>
-
-                                                <div class="sms-code-block active">
-                                                    <div class="form-text code sms-code"
-                                                         ng-class="{'error':signInError && forms.signinform.$pristine || smsErrMsg}">
-                                                        <input ng-model="user.smsCode" type="text"
-                                                               placeholder="Enter verification code" required="required"
-                                                               trans>
-
-                                                        <div class="form-verify-info" ng-show="smsErrMsg">
-                                                            <div class="form-error-icon"></div>
-                                                            <div class="form-error-text">
-                                                                <div class="error-icon-f"></div>
-                                                                <p>{{params.smsErrMsg}}</p>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="button-sms code">
-                                                        <button ng-click="resendSMS()"
-                                                                ng-disabled="!params.allowSMSResend">Resend
-                                                        </button>
-                                                    </div>
-                                                </div>
-                                            </div>
                                             <div class="signin-error-message"
-                                                 ng-show="forms.signinform.$error.maxlength && !params.needVerification && !params.lockedUser">
+                                                 ng-show="forms.signinform.$error.maxlength && !params.lockedUser">
                                                 <p trans>Username and password should be less than 50 characters.</p>
                                             </div>
                                             <div class="signin-error-message"

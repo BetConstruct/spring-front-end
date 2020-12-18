@@ -1,15 +1,3 @@
 <div class="paymen-icons-list" ng-controller="footerCtrl" ng-show="(paymentSystemNames.length && conf.footer.showPaymentSystems || conf.footer.imageInsteadPayments) && $location.path() !='/popup/'">
-    <div class="guide">
-        <div class="footer-custom-sprite" ng-show="conf.footer.imageInsteadPayments">
-            <img ng-src="{{spriteURL}}"/>
-        </div>
-        <div class="payment-content-block" ng-hide="conf.footer.imageInsteadPayments">
-            <ul>
-                <li ng-repeat="payment in paymentSystemNames track by $index" class="{{payment.name}}" ng-click="openDepositWithPayment($event, payment.name)" ng-class="{'default-cursor': !conf.footerPaymentsClickable}">
-                    <span ng-hide="payment.image" class="{{payment.name}} paymentIcon"></span>
-                    <img ng-src="{{payment.image + '?' + $root.releaseDate}}" class="paymentImage" ng-show="payment.image">
-                </li>
-            </ul>
-        </div>
-    </div>
+    <ng-include src="::'templates/footer/payment-fields.html'|fixPath"></ng-include>
 </div>

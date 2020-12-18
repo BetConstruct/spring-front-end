@@ -9,8 +9,8 @@
         <li ng-show="game.sport.alias !== 'Boxing'">
             <div class="soccer-score"  ng-bind="(game.info.set_count === 1 || game.sport.alias === 'Cricket') ? game.stats.score_set1.team1_value : game.info.score1"></div>
             <div class="team-coat" ng-show="game.info.extra.team1icon"><img ng-src="{{ game.info.extra.team1icon}}"></div>
-            <div class="team-form" ng-if="!game.info.extra.team1icon && $root.conf.esportsGames.indexOf(game.sport.alias) === -1"><tshirt shorts="{{game.info.short1_color}}" shirt="{{game.info.shirt1_color}}"></tshirt></div>
-            <div class="team-form" ng-if="$root.conf.esportsGames.indexOf(game.sport.alias) !== -1"><img ng-src="{{$root.conf.teamLogosPath}}e/m/{{Math.floor(game.team1_id / 2000)}}/{{game.team1_id}}.png" /></div>
+            <div class="team-form" ng-if="!game.info.extra.team1icon && !$root.conf.esportsGames[game.sport.alias]"><tshirt shorts="{{game.info.short1_color}}" shirt="{{game.info.shirt1_color}}"></tshirt></div>
+            <div class="team-form" ng-if="$root.conf.esportsGames[game.sport.alias]"><img ng-src="{{$root.conf.teamLogosPath}}e/m/{{Math.floor(game.team1_id / 2000)}}/{{game.team1_id}}.png" /></div>
         </li>
     </ul>
     <ul>
@@ -22,8 +22,8 @@
         <li ng-show="game.sport.alias !== 'Boxing'">
             <div class="soccer-score"  ng-bind="(game.info.set_count === 1 || game.sport.alias === 'Cricket')? game.stats.score_set1.team2_value : game.info.score2"></div>
             <div class="team-coat" ng-show="game.info.extra.team2icon"><img ng-src="{{ game.info.extra.team2icon}}"></div>
-            <div class="team-form" ng-if="!game.info.extra.team2icon && $root.conf.esportsGames.indexOf(game.sport.alias) === -1"><tshirt shorts="{{game.info.short2_color}}" shirt="{{game.info.shirt2_color}}"></tshirt></div>
-            <div class="team-form" ng-if="$root.conf.esportsGames.indexOf(game.sport.alias) !== -1"><img ng-src="{{$root.conf.teamLogosPath}}e/m/{{Math.floor(game.team2_id / 2000)}}/{{game.team2_id}}.png" /></div>
+            <div class="team-form" ng-if="!game.info.extra.team2icon && !$root.conf.esportsGames[game.sport.alias]"><tshirt shorts="{{game.info.short2_color}}" shirt="{{game.info.shirt2_color}}"></tshirt></div>
+            <div class="team-form" ng-if="$root.conf.esportsGames[game.sport.alias]"><img ng-src="{{$root.conf.teamLogosPath}}e/m/{{Math.floor(game.team2_id / 2000)}}/{{game.team2_id}}.png" /></div>
         </li>
     </ul>
     <div class="add-info" ng-if="!!game.info.current_game_state">

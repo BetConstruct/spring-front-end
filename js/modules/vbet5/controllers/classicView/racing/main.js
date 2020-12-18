@@ -121,7 +121,12 @@ angular.module('vbet5.betting').controller('classicViewRacingMainCtrl', ['$rootS
                 }
 
             });
+            $scope.$on("$destroy", function () {
+                $rootScope.broadcast("removePrematchStream");
+            });
         })();
+
+
 
     }
 ]);

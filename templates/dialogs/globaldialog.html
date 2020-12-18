@@ -77,7 +77,7 @@
                                 <h3 ng-show="activeDialog.subTitle" ng-bind-html="activeDialog.subTitle|translate|html"></h3>
                                 <p ng-if="!activeDialog.link" ng-bind-html="activeDialog.content|translate:activeDialog.contentPlaceholders|html" ng-init="checkIsContainsLink(activeDialog.content)" ng-click="!isContainsIframe && closeDialog(activeDialog, 'closeButton')" route-reload ng-class="{'pointer-events-none': !isContainsLink && !isContainsIframe}"></p>
 
-                                <ng-include ng-if="activeDialog.template" src="::activeDialog.template|fixPath"></ng-include>
+                                <ng-include class="float-width" ng-if="activeDialog.template" src="::activeDialog.template|fixPath"></ng-include>
 
                                 <p ng-if="activeDialog.link">
                                     <a ng-href="{{activeDialog.link}}" target="{{activeDialog.linktarget}}" ng-click="closeDialog(activeDialog, 'content');$event.stopPropagation();" ng-bind-html="activeDialog.content|translate:activeDialog.contentPlaceholders|html"></a>

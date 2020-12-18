@@ -121,7 +121,7 @@
   -ms-grid-column: 2;
   @include scroll;
   &.prematch,
-  &.dashboard{
+  &.dashboard {
     overflow: inherit;
   }
 }
@@ -584,3 +584,163 @@
   }
 }
 //Old browsers END
+
+.view-container{
+  &.vip-club{
+    max-width: 1310px;
+    margin: 0 auto;
+    @media screen and (max-width: 1260px){
+      max-width: 996px;
+      .container-p{
+        min-width: 960px;
+      }
+    }
+  }
+}
+
+/* Express off the day cards styles */
+.express-of-day {
+  float: left;
+  width: 100%;
+  > div:not(.md-progress-circular) {
+    width: 100%;
+    padding: 4px;
+    box-sizing: border-box;
+    @include ltr {
+      float: left;
+    }
+    @include rtl {
+      float: right;
+    }
+    &.col-2 {
+      width: 50%;
+    }
+    &.col-3 {
+      width: 33.333%;
+    }
+    &.col-4 {
+      width: 25%;
+    }
+  }
+}
+.express-of-the-day-item {
+  float: left;
+  width: 100%;
+  padding: 8px;
+  background: $c16-sp-10;
+  border-radius: 2px;
+  box-sizing: border-box;
+}
+.express-bet-item {
+  float: left;
+  width: 100%;
+  overflow: hidden;
+  .mini-list-events-b-v3 {
+    padding: 0;
+  }
+  + .express-bet-item {
+    padding-top: 4px;
+  }
+}
+.express-of-the-day-time {
+  color: $c16-tp-3;
+  @include ltr {
+    float: left;
+  }
+  @include rtl {
+    float: right;
+  }
+}
+.express-of-the-day-ul {
+  float: left;
+  width: 100%;
+}
+.express-off-the-day-event-item {
+  float: left;
+  width: 100%;
+  padding: 10px 0 8px;
+  border-top: 1px solid rgba(set-color($c16-sp-9), 0.3);
+}
+.express-of-the-day-heading {
+  float: left;
+  width: 100%;
+  margin-bottom: 6px;
+  color: $c16-tp-3;
+  letter-spacing: 0.45px;
+  text-transform: capitalize;
+  font: 600 14px/16px $font-f;
+}
+.express-of-the-day-date-bonus {
+  float: left;
+  width: 100%;
+  margin-bottom: 8px;
+  font: 12px/14px $font-f;
+}
+.express-of-the-day-date {
+  color: $c16-tp-3;
+  @include ltr {
+    float: left;
+  }
+  @include rtl {
+    float: right;
+  }
+}
+.express-of-the-day-bonus {
+  color: $brand-color-2;
+  @include ltr {
+    float: right;
+  }
+  @include rtl {
+    float: left;
+  }
+}
+.express-of-the-day-wrap {
+  .single-event-info-view-v3 > ul > li:not(:first-child) {
+    margin-top: 6px;
+  }
+  .odds-contain-ew-v3 {
+    border-bottom: none;
+    margin: 0;
+  }
+  .flag-icon,
+  .sport-icon-v3 {
+    @include ltr {
+      float: left;
+      margin-right: 8px;
+    }
+    @include rtl {
+      float: right;
+      margin-left: 8px;
+    }
+  }
+  .sport-icon-v3 {
+    width: 16px;
+    height: 16px;
+    position: static;
+  }
+  .title-event-b-v3 {
+    .betslip-event-icon-view {
+      position: absolute;
+      top: 21px;
+      ~  span {
+        margin: 0;
+        @include ltr {
+          padding-left: 18px;
+        }
+        @include rtl {
+          padding-right: 18px;
+        }
+      }
+    }
+    span {
+      float: left;
+      width: 100%;
+      padding-top: 4px;
+    }
+  }
+  .bet-accept-changes-b-v3 > ul:not(:first-child) > li:first-child > .button-view-contain-v3 > .button-info-text-view-v3 {
+    left: -9999px;
+  }
+}
+
+/* End Express off the day cards styles */

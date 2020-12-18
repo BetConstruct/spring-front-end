@@ -9,6 +9,7 @@ angular.module('vbet5.betting').controller('classicViewRacingGameCtrl', ['$rootS
         'use strict';
         var connectionService = new ConnectionService($scope);
 
+
         function loadCompetitionAndGames() {
             var request = {
                 source: 'betting',

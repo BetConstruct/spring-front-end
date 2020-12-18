@@ -6,7 +6,7 @@
             <div class="asian-left-menu-scroll-wrapper"  fixonscroll auto-positon="true" scrollable-area-id="asianView" header-id="main-header-container">
                 <div class="asian-left-contain-menu" ng-class="'type-' + selectedMenuType.active">
                     <ng-include class="include-viewSwitcher-j" src="::'templates/sport/viewswitcher.html'|fixPath"></ng-include>
-                    <pre-match-stream-channels ng-if="prematchChannels && prematchChannels.length && !$root.env.live"></pre-match-stream-channels>
+                    <pre-match-stream-channels channels="prematchChannels" availability="$root.profile.balance > 0" ng-if="!$root.env.live" env="$root.env"></pre-match-stream-channels>
 
                     <!--video and animation-->
                     <div class="animation-video-box-v3" ng-class="{'active': hideVideoAndAnimationBox}"

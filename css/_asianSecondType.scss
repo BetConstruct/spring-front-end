@@ -98,9 +98,6 @@ $asian-view-custom: false !default;
   }
   .body-wrapper.asian {
     .gaming-wrapper-asia {
-      float: none;
-      margin: 0 auto;
-      max-width: 1440px;
       background: rgba(set-color(darken( desaturate( adjust-hue( $skin-color, 4deg ), 11 ), 1 )), 0.5);
       @if $white-skin == true {
         background: rgba(black, 0.03);
@@ -443,7 +440,55 @@ $asian-view-custom: false !default;
     }
   }
 }
+.asian-left-contain-menu .competition-title-v3{
+  > label.new{
+    @include ltr{
+      padding-right: 48px;
+    }
+    @include rtl{
+      padding-left: 48px;
+    }
+    &:after{
+      content: '';
+      display: block;
+      background: url(../../../images/new-label.png) 0 0 no-repeat;
+      height: 12px;
+      width: 27px;
+      position: absolute;
+      top: 6px;
+      background-size: contain;
+      @include ltr{
+        right: 26px;
+      }
+      @include rtl{
+        left: 26px;
+      }
+    }
+  }
+}
 
-
-
+.asian-left-menu ul li.new .sport-name-asia{
+  @include ltr{
+    padding-right: 45px;
+  }
+  @include rtl{
+      padding-left: 45px;
+  }
+  &:after{
+    content: '';
+    display: block;
+    background: url(../../../images/new-label.png) 0 0 no-repeat;
+    height: 12px;
+    width: 27px;
+    position: absolute;
+    top: 6px;
+    background-size: contain;
+    @include ltr{
+      right: 16px;
+    }
+    @include rtl{
+      left: 16px;
+    }
+  }
+}
 

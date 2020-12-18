@@ -235,7 +235,7 @@ CASINO.controller('casinoJackpotCtrl', ['$rootScope', '$scope', '$sce', '$locati
     };
 
     function subscribeForJackpotData(gameinfo) {
-        if (CConfig.version === 2 && gameinfo && gameinfo.game && gameinfo.game.extearnal_game_id) {
+        if (gameinfo && gameinfo.game && gameinfo.game.extearnal_game_id) {
             gameInfoId = gameinfo.id;
             jackpotManager.subscribeForJackpotData(gameinfo.game.extearnal_game_id, subscribeForJackpotDataCallback,null,'casino');
         }

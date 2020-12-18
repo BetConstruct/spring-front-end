@@ -18,7 +18,6 @@
     direction: ltr;
   }
   img {
-    min-height: 600px;
     object-fit: cover;
     object-position: 50% 50%;
   }
@@ -29,8 +28,8 @@
 .intro-info-j {
   float: left;
   width: 100%;
-  margin: 24px 0 68px;
-  position: relative;
+  bottom: 100px;
+  position: absolute;
   z-index: 40;
   a {
     display: block;
@@ -71,8 +70,8 @@
 .button-group-j {
   float: left;
   width: 100%;
-  margin: 374px 0 0;
-  position: relative;
+  bottom: 140px;
+  position: absolute;
   z-index: 40;
   a {
     display: block;
@@ -130,13 +129,16 @@
   color: #fff;
   display: flex;
   align-items: center;
+  > .guide {
+    height: 100%;
+  }
   h1 {
+    position: absolute;
+    top: 50px;
     text-transform: uppercase;
     float: left;
     width: 100%;
     font: 700 64px/1 $font-f;
-    margin: 0 0 398px;
-    position: relative;
     z-index: 40;
     @include rtl {
       text-align: left;
@@ -151,10 +153,10 @@
       vertical-align: top;
       border-radius: 100%;
       @include ltr {
-        margin: 0 0 0 30px;
+        margin-left: 30px;
       }
       @include rtl {
-        margin: 0 30px 0 0;
+        margin-right: 30px;
       }
     }
     &.Poker-icon:after {
@@ -173,10 +175,8 @@
     }
   }
   .hp-slider-pagination {
-    position: relative;
-    padding: 36px 0 0;
-    float: left;
-    bottom: 0;
+    padding: 0 10px;
+    bottom: 40px;
   }
   h2 {
     float: left;
@@ -883,5 +883,33 @@
   }
   .big-news-block {
     @extend .guide;
+  }
+}
+@media screen and (max-width: 1260px) {
+  .slider-landing-overlay {
+    h1 {
+      font-size: 44px;
+      &:after {
+        width: 44px;
+        height: 44px;
+        font-size: 26px;
+        line-height: 44px;
+        @include ltr {
+          margin-left: 20px;
+        }
+        @include rtl {
+          margin-right: 20px;
+        }
+      }
+    }
+    .hp-slider-pagination {
+      bottom: 20px;
+    }
+  }
+  .button-group-j {
+    bottom: 100px;
+  }
+  .intro-info-j {
+    bottom: 70px;
   }
 }

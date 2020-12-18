@@ -63,6 +63,11 @@
     width: 100%;
 }
 
+.live-score-background-archery,
+.live-score-background-archeryh2h {
+    background: url(../../../images/live-score/archery.svg#{$delete-cache}) no-repeat 100% 100% / contain, linear-gradient(111deg, #2d3580 36%, #d6428e 99%);
+}
+
 live-game-scores {
     display: block;
     float: left;
@@ -163,6 +168,10 @@ live-game-scores {
     background: darken(desaturate(adjust-hue($classic-skinning-color, 3deg), 1), 6);
     margin: 0 0 2px;
     > p {
+        max-width: 71%;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
         @include ltr {
             float: left;
             padding: 0 0 0 24px;
@@ -244,9 +253,8 @@ live-game-scores {
         display: block;
         padding: 0 6px;
         color: $c16-tp-4;
-        font: 11px/24px icomoon;
+        font: normal 11px/24px icomoon;
         transition: 250ms color;
-        font-style: normal;
         @include ltr {
             float: left;
         }
@@ -257,54 +265,10 @@ live-game-scores {
             color: $c16-tp-2;
         }
     }
-    > ul {
-        @include ltr {
-            float: left;
-            margin: 0 0 0 6px;
-            padding: 0 4px 0 10px;
-            border-left: 1px solid $c16-sp-10;
-            font: 11px/24px icomoon;
-        }
-        @include rtl {
-            float: right;
-            margin: 0 6px 0 0;
-            padding: 0 10px 0 4px;
-            border-right: 1px solid $c16-sp-10;
-        }
-        > li {
-            display: block;
-            float: left;
-            padding: 0 3px;
-            color: $c16-tp-7;
-            transition: 250ms color;
-            &.active, &:hover {
-                color: $c16-tp-6;
-            }
-            &.active {
-                pointer-events: none;
-            }
-        }
-    }
-}
-
-.column-view-j:before {
-    content: "\e98e";
-    font-family: icomoon;
-}
-
-.list-view-j:before {
-    content: "\e98d";
-    font-family: icomoon;
 }
 
 .statistics-icon-j:before {
     content: "\e6b8";
-}
-
-.body-wrapper:not(.classic) {
-    .game-additional-icons > ul {
-        display: none;
-    }
 }
 
 // add linep styles
@@ -513,14 +477,28 @@ live-game-scores {
         border-bottom: none;
     }
 }
+.team-form-player {
+    font-weight: normal;
+    @include ltr {
+        float: left;
+    }
+    @include rtl {
+        float: right;
+    }
+    &:not(:only-child) {
+        width: 37%;
+    }
+}
 .game-score-multiset .current-delivery{
+    width: 60%;
     @include  ltr{
         float: right;
+        text-align: right;
     }
     @include rtl{
         float: left;
+        text-align: left;
     }
-    padding: 0 0 0 10px;
     > i{
         font-style: normal;
         margin: 0 0 0 5px;
@@ -534,25 +512,31 @@ live-game-scores {
     }
 }
 .modern {
+    .live-game-basketball-shots {
+        width: calc(100% - 360px);
+        .show-points {
+            @include ltr {
+                right: calc(-100% - 18px);
+            }
+            @include rtl {
+                left: calc(-100% - 18px);
+            }
+        }
+    }
     .no-video-flash{
         &.no-video-ie8{
-            .shot-result-b, .short-info-box h6 ~ p{
-                max-width: 100%;
+            &.live-game-basketball-shots {
+                width: 100%;
+                .show-points {
+                    @include ltr {
+                        right: 0;
+                    }
+                    @include rtl {
+                        left: 0;
+                    }
+                }
             }
         }
 
-    }
-    .shot-result-b {
-        max-width: calc(100% - 356px);
-        @include rtl{
-            right: 0;
-            left: auto;
-        }
-    }
-    .short-info-box h6 ~ p{
-        max-width: calc(100% - 346px);
-        white-space: nowrap;
-        text-overflow: ellipsis;
-        overflow: hidden;
     }
 }

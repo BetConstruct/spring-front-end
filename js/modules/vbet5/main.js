@@ -189,7 +189,7 @@ angular.module('vbet5').run(['$rootScope', '$location', '$routeParams', '$route'
                 $location.search('redirect', undefined);
                 return;
             }
-            var tabletUrl = $rootScope.conf.enableAutoDetectionOfTabletsUrl ? 'http://tablet.' + $window.location.host.replace('www.', '') + '/' : $rootScope.conf.redirectOnTablets;
+            var tabletUrl = $rootScope.conf.enableAutoDetectionOfTabletsUrl ? $window.location.protocol + "//m." + $window.location.host.replace('www.', '') + '/' : $rootScope.conf.redirectOnTablets;
             $window.location = tabletUrl + $window.location.hash;
         });
 
@@ -251,11 +251,21 @@ angular.module('vbet5').run(['$rootScope', '$location', '$routeParams', '$route'
             var params = $location.search();
 
             if (params.btag) {
-                Storage.set('promo_code', params.btag, Config.main.registration.promoCodeLifetime);
-                $cookies.putObject('promo_code', params.btag, Config.main.registration.promoCodeLifetime);
+                var promoCode = params.btag;
+                for (var i = 0; i < Config.affiliateNetworkKeys.length; i++) { // handle third party network key
+                    if (params[Config.affiliateNetworkKeys[i]]) {
+                        promoCode += "_extName" + params[Config.affiliateNetworkKeys[i]];
+                        $location.search(Config.affiliateNetworkKeys[i], undefined);
+                        break;
+                    }
+                }
+
+                Storage.set('promo_code', promoCode, Config.main.registration.promoCodeLifetime);
+                $cookies.putObject('promo_code', promoCode, Config.main.registration.promoCodeLifetime);
                 if (params.AFFAGG) {
                     $location.search('AFFAGG', undefined);
                 }
+                $location.search('btag', undefined);
             }
 
             if (params.loyaltycode) {
@@ -265,10 +275,6 @@ angular.module('vbet5').run(['$rootScope', '$location', '$routeParams', '$route'
             Tracking.init();
             Tracking.event('NUV');
             Tracking.event('runtime', null, true);
-
-            if (params.btag) {
-                $location.search('btag', undefined);
-            }
 
             if (params.loyaltycode) {
                 $location.search('loyaltycode', undefined);

@@ -51,6 +51,21 @@
 </div>
 <!--Menu games end-->
 
+    <!--Menu Coupons-->
+    <div class="coupons" ng-if="coupons">
+        <div class="cupon-block-contain">
+            <ul class="couponslist">
+                <div class="coupon one-line-menu" data-step="3" data-position="bottom" data-intro="Select region" trans="attr-only">
+                    <li ng-repeat="coupon in coupons track by coupon.Name"  >
+                        <a ng-click="selectCoupon(coupon)" ng-class="{'active': coupon.Name === selectedCoupon.Name}">
+                            {{ coupon.Name }}
+                        </a>
+                    </li>
+                </div>
+            </ul>
+        </div>
+    </div>
+<!--Menu Coupons end-->
 <!--Menu country-->
 <div class="country-b" ng-show="!favoriteGamesSelectedAsSport">
 <div class="country-block-contain">
@@ -75,5 +90,6 @@
     </ul>
 </div>
 </div>
+
 <!--Menu country END-->
 </div>

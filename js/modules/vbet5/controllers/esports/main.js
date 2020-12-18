@@ -221,7 +221,7 @@ VBET5.controller('eSportsMainController', ['$rootScope', '$scope', 'Config', 'Ut
     var selectedSportAlias = '';
 
     setTimeout(function () {
-        content.getPage('esport-games', true).then(function (response) {
+        content.getPage('esport-games-' + Config.env.lang, true).then(function (response) {
             if (response && response.data && response.data.page && response.data.page.children && response.data.page.children.length > 0) {
                 pages = response.data.page.children;
                 if (selectedSportAlias) {

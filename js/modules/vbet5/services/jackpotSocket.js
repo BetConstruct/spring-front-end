@@ -64,7 +64,7 @@ VBET5.service('jackpotSocket', ['$rootScope', 'Config', function ($rootScope, Co
     }
 
     jackpotSocket.msg = function msg(command, data, callback, requestId) {
-        data = angular.copy(data) || {};
+        data = data || {};
 
         if ($rootScope.profile && $rootScope.profile.unique_id) {
             data.PlayerId = parseInt($rootScope.profile.unique_id, 10);

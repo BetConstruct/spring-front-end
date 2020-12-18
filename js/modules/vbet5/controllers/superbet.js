@@ -21,7 +21,7 @@ VBET5.controller('superBetCtrl', ['$rootScope', '$scope', '$interval', 'Storage'
 
     function showSuperBetNotification (message, isAccepted) {
         if (Config.betting.showSuperBetNotificationsViaPopup) {
-            var type = isAccepted ? 'info accpeted-superbet' : 'info';
+            var type = isAccepted ? 'info accepted' : 'info declined';
 
             $rootScope.$broadcast("globalDialogs.addDialog", {
                 type: type,
@@ -67,30 +67,20 @@ VBET5.controller('superBetCtrl', ['$rootScope', '$scope', '$interval', 'Storage'
                 $rootScope.$broadcast('globalDialogs.removeDialogsByTag', 'onHoldConfirm');
                 analytics.gaSend('send', 'event', 'betting', 'SuperBet ' + (Config.main.sportsLayout) + ($rootScope.env.live ? '(LIVE)' : '(PM)'), {'page': $location.path(), 'eventLabel': 'declined'});
             } else {
-                Zergling.get({
-                    'where': {
-                        'bet_id': superBet.super_bet_id,
-                        'outcome': 0
-                    }
-                }, 'bet_history')
-                    .then(function (response) {
-                        var event = response.bets && response.bets[0] && response.bets[0].events && response.bets[0].events[0];
-                        var message = !event ? superBet.super_bet_id : event.team1 + (event.team2 && (" - " + event.team2)) + " : " + event.event_name;
-                        if(superBet.super_bet_status === 0 || superBet.super_bet_status === '0') {//Counter Offer part
-                            $rootScope.$broadcast("globalDialogs.addDialog", {
-                                type: 'info',//what type of image to choose???
-                                title: 'Counter offer',
-                                hideCloseButton: true,
-                                content: Translator.get('Do you wish to accept our counter offer ({1}) with the following conditions? Offered Odd: {2} Offered Amount: {3}', [message , superBet.super_bet_price , superBet.super_bet_amount]),
-                                yesno: true,
-                                yesButton: ['acceptCounterOffer', superBet],
-                                noButton: ['declineCounterOffer', superBet]
-                            });
-                        } else {
-                            showSuperBetNotification(Translator.get('Your offer ({1}) request is accepted', [message]), true);
-                            analytics.gaSend('send', 'event', 'betting', 'SuperBet ' + (Config.main.sportsLayout) + ($rootScope.env.live ? '(LIVE)' : '(PM)'), {'page': $location.path(), 'eventLabel': 'accepted'});
-                        }
+                if(superBet.super_bet_status === 0 || superBet.super_bet_status === '0') {//Counter Offer part
+                    $rootScope.$broadcast("globalDialogs.addDialog", {
+                        type: 'info',//what type of image to choose???
+                        title: 'Counter offer',
+                        hideCloseButton: true,
+                        content: Translator.get('Do you wish to accept our counter offer ({1}) with the following conditions? Offered Odd: {2} Offered Amount: {3}', [superBet.super_bet_id , superBet.super_bet_price , superBet.super_bet_amount]),
+                        yesno: true,
+                        yesButton: ['acceptCounterOffer', superBet],
+                        noButton: ['declineCounterOffer', superBet]
                     });
+                } else {
+                    showSuperBetNotification(Translator.get('Your offer ({1}) request is accepted',  [superBet.super_bet_id]), true);
+                    analytics.gaSend('send', 'event', 'betting', 'SuperBet ' + (Config.main.sportsLayout) + ($rootScope.env.live ? '(LIVE)' : '(PM)'), {'page': $location.path(), 'eventLabel': 'accepted'});
+                }
             }
         }
     }

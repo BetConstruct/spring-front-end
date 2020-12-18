@@ -30,7 +30,7 @@
                             </label>
                         </li>
                         <li>
-                            <input type="file" name="passportImage" id="passportImage" accept="image/*" class="passportUpload"  ng-model="data.image" file-upload="" >
+                            <input type="file" name="passportImage" id="passportImage" accept=".png,.jpg,.jpeg" class="passportUpload"  ng-model="data.image" file-upload="" file-extensions=".jpg,.png,.jpeg">
                             <input name="imageFile" id="uploadFilePassport" trans="attr-only" placeholder="Choose File" disabled="disabled" ng-model="data.image.Name" required/>
                         </li>
                         <li>
@@ -41,6 +41,7 @@
                             </button>
                         </li>
                     </ul>
+                    <p class="error-msg" ng-if="data.image.error" trans>The accepted file formats are JPEG, JPG, and PNG</p>
                 </div>
             </li>
             <li ng-if="data.status === 'fail'" trans class="error-msg">There was an error when verifying your account</li>

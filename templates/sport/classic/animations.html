@@ -3,9 +3,28 @@
     <audio id="{{openGame.id}}" ng-src="{{animationSoundsMap[openGame.last_event.type] + '.mp3'}}" autoplay="" ng-if="animationSoundOn() && animationSoundsMap[openGame.last_event.type]" ng-init="changeVolume()"></audio>
     <audio id="{{openGame.id}}" ng-src="{{animationSoundsMap[openGame.last_event.type] + '.ogg'}}" autoplay="" ng-if="animationSoundOn() && animationSoundsMap[openGame.last_event.type] && !isMp3Supported" ng-init="changeVolume()"></audio>
 
-    <iframe class="multilive-visualisation" ng-if="openGame.activeFieldType === 'field' && $root.conf.customAnimationURL" src="{{($root.conf.customAnimationURL.replace('{gameId}',openGame.id))| url}}"></iframe>
+    <div class="multilive-visualisation" ng-if="openGame.activeFieldType === 'field' && $root.conf.customAnimationURL && $root.conf.sportsWithAnimations[openGame.sport.alias] === 'kiev'">
+        <iframe src="{{($root.conf.customAnimationURL.replace('{gameId}',openGame.id))| url}}"></iframe>
+    </div>
+
+    <sportsbook-animations
+            ng-if="openGame.activeFieldType === 'field' && $root.conf.sportsWithAnimations[openGame.sport.alias] === 'sportsbook-animations'"
+            language="$root.env.lang"
+            sport-alias="openGame.sport.alias"
+            field="openGame.info.field"
+            type-id="openGame.last_event.type_id"
+            side="openGame.last_event.side"
+            team1-name="openGame.team1_name"
+            team2-name="openGame.team2_name"
+            team1-score="openGame.info.score1"
+            team2-score="openGame.info.score2"
+            team1-points="openGame.stats.passes.team1_value"
+            team2-points="openGame.stats.passes.team2_value"
+    ></sportsbook-animations>
+
     <feedconstruct-animations ng-if="openGame.activeFieldType === 'field' && $root.conf.sportsWithAnimations[openGame.sport.alias] === 'feedconstruct'" open-game="openGame"></feedconstruct-animations>
-    <div ng-if="vbet5AvailableAnimations[openGame.sport.alias] && openGame.activeFieldType === 'field'">
+
+    <div ng-if="vbet5AvailableAnimations[openGame.sport.alias] && openGame.activeFieldType === 'field' && ($root.conf.sportsWithAnimations[openGame.sport.alias] === 'VBET5' || $root.conf.sportsWithAnimations[openGame.sport.alias] === 'external')">
 
         <!-- Soccer animation control -->
         <div class="game-control soccer" ng-if="openGame.sport.alias === 'Soccer'">
@@ -372,6 +391,7 @@
         <div ng-if="{2:1,4:1}[openGame.scout_provider]" class="powered-by-w"><p/></div>
     </div>
 </div>
+
 <div ng-if="!hideVideoAndAnimationBox && openGame.activeFieldType === 'field' && openGame.video_provider[2]" class="height-100 float-width">
     <div ng-if="openGame.animation_data === undefined" ng-init="getVideoData(openGame, false, true)"></div>
     <div class="float-width height-100">

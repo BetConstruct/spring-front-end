@@ -6,18 +6,18 @@
                     <vbet-loader ng-show="isLoading"></vbet-loader>
                     <div class="cashback-out">
                         <div class="cashback-amount-block" ng-repeat="bonus in availableBonuses track by bonus.BonusDefinitionId">
-                            <span class="bonus-category">{{bonus.CategoryName}}</span>
+                            <span class="bonus-category">{{bonus.CategoryName|translate}}</span>
                             <div class="amount-line">
                                 <div>
                                     <p>
                                         <span class="amount-title" trans>Available For Cashout</span>
-                                        <span class="amount-value" ng-if="!bonus.cashBackCashOut">*** ***</span>
-                                        <span class="amount-value" ng-if="bonus.cashBackCashOut">{{bonus.cashBackCashOut.Amount}} <i>AMD</i></span>
+                                        <span class="amount-value" ng-if="!bonus.cashBackCashOut" trans>*** ***</span>
+                                        <span class="amount-value" ng-if="bonus.cashBackCashOut">{{bonus.cashBackCashOut.Amount|number:$root.conf.balanceFractionSize}} <i>{{$root.profile.currency_name|currency}}</i></span>
                                     </p>
                                 </div>
                                 <div>
                                     <button ng-if="!bonus.cashBackCashOut.Amount" ng-disabled="bonus.cashBackCashOut && !bonus.cashBackCashOut.Amount" ng-click="calculateCashOutAmount(bonus.BonusDefinitionId)" ng-class="{'default': !bonus.cashBackCashOut}" trans>Get Cashback Amount</button>
-                                    <button ng-if="bonus.cashBackCashOut.Amount" ng-click="processCashOutAmount(bonus.BonusDefinitionId, bonus.cashBackCashOut.Amount)" trans>CASHBACK CASHOUT</button>
+                                    <button ng-if="bonus.cashBackCashOut.Amount" ng-click="processCashOutAmount(bonus.BonusDefinitionId, bonus.cashBackCashOut.Amount)" trans>Cashback Cashout</button>
                                 </div>
                             </div>
                         </div>

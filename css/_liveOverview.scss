@@ -791,6 +791,7 @@
   padding: 0 5px;
 }
 .score-contain-overview-b {
+  display: inline-block;
   background: lighten( desaturate( adjust-hue( $classic-skinning-color, -3deg), 14), 3);
   padding: 4px 6px;
   text-align: center;
@@ -807,7 +808,7 @@
 .score-contain-overview-b > b {
   font-weight: bold;
 }
-.score-contain-overview-b > b:first-child:after {
+.score-contain-overview-b > b + b:not(:empty):before {
   content: " : ";
   position: relative;
   top: -1px;

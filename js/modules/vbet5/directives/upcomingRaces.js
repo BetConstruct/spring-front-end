@@ -12,7 +12,8 @@ VBET5.directive('upcomingRaces', ['$rootScope', 'ConnectionService', 'Utils', 'M
         templateUrl: 'templates/directive/upcoming-races.html',
         scope: {
             sportId: '=',
-            navigation: '='
+            navigation: '=',
+            streamConfig: '='
         },
         link: function (scope) {
             var connectionService = new ConnectionService(scope);

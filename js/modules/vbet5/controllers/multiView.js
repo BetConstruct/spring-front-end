@@ -8,6 +8,8 @@ angular.module('vbet5.betting').controller('multiViewCtrl', ['$rootScope', '$sco
     'use strict';
     $rootScope.footerMovable = true;
     $rootScope.multiViewLiveOpenedGames = [];
+    Config.env.hideLiveStats = Storage.get('hideLiveStats') || false;
+    $scope.showStatsBlock = !Config.env.hideLiveStats;
     $rootScope.multiViewLiveOpenedGamesIds = [];
     function checkAvailabilityOfPreviousGames() {
         var prevGamesList = Storage.get('multiViewLiveOpenedGamesIds');

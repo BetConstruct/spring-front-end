@@ -79,7 +79,7 @@ CASINO.controller('liveCasinoMainCtrl', ['$rootScope', '$scope', '$sce', '$locat
         }
 
         var searchParams = $location.search();
-        $scope.selectLiveDealerProvider(searchParams.provider ? searchParams.provider : $scope.liveGamesData.providerOptions[0]);
+        $scope.selectLiveDealerProvider(searchParams.provider ? searchParams.provider : $scope.liveGamesData.selectedProvider);
 
         findAndOpenGame(searchParams);
     }

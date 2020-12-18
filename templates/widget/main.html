@@ -40,18 +40,20 @@
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    <div class="sport-title" ng-click="broadcast('liveGame.headerClicked', openGame);$event.stopPropagation();" ng-if="liveGamesSoccerTemplate.indexOf(openGame.sport.alias) !== -1">
+                                                    <div class="sport-title" ng-click="broadcast('liveGame.headerClicked', openGame);$event.stopPropagation();" ng-if="liveGamesSoccerTemplate[openGame.sport.alias]">
                                                         <b class="mini-icon-1 mini-icon-{{openGame.sport.id}}" title="{{openGame.sport.alias}}"></b>
                                                         <span class="ellipsis-text" title="{{openGame.competition.name}}">
                                                             <b ng-show="conf.showGameIds">{{openGame.game_number}}</b> {{openGame.competition.name}}
                                                         </span>
                                                         <span ng-if="openGame.sport.alias === 'HorseRacing'" title="{{ openGame.team2_name ?  openGame.team2_name: '' }}">{{ openGame.team2_name ?  openGame.team2_name: '' }}&nbsp;&nbsp;&nbsp; {{ openGame.start_ts| formatDate: "LT"}}</span>
                                                     </div>
-                                                    <ng-include src="::'templates/directive/live-game-scores-info.html'|fixPath"></ng-include>
+                                                    <live-game-scores class="float-width" show-stats-block="showStatsBlock"
+                                                                      ng-if="!openGameLoading && openGame" open-game="openGame"
+                                                                      hide-stats-icon="true"
+                                                                      enlarged-game="enlargedGame"></live-game-scores>
                                                     <div class="add-info" ng-if="!!openGame.info.current_game_state">
                                                         {{ (openGame.info.current_leg === undefined?(openGame.info.current_game_state|convertSetName:openGame.sport.alias): (openGame.info.current_game_state|convertSetNameWithLeg:openGame.info))|translate }} {{ (openGame.info.current_game_time)[0] === '-'? ('will start in'|translate)+' '+ (openGame.info.current_game_time).substring(1): openGame.info.current_game_time }}
                                                     </div>
-                                                    <ng-include src="::'templates/directive/live-game-scores-statistics.html'|fixPath"></ng-include>
                                                 </div>
                                             </div>
                                         </div>
@@ -66,119 +68,26 @@
                                                 <!-- Score control -->
                                                 <div class="market-contain-b  pin-{{openGame.sport.alias}}" ng-show="!openGameLoading && openGame">
                                                     <!-- race markets -->
-                                                    <div ng-if="openGame.sport.alias === 'HorseRacing'">
-                                                        <div class="race-market">
-                                                            <ul class="header">
-                                                                <li ng-click="raceCardsColumnClick('cloth');$event.stopPropagation();"
-                                                                    class="arr-up"
-                                                                    ng-class="{'arr-down': raceCardsPredicate === 'cloth' && raceCardsReverce}">No.
-                                                                </li>
-                                                                <li></li>
-                                                                <li><p trans>Horse</p><span class="text-small" trans>Trainer/Jockey</span></li>
-                                                                <li><span class="text-small" trans>Age</span><span class="text-small" trans>Weight</span></li>
-                                                                <li trans>Form</li>
-                                                                <li trans>
-                                                                    Previous
-                                                                    odds
-                                                                </li>
-                                                                <li ng-click="raceCardsColumnClick('price');$event.stopPropagation();"
-                                                                    class="odds arr-up" ng-if="conf.enableNewHorseRacingTemplate"
-                                                                    ng-class="{'arr-down': raceCardsPredicate === 'price' && raceCardsReverce}">Odds
-                                                                </li>
-                                                                <li class="odds" ng-if="conf.enableNewHorseRacingTemplate">SP</li>
-                                                            </ul>
-                                                            <ul ng-repeat="raceStat in openGame.info.race.raceStats | orderBy:raceCardsOrder:raceCardsReverce track by raceStat.id">
-                                                                <li>
-                                                                    {{raceStat.runnerNum}}<br /> <span ng-show="raceStat.drawn">({{raceStat.drawn}})</span>
-                                                                </li>
-                                                                <li class="jockey-colors"><img ng-src="{{raceStat.jockeyInfo.colourFileUrl}}" /></li>
-                                                                <li class="main-name" title="{{raceStat.lastRunDays}} {{raceStat.historyStatistics.c}} {{raceStat.historyStatistics.d}} {{raceStat.historyStatistics.cd}} {{raceStat.historyStatistics.bf}}">
-                                                                    <div>
-                                                                        <p>
-                                                                            {{raceStat.name}} <sup title="Days since last run">{{raceStat.last_run_days}}</sup>
-                                                                            <b ng-if="!raceStat.historyStatistics.cd && raceStat.historyStatistics.c" title="Course">{{raceStat.historyStatistics.c}}</b>
-                                                                            <b ng-if="!raceStat.historyStatistics.cd && raceStat.historyStatistics.d" title="Distance">{{raceStat.historyStatistics.d}}</b>
-                                                                            <b ng-if="raceStat.historyStatistics.cd" title="Course and Distance">{{raceStat.historyStatistics.cd}}</b>
-                                                                            <b ng-if="raceStat.historyStatistics.bf" title="Beaten Favourite">{{raceStat.historyStatistics.bf}}</b>
-                                                                        </p>
-                                                                        <span class="text-small">{{raceStat.trainerName}} <b ng-show="raceStat.jockeyInfo.name">/ {{raceStat.jockeyInfo.name}}</b></span>
+                                                    <div class="right-left-events-wrapper" ng-class="{'one-column-view': marketsInOneColumn.enabled}">
+                                                        <div class="live-events-column-v3" ng-repeat="marketPack in selectedMarketsGroups track by $index">
+                                                            <div class="market-ciew-v3"
+                                                                 ng-repeat="market in marketPack track by market.id">
+                                                                <div class="market-title-v3" ng-click="collapsedMarkets[openGame.id][market.name] = !collapsedMarkets[openGame.id][market.name]" ng-class="{'closed': collapsedMarkets[openGame.id][market.name] }" data-title="{{market.name}}">
+                                                                    <ul class="market-icons-t-r" ng-click="$event.stopPropagation()">
+                                                                        <li class="link-icon-market-v3" ng-show="!$root.conf.hideExpressIds && (market.express_id || market.express_id == 0)" title="Events from different groups can be combined in combined bets" trans="attr-only">
+                                                                            <span ng-hide="$root.conf.hideExpressIds" title="Events from different groups can be combined in combined bets" trans="attr-only">{{market.express_id}}</span>
+                                                                        </li>
+                                                                        <li class="cashout-icon-market-v3" title="Cash-out available" trans ng-show="market.cashout && ((!$root.env.live && !!$root.partnerConfig.is_cashout_prematch) || ($root.env.live && !!$root.partnerConfig.is_cashout_live))"></li>
+                                                                    </ul>
+                                                                </div>
+                                                                <div class="l-b column-{{market.col_count || 1}}" ng-class="{'default': market.col_count > 5}">
+                                                                    <div class="single-events-b-v3"  ng-repeat="event in market.events track by event.id" ng-click="bet(event, market, openGame);" title="{{event.name}} {{ displayBase(event, market)}}" ng-class="{'pointer-events-none': event.is_empty, 'active': isEventInBetSlip(event), 'blocked': ((event.price | oddConvert:'decimal') == 1 || openGame.is_blocked)}">
+                                                                        <div class="max-bet-tooltip-v3" onmouseover="displayEventLimit(event)" onmouseleave="cancelDisplayEventLimit(event)" data-id="{{event.id}}" ng-class="{'maxbet-enabled': $root.env.authorized && $root.conf.displayEventsMaxBet}">
+                                                                        </div>
+                                                                        <b class="p-v {{event.price_change == null? '' : ({true: 'up-', false: 'down'}[event.price_change > 0] + (event.price_change % 2)) }}" ng-show="(event.price | oddConvert:'decimal') != 1 && !openGame.is_blocked">{{event.price|oddConvert:$root.env.oddFormat:null:market.display_key}}</b>
                                                                     </div>
-                                                                </li>
-                                                                <li><div class="text-small">{{raceStat.age}}<span class="text-small">{{raceStat.weight}}</span></div></li>
-                                                                <li>{{raceStat.formFigures}}</li>
-                                                                <li class="odds  preview" ng-bind="raceStat.event.previousPrice?(raceStat.event.previousPrice|oddConvert:env.oddFormat):''"></li>
-                                                                <li class="odds" ng-class="{'no-odd': !raceStat.event.price && raceStat.event.sp_enabled, 'no-odd-both':!raceStat.event.price && !raceStat.event.sp_enabled}" ng-if="conf.enableNewHorseRacingTemplate">
-                                                                    <div class="bets" ng-click="bet(raceStat.event, (openGame.market | firstElement), openGame) ; $event.stopPropagation();" ng-if="raceStat.event.price" ng-class="{'active': isEventInBetSlip(raceStat.event)}">
-                                                                        <span class="{{raceStat.event.price_change == null? '' : ({true: 'up-', false: 'down'}[raceStat.event.price_change > 0] + (raceStat.event.price_change % 2)) }}">{{raceStat.event.price|oddConvert:env.oddFormat:null:openGame.market.display_key}}</span>
-                                                                    </div>
-                                                                </li>
-                                                                <li class="odds" ng-class="{'no-odd': !raceStat.event.sp_enabled}" ng-if="conf.enableNewHorseRacingTemplate">
-                                                                    <div class="bets" ng-click="bet(raceStat.event, (openGame.market | firstElement), openGame, 'sp') ; $event.stopPropagation();" ng-if="raceStat.event.sp_enabled" ng-class="{'active': isEventInBetSlip(raceStat.event,'sp')}">
-                                                                        {{raceStat.event.sp_enabled?'SP':''}}
-                                                                    </div>
-                                                                </li>
-                                                            </ul>
-                                                            <ul class="favorite" ng-if="openGame.info.race.favourite && conf.enableNewHorseRacingTemplate">
-                                                                <li></li>
-                                                                <li></li>
-                                                                <li class="main-name">
-                                                                    Favourite
-                                                                </li>
-                                                                <li></li>
-                                                                <li></li>
-                                                                <li class="disabled-cell" ng-class="{'no-odd-both': !openGame.info.race.favourite.sp_enabled}"></li>
-                                                                <li class="fixed-small odds" ng-class="{'no-odd': !openGame.info.race.favourite.sp_enabled}">
-                                                                    <div class="bets" ng-click="bet(openGame.info.race.favourite, (openGame.market | firstElement), openGame, 'sp') ; $event.stopPropagation();" ng-if="openGame.info.race.favourite.sp_enabled" ng-class="{'active': isEventInBetSlip(openGame.info.race.favourite,'sp')}">
-                                                                        {{openGame.info.race.favourite.sp_enabled?'SP':''}}
-                                                                    </div>
-                                                                </li>
-                                                            </ul>
-                                                            <ul class="favorite" ng-if="openGame.info.race.second_favourite && conf.enableNewHorseRacingTemplate">
-                                                                <li></li>
-                                                                <li></li>
-                                                                <li class="main-name">
-                                                                    2nd Favourite
-                                                                </li>
-                                                                <li></li>
-                                                                <li></li>
-                                                                <li class="disabled-cell" ng-class="{'no-odd-both': !openGame.info.race.second_favourite.sp_enabled}"></li>
-                                                                <li class="fixed-small odds" ng-class="{'no-odd': !openGame.info.race.second_favourite.sp_enabled}">
-                                                                    <div class="bets" ng-click="bet(openGame.info.race.second_favourite, (openGame.market | firstElement), openGame, 'sp') ; $event.stopPropagation();" ng-if="openGame.info.race.second_favourite.sp_enabled" ng-class="{'active': isEventInBetSlip(openGame.info.race.second_favourite,'sp')}">
-                                                                        {{openGame.info.race.second_favourite.sp_enabled?'SP':''}}
-                                                                    </div>
-                                                                </li>
-                                                            </ul>
-                                                            <ul class="non-runner" ng-repeat="raceStat in openGame.info.race.nonRunners" ng-if="conf.enableNewHorseRacingTemplate">
-                                                                <li>
-                                                                    {{raceStat.runnerNum}}<br /> <span ng-show="raceStat.drawn">({{raceStat.drawn}})</span>
-                                                                </li>
-                                                                <li class="jockey-colors"><img ng-src="{{raceStat.jockeyInfo.colourFileUrl}}" /></li>
-                                                                <li class="main-name" title="{{raceStat.lastRunDays}} {{raceStat.historyStatistics.c}} {{raceStat.historyStatistics.d}} {{raceStat.historyStatistics.cd}} {{raceStat.historyStatistics.bf}}">
-                                                                    <div>
-                                                                        <p>
-                                                                            {{raceStat.name}}<sup title="Days since last run">{{raceStat.lastRunDays}}</sup>
-                                                                            <b ng-if="!raceStat.historyStatistics.cd && raceStat.historyStatistics.c" title="Course">{{raceStat.historyStatistics.c}}</b>
-                                                                            <b ng-if="!raceStat.historyStatistics.cd && raceStat.historyStatistics.d" title="Distance">{{raceStat.historyStatistics.d}}</b>
-                                                                            <b ng-if="raceStat.historyStatistics.cd" title="Course and Distance">{{raceStat.historyStatistics.cd}}</b>
-                                                                            <b ng-if="raceStat.historyStatistics.bf" title="Beaten Favourite">{{raceStat.historyStatistics.bf}}</b>
-                                                                        </p>
-                                                                        <span class="text-small">{{raceStat.trainerName}} <b ng-show="raceStat.jockeyInfo.name">/ {{raceStat.jockeyInfo.name}}</b></span>
-                                                                    </div>
-                                                                </li>
-                                                                <li><div class="text-small">{{raceStat.age}}<span class="text-small">{{raceStat.weight}}</span></div></li>
-                                                                <li>{{raceStat.formFigures}}</li>
-                                                                <li></li>
-                                                                <li><div title="Non Runner">Non Runner</div></li>
-                                                            </ul>
-                                                        </div>
-                                                        <div class="each-way" ng-show="conf.showEachWay">
-                                                            <div ng-show="(openGame.market|firstElement).ew_coeff > 1">
-                                                                <span>EW:</span>
-                                                                {{'1/'+ (openGame.market|firstElement).ew_coeff}}&nbsp;
-                                                                {{eachWayPlace((openGame.market|firstElement).ew_place)}}
+                                                                </div>
                                                             </div>
-                                                            <div ng-show="!((openGame.market|firstElement).ew_coeff) || (openGame.market|firstElement).ew_coeff < 2" trans>Win Only</div>
-                                                            <div class="rule-four" ng-show="openGame.info.race.rule4" trans>There may be a Rule 4 on this Race</div>
                                                         </div>
                                                     </div>
 

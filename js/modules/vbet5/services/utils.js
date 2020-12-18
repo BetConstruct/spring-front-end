@@ -6,7 +6,7 @@
  * Utility functions
  */
 
-VBET5.service('Utils', ['$timeout', '$filter', '$location', '$route', '$window', '$cookies', 'Config', function ($timeout, $filter, $location, $route, $window, $cookies, Config) {
+VBET5.service('Utils', ['$rootScope', '$timeout', '$filter', '$location', '$route', '$window', '$cookies', '$q', 'Config', function ($rootScope, $timeout, $filter, $location, $route, $window, $cookies, $q, Config) {
     'use strict';
     var Utils = {};
     var bodyWrapperClasses = {};
@@ -1473,7 +1473,7 @@ VBET5.service('Utils', ['$timeout', '$filter', '$location', '$route', '$window',
      *  Fix domain changes
      */
     Utils.fixDomainChanges = function fixDomainChanges(config, product) {
-        if ({"localhost":1, "staging.betconstruct.int":1}[$window.location.hostname]) {return;}
+        if ({"localhost":1, "staging.betconstruct.int":1}[$window.location.hostname] || Config.disableAutofixDomainChanges) {return;}
 
         var locationHost = $window.location.hostname.split(/\./);
         var existedDomain, currentDomain = (locationHost.length === 4) ? locationHost.slice(-3).join(".") : locationHost.slice(-2).join(".");
@@ -2017,6 +2017,127 @@ VBET5.service('Utils', ['$timeout', '$filter', '$location', '$route', '$window',
      */
     Utils.calculatePermutationCount = function calculatePermutationCount(n, k) {
         return Utils.factorial(n) / Utils.factorial(n - k);
+    };
+
+    /**
+     * @ngdoc method
+     * @name calculateTax
+     * @methodOf vbet5.service:Utils
+     * @description Calculate tax for given possible win and stake
+     * @param {Number} possibleWin
+     * @param {Number} stake
+     */
+    Utils.calculateTax =  Utils.memoize(function calculateTax(possibleWin, stake) {
+        var tax = 0;
+        var taxPercent = $rootScope.partnerConfig.tax_percent;
+        if ($rootScope.partnerConfig.tax_type === 20 && taxPercent) {
+            tax =  possibleWin  * (taxPercent / 100);
+        } else if ({1: 1, 2:1}[$rootScope.partnerConfig.tax_type]) {
+            var ranges = $rootScope.partnerConfig.tax_amount_ranges;
+            var netWin = possibleWin - ($rootScope.partnerConfig.tax_type === 1? stake : 0);
+            var isContains = false;
+            if (ranges && ranges.length) {
+                for (var i = ranges.length; i--;) {
+                    var range = ranges[i];
+                    if (range.entire_amount?(netWin >= range.from && netWin < range.to):(netWin > range.from && netWin <= range.to)) {
+                        isContains = true;
+                        break;
+                    }
+                }
+            }
+            if (!isContains) {
+                tax =  netWin * (taxPercent / 100);
+            } else {
+                var length = ranges.length;
+                var remain = netWin;
+                for (var i = 0; i < length; ++i) {
+                    var range = ranges[i];
+                    if (range.entire_amount?remain > range.to:remain >= range.to) {
+                        tax += range.to * (range.percent / 100);
+                        remain -= range.to;
+                    } else {
+                        tax += remain * (range.percent / 100);
+                        break;
+                    }
+
+                }
+            }
+        }
+        return tax;
+    });
+
+    /**
+     * @ngdoc method
+     * @name getFirstKeyValue
+     * @methodOf vbet5.service:Utils
+     * @description get first key value of object
+     * @param {Object} obj
+     * @param {Function} callback
+     * */
+     Utils.getFirstKeyValue = function getFirstKeyValue(obj, callback) {
+            if (!obj) {
+                return;
+            }
+            var keys = Object.keys(obj);
+            if (keys.length > 0) {
+                callback(obj[keys[0]]);
+            }
+     };
+
+    /**
+     * @ngdoc method
+     * @name getSMSCode
+     * @methodOf vbet5.service:Utils
+     *
+     * @description open popup to get sms confirmation code
+     * @param {int} type the  possible values: 1 - registration, 2 - login,  3 - passwordChange,  4 - profileUpdate, 5 - passwordReset, 13 - withdraw
+     * @param {string} userIdentifier the user identifier
+     * @param {string} [confirmationCode] the  predefined confirmation code
+     * @param {string} [error] - the predefined error
+     *
+     * @returns {Object} promise
+     * */
+    Utils.getSMSCode = function getSMSCode(type, userIdentifier, confirmationCode, error) {
+        var defer = $q.defer();
+        var result = defer.promise;
+
+        $rootScope.broadcast('globalDialogs.addDialog', {
+            template: 'templates/popup/sms-verification.html',
+            type: 'template',
+            tag: "SMS_VERIFICATION_POPUP",
+            state: {
+                type: type,
+                userIdentifier: userIdentifier,
+                confirmationCode: confirmationCode || "",
+                error: error || "",
+                successCallBack: function(code) {
+                    if (code) {
+                        defer.resolve(code);
+                    } else {
+                        defer.reject(code);
+                    }
+                }
+            },
+            hideButtons: true,
+            hideCloseButton: true
+        });
+        return result;
+    };
+
+    Utils.getPaymentIcons = function getPaymentIcons(payments) {
+       return payments.sort(Utils.orderSorting).reduce(function (accumulator, current) {
+            if (!current.isTransferToLinkedService && (current.canDeposit || current.canWithdraw) && !current.hidePaymentInFooter) {
+                accumulator.push({
+                    name: current.name,
+                    image: current.image
+                });
+            }
+            return accumulator;
+        }, []);
+    };
+
+    Utils.getSpriteUrl = function getSpriteUrl(Config, WPConfig) {
+        return (Config.main.cmsDataDomain ||  WPConfig.wpUrl.split("/json")[0]) +  Config.main.footer.imageInsteadPayments + "?v=" + Config.releaseDate;
     };
 
     return Utils;

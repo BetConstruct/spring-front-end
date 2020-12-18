@@ -229,7 +229,7 @@ VBET5.controller('widgetCtrl', ['$rootScope', '$scope', 'TimeoutWrapper', '$wind
             loadSoccerLiveGames();
             return;
         }
-
+        Config.env.live = true;
         var request = {
             'source': 'betting',
             'what': {

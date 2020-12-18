@@ -29,7 +29,7 @@
                             <!--<div class="e-game-arrow"></div>-->
                         </div>
 
-                        <div ng-if="game.availableSequences.length > 1" class="time-filter-v3" ng-class="{'active': game.seqExpanded}">
+                        <div ng-if="game.availableSequences.length > 1" hide-on-click state-flag-var="game.seqExpanded" class="time-filter-v3" ng-class="{'active': game.seqExpanded}">
                             <p ng-click="game.seqExpanded = !game.seqExpanded">
                                 <span ng-bind="('PERIOD' === game.selectedSequence.subKey) ? (asianMarkets.periodsBySports[game.sport.alias] + ' ' + game.selectedSequence.sequence): (game.selectedSequence.sequence? game.selectedSequence.subKey + ' ' + game.selectedSequence.sequence : game.selectedSequence.subKey)|translate"></span>
                                 <i class="arrow-rotate-filter-v3"></i>

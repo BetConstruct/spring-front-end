@@ -50,12 +50,15 @@
       }
     }
   }
-  .game-additional-icons > ul,
+  .switchers-markets,
   .column-view-switcher-vs {
     display: none;
   }
+  div.markets-group-wrap-v3 > ul {
+    width: 100%;
+  }
 }
-@media screen and (max-width: 1279px) {
+@media screen and (max-width: 1400px) {
   .left-column-v3:not(.live) {
     position: absolute;
     top: 0;
@@ -75,13 +78,6 @@
     &:last-child{
       max-width: 32%;
     }
-  }
-  .left-menu-closed-v3 > .left-column-v3 {
-    animation: 240ms closed-l-nav-v ease-in-out;
-  }
-  @keyframes closed-l-nav-v {
-    0%{transform: translate3d(-100px,0,0);}
-    100%{transform: translate3d(0,0,0);}
   }
   .center-column-v3:not(.live){
     @include ltr {
@@ -113,9 +109,6 @@
         border-right-width: 7px;
       }
     }
-  }
-  .classic-view-column-v3 .aic-handicup-cell, .classic-view-column-v3 .aic-over-under-cell {
-    display: none !important;
   }
   .favorite-game-open-euro2016 > .prematch-games-list ~ .live-game-view-contain-v3 {
     top: 0;
@@ -203,9 +196,6 @@
           padding-right: 0;
         }
       }
-    }
-    .dashboard-slider ~ .live-events-column-v3 {
-      height: calc(100% - 308px);
     }
   }
 }

@@ -1,12 +1,8 @@
-<div ng-controller="cmsPagesCtrl" ng-init="loadBanners('sport-event-view-banner-'+env.lang,false);" class="product-list-contain no-select-j">
+<div ng-controller="cmsPagesCtrl" ng-init="loadBanners('sport-event-view-banner-'+env.lang,false);" class="banner-list-contain no-select-j">
     <vbet-loader ng-show="!bannerObjects['sport-event-view-banner-'+env.lang][$root.env.authorized]"></vbet-loader>
-    <ul class="column-{{ bannerObjects['sport-event-view-banner-'+env.lang][$root.env.authorized].length }}" ng-show="bannerObjects['sport-event-view-banner-'+env.lang][$root.env.authorized]">
-        <li ng-repeat="banner in bannerObjects['sport-event-view-banner-'+env.lang][$root.env.authorized] track by $index">
-            <div class="sportsbook-banners-j">
-                <a ng-href="{{banner.link}}" target="{{banner.linktarget}}" ng-click="banner.linktarget !=='_blank' && handleBannersLinks($event.currentTarget)">
-                    <img ng-src="{{banner.image}}" ng-show="banner.image">
-                </a>
-            </div>
-        </li>
-    </ul>
+    <div class="banner-list-wrapper" ng-show="bannerObjects['sport-event-view-banner-'+env.lang][$root.env.authorized]">
+        <a ng-href="{{banner.link}}" target="{{banner.linktarget}}" ng-click="banner.linktarget !=='_blank' && handleBannersLinks($event.currentTarget)" ng-repeat="banner in bannerObjects['sport-event-view-banner-'+env.lang][$root.env.authorized] track by $index">
+            <img ng-src="{{banner.image}}" ng-show="banner.image">
+        </a>
+    </div>
 </div>

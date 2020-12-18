@@ -19,6 +19,164 @@
     padding: 0 0 0 6px;
   }
 }
+
+// Mixed matches start
+.prematch-view-v3 .live-game-view-contain-v3.mixed-matches-games {
+  grid-gap: 1px 0;
+}
+.mixed-matches {
+  float: left;
+  width: 100%;
+  position: relative;
+  margin-bottom: 6px;
+  border-radius: 2px;
+  overflow: hidden;
+  &:after {
+    content: "\e671";
+    position: absolute;
+    top: 0;
+    color: $c16-tp-3;
+    pointer-events: none;
+    font: 20px/28px icomoon;
+    @include ltr {
+      right: 5px;
+    }
+    @include rtl {
+      left: 5px;
+    }
+  }
+  &.closed:after{
+    content: "\e670";
+  }
+}
+
+.mixed-matches-tab {
+  float: left;
+  display: table;
+  table-layout: fixed;
+  width: 100%;
+  height: 28px;
+  color: $c16-tp-3;
+  background: $c16-tp-9;
+  font: 12px/14px $font-f;
+  > li {
+    display: table-cell;
+    vertical-align: middle;
+    &:not(:nth-child(2)) {
+      padding: 0 30px;
+      box-sizing: border-box;
+    }
+    &:nth-child(2) {
+      width: 20px;
+    }
+    &:first-child {
+      @include ltr {
+        text-align: right;
+      }
+      @include rtl {
+        text-align: left;
+      }
+    }
+  }
+}
+.mixed-matches-teams {
+  float: left;
+  width: 100%;
+  margin-top: 1px;
+  > ul {
+    float: left;
+    width: 100%;
+    height: 28px;
+    display: table;
+    table-layout: fixed;
+    background: $c16-tp-9;
+    > li {
+      display: table-cell;
+      vertical-align: middle;
+      &:not(.mixed-matches-vs) {
+        box-sizing: border-box;
+        color: rgba($c16-tp-3,0.9);
+      }
+      &:first-child {
+        @include ltr {
+          padding-right: 30px;
+        }
+        @include rtl {
+          padding-left: 30px;
+        }
+        .mixed-matches-name {
+          @include ltr {
+            float: left;
+            text-align: right;
+          }
+          @include rtl {
+            float: right;
+            text-align: left;
+          }
+        }
+        stats-logo {
+          @include ltr {
+            float: right;
+          }
+          @include rtl {
+            float: left;
+          }
+        }
+      }
+      &:last-child {
+        @include ltr {
+          padding-left: 30px;
+        }
+        @include rtl {
+          padding-right: 30px;
+        }
+        .mixed-matches-name {
+          @include ltr {
+            float: right;
+          }
+          @include rtl {
+            float: left;
+          }
+        }
+        stats-logo {
+          @include ltr {
+            float: left;
+          }
+          @include rtl {
+            float: right;
+          }
+        }
+      }
+    }
+    + ul {
+      margin-top: 1px;
+    }
+  }
+  stats-logo {
+    display: block;
+    width: 20px;
+    height: 20px;
+    margin-top: 4px;
+    > img {
+      width: 100% !important;
+      height: 100% !important;
+    }
+  }
+}
+.mixed-matches-vs {
+  width: 20px;
+  color: $c16-tp-3;
+  text-align: center;
+  font: 500 10px/12px $font-f;
+}
+.mixed-matches-name {
+  padding: 0 8px;
+  box-sizing: border-box;
+  width: calc(100% - 20px);
+  font: 12px/28px $font-f;
+}
+// Mixed matches end
+
 //Statistic
 .statistic-view-v3 {
   float: left;
@@ -44,7 +202,8 @@
 .games-view-wrapper-v3 .md-progress-circular,
 .prematch-list-view-v3 .md-progress-circular {
   box-sizing: border-box;
-  margin: 200px auto auto;
+ // margin: 200px auto auto;
+  margin: 100px auto 100px;
 }
 .Info-text-view-market-v3 {
   box-sizing: border-box;
@@ -85,7 +244,12 @@
   &.one-column-view {
     .live-events-column-v3 {
       width: 100%;
-      padding: 0;
+      @include ltr {
+        padding: 0;
+      }
+      @include rtl {
+        padding: 0;
+      }
     }
   }
 }
@@ -114,12 +278,8 @@
       padding-right: 3px;
     }
   }
-  &.single-market-showed {
+  &:only-child {
     width: 100%;
-    padding-right: 0;
-    + .live-events-column-v3 {
-      display: none;
-    }
   }
 }
 .prematch-view-v3 .live-events-column-v3 {
@@ -766,7 +926,7 @@
     display: inline-block;
     vertical-align: top;
     position: relative;
-    content: "Max: " attr(data-title) "";
+    content: attr(data-title);
     font-weight: bold;
     background: $brand-color-1;
     border-radius: 2px;
@@ -1023,7 +1183,7 @@
   text-overflow: ellipsis;
   overflow: hidden;
   white-space: nowrap;
-  vertical-align: top;
+  vertical-align: middle;
   display: inline-block;
   &:first-child:nth-last-child(2) {
     max-width: calc(100% - 1px);
@@ -1099,16 +1259,7 @@
   }
   @media screen and (min-width: 1280px) {
     &.multi-column-view {
-      width: 60%;
-    }
-  }
-  @media screen and (max-width: 1599px) {
-    &.HorseRacing,
-    &.SISGreyhound {
-      width: 33%;
-      ~ .live-game-view-contain-v3 {
-        width: 67%;
-      }
+      width: 56%;
     }
   }
   &:before {
@@ -1153,16 +1304,20 @@
   font-weight: normal;
 }
 .prematch-region-icon-v3 {
-  box-sizing: border-box;
+  margin-top: 10px;
   display: inline-block;
+  box-sizing: border-box;
   font-weight: normal;
   @include ltr {
     float: left;
-    margin: 10px 8px 0 0;
+    margin-right: 8px;
   }
   @include rtl {
     float: right;
-    margin: 10px 0 0 8px;
+    margin-left: 8px;
+  }
+  &.boostedbets {
+    margin-top: 2px;
   }
 }
 .prematch-markets-filter-v3 {
@@ -1241,14 +1396,9 @@
     will-change: transform;
   }
   @include rtl {
-    padding: 0 0 0 1px;
+    padding: 0 0 0 6px;
     will-change: inherit;
     transform: inherit;
-  }
-  > include-template {
-    @include rtl {
-      margin: 0 0 0 4px;
-    }
   }
 }
 .prematch-view-v3 .live-game-view-contain-v3 {
@@ -1274,8 +1424,17 @@
   display: block;
 }
 @media screen and (min-width: 1280px) {
-  .prematch-view-v3 .prematch-games-list.multi-column-view ~ .live-game-view-contain-v3 {
-    width: 40%;
+  .prematch-view-v3 .prematch-games-list {
+    &.multi-column-view ~ .live-game-view-contain-v3 {
+      width: 44%;
+    }
+    &.HorseRacing,
+    &.SISGreyhound {
+      width: 33%;
+      ~ .live-game-view-contain-v3 {
+        width: 67%;
+      }
+    }
   }
 }
 .prematch-view-v3 .all-game-info-container-v3 {
@@ -1320,10 +1479,11 @@
   }
 }
 .prematch-view-v3 {
-  .game-additional-icons > ul {
+  .switchers-markets {
     display: none;
   }
-  .live-events-column-v3 {
+  .live-events-column-v3,
+  div.markets-group-wrap-v3 > ul {
     width: 100%;
   }
 }
@@ -1827,21 +1987,24 @@
   box-sizing: border-box;
   font: 16px/20px icomoon;
 }
-.game-icons-view-list-v3 > ul > li.statistic-icon-market-v3:before {
+.game-icons-view-list-v3 > ul > li.statistic-icon-market-v3:before,
+.game-icons-view-list-v3 > ul > li.bet-builder-icon-market-v3:before,
+.game-icons-view-list-v3 > ul > li.stream-icon-market-v3:before {
   box-sizing: border-box;
-  content: "\e6b8";
-  color: $c16-tp-4;
-  font-size: 6 + $size-font;
-  position: relative;
-  top: -1px;
-}
-.game-icons-view-list-v3 > ul > li.bet-builder-icon-market-v3:before {
-  box-sizing: border-box;
-  content: "\ea5f";
   color: $c16-tp-4;
   font-size: 8 + $size-font;
   position: relative;
   top: -1px;
+}
+.game-icons-view-list-v3 > ul > li.statistic-icon-market-v3:before {
+  content: "\e6b8";
+  font-size: 6 + $size-font;
+}
+.game-icons-view-list-v3 > ul > li.bet-builder-icon-market-v3:before {
+  content: "\ea5f";
+}
+.game-icons-view-list-v3 > ul > li.stream-icon-market-v3:before {
+  content: "\ea9c";
 }
 .tv-icon-market-v3:before {
   box-sizing: border-box;
@@ -1862,7 +2025,7 @@
   top: 38px;
   right: 0;
 }
-.livecalendar .animation-video-box-v3,
+
 .overview .animation-video-box-v3 {
   display: none;
 }
@@ -1872,6 +2035,50 @@
   .price {
     display: none;
   }
+}
+div.switchers-markets {
+  width: 44px;
+  padding: 0 4px;
+  background: $c16-sp-10;
+  box-sizing: border-box;
+  border-radius: 2px 2px 0 0;
+  font: 11px/24px icomoon;
+  @include ltr {
+    float: right;
+  }
+  @include rtl {
+    float: left;
+  }
+  > i {
+    display: block;
+    padding: 0 3px;
+    color: $c16-tp-7;
+    font: normal 11px/33px icomoon;
+    transition: 250ms color;
+    @include ltr {
+      float: left;
+    }
+    @include rtl {
+      float: right;
+    }
+    &.active, &:hover {
+      color: $c16-tp-6;
+    }
+    &.active {
+      pointer-events: none;
+    }
+  }
+  + ul {
+    width: calc(100% - 46px);
+  }
+}
+
+.column-view-j:before {
+  content: "\e98e";
+}
+
+.list-view-j:before {
+  content: "\e98d";
 }
 .markets-group-wrap-v3 {
   float: left;
@@ -1887,11 +2094,16 @@
   z-index: 200;
   margin: 0 0 4px;
   > ul {
+    width: 100%;
     display: table;
     table-layout: fixed;
     position: relative;
-    float: left;
-    width: 100%;
+    @include ltr {
+      float: left;
+    }
+    @include rtl {
+      float: right;
+    }
     > li {
       display: table-cell;
       box-sizing: border-box;
@@ -2324,4 +2536,1155 @@
   border-radius: 2px 2px 0 0;
   margin: 0 0 3px;
   color: $text-palette-3;
+}
+
+// add horse rase styles new
+
+.horse-slider-area {
+  float: left;
+  width: 100%;
+  margin-bottom: 10px;
+  .product-list-contain > ul > li {
+    padding: 0;
+  }
+  img {
+    float: left;
+    display: block;
+    width: 100%;
+    max-height: 300px;
+  }
+}
+.races-info-h {
+  float: left;
+  width: 100%;
+}
+.upcoming-races{
+  > h2{
+    float: left;
+    width: 100%;
+    box-sizing: border-box;
+    border-radius: 2px;
+    height: 26px;
+    padding: 0 10px;
+    line-height: 26px;
+    font-size: 12px;
+    background: red;
+    background: $c16-sp-9;
+    color: $c16-tp-2;
+    font-weight: bold;
+    margin-bottom: 5px;
+  }
+  .race-info{
+    box-sizing: border-box;
+    width: 100%;
+    float: left;
+    display: grid;
+    grid-column-gap: 4px;
+    grid-template-rows: auto;
+    grid-template-columns: repeat(auto-fit,minmax(33%,1fr));
+    grid-row-gap: 4px;
+  }
+}
+.one-race-info{
+  background: $c16-sp-9;
+  border-radius: 2px;
+  height: 66px;
+  padding: 10px;
+  box-sizing: border-box;
+  cursor: pointer;
+  > p{
+    float: left;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 0 0 10px 0;
+    position: relative;
+    &:after{
+      display: block;
+      content: "\e672";
+      font: 16px/18px icomoon;
+      cursor: pointer;
+      position: absolute;
+      top: 0;
+      color: $c16-tp-5;
+      @include ltr{
+        right: 0;
+      }
+      @include rtl{
+        left: 0;
+        content: '\e673';
+      }
+    }
+    > b {
+      font-size: 11px;
+      line-height: 23px;
+      font-weight: normal;
+      background: $c16-sp-10;
+      width: 38px;
+      height: 23px;
+      border-radius: 4px;
+      color: $c16-tp-3;
+      display: inline-block;
+      text-align: center;
+      vertical-align: middle;
+    }
+    > span {
+      display: inline-block;
+      vertical-align: middle;
+      color: $c16-tp-3;
+      font-size: 12px;
+      line-height: 14px;
+      max-width: calc(100% - 100px);
+      @include ltr{
+        padding: 0 0 0 10px;
+      }
+      @include rtl{
+        padding: 0 10px 0 0;
+      }
+    }
+    > i {
+      position: absolute;
+      top: 0;
+      color: $c16-tp-5;
+      font-size: 12px;
+      line-height: 18px;
+      font-style: normal;
+      @include ltr {
+        right: 32px;
+      }
+      @include rtl {
+        left: 32px;
+      }
+    }
+  }
+  .add-info-h{
+    float: left;
+    width: 100%;
+    position: relative;
+    > b{
+      display: inline-block;
+      vertical-align: top;
+      @include ltr{
+        float: left;
+      }
+      @include rtl{
+        float: right;
+      }
+    }
+    > span{
+      font-size: 11px;
+      line-height: 16px;
+      color: $c16-tp-5;
+      position: relative;
+      @include ltr{
+        float: left;
+        padding: 0 5px 0 10px;
+      }
+      @include rtl{
+        float: right;
+        padding: 0 10px 0 5px;
+      }
+      &:first-child{
+        padding-right: 20px;
+        &:after{
+          height: 100%;
+          background: black;
+          width: 1px;
+          display: block;
+          content: '';
+          position: absolute;
+          right: 10px;
+          top: 0;
+        }
+      }
+      //&:last-child{
+      //  float: right;
+      //}
+    }
+  }
+}
+.single-game-info-h{
+  float: left;
+  width: 100%;
+  margin-top: 10px;
+  &.active{
+    .open-full-info-h{
+      display: block;
+    }
+  }
+  .region-info-h.active {
+    .arrow-view-h3{
+      &:before{
+        content: "\e671";
+      }
+    }
+  }
+}
+.region-info-h{
+  float: left;
+  width: 100%;
+  height: 26px;
+  line-height: 26px;
+  border-radius: 2px;
+  box-sizing: border-box;
+  background: $c16-sp-9;
+  color: $c16-tp-3;
+  position: relative;
+  cursor: pointer;
+  margin-top: 10px;
+  @include ltr{
+    padding: 0 10px 0 40px;
+  }
+  @include rtl{
+    padding: 0 40px 0 10px;
+  }
+  .flag-view-v3{
+    top: 4px;
+  }
+  .arrow-view-h3{
+    box-sizing: border-box;
+    width: 30px;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    font: 16px/26px icomoon;
+    &:before{
+      content: "\e670";
+    }
+    @include ltr{
+      right: 0;
+    }
+    @include rtl{
+      left: 0;
+    }
+  }
+  .active{
+    .arrow-view-h3{
+      &:before{
+        content: "\e671";
+      }
+    }
+  }
+}
+.region-info-h.active + .open-full-info-h{
+  display: block;
+}
+.open-full-info-h{
+  float: left;
+  width: 100%;
+  display: none;
+  > ul{
+    float: left;
+    width: 100%;
+    box-sizing: border-box;
+    height: 26px;
+    line-height: 26px;
+    background: $c16-sp-10;
+    padding: 0 10px;
+    margin: 0 0 1px 0;
+    > li{
+      color: $c16-tp-5;
+      font-size: 12px;
+      cursor: pointer;
+      @include ltr{
+        float: left;
+        margin: 0 30px 0 0;
+      }
+      @include rtl{
+        float: right;
+        margin: 0 0 0 30px;
+      }
+      &.active{
+        color: $c16-tp-3;
+        box-shadow: 0 1px 0 $hero-color;
+      }
+    }
+  }
+}
+.race-start-houres{
+  margin: 0 0 3px 0;
+  width: 100%;
+  box-sizing: border-box;
+  display: inline-grid;
+  grid-column-gap:1px;
+  grid-template-rows: auto;
+  grid-template-columns: auto 10fr;
+}
+.st-h-holder{
+  background: $c16-sp-10;
+}
+.horse-name-inf{
+  width: 300px;
+  box-sizing: border-box;
+  padding: 10px;
+  min-height: 53px;
+  > p{
+    width: 100%;
+    position: relative;
+    font-size: 12px;
+    line-height: 14px;
+    color: $c16-tp-2;
+    box-sizing: border-box;
+    @include ltr{
+      padding: 0 20px 5px 0;
+    }
+    @include rtl{
+      padding: 0 5px 0 20px;
+    }
+    &:after{
+      content: "\e672";
+      font: 16px/18px icomoon;
+      cursor: pointer;
+      position: absolute;
+      top: 0;
+      color: $c16-tp-5;
+      display: block;
+      @include ltr{
+        right: 0;
+      }
+      @include rtl{
+        left: 0;
+        content: '\e673';
+      }
+    }
+  }
+  > span{
+    width: 100%;
+    color: $c16-tp-5;
+    font-size: 11px;
+    line-height: 13px;
+  }
+}
+.start-now-time{
+  width: 100%;
+  box-sizing: border-box;
+  display: grid;
+  grid-gap:1px;
+  grid-template-columns: repeat(auto-fit, minmax(58px, 1fr));
+  background: $c16-sp-10;
+}
+.start-now{
+  height: 26px;
+  padding: 0 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 0 1px $c16-sp-11;
+  color: $text-palette-4;
+}
+.horse-list-title{
+  float: left;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0  10px;
+  background: $c16-sp-9;
+  line-height: 34px;
+  color: $c16-tp-3;
+  position: relative;
+  > h2{
+    position: relative;
+    font-size: 12px;
+    font-weight: normal;
+    box-shadow: 0 1px 0 $c16-sp-12;
+    box-sizing: border-box;
+    height: 34px;
+    > span{
+      padding: 0 10px;
+      color: $c16-tp-3;
+      position: relative;
+      &.reg{
+        color: $c16-tp-5;
+        &:after{
+          content: '';
+          display: inline-block;
+          height: 14px;
+          width: 1px;
+          background: $c16-sp-12;
+          top: 0;
+          position: absolute;
+          @include ltr {
+            right: 0;
+          }
+          @include rtl {
+            left: 0;
+          }
+        }
+      }
+    }
+    > p{
+      color: $c16-tp-6;
+      @include ltr{
+        float: right;
+      }
+      @include rtl{
+        float: left;
+      }
+      > b {
+        font-size: 13px;
+        font-weight: normal;
+        vertical-align: middle;
+      }
+      > i{
+        font-style: normal;
+        position: relative;
+        vertical-align: middle;
+        padding: 0 16px;
+        &:after{
+          content: '';
+          display: inline-block;
+          height: 14px;
+          width: 1px;
+          background: $c16-sp-12;
+          right: 0;
+          top: 0;
+          position: absolute;
+        }
+        &:nth-last-child(2), &:last-child{
+          &:after{
+            display: none;
+          }
+        }
+        &.arrow-open-h{
+          width: 24px;
+          height: 100%;
+          color: $c16-tp-5;
+          padding: 0 10px;
+          &:before{
+            content: "\e670";
+            position: absolute;
+            top: -2px;
+            font: 18px/20px icomoon;
+            right: 0;
+          }
+        }
+      }
+    }
+    > b{
+      display: inline-block;
+      vertical-align: middle;
+
+    }
+  }
+  &.active{
+    > h2 > p > i.arrow-open-h:before{
+      content: "\e671";
+    }
+  }
+}
+.win-or-ew-contain{
+  .win-b{
+    position: relative;
+    .bets{
+      height: 100%;
+      line-height: 52px;
+      color: $c16-tp-3;
+      transition: color 240ms, background 240ms;
+      &:hover,
+      &.active {
+        color: set-color($hero-color);
+        background: $hero-color;
+      }
+    }
+    &.no-odd-both, &.no-odd, &.disabled-cell{
+      pointer-events: none;
+    }
+  }
+   li {
+     &:nth-last-child(3),
+     &.sp-header {
+       &.win-b{
+         pointer-events: none;
+       }
+     }
+   }
+}
+.join-handicap{
+  float: left;
+  width: 100%;
+  box-sizing: border-box;
+  margin: 0;
+  > h6{
+    float: left;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 0 10px;
+    font-size: 12px;
+    line-height: 34px;
+    height: 34px;
+    background: $c16-sp-9;
+    color: $c16-tp-2;
+    font-weight: normal;
+  }
+}
+.menu-swithcer{
+  float: left;
+  width: 100%;
+  box-sizing: border-box;
+  margin: 0 0 1px 0;
+  height: 30px;
+  line-height: 30px;
+  background: $c16-sp-10;
+  padding: 0 10px;
+  > a{
+      text-decoration: none;
+    color: $c16-tp-3;
+    font-size: 12px;
+    text-transform: uppercase;
+    display: inline-block;
+    @include ltr{
+      margin: 0 30px 0 0;
+    }
+    @include rtl{
+      margin: 0 0 0 30px;
+    }
+    &.active{
+      color: $c16-tp-2;
+      box-shadow: 0 1px 0 $hero-color;
+      font-weight: bold;
+    }
+  }
+}
+.horse-market-contain{
+  float: left;
+  width: 100%;
+  box-sizing: border-box;
+  > ul{
+    width: 100%;
+    display: table;
+    border-bottom: 1px solid $c16-sp-12;
+    > li{
+      background: $c16-sp-10;
+      display: table-cell;
+      vertical-align: middle;
+      height: 52px;
+      color: $c16-tp-3;
+      font-size: 14px;
+      &.num{
+        width: 40px;
+        text-align: center;
+      }
+      &.win-b{
+        width: 52px;
+        text-align: center;
+        font-size: 12px;
+        cursor: pointer;
+        @include ltr{
+          border-left: 1px solid $c16-sp-12;
+        }
+        @include rtl{
+          border-right: 1px solid $c16-sp-12;
+        }
+        .bets{
+          &.active{
+            background: $hero-color;
+            color: set-color($hero-color);
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            left: 0;
+            top: 0;
+            line-height: 52px;
+          }
+        }
+      }
+      &.name{
+        font-weight: bold;
+        color: $c16-tp-2;
+      }
+      &.active{
+        background: $hero-color;
+        color: set-color($hero-color);
+      }
+    }
+  }
+}
+.horse-non-runner {
+  position: absolute;
+  top: 50%;
+  right: 0;
+  width: 100px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-align: center;
+  transform: translateY(-50%);
+}
+.add-to-bs{
+  float: left;
+  width: 100%;
+  box-sizing: border-box;
+  height: 64px;
+  background: $c16-sp-10;
+  padding: 16px;
+  text-align: center;
+  > button{
+    height: 30px;
+    width: 380px;
+    text-align: center;
+    font-size: 12px;
+    text-transform: uppercase;
+    background: $brand-color-1;
+    color: set-color($brand-color-1);
+    border: 1px solid $brand-color-1;
+    margin: 0 auto;
+    cursor: pointer;
+    &:disabled{
+      background: transparent;
+      border: 1px solid  $c16-tp-5;
+      color: $c16-tp-5;
+      pointer-events: none;
+      opacity: 0.6;
+    }
+    &:hover{
+      background: lighten($brand-color-1, 10);
+      border: 1px solid lighten($brand-color-1, 10);
+    }
+  }
+}
+.win-or-ew-contain{
+  float: left;
+  width: 100%;
+  box-sizing: border-box;
+  > ul{
+    width: 100%;
+    display: table;
+    border-bottom: 1px solid $c16-sp-12;
+    > li{
+      display: table-cell;
+      vertical-align: middle;
+      width: 53px;
+      height: 52px;
+      min-width: 52px;
+      color: $c16-tp-3;
+      background: $c16-sp-10;
+      font-size: 12px;
+      line-height: 18px;
+      position: relative;
+      transition: background 240ms;
+      &.win-b{
+        width: 52px;
+        min-width: 52px;
+        text-align: center;
+        font-size: 12px;
+        cursor: pointer;
+        @include ltr{
+          border-left: 1px solid $c16-sp-12;
+        }
+        @include rtl{
+          border-right: 1px solid $c16-sp-12;
+        }
+        &:after {
+          display: block;
+          position: absolute;
+          top: 50%;
+          color: $c16-tp-3;
+          font: 16px/16px icomoon;
+          transform: translateY(-50%);
+          @include ltr {
+            right: 0;
+          }
+          @include  rtl {
+            left: 0;
+          }
+        }
+        &.arr-down {
+          &:after {
+            content: "\e670";
+          }
+        }
+        &.arr-up {
+          &:after {
+            content: "\e671";
+          }
+        }
+      }
+      &.num{
+        width: 50px;
+        @include ltr{
+          padding-left: 10px;
+        }
+        @include rtl{
+          padding-right: 10px;
+        }
+        > p{
+          &:first-child{
+            font-weight: bold;
+            font-size: 14px;
+          }
+        }
+        &:after {
+          display: block;
+          position: absolute;
+          top: 0;
+          color: $c16-tp-3;
+          font: 16px/36px icomoon;
+          @include ltr {
+            right: 26px;
+          }
+          @include  rtl {
+            left: 26px;
+          }
+        }
+        &.arr-down {
+          &:after {
+            content: "\e670";
+          }
+        }
+        &.arr-up {
+          &:after {
+          content: "\e671";
+          }
+        }
+      }
+      &.check{
+        width: 70px;
+      }
+      &.weight{
+        width: 96px;
+      }
+      &.horse{
+        min-width: 170px;
+        > p {
+          &:first-child {
+            font-weight: bold;
+            font-size: 14px;
+          }
+          > i{
+            display: inline-block;
+            font-size: 10px;
+            font-weight: normal;
+            position: relative;
+            top: -6px;
+            font-style: normal;
+            padding: 0 5px;
+          }
+          > b{
+            background: $c16-sp-8;
+            font-size: 10px;
+            margin: 0 5px;
+            width: 20px;
+            text-align: center;
+            font-weight: normal;
+            height: 15px;
+            box-sizing: border-box;
+            display: inline-block;
+            line-height: 15px;
+            text-transform: uppercase;
+          }
+        }
+      }
+      &.jockey{
+        min-width: 170px;
+      }
+      &.active {
+        background: $hero-color;
+      }
+    }
+    &:first-child{
+      li{
+        height: 26px;
+        background: $c16-sp-8;
+        color: $c16-tp-3;
+        &.win-b{
+          @include ltr{
+            border-left: none;
+          }
+          @include rtl{
+            border-right: none;
+          }
+        }
+      }
+    }
+  }
+}
+.all-races {
+  float: left;
+  width: 100%;
+  .md-progress-circular {
+    margin: 100px auto;
+  }
+
+}
+.all-races-content{
+  float: left;
+  width: 100%;
+  box-sizing: border-box;
+  margin-bottom: 10px;
+  .open-full-info-h{
+    display: block;
+  }
+  .horse-name-inf {
+    width: 150px;
+    min-height: inherit;
+    padding: 0;
+    > p{
+      text-transform: uppercase;
+      &:after{
+        display: none;
+      }
+    }
+  }
+  .race-start-houres{
+    padding: 10px 0;
+    border-bottom: 1px solid  $c16-sp-8;
+  }
+  .start-now{
+    background: $c16-sp-9;
+    &.active{
+      background: $c16-sp-10;
+    }
+  }
+}
+.go-tomenu{
+  float: left;
+  width: 100%;
+  box-sizing: border-box;
+  height: 26px;
+  background: $c16-sp-8;
+  margin-bottom: 10px;
+  > a {
+    display: inline-block;
+    font-size: 12px;
+    line-height: 26px;
+    color: $c16-tp-4;
+    text-decoration: none;
+    margin: 0 4px 0 0;
+    &:not(:last-child){
+      &:after{
+        content: '/';
+        display: inline-block;
+        padding-left: 5px
+      }
+    }
+    &:last-child{
+      color: $c16-tp-3;
+    }
+    &:first-child {
+      position: relative;
+      @include ltr {
+        padding-left: 28px;
+      }
+      @include rtl {
+        padding-right: 28px;
+      }
+      &:before {
+        content: "\e673";
+        display: block;
+        font: 20px/26px icomoon;
+        color: $c16-tp-2;
+        position: absolute;
+        top: 0;
+        @include ltr{
+          left: 0;
+        }
+        @include rtl{
+          right: 0;
+          content: '\e672';
+        }
+      }
+    }
+  }
+}
+.all-races-filter-b{
+  float: left;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 10px;
+  background: $c16-sp-10;
+}
+.set-filter-h{
+  width: 174px;
+  box-sizing: border-box;
+  height: 26px;
+  padding: 0 10px;
+  background: $c16-sp-8;
+  border-radius: 2px;
+  margin-bottom: 10px;
+  @include ltr{
+    float: left;
+  }
+  @include rtl{
+    float: right;
+  }
+  > span{
+    text-transform: uppercase;
+    font-size: 11px;
+    font-weight: bold;
+    color: $c16-tp-2;
+    position: relative;
+    line-height: 26px;
+    display: block;
+    @include ltr{
+      padding: 0 20px 0 0;
+    }
+    @include rtl{
+      padding: 0 0 0 20px;
+    }
+    &:after{
+      content: "\e670";
+      display: block;
+      font: 16px/26px icomoon;
+      position: absolute;
+      top: 0;
+      @include ltr{
+        right: 0;
+      }
+      @include rtl{
+        left: 0;
+      }
+    }
+  }
+  &.active{
+    > span{
+      &:after{
+        content: "\e671";
+      }
+    }
+  }
+}
+.each-way{
+  display: inline-block;
+  position: relative;
+  @include ltr{
+    padding: 0 10px 0 0;
+    float: left;
+  }
+  @include rtl{
+    padding: 0 0 0 10px;
+    float: right;
+  }
+  &:after{
+    content: '';
+    display: inline-block;
+    height: 14px;
+    width: 1px;
+    background: $c16-sp-12;
+    top: 8px;
+    position: absolute;
+    @include ltr{
+      right: 0;
+    }
+    @include rtl{
+      left: 0;
+    }
+  }
+
+}
+.hourse-popup{
+  float: left;
+  width: 100%;
+  box-sizing: border-box;
+  max-width: 400px;
+  > h2{
+    height: 60px;
+    padding: 20px;
+    font-size: 16px;
+    line-height: 18px;
+    background: $c16-sp-11;
+    color: $c16-tp-2;
+    position: absolute;
+    float: left;
+    width: 100%;
+    box-sizing: border-box;
+    top: 0;
+    left: 0;
+    text-transform: uppercase;
+    @include ltr{
+      text-align: left;
+    }
+    @include rtl{
+      text-align: right;
+    }
+  }
+}
+.forecast-tricast-bet-popup{
+  z-index: 10000;
+}
+.betslip-info-content{
+  float: left;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 10px 0;
+  margin-top: 30px;
+  > h6{
+    font-size: 12px;
+    color: $c16-tp-3;
+    font-weight: normal;
+    padding-bottom: 10px;
+    @include ltr{
+      text-align: left;
+    }
+    @include rtl{
+      text-align: right;
+    }
+  }
+}
+.box-betslip-p{
+  float: left;
+  width: 100%;
+  border: 1px solid $c16-sp-7;
+  border-radius: 3px;
+  background: $c16-sp-8;
+  box-sizing: border-box;
+  padding: 10px;
+  margin-bottom: 10px;
+  @include ltr{
+    text-align: left;
+  }
+  @include rtl{
+    text-align: right;
+  }
+   p{
+    font-size: 12px;
+    line-height: 18px !important;
+    color: $c16-tp-4 !important;
+  }
+  input[type=text]{
+    box-sizing: border-box;
+    background: $c16-sp-8;
+    border: none;
+    width: 100%;
+    height: 30px;
+    float: left;
+    box-shadow: 0 0 0 1px $c16-tp-6 inset;
+    font-family: $font-f;
+    font-size: 6 + $size-font;
+    line-height: 30px;
+    color: $c16-tp-3;
+    padding: 0 10px;
+    margin-top: 10px;
+  }
+  span{
+    margin-top: 10px;
+    font-size: 11px;
+    line-height: 13px;
+    color: $c16-tp-4;
+    float: left;
+    width: 100%;
+    > i{
+      display: inline-block;
+      color: $c16-tp-2;
+      font-style: normal;
+    }
+  }
+}
+.combination-t{
+  float: left;
+  width: 100%;
+  padding: 10px 0;
+  border-bottom: 1px solid $c16-sp-11;
+  p{
+    color: $c16-tp-4;
+    &.lingf{
+      color: $brand-color-2 !important;
+    }
+  }
+}
+.total-stake-b{
+  float: left;
+  width: 100%;
+  border-top: 1px solid $c16-sp-11;
+  padding-top: 10px;
+  p{
+    font-size: 12px;
+    float: left;
+    width: 100%;
+    color: $c16-tp-2 !important;
+    padding-bottom: 10px;
+    @include ltr{
+      text-align: left;
+    }
+    @include rtl{
+      text-align: right;
+    }
+    > i{
+      font-style: normal;
+      @include ltr{
+        float: right;
+      }
+      @include rtl{
+       float: left;
+      }
+    }
+    &.return{
+      font-weight: bold;
+      padding-bottom: 15px;
+    }
+    &.bet-notification-warning{
+      margin-top: 15px;
+      opacity: 0;
+    }
+    &.error-msg{
+      color: #f24b4b !important;
+    }
+  }
+  > button{
+    height: 30px;
+    float: left;
+    width: 100%;
+    text-align: center;
+    background: $brand-color-1;
+    border: none;
+    padding: 0 10px;
+    text-transform: uppercase;
+    color: set-color($brand-color-1);
+    font-size: 12px;
+    &:hover + .bet-notification-warning{
+      opacity: 1;
+    }
+    &:hover{
+      background: lighten($brand-color-1, 10);
+    }
+    &:disabled{
+      background: transparent;
+      border: 1px solid  $c16-tp-5;
+      color: $c16-tp-5;
+      pointer-events: none;
+      opacity: 0.6;
+    }
+  }
+}
+.horse-game-info{
+  float: left;
+  width: 100%;
+  box-sizing: border-box;
+  margin: 4px 0 1px 0;
+  height: 30px;
+  line-height: 30px;
+  background: $c16-sp-10;
+  padding: 0 10px;
+  font-size: 12px;
+  color: $c16-tp-3;
+  > p{
+    display: inline-block;
+    padding: 0 15px;
+    position: relative;
+    vertical-align: middle;
+    &:after{
+      content: '';
+      display: inline-block;
+      height: 14px;
+      width: 1px;
+      background: $c16-sp-12;
+      top: 8px;
+      position: absolute;
+      @include ltr{
+        right: 0;
+      }
+      @include rtl{
+        left: 0;
+      }
+    }
+    &:empty{
+      display: none;
+    }
+  }
+  > span{
+    vertical-align: middle;
+    display: inline-block;
+    @include ltr{
+      padding-left: 10px;
+    }
+    @include rtl{
+      padding-right: 10px;
+    }
+  }
 }

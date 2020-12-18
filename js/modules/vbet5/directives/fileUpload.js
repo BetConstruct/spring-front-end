@@ -1,4 +1,4 @@
-VBET5.directive('fileUpload', function () {
+VBET5.directive('fileUpload', [function () {
    'use strict';
     return {
         require:"ngModel",
@@ -7,6 +7,18 @@ VBET5.directive('fileUpload', function () {
             el.bind('change', function(event){
                 var file =  event.target.files[0];
                 var result = {Name: file.name};
+
+                if (attrs.fileExtensions){
+                    var re = /(?:\.([^.]+))?$/;
+                    var extension = re.exec(file.name)[0];
+                    if (attrs.fileExtensions.indexOf(extension.toLowerCase()) === -1) {
+                        ngModel.$setViewValue({
+                            error: true
+                        });
+                        return;
+                    }
+                }
+
                 var fileReader = new FileReader();
                 fileReader.onloadend = function fileLoaded(e) {
                     result.ImageData = e.target.result;
@@ -18,4 +30,4 @@ VBET5.directive('fileUpload', function () {
             });
         }
     };
-});
+}]);

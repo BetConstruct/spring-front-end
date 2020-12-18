@@ -63,18 +63,10 @@ VBET5.controller('footerCtrl', ['$scope', '$rootScope', '$window', '$sce', '$loc
 
     $scope.now = Date.now();
     if (Config.payments && Config.payments.length) {
-        $scope.paymentSystemNames = Config.payments.sort(Utils.orderSorting).reduce(function (accumulator, current) {
-            if (!current.isTransferToLinkedService && (current.canDeposit || current.canWithdraw) && !current.hidePaymentInFooter) {
-                accumulator.push({
-                    name: current.name,
-                    image: current.image
-                });
-            }
-            return accumulator;
-        }, []);
+        $scope.paymentSystemNames = Utils.getPaymentIcons(Config.payments);
     }
     if (Config.main.footer.imageInsteadPayments) {
-        $scope.spriteURL = (Config.main.cmsDataDomain ||  WPConfig.wpUrl.split("/json")[0]) +  Config.main.footer.imageInsteadPayments + "?v=" + Config.releaseDate;
+        $scope.spriteURL = Utils.getSpriteUrl(Config, WPConfig);
     }
 
     (function init() {

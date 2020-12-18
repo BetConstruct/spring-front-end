@@ -755,11 +755,11 @@
 .full-menu-wrapper-v3 {
   box-sizing: border-box;
   width: 100%;
-  position: absolute;
+  position: relative;
   top: 0;
   bottom: 0;
   left: 0;
-  height: 100%;
+ // height: 100%;
   padding: 0 1px 0 0;
 }
 .esports-nav-b {
@@ -1004,6 +1004,76 @@
       color: set-color($hero-color);
     }
   }
+  &.expressofday {
+    background-image: linear-gradient(to right, #e19b40, #e6b537 119%);
+    &:before {
+      font: 18px/30px icomoon;
+      content: "\e618";
+      color: #ffffff;
+    }
+    > p,
+    span.arrow-view-v3:before {
+      color: #ffffff;
+    }
+    &:hover, &.active {
+      span.arrow-view-v3:before {
+        color: #ffffff;
+      }
+    }
+  }
+  &.homework {
+    background: #a71762 url("../../../images/homework.jpg#{$delete-cache}") no-repeat;
+    &:before {
+      content: "\e98e";
+      color: #ffffff;
+      font-family: icomoon;
+    }
+    &:after {
+      content: none;
+    }
+  }
+}
+.homework-amount {
+  position: absolute;
+  top: 6px;
+  display: block;
+  height: 18px;
+  padding: 0 6px;
+  box-sizing: border-box;
+  border-radius: 8px;
+  color: #ffffff;
+  background: #de0068;
+  font: normal 11px/20px $font-f;
+  @include ltr {
+    right: 10px;
+  }
+  @include rtl {
+    left: 10px;
+  }
+  + .homework-info-icon {
+    @include ltr {
+      right: 58px;
+    }
+    @include rtl {
+      left: 58px;
+    }
+  }
+}
+.homework-info-icon {
+  position: absolute;
+  top: 7px;
+  display: block;
+  color: #d6d0e1;
+  font: 16px/16px icomoon;
+  @include ltr {
+    right: 7px;
+  }
+  @include rtl {
+    left: 7px;
+  }
+  &:before {
+    content: "\ea1e";
+  }
 }
 @keyframes boosted-shine {
   from {
@@ -1114,7 +1184,8 @@
 }
 .sports-item-v3.todaybets > .arrow-view-v3:before, .sports-item-v3.todaybets.active > .arrow-view-v3:before,
 .sports-item-v3.outright > .arrow-view-v3:before, .sports-item-v3.outright.active > .arrow-view-v3:before,
-.sports-item-v3.boostedbets > .arrow-view-v3:before, .sports-item-v3.boostedbets.active > .arrow-view-v3:before {
+.sports-item-v3.boostedbets > .arrow-view-v3:before, .sports-item-v3.boostedbets.active > .arrow-view-v3:before,
+.sports-item-v3.expressofday > .arrow-view-v3:before, .sports-item-v3.expressofday.active > .arrow-view-v3:before {
   color: $c16-tp-3;
   @include ltr {
     content: "\e672";
@@ -1125,7 +1196,8 @@
 }
 .sports-item-v3.todaybets.active > .arrow-view-v3:before,
 .sports-item-v3.outright.active > .arrow-view-v3:before,
-.sports-item-v3.boostedbets.active > .arrow-view-v3:before {
+.sports-item-v3.boostedbets.active > .arrow-view-v3:before,
+.sports-item-v3.expressofday.active > .arrow-view-v3:before{
   @include ltr {
     content: "\e672";
   }
@@ -1499,6 +1571,29 @@ popular-in-sportsbook[type="game"] {
   float: left;
   width: 100%;
   margin: 0;
+  &.live-nba {
+    .team-name-1-v3 {
+      @include ltr {
+        padding-left: 18px;
+      }
+      @include rtl {
+        padding-right: 18px;
+      }
+      stats-logo {
+        position: absolute;
+        @include ltr {
+          left: 0;
+        }
+        @include rtl {
+          right: 0;
+        }
+        > img {
+          width: 14px !important;
+          height: 14px !important;
+        }
+      }
+    }
+  }
 }
 .competition-view-v-3.closed {
   max-height: 29px;
@@ -1897,21 +1992,21 @@ popular-in-sportsbook[type="game"] {
       text-align: right;
     }
   }
+  > span {
+    box-sizing: border-box;
+    display: inline-block;
+    vertical-align: top;
+    text-align: right;
+    font-size: 6 + $size-font;
+    line-height: 14px;
+    color: $brand-color-2;
+    padding: 0 0 0 3px;
+    transform: translate3d(0, 0, 0);
+  }
 }
 .single-game-item-v3.no-events .team-name-1-v3:before{
   box-sizing: border-box;
   color: rgba($c16-tp-1, 0.4);
-}
-.team-name-1-v3 > span {
-  box-sizing: border-box;
-  display: inline-block;
-  vertical-align: top;
-  text-align: right;
-  font-size: 6 + $size-font;
-  line-height: 14px;
-  color: $brand-color-2;
-  padding: 0 0 0 3px;
-  transform: translate3d(0, 0, 0);
 }
 .game-info-mini-v3 {
   box-sizing: border-box;
@@ -2193,16 +2288,39 @@ popular-in-sportsbook[type="game"] {
   > .left-column-v3 {
     max-width: 36px;
     overflow: hidden;
-    .games-list-nav-v3 {
-      display: none;
-    }
-    .prematch-view .region-items-box {
-      display: none;
-    }
+    animation: 240ms closed-l-nav-v ease-in-out;
+    .games-list-nav-v3,
+    .prematch-view .region-items-box,
+    .arrow-view-v3,
     .left-menu-suggested-games {
-    display: none
+      display: none;
     }
   }
+  .live-game-container .sport-title span {
+    max-width: 450px;
+    @media screen and (max-width: 1550px) {
+      max-width: 400px;
+    }
+    @media screen and (max-width: 1490px) {
+      max-width: 350px;
+    }
+    @media screen and (max-width: 1260px) {
+      max-width: 250px;
+    }
+  }
+  .view-switcher-v3.no-dashboard {
+    display: none;
+    + .filter-view-v3 {
+      height: 52px;
+      > .filter-row-v3 {
+        display: none;
+      }
+    }
+  }
+}
+@keyframes closed-l-nav-v {
+  0%{transform: translate3d(-100px,0,0);}
+  100%{transform: translate3d(0,0,0);}
 }
 .left-menu-closed-v3 .full-menu-wrapper-box-v3 > .md-progress-circular,
 .left-menu-closed-v3 .full-menu-wrapper-box-v3 .now-games-menu,
@@ -2274,6 +2392,10 @@ popular-in-sportsbook[type="game"] {
       left: auto;
       right: 0;
     }
+  }
+  .homework-amount,
+  .homework-info-icon {
+    display: none;
   }
 }
 //  left menu closed END
@@ -2470,6 +2592,8 @@ popular-in-sportsbook[type="game"] {
 }
 @include coloring-by-sports(favoritecompetitions, #ffd700);
 @include coloring-by-sports(AlpineSkiing, #93c6e5);
+@include coloring-by-sports(Archery, #a43e8a);
+@include coloring-by-sports(ArcheryH2H, #a43e8a);
 @include coloring-by-sports(AustralianFootball, #119a18);
 @include coloring-by-sports(AmericanFootball, #e7685c);
 @include coloring-by-sports(Badminton, #70c2a7);
@@ -2594,7 +2718,7 @@ popular-in-sportsbook[type="game"] {
 @include coloring-by-sports(E-IceHockey, #4196c2);
 @include coloring-by-sports(ETennis, #829d24);
 @include coloring-by-sports(FIFA, #efb724);
-//
+@include coloring-by-sports(coupongames, #efdfba);
 @include coloring-by-sports(AllianceofValiantArms, #847221);
 @include coloring-by-sports(FortiteBattleRoyale, #5e3151);
 @include coloring-by-sports(GearsofWar, #a2191d);
@@ -2636,3 +2760,4 @@ popular-in-sportsbook[type="game"] {
 @include coloring-by-sports(RainbowSix, #666d72);
 @include coloring-by-sports(ArenaOfValor, #657672);
 @include coloring-by-sports(ClashRoyale, #225199);
+@include coloring-by-sports(MobileLegends, #a98157);

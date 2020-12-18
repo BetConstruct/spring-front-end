@@ -195,16 +195,12 @@ VBET5.controller('facebookCtrl', ['$scope', '$rootScope', '$window', 'Config', '
         Zergling
             .get({user_info: registrationInfo}, 'register_user')
             .then(function (data) {
-                console.log('registration response:', data);
                 if (data.result === 'OK') {
                     if (Config.main.registration.loginRightAfterRegistration) {
                         $rootScope.$broadcast('login.withUsernamePassword', {user: registrationInfo.username, password: registrationInfo.password});
                     }
-                    if (!Config.main.registration.requireSmsValidation) {
-                        $scope.registrationComplete = true;
-                    } else {
-                        $rootScope.$broadcast("openLoginForm");
-                    }
+                    $rootScope.$broadcast("openLoginForm");
+
                     $scope.registrationData = defaultRegistrationData;
                     if ($scope.regFlow.currentRegFlow === $scope.regFlow.ODNO) {
                         $rootScope.odnoModel.loggedIn = true;

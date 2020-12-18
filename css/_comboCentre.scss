@@ -1224,6 +1224,21 @@
     }
   }
 }
-.combo .button-view-contain-v3 .open-bets-cashout-button:after {
-  box-shadow: 0 0 0 1px #f0f0f0;
+.combo {
+  .button-view-contain-v3 .open-bets-cashout-button:after {
+    box-shadow: 0 0 0 1px #f0f0f0;
+  }
+  .mixed-matches:after {
+    color: #3f4553;
+  }
+  .mixed-matches-tab {
+    color: #3f4553;
+    background: #e8edf1;
+  }
+  .mixed-matches-teams > ul {
+    background: #e8edf1;
+    >li, > li:not(.mixed-matches-vs) {
+      color: #3f4553;
+    }
+  }
 }

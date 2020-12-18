@@ -60,7 +60,6 @@
   display: table;
   width: 100%;
   margin: 20px 0;
-  box-shadow: 0 0 0 6px rgba($skin-palette-13, 0.15);
   animation: popup-enter .3s ease-in-out;
   transition: 200ms width;
   > ng-include {
@@ -125,6 +124,23 @@
         }
         @include rtl {
           transform: translate3d(100%,0,0);
+        }
+      }
+    }
+    &.step-2 {
+      .field-separator {
+        &:first-child,
+        &:nth-child(3).birth_year {
+          .tooltip-j {
+            top: calc(100% + 5px);
+            bottom: auto;
+            &:before {
+              top: auto;
+              bottom: 100%;
+              border-width: 0 6px 6px 6px;
+              border-color: transparent transparent #c1c4cd transparent;
+            }
+          }
         }
       }
     }
@@ -233,12 +249,17 @@
   float: left;
   width: 100%;
   height: 41px;
-  padding: 0 10px 0 30px;
   position: absolute;
   bottom: 0;
   left: 0;
   background: $popup-form-palette;
   box-sizing: border-box;
+  @include ltr {
+    padding-left: 30px;
+  }
+  @include rtl {
+    padding-right: 30px;
+  }
   .hp-slider-pagination {
     padding: 0 20px;
     bottom: 4px;
@@ -298,6 +319,7 @@
     font-size: 30px;
     line-height: 24px;
     position: relative;
+    overflow: hidden;
     &:before {
       position: absolute;
       top: 0;
@@ -578,6 +600,7 @@
   }
   div.error {
     input[autocomplete="new-password"] {
+      text-overflow: ellipsis;
       @include ltr {
         padding: 0 74px 0 14px;
       }
@@ -835,7 +858,7 @@
     width: 100%;
     margin: 0;
     padding: 0;
-    color: set-color($brand-color-1);
+    color: opacify(rgba(set-color($popup-form-palette),0.32), $popup-form-opacify);
     background: none;
     box-sizing: border-box;
     border: 1px solid $brand-color-1;
@@ -1197,7 +1220,7 @@
   }
 }
 .block-slider.popup .form-register-layout.signin .button-sign ul li.create-account-icon a:before{
-  font: 10px/16px icomoon;
+  font: 10px/12px icomoon;
   content: "\2b";
   position: absolute;
   top: 0;
@@ -1209,7 +1232,7 @@
   }
 }
 .block-slider.popup .form-register-layout.signin .button-sign ul li.forgot-password-icon a:before{
-  font: 10px/16px icomoon;
+  font: 10px/12px icomoon;
   content: "\e6ef";
   position: absolute;
   top: 0;

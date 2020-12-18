@@ -9,21 +9,10 @@ VBET5.controller('buddyCtrl', ['$rootScope', '$scope', 'Translator', 'Zergling',
     'use strict';
 
     var request = {};
-    $scope.maxAmount = $scope.profile.balance || 0;
-    $scope.transferFormModel = {
-        amount: 0,
-        myAccount: 'Sport',
-        buddyAccount: 'Sport',
-        buddyUsername: ''
-    };
-    $scope.transferData = {};
-    $scope.attr = {
-        currentStep: 'step1'
-    };
-    $scope.friendList = [];
-    $scope.confirmResponse = null;
-    $scope.friendListLoaded = true;
+
+    $scope.friendListLoaded = false;
     $scope.confirmationLoaded = true;
+    $scope.friendList = [];
 
     var knownErrors = {
         '-20099': Translator.get('Unknown error'),
@@ -33,6 +22,25 @@ VBET5.controller('buddyCtrl', ['$rootScope', '$scope', 'Translator', 'Zergling',
         '21': Translator.get('User link blocked, please contact support.'),
         '-2403': Translator.get('Transfer request is already in progress')
     };
+
+    function resetFields() {
+        $scope.maxAmount = $scope.profile.balance || 0;
+        $scope.transferFormModel = {
+            amount: 0,
+            myAccount: 'Sport',
+            buddyAccount: 'Sport',
+            buddyUsername: ''
+        };
+        $scope.transferData = {};
+        $scope.attr = {
+            currentStep: 'step1'
+        };
+        $scope.confirmResponse = null;
+        if ($scope.friendListLoaded) {
+            $scope.searchFriend("");
+        }
+    }
+    resetFields();
 
 
     /**
@@ -129,12 +137,12 @@ VBET5.controller('buddyCtrl', ['$rootScope', '$scope', 'Translator', 'Zergling',
                 messageType = 'success';
             } else if (data && data.result !== undefined && knownErrors[data.result.toString()] !== undefined) {
                 message += "\n" + knownErrors[data.result.toString()];
-                if (data.details && data.details.error) {
-                    message += ' (' + data.details.error + ')';
+                if (data.details && (data.details.error_code || data.details.error)) {
+                    message += ' (' + Translator.get(data.details.error, null, null, data.details.error_code) + ')';
                 }
                 messageType = 'error';
-            } else if (data.details && data.details.error) {
-                message += (data.details.message || '') + ' (' + data.details.error + ')';
+            } else if (data.details && (data.details.error_code || data.details.error)) {
+                message += Translator.get(data.details.message || '') + ' (' + Translator.get(data.details.error, null, null, data.details.error_code) + ')';
                 $scope.messageType = 'error';
             } else {
                 message += Translator.get("Please try later or contact support.");
@@ -195,7 +203,7 @@ VBET5.controller('buddyCtrl', ['$rootScope', '$scope', 'Translator', 'Zergling',
     $scope.makeTransfer = function makeTransfer(confirmed) {
 
 
-        if (!confirmed && Config.main.buddyTransfer.version === 2) {
+        if (!confirmed && $scope.selectedOption === $scope.usernameOption) {
             $rootScope.$broadcast("globalDialogs.addDialog", {
                 type: 'info',
                 title: 'Info',
@@ -214,19 +222,27 @@ VBET5.controller('buddyCtrl', ['$rootScope', '$scope', 'Translator', 'Zergling',
         }
 
         var request;
-
-        if (Config.main.buddyTransfer.version === 1) {
-            request = {
-                to_user: ($scope.transferData.friendName || '').trim(),
-                amount: parseFloat($scope.transferData.transferAmount || 0)
-            };
-        } else if (Config.main.buddyTransfer.version === 2) {
-            request = {
-                to_user: ($scope.transferData.buddyUsername || '').trim(),
-                amount: parseFloat($scope.transferFormModel.amount || 0)
-            };
-        } else {
-            return;
+        switch ($scope.selectedOption) {
+            case $scope.friendNameOption:
+                request = {
+                    to_user: ($scope.transferData.friendName || '').trim(),
+                    amount: parseFloat($scope.transferData.transferAmount || 0)
+                };
+                break;
+            case $scope.usernameOption:
+                request = {
+                    to_user: ($scope.transferData.buddyUsername || '').trim(),
+                    amount: parseFloat($scope.transferFormModel.amount || 0)
+                };
+                break;
+            case $scope.userIdOption:
+                request = {
+                    to_user: +($scope.transferData.userId || '').trim(),
+                    amount: parseFloat($scope.transferData.transferAmount || 0)
+                };
+                break;
+            default:
+                return;
         }
 
 
@@ -238,7 +254,7 @@ VBET5.controller('buddyCtrl', ['$rootScope', '$scope', 'Translator', 'Zergling',
         Zergling.get(request, 'buddy_to_buddy_transfer').then(function (response) {
             $scope.transactionInProgress = false;
 
-            if (Config.main.buddyTransfer.version === 2) {
+            if ($scope.selectedOption === $scope.usernameOption) {
                 if (response.result === 0) {
                     $scope.confirmResponse = {
                         type: 'Success',
@@ -304,11 +320,37 @@ VBET5.controller('buddyCtrl', ['$rootScope', '$scope', 'Translator', 'Zergling',
     }
 
 
-    (function init() {
-        $scope.b2bInfoText = getInfoText(Config.payments);
-        if (Config.main.buddyTransfer.version === 2) {
+    $scope.optionChanged = function optionChanged(notReset) {
+        if ($scope.selectedOption === $scope.usernameOption && !$scope.friendListLoaded) {
             userTransfers();
         }
+        if (!notReset) {
+            resetFields();
+        }
+
+    };
+
+
+    (function init() {
+        $scope.b2bInfoText = getInfoText(Config.payments);
+        $scope.friendNameOption = "friendName";
+        $scope.usernameOption = "username";
+        $scope.userIdOption = "userId";
+        var orders = {
+            username: 1,
+            friendName: 2,
+            userId: 3
+        };
+        var enabledOptions = Object.keys(Config.main.buddyTransfer.options).filter(function (key) {
+            return Config.main.buddyTransfer.options[key];
+        }).sort(function (key1, key2){
+            return orders[key1] - orders[key2];
+        });
+
+        $scope.optionsCount = enabledOptions.length;
+        $scope.selectedOption = enabledOptions[0];
+        $scope.optionChanged(true);
+
     })();
 
 }]);

@@ -123,6 +123,7 @@
                             <th class="hh-cell" trans>Stake</th>
                             <th class="hh-cell" trans>Odd Type</th>
                             <th class="hh-cell" trans>Odds</th>
+                            <th class="hh-cell" ng-if="betStatusFilter === -1" trans>Client ID</th>
                             <th class="hh-cell" trans>Outcome</th>
                             <th class="hh-cell" ng-if="taxEnabled" trans>Details</th>
                             <th class="hh-cell" ng-if="$root.conf.betHistory.enableRecalculationNoteColumn" trans>Note</th>
@@ -171,6 +172,9 @@
                             <td class="hh-cell odd-color center-text">
                                 <strong ng-hide="betConf.hideMyBetsTotalOdds">{{bet.type == 1 && bet.events[0].k_type ==11 ? 'SP' : (bet.k|oddConvert:bet.oddTypeMapped:null:'BET_HISTORY':undefined:(!{1:1, 4:1}[bet.type]))}}</strong>
                             </td>
+                            <td class="hh-cell odd-color center-text" ng-if="betStatusFilter === -1">
+                                <strong ng-bind="bet.client_id"></strong>
+                            </td>
                             <!--Outcome part-->
                             <td ng-if="!$root.conf.betHistory.showPayoutInsteadOutcome" class="hh-cell">
                                 <div ng-if="bet.outcome == 0 && bet.bonus > 0">
@@ -195,7 +199,7 @@
                                     <span class="second-color">{{(bet.possible_win - bet.amount)|roundPossibleWin:$root.conf.balanceFractionSize:bet.type}}</span> {{bet.currency|currency}}
                                 </div>
                                 <div ng-if="bet.outcome != 0">
-                                    <span class="second-color">{{(bet.payout - bet.amount)|roundPossibleWin:$root.conf.balanceFractionSize:bet.type}}}</span> {{bet.currency|currency}}
+                                    <span class="second-color">{{(bet.payout - bet.amount)|roundPossibleWin:$root.conf.balanceFractionSize:bet.type}}</span> {{bet.currency|currency}}
                                 </div>
                             </td>
                             <!--end Outcome part-->
@@ -220,12 +224,12 @@
                                         </div>
                                     </li>
                                     <li>
-                                        <button class="cms-jcon-refresh" ng-show="  conf.enableBetFromBetHistory && (bet.outcome == 0 || bet.outcome == 5) && (bet.type == 1 || bet.type == 2 || bet.type == 3 || bet.type == 4)" ng-click="$event.stopPropagation();addEvents(bet);" title="Repeat Bet"></button>
+                                        <button class="cms-jcon-refresh" ng-show="  conf.enableBetFromBetHistory && (bet.outcome == 0 || bet.outcome == 5) && (bet.type == 1 || bet.type == 2 || bet.type == 3 || bet.type == 4)" ng-click="$event.stopPropagation();addEvents(bet);" title="{{'Repeat Bet'|translate}}"></button>
                                         <button
                                                 class="cms-jcon-edit"
                                                 ng-if="conf.openBetsAndEditBet && !bet.is_gift && !betConf.fullCoverBetTypes.enabled && bet.cash_out && (bet.type == 2 || bet.type == 1) && !$root.editBet.edit"
                                                 ng-click="$event.stopPropagation();addEvents(bet, true);"
-                                                title="{{ 'Editing functionality is avaeilable for this bet.' | translate }}"
+                                                title="{{ 'Editing functionality is available for this bet.' | translate }}"
                                         ></button>
                                     </li>
                                     <li>
@@ -271,6 +275,8 @@
                             <td class="hh-cell odd-color center-text">
                                 <strong title="{{event.k_type == 11 ? 'SP' : (event.coeficient|oddConvert:bet.oddTypeMapped:null:'BET_HISTORY')}}">{{event.k_type == 11 ? 'SP' : (event.coeficient|oddConvert:bet.oddTypeMapped:null:'BET_HISTORY')}}</strong>
                             </td>
+                            <td class="hh-cell odd-color center-text" ng-if="betStatusFilter === -1">
+                            </td>
                             <td class="hh-cell"></td>
                             <td ng-if="taxEnabled" class="hh-cell "></td>
 
@@ -305,7 +311,7 @@
                             <td class="status-icon-b status-cell" ng-class="{'-5': 'cms-jcon-pendding', '-4': 'cms-jcon-close_mark', '0': 'cms-jcon-pendding', '1': 'cms-jcon-close_mark', '2': 'cms-jcon-returned', '3': 'cms-jcon-checkmark2', '5': 'cms-jcon-checkmark2', '7': 'cms-jcon-checkmark2-orange'}[event.outcome]"></td>
                             <td class="arrow-cell"></td>
                         </tr>
-                        <tr class="sub-child last-child cash-out-history-row" ng-show="bet.expand && childBets[bet.id]">
+                        <tr class="sub-child last-child cash-out-history-row" ng-show="bet.expand && bet.cashouts_history">
                             <td colspan="10" ng-init="cashOutHistoryExpanded = true">
                                 <h2 ng-class="{active: cashOutHistoryExpanded}" ng-click="cashOutHistoryExpanded = !cashOutHistoryExpanded; $event.stopPropagation();" trans>Cash Out History</h2>
                                 <div class="cash-out-history-w-c">
@@ -320,15 +326,15 @@
                                             <strong trans>Cash Out Amount</strong>
                                         </li>
                                     </ul>
-                                    <ul ng-repeat="cashedOutBet in childBets[bet.id] track by cashedOutBet.id">
+                                    <ul ng-repeat="cashedOutBet in bet.cashouts_history track by $index">
                                         <li>
-                                            <small>{{::cashedOutBet.date_time|formatDate:(conf.layoutTimeFormat[conf.sportsLayout] || 'noLocaleTranslate'):null:$root.env.timeFormat}} {{::conf.layoutTimeFormat[conf.sportsLayout]? (cashedOutBet.date_time|formatDate:'hour':null:$root.env.timeFormat): ''}}</small>
+                                            <small>{{::cashedOutBet.date|formatDate:(conf.layoutTimeFormat[conf.sportsLayout] || 'noLocaleTranslate'):null:$root.env.timeFormat}} {{::conf.layoutTimeFormat[conf.sportsLayout]? (cashedOutBet.date|formatDate:'hour':null:$root.env.timeFormat): ''}}</small>
                                         </li>
                                         <li>
-                                            <small ng-bind="cashedOutBet.totalAmount"></small>
+                                            <small ng-bind="cashedOutBet.stake"></small>
                                         </li>
                                         <li>
-                                            <small ng-bind="cashedOutBet.payout"></small>
+                                            <small ng-bind="cashedOutBet.cashout_amount"></small>
                                         </li>
                                     </ul>
                                     <ul>
@@ -340,7 +346,7 @@
                                         </li>
                                         <li>
                                             <strong>{{'Total Cash Out'|translate}} :
-                                                <span ng-bind="bet.outcome === 5 ? bet.payout : bet.total_partial_cashout_amount | bankersRoundAndNumberCommas:$root.conf.balanceFractionSize"></span>
+                                                <span ng-bind="bet.total_partial_cashout_amount | bankersRoundAndNumberCommas:$root.conf.balanceFractionSize"></span>
                                             </strong>
                                         </li>
                                     </ul>

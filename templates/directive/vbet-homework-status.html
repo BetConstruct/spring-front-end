@@ -1,0 +1,13 @@
+<div class="left-nav-view-v3" ng-if="homeworkStatus">
+    <ul>
+        <li class="float-width" ng-click="openHomeworkPopup()">
+            <div class="float-width">
+                <div class="sports-item-v3 homework" title="{{'Homework'|translate}}">
+                    <span trans>Homework</span>
+                    <b ng-if="env.authorized" class="homework-amount">{{homeworkStatus.answers + '/' + homeworkStatus.tasks}}</b>
+                    <a class="homework-info-icon" ng-click="$event.stopPropagation();" ng-href="{{homeworkStatus.infoUrl}}" target="_blank"></a>
+                </div>
+            </div>
+        </li>
+    </ul>
+</div>

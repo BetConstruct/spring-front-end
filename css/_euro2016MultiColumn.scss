@@ -96,7 +96,7 @@
           }
           .aic-team-names-wrapper .icon-separator-v3 {
             &.favorite {
-              bottom: 0;
+              bottom: -1px;
               @include ltr {
                 right: -14px;
               }
@@ -251,6 +251,15 @@
           border-color: transparent transparent $brand-color-2;
         }
       }
+    }
+  }
+  &.multi-column-BasketballShots {
+    .aic-head table.aic-table-head-first td.aic-winner-cell,
+    .multicolumn-table > table > tbody > tr > td.aic-winner-cell {
+      display: none;
+    }
+    .multicolumn-table > table > tbody > tr > td:first-child {
+      vertical-align: top;
     }
   }
 }
@@ -575,6 +584,11 @@
 @media screen and (max-width: 1500px) and (min-width: 1280px){
   .aic-over-under-cell {
     display: none !important;
+  }
+  .multi-column-BasketballShots {
+    .aic-over-under-cell {
+      display: table-cell !important;
+    }
   }
 }
 @media screen and (max-width: 1279px) {

@@ -182,7 +182,7 @@ VBET5.controller('eSportsLeftController', ['$rootScope', '$scope',  '$location',
                 break;
             case 'live':
                 request.what.game = [['id', 'start_ts', 'team1_name', 'team2_name','team1_reg_name', 'team2_reg_name', 'type', 'info', 'markets_count', 'is_blocked', 'stats', 'tv_type', 'video_id', 'video_id2', 'video_id3', 'video_provider', 'is_stat_available', 'show_type', 'game_external_id', 'team1_external_id', 'team2_external_id']];
-                request.what.market = ['base','type', 'name', 'express_id', 'id'];
+                request.what.market = ['base','type', 'name', 'express_id', 'id', 'display_key'];
                 request.what.event = [];
                 request.where.game = { 'type': 1 };
                 request.where.market = {type: { '@in': PREDEFINED_ORDER_MARKET_TYPES }};

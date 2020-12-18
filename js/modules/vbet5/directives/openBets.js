@@ -201,33 +201,24 @@ VBET5.directive('openBets', ['$rootScope', 'Zergling', 'BetService', 'Utils', 'G
             }
 
 
-            function updateAfterCashout(betId) {
-                var request = {'where': { 'bet_id': betId }};
+            function updateAfterCashout(bet) {
 
-                $timeout(function() {
-                    Zergling.get(request, 'bet_history')
-                        .then(function(response) {
-                            if (response && response.bets) {
-                                var cashedOutBet = response.bets[0];
-                                angular.forEach(cashedOutBet.events, function improveName(event) {
-                                    event.id = event.game_id;
-                                    event.team1_name = event.team1;
-                                    event.team2_name = event.team2;
-                                    event.oddTypeMapped = $scope.ODD_TYPE_MAP[+bet.odd_type];
-                                    // Parameters assigned above are necessary for 'improveName' filter to work properly
-                                    event.eventName = $filter('improveName')(event.event_name, event);
-                                });
-                                for (var i = $scope.openBets.data.length; i--;) {
-                                    if ($scope.openBets.data[i].id === cashedOutBet.id) {
-                                        $scope.openBets.data[i] = cashedOutBet;
-                                        break;
-                                    }
-                                }
-                            }
-                        });
-                }, 950);
+                angular.forEach(bet.events, function improveName(event) {
+                    event.id = event.game_id;
+                    event.team1_name = event.team1;
+                    event.team2_name = event.team2;
+                    event.oddTypeMapped = $scope.ODD_TYPE_MAP[+bet.odd_type];
+                    // Parameters assigned above are necessary for 'improveName' filter to work properly
+                    event.eventName = $filter('improveName')(event.event_name, event);
+                });
+
+                for (var i = $scope.openBets.data.length; i--;) {
+                    if ($scope.openBets.data[i].id === bet.id) {
+                        $scope.openBets.data[i] = bet;
+                        break;
+                    }
+                }
             }
-
 
             $scope.gotoBetGame = function gotoBetGame(gamePointer) {
                 if (!gamePointer) {return;}
@@ -293,13 +284,18 @@ VBET5.directive('openBets', ['$rootScope', 'Zergling', 'BetService', 'Utils', 'G
             $scope.cancelAutoCashOutRule = function cancelAutoCashOutRule(betId) {
                 Zergling.get({bet_id: betId}, 'cancel_bet_auto_cashout')
                     .then(function (response) {
-                        if(response.result === 0) {
+                        if (response.result === 0) {
                             $rootScope.$broadcast("globalDialogs.addDialog", {
                                 type: "success",
                                 title: 'Cash-out',
                                 content: "Auto Cash-Out rule has been canceled."
                             });
-                            updateAfterCashout(betId);
+                            setTimeout(function() {
+                                BetService.getBetHistory(betId)
+                                    .then(function(bet) {
+                                        updateAfterCashout(bet);
+                                    });
+                            }, 950)
                         }
                     });
             };
@@ -322,7 +318,7 @@ VBET5.directive('openBets', ['$rootScope', 'Zergling', 'BetService', 'Utils', 'G
 
             $scope.$on('updateAfterCashout', function(event, data) {
                 if (data.autoCashout) {
-                    updateAfterCashout(data.betId);
+                    updateAfterCashout(data.bet);
                 }
             });
             $scope.$on('$destroy', function openBetsOnDestroy() {

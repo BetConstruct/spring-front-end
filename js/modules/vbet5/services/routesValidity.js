@@ -49,6 +49,10 @@ angular.module('vbet5').service('RoutesValidity', ['$rootScope', '$location', '$
             path: "#/virtualsports",
             config: "virtualSportsEnabled"
         },
+        "virtualsports": {
+            path: "#/virtualsports",
+            config: "virtualSportsEnabled"
+        },
         "poolbetting": {
             path: "#/poolbetting",
             config: "poolBettingEnabled"
@@ -152,6 +156,9 @@ angular.module('vbet5').service('RoutesValidity', ['$rootScope', '$location', '$
         "covid-19": {
             path: "#/covid-19",
             config: "covid19Enabled"
+        },
+        "expressofday": {
+            path: "#/expressofday"
         }
     };
 
@@ -206,7 +213,7 @@ angular.module('vbet5').service('RoutesValidity', ['$rootScope', '$location', '$
             $rootScope.calculatedConfigs["sportEnabled"] = true;
         }
 
-        if($rootScope.calculatedConfigs.sportEnabled){
+        if($rootScope.calculatedConfigs.sportEnabled) {
             angular.forEach(Config.main.subHeaderItems, function(item) {
                 var menuDetails = menuPaths[item.alias];
                 var config = true;

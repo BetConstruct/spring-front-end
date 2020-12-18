@@ -273,6 +273,7 @@ VBET5.directive('gameWidget', ['Utils', 'Config', 'ConnectionService', 'GameInfo
                         action: 'place_bet',
                         data: {
                             'event': event.id,
+                            'market': market.id,
                             'type': game.type,
                             'sport': game.sport.id,
                             'region': game.region.id,
@@ -287,6 +288,8 @@ VBET5.directive('gameWidget', ['Utils', 'Config', 'ConnectionService', 'GameInfo
                     if (scope.widgetMode === 'homepage') {
                         $location.search({
                             'event': event.id.toString(),
+                            'gameIds': game.id.toString(),
+                            'market': market.id.toString(),
                             'type': game.type === 2 ? 0 : game.type,
                             'sport': game.sport.id,
                             'region': game.region.id,

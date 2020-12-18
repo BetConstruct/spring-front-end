@@ -177,8 +177,6 @@ VBET5.controller('myBetsCtrl', ['$scope', 'Utils', 'ConnectionService', 'Zerglin
         });
     }
 
-
-
     /**
      * @ngdoc method
      * @name filterCashoutBet
@@ -484,7 +482,19 @@ VBET5.controller('myBetsCtrl', ['$scope', 'Utils', 'ConnectionService', 'Zerglin
         });
     }
 
+    //todo should remove after backend fix
+    function addPartialCashOutAmount(bets) {
+        for (var i = bets.length; i--;) {
+            if (bets[i].cashouts_history) {
+                bets[i].total_partial_cashout_amount = bets[i].cashouts_history.reduce(function(acc, cur) {
+                    acc += cur.cashout_amount;
+                    return acc;
+                }, 0)
+            }
+        }
 
+        return bets;
+    }
 
     /**
      * @ngdoc method
@@ -597,8 +607,7 @@ VBET5.controller('myBetsCtrl', ['$scope', 'Utils', 'ConnectionService', 'Zerglin
                     if (!Config.main.enableMixedView) {
                         $scope.betHistoryGotoPage(1);
                     } else {
-                        $scope.betHistory = betHistory;
-                        $scope.childBets = groupPartiallyCashedOut(betHistory);
+                        $scope.betHistory = addPartialCashOutAmount(betHistory);
                     }
 
                     if ($scope.profit.checkAfterLoad) {
@@ -749,55 +758,33 @@ VBET5.controller('myBetsCtrl', ['$scope', 'Utils', 'ConnectionService', 'Zerglin
         }
     };
 
-    function groupPartiallyCashedOut(bets) {
-        var childBets = {},
-            i = bets.length;
-
-        while (i--) {
-            if (bets[i].parent_bet_id) {
-                childBets[bets[i].parent_bet_id] = childBets[bets[i].parent_bet_id] || [];
-                bets[i].totalAmount = bets[i].bonus_bet_amount ? bets[i].bonus_bet_amount : bets[i].amount || 0;
-                childBets[bets[i].parent_bet_id].push(bets[i]);
-            }
-        }
-
-        return childBets;
-    }
-
     /**
      * @ngdoc method
      * @name updateAfterCashout
      * @methodOf vbet5.controller:myBetsCtrl
      * @description updates cash out information of a specific event after a bet has been 'cashed out'
+     *
+     * @param {Object} bet object
      */
-    function updateAfterCashout(betId, autoCashout) {
-        var request = {'where': { 'bet_id': betId }};
+    function updateAfterCashout(bet) {
+        var currentBets = Config.main.enableMixedView ? betHistory : allBets;
 
-        $timeout(function() {
-            Zergling.get(request, 'bet_history')
-                .then(function(response) {
-                    if (response && response.bets) {
-                        var currentBets = Config.main.enableMixedView ? betHistory : allBets;
-                        var cashedOutBet = response.bets[0];
-                        for (var i = 0, length = currentBets.length; i < length; i++) {
-                            if (currentBets[i].id === cashedOutBet.id) {
-                                cashedOutBet.oddTypeMapped = $scope.ODD_TYPE_MAP[+cashedOutBet.odd_type];
-                                currentBets[i] = cashedOutBet;
-                                break;
-                            }
-                        }
-                        if (Config.main.enableMixedView) {
-                            $scope.betHistory = currentBets;
-                        } else {
-                            $scope.myBets = getVisibleBets(currentBets);
-                        }
-                    }
-                });
-        }, 950);
+        for (var i = 0, length = currentBets.length; i < length; i++) {
+            if (currentBets[i].id === bet.id) {
+                bet.oddTypeMapped = $scope.ODD_TYPE_MAP[+bet.odd_type];
+                currentBets[i] = bet;
+                break;
+            }
+        }
+        if (Config.main.enableMixedView) {
+            $scope.betHistory = addPartialCashOutAmount(currentBets);
+        } else {
+            $scope.myBets = getVisibleBets(currentBets);
+        }
     }
 
     $scope.$on('updateAfterCashout', function(event, data) {
-       updateAfterCashout(data.betId, data.autoCashout);
+       updateAfterCashout(data.bet);
     });
 
     $scope.addEvents = BetService.repeatBet;

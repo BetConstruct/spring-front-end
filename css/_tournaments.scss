@@ -721,9 +721,6 @@
   background: -moz-linear-gradient(top, rgba($skin-palette-12,1) 0%, rgba($skin-palette-12,0) 100%);
   background: -webkit-linear-gradient(top, rgba($skin-palette-12,1) 0%,rgba($skin-palette-12,0) 100%);
   background: linear-gradient(to bottom, rgba($skin-palette-12,1) 0%,rgba($skin-palette-12,0) 100%);
-  .list-games-casino-view-b {
-    padding: 5px;
-  }
   .all-casino-games-list-box {
     padding: 0 36px 36px;
   }
@@ -1050,18 +1047,9 @@
 }
 @media screen and (max-width: 1260px) {
   .ctournament-containing-games {
-    .game-img-box-b {
-      height: 90px;
-    }
     > ul {
       height: 120px;
     }
-    .casino-resize-buttons > div button {
-      font-size: 10px;
-    }
-  }
-  .list-games-casino-view-b {
-    width: 20%;
   }
 }
 .casino-tournament-scroll {

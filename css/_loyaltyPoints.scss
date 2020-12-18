@@ -354,6 +354,18 @@
             font: 11px/11px $font-f;
             margin: 0 0 12px;
             padding: 0 13px;
+            > li{
+                &:last-child{
+                    @include ltr{
+                        float: right;
+                        text-align: right;
+                    }
+                    @include rtl{
+                        float: left;
+                        text-align: left;
+                    }
+                }
+            }
         }
     }
     .lp-packs-group-wrap-j {

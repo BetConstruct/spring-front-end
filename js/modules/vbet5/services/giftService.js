@@ -46,33 +46,38 @@ VBET5.factory('giftService', ['$rootScope', 'Zergling', function betService($roo
 
 
         scope.sendGiftBet = function sendGiftBet() {
+            var giftState = scope.giftState;
             var request = {
-                'bet_id': scope.giftState.bet.id,
-                'email': scope.giftState.email
+                'bet_id': giftState.bet.id,
+                'email': giftState.email
             };
-            scope.giftState.loading = true;
+            giftState.loading = true;
             Zergling.get(request, 'send_gift_bet').then(function (response) {
                 if (response && response.result === 0) {
-                    scope.giftState.status = 'success';
-                    scope.giftState.bet.is_gift = true;
+                    giftState.status = 'success';
+                    giftState.bet.is_gift = true;
                 } else {
-                    scope.giftState.status = 'fail';
+                    giftState.status = 'fail';
+                    giftState.errorMessage = response.result_text;
                 }
 
             }, function (response) {
-                scope.giftState.status = 'fail';
+                giftState.status = 'fail';
+                giftState.errorMessage = response.result_text;
             })['finally'](function () {
-                scope.giftState.loading = false;
+                giftState.loading = false;
             });
 
         };
 
         scope.closeGiftPopup = function closeForm() {
-            scope.giftState.showPopup = false;
-            scope.giftState.email = '';
-            scope.giftState.status = null;
-            scope.giftState.loading = false;
-            scope.giftState.bet = null;
+            var giftState = scope.giftState;
+            giftState.showPopup = false;
+            giftState.email = '';
+            giftState.status = null;
+            giftState.loading = false;
+            giftState.bet = null;
+            giftState.errorMessage = '';
         };
 
         scope.$on("showGiftPopup", function (event, data) {

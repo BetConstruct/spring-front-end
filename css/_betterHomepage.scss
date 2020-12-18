@@ -212,6 +212,12 @@ body {
     }
   }
 }
+.homepage-main-title {
+  padding-top: 30px;
+  color: rgba($text-palette-1,0.69);
+  text-transform: uppercase;
+  font: 20px/22px $font-f;
+}
 .hp-slider-17 {
   float: left;
   width: 100%;
@@ -313,12 +319,6 @@ body {
       width: calc(100% + 10px);
       position: relative;
       right: 10px;
-      > li{
-        .game-img-box-b{
-          height: auto;
-          padding: 0 0 70%;
-        }
-      }
     }
   }
 }

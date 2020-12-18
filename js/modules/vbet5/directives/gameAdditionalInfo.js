@@ -15,7 +15,7 @@ VBET5.directive('additionalGameInfo', ['$rootScope', 'GameInfo', 'Config', 'Tran
             var star = "*";
 
             function createAdditionalTextInfo(game) {
-                if (!game.info || game && game.sport && game.sport.alias === 'BasketballShots') {
+                if (!game.info || game && game.sport && (game.sport.alias === 'BasketballShots' || game.sport.alias === 'Archery')) {
                     return game.text_info || '';
                 }
 

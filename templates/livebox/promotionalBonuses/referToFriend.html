@@ -1,0 +1,61 @@
+<div class="prefer-to-friend" ng-controller="referToFriendCtrl">
+    <div class="prefer-to-friend-container">
+        <h3 trans>refer-to-friend-info</h3>
+        <p class="ellipsis-text no-select-j" title="{{data.link}}" ng-bind="data.link"></p>
+        <div class="prefer-to-friend-button">
+            <div class="prefer-to-friend-generate">
+                <button class="ellipsis-text" ng-disabled="data.link"  ng-click="generateLink()" trans>Generate</button>
+                <vbet-loader class="small-progress" ng-show="data.loading"></vbet-loader>
+            </div>
+            <button class="ellipsis-text" ng-disabled="!data.link" ng-click="copyLink()" trans>Copy</button>
+            <button class="ellipsis-text" ng-disabled="!data.link" ng-click="shareLink()" trans>Share</button>
+        </div>
+    </div>
+    <div class="prefer-to-friend-container" ng-if="data.link">
+        <h3 trans>My Referrals</h3>
+        <vbet-loader ng-show="data.referralsLoading"></vbet-loader>
+        <div class="prefer-to-friend-block" ng-if="!data.referralsLoading" ng-repeat="item in data.referrals track by item.ClientId">
+            <div class="prefer-to-friend-info">
+                <div class="prefer-to-friend-line-info">
+                    <span trans>ID:</span>
+                    <b class="prefer-to-friend-id" ng-bind="item.ClientId"></b>
+                </div>
+                <div class="prefer-to-friend-line-info">
+                    <span trans>Name:</span>
+                    <b class="prefer-to-friend-name" ng-bind="item.Name"></b>
+                </div>
+                <div class="prefer-to-friend-line-info">
+                    <span trans>Total Sport Stakes:</span>
+                    <b>{{item.TotalSportStakes|number:$root.conf.balanceFractionSize}} <i>{{item.CurrencyId|currency}}</i></b>
+                </div>
+                <div class="prefer-to-friend-line-info">
+                    <span trans>Total Casino Stakes:</span>
+                    <b>{{item.TotalCasinoStakes|number:$root.conf.balanceFractionSize}} <i>{{item.CurrencyId|currency}}</i></b>
+                </div>
+                <div class="prefer-to-friend-line-info">
+                    <span trans>Total Deposit:</span>
+                    <b>{{item.TotalDeposit|number:$root.conf.balanceFractionSize}} <i>{{item.CurrencyId|currency}}</i></b>
+                </div>
+            </div>
+            <div class="prefer-to-friend-info">
+                <div class="prefer-to-friend-line-info">
+                    <span class="ellipsis-text" trans>Is Verified:</span>
+                    <i class="{{item.IsVerified?'checked': 'unchecked'}}"></i>
+                </div>
+                <div class="prefer-to-friend-line-info">
+                    <span class="ellipsis-text" trans>Is Deposit Requirement Complete:</span>
+                    <i class="{{item.IsDepositReqirementComplete?'checked': 'unchecked'}}"></i>
+                </div>
+                <div class="prefer-to-friend-line-info">
+                    <span class="ellipsis-text" trans>Is Sportsbook Requirement Complete:</span>
+                    <i class="{{item.IsSportsBookReqirementComplete?'checked': 'unchecked'}}"></i>
+                </div>
+                <div class="prefer-to-friend-line-info">
+                    <span class="ellipsis-text" trans>Is Casino Requirement Complete:</span>
+                    <i class="{{item.IsCasinotReqirementComplete?'checked': 'unchecked'}}"></i>
+                </div>
+            </div>
+        </div>
+        <div class="prefer-to-friend-block" ng-if="!data.referralsLoading && data.referrals.length === 0" trans>There is no data</div>
+    </div>
+</div>

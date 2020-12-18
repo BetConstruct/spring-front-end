@@ -15,6 +15,8 @@ VBET5.controller('asianViewMainController', ['$rootScope', '$scope', '$filter', 
         var connectionService = new ConnectionService($scope);
         var streamService = new StreamService($scope);
         var sportDataOrder;
+        Config.env.hideLiveStats = Storage.get('hideLiveStats') || false;
+        $scope.showStatsBlock = !Config.env.hideLiveStats;
         $scope.activeGameId = null;
         $scope.selectedCompetitionsModel = {};
         $scope.competitionsList = [];
@@ -31,7 +33,6 @@ VBET5.controller('asianViewMainController', ['$rootScope', '$scope', '$filter', 
         $scope.liveGamesSoccerTemplate = GameInfo.liveGamesSoccerTemplate;
         $scope.dotaGamesList = GameInfo.dotaGamesList;
         $scope.selectedAll = true;
-        $scope.liveGamesSoccerTemplate = GameInfo.liveGamesSoccerTemplate;
         $scope.dotaGamesList = GameInfo.dotaGamesList;
         $scope.slideSets = GameInfo.slideSets;
         $scope.animationSoundsMap = GameInfo.animationSoundsMap;
@@ -581,7 +582,7 @@ VBET5.controller('asianViewMainController', ['$rootScope', '$scope', '$filter', 
                                 GameInfo.updateGameStatistics($scope.openGame);
                                 GameInfo.extendLiveGame($scope.openGame);
 
-                                if($scope.openGame.sport.alias === "Soccer" || $scope.openGame.alias === 'CyberFootball') {
+                                if($scope.openGame.sport.alias === "Soccer") {
                                     GameInfo.generateTimeLineEvents($scope.openGame, $scope);
                                     GameInfo.addOrderingDataToSoccerGameEvents($scope.openGame);
                                 }
@@ -2144,6 +2145,11 @@ VBET5.controller('asianViewMainController', ['$rootScope', '$scope', '$filter', 
 
         $scope.$on("sportsbook.selectData", function (event, data) {
             selectPopularCompetition(data.data.id);
+        });
+
+        // Unable to find nicer way to do this
+        $scope.$on('sportsbook.updateStatsBlockState', function (e, data) {
+            $scope.showStatsBlock = !!data;
         });
 
         $scope.$on('$destroy', function () {

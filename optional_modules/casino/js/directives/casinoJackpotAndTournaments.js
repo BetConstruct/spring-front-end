@@ -47,9 +47,6 @@ CASINO.directive('casinoJackpotAndTournaments', ['Utils', 'casinoData', 'jackpot
                         if (data && data[scope.providers[index]]) {
                             var provider = scope.providers[index];
                             var jackpot = data[provider];
-                            jackpot.PoolGroup.PoolList.sort(function (a, b) {
-                                return b.CollectedAmount - a.CollectedAmount;
-                            });
                             jackpot.Provider = provider;
                             scope.jackpotData.push(jackpot);
                         }
@@ -57,9 +54,6 @@ CASINO.directive('casinoJackpotAndTournaments', ['Utils', 'casinoData', 'jackpot
                 }else{
                     angular.forEach(data, function (jackpot, provider) {
                         if (jackpot) {
-                            jackpot.PoolGroup.PoolList.sort(function (a, b) {
-                                return b.CollectedAmount - a.CollectedAmount;
-                            });
                             jackpot.Provider = provider;
                             scope.jackpotData.push(jackpot);
 

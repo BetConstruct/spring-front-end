@@ -1,4 +1,78 @@
 // homepage jackpot
+.size-3 {
+  .jp-banner {
+    font: 34px/36px $font-f;
+    > span {
+      font-size: 18px;
+    }
+  }
+  .jackpot-banner-amount {
+    height: 44px;
+  }
+  .amount-animation-container > span > strong {
+    width: 32%;
+    &:before {
+      font-size: 34px;
+    }
+  }
+  .jackpot-banner-amount .amount-animation-container > sup {
+    font: 20px/22px $font-f;
+  }
+}
+.size-4 {
+  .jp-banner {
+    font: 42px/44px $font-f;
+    > span {
+      font-size: 18px;
+    }
+  }
+  .jackpot-banner-amount {
+    height: 50px;
+  }
+  .amount-animation-container > span > strong {
+    width: 32%;
+    &:before {
+      font-size: 42px;
+    }
+  }
+  .jackpot-banner-amount .amount-animation-container > sup {
+    font: 20px/22px $font-f;
+  }
+}
+.size-5 {
+  .jp-banner {
+    font: 50px/52px $font-f;
+  }
+  .jackpot-banner-amount {
+    height: 70px;
+  }
+  .amount-animation-container > span > strong {
+    width: 32%;
+    &:before {
+      font-size: 52px;
+    }
+  }
+  .jackpot-banner-amount .amount-animation-container > sup {
+    font: 24px/26px $font-f;
+  }
+}
+.size-6 {
+  .jp-banner {
+    font: 60px/62px $font-f;
+  }
+  .jackpot-banner-amount {
+    height: 70px;
+  }
+  .amount-animation-container > span > strong {
+    width: 32%;
+    &:before {
+      font-size: 64px;
+    }
+  }
+  .jackpot-banner-amount .amount-animation-container > sup {
+    font: 24px/26px $font-f;
+  }
+}
 .size-7 .jackpot-banner-amount .amount-animation-container > span {
   width: 7%;
   &.with-point,
@@ -185,7 +259,6 @@
   height: 100px;
   .amount-animation-container {
     @media screen and (max-width: 1260px) {
-      font-size: 72px;
       &.amount-animation-container {
         > span {
           width: 7%;

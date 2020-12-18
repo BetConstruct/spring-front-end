@@ -16,23 +16,60 @@
                 <div class="user-info-box-b">
                     <h3 ng-hide="conf.profileMenuHeaderFullName">{{profile.full_name}}</h3>
                     <h4 ng-show="!env.hideUsername">{{ profile['username'] }}</h4>
-                    <h5>
+                    <h5 class="id-num">
                         <span trans>ID</span>:
                         <span>{{profile.unique_id}}</span>
+                        <i class="profile-id-copy" ng-click="copyIdToClipboard()" title="Copy" trans></i>
                     </h5>
+                    <h6 ng-if="(profile.is_ekeng_verified === undefined && profile.is_verified && $root.conf.enableAccountVerification) || (profile.is_verified && profile.is_ekeng_verified)" class="account-verify">
+                        <i class="verified"></i> <span trans>Account Verified</span>
+                    </h6>
+
                 </div>
             </li>
             <li>
                 <div class="drop-nav-new-b"> <!--closed-->
                     <div class="drop-items-contain-b icon-view-box">
                         <ul>
+                            <li ng-click="$location.path('/sport'); $event.stopPropagation()"
+                                ng-if="profile.is_ekeng_verified === false"
+                                prevent-fast-click="1.5"
+                                ng-class="{'active': $root.currentPage.path === '/sport'}"
+                            >
+                                <i class="not-verified"></i>
+                                <span trans>Sports Not Verified</span>
+                            </li>
+                            <li ng-click="($root.currentPage.path !== '/sport' && $location.path('/sport')); $event.stopPropagation()"
+                                ng-if="profile.is_ekeng_verified && !profile.is_verified"
+                                prevent-fast-click="1.5"
+                                ng-class="{'active': $root.currentPage.path === '/sport'}"
+                            >
+                                <i class="verified"></i>
+                                <span trans>Sports Verified</span>
+                            </li>
+                            <li ng-click="toggleSliderTab('settings', 'verifyaccount'); headerVersion2Icons.profileToggled = false; $event.stopPropagation()"
+                                prevent-fast-click="1.5"
+                                ng-if="profile.is_verified === false && $root.conf.enableAccountVerification"
+                                ng-class="{'active': env.sliderContent === 'settings' && $root.env.mixedSettingsPage==='verifyaccount'}"
+                            >
+                                <i class="not-verified"></i>
+                                <span trans>Casino Not Verified</span>
+                            </li>
+                            <li ng-click="toggleSliderTab('settings', 'verifyaccount'); headerVersion2Icons.profileToggled = false; $event.stopPropagation()"
+                                prevent-fast-click="1.5"
+                                ng-if="profile.is_verified && profile.is_ekeng_verified === false && $root.conf.enableAccountVerification"
+                                ng-class="{'active': env.sliderContent === 'settings' && $root.env.mixedSettingsPage==='verifyaccount'}"
+                            >
+                                <i class="verified"></i>
+                                <span trans>Casino Verified</span>
+                            </li>
                             <li ng-click="toggleSliderTab('settings'); headerVersion2Icons.profileToggled = false; $event.stopPropagation()"
                                 prevent-fast-click="1.5"
                                 ng-class="{'active': env.sliderContent === 'settings'}"
                             >
                                 <i class="my-profile-icon-b"></i>
                                 <span trans>My Profile</span>
-<!--                                                     <b>???</b> -->
+                                <!--                                                     <b>???</b> -->
                             </li>
                             <li ng-if="conf.header.messageIcon.enabled"
                                 ng-show="!conf.header.messageIcon.showInTopRow"
@@ -57,7 +94,7 @@
                                     {{profile.calculatedBonus}} {{profile.currency_name|currency}}
                                 </b>
                             </li>
-                            <li ng-show="conf.promotionalBonuses.enable && (!conf.hideBonusSectionIfNoBonus || (conf.hideBonusSectionIfNoBonus && $root.allBonusesCount.sportsbook + $root.allBonusesCount.casino > 0))"
+                            <li ng-show="conf.promotionalBonuses.enable && ($root.profile.is_bonus_allowed !== false) && (!conf.hideBonusSectionIfNoBonus || (conf.hideBonusSectionIfNoBonus && $root.allBonusesCount.sportsbook + $root.allBonusesCount.casino > 0))"
                                 ng-click="toggleSliderTab('promotionalBonuses'); headerVersion2Icons.profileToggled = false; $event.stopPropagation()"
                                 prevent-fast-click="1.5"
                                 ng-class="{'active': env.sliderContent === 'promotionalBonuses'}"

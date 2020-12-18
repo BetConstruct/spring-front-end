@@ -28,6 +28,7 @@ angular.module('vbet5').constant('LanguageCodes',
         'est': 'et',   // estonian
         'ind': 'id',   // indonesian
         'kor': 'ko',   // korean
+        'mlg': 'mg',   // malagasy
         'msa': 'ms',   // malay
         'pol': 'pl',   // polish
         'ron': 'ro',   // romanian

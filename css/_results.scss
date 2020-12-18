@@ -349,6 +349,15 @@ $skin-palette-8: $skin-palette-8 !default;
     width: 100%;
     display: table;
     table-layout: fixed;
+    .search-by-team-name.loading:after {
+        @include ltr {
+            left: auto;
+            right: 6px;
+        }
+        @include rtl {
+            left: 6px;
+        }
+    }
 }
 .search-tabs-conatiner > li {
     display: table-cell;
@@ -408,6 +417,23 @@ $skin-palette-8: $skin-palette-8 !default;
     @include rtl {
         float: right;
         padding: 0 14px 0 39px;
+    }
+}
+.search-tabs-conatiner{
+    .team-name-i{
+        background: $form-elements-bg;
+        height: 36px;
+        float: left;
+        width: 100%;
+        position: relative;
+        overflow: hidden;
+        border-radius: 5px;
+        box-sizing: border-box;
+        padding: 0 14px;
+        border: none;
+        color: $text-palette-4;
+        font-size: 12px;
+        line-height: 14px;
     }
 }
 .input-group ul:before{
@@ -689,3 +715,55 @@ sports-results {
 //small view
 
 //small view END
+.search-by-team-name-results{
+    position: relative;
+    ul{
+        float: left;
+        width: 100%;
+        background: $skin-palette-7;
+        box-sizing: border-box;
+        padding: 5px;
+        position: absolute;
+        top: 60px;
+        > li{
+            display: table;
+            padding: 0 0 5px 0;
+            width: 100%;
+            > i{
+                display: table-cell;
+                vertical-align: top;
+                font: 14px sport-icon;
+                width: 20px;
+                position: relative;
+            }
+            > span{
+                color: $text-palette-2;
+                display: table-cell;
+                vertical-align: top;
+                padding: 0 0 0 5px;
+                box-shadow: 0 1px 0 $text-palette-4;
+            }
+        }
+    }
+}
+.search-by-team-name{
+    &.loading{
+        position: relative;
+        float: left;
+        width: 100%;
+        &:after{
+            position: absolute;
+            bottom: 6px;
+            left: calc(50% - 13px);
+            content: '';
+            display: block;
+            box-sizing: border-box;
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            border-top: 2px solid $hero-color;
+            border-right: 2px solid transparent;
+            animation: spinner 1200ms linear infinite;
+        }
+    }
+}

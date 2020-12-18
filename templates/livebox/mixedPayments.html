@@ -47,7 +47,7 @@
                 <li class="status-col-j">
                     <ul class="status-withdraw-j">
                         <li><b>{{(withdrawStatus[history.status] || history.name)|translate|uppercase}}</b></li>
-                        <li ng-if="history.status === 0 && !conf.disableCancelWithdraw && env.sliderContent === 'withdraw'">
+                        <li ng-if="history.is_cancelable && !conf.disableCancelWithdraw && env.sliderContent === 'withdraw'">
                             <button ng-click="cancelWithdrawRequest(history.id)" ng-disabled="cancelButton.disabled" trans>Cancel</button>
                         </li>
                         <li ng-if="$root.conf.showAdditionalInfoOnPaymentStatuses && (history.status === 0 || history.status === 2 || history.status === -2)" ng-mouseover="getWithdrawRejectedReason(history.id, history.status);" class="info-t" title="{{
@@ -57,7 +57,7 @@
                         '-2': (rejectedInfo[history.id] ? rejectedInfo[history.id] : 'Loading...')}[history.status]|translate}}">
 
                         </li>
-                        <li ng-class="{'pending': history.status === 0 || history.status === 2, 'confirmed': history.status === 3, 'rejected': history.status === -2}"></li>
+                        <li ng-class="{'pending': history.status === 0 || history.status === 2, 'confirmed': history.status === 3, 'rejected': history.status === -2, 'cancelled': history.status === -1}"></li>
                     </ul>
                 </li>
             </ul>
@@ -316,12 +316,17 @@
                             <div ng-switch-when="text">
                                 <input name="{{field.name}}" ng-attr-id="{{field.id}}"
                                        ng-model="paymentFormData[field.name]" type="text" size="{{field.size}}"
-                                       maxlength="{{field.maxlength}}" ng-required="field.required"
+                                       ng-required="field.required"
                                        prevent-input="{{field.restrict}}" allow-spaces="{{field.allowSpaces}}"
                                        ng-disabled="field.disabled" ui-mask="{{field.mask}}" model-view-value="{{field.maskModelViewValue}}"
                                        ng-readonly="field.readonly"
                                        placeholder="{{field.placeholder|translate}}"
+                                       ng-minlength="field.minlength||''"
+                                       ng-maxlength="field.maxlength||''"
                                 >
+                                <span ng-if="paymentForm[field.name].$error.minlength" ng-bind="'This field should have minimum {1} symbols'|translate:[field.minlength]"></span>
+                                <span ng-if="paymentForm[field.name].$error.maxlength" ng-bind="'This field should have maximum {1} symbols'|translate:[field.maxlength]"></span>
+
                             </div>
                             <div ng-switch-when="time">
                                 <input name="{{field.name}}" ng-attr-id="{{field.id}}"

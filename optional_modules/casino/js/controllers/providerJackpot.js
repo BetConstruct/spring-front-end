@@ -24,6 +24,8 @@ CASINO.controller('providerJackpotCtrl', ['$rootScope', '$scope', 'Config', 'CCo
         $scope.$on('middlescreen.on', function () { $scope.middleMode = true; });
         $scope.$on('middlescreen.off', function () { $scope.middleMode = false; });
 
+        var gamesOffset = $scope.wideMode ? CConfig.main.increaseByWide : CConfig.main.increaseBy;
+
         $scope.jackpotWidgets = {
             widgetIndex: 0
         };
@@ -164,8 +166,12 @@ CASINO.controller('providerJackpotCtrl', ['$rootScope', '$scope', 'Config', 'CCo
         if (!$scope.widgetMode) {
             $location.search('provider', $scope.selectedProvider);
         }
-        if (!$scope.providerJackpotGames[$scope.selectedProvider].length) {
-            $scope.getProviderJackpotGames();
+        if($scope.providerJackpotGames[$scope.selectedProvider]){
+            if (!$scope.providerJackpotGames[$scope.selectedProvider].length) {
+                $scope.getProviderJackpotGames();
+            }
+        }else {
+            $scope.providerJackpotGames[$scope.selectedProvider] = [];
         }
         $scope.loadMoreGames();
     };
@@ -181,8 +187,6 @@ CASINO.controller('providerJackpotCtrl', ['$rootScope', '$scope', 'Config', 'CCo
             return;
         }
 
-        $scope.providerJackpotGamesLimits[$scope.selectedProvider].offset = $scope.wideMode ? CConfig.main.increaseByWide : CConfig.main.increaseBy;
-
         if ($scope.providerJackpotGamesLimits[$scope.selectedProvider] && $scope.providerJackpotGamesLimits[$scope.selectedProvider].from + $scope.providerJackpotGamesLimits[$scope.selectedProvider].offset < $scope.providerJackpotGamesLimits[$scope.selectedProvider].max && !$scope.gamesInfo.length) {
             $scope.providerJackpotGamesLimits[$scope.selectedProvider].from += $scope.providerJackpotGamesLimits[$scope.selectedProvider].offset;
             $scope.getProviderJackpotGames();
@@ -194,10 +198,24 @@ CASINO.controller('providerJackpotCtrl', ['$rootScope', '$scope', 'Config', 'CCo
         if ($scope.loadingJackpotesProcess[$scope.selectedProvider]) {
             return;
         }
+
+        if (!$scope.providerJackpotGamesLimits[$scope.selectedProvider]) {
+            $scope.providerJackpotGamesLimits[$scope.selectedProvider] = {
+                from: 0,
+                to: $scope.widgetMode ? 4 : gamesOffset,
+                offset: $scope.widgetMode ? 4 : gamesOffset,
+                max: 0
+            };
+        }
+
         $scope.loadingJackpotesProcess[$scope.selectedProvider] = true;
-        casinoData.getJackpotGames(null, $scope.selectedProvider, $scope.providerJackpotGamesLimits[$scope.selectedProvider].from, $scope.providerJackpotGamesLimits[$scope.selectedProvider].to).then(function (response) {
+        $scope.providerJackpotGamesLimits[$scope.selectedProvider].to = $scope.providerJackpotGamesLimits[$scope.selectedProvider].from + $scope.providerJackpotGamesLimits[$scope.selectedProvider].offset;
+
+        var getter = $scope.selectedProvider === 'ALL' ? casinoData.getGames(null, null, countryCode, $scope.providerJackpotGamesLimits[$scope.selectedProvider].from, $scope.providerJackpotGamesLimits[$scope.selectedProvider].to) : casinoData.getJackpotGames(null, $scope.selectedProvider, $scope.providerJackpotGamesLimits[$scope.selectedProvider].from, $scope.providerJackpotGamesLimits[$scope.selectedProvider].offset);
+
+        getter.then(function (response) {
             if (response && response.data && response.data.status !== -1) {
-                Array.prototype.push.apply($scope.providerJackpotGames[$scope.selectedProvider], response.data.items);
+                Array.prototype.push.apply($scope.providerJackpotGames[$scope.selectedProvider], response.data.items || response.data.games);
                 $scope.providerJackpotGamesLimits[$scope.selectedProvider].max = parseInt(response.data.total_count, 10);
             }
 
@@ -208,19 +226,36 @@ CASINO.controller('providerJackpotCtrl', ['$rootScope', '$scope', 'Config', 'CCo
     };
 
     function subscribeForJackpotData() {
-        if (CConfig.version === 2) {
-            jackpotManager.subscribeForExternalJackpotData(subscribeForExternalJackpotDataCallback);
+        jackpotManager.subscribeForExternalJackpotData(subscribeForExternalJackpotDataCallback);
+
+        if (enableBCJackpots) {
+            jackpotManager.subscribeForJackpotData(-1, function (data) {
+                bCJackpotData = angular.copy(data[bCJackpotId]);
+                bCJackpotData.Provider = 'ALL';
+            }, null, 'casino', [bCJackpotId]);
         }
     }
 
     $scope.externalJackpotData = [];
+
+    var bCJackpotId = Config.main.jackpot.casino.bCJackpotIdForExternalJackpots;
+    var enableBCJackpots = !!bCJackpotId;
+    var bCJackpotData = {};
     var jackpotsCount = 0;
 
     function subscribeForExternalJackpotDataCallback(data) {
 
+
         $scope.externalJackpotData = Utils.objectToArray(data).filter(function (t) {
             return t
         }); // filtering empties
+
+
+        if(enableBCJackpots){
+            if(bCJackpotData && bCJackpotData.Id){
+                $scope.externalJackpotData.push(bCJackpotData);
+            }
+        }
 
         if (jackpotsCount !== $scope.externalJackpotData.length) {
             $scope.externalJackpotProviders = Object.keys(data).map(function (key) {
@@ -228,15 +263,16 @@ CASINO.controller('providerJackpotCtrl', ['$rootScope', '$scope', 'Config', 'CCo
                     name: key
                 }
             });
+
+            if (enableBCJackpots) {
+                $scope.externalJackpotProviders.unshift({name: 'ALL'});
+            }
         }
 
+
+
         jackpotsCount = $scope.externalJackpotData.length;
-
-        $scope.externalJackpotData.forEach(function (jackpot) { // sorting pools by amount
-            jackpot.PoolGroup.PoolList.sort(function (a, b) {
-                return b.CollectedAmount - a.CollectedAmount;
-            });
-
+        $scope.externalJackpotData.forEach(function (jackpot) {
 
             if (!$scope.providerJackpotGames[jackpot.Provider]) {
                 $scope.providerJackpotGames[jackpot.Provider] = [];
@@ -245,13 +281,6 @@ CASINO.controller('providerJackpotCtrl', ['$rootScope', '$scope', 'Config', 'CCo
                 $scope.loadingJackpotesProcess[jackpot.Provider] = false;
             }
 
-            if (!$scope.providerJackpotGamesLimits[jackpot.Provider]) {
-                $scope.providerJackpotGamesLimits[jackpot.Provider] = {
-                    from: 0,
-                    to: $scope.widgetMode ? 4 : 30,
-                    max: 0
-                };
-            }
         });
 
         if ($scope.selectedProvider && $scope.externalJackpotData.length > 0 && $scope.providerJackpotGames[$scope.selectedProvider] && !$scope.providerJackpotGames[$scope.selectedProvider].length) {
@@ -355,6 +384,9 @@ CASINO.controller('providerJackpotCtrl', ['$rootScope', '$scope', 'Config', 'CCo
 
     $scope.$on('$destroy', function () {
         jackpotManager.unsubscribeFromAllExternalJackpotData(subscribeForExternalJackpotDataCallback);
+        if (enableBCJackpots) {
+            jackpotManager.unsubscribeFromJackpotData(true);
+        }
     });
 
 }]);

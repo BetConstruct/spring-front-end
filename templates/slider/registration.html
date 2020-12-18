@@ -113,7 +113,7 @@
                             </div>
                             <div class="finish-register-buttons">
                                 <div class="button-confirm">
-                                    <button class="registration-done-btn" ng-click="closeRegistrationResult()" trans>OK</button>
+                                    <button class="registration-done-btn" ng-click="closeRegistrationResult()" ng-bind="'OK'|translate:null:'ok_reg_success'"></button>
                                 </div>
                             </div>
                         </div>
@@ -147,7 +147,7 @@
                             </div>
                             <div class="finish-register-buttons">
                                 <div class="button-confirm">
-                                    <button class="registration-done-btn" ng-click="closeRegistrationResult()" trans>OK</button>
+                                    <button class="registration-done-btn" ng-click="closeRegistrationResult()" ng-bind="'OK'|translate:null:'ok_reg_failed'"></button>
                                 </div>
                             </div>
                         </div>

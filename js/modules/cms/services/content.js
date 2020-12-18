@@ -62,12 +62,12 @@ CMS.service('content', ['WPConfig', 'Config', '$http', '$rootScope', '$location'
      *
      * @param {Number} offset start
      * @param {Number} count number of news to request
-     * @param {String} categoryId category slug
+     * @param {String} categoryName category slug
      * @param {String} [customNewsUrl] optional.  json interface URL to use
      *
      * @returns {Object} promise
      */
-    content.getRecentNews = function getRecentNews(offset, count, categoryId, customNewsUrl) {
+    content.getRecentNews = function getRecentNews(offset, count, categoryName, customNewsUrl) {
         var customNewsBaseHost;
         if (customNewsUrl) {
             customNewsBaseHost = customNewsUrl.match(/^(https?\:)\/\/(([^:\/?#]*)(?:\:([0-9]+))?)(\/[^?#]*)(\?[^#]*|)(#.*|)$/)[2];
@@ -75,9 +75,9 @@ CMS.service('content', ['WPConfig', 'Config', '$http', '$rootScope', '$location'
         var rootCategory = WPConfig.news.langRootCategories[lang] ||  WPConfig.news.langRootCategories.eng; //select english if we don't have category for news in selected language
         var offsetStr = offset === undefined ? '' : '&offset=' + parseInt(offset, 10),
             countStr = count === undefined ? '' : '&limit=' + parseInt(offset + count, 10),
-            categoryStr = categoryId === undefined ? '&cat=' + rootCategory : '&cat=' + categoryId;
+            categoryStr = categoryName === undefined ? '&cat=' + rootCategory : '&tag=' + categoryName;
         var requestUrl = customNewsUrl || newsUrl;
-        return $http.get(requestUrl + '?base_host=' + (customNewsBaseHost || newsBaseHost) + addHttpsFlag(requestUrl) + '&json=get_recent_posts&lang=' + newsLang +  offsetStr + countStr + categoryStr + countryQuery + excludedFields + tags);
+        return $http.get(requestUrl + '?base_host=' + (customNewsBaseHost || newsBaseHost) + addHttpsFlag(requestUrl) + '&json=get_recent_posts&lang=' + newsLang +  offsetStr + countStr + categoryStr + countryQuery + excludedFields);
     };
 
 
@@ -104,7 +104,7 @@ CMS.service('content', ['WPConfig', 'Config', '$http', '$rootScope', '$location'
         var countStr = count === undefined ? '' : '&count=' + (parseInt(count, 10) || count);
         var requestUrl = customNewsUrl || newsUrl;
         var jsonCategoryType = categoryJsonType || 'get_category_posts';
-        return $http.get(requestUrl + '?base_host=' + (customBaseHost || customNewsBaseHost || newsBaseHost) + addHttpsFlag(requestUrl) + '&json=' + jsonCategoryType + '&lang=' + Config.env.lang + '&category_slug=' + categorySlug + countStr  + excludedFields + (includeTagInRequest ? tags : ''));
+        return $http.get(requestUrl + '?base_host=' + (customBaseHost || customNewsBaseHost || newsBaseHost) + addHttpsFlag(requestUrl) + '&json=' + jsonCategoryType + '&lang=' + Config.env.lang + '&category_slug=' + categorySlug + countStr + countryQuery + excludedFields + (includeTagInRequest ? tags : ''));
     };
     /**
      * @ngdoc method

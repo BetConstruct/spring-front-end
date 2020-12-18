@@ -163,7 +163,7 @@
                                     <button class="cms-jcon-refresh"
                                             ng-show="conf.enableBetFromBetHistory && (bet.outcome == 0 || bet.outcome == 5) && bet.type == 2"
                                             ng-click="$event.stopPropagation();addEvents(bet);"
-                                            title="Repeat Bet"></button>
+                                            title="{{'Repeat Bet'|translate}}"></button>
                                     <div class="share-bet-history" ng-click="$event.stopPropagation();">
                                         <social-share ng-repeat="item in conf.recentbetsSharing track by $index"
                                                       ng-if="item.availableTypes.indexOf(bet.type)!==-1"

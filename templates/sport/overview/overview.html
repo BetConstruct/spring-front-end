@@ -45,7 +45,7 @@
                                             {{game.stats.score_set1.team1_value ? '(' + game.stats.score_set1.team1_value + ' :' : '(0 :'}}
                                             {{game.stats.score_set1.team2_value ?  game.stats.score_set1.team2_value + ')' : ' 0)'}}
                                         </i>
-                                        <i ng-if="!{'Soccer':1, 'CyberFootball': 1, 'BasketballShots': 1}[sport.alias]">
+                                        <i ng-if="!{'Soccer':1, 'CyberFootball': 1, 'BasketballShots': 1, 'Archery': 1, 'ArcheryH2H': 1}[sport.alias]">
                                             {{game.stats['score_'+game.info.current_game_state].team1_value ? '(' + game.stats['score_'+game.info.current_game_state].team1_value + ' :' : '(0 :'}}
                                             {{game.stats['score_'+game.info.current_game_state].team2_value ?  game.stats['score_'+game.info.current_game_state].team2_value + ')' : ' 0)'}}
                                         </i>

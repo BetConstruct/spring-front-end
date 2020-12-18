@@ -170,6 +170,10 @@
 
     <cash-out-dialog ng-if="$root.profile && $root.partnerConfig"></cash-out-dialog>
 
+    <!--Vbet homework popup directive-->
+    <vbet-homework-popup ng-if="$root.conf.homework.enabled"></vbet-homework-popup>
+    <!--Vbet homework popup directive END-->
+
     <div ng-if="inactiveMode" class="tooltip-system-info">
         <h3 trans>Hope you'll be back soon</h3>
         <p trans>As you have been inactive for some time your session is disconnected but it'll be reconnected again right after you show a sign of activity.</p>

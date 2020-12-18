@@ -29,32 +29,15 @@
             </div>
 
             <div class="wrapper-separator-games">
-                <div class="all-games-casino-list" no-animate ng-class="{'no-left-menu': liveGamesData.providerOptions.length == 0}">
-                    <ul>
-                        <li ng-repeat="game in liveGamesData.devidedGames[liveGamesData.selectedProvider].games track by $index"
-                            ng-show="confData.liveCasino.hiddenGamesIds.indexOf(game.id) === -1 && (!game.markets || game.markets.available.indexOf(liveGamesData.devidedGames[liveGamesData.selectedProvider].defaultStudio) !== -1)"
-                            class="list-games-casino-view-b"
-                            no-animate>
-                            <a ng-click="openGame(game, 'real', liveGamesData.devidedGames[liveGamesData.selectedProvider].defaultStudio); $event.stopPropagation();">
-                                <p class="game-img-box-b" style="background-image: url({{useBigIcons ? game.icon_3 : game.icon_2}})"></p>
-                                <p class="game-name-b-favorite">
-                                    <span >{{ game.name|translate }}</span>
-                                    <!--<i class="favorite-icon-view" ng-show="!showDeleteBtn" ng-click="toggleSaveToMyCasinoGames(game); $event.stopPropagation();" ng-class="{'active': isFromSaved(game.id)}"></i>-->
-                                </p>
-                                <div class="casino-resize-buttons">
-                                    <div>
-                                        <button ng-click="openGame(game, 'real', liveGamesData.devidedGames[liveGamesData.selectedProvider].defaultStudio); $event.stopPropagation();">
-                                            <span trans>Play now</span>
-                                        </button>
-                                        <button ng-if="game.types.viewMode && !env.authorized" ng-click="openGame(game, null, liveGamesData.devidedGames[liveGamesData.selectedProvider].defaultStudio); $event.stopPropagation();">
-                                            <span trans>View</span>
-                                        </button>
-                                    </div>
-                                </div>
-                            </a>
-                        </li>
-                    </ul>
-                </div>
+                <casino-games-list class="all-games-casino-list visible-games-count-5"
+                                   show-conditions="true"
+                                   jackpot-games="true"
+                                   games-list="liveGamesData.devidedGames[liveGamesData.selectedProvider].games"
+                                   game-show-conditions="confData.liveCasino.hiddenGamesIds.indexOf(game.id) === -1 && (!game.markets || game.markets.available.indexOf(liveGamesData.devidedGames[liveGamesData.selectedProvider].defaultStudio) !== -1)"
+                                   use-big-icons="true"
+                >
+                </casino-games-list>
+
             </div>
         </div>
     </div>

@@ -85,6 +85,13 @@ $skin-second: false;
 .new-games-page-j .j-resize-950-1280 li.PGDTLC .wrapper-game-link .game-link-tj:after{
   display: none;
 }
+.new-games-page-j .j-resize-950-1280 li.VGS500 .wrapper-game-link .game-link-tj:after,
+.new-games-page-j .j-resize-950-1280 li.VGSHokm .wrapper-game-link .game-link-tj:after,
+.new-games-page-j .j-resize-950-1280 li.ASG333 .wrapper-game-link .game-link-tj:after
+{
+  content: attr(data-new);
+}
+
 .Vbet, .Vbetcn{
    .logo-nav-wrapper{
     z-index: 222;
@@ -95,3 +102,131 @@ $skin-second: false;
   justify-content: center;
   align-items: center;
 }
+
+// ID card authentication popup Start
+  .id-card-auth {
+    .pu-head-j,
+    .pu-contain-j > p {
+      display: none;
+    }
+  }
+  .id-card-authentication {
+    float: left;
+    width: 500px;
+    min-height: 306px;
+    .close-j {
+      top: 6px;
+      @include ltr {
+        right: 6px;
+      }
+      @include rtl {
+        left: 6px;
+      }
+    }
+    .select-doc-a {
+      li {
+        > h2{
+          margin-bottom: 20px;
+          font: 16px/18px $font-f;
+          @include ltr {
+            float: left;
+          }
+          @include rtl{
+            float: right;
+          }
+        }
+        > p {
+          margin: 0;
+          color: $text-palette-4;
+          font-size: 12px;
+        }
+        .youtube-video-link {
+          color: $text-palette-3;
+          font: 14px/18px $font-f;
+          transition: color 240ms;
+          @include ltr {
+            float: right;
+          }
+          @include rtl {
+            float: left;
+          }
+          &:hover {
+            color: $text-palette-2;
+          }
+          &:before {
+            content: "\ea9f";
+            display: inline-block;
+            font: 14px/14px icomoon;
+            @include ltr {
+              margin-right: 8px;
+            }
+            @include rtl {
+              margin-left: 8px;
+            }
+          }
+        }
+      }
+      .button-confirm > button {
+        margin-top: 0;
+        &:not(:last-child) {
+          margin-bottom: 20px;
+        }
+      }
+    }
+    .md-progress-circular {
+      right: 50%;
+      bottom: 50%;
+      margin-right: -50px;
+      margin-bottom: -50px;
+    }
+  }
+
+// ID card authentication popup End
+
+// Recharge popup Start
+
+.low-balance .popup-wrapper-j {
+  max-width: 800px;
+  .pu-button-wrap-j {
+    padding: 30px 0 0;
+    button {
+      &:first-child {
+        color: set-color($brand-color-1);
+        background: $brand-color-1;
+        border-color: $brand-color-1;
+        &:not([disabled]):hover {
+          color: set-color($brand-color-1);
+          background: lighten($brand-color-1, 10);
+          border-color: lighten($brand-color-1, 10);
+        }
+      }
+    }
+  }
+}
+.new-default-popup-j {
+  .contain-footer-block {
+    float: none;
+    width: auto;
+    display: inline-block;
+    background: none;
+    .guide {
+      @media screen and (max-width: 1260px) {
+        width: calc(100% - 20px);
+      }
+    }
+    .paymen-icons-list {
+      background: none;
+    }
+    .payment-content-block {
+      width: auto;
+      > ul {
+        padding: 30px 0 0;
+        > li {
+          padding: 0 10px;
+        }
+      }
+    }
+  }
+}
+
+// Recharge popup End

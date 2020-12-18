@@ -1,0 +1,20 @@
+<div class="mixed-matches"  ng-class="{'closed': mixedMatchesClosed}" >
+    <ul class="mixed-matches-tab" ng-click="toggleMixedMatches()">
+        <li class="ellipsis-text" ng-bind="'1st Teams'|translate"></li>
+        <li></li>
+        <li class="ellipsis-text" ng-bind="'2nd Teams'|translate"></li>
+    </ul>
+    <div class="mixed-matches-teams" ng-show="!mixedMatchesClosed">
+        <ul ng-repeat="virtualGame in virtualGames">
+            <li>
+                <span class="mixed-matches-name ellipsis-text">{{virtualGame.team1_name}}</span>
+                <stats-logo team-id="virtualGame.team1_id"></stats-logo>
+            </li>
+            <li class="mixed-matches-vs" ng-bind="'VS'|translate"></li>
+            <li>
+                <stats-logo team-id="virtualGame.team2_id"></stats-logo>
+                <span class="mixed-matches-name ellipsis-text">{{virtualGame.team2_name}}</span>
+            </li>
+        </ul>
+    </div>
+</div>

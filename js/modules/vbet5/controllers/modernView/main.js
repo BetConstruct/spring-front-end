@@ -39,6 +39,14 @@ angular.module('vbet5.betting').controller('modernViewManCtrl', ['$rootScope', '
         game: 0
     };
 
+    var VIRTUAL_COUPON_GAMES = {
+        id: -16,
+        alias: 'coupongames',
+        name: $filter('translate')('Coupons'),
+        order: Config.main.couponGames.order,
+        game: 0
+    };
+
     var sportListSubId = null;
     var regionListSubId = null;
     var gamesSubId = null;
@@ -47,13 +55,14 @@ angular.module('vbet5.betting').controller('modernViewManCtrl', ['$rootScope', '
     var searchParams;
     var sportSubscriptionProgress = null, regionSubscriptionProgress = null, gameSubsciptionProgress = null, subscribeToBoostedBetsProgress = null;
     $rootScope.boostedBetsEventIds = {};
+    var couponPromise = null;
 
     $scope.withVideo = !!$location.search().video;
     var isWideScreen;
 
     var customSportAliasFilter = Utils.getCustomSportAliasFilter();
     var sportData;
-
+    var coupons;
     GameInfo.checkIfTimeFilterIsNeeded();
 
     /**
@@ -260,6 +269,9 @@ angular.module('vbet5.betting').controller('modernViewManCtrl', ['$rootScope', '
             if(Config.main.boostedBets && Config.main.boostedBets.enabled && !$scope.env.live && $rootScope.boostedBetsEventIds && Object.keys($rootScope.boostedBetsEventIds).length > 0) {
                 $scope.sports_list.unshift(VIRTUAL_BOOSTED_BETS);
             }
+            if(Config.main.couponGames && Config.main.couponGames.enabled && !$scope.env.live && coupons && coupons.length > 0) {
+                $scope.sports_list.unshift(VIRTUAL_COUPON_GAMES);
+            }
         }
 
         $scope.sports_list = $filter('orderBy')($scope.sports_list, 'order');
@@ -279,10 +291,10 @@ angular.module('vbet5.betting').controller('modernViewManCtrl', ['$rootScope', '
                 regionsArray = groupRegionsForAllSports(regionsArray);
             }
             $scope.regionsList = $filter('orderBy')(regionsArray, 'order');
-            if (!$scope.env.live && $scope.selectedSportId !== VIRTUAL_MOST_POPULAR.id && $scope.selectedSportId !== VIRTUAL_BOOSTED_BETS.id) {
+            if (!$scope.env.live && $scope.selectedSportId !== VIRTUAL_MOST_POPULAR.id && $scope.selectedSportId !== VIRTUAL_BOOSTED_BETS.id && $scope.selectedSportId !== VIRTUAL_COUPON_GAMES.id) {
                 $scope.regionsList.unshift(VIRTUAL_REGION_UPCOMING);
             } else {
-                if (Config.main.videoEnabled && !Config.main.customSportsBook.modern.toggleLiveButton && $scope.selectedSportId !== VIRTUAL_MOST_POPULAR.id && $scope.selectedSportId !== VIRTUAL_BOOSTED_BETS.id) {
+                if (Config.main.videoEnabled && !Config.main.customSportsBook.modern.toggleLiveButton && $scope.selectedSportId !== VIRTUAL_MOST_POPULAR.id && $scope.selectedSportId !== VIRTUAL_BOOSTED_BETS.id && $scope.selectedSportId !== VIRTUAL_COUPON_GAMES.id) {
                     $scope.regionsList.unshift(VIRTUAL_REGION_WITHVIDEO);
                 }
                 $scope.regionsList.unshift(VIRTUAL_REGION_ALL);
@@ -330,7 +342,13 @@ angular.module('vbet5.betting').controller('modernViewManCtrl', ['$rootScope', '
     function updateGames(data, initial) {
         $rootScope.gamesAreLoading = false;
         var firstSport = $filter('firstElement')(data.sport);
-        if (firstSport && firstSport.id !== $scope.selectedSportId && $scope.selectedSportId !== VIRTUAL_SPORT_FAVORITE.id && $scope.selectedSportId !== VIRTUAL_SPORT_ALL.id && $scope.selectedSportId !== VIRTUAL_MOST_POPULAR.id && $scope.selectedSportId !== VIRTUAL_BOOSTED_BETS.id) {
+        if (firstSport
+            && firstSport.id !== $scope.selectedSportId
+            && $scope.selectedSportId !== VIRTUAL_SPORT_FAVORITE.id
+            && $scope.selectedSportId !== VIRTUAL_SPORT_ALL.id
+            && $scope.selectedSportId !== VIRTUAL_MOST_POPULAR.id
+            && $scope.selectedSportId !== VIRTUAL_BOOSTED_BETS.id
+            && $scope.selectedSportId !== VIRTUAL_COUPON_GAMES.id) {
             $rootScope.selectedCompetitions = null;
             $rootScope.selectedCompetitionsInColumns = null;
             return; // "late" update (user has already changed sport)
@@ -444,6 +462,9 @@ angular.module('vbet5.betting').controller('modernViewManCtrl', ['$rootScope', '
                             if (Config.main.boostedBets && Config.main.boostedBets.enabled && searchSportParam === VIRTUAL_BOOSTED_BETS.id) {
                                 sportToSelect = VIRTUAL_BOOSTED_BETS;
                             }
+                            if (Config.main.couponGames && Config.main.couponGames.enabled && searchSportParam === VIRTUAL_COUPON_GAMES.id) {
+                                sportToSelect = VIRTUAL_COUPON_GAMES;
+                            }
                         }
                     } else {
                         sportToSelect = $rootScope.myGames && $rootScope.myGames.length ? VIRTUAL_SPORT_FAVORITE : $scope.sports_list[defaultSportListIndex];
@@ -451,6 +472,10 @@ angular.module('vbet5.betting').controller('modernViewManCtrl', ['$rootScope', '
                     if (!$rootScope.favoriteGamesSelectedAsSport ) { //not to reload view when favorites is selected
                         if(sportToSelect.id === VIRTUAL_BOOSTED_BETS.id && !$scope.boostedBetsGameIds.length){
                             subscribeToBoostedBetsProgress.then(function (a) {
+                                $scope.selectSport(sportToSelect);
+                            });
+                        }else if (sportToSelect.id === VIRTUAL_COUPON_GAMES.id && (!coupons || !coupons.length)) {
+                            couponPromise.then(function () {
                                 $scope.selectSport(sportToSelect);
                             });
                         }else {
@@ -655,6 +680,122 @@ angular.module('vbet5.betting').controller('modernViewManCtrl', ['$rootScope', '
         });
     }
 
+    function loadCoupons() {
+        couponPromise = Zergling.get({}, "get_coupons").then(function (res) {
+            coupons = res.details;
+            if (sportData && coupons.length > 0) {
+                updateSportsList(sportData);
+            }
+
+        });
+
+    }
+
+    $scope.selectCoupon = function selectCoupon(coupon) {
+        if ($scope.selectedCoupon === coupon) {
+            return;
+        }
+        $scope.selectedCoupon = coupon;
+        if (regionSubscriptionProgress === null ) { //first time
+            subscribeToRegionList(VIRTUAL_COUPON_GAMES);
+        } else {
+            regionSubscriptionProgress.then(function (subId) {
+                Zergling.unsubscribe(subId);
+                subscribeToRegionList(VIRTUAL_COUPON_GAMES);
+                regionListSubId = null;
+            });
+        }
+    };
+
+    function subscribeToRegionList(sport) {
+        var subscribingProgress = $q.defer();
+        var regionIdToSelect;
+
+        regionSubscriptionProgress = subscribingProgress.promise;
+        var request = {
+            'source': 'betting',
+            'what': {'region': [], 'game': '@count'}
+        };
+
+        request.where = sport.id === VIRTUAL_MOST_POPULAR.id ? {
+            'game': {
+                'type': {'@in': [0, 2]},
+                'promoted': true
+            }
+        } : {
+            'sport': {'id': $scope.selectedSportId},
+            'game': (Config.main.enableVisibleInPrematchGames && !Config.env.live ? {'@or': ([{ 'type': Config.env.live ? 1 : {'@in':[0,2]} }, {'visible_in_prematch': 1, 'type': 1}])} : {'type': Config.env.live ? 1 : {'@in':[0,2]}})
+        };
+
+        if (!sport.id) {
+            delete request.where.sport;
+        }
+
+        if (Config.env.gameTimeFilter) {
+            request.where.game.start_ts = Config.env.gameTimeFilter;
+        }
+
+        if ($scope.withVideo && Config.env.live) {
+            var sKey = Config.main.video.enableOptimization ? 'id' : '@or';
+            request.where.game[sKey] = GameInfo.getVideoFilter();
+        }
+
+        if(sport.id === VIRTUAL_BOOSTED_BETS.id){
+            request.where =  {
+                'game': {
+                    'id': {'@in': $scope.boostedBetsGameIds}
+                }
+            };
+        }
+        if (sport.id === VIRTUAL_COUPON_GAMES.id ) {
+            request.where =  {
+                'game': {
+                    'id': {'@in': $scope.selectedCoupon.Matches}
+                }
+            };
+        }
+
+
+
+        /*Utils.setCustomSportAliasesFilter(request);*/
+        Zergling.subscribe(
+            request,
+            updateRegionsList
+        ).then(function (result) {
+            $rootScope.selectedSportName = sport.name;
+            $rootScope.selectedSportAlias = sport.alias;
+            subscribingProgress.resolve(result.subid);
+            if (result.subid) {
+                regionListSubId = result.subid;
+            }
+            updateRegionsList(result.data);
+            var regionAliasMap = Utils.createMapFromObjItems($scope.regionsList, 'alias');
+            if (searchParams.region !== undefined) {
+                regionIdToSelect = parseInt(searchParams.region, 10);
+                //select only if exists.  if pre-match, also allow virtual "all for today' region
+                regionIdToSelect = result.data.region[regionIdToSelect] || (regionIdToSelect === VIRTUAL_REGION_UPCOMING.id && !$scope.env.live) || regionIdToSelect === VIRTUAL_REGION_WITHVIDEO.id || (regionIdToSelect === VIRTUAL_REGION_POPULAR.id && !$scope.env.live) ? regionIdToSelect : null;
+            } else if ($rootScope.selectedRegionAlias && regionAliasMap && regionAliasMap[$rootScope.selectedRegionAlias] !== undefined && sport.alias !== 'all') {
+                regionIdToSelect = regionAliasMap[$rootScope.selectedRegionAlias].id;
+            } else if ($scope.hasPopularGames) {
+                regionIdToSelect = VIRTUAL_REGION_POPULAR.id;
+            } else if ($scope.env.live) { //load competitions for all regions
+                console.log('LIVE, selecting all');
+                regionIdToSelect = VIRTUAL_REGION_ALL.id;
+            } else if ($scope.regionsList && $scope.regionsList.length) { //load competitions only for 1st region
+                regionIdToSelect = $scope.regionsList[0].id;
+                console.log('selecting 1st region', $scope.regionsList);
+            }
+
+            if (regionIdToSelect !== undefined) {
+                $scope.selectRegion({id: regionIdToSelect});
+            }
+
+        })['catch'](function (reason) {
+            subscribingProgress.resolve(null);
+        });
+
+    }
+
     /**
      * @ngdoc method
      * @name selectSport
@@ -669,13 +810,21 @@ angular.module('vbet5.betting').controller('modernViewManCtrl', ['$rootScope', '
         if (!sport) {
             return;
         }
+
         if (sport.id === VIRTUAL_SPORT_VIRTUALS.id) {
             $location.path('/virtualsports');
             return;
         }
-        var regionIdToSelect;
+        if ($scope.selectedPrematchStreamSport !== undefined && sport.id !== $scope.selectedPrematchStreamSport &&  $scope.selectedSportId === $scope.selectedPrematchStreamSport) {
+            $rootScope.broadcast("removePrematchStream");
+        }
         console.log('select sport', sport);
-
+        if (sport.id === VIRTUAL_COUPON_GAMES.id) {
+            $scope.coupons = coupons;
+            $scope.selectedCoupon = coupons[0];
+        } else {
+            $scope.coupons = undefined;
+        }
         analytics.gaSend('send', 'event', 'explorer', 'select sport ' + ($scope.env.live ? '(LIVE)' : '(PM)'), {'page': $location.path(), 'eventLabel': sport.alias});
         $location.search('sport', sport.id);
         searchParams = $location.search();
@@ -698,94 +847,35 @@ angular.module('vbet5.betting').controller('modernViewManCtrl', ['$rootScope', '
 
         $rootScope.favoriteGamesSelectedAsSport = false;
 
-        function subscribeToRegionList() {
-            var subscribingProgress = $q.defer();
-            regionSubscriptionProgress = subscribingProgress.promise;
-            var request = {
-                'source': 'betting',
-                'what': {'region': [], 'game': '@count'}
-            };
 
-            request.where = sport.id === VIRTUAL_MOST_POPULAR.id ? {
-                'game': {
-                    'type': {'@in': [0, 2]},
-                    'promoted': true
-                }
-            } : {
-                'sport': {'id': $scope.selectedSportId},
-                'game': (Config.main.enableVisibleInPrematchGames && !Config.env.live ? {'@or': ([{ 'type': Config.env.live ? 1 : {'@in':[0,2]} }, {'visible_in_prematch': 1, 'type': 1}])} : {'type': Config.env.live ? 1 : {'@in':[0,2]}})
-            };
-
-            if (!sport.id) {
-                delete request.where.sport;
-            }
-
-            if (Config.env.gameTimeFilter) {
-                request.where.game.start_ts = Config.env.gameTimeFilter;
-            }
-
-            if ($scope.withVideo && Config.env.live) {
-                var sKey = Config.main.video.enableOptimization ? 'id' : '@or';
-                request.where.game[sKey] = GameInfo.getVideoFilter();
-            }
-
-            if(sport.id === VIRTUAL_BOOSTED_BETS.id){
-                request.where =  {
-                    'game': {
-                        'id': {'@in': $scope.boostedBetsGameIds}
-                    }
-                };
-            }
-
-            /*Utils.setCustomSportAliasesFilter(request);*/
-            Zergling.subscribe(
-                request,
-                updateRegionsList
-            ).then(function (result) {
-                $rootScope.selectedSportName = sport.name;
-                $rootScope.selectedSportAlias = sport.alias;
-                subscribingProgress.resolve(result.subid);
-                if (result.subid) {
-                    regionListSubId = result.subid;
-                }
-                updateRegionsList(result.data);
-                var regionAliasMap = Utils.createMapFromObjItems($scope.regionsList, 'alias');
-                if (searchParams.region !== undefined) {
-                    regionIdToSelect = parseInt(searchParams.region, 10);
-                    //select only if exists.  if pre-match, also allow virtual "all for today' region
-                    regionIdToSelect = result.data.region[regionIdToSelect] || (regionIdToSelect === VIRTUAL_REGION_UPCOMING.id && !$scope.env.live) || regionIdToSelect === VIRTUAL_REGION_WITHVIDEO.id || (regionIdToSelect === VIRTUAL_REGION_POPULAR.id && !$scope.env.live) ? regionIdToSelect : null;
-                } else if ($rootScope.selectedRegionAlias && regionAliasMap && regionAliasMap[$rootScope.selectedRegionAlias] !== undefined && sport.alias !== 'all') {
-                    regionIdToSelect = regionAliasMap[$rootScope.selectedRegionAlias].id;
-                } else if ($scope.hasPopularGames) {
-                    regionIdToSelect = VIRTUAL_REGION_POPULAR.id;
-                } else if ($scope.env.live) { //load competitions for all regions
-                    console.log('LIVE, selecting all');
-                    regionIdToSelect = VIRTUAL_REGION_ALL.id;
-                } else if ($scope.regionsList && $scope.regionsList.length) { //load competitions only for 1st region
-                    regionIdToSelect = $scope.regionsList[0].id;
-                    console.log('selecting 1st region', $scope.regionsList);
-                }
-
-                if (regionIdToSelect !== undefined) {
-                    $scope.selectRegion({id: regionIdToSelect});
-                }
-
-            })['catch'](function (reason) {
-                subscribingProgress.resolve(null);
-            });
-
-        }
 
         if (regionSubscriptionProgress === null ) { //first time
-            subscribeToRegionList();
+            subscribeToRegionList(sport);
         } else {
             regionSubscriptionProgress.then(function (subId) {
                 Zergling.unsubscribe(subId);
-                subscribeToRegionList();
+                subscribeToRegionList(sport);
                 regionListSubId = null;
             });
         }
+
     };
+
+    function updateGamesRequest(request, gameIds) {
+        request.what.game = [ 'id', 'start_ts', 'team1_name', 'team2_name', 'team1_external_id', 'team2_external_id', 'type', 'info', 'markets_count', 'extra', 'is_blocked', 'game_number', 'exclude_ids', 'is_stat_available', 'is_live', 'is_neutral_venue', 'is_itf'];
+        request.where =  {
+            'game': {
+                'id': {'@in': gameIds}
+            }
+
+        };
+
+        if($scope.selectedRegionId && $scope.selectedRegionId !== -1){
+            request.where.region = {
+                'id':  $scope.selectedRegionId
+            };
+        }
+    }
 
     /**
      * @ngdoc method
@@ -857,21 +947,12 @@ angular.module('vbet5.betting').controller('modernViewManCtrl', ['$rootScope', '
                 request.where.competition = {'favorite': true};
             }
 
-            if($scope.selectedSportId === VIRTUAL_BOOSTED_BETS.id){
-                request.what.game = [ 'id', 'start_ts', 'team1_name', 'team2_name', 'team1_external_id', 'team2_external_id', 'type', 'info', 'markets_count', 'extra', 'is_blocked', 'game_number', 'exclude_ids', 'is_stat_available', 'is_live', 'is_neutral_venue', 'is_itf'];
-                request.where =  {
-                    'game': {
-                        'id': {'@in': $scope.boostedBetsGameIds}
-                    }
+            if ($scope.selectedSportId === VIRTUAL_BOOSTED_BETS.id){
+                updateGamesRequest(request, $scope.boostedBetsGameIds);
+            }
 
-                };
-
-                if($scope.selectedRegionId && $scope.selectedRegionId !== -1){
-                    request.where.region = {
-                        'id':  $scope.selectedRegionId
-                    };
-                }
-
+            if ($scope.selectedSportId === VIRTUAL_COUPON_GAMES.id){
+                updateGamesRequest(request, $scope.selectedCoupon.Matches);
             }
 
             /*Utils.setCustomSportAliasesFilter(request);*/
@@ -990,6 +1071,9 @@ angular.module('vbet5.betting').controller('modernViewManCtrl', ['$rootScope', '
             if (Config.main.boostedBets && Config.main.boostedBets.enabled) {
                 $scope.subscribeToBoostedBets();
             }
+            if (Config.main.couponGames.enabled) {
+                loadCoupons();
+            }
         });
     };
 
@@ -1059,4 +1143,9 @@ angular.module('vbet5.betting').controller('modernViewManCtrl', ['$rootScope', '
 
         return Utils.objectToArray(regionsAlias);
     }
+
+    $scope.selectPrematchStreaming = function selectPrematchStreaming(streamInfo, game) {
+        $scope.selectedPrematchStreamSport = game.sport.id;
+        $rootScope.broadcast("setPrematchStream", streamInfo);
+    };
 }]);

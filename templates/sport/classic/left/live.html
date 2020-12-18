@@ -43,7 +43,8 @@
                                     <div class="games-list-mini-view-v3">
                                         <div class="competition-view-v-3
                                     {{leftMenuState.live.competition[competition.id].collapsed ? 'closed' : ''}}
-                                    {{(leftMenuState.live.region[region.id].expanded || liveFilters.disableRegions) && competition.gameCount ? 'competition-empty' : ''}}"
+                                    {{(leftMenuState.live.region[region.id].expanded || liveFilters.disableRegions) && competition.gameCount ? 'competition-empty' : ''}}
+                                    {{$root.conf.showIconsForCompetitions[competition.id]? 'live-nba':''}}"
                                              ng-repeat="competition in region.competitions track by competition.id"
                                              dnd-list="competition.games"
                                              dnd-allowed-types="[sport.alias + region.alias + competition.id]">
@@ -64,9 +65,12 @@
                                                  dnd-type="sport.alias + region.alias + competition.id"
                                                  dnd-disable-if="'/multiview/' !== $location.path() || multiViewLiveOpenedGamesIds.length === $root.conf.liveMultiViewItemsAmount">
                                                 <div class="team-name-1-v3" data-title="{{game.team1_name}}" >
+                                                    <stats-logo ng-if="$root.conf.showIconsForCompetitions[competition.id]" team-id="game.team1_id"></stats-logo>
                                                     <span ng-hide="game.show_type === 'OUTRIGHT' || game.sport.id === 17" ng-bind="game.info.set_count === 1 ? game.stats.score_set1.team1_value : game.info.score1"></span>
                                                 </div>
+
                                                 <div class="team-name-1-v3" ng-hide="game.show_type === 'OUTRIGHT'"   data-title="{{game.team2_name ? game.team2_name : ''}}">
+                                                    <stats-logo ng-if="$root.conf.showIconsForCompetitions[competition.id]" team-id="game.team2_id"></stats-logo>
                                                     <span ng-show="game.sport.id !== 17" ng-bind="game.info.set_count === 1 ? game.stats.score_set1.team2_value : game.info.score2"></span>
                                                 </div>
                                                 <div class="game-info-mini-v3"
@@ -74,7 +78,7 @@
                                                     <p ng-show="game.info.score1!=undefined || game.info.score2 !=undefined || game.info.current_game_state || game.info.current_game_time">
                                                         <span ng-if="game.info.current_leg === undefined && game.info.current_game_state !== 'notstarted'">{{game.info.current_game_state|convertSetName:game.sport.alias|translate}}</span>
                                                         <span ng-if="game.info.current_leg !== undefined">{{game.info.current_game_state|convertSetNameWithLeg:game.info|translate}}</span>
-                                                        <i class="blocked-icon-v3"
+                                                        <i class="blocked-icon-v3" title="{{'Blocked'|translate}}"
                                                            ng-show="(!(game.markets_count) || game.is_blocked)"></i>
                                                         <span ng-if="game.info.over_number" class="over-cricet" ng-bind="'Over {1}'|translate:[game.info.over_number]"></span>
                                                     </p>

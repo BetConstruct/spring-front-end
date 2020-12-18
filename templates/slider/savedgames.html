@@ -22,18 +22,18 @@
                                 <div class="score" ng-show="game.sport.alias !== 'Boxing'" ng-bind="game.info.set_count === 1 ? game.stats.score_set1.team1_value : game.info.score1"></div>
                                 <div class="name" title="{{game.team1_name}}"><span>{{ game.team1_name }}</span></div>
                             </div>
-                            <div class="team-2">
+                            <div class="team-2" ng-if="game.team2_name">
                                 <div class="score" ng-show="game.sport.alias !== 'Boxing'" ng-bind="game.info.set_count === 1 ? game.stats.score_set1.team2_value : game.info.score2"></div>
                                 <div class="name" title="{{game.team2_name}}"><span>{{ game.team2_name }}</span></div>
                             </div>
                         </div>
                         <div class="additional-info" ng-class="{'no-logo': !(game.info.extra.team1icon && !game.info.extra.team2icon)}">
                             <div class="logo-team-1"><div ng-show="game.info.extra.team1icon"><img ng-src="{{ game.info.extra.team1icon}}"></div></div>
-                            <div class="details" ng-if="game.info.current_leg === undefined"> {{(game.info.current_game_state|convertSetName:game.sport.alias|translate)}} <span ng-if="game.sport.alias === 'Soccer'">{{ game.info.current_game_time }}</span></div>
+                            <div class="details" ng-if="game.info.current_leg === undefined"> {{(game.info.current_game_state|convertSetName:game.sport.alias|translate)}} <span ng-if="game.sport.alias === 'Soccer' && game.info.current_game_state !== 'notstarted' && game.info.current_game_state !== 'timeout' && game.info.current_game_state !== 'set5'">{{ game.info.current_game_time }}</span></div>
                             <div class="details" ng-if="game.info.current_leg !== undefined"> {{(game.info.current_game_state|convertSetNameWithLeg:game.info|translate)}}</div>
                             <div class="logo-team-2"><div ng-show="game.info.extra.team2icon"><img ng-src="{{ game.info.extra.team2icon}}"></div></div>
                         </div>
-                        <div class="save-games-stats" ng-if="game.sport.alias !== 'Soccer' && game.sport.alias !== 'HorseRacing' && game.sport.alias !== 'Boxing' && game.sport.alias !== 'BasketballShots'">
+                        <div class="save-games-stats" ng-if="!{'Soccer':1,'HorseRacing':1,'Boxing':1,'BasketballShots':1}[game.sport.alias]">
                             <table class="cash-game">
                                 <tr>
                                     <th ng-if="game.sport.alias !== 'Basketball'" trans>Set</th>
@@ -46,7 +46,7 @@
                                         {{ game.stats['score_set' + set_num].team1_value ? game.stats['score_set' + set_num].team1_value : 0}}
                                     </td>
                                 </tr>
-                                <tr>
+                                <tr ng-if="game.team2_name">
                                     <td></td>
                                     <td ng-repeat="set_num in framesCount(game.stats)" ng-class="{'active-cash':game.info.current_game_state == 'set' + set_num,'winner':isSetWinner(game.stats['score_set' + set_num],2)}">
                                         {{ game.stats['score_set' + set_num].team2_value ? game.stats['score_set' + set_num].team2_value : 0}}

@@ -10,6 +10,7 @@ VBET5.service('AuthData', ['$window', '$cookies', 'Config', 'Storage', 'Utils', 
     AuthData.partnerAuthData = null;
     AuthData.integrationMode = false;
 
+    var cookieServiceAvailable = window.location.protocol === "https:";
     /**
      * @ngdoc method
      * @name set
@@ -21,9 +22,10 @@ VBET5.service('AuthData', ['$window', '$cookies', 'Config', 'Storage', 'Utils', 
     AuthData.set = function set(data) {
         if (AuthData.integrationMode) {
             AuthData.partnerAuthData = data;
+        } else if (Config.main.useAuthCookies && cookieServiceAvailable) {
+            Utils.checkAndSetCookie("auth_data", data, data.never_expires ? Config.main.saveLoginDataLifeTime : Config.main.authSessionLifetime);
         } else {
             Storage.set('auth_data', data, data.never_expires ? null : Config.main.authSessionLifetime);
-            Utils.checkAndSetCookie("auth_data", data, data.never_expires ? Config.main.saveLoginDataLifeTime : Config.main.authSessionLifetime);
         }
     };
 
@@ -36,17 +38,12 @@ VBET5.service('AuthData', ['$window', '$cookies', 'Config', 'Storage', 'Utils', 
      * @returns {Object} data auth data object
      */
     AuthData.get = function get() {
-        if ( AuthData.integrationMode) {
+        if (AuthData.integrationMode) {
             return AuthData.partnerAuthData;
         }
-        if (Config.main.useAuthCookies) {
-            var authData = $cookies.getObject('auth_data');
-
-            if (authData) {
-                return authData;
-            }
+        if (Config.main.useAuthCookies && cookieServiceAvailable) {
+            return $cookies.getObject('auth_data');
         }
-
         return Storage.get('auth_data');
     };
 
@@ -61,15 +58,13 @@ VBET5.service('AuthData', ['$window', '$cookies', 'Config', 'Storage', 'Utils', 
     AuthData.clear = function clear() {
         if (AuthData.integrationMode) {
             AuthData.partnerAuthData = null;
+        } else if (Config.main.useAuthCookies && cookieServiceAvailable) {
+            $cookies.remove('auth_data', {
+                domain: $window.location.hostname.split(/\./).slice(-2).join("."),
+                path: "/"
+            });
         } else {
             Storage.remove('auth_data');
-            if (Config.main.useAuthCookies) {
-                $cookies.remove('auth_data', {
-                    domain: $window.location.hostname.split(/\./).slice(-2).join("."),
-                    path: "/"
-                });
-                AuthData.set('');
-            }
         }
     };
 
@@ -87,5 +82,4 @@ VBET5.service('AuthData', ['$window', '$cookies', 'Config', 'Storage', 'Utils', 
     };
 
     return AuthData;
-
 }]);

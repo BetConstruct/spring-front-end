@@ -1,0 +1,19 @@
+<!-- BasketballShots live game template-->
+<div class="basketball-shots-game-container">
+    <div class="short-info-box">
+        <h6>{{openGame.team1_name}}</h6>
+        <div class="show-points"><span ng-bind="'{1} Points'|translate:[openGame.info.score1 || 0]"></span></div>
+        <p>{{openGame.competition.name}} | <span ng-bind="'Hit Stats {1}%'|translate:[$root.Math.round(openGame.info.shot_attempts / (openGame.info.shot_attempts + openGame.info.missed_attempts) *100)|| 0]"></span></p>
+        <div ng-if="openGame.info.total_attempts" class="shot-result-b">
+            <div class="short-points">
+                <span ng-if="shotsSlider.needScroll" ng-class="{'inactive':shotsSlider.scrollIndex >= openGame.info.total_attempts - shotsSlider.visibleCount}" ng-click="shotsSlider.next()" class="next-shot"></span>
+                <span ng-if="shotsSlider.needScroll" ng-class="{'inactive':shotsSlider.scrollIndex <= 0}"  ng-click="shotsSlider.previous()" class="prev-shot"></span>
+                <div class="status-short-l">
+                    <div ng-show="$index < shotsSlider.scrollIndex + shotsSlider.visibleCount && $index >= shotsSlider.scrollIndex " class="each-point" ng-class="{'missed': openGame.live_events[$index].type_id === '4' ,'approved': openGame.live_events[$index].type_id === '5'}"  ng-repeat="x in [].constructor(openGame.info.total_attempts) track by $index">
+                        <p><i>{{$index + 1}}</i></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

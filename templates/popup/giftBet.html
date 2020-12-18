@@ -13,7 +13,7 @@
                             <p trans>Invalid email address</p>
                         </div>
                     </div>
-                    <div class="gift-bet-error" ng-show="giftState.status === 'fail'" trans>Failed to send gift</div>
+                    <div class="gift-bet-error" ng-show="giftState.status === 'fail'" ng-bind="giftState.errorMessage|translate"></div>
                     <div class="button-confirm">
                         <button ng-disabled="!giftBetForm.$valid" ng-click="sendGiftBet()" trans>OK</button>
                         <button ng-click="closeGiftPopup()" trans>Cancel</button>

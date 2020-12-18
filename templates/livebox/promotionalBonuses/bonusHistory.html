@@ -38,7 +38,7 @@
                 <th class="hh-cell" trans >Final Balance</th>
             </tr>
             </thead>
-            <tbody ng-if="bonusHistory.data.length" ng-repeat="bonus in bonusHistory.data">
+            <tbody ng-if="bonusHistory.data.length" ng-repeat="bonus in bonusHistory.data track by bonus.TransactionId">
             <tr>
                 <td class="date-id">
                     <span>{{bonus.Created|formatDate:(conf.layoutTimeFormat[conf.sportsLayout] || 'noLocaleTranslate'):null:$root.env.timeFormat}} {{conf.layoutTimeFormat[conf.sportsLayout] ? (bonus.Created|formatDate:'hour':null:$root.env.timeFormat) : ''}}</span>
@@ -56,17 +56,8 @@
                     </ul>
                 </td>
                 <td class="hh-cell">
-                    <div ng-show="bonus.Amount && !bonus.Balance">
-                        <span class="second-color" ng-show="bonus.Amount > 0">+</span>
+                    <div>
                         <span class="second-color">{{bonus.Amount|number:conf.balanceFractionSize}}</span> {{currency_name|currency}}
-                    </div>
-                    <div ng-show="bonus.Balance && !bonus.Amount"  title="Balance placed from bonus." trans="attr-only">
-                        <span class="second-color" ng-show="bonus.Balance > 0">+</span>
-                        <span class="second-color">{{bonus.Balance|number:conf.balanceFractionSize}}</span> {{currency_name|currency}}
-                    </div>
-                    <div ng-show="bonus.Balance && bonus.Amount">
-                        <span class="second-color" ng-show="bonus.Balance + bonus.Amount > 0">+</span>
-                        <span class="second-color">{{(bonus.Balance + bonus.Amount)|number:conf.balanceFractionSize}}</span> {{currency_name|currency}}
                     </div>
                 </td>
                 <td class="hh-cell">

@@ -3,11 +3,30 @@
         <div class="timeline-control main-time"  ng-init="drawTimeLine()"></div>
         <div ng-class="{'tl-new':showEventsOnTlHover,'tl-data':!showEventsOnTlHover}">
         <div class="current-minute" ng-style="!openGame.info.isExtraTime ? openGame.tlCurrentMinute : {'width' : '100%'}"></div>
-        <div ng-repeat="tlEvent in openGame.tlEvents" ng-if="!tlEvent.extraTime" ng-style="tlEvent.timeline_position" class="{{tlEvent.team + '-' + tlEvent.type}}">
-            <div class="{{tlEvent.type}}"></div>
-            <div class="tl-details" ng-class="{'to-right': tlEvent.minute>50}">{{tlEvent.details.type|capitalise|translate}} {{tlEvent.details.add_info}}</div>
-        </div>
-        <div class="tl-info" ng-if="!openGame.info.isExtraTime" ng-style="openGame.tlCurrentPosition" title="{{!showEventsOnTlHover && openGame.info.current_game_time ? openGame.info.current_game_time + '\'' : ''}}">
+
+            <div ng-repeat="tlEvents in openGame.groupedTlEvents track by $index" ng-if="!tlEvents.extraTime" ng-style="tlEvents.timeline_position" class="grouped-tl-events">
+                <div ng-repeat="team in tlEvents.teams" class="{{(team && team.length === 1) ? (team[0].team + '-' + team[0].type) : team[0].team + '-group'}}">
+                    <div ng-if="team && team.length === 1">
+                        <div class="{{team[0].type}}"></div>
+                        <div class="tl-details" ng-class="{'to-right': team[0].minute>50}">
+                            {{team[0].details.type|capitalise|translate}} {{team[0].details.add_info}}
+                        </div>
+                    </div>
+                    <div class="team-info-events-group" ng-if="team && team.length > 1" ng-class="{'to-right': team[0].minute>50}">
+                        <span class="team-info-event-number" ng-bind="team.length"></span>
+                        <div class="team-info-events">                    <!--show on hover -->
+                            <div ng-repeat="tlEvent in team" class="{{tlEvent.team + '-' + tlEvent.type}}">
+                                <i class="{{tlEvent.type}}"></i>
+                                <p title="{{tlEvent.details.type|capitalise|translate}} {{tlEvent.details.add_info}}">
+                                    {{tlEvent.details.type|capitalise|translate}} {{tlEvent.details.add_info}}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tl-info" ng-if="!openGame.info.isExtraTime" ng-style="openGame.tlCurrentPosition" title="{{!showEventsOnTlHover && openGame.info.current_game_time ? openGame.info.current_game_time + '\'' : ''}}">
             <div ng-if="showEventsOnTlHover" class="hover-sp">
                 <div class="football-gamer-name" ng-repeat="gameEvent in openGame.live_events|orderBy:'add_info_order':true">
                     <span ng-class="gameEvent.team">
@@ -24,10 +43,29 @@
         <div class="timeline-control extra-time" ng-init="drawTimeLine(true)"></div>
         <div ng-class="{'tl-new':showEventsOnTlHover,'tl-data':!showEventsOnTlHover}">
             <div class="current-minute" ng-style="openGame.tlCurrentMinute"></div>
-            <div ng-repeat="tlEvent in openGame.tlEvents" ng-if="tlEvent.extraTime" ng-style="tlEvent.timeline_position" class="{{tlEvent.team + '-' + tlEvent.type}}">
-                <div class="{{tlEvent.type}}"></div>
-                <div class="tl-details" ng-class="{'to-right': tlEvent.minute>50}">{{tlEvent.details.type|capitalise|translate}} {{tlEvent.details.add_info}}</div>
+
+            <div ng-repeat="tlEvents in openGame.groupedTlEvents track by $index" ng-if="tlEvents.extraTime" ng-style="tlEvents.timeline_position" class="grouped-tl-events">
+                <div ng-repeat="team in tlEvents.teams" class="{{(team && team.length === 1) ? (team[0].team + '-' + team[0].type) : team[0].team + '-group'}}">
+                    <div ng-if="team && team.length === 1">
+                        <div class="{{team[0].type}}"></div>
+                        <div class="tl-details" ng-class="{'to-right': team[0].minute>50}">
+                            {{team[0].details.type|capitalise|translate}} {{team[0].details.add_info}}
+                        </div>
+                    </div>
+                    <div class="team-info-events-group" ng-if="team && team.length > 1" ng-class="{'to-right': team[0].minute>50}">
+                        <span class="team-info-event-number" ng-bind="team.length"></span>
+                        <div class="team-info-events">                    <!--show on hover -->
+                            <div ng-repeat="tlEvent in team" class="{{tlEvent.team + '-' + tlEvent.type}}">
+                                <i class="{{tlEvent.type}}"></i>
+                                <p title="{{tlEvent.details.type|capitalise|translate}} {{tlEvent.details.add_info}}">
+                                    {{tlEvent.details.type|capitalise|translate}} {{tlEvent.details.add_info}}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
+
             <div class="tl-info" ng-style="openGame.tlCurrentPosition" title="{{!showEventsOnTlHover && openGame.info.current_game_time ? openGame.info.current_game_time + '\'' : ''}}">
                 <div ng-if="showEventsOnTlHover" class="hover-sp">
                     <div class="football-gamer-name" ng-repeat="gameEvent in openGame.live_events|orderBy:'add_info_order':true">
@@ -46,7 +84,7 @@
         <div class="post-penalty-table">
             <div class="post-penalty-tcell-left">
                 <div class="post-penalty-info">
-                    <span ng-repeat="event in openGame.postMatchPenaltiesEvents['home'] || [0,1,2,3,4] track by $index"  ng-class="{'fail':event.type_id ==='31','success':event.type_id ==='1'}" ></span>
+                    <span ng-repeat="event in openGame.postMatchPenaltiesEvents['home'] || [0,1,2,3,4] track by $index"  ng-class="{'fail':event.type_id ==='31','success':event.type_id ==='1'}" ng-bind="$index + 1"></span>
                 </div>
             </div>
             <div class="post-penalty-tcell-center">
@@ -57,7 +95,7 @@
             </div>
             <div class="post-penalty-tcell-right">
                 <div class="post-penalty-info">
-                    <span ng-repeat="event in openGame.postMatchPenaltiesEvents['away'] || [0,1,2,3,4] track by $index"  ng-class="{'fail':event.type_id ==='31','success':event.type_id ==='1'}" ></span>
+                    <span ng-repeat="event in openGame.postMatchPenaltiesEvents['away'] || [0,1,2,3,4] track by $index"  ng-class="{'fail':event.type_id ==='31','success':event.type_id ==='1'}" ng-bind="$index + 1"></span>
                 </div>
             </div>
         </div>

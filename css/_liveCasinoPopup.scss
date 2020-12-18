@@ -165,6 +165,7 @@
   opacity: 1;
   transform: scale(1);
   transition: opacity 240ms ease-out, transform 240ms ease-out;
+    overflow: hidden;
 }
 .jackpot-table {
   display: table;
@@ -206,6 +207,7 @@
         text-transform: uppercase;
         font: bold 10vh $font-f;
         text-shadow: 4px 10px 24px rgba(0,0,0,0.7);
+        white-space: nowrap;
     }
     > span {
         position: absolute;
@@ -215,6 +217,29 @@
         transform: translateX(-50%);
         font: bold 8vh $font-f;
         z-index: 120;
+    }
+    .got-it{
+        position: absolute;
+        margin: 10px 0 0 0;
+        font-size: 14px;
+        line-height: 36px;
+        display: inline-block;
+        padding: 0 20px;
+        height: 36px;
+        text-transform: uppercase;
+        cursor: pointer;
+        width: auto;
+        min-width: 280px;
+        background: $brand-color-1;
+        border: 1px solid $brand-color-1;
+        color: set-color($brand-color-1);
+        z-index: 999;
+        bottom: 4%;
+        left: 50%;
+        transform: translateX(-50%);
+        &:hover{
+            background: rgba($brand-color-1, 0.8);
+        }
     }
 }
 .jackpot-win-coins-first,

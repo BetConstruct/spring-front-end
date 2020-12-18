@@ -291,7 +291,7 @@ VBET5.controller('mainHeaderVersion2Controller', ['$rootScope', '$scope', '$loca
      * @description Checks the availability of product bonuses and gets the number of active bonuses
      */
     $scope.getBonusesCount = function getBonusesCount() {
-        if (Config.main.promotionalBonuses.disableCountOnIcon) {
+        if (Config.main.promotionalBonuses.disableCountOnIcon || ($rootScope.profile && $rootScope.profile.is_bonus_allowed === false)) {
             return;
         }
         $scope.bonusesCount = {

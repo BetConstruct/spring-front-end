@@ -4,7 +4,7 @@ CASINO.directive('casinoGamesList', ['$rootScope', 'CConfig', function($rootScop
     return {
         restrict: 'E',
         replace: true,
-        templateUrl: 'optional_modules/casino/templates/directive/casino-games-list' + (CConfig.version === 2 ? '-v2' : '') + '.html',
+        templateUrl: 'optional_modules/casino/templates/directive/casino-games-list-v2.html',
         scope: {
             jackpotGames: '=',
             gamesList: '=',

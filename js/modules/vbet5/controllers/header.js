@@ -64,10 +64,10 @@ VBET5.controller('headerCtrl', ['$scope', '$rootScope', '$sce', '$window', '$loc
      * @description get partner Config
      */
     function getPartnerConfig() {
-        $rootScope.partnerConfig = {};
+        $rootScope.partnerConfig = {_not_loaded: true};
         function updatePartnerConfig(data) {
             if (data && data.partner) {
-                $rootScope.partnerConfig = Utils.objectToArray(data.partner)[0] || {};
+                $rootScope.partnerConfig = data.partner[Config.main.site_id] || {};
 
                 if ($rootScope.partnerConfig.tax_amount_ranges && $rootScope.partnerConfig.tax_amount_ranges.length) {
                     $rootScope.partnerConfig.tax_amount_ranges = Utils.orderByField($rootScope.partnerConfig.tax_amount_ranges, 'from');
@@ -86,11 +86,17 @@ VBET5.controller('headerCtrl', ['$scope', '$rootScope', '$sce', '$window', '$loc
                 } else {
                     Config.main.registration.defaultCurrency = $rootScope.partnerConfig.supported_currencies[0];
                 }
-                if($rootScope.partnerConfig.sms_restrictions && $rootScope.partnerConfig.sms_restrictions.length){
-                    Config.main.smsVerification.registration = $rootScope.partnerConfig.sms_restrictions.indexOf(1) !== - 1;
-                    Config.main.smsVerification.login = $rootScope.partnerConfig.sms_restrictions.indexOf(2) !== - 1;
-                    Config.main.smsVerification.changePassword = $rootScope.partnerConfig.sms_restrictions.indexOf(3) !== - 1;
-                    Config.main.smsVerification.updateProfile = $rootScope.partnerConfig.sms_restrictions.indexOf(4) !== - 1;
+
+                $rootScope.partnerConfig.smsVerification = {};
+               // $rootScope.partnerConfig.sms_restrictions = [1,2,4,13,3,5]; // todo
+
+                if ($rootScope.partnerConfig.sms_restrictions && $rootScope.partnerConfig.sms_restrictions.length) {
+                    $rootScope.partnerConfig.smsVerification.registration = $rootScope.partnerConfig.sms_restrictions.indexOf(1) !== -1;
+                    $rootScope.partnerConfig.smsVerification.login = $rootScope.partnerConfig.sms_restrictions.indexOf(2) !== -1;
+                    $rootScope.partnerConfig.smsVerification.changePassword = $rootScope.partnerConfig.sms_restrictions.indexOf(3) !== -1;
+                    $rootScope.partnerConfig.smsVerification.updateProfile = $rootScope.partnerConfig.sms_restrictions.indexOf(4) !== -1;
+                    $rootScope.partnerConfig.smsVerification.resetPassword = $rootScope.partnerConfig.sms_restrictions.indexOf(5) !== -1;
+                    $rootScope.partnerConfig.smsVerification.withdrawal = $rootScope.partnerConfig.sms_restrictions.indexOf(13) !== -1;
                 }
 
                 $rootScope.$broadcast('partnerConfig.updated');

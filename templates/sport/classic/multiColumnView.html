@@ -45,7 +45,7 @@
         </table>
     </div>
     <div class="float-width" ng-repeat="sportGroup in multiColumn.viewData track by $index" ng-class="{'hide-handicaps-mc': !multiColumn.prematchGamesEvents.Handicap && !multiColumn.liveGamesEvents.Handicap}" ng-init="sportIndex = $index;">
-        <div ng-if="boostedBets.selected" class="boosted-bets-show">
+        <div ng-if="boostedBets.selected || couponGames.selected" class="boosted-bets-show">
             <span class="sport-icon-v3 {{sportGroup.sport.alias}}"></span>
             <span ng-bind="sportGroup.sport.name"></span>
         </div>
@@ -85,6 +85,8 @@
                                 <tr>
                                     <td title="{{game.team1_name}} {{game.team2_name ? 'vs ' + game.team2_name : game.team2_name}}">
                                         <div class="aic-team-names">
+                                            <stats-logo ng-if="$root.conf.showIconsForCompetitions[prematchGames.competition.id]" team-id="game.team1_id"></stats-logo>
+
                                             <p>{{game.team1_name}}</p>
                                         </div>
                                     </td>
@@ -103,7 +105,8 @@
                                 <colgroup span="2"></colgroup>
                                 <tr>
                                     <td title="{{game.team1_name}} {{game.team2_name ? 'vs ' + game.team2_name : game.team2_name}}">
-                                        <div class="aic-team-names">
+                                        <div class="aic-team-names {{$root.conf.showIconsForCompetitions[prematchGames.competition.id]?('nba-icon-'+ game.team2_id): ''}}">
+                                            <stats-logo ng-if="$root.conf.showIconsForCompetitions[prematchGames.competition.id]" team-id="game.team2_id"></stats-logo>
                                             <p>{{game.team2_name}}</p>
                                         </div>
                                     </td>
@@ -111,6 +114,9 @@
                                         <div class="game-info-icons-v3">
                                             <div class="icon-separator-v3 match-key" ng-if="game.game_info.Type === 1" pre-match-key hash="game.game_info.Hash"></div>
                                             <div class="icon-separator-v3 cms-jcon-Bet-Builder" ng-if="$root.conf.betBuilderSports[game.sport.alias] && game.type !== 1 && game.show_type !== 'OUTRIGHT'" ng-click="openBetBuilder(game);$event.stopPropagation();"></div>
+                                            <div class="icon-separator-v3 cms-jcon-stream"
+                                                 ng-show="streamConfig && streamConfig[game.id] && !env.live && streamConfig[game.id][0].available_in_prematch"
+                                                 ng-click="selectPrematchStreaming(streamConfig[game.id], game);$event.stopPropagation();"></div>
                                             <div class="icon-separator-v3 statistic"
                                                  ng-show="$root.conf.enableH2HStat && game.is_stat_available" statistics-on-hover
                                                  stats-game="game" stats-competition-name="{{prematchGames.competition.name}}"

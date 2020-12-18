@@ -13,7 +13,7 @@
                ng-click="$event.stopPropagation(); editBet(bet);"
                title="{{ ('Editing functionality is available for this bet.') | translate }}">
             </i>
-            <i class="refresh-icon cms-jcon-refresh" ng-show="$root.conf.enableBetFromBetHistory && (bet.type == 1 || bet.type == 2 || bet.type == 3 || bet.type == 4)" ng-click="$event.stopPropagation();addEvents(bet);" title="Repeat Bet"></i>
+            <i class="refresh-icon cms-jcon-refresh" ng-show="$root.conf.enableBetFromBetHistory && (bet.type == 1 || bet.type == 2 || bet.type == 3 || bet.type == 4)" ng-click="$event.stopPropagation();addEvents(bet);" title="{{'Repeat Bet'|translate}}"></i>
             <span class="gift-bet" ng-if="bet.is_gift === null && $root.conf.enableGiftBet" ng-click="$event.stopPropagation()" title="{{(bet.is_gift? 'Gifted': 'Gift')|translate}}">
                    <i ng-click="$root.broadcast('showGiftPopup', bet)" ng-class="{'disabled': bet.is_gift === true }"></i>
              </span>
@@ -35,7 +35,7 @@
 
                     </div>
                     <div class="open-bets-games-info" ng-show="event.is_live">
-                        <b>Live</b>
+                        <b trans>Live</b>
                     </div>
                     <div class="single-event-info-view-v3">
                         <ul>
@@ -57,7 +57,7 @@
                         <div class="bs-cash-out-btn" ng-mouseover="autoCashoutRule.showInfo = true; getAutoCashOutDetails(bet.id, bet.auto_cash_out_amount)" ng-mouseleave="autoCashoutRule.showInfo = false">
                             <button class="open-bets-cashout-button" ng-class="{'rule-active': bet.auto_cash_out_amount != null}"
                                     ng-click="$root.broadcast('open.cashoutDialog', {bet: bet}); $event.stopPropagation();" ng-disabled="bet.id === $root.editBet.oldBetId || !(bet.outcome == 0 && bet.cash_out !== undefined)">
-                                <span trans>Cash-out</span>
+                                <span ng-bind="'Cash-out'|translate"></span>
                                 <b>{{bet.cash_out}} <span ng-show="bet.cash_out">{{::$root.profile.currency_name|currency}}</span></b>
                             </button>
                         </div>

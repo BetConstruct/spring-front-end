@@ -529,3 +529,193 @@
     width: calc(100% - 20px);
   }
 }
+
+// with left menu Start
+
+.all-games-casino-list {
+  float: right;
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 750px;
+  @include ltr {
+    padding-left: 220px;
+  }
+  @include rtl {
+    padding-right: 220px;
+  }
+  .no-left-menu {
+    padding: 0
+  }
+  > ul {
+    float: left;
+    width: 100%;
+    box-sizing: border-box;
+  }
+  .md-progress-circular.md-theme{
+    margin: 100px auto auto;
+  }
+}
+.save-games-contain .games-slider .all-games-casino-list{
+  min-height: inherit;
+  width: 100%;
+  padding: 0 10px;
+}
+.deposit-alert-contain.casino .games-slider .all-games-casino-list {
+  min-height: inherit;
+  width: 100%;
+  padding: 0;
+}
+
+.deposit-alert-contain.casino .games-slider .all-games-casino-list ul{
+  height: 500px;
+  @include ltr {
+    padding: 0 10px 0 0;
+  }
+  @include rtl {
+    padding: 0 0 0 10px;
+  }
+}
+.deposit-alert-contain.casino .games-slider .all-games-casino-list ~ .load-more-news.multiview{
+  background: $skin-palette-1;
+  margin: 0;
+  height: 90px;
+}
+.deposit-alert-contain.casino .games-slider .all-games-casino-list ~ .load-more-news.multiview a:before{
+  top: 34px;
+}
+
+.fixed-nav-wrapper-casino-view{
+  float: left;
+  width: 100%;
+  margin-top: 20px;
+  &.scrollable-fixed {
+    position: fixed;
+    top: 41px;
+    min-width: 950px;
+    width: 1310px;
+    max-width: inherit;
+    z-index: 99;
+    left: calc((100% - 1310px) / 2);
+    &:before{
+      content: "";
+      display: block;
+      position: absolute;
+      height: 3px;
+      width: 100%;
+      left: 0;
+      top: -3px;
+      background: transparent;
+    }
+  }
+}
+.casino-left-menu-v-2{
+  height: 0;
+  float: left;
+  width: 100%;
+  position: relative;
+  z-index: 66;
+}
+.search-category-nav-contain{
+  position: absolute;
+  top: 0;
+  width: 210px;
+  box-sizing: border-box;
+  transform: translate3d(0,0,0);
+  @include ltr {
+    left: 0;
+  }
+  @include rtl {
+    right: 0;
+  }
+}
+.left-column-casino-nav{
+  float: left;
+  width: 100%;
+  box-sizing: border-box;
+  max-height: calc(100vh - 160px);
+  @include scroll($scroll: auto);
+}
+.left-column-casino-nav > ul{
+  float: left;
+  width: 100%;
+  box-sizing: border-box;
+  background: $skin-palette-11;
+}
+.left-column-casino-nav > ul > li{
+  float: left;
+  width: 100%;
+  box-sizing: border-box;
+  border-bottom: 1px solid $skin-palette-6;
+  color: $text-palette-4;
+  font: 12px/38px $font-f;
+  transition: color 250ms;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  padding: 0 10px;
+}
+.left-column-casino-nav > ul > li:hover,
+.left-column-casino-nav > ul > li.active{
+  color: $brand-color-2;
+}
+
+.search-category-nav-contain.scrollable-absolute {
+  position: absolute;
+  left: 0;
+  top: auto;
+  bottom: 0;
+  z-index: 55;
+}
+.block-slider .my-games-save.casino .games-save-slider .all-games-casino-list ul > li:first-child,
+.block-slider .my-games-save.casino .games-save-slider .all-games-casino-list ul > li:last-child{
+  margin: 0;
+}
+@media screen and (min-width: 1260px) and (max-width: 1350px) {
+  .fixed-nav-wrapper-casino-view.scrollable-fixed {
+    width: calc(100% - 20px);
+    left: 10px;
+  }
+  .search-category-nav-contain.scrollable-fixed {
+    left: 20px;
+  }
+  .search-category-nav-contain.scrollable-fixed.scrollable-absolute{
+    left: 0;
+    position: absolute;
+  }
+}
+@media screen and (max-width: 1260px) {
+  .fixed-nav-wrapper-casino-view.scrollable-fixed{
+    left: calc((100% - 960px) / 2);
+    width: 960px;
+    .left-column-casino-nav {
+      max-height: calc(100vh - 250px);
+    }
+  }
+  .search-category-nav-contain {
+    width: 230px;
+  }
+}
+.wrapper-separator-games {
+  float: left;
+  width: 100%;
+  position: relative;
+  .slider-games {
+    margin: 0;
+    > a {
+      width: calc((100% / 5) - 10px);
+      &:first-child {
+        @include ltr {
+          margin-left: 10px;
+        }
+        @include rtl {
+          margin-right: 10px;
+        }
+      }
+      &:nth-child(n+6) {
+        margin-top: 10px;
+      }
+    }
+  }
+}
+
+// with left menu End

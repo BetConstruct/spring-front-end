@@ -124,6 +124,8 @@
   }
   .asian-left-contain-menu .list-bet-block ul li {
     color: $text-palette-4;
+    box-shadow: 1px 0 0 darken(saturate(adjust-hue($skin-color, 4deg), 1), 7) inset, 1px 0 0 darken(saturate(adjust-hue($skin-color, 4deg), 1), 7) inset;
+    background: darken(desaturate(adjust-hue($skin-color, 4deg), 15), 1);
   }
   .asian-left-contain-menu .bet-event-title {
     color: $text-palette-3;
@@ -135,6 +137,13 @@
   .asian-left-contain-menu .bet-currency-value .single-bet-betmax {
     background: lighten(desaturate(adjust-hue($skin-color, 2deg), 22), 36);
     color: $text-palette-1;
+    span {
+      max-width: 50px;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      display: block;
+      overflow: hidden;
+    }
   }
   .asian-left-contain-menu .list-bet-block ul li .single-bet-container .single-bet-betmax span {
     color: $text-palette-1;
@@ -176,7 +185,8 @@
     color: $brand-color-2;
     background: darken(saturate(adjust-hue($skin-color, 4deg), 1), 7);
   }
-  .asian-left-contain-menu .single-bet-container [type="text"] {
+  .asian-left-contain-menu .single-bet-container [type="text"],
+  .offer-stake-form .offer-input input {
     border: 1px solid darken(saturate(adjust-hue($skin-color, 4deg), 1), 7);
     color: $brand-color-2;
     background: lighten($skin-color, 4);
@@ -199,7 +209,7 @@
   .list-bet-block ul li span {
     color: $text-palette-4;
   }
-  .list-bet-block ul li > b {
+  .list-bet-block ul li:not(.open-bets-games-info) > b {
     color: $brand-color-2;
   }
   .asian-left-contain-menu .betslip-system-chenge {
@@ -214,17 +224,13 @@
   .asian-left-contain-menu .settings-icon-bet {
     background: lighten(desaturate(adjust-hue($skin-color, 3deg), 16), 4);
   }
-  .asian-left-contain-menu .list-bet-block .bet-container .bet-conflict-warning .conflict-content ul li {
+  .asian-left-contain-menu .list-bet-block .bet-container .bet-conflict-warning .conflict-content-v3 li {
     border-top: 1px solid darken(saturate(adjust-hue($skin-color, 4deg), 1), 7);
     color: $text-palette-5;
   }
   .asian-left-contain-menu .name-b-list h2 {
     color: set-color($hero-color);
     background: $hero-color;
-  }
-  .asian-left-contain-menu .list-bet-block ul li {
-    box-shadow: 1px 0 0 darken(saturate(adjust-hue($skin-color, 4deg), 1), 7) inset, 1px 0 0 darken(saturate(adjust-hue($skin-color, 4deg), 1), 7) inset;
-    background: darken(desaturate(adjust-hue($skin-color, 4deg), 15), 1);
   }
   .asian-left-contain-menu .bet-container .list-bet-block ul {
     border-bottom: 1px solid darken(saturate(adjust-hue($skin-color, 4deg), 1), 7);
@@ -1503,5 +1509,30 @@ $compile-asian-themes: false !default;
   }
   .body-wrapper.asian-black {
     @include asian-view(#161616);
+  }
+}
+.body-wrapper.asian .menu-tabs-b ul li{
+
+  &.boosted-bets{
+    background-image: linear-gradient(to right,#751f9f,#ffc353 119%);
+    position: relative;
+    overflow: hidden;
+
+   &.active{
+     background-image: linear-gradient(to right,#751f9f,#ffc353 119%);
+     &:after{
+       content: "";
+       display: block;
+       width: 0;
+       height: 86%;
+       position: absolute;
+       top: 7%;
+       left: 0;
+       opacity: 0;
+       box-shadow: 0 0 35px 10px rgba(255,255,255,.7);
+       transform: skewX(-45deg);
+       animation: boosted-shine 1000ms linear infinite;
+     }
+   }
   }
 }

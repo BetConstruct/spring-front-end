@@ -87,7 +87,7 @@
                         </li>
                 <li class="responsive-header-item-j"
                     ng-show="(!conf.hideBonusSectionIfNoBonus || (conf.hideBonusSectionIfNoBonus && $root.allBonusesCount.sportsbook + $root.allBonusesCount.casino > 0))"
-                    ng-if="env.authorized && conf.promotionalBonuses.enable">
+                    ng-if="env.authorized && conf.promotionalBonuses.enable && $root.profile.is_bonus_allowed !== false">
                     <div class="separator-contain-nav" ng-click="toggleSliderTab('promotionalBonuses')">
                         <div class="settings-icon-contain my-bets-b">
                             <b class="mybets-icon-box-b cms-jcon-bonus2"></b>

@@ -82,47 +82,12 @@
                                     </div>
                                 </div>
                             </div>
-                            <div ng-if="conf.smsVerification.changePassword" class="ver-code-container">
-                                <div class="ver-code-content">
-                                    <label><span trans>Verification Code</span></label>
-                                    <div class="tooltip-wrapper-j">
-                                        <div class="ver-cod-button">
-                                            <button ng-show="!working"
-                                                    type="button"
-                                                    trans
-                                                    ng-click="sendVerificationCodeSMS()">Receive Verification Code</button>
-                                            <button type="button" disabled="disabled" ng-show="working" trans>Wait...</button>
-                                        </div>
-                                    </div>
-                                </div>
-
-                            <div class="form-text"
-                                 ng-if="conf.smsVerification.changePassword"
-                                 ng-class="{'error': (!passwordResetError['confirmation_code'] || forms.changepasswordForm['confirmation_code'].$touched)
-                                                                &&
-                                                                ((forms.changepasswordForm.confirmation_code.$dirty && forms.changepasswordForm.confirmation_code.$error.required)
-                                                               )}">
-                                <div class="tooltip-wrapper-j">
-                                    <input name="confirmation_code"
-                                           id="verificationCode"
-                                           numpad
-                                           prevent-input="[^0-9]+"
-                                           ng-model="changepasswordData.confirmation_code"
-                                           type="text"
-                                           placeholder="{{'Verification Code'|translate}}"
-                                           required
-                                           />
-                                </div>
-                            </div>
-                            </div>
                             <div class="change-button-container password">
                                 <div class="cashier-button">
                                     <button ng-disabled="!forms.changepasswordForm.$dirty || forms.changepasswordForm.$invalid || (forms.changepasswordForm.password2.$modelValue !== forms.changepasswordForm.password.$modelValue)" ng-show="!working" trans ng-click="changePassword();passwordResetError = {}">Save</button>
                                     <button disabled="disabled" ng-show="working" trans>Wait...</button>
                                 </div>
-
                             </div>
-
                         </form>
                     </div>
                     <!--Change Password END-->
@@ -135,8 +100,14 @@
                     <div class="settings-info-contain" ng-if="!loadingInfo">
                         <form name="forms.detailsForm" class="registration-form">
                             <div class="personal-details-left">
-
                                 <ul>
+                                    <li ng-if="personalDetails.readOnlyFields.indexOf('bonus_status') !== -1" ng-class="{'read-only': personalDetails.readOnlyFields.indexOf('bonus_status') !== -1}">
+                                        <div class="eligible-bonus">
+                                            <i class="cms-jcon-infou"></i>
+                                            <span>{{'Eligible for bonus'|translate}}:</span>
+                                            <b ng-class="{'yes': $root.profile.is_bonus_allowed!== false, 'no': $root.profile.is_bonus_allowed === false}" ng-bind="(($root.profile.is_bonus_allowed !== false)? 'Yes': 'No')|translate"></b>
+                                        </div>
+                                    </li>
                                     <li ng-class="{'read-only': personalDetails.readOnlyFields.indexOf('user_id') !== -1, 'editable': personalDetails.editableFields.indexOf('user_id') !== -1}">
                                         <label><span trans>ID</span>: <span class="hint" ng-show="personalDetails.requiredEditableFields.indexOf('user_id') !== -1">*</span></label>
                                         <div class="disabled-field">

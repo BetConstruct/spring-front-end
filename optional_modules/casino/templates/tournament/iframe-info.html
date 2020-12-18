@@ -84,7 +84,7 @@
 
         <div class="float-width-height"
              ng-controller="casinoTournamentsCtrl"
-             ng-show="(iframeTab[gameInfo.id].selected === 'tournaments') || (!hasIframeTournamentInfo[gameInfo.id] || !hasIframeJackpot[gameInfo.id]) || ((hasIframeTournamentInfo[gameInfo.id] && hasIframeJackpot[gameInfo.id]) && confData.main.gameIframeInitialTab === 'tournaments' && !iframeTab[gameInfo.id].selected)"
+             ng-show="tournament.iframeInfo.playerList.length && ((iframeTab[gameInfo.id].selected === 'tournaments') || (!hasIframeTournamentInfo[gameInfo.id] || !hasIframeJackpot[gameInfo.id]) || ((hasIframeTournamentInfo[gameInfo.id] && hasIframeJackpot[gameInfo.id]) && confData.main.gameIframeInitialTab === 'tournaments' && !iframeTab[gameInfo.id].selected))"
              ng-if="env.authorized && gameInfo.game.id && hasTournaments">
             <div class="float-width-height"  ng-init="loadCasinoIframeInfo(gameInfo, true)">
                 <div class="float-width-height" ng-if="tournament.iframeInfo.playerList.length">

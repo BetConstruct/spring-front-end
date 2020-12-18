@@ -6,8 +6,8 @@
                 <ul>
                     <div class="news-sport-contain" ng-show="sports && !conf.hideNewsTab">
                         <li><h3 trans>sport news</h3></li>
-                        <li ng-class="{'active-item': !selectedNewsSport.id}"><a ng-click="selectNewsSport({id:undefined})" trans>all</a></li>
-                        <li ng-repeat="sport in sports" ng-class="{'active-item':sport.id === selectedNewsSport.id}" ng-if="$index < maxVisibleSports">
+                        <li ng-class="{'active-item': !selectedNewsSport.name}"><a ng-click="selectNewsSport({name:undefined})" trans>all</a></li>
+                        <li ng-repeat="sport in sports" ng-class="{'active-item':sport.name === selectedNewsSport.name}" ng-if="$index < maxVisibleSports">
                             <a ng-click="selectNewsSport(sport);closeNews();">{{ sport.title|translate }}</a>
                         </li>
                     </div>
@@ -63,7 +63,7 @@
         <vbet-loader ng-show="articleLoader && !newsAreLoading"></vbet-loader>
 
         <!--Меню sport news-->
-        <div class="block-meny-news"  ng-init="loadRecentNews(0, numberOfRecentNews, undefined);">
+        <div class="block-meny-news">
             <div ng-repeat="group in recentNewsInGroups track by group.id" class="block-sport-news" ng-class="{'news-initial': !newsAmountIncreased}">
                 <div class="list-news">
                     <ul ng-repeat="news in group.news track by news.id" ng-class="'news-column-' + $index">

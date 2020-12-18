@@ -255,7 +255,8 @@ angular.module('vbet5.betting').controller('classicMultiColumnCtrl', ['$scope', 
                             live: true
                         };
                         competitions.push({
-                            gameData: [liveData]
+                            gameData: [liveData],
+                            competition: competition
                         });
                     });
                 });

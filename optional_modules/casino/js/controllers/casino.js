@@ -38,7 +38,7 @@ CASINO.controller('casinoCtrl', ['$rootScope', '$scope', '$sce', '$location', 'G
 
     var jackpotWinnerTimeout;
     //new casino design
-    $scope.jackpotSliderVisibleGamesCount = CConfig.version === 2 ? CConfig.main.jackpotSliderVisibleGamesCount : 4;
+    $scope.jackpotSliderVisibleGamesCount = CConfig.main.jackpotSliderVisibleGamesCount;
     $scope.selectedProvider = {
         name: ''
     };
@@ -117,10 +117,8 @@ CASINO.controller('casinoCtrl', ['$rootScope', '$scope', '$sce', '$location', 'G
                 $scope.loadingProcess = false;
 
                 handlefirstSelection(!forRecommendedGames);
-                if (CConfig.version === 2) {
-                    $scope.moveCategories(undefined, true);
-                    $scope.selectCategory($scope.categories[0]);
-                }
+                $scope.moveCategories(undefined, true);
+                $scope.selectCategory($scope.categories[0]);
             }
         });
     }
@@ -139,23 +137,6 @@ CASINO.controller('casinoCtrl', ['$rootScope', '$scope', '$sce', '$location', 'G
         }
     }
 
-    function updateCategoriesByProviderName(providersString) {
-        if (CConfig.version === 1) {
-            if (providersString === ALL_PRIVIDERS.name) {
-                $scope.categories = allCategories;
-                return;
-            }
-            casinoData.getOptions(countryCode, null, providersString, $rootScope.profile ? $rootScope.profile.id : null).then(function (response) {
-                if (response && response.data && response.data.categories) {
-                    $scope.categories = response.data.categories;
-                    if (CConfig.main.showAllGamesOnHomepage) {
-                        $scope.categories.unshift(ALL_GAMES_CATEGORY);
-                    }
-                }
-
-            });
-        }
-    }
 
     function handlefirstSelection(openGame) {
         var searchParams = $location.search();
@@ -256,13 +237,8 @@ CASINO.controller('casinoCtrl', ['$rootScope', '$scope', '$sce', '$location', 'G
         }
 
         if (category.id === $scope.favouriteCategory.id) {
-            //   $scope.selections.providerName = ALL_PRIVIDERS.name;
             $scope.categories = allCategories;
         }
-
-        // if (category.id === FAVOURITE_CATEGORY.id && CConfig.version === 2) {
-        //     $scope.setProviders([ALL_PRIVIDERS.name]);
-        // }
 
         $scope.selections.category = category;
         $location.search('category', category.id);
@@ -309,9 +285,6 @@ CASINO.controller('casinoCtrl', ['$rootScope', '$scope', '$sce', '$location', 'G
             return;
         }
 
-        if (CConfig.version === 1) {
-            updateCategoriesByProviderName($scope.selections.providers[0]);
-        }
         providersString = getSelectedProvidersString();
         $location.search('provider', providersString);
         resetGamesOptions();
@@ -498,7 +471,7 @@ CASINO.controller('casinoCtrl', ['$rootScope', '$scope', '$sce', '$location', 'G
     }
 
     function subscribeForJackpotData() {
-       if (CConfig.version === 2 && ($rootScope.casinoGameOpened === 0 || $rootScope.casinoGameOpened === undefined)) {
+       if ($rootScope.casinoGameOpened === 0 || $rootScope.casinoGameOpened === undefined) {
             jackpotManager.unsubscribeFromJackpotData();
             jackpotManager.subscribeForJackpotData(-1, subscribeForJackpotDataCallback,null, 'casino');  // -1 all games
         }
@@ -830,20 +803,14 @@ CASINO.controller('casinoCtrl', ['$rootScope', '$scope', '$sce', '$location', 'G
                         return category.id !== RECOMMENDED_CATEGORY.id;
                     });
 
-                    if (CConfig.version === 2) {
-                        $scope.moveCategories(undefined, true);
-                        $scope.selectCategory($scope.categories[0]);
-                    }
+                    $scope.moveCategories(undefined, true);
+                    $scope.selectCategory($scope.categories[0]);
                 }
             } else {
                 var profileWatcherPromise = $scope.$watch('profile', function (newValue) {
                     if (newValue) {
                         profileWatcherPromise();
                         getJackpotAmount();
-
-                        if (CConfig.version === 1) {
-                            updateCategoriesByProviderName($scope.selections.providers[0]);
-                        }
 
                         if (CConfig.main.recommendedGamesCategoryEnabled) {
                             getOptions( $rootScope.profile.id, true);

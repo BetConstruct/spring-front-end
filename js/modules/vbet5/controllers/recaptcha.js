@@ -14,6 +14,10 @@ VBET5.controller('recaptchaCtrl', ['$rootScope', '$scope', '$timeout', 'Zergling
     var recaptchaProps = {};
     $rootScope.$broadcast('recaptcha.response', '');
 
+    var CUSTOM_LANGUAGE_CODE_MAP = {
+        zhh: "zh-CN"
+    };
+
     /**
      * @ngdoc method
      * @name loadScript
@@ -23,14 +27,14 @@ VBET5.controller('recaptchaCtrl', ['$rootScope', '$scope', '$timeout', 'Zergling
     function loadScript () {
         recaptchaProps.script = document.createElement('script');
         recaptchaProps.script.type = 'text/javascript';
-        recaptchaProps.script.src = 'https://www.recaptcha.net/recaptcha/api.js?hl=' + (LanguageCodes[$rootScope.env.lang] || 'en');
+        recaptchaProps.script.src = 'https://www.recaptcha.net/recaptcha/api.js?hl=' + (CUSTOM_LANGUAGE_CODE_MAP[$rootScope.env.lang] ||  LanguageCodes[$rootScope.env.lang] || 'en');
         recaptchaProps.recaptchaDomScript = document.body.appendChild(recaptchaProps.script);
 
     }
 
     /**
      * @ngdoc method
-     * @name loadScript
+     * @name init
      * @methodOf vbet5.controller:recaptchaCtrl
      * @description initialization
      */

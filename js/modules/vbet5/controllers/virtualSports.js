@@ -453,6 +453,7 @@ angular.module('vbet5.betting').controller('virtualSportsCtrl', ['$scope', '$roo
 
     var VIRTUAL_ICONS_PATHS = {
         'VirtualHorseRacing': 'virtualhorses',
+        'VirtualMarbleRacing': 'virtualcarracing',
         'VirtualGreyhoundRacing': 'virtualdogs',
         'VirtualCarRacing': 'virtualcarracing',
         'VirtualBicycle': 'virtualbicycle',

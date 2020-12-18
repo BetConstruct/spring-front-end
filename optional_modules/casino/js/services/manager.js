@@ -357,15 +357,10 @@ CASINO.service('casinoManager', ['$rootScope', '$q', '$window', '$sce', '$locati
         if (CConfig.liveCasino.enableAllProviders && providers.length > 1) {
             providers.unshift('All');
             devidedGames.All = {
-                games: [],
+                games: gamesList.slice(0),
                 defaultStudio: '',
                 studios: []
             };
-            angular.forEach(devidedGames, function (provider, key) {
-                if (key !== 'All') {
-                    devidedGames.All.games = devidedGames.All.games.concat(provider.games);
-                }
-            });
         }
 
         return {
@@ -513,9 +508,7 @@ CASINO.service('casinoManager', ['$rootScope', '$q', '$window', '$sce', '$locati
 
         $rootScope.casinoGameOpened = scope.gamesInfo.length;
 
-        if(CConfig.version === 2){
-            jackpotManager.casinoGameOpenedData = scope.gamesInfo;
-        }
+        jackpotManager.casinoGameOpenedData = scope.gamesInfo;
 
         gameInfo.gameUrl = casinoManager.getGameUrl(gameInfo);
 
@@ -840,9 +833,7 @@ CASINO.service('casinoManager', ['$rootScope', '$q', '$window', '$sce', '$locati
      * @description Clear all promises
      */
     casinoManager.clearAllPromises = function clearAllPromises() {
-        if(CConfig.version === 2){
-            jackpotManager.unsubscribeFromJackpotData(true);
-        }
+        jackpotManager.unsubscribeFromJackpotData(true);
         checkAndStopRealityInterval();
     };
 

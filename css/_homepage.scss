@@ -11,89 +11,57 @@
 .featured-game-list-b > .md-progress-circular {
   margin-top: 40px;
 }
-.product-list-contain > ul{
-  float: left;
-  width: calc(100% + 9px);
-  margin: 0;
-  display: table;
-  table-layout: fixed;
-  position: relative;
-}
-.product-list-contain > ul > li{
-  display: table-cell;
-  box-sizing: border-box;
-  width: calc(100% / 6);
-  max-width: calc(100% / 6);
-  min-width: calc(100% / 6);
-  margin: 0;
-  border: 0;
-  padding: 0 10px 0 0;
-  transition: background 250ms;
-  vertical-align: top;
-  text-align: center;
-  height: 100%;
-  position: relative;
-  transform: translate3d(0,0,0);
-}
-
-.product-list-contain > ul.column-5 > li{
-  width: 20%;
-  max-width: 20%;
-  min-width: 20%;
-}
-.product-list-contain > ul.column-4 > li{
-  width: 25%;
-  max-width: 25%;
-  min-width: 25%;
-}
-.product-list-contain > ul.column-3 > li{
-  width: calc(100% / 3);
-  max-width: calc(100% / 3);
-  min-width: calc(100% / 3);
-}
-.product-list-contain > ul.column-2 > li{
-  width: 50%;
-  max-width: 50%;
-  min-width: 50%;
-}
-.product-list-contain > ul.column-1 > li{
+.product-list-contain .product-list-wrapper {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
   width: 100%;
-  border: none;
-}
-.product-list-contain > ul > li > a{
-  display: block;
-  float: left;
-  width: 100%;
-  min-height: 180px;
-  text-decoration: none;
-  transition: background 250ms;
-  box-sizing: border-box;
-  position: relative;
-  background: lighten( desaturate( adjust-hue( $skin-color, -1deg ), 11 ), 7 );
-  background: -moz-linear-gradient(top,  lighten( desaturate( adjust-hue( $skin-color, -1deg ), 11 ), 7 ) 0%, lighten( desaturate( $skin-color, 7 ), 3 ) 100%);
-  background: -webkit-linear-gradient(top,  lighten( desaturate( adjust-hue( $skin-color, -1deg ), 11 ), 7 ) 0%,lighten( desaturate( $skin-color, 7 ), 3 ) 100%);
-  background: linear-gradient(to bottom,  lighten( desaturate( adjust-hue( $skin-color, -1deg ), 11 ), 7 ) 0%,lighten( desaturate( $skin-color, 7 ), 3 ) 100%);
-  > img {
-    display: block;
-    float: left;
+  > a {
     width: 100%;
-  }
-  &.show {
-    background: none;
-    min-height: auto;
-  }
-  &:before {
-    display: none;
-  }
-}
-.product-list-contain > ul > li:hover > a {
-  background: desaturate( adjust-hue( $skin-color, -1deg ), 3 );
-  background: -moz-linear-gradient(top,  desaturate( adjust-hue( $skin-color, -1deg ), 3 ) 0%, lighten( desaturate( adjust-hue( $skin-color, -1deg ), 11 ), 7 ) 100%);
-  background: -webkit-linear-gradient(top,  desaturate( adjust-hue( $skin-color, -1deg ), 3 ) 0%,lighten( desaturate( adjust-hue( $skin-color, -1deg ), 11 ), 7 ) 100%);
-  background: linear-gradient(to bottom,  desaturate( adjust-hue( $skin-color, -1deg ), 3 ) 0%,lighten( desaturate( adjust-hue( $skin-color, -1deg ), 11 ), 7 ) 100%);
-  &.show {
-    background: none;
-    min-height: auto;
+    height: 100%;
+    text-align: center;
+    position: relative;
+    transform: translate3d(0,0,0);
+    min-height: 180px;
+    text-decoration: none;
+    box-sizing: border-box;
+    transition: background 250ms;
+    background: lighten( desaturate( adjust-hue( $skin-color, -1deg ), 11 ), 7 );
+    background: -moz-linear-gradient(top,  lighten( desaturate( adjust-hue( $skin-color, -1deg ), 11 ), 7 ) 0%, lighten( desaturate( $skin-color, 7 ), 3 ) 100%);
+    background: -webkit-linear-gradient(top,  lighten( desaturate( adjust-hue( $skin-color, -1deg ), 11 ), 7 ) 0%,lighten( desaturate( $skin-color, 7 ), 3 ) 100%);
+    background: linear-gradient(to bottom,  lighten( desaturate( adjust-hue( $skin-color, -1deg ), 11 ), 7 ) 0%,lighten( desaturate( $skin-color, 7 ), 3 ) 100%);
+    background-clip: content-box;
+    > img {
+      display: block;
+      float: left;
+      width: 100%;
+    }
+    &.show {
+      background: none;
+      min-height: auto;
+    }
+    &:before {
+      display: none;
+    }
+    &:hover {
+      background: desaturate( adjust-hue( $skin-color, -1deg ), 3 );
+      background: -moz-linear-gradient(top,  desaturate( adjust-hue( $skin-color, -1deg ), 3 ) 0%, lighten( desaturate( adjust-hue( $skin-color, -1deg ), 11 ), 7 ) 100%);
+      background: -webkit-linear-gradient(top,  desaturate( adjust-hue( $skin-color, -1deg ), 3 ) 0%,lighten( desaturate( adjust-hue( $skin-color, -1deg ), 11 ), 7 ) 100%);
+      background: linear-gradient(to bottom,  desaturate( adjust-hue( $skin-color, -1deg ), 3 ) 0%,lighten( desaturate( adjust-hue( $skin-color, -1deg ), 11 ), 7 ) 100%);
+      background-clip: content-box;
+      &.show {
+        background: none;
+        min-height: auto;
+      }
+    }
+    + a {
+      @include ltr {
+        margin-left: 10px;
+      }
+      @include rtl {
+        margin-right: 10px;
+      }
+    }
   }
 }
 .icon-container-product{
@@ -102,19 +70,13 @@
   width: 100%;
   text-align: center;
   height: 88px;
-  display: table;
   position: relative;
-  transform: translate3d(0,0,0);
-}
-.icon-container-product > b{
-  font: 48px/52px icomoon;
   color: rgba($text-palette-1, 0.7);
-  display: table-cell;
-  vertical-align: bottom;
   transition: color 250ms;
+  transform: translate3d(0,0,0);
+  font: 48px/52px icomoon;
   animation: shadowSlide 4s infinite;
   animation-fill-mode: both;
-  transform: translate3d(0,0,0);
   @if $white-skin == true {
     color: #2A3041;
   }
@@ -142,49 +104,68 @@ $anim-time: 5;
     }
   }
 }
-.product-list-contain > ul > li {
-  &:nth-child(2) .icon-container-product > b {
+.product-list-contain .product-list-wrapper > a {
+  &:nth-child(2) .icon-container-product {
     animation-delay: #{2.0 / $anim-time}s;
   }
-  &:nth-child(3) .icon-container-product > b {
+  &:nth-child(3) .icon-container-product {
     animation-delay: #{2.0 / $anim-time * 2}s;
   }
-  &:nth-child(4) .icon-container-product > b {
+  &:nth-child(4) .icon-container-product {
     animation-delay: #{2.0 / $anim-time * 3}s;
   }
-  &:nth-child(5) .icon-container-product > b {
+  &:nth-child(5) .icon-container-product {
     animation-delay: #{2.0 / $anim-time * 4}s;
   }
-  &:nth-child(6) .icon-container-product > b {
+  &:nth-child(6) .icon-container-product {
     animation-delay: #{2.0 / $anim-time * 5}s;
   }
+  &:hover .icon-container-product:before {
+    animation: pulse-j 800ms ease-out;
+  }
 }
-.icon-container-product > b:before{content: "\69";}
-.icon-container-product > b.sportsbook:before{content: "\e6d7";}
-.icon-container-product > b.casino:before{content: "\e6d6";}
-.icon-container-product > b.live.casino:before{content: "\71";}
-.icon-container-product > b.belote:before{content: "\e6d0";}
-.icon-container-product > b.backgammon:before{content: "\e6cf";}
-.icon-container-product > b.Pool.Betting:before, .icon-container-product > b.Colossusbets:before{content: "\e6fb";}
-.icon-container-product > b.Fantasy:before{
+@keyframes pulse-j {
+  0%, 40%, 100% {
+    transform: translate3d(0,36px,0);
+  }
+  20% {
+    transform: translate3d(0,10px,0);
+  }
+  60% {
+    transform: translate3d(0,28px,0);
+  }
+  70% {
+    transform: translate3d(0,30px,0);
+  }
+}
+.icon-container-product:before {
+  content: "\69";
+  display: block;
+  transform: translate3d(0,36px,0);
+}
+.icon-container-product.sportsbook:before{content: "\e6d7";}
+.icon-container-product.casino:before{content: "\e6d6";}
+.icon-container-product.live.casino:before{content: "\71";}
+.icon-container-product.belote:before{content: "\e6d0";}
+.icon-container-product.backgammon:before{content: "\e6cf";}
+.icon-container-product.Pool.Betting:before, .icon-container-product.Colossusbets:before{content: "\e6fb";}
+.icon-container-product.Fantasy:before{
   content: "\67";
   font-size: 66px;
   display: block;
 }
-.icon-container-product > b.live.russian.poker:before, .icon-container-product > b.Live.Russian.Poker:before{content: "\e903";}
-.icon-container-product > b.statistics:before, .icon-container-product > b.Statistics:before{content: "\e6de";}
-.icon-container-product > b.free.quiz:before, .icon-container-product > b.Free.Quiz:before{content: "\e912";}
-.icon-container-product > b.poker:before{
+.icon-container-product.live.russian.poker:before, .icon-container-product.Live.Russian.Poker:before{content: "\e903";}
+.icon-container-product.statistics:before, .icon-container-product.Statistics:before{content: "\e6de";}
+.icon-container-product.free.quiz:before, .icon-container-product.Free.Quiz:before{content: "\e912";}
+.icon-container-product.poker:before{
   content: "\e6c0";
   font-size: 64px;
-  position: relative;
-  top: 6px;
 }
-.icon-container-product > b.Fortune:before {
+.icon-container-product.Fortune:before {
   content: "\e6f8";
 }
-.product-list-contain > ul > li:hover > a > .icon-container-product > b{color: $text-palette-2;}
-.product-list-contain > ul > li > a > .product-title-animation-wrapper {
+.product-list-contain .product-list-wrapper > a:hover > .icon-container-product {color: $text-palette-2;}
+.product-list-contain .product-list-wrapper > a > .product-title-animation-wrapper {
   float: left;
   width: 100%;
   margin: 17px 0 0;
@@ -240,10 +221,10 @@ $anim-time: 5;
   }
 }
 
-.product-list-contain > ul > li:hover > a > .product-title-animation-wrapper > h4{
+.product-list-contain .product-list-wrapper > a:hover > .product-title-animation-wrapper > h4{
   color: $text-palette-1;
 }
-.product-list-contain > ul > li > a > button {
+.product-list-contain .product-list-wrapper > a > button {
   text-transform: uppercase;
   position: absolute;
   bottom: 0;
@@ -270,7 +251,7 @@ $anim-time: 5;
     z-index: 10;
   }
 }
-.product-list-contain > ul > li > a > button:before {
+.product-list-contain .product-list-wrapper > a > button:before {
   content: "";
   display: block;
   width: 100%;
@@ -282,42 +263,30 @@ $anim-time: 5;
   position: absolute;
 }
 
-.product-list-contain > ul > li > a > button:after {
+.product-list-contain .product-list-wrapper > a > button:after {
   content: "";
   display: block;
   width: 100%;
   left: 0;
-  height: 0;
+  height: 100%;
   top: 0;
   background: $hero-color;
-  transition: height 250ms;
+  transition: opacity 180ms, max-height 240ms;
   position: absolute;
+  opacity: 0;
+  max-height: 0;
 }
 
-.product-list-contain > ul > li:hover {
-  > a > button {
+.product-list-contain .product-list-wrapper > a:hover {
+  > button {
     color: set-color($hero-color);
     &:after {
-      height: 100%;
+      opacity: 1;
+      max-height: 100%;
     }
   }
 }
-.product-list-contain > ul > li:hover > .sportsBook-l > button{
-  color: $text-palette-4;
-  &:after {
-    height: 0;
-  }
-}
-.product-list-contain > ul > li > .sportsBook-l > button:hover {
-  color: set-color($hero-color);
-  &:after {
-    height: 100%;
-  }
-  span:after {
-    opacity: 0;
-  }
-}
-.product-list-contain > ul > li > a > button:hover:before {
+.product-list-contain .product-list-wrapper > a > button:hover:before {
   background: darken( desaturate( adjust-hue( $skin-color, 4deg ), 11 ), 1 );
 }
 .featured-game-list-b{
@@ -325,7 +294,7 @@ $anim-time: 5;
   box-sizing: border-box;
   width: 100%;
   margin: 0;
-  height: 180px;
+  height: 195px;
   background: $skin-palette-12;
 }
 .title-b-wg{
@@ -388,7 +357,7 @@ $anim-time: 5;
 .games-view-slider-contain{
   float: left;
   width: 100%;
-  height: 130px;
+  height: 145px;
   box-sizing: border-box;
   overflow: hidden;
   transform: translate3d(0, 0, 0);
@@ -396,11 +365,12 @@ $anim-time: 5;
 .games-view-slider-contain > ul{
   float: left;
   width: 100%;
+  height: 100%;
   box-sizing: border-box;
 }
 .games-view-slider-contain > ul > li{
-  width: calc((100% - 20px) / 3);
-  height: 130px;
+  width: calc((100% - 22px) / 3);
+  height: 100%;
   box-sizing: border-box;
   background: lighten( desaturate( $skin-color, 7 ), 4 );
   position: relative;
@@ -456,7 +426,7 @@ $anim-time: 5;
   position: absolute;
   top: 0;
   width: 100px;
-  height: 130px;
+  height: 100%;
   background: $skin-palette-10;
   box-sizing: border-box;
   @include ltr {
@@ -470,18 +440,14 @@ $anim-time: 5;
   box-sizing: border-box;
   float: left;
   width: 100%;
+  height: 100%;
   color: $text-palette-3;
   font: 12px/16px $font-f;
   text-align: center;
   padding: 84px 10px 16px;
-  height: 130px;
   background-size:auto 48px;
   background-position: 50% 20px;
   background-repeat: no-repeat;
-  @supports (-moz-animation: linear) {
-    background-position: 72% 20px;
-    margin: 0 0 0 -10px;
-  }
 }
 
 .date-championship-logo > p:first-line {
@@ -510,8 +476,7 @@ $anim-time: 5;
 .game-full-information-w{
   float:left;
   width: 100%;
-  height: 130px;
-  position: relative;
+  height: 100%;
   overflow: hidden;
   box-sizing: border-box;
   padding: 15px 20px 0;
@@ -519,7 +484,7 @@ $anim-time: 5;
 }
 .game-full-information-w:before {
   position: absolute;
-  bottom: 18px;
+  bottom: 14px;
   color: rgba(set-color($skin-palette-12),0.7);
   display: block;
   font: 18px/18px sport-icon;
@@ -541,6 +506,7 @@ $anim-time: 5;
 .team-names-wrapper-b{
   float: left;
   width: 100%;
+  height: 86px;
   box-sizing: border-box;
   position: relative;
   z-index: 22;
@@ -556,7 +522,9 @@ $anim-time: 5;
   display: table;
   box-sizing: border-box;
   height: 22px;
-  margin: 0 0 10px;
+  + li {
+    margin-top: 10px;
+  }
 }
 .team-names-wrapper-b > ul > li > p {
   width: 100%;
@@ -662,15 +630,15 @@ $anim-time: 5;
   box-sizing: border-box;
   position: relative;
   z-index: 22;
-  margin:  10px 0 0;
+  margin:  8px 0 0;
 }
 .game-link-wrapper-b > a{
-  max-width: 100%;
+  max-width: 80%;
   text-decoration: none;
   color: set-color($brand-color-1);
   font: 12px/14px $font-f;
   text-transform: uppercase;
-  padding: 6px 15px;
+  padding: 6px;
   background: $brand-color-1;
   border: 1px solid $brand-color-1;
   white-space: nowrap;
@@ -787,65 +755,6 @@ $anim-time: 5;
     background: none;
   }
 }
-@keyframes pulse-j {
-  0%, 40%, 100% {
-    transform: translateY(0);
-  }
-  20% {
-    transform: translateY(-28px);
-  }
-  60% {
-    transform: translateY(-8px);
-  }
-  70% {
-    transform: translateY(-6px);
-    }
-}
-.product-list-contain > ul > li:hover .icon-container-product {
-  animation: pulse-j 800ms ease-out;
-}
-@keyframes product-jackpot-anim-j {
-  0% {
-    margin-top: 0;
-  }
-  7% {
-    margin-top: -14px;
-  }
-  50% {
-    margin-top: -14px;
-  }
-  57% {
-    margin-top: 0;
-  }
-  100% {
-    margin-top: 0;
-  }
-}
-.product-jackpot-anim-j > span {
-  display: block;
-  height: 14px;
-  overflow: hidden;
-}
-.product-jackpot-anim-j > span > div:first-child {
-  animation: product-jackpot-anim-j 6s both ease infinite;
-}
-.product-list-contain > ul > li > a > button:nth-last-child(2), .product-list-contain > ul > li > a > button:nth-last-child(2) + button {
-  width: 50%;
-}
-.product-list-contain > ul > li > a > button:nth-last-child(2) + button {
-  left: 50%;
-}
-.product-list-contain > ul > li > a > button:nth-last-child(2) span:after {
-  content: "";
-  display: block;
-  width: 1px;
-  height: 20px;
-  background: lighten( desaturate( $skin-color, 8 ), 3 );
-  position: absolute;
-  right: 0;
-  bottom: -3px;
-  transition: opacity ;
-}
 div.slider-image-wrapper-b {
   @if $homepage-banners-size == default {
     background-size: auto 100%;
@@ -856,7 +765,7 @@ div.slider-image-wrapper-b {
     background-size: 100%;
   }
 }
-.product-list-contain > ul > li .product-slider-image {
+.product-list-contain .product-list-wrapper > a .product-slider-image {
   display: none;
   width: 100%;
   &:before, &:after {
@@ -864,7 +773,9 @@ div.slider-image-wrapper-b {
   }
   &.show {
     display: block;
-    ~ .icon-container-product, ~ h4, ~ .product-title-animation-wrapper {
+    ~ .icon-container-product,
+    ~ h4,
+    ~ .product-title-animation-wrapper {
       display: none;
     }
     ~ button {
@@ -1175,14 +1086,13 @@ div.slider-image-wrapper-b {
 .champions-date-count{
   display: table;
   width: 100%;
+  height: 180px;
   table-layout: fixed;
-  height: 100%;
   padding: 30px;
   box-sizing: border-box;
   background-size: cover;
   background-position: 50% 50%;
   background-repeat: no-repeat;
-  height: 180px;
   margin: 5px 0;
   position: relative;
 }
@@ -1222,7 +1132,6 @@ div.slider-image-wrapper-b {
   > p{
     display: inline-block;
     vertical-align: middle;
-    //height: 100%;
     text-align: center;
     position: relative;
     margin: 0 2%;
@@ -1230,20 +1139,30 @@ div.slider-image-wrapper-b {
       font-size: 75px;
       line-height: 78px;
       color: $text-palette-1;
-      text-shadow: 4px 0px 4px rgba(0, 0, 0, 0.73);
+      text-shadow: 4px 0 4px rgba(0, 0, 0, 0.73);
     }
     > i{
       font-style: normal;
       font-size: 25px;
       line-height: 27px;
       position: absolute;
-      //bottom: 0;
       top: 100%;
       right: 50%;
       transform: translateX(50%);
       display: block;
       color: $text-palette-3;
-      text-shadow: 4px 0px 4px rgba(0, 0, 0, 0.73);
+      text-shadow: 4px 0 4px rgba(0, 0, 0, 0.73);
+    }
+    + p {
+      &:before {
+        content: ":";
+        position: absolute;
+        display: block;
+        top: -8px;
+        left: -23%;
+        color: $text-palette-1;
+        font-size: 70px;
+      }
     }
   }
 }
@@ -1254,11 +1173,14 @@ div.slider-image-wrapper-b {
   .championship-time-count > p{
     > span {
       font-size: 60px;
-      //line-height: 62px;
     }
     > i {
       font-size: 18px;
-     // line-height: 20px;
+    }
+    + p:before {
+      top: 3px;
+      left: -25%;
+      font-size: 55px;
     }
   }
 }

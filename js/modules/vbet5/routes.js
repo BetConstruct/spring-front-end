@@ -54,6 +54,12 @@ angular.module('vbet5').config(['$routeProvider', '$anchorScrollProvider', 'Skin
             },
             reloadOnSearch: false
         })
+        .when('/expressofday/', {
+            templateUrl: function () {
+                return getTemplate('templates/sport/expressOfDay/main.html');
+            },
+            reloadOnSearch: false
+        })
         .when('/pinnacle/', {
             templateUrl: getTemplate('templates/sport/pinnacle.html'),
             reloadOnSearch: false

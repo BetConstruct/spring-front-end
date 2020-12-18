@@ -13,8 +13,8 @@ VBET5.directive('jackpotCounter', ['$rootScope', '$filter', function ($rootScope
             maxLength: '=',
             updateInterval: '=?bind'
         },
-        link: function (scope, element,attrs) {
-            element = element[0];
+        link: function (scope, elem,attrs) {
+            var element = elem[0];
             var amountDiff;
             var amountStr = '';
             var start = new Date().getTime();

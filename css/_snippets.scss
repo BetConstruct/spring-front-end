@@ -1167,57 +1167,7 @@ $hide-plus-four: false !default;
   @include scroll($scroll: auto, $background: light);
 }
 // end account information
-//superbet info block
-.superbet-checkbox.active {
-  background: $brand-color-1;
-}
-.superbet-checkbox label{
-  font: 11px/16px $font-f;
-  color: #EFBF00;
-}
-.text-info-superbet{
-  font: 12px/14px $font-f;
-}
-.text-info-superbet h6{color: white;}
-.bet-form form .text-info-superbet p{
-  color: white;
-  font: 11px/14px $font-f;
-}
-.superbet-info-block{background-color: $brand-color-1;}
-.superbet-logo{
-  position: absolute;
-  background: url("../../../images/superbet-logo.png#{$delete-cache}") no-repeat 50% 0;
-  width: 152px;
-  height: 126px;
-  top: -16px;
-  @include ltr {
-    right: 0;
-  }
-  @include rtl {
-    left: 0;
-  }
-}
-.superbet-info-block.active:before{
-  background-position: 62% 72%;
-  animation: bg-superbet 600ms ease;
-}
-@keyframes bg-superbet{
-  0%{background-position: -100% 72%;}
-  100%{background-position: 62% 72%;}
-}
-.superbet-info-block.active .superbet-logo {
-  animation: logo-superbet 1500ms ease;
-  opacity: 1;
-  top: -16px;
-}
-@keyframes logo-superbet{
-  0%{opacity: 0; transform: scale(0.5);}
-  25%{opacity: 1; transform: scale(1.05);}
-  50%{opacity: 1; transform: scale(0.8);}
-  75%{opacity: 1; transform: scale(1.05);}
-  100%{opacity: 1; transform: scale(1);}
-}
-//superbet info block END
+
 .complite-info-register{
   float: left;
   width: 100%;
@@ -1266,17 +1216,6 @@ input[type="password"]:focus ~ .capslock-is-on-j {
   top: 100%;
 }
 //casino 2016 slider-top
-.slider-view-casino-b{
-  float: left;
-  box-sizing: border-box;
-  width: calc(100% - 660px);
-  height: 320px;
-  overflow: hidden;
-  position: relative;
-  &.full-width-slider-casino-j {
-    width: 100%;
-  }
-}
 .big-slider-casino-directive{
   float: left;
   box-sizing: border-box;
@@ -2436,6 +2375,22 @@ input[type="password"]:focus ~ .capslock-is-on-j {
             text-align: center;
             font: 14px/34px $font-f;
           }
+          &:after {
+            content: "\ea30";
+            position: absolute;
+            top: 0;
+            left: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            height: 100%;
+            color: #ffffff;
+            background: rgba(0,0,0,0.2);
+            transform: scale(0);
+            font: 30px/30px icomoon;
+            transition: transform 240ms 200ms;
+          }
           div {
             float: left;
             width: 100%;
@@ -2452,6 +2407,11 @@ input[type="password"]:focus ~ .capslock-is-on-j {
               font: 700 13px $font-f;
               color: white;
               text-shadow: 0 1px 7px rgba(0, 0, 0, 0.71);
+            }
+          }
+          &:hover {
+            &:after {
+              transform: scale(1);
             }
           }
         }
@@ -2986,6 +2946,9 @@ rtg-jackpot {
 @include liveScoreBackgrounds("streetfighterv");
 @include liveScoreBackgrounds("rugby");
 @include liveScoreBackgrounds("mortalkombatxl");
+@include liveScoreBackgrounds("airhockey");
+@include liveScoreBackgrounds("kingofglory");
+@include liveScoreBackgrounds("valorant");
 .uploads-table {
   float: left;
   width: 100%;

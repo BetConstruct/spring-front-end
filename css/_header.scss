@@ -15,6 +15,12 @@
     box-shadow: none;
   }
 }
+.main-header {
+  float: left;
+  width: 100%;
+  position: relative;
+  z-index: 99998;
+}
 .header-wrapper.guide{
   z-index: 30;
   @include rtl {
@@ -26,10 +32,13 @@
 }
 body > {
   #{$pages-with-full-width-header} {
-    .header-wrapper.guide{
-      max-width: 100%;
-      width: 100%;
-      padding: 0;
+    .header-wrapper,
+    .header-menu-nav-container {
+      &.guide{
+        max-width: 100%;
+        width: 100%;
+        padding: 0;
+      }
     }
   }
   #{$pages-with-full-width-header-background} {
@@ -63,6 +72,11 @@ body > {
       &:before {
         bottom: 36px;
       }
+    }
+    .header-wrapper.guide ~ .header-wrapper.guide {
+      max-width: 100%;
+      width: 100%;
+      padding: 0;
     }
   }
 }
@@ -777,7 +791,7 @@ body > {
   float: left;
   width: 100%;
   box-sizing: border-box;
-  padding: 5px 12px;
+  padding: 5px 10px;
   @include rtl {
     text-align: right;
   }
@@ -800,13 +814,118 @@ body > {
 }
 .user-info-box-b > h5{
   float: left;
-  width: 100%;
+  white-space: nowrap;
   box-sizing: border-box;
   font: 12px/16px $font-f;
-  color: darken( desaturate( $brand-color-2, 1 ), 7 );
-  text-transform: uppercase;
-  padding: 2px 0 0;
+  padding: 0 10px 0 22px;
+  color:darken( saturate( adjust-hue( $text-palette-2, 3deg ), 5 ), 9 );
+  margin-bottom:5px;
+  width: 100%;
+  height: 24px;
+  line-height: 24px;
+  position: relative;
+  &:last-child{
+    margin:0;
+  }
+  &.id-num{
+    padding: 2px;
+    text-transform: uppercase;
+    color: darken( desaturate( $brand-color-2, 1 ), 7 );
+    @include ltr {
+      padding-left: 0;
+      padding-right: 10px;
+    }
+    @include rtl {
+      padding-left: 10px;
+      padding-right: 0;
+    }
+  }
 }
+.all-main-tabs-b > ul > li > p > i{
+ margin-bottom:2px;
+}
+.user-info-box-b > h6{
+  float: left;
+  white-space: nowrap;
+  box-sizing: border-box;
+  font: 12px/16px $font-f;
+  padding: 0 10px 0 22px;
+  color:darken( saturate( adjust-hue( $text-palette-2, 3deg ), 5 ), 9 );
+  margin-bottom:5px;
+  width: 100%;
+  height: 24px;
+  line-height: 24px;
+  position: relative;
+  &:last-child{
+    margin:0;
+  }
+
+  &.account-verify{
+    background:rgba(0, 141, 71,.1);
+    color:#109121;
+    margin-bottom: 5px;
+    width: max-content;
+    @include rtl{
+      padding: 0 22px 0 10px;
+      float:right;
+    }
+    .verified{
+      @include rtl{
+        left:auto;
+        right:5px;
+      }
+      left:5px;
+    }
+  }
+
+  .verified{
+    font-style: normal;
+    display: block;
+    width: 20px;
+    height: 20px;
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom:0;
+    margin:auto;
+    font: 13px/20px icomoon;
+    &:before{
+      content: "\eaa0";
+      color:#109121;
+    }
+  }
+}
+
+.profile-id-copy {
+  display: inline-block;
+  color: $text-palette-3;
+  position: relative;
+  font-style: normal;
+  font-family: icomoon;
+  right:-11px;
+  @include rtl{
+    right:11px;
+    &:before{
+      right:-8px;
+    }
+  }
+  &:after {
+    content: "\ea30";
+  }
+  &:before{
+    content:'';
+    position:absolute;
+    right:18px;
+    bottom:0;
+    top:0;
+    margin:auto;
+    width:1px;
+    height:14px;
+    background:#3F4553;
+
+  }
+}
+
 .switcher-t-view-b{
   float: left;
   width: 100%;
@@ -1037,6 +1156,18 @@ body > {
     left: auto;
     right: 10px;
   }
+  &.not-verified{
+    &:before{
+      content: "\eaa1";
+    }
+  }
+  &.verified{
+    font: 14px/20px icomoon;
+    &:before {
+      content: "\eaa0";
+      color:#109121;
+    }
+  }
 }
 .deposit-icon-b:before{content: "\e6cd";}
 .withdraw-icon-b:before{content: "\e6ce";}
@@ -1165,7 +1296,7 @@ body > {
   padding: 0 2px;
   border-radius: 3px 0 3px 0;
   right: 8px;
-  top: 5px;
+  top: 3px;
   box-sizing: border-box;
   @include rtl {
     left: 8px;
@@ -1187,6 +1318,9 @@ body > {
 }
 .header-nav-contain > ul > li.web-top-nav a:before {
   content: "WEB";
+}
+.header-nav-contain > ul > li.hot-top-nav a:before {
+  content: "HOT";
 }
 .header-nav-contain > ul > li.Bonus a:before{
   content: attr(data-content);
@@ -1217,7 +1351,7 @@ body > {
     }
   }
 }
-.header-nav-contain > ul:hover > li.sub-menu-item {
+.header-nav-contain > ul.menu-dropdown > li.sub-menu-item {
   max-height: 40px;
   opacity: 1;
 }
@@ -1375,94 +1509,124 @@ body > {
         font-size: 11px;
         line-height: 14px;
       }
+      .swedish-license {
+        background: none;
+        box-shadow: none;
+        top: 38px;
+        position: absolute;
+        @include ltr {
+          right: 10px;
+        }
+        @include rtl {
+          left: 10px;
+        }
+      }
       #header-collapse:not(:checked) {
         ~ .header-small-view-hide {
           max-height: 0;
           overflow: hidden;
         }
-        ~ .swedish-license {
-          top: 38px;
-        }
       }
     }
   }
 }
-@if $custom-very-top-menu == true {
-  .subheader-enabled .headerVersion_2 {
-    min-height: $header-first-line-height + $header-nav-line-height + $subheader-height + 21px;
+.headerVersion_2 .conteiner.show-fix, .headerVersion_2 .conteiner.show-game {
+  .header-menu-nav-container {
+    display: none;
   }
-  .block-slider{
-    padding-top: $header-first-line-height + $header-nav-line-height + 21px;
-    .close-slider-button-j{
-      top: $header-first-line-height + $header-nav-line-height + 38px;
-    }
+  .s-l-icon {
+    display: none;
   }
-  .conteiner.show-game ~ .block-slider, .block-slider.slider-scroll{
-    padding-top: 95px;
-  }
-  .headerVersion_2 {
-    min-height: $header-first-line-height + $header-nav-line-height + 21px;
-    .conteiner {
-      .duplicate{display: none;}
-      .original {
+  .s-l-logo {
+    padding-top: 10px;
+    padding-bottom: 10px;
+    background: rgba($header-first-line-background,0.7);
+    &:first-child {
+      position: relative;
+      &:before {
+        content: "";
         position: absolute;
         top: 0;
-        left: 0;
-        width: 100%;
-        background: rgba($skin-palette-10, 0.5);
-        border-bottom: 1px solid rgba($hero-color, 0.5);
-        .simple-nav-j {
-          a, p {
-            font-size: 10px;
-            line-height: 16px;
-            min-height: inherit;
-          }
+        border-style: solid;
+        @include ltr {
+          left: -24px;
+          border-width: 36px 0 0 24px;
+          border-color: rgba($header-first-line-background,0.7) transparent transparent transparent;
+        }
+        @include rtl {
+          right: -24px;
+          border-width: 36px 24px 0 0;
+          border-color: rgba($header-first-line-background,0.7) transparent transparent transparent;
         }
       }
     }
-    .header-container-b{
-      padding-top: 21px;
+    .swedish-license-icon-info {
+      display: none;
     }
   }
-  .headerVersion_2 .conteiner.show-fix, .headerVersion_2 .conteiner.show-game {
-    .header-container-b {
-      padding-top: 0;
+}
+.header-menu-nav-container,
+.swedish-license-container {
+  ~ .block-slider {
+    padding-top: #{$header-first-line-height + $header-nav-line-height + $header-top-nav-height};
+    .close-slider-button-j {
+      top: #{$header-first-line-height + $header-nav-line-height + $header-top-nav-height};
     }
-    .original {
-      max-height: 0;
-      overflow: hidden;
-    }
-    .swedish-license {
-      top: 78px;
-      .s-l-logo {
-        padding-top: 10px;
-        padding-bottom: 10px;
-        background: rgba($header-first-line-background,0.7);
-        &:first-child {
-          position: relative;
-          &:before {
-            content: "";
-            position: absolute;
-            top: 0;
-            border-style: solid;
-            @include ltr {
-              left: -24px;
-              border-width: 36px 0 0 24px;
-              border-color: rgba($header-first-line-background,0.7) transparent transparent transparent;
-            }
-            @include rtl {
-              right: -24px;
-              border-width: 36px 24px 0 0;
-              border-color: rgba($header-first-line-background,0.7) transparent transparent transparent;
-            }
-          }
-        }
-        .swedish-license-icon-info {
-          display: none;
-        }
+  }
+}
+.header-menu-nav-container {
+  z-index: 99998;
+  ~ .swedish-license-container {
+    z-index: 99999;
+    width: auto;
+    .swedish-license  {
+      position: absolute;
+      width: auto;
+      height: auto;
+      top: -19px;
+      background: none;
+      box-shadow: none;
+      @include ltr {
+        right: 10px;
       }
-      .s-l-icon {
-        display: none;
+      @include rtl {
+        left: 10px;
+      }
+    }
+  }
+}
+.header-menu-nav {
+  float: left;
+  width: 100%;
+  height: $header-top-nav-height;
+  padding: 0 12px;
+  box-sizing: border-box;
+  background: rgba($skin-palette-10, 0.5);
+  box-shadow: inset 0 -1px 0 0 rgba($hero-color, 0.5);
+  > li {
+    @include ltr {
+      float: left;
+    }
+    @include rtl {
+      float: right;
+    }
+    > a {
+      float: left;
+      display: block;
+      color: rgba(set-color($header-first-line-background), 0.74);
+      text-decoration: none;
+      font: 10px/20px $font-f;
+      transition: 240ms color;
+      &:hover {
+        color: set-color($header-first-line-background);
+      }
+    }
+    + li {
+      @include ltr {
+        margin-left: 12px;
+      }
+      @include rtl {
+        margin-right: 12px;
       }
     }
   }
@@ -1477,6 +1641,12 @@ body > {
       }
     }
   }
+  .headerVersion_2{
+    &.header-license{
+      min-height: 72px;
+    }
+  }
+
 }
 @media screen and (max-width: 1260px){
   .header-nav-contain > ul > li > .top-menu-sub-a-t > a{
@@ -1559,6 +1729,11 @@ body > {
         margin: 0 12px 0 0;
       }
       @include rtl {
+        margin: 0 0 0 12px;
+      }
+    }
+    &:last-child{
+      @include rtl{
         margin: 0 0 0 12px;
       }
     }
@@ -1731,15 +1906,16 @@ body > {
   }
 }
 .swedish-license {
-  position: absolute;
-  width: auto;
-  top: 2px;
-  z-index: 300;
+  float: left;
+  width: 100%;
+  height: 20px;
+  background: rgba($skin-palette-10, 0.5);
+  box-shadow: inset 0 -1px 0 0 rgba($hero-color, 0.5);
   @include ltr {
-    right: 0;
+    text-align: right;
   }
   @include rtl {
-    left: 0;
+    text-align: left;
   }
 }
 .s-l-logo {

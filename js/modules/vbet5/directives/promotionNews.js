@@ -258,6 +258,13 @@ VBET5.directive('promotionNews',
                                 }
 
                                 $scope.setSlug(slug, true);
+
+                                $scope.$on('$routeUpdate', function () {
+                                    var params = $location.search();
+                                    if (params && params.slug) {
+                                        $scope.setSlug(params.slug);
+                                    }
+                                });
                         });
                     }
 

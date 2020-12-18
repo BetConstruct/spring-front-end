@@ -720,4 +720,14 @@
       }
     }
   }
+  &.winning{
+    position: relative;
+    > button{
+      width: 120px;
+      float: none;
+    }
+    p.bet-notification-warning{
+      bottom: 50px;
+    }
+  }
 }

@@ -508,6 +508,7 @@ angular.module('vbet5').service('TopMenu', ['$rootScope', '$location', '$timeout
                     name: subMenuItem.name || '',
                     activeLink: subMenuItem.activeLink,
                     excludeParam: subMenuItem.excludeParam,
+                    'class':  subMenuItem['class'] || '',
                     order: subMenuItem.order
                 });
             });

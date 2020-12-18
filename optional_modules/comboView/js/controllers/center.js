@@ -463,7 +463,7 @@ VBET5.controller('comboViewCenterController', ['$rootScope', '$scope', 'OddServi
                     GameInfo.updateGameStatistics($scope.openGame);
                     GameInfo.extendLiveGame($scope.openGame);
 
-                    if ($scope.openGame.sport.alias === "Soccer" || $scope.openGame.sport.alias === "CyberFootball") {
+                    if ($scope.openGame.sport.alias === "Soccer") {
                         GameInfo.generateTimeLineEvents($scope.openGame, $scope);
                         GameInfo.addOrderingDataToSoccerGameEvents($scope.openGame);
                     }

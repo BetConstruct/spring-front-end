@@ -228,6 +228,11 @@ angular.module('vbet5').constant('Config', {
             refreshPeriod: 2000,
             apiUrl: 'https://qrlogin.fasttoken.com'
         },
+        homework: {
+            enabled: false,
+            loggedInPopupLifetime: 86400000,
+            loggedOutPopupLifetime: 86400000
+        },
         gdpr: {
             enabled: false,
             popup: true,
@@ -489,6 +494,14 @@ angular.module('vbet5').constant('Config', {
             enabled: false,
             order: null
         },
+        couponGames: {
+            enabled: false,
+            order: null
+        },
+        expressOfDay: {
+            enabled: false,
+            order: null
+        },
         showOutright: false,    // false to hide,  any number to show (number is used as 'order' field to define it's position among sports)
         showMapSection: false,   // false to hide,  any true to show Map Section in About Page
         showFavoriteCompetitions: false,
@@ -583,10 +596,14 @@ angular.module('vbet5').constant('Config', {
         countOfRecentBetsToShow: 4,
         casinoBalanceDefaultPage: 'cashier',
         buddyTransfer: {
-            version: 2,
             enabled: false,
             iconInPayments: false,
             iconInTab: true,
+            options: {
+              userId: false,
+              friendName: false,
+              username:true
+            },
             simple: true
         },
         enableLoyaltyPoints: false,
@@ -620,10 +637,6 @@ angular.module('vbet5').constant('Config', {
         maxMessageLength: 4000,
         offlineMessage: false,
         smsVerification: {
-            registration: false,
-            login: false,
-            changePassword: false,
-            updateProfile: false,
             timer: 120, // seconds
             allowResend: 5 // seconds
         },
@@ -663,7 +676,6 @@ angular.module('vbet5').constant('Config', {
             deaultPromocodePerDomain: null,  // see bt848.com skin for options
             minimumAllowedAge: 18,
             suggestPokerRegistration: false,
-            requireSmsValidation: false,
             phoneNumberPattern: '^[0-9 ]+$',
             phoneNumberLength: '20',
             replacePhoneNumberAreaCode: false,
@@ -674,15 +686,11 @@ angular.module('vbet5').constant('Config', {
             defaultCountryCode: null,
             loadExternalScriptAfterRegistration: null, //  script that will be loaded after registration is complete
             sliderPageAfterRegistration: 'deposit', // will open this page after completing registration and clicking "ok"
-            //autoSetCurrency: {   //automatically sets currency in registration form based on selected country (only for selected country-currency pairs)
-            //    enabled: true,
-            //    disableChangeAfterSelect: true,   //will not let user change another currency for selected country
-            //    availableList: {
-            //        "AM" : "AMD",
-            //        "US" : "EUR",
-            //        "RU" : "RUB"
-            //    }
-            //}
+            autoSetCurrency: {   //automatically sets currency in registration form based on selected country (only for selected country-currency pairs)
+                enabled: true,
+               // disableChangeAfterSelect: false,   //will not let user change another currency for selected country
+                availableList: {}
+            },
             securityQuestion: {
                 enabled: false,
                 questions: ['What was the name of your first pet?', 'What age were you when you went to school?', 'What was the name of the city you were born in?', 'What was the number of your school?', 'What was the name of your first love?', 'What was the make and model of your first car?']
@@ -843,10 +851,12 @@ angular.module('vbet5').constant('Config', {
         showPopularGames: false, //show "popular" games selector (as region)
         availableVideoProviderIds: [1, 3, 5, 7, 8, 11, 12, 15, 16, 19, 999999, 31], //list of available providers
         videoProvidersThatWorkWithIframe: {
+            6: 1,
             21: 1,
             22: 1,
             23: 1,
             24: 1,
+            26: 1,
             29: 1,
             30: 1,
             31: 1,
@@ -861,8 +871,7 @@ angular.module('vbet5').constant('Config', {
                 1: true,
                 5: true,
                 25: true,
-                35: true
-            }
+                35: true}
         },
         availableVideoProviderCountryFilters: { 1: ['AM'], 3: ['AM'], 5: ['AM'], 7: ['AM'], 8: ['AM'], 11: ['AM'], 12: ['AM'], 15: ['AM'], 16: ['AM']},
         availableVideoProviderCountryFiltersActive: false,
@@ -1106,13 +1115,14 @@ angular.module('vbet5').constant('Config', {
             '14': 'Client Withdrawal Request Rejection',
             '15': 'Client Withdrawal Payment',
             '16': 'Bet Winning Decrease',
+            '25': 'Bet cashout',
             '50': 'Live Dealer Tip',
             '83': 'Client Bonus Payment',
             '84': 'Cashback Bonus',
             '301': 'Correction Up',
             '302': 'Correction Down'
         },
-	esportsGames: ['StarCraft', 'StarCraft2', 'Hearthstone', 'CallofDuty', 'Overwatch', 'HeroesOfTheStorm'],
+	esportsGames: {'StarCraft': 1, 'StarCraft2': 1, 'Hearthstone': 1, 'CallofDuty': 1, 'Overwatch': 1, 'HeroesOfTheStorm': 1},
 	// numberOfExpandedMarkets: 8
     expandAllInBetHistory: false,
     stakeAmountPreventInput: "[^\\d\\.\\,]",
@@ -1140,10 +1150,9 @@ angular.module('vbet5').constant('Config', {
                 sourceId: 0,
                 intensity: 0, // (Low(5000ms)=0, Medium(3000ms)=1, High=2(1000ms), Intensive(500ms)=3)
                 externalJackpots :false,
-                externalJackpotsDefaultProvider : 'EGT'
+                externalJackpotsDefaultProvider : 'ALL'
             }
         },
-
     hideGameSoonLabel: false
     },
     iovation: {
@@ -1181,7 +1190,6 @@ angular.module('vbet5').constant('Config', {
         hideLiveStats: false,
         showSportsbookToolTip: false
     },
-
     'betting': {
         enabled: true,
         bet_source: '42',
@@ -1202,7 +1210,6 @@ angular.module('vbet5').constant('Config', {
         autoSuperBetLimit: {}, // {'GEL': 400, 'AMD': 50000, 'USD': 1000} //if not false then set limit for each currency if stake is greater then Limit superbet is enabling automaticaly
         resetAmountAfterBet: false,
         enableLimitExceededNotifications: true,
-        allowSuperBetOnLive: false,
         enableBetterOddSelectingFunctyionality: false,
         clearOnLogout: false,
         quickBet: {
@@ -1290,5 +1297,25 @@ angular.module('vbet5').constant('Config', {
             java: false,
             silverlight: false
         }
-    }
+    },
+    affiliateNetworkKeys: [ //ordered keys
+        "Unique-Id",
+        "unique-id",
+        "uniqueid",
+        "clickId",
+        "clickid",
+        "click-id",
+        "Transaction-Id",
+        "transaction-id",
+        "transactionid",
+        "campaign-id",
+        "campaignid",
+        "campaignId",
+        "Hit-Id",
+        "hitid",
+        "hit-id",
+        "A-Id",
+        "a-id",
+        "aid"
+    ]
 });
