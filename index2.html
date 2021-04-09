@@ -1,0 +1,59 @@
+
+<!doctype html>
+<html dir="{{::(conf.availableLanguages[env.lang].rtl ? 'rtl' : 'ltr')}}" ng-class="{'integration-auto-height': confPartner.notifyOnResize}" lang="{{::(conf.availableLanguages[env.lang].short.toLowerCase())}}">
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta charset="utf-8">
+<meta name="ahrefs-site-verification" content="cb555e0f05de657484ea9bbd93144b2f0164a5ffc5e2217ece10a3587f6c2db1">
+<meta name="google-site-verification" content="Asg-2YiFaUKr_F2JpkHzGX-5ywN1CyvN4Megi2WZy7A" />
+<title ng-bind="siteTitle"></title>
+<meta name="description" content="">
+<meta name="keywords" content="">
+<link rel="icon" href="_favicon.ico?=20210401044618" />
+<link rel="stylesheet" href="skins/vbet1000.com/css/skin.min.css?20210401044618" />
+<!--[if lt IE 10]>
+    <script src="//cdn.rawgit.com/jpillora/xdomain/0.7.3/dist/xdomain.min.js"></script>
+    <script>xdomain.slaves({"https://swarm5.betconstruct.com" : "/xdomain-proxy.html", "http://casino.vbet.com" : "/global/partners/xdomain/xDomainProxy.html"});</script>
+    <![endif]-->
+<link ng-if="conf.customLanguageCss.indexOf(env.lang) !== -1" rel="stylesheet" ng-href="css/fonts/{{env.lang}}.css" />
+<link ng-if="conf.customLanguageCss.indexOf(env.lang) !== -1" rel="stylesheet" ng-href="skins/{{conf.skin}}/css/fonts/{{env.lang}}.css" />
+
+</head>
+<body class="{{::conf.site_name.split('.').join('')}}">
+<div class="
+        body-wrapper
+        {{conf.integrationMode ? 'integration': ''}}
+        {{casinoGameOpened ? 'full-screen' : ''}}
+        {{env.sliderContent ? 'slider-open' : ''}}
+        {{noClassicScroll ? 'no-classic-scroll' : ''}}
+        {{$root.currentPage.path == '/' ? 'homepage' : ''}}
+        {{$root.currentPage.path.indexOf('customsport') !== -1 ? 'sport' : ''}}
+        {{footerMovable ? 'footer-movable' : ''}}
+        lang-{{::env.lang}}
+        {{$root.currentPage.path.split('/').join('')}}
+        theme-{{theme.id}}
+        {{::conf.site_name}}
+        {{::domainClass}}
+        {{{'/poolbetting': 1, '/freebet': 1}[$root.currentPage.path] ? 'modern' : ({'/dashboard': 1, '/livecalendar': 1, '/results': 1, '/multiview': 1, '/overview': 1, '/virtualsports': 1, '/insvirtualsports': 1, '/esports': 1, '/expressofday': 1}[$root.currentPage.path] ? 'classic' : conf.sportsLayout)}}
+        {{env.bodyWrapperClass||''}}
+        {{$root.currentPage.path === '/sport' && env.live ? 'live-sportsbook': ''}}
+    " no-animate>
+<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.8.0/angular.min.js?v=1.8.0"></script>
+<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.8.0/angular-route.min.js?v=1.8.0"></script>
+<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.8.0/angular-animate.min.js?v=1.8.0"></script>
+<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.8.0/angular-cookies.min.js?v=1.8.0"></script>
+<script id="app-config" data-config-url-path="" data-id="" data-config-is-externall=""></script>
+<script src="app.min.js?20210401044618-75d6a613cbc0165b72d77f97588aad27117c54f4" id="bc-main-js"></script>
+<div class="contain-header tpl-container block-size-visible-b" ng-include="::'templates/header.html'|fixPath" ng-class="{'subheader-enabled': $root.currentPage.hasSubHeader, 'vertical-nav-null': $root.leftMenuOpen === false}"></div>
+<div ng-view ng-class="$root.currentPage.path.split('/').join('')" class="view-container"></div>
+<div class="footer-group">
+<div class="footer-cell">
+<div class="contain-footer-block" id="footerContainer" ng-hide="!footerMovable && casinoGameOpened > 0" ng-class="{'active': footerOpen && !env.sliderContent, 'footer-fixed': footerMovable}" ng-include="::'templates/footer.html'|fixPath" ng-if="$root.currentPage.path !='/popup/'"></div>
+<div class="footer-button theme-{{theme.id}}" ng-click="footerOpen=!footerOpen" ng-class="{'footer-button-open': footerOpen}" ng-hide="conf.footer.disable || !footerMovable || env.sliderContent"></div>
+</div>
+</div>
+</div>
+<script src="https://static.betconstruct.me/fs/userFiles/vbetcom-updated/zadarma/detectWebRTC.min.js"></script><script src="https://static.betconstruct.me/fs/userFiles/vbetcom-updated/zadarma/jssip.min.js"></script><script src="https://static.betconstruct.me/fs/userFiles/vbetcom-updated/zadarma/widget.min.js"></script>
+</body>
+</html>
