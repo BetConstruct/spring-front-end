@@ -23,6 +23,22 @@ angular.module('casino').controller('casinoSpecialGamesCtrl', ['$rootScope', '$s
     $scope.$on('middlescreen.off', function () { $scope.middleMode = false; });
     casinoMultiviewValues.init($scope);
 
+    $scope.$on('casino.action', function (event, data) {
+        switch (data.action) {
+            case 'setUrlData':
+                data.url && data.frameId && casinoManager.setCurrentFrameUrlSuffix([$scope.gameInfo], data);
+                break;
+            case 'closeGame':
+                casinoManager.findAndCloseGame($scope, data.gameId);
+                break;
+            case 'togglePlayMode':
+                if ($scope.gameInfo && $scope.gameInfo.externalId === data.gameId) {
+                    casinoManager.togglePlayMode($scope, $scope.gameInfo);
+                }
+                break;
+        }
+    });
+
 
 
     function processToOpenGame() {
@@ -236,12 +252,10 @@ angular.module('casino').controller('casinoSpecialGamesCtrl', ['$rootScope', '$s
                 break;
         }
         $scope.loadingUserData = true;
-        casinoData.getGames(null, null, null, null, null, null, null, null, [exId]).then(function (response) {
+        casinoData.getGames({external_id : [exId]}).then(function (response) {
             if (response.data && response.data.games && response.data.games[0]) {
                 $scope.game = response.data.games[0];
-                var uniqueId = Math.random().toString(36).substr(2, 9);
-                $scope.gameInfo = {gameUrl: '', id: uniqueId, toAdd: false, game : $scope.game };
-                jackpotManager.casinoGameOpenedData = [$scope.gameInfo];
+                $scope.gameInfo = {gameUrl: '', id: Utils.guid(), toAdd: false, game : $scope.game, externalId: $scope.game.extearnal_game_id };
                 $rootScope.setTitle($scope.game.name);
                 getUrl();
             } else {
@@ -292,8 +306,6 @@ angular.module('casino').controller('casinoSpecialGamesCtrl', ['$rootScope', '$s
 
     $scope.$on("$destroy", function () {
         $scope.frameUrl = null;
-        $scope.gameInfo = {};
-        jackpotManager.casinoGameOpenedData = [];
         $rootScope.footerMovable = false;
     });
 

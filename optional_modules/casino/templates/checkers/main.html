@@ -13,7 +13,7 @@
                     </div>
                 </div>
             </div>
-            <promotion-news template="slider" slug="checkers" hide-dates="true" main-class="block-meny-news promo" use-custom-base-host="true" ng-if="!showDownloadLinks" share-path="checkers"></promotion-news>
+            <promo-switcher   template="slider"  ng-if="!showDownloadLinks" category="checkers"></promo-switcher>
         </div>
         <div ng-if="showNestedFrame" ng-controller="casinoSpecialGamesCtrl" ng-init="loadGame('checkers')" class="big-games-overflow" ng-include="'optional_modules/casino/templates/specialgames/skillgame.html'|fixPath"></div>
     </div>

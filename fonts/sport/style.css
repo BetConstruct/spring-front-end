@@ -1,10 +1,10 @@
 @font-face {
   font-family: 'icomoon';
-  src:  url('fonts/icomoon.eot?s6gaaj');
-  src:  url('fonts/icomoon.eot?s6gaaj#iefix') format('embedded-opentype'),
-    url('fonts/icomoon.ttf?s6gaaj') format('truetype'),
-    url('fonts/icomoon.woff?s6gaaj') format('woff'),
-    url('fonts/icomoon.svg?s6gaaj#icomoon') format('svg');
+  src:  url('fonts/icomoon.eot?yxih67');
+  src:  url('fonts/icomoon.eot?yxih67#iefix') format('embedded-opentype'),
+    url('fonts/icomoon.ttf?yxih67') format('truetype'),
+    url('fonts/icomoon.woff?yxih67') format('woff'),
+    url('fonts/icomoon.svg?yxih67#icomoon') format('svg');
   font-weight: normal;
   font-style: normal;
   font-display: block;
@@ -25,6 +25,15 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+.cms-jcon-ArenaOfValor:before {
+  content: "\e935";
+}
+.cms-jcon-Headis:before {
+  content: "\e934";
+}
+.cms-jcon-icon-teqball:before {
+  content: "\e933";
+}
 .cms-jcon-MobileLegends:before {
   content: "\e932";
 }

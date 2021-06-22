@@ -74,8 +74,8 @@
     <div class="right-block-flash right-block-flash-soccer" id="game-monitor-{{ game.id }}">
         <include-template template-path="templates/sport/open/player.html"></include-template>
 
-        <div class="multilive-visualisation" ng-if="game.activeFieldType === 'field' && $root.conf.customAnimationURL && $root.conf.sportsWithAnimations[game.sport.alias] === 'kiev'">
-            <iframe src="{{($root.conf.customAnimationURL.replace('{gameId}',game.id))| url}}"></iframe>
+        <div class="multilive-visualisation" ng-class="{'statistic': $root.conf.kievAnimationSettings.statistic}" ng-if="game.activeFieldType === 'field' && $root.conf.customAnimationURL && $root.conf.sportsWithAnimations[game.sport.alias] === 'kiev'">
+            <kiev-animation team1="game.team1_name" team2="game.team2_name" id="game.id" sound="$root.env.sound>0"></kiev-animation>
         </div>
 
         <div class="game-control" ng-if="game.activeFieldType === 'field' && $root.conf.sportsWithAnimations[game.sport.alias] === 'sportsbook-animations'">

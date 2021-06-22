@@ -14,6 +14,14 @@ CASINO.controller('providerJackpotCtrl', ['$rootScope', '$scope', 'Config', 'CCo
         $rootScope.footerMovable = true;
     }
 
+
+    var bCJackpotId = Config.main.jackpot.casino.bCJackpotIdForExternalJackpots;
+    var enableBCJackpots = !!bCJackpotId;
+    var bCJackpotData = {};
+    var jackpotsCount = 0;
+    var countryCode = '';
+
+
     if(!$scope.widgetMode){
         $scope.confData = CConfig;
         $scope.slideIndex = 0;
@@ -24,7 +32,27 @@ CASINO.controller('providerJackpotCtrl', ['$rootScope', '$scope', 'Config', 'CCo
         $scope.$on('middlescreen.on', function () { $scope.middleMode = true; });
         $scope.$on('middlescreen.off', function () { $scope.middleMode = false; });
 
-        var gamesOffset = $scope.wideMode ? CConfig.main.increaseByWide : CConfig.main.increaseBy;
+        var gamesOffset = CConfig.main.loadMoreCount;
+
+        $scope.$on('casino.action', function (event, data) {
+            switch (data.action) {
+                case 'setUrlData':
+                    if (data.url && data.frameId) {
+                        casinoManager.setCurrentFrameUrlSuffix($scope.gamesInfo, data);
+                    }
+                    break;
+                case 'closeGame':
+                    casinoManager.findAndCloseGame($scope, data.gameId);
+                    break;
+                case 'togglePlayMode':
+                    var gameInfo = Utils.getArrayObjectElementHavingFieldValue($scope.gamesInfo, "externalId", data.gameId);
+                    if (gameInfo) {
+                        $scope.togglePlayForReal(gameInfo);
+                    }
+                    break;
+            }
+        });
+
 
         $scope.jackpotWidgets = {
             widgetIndex: 0
@@ -67,7 +95,7 @@ CASINO.controller('providerJackpotCtrl', ['$rootScope', '$scope', 'Config', 'CCo
          * @methodOf CASINO.controller:casinoCtrl
          * @description find game by id in opened games and relaod it
          *
-         * @param {Int} id the games id
+         * @param {int} id the games id
          */
         $scope.refreshGame = function refreshGame(id) {
             casinoManager.refreshCasinoGame($scope, id);
@@ -102,12 +130,12 @@ CASINO.controller('providerJackpotCtrl', ['$rootScope', '$scope', 'Config', 'CCo
          */
 
         $scope.openGame = function openGame(game, gameType, studio, urlSuffix, multiViewWindowIndex) {
-            var countries = CConfig.main.restrictProvidersInCountries;
-            if (countries && countries[game.provider] && countries[game.provider].indexOf(countryCode) !== -1) {
-                showPermittedMessage();
+            //var countries = CConfig.main.restrictProvidersInCountries;
+            /*if (countries && countries[game.provider] && countries[game.provider].indexOf(countryCode) !== -1) {
+               // showPermittedMessage();
 
                 return;
-            }
+            }*/
 
             casinoManager.openCasinoGame($scope, game, gameType, studio, urlSuffix, multiViewWindowIndex);
         };
@@ -115,13 +143,49 @@ CASINO.controller('providerJackpotCtrl', ['$rootScope', '$scope', 'Config', 'CCo
         // casino games list directive events
         $scope.$on('casinoGamesList.openGame', function (e, data) {
             if (!data.game && data.gameId) {
-                casinoData.getGames(null, null, countryCode, null, null, null, null, [data.gameId]).then(function (response) {
+                casinoData.getGames({country: countryCode, id: [data.gameId]}).then(function (response) {
                     if (response && response.data && response.data.games && response.data.games.length) {
                         $scope.openGame(response.data.games[0]);
                     }
                 });
             } else {
                 $scope.openGame(data.game, data.playMode, data.studio);
+            }
+        });
+
+        $scope.$on("jackpots.openGame", function openJackpotsGame (event, game, gameType) {
+            if ($scope.viewCount === 1) {
+                var needToClose = $scope.gamesInfo.length === 1 && $scope.gamesInfo[0].game && $scope.gamesInfo[0].game.id !== game.id;
+                if (needToClose) {
+                    $scope.closeGame();
+                }
+
+                $scope.openGame(game, gameType);
+            } else {
+                //games that are not resizable
+                if (game.ratio === "0") {
+                    $rootScope.$broadcast("globalDialogs.addDialog", {
+                        type: 'warning',
+                        title: 'Warning',
+                        content: Translator.get('Sorry, this game cannot be opened in multi-view mode')
+                    });
+                } else {
+                    var i, count = $scope.gamesInfo.length;
+                    for (i = 0; i < count; i += 1) {
+                        if ($scope.gamesInfo[i].gameUrl === '') {
+                            $scope.gamesInfo[i].toAdd = true;
+                            $scope.openGame(game, gameType);
+                            break;
+                        }
+                    }
+                    if (i === count) {
+                        $rootScope.$broadcast("globalDialogs.addDialog", {
+                            type: 'warning',
+                            title: 'Warning',
+                            content: Translator.get('Please close one of the games for adding new one')
+                        });
+                    }
+                }
             }
         });
 
@@ -211,7 +275,11 @@ CASINO.controller('providerJackpotCtrl', ['$rootScope', '$scope', 'Config', 'CCo
         $scope.loadingJackpotesProcess[$scope.selectedProvider] = true;
         $scope.providerJackpotGamesLimits[$scope.selectedProvider].to = $scope.providerJackpotGamesLimits[$scope.selectedProvider].from + $scope.providerJackpotGamesLimits[$scope.selectedProvider].offset;
 
-        var getter = $scope.selectedProvider === 'ALL' ? casinoData.getGames(null, null, countryCode, $scope.providerJackpotGamesLimits[$scope.selectedProvider].from, $scope.providerJackpotGamesLimits[$scope.selectedProvider].to) : casinoData.getJackpotGames(null, $scope.selectedProvider, $scope.providerJackpotGamesLimits[$scope.selectedProvider].from, $scope.providerJackpotGamesLimits[$scope.selectedProvider].offset);
+        var getter = $scope.selectedProvider === 'ALL' ? casinoData.getGames({
+            country: countryCode,
+            offset: $scope.providerJackpotGamesLimits[$scope.selectedProvider].from,
+            limit: $scope.providerJackpotGamesLimits[$scope.selectedProvider].to
+        }) : casinoData.getJackpotGames(null, $scope.selectedProvider, $scope.providerJackpotGamesLimits[$scope.selectedProvider].from, $scope.providerJackpotGamesLimits[$scope.selectedProvider].offset);
 
         getter.then(function (response) {
             if (response && response.data && response.data.status !== -1) {
@@ -225,29 +293,11 @@ CASINO.controller('providerJackpotCtrl', ['$rootScope', '$scope', 'Config', 'CCo
 
     };
 
-    function subscribeForJackpotData() {
-        jackpotManager.subscribeForExternalJackpotData(subscribeForExternalJackpotDataCallback);
-
-        if (enableBCJackpots) {
-            jackpotManager.subscribeForJackpotData(-1, function (data) {
-                bCJackpotData = angular.copy(data[bCJackpotId]);
-                bCJackpotData.Provider = 'ALL';
-            }, null, 'casino', [bCJackpotId]);
-        }
-    }
-
-    $scope.externalJackpotData = [];
-
-    var bCJackpotId = Config.main.jackpot.casino.bCJackpotIdForExternalJackpots;
-    var enableBCJackpots = !!bCJackpotId;
-    var bCJackpotData = {};
-    var jackpotsCount = 0;
-
     function subscribeForExternalJackpotDataCallback(data) {
 
 
         $scope.externalJackpotData = Utils.objectToArray(data).filter(function (t) {
-            return t
+            return t;
         }); // filtering empties
 
 
@@ -261,7 +311,7 @@ CASINO.controller('providerJackpotCtrl', ['$rootScope', '$scope', 'Config', 'CCo
             $scope.externalJackpotProviders = Object.keys(data).map(function (key) {
                 return {
                     name: key
-                }
+                };
             });
 
             if (enableBCJackpots) {
@@ -287,6 +337,22 @@ CASINO.controller('providerJackpotCtrl', ['$rootScope', '$scope', 'Config', 'CCo
             $scope.getProviderJackpotGames();
         }
     }
+
+    function subscribeForJackpotData() {
+        jackpotManager.subscribeForExternalJackpotData(subscribeForExternalJackpotDataCallback);
+
+        if (enableBCJackpots) {
+            jackpotManager.subscribeForJackpotData(-2, function (data) {
+                bCJackpotData = angular.copy(data[bCJackpotId]);
+                bCJackpotData.Provider = 'ALL';
+            }, null, 'casino', [bCJackpotId]);
+        }
+    }
+
+    $scope.externalJackpotData = [];
+
+
+
 
     $scope.backgrounds = {};
 
@@ -317,7 +383,7 @@ CASINO.controller('providerJackpotCtrl', ['$rootScope', '$scope', 'Config', 'CCo
     function findAndOpenGame(searchParams) {
         if (searchParams.game !== undefined) {
             var game;
-            casinoData.getGames(null, null, countryCode, null, null, null, null, [searchParams.game]).then(function (response) {
+            casinoData.getGames({country: countryCode, id: [searchParams.game] }).then(function (response) {
                 game = response && response.data && response.data.games[0];
                 if (game !== undefined) {
                     var gameType, initialType = searchParams.type || ($rootScope.env.authorized ? 'real' : 'fun');
@@ -334,12 +400,12 @@ CASINO.controller('providerJackpotCtrl', ['$rootScope', '$scope', 'Config', 'CCo
                                 if (!$rootScope.loginInProgress) {
                                     $rootScope.$broadcast('openLoginForm');
                                 } else {
-                                    var gameInfo = {};
-                                    gameInfo.gameID = game.front_game_id;
-                                    gameInfo.game = game;
-                                    gameInfo.loadingUserData = true;
                                     $rootScope.casinoGameOpened = 1;
-                                    $scope.gamesInfo.push(gameInfo);
+                                    $scope.gamesInfo.push({
+                                        externalId: game.extearnal_game_id,
+                                        game: game,
+                                        loadingUserData: true
+                                    });
 
                                     var loginProccesWatcher = $scope.$watch('loginInProgress', function () {
                                         if (!$rootScope.loginInProgress) {
@@ -351,7 +417,7 @@ CASINO.controller('providerJackpotCtrl', ['$rootScope', '$scope', 'Config', 'CCo
                                                 $scope.openGame(game, "real");
                                             }
                                         }
-                                    })
+                                    });
                                 }
                             }
                             break;
@@ -362,7 +428,6 @@ CASINO.controller('providerJackpotCtrl', ['$rootScope', '$scope', 'Config', 'CCo
             });
         }
     }
-    var countryCode = '';
 
     (function init() {
         var searchParams = $location.search();
@@ -375,7 +440,9 @@ CASINO.controller('providerJackpotCtrl', ['$rootScope', '$scope', 'Config', 'CCo
         $scope.selectedProvider = !$scope.widgetMode && searchParams.provider ? searchParams.provider : Config.main.jackpot.casino.externalJackpotsDefaultProvider;
 
         Geoip.getGeoData(false).then(function (data) {
-            data && data.countryCode && (countryCode = data.countryCode);
+            if (data && data.countryCode) {
+                countryCode = data.countryCode;
+            }
         })['finally'](function () {
         });
 

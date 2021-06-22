@@ -12,7 +12,7 @@
                                 <a ng-show="!globalConfig.vrcasino.showDownloadSection" ng-if="userOS === 'Windows' && game.downloads.windows" ng-href="{{(game.downloads.windows.indexOf('http') === -1 ? $root.cUrlPrefix + '/' : '') + game.downloads.windows }}" ng-click="broadcast('analytics.button', 'VRCasino')" trans>download</a>
                                 <a ng-show="!globalConfig.vrcasino.showDownloadSection" ng-if="userOS === 'MacOS' && game.downloads.mac" ng-href="{{ (game.downloads.mac.indexOf('http') === -1 ? $root.cUrlPrefix + '/' : '') + game.downloads.mac }}" ng-click="broadcast('analytics.button', 'VRCasino')" trans>download</a>
                                 <a ng-show="globalConfig.vrcasino.showDownloadSection" ng-click="toggleDownloadLink('vrcasino-buttons')" trans>download</a>
-                                <a href="https://vrcasino.betconstruct.com/" target="_blank" trans>Learn more</a>
+                                <a href="https://vrcasino.betconstruct.com/?lang={{$root.env.lang}}" target="_blank" trans>Learn more</a>
                             </div>
                             <div class="intro-info-j">
                                 <a ng-click="broadcast('openHelpPage', {slug: 'faq&subsub=rules&sub=vr-casino'})" class="how-to-lplay-j" trans>How To Play</a>
@@ -61,7 +61,8 @@
                         </ul>
                     </div>
                 </div>
-                <promotion-news ng-if="globalConfig.vrcasino.showPromotionsInVRCasino" template="slider" slug="vrcasino" hide-dates="true" main-class="block-meny-news promo" use-custom-base-host="true" ng-if="!showDownloadLinks" share-path="vrcasino"></promotion-news>
+                <promo-switcher template="slider"  ng-if="globalConfig.vrcasino.showPromotionsInVRCasino" category="vrcasino"></promo-switcher>
+
             </div>
         </div>
         <div ng-if="showNestedFrame && game" ng-controller="casinoSpecialGamesCtrl" ng-init="loadGame('vrcasino');"  class="big-games-overflow" ng-include="'optional_modules/casino/templates/specialgames/skillgame.html'|fixPath"></div>

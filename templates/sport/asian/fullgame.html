@@ -67,11 +67,11 @@
         <h3 ng-bind="market.name"></h3>
         <i class="cashout-icon-market-v3" title="Cash-out available" trans ng-if="market.cashout"></i>
         <span class="ew-total-view-v3" ng-if="market.eachWayTerms" title="{{market.eachWayTerms}}">ew</span>
-        <i class="statistics-icon-market" ng-class="{'active': market.showStats}" ng-click="market.showStats = !market.showStats; $event.stopPropagation()"  ng-if="market.showStatsIcon"></i>
+        <i class="statistics-icon-market" ng-class="{'active': marketsStatisticsState[market.id]}" ng-click="marketsStatisticsState[market.id] = !marketsStatisticsState[market.id]; $event.stopPropagation()"  ng-if="market.showStatsIcon"></i>
         <i class="favorite-icon-market-v3" ng-class="{'remove': openGame.sport.favouriteMarketsTypes[market.fullType] === 1 }" ng-click="$event.stopPropagation();addToFavouriteMarkets(market)"></i>
     </div>
     <market-stats class="market-stats" market-type="market.type" open-game="openGame"
-                  open-statistics="openStatistics" ng-if="market.showStats"></market-stats>
+                  open-statistics="openStatistics" ng-if="marketsStatisticsState[market.id]"></market-stats>
     <div class="many-columns-b cols-{{market.col_count}}" ng-class="{'default': market.col_count > 5}" ng-show="!market.collapsed">
         <div class="asian-market-wrap-j asian-market-overflow-j {{event.price_change == null? '' : ({true: 'up-', false: 'down'}[event.price_change > 0] + (event.price_change % 2)) }}"
              ng-repeat="event in market.events track by event.id"

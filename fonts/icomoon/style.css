@@ -1,10 +1,10 @@
 @font-face {
   font-family: 'icomoon';
-  src:  url('fonts/icomoon.eot?2u7ixe');
-  src:  url('fonts/icomoon.eot?2u7ixe#iefix') format('embedded-opentype'),
-    url('fonts/icomoon.ttf?2u7ixe') format('truetype'),
-    url('fonts/icomoon.woff?2u7ixe') format('woff'),
-    url('fonts/icomoon.svg?2u7ixe#icomoon') format('svg');
+  src:  url('fonts/icomoon.eot?zgi0oo');
+  src:  url('fonts/icomoon.eot?zgi0oo#iefix') format('embedded-opentype'),
+    url('fonts/icomoon.ttf?zgi0oo') format('truetype'),
+    url('fonts/icomoon.woff?zgi0oo') format('woff'),
+    url('fonts/icomoon.svg?zgi0oo#icomoon') format('svg');
   font-weight: normal;
   font-style: normal;
   font-display: block;
@@ -25,6 +25,15 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+.cms-jcon-left-thin-arrow:before {
+  content: "\eaaa";
+}
+.cms-jcon-right-thin-arrow:before {
+  content: "\eaab";
+}
+.cms-jcon-Twitch:before {
+  content: "\eaa2";
+}
 .cms-jcon-ic_all_verified:before {
   content: "\eaa0";
 }
@@ -118,6 +127,69 @@
 }
 .cms-jcon-Buddy-to-Buddy:before {
   content: "\e978";
+}
+.cms-jcon-BettingGame:before {
+  content: "\eabb";
+}
+.cms-jcon-bingo_icon:before {
+  content: "\eaba";
+}
+.cms-jcon-Lottery-icon-1:before {
+  content: "\eab9";
+}
+.cms-jcon-search-no-result:before {
+  content: "\eab8";
+}
+.cms-jcon-euro2020-icon:before {
+  content: "\eab6";
+}
+.cms-jcon-euro2020-icon_CMS:before {
+  content: "\eab7";
+}
+.cms-jcon-mail-envelope-open:before {
+  content: "\eab0";
+}
+.cms-jcon-mail-envelope-open1:before {
+  content: "\eab1";
+}
+.cms-jcon-mail-envelope-open2:before {
+  content: "\eab2";
+}
+.cms-jcon-mail-envelope-open3:before {
+  content: "\eab3";
+}
+.cms-jcon-iconmonstr-telegram-1:before {
+  content: "\eaaf";
+}
+.cms-jcon-icon_boosted-odds1:before {
+  content: "\eaae";
+}
+.cms-jcon-announcement:before {
+  content: "\eaad";
+}
+.cms-jcon-Wheel-1:before {
+  content: "\eaac";
+}
+.cms-jcon-InstantWin:before {
+  content: "\eaa9";
+}
+.cms-jcon-Fire-blaze-jackpots:before {
+  content: "\eaa7";
+}
+.cms-jcon-Jackpot-mania:before {
+  content: "\eaa6";
+}
+.cms-jcon-Must-drop-jackpots:before {
+  content: "\eaa8";
+}
+.cms-jcon-arcadegames:before {
+  content: "\eaa5";
+}
+.cms-jcon-achievementsslots:before {
+  content: "\eaa4";
+}
+.cms-jcon-cash-drop:before {
+  content: "\eaa3";
 }
 .cms-jcon-video-stream:before {
   content: "\ea9f";
@@ -1771,8 +1843,14 @@
 .cms-jcon-systemcalculator:before {
   content: "\e029";
 }
-.cms-jcon-arrow-left-two:before {
+.cms-jcon-arrow-down-two:before {
   content: "\e92a";
+}
+.cms-jcon-arrow-top-two:before {
+  content: "\eab4";
+}
+.cms-jcon-arrow-down-two1:before {
+  content: "\eab5";
 }
 .cms-jcon-arrow-right-two:before {
   content: "\e92b";

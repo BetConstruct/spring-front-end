@@ -6,7 +6,7 @@
  * @description  promotional bonuses controller.
  */
 
-VBET5.controller('promotionalBonusCtrl', ['$scope', '$location', 'Zergling', 'BackendConstants', '$rootScope', 'Translator', '$q', '$filter', 'Config', 'Utils', function($scope, $location, Zergling, BackendConstants, $rootScope, Translator, $q, $filter, Config, Utils) {
+VBET5.controller('promotionalBonusCtrl', ['$scope', '$location', 'Zergling', 'BackendConstants', '$rootScope', 'Translator', '$q', '$filter', 'Config', 'Utils', 'RecaptchaService', 'analytics', function($scope, $location, Zergling, BackendConstants, $rootScope, Translator, $q, $filter, Config, Utils, RecaptchaService, analytics) {
     'use strict';
 
     $scope.backendBonusConstants = BackendConstants.PromotionalBonus;
@@ -20,6 +20,9 @@ VBET5.controller('promotionalBonusCtrl', ['$scope', '$location', 'Zergling', 'Ba
                 isAllowed = $scope.conf.promotionalBonuses.sportsbook;
                 break;
             case "2":
+                isAllowed = $scope.conf.promotionalBonuses.casino && $scope.casinoEnabled;
+                break;
+            case "0":
                 isAllowed = $scope.conf.promotionalBonuses.casino && $scope.casinoEnabled;
                 break;
             case "3":
@@ -268,9 +271,9 @@ VBET5.controller('promotionalBonusCtrl', ['$scope', '$location', 'Zergling', 'Ba
             });
             return;
         }
-        var bonusId = bonus.partner_bonus_id;
+
         var promise = showConfirmationDialog('Are you sure you want to claim this bonus?', 'prompt');
-        var request = {bonus_id: bonusId};
+        var request = {bonus_id: bonus.partner_bonus_id, client_bonus_id: bonus.id };
         promise.then(function () {
             Zergling.get(request,'claim_bonus').then(function (response) {
                 if (response.result === 0){
@@ -298,7 +301,7 @@ VBET5.controller('promotionalBonusCtrl', ['$scope', '$location', 'Zergling', 'Ba
         if (target !== $scope.activeBonusTab){
             $scope.bonusList = [];
             $scope.activeBonusTab = target;
-            if (target !== 'bonus-request') {
+            if ([$scope.backendBonusConstants.BonusSource.SportsBook, $scope.backendBonusConstants.BonusSource.Casino].indexOf(target) > -1) {
                 getPromotionalBonus();
             }
         }
@@ -308,40 +311,45 @@ VBET5.controller('promotionalBonusCtrl', ['$scope', '$location', 'Zergling', 'Ba
         if ($scope.applyingBonus || $scope.loadingBonus || !$scope.promoCode) { return; }
 
         $scope.applyingBonus = true;
-        Zergling.get({ 'code': $scope.promoCode }, 'apply_promo_codes')
-            .then(function success(response) {
-                var dialogOpts = {
-                    type: '',
-                    title: '',
-                    content: ''
-                };
+        RecaptchaService.execute('apply_promo_codes', { debounce: false }).then(function () {
+            Zergling.get({ 'code': $scope.promoCode }, 'apply_promo_codes')
+                .then(function success(response) {
+                    var dialogOpts = {
+                        type: '',
+                        title: '',
+                        content: ''
+                    };
 
-                switch (response.result) {
-                    case 0:
-                        dialogOpts.type = 'success';
-                        dialogOpts.title = 'Success';
-                        dialogOpts.content = Translator.get('Your promo code has been applied');
-                        break;
-                    case '-99':
-                        dialogOpts.content = Translator.get('Promo code has been already applied');
-                        break;
-                    default:
-                        dialogOpts.type = 'error';
-                        dialogOpts.title = 'Error';
-                        dialogOpts.content = dialogOpts.content || Translator.get('Invalid promo code');
-                }
+                    switch (response.result) {
+                        case 0:
+                            dialogOpts.type = 'success';
+                            dialogOpts.title = 'Success';
+                            dialogOpts.content = Translator.get('Your promo code has been applied');
+                            $rootScope.broadcast("promoCodeApplied", $scope.promoCode);
+                            break;
+                        case '-99':
+                        case '-2471':
+                            dialogOpts.content = Translator.get('Promo code has been already applied');
+                            break;
+                        default:
+                            dialogOpts.type = 'error';
+                            dialogOpts.title = 'Error';
+                            dialogOpts.content = dialogOpts.content || Translator.get('Invalid promo code');
+                    }
 
-                if (dialogOpts.type === 'success') {
-                    dialogOpts.buttons = [
-                        {
-                            title: 'Ok',
-                            callback: getPromotionalBonus
-                        }
-                    ];
-                }
+                    if (dialogOpts.type === 'success') {
+                        dialogOpts.buttons = [
+                            {
+                                title: 'Ok',
+                                callback: getPromotionalBonus
+                            }
+                        ];
+                    }
 
-                $rootScope.$broadcast("globalDialogs.addDialog", dialogOpts);
-            })['finally'](function() { $scope.applyingBonus = false; });
+                    $rootScope.$broadcast("globalDialogs.addDialog", dialogOpts);
+                })['finally'](function() { $scope.applyingBonus = false; });
+        })
+
     };
 
     $scope.formatBonusRequestURL = function formatBonusRequestURL() {
@@ -351,6 +359,21 @@ VBET5.controller('promotionalBonusCtrl', ['$scope', '$location', 'Zergling', 'Ba
 
     };
 
+    function getFreeSpins() {
+        if ($rootScope.partnerConfig.is_freespin_claimable) {
+            Zergling.get({
+                "acceptance_type": $scope.backendBonusConstants.BonusAcceptanceType.None,
+                "max_rows":30
+            },'get_free_spin_bonuses').then(function(data) {
+                $scope.bonusesAmount.freeSpins = data.details.length;
+                $rootScope.$broadcast('promotionalbonuses.data', {data: data, product: 'freeSpins'});
+            });
+        }
+    }
+    if (Config.main.promotionalBonuses.casino) {
+        getFreeSpins();
+    }
     getCasinoBonusesAmount();
     getPromotionalBonus(); //first step
+
 }]);

@@ -8,7 +8,7 @@
                         <p>
                             <i trans>My Profile</i>
                             <span class="id-view-tab">ID: {{profile.unique_id}}</span>
-                            <i class="profile-id-copy" ng-click="copyIdToClipboard()" title="Copy" trans></i>
+                            <i class="profile-id-copy" ng-class="{'profile-id-copied':copyIdState}" ng-click="$event.stopPropagation(); !copyIdState && copyIdToClipboard(); " title="{{(copyIdState ? 'Copied successful' :'Copy')|translate}}"></i>
                         </p>
                     </li>
                     <li ng-class="{'active': ['deposit', 'withdraw', 'balanceHistory', 'casinoBalanceHistory', 'cashier', 'myWallets', 'buddytransfer','depositRequest'].indexOf(env.sliderContent) !== -1}" ng-if="conf.enableMixedView && conf.enableMixedViewBalance"
@@ -32,7 +32,7 @@
                     </li>
                     <li ng-class="{'active': env.sliderContent === 'promotionalBonuses'}"
                         ng-click="env.sliderContent = 'promotionalBonuses'"
-                        ng-if="conf.promotionalBonuses.enable && env.authorized && ($root.profile.is_bonus_allowed !== false) && (!conf.hideBonusSectionIfNoBonus || (conf.hideBonusSectionIfNoBonus && $root.allBonusesCount.sportsbook + $root.allBonusesCount.casino > 0))">
+                        ng-if="conf.promotionalBonuses.enable && env.authorized && ($root.profile.is_bonus_allowed !== false) && (!conf.hideBonusSectionIfNoBonus || (conf.hideBonusSectionIfNoBonus && $root.allBonusesCount.sportsbook + $root.allBonusesCount.casino + $root.allBonusesCount.freeSpins> 0))">
                         <i class="bonuses-icon-tab-b"></i>
                         <h4 trans>Bonuses</h4>
                     </li>

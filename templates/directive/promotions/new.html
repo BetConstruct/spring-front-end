@@ -1,0 +1,43 @@
+<div class="promos-container guide promo block-meny-news"
+     ng-init="setTitle('Promotions')" no-animate>
+    <div ng-class="mainClass" class="promotions-main-p">
+        <div class="promotions-menu-p ng-scope" ng-if="categories.length > 1">
+            <ul>
+                <li ng-repeat="item in categories track by item.src"
+                    ng-class="{active: selectedCategory.src === item.src}"
+                    ng-click="selectCategory(item)">
+                    {{item.title}}
+                </li>
+            </ul>
+        </div>
+        <div ng-if="!promotionsGroups.length && !loading" class="new-casino-no-games-text">
+            <p trans>No promos for the selected category</p>
+        </div>
+        <div ng-repeat="group in promotionsGroups track by group.id" ng-show="!loading"
+             class="block-sport-news count-3">
+            <div class="list-news promo">
+                <ul ng-repeat="promo in group.promotions track by promo.id"
+                    ng-class="'news-column-' + group.id">
+                    <li>
+                        <h3 ng-hide="$root.conf.hidePromotionNewsDate" title="{{promo.title}}">
+                            <a ng-click="selectPromo(promo);$event.stopPropagation();" ng-bind-html="promo.title"></a>
+                        </h3>
+
+                        <div class="picture-news-block">
+                            <a ng-click="selectPromo(promo);$event.stopPropagation();">
+                                <img ng-src="{{promo.src}}" alt="">
+                            </a>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <vbet-loader class="page-center" ng-show="loading"></vbet-loader>
+    </div>
+
+    <ng-include src="::'templates/directive/promotions/popup.html'|fixPath"></ng-include>
+
+
+</div>
+

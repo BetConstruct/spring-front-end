@@ -50,7 +50,13 @@ angular.module('vbet5').controller('RegistrationController', ['$scope', '$rootSc
 
         $scope.monthNames = Config.main.monthNames;
         $scope.genders = [{val: 'M', name: 'Male'}, {val: 'F', name: 'Female'}];
-
+        $scope.incomeSources = [
+            {title: 'Salary', value: 1},
+            {title: 'Self-employed', value: 2},
+            {title: 'Inheritance', value: 3},
+            {title: 'Savings', value: 4},
+            {title: 'Investments', value: 5}
+        ];
         /**
          * RegistratioinData model for registration form
          * @type {{gender: *, username: string, email: string, address: string, city: string, currency_name: *, country_id: string, password: string, password2: string, promo_code: string, doc_number: string, years: {}, language: (Config.env.lang|*), secQuest: String, birth_day: string, birth_month: string, birth_year: string, phone_code: string, phone_number: string, agree: boolean}}
@@ -267,7 +273,7 @@ angular.module('vbet5').controller('RegistrationController', ['$scope', '$rootSc
          * @param predefinedCountryId user prefered country id, if predefined no need to make location call
          * @param {Boolean} skipCity if true doesn't send pre filled city info to back-end
          */
-        $scope.preFillRegionalData = function preFillRegionalData(predefinedCountryId, skipCity, skipCurrency) {
+        $scope.preFillRegionalData = function preFillRegionalData(predefinedCountryId, skipCity) {
             var countryCodeItem;
             if (predefinedCountryId && CountryCodes[predefinedCountryId]) {
                 //timeout is not good solution, but this way setting predefined country works
@@ -278,14 +284,9 @@ angular.module('vbet5').controller('RegistrationController', ['$scope', '$rootSc
                     setCountryCode(predefinedCountryId);
                 });
             } else {
-                var city, disabled = false;
+                var city;
                 Geoip.getGeoData().then(function (data) {
-                    if ($scope.RegConfig.preventChangingCountry && $scope.RegConfig.preventChangingCountry.length && $scope.RegConfig.preventChangingCountry.indexOf(data.countryCode) !== -1) {
-                        disabled = true;
-                        TimeoutWrapper(function () {
-                            $scope.registerform.country_id.disabled = true;
-                        }, 1000);
-                    } else if (!$scope.registrationData.country_id && data.countryCode && (!Config.main.personalDetails.availableCountriesList || Config.main.personalDetails.availableCountriesList.indexOf(data.countryCode) !== -1) && (!Config.main.personalDetails.restrictedCountriesList || Config.main.personalDetails.restrictedCountriesList.indexOf(data.countryCode) === -1)) {
+                    if (!$scope.registrationData.country_id && data.countryCode && (!Config.main.personalDetails.availableCountriesList || Config.main.personalDetails.availableCountriesList.indexOf(data.countryCode) !== -1) && (!Config.main.personalDetails.restrictedCountriesList || Config.main.personalDetails.restrictedCountriesList.indexOf(data.countryCode) === -1)) {
                         countryCodeItem = CountryCodes[data.countryCode];
                         countryCodeItem.key = data.countryCode;
                         if (!skipCity) {
@@ -295,7 +296,7 @@ angular.module('vbet5').controller('RegistrationController', ['$scope', '$rootSc
                 })['catch'](function (reason) {
                     console.log(reason);
                 })['finally'](function () {
-                    if (!disabled && !$scope.registrationData.country_id) {
+                    if (!$scope.registrationData.country_id) {
                         if (!countryCodeItem && Config.main.registration.defaultCountryCode) {
                             countryCodeItem = CountryCodes[Config.main.registration.defaultCountryCode];
                             countryCodeItem.key = Config.main.registration.defaultCountryCode;
@@ -453,6 +454,12 @@ angular.module('vbet5').controller('RegistrationController', ['$scope', '$rootSc
                     },
                     doc_number_4: function () {
                         regInfo.doc_number = $scope.registrationData.doc_number_1 + '-' + $scope.registrationData.doc_number_2 + '-' + $scope.registrationData.doc_number_3 + '-' + $scope.registrationData.doc_number_4;
+                    },
+                    max_session_duration_daily: function () {
+                        return  $scope.registrationData.max_session_duration_daily && $scope.registrationData.max_session_duration_daily * 60;
+                    },
+                    max_session_duration_monthly: function () {
+                        return  $scope.registrationData.max_session_duration_monthly && $scope.registrationData.max_session_duration_monthly * 60;
                     }
                 };
             customDataType.birth_month = customDataType.birth_day;
@@ -556,6 +563,12 @@ angular.module('vbet5').controller('RegistrationController', ['$scope', '$rootSc
                 regInfo.country_code = Config.main.registration.defaultCountryCode;
             }
 
+            if (regInfo.salary_level) {
+                regInfo.salary_min = $scope.registrationData.salary_level.min;
+                regInfo.salary_max = $scope.registrationData.salary_level.max;
+                delete regInfo.salary_level;
+            }
+
             return regInfo;
         }
 
@@ -646,7 +659,6 @@ angular.module('vbet5').controller('RegistrationController', ['$scope', '$rootSc
          */
         function doRegistrationRequest(userInfo) {
             $scope.registration.busy = true;
-
             Zergling
                 .get({user_info: userInfo}, 'register_user')
                 .then(
@@ -662,9 +674,9 @@ angular.module('vbet5').controller('RegistrationController', ['$scope', '$rootSc
                                 Storage.set('renewReminded', 0, Config.main.remindToRenewBalance.interval);
                             }
                             if (Config.main.registration.loginRightAfterRegistration) {
-                                var prefix = $scope.registrationData.phone_code? ('00' + $scope.registrationData.phone_code): '';
+
                                 $scope.$emit('login.withUserPass', {
-                                    user: $scope.registrationData.username || $scope.registrationData.email || (prefix + $scope.registrationData.phone_number),
+                                    user: userInfo.username || userInfo.email || userInfo.phone,
                                     password: $scope.registrationData.password,
                                     action: 'registration_completed'
                                 });
@@ -1045,10 +1057,11 @@ angular.module('vbet5').controller('RegistrationController', ['$scope', '$rootSc
          * @methodOf vbet5.controller:RegistrationController
          * @description check national id
          */
-        $scope.checkNationalId = function checkNationalId(isSkipValidation) {
-            var isRequired = $scope.registerform.doc_number.$$attr.required;
-            var docNumber = $scope.registrationData.doc_number;
-            $scope.registerform.doc_number.$setValidity('docinvalid', isSkipValidation || Utils.checkNationalId(docNumber, isRequired));
+        $scope.checkNationalId = function checkNationalId(isSkipValidation, fieldName) {
+            fieldName = fieldName || "doc_number";
+            var isRequired = $scope.registerform[fieldName].$$attr.required;
+            var docNumber = $scope.registrationData[fieldName];
+            $scope.registerform[fieldName].$setValidity('docinvalid', isSkipValidation || Utils.checkNationalId(docNumber, isRequired));
         };
 
 
@@ -1253,7 +1266,14 @@ angular.module('vbet5').controller('RegistrationController', ['$scope', '$rootSc
             } else {
                 referenceCode = null;
             }
-
+            if(!$rootScope.partnerConfig || $rootScope.partnerConfig._not_loaded) {
+                var partnerConfigUpdatedWatcher = $scope.$on('partnerConfig.updated',function () {
+                   if (!$scope.registrationData.currency_name) {
+                       registrationDefaultCurrency = $scope.registrationData.currency_name = Config.main.registration.defaultCurrency;
+                   }
+                    partnerConfigUpdatedWatcher();
+                });
+            }
 
             RecaptchaService.execute('register', { debounce: false });
         };

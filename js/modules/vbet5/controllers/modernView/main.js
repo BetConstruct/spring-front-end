@@ -278,8 +278,6 @@ angular.module('vbet5.betting').controller('modernViewManCtrl', ['$rootScope', '
         if ($scope.selectedSportId && data.sport[$scope.selectedSportId]) {
             $scope.sports_list = Utils.makeSelectedVisible($scope.sports_list, {id: $scope.selectedSportId}, $scope.sportListMaxVisibleItems);
         }
-
-        console.log('sports_list:', $scope.sports_list, data.sport);
     }
 
 
@@ -614,6 +612,7 @@ angular.module('vbet5.betting').controller('modernViewManCtrl', ['$rootScope', '
                     'market': {'type': {'@in': ['P1XP2', 'P1P2']}}
                 }
             };
+            Utils.addPrematchExpressId(requestMyGame);
 
             Utils.setCustomSportAliasesFilter(requestMyGame);
 
@@ -829,7 +828,6 @@ angular.module('vbet5.betting').controller('modernViewManCtrl', ['$rootScope', '
         $location.search('sport', sport.id);
         searchParams = $location.search();
         $scope.selectedSportId = sport.id;
-        console.log('sporrtlist', $scope.sports_list);
         $scope.sports_list = Utils.makeSelectedVisible($scope.sports_list, {id: $scope.selectedSportId}, $scope.sportListMaxVisibleItems);
 
         $scope.regionsList = [];
@@ -915,6 +913,8 @@ angular.module('vbet5.betting').controller('modernViewManCtrl', ['$rootScope', '
                     'market': ['type', 'express_id', 'name', 'home_score', 'away_score', 'id']
                 }
             };
+            Utils.addPrematchExpressId(request);
+
             request.where = {
                 'market': {'type': {'@in': ['P1XP2', 'P1P2']}}
             };

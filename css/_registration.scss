@@ -193,8 +193,13 @@
   float: left;
   width: 100%;
   height: 100%;
-  padding: 20px 0 41px 30px;
   box-sizing: border-box;
+  @include ltr {
+    padding: 20px 0 41px 30px;
+  }
+  @include rtl {
+    padding: 20px 30px 41px 0;
+  }
 }
 .reg-commercial-content {
   float: left;
@@ -244,6 +249,14 @@
   text-transform: uppercase;
   white-space: normal;
   line-height: 22px;
+  @include rtl {
+    text-align: right;
+  }
+  &.ng-hide {
+    opacity: 0 !important;
+    display: block !important;
+    min-height: 22px;
+  }
 }
 .reg-steps-footer {
   float: left;
@@ -307,34 +320,10 @@
   }
   > a {
     display: inline-block;
-    vertical-align: middle;
     width: 24px;
     height: 24px;
     margin: 0 3px;
-    color: opacify(rgba(set-color($popup-form-palette),0.1), $popup-form-opacify);
-    text-decoration: none;
-    border-radius: 50%;
-    transition: color 250ms;
-    text-align: center;
-    font-size: 30px;
-    line-height: 24px;
-    position: relative;
-    overflow: hidden;
-    &:before {
-      position: absolute;
-      top: 0;
-      width: 100%;
-      height: 100%;
-      @include ltr {
-        left: -2px;
-      }
-      @include rtl {
-        right: -2px;
-      }
-    }
-    &:hover {
-      color: opacify(rgba(set-color($popup-form-palette),0.2), $popup-form-opacify);
-    }
+    vertical-align: middle;
   }
 }
 
@@ -1454,7 +1443,7 @@
   }
 }
 // End captcha
-label.sign-in-checkbox-j {
+label.sign-in-checkbox-j, label.runtime-checkbox-j {
   position: relative;
   cursor: pointer;
   box-sizing: border-box;
@@ -1503,12 +1492,6 @@ label.sign-in-checkbox-j {
     color: transparent;
     font: 6px/16px icomoon;
     transition: color 150ms;
-    @include ltr {
-      left: 1px;
-    }
-    @include rtl {
-      right: 1px;
-    }
   }
 }
 .block-slider.popup.block-slider-register-t, .block-slider.popup.block-slider-login-t, .block-slider.popup.block-slider-forgotPasswordForm-t {
@@ -1976,7 +1959,7 @@ $disable-middle-name: false !default;
     }
   }
 }
-.VBET:not(div.wwwvbetdk) {
+.body-wrapper.VBET:not(.wwwvbetlat):not(.cmsvbetdk) {
   .register-steps-b .field-separator.country_id{
     width: calc(100% - 90px);
   }

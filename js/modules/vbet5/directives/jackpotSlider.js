@@ -43,7 +43,6 @@ VBET5.directive('jackpotSlider', ['$rootScope', 'jackpotManager', 'Utils','$filt
 
             function subscribeForJackpotData() {
                 if (attrs.type !== 'global') {
-                    jackpotManager.unsubscribeFromJackpotData();
                     jackpotManager.subscribeForJackpotData(-1, subscribeForJackpotDataCallback, null, attrs.type || 'casino');  // -1 all games ,  casino
                 } else {
                     jackpotManager.subscribeForGlobalJackpotData(subscribeForGlobalJackpotDataCallback);
@@ -57,9 +56,9 @@ VBET5.directive('jackpotSlider', ['$rootScope', 'jackpotManager', 'Utils','$filt
             scope.$on('$destroy', function() {
                 if (scope.loadJackpotData) {
                     if(attrs.type !== 'global'){
-                        jackpotManager.unsubscribeFromJackpotData(true);
+                        jackpotManager.unsubscribeFromJackpotData(null, -1, subscribeForJackpotDataCallback);
                     }else{
-                        jackpotManager.unsubscribeFromGlobalJackpotData(subscribeForGlobalJackpotDataCallback);
+                        jackpotManager.unsubscribeFromGlobalJackpotData(subscribeForGlobalJackpotDataCallback, true);
                     }
                 }
             });

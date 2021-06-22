@@ -49,6 +49,13 @@
                               </h5>
                           </div>
                         <ul>
+                            <li ng-click="selectBalanceMenuItem($event, 'deposit');$event.stopPropagation();"
+                                ng-class="{'active': env.sliderContent === 'deposit'}"
+                                ng-hide="conf.disableDepositPage"
+                                prevent-fast-click="1.5">
+                                <i class="deposit-icon-b"></i>
+                                <span trans>Deposit</span>
+                            </li>
                             <li ng-click="selectBalanceMenuItem($event, 'cashier')"
                                 ng-show="(casinoEnabled || calculatedConfigs.pokerEnabled) && conf.transferEnabled"
                                 ng-class="{'active': env.sliderContent === 'cashier'}"
@@ -63,12 +70,20 @@
                                 <i class="cashier-icon-b"></i>
                                 <span trans>My Wallets</span>
                             </li>
+                            <li ng-click="selectBalanceMenuItem($event, 'withdraw');$event.stopPropagation();"
+                                ng-class="{'active': env.sliderContent === 'withdraw'}"
+                                ng-hide="conf.disableWithdrawPage"
+                                prevent-fast-click="1.5">
+                                <i class="withdraw-icon-b"></i>
+                                <span trans>Withdraw</span>
+                            </li>
                             <li ng-click="selectBalanceMenuItem($event, 'balanceHistory');$event.stopPropagation();"
                                 ng-class="{'active': env.sliderContent === 'balanceHistory'}"
                                 prevent-fast-click="1.5">
                                 <i class="history-icon-b"></i>
                                 <span>{{'History'|translate:null:'Balance History'}}</span>
                             </li>
+
                             <li ng-click="selectBalanceMenuItem($event, 'casinoBalanceHistory')"
                                 ng-class="{'active': env.sliderContent === 'casinoBalanceHistory'}"
                                 ng-hide="conf.enableMixedView || !conf.enableCasinoBalanceHistory"
@@ -83,20 +98,7 @@
                                 <i class="cms-jcon-Renew"></i>
                                 <span trans>Renew</span>
                             </li>
-                            <li ng-click="selectBalanceMenuItem($event, 'deposit');$event.stopPropagation();"
-                                ng-class="{'active': env.sliderContent === 'deposit'}"
-                                ng-hide="conf.disableDepositPage"
-                                prevent-fast-click="1.5">
-                                <i class="deposit-icon-b"></i>
-                                <span trans>Deposit</span>
-                            </li>
-                            <li ng-click="selectBalanceMenuItem($event, 'withdraw');$event.stopPropagation();"
-                                ng-class="{'active': env.sliderContent === 'withdraw'}"
-                                ng-hide="conf.disableWithdrawPage"
-                                prevent-fast-click="1.5">
-                                <i class="withdraw-icon-b"></i>
-                                <span trans>Withdraw</span>
-                            </li>
+
                             <li ng-click="selectBalanceMenuItem($event, 'buddytransfer')"
                                 ng-class="{'active': env.sliderContent === 'buddytransfer'}"
                                 ng-show="conf.buddyTransfer.enabled && !conf.enableMixedView"

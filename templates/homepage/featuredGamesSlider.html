@@ -27,7 +27,7 @@
                                 <ul>
                                     <li>
                                         <p ng-style="{'background-image': $root.conf.teamDefaultLogo ? 'url(images/team-logo-default.png)' : 'url({{$root.conf.teamLogosPath}}e/s/{{Math.floor(game.team1_id / 2000)}}/{{game.team1_id}}.png)'}">
-                                            <b>{{ game.team1_name }}</b>
+                                            <b title="{{ game.team1_name }}">{{ game.team1_name }}</b>
                                         </p>
                                         <span ng-if="game.events.P1.price" class="{{game.events.P1.price_change == null? '' : ({true: 'up-', false: 'down'}[game.events.P1.price_change > 0] + (game.events.P1.price_change % 2)) }}">
                                             <i>{{game.events.P1.price|oddConvert:env.oddFormat:null:'WINNER'}}</i>
@@ -35,7 +35,7 @@
                                     </li>
                                     <li ng-if="game.events.X.price">
                                         <p ng-style="{'background-image':'url(images/draw.png)'}">
-                                            <b ng-bind="'Draw'|translate"></b>
+                                            <b title="{{'Draw'|translate}}" ng-bind="'Draw'|translate"></b>
                                         </p>
                                         <span  class="{{game.events.X.price_change == null? '' : ({true: 'up-', false: 'down'}[game.events.X.price_change > 0] + (game.events.X.price_change % 2)) }}">
                                             <i>{{game.events.X.price|oddConvert:env.oddFormat:null:'WINNER'}}</i>
@@ -43,7 +43,7 @@
                                     </li>
                                     <li>
                                         <p ng-style="{'background-image': $root.conf.teamDefaultLogo ? 'url(images/team-logo-default.png)' : 'url({{$root.conf.teamLogosPath}}e/s/{{Math.floor(game.team2_id / 2000)}}/{{game.team2_id}}.png)'}">
-                                            <b>{{ game.team2_name }}</b>
+                                            <b title="{{ game.team2_name }}">{{ game.team2_name }}</b>
                                         </p>
                                         <span ng-if="game.events.P2.price" class="{{game.events.P2.price_change == null? '' : ({true: 'up-', false: 'down'}[game.events.P2.price_change > 0] + (game.events.P2.price_change % 2)) }}">
                                             <i>{{game.events.P2.price|oddConvert:env.oddFormat:null:'WINNER'}}</i>

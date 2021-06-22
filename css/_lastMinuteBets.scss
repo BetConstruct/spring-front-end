@@ -36,21 +36,6 @@ $last-minute-bets-widget: $skin-color !default;
   font: 12px/31px $font-f;
   color: $text-palette-4;
 }
-.lmb-sport-select-j .sport-icon-j {
-  display: block;
-  margin: 7px;
-  height: 16px;
-  width: 16px;
-  color: $text-palette-4;
-  font: 16px/16px 'sport-icon';
-  text-align: center;
-  @include ltr {
-    float: left;
-  }
-  @include rtl {
-    float: right;
-  }
-}
 .lmb-sport-select-j ul {
   margin: 1px 0 0;
   @include ltr {
@@ -61,40 +46,41 @@ $last-minute-bets-widget: $skin-color !default;
   }
 }
 .lmb-sport-select-j ul li {
-  display: block;
   height: 30px;
   max-width: 30px;
   cursor: pointer;
   white-space: nowrap;
   overflow: hidden;
+  font-size: 12px;
+  line-height: 30px;
   @include ltr {
     float: left;
+    padding: 0 14px 0 7px;
   }
   @include rtl {
     float: right;
+    padding: 0 7px 0 14px;
   }
-}
-.lmb-sport-select-j ul li span {
-  display: inline-block;
-  float: left;
-  height: 30px;
-  font-size: 12px;
-  line-height: 30px;
-  color: set-color($brand-color-1, black, white);
-  @include ltr {
-    padding: 0 14px 0 0;
+  &:before {
+    display: inline-block;
+    vertical-align: middle;
+    height: 100%;
+    transition: color 240ms;
+    font: 16px/28px 'sport-icon';
+    @include ltr {
+      margin-right: 8px;
+    }
+    @include rtl {
+      margin-left: 8px;
+    }
   }
-  @include rtl {
-    padding: 0 0 0 14px;
+  > span {
+    vertical-align: middle;
   }
-  width: calc(100% - 38px);
-}
-.lmb-sport-select-j ul li.active-j .sport-icon-j {
-  color: set-color($brand-color-1, black, white);
-  transition: 300ms color;
-}
-.lmb-sport-select-j ul li:nth-child(even) {
-  background-color: rgba(255, 255, 255, 0.05);
+  &.active-j {
+    max-width: 100%;
+    transition: 400ms max-width linear, 240ms background cubic-bezier(0.4, 0, 0.2, 1);
+  }
 }
 .lmb-time-selector li {
   display: block;
@@ -267,11 +253,6 @@ $last-minute-bets-widget: $skin-color !default;
 }
 .lmb-table-j li:hover .market-info-b span {
   color: map-get($coeff-color-map, homepage-last-minute-bets-hover);
-}
-.lmb-sport-select-j ul li.active-j {
-  background-color: $brand-color-1;
-  max-width: 100%;
-  transition: 400ms max-width linear, 300ms background cubic-bezier(0.4, 0, 0.2, 1);
 }
 .lmb-table-j .market-info-b.market-name-j {
   padding: 0 5px 0 0;

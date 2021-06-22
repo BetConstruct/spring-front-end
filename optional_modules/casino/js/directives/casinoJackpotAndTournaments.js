@@ -42,7 +42,7 @@ CASINO.directive('casinoJackpotAndTournaments', ['Utils', 'casinoData', 'jackpot
             function subscribeForExternalJackpotDataCallback(data) {
                 data = angular.copy(data);
                 scope.jackpotData = [];
-                if(scope.providers){
+                if (scope.providers) {
                     for (var index in scope.providers) {
                         if (data && data[scope.providers[index]]) {
                             var provider = scope.providers[index];
@@ -51,7 +51,7 @@ CASINO.directive('casinoJackpotAndTournaments', ['Utils', 'casinoData', 'jackpot
                             scope.jackpotData.push(jackpot);
                         }
                     }
-                }else{
+                } else {
                     angular.forEach(data, function (jackpot, provider) {
                         if (jackpot) {
                             jackpot.Provider = provider;
@@ -62,15 +62,15 @@ CASINO.directive('casinoJackpotAndTournaments', ['Utils', 'casinoData', 'jackpot
                 }
             }
 
-            function subscribeForJackpotData() {
+            function subscribeForJackpotDataCallback(data) {
+                scope.jackpotData = Utils.objectToArray(data);
+            }
 
+            function subscribeForJackpotData() {
                 if (scope.loadExternal) {
                     jackpotManager.subscribeForExternalJackpotData(subscribeForExternalJackpotDataCallback, scope.providers);
                 } else {
-                    jackpotManager.unsubscribeFromJackpotData();
-                    jackpotManager.subscribeForJackpotData(-1, function subscribeForJackpotDataCallback(data) {
-                        scope.jackpotData = Utils.objectToArray(data);
-                    }, null, 'casino');  // -1 all games ,  casino
+                    jackpotManager.subscribeForJackpotData(-1, subscribeForJackpotDataCallback, null, 'casino');  // -1 all games ,  casino
                 }
 
             }
@@ -100,11 +100,9 @@ CASINO.directive('casinoJackpotAndTournaments', ['Utils', 'casinoData', 'jackpot
                 scope.$on('$destroy', function () {
                     if (scope.loadExternal) {
                         jackpotManager.unsubscribeFromAllExternalJackpotData(subscribeForExternalJackpotDataCallback);
-                    }else {
-                        jackpotManager.unsubscribeFromJackpotData(true);
+                    } else {
+                        jackpotManager.unsubscribeFromJackpotData(null, -1, subscribeForJackpotDataCallback);
                     }
-
-
                 });
             }
 

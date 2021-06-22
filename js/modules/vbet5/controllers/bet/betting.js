@@ -61,7 +61,7 @@ BettingModule.controller('betSlipController', ['$q', '$scope', '$rootScope', '$f
         betInProgress: false // Used for usual bet
     };
     $scope.bonusBet = {
-        enabled: false
+        disabled: false
     };
     $scope.freeBet = {
         enabled: false
@@ -231,8 +231,16 @@ BettingModule.controller('betSlipController', ['$q', '$scope', '$rootScope', '$f
 
     $scope.$watchCollection('[betSlip.stake, betSlip.unitStake, betSlip.divisionCoefficient]', function (newStakes, oldStakes) {
 
+        if (!$scope.betSlip.stake && $scope.quickBet.enabled) {
+            return;
+        }
+
         if ($scope.betConf.roundBetCents) {
             $scope.betSlip.stake = Math.floor($scope.betSlip.stake); //bankers
+        }
+
+        if (newStakes[0] === newStakes[1] + '.') { //fixed stake removing problem 1.3 to 1
+            return;
         }
 
         if ((!newStakes[0] && !!oldStakes[0]) || (!newStakes[1] && !!oldStakes[1])) {
@@ -243,7 +251,9 @@ BettingModule.controller('betSlipController', ['$q', '$scope', '$rootScope', '$f
             }
         } else {
             if (newStakes[0] !== oldStakes[0] && $scope.betSlip.type.value !== 3) {
-                $scope.betSlip.unitStake = $scope.betSlip.stake / $scope.betSlip.divisionCoefficient;
+                if(!isNaN($scope.betSlip.stake / $scope.betSlip.divisionCoefficient)){
+                    $scope.betSlip.unitStake = $scope.betSlip.stake / $scope.betSlip.divisionCoefficient;
+                }
             } else {
                 if (!!$scope.betSlip.unitStake) {
                     $scope.betSlip.stake =$scope.betSlip.divisionCoefficient * $scope.betSlip.unitStake;
@@ -347,6 +357,34 @@ BettingModule.controller('betSlipController', ['$q', '$scope', '$rootScope', '$f
     }
 
 
+    function checkHasConflict(conflicts, eventId) {
+        return conflicts.filter(function (item) {
+            return item.eventId === eventId;
+        }).length > 0;
+    }
+
+    function calculateBetslipConflicts() {
+        var betsLength = $scope.betSlip.bets.length;
+        for (var i = 0; i < betsLength; ++i) {
+            var firstBet = $scope.betSlip.bets[i];
+            var conflicts = firstBet.conflicts;
+
+            for(var j = i + 1; j < betsLength; ++j) {
+                var secondBet = $scope.betSlip.bets[j];
+                if (!checkHasConflict(conflicts, secondBet.eventId) && firstBet.gameId === secondBet.gameId && firstBet.expressId === secondBet.expressId) {
+                    conflicts.push({
+                        title: secondBet.title,
+                        pick: secondBet.pick,
+                        eventId: secondBet.eventId
+                    });
+                }
+            }
+            if (conflicts.length > 0) {
+                $scope.betSlip.hasConflicts = true;
+            }
+        }
+    }
+
     /**
      * @ngdoc method
      * @name updateEventPrices
@@ -357,6 +395,7 @@ BettingModule.controller('betSlipController', ['$q', '$scope', '$rootScope', '$f
     function updateEventPrices(data) {
         $scope.betSlip.thereAreDeletedEvents = false;
         $scope.betSlip.thereAreEventBaseChanges = false;
+        var changedLiveStatus = false;
         angular.forEach($scope.betSlip.bets, function (b) {
             if (lastSubscriptionEvents.indexOf(b.eventId) === -1) {
                 return;
@@ -379,8 +418,13 @@ BettingModule.controller('betSlipController', ['$q', '$scope', '$rootScope', '$f
                             b.title = (game.displayTitle ?  game.displayTitle + " " : "") + getBetTitle(game);
                             b.marketName = $filter('improveName')(market.name, game);
                             b.team1Name = game.team1_name;
+                            b.expressId = Utils.calculateExpressId(market, game.is_live? 1:0 );
                             b.team2Name = game.team2_name;
-                            b.gamePointer.isLive = game.is_live;
+                            if (b.gamePointer.isLive !== game.is_live) {
+                                changedLiveStatus = true;
+                                b.gamePointer.isLive = game.is_live;
+
+                            }
                             b.marketHomeScore = market.home_score;
                             b.marketAwayScore = market.away_score;
                             b.eventType1 = event.type_1;
@@ -428,6 +472,9 @@ BettingModule.controller('betSlipController', ['$q', '$scope', '$rootScope', '$f
                 $scope.betSlip.thereAreDeletedEvents = true;
             }
         });
+        if (changedLiveStatus) {
+            calculateBetslipConflicts();
+        }
         $scope.thereIsPriceChange();
 
         if (isPlaceBetsAfterAcceptChanges) {
@@ -486,7 +533,7 @@ BettingModule.controller('betSlipController', ['$q', '$scope', '$rootScope', '$f
             'is_betslip': true,
             'what': {
                 'game': ['id', 'is_blocked', 'team1_name', 'team2_name', 'team1_reg_name', 'team2_reg_name', 'is_live'],
-                'market': ['base', 'type', 'name', 'home_score', 'away_score', 'cashout', 'extra_info'],
+                'market': ['base', 'type', 'name', 'home_score', 'away_score', 'cashout', 'extra_info', 'express_id'],
                 'event': ['id', 'price', 'type', 'type_1', 'name', 'base', 'ew_allowed']
             },
             'where': {
@@ -498,7 +545,7 @@ BettingModule.controller('betSlipController', ['$q', '$scope', '$rootScope', '$f
                 }
             }
         };
-
+        Utils.addPrematchExpressId(request);
         if (marketIds.length === eventIds.length) {
             request.where.market = {id: {'@in': marketIds}};
         }
@@ -705,28 +752,7 @@ BettingModule.controller('betSlipController', ['$q', '$scope', '$rootScope', '$f
         }
     };
 
-    function validateRecaptchaBeforeAction(actionName, getToken) {
-        var promiseHander = $q.defer();
-        if (Config.main.validateRecaptchaBeforeAction) {
-            RecaptchaService.execute(actionName, { debounce: false, check:getToken }).then(function (response) {
-                if (getToken) {
-                    promiseHander.resolve(response);
-                } else if (response && response.data && response.data.code === 0) {
-                    promiseHander.resolve(true);
-                } else {
-                    promiseHander.resolve(false);
-                    throw new Error(response);
-                }
-            }, function (reject) {
-                promiseHander.resolve(false);
 
-                throw new Error(reject);
-            });
-        } else {
-            promiseHander.resolve(false);
-        }
-        return promiseHander.promise;
-    }
 
     /**
      * @ngdoc method
@@ -738,7 +764,7 @@ BettingModule.controller('betSlipController', ['$q', '$scope', '$rootScope', '$f
      */
     $scope.getMaxBet = function getMaxBet(betEvents, fullCoverType) {
         $scope.getMaxBetInProgress = true;
-        validateRecaptchaBeforeAction('get_max_bet', true).then(function (token) {
+       Utils.validateRecaptchaBeforeAction(RecaptchaService, 'get_max_bet', true).then(function (token) {
             var request = {
                 'events': []
             };
@@ -997,7 +1023,7 @@ BettingModule.controller('betSlipController', ['$q', '$scope', '$rootScope', '$f
             $scope.disableAddBets.saveChanges = true;
         }
 
-        if (!addBetInProgress && !$scope.shared.isBetsInProgress && $scope.quickBet.status !== 'processing' && ($filter('oddConvert')(data.event.price, 'decimal')) != 1 && !data.game.is_blocked && (Config.betting.enableHorseRacingBetSlip || (!Config.betting.enableHorseRacingBetSlip && data.event.price  !== undefined))) {//temporary reject add events without price into betslip
+        if (!addBetInProgress && !$scope.shared.isBetsInProgress && $scope.quickBet.status !== 'processing' && (!$scope.quickBet.enabled || $scope.quickBet.savedMode) && ($filter('oddConvert')(data.event.price, 'decimal')) != 1 && !data.game.is_blocked && (Config.betting.enableHorseRacingBetSlip || (!Config.betting.enableHorseRacingBetSlip && data.event.price  !== undefined))) {//temporary reject add events without price into betslip
 
             $scope.isBetAccepted = false;
             $scope.isBetOnHold = false;
@@ -1027,7 +1053,7 @@ BettingModule.controller('betSlipController', ['$q', '$scope', '$rootScope', '$f
                         isDuplicate = true;
                     } else {
                         //Check and replace the excluded event with a new one
-                        if (value.gameId === data.game.id && value.expressId === data.market.express_id || value.gameId === data.game.exclude_ids || value.excludeIds === data.game.id) {
+                        if (value.gameId === data.game.id &&((!value.isLive && data.market.prematch_express_id !== undefined )? (value.expressId === data.market.prematch_express_id): (value.expressId === data.market.express_id)) || value.gameId === data.game.exclude_ids || value.excludeIds === data.game.id) {
                             if (!Config.betting.disableConflictEventReplacement) {
                                 $scope.removeBet(value, true);
                                 $scope.eventReplace.visibilityProcess = true;
@@ -1049,7 +1075,10 @@ BettingModule.controller('betSlipController', ['$q', '$scope', '$rootScope', '$f
                         $scope.isMaxCountExceeded = true;
                         return; // no need to add an event to betSlip when exceeding the maximum number
                     }
-                    $scope.sysBetSelectedValue = 2;
+                    if (!data.ignoreSystem) {
+                        $scope.sysBetSelectedValue = 2;
+                    }
+
 
                     if ($scope.betSlip.bets.length === 1 && $scope.betSlip.type.value === 1 && !isConflicted) {
                         $scope.betSlip.betterOddSelectionMode = false;
@@ -1097,7 +1126,7 @@ BettingModule.controller('betSlipController', ['$q', '$scope', '$rootScope', '$f
                         excludeIds: data.game.exclude_ids,
                         incInSysCalc: true,
                         banker: false,
-                        expressId: data.market.express_id,
+                        expressId: Utils.calculateExpressId(data.market, data.game.type),
                         gameId: data.game.id,
                         eventId: data.event.id,
                         isLive: data.game.is_live !== undefined ? !!data.game.is_live : data.game.type === 1,
@@ -1192,7 +1221,9 @@ BettingModule.controller('betSlipController', ['$q', '$scope', '$rootScope', '$f
         };
 
         angular.forEach($scope.betSlip.bets, function (value) {
-            if (value.gameId === data.game.id && (data.market.express_id === undefined || value.expressId === undefined || value.expressId === data.market.express_id)) {
+            if (value.gameId === data.game.id &&
+                ((!value.isLive && data.market.prematch_express_id !== undefined) ?
+                ( value.expressId ===  data.market.prematch_express_id) : (data.market.express_id === undefined || value.expressId === undefined || value.expressId === data.market.express_id ))) {
                 pushValues(value);
             }
 
@@ -1432,7 +1463,6 @@ BettingModule.controller('betSlipController', ['$q', '$scope', '$rootScope', '$f
      */
 
     $scope.placeQuickBet = function placeQuickBet(data) {
-        console.log('quick bet data', data);
         if ($scope.betSlip.totalStake > $rootScope.profile.totalBalance && Config.main.sportsLayout === 'classic') {
             $scope.quickBet.status = 'error';
             $scope.quickBet.massage = Translator.get('Insufficient balance');
@@ -1452,18 +1482,12 @@ BettingModule.controller('betSlipController', ['$q', '$scope', '$rootScope', '$f
                 ]
             };
 
-            if (Config.betting.bonusBetCheckbox) {
-                request.wallet_type = $scope.bonusBet.enabled ? 2 : 1;
-            }
             request.odd_type = getMappedOddType({});
 
             var processQuickBetResults = function (result) {
-                console.log("request =", request);
                 $scope.shared.isBetsInProgress = false;
                 if (result.result === 'OK') {
-
                     BetIntelligent.storeBetInfo(result.details);
-
                     $rootScope.$broadcast('refreshBalance');
                     if (Config.main.enableBetPrint) {
                         $scope.betPrint.id = result.details.bet_id;
@@ -1474,7 +1498,6 @@ BettingModule.controller('betSlipController', ['$q', '$scope', '$rootScope', '$f
                         addGameToFavorites(data.game);
                     }
                 } else if (result.result === -1) {
-                    console.log('Error:', result.details);
                     $scope.quickBet.status = 'error';
                 } else {
                     $scope.quickBet.status = 'error';
@@ -1484,27 +1507,32 @@ BettingModule.controller('betSlipController', ['$q', '$scope', '$rootScope', '$f
 
             $scope.quickBet.status = 'processing';
             $scope.shared.isBetsInProgress = true;
-            analytics.gaSend('send', 'event', 'betting', 'placeQuickBet' + (Config.main.sportsLayout),  {'page': $location.path(), 'eventLabel': ($scope.env.live ? '(LIVE)' : '(PM)')});
 
-            RecaptchaService.execute('do_bet_web', { debounce: false });
+            Utils.validateRecaptchaBeforeAction(RecaptchaService, 'do_bet', false).then(function (validated) {
+                analytics.gaSend('send', 'event', 'betting', 'placeQuickBet' + (Config.main.sportsLayout),  {'page': $location.path(), 'eventLabel': ($scope.env.live ? '(LIVE)' : '(PM)')});
 
-            Zergling
-                .get(request, 'do_bet')
-                .then(processQuickBetResults)['catch'](
-                function (reason) {
-                    $scope.quickBet.status = 'error';
-                    $scope.shared.isBetsInProgress = false;
-                    console.log('Error:', reason);
-                    $scope.quickBet.massage = getBetSlipError(reason);
+                if (!validated) {
+                    RecaptchaService.execute('do_bet_web', { debounce: false });
                 }
-            );
 
-            showQuickBetWatcherPromise = TimeoutWrapper(function () {
-                if ($scope.quickBet.status === 'processing') {
-                    $scope.shared.isBetsInProgress = false;
-                }
-                $scope.quickBet.status = 'idle';
-            }, 15000);
+                Zergling
+                    .get(request, 'do_bet')
+                    .then(processQuickBetResults)['catch'](
+                    function (reason) {
+                        $scope.quickBet.status = 'error';
+                        $scope.shared.isBetsInProgress = false;
+                        console.log('Error:', reason);
+                        $scope.quickBet.massage = getBetSlipError(reason);
+                    }
+                );
+
+                showQuickBetWatcherPromise = TimeoutWrapper(function () {
+                    if ($scope.quickBet.status === 'processing') {
+                        $scope.shared.isBetsInProgress = false;
+                    }
+                    $scope.quickBet.status = 'idle';
+                }, 15000);
+            });
         }
     };
 
@@ -1518,38 +1546,70 @@ BettingModule.controller('betSlipController', ['$q', '$scope', '$rootScope', '$f
         $scope[target].list = undefined;
     }
 
-    function getFreeBetList() {
-        var requests = prepareBetsData(false, true);
-        if (requests.length > 0) {
-            Zergling.get(requests[0], 'get_freebets_for_betslip').then(function (response) {
-                if (!$scope.betSlip.bets.length) {
-                    return;
-                }
-                $scope.freeBet.list = [];
-                $scope.profitBoost.list = [];
-                if (response && response.details) {
-                    angular.forEach(response.details, function (details) {
-                        if (details.amount) {
-                            $scope.freeBet.list.push(details);
-                        }
-                        if (details.amount_percent) {
-                            $scope.profitBoost.list.push(details);
-                        }
-                    });
-                }
-                if (!$scope.freeBet.list.length) {
-                    clearFreeBet('freeBet');
-                } else {
-                    $scope.freeBetStateChanged();
-                }
-
-                if (!$scope.profitBoost.list.length) {
-                    clearFreeBet('profitBoost');
-                } else {
-                    $scope.handleProfitBoostState(null);
-                }
-            });
+    function generateMap(items, field) {
+        var map = {};
+        for (var i = items.length; i--;) {
+            var item = items[i];
+            map[item[field]] = item;
         }
+        return map;
+    }
+
+    function getFreeBetList() {
+        var containsLive = false;
+        var events = $scope.betSlip.bets.map(function(bet) {
+            if (!containsLive && bet.isLive) {
+                containsLive = true;
+            }
+            return {
+                'Coeficient': bet.price,
+                'SelectionId': bet.eventId
+            };
+        });
+        var request = {
+            Events: events,
+            IsLive: containsLive,
+            Type: $scope.betSlip.type.value
+        };
+        if ($scope.betConf.fullCoverBetTypes.enabled && $scope.betSlip.bets.length > 1) {
+            request.Type = 2;
+        }
+
+        Zergling.get(request, 'get_freebets_for_betslip_v3').then(function (response) {
+            if (!$scope.betSlip.bets.length) {
+                return;
+            }
+            $scope.freeBet.list = [];
+            $scope.profitBoost.list = [];
+            if (response && response.details) {
+                angular.forEach(response.details, function (details) {
+
+                    if (details.amount) {
+                        if (details.freebet_max_payouts) {
+                            details.payoutMap = generateMap(details.freebet_max_payouts, 'Currency');
+                        }
+                        $scope.freeBet.list.push(details);
+                    }
+                    if (details.amount_percent) {
+                        if (details.boost_max_bet_amounts) {
+                            details.maxBetMap = generateMap(details.boost_max_bet_amounts, 'Currency');
+                        }
+                        $scope.profitBoost.list.push(details);
+                    }
+                });
+            }
+            if (!$scope.freeBet.list.length) {
+                clearFreeBet('freeBet');
+            } else {
+                $scope.freeBetStateChanged();
+            }
+
+            if (!$scope.profitBoost.list.length) {
+                clearFreeBet('profitBoost');
+            } else {
+                $scope.handleProfitBoostState(null);
+            }
+        });
     }
     /**
      * @ngdoc method
@@ -1714,65 +1774,54 @@ BettingModule.controller('betSlipController', ['$q', '$scope', '$rootScope', '$f
         var expressBets = [], systemBets = [], request;
         var i, bet, length = $scope.betSlip.bets.length;
 
-        if (freeBet) {
-            request = {
-                source: Config.betting.bet_source,
-                mode: parseInt($scope.shared.acceptPriceChanges, 10),
-                each_way: $scope.betSlip.eachWayMode,
-                bets: requests.map(function(request) { return request.bets[0]; }),
-                odd_type: getMappedOddType({}),
-                type: 2
-            };
-            requests.unshift(request); // Unshifting the request because checkFreeBet() takes the first request in the array to check for free bets;
-        } else {
-            angular.forEach($scope.fullCoverBet.types, function (type, key) {
+        angular.forEach($scope.fullCoverBet.types, function (type, key) {
 
-                if (key !== fullCoverTypesMap[1]) { // singles bet already added to the requests
-                    if (!isNaN(type.amount) && parseFloat(type.amount) > 0) {
+            if (key !== fullCoverTypesMap[1]) { // singles bet already added to the requests
+                if (!isNaN(type.amount) && parseFloat(type.amount) > 0) {
 
-                        request = {
-                            source: Config.betting.bet_source,
-                            mode: parseInt($scope.shared.acceptPriceChanges, 10),
-                            each_way: type.ewMode,
-                            type: type.type,
-                            odd_type: getMappedOddType({}),
-                            amount: parseFloat(type.amount) * type.count * (type.ewMode && !$scope.freeBet.enabled ? 2 : 1) // If each way mode is on the stake is doubled
-                        };
+                    request = {
+                        source: Config.betting.bet_source,
+                        mode: parseInt($scope.shared.acceptPriceChanges, 10),
+                        each_way: type.ewMode,
+                        type: type.type,
+                        odd_type: getMappedOddType({}),
+                        amount: parseFloat(type.amount) * type.count * (type.ewMode && !$scope.freeBet.enabled ? 2 : 1) // If each way mode is on the stake is doubled
+                    };
 
-                        if (type.type === 3) { // calculates as systembet
-                            if (!systemBets.length) {
-                                for (i = 0; i < length; ++i) {
-                                    bet = $scope.betSlip.bets[i];
-                                    systemBets.push({'event_id': bet.eventId, 'price': bet.oddType === 'sp' ? -1 : bet.price, 'banker': bet.banker ? 1 : 0});
-                                    bet.processing = true;
-                                }
+                    if (type.type === 3) { // calculates as systembet
+                        if (!systemBets.length) {
+                            for (i = 0; i < length; ++i) {
+                                bet = $scope.betSlip.bets[i];
+                                systemBets.push({'event_id': bet.eventId, 'price': bet.oddType === 'sp' ? -1 : bet.price, 'banker': bet.banker ? 1 : 0});
+                                bet.processing = true;
                             }
-                            request.bets = systemBets;
-                            request.sys_bet = type.sysCount + ($scope.betSlip.bankerBetsCount ? $scope.betSlip.bankerBetsCount : 0)
-                        } else {
-                            if (!expressBets.length) {
-                                for (i = 0; i < length; ++i) {
-                                    bet = $scope.betSlip.bets[i];
-                                    expressBets.push({'event_id': bet.eventId, 'price': bet.oddType === 'sp' ? -1 : bet.price});
-                                    bet.processing = true;
-                                }
-                            }
-                            request.bets = expressBets;
                         }
-
-                        requests.push(request);
+                        request.bets = systemBets;
+                        request.sys_bet = type.sysCount + ($scope.betSlip.bankerBetsCount ? $scope.betSlip.bankerBetsCount : 0)
+                    } else {
+                        if (!expressBets.length) {
+                            for (i = 0; i < length; ++i) {
+                                bet = $scope.betSlip.bets[i];
+                                expressBets.push({'event_id': bet.eventId, 'price': bet.oddType === 'sp' ? -1 : bet.price});
+                                bet.processing = true;
+                            }
+                        }
+                        request.bets = expressBets;
                     }
+
+                    requests.push(request);
                 }
-            });
-        }
+            }
+        });
     }
+
 
     function getMappedOddType(bet) {
         // if (Config.main.oddTypeMapInPlacingBet && Config.main.oddTypeMapInPlacingBet[$rootScope.env.oddFormat]) {
         //     return ODD_TYPE_MAP[Config.main.oddTypeMapInPlacingBet[$rootScope.env.oddFormat]];
         // }
 
-        if ($scope.betSlip.type.value !== 1 || !Config.main.specialOddFormat || !bet.displayKey || !Config.main.specialOddFormat[$rootScope.env.oddFormat] || Config.main.specialOddFormat[$rootScope.env.oddFormat].displayKey[bet.displayKey]) {
+        if ($scope.betSlip.type.value !== 1 || !Config.main.specialOddFormat || !Config.main.specialOddFormat[$rootScope.env.oddFormat] || Config.main.specialOddFormat[$rootScope.env.oddFormat].displayKey[bet.displayKey]) {
             return ODD_TYPE_MAP[Config.env.oddFormat];
         }
 
@@ -1805,11 +1854,7 @@ BettingModule.controller('betSlipController', ['$q', '$scope', '$rootScope', '$f
                                 {'event_id': bet.eventId, 'price': bet.oddType === 'sp' ? -1 : $scope.betSlip.betterOddSelectionMode ? bet.betterPrice : (isCounterOffer ? parseFloat(bet.counterOffer) : bet.price)}
                             ]
                         };
-                        if (!forFreeBet) {
-                            data.amount = parseFloat(bet.customSingleStake || bet.singleStake) * (bet.eachWay && !$scope.freeBet.enabled ? 2 : 1); // If each way mode is on the stake is doubled
-                        } else {
-                            data.is_live = bet.isLive;
-                        }
+                        data.amount = parseFloat(bet.customSingleStake || bet.singleStake) * (bet.eachWay && !$scope.freeBet.enabled ? 2 : 1); // If each way mode is on the stake is doubled
                         if($rootScope.editBet && $rootScope.editBet.edit) {
                             data.amount  = $rootScope.editBet.stakeAmount;
                             data.additional_amount = parseFloat($rootScope.editBet.increaseStake.savedAmount) || 0;
@@ -1817,12 +1862,12 @@ BettingModule.controller('betSlipController', ['$q', '$scope', '$rootScope', '$f
                         }
                         data.odd_type = getMappedOddType(bet);
                         requests.push(data);
-                        bet.processing = !forFreeBet;
+                        bet.processing = true;
                     }
                 });
 
                 if ($scope.betConf.fullCoverBetTypes.enabled && $scope.betSlip.bets.length > 1) {
-                    addFullCoverBetRequests(requests, forFreeBet);
+                    addFullCoverBetRequests(requests);
                 }
                 break;
             case 2:
@@ -1839,7 +1884,7 @@ BettingModule.controller('betSlipController', ['$q', '$scope', '$rootScope', '$f
                 currentBets = [];
                 angular.forEach($scope.betSlip.bets, function (bet) {
                     currentBets.push({'event_id': bet.eventId, 'price': bet.oddType === 'sp' ? -1 : bet.price});
-                    bet.processing = !forFreeBet;
+                    bet.processing = true;
                 });
                 data = {
                     'type': $scope.betSlip.type.value,
@@ -1848,11 +1893,8 @@ BettingModule.controller('betSlipController', ['$q', '$scope', '$rootScope', '$f
                     'each_way': $scope.betSlip.eachWayMode,
                     'bets': currentBets
                 };
-                if (!forFreeBet) {
-                    data.amount = $scope.betSlip.stake * ($scope.betSlip.eachWayMode ? 2 : 1);
-                } else {
-                    data.is_live = $scope.betSlip.hasLiveEvents;
-                }
+                data.amount = $scope.betSlip.stake * ($scope.betSlip.eachWayMode ? 2 : 1);
+
                 if($rootScope.editBet && $rootScope.editBet.edit) {
                     data.amount  = $rootScope.editBet.stakeAmount;
                     data.additional_amount = parseFloat($rootScope.editBet.increaseStake.savedAmount) || 0;
@@ -1865,7 +1907,7 @@ BettingModule.controller('betSlipController', ['$q', '$scope', '$rootScope', '$f
                 currentBets = [];
                 angular.forEach($scope.betSlip.bets, function (bet) {
                     currentBets.push({'event_id': bet.eventId, 'price': bet.oddType === 'sp' ? -1 : bet.price, 'banker': bet.banker ? 1 : 0});
-                    bet.processing = !forFreeBet;
+                    bet.processing = true;
                 });
                 data = {
                     'type': $scope.betSlip.type.value,
@@ -1875,11 +1917,8 @@ BettingModule.controller('betSlipController', ['$q', '$scope', '$rootScope', '$f
                     'bets': currentBets,
                     'sys_bet': parseInt($scope.sysBetSelectedValue, 10) + ($scope.betSlip.bankerBetsCount ? $scope.betSlip.bankerBetsCount : 0)
                 };
-                if (!forFreeBet) {
-                    data.amount = $scope.betSlip.stake * ($scope.betSlip.eachWayMode ? 2 : 1);
-                } else {
-                    data.is_live = $scope.betSlip.hasLiveEvents;
-                }
+                data.amount = $scope.betSlip.stake * ($scope.betSlip.eachWayMode ? 2 : 1);
+
                 data.odd_type = getMappedOddType({});
                 requests.push(data);
                 break;
@@ -1887,7 +1926,7 @@ BettingModule.controller('betSlipController', ['$q', '$scope', '$rootScope', '$f
                 currentBets = [];
                 angular.forEach($scope.betSlip.bets, function (bet) {
                     currentBets.push({'event_id': bet.eventId, 'price': bet.oddType === 'sp' ? -1 : bet.price});
-                    bet.processing = !forFreeBet;
+                    bet.processing = true;
                 });
                 data = {
                     'type': $scope.betSlip.type.value,
@@ -1896,11 +1935,8 @@ BettingModule.controller('betSlipController', ['$q', '$scope', '$rootScope', '$f
                     'each_way': $scope.betSlip.eachWayMode,
                     'bets': currentBets
                 };
-                if (!forFreeBet) {
-                    data.amount = parseFloat($scope.betSlip.stake);
-                } else {
-                    data.is_live = $scope.betSlip.hasLiveEvents;
-                }
+
+                data.amount = parseFloat($scope.betSlip.stake);
                 data.odd_type = getMappedOddType({});
                 requests.push(data);
                 break;
@@ -1926,7 +1962,7 @@ BettingModule.controller('betSlipController', ['$q', '$scope', '$rootScope', '$f
         }
         $scope.shared.betInProgress = true;
 
-        validateRecaptchaBeforeAction('do_bet', false).then(function (validated) {
+        Utils.validateRecaptchaBeforeAction(RecaptchaService, 'do_bet', false).then(function (validated) {
             $scope.isAcceptAndPlaceBetStarted = false;
             $scope.betSlip.generalBetResult = "";
             $scope.betSlip.bookingResultIds = [];
@@ -1961,10 +1997,10 @@ BettingModule.controller('betSlipController', ['$q', '$scope', '$rootScope', '$f
                                 }
                             }
                             haveAcceptedEvent = true;
-                            if ($scope.betConf.popupMessageAfterBet && $scope.betConf.popupMessageAfterBet[$rootScope.currency.name] && result.details.amount >= $scope.betConf.popupMessageAfterBet[$rootScope.currency.name]) {
+                            if ($scope.betConf.popupMessageAfterBet && $scope.betConf.popupMessageAfterBet.ranges && $scope.betConf.popupMessageAfterBet.ranges[$rootScope.currency.name] && $scope.betConf.popupMessageAfterBet.ranges[$rootScope.currency.name][0] && $scope.betConf.popupMessageAfterBet.ranges[$rootScope.currency.name][0].minAmount && result.details.amount >= $scope.betConf.popupMessageAfterBet.ranges[$rootScope.currency.name][0].minAmount) {
                                 enablePopupAfterBet = true;
                             }
-                            if (Config.main.enableSuggestedBets) {
+                            if (Config.main.enableSuggestedBets && !$scope.showRetainsButtons) {
                                 $rootScope.$broadcast('suggestedBets.get', {type: 'preMatch'});
                             }
                             if (result.details && result.details.FreeBetAmount) {
@@ -2071,18 +2107,14 @@ BettingModule.controller('betSlipController', ['$q', '$scope', '$rootScope', '$f
                         hideBetProcessLoaders();
                     };
 
-                    if (Config.betting.bonusBetCheckbox) {
-                        request.wallet_type = $scope.bonusBet.enabled ? 2 : 1;
-                    }
-
                     if (freeBetSelected('freeBet')) {
                         request.bonus_id = $scope.freeBet.selected.id;
                     } else if (freeBetSelected('profitBoost')) {
                         request.bonus_id = $scope.profitBoost.selected.id;
                     }
 
-                    if ($scope.bonusBet.enabled) {
-                        request.is_bonus_money = true;
+                    if ($scope.bonusBet.disabled) {
+                        request.is_bonus_money = false;
                     }
 
                     if (Config.main.enableSuggestedBets) {
@@ -2298,7 +2330,12 @@ BettingModule.controller('betSlipController', ['$q', '$scope', '$rootScope', '$f
 
             if (!$scope.expressBonus || !$scope.expressBonus.enabled) { return; }
             var expressBonusMap = $scope.expressBonus.map;
-            var length = betSlip.bets.length, minOdd = $scope.expressBonus.map[length].minOdds ;
+            var length = betSlip.bets.length;
+
+            if (!$scope.expressBonus.map[length]) {
+               return;
+            }
+            var minOdd = $scope.expressBonus.map[length].minOdds;
             if ($scope.expressBonus.map[length].ignoreLowOdds && length > $scope.expressBonus.visibilityQty) {
                 /* e.g.
                     $scope.expressBonus.visibilityQty: n,
@@ -2388,9 +2425,9 @@ BettingModule.controller('betSlipController', ['$q', '$scope', '$rootScope', '$f
         var singleStake = parseFloat(bet.singleStake);
 
         if ($rootScope.currency.rounding === 0) {
-            bet.customSingleStake = (singleStake / formatDecimal(price - 1)).toFixed(0);
+            bet.customSingleStake = +(singleStake / formatDecimal(price - 1)).toFixed(0);
         } else {
-            bet.customSingleStake = formatDecimal(singleStake / (price - 1));
+            bet.customSingleStake = bankersRounding(singleStake / (price - 1));
         }
 
         bet.singlePosWin = bet.customSingleStake + singleStake;
@@ -2628,7 +2665,7 @@ BettingModule.controller('betSlipController', ['$q', '$scope', '$rootScope', '$f
 
         switch ($scope.betSlip.type.value) {
             case 1:
-                if ($scope.betSlip.bets.length === 1 && $scope.betSlip.stake && (freeBetSelected('freeBet') || $scope.bonusBet.enabled)) {
+                if ($scope.betSlip.bets.length === 1 && $scope.betSlip.stake && (freeBetSelected('freeBet'))) {
                     possibleWin -= $scope.betSlip.stake;
                 }
 
@@ -2639,8 +2676,6 @@ BettingModule.controller('betSlipController', ['$q', '$scope', '$rootScope', '$f
                         var sysWin = 0;
                         if (ewMode) {
                             sysWin = calcRes.win + calcRes.ewWin;
-                        } else if ($scope.bonusBet.enabled) {
-                            sysWin = bankerTotalPrice * calcRes.win - amount
                         } else {
                             sysWin = bankerTotalPrice * calcRes.win;
                         }
@@ -2736,7 +2771,7 @@ BettingModule.controller('betSlipController', ['$q', '$scope', '$rootScope', '$f
                 }
                 if ($scope.betSlip.eachWayMode && ewOdd > 1) {
                     possibleWin = (totalOdd + ewOdd) * $scope.betSlip.stake;
-                } else if ($scope.betSlip.stake && (freeBetSelected('freeBet') || $scope.bonusBet.enabled)) {
+                } else if ($scope.betSlip.stake && (freeBetSelected('freeBet'))) {
                     possibleWin = totalOdd * $scope.betSlip.stake - $scope.betSlip.stake;
                 } else if ($rootScope.editBet && $rootScope.editBet.edit) {
                     // We use increaseStake.amount instead of .savedAmount, so we calculate possible win before user saves changes
@@ -2752,8 +2787,6 @@ BettingModule.controller('betSlipController', ['$q', '$scope', '$rootScope', '$f
                     $scope.betSlip.sysOptions = tempResult.options;
                     if ($scope.betSlip.eachWayMode) {
                         possibleWin = tempResult.win + tempResult.ewWin;
-                    } else if ($scope.betSlip.stake && $scope.bonusBet.enabled) {
-                        possibleWin = bankerTotalPrice * tempResult.win - $scope.betSlip.stake;
                     } else {
                         possibleWin = bankerTotalPrice * tempResult.win;
                     }
@@ -3430,11 +3463,12 @@ BettingModule.controller('betSlipController', ['$q', '$scope', '$rootScope', '$f
     }
 
     function extractIds(value) {
+        var stringValue = value.toString();
         var ids;
-        if (value.indexOf(',') > 0) {
-            ids = Utils.uniqueNum(value.split(','))
-        } else if (!isNaN(Number(value))) { // Checking if the url format is correct (e.g. event=,41545315 is wrong)
-            ids = [Number(value)];
+        if (stringValue.indexOf(',') > 0) {
+            ids = stringValue.split(',').map(Number);
+        } else if (!isNaN(Number(stringValue))) { // Checking if the url format is correct (e.g. event=,41545315 is wrong)
+            ids = [Number(stringValue)];
         }
         return ids;
     }
@@ -3448,17 +3482,17 @@ BettingModule.controller('betSlipController', ['$q', '$scope', '$rootScope', '$f
      */
     function lookForEventsInURL() {
         var params = $location.search();
-        if (params.event && typeof params.event === 'string') {
-            var eventIds,gameIds,marketIds;
+        if (params.event) {
+            var eventIds,gameIds,marketIds, systemCount;
             eventIds = extractIds(params.event);
             gameIds = params.gameIds && extractIds(params.gameIds);
             marketIds = params.market && extractIds(params.market);
+            systemCount = params.systemCount !== undefined && +params.systemCount;
 
             if (eventIds && gameIds && marketIds) {
                 $location.search('event', undefined);
                 $location.search('gameIds', undefined);
                 $location.search('market', undefined);
-
                 var eventsCount = eventIds.length;
                 var promises = [];
                 for (var i = 0; i < eventsCount; ++i) {
@@ -3472,13 +3506,15 @@ BettingModule.controller('betSlipController', ['$q', '$scope', '$rootScope', '$f
                                 var betsToPlace = Utils.formatEventData(response.data),
                                     oddType = 'odd';
                                 if (betsToPlace[0]) {
-                                    $rootScope.$broadcast('bet', {event: betsToPlace[0].eventInfo, market: betsToPlace[0].marketInfo, game: betsToPlace[0].gameInfo, oddType: oddType, ignoreCheck: true});
+                                    $rootScope.$broadcast('bet', {event: betsToPlace[0].eventInfo, market: betsToPlace[0].marketInfo, game: betsToPlace[0].gameInfo, oddType: oddType, ignoreCheck: true, ignoreSystem: true});
                                 }
                             }
                         });
-                        if (params.betSlipType && typeof params.betSlipType === 'number') {
-                            setBetSlipTypeNotDebounced(params.betSlipType, false);
+                        if (params.betSlipType) {
+                            setBetSlipTypeNotDebounced(+params.betSlipType, false);
                             $location.search('betSlipType', undefined);
+                            $location.search('systemCount', undefined);
+                            $scope.sysBetSelectedValue = systemCount;
                         }
                         if (params.stake && typeof params.stake === 'string' && !isNaN(Number(params.stake))) {
                             $scope.betSlip.stake = Number(params.stake);
@@ -3568,8 +3604,11 @@ BettingModule.controller('betSlipController', ['$q', '$scope', '$rootScope', '$f
     (function init() {
         getFavoriteStakes();
         lookForEventsInURL();
-        $scope.$on('betSlipType', function (event, data) {
+        $scope.$on('betSlipType', function (event, data, systemCount) {
             setBetSlipTypeNotDebounced(data, false);
+            if (systemCount) {
+                $scope.sysBetSelectedValue = systemCount;
+            }
         });
 
         BetService.getExpressBonusRules().then(function (response) {
@@ -3606,6 +3645,15 @@ BettingModule.controller('betSlipController', ['$q', '$scope', '$rootScope', '$f
             $rootScope.editBet.unsubPromise = $timeout(cancelEditBet, 1500);
         }
     })
+
+    $scope.handleContinue = function handleContinue() {
+        $scope.showRetainsButtons = false;
+        $scope.clearBetslip();
+
+        if (Config.main.enableSuggestedBets) {
+            $rootScope.$broadcast('suggestedBets.get', {type: 'preMatch'});
+        }
+    }
 
     $scope.$watch('env.live', checkSuperBetAndCounterOffer);
     $scope.$on('partnerConfig.updated', checkSuperBetAndCounterOffer);

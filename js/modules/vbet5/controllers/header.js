@@ -5,11 +5,8 @@
  * @description
  * header controller
  */
-VBET5.controller('headerCtrl', ['$scope', '$rootScope', '$sce', '$window', '$location', '$filter', 'TimeoutWrapper', 'Zergling', 'Utils', '$route', 'Storage', 'Config', function ($scope, $rootScope, $sce, $window, $location, $filter, TimeoutWrapper, Zergling, Utils, $route, Storage, Config) {
+VBET5.controller('headerCtrl', ['$scope', '$rootScope', '$sce', '$window', '$location', '$filter', 'Zergling', 'Utils', '$route', 'Storage', 'Config', function ($scope, $rootScope, $sce, $window, $location, $filter, Zergling, Utils, $route, Storage, Config) {
     'use strict';
-
-    TimeoutWrapper = TimeoutWrapper($scope);
-    var initialCurrecyConfigDone = false;
 
     /**
      * @ngdoc method
@@ -20,11 +17,7 @@ VBET5.controller('headerCtrl', ['$scope', '$rootScope', '$sce', '$window', '$loc
      * sets $rootScope **currency** variable with retrieved data
      * currency name sent to swarm is taken from config(default for site) or from user profile if user is logged in
      */
-    function setCurrencyConfig(event) {
-        if (event === undefined && initialCurrecyConfigDone) { //this happens when called by timeout, but was already called by 'profile' event
-            return;
-        }
-        initialCurrecyConfigDone = true;
+    function setCurrencyConfig() {
         var currencyName;
 
         if ($rootScope.profile && $rootScope.profile.currency_name) {
@@ -211,13 +204,12 @@ VBET5.controller('headerCtrl', ['$scope', '$rootScope', '$sce', '$window', '$loc
      */
     $scope.headerInit = function headerInit(){
         $scope.$on('loggedIn', setCurrencyConfig);
+        $scope.$on('partnerConfig.updated', setCurrencyConfig);
         $scope.$on('login.loggedOut', setCurrencyConfig);
         $scope.$on('gotoSelectedGame', gotoSelectedGame);
         //this isn't really the best place for this listener
         $scope.$on('$routeChangeSuccess', routeChangeSuccess);
         $scope.$on('youtube.videourl', handleVideoUrl);
        /* $scope.$on('google.map', showGoogleMap);*/
-
-        TimeoutWrapper(setCurrencyConfig, 1000); //call once in the beginning(with delay to let user login happen if user is logged in)
     };
 }]);

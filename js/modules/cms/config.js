@@ -69,6 +69,9 @@ CMS.constant('WPConfig', {
         homepageBottomBanners: {
             'default': 'homepage-banners-bottom'
         },
+        homepageSmallBanners: {
+            'default': 'homepage-small-banners'
+        },
         homepageAdditionalBanner1: {
             'default': 'homepage-additional-banner'
         },
@@ -99,6 +102,9 @@ CMS.constant('WPConfig', {
         countdownBanner: {
             'default': 'countdown-banner'
         },
+        promotionsCountdownBanner: {
+            'default': 'promo-countdown-banner'
+        },
         skillGamesBanners: {
             'default': 'skill_games_banners'
         },
@@ -106,7 +112,7 @@ CMS.constant('WPConfig', {
             'default': 'homepage-horse-racing'
         },
         greyhoundRacingBanners: {
-            'default': 'greyhound-racing-banners'
+            'default': 'homepage-greyhounds-banner'
         }
     },
     belote: {

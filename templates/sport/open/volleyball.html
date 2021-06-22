@@ -69,6 +69,9 @@
                     team2-points="game.stats.passes.team2_value"
             ></sportsbook-animations>
         </div>
+        <div class="multilive-visualisation" ng-class="{'statistic': $root.conf.kievAnimationSettings.statistic}" ng-if="game.activeFieldType === 'field' && $root.conf.customAnimationURL && $root.conf.sportsWithAnimations[game.sport.alias] === 'kiev'">
+            <kiev-animation team1="game.team1_name" team2="game.team2_name" id="game.id" sound="$root.env.sound>0"></kiev-animation>
+        </div>
 
         <!-- Animated control -->
         <div class="game-control volleyball" ng-show="game.activeFieldType === 'field' && $root.conf.sportsWithAnimations[game.sport.alias] === 'VBET5'">

@@ -8,9 +8,9 @@ VBET5.constant('SkinConfig', {
     additionalModules: ['casino'],
     'main': {
         siteTitle: {
-            "eng": "vbet.com - Sport Betting & Gaming",
-            "spa": "vbet.com - Sport Betting & Gaming",
-            "por": "vbet.com - Sport Betting & Gaming"
+            "eng": "vbet1000.com - Sport Betting & Gaming",
+            "spa": "vbet1000.com - Sport Betting & Gaming",
+            "por": "vbet1000.com - Sport Betting & Gaming"
         },
         site_name: "vbet",
         skin: 'vbet.com',
@@ -22,7 +22,6 @@ VBET5.constant('SkinConfig', {
         disableITFGamesInfo: true,
         disableChangePassword: true,
         enableAccountVerification: false,
-        htmlHeaderScripts: "<script src=\"https://cdn.lr-ingest.io/LogRocket.min.js\" crossorigin=\"anonymous\"></script><script>window.LogRocket && window.LogRocket.init('xzde63/vbet');</script>",
         messagesPageMenu: ['inbox'],
         hideGmsMarketBase: false,
         GmsPlatform:true,

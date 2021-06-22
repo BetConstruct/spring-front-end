@@ -1,8 +1,8 @@
-<form ng-show="$root.currentPage.isInSports" ng-controller="searchCtrl">
+<form ng-controller="searchCtrl">
     <div class="block-search" ng-show="!conf.rfid.loginWIthRFID || env.authorized">
-        <input name="" type="text" placeholder="competition or a team..." title="Search a competition or a team..." ng-model="searchTerm" ng-keypress="searchEnter($event)" trans>
+        <input name="" type="text" focus-on="focus-input" is-focus="{{$root.currentPage.path === '/'}}" placeholder="competition or a team..." title="Search a competition or a team..." ng-model="searchTerm" ng-keypress="searchEnter($event)" trans>
         <!-- result search-->
-        <div class="search-results-container" ng-show="showSearchResults" hide-on-click state-flag-var="showSearchResults" broadcast-on-close="search.ResultsClosed" class-on-scroll="search-results-container-scroll,search-results-container" >
+        <div class="search-results-container" ng-show="showSearchResults"  hide-on-click="{{$root.currentPage.path !== '/'}}" state-flag-var="showSearchResults" broadcast-on-close="search.ResultsClosed" class-on-scroll="search-results-container-scroll,search-results-container" >
             <div class="search-results-inner">
                 <div class="arrow-sport"></div>
                 <h3 trans>Search results</h3>
@@ -10,15 +10,20 @@
                     <dl ng-repeat="sportResults in searchResults|orderBy:'order'" class="search-result-item">
                         <dt>{{ sportResults.results[0].sport.name }}</dt>
                         <dd ng-repeat="result in sportResults.results" ng-class="{'active': selectedSearchResultId === result.game.id}" id="search-result-{{ result.game.id }}">
-                            <button ng-click="goToResult(result)">
-                                {{ result.game.team1_name }} - {{ result.game.team2_name }}
+                            <button ng-click="$event.preventDefault(); goToResult(result); ">
+                                <span ng-bind-html="result.game.team1_name|highlightWord:searchTerm|html"></span> -   <span ng-bind-html="result.game.team2_name|highlightWord:searchTerm|html"></span>
                                 <br>
-                                <div>{{ result.competition.name }} {{result.game.start_ts|formatDate:'full'}}</div>
+                                <div><span ng-bind-html="result.competition.name|highlightWord:searchTerm|html"></span> {{result.game.start_ts|formatDate:'full'}}</div>
                             </button>
                         </dd>
                     </dl>
                 </div>
-                <div class="search-no-results" ng-show="!(searchResults|count)" trans>no results</div>
+                <div class="search-no-results" ng-show="!(searchResults|count)" >
+                    <div class="no-result-container">
+                        <i class="casino-search-widget-icon cms-jcon-search-no-result" ng-if="$root.currentPage.path === '/'"></i>
+                        <span trans>no results</span>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

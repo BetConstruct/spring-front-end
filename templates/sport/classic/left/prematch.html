@@ -1,6 +1,6 @@
 <div class="left-nav-view-v3 prematch-view" ng-class="{'multiselect-view-v3': env.preMatchMultiSelection}">
     <ul>
-        <li class="p-n-v" ng-if="$root.conf.customLeftMenuWidget">
+        <li class="p-n-v" ng-if="$root.conf.customLeftMenuWidget && !selectedTournament">
             <iframe ng-if="$root.conf.customLeftMenuWidget.external"
                     id="custom-left-menu-iframe"
                     ng-src="{{$root.conf.customLeftMenuWidget.src | url}}"
@@ -11,11 +11,11 @@
                  ng-style="{height: $root.conf.customLeftMenuWidget.height}">
             </div>
         </li>
-        <li class="p-n-v"><popular-in-sportsbook class="float-width" ng-if="$root.conf.popularMatches.enabled" ng-hide="bigBetFilter['0']"  title="{{($root.conf.popularMatches.title || 'Popular Games')|translate}}" type="game" left-menu="{'closed': leftMenuClosed, 'toggle': toggleLeftMenu}" search-field="game"></popular-in-sportsbook></li>
-        <li class="p-n-v"><popular-in-sportsbook class="float-width" ng-if="$root.conf.showFavoriteCompetitions && !env.preMatchMultiSelection"  ng-hide="bigBetFilter['0']" title="{{'Popular competitions'|translate}}" type="competition" left-menu="{'closed': leftMenuClosed, 'toggle': toggleLeftMenu}" search-field="competition"></popular-in-sportsbook></li>
+        <li class="p-n-v"><popular-in-sportsbook class="float-width" ng-if="$root.conf.popularMatches.enabled && !selectedTournament" ng-hide="bigBetFilter['0']"  title="{{($root.conf.popularMatches.title || 'Popular Games')|translate}}" type="game" left-menu="{'closed': leftMenuClosed, 'toggle': toggleLeftMenu}" search-field="game"></popular-in-sportsbook></li>
+        <li class="p-n-v"><popular-in-sportsbook class="float-width" ng-if="$root.conf.showFavoriteCompetitions && !selectedTournament && !env.preMatchMultiSelection"  ng-hide="bigBetFilter['0']" title="{{'Popular competitions'|translate}}" type="competition" left-menu="{'closed': leftMenuClosed, 'toggle': toggleLeftMenu}" search-field="competition"></popular-in-sportsbook></li>
 
 
-        <ng-include ng-if="$root.conf.favoriteTeam.enabled && $root.env.authorized"  src="::'templates/sport/classic/left/favoriteTeam.html'|fixPath"> </ng-include>
+        <ng-include ng-if="$root.conf.favoriteTeam.enabled && $root.env.authorized && !selectedTournament"  src="::'templates/sport/classic/left/favoriteTeam.html'|fixPath"> </ng-include>
 
 
         <li ng-repeat="group in prematchSportGroups track by group.id" ng-show="group && (showPanel.expanded || $index < prematchSportCount + 1)">
@@ -35,7 +35,7 @@
                     class="float-width" title="{{sport.name}}">
                     <div class="sports-item-v3 {{sport.alias}}"
                          ng-class="{'active': leftMenuState.prematch.sport[sport.id].expanded || (todaysBets.selected && sport.isTodayBets ||(outrightSelected && sport.isOutright))}"
-                         ng-click="selectSport(sport, leftMenuState.prematch.sport[sport.id].expanded); expandLeftMenuPrematchSport(sport, null, null, true);  closeOtherSportsIfNeed(leftMenuState.prematch.sport[sport.id].expanded);"
+                         ng-click="selectSport(sport, leftMenuState.prematch.sport[sport.id].expanded); expandLeftMenuPrematchSport(sport, null, null, true, true);  closeOtherSportsIfNeed(leftMenuState.prematch.sport[sport.id].expanded);"
                          ng-show="!sport.link">
                         {{sport.name}}
                         <div class="arrow-view-v3"></div>
@@ -79,7 +79,7 @@
                                  >
                                 <div class="region-item-v3" ng-class="{'active': leftMenuState.prematch.region[region.id].expanded}"
 
-                                     ng-click="expandLeftMenuPrematchRegion(region, sport);">
+                                     ng-click="expandLeftMenuPrematchRegion(region, sport, undefined, true);">
                                     <div class="flag-view-v3 flag-icon flag-{{::region.alias | removeUselessSymbolsByRegexp: '[,\' ]+': 'g': 'true'}}"></div>
                                     {{::region.name}} ({{region.game}})
                                     <div class="arrow-view-v3"></div>

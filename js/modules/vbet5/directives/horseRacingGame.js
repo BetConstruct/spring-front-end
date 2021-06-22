@@ -29,12 +29,8 @@ VBET5.directive('horseRacingGame', ['$rootScope', 'ConnectionService', 'GameInfo
             $scope.raceCardsPredicate = 'price';
             $scope.isEventInBetSlip = GameInfo.isEventInBetSlip;
             $scope.racingData = {};
+            $scope.openGameMarkets = [];
 
-            function resetRacingData() {
-                $scope.racingData.selectionStatusMap = {};
-                $scope.racingData.selectedItems = [];
-                $scope.racingData.selectedAnyCount = 0;
-            }
             $scope.selectTab = function selectTab(tab) {
                 if ($scope.selectedTab !== tab) {
                     $scope.selectedTab = tab;
@@ -42,11 +38,11 @@ VBET5.directive('horseRacingGame', ['$rootScope', 'ConnectionService', 'GameInfo
                     switch (tab) {
                         case 'forecast':
                             $scope.racingData.columns = ['1st', '2nd', 'ANY'];
-                            resetRacingData();
+                            $scope.resetRacingData();
                             break;
                         case 'tricast':
                             $scope.racingData.columns = ['1st', '2nd', '3rd', 'ANY'];
-                            resetRacingData();
+                            $scope.resetRacingData();
                             break;
                     }
 
@@ -119,25 +115,7 @@ VBET5.directive('horseRacingGame', ['$rootScope', 'ConnectionService', 'GameInfo
 
 
             $scope.openBetPopup = function openBetPopup() {
-                $scope.racingData.selectedItems.sort(function (item1, item2) {
-                    return item1.col - item2.col;
-                });
-                $rootScope.broadcast('globalDialogs.addDialog', {
-                    template: 'templates/popup/forecast-tricast-bet.html',
-                    type: 'template',
-                    tag: DIALOG_TAG,
-                    state: {
-                        sportId: $scope.sportId,
-                        selectedItems: $scope.racingData.selectedItems,
-                        selectedAnyCount: $scope.racingData.selectedAnyCount,
-                        type: $scope.selectedTab,
-                        gameId: $scope.openGame.id,
-                        start_ts: $scope.openGame.start_ts,
-                        name: $scope.openGame.team1_name
-                    },
-                    hideButtons: true
-                });
-
+               $scope.openPopup($scope.openGame, DIALOG_TAG);
             };
 
 
@@ -183,8 +161,7 @@ VBET5.directive('horseRacingGame', ['$rootScope', 'ConnectionService', 'GameInfo
 
             }
             $scope.loading = true;
-            connectionService.subscribe(
-                {
+            var request =  {
                     'source': 'betting',
                     'what': {
                         sport: ['id', 'alias'],
@@ -200,7 +177,11 @@ VBET5.directive('horseRacingGame', ['$rootScope', 'ConnectionService', 'GameInfo
                         'competition': {'id': $scope.competitionId},
                         'game': {'id': $scope.gameId}
                     }
-                },
+            };
+            Utils.addPrematchExpressId(request);
+
+            connectionService.subscribe(
+                request,
                 updateOpenGameData,
                 {
                     'thenCallback': function () {
@@ -216,7 +197,7 @@ VBET5.directive('horseRacingGame', ['$rootScope', 'ConnectionService', 'GameInfo
             });
             $scope.$on("forecastTricastFinished", function(event, gameId) {
                 if (gameId === $scope.openGame.id) {
-                    resetRacingData();
+                    $scope.resetRacingData();
                 }
             });
         }

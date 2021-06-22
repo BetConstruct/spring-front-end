@@ -46,13 +46,12 @@
         </div>
     </div>
     <div class="game-additional-info-v3">
-        <p additional-game-info game="openGame" ng-show="openGame.add_info_name || openGame.info.add_info || openGame.tv_info || openGame.openGame.is_neutral_venue || additionalInfo && (!$root.conf.hidePointsForCompetitions['k' + openGame.competition.id] || $root.conf.hidePointsForCompetitions['k' + openGame.competition.id] && $root.env.authorized)">
+        <p additional-game-info game="openGame" ng-show="openGame.add_info_name || openGame.info.add_info || openGame.tv_info || openGame.is_neutral_venue || additionalInfo && (!$root.conf.hidePointsForCompetitions['k' + openGame.competition.id] || $root.conf.hidePointsForCompetitions['k' + openGame.competition.id] && $root.env.authorized)">
             <span ng-show="openGame.is_neutral_venue" title="Neutral field" trans >Neutral field</span>
             <span class="text-info" title="{{ additionalInfo }}" ng-if="additionalInfo">{{ additionalInfo }} </span>
             <span class="text-info" ng-if="openGame.add_info_name" title="{{openGame.add_info_name}}" ng-bind="openGame.add_info_name"></span>
             <span ng-if="openGame.info.add_info" title="{{openGame.info.add_info}}" ng-bind="openGame.info.add_info"></span>
             <span ng-if="openGame.info.tv_info" title="{{openGame.info.tv_info}}" ng-bind="openGame.info.tv_info"></span>
-
         </p>
         <div class="game-additional-icons">
             <i class="statistics-icon-j"

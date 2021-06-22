@@ -5,5 +5,5 @@
     <a ng-repeat="icon in conf.footer.additionalIcons" ng-href="{{icon.url[env.lang] || icon.url}}" target="{{icon.target || '_blank'}}" class="{{icon.name}}" title="{{icon.title[env.lang] || icon.title}}" ></a>
     <a ng-repeat="(key, value) in conf.footer.socialLinks" ng-href="{{value[env.lang] || value['eng'] || value}}" target="_blank" ng-class="key" title="{{value[env.lang] || value['eng'] || value}}"></a>
     -->
-    <a ng-repeat="value in ::conf.footer.socialLinks track by value.key" ng-show="::value.url[env.lang] || value.url.default" ng-href="{{::value.url[env.lang] || value.url.default}}" target="{{::value.target || '_blank'}}" ng-class="::value.key" title="{{::value.title[env.lang] || value.title.default}}"></a>
+    <a ng-repeat="value in ::conf.footer.socialLinks track by value.key" ng-show="::value.url[env.lang] || value.url.default" ng-href="{{::value.url[env.lang] || value.url.default}}" target="{{::value.target || '_blank'}}" class="social-{{::value.key}}" title="{{::value.title[env.lang] || value.title.default}}"></a>
 </div>

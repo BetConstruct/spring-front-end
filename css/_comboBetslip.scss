@@ -60,7 +60,12 @@
 /*Betslip*/
 .right-column-view-contain {
   .quickBetButton-j .print-icon-betslip-v3 {
-    right: 8px;
+    @include ltr {
+      right: 8px;
+    }
+    @include rtl {
+      left: 8px;
+    }
   }
   > .list-bet-block {
     width: 100%;

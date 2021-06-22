@@ -18,6 +18,11 @@ VBET5.directive('resizer', ['$document', '$rootScope', '$window', '$timeout', fu
         var initialPointerCoords = {}, initialSize = {}, x, y, aspectRatio, targetElement;
 
         function mousemove(event) {
+             var leftButtonIsDown = event.buttons === undefined ? event.which === 1 : event.buttons === 1;
+            if (!leftButtonIsDown) {
+                mouseup();
+                return;
+            }
             x = event.pageX - initialPointerCoords.x;
             y = event.pageY - initialPointerCoords.y;
 

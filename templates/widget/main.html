@@ -131,17 +131,12 @@
     </div>
 
     <!-- Bet Now Widget bets Games Widget -->
-    <div ng-switch-when="betnow">
+    <div ng-switch-when="betnow" ng-controller="widgetCtrl">
         <div ng-init="isIframe=true">
             <ng-include src="::'templates/sport/dashboard/betnowwidget.html'|fixPath"></ng-include>
         </div>
     </div>
 
-    <div ng-switch-when="euro2016">
-        <div>
-            <ng-include src="::'templates/sport/championship/classic/main.html'|fixPath"></ng-include>
-        </div>
-    </div>
     <div ng-switch-when="news">
         <div ng-init="isWidget=true">
             <div class="news-block-section">
@@ -167,22 +162,22 @@
     <!--animation widget-->
     <div ng-switch-when="animation" ng-controller="widgetCtrl" ng-init="openGameById($location.search().gameid)">
         <div ng-init="isIframe=true">
-           <div class="video-animation-vox-v3 animation-control">
-               <include-template template-path="templates/sport/classic/animations.html"></include-template>
-           </div>
-       </div>
+            <div class="video-animation-vox-v3 animation-control">
+                <include-template template-path="templates/sport/classic/animations.html"></include-template>
+            </div>
+        </div>
     </div>
     <!--casino jackpot widget  todo can be removed-->
     <div ng-switch-when="casino-jackpot-counter">
         <div ng-init="isIframe=true">
-           <jackpot-slider type="casino" template-type="widget" jackpot-index="$routeParams.jackpotIndex || 0" load-jackpot-data="true"></jackpot-slider>
-       </div>
+            <jackpot-slider type="casino" template-type="widget" jackpot-index="$routeParams.jackpotIndex || 0" load-jackpot-data="true"></jackpot-slider>
+        </div>
     </div>
     <!--jackpot widget-->
     <div ng-switch-when="jackpot-counter">
         <div ng-init="isIframe=true">
-           <jackpot-slider type="{{$routeParams.type||'casino'}}" jackpot-index="$routeParams.jackpotIndex || 0" template-type="widget" load-jackpot-data="true"></jackpot-slider>
-       </div>
+            <jackpot-slider type="{{$routeParams.type||'casino'}}" jackpot-index="$routeParams.jackpotIndex || 0" template-type="widget" load-jackpot-data="true"></jackpot-slider>
+        </div>
     </div>
     <!--sportsBook jackpot widget-->  <!-- todo can be removed-->
     <div ng-switch-when="sportsbook-jackpot-counter">
@@ -193,7 +188,7 @@
     <!--betting calculator widget-->
     <div ng-switch-when="betting-calculator">
         <div ng-init="isIframe=true">
-           <ng-include src="::'templates/sport/classic/systemCalculator.html'|fixPath"></ng-include>
+            <ng-include src="::'templates/sport/classic/systemCalculator.html'|fixPath"></ng-include>
         </div>
     </div>
 </div>

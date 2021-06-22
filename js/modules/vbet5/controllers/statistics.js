@@ -2,7 +2,9 @@
  * @ngdoc controller
  * @name vbet5.controller:statisticsCtrl
  */
-VBET5.controller('statisticsCtrl', ['$rootScope', '$scope', '$sce', 'Config','Moment', '$location', function($rootScope, $scope, $sce, Config,Moment, $location) {
+VBET5.controller('statisticsCtrl', ['$rootScope', '$scope', '$sce', 'Config','Moment', function($rootScope, $scope, $sce, Config, Moment) {
+    "use strict";
+
     $rootScope.footerMovable = true;
     /**
      * @ngdoc method

@@ -50,6 +50,8 @@
         {{::domainClass}}
         {{{'/poolbetting': 1, '/freebet': 1}[$root.currentPage.path] ? 'modern' : ({'/dashboard': 1, '/livecalendar': 1, '/results': 1, '/multiview': 1, '/overview': 1, '/virtualsports': 1, '/insvirtualsports': 1, '/esports': 1, '/expressofday': 1}[$root.currentPage.path] ? 'classic' : conf.sportsLayout)}}
         {{env.bodyWrapperClass||''}}
+        {{$root.currentPage.path === '/sport' && env.live ? 'live-sportsbook': ''}}
+        {{headerOpen?'header-open': ''}}
     " no-animate>
 
         <!-- build:[src] //ajax.googleapis.com/ajax/libs/angularjs/1.8.0/angular.min.js?v=1.8.0 -->
@@ -68,14 +70,21 @@
         <script id="app-config" data-config-url-path="" data-id="" data-config-is-externall=""></script>
         <!-- build:template
         <script src="<%=resourcePathPrefix%>app.min.js?<%=buildDate%>-<%=gitinfo%>" id="bc-main-js"></script>
+           <% if (dynamicLibs) { %>
+                <% for (lib of dynamicLibs.split(',')) {%>
+                        <script src="<%=resourcePathPrefix%>/libs/<%=lib%>?<%=buildDate%>-<%=gitinfo%>"  defer></script>
+                 <% }%>
+           <% }%>
         /build -->
+
 
         <!-- build:remove -->
         <script src="lib/swfobject.js"></script>
         <script src="lib/evercookie.js"></script>
         <script src="lib/fingerprint2.min.js"></script>
+        <script src="lib/fingerprint-service.js"></script>
         <script src="lib/amplify.store.min.js"></script>
-        <script src="lib/sportsbook-animations.js"></script>
+        <script src="lib/dynamic/sportsbook-animations.js"></script>
         <script src="lib/modules/angular-smooth-scroll-1.6.0.js"></script>
         <script src="lib/modules/angular-snapscroll.js"></script>
         <script src="lib/modules/truncate.js"></script>
@@ -96,7 +105,6 @@
         <script src="lib/modules/ui.calendar/ui-bootstrap-custom-tpls-0.12.1.js"></script>
         <script src="lib/hls.js"></script>
 
-        <script src="lib/socket.io.js"></script>
 
         <script src="js/modules/vbet5/main.js"></script>
         <script src="js/modules/vbet5/config.js"></script>
@@ -148,11 +156,14 @@
         <script src="js/modules/vbet5/services/recaptchaService.js"></script>
         <script src="js/modules/vbet5/services/ladderLoader.js"></script>
         <script src="js/modules/vbet5/services/giftService.js"></script>
-        <script src="js/modules/vbet5/services/covid19Socket.js"></script>
         <script src="js/modules/vbet5/services/forecastTricast.js"></script>
         <script src="js/modules/vbet5/services/marketService.js"></script>
         <script src="js/modules/vbet5/services/sessionDurationListener.js"></script>
+        <script src="js/modules/vbet5/services/marketTypes.js"></script>
         <script src="js/modules/vbet5/services/homeworkService.js"></script>
+        <script src="js/modules/vbet5/services/casinoRealityCheck.js"></script>
+        <script src="js/modules/vbet5/services/paymentPreCalculation.js"></script>
+        <script src="js/modules/vbet5/services/tournamentFiltering.js"></script>
 
         <script src="js/modules/cms/main.js"></script>
         <script src="js/modules/cms/config.js"></script>
@@ -245,6 +256,7 @@
         <script src="js/modules/vbet5/directives/matchesList.js"></script>
         <script src="js/modules/vbet5/directives/egtJackpot.js"></script>
         <script src="js/modules/vbet5/directives/rtgJackpot.js"></script>
+        <script src="js/modules/vbet5/directives/bcJackpot.js"></script>
         <script src="js/modules/vbet5/directives/retrieveEvents.js"></script>
         <script src="js/modules/vbet5/directives/autofocus.js"></script>
         <script src="js/modules/vbet5/directives/visibleSets.js"></script>
@@ -255,6 +267,7 @@
         <script src="js/modules/vbet5/directives/vbetHomeworkStatus.js"></script>
         <script src="js/modules/vbet5/directives/vbetHomeworkPopup.js"></script>
         <script src="js/modules/vbet5/directives/carousel.js"></script>
+        <script src="js/modules/vbet5/directives/integratedIframeProduct.js"></script>
 
         <script src="js/modules/vbet5/directives/togglePlaceholder.js"></script>
         <script src="js/modules/vbet5/directives/readMore.js"></script>
@@ -264,8 +277,13 @@
         <script src="js/modules/vbet5/directives/preMatchStreamChannels.js"></script>
         <script src="js/modules/vbet5/directives/upcomingRaces.js"></script>
         <script src="js/modules/vbet5/directives/horseRacingGame.js"></script>
+        <script src="js/modules/vbet5/directives/greyhoundRacingGame.js"></script>
         <script src="js/modules/vbet5/directives/searchTeamNames.js"></script>
         <script src="js/modules/vbet5/directives/expressBetItem.js"></script>
+        <script src="js/modules/vbet5/directives/kievAnimation.js"></script>
+        <script src="js/modules/vbet5/directives/promotionNewsNew.js"></script>
+        <script src="js/modules/vbet5/directives/promotionSwitcher.js"></script>
+        <script src="js/modules/vbet5/directives/hompageSearchWidget.js"></script>
         <script src="js/modules/vbet5/filters/firstElement.js"></script>
         <script src="js/modules/vbet5/filters/translate.js"></script>
         <script src="js/modules/vbet5/filters/oddConvert.js"></script>
@@ -298,6 +316,7 @@
         <script src="js/modules/vbet5/filters/fixPath.js"></script>
         <script src="js/modules/vbet5/filters/rtlConvert.js"></script>
         <script src="js/modules/vbet5/filters/notShowZeroAndFormat.js"></script>
+        <script src="js/modules/vbet5/filters/highlightWord.js"></script>
         <script src="js/modules/vbet5/controllers/modernView/main.js"></script>
         <script src="js/modules/vbet5/controllers/classicView/main.js"></script>
         <script src="js/modules/vbet5/controllers/classicView/center.js"></script>
@@ -368,6 +387,7 @@
         <script src="js/modules/vbet5/controllers/statistics.js"></script>
         <script src="js/modules/vbet5/controllers/winners.js"></script>
         <script src="js/modules/vbet5/controllers/promotionalBonus.js"></script>
+        <script src="js/modules/vbet5/controllers/casinoFreeSpins.js"></script>
         <script src="js/modules/vbet5/controllers/promoCode.js"></script>
         <script src="js/modules/vbet5/controllers/mixedBalance.js"></script>
         <script src="js/modules/vbet5/controllers/euroCompetition.js"></script>
@@ -386,7 +406,6 @@
         <script src="js/modules/vbet5/controllers/homepageCountdown.js"></script>
         <script src="js/modules/vbet5/controllers/loginHistory.js"></script>
         <script src="js/modules/vbet5/controllers/pmu.js"></script>
-        <script src="js/modules/vbet5/controllers/covid19/main.js"></script>
         <script src="js/modules/vbet5/controllers/betBuilder.js"></script>
         <script src="js/modules/vbet5/controllers/sportsbook.js"></script>
         <script src="js/modules/vbet5/controllers/esports/main.js"></script>
@@ -400,6 +419,11 @@
         <script src="js/modules/vbet5/controllers/skinning.js"></script>
         <script src="js/modules/vbet5/controllers/smsVerification.js"></script>
         <script src="js/modules/vbet5/controllers/referToFriend.js"></script>
+        <script src="js/modules/vbet5/controllers/quiz.js"></script>
+        <script src="js/modules/vbet5/controllers/recharge.js"></script>
+        <script src="js/modules/vbet5/controllers/tournamentBase.js"></script>
+        <script src="js/modules/vbet5/controllers/sportTournaments.js"></script>
+
 
         <!--<script src="js/modules/vbet5/translations.js"></script>-->
         <script src='js/modules/vbet5/services/jackpotSocket.js'></script>

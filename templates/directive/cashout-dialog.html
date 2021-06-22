@@ -37,8 +37,7 @@
                             <div
                                  ng-class="{'active': cashoutPopupOpened}"
                                  ng-click="cashoutPopupOpened = !cashoutPopupOpened"
-                                 hide-on-click
-                                 state-flag-var="cashoutPopupOpened">
+                               >
                                 <p class="settings-icon-betslip-v3">{{modes[cashoutPopup.selectedMode]}}</p>
                                 <ul>
                                     <li ng-class="{'active': cashoutPopup.selectedMode === 0}" ng-click="changeCashOutMode(0)"><p ng-bind="::modes[0]"></p></li>
@@ -49,7 +48,7 @@
                         </div>
                         <div class="pu-contain-j" ng-show="cashoutDialog.type == 'confirm' && !cashoutSuccess && cashoutRule.manualError">
                             <p ng-show="unknownError" trans>Error occurred.</p>
-                            <p trans>Cash-out for selected bet is not available.</p>
+                            <p ng-bind="cashoutRule.manualError|translate"></p>
                         </div>
                         <div class="pu-contain-j" ng-show="cashoutDialog.type == 'confirm' && cashoutSuccess && !cashoutRule.created && !cashoutRule.canceled">
                             <span ng-show="cashoutSuccess != true">({{cashoutSuccess }} {{$root.profile.currency_name}})</span>

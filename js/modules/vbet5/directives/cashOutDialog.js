@@ -32,7 +32,7 @@ VBET5.directive('cashOutDialog', ['$rootScope', '$timeout', 'Moment', 'Zergling'
                     created: false,
                     canceled: false,
                     error: false,
-                    manualError: false,
+                    manualError: "",
                     valueReachesAmount: '',
                     partialAmount: '',
                     loading: false
@@ -159,7 +159,7 @@ VBET5.directive('cashOutDialog', ['$rootScope', '$timeout', 'Moment', 'Zergling'
                     created: false,
                     canceled: false,
                     error: false,
-                    manualError: false
+                    manualError: ""
                 };
 
                 Zergling.get(request, 'cashout')
@@ -193,11 +193,11 @@ VBET5.directive('cashOutDialog', ['$rootScope', '$timeout', 'Moment', 'Zergling'
                             } else if (response.result === "NotAvailable" || response.result === "Fail") {
                                 $scope.cashoutDialog.type = 'confirm';
                                 $scope.cashoutSuccess = false;
-                                $scope.cashoutRule.manualError = true;
+                                $scope.cashoutRule.manualError = response.result_text;
                             } else {
                                 $scope.cashoutDialog.type = 'confirm';
                                 $scope.cashoutSuccess = false;
-                                $scope.cashoutRule.manualError = true;
+                                $scope.cashoutRule.manualError = response.result_text;
                                 $scope.unknownError = true;
                             }
                         },
@@ -205,7 +205,7 @@ VBET5.directive('cashOutDialog', ['$rootScope', '$timeout', 'Moment', 'Zergling'
                             $scope.cashoutPopup.active = true;
                             $scope.cashoutDialog.type = 'confirm';
                             $scope.cashoutSuccess = false;
-                            $scope.cashoutRule.manualError = true;
+                            $scope.cashoutRule.manualError = failResponse.result_text;
                             console.log('cashout failed', failResponse);
                         }
                     )['finally'](function () {
@@ -351,6 +351,9 @@ VBET5.directive('cashOutDialog', ['$rootScope', '$timeout', 'Moment', 'Zergling'
              * @description switches cash out dialog type
              */
             $scope.switchCashOutDialogType = function switchCashOutDialogType(dialogType) {
+                if ($scope.cashoutDialog.type === dialogType) {
+                    return;
+                }
                 $scope.cashoutDialog.type = dialogType;
                 $scope.cashoutPopup.inputValue = '';
 

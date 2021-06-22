@@ -1,10 +1,21 @@
-CASINO.directive('getCasinoGame', ['casinoData', function(casinoData) {
+CASINO.directive('getCasinoGame', ['$rootScope', '$location', 'casinoData', function($rootScope, $location, casinoData) {
     'use strict';
     return {
         restrict: 'A',
         scope: false,
         link: function(scope, elem, attrs) {
             var gameId = attrs.getCasinoGame;
+            function showFrame () {
+                if ($location.search().showNestedFrame === 'true') {
+                    scope.showNestedFrame = true;
+                    $rootScope.casinoGameOpened = 1;
+                    $location.search('showNestedFrame', undefined);
+                }
+            }
+
+            showFrame();
+
+            scope.$on("$locationChangeSuccess", showFrame);
 
             if (gameId && scope.games) {
                for (var i = 0, length = scope.games.length; i < length; ++i) {
@@ -15,11 +26,13 @@ CASINO.directive('getCasinoGame', ['casinoData', function(casinoData) {
                }
             }
 
-            casinoData.getGames(null, null, null, null, null, null, null, [gameId]).then(function (response) {
+            casinoData.getGames({id: [gameId]}).then(function (response) {
                 if (response && response.data && response.data.status !== -1) {
                     scope.game = response.data.games[0];
                 }
             });
+
+
         }
     };
 }]);

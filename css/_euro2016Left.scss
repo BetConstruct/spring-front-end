@@ -157,11 +157,141 @@
   box-sizing: border-box;
   content: "\e934";
 }
+.time-filter-v3.select-tournament {
+  width: 100%;
+  height: 40px;
+  z-index: 990;
+  background-image: linear-gradient(to right, #031778, #8d17c7);
+  padding: 5px 10px;
+  margin-top: 10px;
+  color: #ffffff;
+  & + .second-row-filter-v3 {
+    margin-bottom: 6px;
+  }
+  &.active {
+    background-image: linear-gradient(to right, #031778, #8d17c7);
+    .arrow-rotate-filter-v3 {
+      &:before {
+        content: "\e671";
+      }
+    }
+  }
+  &:before {
+    box-sizing: border-box;
+    font: 16px/30px icomoon;
+    content: "\e904";
+    color: #c1c4cd;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    @include ltr {
+      left: 8px;
+    }
+    @include rtl {
+      right: 8px;
+    }
+  }
+  .dropdown-title {
+    font-size: 10px;
+    line-height: 1.3;
+    color: #c1c4cd;
+    max-width: 260px;
+    @include rtl {
+      float: right;
+    }
+  }
+  .dropdown-paragraph {
+    font-size: 14px;
+    line-height: 1.3;
+    text-transform: initial;
+    color: #ffffff;
+    max-width: 260px;
+    @include rtl {
+      float: right;
+    }
+  }
+  .arrow-rotate-filter-v3 {
+    color: #ffffff;
+    top: 50%;
+    transform: translateY(-50%);
+    &:before {
+      content: "\e670";
+    }
+  }
+  .sub-nav-filter-time-v3 {
+    background-image: linear-gradient(to right, #031778, #8d17c7);
+    top: 40px;
+    padding: 1px;
+    ul {
+      background: $c16-sp-10;
+      li {
+        background: rgba($c16-sp-8, 0.4);
+        color: $c16-tp-1;
+        & + li {
+          margin-top: 1px;
+        }
+        &.active, &:hover {
+          background: rgba($c16-sp-8, 0.8);
+          color: $c16-tp-1;
+        }
+        span {
+          box-shadow: none;
+        }
+      }
+    }
+  }
+}
+.tournament-details {
+  padding: 10px 8px;
+  box-sizing: border-box;
+  background: $c16-sp-9;
+  margin-top: 1px;
+  .tournament-details-reset,
+  .tournament-details-bodytournament-details-body-time-bc,
+  .tournament-details-bc {
+    color: $c16-tp-4;
+  }
+  .tournament-details-time-bc {
+    i {
+      font-size: 6px;
+      @include ltr {
+        margin: 4px;
+      }
+      @include rtl {
+        transform: rotate(180deg);
+        margin: 3px 4px 4px 4px;
+      }
+    }
+  }
+  .tournament-details-price {
+    color: #109121;
+  }
+  .tournament-details-bc {
+    text-decoration: underline;
+  }
+  .tournament-details-body-text {
+    margin: 4px 0;
+  }
+  .tournament-details-time-bc i,
+  .tournament-details-reset i {
+    font-style: normal;
+  }
+  .tournament-details-reset {
+    background: transparent;
+    border: none;
+    padding: 0;
+    font-size: 12px;
+    i {
+      font-size: 9px;
+      padding-left: 4px;
+    }
+  }
+}
 .filter-view-v3 {
   box-sizing: border-box;
   float: left;
   width: 100%;
-  height: 70px;
+  min-height: 70px;
   background: $c16-sp-10;
   margin: 0 0 1px;
   @include ltr {
@@ -500,13 +630,14 @@
   border-radius: 50%;
   background: $c16-sp-6;
   transform: translate3d(0, 0, 0);
-  transition: left 240ms, background 240ms;
   cursor: pointer;
   @include ltr {
     left: 1px;
+    transition: left 240ms, background 240ms;
   }
   @include rtl {
     right: 1px;
+    transition: right 240ms, background 240ms;
   }
 }
 .switcher-view-b.active {
@@ -575,6 +706,16 @@
   border-radius: inherit;
   z-index: 77;
   position: static;
+  .md-progress-circular{
+    &.small-progress{
+      @include ltr{
+       right: 35px;
+      }
+      @include rtl{
+       left: 35px;
+      }
+  }
+  }
 }
 .search-box-v3 .block-search:before {
   box-sizing: border-box;
@@ -743,15 +884,7 @@
     height: 100%;
   }
 }
-.full-menu-wrapper-box-v3 > .md-progress-circular {
-  margin: 50px auto auto;
-  width: 60px;
-  height: 60px;
-}
-.full-menu-wrapper-box-v3 .md-progress-circular {
-  width: 60px;
-  height: 60px;
-}
+
 .full-menu-wrapper-v3 {
   box-sizing: border-box;
   width: 100%;
@@ -1033,6 +1166,7 @@
     }
   }
 }
+
 .homework-amount {
   position: absolute;
   top: 6px;
@@ -1180,7 +1314,7 @@
 }
 .boostedbets:before {
   font: 18px/30px icomoon !important;
-  content: "\ea7d";
+  content: "\eaae";
 }
 .sports-item-v3.todaybets > .arrow-view-v3:before, .sports-item-v3.todaybets.active > .arrow-view-v3:before,
 .sports-item-v3.outright > .arrow-view-v3:before, .sports-item-v3.outright.active > .arrow-view-v3:before,
@@ -1275,11 +1409,15 @@
   @include rtl {
     text-align: right;
   }
-  > i{
+  > i {
     position: absolute;
-    right: 0;
     top: 0;
-
+    @include ltr {
+      right: 1px;
+    }
+    @include rtl {
+      left: 1px;
+    }
     &:after{
       content: '\e967';
       font: 14px/30px icomoon;
@@ -2110,24 +2248,25 @@ popular-in-sportsbook[type="game"] {
     padding: 0 3px 0 0;
   }
 }
-.games-list-mini-view-v3 .blocked-icon-v3 {
+.games-list-mini-view-v3 .blocked-icon-v3, .game-info-icons-v3 .blocked-icon-v3 {
   box-sizing: border-box;
   font: 8px/14px icomoon;
   font-style: normal;
-  padding: 0;
-  position: absolute;
-  top: 0;
-  z-index: 444;
   width: 26px;
   height: 13px;
   border-radius: 3px;
   background: darken(desaturate(adjust-hue($c16-sp, -9deg), 9), 1);
+  color: $c16-tp-5;
   text-align: center;
   @include ltr {
-    right: 18px;
+    padding: 0;
+    float: right;
+    margin-left: 4px;
   }
   @include rtl {
-    left: 18px;
+    float: left;
+    padding: 0;
+    margin-right: 4px;
   }
 }
 .blocked-icon-v3:before {
@@ -2142,6 +2281,9 @@ popular-in-sportsbook[type="game"] {
   -webkit-box-flex: 1;
   -ms-flex: 1;
   flex: 1;
+  @include ltr {
+    text-align: right;
+  }
 }
 .icon-separator-v3 {
   box-sizing: border-box;
@@ -2151,11 +2293,11 @@ popular-in-sportsbook[type="game"] {
   transition: color 240ms;
   @include ltr {
     float: right;
-    margin: 0 0 0 8px;
+    margin-left: 4px;
   }
   @include rtl {
     float: left;
-    margin: 0 8px 0 0;
+    margin-right: 4px;
   }
 }
 .icon-separator-v3.video:before {
@@ -2181,8 +2323,16 @@ popular-in-sportsbook[type="game"] {
   color: $brand-color-2;
   cursor: pointer;
 }
-.icon-separator-v3.market-count-v3:before {
-  display: none;
+.icon-separator-v3.market-count-v3 {
+  @include ltr {
+    margin: 0;
+  }
+  @include rtl {
+    margin: 0;
+  }
+  &:before {
+    display: none;
+  }
 }
 .icon-separator-v3.market-count-v3 > span {
   box-sizing: border-box;
@@ -2192,11 +2342,17 @@ popular-in-sportsbook[type="game"] {
   font-family: $font-f;
   font-size: 4 + $size-font;
   line-height: 11px;
-  padding: 1px 0;
   width: 26px;
   text-align: center;
   border-radius: 3px;
   vertical-align: top;
+  padding: 1px 0;
+  @include ltr {
+    margin-left: 4px;
+  }
+  @include rtl {
+    margin-right: 4px;
+  }
 }
 .sub-menu-multiselect-view-v3 {
   box-sizing: border-box;
@@ -2288,7 +2444,13 @@ popular-in-sportsbook[type="game"] {
   > .left-column-v3 {
     max-width: 36px;
     overflow: hidden;
-    animation: 240ms closed-l-nav-v ease-in-out;
+    animation: 240ms closed-l-nav-v ease-in-out forwards;
+    @include ltr {
+      transform: translate3d(-100px,0,0);
+    }
+    @include rtl {
+      transform: translate3d(100px,0,0);
+    }
     .games-list-nav-v3,
     .prematch-view .region-items-box,
     .arrow-view-v3,
@@ -2308,96 +2470,142 @@ popular-in-sportsbook[type="game"] {
       max-width: 250px;
     }
   }
-  .view-switcher-v3.no-dashboard {
-    display: none;
-    + .filter-view-v3 {
-      height: 52px;
-      > .filter-row-v3 {
-        display: none;
+  .view-switcher-v3 {
+    > ul > li:first-child:nth-last-child(3) {
+      @include ltr {
+        float: left;
+      }
+      @include rtl {
+        float: right;
+      }
+    }
+    &.no-dashboard {
+      display: none;
+      + .filter-view-v3 {
+        > .filter-row-v3 {
+          display: none;
+        }
+        .select-tournament {
+          top: -3px;
+          + .second-row-filter-v3 .closed-left-nav-v3 {
+            top: -3px;
+          }
+        }
+      }
+    }
+    &:not(.no-dashboard) {
+      + .filter-view-v3 {
+        .select-tournament {
+          top: -28px;
+          + .second-row-filter-v3 .closed-left-nav-v3 {
+            top: -24px;
+          }
+        }
       }
     }
   }
-}
-@keyframes closed-l-nav-v {
-  0%{transform: translate3d(-100px,0,0);}
-  100%{transform: translate3d(0,0,0);}
-}
-.left-menu-closed-v3 .full-menu-wrapper-box-v3 > .md-progress-circular,
-.left-menu-closed-v3 .full-menu-wrapper-box-v3 .now-games-menu,
-.left-menu-closed-v3 .sports-item-v3.active ~ .region-item-row-v3,
-.left-menu-closed-v3 .sport-games-count-v3 {
-  display: none;
-}
-.left-menu-closed-v3 .left-nav-view-v3 {
-  @include rtl {
-    //margin-left: 8px;
+  .full-menu-wrapper-box-v3 {
+    overflow: hidden;
   }
-}
-.left-menu-closed-v3 .search-box-v3 {
-  display: none;
-}
-.left-menu-closed-v3 .full-menu-wrapper-box-v3 {
-  overflow: hidden;
-}
-.left-menu-closed-v3 .filter-row-v3 > ul > li,
-.left-menu-closed-v3 .view-switcher-v3 > ul > li:nth-child(2),
-.left-menu-closed-v3 .view-switcher-v3 > ul > li:nth-child(3) {
-  display: none;
-}
-.left-menu-closed-v3 .view-switcher-v3 > ul > li:first-child:nth-last-child(3){
-  @include ltr {
-    float: left;
-  }
-  @include rtl {
-    float: right;
-  }
-}
-.left-menu-closed-v3 .closed-left-nav-v3 {
-  @include ltr {
-    right: 9px;
-  }
-  @include rtl {
-    left: 9px;
-  }
-}
-.left-menu-closed-v3 .filter-view-v3 .switcher-view-b {
-  @include ltr {
-    right: -2px;
-  }
-  @include rtl {
-    left: -2px;
-  }
-}
-.left-menu-closed-v3 .left-column-v3 {
-  .sports-item-v3 {
+  .closed-left-nav-v3 {
+    @include ltr {
+      right: 9px;
+    }
     @include rtl {
-      font-size: 0;
-      position: relative;
+      left: 9px;
     }
   }
-  .left-menu-wrapper-v3 {
+  .filter-view-v3 .switcher-view-b {
+    @include ltr {
+      right: -2px;
+    }
     @include rtl {
-      margin: 0;
+      left: -2px;
     }
   }
-  .sports-item-v3:before {
-    @include rtl {
-      left: 8px;
-      right: auto;
+  .left-column-v3 {
+    .sports-item-v3 {
+      @include rtl {
+        font-size: 0;
+        position: relative;
+      }
+    }
+    .left-menu-wrapper-v3 {
+      @include rtl {
+        margin: 0;
+      }
+    }
+    .sports-item-v3:before {
+      @include rtl {
+        left: 8px;
+        right: auto;
+      }
+    }
+    .sport-games-count-v3,
+    .arrow-view-v3 {
+      @include rtl {
+        left: auto;
+        right: 0;
+      }
+    }
+    .homework-amount,
+    .homework-info-icon {
+      display: none;
     }
   }
+  .left-nav-view-v3 {
+    @include rtl {
+      margin-left: 4px;
+    }
+  }
+  .select-tournament {
+    width: 36px;
+    margin-top: 0;
+    @include ltr {
+      left: -5px;
+    }
+    @include rtl {
+      right: -5px;
+    }
+  }
+  .select-tournament,
+  .tournament-details {
+    + {
+      .second-row-filter-v3 .closed-left-nav-v3 {
+        @include ltr {
+          right: 12px;
+        }
+        @include rtl {
+          left: 12px;
+        }
+      }
+    }
+  }
+  .tournament-details + .second-row-filter-v3 .closed-left-nav-v3 {
+    top: -24px;
+  }
+  .full-menu-wrapper-box-v3 > .md-progress-circular,
+  .full-menu-wrapper-box-v3 .now-games-menu,
+  .sports-item-v3.active ~ .region-item-row-v3,
   .sport-games-count-v3,
-  .arrow-view-v3 {
-    @include rtl {
-      left: auto;
-      right: 0;
-    }
-  }
-  .homework-amount,
-  .homework-info-icon {
+  .search-box-v3,
+  .filter-row-v3 > ul > li,
+  .view-switcher-v3 > ul > li:nth-child(2),
+  .view-switcher-v3 > ul > li:nth-child(3),
+  .select-tournament > p,
+  .select-tournament .arrow-rotate-filter-v3,
+  .time-filter-v3 .sub-nav-filter-time-v3,
+  .tournament-details {
     display: none;
   }
 }
+
+@keyframes closed-l-nav-v {
+  100% {
+    transform: translate3d(0,0,0);
+  }
+}
+
 //  left menu closed END
 
 //my favorite team
@@ -2413,23 +2621,32 @@ popular-in-sportsbook[type="game"] {
   display: block;
   .search-box-v3{
     z-index: 99;
+    .block-search > input[type=text]{
+
+     @include ltr{
+       padding-right: 60px;
+     }
+      @include rtl{
+        padding-left: 60px;
+      }
+    }
+
   }
   .confirm-team{
     margin: 10px 0;
     float: left;
     width: 100%;
     height: 26px;
-    background: $brand-color-1;
+    background:none;
     font-size: 12px;
     line-height: 14px;
     text-transform: uppercase;
     text-align: center;
-    color: set-color($header-brand-color-1);
-    border-color: $brand-color-1;
+    color: rgba(set-color($header-first-line-background), 0.7);
+    border: 1px solid $brand-color-1;
     position: relative;
     &:hover{
-      background: lighten( saturate( $header-brand-color-1, 1 ), 7 );
-      border-color: lighten( saturate( $header-brand-color-1, 1 ), 7 );
+      color: rgba(set-color($header-first-line-background), 0.9);
     }
     &:disabled{
       pointer-events: none;
@@ -2437,14 +2654,10 @@ popular-in-sportsbook[type="game"] {
       color: rgba(255,255,255,.2);
       background: transparent;
     }
-    .md-progress-circular.small{
-      position: absolute;
-      left: 0;
-      right: 0;
-      top: 0;
-    }
   }
   > p{
+    float: left;
+    width: 100%;
     font-size: 11px;
     line-height: 13px;
     color: $c16-tp-6;
@@ -2456,12 +2669,29 @@ popular-in-sportsbook[type="game"] {
     line-height: 13px;
   }
   ul{
+    float: left;
+    width: 100%;
     padding-top: 10px;
   }
 }
 .md-progress-circular.small{
   width: 28px;
   height: 28px;
+}
+.left-menu-favorite-team{
+.md-progress-circular {
+  &.small-progress {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    @include ltr {
+      right: 5px;
+    }
+    @include rtl {
+      left: 5px;
+    }
+  }
+}
 }
 .left-menu-closed-v3{
   .my-fav-team-list, .edit-result-search, .search-fav-team{
@@ -2488,7 +2718,13 @@ popular-in-sportsbook[type="game"] {
     background-position: 50% 50%;
     position: absolute;
     top: 4px;
-    left: 2px;
+    @include ltr{
+      left: 8px;
+    }
+    @include rtl{
+      right: 8px;
+      text-align: right;
+    }
   }
   i{
     font-style: normal;
@@ -2497,14 +2733,22 @@ popular-in-sportsbook[type="game"] {
     color: set-color($c16-sp-9);
     float: left;
     box-sizing: border-box;
-    padding: 0 0 0 32px;
     text-overflow: ellipsis;
     overflow: hidden;
     white-space: nowrap;
+    @include ltr{
+      float: left;
+      padding-left: 38px;
+    }
+    @include rtl{
+      float: right;
+      padding-right: 38px;
+    }
   }
   &.empty{
     height: 0;
   }
+
 }
 .sports-item-v3.sports-group-item-v3.my-favorite{
   height: 30px;
@@ -2531,10 +2775,9 @@ popular-in-sportsbook[type="game"] {
     text-transform: uppercase;
     text-align: center;
     color: set-color($header-brand-color-1);
-    border-color: $brand-color-1;
+    border: none;
     &:hover{
       background: lighten( saturate( $header-brand-color-1, 1 ), 7 );
-      border-color: lighten( saturate( $header-brand-color-1, 1 ), 7 );
     }
   }
 }
@@ -2551,6 +2794,13 @@ popular-in-sportsbook[type="game"] {
     position: absolute;
     left: 0;
     top: 2px;
+    @include ltr{
+      left: 0;
+    }
+    @include rtl{
+      right: 0;
+      text-align: right;
+    }
   }
   i{
     color:  set-color($c16-sp-9);
@@ -2559,13 +2809,20 @@ popular-in-sportsbook[type="game"] {
     line-height: 24px;
     vertical-align: middle;
     display: inline-block;
-    float: left;
     width: 100%;
     text-overflow: ellipsis;
     overflow: hidden;
     box-sizing: border-box;
-    padding: 0 0 0 30px;
     white-space: nowrap;
+    @include ltr{
+      float: left;
+      padding-left: 30px;
+    }
+    @include rtl{
+      float: right;
+      text-align: right;
+      padding-right: 30px;
+    }
   }
  &.selected{
    background: $c16-sp-8;
@@ -2590,6 +2847,7 @@ popular-in-sportsbook[type="game"] {
     }
   }
 }
+
 @include coloring-by-sports(favoritecompetitions, #ffd700);
 @include coloring-by-sports(AlpineSkiing, #93c6e5);
 @include coloring-by-sports(Archery, #a43e8a);
@@ -2599,6 +2857,7 @@ popular-in-sportsbook[type="game"] {
 @include coloring-by-sports(Badminton, #70c2a7);
 @include coloring-by-sports(Baseball, #5caaa7);
 @include coloring-by-sports(Basketball, #fca601);
+@include coloring-by-sports(\33 x3Basketball, #fca601);
 @include coloring-by-sports(BasketballShots, #fca601);
 @include coloring-by-sports(BeachHandball, #ccbb87);
 @include coloring-by-sports(BeachSoccer, #bfaf7e);
@@ -2706,6 +2965,7 @@ popular-in-sportsbook[type="game"] {
 @include coloring-by-sports(HeroesOfTheStorm, #655e8a);
 @include coloring-by-sports(WorldOfTanks, #464a37);
 @include coloring-by-sports(Hearthstone, #9d7337);
+@include coloring-by-sports(Headis, #d82338);
 @include coloring-by-sports(StarCraft, #326d5d);
 @include coloring-by-sports(StarCraft2, #005895);
 @include coloring-by-sports(Valorant, #c82833);
@@ -2758,6 +3018,7 @@ popular-in-sportsbook[type="game"] {
 @include coloring-by-sports(WarThunder, #b6171c);
 @include coloring-by-sports(Halo, #0a61a5);
 @include coloring-by-sports(RainbowSix, #666d72);
-@include coloring-by-sports(ArenaOfValor, #657672);
+@include coloring-by-sports(ArenaofValor, #3b387f);
 @include coloring-by-sports(ClashRoyale, #225199);
 @include coloring-by-sports(MobileLegends, #a98157);
+@include coloring-by-sports(TeqBall, #b84b24);

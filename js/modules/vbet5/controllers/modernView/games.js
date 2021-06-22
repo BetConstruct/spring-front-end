@@ -277,7 +277,7 @@ BettingModule.controller('gamesCtrl', ['$rootScope', '$scope', '$location', '$fi
             'what': {
                 'game': gameRequest,
                 'event': ["order", "id", "type_1", "type", "type_id", "original_order", "name", "price", "nonrunner", "ew_allowed", "sp_enabled", "extra_info", "base","home_value", "away_value", "display_column" ],
-                'market': ["id", "col_count", "type", "sequence", "express_id", "cashout", "display_key", "display_sub_key", "group_id", "name", "group_name", "order" ],
+                'market': ["id", "col_count", "type", "sequence", "express_id", "cashout", "display_key", "display_sub_key", "group_id", "name", "group_name", "order", "extra_info" ],
                 'sport': ['id', 'alias', 'name'],
                 'competition': ['id', 'info'],
                 'region': ['id', 'alias']
@@ -288,6 +288,7 @@ BettingModule.controller('gamesCtrl', ['$rootScope', '$scope', '$location', '$fi
                 }
             }
         };
+        Utils.addPrematchExpressId(request);
 
         connectionService.subscribe(
             request,

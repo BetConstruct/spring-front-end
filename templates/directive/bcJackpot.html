@@ -1,0 +1,19 @@
+<ul class="new-jackpot-info" ng-if="jackpotData">
+    <li ng-repeat="pool in jackpotData.PoolGroup.PoolList track by $index">
+
+
+       <img class="jackpot-live-casino-img" ng-src="images/jackpot-live-casino/jackpot-{{pool.Name}}-l-c.png" alt="" />
+       <div class="jackpot-live-casino-amount">
+           <jackpot-counter
+                   max-duration-speed="400"
+                   point="jackpotData.CurrencyFraction"
+                   comma="true"
+                   max-length="9"
+                   show-currency="true"
+                   currency="{{jackpotData.Currency}}"
+                   amount="{{pool.CollectedAmount}}">
+           </jackpot-counter>
+       </div>
+    </li>
+</ul>
+

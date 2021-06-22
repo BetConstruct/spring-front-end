@@ -34,13 +34,13 @@
                                                 <span ng-show="game.type === 1" ng-if="game.info.current_leg !== undefined">{{game.info.current_game_state|convertSetNameWithLeg:game.info|translate}}</span>
 
                                                 <span ng-show="game.type !==1">{{game.start_ts|formatDate:'full':null:$root.env.timeFormat}}</span>
-                                                <i class="blocked-icon-v3" title="{{'Blocked'|translate}}" ng-show="(!(game.markets_count) || game.is_blocked)"></i>
                                                 <span ng-if="game.info.over_number" class="over-cricet" ng-bind="'Over {1}'|translate:[game.info.over_number]"></span>
                                             </p>
                                             <div class="game-info-icons-v3">
                                                 <div class="icon-separator-v3 favorite {{myGames.indexOf(game.id) !== -1 ? 'active' : ''}}"
-                                                     ng-click="toggleGameFavorite(game); $event.stopPropagation()"
-                                                ></div>
+                                                     ng-click="toggleGameFavorite(game); $event.stopPropagation()">
+                                                </div>
+                                                <i class="blocked-icon-v3" title="{{'Blocked'|translate}}" ng-show="(!(game.markets_count) || game.is_blocked)"></i>
                                                 <div class="icon-separator-v3 video" ng-show="game.video_id"></div>
                                                 <!--<div class="icon-separator-v3 tv"></div>-->
                                                 <div class="icon-separator-v3 statistic" ng-click="openStatistics(game);$event.stopPropagation();" ng-show="$root.conf.enableH2HStat && game.is_stat_available" title="{{'statistic'|translate}}"></div>

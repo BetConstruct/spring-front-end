@@ -7,10 +7,10 @@
                     <h2 trans>Gift My Bet</h2>
                     <p trans>Write down the email of the user you want to gift your bet to</p>
                     <div class="gift-bet-form" ng-class="{'error': giftBetForm.email.$touched && giftBetForm.email.$invalid}">
-                        <label trans>Email <span>*</span></label>
+                        <label>{{'Email'|translate}} <span>*</span></label>
                         <input type="email" name="email" ng-model="giftState.email" required ng-pattern="/^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+([.])[a-zA-Z0-9-]+(?:.[a-zA-Z0-9-]+)*$/">
                         <div class="tooltip-j" ng-show="giftBetForm.email.$error.pattern && !giftBetForm.email.$error.required && giftBetForm.email.$touched">
-                            <p trans>Invalid email address</p>
+                            <p trans>Invalid Email Address</p>
                         </div>
                     </div>
                     <div class="gift-bet-error" ng-show="giftState.status === 'fail'" ng-bind="giftState.errorMessage|translate"></div>

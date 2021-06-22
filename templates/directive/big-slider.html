@@ -5,7 +5,7 @@
                 <div class="wrapper-slider-box-b">
                     <div ng-show="$index == index" ng-repeat="banner in images track by $index" class="repeat-contain-b-slider" ng-class="{'active': $index === index}">
                         <div class="contain-img-slider-view">
-                            <a ng-href="{{!banner.isYouTubeVideo ? banner.link : ''}}" target="{{banner.linktarget}}" ng-click="linkClick(banner)"  ng-style="{'background-image':'url({{banner.imageurl}})'}">
+                            <a ng-href="{{!banner.isYouTubeVideo ? banner.link : ''}}" target="{{banner.linktarget}}" ng-click="linkClick(banner, $root.$location.path())"  ng-style="{'background-image':'url({{banner.imageurl}})'}">
                                 <!--<img ng-src="{{banner.imageurl}}" alt="">-->
                             </a>
                             <button ng-if="!$root.env.authorized && banner.action && banner.action === 'register'" trans ng-click="$root.$broadcast('openRegForm');$event.stopPropagation();">Register</button>
@@ -31,6 +31,7 @@
         </div>
         <div class="slider-optional-b-casino" ng-show="$root.conf.sliderArrows && images.length > 1">
             <span ng-click="changeActiveBanner(index - 1)"></span>
+            <span class="slider-amount-btn">{{index + 1}}/{{images.length}}</span>
             <span ng-click="changeActiveBanner(index + 1)"></span>
         </div>
         <div ng-repeat="banner in images track by $index"
@@ -40,7 +41,7 @@
              class="slide-container-repeat-b" no-animate="disable">
             <div class="slide-casino-new-img-b">
                 <div class="banner-set-img">
-                    <a ng-href="{{!banner.isYouTubeVideo ? banner.link : ''}}" target="{{banner.linktarget}}" ng-click="linkClick(banner)">
+                    <a ng-href="{{!banner.isYouTubeVideo ? banner.link : ''}}" target="{{banner.linktarget}}" ng-click="linkClick(banner, $root.$location.path())">
                         <img ng-src="{{ banner.imageurl }}" alt="">
 
                     </a>

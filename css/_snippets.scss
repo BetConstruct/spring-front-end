@@ -258,6 +258,10 @@ div.draws-contain,
     padding: 10px 15px 10px 20px;
     text-align: right;
   }
+  mark {
+    color: set-color($hero-color);
+    background: $hero-color;
+  }
 }
 #result-search dl dd.active button,
 #result-search dl dd button:hover,
@@ -584,10 +588,11 @@ div.draws-contain,
 }
 // End games page menu
 // Promo table
-.open_blok_news {
+.open_blok_news, .popup_block-news {
   table, table.visible {
+    width: 100% !important;
     margin-top: 50px;
-    border-spacing: 0px 3px;
+    border-spacing: 0 3px;
     border-collapse: separate;
     tr td {
       padding: 12px 20px;
@@ -596,6 +601,9 @@ div.draws-contain,
       text-align: center;
       background: #F1F1F1;
       border: 0;
+      p{
+        text-align: center;
+      }
     }
     tr:nth-child(odd) td {
       background: #E6E6E6;
@@ -1285,39 +1293,50 @@ input[type="password"]:focus ~ .capslock-is-on-j {
     }
     > span {
       width: 30px;
-      height: 30px;
+      height: 22px;
       margin: 0;
+      vertical-align: middle;
       color: rgba($text-palette-1, 0.7);
       background: rgba(desaturate( $skin-palette-11, 5 ), 0.5);
       border-radius: 0;
-      font: 16px/30px icomoon;
-      &:before {
-        @include ltr {
-          content: "\e677";
-        }
-        @include rtl {
-          content: "\e67a";
+      &:not(.slider-amount-btn) {
+        font: 10px/22px icomoon;
+        &:hover {
+          color: rgba($text-palette-1, 1);
+          background: rgba(desaturate( $skin-palette-11, 5 ), 0.8);
         }
       }
-      + span {
+      &:first-child {
         @include ltr {
-          margin: 0 0 0 4px;
+          border-radius: 10px 0 0 10px;
         }
         @include rtl {
-          margin: 0 4px 0 0;
+          border-radius: 0 10px 10px 0;
         }
         &:before {
           @include ltr {
-            content: "\e67a";
+            content: "\eaaa";
           }
           @include rtl {
-            content: "\e677";
+            content: "\eaab";
           }
         }
       }
-      &:hover {
-        color: rgba($text-palette-1, 1);
-        background: rgba(desaturate( $skin-palette-11, 5 ), 0.8);
+      &:last-child {
+        @include ltr {
+          border-radius: 0 10px 10px 0;
+        }
+        @include rtl {
+          border-radius: 10px 0 0 10px;
+        }
+        &:before {
+          @include ltr {
+            content: "\eaab";
+          }
+          @include rtl {
+            content: "\eaaa";
+          }
+        }
       }
     }
   }
@@ -1733,7 +1752,6 @@ input[type="password"]:focus ~ .capslock-is-on-j {
   float: left;
   width: 100%;
   position: relative;
-  z-index: 200;
   color: #1e2639;
   .quickBetButton-j {
     float: left;
@@ -2181,7 +2199,12 @@ input[type="password"]:focus ~ .capslock-is-on-j {
   .print-icon-betslip-v3 {
     position: absolute;
     top: 5px;
-    right: 30px;
+    @include ltr {
+      right: 30px;
+    }
+    @include rtl {
+      left: 30px;
+    }
   }
 }
 .right-betslip-contain {
@@ -2416,6 +2439,10 @@ input[type="password"]:focus ~ .capslock-is-on-j {
           }
         }
       }
+      &.main-skin-color,
+      &.icon-text-color {
+        width: 12.5%;
+      }
       &.main-colors {
         width: 50%;
         margin-right: 12.5%;
@@ -2431,6 +2458,12 @@ input[type="password"]:focus ~ .capslock-is-on-j {
         width: 12.5%;
         margin-right: 12.5%;
       }
+    }
+  }
+  .skin-color {
+    background: $skin-color;
+    &:before {
+      content: "#{$skin-color}";
     }
   }
   .hero-color {
@@ -2460,8 +2493,7 @@ input[type="password"]:focus ~ .capslock-is-on-j {
   .skin-palette-23 {
     background: set-color($skin-palette-10);
     &:before {
-      color: #000000;
-      content: "#FFFFFF";
+      content: "#{set-color($skin-palette-10)}";
     }
   }
   .skin-palette-12 {
@@ -2949,6 +2981,11 @@ rtg-jackpot {
 @include liveScoreBackgrounds("airhockey");
 @include liveScoreBackgrounds("kingofglory");
 @include liveScoreBackgrounds("valorant");
+@include liveScoreBackgrounds("teqball");
+@include liveScoreBackgrounds("squash");
+@include liveScoreBackgrounds("bowls");
+@include liveScoreBackgrounds("politics");
+@include liveScoreBackgrounds("pubg");
 .uploads-table {
   float: left;
   width: 100%;

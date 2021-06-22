@@ -31,7 +31,7 @@ CASINO.controller('liveCasinoMainCtrl', ['$rootScope', '$scope', '$sce', '$locat
      * and assigns to scope's 'games' variable
      */
     function loadGames() {
-        casinoData.getGames(CConfig.liveCasino.categoryId, null, countryCode, 0, 999).then(function (response) {
+        casinoData.getGames({category:CConfig.liveCasino.categoryId, country: countryCode, offset:0, limit: 999}).then(function (response) {
             if (response && response.data && response.data.status !== -1) {
                 prepareGames(response.data.games);
                 showProviderMessage('onOpen');
@@ -233,6 +233,12 @@ CASINO.controller('liveCasinoMainCtrl', ['$rootScope', '$scope', '$sce', '$locat
                 break;
             case 'closeGame':
                 casinoManager.findAndCloseGame($scope, data.gameId);
+                break;
+            case 'togglePlayMode':
+                var gameInfo = Utils.getArrayObjectElementHavingFieldValue($scope.gamesInfo, "externalId", data.gameId);
+                if (gameInfo) {
+                    $scope.togglePlayForReal(gameInfo);
+                }
                 break;
         }
     });
@@ -699,7 +705,7 @@ CASINO.controller('liveCasinoMainCtrl', ['$rootScope', '$scope', '$sce', '$locat
             if (game) {
                 $scope.openGame(game, data.playMode, data.studio);
             } else {
-                casinoData.getGames(null, null, countryCode, null, null, null, null, [data.gameId]).then(function(response) {
+                casinoData.getGames({country: countryCode, id:[data.gameId]}).then(function(response) {
                     if(response && response.data) {
                         $scope.openGame(response.data.games[0]);
                     }
@@ -708,11 +714,16 @@ CASINO.controller('liveCasinoMainCtrl', ['$rootScope', '$scope', '$sce', '$locat
         } else {
             $scope.openGame(data.game, data.playMode, data.studio);
         }
+
+        if (data.provider) {
+            $scope.selectLiveDealerProvider(data.provider);
+        }
     });
 
     $scope.openCasinoGameDetails = function openCasinoGameDetails (game_skin_id) {
         casinoManager.openGameDetailsPopUp(game_skin_id);
     };
+
 
     (function init() {
         loadDealerPages();

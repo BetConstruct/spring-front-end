@@ -2,7 +2,7 @@
   float: left;
   width: 100%;
   position: relative;
-  z-index: 9999;
+  z-index: 9998;
   background: $footer-background;
   .paymen-icons-list {
     background: $footer-payments-line-background;
@@ -114,7 +114,44 @@
   &.right{
     width: 1%;
     white-space: nowrap;
-    text-align: right;
+    @include rtl{
+      text-align: left;
+    }
+    @include ltr{
+      text-align: right;
+    }
+  }
+}
+.age-restriction-block{
+  float: left;
+  margin: 15px 0 18px 0;
+  width:100%;
+  .age-restriction-j {
+    width: 42px;
+    height: 42px;
+    background: rgba(set-color($footer-background), 0.03);
+    box-shadow: 0 0 1px rgba(set-color($footer-background), 0.28) inset;
+    font: 16px/42px $font-f;
+    color: set-color($footer-background);
+    border-radius: 100%;
+    text-align: center;
+    @include ltr {
+      float:right;
+    }
+    @include rtl {
+      float:left;
+    }
+  }
+}
+.age-restriction-message{
+  width: 100%;
+  float: left;
+  white-space: normal;
+  padding: 10px 0 0 0;
+  color: $text-palette-3;
+  font-size: 12px;
+  @include rtl {
+    text-align: left;
   }
 }
 .footer-j {
@@ -126,28 +163,12 @@
     text-decoration: none;
   }
   .back-block-j {
-    float: left;
     width: 100%;
-    font-size: 0;
-    margin: 12px 0 0;
-    @include rtl {
-      text-align: left;
-    }
-    .age-restriction-j {
-      display: inline-block;
-      vertical-align: middle;
-      width: 42px;
-      height: 42px;
-      background: rgba(set-color($footer-background), 0.03);
-      box-shadow: 0 0 1px rgba(set-color($footer-background), 0.28) inset;
-      font: 16px/42px $font-f;
-      color: set-color($footer-background);
-      border-radius: 100%;
-      text-align: center;
-    }
+    display:-webkit-box;
+    display:-ms-flexbox;
+    display:flex;
     button {
-      display: inline-block;
-      vertical-align: middle;
+      width:100%;
       height: 32px;
       padding: 0 18px;
       font: 12px $font-f;
@@ -156,11 +177,22 @@
       color: set-color($hero-color);
       text-transform: uppercase;
       transition: 300ms color, 300ms background, 300ms border;
-      @include ltr {
-        margin: 0 0 0 12px;
+
+      &:last-child {
+        @include ltr {
+          margin-left:10px;
+        }
+        @include rtl {
+          margin-right:10px;
+        }
       }
-      @include rtl {
-        margin: 0 12px 0 0;
+      &:only-child {
+        @include ltr {
+          margin:0;
+        }
+        @include rtl {
+          margin:0;
+        }
       }
       &.back-to-top-hide {
         display: none;
@@ -195,29 +227,39 @@
     }
   }
   .old-version-link-j {
-    font-size: 0;
     float: left;
     width: 100%;
-    @include rtl {
-      text-align: left;
-    }
+    margin-top: 10px;
     a {
-      display: inline-block;
-      vertical-align: top;
-      font: 10px/22px $font-f;
-      height: 22px;
-      margin: 20px 0 0;
+      width:100%;
+      float: left;
+      font: 12px/32px $font-f;
+      height: 32px;
       padding: 0 10px;
       border: 1px solid $brand-color-1;
       color: set-color($footer-background);
       text-transform: uppercase;
+      text-align: center;
       transition: 300ms background, 300ms border, 300ms color;
+      box-sizing: border-box;
+      position:relative;
+      &:before{
+        content: "\e97c";
+        font: 14px/30px icomoon;
+        display: inline-block;
+        vertical-align: top;
+        @include ltr {
+          margin-right: 5px;
+        }
+        @include rtl {
+          margin-left: 5px;
+        }
+      }
       + a {
         margin: 0 0 0 10px;
       }
       &:hover {
         background: $brand-color-1;
-        border-color: $brand-color-1;
         color: set-color($brand-color-1);
       }
       &.flash {
@@ -466,15 +508,7 @@
   }
 }
 
-.age-restriction-message{
-  float: right;
-  width: 100%;
-  white-space: normal;
-  padding: 20px 0 0 0;
-  color: $text-palette-3;
-  font-size: 12px;
-  line-height: 14px;
-}
+
 
 // footer slider start
 

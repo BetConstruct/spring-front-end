@@ -190,7 +190,7 @@ angular.module('app').config(['$compileProvider', '$locationProvider', '$qProvid
 
         // fix language in case it`s not present in the language list
         if (availableLanguages && !availableLanguages[lang]) {
-            lang = defaultLanguage || 'eng';
+            lang = availableLanguages[defaultLanguage] ? defaultLanguage : Object.keys(availableLanguages)[0];
         }
 
         var urlPrefix = "";

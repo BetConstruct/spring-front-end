@@ -1,5 +1,5 @@
 <div class="float-width">
-    <div ng-if="jackpotData" class="jackpot-pools">
+    <div ng-if="jackpotData.length" class="jackpot-pools">
         <a ng-controller="cmsPagesCtrl" ng-init="loadBanners('casino-jackpot-banner', true)" class="jp-banner"
            ng-href="{{bannerObjects['casino-jackpot-banner-iframe'][$root.env.authorized][0].link}}" target="{{bannerObjects['casino-jackpot-banner-iframe'][$root.env.authorized][0].linktarget}}"
            style="background-image: url({{bannerObjects['casino-jackpot-banner-iframe'][0].image}})">

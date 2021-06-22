@@ -1,20 +1,22 @@
+.balance-lightbox-j.loyalty-points-lightbox-j {
+    padding: 0;
+    background: $skin-palette-7;
+    @include scroll($scroll: auto);
+    .promotions-balance-j {
+        width: 310px;
+        float: right;
+        height: 100%;
+        .slide-container-repeat-b {
+            padding: 20px 15px;
+            .slide-casino-new-img-b > a {
+                height: 156px;
+            }
+        }
+    }
+}
 .loyalty-points-j {
     float: left;
-    height: 100%;
-    width: calc(100% - 320px);
-    box-sizing: content-box;
-    @include ltr {
-        margin: 0 0 0 -10px;
-        padding: 0 0 0 10px;
-    }
-    @include rtl {
-        margin: 0 -10px 0 0;
-        padding: 0 0 0 -10px;
-    }
-    @media screen and (max-width: 1260px) {
-        width: 100%;
-    }
-    @include scroll($scroll: auto);
+    width: 100%;
     * {
         box-sizing: border-box;
     }
@@ -322,7 +324,7 @@
         width: 100%;
         background: lighten( desaturate( adjust-hue( $skin-color, 2deg ), 20 ), 10 );
         border-bottom: 1px solid darken( desaturate( adjust-hue( $skin-color, 4deg ), 2 ), 5 );
-        margin: 0 0 7px;
+        margin: 0 0 5px;
         .lp-progress-j {
             float: left;
             width: calc(100% - 40px);
@@ -399,7 +401,6 @@
     .lp-pack-wrap-j {
         float: left;
         width: 100%;
-        position: relative;
         border: 2px solid transparent;
         height: 220px;
         box-shadow: 0 1px 0 darken( desaturate( adjust-hue( $skin-color, 4deg ), 4 ), 5 );
@@ -452,33 +453,6 @@
             border: 1px solid lighten( desaturate( adjust-hue( $text-color, 2deg ), 26 ), 39 );
             transition: border-color 240ms, box-shadow 240ms, color 240ms;
             cursor: pointer;
-        }
-        &:before {
-            content: "";
-            display: block;
-            float: left;
-            width: 100%;
-            height: 16px;
-            position: absolute;
-            top: calc(100% - 2px);
-            left: -2px;
-            border-width: 0 2px;
-            z-index: 40;
-            transition: transform 300ms;
-            transform: scaleY(0);
-        }
-        &:after {
-            content: "";
-            display: block;
-            float: left;
-            width: calc(100% - 26px);
-            height: 2px;
-            position: absolute;
-            bottom: -14px;
-            left: 13px;
-            border-width: 0 2px;
-            z-index: 60;
-            transition: 240ms background;
         }
     }
     .lp-pack-details-j {
@@ -557,6 +531,15 @@
                 }
             }
         }
+    }
+}
+.loyalty-points-banner {
+    float: left;
+    width: 100%;
+    margin-top: 10px;
+    .slide-casino-new-img-b .banner-set-img a > img {
+        width: 100%;
+        max-height: 302px;
     }
 }
 @mixin loaylty-points-coloring-by-pack($lp-background-color, $lp-border-color, $lp-pack-name, $lp-progress-color) {
@@ -670,14 +653,14 @@
                     }
                 }
             }
-            ~ .lp-progress-bar-j {
-                .lp-progress-j {
-                    span {
+        }
+        .lp-progress-bar-j.#{$lp-pack-name} {
+            .lp-progress-j {
+                span {
+                    background: $lp-progress-color;
+                    &:before {
                         background: $lp-progress-color;
-                        &:before {
-                            background: $lp-progress-color;
-                            color: #121623;
-                        }
+                        color: #121623;
                     }
                 }
             }
@@ -782,15 +765,6 @@
                 }
                 &.active {
                     border-color: $lp-border-color;
-                    &:before {
-                        background: $lp-background-color;
-                        border: 2px solid $lp-border-color;
-                        border-width: 0 2px;
-                        transform: scaleY(1);
-                    }
-                    &:after {
-                        background: $lp-border-color;
-                    }
                 }
             }
         }
@@ -829,18 +803,3 @@
 @include loaylty-points-coloring-by-pack(#9E9DA1, #e6e5e5, "Platinum", #D3D0CF);
 @include loaylty-points-coloring-by-pack(#9E9DA1, #e6e5e5, "Platinium", #D3D0CF);
 @include loaylty-points-coloring-by-pack(#0D788F, #0DCCFF, "Diamond", #11A1C2);
-.balance-lightbox-j.loyalty-points-lightbox-j {
-    padding: 0;
-    background: $skin-palette-7;
-    .promotions-balance-j {
-        width: 310px;
-        float: right;
-        height: 100%;
-        .slide-container-repeat-b {
-            padding: 20px 15px;
-            .slide-casino-new-img-b > a {
-                height: 156px;
-            }
-        }
-    }
-}

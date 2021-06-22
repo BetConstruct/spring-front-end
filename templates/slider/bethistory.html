@@ -66,7 +66,7 @@
                             <p class="live-indicator">
                                 <b ng-show="bet.type==='1' && bet.events[0].is_live === '1'">Live </b>
                                 <b ng-if="bet.ew">ew</b>
-                                <b ng-if="bet.super_bet" class="superbet-icon">S</b>
+                                <b ng-if="bet.is_super_bet" class="superbet-icon">S</b>
                             </p>{{bet.date_time|formatDate:'full':null:$root.env.timeFormat}}</li>
                         <li class="history-name-team">
                             <div class="mini-express-b">

@@ -1,7 +1,7 @@
 <div class="express-of-day" ng-controller="expressOfDayCtrl">
-    <div ng-if="!loading && expresses.length"   ng-repeat="col in columns track by $index" ng-show = "notVisibleContainer.columnsCount[$index] !== col.length" class="col-{{columnsLength}}" >
-        <express-bet-item not-visible-container="notVisibleContainer" class="express-bet-item" ng-repeat="express in col track by express.Id" item="express" ng-show="!notVisibleContainer.map[express.Id]"></express-bet-item>
+    <div  ng-repeat="col in columns track by $index" ng-if="!loading && expresses.length && notVisibleContainer.columnsCount[$index] !== col.length" class="col-{{columnsLength}} {{(columnsLength < columns.length && (expresses.length  - notVisibleContainer.count) >= maxColCount)? ('updated-columns-' + (expresses.length  - notVisibleContainer.count)): '' }}" >
+        <express-bet-item not-visible-container="notVisibleContainer" class="express-bet-item" ng-repeat="express in col track by express.Id" item="express" ng-if="!notVisibleContainer.map[express.Id]"></express-bet-item>
     </div>
-    <div class="Info-text-view-market-v3" ng-if="expresses.length === 0 || expresses.length  === notVisibleContainer.count"> <p trans>There are no express of the day</p> </div>
+    <div class="Info-text-view-market-v3 no-market" ng-if="expresses.length === 0 || expresses.length  === notVisibleContainer.count"> <p trans>There are no express of the day</p> </div>
     <vbet-loader class="centered-j" ng-show="loading"></vbet-loader>
 </div>

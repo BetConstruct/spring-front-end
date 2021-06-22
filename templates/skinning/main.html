@@ -1,6 +1,12 @@
 <div ng-controller="skinningCtrl" class="guide">
     <div class="skinning-page">
         <h1>Skinning colors</h1>
+        <section class="main-skin-color">
+            <h3>Skin color</h3>
+            <ul>
+                <li ng-click="copyToClipboard($event)" class="skin-color"><div data-number="24"></div></li>
+            </ul>
+        </section>
         <section>
             <h3>For Adnroid and iOS</h3>
             <ul>
@@ -51,11 +57,10 @@
                 <li ng-click="copyToClipboard($event)" class="superbet-color-2"><div data-number="19"></div></li>
             </ul>
         </section>
-        <section class="superbet-colors">
+        <section class="icon-text-color">
             <h3>Icons and Texts color</h3>
             <ul>
                 <li ng-click="copyToClipboard($event)" class="skin-palette-23"><div data-number="23"></div></li>
-                <li></li>
             </ul>
         </section>
     </div>

@@ -49,10 +49,8 @@
       }
     }
   }
-  &.PGDTLC .wrapper-game-link .game-link-tj:after {
-    content: attr(data-new);
-  }
 }
+
 .wrapper-game-link {
   float: left;
   width: 100%;
@@ -86,8 +84,8 @@
       background: -webkit-linear-gradient(45deg,  rgba(0,0,0,0.15) 0%, rgba(0,0,0,0) 100%);
       background: linear-gradient(45deg, rgba(0,0,0,0.15) 0%, rgba(0,0,0,0) 100%);
     }
-    &:after {
-      content: none;
+    &:not([data-new=""]):after {
+      content: attr(data-new);
       position: absolute;
       top: 33px;
       width: 160px;

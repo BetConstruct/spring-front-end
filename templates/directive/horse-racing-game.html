@@ -12,9 +12,9 @@
     <span title="Race Type" trans="attr-only">{{openGame.info.race.courseType|translate}} </span>
 </div>
 <div class="menu-swithcer">
-    <a trans ng-click="selectTab('winner')" ng-class="{'active': selectedTab === 'winner'}">WIN OR E/W</a>
-    <a trans ng-click="selectTab('forecast')" ng-class="{'active': selectedTab === 'forecast'}" ng-if="openGame.game_info.IsForecastAvailable && openGame.info.race.racesWithEvents.length">FORECAST</a>
-    <a trans ng-click="selectTab('tricast')" ng-class="{'active': selectedTab === 'tricast'}" ng-if="openGame.game_info.IsTricastAvailable && openGame.info.race.racesWithEvents.length">TRICAST</a>
+    <a trans ng-click="selectTab('winner')" ng-class="{'active': selectedTab === 'winner'}">Win or E/W</a>
+    <a trans ng-click="selectTab('forecast')" ng-class="{'active': selectedTab === 'forecast'}" ng-if="openGame.game_info.IsForecastAvailable && openGame.info.race.racesWithEvents.length">Forecast</a>
+    <a trans ng-click="selectTab('tricast')" ng-class="{'active': selectedTab === 'tricast'}" ng-if="openGame.game_info.IsTricastAvailable && openGame.info.race.racesWithEvents.length">Tricast</a>
 </div>
 
 <div class="horse-market-contain" ng-if="selectedTab !== 'winner' && !loading">

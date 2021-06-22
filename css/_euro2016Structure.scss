@@ -602,34 +602,68 @@
 .express-of-day {
   float: left;
   width: 100%;
-  > div:not(.md-progress-circular) {
-    width: 100%;
-    padding: 4px;
-    box-sizing: border-box;
-    @include ltr {
-      float: left;
-    }
-    @include rtl {
-      float: right;
-    }
-    &.col-2 {
-      width: 50%;
-    }
-    &.col-3 {
-      width: 33.333%;
-    }
-    &.col-4 {
-      width: 25%;
+  > div {
+    &:not(.md-progress-circular):not(.no-market) {
+      width: 100%;
+      padding: 4px;
+      box-sizing: border-box;
+      max-width: 650px;
+      @include ltr {
+        float: left;
+      }
+      @include rtl {
+        float: right;
+      }
+
+      &.col-2 {
+        width: 50%;
+      }
+
+      &.col-3 {
+        width: 33.333%;
+      }
+
+      &.col-4 {
+        width: 25%;
+      }
+
+      &.updated-columns-3 {
+        width: 66.667%;
+
+        .express-bet-item:not(:only-child) {
+          width: calc(50% - 4px);
+          @include rtl {
+            float: right;
+          }
+
+          + .express-bet-item {
+            padding-top: 0;
+            @include ltr {
+              float: right;
+            }
+            @include rtl {
+              float: left;
+            }
+          }
+        }
+
+        &:first-child {
+          max-width: 1300px;
+        }
+
+        + .updated-columns-3 {
+          width: 33.333%;
+        }
+      }
     }
   }
 }
 .express-of-the-day-item {
   float: left;
   width: 100%;
-  padding: 8px;
+  padding: 8px 0;
   background: $c16-sp-10;
   border-radius: 2px;
-  box-sizing: border-box;
 }
 .express-bet-item {
   float: left;
@@ -644,12 +678,6 @@
 }
 .express-of-the-day-time {
   color: $c16-tp-3;
-  @include ltr {
-    float: left;
-  }
-  @include rtl {
-    float: right;
-  }
 }
 .express-of-the-day-ul {
   float: left;
@@ -658,41 +686,52 @@
 .express-off-the-day-event-item {
   float: left;
   width: 100%;
-  padding: 10px 0 8px;
+  padding: 10px 8px 8px;
+  box-sizing: border-box;
   border-top: 1px solid rgba(set-color($c16-sp-9), 0.3);
+  transition: background 240ms;
+  &:hover {
+    background: $c16-sp-9;
+  }
+  .bet-price-view-b-v3 {
+    .p-v.up-0:before, .p-v.up-1:before, .p-v.down0:before, .p-v.down-1:before {
+      line-height: 13px;
+    }
+  }
 }
-.express-of-the-day-heading {
+.express-of-the-day-heading-bonus {
   float: left;
   width: 100%;
   margin-bottom: 6px;
-  color: $c16-tp-3;
-  letter-spacing: 0.45px;
-  text-transform: capitalize;
-  font: 600 14px/16px $font-f;
-}
-.express-of-the-day-date-bonus {
-  float: left;
-  width: 100%;
-  margin-bottom: 8px;
+  padding: 0 8px;
+  box-sizing: border-box;
   font: 12px/14px $font-f;
 }
-.express-of-the-day-date {
+.express-of-the-day-heading {
   color: $c16-tp-3;
-  @include ltr {
-    float: left;
-  }
-  @include rtl {
-    float: right;
-  }
+  letter-spacing: 0.45px;
+  font: 600 14px/26px $font-f;
 }
 .express-of-the-day-bonus {
-  color: $brand-color-2;
-  @include ltr {
-    float: right;
-  }
-  @include rtl {
-    float: left;
-  }
+  height: 26px;
+  padding: 6px 10px;
+  box-sizing: border-box;
+  color: set-color($hero-color);
+  background: $hero-color;
+}
+.date-count-wrap {
+  margin: 5px 0 10px 0;
+  padding: 0 8px;
+  box-sizing: border-box;
+}
+.express-of-the-day-bet-count {
+  font-size: 12px;
+  font-weight: bold;
+  color: $brand-color-1;
+}
+.express-of-the-day-date {
+  color: $c16-tp-6;
+  box-sizing: border-box;
 }
 .express-of-the-day-wrap {
   .single-event-info-view-v3 > ul > li:not(:first-child) {
@@ -742,5 +781,38 @@
     left: -9999px;
   }
 }
-
+.express-of-the-day-load {
+  float: left;
+  width: 100%;
+  height: 36px;
+  margin-top: 8px;
+  padding: 0 8px;
+  box-sizing: border-box;
+  > button {
+    float: left;
+    width: 100%;
+    height: 100%;
+    padding: 0 10px;
+    color: $c16-tp-5;
+    background: rgba($c16-sp-7, 0.5);
+    border: none;
+    position: relative;
+    font-size: 14px;
+    &.closed:before {
+      content: "\eab5";
+    }
+    &:before {
+      content: "\eab4";
+      display: inline-block;
+      vertical-align: bottom;
+      font: 16px icomoon;
+      @include ltr{
+        padding-right: 5px;
+      }
+      @include rtl{
+        padding-left: 5px;
+      }
+    }
+  }
+}
 /* End Express off the day cards styles */

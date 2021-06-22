@@ -1,0 +1,34 @@
+<div class="promotions-section-j" ng-hide="!recentNewsList || recentNewsList.length === 0">
+    <h1 trans>Best Promotions</h1>
+    <div class="nav-landp-j" no-animate>
+        <div class="mini-slider-new">
+            <div class="contain-new-slider">
+                <ul>
+                    <div class="arrow-slider-left" ng-click="slideLeft()" ng-show="selectedGroupId > 0"></div>
+                    <div class="arrow-slider-right" ng-click="slideRight()"
+                         ng-show="selectedGroupId < recentNewsList.length-1"></div>
+                    <div ng-repeat="group in recentNewsList track by $index"
+                         ng-init="pickFirstGroup(recentNewsList[0])"
+                         ng-show="selectedGroupId == group.id">
+                        <li ng-repeat="news in group.news"
+                            ng-class="{'active-news': (news.id == selectedNews.id)}">
+                            <p ng-hide="$root.conf.hidePromotionNewsDate" title="{{news.title}}">{{news.title}}}</p>
+                            <span  ng-show="showDates">{{ news.date | formatDate:'full' }} </span>
+                            <div class="picture-container-s">
+                                <!--IMG-->
+                                <a ng-click="showNews(news);$event.stopPropagation();">
+                                    <img ng-src="{{news.thumbnail  || news.thumbnail_images.full.url}}" alt=""></a>
+                                <div class="read-more-link"><a
+                                        ng-click="showNews(news,group.id);$event.stopPropagation();" trans>Read More</a>
+                                </div>
+                            </div>
+                        </li>
+                    </div>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <ng-include src="::'templates/directive/promotions/popup.html'|fixPath"></ng-include>
+
+</div>

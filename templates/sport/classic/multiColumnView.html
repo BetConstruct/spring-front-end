@@ -4,7 +4,7 @@
             <colgroup span="5"></colgroup>
             <tr>
                 <td class="aic-team-names-wrapper"></td>
-                <td class="aic-winner-cell" ng-hide="!multiColumn.prematchGamesEvents.P1XP2  && !multiColumn.prematchGamesEvents.Handicap && !multiColumn.prematchGamesEvents.OverUnder && !multiColumn.liveGamesEvents.P1XP2  && !multiColumn.liveGamesEvents.Handicap && !multiColumn.liveGamesEvents.OverUnder">
+                <td class="aic-winner-cell" ng-class="{'has-x-event': multiColumn.prematchGamesEvents.hasXEvent || multiColumn.liveGamesEvents.hasXEvent}" ng-hide="!multiColumn.prematchGamesEvents.P1XP2  && !multiColumn.prematchGamesEvents.Handicap && !multiColumn.prematchGamesEvents.OverUnder && !multiColumn.liveGamesEvents.P1XP2  && !multiColumn.liveGamesEvents.Handicap && !multiColumn.liveGamesEvents.OverUnder">
                     <p ng-show="multiColumn.prematchGamesEvents.P1XP2 || multiColumn.liveGamesEvents.P1XP2" trans>Winner</p>
                 </td>
                 <td class="aic-handicup-cell" ng-hide="!multiColumn.prematchGamesEvents.P1XP2  && !multiColumn.prematchGamesEvents.Handicap && !multiColumn.prematchGamesEvents.OverUnder && !multiColumn.liveGamesEvents.P1XP2  && !multiColumn.liveGamesEvents.Handicap && !multiColumn.liveGamesEvents.OverUnder">
@@ -24,7 +24,7 @@
                 <td class="aic-winner-cell" ng-hide="!multiColumn.prematchGamesEvents.P1XP2  && !multiColumn.prematchGamesEvents.Handicap && !multiColumn.prematchGamesEvents.OverUnder && !multiColumn.liveGamesEvents.P1XP2  && !multiColumn.liveGamesEvents.Handicap && !multiColumn.liveGamesEvents.OverUnder">
                     <p ng-show="multiColumn.prematchGamesEvents.P1XP2 || multiColumn.liveGamesEvents.P1XP2">1</p>
                 </td>
-                <td class="aic-winner-cell" ng-hide="!multiColumn.prematchGamesEvents.P1XP2  && !multiColumn.prematchGamesEvents.Handicap && !multiColumn.prematchGamesEvents.OverUnder && !multiColumn.liveGamesEvents.P1XP2  && !multiColumn.liveGamesEvents.Handicap && !multiColumn.liveGamesEvents.OverUnder">
+                <td class="aic-winner-cell" ng-if="multiColumn.prematchGamesEvents.hasXEvent || multiColumn.liveGamesEvents.hasXEvent" ng-hide="!multiColumn.prematchGamesEvents.P1XP2  && !multiColumn.prematchGamesEvents.Handicap && !multiColumn.prematchGamesEvents.OverUnder && !multiColumn.liveGamesEvents.P1XP2  && !multiColumn.liveGamesEvents.Handicap && !multiColumn.liveGamesEvents.OverUnder">
                     <p ng-show="multiColumn.prematchGamesEvents.P1XP2 || multiColumn.liveGamesEvents.P1XP2">X</p>
                 </td>
                 <td class="aic-winner-cell last" ng-hide="!multiColumn.prematchGamesEvents.P1XP2  && !multiColumn.prematchGamesEvents.Handicap && !multiColumn.prematchGamesEvents.OverUnder && !multiColumn.liveGamesEvents.P1XP2  && !multiColumn.liveGamesEvents.Handicap && !multiColumn.liveGamesEvents.OverUnder">
@@ -64,7 +64,12 @@
                      ng-class="{'closed': competitionTimeGroupe[sportIndex + '-' + competitionIndex + '-' + groupIndex]}">
                     <div class="time-title-view-v3">
                         <p ng-show="groupGames.date || groupGames.label">{{groupGames.label ? '• ' + (groupGames.label|translate) :
-                            (groupGames.date|formatDate:'unixDate':null:$root.env.timeFormat)}}</p>
+                            (groupGames.date|formatDate:'unixDate':null:$root.env.timeFormat)}}
+                        </p>
+                        <div class="boosted-bets-competition-info" ng-if="boostedBets.selected">
+                           <div class="flag-icon flag-{{groupGames.games[0].region.alias | removeUselessSymbolsByRegexp: '[,\' ]+': 'g': 'true'}}"></div>
+                            {{ prematchGames.competition.name}}
+                        </div>
                         <div class="arrow-view-v3"></div>
 
                     </div>
@@ -147,7 +152,7 @@
                                 <span ng-show="!game.is_blocked" class="{{game.filteredEvents.P1XP2.P1.price_change == null? '' : ({true: 'up-', false: 'down'}[game.filteredEvents.P1XP2.P1.price_change > 0] + (game.filteredEvents.P1XP2.P1.price_change % 2)) }}">{{game.filteredEvents.P1XP2.P1.price|oddConvert:env.oddFormat:null}}</span>
                             </div>
                         </td>
-                        <td class="aic-winner-cell" ng-hide="!multiColumn.prematchGamesEvents.P1XP2  && !multiColumn.prematchGamesEvents.Handicap && !multiColumn.prematchGamesEvents.OverUnder && !multiColumn.liveGamesEvents.P1XP2  && !multiColumn.liveGamesEvents.Handicap && !multiColumn.liveGamesEvents.OverUnder">
+                        <td class="aic-winner-cell" ng-if="multiColumn.prematchGamesEvents.hasXEvent || multiColumn.liveGamesEvents.hasXEvent" ng-hide="!multiColumn.prematchGamesEvents.P1XP2  && !multiColumn.prematchGamesEvents.Handicap && !multiColumn.prematchGamesEvents.OverUnder && !multiColumn.liveGamesEvents.P1XP2  && !multiColumn.liveGamesEvents.Handicap && !multiColumn.liveGamesEvents.OverUnder">
                             <div ng-show="game.filteredEvents.P1XP2.X.price"
                                  ng-click="bet(game.filteredEvents.P1XP2.X, game.filteredEvents.P1XP2.market, game);$event.stopPropagation()"
                                  class="aic-odd-container"

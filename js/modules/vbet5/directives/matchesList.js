@@ -209,6 +209,8 @@ VBET5.directive('matchesList', ['$timeout', '$q', 'ConnectionService', '$filter'
                         'market': {'type': 'P1XP2'}
                     }
                 };
+                Utils.addPrematchExpressId(request);
+
                 if (scope.competitionId) {
                     request.where.competition = {'id': scope.competitionId};
                 }

@@ -24,6 +24,11 @@
       overflow: visible;
       > div {
         height: auto;
+        &[style="height: 209px;"] {
+          @media screen and (max-width: 1260px) {
+            height: 126px !important;
+          }
+        }
       }
     }
     @for $i from 1 through 10 {
@@ -1068,7 +1073,7 @@
       > p {
         padding: 0 4px;
         box-sizing: border-box;
-        color: $text-palette-4;
+        color: $text-palette-3;
         font: 12px/14px $font-f;
         text-transform: uppercase;
         word-break: break-word;
@@ -1099,18 +1104,8 @@
         }
       }
       &:hover, &.active {
-        > p {
-          color: $text-palette-3;
-          @if $white-skin==true {
-            color: set-color($hero-color);
-          }
-        }
-        .games-type-icon {
-          color: $text-palette-1;
-          @if $white-skin==true {
-            color: set-color($hero-color);
-          }
-        }
+        > p,
+        .games-type-icon,
         .block-games-search > i {
           color: $text-palette-1;
           @if $white-skin==true {
@@ -1184,7 +1179,7 @@
   padding: 6px;
   box-sizing: border-box;
   position: relative;
-  color: $text-palette-4;
+  color: $text-palette-3;
   transition: color 250ms, border-color 250ms;
   @if $white-skin==true {
     color: rgba(set-color($hero-color),0.7);
@@ -1255,7 +1250,7 @@
       @include placeholder {
         color: $text-palette-3;
       }
-      &:focus {
+      &:focus, &.pin-search-input {
         width: 210px;
         background: $skin-palette-6;
         opacity: 1;
@@ -1286,11 +1281,12 @@
       width: 36px;
       height: 36px;
       top: 0;
-      color: $text-palette-4;
+      color: $text-palette-3;
       pointer-events: none;
       text-align: center;
       font: 16px/36px icomoon;
       z-index: 30;
+      transition: color 240ms;
       @if $white-skin==true {
         color: rgba(set-color($hero-color),0.7);
       }
@@ -1398,6 +1394,9 @@
             color: darken( saturate( $brand-color-2, 10 ), 1 );
           }
         }
+      }
+      &:first-child{
+        overflow: hidden;
       }
     }
     & + ul {
@@ -1521,10 +1520,10 @@
     padding: 6px;
     text-decoration: none;
     box-sizing: border-box;
-    color: $text-palette-4;
+    color: $text-palette-3;
     font: 12px/14px $font-f;
     text-transform: uppercase;
-    transition: box-shadow 250ms;
+    transition: color 240ms, box-shadow 240ms;
     @include ltr {
       float: left;
     }
@@ -1532,10 +1531,8 @@
       float: right;
     }
     &:hover, &.active {
-      box-shadow: 0 0 0 1px $skin-palette-6;
-      @if($white-skin == true) {
-        box-shadow: 0 0 0 1px #000000;
-      }
+      color: $text-palette-1;
+      box-shadow: 0 0 0 1px $hero-color;
     }
     &:first-child.active {
       pointer-events: none;
@@ -1556,7 +1553,7 @@
   > a {
     display: block;
     width: 16.6666667%;
-    height: 152px;
+    padding-top: 11.7%;
     transition: border 240ms;
     border: 1px solid $skin-palette-4;
     box-sizing: border-box;
@@ -1564,9 +1561,6 @@
     position: relative;
     animation: games-slider 250ms ease-in-out;
     background: $skin-palette-9;
-    @media screen and (max-width: 1260px) {
-      height: 114px;
-    }
     @if $white-skin == true {
       background: #505767;
     }
@@ -1578,6 +1572,9 @@
       transform: translate3d(0,0,0)
     }
     > img {
+      position: absolute;
+      top: 0;
+      left: 0;
       display: block;
       width: 100%;
       height: 100%;
@@ -1617,10 +1614,16 @@
       }
     }
   }
+  &.hide-games a > * {
+    display: none;
+  }
 }
 .ctournament-containing-games .all-games-container > a {
   width: 20%;
-  max-height: 140px;
+}
+.casino-all-games-block {
+  float: left;
+  width: 100%;
 }
 .all-casino-games-list-content {
   float: left;
@@ -1712,7 +1715,7 @@
   width: 18px;
   height: 18px;
   position: absolute;
-  top: 6px;
+  top: 8px;
   font: normal 18px/20px icomoon;
   color: $text-palette-3;;
   z-index: 100;
@@ -1824,13 +1827,16 @@
 .icon-PopularGames:before {
   content: "\e904";
 }
+.icon-InstantWin:before {
+  content: "\eaa9";
+}
 
 .icon-CasualGames:before {
   content: "\e970";
 }
 
 .icon-LotteryGames:before {
-  content: "\77";
+  content: "\eab9";
 }
 
 .icon-VideoBingo:before {
@@ -1875,7 +1881,6 @@
 }
 [class*="icon-Valentine's"]:before{
   content: "\ea17";
-  color: #bd3b32;
 }
 [class*="icon-Drops&Wins"]:before {
   content: "\ea60";
@@ -1915,7 +1920,6 @@
 .icon-Cards:before{
   content: '\ea7b';
 }
-
 .icon-BrandedGames:before{
   content: '\ea76';
 }
@@ -1940,7 +1944,7 @@
 .icon-FantasySport:before{
   content: '\ea92';
 }
-icon-AnimalSlots:before{
+.icon-AnimalSlots:before{
   content: '\ea90';
 }
 .icon-3lines:before{
@@ -1984,6 +1988,36 @@ icon-AnimalSlots:before{
 }
 .icon-AgeoftheGods:before{
   content: '\ea9a';
+}
+.icon-CashDrop:before{
+  content: '\eaa3';
+}
+.icon-AchievementsSlots:before{
+  content: '\eaa4';
+}
+.icon-Arcadegames:before{
+  content: '\eaa5';
+}
+.icon-MustDropJackpots:before{
+  content: "\eaa8";
+}
+.icon-FireBlazeJackpots:before{
+  content: "\eaa7";
+}
+.icon-JackpotMania:before{
+  content: "\eaa6";
+}
+.icon-ReelofFortune:before{
+  content: '\eaac'
+}
+.icon-EURO2020SLOTS:before{
+  content: '\eab7';
+}
+.icon-BINGO:before{
+  content: '\eaba';
+}
+.icon-BettingGame:before{
+  content: "\eabb";
 }
 .iframe-tournament-sidebar {
   height: calc(100% - 110px);
@@ -2670,17 +2704,9 @@ icon-AnimalSlots:before{
   > li {
     display: table-cell;
     vertical-align: middle;
+    text-align: center;
     padding: 0 2px;
     box-sizing: border-box;
-    > h3 {
-      float: left;
-      width: 100%;
-      margin-bottom: 6px;
-      letter-spacing: 1.6px;
-      color: $brand-color-2;
-      text-transform: uppercase;
-      font: 500 16px/18px $font-f;
-    }
     .amount-animation-container {
       height: 28px;
       font: bold 24px/28px $font-f;
@@ -2700,6 +2726,15 @@ icon-AnimalSlots:before{
       }
     }
   }
+}
+.new-jackpot-title {
+  float: left;
+  width: 100%;
+  margin-bottom: 6px;
+  letter-spacing: 1.6px;
+  color: $brand-color-2;
+  text-transform: uppercase;
+  font: 500 16px/18px $font-f;
 }
 .new-jackpot-block-games {
   float: left;
@@ -2721,6 +2756,7 @@ icon-AnimalSlots:before{
 .new-jackpot-games {
   display: table-cell;
   vertical-align: middle;
+  width: 700px;
   position: relative;
   white-space: nowrap;
   overflow: hidden;
@@ -2805,7 +2841,6 @@ icon-AnimalSlots:before{
   display: table-cell;
   vertical-align: middle;
   text-align: center;
-  width: 1%;
   height: 100%;
   padding: 12px 15px;
   > i {
@@ -2822,6 +2857,7 @@ icon-AnimalSlots:before{
     display: block;
     width: 117px;
     height: 36px;
+    margin: auto;
     font: 14px/36px $font-f;
     color: #ffffff;
     opacity: 0.8;
@@ -2866,7 +2902,11 @@ icon-AnimalSlots:before{
   &:hover {
     .games-type-icon{
       transform: scale(1.4);
-      color: $skin-palette-1;
+    }
+  }
+  &:hover,
+  &.active {
+    .games-type-icon {
       text-shadow: 0 0 10px $hero-color;
     }
   }
@@ -2906,16 +2946,8 @@ icon-AnimalSlots:before{
 
 .single-game-contain-wp {
   float: left;
-  width: 320px;
-  height: 320px;
-  box-sizing: border-box;
-  position: relative;
-  @include ltr {
-    margin-left: 10px;
-  }
-  @include rtl {
-    margin-right: 10px;
-  }
+  width: 100%;
+  height: 100%;
 }
 .new-casino-no-games-text {
   float: left;
@@ -2928,47 +2960,23 @@ icon-AnimalSlots:before{
     color: $text-palette-4;
   }
 }
-.single-game-screen-wrapper {
+.winners-banner-screen-wrapper {
   float: left;
   width: 100%;
-  height: 320px;
+  height: 100%;
   box-sizing: border-box;
   position: relative;
+  a {
+    float: left;
+    width: 100%;
+    height: 100%;
+  }
+  p {
+    background: no-repeat 50% / cover;
+  }
 }
 .more-casino-games-load-b {
-  float: left;
-  width: 100%;
-  margin: 0;
-  box-sizing: border-box;
-  text-align: center;
-  padding: 0 0 0 10px;
-  transform: translate3d(0,0,0);
-  > p {
-    font: 14px/38px $font-f;
-    font-weight: bold;
-    color: $text-palette-6;
-    transition: color 260ms, border 260ms;
-    border: 1px solid $skin-palette-6;
-    height: 37px;
-    text-transform: uppercase;
-    &:hover {
-      color: darken( desaturate( $brand-color-2, 1 ), 7 );
-      border-color: $skin-palette-5;
-    }
-    > span {
-      display: inline-block;
-      padding: 0 20px 0 0;
-      text-align: center;
-      position: relative;
-      &:before {
-        font: 16px/18px icomoon;
-        position: absolute;
-        right: 0;
-        top: 10px;
-        content: "\e670";
-      }
-    }
-  }
+  display: none;
 }
 .all-casino-games-list-box,
 .all-casino-games-list-box > div{
@@ -2994,6 +3002,9 @@ icon-AnimalSlots:before{
   color: $text-palette-6;
   padding: 0 10px;
   box-sizing: border-box;
+  @include rtl {
+    text-align: right;
+  }
 }
 .slider-games-box.visible-games-count-2{
   .slider-games a{
@@ -3051,12 +3062,12 @@ icon-AnimalSlots:before{
   }
 }
 
-// homepage Start
+// Homepage Start
 
 .homepage {
   .slider-games > a {
-    width: calc((100% / 5) - 10px);
-    &:nth-child(6n) {
+    width: calc((100% / 5) - 8px);
+    &:nth-child(5n + 6) {
       @include ltr {
         margin-left: 0;
       }
@@ -3068,6 +3079,174 @@ icon-AnimalSlots:before{
       margin-top: 10px;
     }
   }
+  .slider-games-bg {
+    padding-top: 70.46%;
+    > img {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+    }
+  }
 }
 
-// homepage End
+// Homepage End
+
+// Live casino banner jackpot Start
+
+.hp-slide-17 {
+  .new-jackpot-info {
+    position: absolute;
+    bottom: 30px;
+    left: 0;
+    width: 50%;
+    pointer-events: none;
+    .amount-animation-container {
+      font-size: 17px;
+      > span {
+        width: 16px;
+        &:not(.with-comma):not(.with-point){
+          width: 10px;
+        }
+      }
+      > sup {
+        font-size: 10px;
+        line-height: 16px;
+      }
+    }
+  }
+}
+.jackpot-live-casino-img{
+  width: auto;
+  height: 36px;
+  object-fit: cover;
+  display: block;
+  margin: 0 auto 14px auto;
+}
+.jackpot-live-casino-amount {
+  display: inline-block;
+  vertical-align: middle;
+}
+
+
+
+// Live casino banner jackpot End
+
+//Live casino, casino games labels START
+@mixin coloring-badge-menu ($badge-type, $badge-color){
+  .games-providers, .live-casino-providers {
+    .#{$badge-type} {
+      min-width:60px;
+      text-align: center;
+      position: relative;
+      &:not([data-badge=""]):after {
+        content: attr(data-badge);
+        position: absolute;
+        width: 60px;
+        color: $badge-color;
+        background-color: darken(rgba($skin-color, 0.5), 10);
+        text-transform: capitalize;
+        text-align: center;
+        border-radius: 2px;
+        box-sizing: border-box;
+        @include ltr {
+          right: -7px;
+        }
+        @include rtl {
+          left: -7px;
+        }
+      }
+      &:before{
+        content: '';
+        position: absolute;
+        width: 62px;
+        border-radius: 2px;
+        @include ltr {
+          right: -7px;
+        }
+        @include rtl {
+          left: -7px;
+        }
+      }
+    }
+  }
+  .live-casino-providers{
+    .#{$badge-type}{
+      &:not([data-badge=""]):after {
+        font: 12px/16px $font-f;
+        top: -10px;
+        height: 16px;
+      }
+      &:before{
+        top: -10px;
+        background: $skin-palette-10;
+        height: 18px;
+      }
+    }
+  }
+  .games-providers{
+    .#{$badge-type}{
+      &:not([data-badge=""]):after {
+        font: 12px/16px $font-f;
+        top: -11px;
+        height: 16px;
+      }
+      &:before{
+        background: $skin-palette-11;
+        top: -13px;
+        height: 20px;
+      }
+    }
+  }
+}
+
+@mixin coloring-badge-types ($badge-type, $badge-color){
+
+    .#{$badge-type}{
+      position:relative;
+      &:not([data-badge=""]):after{
+        content: attr(data-badge);
+        width: 120px;
+        height: 70px;
+        position: absolute;
+        text-transform: uppercase;
+        top: -20px;
+        line-height: 120px;
+        text-align: center;
+        background:  $badge-color;
+        font-weight: $bold-text;
+        color: set-color($skin-palette-11);
+        box-shadow: -1px 6px 20px 0 rgba(0, 0, 0, 0.85);
+        font-size:12px;
+        @include ltr {
+          left: -45px;
+          transform: rotate(-45deg);
+        }
+        @include rtl {
+          right: -45px;
+          transform: rotate(45deg);
+        }
+
+      }
+    }
+}
+
+
+
+@include coloring-badge-types (badge-new, #a81f67);
+@include coloring-badge-types (badge-jackpot, #109121);
+@include coloring-badge-types (badge-promo, #df6a39);
+@include coloring-badge-types (badge-top, #e9044a);
+@include coloring-badge-types (badge-exclusive, #0d8e8f);
+
+@include coloring-badge-menu  (badge-menu-new, #a81f67);
+@include coloring-badge-menu  (badge-menu-jackpot, #109121);
+@include coloring-badge-menu  (badge-menu-promo, #df6a39);
+@include coloring-badge-menu  (badge-menu-top, #e9044a);
+@include coloring-badge-menu  (badge-menu-exclusive, #0d8e8f);
+
+//Live casino, casino games labels END
+
+
+

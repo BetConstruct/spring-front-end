@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14">
+    <defs>
+        <linearGradient id="mptakito2a" x1="50%" x2="50%" y1="0%" y2="100%">
+            <stop offset="0%" stop-color="#FE8500"/>
+            <stop offset="100%" stop-color="#FFC500"/>
+        </linearGradient>
+    </defs>
+    <g fill="none" fill-rule="evenodd">
+        <g>
+            <g>
+                <path fill="#FFF" fill-opacity="0" d="M0 0H14V14H0z" transform="translate(-128 -256) translate(128 256)"/>
+                <g fill="url(#mptakito2a)" stroke="#FFF" stroke-width=".7" transform="translate(-128 -256) translate(128 256) translate(4 1)">
+                    <path d="M5.374-1.684L4.06 4.688h2.27L.626 13.683 1.94 7.31H-.33l5.705-8.994z"/>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

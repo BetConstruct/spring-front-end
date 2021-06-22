@@ -153,13 +153,17 @@ angular.module('vbet5').service('RoutesValidity', ['$rootScope', '$location', '$
             path: "#/blast",
             config: "blastEnabled"
         },
-        "covid-19": {
-            path: "#/covid-19",
-            config: "covid19Enabled"
-        },
         "expressofday": {
             path: "#/expressofday"
+        },
+        "sport-tournaments": {
+            path: "#/sport-tournaments",
+            config: "enableSportsbookTournaments"
+        },
+        "euro-2020": {
+            path: "#/euro-2020"
         }
+
     };
 
     RoutesValidity.makeValid = function makeValid(path) {
@@ -220,6 +224,8 @@ angular.module('vbet5').service('RoutesValidity', ['$rootScope', '$location', '$
                 if (item.enabledConfig !== undefined) {
                     if (item.enabledConfig === "dashboardEnabled") {
                         config = Config.main.dashboard.enabled;
+                    }else if(item.enabledConfig === "enableSportsbookTournaments"){
+                        config = Config.main.sportTournaments.enabled;
                     } else {
                         config = Config.main[item.enabledConfig];
                     }

@@ -19,7 +19,7 @@
                     <h5 class="id-num">
                         <span trans>ID</span>:
                         <span>{{profile.unique_id}}</span>
-                        <i class="profile-id-copy" ng-click="copyIdToClipboard()" title="Copy" trans></i>
+                        <i class="profile-id-copy" ng-class="{'profile-id-copied':copyIdState}" ng-click="$event.stopPropagation(); !copyIdState && copyIdToClipboard(); " title="{{(copyIdState ? 'Copied successful' :'Copy')|translate}}"></i>
                     </h5>
                     <h6 ng-if="(profile.is_ekeng_verified === undefined && profile.is_verified && $root.conf.enableAccountVerification) || (profile.is_verified && profile.is_ekeng_verified)" class="account-verify">
                         <i class="verified"></i> <span trans>Account Verified</span>
@@ -53,7 +53,7 @@
                                 ng-class="{'active': env.sliderContent === 'settings' && $root.env.mixedSettingsPage==='verifyaccount'}"
                             >
                                 <i class="not-verified"></i>
-                                <span trans>Casino Not Verified</span>
+                                <span ng-bind="(profile.is_ekeng_verified === undefined ? 'Account Not Verified' : 'Casino Not Verified')|translate"></span>
                             </li>
                             <li ng-click="toggleSliderTab('settings', 'verifyaccount'); headerVersion2Icons.profileToggled = false; $event.stopPropagation()"
                                 prevent-fast-click="1.5"
@@ -82,7 +82,7 @@
                                 <b ng-bind="profile.unread_count" ng-show="profile.unread_count"></b>
                             </li>
                             <li ng-show="conf.enableBonuses"
-                                ng-click="toggleSliderTab('bonuses'); headerVersion2Icons.profileToggled = false; $event.stopPropagation()"
+                                ng-click="toggleSliderTab('promotionalBonuses'); headerVersion2Icons.profileToggled = false; $event.stopPropagation()"
                                 prevent-fast-click="1.5"
                                 ng-class="{'active': env.sliderContent === 'bonuses'}"
                             >
@@ -94,7 +94,7 @@
                                     {{profile.calculatedBonus}} {{profile.currency_name|currency}}
                                 </b>
                             </li>
-                            <li ng-show="conf.promotionalBonuses.enable && ($root.profile.is_bonus_allowed !== false) && (!conf.hideBonusSectionIfNoBonus || (conf.hideBonusSectionIfNoBonus && $root.allBonusesCount.sportsbook + $root.allBonusesCount.casino > 0))"
+                            <li ng-show="conf.promotionalBonuses.enable && ($root.profile.is_bonus_allowed !== false) && (!conf.hideBonusSectionIfNoBonus || (conf.hideBonusSectionIfNoBonus && $root.allBonusesCount.sportsbook + $root.allBonusesCount.casino + $root.allBonusesCount.freeSpins  > 0))"
                                 ng-click="toggleSliderTab('promotionalBonuses'); headerVersion2Icons.profileToggled = false; $event.stopPropagation()"
                                 prevent-fast-click="1.5"
                                 ng-class="{'active': env.sliderContent === 'promotionalBonuses'}"

@@ -120,11 +120,11 @@
                                                             <span ng-bind="game.info.current_game_state|convertSetName:sport.alias|translate"></span>
                                                             <span trans="attr-only" title="Game time"  ng-hide="game.info.current_game_state == 'notstarted' && game.info.current_game_time == 0"
                                                             ng-bind="game.info.current_game_time"></span>
-                                                            <i class="blocked-icon-v3" title="{{'Blocked'|translate}}" ng-show="(!(game.markets_count) || game.is_blocked)"></i>
                                                         </p>
                                                         <div class="game-info-icons-v3">
                                                             <div class="icon-separator-v3 favorite" ng-class="{'active': sharedData.favoriteGames[game.id]}" ng-click="$event.stopPropagation(); $root.$broadcast('favoriteGames.toggle', game.id)"></div>
-                                                            <div class="icon-separator-v3 market-count-v3">
+                                                            <i class="blocked-icon-v3" title="{{'Blocked'|translate}}" ng-show="(!(game.markets_count) || game.is_blocked)"></i>
+                                                            <div class="icon-separator-v3 market-count-v3" ng-if="game.markets_count > 0">
                                                                 <span ng-bind="'+' + game.markets_count" title="Number of markets"></span>
                                                             </div>
                                                             <div class="icon-separator-v3 video" ng-show="game.hasVideo"></div>

@@ -1,6 +1,6 @@
 <ng-include ng-if="conf.integrationMode" src="::'templates/sport/toptab.html'|fixPath;"></ng-include>
 <div class="promos-container guide" ng-init="setTitle('Promotions')" no-animate>
-    <promotion-news main-class="promo block-meny-news" path="news" categories-list="true" use-custom-base-host="true" count="all"></promotion-news>
+    <promo-switcher count="all"></promo-switcher>
 </div>
 <style ng-controller="cmsPagesCtrl" ng-init="loadPage('promo-section-backgrounds-' + env.lang, 'lang')">
     .body-wrapper.promos {

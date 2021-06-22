@@ -31,7 +31,7 @@
                 <colgroup span="7"></colgroup>
                 <tbody ng-repeat="game in (selectedPopularCompetition? competition.games:(competition.games|orderBy:'start_ts')) track by game.id">
                 <tr>
-                    <th class="dark-bg-j" colspan="2">
+                    <th class="dark-bg-j" colspan="4">
                         <p>
                             <span ng-show="game.is_neutral_venue" class="game-is-neutral" title="is neutral venue" trans="attr-only"></span>
                             <span ng-show="game.type === 1 && game.hasVideo" class="has-video" trans="attr-only" title="video"></span>

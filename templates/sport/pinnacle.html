@@ -2,5 +2,7 @@
     <div class="container-p">
         <vbet-loader class="page-center" ng-show="loadingUserData"></vbet-loader>
         <iframe ng-if="frameUrl && !loadingUserData" ng-src="{{frameUrl}}" width="100%" height="100%" scrolling="yes" frameborder="0" allowfullscreen="" webkitallowfullscreen="" mozallowfullscreen=""></iframe>
+        <p class="game-finished-v3" ng-if="!loadingUserData && !frameUrl && !$root.env.sliderContent" trans>Please log in</p>
     </div>
 </div>
+

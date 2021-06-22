@@ -372,6 +372,12 @@
   box-sizing: border-box;
   float: left;
   width: 100%;
+  .games-view-slider-contain > ul.column-2 > li{
+    width: calc((100% - 10px) / 2);
+  }
+  .games-view-slider-contain > ul.column-1 > li{
+    width: 100%;
+  }
 }
 
 .popular-game-view-wrapper-v3 {
@@ -479,6 +485,7 @@
   box-sizing: border-box;
   vertical-align: middle;
   padding: 0 0 4px;
+  display: inline-block;
 }
 
 .liga-icon-view-v3 {

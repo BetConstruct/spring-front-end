@@ -8,7 +8,7 @@
             <p trans>For further details please contact our support and refer to the Terms and Conditions and Responsible Gambling pages.</p>
         </div>
         <div ng-if="'self-exclusion-text'|translate:null:true">
-            <p ng-bind-html="'self-exclusion-text'|translate|html:'p'"><p trans>
+            <p ng-bind-html="'self-exclusion-text'|translate|html:'p'">
         </div>
 
         <form class="registration-form" name="selfExclusionForm" ng-init="initSelfExclusion()">
@@ -34,7 +34,7 @@
                     </div>
                 </div>
                 <div class="cashier-button">
-                    <button ng-show="!working" ng-disabled="!periodValue || !selfExclusionForm.$valid" trans ng-click="setSelfExclusion(conf.selfExclusion.type, 'selfExclusion', selfExclusionForm.password)">Save</button>
+                    <button disabled="disabled" ng-show="!working" ng-disabled="!periodValue || !selfExclusionForm.$valid" trans ng-click="setSelfExclusion(conf.selfExclusion.type, 'selfExclusion', selfExclusionForm.password)">Save</button>
                     <button disabled="disabled" ng-show="working" trans>Wait...</button>
                 </div>
             </div>

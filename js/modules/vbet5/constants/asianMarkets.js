@@ -123,6 +123,14 @@ angular.module('vbet5').constant('AsianMarkets', {
         'RugbySevens': "Half",
         'RugbyLeague': "Half",
         'RugbyUnion': "Half",
-        'KingOfGlory': "Game"
+        'KingOfGlory': "Game",
+        'CallOfDuty': "Map",
+        'RocketLeague': "Game",
+        'PUBG': "Map",
+        'WarcraftIII': "Map",
+        'RainbowSix': "Map",
+        'Valorant': "Map",
+        'MobileLegends': "Game"
+
     }
 });

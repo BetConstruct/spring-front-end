@@ -50,6 +50,10 @@ angular.module('vbet5').config(['$routeProvider', '$anchorScrollProvider', 'Skin
         })
         .when('/virtualsports/', {
             templateUrl: function () {
+                if (Config.virtualSport.integrationMode) {
+                    return getTemplate('templates/integratedIframeProducts/virtualSport.html');
+                }
+
                 return getTemplate('templates/sport/classic/virtualsportsContainer.html');
             },
             reloadOnSearch: false
@@ -80,6 +84,10 @@ angular.module('vbet5').config(['$routeProvider', '$anchorScrollProvider', 'Skin
         })
         .when('/poolbetting/', {
             templateUrl: getTemplate('templates/sport/main.html'),
+            reloadOnSearch: false
+        })
+        .when('/sport-tournaments/', {
+            templateUrl: getTemplate('templates/sport/tournaments/main.html'),
             reloadOnSearch: false
         })
         .when('/freebet/', {
@@ -224,6 +232,10 @@ angular.module('vbet5').config(['$routeProvider', '$anchorScrollProvider', 'Skin
             templateUrl: getTemplate('optional_modules/casino/templates/skillgames/main.html'),
             reloadOnSearch: false
         })
+        .when('/provider/:keys', {
+            templateUrl: getTemplate('optional_modules/casino/templates/specialgames/providerGames.html'),
+            reloadOnSearch: false
+        })
         .when('/csbpoolbetting/', {
             templateUrl: getTemplate('optional_modules/casino/templates/specialgames/csbpoolbetting.html'),
             reloadOnSearch: false
@@ -313,14 +325,23 @@ angular.module('vbet5').config(['$routeProvider', '$anchorScrollProvider', 'Skin
             reloadOnSearch: false
         })
         .when('/pmu/', {
-            templateUrl: getTemplate('templates/sport/pmu/main.html'),
+            templateUrl: getTemplate('templates/integratedIframeProducts/pmu.html'),
             reloadOnSearch: false
-        }).when('/covid-19/', {
-            templateUrl: getTemplate('templates/sport/classic/covid19/main.html'),
+        })
+        .when('/euro-2020/', {
+            templateUrl: getTemplate('templates/integratedIframeProducts/euro2020.html'),
             reloadOnSearch: false
         })
         .when('/bet-on-lineup/', {
             templateUrl: getTemplate('templates/sport/betOnLineup/main.html'),
+            reloadOnSearch: false
+        })
+        .when('/quiz/', {
+            templateUrl: getTemplate('templates/quiz/main.html'),
+            reloadOnSearch: false
+        })
+        .when('/frame/', {
+            templateUrl: getTemplate('templates/frame/main.html'),
             reloadOnSearch: false
         })
         .otherwise({

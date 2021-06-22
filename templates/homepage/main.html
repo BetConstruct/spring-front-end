@@ -16,7 +16,10 @@
                      banner-slider
                      interval="{{conf.featuredGames.rotationPeriod}}" slug="{{item.sliderSlug}}"></div>
                 <div ng-if="item.dataType" ng-switch="item.dataType">
-                    <div class="casino-games-list-h visible-games-count-5" ng-switch-when="casinoPromotedGames" casino-promoted-games page-category="home" limit="item.limit || 10" games-category="item.category" games-provider="item.provider"></div>
+                    <div ng-switch-when="casinoPromotedGames">
+                        <p ng-if="item.label || item.linkUrl" class="homepage-main-title">{{item.label|translate}}<a href="{{item.linkUrl}}">{{item.linkLabel|translate}}</a></p>
+                        <div class="casino-games-list-h visible-games-count-5"  casino-promoted-games small-item="item.smallItem" page-category="home" limit="item.limit" games-category="item.category" games-provider="item.provider"></div>
+                    </div>
                     <jackpot-slider ng-switch-when="casinoJackpotSlider" type="casino" ng-style="{'height': (item.height || item.mediaHeight), 'max-height': item.maxHeight}" class="casino-games-list-h" load-jackpot-data="true" ></jackpot-slider>
                     <jackpot-slider ng-switch-when="globalJackpotSlider" type="global" ng-style="{'height': (item.height || item.mediaHeight), 'max-height': item.maxHeight}" class="casino-games-list-h" load-jackpot-data="true" ></jackpot-slider>
                     <jackpot-slider ng-switch-when="sportsbookJackpotSlider" type="sportsbook" ng-style="{'height': (item.height || item.mediaHeight), 'max-height': item.maxHeight}" class="casino-games-list-h" load-jackpot-data="true" ></jackpot-slider>
@@ -26,6 +29,9 @@
                     <div ng-switch-when="casinoBiggestWinners">
                         <casino-biggest-winners  title="Last Winners" template-url="templates/directive/casino-biggest-winners-v2.html" limit="item.limit"  class="winners-list" ></casino-biggest-winners>
 
+                    </div>
+                    <div ng-switch-when="search">
+                        <homepage-search-widget class="float-width-height" casino="item.casino" sport="item.sport"></homepage-search-widget>
                     </div>
 
                 </div>

@@ -28,7 +28,7 @@
                     <span trans>Total Sport Stakes:</span>
                     <b>{{item.TotalSportStakes|number:$root.conf.balanceFractionSize}} <i>{{item.CurrencyId|currency}}</i></b>
                 </div>
-                <div class="prefer-to-friend-line-info">
+                <div class="prefer-to-friend-line-info" ng-if="item.TotalCasinoStakes !== undefined">
                     <span trans>Total Casino Stakes:</span>
                     <b>{{item.TotalCasinoStakes|number:$root.conf.balanceFractionSize}} <i>{{item.CurrencyId|currency}}</i></b>
                 </div>
@@ -50,7 +50,7 @@
                     <span class="ellipsis-text" trans>Is Sportsbook Requirement Complete:</span>
                     <i class="{{item.IsSportsBookReqirementComplete?'checked': 'unchecked'}}"></i>
                 </div>
-                <div class="prefer-to-friend-line-info">
+                <div class="prefer-to-friend-line-info"  ng-if="item.IsCasinotReqirementComplete !== undefined">
                     <span class="ellipsis-text" trans>Is Casino Requirement Complete:</span>
                     <i class="{{item.IsCasinotReqirementComplete?'checked': 'unchecked'}}"></i>
                 </div>

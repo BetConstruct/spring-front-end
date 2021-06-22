@@ -283,12 +283,14 @@ angular.module('vbet5.betting').controller('overviewCtrl', ['$rootScope', '$scop
      */
     $scope.initOverview = function initOverview() {
         $scope.loading.overview = true;
-        getSports().then(function subscribeAndCollapse(sportsToExpand) {
-            sportsToExpand.forEach(function subscribeAndExpand(id) {
-                $scope.toggleMenuItem('sport', id);
+        GameInfo.getProviderAvailableEvents().then(function () {
+            getSports().then(function subscribeAndCollapse(sportsToExpand) {
+                sportsToExpand.forEach(function subscribeAndExpand(id) {
+                    $scope.toggleMenuItem('sport', id);
+                });
+            })['finally'](function stopLoading() {
+                $scope.loading.overview = false;
             });
-        })['finally'](function stopLoading() {
-            $scope.loading.overview = false;
         });
     };
 

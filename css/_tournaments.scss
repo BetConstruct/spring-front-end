@@ -310,6 +310,7 @@
   color: $text-palette-1;
 }
 .ct-game-countdown {
+  direction: ltr;
   float: left;
   width: 100%;
   text-transform: uppercase;
@@ -598,13 +599,16 @@
 .casino-tournament-page-intro {
   float: left;
   width: 100%;
-  height: 450px;
-  background: $skin-palette-12 no-repeat 50% 0 / cover;
+  min-height: 450px;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
   position: relative;
   margin: 10px 0 0;
   &:before {
     content: "";
     position: absolute;
+    z-index: -1;
     top: 0;
     left: 0;
     width: 100%;
@@ -744,9 +748,9 @@
       background: linear-gradient(to bottom, rgba(lighten( saturate( $brand-color-1, 1 ), 7 ),0.3) 0%,rgba(lighten( saturate( $brand-color-1, 1 ), 7 ),0) 100%);
       &:nth-child(2):nth-last-child(3), &:nth-child(3):nth-last-child(2), &:nth-child(2):nth-last-child(2) {
         top: -10px;
-        background: -moz-linear-gradient(top, rgba(lighten( saturate( $brand-color-1, 1 ), 7 ),0.6) 0%, rgba(lighten( saturate( $brand-color-1, 1 ), 7 ),0) 100%);
-        background: -webkit-linear-gradient(top, rgba(lighten( saturate( $brand-color-1, 1 ), 7 ),0.6) 0%,rgba(lighten( saturate( $brand-color-1, 1 ), 7 ),0) 100%);
-        background: linear-gradient(to bottom, rgba(lighten( saturate( $brand-color-1, 1 ), 7 ),0.6) 0%,rgba(lighten( saturate( $brand-color-1, 1 ), 7 ),0) 100%);
+        background: -moz-linear-gradient(top, rgba(lighten( saturate( $brand-color-1, 1 ), 7 ),1) 0%, rgba(lighten( saturate( $brand-color-1, 1 ), 7 ),0) 100%);
+        background: -webkit-linear-gradient(top, rgba(lighten( saturate( $brand-color-1, 1 ), 7 ),1) 0%,rgba(lighten( saturate( $brand-color-1, 1 ), 7 ),0) 100%);
+        background: linear-gradient(to bottom, rgba(lighten( saturate( $brand-color-1, 1 ), 7 ),1) 0%,rgba(lighten( saturate( $brand-color-1, 1 ), 7 ),0) 100%);
       }
     }
   }
@@ -833,7 +837,7 @@
     top: -1px;
     left: 0;
     display: block;
-    width: calc(100% - 12px);
+    width: 100%;
   }
 }
 .cst-stat-list-item {
@@ -1066,4 +1070,324 @@
   font: 20px $font-f;
   text-align: center;
   margin: 84px 0 110px;
+}
+
+
+// Euro 2021 tournament styles
+.euro-tournament {
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  .tour-green {
+    color: #1a7051;
+  }
+  .tour-red {
+    color: #ae0000;
+  }
+  .tour-info {
+    width: 30%;
+    @include ltr {
+      padding-left: 15px;
+      border-left: 1px solid $c16-sp-7;
+    }
+    @include rtl {
+      padding-right: 15px;
+      border-right: 1px solid $c16-sp-7;
+    }
+    .ct-game-countdown ul {
+      @include rtl {
+        float: right;
+      }
+    }
+    &.current-tournament-page {
+      width: 90%;
+      text-align: center;
+      margin: 30px auto 0 auto;
+      @include ltr {
+        border: none;
+        padding: 0;
+      }
+      @include rtl {
+        border: none;
+        padding: 0;
+      }
+      .tour-prize {
+        margin: 16px 0 12px 0;
+        font-size: 46px;
+      }
+      .ct-game-countdown ul {
+        margin: 10px 0;
+        @include ltr {
+          float: none;
+        }
+        @include rtl {
+          float: none;
+        }
+      }
+      .tour-join-btn {
+        margin: 30px auto 0 auto;
+        max-width: 200px;
+      }
+      .tour-img {
+        float: none;
+        margin: 0 auto 10px auto;
+      }
+      .status-color {
+        color: #ffffff;
+      }
+      .status-color {
+        padding: 2px 4px;
+        @include ltr {
+          margin-left: 6px;
+        }
+        @include rtl {
+          margin-right: 6px;
+        }
+        &.upcoming {
+          background-color: #d3b173;
+        }
+        &.finished {
+          background-color: #C13653;
+        }
+        &.live {
+          background-color: #278B66;
+        }
+      }
+    }
+  }
+  .tour-title {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 4px;
+    color: #ffffff;
+  }
+  .tour-prize {
+    font-size: 24px;
+    font-weight: bold;
+    text-shadow: 0 0 6px #ffd338;
+    line-height: 1;
+    letter-spacing: 1px;
+    color: #ffd237;
+  }
+  .tour-status {
+    font-size: 14px;
+    .status {
+      color: #ffffff;
+    }
+    .status, p {
+      display: inline-block;
+    }
+    .status-color {
+      display: inline-block;
+      @include ltr {
+        padding-left: 4px;
+      }
+      @include rtl {
+        padding-right: 4px;
+      }
+    }
+  }
+  .tour-counter {
+    font-size: 20px;
+    color: $text-palette-1;
+  }
+  .ct-game-countdown {
+    ul {
+      width: auto;
+      margin: 6px 0 0 0;
+      li, li.has-dot {
+        position: relative;
+        color: #ffffff;
+        &:first-child {
+          margin-left: 0;
+        }
+        &:before {
+          display: none;
+        }
+        strong {
+          font-weight: 400;
+        }
+        span {
+          position: absolute;
+          top: -1px;
+          right: -10px;
+          font-size: 10px;
+          color: #ffffff;
+        }
+      }
+    }
+  }
+  .tour-join-btn {
+    text-transform: uppercase;
+    color: $text-palette-1;
+    font-size: 12px;
+    width: 100%;
+    display: block;
+    height: 30px;
+    line-height: 30px;
+    border: 1px solid $brand-color-1;
+    background: $brand-color-1;
+    box-sizing: border-box;
+    padding: 0 15px;
+    margin-top: 25px;
+    transition: color 180ms, background 180ms, border 180ms;
+    &:hover {
+      background: lighten( saturate( $brand-color-1, 1 ), 7 );
+      border-color: lighten( saturate( $brand-color-1, 1 ), 7 );
+    }
+    &:disabled {
+      color: $text-palette-4;
+      background: $skin-palette-9;
+      border-color: $skin-palette-9;
+    }
+  }
+  .tour-img {
+    width: 100px;
+    height: 100px;
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-position: center;
+    @include ltr {
+      margin: 0 15px 0 0;
+    }
+    @include rtl {
+      margin: 0 0 0 15px;
+    }
+  }
+  .tour-card-title {
+    color: $text-palette-1;
+    font-size: 12px;
+    display: block;
+    margin-bottom: 5px;
+    text-align: center;
+  }
+  .tournament-item {
+    width: 100%;
+    overflow: hidden;
+    padding: 10px 15px;
+    float: none;
+    & + .tournament-item {
+      margin-top: 10px;
+    }
+    &:last-child {
+      margin-bottom: 10px;
+    }
+    .tour-info-wrapper {
+      width: calc(100% - 115px);
+    }
+    .tour-info-cards {
+      width: 70%;
+    }
+    .tour-card {
+      padding: 10px;
+      background-color: $header-first-line-background;
+      width: 32%;
+      height: 100px;
+      max-width: 226px;
+      text-align: center;
+      & + .tour-card {
+        @include ltr {
+          margin-right: 5px;
+        }
+        @include rtl {
+          margin-left: 5px;
+        }
+
+      }
+    }
+    .card-title {
+      color: $text-palette-1;
+      font-size: 12px;
+      display: block;
+      margin-bottom: 8px;
+    }
+    .tour-date-item {
+      width: 49%;
+      max-width: 100px;
+      padding: 5px 10px;
+      background-color: $classic-view-background;
+    }
+    .start-end {
+      margin-bottom: 5px;
+    }
+    .date, .time {
+      color: $text-palette-1;
+      display: block;
+    }
+    .time {
+      margin-top: 2px;
+    }
+    .card-join {
+      max-width: 280px;
+    }
+    .join-card-p {
+      width: 100%;
+      overflow: hidden;
+      color: $text-palette-1;
+      & + .join-card-p {
+        margin-top: 5px;
+      }
+      .info {
+        max-width: 75%;
+      }
+    }
+    .divider {
+      width: 100%;
+      height: 1px;
+      background-color: $c16-tp-5;
+      margin: 7px 0;
+    }
+  }
+  .tour-status-boxes {
+    margin: 30px 0 50px 0;
+    text-align: center;
+    .card-title {
+      text-align: center;
+    }
+    .start {
+      @include ltr {
+        padding-right: 10px;
+      }
+      @include rtl {
+        padding-left: 10px;
+      }
+    }
+    .status-box {
+      vertical-align: middle;
+      display: inline-block;
+      width: 24%;
+      margin: 5px;
+      padding: 8px 15px;
+      background: $skin-palette-12;
+      color: $text-palette-1;
+      min-height: 51px;
+    }
+    .buy-in-fee {
+      display: inline-table;
+      .box-row {
+        display: table-cell;
+        vertical-align: middle;
+      }
+    }
+    .box-row {
+      width: 100%;
+      overflow: hidden;
+      &:not(:first-child) {
+        margin-top: 5px;
+      }
+      .title {
+        max-width: 60%;
+      }
+    }
+    @media only screen and (max-width: 1350px) {
+      margin: 30px 0;
+      .status-box {
+        width: 35%;
+      }
+    }
+  }
+}
+
+.casino-tournaments-include.sport-toutnaments .casino-tournaments-filters-wrapper{
+  z-index: 9999;
 }

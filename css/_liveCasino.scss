@@ -73,20 +73,21 @@
       position: relative;
       .float-width {
         height: 100%;
+        position: relative;
       }
-
       i {
         display: block;
         position: absolute;
-        top: 28px;
-        right: 30px;
+        top: 10px;
         font: 22px/24px icomoon;
         color: $text-palette-2;
         z-index: 77;
         opacity: 0;
+        @include ltr{
+          right: 10px;
+        }
         @include rtl{
-          right: inherit;
-          left: 22px;
+          left: 10px;
         }
         &:after{
           display: block;
@@ -163,6 +164,11 @@
   }
   &:before {
     content: "\e92c";
+  }
+  &.tournament{
+    &:before {
+      content: "\e904";
+    }
   }
   &.vgs102, &.ezgroulette, &.ezg7, &.lksroulette, &.lksexternalroulette, &.ezg6, &.evl104, &.netlcroulette_sw, &.netlcrouletteauto_sw, &.vgs110, &.agcrou, &.agc6, &.xpgliveroulette, &.ntlroulette, &.ntlautomatic_roulette, &.pnh4, &.xpgroulette, &.xpgmore20games, &.ptslrol, &.ptslrol, &.vivroulette, &.tpg201, &.fazroulette, &.evl217033, &.ptslqrol, &.tpg203, &.fazliveeuropeanroulette, &.bgbroulette, &.bgbroulette-eng, &.ntllcroulette_not_mobile_phy_sw, &.ntllcrouletteauto_not_mobilehr_nbc_sw, &.ntllcrouletteauto_not_mobilelr_nbc_sw, &.ntllcrouletteauto_not_mobile_nbc_sw, &[class*="vlc110&lobbytagindex"] {
     &:before {

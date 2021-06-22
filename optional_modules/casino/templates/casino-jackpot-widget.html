@@ -19,7 +19,7 @@
             <div class="jackpot-bottom-line"></div>
             <ul class="new-jackpot-info">
                 <li ng-repeat="pool in jackpot.PoolGroup.PoolList track by $index" ng-if="$index !== 0">
-                    <h3 ng-bind="pool.DisplayName"></h3>
+                    <h3 class="new-jackpot-title" ng-bind="pool.DisplayName"></h3>
                     <jackpot-counter
                             max-duration-speed="400"
                             point="jackpot.CurrencyFraction"
@@ -37,7 +37,7 @@
             <div class="new-jackpot-games-wrapper">
                 <div class="new-jackpot-games">
                     <div ng-repeat="(provider, providerGames) in providerJackpotGames track by $index" ng-show="provider === selectedProvider" class="new-jackpot-img-wrapper " ng-class="{'new-jackpot-img-four': providerJackpotGames[selectedProvider].length > 3}">
-                        <a class="new-jackpot-img" ng-repeat="game in providerGames track by $index"  ng-if="$index < 5"><img ng-src="{{game.icon_2}}" alt="">
+                        <a class="new-jackpot-img {{game.badge? ('badge-' + game.badge['class']):''}}" ng-repeat="game in providerGames track by $index"  data-badge="{{game.badge.title}}"   ng-if="$index < 5"><img ng-src="{{game.icon_2}}" alt="">
                             <span class="games-buttons">
                                <strong>
                                    <button ng-click="openGame(game, 'real'); $event.stopPropagation();" ng-if="game.types.realMode"
@@ -62,8 +62,8 @@
                 </div>
             </div>
         </div>
-        <div ng-repeat="(provider, providerGames) in providerJackpotGames track by $index" ng-show="provider === selectedProvider" class="new-jackpot-block-all-games" ng-if="!widgetMode">
-                <a class="new-jackpot-img" ng-repeat="game in providerGames track by $index" ng-click="openGame(game, 'fun');" ><img ng-src="{{game.icon_2}}" alt="">
+        <div ng-repeat="(provider, providerGames) in providerJackpotGames track by $index" ng-show="provider === selectedProvider" class="new-jackpot-block-all-games"  ng-if="!widgetMode">
+                <a class="new-jackpot-img {{game.badge? ('badge-' + game.badge['class']):''}}" ng-repeat="game in providerGames track by $index" ng-click="openGame(game, 'fun');" data-badge="{{game.badge.title}}" ><img ng-src="{{game.icon_2}}" alt="">
                     <span class="games-buttons">
                                <strong>
                                    <button ng-click="openGame(game, 'real'); $event.stopPropagation();" ng-if="game.types.realMode"
@@ -80,7 +80,7 @@
                        ng-class="{'active': $root.myCasinoGamesIds[game.id]}">
                     </i>
                 </a>
-            <div ng-show="limits[selectedProvider].max > providerJackpotGames[selectedProvider].length" class="more-casino-games-load-b"><p load-more ng-click="loadMoreGames()"><span trans>Load more</span></p></div>
+            <div ng-show="limits[selectedProvider].max > providerJackpotGames[selectedProvider].length" class="more-casino-games-load-b"><p load-more ng-click="loadMoreGames()"></p></div>
             <vbet-loader ng-show="loadingJackpotesProcess[selectedProvider]"></vbet-loader>
         </div>
     </div>

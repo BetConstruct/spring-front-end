@@ -389,6 +389,8 @@ VBET5.controller('classicDashboardCenterController', ['$rootScope', '$scope', 'O
 
         if (whatFields && !whatFields['market']) {
             delete request['what']['market'];
+        } else {
+            Utils.addPrematchExpressId(request);
         }
 
         if (where.sport) {
@@ -416,11 +418,6 @@ VBET5.controller('classicDashboardCenterController', ['$rootScope', '$scope', 'O
                 request.where.game.type = where.type;
             }
         }
-
-        if ($rootScope.myGames && $rootScope.myGames.length && Config.main.separateFavoritesInClassic) {
-            request.where.game.id = {'@nin': $rootScope.myGames};
-        }
-
         if (where.start_ts) {
             request.where.game["@or"] = [];
             request.where.game["@or"].push({start_ts: where.start_ts});
@@ -534,6 +531,7 @@ VBET5.controller('classicDashboardCenterController', ['$rootScope', '$scope', 'O
         };
 
         /*Utils.setCustomSportAliasesFilter(request);*/
+        Utils.addPrematchExpressId(request);
 
         // 0) update breadcrumb
         $scope.updatePathInComboView(sport, region, competition, game);

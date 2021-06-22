@@ -5,7 +5,7 @@
  * @description
  *  payments controller
  */
-VBET5.controller('paymentsCtrl', ['$scope', '$rootScope', '$sce', '$q', '$window', '$location', '$interval', '$filter', 'Utils', 'Config', 'Zergling', 'Translator', 'AuthData', 'Moment', 'analytics', 'Storage', 'Script', 'Tracking', 'TimeoutWrapper', 'RegConfig', 'CountryCodes', 'ActiveStep', function ($scope, $rootScope, $sce, $q, $window, $location, $interval, $filter, Utils, Config, Zergling, Translator, AuthData, Moment, analytics, Storage, Script, Tracking, TimeoutWrapper, RegConfig, CountryCodes, ActiveStep) {
+VBET5.controller('paymentsCtrl', ['$scope', '$rootScope', '$sce', '$q', '$window', '$location', '$interval', '$filter', 'Utils', 'Config', 'Zergling', 'Translator', 'AuthData', 'Moment', 'analytics', 'Storage', 'Script', 'Tracking', 'TimeoutWrapper', 'RegConfig', 'CountryCodes', 'ActiveStep', 'PaymentPreCalculation',  function ($scope, $rootScope, $sce, $q, $window, $location, $interval, $filter, Utils, Config, Zergling, Translator, AuthData, Moment, analytics, Storage, Script, Tracking, TimeoutWrapper, RegConfig, CountryCodes, ActiveStep, PaymentPreCalculation) {
     'use strict';
     TimeoutWrapper = TimeoutWrapper($scope);
     var userConfirmedDepositListener = null;
@@ -23,6 +23,7 @@ VBET5.controller('paymentsCtrl', ['$scope', '$rootScope', '$sce', '$q', '$window
     var currentOpenDropdown = null;
     var TIMEOUT_EXCLUDE_TYPE = 6;
    $scope.withdrawLimit = 0;
+   var isFirstDeposit = false;
    var depositFailParams = [
         {
             key: 'message',
@@ -30,6 +31,7 @@ VBET5.controller('paymentsCtrl', ['$scope', '$rootScope', '$sce', '$q', '$window
         }
     ];
 
+   var withDrawDetailsData = null;
 
     $scope.withdrawStatus = {
         '0': 'New',
@@ -772,8 +774,8 @@ VBET5.controller('paymentsCtrl', ['$scope', '$rootScope', '$sce', '$q', '$window
                         analytics.gaSend('send', 'event', 'slider', 'deposit',  {'page': $location.path(), 'eventLabel': 'Success -' + request.service, 'tr': request.amount + ' ' + $rootScope.profile.currency_name});
                         Tracking.event('deposit_completed', {'currency': $rootScope.profile.currency_name, 'amount': request.amount, 'translation_id': $scope.profile.unique_id}, true);
 
-                        $rootScope.$broadcast('payment.success',{type: 'deposit', 'payment_system': $scope.selectedPaymentSystem.name,'payment_amount': request.amount , 'payment_currency': $rootScope.profile.currency_name}); //todo  SDC-37579
-
+                        $rootScope.$broadcast('payment.success',{type: 'deposit', 'payment_system': $scope.selectedPaymentSystem.name,'payment_amount': request.amount , 'payment_currency': $rootScope.profile.currency_name, 'isFirstDeposit': isFirstDeposit}); //todo  SDC-37579
+                        isFirstDeposit = false;
                         $rootScope.$broadcast("globalDialogs.addDialog", {
                             type: 'success',
                             title: 'Success',
@@ -877,16 +879,13 @@ VBET5.controller('paymentsCtrl', ['$scope', '$rootScope', '$sce', '$q', '$window
                     });
                     return;
 
+                }else if (data.details && (data.details.error_code || data.details.error)) {
+                    message = Translator.get(data.details.error, null, null, data.details.error_code);
+                    $scope.messageType = 'error';
                 } else if (knownErrors[data.result.toString()] !== undefined) {
-                    message += "\n" + knownErrors[data.result.toString()];
-                    if (data.details && (data.details.error_code || data.details.error)) {
-                        message += ' ' + Translator.get(data.details.error, null, null, data.details.error_code);
-                    }
+                    message = "\n" + knownErrors[data.result.toString()];
                     $scope.messageType = 'error';
-                } else if (data.details && (data.details.error_code || data.details.error)) {
-                    message += (data.details.message || '') + ' ' + Translator.get(data.details.error, null, null, data.details.error_code);
-                    $scope.messageType = 'error';
-                } else {
+                }  else {
                     message += Translator.get("Please try later or contact support.");
                     $scope.messageType = 'error';
                 }
@@ -921,6 +920,7 @@ VBET5.controller('paymentsCtrl', ['$scope', '$rootScope', '$sce', '$q', '$window
      */
     $scope.withdraw = function withdraw(paymentFormData, withdrawAmount) {
         $scope.paymentAmount.withdraw = withdrawAmount || $scope.paymentAmount.withdraw;
+        $rootScope.$broadcast("paymentButton.clicked", "withdraw");
 
         if (!Utils.isObjectEmpty(paymentFormData)) {
             $scope.withdrawFormData = paymentFormData || $scope.withdrawFormData;
@@ -993,6 +993,8 @@ VBET5.controller('paymentsCtrl', ['$scope', '$rootScope', '$sce', '$q', '$window
                 customDepositTemplate: 'templates/livebox/' + customTemplate + '.html',
                 customWithdrawTemplate: 'templates/livebox/' + customTemplate + '.html'
             };
+            checkAndSetWithdrawOptions();
+
             return;
         }
 
@@ -1017,6 +1019,8 @@ VBET5.controller('paymentsCtrl', ['$scope', '$rootScope', '$sce', '$q', '$window
         }
 
         $scope.selectedPaymentSystem = paymentSystem;
+        checkAndSetWithdrawOptions();
+
         if ($scope.selectedPaymentSystem.twoStepWithdraw && $scope.env.sliderContent === 'withdraw') {
             Zergling
                 .get({'service': $scope.selectedPaymentSystem.paymentID || $scope.selectedPaymentSystem.name}, 'get_withdraw_status')
@@ -1066,6 +1070,7 @@ VBET5.controller('paymentsCtrl', ['$scope', '$rootScope', '$sce', '$q', '$window
                 $scope.gettingFieldsInProgress = false;
             });
         }
+
     };
 
     /**
@@ -1278,6 +1283,7 @@ VBET5.controller('paymentsCtrl', ['$scope', '$rootScope', '$sce', '$q', '$window
      * @description  sends deposit request to swarm, gets result, displays "external" form
      */
     $scope.deposit = function deposit(paymentFormData, depositAmount) {
+        $rootScope.$broadcast("paymentButton.clicked", "deposit");
         if ($rootScope.profile.exclude_type === TIMEOUT_EXCLUDE_TYPE) {
             $rootScope.$broadcast('globalDialogs.addDialog', {
                 type: 'warning',
@@ -1870,10 +1876,26 @@ VBET5.controller('paymentsCtrl', ['$scope', '$rootScope', '$sce', '$q', '$window
         currentOpenDropdown = name;
     };
 
+    function checkAndSetWithdrawOptions() {
+        if ($scope.selectedPaymentSystem && $scope.env.sliderContent === 'withdraw' && withDrawDetailsData) {
+            $scope.withdrawLimit = withDrawDetailsData.Limit;
+            $scope.unplayedAmount = withDrawDetailsData.UnplayedAmount;
+            $scope.unplayedFee = withDrawDetailsData.UnplayedFee;
+            $scope.feePercentage = withDrawDetailsData.FeePercentage;
+        } else {
+            $scope.withdrawLimit = null;
+            $scope.unplayedAmount = null;
+            $scope.unplayedFee = null;
+            $scope.feePercentage = null;
+        }
+    }
+
     function getWithdrawabelBonus() {
-        Zergling.get({}, "get_client_withdrawable_balance").then(function (response) {
+        Zergling.get({product: $rootScope.currentPage.isInSports ? "Sport" : "Casino"}, "get_client_withdrawable_balance").then(function (response) {
             if (response.details) {
-                $scope.withdrawLimit = response.details.Limit;
+                withDrawDetailsData = response.details;
+                checkAndSetWithdrawOptions();
+
             }
         });
     }
@@ -1882,6 +1904,11 @@ VBET5.controller('paymentsCtrl', ['$scope', '$rootScope', '$sce', '$q', '$window
         if (newValue === 'withdraw') {
             getWithdrawabelBonus();
 
+        } else if ($rootScope.profile) {
+            PaymentPreCalculation.getData().then(function (res) {
+                isFirstDeposit = res.DepositCount < 1;
+            });
+            checkAndSetWithdrawOptions();
         }
-    })
+    });
 }]);

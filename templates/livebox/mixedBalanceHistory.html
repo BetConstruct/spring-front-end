@@ -14,36 +14,28 @@
         <tbody ng-if="balanceHistoryFilter !== 'net'" ng-repeat="balance in balanceHistory">
             <tr>
                 <td class="date-id">
-                    <span>{{balance.date_time|formatDate:(conf.layoutTimeFormat[conf.sportsLayout] || 'noLocaleTranslate'):null:$root.env.timeFormat}} {{conf.layoutTimeFormat[conf.sportsLayout] ? (balance.date_time|formatDate:'hour':null:$root.env.timeFormat) : ''}}</span>
-                    <span ng-show="balance.bet_id"><br/> ID: <a>{{balance.bet_id}}</a></span>
-                    <span ng-show="balance.transaction_id"><br/> ID: <a>{{balance.transaction_id}}</a></span>
+                    <span>{{balance.Created|formatDate:(conf.layoutTimeFormat[conf.sportsLayout] || 'noLocaleTranslate'):null:$root.env.timeFormat}} {{conf.layoutTimeFormat[conf.sportsLayout] ? (balance.Created|formatDate:'hour':null:$root.env.timeFormat) : ''}}</span>
+                    <span ng-show="balance.DocumentId"><br/> ID: <a>{{balance.DocumentId}}</a></span>
+                    <span ng-show="balance.TransactionId"><br/> ID: <a>{{balance.TransactionId}}</a></span>
                 </td>
-                <td class="casino-hist" ng-if="balanceHistoryParams.loadedProductType === 'Casino'" ng-bind="(balance.product || '')|translate"></td>
+                <td class="casino-hist" ng-if="balanceHistoryParams.loadedProductType === 'Casino'" ng-bind="(balance.Product || '')|translate"></td>
                 <td class="auto-cell">
                     <ul class="cell-inner mixed-bet-history-flex">
                         <li class="ellipsis-text">
-                            <span ng-if="balance.product_category === 2">{{ balance.game }}</span>
-                            <span>{{ balance.name }}</span>
-                            <span ng-show="balance.buddy_id || balance.buddy_name">: ({{balance.buddy_id}} : {{balance.buddy_name}})</span>
+                            <span ng-if="balance.ProductCategoryId === 2">{{ balance.Game }}</span>
+                            <span>{{ balance.DocumentTypeName }}</span>
+                            <span ng-show="balance.BuddyId || balance.BuddyLogin">: ({{balance.BuddyId}} : {{balance.BuddyLogin}})</span>
                         </li>
                     </ul>
                 </td>
                 <td class="hh-cell">
-                    <div ng-show="!balance.bonus && balance.amount">
-                        <span class="second-color" ng-show="balance.amount > 0">+</span>
-                        <span class="second-color">{{balance.amount|number:conf.balanceFractionSize}}</span> {{currency_name|currency}}
-                    </div>
-                    <div ng-show="balance.bonus && !balance.amount"  title="Balance placed from bonus." trans="attr-only">
-                        <span class="second-color" ng-show="balance.bonus > 0">+</span>
-                        <span class="second-color">{{balance.bonus|number:conf.balanceFractionSize}}</span> {{currency_name|currency}}
-                    </div>
-                    <div ng-show="balance.bonus && balance.amount"  title="{{('Part of balance placed from bonus.'|translate) + ' (' + balance.amount + ' + ' + balance.bonus + ')'}}" >
-                        <span class="second-color" ng-show="balance.bonus + balance.amount > 0">+</span>
-                        <span class="second-color">{{(balance.bonus + balance.amount)|number:conf.balanceFractionSize}}</span> {{currency_name|currency}}
+                    <div ng-show="balance.Amount">
+                        <span class="second-color" ng-show="balance.Amount > 0">+</span>
+                        <span class="second-color">{{balance.Amount|number:conf.balanceFractionSize}}</span> {{currency_name|currency}}
                     </div>
                 </td>
                 <td class="hh-cell">
-                    <span class="second-color">{{balance.balance|number:conf.balanceFractionSize}}</span> {{currency_name|currency}}
+                    <span class="second-color">{{balance.Balance|number:conf.balanceFractionSize}}</span> {{currency_name|currency}}
                 </td>
             </tr>
         </tbody>

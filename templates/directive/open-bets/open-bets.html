@@ -7,6 +7,7 @@
          ng-init="bet.openEvents = true" ng-if="!openBets.loading && !$root.editBet.loading">
         <p ng-click="bet.openEvents = !bet.openEvents">
             <span ng-class="{'EW-bh-indicator': bet.each_way}" ng-bind="betTypes[bet.type]|translate"></span>
+            <ng-include src="::'templates/livebox/betHistoryIcons.html'|fixPath"></ng-include>
             <span ng-if="bet.type === 3"> {{::bet.system_min_count}}/{{::bet.events.length}}</span>
             <i class="edit-bets-icon"
                ng-show="!betConf.fullCoverBetTypes.enabled && !bet.is_gift && bet.cash_out && (bet.type == 2 || bet.type == 1)  && !$root.editBet.edit"
@@ -14,9 +15,9 @@
                title="{{ ('Editing functionality is available for this bet.') | translate }}">
             </i>
             <i class="refresh-icon cms-jcon-refresh" ng-show="$root.conf.enableBetFromBetHistory && (bet.type == 1 || bet.type == 2 || bet.type == 3 || bet.type == 4)" ng-click="$event.stopPropagation();addEvents(bet);" title="{{'Repeat Bet'|translate}}"></i>
-            <span class="gift-bet" ng-if="bet.is_gift === null && $root.conf.enableGiftBet" ng-click="$event.stopPropagation()" title="{{(bet.is_gift? 'Gifted': 'Gift')|translate}}">
-                   <i ng-click="$root.broadcast('showGiftPopup', bet)" ng-class="{'disabled': bet.is_gift === true }"></i>
-             </span>
+            <span class="gift-bet" ng-if="$root.conf.enableGiftBet && !bet.cashouts_history" ng-click="$event.stopPropagation()" title="{{bet.is_gift ? (('Gifted to'|translate) + ' ' + bet.gift_receiver_email): ('Gift'|translate)}}">
+                <i ng-click="$root.broadcast('showGiftPopup', bet)"  ng-class="{'disabled': bet.is_gift === true }"></i>
+            </span>
         </p>
         <div class="open-bets-time-id">
             <p ng-bind="bet.date_time|formatDate:'noLocaleTranslate':null:$root.env.timeFormat"></p>
@@ -28,6 +29,7 @@
                     <p ng-bind="event.game_start_date|formatDate:'noLocaleTranslate':null:$root.env.timeFormat"></p>
                     <div class="bet-event-teams-name-v3">
                         <div class="title-event-b-v3">
+                            <span  ng-click="gotoBetGame(matchInfo[event.game_id].gamePointer)" class="chain-order" ng-if="bet.showOrder" ng-bind="event.order + ' '"></span>
                             <span ng-click="gotoBetGame(matchInfo[event.game_id].gamePointer)">{{::event.game_name}}</span>
                             <b class="open-bets-games-score" ng-bind="matchInfo[event.game_id].text_info"></b>
                         </div>
@@ -82,14 +84,22 @@
                 <b>{{::bet.remaining_stake | bankersRoundAndNumberCommas:$root.conf.balanceFractionSize}} {{$root.profile.currency_name|currency}}</b>
                 </span>
             </div>
-            <div class="bet-win-view-v3 total-possible-row"  >
+            <div class="bet-win-view-v3 bonus-row" ng-if="bet.bonus > 0">
                 <p>
-                    <i trans>Possible win:</i>
+                    <i trans >Bonus:</i>
                 </p>
                 <span>
-                <b ng-if="bet.possible_win !== -1">{{::bet.possible_win | bankersRoundAndNumberCommas:$root.conf.balanceFractionSize}} {{$root.profile.currency_name|currency}}</b>
-                <b ng-if="bet.possible_win === -1" trans>N/A</b>
-            </span>
+                    <b>{{bet.bonus|bankersRoundAndNumberCommas:$root.conf.balanceFractionSize}} {{bet.currency|currency}} </b>
+                </span>
+            </div>
+            <div class="bet-win-view-v3 total-possible-row">
+                <p>
+                    <i >{{(bet.bonus > 0? 'Final Payout:': 'Possible win:')|translate}}</i>
+                </p>
+                <span>
+                    <b ng-if="bet.possible_win !== -1">{{::bet.possible_win |roundPossibleWin:$root.conf.balanceFractionSize:bet.type}} {{$root.profile.currency_name|currency}}</b>
+                    <b ng-if="bet.possible_win === -1" trans>N/A</b>
+                </span>
             </div>
         </div>
     </div>

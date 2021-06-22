@@ -8,7 +8,7 @@
                  class="{{item.class}}"
                  ng-style="{'max-width': row.maxWidth,'height': row.height}"
             >
-                <div ng-if="item.subRows" ng-repeat="subRowItem in item.subRows|orderBy:'order' track by $index" class="{{subRowItem.class}}">
+                <div ng-if="item.subRows" ng-repeat="subRowItem in item.subRows|orderBy:'order' track by $index" class="{{subRowItem.class}}"  ng-style="{'max-width': subRowItem.maxWidth,'height': subRowItem.height}">
                     <ng-include  src="::('optional_modules/casino/templates/homepage/'+subRowItem.widgetName+'.html')|fixPath"></ng-include>
                 </div>
                 <ng-include ng-if="!item.subRows" src="::('optional_modules/casino/templates/homepage/'+item.widgetName+'.html')|fixPath"></ng-include>

@@ -46,7 +46,7 @@
                 </li>
                 <li class="status-col-j">
                     <ul class="status-withdraw-j">
-                        <li><b>{{(withdrawStatus[history.status] || history.name)|translate|uppercase}}</b></li>
+                        <li><b>{{(withdrawStatus[history.status] || history.name)|translate}}</b></li>
                         <li ng-if="history.is_cancelable && !conf.disableCancelWithdraw && env.sliderContent === 'withdraw'">
                             <button ng-click="cancelWithdrawRequest(history.id)" ng-disabled="cancelButton.disabled" trans>Cancel</button>
                         </li>
@@ -155,13 +155,15 @@
                             </div>
                         </td>
                         <td>
-                            <div><span
-                                    ng-bind="system.info[currencyHolder.selectedCurrency]['min' + (env.sliderContent|capitalise)] || ('No'|translate)"></span>
+                            <div>
+                                <span ng-bind="system.info[currencyHolder.selectedCurrency]['min' + (env.sliderContent|capitalise)] || ('No'|translate)"></span>
+                                <span ng-if="!!(system.info[currencyHolder.selectedCurrency]['min' + (env.sliderContent|capitalise)] * 1)" ng-bind="currencyHolder.selectedCurrency|currency"></span>
                             </div>
                         </td>
                         <td>
-                            <div><span
-                                    ng-bind="(system.info[currencyHolder.selectedCurrency]['max' + (env.sliderContent|capitalise)] || 'No')|translate"></span>
+                            <div>
+                                <span ng-bind="(system.info[currencyHolder.selectedCurrency]['max' + (env.sliderContent|capitalise)] || 'No')|translate"></span>
+                                <span ng-if="!!(system.info[currencyHolder.selectedCurrency]['max' + (env.sliderContent|capitalise)] * 1)" ng-bind="currencyHolder.selectedCurrency|currency"></span>
                             </div>
                         </td>
                     </tr>
@@ -233,13 +235,15 @@
                             </div>
                         </td>
                         <td>
-                            <div><span
-                                    ng-bind="system.info[currencyHolder.selectedCurrency]['min' + (env.sliderContent|capitalise)] || ('No'|translate)"></span>
+                            <div>
+                                <span ng-bind="system.info[currencyHolder.selectedCurrency]['min' + (env.sliderContent|capitalise)] || ('No'|translate)"></span>
+                                <span ng-if="!!(system.info[currencyHolder.selectedCurrency]['min' + (env.sliderContent|capitalise)] * 1)" ng-bind="currencyHolder.selectedCurrency|currency"></span>
                             </div>
                         </td>
                         <td>
-                            <div><span
-                                    ng-bind="(system.info[currencyHolder.selectedCurrency]['max' + (env.sliderContent|capitalise)] || 'No')|translate"></span>
+                            <div>
+                                <span ng-bind="(system.info[currencyHolder.selectedCurrency]['max' + (env.sliderContent|capitalise)] || 'No')|translate"></span>
+                                <span ng-if="!!(system.info[currencyHolder.selectedCurrency]['max' + (env.sliderContent|capitalise)] * 1)" ng-bind="currencyHolder.selectedCurrency|currency"></span>
                             </div>
                         </td>
                     </tr>
@@ -265,13 +269,25 @@
                     <li trans>Maximum Withdraw</li>
                     <li>{{selectedPaymentSystem.info[currencyHolder.selectedCurrency].maxWithdraw|number:$root.conf.balanceFractionSize}} {{currencyHolder.selectedCurrency|currency}}</li>
                 </ul>
-                <ul class="unplayed-balance" ng-if="env.sliderContent === 'withdraw' && selectedPaymentSystem">
+                <ul class="unplayed-balance" ng-if="withdrawLimit !== null">
                     <li trans>Withdraw-able Amount</li>
                     <li class="withdraw-limit">{{withdrawLimit|number:$root.conf.balanceFractionSize}} {{currencyHolder.selectedCurrency|currency}}</li>
                 </ul>
                 <ul class="unplayed-balance" ng-if="env.sliderContent === 'withdraw' && selectedPaymentSystem">
                     <li trans>Balance</li>
                     <li class="withdraw-balance">{{(!$root.currentPage.isInCasino || profile.casino_balance === null ? profile.calculatedBalance : profile.casino_balance)|number:conf.balanceFractionSize}} {{currencyHolder.selectedCurrency|currency}}</li>
+                </ul>
+                <ul class="unplayed-balance" ng-if="unplayedAmount !== null">
+                    <li trans>Unplayed Amount</li>
+                    <li class="withdraw-limit">{{unplayedAmount|number:$root.conf.balanceFractionSize}} {{currencyHolder.selectedCurrency|currency}}</li>
+                </ul>
+                <ul class="unplayed-balance" ng-if="unplayedFee !== null">
+                    <li trans>Unplayed Amount Fee</li>
+                    <li class="withdraw-limit">{{unplayedFee|number:$root.conf.balanceFractionSize}} {{currencyHolder.selectedCurrency|currency}}</li>
+                </ul>
+                <ul class="unplayed-balance" ng-if="feePercentage !== null">
+                    <li trans>Unplayed Amount Percentage</li>
+                    <li class="withdraw-limit">{{feePercentage}} %</li>
                 </ul>
                 <read-more
                     maximum-number-of-lines="conf.maximumNumberOfLinesInPayments"
@@ -577,7 +593,7 @@
                                 </div>
                             </div>
                             <button class="button-confirm" ng-hide="selectedPaymentSystem.hideWithdrawButton"
-                                    title="{{(!paymentAmount.withdraw || paymentAmount.withdraw >= paymentAmount.availableWithdrawAmount ? 'Please enter the correct amount' : withdrawForm.$invalid ? 'Please select a bet-shop from the list.'  : '')|translate}}"
+                                    title="{{(!paymentAmount.withdraw || paymentAmount.withdraw > paymentAmount.availableWithdrawAmount ? 'Please enter the correct amount' : withdrawForm.$invalid ? 'Please select a bet-shop from the list.'  : '')|translate}}"
                                     ng-click="withdraw(paymentFormData, paymentAmount.withdraw)"
                                     ng-disabled="paymentForm.$invalid || busy || (paymentForm.$invalid && !hideWithdrawAmount) || (selectedPaymentSystem.forVerified && !profile.is_verified) "
                                     >
@@ -588,7 +604,7 @@
                         </div>
                         <div ng-if="selectedPaymentSystem.withdrawPrefilledAmount && env.sliderContent === 'withdraw'">
                             <button class="button-confirm" ng-hide="selectedPaymentSystem.hideWithdrawButton"
-                                    title="{{(!paymentAmount.withdraw || paymentAmount.withdraw >= paymentAmount.availableWithdrawAmount ? 'Please enter the correct amount' : withdrawForm.$invalid ? 'Please select a bet-shop from the list.'  : '')|translate}}"
+                                    title="{{(!paymentAmount.withdraw || paymentAmount.withdraw > paymentAmount.availableWithdrawAmount ? 'Please enter the correct amount' : withdrawForm.$invalid ? 'Please select a bet-shop from the list.'  : '')|translate}}"
                                     ng-click="withdraw(paymentFormData, paymentAmount.withdraw)"
                                     ng-disabled="busy || (paymentForm.$invalid && !hideWithdrawAmount) ">
                                     <span ng-bind="(selectedPaymentSystem.withdrawButtonCaption || 'Withdraw')|translate"></span>
@@ -616,7 +632,7 @@
                                            placeholder="{{(('deposit enter amount here'|translate:null:true) ? 'deposit enter amount here' : 'enter amount here')|translate}}"
                                            required/>
                                 </div>
-                                <p ng-show="selectedPaymentSystem.info[currencyHolder.selectedCurrency].minDeposit && selectedPaymentSystem.info[currencyHolder.selectedCurrency].maxDeposit && paymentForm.amount.$error['rangeValidation']" ng-bind="'The entered amount is out of the allowable ({1}/{2}) ranges'|translate:[selectedPaymentSystem.info[currencyHolder.selectedCurrency].minDeposit,selectedPaymentSystem.info[currencyHolder.selectedCurrency].maxDeposit]"></p>
+                                <span ng-show="selectedPaymentSystem.info[currencyHolder.selectedCurrency].minDeposit && selectedPaymentSystem.info[currencyHolder.selectedCurrency].maxDeposit && paymentForm.amount.$error['rangeValidation']" ng-bind="'The entered amount is out of the allowable ({1}/{2}) ranges'|translate:[selectedPaymentSystem.info[currencyHolder.selectedCurrency].minDeposit,selectedPaymentSystem.info[currencyHolder.selectedCurrency].maxDeposit]"></span>
                                 <span>{{previewCurrencyConversion(paymentAmount.deposit)}}</span>
                             </label>
                         </div>

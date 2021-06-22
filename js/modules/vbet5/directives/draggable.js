@@ -21,7 +21,7 @@ VBET5.directive('draggable', ['Config', '$document', '$rootScope', '$window', 'D
     'use strict';
     return function (scope, element, attr) {
 
-        var startX = 0, startY = 0, x = 0, y = 0, backup = {}, isNowDraggable = false, container = null, leftShift = $window.innerWidth - 660;
+        var startX = 0, startY = 0, x = 0, y = 0, initialX = 0, initialY = 0, backup = {}, isNowDraggable = false, container = null, leftShift = $window.innerWidth - 660;
         scope.isDraggable = false;
 
         if (attr.container !== undefined) {
@@ -80,6 +80,11 @@ VBET5.directive('draggable', ['Config', '$document', '$rootScope', '$window', 'D
             if (!isNowDraggable) {
                 return;
             }
+            var leftButtonIsDown = event.buttons === undefined ? event.which === 1 : event.buttons === 1;
+            if (!leftButtonIsDown) {
+                mouseup();
+                return;
+            }
             scope.dragging = true;
 
             y = event.screenY - startY;
@@ -92,15 +97,36 @@ VBET5.directive('draggable', ['Config', '$document', '$rootScope', '$window', 'D
             });
         }
 
+        function isInViewport(el) {
+            var rect = el[0].getBoundingClientRect();
+            return (
+                rect.top >= 0 &&
+                rect.left >= 0 &&
+                rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
+                rect.right <= (window.innerWidth || document.documentElement.clientWidth)
+
+            );
+        }
+
         function mouseup() {
             if (!isNowDraggable) {
                 return;
             }
             scope.dragging = false;
 
+
             $document.off('mousemove', mousemove);
             $document.off('mouseup', mouseup);
+            if (!isInViewport(element)) {
+                element.css({
+                    left: initialX + "px",
+                    top: initialY + "px"
+                });
+                x = initialX;
+                y = initialY;
+            }
         }
+
 
         element.on('mousedown', function (event) {
             if (!isNowDraggable || (attr.dragFrom && event.target.parentElement.id !== attr.dragFrom)) {
@@ -110,7 +136,8 @@ VBET5.directive('draggable', ['Config', '$document', '$rootScope', '$window', 'D
             {
                 event.preventDefault();
             }
-
+            initialX = x;
+            initialY = y;
             startX = event.screenX - x;
             startY = event.screenY - y;
             $document.on('mousemove', mousemove);

@@ -5,7 +5,7 @@
  * @description
  *  New bet history controller.
  */
-VBET5.controller('mixedMyBetsCtrl', ['$rootScope', '$scope', '$controller', '$location', 'Config', 'GameInfo', 'Moment', 'Utils', 'BetService', 'Zergling', function($rootScope, $scope, $controller, $location, Config, GameInfo, Moment, Utils, BetService, Zergling) {
+VBET5.controller('mixedMyBetsCtrl', ['$rootScope', '$scope', '$controller', '$location', 'Config', 'GameInfo', 'Moment', 'Utils', 'BetService', 'Zergling', '$timeout', function($rootScope, $scope, $controller, $location, Config, GameInfo, Moment, Utils, BetService, Zergling, $timeout) {
     'use strict';
 
 
@@ -253,39 +253,41 @@ VBET5.controller('mixedMyBetsCtrl', ['$rootScope', '$scope', '$controller', '$lo
      */
     $scope.adjustDate = function adjustDate(type) {
         var monthCount = Config.main.mixedViewMonthRange || 1;
-        switch (type) {
-            case 'from':
-                if (Moment.get($scope.requestData.dateFrom).unix() > Moment.get($scope.requestData.dateTo).unix()) {
-                    $scope.requestData.dateTo = Moment.moment($scope.requestData.dateFrom).lang("en").format("YYYY-MM-DD");
-                }
-                if ($scope.productMode === "Sportsbook") {
-                    if (Moment.get($scope.requestData.dateFrom).add(monthCount, "M").isAfter($scope.today)){
-                        $scope.datePickerLimits.maxToDate = $scope.today;
-                    } else {
-                        $scope.requestData.dateTo = Moment.get($scope.requestData.dateFrom).add(monthCount, "M").lang("en").format("YYYY-MM-DD");
-                        $scope.datePickerLimits.maxToDate = Moment.moment($scope.requestData.dateFrom).add(monthCount, "M").lang("en").format("YYYY-MM-DD");
+        if ($scope.betStatusFilter !== - 1) {
+            switch (type) {
+                case 'from':
+                    if (Moment.get($scope.requestData.dateFrom).unix() > Moment.get($scope.requestData.dateTo).unix()) {
+                        $scope.requestData.dateTo = Moment.moment($scope.requestData.dateFrom).lang("en").format("YYYY-MM-DD");
                     }
-                } else {
-                    if (Moment.get($scope.requestData.dateFrom).add(1, "w").isAfter($scope.today)){
-                        $scope.datePickerLimits.maxToDate = $scope.today;
+                    if ($scope.productMode === "Sportsbook") {
+                        if (Moment.get($scope.requestData.dateFrom).add(monthCount, "M").isAfter($scope.today)){
+                            $scope.datePickerLimits.maxToDate = $scope.today;
+                        } else {
+                            $scope.requestData.dateTo = Moment.get($scope.requestData.dateFrom).add(monthCount, "M").lang("en").format("YYYY-MM-DD");
+                            $scope.datePickerLimits.maxToDate = Moment.moment($scope.requestData.dateFrom).add(monthCount, "M").lang("en").format("YYYY-MM-DD");
+                        }
                     } else {
-                        $scope.requestData.dateTo = Moment.get($scope.requestData.dateFrom).add(1, "w").lang("en").format("YYYY-MM-DD");
-                        $scope.datePickerLimits.maxToDate = Moment.moment($scope.requestData.dateFrom).add(1, "w").lang("en").format("YYYY-MM-DD");
+                        if (Moment.get($scope.requestData.dateFrom).add(1, "w").isAfter($scope.today)){
+                            $scope.datePickerLimits.maxToDate = $scope.today;
+                        } else {
+                            $scope.requestData.dateTo = Moment.get($scope.requestData.dateFrom).add(1, "w").lang("en").format("YYYY-MM-DD");
+                            $scope.datePickerLimits.maxToDate = Moment.moment($scope.requestData.dateFrom).add(1, "w").lang("en").format("YYYY-MM-DD");
+                        }
                     }
-                }
 
-                break;
-            case 'to':
-                if (Moment.get($scope.requestData.dateFrom).unix() > Moment.get($scope.requestData.dateTo).unix()) {
-                    $scope.requestData.dateFrom = Moment.moment($scope.requestData.dateTo).lang("en").format("YYYY-MM-DD");
-                }
-                break;
+                    break;
+                case 'to':
+                    if (Moment.get($scope.requestData.dateFrom).unix() > Moment.get($scope.requestData.dateTo).unix()) {
+                        $scope.requestData.dateFrom = Moment.moment($scope.requestData.dateTo).lang("en").format("YYYY-MM-DD");
+                    }
+                    break;
+            }
+            $scope.betHistoryParams.dateRange.toDate = Moment.get(Moment.moment($scope.requestData.dateTo).format().split('T')[0] + 'T23:59:59' + timeZone).unix();
         }
 
         $scope.customPeriodApplied = true;
         $scope.selectedUpcomingPeriod = 0;
         $scope.betHistoryParams.dateRange.fromDate = Moment.get(Moment.moment($scope.requestData.dateFrom).format().split('T')[0] + 'T00:00:00' + timeZone).unix();
-        $scope.betHistoryParams.dateRange.toDate = Moment.get(Moment.moment($scope.requestData.dateTo).format().split('T')[0] + 'T23:59:59' + timeZone).unix();
     };
 
     /**
@@ -360,6 +362,26 @@ VBET5.controller('mixedMyBetsCtrl', ['$rootScope', '$scope', '$controller', '$lo
         if (bet.expand && bet.has_recalculation_reason && !$scope.recalculatedBetsDataMap[bet.id]) {
             getBetRecalculationInfo([bet.id]);
         }
+    };
+
+    $scope.copyIdState = {
+        copiedId: false
+    }
+    var timeout;
+
+    /**
+     * @ngdoc method
+     * @name copyToClipboard
+     * @methodOf vbet5.controller:mixedMyBetsCtrl
+     * @description Copy to clipboard
+     */
+    $scope.copyToClipboard = function copyToClipboard(id) {
+        $scope.copyIdState.copiedId = id;
+        $timeout.cancel(timeout);
+        Utils.copyToClipboard(id);
+        timeout = $timeout(function (){
+            $scope.copyIdState.copiedId = false;
+        }, 3000);
     };
 
     initScope();

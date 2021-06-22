@@ -50,7 +50,7 @@
                                 <li ng-show="!env.live">
                                     <div class="time-filter-v3" ng-class="{'active': periodDropdownOpened}">
                                         <p ng-click="periodDropdownOpened=!periodDropdownOpened">
-                                            <span>{{(selectedUpcomingPeriod ? selectedUpcomingPeriod + ' hours' : 'All') | translate}}</span>
+                                            <span ng-bind="(selectedUpcomingPeriod ? selectedUpcomingPeriod + ' hours' : 'All') | translate"></span>
                                             <i class="arrow-rotate-filter-v3"></i></p>
                                         <div class="sub-nav-filter-time-v3">
                                             <ul>
@@ -102,7 +102,43 @@
                                 </li>
                             </ul>
                         </div>
-
+                        <div ng-click="tournamentsOpened=!tournamentsOpened; toggleLeftMenu(true)" class="time-filter-v3 select-tournament" ng-class="{'active': tournamentsOpened}" ng-if="tournaments && tournaments.length &&(!env.live || $root.conf.sportTournaments.showInLive)">
+                            <p trans class="dropdown-title">Tournaments</p>
+                            <p ng-bind="selectedTournament ? selectedTournament.name : ('Select Tournament' | translate)" class="dropdown-paragraph"></p>
+                            <i class="arrow-rotate-filter-v3"></i>
+                            <div class="sub-nav-filter-time-v3">
+                                <ul>
+                                    <li ng-repeat="tournament in tournaments track by tournament.id"
+                                        ng-click="selectTournament(tournament);"
+                                        ng-class="{'active': tournament.id === selectedTournament.id}">
+                                        <span>{{tournament.name}}</span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="tournament-details float-width" ng-if="selectedTournament && (!env.live || $root.conf.sportTournaments.showInLive)">
+                            <div class="float-width">
+                                <p class="tournament-details-price f-left">
+                                    {{selectedTournament.prizeFund|number}} {{selectedTournament.currencyId|currency}}
+                                </p>
+                                <button ng-click="selectTournament(null);"  class="btn tournament-details-reset f-right">
+                                    {{'Reset'|translate}} <i class="tournament-details-remove cms-jcon-close-cross-pu"></i>
+                                </button>
+                            </div>
+                            <div class="tournament-details-bodytournament-details-body-time-bc float-width">
+                                <p class="tournament-details-body-text">
+                                    {{'Buy in + Fee'|translate}}: {{selectedTournament.registrationAmount}} {{selectedTournament.currencyId|currency}}
+                                </p>
+                                <div class="tournament-details-body-time-bc float-width">
+                                    <div class="tournament-details-time-bc ellipsis-text">
+                                        <span class="f-left">{{selectedTournament.startDate|formatDate:'tournament'}}</span>
+                                        <i class="tournament-details-arrow-to cms-jcon-right-thin-arrow f-left"></i>
+                                        <span class="f-left">{{selectedTournament.endDate|formatDate:'tournament'}}</span>
+                                    </div>
+                                    <a class="tournament-details-bc f-right" ng-href="#/sport-tournaments/?tournament_id={{selectedTournament.id}}" trans>Details</a>
+                                </div>
+                            </div>
+                        </div>
                         <div class="second-row-filter-v3">
                             <include-template template-path="templates/search/sport.html" class="search-box-v3"
                                               ng-if="$root.conf.enableMenuSearch"></include-template>
@@ -203,16 +239,16 @@
                         </div>
                         <div class="prematch-markets-filter-v3">
                             <div class="time-filter-v3" ng-class="{'active': showMarketFilterDropDown}"
-                                 ng-show="(showMarketsFilter || env.preMatchMultiSelection) && !outrightSelected && !multiColumn.show && !boostedBets.selected"
-                                 ng-click="showMarketFilterDropDown = !showMarketFilterDropDown">
-                                <p><span>{{selectedMarketFilter.name | translate}}</span> <i
+                                 ng-show="showMarketsFilter && !multiColumn.show && !boostedBets.selected"  ng-click="showMarketFilterDropDown = !showMarketFilterDropDown">
+                                    <p><span>{{selectedMarketFilter.MarketTypeName}}</span> <i
                                         class="arrow-rotate-filter-v3"></i></p>
                                 <div class="sub-nav-filter-time-v3">
                                     <ul>
-                                        <li ng-repeat="marketField in marketFilterTypes"
+                                        <li ng-repeat="marketField in marketTypes track by marketField.Kind"
                                             ng-click="selectMarketFilter(marketField)"
-                                            ng-class="{'active': marketField.type === selectedMarketFilter.type}">
-                                            <span>{{marketField.name | translate}}</span>
+                                            ng-class="{'active': marketField.Kind === selectedMarketFilter.Kind}"
+                                        >
+                                            <span title="{{marketField.MarketTypeName}}">{{marketField.MarketTypeName}}</span>
                                         </li>
                                     </ul>
                                 </div>
@@ -259,10 +295,13 @@
                                 <div class="time-info-game-box-v3"
                                      ng-repeat="(groupDate, groupGames) in competition.gamesGroupedByDate"
                                      ng-class="{'closed': competitionTimeGroupe[$parent.$index + '-' + $index]}">
-                                    <div class="time-title-view-v3" ng-show="!boostedBets.selected"
+                                    <div class="time-title-view-v3"
                                          ng-click="competitionTimeGroupe[$parent.$index + '-' + $index] = !competitionTimeGroupe[$parent.$index + '-' + $index]">
-                                        <p><span>{{groupDate | formatDate:'unixDate':null:$root.env.timeFormat}}</span>
-                                        </p>
+                                        <p>{{groupDate | formatDate:'unixDate':null:$root.env.timeFormat}}</p>
+                                        <div class="boosted-bets-competition-info" ng-if="boostedBets.selected">
+                                            <div class="flag-icon flag-{{groupGames[0].region.alias | removeUselessSymbolsByRegexp: '[,\' ]+': 'g': 'true'}}"></div>
+                                            {{ competition.name}}
+                                        </div>
                                         <div class="arrow-view-v3"></div>
                                     </div>
                                     <div class="game-events-view-v3"
@@ -338,7 +377,7 @@
                                                 <div class="arrow-icon-b-v3"></div>
                                             </div>
                                         </div>
-                                        <div ng-if="(prematchGame.sport.alias !== 'Soccer' || boostedBets.selected || couponGames.selected) && selectedMarketFilter === marketFilterTypes[0]"
+                                        <div ng-if="!showMarketsFilter"
                                              class="l-b column-{{ prematchGame.firstMarket.col_count || (prematchGame.firstMarket.type == 'P1XP2' ? 3 : '2 two-odds') }}"
                                              ng-class="{'two-odds': prematchGame.firstMarket.col_count == 2}">
                                             <div class="single-events-b-v3"
@@ -393,13 +432,13 @@
                                                 </b>
                                             </div>
                                         </div>
-                                        <div ng-if="prematchGame.sport.alias === 'Soccer'&& !boostedBets.selected && !couponGames.selected"
-                                             class="l-b column-{{prematchGame.filteredMarkets[selectedMarketFilter.type][0].col_count}}">
+                                        <div ng-if="showMarketsFilter"
+                                             class="l-b column-{{prematchGame.filteredMarkets[selectedMarketFilter.BasaltKind][0].col_count}}">
                                             <div class="single-events-b-v3"
-                                                 title="{{event.name}}{{displayBase(event, prematchGame.filteredMarkets[selectedMarketFilter.type + selectedMarketFilter.base].market || prematchGame.filteredMarkets[selectedMarketFilter.type + selectedMarketFilter.base][0])}}"
-                                                 ng-repeat="event in prematchGame.filteredMarkets[selectedMarketFilter.type + selectedMarketFilter.base].events|orderBy:'order'"
+                                                 title="{{event.name}}{{displayBase(event, prematchGame.filteredMarkets[selectedMarketFilter.BasaltKind].market || prematchGame.filteredMarkets[selectedMarketFilter.BasaltKind][0])}}"
+                                                 ng-repeat="event in prematchGame.filteredMarkets[selectedMarketFilter.BasaltKind].events|orderBy:'order'"
                                                  ng-show="event && event.name"
-                                                 ng-click="bet(event, prematchGame.filteredMarkets[selectedMarketFilter.type + selectedMarketFilter.base].market || prematchGame.filteredMarkets[selectedMarketFilter.type + selectedMarketFilter.base][0], prematchGame);"
+                                                 ng-click="bet(event, prematchGame.filteredMarkets[selectedMarketFilter.BasaltKind].market || prematchGame.filteredMarkets[selectedMarketFilter.BasaltKind][0], prematchGame);"
                                                  ng-class="{'active': isEventInBetSlip(event), 'blocked': ((event.price | oddConvert:'decimal') == 1 || prematchGame.is_blocked)}">
                                                 <i ng-if="$root.conf.boostedBets.enabled && $root.boostedBetsEventIds && $root.boostedBetsEventIds[event.id]"
                                                    title="{{'Boosted odd'|translate}}" class="boosted"></i>
@@ -409,7 +448,7 @@
                                                      ng-class="{'maxbet-enabled': $root.env.authorized && $root.conf.displayEventsMaxBet}">
                                                 </div>
                                                 <b class="p-v {{event.price_change == null? '' : ({true: 'up-', false: 'down'}[event.price_change > 0] + (event.price_change % 2)) }}"
-                                                   ng-show="(event.price | oddConvert:'decimal') != 1 && !prematchGame.is_blocked">{{event.price | oddConvert:env.oddFormat:null:prematchGame.filteredMarkets[selectedMarketFilter.type + selectedMarketFilter.base][0].display_key}}</b>
+                                                   ng-show="(event.price | oddConvert:'decimal') != 1 && !prematchGame.is_blocked">{{event.price | oddConvert:env.oddFormat:null:prematchGame.filteredMarkets[selectedMarketFilter.BasaltKind][0].display_key}}</b>
                                             </div>
                                         </div>
                                     </div>
@@ -480,7 +519,7 @@
 
                             <div class="statistic-icon-view-p-v3"
                                  ng-show="$root.conf.enableH2HStat && openGame.is_stat_available && openGame"
-                                 ng-click="openStatistics(openGame);$event.stopPropagation();" title="Statistics"></div>
+                                 ng-click="openStatistics(openGame);$event.stopPropagation();" title="Statistics" trans></div>
 
 
                         </div>
@@ -694,6 +733,9 @@
                                 <div class="game-video-container" ng-if="$root.conf.video.providersThatSupportHls[openGame.tv_type] && openGame.activeFieldType === 'video' && !openGame.is_guest && !env.authorized">
                                     <p ng-if="!$root.conf.integrationMode" trans ng-click="broadcast('openLoginForm');$event.stopPropagation();" class="login-link">You need to be logged in to be able to play video.</p>
                                     <p ng-if="$root.conf.integrationMode" trans class="login-link">You need to be logged in to be able to play video.</p>
+                                </div>
+                                <div class="game-video-container" ng-if="!openGame.is_guest && $root.conf.video.providersThatSupportHls[openGame.tv_type] && env.authorized && $root.profile.totalBalance === 0 && !openGame.allow_zero_balance">
+                                    <p  trans ng-click="!$root.conf.disableDepositPage && broadcast('toggleSliderTab', 'deposit');$event.stopPropagation();"> You need to have non-zero balance to be able to play video.</p>
                                 </div>
                                 <p ng-if="openGame.activeFieldType === 'customStreaming' && !isLoadingCustomStreaming && !selectedStreamingItem" trans="">There are no streaming available</p>
                                 <vbet-loader ng-show="isLoadingCustomStreaming"></vbet-loader>

@@ -129,7 +129,7 @@ VBET5.controller('mixedAuthenticationCtrl', ['$scope', '$rootScope', 'Utils', 'Z
             code: $scope.data.code
         };
 
-        request.device_fingerprint = Fingerprint2.getAuthenticationCode();
+        request.device_fingerprint = Fingerprint2.authenticationCode;
 
 
         $scope.isLoading = true;

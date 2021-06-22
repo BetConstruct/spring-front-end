@@ -607,6 +607,7 @@ angular.module('vbet5.betting').controller('virtualSportsCtrl', ['$scope', '$roo
                             market = groupedMarkets[i][j];
 
                             prepareMarket(market);
+                            market.express_id = Utils.calculateExpressId(market, $scope.gameToShow.type)
 
                             if (!market.group_id) {
                                 market.group_id = MARKET_GROUP_OTHER.id;
@@ -699,19 +700,21 @@ angular.module('vbet5.betting').controller('virtualSportsCtrl', ['$scope', '$roo
 
     function loadGameToShow(game) {
         $scope.gameIsLoading = true;
-        connectionService.subscribe(
-            {
-                'source': 'betting',
-                'what': {
-                    sport: ['id', 'alias'],
-                    competition: ['id', 'name'],
-                    region: ['id'],
-                    game: [["id", "markets_count", "start_ts", "is_live", "is_blocked", "is_neutral_venue","team1_id", "team2_id", "game_number", "text_info", "is_stat_available", "match_length", "type", "scout_provider", "info", "stats", "team1_name", "team2_name", "tv_info" , "video_id", "video_id2", "video_id3", "tv_type" ]],
-                    market: ["id", "col_count", "type", "sequence", "express_id", "cashout", "display_key", "display_sub_key", "group_id", "name", "group_name", "order" ],
-                    event: ["order", "id", "type_1", "type", "type_id", "original_order", "name", "price", "base", "home_value", "away_value", "display_column"]
-                },
-                'where': {'game': {'id': game.id}}
+        var request = {
+            'source': 'betting',
+            'what': {
+                sport: ['id', 'alias'],
+                competition: ['id', 'name'],
+                region: ['id'],
+                game: [["id", "markets_count", "start_ts", "is_live", "is_blocked", "is_neutral_venue","team1_id", "team2_id", "game_number", "text_info", "is_stat_available", "match_length", "type", "scout_provider", "info", "stats", "team1_name", "team2_name", "tv_info" , "video_id", "video_id2", "video_id3", "tv_type" ]],
+                market: ["id", "col_count", "type", "sequence", "express_id", "cashout", "display_key", "display_sub_key", "group_id", "name", "group_name", "order" ],
+                event: ["order", "id", "type_1", "type", "type_id", "original_order", "name", "price", "base", "home_value", "away_value", "display_column"]
             },
+            'where': {'game': {'id': game.id}}
+        };
+        Utils.addPrematchExpressId(request);
+        connectionService.subscribe(
+            request,
             updateOpenGameData,
             {
                 'thenCallback': function (res) {
@@ -855,14 +858,14 @@ angular.module('vbet5.betting').controller('virtualSportsCtrl', ['$scope', '$roo
                 return '';
         }
     };
-    $scope.$on('sportsbook.handleDeepLinking', function () {
-        if ($location.search().vsport && $scope.selectedRanges.selectedSportId !== parseInt($location.search().vsport, 10) ) {
+    $scope.$on('sportsbook.handleDeepLinking', Utils.debounce(function () {
+        if ($location.search().vsport) {
             var sportToLoad = Utils.getArrayObjectElementHavingFieldValue($scope.sections, 'id', parseInt($location.search().vsport, 10));
             if (sportToLoad) {
                 $scope.loadCompetitions(sportToLoad);
             }
         }
-    });
+    }, 100));
     loadVirtualSports();
 
     /**

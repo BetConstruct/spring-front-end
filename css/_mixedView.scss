@@ -111,7 +111,6 @@
   width: 100%;
   background: $skin-palette-8;
   box-shadow: 0 -1px 0 $skin-palette-12 inset;
-  height: 48px;
   overflow: hidden;
   @include ltr {
     padding: 0 48px 0 0;
@@ -129,7 +128,6 @@
     > li{
       height: 48px;
       border-bottom: 1px solid $skin-palette-12;
-      box-shadow: 1px 0 0 $skin-palette-12;
       position: relative;
       min-width: 160px;
       transition: background 200ms;
@@ -137,11 +135,13 @@
         float: left;
         margin: 0 1px 0 0;
         padding: 0 15px 0 54px;
+        box-shadow: 1px 0 0 $skin-palette-12;
       }
       @include rtl {
         float: right;
         margin: 0 0 0 1px;
         padding: 0 54px 0 15px;
+        box-shadow: -1px 0 0 $skin-palette-12;
       }
       > i {
         position: absolute;
@@ -178,12 +178,6 @@
             vertical-align: top;
             margin-top: -1px;
             font-size: 11px;
-            @include ltr {
-              margin-left: 3px;
-            }
-            @include rtl {
-              margin-right: 3px;
-            }
           }
         }
         > span {
@@ -217,12 +211,12 @@
     }
   }
 }
-@media  screen and (max-width: 1200px){
-  .all-main-tabs-b{
-    height: auto;
-    max-height: 98px;
-  }
-}
+//@media  screen and (max-width: 1260px){
+//  .all-main-tabs-b{
+//    height: auto;
+//    max-height: 98px;
+//  }
+//}
 .id-view-tab{color: $brand-color-2;}
 .balance-view-tab{color: $brand-color-1;}
 .first-level-history-tab{
@@ -342,6 +336,11 @@
     background: $skin-palette-7;
     border-bottom: 2px solid lighten( desaturate( adjust-hue( $skin-color, 6deg ), 19 ), 8 );
     box-shadow: 0 -1px 0 darken( desaturate( adjust-hue( $skin-color, 3deg ), 10 ), 2 ) inset;
+    -moz-user-select: none;
+    -khtml-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
     > li {
       box-sizing: border-box;
       display: inline-block;
@@ -637,9 +636,11 @@ div.mini-form-box-b{
     }
   }
 }
-
-
-
+.bet-view-information-box {
+  float: left;
+  width: 100%;
+  height: 100%;
+}
 .full-bet-history-information-contain{
   float: left;
   width: 100%;
@@ -653,10 +654,22 @@ div.mini-form-box-b{
 .bet-info-list-separator-b{
   float: left;
   width: 100%;
-  height: 37px;
+  height: 50px;
   background: lighten( desaturate( adjust-hue( $skin-color, 6deg ), 19 ), 7 );
-  margin: 0 0 5px;
+  margin: 0 0 3px;
   border-bottom: 1px solid $skin-palette-12;
+  &:first-child {
+    .deposit-bonus-button-b > span {
+      top: 38px;
+      bottom: auto;
+      &:before {
+        top: -6px;
+        bottom: auto;
+        border-width: 0 6px 6px 6px;
+        border-color: transparent transparent #c1c4cd transparent;
+      }
+    }
+  }
   &.sticky-total {
     position: sticky;
     position: -webkit-sticky;
@@ -678,8 +691,7 @@ div.mini-form-box-b{
   background: $skin-palette-7;
 }
 .bet-info-list-separator-b:first-child{
-  background: none;
-  margin: 0;
+  margin: 5px 0 3px 0;
   border-bottom: 0;
 }
 .bet-info-list-separator-b > ul{
@@ -687,6 +699,11 @@ div.mini-form-box-b{
   width: 100%;
   box-sizing: border-box;
   transition: background 200ms;
+  &:first-child{
+    .bonus-function-b{
+        padding: 10px 7px;
+    }
+  }
 }
 .bet-info-list-separator-b > ul:hover{
   background: lighten( desaturate( adjust-hue( $skin-color, 6deg ), 19 ), 8 );
@@ -705,7 +722,7 @@ div.mini-form-box-b{
   display: inline-block;
   box-sizing: border-box;
   padding: 0 10px;
-  height: 36px;
+  height: 50px;
   position: relative;
   @include ltr {
     float: left;
@@ -774,7 +791,7 @@ div.mini-form-box-b{
 }
 .bet-info-list-separator-b > ul > li.bet-type-column-b{
   width: calc(100% - 765px);
-  font: 12px/36px $font-f;
+  font: 12px/50px $font-f;
   color: $text-palette-3;
   white-space: nowrap;
   text-overflow: ellipsis;
@@ -913,23 +930,50 @@ div.mini-form-box-b{
   font-weight: bold;
 }
 .bet-info-list-separator-b > ul > li.outcome-bet-info-column{
-  width: 160px;
-  background: lighten( desaturate( adjust-hue( $skin-color, 6deg ), 20 ), 9 );
-  @include ltr {
-    border-right: 1px solid lighten( desaturate( adjust-hue( $skin-color, 6deg ), 20 ), 9 );
-  }
-  @include rtl {
-    border-left: 1px solid lighten( desaturate( adjust-hue( $skin-color, 6deg ), 20 ), 9 );
+  max-width: 230px;
+  width: 230px;
+  display: table;
+  > span{
+    display: table-cell;
+    vertical-align: middle;
+    &:last-child{
+      @include ltr{
+        text-align: right;
+      }
+      @include rtl{
+        text-align: left;
+      }
+    }
+    &:first-child{
+      > i{
+        float: left;
+        width: 100%;
+      }
+    }
   }
 }
-.bet-info-list-separator-b > ul > li.outcome-bet-info-column > span{
-  color: $text-palette-14;
-  font: 12px/36px $font-f;
-}
+
 .bet-info-list-separator-b > ul > li.outcome-bet-info-column > span > i{
   font-style: normal;
   color: $text-palette-4;
   text-transform: uppercase;
+}
+.bet-info-list-separator-b > ul > li.outcome-bet-info-column{
+  &.active-status{
+    span:first-child{
+      i{
+        color: #1a7051;
+      }
+    }
+  }
+  > span{
+    color: $text-palette-14;
+    font: 12px/16px $font-f;
+    > span{
+      float: left;
+      width: 100%;
+    }
+  }
 }
 .bet-info-list-separator-b > ul > li.outcome-bet-info-column.possible-win > span{
   line-height: 14px;
@@ -940,7 +984,7 @@ div.mini-form-box-b{
   margin: 4px 0 0;
 }
 .bet-info-list-separator-b > ul > li.bet-status-column-b{
-  width: 150px;
+  width: 110px;
   @include ltr {
     padding: 0 36px 0 10px;
   }
@@ -994,15 +1038,14 @@ div.mini-form-box-b{
 
 .bet-info-list-separator-b > ul > li.bet-status-column-b > span{
   color: $text-palette-14;
-  font: 10px/36px $font-f;
+  font: 10px/50px $font-f;
   text-transform: uppercase;
 }
-.bet-info-list-separator-b:nth-child(even) > ul > li.bet-stake-info-column,
-.bet-info-list-separator-b:nth-child(even) > ul > li.bet-odds-info-column,
-.bet-info-list-separator-b:nth-child(even) > ul > li.outcome-bet-info-column{
+
+.bet-info-list-separator-b:nth-child(even) > ul > li.bet-odds-info-column{
   background: lighten( desaturate( adjust-hue( $skin-color, 6deg ), 19 ), 7 );
 }
-.bet-info-list-separator-b:nth-child(even) > ul > li.outcome-bet-info-column,
+
 .bet-info-list-separator-b:nth-child(even) > ul > li.bet-stake-info-column{
   @include ltr {
     border-color: lighten( desaturate( adjust-hue( $skin-color, 6deg ), 19 ), 7 );
@@ -1142,7 +1185,7 @@ div.mini-form-box-b{
   width: 124px;
 }
 .bet-info-list-separator-b.open-view > ul > li.bet-type-column-b{
-  width: calc(100% - 730px);
+  width: calc(100% - 410px);
   @include ltr {
     padding: 0 0 0 28px;
   }
@@ -1321,7 +1364,7 @@ div.mini-form-box-b{
   padding: 0;
   line-height: 36px;
 }
-.full-bet-history-information-contain.bonus-contain .bet-info-list-separator-b > ul > li.bet-status-column-b {
+.full-bet-history-information-contain.bonus-contain .bet-info-list-separator-b > ul > li.bet-status-column-b:last-child {
   width: 170px;
   padding: 0 10px;
   text-align: center;
@@ -1330,7 +1373,16 @@ div.mini-form-box-b{
 .full-bet-history-information-contain.bonus-contain .bet-info-list-separator-b.title > ul > li.bet-status-column-b > span{font-size: 10px;}
 .full-bet-history-information-contain.bonus-contain .bet-info-list-separator-b > ul > li.bet-status-column-b.active-status > span{color: #008d47;}
 .full-bet-history-information-contain.bonus-contain .bet-info-list-separator-b > ul > li.bet-type-column-b {
-  width: calc(100% - 330px);
+  width: calc(100% - 400px);
+}
+.bet-info-list-separator-b > ul > li.bet-type-column-b + li.bet-status-column-b{
+  width: 130px;
+  padding-right: 10px;
+  > span{
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+  }
 }
 .bet-info-list-separator-b.full-info{
   height: auto;
@@ -1360,16 +1412,21 @@ div.mini-form-box-b{
 .bonus-info-list-separator-b > ul > li{
   box-sizing: border-box;
   display: table-cell;
-  border-left: 1px solid $skin-palette-8;
   vertical-align: top;
   padding: 7px 10px;
+  position: relative;
 }
 .bonus-info-list-separator-b > ul > li:first-child{border: none;}
 .bonus-info-list-separator-b > ul > li.screen-contain-box-b{
   width: 133px;
   display: none;
 }
-.bonus-info-list-separator-b > ul > li.bonus-start-end-b{width: 159px;}
+.bonus-info-list-separator-b > ul > li.bonus-start-end-b{
+  width: 230px;
+  > p{
+    padding: 0 0 10px 0;
+  }
+}
 .bonus-info-list-separator-b > ul > li.claim-cancel-bonus{
   width: 171px;
   padding: 3px;
@@ -1387,6 +1444,7 @@ div.mini-form-box-b{
   float: left;
   width: 100%;
   box-sizing: border-box;
+  padding: 5px 15px;
   & + .bonus-function-b {
     margin-top: 1px;
   }
@@ -1404,10 +1462,16 @@ div.mini-form-box-b{
   background: $brand-color-1;
   cursor: pointer;
   position: relative;
+  &.deposit-bonus-button-b{
+    background: $brand-color-2;
+    color: set-color($brand-color-2);
+  }
 }
 .bonus-function-b.cancel-bonus > button{
-  background: #a82d46;
-  color: white;
+ // background: #a82d46;
+ // color: white;
+  background: $skin-palette-10;
+  color: set-color($skin-palette-10);
 }
 .bonus-function-b > button > i{
   font-style: normal;
@@ -1448,6 +1512,7 @@ div.mini-form-box-b{
   }
   @include rtl {
     left: 0;
+    right: auto;
   }
 }
 .deposit-bonus-button-b > span:before{
@@ -1494,6 +1559,10 @@ div.mini-form-box-b{
   float: left;
   width: 100%;
   box-sizing: border-box;
+  > .md-progress-circular {
+    position: static;
+    margin: 40px auto 10px;
+  }
 }
 .bonus-table-information-b > ul{
   float: left;
@@ -1501,20 +1570,24 @@ div.mini-form-box-b{
   display: table;
   box-sizing: border-box;
 }
-.bonus-table-information-b > ul:first-child{
-  border-bottom: 1px solid lighten( desaturate( adjust-hue( $skin-color, 6deg ), 20 ), 9 );
-}
 .bonus-table-information-b > ul > li{
   display: table-cell;
   padding: 5px;
   font: 12px/14px $font-f;
   color: $text-palette-14;
   width: 20%;
+  &:first-child{
+    min-width: 300px;
+  }
+  &:last-child{
+    min-width: 100px;
+  }
 }
 .bonus-table-information-b > ul:first-child > li{
   font: 11px/12px $font-f;
-  color: $text-palette-4;
+  color: $text-palette-3;
   padding: 0 5px 5px;
+  font-weight: bold;
 }
 .bonus-table-information-b > ul > li:first-child{
   @include ltr {
@@ -1814,9 +1887,14 @@ div.mini-form-box-b{
     color: $text-palette-4;
     margin: 0;
     border: 1px solid $skin-palette-5;
-    padding: 0 40px 0 12px;
     height: 36px;
     transition: border-color 200ms;
+    @include ltr {
+      padding: 0 40px 0 12px;
+    }
+    @include rtl {
+      padding: 0 12px 0 40px;
+    }
     &:focus{
       border-color: $form-elements-focus;
     }
@@ -1833,6 +1911,8 @@ div.mini-form-box-b{
   margin: 5px 0;
 }
 .profile-tab-contain-b .settings-info-contain .personal-details-right .error .select-block select,
+.profile-tab-contain-b .settings-info-contain .personal-details-left .error.select-block select,
+.profile-tab-contain-b .settings-info-contain .error select,
 .profile-tab-contain-b .settings-info-contain .error input[type="text"],
 .profile-tab-contain-b .settings-info-contain .error input[type="email"],
 .profile-tab-contain-b .settings-info-contain .error input[type="number"],
@@ -1961,8 +2041,15 @@ div.mini-form-box-b{
 .profile-tab-contain-b .verifity-account input#uploadFilePassport::-moz-placeholder{color: $text-palette-15;}
 .profile-tab-contain-b .verifity-account input#uploadFilePassport:-moz-placeholder{color: $text-palette-15;}
 .profile-tab-contain-b .verifity-account input#uploadFilePassport:-ms-input-placeholder{color: $text-palette-15;}
-.profile-tab-contain-b .settings-info-contain.deposit-limit p{
-  padding: 5px 10px;
+.profile-tab-contain-b .settings-info-contain.deposit-limit {
+  p {
+    padding: 5px;
+  }
+  &.settings-info-contain-padding {
+    p {
+      padding: 10px;
+    }
+  }
 }
 .profile-tab-contain-b .settings-info-contain .info{
   padding: 10px;
@@ -2205,7 +2292,6 @@ div.mini-form-box-b{
     display: block;
     height: 20px;
     width: 20px;
-    font: 16px/20px icomoon;
     @include ltr {
       float: left;
       margin-left: 8px;
@@ -2214,73 +2300,9 @@ div.mini-form-box-b{
       float: right;
       margin-right: 8px;
     }
-  }
-  .mini-facebook,
-  .mini-google,
-  .mini-odnoklassniki,
-  .mini-telegram,
-  .mini-twitter {
-    position: relative;
-    &:before {
-      font: 20px/20px icomoon;
-      position: relative;
-      z-index: 20;
-      transition: 200ms color;
-    }
-    &:after {
-      content: "";
-      display: block;
-      width: 19px;
-      height: 19px;
-      background: #ffffff;
-      position: absolute;
-      top: 1px;
-      left: 0;
-    }
-  }
-  .mini-facebook {
-    &:before {
-      content: "\e94b";
-      color: #3c5a99;
-    }
-    &:hover:before {
-      color: lighten(#3c5a99, 10);
-    }
-  }
-  .mini-odnoklassniki {
-    &:before{
-      content: "\e94d";
-      color: #eb722e;
-    }
-    &:hover:before {
-      color: lighten(#eb722e, 10);
-    }
-  }
-  .mini-google {
-    &:before{
-      content: "\e94c";
-      color: #dc4f42;
-    }
-    &:hover:before {
-      color: lighten(#dc4f42, 10);
-    }
-  }
-  .mini-telegram {
-    &:before{
-      content: "\e964";
-      color: #31a8de;
-    }
-    &:hover:before {
-      color: lighten(#31a8de, 10);
-    }
-  }
-  .mini-twitter {
-    &:before{
-      content: "\e95e";
-      color: #2ca5db;
-    }
-    &:hover:before {
-      color: lighten(#2ca5db, 10);
+    > div{
+      width: 100%;
+      height: 100%;
     }
   }
 }
@@ -2349,11 +2371,8 @@ div.mini-form-box-b{
   }
 }
 @media screen and (max-width: 1310px){
-  .bet-info-list-separator-b > ul > li.outcome-bet-info-column, .bet-info-list-separator-b > ul > li.bet-stake-info-column {
-    width: 130px;
-  }
-  .bet-info-list-separator-b > ul > li.bet-type-column-b {
-    width: calc(100% - 780px);
+  .bonus-table-information-b > ul > li:first-child{
+    min-width: inherit;
   }
 }
 .balance-lightbox-j {
@@ -2455,14 +2474,14 @@ div.mini-form-box-b{
       li:nth-child(3) {
         width: calc(100% - 607px - 156px);
       }
-       + .switchPaymenthMethodScroll {
-         width: 100%;
-         article {
-           width: 100%;
-         }
-       }
-       + .promotions-balance-j {
-         height: calc(100% - 35px);
+      + .switchPaymenthMethodScroll {
+        width: 100%;
+        article {
+          width: 100%;
+        }
+      }
+      + .promotions-balance-j {
+        height: calc(100% - 35px);
       }
     }
   }
@@ -3225,7 +3244,7 @@ div.mini-form-box-b{
     &.no-banners-balance {
       display: none;
       +  {
-        .switchPaymenthMethodScroll, .withdraw-status-j, .mixedWallet-j, .loyalty-points-j {
+        .switchPaymenthMethodScroll, .withdraw-status-j, .mixedWallet-j {
           width: 100%;
         }
       }
@@ -3259,7 +3278,6 @@ div.mini-form-box-b{
       width: 100%;
       p {
         font: 13px/15px $font-f,Helvetica,sans-serif;
-        text-transform: uppercase;
         color: $text-palette-3;
         padding: 24px 0 6px 0;
       }
@@ -3535,6 +3553,14 @@ div.mini-form-box-b{
   background-color: $skin-palette-7;
   color: $text-palette-4;
   font: 400 12px/14px $font-f;
+  .max-btn {
+    min-width: 120px;
+    padding: 0 14px;
+    &:lang(hy) {
+      padding: 0 4px;
+      font: 400 13px/12px $font-f;
+    }
+  }
   form {
     display: block;
     float: left;
@@ -3542,7 +3568,7 @@ div.mini-form-box-b{
     padding: 30px;
     .select-block-mixedWJ, .input-block-mixedWJ {
       display: block;
-      width: 264px;
+      width: 350px;
       margin: 0 0 16px;
       p {
         padding: 0 0 9px;
@@ -3590,10 +3616,10 @@ div.mini-form-box-b{
         }
       }
       input[type="number"] {
+        min-width: 166px;
         border: 1px solid lighten( desaturate( adjust-hue( $skin-color, 2deg ), 16 ), 9 );
         background-color: lighten( desaturate( adjust-hue( $skin-color, 3deg ), 14 ), 1 );
         height: 36px;
-        width: calc(50% - 5px);
         display: block;
         padding: 0 12px;
         color: $text-palette-15;
@@ -3625,7 +3651,6 @@ div.mini-form-box-b{
       }
       button {
         height: 36px;
-        width: calc(50% - 5px);
         background: none;
         color: $text-palette-14;
         font: 400 14px $font-f;
@@ -3644,6 +3669,7 @@ div.mini-form-box-b{
       }
     }
     > button {
+      min-width: 166px;
       margin: 4px 0 30px;
       display: block;
       padding: 0 20px;
@@ -3744,6 +3770,75 @@ div.mini-form-box-b{
     }
   }
 }
+
+.casino-main-switcher-container {
+  width: 350px;
+  overflow: hidden;
+  margin-bottom: 30px;
+  .switch-btn {
+    background-color: $text-palette-6;
+    color: $text-palette-1;
+    width: 36px;
+    height: 36px;
+    line-height: 36px;
+    padding: 0;
+    border: none;
+    border-radius: 4px;
+    margin: 0 20px;
+    transition: al 250ms ease;
+    &:hover {
+      background: $brand-color-1;
+      color: set-color($brand-color-1);
+    }
+    i {
+      font-size: 16px;
+      font-style: normal;
+    }
+  }
+  .switcher-titles, .switch-btn-wrap {
+    @include ltr {
+      float: left;
+    }
+    @include rtl {
+      float: right;
+    }
+  }
+  .switch-btn-wrap {
+    margin-top: 20px;
+  }
+  .switcher-titles {
+    width: 109px;
+    &.left-part {
+      @include ltr {
+        text-align: right;
+      }
+      @include rtl {
+        text-align: left;
+      }
+    }
+    .main-casino-p {
+      font-size: 14px;
+      text-transform: capitalize;
+      color: $text-palette-2;
+    }
+    .from-to-p {
+      margin-bottom: 7px;
+      color: $text-palette-14;
+    }
+  }
+  .main-casino-p-wrap {
+    height: 36px;
+    line-height: 34px;
+    padding: 0 8px;
+    border: 1px solid $text-palette-4;
+    //border-radius: 4px;
+  }
+}
+
+.transfer-btn {
+  width: 296px;
+}
+
 .balance-lightbox-j {
   .additional-payment-buttons-wrap-j {
     float: left;
@@ -4073,6 +4168,9 @@ div.mini-form-box-b{
   }
 }
 @media screen and (max-width: 1260px) {
+  .mixed-view-holder {
+    height: calc(100% - 96px);
+  }
   .balance-lightbox-j .promotions-balance-j,
   .balance-lightbox-j section > div > ul li:nth-child(3),
   .balance-lightbox-j section > div.withdraw-status-templ-j > ul li:nth-child(2),
@@ -4600,6 +4698,9 @@ button.button-confirm .md-progress-circular.small-progress {
       &.coins-icon:before {
         background: url("../../../images/coins-icon.png#{$delete-cache}") no-repeat 0 50% / contain;
       }
+      .profile-id-copy{
+        height: 9px;
+      }
     }
     &.casino-hist{
       color: $text-palette-3;
@@ -4667,7 +4768,7 @@ button.button-confirm .md-progress-circular.small-progress {
       color: #1a7051;
     }
   }
- .cms-jcon-checkmark2-orange{
+  .cms-jcon-checkmark2-orange{
     &:before{
       color: #C29440 !important;
       content: '\e6ec';
@@ -4703,11 +4804,21 @@ button.button-confirm .md-progress-circular.small-progress {
   .sub-child {
     .was-game {
       cursor: auto;
-      @include ltr {
-        padding: 0 0 0 16px;
-      }
-      @include rtl {
-        padding: 0 16px 0 0;
+      &:not(.show-order){
+        @include ltr {
+          padding: 0 0 0 16px;
+        }
+        @include rtl {
+          padding: 0 16px 0 0;
+        }
+        &:before {
+          @include ltr {
+            left: 12px;
+          }
+          @include rtl {
+            right: 12px;
+          }
+        }
       }
       &:before {
         content: "";
@@ -4718,26 +4829,51 @@ button.button-confirm .md-progress-circular.small-progress {
         border-radius: 100%;
         position: absolute;
         top: 16px;
-        @include ltr {
-          left: 12px;
-        }
-        @include rtl {
-          right: 12px;
-        }
       }
       &.live-now:before {
         background: #008d47;
       }
       &.is-game-available {
         cursor: pointer;
-        > span {
-          text-decoration: underline;
+        span{
           transition: color 240ms;
         }
         &:hover > span {
           color: $brand-color-2;
         }
       }
+      span {
+        &:only-child,
+        + span {
+          text-decoration: underline;
+        }
+      }
+      &.show-order{
+        @include ltr {
+          padding: 0 0 0 30px;
+        }
+        @include rtl {
+          padding: 0 30px 0 0;
+        }
+        &:before {
+          @include ltr {
+            left: 26px;
+          }
+          @include rtl {
+            right: 26px;
+          }
+        }
+        .chain-order{
+          position: absolute;
+          @include ltr {
+            left: 10px;
+          }
+          @include rtl {
+            right: 10px;
+          }
+        }
+      }
+
     }
     .second-color {
       color: $text-palette-4;
@@ -4982,6 +5118,25 @@ button.button-confirm .md-progress-circular.small-progress {
     }
   }
 }
+.my-bets-history-possible-win {
+  text-align: center;
+  .cms-jcon-money-dollar {
+    color: $brand-color-2;
+    font-style: normal;
+    @include ltr {
+      margin-right: 3px;
+    }
+    @include rtl {
+      margin-left: 3px;
+    }
+  }
+}
+.my-bets-history-possible-win-bonus > {
+  span,
+  i {
+    display: inline-block;
+  }
+}
 .mixed-bet-history-flex {
   display: -ms-flexbox;
   display: flex;
@@ -5044,6 +5199,39 @@ button.button-confirm .md-progress-circular.small-progress {
     }
   }
 }
+.bet-history-icon {
+  width: 20px;
+  height: 20px;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-color: transparent;
+  display: inline-block;
+  margin: 0 2px;
+  vertical-align: middle;
+  &.freebet-icon {
+    background-image: url("../../../images/bet-history-icons/freebet.svg");
+  }
+  &.profit-icon {
+    background-image: url("../../../images/bet-history-icons/profit-boost.svg");
+  }
+  &.express-icon {
+    width: 10px;
+    background-image: url("../../../images/bet-history-icons/express.svg");
+  }
+  &.gift-icon {
+    background-image: url("../../../images/bet-history-icons/gift.svg");
+  }
+  &.superbet-icon {
+    background-image: url("../../../images/bet-history-icons/superbet.svg");
+  }
+}
+
+.sport {
+  .bet-history-icon {
+    margin-bottom: 4px;
+  }
+}
+
 .EW-bh-indicator:after {
   content: "E/W";
   margin: 0 4px;
@@ -5228,6 +5416,13 @@ button.button-confirm .md-progress-circular.small-progress {
         color: $text-palette-15;
         font-size: 11px;
         font-family: $font-f;
+      }
+      &:-webkit-autofill, &:-webkit-autofill:focus{
+        box-shadow: 0 0 0 100px $skin-palette-8 inset;
+        -webkit-text-fill-color: $text-palette-15;
+      }
+      &:-webkit-autofill{
+        border: 1px solid $skin-palette-6;
       }
     }
   }
@@ -5621,6 +5816,7 @@ button.button-confirm .md-progress-circular.small-progress {
     max-height: 42px;
     display: inline-block;
     vertical-align: middle;
+    padding-bottom: 10px;
     @include ltr {
       margin-right: 16px;
     }
@@ -5941,10 +6137,8 @@ li.barcod-authentication {
   > .bonus-category {
     display: block;
     color: $text-palette-3;
-    font-weight: bold;
-    font-size: 28px;
-    line-height: 34px;
-    text-transform: uppercase;
+    font-size: 20px;
+    line-height: 22px;
   }
 
   > .amount-line {
@@ -5953,14 +6147,19 @@ li.barcod-authentication {
     display: table;
     vertical-align: top;
     padding: 20px 0 0 0;
-    > div{
+    > div {
       display: table-cell;
       vertical-align: bottom;
-      width: 50%;
+      &:first-child {
+        width: 60%;
+      }
+      &:nth-child(2) {
+        width: 40%;
+      }
     }
     button {
       height: 46px;
-      width: 280px;
+      width: 100%;
       text-align: center;
       font-size: 15px;
       line-height: 17px;
@@ -5994,7 +6193,7 @@ li.barcod-authentication {
       }
     }
     p {
-      width: 80%;
+      min-width: 80%;
       border-bottom: 1px solid $skin-palette-10;
       font-size: 15px;
       line-height: 46px;
@@ -6011,9 +6210,11 @@ li.barcod-authentication {
         color: $text-palette-3;
         @include ltr{
           float: left;
+          margin-right: 10px;
         }
         @include rtl{
           float: right;
+          margin-left: 10px;
         }
       }
 
@@ -6295,3 +6496,46 @@ li.barcod-authentication {
 }
 
 // prefer to friend END
+
+// Free spin games Start
+.free-spin {
+  .select-box-period-b {
+    width: 160px;
+    margin: 15px;
+    z-index: 1;
+    @include rtl {
+      float: right;
+    }
+  }
+}
+.free-spin-games {
+  float: left;
+  width: 100%;
+  margin-top: 10px;
+  .all-games-container {
+    float: none;
+    display: flex;
+    align-items: center;
+    padding-bottom: 6px;
+    @include scroll($scroll: hidden);
+    overflow-x: auto;
+    @include rtl {
+      padding: 0 1px;
+    }
+    > a {
+      width: 20%;
+      padding-top: 14%;
+      flex-shrink: 0;
+      img {
+        width: 100%;
+        height: 100%;
+      }
+      @media screen and (max-width: 1260px) {
+        width: 33.333%;
+        padding-top: 23%;
+      }
+    }
+  }
+}
+
+// Free spin games End

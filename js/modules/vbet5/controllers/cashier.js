@@ -9,12 +9,13 @@ VBET5.controller('cashierCtrl', ['$scope', '$rootScope', '$location', '$filter',
     'use strict';
 
     $scope.cashierFormModel = {
-        amount: 0,
+        amount: null,
         fromProduct: null,
         toProduct: null
     };
 
     $scope.transferMinLimit = 1 / Math.pow(10, $rootScope.conf.balanceFractionSize);
+
 
     /**
      * @ngdoc method
@@ -133,12 +134,9 @@ VBET5.controller('cashierCtrl', ['$scope', '$rootScope', '$location', '$filter',
         if (!$scope.cashierFormModel.fromProduct && !$scope.cashierFormModel.toProduct) {
             switch ($location.path()) {
             case '/casino/':
-                $scope.cashierFormModel.fromProduct = 'Sport';
-                $scope.cashierFormModel.toProduct = 'Casino';
-                break;
             case '/poker/':
                 $scope.cashierFormModel.fromProduct = 'Sport';
-                $scope.cashierFormModel.toProduct = 'Poker';
+                $scope.cashierFormModel.toProduct = 'Casino';
                 break;
                 //case '/sport/':
             default:
@@ -154,14 +152,16 @@ VBET5.controller('cashierCtrl', ['$scope', '$rootScope', '$location', '$filter',
      * @methodOf vbet5.controller:cashierCtrl
      * @description Change cashier form model from product
      */
-    $scope.changeCashierFormModelFromProduct = function changeCashierFormModelFromProduct(selectedProduct) {
+    $scope.changeCashierFormModelFromProduct = function changeCashierFormModelFromProduct(selectedProduct , updateFrom) {
         switch (selectedProduct) {
-        case 'Casino':
-            $scope.cashierFormModel.toProduct = 'Sport';
-            break;
-        default:
-            $scope.cashierFormModel.toProduct = 'Casino';
-            break;
+            case 'Casino':
+                $scope.cashierFormModel.toProduct = 'Sport';
+                updateFrom && ($scope.cashierFormModel.fromProduct = 'Casino');
+                break;
+            default:
+                $scope.cashierFormModel.toProduct = 'Casino';
+                updateFrom && ($scope.cashierFormModel.fromProduct = 'Sport');
+                break;
         }
     };
 
@@ -178,7 +178,6 @@ VBET5.controller('cashierCtrl', ['$scope', '$rootScope', '$location', '$filter',
             $scope.cashierFormModel.amount = +$filter('counterOfferRounding')($rootScope.profile.calculatedBalance, Config.main.balanceFractionSize);
             break;
         case 'Casino':
-        case 'Poker':
             $scope.cashierFormModel.amount = +$filter('counterOfferRounding')($rootScope.profile.casino_balance, Config.main.balanceFractionSize);
             break;
         default:

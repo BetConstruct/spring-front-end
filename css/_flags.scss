@@ -1217,6 +1217,9 @@ $languages:(
         dan: flag-denmark,
         tha: flag-thailand,
         mlg: flag-madagascar,
+        uzb: flag-uzbekistan,
+        en-ca: flag-canada,
+        hin: flag-india,
 );
 @each $className, $extendSelector in $languages {
   .separator-contain-nav .settings-icon-contain.leng-b {

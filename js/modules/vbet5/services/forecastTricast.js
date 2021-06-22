@@ -4,7 +4,7 @@
  * @ngdoc service
  * @name vbet5.service:forecastTricast
  */
-VBET5.factory('forecastTricast', ['$rootScope', function forecastTricastService() {
+VBET5.factory('forecastTricast', ['$rootScope', function forecastTricastService($rootScope) {
     'use strict';
 
     var container = {};
@@ -100,7 +100,33 @@ VBET5.factory('forecastTricast', ['$rootScope', function forecastTricastService(
             }
         };
 
+        $scope.resetRacingData = function resetRacingData() {
+            $scope.racingData.selectionStatusMap = {};
+            $scope.racingData.selectedItems = [];
+            $scope.racingData.selectedAnyCount = 0;
+        };
 
+        $scope.openPopup = function openPopup(game, popupTag) {
+            $scope.racingData.selectedItems.sort(function (item1, item2) {
+                return item1.col - item2.col;
+            });
+            $rootScope.broadcast('globalDialogs.addDialog', {
+                template: 'templates/popup/forecast-tricast-bet.html',
+                type: 'template',
+                title: 'Betslip',
+                tag: popupTag,
+                state: {
+                    sportId: $scope.sportId,
+                    selectedItems: $scope.racingData.selectedItems,
+                    selectedAnyCount: $scope.racingData.selectedAnyCount,
+                    type: $scope.selectedTab,
+                    gameId: game.id,
+                    start_ts: game.start_ts,
+                    name: game.team1_name
+                },
+                hideButtons: true
+            });
+        };
 
         container.restoreSelectedRaces =  function restoreSelectedRaces() {
             //restore selected items when games are updated

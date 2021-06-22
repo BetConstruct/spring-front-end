@@ -14,7 +14,15 @@ VBET5.controller('myBetsCtrl', ['$scope', 'Utils', 'ConnectionService', 'Zerglin
     $scope.betHistoryLoaded = false;
     $scope.monthIndexes = [];
     $scope.ODD_TYPE_MAP = ['decimal', 'fractional', 'american', 'hongkong', 'malay', 'indo'];
-    $scope.betStatusFilter = undefined;
+    var ORDER_BET_TYPES_MAP = {'4':1, '40':1, '43': 1};
+
+    if ($location.search().betStatus) {
+        $scope.betStatusFilter = $location.search().betStatus;
+        $location.search("betStatus", undefined);
+    } else {
+        $scope.betStatusFilter = undefined;
+    }
+
     $scope.poolBettingMap = {
         '1': Translator.get('W1'),
         '2': 'X',
@@ -42,12 +50,13 @@ VBET5.controller('myBetsCtrl', ['$scope', 'Utils', 'ConnectionService', 'Zerglin
         dateRange: null,
         betType: '-1',
         outcome: '-1',
-        betIdFilter: null,
+        betIdFilter: $location.search().bet_id || null,
         type: -1,
         category: '0',
         game: '0'
 
     };
+    $location.search("bet_id", undefined);
     var allBets;
     var cashOutSubId;
 
@@ -78,6 +87,15 @@ VBET5.controller('myBetsCtrl', ['$scope', 'Utils', 'ConnectionService', 'Zerglin
                 bet[field] = parseFloat(bet[field]);
                 bet[field] = isNaN(bet[field]) ? 0 : bet[field];
             });
+        });
+    }
+
+    function sortBetsEvents(bets) {
+        bets.forEach(function (bet){
+            if (ORDER_BET_TYPES_MAP[bet.type]) {
+                bet.events.sort(Utils.orderSorting);
+                bet.showOrder = true;
+            }
         });
     }
 
@@ -196,6 +214,49 @@ VBET5.controller('myBetsCtrl', ['$scope', 'Utils', 'ConnectionService', 'Zerglin
 
     /**
      * @ngdoc method
+     * @name addIconAndTextInfo
+     * @methodOf vbet5.controller:myBetsCtrl
+     * @description  adding Icon And Text Info
+     *
+     * @param {Object} currentBets
+     */
+    $scope.addIconAndTextInfo = function addIconAndTextInfo(currentBets) {
+        if (Config.betting.popupMessageAfterBet && Config.betting.popupMessageAfterBet.startTime && Config.betting.popupMessageAfterBet.ranges) {
+            var startTimeUTC = Moment.moment.utc(Config.betting.popupMessageAfterBet.startTime);
+
+            if (startTimeUTC) {
+                var endTimeUTC = Config.betting.popupMessageAfterBet.endTime && Moment.moment.utc(Config.betting.popupMessageAfterBet.endTime);
+                var outcomeIncludeConfig = Config.betting.popupMessageAfterBet.outcomeInclude && Config.betting.popupMessageAfterBet.outcomeInclude.split(',');
+                var minTotalOddDecimal = parseFloat(Config.betting.popupMessageAfterBet.minTotalOddDecimal) || 0;
+
+                angular.forEach(currentBets, function (bet) {
+                    var amount = bet.amount - (bet.total_partial_cashout_amount || 0);
+                    var freeBet = bet.bonus_bet_amount !== 0;
+                    var outcomeInclude = !outcomeIncludeConfig || (outcomeIncludeConfig.indexOf(bet.outcome.toString()) !== -1);
+
+                    if (startTimeUTC && !freeBet && outcomeInclude && bet.k >= minTotalOddDecimal) {
+                        var diffStart = Moment.get(Moment.moment.unix(bet.date_time)).diff(startTimeUTC, 'seconds');
+                        var diffEnd = Moment.get(Moment.moment.unix(bet.date_time)).diff(endTimeUTC, 'seconds');
+                        if (diffStart > 0 && diffEnd < 0) {
+                            var ranges = Config.betting.popupMessageAfterBet.ranges[bet.currency];
+                            for (var i = 0; i < ranges.length; i++) {
+                                if (amount >= ranges[i].minAmount && (!ranges[i + 1] || ranges[i + 1].minAmount > amount)) {
+                                    bet.betDrawIconTitle = Translator.get(ranges[i].tooltip);
+                                    bet.showBetDrawIcon = true;
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+        }
+    };
+
+
+
+    /**
+     * @ngdoc method
      * @name fillBetsPointerInfo
      * @methodOf vbet5.controller:myBetsCtrl
      * @description  get game regions and fill game Pointer info
@@ -204,6 +265,7 @@ VBET5.controller('myBetsCtrl', ['$scope', 'Utils', 'ConnectionService', 'Zerglin
      */
     function fillBetsPointerInfo(currentBets) {
         var betGameIdsObj = {};
+
         $rootScope.gamePointers = {};
         angular.forEach(currentBets, function (bet) {
             angular.forEach(bet.events, function (betEvent) {
@@ -211,21 +273,6 @@ VBET5.controller('myBetsCtrl', ['$scope', 'Utils', 'ConnectionService', 'Zerglin
                     betGameIdsObj[betEvent.game_id] = parseInt(betEvent.game_id, 10);
                 }
             });
-
-
-            if (Config.betting.popupMessageAfterBet &&
-                Config.betting.popupMessageAfterBet.startTime &&
-                bet.amount >= Config.betting.popupMessageAfterBet[bet.currency] &&
-                bet.bonus_bet_amount === 0 /*non freebet */ &&
-                (!Config.betting.popupMessageAfterBet.outcomeInclude || (Config.betting.popupMessageAfterBet.outcomeInclude && Config.betting.popupMessageAfterBet.outcomeInclude.split(',').indexOf(bet.outcome.toString()) !== -1))
-            ) {
-                var diffStart = Moment.get(Moment.moment.unix(bet.date_time)).diff(Moment.moment.utc(Config.betting.popupMessageAfterBet.startTime), 'seconds');
-                var diffEnd = Moment.get(Moment.moment.unix(bet.date_time)).diff(Moment.moment.utc(Config.betting.popupMessageAfterBet.endTime), 'seconds');
-                if (diffStart > 0 && diffEnd < 0) {
-                    bet.showBetDrawIcon = true;
-                    $scope.betDrawIconTitle = Config.betting.popupMessageAfterBet.tooltip;
-                }
-            }
         });
 
         var betGameIds = Utils.objectToArray(betGameIdsObj);
@@ -309,6 +356,9 @@ VBET5.controller('myBetsCtrl', ['$scope', 'Utils', 'ConnectionService', 'Zerglin
     function updateMyBets(data) {
         if (data && data.bets) {
             allBets = Utils.objectToArray(data.bets);
+
+            $scope.addIconAndTextInfo(allBets);
+
             fillBetsPointerInfo(allBets);
             convertStringFiledsToNumbers(allBets);
             fixBetItemNames(allBets);
@@ -482,20 +532,6 @@ VBET5.controller('myBetsCtrl', ['$scope', 'Utils', 'ConnectionService', 'Zerglin
         });
     }
 
-    //todo should remove after backend fix
-    function addPartialCashOutAmount(bets) {
-        for (var i = bets.length; i--;) {
-            if (bets[i].cashouts_history) {
-                bets[i].total_partial_cashout_amount = bets[i].cashouts_history.reduce(function(acc, cur) {
-                    acc += cur.cashout_amount;
-                    return acc;
-                }, 0)
-            }
-        }
-
-        return bets;
-    }
-
     /**
      * @ngdoc method
      * @name loadBetHistory
@@ -596,8 +632,8 @@ VBET5.controller('myBetsCtrl', ['$scope', 'Utils', 'ConnectionService', 'Zerglin
                     fixBetsOutcome(data);
                     calculateLiability(data);
                     calculateSystemCombinations(data);
+                    sortBetsEvents(data);
                     betHistory = data;
-                    fillBetsPointerInfo(data);
                     convertStringFiledsToNumbers(data);
                     allBets = Utils.objectToArray(data);
                     var sortParam = data[0] && data[0]['bet_date'] !== undefined ? 'bet_date' : 'date_time';
@@ -607,8 +643,16 @@ VBET5.controller('myBetsCtrl', ['$scope', 'Utils', 'ConnectionService', 'Zerglin
                     if (!Config.main.enableMixedView) {
                         $scope.betHistoryGotoPage(1);
                     } else {
-                        $scope.betHistory = addPartialCashOutAmount(betHistory);
+                        $scope.betHistory = betHistory;
                     }
+
+                    if ($scope.betStatusFilter === -2) {
+                        calculatedGiftedBetsCount();
+                    }
+
+                    $scope.addIconAndTextInfo(data);
+
+                    fillBetsPointerInfo(data);
 
                     if ($scope.profit.checkAfterLoad) {
                         $scope.calculateProfit();
@@ -777,7 +821,7 @@ VBET5.controller('myBetsCtrl', ['$scope', 'Utils', 'ConnectionService', 'Zerglin
             }
         }
         if (Config.main.enableMixedView) {
-            $scope.betHistory = addPartialCashOutAmount(currentBets);
+            $scope.betHistory = currentBets;
         } else {
             $scope.myBets = getVisibleBets(currentBets);
         }
@@ -788,6 +832,12 @@ VBET5.controller('myBetsCtrl', ['$scope', 'Utils', 'ConnectionService', 'Zerglin
     });
 
     $scope.addEvents = BetService.repeatBet;
+
+    function calculatedGiftedBetsCount() {
+        $scope.giftedBetsCount = $scope.betHistory.filter(function (bet) {
+            return bet.is_gift;
+        }).length;
+    }
 
     /**
      * @ngdoc function
@@ -800,10 +850,19 @@ VBET5.controller('myBetsCtrl', ['$scope', 'Utils', 'ConnectionService', 'Zerglin
         if (newStatus !== $scope.betStatusFilter) {
             var previous = $scope.betStatusFilter;
             $scope.betStatusFilter = newStatus;
+            if ($scope.betStatusFilter === -2) {
+                $scope.betHistoryParams.betIdFilter = "";
+                $scope.betHistoryParams.betTypeSelector = undefined;
+                $scope.loadBetHistory();
+                return;
+            }
             if (previous !== -1 && newStatus === -1) {
                 $scope.loadBetHistory();
-            } else if (previous === -1 && newStatus !== -1) {
+                return;
+            }
+            if (previous === -1 && newStatus !== -1) {
                 $scope.loadBetHistory();
+                return;
             }
             if ($scope.betStatusFilter === 10) {
                 $scope.loadBetHistory();

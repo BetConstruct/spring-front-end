@@ -30,8 +30,7 @@
                 </div>
 
                 <h3>{{ selectedPage.title }} </h3>
-
-            	<div class="general-text-list" ng-bind-html="selectedPage.content">
+            	<div class="general-text-list {{ 'help-' + selectedPage.slug}}" ng-bind-html="selectedPage.content">
 
              </div>
            </div>

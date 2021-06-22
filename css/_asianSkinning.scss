@@ -346,7 +346,7 @@
   .sub-menu-filter ul li input[type="checkbox"] + label:before,
   .popup-asian-info input[type="checkbox"] + label:before {
     background: darken(saturate(adjust-hue($skin-color, 4deg), 1), 7);
-    box-shadow: 0 0 1px lighten(desaturate($skin-color, 18), 19);
+    box-shadow: 0 0 2px lighten(desaturate(adjust-hue($skin-color, 3deg), 16), 10);
   }
   .sub-menu-filter ul li input[type="checkbox"]:checked + label:after,
   .popup-asian-info input[type="checkbox"]:checked + label:after {
@@ -569,19 +569,21 @@
   }
   .popup-asian-info {
     background: darken(saturate(adjust-hue($skin-color, 4deg), 1), 7);
+    label {
+      color: $text-palette-4;
+    }
   }
   .name-filter-asian h3 {
     color: $text-palette-4;
   }
-  .popup-asian-info label {
-    color: $text-palette-4;
-  }
-  .filter-function-b ul li button {
-    background: $hero-color;
-    color: set-color($hero-color);
-  }
-  .filter-function-b ul li button:disabled {
-    background: darken(desaturate(adjust-hue($skin-color, 4deg), 11), 1);
+  .filter-function-b {
+    ul li button {
+      background: $hero-color;
+      color: set-color($hero-color);
+      &:disabled {
+        background: darken(desaturate(adjust-hue($skin-color, 4deg), 11), 1);
+      }
+    }
   }
   .all-filter-competitions ul li {
     border: 1px solid darken(saturate(adjust-hue($skin-color, 4deg), 1), 7);

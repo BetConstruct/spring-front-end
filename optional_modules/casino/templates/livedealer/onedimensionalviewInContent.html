@@ -1,6 +1,6 @@
 <div class="{{pageOptions.b_container}}">
     <div class="live-casino-providers" ng-show="liveGamesData.providerOptions.length > 1">
-        <button ng-repeat="provider in liveGamesData.providerOptions track by $index" ng-click="selectLiveDealerProvider(provider)" ng-class="{'active': liveGamesData.selectedProvider === provider}">{{ provider|translate }}</button>
+        <button ng-repeat="provider in liveGamesData.providerOptions track by $index" ng-click="selectLiveDealerProvider(provider.id)" class="{{liveGamesData.providerBadgeMap[provider.id]?('badge-menu-' +liveGamesData.providerBadgeMap[provider.id]['class']):''}}" ng-class="{'active': liveGamesData.selectedProvider === provider.id}" data-badge="{{liveGamesData.providerBadgeMap[provider.id].title}}" >{{ provider.displayName|translate }}</button>
     </div>
     <div class="live-casino-providers-submenu" ng-show="liveGamesData.devidedGames[liveGamesData.selectedProvider].defaultStudio && liveGamesData.devidedGames[liveGamesData.selectedProvider].studios.length > 1">
         <a ng-repeat="studio in liveGamesData.devidedGames[liveGamesData.selectedProvider].studios track by $index" ng-class="{'active': studio === liveGamesData.devidedGames[liveGamesData.selectedProvider].defaultStudio}" ng-click="liveGamesData.devidedGames[liveGamesData.selectedProvider].defaultStudio = studio">{{ (liveGamesData.selectedProvider + '_STUDIO_' + studio)|translate }}</a>
@@ -11,9 +11,11 @@
         <ul ng-style="{'justify-content' : pageOptions.g_align, 'width' : 'calc(100% + '+pageOptions.g_container_gaps+'px)', 'padding' : (halfPadding + ' 0'), 'margin' : ('0 0 0 -' + halfPadding)}">
             <li ng-repeat="game in liveGamesData.devidedGames[liveGamesData.selectedProvider].games track by $index"
                 ng-show="confData.liveCasino.hiddenGamesIds.indexOf(game.id) === -1 && (!game.markets || game.markets.available.indexOf(liveGamesData.devidedGames[liveGamesData.selectedProvider].defaultStudio) !== -1)"
-                ng-style="{'width' : 100 / pageOptions.g_columns + '%', 'padding' : halfPadding}">
-                <i  ng-click="toggleSaveToMyCasinoGames(game); $event.stopPropagation();" ng-class="{'active': $root.myCasinoGamesIds[game.id]}"></i>
+                ng-style="{'width' : 100 / pageOptions.g_columns + '%', 'padding' : halfPadding}"
+               >
+
                 <div class="float-width" ng-click="openGame(game, null, liveGamesData.devidedGames[liveGamesData.selectedProvider].defaultStudio); $event.stopPropagation();">
+                    <i  ng-click="toggleSaveToMyCasinoGames(game); $event.stopPropagation();" ng-class="{'active': $root.myCasinoGamesIds[game.id]}"></i>
                     <div class="live-casino-game-default" ng-if="!(pageOptions.image_type === 'images' && (!!game.icon_3 || !!game.icon_2))">
                         <div class="live-casino-icon" ng-class="(game.gameID || game.front_game_id) | removeUselessSymbolsByRegexp: '[,\%,\(,\) ]+': 'g': 'true'"></div>
                         <div class="live-casino-game-name">
@@ -21,7 +23,11 @@
                             <button trans>play now</button>
                         </div>
                     </div>
-                    <div class="live-casino-game-as-image" ng-if="pageOptions.image_type === 'images' && (!!game.icon_3 || !!game.icon_2)">
+                    <div ng-if="pageOptions.image_type === 'images' && (!!game.icon_3 || !!game.icon_2)"
+                         data-badge="{{game.badge.title}}"
+                         class="live-casino-game-as-image {{game.badge['class']? ('badge-' + game.badge['class']):''}}"
+                    >
+
                         <div class="live-casino-image-splash-play">
                             <button trans>play now</button>
                         </div>

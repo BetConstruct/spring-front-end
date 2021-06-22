@@ -24,6 +24,7 @@ angular.module('CMS').controller('cmsPagesCtrl', ['$location', '$rootScope', '$s
     $scope.env = $rootScope.env;
 
     var sliderIntervalPromise;
+    var allPaymanets;
 
     /**
      * @ngdoc method
@@ -252,7 +253,7 @@ angular.module('CMS').controller('cmsPagesCtrl', ['$location', '$rootScope', '$s
     };
 
     if (Config.payments && Config.payments.length) {
-        $scope.paymentSystems = Config.payments.reduce(function (accumulator, current) {
+        allPaymanets = Config.payments.reduce(function (accumulator, current) {
             if (!current.isTransferToLinkedService && (current.canDeposit || current.canWithdraw)) {
                 accumulator.push(current);
             }
@@ -260,9 +261,24 @@ angular.module('CMS').controller('cmsPagesCtrl', ['$location', '$rootScope', '$s
         }, []);
     }
 
-    $scope.selectedPaymentsType = 'deposit';
-    $scope.currencyHolder = {};
-    $scope.currencyHolder.selectedCurrency = Config.main.registration.defaultCurrency;
+    $scope.selectPaymentType = function selectPaymentType(newType) {
+        var product = $location.search().product;
+
+        if ($scope.selectedPaymentsType !== newType) {
+            $scope.selectedPaymentsType = newType;
+            if (product && {'deposit' : 1, 'withdraw': 1}[$scope.selectedPaymentsType] && allPaymanets) {
+                $scope.paymentSystems = allPaymanets.filter(function (item) {
+                    return !item[$scope.selectedPaymentsType + 'Products'] || item[$scope.selectedPaymentsType + 'Products'].indexOf(product) > -1;
+                });
+            } else {
+                $scope.paymentSystems = allPaymanets;
+            }
+        }
+    };
+
+    $scope.selectPaymentType('deposit');
+
+
 
     /**
      * @ngdoc method
@@ -378,10 +394,10 @@ angular.module('CMS').controller('cmsPagesCtrl', ['$location', '$rootScope', '$s
             return;
         }
         if (Config.main.openHelpAsPopup === 'popup') {
-            $window.open('#/popup/?action=helpPopup' + '&currencies=' + encodeURIComponent(JSON.stringify(Config.main.availableCurrencies))  +'&help=' + slug, Config.main.skin + 'help.popup', "scrollbars=1,width=1000,height=500,resizable=yes");
+            $window.open('#/popup/?action=helpPopup' + '&currencies=' + encodeURIComponent(JSON.stringify(Config.main.availableCurrencies))  + '&defaultCurrency=' + Config.main.registration.defaultCurrency + '&product=' + ($rootScope.currentPage.isInSports? 'sport': 'casino') + '&help=' + slug, Config.main.skin + 'help.popup', "scrollbars=1,width=1000,height=500,resizable=yes");
         } else if (Config.main.openHelpAsPopup === 'all' || (Config.main.openHelpAsPopup === 'OnlyHeaderPopup' && from !== 'footer')) {
             var userId = $rootScope.profile && $rootScope.profile.unique_id ? $rootScope.profile.unique_id : '';
-            $window.open('#/popup/?u=' + userId + '&action=help&currencies=' + encodeURIComponent(JSON.stringify(Config.main.availableCurrencies)) + '&page=' + slug, Config.main.skin + 'help.popup', "scrollbars=1,width=1000,height=600,resizable=yes");
+            $window.open('#/popup/?u=' + userId + '&action=help&currencies=' + encodeURIComponent(JSON.stringify(Config.main.availableCurrencies)) + '&defaultCurrency=' + Config.main.registration.defaultCurrency + '&product=' + ($rootScope.currentPage.isInSports? 'sport': 'casino')  + '&page=' + slug, Config.main.skin + 'help.popup', "scrollbars=1,width=1000,height=600,resizable=yes");
         } else {
             $scope.loadHelpPages().then(function () {
                 $rootScope.env.sliderContent = 'help';
@@ -394,6 +410,7 @@ angular.module('CMS').controller('cmsPagesCtrl', ['$location', '$rootScope', '$s
                 $rootScope.env.showSlider = false;
                 $rootScope.env.selectedHelpPageSlug = '';
                 TimeoutWrapper(function () {
+                    $rootScope.env.sliderContent = 'help';
                     $rootScope.env.showSlider = true;
                     $rootScope.env.selectedHelpPageSlug = slug;
                 }, 100);
@@ -581,25 +598,6 @@ angular.module('CMS').controller('cmsPagesCtrl', ['$location', '$rootScope', '$s
                     $scope.sportsBookBanners.push(widget.instance);
                 });
             }
-        });
-    };
-
-    /**
-     * @ngdoc method
-     * @name openCBannerLink
-     * @methodOf CMS.controller:cmsPagesCtrl
-     * @description   sends a message to casino controller to open game
-     *
-     * @param {string} [link] optional. url of casino game to open game for
-     */
-    $scope.openCBannerLink = function openCBannerLink(link) {
-        if (link === undefined || link === '') {
-            return;
-        }
-        analytics.gaSend('send', 'event', 'news', {'page': $location.path(), 'eventLabel': 'Casino Big banner click'});
-        var unregisterlocationChangeSuccess = $scope.$on('$locationChangeSuccess', function () {
-            $rootScope.$broadcast('openCasinoBannerLink');
-            unregisterlocationChangeSuccess();
         });
     };
 
@@ -1165,17 +1163,19 @@ angular.module('CMS').controller('cmsPagesCtrl', ['$location', '$rootScope', '$s
         });
     };
 
+
     (function init() {
         var currencies = $location.search().currencies;
         if (currencies && currencies !== 'undefined') {
             Config.main.availableCurrencies = JSON.parse(decodeURIComponent(currencies));
+
         }
-
-       if($location.search().showNestedFrame === 'true'){
-           $scope.showNestedFrame = true;
-           $rootScope.casinoGameOpened = 1;
-       }
-
+        var defaultCurrency = $location.search().defaultCurrency;
+        if (defaultCurrency) {
+            Config.main.registration.defaultCurrency = defaultCurrency;
+        }
+        $scope.currencyHolder = {};
+        $scope.currencyHolder.selectedCurrency = Config.main.registration.defaultCurrency;
     })();
 
 }]);

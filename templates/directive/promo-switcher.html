@@ -1,0 +1,2 @@
+<promotion-news ng-if="!isNew" slug="{{category||''}}" template="{{template || ''}}" category-json-type="{{categoryJsonType|| ''}}" main-class="promo block-meny-news" path="news" categories-list="{{!category? 'true': ''}}" use-custom-base-host="true" count="{{count|| ''}}" share-path="{{category||''}}"></promotion-news>
+<promotion-news-new ng-if="isNew" category="category" template="template"></promotion-news-new>

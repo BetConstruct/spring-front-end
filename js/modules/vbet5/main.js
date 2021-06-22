@@ -147,17 +147,12 @@ angular.module('vbet5').run(['$rootScope', '$location', '$routeParams', '$route'
         analytics.init();
         facebookPixel.init();
 
-        //TODO After releasing all the skins, we should remove this part.
-        // I think we can remove this block in 08/01/2020
-        if (!Config.main.headerNavigation.nearLogo) {
-            Config.main.headerNavigation.nearLogo = Config.main.theVeryTopMenu;
-        }
 
         Utils.sortItemsArray(Config.main.headerNavigation.nearLogo);
         Utils.sortItemsArray(Config.main.headerNavigation.aboveLogo);
 
         // do filter and remove unavailable components for current host
-        Config.main.homepage = Config.main.homepage.filter(function(item) {
+        Config.main.homepage = Config.main.homepage.filter(function (item) {
             return (!item.availableHosts || item.availableHosts.indexOf($location.host()) !== -1);
         });
 
@@ -165,6 +160,9 @@ angular.module('vbet5').run(['$rootScope', '$location', '$routeParams', '$route'
         if (Config.main.footer.socialLinks) {
             Config.main.footer.socialLinks = Utils.objectToArray(Config.main.footer.socialLinks, 'key');
             Utils.sortItemsArray(Config.main.footer.socialLinks);
+        }
+        if (Config.main.subHeaderItems && Config.main.subHeaderItems.length &&  Config.main.subHeaderItems[0].hasOwnProperty("order")) {
+            Utils.sortItemsArray(Config.main.subHeaderItems);
         }
         // make these available to all scopes
         $rootScope.conf = Config.main;
@@ -261,7 +259,7 @@ angular.module('vbet5').run(['$rootScope', '$location', '$routeParams', '$route'
                 }
 
                 Storage.set('promo_code', promoCode, Config.main.registration.promoCodeLifetime);
-                $cookies.putObject('promo_code', promoCode, Config.main.registration.promoCodeLifetime);
+                $cookies.putObject('promo_code', promoCode, {expires: new Date((new Date()).getTime() + Config.main.registration.promoCodeLifetime)});
                 if (params.AFFAGG) {
                     $location.search('AFFAGG', undefined);
                 }

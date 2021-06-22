@@ -362,7 +362,7 @@
     white-space: nowrap;
     text-overflow: ellipsis;
     overflow: hidden;
-    color: $text-palette-6;
+    color: $text-palette-4;
 
   }
 }
@@ -496,23 +496,22 @@
 }
 .chain-cashout-icons {
   position: absolute;
-  top: 0;
+  top: 4px;
+  height: 20px;
   box-sizing: border-box;
   @include ltr {
     right: 0;
-    padding: 0 5px 0 0;
+    padding-right: 5px;
   }
   @include rtl {
     left: 0;
-    padding: 0 0 0 5px;
+    padding-left: 5px;
   }
 }
 .chain-cashout-icons span {
-  width: 20px;
   text-align: center;
   color: $text-palette-4;
-  height: 28px;
-  font: 14px/28px $font-f;
+  font: 14px/22px $font-f;
   @include ltr {
     float: left;
   }
@@ -522,14 +521,32 @@
 }
 .chain-cashout-icons span.chain-icon-overview,
 .chain-cashout-icons span.cashout-b-overview {
-  font: 16px/28px icomoon;
+  font: 16px/20px icomoon;
 }
-.chain-cashout-icons span.chain-icon-overview:before {
-  content: "\e613";
+.chain-cashout-icons span.chain-icon-overview {
+  color: #9fa948;
+  &:before {
+    content: "\e613";
+  }
 }
-.chain-cashout-icons span.cashout-b-overview:before {
+.chain-cashout-icons span.cashout-b-overview {
   color: $brand-color-1;
-  content: "\e68a";
+  box-sizing: border-box;
+  @include ltr {
+    right: 0;
+    margin-left: 5px;
+    padding-left: 6px;
+    border-left: 1px solid rgba($skin-palette-12, 0.25);
+  }
+  @include rtl {
+    left: 0;
+    margin-right: 5px;
+    padding-right: 6px;
+    border-right: 1px solid rgba($skin-palette-12, 0.25);
+  }
+  &:before {
+    content: "\e68a";
+  }
 }
 .mini-b-events-overview {
   float: left;

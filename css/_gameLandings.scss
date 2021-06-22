@@ -591,37 +591,8 @@
         vertical-align: bottom;
         position: relative;
         transform: translate3d(0,0,0);
-        p {
-          float: left;
-          width: 100%;
-          color: #171c2c;
-          font: bold 16px/18px $font-f;
-          padding: 0 0 15px;
-          @include ltr {
-            text-align: left;
-          }
-          @include rtl {
-            text-align: right;
-          }
-        }
         > span {
           display: none;
-        }
-        &:after {
-          position: absolute;
-          content: "";
-          width: 0;
-          height: 0;
-          border-style: solid;
-          border-color: rgba(0, 0, 0, 0) rgba(0, 0, 0, 0) #f3f3f5;
-          z-index: 22;
-          left: 50%;
-          margin-left: -50px;
-          bottom: -172px;
-          border-width: 0 50px 34px;
-          transition-duration: 500ms;
-          opacity: 0;
-          display: block;
         }
         &.active-news:after {
           bottom: 0;
@@ -634,10 +605,9 @@
     float: left;
     width: 270px;
     height: 165px;
-    border-radius: 5px;
+    position:relative;
     img {
       width: 270px;
-      border-radius: 5px;
       position: relative;
       z-index: 10;
       display: block;
@@ -648,7 +618,6 @@
       display: block;
       text-decoration: none;
       background: #0A1124;
-      border-radius: 8px;
     }
     &:hover img {
       opacity: 0.3;
@@ -659,16 +628,15 @@
     .read-more-link {
       position: absolute;
       top: 50%;
+      transform: translateY(-50%);
       width: 100%;
       z-index: 20;
       opacity: 0;
       transition: opacity 450ms;
       a {
         padding: 0 20px;
-        border-radius: 20px;
         font: 14px/36px $font-f;
         height: 36px;
-        text-decoration: none;
         display: inline-block;
         background: $brand-color-1;
         color: set-color($brand-color-1);
@@ -792,91 +760,6 @@
         }
       }
     }
-    .mini-social-icons {
-      float: left;
-      width: 100%;
-      margin: 20px 0 0 0;
-      p {
-        margin: 0;
-        color: #121623;
-        @include ltr {
-          float: left;
-        }
-        @include rtl {
-          float: right;
-        }
-      }
-      ul {
-        width: auto;
-        display: inline-block;
-        position: relative;
-        padding: 0;
-        @include ltr {
-          float: left;
-        }
-        @include rtl {
-          float: right;
-        }
-        li {
-          display: block;
-          width: auto;
-          padding: 0;
-          text-indent: -9999em;
-          overflow: visible;
-          @include ltr {
-            float: left;
-            margin: 0 0 0 4px;
-          }
-          @include rtl {
-            float: right;
-            margin: 0 4px 0 0;
-          }
-          a {
-            display: block;
-            position: relative;
-            width: 36px;
-            top: -8px;
-            text-decoration: none;
-            height: 19px;
-            &:before {
-              transition: color 200ms;
-              color: #454a5a;
-            }
-            &:hover:before {
-              color: #737888;
-            }
-          }
-        }
-        .mini-facebook a:before {
-          font: 36px/36px icomoon;
-          content: "\e6c7";
-          position: absolute;
-          left: 0;
-          text-indent: 0;
-        }
-        .mini-twitter a:before {
-          font: 36px/36px icomoon;
-          content: "\e6c5";
-          position: absolute;
-          left: 0;
-          text-indent: 0;
-        }
-        .mini-google a:before {
-          font: 36px/36px icomoon;
-          content: "\e6c4";
-          position: absolute;
-          left: 0;
-          text-indent: 0;
-        }
-        .mini-permalink a:before {
-          font: 24px/36px icomoon;
-          content: "\e613";
-          position: absolute;
-          left: 0;
-          text-indent: 0;
-        }
-      }
-    }
     .closed-arrow-b {
       display: none;
     }
@@ -885,6 +768,7 @@
     @extend .guide;
   }
 }
+
 @media screen and (max-width: 1260px) {
   .slider-landing-overlay {
     h1 {

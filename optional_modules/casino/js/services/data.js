@@ -49,38 +49,49 @@ CASINO.service('casinoData', ['CConfig', 'Config', 'WPConfig', 'content', '$http
      * @methodOf CASINO.service:casinoData
      * @description returns promise which will be resolved  with the list of games
      *
-     * @param {string} category the games category
-     * @param {string} provider the games provider
-     * @param {int} from start index
-     * @param {int} to end index
-     * @param {string} searchCommand the term of search
-     * @param {array} restrictedGamesIds the ids of restricted games
-     * @param {array} gameIds the games ids
-     * @param {array} gameExternalIds the games external ids
-     * @param {string} countryCode the code of user's country
-     * @param {String} additionalParams
+     * @typedef {Object} data
+     * @property {string} category
+     * @property {string} provider
+     * @property {string} country
+     * @property {number} offset
+     * @property {number} limit
+     * @property {string} search
+     * @property {Array} id
+     * @property {Array} external_id
+     * @property {Array} restrictedGamesIds
+     * @property {string} additionalParams
      *
      * @returns {Object} promise
      */
-    casinoData.getGames = function getGames(category, provider, countryCode,  from, to, searchCommand, restrictedGamesIds, gameIds, gameExternalIds, additionalParams) {
+    casinoData.getGames = function getGames(data) {
         var dataUrl = DATA_URL + 'getGames?partner_id=' + Config.main.site_id + '&lang=' + Config.env.lang;
 
-        category !== null && category !== 'all' && (dataUrl += '&category=' + category);
-        provider !== null && provider !== 'all' && provider !== undefined && (dataUrl += '&provider=' + provider);
-        countryCode && (dataUrl += '&country=' + countryCode);
-        from !== undefined && from !== null && (dataUrl += '&offset=' + from);
-        to !== undefined && to !== null && (dataUrl += '&limit=' + to);
-        searchCommand && (dataUrl += '&search=' + searchCommand);
-
-        if (restrictedGamesIds && restrictedGamesIds.length) {
-            for (var i = 0, length = restrictedGamesIds.length; i < length; i += 1) {
-                dataUrl += '&except[]=' + restrictedGamesIds[i];
-            }
-        }
-
-        gameIds !== undefined && gameIds !== null && (dataUrl += '&id=' + gameIds.join());
-        gameExternalIds !== undefined && gameExternalIds !== null && (dataUrl += '&external_id=' +gameExternalIds.join());
-        additionalParams && (dataUrl += additionalParams);
+        Object.keys(data).forEach(function(key) {
+           if (data.hasOwnProperty(key) && data[key] !== undefined && data[key] !== null) {
+               switch (key) {
+                   case "restrictedGamesIds":
+                       for (var i = 0, length = data.restrictedGamesIds.length; i < length; i += 1) {
+                           dataUrl += '&except[]=' + data.restrictedGamesIds[i];
+                       }
+                       break;
+                   case "id":
+                   case "external_id":
+                       dataUrl += '&' + key + "=" + data[key].join();
+                       break;
+                   case "additionalParams":
+                       dataUrl += data[key];
+                       break;
+                   case "category":
+                   case "provider":
+                       if (data[key] !== "all") {
+                           dataUrl += '&' + key + "=" + data[key];
+                       }
+                       break;
+                   default:
+                       dataUrl += '&' + key + "=" + data[key];
+               }
+           }
+        });
 
         return $http.get(dataUrl);
     };
@@ -99,7 +110,7 @@ CASINO.service('casinoData', ['CConfig', 'Config', 'WPConfig', 'content', '$http
      * @returns {Object} promise
      */
     casinoData.getOptions = function getOptions(countryCode, categoryId, providerName, playerId, onlyProviders) {
-        return $http.get(DATA_URL + 'getOptions?partner_id=' + Config.main.site_id + (countryCode && ('&country=' + countryCode) || '') + (categoryId && ('&categories=' + categoryId) || '') + (providerName && ('&providers=' + providerName + '&only_categories=1') || '') + (playerId ? ('&player_id=' + playerId) : '') + (onlyProviders ? '&only_providers=1' : ''));
+        return $http.get(DATA_URL + 'getOptions?partner_id=' + Config.main.site_id + (countryCode && ('&country=' + countryCode) || '') + (categoryId && ('&categories=' + categoryId) || '') + (providerName && ('&providers=' + providerName + '&only_categories=1') || '') + (playerId ? ('&player_id=' + playerId) : '') + (onlyProviders ? '&only_providers=1' : '') + ('&lang=' + Config.env.lang));
     };
 
     casinoData.getJackpotGames = function getJackpotGames (jackpotId, provider, from, to) {

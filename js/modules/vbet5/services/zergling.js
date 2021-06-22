@@ -294,7 +294,7 @@ VBET5.factory('Zergling', ['Config', 'WS', '$http', '$q', '$timeout', '$rootScop
             result = session.promise;
             var sessionRequestCmd = { 'command': "request_session", 'params': { 'language': Utils.getLanguageCode(Config.env.lang), 'site_id': Config.main.site_id} };
             if (Config.main.enableTwoFactorAuthentication) {
-                sessionRequestCmd.params.afec = Fingerprint2.getAuthenticationCode();
+                sessionRequestCmd.params.afec = Fingerprint2.authenticationCode;
             }else if (Config.everCookie.enabled && !Config.main.integrationMode) {
                 var clId = $cookies.get("afec");
                 if (clId && clId.length > 0) {
@@ -590,11 +590,16 @@ VBET5.factory('Zergling', ['Config', 'WS', '$http', '$q', '$timeout', '$rootScop
      *
      * @returns {promise} promise
      */
-    Zergling.logout = function logout(source) {
+    Zergling.logout = function logout(source, fcmToken) {
         var data = {'command': 'logout', 'params': {}};
         if (source) {
             data.params.source = source;
         }
+        if (fcmToken) {
+            data.params.fcm_token = fcmToken;
+            data.params.jwe_token = AuthData.get().jwe_token;
+        }
+
         return sendRequest(data)
             .then(function (response) {
                 AuthData.clear();

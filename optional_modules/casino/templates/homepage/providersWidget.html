@@ -16,6 +16,8 @@
     </ul>
     <div class="games-providers">
         <a ng-repeat="provider in providers track by $index"
+           data-badge="{{provider.badge.title}}"
+           class="{{provider.badge?('badge-menu-' + provider.badge['class']):''}}"
            ng-click="toggleProvider(provider.name)"
            ng-class="{'active': selections.providers.indexOf(provider.name) !== -1}"
         >

@@ -467,7 +467,7 @@
 .favorite-icon-market-v3:before {
   box-sizing: border-box;
   content: "\f005";
-  color: darken(saturate(adjust-hue($c16-sp, -2deg), 5), 3);
+  color: darken(saturate(adjust-hue($c16-tp, -2deg), 5), 3);
   cursor: pointer;
   @if $white-skin == true {
     color: #7b8191;
@@ -871,7 +871,7 @@
   position: relative;
   font: 14px/28px icomoon;
   &:before {
-    content: "\ea7d";
+    content: "\eaae";
   }
 }
 .race-market .single-events-b-v3:before {
@@ -895,6 +895,7 @@
   padding-right: 28px;
   font-style: normal;
 }
+
 .max-bet-tooltip-v3 {
   box-sizing: border-box;
   right: 0;
@@ -910,7 +911,7 @@
     content: "";
     display: block;
     position: absolute;
-    top: 5px;
+    top: 0;
     left: 50%;
     margin-left: -6px;
     width: 0;
@@ -935,12 +936,25 @@
     line-height: 16px;
     color: set-color($brand-color-1);
     white-space: nowrap;
-    bottom: 13px;
+    bottom: 20px;
     opacity: 0;
     transition: opacity 0ms;
     transform: translate3d(0,70%,0);
   }
 }
+
+//.single-events-b-v3 {
+//  &:nth-child(3) {
+//    .max-bet-tooltip-v3 {
+//      &:after {
+//        position: absolute;
+//        bottom: 28px;
+//        right: 0;
+//      }
+//    }
+//  }
+//}
+
 .maxbet-enabled, .maxbet-enabled.ng-hide{
   display: block !important;
 }
@@ -1192,15 +1206,17 @@
 .title-teams-premztch-v3 > p > b {
   color: $c16-tp-6;
   font-weight: normal;
-  vertical-align: top;
+  vertical-align: middle;
   display: inline-block;
   box-sizing: border-box;
   font-size: 5 + $size-font;
+  margin: 0 0 0 3px;
 }
 .prematch-competition-title-v3 {
   box-sizing: border-box;
   float: left;
   width: 100%;
+  display: grid;
 }
 .prematch-competition-title-v3 > p {
   box-sizing: border-box;
@@ -1208,6 +1224,9 @@
   font-size: 6 + $size-font;
   line-height: 14px;
   color: $c16-tp-6;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .prematch-competition-title-v3 > p > .prematch-region-icon-v3 {
   box-sizing: border-box;
@@ -1217,14 +1236,6 @@
   @include rtl {
     margin: -1px 0 0 6px;
   }
-}
-.prematch-competition-title-v3 > p > span {
-  box-sizing: border-box;
-  display: inline-block;
-  max-width: 40%;
-  text-overflow: ellipsis;
-  overflow: hidden;
-  white-space: nowrap;
 }
 .statistic-icon-view-p-v3 {
   box-sizing: border-box;
@@ -2536,6 +2547,30 @@ div.switchers-markets {
   border-radius: 2px 2px 0 0;
   margin: 0 0 3px;
   color: $text-palette-3;
+  ~ div {
+    .time-title-view-v3 > p {
+      width: auto;
+    }
+  }
+}
+.boosted-bets-competition-info {
+  color: $c16-tp-3;
+  line-height: 23px;
+  @include ltr {
+    float: left;
+  }
+  @include rtl {
+    float: right;
+  }
+  > .flag-icon {
+    margin: 4px 6px 0;
+    @include ltr {
+      float: left;
+    }
+    @include rtl {
+      float: right;
+    }
+  }
 }
 
 // add horse rase styles new
@@ -2801,17 +2836,26 @@ div.switchers-markets {
   }
 }
 .race-start-houres{
-  margin: 0 0 3px 0;
   width: 100%;
   box-sizing: border-box;
   display: inline-grid;
   grid-column-gap:1px;
   grid-template-rows: auto;
   grid-template-columns: auto 10fr;
+  .st-h-holder, .start-now-time{
+    border-bottom: 2px solid $c16-sp-11;
+  }
+  &:last-child{
+    .st-h-holder, .start-now-time{
+      border-bottom: none;
+    }
+  }
 }
 .st-h-holder{
   background: $c16-sp-10;
 }
+
+
 .horse-name-inf{
   width: 300px;
   box-sizing: border-box;
@@ -2878,13 +2922,14 @@ div.switchers-markets {
   padding: 0  10px;
   background: $c16-sp-9;
   line-height: 34px;
+  height: 34px;
   color: $c16-tp-3;
   position: relative;
   > h2{
     position: relative;
     font-size: 12px;
     font-weight: normal;
-    box-shadow: 0 1px 0 $c16-sp-12;
+    box-shadow: inset 0 -1px 0 $c16-sp-12;
     box-sizing: border-box;
     height: 34px;
     > span{
@@ -2912,6 +2957,16 @@ div.switchers-markets {
     }
     > p{
       color: $c16-tp-6;
+      >span{
+        display: inline-block;
+        min-width: 200px;
+        color:$text-palette-1;
+        font-weight:bold;
+        text-transform: uppercase;
+        > span{
+          text-transform: none;
+        }
+      }
       @include ltr{
         float: right;
       }
@@ -2965,8 +3020,16 @@ div.switchers-markets {
     }
   }
   &.active{
-    > h2 > p > i.arrow-open-h:before{
+    > h2 {
+      box-shadow: none;
+      > p > i.arrow-open-h:before {
       content: "\e671";
+    }
+    }
+  }
+  &:last-child{
+    > h2 {
+      box-shadow: none;
     }
   }
 }
@@ -3015,6 +3078,7 @@ div.switchers-markets {
     font-weight: normal;
   }
 }
+
 .menu-swithcer{
   float: left;
   width: 100%;
@@ -3025,11 +3089,11 @@ div.switchers-markets {
   background: $c16-sp-10;
   padding: 0 10px;
   > a{
-      text-decoration: none;
+    text-decoration: none;
     color: $c16-tp-3;
     font-size: 12px;
-    text-transform: uppercase;
     display: inline-block;
+    font-weight: bold;
     @include ltr{
       margin: 0 30px 0 0;
     }
@@ -3039,10 +3103,28 @@ div.switchers-markets {
     &.active{
       color: $c16-tp-2;
       box-shadow: 0 1px 0 $hero-color;
-      font-weight: bold;
     }
   }
 }
+
+.greyhound-menu-swithcer{
+  box-sizing: border-box;
+  margin: 0 0 1px 0;
+  max-width: 75%;
+   a{
+    text-decoration: none;
+    color: $c16-tp-3;
+    font-size: 12px;
+    display: inline-block;
+    font-weight: bold;
+    margin: 0 10px;
+    &.active{
+      color: $c16-tp-2;
+      box-shadow: 0 1px 0 $hero-color;
+    }
+  }
+}
+
 .horse-market-contain{
   float: left;
   width: 100%;
@@ -3172,17 +3254,15 @@ div.switchers-markets {
           border-right: 1px solid $c16-sp-12;
         }
         &:after {
-          display: block;
           position: absolute;
-          top: 50%;
+          top: 0;
           color: $c16-tp-3;
-          font: 16px/16px icomoon;
-          transform: translateY(-50%);
+          font: 13px/26px icomoon;
           @include ltr {
-            right: 0;
+            right: 7px;
           }
           @include  rtl {
-            left: 0;
+            left: 7px;
           }
         }
         &.arr-down {
@@ -3211,16 +3291,15 @@ div.switchers-markets {
           }
         }
         &:after {
-          display: block;
           position: absolute;
-          top: 0;
           color: $c16-tp-3;
-          font: 16px/36px icomoon;
+          font: 13px/26px icomoon;
+          top:0;
           @include ltr {
-            right: 26px;
+            right: 60px;
           }
           @include  rtl {
-            left: 26px;
+            left: 60px;
           }
         }
         &.arr-down {
@@ -3324,7 +3403,6 @@ div.switchers-markets {
   }
   .race-start-houres{
     padding: 10px 0;
-    border-bottom: 1px solid  $c16-sp-8;
   }
   .start-now{
     background: $c16-sp-9;
@@ -3405,7 +3483,6 @@ div.switchers-markets {
     float: right;
   }
   > span{
-    text-transform: uppercase;
     font-size: 11px;
     font-weight: bold;
     color: $c16-tp-2;
@@ -3466,34 +3543,21 @@ div.switchers-markets {
       left: 0;
     }
   }
-
 }
+
+.modern{
+  .each-way{
+    &:after{
+      content:none;
+    }
+  }
+}
+
 .hourse-popup{
   float: left;
   width: 100%;
   box-sizing: border-box;
   max-width: 400px;
-  > h2{
-    height: 60px;
-    padding: 20px;
-    font-size: 16px;
-    line-height: 18px;
-    background: $c16-sp-11;
-    color: $c16-tp-2;
-    position: absolute;
-    float: left;
-    width: 100%;
-    box-sizing: border-box;
-    top: 0;
-    left: 0;
-    text-transform: uppercase;
-    @include ltr{
-      text-align: left;
-    }
-    @include rtl{
-      text-align: right;
-    }
-  }
 }
 .forecast-tricast-bet-popup{
   z-index: 10000;
@@ -3501,19 +3565,105 @@ div.switchers-markets {
 .betslip-info-content{
   float: left;
   width: 100%;
-  box-sizing: border-box;
-  padding: 10px 0;
-  margin-top: 30px;
   > h6{
     font-size: 12px;
     color: $c16-tp-3;
     font-weight: normal;
     padding-bottom: 10px;
-    @include ltr{
-      text-align: left;
+  }
+  .total-stake-b{
+    float: left;
+    width: 100%;
+    border-top: 1px solid $c16-sp-11;
+    padding-top: 10px;
+    > p {
+      font-size: 12px;
+      float: left;
+      width: 100%;
+      color: $c16-tp-2;
+      @include ltr{
+        text-align: left;
+      }
+      @include rtl{
+        text-align: right;
+      }
+      > i{
+        font-style: normal;
+        @include ltr{
+          float: right;
+        }
+        @include rtl{
+          float: left;
+        }
+      }
+      &.return{
+        font-weight: bold;
+      }
+      &.error-msg{
+        color: #f24b4b;
+      }
+      + p {
+        margin-top: 10px;
+      }
     }
-    @include rtl{
-      text-align: right;
+    .horse-popup-notification-warning {
+      display: none;
+      width: 180px;
+      position: absolute;
+      bottom: 35px;
+      padding: 5px 30px;
+      box-sizing: border-box;
+      background: $c16-sp-3;
+      z-index: 111;
+      font-size: 6 + $size-font;
+      line-height: 14px;
+      color: #000000;
+      @include ltr {
+        left: 0;
+        text-align: left;
+      }
+      @include rtl {
+        right: 0;
+        text-align: right;
+      }
+      &:before {
+        box-sizing: border-box;
+        content: '\e6b2';
+        display: block;
+        font: 16px/16px icomoon;
+        color: $brand-color-2;
+        position: absolute;
+        top: 3px;
+        @include ltr {
+          left: 7px;
+        }
+        @include rtl {
+          right: 7px;
+        }
+      }
+      &:after {
+        box-sizing: border-box;
+        content: "";
+        display: block;
+        position: absolute;
+        bottom: -5px;
+        width: 0;
+        height: 0;
+        border-style: solid;
+        border-width: 8px 6px 0 6px;
+        border-color: $c16-sp-3 transparent transparent transparent;
+        @include ltr {
+          left: 10px;
+        }
+        @include rtl {
+          right: 10px;
+        }
+      }
+    }
+    .button-confirm {
+      &:hover .horse-popup-notification-warning{
+        display: block;
+      }
     }
   }
 }
@@ -3575,70 +3725,6 @@ div.switchers-markets {
     color: $c16-tp-4;
     &.lingf{
       color: $brand-color-2 !important;
-    }
-  }
-}
-.total-stake-b{
-  float: left;
-  width: 100%;
-  border-top: 1px solid $c16-sp-11;
-  padding-top: 10px;
-  p{
-    font-size: 12px;
-    float: left;
-    width: 100%;
-    color: $c16-tp-2 !important;
-    padding-bottom: 10px;
-    @include ltr{
-      text-align: left;
-    }
-    @include rtl{
-      text-align: right;
-    }
-    > i{
-      font-style: normal;
-      @include ltr{
-        float: right;
-      }
-      @include rtl{
-       float: left;
-      }
-    }
-    &.return{
-      font-weight: bold;
-      padding-bottom: 15px;
-    }
-    &.bet-notification-warning{
-      margin-top: 15px;
-      opacity: 0;
-    }
-    &.error-msg{
-      color: #f24b4b !important;
-    }
-  }
-  > button{
-    height: 30px;
-    float: left;
-    width: 100%;
-    text-align: center;
-    background: $brand-color-1;
-    border: none;
-    padding: 0 10px;
-    text-transform: uppercase;
-    color: set-color($brand-color-1);
-    font-size: 12px;
-    &:hover + .bet-notification-warning{
-      opacity: 1;
-    }
-    &:hover{
-      background: lighten($brand-color-1, 10);
-    }
-    &:disabled{
-      background: transparent;
-      border: 1px solid  $c16-tp-5;
-      color: $c16-tp-5;
-      pointer-events: none;
-      opacity: 0.6;
     }
   }
 }

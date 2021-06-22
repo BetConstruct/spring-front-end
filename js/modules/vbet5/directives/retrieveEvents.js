@@ -25,7 +25,7 @@ VBET5.directive('retrieveEvents', ['$rootScope', '$q', 'BetService', 'Zergling',
             };
 
             function getSingleEventPromise(data) {
-                return Zergling.get({
+                var request = {
                     'source': 'betting',
                     'what': {
                         'sport': ['id', 'name', 'alias', 'order'],
@@ -52,7 +52,10 @@ VBET5.directive('retrieveEvents', ['$rootScope', '$q', 'BetService', 'Zergling',
                             'id': data.selection_id
                         }
                     }
-                })
+                };
+                Utils.addPrematchExpressId(request);
+
+                return Zergling.get(request)
             }
 
             $scope.toggleOrSetRetrieveEventsOpen = function toggleOrSetRetrieveEventsOpen(state) {

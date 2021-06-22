@@ -3,9 +3,9 @@
         <div class="group-tabs-wrapper">
             <div class="first-level-history-tab">
                 <ul>
+                    <li ng-click="env.sliderContent = 'deposit'; env.paymentsSubTub = 'paymentsMainPage';" ng-class="{'active':env.sliderContent === 'deposit'}" ng-if="!conf.disableDepositPage"><span trans>Deposit</span></li>
                     <li ng-click="env.sliderContent = 'cashier'; env.paymentsSubTub = 'paymentsMainPage';" ng-if="conf.transferEnabled && env.authorized && (casinoEnabled || calculatedConfigs.pokerEnabled)" ng-class="{'active':env.sliderContent === 'cashier'}" ><span trans>Transfer</span></li>
                     <li ng-click="env.sliderContent = 'myWallets'; env.paymentsSubTub = 'paymentsMainPage';" ng-if="$root.conf.myWalletsEnabled" ng-class="{'active':env.sliderContent === 'myWallets'}" ><span trans>My Wallets</span></li>
-                    <li ng-click="env.sliderContent = 'deposit'; env.paymentsSubTub = 'paymentsMainPage';" ng-class="{'active':env.sliderContent === 'deposit'}" ng-if="!conf.disableDepositPage"><span trans>Deposit</span></li>
                     <li ng-click="env.sliderContent = 'withdraw'; env.paymentsSubTub = 'paymentsMainPage';" ng-class="{'active':env.sliderContent === 'withdraw' && env.paymentsSubTub !== 'buddyTransfer'}" ng-if="!conf.disableWithdrawPage"><span trans>Withdraw</span></li>
                     <li ng-click="env.sliderContent = 'balanceHistory'; env.paymentsSubTub = 'paymentsMainPage';" ng-class="{'active':env.sliderContent === 'balanceHistory'}" ng-if="env.authorized"><span trans>History</span></li>
                     <li ng-click="env.sliderContent = 'depositRequest'; env.paymentsSubTub = 'paymentsMainPage';" ng-class="{'active':env.sliderContent === 'depositRequest'}" ng-if="env.authorized && conf.depositRequestURL"><span trans>Deposit Request</span></li>
@@ -102,8 +102,8 @@
 
                 <section ng-if="($root.env.sliderContent === 'withdraw' && !$root.conf.disableWithdrawPage) || ($root.env.sliderContent === 'deposit' && !$root.conf.disableDepositPage)" ng-include="::'templates/livebox/mixedPayments.html'|fixPath"></section>
                 <section ng-if="env.sliderContent === 'balanceHistory'">
-                    <vbet-loader ng-show="!balanceHistoryLoaded"></vbet-loader>
-                    <ng-include ng-show="balanceHistoryLoaded" src="::'templates/livebox/mixedBalanceHistory.html'|fixPath"></ng-include>
+                    <vbet-loader ng-show="!balanceHistoryLoaded || !balanceHistoryTypesLoaded"></vbet-loader>
+                    <ng-include ng-show="balanceHistoryLoaded && balanceHistoryTypesLoaded" src="::'templates/livebox/mixedBalanceHistory.html'|fixPath"></ng-include>
                 </section>
                 <section ng-if="env.sliderContent === 'buddytransfer'">
                     <ng-include src="::'templates/livebox/mixedBuddyTransfer.html'|fixPath;"></ng-include>

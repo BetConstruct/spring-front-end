@@ -216,6 +216,7 @@ VBET5.service('MarketService', ["$rootScope", "$filter",  "$location", "Utils", 
 
     MarketService.getEventName = getEventName;
 
+
     /**
      * @ngdoc function
      * @name getMarketsAndGroups
@@ -229,8 +230,9 @@ VBET5.service('MarketService', ["$rootScope", "$filter",  "$location", "Utils", 
      * @param {string} team2Name
      * @param {string} sportAlias
      * @param {boolean} statisticsAvailable
+     * @param {number} type
      */
-    MarketService.getMarketsAndGroups = function getMarketsAndGroups(gameId, market, team1Name, team2Name, sportAlias, statisticsAvailable) {
+    MarketService.getMarketsAndGroups = function getMarketsAndGroups(gameId, market, team1Name, team2Name, sportAlias, statisticsAvailable, type) {
         var marketsGroupedByType = {};
         var marketGroupsMap  = {};
 
@@ -264,7 +266,7 @@ VBET5.service('MarketService', ["$rootScope", "$filter",  "$location", "Utils", 
                     name_template: marketData.name_template,
                     sequence: marketData.sequence,
                     point_sequence: marketData.point_sequence,
-                    express_id: !$rootScope.conf.hideExpressIds ? marketData.express_id : undefined,
+                    express_id: Utils.calculateExpressId(marketData, type),
                     cashout: marketData.cashout && !!($rootScope.env.live ? $rootScope.partnerConfig.is_cashout_live : $rootScope.partnerConfig.is_cashout_prematch),
                     display_key: marketData.display_key,
                     display_sub_key: marketData.display_sub_key,

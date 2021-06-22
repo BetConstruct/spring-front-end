@@ -25,7 +25,7 @@
                 <p><span trans>Status</span></p>
                 <p class="status-color" ng-class="{finished: tournament.details.Stage === 1, live: tournament.details.Stage === 2, upcoming: tournament.details.Stage === 3, canceled : tournament.details.Stage === -1}">
                     <strong ng-show="tournament.details.Stage == 1" trans>Finished</strong>
-                    <strong ng-show="tournament.details.Stage == 2" trans>Live</strong>
+                    <strong ng-show="tournament.details.Stage == 2" trans>tournament_live</strong>
                     <strong ng-show="tournament.details.Stage == 3" trans>Upcoming</strong>
                     <strong ng-show="tournament.details.Stage == -1" trans>Canceled</strong>
                 </p>

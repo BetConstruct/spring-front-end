@@ -5,45 +5,38 @@
  * pinnacle controller
  */
 
-VBET5.controller('wonderWheelCtrl', ['$rootScope', '$scope', '$sce', '$timeout', '$window', 'LanguageCodes', 'AuthData', 'Config', function ($rootScope, $scope, $sce, $timeout, $window, LanguageCodes, AuthData, Config) {
+VBET5.controller('wonderWheelCtrl', ['$rootScope', '$scope', '$sce', '$timeout', '$window', 'LanguageCodes', 'AuthData', 'CConfig', function ($rootScope, $scope, $sce, $timeout, $window, LanguageCodes, AuthData, CConfig) {
     'use strict';
 
     $rootScope.footerMovable = true; // make footer movable
 
     var BASE_URL = (function() {
+        if (CConfig.wonderWheel.apiUrl) {
+            return CConfig.wonderWheel.apiUrl;
+        }
         if ($window.location.hostname === "localhost") {
             return "https://luckywheel.vivarobet.am";
         }
-
         return $window.location.protocol + "//luckywheel." + $window.location.hostname.replace('www.','') + "/";
     })();
 
-    function constructUrlForLoggedInUser() {
-        $scope.frameUrl = $sce.trustAsResourceUrl(BASE_URL + "?langId=" + LanguageCodes[$rootScope.env.lang] + "&partnerId=" + Config.main.site_id + "&token=" + AuthData.getAuthToken());
-    }
-
-    function constructUrlForLoggedOutUser() {
-        $scope.frameUrl = $sce.trustAsResourceUrl(BASE_URL + "?langId=" + LanguageCodes[$rootScope.env.lang] + "&partnerId=" + Config.main.site_id);
+    function constructUrl() {
+        $scope.frameUrl = $sce.trustAsResourceUrl(BASE_URL + "?langId=" + LanguageCodes[$rootScope.env.lang] + "&partnerId=" + $rootScope.conf.site_id + ($rootScope.env.authorized ? "&token=" + AuthData.getAuthToken() : ""));
     }
 
     $scope.$on('loggedIn', function() {
         $scope.frameUrl = null;
-        $timeout(constructUrlForLoggedInUser, 100);
+        $timeout(constructUrl, 100);
     });
 
     $scope.$on('login.loggedOut', function() {
         $scope.frameUrl = null;
-        $timeout(constructUrlForLoggedOutUser, 100);
+        $timeout(constructUrl, 100);
     });
 
 
     if (!$rootScope.loginInProgress) {
-        //$sce.trustAsResourceUrl
-        if ($rootScope.profile) {
-            constructUrlForLoggedInUser();
-        } else {
-            constructUrlForLoggedOutUser();
-        }
+        constructUrl();
     }
 
     $scope.$on("$destroy", function () {

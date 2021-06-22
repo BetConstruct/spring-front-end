@@ -11,6 +11,7 @@
                 </div>
             </div>
         </a>
+        <bc-jackpot ng-if="slide.custom_fields.jackpot_src[0]" jackpot-id="slide.custom_fields.jackpot_src[0]" jackpot-source="jackpotSource"></bc-jackpot>
     </div>
     <div class="slider-landing-overlay">
         <div class="guide">
@@ -22,6 +23,7 @@
                 </div>
                 <div class="display-float" ng-if="$root.conf.sliderArrows">
                     <button ng-click="selectSlide(selectedIndex - 1)"></button>
+                    <button class="slider-amount-btn">{{selectedIndex + 1}}/{{productSlides.length}}</button>
                     <button ng-click="selectSlide(selectedIndex + 1)"></button>
                 </div>
             </div>

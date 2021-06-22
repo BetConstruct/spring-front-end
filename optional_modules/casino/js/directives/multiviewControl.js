@@ -103,10 +103,17 @@ CASINO.directive('multiviewControl', ['$interval', '$timeout', 'CConfig', 'casin
                 var offsetIndex = scope.gamesLimit;
 
                 if(scope.selectedCategory === scope.confData.liveCasino.categoryId){
-                    startIndex = offsetIndex = null;
+                    startIndex = 0;
+                    offsetIndex = 999;
                 }
 
-                casinoData.getGames(scope.selectedCategory, null, countryCode, startIndex, offsetIndex, scope.searchCommand).then(function (response) {
+                casinoData.getGames({
+                    category: scope.selectedCategory,
+                    country: countryCode,
+                    offset: startIndex,
+                    limit: offsetIndex,
+                    search: scope.searchCommand
+                }).then(function (response) {
                     if (response && response.data && response.data.status !== -1) {
                         if (scope.selectedCategory === scope.confData.liveCasino.categoryId) {
                             scope.liveGamesData = scope.liveGamesData || casinoManager.initProvidersData(response.data.games);

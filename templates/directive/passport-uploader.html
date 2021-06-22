@@ -18,7 +18,7 @@
             </li>
             <li>
                 <div>
-                    <input type="file" name="passportImage" id="{{inputId}}" accept="image/*" class="passportUpload"/>
+                    <input type="file" name="passportImage" id="{{inputId}}" accept="image/*, application/pdf" class="passportUpload"/>
                     <p trans>File location</p>
                     <ul class="fileUpload-button">
                         <li>
@@ -52,8 +52,8 @@
                 <td>{{::image.CreatedDate|formatDate}}</td>
                 <td>
                     <span>{{::image.Name}}</span>
-                    <i class="cms-jcon-eye" ng-click="openImage(image)" title="{{'Click to open the file'|translate}}"></i>
-                    <a download="{{image.Name}}" ng-href="{{image.Src}}" title="{{'Click to download the file'|translate}}"><i class="cms-jcon-download-arrow"></i></a>
+                    <i ng-if="$root.conf.managePassportOptions.view" class="cms-jcon-eye" ng-click="openImage(image)" title="{{'Click to open the file'|translate}}"></i>
+                    <a ng-if="$root.conf.managePassportOptions.download" download="{{image.Name}}" ng-href="{{image.Src}}" title="{{'Click to download the file'|translate}}"><i class="cms-jcon-download-arrow"></i></a>
                 </td>
                 <td>
                     <div class="uploaded-doc-status {{{0:'new', 1:'verified',2:'rejected ',3:'waiting'}[image.Status]}}">

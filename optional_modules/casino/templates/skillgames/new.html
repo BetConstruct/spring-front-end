@@ -21,7 +21,7 @@
                             <span></span>
                         </div>
                         <p>{{ game.name|translate }}</p>
-                        <a  class="game-link-tj" data-new="{{'new'|translate}}" ng-click="selectPage({id: game.id, name: game.name}); $event.stopPropagation();">
+                        <a  class="game-link-tj badge-class-{{game.badge.class}}" data-new="{{game.badge.title}}" ng-click="selectPage({id: game.id, name: game.name}); $event.stopPropagation();">
                             <img ng-src="{{game.icon_3 ? game.icon_3 : game.icon_2}}" alt="">
                         </a>
                     </div>

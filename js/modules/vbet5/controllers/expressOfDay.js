@@ -38,7 +38,10 @@ VBET5.controller('expressOfDayCtrl', ['$scope', '$location', 'Zergling', functio
         $scope.columns = [];
         Zergling.get({}, "get_predefined_multiples").then(function (res) {
 
-            $scope.expresses = res.result === 0? res.details: [];
+            $scope.expresses = res.result === 0? res.details.filter(function (item){
+                return item.Selections.length > 0;
+            }): [];
+
             var length = $scope.expresses.length;
             var j = 0;
             for (var i = 0; i < length; ++i) {
@@ -50,6 +53,7 @@ VBET5.controller('expressOfDayCtrl', ['$scope', '$location', 'Zergling', functio
 
             }
             $scope.columnsLength = $scope.columns.length;
+            $scope.maxColCount = MAX_COL_COUNT;
         })['finally'](function () {
             $scope.loading = false;
         });

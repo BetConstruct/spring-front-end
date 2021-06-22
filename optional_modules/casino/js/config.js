@@ -20,8 +20,7 @@ CASINO.constant('CConfig', {
         moreColumnNumber: 6, //number of columns in categories  "more" dropdown block
         numberOfRecentGames: 20, //initial number of recent games to show.  When newCasinoDesign is enabled change this value to be 3X
         numberOfRecentGamesWide: 28, //initial number of recent games to show in wide screen mode.  When newCasinoDesign is enabled change this value to be 5X
-        increaseBy: 30, // load this number of additional games when clicking "load more".   When newCasinoDesign is enabled change this value to be 3X
-        increaseByWide: 30, // load this number of additional games when clicking "load more".  When newCasinoDesign is enabled change this value to be 5X
+        loadMoreCount: 24, // load this number of additional games when clicking "load more"
         partnerID: '13', // partner ID
         popularGamesID: 'PopularGames', // popular games ID
         topSlotsID: 'TopSlots', // top slots ID
@@ -246,7 +245,7 @@ CASINO.constant('CConfig', {
             '114': 9,
             '118': 5,
             '119': 5,
-            '121': 3,
+            '121': 13,
             '123': 3,
             '125': 6,
             '126': 3,
@@ -256,6 +255,7 @@ CASINO.constant('CConfig', {
             '132': 11,
             '133': 1,
             '134': 12,
+            '138': 13,
             '141': 7,
             '3001056': 11,
             '3001057':1,
@@ -416,5 +416,6 @@ CASINO.constant('CConfig', {
     blast: {
         externalID: "5000000",
         id: "11870"
-    }
+    },
+    wonderWheel: {}
 });

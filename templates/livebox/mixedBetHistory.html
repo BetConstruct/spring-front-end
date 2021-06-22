@@ -12,20 +12,21 @@
                     <li ng-if="$root.conf.betHistory.enableReturnedFilter" ng-click="filterBetHistory(11)" ng-class="{'active': (betStatusFilter == 11)}"><span trans>Won Return</span> <i ng-show="betEventCounts.wonReturn">{{betEventCounts.wonReturn}}</i></li>
                     <li ng-if="$root.conf.betHistory.enableReturnedFilter" ng-click="filterBetHistory(12)" ng-class="{'active': (betStatusFilter == 12)}"><span trans>Lost Return</span> <i ng-show="betEventCounts.lostReturn">{{betEventCounts.lostReturn}}</i></li>
                     <li ng-if="$root.profile.is_agent" ng-click="filterBetHistory(10)" ng-class="{'active': (betStatusFilter === 10)}"><span trans>Agent Info</span></li>
+                    <li ng-if="$root.conf.enableGiftBet" ng-click="filterBetHistory(-2)" ng-class="{'active': (betStatusFilter == -2)}"><span trans>Gifted bets</span></li>
                     <li ng-if="$root.conf.enableGiftBet" ng-click="filterBetHistory(-1)" ng-class="{'active': (betStatusFilter == -1)}"><span trans>Received gifts</span></li>
                 </ul>
             </div>
             <div class="all-history-filter-container">
                 <div class="filter-columns-container">
                     <ul>
-                        <li ng-show="!conf.betHistoryHideId && betStatusFilter !== 10 && betStatusFilter !== -1">
+                        <li ng-show="!conf.betHistoryHideId && !{'10':1, '-1':1, '-2': 1}[betStatusFilter]">
                             <p trans>bet id:</p>
                             <div class="mini-form-box-b">
                                 <input type="text" ng-model="betHistoryParams.betIdFilter" placeholder="#"
                                        ng-click="periodDropdownOpened = false; openedTo = false; openedFrom = false;  openBetTypeFilter = false;" prevent-input="[^\d]">
                             </div>
                         </li>
-                        <li ng-show="betStatusFilter !== 10 && betStatusFilter !== -1">
+                        <li ng-show="!{'10':1, '-1':1, '-2': 1}[betStatusFilter]">
                             <p trans>Bet Type</p>
                             <div class="select-box-period-b" ng-click="openBetTypeFilter = !openBetTypeFilter" ng-class="{'active': openBetTypeFilter}">
                                 <p>{{(betHistoryParams.betTypeSelector ? betHistoryParams.betTypeSelector.name : 'All')|translate}}</p>
@@ -64,7 +65,7 @@
                                                    is-open="openedFrom"
                                                    disabled="disabled"
                                                    datepicker-options="dateOptions"
-                                                   ng-change="(betStatusFilter !== -1) && adjustDate('from')"
+                                                   ng-change="adjustDate('from')"
                                                    ng-required="true"
                                                    close-text="Close"
                                             />
@@ -121,7 +122,7 @@
                                 </div>
                             </th>
                             <th class="hh-cell" trans>Stake</th>
-                            <th class="hh-cell" trans>Odd Type</th>
+                            <th ng-if="!$root.conf.betHistory.hideOddTypes" class="hh-cell" trans>Odd Type</th>
                             <th class="hh-cell" trans>Odds</th>
                             <th class="hh-cell" ng-if="betStatusFilter === -1" trans>Client ID</th>
                             <th class="hh-cell" trans>Outcome</th>
@@ -133,23 +134,23 @@
                         </tr>
                     </thead>
                     <tbody ng-repeat="bet in betHistory | orderBy:'date_time':true"
-                           ng-if="!bet.parent_bet_id && (betStatusFilter == undefined || betStatusFilter === -1  || betStatusFilter == bet.outcome) && (betHistoryParams.betTypeSelector == undefined ||betHistoryParams.betTypeSelector.value == bet.type)"
+                           ng-if="!bet.parent_bet_id && (betStatusFilter == undefined || betStatusFilter === -1  || betStatusFilter == bet.outcome || (betStatusFilter === -2 && bet.is_gift)) && ( betHistoryParams.betTypeSelector == undefined ||betHistoryParams.betTypeSelector.value == bet.type)"
                            ng-class="{'active': bet.expand}">
                         <tr class="main"  ng-click="toggleBetDetails(bet)">
-                            <td class="date-id" ng-class="{'coins-icon': bet.showBetDrawIcon}" title="{{(bet.showBetDrawIcon? betDrawIconTitle : '')|translate}}">
+                            <td class="date-id" ng-class="{'coins-icon': bet.showBetDrawIcon}" title="{{bet.betDrawIconTitle}}">
                                 <span>{{bet.date_time|formatDate:(conf.layoutTimeFormat[conf.sportsLayout] || 'noLocaleTranslate'):null:$root.env.timeFormat}}</span>
                                 <span>{{conf.layoutTimeFormat[conf.sportsLayout]? (bet.date_time|formatDate:'hour':null:$root.env.timeFormat): ''}}</span>
-                                <span ng-hide="conf.betHistoryHideId"><br/> ID: <a>{{bet.id}}</a></span>
+                                <span ng-hide="conf.betHistoryHideId">
+                                    <br/>ID:<a>{{bet.id}}</a>
+                                    <i class="profile-id-copy" ng-class="{'profile-id-copied':copyIdState.copiedId === bet.id}" ng-click="$event.stopPropagation(); copyIdState.copiedId !== bet.id && copyToClipboard(bet.id); " title="{{(copyIdState.copiedId === bet.id ? 'Copied successful' :'Copy')|translate}}"></i>
+                                </span>
                             </td>
                             <td class="status-icon-b hh-cell" ng-class="{'1':'cms-jcon-single', '2':'cms-jcon-multiple', '3':'cms-jcon-system', '4':'cms-jcon-chain', 'Toto': 'toto-bet', '5': 'trixie-bet', '6': 'yankee-bet', '8': 'super-yankee-bet', '9': 'heinz-bet', '10': 'super-heinz-bet', '11': 'goliath-bet', '20': 'block-bet', '40': 'cms-jcon-forecast-tricast', '41': 'cms-jcon-forecast-tricast', '42': 'cms-jcon-forecast-tricast', '43': 'cms-jcon-forecast-tricast', '44': 'cms-jcon-forecast-tricast', '50': 'cms-jcon-Bet-Builder', '51': 'cms-jcon-bet-on-lineups'}[bet.type]"></td>
                             <td class="auto-cell">
                                 <ul class="cell-inner mixed-bet-history-flex">
                                     <li class="ellipsis-text">
                                         <span ng-class="{'EW-bh-indicator': bet.each_way}" ng-bind="betTypes[bet.type]|translate"></span><span ng-if="bet.type==3">. {{bet.system_min_count}}/{{bet.events.length}} ({{bet.systemCombinationsCount}} {{'opt.'|translate}})</span>
-                                    </li>
-                                    <li class="icons-holder" ng-show="bet.super_bet || bet.is_bonus_money">
-                                        <i class="cms-jcon-souperman" ng-show="bet.super_bet"></i>
-                                        <i class="cms-jcon-bonus2" title="Made with Bonus money" trans="attr-only" ng-if="bet.is_bonus_money"></i>
+                                        <ng-include src="::'templates/livebox/betHistoryIcons.html'|fixPath"></ng-include>
                                     </li>
                                     <li class="buttons-holder">
                                         <button class="cms-jcon-Print" ng-if="conf.enableBetPrint" ng-click="openPrintPreview(bet); $event.stopPropagation()"></button>
@@ -166,32 +167,31 @@
                                 <input class="second-color" disabled size="{{bet['totalAmount'].length}}" type="text" ng-model="bet['totalAmount']" comma comma-enable={{conf.enableCommaSeparateNumber}} comma-decimal="enable" comma-dot="{{conf.enableDotInsteadComma}}">
                                 <span>{{bet.currency|currency}}</span>
                             </td>
-                            <td class="hh-cell odd-color center-text">
+                            <td ng-if="!$root.conf.betHistory.hideOddTypes" class="hh-cell odd-color center-text">
                                 <span ng-bind="::bet.oddTypeMapped | capitalise | translate"></span>
                             </td>
                             <td class="hh-cell odd-color center-text">
-                                <strong ng-hide="betConf.hideMyBetsTotalOdds">{{bet.type == 1 && bet.events[0].k_type ==11 ? 'SP' : (bet.k|oddConvert:bet.oddTypeMapped:null:'BET_HISTORY':undefined:(!{1:1, 4:1}[bet.type]))}}</strong>
+                                <strong ng-hide="betConf.hideMyBetsTotalOdds">{{bet.type == 1 && bet.events[0].k_type == 11 ? 'SP' : (bet.k|oddConvert:bet.oddTypeMapped:null:'BET_HISTORY':undefined:(!{1:1, 4:1}[bet.type]))}}</strong>
                             </td>
                             <td class="hh-cell odd-color center-text" ng-if="betStatusFilter === -1">
                                 <strong ng-bind="bet.client_id"></strong>
                             </td>
                             <!--Outcome part-->
                             <td ng-if="!$root.conf.betHistory.showPayoutInsteadOutcome" class="hh-cell">
-                                <div ng-if="bet.outcome == 0 && bet.bonus > 0">
-                                    <span class="second-color" trans>Bonus</span><br>
-                                    <span class="second-color">{{bet.bonus|bankersRoundAndNumberCommas:$root.conf.balanceFractionSize}}</span> <span>{{bet.currency|currency}}</span>
-                                </div>
-                                <div ng-if="bet.outcome == 0 && bet.possible_win > 0">
-                                    <span class="second-color" trans>Possible win:</span><br>
-                                    <span class="second-color">{{bet.possible_win|roundPossibleWin:$root.conf.balanceFractionSize:bet.type}}</span> {{bet.currency|currency}}
+
+                                <div class="my-bets-history-possible-win" ng-if="{'0': 1, '-5':1}[bet.outcome] && bet.possible_win > 0">
+                                    <span class="second-color">{{'Possible Win'|translate}}</span><br>
+                                    <span class="second-color">{{(bet.possible_win - bet.bonus)|roundPossibleWin:$root.conf.balanceFractionSize:bet.type}}</span>{{bet.bonus>0? ' + ':''}}<span ng-if="bet.bonus> 0" title="{{'Bonus'|translate}}" class="second-color my-bets-history-possible-win-bonus"><i class="cms-jcon-money-dollar"></i><span>{{bet.bonus|bankersRoundAndNumberCommas:$root.conf.balanceFractionSize}}</span></span>
                                 </div>
 
                                 <div ng-if="bet.outcome == 0 && bet.possible_win === -1">
                                     <span class="second-color" trans>N/A</span>
                                 </div>
-                                <div ng-show="bet.outcome != 0 && bet.payout">
-                                    <span class="second-color">{{bet.payout|roundPossibleWin:$root.conf.balanceFractionSize:bet.type}}</span> {{bet.currency|currency}}
+                                <div class="my-bets-history-possible-win" ng-show="bet.outcome != 0 && bet.payout">
+                                    <span class="second-color">{{(bet.outcome === 5?'Payout':'Win')|translate}}</span><br>
+                                    <span class="second-color">{{(bet.payout-bet.bonus)|roundPossibleWin:$root.conf.balanceFractionSize:bet.type}}</span>{{bet.bonus>0? ' + ':''}}<span ng-if="bet.bonus> 0" title="{{'Bonus'|translate}}" class="second-color my-bets-history-possible-win-bonus"><i class="cms-jcon-money-dollar"></i><span>{{bet.bonus|bankersRoundAndNumberCommas:$root.conf.balanceFractionSize}}</span></span>
                                 </div>
+
                             </td>
                             <td ng-if="$root.conf.betHistory.showPayoutInsteadOutcome" class="hh-cell">
                                 <div ng-if="bet.outcome == 0">
@@ -215,11 +215,11 @@
                             <td>
                                 <ul class="edit-bet-or-cashout">
                                     <li ng-if="$root.conf.enableGiftBet && betStatusFilter !== -1" ng-click="$event.stopPropagation()">
-                                        <div ng-if="(bet.outcome === 1 || bet.outcome === 3) && bet.is_gift" class="gift-bet" title="{{'Gifted'|translate}}">
+                                        <div ng-if="(bet.outcome === 1 || bet.outcome === 3) && bet.is_gift" class="gift-bet" title="{{('Gifted to'|translate) + ' ' + bet.gift_receiver_email}}">
                                             <i class="disabled"></i>
                                         </div>
 
-                                        <div ng-if="bet.outcome === 0" class="gift-bet" title="{{(bet.is_gift ? 'Gifted': 'Gift')|translate}}">
+                                        <div ng-if="bet.outcome === 0 && !bet.cashouts_history" class="gift-bet" title="{{bet.is_gift ? (('Gifted to'|translate) + ' ' + bet.gift_receiver_email): ('Gift'|translate)}}">
                                             <i ng-click="showGiftPopup(bet)" ng-class="{'disabled': bet.is_gift === true }"></i>
                                         </div>
                                     </li>
@@ -234,7 +234,7 @@
                                     </li>
                                     <li>
                                         <span class="second-color">{{{'-5': 'On Hold', '-4': 'Declined', '0': 'Unsettled', '1': 'Lost', '2': 'Returned', '3': 'Won', '5': 'Cashed out', '11': 'Won Return', '12': 'Lost Return'}[bet.outcome]|translate}}</span>
-                                        <div ng-if="bet.cash_out && !bet.is_gift" title="{{'Cash-out'|translate}}">
+                                        <div ng-if="bet.cash_out" title="{{'Cash-out'|translate}}">
                                             <button ng-click="broadcast('open.cashoutDialog', {bet: bet, dateRange: betHistoryParams.dateRange, selectedUpcomingPeriod: selectedUpcomingPeriod});$event.stopPropagation();"
                                                     ng-disabled="$root.editBet.edit && bet.id === $root.editBet.oldBetId"
                                                     class="cashout-from-mixed"
@@ -253,8 +253,8 @@
                             <td class="status-icon-b hh-cell sport-icon" ng-class="event.sport_index"></td>
                             <td class="auto-cell" colspan="2">
                                 <ul class="cell-inner mixed-bet-history-flex">
-                                    <li class="ellipsis-text was-game" ng-click="openCorrespondingGame(event);" ng-class="{'live-now': event.is_live, 'is-game-available': !!gamePointers[event.game_id]}" title="{{event.sport_name}} {{event.region_name}} {{event.competition_name}}: {{event.team1}} - {{event.team2}}">
-                                        <span>{{event.team1 + ((event.team1 && event.team2)? ' - ': '') + event.team2}}</span>
+                                    <li class="ellipsis-text was-game" ng-click="openCorrespondingGame(event);" ng-class="{'live-now': event.is_live, 'is-game-available': !!gamePointers[event.game_id], 'show-order': bet.showOrder}" title="{{event.sport_name}} {{event.region_name}} {{event.competition_name}}: {{event.team1}} - {{event.team2}}">
+                                        <span class="chain-order" ng-if="bet.showOrder" ng-bind="event.order + ' '"></span><span>{{event.team1 + ((event.team1 && event.team2)? ' - ': '') + event.team2}}</span>
                                     </li>
                                     <li class="mixed-history-name-child-result">
                                         <span class="second-color">{{event.market_name ? event.market_name + " - ": ""}} <b>{{event.basis ? event.event_name.replace(event.basis, (event.basis|handicapBaseFormat)) : event.event_name}}</b></span>
@@ -271,7 +271,7 @@
                                     <li class="match-key" ng-if="event.game_info.Type === 1" pre-match-key hash="event.game_info.Hash" key="event.game_info.HashKey"></li>
                                 </ul>
                             </td>
-                            <td class="hh-cell"></td>
+                            <td ng-if="!$root.conf.betHistory.hideOddTypes" class="hh-cell"></td>
                             <td class="hh-cell odd-color center-text">
                                 <strong title="{{event.k_type == 11 ? 'SP' : (event.coeficient|oddConvert:bet.oddTypeMapped:null:'BET_HISTORY')}}">{{event.k_type == 11 ? 'SP' : (event.coeficient|oddConvert:bet.oddTypeMapped:null:'BET_HISTORY')}}</strong>
                             </td>
@@ -352,10 +352,9 @@
                                     </ul>
                                 </div>
                             </td>
-                            <td class="arrow-cell"></td>
                         </tr>
                     </tbody>
-                    <tbody ng-if="betHistory && betHistory.length == 0">
+                    <tbody ng-if="betHistory && (betHistory.length == 0 || betStatusFilter === -2 && giftedBetsCount === 0)">
                         <tr>
                             <td colspan="9" class="second-color center-text" trans>There are no bets for the selected time period.</td>
                         </tr>

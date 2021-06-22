@@ -6,7 +6,7 @@
         <form name="forms.smsVerification" class="sms-v-f registration-form">
             <div class="form-text" ng-class="{'error': forms.smsVerification.confirmation_code.$touched && forms.smsVerification.confirmation_code.$invalid}">
                 <div class="tooltip-wrapper-j">
-                     <input name="confirmation_code" ng-model="state.confirmationCode" ng-blur="forms.smsVerification.confirmation_code.$touched=true" type="text" placeholder="{{'Enter Code'|translate}}" prevent-input="[^0-9]+" required />
+                     <input name="confirmation_code" title="{{'Enter code'|translate}}" ng-model="state.confirmationCode" ng-blur="forms.smsVerification.confirmation_code.$touched=true" type="text" placeholder="{{'Enter code'|translate}}" prevent-input="[^0-9]+" required />
                     <div class="form-error-icon-j" ng-click="state.confirmationCode='';forms.smsVerification.$setUntouched()"></div>
                     <div class="tooltip-j" ng-init="formInit()">
                         <div ng-show="forms.smsVerification.confirmation_code.$error.required" trans>This field is required</div>

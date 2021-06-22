@@ -42,7 +42,7 @@
                     </ul>
                 </div>
             </div>
-            <promotion-news template="slider" slug="backgammon" hide-dates="true" main-class="block-meny-news promo" use-custom-base-host="true" ng-if="!showDownloadLinks" share-path="backgammon"></promotion-news>
+            <promo-switcher  template="slider"  ng-if="!showDownloadLinks" category="backgammon"></promo-switcher>
             <div class="game-torunament-section-j backgammon-j" ng-init="setDefaultDownloadOS('backgammon');" >
                 <div class="guide">
                     <div ng-if="!globalConfig.backgammon.tournamentScheduleUrl" class="guide" ng-init="loadPages('backgammon');getCustomPage('backgammon','mainPageHeaderSlugs','headerContentHTML');">

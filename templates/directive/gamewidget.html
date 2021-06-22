@@ -17,7 +17,7 @@
     <div class="lmb-sport-select-j">
         <p ng-if="loadCompleted && liveGameViewData && liveGameViewData.length === 0" class="last-bets-nogames-t" trans>No games found</p>
         <ul ng-show="loadCompleted">
-            <li ng-show="liveGameViewData.length > 0" ng-repeat="sport in liveGameViewData track by $index" ng-class="{'active-j':selectedSport.id == sport.id,'all-sports-section':'allSport' === sport.alias}" title="{{ sport.name }}" ng-click="selectSport(sport)"><i class="sport-icon-j {{sport.alias}}"></i><span>{{sport.name}}</span></li>
+            <li ng-show="liveGameViewData.length > 0" ng-repeat="sport in liveGameViewData track by $index" ng-class="{'active-j':selectedSport.id == sport.id,'all-sports-section':'allSport' === sport.alias}" class="{{sport.alias}}" title="{{ sport.name }}" ng-click="selectSport(sport)"><span>{{sport.name}}</span></li>
         </ul>
     </div>
     <div class="lmb-table-wrap-j" ng-class="{'lmb-empty-list': liveGameViewData.length === 0}">
@@ -32,7 +32,7 @@
                 <li></li>
                 <li trans ng-bind = "gameWidgetType === 'popularGamesWidget' ? '' : 'Team 2'|translate"></li>
                 <li trans>1</li>
-                <li ng-hide="sportP1P2Alias.indexOf(selectedSport.alias) > -1" trans>X</li>
+                <li ng-show="selectedSport.hasXEvent" trans>X</li>
                 <li trans>2</li>
                 <li class="statistic-view-icon"></li>
                 <li class="video-animation-view-icon"></li>
@@ -59,7 +59,7 @@
                     <div class="market-info-b" ng-class="{'blocked': ((game.events.P1.price | oddConvert:'decimal') == 1 || game.is_blocked)}"><span class="price"><span class="{{game.events.P1.price_change == null? '' : ({true: 'up-', false: 'down'}[game.events.P1.price_change > 0] + (game.events.P1.price_change % 2)) }}">{{game.events.P1.price | oddConvert:$root.env.oddFormat:null:'WINNER'}}</span></span>
                     </div>
                 </li>
-                <li ng-hide="sportP1P2Alias.indexOf(selectedSport.alias) > -1" ng-click="bet(game.events.X, game, $event);" ng-class="{'active': isEventInBetSlip(game.events.X)}">
+                <li ng-show="selectedSport.hasXEvent" ng-click="bet(game.events.X, game, $event);" ng-class="{'active': isEventInBetSlip(game.events.X)}">
                     <div class="market-info-b" ng-class="{'blocked': ((game.events.X.price | oddConvert:'decimal') == 1 || game.is_blocked)}"><span class="price"><span class="{{game.events.X.price_change == null? '' : ({true: 'up-', false: 'down'}[game.events.X.price_change > 0] + (game.events.X.price_change % 2)) }}">{{game.events.X.price | oddConvert:$root.env.oddFormat:null:'WINNER'}}</span></span>
                     </div>
                 </li>

@@ -1,4 +1,4 @@
-<div ng-if="game.type === 1" class="e-sport-l-score">
+<div ng-if="game.type === 1 && !gameFinished" class="e-sport-l-score">
     <live-game-scores class="float-width" show-stats-block="showStatsBlock"  open-game="game" enlarged-game="enlargedGame"></live-game-scores>
 </div>
 <div class="all-markets-e-s">
@@ -8,11 +8,11 @@
                 <p ng-bind="game.region.name"></p>
                 <p ng-bind="game.competition.name"></p>
             </li>
-            <li class="team-n-l-v a-right">
+            <li class="team-n-l-v a-right" ng-if="game.show_type !== 'OUTRIGHT'">
                 <h6 class="e-team-name-r">{{game.team1_name}} <i class="team-logo-b" ng-style="{'background-image': $root.conf.teamDefaultLogo ? 'url(images/team-logo-default.png)' : 'url({{$root.conf.teamLogosPath}}e/s/{{Math.floor(game.team1_id / 2000)}}/{{game.team1_id}}.png)'}"></i></h6>
             </li>
-            <li class="g-vs-v" trans>vs</li>
-            <li class="team-n-l-v">
+            <li class="g-vs-v" ng-if="game.show_type !== 'OUTRIGHT'" trans>vs</li>
+            <li class="team-n-l-v" ng-if="game.show_type !== 'OUTRIGHT'">
                 <h6 class="e-team-name-r"><i class="team-logo-b" ng-style="{'background-image': $root.conf.teamDefaultLogo ? 'url(images/team-logo-default.png)' : 'url({{$root.conf.teamLogosPath}}e/s/{{Math.floor(game.team2_id / 2000)}}/{{game.team2_id}}.png)'}"></i> {{game.team2_name}}</h6>
             </li>
             <li>
@@ -43,3 +43,4 @@
         <ng-include src="::'templates/directive/live-game-odds.html'|fixPath"></ng-include>
     </div>
 </div>
+<p class="game-finished-v3" ng-show="gameFinished" trans>This Game is already finished or unavailable</p>

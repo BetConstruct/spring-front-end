@@ -1,0 +1,66 @@
+<!--popup  promotion news block START-->
+
+<div class="popup-news" ng-if="selectedPromo.id">
+    <div class="popup-news-table">
+        <div class="popup-news-row">
+            <div class="popup-news-column">
+                <div class="popup_block-news">
+                    <div ng-click="unselectPromo()" class="popup-news-close-icon"></div>
+                    <a name="news-{{selectedPromo.id}}" class="anchor"></a>
+                    <div class="big-news-block">
+                        <h3 class="promo-bonus-title" ng-bind-html="selectedPromo.title"></h3>
+                        <div class="popup-news-content">
+                            <div class="popup-news-content-left">
+                                    <span class="date-promo-b"
+                                          ng-hide="$root.conf.hidePromotionNewsDate || !selectedPromo.permalink">{{ selectedPromo.date | formatDate:'full'
+                                        }}</span>
+                                <!--<span class="name-promo-bonus">Bonus</span>-->
+                                <div class="promo-picture-block"><a><img
+                                        ng-src="{{selectedPromo.src}}"
+                                        alt=""></a>
+
+                                </div>
+                                <div ng-if="($root.conf.promotionShare.facebook || $root.conf.promotionShare.twitter) && selectedPromo.permalink"
+                                     class="mini-social-icons">
+                                    <p trans>Share</p>
+                                    <ul>
+                                        <li ng-if="$root.conf.promotionShare.facebook" class="social-facebook"><a
+                                                ng-href="https://www.facebook.com/sharer/sharer.php?u={{selectedPromo.permalink}}"
+                                                target="_blank"></a></li>
+                                        <li ng-if="$root.conf.promotionShare.twitter" class="social-twitter">
+                                            <a ng-href="https://twitter.com/share?text={{selectedPromo.titleRaw|uri}}&url={{selectedPromo.permalink}}&via={{$root.conf.twitterAccount[env.lang] || $root.conf.twitterAccount.default || $root.conf.twitterAccount}}&hashtags={{$root.conf.twitterHashTag}},{{selectedPromo.categories[0].title}}"
+                                               target="_blank"></a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="promo-opt-button"
+                                 ng-if="$root.conf.promotionsOptIn && $root.env.authorized && !template && selectedPromo.is_optinable && playerOptIns"
+                                 ng-class="{'disabled': optInOutProcessing[selectedPromo.id]}">
+                                <div>
+                                    <vbet-loader class="small-progress"></vbet-loader>
+                                    <button ng-if="!playerOptIns[selectedPromo.opt_in]"
+                                            ng-click="optInOut(selectedPromo.opt_in,true, selectedPromo.id)"
+                                            title="{{'Opt In'|translate}}" trans>Opt In
+                                    </button>
+                                    <button ng-if="playerOptIns[selectedPromo.opt_in]"
+                                            ng-click="optInOut(selectedPromo.opt_in,false, selectedPromo.id)"
+                                            title="{{'Opt Out'|translate}}" trans>Opt Out
+                                    </button>
+                                </div>
+                            </div>
+
+                            <p class="all-text-news-b" ng-bind-html="selectedPromo.content"></p>
+                            <!--
+                                                <div class="ok-g-link"><a href="#">okay, go!</a></div>
+                            -->
+                        </div>
+                    </div>
+                    <!--                        <div class="closed-arrow-b"><a ng-click="closeNews()" trans>close</a></div>-->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--popup  promotion news block END-->

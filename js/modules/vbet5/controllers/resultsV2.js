@@ -20,6 +20,9 @@ angular.module('vbet5.betting').controller('ResultsV2Controller', ['$rootScope',
         var leftMenuLiveGamesSubId;
         var liveGamesSubId;
         var firstTime = true;
+        var notSplitSports = {
+            Archery: 1
+        };
 
 
         $rootScope.footerMovable = true; // make footer movable
@@ -324,8 +327,9 @@ angular.module('vbet5.betting').controller('ResultsV2Controller', ['$rootScope',
                     if (result.games.game[0]) { // checking if game is array (if one game, then game is object)
                         angular.forEach(result.games.game, function (game) {
                             if (game.date <= Moment.get().unix()) {
-                                game.scoresShort = renderResultScore(game);
-                                game.scoresSecondPart = getSecondPartOfScores(game.scores, game.scoresShort);
+                                var firstPart = !notSplitSports[game.sport_alias]?renderResultScore(game): "";
+                                game.scoresSecondPart = getSecondPartOfScores(game.scores, firstPart);
+                                game.scoresShort = firstPart.replace(/\s+/g, '');
                                 games.push(game);
                             }
                         });
@@ -809,8 +813,6 @@ angular.module('vbet5.betting').controller('ResultsV2Controller', ['$rootScope',
                     scores = scores.substr(0, index).trim();
                 }
             }
-
-            scores = scores.replace(/\s+/g, '');
 
             if (scores.length > 7) {
                 return scores.substr(0, 4) + '...';

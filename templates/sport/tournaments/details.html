@@ -1,0 +1,132 @@
+<div class="casino-tournaments-include" ng-init="openTournamentDetails($location.search().tournament_id, false, true);">
+  <vbet-loader ng-if="!tournament.details"></vbet-loader>
+  <div class="guide" ng-if="tournament.details">
+    <div class="casino-tournament-page-intro euro-tournament" ng-style="{'background-image': 'linear-gradient(to bottom, rgba(0,0,0,0.6), rgba(0,0,0,0.1)), url({{tournament.details.DetailsBannerImagesFiltered[0].ImageUrl}})'}">
+      <div class="tour-info current-tournament-page">
+        <div class="tour-img" ng-style="{'background-image': 'url({{tournament.details.LobbyBannerImagesFiltered[0].ImageUrl}})'}"></div>
+        <h5 class="tour-title">{{tournament.details.Name}}</h5>
+        <p class="tour-prize">{{tournament.details.PrizeFund|number}} {{tournament.details.CurrencyId|currency}}</p>
+        <counter start="{{tournament.details.Stage === 3 ? tournament.details.StartDate : tournament.details.EndDate}}" finish-text="{{tournament.details.Stage === 3 ? 'Started' : tournament.details.Stage === -1 ? 'Canceled' : ''}}" class="status-color"></counter>
+        <div class="tour-status">
+          <span class="status" trans>Status:</span>
+          <p class="status-color" ng-class="{finished: tournament.details.Stage === 1, live: tournament.details.Stage === 2, upcoming: tournament.details.Stage === 3, canceled : tournament.details.Stage === -1}">
+            <strong ng-show="tournament.details.Stage == 1" trans>Finished</strong>
+            <strong ng-show="tournament.details.Stage == 2" trans>tournament_live</strong>
+            <strong ng-show="tournament.details.Stage == 3" trans>Upcoming</strong>
+            <strong ng-show="tournament.details.Stage == -1" trans>Canceled</strong>
+          </p>
+        </div>
+        <button class="tour-join-btn" ng-click="participateInTournament(tournament.details);$event.stopPropagation()" ng-disabled="!tournament.details.canParticipate || tournament.details.IsParticipated">
+          {{(tournament.details.IsParticipated ? 'Joined' : 'Join')|translate}}
+        </button>
+
+      </div>
+      <ul class="tour-status-boxes float-width">
+        <li class="status-box start-end-box">
+          <p class="tour-card-title ellipsis-text"><b trans>Registration Dates</b></p>
+          <div class="start-end float-width">
+            <div class="start-end-date f-left">
+              <span class="start tour-green f-left" trans>Start</span>
+              <span class="date f-right">{{tournament.details.RegistrationStartDate|formatDate:'tournament'}}</span>
+            </div>
+            <div class="start-end-date f-right">
+              <span class="start tour-red f-left" trans>End</span>
+              <span class="date f-right">{{tournament.details.RegistrationEndDate|formatDate:'tournament'}}</span>
+            </div>
+          </div>
+        </li>
+        <li class="status-box start-end-box">
+          <p trans class="tour-card-title ellipsis-text"><b trans>Tournament Dates</b></p>
+          <div class="start-end float-width">
+            <div class="start-end-date f-left">
+              <span class="start tour-green f-left" trans>Start</span>
+              <span class="date f-right">{{tournament.details.StartDate|formatDate:'tournament'}}</span>
+            </div>
+            <div class="start-end-date f-right">
+              <span class="start tour-red f-left" trans>End</span>
+              <span class="date f-right">{{tournament.details.EndDate|formatDate:'tournament'}}</span>
+            </div>
+          </div>
+        </li>
+        <li class="status-box buy-in-fee players-bets">
+          <div class="box-row">
+            <span class="title f-left ellipsis-text" trans>Buy in + Fee</span>
+            <span class="value f-right">{{tournament.details.RegistrationAmount + ' ' + tournament.details.CurrencyId|currency}}</span>
+          </div>
+        </li>
+        <li class="status-box players-bets">
+          <div class="box-row">
+            <span class="title f-left ellipsis-text" trans>Minimum Bet</span>
+            <span class="value f-right">{{tournament.details.MinBet}} {{tournament.details.CurrencyId|currency}}</span>
+          </div>
+          <div class="box-row">
+            <span class="title f-left ellipsis-text" trans>Maximum Bet</span>
+            <span class="value f-right">{{ tournament.details.MaxBet !== null ? tournament.details.MaxBet : '&infin;'}}  {{tournament.details.CurrencyId|currency}}</span>
+          </div>
+        </li>
+      </ul>
+    </div>
+    <div class="casino-tournament-statistics-wrapper" smooth-scroll scroll-if="{{tournament.readMore}}">
+      <ul>
+        <!--tournament prizes-->
+        <li class="prizes">
+          <div class="ct-stat-block">
+            <div class="ct-stat-icon"></div>
+            <div class="waved-decor-7-white"></div>
+            <h5 trans>Prizes</h5>
+            <h6></h6>
+            <div class="casino-tournament-scroll">
+              <div class="cst-stat-list">
+                <div class="cst-stat-list-item" ng-repeat="details in tournament.details.PrizeStructure track by $index">
+                  <ul>
+                    <li><p>{{(details.PlaceNumber + (placePostfix[details.PlaceNumber] || 'th') + ' place')|translate}}</p></li>
+                    <li>{{details.PrizePercent}}%</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </li>
+        <!--tournament results-->
+        <li class="tournament-results">
+          <div class="ct-stat-block has-counter brand-color">
+            <div class="ct-stat-icon"></div>
+            <div class="waved-decor-7-white"></div>
+            <h5 trans>Leaderboard</h5>
+            <h6 ng-show="tournament.details.currentPlayer.Amount"><span trans>Me</span> {{tournament.details.currentPlayer.Amount}}</h6>
+            <div class="casino-tournament-scroll">
+              <div class="cst-stat-list">
+                <div class="cst-stat-list-item" ng-repeat="topPlayerList in tournament.details.playerList track by $index">
+                  <ul>
+                    <li>
+                      <p>
+                        <b>{{topPlayerList.Place || ''}}</b>
+                        <small>{{(topPlayerList.label | translate) || topPlayerList.PlayerId}}</small>
+                      </p>
+                    </li>
+                    <li>{{topPlayerList.Amount}}</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </li>
+        <!--tournament rules-->
+        <li class="tournament-rules">
+          <div class="ct-stat-block">
+            <div class="ct-stat-icon"></div>
+            <div class="waved-decor-7-white"></div>
+            <h5 trans>Tournament Rules</h5>
+            <h6></h6>
+            <div class="casino-tournament-scroll">
+              <div class="ct-stat-rules">
+                <p ng-bind-html="tournament.details.Description|nl2br|html"></p>
+                <a ng-show="false" href="#"  trans>Read full info</a>
+              </div>
+            </div>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>

@@ -1,8 +1,6 @@
 <div class="guide">
-    <div class="footer-custom-sprite" ng-show="conf.footer.imageInsteadPayments">
-        <img ng-src="{{spriteURL}}"/>
-    </div>
-    <div class="payment-content-block" ng-hide="conf.footer.imageInsteadPayments">
+
+    <div class="payment-content-block" ng-show="conf.footer.showPaymentSystems">
         <ul>
             <li ng-repeat="payment in paymentSystemNames track by $index" class="{{payment.name}}" ng-click="openDepositWithPayment($event, payment.name)" ng-class="{'default-cursor': !conf.footerPaymentsClickable}">
                 <span ng-hide="payment.image" class="{{payment.name}} paymentIcon"></span>
@@ -10,5 +8,7 @@
             </li>
         </ul>
     </div>
-
+    <div class="footer-custom-sprite" ng-show="conf.footer.imageInsteadPayments">
+        <img ng-src="{{spriteURL}}"/>
+    </div>
 </div>

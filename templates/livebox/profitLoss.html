@@ -139,8 +139,7 @@
                            class="default-cursor"
                     >
                     <tr class="main">
-                        <td class="date-id"
-                            ng-class="{'win-car': bet.outcome != 5 && bet.showBetDrawIcon && bet.outcome != 2}">
+                        <td class="date-id" ng-class="{'coins-icon': bet.showBetDrawIcon}" title="{{bet.betDrawIconTitle}}">
                             <span>{{bet.date_time|formatDate:(conf.layoutTimeFormat[conf.sportsLayout] || 'noLocaleTranslate'):null:$root.env.timeFormat}} {{conf.layoutTimeFormat[conf.sportsLayout]? (bet.date_time|formatDate:'hour':null:$root.env.timeFormat): ''}}</span>
                             <span ng-hide="conf.betHistoryHideId"><br/> ID: <a>{{bet.id}}</a></span>
                         </td>
@@ -151,11 +150,7 @@
                                 <li class="ellipsis-text">
                                     <span>{{{'1':'Single', '2':'express', '3':'System', '4':'chain', 'Toto': 'Pool Betting', '5': 'Trixie', '6': 'Yankee', '8': 'Super Yankee', '9': 'Heinz', '10': 'Super Heinz', '11': 'Goliath', '20': 'Block'}[bet.type]|translate}}</span><span
                                         ng-if="bet.type==3">. {{bet.system_min_count}}/{{bet.events.length}} ({{bet.systemCombinationsCount}} {{'opt.'|translate}})</span>
-                                </li>
-                                <li class="icons-holder" ng-show="bet.super_bet || bet.is_bonus_money">
-                                    <i class="cms-jcon-souperman" ng-show="bet.super_bet"></i>
-                                    <i class="cms-jcon-bonus2" title="Made with Bonus money" trans="attr-only"
-                                       ng-if="bet.is_bonus_money"></i>
+                                    <ng-include src="::'templates/livebox/betHistoryIcons.html'|fixPath"></ng-include>
                                 </li>
                                 <li class="buttons-holder">
                                     <button class="cms-jcon-Print" ng-if="conf.enableBetPrint"
@@ -367,7 +362,7 @@
                     </tr>
                     </tbody>
                     <tfoot class="pointer-events-none">
-                    <tr ng-if="productMode === 'Sportsbook'">
+                    <tr ng-if="productMode === 'Sportsbook' && betHistory && betHistory.length !== 0">
                         <td class="date-id"></td>
                         <td class="status-icon-b hh-cell"></td>
                         <td class="auto-cell">
@@ -396,7 +391,7 @@
                         <td></td>
                         <td class="status-icon-b status-cell"></td>
                     </tr>
-                    <tr ng-if="productMode === 'Casino'">
+                    <tr ng-if="productMode === 'Casino' && casinoHistory && casinoHistory.length !== 0">
                         <td class="date-id"></td>
                         <td class="hh-cell">
                             <span class="second-color" trans> Total Bet</span>

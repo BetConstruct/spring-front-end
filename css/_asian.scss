@@ -522,7 +522,7 @@
   display: block;
   width: 14px;
   height: 14px;
-  margin-top: 8px;
+  margin-top: 10px;
   @include ltr {
     float: right;
     margin-right: 4px;
@@ -541,14 +541,6 @@
   }
 }
 .betslip-max-min {
-  display: none;
-  position: absolute;
-  bottom: 100%;
-  padding: 0 6px;
-  box-sizing: border-box;
-  z-index: 112;
-  white-space: nowrap;
-  background: $brand-color-1;
   @include ltr {
     right: 0;
   }
@@ -695,10 +687,10 @@
 
 .asian-left-contain-menu .bet-form form .bet-currency-value p {
   @include ltr {
-    padding-top: 7px;
+    padding-top: 10px;
   }
   @include rtl {
-    padding-top: 7px;
+    padding-top: 10px;
   }
 }
 
@@ -2187,6 +2179,31 @@
   }
 }
 
+.competition-search-input {
+  min-width: 300px;
+  border: 1px solid darken(saturate(adjust-hue($skin-color, 4deg), 1), 7);
+  background: lighten(desaturate(adjust-hue($skin-color, 3deg), 16), 4);
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0 14px 0 14px;
+  font: 12px $font-f;
+  height: 26px;
+  border-radius: 4px;
+  width: 100%;
+  color: $text-palette-4;
+  transition: border-color 200ms;
+  box-shadow: none;
+  -webkit-text-fill-color: opacify(rgba(set-color($registration-fields-background),0.39), $popup-form-opacify);
+  caret-color: $text-palette-4;
+  @include rtl {
+    text-align: right;
+  }
+  @include placeholder {
+    color: $text-palette-4;
+    font: 12px $font-f;
+  }
+}
+
 .popup-asian-info label {
   height: 24px;
   width: 100%;
@@ -3243,6 +3260,7 @@ table.hdp-contain-j {
   background: none;
   border: 1px solid #c9c9c9;
 }
+
 .asian {
   .bet-status-container {
     background: darken(desaturate(adjust-hue($skin-color, 4deg), 15), 1);

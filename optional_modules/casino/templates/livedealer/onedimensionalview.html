@@ -1,7 +1,7 @@
 <div class="live-casino-page" ng-init="initSlidingView();">
     <div class="float-width" ng-controller="cmsPagesCtrl" ng-init="loadPage('live-casino-most-popular-game-' + env.lang, true)">
         <div class="{{pageOptions.b_container}}">
-            <casino-game-slider product-slides="productSlides" class="liveDealer" ng-hide="confData.liveCasino.hideTopSlider"></casino-game-slider>
+            <casino-game-slider product-slides="productSlides" class="liveDealer" jackpot-source="'liveCasino'" ng-hide="confData.liveCasino.hideTopSlider"></casino-game-slider>
         </div>
         <div class="float-width" ng-include="'optional_modules/casino/templates/livedealer/onedimensionalviewInContent.html'"></div>
     </div>

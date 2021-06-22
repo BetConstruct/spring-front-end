@@ -338,13 +338,7 @@ VBET5.controller('settingsCtrl', ['$scope', '$rootScope', '$location', '$documen
             pushToReadOnly('zip_code');
         }
 
-        if ($scope.details.city) {
-            pushToReadOnly('city');
-        }
 
-        if ($scope.details.address) {
-            pushToReadOnly('address');
-        }
 
         if($scope.details.birth_date) {  // can edit if birthdate is empty and functionality of edit  enabled from config
             var birthOptions = $scope.details.birth_date.split('-');
@@ -449,7 +443,7 @@ VBET5.controller('settingsCtrl', ['$scope', '$rootScope', '$location', '$documen
                 $rootScope.$broadcast("globalDialogs.addDialog", {
                     type: 'error',
                     title: 'Error',
-                    content: Translator.get('Please try later or contact support.')
+                    content: Translator.get(response.result_text)
                 });
             }
             console.log(response);
@@ -827,6 +821,9 @@ VBET5.controller('settingsCtrl', ['$scope', '$rootScope', '$location', '$documen
                 $scope.depositLimitsData[fieldName] = '';
                 $scope.forms.depositLimitsForm[fieldName].$setUntouched();
                 break;
+            case 'sessionDurationLimit':
+                $scope.forms.sessionDurationLimitForm[fieldName].$setUntouched();
+                break;
             case 'betLimits':
                 $scope.betLimitsData[fieldName] = '';
                 $scope.forms.betLimitsForm[fieldName].$setUntouched();
@@ -892,6 +889,12 @@ VBET5.controller('settingsCtrl', ['$scope', '$rootScope', '$location', '$documen
                 break;
             case 'twoFactorAuthentication':
                 isAllowed = $scope.conf.enableTwoFactorAuthentication;
+                break;
+            case 'sessionDurationLimit':
+                isAllowed = $scope.conf.sessionDurationLimit;
+                break;
+            case $scope.conf.profileCustomPage && $scope.conf.profileCustomPage.deepLinkPath:
+                isAllowed = $scope.conf.profileCustomPage;
                 break;
         }
         $location.search('settingspage', undefined);
@@ -973,6 +976,65 @@ VBET5.controller('settingsCtrl', ['$scope', '$rootScope', '$location', '$documen
         };
         $scope.get12MonthsProfit();
     };
+
+    $scope.setSessionDurationLimit = function setSessionDurationLimit() {
+        if($scope.sessionDurationLimitData.daily_duration_disabled && $scope.sessionDurationLimitData.monthly_duration_disabled){
+            return;
+        }
+
+        $scope.working = true;
+        var request = {};
+
+        if (!$scope.sessionDurationLimitData.daily_duration_disabled) {
+            request.daily_duration = parseFloat($scope.sessionDurationLimitData.daily_duration * 60);
+        }
+        if (!$scope.sessionDurationLimitData.monthly_duration_disabled) {
+            request.monthly_duration = parseFloat($scope.sessionDurationLimitData.monthly_duration * 60);
+        }
+
+        Zergling.get(request, "set_session_duration_limit").then(function (data) {
+            if (data.result === 0 && data.details) {
+                $scope.getSessionDurationLimit();
+            }
+        })['catch'](function () {
+            $rootScope.$broadcast("globalDialogs.addDialog", {
+                type: 'error',
+                title: 'Error',
+                content: "Something went wrong, Please try again."
+            });
+        })['finally'](function() {
+            $scope.working = false;
+        });
+    };
+
+    $scope.sessionDurationLimitData = {};
+
+    $scope.getSessionDurationLimit = function getSessionDurationLimit() {
+        var request = {};
+        $scope.working = true;
+        Zergling.get(request, "get_session_duration_limit").then(function (data) {
+            if (data.result === 0 && data.details) {
+                $scope.sessionDurationLimitData = {
+                    daily_duration : data.details.DailyDuration / 60,
+                    daily_duration_disabled : !!data.details.DailyDuration,
+                    monthly_duration:  data.details.MonthlyDuration / 60,
+                    monthly_duration_disabled:  !!data.details.MonthlyDuration
+                };
+            }
+        })['catch'](function () {
+            $rootScope.$broadcast("globalDialogs.addDialog", {
+                type: 'error',
+                title: 'Error',
+                content: "Something went wrong, Please try again."
+            });
+        })['finally'](function() {
+            $scope.working = false;
+        });
+    };
+
+
+
+
     $scope.showBlocks = {
         // permissions : false, // todo SDC-50625
         preferences :true

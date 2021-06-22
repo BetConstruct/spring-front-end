@@ -5,7 +5,7 @@
  * pinnacle controller
  */
 
-VBET5.controller('pinnacleCtrl', ['$rootScope', '$scope', '$sce',   'Config', 'Zergling', function ($rootScope, $scope, $sce, Config, Zergling) {
+VBET5.controller('pinnacleCtrl', ['$rootScope', '$scope', '$sce', '$timeout',   'Config', 'Zergling', function ($rootScope, $scope, $sce, $timeout, Config, Zergling) {
     'use strict';
 
 
@@ -18,6 +18,7 @@ VBET5.controller('pinnacleCtrl', ['$rootScope', '$scope', '$sce',   'Config', 'Z
         'malay': 4,
         'indo': 5
     };
+    var timeoutPromise = null;
 
     function constructUrl () {
         $scope.loadingUserData = true;
@@ -30,18 +31,31 @@ VBET5.controller('pinnacleCtrl', ['$rootScope', '$scope', '$sce',   'Config', 'Z
             $scope.loadingUserData = false;
         });
     }
+    function cancelTimeout() {
+        if (timeoutPromise) {
+            $timeout.cancel(timeoutPromise);
+            timeoutPromise = null;
+        }
+    }
 
     $scope.$watch('env.authorized', function (newValue) {
-        if (!newValue) {
-            $rootScope.env.showSlider = true;
-            $rootScope.env.sliderContent = 'login';
+        if (!newValue ) {
+            timeoutPromise = $timeout(function () {
+                if (!$rootScope.loginInProgress) {
+                    $rootScope.env.showSlider = true;
+                    $rootScope.env.sliderContent = 'login';
+                }
+            }, 100);
+
             $scope.frameUrl = null;
         } else {
+            cancelTimeout();
             constructUrl();
         }
     });
 
     $scope.$on("$destroy", function () {
         $scope.frameUrl = null;
+        cancelTimeout();
     });
 }]);

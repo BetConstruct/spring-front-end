@@ -247,6 +247,8 @@ VBET5.controller('comboViewLeftController', ['$scope', 'Config', 'GameInfo', 'Ut
                 'game': {}
             }
         };
+        Utils.addPrematchExpressId(request);
+
 
         if (Config.env.gameTimeFilter) {
             request.where.game.start_ts = Config.env.gameTimeFilter;

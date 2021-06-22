@@ -60,7 +60,7 @@
         </div>
         <div class="button-sign">
             <ul>
-                <li><a ng-click="openForgotPasswordForm();$event.stopPropagation()" ng-hide="conf.header.disableRegistrationAndLogin" title="Forgot your password?" trans>Forgot your password?</a></li>
+                <li><a ng-click="openForgotPasswordForm();$event.stopPropagation()" ng-hide="conf.header.disableRegistrationAndLogin || !conf.enableForgotPassword" title="Forgot your password?" trans>Forgot your password?</a></li>
                 <li><a ng-click="register();$event.stopPropagation()" ng-hide="!conf.registration.enable || conf.header.disableRegistrationAndLogin" trans>Create an account</a></li>
             </ul>
 

@@ -86,12 +86,12 @@
                             </div>
                         </li>
                 <li class="responsive-header-item-j"
-                    ng-show="(!conf.hideBonusSectionIfNoBonus || (conf.hideBonusSectionIfNoBonus && $root.allBonusesCount.sportsbook + $root.allBonusesCount.casino > 0))"
+                    ng-show="(!conf.hideBonusSectionIfNoBonus || (conf.hideBonusSectionIfNoBonus && $root.allBonusesCount.sportsbook + $root.allBonusesCount.casino +  $root.allBonusesCount.freeSpins> 0))"
                     ng-if="env.authorized && conf.promotionalBonuses.enable && $root.profile.is_bonus_allowed !== false">
                     <div class="separator-contain-nav" ng-click="toggleSliderTab('promotionalBonuses')">
                         <div class="settings-icon-contain my-bets-b">
                             <b class="mybets-icon-box-b cms-jcon-bonus2"></b>
-                        <i class="mybets-count-view" ng-show="bonusesCount.sportsbook + bonusesCount.casino > 0 && !conf.promotionalBonuses.disableCountOnIcon" ng-init="getBonusesCount();" ng-bind="bonusesCount.sportsbook + bonusesCount.casino"></i>
+                        <i class="mybets-count-view" ng-show="bonusesCount.sportsbook + bonusesCount.casino + bonusesCount.freeSpins > 0 && !conf.promotionalBonuses.disableCountOnIcon" ng-init="getBonusesCount();" ng-bind="bonusesCount.sportsbook + bonusesCount.casino + bonusesCount.freeSpins"></i>
                         </div>
                     </div>
                 </li>
@@ -324,7 +324,7 @@
                 </div>
             </li>
         </ul>
-        <input type="checkbox" id="header-collapse">
+        <input type="checkbox" id="header-collapse" ng-model="$root.headerOpen" ng-init="$root.headerOpen = true">
         <div class="header-small-view-hide" ng-class="{'vertical-nav-closed': $root.conf.customNavMenu && !$root.leftMenuOpen}" ng-init="$root.conf.customNavMenu && ($root.leftMenuOpen = true)">
             <i class="vertical-nav-arrow" ng-show="$root.conf.customNavMenu"   ng-click="$root.leftMenuOpen = !$root.leftMenuOpen;"></i>
             <ul class="responsive-header-mainMenu-j">

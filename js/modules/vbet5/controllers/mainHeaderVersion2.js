@@ -1,4 +1,4 @@
-VBET5.controller('mainHeaderVersion2Controller', ['$rootScope', '$scope', '$location', 'Config', 'Zergling', 'Storage', 'ActiveStep', 'BackendConstants', 'Translator', function ($rootScope, $scope, $location, Config, Zergling, Storage, ActiveStep, BackendConstants, Translator) {
+VBET5.controller('mainHeaderVersion2Controller', ['$rootScope', '$scope', '$location', 'Config', 'Zergling', 'Storage', 'ActiveStep', 'BackendConstants', 'Translator',  function ($rootScope, $scope, $location, Config, Zergling, Storage, ActiveStep, BackendConstants, Translator) {
     'use strict';
 
     /**
@@ -92,16 +92,6 @@ VBET5.controller('mainHeaderVersion2Controller', ['$rootScope', '$scope', '$loca
         e.stopPropagation();
     };
 
-    /**
-     * @ngdoc method
-     * @name doSkypeRequest
-     * @methodOf vbet5.controller:mainHeaderVersion2Controller
-     * @description Opens skype confirmation dialog
-     */
-    $scope.doSkypeRequest = function doSkypeRequest() {
-        $rootScope.$broadcast('skypeAuthorization.show');
-        $scope.showSkypeRequest = false;
-    };
 
     /**
      * @ngdoc method
@@ -176,36 +166,6 @@ VBET5.controller('mainHeaderVersion2Controller', ['$rootScope', '$scope', '$loca
         $scope.notificationPopup = ActiveStep.getNotificationPopup(type);
     }
 
-    /**
-     * @ngdoc method
-     * @name userDataConfirm
-     * @methodOf vbet5.controller:mainHeaderVersion2Controller
-     * @description Handles user age verification call
-     */
-    function userDataConfirm() {
-        Zergling.get({}, 'verify_user_age').then(function (result) {
-            if (parseInt(result.code, 10) === 0) {
-                $rootScope.env.showSlider = false;
-                $scope.doSkypeRequest();
-            } else {
-                $rootScope.$broadcast("globalDialogs.addDialog", {
-                    type: "error",
-                    title: "Error",
-                    content: 'Error occured.'
-                });
-            }
-
-            console.log(result);
-        })['catch'](function (reason) {
-            console.log('Error:'); console.log(reason);
-            $rootScope.$broadcast("globalDialogs.addDialog", {
-                type: "error",
-                title: "Error",
-                content: 'Error occured.'
-            });
-        });
-    }
-
     $scope.env.paymentListShown = Config.main.showPaymentsDescriptionByDefault || false;
 
     // this part of code is used on
@@ -251,7 +211,6 @@ VBET5.controller('mainHeaderVersion2Controller', ['$rootScope', '$scope', '$loca
         });
     });
 
-    $scope.$on('slider.userDataConfirm', userDataConfirm);
     $scope.env.paymentListShown = Config.main.showPaymentsDescriptionByDefault || false;
     $scope.getStorageState = function getStorageState (name) {
         return !!Storage.get(name);
@@ -271,17 +230,20 @@ VBET5.controller('mainHeaderVersion2Controller', ['$rootScope', '$scope', '$loca
 
     function calculateBonusesCount(data, product) {
         if (data && data.bonuses) {
-            var i = 0, length = data.bonuses.length, count = 0, allCount = 0;
-            for (; i < length; i += 1) {
-                if (data.bonuses[i].bonus_type === BackendConstants.PromotionalBonus.BonusType.FreeBet || (data.bonuses[i].acceptance_type === BackendConstants.PromotionalBonus.BonusAcceptanceType.None && data.bonuses[i].can_accept)) {
-                    count += 1;
-                }
-                allCount += 1; //todo condition  SDC-37886
-            }
-
-            $scope.bonusesCount[product] = count;
-            $rootScope.allBonusesCount[product] = allCount;
+            $scope.bonusesCount[product] = data.bonuses.length;
+            $rootScope.allBonusesCount[product] = data.bonuses.length;
         }
+    }
+    function handleFreeSpinsResponse(data) {
+        $scope.bonusesCount.freeSpins = data.details.length;
+        $rootScope.allBonusesCount.freeSpins = data.details.length;
+    }
+
+    function getFreeSpins() {
+        Zergling.get({
+            "acceptance_type": BackendConstants.PromotionalBonus.BonusAcceptanceType.None,
+            "max_rows":30
+        },'get_free_spin_bonuses').then(handleFreeSpinsResponse);
     }
 
     /**
@@ -296,12 +258,14 @@ VBET5.controller('mainHeaderVersion2Controller', ['$rootScope', '$scope', '$loca
         }
         $scope.bonusesCount = {
             'sportsbook': 0,
-            'casino': 0
+            'casino': 0,
+            'freeSpins': 0
         };
 
         $rootScope.allBonusesCount = {
             'sportsbook': 0,
-            'casino': 0
+            'casino': 0,
+            'freeSpins': 0
         };
 
         var getProductBonuses  = function (product) {
@@ -311,7 +275,15 @@ VBET5.controller('mainHeaderVersion2Controller', ['$rootScope', '$scope', '$loca
         };
 
         if (Config.main.promotionalBonuses.sportsbook) getProductBonuses('sportsbook');
-        if (Config.main.promotionalBonuses.casino) getProductBonuses('casino');
+        if (Config.main.promotionalBonuses.casino) {
+            getProductBonuses('casino');
+            if ($rootScope.partnerConfig.is_freespin_claimable) {
+                getFreeSpins();
+            }
+        }
+
+
+
     };
 
     /**
@@ -339,6 +311,10 @@ VBET5.controller('mainHeaderVersion2Controller', ['$rootScope', '$scope', '$loca
 
         if (Config.main.promotionalBonuses.enable && !Config.main.promotionalBonuses.disableCountOnIcon) {
             $scope.$on('promotionalbonuses.data', function (event, data) {
+                if (data.product === 'freeSpins') {
+                    handleFreeSpinsResponse(data.data);
+                    return;
+                }
                 calculateBonusesCount(data.data, data.product);
             });
         }

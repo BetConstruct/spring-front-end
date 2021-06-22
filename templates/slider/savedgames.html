@@ -94,9 +94,7 @@
                     </div>
                 </li>
             </ul>
-            <div class="clear-favorite-games" ng-if="allGamesCount > 0"
-                 ng-click="removeAllGamesFromSaved(); $event.stopPropagation()">Clear all
-            </div>
+            <div class="clear-favorite-games" ng-if="allGamesCount > 0" ng-click="removeAllGamesFromSaved(); $event.stopPropagation()" ng-bind="'Clear all'|translate"></div>
             <div class="dont-games-block" ng-show=" games.length === 0"><p trans>You don't have favourite games. To add some, click the star icon near the game name.</p></div>
         </div>
     </div>

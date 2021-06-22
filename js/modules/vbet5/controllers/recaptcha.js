@@ -15,7 +15,8 @@ VBET5.controller('recaptchaCtrl', ['$rootScope', '$scope', '$timeout', 'Zergling
     $rootScope.$broadcast('recaptcha.response', '');
 
     var CUSTOM_LANGUAGE_CODE_MAP = {
-        zhh: "zh-CN"
+        zhh: "zh-CN",
+        'pt-br': "pt-BR"
     };
 
     /**

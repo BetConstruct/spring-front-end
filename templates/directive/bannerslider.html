@@ -3,6 +3,7 @@
         <div class="hp-slide-17" no-animate ng-repeat="banner in banners[$root.env.authorized] track by $index" cms-analytics="banner" ng-class="{'active': $parent.slide==$index}">
             <a ng-if="banner.linkType=='url' && !banner.videoLink"
                route-reload
+               reload="{{$root.$location.path() === '/' ? false : banner.link.indexOf($root.$location.path()) > -1}}"
                ng-href="{{banner.link}}"
                ng-click="bannerClick(banner)" target="{{banner.linktarget}}">
                 <img ng-src="{{ banner.imageurl }}" alt="">
@@ -27,6 +28,7 @@
             </div>
             <div class="display-float" ng-show="$root.conf.sliderArrows">
                 <button ng-click="slide = slide - 1;slide = slide < 0 ? banners[$root.env.authorized].length - 1 : slide"></button>
+                <button class="slider-amount-btn">{{slide + 1}}/{{banners[$root.env.authorized].length}}</button>
                 <button ng-click="slide = slide + 1;slide = slide > banners[$root.env.authorized].length - 1 ? 0 : slide"></button>
             </div>
         </div>

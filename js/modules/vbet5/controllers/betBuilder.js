@@ -303,7 +303,10 @@ VBET5.controller('betBuilderCtrl', ['$rootScope', '$scope', '$filter', '$q', '$t
                 break;
 
             } else {
-                ids.push($scope.selectedEvents[i].bet.id);
+                ids.push({
+                    SelectionId: $scope.selectedEvents[i].bet.id,
+                    Handicap: $scope.selectedEvents[i].bet.handicap
+                });
             }
         }
         if (notContainsError) {
@@ -508,7 +511,7 @@ VBET5.controller('betBuilderCtrl', ['$rootScope', '$scope', '$filter', '$q', '$t
         request.bets = $scope.selectedEvents.map(function(item) {
             var event = item.bet;
             eventMap[event.id] = event;
-            return {"event_id": event.id, "price": parseFloat(event.price)};
+            return {"event_id": event.id, "price": parseFloat(event.price), "basis": event.handicap};
         });
         Zergling.get(request, 'do_bet').then(function (response) {
             if (response.result === "OK") {

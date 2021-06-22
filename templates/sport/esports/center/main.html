@@ -24,12 +24,15 @@
                 <div class="e-live-games-list">
                     <div class="s-l-game-v" ng-repeat="game in games track by game.id" ng-if="game.show_type !== 'OUTRIGHT' || (game.markets.OUTRIGHT && game.markets.OUTRIGHT[0] && game.markets.OUTRIGHT[0].events.length)">
                         <div class="t-row-l-game">
-                            <p>{{::game.start_ts| formatDate:'MM/D':null:$root.env.timeFormat}} | {{::game.start_ts| formatDate:'hour':null:$root.env.timeFormat}}<span ng-bind="game.markets.OUTRIGHT[0].name" ng-if="game.show_type === 'OUTRIGHT'"></span><i ng-show="game.type === 2 && $root.conf.asian.showLiveIconForUpcomingGames" class="live-indicator">live</i></p>
+                            <p>{{::game.start_ts| formatDate:'MM/D':null:$root.env.timeFormat}} | {{::game.start_ts| formatDate:'hour':null:$root.env.timeFormat}}<span ng-bind="game.team1_name" ng-if="game.show_type === 'OUTRIGHT'" class="game-outright-name"></span>
+                                <i ng-show="game.type === 2 && $root.conf.asian.showLiveIconForUpcomingGames" class="live-indicator">live</i></p>
                             <p ng-bind="game.competition.id ? '' : game.competition.name"></p>
                             <!--<div class="e-game-arrow"></div>-->
                         </div>
 
-                        <div ng-if="game.availableSequences.length > 1" hide-on-click state-flag-var="game.seqExpanded" class="time-filter-v3" ng-class="{'active': game.seqExpanded}">
+
+
+                        <div ng-if="game.availableSequences.length > 1" hide-on-click state-flag-var="game.seqExpanded" class="time-filter-v3"  ng-class="{'active': game.seqExpanded}">
                             <p ng-click="game.seqExpanded = !game.seqExpanded">
                                 <span ng-bind="('PERIOD' === game.selectedSequence.subKey) ? (asianMarkets.periodsBySports[game.sport.alias] + ' ' + game.selectedSequence.sequence): (game.selectedSequence.sequence? game.selectedSequence.subKey + ' ' + game.selectedSequence.sequence : game.selectedSequence.subKey)|translate"></span>
                                 <i class="arrow-rotate-filter-v3"></i>
@@ -43,6 +46,15 @@
                                 </ul>
                             </div>
                         </div>
+                            <span ng-bind="game.markets.OUTRIGHT[0].name" ng-if="game.show_type === 'OUTRIGHT'" class="game-outright-show"></span>
+
+                            <p additional-game-info game="game" class="additional-game-info" ng-show="game.add_info_name || game.info.add_info || game.tv_info || game.is_neutral_venue || additionalInfo && (game.type === 1) && (!$root.conf.hidePointsForCompetitions['k' + game.competition.id] || $root.conf.hidePointsForCompetitions['k' + game.competition.id] && $root.env.authorized)">
+                                <span ng-show="game.is_neutral_venue" title="Neutral field" trans >Neutral field</span>
+                                <span class="text-info" title="{{ additionalInfo }}" ng-if="additionalInfo">{{ additionalInfo }} </span>
+                                <span class="text-info" ng-if="game.add_info_name" title="{{game.add_info_name}}" ng-bind="game.add_info_name"></span>
+                                <span ng-if="game.info.add_info" title="{{game.info.add_info}}" ng-bind="game.info.add_info"></span>
+                                <span ng-if="game.info.tv_info" title="{{game.info.tv_info}}" ng-bind="game.info.tv_info"></span>
+                            </p>
 
                         <div class="e-p-table">
                             <ng-include ng-if="game.show_type !== 'OUTRIGHT'"  class="float-width" src="'templates/sport/esports/center/'+ layout.selected + '.html'"></ng-include>

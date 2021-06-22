@@ -16,6 +16,7 @@ CASINO.controller('casinoJackpotCtrl', ['$rootScope', '$scope', '$sce', '$locati
     $scope.jackpotSlideIndex = 0;
     TimeoutWrapper = TimeoutWrapper($scope);
     var gameInfoId;
+    var gameInfoExId;
 
     $scope.expanded = {
         pollId : '-1'
@@ -32,7 +33,7 @@ CASINO.controller('casinoJackpotCtrl', ['$rootScope', '$scope', '$sce', '$locati
     };
     $scope.iframeJackpotData = [];
 
-    var jackpotLeaders = [], iframeJackpotData, jackpotDataSubscriptions = [];
+    var jackpotLeaders = [];
     /**
      * @ngdoc method
      * @name loadJackpotPages
@@ -237,7 +238,8 @@ CASINO.controller('casinoJackpotCtrl', ['$rootScope', '$scope', '$sce', '$locati
     function subscribeForJackpotData(gameinfo) {
         if (gameinfo && gameinfo.game && gameinfo.game.extearnal_game_id) {
             gameInfoId = gameinfo.id;
-            jackpotManager.subscribeForJackpotData(gameinfo.game.extearnal_game_id, subscribeForJackpotDataCallback,null,'casino');
+            gameInfoExId = gameinfo.game.extearnal_game_id;
+            jackpotManager.subscribeForJackpotData(gameInfoExId, subscribeForJackpotDataCallback,null,'casino');
         }
     }
 
@@ -296,6 +298,6 @@ CASINO.controller('casinoJackpotCtrl', ['$rootScope', '$scope', '$sce', '$locati
                 $scope.hasIframeJackpot.empty = true;
             }
         }
-        $rootScope.$broadcast('iframe.game.close');
+        jackpotManager.unsubscribeFromJackpotData(null,gameInfoExId, subscribeForJackpotDataCallback);
     });
 }]);

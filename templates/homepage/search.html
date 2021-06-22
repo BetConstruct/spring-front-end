@@ -1,0 +1,13 @@
+<div class="homepage-search-widget"  hide-on-click="" state-flag-var="selectedTab" id="homepage-search-widget">
+  <div class="buttons-wrap">
+    <button class="sport-casino-btn" ng-if="sport" ng-click="selectTab('sport')" ng-class="{'active': selectedTab === 'sport'}" trans>Sports</button>
+    <button class="sport-casino-btn" ng-if="casino"  ng-click="selectTab('casino')"  ng-class="{'active': selectedTab === 'casino'}" trans>Casino</button>
+    <div class="divider"></div>
+  </div>
+  <div class="search-widget-content">
+    <img ng-src="images/search/sport-casino-search.jpg" alt="Sport & Casino" class="sport-casino-bg">
+    <ng-include ng-if="selectedTab === 'sport'" src="::'templates/search/sport.html'|fixPath" class="float-width-height"></ng-include>
+    <ng-include ng-if="selectedTab === 'casino'" src="::'optional_modules/casino/templates/search-v2.html'|fixPath" class="float-width-height"></ng-include>
+
+  </div>
+</div>

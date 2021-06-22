@@ -1,0 +1,16 @@
+<div ng-controller="sportTournamentsCtrl" ng-init="initWatchers()" watch-resize middle-screen-mode="true">
+
+    <ng-include  ng-if="!$location.search().tournament_id" src="'templates/sport/tournaments/tournaments.html'|fixPath"></ng-include>
+    <ng-include  ng-if="$location.search().tournament_id" src="'templates/sport/tournaments/details.html'|fixPath"></ng-include>
+
+</div>
+<style ng-controller="cmsPagesCtrl" ng-init="loadPage('sport-tournament-backgrounds-' + env.lang, 'lang')">
+    .body-wrapper.tournaments {
+    {{mainPage.thumbnail ? 'background-image: url('+mainPage.thumbnail+');' : ''}}
+    {{mainPage.custom_fields.size ? "background-size: " + mainPage.custom_fields.size[0] + ";" : mainPage.thumbnail ? "background-size: 100%;" : ""}}
+    {{mainPage.custom_fields.position ? 'background-position: ' + mainPage.custom_fields.position[0] : mainPage.thumbnail ? "background-position: 50% 0" : ""}};
+    {{mainPage.custom_fields.attachment ? "background-attachment:" + mainPage.custom_fields.attachment[0] + ";" : ""}}
+    {{mainPage.custom_fields.color ? "background-color: " + mainPage.custom_fields.color[0] + ";" : ""}}
+    {{mainPage.custom_fields.repeat ? "background-repeat: " + mainPage.custom_fields.repeat[0] : mainPage.thumbnail ? "background-repeat: no-repeat" : ""}};
+    }
+</style>

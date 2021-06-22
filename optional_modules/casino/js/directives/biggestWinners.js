@@ -58,7 +58,7 @@ CASINO.directive('casinoBiggestWinners', ['$rootScope', '$location', '$interval'
                 }
 
                 if (gameExternalIds.length) {
-                    casinoData.getGames(null, null, countryCode, null, null, null, null, null, gameExternalIds,'&only_images=1').then(function(response) {
+                    casinoData.getGames({country: countryCode, external_id : gameExternalIds,additionalParams: '&only_images=1' }).then(function(response) {
                         if(response && response.data && response.data.games) {
                             var games = response.data.games;
                             for (i = 0, length = games.length; i < length; ++i) {
@@ -139,7 +139,7 @@ CASINO.directive('casinoBiggestWinners', ['$rootScope', '$location', '$interval'
             }
 
             scope.openWinnerGame = function openWinnerGame (gameExternalId) {
-                casinoData.getGames(null, null, countryCode, null, null, null, null, null, [gameExternalId]).then(function(response) {
+                casinoData.getGames({country: countryCode, external_id: [gameExternalId]}).then(function(response) {
                     if(response && response.data && response.data.games) {
                         openGame(response.data.games[0], CConfig.main.biggestWinners.defaultMode);
                     }

@@ -9,7 +9,6 @@ VBET5.factory('giftService', ['$rootScope', 'Zergling', function betService($roo
     'use strict';
 
     var giftService = {};
-    var $scope;
     giftService.acceptGiftBet = function acceptGiftBet(giftCode) {
         $rootScope.$broadcast("globalDialogs.addDialog", {
             type: 'info',

@@ -100,7 +100,11 @@ CASINO.controller('casinoMiniGamesCtrl', ['$rootScope', '$scope', '$sce', 'Confi
         Geoip.getGeoData(false).then(function (data) {
             data && data.countryCode && (countryCode = data.countryCode);
         })['finally'](function () {
-            casinoData.getGames(MINI_GAMES_CATEGORY_ID, null, countryCode).then(function(response) {
+            casinoData.getGames({
+                category: MINI_GAMES_CATEGORY_ID,
+                country: countryCode,
+                additionalParams: '&mini_games=1'
+            }).then(function(response) {
                 if (response && response.data && response.data.status !== -1) {
                     $scope.gameOptions.games = response.data.games;
 

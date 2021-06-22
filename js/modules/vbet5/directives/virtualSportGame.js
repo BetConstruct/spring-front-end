@@ -167,6 +167,7 @@ VBET5.directive('virtualSportGame', ['$filter', '$location', '$rootScope', 'Util
                         for (var i = groupedMarkets.length; i--;) {
                             for (var j = groupedMarkets[i].length; j--;) {
                                 market = groupedMarkets[i][j];
+                                market.express_id = Utils.calculateExpressId(market, $scope.gameToShow.type);
 
                                 prepareMarket(market);
 
@@ -208,20 +209,22 @@ VBET5.directive('virtualSportGame', ['$filter', '$location', '$rootScope', 'Util
                 $scope.gameToShow.isVirtual = true;
                 $scope.gameToShow.displayTitle = $scope.gameToShow.text_info;
             }
-
-            connectionService.subscribe(
-                {
+            var request = {
                     'source': 'betting',
                     'what': {
                         sport: ['id', 'alias'],
                         competition: ['id', 'name'],
                         region: ['id'],
-                        game: [["id", "markets_count", "start_ts", "is_live", "is_blocked", "game_number","team1_name", "team2_name" ]],
+                        game: [["id", "markets_count", "start_ts", "is_live", "is_blocked", "game_number","team1_name", "team2_name", "type" ]],
                         market: ["id", "col_count", "type", "sequence", "express_id", "cashout", "display_key", "display_sub_key", "group_id", "name", "group_name", "order" ],
                         event: ["order", "id", "type_1", "type", "type_id", "original_order", "name", "price", "base", "home_value", "away_value", "display_column"]
                     },
                     'where': {'game': {'id': $scope.gameId}}
-                },
+            };
+            Utils.addPrematchExpressId(request);
+
+            connectionService.subscribe(
+                request,
                 updateOpenGameData,
                 {
                     'thenCallback': function () {

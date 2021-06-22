@@ -1,13 +1,16 @@
 <div class="all-games-wrapper">
-    <casino-games-list class="all-casino-games-list-content"
-                       show-conditions="true"
-                       games-list="games"
-                       additional-data="gamesAdditionalData"
-                       game-show-conditions="true"
-                       use-big-icons="true"
-    >
-    </casino-games-list>
-    <div ng-show="limits.max > games.length" class="more-casino-games-load-b"><p load-more ng-click="loadMoreGames(); setTargetElementFixed('casinoCategories')">
-        <span trans>Load more</span></p></div>
+    <div class="casino-all-games-block" ng-repeat="games in gamesBlocks track by $index">
+        <casino-games-list class="all-casino-games-list-content"
+                           show-conditions="true"
+                           games-list="games"
+                           additional-data="gamesAdditionalData"
+                           game-show-conditions="true"
+                           use-big-icons="true"
+                           hide-if-not-in-view="true"
+        >
+        </casino-games-list>
+    </div>
+
+    <div ng-show="limits.max > games.length" class="more-casino-games-load-b"><p load-more ng-click="loadMoreGames(); setTargetElementFixed('casinoCategories')"></p></div>
     <vbet-loader ng-show="loadingProcess"></vbet-loader>
 </div>

@@ -121,8 +121,8 @@ VBET5.service('jackpotSocket', ['$rootScope', 'Config', function ($rootScope, Co
         return jackpotSocket.msg('subscribe', data, callback);
     };
 
-    jackpotSocket.unsubscribe = function unsubscribe(sId, data) {
-        jackpotSocket.msg('unsubscribe', data || null, null, sId);
+    jackpotSocket.unsubscribe = function unsubscribe(sId, data, callback) {
+        jackpotSocket.msg('unsubscribe', data || null, callback, sId);
     };
 
     jackpotSocket.close = function close() {

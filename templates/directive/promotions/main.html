@@ -1,0 +1,76 @@
+<div ng-class="mainClass" class="promotions-main-p">
+    <div ng-if="$root.conf.showPromotionsCountdownBanner" ng-include="::'templates/homepage/wcCountdown.html'|fixPath"
+         ng-init="countdownWidgetName = 'bannerSlugs.promotionsCountdownBanner'"></div>
+
+    <div class="promotions-menu-p ng-scope" ng-if="promotionCategories.length > 1">
+        <!--<div class="promotions-baner-p">-->
+        <!--<p trans>Promotions</p>-->
+        <!--<span ng-repeat="item in promotionCategories track by $index" class="promotions-icons-{{item.key}} cms-jcon-{{item.key}}"></span>-->
+        <!--</div>-->
+        <ul>
+            <li ng-repeat="item in promotionCategories track by $index"
+                ng-class="{active: slug === item.key}"
+                ng-click="setSlug(item.key)">
+                {{item.title | translate}}
+            </li>
+        </ul>
+    </div>
+    <div class="subtop-header-menu-j ng-scope" ng-if="$root.conf.enablePromotionsActualFilter">
+        <ul ng-init="setPromotionsFilter('actual')">
+            <li ng-class="{active: promotionsFilter.name==='actual'}">
+                <a ng-click="setPromotionsFilter('actual')" trans>Actual</a>
+            </li>
+            <li ng-class="{active: promotionsFilter.name==='finished'}">
+                <a ng-click="setPromotionsFilter('finished')" trans>Finished</a>
+            </li>
+        </ul>
+    </div>
+    <div ng-if="!recentNewsList.length && !newsAreLoading" class="new-casino-no-games-text">
+        <p trans>No promos for the selected category</p>
+    </div>
+    <div ng-repeat="group in recentNewsList track by $index" ng-show="!newsAreLoading"
+         class="block-sport-news count-{{recentNewsList[0].news.length}}">
+        <div class="list-news promo">
+            <ul ng-repeat="news in group.news track by $index"
+                ng-class="'news-column-' + $index">
+                <li>
+                    <h3 ng-hide="$root.conf.hidePromotionNewsDate" title="{{news.titleRaw}}">
+                        <a ng-click="showNews(news, group.id);$event.stopPropagation();" ng-bind-html="news.title"></a>
+                    </h3>
+
+                    <p ng-hide="$root.conf.hidePromotionNewsDate">{{ news.date|formatDate:'full' }}
+                    <div class="picture-news-block">
+                        <a ng-click="showNews(news);$event.stopPropagation();"><img
+                                ng-src="{{news.thumbnail || news.thumbnail_images.full.url}}" alt=""></a>
+                        <div class="promo-opt-button"
+                             ng-if="$root.conf.promotionsOptIn && $root.env.authorized && news.is_optinable && playerOptIns"
+                             ng-class="{'disabled': optInOutProcessing[news.id]}">
+                            <div>
+                                <vbet-loader class="small-progress"></vbet-loader>
+                                <button ng-if="!playerOptIns[news.opt_in]"
+                                        ng-click="optInOut(news.opt_in, true, news.id)" title="{{'Opt In'|translate}}"
+                                        trans>Opt In
+                                </button>
+                                <button ng-if="playerOptIns[news.opt_in]"
+                                        ng-click="optInOut(news.opt_in, false, news.id)" title="{{'Opt Out'|translate}}"
+                                        trans>Opt Out
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <vbet-loader class="page-center" ng-show="newsAreLoading"></vbet-loader>
+
+    <!-- load more block -->
+    <div class="load-more-news" ng-show="areThereMore">
+        <a ng-click="loadMore()" ng-show="!newsAreLoading"><p trans>Load more</p><span></span></a>
+        <a trans class="loading-more" ng-show="newsAreLoading">Loading</a>
+    </div>
+    <!-- !load more block -->
+
+    <ng-include src="::'templates/directive/promotions/popup.html'|fixPath"></ng-include>
+</div>

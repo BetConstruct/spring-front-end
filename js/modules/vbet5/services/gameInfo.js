@@ -13,7 +13,7 @@ angular.module('vbet5').service('GameInfo', ['$rootScope', '$http', '$filter', '
     GameInfo.dotaGamesList = [];/*'Dota', 'Dota2','CounterStrike', 'LeagueofLegends', 'StarCraft', 'StarCraft2'  --temporary removed dota game statistics*/
     GameInfo.PROVIDER_AVAILABLE_EVENTS = null;
     GameInfo.SPORT_GROUPS = null;
-    var RACING_URL_PREFIX = "https://horseracing.betcoapps.com/rc/";
+
     /**
      * @ngdoc method
      * @name groupRegionsIfNeeded
@@ -427,7 +427,7 @@ angular.module('vbet5').service('GameInfo', ['$rootScope', '$http', '$filter', '
 
         var raceData = {};
         //Does not work for localhost
-        $http.get(RACING_URL_PREFIX + id + ".json").then(function (response) {
+        $http.get(Config.main.horseRacingUrlPrefix + "rc/" + id + ".json").then(function (response) {
             raceData = response.data;
             if (raceData) {
 
@@ -1123,11 +1123,9 @@ angular.module('vbet5').service('GameInfo', ['$rootScope', '$http', '$filter', '
      */
     GameInfo.framesCount = function framesCount(stats) {
         var frames_array = [];
-        var i = 0;
         for (var key in stats) {
             if (key.indexOf('score_set') === 0) {
-                i++;
-                frames_array.push(i);
+                frames_array.push(parseInt(key.substring(9), 10));
             }
         }
         return frames_array;
@@ -1203,7 +1201,7 @@ angular.module('vbet5').service('GameInfo', ['$rootScope', '$http', '$filter', '
                     break;
             }
 
-        } else if (market.type && market.type.substr(-8) === 'Handicap' && event.base > 0) {
+        } else if (market.type && market.type.indexOf("Handicap") > -1 && event.base > 0) {
             prefix = '+';
         }
 
@@ -1347,18 +1345,25 @@ angular.module('vbet5').service('GameInfo', ['$rootScope', '$http', '$filter', '
         }
         event.maxBet = undefined;
         GameInfo.maxBetRequests[event.id] = $timeout(function () {
-
-            RecaptchaService.execute('get_max_bet_web', { debounce: false });
-
-            Zergling.get({events: [event.id]}, 'get_max_bet').then(function(response) {
-                if (GameInfo.maxBetRequests[event.id]) {
-                    if (!response.result_text) {
-                        event.maxBet = Config.main.onlyDecimalStakeAmount ? Math.floor(response.details.amount) : parseFloat(response.details.amount);
-                    }
-                    if (callback) { callback(); }
-                    GameInfo.maxBetRequests[event.id] = undefined;
+            Utils.validateRecaptchaBeforeAction(RecaptchaService, "get_max_bet", true).then(function (token) {
+                var request = {events: [event.id]};
+                if (!token) {
+                    RecaptchaService.execute('get_max_bet_web', { debounce: false });
+                } else {
+                    request.g_recaptcha_response = token;
                 }
-            });
+
+                Zergling.get(request, 'get_max_bet').then(function(response) {
+                    if (GameInfo.maxBetRequests[event.id]) {
+                        if (!response.result_text) {
+                            event.maxBet = Config.main.onlyDecimalStakeAmount ? Math.floor(response.details.amount) : parseFloat(response.details.amount);
+                        }
+                        if (callback) { callback(); }
+                        GameInfo.maxBetRequests[event.id] = undefined;
+                    }
+                });
+            })
+
         }, 500);
     };
 

@@ -75,9 +75,9 @@
                             </div>
                             <div class="pu-contain-j">
                                 <h3 ng-show="activeDialog.subTitle" ng-bind-html="activeDialog.subTitle|translate|html"></h3>
-                                <p ng-if="!activeDialog.link" ng-bind-html="activeDialog.content|translate:activeDialog.contentPlaceholders|html" ng-init="checkIsContainsLink(activeDialog.content)" ng-click="!isContainsIframe && closeDialog(activeDialog, 'closeButton')" route-reload ng-class="{'pointer-events-none': !isContainsLink && !isContainsIframe}"></p>
+                                <p ng-if="!activeDialog.link" ng-bind-html="activeDialog.content|translate:activeDialog.contentPlaceholders|html" ng-click="closeDialog(activeDialog, 'closeButton', null, $event)"></p>
 
-                                <ng-include class="float-width" ng-if="activeDialog.template" src="::activeDialog.template|fixPath"></ng-include>
+                                <ng-include class="float-width" ng-if="activeDialog.template" src="activeDialog.template|fixPath"></ng-include>
 
                                 <p ng-if="activeDialog.link">
                                     <a ng-href="{{activeDialog.link}}" target="{{activeDialog.linktarget}}" ng-click="closeDialog(activeDialog, 'content');$event.stopPropagation();" ng-bind-html="activeDialog.content|translate:activeDialog.contentPlaceholders|html"></a>
@@ -90,6 +90,7 @@
                                 </div>
                             </div>
                             <div class="pu-button-wrap-j" ng-if="!activeDialog.hideButtons">
+
                                 <div ng-if="!activeDialog.buttons">
                                     <a ng-if="!activeDialog.yesno && activeDialog.link" ng-href="{{ activeDialog.link }}" target="{{activeDialog.linktarget}}"><button ng-click="closeDialog(activeDialog, 'okButton');$event.stopPropagation();" trans>OK</button></a>
                                     <button ng-if="!activeDialog.yesno && !activeDialog.link" ng-click="closeDialog(activeDialog, 'okButton');$event.stopPropagation();" trans>OK</button>
@@ -97,9 +98,14 @@
                                     <button ng-if="activeDialog.yesno" ng-click="closeDialog(activeDialog, 'yesButton');$event.stopPropagation();" trans>Yes</button>
                                     <button ng-if="activeDialog.yesno" ng-click="closeDialog(activeDialog, 'noButton');$event.stopPropagation();" trans>No</button>
                                 </div>
-
                                 <div ng-if="activeDialog.buttons">
                                     <button ng-repeat="button in activeDialog.buttons track by $index" ng-click="closeDialog(activeDialog, '', button);$event.stopPropagation();" ng-bind="button.title|translate" ng-disabled="activeDialog.buttonsDisabled || button.disabled"></button>
+                                </div>
+                                <div ng-if="activeDialog.runtime_popup_id" class="runtime-popup">
+                                    <label for="dont_show_runtime_popup"  class="runtime-checkbox-j">
+                                        <input type="checkbox" id="dont_show_runtime_popup" ng-model="activeDialog.dont_show_runtime_popup" />
+                                        <span ng-bind="'Don\'t Show Again'|translate"></span>
+                                    </label>
                                 </div>
                             </div>
                         </div>

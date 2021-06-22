@@ -177,12 +177,16 @@ VBET5.filter('oddConvert', ['$rootScope', 'Config', 'Utils', 'LadderLoader', fun
         if (Config.main.useLadderForFractionalFormat && !ladder && format === 'fractional') {
             return null;
         }
-        if (displayKey && Config.main.specialOddFormat && Config.main.specialOddFormat[format]) {
-            format = Config.main.specialOddFormat[format].displayKey[displayKey] || Config.main.specialOddFormat[format].default;
+        if (Config.main.specialOddFormat && Config.main.specialOddFormat[format]) {
+            if (!displayKey || !Config.main.specialOddFormat[format].displayKey[displayKey]) {
+                format = Config.main.specialOddFormat[format].default;
+            } else {
+                format = Config.main.specialOddFormat[format].displayKey[displayKey];
+            }
         }
         var cacheKey = (format || Config.env.oddFormat).concat(value);
         if (isMultiple) { //total express odd case
-            if (format === 'fractional' && type === 'fictional' && Config.main.useLadderForFractionalFormat && value !== undefined) {
+            if (format === 'fractional' && type === 'fictional' && Config.main.useLadderForFractionalFormat) {
                 return calculateFractionFormat(value);
             } else {
                 return convert(value, format, isMultiple);
@@ -194,7 +198,7 @@ VBET5.filter('oddConvert', ['$rootScope', 'Config', 'Utils', 'LadderLoader', fun
             if (possibleFormats.indexOf(format) === -1) { //select default format if current one is invalid
                 format = possibleFormats[0];
             }
-            if (format === 'fractional' && type === 'fictional' && Config.main.useLadderForFractionalFormat && value !== undefined) { // use it to calculate express odds as you see on bet365 :)
+            if (format === 'fractional' && type === 'fictional' && Config.main.useLadderForFractionalFormat) { // use it to calculate express odds as you see on bet365 :)
                 cache[cacheKey] = calculateFractionFormat(value);
             } else {
                 cache[cacheKey] = convert(value, format, isMultiple);

@@ -5,34 +5,37 @@
         </div>
     </div>
     <div class="mixedWallet-j">
-        <form autocomplete="off" name="cashierForm" id="cashierForm">
-            <label class="select-block-mixedWJ">
-                <p trans>From</p>
-                <div>
-                    <select ng-model="cashierFormModel.fromProduct" ng-change="changeCashierFormModelFromProduct(cashierFormModel.fromProduct)">
-                        <option value="Casino" ng-if="casinoEnabled || calculatedConfigs.pokerEnabled" trans>Casino - Poker</option>
-                        <option value="Sport" trans>Main</option>
-                    </select>
+        <form autocomplete="off" name="cashierForm" id="cashierForm" novalidate>
+            <div class="casino-main-switcher-container">
+                <div class="switcher-titles left-part">
+                    <p trans class="from-to-p">From</p>
+                    <div class="main-casino-p-wrap">
+                        <p class="main-casino-p ellipsis-text" ng-if="cashierFormModel.fromProduct === 'Casino' && (casinoEnabled || calculatedConfigs.pokerEnabled)" trans="">Casino</p>
+                        <p class="main-casino-p ellipsis-text" ng-if="cashierFormModel.fromProduct === 'Sport'" trans>Main</p>
+                    </div>
                 </div>
-            </label>
-            <label class="select-block-mixedWJ">
-                <p trans>To</p>
-                <div>
-                    <select ng-model="cashierFormModel.toProduct">
-                        <option value="Casino" ng-if="casinoEnabled || calculatedConfigs.pokerEnabled" ng-show="cashierFormModel.fromProduct !== 'Casino' && cashierFormModel.fromProduct !== 'Poker'" trans>Casino - Poker</option>
-                        <option value="Sport" ng-show="cashierFormModel.fromProduct !== 'Sport'" trans>Main</option>
-                    </select>
+                <div ng-if="casinoEnabled" class="switch-btn-wrap">
+                    <button type="button" class="switch-btn" aria-label="Switch button" ng-click="changeCashierFormModelFromProduct(cashierFormModel.fromProduct === 'Sport'?'Casino': 'Sport', true)">
+                        <i class="cms-jcon-switch"></i>
+                    </button>
                 </div>
-            </label>
+                <div class="switcher-titles">
+                    <p trans class="from-to-p">To</p>
+                    <div class="main-casino-p-wrap">
+                        <p class="main-casino-p ellipsis-text" ng-if="cashierFormModel.toProduct === 'Casino' && (casinoEnabled || calculatedConfigs.pokerEnabled)" trans="">Casino</p>
+                        <p class="main-casino-p ellipsis-text" ng-if="cashierFormModel.toProduct === 'Sport'" trans>Main</p>
+                    </div>
+                </div>
+            </div>
             <label class="input-block-mixedWJ">
                 <p trans>Amount</p>
                 <input name="amount" type="number" numpad numpad-force placeholder="0.00" min="{{transferMinLimit}}" fix-input-number
                        max="{{({'Sport': profile.calculatedBalance, 'Casino': profile.casino_balance}[cashierFormModel.fromProduct])}}"
                        autocomplete="off" ng-model="cashierFormModel.amount" step="{{transferMinLimit}}" required
                        trans>
-                <button type="button" ng-disabled="transferInProgress || cashierFormModel.fromProduct === cashierFormModel.toProduct" ng-click="getMaxTransferAmount()" trans>Max</button>
+                <button class="max-btn" type="button" ng-disabled="transferInProgress || cashierFormModel.fromProduct === cashierFormModel.toProduct" ng-click="getMaxTransferAmount()" trans>Max</button>
             </label>
-            <button disabled="true" ng-disabled="cashierForm.amount.$invalid || transferInProgress || cashierFormModel.fromProduct === cashierFormModel.toProduct" ng-click="transfer()">
+            <button class="transfer-btn" disabled="true" ng-disabled="cashierForm.amount.$invalid || transferInProgress || cashierFormModel.fromProduct === cashierFormModel.toProduct" ng-click="transfer()">
                 <span trans ng-show="!transferInProgress">Transfer</span>
                 <span trans ng-show="transferInProgress">Wait...</span>
             </button>

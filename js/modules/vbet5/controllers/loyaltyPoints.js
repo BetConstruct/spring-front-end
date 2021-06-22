@@ -163,5 +163,24 @@ VBET5.controller('loyaltyPointsCtrl', ['$scope', '$rootScope', 'Translator', 'Ze
         $scope.selectedProgram = program;
     };
 
+    $scope.openCBannerLink = function openCBannerLink() {
+        $rootScope.env.showSlider = false;
+    };
+
+    $scope.showPopup = function showPopup() {
+        if ($rootScope.profile.loyalty_max_exchange_point > 0) {
+            $scope.showExchangePopup = true;
+        } else {
+            $rootScope.$broadcast("globalDialogs.addDialog", {
+                title: "Warning",
+                type: "warning",
+                content: "You do not have points to exchange."
+
+            });
+
+
+        }
+    };
+
     reloadLoyaltyInfo();
 }]);

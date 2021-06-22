@@ -27,22 +27,27 @@ VBET5.service('everCookie', ['$rootScope', '$http', 'Config', 'AuthData', functi
 
     evercookie.init = function () {
         var ec = new Evercookie(Config.everCookie.options);
+        try{
+            Fingerprint2.getPromise().then(function() {
+                evercookie.fingerPrint = Fingerprint2.authenticationCode;
 
-        evercookie.fingerPrint = Fingerprint2.getAuthenticationCode();
-
-        ec.get("afec", function(value) {
-            if (value) {
-                evercookie.value = value;
-            } else {
-                evercookie.value = generateCookie();
-                ec.set("afec", evercookie.value);
-            }
-           /* $rootScope.$on('$routeChangeSuccess', function(ev, currentRoute, prevRoute) {
-                var ref = prevRoute && prevRoute.$$route && prevRoute.$$route.originalPath;
-                evercookie.log({ref: ref});
+                ec.get("afec", function(value) {
+                    if (value) {
+                        evercookie.value = value;
+                    } else {
+                        evercookie.value = generateCookie();
+                        ec.set("afec", evercookie.value);
+                    }
+                    /* $rootScope.$on('$routeChangeSuccess', function(ev, currentRoute, prevRoute) {
+                         var ref = prevRoute && prevRoute.$$route && prevRoute.$$route.originalPath;
+                         evercookie.log({ref: ref});
+                     });
+                     evercookie.log();*/
+                });
             });
-            evercookie.log();*/
-        });
+        } catch(error) {
+
+        }
 
     };
 

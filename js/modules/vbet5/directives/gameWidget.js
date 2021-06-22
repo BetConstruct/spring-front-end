@@ -24,7 +24,6 @@ VBET5.directive('gameWidget', ['Utils', 'Config', 'ConnectionService', 'GameInfo
             var connectionService = new ConnectionService(scope);
             var gamesSubscription;
 
-            scope.sportP1P2Alias = ['Dota2', 'CounterStrike', 'Tennis', 'TableTennis', 'Volleyball', 'Golf', 'Snooker', 'Mma', 'LeagueOfLegends', 'StarCraft2', 'WorldOfTanks', 'Badminton', 'KingOfGlory', 'Overwatch']; //sport aliases which haven't X (only P1 P2)
             scope.minutesFilter = 0;
             scope.selectedSport = {};
             scope.loadCompleted = false;
@@ -119,6 +118,9 @@ VBET5.directive('gameWidget', ['Utils', 'Config', 'ConnectionService', 'GameInfo
                                         angular.forEach(game.choosenMarket.event, function (event) {
                                             game.events[event.type] = event;
                                         });
+                                        if (!sportList[k1].hasXEvent && game.events.X) {
+                                            sportList[k1].hasXEvent = true;
+                                        }
                                         sportList[k1].game.push(game);
                                         allSports.game.push(game);
                                     }
@@ -135,6 +137,7 @@ VBET5.directive('gameWidget', ['Utils', 'Config', 'ConnectionService', 'GameInfo
                         }
                     }
                 });
+                scope.liveGameViewData.sort(Utils.orderSorting);
 
                 if ('liveNow' === scope.gameWidgetType) {
                     scope.liveGameViewData.unshift(allSports);
@@ -165,7 +168,7 @@ VBET5.directive('gameWidget', ['Utils', 'Config', 'ConnectionService', 'GameInfo
                 var request = {
                     'source': 'betting',
                     'what': {
-                        'sport': ['id', 'name', 'alias'],
+                        'sport': ['id', 'name', 'alias', 'order'],
                         'competition': ['id', 'order', 'name'],
                         'region': ['id', 'name', 'alias'],
                         'game': ['id', 'start_ts', 'team1_name', 'team2_name', 'type', 'info', 'markets_count', 'is_blocked',
@@ -179,6 +182,7 @@ VBET5.directive('gameWidget', ['Utils', 'Config', 'ConnectionService', 'GameInfo
                     }
                 };
                 request.where.sport = {'type': {'@ne': 1}};
+                Utils.addPrematchExpressId(request);
 
                 if (scope.gameWidgetType === 'lastMinutesBets') {
                     request.where.game.start_ts = {'@now': {'@gte': 0, '@lt': scope.minutesFilter * 60}};
@@ -186,12 +190,8 @@ VBET5.directive('gameWidget', ['Utils', 'Config', 'ConnectionService', 'GameInfo
                     request.where[Config.main.loadPopularGamesForSportsBook.level] = {};
                     request.where[Config.main.loadPopularGamesForSportsBook.level][Config.main.loadPopularGamesForSportsBook.type] = true;
                 } else if (scope.gameWidgetType === 'popularGamesWidget' && Config.main.showPromotedGamesOnWidget.enabled) {
-                    if (Config.main.showPromotedGamesOnWidget.level === 'competition') {
-                        request.where[Config.main.showPromotedGamesOnWidget.level] = {};
-                        request.where[Config.main.showPromotedGamesOnWidget.level][Config.main.showPromotedGamesOnWidget.type] = true;
-                    } else if (Config.main.showPromotedGamesOnWidget.level === 'game') {
-                        request.where.game[Config.main.showPromotedGamesOnWidget.type] = true;
-                    }
+                    request.where.game[Config.main.showPromotedGamesOnWidget.type] = true;
+
                 } else if (scope.gameWidgetType === 'liveNow') {
                     request.where.game.type = 1;
                 } else if (scope.gameWidgetType === 'upcoming') {

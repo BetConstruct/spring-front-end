@@ -31,7 +31,7 @@ VBET5.factory('HomeworkService', ['$rootScope', '$http', '$sce', '$cookies', '$w
         //update all subscriptions
         statusCallBacks.forEach(function(callBack) {
             callBack(data);
-        })
+        });
     }
 
     function isStored() {
@@ -70,6 +70,26 @@ VBET5.factory('HomeworkService', ['$rootScope', '$http', '$sce', '$cookies', '$w
         Utils.checkAndSetCookie(key, true, Config.main.homework[key]);
     }
 
+
+    /**
+     * @ngdoc method
+     * @name updateData
+     * @param {boolean} [forceOpen] open homework popup
+     * @description processing Active bonus data
+     */
+    function updateData(forceOpen) {
+        getHomeworkStatus().then(function(data) {
+            if (data) {
+                updateHomework(data);
+                if (forceOpen) {
+                    HomeworkService.openHomeworkPopup();
+                }
+            } else {
+                updateHomework(undefined);
+            }
+        });
+    }
+
     function handleWindowMessage(event, data) {
         if (data.target === 'homework') {
             switch (data.action) {
@@ -80,16 +100,14 @@ VBET5.factory('HomeworkService', ['$rootScope', '$http', '$sce', '$cookies', '$w
                     break;
                 case "close":
                     closeHomeworkPopup();
+                    if ($rootScope.env.authorized) {
+                        updateData();
+                    }
                     break;
                 case "loginRequired":
                     $rootScope.$broadcast("openLoginForm", {
                         callback: function () {
-                            getHomeworkStatus().then(function(data) {
-                                if (data) {
-                                    updateHomework(data);
-                                    HomeworkService.openHomeworkPopup();
-                                }
-                            });
+                            updateData(true);
                         }
                     });
                     closeHomeworkPopup();
@@ -113,23 +131,15 @@ VBET5.factory('HomeworkService', ['$rootScope', '$http', '$sce', '$cookies', '$w
         getHomeworkStatus().then(function(data) {
             if (data) {
                 updateHomework(data);
-                if (!isStored()) {
+                if (data.openPopUp && !isStored()) {
                     HomeworkService.openHomeworkPopup();
                 }
             }
         });
     }
 
-    function handleLoggedOut() {
-        getHomeworkStatus().then(function(data) {
-            if (data) {
-                updateHomework(data);
-            }
-        })
-    }
-
     HomeworkService.openHomeworkPopup = function openHomeworkPopup() {
-        if (setPopupUrlCallBack) {
+        if (setPopupUrlCallBack && (!$rootScope.profile || $rootScope.profile.is_ekeng_verified !== false )) {
             var url = API_URL + "?partnerId=" + Config.main.site_id + "&platform=web&lan=" + $rootScope.env.lang;
 
             if ($rootScope.env.authorized) {
@@ -143,21 +153,24 @@ VBET5.factory('HomeworkService', ['$rootScope', '$http', '$sce', '$cookies', '$w
 
     HomeworkService.init = function init(scope, popupUrlCallBack, isReadyCallBack) {
         var processToGetHomework = function() {
+
             getHomeworkStatus().then(function (data) {
+                setPopupUrlCallBack = popupUrlCallBack;
+                setIsReadyCallBack = isReadyCallBack;
+
                 if (data) {
-                    setPopupUrlCallBack = popupUrlCallBack;
-                    setIsReadyCallBack = isReadyCallBack;
                     updateHomework(data);
 
-                    if (!isStored()) {
+                    if ((data.openPopUp && !isStored()) || $location.search().homework === '1') {
+                        $location.search('homework', undefined);
                         HomeworkService.openHomeworkPopup();
                     }
-
-                    scope.$on("loggedIn", handleLoggedIn);
-                    scope.$on("login.loggedOut", handleLoggedOut);
-                    scope.$on("window.message", handleWindowMessage);
                 }
-            })
+
+                scope.$on("loggedIn", handleLoggedIn);
+                scope.$on("login.loggedOut", updateData);
+                scope.$on("window.message", handleWindowMessage);
+            });
         };
 
         if (!$rootScope.loginInProgress) {
@@ -182,7 +195,7 @@ VBET5.factory('HomeworkService', ['$rootScope', '$http', '$sce', '$cookies', '$w
     HomeworkService.unsubscribeFromStatus = function unsubscribeForStatus(listener) {
         statusCallBacks = statusCallBacks.filter(function (l) {
             return l !== listener;
-        })
+        });
     };
 
     return HomeworkService;

@@ -1,6 +1,6 @@
 <div class="bet-builder-teams-odd">
     <h5 ng-bind="selectedKeys.marketName"></h5>
     <ul class="bet-builder-teams-info {{selectedKeys.market}}">
-        <li ng-class="{'active': selectedBet.period === selectedKeys.period && (selectedKeys.market === 'TOTALS'?(selectedBet.state.handicap === event.handicap && selectedBet.state.order === event.order):(selectedBet.state.selectedIndex === (event.order - 1)))}" ng-click="attachEvent(event);clearBetslipErrors();" ng-repeat="event in marketsData[selectedKeys.market][selectedKeys.period] track by event.id">{{event.name}}</li>
+        <li ng-class="{'active': selectedBet.period === selectedKeys.period && (selectedKeys.market === 'TOTALS'?(selectedBet.state.handicap === event.handicap && selectedBet.state.order === event.order):(selectedBet.state.selectedIndex === (event.order - 1)))}" ng-click="attachEvent(event);clearBetslipErrors();" ng-repeat="event in marketsData[selectedKeys.market][selectedKeys.period] track by $index">{{event.name}}</li>
     </ul>
 </div>

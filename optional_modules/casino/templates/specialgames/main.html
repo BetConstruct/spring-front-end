@@ -5,8 +5,8 @@
       'hasSidebar': (iframeTab[gameInfo.id].show && (!!hasIframeJackpot[gameInfo.id] || env.authorized && gameInfo.game.id && hasTournaments && hasIframeTournamentInfo[gameInfo.id]))}"  >
     <vbet-loader class="page-center" ng-show="loadingUserData"></vbet-loader>
     <ng-include ng-if="showLoginWarningPopup" src="'optional_modules/casino/templates/specialgames/loginWarningPopup.html'|fixPath"></ng-include>
-    <iframe class="special-game-iframe" ng-if="frameUrl && !loadingUserData" ng-src="{{frameUrl}}" width="100%" height="100%" scrolling="yes" frameborder="0" allowfullscreen="" webkitallowfullscreen="" mozallowfullscreen=""></iframe>
-    <ng-include class="special-game-iframe-info" ng-if="frameUrl && !loadingUserData" ng-show="iframeTab[gameInfo.id].show && (!!hasIframeJackpot[gameInfo.id] || env.authorized && gameInfo.game.id && hasTournaments && hasIframeTournamentInfo[gameInfo.id])" src="'optional_modules/casino/templates/tournament/iframe-info.html'|fixPath"></ng-include>
+    <iframe class="special-game-iframe {{gameInfo.game.extearnal_game_id}}" ng-if="frameUrl && !loadingUserData" ng-src="{{frameUrl}}" width="100%" height="100%" scrolling="yes" frameborder="0" allowfullscreen="" webkitallowfullscreen="" mozallowfullscreen=""></iframe>
+    <ng-include class="special-game-iframe-info" ng-if="!loadingUserData" ng-show="iframeTab[gameInfo.id].show && (!!hasIframeJackpot[gameInfo.id] || env.authorized && gameInfo.game.id && hasTournaments && hasIframeTournamentInfo[gameInfo.id])" src="'optional_modules/casino/templates/tournament/iframe-info.html'|fixPath"></ng-include>
     <div  class="big-game-control">
         <div  class="icon-delete closed-iframe-info">
             <a trans ng-click="iframeTab[gameInfo.id].show = !iframeTab[gameInfo.id].show"></a>

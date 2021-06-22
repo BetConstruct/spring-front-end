@@ -217,6 +217,22 @@ body {
   color: rgba($text-palette-1,0.69);
   text-transform: uppercase;
   font: 20px/22px $font-f;
+  > a {
+    color: rgba($text-palette-1,0.5);
+    text-transform: none;
+    text-decoration: underline;
+    font: 18px/22px $font-f;
+    transition: color 240ms;
+    @include ltr {
+      float: right;
+    }
+    @include rtl {
+      float: left;
+    }
+    &:hover {
+      color: rgba($text-palette-1,0.69);
+    }
+  }
 }
 .hp-slider-17 {
   float: left;
@@ -306,7 +322,6 @@ body {
       bottom: auto;
       top: 100%;
       padding: 12px 10px;
-      left: 0;
     }
   }
 }
@@ -339,16 +354,17 @@ body {
 .hp-slider-pagination {
   position: absolute;
   z-index: 40;
-  left: 0;
   bottom: 10px;
   padding: 10px 20px;
   white-space: nowrap;
   box-sizing: border-box;
   font: 0/0 $font-f;
   @include ltr {
+    left: 0;
     text-align: left;
   }
   @include rtl {
+    right: 0;
     text-align: right;
   }
   small {
@@ -375,11 +391,10 @@ body {
     }
   }
   button {
-    width: 30px;
-    height: 30px;
+    min-width: 30px;
+    height: 22px;
     color: rgba(white, 0.7);
-    background: rgba(black, 0.2);
-    font: 16px icomoon;
+    background: rgba(black, 0.3);
     text-align: center;
     border: 0;
     transition: 300ms background, 300ms color;
@@ -389,35 +404,54 @@ body {
     @include rtl {
       float: right;
     }
-    &:hover {
-      color: rgba(white, 1);
-      background: rgba(black, 0.6);
-    }
-    + button {
-      @include ltr {
-        margin: 0 0 0 4px;
-      }
-      @include rtl {
-        margin: 0 4px 0 0;
+    &:not(.slider-amount-btn) {
+      font: 10px/20px icomoon;
+      &:hover {
+        color: rgba(white, 1);
+        background: rgba(black, 0.6);
       }
     }
-    &:first-child:before {
+    &:first-child {
       @include ltr {
-        content: "\e677";
+        border-radius: 10px 0 0 10px;
       }
       @include rtl {
-        content: "\e67a";
+        border-radius: 0 10px 10px 0;
+      }
+      &:before {
+        @include ltr {
+          content: "\eaaa";
+        }
+        @include rtl {
+          content: "\eaab";
+        }
       }
     }
-    &:last-child:before {
+    &:last-child {
       @include ltr {
-        content: "\e67a";
+        border-radius: 0 10px 10px 0;
       }
       @include rtl {
-        content: "\e677";
+        border-radius: 10px 0 0 10px;
+      }
+      &:before {
+        @include ltr {
+          content: "\eaab";
+        }
+        @include rtl {
+          content: "\eaaa";
+        }
       }
     }
   }
+}
+.slider-amount-btn {
+  padding: 0 6px;
+  font: 12px/22px $font-f;
+  -ms-user-select: none;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  user-select: none;
 }
 .news-widget {
   float: left;
@@ -954,3 +988,347 @@ body {
     }
   }
 }
+
+
+.homepage-search-widget {
+  height: 100%;
+  min-height: 340px;
+  background: linear-gradient(to bottom, $skin-palette-10, $skin-palette-8);
+  padding: 4px 4px 2px 4px;
+  .search-widget-content {
+    position: relative;
+    height: calc(100% - 48px);
+  }
+  .sport-casino-bg {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    object-fit: cover;
+  }
+  .buttons-wrap {
+    border: 1px solid $skin-palette-4;
+    width: 100%;
+    overflow: hidden;
+    position: relative;
+    margin-bottom: 6px;
+    box-sizing: border-box;
+  }
+  .divider {
+    width: 1px;
+    height: 25px;
+    display: block;
+    background: $skin-palette-4;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+  .sport-casino-btn {
+    height: 37px;
+    line-height: 37px;
+    text-align: center;
+    font-size: 14px;
+    text-transform: uppercase;
+    color: $text-palette-1;
+    background-color: transparent;
+    width: 50%;
+    border: none;
+    @include ltr {
+      float: left;
+    }
+    @include rtl {
+      float: right;
+    }
+    &.active {
+      background-color: $skin-palette-4;
+      & ~ .divider {
+        display: none;
+      }
+    }
+  }
+  form {
+    width: 50%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    box-sizing: border-box;
+    @media only screen and (max-width: 1400px) {
+      width: 100%;
+    }
+    @include ltr {
+      left: 0;
+    }
+    @include rtl {
+      right: 0;
+    }
+    .block-search {
+      background: none;
+      width: 100%;
+      height: 100%;
+      max-width: initial;
+      margin: 0;
+      box-sizing: border-box;
+      &:after {
+        content: '';
+        display: block;
+        width: 100%;
+        position: absolute;
+        top: 0;
+        left: 0;
+        background-color: $skin-palette-6;
+        height: 44px;
+      }
+      &:before {
+        top: 7px;
+        z-index: 1;
+        color: $text-palette-3;
+        @include ltr {
+          right: 14px;
+          left: initial;
+        }
+        @include rtl {
+          left: 14px;
+        }
+      }
+      input {
+        width: calc(100% - 8px);
+        height: 36px;
+        box-sizing: border-box;
+        margin: 4px;
+        padding: 0 6px;
+        border: 1px solid $skin-palette-4;
+        border-radius: 0;
+        color: $text-palette-3;
+        @include placeholder {
+          color: $text-palette-3;
+        }
+        &:focus {
+          width: calc(100% - 8px);
+        }
+      }
+    }
+  }
+  .games-type-icon {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    box-sizing: border-box;
+    @include ltr {
+      right: 0;
+    }
+    @include rtl {
+      left: 0;
+    }
+    &:before, & + p {
+      display: none;
+    }
+    .casino-games-search {
+      width: 50%;
+      height: 100%;
+      top: 0;
+      @include ltr {
+        right: 0;
+      }
+      @include rtl {
+        left: 0;
+      }
+      @media only screen and (max-width: 1400px) {
+        width: 100%;
+      }
+      .block-games-search {
+        max-width: initial;
+        position: relative;
+        top: initial;
+        height: initial;
+        background: $skin-palette-6;
+        overflow: hidden;
+        padding: 4px;
+        input[type=text] {
+          &:focus + i, &.pin-search-input + i {
+            @include ltr {
+              right: 4px;
+            }
+            @include rtl {
+              left: 4px;
+            }
+          }
+        }
+        #casino-search-input {
+          border: 1px solid $skin-palette-4;
+          color: $text-palette-3;
+          height: 36px;
+          width: 100%;
+          opacity: 1;
+          padding: 0 6px;
+          @include placeholder {
+            color: $text-palette-3;
+          }
+          &:focus {
+            padding: 0 6px;
+          }
+        }
+        i {
+          top: 4px;
+          margin: 0;
+          color: $text-palette-3;
+          @include ltr {
+            right: 4px;
+          }
+          @include rtl {
+            left: 4px;
+          }
+        }
+      }
+    }
+  }
+  .search-results-container, .search-results-container-scroll {
+    width: 100%;
+    height: 100%;
+    top: 40px;
+    @include ltr {
+      left: 0;
+    }
+    @include rtl {
+      left: initial;
+      right: 0;
+    }
+    h3 {
+      display: none;
+      padding: 0;
+    }
+    #result-search {
+      max-height: 80%;
+      margin: 0;
+      background: $skin-palette-6;
+      dl {
+        padding: 4px 6px;
+        dt {
+          background: $skin-palette-7;
+          color: $text-palette-1;
+          text-transform: initial;
+          font-size: 12px;
+          border-bottom: none;
+        }
+        dd {
+          &:last-child button {
+            box-shadow: none;
+          }
+          &.active button {
+            background: transparent;
+          }
+          button, span, div {
+            color: $text-palette-1;
+          }
+          button {
+            box-shadow: 0 -1px 0 $skin-palette-5 inset;
+            &:hover {
+              background: $skin-palette-10;
+            }
+          }
+        }
+      }
+    }
+  }
+  .arrow-sport {
+    display: none;
+  }
+  .search-results-inner {
+    height: 100%;
+    background: transparent;
+    padding: 0;
+  }
+  .casino-games-results {
+    top: 44px;
+    width: 100%;
+    height: 100%;
+    max-height: 80%;
+    text-align: center;
+    box-shadow: none;
+    color: $text-palette-4;
+    @include ltr {
+      right: 0;
+    }
+    @include rtl {
+      left: 0;
+    }
+    &:before {
+      display: none;
+    }
+    .games-results {
+      min-width: initial;
+      ul {
+        & + ul {
+          border-top: 1px solid $skin-palette-4;
+        }
+        li {
+          &:first-child {
+            width: 1%;
+            vertical-align: middle;
+          }
+        }
+        .results-buttons {
+          width: 96%;
+          div {
+            @include ltr {
+              float: left;
+            }
+            @include rtl {
+              float: right;
+            }
+          }
+        }
+        @media only screen and (min-width: 1400px) {
+          .results-buttons {
+            display: table-column;
+            div {
+              float: none;
+              display: table;
+              &:first-child {
+                margin-bottom: 8px;
+              }
+            }
+          }
+          li p {
+            min-height: 20px;
+          }
+        }
+      }
+    }
+  }
+  .no-result-container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+  .casino-search-widget-icon {
+    font-style: normal;
+    font-size: 67px;
+    display: block;
+    @media only screen and (max-width: 1260px) {
+      font-size: 40px;
+    }
+  }
+  .no-games-result, .search-no-results span {
+    font-size: 14px;
+    font-weight: bold;
+    text-transform: uppercase;
+    display: inline-block;
+  }
+  .search-no-results {
+    position: relative;
+    height: 100%;
+    max-height: 80%;
+    line-height: initial;
+    color: $text-palette-4;
+    background-color: $skin-palette-6;
+    text-align: center;
+    @include rtl {
+      text-align: center;
+    }
+  }
+}
+

@@ -1,7 +1,15 @@
-@media screen and (max-width: 1359px) {
-  .left-column-v3 {
-    width: 250px;
+@media screen and (max-height: 850px), (max-height: 940px) and (max-width: 1440px) {
+  .header-nav-contain > ul > li.sub-menu-item {
+    clear: none;
+    width: 34%;
+    > .top-menu-sub-a-t {
+      &, > a {
+        width: 100%;
+      }
+    }
   }
+}
+@media screen and (max-width: 1359px) {
   .multiselect-view-v3 .competition-title-v3:hover > .sub-menu-multiselect-view-v3 {
     left: 250px;
     @include ltr {

@@ -38,7 +38,7 @@ CASINO.controller('skillGamesMainCtrl', ['$rootScope', '$scope', '$location', 'C
      */
     function loadGames() {
         $scope.loadingProcess = true;
-        casinoData.getGames(CConfig.skillGames.categoryId, 'all', countryCode).then(function (response) {
+        casinoData.getGames({category: CConfig.skillGames.categoryId, provider: 'all', country: countryCode}).then(function (response) {
             if (response && response.data && response.data.status !== -1) {
                 var games = response.data.games;
 
@@ -57,22 +57,8 @@ CASINO.controller('skillGamesMainCtrl', ['$rootScope', '$scope', '$location', 'C
         if (searchParams.game !== undefined) {
             var game = casinoManager.getGameById($scope.games, searchParams.game);
             if (game) {
-                if (!$rootScope.env.authorized && !game.types.funMode) {
-                    TimeoutWrapper(function () {
-                        if (!$rootScope.loginInProgress) {
-                            $scope.openGame(game);
-                        } else {
-                            var loginProccesWatcher = $scope.$watch('loginInProgress', function () {
-                                if (!$rootScope.loginInProgress) {
-                                    loginProccesWatcher();
-                                    $scope.openGame(game);
-                                }
-                            });
-                        }
-                    }, 100);
-                } else {
-                    $scope.openGame(game);
-                }
+                var initialType = ({'demo':1, 'fun':1, 'real': 1}[searchParams.type] && searchParams.type) || ($rootScope.env.authorized ? 'real' : 'fun');
+                $scope.openGame(game, initialType);
             }
         } else {
             content.getPage('games-backgrounds-' + Config.env.lang).then(function (data) {
@@ -116,7 +102,7 @@ CASINO.controller('skillGamesMainCtrl', ['$rootScope', '$scope', '$location', 'C
     $scope.openGame = function openGame(game, gameType, studio, urlSuffix, multiViewWindowIndex) {
         var type = gameType ? gameType : 'real';
 
-        if((!!$rootScope.profile && type === 'real') || type === 'fun'){
+        if({'real': 1, 'fun': 1}[type]){
             analytics.gaSend('send', 'event', 'games','Open game ' + game.name,  {'page': $location.path(), 'eventLabel': 'Game type '+ type});
         }
         casinoManager.openCasinoGame($scope, game, gameType, studio, urlSuffix, multiViewWindowIndex);
@@ -149,9 +135,14 @@ CASINO.controller('skillGamesMainCtrl', ['$rootScope', '$scope', '$location', 'C
             case 'closeGame':
                 casinoManager.findAndCloseGame($scope, data.gameId);
                 break;
+            case 'togglePlayMode':
+                var gameInfo = Utils.getArrayObjectElementHavingFieldValue($scope.gamesInfo, "externalId", data.gameId);
+                if (gameInfo) {
+                    $scope.togglePlayForReal(gameInfo);
+                }
+                break;
         }
     });
-
 
     /**
      * @ngdoc method

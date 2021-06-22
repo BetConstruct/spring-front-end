@@ -344,11 +344,28 @@
       }
     }
     > span {
+      display: inline-block;
       font-size: 11px;
       color: rgba(set-color($c16-sp-9),0.7);
       margin: 0 4px;
     }
   }
+}
+.additional-game-info,
+.game-outright-show{
+  display:inline-block;
+  color: $c16-tp-3;
+  font-size: 12px;
+  line-height: 24px;
+  @include ltr{
+    padding-left: 10px;
+  }
+  @include rtl{
+    padding-right: 10px;
+  }
+}
+.game-outright-show{
+  text-transform: uppercase;
 }
 .e-game-arrow{
   box-sizing: border-box;
@@ -367,7 +384,6 @@
 }
 .live-indicator{
   display: inline-block;
-  margin: 0 0 0 10px;
   font-size: 10px;
   box-sizing: border-box;
   padding: 0 5px;
@@ -376,6 +392,14 @@
   text-transform: uppercase;
   background: $hero-color;
   color: set-color($hero-color);
+  &:only-child {
+    @include ltr {
+      margin-left: 10px;
+    }
+    @include rtl {
+      margin-right: 10px;
+    }
+  }
 }
 .e-p-table{
   float: left;
@@ -539,7 +563,22 @@
     position: relative;
     background: rgba($c16-sp-8,0.7);
     text-indent: -9999px;
-    > i{
+    &:after {
+      content: "\e62d" !important;
+      font-family: 'icomoon' !important;
+      text-transform: none;
+      text-align: center;
+      display: block;
+      position: absolute;
+      left: 0;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      text-indent: 0;
+      margin: auto;
+      color: map-get($coeff-color-map, classic);
+    }
+    > i {
       display: none;
     }
     &.up-0:before,

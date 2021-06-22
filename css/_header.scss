@@ -368,7 +368,8 @@ body > {
     padding: 0 3px 0 0;
   }
 }
-.mybets-icon-box-b:before{content: "\e91e";
+.mybets-icon-box-b:before {
+  content: "\e91e";
   font-size: 18px;
   display: inline-block;
   width: 20px;
@@ -498,13 +499,14 @@ body > {
 .format-12h{
  > .time-view-w-bc{
     @include ltr {
-      width: 72px;
+      width: auto;
     }
     @include rtl {
-      width: 100px;
+      width: auto;
     }
    > .clock-time-v-bc{
-     + b{
+     position: relative;
+     + b {
        left: 5px;
      }
    }
@@ -841,7 +843,7 @@ body > {
     }
   }
 }
-.all-main-tabs-b > ul > li > p > i{
+.all-main-tabs-b > ul > li > p > i:not(.profile-id-copy){
  margin-bottom:2px;
 }
 .user-info-box-b > h6{
@@ -859,7 +861,6 @@ body > {
   &:last-child{
     margin:0;
   }
-
   &.account-verify{
     background:rgba(0, 141, 71,.1);
     color:#109121;
@@ -902,28 +903,59 @@ body > {
   position: relative;
   font-style: normal;
   font-family: icomoon;
-  right:-11px;
-  @include rtl{
-    right:11px;
+  caret-color: transparent;
+  height: 12px;
+  width: 20px;
+
+  @include ltr{
+    margin-left: 5px;
     &:before{
-      right:-8px;
+    left:0;
+    }
+    &:after{
+      right:0;
+    }
+  }
+  @include rtl{
+    margin-right :5px;
+    &:before{
+      right: 0;
+    }
+    &:after{
+      left:0;
     }
   }
   &:after {
     content: "\ea30";
+    position:absolute;
+    top: 0;
+    bottom: 0;
+    margin: auto;
+    width: 12px;
+    height: 12px;
+    line-height: 12px;
   }
   &:before{
     content:'';
     position:absolute;
-    right:18px;
     bottom:0;
     top:0;
     margin:auto;
     width:1px;
     height:14px;
     background:#3F4553;
-
   }
+  &.profile-id-copied{
+    &:after{
+      content: "\e625";
+      background: #109121;
+      color: #fff;
+      border-radius: 50%;
+      text-align: center;
+      font-size: 8px;
+    }
+  }
+
 }
 
 .switcher-t-view-b{
@@ -1307,9 +1339,6 @@ body > {
   right: -10px;
   top: 3px;
 }
-.header-nav-contain > ul > li.new-top-nav a:before, .subtop-header-menu-j > ul > li.new-top-nav a:before {
-  content: attr(data-content);
-}
 .header-nav-contain > ul > li.demo-top-nav a:before {
   content: "DEMO";
 }
@@ -1323,6 +1352,10 @@ body > {
   content: "HOT";
 }
 .header-nav-contain > ul > li.Bonus a:before{
+  content: attr(data-content);
+}
+.header-nav-contain > ul > li.new-top-nav a:before, .subtop-header-menu-j > ul > li.new-top-nav a:before,
+.header-nav-contain > ul > li.datacontent-top-nav a:before, .subtop-header-menu-j > ul > li.datacontent-top-nav a:before {
   content: attr(data-content);
 }
 .header-nav-contain > ul > li.sub-menu-item {
@@ -1340,8 +1373,8 @@ body > {
     left: 0;
   }
   @include rtl {
+    float: left;
     right: 0;
-    display: block;
   }
   > .top-menu-sub-a-t {
     > a {
@@ -2161,12 +2194,9 @@ body > {
     }
   }
 }
-html[dir="rtl"] {
-  .VBET .conteiner:not(.show-fix):not(.show-game) .responsive-header-mainMenu-j > li.header-left-small-b-j:not(.ng-hide) ~ li:not(.header-left-small-b-j) {
+.VBET .conteiner:not(.show-fix):not(.show-game) .responsive-header-mainMenu-j > li.header-left-small-b-j:not(.ng-hide) ~ li:not(.header-left-small-b-j) {
+  @include rtl {
     padding-right: 130px !important;
-  }
-  .VivaroBet .conteiner:not(.show-fix):not(.show-game) .responsive-header-mainMenu-j > li.header-left-small-b-j:not(.ng-hide) ~ li:not(.header-left-small-b-j) {
-    padding-right: 210px !important;
   }
 }
 .accept-cookies-t {

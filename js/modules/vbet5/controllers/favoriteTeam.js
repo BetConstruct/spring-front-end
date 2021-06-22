@@ -49,12 +49,12 @@ VBET5.controller('favoriteTeamController',
         function init() {
             // initScope();
 
-            $scope.favoriteTeamLoading = true;
             $scope.favoriteTeamError = false;
             $scope.getFavoriteTeam();
         }
 
         $scope.getFavoriteTeam = function getFavoriteTeam() {
+            $scope.favoriteTeamLoading = true;
             $timeout(function () { //todo requested by Khachatur Petrosyan
                 Zergling.get({}, 'get_favorite_name').then(function (response) {
                     if (response.result === 0 || response.result === 'OK') {
@@ -373,6 +373,7 @@ VBET5.controller('favoriteTeamController',
                     $scope.searchString = '';
                     $scope.selectedTeam = {};
                     $scope.getFavoriteTeam();
+                    $scope.showForm = false;
 
                 } else {
                     $rootScope.$broadcast("globalDialogs.addDialog", {

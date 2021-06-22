@@ -22,8 +22,8 @@ VBET5.controller('referToFriendCtrl', ['$scope', '$rootScope', 'Zergling', 'Util
         $scope.data = {};
         $scope.data.loading = true;
         Zergling.get({}, 'get_reference_code').then(function (res) {
-            if (res.result === 0 && res.details.ReferenceCode && res.details.ReferenceCode.length > 0) {
-                $scope.data.link = creatLink(res.details.ReferenceCode[0].Code);
+            if (res.result === 0 && res.details && res.details.length &&  res.details[0].Code ) {
+                $scope.data.link = creatLink(res.details[0].Code);
                 loadReferrals();
             }
             $scope.data.loading = false;

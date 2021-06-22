@@ -15,8 +15,10 @@ angular.module("vbet5").directive('preventInput', [ 'Utils', function (Utils) {
             if (!ngModelCtrl || !attrs.preventInput) {
                 return;
             }
+            var commaValues = ['.', ','];
 
-            ngModelCtrl.$parsers.push(function (val) {
+
+                ngModelCtrl.$parsers.push(function (val) {
                 if (angular.isUndefined(val)) {
                     val = '';
                 }
@@ -25,11 +27,15 @@ angular.module("vbet5").directive('preventInput', [ 'Utils', function (Utils) {
                     var currencyRounding = +attrs.preventRounding;
                     var length = clean.length;
                     if (length ) {
-                        if (clean[length - 1] !== '.') {
-                            clean = Utils.cutDecimalNumberAfterPlace(clean,  currencyRounding);
+                        if (commaValues.indexOf(clean[0]) > -1) {
+                            clean = clean.substr(1);
                         } else {
-                            if (currencyRounding === 0 || clean.indexOf('.') !== length - 1) {
-                                clean = clean.substr(0, length - 1);
+                            if (commaValues.indexOf(clean[length - 1]) === -1) {
+                                clean = Utils.cutDecimalNumberAfterPlace(clean,  currencyRounding);
+                            } else {
+                                if (currencyRounding === 0) {
+                                    clean = clean.substr(0, length - 1);
+                                }
                             }
                         }
                     }
@@ -54,8 +60,8 @@ angular.module("vbet5").directive('preventInput', [ 'Utils', function (Utils) {
 
                 scope.$on('$destroy', function() {
                     element.unbind('keypress');
-                })
-            }
+                });
+            };
         }
     };
 }]);

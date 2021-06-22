@@ -1,5 +1,17 @@
 $skin-second: false;
 @import '../../../css/mixins'; @import 'functions/colors'; @import '../../../css/createSkin';
+
+.VivaroBet .conteiner:not(.show-fix):not(.show-game) .responsive-header-mainMenu-j > li.header-left-small-b-j:not(.ng-hide) ~ li:not(.header-left-small-b-j) {
+  @include ltr {
+    padding-left: 20px !important;
+  }
+}
+.VivaroBet .conteiner:not(.show-fix):not(.show-game) .responsive-header-mainMenu-j > li.header-left-small-b-j:not(.ng-hide) ~ li:not(.header-left-small-b-j) {
+  @include rtl {
+    padding-right: 20px !important;
+  }
+}
+
 .header-nav-contain > ul > li > .top-menu-sub-a-t > a[href*="#/russia2018"]{
   background: #05527f;
   &:hover{
@@ -82,18 +94,8 @@ $skin-second: false;
 }
 // custom license-footer end
 
-.new-games-page-j .j-resize-950-1280 li.PGDTLC .wrapper-game-link .game-link-tj:after{
-  display: none;
-}
-.new-games-page-j .j-resize-950-1280 li.VGS500 .wrapper-game-link .game-link-tj:after,
-.new-games-page-j .j-resize-950-1280 li.VGSHokm .wrapper-game-link .game-link-tj:after,
-.new-games-page-j .j-resize-950-1280 li.ASG333 .wrapper-game-link .game-link-tj:after
-{
-  content: attr(data-new);
-}
-
 .Vbet, .Vbetcn{
-   .logo-nav-wrapper{
+  .logo-nav-wrapper{
     z-index: 222;
   }
 }
@@ -101,132 +103,207 @@ $skin-second: false;
   display: flex;
   justify-content: center;
   align-items: center;
+  flex-wrap: wrap;
 }
 
 // ID card authentication popup Start
-  .id-card-auth {
-    .pu-head-j,
-    .pu-contain-j > p {
-      display: none;
+.id-card-auth {
+  .pu-head-j,
+  .pu-contain-j > p {
+    display: none;
+  }
+}
+.id-card-authentication {
+  float: left;
+  width: 500px;
+  min-height: 306px;
+  .close-j {
+    top: 6px;
+    @include ltr {
+      right: 6px;
+    }
+    @include rtl {
+      left: 6px;
     }
   }
-  .id-card-authentication {
-    float: left;
-    width: 500px;
-    min-height: 306px;
-    .close-j {
-      top: 6px;
-      @include ltr {
-        right: 6px;
-      }
-      @include rtl {
-        left: 6px;
-      }
-    }
-    .select-doc-a {
-      li {
-        > h2{
-          margin-bottom: 20px;
-          font: 16px/18px $font-f;
-          @include ltr {
-            float: left;
-          }
-          @include rtl{
-            float: right;
-          }
+  .select-doc-a {
+    li {
+      > h2{
+        margin-bottom: 20px;
+        font: 16px/18px $font-f;
+        @include ltr {
+          float: left;
         }
-        > p {
-          margin: 0;
-          color: $text-palette-4;
-          font-size: 12px;
+        @include rtl{
+          float: right;
         }
-        .youtube-video-link {
-          color: $text-palette-3;
-          font: 14px/18px $font-f;
-          transition: color 240ms;
+      }
+      > p {
+        margin: 0;
+        color: $text-palette-4;
+        font-size: 12px;
+      }
+      .youtube-video-link {
+        color: $text-palette-3;
+        font: 14px/18px $font-f;
+        transition: color 240ms;
+        @include ltr {
+          float: right;
+        }
+        @include rtl {
+          float: left;
+        }
+        &:hover {
+          color: $text-palette-2;
+        }
+        &:before {
+          content: "\ea9f";
+          display: inline-block;
+          font: 14px/14px icomoon;
           @include ltr {
-            float: right;
+            margin-right: 8px;
           }
           @include rtl {
-            float: left;
+            margin-left: 8px;
           }
-          &:hover {
-            color: $text-palette-2;
-          }
-          &:before {
-            content: "\ea9f";
-            display: inline-block;
-            font: 14px/14px icomoon;
-            @include ltr {
-              margin-right: 8px;
-            }
-            @include rtl {
-              margin-left: 8px;
-            }
-          }
-        }
-      }
-      .button-confirm > button {
-        margin-top: 0;
-        &:not(:last-child) {
-          margin-bottom: 20px;
         }
       }
     }
-    .md-progress-circular {
-      right: 50%;
-      bottom: 50%;
-      margin-right: -50px;
-      margin-bottom: -50px;
+    .button-confirm > button {
+      margin-top: 0;
+      &:not(:last-child) {
+        margin-bottom: 20px;
+      }
     }
   }
+  .md-progress-circular {
+    right: 50%;
+    bottom: 50%;
+    margin-right: -50px;
+    margin-bottom: -50px;
+  }
+}
 
 // ID card authentication popup End
 
-// Recharge popup Start
 
-.low-balance .popup-wrapper-j {
-  max-width: 800px;
-  .pu-button-wrap-j {
-    padding: 30px 0 0;
-    button {
-      &:first-child {
-        color: set-color($brand-color-1);
-        background: $brand-color-1;
-        border-color: $brand-color-1;
-        &:not([disabled]):hover {
-          color: set-color($brand-color-1);
-          background: lighten($brand-color-1, 10);
-          border-color: lighten($brand-color-1, 10);
-        }
-      }
-    }
-  }
+// Full banner Start
+
+.guide {
+  max-width: 1670px;
 }
-.new-default-popup-j {
-  .contain-footer-block {
-    float: none;
-    width: auto;
-    display: inline-block;
+.poker .slider-landing-overlay .guide {
+  max-width: calc(100% - 8%);
+}
+.better-homepage {
+  min-height: 1000px;
+  .row {
     background: none;
-    .guide {
-      @media screen and (max-width: 1260px) {
-        width: calc(100% - 20px);
+    &:first-of-type {
+      width: 100%;
+      max-width: 100%;
+      padding: 0;
+      position: absolute;
+      top: 0;
+      left: 0;
+      + .row {
+        margin-top: 24%;
       }
     }
-    .paymen-icons-list {
-      background: none;
+    .row-child > div > div > div[banner-slider] {
+      padding: 0;
     }
-    .payment-content-block {
-      width: auto;
-      > ul {
-        padding: 30px 0 0;
-        > li {
-          padding: 0 10px;
-        }
+  }
+  .hp-slider-pagination {
+    top: 70px;
+    width: 70vw;
+    min-width: 732px;
+    max-width: 1500px;
+    pointer-events: none;
+    box-sizing: content-box;
+    padding-left: 10px;
+    padding-right: 10px;
+    @include ltr {
+      left: 50%;
+      transform: translateX(-50%);
+    }
+    @include rtl {
+      right: 50%;
+      transform: translateX(50%);
+    }
+    button {
+      position: relative;
+      top: -50px;
+      pointer-events: auto;
+    }
+  }
+  .jackpot-pools {
+    background: rgba($skin-palette-12, 0.6);
+    box-shadow: 0 -10px 0 0 rgba($skin-palette-12, 0.6);
+  }
+}
+.hp-slider-pagination {
+  top: 30px;
+  bottom: auto;
+}
+.slider-landing-overlay .hp-slider-pagination {
+  bottom: auto;
+}
+.hp-slider-17.liveDealer .hp-slider-pagination {
+  top: auto;
+  bottom: calc(100% - 10px);
+}
+.reg-steps-footer .hp-slider-pagination {
+  top: auto;
+}
+.featured-game-list-b {
+  background: rgba($skin-palette-12, 0.85);
+}
+
+// Full banner End
+
+@media screen and (max-width: 1440px) {
+  .guide {
+    width: calc(100% - 40px);
+  }
+}
+
+// casino Start Start
+
+@media screen and (min-width: 1260px) {
+  .casino {
+    .slide-casino-new-img-b .banner-set-img a > img {
+      width: 100%;
+    }
+    .casino-jackpots-board {
+      > div.float-width {
+        height: 100%;
+        background: -moz-linear-gradient(top, lighten( saturate( adjust-hue( $skin-color, -5deg ), 9 ), 1 ) 0%, darken( saturate( adjust-hue( $skin-color, -3deg ), 18 ), 8 ) 80%, darken( saturate( adjust-hue( $skin-color, -3deg ), 18 ), 8 ) 100%);
+        background: -webkit-linear-gradient(top, lighten( saturate( adjust-hue( $skin-color, -5deg ), 9 ), 1 ) 0%, darken( saturate( adjust-hue( $skin-color, -3deg ), 18 ), 8 ) 80%, darken( saturate( adjust-hue( $skin-color, -3deg ), 18 ), 8 ) 100%);
+        background: linear-gradient(to bottom, lighten( saturate( adjust-hue( $skin-color, -5deg ), 9 ), 1 ) 0%, darken( saturate( adjust-hue( $skin-color, -3deg ), 18 ), 8 ) 80%, darken( saturate( adjust-hue( $skin-color, -3deg ), 18 ), 8 ) 100%);
       }
     }
   }
 }
+// casino Start End
 
-// Recharge popup End
+//telegrem logo on header
+.header-top-row {
+  .telegram {
+    width: 34px;
+    background: url(../images/telegram.png#{$delete-cache}) no-repeat 0 0 / cover;
+  }
+}
+
+// Poker page banner sizes
+.poker {
+  .button-group-j {
+    bottom: initial;
+    top: 70%;
+  }
+  .intro-info-j {
+    bottom: initial;
+    top: calc(70% - 40px);
+    transform: translateY(-50%);
+  }
+}

@@ -6,7 +6,7 @@
  * @description displays suggested bets
  *
  */
-VBET5.directive('suggestedBets', ['$rootScope', '$http', '$filter', '$q', 'Zergling', 'GameInfo', 'Storage', '$timeout', 'Config', function ($rootScope, $http, $filter, $q, Zergling, GameInfo, Storage, $timeout, Config) {
+VBET5.directive('suggestedBets', ['$rootScope', '$http', '$filter', '$q', 'Zergling', 'GameInfo', 'Storage', '$timeout', 'Config', 'Utils', function ($rootScope, $http, $filter, $q, Zergling, GameInfo, Storage, $timeout, Config, Utils) {
     'use strict';
     return {
         restrict: 'E',
@@ -93,9 +93,8 @@ VBET5.directive('suggestedBets', ['$rootScope', '$http', '$filter', '$q', 'Zergl
                             $http.get(apiUrl + $rootScope.profile.id).then(handleResponse, handleResponseError);
                             break;
                         case 'live':
-                            apiUrl = 'https://recommender.dp.bcua.io/api/v3/recommendations/live/client/';
-                            $http.get(apiUrl + $rootScope.profile.id).then(handleResponse, handleResponseError);
-                            break;
+                            apiUrl = 'https://recommender.dp.bcua.io/api/v3/recommendations/partners/';
+                            $http.get(apiUrl + Config.main.site_id + '/' + $rootScope.profile.id + '/live').then(handleResponse, handleResponseError);
                     }
                 } else {
                     $scope.loadProcess = false;
@@ -210,6 +209,8 @@ VBET5.directive('suggestedBets', ['$rootScope', '$http', '$filter', '$q', 'Zergl
 
                 if ($scope.params.type === 'live') {
                     request.what.game.push('info');
+                } else {
+                    Utils.addPrematchExpressId(request);
                 }
 
 
@@ -339,13 +340,14 @@ VBET5.directive('suggestedBets', ['$rootScope', '$http', '$filter', '$q', 'Zergl
                 }
                 unsubscribe();
             });
-            $scope.$watch('betSlip.mode', function betSlipModeWatcher(newVal, oldVal) {
-                if (oldVal === 'suggested' && newVal !== 'suggested') {
+            $scope.$watch('betSlip.mode',  Utils.debounce(function betSlipModeWatcher() {
+                if (eventSubIdsMap && Object.keys(eventSubIdsMap).length && $scope.betSlip.mode !== 'suggested') {
                     $scope.suggestedBetMap = {};
                     $scope.eventIds = [];
                     unsubscribe();
                 }
-            });
+             }, 100)
+            );
 
         }
     };

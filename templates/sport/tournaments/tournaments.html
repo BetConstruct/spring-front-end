@@ -1,0 +1,102 @@
+<div class="casino-tournaments-include sport-toutnaments" ng-init="getTournamentList(true);tournament.readMore=false; setTitle('Tournaments');casinoMultiviewValues();">
+    <div class="guide">
+        <div class="casino-tournaments-filters-wrapper">
+            <div ng-repeat="filterGroup in tournament.filterList track by $index" class="casino-tournament-filter no-select-j" ng-class="{'active': filterGroup.expanded}" ng-mouseover="filterGroup.expanded=true" ng-mouseleave="filterGroup.expanded=false">
+                <p ng-click="filterGroup.expanded=!filterGroup.expanded">
+                    <span>{{filterGroup.name|translate}}</span>
+                    <span>
+                        <span ng-repeat="filter in filterGroup.filters track by $index" ng-if="filter.active">{{(filter.name|translate)}}</span>
+                    </span>
+                </p>
+                <div>
+                    <ul>
+                        <li ng-repeat="filter in filterGroup.filters track by $index">
+                            <label>
+                                <input ng-model="filter.active" ng-change="updateFilters(filterGroup, filter)" type="checkbox">
+                                <span>{{filter.name|translate}}</span>
+                            </label>
+                        </li>
+                        <li ng-if="filterGroup.okButton">
+                            <button ng-click="filterGroup.expanded=false;updateFilters(filterGroup, null, true)" trans>OK</button>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <button ng-show="false" class="casino-tournaments-filters-reset" ng-click="getTournamentList()"></button>
+        </div>
+        <div class="float-width" ng-if="!tournament.filteredList">
+            <vbet-loader></vbet-loader>
+        </div>
+        <div class="casino-tournaments-games">
+
+            <div class="ct-games-no-results" ng-show="tournament.filteredList.length === 0" trans>There are no tournaments with selected filters.</div>
+            <div ng-show="tournament.filteredList.length">
+                <ul class="euro-tournament">
+                    <li
+                            ng-repeat="item in tournament.filteredList track by item.Id"
+                            ng-class="{finished: item.Stage === 1, live: item.Stage === 2, upcoming: item.Stage === 3, canceled : item.Stage === -1}"
+                            ng-click="selectTournament(item.Id)"
+                            class="tournament-item"
+                            ng-style="{'background': 'linear-gradient(to right bottom, rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 0.1)), url({{item.DetailsBannerImagesFiltered[0].ImageUrl}})'}">
+<!--                            ng-style="{'background-image': 'url({{item.DetailsBannerImagesFiltered[0].ImageUrl}})'}">-->
+                        <div class="tour-img f-left" style="background-image: url({{item.LobbyBannerImagesFiltered[tournament.sliderIndex[item.Id]].ImageUrl}})"></div>
+                        <div class="tour-info-wrapper f-right">
+                            <div class="tour-info f-left">
+                                <h5 class="tour-title ellipsis-text">{{item.Name}}</h5>
+                                <p class="tour-prize">{{item.PrizeFund|number}} {{item.CurrencyId|currency}}</p>
+                                <counter start="{{item.Stage === 3 ? item.StartDate : item.EndDate}}" finish-text="{{item.Stage === 3 ? 'Started' : item.Stage === -1 ? 'Canceled' : ''}}" class="status-color"></counter>
+                                <div class="tour-status f-left">
+                                    <span class="status" trans>Status:</span>
+                                    <p class="status-color">
+                                        <strong ng-show="item.Stage == 1" trans>Finished</strong>
+                                        <strong ng-show="item.Stage == 2" trans>tournament_live</strong>
+                                        <strong ng-show="item.Stage == 3" trans>Upcoming</strong>
+                                        <strong ng-show="item.Stage == -1" trans>Canceled</strong>
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="tour-info-cards f-right">
+                                <div class="tour-card card-join f-right">
+                                    <p class="join-card-p">
+                                        <span class="info f-left ellipsis-text" trans>Buy in + Fee</span>
+                                        <span class="info f-right">{{item.RegistrationAmount}} {{item.CurrencyId|currency}}</span>
+                                    </p>
+                                    <div class="divider"></div>
+                                    <button class="tour-join-btn" ng-click="participateInTournament(item);$event.stopPropagation()" ng-disabled="!item.canParticipate || item.IsParticipated">
+                                        {{(item.IsParticipated ? 'Joined' : 'Join')|translate}}
+                                    </button>
+                                </div>
+                                <div class="tour-card card-date f-right">
+                                    <b class="tour-card-title ellipsis-text" trans>Tournament Dates</b>
+                                    <div class="dates-wrapper">
+                                        <div class="tour-date-item f-left">
+                                            <p class="start-end tour-green" trans>Start</p>
+                                            <b class="date">{{item.StartDate|formatDate:'tournament'}}</b>
+                                        </div>
+                                        <div class="tour-date-item f-right">
+                                            <p class="start-end tour-red" trans>End</p>
+                                            <b class="date">{{item.EndDate|formatDate:'tournament'}}</b>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="tour-card card-date f-right">
+                                    <b class="tour-card-title ellipsis-text" trans>Registration Dates</b>
+                                    <div class="dates-wrapper">
+                                        <div class="tour-date-item f-left">
+                                            <p class="start-end tour-green" trans>Start</p>
+                                            <div class="date"><b>{{item.RegistrationStartDate|formatDate:'tournament'}}</b></div>
+                                        </div>
+                                        <div class="tour-date-item f-right">
+                                            <p class="start-end tour-red" trans>End</p>
+                                            <p class="date"><b>{{item.RegistrationEndDate|formatDate:'tournament'}}</b></p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>

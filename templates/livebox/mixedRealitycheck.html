@@ -1,6 +1,6 @@
 <div>
     <h3 trans>Reality Checks</h3>
-    <div class="settings-info-contain deposit-limit">
+    <div class="settings-info-contain deposit-limit settings-info-contain-padding">
         <div ng-if="!('reality-check-text'|translate:null:true)">
             <p trans>We offer you an opportunity to manage the amount of time spent playing, by setting up a Reality Check on your account.</p>
             <p trans>Once you have saved your reality check time, you get a pop-up once this period has come up on the start of a casino session - placing a real money wager.</p>
@@ -17,7 +17,7 @@
             </div>
             <div class="change-button-container password">
                 <div class="cashier-button">
-                    <button ng-disabled="realityCheck.selectedValue==($root.profile.active_time_in_casino !== null ? $root.profile.active_time_in_casino : '0')" ng-show="!working" trans ng-click="setRealityCheckInterval(realityCheck.selectedValue)">Save</button>
+                    <button disabled="disabled" ng-disabled="realityCheck.selectedValue==($root.profile.active_time_in_casino !== null ? $root.profile.active_time_in_casino : '0')" ng-show="!working" trans ng-click="setRealityCheckInterval(realityCheck.selectedValue)">Save</button>
                     <button disabled="disabled" ng-show="working" trans>Wait...</button>
                 </div>
             </div>

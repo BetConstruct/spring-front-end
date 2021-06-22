@@ -595,7 +595,7 @@ VBET5.controller('asianViewMainController', ['$rootScope', '$scope', '$filter', 
 
                             streamService.monitoring($scope, 'openGame', 'pinnedGames', 'enlargedGame');
 
-                            var marketsData = MarketService.getMarketsAndGroups(game.id, game.market, game.team1_name, game.team2_name, sport.alias, game.is_stat_available);
+                            var marketsData = MarketService.getMarketsAndGroups(game.id, game.market, game.team1_name, game.team2_name, sport.alias, game.is_stat_available, game.type);
 
                             $scope.openGame.markets = marketsData.markets;
                             $scope.openGame.availableMarketGroups = marketsData.marketGroups;
@@ -711,6 +711,7 @@ VBET5.controller('asianViewMainController', ['$rootScope', '$scope', '$filter', 
             }
 
             $scope.marketGamesAreLoading = true;
+            $scope.marketsStatisticsState = {};
             $scope.resetCountDown(true);
 
             $scope.activeGameId = gameId;
@@ -749,6 +750,8 @@ VBET5.controller('asianViewMainController', ['$rootScope', '$scope', '$filter', 
             if (sportId) {
                 request.where.sport =  {'id': +sportId};
             }
+            Utils.addPrematchExpressId(request);
+
             connectionService.subscribe(
                 request,
                 updateOpenGame,
@@ -784,7 +787,7 @@ VBET5.controller('asianViewMainController', ['$rootScope', '$scope', '$filter', 
                     competition: ['name', 'order', 'id', 'info'],
                     region: ['name', 'alias', 'id'],
                     game: ['id', 'team1_name', 'team2_name','team1_reg_name', 'team2_reg_name', 'start_ts', 'type', 'is_blocked', 'markets_count', 'strong_team', 'is_neutral_venue', 'is_stat_available', 'is_itf', 'game_info'],
-                    market: ['base', 'id', 'name', 'order', 'sequence', 'show_type', 'display_key', 'display_sub_key', 'type', 'home_score', 'away_score', 'main_order'],
+                    market: ['base', 'id', 'name', 'order', 'sequence', 'show_type', 'display_key', 'display_sub_key', 'type', 'home_score', 'away_score', 'main_order', 'express_id'],
                     event: ['name', 'id', 'base', 'type', 'type_1', 'price', 'show_type', 'home_value', 'away_value']
                 },
                 'where': {
@@ -797,8 +800,8 @@ VBET5.controller('asianViewMainController', ['$rootScope', '$scope', '$filter', 
                 request.what.game.push('info');
             }
 
-
             Utils.setCustomSportAliasesFilter(request);
+            Utils.addPrematchExpressId(request);
 
             setGameTimeFilter(request);
 
@@ -829,8 +832,10 @@ VBET5.controller('asianViewMainController', ['$rootScope', '$scope', '$filter', 
                 }
 
                 // Request competitions
-                request.where.competition = request.where.competition || {};
-                request.where.competition.id = {'@in': ($scope.competitionsList && $scope.competitionsList.length) ? $scope.competitionsList : ['-1']};
+                if ($scope.competitionsList && $scope.competitionsList.length) {
+                    request.where.competition = request.where.competition || {};
+                    request.where.competition.id = {'@in':  $scope.competitionsList };
+                }
 
                 if($scope.selectedMenuType.active === LEFT_MENU.BOOSTED_BETS){
                     request.where.game = {
@@ -1058,7 +1063,7 @@ VBET5.controller('asianViewMainController', ['$rootScope', '$scope', '$filter', 
                 'source': 'betting',
                 'what': {
                     game: ['id', 'team1_name', 'team2_name', 'info', 'start_ts', 'type', 'text_info', 'is_blocked', 'markets_count', 'strong_team'],
-                    market: ['base', 'id', 'name', 'order', 'sequence', 'show_type', 'display_key', 'display_sub_key', 'optimal', 'home_score', 'away_score', 'type'],
+                    market: ['base', 'id', 'name', 'order', 'sequence', 'show_type', 'display_key', 'display_sub_key', 'optimal', 'home_score', 'away_score', 'type', 'express_id'],
                     event: ['name', 'id', 'base', 'type', 'price', 'show_type', 'type_1', 'home_value', 'away_value']
                 },
                 'where': {
@@ -1069,6 +1074,7 @@ VBET5.controller('asianViewMainController', ['$rootScope', '$scope', '$filter', 
             };
 
             request.where.market.display_key = {'@in': [ "HANDICAP", "TOTALS"]};
+            Utils.addPrematchExpressId(request);
 
             function updateExpandedHdpGame(data) {
                 var gameDetails = data.game;
@@ -1142,6 +1148,7 @@ VBET5.controller('asianViewMainController', ['$rootScope', '$scope', '$filter', 
                 angular.forEach(data.region, function (region) {
                     angular.forEach(region.competition, function (competition) {
                         competition.regionName = region.name;
+                        competition.searchName = competition.regionName + ' - ' + competition.name;
                         $scope.competitionsFilter.push(competition);
                     });
                 });
@@ -1149,7 +1156,7 @@ VBET5.controller('asianViewMainController', ['$rootScope', '$scope', '$filter', 
 
             $scope.checkAll();
             $scope.updateCompetitionsFilter();
-        }
+        };
 
         function fillCompetitionsList() {
             angular.forEach($scope.selectedCompetitionsModel, function (value, competition) {
@@ -1366,10 +1373,13 @@ VBET5.controller('asianViewMainController', ['$rootScope', '$scope', '$filter', 
                                     '@lt': i === 7 ? '' : $scope.dayFilter[i].to
                                 }
                             },
-                            'market': {},
-                            'competition': ($scope.competitionsList && $scope.competitionsList.length) ? {'id': {'@in': $scope.competitionsList}} : {'id': {'@in': ['-1']}}
+                            'market': {}
                         }
                     };
+                    if ($scope.competitionsList && $scope.competitionsList.length) {
+                        request.where.competition = request.where.competition || {};
+                        request.where.competition.id = {'@in':  $scope.competitionsList };
+                    }
                     request.where.game['@or'] = [{'type': {'@in': [0, 2]}}];
                     if (Config.main.enableVisibleInPrematchGames) {
                         request.where.game['@or'].push({
@@ -2015,7 +2025,7 @@ VBET5.controller('asianViewMainController', ['$rootScope', '$scope', '$filter', 
          * @description Checks whether at list one competition is chosen to allow the filtering
          * @returns {boolean}
          */
-        $scope.allowFiltering = function allowFiltering() {
+        $scope.allowFiltering = function allowFiltering(clearQuery) {
             var i = 0;
             if (!Object.keys($scope.selectedCompetitionsModel).length) {
                 $scope.enableFiltering = false;
@@ -2033,6 +2043,8 @@ VBET5.controller('asianViewMainController', ['$rootScope', '$scope', '$filter', 
             if ($scope.competitionsFilter.length === i && i > 0) {
                 $scope.selectedAll = true;
             }
+            clearQuery &&( $scope.competitionsQuery = "");
+
         };
 
         $scope.prefixBase = function prefixBase(market, marketType) {

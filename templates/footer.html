@@ -2,17 +2,20 @@
     <div class="guide" ng-controller="footerCtrl">
         <div class="footer-j">
             <div class="footer-section left" ng-include="::'templates/footer/helppages.html'|fixPath"></div>
-            <div class="footer-section right middle" ng-include="::'templates/footer/customTemplate.html'|fixPath"></div>
+
             <div class="footer-section right">
                 <ng-include src="::'templates/footer/social.html'|fixPath"></ng-include>
                 <ng-include src="::'templates/footer/copyright.html'|fixPath"></ng-include>
-                <ng-include src="::'templates/footer/links.html'|fixPath"></ng-include>
-                <div class="back-block-j">
+                <div class="age-restriction-block">
                     <div class="age-restriction-j" ng-show="conf.footer.ageRestriction">{{ ::conf.footer.ageRestriction[$location.host()] || conf.footer.ageRestriction['default'] || conf.footer.ageRestriction }}+</div>
-                    <button ng-click="broadcast('feedback.toggle')" ng-if="(env.authorized && conf.footer.feedbackButton.enabledLogin) || (!env.authorized && conf.footer.feedbackButton.enabledLogOut)" trans>Feedback</button>
-                    <button ng-if="conf.footer.enableToTopButton" class="back-to-top-hide" ng-click="scrollToTop(true)" class-on-scroll=",back-to-top-hide" trans>back to top</button>
+                    <div class="age-restriction-message" ng-if="$root.conf.footer.ageRestrictionMessage" ng-bind="$root.conf.footer.ageRestrictionMessage|translate"></div>
                 </div>
-                <div class="age-restriction-message" ng-if="$root.conf.footer.ageRestrictionMessage" ng-bind="$root.conf.footer.ageRestrictionMessage|translate"></div>
+                <div class="back-block-j">
+                     <button ng-click="broadcast('feedback.toggle')" ng-if="(env.authorized && conf.footer.feedbackButton.enabledLogin) || (!env.authorized && conf.footer.feedbackButton.enabledLogOut)" trans>Feedback</button>
+                     <button ng-if="conf.footer.enableToTopButton" class="back-to-top-hide" ng-click="scrollToTop(true)" class-on-scroll=",back-to-top-hide" trans>back to top</button>
+                </div>
+                <ng-include class="float-width" src="::'templates/footer/links.html'|fixPath"></ng-include>
+                <div class="footer-custom-template" ng-include="::'templates/footer/customTemplate.html'|fixPath"></div>
             </div>
         </div>
         <div class="extended-license-footer" ng-if="conf.cegSealId || conf.apgSealId || conf.footer.license_logos || conf.footer.about_company_text[env.lang] || conf.footer.about_company_text['eng']">

@@ -1,0 +1,78 @@
+<div ng-controller="casinoFreeSpinsCtrl">
+    <div class="bet-view-information-box free-spin">
+        <div class="select-box-period-b"
+             ng-click="dropdownOpen=!dropdownOpen"
+             ng-class="{'active': dropdownOpen}"> <!--active-->
+            <p ng-bind="(selectedState === backendBonusConstants.BonusAcceptanceType.None? 'New': 'Activated')|translate"></p>
+            <ul>
+                <li ng-click="selectState(backendBonusConstants.BonusAcceptanceType.None) ;$event.stopPropagation();" trans>New</li>
+                <li ng-click="selectState(backendBonusConstants.BonusAcceptanceType.Activated) ;$event.stopPropagation();" trans>Activated</li>
+            </ul>
+        </div>
+        <vbet-loader ng-if="loadingBonuses"></vbet-loader>
+        <div ng-show="!loadingBonuses" class="full-bet-history-information-contain bonus-contain">
+            <div class="empety-bonus-info" ng-if="casinoFreeSpins.length == 0">
+                <p trans>There are no free spin bonuses.</p>
+            </div>
+            <div class="bet-info-list-separator-b" ng-repeat="bonus in casinoFreeSpins track by bonus.Id" ng-class="{'full-info': details[bonus.Id].opened}">
+                <ul ng-click="toggleBonusDetails(bonus.Id, bonus.ExternalId)">
+                    <li class="bet-type-column-b">
+                        <span>{{bonus.Name}}</span>
+                    </li>
+                    <li class="outcome-bet-info-column" ng-class="{'active-status': (bonus.AcceptanceType === backendBonusConstants.BonusAcceptanceType.Accepted || bonus.AcceptanceType === backendBonusConstants.BonusAcceptanceType.Activated)}">
+                        <span><span trans>Status</span> <i>{{(bonus.AcceptanceType!=0?backendBonusConstants.BonusAcceptanceTypeByValue[bonus.AcceptanceType]:'New')|translate}}</i></span>
+                        <span><span trans>Count</span> x{{bonus.Amount}}</span>
+                    </li>
+                    <li class="bet-status-column-b" >
+                        <div class="bonus-function-b" ng-show="bonus.AcceptanceType === backendBonusConstants.BonusAcceptanceType.None">
+                            <button ng-click="claimFreeSpin(bonus); $event.stopPropagation();" trans>Claim</button>
+                        </div>
+                    </li>
+                </ul>
+                <!--open-->
+                <div ng-if="details[bonus.Id].opened" class="second-level-bet-information">
+                    <div class="single-bonus-inform-container">
+                        <!--claim bonus-->
+                        <div class="bonus-info-list-separator-b">
+                            <ul>
+                                <li class="full-bonus-info-box">
+
+                                    <div class="bonus-table-information-b" >
+                                        <ul>
+                                            <li>{{bonus.Description}}</li>
+                                        </ul>
+                                        <vbet-loader ng-if="details[bonus.Id].loading"></vbet-loader>
+                                        <casino-games-list ng-if="!details[bonus.Id].loading" class="free-spin-games"
+                                                           show-conditions="true"
+                                                           games-list="details[bonus.Id].games"
+                                                           games-limit="5"
+                                                           game-show-conditions="true"
+                                                           use-big-icons="true"
+                                                           hide-favorite-button="true">
+                                        </casino-games-list>
+                                    </div>
+                                </li>
+                                <li class="bonus-start-end-b">
+                                    <p>
+                                        <span trans>Starting date:</span>
+                                        <span>{{bonus.StartDate|formatDate:'noLocaleTranslate':null:$root.env.timeFormat}}</span>
+                                    </p>
+                                    <p>
+                                        <span trans>Ending date:</span>
+                                        <span>{{bonus.EndDate|formatDate:'noLocaleTranslate':null:$root.env.timeFormat}}</span>
+                                    </p>
+                                    <p>
+                                        <span trans>Expiration Days:</span>
+                                        <span>{{bonus.ExpirationDays}}</span>
+                                    </p>
+                                </li>
+                            </ul>
+                        </div>
+                        <!--claim bonus END-->
+                    </div>
+                </div>
+                <!--open END-->
+            </div>
+        </div>
+    </div>
+</div>

@@ -106,20 +106,14 @@
 }
 
 .multiview {
-  .left-menu-closed-v3 .filter-row-v3 {
-    display: none;
-  }
-  .filter-view-v3 {
-    height: 38px;
+  .left-menu-closed-v3 {
     .filter-row-v3 {
-      width: calc(100% - 32px);
-      margin: 2px 0 0;
+      display: none;
     }
-    .second-row-filter-v3 {
-      width: 32px;
-      margin: 0;
-      .search-box-v3 {
-        display: none;
+    .view-switcher-v3:not(.no-dashboard) + .filter-view-v3 {
+      .select-tournament,
+      .select-tournament + .second-row-filter-v3 .closed-left-nav-v3 {
+        top: -4px;
       }
     }
   }

@@ -1,23 +1,26 @@
 <div class="mini-list-events-b-v3 express-of-the-day-wrap">
     <div class="express-of-the-day-item">
-        <p class="express-of-the-day-heading" ng-bind="item.Name"></p>
-        <div class="express-of-the-day-date-bonus">
-            <p class="express-of-the-day-date" ng-bind="item.ExpiresAt|formatDate:'full':null:$root.env.timeFormat"></p>
-            <p class="express-of-the-day-bonus" ng-if="item.BonusPercent">{{'Total Bonus' | translate}} {{item.BonusPercent}}%</p>
+        <div class="express-of-the-day-heading-bonus">
+            <p class="express-of-the-day-heading f-left" ng-bind="item.Name"></p>
+            <p class="express-of-the-day-bonus f-right" ng-if="item.BonusPercent">{{'Total Bonus' | translate}} {{item.BonusPercent}}%</p>
+        </div>
+        <div class="date-count-wrap float-width">
+            <p class="express-of-the-day-date f-left" ng-bind="item.ExpiresAt|formatDate:'full':null:$root.env.timeFormat"></p>
+            <p class="express-of-the-day-bet-count f-right" ng-if="$root.conf.expressOfDay.showBetCount">{{'Bet count' | translate}} {{item.BetCount}}</p>
         </div>
         <vbet-loader ng-show="loading"></vbet-loader>
         <ul ng-show="!loading" class="express-of-the-day-ul">
-            <li class="express-off-the-day-event-item" ng-repeat="bet in bets track by bet.event.id">
-                <div class="bet-event-teams-name-v3">
+            <li class="express-off-the-day-event-item" ng-repeat="bet in bets track by bet.event.id" ng-click="gotoBetGame(bet.game)">
+                <div class="bet-event-teams-name-v3" >
                     <div class="title-event-b-v3">
                         <div ng-if="bet.event.locked" class="betslip-event-icon-view blocked-icon-b-v3" title="Event Locked" trans></div>
                         <div class="express-of-the-day-flag-time">
                             <div class="flag-icon flag-{{::bet.game.regionAlias | removeUselessSymbolsByRegexp: '[,\' ]+': 'g': 'true'}}"></div>
                             <div class="sport-icon-v3 {{bet.game.sportAlias}}"></div>
-                            <p class="express-of-the-day-time"
+                            <p class="express-of-the-day-time f-left"
                                ng-bind="bet.game.startTime|formatDate:'hour':null:$root.env.timeFormat"></p>
                         </div>
-                        <span ng-click="gotoBetGame(bet.game)">{{bet.game.team1Name + (bet.game.team2Name ? (' - ' + bet.game.team2Name) : '')}}</span>
+                        <span >{{bet.game.team1Name + (bet.game.team2Name ? (' - ' + bet.game.team2Name) : '')}}</span>
                     </div>
                 </div>
                 <div class="single-event-info-view-v3">
@@ -26,26 +29,23 @@
                         <li>
                             <p>
                                 <span ng-bind="bet.event.name"></span>
+                                <span ng-if="bet.event.base" ng-bind="'(' +(bet.event.base|handicapBaseFormat:$root.conf.sportsLayout==='asian':false:($root.conf.asian.hideHandicapSignsInOverview && bet.market.displayKey === 'HANDICAP'):bet.market.homeScore:bet.market.awayScore:bet.event.type1) + ')'"></span>
                             </p>
                             <div class="bet-price-view-b-v3">
                                 <span class="bet-price-v3" ng-if="bet.event.sp_enabled" trans>SP</span>
-                                <span class="bet-price-v3"
+                                <span class="bet-price-v3 p-v {{bet.event.price_change == null? '' : ({true: 'up-', false: 'down'}[bet.event.price_change > 0] + (bet.event.price_change % 2)) }}"
                                       ng-if="!bet.event.sp_enabled"
                                       ng-bind="bet.event.price|oddConvert:$root.env.oddFormat:null:bet.market.displayKey"></span>
-                                <span class="bet-price-change-v3"
-                                      ng-if="!bet.event.sp_enabled"
-                                      ng-show="bet.event.price !== initialPriceMap[bet.event.id]"
-                                      ng-bind="initialPriceMap[bet.event.id]|oddConvert:$root.env.oddFormat:null:bet.market.displayKey"></span>
+
                             </div>
                         </li>
                     </ul>
                 </div>
             </li>
         </ul>
-
-
-
-
+        <div class="express-of-the-day-load" ng-if="allBets.length > maximumVisibleItems">
+            <button ng-click="toggleBets()" ng-class="{'closed': bets.length === maximumVisibleItems}" ng-bind="bets.length === maximumVisibleItems? ('+' + (allBets.length - bets.length)): ''"></button>
+        </div>
     </div>
     <div class="batslip-contain-fixed-v3">
         <div class="any-info-betslip-contain-v3">
@@ -103,7 +103,7 @@
                         <p>
                             <i><span trans="">Bonus percentage</span>:</i>
                         </p>
-                        <span><b ng-bind="item.BonusPercent"></b></span>
+                        <span><b ng-bind="item.BonusPercent + ' %'"></b></span>
                     </div>
                     <div class="bet-win-view-v3 acc-bonus-v3" ng-if="bonus">
                         <p><i><span trans="">Accumulator Bonus</span>:</i></p>
@@ -184,7 +184,7 @@
                     </li>
                 </ul>
             </div>
-            <ul >
+            <ul>
                 <li>
                     <div class="button-view-contain-v3">
                         <div class="button-info-text-view-v3" ng-show="$root.env.authorized && !stake">

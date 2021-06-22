@@ -10,6 +10,7 @@ VBET5.service('Utils', ['$rootScope', '$timeout', '$filter', '$location', '$rout
     'use strict';
     var Utils = {};
     var bodyWrapperClasses = {};
+    var previouseRequests = [];
 
     /**
      * @ngdoc method
@@ -1167,11 +1168,11 @@ VBET5.service('Utils', ['$rootScope', '$timeout', '$filter', '$location', '$rout
                 {
                     action: 'open_game',
                     data: {
-                        'type': game.type,
-                        'sport': game.sport.id,
-                        'region': game.region.id,
-                        'competition': game.competition.id,
-                        'game': game.id
+                        'type': game.type===1? 1: 0,
+                        'sportId': game.sport.id,
+                        'regionId': game.region.id,
+                        'competitionId': game.competition.id,
+                        'gameId': game.id
                     }
                 },
                 '*'
@@ -1566,21 +1567,20 @@ VBET5.service('Utils', ['$rootScope', '$timeout', '$filter', '$location', '$rout
      * @description Formats SWARM response so that we can add events to the betslip
      */
     Utils.formatEventData = function formatEventData(data) {
-        var formattedData = [],
-            bet;
+        var formattedData = [];
 
         angular.forEach(data.sport, function(sport) {
             angular.forEach(sport.region, function (region) {
                 angular.forEach(region.competition, function (competition) {
                     angular.forEach(competition.game, function (game) {
-                        bet = {};
-                        bet.gameInfo = game;
-                        bet.gameInfo.competition = competition;
-                        bet.gameInfo.region = region;
-                        bet.gameInfo.sport = sport;
-                        bet.gameInfo.title = game.team1_name + (game.team2_name ? ' - ' + game.team2_name : '');
-
+                        var gameInfo = game;
+                        gameInfo.competition = competition;
+                        gameInfo.region = region;
+                        gameInfo.sport = sport;
+                        gameInfo.title = game.team1_name + (game.team2_name ? ' - ' + game.team2_name : '');
                         angular.forEach(game.market, function(market) {
+                            var bet = {};
+                            bet.gameInfo = gameInfo;
                             bet.marketInfo = market;
                             bet.marketInfo.name = $filter('improveName')(market.name, game);
 
@@ -2138,6 +2138,55 @@ VBET5.service('Utils', ['$rootScope', '$timeout', '$filter', '$location', '$rout
 
     Utils.getSpriteUrl = function getSpriteUrl(Config, WPConfig) {
         return (Config.main.cmsDataDomain ||  WPConfig.wpUrl.split("/json")[0]) +  Config.main.footer.imageInsteadPayments + "?v=" + Config.releaseDate;
+    };
+
+    var SLUG_RE = /\s|&|%\//g;
+    Utils.generateSlugFromName = function generateSlugFromName(name)  {
+        return name.toLowerCase().replace(SLUG_RE, "-");
+    };
+
+    Utils.addPrematchExpressId = function addPrematchExpressId(request) {
+        var jsonRequestWhat = JSON.stringify(request.what);
+        if (!$rootScope.partnerConfig || $rootScope.partnerConfig._not_loaded || $rootScope.partnerConfig.prematch_multiple_disabled === false || previouseRequests.indexOf(jsonRequestWhat) > -1) {
+            request.what.market.push('prematch_express_id');
+        }
+        if (!$rootScope.partnerConfig  || $rootScope.partnerConfig._not_loaded) {
+            previouseRequests.push(jsonRequestWhat);
+        }
+        return request;
+    };
+
+    Utils.calculateExpressId = function calculateExpressId(market, type) {
+        if (type !== 1  &&
+            $rootScope.partnerConfig.prematch_multiple_disabled === false &&
+            market.prematch_express_id !== undefined
+        ) {
+            return market.prematch_express_id;
+        }
+        return market.express_id;
+    };
+
+    Utils.validateRecaptchaBeforeAction = function validateRecaptchaBeforeAction(RecaptchaService, actionName, getToken) {
+        var promiseHandler = $q.defer();
+        if (Config.main.validateRecaptchaBeforeAction) {
+            RecaptchaService.execute(actionName, { debounce: false, check:getToken }).then(function (response) {
+                if (getToken) {
+                    promiseHandler.resolve(response);
+                } else if (response && response.data && response.data.code === 0) {
+                    promiseHandler.resolve(true);
+                } else {
+                    promiseHandler.resolve(false);
+                    throw new Error(response);
+                }
+            }, function (reject) {
+                promiseHandler.resolve(false);
+
+                throw new Error(reject);
+            });
+        } else {
+            promiseHandler.resolve(false);
+        }
+        return promiseHandler.promise;
     };
 
     return Utils;

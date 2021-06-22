@@ -96,9 +96,9 @@
 
                         <div class="payments-tab">
                         	<ul>
-                            	<li ng-class="{'active': selectedPaymentsType === 'deposit'}" ng-click="selectedPaymentsType = 'deposit'" trans>Deposit</li>
-                                <li ng-class="{'active': selectedPaymentsType === 'withdraw'}" ng-click="selectedPaymentsType = 'withdraw'" trans>Withdraw</li>
-                                <li ng-show="$root.conf.showBetshopsInFaq" ng-class="{'active': selectedPaymentsType === 'betshop'}" ng-click="selectedPaymentsType = 'betshop'" trans>Betshop</li>
+                            	<li ng-class="{'active': selectedPaymentsType === 'deposit'}" ng-click="selectPaymentType('deposit')" trans>Deposit</li>
+                                <li ng-class="{'active': selectedPaymentsType === 'withdraw'}" ng-click="selectPaymentType('withdraw')" trans>Withdraw</li>
+                                <li ng-show="$root.conf.showBetshopsInFaq" ng-class="{'active': selectedPaymentsType === 'betshop'}" ng-click="selectPaymentType('betshop')" trans>Betshop</li>
                             </ul>
                         </div>
 
@@ -116,7 +116,7 @@
                                       </tr>
                                     </tbody>
 
-                                    <tbody ng-repeat="system in paymentSystems | faqPayment:selectedPaymentsType:currencyHolder.selectedCurrency " ng-show="selectedPaymentsType == 'deposit' ? system.canDeposit : system.canWithdraw">
+                                    <tbody ng-repeat="system in paymentSystems | faqPayment:selectedPaymentsType:currencyHolder.selectedCurrency | orderBy:'order' " ng-show="selectedPaymentsType == 'deposit' ? system.canDeposit : system.canWithdraw">
                                       <tr ng-class="{'open-info': system.infoBlockExpanded}">
                                         <td ng-click="system.infoBlockExpanded = !system.infoBlockExpanded">
                                             <div class="payment-content-block" ng-hide="system.image">

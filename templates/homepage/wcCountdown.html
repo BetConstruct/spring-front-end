@@ -1,16 +1,14 @@
 <div class="countdown-block-b" ng-controller="homepageCountdown" ng-show="isLoading || (banners && banners.length)" >
     <vbet-loader ng-if="isLoading"></vbet-loader>
-    <div class="champions-date-count" ng-repeat="banner in banners track by $index"  ng-if="!isLoading && banner.custom_fields.event_start_date && banner.custom_fields.event_start_date[0]" style="background-image:url({{banner.imageurl || ''}})">
-        <div class="championship-logo-a" ng-if="banner.link">
-            <p style="background-image: url({{banner.link}})"></p>
-        </div>
+    <div class="champions-date-count" ng-repeat="banner in banners track by $index"   ng-if="!isLoading && banner.custom_fields.event_start_date && banner.custom_fields.event_start_date[0]" ng-style="{'background-image': 'url('+ (banner.imageurl || '') + ')'}">
+        <a class="championship-link" ng-if="banner.link" ng-href="{{banner.link}}" target="{{banner.linktarget}}"></a>
         <div class="championship-team-name">
             <p ng-bind="banner.title"></p>
             <div ng-if="banner.custom_fields.play_now && banner.custom_fields.play_now[0]" class="play-now-ch">
                 <a href="{{banner.custom_fields.play_now[0]}}" trans>Play Now</a>
             </div>
         </div>
-        <div class="championship-time-count" countdown="{{banner.custom_fields.event_start_date[0]}}">
+        <div class="championship-time-count" countdown="{{banner.custom_fields.event_start_date[0]}}" ng-class="{'count-down-expired' : (banner.custom_fields.event_start_date[0] - now) <= 0}">
             <p><span ng-bind="countdown.days"></span><i trans>Days</i></p>
             <p><span ng-bind="countdown.hours"></span><i trans>Hours</i></p>
             <p><span ng-bind="countdown.minutes"></span><i trans>Minutes</i></p>

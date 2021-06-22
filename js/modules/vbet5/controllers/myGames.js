@@ -189,6 +189,8 @@ VBET5.controller('myGamesCtrl', ['$scope', '$rootScope', '$location', '$route', 
         if (!Config.main.hideMarketFromLeftMenu) {
             request.what.game = [request.what.game]; // outer join for games that don't have P1XP2 or P1P2
             request.what.market = ['base', 'type', 'name', 'express_id', 'id'];
+            Utils.addPrematchExpressId(request);
+
             request.what.event = [];
             request.where.market = {
                 display_key: 'WINNER',
@@ -277,9 +279,10 @@ VBET5.controller('myGamesCtrl', ['$scope', '$rootScope', '$location', '$route', 
      * @methodOf vbet5.controller:myGamesCtrl
      * @description removes game from "my games" and updates scope and local storage
      *
-     * @param {Object} game game object
+     * @param {Object} data game object
+     * @param {Boolean} skipAnalytics
      */
-    $scope.removeGameFromSaved = function removeGameFromSaved(data) {
+    $scope.removeGameFromSaved = function removeGameFromSaved(data, skipAnalytics) {
         console.log('game.addToMyGames', '$rootScope.myGames', $rootScope.myGames);
         if (!$scope.myGamesloaded) {
             return;
@@ -316,12 +319,15 @@ VBET5.controller('myGamesCtrl', ['$scope', '$rootScope', '$location', '$route', 
             removeGame(data);
         }
 
-        analytics.gaSend('send', 'event', 'explorer', 'removeFromMyGames' + (Config.main.sportsLayout),  {'page': $location.path(), 'eventLabel': "removeFromMyGames"});
-        console.log('gaSend-','removeFromMyGames');
+        if (!skipAnalytics) {
+            analytics.gaSend('send', 'event', 'explorer', 'removeFromMyGames' + (Config.main.sportsLayout), {'page': $location.path(),'eventLabel': "removeFromMyGames"});
+            console.log('gaSend-', 'removeFromMyGames');
+        }
     };
 
     $scope.removeAllGamesFromSaved = function removeAllGamesFromSaved() {
-        $scope.removeGameFromSaved($rootScope.leftMenuFavorites);
+        $scope.removeGameFromSaved($rootScope.leftMenuFavorites, true);
+        analytics.gaSend('send', 'event', 'explorer', 'removeAllGamesFromSaved' + (Config.main.sportsLayout), {'page': $location.path(),'eventLabel': "removeAllGamesFromSaved"});
     };
 
     /**

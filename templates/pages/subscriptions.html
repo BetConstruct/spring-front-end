@@ -2,7 +2,7 @@
     <div class="wrapper-sub">
         <div class="header-sub">
             <a href="#/">
-                <img src="skins/{{$root.conf.skin}}/images/logo.png" alt="">
+                <img ng-src="{{(conf.logo.image ? conf.logo.image : 'skins/' + conf.skin + '/images/logo.png') + '?v=' + env.appVersion}}" alt="">
             </a>
         </div>
         <div class="content-sub">

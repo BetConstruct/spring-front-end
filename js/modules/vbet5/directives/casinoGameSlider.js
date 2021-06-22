@@ -12,6 +12,7 @@ VBET5.directive('casinoGameSlider', ['$interval', '$window', '$location', 'Confi
         templateUrl: 'templates/directive/casino-game-slider.html',
         scope: {
             productSlides: '=',
+            jackpotSource: '=',
             pageName: '@'
         },
         link: function (scope) {
@@ -75,8 +76,17 @@ VBET5.directive('casinoGameSlider', ['$interval', '$window', '$location', 'Confi
                     var locationChangePromise = scope.$on('$locationChangeSuccess', function () {
                         locationChangePromise();
                         var searchParams = $location.search();
-                        if (searchParams.game !== undefined) {
-                            scope.$emit('casinoGamesList.openGame', {gameId: searchParams.game, playMode: searchParams.type, studio: searchParams.studio});
+                        if (searchParams.game !== undefined || searchParams.provider !== undefined) {
+                            var data = {};
+                            if (searchParams.game) {
+                                data.gameId = searchParams.game;
+                                data.playMode = searchParams.type;
+                                data.studio = searchParams.studio;
+                            }
+                            if (searchParams.provider) {
+                                data.provider = searchParams.provider;
+                            }
+                            scope.$emit('casinoGamesList.openGame', data);
                         }
                     });
                 }

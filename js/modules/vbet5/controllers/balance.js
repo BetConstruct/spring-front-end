@@ -10,33 +10,26 @@ VBET5.controller('balanceCtrl', ['$rootScope', '$scope', 'Utils', 'Zergling', 'M
 
     var balanceHistory, ITEMS_PER_PAGE = Config.main.balanceHistoryDefaultItemsCount || 10;
 
-    var balanceTypesFilter = {};
-
     $scope.balanceHistoryLoaded = false;
+    $scope.balanceHistoryTypesLoaded = false;
 
-    $scope.balanceTypes = Config.main.betBalanceHistoryTypes;
-
-    $scope.casinoBalanceTypes = {
-        0: Translator.get('Bet'),
-        1: Translator.get('Win'),
-        2: Translator.get('Correction'),
-        3: Translator.get('Deposit'),
-        4: Translator.get('Withdraw'),
-        5: Translator.get('Tip'),
-        6: Translator.get('Bonus')
-    };
+    $scope.balanceTypes = {'-1': Translator.get('All')};
 
     $scope.balanceHistoryParams = {
         dateRanges: [],
         dateRange: null,
-        balanceTypes: balanceTypesFilter,
+        balanceTypes: $scope.balanceTypes,
         balanceType: '-1'
     };
 
-    (function init () {
-        angular.forEach($scope.balanceTypes, function (value, key) {
-            $scope.balanceTypes[key] = Translator.translationExists('BalanceHistory ' + value) ? Translator.get('BalanceHistory ' + value) : Translator.get(value);
-            balanceTypesFilter[key] = $scope.balanceTypes[key];
+    (function getBalanceHistoryTypes() {
+        Zergling.get({"filter_id": 1}, "get_partner_document_types").then(function (response) {
+            if (response.details && response.details.length)
+                angular.forEach(response.details, function (value) {
+                    $scope.balanceTypes[value.DocumentTypeId] = Translator.get(value.DocumentTypeName);
+                });
+        })['finally'](function () {
+            $scope.balanceHistoryTypesLoaded = true;
         });
     })();
 
@@ -114,21 +107,20 @@ VBET5.controller('balanceCtrl', ['$rootScope', '$scope', 'Utils', 'Zergling', 'M
         if (product) {
             request.product = product;
         }
-        Zergling.get(request, 'balance_history')
+        Zergling.get(request, 'balance_history_v2')
             .then(
                 function (response) {
-                    if (response.history) {
+                    if (response.details) {
                         var i, length;
 
-                        balanceHistory = response.history;
+                        balanceHistory = response.details;
 
                         for (i = 0, length = balanceHistory.length; i < length; i += 1) {
-                            balanceHistory[i].amount = parseFloat(balanceHistory[i].amount);
-                            balanceHistory[i].bonus = parseFloat(balanceHistory[i].bonus);
-                            balanceHistory[i].name = $scope.balanceTypes[balanceHistory[i].operation] || Translator.get(balanceHistory[i].operation_name);
+                            balanceHistory[i].Amount = parseFloat(balanceHistory[i].Amount);
+                            balanceHistory[i].DocumentTypeName = Translator.get(balanceHistory[i].DocumentTypeName);
 
-                            if (balanceHistory[i].payment_system_name) {
-                                balanceHistory[i].name += ' (' + Translator.get(balanceHistory[i].payment_system_name) + ')';
+                            if (balanceHistory[i].PaymentSystemName) {
+                                balanceHistory[i].DocumentTypeName += ' (' + Translator.get(balanceHistory[i].PaymentSystemName) + ')';
                             }
                         }
 

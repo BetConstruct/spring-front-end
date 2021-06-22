@@ -64,5 +64,8 @@
 <div ng-show="(game.video_id && !isVideoDetached) || game.has_animation" ng-class="{'hide-animation-ie8': !game.video_id || isVideoDetached}">
     <div class="right-block-flash right-block-flash-basketball">
         <include-template template-path="templates/sport/open/player.html"></include-template>
+        <div class="multilive-visualisation" ng-class="{'statistic': $root.conf.kievAnimationSettings.statistic}" ng-if="game.activeFieldType === 'field' && $root.conf.customAnimationURL && $root.conf.sportsWithAnimations[game.sport.alias] === 'kiev'">
+            <kiev-animation team1="game.team1_name" team2="game.team2_name" id="game.id" sound="$root.env.sound>0"></kiev-animation>
+        </div>
     </div>
 </div>

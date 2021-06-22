@@ -7,7 +7,7 @@
         <div class="upcoming-games-filter-v3">
             <div class="time-filter-v3 " ng-click="openTimeFilter = !openTimeFilter"
                  ng-class="{'active': openTimeFilter}">
-                <p><span>{{'In ' + minutesFilter + ' Min'|translate}}</span> <i class="arrow-rotate-filter-v3"></i></p>
+                <p><span ng-bind="'In ' + minutesFilter + ' Min'|translate"></span> <i class="arrow-rotate-filter-v3"></i></p>
                 <div class="sub-nav-filter-time-v3">
                     <ul>
                         <li ng-repeat="minute in $root.conf.homePageLastMinuteBets.timeOptions track by $index"
@@ -81,7 +81,7 @@
                                             <div class="arrow-icon-b-v3"></div>
                                         </div>
                                     </div>
-                                    <div class="l-b column-{{sportP1P2Alias.indexOf(sport.alias) > -1 ? 2 : 3}}" ng-class="{'two-odds': sportP1P2Alias.indexOf(sport.alias) > -1 }">
+                                    <div class="l-b column-{{sport.hasXEvent ? 3 : 2}}" ng-class="{'two-odds': !sport.hasXEvent }">
                                         <div class="single-events-b-v3 {{((game.events.P1.price | oddConvert:'decimal') == 1 || game.is_blocked) ? 'blocked' : ''}}"
                                              ng-click="bet(game.events.P1, game); $event.stopPropagation();" title="{{game.team1_name}}"
                                              ng-class="{'active': isEventInBetSlip(game.events.P1), 'blocked': ((game.events.P1.price | oddConvert:'decimal') == 1 || game.is_blocked)}">
@@ -89,7 +89,7 @@
                                             <b class="p-v {{game.events.P1.price_change == null? '' : ({true: 'up-', false: 'down'}[game.events.P1.price_change > 0] + (game.events.P1.price_change % 2)) }}">{{game.events.P1.price | oddConvert:$root.env.oddFormat:null:'WINNER'}}</b>
                                         </div>
                                         <div class="single-events-b-v3 {{((game.events.X.price | oddConvert:'decimal') == 1 || game.is_blocked) ? 'blocked' : ''}}"
-                                             ng-hide="sportP1P2Alias.indexOf(sport.alias) > -1"
+                                             ng-show="sport.hasXEvent"
                                              ng-click="bet(game.events.X, game); $event.stopPropagation();" title="{{game.events.X.name}}"
                                              ng-class="{'active': isEventInBetSlip(game.events.X), 'blocked': ((game.events.X.price | oddConvert:'decimal') == 1 || game.is_blocked)}">
                                             <i ng-if="$root.conf.boostedBets.enabled && $root.boostedBetsEventIds && $root.boostedBetsEventIds[game.events.X.id]" title="{{'Boosted odd'|translate}}" class="boosted"></i>

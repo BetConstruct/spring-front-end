@@ -1,5 +1,4 @@
 <div class="hourse-popup" ng-controller="forecastAndTricastBetslipCtrl">
-    <h2 trans>Betslip</h2>
     <div class="betslip-info-content" ng-show="!done">
         <h6 trans>Your Selections</h6>
         <div class="box-betslip-p">
@@ -36,9 +35,9 @@
             <p ng-if="errorMessage" ng-bind="errorMessage" class="error-msg"></p>
             <div class="button-confirm">
                 <vbet-loader class="md-progress-circular small-progress" ng-show="loading"></vbet-loader>
-                <button ng-disabled="loading || !stake || (stake*combinationCount) < $root.partnerConfig.min_bet_stakes[$root.profile.currency_name] || (stake*combinationCount)  > $root.profile.totalBalance" ng-click="loginAndPlaceBet()">{{(!$root.env.authorized? 'Login and place bet': 'Place Bet')|translate}}</button>
+                <button class="brand-color-1" ng-disabled="loading || !stake || (stake*combinationCount) < $root.partnerConfig.min_bet_stakes[$root.profile.currency_name] || (stake*combinationCount)  > $root.profile.totalBalance" ng-click="loginAndPlaceBet()">{{(!$root.env.authorized? 'Login and place bet': 'Place Bet')|translate}}</button>
+                <p ng-if="$root.env.authorized && !stake" class="horse-popup-notification-warning" trans>Please enter stake amount</p>
             </div>
-            <p ng-if="!stake" class="bet-notification-warning" trans>Please enter stake amount</p>
         </div>
     </div>
     <div class="gift-bet-success" ng-if="done">

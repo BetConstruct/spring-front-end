@@ -25,7 +25,6 @@ angular.module('vbet5.betting').controller('classicViewCenterController', ['$roo
 
     var hoveredLiveGameFullData;
     $scope.visibleSetsNumber = 5; // number of sets to be visible for multiset games
-    $scope.isEventInBetSlip = GameInfo.isEventInBetSlip;
     $scope.GamesWithStatsBlock = GameInfo.GamesWithStatsBlock;
 
     $scope.marketsInOneColumn = {
@@ -33,6 +32,7 @@ angular.module('vbet5.betting').controller('classicViewCenterController', ['$roo
     };
     $scope.customTemplateForSport = {
         '31': 'templates/sport/classic/racing/main.html',
+        '184': 'templates/sport/classic/racing/main.html',
         '-17': 'templates/sport/expressOfDay/main.html'
     };
     var initial = !!$location.search().game;
@@ -124,6 +124,7 @@ angular.module('vbet5.betting').controller('classicViewCenterController', ['$roo
         if (Utils.isObjectEmpty(data.sport) && openGameId) {
             $rootScope.$broadcast('liveGame.gameRemoved', openGameId);
             $scope.openGameFinished = true;
+            $scope.openGame = null;
             $rootScope.$broadcast('sportsbook.gameFinished');
         } else {
             $scope.openGameFinished = false;
@@ -150,9 +151,9 @@ angular.module('vbet5.betting').controller('classicViewCenterController', ['$roo
                             show_type: game.show_type,
                             tv_info: game.tv_info,
                             add_info_name: game.add_info_name,
-                            selectedMarketGroupId: $scope.openGame.selectedMarketGroupId, //store previously selected id
-                            video_data: $scope.openGame.video_data, //store previously calculated data
-                            activeFieldType: $scope.openGame.activeFieldType // store previously calculated data
+                            selectedMarketGroupId: $scope.openGame && $scope.openGame.selectedMarketGroupId, //store previously selected id
+                            video_data:  $scope.openGame && $scope.openGame.video_data, //store previously calculated data
+                            activeFieldType:  $scope.openGame && $scope.openGame.activeFieldType // store previously calculated data
                         };
 
                         if(Config.main.showPlayerRegion) {
@@ -196,7 +197,7 @@ angular.module('vbet5.betting').controller('classicViewCenterController', ['$roo
 
                         streamService.monitoring($scope, 'openGame', 'pinnedGames', 'enlargedGame');
 
-                        var marketsData = MarketService.getMarketsAndGroups(game.id, game.market, game.team1_name, game.team2_name, sport.alias, game.is_stat_available);
+                        var marketsData = MarketService.getMarketsAndGroups(game.id, game.market, game.team1_name, game.team2_name, sport.alias, game.is_stat_available, game.type);
 
                         $scope.openGame.markets = marketsData.markets;
                         $scope.openGame.availableMarketGroups = marketsData.marketGroups;
@@ -247,6 +248,7 @@ angular.module('vbet5.betting').controller('classicViewCenterController', ['$roo
 
         $scope.currentGameIsFinished = false;
         $scope.selectedMarketTab = {};
+        $scope.marketsStatisticsState = {};
         openGameId = game.id;
         $scope.$broadcast('game.selected', openGameId);
 
@@ -296,6 +298,8 @@ angular.module('vbet5.betting').controller('classicViewCenterController', ['$roo
                 },
                 'where': {'game': {'id': game.id}}
             };
+            Utils.addPrematchExpressId(request);
+
             if (initial) {
                 initial = false;
             }
@@ -454,59 +458,6 @@ angular.module('vbet5.betting').controller('classicViewCenterController', ['$roo
     if (Storage.get('LiveGamePin')) {
         $rootScope.env.isLiveGamePinned = Storage.get('LiveGamePin');
     }
-
-    //initial values for ordering of horse_cards
-    $scope.raceCardsReverce = false;
-    $scope.raceCardsPredicate = 'cloth';
-    $scope.raceCardsPredicateDog = 'order';
-
-    /**
-     * @ngdoc method
-     * @name raceCardsColumnClick
-     * @methodOf vbet5.controller:classicViewCenterController
-     * @description changes data that  used for ordering raceCards elements
-     *
-     * @param {String} orderItem orderItem string: value of predicate
-     */
-    $scope.raceCardsColumnClick = function raceCardsColumnClick(orderItem) {
-        if (orderItem === 'price'
-            && $scope.openGame.info.race
-            && !$scope.openGame.info.race.raceStats[0].event.price) {
-            return;
-        }
-        if ($scope.raceCardsPredicate === orderItem || ($scope.openGame.sport.alias === 'SISGreyhound' && $scope.raceCardsPredicateDog === orderItem)) {
-            $scope.raceCardsReverce = !$scope.raceCardsReverce;
-        } else {
-            $scope.raceCardsReverce = false;
-            $scope.raceCardsPredicate = orderItem;
-            $scope.raceCardsPredicateDog = orderItem;
-        }
-    };
-
-    /**
-     * @ngdoc method
-     * @name raceCardsOrder
-     * @methodOf vbet5.controller:classicViewCenterController
-     * @description to be used by the comparator to determine the order of  raceCards elements
-     *
-     * @param {Object} state object
-     */
-    $scope.raceCardsOrder = function raceCardsOrder(state) {
-        switch ($scope.raceCardsPredicate) {
-            case 'cloth':
-                return state.runnerNum;
-            case 'price':
-                return parseFloat(state.event.price);
-            case 'odds':
-                return parseFloat(state.price);
-            case 'order':
-                return parseFloat(state.order);
-            case 'none':
-                return 0;
-        }
-
-        return -1;
-    };
 
     /**
      * @ngdoc method

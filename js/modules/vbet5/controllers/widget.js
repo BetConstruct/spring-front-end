@@ -177,7 +177,8 @@ VBET5.controller('widgetCtrl', ['$rootScope', '$scope', 'TimeoutWrapper', '$wind
                 gameId: game.id,
                 competitionId: game.competition.id,
                 regionId: game.region.id,
-                sportId: game.sport.id
+                sportId: game.sport.id,
+                type: game.type === 1? 1: 0
             };
         } else {
             message.data = {gameId: $scope.activeSlideGame.id};
@@ -320,7 +321,20 @@ VBET5.controller('widgetCtrl', ['$rootScope', '$scope', 'TimeoutWrapper', '$wind
         if(!data) {
             return;
         }
-        $window.parent.postMessage({action: 'place_bet', data: data},'*');
+        var message ={
+            action: 'place_bet',
+            data: {
+                'event': data.event.id,
+                'market': data.market.id,
+                'type': data.game.type,
+                'sport': data.game.sport.id,
+                'region': data.game.region.id,
+                'competition': data.game.competition.id,
+                'game': data.game.id,
+                'start_ts': data.game.start_ts
+            }
+        };
+        $window.parent.postMessage(message,'*');
     });
 
     $scope.$on('$routeChangeStart', function() {

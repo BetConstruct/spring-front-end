@@ -1,0 +1,13 @@
+<div class="size-h-container" ng-controller="quizCtrl" ng-init="$root.footerMovable=true; addLoginWatcher($root.conf.customFramePage.authorized)">
+  <div class="container-p" ng-init="customPage = true;">
+    <div class="login-warning-popup" ng-if="!$root.env.authorized && $root.conf.customFramePage.authorized">
+      <div class="l-w-p-wrapper">
+        <div class="l-w-p-content">
+          <p trans>Please login to continue</p>
+          <button type="button" ng-click="$root.broadcast('openLoginForm')" trans>Sign in</button>
+        </div>
+      </div>
+    </div>
+    <iframe ng-if="$root.conf.customFramePage.url && ($root.env.authorized  || !$root.conf.customFramePage.authorized)"  ng-src="{{$root.conf.customFramePage.url|url}}" width="100%" height="100%" scrolling="yes" frameborder="0" allowfullscreen="" webkitallowfullscreen="" mozallowfullscreen=""></iframe>
+  </div>
+</div>

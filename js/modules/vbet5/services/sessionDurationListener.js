@@ -39,12 +39,15 @@ VBET5.service('sessionDurationListener', ['$rootScope', '$timeout', '$location',
        }, 1000);
        return state;
    }
-
-   this.listen = function listen(duration, initial) {
+   this.ignore = function ignore () {
        if (timeoutPromise) {
            $timeout.cancel(timeoutPromise);
            timeoutPromise = null;
        }
+   };
+
+   this.listen = function listen(duration, initial) {
+        this.ignore();
        if (initial) {
            this.startDate = new Date();
        }
@@ -74,5 +77,7 @@ VBET5.service('sessionDurationListener', ['$rootScope', '$timeout', '$location',
                ]
            });
        }, durationInMillisecond);
+
    };
+
 }]);

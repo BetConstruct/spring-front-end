@@ -7,13 +7,17 @@
          ng-init="bet.openEvents = true" ng-hide="openBets.loading || $root.editBet.loading">
         <p ng-click="bet.openEvents = !bet.openEvents">
             <span ng-class="{'EW-bh-indicator': bet.each_way}" ng-bind="betTypes[bet.type]|translate"></span>
+            <ng-include src="::'templates/livebox/betHistoryIcons.html'|fixPath"></ng-include>
             <span ng-if="bet.type === 3"> {{::bet.system_min_count}}/{{::bet.events.length}}</span>
             <i class="edit-bets-icon"
-               ng-show="!betConf.fullCoverBetTypes.enabled && bet.cash_out && (bet.type == 2 || bet.type == 1)  && !$root.editBet.edit"
+               ng-show="!betConf.fullCoverBetTypes.enabled && !bet.is_gift  && bet.cash_out && (bet.type == 2 || bet.type == 1)  && !$root.editBet.edit"
                ng-click="$event.stopPropagation(); editBet(bet);"
                title="{{ ('Editing functionality is available for this bet.') | translate }}">
             </i>
             <i class="refresh-icon cms-jcon-refresh" ng-show="$root.conf.enableBetFromBetHistory && (bet.type === 1 || bet.type == 2 || bet.type == 3 || bet.type == 4)" ng-click="$event.stopPropagation();addEvents(bet);" title="{{'Repeat Bet'|translate}}"></i>
+            <span class="gift-bet" ng-if="$root.conf.enableGiftBet && !bet.cashouts_history" ng-click="$event.stopPropagation()" title="{{bet.is_gift ? (('Gifted to'|translate) + ' ' + bet.gift_receiver_email): ('Gift'|translate)}}">
+                <i ng-click="$root.broadcast('showGiftPopup', bet)"  ng-class="{'disabled': bet.is_gift === true }"></i>
+            </span>
         </p>
         <div class="open-bets-time-id">
             <p ng-bind="bet.date_time|formatDate:'noLocaleTranslate':null:$root.env.timeFormat"></p>
@@ -23,7 +27,7 @@
             <ul ng-repeat="event in bet.events">
                 <li class="clock-status" ng-class="{'won': event.outcome == 3 , 'lost':event.outcome == 1 }">
                     <p ng-bind="event.game_start_date|formatDate:'noLocaleTranslate':null:$root.env.timeFormat"></p>
-                    <a class="bet-event-title" ng-click="gotoBetGame(matchInfo[event.game_id].gamePointer)">{{::event.game_name }}</a>
+                    <a class="bet-event-title" ng-click="gotoBetGame(matchInfo[event.game_id].gamePointer)"><span class="chain-order" ng-if="bet.showOrder" ng-bind="event.order + ' '"></span>{{::event.game_name }}</a>
                     <b class="open-bets-games-score" ng-bind="matchInfo[event.game_id].text_info"></b>
                     <div class="status-icon-open-bets" title="{{(event.outcome == 3 ? 'Won' : 'Unsettled')|translate}}"></div>
                 </li>
@@ -40,7 +44,7 @@
                 </li>
 
             </ul>
-            <div class="bet-accept-changes-b-v3" ng-show="bet.outcome == 0 && bet.cash_out !== undefined || bet.auto_cash_out_amount !== null">
+            <div class="bet-accept-changes-b-v3" ng-show="bet.outcome == 0 && !bet.is_gift && bet.cash_out !== undefined || bet.auto_cash_out_amount !== null">
                 <div class="button-view-contain-v3">
                     <div class="bs-cash-out-btn" ng-mouseover="autoCashoutRule.showInfo = true; getAutoCashOutDetails(bet.id, bet.auto_cash_out_amount)" ng-mouseleave="autoCashoutRule.showInfo = false">
                         <button class="open-bets-cashout-button"
@@ -67,9 +71,13 @@
                 <span trans>Stake:</span>
                 <span>{{::bet.remaining_stake | bankersRoundAndNumberCommas:$root.conf.balanceFractionSize}} {{$root.profile.currency_name|currency}}</span>
             </p>
-            <p class="total-poswin" ng-show="!taxOnStake.enabled">
-                <span trans>Possible win:</span>
-                <span ng-if="bet.possible_win !== -1">{{::bet.possible_win | bankersRoundAndNumberCommas:$root.conf.balanceFractionSize}} {{$root.profile.currency_name|currency}}</span>
+            <p class="total-poswin" ng-show="!taxOnStake.enabled && bet.bonus > 0">
+                <span trans>Bonus:</span>
+                <span>{{::bet.bonus | bankersRoundAndNumberCommas:$root.conf.balanceFractionSize}} {{$root.profile.currency_name|currency}}</span>
+            </p>
+            <p class="total-poswin" ng-show="!taxOnStake.enabled ">
+                <span>{{(bet.bonus > 0? 'Final Payout:': 'Possible win:')|translate}}</span>
+                <span ng-if="bet.possible_win !== -1">{{::bet.possible_win |roundPossibleWin:$root.conf.balanceFractionSize:bet.type}} {{$root.profile.currency_name|currency}}</span>
                 <span ng-if="bet.possible_win === -1" trans>N/A</span>
             </p>
         </div>

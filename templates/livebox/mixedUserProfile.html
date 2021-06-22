@@ -4,6 +4,7 @@
             <div class="first-level-history-tab">
                 <ul>
                     <li ng-click="$root.env.mixedSettingsPage='details'" ng-class="{'active': $root.env.mixedSettingsPage==='details'}" ng-init="loadUserInfo()"><span trans>Personal Details</span></li>
+                    <li ng-if="conf.profileCustomPage && conf.profileCustomPage.deepLinkPath" ng-show="conf.profileCustomPage" ng-click="$root.env.mixedSettingsPage=conf.profileCustomPage.deepLinkPath" ng-class="{'active': $root.env.mixedSettingsPage === conf.profileCustomPage.deepLinkPath}"><span ng-bind="conf.profileCustomPage.title|translate"></span></li>
                     <li ng-click="$root.env.mixedSettingsPage='changepassword'" ng-show="!$root.conf.disableChangePassword" ng-class="{'active': $root.env.mixedSettingsPage==='changepassword'}"><span trans>Change Password</span></li>
                     <li ng-show="$root.conf.profilePromoCodeUrl" ng-click="$root.env.mixedSettingsPage='promoCode'" ng-class="{'active': $root.env.mixedSettingsPage==='promoCode'}"><span trans>Promo code</span></li>
                     <li ng-show="($root.conf.enableAccountVerification || $root.conf.accountVerificationMessage)" ng-click="$root.env.mixedSettingsPage = 'verifyaccount'" ng-class="{'active': $root.env.mixedSettingsPage==='verifyaccount'}"><span  trans>Verify Account</span></li>
@@ -17,8 +18,9 @@
                     <li ng-show="$root.conf.enableCampaign" ng-click="$root.env.mixedSettingsPage='campaign'" ng-class="{'active': $root.env.mixedSettingsPage==='campaign'}"><span trans>Campaign</span></li>
                     <li ng-show="$root.conf.enableLoginHistory" ng-click="$root.env.mixedSettingsPage='loginHistory'" ng-class="{'active': $root.env.mixedSettingsPage === 'loginHistory'}"><span trans>Login History</span></li>
                     <li ng-show="$root.conf.enable12MonthsProfit" ng-click="$root.env.mixedSettingsPage='12MonthsProfit'" ng-class="{'active': $root.env.mixedSettingsPage === '12MonthsProfit'}"><span trans>12 Months Profit</span></li>
-                    <li ng-show="conf.friendReferral.enabled" ng-click="$root.env.mixedSettingsPage='friendReferral'" ng-class="{'active': $root.env.mixedSettingsPage === 'friendReferral'}"><span trans>Referral Friend & Cashback Bonus</span></li>
-                    <li ng-show="conf.enableTwoFactorAuthentication" ng-click="$root.env.mixedSettingsPage='twoFactorAuthentication'" ng-class="{'active': $root.env.mixedSettingsPage === 'twoFactorAuthentication'}"><span trans>Authentication</span></li>
+                    <li ng-show="$root.conf.friendReferral.enabled" ng-click="$root.env.mixedSettingsPage='friendReferral'" ng-class="{'active': $root.env.mixedSettingsPage === 'friendReferral'}"><span trans>Referral Friend & Cashback Bonus</span></li>
+                    <li ng-show="$root.conf.enableTwoFactorAuthentication" ng-click="$root.env.mixedSettingsPage='twoFactorAuthentication'" ng-class="{'active': $root.env.mixedSettingsPage === 'twoFactorAuthentication'}"><span trans>Authentication</span></li>
+                    <li ng-show="$root.conf.sessionDurationLimit" ng-click="$root.env.mixedSettingsPage='sessionDurationLimit'" ng-class="{'active': $root.env.mixedSettingsPage === 'sessionDurationLimit'}"><span trans>Session duration limit</span></li>
                 </ul>
             </div>
         </div>
@@ -98,7 +100,7 @@
                     <h3 trans>Personal Details</h3>
                     <vbet-loader class="page-center" ng-if="loadingInfo"></vbet-loader>
                     <div class="settings-info-contain" ng-if="!loadingInfo">
-                        <form name="forms.detailsForm" class="registration-form">
+                        <form name="forms.detailsForm" class="registration-form"   ng-class="{'open-preferences':showBlocks.preferences }">
                             <div class="personal-details-left">
                                 <ul>
                                     <li ng-if="personalDetails.readOnlyFields.indexOf('bonus_status') !== -1" ng-class="{'read-only': personalDetails.readOnlyFields.indexOf('bonus_status') !== -1}">
@@ -252,7 +254,7 @@
 
                                         <div class="b-date active-field birth-date-fields">
                                             <div class="tooltip-wrapper-j b-date">
-                                                <div class="select-block">
+                                                <div class="select-block"  ng-class="{'error': forms.detailsForm.birth_day.$invalid}">
                                                     <select name="birth_day" ng-change="calculateAge()" ng-required="personalDetails.requiredEditableFields.indexOf('birth_date') !== -1 && !details.birth_date"
                                                             ng-options="d for d in days"
                                                             day-selector
@@ -265,7 +267,7 @@
                                                         <option value="" disabled selected trans>Day</option>
                                                     </select>
                                                 </div>
-                                                <div class="select-block">
+                                                <div class="select-block"  ng-class="{'error': forms.detailsForm.birth_month.$invalid}">
                                                     <select name="birth_month" ng-change="calculateAge()" ng-required="personalDetails.requiredEditableFields.indexOf('birth_date') !== -1 && !details.birth_date"
                                                             ng-model="birthDate.month"
                                                             ng-disabled="personalDetails.disabledFields.indexOf('birth_date') !== -1"
@@ -274,7 +276,7 @@
                                                         <option ng-repeat="month in monthNames" value="{{month.val}}">{{month.name| translate}}</option>
                                                     </select>
                                                 </div>
-                                                <div class="select-block">
+                                                <div class="select-block" ng-class="{'error': forms.detailsForm.birth_year.$invalid}">
                                                     <select name="birth_year" ng-change="calculateAge()" ng-required="personalDetails.requiredEditableFields.indexOf('birth_date') !== -1 && !details.birth_date"
                                                             ng-model="birthDate.year"
                                                             ng-options="y for (y,y) in birthDate.years"
@@ -554,7 +556,7 @@
                                         <div class="active-field">
                                             <div class="form-text" ng-class="{'error': (!resetError['phone_number'] || forms.detailsForm['phone_number'].$touched) && forms.detailsForm['phone_number'].$invalid}">
                                                 <div class="tooltip-wrapper-j">
-                                                    <input name="phone_number" placeholder="Enter your phone number" trans prevent-input="[^\d]" ng-model="details.phone_number" ng-minlength="personalDetails.limits.phone_number !== undefined?personalDetails.limits.phone_number.minlength:''" ng-maxlength="personalDetails.limits.phone_number !== undefined?personalDetails.limits.phone_number.maxlength:''" title="{{personalDetails.disabledFields.indexOf('phone_number') !== -1 ? ('This field cannot be edited.'|translate) : ''}}" type="text" ng-required="personalDetails.requiredEditableFields.indexOf('phone_number') !== -1" ng-disabled="personalDetails.disabledFields.indexOf('phone_number') !== -1" ng-pattern="/^00[0-9]+$/">
+                                                    <input name="phone_number" placeholder="Enter your phone number" trans prevent-input="[^\d]" ng-model="details.phone_number" ng-minlength="personalDetails.limits.phone_number !== undefined?personalDetails.limits.phone_number.minlength:''" ng-maxlength="personalDetails.limits.phone_number !== undefined?personalDetails.limits.phone_number.maxlength:''" title="{{personalDetails.disabledFields.indexOf('phone_number') !== -1 ? ('This field cannot be edited.'|translate) : ''}}" type="text" ng-required="personalDetails.requiredEditableFields.indexOf('phone_number') !== -1" ng-disabled="personalDetails.disabledFields.indexOf('phone_number') !== -1" ng-pattern="personalDetails.editableFields.indexOf('phone_number') !== -1 && patterns.phoneNumber">
 
                                                     <div class="form-error-icon-j"  ng-click="resetFieldError('phone_number')" ng-show="personalDetails.disabledFields.indexOf('phone_number') === -1"></div>
                                                     <div class="tooltip-j"  ng-click="resetFieldError('phone_number')" ng-show="personalDetails.disabledFields.indexOf('phone_number') === -1">
@@ -709,7 +711,9 @@
                             </div>
                         </div>
                     </form>
-                </div>
+                        <ng-include src="'templates/livebox/profileCustomComponent.html'|fixPath" ></ng-include>
+
+                    </div>
                 <!--Change Password END-->
             </div>
                 <ng-include src="::'templates/livebox/mixedDepositLimits.html'|fixPath"></ng-include>
@@ -726,6 +730,8 @@
                 <ng-include ng-if="$root.env.mixedSettingsPage==='friendReferral'" src="::'templates/livebox/friendReferral.html'|fixPath"></ng-include>
                 <ng-include ng-if="$root.env.mixedSettingsPage==='12MonthsProfit'" src="::'templates/livebox/12MonthsProfit.html'|fixPath"></ng-include>
                 <ng-include ng-if="$root.env.mixedSettingsPage==='twoFactorAuthentication'" src="::'templates/livebox/mixedAuthentication.html'|fixPath"></ng-include>
+                <ng-include ng-if="$root.env.mixedSettingsPage==='sessionDurationLimit'" src="::'templates/livebox/mixedSessionDurationLimit.html'|fixPath"></ng-include>
+                <ng-include ng-if="conf.profileCustomPage && conf.profileCustomPage.deepLinkPath && $root.env.mixedSettingsPage===conf.profileCustomPage.deepLinkPath" src="::'templates/custom-page/main.html'|fixPath"></ng-include>
             </div>
         </div>
     </div>

@@ -48,9 +48,9 @@ angular.module('vbet5.betting').controller('classicViewRacingHomepageCtrl', ['$r
 
             };
             $scope.bannersLoading = true;
+            $scope.banners = [];
             content.getWidget(bannersSlugMap[$scope.data.sportId]).then(function (response) {
                 if (response.data && response.data.widgets && response.data.widgets[0]) {
-                    $scope.banners = [];
                     angular.forEach(response.data.widgets, function (widget) {
                         $scope.banners.push(widget.instance);
                     });
@@ -228,7 +228,20 @@ angular.module('vbet5.betting').controller('classicViewRacingHomepageCtrl', ['$r
             $scope.toggleRegion(regionId, true);
         });
 
-        $scope.$on("reloadHomePage",  init);
+        $scope.$on("reloadHomePage",  function () {
+            angular.forEach($scope.regionMap, function (item) {
+                if (item.competitionSubId) {
+                    connectionService.unsubscribe(item.competitionSubId);
+                    item.competitionSubId = null;
+                }
+                if (item.datesSubId) {
+                    connectionService.unsubscribe(item.datesSubId);
+                    item.datesSubId = null;
+                }
+            });
+            init();
+
+        });
 
 
     }

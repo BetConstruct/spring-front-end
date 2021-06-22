@@ -9,19 +9,27 @@ CASINO.directive('casinoPromotedGames', ['$rootScope', '$filter', 'CConfig', 'ca
             limit: '=',
             pageCategory: '@',
             gamesCategory: '=',
-            gamesProvider: '='
+            gamesProvider: '=',
+            smallItem: '='
         },
         link: function (scope) {
             scope.confData = CConfig;
-            scope.limit = scope.limit || 10;
-            scope.pageCategory = scope.pageCategory || 'home';
+            scope.jackpotGames = !scope.smallItem;
+            var limit = scope.limit || (scope.jackpotGames ? 10 : 12);
+            var pageCategory = scope.pageCategory || 'home';
             scope.useBigIcons = true;
-            scope.jackpotGames = true;
 
             var countryCode;
 
             function getGames() {
-                casinoData.getGames(scope.gamesCategory || null, scope.gamesProvider || null, countryCode, 0, scope.limit, null, null, null, null, (scope.gamesCategory || scope.gamesProvider) ? null : '&show_for=' + scope.pageCategory).then(function (response) {
+                casinoData.getGames({
+                    category: scope.gamesCategory,
+                    provider: scope.gamesProvider,
+                    country: countryCode,
+                    offset: 0,
+                    limit: limit,
+                    additionalParams: (scope.gamesCategory || scope.gamesProvider) ? '' : '&show_for=' + pageCategory
+                }).then(function (response) {
                     if (response && response.data && response.data.status !== -1) {
                         scope.gamesList = response.data.games;
                     }

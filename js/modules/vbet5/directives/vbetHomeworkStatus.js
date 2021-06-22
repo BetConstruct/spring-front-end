@@ -24,7 +24,7 @@ VBET5.directive('vbetHomeworkStatus', ['HomeworkService', function (HomeworkServ
 
             scope.$on("$destroy", function() {
                 HomeworkService.unsubscribeFromStatus(updateStatus);
-            })
+            });
         }
     };
 }]);

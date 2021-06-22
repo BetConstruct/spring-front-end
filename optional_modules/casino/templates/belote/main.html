@@ -13,7 +13,7 @@
                         </div>
                     </div>
                 </div>
-                <promotion-news template="slider" slug="belote" hide-dates="true" main-class="block-meny-news promo" use-custom-base-host="true" ng-if="!showDownloadLinks" share-path="belote"></promotion-news>
+                <promo-switcher template="slider"   ng-if="!showDownloadLinks" category="belote"></promo-switcher>
                 <div class="game-torunament-section-j belote-j">
                     <div ng-init="tounamentTable = getPageBySlug(pages,'belote-table')" ng-bind-html="tounamentTable.content"></div>
                 </div>

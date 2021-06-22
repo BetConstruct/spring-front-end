@@ -22,20 +22,27 @@ VBET5.directive('vbetBigSlider', ['$rootScope', '$timeout', '$route', '$interval
             /**
              * @description Slides click handler
              * @param {String} banner the banner Object
+             * @param {String} currentRoute the current route
              */
-            scope.linkClick = function (banner) {
+            scope.linkClick = function (banner, currentRoute) {
                 if (banner.isYouTubeVideo) {
                     $rootScope.$broadcast('youtube.videourl', banner.link);
                 } else if (banner.link) {
-                    scope.linkClickHandler()(banner.link);
-                    $timeout(function () { $route.reload(); }, 100);
+                    if (scope.linkClickHandler) {
+                        scope.linkClickHandler()(banner.link);
+                    }
+
+                    //in these cases no need reload route
+                    if (currentRoute !== '/casino/' && currentRoute !== '/' && banner.link.indexOf(currentRoute) > -1) {
+                        $timeout(function () { $route.reload(); }, 100);
+                    }
                 }
             };
 
             scope.changeActiveBanner = function changeActiveBanner(activeIndex) {
                 scope.index = activeIndex < 0 ? scope.images.length - 1 : activeIndex > scope.images.length - 1 ? 0 : activeIndex;
             };
-            
+
             /**
              * @description Automatically start slides animation
              */

@@ -33,6 +33,10 @@ VBET5.directive('preMatchStreamChannels', ['$rootScope', 'GameInfo', 'Config', f
                     scope.selectedTab = tab;
                 }
                 if (scope.selectedTab ===  scope.channelTab) {
+                    if (!scope.selectedChannel) {
+                        scope.data.video_data = null;
+                        return;
+                    }
                     scope.data.tv_type = scope.selectedChannel.provider_id;
                     scope.data.video_id = scope.selectedChannel.channel;
                 } else {

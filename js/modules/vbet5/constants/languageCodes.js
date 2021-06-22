@@ -52,6 +52,7 @@ angular.module('vbet5').constant('LanguageCodes',
         'fin': 'fi',   //Finnish
         'slv': 'sl',   // slovene
         'tha': 'th',    // thai
+        'uzb': 'uz',    // uzbek
         'alb': 'sq'    // albanian
     }
 );

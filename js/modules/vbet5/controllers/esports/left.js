@@ -35,6 +35,7 @@ VBET5.controller('eSportsLeftController', ['$rootScope', '$scope',  '$location',
 
     var subIds = {};
     var inThrottle = false;
+    var currentGameFinished = false;
     ////////////////////////////////////////////////////////////////////////////////
     // GLOBAL VARIABLES - END
     ////////////////////////////////////////////////////////////////////////////////
@@ -281,6 +282,8 @@ VBET5.controller('eSportsLeftController', ['$rootScope', '$scope',  '$location',
             expandObj.game = game; // No need to worry if the game.id is undefined - centre.js will take care of it
             expandObj.type = menuType;
             $scope.requestData(expandObj);
+        } else {
+            $rootScope.$broadcast('eSports.requestData');
         }
     }
 
@@ -365,6 +368,8 @@ VBET5.controller('eSportsLeftController', ['$rootScope', '$scope',  '$location',
     };
 
     $scope.requestData = function requestData(params) {
+        currentGameFinished = false;
+
         if (!inThrottle) {
             setThrottle();
             var selected = $scope.createSelectedObj(params);
@@ -453,6 +458,47 @@ VBET5.controller('eSportsLeftController', ['$rootScope', '$scope',  '$location',
             $scope.leftMenuState.selected[type] = $scope.createSelectedObj(data);
             $scope.selectMenu(type);
         }
+    });
+
+    function handleGameFinish(data) {
+        var menuType = $scope.leftMenuState.selectedType,
+            availableData = $scope.leftMenu[menuType].data;
+        if (menuType === menuTypeMap.live) {
+            var sport = null;
+            var sports = availableData.filter(function (sport) {
+                return sport.id === data.sport.id;
+            });
+            if (!sports.length) {
+                sport = availableData[0];
+            } else {
+                sport = sports[0];
+            }
+            if (sport.region[0]&& sport.region[0].competition[0]) {
+                inThrottle = false;
+                $scope.requestData({
+                    type:menuType,
+                    sport: sport,
+                    region: sport.region[0],
+                    competition: sport.region[0].competition[0],
+                    game: sport.region[0].competition[0].game[0]
+                });
+            }
+
+        } else {
+            inThrottle = false;
+            expandAndSelect();
+        }
+    }
+
+
+    $scope.$on("openGameFinished", function (event, data) {
+        currentGameFinished = true;
+        $timeout(function (){
+            if (currentGameFinished){
+                handleGameFinish(data);
+                currentGameFinished = false;
+            }
+        }, 5000);
     });
     ////////////////////////////////////////////////////////////////////////////////
     // $SCOPE EVENT LISTENERS - END

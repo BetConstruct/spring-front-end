@@ -14,9 +14,7 @@
                         use-big-icons="true"
                 >
                 </casino-games-list>
-                <div class="clear-favorite-games" ng-if="myCasinoSavedGames.length > 0"
-                     ng-click="removeAllGamesFromSaved(); $event.stopPropagation();">Clear all
-                </div>
+                <div class="clear-favorite-games" ng-if="myCasinoSavedGames.length > 0" ng-click="removeAllGamesFromSaved(); $event.stopPropagation();" ng-bind="'Clear all'|translate"></div>
                 <div class="dont-games-block" ng-if="myCasinoSavedGames.length === 0"><p trans>You don't have favourite
                     games. To add some, click the star icon near the game name.</p></div>
             </div>

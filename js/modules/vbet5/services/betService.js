@@ -348,8 +348,7 @@ VBET5.factory('BetService', ['$rootScope', 'Zergling', 'Config', '$q', 'Utils', 
                 sportIds.push(event.sport_id);
             }
         });
-
-        Zergling.get({
+        var request = {
             'source': 'betting',
             'what': {
                 'sport': ['id', 'name', 'alias', 'order'],
@@ -370,7 +369,9 @@ VBET5.factory('BetService', ['$rootScope', 'Zergling', 'Config', '$q', 'Utils', 
                     'id': {'@in': Utils.uniqueNum(sportIds)}
                 }
             }
-        }).then(
+        };
+        Utils.addPrematchExpressId(request);
+        Zergling.get(request).then(
             function success(response) {
                 if (response.data) {
                     if (editBet) {
@@ -392,6 +393,8 @@ VBET5.factory('BetService', ['$rootScope', 'Zergling', 'Config', '$q', 'Utils', 
                         });
                         return;
                     }
+                    var systemCount = eventsFromBetHistory.system_min_count? eventsFromBetHistory.system_min_count: undefined;
+
 
                     var process = function process() {
                         var eventIds = [];
@@ -400,7 +403,7 @@ VBET5.factory('BetService', ['$rootScope', 'Zergling', 'Config', '$q', 'Utils', 
                         var addEventsInBetSlipByURL = $location.path() !== '/sport/' && $location.path() !== '/dashboard/' && $location.path() !== '/multiview/' && $location.path() !== '/livecalendar/';
 
                         if (!addEventsInBetSlipByURL) {
-                            $rootScope.$broadcast('betSlipType', eventsFromBetHistory.type);
+                            $rootScope.$broadcast('betSlipType', eventsFromBetHistory.type, systemCount);
                         }
 
                         for (var i = 0; i < betsToPlace.length; i++) {
@@ -414,7 +417,8 @@ VBET5.factory('BetService', ['$rootScope', 'Zergling', 'Config', '$q', 'Utils', 
                                     event: betsToPlace[i].eventInfo,
                                     market: betsToPlace[i].marketInfo,
                                     game: betsToPlace[i].gameInfo,
-                                    oddType: oddType
+                                    oddType: oddType,
+                                    ignoreSystem: true
                                 });
                             }
                         }
@@ -429,6 +433,9 @@ VBET5.factory('BetService', ['$rootScope', 'Zergling', 'Config', '$q', 'Utils', 
                                 'betSlipType': eventsFromBetHistory.type,
                                 'type': 1
                             };
+                            if (systemCount) {
+                                params.systemCount = systemCount;
+                            }
 
                             $location.search(params);
                         }
@@ -504,8 +511,7 @@ VBET5.factory('BetService', ['$rootScope', 'Zergling', 'Config', '$q', 'Utils', 
      */
     BetService.getEventData = function getEventData(eventId, gamId, marketId) {
         var promise = $q.defer();
-
-        Zergling.get({
+        var request = {
             'source': 'betting',
             'what': {
                 'sport': ['id', 'name', 'alias', 'order'],
@@ -525,7 +531,11 @@ VBET5.factory('BetService', ['$rootScope', 'Zergling', 'Config', '$q', 'Utils', 
                 'market': {
                     'id': marketId
                 }
-            }})
+            }
+        };
+        Utils.addPrematchExpressId(request);
+
+        Zergling.get(request)
             .then(function resolve(response) { promise.resolve(response); }, function reject(response) { promise.reject(response); });
 
         return promise.promise;
@@ -618,7 +628,9 @@ VBET5.factory('BetService', ['$rootScope', 'Zergling', 'Config', '$q', 'Utils', 
                         expressBonus = {
                             enabled: true,
                             map: {},
-                            info: []
+                            info: [],
+                            hasCurrencyMinBetStake: {},
+                            allMinOddsEmpty: true
                         };
                     }
 
@@ -628,17 +640,26 @@ VBET5.factory('BetService', ['$rootScope', 'Zergling', 'Config', '$q', 'Utils', 
                     if (maximumSelections === null && rules[i+1] && rules[i+1].MinimumSelections) {
                         maximumSelections = rules[i+1].MinimumSelections - 1;
                     }
+                    if (expressBonus.allMinOddsEmpty && rules[i].MinOdds) {
+                        expressBonus.allMinOddsEmpty = false;
+                    }
                     var infoItem = {percent: (rules[i].AmountPercent + '%'), minOdds: rules[i].MinOdds, minBetStakes: {}, basis: rules[i].Basis};
 
                     if (rules[i].MinBetStakes && rules[i].MinBetStakes.MinStakes) {
 
                         rules[i].MinBetStakes.MinStakes.forEach(function (currencyInfo) {
                             infoItem.minBetStakes[currencyInfo.Currency] = currencyInfo.Amount;
+                            if (!expressBonus.hasCurrencyMinBetStake[currencyInfo.Currency]) {
+                                expressBonus.hasCurrencyMinBetStake[currencyInfo.Currency] = true;
+                            }
                         });
+
                     }
                     if (maximumSelections === null) {
-                        infoItem.count =  minimumSelections + ' ' + Translator.get('or more');
-                    } else {
+                        infoItem.count =  minimumSelections + '+';
+                    } else if (minimumSelections === maximumSelections) {
+                        infoItem.count = minimumSelections + "";
+                    }else{
                         infoItem.count = minimumSelections + '-' + maximumSelections;
                     }
                     expressBonus.info.push(infoItem);

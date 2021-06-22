@@ -97,7 +97,6 @@ VBET5.controller('eSportsCenterController', ['$rootScope', '$scope',  '$location
         }
 
         $scope.getCompetitionData = function getCompetitionData(params, getAllCompetitions) {
-            $scope.isInitial = false;
             $scope.attachPinnedVideo($scope.enlargedGame, 'fullScreen', true);
             if (!getAllCompetitions && $scope.games && $scope.games[0] && $scope.games[0].competition.id === params.competition.id) {
                 return;
@@ -112,7 +111,7 @@ VBET5.controller('eSportsCenterController', ['$rootScope', '$scope',  '$location
             var request = {
                 source: 'betting',
                 what: {
-                    game: [['id', 'team1_name', 'team2_name', 'team1_id', 'team2_id', 'team1_reg_name', 'team2_reg_name', 'info', 'start_ts', 'type', 'text_info', 'is_blocked', 'markets_count', 'stats', 'strong_team', 'is_neutral_venue', 'is_stat_available', 'tv_type', 'video_id', 'video_id2', 'video_id3', 'video_provider', 'show_type']],
+                    game: [['id', 'team1_name', 'team2_name', 'team1_id', 'team2_id', 'team1_reg_name', 'team2_reg_name', 'info', 'start_ts', 'type', 'text_info', 'is_blocked', 'markets_count', 'stats', 'strong_team', 'is_neutral_venue', 'is_stat_available', 'tv_type', 'video_id', 'video_id2', 'video_id3', 'video_provider', 'show_type', "tv_info"]],
                     market: ['base', 'id', 'name', 'order', 'sequence', 'show_type', 'display_key', 'display_sub_key', 'type', 'home_score', 'away_score', 'main_order'],
                     event: ['name', 'id', 'base', 'type', 'type_1', 'price', 'show_type', 'home_value', 'away_value']
                 },
@@ -159,12 +158,10 @@ VBET5.controller('eSportsCenterController', ['$rootScope', '$scope',  '$location
         };
 
         function updateOpenGame(data, matchInfo) {
-            if (Utils.isObjectEmpty(data.game)) {
+            if (Utils.isObjectEmpty(data.game) || !data.game[matchInfo.game.id]) {
                 $scope.gameFinished = true;
 
-                TimeoutWrapper(function(){
-                    //TODO navigate to others
-                }, 5000);
+               $rootScope.broadcast("openGameFinished",  matchInfo);
             } else {
                 $scope.gameFinished = false;
             }
@@ -223,7 +220,7 @@ VBET5.controller('eSportsCenterController', ['$rootScope', '$scope',  '$location
                     GameInfo.updateGameStatistics($scope.game);
                     GameInfo.extendLiveGame($scope.game);
                 }
-                var marketsData = MarketService.getMarketsAndGroups(game.id, game.market, game.team1_name, game.team2_name, $scope.game.sport.alias, game.is_stat_available);
+                var marketsData = MarketService.getMarketsAndGroups(game.id, game.market, game.team1_name, game.team2_name, $scope.game.sport.alias, game.is_stat_available, game.type);
 
                 $scope.game.markets = marketsData.markets;
                 $scope.game.availableMarketGroups = marketsData.marketGroups;
@@ -244,7 +241,6 @@ VBET5.controller('eSportsCenterController', ['$rootScope', '$scope',  '$location
         }
 
         $scope.getGameData = function getGameData(data) {
-            $scope.isInitial = false;
             if ($scope.game && $scope.game.id === data.game.id) {
                 return;
             }
@@ -270,6 +266,7 @@ VBET5.controller('eSportsCenterController', ['$rootScope', '$scope',  '$location
                     sport: {id: data.sport.id}
                 }
             };
+            Utils.addPrematchExpressId(request);
 
             if (data.region.id) {
                 request.where.region = { id: data.region.id };
@@ -359,6 +356,11 @@ VBET5.controller('eSportsCenterController', ['$rootScope', '$scope',  '$location
         };
 
         $scope.$on('eSports.requestData', function requestData(event, data) {
+            $scope.isInitial = false;
+
+            if(!data) {
+                return;
+            }
             if(data.game.id) {
                 $scope.getGameData(data);
             } else if(data.competition.id) {

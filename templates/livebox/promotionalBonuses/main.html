@@ -2,7 +2,7 @@
     <div class="bonus-promo-code" ng-show="conf.promotionalBonuses.showApplyButton">
         <label>
             <span ng-bind="'Promo Code'|translate"></span>
-            <input name="promo_code" placeholder="{{'Promo Code' | translate}}" ng-model="promoCode" type="text">
+            <input name="promo_code" placeholder="{{'Enter promo code here' | translate}}" ng-model="promoCode" type="text">
         </label>
         <button ng-disabled="applyingBonus || loadingBonus" ng-hide="applyingBonus" ng-click="applyBonus()" trans>Apply</button>
         <button disabled="disabled" ng-show="applyingBonus" trans>Wait...</button>
@@ -22,7 +22,7 @@
                                 <span trans>Withdrawable Funds</span>
                             </p>
                         </div>
-                        <progressbar template-path="templates/livebox/promotionalBonuses/progressbar.html" class="bonus-statistic-box" progressbar-position="(profile.calculatedBonus) / (profile.calculatedBalance) * 100"></progressbar>
+                        <progressbar template-path="templates/livebox/promotionalBonuses/progressbar.html" class="bonus-statistic-box" progressbar-position="(profile.calculatedBonus) / (profile.totalBalance) * 100"></progressbar>
                     </div>
                 </li>
                 <li>
@@ -36,8 +36,9 @@
         <div class="group-tabs-wrapper">
             <div class="first-level-history-tab">
                 <ul>
-                    <li ng-if="conf.promotionalBonuses.sportsbook" ng-click="switchBonusTab(backendBonusConstants.BonusSource.SportsBook)" ng-class="{'active': (activeBonusTab === backendBonusConstants.BonusSource.SportsBook)}"><span>{{'sportsbook' | translate }} <i ng-if="bonusesAmount.sportsBook && bonusesAmount.sportsBook > 0">{{bonusesAmount.sportsBook}}</i> </span></li>
-                    <li ng-if="conf.promotionalBonuses.casino" ng-click="switchBonusTab(backendBonusConstants.BonusSource.Casino)" ng-class="{'active': (activeBonusTab === backendBonusConstants.BonusSource.Casino)}"><span>{{'Casino Bonus' | translate }} <i ng-if="bonusesAmount.casino && bonusesAmount.casino > 0">{{bonusesAmount.casino}}</i> </span></li>
+                    <li ng-if="conf.promotionalBonuses.sportsbook" ng-click="switchBonusTab(backendBonusConstants.BonusSource.SportsBook)" ng-class="{'active': (activeBonusTab === backendBonusConstants.BonusSource.SportsBook)}"><span>{{'sportsbook' | translate }} <i ng-if="bonusesAmount.sportsBook > 0">{{bonusesAmount.sportsBook}}</i> </span></li>
+                    <li ng-if="conf.promotionalBonuses.casino" ng-click="switchBonusTab(backendBonusConstants.BonusSource.Casino)" ng-class="{'active': (activeBonusTab === backendBonusConstants.BonusSource.Casino)}"><span>{{'Casino Bonus' | translate }} <i ng-if="bonusesAmount.casino > 0">{{bonusesAmount.casino}}</i> </span></li>
+                    <li ng-if="$root.partnerConfig.is_freespin_claimable && conf.promotionalBonuses.casino" ng-click="switchBonusTab(backendBonusConstants.BonusSource.CasinoFreeSpins)" ng-class="{'active': (activeBonusTab === backendBonusConstants.BonusSource.CasinoFreeSpins)}"><span>{{'Casino Free Spins' | translate }} <i ng-if="bonusesAmount.freeSpins > 0">{{bonusesAmount.freeSpins}}</i> </span></li>
                     <li ng-if="conf.promotionalBonuses.bonusRequestURL" ng-init="formatBonusRequestURL()" ng-click="switchBonusTab(backendBonusConstants.BonusSource.BonusRequest)" ng-class="{'active': (activeBonusTab === backendBonusConstants.BonusSource.BonusRequest)}"><span>{{'Bonus request' | translate }} </span></li>
                     <li ng-click="switchBonusTab(backendBonusConstants.BonusSource.BonusHistory)" ng-class="{'active': (activeBonusTab === backendBonusConstants.BonusSource.BonusHistory)}"><span>{{'Bonus History' | translate }} </span></li>
                     <li ng-if="conf.promotionalBonuses.enableReferToFriend" ng-click="switchBonusTab(backendBonusConstants.BonusSource.ReferToFriend)" ng-class="{'active': (activeBonusTab === backendBonusConstants.BonusSource.ReferToFriend)}"><span>{{'Refer to friend' | translate }} </span></li>
@@ -54,23 +55,31 @@
                     <div class="empety-bonus-info" ng-if="!bonusList || bonusList.length == 0">
                         <p trans>There are no bonuses for selected type.</p>
                     </div>
-                    <div class="bet-info-list-separator-b title" ng-show="bonusList && bonusList.length > 0">
-                        <ul>
-                            <li class="bet-type-column-b"><span trans>Status:</span></li>
-                            <li class="outcome-bet-info-column"><p trans>Amount</p></li>
-                            <li class="bet-status-column-b"><p trans>Status</p></li>
-                        </ul>
-                    </div>
                     <div class="bet-info-list-separator-b" ng-repeat="bonus in bonusList" ng-class="{'full-info': this.opened}" ng-show="bonusList && bonusList.length > 0">
                         <ul ng-init="this.opened = conf.promotionalBonuses.expandAllByDefault || bonus.acceptance_type === backendBonusConstants.BonusAcceptanceType.Activated || bonus.acceptance_type === backendBonusConstants.BonusAcceptanceType.Accepted" ng-click="this.opened = !this.opened">
                             <li class="bet-type-column-b">
                                 <span>{{bonus.name}}</span>
                             </li>
-                            <li class="outcome-bet-info-column">
+                            <li class="outcome-bet-info-column" ng-class="{'active-status': (bonus.acceptance_type === backendBonusConstants.BonusAcceptanceType.Accepted || bonus.acceptance_type === backendBonusConstants.BonusAcceptanceType.Activated)}" >
+                                <span>{{'Status'|translate}} <i>{{ (bonus.acceptance_type!=0?backendBonusConstants.BonusAcceptanceTypeByValue[bonus.acceptance_type]:'Available Bonus')|translate}}</i></span>
                                 <span ng-show="bonus.amount !== undefined">{{bonus.amount|number:conf.balanceFractionSize}} <i>{{currency_name|currency}}</i></span>
                             </li>
-                            <li class="bet-status-column-b" ng-class="{'active-status': (bonus.acceptance_type === backendBonusConstants.BonusAcceptanceType.Accepted || bonus.acceptance_type === backendBonusConstants.BonusAcceptanceType.Activated)}">
-                                <span>{{(bonus.acceptance_type!=0?backendBonusConstants.BonusAcceptanceTypeByValue[bonus.acceptance_type]:'Available Bonus')|translate}}</span>
+                            <li class="bet-status-column-b">
+
+                                    <div class="bonus-function-b"
+                                         ng-show="bonus.acceptance_type === backendBonusConstants.BonusAcceptanceType.None && bonus.can_accept">
+                                                <button ng-click="claimBonus(bonus, bonus['deposit_wagering_factor'] !== 0); $event.stopPropagation();"
+                                                        trans>Claim</button>
+                                            </div>
+                                <div class="bonus-function-b"
+                                     ng-show="bonus.acceptance_type === backendBonusConstants.BonusAcceptanceType.Accepted && bonus.bonus_type === backendBonusConstants.BonusType.WageringBonus">
+                                    <button class="deposit-bonus-button-b"
+                                            ng-click="broadcast('toggleSliderTab','deposit'); $event.stopPropagation();">
+                                        <i trans>Deposit</i>
+                                        <span trans>To activate bonus please do deposit</span>
+                                    </button>
+                                </div>
+
                             </li>
                         </ul>
                         <!--open-->
@@ -95,6 +104,7 @@
                                                     <li trans ng-hide="$root.conf.promotionalBonuses.disableColumns.depositWageringFactor">Deposit wagering factor</li>
                                                     <li trans ng-hide="$root.conf.promotionalBonuses.disableColumns.wageringReq">Wagering req</li>
                                                     <li ng-hide="$root.conf.promotionalBonuses.disableColumns.minMax || (!bonus.min_amount && !bonus.max_amount)" trans>Min/Max Deposit</li>
+
                                                 </ul>
                                                 <ul ng-hide="bonus.bonus_type === backendBonusConstants.BonusType.FreeBet">
                                                     <li ng-hide="$root.conf.promotionalBonuses.disableColumns.bonus"><span ng-show="bonus.name">{{bonus.name}}</span></li>
@@ -119,11 +129,11 @@
                                                 <span>{{bonus.acceptance_date|formatDate:'noLocaleTranslate':null:$root.env.timeFormat}}</span>
                                             </p>
                                             <p ng-show="bonus.expiration_date">
-                                                <span trans>Expiration date:</span>
+                                               <span trans>Expiration date:</span>
                                                 <span>{{bonus.expiration_date|formatDate:'noLocaleTranslate':null:$root.env.timeFormat}}</span>
                                             </p>
                                             <p ng-show="bonus.client_bonus_expiration_date">
-                                                <span trans>Client bonus expiration date:</span>
+                                               <span trans>Client bonus expiration date:</span>
                                                 <span>{{bonus.client_bonus_expiration_date|formatDate:'noLocaleTranslate':null:$root.env.timeFormat}}</span>
                                             </p>
                                             <p ng-show="bonus.start_date && bonus.bonus_type !== backendBonusConstants.BonusType.FreeBet">
@@ -136,18 +146,11 @@
                                             </p>
                                         </li>
                                         <li class="claim-cancel-bonus">
-                                            <div class="bonus-function-b" ng-show="bonus.acceptance_type === backendBonusConstants.BonusAcceptanceType.None && bonus.can_accept">
-                                                <button ng-click="claimBonus(bonus, bonus['deposit_wagering_factor'] !== 0); $event.stopPropagation();" trans>Claim</button>
-                                            </div>
+
                                             <div ng-if="!conf.promotionalBonuses.disableCancelButton" class="bonus-function-b cancel-bonus" ng-show="bonus.bonus_type !== backendBonusConstants.BonusType.FreeBet && (bonus.acceptance_type === backendBonusConstants.BonusAcceptanceType.Accepted || bonus.acceptance_type === backendBonusConstants.BonusAcceptanceType.Activated)">
                                                 <button ng-click="cancelBonus(bonus); $event.stopPropagation();" trans>Cancel</button>
                                             </div>
-                                            <div class="bonus-function-b" ng-show="bonus.acceptance_type === backendBonusConstants.BonusAcceptanceType.Accepted && bonus.bonus_type === backendBonusConstants.BonusType.WageringBonus">
-                                                <button class="deposit-bonus-button-b" ng-click="broadcast('toggleSliderTab','deposit'); $event.stopPropagation();">
-                                                    <i trans>Deposit</i>
-                                                    <span trans>To activate bonus please do deposit</span>
-                                                </button>
-                                            </div>
+
                                             <div class="bonus-function-b" ng-if="conf.promotionalBonuses.helpButtonSlug">
                                                 <button ng-click="broadcast('openHelpPage', {slug: conf.promotionalBonuses.helpButtonSlug});" trans>How to use</button>
                                             </div>
@@ -170,6 +173,9 @@
         </div>
         <div class="mixed-view-body-ins" ng-if="activeBonusTab === backendBonusConstants.BonusSource.ReferToFriend"
              ng-include="::'templates/livebox/promotionalBonuses/referToFriend.html'">
+        </div>
+        <div class="mixed-view-body-ins" ng-if="activeBonusTab === backendBonusConstants.BonusSource.CasinoFreeSpins"
+             ng-include="::'templates/livebox/promotionalBonuses/casinoFreeSpins.html'">
         </div>
     </div>
 </div>

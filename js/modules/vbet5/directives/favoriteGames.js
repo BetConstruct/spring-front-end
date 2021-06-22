@@ -144,7 +144,9 @@ VBET5.directive('favoriteGames', ['$rootScope', '$filter', 'ConnectionService', 
             $scope.$on('favoriteGames.remove', function(event, data) { $scope.removeFromFavorites(data); });
 
             (function init() {
-                subscribeToFavorites();
+                if (favoriteGamesIDs.length > 0) {
+                    subscribeToFavorites();
+                }
             })();
         }
     };

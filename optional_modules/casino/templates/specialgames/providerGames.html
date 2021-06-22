@@ -1,0 +1,18 @@
+<div class="container-p">
+    <div class="virtual-sport-provider" ng-controller="providerGamesCtrl">
+        <ul class="virtual-sport-top-nav" ng-show="games">
+            <li ng-repeat="game in games track by game.extearnal_game_id"
+                ng-click="selectGame(game)"
+                ng-class="{'active': selectedGame.extearnal_game_id === game.extearnal_game_id}">
+                <i class="{{game.alias}}-icon"></i>
+                <p class="ellipsis-text">{{ game.name|translate }}</p>
+            </li>
+        </ul>
+
+        <ng-include ng-if="showLoginWarningPopup" src="'optional_modules/casino/templates/specialgames/loginWarningPopup.html'|fixPath"></ng-include>
+        <iframe class="special-game-iframe {{selectedGame.extearnal_game_id}}" ng-if="frameUrl" ng-src="{{frameUrl}}" width="100%" height="100%" scrolling="yes" frameborder="0" allowfullscreen="" webkitallowfullscreen="" mozallowfullscreen=""></iframe>
+
+        <vbet-loader class="page-center" ng-if="loading"></vbet-loader>
+    </div>
+</div>
+

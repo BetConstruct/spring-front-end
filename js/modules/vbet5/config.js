@@ -45,6 +45,10 @@ angular.module('vbet5').constant('Config', {
             enableLicenseRowVersion: false
             //license_logos: [], // {href: "", img: "", height: "", width: "", target: "", show_on: "", hide_on: "", iframe: "link", css: ""}
         },
+        promotionShare: {
+            'facebook': false,
+            'twitter': false
+        },
         homepage: [
             {
                 /*
@@ -127,14 +131,17 @@ angular.module('vbet5').constant('Config', {
             validation: [{"name": "required", "message": "This field is required"}, {"name": "notmatching", "message": "This field is required"}]
         },
         asianShowTeamNames: true,
-        covid19: {
-            url: ''
-        },
         matchKey: {
             descriptionHref: "https://www.sportify.direct/real-sport"
         },
         asianLoadDays: 1, //   asianview# loads first loadDays for default, for the first time , when localstorage is not set yet
         skin: 'vbet.com',
+        kievAnimationSettings: {
+            score: true,
+            statistic: false,
+            team_names: true,
+            timer: false
+        },
         logo: {
             url: "#/",
             // image: "skins/vbet.com/logo.png",
@@ -157,7 +164,54 @@ angular.module('vbet5').constant('Config', {
         defaultTransLang: 'eng',  //default translation language: // translator will translate strings to default language if translation is not available for selected language
         site_id: '13', //13 is test id
         source: 42,
+        showQuizForAuthorized: true,
+        customFramePage: {
+            url: null,
+            authorized: false
+        },
+        depositLimits: {
+           editable: true
+        },
+        managePassportOptions: {
+            download: true,
+            view: true
+        },
         PMUId: 181,
+        sportTournaments: {
+            enabled: false,
+            showInLive: true,
+            filters: [
+                {
+                    name: 'Status',
+                    field: 'Stage',
+                    okButton: true,
+                    noRefresh: true,
+                    filters: [
+                        {name: 'All', all: true, active: false},
+                        {name: 'Upcoming', value: 3, active: true, stageList: 3},
+                        {name: 'tournament_live', value: 2, active: true, stageList: 2},
+                        {name: 'Finished', value: 1, active: false, stageList: 1},
+                        {name: 'Canceled', value: -1, active: false, stageList: -1}
+                    ]
+                },
+                {
+                    name: 'Registration status',
+                    field: 'registrationStatus',
+                    filters: [
+                        {name: 'Registration Started', value: 1},
+                        {name: 'Registration Finished', value: 2}
+                    ]
+                },
+                {
+                    name: 'Entry type',
+                    field: 'buyInStatus',
+                    filters: [
+                        {name: 'Buy-in', value: 2},
+                        {name: 'Free Entry', value: 1}
+                    ]
+                }
+            ]
+        },
         maximumNumberOfLinesInPayments: 3,  // 0 to not show read more in payments
         calendarPrematchSelection: false,
         esportsOutrightEventsLimit: 8,
@@ -288,6 +342,7 @@ angular.module('vbet5').constant('Config', {
         enableCommaSeparateNumber: false, // enable comma in input field
         bonusesEnabled: false, //enable bonuses (will show bonus amounts in bet/balance histories)
         openProfileMenuByHover: true,
+        promoVersion:1,
         poolBettingPointsAmount: 10,
         disableDecimalSubMenu: false,
         disableDepositPage: false,
@@ -475,7 +530,6 @@ angular.module('vbet5').constant('Config', {
         authSessionLifetime: 600000, // in milliseconds,
         saveLoginDataLifeTime: 31540000000, // 1 year in milliseconds,
         showFavoriteGamesInSportList: false,
-        separateFavoritesInClassic: false,  // if true, when adding game to favorite in classic view, it will *move* to favorites list. if false, it will be duplicated there(this is better for not reloading lists)
         showVirtualsInSportList: false,   // false to hide,  any number to show (number is used as 'order' field to define it's position among sports)
         todayBets: {
             enabled: false, // false to disable
@@ -500,7 +554,9 @@ angular.module('vbet5').constant('Config', {
         },
         expressOfDay: {
             enabled: false,
-            order: null
+            maxVisibleItems: 4,
+            order: null,
+            showBetCount: false
         },
         showOutright: false,    // false to hide,  any number to show (number is used as 'order' field to define it's position among sports)
         showMapSection: false,   // false to hide,  any true to show Map Section in About Page
@@ -577,7 +633,7 @@ angular.module('vbet5').constant('Config', {
         },
         headerNavigation: {},
         multiLevelMenu: {},
-        defaultAvailablePaths: ['/news', '/promos', '/cas-promos', '/about','/first_deposit_bonus', '/first_deposit_bonus_and_20_free_spins', '/404', '/draw', '/exchange-shop', '/registration', '/vrlivedealer', '/help', '/ogwil'],
+        defaultAvailablePaths: ['/news', '/promos', '/cas-promos', '/about','/first_deposit_bonus', '/first_deposit_bonus_and_20_free_spins', '/404', '/draw', '/exchange-shop', '/registration', '/vrlivedealer', '/help', '/ogwil', '/quiz'],
         disableLiveChatPaths: ['/popup', '/widget'],
         'rfid': {
             loginWIthRFID: false,
@@ -626,6 +682,7 @@ angular.module('vbet5').constant('Config', {
         enableVisibleInPrematchGames: false,
         poolBettingResultsUrlPrefix: 'http://www.vbet.com/results/',
         horceRacingXmlUrl: 'https://data.vbet.com/horseracing-tmp/',
+        horseRacingUrlPrefix: 'https://horseracing.betcoapps.com/',
         virtualBettingUrl: '#/casino/?category=35',
         beloteUrl: '#/games/?game=547',
         backgammonUrl: '#/games/?game=599',
@@ -727,7 +784,8 @@ angular.module('vbet5').constant('Config', {
                 userName: "^[^0-9\\[\\]\\\\`~!@#$%^&*()_+={};:<>|./?,\"'-\\s]+$",
                 docNumber: "^[A-Za-z\\u0400-\\u04FF0-9]*[0-9]+[A-Za-z\\u0400-\\u04FF0-9]*$",
                 personalId: "^[A-Za-z0-9\u0400-\u04FF]+$",
-                address: "^[^~!@$%^&*()_+={};:<>|?\\[\\]\\'\\\"]*$"
+                address: "^[^~!@$%^&*()_+={};:<>|?\\[\\]\\'\\\"]*$",
+                phoneNumber: "^00[0-9]+$"
             },
             validation: {
                 email: "Invalid email",
@@ -756,6 +814,16 @@ angular.module('vbet5').constant('Config', {
             enabled: false,
             page: 'renew', // renew or deposit or any other slider page
             threshold: 10,
+            dialog: {
+                "title": "Warning",
+                "content": "Your balance is low, you can make a deposit to proceed.",
+                "type": "dialog",
+                "template": "templates/popup/recharge.html",
+                "tag": "low-balance",
+                "showTransferButton": false,
+                "hideButtons": true
+
+            },
             interval: 14400000 //4 hours
         },
         // custom sports book builder enable/disable parts
@@ -797,20 +865,6 @@ angular.module('vbet5').constant('Config', {
             //{'name': 'Lucky 63', 'value': 17},
             //{'name': 'Super Heinz', 'value': 18},
             //{'name': 'Goliath', 'value': 19}
-        ],
-        enableMarketFiltering: true,
-        marketFilterTypes: [
-            {name: 'Match Result', type:'P1XP2'},
-            {name: 'Double Chance', type: '1X12X2'},
-            {name: 'Total Goals', type: 'OverUnder'},
-            {name: 'Handicap', type: 'Handicap'},
-            {name: 'Asian Handicap', type: 'AsianHandicap'},
-            {name: 'Both Teams To Score', type: 'BothTeamsToScore'},
-            {name: '1st Half Result', type: 'HalfTimeResult'},
-            {name: '1st Half Double Chance', type: 'HalfTimeDoubleChance'},
-            {name: '1st Half Total Goals', type: 'HalfTimeOverUnder'},
-            {name: '1st Half Handicap', type: 'HalfTimeAsianHandicap'},
-            {name: '2nd Half Total Goals', type: '2ndHalfTotalOver/Under'}
         ],
         multiColumnMarketFilterTypes: {
             P1XP2: {key: 'WINNER', subKey: 'MATCH'},
@@ -895,16 +949,37 @@ angular.module('vbet5').constant('Config', {
                 '1961901776': 'competitions-bg-champions-league.png',
                 '2991': 'competitions-bg-copa-del-rey.png',
                 '572': 'competitions-bg-coppa-italia.png',
+                '545': 'competitions-bg-la-liga.png',
                 '565': 'competitions-bg-coupe-de-france.png',
                 '1876': 'competitions-bg-dfb-pokal-germany.png',
                 '1861': 'competitions-bg-europa-league.png',
                 '1963328565': 'competitions-bg-europa-league.png',
                 '548': 'competitions-bg-league-1.png',
                 '538': 'competitions-bg-premier-league.png',
-                '545': 'FA-Community-shield-England.png',
                 '543': 'competitions-bg-seria.png',
                 '1840': 'competitions-bg-fa-cup-england.png',
-                '3013': 'competitions-bg-super-league.png'
+                '3013': 'competitions-bg-super-league.png',
+                '1792': 'competitions-bg-brazilian-seria-a.png',
+                '2988': 'competitions-bg-copa-libertadores.png',
+                '3015': 'competitions-bg-turkish-cup.png',
+                '1129': 'competitions-bg-autstralian-open.png',
+                '1130': 'competitions-bg-autstralian-open.png',
+                '686': 'competitions-bg-basket-europaleague.png',
+                '1732': 'competitions-bg-nhl.png',
+                '1738': 'competitions-bg-kxl.png',
+                '756': 'competitions-bg-nba.png',
+                '3014': 'competitions-bg-tff.png',
+                '807': 'competitions-bg-tbsl.png',
+                '1855': 'competitions-bg-euro2020.png',
+                '4736': 'competitions-bg-roland-garos.png',
+                '4737': 'competitions-bg-roland-garos.png',
+                '10149': 'competitions-bg-roland-garos.png',
+                '10150': 'competitions-bg-roland-garos.png',
+                '1780': 'competitions-bg-ice-hockey-world-championship.png',
+                '1781': 'competitions-bg-australia-a-league1.png',
+                '3020': 'competitions-bg-ukraine-premier-league1.png',
+                '2985': 'competitions-bg-copa-sudamericana1.png',
+                '9275': 'competition-bg-copa-americana.png'
             }
         },
         beloteSlidesRotationPeriod: 6000,  // each belote banner will be shown for this amount of time (in milliseconds)
@@ -925,7 +1000,6 @@ angular.module('vbet5').constant('Config', {
         showPromotedGamesOnWidget: {
             enabled: false,
             quantity: 10,
-            level: 'competition',  // game or competition
             type: 'promoted', // promoted or favorite
             timeFormat: false   // if false by default will be 'LT' or assign custom format ( 'full' )
         },
@@ -1103,25 +1177,7 @@ angular.module('vbet5').constant('Config', {
         loadLibsLocally: false, //  load libs (angular, swfobject) locally instead of Google CDN (needed for users in China, where Google is blocked)
         resourcePathPrefix: '', // adds prefix path for resources : app.min.js, app.min.css. etc
         addToFavouritesOnBet: false,
-        betBalanceHistoryTypes: {
-            '-1': 'All',
-            '0': 'Bet',
-            '1': 'Bet Winning Increase',
-            '3': 'Client Deposit Request Payment',
-            '5': 'Cash Desk Deposit',
-            '9': 'Canceled by user',
-            '10': 'Client Deposit',
-            '12': 'Client Withdrawal Request',
-            '14': 'Client Withdrawal Request Rejection',
-            '15': 'Client Withdrawal Payment',
-            '16': 'Bet Winning Decrease',
-            '25': 'Bet cashout',
-            '50': 'Live Dealer Tip',
-            '83': 'Client Bonus Payment',
-            '84': 'Cashback Bonus',
-            '301': 'Correction Up',
-            '302': 'Correction Down'
-        },
+
 	esportsGames: {'StarCraft': 1, 'StarCraft2': 1, 'Hearthstone': 1, 'CallofDuty': 1, 'Overwatch': 1, 'HeroesOfTheStorm': 1},
 	// numberOfExpandedMarkets: 8
     expandAllInBetHistory: false,
@@ -1145,6 +1201,11 @@ angular.module('vbet5').constant('Config', {
                 sourceId: 5,
                 intensity: 0 // (Low(5000ms)=0, Medium(3000ms)=1, High=2(1000ms), Intensive(500ms)=3)
             },
+            liveCasino: {
+                enabled: true,
+                sourceId: 2,
+                intensity: 0 // (Low(5000ms)=0, Medium(3000ms)=1, High=2(1000ms), Intensive(500ms)=3)
+            },
             casino: {
                 enabled: true,
                 sourceId: 0,
@@ -1156,12 +1217,9 @@ angular.module('vbet5').constant('Config', {
     hideGameSoonLabel: false
     },
     iovation: {
-        enabled: false,
+        enabled: false
     },
     enableSnowEffect:false,
-    pmu: {
-      url: "https://newstaging.betconstruct.com/"
-    },
     betIntelligentAPIUrl: 'https://cms-api-stag.bcapps.org/betting/pushbet',
     partner: {
         // section for partner config
@@ -1317,5 +1375,17 @@ angular.module('vbet5').constant('Config', {
         "A-Id",
         "a-id",
         "aid"
-    ]
+    ],
+    pmu: {
+        name: "pmu"
+    },
+    virtualSport: {
+        name: "vs"
+    },
+    euro2020: {
+        url: "https://euro2020.betcoapps.com/?integrationMode=1",
+        langMap: {
+            "fre": "fra"
+        }
+    }
 });

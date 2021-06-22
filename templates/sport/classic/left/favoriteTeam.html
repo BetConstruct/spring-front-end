@@ -1,8 +1,8 @@
-<li ng-controller="favoriteTeamController">
+<li ng-controller="favoriteTeamController" class="left-menu-favorite-team">
     <ul class="float-width">
         <li class="float-width">
             <div class="sports-item-v3 sports-group-item-v3 my-favorite" ng-click="expanded = !expanded" ng-class="{'active':expanded}">
-                <p>{{'My favorite team'|translate}}
+                <p class="my-fav-team">{{'My favorite team'|translate}}
                     <i title="your info here"></i>
                 </p>
                 <div class="arrow-view-v3"></div>
@@ -11,29 +11,29 @@
             </div>
             <div ng-show="expanded">
                 <div class="my-fav-team-list" ng-class="{'empty': !teams.length && !favoriteTeamLoading}">
-                    <div ng-show="favoriteTeamLoading" class="md-progress-circular small"></div>
+                    <div ng-show="favoriteTeamLoading" class="md-progress-circular small-progress"></div>
                     <div  ng-repeat="team in teams" ng-click="loadGamesOfFavoriteTeam(team)">
                         <span> <stats-logo size="20" team-id="team.Id"></stats-logo></span>
                         <i>{{team.Name|translate}}</i>
                     </div>
                 </div>
                 <div class="edit-result-search">
-                    <button ng-show="teams.length" ng-click="showForm = !showForm" trans>edit</button>
+                    <button ng-show="teams.length" ng-click="showForm = !showForm" ng-disabled="favoriteTeamLoading" trans>edit</button>
                 </div>
 
                 <div class="full-region-info-v3" ng-show="(!teams.length && !favoriteTeamLoading) || showForm">
                     <div class="search-fav-team">
 
-                        <div class="search-box-v3" style="float: none">
+                        <div class="search-box-v3">
                             <form>
                                 <div class="block-search">
                                     <input ng-model="searchString" ng-change="doSearch(searchString)" name="" type="text" trans placeholder="Search for team" title="Search for team"/>
-                                    <div ng-show="searchLoading" class="md-progress-circular small"></div>
+                                    <div ng-show="searchLoading" class="md-progress-circular small-progress"></div>
                                 </div>
                             </form>
                         </div>
 
-                        <div ng-show="searchString.length > 3">
+                        <div class="float-width" ng-show="searchString.length > 3">
                             <ul>
                                 <li class="search-item" ng-class="{'selected' : $parent.selectedTeam.Id === team.Id}"  ng-click="$parent.selectedTeam = team" ng-repeat="team in searchResults">
                                    <span>
@@ -44,10 +44,7 @@
                             </ul>
                             <p class="no-result" ng-show="!searchResults.length && !searchLoading" trans>No search results</p>
                         </div>
-                        <button  class="confirm-team" ng-click="storeFavoriteTeam()" >
-                            {{'Confirm'|translate}}
-                            <p ng-show="storeFavoriteTeamLoading" class="md-progress-circular small"></p>
-                        </button>
+                        <button  class="confirm-team" ng-click="storeFavoriteTeam()" ng-disabled="!selectedTeam.Id" >{{'Confirm'|translate}}<span ng-show="storeFavoriteTeamLoading" class="md-progress-circular small-progress"></span></button>
                         <p trans>From now on you can choose your favorite football team and even get cool bonuses betting on it. Just search to add it.</p>
                     </div>
                 </div>

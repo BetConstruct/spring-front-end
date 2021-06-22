@@ -1,4 +1,4 @@
-<div ng-controller="freeBetCtrl" ng-init="loadVictorinas(); setTitle('Free Bet')" ng-if="calculatedConfigs.freeBetEnabled">
+<div ng-controller="freeBetCtrl" ng-init="loadVictorinas(); setTitle('Free Bet')" ng-if="calculatedConfigs.freeBetEnabled ||isIframe">
     <div class="guide">
         <div class="free-bet-container">
             <vbet-loader class="centered-j" ng-if="loading"></vbet-loader>

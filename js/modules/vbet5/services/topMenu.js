@@ -4,7 +4,7 @@
  * @description main top menu data and methods
  *
  */
-angular.module('vbet5').service('TopMenu', ['$rootScope', '$location', '$timeout' ,'$window', 'Translator', 'Config', 'Utils', 'Moment', 'RecaptchaService', function ($rootScope, $location, $timeout, $window, Translator, Config, Utils, Moment, RecaptchaService) {
+angular.module('vbet5').service('TopMenu', ['$rootScope', '$location', '$timeout' ,'$window', 'Translator', 'Config', 'Utils', 'RecaptchaService', function ($rootScope, $location, $timeout, $window, Translator, Config, Utils, RecaptchaService) {
     'use strict';
     var TopMenu = {};
     var countryCode;
@@ -383,7 +383,6 @@ angular.module('vbet5').service('TopMenu', ['$rootScope', '$location', '$timeout
      */
     TopMenu.updateMenuItemsState = function updateMenuItemsState() {
         if(!$scope) return;
-
         var isActive = false;
         setTimeout(function () {
             angular.forEach($scope.topMenu, function (menuItem) {
@@ -604,23 +603,9 @@ angular.module('vbet5').service('TopMenu', ['$rootScope', '$location', '$timeout
         Utils.sortByField($scope.topMenu, menuData);
     };
 
-    function productAvailibilityForAge(item, age) {
-        if (age && age < 21 && item.href) { // disable casino items
-            var i = 0, length = $rootScope.casinoPaths.length;
-            for (; i < length; ++i) {
-                if (item.href.indexOf($rootScope.casinoPaths[i]) !== -1) {
-                    $rootScope.casinoEnabled = false;
-                    $rootScope.calculatedConfigs.pokerEnabled = false;
-                    return false;
-                }
-            }
-        }
-        return true;
-    }
+    function getAvailability(item) {
 
-    function getAvailability(item, age) {
-
-        var availability = !(item.authorized && !Config.env.authorized) && !(item.positiveBalanceOnly && (!$rootScope.profile || !$rootScope.profile.calculatedBalance)) && !(item.visibleForLayout && item.visibleForLayout.indexOf(Config.main.sportsLayout) === -1) && productAvailibilityForAge(item, age);
+        var availability = !(item.authorized && !Config.env.authorized) && !(item.positiveBalanceOnly && (!$rootScope.profile || !$rootScope.profile.calculatedBalance)) && !(item.visibleForLayout && item.visibleForLayout.indexOf(Config.main.sportsLayout) === -1);
         if(item.name === 'casino' && item.showCondition && availability && !$rootScope.casinoEnabled){
             $rootScope.casinoEnabled = true;
         }
@@ -645,23 +630,18 @@ angular.module('vbet5').service('TopMenu', ['$rootScope', '$location', '$timeout
             return;
         }
 
-        var age = 21;
-        if (Config.main.domainSpecificPrefixes && $rootScope.profile && $rootScope.profile.birth_date) {
-            age = Moment.get().diff(Moment.get(Moment.moment.utc($rootScope.profile.birth_date)), 'year');
-        }
-
         Config.env.hideCasinoFavorites = false;
         var itemIndex;
         $scope.topMenuLength = $scope.topMenu.length;
         // remove items if not authorized or there is a dependency from Layout
         for (itemIndex = $scope.topMenu.length - 1; itemIndex >= 0; itemIndex --) {
-            $scope.topMenu[itemIndex].showCondition = getAvailability($scope.topMenu[itemIndex], age);
+            $scope.topMenu[itemIndex].showCondition = getAvailability($scope.topMenu[itemIndex]);
             if (!$scope.topMenu[itemIndex].showCondition) {
                 $scope.topMenuLength--;
                 Config.env.hideCasinoFavorites = $scope.topMenu[itemIndex].name === 'casino';
             } else if ($scope.topMenu[itemIndex].subMenu && $scope.topMenu[itemIndex].subMenu.length) {
                 for (var subIndex = $scope.topMenu[itemIndex].subMenu.length - 1; subIndex >=0; --subIndex) {
-                    $scope.topMenu[itemIndex].subMenu[subIndex].showCondition = getAvailability($scope.topMenu[itemIndex].subMenu[subIndex], age);
+                    $scope.topMenu[itemIndex].subMenu[subIndex].showCondition = getAvailability($scope.topMenu[itemIndex].subMenu[subIndex]);
                 }
             }
 

@@ -1,0 +1,9 @@
+<div class="pu-button-wrap-j" ng-controller="rechargeCtrl">
+
+    <div>
+        <button ng-if="activeDialog.showTransferButton" ng-click="openPage('cashier');$event.stopPropagation();" trans>Transfer</button>
+        <button ng-click="openPage('deposit');$event.stopPropagation();" trans>Deposit</button>
+    </div>
+    <ng-include class="contain-footer-block" src="::'templates/footer/payment-fields.html'|fixPath"></ng-include>
+
+</div>

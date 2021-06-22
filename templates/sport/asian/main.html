@@ -197,7 +197,7 @@
                             </div>
                         </div>
                     </li>
-                    <li ng-click="allowFiltering(); showCompetitionsSelector=true" hide-on-click state-flag-var="showCompetitionsSelector" ng-show="!openGame && !isSelectedFavorites" ng-class="{'disabled-opacity': selectedPopularCompetition}">
+                    <li ng-click="allowFiltering(true); showCompetitionsSelector=true" hide-on-click state-flag-var="showCompetitionsSelector" ng-show="!openGame && !isSelectedFavorites" ng-class="{'disabled-opacity': selectedPopularCompetition}">
                         <div class="contein-mini-filtr competition">
                             <div class="filter-icon"></div>
                             <p class="name-filter-b" trans>Select competition</p>
@@ -323,6 +323,9 @@
                                     <div class="filter-function-b">
                                         <ul>
                                             <li>
+                                                <input class="competition-search-input" name="" type="text" ng-model="competitionsQuery" placeholder="Search" trans>
+                                            </li>
+                                            <li>
                                                 <input name="" type="checkbox" value="" id="checkbox-00" ng-model="selectedAll" ng-change="checkAll(true)">
                                                 <label for="checkbox-00" trans>Check all</label>
                                             </li>
@@ -338,9 +341,9 @@
                                 </div>
                                 <div class="all-filter-competitions">
                                     <ul>
-                                        <li ng-repeat="competition in competitionsFilter | orderBy: 'regionName' track by competition.id">
+                                        <li ng-repeat="competition in (competitionsFilter |filter:{searchName: competitionsQuery}) | orderBy: 'regionName' track by competition.id">
                                             <input type="checkbox" ng-model="$parent.selectedCompetitionsModel[competition.id]" ng-change="allCompatitionsCheck($parent.selectedCompetitionsModel[competition.id])" id="comp{{::competition.id}}">
-                                            <label for="comp{{::competition.id}}" ng-bind="competition.regionName + ' - ' + competition.name"></label>
+                                            <label for="comp{{::competition.id}}" ng-bind="competition.searchName"></label>
                                         </li>
                                      </ul>
                                 </div>

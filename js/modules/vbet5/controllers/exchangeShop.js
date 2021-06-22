@@ -26,7 +26,6 @@ angular.module('vbet5.betting').controller('exchangeShopCtrl', ['$scope', '$root
      */
     $scope.showItemDetails = function showItemDetails(item) {
         $scope.shop.details = item;
-        $scope.shop.order.agree = false;
         $scope.shop.sliderIndex = 0;
     };
 
@@ -37,10 +36,10 @@ angular.module('vbet5.betting').controller('exchangeShopCtrl', ['$scope', '$root
      * @description do exchange
      */
     $scope.shopConfirm = function shopConfirm() {
-        if (!$scope.shop.order.agree) {
+        if ($scope.shop.details.price > $rootScope.profile.loyalty_point) {
             return;
         }
-        $scope.shop.order.translactionInProgress = true;
+        $scope.shop.order.transactionInProgress = true;
 
         var request = {
             created_ts: Moment.get().unix(),
@@ -49,8 +48,6 @@ angular.module('vbet5.betting').controller('exchangeShopCtrl', ['$scope', '$root
                 count: 1
             }]
         };
-
-        console.log('Exchange shop', request);
 
         Zergling.get(request, 'create_shop_order').then(function (response) {
             if (response && parseInt(response.result, 10) === 0) {
@@ -61,7 +58,7 @@ angular.module('vbet5.betting').controller('exchangeShopCtrl', ['$scope', '$root
         }, function () {
             exchangeResponse(false);
         })['finally'](function() {
-            $scope.shop.order.translactionInProgress = false;
+            $scope.shop.order.transactionInProgress = false;
         });
     };
 

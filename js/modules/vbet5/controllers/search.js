@@ -14,6 +14,18 @@ VBET5.controller('searchCtrl', ['$rootScope', '$scope', 'TimeoutWrapper', '$rout
 
     var eSports = $location.path() === '/esports/';
 
+    function generateIds(data) {
+        var results = [];
+        angular.forEach(data, function (item) {
+            angular.forEach(item.results, function (gameData) {
+                results.push(gameData.game.id);
+            });
+
+        });
+        return results;
+
+    }
+
     /**
      * @ngdoc method
      * @name processResults
@@ -22,41 +34,42 @@ VBET5.controller('searchCtrl', ['$rootScope', '$scope', 'TimeoutWrapper', '$rout
      *
      * @param {Array} promises array of promises of search requests that will be resolved when search completes
      */
-    function processResults(promises) {
-        $q.all(promises).then(function (resultsSet) {
-            $scope.searchResults = {};
-            $scope.searchResultGameIds = []; //needed for keyboard navigation
-            var order = 0;
+    function processResults(data) {
+        $scope.searchResults = [];
 
-            angular.forEach(resultsSet, function (data) {
-                angular.forEach(data.data.sport, function (sport) {
-                    angular.forEach(sport.region, function (region) {
-                        angular.forEach(region.competition, function (competition) {
-                            angular.forEach(competition.game, function (game) {
-                                if ($scope.searchResultGameIds.indexOf(game.id) !== -1) {
-                                    return;
-                                }
-                                if ($scope.searchResults[sport.id] === undefined) {
-                                    $scope.searchResults[sport.id] = {order: order++, results: []};
-                                }
-                                $scope.searchResults[sport.id].results.push({
-                                    game: game,
-                                    region: {name: region.name, id: region.id},
-                                    competition: {name: competition.name, id: competition.id},
-                                    sport: {id: sport.id, name: sport.name, alias: sport.alias}
-                                });
-                                $scope.searchResultGameIds.push(game.id);
-                            });
+        angular.forEach(data.data.sport, function (sport) {
+            var games = [];
+            angular.forEach(sport.region, function (region) {
+                angular.forEach(region.competition, function (competition) {
+                    angular.forEach(competition.game, function (game) {
+                         games.push({
+                                game: game,
+                                region: {name: region.name, id: region.id},
+                                competition: {name: competition.name, id: competition.id},
+                                sport: {id: sport.id, name: sport.name, alias: sport.alias}
                         });
+
                     });
                 });
             });
-            $scope.showSearchResults = true;
-
-            $scope.searchResults = Utils.objectToArray($scope.searchResults); // for sorting
-
-            console.log('results - raw: ', resultsSet, ' flat: ', $scope.searchResults);
+            if (games.length) {
+                games.sort(function (item1, item2) {
+                    return item1.game.start_ts - item2.game.start_ts;
+                });
+                $scope.searchResults.push({
+                    order: sport.order,
+                    results: games
+                });
+            }
         });
+
+        $scope.searchResults.sort(Utils.orderSorting);
+
+        $scope.searchResultGameIds = generateIds($scope.searchResults);
+
+        $scope.showSearchResults = true;
+
+
     }
 
     /**
@@ -76,26 +89,45 @@ VBET5.controller('searchCtrl', ['$rootScope', '$scope', 'TimeoutWrapper', '$rout
         var termIsNumber = term && term.length && parseInt(term, 10).toString() === term;
 
         if (term && (term.length > 2 || (termIsNumber && Config.main.search.enableSearchByGameNumber))) {
-            var like = {}, promiseComp, promiseGame;
+            var like = {};
             like[Utils.getLanguageCode(Config.env.lang)] = term;
             like['eng'] = term;
+            var tempRequest = {where:{}};
+            Utils.setCustomSportAliasesFilter(tempRequest);
+            if (eSports) {
+                tempRequest.where.sport.type = 0;
+            } else {
+                tempRequest.where.sport.type =  {"@ne": 1};
+            }
+
             // search for games
             var request = {
                 'source': 'betting',
                 'what': {
-                    'competition': [],
-                    'region': [],
+                    'competition': ['name', 'id'],
+                    'region': ['name', 'id'],
                     'game': ['type', 'start_ts', 'team1_name', 'team2_name', 'id'],
-                    'sport': ['id', 'name', 'alias']
+                    'sport': ['id', 'name', 'alias', 'order']
                 },
                 'where': {
-                    'game': {
-                        '@limit': Config.main.search.limitGames,
-                        '@or': [
-                            {'team1_name': {'@like': like}},
-                            {'team2_name': {'@like': like}}
-                        ]
-                    }
+                    "@or": [
+                        {
+                            game: {
+                                "@limit": Config.main.search.limitGames,
+                                "@or": [{ team1_name: { "@like": like } }, { team2_name: { "@like": like } }],
+                            },
+                            sport:tempRequest.where.sport
+                        },
+                        {
+                            competition: {
+                                name: { "@like": like }
+                            },
+                            game: {
+                                "@limit": Config.main.search.limitCompetitions
+                            },
+                            sport:tempRequest.where.sport
+
+                        }]
                 }
             };
 
@@ -107,52 +139,19 @@ VBET5.controller('searchCtrl', ['$rootScope', '$scope', 'TimeoutWrapper', '$rout
                 types.splice(1,0,1);
             }
             if (types.length && types.length !== 3) {
-                request.where.game.type = {'@in': types};
+                request.where['@or'][0].game.type = {'@in': types};
             }
 
             if (termIsNumber && Config.main.search.enableSearchByGameNumber) {
-                request.where.game['@or'].push({game_number: parseInt(term, 10)});
+                request.where['@or'].push({
+                    game: {game_number: parseInt(term, 10)},
+                    sport: tempRequest.where.sport
+                });
             }
 
-            if (eSports) {
-                request.where.sport = { type: 0 };
-            } else {
-                request.where.sport = {type: {"@ne": 1}};
-            }
 
-           Utils.setCustomSportAliasesFilter(request);
 
-            promiseGame = Zergling.get(request);
-
-            // search for competitions
-            var compRequest = {
-                'source': 'betting',
-                'what': {
-                    'competition': [],
-                    'region': [],
-                    'game': ['type', 'start_ts', 'team1_name', 'team2_name', 'id'],
-                    'sport': ['id', 'name', 'alias']
-                },
-                'where': {
-                    'competition': {
-                        'name': {'@like': like}
-                    },
-                    'game': {
-                        '@limit': Config.main.search.limitCompetitions
-                    }
-                }
-            };
-
-            if (eSports) {
-                compRequest.where.sport = { type: 0 };
-            } else {
-                compRequest.where.sport = {type: {"@ne": 1}};
-            }
-
-            Utils.setCustomSportAliasesFilter(compRequest);
-            promiseComp = Zergling.get(compRequest);
-
-            processResults([promiseGame, promiseComp]);
+            Zergling.get(request).then(processResults);
             console.log(term);
         } else {
             $scope.showSearchResults = false;
@@ -203,6 +202,7 @@ VBET5.controller('searchCtrl', ['$rootScope', '$scope', 'TimeoutWrapper', '$rout
         if (currentParams.sport == result.sport.id && currentParams.competition == result.competition.id && currentParams.region == result.region.id &&  currentParams.game == result.game.id) {
             return;
         }
+        var isHomepage = $location.path() === '/';
         if($location.path() !== "/sport/" && !eSports){
             $location.path("/sport/");
         }
@@ -213,7 +213,9 @@ VBET5.controller('searchCtrl', ['$rootScope', '$scope', 'TimeoutWrapper', '$rout
             region: result.region.id,
             game: result.game.id
         });
-        $route.reload();
+        if (!isHomepage) {
+            $route.reload();
+        }
     };
 
     /**

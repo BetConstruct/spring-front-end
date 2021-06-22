@@ -11,9 +11,9 @@
                         <div class="left-column-casino-nav" no-animate>
                             <ul ng-show="liveGamesData.providerOptions.length > 1">
                                 <li ng-repeat="provider in liveGamesData.providerOptions track by $index"
-                                    ng-class="{'active': liveGamesData.selectedProvider === provider}"
-                                    ng-click="selectLiveDealerProvider(provider)">
-                                    {{provider|translate }}
+                                    ng-class="{'active': liveGamesData.selectedProvider === provider.id}"
+                                    ng-click="selectLiveDealerProvider(provider.id)">
+                                    {{provider.displayName|translate }}
 
                                     <ul>
                                         <li ng-repeat="studio in liveGamesData.devidedGames[liveGamesData.selectedProvider].studios track by $index"

@@ -101,6 +101,9 @@ angular.module('vbet5.betting').controller('classicMultiColumnCtrl', ['$scope', 
                                 if (events) {
                                     $scope.multiColumn.prematchGamesEvents = $scope.multiColumn.prematchGamesEvents || {};
                                     $scope.multiColumn.prematchGamesEvents[filter.type || filterType] = true;
+                                    if (filterType === 'P1XP2' &&  !$scope.multiColumn.prematchGamesEvents.hasXEvent && events.X) {
+                                        $scope.multiColumn.prematchGamesEvents.hasXEvent = true;
+                                    }
                                     game.filteredEvents[filter.type || filterType] = events;
                                 }
                             });
@@ -146,10 +149,12 @@ angular.module('vbet5.betting').controller('classicMultiColumnCtrl', ['$scope', 
      * @description  updates open game data object
      */
     function loadLiveGamesAndUpdateGames() {
+
         if (liveGamesSubId) {
             connectionService.unsubscribe(liveGamesSubId);
             liveGamesSubId = null;
         }
+
 
         if (!$scope.multiColumn.show || !$scope.selectedCompetition || !$scope.selectedCompetition.id || !$scope.selectedCompetition.sport) {
             $scope.multiColumn.liveSports = [];
@@ -176,7 +181,8 @@ angular.module('vbet5.betting').controller('classicMultiColumnCtrl', ['$scope', 
             },
             'where': {
                 'competition': {'id': parseInt($scope.selectedCompetition.id, 10)},
-                'game': {type: 1}
+                'game': {type: 1},
+                'sport': {'id':parseInt($scope.selectedCompetition.sport.id, 10) }
             }
         };
 
@@ -242,6 +248,9 @@ angular.module('vbet5.betting').controller('classicMultiColumnCtrl', ['$scope', 
                                 if (events) {
                                     $scope.multiColumn.liveGamesEvents = $scope.multiColumn.liveGamesEvents || {};
                                     $scope.multiColumn.liveGamesEvents[filter.type || filterType] = true;
+                                    if (filterType === 'P1XP2' &&  !$scope.multiColumn.liveGamesEvents.hasXEvent && events.X) {
+                                        $scope.multiColumn.liveGamesEvents.hasXEvent = true;
+                                    }
                                     game.filteredEvents[filter.type || filterType] = events;
                                 }
                             });
@@ -292,6 +301,10 @@ angular.module('vbet5.betting').controller('classicMultiColumnCtrl', ['$scope', 
      * @description initialization
      */
     (function initMultiColumn() {
-        loadLiveGamesAndUpdateGames();
+        if ($scope.multiColumn.toggled) {
+            loadLiveGamesAndUpdateGames();
+            $scope.multiColumn.toggled = false;
+        }
     })();
+
 }]);

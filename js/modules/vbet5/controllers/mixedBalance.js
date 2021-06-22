@@ -90,8 +90,6 @@ VBET5.controller('mixedBalanceCtrl', ['$scope', '$controller', 'Config', '$sce',
         if (!$scope.balanceHistoryParams.dateRange) {
             $scope.loadBalanceHistory($scope.balanceHistoryParams.balanceCategory === '1' ? 'Casino' : false, $scope.initialRange);
         }
-
-
     };
 
     $scope.adjustDate = function adjustDate(type) {

@@ -8,6 +8,8 @@
  */
 VBET5.directive('openBets', ['$rootScope', 'Zergling', 'BetService', 'Utils', 'GameInfo', '$filter', '$timeout', 'Config', '$location', '$route', function ($rootScope, Zergling, BetService, Utils, GameInfo, $filter, $timeout, Config, $location, $route) {
     'use strict';
+    var ORDER_BET_TYPES_MAP = {'4':1, '40':1, '43': 1};
+
     return {
         restrict: 'E',
         replace: false,
@@ -188,6 +190,10 @@ VBET5.directive('openBets', ['$rootScope', 'Zergling', 'BetService', 'Utils', 'G
                                             // Parameters assigned above are necessary for 'improveName' filter to work properly
                                             event.eventName = $filter('improveName')(event.event_name, event);
                                         });
+                                        if (ORDER_BET_TYPES_MAP[bet.type]) {
+                                            bet.events.sort(Utils.orderSorting);
+                                            bet.showOrder = true;
+                                        }
                                     });
                                     unsubscribeFromOpenBets();
                                     subscribeToOpenBets();
@@ -261,7 +267,6 @@ VBET5.directive('openBets', ['$rootScope', 'Zergling', 'BetService', 'Utils', 'G
             var startTimeout;
 
             $scope.getAutoCashOutDetails = function getAutoCashOutDetails(betId, rule) {
-                $scope.autoCashoutRule.theValueReaches = undefined;
                 if(startTimeout) {
                     $timeout.cancel(startTimeout);
                 }

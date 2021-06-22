@@ -271,6 +271,8 @@ angular.module('vbet5.betting').controller('LiveCalendarController', ['$scope', 
 
             if (!Config.main.hideLiveCalendarMarkets) {
                 request.what.market = ['type', 'name', 'id', 'base', 'express_id'];
+                Utils.addPrematchExpressId(request);
+
                 request.what.event = ['type', 'id', 'price', 'name', 'base'];
                 request.where.market = {type: {'@in': ['P1XP2', 'P1P2']}};
             }

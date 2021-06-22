@@ -1,0 +1,31 @@
+<div class="promotions-section-j" ng-hide="!promotionsGroups || promotionsGroups.length === 0">
+    <h1 trans>Best Promotions</h1>
+    <div class="nav-landp-j" no-animate>
+        <div class="mini-slider-new">
+            <div class="contain-new-slider">
+                <ul ng-if="promotionsGroups.length" ng-init="pickFirstGroup(promotionsGroups[0])">
+                    <div class="arrow-slider-left" ng-click="slideLeft()" ng-show="selectedGroupId > 0"></div>
+                    <div class="arrow-slider-right" ng-click="slideRight()" ng-show="selectedGroupId < promotionsGroups.length-1"></div>
+                    <div ng-repeat="group in promotionsGroups track by group.id"
+                         ng-show="selectedGroupId == group.id">
+                        <li ng-repeat="promo in group.promotions track by promo.id"
+                            ng-class="{'active-news': (promo.id == selectedPromo.id)}">
+                            <p ng-hide="$root.conf.hidePromotionNewsDate" title="{{promo.title}}">{{promo.title}}}</p>
+                            <div class="picture-container-s">
+                                <!--IMG-->
+                                <a ng-click="selectPromo(promo, group.id);$event.stopPropagation();" id="news{{promo.id}}">
+                                    <img ng-src="{{promo.src}}" alt="">
+                                </a>
+                                <div class="read-more-link"><a ng-click="selectPromo(promo, group.id);$event.stopPropagation();" trans>Read More</a></div>
+                            </div>
+                        </li>
+                    </div>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+
+    <ng-include src="::'templates/directive/promotions/popup.html'|fixPath"></ng-include>
+
+</div>

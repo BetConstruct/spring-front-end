@@ -11,6 +11,7 @@ VBET5.controller('historyBaseCtrl', ['$scope', 'Moment', "Config", function($sco
     Moment.setLang(Config.env.lang);
     Moment.updateMonthLocale();
     Moment.updateWeekDaysLocale();
+    var timeZone = Config.env.selectedTimeZone || '';
 
     $scope.today = Moment.get().lang("en").format("YYYY-MM-DD");
     $scope.dateOptions = { showWeeks: 'false' };
@@ -57,11 +58,14 @@ VBET5.controller('historyBaseCtrl', ['$scope', 'Moment', "Config", function($sco
                     $scope.datePickerLimits.maxToDate = Moment.moment($scope.requestData.dateFrom).add(monthCount, "M").lang("en").format("YYYY-MM-DD");
                 }
                 break;
+            default:
+                $scope.requestData.dateTo = $scope.requestData.dateFrom;
+
         }
 
         return {
-            fromDate: Moment.get(Moment.moment($scope.requestData.dateFrom).format().split('T')[0] + 'T00:00:00').unix(),
-            toDate: Moment.get(Moment.moment($scope.requestData.dateTo).format().split('T')[0] + 'T23:59:59').unix()
+            fromDate: Moment.get(Moment.moment($scope.requestData.dateFrom).format().split('T')[0] + 'T00:00:00' + timeZone).unix(),
+            toDate: Moment.get(Moment.moment($scope.requestData.dateTo).format().split('T')[0] + 'T23:59:59' + timeZone).unix()
         };
     };
 }]);

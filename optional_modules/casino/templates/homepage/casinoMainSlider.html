@@ -1,6 +1,6 @@
 <div ng-controller="cmsPagesCtrl" ng-init="getCasinoBanners(null, true);" class="slider-view-casino"
      ng-if="confData.main.topBanners.showSlider">
     <vbet-big-slider class="big-slider-casino-directive" ng-if="casinoTopBanners[$root.env.authorized]"
-                     images="casinoTopBanners[$root.env.authorized]" link-click-handler="openCBannerLink"
+                     images="casinoTopBanners[$root.env.authorized]" link-click-handler="handleBannerClick"
                      slider-template="true" additional-data="gamesAdditionalData"></vbet-big-slider>
 </div>

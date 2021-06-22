@@ -285,6 +285,11 @@ $popup-overlay-background: black !default;
 
     .cashout-options {
       width: calc(100% + 60px);
+      -moz-user-select: none;
+      -khtml-user-select: none;
+      -webkit-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
       @include ltr {
         margin: -30px 0 10px -30px;
       }
@@ -791,7 +796,6 @@ $popup-overlay-background: black !default;
     z-index: 120;
     padding: 20px 60px 0;
     color: $text-palette-1;
-    text-transform: uppercase;
     letter-spacing: 1px;
     > span, > p {
       display: block;
@@ -972,6 +976,16 @@ $popup-overlay-background: black !default;
         left: 34px;
         right: auto;
       }
+    }
+    .runtime-popup{
+      margin-top:10px;
+      @include ltr {
+      text-align: left;
+      }
+      @include rtl {
+        text-align: right;
+      }
+
     }
   }
   .dialog-text-box-b {
@@ -1879,31 +1893,45 @@ input::-webkit-inner-spin-button {
     float: left;
     width: 100%;
     text-align: center;
-    padding: 0 0 10px 0;
   }
-  > span{
-    padding: 0 0 10px 0;
+  > span {
+    margin-top: 10px;
     color: $text-palette-4;
     font-size: 14px;
     line-height: 16px;
+  }
+}
+.reality-title{
+  width: 70%;
+  @include ltr {
     float: left;
+    text-align: left;
+  }
+  @include rtl {
+    float: right;
+    text-align: right;
   }
 }
 .reality-value{
+  width: 30%;
   font-weight: bold;
-  text-align: right;
-}
-.reality-title{
-  text-align: left;
+  box-sizing: border-box;
+  @include ltr {
+    float: right;
+    text-align: right;
+    padding-left: 10px;
+  }
+  @include rtl {
+    float: left;
+    text-align: left;
+    padding-right: 10px;
+  }
 }
 .new-default-popup-j.gift-bet-popup{
   .popup-wrapper-j{
     min-width: 560px;
     min-height: 382px;
     .md-progress-circular {
-      //bottom: 50%;
-      //right: 50%;
-      //transform: translate(50%, 50%);
       bottom: -160px;
       right: 220px;
     }
@@ -1930,24 +1958,6 @@ input::-webkit-inner-spin-button {
 .session-reality-check {
   .popup-wrapper-j {
     max-width: 500px;
-  }
-  .pu-head-j {
-    @include ltr {
-      padding: 0 20px;
-      text-align: center;
-    }
-    @include rtl {
-      padding: 0 20px;
-      text-align: center;
-    }
-    > span {
-      @include ltr {
-        float: none;
-      }
-      @include rtl {
-        float: none;
-      }
-    }
   }
   .button-confirm {
     > button {
@@ -2068,3 +2078,51 @@ input::-webkit-inner-spin-button {
     }
   }
 }
+
+// Recharge popup Start
+
+.low-balance .popup-wrapper-j {
+  max-width: 800px;
+  .pu-button-wrap-j {
+    padding: 30px 0 0;
+    button {
+      &:first-child {
+        color: set-color($brand-color-1);
+        background: $brand-color-1;
+        border-color: $brand-color-1;
+        &:not([disabled]):hover {
+          color: set-color($brand-color-1);
+          background: lighten($brand-color-1, 10);
+          border-color: lighten($brand-color-1, 10);
+        }
+      }
+    }
+  }
+}
+.new-default-popup-j {
+  .contain-footer-block {
+    float: none;
+    width: auto;
+    display: inline-block;
+    background: none;
+    .guide {
+      @media screen and (max-width: 1260px) {
+        width: calc(100% - 20px);
+      }
+    }
+    .paymen-icons-list {
+      background: none;
+    }
+    .payment-content-block {
+      width: auto;
+      > ul {
+        padding: 30px 0 0;
+        > li {
+          padding: 0 10px;
+        }
+      }
+    }
+  }
+}
+
+// Recharge popup End

@@ -52,7 +52,7 @@
 
             <!--sportsbook jackpot winner tab Start-->
             <ul class="s-j-winners" ng-class="{'expanded': expandedPool.name === pool.Name}">
-                <li class="s-j-w-total">
+                <li class="s-j-w-total" ng-if="pool.TotalWinCount && pool.TotalWinAmount">
                     <p trans>winners and total</p>
                     <div class="s-j-w-info">
                         <p> {{pool.TotalWinCount}}</p>
@@ -60,7 +60,7 @@
                     </div>
                 </li>
 
-                <li class="s-j-w-total">
+                <li class="s-j-w-total" ng-if="pool.MinBetAmount">
                     <p trans>Min Qualifying Bet</p>
                     <div class="s-j-w-info">
                         <span>{{pool.MinBetAmount|number:jackpotData.CurrencyFraction}} <i>{{jackpotData.Currency|currency}}</i></span>

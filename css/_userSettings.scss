@@ -173,6 +173,10 @@
     @include placeholder {
       color: rgba(set-color($contact-us),0.7);
     }
+    &:-webkit-autofill{
+      border: 1px solid rgba(set-color($contact-us),0.7);
+      -webkit-text-fill-color: rgba(set-color($contact-us),0.7);
+    }
   }
   .form-text {
     width: 100%;
@@ -206,7 +210,7 @@
     caret-color: rgba(set-color($contact-us),0.7);
     &:-webkit-autofill, &:-webkit-autofill:focus{
       box-shadow: 0 0 0 100px $contact-us inset;
-      -webkit-text-fill-color: $contact-us;
+      -webkit-text-fill-color: rgba(set-color($contact-us),0.7);
     }
   }
   button:disabled{

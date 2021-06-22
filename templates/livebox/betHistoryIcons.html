@@ -1,0 +1,6 @@
+<div class="bet-history-icon superbet-icon" ng-if="bet.is_super_bet"  title="{{'Superbet'|translate}}"></div>
+<div class="bet-history-icon freebet-icon" ng-if="!bet.amount && bet.bonus_bet_amount && bet.client_bonus_id"  title="{{'Freebet'|translate}}"></div>
+<div class="bet-history-icon gift-icon" ng-if="bet.is_bonus_money"  title="{{'Bonus Money'|translate}}"></div>
+<div class="bet-history-icon profit-icon" ng-if="bet.amount && !bet.bonus_bet_amount && bet.client_bonus_id"  title="{{'Profit Boost'|translate}}"></div>
+<div class="bet-history-icon express-icon" ng-if="bet.amount && !bet.bonus_bet_amount && !bet.client_bonus_id && bet.bonus"  title="{{'Express Bonus'|translate}}"></div>
+                                    

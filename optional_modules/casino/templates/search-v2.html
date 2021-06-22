@@ -1,14 +1,21 @@
-<div class="games-type-icon" ng-show="$location.path() == '/casino/'" ng-controller="casinoSearchCtrl">
+<div class="games-type-icon" ng-show="{'/':1, '/casino':1}[$root.currentPage.path]" ng-controller="casinoSearchCtrl">
     <div class="casino-games-search">
         <div class="block-games-search">
-            <input type="text" ng-model="searchCommand" ng-keypress="searchEnter($event)" placeholder="Search for game or provider" trans>
+            <input id="casino-search-input" focus-on="focus-input" is-focus="{{$root.currentPage.path === '/'}}" type="text" ng-model="searchCommand" ng-class="{'pin-search-input' : showSearchCommandResults}" ng-keypress="searchEnter($event)" placeholder="Search for game or provider" trans>
             <i></i>
         </div>
 
-        <div class="casino-games-results" ng-show="showSearchCommandResults && !!searchCommandResults.length" hide-on-click state-flag-var="showSearchCommandResults" broadcast-on-close="search.ResultsClosed">
+
+        <div class="casino-games-results" ng-if="showSearchCommandResults && !searchCommandResults.length && $root.currentPage.path === '/'">
+            <div class="no-result-container">
+                <i class="casino-search-widget-icon cms-jcon-search-no-result"></i>
+                <div class="no-games-result" trans>no results</div>
+            </div>
+        </div>
+        <div class="casino-games-results" ng-show="showSearchCommandResults && !!searchCommandResults.length" hide-on-click="{{$root.currentPage.path !== '/'}}" state-flag-var="showSearchCommandResults" broadcast-on-close="search.ResultsClosed">
             <div class="games-results">
-                <ul ng-repeat="game in searchCommandResults">
-                    <li>
+                <ul ng-repeat="game in searchCommandResults" >
+                    <li data-badge="{{game.badge.title}}"  class="{{game.badge? ('badge-' + game.badge['class']):''}}">
                         <img ng-src="{{game.icon_3? game.icon_3: game.icon_2}}" alt="">
                     </li>
                     <li>

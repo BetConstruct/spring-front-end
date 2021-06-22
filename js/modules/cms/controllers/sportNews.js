@@ -327,7 +327,7 @@ CMS.controller('cmsSportNewsCtrl', ['$rootScope', '$scope', '$sce', '$location',
      *
      * @param {object} news news object
      */
-    $scope.showNews = function showNews(news, groupId) {
+    $scope.showNews = function showNews(news) {
         $scope.landingNews = null; // hide deeplinked news if exists
         $location.hash('');
 
@@ -338,7 +338,7 @@ CMS.controller('cmsSportNewsCtrl', ['$rootScope', '$scope', '$sce', '$location',
         analytics.gaSend('send', 'event', 'news', 'show homepage news',  {'page': $location.path(), 'eventLabel': news.categoryTitle});
         analytics.gaSend('send', 'event', 'news', 'homepage news by ID',  {'page': $location.path(), 'eventLabel': news.id});
         $scope.selectedNews = news;
-        $scope.selectedNewsGroupId = groupId;
+
         if (typeof $scope.selectedNews.content === 'string') { //not to do it twice
             $scope.selectedNews.content = $sce.trustAsHtml($scope.selectedNews.content);
         }
@@ -348,16 +348,10 @@ CMS.controller('cmsSportNewsCtrl', ['$rootScope', '$scope', '$sce', '$location',
 
         ckeckIfLinkedGameExists($scope.selectedNews);
         $location.search("news", $scope.selectedNews.id);
-        TimeoutWrapper(function () {
-            DomHelper.scrollIntoView('news' + $scope.selectedNews.id);
-        }, 50);
 
         if (Config.main.sportNewsBlockNewWindow) {
             $rootScope.preventDefault();
         }
-        TimeoutWrapper(function () {
-            $scope.getBlockHeigth = document.getElementById('news-block-' + $scope.selectedNews.id + $scope.selectedNewsGroupId).clientHeight;
-        }, 50);
     };
 
     /**

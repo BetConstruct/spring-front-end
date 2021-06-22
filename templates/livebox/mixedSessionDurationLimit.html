@@ -1,0 +1,44 @@
+<div  ng-init="getSessionDurationLimit()">
+    <h3 trans>session_duration_limits_header_text</h3>
+
+    <div class="settings-info-contain deposit-limit settings-info-contain-padding">
+        <p trans>session_duration_limits_main_text</p>
+
+        <form name="forms.sessionDurationLimitForm" class="registration-form">
+
+            <label><span context="Deposit limits" trans>daily_limit_input_text</span></label>
+            <div class="form-text"  ng-class="{'error': forms.sessionDurationLimitForm.daily_duration.$touched && forms.sessionDurationLimitForm.daily_duration.$invalid}">
+                <div class="tooltip-wrapper-j">
+                    <input name="daily_duration" ng-model="$parent.sessionDurationLimitData.daily_duration" ng-disabled="$parent.sessionDurationLimitData.daily_duration_disabled" ng-blur="forms.sessionDurationLimitForm.daily_duration.$touched=true" type="text" placeholder="Enter amount" prevent-input="[^0-9]+" range-validation range-min="0" range-max="24"  required trans>
+
+                    <div class="form-error-icon-j" ng-click="resetFieldError('daily_duration', 'sessionDurationLimit')"></div>
+                    <div class="tooltip-j">
+                        <div ng-show="forms.sessionDurationLimitForm.daily_duration.$error.rangeValidation" ng-bind="'The entered values is out of the allowable ({1}/{2}) ranges'|translate:[0,24]"></div>
+                        <div trans ng-show="forms.sessionDurationLimitForm.daily_duration.$error.required">This field is required</div>
+                    </div>
+                </div>
+            </div>
+
+            <label><span trans context="Deposit limits">monthly_limit_input_text</span></label>
+
+            <div class="form-text" ng-class="{'error': forms.sessionDurationLimitForm.monthly_duration.$touched && forms.sessionDurationLimitForm.monthly_duration.$invalid}">
+                <div class="tooltip-wrapper-j">
+                    <input name="monthly_duration" ng-model="$parent.sessionDurationLimitData.monthly_duration" ng-disabled="$parent.sessionDurationLimitData.monthly_duration_disabled" ng-blur="forms.sessionDurationLimitForm.monthly_duration.$touched=true" type="text" placeholder="Enter amount" prevent-input="[^0-9]+" range-validation range-min="30" range-max="720" required trans>
+
+                    <div class="form-error-icon-j" ng-click="resetFieldError('monthly_duration', 'sessionDurationLimit')"></div>
+                    <div class="tooltip-j">
+                        <div ng-show="forms.sessionDurationLimitForm.monthly_duration.$error.rangeValidation" ng-bind="'The entered values is out of the allowable ({1}/{2}) ranges'|translate:[30,720]"></div>
+                        <div trans ng-show="forms.sessionDurationLimitForm.monthly_duration.$error.required">This field is required</div>
+                    </div>
+                </div>
+            </div>
+            <div class="change-button-container password">
+                <div class="cashier-button">
+                    <button ng-disabled="!forms.sessionDurationLimitForm.$dirty || forms.sessionDurationLimitForm.$invalid || (parent.sessionDurationLimitData.monthly_duration_disabled && $parent.sessionDurationLimitData.daily_duration_disabled)" ng-show="!working" trans ng-click="setSessionDurationLimit()">Save</button>
+                    <button disabled="disabled" ng-show="working" trans>Wait...</button>
+                </div>
+            </div>
+        </form>
+        <div class="info"><span class="note-highlight" trans>session_duration_limits_bottom_text</span></div>
+    </div>
+</div>

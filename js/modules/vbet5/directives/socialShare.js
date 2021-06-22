@@ -8,7 +8,7 @@
 VBET5.directive('socialShare',  ['$rootScope', '$window', '$http', 'Config', function ($rootScope, $window, $http, Config) {
     return {
         restrict: 'E',
-        template: '<div class="mini-{{ provider }}"></div>',
+        template: '<div class="social-{{ provider }}"></div>',
         scope: {
             provider: '@',
             shareLink: '@',
@@ -18,7 +18,7 @@ VBET5.directive('socialShare',  ['$rootScope', '$window', '$http', 'Config', fun
             var serverUrl = 'https://share.betcoapps.com/generateTicketImage';
             var sharer = {
                 facebook: 'https://www.facebook.com/sharer/sharer.php?u=',
-                google: 'https://plus.google.com/share?url=',
+                googlePlus: 'https://plus.google.com/share?url=',
                 twitter: "https://twitter.com/intent/tweet?url=",
                 telegram: "https://telegram.me/share/url?url="
             };

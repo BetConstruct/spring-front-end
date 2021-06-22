@@ -40,17 +40,11 @@
                                     <p ng-bind-html="shop.details.description|html"></p>
                                 </div>
                             </div>
-                            <div class="eshop-form-checkbox" ng-show="env.authorized && shop.details.price<=profile.loyalty_point">
-                                <input type="checkbox" ng-model="shop.order.agree">
-                                <label>
-                                    <p><span trans>I agree to all</span> <a href="#/?help=general-terms-and-conditions" target="_blank" trans>Terms &amp; Conditions</a></p>
-                                </label>
-                            </div>
                         </div>
                         <div class="eshop-item-footer">
                             <div class="eshop-popup-buttons" ng-show="env.authorized && shop.details.price<=profile.loyalty_point">
-                                <button ng-click="shopBack()" ng-disabled="shop.order.translactionInProgress" ng-bind="::'Cancel'| translate"></button>
-                                <button ng-click="shopConfirm()" ng-disabled="shop.order.translactionInProgress || !shop.order.agree" ng-bind="::'Get it'|translate"></button>
+                                <button ng-click="shopBack()" ng-disabled="shop.order.transactionInProgress" ng-bind="::'Cancel'| translate"></button>
+                                <button ng-click="shopConfirm()" ng-disabled="shop.order.transactionInProgress || shop.details.price>profile.loyalty_point" ng-bind="::'Get It'|translate"></button>
                             </div>
                         </div>
                     </div>

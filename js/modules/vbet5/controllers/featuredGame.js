@@ -36,13 +36,10 @@ angular.module('vbet5.betting').controller('featuredgameCtrl', ['$rootScope', '$
                         game.team2_id = game.team2_external_id || game.team2_id;
                         game.import_id = game.import_id || game.competition.id;
                         angular.forEach(game.market, function (market) {
-                            if (market.type === 'P1XP2' || market.type === 'P1P2') {
+                            if ((market.type === 'P1XP2' || market.type === 'P1P2') && (!game.events || !game.events.X)){
                                 game.events = Utils.createMapFromObjItems(market.event, 'type');
                             }
                         });
-                        if (game.info !== undefined && game.info.current_game_time > 0) {
-                            game.info.current_game_time = getOnlyTime(game.info.current_game_time);
-                        }
                         featuredGamesObj[game.id] = game;
                     });
                 });
@@ -182,7 +179,7 @@ angular.module('vbet5.betting').controller('featuredgameCtrl', ['$rootScope', '$
                 'competition' : ['id', 'name'],
                 'region' : ['id', 'name'],
                 'event': ['id', 'price', 'type', 'name'],
-                'market': ['type', 'express_id', 'name', 'home_score', 'away_score'],
+                'market': ['id', 'type', 'express_id', 'name', 'home_score', 'away_score'],
                 'game': ['id', 'start_ts', 'team1_name', 'team2_name', 'info', 'markets_count', 'type', 'team1_id', 'team2_id', 'team1_external_id', 'team2_external_id', 'is_live']
             },
             'where': {game: {}}
@@ -255,7 +252,7 @@ angular.module('vbet5.betting').controller('featuredgameCtrl', ['$rootScope', '$
                 sport: ['id', 'alias', 'name'],
                 competition: ['id', 'name'],
                 region: ['id'],
-                game: ['id', 'start_ts', 'team1_name', 'team2_name', 'info', 'markets_count', 'type', 'team1_id', 'team2_id', 'team1_external_id', 'team2_external_id', 'is_live'],
+                game: ['id', 'start_ts', 'team1_name', 'team2_name', 'type', 'team1_id', 'team2_id', 'team1_external_id', 'team2_external_id', 'is_live'],
                 market: ['type'],
                 event: ['price', 'type']
             },
@@ -393,11 +390,11 @@ angular.module('vbet5.betting').controller('featuredgameCtrl', ['$rootScope', '$
             {
                 action: 'open_game',
                 data: {
-                    'type': game.type,
-                    'sport': game.sport,
-                    'region': game.region,
-                    'competition': game.competition,
-                    'game': game
+                    gameId: game.game,
+                    competitionId: game.competition,
+                    regionId: game.region,
+                    sportId: game.sport,
+                    type: game.type === 1? 1: 0
                 }
             },
             '*'

@@ -9,8 +9,8 @@ VBET5.directive('promotionNews',
         function ($routeParams, $window, $sce, $location, $timeout, Config, WPConfig, content, Utils, analytics, DomHelper, Zergling, $rootScope) {
             'use strict';
             var templates = {
-                slider: 'templates/directive/promotion-news-slider.html',
-                main: 'templates/directive/promotion-news.html'
+                slider: 'templates/directive/promotions/slider.html',
+                main: 'templates/directive/promotions/main.html'
             };
             return {
                 restrict: 'E',
@@ -58,8 +58,8 @@ VBET5.directive('promotionNews',
                         var url;
                         if (templates[attrs.template]) {
                             url = templates[attrs.template];
-                                isSliderMode = true;
-                                initSliderMode();
+                            isSliderMode = true;
+                            initSliderMode();
                         } else {
                             url = templates.main;
                         }
@@ -119,7 +119,7 @@ VBET5.directive('promotionNews',
                      *
                      */
                     function groupSliderNews() {
-                        if (DomHelper.getWindowSize().width < 1300) {
+                        if (DomHelper.getWindowSize().width < 1833) {
                             groupNewsInGroups(SLIDER_NEWS_COUNT.wideOff);
                         } else {
                             groupNewsInGroups(SLIDER_NEWS_COUNT.wideOn);
@@ -168,9 +168,9 @@ VBET5.directive('promotionNews',
                      *
                      * @param {object} news news object
                      */
-                    $scope.showNews = function showNews(news, groupId) {
-                        if ($scope.selectedNews === news) {
-                            $scope.closeNews();
+                    $scope.showNews = function showNews(news) {
+                        if ($scope.selectedPromo === news) {
+                            $scope.unselectPromo();
                             return;
                         }
                         $location.search('news', news.id);
@@ -178,17 +178,14 @@ VBET5.directive('promotionNews',
                             'page': $location.path(),
                             'eventLabel': news.categories.length > 0 ? news.categories[0].title : ''
                         });
-                        $scope.selectedNews = news;
-                        $scope.selectedNewsGroupId = groupId;
-                        if (typeof $scope.selectedNews.content === 'string') { //not to do it twice
-                            $scope.selectedNews.content = $sce.trustAsHtml($scope.selectedNews.content);
+                        $scope.selectedPromo = news;
+                        $scope.selectedPromo.src = $scope.selectedPromo.thumbnail || $scope.selectedPromo.thumbnail_images.full.url;
+                        if (typeof $scope.selectedPromo.content === 'string') { //not to do it twice
+                            $scope.selectedPromo.content = $sce.trustAsHtml($scope.selectedPromo.content);
                         }
-                        if (typeof $scope.selectedNews.title === 'string') { //not to do it twice
-                            $scope.selectedNews.title = $sce.trustAsHtml($scope.selectedNews.title);
+                        if (typeof $scope.selectedPromo.title === 'string') { //not to do it twice
+                            $scope.selectedPromo.title = $sce.trustAsHtml($scope.selectedPromo.title);
                         }
-
-                        DomHelper.scrollIntoView('news' + $scope.selectedNews.id);
-
                     };
 
                     $scope.loadMore = function loadMore() {
@@ -208,12 +205,12 @@ VBET5.directive('promotionNews',
 
                     /**
                      * @ngdoc method
-                     * @name closeNews
+                     * @name unselectPromo
                      * @methodOf CMS.controller:cmsPagesCtrl
                      * @description  closes open news
                      */
-                    $scope.closeNews = function closeNews() {
-                        $scope.selectedNews = null;
+                    $scope.unselectPromo = function unselectPromo() {
+                        $scope.selectedPromo = null;
                         $location.search('news', undefined);
                     };
                     /**
@@ -227,7 +224,7 @@ VBET5.directive('promotionNews',
                             $scope.slug = slug;
                             $location.search("slug", slug);
                             if (!isInitialize) {
-                                $scope.closeNews();
+                                $scope.unselectPromo();
 
                             }
                             loadNews($scope.count);
@@ -242,29 +239,29 @@ VBET5.directive('promotionNews',
                      */
                     function loadCategories() {
                         $scope.promotionCategories = [];
-                            content.getPromotionCategories().then(function(data) {
-                                var slug = $location.search().slug || $scope.slug;
-                                if(data && data.data && data.data.status === "ok" && data.data.categories.length > 0) {
-                                    var categories = data.data.categories;
-                                    for (var i = 0, length = categories.length; i < length; ++i) {
-                                        $scope.promotionCategories.push({
-                                            title: categories[i].title,
-                                            key: categories[i].name
-                                        });
-                                    }
+                        content.getPromotionCategories().then(function(data) {
+                            var slug = $location.search().slug || $scope.slug;
+                            if(data && data.data && data.data.status === "ok" && data.data.categories.length > 0) {
+                                var categories = data.data.categories;
+                                for (var i = 0, length = categories.length; i < length; ++i) {
+                                    $scope.promotionCategories.push({
+                                        title: categories[i].title,
+                                        key: categories[i].name
+                                    });
                                 }
-                                if ($scope.promotionCategories.length > 0 && !slug) {
-                                    slug = $scope.promotionCategories[0].key;
+                            }
+                            if ($scope.promotionCategories.length > 0 && !slug) {
+                                slug = $scope.promotionCategories[0].key;
+                            }
+
+                            $scope.setSlug(slug, true);
+
+                            $scope.$on('$routeUpdate', function () {
+                                var params = $location.search();
+                                if (params && params.slug) {
+                                    $scope.setSlug(params.slug);
                                 }
-
-                                $scope.setSlug(slug, true);
-
-                                $scope.$on('$routeUpdate', function () {
-                                    var params = $location.search();
-                                    if (params && params.slug) {
-                                        $scope.setSlug(params.slug);
-                                    }
-                                });
+                            });
                         });
                     }
 
@@ -313,7 +310,7 @@ VBET5.directive('promotionNews',
                             getPlayerOptIns();
                         });
 
-                       logoutWatcher = $scope.$on('login.loggedOut', function () {
+                        logoutWatcher = $scope.$on('login.loggedOut', function () {
                             $scope.playerOptIns = null;
                         });
                     }
@@ -331,14 +328,14 @@ VBET5.directive('promotionNews',
                                 function (response) {
                                     if (response && response.result === 0 && response.details)
                                         $scope.playerOptIns = {};
-                                        angular.forEach(response.details,function (optIns) {
-                                            $scope.playerOptIns[optIns.Code] = true;
-                                        });
+                                    angular.forEach(response.details,function (optIns) {
+                                        $scope.playerOptIns[optIns.Code] = true;
+                                    });
                                 }
                             )['finally'](function () {
-                                if(typeof callback === 'function'){
-                                    callback();
-                                }
+                            if(typeof callback === 'function'){
+                                callback();
+                            }
                         });
                     }
 

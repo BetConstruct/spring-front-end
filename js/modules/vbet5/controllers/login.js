@@ -239,7 +239,7 @@ angular.module('vbet5').controller('loginCtrl', ['$scope', '$rootScope', 'Timeou
             var request = {
                 code: code,
                 is_device_trusted: $scope.authenticationData.isDeviceTrusted,
-                device_fingerprint: Fingerprint2.getAuthenticationCode()
+                device_fingerprint: Fingerprint2.authenticationCode
             };
 
             if ($scope.authenticationData.isDeviceTrusted) {
@@ -328,8 +328,6 @@ angular.module('vbet5').controller('loginCtrl', ['$scope', '$rootScope', 'Timeou
                         if (!Config.partner.profileNotAvailable) { // for some skins profile is not available in swarm
                             subscribeToProfile(action);
                         }
-                        subscribeForMessages();
-
                         login.resolve(data);
                     }
                     if (!data.data.qr_code_origin && data.data.authentication_status !== 4) {
@@ -490,6 +488,14 @@ angular.module('vbet5').controller('loginCtrl', ['$scope', '$rootScope', 'Timeou
      */
     function handleLoginSuccess() {
         $scope.user.password = '';
+        var token = Config.main.firebaseToken;
+        if(token) {
+            Zergling.get({
+                fcm_token: token,
+                source: "web",
+                app_type: "all"
+            }, "store_fcm_token");
+        }
         TimeoutWrapper(function () {
             if ($scope.env.sliderContent === 'login') {
                 $scope.env.showSlider = false;
@@ -711,7 +717,6 @@ angular.module('vbet5').controller('loginCtrl', ['$scope', '$rootScope', 'Timeou
                                     $scope.env.authorized = true;
                                     Storage.set('lastLoggedInUsername', username);
                                     subscribeToProfile();
-                                    subscribeForMessages();
                                     login.resolve(response);
                                 },
                                 function error(response) {

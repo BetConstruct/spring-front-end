@@ -40,7 +40,6 @@ VBET5.directive('hideOnClick', ['$window',  '$rootScope', 'Config', function ($w
                 element.addClass('ng-hide');
             }
         }
-
     }
 
     /**
@@ -61,6 +60,9 @@ VBET5.directive('hideOnClick', ['$window',  '$rootScope', 'Config', function ($w
     }
 
     return function (scope, element, attr) {
+        if (attr.hideOnClick === 'false') {
+            return;
+        }
         function windowClickHandler(event) {
             if (event.button !== 2 && !Config.env.isGlobalDialog) { //event.button 2 is right button
                 hideElement(element, attr, scope);

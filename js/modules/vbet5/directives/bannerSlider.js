@@ -98,6 +98,10 @@ VBET5.directive('bannerSlider', ['$rootScope','$location', '$interval', 'analyti
                     'page': $location.path(),
                     'eventLabel': attrs.slug + ' banner click: ' + banner.title
                 });
+               $rootScope.broadcast("bannerSliderClick", {
+                   slug: attrs.slug,
+                   url: banner.link
+               });
             };
             //@TODO need to remove this case after the end of the games in Russia in 2018
             if (attrs.categorySlug) {

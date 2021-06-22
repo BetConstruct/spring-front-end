@@ -5,7 +5,7 @@
  * @description
  * Search controller
  */
-VBET5.controller('casinoSearchCtrl', ['$rootScope', '$scope', '$timeout', '$location', 'Config', 'CConfig', 'casinoData', function ($rootScope, $scope, $timeout, $location, Config, CConfig, casinoData) {
+VBET5.controller('casinoSearchCtrl', ['$rootScope', '$scope', '$timeout', '$location', 'Config', 'CConfig', 'casinoData', 'casinoManager', function ($rootScope, $scope, $timeout, $location, Config, CConfig, casinoData, casinoManager) {
     'use strict';
 
     $scope.showSearchResults = false;
@@ -31,6 +31,8 @@ VBET5.controller('casinoSearchCtrl', ['$rootScope', '$scope', '$timeout', '$loca
         }
     };
 
+
+
     /**
      * @ngdoc method
      * @name doSearchCommand
@@ -44,7 +46,7 @@ VBET5.controller('casinoSearchCtrl', ['$rootScope', '$scope', '$timeout', '$loca
     function doSearchCommand(command) {
         if (command && command.length > 2) {
             var countryCode = $rootScope.geoCountryInfo && $rootScope.geoCountryInfo.countryCode || '';
-            casinoData.getGames(null, null, countryCode, null, null, command).then(function (response) {
+            casinoData.getGames({country: countryCode, search:command}).then(function (response) {
                 if (response && response.data && response.data.status !== -1) {
                     var games;
                     if (CConfig.main.disableAgeRestrictedGames) {
@@ -69,64 +71,78 @@ VBET5.controller('casinoSearchCtrl', ['$rootScope', '$scope', '$timeout', '$loca
         }
     }
 
-    /**
-     * @ngdoc method
-     * @name openCasinoGame
-     * @methodOf vbet5.controller:searchCtrl
-     * @param {Object} game game object
-     * @description  broadcast game into casinoCtrl and hide casino search result
-     */
-    $scope.openCasinoGame = function openCasinoGame(game, gameType) {
-        $scope.showSearchCommandResults = false;
+    if ($location.path() === '/') {
+        $scope.openCasinoGame = function openCasinoGame(game, gameType) {
+            casinoManager.navigateToRightRouteAndOpenGame(game, gameType);
+        };
+        $scope.toggleSaveToMyCasinoGames = function toggleSaveToMyCasinoGames(game) {
+            casinoManager.toggleSaveToMyCasinoGames($rootScope, game);
+        };
+    } else {
 
-        switch (game.front_game_id) {
-            case CConfig.fantasySports.gameID:
-                $location.url('/fantasy/');
-                return;
-            case CConfig.ogwil.gameID:
-                if ($rootScope.casinoGameOpened < 2) {
-                    $location.url('/ogwil/');
+        /**
+         * @ngdoc method
+         * @name openCasinoGame
+         * @methodOf vbet5.controller:searchCtrl
+         * @param {Object} game game object
+         * @description  broadcast game into casinoCtrl and hide casino search result
+         */
+        $scope.openCasinoGame = function openCasinoGame(game, gameType) {
+            $scope.showSearchCommandResults = false;
+
+            switch (game.front_game_id) {
+                case CConfig.fantasySports.gameID:
+                    $location.url('/fantasy/');
                     return;
-                }
-                break;
-            case CConfig.financials.gameID:
-                $location.url('/financials/');
+                case CConfig.ogwil.gameID:
+                    if ($rootScope.casinoGameOpened < 2) {
+                        $location.url('/ogwil/');
+                        return;
+                    }
+                    break;
+                case CConfig.financials.gameID:
+                    $location.url('/financials/');
+                    return;
+                default:
+                    break;
+            }
+
+            if (!$rootScope.env.authorized && game.gameProvider === 'GMG') {
+                $rootScope.$broadcast("openLoginForm");
                 return;
-            default:
-                break;
-        }
+            }
 
-        if (!$rootScope.env.authorized && game.gameProvider === 'GMG') {
-            $rootScope.$broadcast("openLoginForm");
-            return;
-        }
+            gameType = gameType || ($rootScope.env.authorized || !CConfig.main.funModeEnabled ? 'real' : (game.gameCategory == 'VirtualBetting' || game.gameCategory == CConfig.liveCasino.categoryName || game.gameCategory == 'SkillGames' ? 'demo' : 'fun'));
+            if($rootScope.casinoGameOpened > 1 && $location.path() === '/casino/') {
+                $rootScope.$broadcast('casino.openGame', game, gameType);
+                return;
+            }
+            var page;
+            if (game.categories.indexOf(CConfig.skillGames.categoryId) !== -1) {
+                page = 'games';
+            } else if (game.categories.indexOf(CConfig.liveCasino.categoryId) !== -1) {
+                page = 'livedealer';
+            } else {
+                page = 'casino';
+            }
 
-        gameType = gameType || ($rootScope.env.authorized || !CConfig.main.funModeEnabled ? 'real' : (game.gameCategory == 'VirtualBetting' || game.gameCategory == CConfig.liveCasino.categoryName || game.gameCategory == 'SkillGames' ? 'demo' : 'fun'));
-        if($rootScope.casinoGameOpened > 1 && $location.path() === '/casino/') {
-            $rootScope.$broadcast('casino.openGame', game, gameType);
-            return;
-        }
-        var page;
-        if (game.categories.indexOf(CConfig.skillGames.categoryId) !== -1) {
-            page = 'games';
-        } else if (game.categories.indexOf(CConfig.liveCasino.categoryId) !== -1) {
-            page = 'livedealer';
-        } else {
-            page = 'casino';
-        }
 
-        if (page !== 'casino') {
-            var unregisterRouteChangeSuccess =  $scope.$on('$routeChangeSuccess', function () {
-                if (!$location.$$replace) {
-                    $rootScope.$broadcast(page + '.openGame', game, gameType);
-                    unregisterRouteChangeSuccess();
-                }
-            });
-            $location.url('/' + page + '/');
-        } else {
-            $rootScope.$broadcast('casino.openGame', game, gameType);
-        }
-    };
+            if (page === "casino" || (page === "games" && !$rootScope.calculatedConfigs.skillgamesEnabled) || (page === "livedealer" && !$rootScope.calculatedConfigs.livedealerEnabled)) {
+                $rootScope.$broadcast('casino.openGame', game, gameType);
+            } else {
+                var unregisterRouteChangeSuccess =  $scope.$on('$routeChangeSuccess', function () {
+                    if (!$location.$$replace) {
+                        $rootScope.$broadcast(page + '.openGame', game, gameType);
+                        unregisterRouteChangeSuccess();
+                    }
+                });
+                $location.url('/' + page + '/');
+            }
+
+        };
+    }
+
+
 
     /**
      * Monitors search field and send search command to casinoCtrl when user stopped typing
@@ -161,11 +177,7 @@ VBET5.controller('casinoSearchCtrl', ['$rootScope', '$scope', '$timeout', '$loca
      */
     $scope.searchEnter = function searchEnter(event) {
         if (event.which === 13) {
-            if (['/', '/sport/', '/poolbetting/'].indexOf($location.path()) !== -1) {
-                searchWatcher();
-            } else {
-                searchCommandWatcher();
-            }
+            searchCommandWatcher();
         }
     };
 

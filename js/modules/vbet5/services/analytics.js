@@ -46,6 +46,9 @@ VBET5.service('analytics', ['$rootScope', '$window', '$location', '$timeout', 'C
                 'page': $location.path()
             });
         }
+        if ($window.hj) {
+            $window.hj('stateChange', $location.url());
+        }
     };
     $rootScope.$on('$viewContentLoaded', track);
 

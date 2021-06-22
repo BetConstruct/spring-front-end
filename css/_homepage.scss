@@ -19,6 +19,9 @@
   > a {
     width: 100%;
     height: 100%;
+    -ms-flex: 1;
+    -webkit-flex: 1;
+    flex: 1;
     text-align: center;
     position: relative;
     transform: translate3d(0,0,0);
@@ -400,19 +403,16 @@ $anim-time: 5;
     transform: translate3d(0, 0, 0);
   }
 }
-.games-view-slider-contain > ul > li:nth-child(1), .games-view-slider-contain > ul > li:nth-child(3) {
+.games-view-slider-contain > ul > li:nth-child(1),
+.games-view-slider-contain > ul > li:nth-child(3),
+.games-view-slider-contain > ul.column-2 > li:nth-child(2) {
   animation-delay: 0.15s;
   animation-duration: 0.6s;
 }
-.games-view-slider-contain > ul.column-2 > li:nth-child(1), .games-view-slider-contain > ul.column-1 > li:nth-child(1) {
+.games-view-slider-contain > ul.column-2 > li:nth-child(1),
+.games-view-slider-contain > ul.column-1 > li:nth-child(1) {
   animation-delay: 0s;
   animation-duration: 0.3s;
-}
-.games-view-slider-contain > ul.column-2 > li{
-  width: calc((100% - 10px) / 2);
-}
-.games-view-slider-contain > ul.column-1 > li{
-  width: 100%;
 }
 .games-view-slider-contain > ul > li:first-child{
   @include ltr {
@@ -765,6 +765,26 @@ div.slider-image-wrapper-b {
     background-size: 100%;
   }
 }
+
+
+//homepage banner hover START
+
+.product-list-contain .product-list-wrapper > a {
+  &.show{
+      overflow: hidden;
+    .product-slider-image {
+      transition: 0.6s transform ease;
+    }
+    &:hover{
+          .product-slider-image {
+            transform: scale(1.13);
+        }
+     }
+  }
+}
+//homepage banner hover END
+
+
 .product-list-contain .product-list-wrapper > a .product-slider-image {
   display: none;
   width: 100%;
@@ -773,6 +793,7 @@ div.slider-image-wrapper-b {
   }
   &.show {
     display: block;
+    position: relative;
     ~ .icon-container-product,
     ~ h4,
     ~ .product-title-animation-wrapper {
@@ -786,6 +807,9 @@ div.slider-image-wrapper-b {
         display: none;
       }
     }
+
+
+
   }
 }
 .nav-news-sport-j {
@@ -1071,17 +1095,6 @@ div.slider-image-wrapper-b {
   -moz-user-select: none;
   -webkit-user-select: none;
   user-select: none;
-  //&:after{
-  //  position: absolute;
-  //  content: '';
-  //  display: block;
-  //  top: 0;
-  //  left: 0;
-  //  right: 0;
-  //  width: 100%;
-  //  height: 100%;
-  //  background: rgba(56, 30, 15, 0.33);
-  //}
 }
 .champions-date-count{
   display: table;
@@ -1096,23 +1109,17 @@ div.slider-image-wrapper-b {
   margin: 5px 0;
   position: relative;
 }
-.championship-logo-a{
-  display: table-cell;
-  vertical-align: middle;
-  width: 120px;
+.championship-link {
+  position: absolute;
+  top: 0;
+  left: 0;
   height: 100%;
-  > p{
-    float: left;
-    width: 100%;
-    background-repeat: no-repeat;
-    background-size: auto;
-    background-position: 0% 50%;
-    height: 100%;
-  }
+  width: 100%;
+  z-index: 1;
 }
 .championship-team-name{
-  display: table-cell;
-  vertical-align: middle;
+  width: 50%;
+  float: left;
   > p{
     float: left;
     width: 100%;
@@ -1122,76 +1129,83 @@ div.slider-image-wrapper-b {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-    text-shadow: 4px 0px 4px rgba(0, 0, 0, 0.73);
+    text-shadow: 4px 0 4px rgba(0, 0, 0, 0.73);
   }
 }
 .championship-time-count{
-  display: table-cell;
-  vertical-align: top;
+  width: 50%;
+  float: right;
   text-align: right;
+  direction: ltr;
   > p{
     display: inline-block;
     vertical-align: middle;
     text-align: center;
     position: relative;
-    margin: 0 2%;
-    > span{
-      font-size: 75px;
-      line-height: 78px;
-      color: $text-palette-1;
-      text-shadow: 4px 0 4px rgba(0, 0, 0, 0.73);
+    min-width: 83px;
+    color: $text-palette-1;
+       > span{
+      font-size: 58px;
+      line-height: 68px;
+      font-weight: bold;
     }
     > i{
       font-style: normal;
-      font-size: 25px;
-      line-height: 27px;
-      position: absolute;
-      top: 100%;
-      right: 50%;
-      transform: translateX(50%);
+      font-size: 11px;
       display: block;
-      color: $text-palette-3;
-      text-shadow: 4px 0 4px rgba(0, 0, 0, 0.73);
+      text-transform: uppercase;
     }
     + p {
       &:before {
         content: ":";
         position: absolute;
         display: block;
-        top: -8px;
-        left: -23%;
+        top: 0;
         color: $text-palette-1;
-        font-size: 70px;
+        font-size: 52px;
+        left: -6.5px;
       }
     }
   }
 }
-@media screen and (max-width: 1279px) {
-  .championship-team-name > p {
-    font-size: 30px;
-  }
-  .championship-time-count > p{
-    > span {
-      font-size: 60px;
+
+//EURO banner START
+
+.row .row-child > div {
+  &.euro-2020 {
+    @media screen and (max-width: 1480px) {
+      display: table-row;
     }
-    > i {
-      font-size: 18px;
+    .champions-date-count {
+      display: block;
+      height: 195px;
+      line-height: 195px;
+      padding: 0 10px 0 0;
+      background-position: 0  top;
     }
-    + p:before {
-      top: 3px;
-      left: -25%;
-      font-size: 55px;
+    .championship-team-name {
+      width: 25%;
+    }
+    .championship-time-count {
+      width: 75%;
+      height: 100%;
+      line-height: 195px;
+      box-sizing: border-box;
+      > p {
+        line-height: normal;
+      }
+    }
+    .championship-time-count.count-down-expired {
+      display: none;
     }
   }
 }
-html[dir="rtl"]{
-  .championship-logo-a > p {
-    background-position: 100% 50%;
-  }
-  .championship-time-count {
-    text-align: left;
-  }
-}
+
+
+
+//EURO banner END
+
+
 .play-now-ch{
   position: absolute;
   bottom: 10%;
@@ -1212,3 +1226,5 @@ html[dir="rtl"]{
     }
   }
 }
+
+

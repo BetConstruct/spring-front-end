@@ -255,7 +255,7 @@ CMS.service('content', ['WPConfig', 'Config', '$http', '$rootScope', '$location'
         return $http.get(url);
 
     };
-    
+
     /**
      * @ngdoc method
      * @name getTermsAndConditions

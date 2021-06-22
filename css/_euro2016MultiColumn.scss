@@ -147,7 +147,10 @@
         td {
           height: 20px;
           &.aic-winner-cell {
-            width: 165px;
+            width: 106px;
+            &.has-x-event {
+              width: 165px;
+            }
           }
           &:not([class]) {
             width: 57px;
@@ -576,12 +579,12 @@
   }
 }
 
-@media screen and (max-width: 1770px) and (min-width: 1280px){
+@media screen and (max-width: 1770px) {
   .aic-handicup-cell {
     display: none !important;
   }
 }
-@media screen and (max-width: 1500px) and (min-width: 1280px){
+@media screen and (max-width: 1500px) {
   .aic-over-under-cell {
     display: none !important;
   }

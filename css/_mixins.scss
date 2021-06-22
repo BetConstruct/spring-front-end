@@ -52,7 +52,7 @@ $delete-cache: '?v=' + random(777);
   }
   &::-webkit-scrollbar {
     width: $width;
-    //height: $width;
+    height: $width + 4;
     background: $background;
     border-radius: $border-radius;
   }
@@ -84,7 +84,16 @@ $delete-cache: '?v=' + random(777);
       color: set-color($c16-sp-9);
     }
   }
-    .body-wrapper.asian{
+  .lmb-sport-select-j ul li {
+    &.#{$sports-name} {
+      color: $sports-color;
+      &.active-j {
+        color: set-color($sports-color);
+        background: $sports-color;
+      }
+    }
+  }
+  .body-wrapper.asian{
     .icon-sport-asia.#{$sports-name}{
       color: $sports-color !important;
       &.Soccer {
@@ -92,7 +101,6 @@ $delete-cache: '?v=' + random(777);
       }
     }
   }
-
   .body-wrapper.asian {
     .asian-left-contain-menu{
       .competition-title-v3{
@@ -105,7 +113,6 @@ $delete-cache: '?v=' + random(777);
             &:before{
               color: set-color($c16-sp-9) !important;
             }
-
           }
         }
        }
@@ -237,7 +244,7 @@ $delete-cache: '?v=' + random(777);
       background: linear-gradient(to left, rgba($sports-color,0.635) 0%, rgba($c16-sp-9,1) 60%,  rgba($c16-sp-9,1) 100%);
     }
   }
-  .suggest-mini-list.suggested-sport-#{$sports-name} {
+  .suggest-mini-list.suggested-sport-.#{$sports-name} {
     background: rgba($sports-color,0.5);
     @include ltr {
       background: -moz-linear-gradient(left, rgba($sports-color,0.5) 0%, rgba($c16-sp-9,1) 60%,  rgba($c16-sp-9,1) 100%);
@@ -252,8 +259,8 @@ $delete-cache: '?v=' + random(777);
   }
   .esports-nav-b.prematch-view .sports-item-v3.#{$sports-name} ~ .region-item-row-v3 .competition-title-v3,
   .esports-nav-b .sports-item-v3.#{$sports-name} ~ .region-item-row-v3 .single-events-b-v3,
-  .e-live-now-betslip > ul.e-betslip-#{$sports-name} .single-events-b-v3,
-  .e-live-now-betslip > ul.e-betslip-#{$sports-name} > li.e-l-n-arrow {
+  .e-live-now-betslip > ul.e-betslip-.#{$sports-name} .single-events-b-v3,
+  .e-live-now-betslip > ul.e-betslip-.#{$sports-name} > li.e-l-n-arrow {
     &:hover, &.active {
       color: set-color($sports-color);
       background: $sports-color;
@@ -282,11 +289,18 @@ $delete-cache: '?v=' + random(777);
       box-shadow: 0 0 20px lighten($sports-color,15);
     }
   }
+
 }
 
 
 @mixin liveScoreBackgrounds($alias, $imageName: $alias, $imagePath: "../../../images/live-score/") {
   .live-score-background-#{$alias} {
     background: url(#{$imagePath + $imageName}.jpg#{$delete-cache}) no-repeat 50% 50% / cover;
+  }
+}
+
+@mixin socialicons ($socialName,$imageName: $socialName, $imagePath: "../../../images/social-icons/"){
+  .social-#{$socialName}{
+    background: url(#{$imagePath + $imageName}.png#{$delete-cache}) no-repeat 50% 50% / cover;
   }
 }

@@ -75,6 +75,7 @@
             <span class="reg" ng-bind="selectedRegion.name"></span>
             <span ng-bind="game.name"></span>
             <p>
+                <span ng-if="game.game_info.status"><span trans>Status</span>: {{game.game_info.status}}</span>
                 <b class="cms-jcon-stream" ng-if="streamConfig && streamConfig[game.id]"  ng-click="$root.broadcast('setPrematchStream', streamConfig[game.id]);$event.stopPropagation();"></b>
                 <i ng-bind="game.start_ts|formatDate:'full':null:$root.env.timeFormat"></i>
                 <i class="arrow-open-h"></i>
@@ -91,9 +92,12 @@
                            game-id="game.id"
         ></horse-racing-game>
 
-
+        <greyhound-racing-game
+                ng-if="data.sportId === 184"
+                sport-id="data.sportId"
+                region-id="selectedRegion.id"
+                competition-id="selectedCompetition.id"
+                game-id="game.id">
+        </greyhound-racing-game>
     </div>
-
-
-
 </div>

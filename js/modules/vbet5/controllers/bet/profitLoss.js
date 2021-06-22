@@ -300,6 +300,9 @@ VBET5.controller('profitLossCtrl', ['$rootScope', '$scope', '$controller', '$loc
                 if (response.details && response.details.bet_pl_objects && response.details.bet_pl_totals) {
                     $scope.betHistory = response.details.bet_pl_objects;
                     $scope.profitLossTotal = response.details.bet_pl_totals;
+
+                    $scope.addIconAndTextInfo($scope.betHistory);
+
                 } else {
                     noData('betHistory');
                 }

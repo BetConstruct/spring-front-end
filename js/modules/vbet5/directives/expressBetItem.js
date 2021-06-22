@@ -9,6 +9,17 @@ VBET5.directive('expressBetItem', ['$rootScope', '$filter', '$location', '$route
             'malay': 4,
             'indo': 5
         };
+       function getDisplayBase(base, marketType){
+            if (!base) {
+                return "";
+            }
+
+            if (marketType.indexOf("Handicap") > -1 && base > 0) {
+                return  "+" + base;
+            }
+
+            return base;
+        }
     return {
         restrict: 'E',
         templateUrl: 'templates/directive/express-bet-item.html',
@@ -19,7 +30,7 @@ VBET5.directive('expressBetItem', ['$rootScope', '$filter', '$location', '$route
         link: function (scope) {
             scope.enableSigninRegisterLinks =  Config.partner.enableSigninRegisterCallbacks;
             scope.containsBlockedEvents = false;
-
+            scope.maximumVisibleItems = Config.main.expressOfDay.maxVisibleItems;
             var connectionService = new ConnectionService(scope);
             var isCalculateTax = $rootScope.partnerConfig && {1:1, 0:1}[$rootScope.partnerConfig.tax_integration_type]&& ($rootScope.partnerConfig.tax_percent || ($rootScope.partnerConfig.tax_amount_ranges && $rootScope.partnerConfig.tax_amount_ranges.length)) && {1:1, 2:1, 20:1}[$rootScope.partnerConfig.tax_type];
             scope.taxOnStake = {};
@@ -33,7 +44,13 @@ VBET5.directive('expressBetItem', ['$rootScope', '$filter', '$location', '$route
             var eventIds = scope.item.Selections.map(function (item) {
                 return item.SelectionId;
             });
-            scope.initialPriceMap = {};
+            var competitionIds = Utils.uniqueNum(scope.item.Selections.map(function (item) {
+                return item.CompetitionId;
+            }));
+            var marketIds =  Utils.uniqueNum(scope.item.Selections.map(function (item) {
+                return item.MarketId;
+            }));
+           var initialPriceMap = {};
             var request = {
                 source: 'betting',
                 what: {
@@ -41,12 +58,14 @@ VBET5.directive('expressBetItem', ['$rootScope', '$filter', '$location', '$route
                     region: ['id'],
                     competition: ['id'],
                     game: ['id', 'team1_name', 'team2_name', 'sport_alias', 'region_alias', 'start_ts', 'is_live', 'is_blocked'],
-                    market: ['id', 'name', 'display_key'],
-                    event: ['id', 'name', 'price', 'sp_enabled']
+                    market: ['id', 'name', 'display_key', 'base', 'type', 'home_score', 'away_score'],
+                    event: ['id', 'name', 'price', 'sp_enabled', 'base', 'type_1']
                 },
                 where: {
                     game: {id: {'@in': matchIds}},
-                    event: {id: {'@in': eventIds}}
+                    event: {id: {'@in': eventIds}},
+                    competition: {id: {'@in': competitionIds}},
+                    market: {id: {'@in': marketIds}}
                 }
             };
 
@@ -132,7 +151,9 @@ VBET5.directive('expressBetItem', ['$rootScope', '$filter', '$location', '$route
                                             market: {
                                                 id: market.id,
                                                 name: $filter('improveName')(market.name, gameData),
-                                                displayKey: market.display_key
+                                                displayKey: market.display_key,
+                                                homeScore: market.home_score,
+                                                awayScore: market.away_score
                                             },
                                             event: {
                                                 id: event.id,
@@ -140,13 +161,15 @@ VBET5.directive('expressBetItem', ['$rootScope', '$filter', '$location', '$route
                                                 blocked: gameData.is_blocked || $filter('oddConvert')(event.price, 'decimal') == 1,
                                                 sp_enabled: event.sp_enabled,
                                                 price_change: event.price_change,
+                                                type1: event.type_1,
+                                                base: getDisplayBase(event.base || market.base, market.type),
                                                 name: MarketService.getEventName(event.name, market.type, market.name, gameData)
                                             }
                                         };
                                         scope.containsBlockedEvents = scope.containsBlockedEvents || bet.event.blocked;
-                                        if (!scope.initialPriceMap[event.id]) {
-                                            scope.initialPriceMap[event.id] = event.price;
-                                        } else if(scope.initialPriceMap[event.id] !== event.price) {
+                                        if (!initialPriceMap[event.id]) {
+                                          initialPriceMap[event.id] = event.price;
+                                        } else if(initialPriceMap[event.id] !== event.price) {
                                             scope.isTherePriceChange = true;
                                         }
                                         bets.push(bet);
@@ -167,8 +190,9 @@ VBET5.directive('expressBetItem', ['$rootScope', '$filter', '$location', '$route
                 bets.sort(function (bet1, bet2){
                     return eventIds.indexOf(bet1.event.id) - eventIds.indexOf(bet2.event.id);
                 });
-                scope.bets = bets;
-                scope.totalOdd = formatMultipleOdd(scope.bets.reduce(function (result, bet){
+                scope.allBets = bets;
+                scope.bets = scope.allBets.slice(0, scope.maximumVisibleItems);
+                scope.totalOdd = formatMultipleOdd(scope.allBets.reduce(function (result, bet){
                     return result * bet.event.price;
                 }, 1));
                 if ($rootScope.partnerConfig.max_odd_for_multiple_bet &&  scope.totalOdd > $rootScope.partnerConfig.max_odd_for_multiple_bet) {
@@ -194,8 +218,8 @@ VBET5.directive('expressBetItem', ['$rootScope', '$filter', '$location', '$route
 
             scope.placeBet = function placeBet() {
                scope.errorMessage = undefined;
-               scope.bets.forEach(function (bet) {
-                  scope.initialPriceMap[bet.event.id] = bet.event.price;
+               scope.allBets.forEach(function (bet) {
+                  initialPriceMap[bet.event.id] = bet.event.price;
               });
               scope.betInProgress = true;
               var request = {
@@ -208,7 +232,7 @@ VBET5.directive('expressBetItem', ['$rootScope', '$filter', '$location', '$route
                           "OddType": ODD_TYPE_MAP[Config.env.oddFormat],
                           "EachWay": false,
                           "PredefinedMultipleId": scope.item.Id,
-                          "Events": scope.bets.map(function (bet) {
+                          "Events": scope.allBets.map(function (bet) {
                               return {
                                   "SelectionId": bet.event.id,
                                   "Coeficient": bet.event.sp_enabled? -1:bet.event.price
@@ -256,6 +280,14 @@ VBET5.directive('expressBetItem', ['$rootScope', '$filter', '$location', '$route
             scope.openForm = function openForm($event, action) {
                 $rootScope.$broadcast(action);
                 $event.stopPropagation();
+            };
+
+            scope.toggleBets = function toggleBets() {
+                if (scope.bets === scope.allBets) {
+                    scope.bets = scope.allBets.slice(0, scope.maximumVisibleItems);
+                } else  {
+                    scope.bets = scope.allBets;
+                }
             };
 
 

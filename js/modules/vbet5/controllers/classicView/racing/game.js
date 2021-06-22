@@ -15,7 +15,7 @@ angular.module('vbet5.betting').controller('classicViewRacingGameCtrl', ['$rootS
                 source: 'betting',
                 what: {
                     competition: ['id', 'name'],
-                    game: ['id', 'team1_name', 'start_ts']
+                    game: ['id', 'team1_name', 'start_ts', 'info']
                 },
                 where: {
                     sport: {id: $scope.data.sportId},
@@ -41,7 +41,10 @@ angular.module('vbet5.betting').controller('classicViewRacingGameCtrl', ['$rootS
                         games.push({
                             id: game.id,
                             name: game.team1_name,
-                            start_ts: game.start_ts
+                            start_ts: game.start_ts,
+                            game_info: {
+                                status: game.info.horse_xml.Status
+                            }
                         });
                     });
                     games.sort(function (item1, item2) {

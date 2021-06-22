@@ -16,12 +16,12 @@ VBET5.directive('sportsbookJackpot', ['$rootScope', 'jackpotManager', 'Utils', f
             };
             scope.jackpotData = [];
 
-            (function subscribeForJackpotData() {
-                jackpotManager.unsubscribeFromJackpotData(true);
-                jackpotManager.subscribeForJackpotData(-1, function subscribeForJackpotDataCallback(data) {
-                    scope.jackpotData = Utils.objectToArray(data)[0];
+            function subscribeForJackpotDataCallback(data) {
+                scope.jackpotData = Utils.objectToArray(data)[0];
+            }
 
-                }, 'getjackpots', 'sportsbook');  // -1 all games,
+            (function subscribeForJackpotData() {
+                jackpotManager.subscribeForJackpotData(-1, subscribeForJackpotDataCallback, 'getjackpots', 'sportsbook');  // -1 all games,
             })();
 
             scope.$on('$destroy', function() {

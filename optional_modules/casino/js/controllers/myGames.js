@@ -16,7 +16,7 @@ CASINO.controller('casinoMyGamesCtrl', ['$scope', '$rootScope', 'Storage', '$loc
         $scope.confData = CConfig;
         $scope.casinoGamesLoaded = false;
         if (gameIds.length) {
-            casinoData.getGames(undefined,undefined,undefined,undefined,undefined,undefined,undefined, gameIds ).then(function (response) {
+            casinoData.getGames({id: gameIds} ).then(function (response) {
                 if (response && response.data && response.data.status !== -1) {
                     $rootScope.myCasinoGames = response.data.games;
                     $rootScope.myCasinoGames.sort(function (game1, game2) {
@@ -115,9 +115,10 @@ CASINO.controller('casinoMyGamesCtrl', ['$scope', '$rootScope', 'Storage', '$loc
      * @description removes game from "my games" and updates scope and local storage
      *
      * @param {Number} gameID gameID number
+     * @param {Boolean} skipAnalytics
      */
 
-    $scope.removeGameFromSaved = function removeGameFromSaved(gameID) {
+    $scope.removeGameFromSaved = function removeGameFromSaved(gameID, skipAnalytics) {
         var games = $rootScope.myCasinoGames, i, j;
         $rootScope.myCasinoGamesIds[gameID] = false;
 
@@ -136,8 +137,12 @@ CASINO.controller('casinoMyGamesCtrl', ['$scope', '$rootScope', 'Storage', '$loc
         var gameIds =  mapMyGames(games);
 
         Storage.set('myCasinoGames', gameIds);
-        analytics.gaSend('send', 'event', 'explorer', "removeFromMyCasinoGames" + (Config.main.sportsLayout),  {'page': $location.path(), 'eventLabel': "removeFromMyCasinoGames"});
-        console.log('gaSend-',"removeFromMyCasinoGames");
+
+        if(!skipAnalytics){
+            analytics.gaSend('send', 'event', 'explorer', "removeFromMyCasinoGames" + (Config.main.sportsLayout),  {'page': $location.path(), 'eventLabel': "removeFromMyCasinoGames"});
+            console.log('gaSend-',"removeFromMyCasinoGames");
+        }
+
         Utils.checkAndSetCookie("myCasinoGames", gameIds, Config.main.authSessionLifetime);
 
         if (games.length === 0 && $rootScope.myGames.length) {
@@ -180,8 +185,9 @@ CASINO.controller('casinoMyGamesCtrl', ['$scope', '$rootScope', 'Storage', '$loc
 
     $scope.removeAllGamesFromSaved = function removeAllGamesFromSaved() {
         $rootScope.myCasinoGames.slice().forEach(function (game) {
-            $scope.removeGameFromSaved(game.id);
+            $scope.removeGameFromSaved(game.id, true);
         });
+        analytics.gaSend('send', 'event', 'explorer', 'removeAllGamesFromSaved' + (Config.main.sportsLayout), {'page': $location.path(),'eventLabel': "removeAllGamesFromSaved"});
     };
 
     $scope.$on('casinoGamesList.toggleSaveToMyCasinoGames', function (event, game) { // casino game list v2  favorite remove
